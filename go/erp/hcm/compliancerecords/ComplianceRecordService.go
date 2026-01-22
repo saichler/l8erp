@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "ComplianceRecord"
+	ServiceName = "CompRec"
 	ServiceArea = byte(30)
 )
 

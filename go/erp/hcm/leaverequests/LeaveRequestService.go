@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "LeaveRequest"
+	ServiceName = "LeaveReq"
 	ServiceArea = byte(30)
 )
 

@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "BenefitPlan"
+	ServiceName = "BenPlan"
 	ServiceArea = byte(30)
 )
 

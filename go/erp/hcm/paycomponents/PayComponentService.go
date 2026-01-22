@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "PayComponent"
+	ServiceName = "PayComp"
 	ServiceArea = byte(30)
 )
 

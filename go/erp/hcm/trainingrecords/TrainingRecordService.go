@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "TrainingRecord"
+	ServiceName = "TrnRec"
 	ServiceArea = byte(30)
 )
 

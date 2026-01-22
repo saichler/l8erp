@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "LeavePolicy"
+	ServiceName = "LeavePol"
 	ServiceArea = byte(30)
 )
 

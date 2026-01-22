@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "PerformanceReview"
+	ServiceName = "PerfRevw"
 	ServiceArea = byte(30)
 )
 

@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "MeritIncrease"
+	ServiceName = "MeritInc"
 	ServiceArea = byte(30)
 )
 

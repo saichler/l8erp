@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "EquityGrant"
+	ServiceName = "EqGrant"
 	ServiceArea = byte(30)
 )
 

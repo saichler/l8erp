@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "CareerPath"
+	ServiceName = "CarPath"
 	ServiceArea = byte(30)
 )
 

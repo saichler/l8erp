@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "YearEndDocument"
+	ServiceName = "YrEndDoc"
 	ServiceArea = byte(30)
 )
 

@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "COBRAEvent"
+	ServiceName = "COBRAEvt"
 	ServiceArea = byte(30)
 )
 

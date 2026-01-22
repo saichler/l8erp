@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "DirectDeposit"
+	ServiceName = "DirDep"
 	ServiceArea = byte(30)
 )
 

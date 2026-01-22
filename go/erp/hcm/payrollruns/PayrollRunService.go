@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "PayrollRun"
+	ServiceName = "PayRun"
 	ServiceArea = byte(30)
 )
 

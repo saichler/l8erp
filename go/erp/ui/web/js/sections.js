@@ -17,6 +17,15 @@ const sections = {
     system: 'sections/system.html'
 };
 
+// Section initialization functions
+const sectionInitializers = {
+    hcm: () => {
+        if (typeof initializeHCM === 'function') {
+            initializeHCM();
+        }
+    }
+};
+
 // Load section content dynamically
 function loadSection(sectionName) {
     const contentArea = document.getElementById('content-area');
@@ -54,6 +63,11 @@ function loadSection(sectionName) {
                 const sectionContainer = contentArea.querySelector('.section-container');
                 if (sectionContainer) {
                     sectionContainer.style.animation = 'fade-in-up 0.6s ease-out';
+                }
+
+                // Call section-specific initialization if defined
+                if (sectionInitializers[sectionName]) {
+                    sectionInitializers[sectionName]();
                 }
             }, 200);
         })

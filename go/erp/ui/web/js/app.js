@@ -1,5 +1,14 @@
 // Main application initialization
 
+// Get authentication headers with bearer token
+function getAuthHeaders() {
+    const bearerToken = sessionStorage.getItem('bearerToken');
+    return {
+        'Authorization': bearerToken ? `Bearer ${bearerToken}` : '',
+        'Content-Type': 'application/json'
+    };
+}
+
 // Utility function for making authenticated API calls
 async function makeAuthenticatedRequest(url, options = {}) {
     const bearerToken = sessionStorage.getItem('bearerToken');

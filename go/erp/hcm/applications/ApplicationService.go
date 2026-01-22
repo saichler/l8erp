@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "Application"
+	ServiceName = "Applctn"
 	ServiceArea = byte(30)
 )
 

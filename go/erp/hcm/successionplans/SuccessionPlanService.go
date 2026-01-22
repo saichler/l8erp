@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "SuccessionPlan"
+	ServiceName = "SuccPlan"
 	ServiceArea = byte(30)
 )
 

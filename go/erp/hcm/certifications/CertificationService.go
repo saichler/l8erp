@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "Certification"
+	ServiceName = "Cert"
 	ServiceArea = byte(30)
 )
 

@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "MarketBenchmark"
+	ServiceName = "MktBench"
 	ServiceArea = byte(30)
 )
 

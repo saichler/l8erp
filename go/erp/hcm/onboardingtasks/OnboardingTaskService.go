@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "OnboardingTask"
+	ServiceName = "OnbrdTsk"
 	ServiceArea = byte(30)
 )
 

@@ -96,7 +96,7 @@ import (
 )
 
 func main() {
-	res := common.CreateResources("orm")
+	res := common.CreateResources("hcm")
 	ifs.SetNetworkMode(ifs.NETWORK_K8s)
 	nic := vnic.NewVirtualNetworkInterface(res, nil)
 	nic.Start()
