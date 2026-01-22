@@ -1,0 +1,485 @@
+syntax = "proto3";
+
+package hcm;
+
+option go_package = "./types/hcm";
+
+
+import "hcm-common.proto";
+import "api.proto";
+
+// ============================================================================
+// COMPENSATION MANAGEMENT MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// SalaryGrade represents salary bands
+message SalaryGrade {
+  string grade_id = 1;
+  string organization_id = 2;
+  string salary_structure_id = 3;
+  string grade_code = 4;
+  string name = 5;
+  int32 level = 6;
+  Money minimum = 7;
+  Money midpoint = 8;
+  Money maximum = 9;
+  double spread_percentage = 10;     // Range width
+  string currency_code = 11;
+  PayFrequency pay_frequency = 12;
+  int64 effective_date = 13;
+  int64 end_date = 14;
+  bool is_active = 15;
+  AuditInfo audit_info = 16;
+}
+
+message SalaryGradeList {
+  repeated SalaryGrade list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalaryStructure represents the overall pay structure
+message SalaryStructure {
+  string structure_id = 1;
+  string organization_id = 2;
+  string name = 3;
+  string code = 4;
+  string description = 5;
+  string currency_code = 6;
+  PayFrequency pay_frequency = 7;
+  repeated SalaryGrade grades = 8;
+  int64 effective_date = 9;
+  int64 end_date = 10;
+  bool is_active = 11;
+  AuditInfo audit_info = 12;
+}
+
+message SalaryStructureList {
+  repeated SalaryStructure list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// EmployeeCompensation represents an employee's compensation record
+message EmployeeCompensation {
+  string compensation_id = 1;
+  string employee_id = 2;
+  CompensationType compensation_type = 3;
+  Money base_salary = 4;
+  PayFrequency pay_frequency = 5;
+  string currency_code = 6;
+  string salary_grade_id = 7;
+  double compa_ratio = 8;            // Position in range
+  Money hourly_rate = 9;
+  double fte = 10;                   // Full-time equivalent
+  int64 effective_date = 11;
+  int64 end_date = 12;
+  string change_reason = 13;
+  string approved_by = 14;
+  int64 approved_date = 15;
+  AuditInfo audit_info = 16;
+}
+
+message EmployeeCompensationList {
+  repeated EmployeeCompensation list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum CompensationType {
+  COMPENSATION_TYPE_UNSPECIFIED = 0;
+  COMPENSATION_TYPE_SALARY = 1;
+  COMPENSATION_TYPE_HOURLY = 2;
+  COMPENSATION_TYPE_COMMISSION = 3;
+  COMPENSATION_TYPE_PIECE_RATE = 4;
+}
+
+// @PrimeObject
+// MeritIncrease represents merit planning records
+message MeritIncrease {
+  string increase_id = 1;
+  string employee_id = 2;
+  string merit_cycle_id = 3;
+  Money current_salary = 4;
+  Money proposed_increase = 5;
+  double proposed_percentage = 6;
+  Money new_salary = 7;
+  Money budget_amount = 8;
+  double compa_ratio_before = 9;
+  double compa_ratio_after = 10;
+  MeritIncreaseStatus status = 11;
+
+  // Performance link
+  string review_id = 12;
+  int32 performance_rating = 13;
+
+  // Recommendations
+  Money manager_recommended = 14;
+  Money hr_approved = 15;
+
+  // Effective date
+  int64 effective_date = 16;
+
+  // Approval workflow
+  string submitted_by = 17;
+  int64 submitted_date = 18;
+  string approved_by = 19;
+  int64 approved_date = 20;
+
+  string notes = 21;
+  AuditInfo audit_info = 22;
+}
+
+message MeritIncreaseList {
+  repeated MeritIncrease list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum MeritIncreaseStatus {
+  MERIT_INCREASE_STATUS_UNSPECIFIED = 0;
+  MERIT_INCREASE_STATUS_DRAFT = 1;
+  MERIT_INCREASE_STATUS_SUBMITTED = 2;
+  MERIT_INCREASE_STATUS_UNDER_REVIEW = 3;
+  MERIT_INCREASE_STATUS_APPROVED = 4;
+  MERIT_INCREASE_STATUS_REJECTED = 5;
+  MERIT_INCREASE_STATUS_PROCESSED = 6;
+}
+
+// @PrimeObject
+// MeritCycle represents a merit planning cycle
+message MeritCycle {
+  string cycle_id = 1;
+  string organization_id = 2;
+  string name = 3;
+  int32 year = 4;
+  MeritCycleStatus status = 5;
+  int64 planning_start_date = 6;
+  int64 planning_end_date = 7;
+  int64 effective_date = 8;
+  Money total_budget = 9;
+  double budget_percentage = 10;
+  string notes = 11;
+  AuditInfo audit_info = 12;
+}
+
+message MeritCycleList {
+  repeated MeritCycle list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum MeritCycleStatus {
+  MERIT_CYCLE_STATUS_UNSPECIFIED = 0;
+  MERIT_CYCLE_STATUS_PLANNING = 1;
+  MERIT_CYCLE_STATUS_OPEN = 2;
+  MERIT_CYCLE_STATUS_UNDER_REVIEW = 3;
+  MERIT_CYCLE_STATUS_APPROVED = 4;
+  MERIT_CYCLE_STATUS_CLOSED = 5;
+}
+
+// @PrimeObject
+// BonusPlan represents a bonus program
+message BonusPlan {
+  string plan_id = 1;
+  string organization_id = 2;
+  string name = 3;
+  string code = 4;
+  string description = 5;
+  BonusPlanType plan_type = 6;
+  int32 plan_year = 7;
+  BonusFrequency frequency = 8;
+
+  // Target
+  double target_percentage = 9;
+  double maximum_percentage = 10;
+  Money target_amount = 11;
+  Money maximum_amount = 12;
+
+  // Funding
+  BonusFundingType funding_type = 13;
+  double funding_pool_percentage = 14;
+
+  // Eligibility
+  EligibilityRules eligibility = 15;
+  int32 proration_method = 16;
+
+  // Dates
+  int64 effective_date = 17;
+  int64 end_date = 18;
+  int64 payout_date = 19;
+
+  bool is_active = 20;
+  AuditInfo audit_info = 21;
+}
+
+message BonusPlanList {
+  repeated BonusPlan list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum BonusPlanType {
+  BONUS_PLAN_TYPE_UNSPECIFIED = 0;
+  BONUS_PLAN_TYPE_ANNUAL = 1;
+  BONUS_PLAN_TYPE_SPOT = 2;
+  BONUS_PLAN_TYPE_SIGNING = 3;
+  BONUS_PLAN_TYPE_RETENTION = 4;
+  BONUS_PLAN_TYPE_REFERRAL = 5;
+  BONUS_PLAN_TYPE_PERFORMANCE = 6;
+  BONUS_PLAN_TYPE_PROFIT_SHARING = 7;
+  BONUS_PLAN_TYPE_PROJECT = 8;
+  BONUS_PLAN_TYPE_SALES_COMMISSION = 9;
+}
+
+enum BonusFrequency {
+  BONUS_FREQUENCY_UNSPECIFIED = 0;
+  BONUS_FREQUENCY_ANNUAL = 1;
+  BONUS_FREQUENCY_SEMI_ANNUAL = 2;
+  BONUS_FREQUENCY_QUARTERLY = 3;
+  BONUS_FREQUENCY_MONTHLY = 4;
+  BONUS_FREQUENCY_ONE_TIME = 5;
+}
+
+enum BonusFundingType {
+  BONUS_FUNDING_TYPE_UNSPECIFIED = 0;
+  BONUS_FUNDING_TYPE_FIXED = 1;
+  BONUS_FUNDING_TYPE_PERCENTAGE_OF_PROFITS = 2;
+  BONUS_FUNDING_TYPE_PERCENTAGE_OF_REVENUE = 3;
+  BONUS_FUNDING_TYPE_DISCRETIONARY = 4;
+}
+
+// @PrimeObject
+// BonusPayment represents an individual bonus award
+message BonusPayment {
+  string payment_id = 1;
+  string employee_id = 2;
+  string bonus_plan_id = 3;
+  BonusPlanType bonus_type = 4;
+  string reason = 5;
+
+  // Amount
+  Money target_amount = 6;
+  Money actual_amount = 7;
+  double payout_percentage = 8;
+
+  // Performance factors
+  double individual_performance_factor = 9;
+  double team_performance_factor = 10;
+  double company_performance_factor = 11;
+
+  // Dates
+  DateRange performance_period = 12;
+  int64 award_date = 13;
+  int64 payment_date = 14;
+
+  // Processing
+  BonusPaymentStatus status = 15;
+  string payroll_run_id = 16;
+  bool is_taxable = 17;
+
+  // Approval
+  string approved_by = 18;
+  int64 approved_date = 19;
+
+  string notes = 20;
+  AuditInfo audit_info = 21;
+}
+
+message BonusPaymentList {
+  repeated BonusPayment list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum BonusPaymentStatus {
+  BONUS_PAYMENT_STATUS_UNSPECIFIED = 0;
+  BONUS_PAYMENT_STATUS_DRAFT = 1;
+  BONUS_PAYMENT_STATUS_PENDING_APPROVAL = 2;
+  BONUS_PAYMENT_STATUS_APPROVED = 3;
+  BONUS_PAYMENT_STATUS_SCHEDULED = 4;
+  BONUS_PAYMENT_STATUS_PAID = 5;
+  BONUS_PAYMENT_STATUS_CANCELLED = 6;
+}
+
+// @PrimeObject
+// EquityGrant represents stock/equity grants
+message EquityGrant {
+  string grant_id = 1;
+  string employee_id = 2;
+  string plan_id = 3;
+  EquityGrantType grant_type = 4;
+  string grant_number = 5;
+
+  // Grant details
+  int64 shares_granted = 6;
+  Money grant_price = 7;             // Strike price for options
+  Money fair_market_value = 8;
+  Money total_value = 9;
+
+  // Vesting
+  VestingSchedule vesting_schedule = 10;
+  int64 shares_vested = 11;
+  int64 shares_unvested = 12;
+  int64 shares_exercised = 13;
+  int64 shares_forfeited = 14;
+  int64 shares_cancelled = 15;
+
+  // Dates
+  int64 grant_date = 16;
+  int64 vest_start_date = 17;
+  int64 expiration_date = 18;
+
+  EquityGrantStatus status = 19;
+
+  // Approval
+  string approved_by = 20;
+  int64 approved_date = 21;
+  string board_approval_date = 22;
+
+  string agreement_document_id = 23;
+  string notes = 24;
+  AuditInfo audit_info = 25;
+}
+
+message EquityGrantList {
+  repeated EquityGrant list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum EquityGrantType {
+  EQUITY_GRANT_TYPE_UNSPECIFIED = 0;
+  EQUITY_GRANT_TYPE_ISO = 1;         // Incentive stock options
+  EQUITY_GRANT_TYPE_NSO = 2;         // Non-qualified stock options
+  EQUITY_GRANT_TYPE_RSU = 3;         // Restricted stock units
+  EQUITY_GRANT_TYPE_RSA = 4;         // Restricted stock awards
+  EQUITY_GRANT_TYPE_ESPP = 5;        // Employee stock purchase plan
+  EQUITY_GRANT_TYPE_PHANTOM = 6;     // Phantom stock
+  EQUITY_GRANT_TYPE_SAR = 7;         // Stock appreciation rights
+}
+
+enum EquityGrantStatus {
+  EQUITY_GRANT_STATUS_UNSPECIFIED = 0;
+  EQUITY_GRANT_STATUS_PENDING = 1;
+  EQUITY_GRANT_STATUS_ACTIVE = 2;
+  EQUITY_GRANT_STATUS_FULLY_VESTED = 3;
+  EQUITY_GRANT_STATUS_EXERCISED = 4;
+  EQUITY_GRANT_STATUS_EXPIRED = 5;
+  EQUITY_GRANT_STATUS_FORFEITED = 6;
+  EQUITY_GRANT_STATUS_CANCELLED = 7;
+}
+
+message VestingSchedule {
+  VestingType vesting_type = 1;
+  int32 cliff_months = 2;
+  int32 total_months = 3;
+  VestingFrequency frequency = 4;
+  double cliff_percentage = 5;
+  repeated VestingMilestone milestones = 6;
+}
+
+enum VestingType {
+  VESTING_TYPE_UNSPECIFIED = 0;
+  VESTING_TYPE_TIME_BASED = 1;
+  VESTING_TYPE_PERFORMANCE_BASED = 2;
+  VESTING_TYPE_HYBRID = 3;
+  VESTING_TYPE_IMMEDIATE = 4;
+}
+
+enum VestingFrequency {
+  VESTING_FREQUENCY_UNSPECIFIED = 0;
+  VESTING_FREQUENCY_MONTHLY = 1;
+  VESTING_FREQUENCY_QUARTERLY = 2;
+  VESTING_FREQUENCY_ANNUALLY = 3;
+}
+
+message VestingMilestone {
+  int64 date = 1;
+  double percentage = 2;
+  int64 shares = 3;
+  bool is_cliff = 4;
+}
+
+// @PrimeObject
+// CompensationStatement represents a total compensation statement
+message CompensationStatement {
+  string statement_id = 1;
+  string employee_id = 2;
+  int32 statement_year = 3;
+  int64 as_of_date = 4;
+
+  // Base compensation
+  Money base_salary = 5;
+  Money hourly_equivalent = 6;
+
+  // Variable pay
+  Money bonus_target = 7;
+  Money bonus_actual = 8;
+  Money commissions = 9;
+
+  // Equity
+  Money equity_value = 10;
+  int64 equity_shares = 11;
+
+  // Benefits
+  Money employer_health_contribution = 12;
+  Money employer_dental_contribution = 13;
+  Money employer_vision_contribution = 14;
+  Money employer_life_contribution = 15;
+  Money employer_disability_contribution = 16;
+  Money employer_retirement_contribution = 17;
+  Money employer_hsa_contribution = 18;
+
+  // Other
+  Money employer_payroll_taxes = 19;
+  Money other_benefits_value = 20;
+  Money perks_value = 21;
+
+  // Totals
+  Money total_cash_compensation = 22;
+  Money total_benefits_value = 23;
+  Money total_compensation = 24;
+
+  string pdf_url = 25;
+  AuditInfo audit_info = 26;
+}
+
+message CompensationStatementList {
+  repeated CompensationStatement list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MarketBenchmark for compensation benchmarking
+message MarketBenchmark {
+  string benchmark_id = 1;
+  string organization_id = 2;
+  string job_id = 3;
+  string job_title = 4;
+  string survey_source = 5;
+  int32 survey_year = 6;
+  string market_definition = 7;      // Geographic/industry scope
+
+  // Market data
+  Money market_25th = 8;
+  Money market_50th = 9;
+  Money market_75th = 10;
+  Money market_90th = 11;
+  Money market_average = 12;
+
+  // Total compensation data
+  Money total_cash_25th = 13;
+  Money total_cash_50th = 14;
+  Money total_cash_75th = 15;
+
+  // Comparison
+  Money internal_average = 16;
+  double market_index = 17;          // Internal vs market ratio
+
+  int64 effective_date = 18;
+  int64 expiration_date = 19;
+
+  string notes = 20;
+  AuditInfo audit_info = 21;
+}
+
+message MarketBenchmarkList {
+  repeated MarketBenchmark list = 1;
+  l8api.L8MetaData metadata = 2;
+}

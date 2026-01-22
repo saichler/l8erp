@@ -1,0 +1,12 @@
+{
+    "login": {
+        "appTitle": "ERP by Layer 8",
+        "appDescription": "Enterprise Resource Planning",
+        "authEndpoint": "/auth",
+        "redirectUrl": "../app.html",
+        "showRememberMe": true,
+        "showRegister": false,
+        "sessionTimeout": 30,
+        "tfaEnabled": true
+    }
+}

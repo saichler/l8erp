@@ -1,0 +1,363 @@
+syntax = "proto3";
+
+package hcm;
+
+option go_package = "./types/hcm";
+
+
+import "hcm-common.proto";
+import "api.proto";
+
+// ============================================================================
+// LEARNING MANAGEMENT MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// Course represents a training course
+message Course {
+  string course_id = 1;
+  string organization_id = 2;
+  string code = 3;
+  string title = 4;
+  string description = 5;
+  string learning_objectives = 6;
+  CourseType course_type = 7;
+  CourseDeliveryMethod delivery_method = 8;
+  CourseCategory category = 9;
+  string provider = 10;
+  string instructor_id = 11;
+
+  // Duration
+  int32 duration_minutes = 12;
+  int32 credits = 13;
+  double ceu_credits = 14;           // Continuing education units
+
+  // Course details
+  string syllabus_url = 15;
+  string content_url = 16;
+  repeated string prerequisite_course_ids = 17;
+  repeated string required_skills = 18;
+  CourseLevel level = 19;
+
+  // Scheduling
+  int32 max_enrollees = 20;
+  bool is_self_paced = 21;
+
+  // Compliance
+  bool is_mandatory = 22;
+  int32 recertification_months = 23;
+  repeated string applicable_job_ids = 24;
+
+  // Cost
+  Money cost_per_person = 25;
+
+  bool is_active = 26;
+  double average_rating = 27;
+  int32 total_completions = 28;
+
+  map<string, string> custom_fields = 29;
+  AuditInfo audit_info = 30;
+}
+
+message CourseList {
+  repeated Course list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum CourseType {
+  COURSE_TYPE_UNSPECIFIED = 0;
+  COURSE_TYPE_TRAINING = 1;
+  COURSE_TYPE_CERTIFICATION = 2;
+  COURSE_TYPE_COMPLIANCE = 3;
+  COURSE_TYPE_ONBOARDING = 4;
+  COURSE_TYPE_LEADERSHIP = 5;
+  COURSE_TYPE_SKILLS = 6;
+  COURSE_TYPE_SAFETY = 7;
+}
+
+enum CourseDeliveryMethod {
+  COURSE_DELIVERY_METHOD_UNSPECIFIED = 0;
+  COURSE_DELIVERY_METHOD_INSTRUCTOR_LED = 1;
+  COURSE_DELIVERY_METHOD_VIRTUAL_ILT = 2;
+  COURSE_DELIVERY_METHOD_E_LEARNING = 3;
+  COURSE_DELIVERY_METHOD_BLENDED = 4;
+  COURSE_DELIVERY_METHOD_ON_THE_JOB = 5;
+  COURSE_DELIVERY_METHOD_SELF_STUDY = 6;
+  COURSE_DELIVERY_METHOD_WEBINAR = 7;
+}
+
+enum CourseCategory {
+  COURSE_CATEGORY_UNSPECIFIED = 0;
+  COURSE_CATEGORY_TECHNICAL = 1;
+  COURSE_CATEGORY_SOFT_SKILLS = 2;
+  COURSE_CATEGORY_LEADERSHIP = 3;
+  COURSE_CATEGORY_COMPLIANCE = 4;
+  COURSE_CATEGORY_SAFETY = 5;
+  COURSE_CATEGORY_PRODUCT = 6;
+  COURSE_CATEGORY_PROCESS = 7;
+  COURSE_CATEGORY_TOOLS = 8;
+}
+
+enum CourseLevel {
+  COURSE_LEVEL_UNSPECIFIED = 0;
+  COURSE_LEVEL_BEGINNER = 1;
+  COURSE_LEVEL_INTERMEDIATE = 2;
+  COURSE_LEVEL_ADVANCED = 3;
+  COURSE_LEVEL_EXPERT = 4;
+}
+
+// @PrimeObject
+// CourseSession represents a scheduled course offering
+message CourseSession {
+  string session_id = 1;
+  string course_id = 2;
+  int64 start_date = 3;
+  int64 end_date = 4;
+  string location = 5;
+  string virtual_link = 6;
+  string instructor_id = 7;
+  string instructor_name = 8;
+  int32 max_enrollees = 9;
+  int32 enrolled_count = 10;
+  int32 waitlist_count = 11;
+  int32 completed_count = 12;
+  SessionStatus status = 13;
+  string notes = 14;
+  AuditInfo audit_info = 15;
+}
+
+message CourseSessionList {
+  repeated CourseSession list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum SessionStatus {
+  SESSION_STATUS_UNSPECIFIED = 0;
+  SESSION_STATUS_SCHEDULED = 1;
+  SESSION_STATUS_OPEN = 2;
+  SESSION_STATUS_FULL = 3;
+  SESSION_STATUS_IN_PROGRESS = 4;
+  SESSION_STATUS_COMPLETED = 5;
+  SESSION_STATUS_CANCELLED = 6;
+}
+
+// @PrimeObject
+// CourseEnrollment represents an employee's course registration
+message CourseEnrollment {
+  string enrollment_id = 1;
+  string employee_id = 2;
+  string course_id = 3;
+  string session_id = 4;
+  CourseEnrollmentStatus status = 5;
+  int64 enrolled_date = 6;
+  int64 started_date = 7;
+  int64 completed_date = 8;
+  int64 due_date = 9;
+  double progress_percentage = 10;
+  int32 score = 11;
+  bool passed = 12;
+  int32 attempts = 13;
+  string completion_certificate_url = 14;
+  string manager_id = 15;
+  string approved_by = 16;
+  int64 approved_date = 17;
+  int32 employee_rating = 18;
+  string employee_feedback = 19;
+  string notes = 20;
+  AuditInfo audit_info = 21;
+}
+
+message CourseEnrollmentList {
+  repeated CourseEnrollment list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum CourseEnrollmentStatus {
+  COURSE_ENROLLMENT_STATUS_UNSPECIFIED = 0;
+  COURSE_ENROLLMENT_STATUS_PENDING = 1;
+  COURSE_ENROLLMENT_STATUS_ACTIVE = 2;
+  COURSE_ENROLLMENT_STATUS_COMPLETED = 3;
+  COURSE_ENROLLMENT_STATUS_FAILED = 4;
+  COURSE_ENROLLMENT_STATUS_CANCELLED = 5;
+  COURSE_ENROLLMENT_STATUS_WAITLISTED = 6;
+}
+
+// @PrimeObject
+// Certification represents a certification definition
+message Certification {
+  string certification_id = 1;
+  string name = 2;
+  string code = 3;
+  string description = 4;
+  string issuing_organization = 5;
+  CertificationType certification_type = 6;
+
+  // Requirements
+  repeated string required_course_ids = 7;
+  int32 required_experience_months = 8;
+  repeated string prerequisite_certification_ids = 9;
+
+  // Renewal
+  int32 validity_months = 10;
+  bool requires_renewal = 11;
+  repeated string renewal_course_ids = 12;
+  double required_ceu_credits = 13;
+
+  // Cost
+  Money exam_cost = 14;
+  Money renewal_cost = 15;
+
+  string exam_url = 16;
+  bool is_active = 17;
+
+  AuditInfo audit_info = 18;
+}
+
+message CertificationList {
+  repeated Certification list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum CertificationType {
+  CERTIFICATION_TYPE_UNSPECIFIED = 0;
+  CERTIFICATION_TYPE_PROFESSIONAL = 1;
+  CERTIFICATION_TYPE_TECHNICAL = 2;
+  CERTIFICATION_TYPE_INDUSTRY = 3;
+  CERTIFICATION_TYPE_VENDOR = 4;
+  CERTIFICATION_TYPE_GOVERNMENT = 5;
+  CERTIFICATION_TYPE_INTERNAL = 6;
+}
+
+// @PrimeObject
+// EmployeeCertification represents an employee's certification record
+message EmployeeCertification {
+  string employee_certification_id = 1;
+  string employee_id = 2;
+  string certification_id = 3;
+  string certification_number = 4;
+  int64 issue_date = 5;
+  int64 expiration_date = 6;
+  CertificationStatus status = 7;
+  string document_id = 8;
+  string verified_by = 9;
+  int64 verified_date = 10;
+  bool is_verified = 11;
+  double ceu_credits_earned = 12;
+  string notes = 13;
+  AuditInfo audit_info = 14;
+}
+
+message EmployeeCertificationList {
+  repeated EmployeeCertification list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum CertificationStatus {
+  CERTIFICATION_STATUS_UNSPECIFIED = 0;
+  CERTIFICATION_STATUS_IN_PROGRESS = 1;
+  CERTIFICATION_STATUS_ACTIVE = 2;
+  CERTIFICATION_STATUS_EXPIRED = 3;
+  CERTIFICATION_STATUS_REVOKED = 4;
+  CERTIFICATION_STATUS_PENDING_RENEWAL = 5;
+}
+
+// @PrimeObject
+// Skill represents a skill definition
+message Skill {
+  string skill_id = 1;
+  string name = 2;
+  string code = 3;
+  string description = 4;
+  SkillCategory category = 5;
+  string skill_group_id = 6;
+  repeated SkillLevelDefinition levels = 7;
+  bool is_active = 8;
+  AuditInfo audit_info = 9;
+}
+
+message SkillList {
+  repeated Skill list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum SkillCategory {
+  SKILL_CATEGORY_UNSPECIFIED = 0;
+  SKILL_CATEGORY_TECHNICAL = 1;
+  SKILL_CATEGORY_SOFT_SKILL = 2;
+  SKILL_CATEGORY_LEADERSHIP = 3;
+  SKILL_CATEGORY_LANGUAGE = 4;
+  SKILL_CATEGORY_TOOL = 5;
+  SKILL_CATEGORY_DOMAIN = 6;
+  SKILL_CATEGORY_CERTIFICATION = 7;
+}
+
+message SkillLevelDefinition {
+  int32 level = 1;                   // 1-5 typically
+  string name = 2;                   // Beginner, Intermediate, etc.
+  string description = 3;
+}
+
+// @PrimeObject
+// EmployeeSkill represents an employee's skill inventory
+message EmployeeSkill {
+  string employee_skill_id = 1;
+  string employee_id = 2;
+  string skill_id = 3;
+  int32 proficiency_level = 4;       // 1-5 scale
+  int32 self_assessed_level = 5;
+  int32 manager_assessed_level = 6;
+  int32 years_of_experience = 7;
+  int64 last_used_date = 8;
+  int64 assessment_date = 9;
+  string assessed_by = 10;
+  bool is_primary_skill = 11;
+  bool wants_to_develop = 12;
+  string notes = 13;
+  AuditInfo audit_info = 14;
+}
+
+message EmployeeSkillList {
+  repeated EmployeeSkill list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// TrainingRecord for compliance training tracking
+message TrainingRecord {
+  string record_id = 1;
+  string employee_id = 2;
+  string course_id = 3;
+  string training_name = 4;
+  TrainingType training_type = 5;
+  int64 completed_date = 6;
+  int64 expiration_date = 7;
+  bool is_compliant = 8;
+  string compliance_requirement = 9;
+  int32 score = 10;
+  bool passed = 11;
+  string certificate_id = 12;
+  string document_id = 13;
+  string trainer_name = 14;
+  string location = 15;
+  double hours = 16;
+  string notes = 17;
+  AuditInfo audit_info = 18;
+}
+
+message TrainingRecordList {
+  repeated TrainingRecord list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum TrainingType {
+  TRAINING_TYPE_UNSPECIFIED = 0;
+  TRAINING_TYPE_COMPLIANCE = 1;
+  TRAINING_TYPE_SAFETY = 2;
+  TRAINING_TYPE_SECURITY = 3;
+  TRAINING_TYPE_HARASSMENT = 4;
+  TRAINING_TYPE_DIVERSITY = 5;
+  TRAINING_TYPE_ETHICS = 6;
+  TRAINING_TYPE_HIPAA = 7;
+  TRAINING_TYPE_GDPR = 8;
+  TRAINING_TYPE_SOX = 9;
+}

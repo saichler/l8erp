@@ -1,0 +1,424 @@
+syntax = "proto3";
+
+package hcm;
+
+option go_package = "./types/hcm";
+
+
+import "hcm-common.proto";
+import "api.proto";
+
+// ============================================================================
+// PAYROLL MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// PayStructure defines pay grades and salary scales
+message PayStructure {
+  string pay_structure_id = 1;
+  string organization_id = 2;
+  string name = 3;
+  string code = 4;
+  string description = 5;
+  string currency_code = 6;
+  PayFrequency pay_frequency = 7;
+  repeated PayGradeDefinition grades = 8;
+  int64 effective_date = 9;
+  int64 end_date = 10;
+  bool is_active = 11;
+  AuditInfo audit_info = 12;
+}
+
+message PayStructureList {
+  repeated PayStructure list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+message PayGradeDefinition {
+  string grade_code = 1;
+  string grade_name = 2;
+  int32 grade_level = 3;
+  Money minimum = 4;
+  Money midpoint = 5;
+  Money maximum = 6;
+  repeated PayStep steps = 7;  // For step-based pay systems
+}
+
+message PayStep {
+  int32 step_number = 1;
+  Money amount = 2;
+}
+
+// @PrimeObject
+// PayComponent represents an earning, deduction, or tax item
+message PayComponent {
+  string component_id = 1;
+  string organization_id = 2;
+  string code = 3;
+  string name = 4;
+  string description = 5;
+  PayComponentType component_type = 6;
+  PayComponentCategory category = 7;
+  CalculationType calculation_type = 8;
+  Money fixed_amount = 9;
+  double rate = 10;                    // For percentage-based
+  double hours_multiplier = 11;        // For hourly (e.g., 1.5 for overtime)
+  bool is_taxable = 12;
+  bool is_pre_tax = 13;
+  bool affects_overtime = 14;
+  bool is_active = 15;
+  int32 display_order = 16;
+  map<string, string> gl_accounts = 17;  // GL account mappings
+  AuditInfo audit_info = 18;
+}
+
+message PayComponentList {
+  repeated PayComponent list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum PayComponentType {
+  PAY_COMPONENT_TYPE_UNSPECIFIED = 0;
+  PAY_COMPONENT_TYPE_EARNING = 1;
+  PAY_COMPONENT_TYPE_DEDUCTION = 2;
+  PAY_COMPONENT_TYPE_TAX = 3;
+  PAY_COMPONENT_TYPE_EMPLOYER_CONTRIBUTION = 4;
+}
+
+enum PayComponentCategory {
+  PAY_COMPONENT_CATEGORY_UNSPECIFIED = 0;
+  // Earnings
+  PAY_COMPONENT_CATEGORY_REGULAR = 1;
+  PAY_COMPONENT_CATEGORY_OVERTIME = 2;
+  PAY_COMPONENT_CATEGORY_BONUS = 3;
+  PAY_COMPONENT_CATEGORY_COMMISSION = 4;
+  PAY_COMPONENT_CATEGORY_PTO = 5;
+  PAY_COMPONENT_CATEGORY_HOLIDAY = 6;
+  PAY_COMPONENT_CATEGORY_SICK = 7;
+  PAY_COMPONENT_CATEGORY_SHIFT_DIFFERENTIAL = 8;
+  PAY_COMPONENT_CATEGORY_TIPS = 9;
+  // Deductions
+  PAY_COMPONENT_CATEGORY_HEALTH_INSURANCE = 20;
+  PAY_COMPONENT_CATEGORY_DENTAL_INSURANCE = 21;
+  PAY_COMPONENT_CATEGORY_VISION_INSURANCE = 22;
+  PAY_COMPONENT_CATEGORY_LIFE_INSURANCE = 23;
+  PAY_COMPONENT_CATEGORY_RETIREMENT_401K = 24;
+  PAY_COMPONENT_CATEGORY_HSA = 25;
+  PAY_COMPONENT_CATEGORY_FSA = 26;
+  PAY_COMPONENT_CATEGORY_GARNISHMENT = 27;
+  PAY_COMPONENT_CATEGORY_UNION_DUES = 28;
+  PAY_COMPONENT_CATEGORY_LOAN_REPAYMENT = 29;
+  // Taxes
+  PAY_COMPONENT_CATEGORY_FEDERAL_TAX = 40;
+  PAY_COMPONENT_CATEGORY_STATE_TAX = 41;
+  PAY_COMPONENT_CATEGORY_LOCAL_TAX = 42;
+  PAY_COMPONENT_CATEGORY_SOCIAL_SECURITY = 43;
+  PAY_COMPONENT_CATEGORY_MEDICARE = 44;
+  PAY_COMPONENT_CATEGORY_FUTA = 45;
+  PAY_COMPONENT_CATEGORY_SUTA = 46;
+}
+
+enum CalculationType {
+  CALCULATION_TYPE_UNSPECIFIED = 0;
+  CALCULATION_TYPE_FIXED = 1;
+  CALCULATION_TYPE_PERCENTAGE = 2;
+  CALCULATION_TYPE_HOURLY = 3;
+  CALCULATION_TYPE_FORMULA = 4;
+}
+
+// @PrimeObject
+// PayrollRun represents a payroll processing batch
+message PayrollRun {
+  string payroll_run_id = 1;
+  string organization_id = 2;
+  string name = 3;
+  PayPeriod pay_period = 4;
+  PayrollRunStatus status = 5;
+  PayrollRunType run_type = 6;
+  int64 scheduled_date = 7;
+  int64 processing_date = 8;
+  int64 payment_date = 9;
+  int32 employee_count = 10;
+  Money total_gross = 11;
+  Money total_deductions = 12;
+  Money total_taxes = 13;
+  Money total_net = 14;
+  Money total_employer_cost = 15;
+  string processed_by = 16;
+  string approved_by = 17;
+  int64 approved_date = 18;
+  string notes = 19;
+  AuditInfo audit_info = 20;
+}
+
+message PayrollRunList {
+  repeated PayrollRun list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+message PayPeriod {
+  int64 start_date = 1;
+  int64 end_date = 2;
+  int32 period_number = 3;
+  int32 year = 4;
+}
+
+enum PayrollRunStatus {
+  PAYROLL_RUN_STATUS_UNSPECIFIED = 0;
+  PAYROLL_RUN_STATUS_DRAFT = 1;
+  PAYROLL_RUN_STATUS_PENDING_APPROVAL = 2;
+  PAYROLL_RUN_STATUS_APPROVED = 3;
+  PAYROLL_RUN_STATUS_PROCESSING = 4;
+  PAYROLL_RUN_STATUS_COMPLETED = 5;
+  PAYROLL_RUN_STATUS_CANCELLED = 6;
+  PAYROLL_RUN_STATUS_ERROR = 7;
+}
+
+enum PayrollRunType {
+  PAYROLL_RUN_TYPE_UNSPECIFIED = 0;
+  PAYROLL_RUN_TYPE_REGULAR = 1;
+  PAYROLL_RUN_TYPE_SUPPLEMENTAL = 2;
+  PAYROLL_RUN_TYPE_BONUS = 3;
+  PAYROLL_RUN_TYPE_CORRECTION = 4;
+  PAYROLL_RUN_TYPE_FINAL = 5;  // Final pay for terminations
+}
+
+// @PrimeObject
+// Payslip represents an individual employee's pay stub
+message Payslip {
+  string payslip_id = 1;
+  string payroll_run_id = 2;
+  string employee_id = 3;
+  PayPeriod pay_period = 4;
+  int64 payment_date = 5;
+
+  // Hours
+  double regular_hours = 6;
+  double overtime_hours = 7;
+  double pto_hours = 8;
+  double holiday_hours = 9;
+  double other_hours = 10;
+  double total_hours = 11;
+
+  // Pay details
+  repeated PayslipLine earnings = 12;
+  repeated PayslipLine deductions = 13;
+  repeated PayslipLine taxes = 14;
+  repeated PayslipLine employer_contributions = 15;
+
+  // Totals
+  Money gross_pay = 16;
+  Money total_deductions = 17;
+  Money total_taxes = 18;
+  Money net_pay = 19;
+
+  // Year-to-date
+  Money ytd_gross = 20;
+  Money ytd_deductions = 21;
+  Money ytd_taxes = 22;
+  Money ytd_net = 23;
+
+  // Payment info
+  repeated PaymentDistribution distributions = 24;
+
+  AuditInfo audit_info = 25;
+}
+
+message PayslipList {
+  repeated Payslip list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+message PayslipLine {
+  string component_id = 1;
+  string code = 2;
+  string description = 3;
+  double hours = 4;
+  double rate = 5;
+  Money current_amount = 6;
+  Money ytd_amount = 7;
+}
+
+message PaymentDistribution {
+  string direct_deposit_id = 1;
+  PaymentMethod payment_method = 2;
+  Money amount = 3;
+  double percentage = 4;
+}
+
+enum PaymentMethod {
+  PAYMENT_METHOD_UNSPECIFIED = 0;
+  PAYMENT_METHOD_DIRECT_DEPOSIT = 1;
+  PAYMENT_METHOD_CHECK = 2;
+  PAYMENT_METHOD_CASH = 3;
+  PAYMENT_METHOD_PAYCARD = 4;
+}
+
+message TaxWithholdingList {
+  repeated TaxWithholding list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// TaxWithholding represents employee tax elections
+message TaxWithholding {
+  string withholding_id = 1;
+  string employee_id = 2;
+  TaxType tax_type = 3;
+  string tax_jurisdiction = 4;       // Federal, state code, locality
+  string form_version = 5;           // W-4 2020, W-4 2019, etc.
+  FilingStatus filing_status = 6;
+  int32 allowances = 7;              // Old W-4 style
+  bool use_new_w4 = 8;               // 2020+ W-4
+  Money additional_withholding = 9;
+  bool exempt = 10;
+  int64 effective_date = 11;
+  int64 signed_date = 12;
+  map<string, string> form_data = 13;  // Form-specific fields
+  AuditInfo audit_info = 14;
+}
+
+enum TaxType {
+  TAX_TYPE_UNSPECIFIED = 0;
+  TAX_TYPE_FEDERAL_INCOME = 1;
+  TAX_TYPE_STATE_INCOME = 2;
+  TAX_TYPE_LOCAL_INCOME = 3;
+  TAX_TYPE_SOCIAL_SECURITY = 4;
+  TAX_TYPE_MEDICARE = 5;
+}
+
+enum FilingStatus {
+  FILING_STATUS_UNSPECIFIED = 0;
+  FILING_STATUS_SINGLE = 1;
+  FILING_STATUS_MARRIED_FILING_JOINTLY = 2;
+  FILING_STATUS_MARRIED_FILING_SEPARATELY = 3;
+  FILING_STATUS_HEAD_OF_HOUSEHOLD = 4;
+  FILING_STATUS_QUALIFYING_WIDOW = 5;
+}
+
+message DirectDepositList {
+  repeated DirectDeposit list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// DirectDeposit represents bank account information for payment
+message DirectDeposit {
+  string direct_deposit_id = 1;
+  string employee_id = 2;
+  string account_name = 3;
+  string bank_name = 4;
+  string routing_number = 5;
+  string account_number_masked = 6;  // Only last 4 digits
+  AccountType account_type = 7;
+  DepositType deposit_type = 8;
+  Money fixed_amount = 9;
+  double percentage = 10;
+  int32 priority = 11;               // Order for multiple accounts
+  bool is_active = 12;
+  bool is_prenote_complete = 13;     // Pre-notification verified
+  int64 effective_date = 14;
+  AuditInfo audit_info = 15;
+}
+
+enum AccountType {
+  ACCOUNT_TYPE_UNSPECIFIED = 0;
+  ACCOUNT_TYPE_CHECKING = 1;
+  ACCOUNT_TYPE_SAVINGS = 2;
+}
+
+enum DepositType {
+  DEPOSIT_TYPE_UNSPECIFIED = 0;
+  DEPOSIT_TYPE_FULL = 1;         // Remainder after other deposits
+  DEPOSIT_TYPE_FIXED = 2;        // Fixed dollar amount
+  DEPOSIT_TYPE_PERCENTAGE = 3;   // Percentage of net
+}
+
+message GarnishmentList {
+  repeated Garnishment list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// Garnishment represents court-ordered deductions
+message Garnishment {
+  string garnishment_id = 1;
+  string employee_id = 2;
+  GarnishmentType garnishment_type = 3;
+  string case_number = 4;
+  string issuing_authority = 5;
+  string payee_name = 6;
+  string payee_address = 7;
+  Money total_amount_owed = 8;
+  Money amount_per_period = 9;
+  double percentage = 10;
+  Money maximum_percentage = 11;     // Disposable income limit
+  Money amount_paid_to_date = 12;
+  int64 start_date = 13;
+  int64 end_date = 14;
+  int32 priority = 15;               // Processing order
+  GarnishmentStatus status = 16;
+  string document_id = 17;           // Link to court order document
+  string notes = 18;
+  AuditInfo audit_info = 19;
+}
+
+enum GarnishmentType {
+  GARNISHMENT_TYPE_UNSPECIFIED = 0;
+  GARNISHMENT_TYPE_CHILD_SUPPORT = 1;
+  GARNISHMENT_TYPE_SPOUSAL_SUPPORT = 2;
+  GARNISHMENT_TYPE_TAX_LEVY = 3;
+  GARNISHMENT_TYPE_CREDITOR = 4;
+  GARNISHMENT_TYPE_STUDENT_LOAN = 5;
+  GARNISHMENT_TYPE_BANKRUPTCY = 6;
+}
+
+enum GarnishmentStatus {
+  GARNISHMENT_STATUS_UNSPECIFIED = 0;
+  GARNISHMENT_STATUS_ACTIVE = 1;
+  GARNISHMENT_STATUS_SUSPENDED = 2;
+  GARNISHMENT_STATUS_COMPLETED = 3;
+  GARNISHMENT_STATUS_CANCELLED = 4;
+}
+
+message YearEndDocumentList {
+  repeated YearEndDocument list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// YearEndDocument represents W-2, T4, and other year-end tax documents
+message YearEndDocument {
+  string document_id = 1;
+  string employee_id = 2;
+  int32 tax_year = 3;
+  YearEndDocumentType document_type = 4;
+  string organization_id = 5;
+  YearEndDocumentStatus status = 6;
+  int64 generated_date = 7;
+  int64 issued_date = 8;
+  int64 corrected_date = 9;
+  bool is_corrected = 10;
+  string original_document_id = 11;  // If correction
+  string file_url = 12;
+  map<string, string> box_data = 13; // Box values (W-2 boxes, etc.)
+  AuditInfo audit_info = 14;
+}
+
+enum YearEndDocumentType {
+  YEAR_END_DOCUMENT_TYPE_UNSPECIFIED = 0;
+  YEAR_END_DOCUMENT_TYPE_W2 = 1;
+  YEAR_END_DOCUMENT_TYPE_W2C = 2;
+  YEAR_END_DOCUMENT_TYPE_1099_MISC = 3;
+  YEAR_END_DOCUMENT_TYPE_1099_NEC = 4;
+  YEAR_END_DOCUMENT_TYPE_T4 = 5;     // Canada
+  YEAR_END_DOCUMENT_TYPE_T4A = 6;    // Canada
+}
+
+enum YearEndDocumentStatus {
+  YEAR_END_DOCUMENT_STATUS_UNSPECIFIED = 0;
+  YEAR_END_DOCUMENT_STATUS_DRAFT = 1;
+  YEAR_END_DOCUMENT_STATUS_GENERATED = 2;
+  YEAR_END_DOCUMENT_STATUS_ISSUED = 3;
+  YEAR_END_DOCUMENT_STATUS_FILED = 4;
+}

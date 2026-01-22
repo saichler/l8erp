@@ -1,0 +1,673 @@
+syntax = "proto3";
+
+package hcm;
+
+option go_package = "./types/hcm";
+
+
+import "hcm-common.proto";
+import "api.proto";
+
+// ============================================================================
+// TALENT MANAGEMENT MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// JobRequisition represents an open position to be filled
+message JobRequisition {
+  string requisition_id = 1;
+  string organization_id = 2;
+  string department_id = 3;
+  string position_id = 4;
+  string job_id = 5;
+  string requisition_number = 6;
+  string title = 7;
+  string description = 8;
+  RequisitionStatus status = 9;
+  RequisitionType requisition_type = 10;
+
+  // Hiring details
+  int32 openings = 11;
+  int32 filled_count = 12;
+  int64 target_start_date = 13;
+  EmploymentType employment_type = 14;
+  string work_location_id = 15;
+  bool is_remote = 16;
+
+  // Compensation
+  Money salary_min = 17;
+  Money salary_max = 18;
+  string pay_grade_code = 19;
+
+  // Recruiting
+  string hiring_manager_id = 20;
+  string recruiter_id = 21;
+  repeated string interview_team_ids = 22;
+
+  // Posting
+  bool is_posted_internal = 23;
+  bool is_posted_external = 24;
+  repeated string job_board_ids = 25;
+  int64 posted_date = 26;
+  int64 close_date = 27;
+
+  // Counts
+  int32 applicant_count = 28;
+  int32 interview_count = 29;
+  int32 offer_count = 30;
+
+  string notes = 31;
+  map<string, string> custom_fields = 32;
+  AuditInfo audit_info = 33;
+}
+
+message JobRequisitionList {
+  repeated JobRequisition list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum RequisitionStatus {
+  REQUISITION_STATUS_UNSPECIFIED = 0;
+  REQUISITION_STATUS_DRAFT = 1;
+  REQUISITION_STATUS_PENDING_APPROVAL = 2;
+  REQUISITION_STATUS_APPROVED = 3;
+  REQUISITION_STATUS_OPEN = 4;
+  REQUISITION_STATUS_ON_HOLD = 5;
+  REQUISITION_STATUS_FILLED = 6;
+  REQUISITION_STATUS_CANCELLED = 7;
+  REQUISITION_STATUS_CLOSED = 8;
+}
+
+enum RequisitionType {
+  REQUISITION_TYPE_UNSPECIFIED = 0;
+  REQUISITION_TYPE_NEW_POSITION = 1;
+  REQUISITION_TYPE_REPLACEMENT = 2;
+  REQUISITION_TYPE_EXPANSION = 3;
+  REQUISITION_TYPE_TEMPORARY = 4;
+  REQUISITION_TYPE_INTERN = 5;
+}
+
+// @PrimeObject
+// Applicant represents a job applicant
+message Applicant {
+  string applicant_id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string email = 4;
+  string phone = 5;
+  Address address = 6;
+  string linkedin_url = 7;
+  string portfolio_url = 8;
+
+  // Application source
+  ApplicantSource source = 9;
+  string source_details = 10;
+  string referrer_employee_id = 11;
+
+  // Documents
+  string resume_url = 12;
+  string cover_letter_url = 13;
+  repeated string document_ids = 14;
+
+  // Qualifications
+  repeated ApplicantEducation education = 15;
+  repeated ApplicantExperience experience = 16;
+  repeated string skills = 17;
+
+  // EEO data (optional, for compliance)
+  Gender gender = 18;
+  string ethnicity = 19;
+  bool is_veteran = 20;
+  bool is_disabled = 21;
+
+  int64 created_date = 22;
+  map<string, string> custom_fields = 23;
+  AuditInfo audit_info = 24;
+}
+
+message ApplicantList {
+  repeated Applicant list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum ApplicantSource {
+  APPLICANT_SOURCE_UNSPECIFIED = 0;
+  APPLICANT_SOURCE_CAREER_SITE = 1;
+  APPLICANT_SOURCE_LINKEDIN = 2;
+  APPLICANT_SOURCE_INDEED = 3;
+  APPLICANT_SOURCE_GLASSDOOR = 4;
+  APPLICANT_SOURCE_REFERRAL = 5;
+  APPLICANT_SOURCE_AGENCY = 6;
+  APPLICANT_SOURCE_UNIVERSITY = 7;
+  APPLICANT_SOURCE_JOB_FAIR = 8;
+  APPLICANT_SOURCE_INTERNAL = 9;
+  APPLICANT_SOURCE_OTHER = 10;
+}
+
+message ApplicantEducation {
+  string institution = 1;
+  string degree = 2;
+  string field_of_study = 3;
+  int64 graduation_date = 4;
+  double gpa = 5;
+}
+
+message ApplicantExperience {
+  string company = 1;
+  string title = 2;
+  int64 start_date = 3;
+  int64 end_date = 4;
+  bool is_current = 5;
+  string description = 6;
+}
+
+// @PrimeObject
+// Application represents a job application
+message Application {
+  string application_id = 1;
+  string applicant_id = 2;
+  string requisition_id = 3;
+  ApplicationStatus status = 4;
+  ApplicationStage stage = 5;
+  int64 applied_date = 6;
+
+  // Screening
+  int32 screening_score = 7;
+  bool passed_screening = 8;
+
+  // Interviews
+  repeated Interview interviews = 9;
+
+  // Offer
+  string offer_id = 10;
+
+  // Disposition
+  DispositionReason disposition_reason = 11;
+  int64 disposition_date = 12;
+
+  // Rating
+  double overall_rating = 13;
+
+  string notes = 14;
+  map<string, string> custom_fields = 15;
+  AuditInfo audit_info = 16;
+}
+
+message ApplicationList {
+  repeated Application list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum ApplicationStatus {
+  APPLICATION_STATUS_UNSPECIFIED = 0;
+  APPLICATION_STATUS_NEW = 1;
+  APPLICATION_STATUS_IN_REVIEW = 2;
+  APPLICATION_STATUS_INTERVIEWING = 3;
+  APPLICATION_STATUS_OFFER_PENDING = 4;
+  APPLICATION_STATUS_OFFER_EXTENDED = 5;
+  APPLICATION_STATUS_HIRED = 6;
+  APPLICATION_STATUS_REJECTED = 7;
+  APPLICATION_STATUS_WITHDRAWN = 8;
+}
+
+enum ApplicationStage {
+  APPLICATION_STAGE_UNSPECIFIED = 0;
+  APPLICATION_STAGE_SCREENING = 1;
+  APPLICATION_STAGE_PHONE_SCREEN = 2;
+  APPLICATION_STAGE_INTERVIEW_1 = 3;
+  APPLICATION_STAGE_INTERVIEW_2 = 4;
+  APPLICATION_STAGE_INTERVIEW_FINAL = 5;
+  APPLICATION_STAGE_REFERENCE_CHECK = 6;
+  APPLICATION_STAGE_BACKGROUND_CHECK = 7;
+  APPLICATION_STAGE_OFFER = 8;
+  APPLICATION_STAGE_CLOSED = 9;
+}
+
+enum DispositionReason {
+  DISPOSITION_REASON_UNSPECIFIED = 0;
+  DISPOSITION_REASON_UNDER_QUALIFIED = 1;
+  DISPOSITION_REASON_OVER_QUALIFIED = 2;
+  DISPOSITION_REASON_BETTER_CANDIDATE = 3;
+  DISPOSITION_REASON_COMPENSATION_MISMATCH = 4;
+  DISPOSITION_REASON_FAILED_INTERVIEW = 5;
+  DISPOSITION_REASON_FAILED_BACKGROUND = 6;
+  DISPOSITION_REASON_WITHDREW = 7;
+  DISPOSITION_REASON_DECLINED_OFFER = 8;
+  DISPOSITION_REASON_POSITION_FILLED = 9;
+  DISPOSITION_REASON_POSITION_CANCELLED = 10;
+  DISPOSITION_REASON_NO_SHOW = 11;
+}
+
+message Interview {
+  string interview_id = 1;
+  string application_id = 2;
+  InterviewType interview_type = 3;
+  int64 scheduled_date = 4;
+  int32 duration_minutes = 5;
+  string location = 6;
+  string video_link = 7;
+  repeated string interviewer_ids = 8;
+  InterviewStatus status = 9;
+  repeated InterviewFeedback feedback = 10;
+  AuditInfo audit_info = 11;
+}
+
+enum InterviewType {
+  INTERVIEW_TYPE_UNSPECIFIED = 0;
+  INTERVIEW_TYPE_PHONE = 1;
+  INTERVIEW_TYPE_VIDEO = 2;
+  INTERVIEW_TYPE_IN_PERSON = 3;
+  INTERVIEW_TYPE_PANEL = 4;
+  INTERVIEW_TYPE_TECHNICAL = 5;
+  INTERVIEW_TYPE_CASE_STUDY = 6;
+}
+
+enum InterviewStatus {
+  INTERVIEW_STATUS_UNSPECIFIED = 0;
+  INTERVIEW_STATUS_SCHEDULED = 1;
+  INTERVIEW_STATUS_CONFIRMED = 2;
+  INTERVIEW_STATUS_COMPLETED = 3;
+  INTERVIEW_STATUS_CANCELLED = 4;
+  INTERVIEW_STATUS_NO_SHOW = 5;
+  INTERVIEW_STATUS_RESCHEDULED = 6;
+}
+
+message InterviewFeedback {
+  string feedback_id = 1;
+  string interviewer_id = 2;
+  int32 overall_rating = 3;          // 1-5
+  string recommendation = 4;          // Hire, No Hire, etc.
+  string strengths = 5;
+  string weaknesses = 6;
+  string notes = 7;
+  int64 submitted_date = 8;
+}
+
+// @PrimeObject
+// OnboardingTask represents an onboarding checklist item
+message OnboardingTask {
+  string task_id = 1;
+  string employee_id = 2;
+  string template_id = 3;            // Link to task template
+  string name = 4;
+  string description = 5;
+  OnboardingTaskCategory category = 6;
+  string assigned_to = 7;            // Employee ID of person responsible
+  TaskOwner owner_type = 8;
+  int64 due_date = 9;
+  int64 completed_date = 10;
+  OnboardingTaskStatus status = 11;
+  int32 sequence_order = 12;
+  repeated string prerequisite_task_ids = 13;
+  repeated string document_ids = 14;
+  string form_id = 15;               // If task requires a form
+  string notes = 16;
+  AuditInfo audit_info = 17;
+}
+
+message OnboardingTaskList {
+  repeated OnboardingTask list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum OnboardingTaskCategory {
+  ONBOARDING_TASK_CATEGORY_UNSPECIFIED = 0;
+  ONBOARDING_TASK_CATEGORY_PAPERWORK = 1;
+  ONBOARDING_TASK_CATEGORY_IT_SETUP = 2;
+  ONBOARDING_TASK_CATEGORY_EQUIPMENT = 3;
+  ONBOARDING_TASK_CATEGORY_TRAINING = 4;
+  ONBOARDING_TASK_CATEGORY_BENEFITS = 5;
+  ONBOARDING_TASK_CATEGORY_COMPLIANCE = 6;
+  ONBOARDING_TASK_CATEGORY_INTRODUCTION = 7;
+  ONBOARDING_TASK_CATEGORY_ORIENTATION = 8;
+}
+
+enum TaskOwner {
+  TASK_OWNER_UNSPECIFIED = 0;
+  TASK_OWNER_EMPLOYEE = 1;
+  TASK_OWNER_MANAGER = 2;
+  TASK_OWNER_HR = 3;
+  TASK_OWNER_IT = 4;
+  TASK_OWNER_PAYROLL = 5;
+  TASK_OWNER_FACILITIES = 6;
+}
+
+enum OnboardingTaskStatus {
+  ONBOARDING_TASK_STATUS_UNSPECIFIED = 0;
+  ONBOARDING_TASK_STATUS_NOT_STARTED = 1;
+  ONBOARDING_TASK_STATUS_IN_PROGRESS = 2;
+  ONBOARDING_TASK_STATUS_COMPLETED = 3;
+  ONBOARDING_TASK_STATUS_SKIPPED = 4;
+  ONBOARDING_TASK_STATUS_BLOCKED = 5;
+}
+
+// @PrimeObject
+// PerformanceReview represents a performance evaluation
+message PerformanceReview {
+  string review_id = 1;
+  string employee_id = 2;
+  string reviewer_id = 3;
+  ReviewCycle review_cycle = 4;
+  DateRange review_period = 5;
+  PerformanceReviewStatus status = 6;
+  ReviewType review_type = 7;
+
+  // Ratings
+  repeated CompetencyRating competencies = 8;
+  repeated GoalRating goals = 9;
+  int32 overall_rating = 10;         // 1-5 scale
+  string overall_rating_label = 11;  // Exceeds, Meets, etc.
+
+  // Comments
+  string employee_comments = 12;
+  string manager_comments = 13;
+  string summary = 14;
+
+  // Development
+  string development_plan = 15;
+  repeated string training_recommendations = 16;
+
+  // Acknowledgment
+  int64 employee_acknowledged_date = 17;
+  int64 manager_submitted_date = 18;
+  string hr_reviewer_id = 19;
+  int64 hr_approved_date = 20;
+
+  // Calibration
+  bool is_calibrated = 21;
+  string calibration_notes = 22;
+
+  map<string, string> custom_fields = 23;
+  AuditInfo audit_info = 24;
+}
+
+message PerformanceReviewList {
+  repeated PerformanceReview list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+message ReviewCycle {
+  string cycle_id = 1;
+  string name = 2;
+  int32 year = 3;
+  DateRange period = 4;
+}
+
+enum PerformanceReviewStatus {
+  PERFORMANCE_REVIEW_STATUS_UNSPECIFIED = 0;
+  PERFORMANCE_REVIEW_STATUS_NOT_STARTED = 1;
+  PERFORMANCE_REVIEW_STATUS_SELF_REVIEW = 2;
+  PERFORMANCE_REVIEW_STATUS_MANAGER_REVIEW = 3;
+  PERFORMANCE_REVIEW_STATUS_CALIBRATION = 4;
+  PERFORMANCE_REVIEW_STATUS_HR_REVIEW = 5;
+  PERFORMANCE_REVIEW_STATUS_ACKNOWLEDGMENT = 6;
+  PERFORMANCE_REVIEW_STATUS_COMPLETED = 7;
+}
+
+enum ReviewType {
+  REVIEW_TYPE_UNSPECIFIED = 0;
+  REVIEW_TYPE_ANNUAL = 1;
+  REVIEW_TYPE_SEMI_ANNUAL = 2;
+  REVIEW_TYPE_QUARTERLY = 3;
+  REVIEW_TYPE_PROBATIONARY = 4;
+  REVIEW_TYPE_PROJECT = 5;
+  REVIEW_TYPE_AD_HOC = 6;
+}
+
+message CompetencyRating {
+  string competency_id = 1;
+  string competency_name = 2;
+  int32 rating = 3;
+  string rating_label = 4;
+  string comments = 5;
+}
+
+message GoalRating {
+  string goal_id = 1;
+  string goal_name = 2;
+  int32 rating = 3;
+  string rating_label = 4;
+  double completion_percentage = 5;
+  string comments = 6;
+}
+
+// @PrimeObject
+// Goal represents an employee goal
+message Goal {
+  string goal_id = 1;
+  string employee_id = 2;
+  string parent_goal_id = 3;         // For cascading goals
+  string title = 4;
+  string description = 5;
+  GoalType goal_type = 6;
+  GoalCategory goal_category = 7;
+  GoalStatus status = 8;
+  GoalPriority priority = 9;
+
+  // Dates
+  int64 start_date = 10;
+  int64 due_date = 11;
+  int64 completed_date = 12;
+
+  // Progress
+  double completion_percentage = 13;
+  double weight = 14;                // For weighted goals
+
+  // Key results (OKR style)
+  repeated KeyResult key_results = 15;
+
+  // Alignment
+  repeated string aligned_goal_ids = 16;
+
+  // Comments
+  repeated GoalComment comments = 17;
+
+  // Review link
+  string review_id = 18;
+
+  map<string, string> custom_fields = 19;
+  AuditInfo audit_info = 20;
+}
+
+message GoalList {
+  repeated Goal list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum GoalType {
+  GOAL_TYPE_UNSPECIFIED = 0;
+  GOAL_TYPE_INDIVIDUAL = 1;
+  GOAL_TYPE_TEAM = 2;
+  GOAL_TYPE_DEPARTMENT = 3;
+  GOAL_TYPE_COMPANY = 4;
+}
+
+enum GoalCategory {
+  GOAL_CATEGORY_UNSPECIFIED = 0;
+  GOAL_CATEGORY_PERFORMANCE = 1;
+  GOAL_CATEGORY_DEVELOPMENT = 2;
+  GOAL_CATEGORY_CAREER = 3;
+  GOAL_CATEGORY_PROJECT = 4;
+}
+
+enum GoalStatus {
+  GOAL_STATUS_UNSPECIFIED = 0;
+  GOAL_STATUS_DRAFT = 1;
+  GOAL_STATUS_ACTIVE = 2;
+  GOAL_STATUS_ON_TRACK = 3;
+  GOAL_STATUS_AT_RISK = 4;
+  GOAL_STATUS_BEHIND = 5;
+  GOAL_STATUS_COMPLETED = 6;
+  GOAL_STATUS_CANCELLED = 7;
+}
+
+enum GoalPriority {
+  GOAL_PRIORITY_UNSPECIFIED = 0;
+  GOAL_PRIORITY_LOW = 1;
+  GOAL_PRIORITY_MEDIUM = 2;
+  GOAL_PRIORITY_HIGH = 3;
+  GOAL_PRIORITY_CRITICAL = 4;
+}
+
+message KeyResult {
+  string key_result_id = 1;
+  string description = 2;
+  double target_value = 3;
+  double current_value = 4;
+  string unit = 5;
+  double completion_percentage = 6;
+}
+
+message GoalComment {
+  string comment_id = 1;
+  string author_id = 2;
+  string content = 3;
+  int64 created_date = 4;
+}
+
+// @PrimeObject
+// SuccessionPlan for succession planning
+message SuccessionPlan {
+  string plan_id = 1;
+  string position_id = 2;            // Key position being planned for
+  string incumbent_id = 3;           // Current holder
+  SuccessionPlanStatus status = 4;
+  RiskLevel vacancy_risk = 5;
+  string impact_assessment = 6;
+
+  repeated SuccessionCandidate candidates = 7;
+
+  int64 review_date = 8;
+  int64 next_review_date = 9;
+  string notes = 10;
+  AuditInfo audit_info = 11;
+}
+
+message SuccessionPlanList {
+  repeated SuccessionPlan list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum SuccessionPlanStatus {
+  SUCCESSION_PLAN_STATUS_UNSPECIFIED = 0;
+  SUCCESSION_PLAN_STATUS_DRAFT = 1;
+  SUCCESSION_PLAN_STATUS_ACTIVE = 2;
+  SUCCESSION_PLAN_STATUS_ON_HOLD = 3;
+  SUCCESSION_PLAN_STATUS_CLOSED = 4;
+}
+
+enum RiskLevel {
+  RISK_LEVEL_UNSPECIFIED = 0;
+  RISK_LEVEL_LOW = 1;
+  RISK_LEVEL_MEDIUM = 2;
+  RISK_LEVEL_HIGH = 3;
+  RISK_LEVEL_CRITICAL = 4;
+}
+
+message SuccessionCandidate {
+  string employee_id = 1;
+  ReadinessLevel readiness = 2;
+  string development_needs = 3;
+  repeated string development_actions = 4;
+  int32 ranking = 5;
+  string notes = 6;
+}
+
+enum ReadinessLevel {
+  READINESS_LEVEL_UNSPECIFIED = 0;
+  READINESS_LEVEL_READY_NOW = 1;
+  READINESS_LEVEL_READY_1_YEAR = 2;
+  READINESS_LEVEL_READY_2_YEARS = 3;
+  READINESS_LEVEL_READY_3_PLUS_YEARS = 4;
+}
+
+// @PrimeObject
+// CareerPath represents career development paths
+message CareerPath {
+  string career_path_id = 1;
+  string name = 2;
+  string description = 3;
+  string job_family_id = 4;
+  repeated CareerPathStep steps = 5;
+  bool is_active = 6;
+  AuditInfo audit_info = 7;
+}
+
+message CareerPathList {
+  repeated CareerPath list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+message CareerPathStep {
+  int32 step_order = 1;
+  string job_id = 2;
+  string job_title = 3;
+  string job_level = 4;
+  repeated string required_skills = 5;
+  repeated string required_certifications = 6;
+  string experience_requirement = 7;
+  int32 typical_tenure_months = 8;
+}
+
+// @PrimeObject
+// Feedback for 360-degree feedback
+message Feedback {
+  string feedback_id = 1;
+  string employee_id = 2;            // Employee receiving feedback
+  string provider_id = 3;            // Employee giving feedback
+  FeedbackType feedback_type = 4;
+  string review_cycle_id = 5;
+  FeedbackRelationship relationship = 6;
+  FeedbackStatus status = 7;
+
+  repeated FeedbackQuestion responses = 8;
+
+  string general_comments = 9;
+  bool is_anonymous = 10;
+
+  int64 requested_date = 11;
+  int64 due_date = 12;
+  int64 submitted_date = 13;
+
+  AuditInfo audit_info = 14;
+}
+
+message FeedbackList {
+  repeated Feedback list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum FeedbackType {
+  FEEDBACK_TYPE_UNSPECIFIED = 0;
+  FEEDBACK_TYPE_360_REVIEW = 1;
+  FEEDBACK_TYPE_PEER = 2;
+  FEEDBACK_TYPE_UPWARD = 3;
+  FEEDBACK_TYPE_CONTINUOUS = 4;
+  FEEDBACK_TYPE_RECOGNITION = 5;
+}
+
+enum FeedbackRelationship {
+  FEEDBACK_RELATIONSHIP_UNSPECIFIED = 0;
+  FEEDBACK_RELATIONSHIP_MANAGER = 1;
+  FEEDBACK_RELATIONSHIP_PEER = 2;
+  FEEDBACK_RELATIONSHIP_DIRECT_REPORT = 3;
+  FEEDBACK_RELATIONSHIP_SKIP_LEVEL = 4;
+  FEEDBACK_RELATIONSHIP_CROSS_FUNCTIONAL = 5;
+  FEEDBACK_RELATIONSHIP_EXTERNAL = 6;
+}
+
+enum FeedbackStatus {
+  FEEDBACK_STATUS_UNSPECIFIED = 0;
+  FEEDBACK_STATUS_REQUESTED = 1;
+  FEEDBACK_STATUS_IN_PROGRESS = 2;
+  FEEDBACK_STATUS_SUBMITTED = 3;
+  FEEDBACK_STATUS_DECLINED = 4;
+}
+
+message FeedbackQuestion {
+  string question_id = 1;
+  string question_text = 2;
+  string response_type = 3;          // rating, text, choice
+  int32 rating_response = 4;
+  string text_response = 5;
+}

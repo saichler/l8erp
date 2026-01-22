@@ -1,0 +1,142 @@
+syntax = "proto3";
+
+package hcm;
+
+option go_package = "./types/hcm";
+
+
+
+// ============================================================================
+// COMMON/SHARED TYPES
+// ============================================================================
+
+// Money represents a monetary amount with currency
+message Money {
+  int64 amount = 1;          // Amount in smallest currency unit (e.g., cents)
+  string currency_code = 2;  // ISO 4217 currency code (e.g., "USD", "EUR")
+}
+
+// DateRange represents a start and end date pair
+message DateRange {
+  int64 start_date = 1;
+  int64 end_date = 2;
+}
+
+// AuditInfo tracks creation and modification metadata
+message AuditInfo {
+  int64 created_at = 1;
+  string created_by = 2;
+  int64 modified_at = 3;
+  string modified_by = 4;
+}
+
+// Address represents a physical or mailing address
+message Address {
+  string address_id = 1;
+  AddressType address_type = 2;
+  string line1 = 3;
+  string line2 = 4;
+  string city = 5;
+  string state_province = 6;
+  string postal_code = 7;
+  string country_code = 8;  // ISO 3166-1 alpha-2
+  bool is_primary = 9;
+}
+
+enum AddressType {
+  ADDRESS_TYPE_UNSPECIFIED = 0;
+  ADDRESS_TYPE_HOME = 1;
+  ADDRESS_TYPE_WORK = 2;
+  ADDRESS_TYPE_MAILING = 3;
+  ADDRESS_TYPE_BILLING = 4;
+}
+
+// ContactInfo represents various contact methods
+message ContactInfo {
+  string contact_id = 1;
+  ContactType contact_type = 2;
+  string value = 3;          // Phone number, email, etc.
+  bool is_primary = 4;
+  bool is_verified = 5;
+}
+
+enum ContactType {
+  CONTACT_TYPE_UNSPECIFIED = 0;
+  CONTACT_TYPE_PHONE_MOBILE = 1;
+  CONTACT_TYPE_PHONE_HOME = 2;
+  CONTACT_TYPE_PHONE_WORK = 3;
+  CONTACT_TYPE_EMAIL_PERSONAL = 4;
+  CONTACT_TYPE_EMAIL_WORK = 5;
+  CONTACT_TYPE_FAX = 6;
+}
+
+// EmergencyContact represents an employee's emergency contact
+message EmergencyContact {
+  string contact_id = 1;
+  string name = 2;
+  string relationship = 3;
+  string phone_primary = 4;
+  string phone_secondary = 5;
+  string email = 6;
+  Address address = 7;
+  int32 priority = 8;  // 1 = primary, 2 = secondary, etc.
+}
+
+// Common enums
+enum Gender {
+  GENDER_UNSPECIFIED = 0;
+  GENDER_MALE = 1;
+  GENDER_FEMALE = 2;
+  GENDER_NON_BINARY = 3;
+  GENDER_OTHER = 4;
+  GENDER_PREFER_NOT_TO_SAY = 5;
+}
+
+enum MaritalStatus {
+  MARITAL_STATUS_UNSPECIFIED = 0;
+  MARITAL_STATUS_SINGLE = 1;
+  MARITAL_STATUS_MARRIED = 2;
+  MARITAL_STATUS_DIVORCED = 3;
+  MARITAL_STATUS_WIDOWED = 4;
+  MARITAL_STATUS_DOMESTIC_PARTNERSHIP = 5;
+  MARITAL_STATUS_SEPARATED = 6;
+}
+
+enum EmploymentType {
+  EMPLOYMENT_TYPE_UNSPECIFIED = 0;
+  EMPLOYMENT_TYPE_FULL_TIME = 1;
+  EMPLOYMENT_TYPE_PART_TIME = 2;
+  EMPLOYMENT_TYPE_CONTRACT = 3;
+  EMPLOYMENT_TYPE_TEMPORARY = 4;
+  EMPLOYMENT_TYPE_INTERN = 5;
+  EMPLOYMENT_TYPE_SEASONAL = 6;
+  EMPLOYMENT_TYPE_CONSULTANT = 7;
+}
+
+enum PayFrequency {
+  PAY_FREQUENCY_UNSPECIFIED = 0;
+  PAY_FREQUENCY_WEEKLY = 1;
+  PAY_FREQUENCY_BI_WEEKLY = 2;
+  PAY_FREQUENCY_SEMI_MONTHLY = 3;
+  PAY_FREQUENCY_MONTHLY = 4;
+  PAY_FREQUENCY_ANNUALLY = 5;
+}
+
+// EligibilityRules for benefits and other programs
+message EligibilityRules {
+  repeated EmploymentType eligible_employment_types = 1;
+  int32 waiting_period_days = 2;
+  double minimum_hours_per_week = 3;
+  repeated string eligible_job_ids = 4;
+  repeated string eligible_department_ids = 5;
+  repeated string eligible_organization_ids = 6;
+  string custom_rule_expression = 7;
+}
+
+enum VerificationStatus {
+  VERIFICATION_STATUS_UNSPECIFIED = 0;
+  VERIFICATION_STATUS_PENDING = 1;
+  VERIFICATION_STATUS_VERIFIED = 2;
+  VERIFICATION_STATUS_REJECTED = 3;
+  VERIFICATION_STATUS_EXPIRED = 4;
+}

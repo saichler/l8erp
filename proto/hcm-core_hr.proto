@@ -1,0 +1,314 @@
+syntax = "proto3";
+
+package hcm;
+
+option go_package = "./types/hcm";
+
+
+import "hcm-common.proto";
+import "api.proto";
+
+// ============================================================================
+// CORE HR MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// Employee is the master employee record
+message Employee {
+  string employee_id = 1;
+  string employee_number = 2;  // Company-assigned employee number
+
+  // Personal information
+  string first_name = 3;
+  string middle_name = 4;
+  string last_name = 5;
+  string preferred_name = 6;
+  string suffix = 7;
+  int64 date_of_birth = 8;
+  Gender gender = 9;
+  MaritalStatus marital_status = 10;
+  string nationality = 11;
+  string citizenship = 12;
+  string national_id = 13;      // SSN, SIN, NI number, etc.
+  string national_id_type = 14; // Type of national ID
+
+  // Contact information
+  repeated Address addresses = 15;
+  repeated ContactInfo contacts = 16;
+  repeated EmergencyContact emergency_contacts = 17;
+
+  // Employment information
+  EmploymentStatus employment_status = 18;
+  EmploymentType employment_type = 19;
+  int64 hire_date = 20;
+  int64 original_hire_date = 21;  // For rehires
+  int64 termination_date = 22;
+  string termination_reason = 23;
+  bool is_rehire = 24;
+
+  // Organizational placement
+  string organization_id = 25;
+  string department_id = 26;
+  string position_id = 27;
+  string job_id = 28;
+  string manager_id = 29;       // Employee ID of manager
+  string work_location_id = 30;
+  string cost_center_id = 31;
+
+  // Photo
+  string photo_url = 32;
+
+  // Custom fields
+  map<string, string> custom_fields = 33;
+
+  AuditInfo audit_info = 34;
+
+  // Reserved for future use
+  reserved 35 to 50;
+}
+
+message EmployeeList {
+  repeated Employee list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum EmploymentStatus {
+  EMPLOYMENT_STATUS_UNSPECIFIED = 0;
+  EMPLOYMENT_STATUS_ACTIVE = 1;
+  EMPLOYMENT_STATUS_INACTIVE = 2;
+  EMPLOYMENT_STATUS_ON_LEAVE = 3;
+  EMPLOYMENT_STATUS_TERMINATED = 4;
+  EMPLOYMENT_STATUS_RETIRED = 5;
+  EMPLOYMENT_STATUS_SUSPENDED = 6;
+  EMPLOYMENT_STATUS_PENDING = 7;  // Pre-hire
+}
+
+// @PrimeObject
+// Organization represents a company or business unit
+message Organization {
+  string organization_id = 1;
+  string parent_organization_id = 2;  // For hierarchies
+  string name = 3;
+  string code = 4;                    // Short code
+  OrganizationType organization_type = 5;
+  string legal_name = 6;
+  string tax_id = 7;
+  string industry_code = 8;           // NAICS, SIC codes
+  repeated Address addresses = 9;
+  repeated ContactInfo contacts = 10;
+  bool is_active = 11;
+  int64 effective_date = 12;
+  int64 end_date = 13;
+  map<string, string> custom_fields = 14;
+  AuditInfo audit_info = 15;
+}
+
+message OrganizationList {
+  repeated Organization list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum OrganizationType {
+  ORGANIZATION_TYPE_UNSPECIFIED = 0;
+  ORGANIZATION_TYPE_COMPANY = 1;
+  ORGANIZATION_TYPE_DIVISION = 2;
+  ORGANIZATION_TYPE_BUSINESS_UNIT = 3;
+  ORGANIZATION_TYPE_REGION = 4;
+  ORGANIZATION_TYPE_COST_CENTER = 5;
+  ORGANIZATION_TYPE_LEGAL_ENTITY = 6;
+}
+
+// @PrimeObject
+// Department represents a department within an organization
+message Department {
+  string department_id = 1;
+  string organization_id = 2;
+  string parent_department_id = 3;  // For hierarchies
+  string name = 4;
+  string code = 5;
+  string description = 6;
+  string manager_id = 7;            // Employee ID of department head
+  string cost_center_id = 8;
+  bool is_active = 9;
+  int64 effective_date = 10;
+  int64 end_date = 11;
+  map<string, string> custom_fields = 12;
+  AuditInfo audit_info = 13;
+}
+
+message DepartmentList {
+  repeated Department list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// Position represents a specific job position (a seat to be filled)
+message Position {
+  string position_id = 1;
+  string job_id = 2;
+  string department_id = 3;
+  string organization_id = 4;
+  string position_code = 5;
+  string title = 6;
+  string reports_to_position_id = 7;  // Position it reports to
+  int32 headcount = 8;                // Authorized headcount
+  int32 filled_count = 9;             // Currently filled
+  PositionStatus status = 10;
+  bool is_manager = 11;
+  bool is_key_position = 12;          // For succession planning
+  string work_location_id = 13;
+  string cost_center_id = 14;
+  PayGrade pay_grade = 15;
+  int64 effective_date = 16;
+  int64 end_date = 17;
+  map<string, string> custom_fields = 18;
+  AuditInfo audit_info = 19;
+}
+
+message PositionList {
+  repeated Position list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum PositionStatus {
+  POSITION_STATUS_UNSPECIFIED = 0;
+  POSITION_STATUS_OPEN = 1;
+  POSITION_STATUS_FILLED = 2;
+  POSITION_STATUS_FROZEN = 3;
+  POSITION_STATUS_ELIMINATED = 4;
+}
+
+// PayGrade embedded in Position for pay range info
+message PayGrade {
+  string grade_code = 1;
+  Money minimum = 2;
+  Money midpoint = 3;
+  Money maximum = 4;
+}
+
+// @PrimeObject
+// Job represents a job definition (template for positions)
+message Job {
+  string job_id = 1;
+  string job_code = 2;
+  string title = 3;
+  string job_family_id = 4;
+  string description = 5;
+  string summary = 6;
+  repeated string responsibilities = 7;
+  repeated string qualifications = 8;
+  repeated string required_skills = 9;
+  repeated string preferred_skills = 10;
+  repeated string certifications_required = 11;
+  string education_requirement = 12;
+  string experience_requirement = 13;
+  bool is_flsa_exempt = 14;           // For US labor law
+  string eeo_category = 15;           // EEO-1 job category
+  string job_level = 16;              // Entry, Mid, Senior, etc.
+  bool is_active = 17;
+  int64 effective_date = 18;
+  int64 end_date = 19;
+  map<string, string> custom_fields = 20;
+  AuditInfo audit_info = 21;
+}
+
+message JobList {
+  repeated Job list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// JobFamily groups related jobs
+message JobFamily {
+  string job_family_id = 1;
+  string name = 2;
+  string code = 3;
+  string description = 4;
+  bool is_active = 5;
+  AuditInfo audit_info = 6;
+}
+
+message JobFamilyList {
+  repeated JobFamily list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// EmployeeDocument represents documents attached to an employee record
+message EmployeeDocument {
+  string document_id = 1;
+  string employee_id = 2;
+  DocumentType document_type = 3;
+  string name = 4;
+  string description = 5;
+  string file_url = 6;
+  string file_type = 7;              // MIME type
+  int64 file_size_bytes = 8;
+  int64 upload_date = 9;
+  int64 expiration_date = 10;
+  bool is_verified = 11;
+  string verified_by = 12;
+  int64 verified_date = 13;
+  map<string, string> custom_fields = 14;
+  AuditInfo audit_info = 15;
+}
+
+message EmployeeDocumentList {
+  repeated EmployeeDocument list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum DocumentType {
+  DOCUMENT_TYPE_UNSPECIFIED = 0;
+  DOCUMENT_TYPE_RESUME = 1;
+  DOCUMENT_TYPE_ID_CARD = 2;
+  DOCUMENT_TYPE_PASSPORT = 3;
+  DOCUMENT_TYPE_DRIVERS_LICENSE = 4;
+  DOCUMENT_TYPE_WORK_PERMIT = 5;
+  DOCUMENT_TYPE_VISA = 6;
+  DOCUMENT_TYPE_I9_FORM = 7;
+  DOCUMENT_TYPE_W4_FORM = 8;
+  DOCUMENT_TYPE_OFFER_LETTER = 9;
+  DOCUMENT_TYPE_CONTRACT = 10;
+  DOCUMENT_TYPE_NDA = 11;
+  DOCUMENT_TYPE_CERTIFICATION = 12;
+  DOCUMENT_TYPE_DEGREE = 13;
+  DOCUMENT_TYPE_PERFORMANCE_REVIEW = 14;
+  DOCUMENT_TYPE_OTHER = 99;
+}
+
+// @PrimeObject
+// ComplianceRecord for I-9, EEO, and other compliance tracking
+message ComplianceRecord {
+  string record_id = 1;
+  string employee_id = 2;
+  ComplianceType compliance_type = 3;
+  string status = 4;
+  int64 due_date = 5;
+  int64 completion_date = 6;
+  int64 expiration_date = 7;
+  string document_id = 8;
+  string notes = 9;
+  string verified_by = 10;
+  int64 verified_date = 11;
+  map<string, string> compliance_data = 12;  // Type-specific data
+  AuditInfo audit_info = 13;
+}
+
+message ComplianceRecordList {
+  repeated ComplianceRecord list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum ComplianceType {
+  COMPLIANCE_TYPE_UNSPECIFIED = 0;
+  COMPLIANCE_TYPE_I9 = 1;
+  COMPLIANCE_TYPE_EEO = 2;
+  COMPLIANCE_TYPE_VETS_4212 = 3;
+  COMPLIANCE_TYPE_ADA = 4;
+  COMPLIANCE_TYPE_BACKGROUND_CHECK = 5;
+  COMPLIANCE_TYPE_DRUG_TEST = 6;
+  COMPLIANCE_TYPE_LICENSE_VERIFICATION = 7;
+  COMPLIANCE_TYPE_EDUCATION_VERIFICATION = 8;
+  COMPLIANCE_TYPE_WORK_AUTHORIZATION = 9;
+}

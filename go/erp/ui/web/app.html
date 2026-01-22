@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>L8ERP - Enterprise Resource Planning</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/base-core.css">
+    <link rel="stylesheet" href="css/components-modals.css">
+    <link rel="stylesheet" href="css/components-misc.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <!-- Header Background Illustration -->
+            <svg class="header-illustration" viewBox="0 0 1920 60" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="headerNodeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:0.3" />
+                        <stop offset="100%" style="stop-color:#0284c7;stop-opacity:0.2" />
+                    </linearGradient>
+                </defs>
+                <!-- Decorative network lines -->
+                <path d="M 0,30 Q 200,10 400,30 T 800,30" fill="none" stroke="rgba(14, 165, 233, 0.15)" stroke-width="1.5"/>
+                <path d="M 1920,30 Q 1720,50 1520,30 T 1120,30" fill="none" stroke="rgba(14, 165, 233, 0.15)" stroke-width="1.5"/>
+
+                <!-- Small animated dots -->
+                <circle cx="200" cy="20" r="2" fill="rgba(14, 165, 233, 0.5)">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="3s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="600" cy="25" r="2" fill="rgba(14, 165, 233, 0.5)">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="4s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="1300" cy="40" r="2" fill="rgba(14, 165, 233, 0.5)">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="3.5s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="1700" cy="35" r="2" fill="rgba(14, 165, 233, 0.5)">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="4.5s" repeatCount="indefinite"/>
+                </circle>
+
+                <!-- Small server icons on edges -->
+                <rect x="50" y="25" width="4" height="10" rx="1" fill="url(#headerNodeGradient)"/>
+                <rect x="1860" y="25" width="4" height="10" rx="1" fill="url(#headerNodeGradient)"/>
+            </svg>
+
+            <div class="header-left">
+                <img src="images/logo.gif" alt="L8ERP Logo" class="header-logo">
+                <div class="header-title">
+                    <h1>L8ERP</h1>
+                    <p class="header-subtitle">Enterprise Resource Planning</p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="powered-by-header">
+                    <span>Powered by</span>
+                    <img src="images/Layer8Logo.gif" alt="Layer 8 Ecosystem" class="layer8-header-logo">
+                    <span class="layer8-header-text">Layer 8 Ecosystem</span>
+                </div>
+                <div class="user-menu">
+                    <span class="username">Admin</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li><a href="#" data-section="dashboard" class="nav-link active">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a></li>
+                <li><a href="#" data-section="financial" class="nav-link">
+                    <span class="nav-icon">💰</span>
+                    <span>Financial Management</span>
+                </a></li>
+                <li><a href="#" data-section="hcm" class="nav-link">
+                    <span class="nav-icon">👥</span>
+                    <span>Human Capital</span>
+                </a></li>
+                <li><a href="#" data-section="scm" class="nav-link">
+                    <span class="nav-icon">🔗</span>
+                    <span>Supply Chain</span>
+                </a></li>
+                <li><a href="#" data-section="manufacturing" class="nav-link">
+                    <span class="nav-icon">🏭</span>
+                    <span>Manufacturing</span>
+                </a></li>
+                <li><a href="#" data-section="sales" class="nav-link">
+                    <span class="nav-icon">📈</span>
+                    <span>Sales & Distribution</span>
+                </a></li>
+                <li><a href="#" data-section="crm" class="nav-link">
+                    <span class="nav-icon">🤝</span>
+                    <span>CRM</span>
+                </a></li>
+                <li><a href="#" data-section="projects" class="nav-link">
+                    <span class="nav-icon">📋</span>
+                    <span>Project Management</span>
+                </a></li>
+                <li><a href="#" data-section="bi" class="nav-link">
+                    <span class="nav-icon">📊</span>
+                    <span>Business Intelligence</span>
+                </a></li>
+                <li><a href="#" data-section="documents" class="nav-link">
+                    <span class="nav-icon">📄</span>
+                    <span>Documents</span>
+                </a></li>
+                <li><a href="#" data-section="ecommerce" class="nav-link">
+                    <span class="nav-icon">🛒</span>
+                    <span>E-Commerce</span>
+                </a></li>
+                <li><a href="#" data-section="compliance" class="nav-link">
+                    <span class="nav-icon">🛡️</span>
+                    <span>Compliance & Risk</span>
+                </a></li>
+                <li><a href="#" data-section="system" class="nav-link">
+                    <span class="nav-icon">⚙️</span>
+                    <span>System</span>
+                </a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <div id="content-area"></div>
+        </main>
+    </div>
+
+    <!-- ERP Popup Root -->
+    <div id="erp-popup-root"></div>
+
+    <script src="js/sections.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,384 @@
+syntax = "proto3";
+
+package hcm;
+
+option go_package = "./types/hcm";
+
+
+import "hcm-common.proto";
+import "api.proto";
+
+// ============================================================================
+// BENEFITS ADMINISTRATION MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// BenefitPlan defines a benefit plan offering
+message BenefitPlan {
+  string plan_id = 1;
+  string organization_id = 2;
+  string carrier_id = 3;
+  string name = 4;
+  string code = 5;
+  string description = 6;
+  BenefitPlanType plan_type = 7;
+  BenefitPlanCategory category = 8;
+  int32 plan_year = 9;
+  int64 effective_date = 10;
+  int64 end_date = 11;
+  int64 open_enrollment_start = 12;
+  int64 open_enrollment_end = 13;
+
+  // Coverage options
+  repeated CoverageOption coverage_options = 14;
+
+  // Cost structure
+  repeated PlanCost costs = 15;
+
+  // Eligibility
+  EligibilityRules eligibility = 16;
+
+  // Plan details
+  Money deductible_individual = 17;
+  Money deductible_family = 18;
+  Money out_of_pocket_max_individual = 19;
+  Money out_of_pocket_max_family = 20;
+
+  bool is_active = 21;
+  string plan_document_url = 22;
+  string summary_document_url = 23;
+  map<string, string> custom_fields = 24;
+  AuditInfo audit_info = 25;
+}
+
+message BenefitPlanList {
+  repeated BenefitPlan list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum BenefitPlanType {
+  BENEFIT_PLAN_TYPE_UNSPECIFIED = 0;
+  BENEFIT_PLAN_TYPE_MEDICAL = 1;
+  BENEFIT_PLAN_TYPE_DENTAL = 2;
+  BENEFIT_PLAN_TYPE_VISION = 3;
+  BENEFIT_PLAN_TYPE_LIFE = 4;
+  BENEFIT_PLAN_TYPE_AD_AND_D = 5;
+  BENEFIT_PLAN_TYPE_STD = 6;
+  BENEFIT_PLAN_TYPE_LTD = 7;
+  BENEFIT_PLAN_TYPE_HSA = 8;
+  BENEFIT_PLAN_TYPE_FSA_MEDICAL = 9;
+  BENEFIT_PLAN_TYPE_FSA_DEPENDENT = 10;
+  BENEFIT_PLAN_TYPE_RETIREMENT_401K = 11;
+  BENEFIT_PLAN_TYPE_RETIREMENT_403B = 12;
+  BENEFIT_PLAN_TYPE_PENSION = 13;
+  BENEFIT_PLAN_TYPE_EAP = 14;
+  BENEFIT_PLAN_TYPE_LEGAL = 15;
+  BENEFIT_PLAN_TYPE_PET_INSURANCE = 16;
+  BENEFIT_PLAN_TYPE_COMMUTER = 17;
+  BENEFIT_PLAN_TYPE_SUPPLEMENTAL = 18;
+}
+
+enum BenefitPlanCategory {
+  BENEFIT_PLAN_CATEGORY_UNSPECIFIED = 0;
+  BENEFIT_PLAN_CATEGORY_HEALTH = 1;
+  BENEFIT_PLAN_CATEGORY_INSURANCE = 2;
+  BENEFIT_PLAN_CATEGORY_RETIREMENT = 3;
+  BENEFIT_PLAN_CATEGORY_SPENDING_ACCOUNT = 4;
+  BENEFIT_PLAN_CATEGORY_WELLNESS = 5;
+  BENEFIT_PLAN_CATEGORY_OTHER = 6;
+}
+
+message CoverageOption {
+  string option_id = 1;
+  CoverageLevel coverage_level = 2;
+  string name = 3;
+  string description = 4;
+}
+
+enum CoverageLevel {
+  COVERAGE_LEVEL_UNSPECIFIED = 0;
+  COVERAGE_LEVEL_EMPLOYEE_ONLY = 1;
+  COVERAGE_LEVEL_EMPLOYEE_SPOUSE = 2;
+  COVERAGE_LEVEL_EMPLOYEE_CHILDREN = 3;
+  COVERAGE_LEVEL_EMPLOYEE_FAMILY = 4;
+  COVERAGE_LEVEL_EMPLOYEE_PLUS_ONE = 5;
+}
+
+message PlanCost {
+  string coverage_option_id = 1;
+  Money employee_cost = 2;       // Per period
+  Money employer_cost = 3;       // Per period
+  Money total_cost = 4;          // Per period
+  PayFrequency pay_frequency = 5;
+}
+
+// @PrimeObject
+// BenefitEnrollment represents an employee's enrollment in a benefit plan
+message BenefitEnrollment {
+  string enrollment_id = 1;
+  string employee_id = 2;
+  string plan_id = 3;
+  string coverage_option_id = 4;
+  EnrollmentStatus status = 5;
+  EnrollmentReason reason = 6;
+  string life_event_id = 7;          // If triggered by life event
+  int64 coverage_start_date = 8;
+  int64 coverage_end_date = 9;
+  int64 enrollment_date = 10;
+
+  // Cost
+  Money employee_cost_per_period = 11;
+  Money employer_cost_per_period = 12;
+
+  // Elections
+  repeated BenefitElection elections = 13;
+  repeated Beneficiary beneficiaries = 14;
+  repeated Dependent covered_dependents = 15;
+
+  // Primary care (for medical)
+  string primary_care_provider = 16;
+  string primary_care_provider_id = 17;
+
+  map<string, string> custom_fields = 18;
+  AuditInfo audit_info = 19;
+}
+
+message BenefitEnrollmentList {
+  repeated BenefitEnrollment list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum EnrollmentStatus {
+  ENROLLMENT_STATUS_UNSPECIFIED = 0;
+  ENROLLMENT_STATUS_PENDING = 1;
+  ENROLLMENT_STATUS_ACTIVE = 2;
+  ENROLLMENT_STATUS_WAIVED = 3;
+  ENROLLMENT_STATUS_TERMINATED = 4;
+  ENROLLMENT_STATUS_CANCELLED = 5;
+  ENROLLMENT_STATUS_COBRA = 6;
+}
+
+enum EnrollmentReason {
+  ENROLLMENT_REASON_UNSPECIFIED = 0;
+  ENROLLMENT_REASON_NEW_HIRE = 1;
+  ENROLLMENT_REASON_OPEN_ENROLLMENT = 2;
+  ENROLLMENT_REASON_QUALIFYING_LIFE_EVENT = 3;
+  ENROLLMENT_REASON_REHIRE = 4;
+  ENROLLMENT_REASON_STATUS_CHANGE = 5;
+}
+
+// BenefitElection represents specific choices within an enrollment
+message BenefitElection {
+  string election_id = 1;
+  string election_type = 2;          // Plan-specific election type
+  string election_value = 3;         // The elected value
+  Money contribution_amount = 4;     // For contribution-based (401k, HSA)
+  double contribution_percentage = 5;
+  Money annual_amount = 6;
+}
+
+// Beneficiary designation for life insurance, retirement, etc.
+message Beneficiary {
+  string beneficiary_id = 1;
+  string enrollment_id = 2;
+  BeneficiaryType beneficiary_type = 3;
+  string name = 4;
+  string relationship = 5;
+  int64 date_of_birth = 6;
+  string ssn_masked = 7;
+  double percentage = 8;
+  bool is_contingent = 9;
+  Address address = 10;
+  string phone = 11;
+  AuditInfo audit_info = 12;
+}
+
+enum BeneficiaryType {
+  BENEFICIARY_TYPE_UNSPECIFIED = 0;
+  BENEFICIARY_TYPE_PERSON = 1;
+  BENEFICIARY_TYPE_TRUST = 2;
+  BENEFICIARY_TYPE_ESTATE = 3;
+  BENEFICIARY_TYPE_CHARITY = 4;
+}
+
+// @PrimeObject
+// Dependent for health insurance coverage
+message Dependent {
+  string dependent_id = 1;
+  string employee_id = 2;
+  string first_name = 3;
+  string middle_name = 4;
+  string last_name = 5;
+  DependentRelationship relationship = 6;
+  int64 date_of_birth = 7;
+  Gender gender = 8;
+  string ssn_masked = 9;
+  bool is_student = 10;
+  bool is_disabled = 11;
+  bool is_tobacco_user = 12;
+  int64 coverage_end_date = 13;  // Age-out date
+  Address address = 14;
+  VerificationStatus verification_status = 15;
+  AuditInfo audit_info = 16;
+}
+
+message DependentList {
+  repeated Dependent list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum DependentRelationship {
+  DEPENDENT_RELATIONSHIP_UNSPECIFIED = 0;
+  DEPENDENT_RELATIONSHIP_SPOUSE = 1;
+  DEPENDENT_RELATIONSHIP_DOMESTIC_PARTNER = 2;
+  DEPENDENT_RELATIONSHIP_CHILD = 3;
+  DEPENDENT_RELATIONSHIP_STEPCHILD = 4;
+  DEPENDENT_RELATIONSHIP_FOSTER_CHILD = 5;
+  DEPENDENT_RELATIONSHIP_ADOPTED_CHILD = 6;
+  DEPENDENT_RELATIONSHIP_LEGAL_GUARDIAN = 7;
+  DEPENDENT_RELATIONSHIP_OTHER = 8;
+}
+
+// @PrimeObject
+// LifeEvent represents qualifying life events for mid-year enrollment changes
+message LifeEvent {
+  string life_event_id = 1;
+  string employee_id = 2;
+  LifeEventType event_type = 3;
+  int64 event_date = 4;
+  int64 reported_date = 5;
+  int64 enrollment_deadline = 6;
+  LifeEventStatus status = 7;
+  string description = 8;
+  repeated string document_ids = 9;
+  string approved_by = 10;
+  int64 approved_date = 11;
+  string notes = 12;
+  AuditInfo audit_info = 13;
+}
+
+message LifeEventList {
+  repeated LifeEvent list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum LifeEventType {
+  LIFE_EVENT_TYPE_UNSPECIFIED = 0;
+  LIFE_EVENT_TYPE_MARRIAGE = 1;
+  LIFE_EVENT_TYPE_DIVORCE = 2;
+  LIFE_EVENT_TYPE_BIRTH = 3;
+  LIFE_EVENT_TYPE_ADOPTION = 4;
+  LIFE_EVENT_TYPE_DEATH_OF_DEPENDENT = 5;
+  LIFE_EVENT_TYPE_LOSS_OF_COVERAGE = 6;
+  LIFE_EVENT_TYPE_GAIN_OF_COVERAGE = 7;
+  LIFE_EVENT_TYPE_CHANGE_IN_WORK_STATUS = 8;
+  LIFE_EVENT_TYPE_MOVE = 9;
+  LIFE_EVENT_TYPE_COURT_ORDER = 10;
+  LIFE_EVENT_TYPE_MEDICARE_ELIGIBILITY = 11;
+}
+
+enum LifeEventStatus {
+  LIFE_EVENT_STATUS_UNSPECIFIED = 0;
+  LIFE_EVENT_STATUS_PENDING_REVIEW = 1;
+  LIFE_EVENT_STATUS_APPROVED = 2;
+  LIFE_EVENT_STATUS_DENIED = 3;
+  LIFE_EVENT_STATUS_EXPIRED = 4;
+}
+
+// @PrimeObject
+// Carrier represents an insurance carrier
+message Carrier {
+  string carrier_id = 1;
+  string name = 2;
+  string code = 3;
+  CarrierType carrier_type = 4;
+  Address address = 5;
+  string phone = 6;
+  string fax = 7;
+  string email = 8;
+  string website = 9;
+  string contact_name = 10;
+  string employer_group_number = 11;
+  string billing_account_number = 12;
+  string edi_payer_id = 13;
+  bool is_active = 14;
+  map<string, string> custom_fields = 15;
+  AuditInfo audit_info = 16;
+}
+
+message CarrierList {
+  repeated Carrier list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum CarrierType {
+  CARRIER_TYPE_UNSPECIFIED = 0;
+  CARRIER_TYPE_MEDICAL = 1;
+  CARRIER_TYPE_DENTAL = 2;
+  CARRIER_TYPE_VISION = 3;
+  CARRIER_TYPE_LIFE = 4;
+  CARRIER_TYPE_DISABILITY = 5;
+  CARRIER_TYPE_RETIREMENT = 6;
+  CARRIER_TYPE_OTHER = 7;
+}
+
+// @PrimeObject
+// COBRAEvent for COBRA administration
+message COBRAEvent {
+  string cobra_event_id = 1;
+  string employee_id = 2;
+  COBRAEventType event_type = 3;
+  int64 qualifying_event_date = 4;
+  int64 notification_date = 5;
+  int64 election_deadline = 6;
+  int64 coverage_start_date = 7;
+  int64 coverage_end_date = 8;
+  int32 coverage_months = 9;         // 18 or 36 typically
+  COBRAStatus status = 10;
+
+  repeated COBRAEnrollment enrollments = 11;
+
+  // Qualified beneficiaries
+  repeated string covered_dependent_ids = 12;
+
+  // Premium information
+  Money monthly_premium = 13;
+  double admin_fee_percentage = 14;
+  Money total_monthly_cost = 15;
+
+  string notes = 16;
+  AuditInfo audit_info = 17;
+}
+
+message COBRAEventList {
+  repeated COBRAEvent list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum COBRAEventType {
+  COBRA_EVENT_TYPE_UNSPECIFIED = 0;
+  COBRA_EVENT_TYPE_TERMINATION = 1;
+  COBRA_EVENT_TYPE_HOURS_REDUCTION = 2;
+  COBRA_EVENT_TYPE_EMPLOYEE_DEATH = 3;
+  COBRA_EVENT_TYPE_DIVORCE = 4;
+  COBRA_EVENT_TYPE_CHILD_AGING_OUT = 5;
+  COBRA_EVENT_TYPE_MEDICARE_ENTITLEMENT = 6;
+}
+
+enum COBRAStatus {
+  COBRA_STATUS_UNSPECIFIED = 0;
+  COBRA_STATUS_PENDING_NOTIFICATION = 1;
+  COBRA_STATUS_NOTIFIED = 2;
+  COBRA_STATUS_ELECTED = 3;
+  COBRA_STATUS_WAIVED = 4;
+  COBRA_STATUS_ACTIVE = 5;
+  COBRA_STATUS_TERMINATED = 6;
+  COBRA_STATUS_EXPIRED = 7;
+}
+
+message COBRAEnrollment {
+  string plan_id = 1;
+  string plan_name = 2;
+  string coverage_option_id = 3;
+  Money monthly_premium = 4;
+}

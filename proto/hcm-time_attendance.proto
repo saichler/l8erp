@@ -1,0 +1,418 @@
+syntax = "proto3";
+
+package hcm;
+
+option go_package = "./types/hcm";
+
+
+import "hcm-common.proto";
+import "api.proto";
+
+// ============================================================================
+// TIME AND ATTENDANCE MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// Timesheet represents a weekly or bi-weekly timesheet
+message Timesheet {
+  string timesheet_id = 1;
+  string employee_id = 2;
+  DateRange period = 3;
+  TimesheetStatus status = 4;
+  repeated TimeEntry entries = 5;
+
+  // Totals
+  double total_regular_hours = 6;
+  double total_overtime_hours = 7;
+  double total_double_time_hours = 8;
+  double total_pto_hours = 9;
+  double total_sick_hours = 10;
+  double total_holiday_hours = 11;
+  double total_hours = 12;
+
+  // Approval
+  int64 submitted_date = 13;
+  string submitted_by = 14;
+  string approved_by = 15;
+  int64 approved_date = 16;
+  string rejected_by = 17;
+  int64 rejected_date = 18;
+  string rejection_reason = 19;
+
+  string notes = 20;
+  AuditInfo audit_info = 21;
+}
+
+message TimesheetList {
+  repeated Timesheet list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum TimesheetStatus {
+  TIMESHEET_STATUS_UNSPECIFIED = 0;
+  TIMESHEET_STATUS_DRAFT = 1;
+  TIMESHEET_STATUS_SUBMITTED = 2;
+  TIMESHEET_STATUS_APPROVED = 3;
+  TIMESHEET_STATUS_REJECTED = 4;
+  TIMESHEET_STATUS_PROCESSED = 5;
+}
+
+// TimeEntry represents an individual time entry
+message TimeEntry {
+  string entry_id = 1;
+  string timesheet_id = 2;
+  string employee_id = 3;
+  int64 date = 4;
+  TimeEntryType entry_type = 5;
+
+  // Clock times (for hourly employees)
+  int64 clock_in = 6;
+  int64 clock_out = 7;
+
+  // Hours (can be directly entered)
+  double hours = 8;
+  double break_duration_minutes = 9;
+
+  // Allocation
+  string project_id = 10;
+  string task_id = 11;
+  string cost_center_id = 12;
+  string department_id = 13;
+  string job_code = 14;
+
+  // Pay modifiers
+  string pay_component_id = 15;
+  double hourly_rate = 16;
+
+  TimeEntrySource source = 17;
+  string notes = 18;
+  bool is_billable = 19;
+
+  // Location (for mobile clock)
+  double latitude = 20;
+  double longitude = 21;
+  string ip_address = 22;
+
+  AuditInfo audit_info = 23;
+}
+
+enum TimeEntryType {
+  TIME_ENTRY_TYPE_UNSPECIFIED = 0;
+  TIME_ENTRY_TYPE_REGULAR = 1;
+  TIME_ENTRY_TYPE_OVERTIME = 2;
+  TIME_ENTRY_TYPE_DOUBLE_TIME = 3;
+  TIME_ENTRY_TYPE_PTO = 4;
+  TIME_ENTRY_TYPE_SICK = 5;
+  TIME_ENTRY_TYPE_HOLIDAY = 6;
+  TIME_ENTRY_TYPE_BEREAVEMENT = 7;
+  TIME_ENTRY_TYPE_JURY_DUTY = 8;
+  TIME_ENTRY_TYPE_TRAINING = 9;
+  TIME_ENTRY_TYPE_UNPAID = 10;
+  TIME_ENTRY_TYPE_ON_CALL = 11;
+  TIME_ENTRY_TYPE_TRAVEL = 12;
+}
+
+enum TimeEntrySource {
+  TIME_ENTRY_SOURCE_UNSPECIFIED = 0;
+  TIME_ENTRY_SOURCE_MANUAL = 1;
+  TIME_ENTRY_SOURCE_TIME_CLOCK = 2;
+  TIME_ENTRY_SOURCE_MOBILE = 3;
+  TIME_ENTRY_SOURCE_BADGE = 4;
+  TIME_ENTRY_SOURCE_BIOMETRIC = 5;
+  TIME_ENTRY_SOURCE_IMPORT = 6;
+}
+
+// @PrimeObject
+// LeaveRequest represents a PTO or leave request
+message LeaveRequest {
+  string request_id = 1;
+  string employee_id = 2;
+  LeaveType leave_type = 3;
+  string leave_policy_id = 4;
+  int64 start_date = 5;
+  int64 end_date = 6;
+  double total_hours = 7;
+  double total_days = 8;
+  LeaveRequestStatus status = 9;
+  string reason = 10;
+  bool is_partial_day = 11;
+  string partial_day_type = 12;     // AM, PM, or specific hours
+
+  // Approval workflow
+  int64 submitted_date = 13;
+  string approver_id = 14;
+  string approved_by = 15;
+  int64 approved_date = 16;
+  string rejection_reason = 17;
+
+  // Supporting documents
+  repeated string document_ids = 18;
+
+  string notes = 19;
+  AuditInfo audit_info = 20;
+}
+
+message LeaveRequestList {
+  repeated LeaveRequest list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum LeaveType {
+  LEAVE_TYPE_UNSPECIFIED = 0;
+  LEAVE_TYPE_PTO = 1;
+  LEAVE_TYPE_VACATION = 2;
+  LEAVE_TYPE_SICK = 3;
+  LEAVE_TYPE_PERSONAL = 4;
+  LEAVE_TYPE_BEREAVEMENT = 5;
+  LEAVE_TYPE_JURY_DUTY = 6;
+  LEAVE_TYPE_MILITARY = 7;
+  LEAVE_TYPE_FMLA = 8;
+  LEAVE_TYPE_PARENTAL = 9;
+  LEAVE_TYPE_MATERNITY = 10;
+  LEAVE_TYPE_PATERNITY = 11;
+  LEAVE_TYPE_SABBATICAL = 12;
+  LEAVE_TYPE_UNPAID = 13;
+  LEAVE_TYPE_ADMINISTRATIVE = 14;
+  LEAVE_TYPE_VOLUNTEER = 15;
+}
+
+enum LeaveRequestStatus {
+  LEAVE_REQUEST_STATUS_UNSPECIFIED = 0;
+  LEAVE_REQUEST_STATUS_DRAFT = 1;
+  LEAVE_REQUEST_STATUS_PENDING = 2;
+  LEAVE_REQUEST_STATUS_APPROVED = 3;
+  LEAVE_REQUEST_STATUS_REJECTED = 4;
+  LEAVE_REQUEST_STATUS_CANCELLED = 5;
+  LEAVE_REQUEST_STATUS_TAKEN = 6;
+}
+
+// @PrimeObject
+// LeaveBalance represents accrued leave balances
+message LeaveBalance {
+  string balance_id = 1;
+  string employee_id = 2;
+  string leave_policy_id = 3;
+  LeaveType leave_type = 4;
+  int32 year = 5;
+
+  // Balances
+  double beginning_balance = 6;
+  double accrued = 7;
+  double used = 8;
+  double pending = 9;              // Requested but not yet taken
+  double adjusted = 10;            // Manual adjustments
+  double forfeited = 11;           // Lost due to carryover limits
+  double available = 12;           // Current available balance
+  double carryover = 13;           // Carried from previous year
+
+  // Limits
+  double annual_allowance = 14;
+  double maximum_accrual = 15;
+  double maximum_carryover = 16;
+
+  int64 last_accrual_date = 17;
+  int64 next_accrual_date = 18;
+
+  AuditInfo audit_info = 19;
+}
+
+message LeaveBalanceList {
+  repeated LeaveBalance list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// LeavePolicy defines leave accrual and usage rules
+message LeavePolicy {
+  string policy_id = 1;
+  string organization_id = 2;
+  string name = 3;
+  string code = 4;
+  string description = 5;
+  LeaveType leave_type = 6;
+
+  // Accrual settings
+  AccrualMethod accrual_method = 7;
+  double accrual_rate = 8;          // Hours/days per period
+  AccrualFrequency accrual_frequency = 9;
+  double maximum_accrual = 10;
+
+  // Carryover
+  bool allow_carryover = 11;
+  double maximum_carryover = 12;
+  int64 carryover_expiration_date = 13;
+
+  // Usage
+  double minimum_increment = 14;    // Minimum hours per request
+  int32 advance_notice_days = 15;
+  bool require_approval = 16;
+  bool allow_negative_balance = 17;
+
+  // Eligibility
+  int32 waiting_period_days = 18;
+  EligibilityRules eligibility = 19;
+
+  // Effective dates
+  int64 effective_date = 20;
+  int64 end_date = 21;
+  bool is_active = 22;
+
+  AuditInfo audit_info = 23;
+}
+
+message LeavePolicyList {
+  repeated LeavePolicy list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum AccrualMethod {
+  ACCRUAL_METHOD_UNSPECIFIED = 0;
+  ACCRUAL_METHOD_FIXED = 1;
+  ACCRUAL_METHOD_HOURS_WORKED = 2;
+  ACCRUAL_METHOD_TENURE_BASED = 3;
+  ACCRUAL_METHOD_FRONT_LOADED = 4;
+}
+
+enum AccrualFrequency {
+  ACCRUAL_FREQUENCY_UNSPECIFIED = 0;
+  ACCRUAL_FREQUENCY_PER_PAY_PERIOD = 1;
+  ACCRUAL_FREQUENCY_MONTHLY = 2;
+  ACCRUAL_FREQUENCY_QUARTERLY = 3;
+  ACCRUAL_FREQUENCY_ANNUALLY = 4;
+  ACCRUAL_FREQUENCY_ANNIVERSARY = 5;
+}
+
+// @PrimeObject
+// Shift represents a shift definition
+message Shift {
+  string shift_id = 1;
+  string organization_id = 2;
+  string name = 3;
+  string code = 4;
+  string description = 5;
+  int64 start_time = 6;  // Time only
+  int64 end_time = 7;    // Time only
+  double duration_hours = 8;
+  double break_duration_minutes = 9;
+  bool is_overnight = 10;
+  ShiftType shift_type = 11;
+  string color_code = 12;             // For UI display
+  Money shift_differential = 13;
+  bool is_active = 14;
+  AuditInfo audit_info = 15;
+}
+
+message ShiftList {
+  repeated Shift list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum ShiftType {
+  SHIFT_TYPE_UNSPECIFIED = 0;
+  SHIFT_TYPE_DAY = 1;
+  SHIFT_TYPE_EVENING = 2;
+  SHIFT_TYPE_NIGHT = 3;
+  SHIFT_TYPE_OVERNIGHT = 4;
+  SHIFT_TYPE_ROTATING = 5;
+  SHIFT_TYPE_SPLIT = 6;
+  SHIFT_TYPE_ON_CALL = 7;
+}
+
+// @PrimeObject
+// Schedule represents an employee's work schedule
+message Schedule {
+  string schedule_id = 1;
+  string employee_id = 2;
+  DateRange period = 3;
+  ScheduleStatus status = 4;
+  repeated ScheduleEntry entries = 5;
+  double total_scheduled_hours = 6;
+  string published_by = 7;
+  int64 published_date = 8;
+  AuditInfo audit_info = 9;
+}
+
+message ScheduleList {
+  repeated Schedule list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum ScheduleStatus {
+  SCHEDULE_STATUS_UNSPECIFIED = 0;
+  SCHEDULE_STATUS_DRAFT = 1;
+  SCHEDULE_STATUS_PUBLISHED = 2;
+  SCHEDULE_STATUS_ARCHIVED = 3;
+}
+
+message ScheduleEntry {
+  string entry_id = 1;
+  int64 date = 2;
+  string shift_id = 3;
+  int64 start_time = 4;
+  int64 end_time = 5;
+  double hours = 6;
+  string location_id = 7;
+  string department_id = 8;
+  string notes = 9;
+  bool is_published = 10;
+}
+
+// @PrimeObject
+// Holiday represents company holidays
+message Holiday {
+  string holiday_id = 1;
+  string organization_id = 2;
+  string name = 3;
+  int64 date = 4;
+  HolidayType holiday_type = 5;
+  bool is_paid = 6;
+  double hours_credited = 7;
+  bool is_recurring = 8;
+  string recurrence_rule = 9;        // For floating holidays
+  repeated string applicable_location_ids = 10;
+  int32 year = 11;
+  bool is_active = 12;
+  AuditInfo audit_info = 13;
+}
+
+message HolidayList {
+  repeated Holiday list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum HolidayType {
+  HOLIDAY_TYPE_UNSPECIFIED = 0;
+  HOLIDAY_TYPE_FIXED = 1;            // Same date every year
+  HOLIDAY_TYPE_FLOATING = 2;         // Nth weekday of month
+  HOLIDAY_TYPE_PERSONAL = 3;         // Employee's choice
+  HOLIDAY_TYPE_OBSERVED = 4;         // Observed on nearest weekday
+}
+
+// @PrimeObject
+// Absence represents an actual absence record
+message Absence {
+  string absence_id = 1;
+  string employee_id = 2;
+  string leave_request_id = 3;       // Link to approved request
+  int64 date = 4;
+  LeaveType absence_type = 5;
+  double hours = 6;
+  bool is_partial_day = 7;
+  AbsenceStatus status = 8;
+  bool is_paid = 9;
+  string pay_component_id = 10;
+  string notes = 11;
+  AuditInfo audit_info = 12;
+}
+
+message AbsenceList {
+  repeated Absence list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum AbsenceStatus {
+  ABSENCE_STATUS_UNSPECIFIED = 0;
+  ABSENCE_STATUS_SCHEDULED = 1;
+  ABSENCE_STATUS_TAKEN = 2;
+  ABSENCE_STATUS_CANCELLED = 3;
+}
