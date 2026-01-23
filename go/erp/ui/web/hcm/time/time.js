@@ -299,8 +299,8 @@
 
     function renderTimePeriod(period) {
         if (!period) return '-';
-        const start = period.startDate ? new Date(period.startDate * 1000).toLocaleDateString() : '?';
-        const end = period.endDate ? new Date(period.endDate * 1000).toLocaleDateString() : '?';
+        const start = period.startDate ? formatDate(period.startDate) : '?';
+        const end = period.endDate ? formatDate(period.endDate) : '?';
         return `${start} - ${end}`;
     }
 

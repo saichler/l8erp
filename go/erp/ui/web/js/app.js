@@ -58,7 +58,12 @@ function logout() {
 }
 
 // Initialize the application
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    // Load app configuration first
+    if (typeof ERPConfig !== 'undefined') {
+        await ERPConfig.load();
+    }
+
     // Check if bearer token exists (user is logged in)
     // Using sessionStorage so session is cleared when browser tab is closed
     const bearerToken = sessionStorage.getItem('bearerToken');

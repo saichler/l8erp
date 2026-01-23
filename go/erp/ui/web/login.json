@@ -8,5 +8,8 @@
         "showRegister": false,
         "sessionTimeout": 30,
         "tfaEnabled": true
+    },
+    "app": {
+        "dateFormat": "mm/dd/yyyy"
     }
 }

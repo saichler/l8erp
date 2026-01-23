@@ -30,41 +30,183 @@
     // DATE FORMATTING
     // ========================================
 
-    function formatDate(timestamp, options = {}) {
-        if (!timestamp) return '-';
+    // Month name abbreviations for dd-mmm-yyyy format
+    const MONTH_ABBREVS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-        const defaults = {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        };
-
-        const date = new Date(timestamp * 1000);
-        return date.toLocaleDateString('en-US', { ...defaults, ...options });
+    /**
+     * Get the configured date format from ERPConfig
+     * @returns {string}
+     */
+    function getConfiguredDateFormat() {
+        if (typeof ERPConfig !== 'undefined' && ERPConfig.getDateFormat) {
+            return ERPConfig.getDateFormat();
+        }
+        return 'mm/dd/yyyy'; // Default fallback
     }
 
+    /**
+     * Pad a number with leading zero if needed
+     * @param {number} num
+     * @returns {string}
+     */
+    function padZero(num) {
+        return num < 10 ? '0' + num : String(num);
+    }
+
+    /**
+     * Format a date according to the configured format
+     * @param {number} timestamp - Unix timestamp in seconds
+     * @returns {string}
+     */
+    function formatDate(timestamp) {
+        if (!timestamp) return '-';
+
+        const date = new Date(timestamp * 1000);
+        const format = getConfiguredDateFormat();
+        const day = date.getDate();
+        const month = date.getMonth(); // 0-indexed
+        const year = date.getFullYear();
+
+        switch (format) {
+            case 'dd/mm/yyyy':
+                return `${padZero(day)}/${padZero(month + 1)}/${year}`;
+            case 'yyyy-mm-dd':
+                return `${year}-${padZero(month + 1)}-${padZero(day)}`;
+            case 'dd-mmm-yyyy':
+                return `${padZero(day)}-${MONTH_ABBREVS[month]}-${year}`;
+            case 'mm/dd/yyyy':
+            default:
+                return `${padZero(month + 1)}/${padZero(day)}/${year}`;
+        }
+    }
+
+    /**
+     * Format a date and time according to the configured format
+     * @param {number} timestamp - Unix timestamp in seconds
+     * @returns {string}
+     */
     function formatDateTime(timestamp) {
         if (!timestamp) return '-';
+
         const date = new Date(timestamp * 1000);
-        return date.toLocaleString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+        const dateStr = formatDate(timestamp);
+        const hours = date.getHours();
+        const minutes = padZero(date.getMinutes());
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const hours12 = hours % 12 || 12;
+
+        return `${dateStr} ${hours12}:${minutes} ${ampm}`;
+    }
+
+    /**
+     * Format a timestamp for input field display (using configured format)
+     * @param {number} timestamp - Unix timestamp in seconds
+     * @returns {string}
+     */
+    function formatDateForInput(timestamp) {
+        if (!timestamp) return '';
+        return formatDate(timestamp).replace(/-/g, (m, i) => {
+            // Keep the format consistent
+            const format = getConfiguredDateFormat();
+            if (format === 'yyyy-mm-dd') return '-';
+            if (format === 'dd-mmm-yyyy') return '-';
+            return '/';
         });
     }
 
-    function formatDateForInput(timestamp) {
-        if (!timestamp) return '';
-        const date = new Date(timestamp * 1000);
-        return date.toISOString().split('T')[0];
-    }
-
+    /**
+     * Parse a date string in the configured format to timestamp
+     * @param {string} dateString
+     * @returns {number|null} Unix timestamp in seconds, or null if invalid
+     */
     function parseDateToTimestamp(dateString) {
         if (!dateString) return null;
-        const date = new Date(dateString);
-        return isNaN(date.getTime()) ? null : Math.floor(date.getTime() / 1000);
+
+        const format = getConfiguredDateFormat();
+        let day, month, year;
+
+        try {
+            switch (format) {
+                case 'dd/mm/yyyy': {
+                    const parts = dateString.split('/');
+                    if (parts.length !== 3) return null;
+                    day = parseInt(parts[0], 10);
+                    month = parseInt(parts[1], 10) - 1;
+                    year = parseInt(parts[2], 10);
+                    break;
+                }
+                case 'yyyy-mm-dd': {
+                    const parts = dateString.split('-');
+                    if (parts.length !== 3) return null;
+                    year = parseInt(parts[0], 10);
+                    month = parseInt(parts[1], 10) - 1;
+                    day = parseInt(parts[2], 10);
+                    break;
+                }
+                case 'dd-mmm-yyyy': {
+                    const parts = dateString.split('-');
+                    if (parts.length !== 3) return null;
+                    day = parseInt(parts[0], 10);
+                    const monthStr = parts[1].charAt(0).toUpperCase() + parts[1].slice(1).toLowerCase();
+                    month = MONTH_ABBREVS.indexOf(monthStr);
+                    if (month === -1) return null;
+                    year = parseInt(parts[2], 10);
+                    break;
+                }
+                case 'mm/dd/yyyy':
+                default: {
+                    const parts = dateString.split('/');
+                    if (parts.length !== 3) return null;
+                    month = parseInt(parts[0], 10) - 1;
+                    day = parseInt(parts[1], 10);
+                    year = parseInt(parts[2], 10);
+                    break;
+                }
+            }
+
+            if (isNaN(day) || isNaN(month) || isNaN(year)) return null;
+            if (month < 0 || month > 11) return null;
+            if (day < 1 || day > 31) return null;
+            if (year < 1000 || year > 9999) return null;
+
+            const date = new Date(year, month, day);
+            // Validate the date is real (e.g., not Feb 31)
+            if (date.getDate() !== day || date.getMonth() !== month || date.getFullYear() !== year) {
+                return null;
+            }
+
+            return Math.floor(date.getTime() / 1000);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get the placeholder text for date input based on configured format
+     * @returns {string}
+     */
+    function getDateInputPlaceholder() {
+        const format = getConfiguredDateFormat();
+        switch (format) {
+            case 'dd/mm/yyyy':
+                return 'DD/MM/YYYY';
+            case 'yyyy-mm-dd':
+                return 'YYYY-MM-DD';
+            case 'dd-mmm-yyyy':
+                return 'DD-Mon-YYYY';
+            case 'mm/dd/yyyy':
+            default:
+                return 'MM/DD/YYYY';
+        }
+    }
+
+    /**
+     * Validate if a date string matches the configured format
+     * @param {string} dateString
+     * @returns {boolean}
+     */
+    function isValidDateFormat(dateString) {
+        return parseDateToTimestamp(dateString) !== null;
     }
 
     // ========================================
@@ -139,6 +281,9 @@
         formatDateTime,
         formatDateForInput,
         parseDateToTimestamp,
+        getDateInputPlaceholder,
+        isValidDateFormat,
+        getConfiguredDateFormat,
 
         // Numbers
         formatMoney,

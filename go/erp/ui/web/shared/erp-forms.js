@@ -69,7 +69,13 @@
 
             case 'date':
                 const dateValue = value ? formatDateForInput(value) : '';
-                inputHtml = `<input type="text" id="field-${field.key}" name="${field.key}" value="${dateValue}" ${required} placeholder="YYYY-MM-DD">`;
+                const datePlaceholder = typeof ERPUtils !== 'undefined' && ERPUtils.getDateInputPlaceholder
+                    ? ERPUtils.getDateInputPlaceholder()
+                    : 'MM/DD/YYYY';
+                inputHtml = `<div class="date-input-wrapper">
+                    <input type="text" id="field-${field.key}" name="${field.key}" value="${dateValue}" ${required} placeholder="${datePlaceholder}" class="date-input">
+                    <button type="button" class="date-picker-trigger" data-for="field-${field.key}" title="Open calendar">&#x1F4C5;</button>
+                </div>`;
                 break;
 
             case 'textarea':
@@ -235,6 +241,38 @@
     }
 
     // ========================================
+    // DATE PICKER INTEGRATION
+    // ========================================
+
+    /**
+     * Attach date pickers to all date inputs in a container
+     * @param {HTMLElement} container
+     */
+    function attachDatePickers(container) {
+        if (typeof ERPDatePicker === 'undefined') return;
+
+        // Find all date inputs
+        const dateInputs = container.querySelectorAll('input.date-input');
+        dateInputs.forEach(input => {
+            ERPDatePicker.attach(input);
+        });
+
+        // Setup trigger buttons
+        const triggers = container.querySelectorAll('.date-picker-trigger');
+        triggers.forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const inputId = trigger.dataset.for;
+                const input = container.querySelector(`#${inputId}`);
+                if (input) {
+                    ERPDatePicker.open(input);
+                }
+            });
+        });
+    }
+
+    // ========================================
     // MODAL HELPERS
     // ========================================
 
@@ -265,7 +303,8 @@
             showFooter: true,
             saveButtonText: 'Save',
             cancelButtonText: 'Cancel',
-            onSave: handleFormSave
+            onSave: handleFormSave,
+            onShow: attachDatePickers
         });
     }
 
@@ -316,7 +355,8 @@
                 showFooter: true,
                 saveButtonText: 'Save',
                 cancelButtonText: 'Cancel',
-                onSave: handleFormSave
+                onSave: handleFormSave,
+                onShow: attachDatePickers
             });
 
         } catch (error) {
@@ -425,7 +465,8 @@
         openAddForm,
         openEditForm,
         openViewForm,
-        confirmDelete
+        confirmDelete,
+        attachDatePickers
     };
 
 })();
