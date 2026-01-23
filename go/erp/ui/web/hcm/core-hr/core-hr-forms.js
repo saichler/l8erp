@@ -48,11 +48,66 @@
                 {
                     title: 'Organizational Placement',
                     fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
-                        { key: 'departmentId', label: 'Department', type: 'lookup', lookupModel: 'Department' },
-                        { key: 'positionId', label: 'Position', type: 'lookup', lookupModel: 'Position' },
-                        { key: 'jobId', label: 'Job', type: 'lookup', lookupModel: 'Job' },
-                        { key: 'managerId', label: 'Manager', type: 'lookup', lookupModel: 'Employee' },
+                        {
+                            key: 'organizationId',
+                            label: 'Organization',
+                            type: 'reference',
+                            referenceConfig: {
+                                modelName: 'Organization',
+                                idColumn: 'organizationId',
+                                displayColumn: 'name',
+                                title: 'Select Organization'
+                            }
+                        },
+                        {
+                            key: 'departmentId',
+                            label: 'Department',
+                            type: 'reference',
+                            referenceConfig: {
+                                modelName: 'Department',
+                                idColumn: 'departmentId',
+                                displayColumn: 'name',
+                                title: 'Select Department'
+                            }
+                        },
+                        {
+                            key: 'positionId',
+                            label: 'Position',
+                            type: 'reference',
+                            referenceConfig: {
+                                modelName: 'Position',
+                                idColumn: 'positionId',
+                                displayColumn: 'title',
+                                title: 'Select Position'
+                            }
+                        },
+                        {
+                            key: 'jobId',
+                            label: 'Job',
+                            type: 'reference',
+                            referenceConfig: {
+                                modelName: 'Job',
+                                idColumn: 'jobId',
+                                displayColumn: 'title',
+                                title: 'Select Job'
+                            }
+                        },
+                        {
+                            key: 'managerId',
+                            label: 'Manager',
+                            type: 'reference',
+                            referenceConfig: {
+                                modelName: 'Employee',
+                                idColumn: 'employeeId',
+                                displayColumn: 'lastName',
+                                selectColumns: ['employeeId', 'lastName', 'firstName'],
+                                displayFormat: function(item) {
+                                    return item.lastName + ', ' + item.firstName;
+                                },
+                                displayLabel: 'Name',
+                                title: 'Select Manager'
+                            }
+                        },
                         { key: 'workLocationId', label: 'Work Location', type: 'text' },
                         { key: 'costCenterId', label: 'Cost Center', type: 'text' }
                     ]

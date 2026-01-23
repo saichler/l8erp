@@ -111,6 +111,14 @@
             size: 'large',
             showFooter: false,
             onShow: (body) => {
+                // Set form context for reference pickers to access displayFormat
+                if (typeof ERPForms !== 'undefined' && ERPForms.setFormContext) {
+                    ERPForms.setFormContext(formDef, service);
+                }
+                // Attach date pickers and reference pickers to fetch display values
+                if (typeof ERPForms !== 'undefined' && ERPForms.attachDatePickers) {
+                    ERPForms.attachDatePickers(body);
+                }
                 // Disable all form inputs
                 body.querySelectorAll('input, select, textarea').forEach(el => {
                     el.disabled = true;

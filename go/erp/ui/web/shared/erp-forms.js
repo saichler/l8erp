@@ -101,6 +101,33 @@
                 inputHtml = `<input type="text" id="field-${field.key}" name="${field.key}" value="${escapeAttr(value || '')}" ${required} placeholder="Enter ${field.lookupModel} ID">`;
                 break;
 
+            case 'reference':
+                // Reference picker field - displays name but stores ID
+                // When editing, value is just the ID - show it until picker loads display value
+                const refId = value?.id || value || '';
+                const displayValue = value?.display || (refId ? `ID: ${refId}` : '');
+                // Store serializable config (without functions)
+                const serializableConfig = {
+                    modelName: field.referenceConfig?.modelName,
+                    idColumn: field.referenceConfig?.idColumn,
+                    displayColumn: field.referenceConfig?.displayColumn,
+                    selectColumns: field.referenceConfig?.selectColumns,
+                    baseWhereClause: field.referenceConfig?.baseWhereClause,
+                    title: field.referenceConfig?.title,
+                    displayLabel: field.referenceConfig?.displayLabel,
+                    placeholder: field.referenceConfig?.placeholder
+                };
+                inputHtml = `<input type="text" id="field-${field.key}" name="${field.key}"
+                    value="${escapeAttr(displayValue)}"
+                    data-ref-id="${escapeAttr(String(refId))}"
+                    data-ref-config='${escapeAttr(JSON.stringify(serializableConfig))}'
+                    data-field-key="${escapeAttr(field.key)}"
+                    class="reference-input"
+                    ${required}
+                    readonly
+                    placeholder="Click to select...">`;
+                break;
+
             default:
                 inputHtml = `<input type="text" id="field-${field.key}" name="${field.key}" value="${escapeAttr(value || '')}" ${required}>`;
         }
@@ -157,6 +184,16 @@
                         if (element.value) {
                             const numVal = parseInt(element.value, 10);
                             value = isNaN(numVal) ? element.value : numVal;
+                        } else {
+                            value = null;
+                        }
+                        break;
+                    case 'reference':
+                        // Reference picker - get the stored ID
+                        const refId = element.dataset.refId;
+                        if (refId) {
+                            const numRefId = parseInt(refId, 10);
+                            value = isNaN(numRefId) ? refId : numRefId;
                         } else {
                             value = null;
                         }
@@ -269,6 +306,159 @@
                     ERPDatePicker.open(input);
                 }
             });
+        });
+
+        // Also attach reference pickers
+        attachReferencePickers(container);
+    }
+
+    // ========================================
+    // REFERENCE PICKER INTEGRATION
+    // ========================================
+
+    /**
+     * Find field definition from form definition by key
+     */
+    function findFieldDef(formDef, fieldKey) {
+        if (!formDef || !formDef.sections) return null;
+        for (const section of formDef.sections) {
+            for (const field of section.fields) {
+                if (field.key === fieldKey) {
+                    return field;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Look up endpoint for a model from HCM.modules config
+     */
+    function getEndpointForModel(modelName) {
+        if (typeof HCM === 'undefined' || !HCM.modules) {
+            return null;
+        }
+
+        // Search through all modules and services
+        for (const moduleKey in HCM.modules) {
+            const module = HCM.modules[moduleKey];
+            if (module.services) {
+                for (const service of module.services) {
+                    if (service.model === modelName) {
+                        return service.endpoint;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Fetch display value for a reference field by ID
+     */
+    async function fetchReferenceDisplayValue(config, idValue) {
+        if (!config.endpoint || !idValue) {
+            return null;
+        }
+
+        // Build query: select <columns> from <model> where <idColumn>=<idValue>
+        const columns = config.selectColumns || [config.idColumn, config.displayColumn];
+        const query = `select ${columns.join(',')} from ${config.modelName} where ${config.idColumn}=${idValue}`;
+
+        try {
+            const body = encodeURIComponent(JSON.stringify({ text: query }));
+            const response = await fetch(config.endpoint + '?body=' + body, {
+                method: 'GET',
+                headers: typeof getAuthHeaders === 'function'
+                    ? getAuthHeaders()
+                    : { 'Content-Type': 'application/json' }
+            });
+
+            if (!response.ok) {
+                return null;
+            }
+
+            const data = await response.json();
+            const items = data.list || [];
+
+            if (items.length > 0) {
+                const item = items[0];
+                // Get display value using displayFormat if available, otherwise use displayColumn
+                const displayValue = config.displayFormat
+                    ? config.displayFormat(item)
+                    : item[config.displayColumn];
+                return { displayValue, item };
+            }
+            return null;
+        } catch (error) {
+            console.error('Error fetching reference display value:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Attach reference pickers to all reference inputs in a container
+     * @param {HTMLElement} container
+     */
+    function attachReferencePickers(container) {
+        if (typeof ERPReferencePicker === 'undefined') {
+            return;
+        }
+
+        // Find all reference inputs
+        const refInputs = container.querySelectorAll('input.reference-input');
+        refInputs.forEach(async input => {
+            // Get config from data attribute
+            let config = {};
+            try {
+                config = JSON.parse(input.dataset.refConfig || '{}');
+            } catch (e) {
+                console.warn('Invalid reference config for', input.name);
+                return;
+            }
+
+            // Skip if no config
+            if (!config.modelName || !config.idColumn || !config.displayColumn) {
+                console.warn('Reference input missing required config:', input.name);
+                return;
+            }
+
+            // Look up endpoint from HCM.modules if not specified
+            if (!config.endpoint) {
+                config.endpoint = getEndpointForModel(config.modelName);
+                if (!config.endpoint) {
+                    return;
+                }
+            }
+
+            // Try to get displayFormat function from original field definition
+            const fieldKey = input.dataset.fieldKey || input.name;
+            if (currentFormContext && currentFormContext.formDef) {
+                const fieldDef = findFieldDef(currentFormContext.formDef, fieldKey);
+                if (fieldDef && fieldDef.referenceConfig && fieldDef.referenceConfig.displayFormat) {
+                    config.displayFormat = fieldDef.referenceConfig.displayFormat;
+                }
+                // Also get selectColumns if specified
+                if (fieldDef && fieldDef.referenceConfig && fieldDef.referenceConfig.selectColumns) {
+                    config.selectColumns = fieldDef.referenceConfig.selectColumns;
+                }
+            }
+
+            // Attach the picker
+            ERPReferencePicker.attach(input, config);
+
+            // If the input has an existing ID value, fetch and display the actual value
+            const refId = input.dataset.refId;
+            if (refId && refId !== '' && refId !== 'undefined') {
+                const result = await fetchReferenceDisplayValue(config, refId);
+                if (result) {
+                    input.value = result.displayValue;
+                    // Store the item data for later use
+                    if (result.item) {
+                        input.dataset.refItem = JSON.stringify(result.item);
+                    }
+                }
+            }
         });
     }
 
@@ -402,12 +592,24 @@
         const title = `${formDef.title} Details`;
         const content = generateFormHtml(formDef, data);
 
+        // Set form context so reference pickers can access field definitions
+        currentFormContext = {
+            formDef: formDef,
+            serviceConfig: serviceConfig,
+            isEdit: false,
+            recordId: null,
+            onSuccess: null
+        };
+
         ERPPopup.show({
             title: title,
             content: content,
             size: 'large',
             showFooter: false,
             onShow: (body) => {
+                // Attach date pickers and reference pickers to fetch display values
+                attachDatePickers(body);
+                // Disable all fields for view mode
                 body.querySelectorAll('input, select, textarea').forEach(el => {
                     el.disabled = true;
                 });
@@ -450,6 +652,23 @@
     }
 
     // ========================================
+    // FORM CONTEXT
+    // ========================================
+
+    /**
+     * Set the current form context (used by reference pickers to access displayFormat)
+     */
+    function setFormContext(formDef, serviceConfig) {
+        currentFormContext = {
+            formDef: formDef,
+            serviceConfig: serviceConfig || null,
+            isEdit: false,
+            recordId: null,
+            onSuccess: null
+        };
+    }
+
+    // ========================================
     // EXPORT
     // ========================================
 
@@ -466,7 +685,9 @@
         openEditForm,
         openViewForm,
         confirmDelete,
-        attachDatePickers
+        attachDatePickers,
+        attachReferencePickers,
+        setFormContext
     };
 
 })();
