@@ -20,7 +20,7 @@ async function openEmployeeDetail(employeeId) {
 
         if (!employee) {
             HCMForms.closeModal();
-            alert('Employee not found');
+            ERPNotification.error('Employee not found');
             return;
         }
 
@@ -48,7 +48,7 @@ async function openEmployeeDetail(employeeId) {
 
     } catch (error) {
         HCMForms.closeModal();
-        alert('Error loading employee: ' + error.message);
+        ERPNotification.error('Error loading employee', [error.message]);
     }
 }
 

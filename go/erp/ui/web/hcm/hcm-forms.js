@@ -305,7 +305,7 @@
         }
 
         if (typeof ERPPopup === 'undefined') {
-            alert('Form component not available');
+            ERPNotification.error('Form component not available');
             return;
         }
 
@@ -338,7 +338,7 @@
         }
 
         if (typeof ERPPopup === 'undefined') {
-            alert('Form component not available');
+            ERPNotification.error('Form component not available');
             return;
         }
 
@@ -355,7 +355,7 @@
 
             if (!record) {
                 ERPPopup.close();
-                alert('Record not found');
+                ERPNotification.error('Record not found');
                 return;
             }
 
@@ -383,7 +383,7 @@
 
         } catch (error) {
             ERPPopup.close();
-            alert('Error loading record: ' + error.message);
+            ERPNotification.error('Error loading record', [error.message]);
         }
     }
 
@@ -398,7 +398,7 @@
 
         if (errors.length > 0) {
             const messages = errors.map(e => typeof e === 'string' ? e : e.message);
-            alert('Validation errors:\n' + messages.join('\n'));
+            ERPNotification.error('Validation failed', messages);
             return;
         }
 
@@ -413,7 +413,7 @@
             currentFormContext = null;
             if (onSuccess) onSuccess();
         } catch (error) {
-            alert('Error saving: ' + error.message);
+            ERPNotification.error('Error saving', [error.message]);
         }
     }
 
@@ -428,7 +428,7 @@
             if (confirm('Are you sure you want to delete this record?')) {
                 deleteRecord(serviceConfig.endpoint, recordId, serviceConfig.primaryKey)
                     .then(() => { if (onSuccess) onSuccess(); })
-                    .catch(error => { alert('Error deleting: ' + error.message); });
+                    .catch(error => { ERPNotification.error('Error deleting', [error.message]); });
             }
             return;
         }
@@ -451,7 +451,7 @@
                     ERPPopup.close();
                     if (onSuccess) onSuccess();
                 } catch (error) {
-                    alert('Error deleting: ' + error.message);
+                    ERPNotification.error('Error deleting', [error.message]);
                 }
             }
         });

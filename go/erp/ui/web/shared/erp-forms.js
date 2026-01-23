@@ -471,7 +471,7 @@
 
     function openAddForm(serviceConfig, formDef, onSuccess) {
         if (typeof ERPPopup === 'undefined') {
-            alert('Form component not available');
+            ERPNotification.error('Form component not available');
             return;
         }
 
@@ -500,7 +500,7 @@
 
     async function openEditForm(serviceConfig, formDef, recordId, onSuccess) {
         if (typeof ERPPopup === 'undefined') {
-            alert('Form component not available');
+            ERPNotification.error('Form component not available');
             return;
         }
 
@@ -522,7 +522,7 @@
 
             if (!record) {
                 ERPPopup.close();
-                alert('Record not found');
+                ERPNotification.error('Record not found');
                 return;
             }
 
@@ -551,7 +551,7 @@
 
         } catch (error) {
             ERPPopup.close();
-            alert('Error loading record: ' + error.message);
+            ERPNotification.error('Error loading record', [error.message]);
         }
     }
 
@@ -564,7 +564,7 @@
         const errors = validateFormData(formDef, data);
 
         if (errors.length > 0) {
-            alert('Validation errors:\n' + errors.map(e => e.message).join('\n'));
+            ERPNotification.error('Validation failed', errors.map(e => e.message));
             return;
         }
 
@@ -579,13 +579,13 @@
             currentFormContext = null;
             if (onSuccess) onSuccess();
         } catch (error) {
-            alert('Error saving: ' + error.message);
+            ERPNotification.error('Error saving', [error.message]);
         }
     }
 
     function openViewForm(serviceConfig, formDef, data) {
         if (typeof ERPPopup === 'undefined') {
-            alert('View component not available');
+            ERPNotification.error('View component not available');
             return;
         }
 
@@ -622,7 +622,7 @@
             if (confirm('Are you sure you want to delete this record?')) {
                 deleteRecord(serviceConfig.endpoint, recordId, serviceConfig.primaryKey)
                     .then(() => { if (onSuccess) onSuccess(); })
-                    .catch(error => { alert('Error deleting: ' + error.message); });
+                    .catch(error => { ERPNotification.error('Error deleting', [error.message]); });
             }
             return;
         }
@@ -645,7 +645,7 @@
                     ERPPopup.close();
                     if (onSuccess) onSuccess();
                 } catch (error) {
-                    alert('Error deleting: ' + error.message);
+                    ERPNotification.error('Error deleting', [error.message]);
                 }
             }
         });

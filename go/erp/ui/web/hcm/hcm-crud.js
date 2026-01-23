@@ -15,7 +15,7 @@
         const formDef = HCM.getServiceFormDef(service.model);
 
         if (!formDef || typeof HCMForms === 'undefined') {
-            alert(`Add ${service.label} - Form not yet configured`);
+            ERPNotification.warning(`Add ${service.label} - Form not yet configured`);
             return;
         }
 
@@ -35,7 +35,7 @@
         const formDef = HCM.getServiceFormDef(service.model);
 
         if (!formDef || typeof HCMForms === 'undefined') {
-            alert(`Edit ${service.label} - Form not yet configured`);
+            ERPNotification.warning(`Edit ${service.label} - Form not yet configured`);
             return;
         }
 
@@ -86,7 +86,7 @@
             }
         } catch (error) {
             console.error('Delete error:', error);
-            alert('Failed to delete item');
+            ERPNotification.error('Failed to delete item');
         }
     };
 
@@ -95,7 +95,7 @@
         const formDef = HCM.getServiceFormDef(service.model);
 
         if (!formDef || typeof HCMForms === 'undefined') {
-            alert('Details view not available');
+            ERPNotification.error('Details view not available');
             return;
         }
 
