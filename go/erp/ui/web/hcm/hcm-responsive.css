@@ -1,0 +1,169 @@
+/* ============================================ */
+/* HCM RESPONSIVE STYLES */
+/* All media queries for HCM module */
+/* ============================================ */
+
+/* ============================================ */
+/* TABLET BREAKPOINT (1024px) */
+/* ============================================ */
+
+@media (max-width: 1024px) {
+    .hcm-header-frame {
+        height: 100px;
+    }
+
+    .hcm-title {
+        font-size: 28px;
+    }
+
+    .hcm-subtitle {
+        font-size: 11px;
+    }
+
+    .hcm-module-tab {
+        padding: 10px 16px;
+        font-size: 12px;
+    }
+
+    .hcm-subnav {
+        width: 180px;
+        min-width: 180px;
+    }
+}
+
+/* ============================================ */
+/* MOBILE BREAKPOINT (768px) */
+/* ============================================ */
+
+@media (max-width: 768px) {
+    /* Header */
+    .hcm-header-frame {
+        height: 80px;
+    }
+
+    .hcm-header-title {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .hcm-icon {
+        font-size: 36px;
+    }
+
+    .hcm-title {
+        font-size: 22px;
+    }
+
+    .hcm-subtitle {
+        font-size: 10px;
+        display: none;
+    }
+
+    /* Module Tabs */
+    .hcm-module-tab .tab-label {
+        display: none;
+    }
+
+    .hcm-module-tab {
+        padding: 10px 14px;
+    }
+
+    /* Module Content */
+    .hcm-module-content {
+        flex-direction: column;
+    }
+
+    /* Sub-navigation (horizontal on mobile) */
+    .hcm-subnav {
+        width: 100%;
+        min-width: 100%;
+        min-height: auto;
+        display: flex;
+        flex-wrap: wrap;
+        padding: 8px;
+        margin: 0 -7px;
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .hcm-subnav-item {
+        padding: 8px 12px;
+        border-left: none;
+        border-radius: 6px;
+        flex: 0 0 auto;
+    }
+
+    .hcm-subnav-item.active {
+        border-left: none;
+        background: #0ea5e9;
+        color: white;
+    }
+
+    /* Service Content */
+    .hcm-service-content {
+        padding: 16px 0;
+    }
+
+    /* Forms */
+    .hcm-form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    /* Modals */
+    .hcm-modal {
+        width: 95%;
+        max-height: 95vh;
+        margin: 10px;
+    }
+
+    .hcm-modal-header {
+        padding: 16px 20px;
+    }
+
+    .hcm-modal-body {
+        padding: 16px;
+    }
+
+    .hcm-modal-footer {
+        padding: 12px 16px;
+        flex-direction: column;
+    }
+
+    .hcm-modal-footer .hcm-btn {
+        width: 100%;
+    }
+
+    /* Details View */
+    .hcm-modal-details {
+        max-width: 95%;
+    }
+
+    .hcm-details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Employee Detail */
+    .emp-detail-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .emp-badges {
+        justify-content: center;
+    }
+
+    .emp-detail-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+
+    .emp-tab {
+        white-space: nowrap;
+    }
+
+    .emp-overview-grid {
+        grid-template-columns: 1fr;
+    }
+}
