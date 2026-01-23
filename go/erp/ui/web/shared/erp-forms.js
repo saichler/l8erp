@@ -1,27 +1,19 @@
-// HCM Forms - Modal Form Generation and Handling
-// Thin wrapper around ERPForms for HCM-specific needs
-
+/**
+ * ERP Shared Form Handler
+ * Generic form generation and handling for all ERP modules
+ */
 (function() {
     'use strict';
 
-    // Import shared utilities
     const { escapeHtml, escapeAttr, formatDateForInput, parseDateToTimestamp } = ERPUtils;
 
-    // ============================================================================
-    // FORM GENERATION (delegates to ERPForms when available)
-    // ============================================================================
+    // ========================================
+    // FORM GENERATION
+    // ========================================
 
-    // Generate form HTML from form definition
     function generateFormHtml(formDef, data = {}) {
-        // Use shared ERPForms if available
-        if (typeof ERPForms !== 'undefined' && ERPForms.generateFormHtml) {
-            return ERPForms.generateFormHtml(formDef, data);
-        }
-
-        // Fallback implementation
         const sections = formDef.sections;
-
-        let html = '<form id="hcm-edit-form">';
+        let html = '<form id="erp-edit-form">';
 
         // Tabs header
         html += '<div class="probler-popup-tabs">';
@@ -38,7 +30,6 @@
             html += `<div class="probler-popup-tab-pane${activeClass}" data-pane="tab-${idx}">`;
             html += '<div class="detail-grid"><div class="detail-section detail-full-width">';
 
-            // Use form-row for two-column layout
             const fields = section.fields;
             for (let i = 0; i < fields.length; i += 2) {
                 const field1 = fields[i];
@@ -56,39 +47,33 @@
 
             html += '</div></div></div>';
         });
-        html += '</div>';
+        html += '</div></form>';
 
-        html += '</form>';
         return html;
     }
 
-    // Generate HTML for a single field
     function generateFieldHtml(field, value) {
         const required = field.required ? 'required' : '';
-        const requiredMark = field.required ? ' <span style="color: var(--erp-error, #ef4444);">*</span>' : '';
+        const requiredMark = field.required ? ' <span style="color: var(--erp-error);">*</span>' : '';
 
         let inputHtml = '';
 
         switch (field.type) {
             case 'text':
-                inputHtml = `<input type="text" id="field-${field.key}"
-                    name="${field.key}" value="${escapeAttr(value || '')}" ${required}>`;
+                inputHtml = `<input type="text" id="field-${field.key}" name="${field.key}" value="${escapeAttr(value || '')}" ${required}>`;
                 break;
 
             case 'number':
-                inputHtml = `<input type="number" id="field-${field.key}"
-                    name="${field.key}" value="${escapeAttr(value || '')}" ${required}>`;
+                inputHtml = `<input type="number" id="field-${field.key}" name="${field.key}" value="${escapeAttr(value || '')}" ${required}>`;
                 break;
 
             case 'date':
                 const dateValue = value ? formatDateForInput(value) : '';
-                inputHtml = `<input type="text" id="field-${field.key}"
-                    name="${field.key}" value="${dateValue}" ${required} placeholder="YYYY-MM-DD">`;
+                inputHtml = `<input type="text" id="field-${field.key}" name="${field.key}" value="${dateValue}" ${required} placeholder="YYYY-MM-DD">`;
                 break;
 
             case 'textarea':
-                inputHtml = `<textarea id="field-${field.key}"
-                    name="${field.key}" rows="3" ${required}>${escapeHtml(value || '')}</textarea>`;
+                inputHtml = `<textarea id="field-${field.key}" name="${field.key}" rows="3" ${required}>${escapeHtml(value || '')}</textarea>`;
                 break;
 
             case 'select':
@@ -100,22 +85,18 @@
                 return `
                     <div class="form-group">
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                            <input type="checkbox" id="field-${field.key}"
-                                name="${field.key}" ${checked} style="width: auto;">
+                            <input type="checkbox" id="field-${field.key}" name="${field.key}" ${checked} style="width: auto;">
                             <span>${escapeHtml(field.label)}</span>
                         </label>
                     </div>
                 `;
 
             case 'lookup':
-                inputHtml = `<input type="text" id="field-${field.key}"
-                    name="${field.key}" value="${escapeAttr(value || '')}"
-                    ${required} placeholder="Enter ${field.lookupModel} ID">`;
+                inputHtml = `<input type="text" id="field-${field.key}" name="${field.key}" value="${escapeAttr(value || '')}" ${required} placeholder="Enter ${field.lookupModel} ID">`;
                 break;
 
             default:
-                inputHtml = `<input type="text" id="field-${field.key}"
-                    name="${field.key}" value="${escapeAttr(value || '')}" ${required}>`;
+                inputHtml = `<input type="text" id="field-${field.key}" name="${field.key}" value="${escapeAttr(value || '')}" ${required}>`;
         }
 
         return `
@@ -126,7 +107,6 @@
         `;
     }
 
-    // Generate select dropdown HTML
     function generateSelectHtml(field, selectedValue) {
         let html = `<select id="field-${field.key}" name="${field.key}" ${field.required ? 'required' : ''}>`;
         html += '<option value="">-- Select --</option>';
@@ -140,19 +120,12 @@
         return html;
     }
 
-    // ============================================================================
+    // ========================================
     // FORM DATA HANDLING
-    // ============================================================================
+    // ========================================
 
-    // Collect form data
     function collectFormData(formDef) {
-        // Try shared ERPForms first
-        if (typeof ERPForms !== 'undefined' && ERPForms.collectFormData) {
-            return ERPForms.collectFormData(formDef);
-        }
-
-        // Fallback implementation
-        const form = document.getElementById('hcm-edit-form') || document.getElementById('erp-edit-form');
+        const form = document.getElementById('erp-edit-form');
         if (!form) return null;
 
         const data = {};
@@ -174,6 +147,7 @@
                         value = parseDateToTimestamp(element.value);
                         break;
                     case 'select':
+                        // Try to parse as number, otherwise keep as string
                         if (element.value) {
                             const numVal = parseInt(element.value, 10);
                             value = isNaN(numVal) ? element.value : numVal;
@@ -194,13 +168,7 @@
         return data;
     }
 
-    // Validate form data
     function validateFormData(formDef, data) {
-        // Try shared ERPForms first
-        if (typeof ERPForms !== 'undefined' && ERPForms.validateFormData) {
-            return ERPForms.validateFormData(formDef, data);
-        }
-
         const errors = [];
 
         formDef.sections.forEach(section => {
@@ -217,17 +185,27 @@
         return errors;
     }
 
-    // ============================================================================
-    // API OPERATIONS
-    // ============================================================================
+    // ========================================
+    // CRUD OPERATIONS
+    // ========================================
 
-    // Save record (create or update)
-    async function saveRecord(endpoint, data, primaryKey, isEdit) {
-        // Delegate to ERPForms if available
-        if (typeof ERPForms !== 'undefined' && ERPForms.saveRecord) {
-            return ERPForms.saveRecord(endpoint, data, isEdit);
-        }
+    async function fetchRecord(endpoint, primaryKey, id, modelName) {
+        const query = encodeURIComponent(JSON.stringify({
+            text: `select * from ${modelName} where ${primaryKey}=${id}`
+        }));
 
+        const response = await fetch(`${endpoint}?body=${query}`, {
+            method: 'GET',
+            headers: typeof getAuthHeaders === 'function' ? getAuthHeaders() : {}
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch record');
+
+        const result = await response.json();
+        return result.list && result.list.length > 0 ? result.list[0] : null;
+    }
+
+    async function saveRecord(endpoint, data, isEdit = false) {
         const method = isEdit ? 'PUT' : 'POST';
 
         const response = await fetch(endpoint, {
@@ -243,73 +221,34 @@
             const errorText = await response.text();
             throw new Error(errorText || 'Failed to save record');
         }
-
         return await response.json();
     }
 
-    // Fetch single record by ID
-    async function fetchRecord(endpoint, id, primaryKey, modelName) {
-        // Delegate to ERPForms if available
-        if (typeof ERPForms !== 'undefined' && ERPForms.fetchRecord) {
-            return ERPForms.fetchRecord(endpoint, primaryKey, id, modelName);
-        }
-
-        const query = encodeURIComponent(JSON.stringify({
-            text: `select * from ${modelName} where ${primaryKey}=${id}`
-        }));
-
-        const response = await fetch(`${endpoint}?body=${query}`, {
-            method: 'GET',
-            headers: typeof getAuthHeaders === 'function' ? getAuthHeaders() : {}
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch record');
-        }
-
-        const data = await response.json();
-        return data.list && data.list.length > 0 ? data.list[0] : null;
-    }
-
-    // Delete record
     async function deleteRecord(endpoint, id, primaryKey) {
-        // Delegate to ERPForms if available
-        if (typeof ERPForms !== 'undefined' && ERPForms.deleteRecord) {
-            return ERPForms.deleteRecord(endpoint, id, primaryKey);
-        }
-
         const response = await fetch(`${endpoint}?${primaryKey}=${id}`, {
             method: 'DELETE',
             headers: typeof getAuthHeaders === 'function' ? getAuthHeaders() : {}
         });
 
-        if (!response.ok) {
-            throw new Error('Failed to delete record');
-        }
-
+        if (!response.ok) throw new Error('Failed to delete record');
         return true;
     }
 
-    // ============================================================================
-    // HIGH-LEVEL FORM OPERATIONS USING ERPPopup
-    // ============================================================================
+    // ========================================
+    // MODAL HELPERS
+    // ========================================
 
     // Store current form context for save handler
     let currentFormContext = null;
 
-    // Open add modal for a service
     function openAddForm(serviceConfig, formDef, onSuccess) {
-        // Delegate to ERPForms if available
-        if (typeof ERPForms !== 'undefined' && ERPForms.openAddForm) {
-            return ERPForms.openAddForm(serviceConfig, formDef, onSuccess);
-        }
-
         if (typeof ERPPopup === 'undefined') {
             alert('Form component not available');
             return;
         }
 
-        const formHtml = generateFormHtml(formDef);
+        const title = `Add ${formDef.title}`;
+        const content = generateFormHtml(formDef, {});
 
         currentFormContext = {
             formDef: formDef,
@@ -320,8 +259,8 @@
         };
 
         ERPPopup.show({
-            title: `Add ${formDef.title}`,
-            content: formHtml,
+            title: title,
+            content: content,
             size: 'large',
             showFooter: true,
             saveButtonText: 'Save',
@@ -330,13 +269,7 @@
         });
     }
 
-    // Open edit modal for a service
     async function openEditForm(serviceConfig, formDef, recordId, onSuccess) {
-        // Delegate to ERPForms if available
-        if (typeof ERPForms !== 'undefined' && ERPForms.openEditForm) {
-            return ERPForms.openEditForm(serviceConfig, formDef, recordId, onSuccess);
-        }
-
         if (typeof ERPPopup === 'undefined') {
             alert('Form component not available');
             return;
@@ -345,13 +278,18 @@
         // Show loading state
         ERPPopup.show({
             title: `Edit ${formDef.title}`,
-            content: '<div style="text-align: center; padding: 40px; color: var(--erp-text-muted, #718096);">Loading...</div>',
+            content: '<div style="text-align: center; padding: 40px; color: #718096;">Loading...</div>',
             size: 'large',
             showFooter: false
         });
 
         try {
-            const record = await fetchRecord(serviceConfig.endpoint, recordId, serviceConfig.primaryKey, serviceConfig.modelName);
+            const record = await fetchRecord(
+                serviceConfig.endpoint,
+                serviceConfig.primaryKey,
+                recordId,
+                serviceConfig.modelName
+            );
 
             if (!record) {
                 ERPPopup.close();
@@ -359,7 +297,7 @@
                 return;
             }
 
-            const formHtml = generateFormHtml(formDef, record);
+            const content = generateFormHtml(formDef, record);
 
             currentFormContext = {
                 formDef: formDef,
@@ -373,7 +311,7 @@
             ERPPopup.close();
             ERPPopup.show({
                 title: `Edit ${formDef.title}`,
-                content: formHtml,
+                content: content,
                 size: 'large',
                 showFooter: true,
                 saveButtonText: 'Save',
@@ -387,7 +325,6 @@
         }
     }
 
-    // Handle form save
     async function handleFormSave() {
         if (!currentFormContext) return;
 
@@ -397,8 +334,7 @@
         const errors = validateFormData(formDef, data);
 
         if (errors.length > 0) {
-            const messages = errors.map(e => typeof e === 'string' ? e : e.message);
-            alert('Validation errors:\n' + messages.join('\n'));
+            alert('Validation errors:\n' + errors.map(e => e.message).join('\n'));
             return;
         }
 
@@ -408,7 +344,7 @@
         }
 
         try {
-            await saveRecord(serviceConfig.endpoint, data, serviceConfig.primaryKey, isEdit);
+            await saveRecord(serviceConfig.endpoint, data, isEdit);
             ERPPopup.close();
             currentFormContext = null;
             if (onSuccess) onSuccess();
@@ -417,13 +353,29 @@
         }
     }
 
-    // Confirm and delete a record
-    function confirmDelete(serviceConfig, recordId, onSuccess) {
-        // Delegate to ERPForms if available
-        if (typeof ERPForms !== 'undefined' && ERPForms.confirmDelete) {
-            return ERPForms.confirmDelete(serviceConfig, recordId, onSuccess);
+    function openViewForm(serviceConfig, formDef, data) {
+        if (typeof ERPPopup === 'undefined') {
+            alert('View component not available');
+            return;
         }
 
+        const title = `${formDef.title} Details`;
+        const content = generateFormHtml(formDef, data);
+
+        ERPPopup.show({
+            title: title,
+            content: content,
+            size: 'large',
+            showFooter: false,
+            onShow: (body) => {
+                body.querySelectorAll('input, select, textarea').forEach(el => {
+                    el.disabled = true;
+                });
+            }
+        });
+    }
+
+    function confirmDelete(serviceConfig, recordId, onSuccess) {
         if (typeof ERPPopup === 'undefined') {
             if (confirm('Are you sure you want to delete this record?')) {
                 deleteRecord(serviceConfig.endpoint, recordId, serviceConfig.primaryKey)
@@ -438,7 +390,7 @@
             content: `
                 <div class="delete-message">
                     <p>Are you sure you want to delete this record?</p>
-                    <p style="color: var(--erp-error, #ef4444); font-weight: 600;">This action cannot be undone.</p>
+                    <p style="color: var(--erp-error); font-weight: 600;">This action cannot be undone.</p>
                 </div>
             `,
             size: 'small',
@@ -457,19 +409,22 @@
         });
     }
 
-    // ============================================================================
-    // EXPORTS
-    // ============================================================================
+    // ========================================
+    // EXPORT
+    // ========================================
 
-    window.HCMForms = {
+    window.ERPForms = {
         generateFormHtml,
+        generateFieldHtml,
+        generateSelectHtml,
         collectFormData,
         validateFormData,
-        saveRecord,
         fetchRecord,
+        saveRecord,
         deleteRecord,
         openAddForm,
         openEditForm,
+        openViewForm,
         confirmDelete
     };
 

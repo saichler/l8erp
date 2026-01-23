@@ -45,6 +45,9 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetServiceItemList(&hcm.EmployeeList{})
 	sla.SetPrimaryKeys("EmployeeId")
 	sla.SetArgs(p)
+	sla.SetTransactional(true)
+	sla.SetReplication(true)
+	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
 	ws.AddEndpoint(&hcm.Employee{}, ifs.POST, &l8web.L8Empty{})

@@ -36,6 +36,9 @@ class L8Table {
         // Primary key for record identification
         this.primaryKey = options.primaryKey || null;
 
+        // Row click handler for details view
+        this.onRowClick = options.onRowClick || null;
+
         // Sorting and filtering support
         this.sortable = options.sortable !== false;
         this.filterable = options.filterable !== false;
@@ -460,7 +463,9 @@ class L8Table {
             `;
         }
 
-        return `<tr>${cells}</tr>`;
+        // Add row click support - store row index for data retrieval
+        const rowClass = this.onRowClick ? 'l8-clickable-row' : '';
+        return `<tr class="${rowClass}" data-row-index="${index}">${cells}</tr>`;
     }
 
     // Get item ID from primary key or common ID field patterns
@@ -595,6 +600,23 @@ class L8Table {
                 if (this.onAdd) this.onAdd();
             });
         });
+
+        // Row click handler for details view
+        if (this.onRowClick) {
+            this.container.querySelectorAll('tbody tr.l8-clickable-row').forEach(row => {
+                row.addEventListener('click', (e) => {
+                    // Don't trigger if clicking on action buttons
+                    if (e.target.closest('.l8-action-btns') || e.target.closest('button')) {
+                        return;
+                    }
+                    const rowIndex = parseInt(row.dataset.rowIndex, 10);
+                    const item = this.data[rowIndex];
+                    if (item) {
+                        this.onRowClick(item, this.getItemId(item));
+                    }
+                });
+            });
+        }
     }
 
     // Handle pagination actions

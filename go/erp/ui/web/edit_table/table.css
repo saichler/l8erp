@@ -219,6 +219,15 @@
     border-bottom: none;
 }
 
+/* Clickable Rows */
+.l8-table tbody tr.l8-clickable-row {
+    cursor: pointer;
+}
+
+.l8-table tbody tr.l8-clickable-row:hover {
+    background: rgba(14, 165, 233, 0.1);
+}
+
 /* Action Buttons */
 .l8-action-btns {
     display: flex;

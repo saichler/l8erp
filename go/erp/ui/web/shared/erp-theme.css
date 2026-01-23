@@ -1,0 +1,283 @@
+/**
+ * ERP Shared Theme
+ * CSS variables and base styles for consistent look & feel
+ */
+
+/* ============================================ */
+/* CSS VARIABLES (Design Tokens) */
+/* ============================================ */
+
+:root {
+    /* Primary Colors */
+    --erp-primary: #0ea5e9;
+    --erp-primary-dark: #0284c7;
+    --erp-primary-light: #7dd3fc;
+
+    /* Text Colors */
+    --erp-text-dark: #2d3748;
+    --erp-text-medium: #4a5568;
+    --erp-text-muted: #718096;
+    --erp-text-light: #a0aec0;
+
+    /* Background Colors */
+    --erp-bg-white: #ffffff;
+    --erp-bg-light: #f7fafc;
+    --erp-bg-input: #f1f5f9;
+
+    /* Border Colors */
+    --erp-border: #e2e8f0;
+    --erp-border-dark: #cbd5e0;
+
+    /* Status Colors */
+    --erp-success: #22c55e;
+    --erp-success-bg: rgba(34, 197, 94, 0.1);
+    --erp-warning: #f59e0b;
+    --erp-warning-bg: rgba(245, 158, 11, 0.1);
+    --erp-error: #ef4444;
+    --erp-error-bg: rgba(239, 68, 68, 0.1);
+    --erp-info: #3b82f6;
+    --erp-info-bg: rgba(59, 130, 246, 0.1);
+
+    /* Typography */
+    --erp-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    --erp-font-mono: 'SF Mono', 'Monaco', 'Consolas', monospace;
+
+    /* Font Sizes */
+    --erp-font-xs: 11px;
+    --erp-font-sm: 12px;
+    --erp-font-base: 14px;
+    --erp-font-lg: 16px;
+    --erp-font-xl: 18px;
+
+    /* Spacing (8px baseline) */
+    --erp-space-xs: 4px;
+    --erp-space-sm: 8px;
+    --erp-space-md: 16px;
+    --erp-space-lg: 24px;
+    --erp-space-xl: 32px;
+
+    /* Border Radius */
+    --erp-radius-sm: 4px;
+    --erp-radius-md: 8px;
+    --erp-radius-lg: 12px;
+
+    /* Shadows */
+    --erp-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --erp-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --erp-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+    /* Focus Ring */
+    --erp-focus-ring: 0 0 0 3px rgba(14, 165, 233, 0.15);
+}
+
+/* ============================================ */
+/* STATUS BADGES */
+/* ============================================ */
+
+.erp-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: var(--erp-radius-sm);
+    font-size: var(--erp-font-xs);
+    font-weight: 600;
+    font-family: var(--erp-font-family);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.erp-status-active {
+    background: var(--erp-success-bg);
+    color: var(--erp-success);
+}
+
+.erp-status-pending {
+    background: var(--erp-warning-bg);
+    color: var(--erp-warning);
+}
+
+.erp-status-inactive {
+    background: rgba(107, 114, 128, 0.1);
+    color: #6b7280;
+}
+
+.erp-status-terminated {
+    background: var(--erp-error-bg);
+    color: var(--erp-error);
+}
+
+.erp-status-info {
+    background: var(--erp-info-bg);
+    color: var(--erp-info);
+}
+
+/* ============================================ */
+/* TAGS */
+/* ============================================ */
+
+.erp-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: var(--erp-radius-sm);
+    font-size: var(--erp-font-xs);
+    font-weight: 500;
+    background: var(--erp-bg-input);
+    color: var(--erp-text-medium);
+}
+
+/* ============================================ */
+/* EMPTY STATE */
+/* ============================================ */
+
+.erp-empty {
+    color: var(--erp-text-light);
+    font-style: italic;
+}
+
+/* ============================================ */
+/* BUTTONS */
+/* ============================================ */
+
+.erp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--erp-space-sm);
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--erp-radius-md);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--erp-font-family);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.erp-btn-primary {
+    background: var(--erp-primary);
+    color: white;
+    box-shadow: 0 2px 4px rgba(14, 165, 233, 0.2);
+}
+
+.erp-btn-primary:hover {
+    background: var(--erp-primary-dark);
+    box-shadow: 0 4px 8px rgba(14, 165, 233, 0.25);
+    transform: translateY(-1px);
+}
+
+.erp-btn-secondary {
+    background: var(--erp-bg-white);
+    color: var(--erp-text-medium);
+    border: 1px solid var(--erp-border);
+}
+
+.erp-btn-secondary:hover {
+    background: var(--erp-bg-light);
+    border-color: var(--erp-border-dark);
+    color: var(--erp-text-dark);
+}
+
+.erp-btn-danger {
+    background: var(--erp-error);
+    color: white;
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+}
+
+.erp-btn-danger:hover {
+    background: #dc2626;
+    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.25);
+    transform: translateY(-1px);
+}
+
+.erp-btn-small {
+    padding: 8px 16px;
+    font-size: var(--erp-font-sm);
+}
+
+/* ============================================ */
+/* FORM ELEMENTS */
+/* ============================================ */
+
+.erp-form-group {
+    margin-bottom: var(--erp-space-lg);
+}
+
+.erp-form-group:last-child {
+    margin-bottom: 0;
+}
+
+.erp-form-label {
+    display: block;
+    margin-bottom: var(--erp-space-sm);
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--erp-text-dark);
+    font-family: var(--erp-font-family);
+}
+
+.erp-form-input,
+.erp-form-select,
+.erp-form-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--erp-border);
+    border-radius: var(--erp-radius-md);
+    font-size: var(--erp-font-base);
+    font-family: var(--erp-font-family);
+    color: var(--erp-text-dark);
+    background: var(--erp-bg-white);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+}
+
+.erp-form-input:focus,
+.erp-form-select:focus,
+.erp-form-textarea:focus {
+    outline: none;
+    border-color: var(--erp-primary);
+    box-shadow: var(--erp-focus-ring);
+}
+
+.erp-form-input:disabled,
+.erp-form-select:disabled,
+.erp-form-textarea:disabled {
+    background: var(--erp-bg-input);
+    color: var(--erp-text-muted);
+    cursor: not-allowed;
+}
+
+.erp-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--erp-space-lg);
+}
+
+/* ============================================ */
+/* CARDS */
+/* ============================================ */
+
+.erp-card {
+    background: var(--erp-bg-white);
+    border: 1px solid var(--erp-border);
+    border-radius: var(--erp-radius-lg);
+    padding: var(--erp-space-lg);
+}
+
+.erp-card-header {
+    font-size: var(--erp-font-lg);
+    font-weight: 700;
+    color: var(--erp-primary);
+    margin-bottom: var(--erp-space-md);
+    padding-bottom: var(--erp-space-sm);
+    border-bottom: 1px solid var(--erp-border);
+}
+
+/* ============================================ */
+/* RESPONSIVE */
+/* ============================================ */
+
+@media (max-width: 768px) {
+    .erp-form-row {
+        grid-template-columns: 1fr;
+    }
+}
