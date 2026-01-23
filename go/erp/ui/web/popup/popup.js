@@ -52,7 +52,7 @@
         if (config.titleHtml) {
             titleHtml = config.titleHtml;
         } else {
-            titleHtml = '<h3 class="probler-popup-title">' + escapeHtml(config.title || 'Popup') + '</h3>';
+            titleHtml = '<h3 class="probler-popup-title">' + ERPUtils.escapeHtml(config.title || 'Popup') + '</h3>';
         }
         header.innerHTML = titleHtml + '<button class="probler-popup-close" type="button">&times;</button>';
 
@@ -283,14 +283,6 @@
     function getBody() {
         if (modalStack.length === 0) return null;
         return popupRoot.querySelector('.probler-popup-overlay:not(.stacked) .probler-popup-body');
-    }
-
-    // Escape HTML to prevent XSS
-    function escapeHtml(text) {
-        if (text === null || text === undefined) return '';
-        const div = document.createElement('div');
-        div.textContent = String(text);
-        return div.innerHTML;
     }
 
     // Close all popups

@@ -12,7 +12,7 @@ RUN /patch.sh
 WORKDIR /home/src/github.com/saichler/build
 RUN go build -o vnet
 
-FROM saichler/probler-security:latest AS final
+FROM saichler/erp-security:latest AS final
 COPY --from=build /home/src/github.com/saichler/build/vnet /home/run/vnet
 
 ENTRYPOINT ["/home/run/vnet"]

@@ -248,6 +248,35 @@
     }
 
     // ========================================
+    // ENUM UTILITIES
+    // ========================================
+
+    /**
+     * Find matching enum value from user input (case-insensitive partial match)
+     * @param {string} input - User input to match
+     * @param {object} enumValues - Object mapping string keys to enum values
+     * @returns {*} Matched enum value or null if no match
+     */
+    function matchEnumValue(input, enumValues) {
+        const normalizedInput = (input || '').toLowerCase().trim();
+        if (!normalizedInput) return null;
+
+        // Try exact match first
+        if (enumValues[normalizedInput] !== undefined) {
+            return enumValues[normalizedInput];
+        }
+
+        // Try partial match (input is prefix of enum key)
+        for (const [key, value] of Object.entries(enumValues)) {
+            if (key.startsWith(normalizedInput)) {
+                return value;
+            }
+        }
+
+        return null; // No match found
+    }
+
+    // ========================================
     // STRING FORMATTING
     // ========================================
 
@@ -292,7 +321,10 @@
 
         // Strings
         formatLabel,
-        truncate
+        truncate,
+
+        // Enums
+        matchEnumValue
     };
 
 })();

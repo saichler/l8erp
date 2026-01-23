@@ -16,6 +16,12 @@
     <link rel="stylesheet" href="css/responsive.css">
     <!-- Module-specific styles -->
     <link rel="stylesheet" href="edit_table/table.css">
+    <!-- HCM Module Styles (load in order) -->
+    <link rel="stylesheet" href="hcm/hcm-layout.css">
+    <link rel="stylesheet" href="hcm/hcm-forms.css">
+    <link rel="stylesheet" href="hcm/hcm-modals.css">
+    <link rel="stylesheet" href="hcm/hcm-employee.css">
+    <link rel="stylesheet" href="hcm/hcm-responsive.css">
     <link rel="stylesheet" href="hcm/hcm.css">
     <!-- Popup Component -->
     <link rel="stylesheet" href="popup/popup.css">
@@ -155,12 +161,27 @@
     <script src="shared/erp-forms.js"></script>
     <!-- Popup Component -->
     <script src="popup/popup.js"></script>
-    <!-- Date Picker Component -->
+    <!-- Date Picker Component (load in order) -->
+    <script src="datepicker/datepicker-utils.js"></script>
+    <script src="datepicker/datepicker-calendar.js"></script>
+    <script src="datepicker/datepicker-core.js"></script>
     <script src="datepicker/datepicker.js"></script>
-    <!-- Module-specific scripts -->
+    <!-- L8Table Component (load in order) -->
+    <script src="edit_table/table-core.js"></script>
+    <script src="edit_table/table-data.js"></script>
+    <script src="edit_table/table-render.js"></script>
+    <script src="edit_table/table-events.js"></script>
+    <script src="edit_table/table-filter.js"></script>
     <script src="edit_table/table.js"></script>
-    <!-- HCM Module -->
+    <!-- HCM Module (load in order) -->
+    <script src="hcm/hcm-config.js"></script>
+    <script src="hcm/hcm-navigation.js"></script>
+    <script src="hcm/hcm-service.js"></script>
+    <script src="hcm/hcm-crud.js"></script>
     <script src="hcm/hcm-forms.js"></script>
+    <script src="hcm/core-hr/core-hr-enums.js"></script>
+    <script src="hcm/core-hr/core-hr-columns.js"></script>
+    <script src="hcm/core-hr/core-hr-forms.js"></script>
     <script src="hcm/core-hr/core-hr.js"></script>
     <script src="hcm/core-hr/employee-detail.js"></script>
     <script src="hcm/payroll/payroll.js"></script>
