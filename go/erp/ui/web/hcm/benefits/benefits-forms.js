@@ -21,8 +21,8 @@
                         { key: 'code', label: 'Code', type: 'text', required: true },
                         { key: 'name', label: 'Name', type: 'text', required: true },
                         { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
-                        { key: 'carrierId', label: 'Carrier', type: 'lookup', lookupModel: 'Carrier' },
+                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier' },
                         { key: 'planType', label: 'Plan Type', type: 'select', options: enums.BENEFIT_PLAN_TYPE, required: true },
                         { key: 'category', label: 'Category', type: 'select', options: enums.BENEFIT_PLAN_CATEGORY, required: true },
                         { key: 'planYear', label: 'Plan Year', type: 'number', required: true }
@@ -54,12 +54,12 @@
                 {
                     title: 'Enrollment Details',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
-                        { key: 'planId', label: 'Benefit Plan', type: 'lookup', lookupModel: 'BenefitPlan', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+                        { key: 'planId', label: 'Benefit Plan', type: 'reference', lookupModel: 'BenefitPlan', required: true },
                         { key: 'coverageOptionId', label: 'Coverage Option', type: 'text' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.ENROLLMENT_STATUS, required: true },
                         { key: 'reason', label: 'Reason', type: 'select', options: enums.ENROLLMENT_REASON, required: true },
-                        { key: 'lifeEventId', label: 'Life Event', type: 'lookup', lookupModel: 'LifeEvent' }
+                        { key: 'lifeEventId', label: 'Life Event', type: 'reference', lookupModel: 'LifeEvent' }
                     ]
                 },
                 {
@@ -119,7 +119,7 @@
                 {
                     title: 'Personal Information',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                         { key: 'firstName', label: 'First Name', type: 'text', required: true },
                         { key: 'middleName', label: 'Middle Name', type: 'text' },
                         { key: 'lastName', label: 'Last Name', type: 'text', required: true },
@@ -147,7 +147,7 @@
                 {
                     title: 'Event Details',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                         { key: 'eventType', label: 'Event Type', type: 'select', options: enums.LIFE_EVENT_TYPE, required: true },
                         { key: 'eventDate', label: 'Event Date', type: 'date', required: true },
                         { key: 'reportedDate', label: 'Reported Date', type: 'date' },
@@ -173,7 +173,7 @@
                 {
                     title: 'Event Details',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                         { key: 'eventType', label: 'Event Type', type: 'select', options: enums.COBRA_EVENT_TYPE, required: true },
                         { key: 'qualifyingEventDate', label: 'Qualifying Event Date', type: 'date', required: true },
                         { key: 'notificationDate', label: 'Notification Date', type: 'date' },

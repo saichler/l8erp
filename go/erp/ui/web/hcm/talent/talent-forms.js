@@ -18,8 +18,8 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
-                        { key: 'reviewerId', label: 'Reviewer', type: 'lookup', lookupModel: 'Employee', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+                        { key: 'reviewerId', label: 'Reviewer', type: 'reference', lookupModel: 'Employee', required: true },
                         { key: 'reviewType', label: 'Review Type', type: 'select', options: enums.REVIEW_TYPE, required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.PERFORMANCE_REVIEW_STATUS, required: true }
                     ]
@@ -56,10 +56,10 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                         { key: 'title', label: 'Title', type: 'text', required: true },
                         { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'parentGoalId', label: 'Parent Goal', type: 'lookup', lookupModel: 'Goal' }
+                        { key: 'parentGoalId', label: 'Parent Goal', type: 'reference', lookupModel: 'Goal' }
                     ]
                 },
                 {
@@ -90,8 +90,8 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'employeeId', label: 'Employee (Receiving)', type: 'lookup', lookupModel: 'Employee', required: true },
-                        { key: 'providerId', label: 'Provider (Giving)', type: 'lookup', lookupModel: 'Employee', required: true },
+                        { key: 'employeeId', label: 'Employee (Receiving)', type: 'reference', lookupModel: 'Employee', required: true },
+                        { key: 'providerId', label: 'Provider (Giving)', type: 'reference', lookupModel: 'Employee', required: true },
                         { key: 'feedbackType', label: 'Feedback Type', type: 'select', options: enums.FEEDBACK_TYPE, required: true },
                         { key: 'relationship', label: 'Relationship', type: 'select', options: enums.FEEDBACK_RELATIONSHIP },
                         { key: 'status', label: 'Status', type: 'select', options: enums.FEEDBACK_STATUS, required: true }
@@ -123,7 +123,7 @@
                     fields: [
                         { key: 'name', label: 'Name', type: 'text', required: true },
                         { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'jobFamilyId', label: 'Job Family', type: 'lookup', lookupModel: 'JobFamily' },
+                        { key: 'jobFamilyId', label: 'Job Family', type: 'reference', lookupModel: 'JobFamily' },
                         { key: 'isActive', label: 'Active', type: 'checkbox' }
                     ]
                 }
@@ -136,8 +136,8 @@
                 {
                     title: 'Position Information',
                     fields: [
-                        { key: 'positionId', label: 'Position', type: 'lookup', lookupModel: 'Position', required: true },
-                        { key: 'incumbentId', label: 'Current Incumbent', type: 'lookup', lookupModel: 'Employee' },
+                        { key: 'positionId', label: 'Position', type: 'reference', lookupModel: 'Position', required: true },
+                        { key: 'incumbentId', label: 'Current Incumbent', type: 'reference', lookupModel: 'Employee' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.SUCCESSION_PLAN_STATUS, required: true }
                     ]
                 },
@@ -175,10 +175,10 @@
                 {
                     title: 'Position Details',
                     fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
-                        { key: 'departmentId', label: 'Department', type: 'lookup', lookupModel: 'Department' },
-                        { key: 'positionId', label: 'Position', type: 'lookup', lookupModel: 'Position' },
-                        { key: 'jobId', label: 'Job', type: 'lookup', lookupModel: 'Job' },
+                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+                        { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'Department' },
+                        { key: 'positionId', label: 'Position', type: 'reference', lookupModel: 'Position' },
+                        { key: 'jobId', label: 'Job', type: 'reference', lookupModel: 'Job' },
                         { key: 'openings', label: 'Number of Openings', type: 'number', required: true },
                         { key: 'isRemote', label: 'Remote Position', type: 'checkbox' }
                     ]
@@ -186,8 +186,8 @@
                 {
                     title: 'Hiring Team',
                     fields: [
-                        { key: 'hiringManagerId', label: 'Hiring Manager', type: 'lookup', lookupModel: 'Employee' },
-                        { key: 'recruiterId', label: 'Recruiter', type: 'lookup', lookupModel: 'Employee' }
+                        { key: 'hiringManagerId', label: 'Hiring Manager', type: 'reference', lookupModel: 'Employee' },
+                        { key: 'recruiterId', label: 'Recruiter', type: 'reference', lookupModel: 'Employee' }
                     ]
                 },
                 {
@@ -226,7 +226,7 @@
                     fields: [
                         { key: 'source', label: 'Source', type: 'select', options: enums.APPLICANT_SOURCE },
                         { key: 'sourceDetails', label: 'Source Details', type: 'text' },
-                        { key: 'referrerEmployeeId', label: 'Referrer', type: 'lookup', lookupModel: 'Employee' }
+                        { key: 'referrerEmployeeId', label: 'Referrer', type: 'reference', lookupModel: 'Employee' }
                     ]
                 },
                 {
@@ -247,8 +247,8 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'applicantId', label: 'Applicant', type: 'lookup', lookupModel: 'Applicant', required: true },
-                        { key: 'requisitionId', label: 'Requisition', type: 'lookup', lookupModel: 'JobRequisition', required: true },
+                        { key: 'applicantId', label: 'Applicant', type: 'reference', lookupModel: 'Applicant', required: true },
+                        { key: 'requisitionId', label: 'Requisition', type: 'reference', lookupModel: 'JobRequisition', required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.APPLICATION_STATUS, required: true },
                         { key: 'stage', label: 'Stage', type: 'select', options: enums.APPLICATION_STAGE }
                     ]
@@ -278,7 +278,7 @@
                 {
                     title: 'Task Information',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                         { key: 'name', label: 'Task Name', type: 'text', required: true },
                         { key: 'description', label: 'Description', type: 'textarea' },
                         { key: 'category', label: 'Category', type: 'select', options: enums.ONBOARDING_TASK_CATEGORY, required: true }
@@ -287,7 +287,7 @@
                 {
                     title: 'Assignment',
                     fields: [
-                        { key: 'assignedTo', label: 'Assigned To', type: 'lookup', lookupModel: 'Employee' },
+                        { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' },
                         { key: 'ownerType', label: 'Owner Type', type: 'select', options: enums.TASK_OWNER },
                         { key: 'status', label: 'Status', type: 'select', options: enums.ONBOARDING_TASK_STATUS, required: true },
                         { key: 'sequenceOrder', label: 'Sequence Order', type: 'number' }

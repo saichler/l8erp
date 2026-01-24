@@ -18,8 +18,8 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
-                        { key: 'salaryStructureId', label: 'Salary Structure', type: 'lookup', lookupModel: 'SalaryStructure' },
+                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+                        { key: 'salaryStructureId', label: 'Salary Structure', type: 'reference', lookupModel: 'SalaryStructure' },
                         { key: 'gradeCode', label: 'Grade Code', type: 'text', required: true },
                         { key: 'name', label: 'Name', type: 'text', required: true },
                         { key: 'level', label: 'Level', type: 'number', required: true }
@@ -53,7 +53,7 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
+                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
                         { key: 'code', label: 'Code', type: 'text', required: true },
                         { key: 'name', label: 'Name', type: 'text', required: true },
                         { key: 'description', label: 'Description', type: 'textarea' }
@@ -83,9 +83,9 @@
                 {
                     title: 'Employee',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                         { key: 'compensationType', label: 'Compensation Type', type: 'select', options: enums.COMPENSATION_TYPE, required: true },
-                        { key: 'salaryGradeId', label: 'Salary Grade', type: 'lookup', lookupModel: 'SalaryGrade' }
+                        { key: 'salaryGradeId', label: 'Salary Grade', type: 'reference', lookupModel: 'SalaryGrade' }
                     ]
                 },
                 {
@@ -116,9 +116,9 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
-                        { key: 'meritCycleId', label: 'Merit Cycle', type: 'lookup', lookupModel: 'MeritCycle', required: true },
-                        { key: 'reviewId', label: 'Performance Review', type: 'lookup', lookupModel: 'PerformanceReview' },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+                        { key: 'meritCycleId', label: 'Merit Cycle', type: 'reference', lookupModel: 'MeritCycle', required: true },
+                        { key: 'reviewId', label: 'Performance Review', type: 'reference', lookupModel: 'PerformanceReview' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.MERIT_INCREASE_STATUS, required: true }
                     ]
                 },
@@ -155,7 +155,7 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
+                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
                         { key: 'name', label: 'Name', type: 'text', required: true },
                         { key: 'year', label: 'Year', type: 'number', required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.MERIT_CYCLE_STATUS, required: true }
@@ -186,7 +186,7 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
+                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
                         { key: 'code', label: 'Code', type: 'text', required: true },
                         { key: 'name', label: 'Name', type: 'text', required: true },
                         { key: 'description', label: 'Description', type: 'textarea' },
@@ -229,8 +229,8 @@
                 {
                     title: 'Payment Details',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
-                        { key: 'bonusPlanId', label: 'Bonus Plan', type: 'lookup', lookupModel: 'BonusPlan' },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+                        { key: 'bonusPlanId', label: 'Bonus Plan', type: 'reference', lookupModel: 'BonusPlan' },
                         { key: 'bonusType', label: 'Bonus Type', type: 'select', options: enums.BONUS_PLAN_TYPE, required: true },
                         { key: 'reason', label: 'Reason', type: 'text' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.BONUS_PAYMENT_STATUS, required: true }
@@ -270,7 +270,7 @@
                 {
                     title: 'Grant Details',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                         { key: 'grantType', label: 'Grant Type', type: 'select', options: enums.EQUITY_GRANT_TYPE, required: true },
                         { key: 'grantNumber', label: 'Grant Number', type: 'text' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.EQUITY_GRANT_STATUS, required: true }
@@ -312,7 +312,7 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                         { key: 'statementYear', label: 'Year', type: 'number', required: true },
                         { key: 'asOfDate', label: 'As Of Date', type: 'date' }
                     ]
@@ -354,8 +354,8 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
-                        { key: 'jobId', label: 'Job', type: 'lookup', lookupModel: 'Job' },
+                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+                        { key: 'jobId', label: 'Job', type: 'reference', lookupModel: 'Job' },
                         { key: 'jobTitle', label: 'Job Title', type: 'text', required: true },
                         { key: 'surveySource', label: 'Survey Source', type: 'text', required: true },
                         { key: 'surveyYear', label: 'Survey Year', type: 'number', required: true },

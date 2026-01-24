@@ -48,66 +48,11 @@
                 {
                     title: 'Organizational Placement',
                     fields: [
-                        {
-                            key: 'organizationId',
-                            label: 'Organization',
-                            type: 'reference',
-                            referenceConfig: {
-                                modelName: 'Organization',
-                                idColumn: 'organizationId',
-                                displayColumn: 'name',
-                                title: 'Select Organization'
-                            }
-                        },
-                        {
-                            key: 'departmentId',
-                            label: 'Department',
-                            type: 'reference',
-                            referenceConfig: {
-                                modelName: 'Department',
-                                idColumn: 'departmentId',
-                                displayColumn: 'name',
-                                title: 'Select Department'
-                            }
-                        },
-                        {
-                            key: 'positionId',
-                            label: 'Position',
-                            type: 'reference',
-                            referenceConfig: {
-                                modelName: 'Position',
-                                idColumn: 'positionId',
-                                displayColumn: 'title',
-                                title: 'Select Position'
-                            }
-                        },
-                        {
-                            key: 'jobId',
-                            label: 'Job',
-                            type: 'reference',
-                            referenceConfig: {
-                                modelName: 'Job',
-                                idColumn: 'jobId',
-                                displayColumn: 'title',
-                                title: 'Select Job'
-                            }
-                        },
-                        {
-                            key: 'managerId',
-                            label: 'Manager',
-                            type: 'reference',
-                            referenceConfig: {
-                                modelName: 'Employee',
-                                idColumn: 'employeeId',
-                                displayColumn: 'lastName',
-                                selectColumns: ['employeeId', 'lastName', 'firstName'],
-                                displayFormat: function(item) {
-                                    return item.lastName + ', ' + item.firstName;
-                                },
-                                displayLabel: 'Name',
-                                title: 'Select Manager'
-                            }
-                        },
+                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+                        { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'Department' },
+                        { key: 'positionId', label: 'Position', type: 'reference', lookupModel: 'Position' },
+                        { key: 'jobId', label: 'Job', type: 'reference', lookupModel: 'Job' },
+                        { key: 'managerId', label: 'Manager', type: 'reference', lookupModel: 'Employee' },
                         { key: 'workLocationId', label: 'Work Location', type: 'text' },
                         { key: 'costCenterId', label: 'Cost Center', type: 'text' }
                     ]
@@ -125,7 +70,7 @@
                         { key: 'name', label: 'Name', type: 'text', required: true },
                         { key: 'legalName', label: 'Legal Name', type: 'text' },
                         { key: 'organizationType', label: 'Type', type: 'select', options: enums.ORGANIZATION_TYPE, required: true },
-                        { key: 'parentOrganizationId', label: 'Parent Organization', type: 'lookup', lookupModel: 'Organization' },
+                        { key: 'parentOrganizationId', label: 'Parent Organization', type: 'reference', lookupModel: 'Organization' },
                         { key: 'taxId', label: 'Tax ID', type: 'text' },
                         { key: 'industryCode', label: 'Industry Code', type: 'text' },
                         { key: 'isActive', label: 'Active', type: 'checkbox' },
@@ -145,9 +90,9 @@
                         { key: 'code', label: 'Code', type: 'text', required: true },
                         { key: 'name', label: 'Name', type: 'text', required: true },
                         { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization', required: true },
-                        { key: 'parentDepartmentId', label: 'Parent Department', type: 'lookup', lookupModel: 'Department' },
-                        { key: 'managerId', label: 'Manager', type: 'lookup', lookupModel: 'Employee' },
+                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization', required: true },
+                        { key: 'parentDepartmentId', label: 'Parent Department', type: 'reference', lookupModel: 'Department' },
+                        { key: 'managerId', label: 'Manager', type: 'reference', lookupModel: 'Employee' },
                         { key: 'costCenterId', label: 'Cost Center', type: 'text' },
                         { key: 'isActive', label: 'Active', type: 'checkbox' },
                         { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
@@ -165,10 +110,10 @@
                     fields: [
                         { key: 'positionCode', label: 'Position Code', type: 'text', required: true },
                         { key: 'title', label: 'Title', type: 'text', required: true },
-                        { key: 'jobId', label: 'Job', type: 'lookup', lookupModel: 'Job', required: true },
-                        { key: 'departmentId', label: 'Department', type: 'lookup', lookupModel: 'Department', required: true },
-                        { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
-                        { key: 'reportsToPositionId', label: 'Reports To', type: 'lookup', lookupModel: 'Position' },
+                        { key: 'jobId', label: 'Job', type: 'reference', lookupModel: 'Job', required: true },
+                        { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'Department', required: true },
+                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+                        { key: 'reportsToPositionId', label: 'Reports To', type: 'reference', lookupModel: 'Position' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.POSITION_STATUS, required: true },
                         { key: 'headcount', label: 'Headcount', type: 'number', required: true },
                         { key: 'isManager', label: 'Is Manager Position', type: 'checkbox' },
@@ -190,7 +135,7 @@
                     fields: [
                         { key: 'jobCode', label: 'Job Code', type: 'text', required: true },
                         { key: 'title', label: 'Title', type: 'text', required: true },
-                        { key: 'jobFamilyId', label: 'Job Family', type: 'lookup', lookupModel: 'JobFamily' },
+                        { key: 'jobFamilyId', label: 'Job Family', type: 'reference', lookupModel: 'JobFamily' },
                         { key: 'jobLevel', label: 'Level', type: 'text' },
                         { key: 'summary', label: 'Summary', type: 'textarea' },
                         { key: 'description', label: 'Description', type: 'textarea' },
@@ -227,7 +172,7 @@
                 {
                     title: 'Document Details',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                         { key: 'name', label: 'Document Name', type: 'text', required: true },
                         { key: 'documentType', label: 'Document Type', type: 'select', options: enums.DOCUMENT_TYPE, required: true },
                         { key: 'description', label: 'Description', type: 'textarea' },
@@ -247,13 +192,13 @@
                 {
                     title: 'Compliance Details',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                         { key: 'complianceType', label: 'Compliance Type', type: 'select', options: enums.COMPLIANCE_TYPE, required: true },
                         { key: 'status', label: 'Status', type: 'text', required: true },
                         { key: 'dueDate', label: 'Due Date', type: 'date' },
                         { key: 'completionDate', label: 'Completion Date', type: 'date' },
                         { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
-                        { key: 'documentId', label: 'Document', type: 'lookup', lookupModel: 'EmployeeDocument' },
+                        { key: 'documentId', label: 'Document', type: 'reference', lookupModel: 'EmployeeDocument' },
                         { key: 'notes', label: 'Notes', type: 'textarea' },
                         { key: 'verifiedBy', label: 'Verified By', type: 'text' },
                         { key: 'verifiedDate', label: 'Verification Date', type: 'date' }

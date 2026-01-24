@@ -106,22 +106,44 @@
                 // When editing, value is just the ID - show it until picker loads display value
                 const refId = value?.id || value || '';
                 const displayValue = value?.display || (refId ? `ID: ${refId}` : '');
-                // Store serializable config (without functions)
+
+                // Build reference config - check registry first if lookupModel specified
+                let refConfig = field.referenceConfig || {};
+                if (field.lookupModel && typeof ERPReferenceRegistry !== 'undefined') {
+                    const registryConfig = ERPReferenceRegistry[field.lookupModel];
+                    if (registryConfig) {
+                        // Merge: registry provides base, field.referenceConfig provides overrides
+                        refConfig = {
+                            modelName: field.lookupModel,
+                            idColumn: registryConfig.idColumn,
+                            displayColumn: registryConfig.displayColumn,
+                            selectColumns: registryConfig.selectColumns,
+                            displayLabel: registryConfig.displayLabel,
+                            // Apply any field-specific overrides
+                            ...field.referenceConfig,
+                            // Default title from label if not specified
+                            title: field.referenceConfig?.title || `Select ${field.label}`
+                        };
+                    }
+                }
+
+                // Store serializable config (without functions - displayFormat handled in attachReferencePickers)
                 const serializableConfig = {
-                    modelName: field.referenceConfig?.modelName,
-                    idColumn: field.referenceConfig?.idColumn,
-                    displayColumn: field.referenceConfig?.displayColumn,
-                    selectColumns: field.referenceConfig?.selectColumns,
-                    baseWhereClause: field.referenceConfig?.baseWhereClause,
-                    title: field.referenceConfig?.title,
-                    displayLabel: field.referenceConfig?.displayLabel,
-                    placeholder: field.referenceConfig?.placeholder
+                    modelName: refConfig.modelName,
+                    idColumn: refConfig.idColumn,
+                    displayColumn: refConfig.displayColumn,
+                    selectColumns: refConfig.selectColumns,
+                    baseWhereClause: refConfig.baseWhereClause,
+                    title: refConfig.title,
+                    displayLabel: refConfig.displayLabel,
+                    placeholder: refConfig.placeholder
                 };
                 inputHtml = `<input type="text" id="field-${field.key}" name="${field.key}"
                     value="${escapeAttr(displayValue)}"
                     data-ref-id="${escapeAttr(String(refId))}"
                     data-ref-config='${escapeAttr(JSON.stringify(serializableConfig))}'
                     data-field-key="${escapeAttr(field.key)}"
+                    data-lookup-model="${escapeAttr(field.lookupModel || refConfig.modelName || '')}"
                     class="reference-input"
                     ${required}
                     readonly
@@ -431,16 +453,33 @@
                 }
             }
 
-            // Try to get displayFormat function from original field definition
+            // Get displayFormat and selectColumns from registry (functions can't be serialized to data attr)
+            const lookupModel = input.dataset.lookupModel || config.modelName;
+            if (lookupModel && typeof ERPReferenceRegistry !== 'undefined') {
+                const registryConfig = ERPReferenceRegistry[lookupModel];
+                if (registryConfig) {
+                    // Get displayFormat function from registry
+                    if (registryConfig.displayFormat && !config.displayFormat) {
+                        config.displayFormat = registryConfig.displayFormat;
+                    }
+                    // Get selectColumns from registry if not already set
+                    if (registryConfig.selectColumns && !config.selectColumns) {
+                        config.selectColumns = registryConfig.selectColumns;
+                    }
+                }
+            }
+
+            // Also try to get from original field definition (for inline referenceConfig)
             const fieldKey = input.dataset.fieldKey || input.name;
             if (currentFormContext && currentFormContext.formDef) {
                 const fieldDef = findFieldDef(currentFormContext.formDef, fieldKey);
-                if (fieldDef && fieldDef.referenceConfig && fieldDef.referenceConfig.displayFormat) {
-                    config.displayFormat = fieldDef.referenceConfig.displayFormat;
-                }
-                // Also get selectColumns if specified
-                if (fieldDef && fieldDef.referenceConfig && fieldDef.referenceConfig.selectColumns) {
-                    config.selectColumns = fieldDef.referenceConfig.selectColumns;
+                if (fieldDef && fieldDef.referenceConfig) {
+                    if (fieldDef.referenceConfig.displayFormat) {
+                        config.displayFormat = fieldDef.referenceConfig.displayFormat;
+                    }
+                    if (fieldDef.referenceConfig.selectColumns) {
+                        config.selectColumns = fieldDef.referenceConfig.selectColumns;
+                    }
                 }
             }
 

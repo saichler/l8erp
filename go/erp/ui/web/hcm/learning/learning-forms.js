@@ -18,7 +18,7 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
+                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
                         { key: 'code', label: 'Code', type: 'text', required: true },
                         { key: 'title', label: 'Title', type: 'text', required: true },
                         { key: 'description', label: 'Description', type: 'textarea' },
@@ -33,7 +33,7 @@
                         { key: 'category', label: 'Category', type: 'select', options: enums.COURSE_CATEGORY },
                         { key: 'level', label: 'Level', type: 'select', options: enums.COURSE_LEVEL },
                         { key: 'provider', label: 'Provider', type: 'text' },
-                        { key: 'instructorId', label: 'Instructor', type: 'lookup', lookupModel: 'Employee' }
+                        { key: 'instructorId', label: 'Instructor', type: 'reference', lookupModel: 'Employee' }
                     ]
                 },
                 {
@@ -70,9 +70,9 @@
                 {
                     title: 'Session Details',
                     fields: [
-                        { key: 'courseId', label: 'Course', type: 'lookup', lookupModel: 'Course', required: true },
+                        { key: 'courseId', label: 'Course', type: 'reference', lookupModel: 'Course', required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.SESSION_STATUS, required: true },
-                        { key: 'instructorId', label: 'Instructor', type: 'lookup', lookupModel: 'Employee' },
+                        { key: 'instructorId', label: 'Instructor', type: 'reference', lookupModel: 'Employee' },
                         { key: 'instructorName', label: 'Instructor Name', type: 'text' }
                     ]
                 },
@@ -106,11 +106,11 @@
                 {
                     title: 'Enrollment Details',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
-                        { key: 'courseId', label: 'Course', type: 'lookup', lookupModel: 'Course', required: true },
-                        { key: 'sessionId', label: 'Session', type: 'lookup', lookupModel: 'CourseSession' },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+                        { key: 'courseId', label: 'Course', type: 'reference', lookupModel: 'Course', required: true },
+                        { key: 'sessionId', label: 'Session', type: 'reference', lookupModel: 'CourseSession' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.COURSE_ENROLLMENT_STATUS, required: true },
-                        { key: 'managerId', label: 'Manager', type: 'lookup', lookupModel: 'Employee' }
+                        { key: 'managerId', label: 'Manager', type: 'reference', lookupModel: 'Employee' }
                     ]
                 },
                 {
@@ -180,8 +180,8 @@
                 {
                     title: 'Certification Details',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
-                        { key: 'certificationId', label: 'Certification', type: 'lookup', lookupModel: 'Certification', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+                        { key: 'certificationId', label: 'Certification', type: 'reference', lookupModel: 'Certification', required: true },
                         { key: 'certificationNumber', label: 'Certification Number', type: 'text' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.CERTIFICATION_STATUS, required: true }
                     ]
@@ -230,8 +230,8 @@
                 {
                     title: 'Skill Assignment',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
-                        { key: 'skillId', label: 'Skill', type: 'lookup', lookupModel: 'Skill', required: true }
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+                        { key: 'skillId', label: 'Skill', type: 'reference', lookupModel: 'Skill', required: true }
                     ]
                 },
                 {
@@ -263,8 +263,8 @@
                 {
                     title: 'Training Details',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
-                        { key: 'courseId', label: 'Course', type: 'lookup', lookupModel: 'Course' },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+                        { key: 'courseId', label: 'Course', type: 'reference', lookupModel: 'Course' },
                         { key: 'trainingName', label: 'Training Name', type: 'text', required: true },
                         { key: 'trainingType', label: 'Training Type', type: 'select', options: enums.TRAINING_TYPE, required: true }
                     ]

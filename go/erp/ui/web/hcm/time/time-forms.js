@@ -18,7 +18,7 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TIMESHEET_STATUS, required: true }
                     ]
                 },
@@ -56,9 +56,9 @@
                 {
                     title: 'Request Details',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                         { key: 'leaveType', label: 'Leave Type', type: 'select', options: enums.LEAVE_TYPE, required: true },
-                        { key: 'leavePolicyId', label: 'Leave Policy', type: 'lookup', lookupModel: 'LeavePolicy' },
+                        { key: 'leavePolicyId', label: 'Leave Policy', type: 'reference', lookupModel: 'LeavePolicy' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.LEAVE_REQUEST_STATUS, required: true }
                     ]
                 },
@@ -89,8 +89,8 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
-                        { key: 'leavePolicyId', label: 'Leave Policy', type: 'lookup', lookupModel: 'LeavePolicy' },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+                        { key: 'leavePolicyId', label: 'Leave Policy', type: 'reference', lookupModel: 'LeavePolicy' },
                         { key: 'leaveType', label: 'Leave Type', type: 'select', options: enums.LEAVE_TYPE, required: true },
                         { key: 'year', label: 'Year', type: 'number', required: true }
                     ]
@@ -125,7 +125,7 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
+                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
                         { key: 'code', label: 'Code', type: 'text', required: true },
                         { key: 'name', label: 'Name', type: 'text', required: true },
                         { key: 'description', label: 'Description', type: 'textarea' },
@@ -176,7 +176,7 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
+                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
                         { key: 'code', label: 'Code', type: 'text', required: true },
                         { key: 'name', label: 'Name', type: 'text', required: true },
                         { key: 'description', label: 'Description', type: 'textarea' },
@@ -209,7 +209,7 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.SCHEDULE_STATUS, required: true }
                     ]
                 },
@@ -235,7 +235,7 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
+                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
                         { key: 'name', label: 'Name', type: 'text', required: true },
                         { key: 'date', label: 'Date', type: 'date', required: true },
                         { key: 'year', label: 'Year', type: 'number', required: true },
@@ -261,8 +261,8 @@
                 {
                     title: 'Basic Information',
                     fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
-                        { key: 'leaveRequestId', label: 'Leave Request', type: 'lookup', lookupModel: 'LeaveRequest' },
+                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+                        { key: 'leaveRequestId', label: 'Leave Request', type: 'reference', lookupModel: 'LeaveRequest' },
                         { key: 'date', label: 'Date', type: 'date', required: true },
                         { key: 'absenceType', label: 'Absence Type', type: 'select', options: enums.LEAVE_TYPE, required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.ABSENCE_STATUS, required: true }
@@ -274,7 +274,7 @@
                         { key: 'hours', label: 'Hours', type: 'number', required: true },
                         { key: 'isPartialDay', label: 'Partial Day', type: 'checkbox' },
                         { key: 'isPaid', label: 'Paid', type: 'checkbox' },
-                        { key: 'payComponentId', label: 'Pay Component', type: 'lookup', lookupModel: 'PayComponent' },
+                        { key: 'payComponentId', label: 'Pay Component', type: 'reference', lookupModel: 'PayComponent' },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
                 }

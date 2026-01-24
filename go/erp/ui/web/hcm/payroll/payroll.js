@@ -270,7 +270,7 @@
                     { key: 'code', label: 'Code', type: 'text', required: true },
                     { key: 'name', label: 'Name', type: 'text', required: true },
                     { key: 'description', label: 'Description', type: 'textarea' },
-                    { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
+                    { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
                     { key: 'currencyCode', label: 'Currency Code', type: 'text', required: true },
                     { key: 'payFrequency', label: 'Pay Frequency', type: 'select', options: PAY_FREQUENCY, required: true },
                     { key: 'isActive', label: 'Active', type: 'checkbox' },
@@ -287,7 +287,7 @@
                     { key: 'code', label: 'Code', type: 'text', required: true },
                     { key: 'name', label: 'Name', type: 'text', required: true },
                     { key: 'description', label: 'Description', type: 'textarea' },
-                    { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
+                    { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
                     { key: 'componentType', label: 'Type', type: 'select', options: PAY_COMPONENT_TYPE, required: true },
                     { key: 'category', label: 'Category', type: 'select', options: PAY_COMPONENT_CATEGORY },
                     { key: 'calculationType', label: 'Calculation', type: 'select', options: CALCULATION_TYPE, required: true }
@@ -308,7 +308,7 @@
             title: 'Payroll Run',
             sections: [{ title: 'Run Details', fields: [
                 { key: 'name', label: 'Name', type: 'text', required: true },
-                { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization', required: true },
+                { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization', required: true },
                 { key: 'runType', label: 'Run Type', type: 'select', options: PAYROLL_RUN_TYPE, required: true },
                 { key: 'status', label: 'Status', type: 'select', options: PAYROLL_RUN_STATUS, required: true },
                 { key: 'scheduledDate', label: 'Scheduled Date', type: 'date' },
@@ -321,8 +321,8 @@
             title: 'Payslip',
             sections: [
                 { title: 'Payslip Details', fields: [
-                    { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
-                    { key: 'payrollRunId', label: 'Payroll Run', type: 'lookup', lookupModel: 'PayrollRun', required: true },
+                    { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+                    { key: 'payrollRunId', label: 'Payroll Run', type: 'reference', lookupModel: 'PayrollRun', required: true },
                     { key: 'paymentDate', label: 'Payment Date', type: 'date', required: true }
                 ]},
                 { title: 'Hours', fields: [
@@ -337,7 +337,7 @@
         TaxWithholding: {
             title: 'Tax Withholding',
             sections: [{ title: 'Tax Information', fields: [
-                { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                 { key: 'taxType', label: 'Tax Type', type: 'select', options: TAX_TYPE, required: true },
                 { key: 'taxJurisdiction', label: 'Jurisdiction', type: 'text', required: true },
                 { key: 'formVersion', label: 'Form Version', type: 'text' },
@@ -353,7 +353,7 @@
         DirectDeposit: {
             title: 'Direct Deposit',
             sections: [{ title: 'Account Information', fields: [
-                { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                 { key: 'accountName', label: 'Account Name', type: 'text' },
                 { key: 'bankName', label: 'Bank Name', type: 'text', required: true },
                 { key: 'routingNumber', label: 'Routing Number', type: 'text', required: true },
@@ -371,7 +371,7 @@
             title: 'Garnishment',
             sections: [
                 { title: 'Garnishment Details', fields: [
-                    { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                    { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                     { key: 'garnishmentType', label: 'Type', type: 'select', options: GARNISHMENT_TYPE, required: true },
                     { key: 'caseNumber', label: 'Case Number', type: 'text', required: true },
                     { key: 'issuingAuthority', label: 'Issuing Authority', type: 'text' },
@@ -392,10 +392,10 @@
         YearEndDocument: {
             title: 'Year-End Document',
             sections: [{ title: 'Document Details', fields: [
-                { key: 'employeeId', label: 'Employee', type: 'lookup', lookupModel: 'Employee', required: true },
+                { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                 { key: 'taxYear', label: 'Tax Year', type: 'number', required: true },
                 { key: 'documentType', label: 'Document Type', type: 'select', options: YEAR_END_DOC_TYPE, required: true },
-                { key: 'organizationId', label: 'Organization', type: 'lookup', lookupModel: 'Organization' },
+                { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
                 { key: 'status', label: 'Status', type: 'select', options: YEAR_END_DOC_STATUS, required: true },
                 { key: 'issuedDate', label: 'Issued Date', type: 'date' },
                 { key: 'isCorrected', label: 'Is Correction', type: 'checkbox' },
