@@ -356,10 +356,10 @@
                 { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
                 { key: 'accountName', label: 'Account Name', type: 'text' },
                 { key: 'bankName', label: 'Bank Name', type: 'text', required: true },
-                { key: 'routingNumber', label: 'Routing Number', type: 'text', required: true },
+                { key: 'routingNumber', label: 'Routing Number', type: 'routingNumber', required: true },
                 { key: 'accountType', label: 'Account Type', type: 'select', options: ACCOUNT_TYPE, required: true },
                 { key: 'depositType', label: 'Deposit Type', type: 'select', options: DEPOSIT_TYPE, required: true },
-                { key: 'percentage', label: 'Percentage', type: 'number' },
+                { key: 'percentage', label: 'Percentage', type: 'percentage' },
                 { key: 'priority', label: 'Priority', type: 'number' },
                 { key: 'isActive', label: 'Active', type: 'checkbox' },
                 { key: 'isPrenoteComplete', label: 'Prenote Complete', type: 'checkbox' },
@@ -380,7 +380,7 @@
                     { key: 'status', label: 'Status', type: 'select', options: GARNISHMENT_STATUS, required: true }
                 ]},
                 { title: 'Amount Details', fields: [
-                    { key: 'percentage', label: 'Percentage', type: 'number' },
+                    { key: 'percentage', label: 'Percentage', type: 'percentage' },
                     { key: 'priority', label: 'Priority', type: 'number' },
                     { key: 'startDate', label: 'Start Date', type: 'date', required: true },
                     { key: 'endDate', label: 'End Date', type: 'date' },
@@ -400,7 +400,7 @@
                 { key: 'issuedDate', label: 'Issued Date', type: 'date' },
                 { key: 'isCorrected', label: 'Is Correction', type: 'checkbox' },
                 { key: 'originalDocumentId', label: 'Original Document ID', type: 'text' },
-                { key: 'fileUrl', label: 'File URL', type: 'text' }
+                { key: 'fileUrl', label: 'File URL', type: 'url' }
             ]}]
         }
     };

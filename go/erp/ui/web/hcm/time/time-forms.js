@@ -181,7 +181,7 @@
                         { key: 'name', label: 'Name', type: 'text', required: true },
                         { key: 'description', label: 'Description', type: 'textarea' },
                         { key: 'shiftType', label: 'Shift Type', type: 'select', options: enums.SHIFT_TYPE, required: true },
-                        { key: 'colorCode', label: 'Color Code', type: 'text' }
+                        { key: 'colorCode', label: 'Color Code', type: 'colorCode' }
                     ]
                 },
                 {

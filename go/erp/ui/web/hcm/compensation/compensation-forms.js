@@ -28,10 +28,10 @@
                 {
                     title: 'Salary Range',
                     fields: [
-                        { key: 'minimum.amount', label: 'Minimum (cents)', type: 'number', required: true },
-                        { key: 'midpoint.amount', label: 'Midpoint (cents)', type: 'number', required: true },
-                        { key: 'maximum.amount', label: 'Maximum (cents)', type: 'number', required: true },
-                        { key: 'spreadPercentage', label: 'Spread %', type: 'number' },
+                        { key: 'minimum.amount', label: 'Minimum', type: 'currency', required: true },
+                        { key: 'midpoint.amount', label: 'Midpoint', type: 'currency', required: true },
+                        { key: 'maximum.amount', label: 'Maximum', type: 'currency', required: true },
+                        { key: 'spreadPercentage', label: 'Spread', type: 'percentage' },
                         { key: 'currencyCode', label: 'Currency', type: 'text' },
                         { key: 'payFrequency', label: 'Pay Frequency', type: 'select', options: enums.PAY_FREQUENCY }
                     ]
@@ -91,11 +91,11 @@
                 {
                     title: 'Compensation',
                     fields: [
-                        { key: 'baseSalary.amount', label: 'Base Salary (cents)', type: 'number', required: true },
-                        { key: 'hourlyRate.amount', label: 'Hourly Rate (cents)', type: 'number' },
+                        { key: 'baseSalary.amount', label: 'Base Salary', type: 'currency', required: true },
+                        { key: 'hourlyRate.amount', label: 'Hourly Rate', type: 'currency' },
                         { key: 'payFrequency', label: 'Pay Frequency', type: 'select', options: enums.PAY_FREQUENCY, required: true },
                         { key: 'currencyCode', label: 'Currency', type: 'text' },
-                        { key: 'compaRatio', label: 'Compa Ratio', type: 'number' },
+                        { key: 'compaRatio', label: 'Compa Ratio', type: 'percentage' },
                         { key: 'fte', label: 'FTE', type: 'number' }
                     ]
                 },
@@ -125,18 +125,18 @@
                 {
                     title: 'Salary',
                     fields: [
-                        { key: 'currentSalary.amount', label: 'Current Salary (cents)', type: 'number' },
-                        { key: 'proposedIncrease.amount', label: 'Proposed Increase (cents)', type: 'number' },
-                        { key: 'proposedPercentage', label: 'Proposed %', type: 'number' },
-                        { key: 'newSalary.amount', label: 'New Salary (cents)', type: 'number' }
+                        { key: 'currentSalary.amount', label: 'Current Salary', type: 'currency' },
+                        { key: 'proposedIncrease.amount', label: 'Proposed Increase', type: 'currency' },
+                        { key: 'proposedPercentage', label: 'Proposed', type: 'percentage' },
+                        { key: 'newSalary.amount', label: 'New Salary', type: 'currency' }
                     ]
                 },
                 {
                     title: 'Performance',
                     fields: [
-                        { key: 'performanceRating', label: 'Performance Rating', type: 'number' },
-                        { key: 'compaRatioBefore', label: 'Compa Ratio Before', type: 'number' },
-                        { key: 'compaRatioAfter', label: 'Compa Ratio After', type: 'number' }
+                        { key: 'performanceRating', label: 'Performance Rating', type: 'rating', min: 1, max: 5 },
+                        { key: 'compaRatioBefore', label: 'Compa Ratio Before', type: 'percentage' },
+                        { key: 'compaRatioAfter', label: 'Compa Ratio After', type: 'percentage' }
                     ]
                 },
                 {
@@ -172,8 +172,8 @@
                 {
                     title: 'Budget',
                     fields: [
-                        { key: 'totalBudget.amount', label: 'Total Budget (cents)', type: 'number' },
-                        { key: 'budgetPercentage', label: 'Budget %', type: 'number' },
+                        { key: 'totalBudget.amount', label: 'Total Budget', type: 'currency' },
+                        { key: 'budgetPercentage', label: 'Budget', type: 'percentage' },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
                 }
@@ -198,17 +198,17 @@
                 {
                     title: 'Target',
                     fields: [
-                        { key: 'targetPercentage', label: 'Target %', type: 'number' },
-                        { key: 'maximumPercentage', label: 'Maximum %', type: 'number' },
-                        { key: 'targetAmount.amount', label: 'Target Amount (cents)', type: 'number' },
-                        { key: 'maximumAmount.amount', label: 'Maximum Amount (cents)', type: 'number' }
+                        { key: 'targetPercentage', label: 'Target', type: 'percentage' },
+                        { key: 'maximumPercentage', label: 'Maximum', type: 'percentage' },
+                        { key: 'targetAmount.amount', label: 'Target Amount', type: 'currency' },
+                        { key: 'maximumAmount.amount', label: 'Maximum Amount', type: 'currency' }
                     ]
                 },
                 {
                     title: 'Funding',
                     fields: [
                         { key: 'fundingType', label: 'Funding Type', type: 'select', options: enums.BONUS_FUNDING_TYPE },
-                        { key: 'fundingPoolPercentage', label: 'Funding Pool %', type: 'number' }
+                        { key: 'fundingPoolPercentage', label: 'Funding Pool', type: 'percentage' }
                     ]
                 },
                 {
@@ -239,9 +239,9 @@
                 {
                     title: 'Amount',
                     fields: [
-                        { key: 'targetAmount.amount', label: 'Target Amount (cents)', type: 'number' },
-                        { key: 'actualAmount.amount', label: 'Actual Amount (cents)', type: 'number', required: true },
-                        { key: 'payoutPercentage', label: 'Payout %', type: 'number' }
+                        { key: 'targetAmount.amount', label: 'Target Amount', type: 'currency' },
+                        { key: 'actualAmount.amount', label: 'Actual Amount', type: 'currency', required: true },
+                        { key: 'payoutPercentage', label: 'Payout', type: 'percentage' }
                     ]
                 },
                 {
@@ -280,9 +280,9 @@
                     title: 'Shares & Value',
                     fields: [
                         { key: 'sharesGranted', label: 'Shares Granted', type: 'number', required: true },
-                        { key: 'grantPrice.amount', label: 'Grant Price (cents)', type: 'number' },
-                        { key: 'fairMarketValue.amount', label: 'Fair Market Value (cents)', type: 'number' },
-                        { key: 'totalValue.amount', label: 'Total Value (cents)', type: 'number' }
+                        { key: 'grantPrice.amount', label: 'Grant Price', type: 'currency' },
+                        { key: 'fairMarketValue.amount', label: 'Fair Market Value', type: 'currency' },
+                        { key: 'totalValue.amount', label: 'Total Value', type: 'currency' }
                     ]
                 },
                 {
@@ -320,29 +320,29 @@
                 {
                     title: 'Base Compensation',
                     fields: [
-                        { key: 'baseSalary.amount', label: 'Base Salary (cents)', type: 'number' },
-                        { key: 'hourlyEquivalent.amount', label: 'Hourly Equivalent (cents)', type: 'number' }
+                        { key: 'baseSalary.amount', label: 'Base Salary', type: 'currency' },
+                        { key: 'hourlyEquivalent.amount', label: 'Hourly Equivalent', type: 'currency' }
                     ]
                 },
                 {
                     title: 'Variable Pay',
                     fields: [
-                        { key: 'bonusTarget.amount', label: 'Bonus Target (cents)', type: 'number' },
-                        { key: 'bonusActual.amount', label: 'Bonus Actual (cents)', type: 'number' },
-                        { key: 'commissions.amount', label: 'Commissions (cents)', type: 'number' }
+                        { key: 'bonusTarget.amount', label: 'Bonus Target', type: 'currency' },
+                        { key: 'bonusActual.amount', label: 'Bonus Actual', type: 'currency' },
+                        { key: 'commissions.amount', label: 'Commissions', type: 'currency' }
                     ]
                 },
                 {
                     title: 'Equity',
                     fields: [
-                        { key: 'equityValue.amount', label: 'Equity Value (cents)', type: 'number' },
+                        { key: 'equityValue.amount', label: 'Equity Value', type: 'currency' },
                         { key: 'equityShares', label: 'Equity Shares', type: 'number' }
                     ]
                 },
                 {
                     title: 'Output',
                     fields: [
-                        { key: 'pdfUrl', label: 'PDF URL', type: 'text' }
+                        { key: 'pdfUrl', label: 'PDF URL', type: 'url' }
                     ]
                 }
             ]
@@ -365,26 +365,26 @@
                 {
                     title: 'Market Data (Base)',
                     fields: [
-                        { key: 'market25th.amount', label: '25th Percentile (cents)', type: 'number' },
-                        { key: 'market50th.amount', label: '50th Percentile (cents)', type: 'number' },
-                        { key: 'market75th.amount', label: '75th Percentile (cents)', type: 'number' },
-                        { key: 'market90th.amount', label: '90th Percentile (cents)', type: 'number' },
-                        { key: 'marketAverage.amount', label: 'Market Average (cents)', type: 'number' }
+                        { key: 'market25th.amount', label: '25th Percentile', type: 'currency' },
+                        { key: 'market50th.amount', label: '50th Percentile', type: 'currency' },
+                        { key: 'market75th.amount', label: '75th Percentile', type: 'currency' },
+                        { key: 'market90th.amount', label: '90th Percentile', type: 'currency' },
+                        { key: 'marketAverage.amount', label: 'Market Average', type: 'currency' }
                     ]
                 },
                 {
                     title: 'Total Cash Data',
                     fields: [
-                        { key: 'totalCash25th.amount', label: 'Total Cash 25th (cents)', type: 'number' },
-                        { key: 'totalCash50th.amount', label: 'Total Cash 50th (cents)', type: 'number' },
-                        { key: 'totalCash75th.amount', label: 'Total Cash 75th (cents)', type: 'number' }
+                        { key: 'totalCash25th.amount', label: 'Total Cash 25th', type: 'currency' },
+                        { key: 'totalCash50th.amount', label: 'Total Cash 50th', type: 'currency' },
+                        { key: 'totalCash75th.amount', label: 'Total Cash 75th', type: 'currency' }
                     ]
                 },
                 {
                     title: 'Comparison',
                     fields: [
-                        { key: 'internalAverage.amount', label: 'Internal Average (cents)', type: 'number' },
-                        { key: 'marketIndex', label: 'Market Index', type: 'number' }
+                        { key: 'internalAverage.amount', label: 'Internal Average', type: 'currency' },
+                        { key: 'marketIndex', label: 'Market Index', type: 'percentage' }
                     ]
                 },
                 {

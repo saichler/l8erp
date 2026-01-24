@@ -34,7 +34,7 @@
                 {
                     title: 'Rating',
                     fields: [
-                        { key: 'overallRating', label: 'Overall Rating (1-5)', type: 'number' },
+                        { key: 'overallRating', label: 'Overall Rating', type: 'rating', min: 1, max: 5 },
                         { key: 'overallRatingLabel', label: 'Rating Label', type: 'text' }
                     ]
                 },
@@ -77,7 +77,7 @@
                         { key: 'startDate', label: 'Start Date', type: 'date' },
                         { key: 'dueDate', label: 'Due Date', type: 'date' },
                         { key: 'completedDate', label: 'Completed Date', type: 'date' },
-                        { key: 'completionPercentage', label: 'Completion %', type: 'number' },
+                        { key: 'completionPercentage', label: 'Completion', type: 'percentage', min: 0, max: 100 },
                         { key: 'weight', label: 'Weight', type: 'number' }
                     ]
                 }
@@ -217,8 +217,8 @@
                     fields: [
                         { key: 'firstName', label: 'First Name', type: 'text', required: true },
                         { key: 'lastName', label: 'Last Name', type: 'text', required: true },
-                        { key: 'email', label: 'Email', type: 'text', required: true },
-                        { key: 'phone', label: 'Phone', type: 'text' }
+                        { key: 'email', label: 'Email', type: 'email', required: true },
+                        { key: 'phone', label: 'Phone', type: 'phone' }
                     ]
                 },
                 {
@@ -232,10 +232,10 @@
                 {
                     title: 'Online Profiles',
                     fields: [
-                        { key: 'linkedinUrl', label: 'LinkedIn URL', type: 'text' },
-                        { key: 'portfolioUrl', label: 'Portfolio URL', type: 'text' },
-                        { key: 'resumeUrl', label: 'Resume URL', type: 'text' },
-                        { key: 'coverLetterUrl', label: 'Cover Letter URL', type: 'text' }
+                        { key: 'linkedinUrl', label: 'LinkedIn URL', type: 'url' },
+                        { key: 'portfolioUrl', label: 'Portfolio URL', type: 'url' },
+                        { key: 'resumeUrl', label: 'Resume URL', type: 'url' },
+                        { key: 'coverLetterUrl', label: 'Cover Letter URL', type: 'url' }
                     ]
                 }
             ]
@@ -263,7 +263,7 @@
                 {
                     title: 'Rating & Disposition',
                     fields: [
-                        { key: 'overallRating', label: 'Overall Rating', type: 'number' },
+                        { key: 'overallRating', label: 'Overall Rating', type: 'rating', min: 1, max: 5 },
                         { key: 'dispositionReason', label: 'Disposition Reason', type: 'select', options: enums.DISPOSITION_REASON },
                         { key: 'dispositionDate', label: 'Disposition Date', type: 'date' },
                         { key: 'notes', label: 'Notes', type: 'textarea' }

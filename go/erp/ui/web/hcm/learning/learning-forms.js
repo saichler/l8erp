@@ -57,8 +57,8 @@
                 {
                     title: 'Resources',
                     fields: [
-                        { key: 'syllabusUrl', label: 'Syllabus URL', type: 'text' },
-                        { key: 'contentUrl', label: 'Content URL', type: 'text' }
+                        { key: 'syllabusUrl', label: 'Syllabus URL', type: 'url' },
+                        { key: 'contentUrl', label: 'Content URL', type: 'url' }
                     ]
                 }
             ]
@@ -87,7 +87,7 @@
                     title: 'Location',
                     fields: [
                         { key: 'location', label: 'Location', type: 'text' },
-                        { key: 'virtualLink', label: 'Virtual Link', type: 'text' }
+                        { key: 'virtualLink', label: 'Virtual Link', type: 'url' }
                     ]
                 },
                 {
@@ -125,7 +125,7 @@
                 {
                     title: 'Progress & Results',
                     fields: [
-                        { key: 'progressPercentage', label: 'Progress %', type: 'number' },
+                        { key: 'progressPercentage', label: 'Progress', type: 'percentage', min: 0, max: 100 },
                         { key: 'score', label: 'Score', type: 'number' },
                         { key: 'passed', label: 'Passed', type: 'checkbox' },
                         { key: 'attempts', label: 'Attempts', type: 'number' }
@@ -134,7 +134,7 @@
                 {
                     title: 'Feedback',
                     fields: [
-                        { key: 'employeeRating', label: 'Employee Rating (1-5)', type: 'number' },
+                        { key: 'employeeRating', label: 'Employee Rating', type: 'rating', min: 1, max: 5 },
                         { key: 'employeeFeedback', label: 'Employee Feedback', type: 'textarea' },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
@@ -167,7 +167,7 @@
                     fields: [
                         { key: 'validityMonths', label: 'Validity (months)', type: 'number' },
                         { key: 'requiresRenewal', label: 'Requires Renewal', type: 'checkbox' },
-                        { key: 'examUrl', label: 'Exam URL', type: 'text' },
+                        { key: 'examUrl', label: 'Exam URL', type: 'url' },
                         { key: 'isActive', label: 'Active', type: 'checkbox' }
                     ]
                 }
@@ -237,9 +237,9 @@
                 {
                     title: 'Proficiency',
                     fields: [
-                        { key: 'proficiencyLevel', label: 'Proficiency Level (1-5)', type: 'number', required: true },
-                        { key: 'selfAssessedLevel', label: 'Self-Assessed Level', type: 'number' },
-                        { key: 'managerAssessedLevel', label: 'Manager-Assessed Level', type: 'number' },
+                        { key: 'proficiencyLevel', label: 'Proficiency Level', type: 'rating', min: 1, max: 5, required: true },
+                        { key: 'selfAssessedLevel', label: 'Self-Assessed Level', type: 'rating', min: 1, max: 5 },
+                        { key: 'managerAssessedLevel', label: 'Manager-Assessed Level', type: 'rating', min: 1, max: 5 },
                         { key: 'yearsOfExperience', label: 'Years of Experience', type: 'number' }
                     ]
                 },
@@ -276,7 +276,7 @@
                         { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
                         { key: 'score', label: 'Score', type: 'number' },
                         { key: 'passed', label: 'Passed', type: 'checkbox' },
-                        { key: 'hours', label: 'Hours', type: 'number' }
+                        { key: 'hours', label: 'Hours', type: 'hours' }
                     ]
                 },
                 {

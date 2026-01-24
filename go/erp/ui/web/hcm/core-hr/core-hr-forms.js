@@ -29,7 +29,7 @@
                         { key: 'gender', label: 'Gender', type: 'select', options: enums.GENDER },
                         { key: 'maritalStatus', label: 'Marital Status', type: 'select', options: enums.MARITAL_STATUS },
                         { key: 'nationality', label: 'Nationality', type: 'text' },
-                        { key: 'nationalId', label: 'National ID (SSN)', type: 'text' },
+                        { key: 'nationalId', label: 'SSN', type: 'ssn' },
                         { key: 'nationalIdType', label: 'ID Type', type: 'text' }
                     ]
                 },
@@ -71,7 +71,7 @@
                         { key: 'legalName', label: 'Legal Name', type: 'text' },
                         { key: 'organizationType', label: 'Type', type: 'select', options: enums.ORGANIZATION_TYPE, required: true },
                         { key: 'parentOrganizationId', label: 'Parent Organization', type: 'reference', lookupModel: 'Organization' },
-                        { key: 'taxId', label: 'Tax ID', type: 'text' },
+                        { key: 'taxId', label: 'Tax ID (EIN)', type: 'ein' },
                         { key: 'industryCode', label: 'Industry Code', type: 'text' },
                         { key: 'isActive', label: 'Active', type: 'checkbox' },
                         { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
@@ -176,7 +176,7 @@
                         { key: 'name', label: 'Document Name', type: 'text', required: true },
                         { key: 'documentType', label: 'Document Type', type: 'select', options: enums.DOCUMENT_TYPE, required: true },
                         { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'fileUrl', label: 'File URL', type: 'text' },
+                        { key: 'fileUrl', label: 'File URL', type: 'url' },
                         { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
                         { key: 'isVerified', label: 'Verified', type: 'checkbox' },
                         { key: 'verifiedBy', label: 'Verified By', type: 'text' },

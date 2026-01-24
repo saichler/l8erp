@@ -52,6 +52,9 @@
         return html;
     }
 
+    // Formatted field types that use ERPInputFormatter
+    const FORMATTED_TYPES = ['ssn', 'phone', 'currency', 'percentage', 'routingNumber', 'ein', 'email', 'url', 'colorCode', 'rating', 'hours'];
+
     function generateFieldHtml(field, value) {
         const required = field.required ? 'required' : '';
         const requiredMark = field.required ? ' <span style="color: var(--erp-error);">*</span>' : '';
@@ -65,6 +68,21 @@
 
             case 'number':
                 inputHtml = `<input type="number" id="field-${field.key}" name="${field.key}" value="${escapeAttr(value || '')}" ${required}>`;
+                break;
+
+            // Formatted input types
+            case 'ssn':
+            case 'phone':
+            case 'currency':
+            case 'percentage':
+            case 'routingNumber':
+            case 'ein':
+            case 'email':
+            case 'url':
+            case 'colorCode':
+            case 'rating':
+            case 'hours':
+                inputHtml = generateFormattedInput(field, value);
                 break;
 
             case 'date':
@@ -175,6 +193,63 @@
         return html;
     }
 
+    /**
+     * Generate HTML for formatted input fields (SSN, phone, currency, etc.)
+     * @param {Object} field - Field definition
+     * @param {*} value - Current value
+     * @returns {string} - HTML string
+     */
+    function generateFormattedInput(field, value) {
+        const type = field.type;
+        const required = field.required ? 'required' : '';
+
+        // Build data attributes for formatter options
+        let dataAttrs = `data-format="${escapeAttr(type)}"`;
+
+        // Add type-specific options
+        if (field.min !== undefined) {
+            dataAttrs += ` data-format-min="${escapeAttr(String(field.min))}"`;
+        }
+        if (field.max !== undefined) {
+            dataAttrs += ` data-format-max="${escapeAttr(String(field.max))}"`;
+        }
+        if (field.decimals !== undefined) {
+            dataAttrs += ` data-format-decimals="${escapeAttr(String(field.decimals))}"`;
+        }
+        if (field.symbol !== undefined) {
+            dataAttrs += ` data-format-symbol="${escapeAttr(field.symbol)}"`;
+        }
+
+        // Format the display value using ERPInputFormatter if available
+        let displayValue = '';
+        if (value !== null && value !== undefined && value !== '') {
+            if (typeof ERPInputFormatter !== 'undefined' && ERPInputFormatter.getType) {
+                const typeConfig = ERPInputFormatter.getType(type);
+                if (typeConfig && typeConfig.format) {
+                    displayValue = typeConfig.format(value, field);
+                } else {
+                    displayValue = value;
+                }
+            } else {
+                displayValue = value;
+            }
+        }
+
+        // Store raw value in data attribute
+        const rawValue = value !== null && value !== undefined ? value : '';
+
+        return `<div class="formatted-input-wrapper" data-formatter="${escapeAttr(type)}">
+            <input type="text"
+                id="field-${field.key}"
+                name="${field.key}"
+                value="${escapeAttr(String(displayValue))}"
+                data-raw-value="${escapeAttr(String(rawValue))}"
+                ${dataAttrs}
+                ${required}
+                class="formatted-input formatted-input-${escapeAttr(type)}">
+        </div>`;
+    }
+
     // ========================================
     // FORM DATA HANDLING
     // ========================================
@@ -220,6 +295,70 @@
                             value = null;
                         }
                         break;
+
+                    // Formatted input types - get raw value via ERPInputFormatter
+                    case 'ssn':
+                    case 'phone':
+                    case 'routingNumber':
+                    case 'ein':
+                    case 'email':
+                    case 'url':
+                    case 'colorCode':
+                        // String types - get raw value from data attribute or parser
+                        if (typeof ERPInputFormatter !== 'undefined') {
+                            value = ERPInputFormatter.getValue(element);
+                        } else {
+                            value = element.dataset.rawValue || element.value || null;
+                        }
+                        break;
+
+                    case 'currency':
+                        // Currency stored in cents (integer)
+                        if (typeof ERPInputFormatter !== 'undefined') {
+                            const cents = ERPInputFormatter.getValue(element);
+                            value = cents !== null && cents !== '' ? parseInt(cents, 10) : null;
+                        } else if (element.dataset.rawValue) {
+                            value = parseInt(element.dataset.rawValue, 10);
+                            if (isNaN(value)) value = null;
+                        } else {
+                            value = null;
+                        }
+                        break;
+
+                    case 'percentage':
+                        // Percentage stored as decimal number
+                        if (typeof ERPInputFormatter !== 'undefined') {
+                            const pct = ERPInputFormatter.getValue(element);
+                            value = pct !== null && pct !== '' ? parseFloat(pct) : null;
+                        } else if (element.dataset.rawValue) {
+                            value = parseFloat(element.dataset.rawValue);
+                            if (isNaN(value)) value = null;
+                        } else {
+                            value = null;
+                        }
+                        break;
+
+                    case 'rating':
+                        // Rating stored as integer 1-5
+                        if (typeof ERPInputFormatter !== 'undefined') {
+                            const rating = ERPInputFormatter.getValue(element);
+                            value = rating !== null && rating !== '' ? parseInt(rating, 10) : null;
+                        } else {
+                            value = element.value ? parseInt(element.value, 10) : null;
+                            if (isNaN(value)) value = null;
+                        }
+                        break;
+
+                    case 'hours':
+                        // Hours stored as minutes (integer)
+                        if (typeof ERPInputFormatter !== 'undefined') {
+                            const minutes = ERPInputFormatter.getValue(element);
+                            value = minutes !== null && minutes !== '' ? parseInt(minutes, 10) : null;
+                        } else {
+                            value = element.value || null;
+                        }
+                        break;
+
                     default:
                         value = element.value || null;
                 }
@@ -330,8 +469,22 @@
             });
         });
 
+        // Attach input formatters
+        attachInputFormatters(container);
+
         // Also attach reference pickers
         attachReferencePickers(container);
+    }
+
+    /**
+     * Attach input formatters to all formatted inputs in a container
+     * @param {HTMLElement} container
+     */
+    function attachInputFormatters(container) {
+        if (typeof ERPInputFormatter === 'undefined') return;
+
+        // Use the auto-attach function which looks for data-format attributes
+        ERPInputFormatter.attachAll(container);
     }
 
     // ========================================
@@ -715,6 +868,7 @@
         generateFormHtml,
         generateFieldHtml,
         generateSelectHtml,
+        generateFormattedInput,
         collectFormData,
         validateFormData,
         fetchRecord,
@@ -725,6 +879,7 @@
         openViewForm,
         confirmDelete,
         attachDatePickers,
+        attachInputFormatters,
         attachReferencePickers,
         setFormContext
     };

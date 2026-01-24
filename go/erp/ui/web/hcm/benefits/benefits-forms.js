@@ -41,8 +41,8 @@
                 {
                     title: 'Documents',
                     fields: [
-                        { key: 'planDocumentUrl', label: 'Plan Document URL', type: 'text' },
-                        { key: 'summaryDocumentUrl', label: 'Summary Document URL', type: 'text' }
+                        { key: 'planDocumentUrl', label: 'Plan Document URL', type: 'url' },
+                        { key: 'summaryDocumentUrl', label: 'Summary Document URL', type: 'url' }
                     ]
                 }
             ]
@@ -95,10 +95,10 @@
                 {
                     title: 'Contact Information',
                     fields: [
-                        { key: 'phone', label: 'Phone', type: 'text' },
-                        { key: 'fax', label: 'Fax', type: 'text' },
-                        { key: 'email', label: 'Email', type: 'text' },
-                        { key: 'website', label: 'Website', type: 'text' },
+                        { key: 'phone', label: 'Phone', type: 'phone' },
+                        { key: 'fax', label: 'Fax', type: 'phone' },
+                        { key: 'email', label: 'Email', type: 'email' },
+                        { key: 'website', label: 'Website', type: 'url' },
                         { key: 'contactName', label: 'Contact Name', type: 'text' }
                     ]
                 },
@@ -192,7 +192,7 @@
                 {
                     title: 'Premium Information',
                     fields: [
-                        { key: 'adminFeePercentage', label: 'Admin Fee %', type: 'number' },
+                        { key: 'adminFeePercentage', label: 'Admin Fee', type: 'percentage' },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
                 }

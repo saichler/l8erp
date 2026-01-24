@@ -1,0 +1,116 @@
+/**
+ * ERP Input Formatter - Entry Point
+ * Module verification and public API export
+ */
+(function() {
+    'use strict';
+
+    // Verify all modules are loaded
+    const requiredModules = ['utils', 'masks', 'types', 'getType', 'attach', 'detach'];
+    const missing = requiredModules.filter(mod => !ERPInputFormatter[mod]);
+
+    if (missing.length > 0) {
+        console.error('ERPInputFormatter: Missing required modules:', missing.join(', '));
+        console.error('Ensure input-formatter-*.js files are loaded in correct order.');
+        return;
+    }
+
+    // ========================================
+    // AUTO-ATTACH HELPER
+    // ========================================
+
+    /**
+     * Auto-attach formatters to inputs within a container based on data attributes
+     * @param {HTMLElement} container
+     */
+    function attachAll(container) {
+        if (!container) return;
+
+        // Find inputs with data-format attribute
+        const inputs = container.querySelectorAll('[data-format]');
+
+        inputs.forEach(input => {
+            const type = input.dataset.format;
+            if (!ERPInputFormatter.hasType(type)) {
+                console.warn(`ERPInputFormatter: Unknown format type "${type}" on input`);
+                return;
+            }
+
+            // Parse options from data attributes
+            const options = {};
+
+            // Common options
+            if (input.dataset.formatMin !== undefined) {
+                options.min = parseFloat(input.dataset.formatMin);
+            }
+            if (input.dataset.formatMax !== undefined) {
+                options.max = parseFloat(input.dataset.formatMax);
+            }
+            if (input.dataset.formatDecimals !== undefined) {
+                options.decimals = parseInt(input.dataset.formatDecimals, 10);
+            }
+            if (input.dataset.formatSymbol !== undefined) {
+                options.symbol = input.dataset.formatSymbol;
+            }
+            if (input.dataset.formatValidateOnBlur !== undefined) {
+                options.validateOnBlur = input.dataset.formatValidateOnBlur !== 'false';
+            }
+
+            ERPInputFormatter.attach(input, type, options);
+        });
+    }
+
+    /**
+     * Detach all formatters from inputs within a container
+     * @param {HTMLElement} container
+     */
+    function detachAll(container) {
+        if (!container) return;
+
+        const inputs = container.querySelectorAll('.formatted-input');
+        inputs.forEach(input => {
+            ERPInputFormatter.detach(input);
+        });
+    }
+
+    // ========================================
+    // COLLECT FORMATTED DATA
+    // ========================================
+
+    /**
+     * Collect raw values from all formatted inputs in a container
+     * @param {HTMLElement} container
+     * @returns {Object} - Map of input name/id to raw value
+     */
+    function collectValues(container) {
+        const values = {};
+        const inputs = container.querySelectorAll('.formatted-input');
+
+        inputs.forEach(input => {
+            const key = input.name || input.id;
+            if (key) {
+                values[key] = ERPInputFormatter.getValue(input);
+            }
+        });
+
+        return values;
+    }
+
+    // ========================================
+    // PUBLIC API
+    // ========================================
+
+    // Add convenience methods to the public API
+    Object.assign(ERPInputFormatter, {
+        attachAll,
+        detachAll,
+        collectValues,
+
+        // Version info
+        version: '1.0.0'
+    });
+
+    // Log successful initialization
+    console.log('ERPInputFormatter initialized successfully');
+
+})();
