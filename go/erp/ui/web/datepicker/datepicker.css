@@ -33,6 +33,12 @@
     opacity: 1;
 }
 
+/* Styling for "Current" or "N/A" values */
+.date-input[data-is-zero="true"] {
+    font-style: italic;
+    color: var(--erp-success, #22c55e);
+}
+
 /* Date Picker Overlay */
 .erp-datepicker-overlay {
     position: fixed;
@@ -195,13 +201,14 @@
     cursor: not-allowed;
 }
 
-/* Footer with Today button */
+/* Footer with buttons */
 .erp-datepicker-footer {
     padding: 8px 12px;
     border-top: 1px solid var(--erp-border, #e2e8f0);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
 }
 
 .erp-datepicker-today-btn {
@@ -235,6 +242,23 @@
 .erp-datepicker-clear-btn:hover {
     background: var(--erp-bg-hover, #e2e8f0);
     color: var(--erp-text-primary, #1e293b);
+}
+
+.erp-datepicker-current-btn {
+    background: none;
+    border: 1px solid var(--erp-success, #22c55e);
+    color: var(--erp-success, #22c55e);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.erp-datepicker-current-btn:hover {
+    background: var(--erp-success, #22c55e);
+    color: #fff;
 }
 
 /* Animation */

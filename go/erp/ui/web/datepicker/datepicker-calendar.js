@@ -34,6 +34,7 @@
             </div>
             <div class="erp-datepicker-footer">
                 <button type="button" class="erp-datepicker-clear-btn">Clear</button>
+                <button type="button" class="erp-datepicker-current-btn">Current</button>
                 <button type="button" class="erp-datepicker-today-btn">Today</button>
             </div>
         `;

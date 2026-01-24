@@ -55,11 +55,18 @@
 
     /**
      * Format a date according to the configured format
-     * @param {number} timestamp - Unix timestamp in seconds
+     * @param {number} timestamp - Unix timestamp in seconds (0 means "current/n/a")
+     * @param {Object} options - Optional settings
+     * @param {string} options.zeroLabel - Label to show when timestamp is 0 (default: 'Current')
      * @returns {string}
      */
-    function formatDate(timestamp) {
-        if (!timestamp) return '-';
+    function formatDate(timestamp, options = {}) {
+        if (timestamp === null || timestamp === undefined) return '-';
+
+        // 0 means "current" or "n/a" depending on context
+        if (timestamp === 0) {
+            return options.zeroLabel || 'Current';
+        }
 
         const date = new Date(timestamp * 1000);
         const format = getConfiguredDateFormat();
@@ -82,14 +89,21 @@
 
     /**
      * Format a date and time according to the configured format
-     * @param {number} timestamp - Unix timestamp in seconds
+     * @param {number} timestamp - Unix timestamp in seconds (0 means "current/n/a")
+     * @param {Object} options - Optional settings
+     * @param {string} options.zeroLabel - Label to show when timestamp is 0 (default: 'Current')
      * @returns {string}
      */
-    function formatDateTime(timestamp) {
-        if (!timestamp) return '-';
+    function formatDateTime(timestamp, options = {}) {
+        if (timestamp === null || timestamp === undefined) return '-';
+
+        // 0 means "current" or "n/a" depending on context
+        if (timestamp === 0) {
+            return options.zeroLabel || 'Current';
+        }
 
         const date = new Date(timestamp * 1000);
-        const dateStr = formatDate(timestamp);
+        const dateStr = formatDate(timestamp, options);
         const hours = date.getHours();
         const minutes = padZero(date.getMinutes());
         const ampm = hours >= 12 ? 'PM' : 'AM';
@@ -100,12 +114,20 @@
 
     /**
      * Format a timestamp for input field display (using configured format)
-     * @param {number} timestamp - Unix timestamp in seconds
+     * @param {number} timestamp - Unix timestamp in seconds (0 means "current/n/a")
+     * @param {Object} options - Optional settings
+     * @param {string} options.zeroLabel - Label to show when timestamp is 0 (default: 'Current')
      * @returns {string}
      */
-    function formatDateForInput(timestamp) {
-        if (!timestamp) return '';
-        return formatDate(timestamp).replace(/-/g, (m, i) => {
+    function formatDateForInput(timestamp, options = {}) {
+        if (timestamp === null || timestamp === undefined) return '';
+
+        // 0 means "current" or "n/a" depending on context
+        if (timestamp === 0) {
+            return options.zeroLabel || 'Current';
+        }
+
+        return formatDate(timestamp, options).replace(/-/g, (m, i) => {
             // Keep the format consistent
             const format = getConfiguredDateFormat();
             if (format === 'yyyy-mm-dd') return '-';

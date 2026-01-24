@@ -90,18 +90,31 @@
         // Get initial date from input or use today
         let timestamp = ERPDatePicker.getDate(inputElement);
         let displayDate;
-        if (timestamp) {
+        let selectedTimestamp = timestamp;
+
+        if (timestamp === 0) {
+            // Zero means "Current/N/A" - show today's month but don't select any date
+            displayDate = new Date();
+            selectedTimestamp = null; // Don't highlight any date
+        } else if (timestamp) {
             displayDate = new Date(timestamp * 1000);
         } else {
             displayDate = new Date();
-            timestamp = null;
+            selectedTimestamp = null;
+        }
+
+        // Update the "Current" button text based on the input's zeroLabel
+        const zeroLabel = inputElement.dataset.zeroLabel || 'Current';
+        const currentBtn = picker.querySelector('.erp-datepicker-current-btn');
+        if (currentBtn) {
+            currentBtn.textContent = zeroLabel;
         }
 
         // Render calendar
-        internal.renderCalendar(picker, displayDate.getFullYear(), displayDate.getMonth(), timestamp, config);
+        internal.renderCalendar(picker, displayDate.getFullYear(), displayDate.getMonth(), selectedTimestamp, config);
 
         // Event handlers
-        setupPickerEvents(picker, inputElement, config);
+        setupPickerEvents(picker, inputElement, config, zeroLabel);
 
         // Close on overlay click
         overlay.addEventListener('click', (e) => {
@@ -117,7 +130,7 @@
     /**
      * Setup event handlers for the picker
      */
-    function setupPickerEvents(picker, inputElement, config) {
+    function setupPickerEvents(picker, inputElement, config, zeroLabel) {
         // Day click
         picker.querySelector('.erp-datepicker-days').addEventListener('click', (e) => {
             const dayBtn = e.target.closest('.erp-datepicker-day');
@@ -129,6 +142,8 @@
                 const date = new Date(year, month, day);
                 const timestamp = Math.floor(date.getTime() / 1000);
 
+                // Remove zero flag since we're setting an actual date
+                delete inputElement.dataset.isZero;
                 ERPDatePicker.setDate(inputElement, timestamp);
 
                 if (config.onChange) {
@@ -194,6 +209,8 @@
             const today = new Date();
             const timestamp = Math.floor(today.getTime() / 1000);
 
+            // Remove zero flag since we're setting an actual date
+            delete inputElement.dataset.isZero;
             ERPDatePicker.setDate(inputElement, timestamp);
 
             if (config.onChange) {
@@ -206,9 +223,21 @@
         // Clear button
         picker.querySelector('.erp-datepicker-clear-btn').addEventListener('click', () => {
             inputElement.value = '';
+            delete inputElement.dataset.isZero;
 
             if (config.onChange) {
                 config.onChange(null, '');
+            }
+
+            ERPDatePicker.close();
+        });
+
+        // Current/N/A button - sets value to 0
+        picker.querySelector('.erp-datepicker-current-btn').addEventListener('click', () => {
+            ERPDatePicker.setDate(inputElement, 0);
+
+            if (config.onChange) {
+                config.onChange(0, inputElement.value);
             }
 
             ERPDatePicker.close();
@@ -231,8 +260,21 @@
 
     /**
      * Set date on an input element
+     * @param {HTMLInputElement} inputElement
+     * @param {number|null} timestamp - Unix timestamp in seconds (0 = "Current"/"N/A")
      */
     ERPDatePicker.setDate = function(inputElement, timestamp) {
+        // Handle zero value (Current/N/A)
+        if (timestamp === 0) {
+            const zeroLabel = inputElement.dataset.zeroLabel || 'Current';
+            inputElement.value = zeroLabel;
+            inputElement.dataset.isZero = 'true';
+            return;
+        }
+
+        // Clear the zero flag
+        delete inputElement.dataset.isZero;
+
         if (typeof ERPUtils !== 'undefined' && ERPUtils.formatDate) {
             inputElement.value = ERPUtils.formatDate(timestamp);
         } else {
@@ -244,10 +286,18 @@
 
     /**
      * Get date from an input element
+     * @param {HTMLInputElement} inputElement
+     * @returns {number|null} Unix timestamp in seconds (0 = "Current"/"N/A", null = empty)
      */
     ERPDatePicker.getDate = function(inputElement) {
-        const value = inputElement.value;
+        const value = (inputElement.value || '').trim();
         if (!value) return null;
+
+        // Check for "Current" or "N/A" values which represent 0
+        const lowerValue = value.toLowerCase();
+        if (lowerValue === 'current' || lowerValue === 'n/a') {
+            return 0;
+        }
 
         if (typeof ERPUtils !== 'undefined' && ERPUtils.parseDateToTimestamp) {
             return ERPUtils.parseDateToTimestamp(value);

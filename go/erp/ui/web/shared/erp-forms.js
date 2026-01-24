@@ -7,6 +7,21 @@
 
     const { escapeHtml, escapeAttr, formatDateForInput, parseDateToTimestamp } = ERPUtils;
 
+    /**
+     * Determine the appropriate zero-value label for a date field
+     * @param {string} fieldKey - The field key (e.g., 'endDate', 'effectiveDate')
+     * @returns {string} - 'N/A' for end/expiration dates, 'Current' for others
+     */
+    function getDateZeroLabel(fieldKey) {
+        const lowerKey = (fieldKey || '').toLowerCase();
+        // Fields that represent "no end" or "no expiration" should show "N/A"
+        if (lowerKey.includes('end') || lowerKey.includes('expir') || lowerKey.includes('termination')) {
+            return 'N/A';
+        }
+        // Other date fields (effective, start, etc.) show "Current"
+        return 'Current';
+    }
+
     // ========================================
     // FORM GENERATION
     // ========================================
@@ -86,12 +101,18 @@
                 break;
 
             case 'date':
-                const dateValue = value ? formatDateForInput(value) : '';
+                const zeroLabel = getDateZeroLabel(field.key);
+                // Treat missing/undefined/null/0 as "Current" or "N/A"
+                const isZeroOrMissing = value === 0 || value === null || value === undefined;
+                const dateValue = isZeroOrMissing
+                    ? zeroLabel
+                    : formatDateForInput(value, { zeroLabel });
                 const datePlaceholder = typeof ERPUtils !== 'undefined' && ERPUtils.getDateInputPlaceholder
                     ? ERPUtils.getDateInputPlaceholder()
                     : 'MM/DD/YYYY';
+                // Store original value and zero label in data attributes for datepicker
                 inputHtml = `<div class="date-input-wrapper">
-                    <input type="text" id="field-${field.key}" name="${field.key}" value="${dateValue}" ${required} placeholder="${datePlaceholder}" class="date-input">
+                    <input type="text" id="field-${field.key}" name="${field.key}" value="${escapeAttr(dateValue)}" ${required} placeholder="${datePlaceholder}" class="date-input" data-zero-label="${escapeAttr(zeroLabel)}" ${isZeroOrMissing ? 'data-is-zero="true"' : ''}>
                     <button type="button" class="date-picker-trigger" data-for="field-${field.key}" title="Open calendar">&#x1F4C5;</button>
                 </div>`;
                 break;
@@ -274,7 +295,17 @@
                         value = element.value ? parseFloat(element.value) : null;
                         break;
                     case 'date':
-                        value = parseDateToTimestamp(element.value);
+                        // Check for special "Current" or "N/A" values which represent 0
+                        const dateVal = (element.value || '').trim().toLowerCase();
+                        if (dateVal === 'current' || dateVal === 'n/a' || element.dataset.isZero === 'true') {
+                            value = 0;
+                        } else if (dateVal === '') {
+                            value = null;
+                        } else {
+                            value = parseDateToTimestamp(element.value);
+                            // If parsing failed but we have a value, it might be an unrecognized format
+                            // Keep null to avoid sending invalid data
+                        }
                         break;
                     case 'select':
                         // Try to parse as number, otherwise keep as string
