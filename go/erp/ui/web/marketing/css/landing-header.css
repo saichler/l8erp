@@ -1,0 +1,223 @@
+/* landing-header.css - Fixed navigation bar */
+
+.landing-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 1rem 0;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--glass-border);
+    transition: all var(--transition-medium);
+}
+
+.landing-header.scrolled {
+    padding: 0.75rem 0;
+    background: rgba(15, 23, 42, 0.95);
+}
+
+.header-container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Logo Section */
+.header-logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+}
+
+.header-logo img {
+    height: 48px;
+    width: auto;
+}
+
+.header-logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-logo-title {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--text-light);
+    line-height: 1.2;
+}
+
+.header-logo-subtitle {
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.header-logo-subtitle img {
+    height: 16px;
+    width: auto;
+}
+
+/* Navigation */
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    list-style: none;
+}
+
+.nav-links a {
+    display: block;
+    padding: 0.625rem 1rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: var(--font-size-sm);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.nav-links a:hover {
+    color: var(--text-light);
+    background: var(--glass-bg);
+}
+
+.nav-links a.active {
+    color: var(--erp-primary);
+}
+
+/* Header Buttons */
+.header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.header-buttons .btn {
+    padding: 0.625rem 1.25rem;
+    font-size: var(--font-size-sm);
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    gap: 5px;
+}
+
+.mobile-menu-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--text-light);
+    border-radius: 2px;
+    transition: all var(--transition-fast);
+}
+
+.mobile-menu-toggle.active span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.mobile-menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-toggle.active span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* Mobile Navigation Drawer */
+.mobile-nav {
+    display: none;
+    position: fixed;
+    top: 80px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.98);
+    backdrop-filter: blur(20px);
+    padding: 2rem;
+    transform: translateX(100%);
+    transition: transform var(--transition-medium);
+    z-index: 999;
+}
+
+.mobile-nav.active {
+    transform: translateX(0);
+}
+
+.mobile-nav-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.mobile-nav-links a {
+    display: block;
+    padding: 1rem 1.5rem;
+    color: var(--text-light);
+    font-size: var(--font-size-lg);
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.mobile-nav-links a:hover {
+    background: var(--glass-bg);
+    color: var(--erp-primary);
+}
+
+.mobile-nav-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--glass-border);
+}
+
+.mobile-nav-buttons .btn {
+    width: 100%;
+    justify-content: center;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .nav-links {
+        display: none;
+    }
+
+    .header-buttons {
+        display: none;
+    }
+
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    .mobile-nav {
+        display: block;
+    }
+}

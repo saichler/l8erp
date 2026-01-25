@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="ERP by Layer 8 - Enterprise Resource Planning system built for the modern enterprise.">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0f172a">
+    <title>ERP by Layer 8</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <link rel="apple-touch-icon" href="../logo.gif">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/mobile-base.css">
+    <link rel="stylesheet" href="css/mobile-header.css">
+    <link rel="stylesheet" href="css/mobile-hero.css">
+    <link rel="stylesheet" href="css/mobile-sections.css">
+    <link rel="stylesheet" href="css/mobile-footer.css">
+    <link rel="stylesheet" href="css/mobile-modals.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="mobile-header">
+        <div class="header-container">
+            <a href="#" class="header-logo">
+                <img src="../logo.gif" alt="ERP Logo">
+                <div class="header-logo-text">
+                    <span class="header-logo-title">ERP by Layer 8</span>
+                    <span class="header-logo-subtitle">
+                        Powered by
+                        <img src="../Layer8Logo.gif" alt="Layer 8">
+                    </span>
+                </div>
+            </a>
+
+            <button class="menu-toggle" aria-label="Toggle menu" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav" id="mobileNav">
+        <ul class="nav-links">
+            <li><a href="#modules" data-close-nav>Modules</a></li>
+            <li><a href="#features" data-close-nav>Features</a></li>
+            <li><a href="#architecture" data-close-nav>Architecture</a></li>
+            <li><a href="#get-started" data-close-nav>Get Started</a></li>
+        </ul>
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" id="demoBtn">View Demo</button>
+            <a href="../../login/" class="btn btn-primary">Try Now</a>
+        </div>
+    </nav>
+
+    <!-- Header Spacer -->
+    <div class="header-spacer"></div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-background">
+                <div class="hero-gradient-overlay"></div>
+                <div class="floating-shapes">
+                    <div class="shape shape-1"></div>
+                    <div class="shape shape-2"></div>
+                </div>
+            </div>
+
+            <div class="hero-content">
+                <div class="hero-logo">
+                    <img src="../logo.gif" alt="ERP">
+                </div>
+                <h1 class="hero-title">
+                    <span class="gradient-text">Enterprise Resource Planning</span>
+                    Built for Modern Business
+                </h1>
+                <p class="hero-subtitle">
+                    Unified platform for Financial Management, Human Capital,
+                    Supply Chain, Manufacturing, and more.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#get-started" class="btn btn-primary btn-block">Get Started</a>
+                    <a href="../../login/" class="btn btn-secondary btn-block">Try Demo</a>
+                </div>
+                <div class="hero-badges">
+                    <span class="badge">Go Backend</span>
+                    <span class="badge">Real-time</span>
+                    <span class="badge">Cloud Ready</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modules Section -->
+        <section id="modules" class="modules-section">
+            <div class="section-title">
+                <h2 class="gradient-text">Integrated Modules</h2>
+                <p>Comprehensive business suite</p>
+            </div>
+
+            <div class="modules-grid">
+                <div class="module-card">
+                    <div class="module-icon">&#128176;</div>
+                    <div class="module-content">
+                        <h3>Financial Management</h3>
+                        <p>GL, AP, AR, Budgeting, and Asset Management</p>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon">&#128101;</div>
+                    <div class="module-content">
+                        <h3>Human Capital</h3>
+                        <p>Core HR, Payroll, Benefits, Talent, Learning</p>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon">&#128279;</div>
+                    <div class="module-content">
+                        <h3>Supply Chain</h3>
+                        <p>Procurement, Inventory, Logistics</p>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon">&#127981;</div>
+                    <div class="module-content">
+                        <h3>Manufacturing</h3>
+                        <p>Production Planning, Shop Floor, Quality</p>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon">&#128200;</div>
+                    <div class="module-content">
+                        <h3>Sales & Distribution</h3>
+                        <p>Orders, Pricing, Shipping, Revenue</p>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon">&#129309;</div>
+                    <div class="module-content">
+                        <h3>CRM</h3>
+                        <p>Customers, Opportunities, Support</p>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon">&#128203;</div>
+                    <div class="module-content">
+                        <h3>Project Management</h3>
+                        <p>Projects, Resources, Time Tracking</p>
+                    </div>
+                </div>
+
+                <div class="module-card">
+                    <div class="module-icon">&#128202;</div>
+                    <div class="module-content">
+                        <h3>Business Intelligence</h3>
+                        <p>Analytics, Reports, Dashboards</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features-section">
+            <div class="section-title">
+                <h2 class="gradient-text">Enterprise Features</h2>
+                <p>Built for scale and security</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">&#127919;</div>
+                    <div class="feature-content">
+                        <h4>Unified Data Model</h4>
+                        <p>Single source of truth across modules</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">&#9889;</div>
+                    <div class="feature-content">
+                        <h4>Real-time Analytics</h4>
+                        <p>Live dashboards and instant updates</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">&#9881;</div>
+                    <div class="feature-content">
+                        <h4>Workflow Automation</h4>
+                        <p>Automated business processes</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">&#128274;</div>
+                    <div class="feature-content">
+                        <h4>Role-based Access</h4>
+                        <p>Granular security and permissions</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">&#128268;</div>
+                    <div class="feature-content">
+                        <h4>API-first Design</h4>
+                        <p>Easy integrations with REST APIs</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">&#128209;</div>
+                    <div class="feature-content">
+                        <h4>Full Audit Trail</h4>
+                        <p>Complete transaction history</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture Section -->
+        <section id="architecture" class="architecture-section">
+            <div class="section-title">
+                <h2 class="gradient-text">Modern Architecture</h2>
+                <p>Built on proven technologies</p>
+            </div>
+
+            <div class="architecture-container">
+                <div class="architecture-layers">
+                    <div class="arch-layer">
+                        <div class="arch-layer-title">Presentation</div>
+                        <div class="arch-layer-items">
+                            <span class="arch-item">Web App</span>
+                            <span class="arch-item">Mobile</span>
+                            <span class="arch-item">API</span>
+                        </div>
+                    </div>
+
+                    <div class="arch-layer">
+                        <div class="arch-layer-title">Application</div>
+                        <div class="arch-layer-items">
+                            <span class="arch-item">Auth</span>
+                            <span class="arch-item">Logic</span>
+                            <span class="arch-item">Workflow</span>
+                        </div>
+                    </div>
+
+                    <div class="arch-layer">
+                        <div class="arch-layer-title">Data</div>
+                        <div class="arch-layer-items">
+                            <span class="arch-item">PostgreSQL</span>
+                            <span class="arch-item">Cache</span>
+                            <span class="arch-item">Files</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tech-stack">
+                    <div class="tech-card">
+                        <span class="tech-icon">&#128311;</span>
+                        <span class="tech-name">Go Backend</span>
+                    </div>
+                    <div class="tech-card">
+                        <span class="tech-icon">&#128024;</span>
+                        <span class="tech-name">PostgreSQL</span>
+                    </div>
+                    <div class="tech-card">
+                        <span class="tech-icon">&#127760;</span>
+                        <span class="tech-name">REST API</span>
+                    </div>
+                    <div class="tech-card">
+                        <span class="tech-icon">&#9729;</span>
+                        <span class="tech-name">Cloud Native</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number">13+</span>
+                    <span class="stat-label">Modules</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Go Backend</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">Real-time</span>
+                    <span class="stat-label">Updates</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">Enterprise</span>
+                    <span class="stat-label">Security</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Get Started Section -->
+        <section id="get-started" class="get-started-section">
+            <div class="section-title">
+                <h2 class="gradient-text">Get Started</h2>
+                <p>Deploy in minutes</p>
+            </div>
+
+            <div class="get-started-container">
+                <div class="steps-list">
+                    <div class="step-item">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            <h4>Clone Repository</h4>
+                            <p>Get the source code</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            <h4>Configure Database</h4>
+                            <p>Set up PostgreSQL</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            <h4>Run Server</h4>
+                            <p>Start Go backend</p>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <span class="step-number">4</span>
+                        <div class="step-content">
+                            <h4>Access App</h4>
+                            <p>Open web interface</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <code>git clone https://github.com/saichler/l8erp.git
+cd l8erp
+go run ./go/erp/main.go</code>
+                </div>
+
+                <button class="btn btn-primary btn-block" id="demoBtnFooter">View Demo Credentials</button>
+            </div>
+        </section>
+
+        <!-- Docs Section -->
+        <section id="docs" class="docs-section">
+            <div class="section-title">
+                <h2 class="gradient-text">Resources</h2>
+                <p>Everything you need</p>
+            </div>
+
+            <div class="docs-grid">
+                <a href="#" class="doc-card">
+                    <h4>&#128214; Documentation</h4>
+                    <p>Comprehensive guides for configuration and usage.</p>
+                </a>
+                <a href="#" class="doc-card">
+                    <h4>&#128187; API Reference</h4>
+                    <p>Complete REST API documentation.</p>
+                </a>
+                <a href="#" class="doc-card">
+                    <h4>&#127891; Tutorials</h4>
+                    <p>Step-by-step tutorials for common workflows.</p>
+                </a>
+                <a href="#" class="doc-card">
+                    <h4>&#128172; Community</h4>
+                    <p>Join the community for support.</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mobile-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <img src="../logo.gif" alt="ERP Logo">
+                    <span>ERP by Layer 8</span>
+                </div>
+                <p>Enterprise Resource Planning for the modern enterprise.</p>
+            </div>
+
+            <div class="footer-links-grid">
+                <div class="footer-column">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="#modules">Modules</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#get-started">Get Started</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h5>Resources</h5>
+                    <ul>
+                        <li><a href="#docs">Documentation</a></li>
+                        <li><a href="#docs">API Reference</a></li>
+                        <li><a href="#docs">Community</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-powered">
+                <div class="footer-powered-label">Powered By</div>
+                <div class="footer-powered-logo">
+                    <img src="../Layer8Logo.gif" alt="Layer 8">
+                    <span>Layer 8</span>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p class="footer-copyright">&copy; 2025 Layer 8. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                </div>
+                <a href="../index.html" class="desktop-link" onclick="localStorage.setItem('preferDesktop', 'true')">
+                    &#128421; Desktop Version
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal Container -->
+    <div id="modal-container"></div>
+
+    <!-- Scripts -->
+    <script>
+        (function() {
+            'use strict';
+
+            // Elements
+            const menuToggle = document.getElementById('menuToggle');
+            const mobileNav = document.getElementById('mobileNav');
+            const modalContainer = document.getElementById('modal-container');
+            const demoBtn = document.getElementById('demoBtn');
+            const demoBtnFooter = document.getElementById('demoBtnFooter');
+
+            // Mobile Menu
+            menuToggle.addEventListener('click', function() {
+                menuToggle.classList.toggle('active');
+                mobileNav.classList.toggle('active');
+                document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+            });
+
+            // Close menu on nav link click
+            document.querySelectorAll('[data-close-nav]').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    menuToggle.classList.remove('active');
+                    mobileNav.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            });
+
+            // Smooth scroll for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+                anchor.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const target = document.querySelector(targetId);
+                    if (!target) return;
+
+                    e.preventDefault();
+
+                    const headerHeight = 64;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Demo Modal
+            function openDemoModal() {
+                const modalHtml = `
+                    <div class="modal-overlay active" id="demoModalOverlay">
+                        <div class="modal">
+                            <div class="modal-drag-handle"></div>
+                            <div class="modal-header">
+                                <h3>Demo Access</h3>
+                                <button class="modal-close" id="closeModal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Try ERP by Layer 8 with demo credentials:</p>
+                                <div class="demo-credentials">
+                                    <h4>Login Credentials</h4>
+                                    <div class="credential-row">
+                                        <span class="credential-label">Username</span>
+                                        <div class="credential-value">
+                                            <code>operator</code>
+                                            <button class="copy-btn" data-copy="operator">Copy</button>
+                                        </div>
+                                    </div>
+                                    <div class="credential-row">
+                                        <span class="credential-label">Password</span>
+                                        <div class="credential-value">
+                                            <code>Oper123!</code>
+                                            <button class="copy-btn" data-copy="Oper123!">Copy</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" id="closeModalBtn">Close</button>
+                                <a href="../../login/" class="btn btn-primary">Go to Login</a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                modalContainer.innerHTML = modalHtml;
+                document.body.style.overflow = 'hidden';
+
+                // Event listeners
+                document.getElementById('closeModal').addEventListener('click', closeModal);
+                document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+                document.getElementById('demoModalOverlay').addEventListener('click', function(e) {
+                    if (e.target === this) closeModal();
+                });
+
+                // Copy buttons
+                document.querySelectorAll('.copy-btn').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        const text = this.getAttribute('data-copy');
+                        navigator.clipboard.writeText(text).then(function() {
+                            btn.textContent = 'Copied!';
+                            setTimeout(function() {
+                                btn.textContent = 'Copy';
+                            }, 2000);
+                        });
+                    });
+                });
+            }
+
+            function closeModal() {
+                const overlay = document.querySelector('.modal-overlay');
+                if (overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                    setTimeout(function() {
+                        modalContainer.innerHTML = '';
+                    }, 300);
+                }
+            }
+
+            // Demo button listeners
+            demoBtn.addEventListener('click', function() {
+                menuToggle.classList.remove('active');
+                mobileNav.classList.remove('active');
+                document.body.style.overflow = '';
+                openDemoModal();
+            });
+
+            demoBtnFooter.addEventListener('click', openDemoModal);
+
+            // Close modal on ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeModal();
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -17,7 +17,7 @@ async function loadConfig() {
         console.error('Error loading configuration:', error);
         // Fallback defaults
         LOGIN_CONFIG = {
-            appTitle: 'L8ERP',
+            appTitle: 'ERP by Layer 8',
             appDescription: 'Enterprise Resource Planning',
             authEndpoint: '/auth',
             redirectUrl: '../app.html',

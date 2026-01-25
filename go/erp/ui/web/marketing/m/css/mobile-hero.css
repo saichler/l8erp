@@ -1,0 +1,128 @@
+/* mobile-hero.css - Mobile hero section */
+
+.hero-section {
+    min-height: calc(100vh - 64px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem var(--container-padding);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background */
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-gradient-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, transparent 0%, var(--bg-dark) 80%);
+}
+
+/* Floating Shapes - Simplified for mobile */
+.floating-shapes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+}
+
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.08;
+}
+
+.shape-1 {
+    width: 200px;
+    height: 200px;
+    background: linear-gradient(135deg, var(--erp-primary), var(--erp-secondary));
+    top: -50px;
+    right: -50px;
+}
+
+.shape-2 {
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, var(--accent-brown), #c4a98a);
+    bottom: 10%;
+    left: -40px;
+}
+
+/* Hero Content */
+.hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    line-height: 1.15;
+}
+
+.hero-title .gradient-text {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.hero-subtitle {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+/* Hero Buttons */
+.hero-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+}
+
+.hero-buttons .btn {
+    width: 100%;
+}
+
+/* Hero Badges */
+.hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* Logo Section (optional visual) */
+.hero-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    padding: 1rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-logo img {
+    max-width: 100%;
+    max-height: 100%;
+}

@@ -1,0 +1,162 @@
+/* mobile-footer.css - Mobile footer */
+
+.mobile-footer {
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid var(--glass-border);
+    padding: 2rem 0 1.5rem;
+}
+
+.footer-container {
+    padding: 0 var(--container-padding);
+}
+
+/* Footer Brand */
+.footer-brand {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.footer-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-bottom: 0.75rem;
+}
+
+.footer-logo img {
+    height: 32px;
+    width: auto;
+}
+
+.footer-logo span {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-light);
+}
+
+.footer-brand p {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+/* Footer Links Grid */
+.footer-links-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.footer-column h5 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.875rem;
+}
+
+.footer-column ul {
+    list-style: none;
+}
+
+.footer-column li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-column a {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    transition: color var(--transition-fast);
+}
+
+.footer-column a:active {
+    color: var(--erp-primary);
+}
+
+/* Powered By */
+.footer-powered {
+    text-align: center;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
+    margin-bottom: 1.5rem;
+}
+
+.footer-powered-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.footer-powered-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.footer-powered-logo img {
+    height: 24px;
+    width: auto;
+}
+
+.footer-powered-logo span {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    text-align: center;
+}
+
+.footer-copyright {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.footer-legal {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.footer-legal a {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+/* Desktop Link */
+.desktop-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    color: var(--erp-primary);
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.desktop-link:active {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Safe area for bottom navigation bar */
+@supports (padding: env(safe-area-inset-bottom)) {
+    .mobile-footer {
+        padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+    }
+}
