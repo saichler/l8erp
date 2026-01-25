@@ -3,6 +3,11 @@
 /* Table Wrapper */
 .l8-table-wrapper {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
 }
 
 /* Pagination Controls (Above Table) */
@@ -105,10 +110,12 @@
 
 /* Table Container */
 .l8-table-container {
-    overflow-x: auto;
+    overflow: auto;
     border: 1px solid #e2e8f0;
     border-radius: 0 0 12px 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    flex: 1;
+    min-height: 0;
 }
 
 /* Table */

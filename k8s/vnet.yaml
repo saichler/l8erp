@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: erp-vnet
+  labels:
+    name: erp-vnet
+
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: erp-vnet
+  name: erp-vnet
+  labels:
+    app: erp-vnet
+spec:
+  selector:
+    matchLabels:
+      app: erp-vnet
+  template:
+    metadata:
+      labels:
+        app: erp-vnet
+    spec:
+      hostNetwork: true
+      containers:
+        - name: erp-vnet
+          image: saichler/erp-vnet:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 34999
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate

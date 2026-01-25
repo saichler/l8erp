@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: erp-web
+  labels:
+    name: erp-web
+
+---
+
+apiVersion: apps/v1
+kind: DaemonSet 
+metadata:
+  namespace: erp-web
+  name: erp-web
+  labels:
+    app: erp-web
+spec:
+  selector:
+    matchLabels:
+      app: erp-web
+  template:
+    metadata:
+      labels:
+        app: erp-web
+    spec:
+      hostNetwork: true
+      containers:
+        - name: erp-web
+          image: saichler/erp-web:latest
+          imagePullPolicy: Always
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
