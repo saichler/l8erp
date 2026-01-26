@@ -1,0 +1,362 @@
+<div class="section-container" id="talent-section">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Talent Management</h1>
+            <p class="page-subtitle">Performance, goals, and recruiting</p>
+        </div>
+    </div>
+
+    <!-- Service Tabs -->
+    <div class="section-tabs">
+        <button class="section-tab active" data-service="reviews">Reviews</button>
+        <button class="section-tab" data-service="goals">Goals</button>
+        <button class="section-tab" data-service="feedback">Feedback</button>
+        <button class="section-tab" data-service="career-paths">Career</button>
+        <button class="section-tab" data-service="succession">Succession</button>
+        <button class="section-tab" data-service="requisitions">Requisitions</button>
+        <button class="section-tab" data-service="applicants">Applicants</button>
+        <button class="section-tab" data-service="applications">Applications</button>
+        <button class="section-tab" data-service="onboarding">Onboarding</button>
+    </div>
+
+    <!-- Table Container -->
+    <div id="talent-table"></div>
+</div>
+
+<script>
+let talentTable = null;
+let currentTalentService = 'reviews';
+
+const TALENT_SERVICES = {
+    reviews: {
+        endpoint: '/erp/30/PerfRevw',
+        modelName: 'PerformanceReview',
+        idField: 'reviewId',
+        columns: [
+            { key: 'reviewId', label: 'ID', filterKey: 'reviewId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'reviewerId', label: 'Reviewer', secondary: true },
+            { key: 'reviewType', label: 'Type', formatter: (v) => ({ 1: 'Annual', 2: 'Mid-Year', 3: 'Quarterly', 4: 'Probation', 5: 'Project', 6: '360' }[v] || '-') },
+            { key: 'reviewPeriod', label: 'Period', formatter: (v, item) => item.reviewPeriod ? `${MobileUtils.formatDate(item.reviewPeriod.startDate)} - ${MobileUtils.formatDate(item.reviewPeriod.endDate)}` : '-' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Pending', 3: 'In Progress', 4: 'Completed', 5: 'Cancelled' }[v] || '-') },
+            { key: 'overallRating', label: 'Rating' }
+        ],
+        statusField: 'status',
+        addText: 'New Review',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'reviewerId', label: 'Reviewer', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'reviewType', label: 'Review Type', type: 'select', options: { 1: 'Annual', 2: 'Mid-Year', 3: 'Quarterly', 4: 'Probation', 5: 'Project', 6: '360' }, required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Draft', 2: 'Pending', 3: 'In Progress', 4: 'Completed', 5: 'Cancelled' }, required: true },
+            { key: 'reviewPeriod.startDate', label: 'Period Start', type: 'date', required: true },
+            { key: 'reviewPeriod.endDate', label: 'Period End', type: 'date', required: true },
+            { key: 'overallRating', label: 'Overall Rating (1-5)', type: 'number' },
+            { key: 'overallRatingLabel', label: 'Rating Label', type: 'text' },
+            { key: 'employeeComments', label: 'Employee Comments', type: 'textarea' },
+            { key: 'managerComments', label: 'Manager Comments', type: 'textarea' },
+            { key: 'summary', label: 'Summary', type: 'textarea' },
+            { key: 'developmentPlan', label: 'Development Plan', type: 'textarea' }
+        ]
+    },
+    goals: {
+        endpoint: '/erp/30/Goal',
+        modelName: 'Goal',
+        idField: 'goalId',
+        columns: [
+            { key: 'goalId', label: 'ID', filterKey: 'goalId' },
+            { key: 'title', label: 'Goal', primary: true, filterKey: 'title' },
+            { key: 'employeeId', label: 'Employee', secondary: true },
+            { key: 'goalType', label: 'Type', formatter: (v) => ({ 1: 'Individual', 2: 'Team', 3: 'Department', 4: 'Company' }[v] || '-') },
+            { key: 'priority', label: 'Priority', formatter: (v) => ({ 1: 'Critical', 2: 'High', 3: 'Medium', 4: 'Low' }[v] || '-') },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Not Started', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled', 5: 'Deferred' }[v] || '-') },
+            { key: 'completionPercentage', label: 'Progress', formatter: (v) => `${v || 0}%` },
+            { key: 'dueDate', label: 'Due', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        statusField: 'status',
+        addText: 'New Goal',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'title', label: 'Goal Title', type: 'text', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'parentGoalId', label: 'Parent Goal', type: 'reference', lookupModel: 'Goal' },
+            { key: 'goalType', label: 'Goal Type', type: 'select', options: { 1: 'Individual', 2: 'Team', 3: 'Department', 4: 'Company' }, required: true },
+            { key: 'goalCategory', label: 'Category', type: 'text' },
+            { key: 'priority', label: 'Priority', type: 'select', options: { 1: 'Critical', 2: 'High', 3: 'Medium', 4: 'Low' } },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Not Started', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled', 5: 'Deferred' }, required: true },
+            { key: 'startDate', label: 'Start Date', type: 'date' },
+            { key: 'dueDate', label: 'Due Date', type: 'date' },
+            { key: 'completedDate', label: 'Completed Date', type: 'date' },
+            { key: 'completionPercentage', label: 'Completion %', type: 'number' },
+            { key: 'weight', label: 'Weight', type: 'number' }
+        ]
+    },
+    feedback: {
+        endpoint: '/erp/30/Feedback',
+        modelName: 'Feedback',
+        idField: 'feedbackId',
+        columns: [
+            { key: 'feedbackId', label: 'ID', filterKey: 'feedbackId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'providerId', label: 'Provider', secondary: true },
+            { key: 'feedbackType', label: 'Type', formatter: (v) => ({ 1: 'Peer', 2: 'Manager', 3: 'Skip-Level', 4: 'Self', 5: 'External' }[v] || '-') },
+            { key: 'relationship', label: 'Relationship', formatter: (v) => ({ 1: 'Peer', 2: 'Manager', 3: 'Direct Report', 4: 'Cross-Functional' }[v] || '-') },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Requested', 2: 'In Progress', 3: 'Submitted', 4: 'Cancelled' }[v] || '-') },
+            { key: 'dueDate', label: 'Due', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'Request Feedback',
+        formFields: [
+            { key: 'employeeId', label: 'Employee (Receiving)', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'providerId', label: 'Provider (Giving)', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'feedbackType', label: 'Feedback Type', type: 'select', options: { 1: 'Peer', 2: 'Manager', 3: 'Skip-Level', 4: 'Self', 5: 'External' }, required: true },
+            { key: 'relationship', label: 'Relationship', type: 'select', options: { 1: 'Peer', 2: 'Manager', 3: 'Direct Report', 4: 'Cross-Functional' } },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Requested', 2: 'In Progress', 3: 'Submitted', 4: 'Cancelled' }, required: true },
+            { key: 'requestedDate', label: 'Requested Date', type: 'date' },
+            { key: 'dueDate', label: 'Due Date', type: 'date' },
+            { key: 'submittedDate', label: 'Submitted Date', type: 'date' },
+            { key: 'generalComments', label: 'General Comments', type: 'textarea' },
+            { key: 'isAnonymous', label: 'Anonymous', type: 'checkbox' }
+        ]
+    },
+    'career-paths': {
+        endpoint: '/erp/30/CarPath',
+        modelName: 'CareerPath',
+        idField: 'careerPathId',
+        columns: [
+            { key: 'careerPathId', label: 'ID', filterKey: 'careerPathId' },
+            { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
+            { key: 'jobFamilyId', label: 'Job Family', secondary: true },
+            { key: 'description', label: 'Description' },
+            { key: 'steps', label: 'Steps', formatter: (v) => v ? v.length : 0 },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Career Path',
+        formFields: [
+            { key: 'name', label: 'Name', type: 'text', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'jobFamilyId', label: 'Job Family', type: 'reference', lookupModel: 'JobFamily' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' }
+        ]
+    },
+    succession: {
+        endpoint: '/erp/30/SuccPlan',
+        modelName: 'SuccessionPlan',
+        idField: 'planId',
+        columns: [
+            { key: 'planId', label: 'ID', filterKey: 'planId' },
+            { key: 'positionId', label: 'Position', primary: true },
+            { key: 'incumbentId', label: 'Incumbent', secondary: true },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Active', 3: 'Completed', 4: 'Cancelled' }[v] || '-') },
+            { key: 'vacancyRisk', label: 'Risk', formatter: (v) => ({ 1: 'Critical', 2: 'High', 3: 'Medium', 4: 'Low' }[v] || '-') },
+            { key: 'candidates', label: 'Candidates', formatter: (v) => v ? v.length : 0 },
+            { key: 'nextReviewDate', label: 'Next Review', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'Add Succession Plan',
+        formFields: [
+            { key: 'positionId', label: 'Position', type: 'reference', lookupModel: 'Position', required: true },
+            { key: 'incumbentId', label: 'Current Incumbent', type: 'reference', lookupModel: 'Employee' },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Draft', 2: 'Active', 3: 'Completed', 4: 'Cancelled' }, required: true },
+            { key: 'vacancyRisk', label: 'Vacancy Risk', type: 'select', options: { 1: 'Critical', 2: 'High', 3: 'Medium', 4: 'Low' } },
+            { key: 'impactAssessment', label: 'Impact Assessment', type: 'textarea' },
+            { key: 'reviewDate', label: 'Review Date', type: 'date' },
+            { key: 'nextReviewDate', label: 'Next Review Date', type: 'date' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    requisitions: {
+        endpoint: '/erp/30/JobReq',
+        modelName: 'JobRequisition',
+        idField: 'requisitionId',
+        columns: [
+            { key: 'requisitionId', label: 'ID', filterKey: 'requisitionId' },
+            { key: 'requisitionNumber', label: 'Req #', filterKey: 'requisitionNumber' },
+            { key: 'title', label: 'Position', primary: true, filterKey: 'title' },
+            { key: 'requisitionType', label: 'Type', formatter: (v) => ({ 1: 'New', 2: 'Replacement', 3: 'Expansion', 4: 'Backfill' }[v] || '-') },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Open', 3: 'On Hold', 4: 'Filled', 5: 'Cancelled' }[v] || '-') },
+            { key: 'openings', label: 'Openings' },
+            { key: 'applicantCount', label: 'Applicants' },
+            { key: 'targetStartDate', label: 'Target Start', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        statusField: 'status',
+        addText: 'New Requisition',
+        formFields: [
+            { key: 'requisitionNumber', label: 'Requisition Number', type: 'text' },
+            { key: 'title', label: 'Position Title', type: 'text', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'requisitionType', label: 'Type', type: 'select', options: { 1: 'New', 2: 'Replacement', 3: 'Expansion', 4: 'Backfill' }, required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Draft', 2: 'Open', 3: 'On Hold', 4: 'Filled', 5: 'Cancelled' }, required: true },
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+            { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'Department' },
+            { key: 'positionId', label: 'Position', type: 'reference', lookupModel: 'Position' },
+            { key: 'jobId', label: 'Job', type: 'reference', lookupModel: 'Job' },
+            { key: 'openings', label: 'Number of Openings', type: 'number', required: true },
+            { key: 'isRemote', label: 'Remote Position', type: 'checkbox' },
+            { key: 'hiringManagerId', label: 'Hiring Manager', type: 'reference', lookupModel: 'Employee' },
+            { key: 'recruiterId', label: 'Recruiter', type: 'reference', lookupModel: 'Employee' },
+            { key: 'targetStartDate', label: 'Target Start Date', type: 'date' },
+            { key: 'postedDate', label: 'Posted Date', type: 'date' },
+            { key: 'closeDate', label: 'Close Date', type: 'date' },
+            { key: 'isPostedInternal', label: 'Posted Internal', type: 'checkbox' },
+            { key: 'isPostedExternal', label: 'Posted External', type: 'checkbox' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    applicants: {
+        endpoint: '/erp/30/Applicant',
+        modelName: 'Applicant',
+        idField: 'applicantId',
+        columns: [
+            { key: 'applicantId', label: 'ID', filterKey: 'applicantId' },
+            { key: 'lastName', label: 'Last Name', primary: true, filterKey: 'lastName' },
+            { key: 'firstName', label: 'First Name', secondary: true },
+            { key: 'email', label: 'Email' },
+            { key: 'phone', label: 'Phone', formatter: (v) => MobileUtils.formatPhone(v) },
+            { key: 'source', label: 'Source', formatter: (v) => ({ 1: 'Website', 2: 'Referral', 3: 'Job Board', 4: 'Agency', 5: 'LinkedIn', 6: 'Other' }[v] || '-') },
+            { key: 'createdDate', label: 'Applied', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'Add Applicant',
+        formFields: [
+            { key: 'firstName', label: 'First Name', type: 'text', required: true },
+            { key: 'lastName', label: 'Last Name', type: 'text', required: true },
+            { key: 'email', label: 'Email', type: 'email', required: true },
+            { key: 'phone', label: 'Phone', type: 'phone' },
+            { key: 'source', label: 'Source', type: 'select', options: { 1: 'Website', 2: 'Referral', 3: 'Job Board', 4: 'Agency', 5: 'LinkedIn', 6: 'Other' } },
+            { key: 'sourceDetails', label: 'Source Details', type: 'text' },
+            { key: 'referrerEmployeeId', label: 'Referrer', type: 'reference', lookupModel: 'Employee' },
+            { key: 'linkedinUrl', label: 'LinkedIn URL', type: 'text' },
+            { key: 'portfolioUrl', label: 'Portfolio URL', type: 'text' },
+            { key: 'resumeUrl', label: 'Resume URL', type: 'text' },
+            { key: 'coverLetterUrl', label: 'Cover Letter URL', type: 'text' }
+        ]
+    },
+    applications: {
+        endpoint: '/erp/30/Applctn',
+        modelName: 'Application',
+        idField: 'applicationId',
+        columns: [
+            { key: 'applicationId', label: 'ID', filterKey: 'applicationId' },
+            { key: 'applicantId', label: 'Applicant', primary: true },
+            { key: 'requisitionId', label: 'Requisition', secondary: true },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'New', 2: 'Screening', 3: 'Interview', 4: 'Offer', 5: 'Hired', 6: 'Rejected', 7: 'Withdrawn' }[v] || '-') },
+            { key: 'stage', label: 'Stage', formatter: (v) => ({ 1: 'Applied', 2: 'Phone Screen', 3: 'Interview 1', 4: 'Interview 2', 5: 'Final', 6: 'Offer', 7: 'Background' }[v] || '-') },
+            { key: 'overallRating', label: 'Rating' },
+            { key: 'appliedDate', label: 'Applied', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'Add Application',
+        formFields: [
+            { key: 'applicantId', label: 'Applicant', type: 'reference', lookupModel: 'Applicant', required: true },
+            { key: 'requisitionId', label: 'Requisition', type: 'reference', lookupModel: 'JobRequisition', required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'New', 2: 'Screening', 3: 'Interview', 4: 'Offer', 5: 'Hired', 6: 'Rejected', 7: 'Withdrawn' }, required: true },
+            { key: 'stage', label: 'Stage', type: 'select', options: { 1: 'Applied', 2: 'Phone Screen', 3: 'Interview 1', 4: 'Interview 2', 5: 'Final', 6: 'Offer', 7: 'Background' } },
+            { key: 'screeningScore', label: 'Screening Score', type: 'number' },
+            { key: 'passedScreening', label: 'Passed Screening', type: 'checkbox' },
+            { key: 'overallRating', label: 'Overall Rating (1-5)', type: 'number' },
+            { key: 'dispositionReason', label: 'Disposition Reason', type: 'text' },
+            { key: 'dispositionDate', label: 'Disposition Date', type: 'date' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    onboarding: {
+        endpoint: '/erp/30/OnbrdTsk',
+        modelName: 'OnboardingTask',
+        idField: 'taskId',
+        columns: [
+            { key: 'taskId', label: 'ID', filterKey: 'taskId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'name', label: 'Task', secondary: true, filterKey: 'name' },
+            { key: 'category', label: 'Category', formatter: (v) => ({ 1: 'Paperwork', 2: 'Equipment', 3: 'Training', 4: 'IT Setup', 5: 'Benefits', 6: 'Introduction', 7: 'Other' }[v] || '-') },
+            { key: 'ownerType', label: 'Owner', formatter: (v) => ({ 1: 'HR', 2: 'Manager', 3: 'IT', 4: 'Employee', 5: 'Facilities' }[v] || '-') },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Not Started', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled', 5: 'Blocked' }[v] || '-') },
+            { key: 'dueDate', label: 'Due', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'Add Onboarding Task',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'name', label: 'Task Name', type: 'text', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'category', label: 'Category', type: 'select', options: { 1: 'Paperwork', 2: 'Equipment', 3: 'Training', 4: 'IT Setup', 5: 'Benefits', 6: 'Introduction', 7: 'Other' }, required: true },
+            { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' },
+            { key: 'ownerType', label: 'Owner Type', type: 'select', options: { 1: 'HR', 2: 'Manager', 3: 'IT', 4: 'Employee', 5: 'Facilities' } },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Not Started', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled', 5: 'Blocked' }, required: true },
+            { key: 'sequenceOrder', label: 'Sequence Order', type: 'number' },
+            { key: 'dueDate', label: 'Due Date', type: 'date' },
+            { key: 'completedDate', label: 'Completed Date', type: 'date' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    }
+};
+
+function initMobileTalent() {
+    loadTalentService('reviews');
+
+    document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            loadTalentService(tab.dataset.service);
+        });
+    });
+}
+
+function loadTalentService(serviceName) {
+    currentTalentService = serviceName;
+    const config = TALENT_SERVICES[serviceName];
+
+    talentTable = new MobileEditTable('talent-table', {
+        endpoint: config.endpoint,
+        modelName: config.modelName,
+        columns: config.columns,
+        rowsPerPage: 15,
+        statusField: config.statusField,
+        addButtonText: config.addText,
+        onAdd: () => openTalentForm(config),
+        onEdit: (id, item) => openTalentForm(config, item),
+        onDelete: (id, item) => deleteTalentItem(config, id, item),
+        getItemId: (item) => item[config.idField]
+    });
+}
+
+function openTalentForm(config, item = null) {
+    const isEdit = !!item;
+    const title = isEdit ? 'Edit ' + config.modelName : config.addText;
+    const formDef = { fields: config.formFields };
+    const content = MobileForms.renderForm(formDef, item || {});
+
+    MobilePopup.show({
+        title: title,
+        content: content,
+        size: 'large',
+        saveButtonText: isEdit ? 'Update' : 'Create',
+        onSave: async (popup) => {
+            const body = popup.body;
+            const errors = MobileForms.validateForm(body);
+            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+
+            const data = MobileForms.getFormData(body);
+            if (isEdit) data[config.idField] = item[config.idField];
+
+            try {
+                if (isEdit) await MobileAuth.put(config.endpoint, data);
+                else await MobileAuth.post(config.endpoint, data);
+                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                MobilePopup.close();
+                talentTable.refresh();
+            } catch (error) {
+                MobileUtils.showError('Failed to save');
+            }
+        }
+    });
+}
+
+async function deleteTalentItem(config, id, item) {
+    const confirmed = await MobileConfirm.confirmDelete(item.title || item.lastName || item.name || id);
+    if (confirmed) {
+        try {
+            await MobileAuth.delete(config.endpoint + '?id=' + id);
+            MobileUtils.showSuccess('Deleted');
+            talentTable.refresh();
+        } catch (error) {
+            MobileUtils.showError('Failed to delete');
+        }
+    }
+}
+</script>

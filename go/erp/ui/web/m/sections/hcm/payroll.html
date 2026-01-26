@@ -1,0 +1,320 @@
+<div class="section-container" id="payroll-section">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Payroll</h1>
+            <p class="page-subtitle">Manage payroll and compensation</p>
+        </div>
+    </div>
+
+    <!-- Service Tabs -->
+    <div class="section-tabs">
+        <button class="section-tab active" data-service="payroll-runs">Runs</button>
+        <button class="section-tab" data-service="payslips">Payslips</button>
+        <button class="section-tab" data-service="pay-structures">Structures</button>
+        <button class="section-tab" data-service="pay-components">Components</button>
+        <button class="section-tab" data-service="direct-deposits">Deposits</button>
+        <button class="section-tab" data-service="tax-withholdings">Tax</button>
+        <button class="section-tab" data-service="garnishments">Garnish</button>
+        <button class="section-tab" data-service="year-end-docs">Year-End</button>
+    </div>
+
+    <!-- Table Container -->
+    <div id="payroll-table"></div>
+</div>
+
+<script>
+let payrollTable = null;
+let currentPayrollService = 'payroll-runs';
+
+const PAYROLL_SERVICES = {
+    'payroll-runs': {
+        endpoint: '/erp/30/PayRun',
+        modelName: 'PayrollRun',
+        idField: 'payrollRunId',
+        columns: [
+            { key: 'payrollRunId', label: 'ID', primary: true, filterKey: 'payrollRunId' },
+            { key: 'name', label: 'Name', secondary: true, filterKey: 'name' },
+            { key: 'runType', label: 'Type', formatter: (v) => ({ 1: 'Regular', 2: 'Supplemental', 3: 'Bonus', 4: 'Correction', 5: 'Final' }[v] || '-') },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Pending', 3: 'Approved', 4: 'Processing', 5: 'Completed', 6: 'Cancelled', 7: 'Error' }[v] || '-') },
+            { key: 'paymentDate', label: 'Pay Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'employeeCount', label: 'Employees' },
+            { key: 'totalNet', label: 'Total Net', formatter: (v) => MobileUtils.formatMoney(v) }
+        ],
+        addText: 'New Payroll Run',
+        formFields: [
+            { key: 'name', label: 'Name', type: 'text', required: true },
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization', required: true },
+            { key: 'runType', label: 'Run Type', type: 'select', options: { 1: 'Regular', 2: 'Supplemental', 3: 'Bonus', 4: 'Correction', 5: 'Final' }, required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Draft', 2: 'Pending', 3: 'Approved', 4: 'Processing', 5: 'Completed', 6: 'Cancelled', 7: 'Error' }, required: true },
+            { key: 'scheduledDate', label: 'Scheduled Date', type: 'date' },
+            { key: 'paymentDate', label: 'Payment Date', type: 'date', required: true },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'payslips': {
+        endpoint: '/erp/30/Payslip',
+        modelName: 'Payslip',
+        idField: 'payslipId',
+        columns: [
+            { key: 'payslipId', label: 'ID', primary: true, filterKey: 'payslipId' },
+            { key: 'employeeId', label: 'Employee', secondary: true },
+            { key: 'payrollRunId', label: 'Payroll Run' },
+            { key: 'paymentDate', label: 'Pay Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'grossPay', label: 'Gross', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'totalDeductions', label: 'Deductions', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'netPay', label: 'Net', formatter: (v) => MobileUtils.formatMoney(v) }
+        ],
+        addText: 'Add Payslip',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'payrollRunId', label: 'Payroll Run', type: 'reference', lookupModel: 'PayrollRun', required: true },
+            { key: 'paymentDate', label: 'Payment Date', type: 'date', required: true },
+            { key: 'regularHours', label: 'Regular Hours', type: 'number' },
+            { key: 'overtimeHours', label: 'Overtime Hours', type: 'number' },
+            { key: 'ptoHours', label: 'PTO Hours', type: 'number' },
+            { key: 'holidayHours', label: 'Holiday Hours', type: 'number' }
+        ]
+    },
+    'pay-structures': {
+        endpoint: '/erp/30/PayStruct',
+        modelName: 'PayStructure',
+        idField: 'payStructureId',
+        columns: [
+            { key: 'payStructureId', label: 'ID', filterKey: 'payStructureId' },
+            { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
+            { key: 'code', label: 'Code', secondary: true, filterKey: 'code' },
+            { key: 'currencyCode', label: 'Currency' },
+            { key: 'payFrequency', label: 'Frequency', formatter: (v) => ({ 1: 'Weekly', 2: 'Bi-Weekly', 3: 'Semi-Monthly', 4: 'Monthly', 5: 'Annually' }[v] || '-') },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Pay Structure',
+        formFields: [
+            { key: 'code', label: 'Code', type: 'text', required: true },
+            { key: 'name', label: 'Name', type: 'text', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+            { key: 'currencyCode', label: 'Currency Code', type: 'text', required: true },
+            { key: 'payFrequency', label: 'Pay Frequency', type: 'select', options: { 1: 'Weekly', 2: 'Bi-Weekly', 3: 'Semi-Monthly', 4: 'Monthly', 5: 'Annually' }, required: true },
+            { key: 'isActive', label: 'Active', type: 'checkbox' },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
+            { key: 'endDate', label: 'End Date', type: 'date' }
+        ]
+    },
+    'pay-components': {
+        endpoint: '/erp/30/PayComp',
+        modelName: 'PayComponent',
+        idField: 'componentId',
+        columns: [
+            { key: 'componentId', label: 'ID', filterKey: 'componentId' },
+            { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
+            { key: 'code', label: 'Code', secondary: true, filterKey: 'code' },
+            { key: 'componentType', label: 'Type', formatter: (v) => ({ 1: 'Earning', 2: 'Deduction', 3: 'Tax', 4: 'Employer Contribution' }[v] || '-') },
+            { key: 'calculationType', label: 'Calculation', formatter: (v) => ({ 1: 'Fixed', 2: 'Percentage', 3: 'Hourly', 4: 'Formula' }[v] || '-') },
+            { key: 'isTaxable', label: 'Taxable', formatter: (v) => v ? 'Yes' : 'No' },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Pay Component',
+        formFields: [
+            { key: 'code', label: 'Code', type: 'text', required: true },
+            { key: 'name', label: 'Name', type: 'text', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+            { key: 'componentType', label: 'Type', type: 'select', options: { 1: 'Earning', 2: 'Deduction', 3: 'Tax', 4: 'Employer Contribution' }, required: true },
+            { key: 'calculationType', label: 'Calculation', type: 'select', options: { 1: 'Fixed', 2: 'Percentage', 3: 'Hourly', 4: 'Formula' }, required: true },
+            { key: 'rate', label: 'Rate/Percentage', type: 'number' },
+            { key: 'isTaxable', label: 'Taxable', type: 'checkbox' },
+            { key: 'isPreTax', label: 'Pre-Tax', type: 'checkbox' },
+            { key: 'affectsOvertime', label: 'Affects Overtime', type: 'checkbox' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' },
+            { key: 'displayOrder', label: 'Display Order', type: 'number' }
+        ]
+    },
+    'direct-deposits': {
+        endpoint: '/erp/30/DirDep',
+        modelName: 'DirectDeposit',
+        idField: 'directDepositId',
+        columns: [
+            { key: 'directDepositId', label: 'ID', primary: true },
+            { key: 'employeeId', label: 'Employee', secondary: true },
+            { key: 'bankName', label: 'Bank', filterKey: 'bankName' },
+            { key: 'accountNumberMasked', label: 'Account' },
+            { key: 'accountType', label: 'Type', formatter: (v) => ({ 1: 'Checking', 2: 'Savings' }[v] || '-') },
+            { key: 'depositType', label: 'Deposit', formatter: (v) => ({ 1: 'Full (Remainder)', 2: 'Fixed Amount', 3: 'Percentage' }[v] || '-') },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Direct Deposit',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'accountName', label: 'Account Name', type: 'text' },
+            { key: 'bankName', label: 'Bank Name', type: 'text', required: true },
+            { key: 'routingNumber', label: 'Routing Number', type: 'text', required: true },
+            { key: 'accountType', label: 'Account Type', type: 'select', options: { 1: 'Checking', 2: 'Savings' }, required: true },
+            { key: 'depositType', label: 'Deposit Type', type: 'select', options: { 1: 'Full (Remainder)', 2: 'Fixed Amount', 3: 'Percentage' }, required: true },
+            { key: 'percentage', label: 'Percentage', type: 'number' },
+            { key: 'priority', label: 'Priority', type: 'number' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' },
+            { key: 'isPrenoteComplete', label: 'Prenote Complete', type: 'checkbox' },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date' }
+        ]
+    },
+    'tax-withholdings': {
+        endpoint: '/erp/30/TaxWith',
+        modelName: 'TaxWithholding',
+        idField: 'withholdingId',
+        columns: [
+            { key: 'withholdingId', label: 'ID', filterKey: 'withholdingId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'taxType', label: 'Tax Type', secondary: true, formatter: (v) => ({ 1: 'Federal Income', 2: 'State Income', 3: 'Local Income', 4: 'Social Security', 5: 'Medicare' }[v] || '-') },
+            { key: 'taxJurisdiction', label: 'Jurisdiction', filterKey: 'taxJurisdiction' },
+            { key: 'filingStatus', label: 'Filing Status', formatter: (v) => ({ 1: 'Single', 2: 'Married Filing Jointly', 3: 'Married Filing Separately', 4: 'Head of Household', 5: 'Widow(er)' }[v] || '-') },
+            { key: 'exempt', label: 'Exempt', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Tax Withholding',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'taxType', label: 'Tax Type', type: 'select', options: { 1: 'Federal Income', 2: 'State Income', 3: 'Local Income', 4: 'Social Security', 5: 'Medicare' }, required: true },
+            { key: 'taxJurisdiction', label: 'Jurisdiction', type: 'text', required: true },
+            { key: 'formVersion', label: 'Form Version', type: 'text' },
+            { key: 'filingStatus', label: 'Filing Status', type: 'select', options: { 1: 'Single', 2: 'Married Filing Jointly', 3: 'Married Filing Separately', 4: 'Head of Household', 5: 'Widow(er)' }, required: true },
+            { key: 'allowances', label: 'Allowances', type: 'number' },
+            { key: 'useNewW4', label: 'Use 2020+ W-4', type: 'checkbox' },
+            { key: 'exempt', label: 'Exempt', type: 'checkbox' },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
+            { key: 'signedDate', label: 'Signed Date', type: 'date' }
+        ]
+    },
+    'garnishments': {
+        endpoint: '/erp/30/Garnish',
+        modelName: 'Garnishment',
+        idField: 'garnishmentId',
+        columns: [
+            { key: 'garnishmentId', label: 'ID', filterKey: 'garnishmentId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'garnishmentType', label: 'Type', secondary: true, formatter: (v) => ({ 1: 'Child Support', 2: 'Spousal Support', 3: 'Tax Levy', 4: 'Creditor', 5: 'Student Loan', 6: 'Bankruptcy' }[v] || '-') },
+            { key: 'caseNumber', label: 'Case #', filterKey: 'caseNumber' },
+            { key: 'payeeName', label: 'Payee', filterKey: 'payeeName' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Active', 2: 'Suspended', 3: 'Completed', 4: 'Cancelled' }[v] || '-') },
+            { key: 'amountPerPeriod', label: 'Per Period', formatter: (v) => MobileUtils.formatMoney(v) }
+        ],
+        addText: 'Add Garnishment',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'garnishmentType', label: 'Type', type: 'select', options: { 1: 'Child Support', 2: 'Spousal Support', 3: 'Tax Levy', 4: 'Creditor', 5: 'Student Loan', 6: 'Bankruptcy' }, required: true },
+            { key: 'caseNumber', label: 'Case Number', type: 'text', required: true },
+            { key: 'issuingAuthority', label: 'Issuing Authority', type: 'text' },
+            { key: 'payeeName', label: 'Payee Name', type: 'text', required: true },
+            { key: 'payeeAddress', label: 'Payee Address', type: 'textarea' },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Active', 2: 'Suspended', 3: 'Completed', 4: 'Cancelled' }, required: true },
+            { key: 'percentage', label: 'Percentage', type: 'number' },
+            { key: 'priority', label: 'Priority', type: 'number' },
+            { key: 'startDate', label: 'Start Date', type: 'date', required: true },
+            { key: 'endDate', label: 'End Date', type: 'date' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'year-end-docs': {
+        endpoint: '/erp/30/YrEndDoc',
+        modelName: 'YearEndDocument',
+        idField: 'documentId',
+        columns: [
+            { key: 'documentId', label: 'ID', filterKey: 'documentId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'taxYear', label: 'Year', secondary: true, filterKey: 'taxYear' },
+            { key: 'documentType', label: 'Type', formatter: (v) => ({ 1: 'W-2', 2: 'W-2C', 3: '1099-MISC', 4: '1099-NEC', 5: 'T4', 6: 'T4A' }[v] || '-') },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Generated', 3: 'Issued', 4: 'Filed' }[v] || '-') },
+            { key: 'issuedDate', label: 'Issued', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'isCorrected', label: 'Corrected', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Year-End Document',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'taxYear', label: 'Tax Year', type: 'number', required: true },
+            { key: 'documentType', label: 'Document Type', type: 'select', options: { 1: 'W-2', 2: 'W-2C', 3: '1099-MISC', 4: '1099-NEC', 5: 'T4', 6: 'T4A' }, required: true },
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Draft', 2: 'Generated', 3: 'Issued', 4: 'Filed' }, required: true },
+            { key: 'issuedDate', label: 'Issued Date', type: 'date' },
+            { key: 'isCorrected', label: 'Is Correction', type: 'checkbox' },
+            { key: 'originalDocumentId', label: 'Original Document ID', type: 'text' },
+            { key: 'fileUrl', label: 'File URL', type: 'text' }
+        ]
+    }
+};
+
+function initMobilePayroll() {
+    loadPayrollService('payroll-runs');
+
+    document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            loadPayrollService(tab.dataset.service);
+        });
+    });
+}
+
+function loadPayrollService(serviceName) {
+    currentPayrollService = serviceName;
+    const config = PAYROLL_SERVICES[serviceName];
+
+    payrollTable = new MobileEditTable('payroll-table', {
+        endpoint: config.endpoint,
+        modelName: config.modelName,
+        columns: config.columns,
+        rowsPerPage: 15,
+        addButtonText: config.addText,
+        onAdd: () => openPayrollForm(config),
+        onEdit: (id, item) => openPayrollForm(config, item),
+        onDelete: (id, item) => deletePayrollItem(config, id, item),
+        getItemId: (item) => item[config.idField]
+    });
+}
+
+function openPayrollForm(config, item = null) {
+    const isEdit = !!item;
+    const title = isEdit ? 'Edit ' + config.modelName : config.addText;
+
+    const formDef = { fields: config.formFields };
+    const content = MobileForms.renderForm(formDef, item || {});
+
+    MobilePopup.show({
+        title: title,
+        content: content,
+        size: 'large',
+        saveButtonText: isEdit ? 'Update' : 'Create',
+        onSave: async (popup) => {
+            const body = popup.body;
+            const errors = MobileForms.validateForm(body);
+            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+
+            const data = MobileForms.getFormData(body);
+            if (isEdit) data[config.idField] = item[config.idField];
+
+            try {
+                if (isEdit) {
+                    await MobileAuth.put(config.endpoint, data);
+                } else {
+                    await MobileAuth.post(config.endpoint, data);
+                }
+                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                MobilePopup.close();
+                payrollTable.refresh();
+            } catch (error) {
+                MobileUtils.showError('Failed to save');
+            }
+        }
+    });
+}
+
+async function deletePayrollItem(config, id, item) {
+    const confirmed = await MobileConfirm.confirmDelete(item.name || id);
+    if (confirmed) {
+        try {
+            await MobileAuth.delete(config.endpoint + '?id=' + id);
+            MobileUtils.showSuccess('Deleted');
+            payrollTable.refresh();
+        } catch (error) {
+            MobileUtils.showError('Failed to delete');
+        }
+    }
+}
+</script>

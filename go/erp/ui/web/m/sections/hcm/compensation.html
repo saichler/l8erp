@@ -1,0 +1,417 @@
+<div class="section-container" id="compensation-section">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Compensation</h1>
+            <p class="page-subtitle">Salary grades, structures, bonuses, and equity</p>
+        </div>
+    </div>
+
+    <!-- Service Tabs -->
+    <div class="section-tabs">
+        <button class="section-tab active" data-service="salary-grades">Grades</button>
+        <button class="section-tab" data-service="salary-structures">Structures</button>
+        <button class="section-tab" data-service="bonus-plans">Bonus Plans</button>
+        <button class="section-tab" data-service="equity-grants">Equity</button>
+        <button class="section-tab" data-service="emp-compensation">Employee</button>
+        <button class="section-tab" data-service="merit-increases">Merit</button>
+        <button class="section-tab" data-service="merit-cycles">Cycles</button>
+        <button class="section-tab" data-service="bonus-payments">Payments</button>
+        <button class="section-tab" data-service="comp-statements">Statements</button>
+        <button class="section-tab" data-service="market-benchmarks">Benchmarks</button>
+    </div>
+
+    <!-- Table Container -->
+    <div id="compensation-table"></div>
+</div>
+
+<script>
+let compensationTable = null;
+let currentCompensationService = 'salary-grades';
+
+const COMPENSATION_SERVICES = {
+    'salary-grades': {
+        endpoint: '/erp/30/SalaryGrade',
+        modelName: 'SalaryGrade',
+        idField: 'gradeId',
+        columns: [
+            { key: 'gradeId', label: 'Grade ID', primary: true },
+            { key: 'gradeCode', label: 'Code', secondary: true, filterKey: 'gradeCode' },
+            { key: 'name', label: 'Name', filterKey: 'name' },
+            { key: 'level', label: 'Level' },
+            { key: 'spreadPercentage', label: 'Spread %' },
+            { key: 'payFrequency', label: 'Frequency', formatter: (v) => ({ 1: 'Annual', 2: 'Monthly', 3: 'Bi-Weekly', 4: 'Weekly', 5: 'Hourly' }[v] || '-') },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Grade',
+        formFields: [
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+            { key: 'salaryStructureId', label: 'Salary Structure', type: 'reference', lookupModel: 'SalaryStructure' },
+            { key: 'gradeCode', label: 'Grade Code', type: 'text', required: true },
+            { key: 'name', label: 'Grade Name', type: 'text', required: true },
+            { key: 'level', label: 'Level', type: 'number', required: true },
+            { key: 'minimum.amount', label: 'Minimum Salary', type: 'currency', required: true },
+            { key: 'midpoint.amount', label: 'Midpoint Salary', type: 'currency', required: true },
+            { key: 'maximum.amount', label: 'Maximum Salary', type: 'currency', required: true },
+            { key: 'spreadPercentage', label: 'Spread Percentage', type: 'percentage' },
+            { key: 'currencyCode', label: 'Currency', type: 'text' },
+            { key: 'payFrequency', label: 'Pay Frequency', type: 'select', options: { 1: 'Annual', 2: 'Monthly', 3: 'Bi-Weekly', 4: 'Weekly', 5: 'Hourly' } },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
+            { key: 'endDate', label: 'End Date', type: 'date' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' },
+            { key: 'description', label: 'Description', type: 'textarea' }
+        ]
+    },
+    'salary-structures': {
+        endpoint: '/erp/30/SalaryStructure',
+        modelName: 'SalaryStructure',
+        idField: 'structureId',
+        columns: [
+            { key: 'structureId', label: 'Structure ID', primary: true },
+            { key: 'name', label: 'Name', secondary: true, filterKey: 'name' },
+            { key: 'currencyCode', label: 'Currency' },
+            { key: 'payFrequency', label: 'Frequency', formatter: (v) => ({ 1: 'Annual', 2: 'Monthly', 3: 'Bi-Weekly', 4: 'Weekly', 5: 'Hourly' }[v] || '-') },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Structure',
+        formFields: [
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+            { key: 'name', label: 'Structure Name', type: 'text', required: true },
+            { key: 'currencyCode', label: 'Currency Code', type: 'text', required: true },
+            { key: 'payFrequency', label: 'Pay Frequency', type: 'select', required: true, options: { 1: 'Annual', 2: 'Monthly', 3: 'Bi-Weekly', 4: 'Weekly', 5: 'Hourly' } },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
+            { key: 'endDate', label: 'End Date', type: 'date' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' },
+            { key: 'description', label: 'Description', type: 'textarea' }
+        ]
+    },
+    'bonus-plans': {
+        endpoint: '/erp/30/BonusPlan',
+        modelName: 'BonusPlan',
+        idField: 'planId',
+        columns: [
+            { key: 'planId', label: 'Plan ID', primary: true },
+            { key: 'name', label: 'Name', secondary: true, filterKey: 'name' },
+            { key: 'planYear', label: 'Year' },
+            { key: 'frequency', label: 'Frequency', formatter: (v) => ({ 1: 'Annual', 2: 'Semi-Annual', 3: 'Quarterly', 4: 'Monthly' }[v] || '-') },
+            { key: 'targetPercentage', label: 'Target %' },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Bonus Plan',
+        formFields: [
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+            { key: 'code', label: 'Plan Code', type: 'text', required: true },
+            { key: 'name', label: 'Plan Name', type: 'text', required: true },
+            { key: 'planType', label: 'Plan Type', type: 'select', options: { 1: 'Individual', 2: 'Team', 3: 'Company', 4: 'Spot' } },
+            { key: 'planYear', label: 'Plan Year', type: 'number', required: true },
+            { key: 'frequency', label: 'Frequency', type: 'select', options: { 1: 'Annual', 2: 'Semi-Annual', 3: 'Quarterly', 4: 'Monthly' } },
+            { key: 'targetPercentage', label: 'Target Percentage', type: 'percentage' },
+            { key: 'maximumPercentage', label: 'Maximum Percentage', type: 'percentage' },
+            { key: 'targetAmount.amount', label: 'Target Amount', type: 'currency' },
+            { key: 'maximumAmount.amount', label: 'Maximum Amount', type: 'currency' },
+            { key: 'fundingType', label: 'Funding Type', type: 'text' },
+            { key: 'fundingPoolPercentage', label: 'Funding Pool %', type: 'percentage' },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
+            { key: 'endDate', label: 'End Date', type: 'date' },
+            { key: 'payoutDate', label: 'Payout Date', type: 'date' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' },
+            { key: 'description', label: 'Description', type: 'textarea' }
+        ]
+    },
+    'equity-grants': {
+        endpoint: '/erp/30/EquityGrant',
+        modelName: 'EquityGrant',
+        idField: 'grantId',
+        columns: [
+            { key: 'grantId', label: 'Grant ID', primary: true },
+            { key: 'grantNumber', label: 'Grant #', secondary: true, filterKey: 'grantNumber' },
+            { key: 'employeeId', label: 'Employee' },
+            { key: 'grantType', label: 'Type', formatter: (v) => ({ 1: 'Stock Options', 2: 'RSU', 3: 'ESPP', 4: 'Phantom Stock' }[v] || '-') },
+            { key: 'shares', label: 'Shares' },
+            { key: 'grantPrice.amount', label: 'Grant Price', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Active', 2: 'Vesting', 3: 'Exercised', 4: 'Forfeited', 5: 'Expired' }[v] || '-') },
+            { key: 'grantDate', label: 'Grant Date', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'Add Grant',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'grantNumber', label: 'Grant Number', type: 'text' },
+            { key: 'grantType', label: 'Grant Type', type: 'select', required: true, options: { 1: 'Stock Options', 2: 'RSU', 3: 'ESPP', 4: 'Phantom Stock' } },
+            { key: 'status', label: 'Status', type: 'select', required: true, options: { 1: 'Active', 2: 'Vesting', 3: 'Exercised', 4: 'Forfeited', 5: 'Expired' } },
+            { key: 'shares', label: 'Number of Shares', type: 'number', required: true },
+            { key: 'grantDate', label: 'Grant Date', type: 'date', required: true },
+            { key: 'grantPrice.amount', label: 'Grant Price', type: 'currency' },
+            { key: 'fairMarketValue.amount', label: 'Fair Market Value', type: 'currency' },
+            { key: 'totalValue.amount', label: 'Total Value', type: 'currency' },
+            { key: 'sharesVested', label: 'Shares Vested', type: 'number' },
+            { key: 'sharesUnvested', label: 'Shares Unvested', type: 'number' },
+            { key: 'sharesExercised', label: 'Shares Exercised', type: 'number' },
+            { key: 'sharesForfeited', label: 'Shares Forfeited', type: 'number' },
+            { key: 'vestStartDate', label: 'Vest Start Date', type: 'date' },
+            { key: 'vestingSchedule', label: 'Vesting Schedule', type: 'text' },
+            { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'emp-compensation': {
+        endpoint: '/erp/30/EmpComp',
+        modelName: 'EmployeeCompensation',
+        idField: 'compensationId',
+        columns: [
+            { key: 'compensationId', label: 'Comp ID', primary: true },
+            { key: 'employeeId', label: 'Employee', secondary: true },
+            { key: 'compensationType', label: 'Type', formatter: (v) => ({ 1: 'Salary', 2: 'Hourly', 3: 'Commission', 4: 'Contract' }[v] || '-') },
+            { key: 'baseSalary.amount', label: 'Base Salary', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'payFrequency', label: 'Frequency', formatter: (v) => ({ 1: 'Annual', 2: 'Monthly', 3: 'Bi-Weekly', 4: 'Weekly', 5: 'Hourly' }[v] || '-') },
+            { key: 'compaRatio', label: 'Compa Ratio', formatter: (v) => v ? (v * 100).toFixed(0) + '%' : '-' },
+            { key: 'effectiveDate', label: 'Effective', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'Add Compensation',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'compensationType', label: 'Compensation Type', type: 'select', required: true, options: { 1: 'Salary', 2: 'Hourly', 3: 'Commission', 4: 'Contract' } },
+            { key: 'salaryGradeId', label: 'Salary Grade', type: 'reference', lookupModel: 'SalaryGrade' },
+            { key: 'baseSalary.amount', label: 'Base Salary', type: 'currency', required: true },
+            { key: 'hourlyRate.amount', label: 'Hourly Rate', type: 'currency' },
+            { key: 'payFrequency', label: 'Pay Frequency', type: 'select', required: true, options: { 1: 'Annual', 2: 'Monthly', 3: 'Bi-Weekly', 4: 'Weekly', 5: 'Hourly' } },
+            { key: 'currencyCode', label: 'Currency', type: 'text' },
+            { key: 'compaRatio', label: 'Compa Ratio', type: 'percentage' },
+            { key: 'fte', label: 'FTE', type: 'number' },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date', required: true },
+            { key: 'endDate', label: 'End Date', type: 'date' },
+            { key: 'changeReason', label: 'Change Reason', type: 'text' }
+        ]
+    },
+    'merit-increases': {
+        endpoint: '/erp/30/MeritInc',
+        modelName: 'MeritIncrease',
+        idField: 'increaseId',
+        columns: [
+            { key: 'increaseId', label: 'Increase ID', primary: true },
+            { key: 'employeeId', label: 'Employee', secondary: true },
+            { key: 'meritCycleId', label: 'Cycle' },
+            { key: 'currentSalary.amount', label: 'Current', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'proposedIncrease.amount', label: 'Proposed', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'proposedPercentage', label: '%', formatter: (v) => v ? v + '%' : '-' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Rejected', 5: 'Applied' }[v] || '-') },
+            { key: 'performanceRating', label: 'Rating', formatter: (v) => v ? '★'.repeat(v) : '-' }
+        ],
+        addText: 'Add Merit Increase',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'meritCycleId', label: 'Merit Cycle', type: 'reference', lookupModel: 'MeritCycle', required: true },
+            { key: 'reviewId', label: 'Performance Review', type: 'reference', lookupModel: 'PerformanceReview' },
+            { key: 'status', label: 'Status', type: 'select', required: true, options: { 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Rejected', 5: 'Applied' } },
+            { key: 'currentSalary.amount', label: 'Current Salary', type: 'currency' },
+            { key: 'proposedIncrease.amount', label: 'Proposed Increase', type: 'currency' },
+            { key: 'proposedPercentage', label: 'Proposed Percentage', type: 'percentage' },
+            { key: 'newSalary.amount', label: 'New Salary', type: 'currency' },
+            { key: 'performanceRating', label: 'Performance Rating', type: 'rating' },
+            { key: 'compaRatioBefore', label: 'Compa Ratio Before', type: 'percentage' },
+            { key: 'compaRatioAfter', label: 'Compa Ratio After', type: 'percentage' },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'merit-cycles': {
+        endpoint: '/erp/30/MrtCycle',
+        modelName: 'MeritCycle',
+        idField: 'cycleId',
+        columns: [
+            { key: 'cycleId', label: 'Cycle ID', primary: true },
+            { key: 'name', label: 'Name', secondary: true, filterKey: 'name' },
+            { key: 'year', label: 'Year' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Planning', 2: 'Open', 3: 'Review', 4: 'Approved', 5: 'Closed' }[v] || '-') },
+            { key: 'totalBudget.amount', label: 'Budget', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'budgetPercentage', label: 'Budget %', formatter: (v) => v ? v + '%' : '-' },
+            { key: 'effectiveDate', label: 'Effective', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'Add Merit Cycle',
+        formFields: [
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+            { key: 'name', label: 'Cycle Name', type: 'text', required: true },
+            { key: 'year', label: 'Year', type: 'number', required: true },
+            { key: 'status', label: 'Status', type: 'select', required: true, options: { 1: 'Planning', 2: 'Open', 3: 'Review', 4: 'Approved', 5: 'Closed' } },
+            { key: 'planningStartDate', label: 'Planning Start', type: 'date' },
+            { key: 'planningEndDate', label: 'Planning End', type: 'date' },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
+            { key: 'totalBudget.amount', label: 'Total Budget', type: 'currency' },
+            { key: 'budgetPercentage', label: 'Budget Percentage', type: 'percentage' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'bonus-payments': {
+        endpoint: '/erp/30/BonusPay',
+        modelName: 'BonusPayment',
+        idField: 'paymentId',
+        columns: [
+            { key: 'paymentId', label: 'Payment ID', primary: true },
+            { key: 'employeeId', label: 'Employee', secondary: true },
+            { key: 'bonusPlanId', label: 'Plan' },
+            { key: 'bonusType', label: 'Type', formatter: (v) => ({ 1: 'Performance', 2: 'Spot', 3: 'Signing', 4: 'Retention', 5: 'Referral' }[v] || '-') },
+            { key: 'actualAmount.amount', label: 'Amount', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Pending', 2: 'Approved', 3: 'Paid', 4: 'Cancelled' }[v] || '-') },
+            { key: 'paymentDate', label: 'Payment Date', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'Add Bonus Payment',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'bonusPlanId', label: 'Bonus Plan', type: 'reference', lookupModel: 'BonusPlan' },
+            { key: 'bonusType', label: 'Bonus Type', type: 'select', required: true, options: { 1: 'Performance', 2: 'Spot', 3: 'Signing', 4: 'Retention', 5: 'Referral' } },
+            { key: 'reason', label: 'Reason', type: 'text' },
+            { key: 'status', label: 'Status', type: 'select', required: true, options: { 1: 'Pending', 2: 'Approved', 3: 'Paid', 4: 'Cancelled' } },
+            { key: 'targetAmount.amount', label: 'Target Amount', type: 'currency' },
+            { key: 'actualAmount.amount', label: 'Actual Amount', type: 'currency', required: true },
+            { key: 'payoutPercentage', label: 'Payout %', type: 'percentage' },
+            { key: 'individualPerformanceFactor', label: 'Individual Factor', type: 'number' },
+            { key: 'teamPerformanceFactor', label: 'Team Factor', type: 'number' },
+            { key: 'companyPerformanceFactor', label: 'Company Factor', type: 'number' },
+            { key: 'awardDate', label: 'Award Date', type: 'date' },
+            { key: 'paymentDate', label: 'Payment Date', type: 'date' },
+            { key: 'isTaxable', label: 'Taxable', type: 'checkbox' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'comp-statements': {
+        endpoint: '/erp/30/CompStmt',
+        modelName: 'CompensationStatement',
+        idField: 'statementId',
+        columns: [
+            { key: 'statementId', label: 'Statement ID', primary: true },
+            { key: 'employeeId', label: 'Employee', secondary: true },
+            { key: 'statementYear', label: 'Year' },
+            { key: 'baseSalary.amount', label: 'Base', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'bonusActual.amount', label: 'Bonus', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'equityValue.amount', label: 'Equity', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'totalCashCompensation.amount', label: 'Total Cash', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'totalCompensation.amount', label: 'Total Comp', formatter: (v) => MobileUtils.formatMoney(v) }
+        ],
+        addText: 'Add Statement',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'statementYear', label: 'Statement Year', type: 'number', required: true },
+            { key: 'asOfDate', label: 'As Of Date', type: 'date' },
+            { key: 'baseSalary.amount', label: 'Base Salary', type: 'currency' },
+            { key: 'hourlyEquivalent.amount', label: 'Hourly Equivalent', type: 'currency' },
+            { key: 'bonusTarget.amount', label: 'Bonus Target', type: 'currency' },
+            { key: 'bonusActual.amount', label: 'Bonus Actual', type: 'currency' },
+            { key: 'commissions.amount', label: 'Commissions', type: 'currency' },
+            { key: 'equityValue.amount', label: 'Equity Value', type: 'currency' },
+            { key: 'equityShares', label: 'Equity Shares', type: 'number' },
+            { key: 'pdfUrl', label: 'PDF URL', type: 'text' }
+        ]
+    },
+    'market-benchmarks': {
+        endpoint: '/erp/30/MktBench',
+        modelName: 'MarketBenchmark',
+        idField: 'benchmarkId',
+        columns: [
+            { key: 'benchmarkId', label: 'Benchmark ID', primary: true },
+            { key: 'jobTitle', label: 'Job Title', secondary: true, filterKey: 'jobTitle' },
+            { key: 'surveySource', label: 'Source' },
+            { key: 'surveyYear', label: 'Year' },
+            { key: 'market50th.amount', label: '50th %ile', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'market75th.amount', label: '75th %ile', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'internalAverage.amount', label: 'Internal Avg', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'marketIndex', label: 'Index', formatter: (v) => v ? (v * 100).toFixed(0) + '%' : '-' }
+        ],
+        addText: 'Add Benchmark',
+        formFields: [
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+            { key: 'jobId', label: 'Job', type: 'reference', lookupModel: 'Job' },
+            { key: 'jobTitle', label: 'Job Title', type: 'text', required: true },
+            { key: 'surveySource', label: 'Survey Source', type: 'text', required: true },
+            { key: 'surveyYear', label: 'Survey Year', type: 'number', required: true },
+            { key: 'marketDefinition', label: 'Market Definition', type: 'text' },
+            { key: 'market25th.amount', label: '25th Percentile', type: 'currency' },
+            { key: 'market50th.amount', label: '50th Percentile', type: 'currency' },
+            { key: 'market75th.amount', label: '75th Percentile', type: 'currency' },
+            { key: 'market90th.amount', label: '90th Percentile', type: 'currency' },
+            { key: 'marketAverage.amount', label: 'Market Average', type: 'currency' },
+            { key: 'totalCash25th.amount', label: 'Total Cash 25th', type: 'currency' },
+            { key: 'totalCash50th.amount', label: 'Total Cash 50th', type: 'currency' },
+            { key: 'totalCash75th.amount', label: 'Total Cash 75th', type: 'currency' },
+            { key: 'internalAverage.amount', label: 'Internal Average', type: 'currency' },
+            { key: 'marketIndex', label: 'Market Index', type: 'percentage' },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
+            { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    }
+};
+
+function initMobileCompensation() {
+    loadCompensationService('salary-grades');
+
+    document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            loadCompensationService(tab.dataset.service);
+        });
+    });
+}
+
+function loadCompensationService(serviceName) {
+    currentCompensationService = serviceName;
+    const config = COMPENSATION_SERVICES[serviceName];
+
+    compensationTable = new MobileEditTable('compensation-table', {
+        endpoint: config.endpoint,
+        modelName: config.modelName,
+        columns: config.columns,
+        rowsPerPage: 15,
+        addButtonText: config.addText,
+        onAdd: () => openCompensationForm(config),
+        onEdit: (id, item) => openCompensationForm(config, item),
+        onDelete: (id, item) => deleteCompensationItem(config, id, item),
+        getItemId: (item) => item[config.idField]
+    });
+}
+
+function openCompensationForm(config, item = null) {
+    const isEdit = !!item;
+    const title = isEdit ? 'Edit' : config.addText;
+
+    const formDef = { fields: config.formFields };
+    const content = MobileForms.renderForm(formDef, item || {});
+
+    MobilePopup.show({
+        title: title,
+        content: content,
+        size: 'medium',
+        saveButtonText: isEdit ? 'Update' : 'Create',
+        onSave: async (popup) => {
+            const body = popup.body;
+            const errors = MobileForms.validateForm(body);
+            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+
+            const data = MobileForms.getFormData(body);
+            if (isEdit) data[config.idField] = item[config.idField];
+
+            try {
+                if (isEdit) await MobileAuth.put(config.endpoint, data);
+                else await MobileAuth.post(config.endpoint, data);
+                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                MobilePopup.close();
+                compensationTable.refresh();
+            } catch (error) {
+                MobileUtils.showError('Failed to save');
+            }
+        }
+    });
+}
+
+async function deleteCompensationItem(config, id, item) {
+    const name = item.name || item.planName || id;
+    const confirmed = await MobileConfirm.confirmDelete(name);
+    if (confirmed) {
+        try {
+            await MobileAuth.delete(config.endpoint + '?id=' + id);
+            MobileUtils.showSuccess('Deleted');
+            compensationTable.refresh();
+        } catch (error) {
+            MobileUtils.showError('Failed to delete');
+        }
+    }
+}
+</script>

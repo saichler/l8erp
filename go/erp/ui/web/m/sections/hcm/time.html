@@ -1,0 +1,337 @@
+<div class="section-container" id="time-section">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Time & Attendance</h1>
+            <p class="page-subtitle">Manage timesheets and leave</p>
+        </div>
+    </div>
+
+    <!-- Service Tabs -->
+    <div class="section-tabs">
+        <button class="section-tab active" data-service="timesheets">Timesheets</button>
+        <button class="section-tab" data-service="leave-requests">Leave</button>
+        <button class="section-tab" data-service="leave-balances">Balances</button>
+        <button class="section-tab" data-service="leave-policies">Policies</button>
+        <button class="section-tab" data-service="schedules">Schedules</button>
+        <button class="section-tab" data-service="shifts">Shifts</button>
+        <button class="section-tab" data-service="absences">Absences</button>
+        <button class="section-tab" data-service="holidays">Holidays</button>
+    </div>
+
+    <!-- Table Container -->
+    <div id="time-table"></div>
+</div>
+
+<script>
+let timeTable = null;
+let currentTimeService = 'timesheets';
+
+const TIME_SERVICES = {
+    timesheets: {
+        endpoint: '/erp/30/Timesheet',
+        modelName: 'Timesheet',
+        idField: 'timesheetId',
+        columns: [
+            { key: 'timesheetId', label: 'ID', primary: true },
+            { key: 'employeeId', label: 'Employee', secondary: true },
+            { key: 'period', label: 'Period', formatter: (v, item) => `${MobileUtils.formatDate(item.startDate)} - ${MobileUtils.formatDate(item.endDate)}` },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Rejected', 5: 'Processed' }[v] || '-') },
+            { key: 'totalRegularHours', label: 'Regular' },
+            { key: 'totalOvertimeHours', label: 'OT' }
+        ],
+        statusField: 'status',
+        addText: 'New Timesheet',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'startDate', label: 'Period Start', type: 'date', required: true },
+            { key: 'endDate', label: 'Period End', type: 'date', required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Rejected', 5: 'Processed' }, required: true },
+            { key: 'totalRegularHours', label: 'Regular Hours', type: 'number' },
+            { key: 'totalOvertimeHours', label: 'Overtime Hours', type: 'number' },
+            { key: 'totalDoubleTimeHours', label: 'Double Time Hours', type: 'number' },
+            { key: 'totalPtoHours', label: 'PTO Hours', type: 'number' },
+            { key: 'totalSickHours', label: 'Sick Hours', type: 'number' },
+            { key: 'totalHolidayHours', label: 'Holiday Hours', type: 'number' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'leave-requests': {
+        endpoint: '/erp/30/LeaveReq',
+        modelName: 'LeaveRequest',
+        idField: 'requestId',
+        columns: [
+            { key: 'requestId', label: 'ID', primary: true },
+            { key: 'employeeId', label: 'Employee', secondary: true },
+            { key: 'leaveType', label: 'Type', formatter: (v) => ({ 1: 'Vacation', 2: 'Sick', 3: 'Personal', 4: 'Bereavement', 5: 'Jury Duty', 6: 'Military', 7: 'FMLA', 8: 'Other' }[v] || '-') },
+            { key: 'startDate', label: 'Start', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'endDate', label: 'End', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'totalHours', label: 'Hours' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Pending', 3: 'Approved', 4: 'Rejected', 5: 'Cancelled' }[v] || '-') }
+        ],
+        statusField: 'status',
+        addText: 'New Leave Request',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'leavePolicyId', label: 'Leave Policy', type: 'reference', lookupModel: 'LeavePolicy' },
+            { key: 'leaveType', label: 'Leave Type', type: 'select', options: { 1: 'Vacation', 2: 'Sick', 3: 'Personal', 4: 'Bereavement', 5: 'Jury Duty', 6: 'Military', 7: 'FMLA', 8: 'Other' }, required: true },
+            { key: 'startDate', label: 'Start Date', type: 'date', required: true },
+            { key: 'endDate', label: 'End Date', type: 'date', required: true },
+            { key: 'totalHours', label: 'Total Hours', type: 'number' },
+            { key: 'totalDays', label: 'Total Days', type: 'number' },
+            { key: 'isPartialDay', label: 'Partial Day', type: 'checkbox' },
+            { key: 'partialDayType', label: 'Partial Day Type', type: 'select', options: { 1: 'Morning', 2: 'Afternoon', 3: 'Custom' } },
+            { key: 'reason', label: 'Reason', type: 'textarea' },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Draft', 2: 'Pending', 3: 'Approved', 4: 'Rejected', 5: 'Cancelled' }, required: true },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'leave-balances': {
+        endpoint: '/erp/30/LeaveBal',
+        modelName: 'LeaveBalance',
+        idField: 'balanceId',
+        columns: [
+            { key: 'balanceId', label: 'ID', filterKey: 'balanceId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'leaveType', label: 'Type', secondary: true, formatter: (v) => ({ 1: 'Vacation', 2: 'Sick', 3: 'Personal', 4: 'Bereavement', 5: 'Jury Duty', 6: 'Military', 7: 'FMLA', 8: 'Other' }[v] || '-') },
+            { key: 'year', label: 'Year' },
+            { key: 'accrued', label: 'Accrued' },
+            { key: 'used', label: 'Used' },
+            { key: 'available', label: 'Available' }
+        ],
+        addText: 'Add Leave Balance',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'leavePolicyId', label: 'Leave Policy', type: 'reference', lookupModel: 'LeavePolicy' },
+            { key: 'leaveType', label: 'Leave Type', type: 'select', options: { 1: 'Vacation', 2: 'Sick', 3: 'Personal', 4: 'Bereavement', 5: 'Jury Duty', 6: 'Military', 7: 'FMLA', 8: 'Other' }, required: true },
+            { key: 'year', label: 'Year', type: 'number', required: true },
+            { key: 'beginningBalance', label: 'Beginning Balance', type: 'number' },
+            { key: 'accrued', label: 'Accrued', type: 'number' },
+            { key: 'used', label: 'Used', type: 'number' },
+            { key: 'pending', label: 'Pending', type: 'number' },
+            { key: 'adjusted', label: 'Adjusted', type: 'number' },
+            { key: 'forfeited', label: 'Forfeited', type: 'number' },
+            { key: 'available', label: 'Available', type: 'number' },
+            { key: 'carryover', label: 'Carryover', type: 'number' },
+            { key: 'annualAllowance', label: 'Annual Allowance', type: 'number' },
+            { key: 'maximumAccrual', label: 'Maximum Accrual', type: 'number' },
+            { key: 'maximumCarryover', label: 'Maximum Carryover', type: 'number' }
+        ]
+    },
+    'leave-policies': {
+        endpoint: '/erp/30/LeavePol',
+        modelName: 'LeavePolicy',
+        idField: 'policyId',
+        columns: [
+            { key: 'policyId', label: 'ID', filterKey: 'policyId' },
+            { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
+            { key: 'code', label: 'Code', secondary: true, filterKey: 'code' },
+            { key: 'leaveType', label: 'Type', formatter: (v) => ({ 1: 'Vacation', 2: 'Sick', 3: 'Personal', 4: 'Bereavement', 5: 'Jury Duty', 6: 'Military', 7: 'FMLA', 8: 'Other' }[v] || '-') },
+            { key: 'accrualMethod', label: 'Accrual', formatter: (v) => ({ 1: 'Annual', 2: 'Monthly', 3: 'Bi-Weekly', 4: 'Weekly', 5: 'Per Pay Period', 6: 'Hourly' }[v] || '-') },
+            { key: 'accrualRate', label: 'Rate' },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Leave Policy',
+        formFields: [
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+            { key: 'code', label: 'Code', type: 'text', required: true },
+            { key: 'name', label: 'Name', type: 'text', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'leaveType', label: 'Leave Type', type: 'select', options: { 1: 'Vacation', 2: 'Sick', 3: 'Personal', 4: 'Bereavement', 5: 'Jury Duty', 6: 'Military', 7: 'FMLA', 8: 'Other' }, required: true },
+            { key: 'accrualMethod', label: 'Accrual Method', type: 'select', options: { 1: 'Annual', 2: 'Monthly', 3: 'Bi-Weekly', 4: 'Weekly', 5: 'Per Pay Period', 6: 'Hourly' }, required: true },
+            { key: 'accrualRate', label: 'Accrual Rate', type: 'number' },
+            { key: 'accrualFrequency', label: 'Accrual Frequency', type: 'text' },
+            { key: 'maximumAccrual', label: 'Maximum Accrual', type: 'number' },
+            { key: 'allowCarryover', label: 'Allow Carryover', type: 'checkbox' },
+            { key: 'maximumCarryover', label: 'Maximum Carryover', type: 'number' },
+            { key: 'minimumIncrement', label: 'Minimum Increment', type: 'number' },
+            { key: 'advanceNoticeDays', label: 'Advance Notice Days', type: 'number' },
+            { key: 'requireApproval', label: 'Require Approval', type: 'checkbox' },
+            { key: 'allowNegativeBalance', label: 'Allow Negative Balance', type: 'checkbox' },
+            { key: 'waitingPeriodDays', label: 'Waiting Period Days', type: 'number' },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
+            { key: 'endDate', label: 'End Date', type: 'date' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' }
+        ]
+    },
+    schedules: {
+        endpoint: '/erp/30/Schedule',
+        modelName: 'Schedule',
+        idField: 'scheduleId',
+        columns: [
+            { key: 'scheduleId', label: 'ID', primary: true },
+            { key: 'employeeId', label: 'Employee', secondary: true },
+            { key: 'period', label: 'Period', formatter: (v, item) => `${MobileUtils.formatDate(item.startDate)} - ${MobileUtils.formatDate(item.endDate)}` },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Published', 3: 'Approved' }[v] || '-') },
+            { key: 'totalScheduledHours', label: 'Hours' },
+            { key: 'publishedDate', label: 'Published', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'New Schedule',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Draft', 2: 'Published', 3: 'Approved' }, required: true },
+            { key: 'startDate', label: 'Period Start', type: 'date', required: true },
+            { key: 'endDate', label: 'Period End', type: 'date', required: true },
+            { key: 'totalScheduledHours', label: 'Total Scheduled Hours', type: 'number' }
+        ]
+    },
+    shifts: {
+        endpoint: '/erp/30/Shift',
+        modelName: 'Shift',
+        idField: 'shiftId',
+        columns: [
+            { key: 'shiftId', label: 'ID', filterKey: 'shiftId' },
+            { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
+            { key: 'code', label: 'Code', secondary: true, filterKey: 'code' },
+            { key: 'shiftType', label: 'Type', formatter: (v) => ({ 1: 'Day', 2: 'Evening', 3: 'Night', 4: 'Swing', 5: 'Rotating', 6: 'Flexible' }[v] || '-') },
+            { key: 'durationHours', label: 'Hours' },
+            { key: 'breakDurationMinutes', label: 'Break (min)' },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Shift',
+        formFields: [
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+            { key: 'code', label: 'Code', type: 'text', required: true },
+            { key: 'name', label: 'Name', type: 'text', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'shiftType', label: 'Shift Type', type: 'select', options: { 1: 'Day', 2: 'Evening', 3: 'Night', 4: 'Swing', 5: 'Rotating', 6: 'Flexible' }, required: true },
+            { key: 'colorCode', label: 'Color Code', type: 'text' },
+            { key: 'startTime', label: 'Start Time', type: 'text' },
+            { key: 'endTime', label: 'End Time', type: 'text' },
+            { key: 'durationHours', label: 'Duration (hours)', type: 'number' },
+            { key: 'breakDurationMinutes', label: 'Break (minutes)', type: 'number' },
+            { key: 'isOvernight', label: 'Overnight', type: 'checkbox' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' }
+        ]
+    },
+    absences: {
+        endpoint: '/erp/30/Absence',
+        modelName: 'Absence',
+        idField: 'absenceId',
+        columns: [
+            { key: 'absenceId', label: 'ID', filterKey: 'absenceId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'date', label: 'Date', secondary: true, formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'absenceType', label: 'Type', formatter: (v) => ({ 1: 'Vacation', 2: 'Sick', 3: 'Personal', 4: 'Bereavement', 5: 'Jury Duty', 6: 'FMLA', 7: 'Other' }[v] || '-') },
+            { key: 'hours', label: 'Hours' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Pending', 2: 'Approved', 3: 'Rejected' }[v] || '-') },
+            { key: 'isPaid', label: 'Paid', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Absence',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'leaveRequestId', label: 'Leave Request', type: 'reference', lookupModel: 'LeaveRequest' },
+            { key: 'date', label: 'Date', type: 'date', required: true },
+            { key: 'absenceType', label: 'Absence Type', type: 'select', options: { 1: 'Vacation', 2: 'Sick', 3: 'Personal', 4: 'Bereavement', 5: 'Jury Duty', 6: 'FMLA', 7: 'Other' }, required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Pending', 2: 'Approved', 3: 'Rejected' }, required: true },
+            { key: 'hours', label: 'Hours', type: 'number', required: true },
+            { key: 'isPartialDay', label: 'Partial Day', type: 'checkbox' },
+            { key: 'isPaid', label: 'Paid', type: 'checkbox' },
+            { key: 'payComponentId', label: 'Pay Component', type: 'reference', lookupModel: 'PayComponent' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    holidays: {
+        endpoint: '/erp/30/Holiday',
+        modelName: 'Holiday',
+        idField: 'holidayId',
+        columns: [
+            { key: 'holidayId', label: 'ID', filterKey: 'holidayId' },
+            { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
+            { key: 'date', label: 'Date', secondary: true, formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'year', label: 'Year' },
+            { key: 'holidayType', label: 'Type', formatter: (v) => ({ 1: 'Federal', 2: 'State', 3: 'Religious', 4: 'Company', 5: 'Floating' }[v] || '-') },
+            { key: 'isPaid', label: 'Paid', formatter: (v) => v ? 'Yes' : 'No' },
+            { key: 'hoursCredited', label: 'Hours' },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Holiday',
+        formFields: [
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+            { key: 'name', label: 'Holiday Name', type: 'text', required: true },
+            { key: 'date', label: 'Date', type: 'date', required: true },
+            { key: 'year', label: 'Year', type: 'number', required: true },
+            { key: 'holidayType', label: 'Holiday Type', type: 'select', options: { 1: 'Federal', 2: 'State', 3: 'Religious', 4: 'Company', 5: 'Floating' }, required: true },
+            { key: 'isPaid', label: 'Paid', type: 'checkbox' },
+            { key: 'hoursCredited', label: 'Hours Credited', type: 'number' },
+            { key: 'isRecurring', label: 'Recurring', type: 'checkbox' },
+            { key: 'recurrenceRule', label: 'Recurrence Rule', type: 'text' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' }
+        ]
+    }
+};
+
+function initMobileTime() {
+    loadTimeService('timesheets');
+
+    document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            loadTimeService(tab.dataset.service);
+        });
+    });
+}
+
+function loadTimeService(serviceName) {
+    currentTimeService = serviceName;
+    const config = TIME_SERVICES[serviceName];
+
+    timeTable = new MobileEditTable('time-table', {
+        endpoint: config.endpoint,
+        modelName: config.modelName,
+        columns: config.columns,
+        rowsPerPage: 15,
+        statusField: config.statusField,
+        addButtonText: config.addText,
+        onAdd: () => openTimeForm(config),
+        onEdit: (id, item) => openTimeForm(config, item),
+        onDelete: (id, item) => deleteTimeItem(config, id, item),
+        getItemId: (item) => item[config.idField]
+    });
+}
+
+function openTimeForm(config, item = null) {
+    const isEdit = !!item;
+    const title = isEdit ? 'Edit ' + config.modelName : config.addText;
+    const formDef = { fields: config.formFields };
+    const content = MobileForms.renderForm(formDef, item || {});
+
+    MobilePopup.show({
+        title: title,
+        content: content,
+        size: 'large',
+        saveButtonText: isEdit ? 'Update' : 'Create',
+        onSave: async (popup) => {
+            const body = popup.body;
+            const errors = MobileForms.validateForm(body);
+            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+
+            const data = MobileForms.getFormData(body);
+            if (isEdit) data[config.idField] = item[config.idField];
+
+            try {
+                if (isEdit) await MobileAuth.put(config.endpoint, data);
+                else await MobileAuth.post(config.endpoint, data);
+                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                MobilePopup.close();
+                timeTable.refresh();
+            } catch (error) {
+                MobileUtils.showError('Failed to save');
+            }
+        }
+    });
+}
+
+async function deleteTimeItem(config, id, item) {
+    const confirmed = await MobileConfirm.confirmDelete(item.name || id);
+    if (confirmed) {
+        try {
+            await MobileAuth.delete(config.endpoint + '?id=' + id);
+            MobileUtils.showSuccess('Deleted');
+            timeTable.refresh();
+        } catch (error) {
+            MobileUtils.showError('Failed to delete');
+        }
+    }
+}
+</script>

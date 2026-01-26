@@ -1,0 +1,347 @@
+<div class="section-container" id="learning-section">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Learning & Development</h1>
+            <p class="page-subtitle">Courses, certifications, and skills</p>
+        </div>
+    </div>
+
+    <!-- Service Tabs -->
+    <div class="section-tabs">
+        <button class="section-tab active" data-service="courses">Courses</button>
+        <button class="section-tab" data-service="sessions">Sessions</button>
+        <button class="section-tab" data-service="enrollments">Enrollments</button>
+        <button class="section-tab" data-service="certifications">Certs</button>
+        <button class="section-tab" data-service="emp-certifications">Emp Certs</button>
+        <button class="section-tab" data-service="skills">Skills</button>
+        <button class="section-tab" data-service="emp-skills">Emp Skills</button>
+        <button class="section-tab" data-service="training-records">Training</button>
+    </div>
+
+    <!-- Table Container -->
+    <div id="learning-table"></div>
+</div>
+
+<script>
+let learningTable = null;
+let currentLearningService = 'courses';
+
+const LEARNING_SERVICES = {
+    courses: {
+        endpoint: '/erp/30/Course',
+        modelName: 'Course',
+        idField: 'courseId',
+        columns: [
+            { key: 'courseId', label: 'ID', filterKey: 'courseId' },
+            { key: 'title', label: 'Title', primary: true, filterKey: 'title' },
+            { key: 'code', label: 'Code', secondary: true, filterKey: 'code' },
+            { key: 'courseType', label: 'Type', formatter: (v) => ({ 1: 'Required', 2: 'Elective', 3: 'Certification', 4: 'Orientation', 5: 'Compliance' }[v] || '-') },
+            { key: 'level', label: 'Level', formatter: (v) => ({ 1: 'Beginner', 2: 'Intermediate', 3: 'Advanced', 4: 'Expert' }[v] || '-') },
+            { key: 'durationMinutes', label: 'Duration', formatter: (v) => v ? `${Math.round(v/60)}h` : '-' },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Course',
+        formFields: [
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+            { key: 'code', label: 'Code', type: 'text', required: true },
+            { key: 'title', label: 'Title', type: 'text', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'learningObjectives', label: 'Learning Objectives', type: 'textarea' },
+            { key: 'courseType', label: 'Course Type', type: 'select', options: { 1: 'Required', 2: 'Elective', 3: 'Certification', 4: 'Orientation', 5: 'Compliance' }, required: true },
+            { key: 'deliveryMethod', label: 'Delivery', type: 'select', options: { 1: 'Classroom', 2: 'Online', 3: 'Blended', 4: 'Self-paced' } },
+            { key: 'category', label: 'Category', type: 'text' },
+            { key: 'level', label: 'Level', type: 'select', options: { 1: 'Beginner', 2: 'Intermediate', 3: 'Advanced', 4: 'Expert' } },
+            { key: 'provider', label: 'Provider', type: 'text' },
+            { key: 'instructorId', label: 'Instructor', type: 'reference', lookupModel: 'Employee' },
+            { key: 'durationMinutes', label: 'Duration (minutes)', type: 'number' },
+            { key: 'credits', label: 'Credits', type: 'number' },
+            { key: 'ceuCredits', label: 'CEU Credits', type: 'number' },
+            { key: 'maxEnrollees', label: 'Max Enrollees', type: 'number' },
+            { key: 'isSelfPaced', label: 'Self-Paced', type: 'checkbox' },
+            { key: 'isMandatory', label: 'Mandatory', type: 'checkbox' },
+            { key: 'recertificationMonths', label: 'Recertification (months)', type: 'number' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' },
+            { key: 'syllabusUrl', label: 'Syllabus URL', type: 'text' },
+            { key: 'contentUrl', label: 'Content URL', type: 'text' }
+        ]
+    },
+    sessions: {
+        endpoint: '/erp/30/CrsSess',
+        modelName: 'CourseSession',
+        idField: 'sessionId',
+        columns: [
+            { key: 'sessionId', label: 'ID', filterKey: 'sessionId' },
+            { key: 'courseId', label: 'Course', primary: true },
+            { key: 'startDate', label: 'Start', secondary: true, formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'endDate', label: 'End', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'instructorName', label: 'Instructor', filterKey: 'instructorName' },
+            { key: 'location', label: 'Location', filterKey: 'location' },
+            { key: 'enrollment', label: 'Enrolled', formatter: (v, item) => `${item.enrolledCount || 0}/${item.maxEnrollees || '-'}` },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Scheduled', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add Session',
+        formFields: [
+            { key: 'courseId', label: 'Course', type: 'reference', lookupModel: 'Course', required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Scheduled', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }, required: true },
+            { key: 'instructorId', label: 'Instructor', type: 'reference', lookupModel: 'Employee' },
+            { key: 'instructorName', label: 'Instructor Name', type: 'text' },
+            { key: 'startDate', label: 'Start Date', type: 'date', required: true },
+            { key: 'endDate', label: 'End Date', type: 'date' },
+            { key: 'location', label: 'Location', type: 'text' },
+            { key: 'virtualLink', label: 'Virtual Link', type: 'text' },
+            { key: 'maxEnrollees', label: 'Max Enrollees', type: 'number' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    enrollments: {
+        endpoint: '/erp/30/CrsEnrol',
+        modelName: 'CourseEnrollment',
+        idField: 'enrollmentId',
+        columns: [
+            { key: 'enrollmentId', label: 'ID', filterKey: 'enrollmentId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'courseId', label: 'Course', secondary: true },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Enrolled', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled', 5: 'Failed' }[v] || '-') },
+            { key: 'progressPercentage', label: 'Progress', formatter: (v) => `${v || 0}%` },
+            { key: 'score', label: 'Score' },
+            { key: 'passed', label: 'Passed', formatter: (v) => v ? 'Pass' : (v === false ? 'Fail' : '-') },
+            { key: 'dueDate', label: 'Due', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'Add Enrollment',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'courseId', label: 'Course', type: 'reference', lookupModel: 'Course', required: true },
+            { key: 'sessionId', label: 'Session', type: 'reference', lookupModel: 'CourseSession' },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Enrolled', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled', 5: 'Failed' }, required: true },
+            { key: 'managerId', label: 'Manager', type: 'reference', lookupModel: 'Employee' },
+            { key: 'enrolledDate', label: 'Enrolled Date', type: 'date' },
+            { key: 'startedDate', label: 'Started Date', type: 'date' },
+            { key: 'completedDate', label: 'Completed Date', type: 'date' },
+            { key: 'dueDate', label: 'Due Date', type: 'date' },
+            { key: 'progressPercentage', label: 'Progress %', type: 'number' },
+            { key: 'score', label: 'Score', type: 'number' },
+            { key: 'passed', label: 'Passed', type: 'checkbox' },
+            { key: 'attempts', label: 'Attempts', type: 'number' },
+            { key: 'employeeRating', label: 'Employee Rating (1-5)', type: 'number' },
+            { key: 'employeeFeedback', label: 'Employee Feedback', type: 'textarea' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    certifications: {
+        endpoint: '/erp/30/Cert',
+        modelName: 'Certification',
+        idField: 'certificationId',
+        columns: [
+            { key: 'certificationId', label: 'ID', filterKey: 'certificationId' },
+            { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
+            { key: 'code', label: 'Code', secondary: true, filterKey: 'code' },
+            { key: 'issuingOrganization', label: 'Issuer', filterKey: 'issuingOrganization' },
+            { key: 'certificationType', label: 'Type', formatter: (v) => ({ 1: 'Professional', 2: 'Technical', 3: 'Industry', 4: 'Compliance', 5: 'Academic' }[v] || '-') },
+            { key: 'validityMonths', label: 'Validity (mo)' },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Certification',
+        formFields: [
+            { key: 'code', label: 'Code', type: 'text', required: true },
+            { key: 'name', label: 'Name', type: 'text', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'issuingOrganization', label: 'Issuing Organization', type: 'text' },
+            { key: 'certificationType', label: 'Type', type: 'select', options: { 1: 'Professional', 2: 'Technical', 3: 'Industry', 4: 'Compliance', 5: 'Academic' }, required: true },
+            { key: 'requiredExperienceMonths', label: 'Required Experience (months)', type: 'number' },
+            { key: 'requiredCeuCredits', label: 'Required CEU Credits', type: 'number' },
+            { key: 'validityMonths', label: 'Validity (months)', type: 'number' },
+            { key: 'requiresRenewal', label: 'Requires Renewal', type: 'checkbox' },
+            { key: 'examUrl', label: 'Exam URL', type: 'text' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' }
+        ]
+    },
+    'emp-certifications': {
+        endpoint: '/erp/30/EmpCert',
+        modelName: 'EmployeeCertification',
+        idField: 'employeeCertificationId',
+        columns: [
+            { key: 'employeeCertificationId', label: 'ID', filterKey: 'employeeCertificationId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'certificationId', label: 'Certification', secondary: true },
+            { key: 'certificationNumber', label: 'Cert #', filterKey: 'certificationNumber' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Active', 2: 'Expired', 3: 'Pending', 4: 'Revoked' }[v] || '-') },
+            { key: 'issueDate', label: 'Issue', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'expirationDate', label: 'Expires', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'isVerified', label: 'Verified', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Employee Certification',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'certificationId', label: 'Certification', type: 'reference', lookupModel: 'Certification', required: true },
+            { key: 'certificationNumber', label: 'Certification Number', type: 'text' },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Active', 2: 'Expired', 3: 'Pending', 4: 'Revoked' }, required: true },
+            { key: 'issueDate', label: 'Issue Date', type: 'date', required: true },
+            { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
+            { key: 'isVerified', label: 'Verified', type: 'checkbox' },
+            { key: 'verifiedBy', label: 'Verified By', type: 'text' },
+            { key: 'verifiedDate', label: 'Verified Date', type: 'date' },
+            { key: 'documentId', label: 'Document ID', type: 'text' },
+            { key: 'ceuCreditsEarned', label: 'CEU Credits Earned', type: 'number' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    skills: {
+        endpoint: '/erp/30/Skill',
+        modelName: 'Skill',
+        idField: 'skillId',
+        columns: [
+            { key: 'skillId', label: 'ID', filterKey: 'skillId' },
+            { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
+            { key: 'code', label: 'Code', secondary: true, filterKey: 'code' },
+            { key: 'category', label: 'Category', formatter: (v) => ({ 1: 'Technical', 2: 'Soft Skills', 3: 'Leadership', 4: 'Industry', 5: 'Tools' }[v] || '-') },
+            { key: 'description', label: 'Description' },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Skill',
+        formFields: [
+            { key: 'code', label: 'Code', type: 'text', required: true },
+            { key: 'name', label: 'Name', type: 'text', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'category', label: 'Category', type: 'select', options: { 1: 'Technical', 2: 'Soft Skills', 3: 'Leadership', 4: 'Industry', 5: 'Tools' }, required: true },
+            { key: 'skillGroupId', label: 'Skill Group ID', type: 'text' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' }
+        ]
+    },
+    'emp-skills': {
+        endpoint: '/erp/30/EmpSkill',
+        modelName: 'EmployeeSkill',
+        idField: 'employeeSkillId',
+        columns: [
+            { key: 'employeeSkillId', label: 'ID', filterKey: 'employeeSkillId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'skillId', label: 'Skill', secondary: true },
+            { key: 'proficiencyLevel', label: 'Proficiency' },
+            { key: 'yearsOfExperience', label: 'Years Exp.' },
+            { key: 'isPrimarySkill', label: 'Primary', formatter: (v) => v ? 'Yes' : 'No' },
+            { key: 'lastUsedDate', label: 'Last Used', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'Add Employee Skill',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'skillId', label: 'Skill', type: 'reference', lookupModel: 'Skill', required: true },
+            { key: 'proficiencyLevel', label: 'Proficiency Level (1-5)', type: 'number', required: true },
+            { key: 'selfAssessedLevel', label: 'Self-Assessed Level (1-5)', type: 'number' },
+            { key: 'managerAssessedLevel', label: 'Manager-Assessed Level (1-5)', type: 'number' },
+            { key: 'yearsOfExperience', label: 'Years of Experience', type: 'number' },
+            { key: 'lastUsedDate', label: 'Last Used Date', type: 'date' },
+            { key: 'assessmentDate', label: 'Assessment Date', type: 'date' },
+            { key: 'assessedBy', label: 'Assessed By', type: 'text' },
+            { key: 'isPrimarySkill', label: 'Primary Skill', type: 'checkbox' },
+            { key: 'wantsToDevelop', label: 'Wants to Develop', type: 'checkbox' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'training-records': {
+        endpoint: '/erp/30/TrnRec',
+        modelName: 'TrainingRecord',
+        idField: 'recordId',
+        columns: [
+            { key: 'recordId', label: 'ID', filterKey: 'recordId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'trainingName', label: 'Training', secondary: true, filterKey: 'trainingName' },
+            { key: 'trainingType', label: 'Type', formatter: (v) => ({ 1: 'Internal', 2: 'External', 3: 'Online', 4: 'On-the-Job', 5: 'Conference' }[v] || '-') },
+            { key: 'completedDate', label: 'Completed', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'expirationDate', label: 'Expires', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'passed', label: 'Passed', formatter: (v) => v ? 'Pass' : (v === false ? 'Fail' : '-') },
+            { key: 'isCompliant', label: 'Compliant', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Training Record',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'courseId', label: 'Course', type: 'reference', lookupModel: 'Course' },
+            { key: 'trainingName', label: 'Training Name', type: 'text', required: true },
+            { key: 'trainingType', label: 'Training Type', type: 'select', options: { 1: 'Internal', 2: 'External', 3: 'Online', 4: 'On-the-Job', 5: 'Conference' }, required: true },
+            { key: 'completedDate', label: 'Completed Date', type: 'date', required: true },
+            { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
+            { key: 'score', label: 'Score', type: 'number' },
+            { key: 'passed', label: 'Passed', type: 'checkbox' },
+            { key: 'hours', label: 'Hours', type: 'number' },
+            { key: 'isCompliant', label: 'Compliant', type: 'checkbox' },
+            { key: 'complianceRequirement', label: 'Compliance Requirement', type: 'text' },
+            { key: 'trainerName', label: 'Trainer Name', type: 'text' },
+            { key: 'location', label: 'Location', type: 'text' },
+            { key: 'certificateId', label: 'Certificate ID', type: 'text' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    }
+};
+
+function initMobileLearning() {
+    loadLearningService('courses');
+
+    document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            loadLearningService(tab.dataset.service);
+        });
+    });
+}
+
+function loadLearningService(serviceName) {
+    currentLearningService = serviceName;
+    const config = LEARNING_SERVICES[serviceName];
+
+    learningTable = new MobileEditTable('learning-table', {
+        endpoint: config.endpoint,
+        modelName: config.modelName,
+        columns: config.columns,
+        rowsPerPage: 15,
+        addButtonText: config.addText,
+        onAdd: () => openLearningForm(config),
+        onEdit: (id, item) => openLearningForm(config, item),
+        onDelete: (id, item) => deleteLearningItem(config, id, item),
+        getItemId: (item) => item[config.idField]
+    });
+}
+
+function openLearningForm(config, item = null) {
+    const isEdit = !!item;
+    const title = isEdit ? 'Edit ' + config.modelName : config.addText;
+    const formDef = { fields: config.formFields };
+    const content = MobileForms.renderForm(formDef, item || {});
+
+    MobilePopup.show({
+        title: title,
+        content: content,
+        size: 'large',
+        saveButtonText: isEdit ? 'Update' : 'Create',
+        onSave: async (popup) => {
+            const body = popup.body;
+            const errors = MobileForms.validateForm(body);
+            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+
+            const data = MobileForms.getFormData(body);
+            if (isEdit) data[config.idField] = item[config.idField];
+
+            try {
+                if (isEdit) await MobileAuth.put(config.endpoint, data);
+                else await MobileAuth.post(config.endpoint, data);
+                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                MobilePopup.close();
+                learningTable.refresh();
+            } catch (error) {
+                MobileUtils.showError('Failed to save');
+            }
+        }
+    });
+}
+
+async function deleteLearningItem(config, id, item) {
+    const confirmed = await MobileConfirm.confirmDelete(item.name || item.title || item.trainingName || id);
+    if (confirmed) {
+        try {
+            await MobileAuth.delete(config.endpoint + '?id=' + id);
+            MobileUtils.showSuccess('Deleted');
+            learningTable.refresh();
+        } catch (error) {
+            MobileUtils.showError('Failed to delete');
+        }
+    }
+}
+</script>

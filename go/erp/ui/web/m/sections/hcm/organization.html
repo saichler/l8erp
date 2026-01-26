@@ -1,0 +1,303 @@
+<div class="section-container" id="organization-section">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Organization</h1>
+            <p class="page-subtitle">Manage organizational structure</p>
+        </div>
+    </div>
+
+    <!-- Service Tabs -->
+    <div class="section-tabs">
+        <button class="section-tab active" data-service="organizations">Orgs</button>
+        <button class="section-tab" data-service="departments">Depts</button>
+        <button class="section-tab" data-service="positions">Positions</button>
+        <button class="section-tab" data-service="jobs">Jobs</button>
+        <button class="section-tab" data-service="job-families">Families</button>
+        <button class="section-tab" data-service="documents">Docs</button>
+        <button class="section-tab" data-service="compliance">Compliance</button>
+    </div>
+
+    <!-- Table Container -->
+    <div id="org-table"></div>
+</div>
+
+<script>
+let orgTable = null;
+let currentService = 'organizations';
+
+const ORG_SERVICES = {
+    organizations: {
+        endpoint: '/erp/30/Org',
+        modelName: 'Organization',
+        idField: 'organizationId',
+        columns: [
+            { key: 'organizationId', label: 'ID', filterKey: 'organizationId' },
+            { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
+            { key: 'code', label: 'Code', secondary: true, filterKey: 'code' },
+            { key: 'organizationType', label: 'Type', formatter: (v) => ({ 1: 'Company', 2: 'Division', 3: 'Business Unit', 4: 'Region', 5: 'Subsidiary' }[v] || '-') },
+            { key: 'legalName', label: 'Legal Name' },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Organization',
+        formFields: [
+            { key: 'code', label: 'Code', type: 'text', required: true },
+            { key: 'name', label: 'Name', type: 'text', required: true },
+            { key: 'legalName', label: 'Legal Name', type: 'text' },
+            { key: 'organizationType', label: 'Type', type: 'select', options: { 1: 'Company', 2: 'Division', 3: 'Business Unit', 4: 'Region', 5: 'Subsidiary' }, required: true },
+            { key: 'parentOrganizationId', label: 'Parent Org', type: 'reference', lookupModel: 'Organization' },
+            { key: 'taxId', label: 'Tax ID (EIN)', type: 'text' },
+            { key: 'industryCode', label: 'Industry Code', type: 'text' },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
+            { key: 'endDate', label: 'End Date', type: 'date' }
+        ]
+    },
+    departments: {
+        endpoint: '/erp/30/Dept',
+        modelName: 'Department',
+        idField: 'departmentId',
+        columns: [
+            { key: 'departmentId', label: 'ID', filterKey: 'departmentId' },
+            { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
+            { key: 'code', label: 'Code', secondary: true, filterKey: 'code' },
+            { key: 'description', label: 'Description' },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Department',
+        formFields: [
+            { key: 'code', label: 'Code', type: 'text', required: true },
+            { key: 'name', label: 'Name', type: 'text', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization', required: true },
+            { key: 'parentDepartmentId', label: 'Parent Department', type: 'reference', lookupModel: 'Department' },
+            { key: 'managerId', label: 'Manager', type: 'reference', lookupModel: 'Employee' },
+            { key: 'costCenterId', label: 'Cost Center', type: 'text' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
+            { key: 'endDate', label: 'End Date', type: 'date' }
+        ]
+    },
+    positions: {
+        endpoint: '/erp/30/Position',
+        modelName: 'Position',
+        idField: 'positionId',
+        columns: [
+            { key: 'positionId', label: 'ID', filterKey: 'positionId' },
+            { key: 'title', label: 'Title', primary: true, filterKey: 'title' },
+            { key: 'positionCode', label: 'Code', secondary: true, filterKey: 'positionCode' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Open', 2: 'Filled', 3: 'Frozen', 4: 'Closed' }[v] || '-') },
+            { key: 'headcount', label: 'Headcount', formatter: (v, item) => `${item.filledCount || 0}/${v || 0}` },
+            { key: 'isManager', label: 'Manager', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Position',
+        formFields: [
+            { key: 'positionCode', label: 'Position Code', type: 'text', required: true },
+            { key: 'title', label: 'Title', type: 'text', required: true },
+            { key: 'jobId', label: 'Job', type: 'reference', lookupModel: 'Job', required: true },
+            { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'Department', required: true },
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+            { key: 'reportsToPositionId', label: 'Reports To', type: 'reference', lookupModel: 'Position' },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Open', 2: 'Filled', 3: 'Frozen', 4: 'Closed' }, required: true },
+            { key: 'headcount', label: 'Headcount', type: 'number', required: true },
+            { key: 'isManager', label: 'Is Manager Position', type: 'checkbox' },
+            { key: 'isKeyPosition', label: 'Is Key Position', type: 'checkbox' },
+            { key: 'workLocationId', label: 'Work Location', type: 'text' },
+            { key: 'costCenterId', label: 'Cost Center', type: 'text' },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
+            { key: 'endDate', label: 'End Date', type: 'date' }
+        ]
+    },
+    jobs: {
+        endpoint: '/erp/30/Job',
+        modelName: 'Job',
+        idField: 'jobId',
+        columns: [
+            { key: 'jobId', label: 'ID', filterKey: 'jobId' },
+            { key: 'title', label: 'Title', primary: true, filterKey: 'title' },
+            { key: 'jobCode', label: 'Code', secondary: true, filterKey: 'jobCode' },
+            { key: 'jobFamilyId', label: 'Family' },
+            { key: 'jobLevel', label: 'Level' },
+            { key: 'isFlsaExempt', label: 'FLSA', formatter: (v) => v ? 'Exempt' : 'Non-Exempt' },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Job',
+        formFields: [
+            { key: 'jobCode', label: 'Job Code', type: 'text', required: true },
+            { key: 'title', label: 'Title', type: 'text', required: true },
+            { key: 'jobFamilyId', label: 'Job Family', type: 'reference', lookupModel: 'JobFamily' },
+            { key: 'jobLevel', label: 'Level', type: 'text' },
+            { key: 'summary', label: 'Summary', type: 'textarea' },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'educationRequirement', label: 'Education Requirement', type: 'text' },
+            { key: 'experienceRequirement', label: 'Experience Requirement', type: 'text' },
+            { key: 'isFlsaExempt', label: 'FLSA Exempt', type: 'checkbox' },
+            { key: 'eeoCategory', label: 'EEO Category', type: 'text' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
+            { key: 'endDate', label: 'End Date', type: 'date' }
+        ]
+    },
+    'job-families': {
+        endpoint: '/erp/30/JobFamily',
+        modelName: 'JobFamily',
+        idField: 'jobFamilyId',
+        columns: [
+            { key: 'jobFamilyId', label: 'ID', filterKey: 'jobFamilyId' },
+            { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
+            { key: 'code', label: 'Code', secondary: true, filterKey: 'code' },
+            { key: 'description', label: 'Description' },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Job Family',
+        formFields: [
+            { key: 'code', label: 'Code', type: 'text', required: true },
+            { key: 'name', label: 'Name', type: 'text', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' }
+        ]
+    },
+    documents: {
+        endpoint: '/erp/30/EmpDoc',
+        modelName: 'EmployeeDocument',
+        idField: 'documentId',
+        columns: [
+            { key: 'documentId', label: 'ID', filterKey: 'documentId' },
+            { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
+            { key: 'employeeId', label: 'Employee', secondary: true },
+            { key: 'documentType', label: 'Type', formatter: (v) => ({ 1: 'I-9', 2: 'W-4', 3: 'ID', 4: 'Resume', 5: 'Contract', 6: 'Performance', 7: 'Certification', 8: 'Other' }[v] || '-') },
+            { key: 'uploadDate', label: 'Uploaded', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'expirationDate', label: 'Expires', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'isVerified', label: 'Verified', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Document',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'name', label: 'Document Name', type: 'text', required: true },
+            { key: 'documentType', label: 'Document Type', type: 'select', options: { 1: 'I-9', 2: 'W-4', 3: 'ID', 4: 'Resume', 5: 'Contract', 6: 'Performance', 7: 'Certification', 8: 'Other' }, required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'fileUrl', label: 'File URL', type: 'text' },
+            { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
+            { key: 'isVerified', label: 'Verified', type: 'checkbox' },
+            { key: 'verifiedBy', label: 'Verified By', type: 'text' },
+            { key: 'verifiedDate', label: 'Verification Date', type: 'date' }
+        ]
+    },
+    compliance: {
+        endpoint: '/erp/30/CompRec',
+        modelName: 'ComplianceRecord',
+        idField: 'recordId',
+        columns: [
+            { key: 'recordId', label: 'ID', filterKey: 'recordId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'complianceType', label: 'Type', secondary: true, formatter: (v) => ({ 1: 'Background Check', 2: 'Drug Test', 3: 'License', 4: 'Training', 5: 'Policy Ack', 6: 'Other' }[v] || '-') },
+            { key: 'status', label: 'Status' },
+            { key: 'dueDate', label: 'Due', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'completionDate', label: 'Completed', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'expirationDate', label: 'Expires', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'Add Compliance Record',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'complianceType', label: 'Compliance Type', type: 'select', options: { 1: 'Background Check', 2: 'Drug Test', 3: 'License', 4: 'Training', 5: 'Policy Ack', 6: 'Other' }, required: true },
+            { key: 'status', label: 'Status', type: 'text', required: true },
+            { key: 'dueDate', label: 'Due Date', type: 'date' },
+            { key: 'completionDate', label: 'Completion Date', type: 'date' },
+            { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
+            { key: 'documentId', label: 'Document', type: 'reference', lookupModel: 'EmployeeDocument' },
+            { key: 'notes', label: 'Notes', type: 'textarea' },
+            { key: 'verifiedBy', label: 'Verified By', type: 'text' },
+            { key: 'verifiedDate', label: 'Verification Date', type: 'date' }
+        ]
+    }
+};
+
+function initMobileOrganization() {
+    loadOrgService('organizations');
+
+    document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            loadOrgService(tab.dataset.service);
+        });
+    });
+}
+
+function loadOrgService(serviceName) {
+    currentService = serviceName;
+    const config = ORG_SERVICES[serviceName];
+
+    orgTable = new MobileEditTable('org-table', {
+        endpoint: config.endpoint,
+        modelName: config.modelName,
+        columns: config.columns,
+        rowsPerPage: 15,
+        addButtonText: config.addText,
+        onAdd: () => openOrgForm(config),
+        onEdit: (id, item) => openOrgForm(config, item),
+        onDelete: (id, item) => deleteOrgItem(config, id, item),
+        getItemId: (item) => item[config.idField]
+    });
+}
+
+function openOrgForm(config, item = null) {
+    const isEdit = !!item;
+    const title = isEdit ? 'Edit ' + config.modelName : config.addText;
+
+    const formDef = { fields: config.formFields };
+    const content = MobileForms.renderForm(formDef, item || {});
+
+    MobilePopup.show({
+        title: title,
+        content: content,
+        size: 'large',
+        saveButtonText: isEdit ? 'Update' : 'Create',
+        onSave: async (popup) => {
+            const body = popup.body;
+            const errors = MobileForms.validateForm(body);
+
+            if (errors.length > 0) {
+                MobileForms.showErrors(body, errors);
+                return;
+            }
+
+            const data = MobileForms.getFormData(body);
+
+            if (isEdit) {
+                data[config.idField] = item[config.idField];
+            }
+
+            try {
+                if (isEdit) {
+                    await MobileAuth.put(config.endpoint, data);
+                    MobileUtils.showSuccess(config.modelName + ' updated');
+                } else {
+                    await MobileAuth.post(config.endpoint, data);
+                    MobileUtils.showSuccess(config.modelName + ' created');
+                }
+
+                MobilePopup.close();
+                orgTable.refresh();
+            } catch (error) {
+                MobileUtils.showError('Failed to save');
+            }
+        }
+    });
+}
+
+async function deleteOrgItem(config, id, item) {
+    const name = item.name || item.title || id;
+    const confirmed = await MobileConfirm.confirmDelete(name);
+
+    if (confirmed) {
+        try {
+            await MobileAuth.delete(config.endpoint + '?id=' + id);
+            MobileUtils.showSuccess(config.modelName + ' deleted');
+            orgTable.refresh();
+        } catch (error) {
+            MobileUtils.showError('Failed to delete');
+        }
+    }
+}
+</script>

@@ -1,0 +1,61 @@
+<div class="section-container" id="system-section">
+    <div class="page-header">
+        <h1 class="page-title">System Administration</h1>
+        <p class="page-subtitle">User Management, System Configuration, Integration Settings</p>
+    </div>
+
+    <div class="under-development">
+        <div class="under-development-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+        </div>
+        <h2 class="under-development-title">Under Development</h2>
+        <p class="under-development-message">System administration tools including user and role management, system configuration, API integrations, and security settings.</p>
+    </div>
+</div>
+
+<style>
+    .under-development {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: var(--spacing-xl) var(--spacing-md);
+        min-height: 300px;
+    }
+
+    .under-development-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: var(--radius-lg);
+        background: rgba(14, 165, 233, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .under-development-icon svg {
+        width: 40px;
+        height: 40px;
+        stroke: var(--erp-primary);
+    }
+
+    .under-development-title {
+        font-size: var(--font-size-lg);
+        font-weight: 600;
+        color: var(--text-primary);
+        margin: 0 0 var(--spacing-sm) 0;
+    }
+
+    .under-development-message {
+        font-size: var(--font-size-sm);
+        color: var(--text-secondary);
+        margin: 0;
+        max-width: 300px;
+        line-height: 1.5;
+    }
+</style>

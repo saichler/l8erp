@@ -1,0 +1,269 @@
+<div class="section-container" id="benefits-section">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Benefits</h1>
+            <p class="page-subtitle">Manage employee benefits</p>
+        </div>
+    </div>
+
+    <!-- Service Tabs -->
+    <div class="section-tabs">
+        <button class="section-tab active" data-service="plans">Plans</button>
+        <button class="section-tab" data-service="enrollments">Enrollments</button>
+        <button class="section-tab" data-service="carriers">Carriers</button>
+        <button class="section-tab" data-service="dependents">Dependents</button>
+        <button class="section-tab" data-service="life-events">Life Events</button>
+        <button class="section-tab" data-service="cobra-events">COBRA</button>
+    </div>
+
+    <!-- Table Container -->
+    <div id="benefits-table"></div>
+</div>
+
+<script>
+let benefitsTable = null;
+let currentBenefitsService = 'plans';
+
+const BENEFITS_SERVICES = {
+    plans: {
+        endpoint: '/erp/30/BenPlan',
+        modelName: 'BenefitPlan',
+        idField: 'planId',
+        columns: [
+            { key: 'planId', label: 'ID', filterKey: 'planId' },
+            { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
+            { key: 'code', label: 'Code', secondary: true, filterKey: 'code' },
+            { key: 'category', label: 'Category', formatter: (v) => ({ 1: 'Medical', 2: 'Dental', 3: 'Vision', 4: 'Life', 5: 'Disability', 6: 'Retirement', 7: 'FSA', 8: 'HSA', 9: 'Other' }[v] || '-') },
+            { key: 'planYear', label: 'Year' },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Benefit Plan',
+        formFields: [
+            { key: 'code', label: 'Code', type: 'text', required: true },
+            { key: 'name', label: 'Name', type: 'text', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+            { key: 'category', label: 'Category', type: 'select', options: { 1: 'Medical', 2: 'Dental', 3: 'Vision', 4: 'Life', 5: 'Disability', 6: 'Retirement', 7: 'FSA', 8: 'HSA', 9: 'Other' }, required: true },
+            { key: 'planYear', label: 'Plan Year', type: 'number', required: true },
+            { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier' },
+            { key: 'openEnrollmentStart', label: 'Open Enrollment Start', type: 'date' },
+            { key: 'openEnrollmentEnd', label: 'Open Enrollment End', type: 'date' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' },
+            { key: 'planDocumentUrl', label: 'Plan Document URL', type: 'text' },
+            { key: 'summaryDocumentUrl', label: 'Summary Document URL', type: 'text' }
+        ]
+    },
+    enrollments: {
+        endpoint: '/erp/30/BenEnroll',
+        modelName: 'BenefitEnrollment',
+        idField: 'enrollmentId',
+        columns: [
+            { key: 'enrollmentId', label: 'ID', filterKey: 'enrollmentId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'planId', label: 'Plan', secondary: true },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Pending', 2: 'Active', 3: 'Waived', 4: 'Terminated', 5: 'Expired' }[v] || '-') },
+            { key: 'reason', label: 'Reason', formatter: (v) => ({ 1: 'New Hire', 2: 'Open Enrollment', 3: 'Life Event', 4: 'COBRA', 5: 'Transfer' }[v] || '-') },
+            { key: 'coverageStartDate', label: 'Start', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'employeeCostPerPeriod', label: 'Cost', formatter: (v) => MobileUtils.formatMoney(v) }
+        ],
+        addText: 'Add Enrollment',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'planId', label: 'Benefit Plan', type: 'reference', lookupModel: 'BenefitPlan', required: true },
+            { key: 'coverageOptionId', label: 'Coverage Option ID', type: 'text' },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Pending', 2: 'Active', 3: 'Waived', 4: 'Terminated', 5: 'Expired' }, required: true },
+            { key: 'reason', label: 'Reason', type: 'select', options: { 1: 'New Hire', 2: 'Open Enrollment', 3: 'Life Event', 4: 'COBRA', 5: 'Transfer' }, required: true },
+            { key: 'lifeEventId', label: 'Life Event', type: 'reference', lookupModel: 'LifeEvent' },
+            { key: 'coverageLevel', label: 'Coverage Level', type: 'select', options: { 1: 'Employee Only', 2: 'Employee + Spouse', 3: 'Employee + Child', 4: 'Family' } },
+            { key: 'coverageStartDate', label: 'Coverage Start', type: 'date', required: true },
+            { key: 'coverageEndDate', label: 'Coverage End', type: 'date' },
+            { key: 'primaryCareProvider', label: 'Primary Care Provider', type: 'text' },
+            { key: 'primaryCareProviderId', label: 'PCP ID', type: 'text' }
+        ]
+    },
+    carriers: {
+        endpoint: '/erp/30/Carrier',
+        modelName: 'Carrier',
+        idField: 'carrierId',
+        columns: [
+            { key: 'carrierId', label: 'ID', filterKey: 'carrierId' },
+            { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
+            { key: 'code', label: 'Code', secondary: true, filterKey: 'code' },
+            { key: 'carrierType', label: 'Type', formatter: (v) => ({ 1: 'Medical', 2: 'Dental', 3: 'Vision', 4: 'Life/Disability', 5: 'Retirement', 6: 'HSA/FSA', 7: 'Multi-Line' }[v] || '-') },
+            { key: 'phone', label: 'Phone' },
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
+        ],
+        addText: 'Add Carrier',
+        formFields: [
+            { key: 'code', label: 'Code', type: 'text', required: true },
+            { key: 'name', label: 'Name', type: 'text', required: true },
+            { key: 'carrierType', label: 'Carrier Type', type: 'select', options: { 1: 'Medical', 2: 'Dental', 3: 'Vision', 4: 'Life/Disability', 5: 'Retirement', 6: 'HSA/FSA', 7: 'Multi-Line' }, required: true },
+            { key: 'phone', label: 'Phone', type: 'phone' },
+            { key: 'fax', label: 'Fax', type: 'text' },
+            { key: 'email', label: 'Email', type: 'email' },
+            { key: 'website', label: 'Website', type: 'text' },
+            { key: 'contactName', label: 'Contact Name', type: 'text' },
+            { key: 'employerGroupNumber', label: 'Employer Group #', type: 'text' },
+            { key: 'billingAccountNumber', label: 'Billing Account #', type: 'text' },
+            { key: 'ediPayerId', label: 'EDI Payer ID', type: 'text' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' }
+        ]
+    },
+    dependents: {
+        endpoint: '/erp/30/Dependent',
+        modelName: 'Dependent',
+        idField: 'dependentId',
+        columns: [
+            { key: 'dependentId', label: 'ID', primary: true },
+            { key: 'firstName', label: 'First Name', filterKey: 'firstName' },
+            { key: 'lastName', label: 'Last Name', secondary: true, filterKey: 'lastName' },
+            { key: 'relationship', label: 'Relationship', formatter: (v) => ({ 1: 'Spouse', 2: 'Child', 3: 'Domestic Partner', 4: 'Parent', 5: 'Other' }[v] || '-') },
+            { key: 'dateOfBirth', label: 'DOB', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'verificationStatus', label: 'Verified', formatter: (v) => ({ 1: 'Pending', 2: 'Verified', 3: 'Rejected' }[v] || '-') }
+        ],
+        addText: 'Add Dependent',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'firstName', label: 'First Name', type: 'text', required: true },
+            { key: 'lastName', label: 'Last Name', type: 'text', required: true },
+            { key: 'relationship', label: 'Relationship', type: 'select', options: { 1: 'Spouse', 2: 'Child', 3: 'Domestic Partner', 4: 'Parent', 5: 'Other' }, required: true },
+            { key: 'dateOfBirth', label: 'Date of Birth', type: 'date', required: true },
+            { key: 'gender', label: 'Gender', type: 'select', options: { 1: 'Male', 2: 'Female', 3: 'Other' } },
+            { key: 'ssn', label: 'SSN (last 4)', type: 'text' },
+            { key: 'isStudent', label: 'Full-Time Student', type: 'checkbox' },
+            { key: 'isDisabled', label: 'Disabled', type: 'checkbox' },
+            { key: 'isTobaccoUser', label: 'Tobacco User', type: 'checkbox' },
+            { key: 'coverageEndDate', label: 'Coverage End Date', type: 'date' },
+            { key: 'verificationStatus', label: 'Verification Status', type: 'select', options: { 1: 'Pending', 2: 'Verified', 3: 'Rejected' } }
+        ]
+    },
+    'life-events': {
+        endpoint: '/erp/30/LifeEvent',
+        modelName: 'LifeEvent',
+        idField: 'lifeEventId',
+        columns: [
+            { key: 'lifeEventId', label: 'ID', filterKey: 'lifeEventId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'eventType', label: 'Event', secondary: true, formatter: (v) => ({ 1: 'Marriage', 2: 'Divorce', 3: 'Birth/Adoption', 4: 'Death', 5: 'Loss of Coverage', 6: 'Gain of Coverage', 7: 'Address Change', 8: 'Status Change' }[v] || '-') },
+            { key: 'eventDate', label: 'Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'enrollmentDeadline', label: 'Deadline', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Expired', 5: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add Life Event',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'eventType', label: 'Event Type', type: 'select', options: { 1: 'Marriage', 2: 'Divorce', 3: 'Birth/Adoption', 4: 'Death', 5: 'Loss of Coverage', 6: 'Gain of Coverage', 7: 'Address Change', 8: 'Status Change' }, required: true },
+            { key: 'eventDate', label: 'Event Date', type: 'date', required: true },
+            { key: 'reportedDate', label: 'Reported Date', type: 'date' },
+            { key: 'enrollmentDeadline', label: 'Enrollment Deadline', type: 'date' },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Expired', 5: 'Cancelled' }, required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'approvedBy', label: 'Approved By', type: 'text' },
+            { key: 'approvedDate', label: 'Approved Date', type: 'date' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'cobra-events': {
+        endpoint: '/erp/30/COBRAEvt',
+        modelName: 'COBRAEvent',
+        idField: 'cobraEventId',
+        columns: [
+            { key: 'cobraEventId', label: 'ID', filterKey: 'cobraEventId' },
+            { key: 'employeeId', label: 'Employee', primary: true },
+            { key: 'eventType', label: 'Event', secondary: true, formatter: (v) => ({ 1: 'Termination', 2: 'Reduction in Hours', 3: 'Death', 4: 'Divorce', 5: 'Aging Out', 6: 'Medicare' }[v] || '-') },
+            { key: 'qualifyingEventDate', label: 'Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Pending', 2: 'Offered', 3: 'Elected', 4: 'Declined', 5: 'Active', 6: 'Ended' }[v] || '-') },
+            { key: 'coverageMonths', label: 'Months' },
+            { key: 'totalMonthlyCost', label: 'Cost', formatter: (v) => MobileUtils.formatMoney(v) }
+        ],
+        addText: 'Add COBRA Event',
+        formFields: [
+            { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+            { key: 'eventType', label: 'Event Type', type: 'select', options: { 1: 'Termination', 2: 'Reduction in Hours', 3: 'Death', 4: 'Divorce', 5: 'Aging Out', 6: 'Medicare' }, required: true },
+            { key: 'qualifyingEventDate', label: 'Qualifying Event Date', type: 'date', required: true },
+            { key: 'notificationDate', label: 'Notification Date', type: 'date' },
+            { key: 'electionDeadline', label: 'Election Deadline', type: 'date' },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Pending', 2: 'Offered', 3: 'Elected', 4: 'Declined', 5: 'Active', 6: 'Ended' }, required: true },
+            { key: 'coverageStartDate', label: 'Coverage Start', type: 'date' },
+            { key: 'coverageEndDate', label: 'Coverage End', type: 'date' },
+            { key: 'coverageMonths', label: 'Coverage Months', type: 'number' },
+            { key: 'adminFeePercentage', label: 'Admin Fee %', type: 'number' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    }
+};
+
+function initMobileBenefits() {
+    loadBenefitsService('plans');
+
+    document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            loadBenefitsService(tab.dataset.service);
+        });
+    });
+}
+
+function loadBenefitsService(serviceName) {
+    currentBenefitsService = serviceName;
+    const config = BENEFITS_SERVICES[serviceName];
+
+    benefitsTable = new MobileEditTable('benefits-table', {
+        endpoint: config.endpoint,
+        modelName: config.modelName,
+        columns: config.columns,
+        rowsPerPage: 15,
+        addButtonText: config.addText,
+        onAdd: () => openBenefitsForm(config),
+        onEdit: (id, item) => openBenefitsForm(config, item),
+        onDelete: (id, item) => deleteBenefitsItem(config, id, item),
+        getItemId: (item) => item[config.idField]
+    });
+}
+
+function openBenefitsForm(config, item = null) {
+    const isEdit = !!item;
+    const title = isEdit ? 'Edit ' + config.modelName : config.addText;
+    const formDef = { fields: config.formFields };
+    const content = MobileForms.renderForm(formDef, item || {});
+
+    MobilePopup.show({
+        title: title,
+        content: content,
+        size: 'large',
+        saveButtonText: isEdit ? 'Update' : 'Create',
+        onSave: async (popup) => {
+            const body = popup.body;
+            const errors = MobileForms.validateForm(body);
+            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+
+            const data = MobileForms.getFormData(body);
+            if (isEdit) data[config.idField] = item[config.idField];
+
+            try {
+                if (isEdit) await MobileAuth.put(config.endpoint, data);
+                else await MobileAuth.post(config.endpoint, data);
+                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                MobilePopup.close();
+                benefitsTable.refresh();
+            } catch (error) {
+                MobileUtils.showError('Failed to save');
+            }
+        }
+    });
+}
+
+async function deleteBenefitsItem(config, id, item) {
+    const confirmed = await MobileConfirm.confirmDelete(item.name || item.firstName || id);
+    if (confirmed) {
+        try {
+            await MobileAuth.delete(config.endpoint + '?id=' + id);
+            MobileUtils.showSuccess('Deleted');
+            benefitsTable.refresh();
+        } catch (error) {
+            MobileUtils.showError('Failed to delete');
+        }
+    }
+}
+</script>

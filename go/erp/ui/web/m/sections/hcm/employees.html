@@ -1,0 +1,205 @@
+<div class="section-container" id="employees-section">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Employees</h1>
+            <p class="page-subtitle">Manage employee records</p>
+        </div>
+    </div>
+
+    <!-- Status Tabs -->
+    <div class="section-tabs">
+        <button class="section-tab active" data-filter="">All</button>
+        <button class="section-tab" data-filter="1">Active</button>
+        <button class="section-tab" data-filter="2">Pending</button>
+        <button class="section-tab" data-filter="0">Inactive</button>
+    </div>
+
+    <!-- Employee Table -->
+    <div id="employees-table"></div>
+</div>
+
+<style>
+    .section-tabs {
+        display: flex;
+        gap: 4px;
+        margin-bottom: var(--spacing-md);
+        background: var(--bg-primary);
+        padding: 4px;
+        border-radius: var(--radius-md);
+        overflow-x: auto;
+    }
+
+    .section-tab {
+        flex: 1;
+        padding: var(--spacing-sm) var(--spacing-md);
+        border: none;
+        background: none;
+        font-size: var(--font-size-sm);
+        font-weight: 500;
+        color: var(--text-secondary);
+        border-radius: var(--radius-sm);
+        white-space: nowrap;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+    }
+
+    .section-tab.active {
+        background: var(--erp-primary);
+        color: white;
+    }
+
+    .section-tab:active:not(.active) {
+        background: var(--bg-tertiary);
+    }
+</style>
+
+<script>
+let employeesTable = null;
+
+function initMobileEmployees() {
+    const columns = [
+        { key: 'employeeId', label: 'ID', primary: true },
+        { key: 'employeeNumber', label: 'Employee #', secondary: true, filterKey: 'employeeNumber' },
+        { key: 'lastName', label: 'Last Name', filterKey: 'lastName' },
+        { key: 'firstName', label: 'First Name', filterKey: 'firstName' },
+        { key: 'email', label: 'Email', filterKey: 'email' },
+        { key: 'phone', label: 'Phone', formatter: (v) => MobileUtils.formatPhone(v) },
+        { key: 'employmentStatus', label: 'Status', formatter: (v) => ({ 1: 'Active', 0: 'Inactive', 2: 'Pending', 3: 'On Leave', 4: 'Terminated' }[v] || '-') },
+        { key: 'employmentType', label: 'Type', formatter: (v) => ({ 1: 'Full-Time', 2: 'Part-Time', 3: 'Contract', 4: 'Temporary', 5: 'Intern' }[v] || '-') },
+        { key: 'hireDate', label: 'Hire Date', formatter: (v) => MobileUtils.formatDate(v), hidden: true }
+    ];
+
+    employeesTable = new MobileEditTable('employees-table', {
+        endpoint: '/erp/30/Employee',
+        modelName: 'Employee',
+        columns: columns,
+        rowsPerPage: 15,
+        statusField: 'employmentStatus',
+        addButtonText: 'Add Employee',
+        onAdd: () => openEmployeeForm(),
+        onEdit: (id, item) => openEmployeeForm(item),
+        onDelete: (id, item) => deleteEmployee(id, item),
+        getItemId: (item) => item.employeeId
+    });
+
+    // Setup tab filtering
+    document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            const filter = tab.dataset.filter;
+            if (filter) {
+                employeesTable.setBaseWhereClause(`employmentStatus=${filter}`);
+            } else {
+                employeesTable.setBaseWhereClause(null);
+            }
+        });
+    });
+}
+
+function openEmployeeForm(employee = null) {
+    const isEdit = !!employee;
+    const title = isEdit ? 'Edit Employee' : 'Add Employee';
+
+    const formDef = {
+        sections: [
+            {
+                title: 'Personal Information',
+                fields: [
+                    { key: 'employeeNumber', label: 'Employee Number', type: 'text', required: true },
+                    { key: 'firstName', label: 'First Name', type: 'text', required: true },
+                    { key: 'middleName', label: 'Middle Name', type: 'text' },
+                    { key: 'lastName', label: 'Last Name', type: 'text', required: true },
+                    { key: 'preferredName', label: 'Preferred Name', type: 'text' },
+                    { key: 'email', label: 'Email', type: 'email', required: true },
+                    { key: 'phone', label: 'Phone', type: 'phone' },
+                    { key: 'dateOfBirth', label: 'Date of Birth', type: 'date' },
+                    { key: 'gender', label: 'Gender', type: 'select', options: { 1: 'Male', 2: 'Female', 3: 'Non-Binary', 4: 'Prefer Not to Say' } },
+                    { key: 'maritalStatus', label: 'Marital Status', type: 'select', options: { 1: 'Single', 2: 'Married', 3: 'Divorced', 4: 'Widowed', 5: 'Domestic Partner' } },
+                    { key: 'nationality', label: 'Nationality', type: 'text' },
+                    { key: 'nationalIdType', label: 'ID Type', type: 'select', options: { 1: 'SSN', 2: 'Passport', 3: 'National ID', 4: 'Other' } },
+                    { key: 'nationalId', label: 'National ID / SSN', type: 'text' }
+                ]
+            },
+            {
+                title: 'Employment',
+                fields: [
+                    { key: 'employmentStatus', label: 'Status', type: 'select', required: true, options: { 1: 'Active', 0: 'Inactive', 2: 'Pending', 3: 'On Leave', 4: 'Terminated' } },
+                    { key: 'employmentType', label: 'Type', type: 'select', required: true, options: { 1: 'Full-Time', 2: 'Part-Time', 3: 'Contract', 4: 'Temporary', 5: 'Intern' } },
+                    { key: 'hireDate', label: 'Hire Date', type: 'date', required: true },
+                    { key: 'originalHireDate', label: 'Original Hire Date', type: 'date' },
+                    { key: 'terminationDate', label: 'Termination Date', type: 'date' },
+                    { key: 'terminationReason', label: 'Termination Reason', type: 'select', options: { 1: 'Resignation', 2: 'Retirement', 3: 'Layoff', 4: 'Termination', 5: 'End of Contract', 6: 'Other' } },
+                    { key: 'isRehire', label: 'Is Rehire', type: 'checkbox' }
+                ]
+            },
+            {
+                title: 'Organization',
+                fields: [
+                    { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
+                    { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'Department' },
+                    { key: 'positionId', label: 'Position', type: 'reference', lookupModel: 'Position' },
+                    { key: 'jobId', label: 'Job', type: 'reference', lookupModel: 'Job' },
+                    { key: 'managerId', label: 'Manager', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'workLocationId', label: 'Work Location', type: 'reference', lookupModel: 'WorkLocation' },
+                    { key: 'costCenterId', label: 'Cost Center', type: 'text' }
+                ]
+            }
+        ]
+    };
+
+    const content = MobileForms.renderForm(formDef, employee || {});
+
+    MobilePopup.show({
+        title: title,
+        content: content,
+        size: 'large',
+        saveButtonText: isEdit ? 'Update' : 'Create',
+        onSave: async (popup) => {
+            const body = popup.body;
+            const errors = MobileForms.validateForm(body);
+
+            if (errors.length > 0) {
+                MobileForms.showErrors(body, errors);
+                return;
+            }
+
+            const data = MobileForms.getFormData(body);
+
+            if (isEdit) {
+                data.employeeId = employee.employeeId;
+            }
+
+            try {
+                if (isEdit) {
+                    await MobileAuth.put('/erp/30/Employee', data);
+                    MobileUtils.showSuccess('Employee updated');
+                } else {
+                    await MobileAuth.post('/erp/30/Employee', data);
+                    MobileUtils.showSuccess('Employee created');
+                }
+
+                MobilePopup.close();
+                employeesTable.refresh();
+            } catch (error) {
+                MobileUtils.showError('Failed to save employee');
+            }
+        }
+    });
+}
+
+async function deleteEmployee(id, item) {
+    const confirmed = await MobileConfirm.confirmDelete(item.lastName + ', ' + item.firstName);
+
+    if (confirmed) {
+        try {
+            await MobileAuth.delete('/erp/30/Employee?id=' + id);
+            MobileUtils.showSuccess('Employee deleted');
+            employeesTable.refresh();
+        } catch (error) {
+            MobileUtils.showError('Failed to delete employee');
+        }
+    }
+}
+</script>
