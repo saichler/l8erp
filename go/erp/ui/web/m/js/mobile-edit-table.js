@@ -63,7 +63,7 @@
         _renderFilters() {
             const invalidClass = this.isInvalidFilter ? 'invalid' : '';
 
-            return `
+            let html = `
                 <div class="mobile-edit-table-filters">
                     <div class="mobile-edit-table-filter-row">
                         <select class="mobile-edit-table-column-select">
@@ -78,9 +78,35 @@
                                class="mobile-edit-table-search-input ${invalidClass}"
                                placeholder="Filter..."
                                value="${MobileUtils.escapeHtml(this.filterValue)}">
-                    </div>
-                </div>
-            `;
+                    </div>`;
+
+            // Sort row (dropdown + direction button)
+            if (this.config.sortable) {
+                const sortableColumns = this.config.columns.filter(col => col.sortKey || col.filterKey);
+                if (sortableColumns.length > 0) {
+                    const directionIcon = this.sortDirection === 'asc' ? '&#9650;' : '&#9660;';
+                    const directionTitle = this.sortDirection === 'asc' ? 'Ascending (click to change)' : 'Descending (click to change)';
+                    const disabled = !this.sortColumn ? 'disabled' : '';
+
+                    html += `
+                    <div class="mobile-edit-table-sort-row">
+                        <select class="mobile-edit-table-sort-select">
+                            <option value="">No Sorting</option>
+                            ${sortableColumns.map(col => `
+                                <option value="${col.key}" ${this.sortColumn === col.key ? 'selected' : ''}>
+                                    ${MobileUtils.escapeHtml(col.label)}
+                                </option>
+                            `).join('')}
+                        </select>
+                        <button class="mobile-edit-table-sort-direction-btn" ${disabled} title="${directionTitle}">
+                            ${directionIcon}
+                        </button>
+                    </div>`;
+                }
+            }
+
+            html += '</div>';
+            return html;
         }
 
         _renderPagination() {
@@ -308,6 +334,46 @@
             const retryBtn = container.querySelector('.mobile-edit-table-error-retry');
             if (retryBtn) {
                 retryBtn.addEventListener('click', () => this.fetchData(this.currentPage));
+            }
+
+            // Sort column dropdown change
+            const sortSelect = container.querySelector('.mobile-edit-table-sort-select');
+            if (sortSelect) {
+                sortSelect.addEventListener('change', (e) => {
+                    const column = e.target.value || null;
+                    if (column) {
+                        this.sortColumn = column;
+                        if (!this.sortDirection) this.sortDirection = 'asc';
+                    } else {
+                        this.sortColumn = null;
+                    }
+                    this.currentPage = 1;
+                    if (this.config.serverSide) {
+                        this.fetchData(1);
+                    } else {
+                        if (this.sortColumn) {
+                            this._applyClientSort();
+                        } else {
+                            this.filteredData = [...this.config.data];
+                            this.render();
+                        }
+                    }
+                });
+            }
+
+            // Sort direction button click
+            const sortDirectionBtn = container.querySelector('.mobile-edit-table-sort-direction-btn');
+            if (sortDirectionBtn) {
+                sortDirectionBtn.addEventListener('click', () => {
+                    if (!this.sortColumn) return;
+                    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+                    this.currentPage = 1;
+                    if (this.config.serverSide) {
+                        this.fetchData(1);
+                    } else {
+                        this._applyClientSort();
+                    }
+                });
             }
         }
 
