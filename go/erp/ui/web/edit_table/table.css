@@ -1,5 +1,10 @@
 /* Layer 8 Ecosystem - Abstract Table Component Styles */
 
+/* Sticky Header Configuration */
+:root {
+    --l8-header-height: 41px;  /* Height of header row for filter positioning */
+}
+
 /* Table Wrapper */
 .l8-table-wrapper {
     width: 100%;
@@ -163,19 +168,63 @@
     font-size: 10px;
 }
 
-/* Header row */
+/* Header row - Sticky */
 .l8-table-header-row {
     background: #f7fafc;
 }
 
-/* Filter Row */
+.l8-table-header-row th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #f7fafc;
+}
+
+/* Shadow for header row (tables without filter) */
+.l8-table-header-row:last-child th::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 4px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.08), transparent);
+    pointer-events: none;
+}
+
+/* Position relative needed for shadow pseudo-element */
+.l8-table-header-row:last-child th {
+    position: sticky;  /* Already set, but ensure it's relative for ::after */
+}
+
+/* Filter Row - Sticky below header */
 .l8-table-filter-row {
     background: #f7fafc;
+}
+
+.l8-table-filter-row th {
+    position: sticky;
+    top: var(--l8-header-height);
+    z-index: 9;
+    background: #f7fafc;
+}
+
+/* Visual separator shadow for sticky header */
+.l8-table-filter-row th::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 4px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.08), transparent);
+    pointer-events: none;
 }
 
 .l8-table-filter {
     padding: 8px 16px;
     border-bottom: 1px solid #e2e8f0;
+    position: relative;  /* For the shadow pseudo-element */
 }
 
 .l8-filter-input {

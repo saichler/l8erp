@@ -53,9 +53,6 @@
         'system': 'sections/system.html'
     };
 
-    // Primary sections shown in bottom nav
-    const PRIMARY_SECTIONS = ['dashboard', 'hcm-employees', 'hcm-time'];
-
     let currentSection = 'dashboard';
     let sectionCache = {};
 
@@ -74,9 +71,7 @@
             this.updateUserInfo();
 
             // Setup navigation
-            this.initNavigation();
             this.initSidebar();
-            this.initMoreDrawer();
 
             // Setup refresh button
             document.getElementById('refresh-btn')?.addEventListener('click', () => {
@@ -109,24 +104,6 @@
         },
 
         /**
-         * Initialize bottom navigation
-         */
-        initNavigation() {
-            document.querySelectorAll('.nav-item[data-section]').forEach(item => {
-                item.addEventListener('click', (e) => {
-                    const section = item.dataset.section;
-                    if (section === 'more') {
-                        e.preventDefault();
-                        this.openMoreDrawer();
-                    } else if (SECTIONS[section]) {
-                        e.preventDefault();
-                        this.loadSection(section);
-                    }
-                });
-            });
-        },
-
-        /**
          * Initialize sidebar
          */
         initSidebar() {
@@ -139,11 +116,16 @@
 
             // Sidebar navigation items
             document.querySelectorAll('.sidebar-item[data-section]').forEach(item => {
-                item.addEventListener('click', (e) => {
+                item.addEventListener('click', async (e) => {
                     e.preventDefault();
                     const section = item.dataset.section;
+                    const module = item.dataset.module;
                     this.closeSidebar();
-                    this.loadSection(section);
+                    await this.loadSection(section);
+                    // If item has a module, navigate to it after loading the section
+                    if (module && window.MobileNav) {
+                        MobileNav.navigateToModule(module);
+                    }
                 });
             });
         },
@@ -163,46 +145,6 @@
         closeSidebar() {
             document.getElementById('sidebar')?.classList.remove('open');
             document.getElementById('sidebar-overlay')?.classList.remove('visible');
-            document.body.style.overflow = '';
-        },
-
-        /**
-         * Initialize more drawer
-         */
-        initMoreDrawer() {
-            const drawer = document.getElementById('more-drawer');
-            const closeBtn = drawer?.querySelector('.close-drawer-btn');
-
-            closeBtn?.addEventListener('click', () => this.closeMoreDrawer());
-
-            drawer?.addEventListener('click', (e) => {
-                if (e.target === drawer) this.closeMoreDrawer();
-            });
-
-            // More menu items
-            document.querySelectorAll('.more-menu-item[data-section]').forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const section = item.dataset.section;
-                    this.closeMoreDrawer();
-                    this.loadSection(section);
-                });
-            });
-        },
-
-        /**
-         * Open more drawer
-         */
-        openMoreDrawer() {
-            document.getElementById('more-drawer')?.classList.add('open');
-            document.body.style.overflow = 'hidden';
-        },
-
-        /**
-         * Close more drawer
-         */
-        closeMoreDrawer() {
-            document.getElementById('more-drawer')?.classList.remove('open');
             document.body.style.overflow = '';
         },
 
@@ -268,29 +210,8 @@
          * Update navigation active state
          */
         updateNavState(section) {
-            // Bottom nav
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-                if (item.dataset.section === section) {
-                    item.classList.add('active');
-                }
-            });
-
-            // If not in primary sections, highlight "More"
-            if (!PRIMARY_SECTIONS.includes(section)) {
-                document.querySelector('.nav-item-more')?.classList.add('active');
-            }
-
             // Sidebar
             document.querySelectorAll('.sidebar-item').forEach(item => {
-                item.classList.remove('active');
-                if (item.dataset.section === section) {
-                    item.classList.add('active');
-                }
-            });
-
-            // More menu
-            document.querySelectorAll('.more-menu-item').forEach(item => {
                 item.classList.remove('active');
                 if (item.dataset.section === section) {
                     item.classList.add('active');

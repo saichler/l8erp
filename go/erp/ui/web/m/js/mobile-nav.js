@@ -205,23 +205,180 @@
             const prev = navStack.pop();
             currentState = prev;
 
+            // Render the previous view directly without calling navigation functions
+            // (navigation functions push to the stack, which we don't want when going back)
             switch (prev.level) {
                 case 'home':
-                    this.showHome();
+                    this._renderHome();
                     break;
                 case 'module':
-                    navStack.pop(); // Remove the duplicate
-                    this.navigateToModule(prev.module);
+                    this._renderModule(prev.module);
                     break;
                 case 'submodule':
-                    navStack.pop(); // Remove the duplicate
-                    this.navigateToSubModule(prev.module, prev.subModule);
+                    this._renderSubModule(prev.module, prev.subModule);
                     break;
                 case 'service':
-                    navStack.pop(); // Remove the duplicate
-                    this.navigateToService(prev.module, prev.subModule, prev.service);
+                    this._renderService(prev.module, prev.subModule, prev.service);
                     break;
             }
+        },
+
+        /**
+         * Render home view (without modifying navigation stack)
+         */
+        _renderHome() {
+            const statsEl = document.getElementById('nav-stats');
+            if (statsEl) statsEl.style.display = 'grid';
+
+            const content = document.getElementById('nav-content');
+            if (!content) return;
+
+            let html = '<div class="nav-section-title">ERP Modules</div>';
+            html += '<div class="nav-card-grid">';
+
+            MOBILE_NAV_CONFIG.modules.forEach(module => {
+                const isImplemented = module.key === 'hcm';
+                const cardClass = isImplemented ? 'nav-card' : 'nav-card coming-soon';
+
+                html += `
+                    <div class="${cardClass}" ${isImplemented ? `onclick="MobileNav.navigateToModule('${module.key}')"` : ''}>
+                        <span class="nav-card-icon">${MOBILE_NAV_CONFIG.getIcon(module.icon)}</span>
+                        <span class="nav-card-label">${MobileUtils.escapeHtml(module.label)}</span>
+                        ${!isImplemented ? '<span class="nav-card-badge">Coming Soon</span>' : ''}
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            content.innerHTML = html;
+        },
+
+        /**
+         * Render module view (without modifying navigation stack)
+         */
+        _renderModule(moduleKey) {
+            const statsEl = document.getElementById('nav-stats');
+            if (statsEl) statsEl.style.display = 'none';
+
+            const content = document.getElementById('nav-content');
+            if (!content) return;
+
+            const moduleConfig = MOBILE_NAV_CONFIG[moduleKey];
+            if (!moduleConfig || !moduleConfig.subModules) {
+                this.showComingSoon(moduleKey);
+                return;
+            }
+
+            const moduleInfo = MOBILE_NAV_CONFIG.modules.find(m => m.key === moduleKey);
+            const moduleLabel = moduleInfo ? moduleInfo.label : moduleKey;
+
+            let html = `
+                <div class="nav-header">
+                    <button class="nav-back-btn" onclick="MobileNav.navigateBack()">
+                        ${MOBILE_NAV_CONFIG.getIcon('back')}
+                    </button>
+                    <div class="nav-title">
+                        <h1>${MobileUtils.escapeHtml(moduleLabel)}</h1>
+                        <p>Select a sub-module</p>
+                    </div>
+                </div>
+            `;
+
+            html += '<div class="nav-card-grid">';
+
+            moduleConfig.subModules.forEach(subModule => {
+                html += `
+                    <div class="nav-card" onclick="MobileNav.navigateToSubModule('${moduleKey}', '${subModule.key}')">
+                        <span class="nav-card-icon">${MOBILE_NAV_CONFIG.getIcon(subModule.icon)}</span>
+                        <span class="nav-card-label">${MobileUtils.escapeHtml(subModule.label)}</span>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            content.innerHTML = html;
+        },
+
+        /**
+         * Render sub-module view (without modifying navigation stack)
+         */
+        _renderSubModule(moduleKey, subModuleKey) {
+            const content = document.getElementById('nav-content');
+            if (!content) return;
+
+            const moduleConfig = MOBILE_NAV_CONFIG[moduleKey];
+            if (!moduleConfig || !moduleConfig.services || !moduleConfig.services[subModuleKey]) {
+                this.showComingSoon(subModuleKey);
+                return;
+            }
+
+            const subModuleInfo = moduleConfig.subModules.find(sm => sm.key === subModuleKey);
+            const subModuleLabel = subModuleInfo ? subModuleInfo.label : subModuleKey;
+            const services = moduleConfig.services[subModuleKey];
+
+            let html = `
+                <div class="nav-header">
+                    <button class="nav-back-btn" onclick="MobileNav.navigateBack()">
+                        ${MOBILE_NAV_CONFIG.getIcon('back')}
+                    </button>
+                    <div class="nav-title">
+                        <h1>${MobileUtils.escapeHtml(subModuleLabel)}</h1>
+                        <p>Select a service</p>
+                    </div>
+                </div>
+            `;
+
+            html += '<div class="nav-card-grid">';
+
+            services.forEach(service => {
+                html += `
+                    <div class="nav-card" onclick="MobileNav.navigateToService('${moduleKey}', '${subModuleKey}', '${service.key}')">
+                        <span class="nav-card-icon">${MOBILE_NAV_CONFIG.getIcon(service.icon)}</span>
+                        <span class="nav-card-label">${MobileUtils.escapeHtml(service.label)}</span>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            content.innerHTML = html;
+        },
+
+        /**
+         * Render service view (without modifying navigation stack)
+         */
+        _renderService(moduleKey, subModuleKey, serviceKey) {
+            const content = document.getElementById('nav-content');
+            if (!content) return;
+
+            const moduleConfig = MOBILE_NAV_CONFIG[moduleKey];
+            if (!moduleConfig || !moduleConfig.services || !moduleConfig.services[subModuleKey]) {
+                this.showComingSoon(serviceKey);
+                return;
+            }
+
+            const services = moduleConfig.services[subModuleKey];
+            const serviceConfig = services.find(s => s.key === serviceKey);
+
+            if (!serviceConfig) {
+                this.showComingSoon(serviceKey);
+                return;
+            }
+
+            let html = `
+                <div class="data-list-header">
+                    <button class="data-list-back-btn" onclick="MobileNav.navigateBack()">
+                        ${MOBILE_NAV_CONFIG.getIcon('back')}
+                    </button>
+                    <div class="data-list-title">
+                        <h1>${MobileUtils.escapeHtml(serviceConfig.label)}</h1>
+                        <p>Tap a record to view details</p>
+                    </div>
+                </div>
+                <div id="service-table-container"></div>
+            `;
+
+            content.innerHTML = html;
+            this._loadServiceData(serviceConfig);
         },
 
         /**
