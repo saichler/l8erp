@@ -40,7 +40,7 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	db := common.OpenDBConection(dbname, user, pass)
 	p := postgres.NewPostgres(db, vnic.Resources())
 
-	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, nil)
+	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newEmployeeCompensationServiceCallback())
 	sla.SetServiceItem(&hcm.EmployeeCompensation{})
 	sla.SetServiceItemList(&hcm.EmployeeCompensationList{})
 	sla.SetPrimaryKeys("CompensationId")

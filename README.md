@@ -32,8 +32,10 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared componen
 - **Role-based Access** - Granular security and permissions
 - **Multi-currency Support** - Global financial operations
 - **API-first Design** - RESTful APIs for easy integrations
-- **Mobile Ready** - Responsive design for any device
+- **Mobile App** - Dedicated mobile application with floating headers and optimized tables
 - **Full Audit Trail** - Complete transaction history
+- **Kubernetes Native** - Deploy on any K8s cluster with included manifests
+- **Zero Frontend Dependencies** - Pure vanilla JavaScript for maximum performance
 
 ## Modules
 
@@ -53,11 +55,19 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared componen
 | **Compliance & Risk** | Regulatory, Audit, Risk Management | Planned |
 | **System Administration** | Users, Settings, Integrations | Active |
 
+## Recent Updates
+
+- **Mobile App** - Full mobile application with responsive design and floating headers
+- **Table Sorting** - Column sorting for mobile and desktop table views
+- **Kubernetes Support** - Production-ready K8s manifests for all services
+- **Marketing Site** - Modern landing page with glass morphism design
+- **Component Library** - Reusable UI components (date picker, reference picker, edit tables)
+
 ## Quick Start
 
 ### Prerequisites
 
-- Go 1.21 or later
+- Go 1.25 or later
 - PostgreSQL 14 or later
 
 ### Installation
@@ -67,16 +77,17 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared componen
 git clone https://github.com/saichler/l8erp.git
 cd l8erp
 
-# Run the server
-go run ./go/erp/main.go
+# Run the web server
+go run ./go/erp/ui/main.go
 ```
 
 ### Access the Application
 
 Open your browser and navigate to:
-- **Marketing Page**: http://localhost:8080/
-- **Login**: http://localhost:8080/login/
-- **Application**: http://localhost:8080/app.html (after login)
+- **Marketing Page**: http://localhost:2773/
+- **Login**: http://localhost:2773/login/
+- **Application**: http://localhost:2773/app.html (after login)
+- **Mobile App**: http://localhost:2773/m/ (mobile-optimized)
 
 ### Demo Credentials
 
@@ -85,31 +96,60 @@ Open your browser and navigate to:
 | Username | `operator` |
 | Password | `Oper123!` |
 
+### Docker Deployment
+
+```bash
+# Build HCM service
+docker build -t erp-hcm ./go/erp/hcm/
+
+# Build web UI
+docker build -t erp-web ./go/erp/ui/
+```
+
+### Kubernetes Deployment
+
+```bash
+# Apply all manifests
+kubectl apply -f k8s/
+
+# Components deployed:
+# - erp-web (DaemonSet) - Web UI on all nodes
+# - erp-hcm (StatefulSet) - HCM service with persistent storage
+# - vnet (DaemonSet) - Virtual network overlay
+```
+
 ## Project Structure
 
 ```
 l8erp/
 ├── go/
 │   ├── erp/
-│   │   ├── common/           # Shared utilities
-│   │   ├── hcm/              # Human Capital Management module
+│   │   ├── common/           # Shared utilities (defaults, validation)
+│   │   ├── hcm/              # Human Capital Management module (59 sub-packages)
 │   │   ├── ui/
+│   │   │   ├── main.go       # Web server entry point
 │   │   │   └── web/          # Web application
 │   │   │       ├── marketing/    # Marketing landing page
 │   │   │       ├── login/        # Login page
 │   │   │       ├── shared/       # Shared CSS/JS components
 │   │   │       ├── hcm/          # HCM module UI
+│   │   │       ├── m/            # Mobile app version
 │   │   │       ├── popup/        # Popup component
 │   │   │       ├── datepicker/   # Date picker component
 │   │   │       ├── reference_picker/  # Reference picker
 │   │   │       ├── edit_table/   # Editable table component
 │   │   │       ├── notification/ # Notification component
+│   │   │       ├── input_formatters/ # Input formatting utilities
 │   │   │       └── app.html      # Main application
 │   │   └── vnet/             # Virtual network layer
 │   ├── types/
-│   │   └── hcm/              # HCM type definitions
+│   │   └── hcm/              # HCM type definitions (Protocol Buffer generated)
 │   ├── tests/                # Test files
 │   └── vendor/               # Go dependencies
+├── k8s/                      # Kubernetes deployment manifests
+│   ├── web.yaml              # Web UI deployment (DaemonSet)
+│   ├── hcm.yaml              # HCM service (StatefulSet)
+│   └── vnet.yaml             # Virtual network (DaemonSet)
 ├── proto/                    # Protocol buffer definitions
 ├── ERP_MODULES.md           # Detailed module documentation
 └── README.md                # This file
@@ -121,7 +161,7 @@ l8erp/
 ┌─────────────────────────────────────────────────────────────┐
 │                    Presentation Layer                        │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
-│  │ Web App     │  │ Mobile      │  │ API Clients │         │
+│  │ Web App     │  │ Mobile App  │  │ API Clients │         │
 │  └─────────────┘  └─────────────┘  └─────────────┘         │
 ├─────────────────────────────────────────────────────────────┤
 │                    Application Layer                         │
@@ -135,6 +175,12 @@ l8erp/
 │  │ PostgreSQL  │  │ Cache       │  │ File        │         │
 │  │             │  │ Layer       │  │ Storage     │         │
 │  └─────────────┘  └─────────────┘  └─────────────┘         │
+├─────────────────────────────────────────────────────────────┤
+│                  Infrastructure Layer                        │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
+│  │ Kubernetes  │  │ Docker      │  │ L8 Virtual  │         │
+│  │             │  │             │  │ Network     │         │
+│  └─────────────┘  └─────────────┘  └─────────────┘         │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -142,11 +188,14 @@ l8erp/
 
 | Layer | Technology |
 |-------|------------|
-| Backend | Go |
-| Database | PostgreSQL |
+| Backend | Go 1.25+ |
+| Database | PostgreSQL 14+ |
 | Frontend | Vanilla JavaScript, CSS |
 | API | REST |
 | Serialization | Protocol Buffers |
+| Container | Docker |
+| Orchestration | Kubernetes |
+| Networking | Layer 8 Bus (Virtual Network Overlay) |
 
 ## Development
 
@@ -159,7 +208,14 @@ go test ./go/tests/...
 ### Building
 
 ```bash
-go build -o erp ./go/erp/main.go
+# Build web server
+go build -o erp-web ./go/erp/ui/main.go
+
+# Build HCM service
+go build -o erp-hcm ./go/erp/hcm/main.go
+
+# Build virtual network
+go build -o erp-vnet ./go/erp/vnet/main.go
 ```
 
 ### Code Style

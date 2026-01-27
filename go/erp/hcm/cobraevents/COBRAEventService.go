@@ -40,7 +40,7 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	db := common.OpenDBConection(dbname, user, pass)
 	p := postgres.NewPostgres(db, vnic.Resources())
 
-	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, nil)
+	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newCOBRAEventServiceCallback())
 	sla.SetServiceItem(&hcm.COBRAEvent{})
 	sla.SetServiceItemList(&hcm.COBRAEventList{})
 	sla.SetPrimaryKeys("CobraEventId")

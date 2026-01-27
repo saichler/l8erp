@@ -40,7 +40,7 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	db := common.OpenDBConection(dbname, user, pass)
 	p := postgres.NewPostgres(db, vnic.Resources())
 
-	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, nil)
+	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newMarketBenchmarkServiceCallback())
 	sla.SetServiceItem(&hcm.MarketBenchmark{})
 	sla.SetServiceItemList(&hcm.MarketBenchmarkList{})
 	sla.SetPrimaryKeys("BenchmarkId")
