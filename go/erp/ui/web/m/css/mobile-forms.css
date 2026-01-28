@@ -16,8 +16,9 @@
 }
 
 .mobile-form-section-title {
+    font-family: var(--font-family);
     font-size: var(--font-size-sm);
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -37,8 +38,9 @@
 
 .mobile-form-label {
     display: block;
+    font-family: var(--font-family);
     font-size: var(--font-size-sm);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     color: var(--text-secondary);
     margin-bottom: var(--spacing-xs);
 }
@@ -53,8 +55,9 @@
     border: 1px solid var(--border-light);
     border-radius: var(--radius-sm);
     color: var(--text-primary);
+    font-family: var(--font-family);
     font-size: var(--font-size-base);
-    font-family: inherit;
+    font-weight: var(--font-weight-normal);
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
@@ -120,8 +123,9 @@
 .mobile-form-input-suffix {
     padding: 0 var(--spacing-sm);
     color: var(--text-secondary);
+    font-family: var(--font-family);
     font-size: var(--font-size-sm);
-    font-weight: 500;
+    font-weight: var(--font-weight-medium);
     background: var(--bg-secondary);
     height: var(--touch-target);
     display: flex;
@@ -160,7 +164,9 @@
 }
 
 .mobile-form-checkbox-text {
+    font-family: var(--font-family);
     font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
     color: var(--text-primary);
 }
 
@@ -180,7 +186,9 @@
 .mobile-form-reference-value {
     flex: 1;
     color: var(--text-primary);
+    font-family: var(--font-family);
     font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
 }
 
 .mobile-form-reference-value:empty::before {
@@ -216,7 +224,9 @@
 
 .mobile-form-error {
     color: var(--status-terminated);
+    font-family: var(--font-family);
     font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
     padding: var(--spacing-xs) 0;
 }
 

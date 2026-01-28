@@ -28,10 +28,10 @@
 .probler-popup-body label {
     display: block;
     margin-bottom: var(--erp-space-sm, 12px);
-    font-weight: 600;
+    font-weight: var(--erp-font-weight-medium, 500);
     color: var(--erp-text-dark, #2d3748);
     font-size: 13px;
-    font-family: var(--erp-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+    font-family: var(--erp-font-family, 'Figtree', sans-serif);
     text-transform: none;
     letter-spacing: normal;
     line-height: 1.4;
@@ -49,7 +49,8 @@
     border: 1px solid var(--erp-border, #e2e8f0);
     border-radius: var(--erp-radius-md, 8px);
     font-size: var(--erp-font-base, 14px);
-    font-family: var(--erp-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+    font-family: var(--erp-font-family, 'Figtree', sans-serif);
+    font-weight: var(--erp-font-weight-normal, 400);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     background: var(--erp-bg-white, white);
     color: var(--erp-text-dark, #2d3748);
@@ -90,7 +91,8 @@
     color: var(--erp-error, #ef4444);
     font-size: var(--erp-font-sm, 12px);
     margin-top: 6px;
-    font-family: var(--erp-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+    font-family: var(--erp-font-family, 'Figtree', sans-serif);
+    font-weight: var(--erp-font-weight-medium, 500);
 }
 
 .probler-popup-body input.is-valid,
@@ -116,12 +118,12 @@
 }
 
 .probler-popup-body .nested-table-header span {
-    font-weight: 600;
+    font-weight: var(--erp-font-weight-semibold, 600);
     font-size: 13px;
     text-transform: none;
     color: var(--erp-text-dark, #2d3748);
     letter-spacing: normal;
-    font-family: var(--erp-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+    font-family: var(--erp-font-family, 'Figtree', sans-serif);
 }
 
 .probler-popup-body .nested-items-table {
@@ -136,13 +138,13 @@
     text-align: left;
     border-bottom: 1px solid var(--erp-border, #e2e8f0);
     color: var(--erp-text-dark, #2d3748);
-    font-family: var(--erp-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+    font-family: var(--erp-font-family, 'Figtree', sans-serif);
 }
 
 .probler-popup-body .nested-items-table th {
     background: var(--erp-bg-input, #f1f5f9);
     font-size: var(--erp-font-xs, 11px);
-    font-weight: 600;
+    font-weight: var(--erp-font-weight-semibold, 600);
     color: var(--erp-primary, #0ea5e9);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -172,8 +174,8 @@
     border-radius: var(--erp-radius-md, 8px);
     cursor: pointer;
     font-size: 13px;
-    font-weight: 600;
-    font-family: var(--erp-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+    font-weight: var(--erp-font-weight-semibold, 600);
+    font-family: var(--erp-font-family, 'Figtree', sans-serif);
     transition: all 0.2s ease;
     text-decoration: none;
 }

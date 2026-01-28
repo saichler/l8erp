@@ -1,5 +1,22 @@
 /* Layer 8 Ecosystem - Abstract Table Component Styles */
 
+/* Figtree Font */
+@font-face {
+    font-family: 'Figtree';
+    src: url('../font/static/Figtree-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Figtree';
+    src: url('../font/static/Figtree-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
 /* Sticky Header Configuration */
 :root {
     --l8-header-height: 41px;  /* Height of header row for filter positioning */
@@ -32,7 +49,7 @@
 .l8-pagination-info {
     font-size: 12px;
     color: #4a5568;
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Figtree', sans-serif;
 }
 
 .l8-pagination-controls {
@@ -62,7 +79,7 @@
     border: 1px solid #e2e8f0;
     border-radius: 6px;
     font-size: 12px;
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Figtree', sans-serif;
     background: white;
     color: #2d3748;
     cursor: pointer;
@@ -110,7 +127,7 @@
     font-size: 12px;
     color: #2d3748;
     font-weight: 600;
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Figtree', sans-serif;
 }
 
 /* Table Container */
@@ -138,7 +155,8 @@
 
 .l8-table th {
     background: #f7fafc;
-    font-weight: 700;
+    font-family: 'Figtree', sans-serif;
+    font-weight: 600;
     color: #0ea5e9;
     font-size: 10px;
     text-transform: uppercase;
@@ -234,7 +252,7 @@
     border: 1px solid #e2e8f0;
     color: #2d3748;
     font-size: 11px;
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Figtree', sans-serif;
     transition: all 0.2s ease;
     border-radius: 6px;
     box-sizing: border-box;
@@ -260,7 +278,7 @@
 .l8-table td {
     color: #4a5568;
     font-size: 12px;
-    font-family: 'Roboto Mono', monospace;
+    font-family: 'Figtree', sans-serif;
 }
 
 .l8-table tbody tr {
@@ -300,7 +318,7 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     transition: all 0.3s ease;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Figtree', sans-serif;
 }
 
 .l8-btn-primary {

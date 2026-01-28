@@ -23,12 +23,12 @@
 
 .hcm-form-section-title {
     font-size: var(--erp-font-base, 14px);
-    font-weight: 700;
+    font-weight: var(--erp-font-weight-semibold, 600);
     color: var(--erp-primary, #0ea5e9);
     margin: 0 0 var(--erp-space-md, 16px) 0;
     text-transform: none;
     letter-spacing: normal;
-    font-family: var(--erp-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+    font-family: var(--erp-font-family, 'Figtree', sans-serif);
 }
 
 .hcm-form-group {
@@ -42,10 +42,10 @@
 .hcm-form-group label {
     display: block;
     margin-bottom: var(--erp-space-sm, 8px);
-    font-weight: 600;
+    font-weight: var(--erp-font-weight-medium, 500);
     color: var(--erp-text-dark, #2d3748);
     font-size: 13px;
-    font-family: var(--erp-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+    font-family: var(--erp-font-family, 'Figtree', sans-serif);
     text-transform: none;
     letter-spacing: normal;
     line-height: 1.4;
@@ -67,7 +67,8 @@
     border: 1px solid var(--erp-border, #e2e8f0);
     border-radius: var(--erp-radius-md, 8px);
     font-size: var(--erp-font-base, 14px);
-    font-family: var(--erp-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+    font-family: var(--erp-font-family, 'Figtree', sans-serif);
+    font-weight: var(--erp-font-weight-normal, 400);
     color: var(--erp-text-dark, #2d3748);
     background: var(--erp-bg-white, #fff);
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -132,7 +133,8 @@
     color: var(--erp-error, #ef4444);
     font-size: var(--erp-font-sm, 12px);
     margin-top: 6px;
-    font-family: var(--erp-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+    font-family: var(--erp-font-family, 'Figtree', sans-serif);
+    font-weight: var(--erp-font-weight-medium, 500);
 }
 
 .hcm-form-input.is-valid,
@@ -189,8 +191,8 @@
     border: none;
     border-radius: var(--erp-radius-md, 8px);
     font-size: 13px;
-    font-weight: 600;
-    font-family: var(--erp-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+    font-weight: var(--erp-font-weight-semibold, 600);
+    font-family: var(--erp-font-family, 'Figtree', sans-serif);
     cursor: pointer;
     transition: all 0.2s ease;
     text-decoration: none;
