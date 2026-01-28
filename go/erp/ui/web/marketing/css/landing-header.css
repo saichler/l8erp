@@ -99,6 +99,30 @@
     color: var(--erp-primary);
 }
 
+/* Emphasized nav link (Developer) */
+.nav-links a.nav-emphasized {
+    font-weight: 600;
+    animation: gentlePulse 2s ease-in-out infinite;
+    position: relative;
+}
+
+.nav-links a.nav-emphasized::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 1rem;
+    right: 1rem;
+    height: 2px;
+    background: linear-gradient(90deg, var(--erp-primary), var(--erp-secondary));
+    border-radius: 2px;
+    animation: glowLine 2s ease-in-out infinite;
+}
+
+.nav-links a.nav-emphasized:hover {
+    color: var(--erp-primary) !important;
+    animation: none;
+}
+
 /* Header Buttons */
 .header-buttons {
     display: flex;

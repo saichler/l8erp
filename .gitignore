@@ -31,5 +31,5 @@ go.work.sum
 .idea/
 # .vscode/
 problerweb/
-go.mod
-go.sum
+#go.mod
+#go.sum

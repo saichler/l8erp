@@ -182,6 +182,49 @@
     }
 
     /**
+     * Simple markdown to HTML parser
+     */
+    function parseMarkdown(markdown) {
+        var html = markdown
+            .replace(/^#\s*<div[^>]*>.*<\/div>\s*\n?/, '')
+            .replace(/^##\s+(.+)$/gm, '<h2>$1</h2>')
+            .replace(/^#\s+(.+)$/gm, '<h1>$1</h1>')
+            .replace(/^---+$/gm, '<hr>')
+            .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\*(.+?)\*/g, '<em>$1</em>')
+            .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+            .split(/\n\n+/)
+            .map(function(para) {
+                para = para.trim();
+                if (!para) return '';
+                if (para.startsWith('<h') || para.startsWith('<hr')) return para;
+                return '<p>' + para.replace(/\n/g, '<br>') + '</p>';
+            })
+            .filter(function(p) { return p; })
+            .join('\n');
+        return html;
+    }
+
+    /**
+     * Load and render AboutTheDeveloper.md into the developer modal
+     */
+    async function loadDeveloperMarkdown() {
+        try {
+            var response = await fetch('AboutTheDeveloper.md');
+            if (!response.ok) throw new Error('Could not load AboutTheDeveloper.md');
+            var markdown = await response.text();
+            var html = parseMarkdown(markdown);
+            var container = document.getElementById('developer-markdown-content');
+            if (container) container.innerHTML = html;
+        } catch (error) {
+            console.error('Error loading developer markdown:', error);
+            var container = document.getElementById('developer-markdown-content');
+            if (container) container.innerHTML = '<p>Content could not be loaded.</p>';
+        }
+    }
+
+    /**
      * Open modal by name
      */
     async function openModal(modalName) {
@@ -223,6 +266,11 @@
 
             // Initialize copy buttons in modal
             initCopyButtons(overlay);
+
+            // Load developer markdown if this is the developer modal
+            if (modalName === 'developer') {
+                loadDeveloperMarkdown();
+            }
 
         } catch (error) {
             console.error('Failed to load modal:', error);
