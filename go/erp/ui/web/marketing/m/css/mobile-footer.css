@@ -78,6 +78,28 @@
     color: var(--erp-primary);
 }
 
+/* Footer Sponsor Card */
+.footer-sponsor {
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-bottom: 1.5rem;
+}
+
+.footer-sponsor h5 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+}
+
+.footer-sponsor iframe {
+    max-width: 100%;
+    border: 0;
+    border-radius: 8px;
+}
+
 /* Powered By */
 .footer-powered {
     text-align: center;

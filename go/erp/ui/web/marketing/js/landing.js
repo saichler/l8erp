@@ -327,6 +327,25 @@
     }
 
     /**
+     * Demo banner dismiss
+     */
+    window.dismissDemoBanner = function() {
+        var banner = document.getElementById('demoBanner');
+        if (banner) {
+            banner.classList.add('hidden');
+            sessionStorage.setItem('demoBannerDismissed', 'true');
+        }
+    };
+
+    // Restore banner state on load
+    (function() {
+        if (sessionStorage.getItem('demoBannerDismissed') === 'true') {
+            var banner = document.getElementById('demoBanner');
+            if (banner) banner.classList.add('hidden');
+        }
+    })();
+
+    /**
      * Set preference to view desktop version
      */
     window.setDesktopPreference = function(prefer) {

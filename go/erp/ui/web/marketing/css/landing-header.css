@@ -213,6 +213,17 @@
     color: var(--erp-primary);
 }
 
+/* Mobile Nav Sponsor */
+.mobile-nav-sponsor {
+    padding: 1rem 0;
+    text-align: center;
+}
+
+.mobile-nav-sponsor iframe {
+    border: 0;
+    border-radius: 6px;
+}
+
 .mobile-nav-buttons {
     display: flex;
     flex-direction: column;

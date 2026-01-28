@@ -57,6 +57,9 @@
             <li><a href="#architecture" data-close-nav>Architecture</a></li>
             <li><a href="#get-started" data-close-nav>Get Started</a></li>
         </ul>
+        <div class="nav-sponsor">
+            <iframe src="https://github.com/sponsors/saichler/button" title="Sponsor saichler" height="32" width="114" style="border: 0; border-radius: 6px;"></iframe>
+        </div>
         <div class="nav-buttons">
             <button class="btn btn-secondary" id="demoBtn">View Demo</button>
             <a href="../../login/" class="btn btn-primary">Try Now</a>
@@ -79,6 +82,14 @@
             </div>
 
             <div class="hero-content">
+                <div id="demoBanner" class="demo-banner">
+                    <div class="demo-banner-content">
+                        <span class="demo-banner-pulse"></span>
+                        <span class="demo-banner-text">Live Demo Available</span>
+                        <a href="../../login/" class="demo-banner-link">Try it now &rarr;</a>
+                    </div>
+                    <button class="demo-banner-close" onclick="dismissDemoBanner()" title="Dismiss">&times;</button>
+                </div>
                 <div class="hero-logo">
                     <img src="../logo.gif" alt="ERP">
                 </div>
@@ -431,6 +442,11 @@ go run ./go/erp/ui/main.go</code>
                 </div>
             </div>
 
+            <div class="footer-sponsor">
+                <h5>Support the Project</h5>
+                <iframe src="https://github.com/sponsors/saichler/card" title="Sponsor saichler" height="225" width="100%" style="border: 0; max-width: 300px;"></iframe>
+            </div>
+
             <div class="footer-powered">
                 <div class="footer-powered-label">Powered By</div>
                 <div class="footer-powered-logo">
@@ -591,6 +607,21 @@ go run ./go/erp/ui/main.go</code>
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') closeModal();
             });
+
+            // Demo banner dismiss
+            window.dismissDemoBanner = function() {
+                var banner = document.getElementById('demoBanner');
+                if (banner) {
+                    banner.classList.add('hidden');
+                    sessionStorage.setItem('demoBannerDismissed', 'true');
+                }
+            };
+
+            // Restore banner state on load
+            if (sessionStorage.getItem('demoBannerDismissed') === 'true') {
+                var banner = document.getElementById('demoBanner');
+                if (banner) banner.classList.add('hidden');
+            }
         })();
     </script>
 </body>

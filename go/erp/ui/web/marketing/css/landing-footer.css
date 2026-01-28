@@ -14,7 +14,7 @@
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 2fr repeat(4, 1fr);
+    grid-template-columns: 2fr repeat(3, 1fr) 1fr minmax(200px, 1fr);
     gap: 3rem;
     margin-bottom: 3rem;
 }
@@ -112,6 +112,26 @@
     color: var(--text-muted);
 }
 
+/* Footer Sponsor Card */
+.footer-sponsor {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.footer-sponsor h5 {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.footer-sponsor iframe {
+    border-radius: 8px;
+}
+
 /* Footer Bottom */
 .footer-bottom {
     display: flex;
@@ -173,6 +193,12 @@
     .footer-brand p {
         max-width: 400px;
     }
+
+    .footer-sponsor {
+        grid-column: span 3;
+        align-items: center;
+        text-align: center;
+    }
 }
 
 @media (max-width: 768px) {
@@ -187,6 +213,12 @@
 
     .footer-brand {
         grid-column: span 2;
+    }
+
+    .footer-sponsor {
+        grid-column: span 2;
+        align-items: center;
+        text-align: center;
     }
 
     .footer-bottom {

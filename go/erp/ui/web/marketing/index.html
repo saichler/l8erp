@@ -53,6 +53,7 @@
                 </ul>
 
                 <div class="header-buttons">
+                    <iframe src="https://github.com/sponsors/saichler/button" title="Sponsor saichler" height="32" width="114" style="border: 0; border-radius: 6px; vertical-align: middle;"></iframe>
                     <button class="btn btn-secondary" data-modal="demo">Demo</button>
                     <a href="https://www.probler.dev:2883" target="_blank" class="btn btn-primary">Live Demo</a>
                 </div>
@@ -75,6 +76,9 @@
             <li><a href="#get-started">Get Started</a></li>
             <li><a href="#" data-modal="developer" class="nav-emphasized">Developer</a></li>
         </ul>
+        <div class="mobile-nav-sponsor">
+            <iframe src="https://github.com/sponsors/saichler/button" title="Sponsor saichler" height="32" width="114" style="border: 0; border-radius: 6px;"></iframe>
+        </div>
         <div class="mobile-nav-buttons">
             <button class="btn btn-secondary" data-modal="demo">View Demo</button>
             <a href="https://www.probler.dev:2883" target="_blank" class="btn btn-primary">Live Demo</a>
@@ -139,6 +143,14 @@
             </div>
 
             <div class="hero-content">
+                <div id="demoBanner" class="demo-banner">
+                    <div class="demo-banner-content">
+                        <span class="demo-banner-pulse"></span>
+                        <span class="demo-banner-text">Live Demo Available</span>
+                        <a href="../login/" class="demo-banner-link">Try it now &rarr;</a>
+                    </div>
+                    <button class="demo-banner-close" onclick="dismissDemoBanner()" title="Dismiss">&times;</button>
+                </div>
                 <h1 class="hero-title">
                     <span class="gradient-text">Enterprise Resource Planning</span>
                     Built for the Modern Enterprise
@@ -570,6 +582,11 @@ go run ./go/erp/ui/main.go</code>
                         <img src="Layer8Logo.gif" alt="Layer 8">
                         <span>Layer 8</span>
                     </div>
+                </div>
+
+                <div class="footer-sponsor">
+                    <h5>Support the Project</h5>
+                    <iframe src="https://github.com/sponsors/saichler/card" title="Sponsor saichler" height="225" width="100%" style="border: 0; max-width: 300px;"></iframe>
                 </div>
             </div>
 

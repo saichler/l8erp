@@ -140,6 +140,17 @@
     color: var(--erp-primary);
 }
 
+/* Navigation Sponsor */
+.nav-sponsor {
+    padding: 1rem 0;
+    text-align: center;
+}
+
+.nav-sponsor iframe {
+    border: 0;
+    border-radius: 6px;
+}
+
 /* Navigation Buttons */
 .nav-buttons {
     display: flex;
