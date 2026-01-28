@@ -76,7 +76,7 @@ limitations under the License.
         </div>
         <div class="nav-buttons">
             <button class="btn btn-secondary" id="demoBtn">View Demo</button>
-            <a href="../../login/" class="btn btn-primary">Try Now</a>
+            <button class="btn btn-primary" id="tryNowBtn">Try Now</button>
         </div>
     </nav>
 
@@ -100,7 +100,7 @@ limitations under the License.
                     <div class="demo-banner-content">
                         <span class="demo-banner-pulse"></span>
                         <span class="demo-banner-text">Live Demo Available</span>
-                        <a href="../../login/" class="demo-banner-link">Try it now &rarr;</a>
+                        <a href="#" class="demo-banner-link" id="demoBannerLink">Try it now &rarr;</a>
                     </div>
                     <button class="demo-banner-close" onclick="dismissDemoBanner()" title="Dismiss">&times;</button>
                 </div>
@@ -117,7 +117,7 @@ limitations under the License.
                 </p>
                 <div class="hero-buttons">
                     <a href="#get-started" class="btn btn-primary btn-block">Get Started</a>
-                    <a href="../../login/" class="btn btn-secondary btn-block">Try Demo</a>
+                    <button class="btn btn-secondary btn-block" id="tryDemoBtn">Try Demo</button>
                 </div>
                 <div class="hero-badges">
                     <span class="badge">Go Backend</span>
@@ -616,6 +616,32 @@ go run ./go/erp/ui/main.go</code>
             });
 
             demoBtnFooter.addEventListener('click', openDemoModal);
+
+            // Try Now button in nav
+            var tryNowBtn = document.getElementById('tryNowBtn');
+            if (tryNowBtn) {
+                tryNowBtn.addEventListener('click', function() {
+                    menuToggle.classList.remove('active');
+                    mobileNav.classList.remove('active');
+                    document.body.style.overflow = '';
+                    openDemoModal();
+                });
+            }
+
+            // Try Demo button in hero
+            var tryDemoBtn = document.getElementById('tryDemoBtn');
+            if (tryDemoBtn) {
+                tryDemoBtn.addEventListener('click', openDemoModal);
+            }
+
+            // Demo banner link
+            var demoBannerLink = document.getElementById('demoBannerLink');
+            if (demoBannerLink) {
+                demoBannerLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openDemoModal();
+                });
+            }
 
             // Close modal on ESC
             document.addEventListener('keydown', function(e) {

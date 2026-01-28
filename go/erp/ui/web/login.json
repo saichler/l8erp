@@ -5,7 +5,7 @@
         "authEndpoint": "/auth",
         "redirectUrl": "../app.html",
         "showRememberMe": true,
-        "showRegister": false,
+        "showRegister": true,
         "sessionTimeout": 30,
         "tfaEnabled": true
     },
