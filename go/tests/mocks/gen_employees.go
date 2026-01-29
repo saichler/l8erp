@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"math/rand"
 
+	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
@@ -67,15 +68,15 @@ func generateEmployees(store *MockDataStore) []*hcm.Employee {
 			Citizenship:    "US",
 			NationalId:     randomSSN(),
 			NationalIdType: "SSN",
-			Addresses:      []*hcm.Address{createAddress()},
-			Contacts: []*hcm.ContactInfo{
+			Addresses:      []*erp.Address{createAddress()},
+			Contacts: []*erp.ContactInfo{
 				{
-					ContactType: hcm.ContactType_CONTACT_TYPE_EMAIL_WORK,
+					ContactType: erp.ContactType_CONTACT_TYPE_EMAIL_WORK,
 					Value:       email,
 					IsPrimary:   true,
 				},
 				{
-					ContactType: hcm.ContactType_CONTACT_TYPE_PHONE_MOBILE,
+					ContactType: erp.ContactType_CONTACT_TYPE_PHONE_MOBILE,
 					Value:       randomPhone(),
 					IsPrimary:   false,
 				},

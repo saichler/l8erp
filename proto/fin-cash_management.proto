@@ -1,0 +1,164 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package fin;
+
+option go_package = "./types/fin";
+
+import "fin-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// CASH MANAGEMENT MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// BankAccount represents a bank account
+message BankAccount {
+  string bank_account_id = 1;
+  string account_name = 2;
+  string bank_name = 3;
+  string account_number_masked = 4;
+  string routing_number = 5;
+  string swift_code = 6;
+  string iban = 7;
+  BankAccountType account_type = 8;
+  BankAccountStatus status = 9;
+  string currency_id = 10;
+  string gl_account_id = 11;
+  erp.Money current_balance = 12;
+  int64 last_reconciled_date = 13;
+  string notes = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message BankAccountList {
+  repeated BankAccount list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// BankTransaction represents a bank transaction
+message BankTransaction {
+  string transaction_id = 1;
+  string bank_account_id = 2;
+  int64 transaction_date = 3;
+  int64 value_date = 4;
+  TransactionType transaction_type = 5;
+  erp.Money amount = 6;
+  erp.Money running_balance = 7;
+  string description = 8;
+  string reference = 9;
+  string check_number = 10;
+  bool is_reconciled = 11;
+  string reconciliation_id = 12;
+  string notes = 13;
+  erp.AuditInfo audit_info = 14;
+}
+
+message BankTransactionList {
+  repeated BankTransaction list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// BankReconciliation represents a bank reconciliation
+message BankReconciliation {
+  string reconciliation_id = 1;
+  string bank_account_id = 2;
+  int64 statement_date = 3;
+  int64 period_start = 4;
+  int64 period_end = 5;
+  erp.Money statement_balance = 6;
+  erp.Money book_balance = 7;
+  erp.Money adjusted_balance = 8;
+  erp.Money difference = 9;
+  ReconciliationStatus status = 10;
+  int32 matched_count = 11;
+  int32 unmatched_count = 12;
+  string reconciled_by = 13;
+  int64 reconciled_date = 14;
+  string notes = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message BankReconciliationList {
+  repeated BankReconciliation list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CashForecast represents a cash flow forecast
+message CashForecast {
+  string forecast_id = 1;
+  string forecast_name = 2;
+  int64 forecast_date = 3;
+  int64 period_start = 4;
+  int64 period_end = 5;
+  erp.Money opening_balance = 6;
+  erp.Money projected_inflows = 7;
+  erp.Money projected_outflows = 8;
+  erp.Money net_cash_flow = 9;
+  erp.Money closing_balance = 10;
+  string notes = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message CashForecastList {
+  repeated CashForecast list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// FundTransfer represents a transfer between bank accounts
+message FundTransfer {
+  string transfer_id = 1;
+  string from_bank_account_id = 2;
+  string to_bank_account_id = 3;
+  erp.Money amount = 4;
+  int64 transfer_date = 5;
+  int64 value_date = 6;
+  TransferStatus status = 7;
+  string reference = 8;
+  string notes = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message FundTransferList {
+  repeated FundTransfer list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PettyCash represents a petty cash fund
+message PettyCash {
+  string petty_cash_id = 1;
+  string fund_name = 2;
+  string custodian_employee_id = 3;
+  erp.Money fund_limit = 4;
+  erp.Money current_balance = 5;
+  int64 last_replenished_date = 6;
+  bool is_active = 7;
+  string notes = 8;
+  erp.AuditInfo audit_info = 9;
+}
+
+message PettyCashList {
+  repeated PettyCash list = 1;
+  l8api.L8MetaData metadata = 2;
+}

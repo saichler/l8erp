@@ -20,6 +20,7 @@ option go_package = "./types/hcm";
 
 
 import "hcm-common.proto";
+import "erp-common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -31,7 +32,7 @@ import "api.proto";
 message Timesheet {
   string timesheet_id = 1;
   string employee_id = 2;
-  DateRange period = 3;
+  erp.DateRange period = 3;
   TimesheetStatus status = 4;
   repeated TimeEntry entries = 5;
 
@@ -54,7 +55,7 @@ message Timesheet {
   string rejection_reason = 19;
 
   string notes = 20;
-  AuditInfo audit_info = 21;
+  erp.AuditInfo audit_info = 21;
 }
 
 message TimesheetList {
@@ -107,7 +108,7 @@ message TimeEntry {
   double longitude = 21;
   string ip_address = 22;
 
-  AuditInfo audit_info = 23;
+  erp.AuditInfo audit_info = 23;
 }
 
 enum TimeEntryType {
@@ -163,7 +164,7 @@ message LeaveRequest {
   repeated string document_ids = 18;
 
   string notes = 19;
-  AuditInfo audit_info = 20;
+  erp.AuditInfo audit_info = 20;
 }
 
 message LeaveRequestList {
@@ -227,7 +228,7 @@ message LeaveBalance {
   int64 last_accrual_date = 17;
   int64 next_accrual_date = 18;
 
-  AuditInfo audit_info = 19;
+  erp.AuditInfo audit_info = 19;
 }
 
 message LeaveBalanceList {
@@ -271,7 +272,7 @@ message LeavePolicy {
   int64 end_date = 21;
   bool is_active = 22;
 
-  AuditInfo audit_info = 23;
+  erp.AuditInfo audit_info = 23;
 }
 
 message LeavePolicyList {
@@ -311,9 +312,9 @@ message Shift {
   bool is_overnight = 10;
   ShiftType shift_type = 11;
   string color_code = 12;             // For UI display
-  Money shift_differential = 13;
+  erp.Money shift_differential = 13;
   bool is_active = 14;
-  AuditInfo audit_info = 15;
+  erp.AuditInfo audit_info = 15;
 }
 
 message ShiftList {
@@ -337,13 +338,13 @@ enum ShiftType {
 message Schedule {
   string schedule_id = 1;
   string employee_id = 2;
-  DateRange period = 3;
+  erp.DateRange period = 3;
   ScheduleStatus status = 4;
   repeated ScheduleEntry entries = 5;
   double total_scheduled_hours = 6;
   string published_by = 7;
   int64 published_date = 8;
-  AuditInfo audit_info = 9;
+  erp.AuditInfo audit_info = 9;
 }
 
 message ScheduleList {
@@ -386,7 +387,7 @@ message Holiday {
   repeated string applicable_location_ids = 10;
   int32 year = 11;
   bool is_active = 12;
-  AuditInfo audit_info = 13;
+  erp.AuditInfo audit_info = 13;
 }
 
 message HolidayList {
@@ -416,7 +417,7 @@ message Absence {
   bool is_paid = 9;
   string pay_component_id = 10;
   string notes = 11;
-  AuditInfo audit_info = 12;
+  erp.AuditInfo audit_info = 12;
 }
 
 message AbsenceList {

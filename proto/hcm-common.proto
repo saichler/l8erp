@@ -18,71 +18,11 @@ package hcm;
 
 option go_package = "./types/hcm";
 
-
+import "erp-common.proto";
 
 // ============================================================================
-// COMMON/SHARED TYPES
+// HCM-SPECIFIC COMMON TYPES
 // ============================================================================
-
-// Money represents a monetary amount with currency
-message Money {
-  int64 amount = 1;          // Amount in smallest currency unit (e.g., cents)
-  string currency_code = 2;  // ISO 4217 currency code (e.g., "USD", "EUR")
-}
-
-// DateRange represents a start and end date pair
-message DateRange {
-  int64 start_date = 1;
-  int64 end_date = 2;
-}
-
-// AuditInfo tracks creation and modification metadata
-message AuditInfo {
-  int64 created_at = 1;
-  string created_by = 2;
-  int64 modified_at = 3;
-  string modified_by = 4;
-}
-
-// Address represents a physical or mailing address
-message Address {
-  string address_id = 1;
-  AddressType address_type = 2;
-  string line1 = 3;
-  string line2 = 4;
-  string city = 5;
-  string state_province = 6;
-  string postal_code = 7;
-  string country_code = 8;  // ISO 3166-1 alpha-2
-  bool is_primary = 9;
-}
-
-enum AddressType {
-  ADDRESS_TYPE_UNSPECIFIED = 0;
-  ADDRESS_TYPE_HOME = 1;
-  ADDRESS_TYPE_WORK = 2;
-  ADDRESS_TYPE_MAILING = 3;
-  ADDRESS_TYPE_BILLING = 4;
-}
-
-// ContactInfo represents various contact methods
-message ContactInfo {
-  string contact_id = 1;
-  ContactType contact_type = 2;
-  string value = 3;          // Phone number, email, etc.
-  bool is_primary = 4;
-  bool is_verified = 5;
-}
-
-enum ContactType {
-  CONTACT_TYPE_UNSPECIFIED = 0;
-  CONTACT_TYPE_PHONE_MOBILE = 1;
-  CONTACT_TYPE_PHONE_HOME = 2;
-  CONTACT_TYPE_PHONE_WORK = 3;
-  CONTACT_TYPE_EMAIL_PERSONAL = 4;
-  CONTACT_TYPE_EMAIL_WORK = 5;
-  CONTACT_TYPE_FAX = 6;
-}
 
 // EmergencyContact represents an employee's emergency contact
 message EmergencyContact {
@@ -92,7 +32,7 @@ message EmergencyContact {
   string phone_primary = 4;
   string phone_secondary = 5;
   string email = 6;
-  Address address = 7;
+  erp.Address address = 7;
   int32 priority = 8;  // 1 = primary, 2 = secondary, etc.
 }
 

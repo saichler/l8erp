@@ -12,14 +12,526 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<div class="section-container">
-    <h2 class="section-title">Financial Management</h2>
+<div class="section-container hcm-section">
+    <!-- Header with Parallax Effect -->
+    <div class="hcm-header-frame parallax-container">
+        <!-- Background Illustration Layer -->
+        <div class="hcm-header-bg parallax-layer" data-speed="0.5">
+            <svg class="hcm-illustration" viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="finGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:0.4" />
+                        <stop offset="100%" style="stop-color:#0284c7;stop-opacity:0.2" />
+                    </linearGradient>
+                </defs>
+
+                <!-- Network Grid Background -->
+                <g opacity="0.1">
+                    <line x1="0" y1="30" x2="1200" y2="30" stroke="#0ea5e9" stroke-width="0.5"/>
+                    <line x1="0" y1="60" x2="1200" y2="60" stroke="#0ea5e9" stroke-width="0.5"/>
+                    <line x1="0" y1="90" x2="1200" y2="90" stroke="#0ea5e9" stroke-width="0.5"/>
+                    <line x1="200" y1="0" x2="200" y2="120" stroke="#0ea5e9" stroke-width="0.5"/>
+                    <line x1="400" y1="0" x2="400" y2="120" stroke="#0ea5e9" stroke-width="0.5"/>
+                    <line x1="600" y1="0" x2="600" y2="120" stroke="#0ea5e9" stroke-width="0.5"/>
+                    <line x1="800" y1="0" x2="800" y2="120" stroke="#0ea5e9" stroke-width="0.5"/>
+                    <line x1="1000" y1="0" x2="1000" y2="120" stroke="#0ea5e9" stroke-width="0.5"/>
+                </g>
+
+                <!-- Financial Icons - Dollar Signs, Chart Bars, Ledger Lines -->
+                <g class="people-animation">
+                    <!-- Dollar Sign Circle 1 -->
+                    <circle cx="200" cy="60" r="15" fill="url(#finGradient1)" opacity="0.6"/>
+                    <text x="200" y="66" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold" opacity="0.8">$</text>
+
+                    <!-- Chart Bars -->
+                    <rect x="385" y="55" width="6" height="20" rx="1" fill="url(#finGradient1)" opacity="0.5"/>
+                    <rect x="394" y="45" width="6" height="30" rx="1" fill="url(#finGradient1)" opacity="0.6"/>
+                    <rect x="403" y="50" width="6" height="25" rx="1" fill="url(#finGradient1)" opacity="0.5"/>
+                    <rect x="412" y="40" width="6" height="35" rx="1" fill="url(#finGradient1)" opacity="0.7"/>
+
+                    <!-- Dollar Sign Circle 2 -->
+                    <circle cx="600" cy="60" r="18" fill="url(#finGradient1)" opacity="0.7"/>
+                    <text x="600" y="67" text-anchor="middle" fill="#fff" font-size="20" font-weight="bold" opacity="0.8">$</text>
+
+                    <!-- Ledger Lines -->
+                    <line x1="770" y1="45" x2="830" y2="45" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
+                    <line x1="770" y1="55" x2="830" y2="55" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
+                    <line x1="770" y1="65" x2="830" y2="65" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
+                    <line x1="770" y1="75" x2="830" y2="75" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
+                    <circle cx="800" cy="60" r="14" fill="url(#finGradient1)" opacity="0.5"/>
+
+                    <!-- Dollar Sign Circle 3 -->
+                    <circle cx="1000" cy="60" r="16" fill="url(#finGradient1)" opacity="0.6"/>
+                    <text x="1000" y="67" text-anchor="middle" fill="#fff" font-size="18" font-weight="bold" opacity="0.8">$</text>
+                </g>
+
+                <!-- Connection Lines -->
+                <path d="M 215,60 Q 300,40 385,55" fill="none" stroke="#0ea5e9" stroke-width="1" opacity="0.3"/>
+                <path d="M 418,50 Q 500,70 582,60" fill="none" stroke="#0ea5e9" stroke-width="1" opacity="0.3"/>
+                <path d="M 618,60 Q 700,45 770,55" fill="none" stroke="#0ea5e9" stroke-width="1" opacity="0.3"/>
+                <path d="M 830,60 Q 900,75 984,60" fill="none" stroke="#0ea5e9" stroke-width="1" opacity="0.3"/>
+
+                <!-- Animated Dots -->
+                <circle cx="300" cy="50" r="3" fill="#0ea5e9" opacity="0.8">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="700" cy="55" r="3" fill="#0ea5e9" opacity="0.8">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+
+        <!-- Header Content Layer -->
+        <div class="hcm-header-content parallax-layer" data-speed="1">
+            <div class="hcm-header-title">
+                <div class="hcm-icon">💰</div>
+                <div>
+                    <h1 class="hcm-title">Financial Management</h1>
+                    <p class="hcm-subtitle">General Ledger, AP, AR, Cash, Assets, Budget & Tax</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module Tabs -->
+    <div class="hcm-module-tabs">
+        <button class="hcm-module-tab active" data-module="general-ledger">
+            <span class="tab-icon">📒</span>
+            <span class="tab-label">General Ledger</span>
+        </button>
+        <button class="hcm-module-tab" data-module="accounts-payable">
+            <span class="tab-icon">📤</span>
+            <span class="tab-label">Accounts Payable</span>
+        </button>
+        <button class="hcm-module-tab" data-module="accounts-receivable">
+            <span class="tab-icon">📥</span>
+            <span class="tab-label">Accounts Receivable</span>
+        </button>
+        <button class="hcm-module-tab" data-module="cash">
+            <span class="tab-icon">🏦</span>
+            <span class="tab-label">Cash Management</span>
+        </button>
+        <button class="hcm-module-tab" data-module="fixed-assets">
+            <span class="tab-icon">🏗️</span>
+            <span class="tab-label">Fixed Assets</span>
+        </button>
+        <button class="hcm-module-tab" data-module="budgeting">
+            <span class="tab-icon">📊</span>
+            <span class="tab-label">Budgeting</span>
+        </button>
+        <button class="hcm-module-tab" data-module="tax">
+            <span class="tab-icon">🏛️</span>
+            <span class="tab-label">Tax</span>
+        </button>
+    </div>
+
     <div class="section-content">
-        <p class="section-description">General Ledger, Accounts Payable, Accounts Receivable, Cash Management, Fixed Assets, Tax Management</p>
-        <div style="padding: 40px; text-align: center; color: #718096;">
-            <p style="font-size: 48px; margin-bottom: 20px;">💰</p>
-            <p>This module is under development.</p>
-            <p style="margin-top: 10px; font-size: 12px;">Comprehensive financial management including GL, AP, AR, cash flow, assets, and tax compliance.</p>
+        <!-- General Ledger Module -->
+        <div class="hcm-module-content active" data-module="general-ledger">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="accounts">
+                    <span class="subnav-icon">📒</span>
+                    <span class="subnav-label">Accounts</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="journal-entries">
+                    <span class="subnav-icon">📝</span>
+                    <span class="subnav-label">Journal Entries</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="journal-entry-lines">
+                    <span class="subnav-icon">📋</span>
+                    <span class="subnav-label">Entry Lines</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="fiscal-years">
+                    <span class="subnav-icon">📅</span>
+                    <span class="subnav-label">Fiscal Years</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="fiscal-periods">
+                    <span class="subnav-icon">📆</span>
+                    <span class="subnav-label">Fiscal Periods</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="currencies">
+                    <span class="subnav-icon">💱</span>
+                    <span class="subnav-label">Currencies</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="exchange-rates">
+                    <span class="subnav-icon">📈</span>
+                    <span class="subnav-label">Exchange Rates</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="account-balances">
+                    <span class="subnav-icon">💰</span>
+                    <span class="subnav-label">Balances</span>
+                </a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="accounts">
+                    <div class="hcm-table-container" id="general-ledger-accounts-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="journal-entries">
+                    <div class="hcm-table-container" id="general-ledger-journal-entries-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="journal-entry-lines">
+                    <div class="hcm-table-container" id="general-ledger-journal-entry-lines-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="fiscal-years">
+                    <div class="hcm-table-container" id="general-ledger-fiscal-years-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="fiscal-periods">
+                    <div class="hcm-table-container" id="general-ledger-fiscal-periods-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="currencies">
+                    <div class="hcm-table-container" id="general-ledger-currencies-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="exchange-rates">
+                    <div class="hcm-table-container" id="general-ledger-exchange-rates-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="account-balances">
+                    <div class="hcm-table-container" id="general-ledger-account-balances-table-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accounts Payable Module -->
+        <div class="hcm-module-content" data-module="accounts-payable">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="vendors">
+                    <span class="subnav-icon">🏢</span>
+                    <span class="subnav-label">Vendors</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="vendor-contacts">
+                    <span class="subnav-icon">👤</span>
+                    <span class="subnav-label">Vendor Contacts</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="purchase-invoices">
+                    <span class="subnav-icon">📄</span>
+                    <span class="subnav-label">Purchase Invoices</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="purchase-invoice-lines">
+                    <span class="subnav-icon">📋</span>
+                    <span class="subnav-label">Invoice Lines</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="payment-schedules">
+                    <span class="subnav-icon">📅</span>
+                    <span class="subnav-label">Payment Schedules</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="vendor-payments">
+                    <span class="subnav-icon">💳</span>
+                    <span class="subnav-label">Vendor Payments</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="payment-allocations">
+                    <span class="subnav-icon">🔗</span>
+                    <span class="subnav-label">Payment Allocations</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="vendor-statements">
+                    <span class="subnav-icon">📊</span>
+                    <span class="subnav-label">Vendor Statements</span>
+                </a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="vendors">
+                    <div class="hcm-table-container" id="accounts-payable-vendors-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="vendor-contacts">
+                    <div class="hcm-table-container" id="accounts-payable-vendor-contacts-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="purchase-invoices">
+                    <div class="hcm-table-container" id="accounts-payable-purchase-invoices-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="purchase-invoice-lines">
+                    <div class="hcm-table-container" id="accounts-payable-purchase-invoice-lines-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="payment-schedules">
+                    <div class="hcm-table-container" id="accounts-payable-payment-schedules-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="vendor-payments">
+                    <div class="hcm-table-container" id="accounts-payable-vendor-payments-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="payment-allocations">
+                    <div class="hcm-table-container" id="accounts-payable-payment-allocations-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="vendor-statements">
+                    <div class="hcm-table-container" id="accounts-payable-vendor-statements-table-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accounts Receivable Module -->
+        <div class="hcm-module-content" data-module="accounts-receivable">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="customers">
+                    <span class="subnav-icon">👥</span>
+                    <span class="subnav-label">Customers</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="customer-contacts">
+                    <span class="subnav-icon">👤</span>
+                    <span class="subnav-label">Customer Contacts</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="sales-invoices">
+                    <span class="subnav-icon">📄</span>
+                    <span class="subnav-label">Sales Invoices</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="sales-invoice-lines">
+                    <span class="subnav-icon">📋</span>
+                    <span class="subnav-label">Invoice Lines</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="customer-payments">
+                    <span class="subnav-icon">💳</span>
+                    <span class="subnav-label">Customer Payments</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="payment-applications">
+                    <span class="subnav-icon">🔗</span>
+                    <span class="subnav-label">Payment Applications</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="credit-memos">
+                    <span class="subnav-icon">📝</span>
+                    <span class="subnav-label">Credit Memos</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="dunning-letters">
+                    <span class="subnav-icon">📨</span>
+                    <span class="subnav-label">Dunning Letters</span>
+                </a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="customers">
+                    <div class="hcm-table-container" id="accounts-receivable-customers-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="customer-contacts">
+                    <div class="hcm-table-container" id="accounts-receivable-customer-contacts-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="sales-invoices">
+                    <div class="hcm-table-container" id="accounts-receivable-sales-invoices-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="sales-invoice-lines">
+                    <div class="hcm-table-container" id="accounts-receivable-sales-invoice-lines-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="customer-payments">
+                    <div class="hcm-table-container" id="accounts-receivable-customer-payments-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="payment-applications">
+                    <div class="hcm-table-container" id="accounts-receivable-payment-applications-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="credit-memos">
+                    <div class="hcm-table-container" id="accounts-receivable-credit-memos-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="dunning-letters">
+                    <div class="hcm-table-container" id="accounts-receivable-dunning-letters-table-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cash Management Module -->
+        <div class="hcm-module-content" data-module="cash">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="bank-accounts">
+                    <span class="subnav-icon">🏦</span>
+                    <span class="subnav-label">Bank Accounts</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="bank-transactions">
+                    <span class="subnav-icon">💵</span>
+                    <span class="subnav-label">Transactions</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="bank-reconciliations">
+                    <span class="subnav-icon">✅</span>
+                    <span class="subnav-label">Reconciliations</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="cash-forecasts">
+                    <span class="subnav-icon">📊</span>
+                    <span class="subnav-label">Cash Forecasts</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="fund-transfers">
+                    <span class="subnav-icon">🔄</span>
+                    <span class="subnav-label">Fund Transfers</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="petty-cash">
+                    <span class="subnav-icon">💰</span>
+                    <span class="subnav-label">Petty Cash</span>
+                </a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="bank-accounts">
+                    <div class="hcm-table-container" id="cash-bank-accounts-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="bank-transactions">
+                    <div class="hcm-table-container" id="cash-bank-transactions-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="bank-reconciliations">
+                    <div class="hcm-table-container" id="cash-bank-reconciliations-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="cash-forecasts">
+                    <div class="hcm-table-container" id="cash-cash-forecasts-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="fund-transfers">
+                    <div class="hcm-table-container" id="cash-fund-transfers-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="petty-cash">
+                    <div class="hcm-table-container" id="cash-petty-cash-table-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fixed Assets Module -->
+        <div class="hcm-module-content" data-module="fixed-assets">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="assets">
+                    <span class="subnav-icon">🏗️</span>
+                    <span class="subnav-label">Assets</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="asset-categories">
+                    <span class="subnav-icon">📁</span>
+                    <span class="subnav-label">Categories</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="depreciation-schedules">
+                    <span class="subnav-icon">📉</span>
+                    <span class="subnav-label">Depreciation</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="asset-disposals">
+                    <span class="subnav-icon">🗑️</span>
+                    <span class="subnav-label">Disposals</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="asset-transfers">
+                    <span class="subnav-icon">🔄</span>
+                    <span class="subnav-label">Transfers</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="asset-maintenance">
+                    <span class="subnav-icon">🔧</span>
+                    <span class="subnav-label">Maintenance</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="asset-revaluations">
+                    <span class="subnav-icon">📊</span>
+                    <span class="subnav-label">Revaluations</span>
+                </a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="assets">
+                    <div class="hcm-table-container" id="fixed-assets-assets-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="asset-categories">
+                    <div class="hcm-table-container" id="fixed-assets-asset-categories-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="depreciation-schedules">
+                    <div class="hcm-table-container" id="fixed-assets-depreciation-schedules-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="asset-disposals">
+                    <div class="hcm-table-container" id="fixed-assets-asset-disposals-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="asset-transfers">
+                    <div class="hcm-table-container" id="fixed-assets-asset-transfers-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="asset-maintenance">
+                    <div class="hcm-table-container" id="fixed-assets-asset-maintenance-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="asset-revaluations">
+                    <div class="hcm-table-container" id="fixed-assets-asset-revaluations-table-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Budgeting Module -->
+        <div class="hcm-module-content" data-module="budgeting">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="budgets">
+                    <span class="subnav-icon">📊</span>
+                    <span class="subnav-label">Budgets</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="budget-lines">
+                    <span class="subnav-icon">📋</span>
+                    <span class="subnav-label">Budget Lines</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="budget-transfers">
+                    <span class="subnav-icon">🔄</span>
+                    <span class="subnav-label">Budget Transfers</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="budget-scenarios">
+                    <span class="subnav-icon">🎯</span>
+                    <span class="subnav-label">Scenarios</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="capital-expenditures">
+                    <span class="subnav-icon">🏗️</span>
+                    <span class="subnav-label">Capital Expenditures</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="forecasts">
+                    <span class="subnav-icon">📈</span>
+                    <span class="subnav-label">Forecasts</span>
+                </a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="budgets">
+                    <div class="hcm-table-container" id="budgeting-budgets-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="budget-lines">
+                    <div class="hcm-table-container" id="budgeting-budget-lines-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="budget-transfers">
+                    <div class="hcm-table-container" id="budgeting-budget-transfers-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="budget-scenarios">
+                    <div class="hcm-table-container" id="budgeting-budget-scenarios-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="capital-expenditures">
+                    <div class="hcm-table-container" id="budgeting-capital-expenditures-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="forecasts">
+                    <div class="hcm-table-container" id="budgeting-forecasts-table-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tax Module -->
+        <div class="hcm-module-content" data-module="tax">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="tax-codes">
+                    <span class="subnav-icon">🏷️</span>
+                    <span class="subnav-label">Tax Codes</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="tax-jurisdictions">
+                    <span class="subnav-icon">🌐</span>
+                    <span class="subnav-label">Jurisdictions</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="tax-rules">
+                    <span class="subnav-icon">📜</span>
+                    <span class="subnav-label">Tax Rules</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="tax-returns">
+                    <span class="subnav-icon">📄</span>
+                    <span class="subnav-label">Tax Returns</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="tax-exemptions">
+                    <span class="subnav-icon">✋</span>
+                    <span class="subnav-label">Exemptions</span>
+                </a>
+                <a class="hcm-subnav-item" data-service="withholding-tax-configs">
+                    <span class="subnav-icon">⚙️</span>
+                    <span class="subnav-label">Withholding Configs</span>
+                </a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="tax-codes">
+                    <div class="hcm-table-container" id="tax-tax-codes-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="tax-jurisdictions">
+                    <div class="hcm-table-container" id="tax-tax-jurisdictions-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="tax-rules">
+                    <div class="hcm-table-container" id="tax-tax-rules-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="tax-returns">
+                    <div class="hcm-table-container" id="tax-tax-returns-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="tax-exemptions">
+                    <div class="hcm-table-container" id="tax-tax-exemptions-table-container"></div>
+                </div>
+                <div class="hcm-service-view" data-service="withholding-tax-configs">
+                    <div class="hcm-table-container" id="tax-withholding-tax-configs-table-container"></div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Initialize FIN when section loads
+    if (typeof initializeFIN === 'function') {
+        initializeFIN();
+    } else if (typeof FIN !== 'undefined' && FIN.initialize) {
+        FIN.initialize();
+    }
+</script>

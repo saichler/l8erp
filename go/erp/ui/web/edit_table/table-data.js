@@ -219,6 +219,27 @@ L8Table.prototype.getItemId = function(item) {
            item.gradeId || item.structureId || item.compensationId ||
            item.increaseId || item.cycleId || item.grantId ||
            item.statementId || item.benchmarkId ||
+           // FIN - General Ledger primary keys
+           item.accountId || item.journalEntryId || item.lineId ||
+           item.fiscalYearId || item.fiscalPeriodId || item.currencyId ||
+           item.exchangeRateId ||
+           // FIN - Accounts Payable primary keys
+           item.vendorId || item.contactId || item.invoiceId ||
+           item.paymentId || item.allocationId ||
+           // FIN - Accounts Receivable primary keys
+           item.customerId || item.creditMemoId || item.letterId ||
+           item.applicationId ||
+           // FIN - Cash Management primary keys
+           item.bankAccountId || item.transactionId || item.reconciliationId ||
+           item.forecastId || item.transferId || item.pettyCashId ||
+           // FIN - Fixed Assets primary keys
+           item.assetId || item.categoryId || item.disposalId ||
+           item.maintenanceId || item.revaluationId ||
+           // FIN - Budgeting primary keys
+           item.budgetId || item.scenarioId || item.capexId ||
+           // FIN - Tax primary keys
+           item.taxCodeId || item.jurisdictionId || item.ruleId ||
+           item.returnId || item.exemptionId || item.configId ||
            item.key || JSON.stringify(item);
 };
 

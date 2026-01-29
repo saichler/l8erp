@@ -1,0 +1,208 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package fin;
+
+option go_package = "./types/fin";
+
+import "fin-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// ACCOUNTS PAYABLE MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// Vendor represents a supplier or vendor entity
+message Vendor {
+  string vendor_id = 1;
+  string vendor_number = 2;
+  string name = 3;
+  string legal_name = 4;
+  string tax_id = 5;
+  VendorStatus status = 6;
+  string default_account_id = 7;
+  string currency_id = 8;
+  int32 payment_term_days = 9;
+  PaymentMethod preferred_payment_method = 10;
+  repeated erp.Address addresses = 11;
+  repeated erp.ContactInfo contacts = 12;
+  string website = 13;
+  string notes = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message VendorList {
+  repeated Vendor list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// VendorContact represents a contact person at a vendor
+message VendorContact {
+  string contact_id = 1;
+  string vendor_id = 2;
+  string first_name = 3;
+  string last_name = 4;
+  string title = 5;
+  string email = 6;
+  string phone = 7;
+  string fax = 8;
+  bool is_primary = 9;
+  bool is_active = 10;
+  string notes = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message VendorContactList {
+  repeated VendorContact list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PurchaseInvoice represents a vendor invoice
+message PurchaseInvoice {
+  string invoice_id = 1;
+  string invoice_number = 2;
+  string vendor_id = 3;
+  int64 invoice_date = 4;
+  int64 due_date = 5;
+  string currency_id = 6;
+  string fiscal_period_id = 7;
+  InvoiceStatus status = 8;
+  erp.Money subtotal = 9;
+  erp.Money tax_amount = 10;
+  erp.Money total_amount = 11;
+  erp.Money amount_paid = 12;
+  erp.Money balance_due = 13;
+  int32 payment_term_days = 14;
+  double discount_percent = 15;
+  int32 discount_days = 16;
+  string ap_account_id = 17;
+  string purchase_order_number = 18;
+  string description = 19;
+  string notes = 20;
+  map<string, string> custom_fields = 21;
+  erp.AuditInfo audit_info = 22;
+}
+
+message PurchaseInvoiceList {
+  repeated PurchaseInvoice list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PurchaseInvoiceLine represents a line item on a purchase invoice
+message PurchaseInvoiceLine {
+  string line_id = 1;
+  string invoice_id = 2;
+  int32 line_number = 3;
+  string account_id = 4;
+  string description = 5;
+  double quantity = 6;
+  erp.Money unit_price = 7;
+  erp.Money line_amount = 8;
+  string tax_code_id = 9;
+  erp.Money tax_amount = 10;
+  string cost_center_id = 11;
+  string project_id = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message PurchaseInvoiceLineList {
+  repeated PurchaseInvoiceLine list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PaymentSchedule represents a scheduled payment for a vendor invoice
+message PaymentSchedule {
+  string schedule_id = 1;
+  string vendor_id = 2;
+  string invoice_id = 3;
+  int64 scheduled_date = 4;
+  erp.Money amount = 5;
+  bool is_paid = 6;
+  string payment_id = 7;
+  string notes = 8;
+  erp.AuditInfo audit_info = 9;
+}
+
+message PaymentScheduleList {
+  repeated PaymentSchedule list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// VendorPayment represents a payment made to a vendor
+message VendorPayment {
+  string payment_id = 1;
+  string vendor_id = 2;
+  int64 payment_date = 3;
+  erp.Money amount = 4;
+  PaymentMethod payment_method = 5;
+  PaymentStatus status = 6;
+  string bank_account_id = 7;
+  string check_number = 8;
+  string reference = 9;
+  string notes = 10;
+  map<string, string> custom_fields = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message VendorPaymentList {
+  repeated VendorPayment list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PaymentAllocation links a vendor payment to specific invoices
+message PaymentAllocation {
+  string allocation_id = 1;
+  string payment_id = 2;
+  string invoice_id = 3;
+  erp.Money allocated_amount = 4;
+  erp.Money discount_taken = 5;
+  erp.AuditInfo audit_info = 6;
+}
+
+message PaymentAllocationList {
+  repeated PaymentAllocation list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// VendorStatement represents a periodic statement for a vendor
+message VendorStatement {
+  string statement_id = 1;
+  string vendor_id = 2;
+  int64 statement_date = 3;
+  int64 period_start = 4;
+  int64 period_end = 5;
+  erp.Money opening_balance = 6;
+  erp.Money total_invoices = 7;
+  erp.Money total_payments = 8;
+  erp.Money closing_balance = 9;
+  string notes = 10;
+  erp.AuditInfo audit_info = 11;
+}
+
+message VendorStatementList {
+  repeated VendorStatement list = 1;
+  l8api.L8MetaData metadata = 2;
+}

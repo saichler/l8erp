@@ -19,12 +19,12 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/hcm"
+	"github.com/saichler/l8erp/go/types/erp"
 )
 
-func createAuditInfo() *hcm.AuditInfo {
+func createAuditInfo() *erp.AuditInfo {
 	now := time.Now().Unix()
-	return &hcm.AuditInfo{
+	return &erp.AuditInfo{
 		CreatedAt:  now,
 		CreatedBy:  "mock-generator",
 		ModifiedAt: now,
@@ -32,9 +32,9 @@ func createAuditInfo() *hcm.AuditInfo {
 	}
 }
 
-func createAddress() *hcm.Address {
-	return &hcm.Address{
-		AddressType:   hcm.AddressType_ADDRESS_TYPE_WORK,
+func createAddress() *erp.Address {
+	return &erp.Address{
+		AddressType:   erp.AddressType_ADDRESS_TYPE_WORK,
 		Line1:         fmt.Sprintf("%d %s", rand.Intn(9999)+1, streetNames[rand.Intn(len(streetNames))]),
 		City:          cities[rand.Intn(len(cities))],
 		StateProvince: states[rand.Intn(len(states))],
@@ -44,9 +44,9 @@ func createAddress() *hcm.Address {
 	}
 }
 
-func createContact() *hcm.ContactInfo {
-	return &hcm.ContactInfo{
-		ContactType: hcm.ContactType_CONTACT_TYPE_PHONE_WORK,
+func createContact() *erp.ContactInfo {
+	return &erp.ContactInfo{
+		ContactType: erp.ContactType_CONTACT_TYPE_PHONE_WORK,
 		Value:       randomPhone(),
 		IsPrimary:   true,
 	}

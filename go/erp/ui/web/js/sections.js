@@ -37,6 +37,11 @@ const sectionInitializers = {
         if (typeof initializeHCM === 'function') {
             initializeHCM();
         }
+    },
+    financial: () => {
+        if (typeof initializeFIN === 'function') {
+            initializeFIN();
+        }
     }
 };
 

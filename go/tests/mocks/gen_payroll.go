@@ -19,6 +19,7 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
@@ -48,8 +49,8 @@ func generatePayrollRuns(store *MockDataStore) []*hcm.PayrollRun {
 				ProcessingDate: periodEnd.Unix(),
 				PaymentDate:    paymentDate.Unix(),
 				EmployeeCount:  int32(len(store.EmployeeIDs) / len(store.OrganizationIDs)),
-				TotalGross:     &hcm.Money{Amount: int64(rand.Intn(500000)+100000) * 100, CurrencyCode: "USD"},
-				TotalNet:       &hcm.Money{Amount: int64(rand.Intn(400000)+80000) * 100, CurrencyCode: "USD"},
+				TotalGross:     &erp.Money{Amount: int64(rand.Intn(500000)+100000) * 100, CurrencyCode: "USD"},
+				TotalNet:       &erp.Money{Amount: int64(rand.Intn(400000)+80000) * 100, CurrencyCode: "USD"},
 				ProcessedBy:    "System",
 				AuditInfo:      createAuditInfo(),
 			})
@@ -88,10 +89,10 @@ func generatePayslips(store *MockDataStore) []*hcm.Payslip {
 				RegularHours:    80,
 				OvertimeHours:   float64(rand.Intn(10)),
 				TotalHours:      80 + float64(rand.Intn(10)),
-				GrossPay:        &hcm.Money{Amount: grossPay, CurrencyCode: "USD"},
-				TotalTaxes:      &hcm.Money{Amount: taxes, CurrencyCode: "USD"},
-				TotalDeductions: &hcm.Money{Amount: deductions, CurrencyCode: "USD"},
-				NetPay:          &hcm.Money{Amount: netPay, CurrencyCode: "USD"},
+				GrossPay:        &erp.Money{Amount: grossPay, CurrencyCode: "USD"},
+				TotalTaxes:      &erp.Money{Amount: taxes, CurrencyCode: "USD"},
+				TotalDeductions: &erp.Money{Amount: deductions, CurrencyCode: "USD"},
+				NetPay:          &erp.Money{Amount: netPay, CurrencyCode: "USD"},
 				AuditInfo:       createAuditInfo(),
 			})
 			slipIdx++
@@ -184,8 +185,8 @@ func generateGarnishments(store *MockDataStore) []*hcm.Garnishment {
 			CaseNumber:       fmt.Sprintf("CASE-%06d", rand.Intn(1000000)),
 			IssuingAuthority: "State Court",
 			PayeeName:        "State Collections",
-			TotalAmountOwed:  &hcm.Money{Amount: int64(rand.Intn(10000)+1000) * 100, CurrencyCode: "USD"},
-			AmountPerPeriod:  &hcm.Money{Amount: int64(rand.Intn(500)+100) * 100, CurrencyCode: "USD"},
+			TotalAmountOwed:  &erp.Money{Amount: int64(rand.Intn(10000)+1000) * 100, CurrencyCode: "USD"},
+			AmountPerPeriod:  &erp.Money{Amount: int64(rand.Intn(500)+100) * 100, CurrencyCode: "USD"},
 			StartDate:        time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),
 			Priority:         1,
 			Status:           hcm.GarnishmentStatus_GARNISHMENT_STATUS_ACTIVE,

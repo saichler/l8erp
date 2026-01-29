@@ -19,7 +19,7 @@ package hcm;
 option go_package = "./types/hcm";
 
 
-import "hcm-common.proto";
+import "erp-common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -63,14 +63,14 @@ message Course {
   repeated string applicable_job_ids = 24;
 
   // Cost
-  Money cost_per_person = 25;
+  erp.Money cost_per_person = 25;
 
   bool is_active = 26;
   double average_rating = 27;
   int32 total_completions = 28;
 
   map<string, string> custom_fields = 29;
-  AuditInfo audit_info = 30;
+  erp.AuditInfo audit_info = 30;
 }
 
 message CourseList {
@@ -137,7 +137,7 @@ message CourseSession {
   int32 completed_count = 12;
   SessionStatus status = 13;
   string notes = 14;
-  AuditInfo audit_info = 15;
+  erp.AuditInfo audit_info = 15;
 }
 
 message CourseSessionList {
@@ -178,7 +178,7 @@ message CourseEnrollment {
   int32 employee_rating = 18;
   string employee_feedback = 19;
   string notes = 20;
-  AuditInfo audit_info = 21;
+  erp.AuditInfo audit_info = 21;
 }
 
 message CourseEnrollmentList {
@@ -218,13 +218,13 @@ message Certification {
   double required_ceu_credits = 13;
 
   // Cost
-  Money exam_cost = 14;
-  Money renewal_cost = 15;
+  erp.Money exam_cost = 14;
+  erp.Money renewal_cost = 15;
 
   string exam_url = 16;
   bool is_active = 17;
 
-  AuditInfo audit_info = 18;
+  erp.AuditInfo audit_info = 18;
 }
 
 message CertificationList {
@@ -258,7 +258,7 @@ message EmployeeCertification {
   bool is_verified = 11;
   double ceu_credits_earned = 12;
   string notes = 13;
-  AuditInfo audit_info = 14;
+  erp.AuditInfo audit_info = 14;
 }
 
 message EmployeeCertificationList {
@@ -286,7 +286,7 @@ message Skill {
   string skill_group_id = 6;
   repeated SkillLevelDefinition levels = 7;
   bool is_active = 8;
-  AuditInfo audit_info = 9;
+  erp.AuditInfo audit_info = 9;
 }
 
 message SkillList {
@@ -327,7 +327,7 @@ message EmployeeSkill {
   bool is_primary_skill = 11;
   bool wants_to_develop = 12;
   string notes = 13;
-  AuditInfo audit_info = 14;
+  erp.AuditInfo audit_info = 14;
 }
 
 message EmployeeSkillList {
@@ -355,7 +355,7 @@ message TrainingRecord {
   string location = 15;
   double hours = 16;
   string notes = 17;
-  AuditInfo audit_info = 18;
+  erp.AuditInfo audit_info = 18;
 }
 
 message TrainingRecordList {

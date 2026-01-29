@@ -19,6 +19,7 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
@@ -74,7 +75,7 @@ func generateTimesheets(store *MockDataStore) []*hcm.Timesheet {
 		timesheets = append(timesheets, &hcm.Timesheet{
 			TimesheetId: fmt.Sprintf("ts-%03d", tsIdx),
 			EmployeeId:  empID,
-			Period: &hcm.DateRange{
+			Period: &erp.DateRange{
 				StartDate: weekStart.Unix(),
 				EndDate:   weekStart.AddDate(0, 0, 6).Unix(),
 			},
@@ -208,7 +209,7 @@ func generatePerformanceReviews(store *MockDataStore) []*hcm.PerformanceReview {
 			ReviewId:   fmt.Sprintf("review-%03d", reviewIdx),
 			EmployeeId: empID,
 			ReviewerId: managerID,
-			ReviewPeriod: &hcm.DateRange{
+			ReviewPeriod: &erp.DateRange{
 				StartDate: time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),
 				EndDate:   time.Date(2024, 12, 31, 0, 0, 0, 0, time.UTC).Unix(),
 			},
@@ -277,7 +278,7 @@ func generateEmployeeCompensation(store *MockDataStore) []*hcm.EmployeeCompensat
 			CompensationId: fmt.Sprintf("comp-%03d", compIdx),
 			EmployeeId:     empID,
 			SalaryGradeId:  store.SalaryGradeIDs[gradeIdx],
-			BaseSalary: &hcm.Money{
+			BaseSalary: &erp.Money{
 				Amount:       int64(baseSalary * 100), // Convert to cents
 				CurrencyCode: "USD",
 			},

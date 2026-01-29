@@ -552,20 +552,21 @@ limitations under the License.
     }
 
     /**
-     * Look up endpoint for a model from HCM.modules config
+     * Look up endpoint for a model from module configs (HCM, FIN, etc.)
      */
     function getEndpointForModel(modelName) {
-        if (typeof HCM === 'undefined' || !HCM.modules) {
-            return null;
-        }
-
-        // Search through all modules and services
-        for (const moduleKey in HCM.modules) {
-            const module = HCM.modules[moduleKey];
-            if (module.services) {
-                for (const service of module.services) {
-                    if (service.model === modelName) {
-                        return service.endpoint;
+        // Search all registered module namespaces
+        const namespaces = ['HCM', 'FIN'];
+        for (const ns of namespaces) {
+            const mod = window[ns];
+            if (!mod || !mod.modules) continue;
+            for (const moduleKey in mod.modules) {
+                const module = mod.modules[moduleKey];
+                if (module.services) {
+                    for (const service of module.services) {
+                        if (service.model === modelName) {
+                            return service.endpoint;
+                        }
                     }
                 }
             }

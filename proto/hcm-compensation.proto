@@ -20,6 +20,7 @@ option go_package = "./types/hcm";
 
 
 import "hcm-common.proto";
+import "erp-common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -35,16 +36,16 @@ message SalaryGrade {
   string grade_code = 4;
   string name = 5;
   int32 level = 6;
-  Money minimum = 7;
-  Money midpoint = 8;
-  Money maximum = 9;
+  erp.Money minimum = 7;
+  erp.Money midpoint = 8;
+  erp.Money maximum = 9;
   double spread_percentage = 10;     // Range width
   string currency_code = 11;
   PayFrequency pay_frequency = 12;
   int64 effective_date = 13;
   int64 end_date = 14;
   bool is_active = 15;
-  AuditInfo audit_info = 16;
+  erp.AuditInfo audit_info = 16;
 }
 
 message SalaryGradeList {
@@ -66,7 +67,7 @@ message SalaryStructure {
   int64 effective_date = 9;
   int64 end_date = 10;
   bool is_active = 11;
-  AuditInfo audit_info = 12;
+  erp.AuditInfo audit_info = 12;
 }
 
 message SalaryStructureList {
@@ -80,19 +81,19 @@ message EmployeeCompensation {
   string compensation_id = 1;
   string employee_id = 2;
   CompensationType compensation_type = 3;
-  Money base_salary = 4;
+  erp.Money base_salary = 4;
   PayFrequency pay_frequency = 5;
   string currency_code = 6;
   string salary_grade_id = 7;
   double compa_ratio = 8;            // Position in range
-  Money hourly_rate = 9;
+  erp.Money hourly_rate = 9;
   double fte = 10;                   // Full-time equivalent
   int64 effective_date = 11;
   int64 end_date = 12;
   string change_reason = 13;
   string approved_by = 14;
   int64 approved_date = 15;
-  AuditInfo audit_info = 16;
+  erp.AuditInfo audit_info = 16;
 }
 
 message EmployeeCompensationList {
@@ -114,11 +115,11 @@ message MeritIncrease {
   string increase_id = 1;
   string employee_id = 2;
   string merit_cycle_id = 3;
-  Money current_salary = 4;
-  Money proposed_increase = 5;
+  erp.Money current_salary = 4;
+  erp.Money proposed_increase = 5;
   double proposed_percentage = 6;
-  Money new_salary = 7;
-  Money budget_amount = 8;
+  erp.Money new_salary = 7;
+  erp.Money budget_amount = 8;
   double compa_ratio_before = 9;
   double compa_ratio_after = 10;
   MeritIncreaseStatus status = 11;
@@ -128,8 +129,8 @@ message MeritIncrease {
   int32 performance_rating = 13;
 
   // Recommendations
-  Money manager_recommended = 14;
-  Money hr_approved = 15;
+  erp.Money manager_recommended = 14;
+  erp.Money hr_approved = 15;
 
   // Effective date
   int64 effective_date = 16;
@@ -141,7 +142,7 @@ message MeritIncrease {
   int64 approved_date = 20;
 
   string notes = 21;
-  AuditInfo audit_info = 22;
+  erp.AuditInfo audit_info = 22;
 }
 
 message MeritIncreaseList {
@@ -170,10 +171,10 @@ message MeritCycle {
   int64 planning_start_date = 6;
   int64 planning_end_date = 7;
   int64 effective_date = 8;
-  Money total_budget = 9;
+  erp.Money total_budget = 9;
   double budget_percentage = 10;
   string notes = 11;
-  AuditInfo audit_info = 12;
+  erp.AuditInfo audit_info = 12;
 }
 
 message MeritCycleList {
@@ -205,8 +206,8 @@ message BonusPlan {
   // Target
   double target_percentage = 9;
   double maximum_percentage = 10;
-  Money target_amount = 11;
-  Money maximum_amount = 12;
+  erp.Money target_amount = 11;
+  erp.Money maximum_amount = 12;
 
   // Funding
   BonusFundingType funding_type = 13;
@@ -222,7 +223,7 @@ message BonusPlan {
   int64 payout_date = 19;
 
   bool is_active = 20;
-  AuditInfo audit_info = 21;
+  erp.AuditInfo audit_info = 21;
 }
 
 message BonusPlanList {
@@ -270,8 +271,8 @@ message BonusPayment {
   string reason = 5;
 
   // Amount
-  Money target_amount = 6;
-  Money actual_amount = 7;
+  erp.Money target_amount = 6;
+  erp.Money actual_amount = 7;
   double payout_percentage = 8;
 
   // Performance factors
@@ -280,7 +281,7 @@ message BonusPayment {
   double company_performance_factor = 11;
 
   // Dates
-  DateRange performance_period = 12;
+  erp.DateRange performance_period = 12;
   int64 award_date = 13;
   int64 payment_date = 14;
 
@@ -294,7 +295,7 @@ message BonusPayment {
   int64 approved_date = 19;
 
   string notes = 20;
-  AuditInfo audit_info = 21;
+  erp.AuditInfo audit_info = 21;
 }
 
 message BonusPaymentList {
@@ -323,9 +324,9 @@ message EquityGrant {
 
   // Grant details
   int64 shares_granted = 6;
-  Money grant_price = 7;             // Strike price for options
-  Money fair_market_value = 8;
-  Money total_value = 9;
+  erp.Money grant_price = 7;             // Strike price for options
+  erp.Money fair_market_value = 8;
+  erp.Money total_value = 9;
 
   // Vesting
   VestingSchedule vesting_schedule = 10;
@@ -349,7 +350,7 @@ message EquityGrant {
 
   string agreement_document_id = 23;
   string notes = 24;
-  AuditInfo audit_info = 25;
+  erp.AuditInfo audit_info = 25;
 }
 
 message EquityGrantList {
@@ -419,39 +420,39 @@ message CompensationStatement {
   int64 as_of_date = 4;
 
   // Base compensation
-  Money base_salary = 5;
-  Money hourly_equivalent = 6;
+  erp.Money base_salary = 5;
+  erp.Money hourly_equivalent = 6;
 
   // Variable pay
-  Money bonus_target = 7;
-  Money bonus_actual = 8;
-  Money commissions = 9;
+  erp.Money bonus_target = 7;
+  erp.Money bonus_actual = 8;
+  erp.Money commissions = 9;
 
   // Equity
-  Money equity_value = 10;
+  erp.Money equity_value = 10;
   int64 equity_shares = 11;
 
   // Benefits
-  Money employer_health_contribution = 12;
-  Money employer_dental_contribution = 13;
-  Money employer_vision_contribution = 14;
-  Money employer_life_contribution = 15;
-  Money employer_disability_contribution = 16;
-  Money employer_retirement_contribution = 17;
-  Money employer_hsa_contribution = 18;
+  erp.Money employer_health_contribution = 12;
+  erp.Money employer_dental_contribution = 13;
+  erp.Money employer_vision_contribution = 14;
+  erp.Money employer_life_contribution = 15;
+  erp.Money employer_disability_contribution = 16;
+  erp.Money employer_retirement_contribution = 17;
+  erp.Money employer_hsa_contribution = 18;
 
   // Other
-  Money employer_payroll_taxes = 19;
-  Money other_benefits_value = 20;
-  Money perks_value = 21;
+  erp.Money employer_payroll_taxes = 19;
+  erp.Money other_benefits_value = 20;
+  erp.Money perks_value = 21;
 
   // Totals
-  Money total_cash_compensation = 22;
-  Money total_benefits_value = 23;
-  Money total_compensation = 24;
+  erp.Money total_cash_compensation = 22;
+  erp.Money total_benefits_value = 23;
+  erp.Money total_compensation = 24;
 
   string pdf_url = 25;
-  AuditInfo audit_info = 26;
+  erp.AuditInfo audit_info = 26;
 }
 
 message CompensationStatementList {
@@ -471,26 +472,26 @@ message MarketBenchmark {
   string market_definition = 7;      // Geographic/industry scope
 
   // Market data
-  Money market_25th = 8;
-  Money market_50th = 9;
-  Money market_75th = 10;
-  Money market_90th = 11;
-  Money market_average = 12;
+  erp.Money market_25th = 8;
+  erp.Money market_50th = 9;
+  erp.Money market_75th = 10;
+  erp.Money market_90th = 11;
+  erp.Money market_average = 12;
 
   // Total compensation data
-  Money total_cash_25th = 13;
-  Money total_cash_50th = 14;
-  Money total_cash_75th = 15;
+  erp.Money total_cash_25th = 13;
+  erp.Money total_cash_50th = 14;
+  erp.Money total_cash_75th = 15;
 
   // Comparison
-  Money internal_average = 16;
+  erp.Money internal_average = 16;
   double market_index = 17;          // Internal vs market ratio
 
   int64 effective_date = 18;
   int64 expiration_date = 19;
 
   string notes = 20;
-  AuditInfo audit_info = 21;
+  erp.AuditInfo audit_info = 21;
 }
 
 message MarketBenchmarkList {

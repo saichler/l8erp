@@ -20,6 +20,7 @@ option go_package = "./types/hcm";
 
 
 import "hcm-common.proto";
+import "erp-common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -47,8 +48,8 @@ message Employee {
   string national_id_type = 14; // Type of national ID
 
   // Contact information
-  repeated Address addresses = 15;
-  repeated ContactInfo contacts = 16;
+  repeated erp.Address addresses = 15;
+  repeated erp.ContactInfo contacts = 16;
   repeated EmergencyContact emergency_contacts = 17;
 
   // Employment information
@@ -75,7 +76,7 @@ message Employee {
   // Custom fields
   map<string, string> custom_fields = 33;
 
-  AuditInfo audit_info = 34;
+  erp.AuditInfo audit_info = 34;
 
   // Reserved for future use
   reserved 35 to 50;
@@ -108,13 +109,13 @@ message Organization {
   string legal_name = 6;
   string tax_id = 7;
   string industry_code = 8;           // NAICS, SIC codes
-  repeated Address addresses = 9;
-  repeated ContactInfo contacts = 10;
+  repeated erp.Address addresses = 9;
+  repeated erp.ContactInfo contacts = 10;
   bool is_active = 11;
   int64 effective_date = 12;
   int64 end_date = 13;
   map<string, string> custom_fields = 14;
-  AuditInfo audit_info = 15;
+  erp.AuditInfo audit_info = 15;
 }
 
 message OrganizationList {
@@ -147,7 +148,7 @@ message Department {
   int64 effective_date = 10;
   int64 end_date = 11;
   map<string, string> custom_fields = 12;
-  AuditInfo audit_info = 13;
+  erp.AuditInfo audit_info = 13;
 }
 
 message DepartmentList {
@@ -176,7 +177,7 @@ message Position {
   int64 effective_date = 16;
   int64 end_date = 17;
   map<string, string> custom_fields = 18;
-  AuditInfo audit_info = 19;
+  erp.AuditInfo audit_info = 19;
 }
 
 message PositionList {
@@ -195,9 +196,9 @@ enum PositionStatus {
 // PayGrade embedded in Position for pay range info
 message PayGrade {
   string grade_code = 1;
-  Money minimum = 2;
-  Money midpoint = 3;
-  Money maximum = 4;
+  erp.Money minimum = 2;
+  erp.Money midpoint = 3;
+  erp.Money maximum = 4;
 }
 
 // @PrimeObject
@@ -223,7 +224,7 @@ message Job {
   int64 effective_date = 18;
   int64 end_date = 19;
   map<string, string> custom_fields = 20;
-  AuditInfo audit_info = 21;
+  erp.AuditInfo audit_info = 21;
 }
 
 message JobList {
@@ -239,7 +240,7 @@ message JobFamily {
   string code = 3;
   string description = 4;
   bool is_active = 5;
-  AuditInfo audit_info = 6;
+  erp.AuditInfo audit_info = 6;
 }
 
 message JobFamilyList {
@@ -264,7 +265,7 @@ message EmployeeDocument {
   string verified_by = 12;
   int64 verified_date = 13;
   map<string, string> custom_fields = 14;
-  AuditInfo audit_info = 15;
+  erp.AuditInfo audit_info = 15;
 }
 
 message EmployeeDocumentList {
@@ -306,7 +307,7 @@ message ComplianceRecord {
   string verified_by = 10;
   int64 verified_date = 11;
   map<string, string> compliance_data = 12;  // Type-specific data
-  AuditInfo audit_info = 13;
+  erp.AuditInfo audit_info = 13;
 }
 
 message ComplianceRecordList {

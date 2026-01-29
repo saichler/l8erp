@@ -1,0 +1,190 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package fin;
+
+option go_package = "./types/fin";
+
+import "fin-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// GENERAL LEDGER MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// Account represents a GL account in the chart of accounts
+message Account {
+  string account_id = 1;
+  string account_number = 2;
+  string name = 3;
+  string description = 4;
+  AccountType account_type = 5;
+  BalanceType normal_balance = 6;
+  string parent_account_id = 7;
+  string currency_id = 8;
+  bool is_active = 9;
+  bool is_header = 10;          // Header/summary account (not postable)
+  int32 level = 11;             // Hierarchy level
+  map<string, string> custom_fields = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message AccountList {
+  repeated Account list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// JournalEntry represents a general journal entry
+message JournalEntry {
+  string journal_entry_id = 1;
+  string entry_number = 2;
+  int64 entry_date = 3;
+  string fiscal_period_id = 4;
+  string description = 5;
+  string source = 6;            // Manual, AP, AR, Payroll, etc.
+  string reference = 7;
+  JournalEntryStatus status = 8;
+  erp.Money total_amount = 9;
+  string posted_by = 10;
+  int64 posted_date = 11;
+  string reversed_by = 12;
+  int64 reversed_date = 13;
+  string reversal_entry_id = 14;
+  string notes = 15;
+  map<string, string> custom_fields = 16;
+  erp.AuditInfo audit_info = 17;
+}
+
+message JournalEntryList {
+  repeated JournalEntry list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// JournalEntryLine represents a single line in a journal entry
+message JournalEntryLine {
+  string line_id = 1;
+  string journal_entry_id = 2;
+  int32 line_number = 3;
+  string account_id = 4;
+  string description = 5;
+  erp.Money debit_amount = 6;
+  erp.Money credit_amount = 7;
+  string cost_center_id = 8;
+  string department_id = 9;
+  string project_id = 10;
+  string reference = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message JournalEntryLineList {
+  repeated JournalEntryLine list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// FiscalYear represents an accounting fiscal year
+message FiscalYear {
+  string fiscal_year_id = 1;
+  string year_name = 2;
+  int64 start_date = 3;
+  int64 end_date = 4;
+  bool is_closed = 5;
+  bool is_active = 6;
+  string notes = 7;
+  erp.AuditInfo audit_info = 8;
+}
+
+message FiscalYearList {
+  repeated FiscalYear list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// FiscalPeriod represents a period within a fiscal year (typically monthly)
+message FiscalPeriod {
+  string fiscal_period_id = 1;
+  string fiscal_year_id = 2;
+  string period_name = 3;
+  int32 period_number = 4;
+  int64 start_date = 5;
+  int64 end_date = 6;
+  FiscalPeriodStatus status = 7;
+  erp.AuditInfo audit_info = 8;
+}
+
+message FiscalPeriodList {
+  repeated FiscalPeriod list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// Currency represents a currency definition
+message Currency {
+  string currency_id = 1;
+  string code = 2;              // ISO 4217 (e.g., USD, EUR)
+  string name = 3;
+  string symbol = 4;            // e.g., $, €, £
+  int32 decimal_places = 5;
+  bool is_active = 6;
+  erp.AuditInfo audit_info = 7;
+}
+
+message CurrencyList {
+  repeated Currency list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// ExchangeRate represents a currency exchange rate
+message ExchangeRate {
+  string exchange_rate_id = 1;
+  string from_currency_id = 2;
+  string to_currency_id = 3;
+  double rate = 4;
+  int64 effective_date = 5;
+  int64 end_date = 6;
+  string source = 7;            // Manual, API feed, etc.
+  erp.AuditInfo audit_info = 8;
+}
+
+message ExchangeRateList {
+  repeated ExchangeRate list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// AccountBalance represents the balance of an account for a fiscal period
+message AccountBalance {
+  string balance_id = 1;
+  string account_id = 2;
+  string fiscal_period_id = 3;
+  erp.Money beginning_balance = 4;
+  erp.Money period_debit = 5;
+  erp.Money period_credit = 6;
+  erp.Money ending_balance = 7;
+  erp.Money ytd_debit = 8;
+  erp.Money ytd_credit = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message AccountBalanceList {
+  repeated AccountBalance list = 1;
+  l8api.L8MetaData metadata = 2;
+}

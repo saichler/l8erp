@@ -20,6 +20,7 @@ option go_package = "./types/hcm";
 
 
 import "hcm-common.proto";
+import "erp-common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -49,8 +50,8 @@ message JobRequisition {
   bool is_remote = 16;
 
   // Compensation
-  Money salary_min = 17;
-  Money salary_max = 18;
+  erp.Money salary_min = 17;
+  erp.Money salary_max = 18;
   string pay_grade_code = 19;
 
   // Recruiting
@@ -72,7 +73,7 @@ message JobRequisition {
 
   string notes = 31;
   map<string, string> custom_fields = 32;
-  AuditInfo audit_info = 33;
+  erp.AuditInfo audit_info = 33;
 }
 
 message JobRequisitionList {
@@ -109,7 +110,7 @@ message Applicant {
   string last_name = 3;
   string email = 4;
   string phone = 5;
-  Address address = 6;
+  erp.Address address = 6;
   string linkedin_url = 7;
   string portfolio_url = 8;
 
@@ -136,7 +137,7 @@ message Applicant {
 
   int64 created_date = 22;
   map<string, string> custom_fields = 23;
-  AuditInfo audit_info = 24;
+  erp.AuditInfo audit_info = 24;
 }
 
 message ApplicantList {
@@ -204,7 +205,7 @@ message Application {
 
   string notes = 14;
   map<string, string> custom_fields = 15;
-  AuditInfo audit_info = 16;
+  erp.AuditInfo audit_info = 16;
 }
 
 message ApplicationList {
@@ -263,7 +264,7 @@ message Interview {
   repeated string interviewer_ids = 8;
   InterviewStatus status = 9;
   repeated InterviewFeedback feedback = 10;
-  AuditInfo audit_info = 11;
+  erp.AuditInfo audit_info = 11;
 }
 
 enum InterviewType {
@@ -316,7 +317,7 @@ message OnboardingTask {
   repeated string document_ids = 14;
   string form_id = 15;               // If task requires a form
   string notes = 16;
-  AuditInfo audit_info = 17;
+  erp.AuditInfo audit_info = 17;
 }
 
 message OnboardingTaskList {
@@ -362,7 +363,7 @@ message PerformanceReview {
   string employee_id = 2;
   string reviewer_id = 3;
   ReviewCycle review_cycle = 4;
-  DateRange review_period = 5;
+  erp.DateRange review_period = 5;
   PerformanceReviewStatus status = 6;
   ReviewType review_type = 7;
 
@@ -392,7 +393,7 @@ message PerformanceReview {
   string calibration_notes = 22;
 
   map<string, string> custom_fields = 23;
-  AuditInfo audit_info = 24;
+  erp.AuditInfo audit_info = 24;
 }
 
 message PerformanceReviewList {
@@ -404,7 +405,7 @@ message ReviewCycle {
   string cycle_id = 1;
   string name = 2;
   int32 year = 3;
-  DateRange period = 4;
+  erp.DateRange period = 4;
 }
 
 enum PerformanceReviewStatus {
@@ -480,7 +481,7 @@ message Goal {
   string review_id = 18;
 
   map<string, string> custom_fields = 19;
-  AuditInfo audit_info = 20;
+  erp.AuditInfo audit_info = 20;
 }
 
 message GoalList {
@@ -554,7 +555,7 @@ message SuccessionPlan {
   int64 review_date = 8;
   int64 next_review_date = 9;
   string notes = 10;
-  AuditInfo audit_info = 11;
+  erp.AuditInfo audit_info = 11;
 }
 
 message SuccessionPlanList {
@@ -604,7 +605,7 @@ message CareerPath {
   string job_family_id = 4;
   repeated CareerPathStep steps = 5;
   bool is_active = 6;
-  AuditInfo audit_info = 7;
+  erp.AuditInfo audit_info = 7;
 }
 
 message CareerPathList {
@@ -643,7 +644,7 @@ message Feedback {
   int64 due_date = 12;
   int64 submitted_date = 13;
 
-  AuditInfo audit_info = 14;
+  erp.AuditInfo audit_info = 14;
 }
 
 message FeedbackList {

@@ -1,0 +1,209 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package fin;
+
+option go_package = "./types/fin";
+
+import "fin-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// ACCOUNTS RECEIVABLE MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// Customer represents a customer entity
+message Customer {
+  string customer_id = 1;
+  string customer_number = 2;
+  string name = 3;
+  string legal_name = 4;
+  string tax_id = 5;
+  CustomerStatus status = 6;
+  string default_account_id = 7;
+  string currency_id = 8;
+  int32 payment_term_days = 9;
+  erp.Money credit_limit = 10;
+  repeated erp.Address addresses = 11;
+  repeated erp.ContactInfo contacts = 12;
+  string website = 13;
+  string notes = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message CustomerList {
+  repeated Customer list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CustomerContact represents a contact person at a customer
+message CustomerContact {
+  string contact_id = 1;
+  string customer_id = 2;
+  string first_name = 3;
+  string last_name = 4;
+  string title = 5;
+  string email = 6;
+  string phone = 7;
+  string fax = 8;
+  bool is_primary = 9;
+  bool is_active = 10;
+  string notes = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message CustomerContactList {
+  repeated CustomerContact list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesInvoice represents a customer invoice
+message SalesInvoice {
+  string invoice_id = 1;
+  string invoice_number = 2;
+  string customer_id = 3;
+  int64 invoice_date = 4;
+  int64 due_date = 5;
+  string currency_id = 6;
+  string fiscal_period_id = 7;
+  InvoiceStatus status = 8;
+  erp.Money subtotal = 9;
+  erp.Money tax_amount = 10;
+  erp.Money total_amount = 11;
+  erp.Money amount_paid = 12;
+  erp.Money balance_due = 13;
+  int32 payment_term_days = 14;
+  string ar_account_id = 15;
+  string sales_order_number = 16;
+  string description = 17;
+  string notes = 18;
+  map<string, string> custom_fields = 19;
+  erp.AuditInfo audit_info = 20;
+}
+
+message SalesInvoiceList {
+  repeated SalesInvoice list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesInvoiceLine represents a line item on a sales invoice
+message SalesInvoiceLine {
+  string line_id = 1;
+  string invoice_id = 2;
+  int32 line_number = 3;
+  string account_id = 4;
+  string description = 5;
+  double quantity = 6;
+  erp.Money unit_price = 7;
+  erp.Money line_amount = 8;
+  string tax_code_id = 9;
+  erp.Money tax_amount = 10;
+  string cost_center_id = 11;
+  string project_id = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message SalesInvoiceLineList {
+  repeated SalesInvoiceLine list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CustomerPayment represents a payment received from a customer
+message CustomerPayment {
+  string payment_id = 1;
+  string customer_id = 2;
+  int64 payment_date = 3;
+  erp.Money amount = 4;
+  PaymentMethod payment_method = 5;
+  PaymentStatus status = 6;
+  string bank_account_id = 7;
+  string check_number = 8;
+  string reference = 9;
+  string notes = 10;
+  map<string, string> custom_fields = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message CustomerPaymentList {
+  repeated CustomerPayment list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PaymentApplication links a customer payment to specific invoices
+message PaymentApplication {
+  string application_id = 1;
+  string payment_id = 2;
+  string invoice_id = 3;
+  erp.Money applied_amount = 4;
+  erp.Money discount_taken = 5;
+  erp.AuditInfo audit_info = 6;
+}
+
+message PaymentApplicationList {
+  repeated PaymentApplication list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CreditMemo represents a credit issued to a customer
+message CreditMemo {
+  string credit_memo_id = 1;
+  string memo_number = 2;
+  string customer_id = 3;
+  string original_invoice_id = 4;
+  int64 memo_date = 5;
+  erp.Money amount = 6;
+  CreditMemoStatus status = 7;
+  string reason = 8;
+  string description = 9;
+  string notes = 10;
+  erp.AuditInfo audit_info = 11;
+}
+
+message CreditMemoList {
+  repeated CreditMemo list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// DunningLetter represents a collection notice sent to a customer
+message DunningLetter {
+  string letter_id = 1;
+  string customer_id = 2;
+  DunningLevel dunning_level = 3;
+  int64 letter_date = 4;
+  int64 due_date = 5;
+  erp.Money total_overdue = 6;
+  int32 days_overdue = 7;
+  repeated string invoice_ids = 8;
+  bool is_sent = 9;
+  int64 sent_date = 10;
+  string notes = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message DunningLetterList {
+  repeated DunningLetter list = 1;
+  l8api.L8MetaData metadata = 2;
+}

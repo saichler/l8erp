@@ -19,6 +19,7 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
@@ -303,9 +304,9 @@ func generateSalaryGrades(store *MockDataStore) []*hcm.SalaryGrade {
 			Name:              fmt.Sprintf("Grade %s", r.level),
 			GradeCode:         r.level,
 			Level:             int32(i + 1),
-			Minimum:           &hcm.Money{Amount: r.min, CurrencyCode: "USD"},
-			Midpoint:          &hcm.Money{Amount: r.mid, CurrencyCode: "USD"},
-			Maximum:           &hcm.Money{Amount: r.max, CurrencyCode: "USD"},
+			Minimum:           &erp.Money{Amount: r.min, CurrencyCode: "USD"},
+			Midpoint:          &erp.Money{Amount: r.mid, CurrencyCode: "USD"},
+			Maximum:           &erp.Money{Amount: r.max, CurrencyCode: "USD"},
 			CurrencyCode:      "USD",
 			PayFrequency:      hcm.PayFrequency_PAY_FREQUENCY_ANNUALLY,
 			IsActive:          true,
