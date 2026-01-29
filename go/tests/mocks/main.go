@@ -30,7 +30,7 @@ func main() {
 	insecure := flag.Bool("insecure", false, "Skip TLS certificate verification")
 	flag.Parse()
 
-	fmt.Printf("HCM Mock Data Generator\n")
+	fmt.Printf("ERP Mock Data Generator\n")
 	fmt.Printf("=======================\n")
 	fmt.Printf("Server: %s\n", *address)
 	fmt.Printf("User: %s\n", *user)
@@ -105,9 +105,73 @@ func main() {
 		os.Exit(1)
 	}
 
+	// FIN Module Phases
+	fmt.Printf("\nFIN Phase 1: Foundation\n")
+	fmt.Printf("-----------------------\n")
+	if err := generateFinPhase1(client, store); err != nil {
+		fmt.Printf("FIN Phase 1 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nFIN Phase 2: Core Financial\n")
+	fmt.Printf("---------------------------\n")
+	if err := generateFinPhase2(client, store); err != nil {
+		fmt.Printf("FIN Phase 2 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nFIN Phase 3: Entity Master\n")
+	fmt.Printf("--------------------------\n")
+	if err := generateFinPhase3(client, store); err != nil {
+		fmt.Printf("FIN Phase 3 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nFIN Phase 4: Configuration\n")
+	fmt.Printf("--------------------------\n")
+	if err := generateFinPhase4(client, store); err != nil {
+		fmt.Printf("FIN Phase 4 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nFIN Phase 5: AP Transactions\n")
+	fmt.Printf("----------------------------\n")
+	if err := generateFinPhase5(client, store); err != nil {
+		fmt.Printf("FIN Phase 5 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nFIN Phase 6: AR Transactions\n")
+	fmt.Printf("----------------------------\n")
+	if err := generateFinPhase6(client, store); err != nil {
+		fmt.Printf("FIN Phase 6 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nFIN Phase 7: GL Transactions\n")
+	fmt.Printf("----------------------------\n")
+	if err := generateFinPhase7(client, store); err != nil {
+		fmt.Printf("FIN Phase 7 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nFIN Phase 8: Cash & Assets\n")
+	fmt.Printf("--------------------------\n")
+	if err := generateFinPhase8(client, store); err != nil {
+		fmt.Printf("FIN Phase 8 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nFIN Phase 9: Tax Filing\n")
+	fmt.Printf("-----------------------\n")
+	if err := generateFinPhase9(client, store); err != nil {
+		fmt.Printf("FIN Phase 9 failed: %v\n", err)
+		os.Exit(1)
+	}
+
 	fmt.Printf("\n=======================\n")
 	fmt.Printf("Mock data generation complete!\n")
-	fmt.Printf("Summary:\n")
+	fmt.Printf("\nHCM Summary:\n")
 	fmt.Printf("  - Job Families: %d\n", len(store.JobFamilyIDs))
 	fmt.Printf("  - Organizations: %d\n", len(store.OrganizationIDs))
 	fmt.Printf("  - Departments: %d\n", len(store.DepartmentIDs))
@@ -118,4 +182,17 @@ func main() {
 	fmt.Printf("  - Payslips: %d\n", len(store.PayslipIDs))
 	fmt.Printf("  - Job Requisitions: %d\n", len(store.JobRequisitionIDs))
 	fmt.Printf("  - Applicants: %d\n", len(store.ApplicantIDs))
+	fmt.Printf("\nFIN Summary:\n")
+	fmt.Printf("  - Currencies: %d\n", len(store.CurrencyIDs))
+	fmt.Printf("  - Fiscal Years: %d\n", len(store.FiscalYearIDs))
+	fmt.Printf("  - Accounts: %d\n", len(store.AccountIDs))
+	fmt.Printf("  - Vendors: %d\n", len(store.VendorIDs))
+	fmt.Printf("  - Customers: %d\n", len(store.CustomerIDs))
+	fmt.Printf("  - Bank Accounts: %d\n", len(store.BankAccountIDs))
+	fmt.Printf("  - Budgets: %d\n", len(store.BudgetIDs))
+	fmt.Printf("  - Purchase Invoices: %d\n", len(store.PurchaseInvoiceIDs))
+	fmt.Printf("  - Sales Invoices: %d\n", len(store.SalesInvoiceIDs))
+	fmt.Printf("  - Journal Entries: %d\n", len(store.JournalEntryIDs))
+	fmt.Printf("  - Assets: %d\n", len(store.AssetIDs))
+	fmt.Printf("  - Tax Returns: %d\n", len(store.TaxReturnIDs))
 }

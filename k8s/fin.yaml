@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: erp-fin
+  labels:
+    name: erp-fin
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: erp-fin
+  name: erp-fin
+  labels:
+    app: erp-fin
+spec:
+  serviceName: erp-fin
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erp-fin
+  template:
+    metadata:
+      labels:
+        app: erp-fin
+    spec:
+      containers:
+        - name: erp-fin
+          image: saichler/erp-fin:latest
+          imagePullPolicy: Always
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
