@@ -28,8 +28,8 @@ import (
 )
 
 const (
-	ServiceName = "FiscalYear"
-	ServiceArea = byte(103)
+	ServiceName = "FiscalYr"
+	ServiceArea = byte(40)
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {

@@ -28,8 +28,8 @@ import (
 )
 
 const (
-	ServiceName = "AssetDisposal"
-	ServiceArea = byte(143)
+	ServiceName = "AstDisp"
+	ServiceArea = byte(40)
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {

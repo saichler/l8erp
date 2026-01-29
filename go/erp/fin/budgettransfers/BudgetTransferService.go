@@ -28,8 +28,8 @@ import (
 )
 
 const (
-	ServiceName = "BudgetTransfer"
-	ServiceArea = byte(152)
+	ServiceName = "BdgtXfer"
+	ServiceArea = byte(40)
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {

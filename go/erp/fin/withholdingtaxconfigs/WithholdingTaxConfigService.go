@@ -28,8 +28,8 @@ import (
 )
 
 const (
-	ServiceName = "WithholdingTaxConfig"
-	ServiceArea = byte(165)
+	ServiceName = "WhtTxCfg"
+	ServiceArea = byte(40)
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {

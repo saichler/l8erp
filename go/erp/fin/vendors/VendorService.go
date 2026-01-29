@@ -29,7 +29,7 @@ import (
 
 const (
 	ServiceName = "Vendor"
-	ServiceArea = byte(110)
+	ServiceArea = byte(40)
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {

@@ -17,6 +17,7 @@ package main
 
 import (
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"strconv"
 
@@ -205,4 +206,120 @@ func registerTypes(resources ifs.IResources) {
 	resources.Registry().Register(&hcm.CompensationStatementList{})
 	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&hcm.MarketBenchmark{}, "BenchmarkId")
 	resources.Registry().Register(&hcm.MarketBenchmarkList{})
+
+	registerFinTypes(resources)
+}
+
+func registerFinTypes(resources ifs.IResources) {
+	// General Ledger
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.Account{}, "AccountId")
+	resources.Registry().Register(&fin.AccountList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.JournalEntry{}, "JournalEntryId")
+	resources.Registry().Register(&fin.JournalEntryList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.JournalEntryLine{}, "LineId")
+	resources.Registry().Register(&fin.JournalEntryLineList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.FiscalYear{}, "FiscalYearId")
+	resources.Registry().Register(&fin.FiscalYearList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.FiscalPeriod{}, "FiscalPeriodId")
+	resources.Registry().Register(&fin.FiscalPeriodList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.Currency{}, "CurrencyId")
+	resources.Registry().Register(&fin.CurrencyList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.ExchangeRate{}, "ExchangeRateId")
+	resources.Registry().Register(&fin.ExchangeRateList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.AccountBalance{}, "BalanceId")
+	resources.Registry().Register(&fin.AccountBalanceList{})
+
+	// Accounts Payable
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.Vendor{}, "VendorId")
+	resources.Registry().Register(&fin.VendorList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.VendorContact{}, "ContactId")
+	resources.Registry().Register(&fin.VendorContactList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.PurchaseInvoice{}, "InvoiceId")
+	resources.Registry().Register(&fin.PurchaseInvoiceList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.PurchaseInvoiceLine{}, "LineId")
+	resources.Registry().Register(&fin.PurchaseInvoiceLineList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.PaymentSchedule{}, "ScheduleId")
+	resources.Registry().Register(&fin.PaymentScheduleList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.VendorPayment{}, "PaymentId")
+	resources.Registry().Register(&fin.VendorPaymentList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.PaymentAllocation{}, "AllocationId")
+	resources.Registry().Register(&fin.PaymentAllocationList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.VendorStatement{}, "StatementId")
+	resources.Registry().Register(&fin.VendorStatementList{})
+
+	// Accounts Receivable
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.Customer{}, "CustomerId")
+	resources.Registry().Register(&fin.CustomerList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.CustomerContact{}, "ContactId")
+	resources.Registry().Register(&fin.CustomerContactList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.SalesInvoice{}, "InvoiceId")
+	resources.Registry().Register(&fin.SalesInvoiceList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.SalesInvoiceLine{}, "LineId")
+	resources.Registry().Register(&fin.SalesInvoiceLineList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.CustomerPayment{}, "PaymentId")
+	resources.Registry().Register(&fin.CustomerPaymentList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.PaymentApplication{}, "ApplicationId")
+	resources.Registry().Register(&fin.PaymentApplicationList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.CreditMemo{}, "CreditMemoId")
+	resources.Registry().Register(&fin.CreditMemoList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.DunningLetter{}, "LetterId")
+	resources.Registry().Register(&fin.DunningLetterList{})
+
+	// Cash Management
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.BankAccount{}, "BankAccountId")
+	resources.Registry().Register(&fin.BankAccountList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.BankTransaction{}, "TransactionId")
+	resources.Registry().Register(&fin.BankTransactionList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.BankReconciliation{}, "ReconciliationId")
+	resources.Registry().Register(&fin.BankReconciliationList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.CashForecast{}, "ForecastId")
+	resources.Registry().Register(&fin.CashForecastList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.FundTransfer{}, "TransferId")
+	resources.Registry().Register(&fin.FundTransferList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.PettyCash{}, "PettyCashId")
+	resources.Registry().Register(&fin.PettyCashList{})
+
+	// Fixed Assets
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.Asset{}, "AssetId")
+	resources.Registry().Register(&fin.AssetList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.AssetCategory{}, "CategoryId")
+	resources.Registry().Register(&fin.AssetCategoryList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.DepreciationSchedule{}, "ScheduleId")
+	resources.Registry().Register(&fin.DepreciationScheduleList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.AssetDisposal{}, "DisposalId")
+	resources.Registry().Register(&fin.AssetDisposalList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.AssetTransfer{}, "TransferId")
+	resources.Registry().Register(&fin.AssetTransferList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.AssetMaintenance{}, "MaintenanceId")
+	resources.Registry().Register(&fin.AssetMaintenanceList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.AssetRevaluation{}, "RevaluationId")
+	resources.Registry().Register(&fin.AssetRevaluationList{})
+
+	// Budgeting
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.Budget{}, "BudgetId")
+	resources.Registry().Register(&fin.BudgetList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.BudgetLine{}, "LineId")
+	resources.Registry().Register(&fin.BudgetLineList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.BudgetTransfer{}, "TransferId")
+	resources.Registry().Register(&fin.BudgetTransferList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.BudgetScenario{}, "ScenarioId")
+	resources.Registry().Register(&fin.BudgetScenarioList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.CapitalExpenditure{}, "CapexId")
+	resources.Registry().Register(&fin.CapitalExpenditureList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.Forecast{}, "ForecastId")
+	resources.Registry().Register(&fin.ForecastList{})
+
+	// Tax
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.TaxCode{}, "TaxCodeId")
+	resources.Registry().Register(&fin.TaxCodeList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.TaxJurisdiction{}, "JurisdictionId")
+	resources.Registry().Register(&fin.TaxJurisdictionList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.TaxRule{}, "RuleId")
+	resources.Registry().Register(&fin.TaxRuleList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.TaxReturn{}, "ReturnId")
+	resources.Registry().Register(&fin.TaxReturnList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.TaxExemption{}, "ExemptionId")
+	resources.Registry().Register(&fin.TaxExemptionList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.WithholdingTaxConfig{}, "ConfigId")
+	resources.Registry().Register(&fin.WithholdingTaxConfigList{})
 }

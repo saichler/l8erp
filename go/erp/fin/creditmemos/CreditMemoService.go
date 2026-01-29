@@ -28,8 +28,8 @@ import (
 )
 
 const (
-	ServiceName = "CreditMemo"
-	ServiceArea = byte(126)
+	ServiceName = "CrdtMemo"
+	ServiceArea = byte(40)
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {

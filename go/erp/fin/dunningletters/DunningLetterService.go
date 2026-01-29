@@ -28,8 +28,8 @@ import (
 )
 
 const (
-	ServiceName = "DunningLetter"
-	ServiceArea = byte(127)
+	ServiceName = "DunLtr"
+	ServiceArea = byte(40)
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {

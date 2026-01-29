@@ -28,8 +28,8 @@ import (
 )
 
 const (
-	ServiceName = "ExchangeRate"
-	ServiceArea = byte(106)
+	ServiceName = "XchgRate"
+	ServiceArea = byte(40)
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {

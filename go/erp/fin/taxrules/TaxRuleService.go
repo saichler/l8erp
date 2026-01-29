@@ -29,7 +29,7 @@ import (
 
 const (
 	ServiceName = "TaxRule"
-	ServiceArea = byte(162)
+	ServiceArea = byte(40)
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {

@@ -28,8 +28,8 @@ import (
 )
 
 const (
-	ServiceName = "TaxExemption"
-	ServiceArea = byte(164)
+	ServiceName = "TaxExmpt"
+	ServiceArea = byte(40)
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
