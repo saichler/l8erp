@@ -215,12 +215,13 @@ limitations under the License.
     <script src="edit_table/table-events.js"></script>
     <script src="edit_table/table-filter.js"></script>
     <script src="edit_table/table.js"></script>
-    <!-- HCM Module (load in order) -->
+    <!-- Shared Module Abstractions -->
+    <script src="shared/erp-service-registry.js"></script>
+    <script src="shared/erp-module-crud.js"></script>
+    <script src="shared/erp-module-navigation.js"></script>
+    <script src="shared/erp-module-factory.js"></script>
+    <!-- HCM Module -->
     <script src="hcm/hcm-config.js"></script>
-    <script src="hcm/hcm-navigation.js"></script>
-    <script src="hcm/hcm-service.js"></script>
-    <script src="hcm/hcm-crud.js"></script>
-    <script src="hcm/hcm-forms.js"></script>
     <script src="hcm/core-hr/core-hr-enums.js"></script>
     <script src="hcm/core-hr/core-hr-columns.js"></script>
     <script src="hcm/core-hr/core-hr-forms.js"></script>
@@ -247,13 +248,9 @@ limitations under the License.
     <script src="hcm/compensation/compensation-columns.js"></script>
     <script src="hcm/compensation/compensation-forms.js"></script>
     <script src="hcm/compensation/compensation.js"></script>
-    <script src="hcm/hcm.js"></script>
-    <!-- FIN Module (load in order) -->
+    <script src="hcm/hcm-init.js"></script>
+    <!-- FIN Module -->
     <script src="fin/fin-config.js"></script>
-    <script src="fin/fin-navigation.js"></script>
-    <script src="fin/fin-service.js"></script>
-    <script src="fin/fin-crud.js"></script>
-    <script src="fin/fin-forms.js"></script>
     <script src="fin/general-ledger/general-ledger-enums.js"></script>
     <script src="fin/general-ledger/general-ledger-columns.js"></script>
     <script src="fin/general-ledger/general-ledger-forms.js"></script>
@@ -282,13 +279,9 @@ limitations under the License.
     <script src="fin/tax/tax-columns.js"></script>
     <script src="fin/tax/tax-forms.js"></script>
     <script src="fin/tax/tax.js"></script>
-    <script src="fin/fin.js"></script>
-    <!-- SCM Module (load in order) -->
+    <script src="fin/fin-init.js"></script>
+    <!-- SCM Module -->
     <script src="scm/scm-config.js"></script>
-    <script src="scm/scm-navigation.js"></script>
-    <script src="scm/scm-service.js"></script>
-    <script src="scm/scm-crud.js"></script>
-    <script src="scm/scm-forms.js"></script>
     <script src="scm/procurement/procurement-enums.js"></script>
     <script src="scm/procurement/procurement-columns.js"></script>
     <script src="scm/procurement/procurement-forms.js"></script>
@@ -313,6 +306,6 @@ limitations under the License.
     <script src="scm/supply-planning/supply-planning-columns.js"></script>
     <script src="scm/supply-planning/supply-planning-forms.js"></script>
     <script src="scm/supply-planning/supply-planning.js"></script>
-    <script src="scm/scm.js"></script>
+    <script src="scm/scm-init.js"></script>
 </body>
 </html>

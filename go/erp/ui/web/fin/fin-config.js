@@ -116,6 +116,9 @@ limitations under the License.
         }
     };
 
+    // Sub-module namespaces for service registry
+    FIN.submodules = ['GeneralLedger', 'AccountsPayable', 'AccountsReceivable', 'CashManagement', 'FixedAssets', 'Budgeting', 'TaxManagement'];
+
     // Render status badge (uses shared erp-status-* classes)
     FIN.renderStatus = function(status) {
         const statusMap = {

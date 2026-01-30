@@ -124,6 +124,9 @@ limitations under the License.
         }
     };
 
+    // Sub-module namespaces for service registry
+    HCM.submodules = ['CoreHR', 'Payroll', 'Benefits', 'Time', 'Talent', 'Learning', 'Compensation'];
+
     // Render status badge (uses shared erp-status-* classes)
     HCM.renderStatus = function(status) {
         const statusMap = {
