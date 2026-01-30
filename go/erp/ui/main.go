@@ -19,6 +19,7 @@ import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/hcm"
+	"github.com/saichler/l8erp/go/types/scm"
 	"strconv"
 
 	"github.com/saichler/l8bus/go/overlay/health"
@@ -208,6 +209,7 @@ func registerTypes(resources ifs.IResources) {
 	resources.Registry().Register(&hcm.MarketBenchmarkList{})
 
 	registerFinTypes(resources)
+	registerScmTypes(resources)
 }
 
 func registerFinTypes(resources ifs.IResources) {
@@ -322,4 +324,106 @@ func registerFinTypes(resources ifs.IResources) {
 	resources.Registry().Register(&fin.TaxExemptionList{})
 	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&fin.WithholdingTaxConfig{}, "ConfigId")
 	resources.Registry().Register(&fin.WithholdingTaxConfigList{})
+}
+
+func registerScmTypes(resources ifs.IResources) {
+	// Procurement
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.PurchaseRequisition{}, "RequisitionId")
+	resources.Registry().Register(&scm.PurchaseRequisitionList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.RequisitionLine{}, "LineId")
+	resources.Registry().Register(&scm.RequisitionLineList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.RequestForQuotation{}, "RfqId")
+	resources.Registry().Register(&scm.RequestForQuotationList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.PurchaseOrder{}, "PurchaseOrderId")
+	resources.Registry().Register(&scm.PurchaseOrderList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.PurchaseOrderLine{}, "LineId")
+	resources.Registry().Register(&scm.PurchaseOrderLineList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.BlanketOrder{}, "BlanketOrderId")
+	resources.Registry().Register(&scm.BlanketOrderList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.SupplierScorecard{}, "ScorecardId")
+	resources.Registry().Register(&scm.SupplierScorecardList{})
+
+	// Inventory Management
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.Item{}, "ItemId")
+	resources.Registry().Register(&scm.ItemList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.ItemCategory{}, "CategoryId")
+	resources.Registry().Register(&scm.ItemCategoryList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.StockMovement{}, "MovementId")
+	resources.Registry().Register(&scm.StockMovementList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.LotNumber{}, "LotId")
+	resources.Registry().Register(&scm.LotNumberList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.SerialNumber{}, "SerialId")
+	resources.Registry().Register(&scm.SerialNumberList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.CycleCount{}, "CycleCountId")
+	resources.Registry().Register(&scm.CycleCountList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.ReorderPoint{}, "ReorderPointId")
+	resources.Registry().Register(&scm.ReorderPointList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.InventoryValuation{}, "ValuationId")
+	resources.Registry().Register(&scm.InventoryValuationList{})
+
+	// Warehouse Management
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.Warehouse{}, "WarehouseId")
+	resources.Registry().Register(&scm.WarehouseList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.Bin{}, "BinId")
+	resources.Registry().Register(&scm.BinList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.ReceivingOrder{}, "ReceivingOrderId")
+	resources.Registry().Register(&scm.ReceivingOrderList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.PutawayTask{}, "TaskId")
+	resources.Registry().Register(&scm.PutawayTaskList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.PickTask{}, "TaskId")
+	resources.Registry().Register(&scm.PickTaskList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.PackTask{}, "TaskId")
+	resources.Registry().Register(&scm.PackTaskList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.ShipTask{}, "TaskId")
+	resources.Registry().Register(&scm.ShipTaskList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.WavePlan{}, "WavePlanId")
+	resources.Registry().Register(&scm.WavePlanList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.DockSchedule{}, "ScheduleId")
+	resources.Registry().Register(&scm.DockScheduleList{})
+
+	// Logistics and Transportation
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.Carrier{}, "CarrierId")
+	resources.Registry().Register(&scm.CarrierList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.FreightRate{}, "RateId")
+	resources.Registry().Register(&scm.FreightRateList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.Shipment{}, "ShipmentId")
+	resources.Registry().Register(&scm.ShipmentList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.Route{}, "RouteId")
+	resources.Registry().Register(&scm.RouteList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.LoadPlan{}, "LoadPlanId")
+	resources.Registry().Register(&scm.LoadPlanList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.DeliveryProof{}, "ProofId")
+	resources.Registry().Register(&scm.DeliveryProofList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.FreightAudit{}, "AuditId")
+	resources.Registry().Register(&scm.FreightAuditList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.ReturnAuthorization{}, "RmaId")
+	resources.Registry().Register(&scm.ReturnAuthorizationList{})
+
+	// Demand Planning
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.DemandForecast{}, "ForecastId")
+	resources.Registry().Register(&scm.DemandForecastList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.ForecastModel{}, "ModelId")
+	resources.Registry().Register(&scm.ForecastModelList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.DemandPlan{}, "PlanId")
+	resources.Registry().Register(&scm.DemandPlanList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.PromotionalPlan{}, "PlanId")
+	resources.Registry().Register(&scm.PromotionalPlanList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.NewProductPlan{}, "PlanId")
+	resources.Registry().Register(&scm.NewProductPlanList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.ForecastAccuracy{}, "AccuracyId")
+	resources.Registry().Register(&scm.ForecastAccuracyList{})
+
+	// Supply Planning
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.MaterialRequirement{}, "RequirementId")
+	resources.Registry().Register(&scm.MaterialRequirementList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.DistributionRequirement{}, "RequirementId")
+	resources.Registry().Register(&scm.DistributionRequirementList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.SupplyPlan{}, "PlanId")
+	resources.Registry().Register(&scm.SupplyPlanList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.SupplierCollaboration{}, "CollaborationId")
+	resources.Registry().Register(&scm.SupplierCollaborationList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.SafetyStock{}, "SafetyStockId")
+	resources.Registry().Register(&scm.SafetyStockList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&scm.LeadTime{}, "LeadTimeId")
+	resources.Registry().Register(&scm.LeadTimeList{})
 }
