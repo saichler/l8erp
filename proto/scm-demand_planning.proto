@@ -1,0 +1,145 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package scm;
+
+option go_package = "./types/scm";
+
+import "scm-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// DEMAND PLANNING MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// DemandForecast represents a demand forecast for an item
+message DemandForecast {
+  string forecast_id = 1;
+  string item_id = 2;
+  int64 period_start = 3;
+  int64 period_end = 4;
+  double forecast_quantity = 5;
+  double actual_quantity = 6;
+  ForecastMethod forecast_method = 7;
+  double confidence_level = 8;
+  string notes = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message DemandForecastList {
+  repeated DemandForecast list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// ForecastModel represents a forecasting model configuration
+message ForecastModel {
+  string model_id = 1;
+  string name = 2;
+  string description = 3;
+  ForecastMethod forecast_method = 4;
+  map<string, string> parameters = 5;
+  bool is_active = 6;
+  double accuracy_score = 7;
+  erp.AuditInfo audit_info = 8;
+}
+
+message ForecastModelList {
+  repeated ForecastModel list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// DemandPlan represents an overall demand plan
+message DemandPlan {
+  string plan_id = 1;
+  string name = 2;
+  string description = 3;
+  erp.DateRange plan_period = 4;
+  TaskStatus status = 5;
+  string created_by = 6;
+  string approved_by = 7;
+  string notes = 8;
+  map<string, string> custom_fields = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message DemandPlanList {
+  repeated DemandPlan list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PromotionalPlan represents a promotional demand plan
+message PromotionalPlan {
+  string plan_id = 1;
+  string name = 2;
+  string description = 3;
+  int64 start_date = 4;
+  int64 end_date = 5;
+  double expected_uplift = 6;
+  repeated string item_ids = 7;
+  TaskStatus status = 8;
+  string notes = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message PromotionalPlanList {
+  repeated PromotionalPlan list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// NewProductPlan represents a demand plan for a new product launch
+message NewProductPlan {
+  string plan_id = 1;
+  string name = 2;
+  string item_id = 3;
+  int64 launch_date = 4;
+  int32 ramp_up_period = 5;
+  double initial_forecast = 6;
+  string comparable_item_id = 7;
+  TaskStatus status = 8;
+  string notes = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message NewProductPlanList {
+  repeated NewProductPlan list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// ForecastAccuracy represents forecast accuracy metrics for a period
+message ForecastAccuracy {
+  string accuracy_id = 1;
+  string forecast_id = 2;
+  string item_id = 3;
+  erp.DateRange period = 4;
+  double forecast_quantity = 5;
+  double actual_quantity = 6;
+  double mape = 7;                   // Mean Absolute Percentage Error
+  double bias = 8;
+  string notes = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message ForecastAccuracyList {
+  repeated ForecastAccuracy list = 1;
+  l8api.L8MetaData metadata = 2;
+}

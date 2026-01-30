@@ -12,14 +12,258 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<div class="section-container">
-    <h2 class="section-title">Supply Chain Management</h2>
+<div class="section-container hcm-section">
+    <!-- Header with Parallax Effect -->
+    <div class="hcm-header-frame parallax-container">
+        <!-- Background Illustration Layer -->
+        <div class="hcm-header-bg parallax-layer" data-speed="0.5">
+            <svg class="hcm-illustration" viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="scmGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:0.4" />
+                        <stop offset="100%" style="stop-color:#0284c7;stop-opacity:0.2" />
+                    </linearGradient>
+                </defs>
+
+                <!-- Network Grid Background -->
+                <g opacity="0.1">
+                    <line x1="0" y1="30" x2="1200" y2="30" stroke="#0ea5e9" stroke-width="0.5"/>
+                    <line x1="0" y1="60" x2="1200" y2="60" stroke="#0ea5e9" stroke-width="0.5"/>
+                    <line x1="0" y1="90" x2="1200" y2="90" stroke="#0ea5e9" stroke-width="0.5"/>
+                    <line x1="200" y1="0" x2="200" y2="120" stroke="#0ea5e9" stroke-width="0.5"/>
+                    <line x1="400" y1="0" x2="400" y2="120" stroke="#0ea5e9" stroke-width="0.5"/>
+                    <line x1="600" y1="0" x2="600" y2="120" stroke="#0ea5e9" stroke-width="0.5"/>
+                    <line x1="800" y1="0" x2="800" y2="120" stroke="#0ea5e9" stroke-width="0.5"/>
+                    <line x1="1000" y1="0" x2="1000" y2="120" stroke="#0ea5e9" stroke-width="0.5"/>
+                </g>
+
+                <!-- Supply Chain Icons -->
+                <g class="people-animation">
+                    <!-- Warehouse Icon -->
+                    <rect x="180" y="45" width="40" height="30" rx="2" fill="url(#scmGradient1)" opacity="0.6"/>
+                    <polygon points="180,45 200,30 220,45" fill="url(#scmGradient1)" opacity="0.5"/>
+
+                    <!-- Package Boxes -->
+                    <rect x="385" y="50" width="15" height="15" rx="2" fill="url(#scmGradient1)" opacity="0.5"/>
+                    <rect x="395" y="40" width="15" height="15" rx="2" fill="url(#scmGradient1)" opacity="0.6"/>
+                    <rect x="405" y="55" width="15" height="15" rx="2" fill="url(#scmGradient1)" opacity="0.5"/>
+
+                    <!-- Truck Icon -->
+                    <rect x="575" y="50" width="30" height="20" rx="2" fill="url(#scmGradient1)" opacity="0.6"/>
+                    <rect x="605" y="55" width="15" height="15" rx="2" fill="url(#scmGradient1)" opacity="0.7"/>
+                    <circle cx="585" cy="73" r="4" fill="#0ea5e9" opacity="0.6"/>
+                    <circle cx="612" cy="73" r="4" fill="#0ea5e9" opacity="0.6"/>
+
+                    <!-- Chain Links -->
+                    <circle cx="800" cy="55" r="10" fill="none" stroke="url(#scmGradient1)" stroke-width="3" opacity="0.5"/>
+                    <circle cx="820" cy="55" r="10" fill="none" stroke="url(#scmGradient1)" stroke-width="3" opacity="0.5"/>
+
+                    <!-- Globe/Distribution -->
+                    <circle cx="1000" cy="60" r="16" fill="url(#scmGradient1)" opacity="0.6"/>
+                    <ellipse cx="1000" cy="60" rx="16" ry="8" fill="none" stroke="#fff" stroke-width="1" opacity="0.4"/>
+                    <line x1="1000" y1="44" x2="1000" y2="76" stroke="#fff" stroke-width="1" opacity="0.4"/>
+                </g>
+
+                <!-- Connection Lines -->
+                <path d="M 220,60 Q 300,40 385,55" fill="none" stroke="#0ea5e9" stroke-width="1" opacity="0.3"/>
+                <path d="M 420,55 Q 500,70 575,55" fill="none" stroke="#0ea5e9" stroke-width="1" opacity="0.3"/>
+                <path d="M 620,60 Q 700,45 790,55" fill="none" stroke="#0ea5e9" stroke-width="1" opacity="0.3"/>
+                <path d="M 830,55 Q 900,75 984,60" fill="none" stroke="#0ea5e9" stroke-width="1" opacity="0.3"/>
+
+                <!-- Animated Dots -->
+                <circle cx="300" cy="50" r="3" fill="#0ea5e9" opacity="0.8">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="700" cy="55" r="3" fill="#0ea5e9" opacity="0.8">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+
+        <!-- Header Content Layer -->
+        <div class="hcm-header-content parallax-layer" data-speed="1">
+            <div class="hcm-header-title">
+                <div class="hcm-icon">🔗</div>
+                <div>
+                    <h1 class="hcm-title">Supply Chain Management</h1>
+                    <p class="hcm-subtitle">Procurement, Inventory, Warehouse, Logistics, Demand & Supply Planning</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module Tabs -->
+    <div class="hcm-module-tabs">
+        <button class="hcm-module-tab active" data-module="procurement">
+            <span class="tab-icon">📦</span>
+            <span class="tab-label">Procurement</span>
+        </button>
+        <button class="hcm-module-tab" data-module="inventory">
+            <span class="tab-icon">📦</span>
+            <span class="tab-label">Inventory</span>
+        </button>
+        <button class="hcm-module-tab" data-module="warehouse">
+            <span class="tab-icon">🏭</span>
+            <span class="tab-label">Warehouse</span>
+        </button>
+        <button class="hcm-module-tab" data-module="logistics">
+            <span class="tab-icon">🚚</span>
+            <span class="tab-label">Logistics</span>
+        </button>
+        <button class="hcm-module-tab" data-module="demand-planning">
+            <span class="tab-icon">📈</span>
+            <span class="tab-label">Demand Planning</span>
+        </button>
+        <button class="hcm-module-tab" data-module="supply-planning">
+            <span class="tab-icon">🔗</span>
+            <span class="tab-label">Supply Planning</span>
+        </button>
+    </div>
+
     <div class="section-content">
-        <p class="section-description">Procurement, Inventory Management, Warehouse Management, Logistics & Transportation</p>
-        <div style="padding: 40px; text-align: center; color: #718096;">
-            <p style="font-size: 48px; margin-bottom: 20px;">🔗</p>
-            <p>This module is under development.</p>
-            <p style="margin-top: 10px; font-size: 12px;">End-to-end supply chain visibility including purchasing, inventory control, warehouse operations, and logistics management.</p>
+        <!-- Procurement Module -->
+        <div class="hcm-module-content active" data-module="procurement">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="purchase-requisitions"><span class="subnav-icon">📋</span><span class="subnav-label">Requisitions</span></a>
+                <a class="hcm-subnav-item" data-service="requisition-lines"><span class="subnav-icon">📝</span><span class="subnav-label">Requisition Lines</span></a>
+                <a class="hcm-subnav-item" data-service="rfqs"><span class="subnav-icon">📨</span><span class="subnav-label">RFQs</span></a>
+                <a class="hcm-subnav-item" data-service="purchase-orders"><span class="subnav-icon">📄</span><span class="subnav-label">Purchase Orders</span></a>
+                <a class="hcm-subnav-item" data-service="po-lines"><span class="subnav-icon">📋</span><span class="subnav-label">PO Lines</span></a>
+                <a class="hcm-subnav-item" data-service="blanket-orders"><span class="subnav-icon">📑</span><span class="subnav-label">Blanket Orders</span></a>
+                <a class="hcm-subnav-item" data-service="supplier-scorecards"><span class="subnav-icon">⭐</span><span class="subnav-label">Scorecards</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="purchase-requisitions"><div class="hcm-table-container" id="procurement-purchase-requisitions-table-container"></div></div>
+                <div class="hcm-service-view" data-service="requisition-lines"><div class="hcm-table-container" id="procurement-requisition-lines-table-container"></div></div>
+                <div class="hcm-service-view" data-service="rfqs"><div class="hcm-table-container" id="procurement-rfqs-table-container"></div></div>
+                <div class="hcm-service-view" data-service="purchase-orders"><div class="hcm-table-container" id="procurement-purchase-orders-table-container"></div></div>
+                <div class="hcm-service-view" data-service="po-lines"><div class="hcm-table-container" id="procurement-po-lines-table-container"></div></div>
+                <div class="hcm-service-view" data-service="blanket-orders"><div class="hcm-table-container" id="procurement-blanket-orders-table-container"></div></div>
+                <div class="hcm-service-view" data-service="supplier-scorecards"><div class="hcm-table-container" id="procurement-supplier-scorecards-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Inventory Module -->
+        <div class="hcm-module-content" data-module="inventory">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="items"><span class="subnav-icon">📦</span><span class="subnav-label">Items</span></a>
+                <a class="hcm-subnav-item" data-service="item-categories"><span class="subnav-icon">📁</span><span class="subnav-label">Categories</span></a>
+                <a class="hcm-subnav-item" data-service="stock-movements"><span class="subnav-icon">🔄</span><span class="subnav-label">Stock Movements</span></a>
+                <a class="hcm-subnav-item" data-service="lot-numbers"><span class="subnav-icon">🏷️</span><span class="subnav-label">Lot Numbers</span></a>
+                <a class="hcm-subnav-item" data-service="serial-numbers"><span class="subnav-icon">🔢</span><span class="subnav-label">Serial Numbers</span></a>
+                <a class="hcm-subnav-item" data-service="cycle-counts"><span class="subnav-icon">🔄</span><span class="subnav-label">Cycle Counts</span></a>
+                <a class="hcm-subnav-item" data-service="reorder-points"><span class="subnav-icon">📊</span><span class="subnav-label">Reorder Points</span></a>
+                <a class="hcm-subnav-item" data-service="inventory-valuations"><span class="subnav-icon">💰</span><span class="subnav-label">Valuations</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="items"><div class="hcm-table-container" id="inventory-items-table-container"></div></div>
+                <div class="hcm-service-view" data-service="item-categories"><div class="hcm-table-container" id="inventory-item-categories-table-container"></div></div>
+                <div class="hcm-service-view" data-service="stock-movements"><div class="hcm-table-container" id="inventory-stock-movements-table-container"></div></div>
+                <div class="hcm-service-view" data-service="lot-numbers"><div class="hcm-table-container" id="inventory-lot-numbers-table-container"></div></div>
+                <div class="hcm-service-view" data-service="serial-numbers"><div class="hcm-table-container" id="inventory-serial-numbers-table-container"></div></div>
+                <div class="hcm-service-view" data-service="cycle-counts"><div class="hcm-table-container" id="inventory-cycle-counts-table-container"></div></div>
+                <div class="hcm-service-view" data-service="reorder-points"><div class="hcm-table-container" id="inventory-reorder-points-table-container"></div></div>
+                <div class="hcm-service-view" data-service="inventory-valuations"><div class="hcm-table-container" id="inventory-inventory-valuations-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Warehouse Module -->
+        <div class="hcm-module-content" data-module="warehouse">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="warehouses"><span class="subnav-icon">🏭</span><span class="subnav-label">Warehouses</span></a>
+                <a class="hcm-subnav-item" data-service="bins"><span class="subnav-icon">📍</span><span class="subnav-label">Bins</span></a>
+                <a class="hcm-subnav-item" data-service="receiving-orders"><span class="subnav-icon">📥</span><span class="subnav-label">Receiving</span></a>
+                <a class="hcm-subnav-item" data-service="putaway-tasks"><span class="subnav-icon">📤</span><span class="subnav-label">Put Away</span></a>
+                <a class="hcm-subnav-item" data-service="pick-tasks"><span class="subnav-icon">🔍</span><span class="subnav-label">Pick Tasks</span></a>
+                <a class="hcm-subnav-item" data-service="pack-tasks"><span class="subnav-icon">📦</span><span class="subnav-label">Pack Tasks</span></a>
+                <a class="hcm-subnav-item" data-service="ship-tasks"><span class="subnav-icon">🚚</span><span class="subnav-label">Ship Tasks</span></a>
+                <a class="hcm-subnav-item" data-service="wave-plans"><span class="subnav-icon">🌊</span><span class="subnav-label">Wave Plans</span></a>
+                <a class="hcm-subnav-item" data-service="dock-schedules"><span class="subnav-icon">🚢</span><span class="subnav-label">Dock Schedules</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="warehouses"><div class="hcm-table-container" id="warehouse-warehouses-table-container"></div></div>
+                <div class="hcm-service-view" data-service="bins"><div class="hcm-table-container" id="warehouse-bins-table-container"></div></div>
+                <div class="hcm-service-view" data-service="receiving-orders"><div class="hcm-table-container" id="warehouse-receiving-orders-table-container"></div></div>
+                <div class="hcm-service-view" data-service="putaway-tasks"><div class="hcm-table-container" id="warehouse-putaway-tasks-table-container"></div></div>
+                <div class="hcm-service-view" data-service="pick-tasks"><div class="hcm-table-container" id="warehouse-pick-tasks-table-container"></div></div>
+                <div class="hcm-service-view" data-service="pack-tasks"><div class="hcm-table-container" id="warehouse-pack-tasks-table-container"></div></div>
+                <div class="hcm-service-view" data-service="ship-tasks"><div class="hcm-table-container" id="warehouse-ship-tasks-table-container"></div></div>
+                <div class="hcm-service-view" data-service="wave-plans"><div class="hcm-table-container" id="warehouse-wave-plans-table-container"></div></div>
+                <div class="hcm-service-view" data-service="dock-schedules"><div class="hcm-table-container" id="warehouse-dock-schedules-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Logistics Module -->
+        <div class="hcm-module-content" data-module="logistics">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="carriers"><span class="subnav-icon">🚚</span><span class="subnav-label">Carriers</span></a>
+                <a class="hcm-subnav-item" data-service="freight-rates"><span class="subnav-icon">💲</span><span class="subnav-label">Freight Rates</span></a>
+                <a class="hcm-subnav-item" data-service="shipments"><span class="subnav-icon">📦</span><span class="subnav-label">Shipments</span></a>
+                <a class="hcm-subnav-item" data-service="routes"><span class="subnav-icon">🗺️</span><span class="subnav-label">Routes</span></a>
+                <a class="hcm-subnav-item" data-service="load-plans"><span class="subnav-icon">📋</span><span class="subnav-label">Load Plans</span></a>
+                <a class="hcm-subnav-item" data-service="delivery-proofs"><span class="subnav-icon">✅</span><span class="subnav-label">Delivery Proofs</span></a>
+                <a class="hcm-subnav-item" data-service="freight-audits"><span class="subnav-icon">🔍</span><span class="subnav-label">Freight Audits</span></a>
+                <a class="hcm-subnav-item" data-service="return-authorizations"><span class="subnav-icon">↩️</span><span class="subnav-label">Returns</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="carriers"><div class="hcm-table-container" id="logistics-carriers-table-container"></div></div>
+                <div class="hcm-service-view" data-service="freight-rates"><div class="hcm-table-container" id="logistics-freight-rates-table-container"></div></div>
+                <div class="hcm-service-view" data-service="shipments"><div class="hcm-table-container" id="logistics-shipments-table-container"></div></div>
+                <div class="hcm-service-view" data-service="routes"><div class="hcm-table-container" id="logistics-routes-table-container"></div></div>
+                <div class="hcm-service-view" data-service="load-plans"><div class="hcm-table-container" id="logistics-load-plans-table-container"></div></div>
+                <div class="hcm-service-view" data-service="delivery-proofs"><div class="hcm-table-container" id="logistics-delivery-proofs-table-container"></div></div>
+                <div class="hcm-service-view" data-service="freight-audits"><div class="hcm-table-container" id="logistics-freight-audits-table-container"></div></div>
+                <div class="hcm-service-view" data-service="return-authorizations"><div class="hcm-table-container" id="logistics-return-authorizations-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Demand Planning Module -->
+        <div class="hcm-module-content" data-module="demand-planning">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="demand-forecasts"><span class="subnav-icon">📊</span><span class="subnav-label">Forecasts</span></a>
+                <a class="hcm-subnav-item" data-service="forecast-models"><span class="subnav-icon">🧮</span><span class="subnav-label">Models</span></a>
+                <a class="hcm-subnav-item" data-service="demand-plans"><span class="subnav-icon">📋</span><span class="subnav-label">Demand Plans</span></a>
+                <a class="hcm-subnav-item" data-service="promo-plans"><span class="subnav-icon">🎯</span><span class="subnav-label">Promotions</span></a>
+                <a class="hcm-subnav-item" data-service="new-product-plans"><span class="subnav-icon">🆕</span><span class="subnav-label">New Products</span></a>
+                <a class="hcm-subnav-item" data-service="forecast-accuracies"><span class="subnav-icon">🎯</span><span class="subnav-label">Accuracy</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="demand-forecasts"><div class="hcm-table-container" id="demand-planning-demand-forecasts-table-container"></div></div>
+                <div class="hcm-service-view" data-service="forecast-models"><div class="hcm-table-container" id="demand-planning-forecast-models-table-container"></div></div>
+                <div class="hcm-service-view" data-service="demand-plans"><div class="hcm-table-container" id="demand-planning-demand-plans-table-container"></div></div>
+                <div class="hcm-service-view" data-service="promo-plans"><div class="hcm-table-container" id="demand-planning-promo-plans-table-container"></div></div>
+                <div class="hcm-service-view" data-service="new-product-plans"><div class="hcm-table-container" id="demand-planning-new-product-plans-table-container"></div></div>
+                <div class="hcm-service-view" data-service="forecast-accuracies"><div class="hcm-table-container" id="demand-planning-forecast-accuracies-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Supply Planning Module -->
+        <div class="hcm-module-content" data-module="supply-planning">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="material-requirements"><span class="subnav-icon">📋</span><span class="subnav-label">Material Reqs</span></a>
+                <a class="hcm-subnav-item" data-service="distribution-requirements"><span class="subnav-icon">🔄</span><span class="subnav-label">Distribution Reqs</span></a>
+                <a class="hcm-subnav-item" data-service="supply-plans"><span class="subnav-icon">📊</span><span class="subnav-label">Supply Plans</span></a>
+                <a class="hcm-subnav-item" data-service="supplier-collaborations"><span class="subnav-icon">🤝</span><span class="subnav-label">Collaborations</span></a>
+                <a class="hcm-subnav-item" data-service="safety-stocks"><span class="subnav-icon">🛡️</span><span class="subnav-label">Safety Stock</span></a>
+                <a class="hcm-subnav-item" data-service="lead-times"><span class="subnav-icon">⏱️</span><span class="subnav-label">Lead Times</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="material-requirements"><div class="hcm-table-container" id="supply-planning-material-requirements-table-container"></div></div>
+                <div class="hcm-service-view" data-service="distribution-requirements"><div class="hcm-table-container" id="supply-planning-distribution-requirements-table-container"></div></div>
+                <div class="hcm-service-view" data-service="supply-plans"><div class="hcm-table-container" id="supply-planning-supply-plans-table-container"></div></div>
+                <div class="hcm-service-view" data-service="supplier-collaborations"><div class="hcm-table-container" id="supply-planning-supplier-collaborations-table-container"></div></div>
+                <div class="hcm-service-view" data-service="safety-stocks"><div class="hcm-table-container" id="supply-planning-safety-stocks-table-container"></div></div>
+                <div class="hcm-service-view" data-service="lead-times"><div class="hcm-table-container" id="supply-planning-lead-times-table-container"></div></div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Initialize SCM when section loads
+    if (typeof initializeSCM === 'function') {
+        initializeSCM();
+    } else if (typeof SCM !== 'undefined' && SCM.initialize) {
+        SCM.initialize();
+    }
+</script>

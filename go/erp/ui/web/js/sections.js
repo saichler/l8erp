@@ -42,6 +42,11 @@ const sectionInitializers = {
         if (typeof initializeFIN === 'function') {
             initializeFIN();
         }
+    },
+    scm: () => {
+        if (typeof initializeSCM === 'function') {
+            initializeSCM();
+        }
     }
 };
 

@@ -1,0 +1,198 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package scm;
+
+option go_package = "./types/scm";
+
+import "scm-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// LOGISTICS MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// Carrier represents a shipping carrier or freight provider
+message Carrier {
+  string carrier_id = 1;
+  string code = 2;
+  string name = 3;
+  CarrierType carrier_type = 4;
+  erp.ContactInfo contact_info = 5;
+  bool is_active = 6;
+  double rating = 7;
+  string notes = 8;
+  map<string, string> custom_fields = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message CarrierList {
+  repeated Carrier list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// FreightRate represents a shipping rate for a carrier and route
+message FreightRate {
+  string rate_id = 1;
+  string carrier_id = 2;
+  string origin = 3;
+  string destination = 4;
+  erp.Money rate_per_unit = 5;
+  string unit_type = 6;
+  int64 effective_date = 7;
+  int64 expiry_date = 8;
+  double min_weight = 9;
+  double max_weight = 10;
+  string notes = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message FreightRateList {
+  repeated FreightRate list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// Shipment represents a shipment of goods
+message Shipment {
+  string shipment_id = 1;
+  string shipment_number = 2;
+  string carrier_id = 3;
+  string origin_warehouse_id = 4;
+  erp.Address destination_address = 5;
+  string customer_id = 6;           // Cross-ref: FIN Customer
+  int64 ship_date = 7;
+  int64 expected_delivery = 8;
+  int64 actual_delivery = 9;
+  ShipmentStatus status = 10;
+  string tracking_number = 11;
+  double total_weight = 12;
+  erp.Money freight_cost = 13;
+  string notes = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message ShipmentList {
+  repeated Shipment list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// Route represents a shipping route
+message Route {
+  string route_id = 1;
+  string name = 2;
+  string description = 3;
+  string origin = 4;
+  string destination = 5;
+  double distance = 6;
+  int32 estimated_time = 7;
+  string carrier_id = 8;
+  bool is_active = 9;
+  string notes = 10;
+  erp.AuditInfo audit_info = 11;
+}
+
+message RouteList {
+  repeated Route list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// LoadPlan represents a load planning for a shipment
+message LoadPlan {
+  string load_plan_id = 1;
+  string shipment_id = 2;
+  string vehicle_id = 3;
+  double total_weight = 4;
+  double total_volume = 5;
+  double max_weight = 6;
+  double max_volume = 7;
+  TaskStatus status = 8;
+  int64 planned_date = 9;
+  string notes = 10;
+  erp.AuditInfo audit_info = 11;
+}
+
+message LoadPlanList {
+  repeated LoadPlan list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// DeliveryProof represents proof of delivery for a shipment
+message DeliveryProof {
+  string proof_id = 1;
+  string shipment_id = 2;
+  int64 delivery_date = 3;
+  string received_by = 4;
+  string signature = 5;
+  string photo_url = 6;
+  string notes = 7;
+  string status = 8;
+  erp.AuditInfo audit_info = 9;
+}
+
+message DeliveryProofList {
+  repeated DeliveryProof list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// FreightAudit represents an audit of freight charges
+message FreightAudit {
+  string audit_id = 1;
+  string shipment_id = 2;
+  string carrier_id = 3;
+  erp.Money invoiced_amount = 4;
+  erp.Money actual_amount = 5;
+  erp.Money variance = 6;
+  int64 audit_date = 7;
+  string status = 8;
+  string notes = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message FreightAuditList {
+  repeated FreightAudit list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// ReturnAuthorization represents a return merchandise authorization (RMA)
+message ReturnAuthorization {
+  string rma_id = 1;
+  string rma_number = 2;
+  string customer_id = 3;           // Cross-ref: FIN Customer
+  string original_shipment_id = 4;
+  string reason = 5;
+  RequisitionStatus status = 6;
+  int64 return_date = 7;
+  string items_description = 8;
+  erp.Money refund_amount = 9;
+  string notes = 10;
+  map<string, string> custom_fields = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message ReturnAuthorizationList {
+  repeated ReturnAuthorization list = 1;
+  l8api.L8MetaData metadata = 2;
+}

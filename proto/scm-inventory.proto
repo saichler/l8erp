@@ -1,0 +1,194 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package scm;
+
+option go_package = "./types/scm";
+
+import "scm-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// INVENTORY MANAGEMENT MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// Item represents an inventory item or product
+message Item {
+  string item_id = 1;
+  string item_number = 2;
+  string name = 3;
+  string description = 4;
+  ItemType item_type = 5;
+  string category_id = 6;
+  string unit_of_measure = 7;
+  erp.Money unit_cost = 8;
+  erp.Money unit_price = 9;
+  ValuationMethod valuation_method = 10;
+  PlanningMethod planning_method = 11;
+  bool is_lot_tracked = 12;
+  bool is_serial_tracked = 13;
+  int32 shelf_life = 14;
+  string default_warehouse_id = 15;
+  bool is_active = 16;
+  map<string, string> custom_fields = 17;
+  erp.AuditInfo audit_info = 18;
+}
+
+message ItemList {
+  repeated Item list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// ItemCategory represents a category for grouping items
+message ItemCategory {
+  string category_id = 1;
+  string name = 2;
+  string description = 3;
+  string parent_category_id = 4;
+  bool is_active = 5;
+  erp.AuditInfo audit_info = 6;
+}
+
+message ItemCategoryList {
+  repeated ItemCategory list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// StockMovement represents inventory movement in or out of a warehouse
+message StockMovement {
+  string movement_id = 1;
+  string item_id = 2;
+  string warehouse_id = 3;
+  string bin_id = 4;
+  MovementType movement_type = 5;
+  double quantity = 6;
+  string unit_of_measure = 7;
+  string reference_id = 8;
+  string reference_type = 9;
+  int64 movement_date = 10;
+  string lot_id = 11;
+  string serial_id = 12;
+  erp.Money cost = 13;
+  string notes = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message StockMovementList {
+  repeated StockMovement list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// LotNumber represents a lot/batch number for lot-tracked items
+message LotNumber {
+  string lot_id = 1;
+  string lot_number = 2;
+  string item_id = 3;
+  int64 manufacture_date = 4;
+  int64 expiry_date = 5;
+  double quantity = 6;
+  string warehouse_id = 7;
+  string status = 8;
+  string notes = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message LotNumberList {
+  repeated LotNumber list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SerialNumber represents a serial number for serial-tracked items
+message SerialNumber {
+  string serial_id = 1;
+  string serial_number = 2;
+  string item_id = 3;
+  string lot_id = 4;
+  string warehouse_id = 5;
+  string bin_id = 6;
+  string status = 7;
+  string notes = 8;
+  erp.AuditInfo audit_info = 9;
+}
+
+message SerialNumberList {
+  repeated SerialNumber list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CycleCount represents an inventory cycle count
+message CycleCount {
+  string cycle_count_id = 1;
+  string warehouse_id = 2;
+  int64 count_date = 3;
+  TaskStatus status = 4;
+  string counter_id = 5;
+  int32 items_counted = 6;
+  int32 discrepancies = 7;
+  string notes = 8;
+  erp.AuditInfo audit_info = 9;
+}
+
+message CycleCountList {
+  repeated CycleCount list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// ReorderPoint represents reorder settings for an item at a warehouse
+message ReorderPoint {
+  string reorder_point_id = 1;
+  string item_id = 2;
+  string warehouse_id = 3;
+  double minimum_quantity = 4;
+  double maximum_quantity = 5;
+  double reorder_quantity = 6;
+  int32 lead_time_days = 7;
+  double safety_stock_quantity = 8;
+  bool is_active = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message ReorderPointList {
+  repeated ReorderPoint list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// InventoryValuation represents the valuation of inventory at a point in time
+message InventoryValuation {
+  string valuation_id = 1;
+  string item_id = 2;
+  string warehouse_id = 3;
+  int64 valuation_date = 4;
+  double quantity_on_hand = 5;
+  erp.Money unit_cost = 6;
+  erp.Money total_value = 7;
+  ValuationMethod valuation_method = 8;
+  string account_id = 9;            // Cross-ref: FIN Account
+  erp.AuditInfo audit_info = 10;
+}
+
+message InventoryValuationList {
+  repeated InventoryValuation list = 1;
+  l8api.L8MetaData metadata = 2;
+}

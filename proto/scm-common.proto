@@ -1,0 +1,160 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package scm;
+
+option go_package = "./types/scm";
+
+import "erp-common.proto";
+
+// ============================================================================
+// SCM-SPECIFIC COMMON TYPES AND ENUMS
+// ============================================================================
+
+// --- Procurement Enums ---
+
+enum RequisitionStatus {
+  REQUISITION_STATUS_UNSPECIFIED = 0;
+  REQUISITION_STATUS_DRAFT = 1;
+  REQUISITION_STATUS_SUBMITTED = 2;
+  REQUISITION_STATUS_APPROVED = 3;
+  REQUISITION_STATUS_REJECTED = 4;
+  REQUISITION_STATUS_FULFILLED = 5;
+  REQUISITION_STATUS_CANCELLED = 6;
+}
+
+enum PurchaseOrderStatus {
+  PO_STATUS_UNSPECIFIED = 0;
+  PO_STATUS_DRAFT = 1;
+  PO_STATUS_APPROVED = 2;
+  PO_STATUS_SENT = 3;
+  PO_STATUS_PARTIALLY_RECEIVED = 4;
+  PO_STATUS_RECEIVED = 5;
+  PO_STATUS_CLOSED = 6;
+  PO_STATUS_CANCELLED = 7;
+}
+
+// --- Inventory Enums ---
+
+enum MovementType {
+  MOVEMENT_TYPE_UNSPECIFIED = 0;
+  MOVEMENT_TYPE_RECEIPT = 1;
+  MOVEMENT_TYPE_ISSUE = 2;
+  MOVEMENT_TYPE_TRANSFER = 3;
+  MOVEMENT_TYPE_ADJUSTMENT = 4;
+  MOVEMENT_TYPE_RETURN = 5;
+  MOVEMENT_TYPE_SCRAP = 6;
+}
+
+enum ItemType {
+  ITEM_TYPE_UNSPECIFIED = 0;
+  ITEM_TYPE_RAW_MATERIAL = 1;
+  ITEM_TYPE_FINISHED_GOOD = 2;
+  ITEM_TYPE_SEMI_FINISHED = 3;
+  ITEM_TYPE_MRO = 4;
+  ITEM_TYPE_SERVICE = 5;
+  ITEM_TYPE_CONSUMABLE = 6;
+}
+
+enum ValuationMethod {
+  VALUATION_METHOD_UNSPECIFIED = 0;
+  VALUATION_METHOD_FIFO = 1;
+  VALUATION_METHOD_LIFO = 2;
+  VALUATION_METHOD_WEIGHTED_AVG = 3;
+  VALUATION_METHOD_STANDARD = 4;
+}
+
+// --- Logistics Enums ---
+
+enum ShipmentStatus {
+  SHIPMENT_STATUS_UNSPECIFIED = 0;
+  SHIPMENT_STATUS_PLANNED = 1;
+  SHIPMENT_STATUS_PICKED_UP = 2;
+  SHIPMENT_STATUS_IN_TRANSIT = 3;
+  SHIPMENT_STATUS_DELIVERED = 4;
+  SHIPMENT_STATUS_FAILED = 5;
+  SHIPMENT_STATUS_RETURNED = 6;
+}
+
+// --- Task and Warehouse Enums ---
+
+enum TaskStatus {
+  TASK_STATUS_UNSPECIFIED = 0;
+  TASK_STATUS_PENDING = 1;
+  TASK_STATUS_IN_PROGRESS = 2;
+  TASK_STATUS_COMPLETED = 3;
+  TASK_STATUS_CANCELLED = 4;
+}
+
+enum WarehouseType {
+  WAREHOUSE_TYPE_UNSPECIFIED = 0;
+  WAREHOUSE_TYPE_STANDARD = 1;
+  WAREHOUSE_TYPE_COLD_STORAGE = 2;
+  WAREHOUSE_TYPE_HAZMAT = 3;
+  WAREHOUSE_TYPE_BONDED = 4;
+  WAREHOUSE_TYPE_CROSS_DOCK = 5;
+}
+
+enum BinType {
+  BIN_TYPE_UNSPECIFIED = 0;
+  BIN_TYPE_STORAGE = 1;
+  BIN_TYPE_PICKING = 2;
+  BIN_TYPE_RECEIVING = 3;
+  BIN_TYPE_SHIPPING = 4;
+  BIN_TYPE_STAGING = 5;
+  BIN_TYPE_QUARANTINE = 6;
+}
+
+enum CarrierType {
+  CARRIER_TYPE_UNSPECIFIED = 0;
+  CARRIER_TYPE_PARCEL = 1;
+  CARRIER_TYPE_LTL = 2;
+  CARRIER_TYPE_FTL = 3;
+  CARRIER_TYPE_AIR = 4;
+  CARRIER_TYPE_OCEAN = 5;
+  CARRIER_TYPE_RAIL = 6;
+  CARRIER_TYPE_COURIER = 7;
+}
+
+// --- Planning Enums ---
+
+enum PlanningMethod {
+  PLANNING_METHOD_UNSPECIFIED = 0;
+  PLANNING_METHOD_MRP = 1;
+  PLANNING_METHOD_REORDER_POINT = 2;
+  PLANNING_METHOD_MIN_MAX = 3;
+  PLANNING_METHOD_KANBAN = 4;
+}
+
+enum ForecastMethod {
+  FORECAST_METHOD_UNSPECIFIED = 0;
+  FORECAST_METHOD_MOVING_AVG = 1;
+  FORECAST_METHOD_EXPONENTIAL = 2;
+  FORECAST_METHOD_REGRESSION = 3;
+  FORECAST_METHOD_SEASONAL = 4;
+  FORECAST_METHOD_MANUAL = 5;
+}
+
+// --- Common Messages ---
+
+// UnitOfMeasure represents a unit of measure for items
+message UnitOfMeasure {
+  string uom_id = 1;
+  string code = 2;
+  string name = 3;
+  string category = 4;
+  double conversion_factor = 5;
+}
