@@ -295,7 +295,238 @@ limitations under the License.
         }
 
         // ========================================
-        // Future: Financial, SCM, Manufacturing models
+        // SCM - Procurement Models
+        // ========================================
+        PurchaseRequisition: {
+            idColumn: 'requisitionId',
+            displayColumn: 'requisitionNumber',
+            selectColumns: ['requisitionId', 'requisitionNumber'],
+            displayLabel: 'Requisition'
+        },
+        RequisitionLine: {
+            idColumn: 'lineId',
+            displayColumn: 'lineId'
+        },
+        RequestForQuotation: {
+            idColumn: 'rfqId',
+            displayColumn: 'rfqNumber',
+            selectColumns: ['rfqId', 'rfqNumber'],
+            displayLabel: 'RFQ'
+        },
+        PurchaseOrder: {
+            idColumn: 'purchaseOrderId',
+            displayColumn: 'orderNumber',
+            selectColumns: ['purchaseOrderId', 'orderNumber'],
+            displayLabel: 'Purchase Order'
+        },
+        PurchaseOrderLine: {
+            idColumn: 'lineId',
+            displayColumn: 'lineId'
+        },
+        BlanketOrder: {
+            idColumn: 'blanketOrderId',
+            displayColumn: 'orderNumber',
+            selectColumns: ['blanketOrderId', 'orderNumber'],
+            displayLabel: 'Blanket Order'
+        },
+        SupplierScorecard: {
+            idColumn: 'scorecardId',
+            displayColumn: 'scorecardId'
+        },
+
+        // ========================================
+        // SCM - Inventory Models
+        // ========================================
+        Item: {
+            idColumn: 'itemId',
+            displayColumn: 'name',
+            selectColumns: ['itemId', 'itemNumber', 'name'],
+            displayFormat: function(item) {
+                return item.itemNumber + ' - ' + item.name;
+            },
+            displayLabel: 'Item'
+        },
+        ItemCategory: {
+            idColumn: 'categoryId',
+            displayColumn: 'categoryName'
+        },
+        StockMovement: {
+            idColumn: 'movementId',
+            displayColumn: 'movementId'
+        },
+        LotNumber: {
+            idColumn: 'lotId',
+            displayColumn: 'lotNumber'
+        },
+        SerialNumber: {
+            idColumn: 'serialId',
+            displayColumn: 'serialNumber'
+        },
+        CycleCount: {
+            idColumn: 'cycleCountId',
+            displayColumn: 'cycleCountId'
+        },
+        ReorderPoint: {
+            idColumn: 'reorderPointId',
+            displayColumn: 'reorderPointId'
+        },
+        InventoryValuation: {
+            idColumn: 'valuationId',
+            displayColumn: 'valuationId'
+        },
+
+        // ========================================
+        // SCM - Warehouse Management Models
+        // ========================================
+        Warehouse: {
+            idColumn: 'warehouseId',
+            displayColumn: 'name',
+            selectColumns: ['warehouseId', 'warehouseCode', 'name'],
+            displayFormat: function(item) {
+                return item.warehouseCode + ' - ' + item.name;
+            },
+            displayLabel: 'Warehouse'
+        },
+        Bin: {
+            idColumn: 'binId',
+            displayColumn: 'binCode'
+        },
+        ReceivingOrder: {
+            idColumn: 'receivingOrderId',
+            displayColumn: 'orderNumber'
+        },
+        PutawayTask: {
+            idColumn: 'taskId',
+            displayColumn: 'taskId'
+        },
+        PickTask: {
+            idColumn: 'taskId',
+            displayColumn: 'taskId'
+        },
+        PackTask: {
+            idColumn: 'taskId',
+            displayColumn: 'taskId'
+        },
+        ShipTask: {
+            idColumn: 'taskId',
+            displayColumn: 'taskId'
+        },
+        WavePlan: {
+            idColumn: 'wavePlanId',
+            displayColumn: 'waveName'
+        },
+        DockSchedule: {
+            idColumn: 'scheduleId',
+            displayColumn: 'scheduleId'
+        },
+
+        // ========================================
+        // SCM - Logistics Models
+        // ========================================
+        Carrier: {
+            idColumn: 'carrierId',
+            displayColumn: 'name',
+            selectColumns: ['carrierId', 'carrierCode', 'name'],
+            displayFormat: function(item) {
+                return item.carrierCode + ' - ' + item.name;
+            },
+            displayLabel: 'Carrier'
+        },
+        FreightRate: {
+            idColumn: 'rateId',
+            displayColumn: 'rateId'
+        },
+        Shipment: {
+            idColumn: 'shipmentId',
+            displayColumn: 'shipmentNumber',
+            selectColumns: ['shipmentId', 'shipmentNumber'],
+            displayLabel: 'Shipment'
+        },
+        Route: {
+            idColumn: 'routeId',
+            displayColumn: 'routeName'
+        },
+        LoadPlan: {
+            idColumn: 'loadPlanId',
+            displayColumn: 'planName'
+        },
+        DeliveryProof: {
+            idColumn: 'proofId',
+            displayColumn: 'proofId'
+        },
+        FreightAudit: {
+            idColumn: 'auditId',
+            displayColumn: 'auditId'
+        },
+        ReturnAuthorization: {
+            idColumn: 'rmaId',
+            displayColumn: 'rmaNumber',
+            selectColumns: ['rmaId', 'rmaNumber'],
+            displayLabel: 'RMA'
+        },
+
+        // ========================================
+        // SCM - Demand Planning Models
+        // ========================================
+        DemandForecast: {
+            idColumn: 'forecastId',
+            displayColumn: 'forecastName',
+            selectColumns: ['forecastId', 'forecastName'],
+            displayLabel: 'Forecast'
+        },
+        ForecastModel: {
+            idColumn: 'modelId',
+            displayColumn: 'modelName'
+        },
+        DemandPlan: {
+            idColumn: 'planId',
+            displayColumn: 'planName'
+        },
+        PromotionalPlan: {
+            idColumn: 'planId',
+            displayColumn: 'planName'
+        },
+        NewProductPlan: {
+            idColumn: 'planId',
+            displayColumn: 'productName'
+        },
+        ForecastAccuracy: {
+            idColumn: 'accuracyId',
+            displayColumn: 'accuracyId'
+        },
+
+        // ========================================
+        // SCM - Supply Planning Models
+        // ========================================
+        MaterialRequirement: {
+            idColumn: 'requirementId',
+            displayColumn: 'requirementId'
+        },
+        DistributionRequirement: {
+            idColumn: 'requirementId',
+            displayColumn: 'requirementId'
+        },
+        SupplyPlan: {
+            idColumn: 'planId',
+            displayColumn: 'planName',
+            selectColumns: ['planId', 'planName'],
+            displayLabel: 'Supply Plan'
+        },
+        SupplierCollaboration: {
+            idColumn: 'collaborationId',
+            displayColumn: 'collaborationId'
+        },
+        SafetyStock: {
+            idColumn: 'safetyStockId',
+            displayColumn: 'safetyStockId'
+        },
+        LeadTime: {
+            idColumn: 'leadTimeId',
+            displayColumn: 'leadTimeId'
+        }
+
+        // ========================================
+        // Future: Financial, Manufacturing models
         // ========================================
     };
 

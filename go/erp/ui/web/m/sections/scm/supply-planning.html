@@ -1,0 +1,253 @@
+<!--
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<div class="section-container" id="supply-planning-section">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Supply Planning</h1>
+            <p class="page-subtitle">Material requirements, distribution, supply plans, and lead times</p>
+        </div>
+    </div>
+
+    <!-- Service Tabs -->
+    <div class="section-tabs">
+        <button class="section-tab active" data-service="material-requirements">Material Reqs</button>
+        <button class="section-tab" data-service="distribution-requirements">Distribution</button>
+        <button class="section-tab" data-service="supply-plans">Plans</button>
+        <button class="section-tab" data-service="supplier-collaborations">Collaboration</button>
+        <button class="section-tab" data-service="safety-stocks">Safety Stock</button>
+        <button class="section-tab" data-service="lead-times">Lead Times</button>
+    </div>
+
+    <!-- Table Container -->
+    <div id="supply-planning-table"></div>
+</div>
+
+<script>
+let supplyPlanningTable = null;
+let currentSupplyPlanningService = 'material-requirements';
+
+const SUPPLY_PLANNING_SERVICES = {
+    'material-requirements': {
+        endpoint: '/erp/50/MatReq',
+        modelName: 'MaterialRequirement',
+        idField: 'requirementId',
+        columns: [
+            { key: 'requirementId', label: 'ID', primary: true },
+            { key: 'itemId', label: 'Item', secondary: true },
+            { key: 'requiredQuantity', label: 'Required Qty' },
+            { key: 'requiredDate', label: 'Required Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'planningMethod', label: 'Method', formatter: (v) => ({ 0: 'Unspecified', 1: 'MRP', 2: 'DRP', 3: 'Kanban', 4: 'Min-Max', 5: 'Reorder Point' }[v] || '-') },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add Material Requirement',
+        formFields: [
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'requiredQuantity', label: 'Required Quantity', type: 'number', required: true },
+            { key: 'requiredDate', label: 'Required Date', type: 'date', required: true },
+            { key: 'planningMethod', label: 'Planning Method', type: 'select', options: { 0: 'Unspecified', 1: 'MRP', 2: 'DRP', 3: 'Kanban', 4: 'Min-Max', 5: 'Reorder Point' } },
+            { key: 'sourceOrderId', label: 'Source Order', type: 'text' },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'distribution-requirements': {
+        endpoint: '/erp/50/DistReq',
+        modelName: 'DistributionRequirement',
+        idField: 'requirementId',
+        columns: [
+            { key: 'requirementId', label: 'ID', primary: true },
+            { key: 'itemId', label: 'Item', secondary: true },
+            { key: 'sourceWarehouseId', label: 'Source' },
+            { key: 'targetWarehouseId', label: 'Target' },
+            { key: 'requiredQuantity', label: 'Required Qty' },
+            { key: 'requiredDate', label: 'Required Date', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'Add Distribution Requirement',
+        formFields: [
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'sourceWarehouseId', label: 'Source Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
+            { key: 'targetWarehouseId', label: 'Target Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
+            { key: 'requiredQuantity', label: 'Required Quantity', type: 'number', required: true },
+            { key: 'requiredDate', label: 'Required Date', type: 'date', required: true },
+            { key: 'priority', label: 'Priority', type: 'text' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'supply-plans': {
+        endpoint: '/erp/50/SupplyPlan',
+        modelName: 'SupplyPlan',
+        idField: 'planId',
+        columns: [
+            { key: 'planId', label: 'ID', primary: true },
+            { key: 'planName', label: 'Plan', secondary: true, filterKey: 'planName' },
+            { key: 'startDate', label: 'Start', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'endDate', label: 'End', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'planningMethod', label: 'Method', formatter: (v) => ({ 0: 'Unspecified', 1: 'MRP', 2: 'DRP', 3: 'Kanban', 4: 'Min-Max', 5: 'Reorder Point' }[v] || '-') },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add Supply Plan',
+        formFields: [
+            { key: 'planName', label: 'Plan Name', type: 'text', required: true },
+            { key: 'startDate', label: 'Start Date', type: 'date', required: true },
+            { key: 'endDate', label: 'End Date', type: 'date', required: true },
+            { key: 'planningMethod', label: 'Planning Method', type: 'select', options: { 0: 'Unspecified', 1: 'MRP', 2: 'DRP', 3: 'Kanban', 4: 'Min-Max', 5: 'Reorder Point' } },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'description', label: 'Description', type: 'textarea' }
+        ]
+    },
+    'supplier-collaborations': {
+        endpoint: '/erp/50/SupCollab',
+        modelName: 'SupplierCollaboration',
+        idField: 'collaborationId',
+        columns: [
+            { key: 'collaborationId', label: 'ID', primary: true },
+            { key: 'vendorId', label: 'Vendor', secondary: true },
+            { key: 'itemId', label: 'Item' },
+            { key: 'agreedQuantity', label: 'Agreed Qty' },
+            { key: 'deliveryDate', label: 'Delivery', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add Collaboration',
+        formFields: [
+            { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'agreedQuantity', label: 'Agreed Quantity', type: 'number', required: true },
+            { key: 'deliveryDate', label: 'Delivery Date', type: 'date', required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'safety-stocks': {
+        endpoint: '/erp/50/SafeStock',
+        modelName: 'SafetyStock',
+        idField: 'safetyStockId',
+        columns: [
+            { key: 'safetyStockId', label: 'ID', primary: true },
+            { key: 'itemId', label: 'Item', secondary: true },
+            { key: 'warehouseId', label: 'Warehouse' },
+            { key: 'safetyStockLevel', label: 'Safety Level' },
+            { key: 'currentStock', label: 'Current' },
+            { key: 'serviceLevel', label: 'Service %' }
+        ],
+        addText: 'Add Safety Stock',
+        formFields: [
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
+            { key: 'safetyStockLevel', label: 'Safety Stock Level', type: 'number', required: true },
+            { key: 'currentStock', label: 'Current Stock', type: 'number' },
+            { key: 'serviceLevel', label: 'Service Level %', type: 'number' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'lead-times': {
+        endpoint: '/erp/50/LeadTime',
+        modelName: 'LeadTime',
+        idField: 'leadTimeId',
+        columns: [
+            { key: 'leadTimeId', label: 'ID', primary: true },
+            { key: 'itemId', label: 'Item', secondary: true },
+            { key: 'vendorId', label: 'Vendor' },
+            { key: 'averageLeadTime', label: 'Avg Lead Time' },
+            { key: 'minimumLeadTime', label: 'Min' },
+            { key: 'maximumLeadTime', label: 'Max' }
+        ],
+        addText: 'Add Lead Time',
+        formFields: [
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
+            { key: 'averageLeadTime', label: 'Average Lead Time (days)', type: 'number', required: true },
+            { key: 'minimumLeadTime', label: 'Minimum Lead Time (days)', type: 'number' },
+            { key: 'maximumLeadTime', label: 'Maximum Lead Time (days)', type: 'number' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    }
+};
+
+function initMobileSupplyPlanning() {
+    loadSupplyPlanningService('material-requirements');
+
+    document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            loadSupplyPlanningService(tab.dataset.service);
+        });
+    });
+}
+
+function loadSupplyPlanningService(serviceName) {
+    currentSupplyPlanningService = serviceName;
+    const config = SUPPLY_PLANNING_SERVICES[serviceName];
+
+    supplyPlanningTable = new MobileEditTable('supply-planning-table', {
+        endpoint: config.endpoint,
+        modelName: config.modelName,
+        columns: config.columns,
+        rowsPerPage: 15,
+        addButtonText: config.addText,
+        onAdd: () => openSupplyPlanningForm(config),
+        onEdit: (id, item) => openSupplyPlanningForm(config, item),
+        onDelete: (id, item) => deleteSupplyPlanningItem(config, id, item),
+        getItemId: (item) => item[config.idField]
+    });
+}
+
+function openSupplyPlanningForm(config, item = null) {
+    const isEdit = !!item;
+    const title = isEdit ? 'Edit' : config.addText;
+
+    const formDef = { fields: config.formFields };
+    const content = MobileForms.renderForm(formDef, item || {});
+
+    MobilePopup.show({
+        title: title,
+        content: content,
+        size: 'medium',
+        saveButtonText: isEdit ? 'Update' : 'Create',
+        onSave: async (popup) => {
+            const body = popup.body;
+            const errors = MobileForms.validateForm(body);
+            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+
+            const data = MobileForms.getFormData(body);
+            if (isEdit) data[config.idField] = item[config.idField];
+
+            try {
+                if (isEdit) await MobileAuth.put(config.endpoint, data);
+                else await MobileAuth.post(config.endpoint, data);
+                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                MobilePopup.close();
+                supplyPlanningTable.refresh();
+            } catch (error) {
+                MobileUtils.showError('Failed to save');
+            }
+        }
+    });
+}
+
+async function deleteSupplyPlanningItem(config, id, item) {
+    const name = item.planName || id;
+    const confirmed = await MobileConfirm.confirmDelete(name);
+    if (confirmed) {
+        try {
+            await MobileAuth.delete(config.endpoint + '?id=' + id);
+            MobileUtils.showSuccess('Deleted');
+            supplyPlanningTable.refresh();
+        } catch (error) {
+            MobileUtils.showError('Failed to delete');
+        }
+    }
+}
+</script>

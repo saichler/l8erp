@@ -1,0 +1,279 @@
+<!--
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<div class="section-container" id="procurement-section">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Procurement</h1>
+            <p class="page-subtitle">Requisitions, purchase orders, RFQs, and supplier management</p>
+        </div>
+    </div>
+
+    <!-- Service Tabs -->
+    <div class="section-tabs">
+        <button class="section-tab active" data-service="purchase-requisitions">Requisitions</button>
+        <button class="section-tab" data-service="requisition-lines">Req Lines</button>
+        <button class="section-tab" data-service="rfqs">RFQs</button>
+        <button class="section-tab" data-service="purchase-orders">POs</button>
+        <button class="section-tab" data-service="po-lines">PO Lines</button>
+        <button class="section-tab" data-service="blanket-orders">Blanket</button>
+        <button class="section-tab" data-service="supplier-scorecards">Scorecards</button>
+    </div>
+
+    <!-- Table Container -->
+    <div id="procurement-table"></div>
+</div>
+
+<script>
+let procurementTable = null;
+let currentProcurementService = 'purchase-requisitions';
+
+const PROCUREMENT_SERVICES = {
+    'purchase-requisitions': {
+        endpoint: '/erp/50/PurchReq',
+        modelName: 'PurchaseRequisition',
+        idField: 'requisitionId',
+        columns: [
+            { key: 'requisitionId', label: 'Req ID', primary: true },
+            { key: 'requisitionNumber', label: 'Req #', secondary: true, filterKey: 'requisitionNumber' },
+            { key: 'requesterId', label: 'Requester' },
+            { key: 'requestDate', label: 'Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Rejected', 5: 'Fulfilled', 6: 'Cancelled' }[v] || '-') },
+            { key: 'estimatedTotal', label: 'Est. Total', formatter: (v) => MobileUtils.formatMoney(v) }
+        ],
+        addText: 'Add Requisition',
+        formFields: [
+            { key: 'requisitionNumber', label: 'Requisition #', type: 'text', required: true },
+            { key: 'requesterId', label: 'Requester', type: 'reference', lookupModel: 'Employee' },
+            { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'Department' },
+            { key: 'requestDate', label: 'Request Date', type: 'date', required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Rejected', 5: 'Fulfilled', 6: 'Cancelled' } },
+            { key: 'priority', label: 'Priority', type: 'text' },
+            { key: 'description', label: 'Description', type: 'textarea' }
+        ]
+    },
+    'requisition-lines': {
+        endpoint: '/erp/50/ReqLine',
+        modelName: 'RequisitionLine',
+        idField: 'lineId',
+        columns: [
+            { key: 'lineId', label: 'Line ID', primary: true },
+            { key: 'requisitionId', label: 'Requisition', secondary: true },
+            { key: 'itemId', label: 'Item' },
+            { key: 'quantity', label: 'Qty' },
+            { key: 'estimatedUnitPrice', label: 'Unit Price', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'deliveryDate', label: 'Delivery', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'Add Line',
+        formFields: [
+            { key: 'requisitionId', label: 'Requisition', type: 'reference', lookupModel: 'PurchaseRequisition', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item' },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'quantity', label: 'Quantity', type: 'number', required: true },
+            { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
+            { key: 'estimatedUnitPrice', label: 'Est. Unit Price', type: 'currency' },
+            { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor' },
+            { key: 'deliveryDate', label: 'Delivery Date', type: 'date' }
+        ]
+    },
+    'rfqs': {
+        endpoint: '/erp/50/RFQ',
+        modelName: 'RequestForQuotation',
+        idField: 'rfqId',
+        columns: [
+            { key: 'rfqId', label: 'RFQ ID', primary: true },
+            { key: 'rfqNumber', label: 'RFQ #', secondary: true, filterKey: 'rfqNumber' },
+            { key: 'issueDate', label: 'Issued', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'responseDeadline', label: 'Deadline', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Rejected', 5: 'Fulfilled', 6: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add RFQ',
+        formFields: [
+            { key: 'rfqNumber', label: 'RFQ #', type: 'text', required: true },
+            { key: 'requisitionId', label: 'Requisition', type: 'reference', lookupModel: 'PurchaseRequisition' },
+            { key: 'issueDate', label: 'Issue Date', type: 'date', required: true },
+            { key: 'responseDeadline', label: 'Response Deadline', type: 'date' },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Rejected', 5: 'Fulfilled', 6: 'Cancelled' } },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'purchase-orders': {
+        endpoint: '/erp/50/PurchOrder',
+        modelName: 'PurchaseOrder',
+        idField: 'purchaseOrderId',
+        columns: [
+            { key: 'purchaseOrderId', label: 'PO ID', primary: true },
+            { key: 'orderNumber', label: 'PO #', secondary: true, filterKey: 'orderNumber' },
+            { key: 'vendorId', label: 'Vendor' },
+            { key: 'orderDate', label: 'Order Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Approved', 3: 'Sent', 4: 'Partial', 5: 'Received', 6: 'Closed', 7: 'Cancelled' }[v] || '-') },
+            { key: 'totalAmount', label: 'Total', formatter: (v) => MobileUtils.formatMoney(v) }
+        ],
+        addText: 'Add PO',
+        formFields: [
+            { key: 'orderNumber', label: 'PO #', type: 'text', required: true },
+            { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
+            { key: 'orderDate', label: 'Order Date', type: 'date', required: true },
+            { key: 'expectedDelivery', label: 'Expected Delivery', type: 'date' },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Draft', 2: 'Approved', 3: 'Sent', 4: 'Partial', 5: 'Received', 6: 'Closed', 7: 'Cancelled' } },
+            { key: 'paymentTerms', label: 'Payment Terms', type: 'text' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'po-lines': {
+        endpoint: '/erp/50/POLine',
+        modelName: 'PurchaseOrderLine',
+        idField: 'lineId',
+        columns: [
+            { key: 'lineId', label: 'Line ID', primary: true },
+            { key: 'purchaseOrderId', label: 'PO', secondary: true },
+            { key: 'itemId', label: 'Item' },
+            { key: 'quantity', label: 'Qty' },
+            { key: 'unitPrice', label: 'Unit Price', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'totalPrice', label: 'Total', formatter: (v) => MobileUtils.formatMoney(v) }
+        ],
+        addText: 'Add PO Line',
+        formFields: [
+            { key: 'purchaseOrderId', label: 'Purchase Order', type: 'reference', lookupModel: 'PurchaseOrder', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'quantity', label: 'Quantity', type: 'number', required: true },
+            { key: 'unitPrice', label: 'Unit Price', type: 'currency', required: true },
+            { key: 'unitOfMeasure', label: 'UOM', type: 'text' }
+        ]
+    },
+    'blanket-orders': {
+        endpoint: '/erp/50/BlnktOrder',
+        modelName: 'BlanketOrder',
+        idField: 'blanketOrderId',
+        columns: [
+            { key: 'blanketOrderId', label: 'Order ID', primary: true },
+            { key: 'orderNumber', label: 'Order #', secondary: true, filterKey: 'orderNumber' },
+            { key: 'vendorId', label: 'Vendor' },
+            { key: 'startDate', label: 'Start', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'endDate', label: 'End', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'maxAmount', label: 'Max', formatter: (v) => MobileUtils.formatMoney(v) }
+        ],
+        addText: 'Add Blanket Order',
+        formFields: [
+            { key: 'orderNumber', label: 'Order #', type: 'text', required: true },
+            { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
+            { key: 'startDate', label: 'Start Date', type: 'date', required: true },
+            { key: 'endDate', label: 'End Date', type: 'date', required: true },
+            { key: 'maxAmount', label: 'Max Amount', type: 'currency' },
+            { key: 'status', label: 'Status', type: 'select', options: { 1: 'Draft', 2: 'Approved', 3: 'Sent', 4: 'Partial', 5: 'Received', 6: 'Closed', 7: 'Cancelled' } },
+            { key: 'description', label: 'Description', type: 'textarea' }
+        ]
+    },
+    'supplier-scorecards': {
+        endpoint: '/erp/50/SupplrCard',
+        modelName: 'SupplierScorecard',
+        idField: 'scorecardId',
+        columns: [
+            { key: 'scorecardId', label: 'ID', primary: true },
+            { key: 'vendorId', label: 'Vendor', secondary: true },
+            { key: 'qualityScore', label: 'Quality' },
+            { key: 'deliveryScore', label: 'Delivery' },
+            { key: 'overallScore', label: 'Overall' }
+        ],
+        addText: 'Add Scorecard',
+        formFields: [
+            { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
+            { key: 'qualityScore', label: 'Quality Score', type: 'number' },
+            { key: 'deliveryScore', label: 'Delivery Score', type: 'number' },
+            { key: 'priceScore', label: 'Price Score', type: 'number' },
+            { key: 'serviceScore', label: 'Service Score', type: 'number' },
+            { key: 'overallScore', label: 'Overall Score', type: 'number' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    }
+};
+
+function initMobileProcurement() {
+    loadProcurementService('purchase-requisitions');
+
+    document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            loadProcurementService(tab.dataset.service);
+        });
+    });
+}
+
+function loadProcurementService(serviceName) {
+    currentProcurementService = serviceName;
+    const config = PROCUREMENT_SERVICES[serviceName];
+
+    procurementTable = new MobileEditTable('procurement-table', {
+        endpoint: config.endpoint,
+        modelName: config.modelName,
+        columns: config.columns,
+        rowsPerPage: 15,
+        addButtonText: config.addText,
+        onAdd: () => openProcurementForm(config),
+        onEdit: (id, item) => openProcurementForm(config, item),
+        onDelete: (id, item) => deleteProcurementItem(config, id, item),
+        getItemId: (item) => item[config.idField]
+    });
+}
+
+function openProcurementForm(config, item = null) {
+    const isEdit = !!item;
+    const title = isEdit ? 'Edit' : config.addText;
+
+    const formDef = { fields: config.formFields };
+    const content = MobileForms.renderForm(formDef, item || {});
+
+    MobilePopup.show({
+        title: title,
+        content: content,
+        size: 'medium',
+        saveButtonText: isEdit ? 'Update' : 'Create',
+        onSave: async (popup) => {
+            const body = popup.body;
+            const errors = MobileForms.validateForm(body);
+            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+
+            const data = MobileForms.getFormData(body);
+            if (isEdit) data[config.idField] = item[config.idField];
+
+            try {
+                if (isEdit) await MobileAuth.put(config.endpoint, data);
+                else await MobileAuth.post(config.endpoint, data);
+                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                MobilePopup.close();
+                procurementTable.refresh();
+            } catch (error) {
+                MobileUtils.showError('Failed to save');
+            }
+        }
+    });
+}
+
+async function deleteProcurementItem(config, id, item) {
+    const name = item.requisitionNumber || item.orderNumber || item.rfqNumber || id;
+    const confirmed = await MobileConfirm.confirmDelete(name);
+    if (confirmed) {
+        try {
+            await MobileAuth.delete(config.endpoint + '?id=' + id);
+            MobileUtils.showSuccess('Deleted');
+            procurementTable.refresh();
+        } catch (error) {
+            MobileUtils.showError('Failed to delete');
+        }
+    }
+}
+</script>

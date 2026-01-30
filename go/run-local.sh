@@ -19,8 +19,8 @@ cp -r ./web ../../demo/.
 cd ../../demo
 ./vnet_demo &
 sleep 1
-#./hcm_demo &
-#./fin_demo &
+./hcm_demo &
+./fin_demo &
 ./scm_demo &
 ./ui_demo
 

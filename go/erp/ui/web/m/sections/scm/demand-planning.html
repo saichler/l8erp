@@ -1,0 +1,248 @@
+<!--
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<div class="section-container" id="demand-planning-section">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Demand Planning</h1>
+            <p class="page-subtitle">Forecasts, models, demand plans, promotions, and accuracy tracking</p>
+        </div>
+    </div>
+
+    <!-- Service Tabs -->
+    <div class="section-tabs">
+        <button class="section-tab active" data-service="demand-forecasts">Forecasts</button>
+        <button class="section-tab" data-service="forecast-models">Models</button>
+        <button class="section-tab" data-service="demand-plans">Plans</button>
+        <button class="section-tab" data-service="promo-plans">Promotions</button>
+        <button class="section-tab" data-service="new-product-plans">New Products</button>
+        <button class="section-tab" data-service="forecast-accuracies">Accuracy</button>
+    </div>
+
+    <!-- Table Container -->
+    <div id="demand-planning-table"></div>
+</div>
+
+<script>
+let demandPlanningTable = null;
+let currentDemandPlanningService = 'demand-forecasts';
+
+const DEMAND_PLANNING_SERVICES = {
+    'demand-forecasts': {
+        endpoint: '/erp/50/DmndFcast',
+        modelName: 'DemandForecast',
+        idField: 'forecastId',
+        columns: [
+            { key: 'forecastId', label: 'ID', primary: true },
+            { key: 'forecastName', label: 'Forecast', secondary: true, filterKey: 'forecastName' },
+            { key: 'itemId', label: 'Item' },
+            { key: 'forecastDate', label: 'Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'forecastQuantity', label: 'Qty' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add Forecast',
+        formFields: [
+            { key: 'forecastName', label: 'Forecast Name', type: 'text', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'forecastDate', label: 'Forecast Date', type: 'date', required: true },
+            { key: 'forecastQuantity', label: 'Forecast Quantity', type: 'number', required: true },
+            { key: 'modelId', label: 'Forecast Model', type: 'reference', lookupModel: 'ForecastModel' },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'forecast-models': {
+        endpoint: '/erp/50/FcastModel',
+        modelName: 'ForecastModel',
+        idField: 'modelId',
+        columns: [
+            { key: 'modelId', label: 'ID', primary: true },
+            { key: 'modelName', label: 'Model', secondary: true, filterKey: 'modelName' },
+            { key: 'forecastMethod', label: 'Method', formatter: (v) => ({ 0: 'Unspecified', 1: 'Moving Average', 2: 'Exponential Smoothing', 3: 'Regression', 4: 'Seasonal', 5: 'Causal' }[v] || '-') },
+            { key: 'accuracy', label: 'Accuracy %' },
+            { key: 'description', label: 'Description' }
+        ],
+        addText: 'Add Model',
+        formFields: [
+            { key: 'modelName', label: 'Model Name', type: 'text', required: true },
+            { key: 'forecastMethod', label: 'Forecast Method', type: 'select', options: { 0: 'Unspecified', 1: 'Moving Average', 2: 'Exponential Smoothing', 3: 'Regression', 4: 'Seasonal', 5: 'Causal' } },
+            { key: 'accuracy', label: 'Accuracy %', type: 'number' },
+            { key: 'parameters', label: 'Parameters', type: 'textarea' },
+            { key: 'description', label: 'Description', type: 'textarea' }
+        ]
+    },
+    'demand-plans': {
+        endpoint: '/erp/50/DemandPlan',
+        modelName: 'DemandPlan',
+        idField: 'planId',
+        columns: [
+            { key: 'planId', label: 'ID', primary: true },
+            { key: 'planName', label: 'Plan', secondary: true, filterKey: 'planName' },
+            { key: 'startDate', label: 'Start', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'endDate', label: 'End', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add Demand Plan',
+        formFields: [
+            { key: 'planName', label: 'Plan Name', type: 'text', required: true },
+            { key: 'startDate', label: 'Start Date', type: 'date', required: true },
+            { key: 'endDate', label: 'End Date', type: 'date', required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'description', label: 'Description', type: 'textarea' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'promo-plans': {
+        endpoint: '/erp/50/PromoPlan',
+        modelName: 'PromotionalPlan',
+        idField: 'planId',
+        columns: [
+            { key: 'planId', label: 'ID', primary: true },
+            { key: 'planName', label: 'Plan', secondary: true, filterKey: 'planName' },
+            { key: 'promotionType', label: 'Type' },
+            { key: 'startDate', label: 'Start', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'endDate', label: 'End', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'expectedUplift', label: 'Uplift %' }
+        ],
+        addText: 'Add Promotional Plan',
+        formFields: [
+            { key: 'planName', label: 'Plan Name', type: 'text', required: true },
+            { key: 'promotionType', label: 'Promotion Type', type: 'text', required: true },
+            { key: 'startDate', label: 'Start Date', type: 'date', required: true },
+            { key: 'endDate', label: 'End Date', type: 'date', required: true },
+            { key: 'expectedUplift', label: 'Expected Uplift %', type: 'number' },
+            { key: 'description', label: 'Description', type: 'textarea' }
+        ]
+    },
+    'new-product-plans': {
+        endpoint: '/erp/50/NewProdPln',
+        modelName: 'NewProductPlan',
+        idField: 'planId',
+        columns: [
+            { key: 'planId', label: 'ID', primary: true },
+            { key: 'productName', label: 'Product', secondary: true, filterKey: 'productName' },
+            { key: 'launchDate', label: 'Launch', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'estimatedDemand', label: 'Est. Demand' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add New Product Plan',
+        formFields: [
+            { key: 'productName', label: 'Product Name', type: 'text', required: true },
+            { key: 'launchDate', label: 'Launch Date', type: 'date', required: true },
+            { key: 'estimatedDemand', label: 'Estimated Demand', type: 'number' },
+            { key: 'rampUpPeriod', label: 'Ramp-Up Period', type: 'text' },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'description', label: 'Description', type: 'textarea' }
+        ]
+    },
+    'forecast-accuracies': {
+        endpoint: '/erp/50/FcastAccur',
+        modelName: 'ForecastAccuracy',
+        idField: 'accuracyId',
+        columns: [
+            { key: 'accuracyId', label: 'ID', primary: true },
+            { key: 'forecastId', label: 'Forecast', secondary: true },
+            { key: 'itemId', label: 'Item' },
+            { key: 'forecastedQty', label: 'Forecasted' },
+            { key: 'actualQty', label: 'Actual' },
+            { key: 'accuracyPercent', label: 'Accuracy %' }
+        ],
+        addText: 'Add Accuracy Record',
+        formFields: [
+            { key: 'forecastId', label: 'Forecast', type: 'reference', lookupModel: 'DemandForecast', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'forecastedQty', label: 'Forecasted Quantity', type: 'number' },
+            { key: 'actualQty', label: 'Actual Quantity', type: 'number' },
+            { key: 'accuracyPercent', label: 'Accuracy %', type: 'number' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    }
+};
+
+function initMobileDemandPlanning() {
+    loadDemandPlanningService('demand-forecasts');
+
+    document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            loadDemandPlanningService(tab.dataset.service);
+        });
+    });
+}
+
+function loadDemandPlanningService(serviceName) {
+    currentDemandPlanningService = serviceName;
+    const config = DEMAND_PLANNING_SERVICES[serviceName];
+
+    demandPlanningTable = new MobileEditTable('demand-planning-table', {
+        endpoint: config.endpoint,
+        modelName: config.modelName,
+        columns: config.columns,
+        rowsPerPage: 15,
+        addButtonText: config.addText,
+        onAdd: () => openDemandPlanningForm(config),
+        onEdit: (id, item) => openDemandPlanningForm(config, item),
+        onDelete: (id, item) => deleteDemandPlanningItem(config, id, item),
+        getItemId: (item) => item[config.idField]
+    });
+}
+
+function openDemandPlanningForm(config, item = null) {
+    const isEdit = !!item;
+    const title = isEdit ? 'Edit' : config.addText;
+
+    const formDef = { fields: config.formFields };
+    const content = MobileForms.renderForm(formDef, item || {});
+
+    MobilePopup.show({
+        title: title,
+        content: content,
+        size: 'medium',
+        saveButtonText: isEdit ? 'Update' : 'Create',
+        onSave: async (popup) => {
+            const body = popup.body;
+            const errors = MobileForms.validateForm(body);
+            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+
+            const data = MobileForms.getFormData(body);
+            if (isEdit) data[config.idField] = item[config.idField];
+
+            try {
+                if (isEdit) await MobileAuth.put(config.endpoint, data);
+                else await MobileAuth.post(config.endpoint, data);
+                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                MobilePopup.close();
+                demandPlanningTable.refresh();
+            } catch (error) {
+                MobileUtils.showError('Failed to save');
+            }
+        }
+    });
+}
+
+async function deleteDemandPlanningItem(config, id, item) {
+    const name = item.forecastName || item.modelName || item.planName || item.productName || id;
+    const confirmed = await MobileConfirm.confirmDelete(name);
+    if (confirmed) {
+        try {
+            await MobileAuth.delete(config.endpoint + '?id=' + id);
+            MobileUtils.showSuccess('Deleted');
+            demandPlanningTable.refresh();
+        } catch (error) {
+            MobileUtils.showError('Failed to delete');
+        }
+    }
+}
+</script>

@@ -25,7 +25,7 @@ limitations under the License.
             { key: 'dashboard', label: 'Dashboard', icon: 'dashboard', hasSubModules: false },
             { key: 'financial', label: 'Financial', icon: 'financial', hasSubModules: false },
             { key: 'hcm', label: 'Human Capital', icon: 'hcm', hasSubModules: true },
-            { key: 'scm', label: 'Supply Chain', icon: 'scm', hasSubModules: false },
+            { key: 'scm', label: 'Supply Chain', icon: 'scm', hasSubModules: true },
             { key: 'manufacturing', label: 'Manufacturing', icon: 'manufacturing', hasSubModules: false },
             { key: 'sales', label: 'Sales', icon: 'sales', hasSubModules: false },
             { key: 'crm', label: 'CRM', icon: 'crm', hasSubModules: false },
@@ -125,6 +125,78 @@ limitations under the License.
             }
         },
 
+        // SCM Sub-Modules (Level 2)
+        scm: {
+            subModules: [
+                { key: 'procurement', label: 'Procurement', icon: 'procurement' },
+                { key: 'inventory', label: 'Inventory', icon: 'inventory' },
+                { key: 'warehouse', label: 'Warehouse', icon: 'warehouse' },
+                { key: 'logistics', label: 'Logistics', icon: 'logistics' },
+                { key: 'demand-planning', label: 'Demand Planning', icon: 'demand-planning' },
+                { key: 'supply-planning', label: 'Supply Planning', icon: 'supply-planning' }
+            ],
+
+            // Services for each sub-module (Level 3) - EXACT order from desktop scm-config.js
+            services: {
+                'procurement': [
+                    { key: 'purchase-requisitions', label: 'Requisitions', icon: 'procurement', endpoint: '/erp/50/PurchReq', model: 'PurchaseRequisition', idField: 'requisitionId' },
+                    { key: 'requisition-lines', label: 'Req. Lines', icon: 'procurement', endpoint: '/erp/50/ReqLine', model: 'RequisitionLine', idField: 'lineId' },
+                    { key: 'rfqs', label: 'RFQs', icon: 'procurement', endpoint: '/erp/50/RFQ', model: 'RequestForQuotation', idField: 'rfqId' },
+                    { key: 'purchase-orders', label: 'Purchase Orders', icon: 'procurement', endpoint: '/erp/50/PurchOrder', model: 'PurchaseOrder', idField: 'purchaseOrderId' },
+                    { key: 'po-lines', label: 'PO Lines', icon: 'procurement', endpoint: '/erp/50/POLine', model: 'PurchaseOrderLine', idField: 'lineId' },
+                    { key: 'blanket-orders', label: 'Blanket Orders', icon: 'procurement', endpoint: '/erp/50/BlnktOrder', model: 'BlanketOrder', idField: 'blanketOrderId' },
+                    { key: 'supplier-scorecards', label: 'Scorecards', icon: 'procurement', endpoint: '/erp/50/SupplrCard', model: 'SupplierScorecard', idField: 'scorecardId' }
+                ],
+                'inventory': [
+                    { key: 'items', label: 'Items', icon: 'inventory', endpoint: '/erp/50/Item', model: 'Item', idField: 'itemId' },
+                    { key: 'item-categories', label: 'Categories', icon: 'inventory', endpoint: '/erp/50/ItemCat', model: 'ItemCategory', idField: 'categoryId' },
+                    { key: 'stock-movements', label: 'Stock Movements', icon: 'inventory', endpoint: '/erp/50/StockMove', model: 'StockMovement', idField: 'movementId' },
+                    { key: 'lot-numbers', label: 'Lot Numbers', icon: 'inventory', endpoint: '/erp/50/LotNumber', model: 'LotNumber', idField: 'lotId' },
+                    { key: 'serial-numbers', label: 'Serial Numbers', icon: 'inventory', endpoint: '/erp/50/SerialNum', model: 'SerialNumber', idField: 'serialId' },
+                    { key: 'cycle-counts', label: 'Cycle Counts', icon: 'inventory', endpoint: '/erp/50/CycleCount', model: 'CycleCount', idField: 'cycleCountId' },
+                    { key: 'reorder-points', label: 'Reorder Points', icon: 'inventory', endpoint: '/erp/50/ReorderPt', model: 'ReorderPoint', idField: 'reorderPointId' },
+                    { key: 'inventory-valuations', label: 'Valuations', icon: 'inventory', endpoint: '/erp/50/InvValue', model: 'InventoryValuation', idField: 'valuationId' }
+                ],
+                'warehouse': [
+                    { key: 'warehouses', label: 'Warehouses', icon: 'warehouse', endpoint: '/erp/50/Warehouse', model: 'Warehouse', idField: 'warehouseId' },
+                    { key: 'bins', label: 'Bins', icon: 'warehouse', endpoint: '/erp/50/Bin', model: 'Bin', idField: 'binId' },
+                    { key: 'receiving-orders', label: 'Receiving', icon: 'warehouse', endpoint: '/erp/50/RecvOrder', model: 'ReceivingOrder', idField: 'receivingOrderId' },
+                    { key: 'putaway-tasks', label: 'Put Away', icon: 'warehouse', endpoint: '/erp/50/PutAway', model: 'PutawayTask', idField: 'taskId' },
+                    { key: 'pick-tasks', label: 'Pick Tasks', icon: 'warehouse', endpoint: '/erp/50/PickTask', model: 'PickTask', idField: 'taskId' },
+                    { key: 'pack-tasks', label: 'Pack Tasks', icon: 'warehouse', endpoint: '/erp/50/PackTask', model: 'PackTask', idField: 'taskId' },
+                    { key: 'ship-tasks', label: 'Ship Tasks', icon: 'warehouse', endpoint: '/erp/50/ShipTask', model: 'ShipTask', idField: 'taskId' },
+                    { key: 'wave-plans', label: 'Wave Plans', icon: 'warehouse', endpoint: '/erp/50/WavePlan', model: 'WavePlan', idField: 'wavePlanId' },
+                    { key: 'dock-schedules', label: 'Dock Schedules', icon: 'warehouse', endpoint: '/erp/50/DockSched', model: 'DockSchedule', idField: 'scheduleId' }
+                ],
+                'logistics': [
+                    { key: 'carriers', label: 'Carriers', icon: 'logistics', endpoint: '/erp/50/Carrier', model: 'Carrier', idField: 'carrierId' },
+                    { key: 'freight-rates', label: 'Freight Rates', icon: 'logistics', endpoint: '/erp/50/FreightRt', model: 'FreightRate', idField: 'rateId' },
+                    { key: 'shipments', label: 'Shipments', icon: 'logistics', endpoint: '/erp/50/Shipment', model: 'Shipment', idField: 'shipmentId' },
+                    { key: 'routes', label: 'Routes', icon: 'logistics', endpoint: '/erp/50/Route', model: 'Route', idField: 'routeId' },
+                    { key: 'load-plans', label: 'Load Plans', icon: 'logistics', endpoint: '/erp/50/LoadPlan', model: 'LoadPlan', idField: 'loadPlanId' },
+                    { key: 'delivery-proofs', label: 'Delivery Proofs', icon: 'logistics', endpoint: '/erp/50/DlvryProof', model: 'DeliveryProof', idField: 'proofId' },
+                    { key: 'freight-audits', label: 'Freight Audits', icon: 'logistics', endpoint: '/erp/50/FrtAudit', model: 'FreightAudit', idField: 'auditId' },
+                    { key: 'return-authorizations', label: 'Returns', icon: 'logistics', endpoint: '/erp/50/ReturnAuth', model: 'ReturnAuthorization', idField: 'rmaId' }
+                ],
+                'demand-planning': [
+                    { key: 'demand-forecasts', label: 'Forecasts', icon: 'demand-planning', endpoint: '/erp/50/DmndFcast', model: 'DemandForecast', idField: 'forecastId' },
+                    { key: 'forecast-models', label: 'Models', icon: 'demand-planning', endpoint: '/erp/50/FcastModel', model: 'ForecastModel', idField: 'modelId' },
+                    { key: 'demand-plans', label: 'Demand Plans', icon: 'demand-planning', endpoint: '/erp/50/DemandPlan', model: 'DemandPlan', idField: 'planId' },
+                    { key: 'promo-plans', label: 'Promotions', icon: 'demand-planning', endpoint: '/erp/50/PromoPlan', model: 'PromotionalPlan', idField: 'planId' },
+                    { key: 'new-product-plans', label: 'New Products', icon: 'demand-planning', endpoint: '/erp/50/NewProdPln', model: 'NewProductPlan', idField: 'planId' },
+                    { key: 'forecast-accuracies', label: 'Accuracy', icon: 'demand-planning', endpoint: '/erp/50/FcastAccur', model: 'ForecastAccuracy', idField: 'accuracyId' }
+                ],
+                'supply-planning': [
+                    { key: 'material-requirements', label: 'Material Reqs', icon: 'supply-planning', endpoint: '/erp/50/MatReq', model: 'MaterialRequirement', idField: 'requirementId' },
+                    { key: 'distribution-requirements', label: 'Distribution Reqs', icon: 'supply-planning', endpoint: '/erp/50/DistReq', model: 'DistributionRequirement', idField: 'requirementId' },
+                    { key: 'supply-plans', label: 'Supply Plans', icon: 'supply-planning', endpoint: '/erp/50/SupplyPlan', model: 'SupplyPlan', idField: 'planId' },
+                    { key: 'supplier-collaborations', label: 'Collaborations', icon: 'supply-planning', endpoint: '/erp/50/SupCollab', model: 'SupplierCollaboration', idField: 'collaborationId' },
+                    { key: 'safety-stocks', label: 'Safety Stock', icon: 'supply-planning', endpoint: '/erp/50/SafeStock', model: 'SafetyStock', idField: 'safetyStockId' },
+                    { key: 'lead-times', label: 'Lead Times', icon: 'supply-planning', endpoint: '/erp/50/LeadTime', model: 'LeadTime', idField: 'leadTimeId' }
+                ]
+            }
+        },
+
         // SVG icons for navigation
         icons: {
             'dashboard': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>',
@@ -151,6 +223,12 @@ limitations under the License.
             'job-families': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>',
             'organizations': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"></path><path d="M5 21V7l8-4v18"></path><path d="M19 21V11l-6-4"></path></svg>',
             'departments': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"></path><path d="M9 21V8l3-3 3 3v13"></path><path d="M3 21V11h4"></path><path d="M17 21V11h4"></path></svg>',
+            'procurement': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>',
+            'inventory': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>',
+            'warehouse': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"></path><path d="M5 21V7l7-4 7 4v14"></path><path d="M9 21v-6h6v6"></path></svg>',
+            'logistics': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>',
+            'demand-planning': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>',
+            'supply-planning': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>',
             'back': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>',
             'default': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg>'
         },

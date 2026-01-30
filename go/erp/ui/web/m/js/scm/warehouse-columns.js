@@ -1,0 +1,113 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+/**
+ * Mobile Warehouse Management Module - Column Configurations
+ * Desktop Equivalent: scm/warehouse/warehouse-columns.js
+ */
+(function() {
+    'use strict';
+
+    const enums = MobileWarehouse.enums;
+    const render = MobileWarehouse.render;
+
+    MobileWarehouse.columns = {
+        Warehouse: [
+            { key: 'warehouseId', label: 'ID', sortKey: 'warehouseId', filterKey: 'warehouseId' },
+            { key: 'warehouseCode', label: 'Code', sortKey: 'warehouseCode', filterKey: 'warehouseCode' },
+            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
+            { key: 'warehouseType', label: 'Type', sortKey: 'warehouseType', filterKey: 'warehouseType', enumValues: enums.WAREHOUSE_TYPE_VALUES, render: (item) => render.warehouseType(item.warehouseType) },
+            { key: 'location', label: 'Location', sortKey: 'location', filterKey: 'location' },
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+        ],
+
+        Bin: [
+            { key: 'binId', label: 'ID', sortKey: 'binId', filterKey: 'binId' },
+            { key: 'binCode', label: 'Bin Code', sortKey: 'binCode', filterKey: 'binCode' },
+            { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
+            { key: 'binType', label: 'Type', sortKey: 'binType', filterKey: 'binType', enumValues: enums.BIN_TYPE_VALUES, render: (item) => render.binType(item.binType) },
+            { key: 'zone', label: 'Zone', sortKey: 'zone', filterKey: 'zone' },
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+        ],
+
+        ReceivingOrder: [
+            { key: 'receivingOrderId', label: 'ID', sortKey: 'receivingOrderId', filterKey: 'receivingOrderId' },
+            { key: 'orderNumber', label: 'Order #', sortKey: 'orderNumber', filterKey: 'orderNumber' },
+            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
+            { key: 'expectedDate', label: 'Expected', sortKey: 'expectedDate', render: (item) => MobileRenderers.renderDate(item.expectedDate) },
+            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) },
+            { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' }
+        ],
+
+        PutawayTask: [
+            { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
+            { key: 'receivingOrderId', label: 'Receiving Order', sortKey: 'receivingOrderId', filterKey: 'receivingOrderId' },
+            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
+            { key: 'sourceBinId', label: 'Source Bin', sortKey: 'sourceBinId', filterKey: 'sourceBinId' },
+            { key: 'targetBinId', label: 'Target Bin', sortKey: 'targetBinId', filterKey: 'targetBinId' },
+            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+        ],
+
+        PickTask: [
+            { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
+            { key: 'orderReference', label: 'Order Ref', sortKey: 'orderReference', filterKey: 'orderReference' },
+            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
+            { key: 'binId', label: 'Bin', sortKey: 'binId', filterKey: 'binId' },
+            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
+            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+        ],
+
+        PackTask: [
+            { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
+            { key: 'orderReference', label: 'Order Ref', sortKey: 'orderReference', filterKey: 'orderReference' },
+            { key: 'packStation', label: 'Pack Station', sortKey: 'packStation', filterKey: 'packStation' },
+            { key: 'itemCount', label: 'Items', sortKey: 'itemCount' },
+            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+        ],
+
+        ShipTask: [
+            { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
+            { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
+            { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
+            { key: 'dockId', label: 'Dock', sortKey: 'dockId', filterKey: 'dockId' },
+            { key: 'scheduledDate', label: 'Scheduled', sortKey: 'scheduledDate', render: (item) => MobileRenderers.renderDate(item.scheduledDate) },
+            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+        ],
+
+        WavePlan: [
+            { key: 'wavePlanId', label: 'ID', sortKey: 'wavePlanId', filterKey: 'wavePlanId' },
+            { key: 'waveName', label: 'Wave', sortKey: 'waveName', filterKey: 'waveName' },
+            { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
+            { key: 'plannedDate', label: 'Planned', sortKey: 'plannedDate', render: (item) => MobileRenderers.renderDate(item.plannedDate) },
+            { key: 'orderCount', label: 'Orders', sortKey: 'orderCount' },
+            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+        ],
+
+        DockSchedule: [
+            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
+            { key: 'dockId', label: 'Dock', sortKey: 'dockId', filterKey: 'dockId' },
+            { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
+            { key: 'scheduledDate', label: 'Date', sortKey: 'scheduledDate', render: (item) => MobileRenderers.renderDate(item.scheduledDate) },
+            { key: 'direction', label: 'Direction', sortKey: 'direction', filterKey: 'direction' },
+            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+        ]
+    };
+
+    MobileWarehouse.primaryKeys = {
+        Warehouse: 'warehouseId', Bin: 'binId', ReceivingOrder: 'receivingOrderId',
+        PutawayTask: 'taskId', PickTask: 'taskId', PackTask: 'taskId',
+        ShipTask: 'taskId', WavePlan: 'wavePlanId', DockSchedule: 'scheduleId'
+    };
+
+})();

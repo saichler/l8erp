@@ -1,0 +1,322 @@
+<!--
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<div class="section-container" id="warehouse-section">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Warehouse</h1>
+            <p class="page-subtitle">Warehouses, bins, receiving, putaway, picking, packing, and shipping</p>
+        </div>
+    </div>
+
+    <!-- Service Tabs -->
+    <div class="section-tabs">
+        <button class="section-tab active" data-service="warehouses">Warehouses</button>
+        <button class="section-tab" data-service="bins">Bins</button>
+        <button class="section-tab" data-service="receiving-orders">Receiving</button>
+        <button class="section-tab" data-service="putaway-tasks">Putaway</button>
+        <button class="section-tab" data-service="pick-tasks">Pick</button>
+        <button class="section-tab" data-service="pack-tasks">Pack</button>
+        <button class="section-tab" data-service="ship-tasks">Ship</button>
+        <button class="section-tab" data-service="wave-plans">Waves</button>
+        <button class="section-tab" data-service="dock-schedules">Docks</button>
+    </div>
+
+    <!-- Table Container -->
+    <div id="warehouse-table"></div>
+</div>
+
+<script>
+let warehouseTable = null;
+let currentWarehouseService = 'warehouses';
+
+const WAREHOUSE_SERVICES = {
+    'warehouses': {
+        endpoint: '/erp/50/Warehouse',
+        modelName: 'Warehouse',
+        idField: 'warehouseId',
+        columns: [
+            { key: 'warehouseId', label: 'ID', primary: true },
+            { key: 'warehouseCode', label: 'Code', secondary: true, filterKey: 'warehouseCode' },
+            { key: 'name', label: 'Name' },
+            { key: 'warehouseType', label: 'Type', formatter: (v) => ({ 0: 'Unspecified', 1: 'Distribution Center', 2: 'Manufacturing', 3: 'Cold Storage', 4: 'Cross-Dock', 5: 'Bonded' }[v] || '-') },
+            { key: 'location', label: 'Location' }
+        ],
+        addText: 'Add Warehouse',
+        formFields: [
+            { key: 'warehouseCode', label: 'Warehouse Code', type: 'text', required: true },
+            { key: 'name', label: 'Name', type: 'text', required: true },
+            { key: 'warehouseType', label: 'Type', type: 'select', options: { 0: 'Unspecified', 1: 'Distribution Center', 2: 'Manufacturing', 3: 'Cold Storage', 4: 'Cross-Dock', 5: 'Bonded' } },
+            { key: 'location', label: 'Location', type: 'text' },
+            { key: 'address', label: 'Address', type: 'textarea' },
+            { key: 'managerId', label: 'Manager', type: 'reference', lookupModel: 'Employee' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' }
+        ]
+    },
+    'bins': {
+        endpoint: '/erp/50/Bin',
+        modelName: 'Bin',
+        idField: 'binId',
+        columns: [
+            { key: 'binId', label: 'ID', primary: true },
+            { key: 'binCode', label: 'Bin Code', secondary: true, filterKey: 'binCode' },
+            { key: 'warehouseId', label: 'Warehouse' },
+            { key: 'binType', label: 'Type', formatter: (v) => ({ 0: 'Unspecified', 1: 'Storage', 2: 'Picking', 3: 'Receiving', 4: 'Shipping', 5: 'Staging' }[v] || '-') },
+            { key: 'zone', label: 'Zone' }
+        ],
+        addText: 'Add Bin',
+        formFields: [
+            { key: 'binCode', label: 'Bin Code', type: 'text', required: true },
+            { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
+            { key: 'binType', label: 'Bin Type', type: 'select', options: { 0: 'Unspecified', 1: 'Storage', 2: 'Picking', 3: 'Receiving', 4: 'Shipping', 5: 'Staging' } },
+            { key: 'zone', label: 'Zone', type: 'text' },
+            { key: 'aisle', label: 'Aisle', type: 'text' },
+            { key: 'rack', label: 'Rack', type: 'text' },
+            { key: 'level', label: 'Level', type: 'text' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' }
+        ]
+    },
+    'receiving-orders': {
+        endpoint: '/erp/50/RecvOrder',
+        modelName: 'ReceivingOrder',
+        idField: 'receivingOrderId',
+        columns: [
+            { key: 'receivingOrderId', label: 'ID', primary: true },
+            { key: 'orderNumber', label: 'Order #', secondary: true, filterKey: 'orderNumber' },
+            { key: 'vendorId', label: 'Vendor' },
+            { key: 'expectedDate', label: 'Expected', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') },
+            { key: 'warehouseId', label: 'Warehouse' }
+        ],
+        addText: 'Add Receiving Order',
+        formFields: [
+            { key: 'orderNumber', label: 'Order Number', type: 'text', required: true },
+            { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
+            { key: 'purchaseOrderId', label: 'Purchase Order', type: 'reference', lookupModel: 'PurchaseOrder' },
+            { key: 'expectedDate', label: 'Expected Date', type: 'date', required: true },
+            { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'putaway-tasks': {
+        endpoint: '/erp/50/PutAway',
+        modelName: 'PutawayTask',
+        idField: 'taskId',
+        columns: [
+            { key: 'taskId', label: 'ID', primary: true },
+            { key: 'receivingOrderId', label: 'Receiving Order', secondary: true },
+            { key: 'itemId', label: 'Item' },
+            { key: 'sourceBinId', label: 'Source Bin' },
+            { key: 'targetBinId', label: 'Target Bin' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add Putaway Task',
+        formFields: [
+            { key: 'receivingOrderId', label: 'Receiving Order', type: 'reference', lookupModel: 'ReceivingOrder', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'quantity', label: 'Quantity', type: 'number', required: true },
+            { key: 'sourceBinId', label: 'Source Bin', type: 'reference', lookupModel: 'Bin' },
+            { key: 'targetBinId', label: 'Target Bin', type: 'reference', lookupModel: 'Bin', required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' }
+        ]
+    },
+    'pick-tasks': {
+        endpoint: '/erp/50/PickTask',
+        modelName: 'PickTask',
+        idField: 'taskId',
+        columns: [
+            { key: 'taskId', label: 'ID', primary: true },
+            { key: 'orderReference', label: 'Order Ref', secondary: true, filterKey: 'orderReference' },
+            { key: 'itemId', label: 'Item' },
+            { key: 'binId', label: 'Bin' },
+            { key: 'quantity', label: 'Qty' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add Pick Task',
+        formFields: [
+            { key: 'orderReference', label: 'Order Reference', type: 'text', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'binId', label: 'Bin', type: 'reference', lookupModel: 'Bin', required: true },
+            { key: 'quantity', label: 'Quantity', type: 'number', required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' }
+        ]
+    },
+    'pack-tasks': {
+        endpoint: '/erp/50/PackTask',
+        modelName: 'PackTask',
+        idField: 'taskId',
+        columns: [
+            { key: 'taskId', label: 'ID', primary: true },
+            { key: 'orderReference', label: 'Order Ref', secondary: true, filterKey: 'orderReference' },
+            { key: 'packStation', label: 'Pack Station' },
+            { key: 'itemCount', label: 'Items' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add Pack Task',
+        formFields: [
+            { key: 'orderReference', label: 'Order Reference', type: 'text', required: true },
+            { key: 'packStation', label: 'Pack Station', type: 'text' },
+            { key: 'itemCount', label: 'Item Count', type: 'number' },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'ship-tasks': {
+        endpoint: '/erp/50/ShipTask',
+        modelName: 'ShipTask',
+        idField: 'taskId',
+        columns: [
+            { key: 'taskId', label: 'ID', primary: true },
+            { key: 'shipmentId', label: 'Shipment', secondary: true },
+            { key: 'carrierId', label: 'Carrier' },
+            { key: 'dockId', label: 'Dock' },
+            { key: 'scheduledDate', label: 'Scheduled', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add Ship Task',
+        formFields: [
+            { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'Shipment', required: true },
+            { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier' },
+            { key: 'dockId', label: 'Dock', type: 'text' },
+            { key: 'scheduledDate', label: 'Scheduled Date', type: 'date', required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' }
+        ]
+    },
+    'wave-plans': {
+        endpoint: '/erp/50/WavePlan',
+        modelName: 'WavePlan',
+        idField: 'wavePlanId',
+        columns: [
+            { key: 'wavePlanId', label: 'ID', primary: true },
+            { key: 'waveName', label: 'Wave', secondary: true, filterKey: 'waveName' },
+            { key: 'warehouseId', label: 'Warehouse' },
+            { key: 'plannedDate', label: 'Planned', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'orderCount', label: 'Orders' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add Wave Plan',
+        formFields: [
+            { key: 'waveName', label: 'Wave Name', type: 'text', required: true },
+            { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
+            { key: 'plannedDate', label: 'Planned Date', type: 'date', required: true },
+            { key: 'orderCount', label: 'Order Count', type: 'number' },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'dock-schedules': {
+        endpoint: '/erp/50/DockSched',
+        modelName: 'DockSchedule',
+        idField: 'scheduleId',
+        columns: [
+            { key: 'scheduleId', label: 'ID', primary: true },
+            { key: 'dockId', label: 'Dock', secondary: true },
+            { key: 'carrierId', label: 'Carrier' },
+            { key: 'scheduledDate', label: 'Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'direction', label: 'Direction' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add Dock Schedule',
+        formFields: [
+            { key: 'dockId', label: 'Dock', type: 'text', required: true },
+            { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier' },
+            { key: 'scheduledDate', label: 'Scheduled Date', type: 'date', required: true },
+            { key: 'direction', label: 'Direction', type: 'text' },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    }
+};
+
+function initMobileWarehouse() {
+    loadWarehouseService('warehouses');
+
+    document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            loadWarehouseService(tab.dataset.service);
+        });
+    });
+}
+
+function loadWarehouseService(serviceName) {
+    currentWarehouseService = serviceName;
+    const config = WAREHOUSE_SERVICES[serviceName];
+
+    warehouseTable = new MobileEditTable('warehouse-table', {
+        endpoint: config.endpoint,
+        modelName: config.modelName,
+        columns: config.columns,
+        rowsPerPage: 15,
+        addButtonText: config.addText,
+        onAdd: () => openWarehouseForm(config),
+        onEdit: (id, item) => openWarehouseForm(config, item),
+        onDelete: (id, item) => deleteWarehouseItem(config, id, item),
+        getItemId: (item) => item[config.idField]
+    });
+}
+
+function openWarehouseForm(config, item = null) {
+    const isEdit = !!item;
+    const title = isEdit ? 'Edit' : config.addText;
+
+    const formDef = { fields: config.formFields };
+    const content = MobileForms.renderForm(formDef, item || {});
+
+    MobilePopup.show({
+        title: title,
+        content: content,
+        size: 'medium',
+        saveButtonText: isEdit ? 'Update' : 'Create',
+        onSave: async (popup) => {
+            const body = popup.body;
+            const errors = MobileForms.validateForm(body);
+            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+
+            const data = MobileForms.getFormData(body);
+            if (isEdit) data[config.idField] = item[config.idField];
+
+            try {
+                if (isEdit) await MobileAuth.put(config.endpoint, data);
+                else await MobileAuth.post(config.endpoint, data);
+                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                MobilePopup.close();
+                warehouseTable.refresh();
+            } catch (error) {
+                MobileUtils.showError('Failed to save');
+            }
+        }
+    });
+}
+
+async function deleteWarehouseItem(config, id, item) {
+    const name = item.warehouseCode || item.binCode || item.orderNumber || item.waveName || id;
+    const confirmed = await MobileConfirm.confirmDelete(name);
+    if (confirmed) {
+        try {
+            await MobileAuth.delete(config.endpoint + '?id=' + id);
+            MobileUtils.showSuccess('Deleted');
+            warehouseTable.refresh();
+        } catch (error) {
+            MobileUtils.showError('Failed to delete');
+        }
+    }
+}
+</script>

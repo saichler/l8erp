@@ -1,0 +1,298 @@
+<!--
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<div class="section-container" id="logistics-section">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Logistics</h1>
+            <p class="page-subtitle">Carriers, freight rates, shipments, routes, and delivery management</p>
+        </div>
+    </div>
+
+    <!-- Service Tabs -->
+    <div class="section-tabs">
+        <button class="section-tab active" data-service="carriers">Carriers</button>
+        <button class="section-tab" data-service="freight-rates">Rates</button>
+        <button class="section-tab" data-service="shipments">Shipments</button>
+        <button class="section-tab" data-service="routes">Routes</button>
+        <button class="section-tab" data-service="load-plans">Load Plans</button>
+        <button class="section-tab" data-service="delivery-proofs">Delivery</button>
+        <button class="section-tab" data-service="freight-audits">Audits</button>
+        <button class="section-tab" data-service="return-authorizations">Returns</button>
+    </div>
+
+    <!-- Table Container -->
+    <div id="logistics-table"></div>
+</div>
+
+<script>
+let logisticsTable = null;
+let currentLogisticsService = 'carriers';
+
+const LOGISTICS_SERVICES = {
+    'carriers': {
+        endpoint: '/erp/50/Carrier',
+        modelName: 'Carrier',
+        idField: 'carrierId',
+        columns: [
+            { key: 'carrierId', label: 'ID', primary: true },
+            { key: 'carrierCode', label: 'Code', secondary: true, filterKey: 'carrierCode' },
+            { key: 'name', label: 'Name' },
+            { key: 'carrierType', label: 'Type', formatter: (v) => ({ 0: 'Unspecified', 1: 'Trucking', 2: 'Rail', 3: 'Ocean', 4: 'Air', 5: 'Courier', 6: 'Intermodal' }[v] || '-') },
+            { key: 'contactInfo', label: 'Contact' }
+        ],
+        addText: 'Add Carrier',
+        formFields: [
+            { key: 'carrierCode', label: 'Carrier Code', type: 'text', required: true },
+            { key: 'name', label: 'Name', type: 'text', required: true },
+            { key: 'carrierType', label: 'Carrier Type', type: 'select', options: { 0: 'Unspecified', 1: 'Trucking', 2: 'Rail', 3: 'Ocean', 4: 'Air', 5: 'Courier', 6: 'Intermodal' } },
+            { key: 'contactInfo', label: 'Contact Info', type: 'text' },
+            { key: 'website', label: 'Website', type: 'text' },
+            { key: 'isActive', label: 'Active', type: 'checkbox' }
+        ]
+    },
+    'freight-rates': {
+        endpoint: '/erp/50/FreightRt',
+        modelName: 'FreightRate',
+        idField: 'rateId',
+        columns: [
+            { key: 'rateId', label: 'ID', primary: true },
+            { key: 'carrierId', label: 'Carrier', secondary: true },
+            { key: 'origin', label: 'Origin' },
+            { key: 'destination', label: 'Destination' },
+            { key: 'ratePerUnit', label: 'Rate/Unit', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'effectiveDate', label: 'Effective', formatter: (v) => MobileUtils.formatDate(v) }
+        ],
+        addText: 'Add Freight Rate',
+        formFields: [
+            { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier', required: true },
+            { key: 'origin', label: 'Origin', type: 'text', required: true },
+            { key: 'destination', label: 'Destination', type: 'text', required: true },
+            { key: 'ratePerUnit', label: 'Rate per Unit', type: 'currency', required: true },
+            { key: 'unitOfMeasure', label: 'Unit of Measure', type: 'text' },
+            { key: 'effectiveDate', label: 'Effective Date', type: 'date', required: true },
+            { key: 'expirationDate', label: 'Expiration Date', type: 'date' }
+        ]
+    },
+    'shipments': {
+        endpoint: '/erp/50/Shipment',
+        modelName: 'Shipment',
+        idField: 'shipmentId',
+        columns: [
+            { key: 'shipmentId', label: 'ID', primary: true },
+            { key: 'shipmentNumber', label: 'Shipment #', secondary: true, filterKey: 'shipmentNumber' },
+            { key: 'carrierId', label: 'Carrier' },
+            { key: 'shipDate', label: 'Ship Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Planned', 2: 'Picked Up', 3: 'In Transit', 4: 'Delivered', 5: 'Returned', 6: 'Cancelled' }[v] || '-') },
+            { key: 'totalCost', label: 'Cost', formatter: (v) => MobileUtils.formatMoney(v) }
+        ],
+        addText: 'Add Shipment',
+        formFields: [
+            { key: 'shipmentNumber', label: 'Shipment Number', type: 'text', required: true },
+            { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier', required: true },
+            { key: 'origin', label: 'Origin', type: 'text' },
+            { key: 'destination', label: 'Destination', type: 'text' },
+            { key: 'shipDate', label: 'Ship Date', type: 'date', required: true },
+            { key: 'expectedDelivery', label: 'Expected Delivery', type: 'date' },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Planned', 2: 'Picked Up', 3: 'In Transit', 4: 'Delivered', 5: 'Returned', 6: 'Cancelled' } },
+            { key: 'totalCost', label: 'Total Cost', type: 'currency' }
+        ]
+    },
+    'routes': {
+        endpoint: '/erp/50/Route',
+        modelName: 'Route',
+        idField: 'routeId',
+        columns: [
+            { key: 'routeId', label: 'ID', primary: true },
+            { key: 'routeName', label: 'Route', secondary: true, filterKey: 'routeName' },
+            { key: 'origin', label: 'Origin' },
+            { key: 'destination', label: 'Destination' },
+            { key: 'distance', label: 'Distance' },
+            { key: 'estimatedTime', label: 'Est. Time' }
+        ],
+        addText: 'Add Route',
+        formFields: [
+            { key: 'routeName', label: 'Route Name', type: 'text', required: true },
+            { key: 'origin', label: 'Origin', type: 'text', required: true },
+            { key: 'destination', label: 'Destination', type: 'text', required: true },
+            { key: 'distance', label: 'Distance', type: 'number' },
+            { key: 'estimatedTime', label: 'Estimated Time', type: 'text' },
+            { key: 'description', label: 'Description', type: 'textarea' }
+        ]
+    },
+    'load-plans': {
+        endpoint: '/erp/50/LoadPlan',
+        modelName: 'LoadPlan',
+        idField: 'loadPlanId',
+        columns: [
+            { key: 'loadPlanId', label: 'ID', primary: true },
+            { key: 'planName', label: 'Plan', secondary: true, filterKey: 'planName' },
+            { key: 'shipmentId', label: 'Shipment' },
+            { key: 'vehicleId', label: 'Vehicle' },
+            { key: 'totalWeight', label: 'Weight' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add Load Plan',
+        formFields: [
+            { key: 'planName', label: 'Plan Name', type: 'text', required: true },
+            { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'Shipment', required: true },
+            { key: 'vehicleId', label: 'Vehicle', type: 'text' },
+            { key: 'totalWeight', label: 'Total Weight', type: 'number' },
+            { key: 'totalVolume', label: 'Total Volume', type: 'number' },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'delivery-proofs': {
+        endpoint: '/erp/50/DlvryProof',
+        modelName: 'DeliveryProof',
+        idField: 'proofId',
+        columns: [
+            { key: 'proofId', label: 'ID', primary: true },
+            { key: 'shipmentId', label: 'Shipment', secondary: true },
+            { key: 'deliveryDate', label: 'Delivered', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'receivedBy', label: 'Received By' }
+        ],
+        addText: 'Add Delivery Proof',
+        formFields: [
+            { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'Shipment', required: true },
+            { key: 'deliveryDate', label: 'Delivery Date', type: 'date', required: true },
+            { key: 'receivedBy', label: 'Received By', type: 'text', required: true },
+            { key: 'signatureRef', label: 'Signature Reference', type: 'text' },
+            { key: 'isComplete', label: 'Complete', type: 'checkbox' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'freight-audits': {
+        endpoint: '/erp/50/FrtAudit',
+        modelName: 'FreightAudit',
+        idField: 'auditId',
+        columns: [
+            { key: 'auditId', label: 'ID', primary: true },
+            { key: 'shipmentId', label: 'Shipment', secondary: true },
+            { key: 'carrierId', label: 'Carrier' },
+            { key: 'invoicedAmount', label: 'Invoiced', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'auditedAmount', label: 'Audited', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'variance', label: 'Variance', formatter: (v) => MobileUtils.formatMoney(v) }
+        ],
+        addText: 'Add Freight Audit',
+        formFields: [
+            { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'Shipment', required: true },
+            { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier', required: true },
+            { key: 'invoicedAmount', label: 'Invoiced Amount', type: 'currency', required: true },
+            { key: 'auditedAmount', label: 'Audited Amount', type: 'currency' },
+            { key: 'variance', label: 'Variance', type: 'currency' },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    },
+    'return-authorizations': {
+        endpoint: '/erp/50/ReturnAuth',
+        modelName: 'ReturnAuthorization',
+        idField: 'rmaId',
+        columns: [
+            { key: 'rmaId', label: 'ID', primary: true },
+            { key: 'rmaNumber', label: 'RMA #', secondary: true, filterKey: 'rmaNumber' },
+            { key: 'customerId', label: 'Customer' },
+            { key: 'requestDate', label: 'Requested', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'reason', label: 'Reason' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+        ],
+        addText: 'Add Return Authorization',
+        formFields: [
+            { key: 'rmaNumber', label: 'RMA Number', type: 'text', required: true },
+            { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'Customer' },
+            { key: 'requestDate', label: 'Request Date', type: 'date', required: true },
+            { key: 'reason', label: 'Reason', type: 'textarea', required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'notes', label: 'Notes', type: 'textarea' }
+        ]
+    }
+};
+
+function initMobileLogistics() {
+    loadLogisticsService('carriers');
+
+    document.querySelectorAll('.section-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            loadLogisticsService(tab.dataset.service);
+        });
+    });
+}
+
+function loadLogisticsService(serviceName) {
+    currentLogisticsService = serviceName;
+    const config = LOGISTICS_SERVICES[serviceName];
+
+    logisticsTable = new MobileEditTable('logistics-table', {
+        endpoint: config.endpoint,
+        modelName: config.modelName,
+        columns: config.columns,
+        rowsPerPage: 15,
+        addButtonText: config.addText,
+        onAdd: () => openLogisticsForm(config),
+        onEdit: (id, item) => openLogisticsForm(config, item),
+        onDelete: (id, item) => deleteLogisticsItem(config, id, item),
+        getItemId: (item) => item[config.idField]
+    });
+}
+
+function openLogisticsForm(config, item = null) {
+    const isEdit = !!item;
+    const title = isEdit ? 'Edit' : config.addText;
+
+    const formDef = { fields: config.formFields };
+    const content = MobileForms.renderForm(formDef, item || {});
+
+    MobilePopup.show({
+        title: title,
+        content: content,
+        size: 'medium',
+        saveButtonText: isEdit ? 'Update' : 'Create',
+        onSave: async (popup) => {
+            const body = popup.body;
+            const errors = MobileForms.validateForm(body);
+            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+
+            const data = MobileForms.getFormData(body);
+            if (isEdit) data[config.idField] = item[config.idField];
+
+            try {
+                if (isEdit) await MobileAuth.put(config.endpoint, data);
+                else await MobileAuth.post(config.endpoint, data);
+                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                MobilePopup.close();
+                logisticsTable.refresh();
+            } catch (error) {
+                MobileUtils.showError('Failed to save');
+            }
+        }
+    });
+}
+
+async function deleteLogisticsItem(config, id, item) {
+    const name = item.carrierCode || item.shipmentNumber || item.routeName || item.planName || item.rmaNumber || id;
+    const confirmed = await MobileConfirm.confirmDelete(name);
+    if (confirmed) {
+        try {
+            await MobileAuth.delete(config.endpoint + '?id=' + id);
+            MobileUtils.showSuccess('Deleted');
+            logisticsTable.refresh();
+        } catch (error) {
+            MobileUtils.showError('Failed to delete');
+        }
+    }
+}
+</script>
