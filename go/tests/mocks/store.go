@@ -152,4 +152,64 @@ type MockDataStore struct {
 
 	// FIN Phase 9: Tax Filing
 	TaxReturnIDs []string
+
+	// SCM Phase 1: Foundation
+	ItemCategoryIDs  []string
+	SCMWarehouseIDs  []string
+	SCMCarrierIDs    []string
+	ForecastModelIDs []string
+
+	// SCM Phase 2: Inventory Core
+	ItemIDs       []string
+	BinIDs        []string
+	FreightRateIDs []string
+
+	// SCM Phase 3: Procurement
+	PurchaseRequisitionIDs []string
+	RequisitionLineIDs     []string
+	RFQIDs                 []string
+	BlanketOrderIDs        []string
+	SupplierScorecardIDs   []string
+
+	// SCM Phase 4: Purchase Orders
+	SCMPurchaseOrderIDs []string
+	POLineIDs           []string
+
+	// SCM Phase 5: Warehouse Operations
+	ReceivingOrderIDs []string
+	PutawayTaskIDs    []string
+	PickTaskIDs       []string
+	PackTaskIDs       []string
+	ShipTaskIDs       []string
+	WavePlanIDs       []string
+	DockScheduleIDs   []string
+
+	// SCM Phase 6: Inventory Transactions
+	StockMovementIDs      []string
+	LotNumberIDs          []string
+	SerialNumberIDs       []string
+	CycleCountIDs         []string
+	ReorderPointIDs       []string
+	InventoryValuationIDs []string
+
+	// SCM Phase 7: Logistics
+	ShipmentIDs            []string
+	RouteIDs               []string
+	LoadPlanIDs            []string
+	DeliveryProofIDs       []string
+	FreightAuditIDs        []string
+	ReturnAuthorizationIDs []string
+
+	// SCM Phase 8: Planning
+	DemandForecastIDs          []string
+	DemandPlanIDs              []string
+	PromotionalPlanIDs         []string
+	NewProductPlanIDs          []string
+	ForecastAccuracyIDs        []string
+	MaterialRequirementIDs     []string
+	DistributionRequirementIDs []string
+	SupplyPlanIDs              []string
+	SupplierCollaborationIDs   []string
+	SafetyStockIDs             []string
+	LeadTimeIDs                []string
 }

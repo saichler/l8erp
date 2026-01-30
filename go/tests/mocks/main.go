@@ -169,6 +169,63 @@ func main() {
 		os.Exit(1)
 	}
 
+	// SCM Module Phases
+	fmt.Printf("\nSCM Phase 1: Foundation\n")
+	fmt.Printf("-----------------------\n")
+	if err := generateScmPhase1(client, store); err != nil {
+		fmt.Printf("SCM Phase 1 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nSCM Phase 2: Inventory Core\n")
+	fmt.Printf("---------------------------\n")
+	if err := generateScmPhase2(client, store); err != nil {
+		fmt.Printf("SCM Phase 2 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nSCM Phase 3: Procurement\n")
+	fmt.Printf("------------------------\n")
+	if err := generateScmPhase3(client, store); err != nil {
+		fmt.Printf("SCM Phase 3 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nSCM Phase 4: Purchase Orders\n")
+	fmt.Printf("----------------------------\n")
+	if err := generateScmPhase4(client, store); err != nil {
+		fmt.Printf("SCM Phase 4 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nSCM Phase 5: Warehouse Operations\n")
+	fmt.Printf("----------------------------------\n")
+	if err := generateScmPhase5(client, store); err != nil {
+		fmt.Printf("SCM Phase 5 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nSCM Phase 6: Inventory Transactions\n")
+	fmt.Printf("------------------------------------\n")
+	if err := generateScmPhase6(client, store); err != nil {
+		fmt.Printf("SCM Phase 6 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nSCM Phase 7: Logistics\n")
+	fmt.Printf("----------------------\n")
+	if err := generateScmPhase7(client, store); err != nil {
+		fmt.Printf("SCM Phase 7 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nSCM Phase 8: Planning\n")
+	fmt.Printf("---------------------\n")
+	if err := generateScmPhase8(client, store); err != nil {
+		fmt.Printf("SCM Phase 8 failed: %v\n", err)
+		os.Exit(1)
+	}
+
 	fmt.Printf("\n=======================\n")
 	fmt.Printf("Mock data generation complete!\n")
 	fmt.Printf("\nHCM Summary:\n")
@@ -195,4 +252,17 @@ func main() {
 	fmt.Printf("  - Journal Entries: %d\n", len(store.JournalEntryIDs))
 	fmt.Printf("  - Assets: %d\n", len(store.AssetIDs))
 	fmt.Printf("  - Tax Returns: %d\n", len(store.TaxReturnIDs))
+	fmt.Printf("\nSCM Summary:\n")
+	fmt.Printf("  - Item Categories: %d\n", len(store.ItemCategoryIDs))
+	fmt.Printf("  - Warehouses: %d\n", len(store.SCMWarehouseIDs))
+	fmt.Printf("  - Items: %d\n", len(store.ItemIDs))
+	fmt.Printf("  - Purchase Requisitions: %d\n", len(store.PurchaseRequisitionIDs))
+	fmt.Printf("  - Purchase Orders: %d\n", len(store.SCMPurchaseOrderIDs))
+	fmt.Printf("  - Receiving Orders: %d\n", len(store.ReceivingOrderIDs))
+	fmt.Printf("  - Stock Movements: %d\n", len(store.StockMovementIDs))
+	fmt.Printf("  - Shipments: %d\n", len(store.ShipmentIDs))
+	fmt.Printf("  - Demand Forecasts: %d\n", len(store.DemandForecastIDs))
+	fmt.Printf("  - Supply Plans: %d\n", len(store.SupplyPlanIDs))
+	fmt.Printf("  - Safety Stocks: %d\n", len(store.SafetyStockIDs))
+	fmt.Printf("  - Lead Times: %d\n", len(store.LeadTimeIDs))
 }
