@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newForecastAccuracyServiceCallback())
-	sla.SetServiceItem(&scm.ForecastAccuracy{})
-	sla.SetServiceItemList(&scm.ForecastAccuracyList{})
+	sla.SetServiceItem(&scm.ScmForecastAccuracy{})
+	sla.SetServiceItemList(&scm.ScmForecastAccuracyList{})
 	sla.SetPrimaryKeys("AccuracyId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.ForecastAccuracy{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ForecastAccuracyList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ForecastAccuracy{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ForecastAccuracy{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmForecastAccuracy{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmForecastAccuracyList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmForecastAccuracy{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmForecastAccuracy{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ForecastAccuracyList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmForecastAccuracyList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func ForecastAccuracies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func ForecastAccuracy(accuracyId string, vnic ifs.IVNic) (*scm.ForecastAccuracy, error) {
+func ForecastAccuracy(accuracyId string, vnic ifs.IVNic) (*scm.ScmForecastAccuracy, error) {
 	this, ok := ForecastAccuracies(vnic)
 	if !ok {
 		return nil, errors.New("No ForecastAccuracy Service Found")
 	}
-	filter := &scm.ForecastAccuracy{AccuracyId: accuracyId}
+	filter := &scm.ScmForecastAccuracy{AccuracyId: accuracyId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ForecastAccuracy), nil
+	return resp.Element().(*scm.ScmForecastAccuracy), nil
 }

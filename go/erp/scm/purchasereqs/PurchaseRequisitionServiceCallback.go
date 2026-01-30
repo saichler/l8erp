@@ -29,7 +29,7 @@ func newPurchaseRequisitionServiceCallback() *PurchaseRequisitionServiceCallback
 }
 
 func (this *PurchaseRequisitionServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.PurchaseRequisition)
+	item, ok := any.(*scm.ScmPurchaseRequisition)
 	if !ok {
 		return nil, false, errors.New("invalid purchase requisition type")
 	}
@@ -44,7 +44,7 @@ func (this *PurchaseRequisitionServiceCallback) After(any interface{}, action if
 	return nil, true, nil
 }
 
-func validate(item *scm.PurchaseRequisition, vnic ifs.IVNic) error {
+func validate(item *scm.ScmPurchaseRequisition, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.RequisitionId, "RequisitionId"); err != nil {
 		return err
 	}

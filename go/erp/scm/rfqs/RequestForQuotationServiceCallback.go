@@ -29,7 +29,7 @@ func newRequestForQuotationServiceCallback() *RequestForQuotationServiceCallback
 }
 
 func (this *RequestForQuotationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.RequestForQuotation)
+	item, ok := any.(*scm.ScmRequestForQuotation)
 	if !ok {
 		return nil, false, errors.New("invalid request for quotation type")
 	}
@@ -44,7 +44,7 @@ func (this *RequestForQuotationServiceCallback) After(any interface{}, action if
 	return nil, true, nil
 }
 
-func validate(item *scm.RequestForQuotation, vnic ifs.IVNic) error {
+func validate(item *scm.ScmRequestForQuotation, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.RfqId, "RfqId"); err != nil {
 		return err
 	}

@@ -29,7 +29,7 @@ func newPurchaseOrderLineServiceCallback() *PurchaseOrderLineServiceCallback {
 }
 
 func (this *PurchaseOrderLineServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.PurchaseOrderLine)
+	item, ok := any.(*scm.ScmPurchaseOrderLine)
 	if !ok {
 		return nil, false, errors.New("invalid purchase order line type")
 	}
@@ -44,7 +44,7 @@ func (this *PurchaseOrderLineServiceCallback) After(any interface{}, action ifs.
 	return nil, true, nil
 }
 
-func validate(item *scm.PurchaseOrderLine, vnic ifs.IVNic) error {
+func validate(item *scm.ScmPurchaseOrderLine, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.LineId, "LineId"); err != nil {
 		return err
 	}

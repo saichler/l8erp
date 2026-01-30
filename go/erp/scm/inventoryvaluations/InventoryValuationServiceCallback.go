@@ -29,7 +29,7 @@ func newInventoryValuationServiceCallback() *InventoryValuationServiceCallback {
 }
 
 func (this *InventoryValuationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.InventoryValuation)
+	item, ok := any.(*scm.ScmInventoryValuation)
 	if !ok {
 		return nil, false, errors.New("invalid inventory valuation type")
 	}
@@ -44,7 +44,7 @@ func (this *InventoryValuationServiceCallback) After(any interface{}, action ifs
 	return nil, true, nil
 }
 
-func validate(item *scm.InventoryValuation, vnic ifs.IVNic) error {
+func validate(item *scm.ScmInventoryValuation, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.ValuationId, "ValuationId"); err != nil {
 		return err
 	}

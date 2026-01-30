@@ -28,7 +28,7 @@ func newCarrierServiceCallback() *CarrierServiceCallback {
 }
 
 func (this *CarrierServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.Carrier)
+	item, ok := any.(*scm.ScmCarrier)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -43,7 +43,7 @@ func (this *CarrierServiceCallback) After(any interface{}, action ifs.Action, co
 	return nil, true, nil
 }
 
-func validate(item *scm.Carrier, vnic ifs.IVNic) error {
+func validate(item *scm.ScmCarrier, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.CarrierId, "CarrierId"); err != nil {
 		return err
 	}

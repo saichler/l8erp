@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newFreightRateServiceCallback())
-	sla.SetServiceItem(&scm.FreightRate{})
-	sla.SetServiceItemList(&scm.FreightRateList{})
+	sla.SetServiceItem(&scm.ScmFreightRate{})
+	sla.SetServiceItemList(&scm.ScmFreightRateList{})
 	sla.SetPrimaryKeys("RateId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.FreightRate{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.FreightRateList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.FreightRate{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.FreightRate{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmFreightRate{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmFreightRateList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmFreightRate{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmFreightRate{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.FreightRateList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmFreightRateList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func FreightRates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func FreightRate(rateId string, vnic ifs.IVNic) (*scm.FreightRate, error) {
+func FreightRate(rateId string, vnic ifs.IVNic) (*scm.ScmFreightRate, error) {
 	this, ok := FreightRates(vnic)
 	if !ok {
 		return nil, errors.New("No FreightRate Service Found")
 	}
-	filter := &scm.FreightRate{RateId: rateId}
+	filter := &scm.ScmFreightRate{RateId: rateId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.FreightRate), nil
+	return resp.Element().(*scm.ScmFreightRate), nil
 }

@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newNewProductPlanServiceCallback())
-	sla.SetServiceItem(&scm.NewProductPlan{})
-	sla.SetServiceItemList(&scm.NewProductPlanList{})
+	sla.SetServiceItem(&scm.ScmNewProductPlan{})
+	sla.SetServiceItemList(&scm.ScmNewProductPlanList{})
 	sla.SetPrimaryKeys("PlanId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.NewProductPlan{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.NewProductPlanList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.NewProductPlan{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.NewProductPlan{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmNewProductPlan{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmNewProductPlanList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmNewProductPlan{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmNewProductPlan{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.NewProductPlanList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmNewProductPlanList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func NewProductPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func NewProductPlan(planId string, vnic ifs.IVNic) (*scm.NewProductPlan, error) {
+func NewProductPlan(planId string, vnic ifs.IVNic) (*scm.ScmNewProductPlan, error) {
 	this, ok := NewProductPlans(vnic)
 	if !ok {
 		return nil, errors.New("No NewProductPlan Service Found")
 	}
-	filter := &scm.NewProductPlan{PlanId: planId}
+	filter := &scm.ScmNewProductPlan{PlanId: planId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.NewProductPlan), nil
+	return resp.Element().(*scm.ScmNewProductPlan), nil
 }

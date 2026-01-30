@@ -24,21 +24,21 @@ import (
 )
 
 // generateShipments creates 20 shipment records for logistics tracking
-func generateShipments(store *MockDataStore) []*scm.Shipment {
-	shipments := make([]*scm.Shipment, 20)
+func generateShipments(store *MockDataStore) []*scm.ScmShipment {
+	shipments := make([]*scm.ScmShipment, 20)
 
-	statuses := []scm.ShipmentStatus{
-		scm.ShipmentStatus_SHIPMENT_STATUS_PLANNED,
-		scm.ShipmentStatus_SHIPMENT_STATUS_PICKED_UP,
-		scm.ShipmentStatus_SHIPMENT_STATUS_IN_TRANSIT,
-		scm.ShipmentStatus_SHIPMENT_STATUS_DELIVERED,
+	statuses := []scm.ScmShipmentStatus{
+		scm.ScmShipmentStatus_SHIPMENT_STATUS_PLANNED,
+		scm.ScmShipmentStatus_SHIPMENT_STATUS_PICKED_UP,
+		scm.ScmShipmentStatus_SHIPMENT_STATUS_IN_TRANSIT,
+		scm.ScmShipmentStatus_SHIPMENT_STATUS_DELIVERED,
 	}
 
 	for i := 0; i < 20; i++ {
 		// 50% delivered
-		var status scm.ShipmentStatus
+		var status scm.ScmShipmentStatus
 		if i < 10 {
-			status = scm.ShipmentStatus_SHIPMENT_STATUS_DELIVERED
+			status = scm.ScmShipmentStatus_SHIPMENT_STATUS_DELIVERED
 		} else {
 			status = statuses[i%len(statuses)]
 		}
@@ -51,14 +51,14 @@ func generateShipments(store *MockDataStore) []*scm.Shipment {
 		expectedDelivery := shipDate.AddDate(0, 0, rand.Intn(10)+3)
 
 		var actualDelivery int64
-		if status == scm.ShipmentStatus_SHIPMENT_STATUS_DELIVERED {
+		if status == scm.ScmShipmentStatus_SHIPMENT_STATUS_DELIVERED {
 			actualDelivery = expectedDelivery.AddDate(0, 0, rand.Intn(3)-1).Unix()
 		}
 
 		totalWeight := float64(rand.Intn(9901)+100)   // 100-10000 lbs
 		freightCost := int64(rand.Intn(95001) + 5000)  // 5000-100000 cents
 
-		shipments[i] = &scm.Shipment{
+		shipments[i] = &scm.ScmShipment{
 			ShipmentId:         fmt.Sprintf("shp-%03d", i+1),
 			ShipmentNumber:     fmt.Sprintf("SHP-%06d", i+1),
 			CarrierId:          carrierID,
@@ -81,15 +81,15 @@ func generateShipments(store *MockDataStore) []*scm.Shipment {
 }
 
 // generateRoutes creates 10 logistics route records
-func generateRoutes(store *MockDataStore) []*scm.Route {
-	routes := make([]*scm.Route, len(routeNames))
+func generateRoutes(store *MockDataStore) []*scm.ScmRoute {
+	routes := make([]*scm.ScmRoute, len(routeNames))
 
 	for i, name := range routeNames {
 		originIdx := i % len(store.SCMWarehouseIDs)
 		destIdx := (i + 1) % len(store.SCMWarehouseIDs)
 		carrierID := store.SCMCarrierIDs[i%len(store.SCMCarrierIDs)]
 
-		routes[i] = &scm.Route{
+		routes[i] = &scm.ScmRoute{
 			RouteId:       fmt.Sprintf("rte-%03d", i+1),
 			Name:          name,
 			Description:   fmt.Sprintf("Logistics route: %s", name),
@@ -108,13 +108,13 @@ func generateRoutes(store *MockDataStore) []*scm.Route {
 }
 
 // generateLoadPlans creates 15 load plan records linked to shipments
-func generateLoadPlans(store *MockDataStore) []*scm.LoadPlan {
-	plans := make([]*scm.LoadPlan, 15)
+func generateLoadPlans(store *MockDataStore) []*scm.ScmLoadPlan {
+	plans := make([]*scm.ScmLoadPlan, 15)
 
-	loadStatuses := []scm.TaskStatus{
-		scm.TaskStatus_TASK_STATUS_PENDING,
-		scm.TaskStatus_TASK_STATUS_IN_PROGRESS,
-		scm.TaskStatus_TASK_STATUS_COMPLETED,
+	loadStatuses := []scm.ScmTaskStatus{
+		scm.ScmTaskStatus_TASK_STATUS_PENDING,
+		scm.ScmTaskStatus_TASK_STATUS_IN_PROGRESS,
+		scm.ScmTaskStatus_TASK_STATUS_COMPLETED,
 	}
 
 	for i := 0; i < 15; i++ {
@@ -125,7 +125,7 @@ func generateLoadPlans(store *MockDataStore) []*scm.LoadPlan {
 		currentWeight := maxWeight * pct
 		plannedDate := time.Date(2025, time.Month((i%12)+1), (i%28)+1, 0, 0, 0, 0, time.UTC)
 
-		plans[i] = &scm.LoadPlan{
+		plans[i] = &scm.ScmLoadPlan{
 			LoadPlanId:  fmt.Sprintf("lp-%03d", i+1),
 			ShipmentId:  shipmentID,
 			VehicleId:   fmt.Sprintf("veh-%03d", i+1),
@@ -144,8 +144,8 @@ func generateLoadPlans(store *MockDataStore) []*scm.LoadPlan {
 }
 
 // generateDeliveryProofs creates 10 delivery proof records for delivered shipments
-func generateDeliveryProofs(store *MockDataStore) []*scm.DeliveryProof {
-	proofs := make([]*scm.DeliveryProof, 10)
+func generateDeliveryProofs(store *MockDataStore) []*scm.ScmDeliveryProof {
+	proofs := make([]*scm.ScmDeliveryProof, 10)
 
 	for i := 0; i < 10; i++ {
 		// Link to delivered shipments (first 10 shipments are delivered)
@@ -153,7 +153,7 @@ func generateDeliveryProofs(store *MockDataStore) []*scm.DeliveryProof {
 		shipmentID := store.ShipmentIDs[shipmentIdx]
 		deliveryDate := time.Date(2025, time.Month((i%12)+1), (i%28)+1, 14, 30, 0, 0, time.UTC)
 
-		proofs[i] = &scm.DeliveryProof{
+		proofs[i] = &scm.ScmDeliveryProof{
 			ProofId:      fmt.Sprintf("dprf-%03d", i+1),
 			ShipmentId:   shipmentID,
 			DeliveryDate: deliveryDate.Unix(),
@@ -170,8 +170,8 @@ func generateDeliveryProofs(store *MockDataStore) []*scm.DeliveryProof {
 }
 
 // generateFreightAudits creates 12 freight audit records
-func generateFreightAudits(store *MockDataStore) []*scm.FreightAudit {
-	audits := make([]*scm.FreightAudit, 12)
+func generateFreightAudits(store *MockDataStore) []*scm.ScmFreightAudit {
+	audits := make([]*scm.ScmFreightAudit, 12)
 
 	auditStatuses := []string{"Pending", "In Review", "Completed", "Disputed"}
 
@@ -186,7 +186,7 @@ func generateFreightAudits(store *MockDataStore) []*scm.FreightAudit {
 		actualAmount := int64(float64(invoicedAmount) * variancePct)
 		varianceAmount := actualAmount - invoicedAmount
 
-		audits[i] = &scm.FreightAudit{
+		audits[i] = &scm.ScmFreightAudit{
 			AuditId:        fmt.Sprintf("faud-%03d", i+1),
 			ShipmentId:     shipmentID,
 			CarrierId:      carrierID,
@@ -204,18 +204,18 @@ func generateFreightAudits(store *MockDataStore) []*scm.FreightAudit {
 }
 
 // generateReturnAuthorizations creates 8 return merchandise authorization records
-func generateReturnAuthorizations(store *MockDataStore) []*scm.ReturnAuthorization {
-	returns := make([]*scm.ReturnAuthorization, 8)
+func generateReturnAuthorizations(store *MockDataStore) []*scm.ScmReturnAuthorization {
+	returns := make([]*scm.ScmReturnAuthorization, 8)
 
 	reasons := []string{
 		"Defective", "Wrong Item", "Damaged in Transit", "Quality Issue",
 	}
 
-	returnStatuses := []scm.RequisitionStatus{
-		scm.RequisitionStatus_REQUISITION_STATUS_DRAFT,
-		scm.RequisitionStatus_REQUISITION_STATUS_SUBMITTED,
-		scm.RequisitionStatus_REQUISITION_STATUS_APPROVED,
-		scm.RequisitionStatus_REQUISITION_STATUS_FULFILLED,
+	returnStatuses := []scm.ScmRequisitionStatus{
+		scm.ScmRequisitionStatus_REQUISITION_STATUS_DRAFT,
+		scm.ScmRequisitionStatus_REQUISITION_STATUS_SUBMITTED,
+		scm.ScmRequisitionStatus_REQUISITION_STATUS_APPROVED,
+		scm.ScmRequisitionStatus_REQUISITION_STATUS_FULFILLED,
 	}
 
 	for i := 0; i < 8; i++ {
@@ -229,7 +229,7 @@ func generateReturnAuthorizations(store *MockDataStore) []*scm.ReturnAuthorizati
 			itemDesc = fmt.Sprintf("Item %s", store.ItemIDs[i%len(store.ItemIDs)])
 		}
 
-		returns[i] = &scm.ReturnAuthorization{
+		returns[i] = &scm.ScmReturnAuthorization{
 			RmaId:              fmt.Sprintf("rma-%03d", i+1),
 			RmaNumber:          fmt.Sprintf("RMA-%06d", i+1),
 			CustomerId:         customerID,

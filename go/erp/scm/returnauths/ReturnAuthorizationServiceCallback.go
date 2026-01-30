@@ -28,7 +28,7 @@ func newReturnAuthorizationServiceCallback() *ReturnAuthorizationServiceCallback
 }
 
 func (this *ReturnAuthorizationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ReturnAuthorization)
+	item, ok := any.(*scm.ScmReturnAuthorization)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -43,7 +43,7 @@ func (this *ReturnAuthorizationServiceCallback) After(any interface{}, action if
 	return nil, true, nil
 }
 
-func validate(item *scm.ReturnAuthorization, vnic ifs.IVNic) error {
+func validate(item *scm.ScmReturnAuthorization, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.RmaId, "RmaId"); err != nil {
 		return err
 	}

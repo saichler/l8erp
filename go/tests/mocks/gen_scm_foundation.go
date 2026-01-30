@@ -24,10 +24,10 @@ import (
 )
 
 // generateItemCategories creates item category records
-func generateItemCategories() []*scm.ItemCategory {
-	categories := make([]*scm.ItemCategory, len(itemCategoryNames))
+func generateItemCategories() []*scm.ScmItemCategory {
+	categories := make([]*scm.ScmItemCategory, len(itemCategoryNames))
 	for i, name := range itemCategoryNames {
-		cat := &scm.ItemCategory{
+		cat := &scm.ScmItemCategory{
 			CategoryId:  fmt.Sprintf("icat-%03d", i+1),
 			Name:        name,
 			Description: fmt.Sprintf("Category for %s", name),
@@ -44,17 +44,17 @@ func generateItemCategories() []*scm.ItemCategory {
 }
 
 // generateWarehouses creates warehouse records
-func generateWarehouses(store *MockDataStore) []*scm.Warehouse {
-	warehouseTypes := []scm.WarehouseType{
-		scm.WarehouseType_WAREHOUSE_TYPE_STANDARD,
-		scm.WarehouseType_WAREHOUSE_TYPE_STANDARD,
-		scm.WarehouseType_WAREHOUSE_TYPE_STANDARD,
-		scm.WarehouseType_WAREHOUSE_TYPE_STANDARD,
-		scm.WarehouseType_WAREHOUSE_TYPE_COLD_STORAGE,
-		scm.WarehouseType_WAREHOUSE_TYPE_HAZMAT,
+func generateWarehouses(store *MockDataStore) []*scm.ScmWarehouse {
+	warehouseTypes := []scm.ScmWarehouseType{
+		scm.ScmWarehouseType_WAREHOUSE_TYPE_STANDARD,
+		scm.ScmWarehouseType_WAREHOUSE_TYPE_STANDARD,
+		scm.ScmWarehouseType_WAREHOUSE_TYPE_STANDARD,
+		scm.ScmWarehouseType_WAREHOUSE_TYPE_STANDARD,
+		scm.ScmWarehouseType_WAREHOUSE_TYPE_COLD_STORAGE,
+		scm.ScmWarehouseType_WAREHOUSE_TYPE_HAZMAT,
 	}
 
-	warehouses := make([]*scm.Warehouse, len(warehouseNames))
+	warehouses := make([]*scm.ScmWarehouse, len(warehouseNames))
 	for i, name := range warehouseNames {
 		managerID := ""
 		if len(store.ManagerIDs) > 0 {
@@ -63,7 +63,7 @@ func generateWarehouses(store *MockDataStore) []*scm.Warehouse {
 			managerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
 		}
 
-		warehouses[i] = &scm.Warehouse{
+		warehouses[i] = &scm.ScmWarehouse{
 			WarehouseId:   fmt.Sprintf("wh-%03d", i+1),
 			Code:          fmt.Sprintf("WH%03d", i+1),
 			Name:          name,
@@ -80,16 +80,16 @@ func generateWarehouses(store *MockDataStore) []*scm.Warehouse {
 }
 
 // generateBins creates bin records (5 per warehouse = 30 total)
-func generateBins(store *MockDataStore) []*scm.Bin {
-	binTypes := []scm.BinType{
-		scm.BinType_BIN_TYPE_STORAGE,
-		scm.BinType_BIN_TYPE_PICKING,
-		scm.BinType_BIN_TYPE_RECEIVING,
-		scm.BinType_BIN_TYPE_SHIPPING,
-		scm.BinType_BIN_TYPE_STAGING,
+func generateBins(store *MockDataStore) []*scm.ScmBin {
+	binTypes := []scm.ScmBinType{
+		scm.ScmBinType_BIN_TYPE_STORAGE,
+		scm.ScmBinType_BIN_TYPE_PICKING,
+		scm.ScmBinType_BIN_TYPE_RECEIVING,
+		scm.ScmBinType_BIN_TYPE_SHIPPING,
+		scm.ScmBinType_BIN_TYPE_STAGING,
 	}
 
-	bins := make([]*scm.Bin, 0, len(store.SCMWarehouseIDs)*5)
+	bins := make([]*scm.ScmBin, 0, len(store.SCMWarehouseIDs)*5)
 	idx := 1
 	for whIdx, warehouseID := range store.SCMWarehouseIDs {
 		for j := 0; j < 5; j++ {
@@ -100,7 +100,7 @@ func generateBins(store *MockDataStore) []*scm.Bin {
 			maxCap := float64(rand.Intn(901) + 100)
 			currentQty := float64(rand.Intn(int(maxCap*0.8) + 1))
 
-			bins = append(bins, &scm.Bin{
+			bins = append(bins, &scm.ScmBin{
 				BinId:           fmt.Sprintf("bin-%03d", idx),
 				WarehouseId:     warehouseID,
 				BinCode:         fmt.Sprintf("Z%d-A%d-R%d-L%d", zone, aisle, rack, level),
@@ -121,20 +121,20 @@ func generateBins(store *MockDataStore) []*scm.Bin {
 }
 
 // generateSCMCarriers creates SCM carrier records
-func generateSCMCarriers() []*scm.Carrier {
-	carrierTypes := []scm.CarrierType{
-		scm.CarrierType_CARRIER_TYPE_PARCEL,
-		scm.CarrierType_CARRIER_TYPE_LTL,
-		scm.CarrierType_CARRIER_TYPE_FTL,
-		scm.CarrierType_CARRIER_TYPE_AIR,
-		scm.CarrierType_CARRIER_TYPE_OCEAN,
-		scm.CarrierType_CARRIER_TYPE_RAIL,
-		scm.CarrierType_CARRIER_TYPE_COURIER,
+func generateSCMCarriers() []*scm.ScmCarrier {
+	carrierTypes := []scm.ScmCarrierType{
+		scm.ScmCarrierType_CARRIER_TYPE_PARCEL,
+		scm.ScmCarrierType_CARRIER_TYPE_LTL,
+		scm.ScmCarrierType_CARRIER_TYPE_FTL,
+		scm.ScmCarrierType_CARRIER_TYPE_AIR,
+		scm.ScmCarrierType_CARRIER_TYPE_OCEAN,
+		scm.ScmCarrierType_CARRIER_TYPE_RAIL,
+		scm.ScmCarrierType_CARRIER_TYPE_COURIER,
 	}
 
-	carriers := make([]*scm.Carrier, len(scmCarrierNames))
+	carriers := make([]*scm.ScmCarrier, len(scmCarrierNames))
 	for i, name := range scmCarrierNames {
-		carriers[i] = &scm.Carrier{
+		carriers[i] = &scm.ScmCarrier{
 			CarrierId:   fmt.Sprintf("sccar-%03d", i+1),
 			Code:        fmt.Sprintf("CR%03d", i+1),
 			Name:        name,
@@ -150,10 +150,10 @@ func generateSCMCarriers() []*scm.Carrier {
 }
 
 // generateFreightRates creates freight rate records (2 per carrier = 20 total)
-func generateFreightRates(store *MockDataStore) []*scm.FreightRate {
+func generateFreightRates(store *MockDataStore) []*scm.ScmFreightRate {
 	unitTypes := []string{"per_lb", "per_pallet"}
 
-	rates := make([]*scm.FreightRate, 0, len(store.SCMCarrierIDs)*2)
+	rates := make([]*scm.ScmFreightRate, 0, len(store.SCMCarrierIDs)*2)
 	idx := 1
 	for _, carrierID := range store.SCMCarrierIDs {
 		for j := 0; j < 2; j++ {
@@ -162,7 +162,7 @@ func generateFreightRates(store *MockDataStore) []*scm.FreightRate {
 			effectiveDate := time.Now().AddDate(0, -rand.Intn(3), 0)
 			expiryDate := effectiveDate.AddDate(0, 6, 0)
 
-			rates = append(rates, &scm.FreightRate{
+			rates = append(rates, &scm.ScmFreightRate{
 				RateId:    fmt.Sprintf("frt-%03d", idx),
 				CarrierId: carrierID,
 				Origin:    cities[originIdx],
@@ -186,11 +186,11 @@ func generateFreightRates(store *MockDataStore) []*scm.FreightRate {
 }
 
 // generateForecastModels creates forecast model records
-func generateForecastModels() []*scm.ForecastModel {
+func generateForecastModels() []*scm.ScmForecastModel {
 	type modelDef struct {
 		name           string
 		description    string
-		method         scm.ForecastMethod
+		method         scm.ScmForecastMethod
 		params         map[string]string
 		accuracyScore  float64
 	}
@@ -199,43 +199,43 @@ func generateForecastModels() []*scm.ForecastModel {
 		{
 			name:        "Moving Average Model",
 			description: "Forecast using simple moving average over configurable window",
-			method:      scm.ForecastMethod_FORECAST_METHOD_MOVING_AVG,
+			method:      scm.ScmForecastMethod_FORECAST_METHOD_MOVING_AVG,
 			params:      map[string]string{"window_size": "12", "weighted": "false"},
 			accuracyScore: 0.82,
 		},
 		{
 			name:        "Exponential Smoothing",
 			description: "Forecast using exponential smoothing with alpha parameter",
-			method:      scm.ForecastMethod_FORECAST_METHOD_EXPONENTIAL,
+			method:      scm.ScmForecastMethod_FORECAST_METHOD_EXPONENTIAL,
 			params:      map[string]string{"alpha": "0.3", "beta": "0.1"},
 			accuracyScore: 0.87,
 		},
 		{
 			name:        "Regression Analysis",
 			description: "Linear regression model for trend-based forecasting",
-			method:      scm.ForecastMethod_FORECAST_METHOD_REGRESSION,
+			method:      scm.ScmForecastMethod_FORECAST_METHOD_REGRESSION,
 			params:      map[string]string{"variables": "price,season,promotion", "confidence": "0.95"},
 			accuracyScore: 0.91,
 		},
 		{
 			name:        "Seasonal Decomposition",
 			description: "Seasonal decomposition model for cyclical demand patterns",
-			method:      scm.ForecastMethod_FORECAST_METHOD_SEASONAL,
+			method:      scm.ScmForecastMethod_FORECAST_METHOD_SEASONAL,
 			params:      map[string]string{"period": "12", "trend_type": "additive"},
 			accuracyScore: 0.89,
 		},
 		{
 			name:        "Manual Forecast",
 			description: "Manual forecast entry for expert-driven planning",
-			method:      scm.ForecastMethod_FORECAST_METHOD_MANUAL,
+			method:      scm.ScmForecastMethod_FORECAST_METHOD_MANUAL,
 			params:      map[string]string{"review_frequency": "monthly", "approval_required": "true"},
 			accuracyScore: 0.76,
 		},
 	}
 
-	models := make([]*scm.ForecastModel, len(defs))
+	models := make([]*scm.ScmForecastModel, len(defs))
 	for i, d := range defs {
-		models[i] = &scm.ForecastModel{
+		models[i] = &scm.ScmForecastModel{
 			ModelId:        fmt.Sprintf("fmdl-%03d", i+1),
 			Name:           d.name,
 			Description:    d.description,

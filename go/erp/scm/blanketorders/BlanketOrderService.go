@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newBlanketOrderServiceCallback())
-	sla.SetServiceItem(&scm.BlanketOrder{})
-	sla.SetServiceItemList(&scm.BlanketOrderList{})
+	sla.SetServiceItem(&scm.ScmBlanketOrder{})
+	sla.SetServiceItemList(&scm.ScmBlanketOrderList{})
 	sla.SetPrimaryKeys("BlanketOrderId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.BlanketOrder{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.BlanketOrderList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.BlanketOrder{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.BlanketOrder{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmBlanketOrder{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmBlanketOrderList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmBlanketOrder{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmBlanketOrder{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.BlanketOrderList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmBlanketOrderList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func BlanketOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func BlanketOrder(blanketOrderId string, vnic ifs.IVNic) (*scm.BlanketOrder, error) {
+func BlanketOrder(blanketOrderId string, vnic ifs.IVNic) (*scm.ScmBlanketOrder, error) {
 	this, ok := BlanketOrders(vnic)
 	if !ok {
 		return nil, errors.New("No BlanketOrder Service Found")
 	}
-	filter := &scm.BlanketOrder{BlanketOrderId: blanketOrderId}
+	filter := &scm.ScmBlanketOrder{BlanketOrderId: blanketOrderId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.BlanketOrder), nil
+	return resp.Element().(*scm.ScmBlanketOrder), nil
 }

@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newShipmentServiceCallback())
-	sla.SetServiceItem(&scm.Shipment{})
-	sla.SetServiceItemList(&scm.ShipmentList{})
+	sla.SetServiceItem(&scm.ScmShipment{})
+	sla.SetServiceItemList(&scm.ScmShipmentList{})
 	sla.SetPrimaryKeys("ShipmentId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.Shipment{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ShipmentList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.Shipment{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.Shipment{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmShipment{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmShipmentList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmShipment{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmShipment{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ShipmentList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmShipmentList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func Shipments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func Shipment(shipmentId string, vnic ifs.IVNic) (*scm.Shipment, error) {
+func Shipment(shipmentId string, vnic ifs.IVNic) (*scm.ScmShipment, error) {
 	this, ok := Shipments(vnic)
 	if !ok {
 		return nil, errors.New("No Shipment Service Found")
 	}
-	filter := &scm.Shipment{ShipmentId: shipmentId}
+	filter := &scm.ScmShipment{ShipmentId: shipmentId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.Shipment), nil
+	return resp.Element().(*scm.ScmShipment), nil
 }

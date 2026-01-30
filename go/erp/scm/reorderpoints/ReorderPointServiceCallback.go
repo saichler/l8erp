@@ -29,7 +29,7 @@ func newReorderPointServiceCallback() *ReorderPointServiceCallback {
 }
 
 func (this *ReorderPointServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ReorderPoint)
+	item, ok := any.(*scm.ScmReorderPoint)
 	if !ok {
 		return nil, false, errors.New("invalid reorder point type")
 	}
@@ -44,7 +44,7 @@ func (this *ReorderPointServiceCallback) After(any interface{}, action ifs.Actio
 	return nil, true, nil
 }
 
-func validate(item *scm.ReorderPoint, vnic ifs.IVNic) error {
+func validate(item *scm.ScmReorderPoint, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.ReorderPointId, "ReorderPointId"); err != nil {
 		return err
 	}

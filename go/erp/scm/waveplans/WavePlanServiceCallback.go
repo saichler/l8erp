@@ -28,7 +28,7 @@ func newWavePlanServiceCallback() *WavePlanServiceCallback {
 }
 
 func (this *WavePlanServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.WavePlan)
+	item, ok := any.(*scm.ScmWavePlan)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -43,7 +43,7 @@ func (this *WavePlanServiceCallback) After(any interface{}, action ifs.Action, c
 	return nil, true, nil
 }
 
-func validate(item *scm.WavePlan, vnic ifs.IVNic) error {
+func validate(item *scm.ScmWavePlan, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.WavePlanId, "WavePlanId"); err != nil {
 		return err
 	}

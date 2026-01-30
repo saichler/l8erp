@@ -28,7 +28,7 @@ func newPackTaskServiceCallback() *PackTaskServiceCallback {
 }
 
 func (this *PackTaskServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.PackTask)
+	item, ok := any.(*scm.ScmPackTask)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -43,7 +43,7 @@ func (this *PackTaskServiceCallback) After(any interface{}, action ifs.Action, c
 	return nil, true, nil
 }
 
-func validate(item *scm.PackTask, vnic ifs.IVNic) error {
+func validate(item *scm.ScmPackTask, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.TaskId, "TaskId"); err != nil {
 		return err
 	}

@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newLoadPlanServiceCallback())
-	sla.SetServiceItem(&scm.LoadPlan{})
-	sla.SetServiceItemList(&scm.LoadPlanList{})
+	sla.SetServiceItem(&scm.ScmLoadPlan{})
+	sla.SetServiceItemList(&scm.ScmLoadPlanList{})
 	sla.SetPrimaryKeys("LoadPlanId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.LoadPlan{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.LoadPlanList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.LoadPlan{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.LoadPlan{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmLoadPlan{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmLoadPlanList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmLoadPlan{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmLoadPlan{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.LoadPlanList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmLoadPlanList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func LoadPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func LoadPlan(loadPlanId string, vnic ifs.IVNic) (*scm.LoadPlan, error) {
+func LoadPlan(loadPlanId string, vnic ifs.IVNic) (*scm.ScmLoadPlan, error) {
 	this, ok := LoadPlans(vnic)
 	if !ok {
 		return nil, errors.New("No LoadPlan Service Found")
 	}
-	filter := &scm.LoadPlan{LoadPlanId: loadPlanId}
+	filter := &scm.ScmLoadPlan{LoadPlanId: loadPlanId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.LoadPlan), nil
+	return resp.Element().(*scm.ScmLoadPlan), nil
 }

@@ -29,7 +29,7 @@ func newSupplyPlanServiceCallback() *SupplyPlanServiceCallback {
 }
 
 func (this *SupplyPlanServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.SupplyPlan)
+	item, ok := any.(*scm.ScmSupplyPlan)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -44,7 +44,7 @@ func (this *SupplyPlanServiceCallback) After(any interface{}, action ifs.Action,
 	return nil, true, nil
 }
 
-func validate(item *scm.SupplyPlan, vnic ifs.IVNic) error {
+func validate(item *scm.ScmSupplyPlan, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.PlanId, "PlanId"); err != nil {
 		return err
 	}

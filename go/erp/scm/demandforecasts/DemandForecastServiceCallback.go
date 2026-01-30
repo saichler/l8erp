@@ -29,7 +29,7 @@ func newDemandForecastServiceCallback() *DemandForecastServiceCallback {
 }
 
 func (this *DemandForecastServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.DemandForecast)
+	item, ok := any.(*scm.ScmDemandForecast)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -44,7 +44,7 @@ func (this *DemandForecastServiceCallback) After(any interface{}, action ifs.Act
 	return nil, true, nil
 }
 
-func validate(item *scm.DemandForecast, vnic ifs.IVNic) error {
+func validate(item *scm.ScmDemandForecast, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.ForecastId, "ForecastId"); err != nil {
 		return err
 	}

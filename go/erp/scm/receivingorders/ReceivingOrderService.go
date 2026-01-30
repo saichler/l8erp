@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newReceivingOrderServiceCallback())
-	sla.SetServiceItem(&scm.ReceivingOrder{})
-	sla.SetServiceItemList(&scm.ReceivingOrderList{})
+	sla.SetServiceItem(&scm.ScmReceivingOrder{})
+	sla.SetServiceItemList(&scm.ScmReceivingOrderList{})
 	sla.SetPrimaryKeys("ReceivingOrderId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.ReceivingOrder{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ReceivingOrderList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ReceivingOrder{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ReceivingOrder{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmReceivingOrder{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmReceivingOrderList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmReceivingOrder{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmReceivingOrder{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ReceivingOrderList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmReceivingOrderList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func ReceivingOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func ReceivingOrder(receivingOrderId string, vnic ifs.IVNic) (*scm.ReceivingOrder, error) {
+func ReceivingOrder(receivingOrderId string, vnic ifs.IVNic) (*scm.ScmReceivingOrder, error) {
 	this, ok := ReceivingOrders(vnic)
 	if !ok {
 		return nil, errors.New("No ReceivingOrder Service Found")
 	}
-	filter := &scm.ReceivingOrder{ReceivingOrderId: receivingOrderId}
+	filter := &scm.ScmReceivingOrder{ReceivingOrderId: receivingOrderId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ReceivingOrder), nil
+	return resp.Element().(*scm.ScmReceivingOrder), nil
 }

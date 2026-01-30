@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newDistributionRequirementServiceCallback())
-	sla.SetServiceItem(&scm.DistributionRequirement{})
-	sla.SetServiceItemList(&scm.DistributionRequirementList{})
+	sla.SetServiceItem(&scm.ScmDistributionRequirement{})
+	sla.SetServiceItemList(&scm.ScmDistributionRequirementList{})
 	sla.SetPrimaryKeys("RequirementId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.DistributionRequirement{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.DistributionRequirementList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.DistributionRequirement{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.DistributionRequirement{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDistributionRequirement{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDistributionRequirementList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDistributionRequirement{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDistributionRequirement{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.DistributionRequirementList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmDistributionRequirementList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func DistributionRequirements(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func DistributionRequirement(requirementId string, vnic ifs.IVNic) (*scm.DistributionRequirement, error) {
+func DistributionRequirement(requirementId string, vnic ifs.IVNic) (*scm.ScmDistributionRequirement, error) {
 	this, ok := DistributionRequirements(vnic)
 	if !ok {
 		return nil, errors.New("No DistributionRequirement Service Found")
 	}
-	filter := &scm.DistributionRequirement{RequirementId: requirementId}
+	filter := &scm.ScmDistributionRequirement{RequirementId: requirementId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.DistributionRequirement), nil
+	return resp.Element().(*scm.ScmDistributionRequirement), nil
 }

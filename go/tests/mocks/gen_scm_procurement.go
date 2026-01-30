@@ -24,15 +24,15 @@ import (
 )
 
 // generatePurchaseRequisitions creates 20 purchase requisition records
-func generatePurchaseRequisitions(store *MockDataStore) []*scm.PurchaseRequisition {
-	requisitions := make([]*scm.PurchaseRequisition, 20)
+func generatePurchaseRequisitions(store *MockDataStore) []*scm.ScmPurchaseRequisition {
+	requisitions := make([]*scm.ScmPurchaseRequisition, 20)
 
-	statuses := []scm.RequisitionStatus{
-		scm.RequisitionStatus_REQUISITION_STATUS_DRAFT,
-		scm.RequisitionStatus_REQUISITION_STATUS_SUBMITTED,
-		scm.RequisitionStatus_REQUISITION_STATUS_APPROVED,
-		scm.RequisitionStatus_REQUISITION_STATUS_FULFILLED,
-		scm.RequisitionStatus_REQUISITION_STATUS_REJECTED,
+	statuses := []scm.ScmRequisitionStatus{
+		scm.ScmRequisitionStatus_REQUISITION_STATUS_DRAFT,
+		scm.ScmRequisitionStatus_REQUISITION_STATUS_SUBMITTED,
+		scm.ScmRequisitionStatus_REQUISITION_STATUS_APPROVED,
+		scm.ScmRequisitionStatus_REQUISITION_STATUS_FULFILLED,
+		scm.ScmRequisitionStatus_REQUISITION_STATUS_REJECTED,
 	}
 
 	priorities := []string{"High", "Medium", "Low"}
@@ -43,16 +43,16 @@ func generatePurchaseRequisitions(store *MockDataStore) []*scm.PurchaseRequisiti
 		requestDate := time.Date(2025, time.Month(rand.Intn(12)+1), rand.Intn(28)+1, 0, 0, 0, 0, time.UTC)
 
 		// 60% APPROVED: indices 0-11 get APPROVED, rest cycle through statuses
-		var status scm.RequisitionStatus
+		var status scm.ScmRequisitionStatus
 		if i < 12 {
-			status = scm.RequisitionStatus_REQUISITION_STATUS_APPROVED
+			status = scm.ScmRequisitionStatus_REQUISITION_STATUS_APPROVED
 		} else {
 			status = statuses[i%len(statuses)]
 		}
 
 		estimatedTotal := int64(rand.Intn(495001)+5000) // 5000 to 500000 cents
 
-		requisitions[i] = &scm.PurchaseRequisition{
+		requisitions[i] = &scm.ScmPurchaseRequisition{
 			RequisitionId:      fmt.Sprintf("preq-%03d", i+1),
 			RequisitionNumber:  fmt.Sprintf("PR-%06d", i+1),
 			RequesterId:        requesterId,
@@ -71,8 +71,8 @@ func generatePurchaseRequisitions(store *MockDataStore) []*scm.PurchaseRequisiti
 }
 
 // generateRequisitionLines creates 3 lines per requisition = 60 total
-func generateRequisitionLines(store *MockDataStore) []*scm.RequisitionLine {
-	lines := make([]*scm.RequisitionLine, 0, 60)
+func generateRequisitionLines(store *MockDataStore) []*scm.ScmRequisitionLine {
+	lines := make([]*scm.ScmRequisitionLine, 0, 60)
 
 	descriptions := []string{
 		"Raw Materials",
@@ -100,7 +100,7 @@ func generateRequisitionLines(store *MockDataStore) []*scm.RequisitionLine {
 			lineTotal := int64(quantity) * unitPrice
 			deliveryDate := time.Now().AddDate(0, 0, rand.Intn(60)+14)
 
-			lines = append(lines, &scm.RequisitionLine{
+			lines = append(lines, &scm.ScmRequisitionLine{
 				LineId:             fmt.Sprintf("rqln-%04d", idx),
 				RequisitionId:      requisitionId,
 				LineNumber:         lineNum,
@@ -122,12 +122,12 @@ func generateRequisitionLines(store *MockDataStore) []*scm.RequisitionLine {
 }
 
 // generateRFQs creates 10 RFQ records linked to the first 10 requisitions
-func generateRFQs(store *MockDataStore) []*scm.RequestForQuotation {
-	rfqs := make([]*scm.RequestForQuotation, 10)
+func generateRFQs(store *MockDataStore) []*scm.ScmRequestForQuotation {
+	rfqs := make([]*scm.ScmRequestForQuotation, 10)
 
-	statuses := []scm.RequisitionStatus{
-		scm.RequisitionStatus_REQUISITION_STATUS_SUBMITTED,
-		scm.RequisitionStatus_REQUISITION_STATUS_APPROVED,
+	statuses := []scm.ScmRequisitionStatus{
+		scm.ScmRequisitionStatus_REQUISITION_STATUS_SUBMITTED,
+		scm.ScmRequisitionStatus_REQUISITION_STATUS_APPROVED,
 	}
 
 	for i := 0; i < 10; i++ {
@@ -142,7 +142,7 @@ func generateRFQs(store *MockDataStore) []*scm.RequestForQuotation {
 			vendorIds[v] = store.VendorIDs[rand.Intn(len(store.VendorIDs))]
 		}
 
-		rfqs[i] = &scm.RequestForQuotation{
+		rfqs[i] = &scm.ScmRequestForQuotation{
 			RfqId:            fmt.Sprintf("rfq-%03d", i+1),
 			RfqNumber:        fmt.Sprintf("RFQ-%06d", i+1),
 			RequisitionId:    requisitionId,
@@ -160,12 +160,12 @@ func generateRFQs(store *MockDataStore) []*scm.RequestForQuotation {
 }
 
 // generateBlanketOrders creates 8 blanket order records
-func generateBlanketOrders(store *MockDataStore) []*scm.BlanketOrder {
-	orders := make([]*scm.BlanketOrder, 8)
+func generateBlanketOrders(store *MockDataStore) []*scm.ScmBlanketOrder {
+	orders := make([]*scm.ScmBlanketOrder, 8)
 
-	statuses := []scm.PurchaseOrderStatus{
-		scm.PurchaseOrderStatus_PO_STATUS_APPROVED,
-		scm.PurchaseOrderStatus_PO_STATUS_SENT,
+	statuses := []scm.ScmPurchaseOrderStatus{
+		scm.ScmPurchaseOrderStatus_PO_STATUS_APPROVED,
+		scm.ScmPurchaseOrderStatus_PO_STATUS_SENT,
 	}
 
 	for i := 0; i < 8; i++ {
@@ -177,7 +177,7 @@ func generateBlanketOrders(store *MockDataStore) []*scm.BlanketOrder {
 		usedPercent := rand.Intn(81)                    // 0-80%
 		usedAmount := maxAmount * int64(usedPercent) / 100
 
-		orders[i] = &scm.BlanketOrder{
+		orders[i] = &scm.ScmBlanketOrder{
 			BlanketOrderId: fmt.Sprintf("bo-%03d", i+1),
 			OrderNumber:    fmt.Sprintf("BO-%06d", i+1),
 			VendorId:       vendorId,
@@ -195,15 +195,15 @@ func generateBlanketOrders(store *MockDataStore) []*scm.BlanketOrder {
 }
 
 // generateSCMPurchaseOrders creates 15 purchase order records from approved requisitions
-func generateSCMPurchaseOrders(store *MockDataStore) []*scm.PurchaseOrder {
-	orders := make([]*scm.PurchaseOrder, 15)
+func generateSCMPurchaseOrders(store *MockDataStore) []*scm.ScmPurchaseOrder {
+	orders := make([]*scm.ScmPurchaseOrder, 15)
 
-	statuses := []scm.PurchaseOrderStatus{
-		scm.PurchaseOrderStatus_PO_STATUS_APPROVED,
-		scm.PurchaseOrderStatus_PO_STATUS_SENT,
-		scm.PurchaseOrderStatus_PO_STATUS_PARTIALLY_RECEIVED,
-		scm.PurchaseOrderStatus_PO_STATUS_RECEIVED,
-		scm.PurchaseOrderStatus_PO_STATUS_CLOSED,
+	statuses := []scm.ScmPurchaseOrderStatus{
+		scm.ScmPurchaseOrderStatus_PO_STATUS_APPROVED,
+		scm.ScmPurchaseOrderStatus_PO_STATUS_SENT,
+		scm.ScmPurchaseOrderStatus_PO_STATUS_PARTIALLY_RECEIVED,
+		scm.ScmPurchaseOrderStatus_PO_STATUS_RECEIVED,
+		scm.ScmPurchaseOrderStatus_PO_STATUS_CLOSED,
 	}
 
 	paymentTerms := []string{"Net 30", "Net 60", "Net 90", "2/10 Net 30", "Due on Receipt"}
@@ -215,12 +215,12 @@ func generateSCMPurchaseOrders(store *MockDataStore) []*scm.PurchaseOrder {
 		totalAmount := int64(rand.Intn(950001)+50000) // 50000-1000000 cents
 
 		// 60% APPROVED/SENT, rest cycle through other statuses
-		var status scm.PurchaseOrderStatus
+		var status scm.ScmPurchaseOrderStatus
 		if i < 9 {
 			if i%2 == 0 {
-				status = scm.PurchaseOrderStatus_PO_STATUS_APPROVED
+				status = scm.ScmPurchaseOrderStatus_PO_STATUS_APPROVED
 			} else {
-				status = scm.PurchaseOrderStatus_PO_STATUS_SENT
+				status = scm.ScmPurchaseOrderStatus_PO_STATUS_SENT
 			}
 		} else {
 			status = statuses[i%len(statuses)]
@@ -235,7 +235,7 @@ func generateSCMPurchaseOrders(store *MockDataStore) []*scm.PurchaseOrder {
 			rfqID = store.RFQIDs[i%len(store.RFQIDs)]
 		}
 
-		orders[i] = &scm.PurchaseOrder{
+		orders[i] = &scm.ScmPurchaseOrder{
 			PurchaseOrderId:  fmt.Sprintf("spo-%03d", i+1),
 			OrderNumber:      fmt.Sprintf("PO-%06d", i+1),
 			VendorId:         vendorID,
@@ -256,8 +256,8 @@ func generateSCMPurchaseOrders(store *MockDataStore) []*scm.PurchaseOrder {
 }
 
 // generatePOLines creates 3 lines per purchase order = 45 total
-func generatePOLines(store *MockDataStore) []*scm.PurchaseOrderLine {
-	lines := make([]*scm.PurchaseOrderLine, 0, len(store.SCMPurchaseOrderIDs)*3)
+func generatePOLines(store *MockDataStore) []*scm.ScmPurchaseOrderLine {
+	lines := make([]*scm.ScmPurchaseOrderLine, 0, len(store.SCMPurchaseOrderIDs)*3)
 	uoms := []string{"EA", "BOX", "KG", "LB", "PCS", "SET"}
 	idx := 1
 
@@ -277,7 +277,7 @@ func generatePOLines(store *MockDataStore) []*scm.PurchaseOrderLine {
 				receivedQty = quantity * (0.3 + rand.Float64()*0.5) // partially received
 			}
 
-			lines = append(lines, &scm.PurchaseOrderLine{
+			lines = append(lines, &scm.ScmPurchaseOrderLine{
 				LineId:           fmt.Sprintf("poln-%04d", idx),
 				PurchaseOrderId:  poID,
 				LineNumber:       lineNum,
@@ -298,13 +298,13 @@ func generatePOLines(store *MockDataStore) []*scm.PurchaseOrderLine {
 }
 
 // generateSupplierScorecards creates 1 scorecard per vendor (up to 15)
-func generateSupplierScorecards(store *MockDataStore) []*scm.SupplierScorecard {
+func generateSupplierScorecards(store *MockDataStore) []*scm.ScmSupplierScorecard {
 	count := len(store.VendorIDs)
 	if count > 15 {
 		count = 15
 	}
 
-	scorecards := make([]*scm.SupplierScorecard, count)
+	scorecards := make([]*scm.ScmSupplierScorecard, count)
 
 	now := time.Now()
 	periodStart := time.Date(now.Year(), now.Month()-3, 1, 0, 0, 0, 0, time.UTC)
@@ -320,7 +320,7 @@ func generateSupplierScorecards(store *MockDataStore) []*scm.SupplierScorecard {
 		serviceScore := 3.0 + rand.Float64()*2.0
 		overallScore := (qualityScore + deliveryScore + priceScore + serviceScore) / 4.0
 
-		scorecards[i] = &scm.SupplierScorecard{
+		scorecards[i] = &scm.ScmSupplierScorecard{
 			ScorecardId: fmt.Sprintf("ssc-%03d", i+1),
 			VendorId:    vendorId,
 			EvaluationPeriod: &erp.DateRange{

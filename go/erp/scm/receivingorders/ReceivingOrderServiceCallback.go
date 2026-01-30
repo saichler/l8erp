@@ -28,7 +28,7 @@ func newReceivingOrderServiceCallback() *ReceivingOrderServiceCallback {
 }
 
 func (this *ReceivingOrderServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ReceivingOrder)
+	item, ok := any.(*scm.ScmReceivingOrder)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -43,7 +43,7 @@ func (this *ReceivingOrderServiceCallback) After(any interface{}, action ifs.Act
 	return nil, true, nil
 }
 
-func validate(item *scm.ReceivingOrder, vnic ifs.IVNic) error {
+func validate(item *scm.ScmReceivingOrder, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.ReceivingOrderId, "ReceivingOrderId"); err != nil {
 		return err
 	}

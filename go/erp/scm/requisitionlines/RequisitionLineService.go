@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newRequisitionLineServiceCallback())
-	sla.SetServiceItem(&scm.RequisitionLine{})
-	sla.SetServiceItemList(&scm.RequisitionLineList{})
+	sla.SetServiceItem(&scm.ScmRequisitionLine{})
+	sla.SetServiceItemList(&scm.ScmRequisitionLineList{})
 	sla.SetPrimaryKeys("LineId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.RequisitionLine{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.RequisitionLineList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.RequisitionLine{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.RequisitionLine{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmRequisitionLine{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmRequisitionLineList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmRequisitionLine{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmRequisitionLine{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.RequisitionLineList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmRequisitionLineList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func RequisitionLines(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func RequisitionLine(lineId string, vnic ifs.IVNic) (*scm.RequisitionLine, error) {
+func RequisitionLine(lineId string, vnic ifs.IVNic) (*scm.ScmRequisitionLine, error) {
 	this, ok := RequisitionLines(vnic)
 	if !ok {
 		return nil, errors.New("No RequisitionLine Service Found")
 	}
-	filter := &scm.RequisitionLine{LineId: lineId}
+	filter := &scm.ScmRequisitionLine{LineId: lineId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.RequisitionLine), nil
+	return resp.Element().(*scm.ScmRequisitionLine), nil
 }

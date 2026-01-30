@@ -29,7 +29,7 @@ func newRequisitionLineServiceCallback() *RequisitionLineServiceCallback {
 }
 
 func (this *RequisitionLineServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.RequisitionLine)
+	item, ok := any.(*scm.ScmRequisitionLine)
 	if !ok {
 		return nil, false, errors.New("invalid requisition line type")
 	}
@@ -44,7 +44,7 @@ func (this *RequisitionLineServiceCallback) After(any interface{}, action ifs.Ac
 	return nil, true, nil
 }
 
-func validate(item *scm.RequisitionLine, vnic ifs.IVNic) error {
+func validate(item *scm.ScmRequisitionLine, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.LineId, "LineId"); err != nil {
 		return err
 	}

@@ -29,7 +29,7 @@ func newBlanketOrderServiceCallback() *BlanketOrderServiceCallback {
 }
 
 func (this *BlanketOrderServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.BlanketOrder)
+	item, ok := any.(*scm.ScmBlanketOrder)
 	if !ok {
 		return nil, false, errors.New("invalid blanket order type")
 	}
@@ -44,7 +44,7 @@ func (this *BlanketOrderServiceCallback) After(any interface{}, action ifs.Actio
 	return nil, true, nil
 }
 
-func validate(item *scm.BlanketOrder, vnic ifs.IVNic) error {
+func validate(item *scm.ScmBlanketOrder, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.BlanketOrderId, "BlanketOrderId"); err != nil {
 		return err
 	}

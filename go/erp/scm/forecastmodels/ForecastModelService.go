@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newForecastModelServiceCallback())
-	sla.SetServiceItem(&scm.ForecastModel{})
-	sla.SetServiceItemList(&scm.ForecastModelList{})
+	sla.SetServiceItem(&scm.ScmForecastModel{})
+	sla.SetServiceItemList(&scm.ScmForecastModelList{})
 	sla.SetPrimaryKeys("ModelId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.ForecastModel{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ForecastModelList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ForecastModel{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ForecastModel{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmForecastModel{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmForecastModelList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmForecastModel{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmForecastModel{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ForecastModelList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmForecastModelList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func ForecastModels(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func ForecastModel(modelId string, vnic ifs.IVNic) (*scm.ForecastModel, error) {
+func ForecastModel(modelId string, vnic ifs.IVNic) (*scm.ScmForecastModel, error) {
 	this, ok := ForecastModels(vnic)
 	if !ok {
 		return nil, errors.New("No ForecastModel Service Found")
 	}
-	filter := &scm.ForecastModel{ModelId: modelId}
+	filter := &scm.ScmForecastModel{ModelId: modelId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ForecastModel), nil
+	return resp.Element().(*scm.ScmForecastModel), nil
 }

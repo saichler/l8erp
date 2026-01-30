@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newDockScheduleServiceCallback())
-	sla.SetServiceItem(&scm.DockSchedule{})
-	sla.SetServiceItemList(&scm.DockScheduleList{})
+	sla.SetServiceItem(&scm.ScmDockSchedule{})
+	sla.SetServiceItemList(&scm.ScmDockScheduleList{})
 	sla.SetPrimaryKeys("ScheduleId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.DockSchedule{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.DockScheduleList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.DockSchedule{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.DockSchedule{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDockSchedule{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDockScheduleList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDockSchedule{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDockSchedule{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.DockScheduleList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmDockScheduleList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func DockSchedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func DockSchedule(scheduleId string, vnic ifs.IVNic) (*scm.DockSchedule, error) {
+func DockSchedule(scheduleId string, vnic ifs.IVNic) (*scm.ScmDockSchedule, error) {
 	this, ok := DockSchedules(vnic)
 	if !ok {
 		return nil, errors.New("No DockSchedule Service Found")
 	}
-	filter := &scm.DockSchedule{ScheduleId: scheduleId}
+	filter := &scm.ScmDockSchedule{ScheduleId: scheduleId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.DockSchedule), nil
+	return resp.Element().(*scm.ScmDockSchedule), nil
 }

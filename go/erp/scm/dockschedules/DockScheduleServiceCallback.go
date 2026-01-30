@@ -28,7 +28,7 @@ func newDockScheduleServiceCallback() *DockScheduleServiceCallback {
 }
 
 func (this *DockScheduleServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.DockSchedule)
+	item, ok := any.(*scm.ScmDockSchedule)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -43,7 +43,7 @@ func (this *DockScheduleServiceCallback) After(any interface{}, action ifs.Actio
 	return nil, true, nil
 }
 
-func validate(item *scm.DockSchedule, vnic ifs.IVNic) error {
+func validate(item *scm.ScmDockSchedule, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.ScheduleId, "ScheduleId"); err != nil {
 		return err
 	}

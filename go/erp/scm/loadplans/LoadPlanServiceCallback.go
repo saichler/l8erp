@@ -28,7 +28,7 @@ func newLoadPlanServiceCallback() *LoadPlanServiceCallback {
 }
 
 func (this *LoadPlanServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.LoadPlan)
+	item, ok := any.(*scm.ScmLoadPlan)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -43,7 +43,7 @@ func (this *LoadPlanServiceCallback) After(any interface{}, action ifs.Action, c
 	return nil, true, nil
 }
 
-func validate(item *scm.LoadPlan, vnic ifs.IVNic) error {
+func validate(item *scm.ScmLoadPlan, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.LoadPlanId, "LoadPlanId"); err != nil {
 		return err
 	}

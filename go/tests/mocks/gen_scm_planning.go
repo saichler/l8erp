@@ -24,15 +24,15 @@ import (
 )
 
 // generateDemandForecasts creates 30 demand forecast records for items
-func generateDemandForecasts(store *MockDataStore) []*scm.DemandForecast {
-	forecasts := make([]*scm.DemandForecast, 30)
+func generateDemandForecasts(store *MockDataStore) []*scm.ScmDemandForecast {
+	forecasts := make([]*scm.ScmDemandForecast, 30)
 
-	forecastMethods := []scm.ForecastMethod{
-		scm.ForecastMethod_FORECAST_METHOD_MOVING_AVG,
-		scm.ForecastMethod_FORECAST_METHOD_EXPONENTIAL,
-		scm.ForecastMethod_FORECAST_METHOD_REGRESSION,
-		scm.ForecastMethod_FORECAST_METHOD_SEASONAL,
-		scm.ForecastMethod_FORECAST_METHOD_MANUAL,
+	forecastMethods := []scm.ScmForecastMethod{
+		scm.ScmForecastMethod_FORECAST_METHOD_MOVING_AVG,
+		scm.ScmForecastMethod_FORECAST_METHOD_EXPONENTIAL,
+		scm.ScmForecastMethod_FORECAST_METHOD_REGRESSION,
+		scm.ScmForecastMethod_FORECAST_METHOD_SEASONAL,
+		scm.ScmForecastMethod_FORECAST_METHOD_MANUAL,
 	}
 
 	for i := 0; i < 30; i++ {
@@ -46,7 +46,7 @@ func generateDemandForecasts(store *MockDataStore) []*scm.DemandForecast {
 		actualQty := forecastQty * variance
 		confidenceLevel := 0.65 + rand.Float64()*0.30 // 0.65-0.95
 
-		forecasts[i] = &scm.DemandForecast{
+		forecasts[i] = &scm.ScmDemandForecast{
 			ForecastId:       fmt.Sprintf("dfcast-%03d", i+1),
 			ItemId:           store.ItemIDs[itemIdx],
 			PeriodStart:      periodStart.Unix(),
@@ -64,13 +64,13 @@ func generateDemandForecasts(store *MockDataStore) []*scm.DemandForecast {
 }
 
 // generateDemandPlans creates 3 demand plan records
-func generateDemandPlans(store *MockDataStore) []*scm.DemandPlan {
+func generateDemandPlans(store *MockDataStore) []*scm.ScmDemandPlan {
 	type planDef struct {
 		name        string
 		description string
 		startMonth  time.Month
 		endMonth    time.Month
-		status      scm.TaskStatus
+		status      scm.ScmTaskStatus
 		approvedBy  string
 	}
 
@@ -80,7 +80,7 @@ func generateDemandPlans(store *MockDataStore) []*scm.DemandPlan {
 			description: "Demand plan for Q1 2025 covering January through March",
 			startMonth:  time.January,
 			endMonth:    time.March,
-			status:      scm.TaskStatus_TASK_STATUS_COMPLETED,
+			status:      scm.ScmTaskStatus_TASK_STATUS_COMPLETED,
 			approvedBy:  "mock-generator",
 		},
 		{
@@ -88,7 +88,7 @@ func generateDemandPlans(store *MockDataStore) []*scm.DemandPlan {
 			description: "Demand plan for Q2 2025 covering April through June",
 			startMonth:  time.April,
 			endMonth:    time.June,
-			status:      scm.TaskStatus_TASK_STATUS_IN_PROGRESS,
+			status:      scm.ScmTaskStatus_TASK_STATUS_IN_PROGRESS,
 			approvedBy:  "",
 		},
 		{
@@ -96,17 +96,17 @@ func generateDemandPlans(store *MockDataStore) []*scm.DemandPlan {
 			description: "Annual demand plan for fiscal year 2025",
 			startMonth:  time.January,
 			endMonth:    time.December,
-			status:      scm.TaskStatus_TASK_STATUS_PENDING,
+			status:      scm.ScmTaskStatus_TASK_STATUS_PENDING,
 			approvedBy:  "",
 		},
 	}
 
-	plans := make([]*scm.DemandPlan, len(defs))
+	plans := make([]*scm.ScmDemandPlan, len(defs))
 	for i, d := range defs {
 		startDate := time.Date(2025, d.startMonth, 1, 0, 0, 0, 0, time.UTC)
 		endDate := time.Date(2025, d.endMonth+1, 0, 0, 0, 0, 0, time.UTC)
 
-		plans[i] = &scm.DemandPlan{
+		plans[i] = &scm.ScmDemandPlan{
 			PlanId:      fmt.Sprintf("dplan-%03d", i+1),
 			Name:        d.name,
 			Description: d.description,
@@ -126,25 +126,25 @@ func generateDemandPlans(store *MockDataStore) []*scm.DemandPlan {
 }
 
 // generatePromotionalPlans creates 6 promotional plan records
-func generatePromotionalPlans(store *MockDataStore) []*scm.PromotionalPlan {
+func generatePromotionalPlans(store *MockDataStore) []*scm.ScmPromotionalPlan {
 	type promoDef struct {
 		name        string
 		description string
 		startMonth  time.Month
 		durationDays int
-		status      scm.TaskStatus
+		status      scm.ScmTaskStatus
 	}
 
 	defs := []promoDef{
-		{"Spring Sale", "Spring promotional event with seasonal discounts", time.March, 14, scm.TaskStatus_TASK_STATUS_COMPLETED},
-		{"Summer Clearance", "Mid-year clearance promotion for excess inventory", time.June, 21, scm.TaskStatus_TASK_STATUS_COMPLETED},
-		{"Back to School", "Back-to-school promotion for office and safety supplies", time.August, 30, scm.TaskStatus_TASK_STATUS_IN_PROGRESS},
-		{"Black Friday", "Annual Black Friday promotional event", time.November, 4, scm.TaskStatus_TASK_STATUS_PENDING},
-		{"Holiday Season", "Year-end holiday promotional campaign", time.December, 21, scm.TaskStatus_TASK_STATUS_PENDING},
-		{"New Year Launch", "New year product launch promotion", time.January, 10, scm.TaskStatus_TASK_STATUS_PENDING},
+		{"Spring Sale", "Spring promotional event with seasonal discounts", time.March, 14, scm.ScmTaskStatus_TASK_STATUS_COMPLETED},
+		{"Summer Clearance", "Mid-year clearance promotion for excess inventory", time.June, 21, scm.ScmTaskStatus_TASK_STATUS_COMPLETED},
+		{"Back to School", "Back-to-school promotion for office and safety supplies", time.August, 30, scm.ScmTaskStatus_TASK_STATUS_IN_PROGRESS},
+		{"Black Friday", "Annual Black Friday promotional event", time.November, 4, scm.ScmTaskStatus_TASK_STATUS_PENDING},
+		{"Holiday Season", "Year-end holiday promotional campaign", time.December, 21, scm.ScmTaskStatus_TASK_STATUS_PENDING},
+		{"New Year Launch", "New year product launch promotion", time.January, 10, scm.ScmTaskStatus_TASK_STATUS_PENDING},
 	}
 
-	plans := make([]*scm.PromotionalPlan, len(defs))
+	plans := make([]*scm.ScmPromotionalPlan, len(defs))
 	for i, d := range defs {
 		startDate := time.Date(2025, d.startMonth, 1, 0, 0, 0, 0, time.UTC)
 		endDate := startDate.AddDate(0, 0, d.durationDays)
@@ -157,7 +157,7 @@ func generatePromotionalPlans(store *MockDataStore) []*scm.PromotionalPlan {
 			itemIds[j] = store.ItemIDs[(i*3+j)%len(store.ItemIDs)]
 		}
 
-		plans[i] = &scm.PromotionalPlan{
+		plans[i] = &scm.ScmPromotionalPlan{
 			PlanId:         fmt.Sprintf("promo-%03d", i+1),
 			Name:           d.name,
 			Description:    d.description,
@@ -175,30 +175,30 @@ func generatePromotionalPlans(store *MockDataStore) []*scm.PromotionalPlan {
 }
 
 // generateNewProductPlans creates 4 new product plan records
-func generateNewProductPlans(store *MockDataStore) []*scm.NewProductPlan {
+func generateNewProductPlans(store *MockDataStore) []*scm.ScmNewProductPlan {
 	type nppDef struct {
 		name           string
 		itemIdx        int
 		launchMonth    time.Month
 		initialForecast float64
 		rampUpPeriod   int32
-		status         scm.TaskStatus
+		status         scm.ScmTaskStatus
 	}
 
 	defs := []nppDef{
-		{"Next-Gen Motor Launch", 5, time.March, 2500.0, 6, scm.TaskStatus_TASK_STATUS_COMPLETED},
-		{"Smart Sensor Release", 6, time.June, 1500.0, 3, scm.TaskStatus_TASK_STATUS_IN_PROGRESS},
-		{"Advanced Filter Line", 11, time.September, 4000.0, 9, scm.TaskStatus_TASK_STATUS_PENDING},
-		{"Eco-Friendly Gasket", 8, time.November, 800.0, 12, scm.TaskStatus_TASK_STATUS_PENDING},
+		{"Next-Gen Motor Launch", 5, time.March, 2500.0, 6, scm.ScmTaskStatus_TASK_STATUS_COMPLETED},
+		{"Smart Sensor Release", 6, time.June, 1500.0, 3, scm.ScmTaskStatus_TASK_STATUS_IN_PROGRESS},
+		{"Advanced Filter Line", 11, time.September, 4000.0, 9, scm.ScmTaskStatus_TASK_STATUS_PENDING},
+		{"Eco-Friendly Gasket", 8, time.November, 800.0, 12, scm.ScmTaskStatus_TASK_STATUS_PENDING},
 	}
 
-	plans := make([]*scm.NewProductPlan, len(defs))
+	plans := make([]*scm.ScmNewProductPlan, len(defs))
 	for i, d := range defs {
 		launchDate := time.Date(2025, d.launchMonth, 15, 0, 0, 0, 0, time.UTC)
 		// Use a comparable item from existing items
 		comparableIdx := (d.itemIdx + 1) % len(store.ItemIDs)
 
-		plans[i] = &scm.NewProductPlan{
+		plans[i] = &scm.ScmNewProductPlan{
 			PlanId:           fmt.Sprintf("npp-%03d", i+1),
 			Name:             d.name,
 			ItemId:           store.ItemIDs[d.itemIdx%len(store.ItemIDs)],
@@ -216,8 +216,8 @@ func generateNewProductPlans(store *MockDataStore) []*scm.NewProductPlan {
 }
 
 // generateForecastAccuracy creates 15 forecast accuracy records linked to forecasts
-func generateForecastAccuracy(store *MockDataStore) []*scm.ForecastAccuracy {
-	records := make([]*scm.ForecastAccuracy, 15)
+func generateForecastAccuracy(store *MockDataStore) []*scm.ScmForecastAccuracy {
+	records := make([]*scm.ScmForecastAccuracy, 15)
 
 	for i := 0; i < 15; i++ {
 		forecastIdx := i % len(store.DemandForecastIDs)
@@ -237,7 +237,7 @@ func generateForecastAccuracy(store *MockDataStore) []*scm.ForecastAccuracy {
 		periodStart := time.Date(2025, time.Month((i%12)+1), 1, 0, 0, 0, 0, time.UTC)
 		periodEnd := periodStart.AddDate(0, 1, -1)
 
-		records[i] = &scm.ForecastAccuracy{
+		records[i] = &scm.ScmForecastAccuracy{
 			AccuracyId:       fmt.Sprintf("facc-%03d", i+1),
 			ForecastId:       store.DemandForecastIDs[forecastIdx],
 			ItemId:           store.ItemIDs[itemIdx],
@@ -258,20 +258,20 @@ func generateForecastAccuracy(store *MockDataStore) []*scm.ForecastAccuracy {
 }
 
 // generateMaterialRequirements creates 20 material requirement records
-func generateMaterialRequirements(store *MockDataStore) []*scm.MaterialRequirement {
-	requirements := make([]*scm.MaterialRequirement, 20)
+func generateMaterialRequirements(store *MockDataStore) []*scm.ScmMaterialRequirement {
+	requirements := make([]*scm.ScmMaterialRequirement, 20)
 
-	planningMethods := []scm.PlanningMethod{
-		scm.PlanningMethod_PLANNING_METHOD_MRP,
-		scm.PlanningMethod_PLANNING_METHOD_REORDER_POINT,
-		scm.PlanningMethod_PLANNING_METHOD_MIN_MAX,
-		scm.PlanningMethod_PLANNING_METHOD_KANBAN,
+	planningMethods := []scm.ScmPlanningMethod{
+		scm.ScmPlanningMethod_PLANNING_METHOD_MRP,
+		scm.ScmPlanningMethod_PLANNING_METHOD_REORDER_POINT,
+		scm.ScmPlanningMethod_PLANNING_METHOD_MIN_MAX,
+		scm.ScmPlanningMethod_PLANNING_METHOD_KANBAN,
 	}
 
-	statuses := []scm.TaskStatus{
-		scm.TaskStatus_TASK_STATUS_PENDING,
-		scm.TaskStatus_TASK_STATUS_IN_PROGRESS,
-		scm.TaskStatus_TASK_STATUS_COMPLETED,
+	statuses := []scm.ScmTaskStatus{
+		scm.ScmTaskStatus_TASK_STATUS_PENDING,
+		scm.ScmTaskStatus_TASK_STATUS_IN_PROGRESS,
+		scm.ScmTaskStatus_TASK_STATUS_COMPLETED,
 	}
 
 	sources := []string{"MRP Run", "Reorder Point Trigger", "Manual Request", "Safety Stock Alert"}
@@ -285,7 +285,7 @@ func generateMaterialRequirements(store *MockDataStore) []*scm.MaterialRequireme
 		availableQty := requiredQty * (float64(rand.Intn(81)) / 100.0) // 0-80% of required
 		shortageQty := requiredQty - availableQty
 
-		requirements[i] = &scm.MaterialRequirement{
+		requirements[i] = &scm.ScmMaterialRequirement{
 			RequirementId:     fmt.Sprintf("mreq-%03d", i+1),
 			ItemId:            store.ItemIDs[itemIdx],
 			RequiredDate:      requiredDate.Unix(),
@@ -304,13 +304,13 @@ func generateMaterialRequirements(store *MockDataStore) []*scm.MaterialRequireme
 }
 
 // generateDistributionRequirements creates 10 distribution requirement records between warehouses
-func generateDistributionRequirements(store *MockDataStore) []*scm.DistributionRequirement {
-	requirements := make([]*scm.DistributionRequirement, 10)
+func generateDistributionRequirements(store *MockDataStore) []*scm.ScmDistributionRequirement {
+	requirements := make([]*scm.ScmDistributionRequirement, 10)
 
-	statuses := []scm.TaskStatus{
-		scm.TaskStatus_TASK_STATUS_PENDING,
-		scm.TaskStatus_TASK_STATUS_IN_PROGRESS,
-		scm.TaskStatus_TASK_STATUS_COMPLETED,
+	statuses := []scm.ScmTaskStatus{
+		scm.ScmTaskStatus_TASK_STATUS_PENDING,
+		scm.ScmTaskStatus_TASK_STATUS_IN_PROGRESS,
+		scm.ScmTaskStatus_TASK_STATUS_COMPLETED,
 	}
 
 	for i := 0; i < 10; i++ {
@@ -326,7 +326,7 @@ func generateDistributionRequirements(store *MockDataStore) []*scm.DistributionR
 		requiredQty := float64(rand.Intn(451) + 50) // 50-500
 		transferQty := requiredQty * (0.8 + rand.Float64()*0.2)
 
-		requirements[i] = &scm.DistributionRequirement{
+		requirements[i] = &scm.ScmDistributionRequirement{
 			RequirementId:          fmt.Sprintf("dreq-%03d", i+1),
 			ItemId:                 store.ItemIDs[itemIdx],
 			SourceWarehouseId:      store.SCMWarehouseIDs[sourceIdx],
@@ -344,13 +344,13 @@ func generateDistributionRequirements(store *MockDataStore) []*scm.DistributionR
 }
 
 // generateSupplyPlans creates 3 supply plan records
-func generateSupplyPlans(store *MockDataStore) []*scm.SupplyPlan {
+func generateSupplyPlans(store *MockDataStore) []*scm.ScmSupplyPlan {
 	type planDef struct {
 		name        string
 		description string
 		startMonth  time.Month
 		endMonth    time.Month
-		status      scm.TaskStatus
+		status      scm.ScmTaskStatus
 		approvedBy  string
 	}
 
@@ -360,7 +360,7 @@ func generateSupplyPlans(store *MockDataStore) []*scm.SupplyPlan {
 			description: "Supply plan for Q1 2025 covering material sourcing and procurement",
 			startMonth:  time.January,
 			endMonth:    time.March,
-			status:      scm.TaskStatus_TASK_STATUS_COMPLETED,
+			status:      scm.ScmTaskStatus_TASK_STATUS_COMPLETED,
 			approvedBy:  "mock-generator",
 		},
 		{
@@ -368,7 +368,7 @@ func generateSupplyPlans(store *MockDataStore) []*scm.SupplyPlan {
 			description: "Supply plan for Q2 2025 covering seasonal inventory buildup",
 			startMonth:  time.April,
 			endMonth:    time.June,
-			status:      scm.TaskStatus_TASK_STATUS_IN_PROGRESS,
+			status:      scm.ScmTaskStatus_TASK_STATUS_IN_PROGRESS,
 			approvedBy:  "",
 		},
 		{
@@ -376,17 +376,17 @@ func generateSupplyPlans(store *MockDataStore) []*scm.SupplyPlan {
 			description: "Supply plan for second half of 2025",
 			startMonth:  time.July,
 			endMonth:    time.December,
-			status:      scm.TaskStatus_TASK_STATUS_PENDING,
+			status:      scm.ScmTaskStatus_TASK_STATUS_PENDING,
 			approvedBy:  "",
 		},
 	}
 
-	plans := make([]*scm.SupplyPlan, len(defs))
+	plans := make([]*scm.ScmSupplyPlan, len(defs))
 	for i, d := range defs {
 		startDate := time.Date(2025, d.startMonth, 1, 0, 0, 0, 0, time.UTC)
 		endDate := time.Date(2025, d.endMonth+1, 0, 0, 0, 0, 0, time.UTC)
 
-		plans[i] = &scm.SupplyPlan{
+		plans[i] = &scm.ScmSupplyPlan{
 			PlanId:      fmt.Sprintf("splan-%03d", i+1),
 			Name:        d.name,
 			Description: d.description,
@@ -406,8 +406,8 @@ func generateSupplyPlans(store *MockDataStore) []*scm.SupplyPlan {
 }
 
 // generateSupplierCollaborations creates 10 supplier collaboration records
-func generateSupplierCollaborations(store *MockDataStore) []*scm.SupplierCollaboration {
-	collaborations := make([]*scm.SupplierCollaboration, 10)
+func generateSupplierCollaborations(store *MockDataStore) []*scm.ScmSupplierCollaboration {
+	collaborations := make([]*scm.ScmSupplierCollaboration, 10)
 
 	statusValues := []string{"Active", "Pending", "Suspended"}
 
@@ -415,7 +415,7 @@ func generateSupplierCollaborations(store *MockDataStore) []*scm.SupplierCollabo
 		vendorIdx := i % len(store.VendorIDs)
 		itemIdx := i % len(store.ItemIDs)
 
-		collaborations[i] = &scm.SupplierCollaboration{
+		collaborations[i] = &scm.ScmSupplierCollaboration{
 			CollaborationId:  fmt.Sprintf("scollab-%03d", i+1),
 			VendorId:         store.VendorIDs[vendorIdx],
 			ItemId:           store.ItemIDs[itemIdx],
@@ -433,8 +433,8 @@ func generateSupplierCollaborations(store *MockDataStore) []*scm.SupplierCollabo
 }
 
 // generateSafetyStocks creates 1 safety stock record per item (25 total)
-func generateSafetyStocks(store *MockDataStore) []*scm.SafetyStock {
-	stocks := make([]*scm.SafetyStock, len(store.ItemIDs))
+func generateSafetyStocks(store *MockDataStore) []*scm.ScmSafetyStock {
+	stocks := make([]*scm.ScmSafetyStock, len(store.ItemIDs))
 
 	calcMethods := []string{"Statistical", "Fixed Quantity", "Demand-Based", "Service Level"}
 
@@ -443,7 +443,7 @@ func generateSafetyStocks(store *MockDataStore) []*scm.SafetyStock {
 		safetyStockQty := float64(rand.Intn(451) + 50) // 50-500
 		serviceLevel := 0.90 + rand.Float64()*0.09      // 0.90-0.99
 
-		stocks[i] = &scm.SafetyStock{
+		stocks[i] = &scm.ScmSafetyStock{
 			SafetyStockId:       fmt.Sprintf("sstock-%03d", i+1),
 			ItemId:              itemID,
 			WarehouseId:         store.SCMWarehouseIDs[warehouseIdx],
@@ -461,8 +461,8 @@ func generateSafetyStocks(store *MockDataStore) []*scm.SafetyStock {
 }
 
 // generateLeadTimes creates 1 lead time record per item (25 total)
-func generateLeadTimes(store *MockDataStore) []*scm.LeadTime {
-	leadTimes := make([]*scm.LeadTime, len(store.ItemIDs))
+func generateLeadTimes(store *MockDataStore) []*scm.ScmLeadTime {
+	leadTimes := make([]*scm.ScmLeadTime, len(store.ItemIDs))
 
 	for i, itemID := range store.ItemIDs {
 		vendorIdx := i % len(store.VendorIDs)
@@ -471,7 +471,7 @@ func generateLeadTimes(store *MockDataStore) []*scm.LeadTime {
 		receivingDays := int32(rand.Intn(3) + 1)    // 1-3 days
 		totalDays := leadTimeDays + transitDays + receivingDays
 
-		leadTimes[i] = &scm.LeadTime{
+		leadTimes[i] = &scm.ScmLeadTime{
 			LeadTimeId:    fmt.Sprintf("lt-%03d", i+1),
 			ItemId:        itemID,
 			VendorId:      store.VendorIDs[vendorIdx],

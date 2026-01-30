@@ -24,27 +24,27 @@ import (
 )
 
 // generateItems creates inventory item records from the itemNames array
-func generateItems(store *MockDataStore) []*scm.Item {
-	items := make([]*scm.Item, 25)
-	itemTypes := []scm.ItemType{
-		scm.ItemType_ITEM_TYPE_RAW_MATERIAL,
-		scm.ItemType_ITEM_TYPE_FINISHED_GOOD,
-		scm.ItemType_ITEM_TYPE_SEMI_FINISHED,
-		scm.ItemType_ITEM_TYPE_MRO,
-		scm.ItemType_ITEM_TYPE_SERVICE,
-		scm.ItemType_ITEM_TYPE_CONSUMABLE,
+func generateItems(store *MockDataStore) []*scm.ScmItem {
+	items := make([]*scm.ScmItem, 25)
+	itemTypes := []scm.ScmItemType{
+		scm.ScmItemType_ITEM_TYPE_RAW_MATERIAL,
+		scm.ScmItemType_ITEM_TYPE_FINISHED_GOOD,
+		scm.ScmItemType_ITEM_TYPE_SEMI_FINISHED,
+		scm.ScmItemType_ITEM_TYPE_MRO,
+		scm.ScmItemType_ITEM_TYPE_SERVICE,
+		scm.ScmItemType_ITEM_TYPE_CONSUMABLE,
 	}
-	valuationMethods := []scm.ValuationMethod{
-		scm.ValuationMethod_VALUATION_METHOD_FIFO,
-		scm.ValuationMethod_VALUATION_METHOD_LIFO,
-		scm.ValuationMethod_VALUATION_METHOD_WEIGHTED_AVG,
-		scm.ValuationMethod_VALUATION_METHOD_STANDARD,
+	valuationMethods := []scm.ScmValuationMethod{
+		scm.ScmValuationMethod_VALUATION_METHOD_FIFO,
+		scm.ScmValuationMethod_VALUATION_METHOD_LIFO,
+		scm.ScmValuationMethod_VALUATION_METHOD_WEIGHTED_AVG,
+		scm.ScmValuationMethod_VALUATION_METHOD_STANDARD,
 	}
-	planningMethods := []scm.PlanningMethod{
-		scm.PlanningMethod_PLANNING_METHOD_MRP,
-		scm.PlanningMethod_PLANNING_METHOD_REORDER_POINT,
-		scm.PlanningMethod_PLANNING_METHOD_MIN_MAX,
-		scm.PlanningMethod_PLANNING_METHOD_KANBAN,
+	planningMethods := []scm.ScmPlanningMethod{
+		scm.ScmPlanningMethod_PLANNING_METHOD_MRP,
+		scm.ScmPlanningMethod_PLANNING_METHOD_REORDER_POINT,
+		scm.ScmPlanningMethod_PLANNING_METHOD_MIN_MAX,
+		scm.ScmPlanningMethod_PLANNING_METHOD_KANBAN,
 	}
 	uoms := []string{"EA", "KG", "LB", "M", "FT"}
 
@@ -60,7 +60,7 @@ func generateItems(store *MockDataStore) []*scm.Item {
 			shelfLife = int32(rand.Intn(541) + 180) // 180-720 days
 		}
 
-		items[i] = &scm.Item{
+		items[i] = &scm.ScmItem{
 			ItemId:             fmt.Sprintf("item-%03d", i+1),
 			ItemNumber:         fmt.Sprintf("ITM-%05d", i+1),
 			Name:               itemNames[i],
@@ -84,30 +84,30 @@ func generateItems(store *MockDataStore) []*scm.Item {
 }
 
 // generateStockMovements creates stock movement records for inventory transactions
-func generateStockMovements(store *MockDataStore) []*scm.StockMovement {
-	movements := make([]*scm.StockMovement, 40)
+func generateStockMovements(store *MockDataStore) []*scm.ScmStockMovement {
+	movements := make([]*scm.ScmStockMovement, 40)
 	now := time.Now()
 
 	for i := 0; i < 40; i++ {
 		// 50% RECEIPT, 30% ISSUE, remaining cycle through TRANSFER, ADJUSTMENT, RETURN, SCRAP
-		var movementType scm.MovementType
+		var movementType scm.ScmMovementType
 		r := i % 10
 		if r < 5 {
-			movementType = scm.MovementType_MOVEMENT_TYPE_RECEIPT
+			movementType = scm.ScmMovementType_MOVEMENT_TYPE_RECEIPT
 		} else if r < 8 {
-			movementType = scm.MovementType_MOVEMENT_TYPE_ISSUE
+			movementType = scm.ScmMovementType_MOVEMENT_TYPE_ISSUE
 		} else {
-			others := []scm.MovementType{
-				scm.MovementType_MOVEMENT_TYPE_TRANSFER,
-				scm.MovementType_MOVEMENT_TYPE_ADJUSTMENT,
-				scm.MovementType_MOVEMENT_TYPE_RETURN,
-				scm.MovementType_MOVEMENT_TYPE_SCRAP,
+			others := []scm.ScmMovementType{
+				scm.ScmMovementType_MOVEMENT_TYPE_TRANSFER,
+				scm.ScmMovementType_MOVEMENT_TYPE_ADJUSTMENT,
+				scm.ScmMovementType_MOVEMENT_TYPE_RETURN,
+				scm.ScmMovementType_MOVEMENT_TYPE_SCRAP,
 			}
 			movementType = others[(i/10)%len(others)]
 		}
 
 		var referenceId, referenceType string
-		if movementType == scm.MovementType_MOVEMENT_TYPE_RECEIPT && len(store.SCMPurchaseOrderIDs) > 0 {
+		if movementType == scm.ScmMovementType_MOVEMENT_TYPE_RECEIPT && len(store.SCMPurchaseOrderIDs) > 0 {
 			referenceId = store.SCMPurchaseOrderIDs[i%len(store.SCMPurchaseOrderIDs)]
 			referenceType = "PO"
 		} else {
@@ -117,7 +117,7 @@ func generateStockMovements(store *MockDataStore) []*scm.StockMovement {
 
 		movementDate := now.AddDate(0, 0, -rand.Intn(90))
 
-		movements[i] = &scm.StockMovement{
+		movements[i] = &scm.ScmStockMovement{
 			MovementId:    fmt.Sprintf("smov-%03d", i+1),
 			ItemId:        store.ItemIDs[i%len(store.ItemIDs)],
 			WarehouseId:   store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)],
@@ -137,8 +137,8 @@ func generateStockMovements(store *MockDataStore) []*scm.StockMovement {
 }
 
 // generateLotNumbers creates lot number records for lot-tracked items
-func generateLotNumbers(store *MockDataStore) []*scm.LotNumber {
-	lots := make([]*scm.LotNumber, 20)
+func generateLotNumbers(store *MockDataStore) []*scm.ScmLotNumber {
+	lots := make([]*scm.ScmLotNumber, 20)
 	now := time.Now()
 
 	// Lot-tracked items are the first 10 items (indices 0-9)
@@ -153,7 +153,7 @@ func generateLotNumbers(store *MockDataStore) []*scm.LotNumber {
 		shelfDays := rand.Intn(541) + 180
 		expiryDate := manufactureDate.AddDate(0, 0, shelfDays)
 
-		lots[i] = &scm.LotNumber{
+		lots[i] = &scm.ScmLotNumber{
 			LotId:           fmt.Sprintf("lot-%03d", i+1),
 			ItemId:          lotTrackedItemIDs[i%len(lotTrackedItemIDs)],
 			LotNumber:       fmt.Sprintf("LOT-%06d", i+1),
@@ -170,8 +170,8 @@ func generateLotNumbers(store *MockDataStore) []*scm.LotNumber {
 }
 
 // generateSerialNumbers creates serial number records for serial-tracked items
-func generateSerialNumbers(store *MockDataStore) []*scm.SerialNumber {
-	serials := make([]*scm.SerialNumber, 25)
+func generateSerialNumbers(store *MockDataStore) []*scm.ScmSerialNumber {
+	serials := make([]*scm.ScmSerialNumber, 25)
 
 	// Serial-tracked items are items 5-14 (indices 5-14)
 	serialTrackedItemIDs := store.ItemIDs
@@ -184,7 +184,7 @@ func generateSerialNumbers(store *MockDataStore) []*scm.SerialNumber {
 	statuses := []string{"Available", "In Use"}
 
 	for i := 0; i < 25; i++ {
-		serials[i] = &scm.SerialNumber{
+		serials[i] = &scm.ScmSerialNumber{
 			SerialId:     fmt.Sprintf("ser-%03d", i+1),
 			ItemId:       serialTrackedItemIDs[i%len(serialTrackedItemIDs)],
 			SerialNumber: fmt.Sprintf("SN-%08d", i+1),
@@ -199,19 +199,19 @@ func generateSerialNumbers(store *MockDataStore) []*scm.SerialNumber {
 }
 
 // generateCycleCounts creates cycle count records for warehouse inventory audits
-func generateCycleCounts(store *MockDataStore) []*scm.CycleCount {
-	counts := make([]*scm.CycleCount, 10)
-	taskStatuses := []scm.TaskStatus{
-		scm.TaskStatus_TASK_STATUS_COMPLETED,
-		scm.TaskStatus_TASK_STATUS_IN_PROGRESS,
-		scm.TaskStatus_TASK_STATUS_PENDING,
+func generateCycleCounts(store *MockDataStore) []*scm.ScmCycleCount {
+	counts := make([]*scm.ScmCycleCount, 10)
+	taskStatuses := []scm.ScmTaskStatus{
+		scm.ScmTaskStatus_TASK_STATUS_COMPLETED,
+		scm.ScmTaskStatus_TASK_STATUS_IN_PROGRESS,
+		scm.ScmTaskStatus_TASK_STATUS_PENDING,
 	}
 	now := time.Now()
 
 	for i := 0; i < 10; i++ {
 		countDate := now.AddDate(0, 0, -rand.Intn(30))
 
-		counts[i] = &scm.CycleCount{
+		counts[i] = &scm.ScmCycleCount{
 			CycleCountId:  fmt.Sprintf("cc-%03d", i+1),
 			WarehouseId:   store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)],
 			CountDate:     countDate.Unix(),
@@ -227,15 +227,15 @@ func generateCycleCounts(store *MockDataStore) []*scm.CycleCount {
 }
 
 // generateReorderPoints creates reorder point records for each item
-func generateReorderPoints(store *MockDataStore) []*scm.ReorderPoint {
-	points := make([]*scm.ReorderPoint, 25)
+func generateReorderPoints(store *MockDataStore) []*scm.ScmReorderPoint {
+	points := make([]*scm.ScmReorderPoint, 25)
 
 	for i := 0; i < 25; i++ {
 		minQty := float64(rand.Intn(91) + 10)    // 10-100
 		maxQty := float64(rand.Intn(801) + 200)   // 200-1000
 		reorderQty := float64(rand.Intn(401) + 100) // 100-500
 
-		points[i] = &scm.ReorderPoint{
+		points[i] = &scm.ScmReorderPoint{
 			ReorderPointId:  fmt.Sprintf("rop-%03d", i+1),
 			ItemId:          store.ItemIDs[i%len(store.ItemIDs)],
 			WarehouseId:     store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)],
@@ -251,13 +251,13 @@ func generateReorderPoints(store *MockDataStore) []*scm.ReorderPoint {
 }
 
 // generateInventoryValuations creates inventory valuation records for each item
-func generateInventoryValuations(store *MockDataStore) []*scm.InventoryValuation {
-	valuations := make([]*scm.InventoryValuation, 25)
-	valuationMethods := []scm.ValuationMethod{
-		scm.ValuationMethod_VALUATION_METHOD_FIFO,
-		scm.ValuationMethod_VALUATION_METHOD_LIFO,
-		scm.ValuationMethod_VALUATION_METHOD_WEIGHTED_AVG,
-		scm.ValuationMethod_VALUATION_METHOD_STANDARD,
+func generateInventoryValuations(store *MockDataStore) []*scm.ScmInventoryValuation {
+	valuations := make([]*scm.ScmInventoryValuation, 25)
+	valuationMethods := []scm.ScmValuationMethod{
+		scm.ScmValuationMethod_VALUATION_METHOD_FIFO,
+		scm.ScmValuationMethod_VALUATION_METHOD_LIFO,
+		scm.ScmValuationMethod_VALUATION_METHOD_WEIGHTED_AVG,
+		scm.ScmValuationMethod_VALUATION_METHOD_STANDARD,
 	}
 	now := time.Now()
 
@@ -267,7 +267,7 @@ func generateInventoryValuations(store *MockDataStore) []*scm.InventoryValuation
 		totalValue := int64(qtyOnHand) * unitCost
 		valuationDate := now.AddDate(0, 0, -rand.Intn(30))
 
-		valuations[i] = &scm.InventoryValuation{
+		valuations[i] = &scm.ScmInventoryValuation{
 			ValuationId:     fmt.Sprintf("ival-%03d", i+1),
 			ItemId:          store.ItemIDs[i%len(store.ItemIDs)],
 			WarehouseId:     store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)],

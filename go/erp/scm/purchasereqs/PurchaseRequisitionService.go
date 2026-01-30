@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newPurchaseRequisitionServiceCallback())
-	sla.SetServiceItem(&scm.PurchaseRequisition{})
-	sla.SetServiceItemList(&scm.PurchaseRequisitionList{})
+	sla.SetServiceItem(&scm.ScmPurchaseRequisition{})
+	sla.SetServiceItemList(&scm.ScmPurchaseRequisitionList{})
 	sla.SetPrimaryKeys("RequisitionId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.PurchaseRequisition{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.PurchaseRequisitionList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.PurchaseRequisition{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.PurchaseRequisition{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPurchaseRequisition{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPurchaseRequisitionList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPurchaseRequisition{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPurchaseRequisition{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.PurchaseRequisitionList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmPurchaseRequisitionList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func PurchaseRequisitions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func PurchaseRequisition(requisitionId string, vnic ifs.IVNic) (*scm.PurchaseRequisition, error) {
+func PurchaseRequisition(requisitionId string, vnic ifs.IVNic) (*scm.ScmPurchaseRequisition, error) {
 	this, ok := PurchaseRequisitions(vnic)
 	if !ok {
 		return nil, errors.New("No PurchaseRequisition Service Found")
 	}
-	filter := &scm.PurchaseRequisition{RequisitionId: requisitionId}
+	filter := &scm.ScmPurchaseRequisition{RequisitionId: requisitionId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.PurchaseRequisition), nil
+	return resp.Element().(*scm.ScmPurchaseRequisition), nil
 }

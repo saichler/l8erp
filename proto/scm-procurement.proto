@@ -27,14 +27,14 @@ import "api.proto";
 // ============================================================================
 
 // @PrimeObject
-// PurchaseRequisition represents an internal request to purchase goods or services
-message PurchaseRequisition {
+// ScmPurchaseRequisition represents an internal request to purchase goods or services
+message ScmPurchaseRequisition {
   string requisition_id = 1;
   string requisition_number = 2;
   string requester_id = 3;          // Cross-ref: HCM Employee
   string department_id = 4;         // Cross-ref: HCM Department
   int64 request_date = 5;
-  RequisitionStatus status = 6;
+  ScmRequisitionStatus status = 6;
   string description = 7;
   string priority = 8;
   erp.Money estimated_total = 9;
@@ -43,14 +43,14 @@ message PurchaseRequisition {
   erp.AuditInfo audit_info = 12;
 }
 
-message PurchaseRequisitionList {
-  repeated PurchaseRequisition list = 1;
+message ScmPurchaseRequisitionList {
+  repeated ScmPurchaseRequisition list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// RequisitionLine represents a line item on a purchase requisition
-message RequisitionLine {
+// ScmRequisitionLine represents a line item on a purchase requisition
+message ScmRequisitionLine {
   string line_id = 1;
   string requisition_id = 2;
   int32 line_number = 3;
@@ -65,14 +65,14 @@ message RequisitionLine {
   erp.AuditInfo audit_info = 12;
 }
 
-message RequisitionLineList {
-  repeated RequisitionLine list = 1;
+message ScmRequisitionLineList {
+  repeated ScmRequisitionLine list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// RequestForQuotation represents an RFQ sent to vendors
-message RequestForQuotation {
+// ScmRequestForQuotation represents an RFQ sent to vendors
+message ScmRequestForQuotation {
   string rfq_id = 1;
   string rfq_number = 2;
   string requisition_id = 3;
@@ -80,26 +80,26 @@ message RequestForQuotation {
   int64 issue_date = 5;
   int64 response_deadline = 6;
   string description = 7;
-  RequisitionStatus status = 8;
+  ScmRequisitionStatus status = 8;
   string notes = 9;
   map<string, string> custom_fields = 10;
   erp.AuditInfo audit_info = 11;
 }
 
-message RequestForQuotationList {
-  repeated RequestForQuotation list = 1;
+message ScmRequestForQuotationList {
+  repeated ScmRequestForQuotation list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// PurchaseOrder represents a purchase order sent to a vendor
-message PurchaseOrder {
+// ScmPurchaseOrder represents a purchase order sent to a vendor
+message ScmPurchaseOrder {
   string purchase_order_id = 1;
   string order_number = 2;
   string vendor_id = 3;             // Cross-ref: FIN Vendor
   int64 order_date = 4;
   int64 expected_delivery = 5;
-  PurchaseOrderStatus status = 6;
+  ScmPurchaseOrderStatus status = 6;
   erp.Money total_amount = 7;
   erp.Address shipping_address = 8;
   string payment_terms = 9;
@@ -110,14 +110,14 @@ message PurchaseOrder {
   erp.AuditInfo audit_info = 14;
 }
 
-message PurchaseOrderList {
-  repeated PurchaseOrder list = 1;
+message ScmPurchaseOrderList {
+  repeated ScmPurchaseOrder list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// PurchaseOrderLine represents a line item on a purchase order
-message PurchaseOrderLine {
+// ScmPurchaseOrderLine represents a line item on a purchase order
+message ScmPurchaseOrderLine {
   string line_id = 1;
   string purchase_order_id = 2;
   int32 line_number = 3;
@@ -131,14 +131,14 @@ message PurchaseOrderLine {
   erp.AuditInfo audit_info = 11;
 }
 
-message PurchaseOrderLineList {
-  repeated PurchaseOrderLine list = 1;
+message ScmPurchaseOrderLineList {
+  repeated ScmPurchaseOrderLine list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// BlanketOrder represents a long-term purchase agreement with a vendor
-message BlanketOrder {
+// ScmBlanketOrder represents a long-term purchase agreement with a vendor
+message ScmBlanketOrder {
   string blanket_order_id = 1;
   string order_number = 2;
   string vendor_id = 3;
@@ -146,20 +146,20 @@ message BlanketOrder {
   int64 end_date = 5;
   erp.Money max_amount = 6;
   erp.Money used_amount = 7;
-  PurchaseOrderStatus status = 8;
+  ScmPurchaseOrderStatus status = 8;
   string description = 9;
   map<string, string> custom_fields = 10;
   erp.AuditInfo audit_info = 11;
 }
 
-message BlanketOrderList {
-  repeated BlanketOrder list = 1;
+message ScmBlanketOrderList {
+  repeated ScmBlanketOrder list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// SupplierScorecard represents a vendor performance evaluation
-message SupplierScorecard {
+// ScmSupplierScorecard represents a vendor performance evaluation
+message ScmSupplierScorecard {
   string scorecard_id = 1;
   string vendor_id = 2;             // Cross-ref: FIN Vendor
   erp.DateRange evaluation_period = 3;
@@ -172,7 +172,7 @@ message SupplierScorecard {
   erp.AuditInfo audit_info = 10;
 }
 
-message SupplierScorecardList {
-  repeated SupplierScorecard list = 1;
+message ScmSupplierScorecardList {
+  repeated ScmSupplierScorecard list = 1;
   l8api.L8MetaData metadata = 2;
 }

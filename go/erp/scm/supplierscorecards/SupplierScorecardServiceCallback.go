@@ -29,7 +29,7 @@ func newSupplierScorecardServiceCallback() *SupplierScorecardServiceCallback {
 }
 
 func (this *SupplierScorecardServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.SupplierScorecard)
+	item, ok := any.(*scm.ScmSupplierScorecard)
 	if !ok {
 		return nil, false, errors.New("invalid supplier scorecard type")
 	}
@@ -44,7 +44,7 @@ func (this *SupplierScorecardServiceCallback) After(any interface{}, action ifs.
 	return nil, true, nil
 }
 
-func validate(item *scm.SupplierScorecard, vnic ifs.IVNic) error {
+func validate(item *scm.ScmSupplierScorecard, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.ScorecardId, "ScorecardId"); err != nil {
 		return err
 	}

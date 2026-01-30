@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newItemCategoryServiceCallback())
-	sla.SetServiceItem(&scm.ItemCategory{})
-	sla.SetServiceItemList(&scm.ItemCategoryList{})
+	sla.SetServiceItem(&scm.ScmItemCategory{})
+	sla.SetServiceItemList(&scm.ScmItemCategoryList{})
 	sla.SetPrimaryKeys("CategoryId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.ItemCategory{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ItemCategoryList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ItemCategory{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ItemCategory{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmItemCategory{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmItemCategoryList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmItemCategory{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmItemCategory{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ItemCategoryList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmItemCategoryList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func ItemCategories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func ItemCategory(categoryId string, vnic ifs.IVNic) (*scm.ItemCategory, error) {
+func ItemCategory(categoryId string, vnic ifs.IVNic) (*scm.ScmItemCategory, error) {
 	this, ok := ItemCategories(vnic)
 	if !ok {
 		return nil, errors.New("No ItemCategory Service Found")
 	}
-	filter := &scm.ItemCategory{CategoryId: categoryId}
+	filter := &scm.ScmItemCategory{CategoryId: categoryId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ItemCategory), nil
+	return resp.Element().(*scm.ScmItemCategory), nil
 }

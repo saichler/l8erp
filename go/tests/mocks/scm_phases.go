@@ -25,7 +25,7 @@ func generateScmPhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate Item Categories
 	fmt.Printf("  Creating Item Categories...")
 	itemCategories := generateItemCategories()
-	if err := client.post("/erp/50/ItemCat", &scm.ItemCategoryList{List: itemCategories}); err != nil {
+	if err := client.post("/erp/50/ItemCat", &scm.ScmItemCategoryList{List: itemCategories}); err != nil {
 		return fmt.Errorf("item categories: %w", err)
 	}
 	for _, ic := range itemCategories {
@@ -36,7 +36,7 @@ func generateScmPhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate Warehouses
 	fmt.Printf("  Creating Warehouses...")
 	warehouses := generateWarehouses(store)
-	if err := client.post("/erp/50/Warehouse", &scm.WarehouseList{List: warehouses}); err != nil {
+	if err := client.post("/erp/50/Warehouse", &scm.ScmWarehouseList{List: warehouses}); err != nil {
 		return fmt.Errorf("warehouses: %w", err)
 	}
 	for _, w := range warehouses {
@@ -47,7 +47,7 @@ func generateScmPhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate SCM Carriers
 	fmt.Printf("  Creating SCM Carriers...")
 	carriers := generateSCMCarriers()
-	if err := client.post("/erp/50/Carrier", &scm.CarrierList{List: carriers}); err != nil {
+	if err := client.post("/erp/50/Carrier", &scm.ScmCarrierList{List: carriers}); err != nil {
 		return fmt.Errorf("scm carriers: %w", err)
 	}
 	for _, c := range carriers {
@@ -58,7 +58,7 @@ func generateScmPhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate Forecast Models
 	fmt.Printf("  Creating Forecast Models...")
 	forecastModels := generateForecastModels()
-	if err := client.post("/erp/50/FcastModel", &scm.ForecastModelList{List: forecastModels}); err != nil {
+	if err := client.post("/erp/50/FcastModel", &scm.ScmForecastModelList{List: forecastModels}); err != nil {
 		return fmt.Errorf("forecast models: %w", err)
 	}
 	for _, fm := range forecastModels {
@@ -74,7 +74,7 @@ func generateScmPhase2(client *HCMClient, store *MockDataStore) error {
 	// Generate Items
 	fmt.Printf("  Creating Items...")
 	items := generateItems(store)
-	if err := client.post("/erp/50/Item", &scm.ItemList{List: items}); err != nil {
+	if err := client.post("/erp/50/Item", &scm.ScmItemList{List: items}); err != nil {
 		return fmt.Errorf("items: %w", err)
 	}
 	for _, item := range items {
@@ -85,7 +85,7 @@ func generateScmPhase2(client *HCMClient, store *MockDataStore) error {
 	// Generate Bins
 	fmt.Printf("  Creating Bins...")
 	bins := generateBins(store)
-	if err := client.post("/erp/50/Bin", &scm.BinList{List: bins}); err != nil {
+	if err := client.post("/erp/50/Bin", &scm.ScmBinList{List: bins}); err != nil {
 		return fmt.Errorf("bins: %w", err)
 	}
 	for _, b := range bins {
@@ -96,7 +96,7 @@ func generateScmPhase2(client *HCMClient, store *MockDataStore) error {
 	// Generate Freight Rates
 	fmt.Printf("  Creating Freight Rates...")
 	freightRates := generateFreightRates(store)
-	if err := client.post("/erp/50/FreightRt", &scm.FreightRateList{List: freightRates}); err != nil {
+	if err := client.post("/erp/50/FreightRt", &scm.ScmFreightRateList{List: freightRates}); err != nil {
 		return fmt.Errorf("freight rates: %w", err)
 	}
 	for _, fr := range freightRates {
@@ -112,7 +112,7 @@ func generateScmPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Purchase Requisitions
 	fmt.Printf("  Creating Purchase Requisitions...")
 	requisitions := generatePurchaseRequisitions(store)
-	if err := client.post("/erp/50/PurchReq", &scm.PurchaseRequisitionList{List: requisitions}); err != nil {
+	if err := client.post("/erp/50/PurchReq", &scm.ScmPurchaseRequisitionList{List: requisitions}); err != nil {
 		return fmt.Errorf("purchase requisitions: %w", err)
 	}
 	for _, r := range requisitions {
@@ -123,7 +123,7 @@ func generateScmPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Requisition Lines
 	fmt.Printf("  Creating Requisition Lines...")
 	reqLines := generateRequisitionLines(store)
-	if err := client.post("/erp/50/ReqLine", &scm.RequisitionLineList{List: reqLines}); err != nil {
+	if err := client.post("/erp/50/ReqLine", &scm.ScmRequisitionLineList{List: reqLines}); err != nil {
 		return fmt.Errorf("requisition lines: %w", err)
 	}
 	for _, rl := range reqLines {
@@ -134,7 +134,7 @@ func generateScmPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate RFQs
 	fmt.Printf("  Creating RFQs...")
 	rfqs := generateRFQs(store)
-	if err := client.post("/erp/50/RFQ", &scm.RequestForQuotationList{List: rfqs}); err != nil {
+	if err := client.post("/erp/50/RFQ", &scm.ScmRequestForQuotationList{List: rfqs}); err != nil {
 		return fmt.Errorf("rfqs: %w", err)
 	}
 	for _, rfq := range rfqs {
@@ -145,7 +145,7 @@ func generateScmPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Blanket Orders
 	fmt.Printf("  Creating Blanket Orders...")
 	blanketOrders := generateBlanketOrders(store)
-	if err := client.post("/erp/50/BlnktOrder", &scm.BlanketOrderList{List: blanketOrders}); err != nil {
+	if err := client.post("/erp/50/BlnktOrder", &scm.ScmBlanketOrderList{List: blanketOrders}); err != nil {
 		return fmt.Errorf("blanket orders: %w", err)
 	}
 	for _, bo := range blanketOrders {
@@ -156,7 +156,7 @@ func generateScmPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Supplier Scorecards
 	fmt.Printf("  Creating Supplier Scorecards...")
 	scorecards := generateSupplierScorecards(store)
-	if err := client.post("/erp/50/SupplrCard", &scm.SupplierScorecardList{List: scorecards}); err != nil {
+	if err := client.post("/erp/50/SupplrCard", &scm.ScmSupplierScorecardList{List: scorecards}); err != nil {
 		return fmt.Errorf("supplier scorecards: %w", err)
 	}
 	for _, sc := range scorecards {
@@ -172,7 +172,7 @@ func generateScmPhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate Purchase Orders
 	fmt.Printf("  Creating Purchase Orders...")
 	purchaseOrders := generateSCMPurchaseOrders(store)
-	if err := client.post("/erp/50/PurchOrder", &scm.PurchaseOrderList{List: purchaseOrders}); err != nil {
+	if err := client.post("/erp/50/PurchOrder", &scm.ScmPurchaseOrderList{List: purchaseOrders}); err != nil {
 		return fmt.Errorf("purchase orders: %w", err)
 	}
 	for _, po := range purchaseOrders {
@@ -183,7 +183,7 @@ func generateScmPhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate PO Lines
 	fmt.Printf("  Creating PO Lines...")
 	poLines := generatePOLines(store)
-	if err := client.post("/erp/50/POLine", &scm.PurchaseOrderLineList{List: poLines}); err != nil {
+	if err := client.post("/erp/50/POLine", &scm.ScmPurchaseOrderLineList{List: poLines}); err != nil {
 		return fmt.Errorf("po lines: %w", err)
 	}
 	for _, pl := range poLines {
@@ -199,7 +199,7 @@ func generateScmPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Receiving Orders
 	fmt.Printf("  Creating Receiving Orders...")
 	receivingOrders := generateReceivingOrders(store)
-	if err := client.post("/erp/50/RecvOrder", &scm.ReceivingOrderList{List: receivingOrders}); err != nil {
+	if err := client.post("/erp/50/RecvOrder", &scm.ScmReceivingOrderList{List: receivingOrders}); err != nil {
 		return fmt.Errorf("receiving orders: %w", err)
 	}
 	for _, ro := range receivingOrders {
@@ -210,7 +210,7 @@ func generateScmPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Putaway Tasks
 	fmt.Printf("  Creating Putaway Tasks...")
 	putawayTasks := generatePutawayTasks(store)
-	if err := client.post("/erp/50/PutAway", &scm.PutawayTaskList{List: putawayTasks}); err != nil {
+	if err := client.post("/erp/50/PutAway", &scm.ScmPutawayTaskList{List: putawayTasks}); err != nil {
 		return fmt.Errorf("putaway tasks: %w", err)
 	}
 	for _, pt := range putawayTasks {
@@ -221,7 +221,7 @@ func generateScmPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Pick Tasks
 	fmt.Printf("  Creating Pick Tasks...")
 	pickTasks := generatePickTasks(store)
-	if err := client.post("/erp/50/PickTask", &scm.PickTaskList{List: pickTasks}); err != nil {
+	if err := client.post("/erp/50/PickTask", &scm.ScmPickTaskList{List: pickTasks}); err != nil {
 		return fmt.Errorf("pick tasks: %w", err)
 	}
 	for _, pk := range pickTasks {
@@ -232,7 +232,7 @@ func generateScmPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Pack Tasks
 	fmt.Printf("  Creating Pack Tasks...")
 	packTasks := generatePackTasks(store)
-	if err := client.post("/erp/50/PackTask", &scm.PackTaskList{List: packTasks}); err != nil {
+	if err := client.post("/erp/50/PackTask", &scm.ScmPackTaskList{List: packTasks}); err != nil {
 		return fmt.Errorf("pack tasks: %w", err)
 	}
 	for _, pk := range packTasks {
@@ -243,7 +243,7 @@ func generateScmPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Ship Tasks
 	fmt.Printf("  Creating Ship Tasks...")
 	shipTasks := generateShipTasks(store)
-	if err := client.post("/erp/50/ShipTask", &scm.ShipTaskList{List: shipTasks}); err != nil {
+	if err := client.post("/erp/50/ShipTask", &scm.ScmShipTaskList{List: shipTasks}); err != nil {
 		return fmt.Errorf("ship tasks: %w", err)
 	}
 	for _, st := range shipTasks {
@@ -254,7 +254,7 @@ func generateScmPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Wave Plans
 	fmt.Printf("  Creating Wave Plans...")
 	wavePlans := generateWavePlans(store)
-	if err := client.post("/erp/50/WavePlan", &scm.WavePlanList{List: wavePlans}); err != nil {
+	if err := client.post("/erp/50/WavePlan", &scm.ScmWavePlanList{List: wavePlans}); err != nil {
 		return fmt.Errorf("wave plans: %w", err)
 	}
 	for _, wp := range wavePlans {
@@ -265,7 +265,7 @@ func generateScmPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Dock Schedules
 	fmt.Printf("  Creating Dock Schedules...")
 	dockSchedules := generateDockSchedules(store)
-	if err := client.post("/erp/50/DockSched", &scm.DockScheduleList{List: dockSchedules}); err != nil {
+	if err := client.post("/erp/50/DockSched", &scm.ScmDockScheduleList{List: dockSchedules}); err != nil {
 		return fmt.Errorf("dock schedules: %w", err)
 	}
 	for _, ds := range dockSchedules {

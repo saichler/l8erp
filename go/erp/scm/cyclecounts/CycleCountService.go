@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newCycleCountServiceCallback())
-	sla.SetServiceItem(&scm.CycleCount{})
-	sla.SetServiceItemList(&scm.CycleCountList{})
+	sla.SetServiceItem(&scm.ScmCycleCount{})
+	sla.SetServiceItemList(&scm.ScmCycleCountList{})
 	sla.SetPrimaryKeys("CycleCountId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.CycleCount{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.CycleCountList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.CycleCount{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.CycleCount{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmCycleCount{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmCycleCountList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmCycleCount{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmCycleCount{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.CycleCountList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmCycleCountList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func CycleCounts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func CycleCount(cycleCountId string, vnic ifs.IVNic) (*scm.CycleCount, error) {
+func CycleCount(cycleCountId string, vnic ifs.IVNic) (*scm.ScmCycleCount, error) {
 	this, ok := CycleCounts(vnic)
 	if !ok {
 		return nil, errors.New("No CycleCount Service Found")
 	}
-	filter := &scm.CycleCount{CycleCountId: cycleCountId}
+	filter := &scm.ScmCycleCount{CycleCountId: cycleCountId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.CycleCount), nil
+	return resp.Element().(*scm.ScmCycleCount), nil
 }

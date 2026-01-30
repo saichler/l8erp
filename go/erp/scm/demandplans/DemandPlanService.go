@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newDemandPlanServiceCallback())
-	sla.SetServiceItem(&scm.DemandPlan{})
-	sla.SetServiceItemList(&scm.DemandPlanList{})
+	sla.SetServiceItem(&scm.ScmDemandPlan{})
+	sla.SetServiceItemList(&scm.ScmDemandPlanList{})
 	sla.SetPrimaryKeys("PlanId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.DemandPlan{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.DemandPlanList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.DemandPlan{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.DemandPlan{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDemandPlan{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDemandPlanList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDemandPlan{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDemandPlan{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.DemandPlanList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmDemandPlanList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func DemandPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func DemandPlan(planId string, vnic ifs.IVNic) (*scm.DemandPlan, error) {
+func DemandPlan(planId string, vnic ifs.IVNic) (*scm.ScmDemandPlan, error) {
 	this, ok := DemandPlans(vnic)
 	if !ok {
 		return nil, errors.New("No DemandPlan Service Found")
 	}
-	filter := &scm.DemandPlan{PlanId: planId}
+	filter := &scm.ScmDemandPlan{PlanId: planId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.DemandPlan), nil
+	return resp.Element().(*scm.ScmDemandPlan), nil
 }

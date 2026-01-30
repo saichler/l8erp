@@ -26,7 +26,7 @@ import "erp-common.proto";
 
 // --- Procurement Enums ---
 
-enum RequisitionStatus {
+enum ScmRequisitionStatus {
   REQUISITION_STATUS_UNSPECIFIED = 0;
   REQUISITION_STATUS_DRAFT = 1;
   REQUISITION_STATUS_SUBMITTED = 2;
@@ -36,7 +36,7 @@ enum RequisitionStatus {
   REQUISITION_STATUS_CANCELLED = 6;
 }
 
-enum PurchaseOrderStatus {
+enum ScmPurchaseOrderStatus {
   PO_STATUS_UNSPECIFIED = 0;
   PO_STATUS_DRAFT = 1;
   PO_STATUS_APPROVED = 2;
@@ -49,7 +49,7 @@ enum PurchaseOrderStatus {
 
 // --- Inventory Enums ---
 
-enum MovementType {
+enum ScmMovementType {
   MOVEMENT_TYPE_UNSPECIFIED = 0;
   MOVEMENT_TYPE_RECEIPT = 1;
   MOVEMENT_TYPE_ISSUE = 2;
@@ -59,7 +59,7 @@ enum MovementType {
   MOVEMENT_TYPE_SCRAP = 6;
 }
 
-enum ItemType {
+enum ScmItemType {
   ITEM_TYPE_UNSPECIFIED = 0;
   ITEM_TYPE_RAW_MATERIAL = 1;
   ITEM_TYPE_FINISHED_GOOD = 2;
@@ -69,7 +69,7 @@ enum ItemType {
   ITEM_TYPE_CONSUMABLE = 6;
 }
 
-enum ValuationMethod {
+enum ScmValuationMethod {
   VALUATION_METHOD_UNSPECIFIED = 0;
   VALUATION_METHOD_FIFO = 1;
   VALUATION_METHOD_LIFO = 2;
@@ -79,7 +79,7 @@ enum ValuationMethod {
 
 // --- Logistics Enums ---
 
-enum ShipmentStatus {
+enum ScmShipmentStatus {
   SHIPMENT_STATUS_UNSPECIFIED = 0;
   SHIPMENT_STATUS_PLANNED = 1;
   SHIPMENT_STATUS_PICKED_UP = 2;
@@ -91,7 +91,7 @@ enum ShipmentStatus {
 
 // --- Task and Warehouse Enums ---
 
-enum TaskStatus {
+enum ScmTaskStatus {
   TASK_STATUS_UNSPECIFIED = 0;
   TASK_STATUS_PENDING = 1;
   TASK_STATUS_IN_PROGRESS = 2;
@@ -99,7 +99,7 @@ enum TaskStatus {
   TASK_STATUS_CANCELLED = 4;
 }
 
-enum WarehouseType {
+enum ScmWarehouseType {
   WAREHOUSE_TYPE_UNSPECIFIED = 0;
   WAREHOUSE_TYPE_STANDARD = 1;
   WAREHOUSE_TYPE_COLD_STORAGE = 2;
@@ -108,7 +108,7 @@ enum WarehouseType {
   WAREHOUSE_TYPE_CROSS_DOCK = 5;
 }
 
-enum BinType {
+enum ScmBinType {
   BIN_TYPE_UNSPECIFIED = 0;
   BIN_TYPE_STORAGE = 1;
   BIN_TYPE_PICKING = 2;
@@ -118,7 +118,7 @@ enum BinType {
   BIN_TYPE_QUARANTINE = 6;
 }
 
-enum CarrierType {
+enum ScmCarrierType {
   CARRIER_TYPE_UNSPECIFIED = 0;
   CARRIER_TYPE_PARCEL = 1;
   CARRIER_TYPE_LTL = 2;
@@ -131,7 +131,7 @@ enum CarrierType {
 
 // --- Planning Enums ---
 
-enum PlanningMethod {
+enum ScmPlanningMethod {
   PLANNING_METHOD_UNSPECIFIED = 0;
   PLANNING_METHOD_MRP = 1;
   PLANNING_METHOD_REORDER_POINT = 2;
@@ -139,7 +139,7 @@ enum PlanningMethod {
   PLANNING_METHOD_KANBAN = 4;
 }
 
-enum ForecastMethod {
+enum ScmForecastMethod {
   FORECAST_METHOD_UNSPECIFIED = 0;
   FORECAST_METHOD_MOVING_AVG = 1;
   FORECAST_METHOD_EXPONENTIAL = 2;
@@ -150,8 +150,8 @@ enum ForecastMethod {
 
 // --- Common Messages ---
 
-// UnitOfMeasure represents a unit of measure for items
-message UnitOfMeasure {
+// ScmUnitOfMeasure represents a unit of measure for items
+message ScmUnitOfMeasure {
   string uom_id = 1;
   string code = 2;
   string name = 3;

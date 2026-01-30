@@ -28,7 +28,7 @@ func newRouteServiceCallback() *RouteServiceCallback {
 }
 
 func (this *RouteServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.Route)
+	item, ok := any.(*scm.ScmRoute)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -43,7 +43,7 @@ func (this *RouteServiceCallback) After(any interface{}, action ifs.Action, cont
 	return nil, true, nil
 }
 
-func validate(item *scm.Route, vnic ifs.IVNic) error {
+func validate(item *scm.ScmRoute, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.RouteId, "RouteId"); err != nil {
 		return err
 	}

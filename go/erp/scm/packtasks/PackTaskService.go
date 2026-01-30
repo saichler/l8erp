@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newPackTaskServiceCallback())
-	sla.SetServiceItem(&scm.PackTask{})
-	sla.SetServiceItemList(&scm.PackTaskList{})
+	sla.SetServiceItem(&scm.ScmPackTask{})
+	sla.SetServiceItemList(&scm.ScmPackTaskList{})
 	sla.SetPrimaryKeys("TaskId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.PackTask{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.PackTaskList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.PackTask{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.PackTask{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPackTask{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPackTaskList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPackTask{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPackTask{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.PackTaskList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmPackTaskList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func PackTasks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func PackTask(taskId string, vnic ifs.IVNic) (*scm.PackTask, error) {
+func PackTask(taskId string, vnic ifs.IVNic) (*scm.ScmPackTask, error) {
 	this, ok := PackTasks(vnic)
 	if !ok {
 		return nil, errors.New("No PackTask Service Found")
 	}
-	filter := &scm.PackTask{TaskId: taskId}
+	filter := &scm.ScmPackTask{TaskId: taskId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.PackTask), nil
+	return resp.Element().(*scm.ScmPackTask), nil
 }

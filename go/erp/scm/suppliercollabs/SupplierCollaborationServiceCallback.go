@@ -29,7 +29,7 @@ func newSupplierCollaborationServiceCallback() *SupplierCollaborationServiceCall
 }
 
 func (this *SupplierCollaborationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.SupplierCollaboration)
+	item, ok := any.(*scm.ScmSupplierCollaboration)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -44,7 +44,7 @@ func (this *SupplierCollaborationServiceCallback) After(any interface{}, action 
 	return nil, true, nil
 }
 
-func validate(item *scm.SupplierCollaboration, vnic ifs.IVNic) error {
+func validate(item *scm.ScmSupplierCollaboration, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.CollaborationId, "CollaborationId"); err != nil {
 		return err
 	}

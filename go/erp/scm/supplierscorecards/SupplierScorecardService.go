@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newSupplierScorecardServiceCallback())
-	sla.SetServiceItem(&scm.SupplierScorecard{})
-	sla.SetServiceItemList(&scm.SupplierScorecardList{})
+	sla.SetServiceItem(&scm.ScmSupplierScorecard{})
+	sla.SetServiceItemList(&scm.ScmSupplierScorecardList{})
 	sla.SetPrimaryKeys("ScorecardId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.SupplierScorecard{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.SupplierScorecardList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.SupplierScorecard{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.SupplierScorecard{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmSupplierScorecard{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmSupplierScorecardList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmSupplierScorecard{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmSupplierScorecard{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.SupplierScorecardList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmSupplierScorecardList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func SupplierScorecards(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func SupplierScorecard(scorecardId string, vnic ifs.IVNic) (*scm.SupplierScorecard, error) {
+func SupplierScorecard(scorecardId string, vnic ifs.IVNic) (*scm.ScmSupplierScorecard, error) {
 	this, ok := SupplierScorecards(vnic)
 	if !ok {
 		return nil, errors.New("No SupplierScorecard Service Found")
 	}
-	filter := &scm.SupplierScorecard{ScorecardId: scorecardId}
+	filter := &scm.ScmSupplierScorecard{ScorecardId: scorecardId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.SupplierScorecard), nil
+	return resp.Element().(*scm.ScmSupplierScorecard), nil
 }

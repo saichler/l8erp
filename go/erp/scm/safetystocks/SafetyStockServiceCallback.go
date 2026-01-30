@@ -29,7 +29,7 @@ func newSafetyStockServiceCallback() *SafetyStockServiceCallback {
 }
 
 func (this *SafetyStockServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.SafetyStock)
+	item, ok := any.(*scm.ScmSafetyStock)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -44,7 +44,7 @@ func (this *SafetyStockServiceCallback) After(any interface{}, action ifs.Action
 	return nil, true, nil
 }
 
-func validate(item *scm.SafetyStock, vnic ifs.IVNic) error {
+func validate(item *scm.ScmSafetyStock, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.SafetyStockId, "SafetyStockId"); err != nil {
 		return err
 	}

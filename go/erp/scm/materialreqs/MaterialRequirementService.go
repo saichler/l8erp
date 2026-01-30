@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newMaterialRequirementServiceCallback())
-	sla.SetServiceItem(&scm.MaterialRequirement{})
-	sla.SetServiceItemList(&scm.MaterialRequirementList{})
+	sla.SetServiceItem(&scm.ScmMaterialRequirement{})
+	sla.SetServiceItemList(&scm.ScmMaterialRequirementList{})
 	sla.SetPrimaryKeys("RequirementId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.MaterialRequirement{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.MaterialRequirementList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.MaterialRequirement{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.MaterialRequirement{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmMaterialRequirement{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmMaterialRequirementList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmMaterialRequirement{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmMaterialRequirement{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.MaterialRequirementList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmMaterialRequirementList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func MaterialRequirements(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func MaterialRequirement(requirementId string, vnic ifs.IVNic) (*scm.MaterialRequirement, error) {
+func MaterialRequirement(requirementId string, vnic ifs.IVNic) (*scm.ScmMaterialRequirement, error) {
 	this, ok := MaterialRequirements(vnic)
 	if !ok {
 		return nil, errors.New("No MaterialRequirement Service Found")
 	}
-	filter := &scm.MaterialRequirement{RequirementId: requirementId}
+	filter := &scm.ScmMaterialRequirement{RequirementId: requirementId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.MaterialRequirement), nil
+	return resp.Element().(*scm.ScmMaterialRequirement), nil
 }

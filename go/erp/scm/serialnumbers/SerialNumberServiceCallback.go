@@ -29,7 +29,7 @@ func newSerialNumberServiceCallback() *SerialNumberServiceCallback {
 }
 
 func (this *SerialNumberServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.SerialNumber)
+	item, ok := any.(*scm.ScmSerialNumber)
 	if !ok {
 		return nil, false, errors.New("invalid serial number type")
 	}
@@ -44,7 +44,7 @@ func (this *SerialNumberServiceCallback) After(any interface{}, action ifs.Actio
 	return nil, true, nil
 }
 
-func validate(item *scm.SerialNumber, vnic ifs.IVNic) error {
+func validate(item *scm.ScmSerialNumber, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.SerialId, "SerialId"); err != nil {
 		return err
 	}

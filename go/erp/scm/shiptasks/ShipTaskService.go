@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newShipTaskServiceCallback())
-	sla.SetServiceItem(&scm.ShipTask{})
-	sla.SetServiceItemList(&scm.ShipTaskList{})
+	sla.SetServiceItem(&scm.ScmShipTask{})
+	sla.SetServiceItemList(&scm.ScmShipTaskList{})
 	sla.SetPrimaryKeys("TaskId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.ShipTask{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ShipTaskList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ShipTask{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ShipTask{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmShipTask{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmShipTaskList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmShipTask{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmShipTask{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ShipTaskList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmShipTaskList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func ShipTasks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func ShipTask(taskId string, vnic ifs.IVNic) (*scm.ShipTask, error) {
+func ShipTask(taskId string, vnic ifs.IVNic) (*scm.ScmShipTask, error) {
 	this, ok := ShipTasks(vnic)
 	if !ok {
 		return nil, errors.New("No ShipTask Service Found")
 	}
-	filter := &scm.ShipTask{TaskId: taskId}
+	filter := &scm.ScmShipTask{TaskId: taskId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ShipTask), nil
+	return resp.Element().(*scm.ScmShipTask), nil
 }

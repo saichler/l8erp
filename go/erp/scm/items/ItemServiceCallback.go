@@ -29,7 +29,7 @@ func newItemServiceCallback() *ItemServiceCallback {
 }
 
 func (this *ItemServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.Item)
+	item, ok := any.(*scm.ScmItem)
 	if !ok {
 		return nil, false, errors.New("invalid item type")
 	}
@@ -44,7 +44,7 @@ func (this *ItemServiceCallback) After(any interface{}, action ifs.Action, cont 
 	return nil, true, nil
 }
 
-func validate(item *scm.Item, vnic ifs.IVNic) error {
+func validate(item *scm.ScmItem, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.ItemId, "ItemId"); err != nil {
 		return err
 	}

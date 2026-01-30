@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newDeliveryProofServiceCallback())
-	sla.SetServiceItem(&scm.DeliveryProof{})
-	sla.SetServiceItemList(&scm.DeliveryProofList{})
+	sla.SetServiceItem(&scm.ScmDeliveryProof{})
+	sla.SetServiceItemList(&scm.ScmDeliveryProofList{})
 	sla.SetPrimaryKeys("ProofId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.DeliveryProof{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.DeliveryProofList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.DeliveryProof{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.DeliveryProof{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDeliveryProof{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDeliveryProofList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDeliveryProof{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDeliveryProof{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.DeliveryProofList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmDeliveryProofList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func DeliveryProofs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func DeliveryProof(proofId string, vnic ifs.IVNic) (*scm.DeliveryProof, error) {
+func DeliveryProof(proofId string, vnic ifs.IVNic) (*scm.ScmDeliveryProof, error) {
 	this, ok := DeliveryProofs(vnic)
 	if !ok {
 		return nil, errors.New("No DeliveryProof Service Found")
 	}
-	filter := &scm.DeliveryProof{ProofId: proofId}
+	filter := &scm.ScmDeliveryProof{ProofId: proofId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.DeliveryProof), nil
+	return resp.Element().(*scm.ScmDeliveryProof), nil
 }

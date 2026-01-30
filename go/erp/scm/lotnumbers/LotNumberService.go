@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newLotNumberServiceCallback())
-	sla.SetServiceItem(&scm.LotNumber{})
-	sla.SetServiceItemList(&scm.LotNumberList{})
+	sla.SetServiceItem(&scm.ScmLotNumber{})
+	sla.SetServiceItemList(&scm.ScmLotNumberList{})
 	sla.SetPrimaryKeys("LotId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.LotNumber{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.LotNumberList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.LotNumber{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.LotNumber{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmLotNumber{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmLotNumberList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmLotNumber{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmLotNumber{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.LotNumberList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmLotNumberList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func LotNumbers(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func LotNumber(lotId string, vnic ifs.IVNic) (*scm.LotNumber, error) {
+func LotNumber(lotId string, vnic ifs.IVNic) (*scm.ScmLotNumber, error) {
 	this, ok := LotNumbers(vnic)
 	if !ok {
 		return nil, errors.New("No LotNumber Service Found")
 	}
-	filter := &scm.LotNumber{LotId: lotId}
+	filter := &scm.ScmLotNumber{LotId: lotId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.LotNumber), nil
+	return resp.Element().(*scm.ScmLotNumber), nil
 }

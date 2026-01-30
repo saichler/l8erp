@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newSupplierCollaborationServiceCallback())
-	sla.SetServiceItem(&scm.SupplierCollaboration{})
-	sla.SetServiceItemList(&scm.SupplierCollaborationList{})
+	sla.SetServiceItem(&scm.ScmSupplierCollaboration{})
+	sla.SetServiceItemList(&scm.ScmSupplierCollaborationList{})
 	sla.SetPrimaryKeys("CollaborationId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.SupplierCollaboration{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.SupplierCollaborationList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.SupplierCollaboration{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.SupplierCollaboration{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmSupplierCollaboration{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmSupplierCollaborationList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmSupplierCollaboration{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmSupplierCollaboration{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.SupplierCollaborationList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmSupplierCollaborationList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func SupplierCollaborations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func SupplierCollaboration(collaborationId string, vnic ifs.IVNic) (*scm.SupplierCollaboration, error) {
+func SupplierCollaboration(collaborationId string, vnic ifs.IVNic) (*scm.ScmSupplierCollaboration, error) {
 	this, ok := SupplierCollaborations(vnic)
 	if !ok {
 		return nil, errors.New("No SupplierCollaboration Service Found")
 	}
-	filter := &scm.SupplierCollaboration{CollaborationId: collaborationId}
+	filter := &scm.ScmSupplierCollaboration{CollaborationId: collaborationId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.SupplierCollaboration), nil
+	return resp.Element().(*scm.ScmSupplierCollaboration), nil
 }

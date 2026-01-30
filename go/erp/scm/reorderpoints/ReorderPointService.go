@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newReorderPointServiceCallback())
-	sla.SetServiceItem(&scm.ReorderPoint{})
-	sla.SetServiceItemList(&scm.ReorderPointList{})
+	sla.SetServiceItem(&scm.ScmReorderPoint{})
+	sla.SetServiceItemList(&scm.ScmReorderPointList{})
 	sla.SetPrimaryKeys("ReorderPointId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.ReorderPoint{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ReorderPointList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ReorderPoint{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ReorderPoint{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmReorderPoint{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmReorderPointList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmReorderPoint{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmReorderPoint{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ReorderPointList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmReorderPointList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func ReorderPoints(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func ReorderPoint(reorderPointId string, vnic ifs.IVNic) (*scm.ReorderPoint, error) {
+func ReorderPoint(reorderPointId string, vnic ifs.IVNic) (*scm.ScmReorderPoint, error) {
 	this, ok := ReorderPoints(vnic)
 	if !ok {
 		return nil, errors.New("No ReorderPoint Service Found")
 	}
-	filter := &scm.ReorderPoint{ReorderPointId: reorderPointId}
+	filter := &scm.ScmReorderPoint{ReorderPointId: reorderPointId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ReorderPoint), nil
+	return resp.Element().(*scm.ScmReorderPoint), nil
 }

@@ -27,51 +27,51 @@ import "api.proto";
 // ============================================================================
 
 // @PrimeObject
-// DemandForecast represents a demand forecast for an item
-message DemandForecast {
+// ScmDemandForecast represents a demand forecast for an item
+message ScmDemandForecast {
   string forecast_id = 1;
   string item_id = 2;
   int64 period_start = 3;
   int64 period_end = 4;
   double forecast_quantity = 5;
   double actual_quantity = 6;
-  ForecastMethod forecast_method = 7;
+  ScmForecastMethod forecast_method = 7;
   double confidence_level = 8;
   string notes = 9;
   erp.AuditInfo audit_info = 10;
 }
 
-message DemandForecastList {
-  repeated DemandForecast list = 1;
+message ScmDemandForecastList {
+  repeated ScmDemandForecast list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// ForecastModel represents a forecasting model configuration
-message ForecastModel {
+// ScmForecastModel represents a forecasting model configuration
+message ScmForecastModel {
   string model_id = 1;
   string name = 2;
   string description = 3;
-  ForecastMethod forecast_method = 4;
+  ScmForecastMethod forecast_method = 4;
   map<string, string> parameters = 5;
   bool is_active = 6;
   double accuracy_score = 7;
   erp.AuditInfo audit_info = 8;
 }
 
-message ForecastModelList {
-  repeated ForecastModel list = 1;
+message ScmForecastModelList {
+  repeated ScmForecastModel list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// DemandPlan represents an overall demand plan
-message DemandPlan {
+// ScmDemandPlan represents an overall demand plan
+message ScmDemandPlan {
   string plan_id = 1;
   string name = 2;
   string description = 3;
   erp.DateRange plan_period = 4;
-  TaskStatus status = 5;
+  ScmTaskStatus status = 5;
   string created_by = 6;
   string approved_by = 7;
   string notes = 8;
@@ -79,14 +79,14 @@ message DemandPlan {
   erp.AuditInfo audit_info = 10;
 }
 
-message DemandPlanList {
-  repeated DemandPlan list = 1;
+message ScmDemandPlanList {
+  repeated ScmDemandPlan list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// PromotionalPlan represents a promotional demand plan
-message PromotionalPlan {
+// ScmPromotionalPlan represents a promotional demand plan
+message ScmPromotionalPlan {
   string plan_id = 1;
   string name = 2;
   string description = 3;
@@ -94,19 +94,19 @@ message PromotionalPlan {
   int64 end_date = 5;
   double expected_uplift = 6;
   repeated string item_ids = 7;
-  TaskStatus status = 8;
+  ScmTaskStatus status = 8;
   string notes = 9;
   erp.AuditInfo audit_info = 10;
 }
 
-message PromotionalPlanList {
-  repeated PromotionalPlan list = 1;
+message ScmPromotionalPlanList {
+  repeated ScmPromotionalPlan list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// NewProductPlan represents a demand plan for a new product launch
-message NewProductPlan {
+// ScmNewProductPlan represents a demand plan for a new product launch
+message ScmNewProductPlan {
   string plan_id = 1;
   string name = 2;
   string item_id = 3;
@@ -114,19 +114,19 @@ message NewProductPlan {
   int32 ramp_up_period = 5;
   double initial_forecast = 6;
   string comparable_item_id = 7;
-  TaskStatus status = 8;
+  ScmTaskStatus status = 8;
   string notes = 9;
   erp.AuditInfo audit_info = 10;
 }
 
-message NewProductPlanList {
-  repeated NewProductPlan list = 1;
+message ScmNewProductPlanList {
+  repeated ScmNewProductPlan list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// ForecastAccuracy represents forecast accuracy metrics for a period
-message ForecastAccuracy {
+// ScmForecastAccuracy represents forecast accuracy metrics for a period
+message ScmForecastAccuracy {
   string accuracy_id = 1;
   string forecast_id = 2;
   string item_id = 3;
@@ -139,7 +139,7 @@ message ForecastAccuracy {
   erp.AuditInfo audit_info = 10;
 }
 
-message ForecastAccuracyList {
-  repeated ForecastAccuracy list = 1;
+message ScmForecastAccuracyList {
+  repeated ScmForecastAccuracy list = 1;
   l8api.L8MetaData metadata = 2;
 }

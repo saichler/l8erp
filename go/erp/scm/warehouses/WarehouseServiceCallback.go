@@ -28,7 +28,7 @@ func newWarehouseServiceCallback() *WarehouseServiceCallback {
 }
 
 func (this *WarehouseServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.Warehouse)
+	item, ok := any.(*scm.ScmWarehouse)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -43,7 +43,7 @@ func (this *WarehouseServiceCallback) After(any interface{}, action ifs.Action, 
 	return nil, true, nil
 }
 
-func validate(item *scm.Warehouse, vnic ifs.IVNic) error {
+func validate(item *scm.ScmWarehouse, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.WarehouseId, "WarehouseId"); err != nil {
 		return err
 	}

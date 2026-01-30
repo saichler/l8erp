@@ -29,7 +29,7 @@ func newLeadTimeServiceCallback() *LeadTimeServiceCallback {
 }
 
 func (this *LeadTimeServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.LeadTime)
+	item, ok := any.(*scm.ScmLeadTime)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -44,7 +44,7 @@ func (this *LeadTimeServiceCallback) After(any interface{}, action ifs.Action, c
 	return nil, true, nil
 }
 
-func validate(item *scm.LeadTime, vnic ifs.IVNic) error {
+func validate(item *scm.ScmLeadTime, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.LeadTimeId, "LeadTimeId"); err != nil {
 		return err
 	}

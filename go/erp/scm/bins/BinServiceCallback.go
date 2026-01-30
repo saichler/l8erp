@@ -28,7 +28,7 @@ func newBinServiceCallback() *BinServiceCallback {
 }
 
 func (this *BinServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.Bin)
+	item, ok := any.(*scm.ScmBin)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -43,7 +43,7 @@ func (this *BinServiceCallback) After(any interface{}, action ifs.Action, cont b
 	return nil, true, nil
 }
 
-func validate(item *scm.Bin, vnic ifs.IVNic) error {
+func validate(item *scm.ScmBin, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.BinId, "BinId"); err != nil {
 		return err
 	}

@@ -27,12 +27,12 @@ import "api.proto";
 // ============================================================================
 
 // @PrimeObject
-// Carrier represents a shipping carrier or freight provider
-message Carrier {
+// ScmCarrier represents a shipping carrier or freight provider
+message ScmCarrier {
   string carrier_id = 1;
   string code = 2;
   string name = 3;
-  CarrierType carrier_type = 4;
+  ScmCarrierType carrier_type = 4;
   erp.ContactInfo contact_info = 5;
   bool is_active = 6;
   double rating = 7;
@@ -41,14 +41,14 @@ message Carrier {
   erp.AuditInfo audit_info = 10;
 }
 
-message CarrierList {
-  repeated Carrier list = 1;
+message ScmCarrierList {
+  repeated ScmCarrier list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// FreightRate represents a shipping rate for a carrier and route
-message FreightRate {
+// ScmFreightRate represents a shipping rate for a carrier and route
+message ScmFreightRate {
   string rate_id = 1;
   string carrier_id = 2;
   string origin = 3;
@@ -63,14 +63,14 @@ message FreightRate {
   erp.AuditInfo audit_info = 12;
 }
 
-message FreightRateList {
-  repeated FreightRate list = 1;
+message ScmFreightRateList {
+  repeated ScmFreightRate list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// Shipment represents a shipment of goods
-message Shipment {
+// ScmShipment represents a shipment of goods
+message ScmShipment {
   string shipment_id = 1;
   string shipment_number = 2;
   string carrier_id = 3;
@@ -80,7 +80,7 @@ message Shipment {
   int64 ship_date = 7;
   int64 expected_delivery = 8;
   int64 actual_delivery = 9;
-  ShipmentStatus status = 10;
+  ScmShipmentStatus status = 10;
   string tracking_number = 11;
   double total_weight = 12;
   erp.Money freight_cost = 13;
@@ -89,14 +89,14 @@ message Shipment {
   erp.AuditInfo audit_info = 16;
 }
 
-message ShipmentList {
-  repeated Shipment list = 1;
+message ScmShipmentList {
+  repeated ScmShipment list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// Route represents a shipping route
-message Route {
+// ScmRoute represents a shipping route
+message ScmRoute {
   string route_id = 1;
   string name = 2;
   string description = 3;
@@ -110,14 +110,14 @@ message Route {
   erp.AuditInfo audit_info = 11;
 }
 
-message RouteList {
-  repeated Route list = 1;
+message ScmRouteList {
+  repeated ScmRoute list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// LoadPlan represents a load planning for a shipment
-message LoadPlan {
+// ScmLoadPlan represents a load planning for a shipment
+message ScmLoadPlan {
   string load_plan_id = 1;
   string shipment_id = 2;
   string vehicle_id = 3;
@@ -125,20 +125,20 @@ message LoadPlan {
   double total_volume = 5;
   double max_weight = 6;
   double max_volume = 7;
-  TaskStatus status = 8;
+  ScmTaskStatus status = 8;
   int64 planned_date = 9;
   string notes = 10;
   erp.AuditInfo audit_info = 11;
 }
 
-message LoadPlanList {
-  repeated LoadPlan list = 1;
+message ScmLoadPlanList {
+  repeated ScmLoadPlan list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// DeliveryProof represents proof of delivery for a shipment
-message DeliveryProof {
+// ScmDeliveryProof represents proof of delivery for a shipment
+message ScmDeliveryProof {
   string proof_id = 1;
   string shipment_id = 2;
   int64 delivery_date = 3;
@@ -150,14 +150,14 @@ message DeliveryProof {
   erp.AuditInfo audit_info = 9;
 }
 
-message DeliveryProofList {
-  repeated DeliveryProof list = 1;
+message ScmDeliveryProofList {
+  repeated ScmDeliveryProof list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// FreightAudit represents an audit of freight charges
-message FreightAudit {
+// ScmFreightAudit represents an audit of freight charges
+message ScmFreightAudit {
   string audit_id = 1;
   string shipment_id = 2;
   string carrier_id = 3;
@@ -170,20 +170,20 @@ message FreightAudit {
   erp.AuditInfo audit_info = 10;
 }
 
-message FreightAuditList {
-  repeated FreightAudit list = 1;
+message ScmFreightAuditList {
+  repeated ScmFreightAudit list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// ReturnAuthorization represents a return merchandise authorization (RMA)
-message ReturnAuthorization {
+// ScmReturnAuthorization represents a return merchandise authorization (RMA)
+message ScmReturnAuthorization {
   string rma_id = 1;
   string rma_number = 2;
   string customer_id = 3;           // Cross-ref: FIN Customer
   string original_shipment_id = 4;
   string reason = 5;
-  RequisitionStatus status = 6;
+  ScmRequisitionStatus status = 6;
   int64 return_date = 7;
   string items_description = 8;
   erp.Money refund_amount = 9;
@@ -192,7 +192,7 @@ message ReturnAuthorization {
   erp.AuditInfo audit_info = 12;
 }
 
-message ReturnAuthorizationList {
-  repeated ReturnAuthorization list = 1;
+message ScmReturnAuthorizationList {
+  repeated ScmReturnAuthorization list = 1;
   l8api.L8MetaData metadata = 2;
 }

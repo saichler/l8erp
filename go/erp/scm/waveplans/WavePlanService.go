@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newWavePlanServiceCallback())
-	sla.SetServiceItem(&scm.WavePlan{})
-	sla.SetServiceItemList(&scm.WavePlanList{})
+	sla.SetServiceItem(&scm.ScmWavePlan{})
+	sla.SetServiceItemList(&scm.ScmWavePlanList{})
 	sla.SetPrimaryKeys("WavePlanId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.WavePlan{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.WavePlanList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.WavePlan{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.WavePlan{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmWavePlan{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmWavePlanList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmWavePlan{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmWavePlan{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.WavePlanList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmWavePlanList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func WavePlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func WavePlan(wavePlanId string, vnic ifs.IVNic) (*scm.WavePlan, error) {
+func WavePlan(wavePlanId string, vnic ifs.IVNic) (*scm.ScmWavePlan, error) {
 	this, ok := WavePlans(vnic)
 	if !ok {
 		return nil, errors.New("No WavePlan Service Found")
 	}
-	filter := &scm.WavePlan{WavePlanId: wavePlanId}
+	filter := &scm.ScmWavePlan{WavePlanId: wavePlanId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.WavePlan), nil
+	return resp.Element().(*scm.ScmWavePlan), nil
 }

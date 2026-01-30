@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newRouteServiceCallback())
-	sla.SetServiceItem(&scm.Route{})
-	sla.SetServiceItemList(&scm.RouteList{})
+	sla.SetServiceItem(&scm.ScmRoute{})
+	sla.SetServiceItemList(&scm.ScmRouteList{})
 	sla.SetPrimaryKeys("RouteId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.Route{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.RouteList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.Route{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.Route{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmRoute{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmRouteList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmRoute{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmRoute{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.RouteList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmRouteList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func Routes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func Route(routeId string, vnic ifs.IVNic) (*scm.Route, error) {
+func Route(routeId string, vnic ifs.IVNic) (*scm.ScmRoute, error) {
 	this, ok := Routes(vnic)
 	if !ok {
 		return nil, errors.New("No Route Service Found")
 	}
-	filter := &scm.Route{RouteId: routeId}
+	filter := &scm.ScmRoute{RouteId: routeId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.Route), nil
+	return resp.Element().(*scm.ScmRoute), nil
 }

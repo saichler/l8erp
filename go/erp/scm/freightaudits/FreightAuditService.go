@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newFreightAuditServiceCallback())
-	sla.SetServiceItem(&scm.FreightAudit{})
-	sla.SetServiceItemList(&scm.FreightAuditList{})
+	sla.SetServiceItem(&scm.ScmFreightAudit{})
+	sla.SetServiceItemList(&scm.ScmFreightAuditList{})
 	sla.SetPrimaryKeys("AuditId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.FreightAudit{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.FreightAuditList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.FreightAudit{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.FreightAudit{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmFreightAudit{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmFreightAuditList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmFreightAudit{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmFreightAudit{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.FreightAuditList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmFreightAuditList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func FreightAudits(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func FreightAudit(auditId string, vnic ifs.IVNic) (*scm.FreightAudit, error) {
+func FreightAudit(auditId string, vnic ifs.IVNic) (*scm.ScmFreightAudit, error) {
 	this, ok := FreightAudits(vnic)
 	if !ok {
 		return nil, errors.New("No FreightAudit Service Found")
 	}
-	filter := &scm.FreightAudit{AuditId: auditId}
+	filter := &scm.ScmFreightAudit{AuditId: auditId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.FreightAudit), nil
+	return resp.Element().(*scm.ScmFreightAudit), nil
 }

@@ -27,8 +27,8 @@ import "api.proto";
 // ============================================================================
 
 // @PrimeObject
-// MaterialRequirement represents a material requirement from MRP
-message MaterialRequirement {
+// ScmMaterialRequirement represents a material requirement from MRP
+message ScmMaterialRequirement {
   string requirement_id = 1;
   string item_id = 2;
   int64 required_date = 3;
@@ -36,20 +36,20 @@ message MaterialRequirement {
   double available_quantity = 5;
   double shortage_quantity = 6;
   int64 planned_order_date = 7;
-  PlanningMethod planning_method = 8;
+  ScmPlanningMethod planning_method = 8;
   string source = 9;
-  TaskStatus status = 10;
+  ScmTaskStatus status = 10;
   erp.AuditInfo audit_info = 11;
 }
 
-message MaterialRequirementList {
-  repeated MaterialRequirement list = 1;
+message ScmMaterialRequirementList {
+  repeated ScmMaterialRequirement list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// DistributionRequirement represents a distribution requirement between warehouses
-message DistributionRequirement {
+// ScmDistributionRequirement represents a distribution requirement between warehouses
+message ScmDistributionRequirement {
   string requirement_id = 1;
   string item_id = 2;
   string source_warehouse_id = 3;
@@ -57,24 +57,24 @@ message DistributionRequirement {
   int64 required_date = 5;
   double required_quantity = 6;
   double transfer_quantity = 7;
-  TaskStatus status = 8;
+  ScmTaskStatus status = 8;
   string notes = 9;
   erp.AuditInfo audit_info = 10;
 }
 
-message DistributionRequirementList {
-  repeated DistributionRequirement list = 1;
+message ScmDistributionRequirementList {
+  repeated ScmDistributionRequirement list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// SupplyPlan represents an overall supply plan
-message SupplyPlan {
+// ScmSupplyPlan represents an overall supply plan
+message ScmSupplyPlan {
   string plan_id = 1;
   string name = 2;
   string description = 3;
   erp.DateRange plan_period = 4;
-  TaskStatus status = 5;
+  ScmTaskStatus status = 5;
   string created_by = 6;
   string approved_by = 7;
   string notes = 8;
@@ -82,14 +82,14 @@ message SupplyPlan {
   erp.AuditInfo audit_info = 10;
 }
 
-message SupplyPlanList {
-  repeated SupplyPlan list = 1;
+message ScmSupplyPlanList {
+  repeated ScmSupplyPlan list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// SupplierCollaboration represents vendor collaboration settings for an item
-message SupplierCollaboration {
+// ScmSupplierCollaboration represents vendor collaboration settings for an item
+message ScmSupplierCollaboration {
   string collaboration_id = 1;
   string vendor_id = 2;             // Cross-ref: FIN Vendor
   string item_id = 3;
@@ -102,14 +102,14 @@ message SupplierCollaboration {
   erp.AuditInfo audit_info = 10;
 }
 
-message SupplierCollaborationList {
-  repeated SupplierCollaboration list = 1;
+message ScmSupplierCollaborationList {
+  repeated ScmSupplierCollaboration list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// SafetyStock represents safety stock configuration for an item at a warehouse
-message SafetyStock {
+// ScmSafetyStock represents safety stock configuration for an item at a warehouse
+message ScmSafetyStock {
   string safety_stock_id = 1;
   string item_id = 2;
   string warehouse_id = 3;
@@ -122,14 +122,14 @@ message SafetyStock {
   erp.AuditInfo audit_info = 10;
 }
 
-message SafetyStockList {
-  repeated SafetyStock list = 1;
+message ScmSafetyStockList {
+  repeated ScmSafetyStock list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// LeadTime represents lead time configuration for an item from a vendor
-message LeadTime {
+// ScmLeadTime represents lead time configuration for an item from a vendor
+message ScmLeadTime {
   string lead_time_id = 1;
   string item_id = 2;
   string vendor_id = 3;             // Cross-ref: FIN Vendor
@@ -142,7 +142,7 @@ message LeadTime {
   erp.AuditInfo audit_info = 10;
 }
 
-message LeadTimeList {
-  repeated LeadTime list = 1;
+message ScmLeadTimeList {
+  repeated ScmLeadTime list = 1;
   l8api.L8MetaData metadata = 2;
 }

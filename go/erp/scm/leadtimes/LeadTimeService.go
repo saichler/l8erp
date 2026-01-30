@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newLeadTimeServiceCallback())
-	sla.SetServiceItem(&scm.LeadTime{})
-	sla.SetServiceItemList(&scm.LeadTimeList{})
+	sla.SetServiceItem(&scm.ScmLeadTime{})
+	sla.SetServiceItemList(&scm.ScmLeadTimeList{})
 	sla.SetPrimaryKeys("LeadTimeId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.LeadTime{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.LeadTimeList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.LeadTime{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.LeadTime{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmLeadTime{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmLeadTimeList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmLeadTime{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmLeadTime{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.LeadTimeList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmLeadTimeList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func LeadTimes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func LeadTime(leadTimeId string, vnic ifs.IVNic) (*scm.LeadTime, error) {
+func LeadTime(leadTimeId string, vnic ifs.IVNic) (*scm.ScmLeadTime, error) {
 	this, ok := LeadTimes(vnic)
 	if !ok {
 		return nil, errors.New("No LeadTime Service Found")
 	}
-	filter := &scm.LeadTime{LeadTimeId: leadTimeId}
+	filter := &scm.ScmLeadTime{LeadTimeId: leadTimeId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.LeadTime), nil
+	return resp.Element().(*scm.ScmLeadTime), nil
 }

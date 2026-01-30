@@ -29,7 +29,7 @@ func newPurchaseOrderServiceCallback() *PurchaseOrderServiceCallback {
 }
 
 func (this *PurchaseOrderServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.PurchaseOrder)
+	item, ok := any.(*scm.ScmPurchaseOrder)
 	if !ok {
 		return nil, false, errors.New("invalid purchase order type")
 	}
@@ -44,7 +44,7 @@ func (this *PurchaseOrderServiceCallback) After(any interface{}, action ifs.Acti
 	return nil, true, nil
 }
 
-func validate(item *scm.PurchaseOrder, vnic ifs.IVNic) error {
+func validate(item *scm.ScmPurchaseOrder, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.PurchaseOrderId, "PurchaseOrderId"); err != nil {
 		return err
 	}

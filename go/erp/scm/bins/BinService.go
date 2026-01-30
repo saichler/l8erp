@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newBinServiceCallback())
-	sla.SetServiceItem(&scm.Bin{})
-	sla.SetServiceItemList(&scm.BinList{})
+	sla.SetServiceItem(&scm.ScmBin{})
+	sla.SetServiceItemList(&scm.ScmBinList{})
 	sla.SetPrimaryKeys("BinId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.Bin{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.BinList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.Bin{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.Bin{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmBin{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmBinList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmBin{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmBin{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.BinList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmBinList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func Bins(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func Bin(binId string, vnic ifs.IVNic) (*scm.Bin, error) {
+func Bin(binId string, vnic ifs.IVNic) (*scm.ScmBin, error) {
 	this, ok := Bins(vnic)
 	if !ok {
 		return nil, errors.New("No Bin Service Found")
 	}
-	filter := &scm.Bin{BinId: binId}
+	filter := &scm.ScmBin{BinId: binId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.Bin), nil
+	return resp.Element().(*scm.ScmBin), nil
 }

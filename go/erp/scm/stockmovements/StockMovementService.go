@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newStockMovementServiceCallback())
-	sla.SetServiceItem(&scm.StockMovement{})
-	sla.SetServiceItemList(&scm.StockMovementList{})
+	sla.SetServiceItem(&scm.ScmStockMovement{})
+	sla.SetServiceItemList(&scm.ScmStockMovementList{})
 	sla.SetPrimaryKeys("MovementId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.StockMovement{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.StockMovementList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.StockMovement{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.StockMovement{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmStockMovement{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmStockMovementList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmStockMovement{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmStockMovement{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.StockMovementList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmStockMovementList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func StockMovements(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func StockMovement(movementId string, vnic ifs.IVNic) (*scm.StockMovement, error) {
+func StockMovement(movementId string, vnic ifs.IVNic) (*scm.ScmStockMovement, error) {
 	this, ok := StockMovements(vnic)
 	if !ok {
 		return nil, errors.New("No StockMovement Service Found")
 	}
-	filter := &scm.StockMovement{MovementId: movementId}
+	filter := &scm.ScmStockMovement{MovementId: movementId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.StockMovement), nil
+	return resp.Element().(*scm.ScmStockMovement), nil
 }

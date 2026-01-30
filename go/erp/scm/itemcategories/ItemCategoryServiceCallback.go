@@ -29,7 +29,7 @@ func newItemCategoryServiceCallback() *ItemCategoryServiceCallback {
 }
 
 func (this *ItemCategoryServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ItemCategory)
+	item, ok := any.(*scm.ScmItemCategory)
 	if !ok {
 		return nil, false, errors.New("invalid item category type")
 	}
@@ -44,7 +44,7 @@ func (this *ItemCategoryServiceCallback) After(any interface{}, action ifs.Actio
 	return nil, true, nil
 }
 
-func validate(item *scm.ItemCategory, vnic ifs.IVNic) error {
+func validate(item *scm.ScmItemCategory, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.CategoryId, "CategoryId"); err != nil {
 		return err
 	}

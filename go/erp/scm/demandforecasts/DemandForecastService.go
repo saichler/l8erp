@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newDemandForecastServiceCallback())
-	sla.SetServiceItem(&scm.DemandForecast{})
-	sla.SetServiceItemList(&scm.DemandForecastList{})
+	sla.SetServiceItem(&scm.ScmDemandForecast{})
+	sla.SetServiceItemList(&scm.ScmDemandForecastList{})
 	sla.SetPrimaryKeys("ForecastId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.DemandForecast{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.DemandForecastList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.DemandForecast{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.DemandForecast{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDemandForecast{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDemandForecastList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDemandForecast{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmDemandForecast{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.DemandForecastList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmDemandForecastList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func DemandForecasts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func DemandForecast(forecastId string, vnic ifs.IVNic) (*scm.DemandForecast, error) {
+func DemandForecast(forecastId string, vnic ifs.IVNic) (*scm.ScmDemandForecast, error) {
 	this, ok := DemandForecasts(vnic)
 	if !ok {
 		return nil, errors.New("No DemandForecast Service Found")
 	}
-	filter := &scm.DemandForecast{ForecastId: forecastId}
+	filter := &scm.ScmDemandForecast{ForecastId: forecastId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.DemandForecast), nil
+	return resp.Element().(*scm.ScmDemandForecast), nil
 }

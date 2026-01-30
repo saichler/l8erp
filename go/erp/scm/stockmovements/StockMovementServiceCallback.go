@@ -29,7 +29,7 @@ func newStockMovementServiceCallback() *StockMovementServiceCallback {
 }
 
 func (this *StockMovementServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.StockMovement)
+	item, ok := any.(*scm.ScmStockMovement)
 	if !ok {
 		return nil, false, errors.New("invalid stock movement type")
 	}
@@ -44,7 +44,7 @@ func (this *StockMovementServiceCallback) After(any interface{}, action ifs.Acti
 	return nil, true, nil
 }
 
-func validate(item *scm.StockMovement, vnic ifs.IVNic) error {
+func validate(item *scm.ScmStockMovement, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.MovementId, "MovementId"); err != nil {
 		return err
 	}

@@ -28,7 +28,7 @@ func newFreightAuditServiceCallback() *FreightAuditServiceCallback {
 }
 
 func (this *FreightAuditServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.FreightAudit)
+	item, ok := any.(*scm.ScmFreightAudit)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -43,7 +43,7 @@ func (this *FreightAuditServiceCallback) After(any interface{}, action ifs.Actio
 	return nil, true, nil
 }
 
-func validate(item *scm.FreightAudit, vnic ifs.IVNic) error {
+func validate(item *scm.ScmFreightAudit, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.AuditId, "AuditId"); err != nil {
 		return err
 	}

@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newWarehouseServiceCallback())
-	sla.SetServiceItem(&scm.Warehouse{})
-	sla.SetServiceItemList(&scm.WarehouseList{})
+	sla.SetServiceItem(&scm.ScmWarehouse{})
+	sla.SetServiceItemList(&scm.ScmWarehouseList{})
 	sla.SetPrimaryKeys("WarehouseId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.Warehouse{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.WarehouseList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.Warehouse{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.Warehouse{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmWarehouse{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmWarehouseList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmWarehouse{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmWarehouse{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.WarehouseList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmWarehouseList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func Warehouses(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func Warehouse(warehouseId string, vnic ifs.IVNic) (*scm.Warehouse, error) {
+func Warehouse(warehouseId string, vnic ifs.IVNic) (*scm.ScmWarehouse, error) {
 	this, ok := Warehouses(vnic)
 	if !ok {
 		return nil, errors.New("No Warehouse Service Found")
 	}
-	filter := &scm.Warehouse{WarehouseId: warehouseId}
+	filter := &scm.ScmWarehouse{WarehouseId: warehouseId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.Warehouse), nil
+	return resp.Element().(*scm.ScmWarehouse), nil
 }

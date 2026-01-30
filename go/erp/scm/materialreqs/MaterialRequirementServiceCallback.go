@@ -29,7 +29,7 @@ func newMaterialRequirementServiceCallback() *MaterialRequirementServiceCallback
 }
 
 func (this *MaterialRequirementServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.MaterialRequirement)
+	item, ok := any.(*scm.ScmMaterialRequirement)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -44,7 +44,7 @@ func (this *MaterialRequirementServiceCallback) After(any interface{}, action if
 	return nil, true, nil
 }
 
-func validate(item *scm.MaterialRequirement, vnic ifs.IVNic) error {
+func validate(item *scm.ScmMaterialRequirement, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.RequirementId, "RequirementId"); err != nil {
 		return err
 	}

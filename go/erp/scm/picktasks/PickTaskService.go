@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newPickTaskServiceCallback())
-	sla.SetServiceItem(&scm.PickTask{})
-	sla.SetServiceItemList(&scm.PickTaskList{})
+	sla.SetServiceItem(&scm.ScmPickTask{})
+	sla.SetServiceItemList(&scm.ScmPickTaskList{})
 	sla.SetPrimaryKeys("TaskId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.PickTask{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.PickTaskList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.PickTask{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.PickTask{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPickTask{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPickTaskList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPickTask{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPickTask{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.PickTaskList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmPickTaskList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func PickTasks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func PickTask(taskId string, vnic ifs.IVNic) (*scm.PickTask, error) {
+func PickTask(taskId string, vnic ifs.IVNic) (*scm.ScmPickTask, error) {
 	this, ok := PickTasks(vnic)
 	if !ok {
 		return nil, errors.New("No PickTask Service Found")
 	}
-	filter := &scm.PickTask{TaskId: taskId}
+	filter := &scm.ScmPickTask{TaskId: taskId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.PickTask), nil
+	return resp.Element().(*scm.ScmPickTask), nil
 }

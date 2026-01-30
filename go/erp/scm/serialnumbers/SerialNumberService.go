@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newSerialNumberServiceCallback())
-	sla.SetServiceItem(&scm.SerialNumber{})
-	sla.SetServiceItemList(&scm.SerialNumberList{})
+	sla.SetServiceItem(&scm.ScmSerialNumber{})
+	sla.SetServiceItemList(&scm.ScmSerialNumberList{})
 	sla.SetPrimaryKeys("SerialId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.SerialNumber{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.SerialNumberList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.SerialNumber{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.SerialNumber{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmSerialNumber{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmSerialNumberList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmSerialNumber{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmSerialNumber{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.SerialNumberList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmSerialNumberList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func SerialNumbers(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func SerialNumber(serialId string, vnic ifs.IVNic) (*scm.SerialNumber, error) {
+func SerialNumber(serialId string, vnic ifs.IVNic) (*scm.ScmSerialNumber, error) {
 	this, ok := SerialNumbers(vnic)
 	if !ok {
 		return nil, errors.New("No SerialNumber Service Found")
 	}
-	filter := &scm.SerialNumber{SerialId: serialId}
+	filter := &scm.ScmSerialNumber{SerialId: serialId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.SerialNumber), nil
+	return resp.Element().(*scm.ScmSerialNumber), nil
 }

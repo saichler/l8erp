@@ -28,7 +28,7 @@ func newDeliveryProofServiceCallback() *DeliveryProofServiceCallback {
 }
 
 func (this *DeliveryProofServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.DeliveryProof)
+	item, ok := any.(*scm.ScmDeliveryProof)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -43,7 +43,7 @@ func (this *DeliveryProofServiceCallback) After(any interface{}, action ifs.Acti
 	return nil, true, nil
 }
 
-func validate(item *scm.DeliveryProof, vnic ifs.IVNic) error {
+func validate(item *scm.ScmDeliveryProof, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.ProofId, "ProofId"); err != nil {
 		return err
 	}

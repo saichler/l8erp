@@ -23,21 +23,21 @@ import (
 )
 
 // generateReceivingOrders creates 15 receiving order records for warehouse operations
-func generateReceivingOrders(store *MockDataStore) []*scm.ReceivingOrder {
-	orders := make([]*scm.ReceivingOrder, 15)
+func generateReceivingOrders(store *MockDataStore) []*scm.ScmReceivingOrder {
+	orders := make([]*scm.ScmReceivingOrder, 15)
 
 	for i := 0; i < 15; i++ {
 		receivingDate := time.Date(2025, time.Month((i%12)+1), (i%28)+1, 8, 0, 0, 0, time.UTC)
 
 		// Status: COMPLETED (60%), IN_PROGRESS (30%), PENDING (10%)
-		var status scm.TaskStatus
+		var status scm.ScmTaskStatus
 		switch {
 		case i < 9:
-			status = scm.TaskStatus_TASK_STATUS_COMPLETED
+			status = scm.ScmTaskStatus_TASK_STATUS_COMPLETED
 		case i < 13:
-			status = scm.TaskStatus_TASK_STATUS_IN_PROGRESS
+			status = scm.ScmTaskStatus_TASK_STATUS_IN_PROGRESS
 		default:
-			status = scm.TaskStatus_TASK_STATUS_PENDING
+			status = scm.ScmTaskStatus_TASK_STATUS_PENDING
 		}
 
 		poID := ""
@@ -55,7 +55,7 @@ func generateReceivingOrders(store *MockDataStore) []*scm.ReceivingOrder {
 			receivedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
 		}
 
-		orders[i] = &scm.ReceivingOrder{
+		orders[i] = &scm.ScmReceivingOrder{
 			ReceivingOrderId: fmt.Sprintf("ro-%03d", i+1),
 			PurchaseOrderId:  poID,
 			WarehouseId:      whID,
@@ -71,12 +71,12 @@ func generateReceivingOrders(store *MockDataStore) []*scm.ReceivingOrder {
 }
 
 // generatePutawayTasks creates 1 putaway task per receiving order (15 total)
-func generatePutawayTasks(store *MockDataStore) []*scm.PutawayTask {
+func generatePutawayTasks(store *MockDataStore) []*scm.ScmPutawayTask {
 	count := len(store.ReceivingOrderIDs)
 	if count == 0 {
 		count = 15
 	}
-	tasks := make([]*scm.PutawayTask, count)
+	tasks := make([]*scm.ScmPutawayTask, count)
 
 	for i := 0; i < count; i++ {
 		receivingOrderID := ""
@@ -102,12 +102,12 @@ func generatePutawayTasks(store *MockDataStore) []*scm.PutawayTask {
 		}
 
 		// Status: COMPLETED (80%), IN_PROGRESS (20%)
-		status := scm.TaskStatus_TASK_STATUS_COMPLETED
+		status := scm.ScmTaskStatus_TASK_STATUS_COMPLETED
 		if i >= 12 {
-			status = scm.TaskStatus_TASK_STATUS_IN_PROGRESS
+			status = scm.ScmTaskStatus_TASK_STATUS_IN_PROGRESS
 		}
 
-		task := &scm.PutawayTask{
+		task := &scm.ScmPutawayTask{
 			TaskId:           fmt.Sprintf("put-%03d", i+1),
 			ReceivingOrderId: receivingOrderID,
 			ItemId:           itemID,
@@ -119,7 +119,7 @@ func generatePutawayTasks(store *MockDataStore) []*scm.PutawayTask {
 			AuditInfo:        createAuditInfo(),
 		}
 
-		if status == scm.TaskStatus_TASK_STATUS_COMPLETED {
+		if status == scm.ScmTaskStatus_TASK_STATUS_COMPLETED {
 			completedDate := time.Date(2025, time.Month((i%12)+1), (i%28)+2, 14, 0, 0, 0, time.UTC)
 			task.CompletedAt = completedDate.Unix()
 		}
@@ -131,8 +131,8 @@ func generatePutawayTasks(store *MockDataStore) []*scm.PutawayTask {
 }
 
 // generatePickTasks creates 20 pick tasks for warehouse operations
-func generatePickTasks(store *MockDataStore) []*scm.PickTask {
-	tasks := make([]*scm.PickTask, 20)
+func generatePickTasks(store *MockDataStore) []*scm.ScmPickTask {
+	tasks := make([]*scm.ScmPickTask, 20)
 	priorities := []string{"High", "Medium", "Low"}
 
 	for i := 0; i < 20; i++ {
@@ -157,17 +157,17 @@ func generatePickTasks(store *MockDataStore) []*scm.PickTask {
 		}
 
 		// Status: COMPLETED (60%), IN_PROGRESS (25%), PENDING (15%)
-		var status scm.TaskStatus
+		var status scm.ScmTaskStatus
 		switch {
 		case i < 12:
-			status = scm.TaskStatus_TASK_STATUS_COMPLETED
+			status = scm.ScmTaskStatus_TASK_STATUS_COMPLETED
 		case i < 17:
-			status = scm.TaskStatus_TASK_STATUS_IN_PROGRESS
+			status = scm.ScmTaskStatus_TASK_STATUS_IN_PROGRESS
 		default:
-			status = scm.TaskStatus_TASK_STATUS_PENDING
+			status = scm.ScmTaskStatus_TASK_STATUS_PENDING
 		}
 
-		task := &scm.PickTask{
+		task := &scm.ScmPickTask{
 			TaskId:         fmt.Sprintf("pick-%03d", i+1),
 			WavePlanId:     wavePlanID,
 			ItemId:         itemID,
@@ -179,7 +179,7 @@ func generatePickTasks(store *MockDataStore) []*scm.PickTask {
 			AuditInfo:      createAuditInfo(),
 		}
 
-		if status == scm.TaskStatus_TASK_STATUS_COMPLETED {
+		if status == scm.ScmTaskStatus_TASK_STATUS_COMPLETED {
 			completedDate := time.Date(2025, time.Month((i%12)+1), (i%28)+1, 16, 0, 0, 0, time.UTC)
 			task.CompletedAt = completedDate.Unix()
 		}
@@ -191,8 +191,8 @@ func generatePickTasks(store *MockDataStore) []*scm.PickTask {
 }
 
 // generatePackTasks creates 15 pack tasks linked to the first 15 pick tasks
-func generatePackTasks(store *MockDataStore) []*scm.PackTask {
-	tasks := make([]*scm.PackTask, 15)
+func generatePackTasks(store *MockDataStore) []*scm.ScmPackTask {
+	tasks := make([]*scm.ScmPackTask, 15)
 
 	for i := 0; i < 15; i++ {
 		pickTaskID := ""
@@ -211,17 +211,17 @@ func generatePackTasks(store *MockDataStore) []*scm.PackTask {
 		}
 
 		// Status: COMPLETED (70%), IN_PROGRESS (20%), PENDING (10%)
-		var status scm.TaskStatus
+		var status scm.ScmTaskStatus
 		switch {
 		case i < 10:
-			status = scm.TaskStatus_TASK_STATUS_COMPLETED
+			status = scm.ScmTaskStatus_TASK_STATUS_COMPLETED
 		case i < 13:
-			status = scm.TaskStatus_TASK_STATUS_IN_PROGRESS
+			status = scm.ScmTaskStatus_TASK_STATUS_IN_PROGRESS
 		default:
-			status = scm.TaskStatus_TASK_STATUS_PENDING
+			status = scm.ScmTaskStatus_TASK_STATUS_PENDING
 		}
 
-		task := &scm.PackTask{
+		task := &scm.ScmPackTask{
 			TaskId:     fmt.Sprintf("pack-%03d", i+1),
 			PickTaskId: pickTaskID,
 			ItemId:     itemID,
@@ -232,7 +232,7 @@ func generatePackTasks(store *MockDataStore) []*scm.PackTask {
 			AuditInfo:  createAuditInfo(),
 		}
 
-		if status == scm.TaskStatus_TASK_STATUS_COMPLETED {
+		if status == scm.ScmTaskStatus_TASK_STATUS_COMPLETED {
 			packedDate := time.Date(2025, time.Month((i%12)+1), (i%28)+2, 10, 0, 0, 0, time.UTC)
 			task.CompletedAt = packedDate.Unix()
 		}
@@ -244,8 +244,8 @@ func generatePackTasks(store *MockDataStore) []*scm.PackTask {
 }
 
 // generateShipTasks creates 12 ship tasks for warehouse shipping operations
-func generateShipTasks(store *MockDataStore) []*scm.ShipTask {
-	tasks := make([]*scm.ShipTask, 12)
+func generateShipTasks(store *MockDataStore) []*scm.ScmShipTask {
+	tasks := make([]*scm.ScmShipTask, 12)
 
 	for i := 0; i < 12; i++ {
 		packTaskID := ""
@@ -259,17 +259,17 @@ func generateShipTasks(store *MockDataStore) []*scm.ShipTask {
 		}
 
 		// Status: COMPLETED (60%), IN_PROGRESS (25%), PENDING (15%)
-		var status scm.TaskStatus
+		var status scm.ScmTaskStatus
 		switch {
 		case i < 7:
-			status = scm.TaskStatus_TASK_STATUS_COMPLETED
+			status = scm.ScmTaskStatus_TASK_STATUS_COMPLETED
 		case i < 10:
-			status = scm.TaskStatus_TASK_STATUS_IN_PROGRESS
+			status = scm.ScmTaskStatus_TASK_STATUS_IN_PROGRESS
 		default:
-			status = scm.TaskStatus_TASK_STATUS_PENDING
+			status = scm.ScmTaskStatus_TASK_STATUS_PENDING
 		}
 
-		task := &scm.ShipTask{
+		task := &scm.ScmShipTask{
 			TaskId:         fmt.Sprintf("ship-%03d", i+1),
 			PackTaskId:     packTaskID,
 			ShipmentId:     fmt.Sprintf("shp-%03d", i+1),
@@ -279,7 +279,7 @@ func generateShipTasks(store *MockDataStore) []*scm.ShipTask {
 			AuditInfo:      createAuditInfo(),
 		}
 
-		if status == scm.TaskStatus_TASK_STATUS_COMPLETED {
+		if status == scm.ScmTaskStatus_TASK_STATUS_COMPLETED {
 			shippedDate := time.Date(2025, time.Month((i%12)+1), (i%28)+3, 12, 0, 0, 0, time.UTC)
 			task.ShippedAt = shippedDate.Unix()
 		}
@@ -291,8 +291,8 @@ func generateShipTasks(store *MockDataStore) []*scm.ShipTask {
 }
 
 // generateWavePlans creates 5 wave plan records for order fulfillment batching
-func generateWavePlans(store *MockDataStore) []*scm.WavePlan {
-	plans := make([]*scm.WavePlan, 5)
+func generateWavePlans(store *MockDataStore) []*scm.ScmWavePlan {
+	plans := make([]*scm.ScmWavePlan, 5)
 
 	for i := 0; i < 5; i++ {
 		whID := ""
@@ -308,15 +308,15 @@ func generateWavePlans(store *MockDataStore) []*scm.WavePlan {
 		planDate := time.Date(2025, time.Month((i*2)+1), 15, 6, 0, 0, 0, time.UTC)
 
 		// Status: COMPLETED (60%), IN_PROGRESS (40%)
-		status := scm.TaskStatus_TASK_STATUS_COMPLETED
+		status := scm.ScmTaskStatus_TASK_STATUS_COMPLETED
 		if i >= 3 {
-			status = scm.TaskStatus_TASK_STATUS_IN_PROGRESS
+			status = scm.ScmTaskStatus_TASK_STATUS_IN_PROGRESS
 		}
 
 		totalOrders := int32(rand.Intn(21) + 5) // 5-25
 		totalItems := totalOrders * int32(rand.Intn(4)+2)
 
-		plans[i] = &scm.WavePlan{
+		plans[i] = &scm.ScmWavePlan{
 			WavePlanId:  fmt.Sprintf("wave-%03d", i+1),
 			WarehouseId: whID,
 			PlanDate:    planDate.Unix(),
@@ -333,8 +333,8 @@ func generateWavePlans(store *MockDataStore) []*scm.WavePlan {
 }
 
 // generateDockSchedules creates 10 dock schedule records for shipping/receiving appointments
-func generateDockSchedules(store *MockDataStore) []*scm.DockSchedule {
-	schedules := make([]*scm.DockSchedule, 10)
+func generateDockSchedules(store *MockDataStore) []*scm.ScmDockSchedule {
+	schedules := make([]*scm.ScmDockSchedule, 10)
 	dockNumbers := []string{"D1", "D2", "D3", "D4", "D5"}
 	directions := []string{"Inbound", "Outbound"}
 
@@ -358,17 +358,17 @@ func generateDockSchedules(store *MockDataStore) []*scm.DockSchedule {
 		shipmentID := fmt.Sprintf("shp-%03d", i+1)
 
 		// Status: COMPLETED (50%), IN_PROGRESS (30%), PENDING (20%)
-		var status scm.TaskStatus
+		var status scm.ScmTaskStatus
 		switch {
 		case i < 5:
-			status = scm.TaskStatus_TASK_STATUS_COMPLETED
+			status = scm.ScmTaskStatus_TASK_STATUS_COMPLETED
 		case i < 8:
-			status = scm.TaskStatus_TASK_STATUS_IN_PROGRESS
+			status = scm.ScmTaskStatus_TASK_STATUS_IN_PROGRESS
 		default:
-			status = scm.TaskStatus_TASK_STATUS_PENDING
+			status = scm.ScmTaskStatus_TASK_STATUS_PENDING
 		}
 
-		schedules[i] = &scm.DockSchedule{
+		schedules[i] = &scm.ScmDockSchedule{
 			ScheduleId:   fmt.Sprintf("dock-%03d", i+1),
 			WarehouseId:  whID,
 			DockNumber:   dockNumbers[i%len(dockNumbers)],

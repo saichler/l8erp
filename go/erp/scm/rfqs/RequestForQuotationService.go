@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newRequestForQuotationServiceCallback())
-	sla.SetServiceItem(&scm.RequestForQuotation{})
-	sla.SetServiceItemList(&scm.RequestForQuotationList{})
+	sla.SetServiceItem(&scm.ScmRequestForQuotation{})
+	sla.SetServiceItemList(&scm.ScmRequestForQuotationList{})
 	sla.SetPrimaryKeys("RfqId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.RequestForQuotation{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.RequestForQuotationList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.RequestForQuotation{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.RequestForQuotation{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmRequestForQuotation{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmRequestForQuotationList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmRequestForQuotation{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmRequestForQuotation{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.RequestForQuotationList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmRequestForQuotationList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func Rfqs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func RequestForQuotation(rfqId string, vnic ifs.IVNic) (*scm.RequestForQuotation, error) {
+func RequestForQuotation(rfqId string, vnic ifs.IVNic) (*scm.ScmRequestForQuotation, error) {
 	this, ok := Rfqs(vnic)
 	if !ok {
 		return nil, errors.New("No RequestForQuotation Service Found")
 	}
-	filter := &scm.RequestForQuotation{RfqId: rfqId}
+	filter := &scm.ScmRequestForQuotation{RfqId: rfqId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.RequestForQuotation), nil
+	return resp.Element().(*scm.ScmRequestForQuotation), nil
 }

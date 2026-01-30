@@ -27,19 +27,19 @@ import "api.proto";
 // ============================================================================
 
 // @PrimeObject
-// Item represents an inventory item or product
-message Item {
+// ScmItem represents an inventory item or product
+message ScmItem {
   string item_id = 1;
   string item_number = 2;
   string name = 3;
   string description = 4;
-  ItemType item_type = 5;
+  ScmItemType item_type = 5;
   string category_id = 6;
   string unit_of_measure = 7;
   erp.Money unit_cost = 8;
   erp.Money unit_price = 9;
-  ValuationMethod valuation_method = 10;
-  PlanningMethod planning_method = 11;
+  ScmValuationMethod valuation_method = 10;
+  ScmPlanningMethod planning_method = 11;
   bool is_lot_tracked = 12;
   bool is_serial_tracked = 13;
   int32 shelf_life = 14;
@@ -49,14 +49,14 @@ message Item {
   erp.AuditInfo audit_info = 18;
 }
 
-message ItemList {
-  repeated Item list = 1;
+message ScmItemList {
+  repeated ScmItem list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// ItemCategory represents a category for grouping items
-message ItemCategory {
+// ScmItemCategory represents a category for grouping items
+message ScmItemCategory {
   string category_id = 1;
   string name = 2;
   string description = 3;
@@ -65,19 +65,19 @@ message ItemCategory {
   erp.AuditInfo audit_info = 6;
 }
 
-message ItemCategoryList {
-  repeated ItemCategory list = 1;
+message ScmItemCategoryList {
+  repeated ScmItemCategory list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// StockMovement represents inventory movement in or out of a warehouse
-message StockMovement {
+// ScmStockMovement represents inventory movement in or out of a warehouse
+message ScmStockMovement {
   string movement_id = 1;
   string item_id = 2;
   string warehouse_id = 3;
   string bin_id = 4;
-  MovementType movement_type = 5;
+  ScmMovementType movement_type = 5;
   double quantity = 6;
   string unit_of_measure = 7;
   string reference_id = 8;
@@ -90,14 +90,14 @@ message StockMovement {
   erp.AuditInfo audit_info = 15;
 }
 
-message StockMovementList {
-  repeated StockMovement list = 1;
+message ScmStockMovementList {
+  repeated ScmStockMovement list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// LotNumber represents a lot/batch number for lot-tracked items
-message LotNumber {
+// ScmLotNumber represents a lot/batch number for lot-tracked items
+message ScmLotNumber {
   string lot_id = 1;
   string lot_number = 2;
   string item_id = 3;
@@ -110,14 +110,14 @@ message LotNumber {
   erp.AuditInfo audit_info = 10;
 }
 
-message LotNumberList {
-  repeated LotNumber list = 1;
+message ScmLotNumberList {
+  repeated ScmLotNumber list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// SerialNumber represents a serial number for serial-tracked items
-message SerialNumber {
+// ScmSerialNumber represents a serial number for serial-tracked items
+message ScmSerialNumber {
   string serial_id = 1;
   string serial_number = 2;
   string item_id = 3;
@@ -129,18 +129,18 @@ message SerialNumber {
   erp.AuditInfo audit_info = 9;
 }
 
-message SerialNumberList {
-  repeated SerialNumber list = 1;
+message ScmSerialNumberList {
+  repeated ScmSerialNumber list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// CycleCount represents an inventory cycle count
-message CycleCount {
+// ScmCycleCount represents an inventory cycle count
+message ScmCycleCount {
   string cycle_count_id = 1;
   string warehouse_id = 2;
   int64 count_date = 3;
-  TaskStatus status = 4;
+  ScmTaskStatus status = 4;
   string counter_id = 5;
   int32 items_counted = 6;
   int32 discrepancies = 7;
@@ -148,14 +148,14 @@ message CycleCount {
   erp.AuditInfo audit_info = 9;
 }
 
-message CycleCountList {
-  repeated CycleCount list = 1;
+message ScmCycleCountList {
+  repeated ScmCycleCount list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// ReorderPoint represents reorder settings for an item at a warehouse
-message ReorderPoint {
+// ScmReorderPoint represents reorder settings for an item at a warehouse
+message ScmReorderPoint {
   string reorder_point_id = 1;
   string item_id = 2;
   string warehouse_id = 3;
@@ -168,14 +168,14 @@ message ReorderPoint {
   erp.AuditInfo audit_info = 10;
 }
 
-message ReorderPointList {
-  repeated ReorderPoint list = 1;
+message ScmReorderPointList {
+  repeated ScmReorderPoint list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// InventoryValuation represents the valuation of inventory at a point in time
-message InventoryValuation {
+// ScmInventoryValuation represents the valuation of inventory at a point in time
+message ScmInventoryValuation {
   string valuation_id = 1;
   string item_id = 2;
   string warehouse_id = 3;
@@ -183,12 +183,12 @@ message InventoryValuation {
   double quantity_on_hand = 5;
   erp.Money unit_cost = 6;
   erp.Money total_value = 7;
-  ValuationMethod valuation_method = 8;
+  ScmValuationMethod valuation_method = 8;
   string account_id = 9;            // Cross-ref: FIN Account
   erp.AuditInfo audit_info = 10;
 }
 
-message InventoryValuationList {
-  repeated InventoryValuation list = 1;
+message ScmInventoryValuationList {
+  repeated ScmInventoryValuation list = 1;
   l8api.L8MetaData metadata = 2;
 }

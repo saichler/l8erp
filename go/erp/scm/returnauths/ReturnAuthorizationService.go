@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newReturnAuthorizationServiceCallback())
-	sla.SetServiceItem(&scm.ReturnAuthorization{})
-	sla.SetServiceItemList(&scm.ReturnAuthorizationList{})
+	sla.SetServiceItem(&scm.ScmReturnAuthorization{})
+	sla.SetServiceItemList(&scm.ScmReturnAuthorizationList{})
 	sla.SetPrimaryKeys("RmaId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.ReturnAuthorization{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ReturnAuthorizationList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ReturnAuthorization{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ReturnAuthorization{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmReturnAuthorization{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmReturnAuthorizationList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmReturnAuthorization{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmReturnAuthorization{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ReturnAuthorizationList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmReturnAuthorizationList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func ReturnAuthorizations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func ReturnAuthorization(rmaId string, vnic ifs.IVNic) (*scm.ReturnAuthorization, error) {
+func ReturnAuthorization(rmaId string, vnic ifs.IVNic) (*scm.ScmReturnAuthorization, error) {
 	this, ok := ReturnAuthorizations(vnic)
 	if !ok {
 		return nil, errors.New("No ReturnAuthorization Service Found")
 	}
-	filter := &scm.ReturnAuthorization{RmaId: rmaId}
+	filter := &scm.ScmReturnAuthorization{RmaId: rmaId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ReturnAuthorization), nil
+	return resp.Element().(*scm.ScmReturnAuthorization), nil
 }

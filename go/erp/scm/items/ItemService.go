@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newItemServiceCallback())
-	sla.SetServiceItem(&scm.Item{})
-	sla.SetServiceItemList(&scm.ItemList{})
+	sla.SetServiceItem(&scm.ScmItem{})
+	sla.SetServiceItemList(&scm.ScmItemList{})
 	sla.SetPrimaryKeys("ItemId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.Item{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.ItemList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.Item{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.Item{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmItem{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmItemList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmItem{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmItem{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ItemList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmItemList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func Items(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func Item(itemId string, vnic ifs.IVNic) (*scm.Item, error) {
+func Item(itemId string, vnic ifs.IVNic) (*scm.ScmItem, error) {
 	this, ok := Items(vnic)
 	if !ok {
 		return nil, errors.New("No Item Service Found")
 	}
-	filter := &scm.Item{ItemId: itemId}
+	filter := &scm.ScmItem{ItemId: itemId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.Item), nil
+	return resp.Element().(*scm.ScmItem), nil
 }

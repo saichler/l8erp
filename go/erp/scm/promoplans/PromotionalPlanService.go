@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newPromotionalPlanServiceCallback())
-	sla.SetServiceItem(&scm.PromotionalPlan{})
-	sla.SetServiceItemList(&scm.PromotionalPlanList{})
+	sla.SetServiceItem(&scm.ScmPromotionalPlan{})
+	sla.SetServiceItemList(&scm.ScmPromotionalPlanList{})
 	sla.SetPrimaryKeys("PlanId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.PromotionalPlan{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.PromotionalPlanList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.PromotionalPlan{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.PromotionalPlan{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPromotionalPlan{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPromotionalPlanList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPromotionalPlan{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPromotionalPlan{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.PromotionalPlanList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmPromotionalPlanList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func PromotionalPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func PromotionalPlan(planId string, vnic ifs.IVNic) (*scm.PromotionalPlan, error) {
+func PromotionalPlan(planId string, vnic ifs.IVNic) (*scm.ScmPromotionalPlan, error) {
 	this, ok := PromotionalPlans(vnic)
 	if !ok {
 		return nil, errors.New("No PromotionalPlan Service Found")
 	}
-	filter := &scm.PromotionalPlan{PlanId: planId}
+	filter := &scm.ScmPromotionalPlan{PlanId: planId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.PromotionalPlan), nil
+	return resp.Element().(*scm.ScmPromotionalPlan), nil
 }

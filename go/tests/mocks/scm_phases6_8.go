@@ -25,7 +25,7 @@ func generateScmPhase6(client *HCMClient, store *MockDataStore) error {
 	// Generate Stock Movements
 	fmt.Printf("  Creating Stock Movements...")
 	stockMovements := generateStockMovements(store)
-	if err := client.post("/erp/50/StockMove", &scm.StockMovementList{List: stockMovements}); err != nil {
+	if err := client.post("/erp/50/StockMove", &scm.ScmStockMovementList{List: stockMovements}); err != nil {
 		return fmt.Errorf("stock movements: %w", err)
 	}
 	for _, sm := range stockMovements {
@@ -36,7 +36,7 @@ func generateScmPhase6(client *HCMClient, store *MockDataStore) error {
 	// Generate Lot Numbers
 	fmt.Printf("  Creating Lot Numbers...")
 	lotNumbers := generateLotNumbers(store)
-	if err := client.post("/erp/50/LotNumber", &scm.LotNumberList{List: lotNumbers}); err != nil {
+	if err := client.post("/erp/50/LotNumber", &scm.ScmLotNumberList{List: lotNumbers}); err != nil {
 		return fmt.Errorf("lot numbers: %w", err)
 	}
 	for _, ln := range lotNumbers {
@@ -47,7 +47,7 @@ func generateScmPhase6(client *HCMClient, store *MockDataStore) error {
 	// Generate Serial Numbers
 	fmt.Printf("  Creating Serial Numbers...")
 	serialNumbers := generateSerialNumbers(store)
-	if err := client.post("/erp/50/SerialNum", &scm.SerialNumberList{List: serialNumbers}); err != nil {
+	if err := client.post("/erp/50/SerialNum", &scm.ScmSerialNumberList{List: serialNumbers}); err != nil {
 		return fmt.Errorf("serial numbers: %w", err)
 	}
 	for _, sn := range serialNumbers {
@@ -58,7 +58,7 @@ func generateScmPhase6(client *HCMClient, store *MockDataStore) error {
 	// Generate Cycle Counts
 	fmt.Printf("  Creating Cycle Counts...")
 	cycleCounts := generateCycleCounts(store)
-	if err := client.post("/erp/50/CycleCount", &scm.CycleCountList{List: cycleCounts}); err != nil {
+	if err := client.post("/erp/50/CycleCount", &scm.ScmCycleCountList{List: cycleCounts}); err != nil {
 		return fmt.Errorf("cycle counts: %w", err)
 	}
 	for _, cc := range cycleCounts {
@@ -69,7 +69,7 @@ func generateScmPhase6(client *HCMClient, store *MockDataStore) error {
 	// Generate Reorder Points
 	fmt.Printf("  Creating Reorder Points...")
 	reorderPoints := generateReorderPoints(store)
-	if err := client.post("/erp/50/ReorderPt", &scm.ReorderPointList{List: reorderPoints}); err != nil {
+	if err := client.post("/erp/50/ReorderPt", &scm.ScmReorderPointList{List: reorderPoints}); err != nil {
 		return fmt.Errorf("reorder points: %w", err)
 	}
 	for _, rp := range reorderPoints {
@@ -80,7 +80,7 @@ func generateScmPhase6(client *HCMClient, store *MockDataStore) error {
 	// Generate Inventory Valuations
 	fmt.Printf("  Creating Inventory Valuations...")
 	inventoryValuations := generateInventoryValuations(store)
-	if err := client.post("/erp/50/InvValue", &scm.InventoryValuationList{List: inventoryValuations}); err != nil {
+	if err := client.post("/erp/50/InvValue", &scm.ScmInventoryValuationList{List: inventoryValuations}); err != nil {
 		return fmt.Errorf("inventory valuations: %w", err)
 	}
 	for _, iv := range inventoryValuations {
@@ -96,7 +96,7 @@ func generateScmPhase7(client *HCMClient, store *MockDataStore) error {
 	// Generate Shipments
 	fmt.Printf("  Creating Shipments...")
 	shipments := generateShipments(store)
-	if err := client.post("/erp/50/Shipment", &scm.ShipmentList{List: shipments}); err != nil {
+	if err := client.post("/erp/50/Shipment", &scm.ScmShipmentList{List: shipments}); err != nil {
 		return fmt.Errorf("shipments: %w", err)
 	}
 	for _, s := range shipments {
@@ -107,7 +107,7 @@ func generateScmPhase7(client *HCMClient, store *MockDataStore) error {
 	// Generate Routes
 	fmt.Printf("  Creating Routes...")
 	routes := generateRoutes(store)
-	if err := client.post("/erp/50/Route", &scm.RouteList{List: routes}); err != nil {
+	if err := client.post("/erp/50/Route", &scm.ScmRouteList{List: routes}); err != nil {
 		return fmt.Errorf("routes: %w", err)
 	}
 	for _, r := range routes {
@@ -118,7 +118,7 @@ func generateScmPhase7(client *HCMClient, store *MockDataStore) error {
 	// Generate Load Plans
 	fmt.Printf("  Creating Load Plans...")
 	loadPlans := generateLoadPlans(store)
-	if err := client.post("/erp/50/LoadPlan", &scm.LoadPlanList{List: loadPlans}); err != nil {
+	if err := client.post("/erp/50/LoadPlan", &scm.ScmLoadPlanList{List: loadPlans}); err != nil {
 		return fmt.Errorf("load plans: %w", err)
 	}
 	for _, lp := range loadPlans {
@@ -129,7 +129,7 @@ func generateScmPhase7(client *HCMClient, store *MockDataStore) error {
 	// Generate Delivery Proofs
 	fmt.Printf("  Creating Delivery Proofs...")
 	deliveryProofs := generateDeliveryProofs(store)
-	if err := client.post("/erp/50/DlvryProof", &scm.DeliveryProofList{List: deliveryProofs}); err != nil {
+	if err := client.post("/erp/50/DlvryProof", &scm.ScmDeliveryProofList{List: deliveryProofs}); err != nil {
 		return fmt.Errorf("delivery proofs: %w", err)
 	}
 	for _, dp := range deliveryProofs {
@@ -140,7 +140,7 @@ func generateScmPhase7(client *HCMClient, store *MockDataStore) error {
 	// Generate Freight Audits
 	fmt.Printf("  Creating Freight Audits...")
 	freightAudits := generateFreightAudits(store)
-	if err := client.post("/erp/50/FrtAudit", &scm.FreightAuditList{List: freightAudits}); err != nil {
+	if err := client.post("/erp/50/FrtAudit", &scm.ScmFreightAuditList{List: freightAudits}); err != nil {
 		return fmt.Errorf("freight audits: %w", err)
 	}
 	for _, fa := range freightAudits {
@@ -151,7 +151,7 @@ func generateScmPhase7(client *HCMClient, store *MockDataStore) error {
 	// Generate Return Authorizations
 	fmt.Printf("  Creating Return Authorizations...")
 	returnAuths := generateReturnAuthorizations(store)
-	if err := client.post("/erp/50/ReturnAuth", &scm.ReturnAuthorizationList{List: returnAuths}); err != nil {
+	if err := client.post("/erp/50/ReturnAuth", &scm.ScmReturnAuthorizationList{List: returnAuths}); err != nil {
 		return fmt.Errorf("return authorizations: %w", err)
 	}
 	for _, ra := range returnAuths {
@@ -167,7 +167,7 @@ func generateScmPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate Demand Forecasts
 	fmt.Printf("  Creating Demand Forecasts...")
 	demandForecasts := generateDemandForecasts(store)
-	if err := client.post("/erp/50/DmndFcast", &scm.DemandForecastList{List: demandForecasts}); err != nil {
+	if err := client.post("/erp/50/DmndFcast", &scm.ScmDemandForecastList{List: demandForecasts}); err != nil {
 		return fmt.Errorf("demand forecasts: %w", err)
 	}
 	for _, df := range demandForecasts {
@@ -178,7 +178,7 @@ func generateScmPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate Demand Plans
 	fmt.Printf("  Creating Demand Plans...")
 	demandPlans := generateDemandPlans(store)
-	if err := client.post("/erp/50/DemandPlan", &scm.DemandPlanList{List: demandPlans}); err != nil {
+	if err := client.post("/erp/50/DemandPlan", &scm.ScmDemandPlanList{List: demandPlans}); err != nil {
 		return fmt.Errorf("demand plans: %w", err)
 	}
 	for _, dp := range demandPlans {
@@ -189,7 +189,7 @@ func generateScmPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate Promotional Plans
 	fmt.Printf("  Creating Promotional Plans...")
 	promoPlan := generatePromotionalPlans(store)
-	if err := client.post("/erp/50/PromoPlan", &scm.PromotionalPlanList{List: promoPlan}); err != nil {
+	if err := client.post("/erp/50/PromoPlan", &scm.ScmPromotionalPlanList{List: promoPlan}); err != nil {
 		return fmt.Errorf("promotional plans: %w", err)
 	}
 	for _, pp := range promoPlan {
@@ -200,7 +200,7 @@ func generateScmPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate New Product Plans
 	fmt.Printf("  Creating New Product Plans...")
 	newProductPlans := generateNewProductPlans(store)
-	if err := client.post("/erp/50/NewProdPln", &scm.NewProductPlanList{List: newProductPlans}); err != nil {
+	if err := client.post("/erp/50/NewProdPln", &scm.ScmNewProductPlanList{List: newProductPlans}); err != nil {
 		return fmt.Errorf("new product plans: %w", err)
 	}
 	for _, np := range newProductPlans {
@@ -211,7 +211,7 @@ func generateScmPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate Forecast Accuracy
 	fmt.Printf("  Creating Forecast Accuracy...")
 	forecastAccuracy := generateForecastAccuracy(store)
-	if err := client.post("/erp/50/FcastAccur", &scm.ForecastAccuracyList{List: forecastAccuracy}); err != nil {
+	if err := client.post("/erp/50/FcastAccur", &scm.ScmForecastAccuracyList{List: forecastAccuracy}); err != nil {
 		return fmt.Errorf("forecast accuracy: %w", err)
 	}
 	for _, fa := range forecastAccuracy {
@@ -222,7 +222,7 @@ func generateScmPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate Material Requirements
 	fmt.Printf("  Creating Material Requirements...")
 	materialReqs := generateMaterialRequirements(store)
-	if err := client.post("/erp/50/MatReq", &scm.MaterialRequirementList{List: materialReqs}); err != nil {
+	if err := client.post("/erp/50/MatReq", &scm.ScmMaterialRequirementList{List: materialReqs}); err != nil {
 		return fmt.Errorf("material requirements: %w", err)
 	}
 	for _, mr := range materialReqs {
@@ -233,7 +233,7 @@ func generateScmPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate Distribution Requirements
 	fmt.Printf("  Creating Distribution Requirements...")
 	distReqs := generateDistributionRequirements(store)
-	if err := client.post("/erp/50/DistReq", &scm.DistributionRequirementList{List: distReqs}); err != nil {
+	if err := client.post("/erp/50/DistReq", &scm.ScmDistributionRequirementList{List: distReqs}); err != nil {
 		return fmt.Errorf("distribution requirements: %w", err)
 	}
 	for _, dr := range distReqs {
@@ -244,7 +244,7 @@ func generateScmPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate Supply Plans
 	fmt.Printf("  Creating Supply Plans...")
 	supplyPlans := generateSupplyPlans(store)
-	if err := client.post("/erp/50/SupplyPlan", &scm.SupplyPlanList{List: supplyPlans}); err != nil {
+	if err := client.post("/erp/50/SupplyPlan", &scm.ScmSupplyPlanList{List: supplyPlans}); err != nil {
 		return fmt.Errorf("supply plans: %w", err)
 	}
 	for _, sp := range supplyPlans {
@@ -255,7 +255,7 @@ func generateScmPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate Supplier Collaborations
 	fmt.Printf("  Creating Supplier Collaborations...")
 	supplierCollabs := generateSupplierCollaborations(store)
-	if err := client.post("/erp/50/SupCollab", &scm.SupplierCollaborationList{List: supplierCollabs}); err != nil {
+	if err := client.post("/erp/50/SupCollab", &scm.ScmSupplierCollaborationList{List: supplierCollabs}); err != nil {
 		return fmt.Errorf("supplier collaborations: %w", err)
 	}
 	for _, sc := range supplierCollabs {
@@ -266,7 +266,7 @@ func generateScmPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate Safety Stocks
 	fmt.Printf("  Creating Safety Stocks...")
 	safetyStocks := generateSafetyStocks(store)
-	if err := client.post("/erp/50/SafeStock", &scm.SafetyStockList{List: safetyStocks}); err != nil {
+	if err := client.post("/erp/50/SafeStock", &scm.ScmSafetyStockList{List: safetyStocks}); err != nil {
 		return fmt.Errorf("safety stocks: %w", err)
 	}
 	for _, ss := range safetyStocks {
@@ -277,7 +277,7 @@ func generateScmPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate Lead Times
 	fmt.Printf("  Creating Lead Times...")
 	leadTimes := generateLeadTimes(store)
-	if err := client.post("/erp/50/LeadTime", &scm.LeadTimeList{List: leadTimes}); err != nil {
+	if err := client.post("/erp/50/LeadTime", &scm.ScmLeadTimeList{List: leadTimes}); err != nil {
 		return fmt.Errorf("lead times: %w", err)
 	}
 	for _, lt := range leadTimes {

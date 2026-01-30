@@ -28,7 +28,7 @@ func newPutawayTaskServiceCallback() *PutawayTaskServiceCallback {
 }
 
 func (this *PutawayTaskServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.PutawayTask)
+	item, ok := any.(*scm.ScmPutawayTask)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -43,7 +43,7 @@ func (this *PutawayTaskServiceCallback) After(any interface{}, action ifs.Action
 	return nil, true, nil
 }
 
-func validate(item *scm.PutawayTask, vnic ifs.IVNic) error {
+func validate(item *scm.ScmPutawayTask, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.TaskId, "TaskId"); err != nil {
 		return err
 	}

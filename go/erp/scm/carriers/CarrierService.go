@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newCarrierServiceCallback())
-	sla.SetServiceItem(&scm.Carrier{})
-	sla.SetServiceItemList(&scm.CarrierList{})
+	sla.SetServiceItem(&scm.ScmCarrier{})
+	sla.SetServiceItemList(&scm.ScmCarrierList{})
 	sla.SetPrimaryKeys("CarrierId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.Carrier{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.CarrierList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.Carrier{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.Carrier{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmCarrier{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmCarrierList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmCarrier{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmCarrier{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.CarrierList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmCarrierList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func Carriers(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func Carrier(carrierId string, vnic ifs.IVNic) (*scm.Carrier, error) {
+func Carrier(carrierId string, vnic ifs.IVNic) (*scm.ScmCarrier, error) {
 	this, ok := Carriers(vnic)
 	if !ok {
 		return nil, errors.New("No Carrier Service Found")
 	}
-	filter := &scm.Carrier{CarrierId: carrierId}
+	filter := &scm.ScmCarrier{CarrierId: carrierId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.Carrier), nil
+	return resp.Element().(*scm.ScmCarrier), nil
 }

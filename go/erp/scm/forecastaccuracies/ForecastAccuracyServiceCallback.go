@@ -29,7 +29,7 @@ func newForecastAccuracyServiceCallback() *ForecastAccuracyServiceCallback {
 }
 
 func (this *ForecastAccuracyServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ForecastAccuracy)
+	item, ok := any.(*scm.ScmForecastAccuracy)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -44,7 +44,7 @@ func (this *ForecastAccuracyServiceCallback) After(any interface{}, action ifs.A
 	return nil, true, nil
 }
 
-func validate(item *scm.ForecastAccuracy, vnic ifs.IVNic) error {
+func validate(item *scm.ScmForecastAccuracy, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.AccuracyId, "AccuracyId"); err != nil {
 		return err
 	}

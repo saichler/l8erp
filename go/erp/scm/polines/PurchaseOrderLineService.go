@@ -41,8 +41,8 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newPurchaseOrderLineServiceCallback())
-	sla.SetServiceItem(&scm.PurchaseOrderLine{})
-	sla.SetServiceItemList(&scm.PurchaseOrderLineList{})
+	sla.SetServiceItem(&scm.ScmPurchaseOrderLine{})
+	sla.SetServiceItemList(&scm.ScmPurchaseOrderLineList{})
 	sla.SetPrimaryKeys("LineId")
 	sla.SetArgs(p)
 	sla.SetTransactional(true)
@@ -50,12 +50,12 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	sla.SetReplicationCount(3)
 
 	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&scm.PurchaseOrderLine{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.PurchaseOrderLineList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.PurchaseOrderLine{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&scm.PurchaseOrderLine{}, ifs.PATCH, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPurchaseOrderLine{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPurchaseOrderLineList{}, ifs.POST, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPurchaseOrderLine{}, ifs.PUT, &l8web.L8Empty{})
+	ws.AddEndpoint(&scm.ScmPurchaseOrderLine{}, ifs.PATCH, &l8web.L8Empty{})
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.PurchaseOrderLineList{})
+	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &scm.ScmPurchaseOrderLineList{})
 	sla.SetWebService(ws)
 
 	vnic.Resources().Services().Activate(sla, vnic)
@@ -65,15 +65,15 @@ func Polines(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
 }
 
-func PurchaseOrderLine(lineId string, vnic ifs.IVNic) (*scm.PurchaseOrderLine, error) {
+func PurchaseOrderLine(lineId string, vnic ifs.IVNic) (*scm.ScmPurchaseOrderLine, error) {
 	this, ok := Polines(vnic)
 	if !ok {
 		return nil, errors.New("No PurchaseOrderLine Service Found")
 	}
-	filter := &scm.PurchaseOrderLine{LineId: lineId}
+	filter := &scm.ScmPurchaseOrderLine{LineId: lineId}
 	resp := this.Get(object.New(nil, filter), vnic)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.PurchaseOrderLine), nil
+	return resp.Element().(*scm.ScmPurchaseOrderLine), nil
 }

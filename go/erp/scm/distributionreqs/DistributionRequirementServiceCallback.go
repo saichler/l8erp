@@ -29,7 +29,7 @@ func newDistributionRequirementServiceCallback() *DistributionRequirementService
 }
 
 func (this *DistributionRequirementServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.DistributionRequirement)
+	item, ok := any.(*scm.ScmDistributionRequirement)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -44,7 +44,7 @@ func (this *DistributionRequirementServiceCallback) After(any interface{}, actio
 	return nil, true, nil
 }
 
-func validate(item *scm.DistributionRequirement, vnic ifs.IVNic) error {
+func validate(item *scm.ScmDistributionRequirement, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.RequirementId, "RequirementId"); err != nil {
 		return err
 	}

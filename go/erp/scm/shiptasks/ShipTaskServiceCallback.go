@@ -28,7 +28,7 @@ func newShipTaskServiceCallback() *ShipTaskServiceCallback {
 }
 
 func (this *ShipTaskServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ShipTask)
+	item, ok := any.(*scm.ScmShipTask)
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
@@ -43,7 +43,7 @@ func (this *ShipTaskServiceCallback) After(any interface{}, action ifs.Action, c
 	return nil, true, nil
 }
 
-func validate(item *scm.ShipTask, vnic ifs.IVNic) error {
+func validate(item *scm.ScmShipTask, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.TaskId, "TaskId"); err != nil {
 		return err
 	}

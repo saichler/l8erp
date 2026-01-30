@@ -29,7 +29,7 @@ func newCycleCountServiceCallback() *CycleCountServiceCallback {
 }
 
 func (this *CycleCountServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.CycleCount)
+	item, ok := any.(*scm.ScmCycleCount)
 	if !ok {
 		return nil, false, errors.New("invalid cycle count type")
 	}
@@ -44,7 +44,7 @@ func (this *CycleCountServiceCallback) After(any interface{}, action ifs.Action,
 	return nil, true, nil
 }
 
-func validate(item *scm.CycleCount, vnic ifs.IVNic) error {
+func validate(item *scm.ScmCycleCount, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.CycleCountId, "CycleCountId"); err != nil {
 		return err
 	}

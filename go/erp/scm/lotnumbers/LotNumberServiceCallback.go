@@ -29,7 +29,7 @@ func newLotNumberServiceCallback() *LotNumberServiceCallback {
 }
 
 func (this *LotNumberServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.LotNumber)
+	item, ok := any.(*scm.ScmLotNumber)
 	if !ok {
 		return nil, false, errors.New("invalid lot number type")
 	}
@@ -44,7 +44,7 @@ func (this *LotNumberServiceCallback) After(any interface{}, action ifs.Action, 
 	return nil, true, nil
 }
 
-func validate(item *scm.LotNumber, vnic ifs.IVNic) error {
+func validate(item *scm.ScmLotNumber, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.LotId, "LotId"); err != nil {
 		return err
 	}

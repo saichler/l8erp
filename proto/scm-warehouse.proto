@@ -27,12 +27,12 @@ import "api.proto";
 // ============================================================================
 
 // @PrimeObject
-// Warehouse represents a physical warehouse or storage facility
-message Warehouse {
+// ScmWarehouse represents a physical warehouse or storage facility
+message ScmWarehouse {
   string warehouse_id = 1;
   string code = 2;
   string name = 3;
-  WarehouseType warehouse_type = 4;
+  ScmWarehouseType warehouse_type = 4;
   erp.Address address = 5;
   string manager_id = 6;            // Cross-ref: HCM Employee
   bool is_active = 7;
@@ -42,18 +42,18 @@ message Warehouse {
   erp.AuditInfo audit_info = 11;
 }
 
-message WarehouseList {
-  repeated Warehouse list = 1;
+message ScmWarehouseList {
+  repeated ScmWarehouse list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// Bin represents a storage bin or location within a warehouse
-message Bin {
+// ScmBin represents a storage bin or location within a warehouse
+message ScmBin {
   string bin_id = 1;
   string warehouse_id = 2;
   string bin_code = 3;
-  BinType bin_type = 4;
+  ScmBinType bin_type = 4;
   string zone = 5;
   string aisle = 6;
   string rack = 7;
@@ -64,114 +64,114 @@ message Bin {
   erp.AuditInfo audit_info = 12;
 }
 
-message BinList {
-  repeated Bin list = 1;
+message ScmBinList {
+  repeated ScmBin list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// ReceivingOrder represents the receipt of goods into a warehouse
-message ReceivingOrder {
+// ScmReceivingOrder represents the receipt of goods into a warehouse
+message ScmReceivingOrder {
   string receiving_order_id = 1;
   string purchase_order_id = 2;     // Cross-ref: SCM PurchaseOrder
   string warehouse_id = 3;
   int64 receiving_date = 4;
-  TaskStatus status = 5;
+  ScmTaskStatus status = 5;
   string received_by = 6;
   string notes = 7;
   map<string, string> custom_fields = 8;
   erp.AuditInfo audit_info = 9;
 }
 
-message ReceivingOrderList {
-  repeated ReceivingOrder list = 1;
+message ScmReceivingOrderList {
+  repeated ScmReceivingOrder list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// PutawayTask represents a task to move received goods to storage bins
-message PutawayTask {
+// ScmPutawayTask represents a task to move received goods to storage bins
+message ScmPutawayTask {
   string task_id = 1;
   string receiving_order_id = 2;
   string item_id = 3;
   string from_bin_id = 4;
   string to_bin_id = 5;
   double quantity = 6;
-  TaskStatus status = 7;
+  ScmTaskStatus status = 7;
   string assigned_to = 8;
   int64 completed_at = 9;
   erp.AuditInfo audit_info = 10;
 }
 
-message PutawayTaskList {
-  repeated PutawayTask list = 1;
+message ScmPutawayTaskList {
+  repeated ScmPutawayTask list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// PickTask represents a task to pick items from storage bins
-message PickTask {
+// ScmPickTask represents a task to pick items from storage bins
+message ScmPickTask {
   string task_id = 1;
   string wave_plan_id = 2;
   string item_id = 3;
   string from_bin_id = 4;
   double quantity = 5;
-  TaskStatus status = 6;
+  ScmTaskStatus status = 6;
   string assigned_to = 7;
   int64 completed_at = 8;
   string order_reference = 9;
   erp.AuditInfo audit_info = 10;
 }
 
-message PickTaskList {
-  repeated PickTask list = 1;
+message ScmPickTaskList {
+  repeated ScmPickTask list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// PackTask represents a task to pack picked items for shipment
-message PackTask {
+// ScmPackTask represents a task to pack picked items for shipment
+message ScmPackTask {
   string task_id = 1;
   string pick_task_id = 2;
   string item_id = 3;
   double quantity = 4;
   string package_id = 5;
-  TaskStatus status = 6;
+  ScmTaskStatus status = 6;
   string assigned_to = 7;
   int64 completed_at = 8;
   erp.AuditInfo audit_info = 9;
 }
 
-message PackTaskList {
-  repeated PackTask list = 1;
+message ScmPackTaskList {
+  repeated ScmPackTask list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// ShipTask represents a task to ship packed items
-message ShipTask {
+// ScmShipTask represents a task to ship packed items
+message ScmShipTask {
   string task_id = 1;
   string pack_task_id = 2;
   string shipment_id = 3;
   string carrier_id = 4;
   string tracking_number = 5;
-  TaskStatus status = 6;
+  ScmTaskStatus status = 6;
   int64 shipped_at = 7;
   erp.AuditInfo audit_info = 8;
 }
 
-message ShipTaskList {
-  repeated ShipTask list = 1;
+message ScmShipTaskList {
+  repeated ScmShipTask list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// WavePlan represents a wave planning batch for order fulfillment
-message WavePlan {
+// ScmWavePlan represents a wave planning batch for order fulfillment
+message ScmWavePlan {
   string wave_plan_id = 1;
   string warehouse_id = 2;
   int64 plan_date = 3;
-  TaskStatus status = 4;
+  ScmTaskStatus status = 4;
   int32 total_orders = 5;
   int32 total_items = 6;
   string assigned_to = 7;
@@ -179,14 +179,14 @@ message WavePlan {
   erp.AuditInfo audit_info = 9;
 }
 
-message WavePlanList {
-  repeated WavePlan list = 1;
+message ScmWavePlanList {
+  repeated ScmWavePlan list = 1;
   l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
-// DockSchedule represents a scheduled dock appointment for shipping/receiving
-message DockSchedule {
+// ScmDockSchedule represents a scheduled dock appointment for shipping/receiving
+message ScmDockSchedule {
   string schedule_id = 1;
   string warehouse_id = 2;
   string dock_number = 3;
@@ -196,12 +196,12 @@ message DockSchedule {
   string carrier_id = 7;
   string shipment_id = 8;
   string direction = 9;             // Inbound or Outbound
-  TaskStatus status = 10;
+  ScmTaskStatus status = 10;
   string notes = 11;
   erp.AuditInfo audit_info = 12;
 }
 
-message DockScheduleList {
-  repeated DockSchedule list = 1;
+message ScmDockScheduleList {
+  repeated ScmDockSchedule list = 1;
   l8api.L8MetaData metadata = 2;
 }
