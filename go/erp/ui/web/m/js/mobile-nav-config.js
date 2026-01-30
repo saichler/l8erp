@@ -23,7 +23,7 @@ limitations under the License.
         // ERP Modules (Level 1) - matches desktop sidebar order
         modules: [
             { key: 'dashboard', label: 'Dashboard', icon: 'dashboard', hasSubModules: false },
-            { key: 'financial', label: 'Financial', icon: 'financial', hasSubModules: false },
+            { key: 'financial', label: 'Financial', icon: 'financial', hasSubModules: true },
             { key: 'hcm', label: 'Human Capital', icon: 'hcm', hasSubModules: true },
             { key: 'scm', label: 'Supply Chain', icon: 'scm', hasSubModules: true },
             { key: 'manufacturing', label: 'Manufacturing', icon: 'manufacturing', hasSubModules: false },
@@ -36,6 +36,86 @@ limitations under the License.
             { key: 'compliance', label: 'Compliance', icon: 'compliance', hasSubModules: false },
             { key: 'system', label: 'System', icon: 'system', hasSubModules: false }
         ],
+
+        // FIN Sub-Modules (Level 2)
+        financial: {
+            subModules: [
+                { key: 'general-ledger', label: 'General Ledger', icon: 'financial' },
+                { key: 'accounts-payable', label: 'Accounts Payable', icon: 'financial' },
+                { key: 'accounts-receivable', label: 'Accounts Receivable', icon: 'financial' },
+                { key: 'cash-management', label: 'Cash Management', icon: 'financial' },
+                { key: 'fixed-assets', label: 'Fixed Assets', icon: 'financial' },
+                { key: 'budgeting', label: 'Budgeting', icon: 'financial' },
+                { key: 'tax-management', label: 'Tax Management', icon: 'financial' }
+            ],
+
+            // Services for each sub-module (Level 3) - EXACT order from desktop fin-config.js
+            services: {
+                'general-ledger': [
+                    { key: 'accounts', label: 'Accounts', icon: 'financial', endpoint: '/erp/40/Account', model: 'Account', idField: 'accountId' },
+                    { key: 'journal-entries', label: 'Journal Entries', icon: 'financial', endpoint: '/erp/40/JrnlEntry', model: 'JournalEntry', idField: 'journalEntryId' },
+                    { key: 'journal-entry-lines', label: 'Entry Lines', icon: 'financial', endpoint: '/erp/40/JrnlLine', model: 'JournalEntryLine', idField: 'lineId' },
+                    { key: 'fiscal-years', label: 'Fiscal Years', icon: 'financial', endpoint: '/erp/40/FiscalYr', model: 'FiscalYear', idField: 'fiscalYearId' },
+                    { key: 'fiscal-periods', label: 'Fiscal Periods', icon: 'financial', endpoint: '/erp/40/FiscalPd', model: 'FiscalPeriod', idField: 'fiscalPeriodId' },
+                    { key: 'currencies', label: 'Currencies', icon: 'financial', endpoint: '/erp/40/Currency', model: 'Currency', idField: 'currencyId' },
+                    { key: 'exchange-rates', label: 'Exchange Rates', icon: 'financial', endpoint: '/erp/40/XchgRate', model: 'ExchangeRate', idField: 'exchangeRateId' },
+                    { key: 'account-balances', label: 'Balances', icon: 'financial', endpoint: '/erp/40/AcctBal', model: 'AccountBalance', idField: 'balanceId' }
+                ],
+                'accounts-payable': [
+                    { key: 'vendors', label: 'Vendors', icon: 'financial', endpoint: '/erp/40/Vendor', model: 'Vendor', idField: 'vendorId' },
+                    { key: 'vendor-contacts', label: 'Vendor Contacts', icon: 'financial', endpoint: '/erp/40/VndrCont', model: 'VendorContact', idField: 'contactId' },
+                    { key: 'purchase-invoices', label: 'Purchase Invoices', icon: 'financial', endpoint: '/erp/40/PurchInv', model: 'PurchaseInvoice', idField: 'invoiceId' },
+                    { key: 'purchase-invoice-lines', label: 'Invoice Lines', icon: 'financial', endpoint: '/erp/40/PurchLine', model: 'PurchaseInvoiceLine', idField: 'lineId' },
+                    { key: 'payment-schedules', label: 'Payment Schedules', icon: 'financial', endpoint: '/erp/40/PmtSched', model: 'PaymentSchedule', idField: 'scheduleId' },
+                    { key: 'vendor-payments', label: 'Vendor Payments', icon: 'financial', endpoint: '/erp/40/VndrPmt', model: 'VendorPayment', idField: 'paymentId' },
+                    { key: 'payment-allocations', label: 'Payment Allocations', icon: 'financial', endpoint: '/erp/40/PmtAlloc', model: 'PaymentAllocation', idField: 'allocationId' },
+                    { key: 'vendor-statements', label: 'Vendor Statements', icon: 'financial', endpoint: '/erp/40/VndrStmt', model: 'VendorStatement', idField: 'statementId' }
+                ],
+                'accounts-receivable': [
+                    { key: 'customers', label: 'Customers', icon: 'financial', endpoint: '/erp/40/Customer', model: 'Customer', idField: 'customerId' },
+                    { key: 'customer-contacts', label: 'Customer Contacts', icon: 'financial', endpoint: '/erp/40/CustCont', model: 'CustomerContact', idField: 'contactId' },
+                    { key: 'sales-invoices', label: 'Sales Invoices', icon: 'financial', endpoint: '/erp/40/SalesInv', model: 'SalesInvoice', idField: 'invoiceId' },
+                    { key: 'sales-invoice-lines', label: 'Invoice Lines', icon: 'financial', endpoint: '/erp/40/SalesLine', model: 'SalesInvoiceLine', idField: 'lineId' },
+                    { key: 'customer-payments', label: 'Customer Payments', icon: 'financial', endpoint: '/erp/40/CustPmt', model: 'CustomerPayment', idField: 'paymentId' },
+                    { key: 'payment-applications', label: 'Payment Apps', icon: 'financial', endpoint: '/erp/40/PmtApp', model: 'PaymentApplication', idField: 'applicationId' },
+                    { key: 'credit-memos', label: 'Credit Memos', icon: 'financial', endpoint: '/erp/40/CrdtMemo', model: 'CreditMemo', idField: 'creditMemoId' },
+                    { key: 'dunning-letters', label: 'Dunning Letters', icon: 'financial', endpoint: '/erp/40/DunLtr', model: 'DunningLetter', idField: 'letterId' }
+                ],
+                'cash-management': [
+                    { key: 'bank-accounts', label: 'Bank Accounts', icon: 'financial', endpoint: '/erp/40/BankAcct', model: 'BankAccount', idField: 'bankAccountId' },
+                    { key: 'bank-transactions', label: 'Transactions', icon: 'financial', endpoint: '/erp/40/BankTxn', model: 'BankTransaction', idField: 'transactionId' },
+                    { key: 'bank-reconciliations', label: 'Reconciliations', icon: 'financial', endpoint: '/erp/40/BankRec', model: 'BankReconciliation', idField: 'reconciliationId' },
+                    { key: 'cash-forecasts', label: 'Cash Forecasts', icon: 'financial', endpoint: '/erp/40/CashFcst', model: 'CashForecast', idField: 'forecastId' },
+                    { key: 'fund-transfers', label: 'Fund Transfers', icon: 'financial', endpoint: '/erp/40/FundXfer', model: 'FundTransfer', idField: 'transferId' },
+                    { key: 'petty-cash', label: 'Petty Cash', icon: 'financial', endpoint: '/erp/40/PettyCash', model: 'PettyCash', idField: 'pettyCashId' }
+                ],
+                'fixed-assets': [
+                    { key: 'assets', label: 'Assets', icon: 'financial', endpoint: '/erp/40/Asset', model: 'Asset', idField: 'assetId' },
+                    { key: 'asset-categories', label: 'Categories', icon: 'financial', endpoint: '/erp/40/AstCat', model: 'AssetCategory', idField: 'categoryId' },
+                    { key: 'depreciation-schedules', label: 'Depreciation', icon: 'financial', endpoint: '/erp/40/DeprSched', model: 'DepreciationSchedule', idField: 'scheduleId' },
+                    { key: 'asset-disposals', label: 'Disposals', icon: 'financial', endpoint: '/erp/40/AstDisp', model: 'AssetDisposal', idField: 'disposalId' },
+                    { key: 'asset-transfers', label: 'Transfers', icon: 'financial', endpoint: '/erp/40/AstXfer', model: 'AssetTransfer', idField: 'transferId' },
+                    { key: 'asset-maintenance', label: 'Maintenance', icon: 'financial', endpoint: '/erp/40/AstMaint', model: 'AssetMaintenance', idField: 'maintenanceId' },
+                    { key: 'asset-revaluations', label: 'Revaluations', icon: 'financial', endpoint: '/erp/40/AstReval', model: 'AssetRevaluation', idField: 'revaluationId' }
+                ],
+                'budgeting': [
+                    { key: 'budgets', label: 'Budgets', icon: 'financial', endpoint: '/erp/40/Budget', model: 'Budget', idField: 'budgetId' },
+                    { key: 'budget-lines', label: 'Budget Lines', icon: 'financial', endpoint: '/erp/40/BdgtLine', model: 'BudgetLine', idField: 'lineId' },
+                    { key: 'budget-transfers', label: 'Budget Transfers', icon: 'financial', endpoint: '/erp/40/BdgtXfer', model: 'BudgetTransfer', idField: 'transferId' },
+                    { key: 'budget-scenarios', label: 'Scenarios', icon: 'financial', endpoint: '/erp/40/BdgtScen', model: 'BudgetScenario', idField: 'scenarioId' },
+                    { key: 'capital-expenditures', label: 'Capital Expenditures', icon: 'financial', endpoint: '/erp/40/CapEx', model: 'CapitalExpenditure', idField: 'capexId' },
+                    { key: 'forecasts', label: 'Forecasts', icon: 'financial', endpoint: '/erp/40/Forecast', model: 'Forecast', idField: 'forecastId' }
+                ],
+                'tax-management': [
+                    { key: 'tax-codes', label: 'Tax Codes', icon: 'financial', endpoint: '/erp/40/TaxCode', model: 'TaxCode', idField: 'taxCodeId' },
+                    { key: 'tax-jurisdictions', label: 'Jurisdictions', icon: 'financial', endpoint: '/erp/40/TaxJuris', model: 'TaxJurisdiction', idField: 'jurisdictionId' },
+                    { key: 'tax-rules', label: 'Tax Rules', icon: 'financial', endpoint: '/erp/40/TaxRule', model: 'TaxRule', idField: 'ruleId' },
+                    { key: 'tax-returns', label: 'Tax Returns', icon: 'financial', endpoint: '/erp/40/TaxRtn', model: 'TaxReturn', idField: 'returnId' },
+                    { key: 'tax-exemptions', label: 'Exemptions', icon: 'financial', endpoint: '/erp/40/TaxExmpt', model: 'TaxExemption', idField: 'exemptionId' },
+                    { key: 'withholding-tax-configs', label: 'Withholding Configs', icon: 'financial', endpoint: '/erp/40/WhtTxCfg', model: 'WithholdingTaxConfig', idField: 'configId' }
+                ]
+            }
+        },
 
         // HCM Sub-Modules (Level 2)
         hcm: {
