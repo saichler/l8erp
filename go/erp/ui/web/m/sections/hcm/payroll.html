@@ -42,7 +42,7 @@ let currentPayrollService = 'payroll-runs';
 
 const PAYROLL_SERVICES = {
     'payroll-runs': {
-        endpoint: '/erp/30/PayRun',
+        endpoint: MobileConfig.resolveEndpoint('/30/PayRun'),
         modelName: 'PayrollRun',
         idField: 'payrollRunId',
         columns: [
@@ -66,7 +66,7 @@ const PAYROLL_SERVICES = {
         ]
     },
     'payslips': {
-        endpoint: '/erp/30/Payslip',
+        endpoint: MobileConfig.resolveEndpoint('/30/Payslip'),
         modelName: 'Payslip',
         idField: 'payslipId',
         columns: [
@@ -90,7 +90,7 @@ const PAYROLL_SERVICES = {
         ]
     },
     'pay-structures': {
-        endpoint: '/erp/30/PayStruct',
+        endpoint: MobileConfig.resolveEndpoint('/30/PayStruct'),
         modelName: 'PayStructure',
         idField: 'payStructureId',
         columns: [
@@ -115,7 +115,7 @@ const PAYROLL_SERVICES = {
         ]
     },
     'pay-components': {
-        endpoint: '/erp/30/PayComp',
+        endpoint: MobileConfig.resolveEndpoint('/30/PayComp'),
         modelName: 'PayComponent',
         idField: 'componentId',
         columns: [
@@ -144,7 +144,7 @@ const PAYROLL_SERVICES = {
         ]
     },
     'direct-deposits': {
-        endpoint: '/erp/30/DirDep',
+        endpoint: MobileConfig.resolveEndpoint('/30/DirDep'),
         modelName: 'DirectDeposit',
         idField: 'directDepositId',
         columns: [
@@ -172,7 +172,7 @@ const PAYROLL_SERVICES = {
         ]
     },
     'tax-withholdings': {
-        endpoint: '/erp/30/TaxWith',
+        endpoint: MobileConfig.resolveEndpoint('/30/TaxWith'),
         modelName: 'TaxWithholding',
         idField: 'withholdingId',
         columns: [
@@ -198,7 +198,7 @@ const PAYROLL_SERVICES = {
         ]
     },
     'garnishments': {
-        endpoint: '/erp/30/Garnish',
+        endpoint: MobileConfig.resolveEndpoint('/30/Garnish'),
         modelName: 'Garnishment',
         idField: 'garnishmentId',
         columns: [
@@ -227,7 +227,7 @@ const PAYROLL_SERVICES = {
         ]
     },
     'year-end-docs': {
-        endpoint: '/erp/30/YrEndDoc',
+        endpoint: MobileConfig.resolveEndpoint('/30/YrEndDoc'),
         modelName: 'YearEndDocument',
         idField: 'documentId',
         columns: [

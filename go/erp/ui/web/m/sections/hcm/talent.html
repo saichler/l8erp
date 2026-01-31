@@ -43,7 +43,7 @@ let currentTalentService = 'reviews';
 
 const TALENT_SERVICES = {
     reviews: {
-        endpoint: '/erp/30/PerfRevw',
+        endpoint: MobileConfig.resolveEndpoint('/30/PerfRevw'),
         modelName: 'PerformanceReview',
         idField: 'reviewId',
         columns: [
@@ -73,7 +73,7 @@ const TALENT_SERVICES = {
         ]
     },
     goals: {
-        endpoint: '/erp/30/Goal',
+        endpoint: MobileConfig.resolveEndpoint('/30/Goal'),
         modelName: 'Goal',
         idField: 'goalId',
         columns: [
@@ -105,7 +105,7 @@ const TALENT_SERVICES = {
         ]
     },
     feedback: {
-        endpoint: '/erp/30/Feedback',
+        endpoint: MobileConfig.resolveEndpoint('/30/Feedback'),
         modelName: 'Feedback',
         idField: 'feedbackId',
         columns: [
@@ -132,7 +132,7 @@ const TALENT_SERVICES = {
         ]
     },
     'career-paths': {
-        endpoint: '/erp/30/CarPath',
+        endpoint: MobileConfig.resolveEndpoint('/30/CarPath'),
         modelName: 'CareerPath',
         idField: 'careerPathId',
         columns: [
@@ -152,7 +152,7 @@ const TALENT_SERVICES = {
         ]
     },
     succession: {
-        endpoint: '/erp/30/SuccPlan',
+        endpoint: MobileConfig.resolveEndpoint('/30/SuccPlan'),
         modelName: 'SuccessionPlan',
         idField: 'planId',
         columns: [
@@ -177,7 +177,7 @@ const TALENT_SERVICES = {
         ]
     },
     requisitions: {
-        endpoint: '/erp/30/JobReq',
+        endpoint: MobileConfig.resolveEndpoint('/30/JobReq'),
         modelName: 'JobRequisition',
         idField: 'requisitionId',
         columns: [
@@ -215,7 +215,7 @@ const TALENT_SERVICES = {
         ]
     },
     applicants: {
-        endpoint: '/erp/30/Applicant',
+        endpoint: MobileConfig.resolveEndpoint('/30/Applicant'),
         modelName: 'Applicant',
         idField: 'applicantId',
         columns: [
@@ -243,7 +243,7 @@ const TALENT_SERVICES = {
         ]
     },
     applications: {
-        endpoint: '/erp/30/Applctn',
+        endpoint: MobileConfig.resolveEndpoint('/30/Applctn'),
         modelName: 'Application',
         idField: 'applicationId',
         columns: [
@@ -270,7 +270,7 @@ const TALENT_SERVICES = {
         ]
     },
     onboarding: {
-        endpoint: '/erp/30/OnbrdTsk',
+        endpoint: MobileConfig.resolveEndpoint('/30/OnbrdTsk'),
         modelName: 'OnboardingTask',
         idField: 'taskId',
         columns: [

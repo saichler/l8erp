@@ -21,7 +21,8 @@ limitations under the License.
 
     // Default configuration
     const DEFAULT_CONFIG = {
-        dateFormat: 'mm/dd/yyyy'
+        dateFormat: 'mm/dd/yyyy',
+        apiPrefix: '/erp'
     };
 
     // Current configuration (starts with defaults)
@@ -67,6 +68,23 @@ limitations under the License.
     }
 
     /**
+     * Get the configured API prefix
+     * @returns {string} API prefix (e.g., '/erp')
+     */
+    function getApiPrefix() {
+        return currentConfig.apiPrefix || DEFAULT_CONFIG.apiPrefix;
+    }
+
+    /**
+     * Resolve a relative endpoint path to a full API endpoint
+     * @param {string} path - Relative path (e.g., '/30/Employee')
+     * @returns {string} Full endpoint (e.g., '/erp/30/Employee')
+     */
+    function resolveEndpoint(path) {
+        return getApiPrefix() + path;
+    }
+
+    /**
      * Get all configuration
      * @returns {object} Current configuration object
      */
@@ -86,6 +104,8 @@ limitations under the License.
     window.ERPConfig = {
         load,
         getDateFormat,
+        getApiPrefix,
+        resolveEndpoint,
         getConfig,
         isLoaded
     };

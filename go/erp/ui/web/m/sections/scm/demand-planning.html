@@ -40,7 +40,7 @@ let currentScmDemandPlanningService = 'demand-forecasts';
 
 const DEMAND_PLANNING_SERVICES = {
     'demand-forecasts': {
-        endpoint: '/erp/50/DmndFcast',
+        endpoint: MobileConfig.resolveEndpoint('/50/DmndFcast'),
         modelName: 'ScmDemandForecast',
         idField: 'forecastId',
         columns: [
@@ -63,7 +63,7 @@ const DEMAND_PLANNING_SERVICES = {
         ]
     },
     'forecast-models': {
-        endpoint: '/erp/50/FcastModel',
+        endpoint: MobileConfig.resolveEndpoint('/50/FcastModel'),
         modelName: 'ScmForecastModel',
         idField: 'modelId',
         columns: [
@@ -83,7 +83,7 @@ const DEMAND_PLANNING_SERVICES = {
         ]
     },
     'demand-plans': {
-        endpoint: '/erp/50/DemandPlan',
+        endpoint: MobileConfig.resolveEndpoint('/50/DemandPlan'),
         modelName: 'ScmDemandPlan',
         idField: 'planId',
         columns: [
@@ -104,7 +104,7 @@ const DEMAND_PLANNING_SERVICES = {
         ]
     },
     'promo-plans': {
-        endpoint: '/erp/50/PromoPlan',
+        endpoint: MobileConfig.resolveEndpoint('/50/PromoPlan'),
         modelName: 'ScmPromotionalPlan',
         idField: 'planId',
         columns: [
@@ -126,7 +126,7 @@ const DEMAND_PLANNING_SERVICES = {
         ]
     },
     'new-product-plans': {
-        endpoint: '/erp/50/NewProdPln',
+        endpoint: MobileConfig.resolveEndpoint('/50/NewProdPln'),
         modelName: 'ScmNewProductPlan',
         idField: 'planId',
         columns: [
@@ -147,7 +147,7 @@ const DEMAND_PLANNING_SERVICES = {
         ]
     },
     'forecast-accuracies': {
-        endpoint: '/erp/50/FcastAccur',
+        endpoint: MobileConfig.resolveEndpoint('/50/FcastAccur'),
         modelName: 'ScmForecastAccuracy',
         idField: 'accuracyId',
         columns: [

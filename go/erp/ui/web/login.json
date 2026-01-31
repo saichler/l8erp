@@ -10,6 +10,7 @@
         "tfaEnabled": true
     },
     "app": {
-        "dateFormat": "mm/dd/yyyy"
+        "dateFormat": "mm/dd/yyyy",
+        "apiPrefix": "/erp"
     }
 }

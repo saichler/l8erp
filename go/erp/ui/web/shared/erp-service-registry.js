@@ -85,7 +85,7 @@ limitations under the License.
 
         const table = new L8Table({
             containerId: containerId,
-            endpoint: service.endpoint,
+            endpoint: ERPConfig.resolveEndpoint(service.endpoint),
             modelName: service.model,
             serverSide: true,
             columns: columns,

@@ -43,7 +43,7 @@ let currentWarehouseService = 'warehouses';
 
 const WAREHOUSE_SERVICES = {
     'warehouses': {
-        endpoint: '/erp/50/Warehouse',
+        endpoint: MobileConfig.resolveEndpoint('/50/Warehouse'),
         modelName: 'ScmWarehouse',
         idField: 'warehouseId',
         columns: [
@@ -65,7 +65,7 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'bins': {
-        endpoint: '/erp/50/Bin',
+        endpoint: MobileConfig.resolveEndpoint('/50/Bin'),
         modelName: 'ScmBin',
         idField: 'binId',
         columns: [
@@ -88,7 +88,7 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'receiving-orders': {
-        endpoint: '/erp/50/RecvOrder',
+        endpoint: MobileConfig.resolveEndpoint('/50/RecvOrder'),
         modelName: 'ScmReceivingOrder',
         idField: 'receivingOrderId',
         columns: [
@@ -111,7 +111,7 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'putaway-tasks': {
-        endpoint: '/erp/50/PutAway',
+        endpoint: MobileConfig.resolveEndpoint('/50/PutAway'),
         modelName: 'ScmPutawayTask',
         idField: 'taskId',
         columns: [
@@ -134,7 +134,7 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'pick-tasks': {
-        endpoint: '/erp/50/PickTask',
+        endpoint: MobileConfig.resolveEndpoint('/50/PickTask'),
         modelName: 'ScmPickTask',
         idField: 'taskId',
         columns: [
@@ -156,7 +156,7 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'pack-tasks': {
-        endpoint: '/erp/50/PackTask',
+        endpoint: MobileConfig.resolveEndpoint('/50/PackTask'),
         modelName: 'ScmPackTask',
         idField: 'taskId',
         columns: [
@@ -177,7 +177,7 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'ship-tasks': {
-        endpoint: '/erp/50/ShipTask',
+        endpoint: MobileConfig.resolveEndpoint('/50/ShipTask'),
         modelName: 'ScmShipTask',
         idField: 'taskId',
         columns: [
@@ -199,7 +199,7 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'wave-plans': {
-        endpoint: '/erp/50/WavePlan',
+        endpoint: MobileConfig.resolveEndpoint('/50/WavePlan'),
         modelName: 'ScmWavePlan',
         idField: 'wavePlanId',
         columns: [
@@ -221,7 +221,7 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'dock-schedules': {
-        endpoint: '/erp/50/DockSched',
+        endpoint: MobileConfig.resolveEndpoint('/50/DockSched'),
         modelName: 'ScmDockSchedule',
         idField: 'scheduleId',
         columns: [

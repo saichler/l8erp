@@ -41,7 +41,7 @@ let currentProcurementService = 'purchase-requisitions';
 
 const PROCUREMENT_SERVICES = {
     'purchase-requisitions': {
-        endpoint: '/erp/50/PurchReq',
+        endpoint: MobileConfig.resolveEndpoint('/50/PurchReq'),
         modelName: 'ScmPurchaseRequisition',
         idField: 'requisitionId',
         columns: [
@@ -64,7 +64,7 @@ const PROCUREMENT_SERVICES = {
         ]
     },
     'requisition-lines': {
-        endpoint: '/erp/50/ReqLine',
+        endpoint: MobileConfig.resolveEndpoint('/50/ReqLine'),
         modelName: 'ScmRequisitionLine',
         idField: 'lineId',
         columns: [
@@ -88,7 +88,7 @@ const PROCUREMENT_SERVICES = {
         ]
     },
     'rfqs': {
-        endpoint: '/erp/50/RFQ',
+        endpoint: MobileConfig.resolveEndpoint('/50/RFQ'),
         modelName: 'ScmRequestForQuotation',
         idField: 'rfqId',
         columns: [
@@ -110,7 +110,7 @@ const PROCUREMENT_SERVICES = {
         ]
     },
     'purchase-orders': {
-        endpoint: '/erp/50/PurchOrder',
+        endpoint: MobileConfig.resolveEndpoint('/50/PurchOrder'),
         modelName: 'ScmPurchaseOrder',
         idField: 'purchaseOrderId',
         columns: [
@@ -133,7 +133,7 @@ const PROCUREMENT_SERVICES = {
         ]
     },
     'po-lines': {
-        endpoint: '/erp/50/POLine',
+        endpoint: MobileConfig.resolveEndpoint('/50/POLine'),
         modelName: 'ScmPurchaseOrderLine',
         idField: 'lineId',
         columns: [
@@ -155,7 +155,7 @@ const PROCUREMENT_SERVICES = {
         ]
     },
     'blanket-orders': {
-        endpoint: '/erp/50/BlnktOrder',
+        endpoint: MobileConfig.resolveEndpoint('/50/BlnktOrder'),
         modelName: 'ScmBlanketOrder',
         idField: 'blanketOrderId',
         columns: [
@@ -178,7 +178,7 @@ const PROCUREMENT_SERVICES = {
         ]
     },
     'supplier-scorecards': {
-        endpoint: '/erp/50/SupplrCard',
+        endpoint: MobileConfig.resolveEndpoint('/50/SupplrCard'),
         modelName: 'ScmSupplierScorecard',
         idField: 'scorecardId',
         columns: [

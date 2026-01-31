@@ -565,7 +565,7 @@ limitations under the License.
                 if (module.services) {
                     for (const service of module.services) {
                         if (service.model === modelName) {
-                            return service.endpoint;
+                            return ERPConfig.resolveEndpoint(service.endpoint);
                         }
                     }
                 }

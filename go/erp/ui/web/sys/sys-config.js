@@ -27,9 +27,9 @@ limitations under the License.
             label: 'Security',
             icon: '🔒',
             services: [
-                { key: 'users', label: 'Users', icon: '👤', endpoint: '/erp/73/users', model: 'L8User' },
-                { key: 'roles', label: 'Roles', icon: '🛡️', endpoint: '/erp/74/roles', model: 'L8Role' },
-                { key: 'credentials', label: 'Credentials', icon: '🔑', endpoint: '/erp/75/Creds', model: 'L8Credentials' }
+                { key: 'users', label: 'Users', icon: '👤', endpoint: '/73/users', model: 'L8User' },
+                { key: 'roles', label: 'Roles', icon: '🛡️', endpoint: '/74/roles', model: 'L8Role' },
+                { key: 'credentials', label: 'Credentials', icon: '🔑', endpoint: '/75/Creds', model: 'L8Credentials' }
             ]
         }
     };

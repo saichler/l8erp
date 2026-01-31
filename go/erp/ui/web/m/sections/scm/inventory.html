@@ -42,7 +42,7 @@ let currentInventoryService = 'items';
 
 const INVENTORY_SERVICES = {
     'items': {
-        endpoint: '/erp/50/Item',
+        endpoint: MobileConfig.resolveEndpoint('/50/Item'),
         modelName: 'ScmItem',
         idField: 'itemId',
         columns: [
@@ -66,7 +66,7 @@ const INVENTORY_SERVICES = {
         ]
     },
     'item-categories': {
-        endpoint: '/erp/50/ItemCat',
+        endpoint: MobileConfig.resolveEndpoint('/50/ItemCat'),
         modelName: 'ScmItemCategory',
         idField: 'categoryId',
         columns: [
@@ -84,7 +84,7 @@ const INVENTORY_SERVICES = {
         ]
     },
     'stock-movements': {
-        endpoint: '/erp/50/StockMove',
+        endpoint: MobileConfig.resolveEndpoint('/50/StockMove'),
         modelName: 'ScmStockMovement',
         idField: 'movementId',
         columns: [
@@ -107,7 +107,7 @@ const INVENTORY_SERVICES = {
         ]
     },
     'lot-numbers': {
-        endpoint: '/erp/50/LotNumber',
+        endpoint: MobileConfig.resolveEndpoint('/50/LotNumber'),
         modelName: 'ScmLotNumber',
         idField: 'lotId',
         columns: [
@@ -129,7 +129,7 @@ const INVENTORY_SERVICES = {
         ]
     },
     'serial-numbers': {
-        endpoint: '/erp/50/SerialNum',
+        endpoint: MobileConfig.resolveEndpoint('/50/SerialNum'),
         modelName: 'ScmSerialNumber',
         idField: 'serialId',
         columns: [
@@ -148,7 +148,7 @@ const INVENTORY_SERVICES = {
         ]
     },
     'cycle-counts': {
-        endpoint: '/erp/50/CycleCount',
+        endpoint: MobileConfig.resolveEndpoint('/50/CycleCount'),
         modelName: 'ScmCycleCount',
         idField: 'cycleCountId',
         columns: [
@@ -170,7 +170,7 @@ const INVENTORY_SERVICES = {
         ]
     },
     'reorder-points': {
-        endpoint: '/erp/50/ReorderPt',
+        endpoint: MobileConfig.resolveEndpoint('/50/ReorderPt'),
         modelName: 'ScmReorderPoint',
         idField: 'reorderPointId',
         columns: [
@@ -192,7 +192,7 @@ const INVENTORY_SERVICES = {
         ]
     },
     'inventory-valuations': {
-        endpoint: '/erp/50/InvValue',
+        endpoint: MobileConfig.resolveEndpoint('/50/InvValue'),
         modelName: 'ScmInventoryValuation',
         idField: 'valuationId',
         columns: [

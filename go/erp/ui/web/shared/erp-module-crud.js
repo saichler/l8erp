@@ -38,7 +38,7 @@ limitations under the License.
             }
 
             const serviceConfig = {
-                endpoint: service.endpoint,
+                endpoint: ERPConfig.resolveEndpoint(service.endpoint),
                 primaryKey: ERPServiceRegistry.getPrimaryKey(parentModule, service.model),
                 modelName: service.model
             };
@@ -59,7 +59,7 @@ limitations under the License.
             }
 
             const serviceConfig = {
-                endpoint: service.endpoint,
+                endpoint: ERPConfig.resolveEndpoint(service.endpoint),
                 primaryKey: ERPServiceRegistry.getPrimaryKey(parentModule, service.model),
                 modelName: service.model
             };
@@ -72,7 +72,7 @@ limitations under the License.
         // Confirm delete
         moduleNS._confirmDeleteItem = function(service, id) {
             const serviceConfig = {
-                endpoint: service.endpoint,
+                endpoint: ERPConfig.resolveEndpoint(service.endpoint),
                 primaryKey: ERPServiceRegistry.getPrimaryKey(parentModule, service.model),
                 modelName: service.model
             };
@@ -90,7 +90,7 @@ limitations under the License.
         // Delete item
         moduleNS._deleteItem = async function(service, id) {
             try {
-                const response = await fetch(`${service.endpoint}?id=${id}`, {
+                const response = await fetch(`${ERPConfig.resolveEndpoint(service.endpoint)}?id=${id}`, {
                     method: 'DELETE',
                     headers: typeof getAuthHeaders === 'function' ? getAuthHeaders() : { 'Content-Type': 'application/json' }
                 });

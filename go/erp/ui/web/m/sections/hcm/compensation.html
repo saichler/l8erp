@@ -44,7 +44,7 @@ let currentCompensationService = 'salary-grades';
 
 const COMPENSATION_SERVICES = {
     'salary-grades': {
-        endpoint: '/erp/30/SalaryGrade',
+        endpoint: MobileConfig.resolveEndpoint('/30/SalaryGrade'),
         modelName: 'SalaryGrade',
         idField: 'gradeId',
         columns: [
@@ -76,7 +76,7 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'salary-structures': {
-        endpoint: '/erp/30/SalaryStructure',
+        endpoint: MobileConfig.resolveEndpoint('/30/SalaryStructure'),
         modelName: 'SalaryStructure',
         idField: 'structureId',
         columns: [
@@ -99,7 +99,7 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'bonus-plans': {
-        endpoint: '/erp/30/BonusPlan',
+        endpoint: MobileConfig.resolveEndpoint('/30/BonusPlan'),
         modelName: 'BonusPlan',
         idField: 'planId',
         columns: [
@@ -132,7 +132,7 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'equity-grants': {
-        endpoint: '/erp/30/EquityGrant',
+        endpoint: MobileConfig.resolveEndpoint('/30/EquityGrant'),
         modelName: 'EquityGrant',
         idField: 'grantId',
         columns: [
@@ -167,7 +167,7 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'emp-compensation': {
-        endpoint: '/erp/30/EmpComp',
+        endpoint: MobileConfig.resolveEndpoint('/30/EmpComp'),
         modelName: 'EmployeeCompensation',
         idField: 'compensationId',
         columns: [
@@ -196,7 +196,7 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'merit-increases': {
-        endpoint: '/erp/30/MeritInc',
+        endpoint: MobileConfig.resolveEndpoint('/30/MeritInc'),
         modelName: 'MeritIncrease',
         idField: 'increaseId',
         columns: [
@@ -227,7 +227,7 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'merit-cycles': {
-        endpoint: '/erp/30/MrtCycle',
+        endpoint: MobileConfig.resolveEndpoint('/30/MrtCycle'),
         modelName: 'MeritCycle',
         idField: 'cycleId',
         columns: [
@@ -254,7 +254,7 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'bonus-payments': {
-        endpoint: '/erp/30/BonusPay',
+        endpoint: MobileConfig.resolveEndpoint('/30/BonusPay'),
         modelName: 'BonusPayment',
         idField: 'paymentId',
         columns: [
@@ -286,7 +286,7 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'comp-statements': {
-        endpoint: '/erp/30/CompStmt',
+        endpoint: MobileConfig.resolveEndpoint('/30/CompStmt'),
         modelName: 'CompensationStatement',
         idField: 'statementId',
         columns: [
@@ -315,7 +315,7 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'market-benchmarks': {
-        endpoint: '/erp/30/MktBench',
+        endpoint: MobileConfig.resolveEndpoint('/30/MktBench'),
         modelName: 'MarketBenchmark',
         idField: 'benchmarkId',
         columns: [

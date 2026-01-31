@@ -84,7 +84,7 @@ function initMobileEmployees() {
     ];
 
     employeesTable = new MobileEditTable('employees-table', {
-        endpoint: '/erp/30/Employee',
+        endpoint: MobileConfig.resolveEndpoint('/30/Employee'),
         modelName: 'Employee',
         columns: columns,
         rowsPerPage: 15,
@@ -187,10 +187,10 @@ function openEmployeeForm(employee = null) {
 
             try {
                 if (isEdit) {
-                    await MobileAuth.put('/erp/30/Employee', data);
+                    await MobileAuth.put(MobileConfig.resolveEndpoint('/30/Employee'), data);
                     MobileUtils.showSuccess('Employee updated');
                 } else {
-                    await MobileAuth.post('/erp/30/Employee', data);
+                    await MobileAuth.post(MobileConfig.resolveEndpoint('/30/Employee'), data);
                     MobileUtils.showSuccess('Employee created');
                 }
 
@@ -208,7 +208,7 @@ async function deleteEmployee(id, item) {
 
     if (confirmed) {
         try {
-            await MobileAuth.delete('/erp/30/Employee?id=' + id);
+            await MobileAuth.delete(MobileConfig.resolveEndpoint('/30/Employee') + '?id=' + id);
             MobileUtils.showSuccess('Employee deleted');
             employeesTable.refresh();
         } catch (error) {

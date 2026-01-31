@@ -42,7 +42,7 @@ let currentTimeService = 'timesheets';
 
 const TIME_SERVICES = {
     timesheets: {
-        endpoint: '/erp/30/Timesheet',
+        endpoint: MobileConfig.resolveEndpoint('/30/Timesheet'),
         modelName: 'Timesheet',
         idField: 'timesheetId',
         columns: [
@@ -70,7 +70,7 @@ const TIME_SERVICES = {
         ]
     },
     'leave-requests': {
-        endpoint: '/erp/30/LeaveReq',
+        endpoint: MobileConfig.resolveEndpoint('/30/LeaveReq'),
         modelName: 'LeaveRequest',
         idField: 'requestId',
         columns: [
@@ -100,7 +100,7 @@ const TIME_SERVICES = {
         ]
     },
     'leave-balances': {
-        endpoint: '/erp/30/LeaveBal',
+        endpoint: MobileConfig.resolveEndpoint('/30/LeaveBal'),
         modelName: 'LeaveBalance',
         idField: 'balanceId',
         columns: [
@@ -132,7 +132,7 @@ const TIME_SERVICES = {
         ]
     },
     'leave-policies': {
-        endpoint: '/erp/30/LeavePol',
+        endpoint: MobileConfig.resolveEndpoint('/30/LeavePol'),
         modelName: 'LeavePolicy',
         idField: 'policyId',
         columns: [
@@ -168,7 +168,7 @@ const TIME_SERVICES = {
         ]
     },
     schedules: {
-        endpoint: '/erp/30/Schedule',
+        endpoint: MobileConfig.resolveEndpoint('/30/Schedule'),
         modelName: 'Schedule',
         idField: 'scheduleId',
         columns: [
@@ -189,7 +189,7 @@ const TIME_SERVICES = {
         ]
     },
     shifts: {
-        endpoint: '/erp/30/Shift',
+        endpoint: MobileConfig.resolveEndpoint('/30/Shift'),
         modelName: 'Shift',
         idField: 'shiftId',
         columns: [
@@ -218,7 +218,7 @@ const TIME_SERVICES = {
         ]
     },
     absences: {
-        endpoint: '/erp/30/Absence',
+        endpoint: MobileConfig.resolveEndpoint('/30/Absence'),
         modelName: 'Absence',
         idField: 'absenceId',
         columns: [
@@ -245,7 +245,7 @@ const TIME_SERVICES = {
         ]
     },
     holidays: {
-        endpoint: '/erp/30/Holiday',
+        endpoint: MobileConfig.resolveEndpoint('/30/Holiday'),
         modelName: 'Holiday',
         idField: 'holidayId',
         columns: [

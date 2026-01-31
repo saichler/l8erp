@@ -41,7 +41,7 @@ let currentService = 'organizations';
 
 const ORG_SERVICES = {
     organizations: {
-        endpoint: '/erp/30/Org',
+        endpoint: MobileConfig.resolveEndpoint('/30/Org'),
         modelName: 'Organization',
         idField: 'organizationId',
         columns: [
@@ -68,7 +68,7 @@ const ORG_SERVICES = {
         ]
     },
     departments: {
-        endpoint: '/erp/30/Dept',
+        endpoint: MobileConfig.resolveEndpoint('/30/Dept'),
         modelName: 'Department',
         idField: 'departmentId',
         columns: [
@@ -93,7 +93,7 @@ const ORG_SERVICES = {
         ]
     },
     positions: {
-        endpoint: '/erp/30/Position',
+        endpoint: MobileConfig.resolveEndpoint('/30/Position'),
         modelName: 'Position',
         idField: 'positionId',
         columns: [
@@ -123,7 +123,7 @@ const ORG_SERVICES = {
         ]
     },
     jobs: {
-        endpoint: '/erp/30/Job',
+        endpoint: MobileConfig.resolveEndpoint('/30/Job'),
         modelName: 'Job',
         idField: 'jobId',
         columns: [
@@ -153,7 +153,7 @@ const ORG_SERVICES = {
         ]
     },
     'job-families': {
-        endpoint: '/erp/30/JobFamily',
+        endpoint: MobileConfig.resolveEndpoint('/30/JobFamily'),
         modelName: 'JobFamily',
         idField: 'jobFamilyId',
         columns: [
@@ -172,7 +172,7 @@ const ORG_SERVICES = {
         ]
     },
     documents: {
-        endpoint: '/erp/30/EmpDoc',
+        endpoint: MobileConfig.resolveEndpoint('/30/EmpDoc'),
         modelName: 'EmployeeDocument',
         idField: 'documentId',
         columns: [
@@ -198,7 +198,7 @@ const ORG_SERVICES = {
         ]
     },
     compliance: {
-        endpoint: '/erp/30/CompRec',
+        endpoint: MobileConfig.resolveEndpoint('/30/CompRec'),
         modelName: 'ComplianceRecord',
         idField: 'recordId',
         columns: [

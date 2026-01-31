@@ -24,7 +24,7 @@ limitations under the License.
     async function fetchAllRoles() {
         try {
             var query = encodeURIComponent(JSON.stringify({ text: 'select * from L8Role' }));
-            var response = await fetch('/erp/74/roles?body=' + query, {
+            var response = await fetch(ERPConfig.resolveEndpoint('/74/roles') + '?body=' + query, {
                 method: 'GET',
                 headers: typeof getAuthHeaders === 'function' ? getAuthHeaders() : {}
             });

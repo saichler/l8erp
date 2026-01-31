@@ -42,7 +42,7 @@ let currentLearningService = 'courses';
 
 const LEARNING_SERVICES = {
     courses: {
-        endpoint: '/erp/30/Course',
+        endpoint: MobileConfig.resolveEndpoint('/30/Course'),
         modelName: 'Course',
         idField: 'courseId',
         columns: [
@@ -80,7 +80,7 @@ const LEARNING_SERVICES = {
         ]
     },
     sessions: {
-        endpoint: '/erp/30/CrsSess',
+        endpoint: MobileConfig.resolveEndpoint('/30/CrsSess'),
         modelName: 'CourseSession',
         idField: 'sessionId',
         columns: [
@@ -108,7 +108,7 @@ const LEARNING_SERVICES = {
         ]
     },
     enrollments: {
-        endpoint: '/erp/30/CrsEnrol',
+        endpoint: MobileConfig.resolveEndpoint('/30/CrsEnrol'),
         modelName: 'CourseEnrollment',
         idField: 'enrollmentId',
         columns: [
@@ -142,7 +142,7 @@ const LEARNING_SERVICES = {
         ]
     },
     certifications: {
-        endpoint: '/erp/30/Cert',
+        endpoint: MobileConfig.resolveEndpoint('/30/Cert'),
         modelName: 'Certification',
         idField: 'certificationId',
         columns: [
@@ -170,7 +170,7 @@ const LEARNING_SERVICES = {
         ]
     },
     'emp-certifications': {
-        endpoint: '/erp/30/EmpCert',
+        endpoint: MobileConfig.resolveEndpoint('/30/EmpCert'),
         modelName: 'EmployeeCertification',
         idField: 'employeeCertificationId',
         columns: [
@@ -200,7 +200,7 @@ const LEARNING_SERVICES = {
         ]
     },
     skills: {
-        endpoint: '/erp/30/Skill',
+        endpoint: MobileConfig.resolveEndpoint('/30/Skill'),
         modelName: 'Skill',
         idField: 'skillId',
         columns: [
@@ -222,7 +222,7 @@ const LEARNING_SERVICES = {
         ]
     },
     'emp-skills': {
-        endpoint: '/erp/30/EmpSkill',
+        endpoint: MobileConfig.resolveEndpoint('/30/EmpSkill'),
         modelName: 'EmployeeSkill',
         idField: 'employeeSkillId',
         columns: [
@@ -251,7 +251,7 @@ const LEARNING_SERVICES = {
         ]
     },
     'training-records': {
-        endpoint: '/erp/30/TrnRec',
+        endpoint: MobileConfig.resolveEndpoint('/30/TrnRec'),
         modelName: 'TrainingRecord',
         idField: 'recordId',
         columns: [

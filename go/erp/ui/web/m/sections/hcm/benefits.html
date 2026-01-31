@@ -40,7 +40,7 @@ let currentBenefitsService = 'plans';
 
 const BENEFITS_SERVICES = {
     plans: {
-        endpoint: '/erp/30/BenPlan',
+        endpoint: MobileConfig.resolveEndpoint('/30/BenPlan'),
         modelName: 'BenefitPlan',
         idField: 'planId',
         columns: [
@@ -68,7 +68,7 @@ const BENEFITS_SERVICES = {
         ]
     },
     enrollments: {
-        endpoint: '/erp/30/BenEnroll',
+        endpoint: MobileConfig.resolveEndpoint('/30/BenEnroll'),
         modelName: 'BenefitEnrollment',
         idField: 'enrollmentId',
         columns: [
@@ -96,7 +96,7 @@ const BENEFITS_SERVICES = {
         ]
     },
     carriers: {
-        endpoint: '/erp/30/Carrier',
+        endpoint: MobileConfig.resolveEndpoint('/30/Carrier'),
         modelName: 'Carrier',
         idField: 'carrierId',
         columns: [
@@ -124,7 +124,7 @@ const BENEFITS_SERVICES = {
         ]
     },
     dependents: {
-        endpoint: '/erp/30/Dependent',
+        endpoint: MobileConfig.resolveEndpoint('/30/Dependent'),
         modelName: 'Dependent',
         idField: 'dependentId',
         columns: [
@@ -152,7 +152,7 @@ const BENEFITS_SERVICES = {
         ]
     },
     'life-events': {
-        endpoint: '/erp/30/LifeEvent',
+        endpoint: MobileConfig.resolveEndpoint('/30/LifeEvent'),
         modelName: 'LifeEvent',
         idField: 'lifeEventId',
         columns: [
@@ -178,7 +178,7 @@ const BENEFITS_SERVICES = {
         ]
     },
     'cobra-events': {
-        endpoint: '/erp/30/COBRAEvt',
+        endpoint: MobileConfig.resolveEndpoint('/30/COBRAEvt'),
         modelName: 'COBRAEvent',
         idField: 'cobraEventId',
         columns: [

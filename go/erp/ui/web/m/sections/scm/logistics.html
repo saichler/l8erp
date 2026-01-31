@@ -42,7 +42,7 @@ let currentLogisticsService = 'carriers';
 
 const LOGISTICS_SERVICES = {
     'carriers': {
-        endpoint: '/erp/50/ScmCarrier',
+        endpoint: MobileConfig.resolveEndpoint('/50/ScmCarrier'),
         modelName: 'ScmCarrier',
         idField: 'carrierId',
         columns: [
@@ -63,7 +63,7 @@ const LOGISTICS_SERVICES = {
         ]
     },
     'freight-rates': {
-        endpoint: '/erp/50/FreightRt',
+        endpoint: MobileConfig.resolveEndpoint('/50/FreightRt'),
         modelName: 'ScmFreightRate',
         idField: 'rateId',
         columns: [
@@ -86,7 +86,7 @@ const LOGISTICS_SERVICES = {
         ]
     },
     'shipments': {
-        endpoint: '/erp/50/Shipment',
+        endpoint: MobileConfig.resolveEndpoint('/50/Shipment'),
         modelName: 'ScmShipment',
         idField: 'shipmentId',
         columns: [
@@ -110,7 +110,7 @@ const LOGISTICS_SERVICES = {
         ]
     },
     'routes': {
-        endpoint: '/erp/50/Route',
+        endpoint: MobileConfig.resolveEndpoint('/50/Route'),
         modelName: 'ScmRoute',
         idField: 'routeId',
         columns: [
@@ -132,7 +132,7 @@ const LOGISTICS_SERVICES = {
         ]
     },
     'load-plans': {
-        endpoint: '/erp/50/LoadPlan',
+        endpoint: MobileConfig.resolveEndpoint('/50/LoadPlan'),
         modelName: 'ScmLoadPlan',
         idField: 'loadPlanId',
         columns: [
@@ -155,7 +155,7 @@ const LOGISTICS_SERVICES = {
         ]
     },
     'delivery-proofs': {
-        endpoint: '/erp/50/DlvryProof',
+        endpoint: MobileConfig.resolveEndpoint('/50/DlvryProof'),
         modelName: 'ScmDeliveryProof',
         idField: 'proofId',
         columns: [
@@ -175,7 +175,7 @@ const LOGISTICS_SERVICES = {
         ]
     },
     'freight-audits': {
-        endpoint: '/erp/50/FrtAudit',
+        endpoint: MobileConfig.resolveEndpoint('/50/FrtAudit'),
         modelName: 'ScmFreightAudit',
         idField: 'auditId',
         columns: [
@@ -197,7 +197,7 @@ const LOGISTICS_SERVICES = {
         ]
     },
     'return-authorizations': {
-        endpoint: '/erp/50/ReturnAuth',
+        endpoint: MobileConfig.resolveEndpoint('/50/ReturnAuth'),
         modelName: 'ScmReturnAuthorization',
         idField: 'rmaId',
         columns: [

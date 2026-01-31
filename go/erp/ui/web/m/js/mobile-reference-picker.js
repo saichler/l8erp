@@ -290,7 +290,7 @@ limitations under the License.
             if (!services) return null;
             for (const subModuleKey in services) {
                 for (const service of services[subModuleKey]) {
-                    if (service.model === modelName) return service.endpoint;
+                    if (service.model === modelName) return MobileConfig.resolveEndpoint(service.endpoint);
                 }
             }
             return null;

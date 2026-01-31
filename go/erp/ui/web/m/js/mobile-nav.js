@@ -432,7 +432,7 @@ limitations under the License.
 
             // Create the table
             activeTable = new MobileEditTable('service-table-container', {
-                endpoint: serviceConfig.endpoint,
+                endpoint: MobileConfig.resolveEndpoint(serviceConfig.endpoint),
                 modelName: serviceConfig.model,
                 columns: columns,
                 rowsPerPage: 15,
@@ -500,7 +500,7 @@ limitations under the License.
         async _fetchRecord(serviceConfig, id) {
             const query = `select * from ${serviceConfig.model} where ${serviceConfig.idField}=${id}`;
             try {
-                const response = await MobileAuth.get(`${serviceConfig.endpoint}?body=${encodeURIComponent(JSON.stringify({ text: query }))}`);
+                const response = await MobileAuth.get(`${MobileConfig.resolveEndpoint(serviceConfig.endpoint)}?body=${encodeURIComponent(JSON.stringify({ text: query }))}`);
                 return (response && response.list && response.list.length > 0) ? response.list[0] : null;
             } catch (error) {
                 console.error('Failed to fetch record:', error);
@@ -561,10 +561,10 @@ limitations under the License.
 
                     try {
                         if (isEdit) {
-                            await MobileAuth.put(serviceConfig.endpoint, data);
+                            await MobileAuth.put(MobileConfig.resolveEndpoint(serviceConfig.endpoint), data);
                             MobileUtils.showSuccess(`${serviceConfig.label.replace(/s$/, '')} updated`);
                         } else {
-                            await MobileAuth.post(serviceConfig.endpoint, data);
+                            await MobileAuth.post(MobileConfig.resolveEndpoint(serviceConfig.endpoint), data);
                             MobileUtils.showSuccess(`${serviceConfig.label.replace(/s$/, '')} created`);
                         }
 
@@ -589,7 +589,7 @@ limitations under the License.
                 try {
                     // Use correct primary key in query param (matches desktop)
                     const primaryKey = serviceConfig.idField;
-                    await MobileAuth.delete(`${serviceConfig.endpoint}?${primaryKey}=${id}`);
+                    await MobileAuth.delete(`${MobileConfig.resolveEndpoint(serviceConfig.endpoint)}?${primaryKey}=${id}`);
                     MobileUtils.showSuccess(`${serviceConfig.label.replace(/s$/, '')} deleted`);
                     if (activeTable) activeTable.refresh();
                 } catch (error) {

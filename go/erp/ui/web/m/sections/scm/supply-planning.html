@@ -40,7 +40,7 @@ let currentScmSupplyPlanningService = 'material-requirements';
 
 const SUPPLY_PLANNING_SERVICES = {
     'material-requirements': {
-        endpoint: '/erp/50/MatReq',
+        endpoint: MobileConfig.resolveEndpoint('/50/MatReq'),
         modelName: 'ScmMaterialRequirement',
         idField: 'requirementId',
         columns: [
@@ -63,7 +63,7 @@ const SUPPLY_PLANNING_SERVICES = {
         ]
     },
     'distribution-requirements': {
-        endpoint: '/erp/50/DistReq',
+        endpoint: MobileConfig.resolveEndpoint('/50/DistReq'),
         modelName: 'ScmDistributionRequirement',
         idField: 'requirementId',
         columns: [
@@ -86,7 +86,7 @@ const SUPPLY_PLANNING_SERVICES = {
         ]
     },
     'supply-plans': {
-        endpoint: '/erp/50/SupplyPlan',
+        endpoint: MobileConfig.resolveEndpoint('/50/SupplyPlan'),
         modelName: 'ScmSupplyPlan',
         idField: 'planId',
         columns: [
@@ -108,7 +108,7 @@ const SUPPLY_PLANNING_SERVICES = {
         ]
     },
     'supplier-collaborations': {
-        endpoint: '/erp/50/SupCollab',
+        endpoint: MobileConfig.resolveEndpoint('/50/SupCollab'),
         modelName: 'ScmSupplierCollaboration',
         idField: 'collaborationId',
         columns: [
@@ -130,7 +130,7 @@ const SUPPLY_PLANNING_SERVICES = {
         ]
     },
     'safety-stocks': {
-        endpoint: '/erp/50/SafeStock',
+        endpoint: MobileConfig.resolveEndpoint('/50/SafeStock'),
         modelName: 'ScmSafetyStock',
         idField: 'safetyStockId',
         columns: [
@@ -152,7 +152,7 @@ const SUPPLY_PLANNING_SERVICES = {
         ]
     },
     'lead-times': {
-        endpoint: '/erp/50/LeadTime',
+        endpoint: MobileConfig.resolveEndpoint('/50/LeadTime'),
         modelName: 'ScmLeadTime',
         idField: 'leadTimeId',
         columns: [
