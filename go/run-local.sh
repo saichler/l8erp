@@ -3,15 +3,9 @@ mkdir -p demo
 cd erp/vnet/
 echo "Building vnet"
 go build -o ../../demo/vnet_demo
-cd ../hcm
-echo "Building HCM"
-go build -o ../../demo/hcm_demo
-echo "Building FIN"
-cd ../fin
-go build -o ../../demo/fin_demo
-cd ../scm
-echo "Building SCM"
-go build -o ../../demo/scm_demo
+cd ../main
+echo "Building ERP"
+go build -o ../../demo/erp_demo
 cd ../ui
 echo "Building ui"
 go build -o ../../demo/ui_demo
@@ -19,9 +13,7 @@ cp -r ./web ../../demo/.
 cd ../../demo
 ./vnet_demo &
 sleep 1
-./hcm_demo &
-./fin_demo &
-./scm_demo &
+./erp_demo &
 ./ui_demo
 
 pkill demo

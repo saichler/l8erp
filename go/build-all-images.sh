@@ -1,8 +1,6 @@
 cd ./erp/vnet/
 ./build.sh
-cd ../hcm
-./build.sh
-cd ../fin
+cd ../main
 ./build.sh
 cd ../ui
 ./build.sh

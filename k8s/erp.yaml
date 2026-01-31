@@ -1,33 +1,33 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: erp-fin
+  name: erp
   labels:
-    name: erp-fin
+    name: erp
 
 ---
 
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  namespace: erp-fin
-  name: erp-fin
+  namespace: erp
+  name: erp
   labels:
-    app: erp-fin
+    app: erp
 spec:
-  serviceName: erp-fin
+  serviceName: erp
   replicas: 1
   selector:
     matchLabels:
-      app: erp-fin
+      app: erp
   template:
     metadata:
       labels:
-        app: erp-fin
+        app: erp
     spec:
       containers:
-        - name: erp-fin
-          image: saichler/erp-fin:latest
+        - name: erp
+          image: saichler/erp:latest
           imagePullPolicy: Always
           env:
             - name: NODE_IP
