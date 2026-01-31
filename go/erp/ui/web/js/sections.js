@@ -47,6 +47,11 @@ const sectionInitializers = {
         if (typeof initializeSCM === 'function') {
             initializeSCM();
         }
+    },
+    system: () => {
+        if (typeof initializeSYS === 'function') {
+            initializeSYS();
+        }
     }
 };
 

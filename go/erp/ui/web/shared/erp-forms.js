@@ -556,7 +556,7 @@ limitations under the License.
      */
     function getEndpointForModel(modelName) {
         // Search all registered module namespaces
-        const namespaces = ['HCM', 'FIN', 'SCM'];
+        const namespaces = ['HCM', 'FIN', 'SCM', 'SYS'];
         for (const ns of namespaces) {
             const mod = window[ns];
             if (!mod || !mod.modules) continue;
