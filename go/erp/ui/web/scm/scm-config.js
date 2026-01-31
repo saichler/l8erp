@@ -69,7 +69,7 @@ limitations under the License.
             label: 'Logistics',
             icon: '🚚',
             services: [
-                { key: 'carriers', label: 'Carriers', icon: '🚚', endpoint: '/erp/50/Carrier', model: 'ScmCarrier' },
+                { key: 'carriers', label: 'Carriers', icon: '🚚', endpoint: '/erp/50/ScmCarrier', model: 'ScmCarrier' },
                 { key: 'freight-rates', label: 'Freight Rates', icon: '💲', endpoint: '/erp/50/FreightRt', model: 'ScmFreightRate' },
                 { key: 'shipments', label: 'Shipments', icon: '📦', endpoint: '/erp/50/Shipment', model: 'ScmShipment' },
                 { key: 'routes', label: 'Routes', icon: '🗺️', endpoint: '/erp/50/Route', model: 'ScmRoute' },

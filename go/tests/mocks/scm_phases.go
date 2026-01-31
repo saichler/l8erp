@@ -47,7 +47,7 @@ func generateScmPhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate SCM Carriers
 	fmt.Printf("  Creating SCM Carriers...")
 	carriers := generateSCMCarriers()
-	if err := client.post("/erp/50/Carrier", &scm.ScmCarrierList{List: carriers}); err != nil {
+	if err := client.post("/erp/50/ScmCarrier", &scm.ScmCarrierList{List: carriers}); err != nil {
 		return fmt.Errorf("scm carriers: %w", err)
 	}
 	for _, c := range carriers {

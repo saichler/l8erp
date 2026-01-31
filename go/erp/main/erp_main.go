@@ -139,6 +139,7 @@ import (
 	"github.com/saichler/l8erp/go/erp/hcm/benefitenrollments"
 	"github.com/saichler/l8erp/go/erp/hcm/benefitplans"
 	"github.com/saichler/l8erp/go/erp/hcm/carriers"
+	scmcarriers "github.com/saichler/l8erp/go/erp/scm/carriers"
 	"github.com/saichler/l8erp/go/erp/hcm/cobraevents"
 	"github.com/saichler/l8erp/go/erp/hcm/dependents"
 	"github.com/saichler/l8erp/go/erp/hcm/lifeevents"
@@ -236,7 +237,7 @@ func activateSCMServices(nic ifs.IVNic) {
 	dockschedules.Activate(common.DB_CREDS, common.DB_NAME, nic)
 
 	// Logistics and Transportation
-	carriers.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	scmcarriers.Activate(common.DB_CREDS, common.DB_NAME, nic)
 	freightrates.Activate(common.DB_CREDS, common.DB_NAME, nic)
 	shipments.Activate(common.DB_CREDS, common.DB_NAME, nic)
 	routes.Activate(common.DB_CREDS, common.DB_NAME, nic)

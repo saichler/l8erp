@@ -28,7 +28,7 @@ import (
 )
 
 const (
-	ServiceName = "Carrier"
+	ServiceName = "ScmCarrier"
 	ServiceArea = byte(50)
 )
 

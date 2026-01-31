@@ -249,7 +249,7 @@ limitations under the License.
                     { key: 'dock-schedules', label: 'Dock Schedules', icon: 'warehouse', endpoint: '/erp/50/DockSched', model: 'ScmDockSchedule', idField: 'scheduleId' }
                 ],
                 'logistics': [
-                    { key: 'carriers', label: 'Carriers', icon: 'logistics', endpoint: '/erp/50/Carrier', model: 'ScmCarrier', idField: 'carrierId' },
+                    { key: 'carriers', label: 'Carriers', icon: 'logistics', endpoint: '/erp/50/ScmCarrier', model: 'ScmCarrier', idField: 'carrierId' },
                     { key: 'freight-rates', label: 'Freight Rates', icon: 'logistics', endpoint: '/erp/50/FreightRt', model: 'ScmFreightRate', idField: 'rateId' },
                     { key: 'shipments', label: 'Shipments', icon: 'logistics', endpoint: '/erp/50/Shipment', model: 'ScmShipment', idField: 'shipmentId' },
                     { key: 'routes', label: 'Routes', icon: 'logistics', endpoint: '/erp/50/Route', model: 'ScmRoute', idField: 'routeId' },
