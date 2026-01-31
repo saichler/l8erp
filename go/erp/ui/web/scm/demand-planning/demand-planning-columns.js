@@ -18,18 +18,18 @@ limitations under the License.
 (function() {
     'use strict';
 
-    // Ensure DemandPlanning namespace exists
-    window.DemandPlanning = window.DemandPlanning || {};
+    // Ensure ScmDemandPlanning namespace exists
+    window.ScmDemandPlanning = window.ScmDemandPlanning || {};
 
     const { renderDate, renderMoney } = ERPRenderers;
-    const render = DemandPlanning.render;
+    const render = ScmDemandPlanning.render;
 
     // ============================================================================
     // COLUMN CONFIGURATIONS
     // ============================================================================
 
-    DemandPlanning.columns = {
-        DemandForecast: [
+    ScmDemandPlanning.columns = {
+        ScmDemandForecast: [
             { key: 'forecastId', label: 'ID', sortKey: 'forecastId', filterKey: 'forecastId' },
             { key: 'forecastName', label: 'Forecast', sortKey: 'forecastName', filterKey: 'forecastName' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -48,7 +48,7 @@ limitations under the License.
             }
         ],
 
-        ForecastModel: [
+        ScmForecastModel: [
             { key: 'modelId', label: 'ID', sortKey: 'modelId', filterKey: 'modelId' },
             { key: 'modelName', label: 'Model', sortKey: 'modelName', filterKey: 'modelName' },
             {
@@ -61,7 +61,7 @@ limitations under the License.
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' }
         ],
 
-        DemandPlan: [
+        ScmDemandPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'planName', label: 'Plan', sortKey: 'planName', filterKey: 'planName' },
             {
@@ -84,7 +84,7 @@ limitations under the License.
             }
         ],
 
-        PromotionalPlan: [
+        ScmPromotionalPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'planName', label: 'Plan', sortKey: 'planName', filterKey: 'planName' },
             { key: 'promotionType', label: 'Type', sortKey: 'promotionType', filterKey: 'promotionType' },
@@ -103,7 +103,7 @@ limitations under the License.
             { key: 'expectedUplift', label: 'Uplift %', sortKey: 'expectedUplift' }
         ],
 
-        NewProductPlan: [
+        ScmNewProductPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'productName', label: 'Product', sortKey: 'productName', filterKey: 'productName' },
             {
@@ -121,7 +121,7 @@ limitations under the License.
             }
         ],
 
-        ForecastAccuracy: [
+        ScmForecastAccuracy: [
             { key: 'accuracyId', label: 'ID', sortKey: 'accuracyId', filterKey: 'accuracyId' },
             { key: 'forecastId', label: 'Forecast', sortKey: 'forecastId', filterKey: 'forecastId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },

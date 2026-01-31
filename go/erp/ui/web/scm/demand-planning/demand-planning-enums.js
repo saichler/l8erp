@@ -18,15 +18,15 @@ limitations under the License.
 (function() {
     'use strict';
 
-    // Create DemandPlanning namespace
-    window.DemandPlanning = window.DemandPlanning || {};
-    DemandPlanning.enums = {};
+    // Create ScmDemandPlanning namespace
+    window.ScmDemandPlanning = window.ScmDemandPlanning || {};
+    ScmDemandPlanning.enums = {};
 
     // ============================================================================
     // FORECAST METHOD
     // ============================================================================
 
-    DemandPlanning.enums.FORECAST_METHOD = {
+    ScmDemandPlanning.enums.FORECAST_METHOD = {
         0: 'Unspecified',
         1: 'Moving Average',
         2: 'Exponential Smoothing',
@@ -39,7 +39,7 @@ limitations under the License.
     // TASK STATUS
     // ============================================================================
 
-    DemandPlanning.enums.TASK_STATUS = {
+    ScmDemandPlanning.enums.TASK_STATUS = {
         0: 'Unspecified',
         1: 'Pending',
         2: 'In Progress',
@@ -47,7 +47,7 @@ limitations under the License.
         4: 'Cancelled'
     };
 
-    DemandPlanning.enums.TASK_STATUS_CLASSES = {
+    ScmDemandPlanning.enums.TASK_STATUS_CLASSES = {
         1: 'erp-status-pending',
         2: 'erp-status-active',
         3: 'erp-status-active',
@@ -59,17 +59,17 @@ limitations under the License.
     // ============================================================================
 
     // Create render functions using shared utilities
-    DemandPlanning.render = {};
+    ScmDemandPlanning.render = {};
 
-    DemandPlanning.render.forecastMethod = (type) => ERPRenderers.renderEnum(type, DemandPlanning.enums.FORECAST_METHOD);
+    ScmDemandPlanning.render.forecastMethod = (type) => ERPRenderers.renderEnum(type, ScmDemandPlanning.enums.FORECAST_METHOD);
 
-    DemandPlanning.render.taskStatus = ERPRenderers.createStatusRenderer(
-        DemandPlanning.enums.TASK_STATUS,
-        DemandPlanning.enums.TASK_STATUS_CLASSES
+    ScmDemandPlanning.render.taskStatus = ERPRenderers.createStatusRenderer(
+        ScmDemandPlanning.enums.TASK_STATUS,
+        ScmDemandPlanning.enums.TASK_STATUS_CLASSES
     );
 
-    DemandPlanning.render.boolean = ERPRenderers.renderBoolean;
-    DemandPlanning.render.date = ERPRenderers.renderDate;
-    DemandPlanning.render.money = ERPRenderers.renderMoney;
+    ScmDemandPlanning.render.boolean = ERPRenderers.renderBoolean;
+    ScmDemandPlanning.render.date = ERPRenderers.renderDate;
+    ScmDemandPlanning.render.money = ERPRenderers.renderMoney;
 
 })();

@@ -43,7 +43,7 @@ let currentInventoryService = 'items';
 const INVENTORY_SERVICES = {
     'items': {
         endpoint: '/erp/50/Item',
-        modelName: 'Item',
+        modelName: 'ScmItem',
         idField: 'itemId',
         columns: [
             { key: 'itemId', label: 'ID', primary: true },
@@ -59,7 +59,7 @@ const INVENTORY_SERVICES = {
             { key: 'name', label: 'Name', type: 'text', required: true },
             { key: 'description', label: 'Description', type: 'textarea' },
             { key: 'itemType', label: 'Item Type', type: 'select', options: { 0: 'Unspecified', 1: 'Raw Material', 2: 'Finished Good', 3: 'Semi-Finished', 4: 'Consumable', 5: 'Service' } },
-            { key: 'categoryId', label: 'Category', type: 'reference', lookupModel: 'ItemCategory' },
+            { key: 'categoryId', label: 'Category', type: 'reference', lookupModel: 'ScmItemCategory' },
             { key: 'unitOfMeasure', label: 'Unit of Measure', type: 'text' },
             { key: 'unitCost', label: 'Unit Cost', type: 'currency' },
             { key: 'isActive', label: 'Active', type: 'checkbox' }
@@ -67,7 +67,7 @@ const INVENTORY_SERVICES = {
     },
     'item-categories': {
         endpoint: '/erp/50/ItemCat',
-        modelName: 'ItemCategory',
+        modelName: 'ScmItemCategory',
         idField: 'categoryId',
         columns: [
             { key: 'categoryId', label: 'ID', primary: true },
@@ -78,14 +78,14 @@ const INVENTORY_SERVICES = {
         addText: 'Add Category',
         formFields: [
             { key: 'categoryName', label: 'Category Name', type: 'text', required: true },
-            { key: 'parentCategoryId', label: 'Parent Category', type: 'reference', lookupModel: 'ItemCategory' },
+            { key: 'parentCategoryId', label: 'Parent Category', type: 'reference', lookupModel: 'ScmItemCategory' },
             { key: 'description', label: 'Description', type: 'textarea' },
             { key: 'isActive', label: 'Active', type: 'checkbox' }
         ]
     },
     'stock-movements': {
         endpoint: '/erp/50/StockMove',
-        modelName: 'StockMovement',
+        modelName: 'ScmStockMovement',
         idField: 'movementId',
         columns: [
             { key: 'movementId', label: 'ID', primary: true },
@@ -97,18 +97,18 @@ const INVENTORY_SERVICES = {
         ],
         addText: 'Add Movement',
         formFields: [
-            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
             { key: 'movementType', label: 'Movement Type', type: 'select', options: { 0: 'Unspecified', 1: 'Receipt', 2: 'Issue', 3: 'Transfer', 4: 'Adjustment', 5: 'Return' } },
             { key: 'quantity', label: 'Quantity', type: 'number', required: true },
             { key: 'movementDate', label: 'Movement Date', type: 'date', required: true },
-            { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse' },
+            { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
             { key: 'reference', label: 'Reference', type: 'text' },
             { key: 'notes', label: 'Notes', type: 'textarea' }
         ]
     },
     'lot-numbers': {
         endpoint: '/erp/50/LotNumber',
-        modelName: 'LotNumber',
+        modelName: 'ScmLotNumber',
         idField: 'lotId',
         columns: [
             { key: 'lotId', label: 'ID', primary: true },
@@ -121,7 +121,7 @@ const INVENTORY_SERVICES = {
         addText: 'Add Lot',
         formFields: [
             { key: 'lotNumber', label: 'Lot Number', type: 'text', required: true },
-            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
             { key: 'manufacturingDate', label: 'Manufacturing Date', type: 'date' },
             { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
             { key: 'quantity', label: 'Quantity', type: 'number' },
@@ -130,7 +130,7 @@ const INVENTORY_SERVICES = {
     },
     'serial-numbers': {
         endpoint: '/erp/50/SerialNum',
-        modelName: 'SerialNumber',
+        modelName: 'ScmSerialNumber',
         idField: 'serialId',
         columns: [
             { key: 'serialId', label: 'ID', primary: true },
@@ -141,15 +141,15 @@ const INVENTORY_SERVICES = {
         addText: 'Add Serial',
         formFields: [
             { key: 'serialNumber', label: 'Serial Number', type: 'text', required: true },
-            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
-            { key: 'lotId', label: 'Lot', type: 'reference', lookupModel: 'LotNumber' },
-            { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse' },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+            { key: 'lotId', label: 'Lot', type: 'reference', lookupModel: 'ScmLotNumber' },
+            { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
             { key: 'isAvailable', label: 'Available', type: 'checkbox' }
         ]
     },
     'cycle-counts': {
         endpoint: '/erp/50/CycleCount',
-        modelName: 'CycleCount',
+        modelName: 'ScmCycleCount',
         idField: 'cycleCountId',
         columns: [
             { key: 'cycleCountId', label: 'ID', primary: true },
@@ -161,7 +161,7 @@ const INVENTORY_SERVICES = {
         ],
         addText: 'Add Cycle Count',
         formFields: [
-            { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
+            { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
             { key: 'countDate', label: 'Count Date', type: 'date', required: true },
             { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
             { key: 'itemsCounted', label: 'Items Counted', type: 'number' },
@@ -171,7 +171,7 @@ const INVENTORY_SERVICES = {
     },
     'reorder-points': {
         endpoint: '/erp/50/ReorderPt',
-        modelName: 'ReorderPoint',
+        modelName: 'ScmReorderPoint',
         idField: 'reorderPointId',
         columns: [
             { key: 'reorderPointId', label: 'ID', primary: true },
@@ -183,8 +183,8 @@ const INVENTORY_SERVICES = {
         ],
         addText: 'Add Reorder Point',
         formFields: [
-            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
-            { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse' },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+            { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
             { key: 'minimumQuantity', label: 'Minimum Quantity', type: 'number', required: true },
             { key: 'reorderQuantity', label: 'Reorder Quantity', type: 'number', required: true },
             { key: 'maximumQuantity', label: 'Maximum Quantity', type: 'number' },
@@ -193,7 +193,7 @@ const INVENTORY_SERVICES = {
     },
     'inventory-valuations': {
         endpoint: '/erp/50/InvValue',
-        modelName: 'InventoryValuation',
+        modelName: 'ScmInventoryValuation',
         idField: 'valuationId',
         columns: [
             { key: 'valuationId', label: 'ID', primary: true },
@@ -204,7 +204,7 @@ const INVENTORY_SERVICES = {
         ],
         addText: 'Add Valuation',
         formFields: [
-            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
             { key: 'valuationMethod', label: 'Valuation Method', type: 'select', options: { 0: 'Unspecified', 1: 'FIFO', 2: 'LIFO', 3: 'Weighted Average', 4: 'Standard Cost' } },
             { key: 'valuationDate', label: 'Valuation Date', type: 'date', required: true },
             { key: 'quantityOnHand', label: 'Quantity on Hand', type: 'number' },

@@ -29,7 +29,7 @@ limitations under the License.
     // ============================================================================
 
     Inventory.columns = {
-        Item: [
+        ScmItem: [
             { key: 'itemId', label: 'ID', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'itemNumber', label: 'Item #', sortKey: 'itemNumber', filterKey: 'itemNumber' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
@@ -54,7 +54,7 @@ limitations under the License.
             }
         ],
 
-        ItemCategory: [
+        ScmItemCategory: [
             { key: 'categoryId', label: 'ID', sortKey: 'categoryId', filterKey: 'categoryId' },
             { key: 'categoryName', label: 'Name', sortKey: 'categoryName', filterKey: 'categoryName' },
             { key: 'parentCategoryId', label: 'Parent', sortKey: 'parentCategoryId', filterKey: 'parentCategoryId' },
@@ -67,7 +67,7 @@ limitations under the License.
             }
         ],
 
-        StockMovement: [
+        ScmStockMovement: [
             { key: 'movementId', label: 'ID', sortKey: 'movementId', filterKey: 'movementId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             {
@@ -86,7 +86,7 @@ limitations under the License.
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' }
         ],
 
-        LotNumber: [
+        ScmLotNumber: [
             { key: 'lotId', label: 'ID', sortKey: 'lotId', filterKey: 'lotId' },
             { key: 'lotNumber', label: 'Lot #', sortKey: 'lotNumber', filterKey: 'lotNumber' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -105,7 +105,7 @@ limitations under the License.
             { key: 'quantity', label: 'Qty', sortKey: 'quantity' }
         ],
 
-        SerialNumber: [
+        ScmSerialNumber: [
             { key: 'serialId', label: 'ID', sortKey: 'serialId', filterKey: 'serialId' },
             { key: 'serialNumber', label: 'Serial #', sortKey: 'serialNumber', filterKey: 'serialNumber' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -118,7 +118,7 @@ limitations under the License.
             }
         ],
 
-        CycleCount: [
+        ScmCycleCount: [
             { key: 'cycleCountId', label: 'ID', sortKey: 'cycleCountId', filterKey: 'cycleCountId' },
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
             {
@@ -137,7 +137,7 @@ limitations under the License.
             { key: 'discrepancies', label: 'Discrepancies', sortKey: 'discrepancies' }
         ],
 
-        ReorderPoint: [
+        ScmReorderPoint: [
             { key: 'reorderPointId', label: 'ID', sortKey: 'reorderPointId', filterKey: 'reorderPointId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
@@ -151,7 +151,7 @@ limitations under the License.
             }
         ],
 
-        InventoryValuation: [
+        ScmInventoryValuation: [
             { key: 'valuationId', label: 'ID', sortKey: 'valuationId', filterKey: 'valuationId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             {

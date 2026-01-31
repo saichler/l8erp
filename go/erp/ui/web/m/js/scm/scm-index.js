@@ -26,8 +26,8 @@ limitations under the License.
         MobileInventory,
         MobileWarehouse,
         MobileLogistics,
-        MobileDemandPlanning,
-        MobileSupplyPlanning
+        MobileScmDemandPlanning,
+        MobileScmSupplyPlanning
     ];
 
     /**
@@ -44,7 +44,7 @@ limitations under the License.
 
     /**
      * Get form definition for a model
-     * @param {string} modelName - The model name (e.g., 'Item', 'PurchaseOrder')
+     * @param {string} modelName - The model name (e.g., 'ScmItem', 'ScmPurchaseOrder')
      * @returns {Object|null} Form definition with sections and fields
      */
     function getFormDef(modelName) {
@@ -141,10 +141,10 @@ limitations under the License.
 
         if (mod === MobileProcurement) return 'Procurement';
         if (mod === MobileInventory) return 'Inventory';
-        if (mod === MobileWarehouse) return 'Warehouse';
+        if (mod === MobileWarehouse) return 'ScmWarehouse';
         if (mod === MobileLogistics) return 'Logistics';
-        if (mod === MobileDemandPlanning) return 'Demand Planning';
-        if (mod === MobileSupplyPlanning) return 'Supply Planning';
+        if (mod === MobileScmDemandPlanning) return 'Demand Planning';
+        if (mod === MobileScmSupplyPlanning) return 'Supply Planning';
 
         return null;
     }
@@ -166,8 +166,8 @@ limitations under the License.
             Inventory: MobileInventory,
             Warehouse: MobileWarehouse,
             Logistics: MobileLogistics,
-            DemandPlanning: MobileDemandPlanning,
-            SupplyPlanning: MobileSupplyPlanning
+            ScmDemandPlanning: MobileScmDemandPlanning,
+            ScmSupplyPlanning: MobileScmSupplyPlanning
         }
     };
 

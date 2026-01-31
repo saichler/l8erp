@@ -43,7 +43,7 @@ let currentLogisticsService = 'carriers';
 const LOGISTICS_SERVICES = {
     'carriers': {
         endpoint: '/erp/50/Carrier',
-        modelName: 'Carrier',
+        modelName: 'ScmCarrier',
         idField: 'carrierId',
         columns: [
             { key: 'carrierId', label: 'ID', primary: true },
@@ -64,7 +64,7 @@ const LOGISTICS_SERVICES = {
     },
     'freight-rates': {
         endpoint: '/erp/50/FreightRt',
-        modelName: 'FreightRate',
+        modelName: 'ScmFreightRate',
         idField: 'rateId',
         columns: [
             { key: 'rateId', label: 'ID', primary: true },
@@ -76,7 +76,7 @@ const LOGISTICS_SERVICES = {
         ],
         addText: 'Add Freight Rate',
         formFields: [
-            { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier', required: true },
+            { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier', required: true },
             { key: 'origin', label: 'Origin', type: 'text', required: true },
             { key: 'destination', label: 'Destination', type: 'text', required: true },
             { key: 'ratePerUnit', label: 'Rate per Unit', type: 'currency', required: true },
@@ -87,7 +87,7 @@ const LOGISTICS_SERVICES = {
     },
     'shipments': {
         endpoint: '/erp/50/Shipment',
-        modelName: 'Shipment',
+        modelName: 'ScmShipment',
         idField: 'shipmentId',
         columns: [
             { key: 'shipmentId', label: 'ID', primary: true },
@@ -100,7 +100,7 @@ const LOGISTICS_SERVICES = {
         addText: 'Add Shipment',
         formFields: [
             { key: 'shipmentNumber', label: 'Shipment Number', type: 'text', required: true },
-            { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier', required: true },
+            { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier', required: true },
             { key: 'origin', label: 'Origin', type: 'text' },
             { key: 'destination', label: 'Destination', type: 'text' },
             { key: 'shipDate', label: 'Ship Date', type: 'date', required: true },
@@ -111,7 +111,7 @@ const LOGISTICS_SERVICES = {
     },
     'routes': {
         endpoint: '/erp/50/Route',
-        modelName: 'Route',
+        modelName: 'ScmRoute',
         idField: 'routeId',
         columns: [
             { key: 'routeId', label: 'ID', primary: true },
@@ -133,7 +133,7 @@ const LOGISTICS_SERVICES = {
     },
     'load-plans': {
         endpoint: '/erp/50/LoadPlan',
-        modelName: 'LoadPlan',
+        modelName: 'ScmLoadPlan',
         idField: 'loadPlanId',
         columns: [
             { key: 'loadPlanId', label: 'ID', primary: true },
@@ -146,7 +146,7 @@ const LOGISTICS_SERVICES = {
         addText: 'Add Load Plan',
         formFields: [
             { key: 'planName', label: 'Plan Name', type: 'text', required: true },
-            { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'Shipment', required: true },
+            { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
             { key: 'vehicleId', label: 'Vehicle', type: 'text' },
             { key: 'totalWeight', label: 'Total Weight', type: 'number' },
             { key: 'totalVolume', label: 'Total Volume', type: 'number' },
@@ -156,7 +156,7 @@ const LOGISTICS_SERVICES = {
     },
     'delivery-proofs': {
         endpoint: '/erp/50/DlvryProof',
-        modelName: 'DeliveryProof',
+        modelName: 'ScmDeliveryProof',
         idField: 'proofId',
         columns: [
             { key: 'proofId', label: 'ID', primary: true },
@@ -166,7 +166,7 @@ const LOGISTICS_SERVICES = {
         ],
         addText: 'Add Delivery Proof',
         formFields: [
-            { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'Shipment', required: true },
+            { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
             { key: 'deliveryDate', label: 'Delivery Date', type: 'date', required: true },
             { key: 'receivedBy', label: 'Received By', type: 'text', required: true },
             { key: 'signatureRef', label: 'Signature Reference', type: 'text' },
@@ -176,7 +176,7 @@ const LOGISTICS_SERVICES = {
     },
     'freight-audits': {
         endpoint: '/erp/50/FrtAudit',
-        modelName: 'FreightAudit',
+        modelName: 'ScmFreightAudit',
         idField: 'auditId',
         columns: [
             { key: 'auditId', label: 'ID', primary: true },
@@ -188,8 +188,8 @@ const LOGISTICS_SERVICES = {
         ],
         addText: 'Add Freight Audit',
         formFields: [
-            { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'Shipment', required: true },
-            { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier', required: true },
+            { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
+            { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier', required: true },
             { key: 'invoicedAmount', label: 'Invoiced Amount', type: 'currency', required: true },
             { key: 'auditedAmount', label: 'Audited Amount', type: 'currency' },
             { key: 'variance', label: 'Variance', type: 'currency' },
@@ -198,7 +198,7 @@ const LOGISTICS_SERVICES = {
     },
     'return-authorizations': {
         endpoint: '/erp/50/ReturnAuth',
-        modelName: 'ReturnAuthorization',
+        modelName: 'ScmReturnAuthorization',
         idField: 'rmaId',
         columns: [
             { key: 'rmaId', label: 'ID', primary: true },

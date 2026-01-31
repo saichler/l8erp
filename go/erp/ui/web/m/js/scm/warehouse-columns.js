@@ -23,7 +23,7 @@ limitations under the License.
     const render = MobileWarehouse.render;
 
     MobileWarehouse.columns = {
-        Warehouse: [
+        ScmWarehouse: [
             { key: 'warehouseId', label: 'ID', sortKey: 'warehouseId', filterKey: 'warehouseId' },
             { key: 'warehouseCode', label: 'Code', sortKey: 'warehouseCode', filterKey: 'warehouseCode' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
@@ -32,7 +32,7 @@ limitations under the License.
             { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
         ],
 
-        Bin: [
+        ScmBin: [
             { key: 'binId', label: 'ID', sortKey: 'binId', filterKey: 'binId' },
             { key: 'binCode', label: 'Bin Code', sortKey: 'binCode', filterKey: 'binCode' },
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
@@ -41,7 +41,7 @@ limitations under the License.
             { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
         ],
 
-        ReceivingOrder: [
+        ScmReceivingOrder: [
             { key: 'receivingOrderId', label: 'ID', sortKey: 'receivingOrderId', filterKey: 'receivingOrderId' },
             { key: 'orderNumber', label: 'Order #', sortKey: 'orderNumber', filterKey: 'orderNumber' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
@@ -50,7 +50,7 @@ limitations under the License.
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' }
         ],
 
-        PutawayTask: [
+        ScmPutawayTask: [
             { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
             { key: 'receivingOrderId', label: 'Receiving Order', sortKey: 'receivingOrderId', filterKey: 'receivingOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -59,7 +59,7 @@ limitations under the License.
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
-        PickTask: [
+        ScmPickTask: [
             { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
             { key: 'orderReference', label: 'Order Ref', sortKey: 'orderReference', filterKey: 'orderReference' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -68,7 +68,7 @@ limitations under the License.
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
-        PackTask: [
+        ScmPackTask: [
             { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
             { key: 'orderReference', label: 'Order Ref', sortKey: 'orderReference', filterKey: 'orderReference' },
             { key: 'packStation', label: 'Pack Station', sortKey: 'packStation', filterKey: 'packStation' },
@@ -76,7 +76,7 @@ limitations under the License.
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
-        ShipTask: [
+        ScmShipTask: [
             { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
             { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
@@ -85,7 +85,7 @@ limitations under the License.
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
-        WavePlan: [
+        ScmWavePlan: [
             { key: 'wavePlanId', label: 'ID', sortKey: 'wavePlanId', filterKey: 'wavePlanId' },
             { key: 'waveName', label: 'Wave', sortKey: 'waveName', filterKey: 'waveName' },
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
@@ -94,7 +94,7 @@ limitations under the License.
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
-        DockSchedule: [
+        ScmDockSchedule: [
             { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
             { key: 'dockId', label: 'Dock', sortKey: 'dockId', filterKey: 'dockId' },
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
@@ -105,9 +105,9 @@ limitations under the License.
     };
 
     MobileWarehouse.primaryKeys = {
-        Warehouse: 'warehouseId', Bin: 'binId', ReceivingOrder: 'receivingOrderId',
-        PutawayTask: 'taskId', PickTask: 'taskId', PackTask: 'taskId',
-        ShipTask: 'taskId', WavePlan: 'wavePlanId', DockSchedule: 'scheduleId'
+        ScmWarehouse: 'warehouseId', ScmBin: 'binId', ScmReceivingOrder: 'receivingOrderId',
+        ScmPutawayTask: 'taskId', ScmPickTask: 'taskId', ScmPackTask: 'taskId',
+        ScmShipTask: 'taskId', ScmWavePlan: 'wavePlanId', ScmDockSchedule: 'scheduleId'
     };
 
 })();

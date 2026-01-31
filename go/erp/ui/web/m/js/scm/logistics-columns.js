@@ -23,7 +23,7 @@ limitations under the License.
     const render = MobileLogistics.render;
 
     MobileLogistics.columns = {
-        Carrier: [
+        ScmCarrier: [
             { key: 'carrierId', label: 'ID', sortKey: 'carrierId', filterKey: 'carrierId' },
             { key: 'carrierCode', label: 'Code', sortKey: 'carrierCode', filterKey: 'carrierCode' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
@@ -32,7 +32,7 @@ limitations under the License.
             { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
         ],
 
-        FreightRate: [
+        ScmFreightRate: [
             { key: 'rateId', label: 'ID', sortKey: 'rateId', filterKey: 'rateId' },
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
             { key: 'origin', label: 'Origin', sortKey: 'origin', filterKey: 'origin' },
@@ -41,7 +41,7 @@ limitations under the License.
             { key: 'effectiveDate', label: 'Effective', sortKey: 'effectiveDate', render: (item) => MobileRenderers.renderDate(item.effectiveDate) }
         ],
 
-        Shipment: [
+        ScmShipment: [
             { key: 'shipmentId', label: 'ID', sortKey: 'shipmentId', filterKey: 'shipmentId' },
             { key: 'shipmentNumber', label: 'Shipment #', sortKey: 'shipmentNumber', filterKey: 'shipmentNumber' },
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
@@ -50,7 +50,7 @@ limitations under the License.
             { key: 'totalCost', label: 'Cost', sortKey: 'totalCost', render: (item) => MobileRenderers.renderMoney(item.totalCost) }
         ],
 
-        Route: [
+        ScmRoute: [
             { key: 'routeId', label: 'ID', sortKey: 'routeId', filterKey: 'routeId' },
             { key: 'routeName', label: 'Route', sortKey: 'routeName', filterKey: 'routeName' },
             { key: 'origin', label: 'Origin', sortKey: 'origin', filterKey: 'origin' },
@@ -59,7 +59,7 @@ limitations under the License.
             { key: 'estimatedTime', label: 'Est. Time', sortKey: 'estimatedTime' }
         ],
 
-        LoadPlan: [
+        ScmLoadPlan: [
             { key: 'loadPlanId', label: 'ID', sortKey: 'loadPlanId', filterKey: 'loadPlanId' },
             { key: 'planName', label: 'Plan', sortKey: 'planName', filterKey: 'planName' },
             { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
@@ -68,7 +68,7 @@ limitations under the License.
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
-        DeliveryProof: [
+        ScmDeliveryProof: [
             { key: 'proofId', label: 'ID', sortKey: 'proofId', filterKey: 'proofId' },
             { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
             { key: 'deliveryDate', label: 'Delivered', sortKey: 'deliveryDate', render: (item) => MobileRenderers.renderDate(item.deliveryDate) },
@@ -76,7 +76,7 @@ limitations under the License.
             { key: 'isComplete', label: 'Complete', sortKey: 'isComplete', render: (item) => MobileRenderers.renderBoolean(item.isComplete) }
         ],
 
-        FreightAudit: [
+        ScmFreightAudit: [
             { key: 'auditId', label: 'ID', sortKey: 'auditId', filterKey: 'auditId' },
             { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
@@ -85,7 +85,7 @@ limitations under the License.
             { key: 'variance', label: 'Variance', sortKey: 'variance', render: (item) => MobileRenderers.renderMoney(item.variance) }
         ],
 
-        ReturnAuthorization: [
+        ScmReturnAuthorization: [
             { key: 'rmaId', label: 'ID', sortKey: 'rmaId', filterKey: 'rmaId' },
             { key: 'rmaNumber', label: 'RMA #', sortKey: 'rmaNumber', filterKey: 'rmaNumber' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
@@ -96,9 +96,9 @@ limitations under the License.
     };
 
     MobileLogistics.primaryKeys = {
-        Carrier: 'carrierId', FreightRate: 'rateId', Shipment: 'shipmentId',
-        Route: 'routeId', LoadPlan: 'loadPlanId', DeliveryProof: 'proofId',
-        FreightAudit: 'auditId', ReturnAuthorization: 'rmaId'
+        ScmCarrier: 'carrierId', ScmFreightRate: 'rateId', ScmShipment: 'shipmentId',
+        ScmRoute: 'routeId', ScmLoadPlan: 'loadPlanId', ScmDeliveryProof: 'proofId',
+        ScmFreightAudit: 'auditId', ScmReturnAuthorization: 'rmaId'
     };
 
 })();

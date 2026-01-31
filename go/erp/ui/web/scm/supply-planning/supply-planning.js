@@ -15,7 +15,7 @@ limitations under the License.
 // Supply Planning Module - Entry Point
 // Column Configurations and Form Definitions for Supply Planning models
 //
-// This file serves as the entry point. The SupplyPlanning module is split across:
+// This file serves as the entry point. The ScmSupplyPlanning module is split across:
 //   - supply-planning-enums.js   : All enum definitions and value mappings
 //   - supply-planning-columns.js : Table column configurations
 //   - supply-planning-forms.js   : Form field definitions and primary keys
@@ -25,22 +25,22 @@ limitations under the License.
 (function() {
     'use strict';
 
-    // Ensure SupplyPlanning namespace exists and is complete
-    if (typeof window.SupplyPlanning === 'undefined') {
-        console.error('SupplyPlanning module not properly initialized. Ensure all supply-planning-*.js files are loaded.');
+    // Ensure ScmSupplyPlanning namespace exists and is complete
+    if (typeof window.ScmSupplyPlanning === 'undefined') {
+        console.error('ScmSupplyPlanning module not properly initialized. Ensure all supply-planning-*.js files are loaded.');
         return;
     }
 
     // Verify required properties exist
     const requiredProps = ['columns', 'forms', 'primaryKeys', 'enums', 'render'];
     for (const prop of requiredProps) {
-        if (!SupplyPlanning[prop]) {
-            console.error(`SupplyPlanning.${prop} not found. Ensure all supply-planning-*.js files are loaded.`);
+        if (!ScmSupplyPlanning[prop]) {
+            console.error(`ScmSupplyPlanning.${prop} not found. Ensure all supply-planning-*.js files are loaded.`);
             return;
         }
     }
 
-    // SupplyPlanning module is ready
-    console.log('SupplyPlanning module initialized');
+    // ScmSupplyPlanning module is ready
+    console.log('ScmSupplyPlanning module initialized');
 
 })();

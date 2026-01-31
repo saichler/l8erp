@@ -19,11 +19,11 @@ limitations under the License.
 (function() {
     'use strict';
 
-    const enums = MobileDemandPlanning.enums;
-    const render = MobileDemandPlanning.render;
+    const enums = MobileScmDemandPlanning.enums;
+    const render = MobileScmDemandPlanning.render;
 
-    MobileDemandPlanning.columns = {
-        DemandForecast: [
+    MobileScmDemandPlanning.columns = {
+        ScmDemandForecast: [
             { key: 'forecastId', label: 'ID', sortKey: 'forecastId', filterKey: 'forecastId' },
             { key: 'forecastName', label: 'Forecast', sortKey: 'forecastName', filterKey: 'forecastName' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -32,7 +32,7 @@ limitations under the License.
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
-        ForecastModel: [
+        ScmForecastModel: [
             { key: 'modelId', label: 'ID', sortKey: 'modelId', filterKey: 'modelId' },
             { key: 'modelName', label: 'Model', sortKey: 'modelName', filterKey: 'modelName' },
             { key: 'forecastMethod', label: 'Method', sortKey: 'forecastMethod', filterKey: 'forecastMethod', enumValues: enums.FORECAST_METHOD_VALUES, render: (item) => render.forecastMethod(item.forecastMethod) },
@@ -40,7 +40,7 @@ limitations under the License.
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' }
         ],
 
-        DemandPlan: [
+        ScmDemandPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'planName', label: 'Plan', sortKey: 'planName', filterKey: 'planName' },
             { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => MobileRenderers.renderDate(item.startDate) },
@@ -48,7 +48,7 @@ limitations under the License.
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
-        PromotionalPlan: [
+        ScmPromotionalPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'planName', label: 'Plan', sortKey: 'planName', filterKey: 'planName' },
             { key: 'promotionType', label: 'Type', sortKey: 'promotionType', filterKey: 'promotionType' },
@@ -57,7 +57,7 @@ limitations under the License.
             { key: 'expectedUplift', label: 'Uplift %', sortKey: 'expectedUplift' }
         ],
 
-        NewProductPlan: [
+        ScmNewProductPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'productName', label: 'Product', sortKey: 'productName', filterKey: 'productName' },
             { key: 'launchDate', label: 'Launch', sortKey: 'launchDate', render: (item) => MobileRenderers.renderDate(item.launchDate) },
@@ -65,7 +65,7 @@ limitations under the License.
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
-        ForecastAccuracy: [
+        ScmForecastAccuracy: [
             { key: 'accuracyId', label: 'ID', sortKey: 'accuracyId', filterKey: 'accuracyId' },
             { key: 'forecastId', label: 'Forecast', sortKey: 'forecastId', filterKey: 'forecastId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -75,10 +75,10 @@ limitations under the License.
         ]
     };
 
-    MobileDemandPlanning.primaryKeys = {
-        DemandForecast: 'forecastId', ForecastModel: 'modelId',
-        DemandPlan: 'planId', PromotionalPlan: 'planId',
-        NewProductPlan: 'planId', ForecastAccuracy: 'accuracyId'
+    MobileScmDemandPlanning.primaryKeys = {
+        ScmDemandForecast: 'forecastId', ScmForecastModel: 'modelId',
+        ScmDemandPlan: 'planId', ScmPromotionalPlan: 'planId',
+        ScmNewProductPlan: 'planId', ScmForecastAccuracy: 'accuracyId'
     };
 
 })();

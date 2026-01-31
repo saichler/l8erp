@@ -15,7 +15,7 @@ limitations under the License.
 // Demand Planning Module - Entry Point
 // Column Configurations and Form Definitions for Demand Planning models
 //
-// This file serves as the entry point. The DemandPlanning module is split across:
+// This file serves as the entry point. The ScmDemandPlanning module is split across:
 //   - demand-planning-enums.js   : All enum definitions and value mappings
 //   - demand-planning-columns.js : Table column configurations
 //   - demand-planning-forms.js   : Form field definitions and primary keys
@@ -25,22 +25,22 @@ limitations under the License.
 (function() {
     'use strict';
 
-    // Ensure DemandPlanning namespace exists and is complete
-    if (typeof window.DemandPlanning === 'undefined') {
-        console.error('DemandPlanning module not properly initialized. Ensure all demand-planning-*.js files are loaded.');
+    // Ensure ScmDemandPlanning namespace exists and is complete
+    if (typeof window.ScmDemandPlanning === 'undefined') {
+        console.error('ScmDemandPlanning module not properly initialized. Ensure all demand-planning-*.js files are loaded.');
         return;
     }
 
     // Verify required properties exist
     const requiredProps = ['columns', 'forms', 'primaryKeys', 'enums', 'render'];
     for (const prop of requiredProps) {
-        if (!DemandPlanning[prop]) {
-            console.error(`DemandPlanning.${prop} not found. Ensure all demand-planning-*.js files are loaded.`);
+        if (!ScmDemandPlanning[prop]) {
+            console.error(`ScmDemandPlanning.${prop} not found. Ensure all demand-planning-*.js files are loaded.`);
             return;
         }
     }
 
-    // DemandPlanning module is ready
-    console.log('DemandPlanning module initialized');
+    // ScmDemandPlanning module is ready
+    console.log('ScmDemandPlanning module initialized');
 
 })();

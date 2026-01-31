@@ -18,15 +18,15 @@ limitations under the License.
 (function() {
     'use strict';
 
-    // Create SupplyPlanning namespace
-    window.SupplyPlanning = window.SupplyPlanning || {};
-    SupplyPlanning.enums = {};
+    // Create ScmSupplyPlanning namespace
+    window.ScmSupplyPlanning = window.ScmSupplyPlanning || {};
+    ScmSupplyPlanning.enums = {};
 
     // ============================================================================
     // PLANNING METHOD
     // ============================================================================
 
-    SupplyPlanning.enums.PLANNING_METHOD = {
+    ScmSupplyPlanning.enums.PLANNING_METHOD = {
         0: 'Unspecified',
         1: 'MRP',
         2: 'DRP',
@@ -39,7 +39,7 @@ limitations under the License.
     // TASK STATUS
     // ============================================================================
 
-    SupplyPlanning.enums.TASK_STATUS = {
+    ScmSupplyPlanning.enums.TASK_STATUS = {
         0: 'Unspecified',
         1: 'Pending',
         2: 'In Progress',
@@ -47,7 +47,7 @@ limitations under the License.
         4: 'Cancelled'
     };
 
-    SupplyPlanning.enums.TASK_STATUS_CLASSES = {
+    ScmSupplyPlanning.enums.TASK_STATUS_CLASSES = {
         1: 'erp-status-pending',
         2: 'erp-status-active',
         3: 'erp-status-active',
@@ -59,17 +59,17 @@ limitations under the License.
     // ============================================================================
 
     // Create render functions using shared utilities
-    SupplyPlanning.render = {};
+    ScmSupplyPlanning.render = {};
 
-    SupplyPlanning.render.planningMethod = (type) => ERPRenderers.renderEnum(type, SupplyPlanning.enums.PLANNING_METHOD);
+    ScmSupplyPlanning.render.planningMethod = (type) => ERPRenderers.renderEnum(type, ScmSupplyPlanning.enums.PLANNING_METHOD);
 
-    SupplyPlanning.render.taskStatus = ERPRenderers.createStatusRenderer(
-        SupplyPlanning.enums.TASK_STATUS,
-        SupplyPlanning.enums.TASK_STATUS_CLASSES
+    ScmSupplyPlanning.render.taskStatus = ERPRenderers.createStatusRenderer(
+        ScmSupplyPlanning.enums.TASK_STATUS,
+        ScmSupplyPlanning.enums.TASK_STATUS_CLASSES
     );
 
-    SupplyPlanning.render.boolean = ERPRenderers.renderBoolean;
-    SupplyPlanning.render.date = ERPRenderers.renderDate;
-    SupplyPlanning.render.money = ERPRenderers.renderMoney;
+    ScmSupplyPlanning.render.boolean = ERPRenderers.renderBoolean;
+    ScmSupplyPlanning.render.date = ERPRenderers.renderDate;
+    ScmSupplyPlanning.render.money = ERPRenderers.renderMoney;
 
 })();

@@ -559,42 +559,42 @@ limitations under the License.
         WithholdingTaxConfig: {
             idColumn: 'configId',
             displayColumn: 'name'
-        }
+        },
 
         // ========================================
         // SCM - Procurement Models
         // ========================================
-        PurchaseOrder: {
+        ScmPurchaseOrder: {
             idColumn: 'purchaseOrderId',
             displayColumn: 'orderNumber',
             selectColumns: ['purchaseOrderId', 'orderNumber'],
             displayLabel: 'Purchase Order'
         },
-        PurchaseOrderLine: {
+        ScmPurchaseOrderLine: {
             idColumn: 'lineId',
             displayColumn: 'lineId'
         },
-        PurchaseRequisition: {
+        ScmPurchaseRequisition: {
             idColumn: 'requisitionId',
             displayColumn: 'requisitionNumber',
             selectColumns: ['requisitionId', 'requisitionNumber'],
             displayLabel: 'Requisition'
         },
-        RequisitionLine: {
+        ScmRequisitionLine: {
             idColumn: 'lineId',
             displayColumn: 'lineId'
         },
-        SupplierContract: {
+        ScmSupplierContract: {
             idColumn: 'contractId',
             displayColumn: 'contractNumber',
             selectColumns: ['contractId', 'contractNumber'],
             displayLabel: 'Contract'
         },
-        ContractTerm: {
+        ScmContractTerm: {
             idColumn: 'termId',
             displayColumn: 'termId'
         },
-        RequestForQuote: {
+        ScmRequestForQuote: {
             idColumn: 'rfqId',
             displayColumn: 'rfqNumber',
             selectColumns: ['rfqId', 'rfqNumber'],
@@ -604,7 +604,7 @@ limitations under the License.
         // ========================================
         // SCM - Inventory Models
         // ========================================
-        Item: {
+        ScmItem: {
             idColumn: 'itemId',
             displayColumn: 'name',
             selectColumns: ['itemId', 'itemNumber', 'name'],
@@ -613,31 +613,31 @@ limitations under the License.
             },
             displayLabel: 'Item'
         },
-        ItemCategory: {
+        ScmItemCategory: {
             idColumn: 'categoryId',
             displayColumn: 'name'
         },
-        InventoryLocation: {
+        ScmInventoryLocation: {
             idColumn: 'locationId',
             displayColumn: 'name'
         },
-        StockLevel: {
+        ScmStockLevel: {
             idColumn: 'stockLevelId',
             displayColumn: 'stockLevelId'
         },
-        StockMovement: {
+        ScmStockMovement: {
             idColumn: 'movementId',
             displayColumn: 'movementId'
         },
-        InventoryCount: {
+        ScmInventoryCount: {
             idColumn: 'countId',
             displayColumn: 'countId'
         },
-        LotSerial: {
+        ScmLotSerial: {
             idColumn: 'lotSerialId',
             displayColumn: 'lotNumber'
         },
-        ItemPricing: {
+        ScmItemPricing: {
             idColumn: 'pricingId',
             displayColumn: 'pricingId'
         },
@@ -645,7 +645,7 @@ limitations under the License.
         // ========================================
         // SCM - Warehouse Management Models
         // ========================================
-        Warehouse: {
+        ScmWarehouse: {
             idColumn: 'warehouseId',
             displayColumn: 'name',
             selectColumns: ['warehouseId', 'warehouseCode', 'name'],
@@ -654,35 +654,35 @@ limitations under the License.
             },
             displayLabel: 'Warehouse'
         },
-        Zone: {
+        ScmZone: {
             idColumn: 'zoneId',
             displayColumn: 'name'
         },
-        Bin: {
+        ScmBin: {
             idColumn: 'binId',
             displayColumn: 'binCode'
         },
-        ReceivingOrder: {
+        ScmReceivingOrder: {
             idColumn: 'receivingOrderId',
             displayColumn: 'orderNumber'
         },
-        ReceivingLine: {
+        ScmReceivingLine: {
             idColumn: 'lineId',
             displayColumn: 'lineId'
         },
-        PickOrder: {
+        ScmPickOrder: {
             idColumn: 'pickOrderId',
             displayColumn: 'orderNumber'
         },
-        PickLine: {
+        ScmPickLine: {
             idColumn: 'lineId',
             displayColumn: 'lineId'
         },
-        PackOrder: {
+        ScmPackOrder: {
             idColumn: 'packOrderId',
             displayColumn: 'orderNumber'
         },
-        PackLine: {
+        ScmPackLine: {
             idColumn: 'lineId',
             displayColumn: 'lineId'
         },
@@ -690,7 +690,7 @@ limitations under the License.
         // ========================================
         // SCM - Logistics & Transportation Models
         // ========================================
-        ShipmentCarrier: {
+        ScmShipmentCarrier: {
             idColumn: 'carrierId',
             displayColumn: 'name',
             selectColumns: ['carrierId', 'carrierCode', 'name'],
@@ -699,33 +699,33 @@ limitations under the License.
             },
             displayLabel: 'Carrier'
         },
-        Shipment: {
+        ScmShipment: {
             idColumn: 'shipmentId',
             displayColumn: 'shipmentNumber',
             selectColumns: ['shipmentId', 'shipmentNumber'],
             displayLabel: 'Shipment'
         },
-        ShipmentLine: {
+        ScmShipmentLine: {
             idColumn: 'lineId',
             displayColumn: 'lineId'
         },
-        FreightRate: {
+        ScmFreightRate: {
             idColumn: 'rateId',
             displayColumn: 'rateId'
         },
-        DeliveryRoute: {
+        ScmDeliveryRoute: {
             idColumn: 'routeId',
             displayColumn: 'name'
         },
-        RouteStop: {
+        ScmRouteStop: {
             idColumn: 'stopId',
             displayColumn: 'stopId'
         },
-        ReturnOrder: {
+        ScmReturnOrder: {
             idColumn: 'returnOrderId',
             displayColumn: 'orderNumber'
         },
-        ReturnLine: {
+        ScmReturnLine: {
             idColumn: 'lineId',
             displayColumn: 'lineId'
         },
@@ -733,29 +733,29 @@ limitations under the License.
         // ========================================
         // SCM - Demand Planning Models
         // ========================================
-        DemandForecast: {
+        ScmDemandForecast: {
             idColumn: 'forecastId',
             displayColumn: 'forecastName',
             selectColumns: ['forecastId', 'forecastName'],
             displayLabel: 'Forecast'
         },
-        ForecastItem: {
+        ScmForecastItem: {
             idColumn: 'forecastItemId',
             displayColumn: 'forecastItemId'
         },
-        DemandHistory: {
+        ScmDemandHistory: {
             idColumn: 'historyId',
             displayColumn: 'historyId'
         },
-        SeasonalProfile: {
+        ScmSeasonalProfile: {
             idColumn: 'profileId',
             displayColumn: 'name'
         },
-        PromotionImpact: {
+        ScmPromotionImpact: {
             idColumn: 'impactId',
             displayColumn: 'impactId'
         },
-        ConsensusAdjustment: {
+        ScmConsensusAdjustment: {
             idColumn: 'adjustmentId',
             displayColumn: 'adjustmentId'
         },
@@ -763,29 +763,29 @@ limitations under the License.
         // ========================================
         // SCM - Supply Planning Models
         // ========================================
-        SupplyPlan: {
+        ScmSupplyPlan: {
             idColumn: 'planId',
             displayColumn: 'planName',
             selectColumns: ['planId', 'planName'],
             displayLabel: 'Supply Plan'
         },
-        PlannedOrder: {
+        ScmPlannedOrder: {
             idColumn: 'plannedOrderId',
             displayColumn: 'orderNumber'
         },
-        MRPRun: {
+        ScmMRPRun: {
             idColumn: 'mrpRunId',
             displayColumn: 'mrpRunId'
         },
-        MRPException: {
+        ScmMRPException: {
             idColumn: 'exceptionId',
             displayColumn: 'exceptionId'
         },
-        SafetyStock: {
+        ScmSafetyStock: {
             idColumn: 'safetyStockId',
             displayColumn: 'safetyStockId'
         },
-        ReorderRule: {
+        ScmReorderRule: {
             idColumn: 'ruleId',
             displayColumn: 'ruleName'
         }

@@ -29,7 +29,7 @@ limitations under the License.
     // ============================================================================
 
     Logistics.columns = {
-        Carrier: [
+        ScmCarrier: [
             { key: 'carrierId', label: 'ID', sortKey: 'carrierId', filterKey: 'carrierId' },
             { key: 'carrierCode', label: 'Code', sortKey: 'carrierCode', filterKey: 'carrierCode' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
@@ -48,7 +48,7 @@ limitations under the License.
             }
         ],
 
-        FreightRate: [
+        ScmFreightRate: [
             { key: 'rateId', label: 'ID', sortKey: 'rateId', filterKey: 'rateId' },
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
             { key: 'origin', label: 'Origin', sortKey: 'origin', filterKey: 'origin' },
@@ -67,7 +67,7 @@ limitations under the License.
             }
         ],
 
-        Shipment: [
+        ScmShipment: [
             { key: 'shipmentId', label: 'ID', sortKey: 'shipmentId', filterKey: 'shipmentId' },
             { key: 'shipmentNumber', label: 'Shipment #', sortKey: 'shipmentNumber', filterKey: 'shipmentNumber' },
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
@@ -91,7 +91,7 @@ limitations under the License.
             }
         ],
 
-        Route: [
+        ScmRoute: [
             { key: 'routeId', label: 'ID', sortKey: 'routeId', filterKey: 'routeId' },
             { key: 'routeName', label: 'Route', sortKey: 'routeName', filterKey: 'routeName' },
             { key: 'origin', label: 'Origin', sortKey: 'origin', filterKey: 'origin' },
@@ -100,7 +100,7 @@ limitations under the License.
             { key: 'estimatedTime', label: 'Est. Time', sortKey: 'estimatedTime' }
         ],
 
-        LoadPlan: [
+        ScmLoadPlan: [
             { key: 'loadPlanId', label: 'ID', sortKey: 'loadPlanId', filterKey: 'loadPlanId' },
             { key: 'planName', label: 'Plan', sortKey: 'planName', filterKey: 'planName' },
             { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
@@ -114,7 +114,7 @@ limitations under the License.
             }
         ],
 
-        DeliveryProof: [
+        ScmDeliveryProof: [
             { key: 'proofId', label: 'ID', sortKey: 'proofId', filterKey: 'proofId' },
             { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
             {
@@ -132,7 +132,7 @@ limitations under the License.
             }
         ],
 
-        FreightAudit: [
+        ScmFreightAudit: [
             { key: 'auditId', label: 'ID', sortKey: 'auditId', filterKey: 'auditId' },
             { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
@@ -156,7 +156,7 @@ limitations under the License.
             }
         ],
 
-        ReturnAuthorization: [
+        ScmReturnAuthorization: [
             { key: 'rmaId', label: 'ID', sortKey: 'rmaId', filterKey: 'rmaId' },
             { key: 'rmaNumber', label: 'RMA #', sortKey: 'rmaNumber', filterKey: 'rmaNumber' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },

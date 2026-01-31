@@ -36,12 +36,12 @@ limitations under the License.
 
 <script>
 let supplyPlanningTable = null;
-let currentSupplyPlanningService = 'material-requirements';
+let currentScmSupplyPlanningService = 'material-requirements';
 
 const SUPPLY_PLANNING_SERVICES = {
     'material-requirements': {
         endpoint: '/erp/50/MatReq',
-        modelName: 'MaterialRequirement',
+        modelName: 'ScmMaterialRequirement',
         idField: 'requirementId',
         columns: [
             { key: 'requirementId', label: 'ID', primary: true },
@@ -53,7 +53,7 @@ const SUPPLY_PLANNING_SERVICES = {
         ],
         addText: 'Add Material Requirement',
         formFields: [
-            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
             { key: 'requiredQuantity', label: 'Required Quantity', type: 'number', required: true },
             { key: 'requiredDate', label: 'Required Date', type: 'date', required: true },
             { key: 'planningMethod', label: 'Planning Method', type: 'select', options: { 0: 'Unspecified', 1: 'MRP', 2: 'DRP', 3: 'Kanban', 4: 'Min-Max', 5: 'Reorder Point' } },
@@ -64,7 +64,7 @@ const SUPPLY_PLANNING_SERVICES = {
     },
     'distribution-requirements': {
         endpoint: '/erp/50/DistReq',
-        modelName: 'DistributionRequirement',
+        modelName: 'ScmDistributionRequirement',
         idField: 'requirementId',
         columns: [
             { key: 'requirementId', label: 'ID', primary: true },
@@ -76,9 +76,9 @@ const SUPPLY_PLANNING_SERVICES = {
         ],
         addText: 'Add Distribution Requirement',
         formFields: [
-            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
-            { key: 'sourceWarehouseId', label: 'Source Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
-            { key: 'targetWarehouseId', label: 'Target Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+            { key: 'sourceWarehouseId', label: 'Source Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
+            { key: 'targetWarehouseId', label: 'Target Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
             { key: 'requiredQuantity', label: 'Required Quantity', type: 'number', required: true },
             { key: 'requiredDate', label: 'Required Date', type: 'date', required: true },
             { key: 'priority', label: 'Priority', type: 'text' },
@@ -87,7 +87,7 @@ const SUPPLY_PLANNING_SERVICES = {
     },
     'supply-plans': {
         endpoint: '/erp/50/SupplyPlan',
-        modelName: 'SupplyPlan',
+        modelName: 'ScmSupplyPlan',
         idField: 'planId',
         columns: [
             { key: 'planId', label: 'ID', primary: true },
@@ -109,7 +109,7 @@ const SUPPLY_PLANNING_SERVICES = {
     },
     'supplier-collaborations': {
         endpoint: '/erp/50/SupCollab',
-        modelName: 'SupplierCollaboration',
+        modelName: 'ScmSupplierCollaboration',
         idField: 'collaborationId',
         columns: [
             { key: 'collaborationId', label: 'ID', primary: true },
@@ -122,7 +122,7 @@ const SUPPLY_PLANNING_SERVICES = {
         addText: 'Add Collaboration',
         formFields: [
             { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
-            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
             { key: 'agreedQuantity', label: 'Agreed Quantity', type: 'number', required: true },
             { key: 'deliveryDate', label: 'Delivery Date', type: 'date', required: true },
             { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
@@ -131,7 +131,7 @@ const SUPPLY_PLANNING_SERVICES = {
     },
     'safety-stocks': {
         endpoint: '/erp/50/SafeStock',
-        modelName: 'SafetyStock',
+        modelName: 'ScmSafetyStock',
         idField: 'safetyStockId',
         columns: [
             { key: 'safetyStockId', label: 'ID', primary: true },
@@ -143,8 +143,8 @@ const SUPPLY_PLANNING_SERVICES = {
         ],
         addText: 'Add Safety Stock',
         formFields: [
-            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
-            { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+            { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
             { key: 'safetyStockLevel', label: 'Safety Stock Level', type: 'number', required: true },
             { key: 'currentStock', label: 'Current Stock', type: 'number' },
             { key: 'serviceLevel', label: 'Service Level %', type: 'number' },
@@ -153,7 +153,7 @@ const SUPPLY_PLANNING_SERVICES = {
     },
     'lead-times': {
         endpoint: '/erp/50/LeadTime',
-        modelName: 'LeadTime',
+        modelName: 'ScmLeadTime',
         idField: 'leadTimeId',
         columns: [
             { key: 'leadTimeId', label: 'ID', primary: true },
@@ -165,7 +165,7 @@ const SUPPLY_PLANNING_SERVICES = {
         ],
         addText: 'Add Lead Time',
         formFields: [
-            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
             { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
             { key: 'averageLeadTime', label: 'Average Lead Time (days)', type: 'number', required: true },
             { key: 'minimumLeadTime', label: 'Minimum Lead Time (days)', type: 'number' },
@@ -175,20 +175,20 @@ const SUPPLY_PLANNING_SERVICES = {
     }
 };
 
-function initMobileSupplyPlanning() {
-    loadSupplyPlanningService('material-requirements');
+function initMobileScmSupplyPlanning() {
+    loadScmSupplyPlanningService('material-requirements');
 
     document.querySelectorAll('.section-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
-            loadSupplyPlanningService(tab.dataset.service);
+            loadScmSupplyPlanningService(tab.dataset.service);
         });
     });
 }
 
-function loadSupplyPlanningService(serviceName) {
-    currentSupplyPlanningService = serviceName;
+function loadScmSupplyPlanningService(serviceName) {
+    currentScmSupplyPlanningService = serviceName;
     const config = SUPPLY_PLANNING_SERVICES[serviceName];
 
     supplyPlanningTable = new MobileEditTable('supply-planning-table', {
@@ -197,14 +197,14 @@ function loadSupplyPlanningService(serviceName) {
         columns: config.columns,
         rowsPerPage: 15,
         addButtonText: config.addText,
-        onAdd: () => openSupplyPlanningForm(config),
-        onEdit: (id, item) => openSupplyPlanningForm(config, item),
-        onDelete: (id, item) => deleteSupplyPlanningItem(config, id, item),
+        onAdd: () => openScmSupplyPlanningForm(config),
+        onEdit: (id, item) => openScmSupplyPlanningForm(config, item),
+        onDelete: (id, item) => deleteScmSupplyPlanningItem(config, id, item),
         getItemId: (item) => item[config.idField]
     });
 }
 
-function openSupplyPlanningForm(config, item = null) {
+function openScmSupplyPlanningForm(config, item = null) {
     const isEdit = !!item;
     const title = isEdit ? 'Edit' : config.addText;
 
@@ -237,7 +237,7 @@ function openSupplyPlanningForm(config, item = null) {
     });
 }
 
-async function deleteSupplyPlanningItem(config, id, item) {
+async function deleteScmSupplyPlanningItem(config, id, item) {
     const name = item.planName || id;
     const confirmed = await MobileConfirm.confirmDelete(name);
     if (confirmed) {

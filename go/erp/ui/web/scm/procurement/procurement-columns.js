@@ -29,7 +29,7 @@ limitations under the License.
     // ============================================================================
 
     Procurement.columns = {
-        PurchaseRequisition: [
+        ScmPurchaseRequisition: [
             { key: 'requisitionId', label: 'ID', sortKey: 'requisitionId', filterKey: 'requisitionId' },
             { key: 'requisitionNumber', label: 'Req #', sortKey: 'requisitionNumber', filterKey: 'requisitionNumber' },
             { key: 'requesterId', label: 'Requester', sortKey: 'requesterId', filterKey: 'requesterId' },
@@ -53,7 +53,7 @@ limitations under the License.
             }
         ],
 
-        RequisitionLine: [
+        ScmRequisitionLine: [
             { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
             { key: 'requisitionId', label: 'Requisition', sortKey: 'requisitionId', filterKey: 'requisitionId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -72,7 +72,7 @@ limitations under the License.
             }
         ],
 
-        RequestForQuotation: [
+        ScmRequestForQuotation: [
             { key: 'rfqId', label: 'ID', sortKey: 'rfqId', filterKey: 'rfqId' },
             { key: 'rfqNumber', label: 'RFQ #', sortKey: 'rfqNumber', filterKey: 'rfqNumber' },
             {
@@ -95,7 +95,7 @@ limitations under the License.
             }
         ],
 
-        PurchaseOrder: [
+        ScmPurchaseOrder: [
             { key: 'purchaseOrderId', label: 'ID', sortKey: 'purchaseOrderId', filterKey: 'purchaseOrderId' },
             { key: 'orderNumber', label: 'PO #', sortKey: 'orderNumber', filterKey: 'orderNumber' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
@@ -119,7 +119,7 @@ limitations under the License.
             }
         ],
 
-        PurchaseOrderLine: [
+        ScmPurchaseOrderLine: [
             { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
             { key: 'purchaseOrderId', label: 'PO', sortKey: 'purchaseOrderId', filterKey: 'purchaseOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -138,7 +138,7 @@ limitations under the License.
             }
         ],
 
-        BlanketOrder: [
+        ScmBlanketOrder: [
             { key: 'blanketOrderId', label: 'ID', sortKey: 'blanketOrderId', filterKey: 'blanketOrderId' },
             { key: 'orderNumber', label: 'Order #', sortKey: 'orderNumber', filterKey: 'orderNumber' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
@@ -168,7 +168,7 @@ limitations under the License.
             }
         ],
 
-        SupplierScorecard: [
+        ScmSupplierScorecard: [
             { key: 'scorecardId', label: 'ID', sortKey: 'scorecardId', filterKey: 'scorecardId' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
             { key: 'qualityScore', label: 'Quality', sortKey: 'qualityScore' },

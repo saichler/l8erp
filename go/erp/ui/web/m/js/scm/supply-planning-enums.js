@@ -19,18 +19,18 @@ limitations under the License.
 (function() {
     'use strict';
 
-    window.MobileSupplyPlanning = window.MobileSupplyPlanning || {};
-    MobileSupplyPlanning.enums = {};
+    window.MobileScmSupplyPlanning = window.MobileScmSupplyPlanning || {};
+    MobileScmSupplyPlanning.enums = {};
 
     // ============================================================================
     // PLANNING METHOD
     // ============================================================================
 
-    MobileSupplyPlanning.enums.PLANNING_METHOD = {
+    MobileScmSupplyPlanning.enums.PLANNING_METHOD = {
         0: 'Unspecified', 1: 'MRP', 2: 'DRP', 3: 'Kanban',
         4: 'Min-Max', 5: 'Reorder Point'
     };
-    MobileSupplyPlanning.enums.PLANNING_METHOD_VALUES = {
+    MobileScmSupplyPlanning.enums.PLANNING_METHOD_VALUES = {
         'mrp': 1, 'drp': 2, 'kanban': 3, 'min': 4, 'max': 4, 'reorder': 5, 'point': 5
     };
 
@@ -38,13 +38,13 @@ limitations under the License.
     // TASK STATUS
     // ============================================================================
 
-    MobileSupplyPlanning.enums.TASK_STATUS = {
+    MobileScmSupplyPlanning.enums.TASK_STATUS = {
         0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled'
     };
-    MobileSupplyPlanning.enums.TASK_STATUS_VALUES = {
+    MobileScmSupplyPlanning.enums.TASK_STATUS_VALUES = {
         'pending': 1, 'progress': 2, 'in': 2, 'completed': 3, 'cancelled': 4
     };
-    MobileSupplyPlanning.enums.TASK_STATUS_CLASSES = {
+    MobileScmSupplyPlanning.enums.TASK_STATUS_CLASSES = {
         1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-terminated'
     };
 
@@ -52,11 +52,11 @@ limitations under the License.
     // RENDER FUNCTIONS
     // ============================================================================
 
-    MobileSupplyPlanning.render = {
-        planningMethod: (v) => MobileRenderers.renderEnum(v, MobileSupplyPlanning.enums.PLANNING_METHOD),
+    MobileScmSupplyPlanning.render = {
+        planningMethod: (v) => MobileRenderers.renderEnum(v, MobileScmSupplyPlanning.enums.PLANNING_METHOD),
         taskStatus: MobileRenderers.createStatusRenderer(
-            MobileSupplyPlanning.enums.TASK_STATUS,
-            MobileSupplyPlanning.enums.TASK_STATUS_CLASSES
+            MobileScmSupplyPlanning.enums.TASK_STATUS,
+            MobileScmSupplyPlanning.enums.TASK_STATUS_CLASSES
         ),
         boolean: MobileRenderers.renderBoolean,
         date: MobileRenderers.renderDate,

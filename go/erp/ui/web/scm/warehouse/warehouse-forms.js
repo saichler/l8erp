@@ -28,8 +28,8 @@ limitations under the License.
     // ============================================================================
 
     WarehouseManagement.forms = {
-        Warehouse: {
-            title: 'Warehouse',
+        ScmWarehouse: {
+            title: 'ScmWarehouse',
             sections: [
                 {
                     title: 'Warehouse Information',
@@ -46,14 +46,14 @@ limitations under the License.
             ]
         },
 
-        Bin: {
-            title: 'Bin',
+        ScmBin: {
+            title: 'ScmBin',
             sections: [
                 {
                     title: 'Bin Information',
                     fields: [
                         { key: 'binCode', label: 'Bin Code', type: 'text', required: true },
-                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
+                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
                         { key: 'binType', label: 'Bin Type', type: 'select', options: enums.BIN_TYPE, required: true },
                         { key: 'zone', label: 'Zone', type: 'text' },
                         { key: 'aisle', label: 'Aisle', type: 'text' },
@@ -65,7 +65,7 @@ limitations under the License.
             ]
         },
 
-        ReceivingOrder: {
+        ScmReceivingOrder: {
             title: 'Receiving Order',
             sections: [
                 {
@@ -73,9 +73,9 @@ limitations under the License.
                     fields: [
                         { key: 'orderNumber', label: 'Order Number', type: 'text', required: true },
                         { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
-                        { key: 'purchaseOrderId', label: 'Purchase Order', type: 'reference', lookupModel: 'PurchaseOrder' },
+                        { key: 'purchaseOrderId', label: 'Purchase Order', type: 'reference', lookupModel: 'ScmPurchaseOrder' },
                         { key: 'expectedDate', label: 'Expected Date', type: 'date', required: true },
-                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
+                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
@@ -83,17 +83,17 @@ limitations under the License.
             ]
         },
 
-        PutawayTask: {
+        ScmPutawayTask: {
             title: 'Putaway Task',
             sections: [
                 {
                     title: 'Task Details',
                     fields: [
-                        { key: 'receivingOrderId', label: 'Receiving Order', type: 'reference', lookupModel: 'ReceivingOrder', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+                        { key: 'receivingOrderId', label: 'Receiving Order', type: 'reference', lookupModel: 'ScmReceivingOrder', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                        { key: 'sourceBinId', label: 'Source Bin', type: 'reference', lookupModel: 'Bin' },
-                        { key: 'targetBinId', label: 'Target Bin', type: 'reference', lookupModel: 'Bin', required: true },
+                        { key: 'sourceBinId', label: 'Source Bin', type: 'reference', lookupModel: 'ScmBin' },
+                        { key: 'targetBinId', label: 'Target Bin', type: 'reference', lookupModel: 'ScmBin', required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
                         { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' }
                     ]
@@ -101,15 +101,15 @@ limitations under the License.
             ]
         },
 
-        PickTask: {
+        ScmPickTask: {
             title: 'Pick Task',
             sections: [
                 {
                     title: 'Task Details',
                     fields: [
                         { key: 'orderReference', label: 'Order Reference', type: 'text', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
-                        { key: 'binId', label: 'Bin', type: 'reference', lookupModel: 'Bin', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                        { key: 'binId', label: 'Bin', type: 'reference', lookupModel: 'ScmBin', required: true },
                         { key: 'quantity', label: 'Quantity', type: 'number', required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
                         { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' }
@@ -118,7 +118,7 @@ limitations under the License.
             ]
         },
 
-        PackTask: {
+        ScmPackTask: {
             title: 'Pack Task',
             sections: [
                 {
@@ -135,14 +135,14 @@ limitations under the License.
             ]
         },
 
-        ShipTask: {
+        ScmShipTask: {
             title: 'Ship Task',
             sections: [
                 {
                     title: 'Task Details',
                     fields: [
-                        { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'Shipment', required: true },
-                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier' },
+                        { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
+                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier' },
                         { key: 'dockId', label: 'Dock', type: 'text' },
                         { key: 'scheduledDate', label: 'Scheduled Date', type: 'date', required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
@@ -152,14 +152,14 @@ limitations under the License.
             ]
         },
 
-        WavePlan: {
+        ScmWavePlan: {
             title: 'Wave Plan',
             sections: [
                 {
                     title: 'Wave Details',
                     fields: [
                         { key: 'waveName', label: 'Wave Name', type: 'text', required: true },
-                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
+                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
                         { key: 'plannedDate', label: 'Planned Date', type: 'date', required: true },
                         { key: 'orderCount', label: 'Order Count', type: 'number' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
@@ -169,14 +169,14 @@ limitations under the License.
             ]
         },
 
-        DockSchedule: {
+        ScmDockSchedule: {
             title: 'Dock Schedule',
             sections: [
                 {
                     title: 'Schedule Details',
                     fields: [
                         { key: 'dockId', label: 'Dock', type: 'text', required: true },
-                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier' },
+                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier' },
                         { key: 'scheduledDate', label: 'Scheduled Date', type: 'date', required: true },
                         { key: 'direction', label: 'Direction', type: 'text' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
@@ -192,15 +192,15 @@ limitations under the License.
     // ============================================================================
 
     WarehouseManagement.primaryKeys = {
-        Warehouse: 'warehouseId',
-        Bin: 'binId',
-        ReceivingOrder: 'receivingOrderId',
-        PutawayTask: 'taskId',
-        PickTask: 'taskId',
-        PackTask: 'taskId',
-        ShipTask: 'taskId',
-        WavePlan: 'wavePlanId',
-        DockSchedule: 'scheduleId'
+        ScmWarehouse: 'warehouseId',
+        ScmBin: 'binId',
+        ScmReceivingOrder: 'receivingOrderId',
+        ScmPutawayTask: 'taskId',
+        ScmPickTask: 'taskId',
+        ScmPackTask: 'taskId',
+        ScmShipTask: 'taskId',
+        ScmWavePlan: 'wavePlanId',
+        ScmDockSchedule: 'scheduleId'
     };
 
 })();

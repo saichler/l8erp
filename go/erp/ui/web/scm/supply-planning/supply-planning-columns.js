@@ -18,18 +18,18 @@ limitations under the License.
 (function() {
     'use strict';
 
-    // Ensure SupplyPlanning namespace exists
-    window.SupplyPlanning = window.SupplyPlanning || {};
+    // Ensure ScmSupplyPlanning namespace exists
+    window.ScmSupplyPlanning = window.ScmSupplyPlanning || {};
 
     const { renderDate, renderMoney } = ERPRenderers;
-    const render = SupplyPlanning.render;
+    const render = ScmSupplyPlanning.render;
 
     // ============================================================================
     // COLUMN CONFIGURATIONS
     // ============================================================================
 
-    SupplyPlanning.columns = {
-        MaterialRequirement: [
+    ScmSupplyPlanning.columns = {
+        ScmMaterialRequirement: [
             { key: 'requirementId', label: 'ID', sortKey: 'requirementId', filterKey: 'requirementId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'requiredQuantity', label: 'Required Qty', sortKey: 'requiredQuantity' },
@@ -53,7 +53,7 @@ limitations under the License.
             }
         ],
 
-        DistributionRequirement: [
+        ScmDistributionRequirement: [
             { key: 'requirementId', label: 'ID', sortKey: 'requirementId', filterKey: 'requirementId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'sourceWarehouseId', label: 'Source', sortKey: 'sourceWarehouseId', filterKey: 'sourceWarehouseId' },
@@ -67,7 +67,7 @@ limitations under the License.
             }
         ],
 
-        SupplyPlan: [
+        ScmSupplyPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'planName', label: 'Plan', sortKey: 'planName', filterKey: 'planName' },
             {
@@ -96,7 +96,7 @@ limitations under the License.
             }
         ],
 
-        SupplierCollaboration: [
+        ScmSupplierCollaboration: [
             { key: 'collaborationId', label: 'ID', sortKey: 'collaborationId', filterKey: 'collaborationId' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -115,7 +115,7 @@ limitations under the License.
             }
         ],
 
-        SafetyStock: [
+        ScmSafetyStock: [
             { key: 'safetyStockId', label: 'ID', sortKey: 'safetyStockId', filterKey: 'safetyStockId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
@@ -124,7 +124,7 @@ limitations under the License.
             { key: 'serviceLevel', label: 'Service %', sortKey: 'serviceLevel' }
         ],
 
-        LeadTime: [
+        ScmLeadTime: [
             { key: 'leadTimeId', label: 'ID', sortKey: 'leadTimeId', filterKey: 'leadTimeId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },

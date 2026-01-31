@@ -19,20 +19,20 @@ limitations under the License.
 (function() {
     'use strict';
 
-    const enums = MobileDemandPlanning.enums;
+    const enums = MobileScmDemandPlanning.enums;
 
-    MobileDemandPlanning.forms = {
-        DemandForecast: {
+    MobileScmDemandPlanning.forms = {
+        ScmDemandForecast: {
             title: 'Demand Forecast',
             sections: [
                 {
                     title: 'Forecast Details',
                     fields: [
                         { key: 'forecastName', label: 'Forecast Name', type: 'text', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'forecastDate', label: 'Forecast Date', type: 'date', required: true },
                         { key: 'forecastQuantity', label: 'Forecast Quantity', type: 'number', required: true },
-                        { key: 'modelId', label: 'Forecast Model', type: 'reference', lookupModel: 'ForecastModel' },
+                        { key: 'modelId', label: 'Forecast Model', type: 'reference', lookupModel: 'ScmForecastModel' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
@@ -40,7 +40,7 @@ limitations under the License.
             ]
         },
 
-        ForecastModel: {
+        ScmForecastModel: {
             title: 'Forecast Model',
             sections: [
                 {
@@ -56,7 +56,7 @@ limitations under the License.
             ]
         },
 
-        DemandPlan: {
+        ScmDemandPlan: {
             title: 'Demand Plan',
             sections: [
                 {
@@ -73,7 +73,7 @@ limitations under the License.
             ]
         },
 
-        PromotionalPlan: {
+        ScmPromotionalPlan: {
             title: 'Promotional Plan',
             sections: [
                 {
@@ -90,7 +90,7 @@ limitations under the License.
             ]
         },
 
-        NewProductPlan: {
+        ScmNewProductPlan: {
             title: 'New Product Plan',
             sections: [
                 {
@@ -107,14 +107,14 @@ limitations under the License.
             ]
         },
 
-        ForecastAccuracy: {
+        ScmForecastAccuracy: {
             title: 'Forecast Accuracy',
             sections: [
                 {
                     title: 'Accuracy Details',
                     fields: [
-                        { key: 'forecastId', label: 'Forecast', type: 'reference', lookupModel: 'DemandForecast', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+                        { key: 'forecastId', label: 'Forecast', type: 'reference', lookupModel: 'ScmDemandForecast', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'forecastedQty', label: 'Forecasted Quantity', type: 'number' },
                         { key: 'actualQty', label: 'Actual Quantity', type: 'number' },
                         { key: 'accuracyPercent', label: 'Accuracy %', type: 'number' },

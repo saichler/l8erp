@@ -19,18 +19,18 @@ limitations under the License.
 (function() {
     'use strict';
 
-    window.MobileDemandPlanning = window.MobileDemandPlanning || {};
-    MobileDemandPlanning.enums = {};
+    window.MobileScmDemandPlanning = window.MobileScmDemandPlanning || {};
+    MobileScmDemandPlanning.enums = {};
 
     // ============================================================================
     // FORECAST METHOD
     // ============================================================================
 
-    MobileDemandPlanning.enums.FORECAST_METHOD = {
+    MobileScmDemandPlanning.enums.FORECAST_METHOD = {
         0: 'Unspecified', 1: 'Moving Average', 2: 'Exponential Smoothing',
         3: 'Regression', 4: 'Seasonal', 5: 'Causal'
     };
-    MobileDemandPlanning.enums.FORECAST_METHOD_VALUES = {
+    MobileScmDemandPlanning.enums.FORECAST_METHOD_VALUES = {
         'moving': 1, 'average': 1, 'exponential': 2, 'smoothing': 2,
         'regression': 3, 'seasonal': 4, 'causal': 5
     };
@@ -39,13 +39,13 @@ limitations under the License.
     // TASK STATUS
     // ============================================================================
 
-    MobileDemandPlanning.enums.TASK_STATUS = {
+    MobileScmDemandPlanning.enums.TASK_STATUS = {
         0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled'
     };
-    MobileDemandPlanning.enums.TASK_STATUS_VALUES = {
+    MobileScmDemandPlanning.enums.TASK_STATUS_VALUES = {
         'pending': 1, 'progress': 2, 'in': 2, 'completed': 3, 'cancelled': 4
     };
-    MobileDemandPlanning.enums.TASK_STATUS_CLASSES = {
+    MobileScmDemandPlanning.enums.TASK_STATUS_CLASSES = {
         1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-terminated'
     };
 
@@ -53,11 +53,11 @@ limitations under the License.
     // RENDER FUNCTIONS
     // ============================================================================
 
-    MobileDemandPlanning.render = {
-        forecastMethod: (v) => MobileRenderers.renderEnum(v, MobileDemandPlanning.enums.FORECAST_METHOD),
+    MobileScmDemandPlanning.render = {
+        forecastMethod: (v) => MobileRenderers.renderEnum(v, MobileScmDemandPlanning.enums.FORECAST_METHOD),
         taskStatus: MobileRenderers.createStatusRenderer(
-            MobileDemandPlanning.enums.TASK_STATUS,
-            MobileDemandPlanning.enums.TASK_STATUS_CLASSES
+            MobileScmDemandPlanning.enums.TASK_STATUS,
+            MobileScmDemandPlanning.enums.TASK_STATUS_CLASSES
         ),
         boolean: MobileRenderers.renderBoolean,
         date: MobileRenderers.renderDate,

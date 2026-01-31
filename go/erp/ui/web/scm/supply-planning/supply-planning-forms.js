@@ -18,23 +18,23 @@ limitations under the License.
 (function() {
     'use strict';
 
-    // Ensure SupplyPlanning namespace exists
-    window.SupplyPlanning = window.SupplyPlanning || {};
+    // Ensure ScmSupplyPlanning namespace exists
+    window.ScmSupplyPlanning = window.ScmSupplyPlanning || {};
 
-    const enums = SupplyPlanning.enums;
+    const enums = ScmSupplyPlanning.enums;
 
     // ============================================================================
     // FORM FIELD DEFINITIONS
     // ============================================================================
 
-    SupplyPlanning.forms = {
-        MaterialRequirement: {
+    ScmSupplyPlanning.forms = {
+        ScmMaterialRequirement: {
             title: 'Material Requirement',
             sections: [
                 {
                     title: 'Requirement Details',
                     fields: [
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'requiredQuantity', label: 'Required Quantity', type: 'number', required: true },
                         { key: 'requiredDate', label: 'Required Date', type: 'date', required: true },
                         { key: 'planningMethod', label: 'Planning Method', type: 'select', options: enums.PLANNING_METHOD },
@@ -46,15 +46,15 @@ limitations under the License.
             ]
         },
 
-        DistributionRequirement: {
+        ScmDistributionRequirement: {
             title: 'Distribution Requirement',
             sections: [
                 {
                     title: 'Distribution Details',
                     fields: [
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
-                        { key: 'sourceWarehouseId', label: 'Source Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
-                        { key: 'targetWarehouseId', label: 'Target Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                        { key: 'sourceWarehouseId', label: 'Source Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
+                        { key: 'targetWarehouseId', label: 'Target Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
                         { key: 'requiredQuantity', label: 'Required Quantity', type: 'number', required: true },
                         { key: 'requiredDate', label: 'Required Date', type: 'date', required: true },
                         { key: 'priority', label: 'Priority', type: 'text' },
@@ -64,7 +64,7 @@ limitations under the License.
             ]
         },
 
-        SupplyPlan: {
+        ScmSupplyPlan: {
             title: 'Supply Plan',
             sections: [
                 {
@@ -81,14 +81,14 @@ limitations under the License.
             ]
         },
 
-        SupplierCollaboration: {
+        ScmSupplierCollaboration: {
             title: 'Supplier Collaboration',
             sections: [
                 {
                     title: 'Collaboration Details',
                     fields: [
                         { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'agreedQuantity', label: 'Agreed Quantity', type: 'number', required: true },
                         { key: 'deliveryDate', label: 'Delivery Date', type: 'date', required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
@@ -98,14 +98,14 @@ limitations under the License.
             ]
         },
 
-        SafetyStock: {
+        ScmSafetyStock: {
             title: 'Safety Stock',
             sections: [
                 {
                     title: 'Safety Stock Details',
                     fields: [
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
-                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
                         { key: 'safetyStockLevel', label: 'Safety Stock Level', type: 'number', required: true },
                         { key: 'currentStock', label: 'Current Stock', type: 'number' },
                         { key: 'serviceLevel', label: 'Service Level %', type: 'number' },
@@ -115,13 +115,13 @@ limitations under the License.
             ]
         },
 
-        LeadTime: {
+        ScmLeadTime: {
             title: 'Lead Time',
             sections: [
                 {
                     title: 'Lead Time Details',
                     fields: [
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
                         { key: 'averageLeadTime', label: 'Average Lead Time (days)', type: 'number', required: true },
                         { key: 'minimumLeadTime', label: 'Minimum Lead Time (days)', type: 'number' },
@@ -137,13 +137,13 @@ limitations under the License.
     // PRIMARY KEY MAPPING
     // ============================================================================
 
-    SupplyPlanning.primaryKeys = {
-        MaterialRequirement: 'requirementId',
-        DistributionRequirement: 'requirementId',
-        SupplyPlan: 'planId',
-        SupplierCollaboration: 'collaborationId',
-        SafetyStock: 'safetyStockId',
-        LeadTime: 'leadTimeId'
+    ScmSupplyPlanning.primaryKeys = {
+        ScmMaterialRequirement: 'requirementId',
+        ScmDistributionRequirement: 'requirementId',
+        ScmSupplyPlan: 'planId',
+        ScmSupplierCollaboration: 'collaborationId',
+        ScmSafetyStock: 'safetyStockId',
+        ScmLeadTime: 'leadTimeId'
     };
 
 })();

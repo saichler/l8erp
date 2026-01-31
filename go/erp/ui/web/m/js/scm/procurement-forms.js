@@ -22,7 +22,7 @@ limitations under the License.
     const enums = MobileProcurement.enums;
 
     MobileProcurement.forms = {
-        PurchaseRequisition: {
+        ScmPurchaseRequisition: {
             title: 'Purchase Requisition',
             sections: [
                 {
@@ -40,14 +40,14 @@ limitations under the License.
             ]
         },
 
-        RequisitionLine: {
+        ScmRequisitionLine: {
             title: 'Requisition Line',
             sections: [
                 {
                     title: 'Line Details',
                     fields: [
-                        { key: 'requisitionId', label: 'Requisition', type: 'reference', lookupModel: 'PurchaseRequisition', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item' },
+                        { key: 'requisitionId', label: 'Requisition', type: 'reference', lookupModel: 'ScmPurchaseRequisition', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem' },
                         { key: 'description', label: 'Description', type: 'textarea' },
                         { key: 'quantity', label: 'Quantity', type: 'number', required: true },
                         { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
@@ -59,14 +59,14 @@ limitations under the License.
             ]
         },
 
-        RequestForQuotation: {
+        ScmRequestForQuotation: {
             title: 'Request for Quotation',
             sections: [
                 {
                     title: 'RFQ Details',
                     fields: [
                         { key: 'rfqNumber', label: 'RFQ #', type: 'text', required: true },
-                        { key: 'requisitionId', label: 'Requisition', type: 'reference', lookupModel: 'PurchaseRequisition' },
+                        { key: 'requisitionId', label: 'Requisition', type: 'reference', lookupModel: 'ScmPurchaseRequisition' },
                         { key: 'issueDate', label: 'Issue Date', type: 'date', required: true },
                         { key: 'responseDeadline', label: 'Response Deadline', type: 'date' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.REQUISITION_STATUS },
@@ -77,7 +77,7 @@ limitations under the License.
             ]
         },
 
-        PurchaseOrder: {
+        ScmPurchaseOrder: {
             title: 'Purchase Order',
             sections: [
                 {
@@ -95,14 +95,14 @@ limitations under the License.
             ]
         },
 
-        PurchaseOrderLine: {
+        ScmPurchaseOrderLine: {
             title: 'PO Line',
             sections: [
                 {
                     title: 'Line Details',
                     fields: [
-                        { key: 'purchaseOrderId', label: 'Purchase Order', type: 'reference', lookupModel: 'PurchaseOrder', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+                        { key: 'purchaseOrderId', label: 'Purchase Order', type: 'reference', lookupModel: 'ScmPurchaseOrder', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'description', label: 'Description', type: 'textarea' },
                         { key: 'quantity', label: 'Quantity', type: 'number', required: true },
                         { key: 'unitPrice', label: 'Unit Price', type: 'currency', required: true },
@@ -112,7 +112,7 @@ limitations under the License.
             ]
         },
 
-        BlanketOrder: {
+        ScmBlanketOrder: {
             title: 'Blanket Order',
             sections: [
                 {
@@ -130,7 +130,7 @@ limitations under the License.
             ]
         },
 
-        SupplierScorecard: {
+        ScmSupplierScorecard: {
             title: 'Supplier Scorecard',
             sections: [
                 {

@@ -36,12 +36,12 @@ limitations under the License.
 
 <script>
 let demandPlanningTable = null;
-let currentDemandPlanningService = 'demand-forecasts';
+let currentScmDemandPlanningService = 'demand-forecasts';
 
 const DEMAND_PLANNING_SERVICES = {
     'demand-forecasts': {
         endpoint: '/erp/50/DmndFcast',
-        modelName: 'DemandForecast',
+        modelName: 'ScmDemandForecast',
         idField: 'forecastId',
         columns: [
             { key: 'forecastId', label: 'ID', primary: true },
@@ -54,17 +54,17 @@ const DEMAND_PLANNING_SERVICES = {
         addText: 'Add Forecast',
         formFields: [
             { key: 'forecastName', label: 'Forecast Name', type: 'text', required: true },
-            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
             { key: 'forecastDate', label: 'Forecast Date', type: 'date', required: true },
             { key: 'forecastQuantity', label: 'Forecast Quantity', type: 'number', required: true },
-            { key: 'modelId', label: 'Forecast Model', type: 'reference', lookupModel: 'ForecastModel' },
+            { key: 'modelId', label: 'Forecast Model', type: 'reference', lookupModel: 'ScmForecastModel' },
             { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
             { key: 'notes', label: 'Notes', type: 'textarea' }
         ]
     },
     'forecast-models': {
         endpoint: '/erp/50/FcastModel',
-        modelName: 'ForecastModel',
+        modelName: 'ScmForecastModel',
         idField: 'modelId',
         columns: [
             { key: 'modelId', label: 'ID', primary: true },
@@ -84,7 +84,7 @@ const DEMAND_PLANNING_SERVICES = {
     },
     'demand-plans': {
         endpoint: '/erp/50/DemandPlan',
-        modelName: 'DemandPlan',
+        modelName: 'ScmDemandPlan',
         idField: 'planId',
         columns: [
             { key: 'planId', label: 'ID', primary: true },
@@ -105,7 +105,7 @@ const DEMAND_PLANNING_SERVICES = {
     },
     'promo-plans': {
         endpoint: '/erp/50/PromoPlan',
-        modelName: 'PromotionalPlan',
+        modelName: 'ScmPromotionalPlan',
         idField: 'planId',
         columns: [
             { key: 'planId', label: 'ID', primary: true },
@@ -127,7 +127,7 @@ const DEMAND_PLANNING_SERVICES = {
     },
     'new-product-plans': {
         endpoint: '/erp/50/NewProdPln',
-        modelName: 'NewProductPlan',
+        modelName: 'ScmNewProductPlan',
         idField: 'planId',
         columns: [
             { key: 'planId', label: 'ID', primary: true },
@@ -148,7 +148,7 @@ const DEMAND_PLANNING_SERVICES = {
     },
     'forecast-accuracies': {
         endpoint: '/erp/50/FcastAccur',
-        modelName: 'ForecastAccuracy',
+        modelName: 'ScmForecastAccuracy',
         idField: 'accuracyId',
         columns: [
             { key: 'accuracyId', label: 'ID', primary: true },
@@ -160,8 +160,8 @@ const DEMAND_PLANNING_SERVICES = {
         ],
         addText: 'Add Accuracy Record',
         formFields: [
-            { key: 'forecastId', label: 'Forecast', type: 'reference', lookupModel: 'DemandForecast', required: true },
-            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'forecastId', label: 'Forecast', type: 'reference', lookupModel: 'ScmDemandForecast', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
             { key: 'forecastedQty', label: 'Forecasted Quantity', type: 'number' },
             { key: 'actualQty', label: 'Actual Quantity', type: 'number' },
             { key: 'accuracyPercent', label: 'Accuracy %', type: 'number' },
@@ -170,20 +170,20 @@ const DEMAND_PLANNING_SERVICES = {
     }
 };
 
-function initMobileDemandPlanning() {
-    loadDemandPlanningService('demand-forecasts');
+function initMobileScmDemandPlanning() {
+    loadScmDemandPlanningService('demand-forecasts');
 
     document.querySelectorAll('.section-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.section-tab').forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
-            loadDemandPlanningService(tab.dataset.service);
+            loadScmDemandPlanningService(tab.dataset.service);
         });
     });
 }
 
-function loadDemandPlanningService(serviceName) {
-    currentDemandPlanningService = serviceName;
+function loadScmDemandPlanningService(serviceName) {
+    currentScmDemandPlanningService = serviceName;
     const config = DEMAND_PLANNING_SERVICES[serviceName];
 
     demandPlanningTable = new MobileEditTable('demand-planning-table', {
@@ -192,14 +192,14 @@ function loadDemandPlanningService(serviceName) {
         columns: config.columns,
         rowsPerPage: 15,
         addButtonText: config.addText,
-        onAdd: () => openDemandPlanningForm(config),
-        onEdit: (id, item) => openDemandPlanningForm(config, item),
-        onDelete: (id, item) => deleteDemandPlanningItem(config, id, item),
+        onAdd: () => openScmDemandPlanningForm(config),
+        onEdit: (id, item) => openScmDemandPlanningForm(config, item),
+        onDelete: (id, item) => deleteScmDemandPlanningItem(config, id, item),
         getItemId: (item) => item[config.idField]
     });
 }
 
-function openDemandPlanningForm(config, item = null) {
+function openScmDemandPlanningForm(config, item = null) {
     const isEdit = !!item;
     const title = isEdit ? 'Edit' : config.addText;
 
@@ -232,7 +232,7 @@ function openDemandPlanningForm(config, item = null) {
     });
 }
 
-async function deleteDemandPlanningItem(config, id, item) {
+async function deleteScmDemandPlanningItem(config, id, item) {
     const name = item.forecastName || item.modelName || item.planName || item.productName || id;
     const confirmed = await MobileConfirm.confirmDelete(name);
     if (confirmed) {

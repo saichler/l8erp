@@ -22,8 +22,8 @@ limitations under the License.
     const enums = MobileLogistics.enums;
 
     MobileLogistics.forms = {
-        Carrier: {
-            title: 'Carrier',
+        ScmCarrier: {
+            title: 'ScmCarrier',
             sections: [
                 {
                     title: 'Carrier Information',
@@ -39,13 +39,13 @@ limitations under the License.
             ]
         },
 
-        FreightRate: {
+        ScmFreightRate: {
             title: 'Freight Rate',
             sections: [
                 {
                     title: 'Rate Details',
                     fields: [
-                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier', required: true },
+                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier', required: true },
                         { key: 'origin', label: 'Origin', type: 'text', required: true },
                         { key: 'destination', label: 'Destination', type: 'text', required: true },
                         { key: 'ratePerUnit', label: 'Rate per Unit', type: 'currency', required: true },
@@ -57,14 +57,14 @@ limitations under the License.
             ]
         },
 
-        Shipment: {
-            title: 'Shipment',
+        ScmShipment: {
+            title: 'ScmShipment',
             sections: [
                 {
                     title: 'Shipment Details',
                     fields: [
                         { key: 'shipmentNumber', label: 'Shipment Number', type: 'text', required: true },
-                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier', required: true },
+                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier', required: true },
                         { key: 'origin', label: 'Origin', type: 'text' },
                         { key: 'destination', label: 'Destination', type: 'text' },
                         { key: 'shipDate', label: 'Ship Date', type: 'date', required: true },
@@ -76,8 +76,8 @@ limitations under the License.
             ]
         },
 
-        Route: {
-            title: 'Route',
+        ScmRoute: {
+            title: 'ScmRoute',
             sections: [
                 {
                     title: 'Route Details',
@@ -93,14 +93,14 @@ limitations under the License.
             ]
         },
 
-        LoadPlan: {
+        ScmLoadPlan: {
             title: 'Load Plan',
             sections: [
                 {
                     title: 'Plan Details',
                     fields: [
                         { key: 'planName', label: 'Plan Name', type: 'text', required: true },
-                        { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'Shipment', required: true },
+                        { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
                         { key: 'vehicleId', label: 'Vehicle', type: 'text' },
                         { key: 'totalWeight', label: 'Total Weight', type: 'number' },
                         { key: 'totalVolume', label: 'Total Volume', type: 'number' },
@@ -111,13 +111,13 @@ limitations under the License.
             ]
         },
 
-        DeliveryProof: {
+        ScmDeliveryProof: {
             title: 'Delivery Proof',
             sections: [
                 {
                     title: 'Proof Details',
                     fields: [
-                        { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'Shipment', required: true },
+                        { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
                         { key: 'deliveryDate', label: 'Delivery Date', type: 'date', required: true },
                         { key: 'receivedBy', label: 'Received By', type: 'text', required: true },
                         { key: 'signatureRef', label: 'Signature Reference', type: 'text' },
@@ -128,14 +128,14 @@ limitations under the License.
             ]
         },
 
-        FreightAudit: {
+        ScmFreightAudit: {
             title: 'Freight Audit',
             sections: [
                 {
                     title: 'Audit Details',
                     fields: [
-                        { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'Shipment', required: true },
-                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier', required: true },
+                        { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
+                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier', required: true },
                         { key: 'invoicedAmount', label: 'Invoiced Amount', type: 'currency', required: true },
                         { key: 'auditedAmount', label: 'Audited Amount', type: 'currency' },
                         { key: 'variance', label: 'Variance', type: 'currency' },
@@ -145,7 +145,7 @@ limitations under the License.
             ]
         },
 
-        ReturnAuthorization: {
+        ScmReturnAuthorization: {
             title: 'Return Authorization',
             sections: [
                 {

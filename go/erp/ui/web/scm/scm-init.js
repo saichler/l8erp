@@ -24,6 +24,6 @@ limitations under the License.
         defaultService: 'purchase-requisitions',
         sectionSelector: 'procurement',
         initializerName: 'initializeSCM',
-        requiredNamespaces: ['Procurement', 'Inventory', 'WarehouseManagement', 'Logistics', 'DemandPlanning', 'SupplyPlanning']
+        requiredNamespaces: ['Procurement', 'Inventory', 'WarehouseManagement', 'Logistics', 'ScmDemandPlanning', 'ScmSupplyPlanning']
     });
 })();

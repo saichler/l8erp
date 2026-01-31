@@ -219,60 +219,60 @@ limitations under the License.
             // Services for each sub-module (Level 3) - EXACT order from desktop scm-config.js
             services: {
                 'procurement': [
-                    { key: 'purchase-requisitions', label: 'Requisitions', icon: 'procurement', endpoint: '/erp/50/PurchReq', model: 'PurchaseRequisition', idField: 'requisitionId' },
-                    { key: 'requisition-lines', label: 'Req. Lines', icon: 'procurement', endpoint: '/erp/50/ReqLine', model: 'RequisitionLine', idField: 'lineId' },
-                    { key: 'rfqs', label: 'RFQs', icon: 'procurement', endpoint: '/erp/50/RFQ', model: 'RequestForQuotation', idField: 'rfqId' },
-                    { key: 'purchase-orders', label: 'Purchase Orders', icon: 'procurement', endpoint: '/erp/50/PurchOrder', model: 'PurchaseOrder', idField: 'purchaseOrderId' },
-                    { key: 'po-lines', label: 'PO Lines', icon: 'procurement', endpoint: '/erp/50/POLine', model: 'PurchaseOrderLine', idField: 'lineId' },
-                    { key: 'blanket-orders', label: 'Blanket Orders', icon: 'procurement', endpoint: '/erp/50/BlnktOrder', model: 'BlanketOrder', idField: 'blanketOrderId' },
-                    { key: 'supplier-scorecards', label: 'Scorecards', icon: 'procurement', endpoint: '/erp/50/SupplrCard', model: 'SupplierScorecard', idField: 'scorecardId' }
+                    { key: 'purchase-requisitions', label: 'Requisitions', icon: 'procurement', endpoint: '/erp/50/PurchReq', model: 'ScmPurchaseRequisition', idField: 'requisitionId' },
+                    { key: 'requisition-lines', label: 'Req. Lines', icon: 'procurement', endpoint: '/erp/50/ReqLine', model: 'ScmRequisitionLine', idField: 'lineId' },
+                    { key: 'rfqs', label: 'RFQs', icon: 'procurement', endpoint: '/erp/50/RFQ', model: 'ScmRequestForQuotation', idField: 'rfqId' },
+                    { key: 'purchase-orders', label: 'Purchase Orders', icon: 'procurement', endpoint: '/erp/50/PurchOrder', model: 'ScmPurchaseOrder', idField: 'purchaseOrderId' },
+                    { key: 'po-lines', label: 'PO Lines', icon: 'procurement', endpoint: '/erp/50/POLine', model: 'ScmPurchaseOrderLine', idField: 'lineId' },
+                    { key: 'blanket-orders', label: 'Blanket Orders', icon: 'procurement', endpoint: '/erp/50/BlnktOrder', model: 'ScmBlanketOrder', idField: 'blanketOrderId' },
+                    { key: 'supplier-scorecards', label: 'Scorecards', icon: 'procurement', endpoint: '/erp/50/SupplrCard', model: 'ScmSupplierScorecard', idField: 'scorecardId' }
                 ],
                 'inventory': [
-                    { key: 'items', label: 'Items', icon: 'inventory', endpoint: '/erp/50/Item', model: 'Item', idField: 'itemId' },
-                    { key: 'item-categories', label: 'Categories', icon: 'inventory', endpoint: '/erp/50/ItemCat', model: 'ItemCategory', idField: 'categoryId' },
-                    { key: 'stock-movements', label: 'Stock Movements', icon: 'inventory', endpoint: '/erp/50/StockMove', model: 'StockMovement', idField: 'movementId' },
-                    { key: 'lot-numbers', label: 'Lot Numbers', icon: 'inventory', endpoint: '/erp/50/LotNumber', model: 'LotNumber', idField: 'lotId' },
-                    { key: 'serial-numbers', label: 'Serial Numbers', icon: 'inventory', endpoint: '/erp/50/SerialNum', model: 'SerialNumber', idField: 'serialId' },
-                    { key: 'cycle-counts', label: 'Cycle Counts', icon: 'inventory', endpoint: '/erp/50/CycleCount', model: 'CycleCount', idField: 'cycleCountId' },
-                    { key: 'reorder-points', label: 'Reorder Points', icon: 'inventory', endpoint: '/erp/50/ReorderPt', model: 'ReorderPoint', idField: 'reorderPointId' },
-                    { key: 'inventory-valuations', label: 'Valuations', icon: 'inventory', endpoint: '/erp/50/InvValue', model: 'InventoryValuation', idField: 'valuationId' }
+                    { key: 'items', label: 'Items', icon: 'inventory', endpoint: '/erp/50/Item', model: 'ScmItem', idField: 'itemId' },
+                    { key: 'item-categories', label: 'Categories', icon: 'inventory', endpoint: '/erp/50/ItemCat', model: 'ScmItemCategory', idField: 'categoryId' },
+                    { key: 'stock-movements', label: 'Stock Movements', icon: 'inventory', endpoint: '/erp/50/StockMove', model: 'ScmStockMovement', idField: 'movementId' },
+                    { key: 'lot-numbers', label: 'Lot Numbers', icon: 'inventory', endpoint: '/erp/50/LotNumber', model: 'ScmLotNumber', idField: 'lotId' },
+                    { key: 'serial-numbers', label: 'Serial Numbers', icon: 'inventory', endpoint: '/erp/50/SerialNum', model: 'ScmSerialNumber', idField: 'serialId' },
+                    { key: 'cycle-counts', label: 'Cycle Counts', icon: 'inventory', endpoint: '/erp/50/CycleCount', model: 'ScmCycleCount', idField: 'cycleCountId' },
+                    { key: 'reorder-points', label: 'Reorder Points', icon: 'inventory', endpoint: '/erp/50/ReorderPt', model: 'ScmReorderPoint', idField: 'reorderPointId' },
+                    { key: 'inventory-valuations', label: 'Valuations', icon: 'inventory', endpoint: '/erp/50/InvValue', model: 'ScmInventoryValuation', idField: 'valuationId' }
                 ],
                 'warehouse': [
-                    { key: 'warehouses', label: 'Warehouses', icon: 'warehouse', endpoint: '/erp/50/Warehouse', model: 'Warehouse', idField: 'warehouseId' },
-                    { key: 'bins', label: 'Bins', icon: 'warehouse', endpoint: '/erp/50/Bin', model: 'Bin', idField: 'binId' },
-                    { key: 'receiving-orders', label: 'Receiving', icon: 'warehouse', endpoint: '/erp/50/RecvOrder', model: 'ReceivingOrder', idField: 'receivingOrderId' },
-                    { key: 'putaway-tasks', label: 'Put Away', icon: 'warehouse', endpoint: '/erp/50/PutAway', model: 'PutawayTask', idField: 'taskId' },
-                    { key: 'pick-tasks', label: 'Pick Tasks', icon: 'warehouse', endpoint: '/erp/50/PickTask', model: 'PickTask', idField: 'taskId' },
-                    { key: 'pack-tasks', label: 'Pack Tasks', icon: 'warehouse', endpoint: '/erp/50/PackTask', model: 'PackTask', idField: 'taskId' },
-                    { key: 'ship-tasks', label: 'Ship Tasks', icon: 'warehouse', endpoint: '/erp/50/ShipTask', model: 'ShipTask', idField: 'taskId' },
-                    { key: 'wave-plans', label: 'Wave Plans', icon: 'warehouse', endpoint: '/erp/50/WavePlan', model: 'WavePlan', idField: 'wavePlanId' },
-                    { key: 'dock-schedules', label: 'Dock Schedules', icon: 'warehouse', endpoint: '/erp/50/DockSched', model: 'DockSchedule', idField: 'scheduleId' }
+                    { key: 'warehouses', label: 'Warehouses', icon: 'warehouse', endpoint: '/erp/50/Warehouse', model: 'ScmWarehouse', idField: 'warehouseId' },
+                    { key: 'bins', label: 'Bins', icon: 'warehouse', endpoint: '/erp/50/Bin', model: 'ScmBin', idField: 'binId' },
+                    { key: 'receiving-orders', label: 'Receiving', icon: 'warehouse', endpoint: '/erp/50/RecvOrder', model: 'ScmReceivingOrder', idField: 'receivingOrderId' },
+                    { key: 'putaway-tasks', label: 'Put Away', icon: 'warehouse', endpoint: '/erp/50/PutAway', model: 'ScmPutawayTask', idField: 'taskId' },
+                    { key: 'pick-tasks', label: 'Pick Tasks', icon: 'warehouse', endpoint: '/erp/50/PickTask', model: 'ScmPickTask', idField: 'taskId' },
+                    { key: 'pack-tasks', label: 'Pack Tasks', icon: 'warehouse', endpoint: '/erp/50/PackTask', model: 'ScmPackTask', idField: 'taskId' },
+                    { key: 'ship-tasks', label: 'Ship Tasks', icon: 'warehouse', endpoint: '/erp/50/ShipTask', model: 'ScmShipTask', idField: 'taskId' },
+                    { key: 'wave-plans', label: 'Wave Plans', icon: 'warehouse', endpoint: '/erp/50/WavePlan', model: 'ScmWavePlan', idField: 'wavePlanId' },
+                    { key: 'dock-schedules', label: 'Dock Schedules', icon: 'warehouse', endpoint: '/erp/50/DockSched', model: 'ScmDockSchedule', idField: 'scheduleId' }
                 ],
                 'logistics': [
-                    { key: 'carriers', label: 'Carriers', icon: 'logistics', endpoint: '/erp/50/Carrier', model: 'Carrier', idField: 'carrierId' },
-                    { key: 'freight-rates', label: 'Freight Rates', icon: 'logistics', endpoint: '/erp/50/FreightRt', model: 'FreightRate', idField: 'rateId' },
-                    { key: 'shipments', label: 'Shipments', icon: 'logistics', endpoint: '/erp/50/Shipment', model: 'Shipment', idField: 'shipmentId' },
-                    { key: 'routes', label: 'Routes', icon: 'logistics', endpoint: '/erp/50/Route', model: 'Route', idField: 'routeId' },
-                    { key: 'load-plans', label: 'Load Plans', icon: 'logistics', endpoint: '/erp/50/LoadPlan', model: 'LoadPlan', idField: 'loadPlanId' },
-                    { key: 'delivery-proofs', label: 'Delivery Proofs', icon: 'logistics', endpoint: '/erp/50/DlvryProof', model: 'DeliveryProof', idField: 'proofId' },
-                    { key: 'freight-audits', label: 'Freight Audits', icon: 'logistics', endpoint: '/erp/50/FrtAudit', model: 'FreightAudit', idField: 'auditId' },
-                    { key: 'return-authorizations', label: 'Returns', icon: 'logistics', endpoint: '/erp/50/ReturnAuth', model: 'ReturnAuthorization', idField: 'rmaId' }
+                    { key: 'carriers', label: 'Carriers', icon: 'logistics', endpoint: '/erp/50/Carrier', model: 'ScmCarrier', idField: 'carrierId' },
+                    { key: 'freight-rates', label: 'Freight Rates', icon: 'logistics', endpoint: '/erp/50/FreightRt', model: 'ScmFreightRate', idField: 'rateId' },
+                    { key: 'shipments', label: 'Shipments', icon: 'logistics', endpoint: '/erp/50/Shipment', model: 'ScmShipment', idField: 'shipmentId' },
+                    { key: 'routes', label: 'Routes', icon: 'logistics', endpoint: '/erp/50/Route', model: 'ScmRoute', idField: 'routeId' },
+                    { key: 'load-plans', label: 'Load Plans', icon: 'logistics', endpoint: '/erp/50/LoadPlan', model: 'ScmLoadPlan', idField: 'loadPlanId' },
+                    { key: 'delivery-proofs', label: 'Delivery Proofs', icon: 'logistics', endpoint: '/erp/50/DlvryProof', model: 'ScmDeliveryProof', idField: 'proofId' },
+                    { key: 'freight-audits', label: 'Freight Audits', icon: 'logistics', endpoint: '/erp/50/FrtAudit', model: 'ScmFreightAudit', idField: 'auditId' },
+                    { key: 'return-authorizations', label: 'Returns', icon: 'logistics', endpoint: '/erp/50/ReturnAuth', model: 'ScmReturnAuthorization', idField: 'rmaId' }
                 ],
                 'demand-planning': [
-                    { key: 'demand-forecasts', label: 'Forecasts', icon: 'demand-planning', endpoint: '/erp/50/DmndFcast', model: 'DemandForecast', idField: 'forecastId' },
-                    { key: 'forecast-models', label: 'Models', icon: 'demand-planning', endpoint: '/erp/50/FcastModel', model: 'ForecastModel', idField: 'modelId' },
-                    { key: 'demand-plans', label: 'Demand Plans', icon: 'demand-planning', endpoint: '/erp/50/DemandPlan', model: 'DemandPlan', idField: 'planId' },
-                    { key: 'promo-plans', label: 'Promotions', icon: 'demand-planning', endpoint: '/erp/50/PromoPlan', model: 'PromotionalPlan', idField: 'planId' },
-                    { key: 'new-product-plans', label: 'New Products', icon: 'demand-planning', endpoint: '/erp/50/NewProdPln', model: 'NewProductPlan', idField: 'planId' },
-                    { key: 'forecast-accuracies', label: 'Accuracy', icon: 'demand-planning', endpoint: '/erp/50/FcastAccur', model: 'ForecastAccuracy', idField: 'accuracyId' }
+                    { key: 'demand-forecasts', label: 'Forecasts', icon: 'demand-planning', endpoint: '/erp/50/DmndFcast', model: 'ScmDemandForecast', idField: 'forecastId' },
+                    { key: 'forecast-models', label: 'Models', icon: 'demand-planning', endpoint: '/erp/50/FcastModel', model: 'ScmForecastModel', idField: 'modelId' },
+                    { key: 'demand-plans', label: 'Demand Plans', icon: 'demand-planning', endpoint: '/erp/50/DemandPlan', model: 'ScmDemandPlan', idField: 'planId' },
+                    { key: 'promo-plans', label: 'Promotions', icon: 'demand-planning', endpoint: '/erp/50/PromoPlan', model: 'ScmPromotionalPlan', idField: 'planId' },
+                    { key: 'new-product-plans', label: 'New Products', icon: 'demand-planning', endpoint: '/erp/50/NewProdPln', model: 'ScmNewProductPlan', idField: 'planId' },
+                    { key: 'forecast-accuracies', label: 'Accuracy', icon: 'demand-planning', endpoint: '/erp/50/FcastAccur', model: 'ScmForecastAccuracy', idField: 'accuracyId' }
                 ],
                 'supply-planning': [
-                    { key: 'material-requirements', label: 'Material Reqs', icon: 'supply-planning', endpoint: '/erp/50/MatReq', model: 'MaterialRequirement', idField: 'requirementId' },
-                    { key: 'distribution-requirements', label: 'Distribution Reqs', icon: 'supply-planning', endpoint: '/erp/50/DistReq', model: 'DistributionRequirement', idField: 'requirementId' },
-                    { key: 'supply-plans', label: 'Supply Plans', icon: 'supply-planning', endpoint: '/erp/50/SupplyPlan', model: 'SupplyPlan', idField: 'planId' },
-                    { key: 'supplier-collaborations', label: 'Collaborations', icon: 'supply-planning', endpoint: '/erp/50/SupCollab', model: 'SupplierCollaboration', idField: 'collaborationId' },
-                    { key: 'safety-stocks', label: 'Safety Stock', icon: 'supply-planning', endpoint: '/erp/50/SafeStock', model: 'SafetyStock', idField: 'safetyStockId' },
-                    { key: 'lead-times', label: 'Lead Times', icon: 'supply-planning', endpoint: '/erp/50/LeadTime', model: 'LeadTime', idField: 'leadTimeId' }
+                    { key: 'material-requirements', label: 'Material Reqs', icon: 'supply-planning', endpoint: '/erp/50/MatReq', model: 'ScmMaterialRequirement', idField: 'requirementId' },
+                    { key: 'distribution-requirements', label: 'Distribution Reqs', icon: 'supply-planning', endpoint: '/erp/50/DistReq', model: 'ScmDistributionRequirement', idField: 'requirementId' },
+                    { key: 'supply-plans', label: 'Supply Plans', icon: 'supply-planning', endpoint: '/erp/50/SupplyPlan', model: 'ScmSupplyPlan', idField: 'planId' },
+                    { key: 'supplier-collaborations', label: 'Collaborations', icon: 'supply-planning', endpoint: '/erp/50/SupCollab', model: 'ScmSupplierCollaboration', idField: 'collaborationId' },
+                    { key: 'safety-stocks', label: 'Safety Stock', icon: 'supply-planning', endpoint: '/erp/50/SafeStock', model: 'ScmSafetyStock', idField: 'safetyStockId' },
+                    { key: 'lead-times', label: 'Lead Times', icon: 'supply-planning', endpoint: '/erp/50/LeadTime', model: 'ScmLeadTime', idField: 'leadTimeId' }
                 ]
             }
         },

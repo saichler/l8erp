@@ -22,8 +22,8 @@ limitations under the License.
     const enums = MobileInventory.enums;
 
     MobileInventory.forms = {
-        Item: {
-            title: 'Item',
+        ScmItem: {
+            title: 'ScmItem',
             sections: [
                 {
                     title: 'Item Information',
@@ -32,7 +32,7 @@ limitations under the License.
                         { key: 'name', label: 'Name', type: 'text', required: true },
                         { key: 'description', label: 'Description', type: 'textarea' },
                         { key: 'itemType', label: 'Item Type', type: 'select', options: enums.ITEM_TYPE, required: true },
-                        { key: 'categoryId', label: 'Category', type: 'reference', lookupModel: 'ItemCategory' },
+                        { key: 'categoryId', label: 'Category', type: 'reference', lookupModel: 'ScmItemCategory' },
                         { key: 'unitOfMeasure', label: 'Unit of Measure', type: 'text' },
                         { key: 'unitCost', label: 'Unit Cost', type: 'currency' },
                         { key: 'isActive', label: 'Active', type: 'checkbox' }
@@ -41,14 +41,14 @@ limitations under the License.
             ]
         },
 
-        ItemCategory: {
+        ScmItemCategory: {
             title: 'Item Category',
             sections: [
                 {
                     title: 'Category Information',
                     fields: [
                         { key: 'categoryName', label: 'Category Name', type: 'text', required: true },
-                        { key: 'parentCategoryId', label: 'Parent Category', type: 'reference', lookupModel: 'ItemCategory' },
+                        { key: 'parentCategoryId', label: 'Parent Category', type: 'reference', lookupModel: 'ScmItemCategory' },
                         { key: 'description', label: 'Description', type: 'textarea' },
                         { key: 'isActive', label: 'Active', type: 'checkbox' }
                     ]
@@ -56,17 +56,17 @@ limitations under the License.
             ]
         },
 
-        StockMovement: {
+        ScmStockMovement: {
             title: 'Stock Movement',
             sections: [
                 {
                     title: 'Movement Details',
                     fields: [
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'movementType', label: 'Movement Type', type: 'select', options: enums.MOVEMENT_TYPE, required: true },
                         { key: 'quantity', label: 'Quantity', type: 'number', required: true },
                         { key: 'movementDate', label: 'Movement Date', type: 'date', required: true },
-                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse' },
+                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
                         { key: 'reference', label: 'Reference', type: 'text' },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
@@ -74,14 +74,14 @@ limitations under the License.
             ]
         },
 
-        LotNumber: {
+        ScmLotNumber: {
             title: 'Lot Number',
             sections: [
                 {
                     title: 'Lot Details',
                     fields: [
                         { key: 'lotNumber', label: 'Lot Number', type: 'text', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'manufacturingDate', label: 'Manufacturing Date', type: 'date' },
                         { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
                         { key: 'quantity', label: 'Quantity', type: 'number' },
@@ -91,29 +91,29 @@ limitations under the License.
             ]
         },
 
-        SerialNumber: {
+        ScmSerialNumber: {
             title: 'Serial Number',
             sections: [
                 {
                     title: 'Serial Details',
                     fields: [
                         { key: 'serialNumber', label: 'Serial Number', type: 'text', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
-                        { key: 'lotId', label: 'Lot', type: 'reference', lookupModel: 'LotNumber' },
-                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse' },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                        { key: 'lotId', label: 'Lot', type: 'reference', lookupModel: 'ScmLotNumber' },
+                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
                         { key: 'isAvailable', label: 'Available', type: 'checkbox' }
                     ]
                 }
             ]
         },
 
-        CycleCount: {
+        ScmCycleCount: {
             title: 'Cycle Count',
             sections: [
                 {
                     title: 'Count Details',
                     fields: [
-                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse', required: true },
+                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
                         { key: 'countDate', label: 'Count Date', type: 'date', required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
                         { key: 'itemsCounted', label: 'Items Counted', type: 'number' },
@@ -124,14 +124,14 @@ limitations under the License.
             ]
         },
 
-        ReorderPoint: {
+        ScmReorderPoint: {
             title: 'Reorder Point',
             sections: [
                 {
                     title: 'Reorder Details',
                     fields: [
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
-                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'Warehouse' },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
                         { key: 'minimumQuantity', label: 'Minimum Quantity', type: 'number', required: true },
                         { key: 'reorderQuantity', label: 'Reorder Quantity', type: 'number', required: true },
                         { key: 'maximumQuantity', label: 'Maximum Quantity', type: 'number' },
@@ -141,13 +141,13 @@ limitations under the License.
             ]
         },
 
-        InventoryValuation: {
+        ScmInventoryValuation: {
             title: 'Inventory Valuation',
             sections: [
                 {
                     title: 'Valuation Details',
                     fields: [
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'valuationMethod', label: 'Valuation Method', type: 'select', options: enums.VALUATION_METHOD, required: true },
                         { key: 'valuationDate', label: 'Valuation Date', type: 'date', required: true },
                         { key: 'quantityOnHand', label: 'Quantity on Hand', type: 'number' },

@@ -42,7 +42,7 @@ let currentProcurementService = 'purchase-requisitions';
 const PROCUREMENT_SERVICES = {
     'purchase-requisitions': {
         endpoint: '/erp/50/PurchReq',
-        modelName: 'PurchaseRequisition',
+        modelName: 'ScmPurchaseRequisition',
         idField: 'requisitionId',
         columns: [
             { key: 'requisitionId', label: 'Req ID', primary: true },
@@ -65,7 +65,7 @@ const PROCUREMENT_SERVICES = {
     },
     'requisition-lines': {
         endpoint: '/erp/50/ReqLine',
-        modelName: 'RequisitionLine',
+        modelName: 'ScmRequisitionLine',
         idField: 'lineId',
         columns: [
             { key: 'lineId', label: 'Line ID', primary: true },
@@ -77,8 +77,8 @@ const PROCUREMENT_SERVICES = {
         ],
         addText: 'Add Line',
         formFields: [
-            { key: 'requisitionId', label: 'Requisition', type: 'reference', lookupModel: 'PurchaseRequisition', required: true },
-            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item' },
+            { key: 'requisitionId', label: 'Requisition', type: 'reference', lookupModel: 'ScmPurchaseRequisition', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem' },
             { key: 'description', label: 'Description', type: 'textarea' },
             { key: 'quantity', label: 'Quantity', type: 'number', required: true },
             { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
@@ -89,7 +89,7 @@ const PROCUREMENT_SERVICES = {
     },
     'rfqs': {
         endpoint: '/erp/50/RFQ',
-        modelName: 'RequestForQuotation',
+        modelName: 'ScmRequestForQuotation',
         idField: 'rfqId',
         columns: [
             { key: 'rfqId', label: 'RFQ ID', primary: true },
@@ -101,7 +101,7 @@ const PROCUREMENT_SERVICES = {
         addText: 'Add RFQ',
         formFields: [
             { key: 'rfqNumber', label: 'RFQ #', type: 'text', required: true },
-            { key: 'requisitionId', label: 'Requisition', type: 'reference', lookupModel: 'PurchaseRequisition' },
+            { key: 'requisitionId', label: 'Requisition', type: 'reference', lookupModel: 'ScmPurchaseRequisition' },
             { key: 'issueDate', label: 'Issue Date', type: 'date', required: true },
             { key: 'responseDeadline', label: 'Response Deadline', type: 'date' },
             { key: 'status', label: 'Status', type: 'select', options: { 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Rejected', 5: 'Fulfilled', 6: 'Cancelled' } },
@@ -111,7 +111,7 @@ const PROCUREMENT_SERVICES = {
     },
     'purchase-orders': {
         endpoint: '/erp/50/PurchOrder',
-        modelName: 'PurchaseOrder',
+        modelName: 'ScmPurchaseOrder',
         idField: 'purchaseOrderId',
         columns: [
             { key: 'purchaseOrderId', label: 'PO ID', primary: true },
@@ -134,7 +134,7 @@ const PROCUREMENT_SERVICES = {
     },
     'po-lines': {
         endpoint: '/erp/50/POLine',
-        modelName: 'PurchaseOrderLine',
+        modelName: 'ScmPurchaseOrderLine',
         idField: 'lineId',
         columns: [
             { key: 'lineId', label: 'Line ID', primary: true },
@@ -146,8 +146,8 @@ const PROCUREMENT_SERVICES = {
         ],
         addText: 'Add PO Line',
         formFields: [
-            { key: 'purchaseOrderId', label: 'Purchase Order', type: 'reference', lookupModel: 'PurchaseOrder', required: true },
-            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+            { key: 'purchaseOrderId', label: 'Purchase Order', type: 'reference', lookupModel: 'ScmPurchaseOrder', required: true },
+            { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
             { key: 'description', label: 'Description', type: 'textarea' },
             { key: 'quantity', label: 'Quantity', type: 'number', required: true },
             { key: 'unitPrice', label: 'Unit Price', type: 'currency', required: true },
@@ -156,7 +156,7 @@ const PROCUREMENT_SERVICES = {
     },
     'blanket-orders': {
         endpoint: '/erp/50/BlnktOrder',
-        modelName: 'BlanketOrder',
+        modelName: 'ScmBlanketOrder',
         idField: 'blanketOrderId',
         columns: [
             { key: 'blanketOrderId', label: 'Order ID', primary: true },
@@ -179,7 +179,7 @@ const PROCUREMENT_SERVICES = {
     },
     'supplier-scorecards': {
         endpoint: '/erp/50/SupplrCard',
-        modelName: 'SupplierScorecard',
+        modelName: 'ScmSupplierScorecard',
         idField: 'scorecardId',
         columns: [
             { key: 'scorecardId', label: 'ID', primary: true },

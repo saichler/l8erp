@@ -23,7 +23,7 @@ limitations under the License.
     const render = MobileInventory.render;
 
     MobileInventory.columns = {
-        Item: [
+        ScmItem: [
             { key: 'itemId', label: 'ID', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'itemNumber', label: 'Item #', sortKey: 'itemNumber', filterKey: 'itemNumber' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
@@ -33,7 +33,7 @@ limitations under the License.
             { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
         ],
 
-        ItemCategory: [
+        ScmItemCategory: [
             { key: 'categoryId', label: 'ID', sortKey: 'categoryId', filterKey: 'categoryId' },
             { key: 'categoryName', label: 'Name', sortKey: 'categoryName', filterKey: 'categoryName' },
             { key: 'parentCategoryId', label: 'Parent', sortKey: 'parentCategoryId', filterKey: 'parentCategoryId' },
@@ -41,7 +41,7 @@ limitations under the License.
             { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
         ],
 
-        StockMovement: [
+        ScmStockMovement: [
             { key: 'movementId', label: 'ID', sortKey: 'movementId', filterKey: 'movementId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'movementType', label: 'Type', sortKey: 'movementType', filterKey: 'movementType', enumValues: enums.MOVEMENT_TYPE_VALUES, render: (item) => render.movementType(item.movementType) },
@@ -50,7 +50,7 @@ limitations under the License.
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' }
         ],
 
-        LotNumber: [
+        ScmLotNumber: [
             { key: 'lotId', label: 'ID', sortKey: 'lotId', filterKey: 'lotId' },
             { key: 'lotNumber', label: 'Lot #', sortKey: 'lotNumber', filterKey: 'lotNumber' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -59,7 +59,7 @@ limitations under the License.
             { key: 'quantity', label: 'Qty', sortKey: 'quantity' }
         ],
 
-        SerialNumber: [
+        ScmSerialNumber: [
             { key: 'serialId', label: 'ID', sortKey: 'serialId', filterKey: 'serialId' },
             { key: 'serialNumber', label: 'Serial #', sortKey: 'serialNumber', filterKey: 'serialNumber' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -67,7 +67,7 @@ limitations under the License.
             { key: 'isAvailable', label: 'Available', sortKey: 'isAvailable', render: (item) => MobileRenderers.renderBoolean(item.isAvailable) }
         ],
 
-        CycleCount: [
+        ScmCycleCount: [
             { key: 'cycleCountId', label: 'ID', sortKey: 'cycleCountId', filterKey: 'cycleCountId' },
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
             { key: 'countDate', label: 'Count Date', sortKey: 'countDate', render: (item) => MobileRenderers.renderDate(item.countDate) },
@@ -76,7 +76,7 @@ limitations under the License.
             { key: 'discrepancies', label: 'Discrepancies', sortKey: 'discrepancies' }
         ],
 
-        ReorderPoint: [
+        ScmReorderPoint: [
             { key: 'reorderPointId', label: 'ID', sortKey: 'reorderPointId', filterKey: 'reorderPointId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
@@ -85,7 +85,7 @@ limitations under the License.
             { key: 'planningMethod', label: 'Method', sortKey: 'planningMethod', filterKey: 'planningMethod', enumValues: enums.PLANNING_METHOD_VALUES, render: (item) => render.planningMethod(item.planningMethod) }
         ],
 
-        InventoryValuation: [
+        ScmInventoryValuation: [
             { key: 'valuationId', label: 'ID', sortKey: 'valuationId', filterKey: 'valuationId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'valuationMethod', label: 'Method', sortKey: 'valuationMethod', filterKey: 'valuationMethod', enumValues: enums.VALUATION_METHOD_VALUES, render: (item) => render.valuationMethod(item.valuationMethod) },
@@ -95,9 +95,9 @@ limitations under the License.
     };
 
     MobileInventory.primaryKeys = {
-        Item: 'itemId', ItemCategory: 'categoryId', StockMovement: 'movementId',
-        LotNumber: 'lotId', SerialNumber: 'serialId', CycleCount: 'cycleCountId',
-        ReorderPoint: 'reorderPointId', InventoryValuation: 'valuationId'
+        ScmItem: 'itemId', ScmItemCategory: 'categoryId', ScmStockMovement: 'movementId',
+        ScmLotNumber: 'lotId', ScmSerialNumber: 'serialId', ScmCycleCount: 'cycleCountId',
+        ScmReorderPoint: 'reorderPointId', ScmInventoryValuation: 'valuationId'
     };
 
 })();

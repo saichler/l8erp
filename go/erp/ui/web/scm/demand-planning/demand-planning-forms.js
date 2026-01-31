@@ -18,27 +18,27 @@ limitations under the License.
 (function() {
     'use strict';
 
-    // Ensure DemandPlanning namespace exists
-    window.DemandPlanning = window.DemandPlanning || {};
+    // Ensure ScmDemandPlanning namespace exists
+    window.ScmDemandPlanning = window.ScmDemandPlanning || {};
 
-    const enums = DemandPlanning.enums;
+    const enums = ScmDemandPlanning.enums;
 
     // ============================================================================
     // FORM FIELD DEFINITIONS
     // ============================================================================
 
-    DemandPlanning.forms = {
-        DemandForecast: {
+    ScmDemandPlanning.forms = {
+        ScmDemandForecast: {
             title: 'Demand Forecast',
             sections: [
                 {
                     title: 'Forecast Details',
                     fields: [
                         { key: 'forecastName', label: 'Forecast Name', type: 'text', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'forecastDate', label: 'Forecast Date', type: 'date', required: true },
                         { key: 'forecastQuantity', label: 'Forecast Quantity', type: 'number', required: true },
-                        { key: 'modelId', label: 'Forecast Model', type: 'reference', lookupModel: 'ForecastModel' },
+                        { key: 'modelId', label: 'Forecast Model', type: 'reference', lookupModel: 'ScmForecastModel' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
@@ -46,7 +46,7 @@ limitations under the License.
             ]
         },
 
-        ForecastModel: {
+        ScmForecastModel: {
             title: 'Forecast Model',
             sections: [
                 {
@@ -62,7 +62,7 @@ limitations under the License.
             ]
         },
 
-        DemandPlan: {
+        ScmDemandPlan: {
             title: 'Demand Plan',
             sections: [
                 {
@@ -79,7 +79,7 @@ limitations under the License.
             ]
         },
 
-        PromotionalPlan: {
+        ScmPromotionalPlan: {
             title: 'Promotional Plan',
             sections: [
                 {
@@ -96,7 +96,7 @@ limitations under the License.
             ]
         },
 
-        NewProductPlan: {
+        ScmNewProductPlan: {
             title: 'New Product Plan',
             sections: [
                 {
@@ -113,14 +113,14 @@ limitations under the License.
             ]
         },
 
-        ForecastAccuracy: {
+        ScmForecastAccuracy: {
             title: 'Forecast Accuracy',
             sections: [
                 {
                     title: 'Accuracy Details',
                     fields: [
-                        { key: 'forecastId', label: 'Forecast', type: 'reference', lookupModel: 'DemandForecast', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'Item', required: true },
+                        { key: 'forecastId', label: 'Forecast', type: 'reference', lookupModel: 'ScmDemandForecast', required: true },
+                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'forecastedQty', label: 'Forecasted Quantity', type: 'number' },
                         { key: 'actualQty', label: 'Actual Quantity', type: 'number' },
                         { key: 'accuracyPercent', label: 'Accuracy %', type: 'number' },
@@ -135,13 +135,13 @@ limitations under the License.
     // PRIMARY KEY MAPPING
     // ============================================================================
 
-    DemandPlanning.primaryKeys = {
-        DemandForecast: 'forecastId',
-        ForecastModel: 'modelId',
-        DemandPlan: 'planId',
-        PromotionalPlan: 'planId',
-        NewProductPlan: 'planId',
-        ForecastAccuracy: 'accuracyId'
+    ScmDemandPlanning.primaryKeys = {
+        ScmDemandForecast: 'forecastId',
+        ScmForecastModel: 'modelId',
+        ScmDemandPlan: 'planId',
+        ScmPromotionalPlan: 'planId',
+        ScmNewProductPlan: 'planId',
+        ScmForecastAccuracy: 'accuracyId'
     };
 
 })();
