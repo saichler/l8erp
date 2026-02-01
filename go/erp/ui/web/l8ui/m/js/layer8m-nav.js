@@ -429,21 +429,33 @@ limitations under the License.
             // Get form definition for this service
             const formDef = this._getServiceFormDef(serviceConfig);
             const columns = this._getServiceColumns(serviceConfig);
+            const transformData = this._getServiceTransformData(serviceConfig);
 
-            // Create the table
-            activeTable = new Layer8MEditTable('service-table-container', {
+            // Build table config
+            const tableConfig = {
                 endpoint: Layer8MConfig.resolveEndpoint(serviceConfig.endpoint),
                 modelName: serviceConfig.model,
                 columns: columns,
                 rowsPerPage: 15,
-                statusField: 'status',
-                addButtonText: `Add ${serviceConfig.label.replace(/s$/, '')}`,
-                onAdd: () => this._openServiceForm(serviceConfig, formDef, null),
-                onEdit: (id, item) => this._openServiceForm(serviceConfig, formDef, item),
-                onDelete: (id, item) => this._deleteServiceRecord(serviceConfig, id, item),
-                onRowClick: (item, id) => this._showRecordDetails(serviceConfig, formDef, item),
                 getItemId: (item) => item[serviceConfig.idField] || item.id
-            });
+            };
+
+            // Add transform if available
+            if (transformData) {
+                tableConfig.transformData = transformData;
+            }
+
+            // Add CRUD callbacks only for non-readOnly services
+            if (!serviceConfig.readOnly) {
+                tableConfig.statusField = 'status';
+                tableConfig.addButtonText = `Add ${serviceConfig.label.replace(/s$/, '')}`;
+                tableConfig.onAdd = () => this._openServiceForm(serviceConfig, formDef, null);
+                tableConfig.onEdit = (id, item) => this._openServiceForm(serviceConfig, formDef, item);
+                tableConfig.onDelete = (id, item) => this._deleteServiceRecord(serviceConfig, id, item);
+                tableConfig.onRowClick = (item, id) => this._showRecordDetails(serviceConfig, formDef, item);
+            }
+
+            activeTable = new Layer8MEditTable('service-table-container', tableConfig);
         },
 
         /**
@@ -617,7 +629,7 @@ limitations under the License.
         _getServiceColumns(serviceConfig) {
             if (serviceConfig.model) {
                 // Try all registered mobile module registries
-                const registries = [window.MobileHCM, window.MobileFIN, window.MobileSCM];
+                const registries = [window.MobileHCM, window.MobileFIN, window.MobileSCM, window.MobileSYS];
                 for (const reg of registries) {
                     if (reg && reg.getColumns) {
                         const columns = reg.getColumns(serviceConfig.model);
@@ -637,10 +649,26 @@ limitations under the License.
         /**
          * Get form definition for a service from registered mobile module registries
          */
+        /**
+         * Get transform data function for a service from registered registries
+         */
+        _getServiceTransformData(serviceConfig) {
+            if (serviceConfig.model) {
+                const registries = [window.MobileHCM, window.MobileFIN, window.MobileSCM, window.MobileSYS];
+                for (const reg of registries) {
+                    if (reg && reg.getTransformData) {
+                        const transform = reg.getTransformData(serviceConfig.model);
+                        if (transform) return transform;
+                    }
+                }
+            }
+            return null;
+        },
+
         _getServiceFormDef(serviceConfig) {
             if (serviceConfig.model) {
                 // Try all registered mobile module registries
-                const registries = [window.MobileHCM, window.MobileFIN, window.MobileSCM];
+                const registries = [window.MobileHCM, window.MobileFIN, window.MobileSCM, window.MobileSYS];
                 for (const reg of registries) {
                     if (reg && reg.getFormDef) {
                         const formDef = reg.getFormDef(serviceConfig.model);

@@ -34,7 +34,7 @@ limitations under the License.
             { key: 'documents', label: 'Documents', icon: 'documents', hasSubModules: false },
             { key: 'ecommerce', label: 'E-Commerce', icon: 'ecommerce', hasSubModules: false },
             { key: 'compliance', label: 'Compliance', icon: 'compliance', hasSubModules: false },
-            { key: 'system', label: 'System', icon: 'system', hasSubModules: false }
+            { key: 'system', label: 'System', icon: 'system', hasSubModules: true }
         ],
 
         // FIN Sub-Modules (Level 2)
@@ -277,6 +277,25 @@ limitations under the License.
             }
         },
 
+        // System Sub-Modules (Level 2)
+        system: {
+            subModules: [
+                { key: 'health', label: 'Health', icon: 'health' },
+                { key: 'security', label: 'Security', icon: 'security' }
+            ],
+
+            services: {
+                'health': [
+                    { key: 'health-monitor', label: 'Health Monitor', icon: 'health', endpoint: '/0/Health', model: 'L8Health', idField: 'service', readOnly: true }
+                ],
+                'security': [
+                    { key: 'users', label: 'Users', icon: 'users', endpoint: '/73/users', model: 'L8User', idField: 'userId' },
+                    { key: 'roles', label: 'Roles', icon: 'roles', endpoint: '/74/roles', model: 'L8Role', idField: 'roleId' },
+                    { key: 'credentials', label: 'Credentials', icon: 'credentials', endpoint: '/75/Creds', model: 'L8Credentials', idField: 'id' }
+                ]
+            }
+        },
+
         // SVG icons for navigation
         icons: {
             'dashboard': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>',
@@ -309,6 +328,11 @@ limitations under the License.
             'logistics': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>',
             'demand-planning': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>',
             'supply-planning': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>',
+            'health': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>',
+            'security': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>',
+            'users': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>',
+            'roles': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>',
+            'credentials': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>',
             'back': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"></path><polyline points="12 19 5 12 12 5"></polyline></svg>',
             'default': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg>'
         },

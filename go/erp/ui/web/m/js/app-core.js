@@ -61,10 +61,7 @@ limitations under the License.
         'ecommerce': 'sections/ecommerce.html',
 
         // Compliance & Risk Management
-        'compliance': 'sections/compliance.html',
-
-        // System Administration
-        'system': 'sections/system.html'
+        'compliance': 'sections/compliance.html'
     };
 
     let currentSection = 'dashboard';

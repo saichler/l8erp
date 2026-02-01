@@ -15,61 +15,187 @@ limitations under the License.
 <div class="section-container" id="system-section">
     <div class="page-header">
         <h1 class="page-title">System Administration</h1>
-        <p class="page-subtitle">User Management, System Configuration, Integration Settings</p>
+        <p class="page-subtitle">Health Monitoring & Security Management</p>
     </div>
 
-    <div class="under-development">
-        <div class="under-development-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-            </svg>
+    <!-- Module Tabs -->
+    <div class="section-tabs">
+        <button class="section-tab active" data-module="health">Health</button>
+        <button class="section-tab" data-module="security">Security</button>
+    </div>
+
+    <!-- Health Content -->
+    <div id="system-health-content">
+        <div id="system-health-table"></div>
+    </div>
+
+    <!-- Security Content (hidden by default) -->
+    <div id="system-security-content" style="display:none;">
+        <div class="section-tabs" id="security-service-tabs">
+            <button class="section-tab active" data-service="users">Users</button>
+            <button class="section-tab" data-service="roles">Roles</button>
+            <button class="section-tab" data-service="credentials">Creds</button>
         </div>
-        <h2 class="under-development-title">Under Development</h2>
-        <p class="under-development-message">System administration tools including user and role management, system configuration, API integrations, and security settings.</p>
+        <div id="system-security-table"></div>
     </div>
 </div>
 
-<style>
-    .under-development {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: var(--spacing-xl) var(--spacing-md);
-        min-height: 300px;
-    }
+<script>
+var systemHealthTable = null;
+var systemSecurityTable = null;
+var currentSystemModule = 'health';
+var currentSecurityService = 'users';
 
-    .under-development-icon {
-        width: 80px;
-        height: 80px;
-        border-radius: var(--radius-lg);
-        background: rgba(14, 165, 233, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: var(--spacing-lg);
-    }
+// Health column definitions
+var HEALTH_COLUMNS = [
+    { key: 'service', label: 'Service', primary: true, filterKey: 'alias', sortKey: 'alias' },
+    { key: 'cpuPercent', label: 'CPU %', secondary: true, filterKey: 'stats.cpuUsage', sortKey: 'stats.cpuUsage' },
+    { key: 'memory', label: 'Memory', filterKey: 'stats.memoryUsage', sortKey: 'stats.memoryUsage' },
+    { key: 'rx', label: 'RX', filterKey: 'stats.rxMsgCount', sortKey: 'stats.rxMsgCount' },
+    { key: 'tx', label: 'TX', filterKey: 'stats.txMsgCount', sortKey: 'stats.txMsgCount' },
+    { key: 'upTime', label: 'Up Time', filterKey: 'startTime', sortKey: 'startTime' },
+    { key: 'lastPulse', label: 'Last Pulse', filterKey: 'stats.lastMsgTime', sortKey: 'stats.lastMsgTime' }
+];
 
-    .under-development-icon svg {
-        width: 40px;
-        height: 40px;
-        stroke: var(--layer8d-primary);
+// Security service definitions
+var SECURITY_SERVICES = {
+    users: {
+        endpoint: Layer8MConfig.resolveEndpoint('/73/users'),
+        modelName: 'L8User',
+        idField: 'userId',
+        columns: [
+            { key: 'userId', label: 'User ID', primary: true, filterKey: 'userId' },
+            { key: 'fullName', label: 'Full Name', secondary: true, filterKey: 'fullName' }
+        ]
+    },
+    roles: {
+        endpoint: Layer8MConfig.resolveEndpoint('/74/roles'),
+        modelName: 'L8Role',
+        idField: 'roleId',
+        columns: [
+            { key: 'roleId', label: 'Role ID', primary: true, filterKey: 'roleId' },
+            { key: 'roleName', label: 'Role Name', secondary: true, filterKey: 'roleName' }
+        ]
+    },
+    credentials: {
+        endpoint: Layer8MConfig.resolveEndpoint('/75/Creds'),
+        modelName: 'L8Credentials',
+        idField: 'id',
+        columns: [
+            { key: 'id', label: 'ID', primary: true, filterKey: 'id' },
+            { key: 'name', label: 'Name', secondary: true, filterKey: 'name' }
+        ]
     }
+};
 
-    .under-development-title {
-        font-size: var(--font-size-lg);
-        font-weight: 600;
-        color: var(--text-primary);
-        margin: 0 0 var(--spacing-sm) 0;
-    }
+// Health data formatters
+function formatHealthBytes(bytes) {
+    if (!bytes || bytes === 0) return '0 B';
+    var sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    var i = Math.floor(Math.log(bytes) / Math.log(1024));
+    if (i === 0) return bytes + ' B';
+    return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+}
 
-    .under-development-message {
-        font-size: var(--font-size-sm);
-        color: var(--text-secondary);
-        margin: 0;
-        max-width: 300px;
-        line-height: 1.5;
+function formatHealthUptime(startTime) {
+    if (!startTime || startTime === 0 || startTime === '0') return '00:00:00';
+    var startMs = typeof startTime === 'string' ? parseInt(startTime, 10) : startTime;
+    var s = Math.floor((Date.now() - startMs) / 1000);
+    if (s < 0) return '00:00:00';
+    return String(Math.floor(s / 3600)).padStart(2, '0') + ':' +
+           String(Math.floor((s % 3600) / 60)).padStart(2, '0') + ':' +
+           String(s % 60).padStart(2, '0');
+}
+
+function formatHealthLastPulse(lastMsgTime) {
+    if (!lastMsgTime || lastMsgTime === 0 || lastMsgTime === '0') return '00:00:00';
+    var ms = typeof lastMsgTime === 'string' ? parseInt(lastMsgTime, 10) : lastMsgTime;
+    var s = Math.floor((Date.now() - ms) / 1000);
+    if (s < 0) return '00:00:00';
+    return String(Math.floor(s / 3600)).padStart(2, '0') + ':' +
+           String(Math.floor((s % 3600) / 60)).padStart(2, '0') + ':' +
+           String(s % 60).padStart(2, '0');
+}
+
+function transformHealthItem(item) {
+    if (!item.stats) return null;
+    return {
+        service: item.alias || 'Unknown',
+        rx: (item.stats.rxMsgCount || 0).toLocaleString(),
+        tx: (item.stats.txMsgCount || 0).toLocaleString(),
+        memory: formatHealthBytes(item.stats.memoryUsage || 0),
+        cpuPercent: (item.stats.cpuUsage || 0).toFixed(2) + '%',
+        upTime: formatHealthUptime(item.startTime),
+        lastPulse: formatHealthLastPulse(item.stats.lastMsgTime)
+    };
+}
+
+function initMobileSystem() {
+    loadSystemHealth();
+
+    // Module tab switching (Health / Security)
+    document.querySelectorAll('#system-section > .section-tabs .section-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('#system-section > .section-tabs .section-tab').forEach(function(t) {
+                t.classList.remove('active');
+            });
+            tab.classList.add('active');
+            switchSystemModule(tab.dataset.module);
+        });
+    });
+
+    // Security service tab switching
+    document.querySelectorAll('#security-service-tabs .section-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('#security-service-tabs .section-tab').forEach(function(t) {
+                t.classList.remove('active');
+            });
+            tab.classList.add('active');
+            loadSecurityService(tab.dataset.service);
+        });
+    });
+}
+
+function switchSystemModule(moduleKey) {
+    currentSystemModule = moduleKey;
+    var healthContent = document.getElementById('system-health-content');
+    var securityContent = document.getElementById('system-security-content');
+
+    if (moduleKey === 'health') {
+        healthContent.style.display = '';
+        securityContent.style.display = 'none';
+        loadSystemHealth();
+    } else {
+        healthContent.style.display = 'none';
+        securityContent.style.display = '';
+        loadSecurityService(currentSecurityService);
     }
-</style>
+}
+
+function loadSystemHealth() {
+    var config = Layer8MConfig.getConfig();
+    var healthPath = (config.app && config.app.healthPath) || '/0/Health';
+
+    systemHealthTable = new Layer8MEditTable('system-health-table', {
+        endpoint: Layer8MConfig.resolveEndpoint(healthPath),
+        modelName: 'L8Health',
+        columns: HEALTH_COLUMNS,
+        rowsPerPage: 15,
+        transformData: transformHealthItem,
+        getItemId: function(item) { return item.service; }
+    });
+}
+
+function loadSecurityService(serviceName) {
+    currentSecurityService = serviceName;
+    var config = SECURITY_SERVICES[serviceName];
+
+    systemSecurityTable = new Layer8MEditTable('system-security-table', {
+        endpoint: config.endpoint,
+        modelName: config.modelName,
+        columns: config.columns,
+        rowsPerPage: 15,
+        getItemId: function(item) { return item[config.idField]; }
+    });
+}
+</script>
