@@ -34,7 +34,7 @@ async function openEmployeeDetail(employeeId) {
 
         if (!employee) {
             HCMForms.closeModal();
-            ERPNotification.error('Employee not found');
+            Layer8DNotification.error('Employee not found');
             return;
         }
 
@@ -62,7 +62,7 @@ async function openEmployeeDetail(employeeId) {
 
     } catch (error) {
         HCMForms.closeModal();
-        ERPNotification.error('Error loading employee', [error.message]);
+        Layer8DNotification.error('Error loading employee', [error.message]);
     }
 }
 
@@ -75,7 +75,7 @@ async function fetchEmployeeWithRelated(employeeId) {
         text: `select * from Employee where employeeId=${employeeId}`
     }));
 
-    const empResponse = await fetch(`${ERPConfig.resolveEndpoint('/30/Employee')}?body=${empQuery}`, {
+    const empResponse = await fetch(`${Layer8DConfig.resolveEndpoint('/30/Employee')}?body=${empQuery}`, {
         method: 'GET',
         headers: headers
     });
@@ -118,7 +118,7 @@ async function fetchRelatedList(serviceName, modelName, foreignKey, foreignValue
             text: `select * from ${modelName} where ${foreignKey}=${foreignValue}`
         }));
 
-        const response = await fetch(`${ERPConfig.resolveEndpoint('/30/' + serviceName)}?body=${query}`, {
+        const response = await fetch(`${Layer8DConfig.resolveEndpoint('/30/' + serviceName)}?body=${query}`, {
             method: 'GET',
             headers: headers
         });
@@ -141,7 +141,7 @@ async function fetchSingleRecord(serviceName, modelName, primaryKey, id) {
             text: `select * from ${modelName} where ${primaryKey}=${id}`
         }));
 
-        const response = await fetch(`${ERPConfig.resolveEndpoint('/30/' + serviceName)}?body=${query}`, {
+        const response = await fetch(`${Layer8DConfig.resolveEndpoint('/30/' + serviceName)}?body=${query}`, {
             method: 'GET',
             headers: headers
         });

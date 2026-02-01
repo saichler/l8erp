@@ -40,7 +40,7 @@ let currentBenefitsService = 'plans';
 
 const BENEFITS_SERVICES = {
     plans: {
-        endpoint: MobileConfig.resolveEndpoint('/30/BenPlan'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/BenPlan'),
         modelName: 'BenefitPlan',
         idField: 'planId',
         columns: [
@@ -68,7 +68,7 @@ const BENEFITS_SERVICES = {
         ]
     },
     enrollments: {
-        endpoint: MobileConfig.resolveEndpoint('/30/BenEnroll'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/BenEnroll'),
         modelName: 'BenefitEnrollment',
         idField: 'enrollmentId',
         columns: [
@@ -77,8 +77,8 @@ const BENEFITS_SERVICES = {
             { key: 'planId', label: 'Plan', secondary: true },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Pending', 2: 'Active', 3: 'Waived', 4: 'Terminated', 5: 'Expired' }[v] || '-') },
             { key: 'reason', label: 'Reason', formatter: (v) => ({ 1: 'New Hire', 2: 'Open Enrollment', 3: 'Life Event', 4: 'COBRA', 5: 'Transfer' }[v] || '-') },
-            { key: 'coverageStartDate', label: 'Start', formatter: (v) => MobileUtils.formatDate(v) },
-            { key: 'employeeCostPerPeriod', label: 'Cost', formatter: (v) => MobileUtils.formatMoney(v) }
+            { key: 'coverageStartDate', label: 'Start', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'employeeCostPerPeriod', label: 'Cost', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'Add Enrollment',
         formFields: [
@@ -96,7 +96,7 @@ const BENEFITS_SERVICES = {
         ]
     },
     carriers: {
-        endpoint: MobileConfig.resolveEndpoint('/30/Carrier'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Carrier'),
         modelName: 'Carrier',
         idField: 'carrierId',
         columns: [
@@ -124,7 +124,7 @@ const BENEFITS_SERVICES = {
         ]
     },
     dependents: {
-        endpoint: MobileConfig.resolveEndpoint('/30/Dependent'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Dependent'),
         modelName: 'Dependent',
         idField: 'dependentId',
         columns: [
@@ -132,7 +132,7 @@ const BENEFITS_SERVICES = {
             { key: 'firstName', label: 'First Name', filterKey: 'firstName' },
             { key: 'lastName', label: 'Last Name', secondary: true, filterKey: 'lastName' },
             { key: 'relationship', label: 'Relationship', formatter: (v) => ({ 1: 'Spouse', 2: 'Child', 3: 'Domestic Partner', 4: 'Parent', 5: 'Other' }[v] || '-') },
-            { key: 'dateOfBirth', label: 'DOB', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'dateOfBirth', label: 'DOB', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'verificationStatus', label: 'Verified', formatter: (v) => ({ 1: 'Pending', 2: 'Verified', 3: 'Rejected' }[v] || '-') }
         ],
         addText: 'Add Dependent',
@@ -152,15 +152,15 @@ const BENEFITS_SERVICES = {
         ]
     },
     'life-events': {
-        endpoint: MobileConfig.resolveEndpoint('/30/LifeEvent'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/LifeEvent'),
         modelName: 'LifeEvent',
         idField: 'lifeEventId',
         columns: [
             { key: 'lifeEventId', label: 'ID', filterKey: 'lifeEventId' },
             { key: 'employeeId', label: 'Employee', primary: true },
             { key: 'eventType', label: 'Event', secondary: true, formatter: (v) => ({ 1: 'Marriage', 2: 'Divorce', 3: 'Birth/Adoption', 4: 'Death', 5: 'Loss of Coverage', 6: 'Gain of Coverage', 7: 'Address Change', 8: 'Status Change' }[v] || '-') },
-            { key: 'eventDate', label: 'Date', formatter: (v) => MobileUtils.formatDate(v) },
-            { key: 'enrollmentDeadline', label: 'Deadline', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'eventDate', label: 'Date', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'enrollmentDeadline', label: 'Deadline', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Expired', 5: 'Cancelled' }[v] || '-') }
         ],
         addText: 'Add Life Event',
@@ -178,17 +178,17 @@ const BENEFITS_SERVICES = {
         ]
     },
     'cobra-events': {
-        endpoint: MobileConfig.resolveEndpoint('/30/COBRAEvt'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/COBRAEvt'),
         modelName: 'COBRAEvent',
         idField: 'cobraEventId',
         columns: [
             { key: 'cobraEventId', label: 'ID', filterKey: 'cobraEventId' },
             { key: 'employeeId', label: 'Employee', primary: true },
             { key: 'eventType', label: 'Event', secondary: true, formatter: (v) => ({ 1: 'Termination', 2: 'Reduction in Hours', 3: 'Death', 4: 'Divorce', 5: 'Aging Out', 6: 'Medicare' }[v] || '-') },
-            { key: 'qualifyingEventDate', label: 'Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'qualifyingEventDate', label: 'Date', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Pending', 2: 'Offered', 3: 'Elected', 4: 'Declined', 5: 'Active', 6: 'Ended' }[v] || '-') },
             { key: 'coverageMonths', label: 'Months' },
-            { key: 'totalMonthlyCost', label: 'Cost', formatter: (v) => MobileUtils.formatMoney(v) }
+            { key: 'totalMonthlyCost', label: 'Cost', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'Add COBRA Event',
         formFields: [
@@ -223,7 +223,7 @@ function loadBenefitsService(serviceName) {
     currentBenefitsService = serviceName;
     const config = BENEFITS_SERVICES[serviceName];
 
-    benefitsTable = new MobileEditTable('benefits-table', {
+    benefitsTable = new Layer8MEditTable('benefits-table', {
         endpoint: config.endpoint,
         modelName: config.modelName,
         columns: config.columns,
@@ -240,43 +240,43 @@ function openBenefitsForm(config, item = null) {
     const isEdit = !!item;
     const title = isEdit ? 'Edit ' + config.modelName : config.addText;
     const formDef = { fields: config.formFields };
-    const content = MobileForms.renderForm(formDef, item || {});
+    const content = Layer8MForms.renderForm(formDef, item || {});
 
-    MobilePopup.show({
+    Layer8MPopup.show({
         title: title,
         content: content,
         size: 'large',
         saveButtonText: isEdit ? 'Update' : 'Create',
         onSave: async (popup) => {
             const body = popup.body;
-            const errors = MobileForms.validateForm(body);
-            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+            const errors = Layer8MForms.validateForm(body);
+            if (errors.length > 0) { Layer8MForms.showErrors(body, errors); return; }
 
-            const data = MobileForms.getFormData(body);
+            const data = Layer8MForms.getFormData(body);
             if (isEdit) data[config.idField] = item[config.idField];
 
             try {
-                if (isEdit) await MobileAuth.put(config.endpoint, data);
-                else await MobileAuth.post(config.endpoint, data);
-                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
-                MobilePopup.close();
+                if (isEdit) await Layer8MAuth.put(config.endpoint, data);
+                else await Layer8MAuth.post(config.endpoint, data);
+                Layer8MUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                Layer8MPopup.close();
                 benefitsTable.refresh();
             } catch (error) {
-                MobileUtils.showError('Failed to save');
+                Layer8MUtils.showError('Failed to save');
             }
         }
     });
 }
 
 async function deleteBenefitsItem(config, id, item) {
-    const confirmed = await MobileConfirm.confirmDelete(item.name || item.firstName || id);
+    const confirmed = await Layer8MConfirm.confirmDelete(item.name || item.firstName || id);
     if (confirmed) {
         try {
-            await MobileAuth.delete(config.endpoint + '?id=' + id);
-            MobileUtils.showSuccess('Deleted');
+            await Layer8MAuth.delete(config.endpoint + '?id=' + id);
+            Layer8MUtils.showSuccess('Deleted');
             benefitsTable.refresh();
         } catch (error) {
-            MobileUtils.showError('Failed to delete');
+            Layer8MUtils.showError('Failed to delete');
         }
     }
 }

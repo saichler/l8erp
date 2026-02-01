@@ -21,7 +21,7 @@ limitations under the License.
     // Ensure Budgeting namespace exists
     window.Budgeting = window.Budgeting || {};
 
-    const { renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
     const enums = Budgeting.enums;
     const render = Budgeting.render;
 

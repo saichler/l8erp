@@ -37,12 +37,12 @@ limitations under the License.
     };
 
     Procurement.enums.REQUISITION_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-pending',
-        3: 'erp-status-active',
-        4: 'erp-status-terminated',
-        5: 'erp-status-active',
-        6: 'erp-status-inactive'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-pending',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-terminated',
+        5: 'layer8d-status-active',
+        6: 'layer8d-status-inactive'
     };
 
     // ============================================================================
@@ -61,13 +61,13 @@ limitations under the License.
     };
 
     Procurement.enums.PO_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-active',
-        3: 'erp-status-active',
-        4: 'erp-status-pending',
-        5: 'erp-status-active',
-        6: 'erp-status-inactive',
-        7: 'erp-status-terminated'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-pending',
+        5: 'layer8d-status-active',
+        6: 'layer8d-status-inactive',
+        7: 'layer8d-status-terminated'
     };
 
     // ============================================================================
@@ -77,17 +77,17 @@ limitations under the License.
     // Create render functions using shared utilities
     Procurement.render = {};
 
-    Procurement.render.requisitionStatus = ERPRenderers.createStatusRenderer(
+    Procurement.render.requisitionStatus = Layer8DRenderers.createStatusRenderer(
         Procurement.enums.REQUISITION_STATUS,
         Procurement.enums.REQUISITION_STATUS_CLASSES
     );
 
-    Procurement.render.poStatus = ERPRenderers.createStatusRenderer(
+    Procurement.render.poStatus = Layer8DRenderers.createStatusRenderer(
         Procurement.enums.PO_STATUS,
         Procurement.enums.PO_STATUS_CLASSES
     );
 
-    Procurement.render.date = ERPRenderers.renderDate;
-    Procurement.render.money = ERPRenderers.renderMoney;
+    Procurement.render.date = Layer8DRenderers.renderDate;
+    Procurement.render.money = Layer8DRenderers.renderMoney;
 
 })();

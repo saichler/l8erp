@@ -219,35 +219,35 @@ limitations under the License.
     // ============================================================================
 
     MobilePayroll.render = {
-        payFrequency: (v) => MobileRenderers.renderEnum(v, MobilePayroll.enums.PAY_FREQUENCY),
-        componentType: MobileRenderers.createStatusRenderer(
+        payFrequency: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.PAY_FREQUENCY),
+        componentType: Layer8MRenderers.createStatusRenderer(
             MobilePayroll.enums.PAY_COMPONENT_TYPE,
             MobilePayroll.enums.PAY_COMPONENT_TYPE_CLASSES
         ),
-        componentCategory: (v) => MobileRenderers.renderEnum(v, MobilePayroll.enums.PAY_COMPONENT_CATEGORY),
-        calculationType: (v) => MobileRenderers.renderEnum(v, MobilePayroll.enums.CALCULATION_TYPE),
-        payrollRunStatus: MobileRenderers.createStatusRenderer(
+        componentCategory: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.PAY_COMPONENT_CATEGORY),
+        calculationType: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.CALCULATION_TYPE),
+        payrollRunStatus: Layer8MRenderers.createStatusRenderer(
             MobilePayroll.enums.PAYROLL_RUN_STATUS,
             MobilePayroll.enums.PAYROLL_RUN_STATUS_CLASSES
         ),
-        payrollRunType: (v) => MobileRenderers.renderEnum(v, MobilePayroll.enums.PAYROLL_RUN_TYPE),
-        taxType: (v) => MobileRenderers.renderEnum(v, MobilePayroll.enums.TAX_TYPE),
-        filingStatus: (v) => MobileRenderers.renderEnum(v, MobilePayroll.enums.FILING_STATUS),
-        accountType: (v) => MobileRenderers.renderEnum(v, MobilePayroll.enums.ACCOUNT_TYPE),
-        depositType: (v) => MobileRenderers.renderEnum(v, MobilePayroll.enums.DEPOSIT_TYPE),
-        garnishmentType: (v) => MobileRenderers.renderEnum(v, MobilePayroll.enums.GARNISHMENT_TYPE),
-        garnishmentStatus: MobileRenderers.createStatusRenderer(
+        payrollRunType: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.PAYROLL_RUN_TYPE),
+        taxType: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.TAX_TYPE),
+        filingStatus: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.FILING_STATUS),
+        accountType: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.ACCOUNT_TYPE),
+        depositType: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.DEPOSIT_TYPE),
+        garnishmentType: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.GARNISHMENT_TYPE),
+        garnishmentStatus: Layer8MRenderers.createStatusRenderer(
             MobilePayroll.enums.GARNISHMENT_STATUS,
             MobilePayroll.enums.GARNISHMENT_STATUS_CLASSES
         ),
-        yearEndDocType: (v) => MobileRenderers.renderEnum(v, MobilePayroll.enums.YEAR_END_DOC_TYPE),
-        yearEndDocStatus: MobileRenderers.createStatusRenderer(
+        yearEndDocType: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.YEAR_END_DOC_TYPE),
+        yearEndDocStatus: Layer8MRenderers.createStatusRenderer(
             MobilePayroll.enums.YEAR_END_DOC_STATUS,
             MobilePayroll.enums.YEAR_END_DOC_STATUS_CLASSES
         ),
-        money: MobileRenderers.renderMoney,
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate
+        money: Layer8MRenderers.renderMoney,
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate
     };
 
 })();

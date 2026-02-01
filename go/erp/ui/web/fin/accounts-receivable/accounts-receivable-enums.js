@@ -27,28 +27,28 @@ limitations under the License.
     // ============================================================================
 
     AccountsReceivable.enums.CUSTOMER_STATUS = { 0: 'Unspecified', 1: 'Active', 2: 'Inactive', 3: 'On Hold', 4: 'Blocked' };
-    AccountsReceivable.enums.CUSTOMER_STATUS_CLASSES = { 1: 'erp-status-active', 2: 'erp-status-inactive', 3: 'erp-status-pending', 4: 'erp-status-terminated' };
+    AccountsReceivable.enums.CUSTOMER_STATUS_CLASSES = { 1: 'layer8d-status-active', 2: 'layer8d-status-inactive', 3: 'layer8d-status-pending', 4: 'layer8d-status-terminated' };
 
     // ============================================================================
     // INVOICE STATUS
     // ============================================================================
 
     AccountsReceivable.enums.INVOICE_STATUS = { 0: 'Unspecified', 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Partially Paid', 5: 'Paid', 6: 'Overdue', 7: 'Cancelled', 8: 'Void' };
-    AccountsReceivable.enums.INVOICE_STATUS_CLASSES = { 1: 'erp-status-pending', 2: 'erp-status-pending', 3: 'erp-status-active', 4: 'erp-status-pending', 5: 'erp-status-active', 6: 'erp-status-terminated', 7: 'erp-status-inactive', 8: 'erp-status-terminated' };
+    AccountsReceivable.enums.INVOICE_STATUS_CLASSES = { 1: 'layer8d-status-pending', 2: 'layer8d-status-pending', 3: 'layer8d-status-active', 4: 'layer8d-status-pending', 5: 'layer8d-status-active', 6: 'layer8d-status-terminated', 7: 'layer8d-status-inactive', 8: 'layer8d-status-terminated' };
 
     // ============================================================================
     // PAYMENT STATUS
     // ============================================================================
 
     AccountsReceivable.enums.PAYMENT_STATUS = { 0: 'Unspecified', 1: 'Pending', 2: 'Processing', 3: 'Completed', 4: 'Failed', 5: 'Cancelled', 6: 'Reversed' };
-    AccountsReceivable.enums.PAYMENT_STATUS_CLASSES = { 1: 'erp-status-pending', 2: 'erp-status-pending', 3: 'erp-status-active', 4: 'erp-status-terminated', 5: 'erp-status-inactive', 6: 'erp-status-terminated' };
+    AccountsReceivable.enums.PAYMENT_STATUS_CLASSES = { 1: 'layer8d-status-pending', 2: 'layer8d-status-pending', 3: 'layer8d-status-active', 4: 'layer8d-status-terminated', 5: 'layer8d-status-inactive', 6: 'layer8d-status-terminated' };
 
     // ============================================================================
     // CREDIT MEMO STATUS
     // ============================================================================
 
     AccountsReceivable.enums.CREDIT_MEMO_STATUS = { 0: 'Unspecified', 1: 'Draft', 2: 'Approved', 3: 'Applied', 4: 'Void' };
-    AccountsReceivable.enums.CREDIT_MEMO_STATUS_CLASSES = { 1: 'erp-status-pending', 2: 'erp-status-active', 3: 'erp-status-active', 4: 'erp-status-terminated' };
+    AccountsReceivable.enums.CREDIT_MEMO_STATUS_CLASSES = { 1: 'layer8d-status-pending', 2: 'layer8d-status-active', 3: 'layer8d-status-active', 4: 'layer8d-status-terminated' };
 
     // ============================================================================
     // DUNNING LEVEL
@@ -68,14 +68,14 @@ limitations under the License.
 
     AccountsReceivable.render = {};
 
-    AccountsReceivable.render.customerStatus = ERPRenderers.createStatusRenderer(AccountsReceivable.enums.CUSTOMER_STATUS, AccountsReceivable.enums.CUSTOMER_STATUS_CLASSES);
-    AccountsReceivable.render.invoiceStatus = ERPRenderers.createStatusRenderer(AccountsReceivable.enums.INVOICE_STATUS, AccountsReceivable.enums.INVOICE_STATUS_CLASSES);
-    AccountsReceivable.render.paymentStatus = ERPRenderers.createStatusRenderer(AccountsReceivable.enums.PAYMENT_STATUS, AccountsReceivable.enums.PAYMENT_STATUS_CLASSES);
-    AccountsReceivable.render.creditMemoStatus = ERPRenderers.createStatusRenderer(AccountsReceivable.enums.CREDIT_MEMO_STATUS, AccountsReceivable.enums.CREDIT_MEMO_STATUS_CLASSES);
-    AccountsReceivable.render.dunningLevel = (level) => ERPRenderers.renderEnum(level, AccountsReceivable.enums.DUNNING_LEVEL);
-    AccountsReceivable.render.paymentMethod = (type) => ERPRenderers.renderEnum(type, AccountsReceivable.enums.PAYMENT_METHOD);
-    AccountsReceivable.render.boolean = ERPRenderers.renderBoolean;
-    AccountsReceivable.render.date = ERPRenderers.renderDate;
-    AccountsReceivable.render.money = ERPRenderers.renderMoney;
+    AccountsReceivable.render.customerStatus = Layer8DRenderers.createStatusRenderer(AccountsReceivable.enums.CUSTOMER_STATUS, AccountsReceivable.enums.CUSTOMER_STATUS_CLASSES);
+    AccountsReceivable.render.invoiceStatus = Layer8DRenderers.createStatusRenderer(AccountsReceivable.enums.INVOICE_STATUS, AccountsReceivable.enums.INVOICE_STATUS_CLASSES);
+    AccountsReceivable.render.paymentStatus = Layer8DRenderers.createStatusRenderer(AccountsReceivable.enums.PAYMENT_STATUS, AccountsReceivable.enums.PAYMENT_STATUS_CLASSES);
+    AccountsReceivable.render.creditMemoStatus = Layer8DRenderers.createStatusRenderer(AccountsReceivable.enums.CREDIT_MEMO_STATUS, AccountsReceivable.enums.CREDIT_MEMO_STATUS_CLASSES);
+    AccountsReceivable.render.dunningLevel = (level) => Layer8DRenderers.renderEnum(level, AccountsReceivable.enums.DUNNING_LEVEL);
+    AccountsReceivable.render.paymentMethod = (type) => Layer8DRenderers.renderEnum(type, AccountsReceivable.enums.PAYMENT_METHOD);
+    AccountsReceivable.render.boolean = Layer8DRenderers.renderBoolean;
+    AccountsReceivable.render.date = Layer8DRenderers.renderDate;
+    AccountsReceivable.render.money = Layer8DRenderers.renderMoney;
 
 })();

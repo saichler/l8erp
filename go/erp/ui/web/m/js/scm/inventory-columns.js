@@ -29,8 +29,8 @@ limitations under the License.
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'itemType', label: 'Type', sortKey: 'itemType', filterKey: 'itemType', enumValues: enums.ITEM_TYPE_VALUES, render: (item) => render.itemType(item.itemType) },
             { key: 'categoryId', label: 'Category', sortKey: 'categoryId', filterKey: 'categoryId' },
-            { key: 'unitCost', label: 'Unit Cost', sortKey: 'unitCost', render: (item) => MobileRenderers.renderMoney(item.unitCost) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+            { key: 'unitCost', label: 'Unit Cost', sortKey: 'unitCost', render: (item) => Layer8MRenderers.renderMoney(item.unitCost) },
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
         ScmItemCategory: [
@@ -38,7 +38,7 @@ limitations under the License.
             { key: 'categoryName', label: 'Name', sortKey: 'categoryName', filterKey: 'categoryName' },
             { key: 'parentCategoryId', label: 'Parent', sortKey: 'parentCategoryId', filterKey: 'parentCategoryId' },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
         ScmStockMovement: [
@@ -46,7 +46,7 @@ limitations under the License.
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'movementType', label: 'Type', sortKey: 'movementType', filterKey: 'movementType', enumValues: enums.MOVEMENT_TYPE_VALUES, render: (item) => render.movementType(item.movementType) },
             { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            { key: 'movementDate', label: 'Date', sortKey: 'movementDate', render: (item) => MobileRenderers.renderDate(item.movementDate) },
+            { key: 'movementDate', label: 'Date', sortKey: 'movementDate', render: (item) => Layer8MRenderers.renderDate(item.movementDate) },
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' }
         ],
 
@@ -54,8 +54,8 @@ limitations under the License.
             { key: 'lotId', label: 'ID', sortKey: 'lotId', filterKey: 'lotId' },
             { key: 'lotNumber', label: 'Lot #', sortKey: 'lotNumber', filterKey: 'lotNumber' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'manufacturingDate', label: 'Mfg Date', sortKey: 'manufacturingDate', render: (item) => MobileRenderers.renderDate(item.manufacturingDate) },
-            { key: 'expirationDate', label: 'Expiry', sortKey: 'expirationDate', render: (item) => MobileRenderers.renderDate(item.expirationDate) },
+            { key: 'manufacturingDate', label: 'Mfg Date', sortKey: 'manufacturingDate', render: (item) => Layer8MRenderers.renderDate(item.manufacturingDate) },
+            { key: 'expirationDate', label: 'Expiry', sortKey: 'expirationDate', render: (item) => Layer8MRenderers.renderDate(item.expirationDate) },
             { key: 'quantity', label: 'Qty', sortKey: 'quantity' }
         ],
 
@@ -64,13 +64,13 @@ limitations under the License.
             { key: 'serialNumber', label: 'Serial #', sortKey: 'serialNumber', filterKey: 'serialNumber' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'lotId', label: 'Lot', sortKey: 'lotId', filterKey: 'lotId' },
-            { key: 'isAvailable', label: 'Available', sortKey: 'isAvailable', render: (item) => MobileRenderers.renderBoolean(item.isAvailable) }
+            { key: 'isAvailable', label: 'Available', sortKey: 'isAvailable', render: (item) => Layer8MRenderers.renderBoolean(item.isAvailable) }
         ],
 
         ScmCycleCount: [
             { key: 'cycleCountId', label: 'ID', sortKey: 'cycleCountId', filterKey: 'cycleCountId' },
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
-            { key: 'countDate', label: 'Count Date', sortKey: 'countDate', render: (item) => MobileRenderers.renderDate(item.countDate) },
+            { key: 'countDate', label: 'Count Date', sortKey: 'countDate', render: (item) => Layer8MRenderers.renderDate(item.countDate) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) },
             { key: 'itemsCounted', label: 'Items Counted', sortKey: 'itemsCounted' },
             { key: 'discrepancies', label: 'Discrepancies', sortKey: 'discrepancies' }
@@ -89,8 +89,8 @@ limitations under the License.
             { key: 'valuationId', label: 'ID', sortKey: 'valuationId', filterKey: 'valuationId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'valuationMethod', label: 'Method', sortKey: 'valuationMethod', filterKey: 'valuationMethod', enumValues: enums.VALUATION_METHOD_VALUES, render: (item) => render.valuationMethod(item.valuationMethod) },
-            { key: 'valuationDate', label: 'Date', sortKey: 'valuationDate', render: (item) => MobileRenderers.renderDate(item.valuationDate) },
-            { key: 'totalValue', label: 'Total Value', sortKey: 'totalValue', render: (item) => MobileRenderers.renderMoney(item.totalValue) }
+            { key: 'valuationDate', label: 'Date', sortKey: 'valuationDate', render: (item) => Layer8MRenderers.renderDate(item.valuationDate) },
+            { key: 'totalValue', label: 'Total Value', sortKey: 'totalValue', render: (item) => Layer8MRenderers.renderMoney(item.totalValue) }
         ]
     };
 

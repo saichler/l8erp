@@ -27,7 +27,7 @@ limitations under the License.
             { key: 'requirementId', label: 'ID', sortKey: 'requirementId', filterKey: 'requirementId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'requiredQuantity', label: 'Required Qty', sortKey: 'requiredQuantity' },
-            { key: 'requiredDate', label: 'Required Date', sortKey: 'requiredDate', render: (item) => MobileRenderers.renderDate(item.requiredDate) },
+            { key: 'requiredDate', label: 'Required Date', sortKey: 'requiredDate', render: (item) => Layer8MRenderers.renderDate(item.requiredDate) },
             { key: 'planningMethod', label: 'Method', sortKey: 'planningMethod', filterKey: 'planningMethod', enumValues: enums.PLANNING_METHOD_VALUES, render: (item) => render.planningMethod(item.planningMethod) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
@@ -38,14 +38,14 @@ limitations under the License.
             { key: 'sourceWarehouseId', label: 'Source', sortKey: 'sourceWarehouseId', filterKey: 'sourceWarehouseId' },
             { key: 'targetWarehouseId', label: 'Target', sortKey: 'targetWarehouseId', filterKey: 'targetWarehouseId' },
             { key: 'requiredQuantity', label: 'Required Qty', sortKey: 'requiredQuantity' },
-            { key: 'requiredDate', label: 'Required Date', sortKey: 'requiredDate', render: (item) => MobileRenderers.renderDate(item.requiredDate) }
+            { key: 'requiredDate', label: 'Required Date', sortKey: 'requiredDate', render: (item) => Layer8MRenderers.renderDate(item.requiredDate) }
         ],
 
         ScmSupplyPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'planName', label: 'Plan', sortKey: 'planName', filterKey: 'planName' },
-            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => MobileRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => MobileRenderers.renderDate(item.endDate) },
+            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
+            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
             { key: 'planningMethod', label: 'Method', sortKey: 'planningMethod', filterKey: 'planningMethod', enumValues: enums.PLANNING_METHOD_VALUES, render: (item) => render.planningMethod(item.planningMethod) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
@@ -55,7 +55,7 @@ limitations under the License.
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'agreedQuantity', label: 'Agreed Qty', sortKey: 'agreedQuantity' },
-            { key: 'deliveryDate', label: 'Delivery', sortKey: 'deliveryDate', render: (item) => MobileRenderers.renderDate(item.deliveryDate) },
+            { key: 'deliveryDate', label: 'Delivery', sortKey: 'deliveryDate', render: (item) => Layer8MRenderers.renderDate(item.deliveryDate) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 

@@ -54,14 +54,14 @@ limitations under the License.
     // ============================================================================
 
     MobileScmDemandPlanning.render = {
-        forecastMethod: (v) => MobileRenderers.renderEnum(v, MobileScmDemandPlanning.enums.FORECAST_METHOD),
-        taskStatus: MobileRenderers.createStatusRenderer(
+        forecastMethod: (v) => Layer8MRenderers.renderEnum(v, MobileScmDemandPlanning.enums.FORECAST_METHOD),
+        taskStatus: Layer8MRenderers.createStatusRenderer(
             MobileScmDemandPlanning.enums.TASK_STATUS,
             MobileScmDemandPlanning.enums.TASK_STATUS_CLASSES
         ),
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate,
-        money: MobileRenderers.renderMoney
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate,
+        money: Layer8MRenderers.renderMoney
     };
 
 })();

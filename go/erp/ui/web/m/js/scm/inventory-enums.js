@@ -92,20 +92,20 @@ limitations under the License.
     // ============================================================================
 
     MobileInventory.render = {
-        itemType: (v) => MobileRenderers.renderEnum(v, MobileInventory.enums.ITEM_TYPE),
-        valuationMethod: (v) => MobileRenderers.renderEnum(v, MobileInventory.enums.VALUATION_METHOD),
-        planningMethod: (v) => MobileRenderers.renderEnum(v, MobileInventory.enums.PLANNING_METHOD),
-        movementType: MobileRenderers.createStatusRenderer(
+        itemType: (v) => Layer8MRenderers.renderEnum(v, MobileInventory.enums.ITEM_TYPE),
+        valuationMethod: (v) => Layer8MRenderers.renderEnum(v, MobileInventory.enums.VALUATION_METHOD),
+        planningMethod: (v) => Layer8MRenderers.renderEnum(v, MobileInventory.enums.PLANNING_METHOD),
+        movementType: Layer8MRenderers.createStatusRenderer(
             MobileInventory.enums.MOVEMENT_TYPE,
             MobileInventory.enums.MOVEMENT_TYPE_CLASSES
         ),
-        taskStatus: MobileRenderers.createStatusRenderer(
+        taskStatus: Layer8MRenderers.createStatusRenderer(
             MobileInventory.enums.TASK_STATUS,
             MobileInventory.enums.TASK_STATUS_CLASSES
         ),
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate,
-        money: MobileRenderers.renderMoney
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate,
+        money: Layer8MRenderers.renderMoney
     };
 
 })();

@@ -72,7 +72,7 @@ limitations under the License.
 .sidebar-logo-text {
     font-size: var(--font-size-xl);
     font-weight: 700;
-    color: var(--erp-primary);
+    color: var(--layer8d-primary);
 }
 
 .sidebar-nav {
@@ -113,7 +113,7 @@ limitations under the License.
 
 .sidebar-item.active {
     background: rgba(14, 165, 233, 0.1);
-    color: var(--erp-primary);
+    color: var(--layer8d-primary);
 }
 
 .sidebar-item-icon {
@@ -149,7 +149,7 @@ limitations under the License.
 
 .sidebar-subitem:active,
 .sidebar-subitem.active {
-    color: var(--erp-primary);
+    color: var(--layer8d-primary);
     background: rgba(14, 165, 233, 0.05);
 }
 
@@ -172,7 +172,7 @@ limitations under the License.
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: var(--erp-primary);
+    background: var(--layer8d-primary);
     color: white;
     display: flex;
     align-items: center;

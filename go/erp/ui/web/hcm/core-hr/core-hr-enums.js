@@ -48,13 +48,13 @@ limitations under the License.
     };
 
     CoreHR.enums.EMPLOYMENT_STATUS_CLASSES = {
-        1: 'erp-status-active',
-        2: 'erp-status-inactive',
-        3: 'erp-status-pending',
-        4: 'erp-status-terminated',
-        5: 'erp-status-inactive',
-        6: 'erp-status-terminated',
-        7: 'erp-status-pending'
+        1: 'layer8d-status-active',
+        2: 'layer8d-status-inactive',
+        3: 'layer8d-status-pending',
+        4: 'layer8d-status-terminated',
+        5: 'layer8d-status-inactive',
+        6: 'layer8d-status-terminated',
+        7: 'layer8d-status-pending'
     };
 
     // ============================================================================
@@ -152,10 +152,10 @@ limitations under the License.
     };
 
     CoreHR.enums.POSITION_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-active',
-        3: 'erp-status-inactive',
-        4: 'erp-status-terminated'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-inactive',
+        4: 'layer8d-status-terminated'
     };
 
     // ============================================================================
@@ -205,21 +205,21 @@ limitations under the License.
     // Create render functions using shared utilities
     CoreHR.render = {};
 
-    CoreHR.render.employmentStatus = ERPRenderers.createStatusRenderer(
+    CoreHR.render.employmentStatus = Layer8DRenderers.createStatusRenderer(
         CoreHR.enums.EMPLOYMENT_STATUS,
         CoreHR.enums.EMPLOYMENT_STATUS_CLASSES
     );
 
-    CoreHR.render.positionStatus = ERPRenderers.createStatusRenderer(
+    CoreHR.render.positionStatus = Layer8DRenderers.createStatusRenderer(
         CoreHR.enums.POSITION_STATUS,
         CoreHR.enums.POSITION_STATUS_CLASSES
     );
 
-    CoreHR.render.employmentType = (type) => ERPRenderers.renderEnum(type, CoreHR.enums.EMPLOYMENT_TYPE);
-    CoreHR.render.orgType = (type) => ERPRenderers.renderEnum(type, CoreHR.enums.ORGANIZATION_TYPE);
-    CoreHR.render.documentType = (type) => ERPRenderers.renderEnum(type, CoreHR.enums.DOCUMENT_TYPE);
-    CoreHR.render.complianceType = (type) => ERPRenderers.renderEnum(type, CoreHR.enums.COMPLIANCE_TYPE);
-    CoreHR.render.boolean = ERPRenderers.renderBoolean;
-    CoreHR.render.date = ERPRenderers.renderDate;
+    CoreHR.render.employmentType = (type) => Layer8DRenderers.renderEnum(type, CoreHR.enums.EMPLOYMENT_TYPE);
+    CoreHR.render.orgType = (type) => Layer8DRenderers.renderEnum(type, CoreHR.enums.ORGANIZATION_TYPE);
+    CoreHR.render.documentType = (type) => Layer8DRenderers.renderEnum(type, CoreHR.enums.DOCUMENT_TYPE);
+    CoreHR.render.complianceType = (type) => Layer8DRenderers.renderEnum(type, CoreHR.enums.COMPLIANCE_TYPE);
+    CoreHR.render.boolean = Layer8DRenderers.renderBoolean;
+    CoreHR.render.date = Layer8DRenderers.renderDate;
 
 })();

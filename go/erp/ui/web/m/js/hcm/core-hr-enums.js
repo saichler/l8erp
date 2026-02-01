@@ -235,24 +235,24 @@ limitations under the License.
     // ============================================================================
 
     MobileCoreHR.render = {
-        employmentStatus: MobileRenderers.createStatusRenderer(
+        employmentStatus: Layer8MRenderers.createStatusRenderer(
             MobileCoreHR.enums.EMPLOYMENT_STATUS,
             MobileCoreHR.enums.EMPLOYMENT_STATUS_CLASSES
         ),
-        positionStatus: MobileRenderers.createStatusRenderer(
+        positionStatus: Layer8MRenderers.createStatusRenderer(
             MobileCoreHR.enums.POSITION_STATUS,
             MobileCoreHR.enums.POSITION_STATUS_CLASSES
         ),
-        employmentType: (type) => MobileRenderers.renderEnum(type, MobileCoreHR.enums.EMPLOYMENT_TYPE),
-        gender: (gender) => MobileRenderers.renderEnum(gender, MobileCoreHR.enums.GENDER),
-        maritalStatus: (status) => MobileRenderers.renderEnum(status, MobileCoreHR.enums.MARITAL_STATUS),
-        orgType: (type) => MobileRenderers.renderEnum(type, MobileCoreHR.enums.ORGANIZATION_TYPE),
-        documentType: (type) => MobileRenderers.renderEnum(type, MobileCoreHR.enums.DOCUMENT_TYPE),
-        complianceType: (type) => MobileRenderers.renderEnum(type, MobileCoreHR.enums.COMPLIANCE_TYPE),
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate,
-        phone: MobileRenderers.renderPhone,
-        ssn: MobileRenderers.renderSSN
+        employmentType: (type) => Layer8MRenderers.renderEnum(type, MobileCoreHR.enums.EMPLOYMENT_TYPE),
+        gender: (gender) => Layer8MRenderers.renderEnum(gender, MobileCoreHR.enums.GENDER),
+        maritalStatus: (status) => Layer8MRenderers.renderEnum(status, MobileCoreHR.enums.MARITAL_STATUS),
+        orgType: (type) => Layer8MRenderers.renderEnum(type, MobileCoreHR.enums.ORGANIZATION_TYPE),
+        documentType: (type) => Layer8MRenderers.renderEnum(type, MobileCoreHR.enums.DOCUMENT_TYPE),
+        complianceType: (type) => Layer8MRenderers.renderEnum(type, MobileCoreHR.enums.COMPLIANCE_TYPE),
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate,
+        phone: Layer8MRenderers.renderPhone,
+        ssn: Layer8MRenderers.renderSSN
     };
 
 })();

@@ -21,7 +21,7 @@ limitations under the License.
     // Ensure ScmSupplyPlanning namespace exists
     window.ScmSupplyPlanning = window.ScmSupplyPlanning || {};
 
-    const { renderDate, renderMoney } = ERPRenderers;
+    const { renderDate, renderMoney } = Layer8DRenderers;
     const render = ScmSupplyPlanning.render;
 
     // ============================================================================

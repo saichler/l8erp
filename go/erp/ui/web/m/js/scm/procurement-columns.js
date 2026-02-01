@@ -27,9 +27,9 @@ limitations under the License.
             { key: 'requisitionId', label: 'ID', sortKey: 'requisitionId', filterKey: 'requisitionId' },
             { key: 'requisitionNumber', label: 'Req #', sortKey: 'requisitionNumber', filterKey: 'requisitionNumber' },
             { key: 'requesterId', label: 'Requester', sortKey: 'requesterId', filterKey: 'requesterId' },
-            { key: 'requestDate', label: 'Date', sortKey: 'requestDate', render: (item) => MobileRenderers.renderDate(item.requestDate) },
+            { key: 'requestDate', label: 'Date', sortKey: 'requestDate', render: (item) => Layer8MRenderers.renderDate(item.requestDate) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.REQUISITION_STATUS_VALUES, render: (item) => render.requisitionStatus(item.status) },
-            { key: 'estimatedTotal', label: 'Est. Total', sortKey: 'estimatedTotal', render: (item) => MobileRenderers.renderMoney(item.estimatedTotal) }
+            { key: 'estimatedTotal', label: 'Est. Total', sortKey: 'estimatedTotal', render: (item) => Layer8MRenderers.renderMoney(item.estimatedTotal) }
         ],
 
         ScmRequisitionLine: [
@@ -37,15 +37,15 @@ limitations under the License.
             { key: 'requisitionId', label: 'Requisition', sortKey: 'requisitionId', filterKey: 'requisitionId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            { key: 'estimatedUnitPrice', label: 'Unit Price', sortKey: 'estimatedUnitPrice', render: (item) => MobileRenderers.renderMoney(item.estimatedUnitPrice) },
-            { key: 'deliveryDate', label: 'Delivery', sortKey: 'deliveryDate', render: (item) => MobileRenderers.renderDate(item.deliveryDate) }
+            { key: 'estimatedUnitPrice', label: 'Unit Price', sortKey: 'estimatedUnitPrice', render: (item) => Layer8MRenderers.renderMoney(item.estimatedUnitPrice) },
+            { key: 'deliveryDate', label: 'Delivery', sortKey: 'deliveryDate', render: (item) => Layer8MRenderers.renderDate(item.deliveryDate) }
         ],
 
         ScmRequestForQuotation: [
             { key: 'rfqId', label: 'ID', sortKey: 'rfqId', filterKey: 'rfqId' },
             { key: 'rfqNumber', label: 'RFQ #', sortKey: 'rfqNumber', filterKey: 'rfqNumber' },
-            { key: 'issueDate', label: 'Issued', sortKey: 'issueDate', render: (item) => MobileRenderers.renderDate(item.issueDate) },
-            { key: 'responseDeadline', label: 'Deadline', sortKey: 'responseDeadline', render: (item) => MobileRenderers.renderDate(item.responseDeadline) },
+            { key: 'issueDate', label: 'Issued', sortKey: 'issueDate', render: (item) => Layer8MRenderers.renderDate(item.issueDate) },
+            { key: 'responseDeadline', label: 'Deadline', sortKey: 'responseDeadline', render: (item) => Layer8MRenderers.renderDate(item.responseDeadline) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.REQUISITION_STATUS_VALUES, render: (item) => render.requisitionStatus(item.status) }
         ],
 
@@ -53,9 +53,9 @@ limitations under the License.
             { key: 'purchaseOrderId', label: 'ID', sortKey: 'purchaseOrderId', filterKey: 'purchaseOrderId' },
             { key: 'orderNumber', label: 'PO #', sortKey: 'orderNumber', filterKey: 'orderNumber' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'orderDate', label: 'Order Date', sortKey: 'orderDate', render: (item) => MobileRenderers.renderDate(item.orderDate) },
+            { key: 'orderDate', label: 'Order Date', sortKey: 'orderDate', render: (item) => Layer8MRenderers.renderDate(item.orderDate) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.PO_STATUS_VALUES, render: (item) => render.poStatus(item.status) },
-            { key: 'totalAmount', label: 'Total', sortKey: 'totalAmount', render: (item) => MobileRenderers.renderMoney(item.totalAmount) }
+            { key: 'totalAmount', label: 'Total', sortKey: 'totalAmount', render: (item) => Layer8MRenderers.renderMoney(item.totalAmount) }
         ],
 
         ScmPurchaseOrderLine: [
@@ -63,18 +63,18 @@ limitations under the License.
             { key: 'purchaseOrderId', label: 'PO', sortKey: 'purchaseOrderId', filterKey: 'purchaseOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            { key: 'unitPrice', label: 'Unit Price', sortKey: 'unitPrice', render: (item) => MobileRenderers.renderMoney(item.unitPrice) },
-            { key: 'totalPrice', label: 'Total', sortKey: 'totalPrice', render: (item) => MobileRenderers.renderMoney(item.totalPrice) }
+            { key: 'unitPrice', label: 'Unit Price', sortKey: 'unitPrice', render: (item) => Layer8MRenderers.renderMoney(item.unitPrice) },
+            { key: 'totalPrice', label: 'Total', sortKey: 'totalPrice', render: (item) => Layer8MRenderers.renderMoney(item.totalPrice) }
         ],
 
         ScmBlanketOrder: [
             { key: 'blanketOrderId', label: 'ID', sortKey: 'blanketOrderId', filterKey: 'blanketOrderId' },
             { key: 'orderNumber', label: 'Order #', sortKey: 'orderNumber', filterKey: 'orderNumber' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => MobileRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => MobileRenderers.renderDate(item.endDate) },
+            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
+            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.PO_STATUS_VALUES, render: (item) => render.poStatus(item.status) },
-            { key: 'maxAmount', label: 'Max Amount', sortKey: 'maxAmount', render: (item) => MobileRenderers.renderMoney(item.maxAmount) }
+            { key: 'maxAmount', label: 'Max Amount', sortKey: 'maxAmount', render: (item) => Layer8MRenderers.renderMoney(item.maxAmount) }
         ],
 
         ScmSupplierScorecard: [

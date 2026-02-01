@@ -64,11 +64,11 @@ limitations under the License.
     };
 
     TaxManagement.enums.TAX_RETURN_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-pending',
-        3: 'erp-status-active',
-        4: 'erp-status-terminated',
-        5: 'erp-status-pending'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-pending',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-terminated',
+        5: 'layer8d-status-pending'
     };
 
     // ============================================================================
@@ -78,17 +78,17 @@ limitations under the License.
     // Create render functions using shared utilities
     TaxManagement.render = {};
 
-    TaxManagement.render.taxType = (type) => ERPRenderers.renderEnum(type, TaxManagement.enums.TAX_TYPE);
-    TaxManagement.render.jurisdictionLevel = (level) => ERPRenderers.renderEnum(level, TaxManagement.enums.JURISDICTION_LEVEL);
+    TaxManagement.render.taxType = (type) => Layer8DRenderers.renderEnum(type, TaxManagement.enums.TAX_TYPE);
+    TaxManagement.render.jurisdictionLevel = (level) => Layer8DRenderers.renderEnum(level, TaxManagement.enums.JURISDICTION_LEVEL);
 
-    TaxManagement.render.taxReturnStatus = ERPRenderers.createStatusRenderer(
+    TaxManagement.render.taxReturnStatus = Layer8DRenderers.createStatusRenderer(
         TaxManagement.enums.TAX_RETURN_STATUS,
         TaxManagement.enums.TAX_RETURN_STATUS_CLASSES
     );
 
-    TaxManagement.render.boolean = ERPRenderers.renderBoolean;
-    TaxManagement.render.date = ERPRenderers.renderDate;
-    TaxManagement.render.money = ERPRenderers.renderMoney;
-    TaxManagement.render.percentage = ERPRenderers.renderPercentage;
+    TaxManagement.render.boolean = Layer8DRenderers.renderBoolean;
+    TaxManagement.render.date = Layer8DRenderers.renderDate;
+    TaxManagement.render.money = Layer8DRenderers.renderMoney;
+    TaxManagement.render.percentage = Layer8DRenderers.renderPercentage;
 
 })();

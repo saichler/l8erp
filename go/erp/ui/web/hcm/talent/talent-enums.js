@@ -22,8 +22,8 @@ limitations under the License.
     window.Talent = window.Talent || {};
 
     // Import shared utilities
-    const { escapeHtml, formatDate } = ERPUtils;
-    const { renderEnum, createStatusRenderer, renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { escapeHtml, formatDate } = Layer8DUtils;
+    const { renderEnum, createStatusRenderer, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
 
     // ============================================================================
     // ENUM DEFINITIONS
@@ -54,14 +54,14 @@ limitations under the License.
     };
 
     const REQUISITION_STATUS_CLASSES = {
-        1: 'erp-status-inactive',
-        2: 'erp-status-pending',
-        3: 'erp-status-active',
-        4: 'erp-status-active',
-        5: 'erp-status-pending',
-        6: 'erp-status-active',
-        7: 'erp-status-terminated',
-        8: 'erp-status-inactive'
+        1: 'layer8d-status-inactive',
+        2: 'layer8d-status-pending',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-active',
+        5: 'layer8d-status-pending',
+        6: 'layer8d-status-active',
+        7: 'layer8d-status-terminated',
+        8: 'layer8d-status-inactive'
     };
 
     const REQUISITION_TYPE = {
@@ -136,14 +136,14 @@ limitations under the License.
     };
 
     const APPLICATION_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-pending',
-        3: 'erp-status-active',
-        4: 'erp-status-pending',
-        5: 'erp-status-active',
-        6: 'erp-status-active',
-        7: 'erp-status-terminated',
-        8: 'erp-status-inactive'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-pending',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-pending',
+        5: 'layer8d-status-active',
+        6: 'layer8d-status-active',
+        7: 'layer8d-status-terminated',
+        8: 'layer8d-status-inactive'
     };
 
     const APPLICATION_STAGE = {
@@ -264,11 +264,11 @@ limitations under the License.
     };
 
     const ONBOARDING_TASK_STATUS_CLASSES = {
-        1: 'erp-status-inactive',
-        2: 'erp-status-pending',
-        3: 'erp-status-active',
-        4: 'erp-status-inactive',
-        5: 'erp-status-terminated'
+        1: 'layer8d-status-inactive',
+        2: 'layer8d-status-pending',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-inactive',
+        5: 'layer8d-status-terminated'
     };
 
     const PERFORMANCE_REVIEW_STATUS = {
@@ -294,13 +294,13 @@ limitations under the License.
     };
 
     const PERFORMANCE_REVIEW_STATUS_CLASSES = {
-        1: 'erp-status-inactive',
-        2: 'erp-status-pending',
-        3: 'erp-status-pending',
-        4: 'erp-status-pending',
-        5: 'erp-status-pending',
-        6: 'erp-status-pending',
-        7: 'erp-status-active'
+        1: 'layer8d-status-inactive',
+        2: 'layer8d-status-pending',
+        3: 'layer8d-status-pending',
+        4: 'layer8d-status-pending',
+        5: 'layer8d-status-pending',
+        6: 'layer8d-status-pending',
+        7: 'layer8d-status-active'
     };
 
     const REVIEW_TYPE = {
@@ -376,13 +376,13 @@ limitations under the License.
     };
 
     const GOAL_STATUS_CLASSES = {
-        1: 'erp-status-inactive',
-        2: 'erp-status-active',
-        3: 'erp-status-active',
-        4: 'erp-status-pending',
-        5: 'erp-status-terminated',
-        6: 'erp-status-active',
-        7: 'erp-status-inactive'
+        1: 'layer8d-status-inactive',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-pending',
+        5: 'layer8d-status-terminated',
+        6: 'layer8d-status-active',
+        7: 'layer8d-status-inactive'
     };
 
     const GOAL_PRIORITY = {
@@ -417,10 +417,10 @@ limitations under the License.
     };
 
     const SUCCESSION_PLAN_STATUS_CLASSES = {
-        1: 'erp-status-inactive',
-        2: 'erp-status-active',
-        3: 'erp-status-pending',
-        4: 'erp-status-inactive'
+        1: 'layer8d-status-inactive',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-pending',
+        4: 'layer8d-status-inactive'
     };
 
     const RISK_LEVEL = {
@@ -510,10 +510,10 @@ limitations under the License.
     };
 
     const FEEDBACK_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-pending',
-        3: 'erp-status-active',
-        4: 'erp-status-terminated'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-pending',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-terminated'
     };
 
     // ============================================================================

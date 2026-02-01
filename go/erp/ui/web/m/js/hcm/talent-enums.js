@@ -212,36 +212,36 @@ limitations under the License.
     // ============================================================================
 
     MobileTalent.render = {
-        requisitionStatus: MobileRenderers.createStatusRenderer(MobileTalent.enums.REQUISITION_STATUS, MobileTalent.enums.REQUISITION_STATUS_CLASSES),
-        requisitionType: (v) => MobileRenderers.renderEnum(v, MobileTalent.enums.REQUISITION_TYPE),
-        applicantSource: (v) => MobileRenderers.renderEnum(v, MobileTalent.enums.APPLICANT_SOURCE),
-        applicationStatus: MobileRenderers.createStatusRenderer(MobileTalent.enums.APPLICATION_STATUS, MobileTalent.enums.APPLICATION_STATUS_CLASSES),
-        applicationStage: (v) => MobileRenderers.renderEnum(v, MobileTalent.enums.APPLICATION_STAGE),
-        dispositionReason: (v) => MobileRenderers.renderEnum(v, MobileTalent.enums.DISPOSITION_REASON),
-        onboardingTaskCategory: (v) => MobileRenderers.renderEnum(v, MobileTalent.enums.ONBOARDING_TASK_CATEGORY),
-        taskOwner: (v) => MobileRenderers.renderEnum(v, MobileTalent.enums.TASK_OWNER),
-        onboardingTaskStatus: MobileRenderers.createStatusRenderer(MobileTalent.enums.ONBOARDING_TASK_STATUS, MobileTalent.enums.ONBOARDING_TASK_STATUS_CLASSES),
-        performanceReviewStatus: MobileRenderers.createStatusRenderer(MobileTalent.enums.PERFORMANCE_REVIEW_STATUS, MobileTalent.enums.PERFORMANCE_REVIEW_STATUS_CLASSES),
-        reviewType: (v) => MobileRenderers.renderEnum(v, MobileTalent.enums.REVIEW_TYPE),
-        goalType: (v) => MobileRenderers.renderEnum(v, MobileTalent.enums.GOAL_TYPE),
-        goalCategory: (v) => MobileRenderers.renderEnum(v, MobileTalent.enums.GOAL_CATEGORY),
-        goalStatus: MobileRenderers.createStatusRenderer(MobileTalent.enums.GOAL_STATUS, MobileTalent.enums.GOAL_STATUS_CLASSES),
-        goalPriority: (v) => MobileRenderers.renderPriority(v, MobileTalent.enums.GOAL_PRIORITY),
-        successionPlanStatus: MobileRenderers.createStatusRenderer(MobileTalent.enums.SUCCESSION_PLAN_STATUS, MobileTalent.enums.SUCCESSION_PLAN_STATUS_CLASSES),
-        riskLevel: (v) => MobileRenderers.renderRisk(v, MobileTalent.enums.RISK_LEVEL),
+        requisitionStatus: Layer8MRenderers.createStatusRenderer(MobileTalent.enums.REQUISITION_STATUS, MobileTalent.enums.REQUISITION_STATUS_CLASSES),
+        requisitionType: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.REQUISITION_TYPE),
+        applicantSource: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.APPLICANT_SOURCE),
+        applicationStatus: Layer8MRenderers.createStatusRenderer(MobileTalent.enums.APPLICATION_STATUS, MobileTalent.enums.APPLICATION_STATUS_CLASSES),
+        applicationStage: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.APPLICATION_STAGE),
+        dispositionReason: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.DISPOSITION_REASON),
+        onboardingTaskCategory: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.ONBOARDING_TASK_CATEGORY),
+        taskOwner: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.TASK_OWNER),
+        onboardingTaskStatus: Layer8MRenderers.createStatusRenderer(MobileTalent.enums.ONBOARDING_TASK_STATUS, MobileTalent.enums.ONBOARDING_TASK_STATUS_CLASSES),
+        performanceReviewStatus: Layer8MRenderers.createStatusRenderer(MobileTalent.enums.PERFORMANCE_REVIEW_STATUS, MobileTalent.enums.PERFORMANCE_REVIEW_STATUS_CLASSES),
+        reviewType: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.REVIEW_TYPE),
+        goalType: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.GOAL_TYPE),
+        goalCategory: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.GOAL_CATEGORY),
+        goalStatus: Layer8MRenderers.createStatusRenderer(MobileTalent.enums.GOAL_STATUS, MobileTalent.enums.GOAL_STATUS_CLASSES),
+        goalPriority: (v) => Layer8MRenderers.renderPriority(v, MobileTalent.enums.GOAL_PRIORITY),
+        successionPlanStatus: Layer8MRenderers.createStatusRenderer(MobileTalent.enums.SUCCESSION_PLAN_STATUS, MobileTalent.enums.SUCCESSION_PLAN_STATUS_CLASSES),
+        riskLevel: (v) => Layer8MRenderers.renderRisk(v, MobileTalent.enums.RISK_LEVEL),
         readinessLevel: (v) => {
             const colors = { 1: '#10b981', 2: '#22c55e', 3: '#f59e0b', 4: '#ef4444' };
             const label = MobileTalent.enums.READINESS_LEVEL[v] || 'Unknown';
-            return `<span style="color: ${colors[v] || '#64748b'}; font-weight: 500;">${MobileUtils.escapeHtml(label)}</span>`;
+            return `<span style="color: ${colors[v] || '#64748b'}; font-weight: 500;">${Layer8MUtils.escapeHtml(label)}</span>`;
         },
-        feedbackType: (v) => MobileRenderers.renderEnum(v, MobileTalent.enums.FEEDBACK_TYPE),
-        feedbackRelationship: (v) => MobileRenderers.renderEnum(v, MobileTalent.enums.FEEDBACK_RELATIONSHIP),
-        feedbackStatus: MobileRenderers.createStatusRenderer(MobileTalent.enums.FEEDBACK_STATUS, MobileTalent.enums.FEEDBACK_STATUS_CLASSES),
-        percentage: MobileRenderers.renderProgress,
-        rating: MobileRenderers.renderRating,
-        period: MobileRenderers.renderPeriod,
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate
+        feedbackType: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.FEEDBACK_TYPE),
+        feedbackRelationship: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.FEEDBACK_RELATIONSHIP),
+        feedbackStatus: Layer8MRenderers.createStatusRenderer(MobileTalent.enums.FEEDBACK_STATUS, MobileTalent.enums.FEEDBACK_STATUS_CLASSES),
+        percentage: Layer8MRenderers.renderProgress,
+        rating: Layer8MRenderers.renderRating,
+        period: Layer8MRenderers.renderPeriod,
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate
     };
 
 })();

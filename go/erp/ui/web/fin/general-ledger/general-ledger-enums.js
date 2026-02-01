@@ -58,10 +58,10 @@ limitations under the License.
     };
 
     GeneralLedger.enums.JOURNAL_ENTRY_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-active',
-        3: 'erp-status-inactive',
-        4: 'erp-status-terminated'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-inactive',
+        4: 'layer8d-status-terminated'
     };
 
     // ============================================================================
@@ -76,9 +76,9 @@ limitations under the License.
     };
 
     GeneralLedger.enums.FISCAL_PERIOD_STATUS_CLASSES = {
-        1: 'erp-status-active',
-        2: 'erp-status-inactive',
-        3: 'erp-status-terminated'
+        1: 'layer8d-status-active',
+        2: 'layer8d-status-inactive',
+        3: 'layer8d-status-terminated'
     };
 
     // ============================================================================
@@ -88,21 +88,21 @@ limitations under the License.
     // Create render functions using shared utilities
     GeneralLedger.render = {};
 
-    GeneralLedger.render.accountType = (type) => ERPRenderers.renderEnum(type, GeneralLedger.enums.ACCOUNT_TYPE);
-    GeneralLedger.render.balanceType = (type) => ERPRenderers.renderEnum(type, GeneralLedger.enums.BALANCE_TYPE);
+    GeneralLedger.render.accountType = (type) => Layer8DRenderers.renderEnum(type, GeneralLedger.enums.ACCOUNT_TYPE);
+    GeneralLedger.render.balanceType = (type) => Layer8DRenderers.renderEnum(type, GeneralLedger.enums.BALANCE_TYPE);
 
-    GeneralLedger.render.journalEntryStatus = ERPRenderers.createStatusRenderer(
+    GeneralLedger.render.journalEntryStatus = Layer8DRenderers.createStatusRenderer(
         GeneralLedger.enums.JOURNAL_ENTRY_STATUS,
         GeneralLedger.enums.JOURNAL_ENTRY_STATUS_CLASSES
     );
 
-    GeneralLedger.render.fiscalPeriodStatus = ERPRenderers.createStatusRenderer(
+    GeneralLedger.render.fiscalPeriodStatus = Layer8DRenderers.createStatusRenderer(
         GeneralLedger.enums.FISCAL_PERIOD_STATUS,
         GeneralLedger.enums.FISCAL_PERIOD_STATUS_CLASSES
     );
 
-    GeneralLedger.render.boolean = ERPRenderers.renderBoolean;
-    GeneralLedger.render.date = ERPRenderers.renderDate;
-    GeneralLedger.render.money = ERPRenderers.renderMoney;
+    GeneralLedger.render.boolean = Layer8DRenderers.renderBoolean;
+    GeneralLedger.render.date = Layer8DRenderers.renderDate;
+    GeneralLedger.render.money = Layer8DRenderers.renderMoney;
 
 })();

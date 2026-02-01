@@ -61,11 +61,11 @@ limitations under the License.
     };
 
     Inventory.enums.MOVEMENT_TYPE_CLASSES = {
-        1: 'erp-status-active',
-        2: 'erp-status-pending',
-        3: 'erp-status-pending',
-        4: 'erp-status-inactive',
-        5: 'erp-status-terminated'
+        1: 'layer8d-status-active',
+        2: 'layer8d-status-pending',
+        3: 'layer8d-status-pending',
+        4: 'layer8d-status-inactive',
+        5: 'layer8d-status-terminated'
     };
 
     // ============================================================================
@@ -93,10 +93,10 @@ limitations under the License.
     };
 
     Inventory.enums.TASK_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-active',
-        3: 'erp-status-active',
-        4: 'erp-status-terminated'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-terminated'
     };
 
     // ============================================================================
@@ -106,22 +106,22 @@ limitations under the License.
     // Create render functions using shared utilities
     Inventory.render = {};
 
-    Inventory.render.itemType = (type) => ERPRenderers.renderEnum(type, Inventory.enums.ITEM_TYPE);
-    Inventory.render.valuationMethod = (type) => ERPRenderers.renderEnum(type, Inventory.enums.VALUATION_METHOD);
-    Inventory.render.planningMethod = (type) => ERPRenderers.renderEnum(type, Inventory.enums.PLANNING_METHOD);
+    Inventory.render.itemType = (type) => Layer8DRenderers.renderEnum(type, Inventory.enums.ITEM_TYPE);
+    Inventory.render.valuationMethod = (type) => Layer8DRenderers.renderEnum(type, Inventory.enums.VALUATION_METHOD);
+    Inventory.render.planningMethod = (type) => Layer8DRenderers.renderEnum(type, Inventory.enums.PLANNING_METHOD);
 
-    Inventory.render.movementType = ERPRenderers.createStatusRenderer(
+    Inventory.render.movementType = Layer8DRenderers.createStatusRenderer(
         Inventory.enums.MOVEMENT_TYPE,
         Inventory.enums.MOVEMENT_TYPE_CLASSES
     );
 
-    Inventory.render.taskStatus = ERPRenderers.createStatusRenderer(
+    Inventory.render.taskStatus = Layer8DRenderers.createStatusRenderer(
         Inventory.enums.TASK_STATUS,
         Inventory.enums.TASK_STATUS_CLASSES
     );
 
-    Inventory.render.boolean = ERPRenderers.renderBoolean;
-    Inventory.render.date = ERPRenderers.renderDate;
-    Inventory.render.money = ERPRenderers.renderMoney;
+    Inventory.render.boolean = Layer8DRenderers.renderBoolean;
+    Inventory.render.date = Layer8DRenderers.renderDate;
+    Inventory.render.money = Layer8DRenderers.renderMoney;
 
 })();

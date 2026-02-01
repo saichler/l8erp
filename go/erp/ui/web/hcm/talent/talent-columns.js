@@ -19,8 +19,8 @@ limitations under the License.
     'use strict';
 
     // Import shared utilities
-    const { escapeHtml } = ERPUtils;
-    const { renderEnum, renderBoolean, renderDate } = ERPRenderers;
+    const { escapeHtml } = Layer8DUtils;
+    const { renderEnum, renderBoolean, renderDate } = Layer8DRenderers;
 
     // Get enums and render functions from talent-enums.js
     const enums = window.Talent.enums;

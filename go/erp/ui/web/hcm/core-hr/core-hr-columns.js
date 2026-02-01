@@ -21,8 +21,8 @@ limitations under the License.
     // Ensure CoreHR namespace exists
     window.CoreHR = window.CoreHR || {};
 
-    const { escapeHtml } = ERPUtils;
-    const { renderBoolean, renderDate } = ERPRenderers;
+    const { escapeHtml } = Layer8DUtils;
+    const { renderBoolean, renderDate } = Layer8DRenderers;
     const enums = CoreHR.enums;
     const render = CoreHR.render;
 

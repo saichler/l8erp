@@ -60,16 +60,16 @@ limitations under the License.
     // ============================================================================
 
     MobileTaxManagement.render = {
-        taxType: (type) => MobileRenderers.renderEnum(type, MobileTaxManagement.enums.TAX_TYPE),
-        jurisdictionLevel: (level) => MobileRenderers.renderEnum(level, MobileTaxManagement.enums.JURISDICTION_LEVEL),
-        taxReturnStatus: MobileRenderers.createStatusRenderer(
+        taxType: (type) => Layer8MRenderers.renderEnum(type, MobileTaxManagement.enums.TAX_TYPE),
+        jurisdictionLevel: (level) => Layer8MRenderers.renderEnum(level, MobileTaxManagement.enums.JURISDICTION_LEVEL),
+        taxReturnStatus: Layer8MRenderers.createStatusRenderer(
             MobileTaxManagement.enums.TAX_RETURN_STATUS,
             MobileTaxManagement.enums.TAX_RETURN_STATUS_CLASSES
         ),
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate,
-        money: MobileRenderers.renderMoney,
-        percentage: MobileRenderers.renderPercentage
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate,
+        money: Layer8MRenderers.renderMoney,
+        percentage: Layer8MRenderers.renderPercentage
     };
 
 })();

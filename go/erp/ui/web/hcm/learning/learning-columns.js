@@ -19,7 +19,7 @@ limitations under the License.
     'use strict';
 
     // Import shared utilities
-    const { renderBoolean, renderDate } = ERPRenderers;
+    const { renderBoolean, renderDate } = Layer8DRenderers;
 
     // Get enums and render functions from learning-enums.js
     const enums = window.Learning.enums;

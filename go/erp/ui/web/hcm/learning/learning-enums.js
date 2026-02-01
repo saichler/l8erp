@@ -22,8 +22,8 @@ limitations under the License.
     window.Learning = window.Learning || {};
 
     // Import shared utilities
-    const { escapeHtml, formatDate, formatMoney } = ERPUtils;
-    const { renderEnum, createStatusRenderer, renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { escapeHtml, formatDate, formatMoney } = Layer8DUtils;
+    const { renderEnum, createStatusRenderer, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
 
     // ============================================================================
     // ENUM DEFINITIONS
@@ -135,12 +135,12 @@ limitations under the License.
     };
 
     const SESSION_STATUS_CLASSES = {
-        1: 'erp-status-pending',     // Scheduled
-        2: 'erp-status-active',      // Open
-        3: 'erp-status-pending',     // Full
-        4: 'erp-status-active',      // In Progress
-        5: 'erp-status-active',      // Completed
-        6: 'erp-status-terminated'   // Cancelled
+        1: 'layer8d-status-pending',     // Scheduled
+        2: 'layer8d-status-active',      // Open
+        3: 'layer8d-status-pending',     // Full
+        4: 'layer8d-status-active',      // In Progress
+        5: 'layer8d-status-active',      // Completed
+        6: 'layer8d-status-terminated'   // Cancelled
     };
 
     const COURSE_ENROLLMENT_STATUS = {
@@ -164,12 +164,12 @@ limitations under the License.
     };
 
     const COURSE_ENROLLMENT_STATUS_CLASSES = {
-        1: 'erp-status-pending',     // Pending
-        2: 'erp-status-active',      // Active
-        3: 'erp-status-active',      // Completed
-        4: 'erp-status-terminated',  // Failed
-        5: 'erp-status-terminated',  // Cancelled
-        6: 'erp-status-pending'      // Waitlisted
+        1: 'layer8d-status-pending',     // Pending
+        2: 'layer8d-status-active',      // Active
+        3: 'layer8d-status-active',      // Completed
+        4: 'layer8d-status-terminated',  // Failed
+        5: 'layer8d-status-terminated',  // Cancelled
+        6: 'layer8d-status-pending'      // Waitlisted
     };
 
     const CERTIFICATION_TYPE = {
@@ -210,11 +210,11 @@ limitations under the License.
     };
 
     const CERTIFICATION_STATUS_CLASSES = {
-        1: 'erp-status-pending',     // In Progress
-        2: 'erp-status-active',      // Active
-        3: 'erp-status-terminated',  // Expired
-        4: 'erp-status-terminated',  // Revoked
-        5: 'erp-status-pending'      // Pending Renewal
+        1: 'layer8d-status-pending',     // In Progress
+        2: 'layer8d-status-active',      // Active
+        3: 'layer8d-status-terminated',  // Expired
+        4: 'layer8d-status-terminated',  // Revoked
+        5: 'layer8d-status-pending'      // Pending Renewal
     };
 
     const SKILL_CATEGORY = {

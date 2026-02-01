@@ -28,7 +28,7 @@ limitations under the License.
             { key: 'budgetName', label: 'Budget Name', sortKey: 'budgetName', filterKey: 'budgetName' },
             { key: 'budgetType', label: 'Type', sortKey: 'budgetType', render: (item) => render.budgetType(item.budgetType) },
             { key: 'fiscalYearId', label: 'Fiscal Year', sortKey: 'fiscalYearId', filterKey: 'fiscalYearId' },
-            { key: 'totalAmount', label: 'Total Amount', sortKey: 'totalAmount', render: (item) => MobileRenderers.renderMoney(item.totalAmount) },
+            { key: 'totalAmount', label: 'Total Amount', sortKey: 'totalAmount', render: (item) => Layer8MRenderers.renderMoney(item.totalAmount) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.BUDGET_STATUS_VALUES, render: (item) => render.budgetStatus(item.status) }
         ],
 
@@ -36,17 +36,17 @@ limitations under the License.
             { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
             { key: 'budgetId', label: 'Budget', sortKey: 'budgetId', filterKey: 'budgetId' },
             { key: 'accountId', label: 'Account', sortKey: 'accountId', filterKey: 'accountId' },
-            { key: 'budgetedAmount', label: 'Budgeted', sortKey: 'budgetedAmount', render: (item) => MobileRenderers.renderMoney(item.budgetedAmount) },
-            { key: 'actualAmount', label: 'Actual', sortKey: 'actualAmount', render: (item) => MobileRenderers.renderMoney(item.actualAmount) },
-            { key: 'variance', label: 'Variance', sortKey: 'variance', render: (item) => MobileRenderers.renderMoney(item.variance) }
+            { key: 'budgetedAmount', label: 'Budgeted', sortKey: 'budgetedAmount', render: (item) => Layer8MRenderers.renderMoney(item.budgetedAmount) },
+            { key: 'actualAmount', label: 'Actual', sortKey: 'actualAmount', render: (item) => Layer8MRenderers.renderMoney(item.actualAmount) },
+            { key: 'variance', label: 'Variance', sortKey: 'variance', render: (item) => Layer8MRenderers.renderMoney(item.variance) }
         ],
 
         BudgetTransfer: [
             { key: 'transferId', label: 'ID', sortKey: 'transferId', filterKey: 'transferId' },
             { key: 'fromBudgetLineId', label: 'From Line', sortKey: 'fromBudgetLineId', filterKey: 'fromBudgetLineId' },
             { key: 'toBudgetLineId', label: 'To Line', sortKey: 'toBudgetLineId', filterKey: 'toBudgetLineId' },
-            { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => MobileRenderers.renderMoney(item.amount) },
-            { key: 'transferDate', label: 'Transfer Date', sortKey: 'transferDate', render: (item) => MobileRenderers.renderDate(item.transferDate) }
+            { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => Layer8MRenderers.renderMoney(item.amount) },
+            { key: 'transferDate', label: 'Transfer Date', sortKey: 'transferDate', render: (item) => Layer8MRenderers.renderDate(item.transferDate) }
         ],
 
         BudgetScenario: [
@@ -54,25 +54,25 @@ limitations under the License.
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
             { key: 'budgetId', label: 'Budget', sortKey: 'budgetId', filterKey: 'budgetId' },
-            { key: 'isBaseline', label: 'Baseline', sortKey: 'isBaseline', render: (item) => MobileRenderers.renderBoolean(item.isBaseline) }
+            { key: 'isBaseline', label: 'Baseline', sortKey: 'isBaseline', render: (item) => Layer8MRenderers.renderBoolean(item.isBaseline) }
         ],
 
         CapitalExpenditure: [
             { key: 'capexId', label: 'ID', sortKey: 'capexId', filterKey: 'capexId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            { key: 'requestedAmount', label: 'Requested', sortKey: 'requestedAmount', render: (item) => MobileRenderers.renderMoney(item.requestedAmount) },
-            { key: 'approvedAmount', label: 'Approved', sortKey: 'approvedAmount', render: (item) => MobileRenderers.renderMoney(item.approvedAmount) },
+            { key: 'requestedAmount', label: 'Requested', sortKey: 'requestedAmount', render: (item) => Layer8MRenderers.renderMoney(item.requestedAmount) },
+            { key: 'approvedAmount', label: 'Approved', sortKey: 'approvedAmount', render: (item) => Layer8MRenderers.renderMoney(item.approvedAmount) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.CAPEX_STATUS_VALUES, render: (item) => render.capexStatus(item.status) }
         ],
 
         Forecast: [
             { key: 'forecastId', label: 'ID', sortKey: 'forecastId', filterKey: 'forecastId' },
             { key: 'forecastType', label: 'Type', sortKey: 'forecastType', render: (item) => render.forecastType(item.forecastType) },
-            { key: 'periodStart', label: 'Period Start', sortKey: 'periodStart', render: (item) => MobileRenderers.renderDate(item.periodStart) },
-            { key: 'periodEnd', label: 'Period End', sortKey: 'periodEnd', render: (item) => MobileRenderers.renderDate(item.periodEnd) },
-            { key: 'forecastAmount', label: 'Forecast', sortKey: 'forecastAmount', render: (item) => MobileRenderers.renderMoney(item.forecastAmount) },
-            { key: 'actualAmount', label: 'Actual', sortKey: 'actualAmount', render: (item) => MobileRenderers.renderMoney(item.actualAmount) }
+            { key: 'periodStart', label: 'Period Start', sortKey: 'periodStart', render: (item) => Layer8MRenderers.renderDate(item.periodStart) },
+            { key: 'periodEnd', label: 'Period End', sortKey: 'periodEnd', render: (item) => Layer8MRenderers.renderDate(item.periodEnd) },
+            { key: 'forecastAmount', label: 'Forecast', sortKey: 'forecastAmount', render: (item) => Layer8MRenderers.renderMoney(item.forecastAmount) },
+            { key: 'actualAmount', label: 'Actual', sortKey: 'actualAmount', render: (item) => Layer8MRenderers.renderMoney(item.actualAmount) }
         ]
     };
 

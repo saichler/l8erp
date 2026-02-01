@@ -19,8 +19,8 @@ limitations under the License.
     'use strict';
 
     // Use shared utilities
-    const { formatMoney } = ERPUtils;
-    const { renderEnum, renderStatus, createStatusRenderer, renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { formatMoney } = Layer8DUtils;
+    const { renderEnum, renderStatus, createStatusRenderer, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
 
     // ============================================================================
     // ENUM DEFINITIONS
@@ -63,10 +63,10 @@ limitations under the License.
     };
 
     const PAY_COMPONENT_TYPE_CLASSES = {
-        1: 'erp-status-active',      // Earning - green
-        2: 'erp-status-terminated',  // Deduction - red
-        3: 'erp-status-pending',     // Tax - orange
-        4: 'erp-status-inactive'     // Employer - gray
+        1: 'layer8d-status-active',      // Earning - green
+        2: 'layer8d-status-terminated',  // Deduction - red
+        3: 'layer8d-status-pending',     // Tax - orange
+        4: 'layer8d-status-inactive'     // Employer - gray
     };
 
     const PAY_COMPONENT_CATEGORY = {
@@ -99,9 +99,9 @@ limitations under the License.
     };
 
     const PAYROLL_RUN_STATUS_CLASSES = {
-        1: 'erp-status-inactive', 2: 'erp-status-pending', 3: 'erp-status-active',
-        4: 'erp-status-pending', 5: 'erp-status-active', 6: 'erp-status-terminated',
-        7: 'erp-status-terminated'
+        1: 'layer8d-status-inactive', 2: 'layer8d-status-pending', 3: 'layer8d-status-active',
+        4: 'layer8d-status-pending', 5: 'layer8d-status-active', 6: 'layer8d-status-terminated',
+        7: 'layer8d-status-terminated'
     };
 
     const PAYROLL_RUN_TYPE = {
@@ -149,7 +149,7 @@ limitations under the License.
     const GARNISHMENT_STATUS = { 0: 'Unspecified', 1: 'Active', 2: 'Suspended', 3: 'Completed', 4: 'Cancelled' };
     const GARNISHMENT_STATUS_VALUES = { 'active': 1, 'suspended': 2, 'completed': 3, 'cancelled': 4 };
     const GARNISHMENT_STATUS_CLASSES = {
-        1: 'erp-status-active', 2: 'erp-status-pending', 3: 'erp-status-inactive', 4: 'erp-status-terminated'
+        1: 'layer8d-status-active', 2: 'layer8d-status-pending', 3: 'layer8d-status-inactive', 4: 'layer8d-status-terminated'
     };
 
     const YEAR_END_DOC_TYPE = {
@@ -163,7 +163,7 @@ limitations under the License.
     const YEAR_END_DOC_STATUS = { 0: 'Unspecified', 1: 'Draft', 2: 'Generated', 3: 'Issued', 4: 'Filed' };
     const YEAR_END_DOC_STATUS_VALUES = { 'draft': 1, 'generated': 2, 'issued': 3, 'filed': 4 };
     const YEAR_END_DOC_STATUS_CLASSES = {
-        1: 'erp-status-inactive', 2: 'erp-status-pending', 3: 'erp-status-active', 4: 'erp-status-active'
+        1: 'layer8d-status-inactive', 2: 'layer8d-status-pending', 3: 'layer8d-status-active', 4: 'layer8d-status-active'
     };
 
     // ============================================================================

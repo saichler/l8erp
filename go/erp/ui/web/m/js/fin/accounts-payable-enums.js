@@ -85,22 +85,22 @@ limitations under the License.
     // ============================================================================
 
     MobileAccountsPayable.render = {
-        vendorStatus: MobileRenderers.createStatusRenderer(
+        vendorStatus: Layer8MRenderers.createStatusRenderer(
             MobileAccountsPayable.enums.VENDOR_STATUS,
             MobileAccountsPayable.enums.VENDOR_STATUS_CLASSES
         ),
-        invoiceStatus: MobileRenderers.createStatusRenderer(
+        invoiceStatus: Layer8MRenderers.createStatusRenderer(
             MobileAccountsPayable.enums.INVOICE_STATUS,
             MobileAccountsPayable.enums.INVOICE_STATUS_CLASSES
         ),
-        paymentStatus: MobileRenderers.createStatusRenderer(
+        paymentStatus: Layer8MRenderers.createStatusRenderer(
             MobileAccountsPayable.enums.PAYMENT_STATUS,
             MobileAccountsPayable.enums.PAYMENT_STATUS_CLASSES
         ),
-        paymentMethod: (type) => MobileRenderers.renderEnum(type, MobileAccountsPayable.enums.PAYMENT_METHOD),
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate,
-        money: MobileRenderers.renderMoney
+        paymentMethod: (type) => Layer8MRenderers.renderEnum(type, MobileAccountsPayable.enums.PAYMENT_METHOD),
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate,
+        money: Layer8MRenderers.renderMoney
     };
 
 })();

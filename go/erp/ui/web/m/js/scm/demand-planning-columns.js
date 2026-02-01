@@ -27,7 +27,7 @@ limitations under the License.
             { key: 'forecastId', label: 'ID', sortKey: 'forecastId', filterKey: 'forecastId' },
             { key: 'forecastName', label: 'Forecast', sortKey: 'forecastName', filterKey: 'forecastName' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'forecastDate', label: 'Date', sortKey: 'forecastDate', render: (item) => MobileRenderers.renderDate(item.forecastDate) },
+            { key: 'forecastDate', label: 'Date', sortKey: 'forecastDate', render: (item) => Layer8MRenderers.renderDate(item.forecastDate) },
             { key: 'forecastQuantity', label: 'Qty', sortKey: 'forecastQuantity' },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
@@ -43,8 +43,8 @@ limitations under the License.
         ScmDemandPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'planName', label: 'Plan', sortKey: 'planName', filterKey: 'planName' },
-            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => MobileRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => MobileRenderers.renderDate(item.endDate) },
+            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
+            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
@@ -52,15 +52,15 @@ limitations under the License.
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'planName', label: 'Plan', sortKey: 'planName', filterKey: 'planName' },
             { key: 'promotionType', label: 'Type', sortKey: 'promotionType', filterKey: 'promotionType' },
-            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => MobileRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => MobileRenderers.renderDate(item.endDate) },
+            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
+            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
             { key: 'expectedUplift', label: 'Uplift %', sortKey: 'expectedUplift' }
         ],
 
         ScmNewProductPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'productName', label: 'Product', sortKey: 'productName', filterKey: 'productName' },
-            { key: 'launchDate', label: 'Launch', sortKey: 'launchDate', render: (item) => MobileRenderers.renderDate(item.launchDate) },
+            { key: 'launchDate', label: 'Launch', sortKey: 'launchDate', render: (item) => Layer8MRenderers.renderDate(item.launchDate) },
             { key: 'estimatedDemand', label: 'Est. Demand', sortKey: 'estimatedDemand' },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],

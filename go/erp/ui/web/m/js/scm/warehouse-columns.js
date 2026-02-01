@@ -29,7 +29,7 @@ limitations under the License.
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'warehouseType', label: 'Type', sortKey: 'warehouseType', filterKey: 'warehouseType', enumValues: enums.WAREHOUSE_TYPE_VALUES, render: (item) => render.warehouseType(item.warehouseType) },
             { key: 'location', label: 'Location', sortKey: 'location', filterKey: 'location' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
         ScmBin: [
@@ -38,14 +38,14 @@ limitations under the License.
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
             { key: 'binType', label: 'Type', sortKey: 'binType', filterKey: 'binType', enumValues: enums.BIN_TYPE_VALUES, render: (item) => render.binType(item.binType) },
             { key: 'zone', label: 'Zone', sortKey: 'zone', filterKey: 'zone' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
         ScmReceivingOrder: [
             { key: 'receivingOrderId', label: 'ID', sortKey: 'receivingOrderId', filterKey: 'receivingOrderId' },
             { key: 'orderNumber', label: 'Order #', sortKey: 'orderNumber', filterKey: 'orderNumber' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'expectedDate', label: 'Expected', sortKey: 'expectedDate', render: (item) => MobileRenderers.renderDate(item.expectedDate) },
+            { key: 'expectedDate', label: 'Expected', sortKey: 'expectedDate', render: (item) => Layer8MRenderers.renderDate(item.expectedDate) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) },
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' }
         ],
@@ -81,7 +81,7 @@ limitations under the License.
             { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
             { key: 'dockId', label: 'Dock', sortKey: 'dockId', filterKey: 'dockId' },
-            { key: 'scheduledDate', label: 'Scheduled', sortKey: 'scheduledDate', render: (item) => MobileRenderers.renderDate(item.scheduledDate) },
+            { key: 'scheduledDate', label: 'Scheduled', sortKey: 'scheduledDate', render: (item) => Layer8MRenderers.renderDate(item.scheduledDate) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
@@ -89,7 +89,7 @@ limitations under the License.
             { key: 'wavePlanId', label: 'ID', sortKey: 'wavePlanId', filterKey: 'wavePlanId' },
             { key: 'waveName', label: 'Wave', sortKey: 'waveName', filterKey: 'waveName' },
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
-            { key: 'plannedDate', label: 'Planned', sortKey: 'plannedDate', render: (item) => MobileRenderers.renderDate(item.plannedDate) },
+            { key: 'plannedDate', label: 'Planned', sortKey: 'plannedDate', render: (item) => Layer8MRenderers.renderDate(item.plannedDate) },
             { key: 'orderCount', label: 'Orders', sortKey: 'orderCount' },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
@@ -98,7 +98,7 @@ limitations under the License.
             { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
             { key: 'dockId', label: 'Dock', sortKey: 'dockId', filterKey: 'dockId' },
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
-            { key: 'scheduledDate', label: 'Date', sortKey: 'scheduledDate', render: (item) => MobileRenderers.renderDate(item.scheduledDate) },
+            { key: 'scheduledDate', label: 'Date', sortKey: 'scheduledDate', render: (item) => Layer8MRenderers.renderDate(item.scheduledDate) },
             { key: 'direction', label: 'Direction', sortKey: 'direction', filterKey: 'direction' },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ]

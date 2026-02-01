@@ -19,8 +19,8 @@ limitations under the License.
     'use strict';
 
     // Import shared utilities
-    const { escapeHtml } = ERPUtils;
-    const { renderEnum, renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { escapeHtml } = Layer8DUtils;
+    const { renderEnum, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
 
     // Get enums and render functions from benefits-enums.js
     const enums = window.Benefits.enums;

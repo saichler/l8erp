@@ -40,14 +40,14 @@ let currentScmSupplyPlanningService = 'material-requirements';
 
 const SUPPLY_PLANNING_SERVICES = {
     'material-requirements': {
-        endpoint: MobileConfig.resolveEndpoint('/50/MatReq'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/MatReq'),
         modelName: 'ScmMaterialRequirement',
         idField: 'requirementId',
         columns: [
             { key: 'requirementId', label: 'ID', primary: true },
             { key: 'itemId', label: 'Item', secondary: true },
             { key: 'requiredQuantity', label: 'Required Qty' },
-            { key: 'requiredDate', label: 'Required Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'requiredDate', label: 'Required Date', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'planningMethod', label: 'Method', formatter: (v) => ({ 0: 'Unspecified', 1: 'MRP', 2: 'DRP', 3: 'Kanban', 4: 'Min-Max', 5: 'Reorder Point' }[v] || '-') },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
@@ -63,7 +63,7 @@ const SUPPLY_PLANNING_SERVICES = {
         ]
     },
     'distribution-requirements': {
-        endpoint: MobileConfig.resolveEndpoint('/50/DistReq'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/DistReq'),
         modelName: 'ScmDistributionRequirement',
         idField: 'requirementId',
         columns: [
@@ -72,7 +72,7 @@ const SUPPLY_PLANNING_SERVICES = {
             { key: 'sourceWarehouseId', label: 'Source' },
             { key: 'targetWarehouseId', label: 'Target' },
             { key: 'requiredQuantity', label: 'Required Qty' },
-            { key: 'requiredDate', label: 'Required Date', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'requiredDate', label: 'Required Date', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         addText: 'Add Distribution Requirement',
         formFields: [
@@ -86,14 +86,14 @@ const SUPPLY_PLANNING_SERVICES = {
         ]
     },
     'supply-plans': {
-        endpoint: MobileConfig.resolveEndpoint('/50/SupplyPlan'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/SupplyPlan'),
         modelName: 'ScmSupplyPlan',
         idField: 'planId',
         columns: [
             { key: 'planId', label: 'ID', primary: true },
             { key: 'planName', label: 'Plan', secondary: true, filterKey: 'planName' },
-            { key: 'startDate', label: 'Start', formatter: (v) => MobileUtils.formatDate(v) },
-            { key: 'endDate', label: 'End', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'startDate', label: 'Start', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'endDate', label: 'End', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'planningMethod', label: 'Method', formatter: (v) => ({ 0: 'Unspecified', 1: 'MRP', 2: 'DRP', 3: 'Kanban', 4: 'Min-Max', 5: 'Reorder Point' }[v] || '-') },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
@@ -108,7 +108,7 @@ const SUPPLY_PLANNING_SERVICES = {
         ]
     },
     'supplier-collaborations': {
-        endpoint: MobileConfig.resolveEndpoint('/50/SupCollab'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/SupCollab'),
         modelName: 'ScmSupplierCollaboration',
         idField: 'collaborationId',
         columns: [
@@ -116,7 +116,7 @@ const SUPPLY_PLANNING_SERVICES = {
             { key: 'vendorId', label: 'Vendor', secondary: true },
             { key: 'itemId', label: 'Item' },
             { key: 'agreedQuantity', label: 'Agreed Qty' },
-            { key: 'deliveryDate', label: 'Delivery', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'deliveryDate', label: 'Delivery', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
         addText: 'Add Collaboration',
@@ -130,7 +130,7 @@ const SUPPLY_PLANNING_SERVICES = {
         ]
     },
     'safety-stocks': {
-        endpoint: MobileConfig.resolveEndpoint('/50/SafeStock'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/SafeStock'),
         modelName: 'ScmSafetyStock',
         idField: 'safetyStockId',
         columns: [
@@ -152,7 +152,7 @@ const SUPPLY_PLANNING_SERVICES = {
         ]
     },
     'lead-times': {
-        endpoint: MobileConfig.resolveEndpoint('/50/LeadTime'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/LeadTime'),
         modelName: 'ScmLeadTime',
         idField: 'leadTimeId',
         columns: [
@@ -191,7 +191,7 @@ function loadScmSupplyPlanningService(serviceName) {
     currentScmSupplyPlanningService = serviceName;
     const config = SUPPLY_PLANNING_SERVICES[serviceName];
 
-    supplyPlanningTable = new MobileEditTable('supply-planning-table', {
+    supplyPlanningTable = new Layer8MEditTable('supply-planning-table', {
         endpoint: config.endpoint,
         modelName: config.modelName,
         columns: config.columns,
@@ -209,29 +209,29 @@ function openScmSupplyPlanningForm(config, item = null) {
     const title = isEdit ? 'Edit' : config.addText;
 
     const formDef = { fields: config.formFields };
-    const content = MobileForms.renderForm(formDef, item || {});
+    const content = Layer8MForms.renderForm(formDef, item || {});
 
-    MobilePopup.show({
+    Layer8MPopup.show({
         title: title,
         content: content,
         size: 'medium',
         saveButtonText: isEdit ? 'Update' : 'Create',
         onSave: async (popup) => {
             const body = popup.body;
-            const errors = MobileForms.validateForm(body);
-            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+            const errors = Layer8MForms.validateForm(body);
+            if (errors.length > 0) { Layer8MForms.showErrors(body, errors); return; }
 
-            const data = MobileForms.getFormData(body);
+            const data = Layer8MForms.getFormData(body);
             if (isEdit) data[config.idField] = item[config.idField];
 
             try {
-                if (isEdit) await MobileAuth.put(config.endpoint, data);
-                else await MobileAuth.post(config.endpoint, data);
-                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
-                MobilePopup.close();
+                if (isEdit) await Layer8MAuth.put(config.endpoint, data);
+                else await Layer8MAuth.post(config.endpoint, data);
+                Layer8MUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                Layer8MPopup.close();
                 supplyPlanningTable.refresh();
             } catch (error) {
-                MobileUtils.showError('Failed to save');
+                Layer8MUtils.showError('Failed to save');
             }
         }
     });
@@ -239,14 +239,14 @@ function openScmSupplyPlanningForm(config, item = null) {
 
 async function deleteScmSupplyPlanningItem(config, id, item) {
     const name = item.planName || id;
-    const confirmed = await MobileConfirm.confirmDelete(name);
+    const confirmed = await Layer8MConfirm.confirmDelete(name);
     if (confirmed) {
         try {
-            await MobileAuth.delete(config.endpoint + '?id=' + id);
-            MobileUtils.showSuccess('Deleted');
+            await Layer8MAuth.delete(config.endpoint + '?id=' + id);
+            Layer8MUtils.showSuccess('Deleted');
             supplyPlanningTable.refresh();
         } catch (error) {
-            MobileUtils.showError('Failed to delete');
+            Layer8MUtils.showError('Failed to delete');
         }
     }
 }

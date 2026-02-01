@@ -43,7 +43,7 @@ let currentTalentService = 'reviews';
 
 const TALENT_SERVICES = {
     reviews: {
-        endpoint: MobileConfig.resolveEndpoint('/30/PerfRevw'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/PerfRevw'),
         modelName: 'PerformanceReview',
         idField: 'reviewId',
         columns: [
@@ -51,7 +51,7 @@ const TALENT_SERVICES = {
             { key: 'employeeId', label: 'Employee', primary: true },
             { key: 'reviewerId', label: 'Reviewer', secondary: true },
             { key: 'reviewType', label: 'Type', formatter: (v) => ({ 1: 'Annual', 2: 'Mid-Year', 3: 'Quarterly', 4: 'Probation', 5: 'Project', 6: '360' }[v] || '-') },
-            { key: 'reviewPeriod', label: 'Period', formatter: (v, item) => item.reviewPeriod ? `${MobileUtils.formatDate(item.reviewPeriod.startDate)} - ${MobileUtils.formatDate(item.reviewPeriod.endDate)}` : '-' },
+            { key: 'reviewPeriod', label: 'Period', formatter: (v, item) => item.reviewPeriod ? `${Layer8MUtils.formatDate(item.reviewPeriod.startDate)} - ${Layer8MUtils.formatDate(item.reviewPeriod.endDate)}` : '-' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Pending', 3: 'In Progress', 4: 'Completed', 5: 'Cancelled' }[v] || '-') },
             { key: 'overallRating', label: 'Rating' }
         ],
@@ -73,7 +73,7 @@ const TALENT_SERVICES = {
         ]
     },
     goals: {
-        endpoint: MobileConfig.resolveEndpoint('/30/Goal'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Goal'),
         modelName: 'Goal',
         idField: 'goalId',
         columns: [
@@ -84,7 +84,7 @@ const TALENT_SERVICES = {
             { key: 'priority', label: 'Priority', formatter: (v) => ({ 1: 'Critical', 2: 'High', 3: 'Medium', 4: 'Low' }[v] || '-') },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Not Started', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled', 5: 'Deferred' }[v] || '-') },
             { key: 'completionPercentage', label: 'Progress', formatter: (v) => `${v || 0}%` },
-            { key: 'dueDate', label: 'Due', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'dueDate', label: 'Due', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         statusField: 'status',
         addText: 'New Goal',
@@ -105,7 +105,7 @@ const TALENT_SERVICES = {
         ]
     },
     feedback: {
-        endpoint: MobileConfig.resolveEndpoint('/30/Feedback'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Feedback'),
         modelName: 'Feedback',
         idField: 'feedbackId',
         columns: [
@@ -115,7 +115,7 @@ const TALENT_SERVICES = {
             { key: 'feedbackType', label: 'Type', formatter: (v) => ({ 1: 'Peer', 2: 'Manager', 3: 'Skip-Level', 4: 'Self', 5: 'External' }[v] || '-') },
             { key: 'relationship', label: 'Relationship', formatter: (v) => ({ 1: 'Peer', 2: 'Manager', 3: 'Direct Report', 4: 'Cross-Functional' }[v] || '-') },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Requested', 2: 'In Progress', 3: 'Submitted', 4: 'Cancelled' }[v] || '-') },
-            { key: 'dueDate', label: 'Due', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'dueDate', label: 'Due', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         addText: 'Request Feedback',
         formFields: [
@@ -132,7 +132,7 @@ const TALENT_SERVICES = {
         ]
     },
     'career-paths': {
-        endpoint: MobileConfig.resolveEndpoint('/30/CarPath'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/CarPath'),
         modelName: 'CareerPath',
         idField: 'careerPathId',
         columns: [
@@ -152,7 +152,7 @@ const TALENT_SERVICES = {
         ]
     },
     succession: {
-        endpoint: MobileConfig.resolveEndpoint('/30/SuccPlan'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/SuccPlan'),
         modelName: 'SuccessionPlan',
         idField: 'planId',
         columns: [
@@ -162,7 +162,7 @@ const TALENT_SERVICES = {
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Active', 3: 'Completed', 4: 'Cancelled' }[v] || '-') },
             { key: 'vacancyRisk', label: 'Risk', formatter: (v) => ({ 1: 'Critical', 2: 'High', 3: 'Medium', 4: 'Low' }[v] || '-') },
             { key: 'candidates', label: 'Candidates', formatter: (v) => v ? v.length : 0 },
-            { key: 'nextReviewDate', label: 'Next Review', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'nextReviewDate', label: 'Next Review', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         addText: 'Add Succession Plan',
         formFields: [
@@ -177,7 +177,7 @@ const TALENT_SERVICES = {
         ]
     },
     requisitions: {
-        endpoint: MobileConfig.resolveEndpoint('/30/JobReq'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/JobReq'),
         modelName: 'JobRequisition',
         idField: 'requisitionId',
         columns: [
@@ -188,7 +188,7 @@ const TALENT_SERVICES = {
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Open', 3: 'On Hold', 4: 'Filled', 5: 'Cancelled' }[v] || '-') },
             { key: 'openings', label: 'Openings' },
             { key: 'applicantCount', label: 'Applicants' },
-            { key: 'targetStartDate', label: 'Target Start', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'targetStartDate', label: 'Target Start', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         statusField: 'status',
         addText: 'New Requisition',
@@ -215,7 +215,7 @@ const TALENT_SERVICES = {
         ]
     },
     applicants: {
-        endpoint: MobileConfig.resolveEndpoint('/30/Applicant'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Applicant'),
         modelName: 'Applicant',
         idField: 'applicantId',
         columns: [
@@ -223,9 +223,9 @@ const TALENT_SERVICES = {
             { key: 'lastName', label: 'Last Name', primary: true, filterKey: 'lastName' },
             { key: 'firstName', label: 'First Name', secondary: true },
             { key: 'email', label: 'Email' },
-            { key: 'phone', label: 'Phone', formatter: (v) => MobileUtils.formatPhone(v) },
+            { key: 'phone', label: 'Phone', formatter: (v) => Layer8MUtils.formatPhone(v) },
             { key: 'source', label: 'Source', formatter: (v) => ({ 1: 'Website', 2: 'Referral', 3: 'Job Board', 4: 'Agency', 5: 'LinkedIn', 6: 'Other' }[v] || '-') },
-            { key: 'createdDate', label: 'Applied', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'createdDate', label: 'Applied', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         addText: 'Add Applicant',
         formFields: [
@@ -243,7 +243,7 @@ const TALENT_SERVICES = {
         ]
     },
     applications: {
-        endpoint: MobileConfig.resolveEndpoint('/30/Applctn'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Applctn'),
         modelName: 'Application',
         idField: 'applicationId',
         columns: [
@@ -253,7 +253,7 @@ const TALENT_SERVICES = {
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'New', 2: 'Screening', 3: 'Interview', 4: 'Offer', 5: 'Hired', 6: 'Rejected', 7: 'Withdrawn' }[v] || '-') },
             { key: 'stage', label: 'Stage', formatter: (v) => ({ 1: 'Applied', 2: 'Phone Screen', 3: 'Interview 1', 4: 'Interview 2', 5: 'Final', 6: 'Offer', 7: 'Background' }[v] || '-') },
             { key: 'overallRating', label: 'Rating' },
-            { key: 'appliedDate', label: 'Applied', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'appliedDate', label: 'Applied', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         addText: 'Add Application',
         formFields: [
@@ -270,7 +270,7 @@ const TALENT_SERVICES = {
         ]
     },
     onboarding: {
-        endpoint: MobileConfig.resolveEndpoint('/30/OnbrdTsk'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/OnbrdTsk'),
         modelName: 'OnboardingTask',
         idField: 'taskId',
         columns: [
@@ -280,7 +280,7 @@ const TALENT_SERVICES = {
             { key: 'category', label: 'Category', formatter: (v) => ({ 1: 'Paperwork', 2: 'Equipment', 3: 'Training', 4: 'IT Setup', 5: 'Benefits', 6: 'Introduction', 7: 'Other' }[v] || '-') },
             { key: 'ownerType', label: 'Owner', formatter: (v) => ({ 1: 'HR', 2: 'Manager', 3: 'IT', 4: 'Employee', 5: 'Facilities' }[v] || '-') },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Not Started', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled', 5: 'Blocked' }[v] || '-') },
-            { key: 'dueDate', label: 'Due', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'dueDate', label: 'Due', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         addText: 'Add Onboarding Task',
         formFields: [
@@ -315,7 +315,7 @@ function loadTalentService(serviceName) {
     currentTalentService = serviceName;
     const config = TALENT_SERVICES[serviceName];
 
-    talentTable = new MobileEditTable('talent-table', {
+    talentTable = new Layer8MEditTable('talent-table', {
         endpoint: config.endpoint,
         modelName: config.modelName,
         columns: config.columns,
@@ -333,43 +333,43 @@ function openTalentForm(config, item = null) {
     const isEdit = !!item;
     const title = isEdit ? 'Edit ' + config.modelName : config.addText;
     const formDef = { fields: config.formFields };
-    const content = MobileForms.renderForm(formDef, item || {});
+    const content = Layer8MForms.renderForm(formDef, item || {});
 
-    MobilePopup.show({
+    Layer8MPopup.show({
         title: title,
         content: content,
         size: 'large',
         saveButtonText: isEdit ? 'Update' : 'Create',
         onSave: async (popup) => {
             const body = popup.body;
-            const errors = MobileForms.validateForm(body);
-            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+            const errors = Layer8MForms.validateForm(body);
+            if (errors.length > 0) { Layer8MForms.showErrors(body, errors); return; }
 
-            const data = MobileForms.getFormData(body);
+            const data = Layer8MForms.getFormData(body);
             if (isEdit) data[config.idField] = item[config.idField];
 
             try {
-                if (isEdit) await MobileAuth.put(config.endpoint, data);
-                else await MobileAuth.post(config.endpoint, data);
-                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
-                MobilePopup.close();
+                if (isEdit) await Layer8MAuth.put(config.endpoint, data);
+                else await Layer8MAuth.post(config.endpoint, data);
+                Layer8MUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                Layer8MPopup.close();
                 talentTable.refresh();
             } catch (error) {
-                MobileUtils.showError('Failed to save');
+                Layer8MUtils.showError('Failed to save');
             }
         }
     });
 }
 
 async function deleteTalentItem(config, id, item) {
-    const confirmed = await MobileConfirm.confirmDelete(item.title || item.lastName || item.name || id);
+    const confirmed = await Layer8MConfirm.confirmDelete(item.title || item.lastName || item.name || id);
     if (confirmed) {
         try {
-            await MobileAuth.delete(config.endpoint + '?id=' + id);
-            MobileUtils.showSuccess('Deleted');
+            await Layer8MAuth.delete(config.endpoint + '?id=' + id);
+            Layer8MUtils.showSuccess('Deleted');
             talentTable.refresh();
         } catch (error) {
-            MobileUtils.showError('Failed to delete');
+            Layer8MUtils.showError('Failed to delete');
         }
     }
 }

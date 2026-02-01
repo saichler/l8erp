@@ -35,10 +35,10 @@ limitations under the License.
     };
 
     AccountsPayable.enums.VENDOR_STATUS_CLASSES = {
-        1: 'erp-status-active',
-        2: 'erp-status-inactive',
-        3: 'erp-status-pending',
-        4: 'erp-status-terminated'
+        1: 'layer8d-status-active',
+        2: 'layer8d-status-inactive',
+        3: 'layer8d-status-pending',
+        4: 'layer8d-status-terminated'
     };
 
     // ============================================================================
@@ -58,14 +58,14 @@ limitations under the License.
     };
 
     AccountsPayable.enums.INVOICE_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-pending',
-        3: 'erp-status-active',
-        4: 'erp-status-pending',
-        5: 'erp-status-active',
-        6: 'erp-status-terminated',
-        7: 'erp-status-inactive',
-        8: 'erp-status-terminated'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-pending',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-pending',
+        5: 'layer8d-status-active',
+        6: 'layer8d-status-terminated',
+        7: 'layer8d-status-inactive',
+        8: 'layer8d-status-terminated'
     };
 
     // ============================================================================
@@ -83,12 +83,12 @@ limitations under the License.
     };
 
     AccountsPayable.enums.PAYMENT_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-pending',
-        3: 'erp-status-active',
-        4: 'erp-status-terminated',
-        5: 'erp-status-inactive',
-        6: 'erp-status-terminated'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-pending',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-terminated',
+        5: 'layer8d-status-inactive',
+        6: 'layer8d-status-terminated'
     };
 
     // ============================================================================
@@ -112,24 +112,24 @@ limitations under the License.
     // Create render functions using shared utilities
     AccountsPayable.render = {};
 
-    AccountsPayable.render.vendorStatus = ERPRenderers.createStatusRenderer(
+    AccountsPayable.render.vendorStatus = Layer8DRenderers.createStatusRenderer(
         AccountsPayable.enums.VENDOR_STATUS,
         AccountsPayable.enums.VENDOR_STATUS_CLASSES
     );
 
-    AccountsPayable.render.invoiceStatus = ERPRenderers.createStatusRenderer(
+    AccountsPayable.render.invoiceStatus = Layer8DRenderers.createStatusRenderer(
         AccountsPayable.enums.INVOICE_STATUS,
         AccountsPayable.enums.INVOICE_STATUS_CLASSES
     );
 
-    AccountsPayable.render.paymentStatus = ERPRenderers.createStatusRenderer(
+    AccountsPayable.render.paymentStatus = Layer8DRenderers.createStatusRenderer(
         AccountsPayable.enums.PAYMENT_STATUS,
         AccountsPayable.enums.PAYMENT_STATUS_CLASSES
     );
 
-    AccountsPayable.render.paymentMethod = (type) => ERPRenderers.renderEnum(type, AccountsPayable.enums.PAYMENT_METHOD);
-    AccountsPayable.render.boolean = ERPRenderers.renderBoolean;
-    AccountsPayable.render.date = ERPRenderers.renderDate;
-    AccountsPayable.render.money = ERPRenderers.renderMoney;
+    AccountsPayable.render.paymentMethod = (type) => Layer8DRenderers.renderEnum(type, AccountsPayable.enums.PAYMENT_METHOD);
+    AccountsPayable.render.boolean = Layer8DRenderers.renderBoolean;
+    AccountsPayable.render.date = Layer8DRenderers.renderDate;
+    AccountsPayable.render.money = Layer8DRenderers.renderMoney;
 
 })();

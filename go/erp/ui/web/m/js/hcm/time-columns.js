@@ -37,8 +37,8 @@ limitations under the License.
             { key: 'requestId', label: 'ID', sortKey: 'requestId', filterKey: 'requestId' },
             { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
             { key: 'leaveType', label: 'Leave Type', sortKey: 'leaveType', filterKey: 'leaveType', enumValues: enums.LEAVE_TYPE_VALUES, render: (item) => render.leaveType(item.leaveType) },
-            { key: 'startDate', label: 'Start Date', sortKey: 'startDate', render: (item) => MobileRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End Date', sortKey: 'endDate', render: (item) => MobileRenderers.renderDate(item.endDate) },
+            { key: 'startDate', label: 'Start Date', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
+            { key: 'endDate', label: 'End Date', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
             { key: 'totalHours', label: 'Hours', sortKey: 'totalHours', render: (item) => render.hours(item.totalHours) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.LEAVE_REQUEST_STATUS_VALUES, render: (item) => render.leaveRequestStatus(item.status) }
         ],
@@ -60,7 +60,7 @@ limitations under the License.
             { key: 'leaveType', label: 'Leave Type', sortKey: 'leaveType', filterKey: 'leaveType', enumValues: enums.LEAVE_TYPE_VALUES, render: (item) => render.leaveType(item.leaveType) },
             { key: 'accrualMethod', label: 'Accrual Method', sortKey: 'accrualMethod', filterKey: 'accrualMethod', enumValues: enums.ACCRUAL_METHOD_VALUES, render: (item) => render.accrualMethod(item.accrualMethod) },
             { key: 'accrualRate', label: 'Accrual Rate', sortKey: 'accrualRate', render: (item) => render.hours(item.accrualRate) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
         Shift: [
@@ -70,7 +70,7 @@ limitations under the License.
             { key: 'shiftType', label: 'Type', sortKey: 'shiftType', filterKey: 'shiftType', enumValues: enums.SHIFT_TYPE_VALUES, render: (item) => render.shiftType(item.shiftType) },
             { key: 'durationHours', label: 'Duration', sortKey: 'durationHours', render: (item) => render.hours(item.durationHours) },
             { key: 'breakDurationMinutes', label: 'Break', sortKey: 'breakDurationMinutes', render: (item) => item.breakDurationMinutes ? `${item.breakDurationMinutes} min` : '-' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
         Schedule: [
@@ -79,28 +79,28 @@ limitations under the License.
             { key: 'period', label: 'Period', render: (item) => render.period(item.period) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.SCHEDULE_STATUS_VALUES, render: (item) => render.scheduleStatus(item.status) },
             { key: 'totalScheduledHours', label: 'Scheduled Hours', sortKey: 'totalScheduledHours', render: (item) => render.hours(item.totalScheduledHours) },
-            { key: 'publishedDate', label: 'Published', sortKey: 'publishedDate', render: (item) => MobileRenderers.renderDate(item.publishedDate) }
+            { key: 'publishedDate', label: 'Published', sortKey: 'publishedDate', render: (item) => Layer8MRenderers.renderDate(item.publishedDate) }
         ],
 
         Holiday: [
             { key: 'holidayId', label: 'ID', sortKey: 'holidayId', filterKey: 'holidayId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'date', label: 'Date', sortKey: 'date', render: (item) => MobileRenderers.renderDate(item.date) },
+            { key: 'date', label: 'Date', sortKey: 'date', render: (item) => Layer8MRenderers.renderDate(item.date) },
             { key: 'year', label: 'Year', sortKey: 'year', filterKey: 'year' },
             { key: 'holidayType', label: 'Type', sortKey: 'holidayType', filterKey: 'holidayType', enumValues: enums.HOLIDAY_TYPE_VALUES, render: (item) => render.holidayType(item.holidayType) },
-            { key: 'isPaid', label: 'Paid', sortKey: 'isPaid', render: (item) => MobileRenderers.renderBoolean(item.isPaid) },
+            { key: 'isPaid', label: 'Paid', sortKey: 'isPaid', render: (item) => Layer8MRenderers.renderBoolean(item.isPaid) },
             { key: 'hoursCredited', label: 'Hours', sortKey: 'hoursCredited', render: (item) => render.hours(item.hoursCredited) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
         Absence: [
             { key: 'absenceId', label: 'ID', sortKey: 'absenceId', filterKey: 'absenceId' },
             { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            { key: 'date', label: 'Date', sortKey: 'date', render: (item) => MobileRenderers.renderDate(item.date) },
+            { key: 'date', label: 'Date', sortKey: 'date', render: (item) => Layer8MRenderers.renderDate(item.date) },
             { key: 'absenceType', label: 'Type', sortKey: 'absenceType', filterKey: 'absenceType', enumValues: enums.LEAVE_TYPE_VALUES, render: (item) => render.leaveType(item.absenceType) },
             { key: 'hours', label: 'Hours', sortKey: 'hours', render: (item) => render.hours(item.hours) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.ABSENCE_STATUS_VALUES, render: (item) => render.absenceStatus(item.status) },
-            { key: 'isPaid', label: 'Paid', sortKey: 'isPaid', render: (item) => MobileRenderers.renderBoolean(item.isPaid) }
+            { key: 'isPaid', label: 'Paid', sortKey: 'isPaid', render: (item) => Layer8MRenderers.renderBoolean(item.isPaid) }
         ]
     };
 

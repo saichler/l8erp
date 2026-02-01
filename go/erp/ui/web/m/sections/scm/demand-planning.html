@@ -40,14 +40,14 @@ let currentScmDemandPlanningService = 'demand-forecasts';
 
 const DEMAND_PLANNING_SERVICES = {
     'demand-forecasts': {
-        endpoint: MobileConfig.resolveEndpoint('/50/DmndFcast'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/DmndFcast'),
         modelName: 'ScmDemandForecast',
         idField: 'forecastId',
         columns: [
             { key: 'forecastId', label: 'ID', primary: true },
             { key: 'forecastName', label: 'Forecast', secondary: true, filterKey: 'forecastName' },
             { key: 'itemId', label: 'Item' },
-            { key: 'forecastDate', label: 'Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'forecastDate', label: 'Date', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'forecastQuantity', label: 'Qty' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
@@ -63,7 +63,7 @@ const DEMAND_PLANNING_SERVICES = {
         ]
     },
     'forecast-models': {
-        endpoint: MobileConfig.resolveEndpoint('/50/FcastModel'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/FcastModel'),
         modelName: 'ScmForecastModel',
         idField: 'modelId',
         columns: [
@@ -83,14 +83,14 @@ const DEMAND_PLANNING_SERVICES = {
         ]
     },
     'demand-plans': {
-        endpoint: MobileConfig.resolveEndpoint('/50/DemandPlan'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/DemandPlan'),
         modelName: 'ScmDemandPlan',
         idField: 'planId',
         columns: [
             { key: 'planId', label: 'ID', primary: true },
             { key: 'planName', label: 'Plan', secondary: true, filterKey: 'planName' },
-            { key: 'startDate', label: 'Start', formatter: (v) => MobileUtils.formatDate(v) },
-            { key: 'endDate', label: 'End', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'startDate', label: 'Start', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'endDate', label: 'End', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
         addText: 'Add Demand Plan',
@@ -104,15 +104,15 @@ const DEMAND_PLANNING_SERVICES = {
         ]
     },
     'promo-plans': {
-        endpoint: MobileConfig.resolveEndpoint('/50/PromoPlan'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/PromoPlan'),
         modelName: 'ScmPromotionalPlan',
         idField: 'planId',
         columns: [
             { key: 'planId', label: 'ID', primary: true },
             { key: 'planName', label: 'Plan', secondary: true, filterKey: 'planName' },
             { key: 'promotionType', label: 'Type' },
-            { key: 'startDate', label: 'Start', formatter: (v) => MobileUtils.formatDate(v) },
-            { key: 'endDate', label: 'End', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'startDate', label: 'Start', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'endDate', label: 'End', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'expectedUplift', label: 'Uplift %' }
         ],
         addText: 'Add Promotional Plan',
@@ -126,13 +126,13 @@ const DEMAND_PLANNING_SERVICES = {
         ]
     },
     'new-product-plans': {
-        endpoint: MobileConfig.resolveEndpoint('/50/NewProdPln'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/NewProdPln'),
         modelName: 'ScmNewProductPlan',
         idField: 'planId',
         columns: [
             { key: 'planId', label: 'ID', primary: true },
             { key: 'productName', label: 'Product', secondary: true, filterKey: 'productName' },
-            { key: 'launchDate', label: 'Launch', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'launchDate', label: 'Launch', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'estimatedDemand', label: 'Est. Demand' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
@@ -147,7 +147,7 @@ const DEMAND_PLANNING_SERVICES = {
         ]
     },
     'forecast-accuracies': {
-        endpoint: MobileConfig.resolveEndpoint('/50/FcastAccur'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/FcastAccur'),
         modelName: 'ScmForecastAccuracy',
         idField: 'accuracyId',
         columns: [
@@ -186,7 +186,7 @@ function loadScmDemandPlanningService(serviceName) {
     currentScmDemandPlanningService = serviceName;
     const config = DEMAND_PLANNING_SERVICES[serviceName];
 
-    demandPlanningTable = new MobileEditTable('demand-planning-table', {
+    demandPlanningTable = new Layer8MEditTable('demand-planning-table', {
         endpoint: config.endpoint,
         modelName: config.modelName,
         columns: config.columns,
@@ -204,29 +204,29 @@ function openScmDemandPlanningForm(config, item = null) {
     const title = isEdit ? 'Edit' : config.addText;
 
     const formDef = { fields: config.formFields };
-    const content = MobileForms.renderForm(formDef, item || {});
+    const content = Layer8MForms.renderForm(formDef, item || {});
 
-    MobilePopup.show({
+    Layer8MPopup.show({
         title: title,
         content: content,
         size: 'medium',
         saveButtonText: isEdit ? 'Update' : 'Create',
         onSave: async (popup) => {
             const body = popup.body;
-            const errors = MobileForms.validateForm(body);
-            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+            const errors = Layer8MForms.validateForm(body);
+            if (errors.length > 0) { Layer8MForms.showErrors(body, errors); return; }
 
-            const data = MobileForms.getFormData(body);
+            const data = Layer8MForms.getFormData(body);
             if (isEdit) data[config.idField] = item[config.idField];
 
             try {
-                if (isEdit) await MobileAuth.put(config.endpoint, data);
-                else await MobileAuth.post(config.endpoint, data);
-                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
-                MobilePopup.close();
+                if (isEdit) await Layer8MAuth.put(config.endpoint, data);
+                else await Layer8MAuth.post(config.endpoint, data);
+                Layer8MUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                Layer8MPopup.close();
                 demandPlanningTable.refresh();
             } catch (error) {
-                MobileUtils.showError('Failed to save');
+                Layer8MUtils.showError('Failed to save');
             }
         }
     });
@@ -234,14 +234,14 @@ function openScmDemandPlanningForm(config, item = null) {
 
 async function deleteScmDemandPlanningItem(config, id, item) {
     const name = item.forecastName || item.modelName || item.planName || item.productName || id;
-    const confirmed = await MobileConfirm.confirmDelete(name);
+    const confirmed = await Layer8MConfirm.confirmDelete(name);
     if (confirmed) {
         try {
-            await MobileAuth.delete(config.endpoint + '?id=' + id);
-            MobileUtils.showSuccess('Deleted');
+            await Layer8MAuth.delete(config.endpoint + '?id=' + id);
+            Layer8MUtils.showSuccess('Deleted');
             demandPlanningTable.refresh();
         } catch (error) {
-            MobileUtils.showError('Failed to delete');
+            Layer8MUtils.showError('Failed to delete');
         }
     }
 }

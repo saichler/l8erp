@@ -21,7 +21,7 @@ limitations under the License.
     // Ensure TaxManagement namespace exists
     window.TaxManagement = window.TaxManagement || {};
 
-    const { renderBoolean, renderDate, renderMoney, renderPercentage } = ERPRenderers;
+    const { renderBoolean, renderDate, renderMoney, renderPercentage } = Layer8DRenderers;
     const enums = TaxManagement.enums;
     const render = TaxManagement.render;
 

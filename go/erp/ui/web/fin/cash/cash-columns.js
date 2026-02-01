@@ -21,7 +21,7 @@ limitations under the License.
     // Ensure CashManagement namespace exists
     window.CashManagement = window.CashManagement || {};
 
-    const { renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
     const render = CashManagement.render;
 
     // ============================================================================

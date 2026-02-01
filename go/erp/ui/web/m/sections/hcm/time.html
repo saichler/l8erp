@@ -42,13 +42,13 @@ let currentTimeService = 'timesheets';
 
 const TIME_SERVICES = {
     timesheets: {
-        endpoint: MobileConfig.resolveEndpoint('/30/Timesheet'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Timesheet'),
         modelName: 'Timesheet',
         idField: 'timesheetId',
         columns: [
             { key: 'timesheetId', label: 'ID', primary: true },
             { key: 'employeeId', label: 'Employee', secondary: true },
-            { key: 'period', label: 'Period', formatter: (v, item) => `${MobileUtils.formatDate(item.startDate)} - ${MobileUtils.formatDate(item.endDate)}` },
+            { key: 'period', label: 'Period', formatter: (v, item) => `${Layer8MUtils.formatDate(item.startDate)} - ${Layer8MUtils.formatDate(item.endDate)}` },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Rejected', 5: 'Processed' }[v] || '-') },
             { key: 'totalRegularHours', label: 'Regular' },
             { key: 'totalOvertimeHours', label: 'OT' }
@@ -70,15 +70,15 @@ const TIME_SERVICES = {
         ]
     },
     'leave-requests': {
-        endpoint: MobileConfig.resolveEndpoint('/30/LeaveReq'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/LeaveReq'),
         modelName: 'LeaveRequest',
         idField: 'requestId',
         columns: [
             { key: 'requestId', label: 'ID', primary: true },
             { key: 'employeeId', label: 'Employee', secondary: true },
             { key: 'leaveType', label: 'Type', formatter: (v) => ({ 1: 'Vacation', 2: 'Sick', 3: 'Personal', 4: 'Bereavement', 5: 'Jury Duty', 6: 'Military', 7: 'FMLA', 8: 'Other' }[v] || '-') },
-            { key: 'startDate', label: 'Start', formatter: (v) => MobileUtils.formatDate(v) },
-            { key: 'endDate', label: 'End', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'startDate', label: 'Start', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'endDate', label: 'End', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'totalHours', label: 'Hours' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Pending', 3: 'Approved', 4: 'Rejected', 5: 'Cancelled' }[v] || '-') }
         ],
@@ -100,7 +100,7 @@ const TIME_SERVICES = {
         ]
     },
     'leave-balances': {
-        endpoint: MobileConfig.resolveEndpoint('/30/LeaveBal'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/LeaveBal'),
         modelName: 'LeaveBalance',
         idField: 'balanceId',
         columns: [
@@ -132,7 +132,7 @@ const TIME_SERVICES = {
         ]
     },
     'leave-policies': {
-        endpoint: MobileConfig.resolveEndpoint('/30/LeavePol'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/LeavePol'),
         modelName: 'LeavePolicy',
         idField: 'policyId',
         columns: [
@@ -168,16 +168,16 @@ const TIME_SERVICES = {
         ]
     },
     schedules: {
-        endpoint: MobileConfig.resolveEndpoint('/30/Schedule'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Schedule'),
         modelName: 'Schedule',
         idField: 'scheduleId',
         columns: [
             { key: 'scheduleId', label: 'ID', primary: true },
             { key: 'employeeId', label: 'Employee', secondary: true },
-            { key: 'period', label: 'Period', formatter: (v, item) => `${MobileUtils.formatDate(item.startDate)} - ${MobileUtils.formatDate(item.endDate)}` },
+            { key: 'period', label: 'Period', formatter: (v, item) => `${Layer8MUtils.formatDate(item.startDate)} - ${Layer8MUtils.formatDate(item.endDate)}` },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Published', 3: 'Approved' }[v] || '-') },
             { key: 'totalScheduledHours', label: 'Hours' },
-            { key: 'publishedDate', label: 'Published', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'publishedDate', label: 'Published', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         addText: 'New Schedule',
         formFields: [
@@ -189,7 +189,7 @@ const TIME_SERVICES = {
         ]
     },
     shifts: {
-        endpoint: MobileConfig.resolveEndpoint('/30/Shift'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Shift'),
         modelName: 'Shift',
         idField: 'shiftId',
         columns: [
@@ -218,13 +218,13 @@ const TIME_SERVICES = {
         ]
     },
     absences: {
-        endpoint: MobileConfig.resolveEndpoint('/30/Absence'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Absence'),
         modelName: 'Absence',
         idField: 'absenceId',
         columns: [
             { key: 'absenceId', label: 'ID', filterKey: 'absenceId' },
             { key: 'employeeId', label: 'Employee', primary: true },
-            { key: 'date', label: 'Date', secondary: true, formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'date', label: 'Date', secondary: true, formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'absenceType', label: 'Type', formatter: (v) => ({ 1: 'Vacation', 2: 'Sick', 3: 'Personal', 4: 'Bereavement', 5: 'Jury Duty', 6: 'FMLA', 7: 'Other' }[v] || '-') },
             { key: 'hours', label: 'Hours' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Pending', 2: 'Approved', 3: 'Rejected' }[v] || '-') },
@@ -245,13 +245,13 @@ const TIME_SERVICES = {
         ]
     },
     holidays: {
-        endpoint: MobileConfig.resolveEndpoint('/30/Holiday'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Holiday'),
         modelName: 'Holiday',
         idField: 'holidayId',
         columns: [
             { key: 'holidayId', label: 'ID', filterKey: 'holidayId' },
             { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
-            { key: 'date', label: 'Date', secondary: true, formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'date', label: 'Date', secondary: true, formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'year', label: 'Year' },
             { key: 'holidayType', label: 'Type', formatter: (v) => ({ 1: 'Federal', 2: 'State', 3: 'Religious', 4: 'Company', 5: 'Floating' }[v] || '-') },
             { key: 'isPaid', label: 'Paid', formatter: (v) => v ? 'Yes' : 'No' },
@@ -290,7 +290,7 @@ function loadTimeService(serviceName) {
     currentTimeService = serviceName;
     const config = TIME_SERVICES[serviceName];
 
-    timeTable = new MobileEditTable('time-table', {
+    timeTable = new Layer8MEditTable('time-table', {
         endpoint: config.endpoint,
         modelName: config.modelName,
         columns: config.columns,
@@ -308,43 +308,43 @@ function openTimeForm(config, item = null) {
     const isEdit = !!item;
     const title = isEdit ? 'Edit ' + config.modelName : config.addText;
     const formDef = { fields: config.formFields };
-    const content = MobileForms.renderForm(formDef, item || {});
+    const content = Layer8MForms.renderForm(formDef, item || {});
 
-    MobilePopup.show({
+    Layer8MPopup.show({
         title: title,
         content: content,
         size: 'large',
         saveButtonText: isEdit ? 'Update' : 'Create',
         onSave: async (popup) => {
             const body = popup.body;
-            const errors = MobileForms.validateForm(body);
-            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+            const errors = Layer8MForms.validateForm(body);
+            if (errors.length > 0) { Layer8MForms.showErrors(body, errors); return; }
 
-            const data = MobileForms.getFormData(body);
+            const data = Layer8MForms.getFormData(body);
             if (isEdit) data[config.idField] = item[config.idField];
 
             try {
-                if (isEdit) await MobileAuth.put(config.endpoint, data);
-                else await MobileAuth.post(config.endpoint, data);
-                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
-                MobilePopup.close();
+                if (isEdit) await Layer8MAuth.put(config.endpoint, data);
+                else await Layer8MAuth.post(config.endpoint, data);
+                Layer8MUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                Layer8MPopup.close();
                 timeTable.refresh();
             } catch (error) {
-                MobileUtils.showError('Failed to save');
+                Layer8MUtils.showError('Failed to save');
             }
         }
     });
 }
 
 async function deleteTimeItem(config, id, item) {
-    const confirmed = await MobileConfirm.confirmDelete(item.name || id);
+    const confirmed = await Layer8MConfirm.confirmDelete(item.name || id);
     if (confirmed) {
         try {
-            await MobileAuth.delete(config.endpoint + '?id=' + id);
-            MobileUtils.showSuccess('Deleted');
+            await Layer8MAuth.delete(config.endpoint + '?id=' + id);
+            Layer8MUtils.showSuccess('Deleted');
             timeTable.refresh();
         } catch (error) {
-            MobileUtils.showError('Failed to delete');
+            Layer8MUtils.showError('Failed to delete');
         }
     }
 }

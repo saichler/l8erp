@@ -71,18 +71,18 @@ limitations under the License.
     // ============================================================================
 
     MobileLogistics.render = {
-        carrierType: (v) => MobileRenderers.renderEnum(v, MobileLogistics.enums.CARRIER_TYPE),
-        shipmentStatus: MobileRenderers.createStatusRenderer(
+        carrierType: (v) => Layer8MRenderers.renderEnum(v, MobileLogistics.enums.CARRIER_TYPE),
+        shipmentStatus: Layer8MRenderers.createStatusRenderer(
             MobileLogistics.enums.SHIPMENT_STATUS,
             MobileLogistics.enums.SHIPMENT_STATUS_CLASSES
         ),
-        taskStatus: MobileRenderers.createStatusRenderer(
+        taskStatus: Layer8MRenderers.createStatusRenderer(
             MobileLogistics.enums.TASK_STATUS,
             MobileLogistics.enums.TASK_STATUS_CLASSES
         ),
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate,
-        money: MobileRenderers.renderMoney
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate,
+        money: Layer8MRenderers.renderMoney
     };
 
 })();

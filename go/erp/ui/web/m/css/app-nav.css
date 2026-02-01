@@ -52,13 +52,13 @@ limitations under the License.
     transform: translateX(-50%);
     width: 0;
     height: 3px;
-    background: var(--erp-primary);
+    background: var(--layer8d-primary);
     border-radius: 0 0 3px 3px;
     transition: width var(--transition-fast);
 }
 
 .nav-item.active {
-    color: var(--erp-primary);
+    color: var(--layer8d-primary);
 }
 
 .nav-item.active::before {
@@ -218,7 +218,7 @@ limitations under the License.
 
 .more-menu-item.active {
     background: var(--bg-tertiary);
-    color: var(--erp-primary);
+    color: var(--layer8d-primary);
 }
 
 .more-menu-icon {
@@ -260,7 +260,7 @@ limitations under the License.
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: var(--erp-primary);
+    background: var(--layer8d-primary);
     color: white;
     display: flex;
     align-items: center;

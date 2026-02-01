@@ -183,19 +183,19 @@ limitations under the License.
     // ============================================================================
 
     MobileTime.render = {
-        timesheetStatus: MobileRenderers.createStatusRenderer(
+        timesheetStatus: Layer8MRenderers.createStatusRenderer(
             MobileTime.enums.TIMESHEET_STATUS,
             MobileTime.enums.TIMESHEET_STATUS_CLASSES
         ),
-        timeEntryType: (v) => MobileRenderers.renderEnum(v, MobileTime.enums.TIME_ENTRY_TYPE),
-        timeEntrySource: (v) => MobileRenderers.renderEnum(v, MobileTime.enums.TIME_ENTRY_SOURCE),
-        leaveType: (v) => MobileRenderers.renderEnum(v, MobileTime.enums.LEAVE_TYPE),
-        leaveRequestStatus: MobileRenderers.createStatusRenderer(
+        timeEntryType: (v) => Layer8MRenderers.renderEnum(v, MobileTime.enums.TIME_ENTRY_TYPE),
+        timeEntrySource: (v) => Layer8MRenderers.renderEnum(v, MobileTime.enums.TIME_ENTRY_SOURCE),
+        leaveType: (v) => Layer8MRenderers.renderEnum(v, MobileTime.enums.LEAVE_TYPE),
+        leaveRequestStatus: Layer8MRenderers.createStatusRenderer(
             MobileTime.enums.LEAVE_REQUEST_STATUS,
             MobileTime.enums.LEAVE_REQUEST_STATUS_CLASSES
         ),
-        accrualMethod: (v) => MobileRenderers.renderEnum(v, MobileTime.enums.ACCRUAL_METHOD),
-        accrualFrequency: (v) => MobileRenderers.renderEnum(v, MobileTime.enums.ACCRUAL_FREQUENCY),
+        accrualMethod: (v) => Layer8MRenderers.renderEnum(v, MobileTime.enums.ACCRUAL_METHOD),
+        accrualFrequency: (v) => Layer8MRenderers.renderEnum(v, MobileTime.enums.ACCRUAL_FREQUENCY),
         shiftType: (type) => {
             const shiftColors = {
                 1: '#10b981', 2: '#f59e0b', 3: '#6366f1', 4: '#8b5cf6',
@@ -203,21 +203,21 @@ limitations under the License.
             };
             const label = MobileTime.enums.SHIFT_TYPE[type] || 'Unknown';
             const color = shiftColors[type] || '#64748b';
-            return `<span style="color: ${color}; font-weight: 500;">${MobileUtils.escapeHtml(label)}</span>`;
+            return `<span style="color: ${color}; font-weight: 500;">${Layer8MUtils.escapeHtml(label)}</span>`;
         },
-        scheduleStatus: MobileRenderers.createStatusRenderer(
+        scheduleStatus: Layer8MRenderers.createStatusRenderer(
             MobileTime.enums.SCHEDULE_STATUS,
             MobileTime.enums.SCHEDULE_STATUS_CLASSES
         ),
-        holidayType: (v) => MobileRenderers.renderEnum(v, MobileTime.enums.HOLIDAY_TYPE),
-        absenceStatus: MobileRenderers.createStatusRenderer(
+        holidayType: (v) => Layer8MRenderers.renderEnum(v, MobileTime.enums.HOLIDAY_TYPE),
+        absenceStatus: Layer8MRenderers.createStatusRenderer(
             MobileTime.enums.ABSENCE_STATUS,
             MobileTime.enums.ABSENCE_STATUS_CLASSES
         ),
-        hours: MobileRenderers.renderHours,
-        period: MobileRenderers.renderPeriod,
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate
+        hours: Layer8MRenderers.renderHours,
+        period: Layer8MRenderers.renderPeriod,
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate
     };
 
 })();

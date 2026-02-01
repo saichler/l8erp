@@ -77,23 +77,23 @@ limitations under the License.
     // ============================================================================
 
     MobileCashManagement.render = {
-        bankAccountType: (type) => MobileRenderers.renderEnum(type, MobileCashManagement.enums.BANK_ACCOUNT_TYPE),
-        bankAccountStatus: MobileRenderers.createStatusRenderer(
+        bankAccountType: (type) => Layer8MRenderers.renderEnum(type, MobileCashManagement.enums.BANK_ACCOUNT_TYPE),
+        bankAccountStatus: Layer8MRenderers.createStatusRenderer(
             MobileCashManagement.enums.BANK_ACCOUNT_STATUS,
             MobileCashManagement.enums.BANK_ACCOUNT_STATUS_CLASSES
         ),
-        transactionType: (type) => MobileRenderers.renderEnum(type, MobileCashManagement.enums.TRANSACTION_TYPE),
-        reconciliationStatus: MobileRenderers.createStatusRenderer(
+        transactionType: (type) => Layer8MRenderers.renderEnum(type, MobileCashManagement.enums.TRANSACTION_TYPE),
+        reconciliationStatus: Layer8MRenderers.createStatusRenderer(
             MobileCashManagement.enums.RECONCILIATION_STATUS,
             MobileCashManagement.enums.RECONCILIATION_STATUS_CLASSES
         ),
-        transferStatus: MobileRenderers.createStatusRenderer(
+        transferStatus: Layer8MRenderers.createStatusRenderer(
             MobileCashManagement.enums.TRANSFER_STATUS,
             MobileCashManagement.enums.TRANSFER_STATUS_CLASSES
         ),
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate,
-        money: MobileRenderers.renderMoney
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate,
+        money: Layer8MRenderers.renderMoney
     };
 
 })();

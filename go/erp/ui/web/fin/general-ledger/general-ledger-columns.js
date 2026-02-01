@@ -21,7 +21,7 @@ limitations under the License.
     // Ensure GeneralLedger namespace exists
     window.GeneralLedger = window.GeneralLedger || {};
 
-    const { renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
     const enums = GeneralLedger.enums;
     const render = GeneralLedger.render;
 

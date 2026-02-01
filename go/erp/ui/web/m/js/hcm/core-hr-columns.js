@@ -28,7 +28,7 @@ limitations under the License.
             { key: 'employeeNumber', label: 'Emp #', sortKey: 'employeeNumber', filterKey: 'employeeNumber' },
             {
                 key: 'name', label: 'Name', sortKey: 'lastName', filterKey: 'lastName',
-                render: (item) => MobileRenderers.renderEmployeeName(item)
+                render: (item) => Layer8MRenderers.renderEmployeeName(item)
             },
             {
                 key: 'employmentStatus', label: 'Status', sortKey: 'employmentStatus', filterKey: 'employmentStatus',
@@ -40,7 +40,7 @@ limitations under the License.
                 enumValues: enums.EMPLOYMENT_TYPE_VALUES,
                 render: (item) => render.employmentType(item.employmentType)
             },
-            { key: 'hireDate', label: 'Hire Date', sortKey: 'hireDate', render: (item) => MobileRenderers.renderDate(item.hireDate) }
+            { key: 'hireDate', label: 'Hire Date', sortKey: 'hireDate', render: (item) => Layer8MRenderers.renderDate(item.hireDate) }
         ],
 
         Organization: [
@@ -53,7 +53,7 @@ limitations under the License.
                 render: (item) => render.orgType(item.organizationType)
             },
             { key: 'legalName', label: 'Legal Name', sortKey: 'legalName', filterKey: 'legalName' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
         Department: [
@@ -62,7 +62,7 @@ limitations under the License.
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
             { key: 'managerId', label: 'Manager ID', sortKey: 'managerId', filterKey: 'managerId' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
         Position: [
@@ -75,8 +75,8 @@ limitations under the License.
                 enumValues: enums.POSITION_STATUS_VALUES,
                 render: (item) => render.positionStatus(item.status)
             },
-            { key: 'headcount', label: 'Headcount', sortKey: 'headcount', render: (item) => MobileRenderers.renderCount(item.filledCount, item.headcount) },
-            { key: 'isManager', label: 'Manager', sortKey: 'isManager', render: (item) => MobileRenderers.renderBoolean(item.isManager) }
+            { key: 'headcount', label: 'Headcount', sortKey: 'headcount', render: (item) => Layer8MRenderers.renderCount(item.filledCount, item.headcount) },
+            { key: 'isManager', label: 'Manager', sortKey: 'isManager', render: (item) => Layer8MRenderers.renderBoolean(item.isManager) }
         ],
 
         Job: [
@@ -85,8 +85,8 @@ limitations under the License.
             { key: 'title', label: 'Title', sortKey: 'title', filterKey: 'title' },
             { key: 'jobFamilyId', label: 'Family', sortKey: 'jobFamilyId', filterKey: 'jobFamilyId' },
             { key: 'jobLevel', label: 'Level', sortKey: 'jobLevel', filterKey: 'jobLevel' },
-            { key: 'isFlsaExempt', label: 'FLSA Exempt', sortKey: 'isFlsaExempt', render: (item) => MobileRenderers.renderBoolean(item.isFlsaExempt, { trueText: 'Exempt', falseText: 'Non-Exempt' }) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+            { key: 'isFlsaExempt', label: 'FLSA Exempt', sortKey: 'isFlsaExempt', render: (item) => Layer8MRenderers.renderBoolean(item.isFlsaExempt, { trueText: 'Exempt', falseText: 'Non-Exempt' }) },
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
         JobFamily: [
@@ -94,7 +94,7 @@ limitations under the License.
             { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
         EmployeeDocument: [
@@ -102,9 +102,9 @@ limitations under the License.
             { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'documentType', label: 'Type', sortKey: 'documentType', filterKey: 'documentType', render: (item) => render.documentType(item.documentType) },
-            { key: 'uploadDate', label: 'Uploaded', sortKey: 'uploadDate', render: (item) => MobileRenderers.renderDate(item.uploadDate) },
-            { key: 'expirationDate', label: 'Expires', sortKey: 'expirationDate', render: (item) => MobileRenderers.renderDate(item.expirationDate) },
-            { key: 'isVerified', label: 'Verified', sortKey: 'isVerified', render: (item) => MobileRenderers.renderBoolean(item.isVerified) }
+            { key: 'uploadDate', label: 'Uploaded', sortKey: 'uploadDate', render: (item) => Layer8MRenderers.renderDate(item.uploadDate) },
+            { key: 'expirationDate', label: 'Expires', sortKey: 'expirationDate', render: (item) => Layer8MRenderers.renderDate(item.expirationDate) },
+            { key: 'isVerified', label: 'Verified', sortKey: 'isVerified', render: (item) => Layer8MRenderers.renderBoolean(item.isVerified) }
         ],
 
         ComplianceRecord: [
@@ -112,9 +112,9 @@ limitations under the License.
             { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
             { key: 'complianceType', label: 'Type', sortKey: 'complianceType', filterKey: 'complianceType', render: (item) => render.complianceType(item.complianceType) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status' },
-            { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => MobileRenderers.renderDate(item.dueDate) },
-            { key: 'completionDate', label: 'Completed', sortKey: 'completionDate', render: (item) => MobileRenderers.renderDate(item.completionDate) },
-            { key: 'expirationDate', label: 'Expires', sortKey: 'expirationDate', render: (item) => MobileRenderers.renderDate(item.expirationDate) }
+            { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => Layer8MRenderers.renderDate(item.dueDate) },
+            { key: 'completionDate', label: 'Completed', sortKey: 'completionDate', render: (item) => Layer8MRenderers.renderDate(item.completionDate) },
+            { key: 'expirationDate', label: 'Expires', sortKey: 'expirationDate', render: (item) => Layer8MRenderers.renderDate(item.expirationDate) }
         ]
     };
 

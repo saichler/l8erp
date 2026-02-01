@@ -41,16 +41,16 @@ let currentProcurementService = 'purchase-requisitions';
 
 const PROCUREMENT_SERVICES = {
     'purchase-requisitions': {
-        endpoint: MobileConfig.resolveEndpoint('/50/PurchReq'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/PurchReq'),
         modelName: 'ScmPurchaseRequisition',
         idField: 'requisitionId',
         columns: [
             { key: 'requisitionId', label: 'Req ID', primary: true },
             { key: 'requisitionNumber', label: 'Req #', secondary: true, filterKey: 'requisitionNumber' },
             { key: 'requesterId', label: 'Requester' },
-            { key: 'requestDate', label: 'Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'requestDate', label: 'Date', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Rejected', 5: 'Fulfilled', 6: 'Cancelled' }[v] || '-') },
-            { key: 'estimatedTotal', label: 'Est. Total', formatter: (v) => MobileUtils.formatMoney(v) }
+            { key: 'estimatedTotal', label: 'Est. Total', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'Add Requisition',
         formFields: [
@@ -64,7 +64,7 @@ const PROCUREMENT_SERVICES = {
         ]
     },
     'requisition-lines': {
-        endpoint: MobileConfig.resolveEndpoint('/50/ReqLine'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/ReqLine'),
         modelName: 'ScmRequisitionLine',
         idField: 'lineId',
         columns: [
@@ -72,8 +72,8 @@ const PROCUREMENT_SERVICES = {
             { key: 'requisitionId', label: 'Requisition', secondary: true },
             { key: 'itemId', label: 'Item' },
             { key: 'quantity', label: 'Qty' },
-            { key: 'estimatedUnitPrice', label: 'Unit Price', formatter: (v) => MobileUtils.formatMoney(v) },
-            { key: 'deliveryDate', label: 'Delivery', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'estimatedUnitPrice', label: 'Unit Price', formatter: (v) => Layer8MUtils.formatMoney(v) },
+            { key: 'deliveryDate', label: 'Delivery', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         addText: 'Add Line',
         formFields: [
@@ -88,14 +88,14 @@ const PROCUREMENT_SERVICES = {
         ]
     },
     'rfqs': {
-        endpoint: MobileConfig.resolveEndpoint('/50/RFQ'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/RFQ'),
         modelName: 'ScmRequestForQuotation',
         idField: 'rfqId',
         columns: [
             { key: 'rfqId', label: 'RFQ ID', primary: true },
             { key: 'rfqNumber', label: 'RFQ #', secondary: true, filterKey: 'rfqNumber' },
-            { key: 'issueDate', label: 'Issued', formatter: (v) => MobileUtils.formatDate(v) },
-            { key: 'responseDeadline', label: 'Deadline', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'issueDate', label: 'Issued', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'responseDeadline', label: 'Deadline', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Rejected', 5: 'Fulfilled', 6: 'Cancelled' }[v] || '-') }
         ],
         addText: 'Add RFQ',
@@ -110,16 +110,16 @@ const PROCUREMENT_SERVICES = {
         ]
     },
     'purchase-orders': {
-        endpoint: MobileConfig.resolveEndpoint('/50/PurchOrder'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/PurchOrder'),
         modelName: 'ScmPurchaseOrder',
         idField: 'purchaseOrderId',
         columns: [
             { key: 'purchaseOrderId', label: 'PO ID', primary: true },
             { key: 'orderNumber', label: 'PO #', secondary: true, filterKey: 'orderNumber' },
             { key: 'vendorId', label: 'Vendor' },
-            { key: 'orderDate', label: 'Order Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'orderDate', label: 'Order Date', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Approved', 3: 'Sent', 4: 'Partial', 5: 'Received', 6: 'Closed', 7: 'Cancelled' }[v] || '-') },
-            { key: 'totalAmount', label: 'Total', formatter: (v) => MobileUtils.formatMoney(v) }
+            { key: 'totalAmount', label: 'Total', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'Add PO',
         formFields: [
@@ -133,7 +133,7 @@ const PROCUREMENT_SERVICES = {
         ]
     },
     'po-lines': {
-        endpoint: MobileConfig.resolveEndpoint('/50/POLine'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/POLine'),
         modelName: 'ScmPurchaseOrderLine',
         idField: 'lineId',
         columns: [
@@ -141,8 +141,8 @@ const PROCUREMENT_SERVICES = {
             { key: 'purchaseOrderId', label: 'PO', secondary: true },
             { key: 'itemId', label: 'Item' },
             { key: 'quantity', label: 'Qty' },
-            { key: 'unitPrice', label: 'Unit Price', formatter: (v) => MobileUtils.formatMoney(v) },
-            { key: 'totalPrice', label: 'Total', formatter: (v) => MobileUtils.formatMoney(v) }
+            { key: 'unitPrice', label: 'Unit Price', formatter: (v) => Layer8MUtils.formatMoney(v) },
+            { key: 'totalPrice', label: 'Total', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'Add PO Line',
         formFields: [
@@ -155,16 +155,16 @@ const PROCUREMENT_SERVICES = {
         ]
     },
     'blanket-orders': {
-        endpoint: MobileConfig.resolveEndpoint('/50/BlnktOrder'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/BlnktOrder'),
         modelName: 'ScmBlanketOrder',
         idField: 'blanketOrderId',
         columns: [
             { key: 'blanketOrderId', label: 'Order ID', primary: true },
             { key: 'orderNumber', label: 'Order #', secondary: true, filterKey: 'orderNumber' },
             { key: 'vendorId', label: 'Vendor' },
-            { key: 'startDate', label: 'Start', formatter: (v) => MobileUtils.formatDate(v) },
-            { key: 'endDate', label: 'End', formatter: (v) => MobileUtils.formatDate(v) },
-            { key: 'maxAmount', label: 'Max', formatter: (v) => MobileUtils.formatMoney(v) }
+            { key: 'startDate', label: 'Start', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'endDate', label: 'End', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'maxAmount', label: 'Max', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'Add Blanket Order',
         formFields: [
@@ -178,7 +178,7 @@ const PROCUREMENT_SERVICES = {
         ]
     },
     'supplier-scorecards': {
-        endpoint: MobileConfig.resolveEndpoint('/50/SupplrCard'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/SupplrCard'),
         modelName: 'ScmSupplierScorecard',
         idField: 'scorecardId',
         columns: [
@@ -217,7 +217,7 @@ function loadProcurementService(serviceName) {
     currentProcurementService = serviceName;
     const config = PROCUREMENT_SERVICES[serviceName];
 
-    procurementTable = new MobileEditTable('procurement-table', {
+    procurementTable = new Layer8MEditTable('procurement-table', {
         endpoint: config.endpoint,
         modelName: config.modelName,
         columns: config.columns,
@@ -235,29 +235,29 @@ function openProcurementForm(config, item = null) {
     const title = isEdit ? 'Edit' : config.addText;
 
     const formDef = { fields: config.formFields };
-    const content = MobileForms.renderForm(formDef, item || {});
+    const content = Layer8MForms.renderForm(formDef, item || {});
 
-    MobilePopup.show({
+    Layer8MPopup.show({
         title: title,
         content: content,
         size: 'medium',
         saveButtonText: isEdit ? 'Update' : 'Create',
         onSave: async (popup) => {
             const body = popup.body;
-            const errors = MobileForms.validateForm(body);
-            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+            const errors = Layer8MForms.validateForm(body);
+            if (errors.length > 0) { Layer8MForms.showErrors(body, errors); return; }
 
-            const data = MobileForms.getFormData(body);
+            const data = Layer8MForms.getFormData(body);
             if (isEdit) data[config.idField] = item[config.idField];
 
             try {
-                if (isEdit) await MobileAuth.put(config.endpoint, data);
-                else await MobileAuth.post(config.endpoint, data);
-                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
-                MobilePopup.close();
+                if (isEdit) await Layer8MAuth.put(config.endpoint, data);
+                else await Layer8MAuth.post(config.endpoint, data);
+                Layer8MUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                Layer8MPopup.close();
                 procurementTable.refresh();
             } catch (error) {
-                MobileUtils.showError('Failed to save');
+                Layer8MUtils.showError('Failed to save');
             }
         }
     });
@@ -265,14 +265,14 @@ function openProcurementForm(config, item = null) {
 
 async function deleteProcurementItem(config, id, item) {
     const name = item.requisitionNumber || item.orderNumber || item.rfqNumber || id;
-    const confirmed = await MobileConfirm.confirmDelete(name);
+    const confirmed = await Layer8MConfirm.confirmDelete(name);
     if (confirmed) {
         try {
-            await MobileAuth.delete(config.endpoint + '?id=' + id);
-            MobileUtils.showSuccess('Deleted');
+            await Layer8MAuth.delete(config.endpoint + '?id=' + id);
+            Layer8MUtils.showSuccess('Deleted');
             procurementTable.refresh();
         } catch (error) {
-            MobileUtils.showError('Failed to delete');
+            Layer8MUtils.showError('Failed to delete');
         }
     }
 }

@@ -59,10 +59,10 @@ limitations under the License.
     --sar: env(safe-area-inset-right, 0px);
 
     /* ERP Theme Colors (from erp-theme.css) */
-    --erp-primary: #0ea5e9;
-    --erp-primary-dark: #0284c7;
-    --erp-primary-light: #38bdf8;
-    --erp-secondary: #06b6d4;
+    --layer8d-primary: #0ea5e9;
+    --layer8d-primary-dark: #0284c7;
+    --layer8d-primary-light: #38bdf8;
+    --layer8d-secondary: #06b6d4;
 
     /* Text Colors */
     --text-primary: #1e293b;
@@ -248,7 +248,7 @@ button, .btn {
 }
 
 .btn-primary {
-    background: var(--erp-primary);
+    background: var(--layer8d-primary);
     color: var(--text-light);
 }
 
@@ -274,7 +274,7 @@ button, .btn {
 
 /* Focus states */
 a:focus, button:focus {
-    outline: 2px solid var(--erp-primary);
+    outline: 2px solid var(--layer8d-primary);
     outline-offset: 2px;
 }
 
@@ -294,7 +294,7 @@ a:focus, button:focus {
     width: 28px;
     height: 28px;
     border: 3px solid var(--border-light);
-    border-top-color: var(--erp-primary);
+    border-top-color: var(--layer8d-primary);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
 }
@@ -320,7 +320,7 @@ a:focus, button:focus {
     width: 32px;
     height: 32px;
     border: 3px solid var(--border-light);
-    border-top-color: var(--erp-primary);
+    border-top-color: var(--layer8d-primary);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
 }

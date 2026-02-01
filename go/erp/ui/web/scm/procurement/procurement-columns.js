@@ -21,7 +21,7 @@ limitations under the License.
     // Ensure Procurement namespace exists
     window.Procurement = window.Procurement || {};
 
-    const { renderDate, renderMoney } = ERPRenderers;
+    const { renderDate, renderMoney } = Layer8DRenderers;
     const render = Procurement.render;
 
     // ============================================================================

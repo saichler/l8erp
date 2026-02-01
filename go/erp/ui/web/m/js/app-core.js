@@ -76,10 +76,10 @@ limitations under the License.
          */
         async init() {
             // Check authentication
-            if (!MobileAuth.requireAuth()) return;
+            if (!Layer8MAuth.requireAuth()) return;
 
             // Load configuration
-            await MobileConfig.load();
+            await Layer8MConfig.load();
 
             // Set user info
             this.updateUserInfo();
@@ -110,7 +110,7 @@ limitations under the License.
          * Update user info in UI
          */
         updateUserInfo() {
-            const username = MobileAuth.getUsername();
+            const username = Layer8MAuth.getUsername();
             const initial = username.charAt(0).toUpperCase();
 
             document.getElementById('user-name').textContent = username;
@@ -137,8 +137,8 @@ limitations under the License.
                     this.closeSidebar();
                     await this.loadSection(section);
                     // If item has a module, navigate to it after loading the section
-                    if (module && window.MobileNav) {
-                        MobileNav.navigateToModule(module);
+                    if (module && window.Layer8MNav) {
+                        Layer8MNav.navigateToModule(module);
                     }
                 });
             });
@@ -282,7 +282,7 @@ limitations under the License.
          * Logout
          */
         logout() {
-            MobileAuth.logout();
+            Layer8MAuth.logout();
         },
 
         /**

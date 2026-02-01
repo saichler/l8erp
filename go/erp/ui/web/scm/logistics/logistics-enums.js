@@ -51,12 +51,12 @@ limitations under the License.
     };
 
     Logistics.enums.SHIPMENT_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-active',
-        3: 'erp-status-active',
-        4: 'erp-status-active',
-        5: 'erp-status-terminated',
-        6: 'erp-status-inactive'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-active',
+        5: 'layer8d-status-terminated',
+        6: 'layer8d-status-inactive'
     };
 
     // ============================================================================
@@ -72,10 +72,10 @@ limitations under the License.
     };
 
     Logistics.enums.TASK_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-active',
-        3: 'erp-status-active',
-        4: 'erp-status-terminated'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-terminated'
     };
 
     // ============================================================================
@@ -85,20 +85,20 @@ limitations under the License.
     // Create render functions using shared utilities
     Logistics.render = {};
 
-    Logistics.render.carrierType = (type) => ERPRenderers.renderEnum(type, Logistics.enums.CARRIER_TYPE);
+    Logistics.render.carrierType = (type) => Layer8DRenderers.renderEnum(type, Logistics.enums.CARRIER_TYPE);
 
-    Logistics.render.shipmentStatus = ERPRenderers.createStatusRenderer(
+    Logistics.render.shipmentStatus = Layer8DRenderers.createStatusRenderer(
         Logistics.enums.SHIPMENT_STATUS,
         Logistics.enums.SHIPMENT_STATUS_CLASSES
     );
 
-    Logistics.render.taskStatus = ERPRenderers.createStatusRenderer(
+    Logistics.render.taskStatus = Layer8DRenderers.createStatusRenderer(
         Logistics.enums.TASK_STATUS,
         Logistics.enums.TASK_STATUS_CLASSES
     );
 
-    Logistics.render.boolean = ERPRenderers.renderBoolean;
-    Logistics.render.date = ERPRenderers.renderDate;
-    Logistics.render.money = ERPRenderers.renderMoney;
+    Logistics.render.boolean = Layer8DRenderers.renderBoolean;
+    Logistics.render.date = Layer8DRenderers.renderDate;
+    Logistics.render.money = Layer8DRenderers.renderMoney;
 
 })();

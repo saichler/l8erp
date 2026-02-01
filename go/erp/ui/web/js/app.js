@@ -74,8 +74,8 @@ function logout() {
 // Initialize the application
 document.addEventListener('DOMContentLoaded', async function() {
     // Load app configuration first
-    if (typeof ERPConfig !== 'undefined') {
-        await ERPConfig.load();
+    if (typeof Layer8DConfig !== 'undefined') {
+        await Layer8DConfig.load();
     }
 
     // Check if bearer token exists (user is logged in)

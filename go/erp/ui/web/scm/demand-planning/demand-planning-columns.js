@@ -21,7 +21,7 @@ limitations under the License.
     // Ensure ScmDemandPlanning namespace exists
     window.ScmDemandPlanning = window.ScmDemandPlanning || {};
 
-    const { renderDate, renderMoney } = ERPRenderers;
+    const { renderDate, renderMoney } = Layer8DRenderers;
     const render = ScmDemandPlanning.render;
 
     // ============================================================================

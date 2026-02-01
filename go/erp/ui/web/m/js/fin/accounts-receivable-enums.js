@@ -108,27 +108,27 @@ limitations under the License.
     // ============================================================================
 
     MobileAccountsReceivable.render = {
-        customerStatus: MobileRenderers.createStatusRenderer(
+        customerStatus: Layer8MRenderers.createStatusRenderer(
             MobileAccountsReceivable.enums.CUSTOMER_STATUS,
             MobileAccountsReceivable.enums.CUSTOMER_STATUS_CLASSES
         ),
-        invoiceStatus: MobileRenderers.createStatusRenderer(
+        invoiceStatus: Layer8MRenderers.createStatusRenderer(
             MobileAccountsReceivable.enums.INVOICE_STATUS,
             MobileAccountsReceivable.enums.INVOICE_STATUS_CLASSES
         ),
-        paymentStatus: MobileRenderers.createStatusRenderer(
+        paymentStatus: Layer8MRenderers.createStatusRenderer(
             MobileAccountsReceivable.enums.PAYMENT_STATUS,
             MobileAccountsReceivable.enums.PAYMENT_STATUS_CLASSES
         ),
-        creditMemoStatus: MobileRenderers.createStatusRenderer(
+        creditMemoStatus: Layer8MRenderers.createStatusRenderer(
             MobileAccountsReceivable.enums.CREDIT_MEMO_STATUS,
             MobileAccountsReceivable.enums.CREDIT_MEMO_STATUS_CLASSES
         ),
-        dunningLevel: (level) => MobileRenderers.renderEnum(level, MobileAccountsReceivable.enums.DUNNING_LEVEL),
-        paymentMethod: (type) => MobileRenderers.renderEnum(type, MobileAccountsReceivable.enums.PAYMENT_METHOD),
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate,
-        money: MobileRenderers.renderMoney
+        dunningLevel: (level) => Layer8MRenderers.renderEnum(level, MobileAccountsReceivable.enums.DUNNING_LEVEL),
+        paymentMethod: (type) => Layer8MRenderers.renderEnum(type, MobileAccountsReceivable.enums.PAYMENT_METHOD),
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate,
+        money: Layer8MRenderers.renderMoney
     };
 
 })();

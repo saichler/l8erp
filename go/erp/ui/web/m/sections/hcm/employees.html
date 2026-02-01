@@ -58,7 +58,7 @@ limitations under the License.
     }
 
     .section-tab.active {
-        background: var(--erp-primary);
+        background: var(--layer8d-primary);
         color: white;
     }
 
@@ -77,14 +77,14 @@ function initMobileEmployees() {
         { key: 'lastName', label: 'Last Name', filterKey: 'lastName' },
         { key: 'firstName', label: 'First Name', filterKey: 'firstName' },
         { key: 'email', label: 'Email', filterKey: 'email' },
-        { key: 'phone', label: 'Phone', formatter: (v) => MobileUtils.formatPhone(v) },
+        { key: 'phone', label: 'Phone', formatter: (v) => Layer8MUtils.formatPhone(v) },
         { key: 'employmentStatus', label: 'Status', formatter: (v) => ({ 1: 'Active', 0: 'Inactive', 2: 'Pending', 3: 'On Leave', 4: 'Terminated' }[v] || '-') },
         { key: 'employmentType', label: 'Type', formatter: (v) => ({ 1: 'Full-Time', 2: 'Part-Time', 3: 'Contract', 4: 'Temporary', 5: 'Intern' }[v] || '-') },
-        { key: 'hireDate', label: 'Hire Date', formatter: (v) => MobileUtils.formatDate(v), hidden: true }
+        { key: 'hireDate', label: 'Hire Date', formatter: (v) => Layer8MUtils.formatDate(v), hidden: true }
     ];
 
-    employeesTable = new MobileEditTable('employees-table', {
-        endpoint: MobileConfig.resolveEndpoint('/30/Employee'),
+    employeesTable = new Layer8MEditTable('employees-table', {
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Employee'),
         modelName: 'Employee',
         columns: columns,
         rowsPerPage: 15,
@@ -163,23 +163,23 @@ function openEmployeeForm(employee = null) {
         ]
     };
 
-    const content = MobileForms.renderForm(formDef, employee || {});
+    const content = Layer8MForms.renderForm(formDef, employee || {});
 
-    MobilePopup.show({
+    Layer8MPopup.show({
         title: title,
         content: content,
         size: 'large',
         saveButtonText: isEdit ? 'Update' : 'Create',
         onSave: async (popup) => {
             const body = popup.body;
-            const errors = MobileForms.validateForm(body);
+            const errors = Layer8MForms.validateForm(body);
 
             if (errors.length > 0) {
-                MobileForms.showErrors(body, errors);
+                Layer8MForms.showErrors(body, errors);
                 return;
             }
 
-            const data = MobileForms.getFormData(body);
+            const data = Layer8MForms.getFormData(body);
 
             if (isEdit) {
                 data.employeeId = employee.employeeId;
@@ -187,32 +187,32 @@ function openEmployeeForm(employee = null) {
 
             try {
                 if (isEdit) {
-                    await MobileAuth.put(MobileConfig.resolveEndpoint('/30/Employee'), data);
-                    MobileUtils.showSuccess('Employee updated');
+                    await Layer8MAuth.put(Layer8MConfig.resolveEndpoint('/30/Employee'), data);
+                    Layer8MUtils.showSuccess('Employee updated');
                 } else {
-                    await MobileAuth.post(MobileConfig.resolveEndpoint('/30/Employee'), data);
-                    MobileUtils.showSuccess('Employee created');
+                    await Layer8MAuth.post(Layer8MConfig.resolveEndpoint('/30/Employee'), data);
+                    Layer8MUtils.showSuccess('Employee created');
                 }
 
-                MobilePopup.close();
+                Layer8MPopup.close();
                 employeesTable.refresh();
             } catch (error) {
-                MobileUtils.showError('Failed to save employee');
+                Layer8MUtils.showError('Failed to save employee');
             }
         }
     });
 }
 
 async function deleteEmployee(id, item) {
-    const confirmed = await MobileConfirm.confirmDelete(item.lastName + ', ' + item.firstName);
+    const confirmed = await Layer8MConfirm.confirmDelete(item.lastName + ', ' + item.firstName);
 
     if (confirmed) {
         try {
-            await MobileAuth.delete(MobileConfig.resolveEndpoint('/30/Employee') + '?id=' + id);
-            MobileUtils.showSuccess('Employee deleted');
+            await Layer8MAuth.delete(Layer8MConfig.resolveEndpoint('/30/Employee') + '?id=' + id);
+            Layer8MUtils.showSuccess('Employee deleted');
             employeesTable.refresh();
         } catch (error) {
-            MobileUtils.showError('Failed to delete employee');
+            Layer8MUtils.showError('Failed to delete employee');
         }
     }
 }

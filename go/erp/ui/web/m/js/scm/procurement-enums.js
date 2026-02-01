@@ -60,16 +60,16 @@ limitations under the License.
     // ============================================================================
 
     MobileProcurement.render = {
-        requisitionStatus: MobileRenderers.createStatusRenderer(
+        requisitionStatus: Layer8MRenderers.createStatusRenderer(
             MobileProcurement.enums.REQUISITION_STATUS,
             MobileProcurement.enums.REQUISITION_STATUS_CLASSES
         ),
-        poStatus: MobileRenderers.createStatusRenderer(
+        poStatus: Layer8MRenderers.createStatusRenderer(
             MobileProcurement.enums.PO_STATUS,
             MobileProcurement.enums.PO_STATUS_CLASSES
         ),
-        date: MobileRenderers.renderDate,
-        money: MobileRenderers.renderMoney
+        date: Layer8MRenderers.renderDate,
+        money: Layer8MRenderers.renderMoney
     };
 
 })();

@@ -81,20 +81,20 @@ limitations under the License.
     // ============================================================================
 
     MobileFixedAssets.render = {
-        assetStatus: MobileRenderers.createStatusRenderer(
+        assetStatus: Layer8MRenderers.createStatusRenderer(
             MobileFixedAssets.enums.ASSET_STATUS,
             MobileFixedAssets.enums.ASSET_STATUS_CLASSES
         ),
-        depreciationMethod: (type) => MobileRenderers.renderEnum(type, MobileFixedAssets.enums.DEPRECIATION_METHOD),
-        disposalMethod: (type) => MobileRenderers.renderEnum(type, MobileFixedAssets.enums.DISPOSAL_METHOD),
-        maintenanceType: (type) => MobileRenderers.renderEnum(type, MobileFixedAssets.enums.MAINTENANCE_TYPE),
-        maintenanceStatus: MobileRenderers.createStatusRenderer(
+        depreciationMethod: (type) => Layer8MRenderers.renderEnum(type, MobileFixedAssets.enums.DEPRECIATION_METHOD),
+        disposalMethod: (type) => Layer8MRenderers.renderEnum(type, MobileFixedAssets.enums.DISPOSAL_METHOD),
+        maintenanceType: (type) => Layer8MRenderers.renderEnum(type, MobileFixedAssets.enums.MAINTENANCE_TYPE),
+        maintenanceStatus: Layer8MRenderers.createStatusRenderer(
             MobileFixedAssets.enums.MAINTENANCE_STATUS,
             MobileFixedAssets.enums.MAINTENANCE_STATUS_CLASSES
         ),
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate,
-        money: MobileRenderers.renderMoney
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate,
+        money: Layer8MRenderers.renderMoney
     };
 
 })();

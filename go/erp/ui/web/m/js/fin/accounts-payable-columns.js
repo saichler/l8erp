@@ -29,7 +29,7 @@ limitations under the License.
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.VENDOR_STATUS_VALUES, render: (item) => render.vendorStatus(item.status) },
             { key: 'paymentTerms', label: 'Payment Terms', sortKey: 'paymentTerms', filterKey: 'paymentTerms' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
         VendorContact: [
@@ -38,16 +38,16 @@ limitations under the License.
             { key: 'contactName', label: 'Contact Name', sortKey: 'contactName', filterKey: 'contactName' },
             { key: 'email', label: 'Email', sortKey: 'email', filterKey: 'email' },
             { key: 'phone', label: 'Phone', sortKey: 'phone', filterKey: 'phone' },
-            { key: 'isPrimary', label: 'Primary', sortKey: 'isPrimary', render: (item) => MobileRenderers.renderBoolean(item.isPrimary) }
+            { key: 'isPrimary', label: 'Primary', sortKey: 'isPrimary', render: (item) => Layer8MRenderers.renderBoolean(item.isPrimary) }
         ],
 
         PurchaseInvoice: [
             { key: 'invoiceId', label: 'ID', sortKey: 'invoiceId', filterKey: 'invoiceId' },
             { key: 'invoiceNumber', label: 'Invoice #', sortKey: 'invoiceNumber', filterKey: 'invoiceNumber' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'invoiceDate', label: 'Invoice Date', sortKey: 'invoiceDate', render: (item) => MobileRenderers.renderDate(item.invoiceDate) },
-            { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => MobileRenderers.renderDate(item.dueDate) },
-            { key: 'totalAmount', label: 'Total', sortKey: 'totalAmount', render: (item) => MobileRenderers.renderMoney(item.totalAmount) },
+            { key: 'invoiceDate', label: 'Invoice Date', sortKey: 'invoiceDate', render: (item) => Layer8MRenderers.renderDate(item.invoiceDate) },
+            { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => Layer8MRenderers.renderDate(item.dueDate) },
+            { key: 'totalAmount', label: 'Total', sortKey: 'totalAmount', render: (item) => Layer8MRenderers.renderMoney(item.totalAmount) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.INVOICE_STATUS_VALUES, render: (item) => render.invoiceStatus(item.status) }
         ],
 
@@ -56,15 +56,15 @@ limitations under the License.
             { key: 'invoiceId', label: 'Invoice', sortKey: 'invoiceId', filterKey: 'invoiceId' },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
             { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
-            { key: 'unitPrice', label: 'Unit Price', sortKey: 'unitPrice', render: (item) => MobileRenderers.renderMoney(item.unitPrice) },
-            { key: 'lineTotal', label: 'Line Total', sortKey: 'lineTotal', render: (item) => MobileRenderers.renderMoney(item.lineTotal) }
+            { key: 'unitPrice', label: 'Unit Price', sortKey: 'unitPrice', render: (item) => Layer8MRenderers.renderMoney(item.unitPrice) },
+            { key: 'lineTotal', label: 'Line Total', sortKey: 'lineTotal', render: (item) => Layer8MRenderers.renderMoney(item.lineTotal) }
         ],
 
         PaymentSchedule: [
             { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
             { key: 'invoiceId', label: 'Invoice', sortKey: 'invoiceId', filterKey: 'invoiceId' },
-            { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => MobileRenderers.renderDate(item.dueDate) },
-            { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => MobileRenderers.renderMoney(item.amount) },
+            { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => Layer8MRenderers.renderDate(item.dueDate) },
+            { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => Layer8MRenderers.renderMoney(item.amount) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.PAYMENT_STATUS_VALUES, render: (item) => render.paymentStatus(item.status) }
         ],
 
@@ -72,8 +72,8 @@ limitations under the License.
             { key: 'paymentId', label: 'ID', sortKey: 'paymentId', filterKey: 'paymentId' },
             { key: 'paymentNumber', label: 'Payment #', sortKey: 'paymentNumber', filterKey: 'paymentNumber' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'paymentDate', label: 'Payment Date', sortKey: 'paymentDate', render: (item) => MobileRenderers.renderDate(item.paymentDate) },
-            { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => MobileRenderers.renderMoney(item.amount) },
+            { key: 'paymentDate', label: 'Payment Date', sortKey: 'paymentDate', render: (item) => Layer8MRenderers.renderDate(item.paymentDate) },
+            { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => Layer8MRenderers.renderMoney(item.amount) },
             { key: 'paymentMethod', label: 'Method', sortKey: 'paymentMethod', render: (item) => render.paymentMethod(item.paymentMethod) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.PAYMENT_STATUS_VALUES, render: (item) => render.paymentStatus(item.status) }
         ],
@@ -82,14 +82,14 @@ limitations under the License.
             { key: 'allocationId', label: 'ID', sortKey: 'allocationId', filterKey: 'allocationId' },
             { key: 'paymentId', label: 'Payment', sortKey: 'paymentId', filterKey: 'paymentId' },
             { key: 'invoiceId', label: 'Invoice', sortKey: 'invoiceId', filterKey: 'invoiceId' },
-            { key: 'allocatedAmount', label: 'Allocated', sortKey: 'allocatedAmount', render: (item) => MobileRenderers.renderMoney(item.allocatedAmount) }
+            { key: 'allocatedAmount', label: 'Allocated', sortKey: 'allocatedAmount', render: (item) => Layer8MRenderers.renderMoney(item.allocatedAmount) }
         ],
 
         VendorStatement: [
             { key: 'statementId', label: 'ID', sortKey: 'statementId', filterKey: 'statementId' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'statementDate', label: 'Statement Date', sortKey: 'statementDate', render: (item) => MobileRenderers.renderDate(item.statementDate) },
-            { key: 'totalBalance', label: 'Total Balance', sortKey: 'totalBalance', render: (item) => MobileRenderers.renderMoney(item.totalBalance) }
+            { key: 'statementDate', label: 'Statement Date', sortKey: 'statementDate', render: (item) => Layer8MRenderers.renderDate(item.statementDate) },
+            { key: 'totalBalance', label: 'Total Balance', sortKey: 'totalBalance', render: (item) => Layer8MRenderers.renderMoney(item.totalBalance) }
         ]
     };
 

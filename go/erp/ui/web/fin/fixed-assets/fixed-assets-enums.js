@@ -36,11 +36,11 @@ limitations under the License.
     };
 
     FixedAssets.enums.ASSET_STATUS_CLASSES = {
-        1: 'erp-status-active',
-        2: 'erp-status-terminated',
-        3: 'erp-status-pending',
-        4: 'erp-status-inactive',
-        5: 'erp-status-inactive'
+        1: 'layer8d-status-active',
+        2: 'layer8d-status-terminated',
+        3: 'layer8d-status-pending',
+        4: 'layer8d-status-inactive',
+        5: 'layer8d-status-inactive'
     };
 
     // ============================================================================
@@ -94,10 +94,10 @@ limitations under the License.
     };
 
     FixedAssets.enums.MAINTENANCE_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-pending',
-        3: 'erp-status-active',
-        4: 'erp-status-inactive'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-pending',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-inactive'
     };
 
     // ============================================================================
@@ -107,22 +107,22 @@ limitations under the License.
     // Create render functions using shared utilities
     FixedAssets.render = {};
 
-    FixedAssets.render.assetStatus = ERPRenderers.createStatusRenderer(
+    FixedAssets.render.assetStatus = Layer8DRenderers.createStatusRenderer(
         FixedAssets.enums.ASSET_STATUS,
         FixedAssets.enums.ASSET_STATUS_CLASSES
     );
 
-    FixedAssets.render.depreciationMethod = (type) => ERPRenderers.renderEnum(type, FixedAssets.enums.DEPRECIATION_METHOD);
-    FixedAssets.render.disposalMethod = (type) => ERPRenderers.renderEnum(type, FixedAssets.enums.DISPOSAL_METHOD);
-    FixedAssets.render.maintenanceType = (type) => ERPRenderers.renderEnum(type, FixedAssets.enums.MAINTENANCE_TYPE);
+    FixedAssets.render.depreciationMethod = (type) => Layer8DRenderers.renderEnum(type, FixedAssets.enums.DEPRECIATION_METHOD);
+    FixedAssets.render.disposalMethod = (type) => Layer8DRenderers.renderEnum(type, FixedAssets.enums.DISPOSAL_METHOD);
+    FixedAssets.render.maintenanceType = (type) => Layer8DRenderers.renderEnum(type, FixedAssets.enums.MAINTENANCE_TYPE);
 
-    FixedAssets.render.maintenanceStatus = ERPRenderers.createStatusRenderer(
+    FixedAssets.render.maintenanceStatus = Layer8DRenderers.createStatusRenderer(
         FixedAssets.enums.MAINTENANCE_STATUS,
         FixedAssets.enums.MAINTENANCE_STATUS_CLASSES
     );
 
-    FixedAssets.render.boolean = ERPRenderers.renderBoolean;
-    FixedAssets.render.date = ERPRenderers.renderDate;
-    FixedAssets.render.money = ERPRenderers.renderMoney;
+    FixedAssets.render.boolean = Layer8DRenderers.renderBoolean;
+    FixedAssets.render.date = Layer8DRenderers.renderDate;
+    FixedAssets.render.money = Layer8DRenderers.renderMoney;
 
 })();

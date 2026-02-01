@@ -178,30 +178,30 @@ limitations under the License.
     // ============================================================================
 
     MobileCompensation.render = {
-        compensationType: (v) => MobileRenderers.renderEnum(v, MobileCompensation.enums.COMPENSATION_TYPE),
-        meritIncreaseStatus: MobileRenderers.createStatusRenderer(
+        compensationType: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.COMPENSATION_TYPE),
+        meritIncreaseStatus: Layer8MRenderers.createStatusRenderer(
             MobileCompensation.enums.MERIT_INCREASE_STATUS,
             MobileCompensation.enums.MERIT_INCREASE_STATUS_CLASSES
         ),
-        meritCycleStatus: MobileRenderers.createStatusRenderer(
+        meritCycleStatus: Layer8MRenderers.createStatusRenderer(
             MobileCompensation.enums.MERIT_CYCLE_STATUS,
             MobileCompensation.enums.MERIT_CYCLE_STATUS_CLASSES
         ),
-        bonusPlanType: (v) => MobileRenderers.renderEnum(v, MobileCompensation.enums.BONUS_PLAN_TYPE),
-        bonusFrequency: (v) => MobileRenderers.renderEnum(v, MobileCompensation.enums.BONUS_FREQUENCY),
-        bonusFundingType: (v) => MobileRenderers.renderEnum(v, MobileCompensation.enums.BONUS_FUNDING_TYPE),
-        bonusPaymentStatus: MobileRenderers.createStatusRenderer(
+        bonusPlanType: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.BONUS_PLAN_TYPE),
+        bonusFrequency: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.BONUS_FREQUENCY),
+        bonusFundingType: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.BONUS_FUNDING_TYPE),
+        bonusPaymentStatus: Layer8MRenderers.createStatusRenderer(
             MobileCompensation.enums.BONUS_PAYMENT_STATUS,
             MobileCompensation.enums.BONUS_PAYMENT_STATUS_CLASSES
         ),
-        equityGrantType: (v) => MobileRenderers.renderEnum(v, MobileCompensation.enums.EQUITY_GRANT_TYPE),
-        equityGrantStatus: MobileRenderers.createStatusRenderer(
+        equityGrantType: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.EQUITY_GRANT_TYPE),
+        equityGrantStatus: Layer8MRenderers.createStatusRenderer(
             MobileCompensation.enums.EQUITY_GRANT_STATUS,
             MobileCompensation.enums.EQUITY_GRANT_STATUS_CLASSES
         ),
-        vestingType: (v) => MobileRenderers.renderEnum(v, MobileCompensation.enums.VESTING_TYPE),
-        vestingFrequency: (v) => MobileRenderers.renderEnum(v, MobileCompensation.enums.VESTING_FREQUENCY),
-        payFrequency: (v) => MobileRenderers.renderEnum(v, MobileCompensation.enums.PAY_FREQUENCY),
+        vestingType: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.VESTING_TYPE),
+        vestingFrequency: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.VESTING_FREQUENCY),
+        payFrequency: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.PAY_FREQUENCY),
         percentage: (value) => {
             if (value === null || value === undefined) return '-';
             return `${Number(value).toFixed(1)}%`;
@@ -219,14 +219,14 @@ limitations under the License.
             return new Intl.NumberFormat('en-US').format(shares);
         },
         salaryRange: (item) => {
-            const min = MobileRenderers.renderMoney(item.minimum);
-            const max = MobileRenderers.renderMoney(item.maximum);
+            const min = Layer8MRenderers.renderMoney(item.minimum);
+            const max = Layer8MRenderers.renderMoney(item.maximum);
             if (min === '-' && max === '-') return '-';
             return `${min} - ${max}`;
         },
-        money: MobileRenderers.renderMoney,
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate
+        money: Layer8MRenderers.renderMoney,
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate
     };
 
 })();

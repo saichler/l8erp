@@ -42,7 +42,7 @@ let currentInventoryService = 'items';
 
 const INVENTORY_SERVICES = {
     'items': {
-        endpoint: MobileConfig.resolveEndpoint('/50/Item'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/Item'),
         modelName: 'ScmItem',
         idField: 'itemId',
         columns: [
@@ -51,7 +51,7 @@ const INVENTORY_SERVICES = {
             { key: 'name', label: 'Name' },
             { key: 'itemType', label: 'Type', formatter: (v) => ({ 0: 'Unspecified', 1: 'Raw Material', 2: 'Finished Good', 3: 'Semi-Finished', 4: 'Consumable', 5: 'Service' }[v] || '-') },
             { key: 'categoryId', label: 'Category' },
-            { key: 'unitCost', label: 'Unit Cost', formatter: (v) => MobileUtils.formatMoney(v) }
+            { key: 'unitCost', label: 'Unit Cost', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'Add Item',
         formFields: [
@@ -66,7 +66,7 @@ const INVENTORY_SERVICES = {
         ]
     },
     'item-categories': {
-        endpoint: MobileConfig.resolveEndpoint('/50/ItemCat'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/ItemCat'),
         modelName: 'ScmItemCategory',
         idField: 'categoryId',
         columns: [
@@ -84,7 +84,7 @@ const INVENTORY_SERVICES = {
         ]
     },
     'stock-movements': {
-        endpoint: MobileConfig.resolveEndpoint('/50/StockMove'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/StockMove'),
         modelName: 'ScmStockMovement',
         idField: 'movementId',
         columns: [
@@ -92,7 +92,7 @@ const INVENTORY_SERVICES = {
             { key: 'itemId', label: 'Item', secondary: true },
             { key: 'movementType', label: 'Type', formatter: (v) => ({ 0: 'Unspecified', 1: 'Receipt', 2: 'Issue', 3: 'Transfer', 4: 'Adjustment', 5: 'Return' }[v] || '-') },
             { key: 'quantity', label: 'Qty' },
-            { key: 'movementDate', label: 'Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'movementDate', label: 'Date', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'warehouseId', label: 'Warehouse' }
         ],
         addText: 'Add Movement',
@@ -107,15 +107,15 @@ const INVENTORY_SERVICES = {
         ]
     },
     'lot-numbers': {
-        endpoint: MobileConfig.resolveEndpoint('/50/LotNumber'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/LotNumber'),
         modelName: 'ScmLotNumber',
         idField: 'lotId',
         columns: [
             { key: 'lotId', label: 'ID', primary: true },
             { key: 'lotNumber', label: 'Lot #', secondary: true, filterKey: 'lotNumber' },
             { key: 'itemId', label: 'Item' },
-            { key: 'manufacturingDate', label: 'Mfg Date', formatter: (v) => MobileUtils.formatDate(v) },
-            { key: 'expirationDate', label: 'Expiry', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'manufacturingDate', label: 'Mfg Date', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'expirationDate', label: 'Expiry', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'quantity', label: 'Qty' }
         ],
         addText: 'Add Lot',
@@ -129,7 +129,7 @@ const INVENTORY_SERVICES = {
         ]
     },
     'serial-numbers': {
-        endpoint: MobileConfig.resolveEndpoint('/50/SerialNum'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/SerialNum'),
         modelName: 'ScmSerialNumber',
         idField: 'serialId',
         columns: [
@@ -148,13 +148,13 @@ const INVENTORY_SERVICES = {
         ]
     },
     'cycle-counts': {
-        endpoint: MobileConfig.resolveEndpoint('/50/CycleCount'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/CycleCount'),
         modelName: 'ScmCycleCount',
         idField: 'cycleCountId',
         columns: [
             { key: 'cycleCountId', label: 'ID', primary: true },
             { key: 'warehouseId', label: 'Warehouse', secondary: true },
-            { key: 'countDate', label: 'Count Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'countDate', label: 'Count Date', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') },
             { key: 'itemsCounted', label: 'Items Counted' },
             { key: 'discrepancies', label: 'Discrepancies' }
@@ -170,7 +170,7 @@ const INVENTORY_SERVICES = {
         ]
     },
     'reorder-points': {
-        endpoint: MobileConfig.resolveEndpoint('/50/ReorderPt'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/ReorderPt'),
         modelName: 'ScmReorderPoint',
         idField: 'reorderPointId',
         columns: [
@@ -192,15 +192,15 @@ const INVENTORY_SERVICES = {
         ]
     },
     'inventory-valuations': {
-        endpoint: MobileConfig.resolveEndpoint('/50/InvValue'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/InvValue'),
         modelName: 'ScmInventoryValuation',
         idField: 'valuationId',
         columns: [
             { key: 'valuationId', label: 'ID', primary: true },
             { key: 'itemId', label: 'Item', secondary: true },
             { key: 'valuationMethod', label: 'Method', formatter: (v) => ({ 0: 'Unspecified', 1: 'FIFO', 2: 'LIFO', 3: 'Weighted Avg', 4: 'Standard Cost' }[v] || '-') },
-            { key: 'valuationDate', label: 'Date', formatter: (v) => MobileUtils.formatDate(v) },
-            { key: 'totalValue', label: 'Total Value', formatter: (v) => MobileUtils.formatMoney(v) }
+            { key: 'valuationDate', label: 'Date', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'totalValue', label: 'Total Value', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'Add Valuation',
         formFields: [
@@ -230,7 +230,7 @@ function loadInventoryService(serviceName) {
     currentInventoryService = serviceName;
     const config = INVENTORY_SERVICES[serviceName];
 
-    inventoryTable = new MobileEditTable('inventory-table', {
+    inventoryTable = new Layer8MEditTable('inventory-table', {
         endpoint: config.endpoint,
         modelName: config.modelName,
         columns: config.columns,
@@ -248,29 +248,29 @@ function openInventoryForm(config, item = null) {
     const title = isEdit ? 'Edit' : config.addText;
 
     const formDef = { fields: config.formFields };
-    const content = MobileForms.renderForm(formDef, item || {});
+    const content = Layer8MForms.renderForm(formDef, item || {});
 
-    MobilePopup.show({
+    Layer8MPopup.show({
         title: title,
         content: content,
         size: 'medium',
         saveButtonText: isEdit ? 'Update' : 'Create',
         onSave: async (popup) => {
             const body = popup.body;
-            const errors = MobileForms.validateForm(body);
-            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+            const errors = Layer8MForms.validateForm(body);
+            if (errors.length > 0) { Layer8MForms.showErrors(body, errors); return; }
 
-            const data = MobileForms.getFormData(body);
+            const data = Layer8MForms.getFormData(body);
             if (isEdit) data[config.idField] = item[config.idField];
 
             try {
-                if (isEdit) await MobileAuth.put(config.endpoint, data);
-                else await MobileAuth.post(config.endpoint, data);
-                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
-                MobilePopup.close();
+                if (isEdit) await Layer8MAuth.put(config.endpoint, data);
+                else await Layer8MAuth.post(config.endpoint, data);
+                Layer8MUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                Layer8MPopup.close();
                 inventoryTable.refresh();
             } catch (error) {
-                MobileUtils.showError('Failed to save');
+                Layer8MUtils.showError('Failed to save');
             }
         }
     });
@@ -278,14 +278,14 @@ function openInventoryForm(config, item = null) {
 
 async function deleteInventoryItem(config, id, item) {
     const name = item.itemNumber || item.categoryName || item.lotNumber || item.serialNumber || id;
-    const confirmed = await MobileConfirm.confirmDelete(name);
+    const confirmed = await Layer8MConfirm.confirmDelete(name);
     if (confirmed) {
         try {
-            await MobileAuth.delete(config.endpoint + '?id=' + id);
-            MobileUtils.showSuccess('Deleted');
+            await Layer8MAuth.delete(config.endpoint + '?id=' + id);
+            Layer8MUtils.showSuccess('Deleted');
             inventoryTable.refresh();
         } catch (error) {
-            MobileUtils.showError('Failed to delete');
+            Layer8MUtils.showError('Failed to delete');
         }
     }
 }

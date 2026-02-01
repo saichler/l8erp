@@ -122,14 +122,14 @@ limitations under the License.
     // Render status badge (uses shared erp-status-* classes)
     FIN.renderStatus = function(status) {
         const statusMap = {
-            1: { label: 'Active', class: 'erp-status-active' },
-            0: { label: 'Inactive', class: 'erp-status-inactive' },
-            2: { label: 'Pending', class: 'erp-status-pending' },
-            3: { label: 'Closed', class: 'erp-status-terminated' }
+            1: { label: 'Active', class: 'layer8d-status-active' },
+            0: { label: 'Inactive', class: 'layer8d-status-inactive' },
+            2: { label: 'Pending', class: 'layer8d-status-pending' },
+            3: { label: 'Closed', class: 'layer8d-status-terminated' }
         };
 
         const config = statusMap[status] || { label: status, class: '' };
-        return `<span class="erp-status ${config.class}">${ERPUtils.escapeHtml(config.label)}</span>`;
+        return `<span class="layer8d-status ${config.class}">${Layer8DUtils.escapeHtml(config.label)}</span>`;
     };
 
 })();

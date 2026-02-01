@@ -61,10 +61,10 @@ limitations under the License.
     };
 
     WarehouseManagement.enums.TASK_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-active',
-        3: 'erp-status-active',
-        4: 'erp-status-terminated'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-terminated'
     };
 
     // ============================================================================
@@ -74,16 +74,16 @@ limitations under the License.
     // Create render functions using shared utilities
     WarehouseManagement.render = {};
 
-    WarehouseManagement.render.warehouseType = (type) => ERPRenderers.renderEnum(type, WarehouseManagement.enums.WAREHOUSE_TYPE);
-    WarehouseManagement.render.binType = (type) => ERPRenderers.renderEnum(type, WarehouseManagement.enums.BIN_TYPE);
+    WarehouseManagement.render.warehouseType = (type) => Layer8DRenderers.renderEnum(type, WarehouseManagement.enums.WAREHOUSE_TYPE);
+    WarehouseManagement.render.binType = (type) => Layer8DRenderers.renderEnum(type, WarehouseManagement.enums.BIN_TYPE);
 
-    WarehouseManagement.render.taskStatus = ERPRenderers.createStatusRenderer(
+    WarehouseManagement.render.taskStatus = Layer8DRenderers.createStatusRenderer(
         WarehouseManagement.enums.TASK_STATUS,
         WarehouseManagement.enums.TASK_STATUS_CLASSES
     );
 
-    WarehouseManagement.render.boolean = ERPRenderers.renderBoolean;
-    WarehouseManagement.render.date = ERPRenderers.renderDate;
-    WarehouseManagement.render.money = ERPRenderers.renderMoney;
+    WarehouseManagement.render.boolean = Layer8DRenderers.renderBoolean;
+    WarehouseManagement.render.date = Layer8DRenderers.renderDate;
+    WarehouseManagement.render.money = Layer8DRenderers.renderMoney;
 
 })();

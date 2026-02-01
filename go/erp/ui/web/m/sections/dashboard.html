@@ -89,14 +89,14 @@ limitations under the License.
 <script>
 function initMobileDashboard() {
     loadDashboardStats();
-    MobileNav.showHome();
+    Layer8MNav.showHome();
 }
 
 async function loadDashboardStats() {
     try {
         const empQuery = 'select * from Employee limit 1 page 0';
         const empBody = encodeURIComponent(JSON.stringify({ text: empQuery }));
-        const empResponse = await MobileAuth.get(MobileConfig.resolveEndpoint('/30/Employee') + '?body=' + empBody);
+        const empResponse = await Layer8MAuth.get(Layer8MConfig.resolveEndpoint('/30/Employee') + '?body=' + empBody);
 
         if (empResponse && empResponse.metadata?.keyCount?.counts) {
             document.getElementById('stat-employees').textContent = empResponse.metadata.keyCount.counts.Total || 0;
@@ -105,7 +105,7 @@ async function loadDashboardStats() {
 
         const leaveQuery = 'select * from LeaveRequest where status=2 limit 1 page 0';
         const leaveBody = encodeURIComponent(JSON.stringify({ text: leaveQuery }));
-        const leaveResponse = await MobileAuth.get(MobileConfig.resolveEndpoint('/30/LeaveReq') + '?body=' + leaveBody);
+        const leaveResponse = await Layer8MAuth.get(Layer8MConfig.resolveEndpoint('/30/LeaveReq') + '?body=' + leaveBody);
 
         if (leaveResponse && leaveResponse.metadata?.keyCount?.counts) {
             document.getElementById('stat-pending').textContent = leaveResponse.metadata.keyCount.counts.Total || 0;

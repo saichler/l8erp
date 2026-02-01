@@ -42,7 +42,7 @@ let currentLearningService = 'courses';
 
 const LEARNING_SERVICES = {
     courses: {
-        endpoint: MobileConfig.resolveEndpoint('/30/Course'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Course'),
         modelName: 'Course',
         idField: 'courseId',
         columns: [
@@ -80,14 +80,14 @@ const LEARNING_SERVICES = {
         ]
     },
     sessions: {
-        endpoint: MobileConfig.resolveEndpoint('/30/CrsSess'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/CrsSess'),
         modelName: 'CourseSession',
         idField: 'sessionId',
         columns: [
             { key: 'sessionId', label: 'ID', filterKey: 'sessionId' },
             { key: 'courseId', label: 'Course', primary: true },
-            { key: 'startDate', label: 'Start', secondary: true, formatter: (v) => MobileUtils.formatDate(v) },
-            { key: 'endDate', label: 'End', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'startDate', label: 'Start', secondary: true, formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'endDate', label: 'End', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'instructorName', label: 'Instructor', filterKey: 'instructorName' },
             { key: 'location', label: 'Location', filterKey: 'location' },
             { key: 'enrollment', label: 'Enrolled', formatter: (v, item) => `${item.enrolledCount || 0}/${item.maxEnrollees || '-'}` },
@@ -108,7 +108,7 @@ const LEARNING_SERVICES = {
         ]
     },
     enrollments: {
-        endpoint: MobileConfig.resolveEndpoint('/30/CrsEnrol'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/CrsEnrol'),
         modelName: 'CourseEnrollment',
         idField: 'enrollmentId',
         columns: [
@@ -119,7 +119,7 @@ const LEARNING_SERVICES = {
             { key: 'progressPercentage', label: 'Progress', formatter: (v) => `${v || 0}%` },
             { key: 'score', label: 'Score' },
             { key: 'passed', label: 'Passed', formatter: (v) => v ? 'Pass' : (v === false ? 'Fail' : '-') },
-            { key: 'dueDate', label: 'Due', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'dueDate', label: 'Due', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         addText: 'Add Enrollment',
         formFields: [
@@ -142,7 +142,7 @@ const LEARNING_SERVICES = {
         ]
     },
     certifications: {
-        endpoint: MobileConfig.resolveEndpoint('/30/Cert'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Cert'),
         modelName: 'Certification',
         idField: 'certificationId',
         columns: [
@@ -170,7 +170,7 @@ const LEARNING_SERVICES = {
         ]
     },
     'emp-certifications': {
-        endpoint: MobileConfig.resolveEndpoint('/30/EmpCert'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/EmpCert'),
         modelName: 'EmployeeCertification',
         idField: 'employeeCertificationId',
         columns: [
@@ -179,8 +179,8 @@ const LEARNING_SERVICES = {
             { key: 'certificationId', label: 'Certification', secondary: true },
             { key: 'certificationNumber', label: 'Cert #', filterKey: 'certificationNumber' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Active', 2: 'Expired', 3: 'Pending', 4: 'Revoked' }[v] || '-') },
-            { key: 'issueDate', label: 'Issue', formatter: (v) => MobileUtils.formatDate(v) },
-            { key: 'expirationDate', label: 'Expires', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'issueDate', label: 'Issue', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'expirationDate', label: 'Expires', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'isVerified', label: 'Verified', formatter: (v) => v ? 'Yes' : 'No' }
         ],
         addText: 'Add Employee Certification',
@@ -200,7 +200,7 @@ const LEARNING_SERVICES = {
         ]
     },
     skills: {
-        endpoint: MobileConfig.resolveEndpoint('/30/Skill'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Skill'),
         modelName: 'Skill',
         idField: 'skillId',
         columns: [
@@ -222,7 +222,7 @@ const LEARNING_SERVICES = {
         ]
     },
     'emp-skills': {
-        endpoint: MobileConfig.resolveEndpoint('/30/EmpSkill'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/EmpSkill'),
         modelName: 'EmployeeSkill',
         idField: 'employeeSkillId',
         columns: [
@@ -232,7 +232,7 @@ const LEARNING_SERVICES = {
             { key: 'proficiencyLevel', label: 'Proficiency' },
             { key: 'yearsOfExperience', label: 'Years Exp.' },
             { key: 'isPrimarySkill', label: 'Primary', formatter: (v) => v ? 'Yes' : 'No' },
-            { key: 'lastUsedDate', label: 'Last Used', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'lastUsedDate', label: 'Last Used', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         addText: 'Add Employee Skill',
         formFields: [
@@ -251,7 +251,7 @@ const LEARNING_SERVICES = {
         ]
     },
     'training-records': {
-        endpoint: MobileConfig.resolveEndpoint('/30/TrnRec'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/TrnRec'),
         modelName: 'TrainingRecord',
         idField: 'recordId',
         columns: [
@@ -259,8 +259,8 @@ const LEARNING_SERVICES = {
             { key: 'employeeId', label: 'Employee', primary: true },
             { key: 'trainingName', label: 'Training', secondary: true, filterKey: 'trainingName' },
             { key: 'trainingType', label: 'Type', formatter: (v) => ({ 1: 'Internal', 2: 'External', 3: 'Online', 4: 'On-the-Job', 5: 'Conference' }[v] || '-') },
-            { key: 'completedDate', label: 'Completed', formatter: (v) => MobileUtils.formatDate(v) },
-            { key: 'expirationDate', label: 'Expires', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'completedDate', label: 'Completed', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'expirationDate', label: 'Expires', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'passed', label: 'Passed', formatter: (v) => v ? 'Pass' : (v === false ? 'Fail' : '-') },
             { key: 'isCompliant', label: 'Compliant', formatter: (v) => v ? 'Yes' : 'No' }
         ],
@@ -301,7 +301,7 @@ function loadLearningService(serviceName) {
     currentLearningService = serviceName;
     const config = LEARNING_SERVICES[serviceName];
 
-    learningTable = new MobileEditTable('learning-table', {
+    learningTable = new Layer8MEditTable('learning-table', {
         endpoint: config.endpoint,
         modelName: config.modelName,
         columns: config.columns,
@@ -318,43 +318,43 @@ function openLearningForm(config, item = null) {
     const isEdit = !!item;
     const title = isEdit ? 'Edit ' + config.modelName : config.addText;
     const formDef = { fields: config.formFields };
-    const content = MobileForms.renderForm(formDef, item || {});
+    const content = Layer8MForms.renderForm(formDef, item || {});
 
-    MobilePopup.show({
+    Layer8MPopup.show({
         title: title,
         content: content,
         size: 'large',
         saveButtonText: isEdit ? 'Update' : 'Create',
         onSave: async (popup) => {
             const body = popup.body;
-            const errors = MobileForms.validateForm(body);
-            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+            const errors = Layer8MForms.validateForm(body);
+            if (errors.length > 0) { Layer8MForms.showErrors(body, errors); return; }
 
-            const data = MobileForms.getFormData(body);
+            const data = Layer8MForms.getFormData(body);
             if (isEdit) data[config.idField] = item[config.idField];
 
             try {
-                if (isEdit) await MobileAuth.put(config.endpoint, data);
-                else await MobileAuth.post(config.endpoint, data);
-                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
-                MobilePopup.close();
+                if (isEdit) await Layer8MAuth.put(config.endpoint, data);
+                else await Layer8MAuth.post(config.endpoint, data);
+                Layer8MUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                Layer8MPopup.close();
                 learningTable.refresh();
             } catch (error) {
-                MobileUtils.showError('Failed to save');
+                Layer8MUtils.showError('Failed to save');
             }
         }
     });
 }
 
 async function deleteLearningItem(config, id, item) {
-    const confirmed = await MobileConfirm.confirmDelete(item.name || item.title || item.trainingName || id);
+    const confirmed = await Layer8MConfirm.confirmDelete(item.name || item.title || item.trainingName || id);
     if (confirmed) {
         try {
-            await MobileAuth.delete(config.endpoint + '?id=' + id);
-            MobileUtils.showSuccess('Deleted');
+            await Layer8MAuth.delete(config.endpoint + '?id=' + id);
+            Layer8MUtils.showSuccess('Deleted');
             learningTable.refresh();
         } catch (error) {
-            MobileUtils.showError('Failed to delete');
+            Layer8MUtils.showError('Failed to delete');
         }
     }
 }

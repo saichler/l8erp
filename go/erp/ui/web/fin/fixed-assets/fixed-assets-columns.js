@@ -21,7 +21,7 @@ limitations under the License.
     // Ensure FixedAssets namespace exists
     window.FixedAssets = window.FixedAssets || {};
 
-    const { renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
     const enums = FixedAssets.enums;
     const render = FixedAssets.render;
 

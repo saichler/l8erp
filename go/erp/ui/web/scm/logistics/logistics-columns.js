@@ -21,7 +21,7 @@ limitations under the License.
     // Ensure Logistics namespace exists
     window.Logistics = window.Logistics || {};
 
-    const { renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
     const render = Logistics.render;
 
     // ============================================================================

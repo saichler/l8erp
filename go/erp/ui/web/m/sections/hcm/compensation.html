@@ -44,7 +44,7 @@ let currentCompensationService = 'salary-grades';
 
 const COMPENSATION_SERVICES = {
     'salary-grades': {
-        endpoint: MobileConfig.resolveEndpoint('/30/SalaryGrade'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/SalaryGrade'),
         modelName: 'SalaryGrade',
         idField: 'gradeId',
         columns: [
@@ -76,7 +76,7 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'salary-structures': {
-        endpoint: MobileConfig.resolveEndpoint('/30/SalaryStructure'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/SalaryStructure'),
         modelName: 'SalaryStructure',
         idField: 'structureId',
         columns: [
@@ -99,7 +99,7 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'bonus-plans': {
-        endpoint: MobileConfig.resolveEndpoint('/30/BonusPlan'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/BonusPlan'),
         modelName: 'BonusPlan',
         idField: 'planId',
         columns: [
@@ -132,7 +132,7 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'equity-grants': {
-        endpoint: MobileConfig.resolveEndpoint('/30/EquityGrant'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/EquityGrant'),
         modelName: 'EquityGrant',
         idField: 'grantId',
         columns: [
@@ -141,9 +141,9 @@ const COMPENSATION_SERVICES = {
             { key: 'employeeId', label: 'Employee' },
             { key: 'grantType', label: 'Type', formatter: (v) => ({ 1: 'Stock Options', 2: 'RSU', 3: 'ESPP', 4: 'Phantom Stock' }[v] || '-') },
             { key: 'shares', label: 'Shares' },
-            { key: 'grantPrice.amount', label: 'Grant Price', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'grantPrice.amount', label: 'Grant Price', formatter: (v) => Layer8MUtils.formatMoney(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Active', 2: 'Vesting', 3: 'Exercised', 4: 'Forfeited', 5: 'Expired' }[v] || '-') },
-            { key: 'grantDate', label: 'Grant Date', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'grantDate', label: 'Grant Date', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         addText: 'Add Grant',
         formFields: [
@@ -167,17 +167,17 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'emp-compensation': {
-        endpoint: MobileConfig.resolveEndpoint('/30/EmpComp'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/EmpComp'),
         modelName: 'EmployeeCompensation',
         idField: 'compensationId',
         columns: [
             { key: 'compensationId', label: 'Comp ID', primary: true },
             { key: 'employeeId', label: 'Employee', secondary: true },
             { key: 'compensationType', label: 'Type', formatter: (v) => ({ 1: 'Salary', 2: 'Hourly', 3: 'Commission', 4: 'Contract' }[v] || '-') },
-            { key: 'baseSalary.amount', label: 'Base Salary', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'baseSalary.amount', label: 'Base Salary', formatter: (v) => Layer8MUtils.formatMoney(v) },
             { key: 'payFrequency', label: 'Frequency', formatter: (v) => ({ 1: 'Annual', 2: 'Monthly', 3: 'Bi-Weekly', 4: 'Weekly', 5: 'Hourly' }[v] || '-') },
             { key: 'compaRatio', label: 'Compa Ratio', formatter: (v) => v ? (v * 100).toFixed(0) + '%' : '-' },
-            { key: 'effectiveDate', label: 'Effective', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'effectiveDate', label: 'Effective', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         addText: 'Add Compensation',
         formFields: [
@@ -196,15 +196,15 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'merit-increases': {
-        endpoint: MobileConfig.resolveEndpoint('/30/MeritInc'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/MeritInc'),
         modelName: 'MeritIncrease',
         idField: 'increaseId',
         columns: [
             { key: 'increaseId', label: 'Increase ID', primary: true },
             { key: 'employeeId', label: 'Employee', secondary: true },
             { key: 'meritCycleId', label: 'Cycle' },
-            { key: 'currentSalary.amount', label: 'Current', formatter: (v) => MobileUtils.formatMoney(v) },
-            { key: 'proposedIncrease.amount', label: 'Proposed', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'currentSalary.amount', label: 'Current', formatter: (v) => Layer8MUtils.formatMoney(v) },
+            { key: 'proposedIncrease.amount', label: 'Proposed', formatter: (v) => Layer8MUtils.formatMoney(v) },
             { key: 'proposedPercentage', label: '%', formatter: (v) => v ? v + '%' : '-' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Rejected', 5: 'Applied' }[v] || '-') },
             { key: 'performanceRating', label: 'Rating', formatter: (v) => v ? '★'.repeat(v) : '-' }
@@ -227,7 +227,7 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'merit-cycles': {
-        endpoint: MobileConfig.resolveEndpoint('/30/MrtCycle'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/MrtCycle'),
         modelName: 'MeritCycle',
         idField: 'cycleId',
         columns: [
@@ -235,9 +235,9 @@ const COMPENSATION_SERVICES = {
             { key: 'name', label: 'Name', secondary: true, filterKey: 'name' },
             { key: 'year', label: 'Year' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Planning', 2: 'Open', 3: 'Review', 4: 'Approved', 5: 'Closed' }[v] || '-') },
-            { key: 'totalBudget.amount', label: 'Budget', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'totalBudget.amount', label: 'Budget', formatter: (v) => Layer8MUtils.formatMoney(v) },
             { key: 'budgetPercentage', label: 'Budget %', formatter: (v) => v ? v + '%' : '-' },
-            { key: 'effectiveDate', label: 'Effective', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'effectiveDate', label: 'Effective', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         addText: 'Add Merit Cycle',
         formFields: [
@@ -254,7 +254,7 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'bonus-payments': {
-        endpoint: MobileConfig.resolveEndpoint('/30/BonusPay'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/BonusPay'),
         modelName: 'BonusPayment',
         idField: 'paymentId',
         columns: [
@@ -262,9 +262,9 @@ const COMPENSATION_SERVICES = {
             { key: 'employeeId', label: 'Employee', secondary: true },
             { key: 'bonusPlanId', label: 'Plan' },
             { key: 'bonusType', label: 'Type', formatter: (v) => ({ 1: 'Performance', 2: 'Spot', 3: 'Signing', 4: 'Retention', 5: 'Referral' }[v] || '-') },
-            { key: 'actualAmount.amount', label: 'Amount', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'actualAmount.amount', label: 'Amount', formatter: (v) => Layer8MUtils.formatMoney(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Pending', 2: 'Approved', 3: 'Paid', 4: 'Cancelled' }[v] || '-') },
-            { key: 'paymentDate', label: 'Payment Date', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'paymentDate', label: 'Payment Date', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         addText: 'Add Bonus Payment',
         formFields: [
@@ -286,18 +286,18 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'comp-statements': {
-        endpoint: MobileConfig.resolveEndpoint('/30/CompStmt'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/CompStmt'),
         modelName: 'CompensationStatement',
         idField: 'statementId',
         columns: [
             { key: 'statementId', label: 'Statement ID', primary: true },
             { key: 'employeeId', label: 'Employee', secondary: true },
             { key: 'statementYear', label: 'Year' },
-            { key: 'baseSalary.amount', label: 'Base', formatter: (v) => MobileUtils.formatMoney(v) },
-            { key: 'bonusActual.amount', label: 'Bonus', formatter: (v) => MobileUtils.formatMoney(v) },
-            { key: 'equityValue.amount', label: 'Equity', formatter: (v) => MobileUtils.formatMoney(v) },
-            { key: 'totalCashCompensation.amount', label: 'Total Cash', formatter: (v) => MobileUtils.formatMoney(v) },
-            { key: 'totalCompensation.amount', label: 'Total Comp', formatter: (v) => MobileUtils.formatMoney(v) }
+            { key: 'baseSalary.amount', label: 'Base', formatter: (v) => Layer8MUtils.formatMoney(v) },
+            { key: 'bonusActual.amount', label: 'Bonus', formatter: (v) => Layer8MUtils.formatMoney(v) },
+            { key: 'equityValue.amount', label: 'Equity', formatter: (v) => Layer8MUtils.formatMoney(v) },
+            { key: 'totalCashCompensation.amount', label: 'Total Cash', formatter: (v) => Layer8MUtils.formatMoney(v) },
+            { key: 'totalCompensation.amount', label: 'Total Comp', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'Add Statement',
         formFields: [
@@ -315,7 +315,7 @@ const COMPENSATION_SERVICES = {
         ]
     },
     'market-benchmarks': {
-        endpoint: MobileConfig.resolveEndpoint('/30/MktBench'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/MktBench'),
         modelName: 'MarketBenchmark',
         idField: 'benchmarkId',
         columns: [
@@ -323,9 +323,9 @@ const COMPENSATION_SERVICES = {
             { key: 'jobTitle', label: 'Job Title', secondary: true, filterKey: 'jobTitle' },
             { key: 'surveySource', label: 'Source' },
             { key: 'surveyYear', label: 'Year' },
-            { key: 'market50th.amount', label: '50th %ile', formatter: (v) => MobileUtils.formatMoney(v) },
-            { key: 'market75th.amount', label: '75th %ile', formatter: (v) => MobileUtils.formatMoney(v) },
-            { key: 'internalAverage.amount', label: 'Internal Avg', formatter: (v) => MobileUtils.formatMoney(v) },
+            { key: 'market50th.amount', label: '50th %ile', formatter: (v) => Layer8MUtils.formatMoney(v) },
+            { key: 'market75th.amount', label: '75th %ile', formatter: (v) => Layer8MUtils.formatMoney(v) },
+            { key: 'internalAverage.amount', label: 'Internal Avg', formatter: (v) => Layer8MUtils.formatMoney(v) },
             { key: 'marketIndex', label: 'Index', formatter: (v) => v ? (v * 100).toFixed(0) + '%' : '-' }
         ],
         addText: 'Add Benchmark',
@@ -369,7 +369,7 @@ function loadCompensationService(serviceName) {
     currentCompensationService = serviceName;
     const config = COMPENSATION_SERVICES[serviceName];
 
-    compensationTable = new MobileEditTable('compensation-table', {
+    compensationTable = new Layer8MEditTable('compensation-table', {
         endpoint: config.endpoint,
         modelName: config.modelName,
         columns: config.columns,
@@ -387,29 +387,29 @@ function openCompensationForm(config, item = null) {
     const title = isEdit ? 'Edit' : config.addText;
 
     const formDef = { fields: config.formFields };
-    const content = MobileForms.renderForm(formDef, item || {});
+    const content = Layer8MForms.renderForm(formDef, item || {});
 
-    MobilePopup.show({
+    Layer8MPopup.show({
         title: title,
         content: content,
         size: 'medium',
         saveButtonText: isEdit ? 'Update' : 'Create',
         onSave: async (popup) => {
             const body = popup.body;
-            const errors = MobileForms.validateForm(body);
-            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+            const errors = Layer8MForms.validateForm(body);
+            if (errors.length > 0) { Layer8MForms.showErrors(body, errors); return; }
 
-            const data = MobileForms.getFormData(body);
+            const data = Layer8MForms.getFormData(body);
             if (isEdit) data[config.idField] = item[config.idField];
 
             try {
-                if (isEdit) await MobileAuth.put(config.endpoint, data);
-                else await MobileAuth.post(config.endpoint, data);
-                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
-                MobilePopup.close();
+                if (isEdit) await Layer8MAuth.put(config.endpoint, data);
+                else await Layer8MAuth.post(config.endpoint, data);
+                Layer8MUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                Layer8MPopup.close();
                 compensationTable.refresh();
             } catch (error) {
-                MobileUtils.showError('Failed to save');
+                Layer8MUtils.showError('Failed to save');
             }
         }
     });
@@ -417,14 +417,14 @@ function openCompensationForm(config, item = null) {
 
 async function deleteCompensationItem(config, id, item) {
     const name = item.name || item.planName || id;
-    const confirmed = await MobileConfirm.confirmDelete(name);
+    const confirmed = await Layer8MConfirm.confirmDelete(name);
     if (confirmed) {
         try {
-            await MobileAuth.delete(config.endpoint + '?id=' + id);
-            MobileUtils.showSuccess('Deleted');
+            await Layer8MAuth.delete(config.endpoint + '?id=' + id);
+            Layer8MUtils.showSuccess('Deleted');
             compensationTable.refresh();
         } catch (error) {
-            MobileUtils.showError('Failed to delete');
+            Layer8MUtils.showError('Failed to delete');
         }
     }
 }

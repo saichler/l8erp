@@ -42,7 +42,7 @@ let currentLogisticsService = 'carriers';
 
 const LOGISTICS_SERVICES = {
     'carriers': {
-        endpoint: MobileConfig.resolveEndpoint('/50/ScmCarrier'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/ScmCarrier'),
         modelName: 'ScmCarrier',
         idField: 'carrierId',
         columns: [
@@ -63,7 +63,7 @@ const LOGISTICS_SERVICES = {
         ]
     },
     'freight-rates': {
-        endpoint: MobileConfig.resolveEndpoint('/50/FreightRt'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/FreightRt'),
         modelName: 'ScmFreightRate',
         idField: 'rateId',
         columns: [
@@ -71,8 +71,8 @@ const LOGISTICS_SERVICES = {
             { key: 'carrierId', label: 'Carrier', secondary: true },
             { key: 'origin', label: 'Origin' },
             { key: 'destination', label: 'Destination' },
-            { key: 'ratePerUnit', label: 'Rate/Unit', formatter: (v) => MobileUtils.formatMoney(v) },
-            { key: 'effectiveDate', label: 'Effective', formatter: (v) => MobileUtils.formatDate(v) }
+            { key: 'ratePerUnit', label: 'Rate/Unit', formatter: (v) => Layer8MUtils.formatMoney(v) },
+            { key: 'effectiveDate', label: 'Effective', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
         addText: 'Add Freight Rate',
         formFields: [
@@ -86,16 +86,16 @@ const LOGISTICS_SERVICES = {
         ]
     },
     'shipments': {
-        endpoint: MobileConfig.resolveEndpoint('/50/Shipment'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/Shipment'),
         modelName: 'ScmShipment',
         idField: 'shipmentId',
         columns: [
             { key: 'shipmentId', label: 'ID', primary: true },
             { key: 'shipmentNumber', label: 'Shipment #', secondary: true, filterKey: 'shipmentNumber' },
             { key: 'carrierId', label: 'Carrier' },
-            { key: 'shipDate', label: 'Ship Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'shipDate', label: 'Ship Date', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Planned', 2: 'Picked Up', 3: 'In Transit', 4: 'Delivered', 5: 'Returned', 6: 'Cancelled' }[v] || '-') },
-            { key: 'totalCost', label: 'Cost', formatter: (v) => MobileUtils.formatMoney(v) }
+            { key: 'totalCost', label: 'Cost', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'Add Shipment',
         formFields: [
@@ -110,7 +110,7 @@ const LOGISTICS_SERVICES = {
         ]
     },
     'routes': {
-        endpoint: MobileConfig.resolveEndpoint('/50/Route'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/Route'),
         modelName: 'ScmRoute',
         idField: 'routeId',
         columns: [
@@ -132,7 +132,7 @@ const LOGISTICS_SERVICES = {
         ]
     },
     'load-plans': {
-        endpoint: MobileConfig.resolveEndpoint('/50/LoadPlan'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/LoadPlan'),
         modelName: 'ScmLoadPlan',
         idField: 'loadPlanId',
         columns: [
@@ -155,13 +155,13 @@ const LOGISTICS_SERVICES = {
         ]
     },
     'delivery-proofs': {
-        endpoint: MobileConfig.resolveEndpoint('/50/DlvryProof'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/DlvryProof'),
         modelName: 'ScmDeliveryProof',
         idField: 'proofId',
         columns: [
             { key: 'proofId', label: 'ID', primary: true },
             { key: 'shipmentId', label: 'Shipment', secondary: true },
-            { key: 'deliveryDate', label: 'Delivered', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'deliveryDate', label: 'Delivered', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'receivedBy', label: 'Received By' }
         ],
         addText: 'Add Delivery Proof',
@@ -175,16 +175,16 @@ const LOGISTICS_SERVICES = {
         ]
     },
     'freight-audits': {
-        endpoint: MobileConfig.resolveEndpoint('/50/FrtAudit'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/FrtAudit'),
         modelName: 'ScmFreightAudit',
         idField: 'auditId',
         columns: [
             { key: 'auditId', label: 'ID', primary: true },
             { key: 'shipmentId', label: 'Shipment', secondary: true },
             { key: 'carrierId', label: 'Carrier' },
-            { key: 'invoicedAmount', label: 'Invoiced', formatter: (v) => MobileUtils.formatMoney(v) },
-            { key: 'auditedAmount', label: 'Audited', formatter: (v) => MobileUtils.formatMoney(v) },
-            { key: 'variance', label: 'Variance', formatter: (v) => MobileUtils.formatMoney(v) }
+            { key: 'invoicedAmount', label: 'Invoiced', formatter: (v) => Layer8MUtils.formatMoney(v) },
+            { key: 'auditedAmount', label: 'Audited', formatter: (v) => Layer8MUtils.formatMoney(v) },
+            { key: 'variance', label: 'Variance', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'Add Freight Audit',
         formFields: [
@@ -197,14 +197,14 @@ const LOGISTICS_SERVICES = {
         ]
     },
     'return-authorizations': {
-        endpoint: MobileConfig.resolveEndpoint('/50/ReturnAuth'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/ReturnAuth'),
         modelName: 'ScmReturnAuthorization',
         idField: 'rmaId',
         columns: [
             { key: 'rmaId', label: 'ID', primary: true },
             { key: 'rmaNumber', label: 'RMA #', secondary: true, filterKey: 'rmaNumber' },
             { key: 'customerId', label: 'Customer' },
-            { key: 'requestDate', label: 'Requested', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'requestDate', label: 'Requested', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'reason', label: 'Reason' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
@@ -236,7 +236,7 @@ function loadLogisticsService(serviceName) {
     currentLogisticsService = serviceName;
     const config = LOGISTICS_SERVICES[serviceName];
 
-    logisticsTable = new MobileEditTable('logistics-table', {
+    logisticsTable = new Layer8MEditTable('logistics-table', {
         endpoint: config.endpoint,
         modelName: config.modelName,
         columns: config.columns,
@@ -254,29 +254,29 @@ function openLogisticsForm(config, item = null) {
     const title = isEdit ? 'Edit' : config.addText;
 
     const formDef = { fields: config.formFields };
-    const content = MobileForms.renderForm(formDef, item || {});
+    const content = Layer8MForms.renderForm(formDef, item || {});
 
-    MobilePopup.show({
+    Layer8MPopup.show({
         title: title,
         content: content,
         size: 'medium',
         saveButtonText: isEdit ? 'Update' : 'Create',
         onSave: async (popup) => {
             const body = popup.body;
-            const errors = MobileForms.validateForm(body);
-            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+            const errors = Layer8MForms.validateForm(body);
+            if (errors.length > 0) { Layer8MForms.showErrors(body, errors); return; }
 
-            const data = MobileForms.getFormData(body);
+            const data = Layer8MForms.getFormData(body);
             if (isEdit) data[config.idField] = item[config.idField];
 
             try {
-                if (isEdit) await MobileAuth.put(config.endpoint, data);
-                else await MobileAuth.post(config.endpoint, data);
-                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
-                MobilePopup.close();
+                if (isEdit) await Layer8MAuth.put(config.endpoint, data);
+                else await Layer8MAuth.post(config.endpoint, data);
+                Layer8MUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                Layer8MPopup.close();
                 logisticsTable.refresh();
             } catch (error) {
-                MobileUtils.showError('Failed to save');
+                Layer8MUtils.showError('Failed to save');
             }
         }
     });
@@ -284,14 +284,14 @@ function openLogisticsForm(config, item = null) {
 
 async function deleteLogisticsItem(config, id, item) {
     const name = item.carrierCode || item.shipmentNumber || item.routeName || item.planName || item.rmaNumber || id;
-    const confirmed = await MobileConfirm.confirmDelete(name);
+    const confirmed = await Layer8MConfirm.confirmDelete(name);
     if (confirmed) {
         try {
-            await MobileAuth.delete(config.endpoint + '?id=' + id);
-            MobileUtils.showSuccess('Deleted');
+            await Layer8MAuth.delete(config.endpoint + '?id=' + id);
+            Layer8MUtils.showSuccess('Deleted');
             logisticsTable.refresh();
         } catch (error) {
-            MobileUtils.showError('Failed to delete');
+            Layer8MUtils.showError('Failed to delete');
         }
     }
 }

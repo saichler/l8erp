@@ -21,7 +21,7 @@ limitations under the License.
     // Ensure Inventory namespace exists
     window.Inventory = window.Inventory || {};
 
-    const { renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
     const render = Inventory.render;
 
     // ============================================================================

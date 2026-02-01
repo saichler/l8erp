@@ -23,15 +23,15 @@ limitations under the License.
     <title>ERP by Layer 8</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <!-- ERP Shared Theme (load first) -->
-    <link rel="stylesheet" href="shared/erp-theme.css">
-    <link rel="stylesheet" href="shared/erp-animations.css">
-    <link rel="stylesheet" href="shared/erp-scrollbar.css">
+    <link rel="stylesheet" href="shared/layer8d-theme.css">
+    <link rel="stylesheet" href="shared/layer8d-animations.css">
+    <link rel="stylesheet" href="shared/layer8d-scrollbar.css">
     <link rel="stylesheet" href="css/base-core.css">
     <link rel="stylesheet" href="css/components-modals.css">
     <link rel="stylesheet" href="css/components-misc.css">
     <link rel="stylesheet" href="css/responsive.css">
     <!-- Module-specific styles -->
-    <link rel="stylesheet" href="edit_table/table.css">
+    <link rel="stylesheet" href="edit_table/layer8d-table.css">
     <!-- HCM Module Styles (load in order) -->
     <link rel="stylesheet" href="hcm/hcm-layout.css">
     <link rel="stylesheet" href="hcm/hcm-forms.css">
@@ -44,19 +44,19 @@ limitations under the License.
     <!-- SCM Module Styles -->
     <link rel="stylesheet" href="scm/scm.css">
     <!-- SYS Module Styles -->
-    <link rel="stylesheet" href="sys/sys.css">
+    <link rel="stylesheet" href="sys/l8sys.css">
     <!-- Popup Component -->
-    <link rel="stylesheet" href="popup/popup.css">
-    <link rel="stylesheet" href="popup/popup-forms.css">
-    <link rel="stylesheet" href="popup/popup-content.css">
+    <link rel="stylesheet" href="popup/layer8d-popup.css">
+    <link rel="stylesheet" href="popup/layer8d-popup-forms.css">
+    <link rel="stylesheet" href="popup/layer8d-popup-content.css">
     <!-- Date Picker Component -->
-    <link rel="stylesheet" href="datepicker/datepicker.css">
+    <link rel="stylesheet" href="datepicker/layer8d-datepicker.css">
     <!-- Reference Picker Component -->
-    <link rel="stylesheet" href="reference_picker/reference-picker.css">
+    <link rel="stylesheet" href="reference_picker/layer8d-reference-picker.css">
     <!-- Input Formatter Component -->
-    <link rel="stylesheet" href="input_formatters/input-formatter.css">
+    <link rel="stylesheet" href="input_formatters/layer8d-input-formatter.css">
     <!-- Notification Component -->
-    <link rel="stylesheet" href="notification/notification.css">
+    <link rel="stylesheet" href="notification/layer8d-notification.css">
 </head>
 <body>
     <div class="app-container">
@@ -178,50 +178,50 @@ limitations under the License.
     </div>
 
     <!-- ERP Popup Root -->
-    <div id="erp-popup-root"></div>
+    <div id="layer8d-popup-root"></div>
 
     <script src="js/sections.js"></script>
     <script src="js/app.js"></script>
     <!-- ERP Shared Scripts (load first, in order) -->
-    <script src="shared/app-config.js"></script>
-    <script src="shared/erp-utils.js"></script>
-    <script src="shared/erp-renderers.js"></script>
-    <script src="shared/reference-registry.js"></script>
+    <script src="shared/layer8d-config.js"></script>
+    <script src="shared/layer8d-utils.js"></script>
+    <script src="shared/layer8d-renderers.js"></script>
+    <script src="shared/layer8d-reference-registry.js"></script>
     <!-- Notification Component (load before forms) -->
-    <script src="notification/notification.js"></script>
+    <script src="notification/layer8d-notification.js"></script>
     <!-- Input Formatter Component (load in order, before forms) -->
-    <script src="input_formatters/input-formatter-utils.js"></script>
-    <script src="input_formatters/input-formatter-masks.js"></script>
-    <script src="input_formatters/input-formatter-types.js"></script>
-    <script src="input_formatters/input-formatter-core.js"></script>
-    <script src="input_formatters/input-formatter.js"></script>
-    <script src="shared/erp-forms.js"></script>
+    <script src="input_formatters/layer8d-input-formatter-utils.js"></script>
+    <script src="input_formatters/layer8d-input-formatter-masks.js"></script>
+    <script src="input_formatters/layer8d-input-formatter-types.js"></script>
+    <script src="input_formatters/layer8d-input-formatter-core.js"></script>
+    <script src="input_formatters/layer8d-input-formatter.js"></script>
+    <script src="shared/layer8d-forms.js"></script>
     <!-- Popup Component -->
-    <script src="popup/popup.js"></script>
+    <script src="popup/layer8d-popup.js"></script>
     <!-- Date Picker Component (load in order) -->
-    <script src="datepicker/datepicker-utils.js"></script>
-    <script src="datepicker/datepicker-calendar.js"></script>
-    <script src="datepicker/datepicker-core.js"></script>
-    <script src="datepicker/datepicker.js"></script>
+    <script src="datepicker/layer8d-datepicker-utils.js"></script>
+    <script src="datepicker/layer8d-datepicker-calendar.js"></script>
+    <script src="datepicker/layer8d-datepicker-core.js"></script>
+    <script src="datepicker/layer8d-datepicker.js"></script>
     <!-- Reference Picker Component (load in order) -->
-    <script src="reference_picker/reference-picker-utils.js"></script>
-    <script src="reference_picker/reference-picker-data.js"></script>
-    <script src="reference_picker/reference-picker-render.js"></script>
-    <script src="reference_picker/reference-picker-events.js"></script>
-    <script src="reference_picker/reference-picker-core.js"></script>
-    <script src="reference_picker/reference-picker.js"></script>
-    <!-- L8Table Component (load in order) -->
-    <script src="edit_table/table-core.js"></script>
-    <script src="edit_table/table-data.js"></script>
-    <script src="edit_table/table-render.js"></script>
-    <script src="edit_table/table-events.js"></script>
-    <script src="edit_table/table-filter.js"></script>
-    <script src="edit_table/table.js"></script>
+    <script src="reference_picker/layer8d-reference-picker-utils.js"></script>
+    <script src="reference_picker/layer8d-reference-picker-data.js"></script>
+    <script src="reference_picker/layer8d-reference-picker-render.js"></script>
+    <script src="reference_picker/layer8d-reference-picker-events.js"></script>
+    <script src="reference_picker/layer8d-reference-picker-core.js"></script>
+    <script src="reference_picker/layer8d-reference-picker.js"></script>
+    <!-- Layer8DTable Component (load in order) -->
+    <script src="edit_table/layer8d-table-core.js"></script>
+    <script src="edit_table/layer8d-table-data.js"></script>
+    <script src="edit_table/layer8d-table-render.js"></script>
+    <script src="edit_table/layer8d-table-events.js"></script>
+    <script src="edit_table/layer8d-table-filter.js"></script>
+    <script src="edit_table/layer8d-table.js"></script>
     <!-- Shared Module Abstractions -->
-    <script src="shared/erp-service-registry.js"></script>
-    <script src="shared/erp-module-crud.js"></script>
-    <script src="shared/erp-module-navigation.js"></script>
-    <script src="shared/erp-module-factory.js"></script>
+    <script src="shared/layer8d-service-registry.js"></script>
+    <script src="shared/layer8d-module-crud.js"></script>
+    <script src="shared/layer8d-module-navigation.js"></script>
+    <script src="shared/layer8d-module-factory.js"></script>
     <!-- HCM Module -->
     <script src="hcm/hcm-config.js"></script>
     <script src="hcm/core-hr/core-hr-enums.js"></script>
@@ -310,14 +310,14 @@ limitations under the License.
     <script src="scm/supply-planning/supply-planning.js"></script>
     <script src="scm/scm-init.js"></script>
     <!-- SYS Module -->
-    <script src="sys/sys-config.js"></script>
-    <script src="sys/security/security-enums.js"></script>
-    <script src="sys/security/security-columns.js"></script>
-    <script src="sys/security/security-forms.js"></script>
-    <script src="sys/security/security.js"></script>
-    <script src="sys/security/security-users-crud.js"></script>
-    <script src="sys/security/security-roles-crud.js"></script>
-    <script src="sys/security/security-credentials-crud.js"></script>
-    <script src="sys/sys-init.js"></script>
+    <script src="sys/l8sys-config.js"></script>
+    <script src="sys/security/l8security-enums.js"></script>
+    <script src="sys/security/l8security-columns.js"></script>
+    <script src="sys/security/l8security-forms.js"></script>
+    <script src="sys/security/l8security.js"></script>
+    <script src="sys/security/l8security-users-crud.js"></script>
+    <script src="sys/security/l8security-roles-crud.js"></script>
+    <script src="sys/security/l8security-credentials-crud.js"></script>
+    <script src="sys/l8sys-init.js"></script>
 </body>
 </html>

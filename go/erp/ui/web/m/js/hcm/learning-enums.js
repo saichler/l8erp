@@ -156,34 +156,34 @@ limitations under the License.
     // ============================================================================
 
     MobileLearning.render = {
-        courseType: (v) => MobileRenderers.renderEnum(v, MobileLearning.enums.COURSE_TYPE),
+        courseType: (v) => Layer8MRenderers.renderEnum(v, MobileLearning.enums.COURSE_TYPE),
         courseDeliveryMethod: (method) => {
             const icons = { 1: '👨‍🏫', 2: '💻', 3: '🖥️', 4: '🔄', 5: '🏢', 6: '📖', 7: '🎥' };
             const label = MobileLearning.enums.COURSE_DELIVERY_METHOD[method] || 'Unknown';
-            return icons[method] ? `${icons[method]} ${MobileUtils.escapeHtml(label)}` : MobileUtils.escapeHtml(label);
+            return icons[method] ? `${icons[method]} ${Layer8MUtils.escapeHtml(label)}` : Layer8MUtils.escapeHtml(label);
         },
-        courseCategory: (v) => MobileRenderers.renderEnum(v, MobileLearning.enums.COURSE_CATEGORY),
+        courseCategory: (v) => Layer8MRenderers.renderEnum(v, MobileLearning.enums.COURSE_CATEGORY),
         courseLevel: (level) => {
             const colors = { 1: '#10b981', 2: '#3b82f6', 3: '#f59e0b', 4: '#7c3aed' };
             const label = MobileLearning.enums.COURSE_LEVEL[level] || 'Unknown';
-            return `<span style="color: ${colors[level] || '#64748b'}; font-weight: 500;">${MobileUtils.escapeHtml(label)}</span>`;
+            return `<span style="color: ${colors[level] || '#64748b'}; font-weight: 500;">${Layer8MUtils.escapeHtml(label)}</span>`;
         },
-        sessionStatus: MobileRenderers.createStatusRenderer(MobileLearning.enums.SESSION_STATUS, MobileLearning.enums.SESSION_STATUS_CLASSES),
-        courseEnrollmentStatus: MobileRenderers.createStatusRenderer(MobileLearning.enums.COURSE_ENROLLMENT_STATUS, MobileLearning.enums.COURSE_ENROLLMENT_STATUS_CLASSES),
-        certificationType: (v) => MobileRenderers.renderEnum(v, MobileLearning.enums.CERTIFICATION_TYPE),
-        certificationStatus: MobileRenderers.createStatusRenderer(MobileLearning.enums.CERTIFICATION_STATUS, MobileLearning.enums.CERTIFICATION_STATUS_CLASSES),
-        skillCategory: (v) => MobileRenderers.renderEnum(v, MobileLearning.enums.SKILL_CATEGORY),
-        trainingType: (v) => MobileRenderers.renderEnum(v, MobileLearning.enums.TRAINING_TYPE),
-        duration: MobileRenderers.renderMinutes,
-        percentage: MobileRenderers.renderProgress,
+        sessionStatus: Layer8MRenderers.createStatusRenderer(MobileLearning.enums.SESSION_STATUS, MobileLearning.enums.SESSION_STATUS_CLASSES),
+        courseEnrollmentStatus: Layer8MRenderers.createStatusRenderer(MobileLearning.enums.COURSE_ENROLLMENT_STATUS, MobileLearning.enums.COURSE_ENROLLMENT_STATUS_CLASSES),
+        certificationType: (v) => Layer8MRenderers.renderEnum(v, MobileLearning.enums.CERTIFICATION_TYPE),
+        certificationStatus: Layer8MRenderers.createStatusRenderer(MobileLearning.enums.CERTIFICATION_STATUS, MobileLearning.enums.CERTIFICATION_STATUS_CLASSES),
+        skillCategory: (v) => Layer8MRenderers.renderEnum(v, MobileLearning.enums.SKILL_CATEGORY),
+        trainingType: (v) => Layer8MRenderers.renderEnum(v, MobileLearning.enums.TRAINING_TYPE),
+        duration: Layer8MRenderers.renderMinutes,
+        percentage: Layer8MRenderers.renderProgress,
         proficiency: (level) => {
             if (!level) return '-';
             const stars = '★'.repeat(level) + '☆'.repeat(5 - level);
             return `<span title="Level ${level}/5">${stars}</span>`;
         },
-        rating: MobileRenderers.renderRating,
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate
+        rating: Layer8MRenderers.renderRating,
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate
     };
 
 })();

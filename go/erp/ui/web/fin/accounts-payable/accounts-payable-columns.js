@@ -21,7 +21,7 @@ limitations under the License.
     // Ensure AccountsPayable namespace exists
     window.AccountsPayable = window.AccountsPayable || {};
 
-    const { renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
     const enums = AccountsPayable.enums;
     const render = AccountsPayable.render;
 

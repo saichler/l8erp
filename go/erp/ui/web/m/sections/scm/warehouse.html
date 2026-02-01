@@ -43,7 +43,7 @@ let currentWarehouseService = 'warehouses';
 
 const WAREHOUSE_SERVICES = {
     'warehouses': {
-        endpoint: MobileConfig.resolveEndpoint('/50/Warehouse'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/Warehouse'),
         modelName: 'ScmWarehouse',
         idField: 'warehouseId',
         columns: [
@@ -65,7 +65,7 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'bins': {
-        endpoint: MobileConfig.resolveEndpoint('/50/Bin'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/Bin'),
         modelName: 'ScmBin',
         idField: 'binId',
         columns: [
@@ -88,14 +88,14 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'receiving-orders': {
-        endpoint: MobileConfig.resolveEndpoint('/50/RecvOrder'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/RecvOrder'),
         modelName: 'ScmReceivingOrder',
         idField: 'receivingOrderId',
         columns: [
             { key: 'receivingOrderId', label: 'ID', primary: true },
             { key: 'orderNumber', label: 'Order #', secondary: true, filterKey: 'orderNumber' },
             { key: 'vendorId', label: 'Vendor' },
-            { key: 'expectedDate', label: 'Expected', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'expectedDate', label: 'Expected', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') },
             { key: 'warehouseId', label: 'Warehouse' }
         ],
@@ -111,7 +111,7 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'putaway-tasks': {
-        endpoint: MobileConfig.resolveEndpoint('/50/PutAway'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/PutAway'),
         modelName: 'ScmPutawayTask',
         idField: 'taskId',
         columns: [
@@ -134,7 +134,7 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'pick-tasks': {
-        endpoint: MobileConfig.resolveEndpoint('/50/PickTask'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/PickTask'),
         modelName: 'ScmPickTask',
         idField: 'taskId',
         columns: [
@@ -156,7 +156,7 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'pack-tasks': {
-        endpoint: MobileConfig.resolveEndpoint('/50/PackTask'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/PackTask'),
         modelName: 'ScmPackTask',
         idField: 'taskId',
         columns: [
@@ -177,7 +177,7 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'ship-tasks': {
-        endpoint: MobileConfig.resolveEndpoint('/50/ShipTask'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/ShipTask'),
         modelName: 'ScmShipTask',
         idField: 'taskId',
         columns: [
@@ -185,7 +185,7 @@ const WAREHOUSE_SERVICES = {
             { key: 'shipmentId', label: 'Shipment', secondary: true },
             { key: 'carrierId', label: 'Carrier' },
             { key: 'dockId', label: 'Dock' },
-            { key: 'scheduledDate', label: 'Scheduled', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'scheduledDate', label: 'Scheduled', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
         addText: 'Add Ship Task',
@@ -199,14 +199,14 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'wave-plans': {
-        endpoint: MobileConfig.resolveEndpoint('/50/WavePlan'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/WavePlan'),
         modelName: 'ScmWavePlan',
         idField: 'wavePlanId',
         columns: [
             { key: 'wavePlanId', label: 'ID', primary: true },
             { key: 'waveName', label: 'Wave', secondary: true, filterKey: 'waveName' },
             { key: 'warehouseId', label: 'Warehouse' },
-            { key: 'plannedDate', label: 'Planned', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'plannedDate', label: 'Planned', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'orderCount', label: 'Orders' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
@@ -221,14 +221,14 @@ const WAREHOUSE_SERVICES = {
         ]
     },
     'dock-schedules': {
-        endpoint: MobileConfig.resolveEndpoint('/50/DockSched'),
+        endpoint: Layer8MConfig.resolveEndpoint('/50/DockSched'),
         modelName: 'ScmDockSchedule',
         idField: 'scheduleId',
         columns: [
             { key: 'scheduleId', label: 'ID', primary: true },
             { key: 'dockId', label: 'Dock', secondary: true },
             { key: 'carrierId', label: 'Carrier' },
-            { key: 'scheduledDate', label: 'Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'scheduledDate', label: 'Date', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'direction', label: 'Direction' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
@@ -260,7 +260,7 @@ function loadWarehouseService(serviceName) {
     currentWarehouseService = serviceName;
     const config = WAREHOUSE_SERVICES[serviceName];
 
-    warehouseTable = new MobileEditTable('warehouse-table', {
+    warehouseTable = new Layer8MEditTable('warehouse-table', {
         endpoint: config.endpoint,
         modelName: config.modelName,
         columns: config.columns,
@@ -278,29 +278,29 @@ function openWarehouseForm(config, item = null) {
     const title = isEdit ? 'Edit' : config.addText;
 
     const formDef = { fields: config.formFields };
-    const content = MobileForms.renderForm(formDef, item || {});
+    const content = Layer8MForms.renderForm(formDef, item || {});
 
-    MobilePopup.show({
+    Layer8MPopup.show({
         title: title,
         content: content,
         size: 'medium',
         saveButtonText: isEdit ? 'Update' : 'Create',
         onSave: async (popup) => {
             const body = popup.body;
-            const errors = MobileForms.validateForm(body);
-            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+            const errors = Layer8MForms.validateForm(body);
+            if (errors.length > 0) { Layer8MForms.showErrors(body, errors); return; }
 
-            const data = MobileForms.getFormData(body);
+            const data = Layer8MForms.getFormData(body);
             if (isEdit) data[config.idField] = item[config.idField];
 
             try {
-                if (isEdit) await MobileAuth.put(config.endpoint, data);
-                else await MobileAuth.post(config.endpoint, data);
-                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
-                MobilePopup.close();
+                if (isEdit) await Layer8MAuth.put(config.endpoint, data);
+                else await Layer8MAuth.post(config.endpoint, data);
+                Layer8MUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                Layer8MPopup.close();
                 warehouseTable.refresh();
             } catch (error) {
-                MobileUtils.showError('Failed to save');
+                Layer8MUtils.showError('Failed to save');
             }
         }
     });
@@ -308,14 +308,14 @@ function openWarehouseForm(config, item = null) {
 
 async function deleteWarehouseItem(config, id, item) {
     const name = item.warehouseCode || item.binCode || item.orderNumber || item.waveName || id;
-    const confirmed = await MobileConfirm.confirmDelete(name);
+    const confirmed = await Layer8MConfirm.confirmDelete(name);
     if (confirmed) {
         try {
-            await MobileAuth.delete(config.endpoint + '?id=' + id);
-            MobileUtils.showSuccess('Deleted');
+            await Layer8MAuth.delete(config.endpoint + '?id=' + id);
+            Layer8MUtils.showSuccess('Deleted');
             warehouseTable.refresh();
         } catch (error) {
-            MobileUtils.showError('Failed to delete');
+            Layer8MUtils.showError('Failed to delete');
         }
     }
 }

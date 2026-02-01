@@ -79,7 +79,7 @@ limitations under the License.
 .header-logo-text {
     font-size: var(--font-size-lg);
     font-weight: 700;
-    color: var(--erp-primary);
+    color: var(--layer8d-primary);
 }
 
 .header-actions {
@@ -124,7 +124,7 @@ limitations under the License.
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: var(--erp-primary);
+    background: var(--layer8d-primary);
     color: white;
     display: flex;
     align-items: center;

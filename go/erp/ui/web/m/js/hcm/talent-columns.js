@@ -41,7 +41,7 @@ limitations under the License.
             { key: 'priority', label: 'Priority', sortKey: 'priority', filterKey: 'priority', enumValues: enums.GOAL_PRIORITY_VALUES, render: (item) => render.goalPriority(item.priority) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.GOAL_STATUS_VALUES, render: (item) => render.goalStatus(item.status) },
             { key: 'completionPercentage', label: 'Progress', sortKey: 'completionPercentage', render: (item) => render.percentage(item.completionPercentage) },
-            { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => MobileRenderers.renderDate(item.dueDate) }
+            { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => Layer8MRenderers.renderDate(item.dueDate) }
         ],
 
         Feedback: [
@@ -51,7 +51,7 @@ limitations under the License.
             { key: 'feedbackType', label: 'Type', sortKey: 'feedbackType', filterKey: 'feedbackType', enumValues: enums.FEEDBACK_TYPE_VALUES, render: (item) => render.feedbackType(item.feedbackType) },
             { key: 'relationship', label: 'Relationship', sortKey: 'relationship', filterKey: 'relationship', enumValues: enums.FEEDBACK_RELATIONSHIP_VALUES, render: (item) => render.feedbackRelationship(item.relationship) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.FEEDBACK_STATUS_VALUES, render: (item) => render.feedbackStatus(item.status) },
-            { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => MobileRenderers.renderDate(item.dueDate) }
+            { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => Layer8MRenderers.renderDate(item.dueDate) }
         ],
 
         CareerPath: [
@@ -60,7 +60,7 @@ limitations under the License.
             { key: 'jobFamilyId', label: 'Job Family', sortKey: 'jobFamilyId', filterKey: 'jobFamilyId' },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
             { key: 'steps', label: 'Steps', render: (item) => item.steps ? item.steps.length : 0 },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
         SuccessionPlan: [
@@ -70,7 +70,7 @@ limitations under the License.
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.SUCCESSION_PLAN_STATUS_VALUES, render: (item) => render.successionPlanStatus(item.status) },
             { key: 'vacancyRisk', label: 'Vacancy Risk', sortKey: 'vacancyRisk', filterKey: 'vacancyRisk', enumValues: enums.RISK_LEVEL_VALUES, render: (item) => render.riskLevel(item.vacancyRisk) },
             { key: 'candidates', label: 'Candidates', render: (item) => item.candidates ? item.candidates.length : 0 },
-            { key: 'nextReviewDate', label: 'Next Review', sortKey: 'nextReviewDate', render: (item) => MobileRenderers.renderDate(item.nextReviewDate) }
+            { key: 'nextReviewDate', label: 'Next Review', sortKey: 'nextReviewDate', render: (item) => Layer8MRenderers.renderDate(item.nextReviewDate) }
         ],
 
         JobRequisition: [
@@ -81,16 +81,16 @@ limitations under the License.
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.REQUISITION_STATUS_VALUES, render: (item) => render.requisitionStatus(item.status) },
             { key: 'openings', label: 'Openings', sortKey: 'openings' },
             { key: 'applicantCount', label: 'Applicants', sortKey: 'applicantCount' },
-            { key: 'targetStartDate', label: 'Target Start', sortKey: 'targetStartDate', render: (item) => MobileRenderers.renderDate(item.targetStartDate) }
+            { key: 'targetStartDate', label: 'Target Start', sortKey: 'targetStartDate', render: (item) => Layer8MRenderers.renderDate(item.targetStartDate) }
         ],
 
         Applicant: [
             { key: 'applicantId', label: 'ID', sortKey: 'applicantId', filterKey: 'applicantId' },
-            { key: 'name', label: 'Name', sortKey: 'lastName', filterKey: 'lastName', render: (item) => `${MobileUtils.escapeHtml(item.firstName || '')} ${MobileUtils.escapeHtml(item.lastName || '')}`.trim() },
+            { key: 'name', label: 'Name', sortKey: 'lastName', filterKey: 'lastName', render: (item) => `${Layer8MUtils.escapeHtml(item.firstName || '')} ${Layer8MUtils.escapeHtml(item.lastName || '')}`.trim() },
             { key: 'email', label: 'Email', sortKey: 'email', filterKey: 'email' },
             { key: 'phone', label: 'Phone', sortKey: 'phone', filterKey: 'phone' },
             { key: 'source', label: 'Source', sortKey: 'source', filterKey: 'source', enumValues: enums.APPLICANT_SOURCE_VALUES, render: (item) => render.applicantSource(item.source) },
-            { key: 'createdDate', label: 'Applied', sortKey: 'createdDate', render: (item) => MobileRenderers.renderDate(item.createdDate) }
+            { key: 'createdDate', label: 'Applied', sortKey: 'createdDate', render: (item) => Layer8MRenderers.renderDate(item.createdDate) }
         ],
 
         Application: [
@@ -100,7 +100,7 @@ limitations under the License.
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.APPLICATION_STATUS_VALUES, render: (item) => render.applicationStatus(item.status) },
             { key: 'stage', label: 'Stage', sortKey: 'stage', filterKey: 'stage', enumValues: enums.APPLICATION_STAGE_VALUES, render: (item) => render.applicationStage(item.stage) },
             { key: 'overallRating', label: 'Rating', sortKey: 'overallRating', render: (item) => render.rating(item.overallRating) },
-            { key: 'appliedDate', label: 'Applied', sortKey: 'appliedDate', render: (item) => MobileRenderers.renderDate(item.appliedDate) }
+            { key: 'appliedDate', label: 'Applied', sortKey: 'appliedDate', render: (item) => Layer8MRenderers.renderDate(item.appliedDate) }
         ],
 
         OnboardingTask: [
@@ -110,7 +110,7 @@ limitations under the License.
             { key: 'category', label: 'Category', sortKey: 'category', filterKey: 'category', enumValues: enums.ONBOARDING_TASK_CATEGORY_VALUES, render: (item) => render.onboardingTaskCategory(item.category) },
             { key: 'ownerType', label: 'Owner', sortKey: 'ownerType', filterKey: 'ownerType', enumValues: enums.TASK_OWNER_VALUES, render: (item) => render.taskOwner(item.ownerType) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.ONBOARDING_TASK_STATUS_VALUES, render: (item) => render.onboardingTaskStatus(item.status) },
-            { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => MobileRenderers.renderDate(item.dueDate) }
+            { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => Layer8MRenderers.renderDate(item.dueDate) }
         ]
     };
 

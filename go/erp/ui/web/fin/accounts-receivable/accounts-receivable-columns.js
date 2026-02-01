@@ -21,7 +21,7 @@ limitations under the License.
     // Ensure AccountsReceivable namespace exists
     window.AccountsReceivable = window.AccountsReceivable || {};
 
-    const { renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
     const render = AccountsReceivable.render;
 
     // ============================================================================

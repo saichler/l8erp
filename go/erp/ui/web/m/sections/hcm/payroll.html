@@ -42,7 +42,7 @@ let currentPayrollService = 'payroll-runs';
 
 const PAYROLL_SERVICES = {
     'payroll-runs': {
-        endpoint: MobileConfig.resolveEndpoint('/30/PayRun'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/PayRun'),
         modelName: 'PayrollRun',
         idField: 'payrollRunId',
         columns: [
@@ -50,9 +50,9 @@ const PAYROLL_SERVICES = {
             { key: 'name', label: 'Name', secondary: true, filterKey: 'name' },
             { key: 'runType', label: 'Type', formatter: (v) => ({ 1: 'Regular', 2: 'Supplemental', 3: 'Bonus', 4: 'Correction', 5: 'Final' }[v] || '-') },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Pending', 3: 'Approved', 4: 'Processing', 5: 'Completed', 6: 'Cancelled', 7: 'Error' }[v] || '-') },
-            { key: 'paymentDate', label: 'Pay Date', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'paymentDate', label: 'Pay Date', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'employeeCount', label: 'Employees' },
-            { key: 'totalNet', label: 'Total Net', formatter: (v) => MobileUtils.formatMoney(v) }
+            { key: 'totalNet', label: 'Total Net', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'New Payroll Run',
         formFields: [
@@ -66,17 +66,17 @@ const PAYROLL_SERVICES = {
         ]
     },
     'payslips': {
-        endpoint: MobileConfig.resolveEndpoint('/30/Payslip'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Payslip'),
         modelName: 'Payslip',
         idField: 'payslipId',
         columns: [
             { key: 'payslipId', label: 'ID', primary: true, filterKey: 'payslipId' },
             { key: 'employeeId', label: 'Employee', secondary: true },
             { key: 'payrollRunId', label: 'Payroll Run' },
-            { key: 'paymentDate', label: 'Pay Date', formatter: (v) => MobileUtils.formatDate(v) },
-            { key: 'grossPay', label: 'Gross', formatter: (v) => MobileUtils.formatMoney(v) },
-            { key: 'totalDeductions', label: 'Deductions', formatter: (v) => MobileUtils.formatMoney(v) },
-            { key: 'netPay', label: 'Net', formatter: (v) => MobileUtils.formatMoney(v) }
+            { key: 'paymentDate', label: 'Pay Date', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'grossPay', label: 'Gross', formatter: (v) => Layer8MUtils.formatMoney(v) },
+            { key: 'totalDeductions', label: 'Deductions', formatter: (v) => Layer8MUtils.formatMoney(v) },
+            { key: 'netPay', label: 'Net', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'Add Payslip',
         formFields: [
@@ -90,7 +90,7 @@ const PAYROLL_SERVICES = {
         ]
     },
     'pay-structures': {
-        endpoint: MobileConfig.resolveEndpoint('/30/PayStruct'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/PayStruct'),
         modelName: 'PayStructure',
         idField: 'payStructureId',
         columns: [
@@ -115,7 +115,7 @@ const PAYROLL_SERVICES = {
         ]
     },
     'pay-components': {
-        endpoint: MobileConfig.resolveEndpoint('/30/PayComp'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/PayComp'),
         modelName: 'PayComponent',
         idField: 'componentId',
         columns: [
@@ -144,7 +144,7 @@ const PAYROLL_SERVICES = {
         ]
     },
     'direct-deposits': {
-        endpoint: MobileConfig.resolveEndpoint('/30/DirDep'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/DirDep'),
         modelName: 'DirectDeposit',
         idField: 'directDepositId',
         columns: [
@@ -172,7 +172,7 @@ const PAYROLL_SERVICES = {
         ]
     },
     'tax-withholdings': {
-        endpoint: MobileConfig.resolveEndpoint('/30/TaxWith'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/TaxWith'),
         modelName: 'TaxWithholding',
         idField: 'withholdingId',
         columns: [
@@ -198,7 +198,7 @@ const PAYROLL_SERVICES = {
         ]
     },
     'garnishments': {
-        endpoint: MobileConfig.resolveEndpoint('/30/Garnish'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/Garnish'),
         modelName: 'Garnishment',
         idField: 'garnishmentId',
         columns: [
@@ -208,7 +208,7 @@ const PAYROLL_SERVICES = {
             { key: 'caseNumber', label: 'Case #', filterKey: 'caseNumber' },
             { key: 'payeeName', label: 'Payee', filterKey: 'payeeName' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Active', 2: 'Suspended', 3: 'Completed', 4: 'Cancelled' }[v] || '-') },
-            { key: 'amountPerPeriod', label: 'Per Period', formatter: (v) => MobileUtils.formatMoney(v) }
+            { key: 'amountPerPeriod', label: 'Per Period', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'Add Garnishment',
         formFields: [
@@ -227,7 +227,7 @@ const PAYROLL_SERVICES = {
         ]
     },
     'year-end-docs': {
-        endpoint: MobileConfig.resolveEndpoint('/30/YrEndDoc'),
+        endpoint: Layer8MConfig.resolveEndpoint('/30/YrEndDoc'),
         modelName: 'YearEndDocument',
         idField: 'documentId',
         columns: [
@@ -236,7 +236,7 @@ const PAYROLL_SERVICES = {
             { key: 'taxYear', label: 'Year', secondary: true, filterKey: 'taxYear' },
             { key: 'documentType', label: 'Type', formatter: (v) => ({ 1: 'W-2', 2: 'W-2C', 3: '1099-MISC', 4: '1099-NEC', 5: 'T4', 6: 'T4A' }[v] || '-') },
             { key: 'status', label: 'Status', formatter: (v) => ({ 1: 'Draft', 2: 'Generated', 3: 'Issued', 4: 'Filed' }[v] || '-') },
-            { key: 'issuedDate', label: 'Issued', formatter: (v) => MobileUtils.formatDate(v) },
+            { key: 'issuedDate', label: 'Issued', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'isCorrected', label: 'Corrected', formatter: (v) => v ? 'Yes' : 'No' }
         ],
         addText: 'Add Year-End Document',
@@ -270,7 +270,7 @@ function loadPayrollService(serviceName) {
     currentPayrollService = serviceName;
     const config = PAYROLL_SERVICES[serviceName];
 
-    payrollTable = new MobileEditTable('payroll-table', {
+    payrollTable = new Layer8MEditTable('payroll-table', {
         endpoint: config.endpoint,
         modelName: config.modelName,
         columns: config.columns,
@@ -288,46 +288,46 @@ function openPayrollForm(config, item = null) {
     const title = isEdit ? 'Edit ' + config.modelName : config.addText;
 
     const formDef = { fields: config.formFields };
-    const content = MobileForms.renderForm(formDef, item || {});
+    const content = Layer8MForms.renderForm(formDef, item || {});
 
-    MobilePopup.show({
+    Layer8MPopup.show({
         title: title,
         content: content,
         size: 'large',
         saveButtonText: isEdit ? 'Update' : 'Create',
         onSave: async (popup) => {
             const body = popup.body;
-            const errors = MobileForms.validateForm(body);
-            if (errors.length > 0) { MobileForms.showErrors(body, errors); return; }
+            const errors = Layer8MForms.validateForm(body);
+            if (errors.length > 0) { Layer8MForms.showErrors(body, errors); return; }
 
-            const data = MobileForms.getFormData(body);
+            const data = Layer8MForms.getFormData(body);
             if (isEdit) data[config.idField] = item[config.idField];
 
             try {
                 if (isEdit) {
-                    await MobileAuth.put(config.endpoint, data);
+                    await Layer8MAuth.put(config.endpoint, data);
                 } else {
-                    await MobileAuth.post(config.endpoint, data);
+                    await Layer8MAuth.post(config.endpoint, data);
                 }
-                MobileUtils.showSuccess(isEdit ? 'Updated' : 'Created');
-                MobilePopup.close();
+                Layer8MUtils.showSuccess(isEdit ? 'Updated' : 'Created');
+                Layer8MPopup.close();
                 payrollTable.refresh();
             } catch (error) {
-                MobileUtils.showError('Failed to save');
+                Layer8MUtils.showError('Failed to save');
             }
         }
     });
 }
 
 async function deletePayrollItem(config, id, item) {
-    const confirmed = await MobileConfirm.confirmDelete(item.name || id);
+    const confirmed = await Layer8MConfirm.confirmDelete(item.name || id);
     if (confirmed) {
         try {
-            await MobileAuth.delete(config.endpoint + '?id=' + id);
-            MobileUtils.showSuccess('Deleted');
+            await Layer8MAuth.delete(config.endpoint + '?id=' + id);
+            Layer8MUtils.showSuccess('Deleted');
             payrollTable.refresh();
         } catch (error) {
-            MobileUtils.showError('Failed to delete');
+            Layer8MUtils.showError('Failed to delete');
         }
     }
 }

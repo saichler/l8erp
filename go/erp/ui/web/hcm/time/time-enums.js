@@ -22,8 +22,8 @@ limitations under the License.
     window.Time = window.Time || {};
 
     // Import shared utilities
-    const { escapeHtml, formatDate } = ERPUtils;
-    const { renderEnum, createStatusRenderer, renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { escapeHtml, formatDate } = Layer8DUtils;
+    const { renderEnum, createStatusRenderer, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
 
     // ============================================================================
     // ENUM DEFINITIONS
@@ -47,11 +47,11 @@ limitations under the License.
     };
 
     const TIMESHEET_STATUS_CLASSES = {
-        1: 'erp-status-inactive',
-        2: 'erp-status-pending',
-        3: 'erp-status-active',
-        4: 'erp-status-terminated',
-        5: 'erp-status-active'
+        1: 'layer8d-status-inactive',
+        2: 'layer8d-status-pending',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-terminated',
+        5: 'layer8d-status-active'
     };
 
     const TIME_ENTRY_TYPE = {
@@ -162,12 +162,12 @@ limitations under the License.
     };
 
     const LEAVE_REQUEST_STATUS_CLASSES = {
-        1: 'erp-status-inactive',
-        2: 'erp-status-pending',
-        3: 'erp-status-active',
-        4: 'erp-status-terminated',
-        5: 'erp-status-terminated',
-        6: 'erp-status-active'
+        1: 'layer8d-status-inactive',
+        2: 'layer8d-status-pending',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-terminated',
+        5: 'layer8d-status-terminated',
+        6: 'layer8d-status-active'
     };
 
     const ACCRUAL_METHOD = {
@@ -242,9 +242,9 @@ limitations under the License.
     };
 
     const SCHEDULE_STATUS_CLASSES = {
-        1: 'erp-status-inactive',
-        2: 'erp-status-active',
-        3: 'erp-status-inactive'
+        1: 'layer8d-status-inactive',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-inactive'
     };
 
     const HOLIDAY_TYPE = {
@@ -276,9 +276,9 @@ limitations under the License.
     };
 
     const ABSENCE_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-active',
-        3: 'erp-status-terminated'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-terminated'
     };
 
     // ============================================================================

@@ -19,7 +19,7 @@ limitations under the License.
     'use strict';
 
     // Import shared utilities
-    const { renderEnum, renderBoolean, renderDate } = ERPRenderers;
+    const { renderEnum, renderBoolean, renderDate } = Layer8DRenderers;
 
     // Get enums and render functions from time-enums.js
     const enums = window.Time.enums;

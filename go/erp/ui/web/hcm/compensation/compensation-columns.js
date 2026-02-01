@@ -19,7 +19,7 @@ limitations under the License.
     'use strict';
 
     // Import shared utilities
-    const { renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
 
     // Get enums and render functions from compensation-enums.js
     const enums = window.Compensation.enums;

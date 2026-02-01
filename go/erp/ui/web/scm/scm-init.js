@@ -18,7 +18,7 @@ limitations under the License.
 (function() {
     'use strict';
 
-    ERPModuleFactory.create({
+    Layer8DModuleFactory.create({
         namespace: 'SCM',
         defaultModule: 'procurement',
         defaultService: 'purchase-requisitions',

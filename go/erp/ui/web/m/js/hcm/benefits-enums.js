@@ -207,33 +207,33 @@ limitations under the License.
     // ============================================================================
 
     MobileBenefits.render = {
-        benefitPlanType: (v) => MobileRenderers.renderEnum(v, MobileBenefits.enums.BENEFIT_PLAN_TYPE),
-        benefitPlanCategory: (v) => MobileRenderers.renderEnum(v, MobileBenefits.enums.BENEFIT_PLAN_CATEGORY),
-        coverageLevel: (v) => MobileRenderers.renderEnum(v, MobileBenefits.enums.COVERAGE_LEVEL),
-        enrollmentStatus: MobileRenderers.createStatusRenderer(
+        benefitPlanType: (v) => Layer8MRenderers.renderEnum(v, MobileBenefits.enums.BENEFIT_PLAN_TYPE),
+        benefitPlanCategory: (v) => Layer8MRenderers.renderEnum(v, MobileBenefits.enums.BENEFIT_PLAN_CATEGORY),
+        coverageLevel: (v) => Layer8MRenderers.renderEnum(v, MobileBenefits.enums.COVERAGE_LEVEL),
+        enrollmentStatus: Layer8MRenderers.createStatusRenderer(
             MobileBenefits.enums.ENROLLMENT_STATUS,
             MobileBenefits.enums.ENROLLMENT_STATUS_CLASSES
         ),
-        enrollmentReason: (v) => MobileRenderers.renderEnum(v, MobileBenefits.enums.ENROLLMENT_REASON),
-        dependentRelationship: (v) => MobileRenderers.renderEnum(v, MobileBenefits.enums.DEPENDENT_RELATIONSHIP),
-        lifeEventType: (v) => MobileRenderers.renderEnum(v, MobileBenefits.enums.LIFE_EVENT_TYPE),
-        lifeEventStatus: MobileRenderers.createStatusRenderer(
+        enrollmentReason: (v) => Layer8MRenderers.renderEnum(v, MobileBenefits.enums.ENROLLMENT_REASON),
+        dependentRelationship: (v) => Layer8MRenderers.renderEnum(v, MobileBenefits.enums.DEPENDENT_RELATIONSHIP),
+        lifeEventType: (v) => Layer8MRenderers.renderEnum(v, MobileBenefits.enums.LIFE_EVENT_TYPE),
+        lifeEventStatus: Layer8MRenderers.createStatusRenderer(
             MobileBenefits.enums.LIFE_EVENT_STATUS,
             MobileBenefits.enums.LIFE_EVENT_STATUS_CLASSES
         ),
-        carrierType: (v) => MobileRenderers.renderEnum(v, MobileBenefits.enums.CARRIER_TYPE),
-        cobraEventType: (v) => MobileRenderers.renderEnum(v, MobileBenefits.enums.COBRA_EVENT_TYPE),
-        cobraStatus: MobileRenderers.createStatusRenderer(
+        carrierType: (v) => Layer8MRenderers.renderEnum(v, MobileBenefits.enums.CARRIER_TYPE),
+        cobraEventType: (v) => Layer8MRenderers.renderEnum(v, MobileBenefits.enums.COBRA_EVENT_TYPE),
+        cobraStatus: Layer8MRenderers.createStatusRenderer(
             MobileBenefits.enums.COBRA_STATUS,
             MobileBenefits.enums.COBRA_STATUS_CLASSES
         ),
-        verificationStatus: MobileRenderers.createStatusRenderer(
+        verificationStatus: Layer8MRenderers.createStatusRenderer(
             MobileBenefits.enums.VERIFICATION_STATUS,
             MobileBenefits.enums.VERIFICATION_STATUS_CLASSES
         ),
-        money: MobileRenderers.renderMoney,
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate
+        money: Layer8MRenderers.renderMoney,
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate
     };
 
 })();

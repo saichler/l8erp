@@ -75,19 +75,19 @@ limitations under the License.
     // ============================================================================
 
     MobileGeneralLedger.render = {
-        accountType: (type) => MobileRenderers.renderEnum(type, MobileGeneralLedger.enums.ACCOUNT_TYPE),
-        balanceType: (type) => MobileRenderers.renderEnum(type, MobileGeneralLedger.enums.BALANCE_TYPE),
-        journalEntryStatus: MobileRenderers.createStatusRenderer(
+        accountType: (type) => Layer8MRenderers.renderEnum(type, MobileGeneralLedger.enums.ACCOUNT_TYPE),
+        balanceType: (type) => Layer8MRenderers.renderEnum(type, MobileGeneralLedger.enums.BALANCE_TYPE),
+        journalEntryStatus: Layer8MRenderers.createStatusRenderer(
             MobileGeneralLedger.enums.JOURNAL_ENTRY_STATUS,
             MobileGeneralLedger.enums.JOURNAL_ENTRY_STATUS_CLASSES
         ),
-        fiscalPeriodStatus: MobileRenderers.createStatusRenderer(
+        fiscalPeriodStatus: Layer8MRenderers.createStatusRenderer(
             MobileGeneralLedger.enums.FISCAL_PERIOD_STATUS,
             MobileGeneralLedger.enums.FISCAL_PERIOD_STATUS_CLASSES
         ),
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate,
-        money: MobileRenderers.renderMoney
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate,
+        money: Layer8MRenderers.renderMoney
     };
 
 })();

@@ -21,7 +21,7 @@ limitations under the License.
     // Ensure WarehouseManagement namespace exists
     window.WarehouseManagement = window.WarehouseManagement || {};
 
-    const { renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
     const render = WarehouseManagement.render;
 
     // ============================================================================

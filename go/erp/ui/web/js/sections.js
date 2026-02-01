@@ -49,8 +49,8 @@ const sectionInitializers = {
         }
     },
     system: () => {
-        if (typeof initializeSYS === 'function') {
-            initializeSYS();
+        if (typeof initializeL8Sys === 'function') {
+            initializeL8Sys();
         }
     }
 };

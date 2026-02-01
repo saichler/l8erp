@@ -48,10 +48,10 @@ limitations under the License.
     };
 
     ScmDemandPlanning.enums.TASK_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-active',
-        3: 'erp-status-active',
-        4: 'erp-status-terminated'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-terminated'
     };
 
     // ============================================================================
@@ -61,15 +61,15 @@ limitations under the License.
     // Create render functions using shared utilities
     ScmDemandPlanning.render = {};
 
-    ScmDemandPlanning.render.forecastMethod = (type) => ERPRenderers.renderEnum(type, ScmDemandPlanning.enums.FORECAST_METHOD);
+    ScmDemandPlanning.render.forecastMethod = (type) => Layer8DRenderers.renderEnum(type, ScmDemandPlanning.enums.FORECAST_METHOD);
 
-    ScmDemandPlanning.render.taskStatus = ERPRenderers.createStatusRenderer(
+    ScmDemandPlanning.render.taskStatus = Layer8DRenderers.createStatusRenderer(
         ScmDemandPlanning.enums.TASK_STATUS,
         ScmDemandPlanning.enums.TASK_STATUS_CLASSES
     );
 
-    ScmDemandPlanning.render.boolean = ERPRenderers.renderBoolean;
-    ScmDemandPlanning.render.date = ERPRenderers.renderDate;
-    ScmDemandPlanning.render.money = ERPRenderers.renderMoney;
+    ScmDemandPlanning.render.boolean = Layer8DRenderers.renderBoolean;
+    ScmDemandPlanning.render.date = Layer8DRenderers.renderDate;
+    ScmDemandPlanning.render.money = Layer8DRenderers.renderMoney;
 
 })();

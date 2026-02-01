@@ -29,7 +29,7 @@ limitations under the License.
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'carrierType', label: 'Type', sortKey: 'carrierType', filterKey: 'carrierType', enumValues: enums.CARRIER_TYPE_VALUES, render: (item) => render.carrierType(item.carrierType) },
             { key: 'contactInfo', label: 'Contact', sortKey: 'contactInfo', filterKey: 'contactInfo' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => MobileRenderers.renderBoolean(item.isActive) }
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
         ScmFreightRate: [
@@ -37,17 +37,17 @@ limitations under the License.
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
             { key: 'origin', label: 'Origin', sortKey: 'origin', filterKey: 'origin' },
             { key: 'destination', label: 'Destination', sortKey: 'destination', filterKey: 'destination' },
-            { key: 'ratePerUnit', label: 'Rate/Unit', sortKey: 'ratePerUnit', render: (item) => MobileRenderers.renderMoney(item.ratePerUnit) },
-            { key: 'effectiveDate', label: 'Effective', sortKey: 'effectiveDate', render: (item) => MobileRenderers.renderDate(item.effectiveDate) }
+            { key: 'ratePerUnit', label: 'Rate/Unit', sortKey: 'ratePerUnit', render: (item) => Layer8MRenderers.renderMoney(item.ratePerUnit) },
+            { key: 'effectiveDate', label: 'Effective', sortKey: 'effectiveDate', render: (item) => Layer8MRenderers.renderDate(item.effectiveDate) }
         ],
 
         ScmShipment: [
             { key: 'shipmentId', label: 'ID', sortKey: 'shipmentId', filterKey: 'shipmentId' },
             { key: 'shipmentNumber', label: 'Shipment #', sortKey: 'shipmentNumber', filterKey: 'shipmentNumber' },
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
-            { key: 'shipDate', label: 'Ship Date', sortKey: 'shipDate', render: (item) => MobileRenderers.renderDate(item.shipDate) },
+            { key: 'shipDate', label: 'Ship Date', sortKey: 'shipDate', render: (item) => Layer8MRenderers.renderDate(item.shipDate) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.SHIPMENT_STATUS_VALUES, render: (item) => render.shipmentStatus(item.status) },
-            { key: 'totalCost', label: 'Cost', sortKey: 'totalCost', render: (item) => MobileRenderers.renderMoney(item.totalCost) }
+            { key: 'totalCost', label: 'Cost', sortKey: 'totalCost', render: (item) => Layer8MRenderers.renderMoney(item.totalCost) }
         ],
 
         ScmRoute: [
@@ -71,25 +71,25 @@ limitations under the License.
         ScmDeliveryProof: [
             { key: 'proofId', label: 'ID', sortKey: 'proofId', filterKey: 'proofId' },
             { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
-            { key: 'deliveryDate', label: 'Delivered', sortKey: 'deliveryDate', render: (item) => MobileRenderers.renderDate(item.deliveryDate) },
+            { key: 'deliveryDate', label: 'Delivered', sortKey: 'deliveryDate', render: (item) => Layer8MRenderers.renderDate(item.deliveryDate) },
             { key: 'receivedBy', label: 'Received By', sortKey: 'receivedBy', filterKey: 'receivedBy' },
-            { key: 'isComplete', label: 'Complete', sortKey: 'isComplete', render: (item) => MobileRenderers.renderBoolean(item.isComplete) }
+            { key: 'isComplete', label: 'Complete', sortKey: 'isComplete', render: (item) => Layer8MRenderers.renderBoolean(item.isComplete) }
         ],
 
         ScmFreightAudit: [
             { key: 'auditId', label: 'ID', sortKey: 'auditId', filterKey: 'auditId' },
             { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
-            { key: 'invoicedAmount', label: 'Invoiced', sortKey: 'invoicedAmount', render: (item) => MobileRenderers.renderMoney(item.invoicedAmount) },
-            { key: 'auditedAmount', label: 'Audited', sortKey: 'auditedAmount', render: (item) => MobileRenderers.renderMoney(item.auditedAmount) },
-            { key: 'variance', label: 'Variance', sortKey: 'variance', render: (item) => MobileRenderers.renderMoney(item.variance) }
+            { key: 'invoicedAmount', label: 'Invoiced', sortKey: 'invoicedAmount', render: (item) => Layer8MRenderers.renderMoney(item.invoicedAmount) },
+            { key: 'auditedAmount', label: 'Audited', sortKey: 'auditedAmount', render: (item) => Layer8MRenderers.renderMoney(item.auditedAmount) },
+            { key: 'variance', label: 'Variance', sortKey: 'variance', render: (item) => Layer8MRenderers.renderMoney(item.variance) }
         ],
 
         ScmReturnAuthorization: [
             { key: 'rmaId', label: 'ID', sortKey: 'rmaId', filterKey: 'rmaId' },
             { key: 'rmaNumber', label: 'RMA #', sortKey: 'rmaNumber', filterKey: 'rmaNumber' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'requestDate', label: 'Requested', sortKey: 'requestDate', render: (item) => MobileRenderers.renderDate(item.requestDate) },
+            { key: 'requestDate', label: 'Requested', sortKey: 'requestDate', render: (item) => Layer8MRenderers.renderDate(item.requestDate) },
             { key: 'reason', label: 'Reason', sortKey: 'reason', filterKey: 'reason' },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ]

@@ -36,11 +36,11 @@ limitations under the License.
     };
 
     Budgeting.enums.BUDGET_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-pending',
-        3: 'erp-status-active',
-        4: 'erp-status-active',
-        5: 'erp-status-inactive'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-pending',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-active',
+        5: 'layer8d-status-inactive'
     };
 
     // ============================================================================
@@ -81,11 +81,11 @@ limitations under the License.
     };
 
     Budgeting.enums.CAPEX_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-active',
-        3: 'erp-status-pending',
-        4: 'erp-status-active',
-        5: 'erp-status-inactive'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-pending',
+        4: 'layer8d-status-active',
+        5: 'layer8d-status-inactive'
     };
 
     // ============================================================================
@@ -95,21 +95,21 @@ limitations under the License.
     // Create render functions using shared utilities
     Budgeting.render = {};
 
-    Budgeting.render.budgetStatus = ERPRenderers.createStatusRenderer(
+    Budgeting.render.budgetStatus = Layer8DRenderers.createStatusRenderer(
         Budgeting.enums.BUDGET_STATUS,
         Budgeting.enums.BUDGET_STATUS_CLASSES
     );
 
-    Budgeting.render.budgetType = (type) => ERPRenderers.renderEnum(type, Budgeting.enums.BUDGET_TYPE);
-    Budgeting.render.forecastType = (type) => ERPRenderers.renderEnum(type, Budgeting.enums.FORECAST_TYPE);
+    Budgeting.render.budgetType = (type) => Layer8DRenderers.renderEnum(type, Budgeting.enums.BUDGET_TYPE);
+    Budgeting.render.forecastType = (type) => Layer8DRenderers.renderEnum(type, Budgeting.enums.FORECAST_TYPE);
 
-    Budgeting.render.capexStatus = ERPRenderers.createStatusRenderer(
+    Budgeting.render.capexStatus = Layer8DRenderers.createStatusRenderer(
         Budgeting.enums.CAPEX_STATUS,
         Budgeting.enums.CAPEX_STATUS_CLASSES
     );
 
-    Budgeting.render.boolean = ERPRenderers.renderBoolean;
-    Budgeting.render.date = ERPRenderers.renderDate;
-    Budgeting.render.money = ERPRenderers.renderMoney;
+    Budgeting.render.boolean = Layer8DRenderers.renderBoolean;
+    Budgeting.render.date = Layer8DRenderers.renderDate;
+    Budgeting.render.money = Layer8DRenderers.renderMoney;
 
 })();

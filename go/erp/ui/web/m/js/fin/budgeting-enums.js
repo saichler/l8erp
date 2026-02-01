@@ -75,19 +75,19 @@ limitations under the License.
     // ============================================================================
 
     MobileBudgeting.render = {
-        budgetStatus: MobileRenderers.createStatusRenderer(
+        budgetStatus: Layer8MRenderers.createStatusRenderer(
             MobileBudgeting.enums.BUDGET_STATUS,
             MobileBudgeting.enums.BUDGET_STATUS_CLASSES
         ),
-        budgetType: (type) => MobileRenderers.renderEnum(type, MobileBudgeting.enums.BUDGET_TYPE),
-        forecastType: (type) => MobileRenderers.renderEnum(type, MobileBudgeting.enums.FORECAST_TYPE),
-        capexStatus: MobileRenderers.createStatusRenderer(
+        budgetType: (type) => Layer8MRenderers.renderEnum(type, MobileBudgeting.enums.BUDGET_TYPE),
+        forecastType: (type) => Layer8MRenderers.renderEnum(type, MobileBudgeting.enums.FORECAST_TYPE),
+        capexStatus: Layer8MRenderers.createStatusRenderer(
             MobileBudgeting.enums.CAPEX_STATUS,
             MobileBudgeting.enums.CAPEX_STATUS_CLASSES
         ),
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate,
-        money: MobileRenderers.renderMoney
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate,
+        money: Layer8MRenderers.renderMoney
     };
 
 })();

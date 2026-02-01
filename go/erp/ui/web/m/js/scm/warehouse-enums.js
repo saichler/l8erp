@@ -66,15 +66,15 @@ limitations under the License.
     // ============================================================================
 
     MobileWarehouse.render = {
-        warehouseType: (v) => MobileRenderers.renderEnum(v, MobileWarehouse.enums.WAREHOUSE_TYPE),
-        binType: (v) => MobileRenderers.renderEnum(v, MobileWarehouse.enums.BIN_TYPE),
-        taskStatus: MobileRenderers.createStatusRenderer(
+        warehouseType: (v) => Layer8MRenderers.renderEnum(v, MobileWarehouse.enums.WAREHOUSE_TYPE),
+        binType: (v) => Layer8MRenderers.renderEnum(v, MobileWarehouse.enums.BIN_TYPE),
+        taskStatus: Layer8MRenderers.createStatusRenderer(
             MobileWarehouse.enums.TASK_STATUS,
             MobileWarehouse.enums.TASK_STATUS_CLASSES
         ),
-        boolean: MobileRenderers.renderBoolean,
-        date: MobileRenderers.renderDate,
-        money: MobileRenderers.renderMoney
+        boolean: Layer8MRenderers.renderBoolean,
+        date: Layer8MRenderers.renderDate,
+        money: Layer8MRenderers.renderMoney
     };
 
 })();

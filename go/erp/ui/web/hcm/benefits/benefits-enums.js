@@ -22,8 +22,8 @@ limitations under the License.
     window.Benefits = window.Benefits || {};
 
     // Import shared utilities
-    const { escapeHtml, formatDate, formatMoney } = ERPUtils;
-    const { renderEnum, renderStatus, createStatusRenderer, renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { escapeHtml, formatDate, formatMoney } = Layer8DUtils;
+    const { renderEnum, renderStatus, createStatusRenderer, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
 
     // ============================================================================
     // ENUM DEFINITIONS
@@ -128,12 +128,12 @@ limitations under the License.
     };
 
     const ENROLLMENT_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-active',
-        3: 'erp-status-inactive',
-        4: 'erp-status-terminated',
-        5: 'erp-status-terminated',
-        6: 'erp-status-pending'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-inactive',
+        4: 'layer8d-status-terminated',
+        5: 'layer8d-status-terminated',
+        6: 'layer8d-status-pending'
     };
 
     const ENROLLMENT_REASON = {
@@ -228,10 +228,10 @@ limitations under the License.
     };
 
     const LIFE_EVENT_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-active',
-        3: 'erp-status-terminated',
-        4: 'erp-status-inactive'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-terminated',
+        4: 'layer8d-status-inactive'
     };
 
     const CARRIER_TYPE = {
@@ -298,13 +298,13 @@ limitations under the License.
     };
 
     const COBRA_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-pending',
-        3: 'erp-status-active',
-        4: 'erp-status-inactive',
-        5: 'erp-status-active',
-        6: 'erp-status-terminated',
-        7: 'erp-status-inactive'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-pending',
+        3: 'layer8d-status-active',
+        4: 'layer8d-status-inactive',
+        5: 'layer8d-status-active',
+        6: 'layer8d-status-terminated',
+        7: 'layer8d-status-inactive'
     };
 
     const VERIFICATION_STATUS = {
@@ -323,10 +323,10 @@ limitations under the License.
     };
 
     const VERIFICATION_STATUS_CLASSES = {
-        1: 'erp-status-pending',
-        2: 'erp-status-active',
-        3: 'erp-status-terminated',
-        4: 'erp-status-inactive'
+        1: 'layer8d-status-pending',
+        2: 'layer8d-status-active',
+        3: 'layer8d-status-terminated',
+        4: 'layer8d-status-inactive'
     };
 
     // ============================================================================

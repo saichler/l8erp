@@ -18,7 +18,7 @@ limitations under the License.
 (function() {
     'use strict';
 
-    ERPModuleFactory.create({
+    Layer8DModuleFactory.create({
         namespace: 'HCM',
         defaultModule: 'core-hr',
         defaultService: 'employees',

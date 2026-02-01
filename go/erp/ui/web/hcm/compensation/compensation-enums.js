@@ -22,8 +22,8 @@ limitations under the License.
     window.Compensation = window.Compensation || {};
 
     // Import shared utilities
-    const { escapeHtml, formatDate, formatMoney, formatNumber } = ERPUtils;
-    const { renderEnum, createStatusRenderer, renderBoolean, renderDate, renderMoney } = ERPRenderers;
+    const { escapeHtml, formatDate, formatMoney, formatNumber } = Layer8DUtils;
+    const { renderEnum, createStatusRenderer, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
 
     // ============================================================================
     // ENUM DEFINITIONS
@@ -65,12 +65,12 @@ limitations under the License.
     };
 
     const MERIT_INCREASE_STATUS_CLASSES = {
-        1: 'erp-status-inactive',    // Draft
-        2: 'erp-status-pending',     // Submitted
-        3: 'erp-status-pending',     // Under Review
-        4: 'erp-status-active',      // Approved
-        5: 'erp-status-terminated',  // Rejected
-        6: 'erp-status-active'       // Processed
+        1: 'layer8d-status-inactive',    // Draft
+        2: 'layer8d-status-pending',     // Submitted
+        3: 'layer8d-status-pending',     // Under Review
+        4: 'layer8d-status-active',      // Approved
+        5: 'layer8d-status-terminated',  // Rejected
+        6: 'layer8d-status-active'       // Processed
     };
 
     const MERIT_CYCLE_STATUS = {
@@ -91,11 +91,11 @@ limitations under the License.
     };
 
     const MERIT_CYCLE_STATUS_CLASSES = {
-        1: 'erp-status-pending',     // Planning
-        2: 'erp-status-active',      // Open
-        3: 'erp-status-pending',     // Under Review
-        4: 'erp-status-active',      // Approved
-        5: 'erp-status-inactive'     // Closed
+        1: 'layer8d-status-pending',     // Planning
+        2: 'layer8d-status-active',      // Open
+        3: 'layer8d-status-pending',     // Under Review
+        4: 'layer8d-status-active',      // Approved
+        5: 'layer8d-status-inactive'     // Closed
     };
 
     const BONUS_PLAN_TYPE = {
@@ -178,12 +178,12 @@ limitations under the License.
     };
 
     const BONUS_PAYMENT_STATUS_CLASSES = {
-        1: 'erp-status-inactive',    // Draft
-        2: 'erp-status-pending',     // Pending Approval
-        3: 'erp-status-active',      // Approved
-        4: 'erp-status-pending',     // Scheduled
-        5: 'erp-status-active',      // Paid
-        6: 'erp-status-terminated'   // Cancelled
+        1: 'layer8d-status-inactive',    // Draft
+        2: 'layer8d-status-pending',     // Pending Approval
+        3: 'layer8d-status-active',      // Approved
+        4: 'layer8d-status-pending',     // Scheduled
+        5: 'layer8d-status-active',      // Paid
+        6: 'layer8d-status-terminated'   // Cancelled
     };
 
     const EQUITY_GRANT_TYPE = {
@@ -230,13 +230,13 @@ limitations under the License.
     };
 
     const EQUITY_GRANT_STATUS_CLASSES = {
-        1: 'erp-status-pending',     // Pending
-        2: 'erp-status-active',      // Active
-        3: 'erp-status-active',      // Fully Vested
-        4: 'erp-status-active',      // Exercised
-        5: 'erp-status-inactive',    // Expired
-        6: 'erp-status-terminated',  // Forfeited
-        7: 'erp-status-terminated'   // Cancelled
+        1: 'layer8d-status-pending',     // Pending
+        2: 'layer8d-status-active',      // Active
+        3: 'layer8d-status-active',      // Fully Vested
+        4: 'layer8d-status-active',      // Exercised
+        5: 'layer8d-status-inactive',    // Expired
+        6: 'layer8d-status-terminated',  // Forfeited
+        7: 'layer8d-status-terminated'   // Cancelled
     };
 
     const VESTING_TYPE = {
@@ -345,12 +345,12 @@ limitations under the License.
         if (ratio === null || ratio === undefined) return '-';
         const percentage = (ratio * 100).toFixed(1);
         let cssClass = '';
-        if (ratio < 0.85) cssClass = 'erp-status-terminated';
-        else if (ratio < 0.95) cssClass = 'erp-status-pending';
-        else if (ratio <= 1.05) cssClass = 'erp-status-active';
-        else if (ratio <= 1.15) cssClass = 'erp-status-pending';
-        else cssClass = 'erp-status-terminated';
-        return `<span class="erp-status ${cssClass}">${percentage}%</span>`;
+        if (ratio < 0.85) cssClass = 'layer8d-status-terminated';
+        else if (ratio < 0.95) cssClass = 'layer8d-status-pending';
+        else if (ratio <= 1.05) cssClass = 'layer8d-status-active';
+        else if (ratio <= 1.15) cssClass = 'layer8d-status-pending';
+        else cssClass = 'layer8d-status-terminated';
+        return `<span class="layer8d-status ${cssClass}">${percentage}%</span>`;
     }
 
     function renderShares(shares) {
