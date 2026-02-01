@@ -51,7 +51,7 @@ limitations under the License.
             html += '<div class="nav-card-grid">';
 
             LAYER8M_NAV_CONFIG.modules.forEach(module => {
-                const isImplemented = module.key === 'hcm';
+                const isImplemented = !!LAYER8M_NAV_CONFIG[module.key];
                 const cardClass = isImplemented ? 'nav-card' : 'nav-card coming-soon';
 
                 html += `
@@ -251,7 +251,7 @@ limitations under the License.
             html += '<div class="nav-card-grid">';
 
             LAYER8M_NAV_CONFIG.modules.forEach(module => {
-                const isImplemented = module.key === 'hcm';
+                const isImplemented = !!LAYER8M_NAV_CONFIG[module.key];
                 const cardClass = isImplemented ? 'nav-card' : 'nav-card coming-soon';
 
                 html += `
