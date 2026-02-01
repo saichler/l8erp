@@ -94,15 +94,24 @@ limitations under the License.
 
     <!-- Module Tabs -->
     <div class="hcm-module-tabs">
-        <button class="hcm-module-tab active" data-module="security">
+        <button class="hcm-module-tab active" data-module="health">
+            <span class="tab-icon">💚</span>
+            <span class="tab-label">Health</span>
+        </button>
+        <button class="hcm-module-tab" data-module="security">
             <span class="tab-icon">🔒</span>
             <span class="tab-label">Security</span>
         </button>
     </div>
 
     <div class="section-content">
+        <!-- Health Module -->
+        <div class="hcm-module-content active" data-module="health">
+            <div class="hcm-table-container" id="health-table-container"></div>
+        </div>
+
         <!-- Security Module -->
-        <div class="hcm-module-content active" data-module="security">
+        <div class="hcm-module-content" data-module="security">
             <nav class="hcm-subnav">
                 <a class="hcm-subnav-item active" data-service="users"><span class="subnav-icon">👤</span><span class="subnav-label">Users</span></a>
                 <a class="hcm-subnav-item" data-service="roles"><span class="subnav-icon">🛡️</span><span class="subnav-label">Roles</span></a>

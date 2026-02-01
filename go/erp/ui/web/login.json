@@ -11,6 +11,7 @@
     },
     "app": {
         "dateFormat": "mm/dd/yyyy",
-        "apiPrefix": "/erp"
+        "apiPrefix": "/erp",
+        "healthPath": "/0/Health"
     }
 }

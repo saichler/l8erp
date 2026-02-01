@@ -23,6 +23,11 @@ limitations under the License.
 
     // SYS Module Configuration
     L8Sys.modules = {
+        'health': {
+            label: 'Health',
+            icon: '💚',
+            services: []
+        },
         'security': {
             label: 'Security',
             icon: '🔒',

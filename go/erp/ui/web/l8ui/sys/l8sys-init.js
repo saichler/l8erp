@@ -22,14 +22,21 @@ limitations under the License.
     // 1. Bootstrap using shared factory
     Layer8DModuleFactory.create({
         namespace: 'L8Sys',
-        defaultModule: 'security',
+        defaultModule: 'health',
         defaultService: 'users',
-        sectionSelector: 'security',
+        sectionSelector: 'health',
         initializerName: 'initializeL8Sys',
         requiredNamespaces: ['L8Security']
     });
 
-    // 2. Override CRUD methods to route to custom handlers per model
+    // 2. Initialize Health Monitor when System section loads
+    var origInit = window.initializeL8Sys;
+    window.initializeL8Sys = function() {
+        if (origInit) origInit();
+        if (window.L8Health) L8Health.initialize();
+    };
+
+    // 3. Override CRUD methods to route to custom handlers per model
     var origOpenAdd = L8Sys._openAddModal;
     L8Sys._openAddModal = function(service) {
         if (service.model === 'L8User' && window.L8SysUsersCRUD) {
