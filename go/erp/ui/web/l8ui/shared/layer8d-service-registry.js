@@ -102,6 +102,11 @@ limitations under the License.
         moduleNS._state.serviceTables[tableId] = table;
     }
 
+    // Get list of registered parent module names (e.g., ['HCM', 'FIN', 'SCM', 'L8Sys'])
+    function getRegisteredModules() {
+        return Object.keys(_registry);
+    }
+
     window.Layer8DServiceRegistry = {
         register,
         lookup,
@@ -109,6 +114,7 @@ limitations under the License.
         getFormDef,
         getDetailsConfig,
         getPrimaryKey,
+        getRegisteredModules,
         initializeServiceTable
     };
 

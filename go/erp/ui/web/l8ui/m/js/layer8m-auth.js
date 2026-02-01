@@ -327,7 +327,7 @@ limitations under the License.
             window.bearerToken = null;
 
             if (redirect) {
-                window.location.href = '../login/';
+                window.location.href = '/l8ui/login/';
             }
         },
 
@@ -347,7 +347,7 @@ limitations under the License.
             if (_onSessionExpired) {
                 _onSessionExpired();
             } else {
-                window.location.href = '../login/';
+                window.location.href = '/l8ui/login/';
             }
         },
 
@@ -356,7 +356,7 @@ limitations under the License.
          */
         requireAuth() {
             if (!this.isAuthenticated()) {
-                window.location.href = '../login/';
+                window.location.href = '/l8ui/login/';
                 return false;
             }
             return true;

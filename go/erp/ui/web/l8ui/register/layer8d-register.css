@@ -99,13 +99,13 @@ body {
     padding: 10px;
 }
 
-.register-container {
+.layer8d-register-container {
     width: 100%;
     max-width: 420px;
 }
 
 /* Register Card - Dark Theme */
-.register-card {
+.layer8d-register-card {
     background: rgba(26, 26, 26, 0.95);
     backdrop-filter: blur(20px);
     border-radius: 16px;
@@ -115,7 +115,7 @@ body {
 }
 
 /* Header Section - White like main app */
-.register-header {
+.layer8d-register-header {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     padding: 20px;
@@ -177,13 +177,13 @@ body {
 }
 
 /* Form Section - Dark Theme */
-.register-form {
+.layer8d-register-form {
     padding: 20px;
     background: var(--bg-card);
 }
 
 /* 2FA Notice */
-.tfa-notice {
+.layer8d-tfa-notice {
     display: flex;
     align-items: flex-start;
     gap: 10px;
@@ -194,20 +194,20 @@ body {
     margin-bottom: 16px;
 }
 
-.tfa-notice-icon {
+.layer8d-tfa-notice-icon {
     font-size: 16px;
     line-height: 1;
     flex-shrink: 0;
     margin-top: 1px;
 }
 
-.tfa-notice-text {
+.layer8d-tfa-notice-text {
     font-size: 10px;
     color: var(--text-secondary);
     line-height: 1.4;
 }
 
-.tfa-notice-text strong {
+.layer8d-tfa-notice-text strong {
     color: var(--noc-cyan);
 }
 
@@ -249,7 +249,7 @@ body {
 }
 
 /* Captcha Container */
-.captcha-container {
+.layer8d-captcha-container {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -263,7 +263,7 @@ body {
     background: var(--bg-elevated);
 }
 
-.btn-refresh {
+.layer8d-btn-refresh {
     background: linear-gradient(135deg, var(--noc-cyan) 0%, var(--noc-cyan-dark) 100%);
     color: white;
     border: none;
@@ -276,17 +276,17 @@ body {
     box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
 }
 
-.btn-refresh:hover {
+.layer8d-btn-refresh:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4);
 }
 
-.btn-refresh:active {
+.layer8d-btn-refresh:active {
     transform: translateY(0);
 }
 
 /* Register Button */
-.btn-register {
+.layer8d-btn-register {
     width: 100%;
     padding: 12px 20px;
     border: none;
@@ -303,17 +303,17 @@ body {
     box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
 }
 
-.btn-register:hover {
+.layer8d-btn-register:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4);
     background: linear-gradient(135deg, var(--noc-cyan-dark) 0%, var(--noc-cyan) 100%);
 }
 
-.btn-register:active {
+.layer8d-btn-register:active {
     transform: translateY(0);
 }
 
-.btn-register:disabled {
+.layer8d-btn-register:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
@@ -352,19 +352,19 @@ body {
 }
 
 /* Login Link */
-.login-link {
+.layer8d-login-link {
     text-align: center;
     margin-top: 14px;
     padding-top: 12px;
     border-top: 1px solid var(--border-emphasis);
 }
 
-.login-link span {
+.layer8d-login-link span {
     font-size: 11px;
     color: var(--text-muted);
 }
 
-.login-link a {
+.layer8d-login-link a {
     color: var(--noc-cyan);
     font-size: 11px;
     font-weight: 600;
@@ -372,12 +372,12 @@ body {
     margin-left: 4px;
 }
 
-.login-link a:hover {
+.layer8d-login-link a:hover {
     text-decoration: underline;
 }
 
 /* Footer Section - Light like main app header */
-.register-footer {
+.layer8d-register-footer {
     padding: 14px 20px;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
@@ -423,11 +423,11 @@ body {
 
 /* Responsive */
 @media (max-width: 480px) {
-    .register-header {
+    .layer8d-register-header {
         padding: 24px 20px;
     }
 
-    .register-form {
+    .layer8d-register-form {
         padding: 24px 20px;
     }
 
@@ -440,7 +440,7 @@ body {
         max-height: 64px;
     }
 
-    .captcha-container {
+    .layer8d-captcha-container {
         flex-direction: column;
         align-items: stretch;
     }
@@ -450,7 +450,7 @@ body {
         height: auto;
     }
 
-    .btn-refresh {
+    .layer8d-btn-refresh {
         width: 100%;
     }
 }

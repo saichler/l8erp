@@ -18,14 +18,14 @@ limitations under the License.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - ERP by Layer 8</title>
-    <link rel="stylesheet" href="register.css">
+    <link rel="stylesheet" href="layer8d-register.css">
 </head>
 <body>
-    <div class="register-container">
-        <div class="register-card">
+    <div class="layer8d-register-container">
+        <div class="layer8d-register-card">
             <!-- Header with App Logo and Title -->
-            <div class="register-header">
-                <img src="/login/logo.gif" alt="Application Logo" class="app-logo" onerror="this.style.display='none'">
+            <div class="layer8d-register-header">
+                <img src="/l8ui/login/logo.gif" alt="Application Logo" class="app-logo" onerror="this.style.display='none'">
                 <div class="title-with-icon">
                     <svg class="title-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -39,11 +39,11 @@ limitations under the License.
             </div>
 
             <!-- Register Form Section -->
-            <div class="register-form">
+            <div class="layer8d-register-form">
                 <!-- 2FA Notice -->
-                <div class="tfa-notice">
-                    <span class="tfa-notice-icon">&#128274;</span>
-                    <div class="tfa-notice-text">
+                <div class="layer8d-tfa-notice">
+                    <span class="layer8d-tfa-notice-icon">&#128274;</span>
+                    <div class="layer8d-tfa-notice-text">
                         <strong>Note:</strong> For your security, new accounts use 2FA.<br>
                         You'll set it up during your first login.
                     </div>
@@ -63,34 +63,34 @@ limitations under the License.
                     </div>
                     <div class="form-group">
                         <label for="captcha">Captcha</label>
-                        <div class="captcha-container">
+                        <div class="layer8d-captcha-container">
                             <img id="captcha-image" alt="Captcha" src="">
-                            <button type="button" id="refresh-captcha" class="btn-refresh" title="Refresh Captcha">&#8635;</button>
+                            <button type="button" id="refresh-captcha" class="layer8d-btn-refresh" title="Refresh Captcha">&#8635;</button>
                         </div>
                         <input type="text" id="captcha" name="captcha" placeholder="Enter captcha text" autocomplete="off" required>
                     </div>
-                    <button type="submit" id="register-btn" class="btn-register">
+                    <button type="submit" id="register-btn" class="layer8d-btn-register">
                         <span id="btn-spinner" class="spinner" style="display: none;"></span>
                         <span id="btn-text">Register</span>
                     </button>
                 </form>
 
-                <div class="login-link">
+                <div class="layer8d-login-link">
                     <span>Already have an account?</span>
-                    <a href="/login/">Login</a>
+                    <a href="/l8ui/login/">Login</a>
                 </div>
             </div>
 
             <!-- Footer with Layer 8 Branding -->
-            <div class="register-footer">
+            <div class="layer8d-register-footer">
                 <div class="ecosystem-branding">
-                    <img src="/login/Layer8Logo.gif" alt="Layer 8" class="ecosystem-logo" onerror="this.style.display='none'">
+                    <img src="/l8ui/login/Layer8Logo.gif" alt="Layer 8" class="ecosystem-logo" onerror="this.style.display='none'">
                     <span class="ecosystem-text">Layer 8 Ecosystem</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="register.js"></script>
+    <script src="layer8d-register.js"></script>
 </body>
 </html>

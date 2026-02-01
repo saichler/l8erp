@@ -612,13 +612,18 @@ limitations under the License.
         },
 
         /**
-         * Get columns for a service from MobileHCM registry
+         * Get columns for a service from registered mobile module registries
          */
         _getServiceColumns(serviceConfig) {
-            // Try MobileHCM registry first (uses new module configs)
-            if (window.MobileHCM && serviceConfig.model) {
-                const columns = MobileHCM.getColumns(serviceConfig.model);
-                if (columns) return columns;
+            if (serviceConfig.model) {
+                // Try all registered mobile module registries
+                const registries = [window.MobileHCM, window.MobileFIN, window.MobileSCM];
+                for (const reg of registries) {
+                    if (reg && reg.getColumns) {
+                        const columns = reg.getColumns(serviceConfig.model);
+                        if (columns) return columns;
+                    }
+                }
             }
 
             // Fallback to defaults
@@ -630,13 +635,18 @@ limitations under the License.
         },
 
         /**
-         * Get form definition for a service from MobileHCM registry
+         * Get form definition for a service from registered mobile module registries
          */
         _getServiceFormDef(serviceConfig) {
-            // Try MobileHCM registry first (uses new module configs)
-            if (window.MobileHCM && serviceConfig.model) {
-                const formDef = MobileHCM.getFormDef(serviceConfig.model);
-                if (formDef) return formDef;
+            if (serviceConfig.model) {
+                // Try all registered mobile module registries
+                const registries = [window.MobileHCM, window.MobileFIN, window.MobileSCM];
+                for (const reg of registries) {
+                    if (reg && reg.getFormDef) {
+                        const formDef = reg.getFormDef(serviceConfig.model);
+                        if (formDef) return formDef;
+                    }
+                }
             }
 
             // Fallback to generic form

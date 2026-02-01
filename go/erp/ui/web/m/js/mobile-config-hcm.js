@@ -13,31 +13,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Layer8MConfig - Centralized configuration for ERP mobile app
- * Desktop Equivalent: hcm-config.js, app-config.js patterns
+ * Mobile Config Data - HCM Modules & Reference Registry
+ * Registers HCM module navigation and reference picker configs into Layer8MConfig.
  */
 (function() {
     'use strict';
 
-    // Private state
-    let _config = null;
-    let _loaded = false;
-    let _loading = false;
-    let _loadPromise = null;
-
-    // Default configuration
-    const DEFAULT_CONFIG = {
-        app: {
-            apiPrefix: '/erp'
-        },
-        api: {
-            typeCode: 30
-        },
-        dateFormat: 'mm/dd/yyyy'
-    };
-
-    // HCM Module Configuration (from hcm-config.js)
-    const HCM_MODULES = {
+    // HCM Module Configuration
+    Layer8MConfig.registerModules({
         'core-hr': {
             label: 'Core HR',
             icon: 'user',
@@ -113,14 +96,14 @@ limitations under the License.
                 { key: 'bonus-plans', label: 'Bonus Plans', icon: 'gift', endpoint: '/30/BonusPlan', model: 'BonusPlan' }
             ]
         }
-    };
+    });
 
-    // Reference Registry (from reference-registry.js) - extended for mobile picker
-    const REFERENCE_REGISTRY = {
+    // HCM Reference Registry for mobile picker
+    Layer8MConfig.registerReferences({
         Employee: {
             idColumn: 'employeeId', displayColumn: 'lastName', endpoint: '/30/Employee',
             displayField: 'lastName', idField: 'employeeId', searchFields: ['firstName', 'lastName', 'email'],
-            displayFormat: item => item.lastName + ', ' + item.firstName
+            displayFormat: function(item) { return item.lastName + ', ' + item.firstName; }
         },
         Organization: {
             idColumn: 'organizationId', displayColumn: 'name', endpoint: '/30/Org',
@@ -153,7 +136,7 @@ limitations under the License.
         Dependent: {
             idColumn: 'dependentId', displayColumn: 'firstName', endpoint: '/30/Dependent',
             displayField: 'firstName', idField: 'dependentId', searchFields: ['firstName', 'lastName'],
-            displayFormat: item => item.lastName + ', ' + item.firstName
+            displayFormat: function(item) { return item.lastName + ', ' + item.firstName; }
         },
         LeavePolicy: {
             idColumn: 'policyId', displayColumn: 'name', endpoint: '/30/LeavePolicy',
@@ -202,124 +185,8 @@ limitations under the License.
         Applicant: {
             idColumn: 'applicantId', displayColumn: 'lastName', endpoint: '/30/Applicant',
             displayField: 'lastName', idField: 'applicantId', searchFields: ['firstName', 'lastName', 'email'],
-            displayFormat: item => item.lastName + ', ' + item.firstName
+            displayFormat: function(item) { return item.lastName + ', ' + item.firstName; }
         }
-    };
-
-    // Public API
-    window.Layer8MConfig = {
-        /**
-         * Load configuration from server
-         */
-        async load() {
-            if (_loading && _loadPromise) return _loadPromise;
-            if (_loaded) return true;
-
-            _loading = true;
-            _loadPromise = this._doLoad();
-
-            try {
-                return await _loadPromise;
-            } finally {
-                _loading = false;
-            }
-        },
-
-        async _doLoad() {
-            try {
-                const response = await fetch('../login.json?t=' + Date.now());
-                if (!response.ok) throw new Error('Failed to load config');
-                _config = await response.json();
-                _loaded = true;
-                return true;
-            } catch (error) {
-                console.warn('Layer8MConfig: Using defaults:', error.message);
-                _config = DEFAULT_CONFIG;
-                _loaded = true;
-                return false;
-            }
-        },
-
-        isLoaded() { return _loaded; },
-
-        getApiPrefix() {
-            return _config?.app?.apiPrefix || DEFAULT_CONFIG.app.apiPrefix;
-        },
-
-        resolveEndpoint(path) {
-            return this.getApiPrefix() + path;
-        },
-
-        getTypeCode() {
-            return _config?.api?.typeCode || DEFAULT_CONFIG.api.typeCode;
-        },
-
-        getDateFormat() {
-            return _config?.dateFormat || DEFAULT_CONFIG.dateFormat;
-        },
-
-        /**
-         * Get HCM modules configuration
-         */
-        getHCMModules() {
-            return HCM_MODULES;
-        },
-
-        /**
-         * Get a specific module
-         */
-        getModule(moduleKey) {
-            return HCM_MODULES[moduleKey] || null;
-        },
-
-        /**
-         * Get a specific service by module and service key
-         */
-        getService(moduleKey, serviceKey) {
-            const module = HCM_MODULES[moduleKey];
-            if (!module) return null;
-            return module.services.find(s => s.key === serviceKey) || null;
-        },
-
-        /**
-         * Find service by model name
-         */
-        getServiceByModel(modelName) {
-            for (const moduleKey of Object.keys(HCM_MODULES)) {
-                const module = HCM_MODULES[moduleKey];
-                const service = module.services.find(s => s.model === modelName);
-                if (service) return { module: moduleKey, ...service };
-            }
-            return null;
-        },
-
-        /**
-         * Get reference registry for a model
-         */
-        getReferenceConfig(modelName) {
-            return REFERENCE_REGISTRY[modelName] || null;
-        },
-
-        /**
-         * Get all flat services list
-         */
-        getAllServices() {
-            const services = [];
-            for (const moduleKey of Object.keys(HCM_MODULES)) {
-                const module = HCM_MODULES[moduleKey];
-                for (const service of module.services) {
-                    services.push({ module: moduleKey, moduleLabel: module.label, ...service });
-                }
-            }
-            return services;
-        },
-
-        /**
-         * Get full config object
-         */
-        getConfig() {
-            return _config || DEFAULT_CONFIG;
-        }
-    };
+    });
 
 })();

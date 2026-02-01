@@ -3,7 +3,7 @@
         "appTitle": "ERP by Layer 8",
         "appDescription": "Enterprise Resource Planning",
         "authEndpoint": "/auth",
-        "redirectUrl": "../app.html",
+        "redirectUrl": "/app.html",
         "showRememberMe": true,
         "showRegister": true,
         "sessionTimeout": 30,

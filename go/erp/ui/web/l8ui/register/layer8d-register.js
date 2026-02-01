@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (result.status === 200) {
                 showMessage('Registration successful! Redirecting to login...', 'success');
                 setTimeout(function() {
-                    window.location.href = '/login/';
+                    window.location.href = '/l8ui/login/';
                 }, 1500);
                 return;
             } else {

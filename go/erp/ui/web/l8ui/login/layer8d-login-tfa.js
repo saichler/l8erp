@@ -100,7 +100,7 @@ async function showTfaSetupRequired() {
     document.getElementById('login-section').style.display = 'none';
     document.getElementById('tfa-section').classList.remove('visible');
     document.getElementById('tfa-setup-section').classList.add('visible');
-    document.querySelector('.login-container').classList.add('tfa-setup-active');
+    document.querySelector('.layer8d-login-container').classList.add('layer8d-tfa-setup-active');
 
     // Show loading state
     document.getElementById('tfa-setup-loading').style.display = 'flex';
@@ -222,7 +222,7 @@ function showLoginSection() {
     document.getElementById('login-section').style.display = 'block';
     document.getElementById('tfa-section').classList.remove('visible');
     document.getElementById('tfa-setup-section').classList.remove('visible');
-    document.querySelector('.login-container').classList.remove('tfa-setup-active');
+    document.querySelector('.layer8d-login-container').classList.remove('layer8d-tfa-setup-active');
     document.getElementById('tfa-code').value = '';
     document.getElementById('tfa-setup-code').value = '';
     document.getElementById('password').value = '';

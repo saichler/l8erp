@@ -555,8 +555,10 @@ limitations under the License.
      * Look up endpoint for a model from module configs (HCM, FIN, etc.)
      */
     function getEndpointForModel(modelName) {
-        // Search all registered module namespaces
-        const namespaces = ['HCM', 'FIN', 'SCM', 'L8Sys'];
+        // Search all registered module namespaces dynamically
+        const namespaces = typeof Layer8DServiceRegistry !== 'undefined'
+            ? Layer8DServiceRegistry.getRegisteredModules()
+            : [];
         for (const ns of namespaces) {
             const mod = window[ns];
             if (!mod || !mod.modules) continue;

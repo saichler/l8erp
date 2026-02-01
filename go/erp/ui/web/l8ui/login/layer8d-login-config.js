@@ -13,14 +13,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 // Login App Configuration
-// Loaded from ../login.json
+// Loaded from /login.json
 
 let LOGIN_CONFIG = null;
 
 // Load configuration from login.json
 async function loadConfig() {
     try {
-        const response = await fetch('../login.json');
+        const response = await fetch('/login.json');
         if (!response.ok) {
             throw new Error('Failed to load configuration');
         }
@@ -34,7 +34,7 @@ async function loadConfig() {
             appTitle: 'ERP by Layer 8',
             appDescription: 'Enterprise Resource Planning',
             authEndpoint: '/auth',
-            redirectUrl: '../app.html',
+            redirectUrl: '/app.html',
             showRememberMe: true,
             showRegister: false,
             sessionTimeout: 30,

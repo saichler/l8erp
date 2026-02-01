@@ -29,7 +29,7 @@ async function makeAuthenticatedRequest(url, options = {}) {
 
     if (!bearerToken) {
         console.error('No bearer token found');
-        window.location.href = 'login/index.html';
+        window.location.href = 'l8ui/login/index.html';
         return;
     }
 
@@ -49,7 +49,7 @@ async function makeAuthenticatedRequest(url, options = {}) {
         // If unauthorized, redirect to login
         if (response.status === 401) {
             sessionStorage.removeItem('bearerToken');
-            window.location.href = 'login/index.html';
+            window.location.href = 'l8ui/login/index.html';
             return;
         }
 
@@ -68,7 +68,7 @@ function logout() {
     localStorage.removeItem('rememberedUser');
 
     // Redirect to login page
-    window.location.href = 'login/index.html';
+    window.location.href = 'l8ui/login/index.html';
 }
 
 // Initialize the application
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Using sessionStorage so session is cleared when browser tab is closed
     const bearerToken = sessionStorage.getItem('bearerToken');
     if (!bearerToken) {
-        window.location.href = 'login/index.html';
+        window.location.href = 'l8ui/login/index.html';
         return;
     }
 

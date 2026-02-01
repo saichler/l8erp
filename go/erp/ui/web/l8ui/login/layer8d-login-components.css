@@ -17,7 +17,7 @@ limitations under the License.
 /* Footer, toast notifications, spinner, responsive, scrollbar */
 
 /* Footer Section - Light like main app header */
-.login-footer {
+.layer8d-login-footer {
     padding: 20px 30px;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
@@ -63,11 +63,11 @@ limitations under the License.
 
 /* Responsive */
 @media (max-width: 480px) {
-    .login-header {
+    .layer8d-login-header {
         padding: 24px 20px;
     }
 
-    .login-form {
+    .layer8d-login-form {
         padding: 24px 20px;
     }
 

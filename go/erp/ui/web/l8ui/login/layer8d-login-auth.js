@@ -112,7 +112,7 @@ function isMobileDevice() {
 
 // Get appropriate redirect URL based on device type
 function getRedirectUrl() {
-    const baseRedirectUrl = LOGIN_CONFIG.redirectUrl || '../app.html';
+    const baseRedirectUrl = LOGIN_CONFIG.redirectUrl || '/app.html';
 
     // If already pointing to mobile, use as-is
     if (baseRedirectUrl.includes('/m/')) {
@@ -126,7 +126,7 @@ function getRedirectUrl() {
             return baseRedirectUrl.replace('app.html', 'm/app.html');
         }
         // Fallback for other patterns
-        return '../m/app.html';
+        return '/m/app.html';
     }
 
     return baseRedirectUrl;

@@ -22,8 +22,8 @@ limitations under the License.
     <meta name="theme-color" content="#0ea5e9">
     <title>ERP by Layer 8</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="../images/logo.gif">
-    <link rel="apple-touch-icon" href="../images/logo.gif">
+    <link rel="icon" href="../l8ui/images/logo.gif">
+    <link rel="apple-touch-icon" href="../l8ui/images/logo.gif">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -68,7 +68,7 @@ limitations under the License.
 </head>
 <body>
     <div class="splash">
-        <img src="../images/logo.gif" alt="ERP" class="splash-logo">
+        <img src="../l8ui/images/logo.gif" alt="ERP" class="splash-logo">
         <h1 class="splash-title">ERP by Layer 8</h1>
         <p class="splash-subtitle">Enterprise Resource Planning</p>
         <div class="loader"></div>
@@ -81,7 +81,7 @@ limitations under the License.
         setTimeout(function() {
             if (!token) {
                 // No token, redirect to login
-                window.location.href = '../login/';
+                window.location.href = '../l8ui/login/';
             } else {
                 // Has token, go to app
                 window.location.href = 'app.html';

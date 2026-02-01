@@ -17,15 +17,15 @@ limitations under the License.
 /* TFA verification and setup sections */
 
 /* TFA Section */
-.tfa-section {
+.layer8d-tfa-section {
     display: none;
 }
 
-.tfa-section.visible {
+.layer8d-tfa-section.visible {
     display: block;
 }
 
-.tfa-instructions {
+.layer8d-tfa-instructions {
     text-align: center;
     color: var(--text-secondary);
     font-size: 13px;
@@ -33,7 +33,7 @@ limitations under the License.
     line-height: 1.5;
 }
 
-.tfa-input {
+.layer8d-tfa-input {
     text-align: center;
     font-size: 28px;
     font-weight: 600;
@@ -41,7 +41,7 @@ limitations under the License.
     padding: 16px !important;
 }
 
-.back-link {
+.layer8d-back-link {
     display: block;
     text-align: center;
     margin-top: 16px;
@@ -51,12 +51,12 @@ limitations under the License.
     cursor: pointer;
 }
 
-.back-link:hover {
+.layer8d-back-link:hover {
     text-decoration: underline;
 }
 
 /* TFA Setup Styles */
-.tfa-loading {
+.layer8d-tfa-loading {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -65,7 +65,7 @@ limitations under the License.
     color: var(--text-muted);
 }
 
-.tfa-loading .spinner {
+.layer8d-tfa-loading .spinner {
     width: 28px;
     height: 28px;
     border: 3px solid rgba(14, 165, 233, 0.2);
@@ -74,28 +74,28 @@ limitations under the License.
     margin-right: 0;
 }
 
-.tfa-loading p {
+.layer8d-tfa-loading p {
     font-size: 13px;
 }
 
-.tfa-setup-content {
+.layer8d-tfa-setup-content {
     padding: 0;
 }
 
-.tfa-setup-instructions {
+.layer8d-tfa-setup-instructions {
     text-align: center;
     color: var(--text-secondary);
     font-size: 12px;
     margin-bottom: 12px;
 }
 
-.tfa-setup-row {
+.layer8d-tfa-setup-row {
     display: flex;
     gap: 16px;
     align-items: flex-start;
 }
 
-.tfa-qr-container {
+.layer8d-tfa-qr-container {
     flex-shrink: 0;
     padding: 10px;
     background: white;
@@ -103,20 +103,20 @@ limitations under the License.
     border-radius: 8px;
 }
 
-.tfa-qr-container img {
+.layer8d-tfa-qr-container img {
     width: 160px;
     height: 160px;
     image-rendering: pixelated;
 }
 
-.tfa-setup-right {
+.layer8d-tfa-setup-right {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.tfa-secret-section {
+.layer8d-tfa-secret-section {
     text-align: center;
     padding: 10px;
     background: var(--bg-elevated);
@@ -124,7 +124,7 @@ limitations under the License.
     border: 1px solid var(--border-emphasis);
 }
 
-.tfa-secret-label {
+.layer8d-tfa-secret-label {
     font-size: 9px;
     color: var(--text-muted);
     text-transform: uppercase;
@@ -132,7 +132,7 @@ limitations under the License.
     margin: 0 0 6px 0;
 }
 
-.tfa-secret-section code {
+.layer8d-tfa-secret-section code {
     display: block;
     font-family: 'Roboto Mono', monospace;
     font-size: 10px;
@@ -152,7 +152,7 @@ limitations under the License.
     padding: 0;
 }
 
-.tfa-input-small {
+.layer8d-tfa-input-small {
     flex: 1;
     text-align: center;
     font-size: 18px;
@@ -161,18 +161,18 @@ limitations under the License.
     padding: 10px 8px !important;
 }
 
-.btn-login.btn-small {
+.layer8d-btn-login.layer8d-btn-small {
     padding: 10px 16px;
     font-size: 10px;
     white-space: nowrap;
 }
 
-.tfa-error {
+.layer8d-tfa-error {
     text-align: center;
     padding: 20px;
 }
 
-.tfa-error p {
+.layer8d-tfa-error p {
     color: #ff6e40;
     margin-bottom: 10px;
     font-size: 13px;
@@ -180,17 +180,17 @@ limitations under the License.
 
 /* Responsive for small screens */
 @media (max-width: 420px) {
-    .tfa-setup-row {
+    .layer8d-tfa-setup-row {
         flex-direction: column;
         align-items: center;
     }
 
-    .tfa-qr-container img {
+    .layer8d-tfa-qr-container img {
         width: 120px;
         height: 120px;
     }
 
-    .tfa-setup-right {
+    .layer8d-tfa-setup-right {
         width: 100%;
     }
 
@@ -198,7 +198,7 @@ limitations under the License.
         flex-direction: column;
     }
 
-    .btn-login.btn-small {
+    .layer8d-btn-login.layer8d-btn-small {
         width: 100%;
     }
 }
