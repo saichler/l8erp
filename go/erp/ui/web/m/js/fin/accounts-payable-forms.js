@@ -33,7 +33,7 @@ limitations under the License.
                         { key: 'legalName', label: 'Legal Name', type: 'text' },
                         { key: 'taxId', label: 'Tax ID', type: 'text' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.VENDOR_STATUS, required: true },
-                        { key: 'paymentTerms', label: 'Payment Terms', type: 'text' },
+                        { key: 'paymentTermDays', label: 'Payment Term Days', type: 'number' },
                         { key: 'defaultPaymentMethod', label: 'Default Payment Method', type: 'select', options: enums.PAYMENT_METHOD },
                         { key: 'defaultAccountId', label: 'Default GL Account', type: 'reference', lookupModel: 'Account' },
                         { key: 'currencyId', label: 'Currency', type: 'reference', lookupModel: 'Currency' },

@@ -41,7 +41,7 @@ limitations under the License.
                 filterKey: 'status',
                 render: (item) => render.vendorStatus(item.status)
             },
-            { key: 'paymentTerms', label: 'Payment Terms', sortKey: 'paymentTerms', filterKey: 'paymentTerms' },
+            { key: 'paymentTermDays', label: 'Payment Terms', sortKey: 'paymentTermDays', filterKey: 'paymentTermDays' },
             {
                 key: 'isActive',
                 label: 'Active',

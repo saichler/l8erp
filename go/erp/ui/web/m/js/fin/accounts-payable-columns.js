@@ -28,7 +28,7 @@ limitations under the License.
             { key: 'vendorNumber', label: 'Vendor #', sortKey: 'vendorNumber', filterKey: 'vendorNumber' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.VENDOR_STATUS_VALUES, render: (item) => render.vendorStatus(item.status) },
-            { key: 'paymentTerms', label: 'Payment Terms', sortKey: 'paymentTerms', filterKey: 'paymentTerms' },
+            { key: 'paymentTermDays', label: 'Payment Terms', sortKey: 'paymentTermDays', filterKey: 'paymentTermDays' },
             { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 

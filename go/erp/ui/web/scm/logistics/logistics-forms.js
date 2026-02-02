@@ -34,7 +34,7 @@ limitations under the License.
                 {
                     title: 'Carrier Information',
                     fields: [
-                        { key: 'carrierCode', label: 'Carrier Code', type: 'text', required: true },
+                        { key: 'code', label: 'Carrier Code', type: 'text', required: true },
                         { key: 'name', label: 'Name', type: 'text', required: true },
                         { key: 'carrierType', label: 'Carrier Type', type: 'select', options: enums.CARRIER_TYPE, required: true },
                         { key: 'contactInfo', label: 'Contact Info', type: 'text' },
@@ -76,7 +76,7 @@ limitations under the License.
                         { key: 'shipDate', label: 'Ship Date', type: 'date', required: true },
                         { key: 'expectedDelivery', label: 'Expected Delivery', type: 'date' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.SHIPMENT_STATUS },
-                        { key: 'totalCost', label: 'Total Cost', type: 'currency' }
+                        { key: 'freightCost', label: 'Freight Cost', type: 'currency' }
                     ]
                 }
             ]
@@ -88,7 +88,7 @@ limitations under the License.
                 {
                     title: 'Route Details',
                     fields: [
-                        { key: 'routeName', label: 'Route Name', type: 'text', required: true },
+                        { key: 'name', label: 'Route Name', type: 'text', required: true },
                         { key: 'origin', label: 'Origin', type: 'text', required: true },
                         { key: 'destination', label: 'Destination', type: 'text', required: true },
                         { key: 'distance', label: 'Distance', type: 'number' },
@@ -105,7 +105,7 @@ limitations under the License.
                 {
                     title: 'Plan Details',
                     fields: [
-                        { key: 'planName', label: 'Plan Name', type: 'text', required: true },
+                        { key: 'plannedDate', label: 'Planned Date', type: 'date' },
                         { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
                         { key: 'vehicleId', label: 'Vehicle', type: 'text' },
                         { key: 'totalWeight', label: 'Total Weight', type: 'number' },
@@ -127,7 +127,7 @@ limitations under the License.
                         { key: 'deliveryDate', label: 'Delivery Date', type: 'date', required: true },
                         { key: 'receivedBy', label: 'Received By', type: 'text', required: true },
                         { key: 'signatureRef', label: 'Signature Reference', type: 'text' },
-                        { key: 'isComplete', label: 'Complete', type: 'checkbox' },
+                        { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
                 }
@@ -143,7 +143,7 @@ limitations under the License.
                         { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
                         { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier', required: true },
                         { key: 'invoicedAmount', label: 'Invoiced Amount', type: 'currency', required: true },
-                        { key: 'auditedAmount', label: 'Audited Amount', type: 'currency' },
+                        { key: 'actualAmount', label: 'Actual Amount', type: 'currency' },
                         { key: 'variance', label: 'Variance', type: 'currency' },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
@@ -159,7 +159,7 @@ limitations under the License.
                     fields: [
                         { key: 'rmaNumber', label: 'RMA Number', type: 'text', required: true },
                         { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'Customer' },
-                        { key: 'requestDate', label: 'Request Date', type: 'date', required: true },
+                        { key: 'returnDate', label: 'Return Date', type: 'date', required: true },
                         { key: 'reason', label: 'Reason', type: 'textarea', required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
                         { key: 'notes', label: 'Notes', type: 'textarea' }

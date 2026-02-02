@@ -48,17 +48,16 @@ const WAREHOUSE_SERVICES = {
         idField: 'warehouseId',
         columns: [
             { key: 'warehouseId', label: 'ID', primary: true },
-            { key: 'warehouseCode', label: 'Code', secondary: true, filterKey: 'warehouseCode' },
+            { key: 'code', label: 'Code', secondary: true, filterKey: 'code' },
             { key: 'name', label: 'Name' },
             { key: 'warehouseType', label: 'Type', formatter: (v) => ({ 0: 'Unspecified', 1: 'Distribution Center', 2: 'Manufacturing', 3: 'Cold Storage', 4: 'Cross-Dock', 5: 'Bonded' }[v] || '-') },
-            { key: 'location', label: 'Location' }
+            { key: 'address', label: 'Location', formatter: (v) => v?.city || '' }
         ],
         addText: 'Add Warehouse',
         formFields: [
-            { key: 'warehouseCode', label: 'Warehouse Code', type: 'text', required: true },
+            { key: 'code', label: 'Warehouse Code', type: 'text', required: true },
             { key: 'name', label: 'Name', type: 'text', required: true },
             { key: 'warehouseType', label: 'Type', type: 'select', options: { 0: 'Unspecified', 1: 'Distribution Center', 2: 'Manufacturing', 3: 'Cold Storage', 4: 'Cross-Dock', 5: 'Bonded' } },
-            { key: 'location', label: 'Location', type: 'text' },
             { key: 'address', label: 'Address', type: 'textarea' },
             { key: 'managerId', label: 'Manager', type: 'reference', lookupModel: 'Employee' },
             { key: 'isActive', label: 'Active', type: 'checkbox' }
@@ -93,18 +92,17 @@ const WAREHOUSE_SERVICES = {
         idField: 'receivingOrderId',
         columns: [
             { key: 'receivingOrderId', label: 'ID', primary: true },
-            { key: 'orderNumber', label: 'Order #', secondary: true, filterKey: 'orderNumber' },
-            { key: 'vendorId', label: 'Vendor' },
-            { key: 'expectedDate', label: 'Expected', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'purchaseOrderId', label: 'PO', secondary: true, filterKey: 'purchaseOrderId' },
+            { key: 'receivedBy', label: 'Received By' },
+            { key: 'receivingDate', label: 'Receiving', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') },
             { key: 'warehouseId', label: 'Warehouse' }
         ],
         addText: 'Add Receiving Order',
         formFields: [
-            { key: 'orderNumber', label: 'Order Number', type: 'text', required: true },
-            { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
-            { key: 'purchaseOrderId', label: 'Purchase Order', type: 'reference', lookupModel: 'ScmPurchaseOrder' },
-            { key: 'expectedDate', label: 'Expected Date', type: 'date', required: true },
+            { key: 'purchaseOrderId', label: 'Purchase Order', type: 'reference', lookupModel: 'ScmPurchaseOrder', required: true },
+            { key: 'receivedBy', label: 'Received By', type: 'text' },
+            { key: 'receivingDate', label: 'Receiving Date', type: 'date', required: true },
             { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
             { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
             { key: 'notes', label: 'Notes', type: 'textarea' }
@@ -118,8 +116,8 @@ const WAREHOUSE_SERVICES = {
             { key: 'taskId', label: 'ID', primary: true },
             { key: 'receivingOrderId', label: 'Receiving Order', secondary: true },
             { key: 'itemId', label: 'Item' },
-            { key: 'sourceBinId', label: 'Source Bin' },
-            { key: 'targetBinId', label: 'Target Bin' },
+            { key: 'fromBinId', label: 'From Bin' },
+            { key: 'toBinId', label: 'To Bin' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
         addText: 'Add Putaway Task',
@@ -127,8 +125,8 @@ const WAREHOUSE_SERVICES = {
             { key: 'receivingOrderId', label: 'Receiving Order', type: 'reference', lookupModel: 'ScmReceivingOrder', required: true },
             { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
             { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-            { key: 'sourceBinId', label: 'Source Bin', type: 'reference', lookupModel: 'ScmBin' },
-            { key: 'targetBinId', label: 'Target Bin', type: 'reference', lookupModel: 'ScmBin', required: true },
+            { key: 'fromBinId', label: 'From Bin', type: 'reference', lookupModel: 'ScmBin' },
+            { key: 'toBinId', label: 'To Bin', type: 'reference', lookupModel: 'ScmBin', required: true },
             { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
             { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' }
         ]
@@ -139,17 +137,17 @@ const WAREHOUSE_SERVICES = {
         idField: 'taskId',
         columns: [
             { key: 'taskId', label: 'ID', primary: true },
-            { key: 'orderReference', label: 'Order Ref', secondary: true, filterKey: 'orderReference' },
+            { key: 'wavePlanId', label: 'Wave Plan', secondary: true, filterKey: 'wavePlanId' },
             { key: 'itemId', label: 'Item' },
-            { key: 'binId', label: 'Bin' },
+            { key: 'fromBinId', label: 'Bin' },
             { key: 'quantity', label: 'Qty' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
         addText: 'Add Pick Task',
         formFields: [
-            { key: 'orderReference', label: 'Order Reference', type: 'text', required: true },
+            { key: 'wavePlanId', label: 'Wave Plan', type: 'reference', lookupModel: 'ScmWavePlan', required: true },
             { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-            { key: 'binId', label: 'Bin', type: 'reference', lookupModel: 'ScmBin', required: true },
+            { key: 'fromBinId', label: 'Bin', type: 'reference', lookupModel: 'ScmBin', required: true },
             { key: 'quantity', label: 'Quantity', type: 'number', required: true },
             { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
             { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' }
@@ -161,16 +159,16 @@ const WAREHOUSE_SERVICES = {
         idField: 'taskId',
         columns: [
             { key: 'taskId', label: 'ID', primary: true },
-            { key: 'orderReference', label: 'Order Ref', secondary: true, filterKey: 'orderReference' },
-            { key: 'packStation', label: 'Pack Station' },
-            { key: 'itemCount', label: 'Items' },
+            { key: 'pickTaskId', label: 'Pick Task', secondary: true, filterKey: 'pickTaskId' },
+            { key: 'packageId', label: 'Package' },
+            { key: 'quantity', label: 'Qty' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
         addText: 'Add Pack Task',
         formFields: [
-            { key: 'orderReference', label: 'Order Reference', type: 'text', required: true },
-            { key: 'packStation', label: 'Pack Station', type: 'text' },
-            { key: 'itemCount', label: 'Item Count', type: 'number' },
+            { key: 'pickTaskId', label: 'Pick Task', type: 'reference', lookupModel: 'ScmPickTask', required: true },
+            { key: 'packageId', label: 'Package', type: 'text' },
+            { key: 'quantity', label: 'Quantity', type: 'number' },
             { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
             { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' },
             { key: 'notes', label: 'Notes', type: 'textarea' }
@@ -184,18 +182,17 @@ const WAREHOUSE_SERVICES = {
             { key: 'taskId', label: 'ID', primary: true },
             { key: 'shipmentId', label: 'Shipment', secondary: true },
             { key: 'carrierId', label: 'Carrier' },
-            { key: 'dockId', label: 'Dock' },
-            { key: 'scheduledDate', label: 'Scheduled', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'trackingNumber', label: 'Tracking #' },
+            { key: 'shippedAt', label: 'Shipped', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
         addText: 'Add Ship Task',
         formFields: [
             { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
             { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier' },
-            { key: 'dockId', label: 'Dock', type: 'text' },
-            { key: 'scheduledDate', label: 'Scheduled Date', type: 'date', required: true },
-            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
-            { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' }
+            { key: 'trackingNumber', label: 'Tracking Number', type: 'text' },
+            { key: 'shippedAt', label: 'Shipped At', type: 'date' },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } }
         ]
     },
     'wave-plans': {
@@ -204,18 +201,18 @@ const WAREHOUSE_SERVICES = {
         idField: 'wavePlanId',
         columns: [
             { key: 'wavePlanId', label: 'ID', primary: true },
-            { key: 'waveName', label: 'Wave', secondary: true, filterKey: 'waveName' },
+            { key: 'assignedTo', label: 'Assigned To', secondary: true, filterKey: 'assignedTo' },
             { key: 'warehouseId', label: 'Warehouse' },
-            { key: 'plannedDate', label: 'Planned', formatter: (v) => Layer8MUtils.formatDate(v) },
-            { key: 'orderCount', label: 'Orders' },
+            { key: 'planDate', label: 'Plan Date', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'totalOrders', label: 'Orders' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
         addText: 'Add Wave Plan',
         formFields: [
-            { key: 'waveName', label: 'Wave Name', type: 'text', required: true },
+            { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' },
             { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
-            { key: 'plannedDate', label: 'Planned Date', type: 'date', required: true },
-            { key: 'orderCount', label: 'Order Count', type: 'number' },
+            { key: 'planDate', label: 'Plan Date', type: 'date', required: true },
+            { key: 'totalOrders', label: 'Total Orders', type: 'number' },
             { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
             { key: 'notes', label: 'Notes', type: 'textarea' }
         ]
@@ -226,17 +223,17 @@ const WAREHOUSE_SERVICES = {
         idField: 'scheduleId',
         columns: [
             { key: 'scheduleId', label: 'ID', primary: true },
-            { key: 'dockId', label: 'Dock', secondary: true },
+            { key: 'dockNumber', label: 'Dock', secondary: true },
             { key: 'carrierId', label: 'Carrier' },
-            { key: 'scheduledDate', label: 'Date', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'scheduleDate', label: 'Date', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'direction', label: 'Direction' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
         addText: 'Add Dock Schedule',
         formFields: [
-            { key: 'dockId', label: 'Dock', type: 'text', required: true },
+            { key: 'dockNumber', label: 'Dock Number', type: 'text', required: true },
             { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier' },
-            { key: 'scheduledDate', label: 'Scheduled Date', type: 'date', required: true },
+            { key: 'scheduleDate', label: 'Schedule Date', type: 'date', required: true },
             { key: 'direction', label: 'Direction', type: 'text' },
             { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
             { key: 'notes', label: 'Notes', type: 'textarea' }
@@ -307,7 +304,7 @@ function openWarehouseForm(config, item = null) {
 }
 
 async function deleteWarehouseItem(config, id, item) {
-    const name = item.warehouseCode || item.binCode || item.orderNumber || item.waveName || id;
+    const name = item.code || item.binCode || item.purchaseOrderId || item.assignedTo || id;
     const confirmed = await Layer8MConfirm.confirmDelete(name);
     if (confirmed) {
         try {

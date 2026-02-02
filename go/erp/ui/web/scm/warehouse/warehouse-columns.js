@@ -31,7 +31,7 @@ limitations under the License.
     WarehouseManagement.columns = {
         ScmWarehouse: [
             { key: 'warehouseId', label: 'ID', sortKey: 'warehouseId', filterKey: 'warehouseId' },
-            { key: 'warehouseCode', label: 'Code', sortKey: 'warehouseCode', filterKey: 'warehouseCode' },
+            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             {
                 key: 'warehouseType',
@@ -39,7 +39,12 @@ limitations under the License.
                 sortKey: 'warehouseType',
                 render: (item) => render.warehouseType(item.warehouseType)
             },
-            { key: 'location', label: 'Location', sortKey: 'location', filterKey: 'location' },
+            {
+                key: 'address',
+                label: 'Location',
+                sortKey: 'address',
+                render: (item) => item.address?.city || ''
+            },
             {
                 key: 'isActive',
                 label: 'Active',
@@ -69,13 +74,13 @@ limitations under the License.
 
         ScmReceivingOrder: [
             { key: 'receivingOrderId', label: 'ID', sortKey: 'receivingOrderId', filterKey: 'receivingOrderId' },
-            { key: 'orderNumber', label: 'Order #', sortKey: 'orderNumber', filterKey: 'orderNumber' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
+            { key: 'purchaseOrderId', label: 'PO #', sortKey: 'purchaseOrderId', filterKey: 'purchaseOrderId' },
+            { key: 'receivedBy', label: 'Received By', sortKey: 'receivedBy', filterKey: 'receivedBy' },
             {
-                key: 'expectedDate',
-                label: 'Expected',
-                sortKey: 'expectedDate',
-                render: (item) => renderDate(item.expectedDate)
+                key: 'receivingDate',
+                label: 'Receiving Date',
+                sortKey: 'receivingDate',
+                render: (item) => renderDate(item.receivingDate)
             },
             {
                 key: 'status',
@@ -90,8 +95,8 @@ limitations under the License.
             { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
             { key: 'receivingOrderId', label: 'Receiving Order', sortKey: 'receivingOrderId', filterKey: 'receivingOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'sourceBinId', label: 'Source Bin', sortKey: 'sourceBinId', filterKey: 'sourceBinId' },
-            { key: 'targetBinId', label: 'Target Bin', sortKey: 'targetBinId', filterKey: 'targetBinId' },
+            { key: 'fromBinId', label: 'From Bin', sortKey: 'fromBinId', filterKey: 'fromBinId' },
+            { key: 'toBinId', label: 'To Bin', sortKey: 'toBinId', filterKey: 'toBinId' },
             {
                 key: 'status',
                 label: 'Status',
@@ -104,7 +109,7 @@ limitations under the License.
             { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
             { key: 'orderReference', label: 'Order Ref', sortKey: 'orderReference', filterKey: 'orderReference' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'binId', label: 'Bin', sortKey: 'binId', filterKey: 'binId' },
+            { key: 'fromBinId', label: 'Bin', sortKey: 'fromBinId', filterKey: 'fromBinId' },
             { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
             {
                 key: 'status',
@@ -116,9 +121,9 @@ limitations under the License.
 
         ScmPackTask: [
             { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
-            { key: 'orderReference', label: 'Order Ref', sortKey: 'orderReference', filterKey: 'orderReference' },
-            { key: 'packStation', label: 'Pack Station', sortKey: 'packStation', filterKey: 'packStation' },
-            { key: 'itemCount', label: 'Items', sortKey: 'itemCount' },
+            { key: 'pickTaskId', label: 'Pick Task', sortKey: 'pickTaskId', filterKey: 'pickTaskId' },
+            { key: 'packageId', label: 'Package', sortKey: 'packageId', filterKey: 'packageId' },
+            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
             {
                 key: 'status',
                 label: 'Status',
@@ -131,12 +136,12 @@ limitations under the License.
             { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
             { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
-            { key: 'dockId', label: 'Dock', sortKey: 'dockId', filterKey: 'dockId' },
+            { key: 'trackingNumber', label: 'Tracking #', sortKey: 'trackingNumber', filterKey: 'trackingNumber' },
             {
-                key: 'scheduledDate',
-                label: 'Scheduled',
-                sortKey: 'scheduledDate',
-                render: (item) => renderDate(item.scheduledDate)
+                key: 'shippedAt',
+                label: 'Shipped',
+                sortKey: 'shippedAt',
+                render: (item) => renderDate(item.shippedAt)
             },
             {
                 key: 'status',
@@ -148,15 +153,15 @@ limitations under the License.
 
         ScmWavePlan: [
             { key: 'wavePlanId', label: 'ID', sortKey: 'wavePlanId', filterKey: 'wavePlanId' },
-            { key: 'waveName', label: 'Wave', sortKey: 'waveName', filterKey: 'waveName' },
+            { key: 'assignedTo', label: 'Assigned To', sortKey: 'assignedTo', filterKey: 'assignedTo' },
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
             {
-                key: 'plannedDate',
+                key: 'planDate',
                 label: 'Planned',
-                sortKey: 'plannedDate',
-                render: (item) => renderDate(item.plannedDate)
+                sortKey: 'planDate',
+                render: (item) => renderDate(item.planDate)
             },
-            { key: 'orderCount', label: 'Orders', sortKey: 'orderCount' },
+            { key: 'totalOrders', label: 'Orders', sortKey: 'totalOrders' },
             {
                 key: 'status',
                 label: 'Status',
@@ -167,13 +172,13 @@ limitations under the License.
 
         ScmDockSchedule: [
             { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'dockId', label: 'Dock', sortKey: 'dockId', filterKey: 'dockId' },
+            { key: 'dockNumber', label: 'Dock', sortKey: 'dockNumber', filterKey: 'dockNumber' },
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
             {
-                key: 'scheduledDate',
+                key: 'scheduleDate',
                 label: 'Date',
-                sortKey: 'scheduledDate',
-                render: (item) => renderDate(item.scheduledDate)
+                sortKey: 'scheduleDate',
+                render: (item) => renderDate(item.scheduleDate)
             },
             { key: 'direction', label: 'Direction', sortKey: 'direction', filterKey: 'direction' },
             {

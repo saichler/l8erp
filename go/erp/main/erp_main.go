@@ -139,10 +139,10 @@ import (
 	"github.com/saichler/l8erp/go/erp/hcm/benefitenrollments"
 	"github.com/saichler/l8erp/go/erp/hcm/benefitplans"
 	"github.com/saichler/l8erp/go/erp/hcm/carriers"
-	scmcarriers "github.com/saichler/l8erp/go/erp/scm/carriers"
 	"github.com/saichler/l8erp/go/erp/hcm/cobraevents"
 	"github.com/saichler/l8erp/go/erp/hcm/dependents"
 	"github.com/saichler/l8erp/go/erp/hcm/lifeevents"
+	scmcarriers "github.com/saichler/l8erp/go/erp/scm/carriers"
 
 	// Time & Attendance
 	"github.com/saichler/l8erp/go/erp/hcm/absences"

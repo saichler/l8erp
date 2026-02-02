@@ -48,7 +48,7 @@ limitations under the License.
                     fields: [
                         { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'sourceWarehouseId', label: 'Source Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
-                        { key: 'targetWarehouseId', label: 'Target Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
+                        { key: 'destinationWarehouseId', label: 'Destination Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
                         { key: 'requiredQuantity', label: 'Required Quantity', type: 'number', required: true },
                         { key: 'requiredDate', label: 'Required Date', type: 'date', required: true },
                         { key: 'priority', label: 'Priority', type: 'text' },
@@ -64,10 +64,10 @@ limitations under the License.
                 {
                     title: 'Plan Details',
                     fields: [
-                        { key: 'planName', label: 'Plan Name', type: 'text', required: true },
-                        { key: 'startDate', label: 'Start Date', type: 'date', required: true },
-                        { key: 'endDate', label: 'End Date', type: 'date', required: true },
-                        { key: 'planningMethod', label: 'Planning Method', type: 'select', options: enums.PLANNING_METHOD },
+                        { key: 'name', label: 'Plan Name', type: 'text', required: true },
+                        { key: 'planPeriod.startDate', label: 'Start Date', type: 'date', required: true },
+                        { key: 'planPeriod.endDate', label: 'End Date', type: 'date', required: true },
+                        { key: 'createdBy', label: 'Created By', type: 'text' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
                         { key: 'description', label: 'Description', type: 'textarea' }
                     ]
@@ -83,8 +83,8 @@ limitations under the License.
                     fields: [
                         { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
                         { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                        { key: 'agreedQuantity', label: 'Agreed Quantity', type: 'number', required: true },
-                        { key: 'deliveryDate', label: 'Delivery Date', type: 'date', required: true },
+                        { key: 'minOrderQuantity', label: 'Min Order Quantity', type: 'number', required: true },
+                        { key: 'leadTimeAgreed', label: 'Lead Time Agreed', type: 'checkbox' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
@@ -100,8 +100,8 @@ limitations under the License.
                     fields: [
                         { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
-                        { key: 'safetyStockLevel', label: 'Safety Stock Level', type: 'number', required: true },
-                        { key: 'currentStock', label: 'Current Stock', type: 'number' },
+                        { key: 'safetyStockQuantity', label: 'Safety Stock Quantity', type: 'number', required: true },
+                        { key: 'calculationMethod', label: 'Calculation Method', type: 'text' },
                         { key: 'serviceLevel', label: 'Service Level %', type: 'number' },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
@@ -117,9 +117,9 @@ limitations under the License.
                     fields: [
                         { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
-                        { key: 'averageLeadTime', label: 'Average Lead Time (days)', type: 'number', required: true },
-                        { key: 'minimumLeadTime', label: 'Minimum Lead Time (days)', type: 'number' },
-                        { key: 'maximumLeadTime', label: 'Maximum Lead Time (days)', type: 'number' },
+                        { key: 'leadTimeDays', label: 'Lead Time (days)', type: 'number', required: true },
+                        { key: 'transitDays', label: 'Transit (days)', type: 'number' },
+                        { key: 'totalDays', label: 'Total (days)', type: 'number' },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
                 }

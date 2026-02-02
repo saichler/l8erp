@@ -106,7 +106,7 @@ limitations under the License.
     };
 
     // Sub-module namespaces for service registry
-    SCM.submodules = ['Procurement', 'Inventory', 'WarehouseManagement', 'Logistics', 'DemandPlanning', 'SupplyPlanning'];
+    SCM.submodules = ['Procurement', 'Inventory', 'WarehouseManagement', 'Logistics', 'ScmDemandPlanning', 'ScmSupplyPlanning'];
 
     // Render status badge (uses shared erp-status-* classes)
     SCM.renderStatus = function(status) {

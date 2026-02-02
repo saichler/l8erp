@@ -56,7 +56,7 @@ limitations under the License.
 
         ScmItemCategory: [
             { key: 'categoryId', label: 'ID', sortKey: 'categoryId', filterKey: 'categoryId' },
-            { key: 'categoryName', label: 'Name', sortKey: 'categoryName', filterKey: 'categoryName' },
+            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'parentCategoryId', label: 'Parent', sortKey: 'parentCategoryId', filterKey: 'parentCategoryId' },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
             {
@@ -91,16 +91,16 @@ limitations under the License.
             { key: 'lotNumber', label: 'Lot #', sortKey: 'lotNumber', filterKey: 'lotNumber' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             {
-                key: 'manufacturingDate',
+                key: 'manufactureDate',
                 label: 'Mfg Date',
-                sortKey: 'manufacturingDate',
-                render: (item) => renderDate(item.manufacturingDate)
+                sortKey: 'manufactureDate',
+                render: (item) => renderDate(item.manufactureDate)
             },
             {
-                key: 'expirationDate',
+                key: 'expiryDate',
                 label: 'Expiry',
-                sortKey: 'expirationDate',
-                render: (item) => renderDate(item.expirationDate)
+                sortKey: 'expiryDate',
+                render: (item) => renderDate(item.expiryDate)
             },
             { key: 'quantity', label: 'Qty', sortKey: 'quantity' }
         ],
@@ -111,10 +111,10 @@ limitations under the License.
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'lotId', label: 'Lot', sortKey: 'lotId', filterKey: 'lotId' },
             {
-                key: 'isAvailable',
-                label: 'Available',
-                sortKey: 'isAvailable',
-                render: (item) => renderBoolean(item.isAvailable)
+                key: 'status',
+                label: 'Status',
+                sortKey: 'status',
+                render: (item) => render.taskStatus(item.status)
             }
         ],
 
@@ -144,10 +144,10 @@ limitations under the License.
             { key: 'minimumQuantity', label: 'Min Qty', sortKey: 'minimumQuantity' },
             { key: 'reorderQuantity', label: 'Reorder Qty', sortKey: 'reorderQuantity' },
             {
-                key: 'planningMethod',
-                label: 'Method',
-                sortKey: 'planningMethod',
-                render: (item) => render.planningMethod(item.planningMethod)
+                key: 'isActive',
+                label: 'Active',
+                sortKey: 'isActive',
+                render: (item) => renderBoolean(item.isActive)
             }
         ],
 

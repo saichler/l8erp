@@ -36,17 +36,17 @@ limitations under the License.
             { key: 'requirementId', label: 'ID', sortKey: 'requirementId', filterKey: 'requirementId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'sourceWarehouseId', label: 'Source', sortKey: 'sourceWarehouseId', filterKey: 'sourceWarehouseId' },
-            { key: 'targetWarehouseId', label: 'Target', sortKey: 'targetWarehouseId', filterKey: 'targetWarehouseId' },
+            { key: 'destinationWarehouseId', label: 'Destination', sortKey: 'destinationWarehouseId', filterKey: 'destinationWarehouseId' },
             { key: 'requiredQuantity', label: 'Required Qty', sortKey: 'requiredQuantity' },
             { key: 'requiredDate', label: 'Required Date', sortKey: 'requiredDate', render: (item) => Layer8MRenderers.renderDate(item.requiredDate) }
         ],
 
         ScmSupplyPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'planName', label: 'Plan', sortKey: 'planName', filterKey: 'planName' },
-            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
-            { key: 'planningMethod', label: 'Method', sortKey: 'planningMethod', filterKey: 'planningMethod', enumValues: enums.PLANNING_METHOD_VALUES, render: (item) => render.planningMethod(item.planningMethod) },
+            { key: 'name', label: 'Plan', sortKey: 'name', filterKey: 'name' },
+            { key: 'planPeriod', label: 'Start', sortKey: 'planPeriod.startDate', render: (item) => Layer8MRenderers.renderDate(item.planPeriod?.startDate) },
+            { key: 'planPeriod', label: 'End', sortKey: 'planPeriod.endDate', render: (item) => Layer8MRenderers.renderDate(item.planPeriod?.endDate) },
+            { key: 'createdBy', label: 'Created By', sortKey: 'createdBy', filterKey: 'createdBy' },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
@@ -54,8 +54,8 @@ limitations under the License.
             { key: 'collaborationId', label: 'ID', sortKey: 'collaborationId', filterKey: 'collaborationId' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'agreedQuantity', label: 'Agreed Qty', sortKey: 'agreedQuantity' },
-            { key: 'deliveryDate', label: 'Delivery', sortKey: 'deliveryDate', render: (item) => Layer8MRenderers.renderDate(item.deliveryDate) },
+            { key: 'minOrderQuantity', label: 'Min Order Qty', sortKey: 'minOrderQuantity' },
+            { key: 'leadTimeAgreed', label: 'Lead Time Agreed', sortKey: 'leadTimeAgreed', render: (item) => Layer8MRenderers.renderBoolean(item.leadTimeAgreed) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
@@ -63,8 +63,8 @@ limitations under the License.
             { key: 'safetyStockId', label: 'ID', sortKey: 'safetyStockId', filterKey: 'safetyStockId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
-            { key: 'safetyStockLevel', label: 'Safety Level', sortKey: 'safetyStockLevel' },
-            { key: 'currentStock', label: 'Current', sortKey: 'currentStock' },
+            { key: 'safetyStockQuantity', label: 'Safety Qty', sortKey: 'safetyStockQuantity' },
+            { key: 'calculationMethod', label: 'Method', sortKey: 'calculationMethod' },
             { key: 'serviceLevel', label: 'Service %', sortKey: 'serviceLevel' }
         ],
 
@@ -72,9 +72,9 @@ limitations under the License.
             { key: 'leadTimeId', label: 'ID', sortKey: 'leadTimeId', filterKey: 'leadTimeId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'averageLeadTime', label: 'Avg Lead Time', sortKey: 'averageLeadTime' },
-            { key: 'minimumLeadTime', label: 'Min', sortKey: 'minimumLeadTime' },
-            { key: 'maximumLeadTime', label: 'Max', sortKey: 'maximumLeadTime' }
+            { key: 'leadTimeDays', label: 'Lead Time (days)', sortKey: 'leadTimeDays' },
+            { key: 'transitDays', label: 'Transit (days)', sortKey: 'transitDays' },
+            { key: 'totalDays', label: 'Total (days)', sortKey: 'totalDays' }
         ]
     };
 

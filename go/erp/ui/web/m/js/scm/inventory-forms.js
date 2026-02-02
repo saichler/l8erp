@@ -47,7 +47,7 @@ limitations under the License.
                 {
                     title: 'Category Information',
                     fields: [
-                        { key: 'categoryName', label: 'Category Name', type: 'text', required: true },
+                        { key: 'name', label: 'Category Name', type: 'text', required: true },
                         { key: 'parentCategoryId', label: 'Parent Category', type: 'reference', lookupModel: 'ScmItemCategory' },
                         { key: 'description', label: 'Description', type: 'textarea' },
                         { key: 'isActive', label: 'Active', type: 'checkbox' }
@@ -82,8 +82,8 @@ limitations under the License.
                     fields: [
                         { key: 'lotNumber', label: 'Lot Number', type: 'text', required: true },
                         { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                        { key: 'manufacturingDate', label: 'Manufacturing Date', type: 'date' },
-                        { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
+                        { key: 'manufactureDate', label: 'Manufacture Date', type: 'date' },
+                        { key: 'expiryDate', label: 'Expiry Date', type: 'date' },
                         { key: 'quantity', label: 'Quantity', type: 'number' },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
@@ -101,7 +101,7 @@ limitations under the License.
                         { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'lotId', label: 'Lot', type: 'reference', lookupModel: 'ScmLotNumber' },
                         { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
-                        { key: 'isAvailable', label: 'Available', type: 'checkbox' }
+                        { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS }
                     ]
                 }
             ]
@@ -135,7 +135,7 @@ limitations under the License.
                         { key: 'minimumQuantity', label: 'Minimum Quantity', type: 'number', required: true },
                         { key: 'reorderQuantity', label: 'Reorder Quantity', type: 'number', required: true },
                         { key: 'maximumQuantity', label: 'Maximum Quantity', type: 'number' },
-                        { key: 'planningMethod', label: 'Planning Method', type: 'select', options: enums.PLANNING_METHOD }
+                        { key: 'isActive', label: 'Active', type: 'checkbox' }
                     ]
                 }
             ]

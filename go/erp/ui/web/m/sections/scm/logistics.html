@@ -47,14 +47,14 @@ const LOGISTICS_SERVICES = {
         idField: 'carrierId',
         columns: [
             { key: 'carrierId', label: 'ID', primary: true },
-            { key: 'carrierCode', label: 'Code', secondary: true, filterKey: 'carrierCode' },
+            { key: 'code', label: 'Code', secondary: true, filterKey: 'code' },
             { key: 'name', label: 'Name' },
             { key: 'carrierType', label: 'Type', formatter: (v) => ({ 0: 'Unspecified', 1: 'Trucking', 2: 'Rail', 3: 'Ocean', 4: 'Air', 5: 'Courier', 6: 'Intermodal' }[v] || '-') },
             { key: 'contactInfo', label: 'Contact' }
         ],
         addText: 'Add Carrier',
         formFields: [
-            { key: 'carrierCode', label: 'Carrier Code', type: 'text', required: true },
+            { key: 'code', label: 'Carrier Code', type: 'text', required: true },
             { key: 'name', label: 'Name', type: 'text', required: true },
             { key: 'carrierType', label: 'Carrier Type', type: 'select', options: { 0: 'Unspecified', 1: 'Trucking', 2: 'Rail', 3: 'Ocean', 4: 'Air', 5: 'Courier', 6: 'Intermodal' } },
             { key: 'contactInfo', label: 'Contact Info', type: 'text' },
@@ -95,7 +95,7 @@ const LOGISTICS_SERVICES = {
             { key: 'carrierId', label: 'Carrier' },
             { key: 'shipDate', label: 'Ship Date', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Planned', 2: 'Picked Up', 3: 'In Transit', 4: 'Delivered', 5: 'Returned', 6: 'Cancelled' }[v] || '-') },
-            { key: 'totalCost', label: 'Cost', formatter: (v) => Layer8MUtils.formatMoney(v) }
+            { key: 'freightCost', label: 'Cost', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'Add Shipment',
         formFields: [
@@ -106,7 +106,7 @@ const LOGISTICS_SERVICES = {
             { key: 'shipDate', label: 'Ship Date', type: 'date', required: true },
             { key: 'expectedDelivery', label: 'Expected Delivery', type: 'date' },
             { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Planned', 2: 'Picked Up', 3: 'In Transit', 4: 'Delivered', 5: 'Returned', 6: 'Cancelled' } },
-            { key: 'totalCost', label: 'Total Cost', type: 'currency' }
+            { key: 'freightCost', label: 'Freight Cost', type: 'currency' }
         ]
     },
     'routes': {
@@ -115,7 +115,7 @@ const LOGISTICS_SERVICES = {
         idField: 'routeId',
         columns: [
             { key: 'routeId', label: 'ID', primary: true },
-            { key: 'routeName', label: 'Route', secondary: true, filterKey: 'routeName' },
+            { key: 'name', label: 'Route', secondary: true, filterKey: 'name' },
             { key: 'origin', label: 'Origin' },
             { key: 'destination', label: 'Destination' },
             { key: 'distance', label: 'Distance' },
@@ -123,7 +123,7 @@ const LOGISTICS_SERVICES = {
         ],
         addText: 'Add Route',
         formFields: [
-            { key: 'routeName', label: 'Route Name', type: 'text', required: true },
+            { key: 'name', label: 'Route Name', type: 'text', required: true },
             { key: 'origin', label: 'Origin', type: 'text', required: true },
             { key: 'destination', label: 'Destination', type: 'text', required: true },
             { key: 'distance', label: 'Distance', type: 'number' },
@@ -137,7 +137,7 @@ const LOGISTICS_SERVICES = {
         idField: 'loadPlanId',
         columns: [
             { key: 'loadPlanId', label: 'ID', primary: true },
-            { key: 'planName', label: 'Plan', secondary: true, filterKey: 'planName' },
+            { key: 'plannedDate', label: 'Planned', secondary: true, formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'shipmentId', label: 'Shipment' },
             { key: 'vehicleId', label: 'Vehicle' },
             { key: 'totalWeight', label: 'Weight' },
@@ -145,7 +145,7 @@ const LOGISTICS_SERVICES = {
         ],
         addText: 'Add Load Plan',
         formFields: [
-            { key: 'planName', label: 'Plan Name', type: 'text', required: true },
+            { key: 'plannedDate', label: 'Planned Date', type: 'date' },
             { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
             { key: 'vehicleId', label: 'Vehicle', type: 'text' },
             { key: 'totalWeight', label: 'Total Weight', type: 'number' },
@@ -170,7 +170,7 @@ const LOGISTICS_SERVICES = {
             { key: 'deliveryDate', label: 'Delivery Date', type: 'date', required: true },
             { key: 'receivedBy', label: 'Received By', type: 'text', required: true },
             { key: 'signatureRef', label: 'Signature Reference', type: 'text' },
-            { key: 'isComplete', label: 'Complete', type: 'checkbox' },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
             { key: 'notes', label: 'Notes', type: 'textarea' }
         ]
     },
@@ -183,7 +183,7 @@ const LOGISTICS_SERVICES = {
             { key: 'shipmentId', label: 'Shipment', secondary: true },
             { key: 'carrierId', label: 'Carrier' },
             { key: 'invoicedAmount', label: 'Invoiced', formatter: (v) => Layer8MUtils.formatMoney(v) },
-            { key: 'auditedAmount', label: 'Audited', formatter: (v) => Layer8MUtils.formatMoney(v) },
+            { key: 'actualAmount', label: 'Actual', formatter: (v) => Layer8MUtils.formatMoney(v) },
             { key: 'variance', label: 'Variance', formatter: (v) => Layer8MUtils.formatMoney(v) }
         ],
         addText: 'Add Freight Audit',
@@ -191,7 +191,7 @@ const LOGISTICS_SERVICES = {
             { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
             { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier', required: true },
             { key: 'invoicedAmount', label: 'Invoiced Amount', type: 'currency', required: true },
-            { key: 'auditedAmount', label: 'Audited Amount', type: 'currency' },
+            { key: 'actualAmount', label: 'Actual Amount', type: 'currency' },
             { key: 'variance', label: 'Variance', type: 'currency' },
             { key: 'notes', label: 'Notes', type: 'textarea' }
         ]
@@ -204,7 +204,7 @@ const LOGISTICS_SERVICES = {
             { key: 'rmaId', label: 'ID', primary: true },
             { key: 'rmaNumber', label: 'RMA #', secondary: true, filterKey: 'rmaNumber' },
             { key: 'customerId', label: 'Customer' },
-            { key: 'requestDate', label: 'Requested', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'returnDate', label: 'Return Date', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'reason', label: 'Reason' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
@@ -212,7 +212,7 @@ const LOGISTICS_SERVICES = {
         formFields: [
             { key: 'rmaNumber', label: 'RMA Number', type: 'text', required: true },
             { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'Customer' },
-            { key: 'requestDate', label: 'Request Date', type: 'date', required: true },
+            { key: 'returnDate', label: 'Return Date', type: 'date', required: true },
             { key: 'reason', label: 'Reason', type: 'textarea', required: true },
             { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
             { key: 'notes', label: 'Notes', type: 'textarea' }
@@ -283,7 +283,7 @@ function openLogisticsForm(config, item = null) {
 }
 
 async function deleteLogisticsItem(config, id, item) {
-    const name = item.carrierCode || item.shipmentNumber || item.routeName || item.planName || item.rmaNumber || id;
+    const name = item.code || item.shipmentNumber || item.name || item.rmaNumber || id;
     const confirmed = await Layer8MConfirm.confirmDelete(name);
     if (confirmed) {
         try {

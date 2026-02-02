@@ -31,7 +31,7 @@ limitations under the License.
     Logistics.columns = {
         ScmCarrier: [
             { key: 'carrierId', label: 'ID', sortKey: 'carrierId', filterKey: 'carrierId' },
-            { key: 'carrierCode', label: 'Code', sortKey: 'carrierCode', filterKey: 'carrierCode' },
+            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             {
                 key: 'carrierType',
@@ -84,16 +84,16 @@ limitations under the License.
                 render: (item) => render.shipmentStatus(item.status)
             },
             {
-                key: 'totalCost',
+                key: 'freightCost',
                 label: 'Cost',
-                sortKey: 'totalCost',
-                render: (item) => renderMoney(item.totalCost)
+                sortKey: 'freightCost',
+                render: (item) => renderMoney(item.freightCost)
             }
         ],
 
         ScmRoute: [
             { key: 'routeId', label: 'ID', sortKey: 'routeId', filterKey: 'routeId' },
-            { key: 'routeName', label: 'Route', sortKey: 'routeName', filterKey: 'routeName' },
+            { key: 'name', label: 'Route', sortKey: 'name', filterKey: 'name' },
             { key: 'origin', label: 'Origin', sortKey: 'origin', filterKey: 'origin' },
             { key: 'destination', label: 'Destination', sortKey: 'destination', filterKey: 'destination' },
             { key: 'distance', label: 'Distance', sortKey: 'distance' },
@@ -102,7 +102,12 @@ limitations under the License.
 
         ScmLoadPlan: [
             { key: 'loadPlanId', label: 'ID', sortKey: 'loadPlanId', filterKey: 'loadPlanId' },
-            { key: 'planName', label: 'Plan', sortKey: 'planName', filterKey: 'planName' },
+            {
+                key: 'plannedDate',
+                label: 'Planned',
+                sortKey: 'plannedDate',
+                render: (item) => renderDate(item.plannedDate)
+            },
             { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
             { key: 'vehicleId', label: 'Vehicle', sortKey: 'vehicleId', filterKey: 'vehicleId' },
             { key: 'totalWeight', label: 'Weight', sortKey: 'totalWeight' },
@@ -125,10 +130,10 @@ limitations under the License.
             },
             { key: 'receivedBy', label: 'Received By', sortKey: 'receivedBy', filterKey: 'receivedBy' },
             {
-                key: 'isComplete',
-                label: 'Complete',
-                sortKey: 'isComplete',
-                render: (item) => renderBoolean(item.isComplete)
+                key: 'status',
+                label: 'Status',
+                sortKey: 'status',
+                render: (item) => render.taskStatus(item.status)
             }
         ],
 
@@ -143,10 +148,10 @@ limitations under the License.
                 render: (item) => renderMoney(item.invoicedAmount)
             },
             {
-                key: 'auditedAmount',
-                label: 'Audited',
-                sortKey: 'auditedAmount',
-                render: (item) => renderMoney(item.auditedAmount)
+                key: 'actualAmount',
+                label: 'Actual',
+                sortKey: 'actualAmount',
+                render: (item) => renderMoney(item.actualAmount)
             },
             {
                 key: 'variance',
@@ -161,10 +166,10 @@ limitations under the License.
             { key: 'rmaNumber', label: 'RMA #', sortKey: 'rmaNumber', filterKey: 'rmaNumber' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
             {
-                key: 'requestDate',
-                label: 'Requested',
-                sortKey: 'requestDate',
-                render: (item) => renderDate(item.requestDate)
+                key: 'returnDate',
+                label: 'Return Date',
+                sortKey: 'returnDate',
+                render: (item) => renderDate(item.returnDate)
             },
             { key: 'reason', label: 'Reason', sortKey: 'reason', filterKey: 'reason' },
             {

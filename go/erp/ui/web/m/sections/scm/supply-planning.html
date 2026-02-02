@@ -70,7 +70,7 @@ const SUPPLY_PLANNING_SERVICES = {
             { key: 'requirementId', label: 'ID', primary: true },
             { key: 'itemId', label: 'Item', secondary: true },
             { key: 'sourceWarehouseId', label: 'Source' },
-            { key: 'targetWarehouseId', label: 'Target' },
+            { key: 'destinationWarehouseId', label: 'Destination' },
             { key: 'requiredQuantity', label: 'Required Qty' },
             { key: 'requiredDate', label: 'Required Date', formatter: (v) => Layer8MUtils.formatDate(v) }
         ],
@@ -78,7 +78,7 @@ const SUPPLY_PLANNING_SERVICES = {
         formFields: [
             { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
             { key: 'sourceWarehouseId', label: 'Source Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
-            { key: 'targetWarehouseId', label: 'Target Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
+            { key: 'destinationWarehouseId', label: 'Destination Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
             { key: 'requiredQuantity', label: 'Required Quantity', type: 'number', required: true },
             { key: 'requiredDate', label: 'Required Date', type: 'date', required: true },
             { key: 'priority', label: 'Priority', type: 'text' },
@@ -91,18 +91,18 @@ const SUPPLY_PLANNING_SERVICES = {
         idField: 'planId',
         columns: [
             { key: 'planId', label: 'ID', primary: true },
-            { key: 'planName', label: 'Plan', secondary: true, filterKey: 'planName' },
-            { key: 'startDate', label: 'Start', formatter: (v) => Layer8MUtils.formatDate(v) },
-            { key: 'endDate', label: 'End', formatter: (v) => Layer8MUtils.formatDate(v) },
-            { key: 'planningMethod', label: 'Method', formatter: (v) => ({ 0: 'Unspecified', 1: 'MRP', 2: 'DRP', 3: 'Kanban', 4: 'Min-Max', 5: 'Reorder Point' }[v] || '-') },
+            { key: 'name', label: 'Plan', secondary: true, filterKey: 'name' },
+            { key: 'planPeriod', label: 'Start', formatter: (v) => Layer8MUtils.formatDate(v?.startDate) },
+            { key: 'planPeriod', label: 'End', formatter: (v) => Layer8MUtils.formatDate(v?.endDate) },
+            { key: 'createdBy', label: 'Created By' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
         addText: 'Add Supply Plan',
         formFields: [
-            { key: 'planName', label: 'Plan Name', type: 'text', required: true },
-            { key: 'startDate', label: 'Start Date', type: 'date', required: true },
-            { key: 'endDate', label: 'End Date', type: 'date', required: true },
-            { key: 'planningMethod', label: 'Planning Method', type: 'select', options: { 0: 'Unspecified', 1: 'MRP', 2: 'DRP', 3: 'Kanban', 4: 'Min-Max', 5: 'Reorder Point' } },
+            { key: 'name', label: 'Plan Name', type: 'text', required: true },
+            { key: 'planPeriod.startDate', label: 'Start Date', type: 'date', required: true },
+            { key: 'planPeriod.endDate', label: 'End Date', type: 'date', required: true },
+            { key: 'createdBy', label: 'Created By', type: 'text' },
             { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
             { key: 'description', label: 'Description', type: 'textarea' }
         ]
@@ -115,16 +115,16 @@ const SUPPLY_PLANNING_SERVICES = {
             { key: 'collaborationId', label: 'ID', primary: true },
             { key: 'vendorId', label: 'Vendor', secondary: true },
             { key: 'itemId', label: 'Item' },
-            { key: 'agreedQuantity', label: 'Agreed Qty' },
-            { key: 'deliveryDate', label: 'Delivery', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'minOrderQuantity', label: 'Min Order Qty' },
+            { key: 'leadTimeAgreed', label: 'Lead Time Agreed', formatter: (v) => v ? 'Yes' : 'No' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
         addText: 'Add Collaboration',
         formFields: [
             { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
             { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-            { key: 'agreedQuantity', label: 'Agreed Quantity', type: 'number', required: true },
-            { key: 'deliveryDate', label: 'Delivery Date', type: 'date', required: true },
+            { key: 'minOrderQuantity', label: 'Min Order Quantity', type: 'number', required: true },
+            { key: 'leadTimeAgreed', label: 'Lead Time Agreed', type: 'checkbox' },
             { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
             { key: 'notes', label: 'Notes', type: 'textarea' }
         ]
@@ -137,16 +137,16 @@ const SUPPLY_PLANNING_SERVICES = {
             { key: 'safetyStockId', label: 'ID', primary: true },
             { key: 'itemId', label: 'Item', secondary: true },
             { key: 'warehouseId', label: 'Warehouse' },
-            { key: 'safetyStockLevel', label: 'Safety Level' },
-            { key: 'currentStock', label: 'Current' },
+            { key: 'safetyStockQuantity', label: 'Safety Qty' },
+            { key: 'calculationMethod', label: 'Calc Method' },
             { key: 'serviceLevel', label: 'Service %' }
         ],
         addText: 'Add Safety Stock',
         formFields: [
             { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
             { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
-            { key: 'safetyStockLevel', label: 'Safety Stock Level', type: 'number', required: true },
-            { key: 'currentStock', label: 'Current Stock', type: 'number' },
+            { key: 'safetyStockQuantity', label: 'Safety Stock Quantity', type: 'number', required: true },
+            { key: 'calculationMethod', label: 'Calculation Method', type: 'text' },
             { key: 'serviceLevel', label: 'Service Level %', type: 'number' },
             { key: 'notes', label: 'Notes', type: 'textarea' }
         ]
@@ -159,17 +159,17 @@ const SUPPLY_PLANNING_SERVICES = {
             { key: 'leadTimeId', label: 'ID', primary: true },
             { key: 'itemId', label: 'Item', secondary: true },
             { key: 'vendorId', label: 'Vendor' },
-            { key: 'averageLeadTime', label: 'Avg Lead Time' },
-            { key: 'minimumLeadTime', label: 'Min' },
-            { key: 'maximumLeadTime', label: 'Max' }
+            { key: 'leadTimeDays', label: 'Lead Time (days)' },
+            { key: 'transitDays', label: 'Transit (days)' },
+            { key: 'totalDays', label: 'Total (days)' }
         ],
         addText: 'Add Lead Time',
         formFields: [
             { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
             { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
-            { key: 'averageLeadTime', label: 'Average Lead Time (days)', type: 'number', required: true },
-            { key: 'minimumLeadTime', label: 'Minimum Lead Time (days)', type: 'number' },
-            { key: 'maximumLeadTime', label: 'Maximum Lead Time (days)', type: 'number' },
+            { key: 'leadTimeDays', label: 'Lead Time (days)', type: 'number', required: true },
+            { key: 'transitDays', label: 'Transit (days)', type: 'number' },
+            { key: 'totalDays', label: 'Total (days)', type: 'number' },
             { key: 'notes', label: 'Notes', type: 'textarea' }
         ]
     }
@@ -238,7 +238,7 @@ function openScmSupplyPlanningForm(config, item = null) {
 }
 
 async function deleteScmSupplyPlanningItem(config, id, item) {
-    const name = item.planName || id;
+    const name = item.name || id;
     const confirmed = await Layer8MConfirm.confirmDelete(name);
     if (confirmed) {
         try {

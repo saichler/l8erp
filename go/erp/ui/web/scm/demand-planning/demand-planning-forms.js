@@ -34,12 +34,12 @@ limitations under the License.
                 {
                     title: 'Forecast Details',
                     fields: [
-                        { key: 'forecastName', label: 'Forecast Name', type: 'text', required: true },
+                        { key: 'forecastMethod', label: 'Forecast Method', type: 'select', options: enums.FORECAST_METHOD, required: true },
                         { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                        { key: 'forecastDate', label: 'Forecast Date', type: 'date', required: true },
+                        { key: 'periodStart', label: 'Period Start', type: 'date', required: true },
+                        { key: 'periodEnd', label: 'Period End', type: 'date' },
                         { key: 'forecastQuantity', label: 'Forecast Quantity', type: 'number', required: true },
-                        { key: 'modelId', label: 'Forecast Model', type: 'reference', lookupModel: 'ScmForecastModel' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
+                        { key: 'confidenceLevel', label: 'Confidence Level', type: 'number' },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
                 }
@@ -52,9 +52,9 @@ limitations under the License.
                 {
                     title: 'Model Details',
                     fields: [
-                        { key: 'modelName', label: 'Model Name', type: 'text', required: true },
+                        { key: 'name', label: 'Model Name', type: 'text', required: true },
                         { key: 'forecastMethod', label: 'Forecast Method', type: 'select', options: enums.FORECAST_METHOD, required: true },
-                        { key: 'accuracy', label: 'Accuracy %', type: 'number' },
+                        { key: 'accuracyScore', label: 'Accuracy %', type: 'number' },
                         { key: 'parameters', label: 'Parameters', type: 'textarea' },
                         { key: 'description', label: 'Description', type: 'textarea' }
                     ]
@@ -68,9 +68,9 @@ limitations under the License.
                 {
                     title: 'Plan Details',
                     fields: [
-                        { key: 'planName', label: 'Plan Name', type: 'text', required: true },
-                        { key: 'startDate', label: 'Start Date', type: 'date', required: true },
-                        { key: 'endDate', label: 'End Date', type: 'date', required: true },
+                        { key: 'name', label: 'Plan Name', type: 'text', required: true },
+                        { key: 'planPeriod.startDate', label: 'Start Date', type: 'date', required: true },
+                        { key: 'planPeriod.endDate', label: 'End Date', type: 'date', required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
                         { key: 'description', label: 'Description', type: 'textarea' },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
@@ -85,8 +85,8 @@ limitations under the License.
                 {
                     title: 'Promotion Details',
                     fields: [
-                        { key: 'planName', label: 'Plan Name', type: 'text', required: true },
-                        { key: 'promotionType', label: 'Promotion Type', type: 'text', required: true },
+                        { key: 'name', label: 'Plan Name', type: 'text', required: true },
+                        { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
                         { key: 'startDate', label: 'Start Date', type: 'date', required: true },
                         { key: 'endDate', label: 'End Date', type: 'date', required: true },
                         { key: 'expectedUplift', label: 'Expected Uplift %', type: 'number' },
@@ -102,9 +102,9 @@ limitations under the License.
                 {
                     title: 'Product Plan Details',
                     fields: [
-                        { key: 'productName', label: 'Product Name', type: 'text', required: true },
+                        { key: 'name', label: 'Product Name', type: 'text', required: true },
                         { key: 'launchDate', label: 'Launch Date', type: 'date', required: true },
-                        { key: 'estimatedDemand', label: 'Estimated Demand', type: 'number' },
+                        { key: 'initialForecast', label: 'Initial Forecast', type: 'number' },
                         { key: 'rampUpPeriod', label: 'Ramp-Up Period', type: 'text' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
                         { key: 'description', label: 'Description', type: 'textarea' }
@@ -121,9 +121,9 @@ limitations under the License.
                     fields: [
                         { key: 'forecastId', label: 'Forecast', type: 'reference', lookupModel: 'ScmDemandForecast', required: true },
                         { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                        { key: 'forecastedQty', label: 'Forecasted Quantity', type: 'number' },
-                        { key: 'actualQty', label: 'Actual Quantity', type: 'number' },
-                        { key: 'accuracyPercent', label: 'Accuracy %', type: 'number' },
+                        { key: 'forecastQuantity', label: 'Forecasted Quantity', type: 'number' },
+                        { key: 'actualQuantity', label: 'Actual Quantity', type: 'number' },
+                        { key: 'mape', label: 'MAPE %', type: 'number' },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
                 }

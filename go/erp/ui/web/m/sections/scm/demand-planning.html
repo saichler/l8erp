@@ -45,20 +45,20 @@ const DEMAND_PLANNING_SERVICES = {
         idField: 'forecastId',
         columns: [
             { key: 'forecastId', label: 'ID', primary: true },
-            { key: 'forecastName', label: 'Forecast', secondary: true, filterKey: 'forecastName' },
+            { key: 'forecastMethod', label: 'Method', secondary: true, formatter: (v) => ({ 0: 'Unspecified', 1: 'Moving Average', 2: 'Exponential Smoothing', 3: 'Regression', 4: 'Seasonal', 5: 'Causal' }[v] || '-') },
             { key: 'itemId', label: 'Item' },
-            { key: 'forecastDate', label: 'Date', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'periodStart', label: 'Start', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'forecastQuantity', label: 'Qty' },
-            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
+            { key: 'confidenceLevel', label: 'Confidence' }
         ],
         addText: 'Add Forecast',
         formFields: [
-            { key: 'forecastName', label: 'Forecast Name', type: 'text', required: true },
+            { key: 'forecastMethod', label: 'Forecast Method', type: 'select', options: { 0: 'Unspecified', 1: 'Moving Average', 2: 'Exponential Smoothing', 3: 'Regression', 4: 'Seasonal', 5: 'Causal' }, required: true },
             { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-            { key: 'forecastDate', label: 'Forecast Date', type: 'date', required: true },
+            { key: 'periodStart', label: 'Period Start', type: 'date', required: true },
             { key: 'forecastQuantity', label: 'Forecast Quantity', type: 'number', required: true },
-            { key: 'modelId', label: 'Forecast Model', type: 'reference', lookupModel: 'ScmForecastModel' },
-            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
+            { key: 'periodEnd', label: 'Period End', type: 'date' },
+            { key: 'confidenceLevel', label: 'Confidence Level', type: 'number' },
             { key: 'notes', label: 'Notes', type: 'textarea' }
         ]
     },
@@ -68,16 +68,16 @@ const DEMAND_PLANNING_SERVICES = {
         idField: 'modelId',
         columns: [
             { key: 'modelId', label: 'ID', primary: true },
-            { key: 'modelName', label: 'Model', secondary: true, filterKey: 'modelName' },
+            { key: 'name', label: 'Model', secondary: true, filterKey: 'name' },
             { key: 'forecastMethod', label: 'Method', formatter: (v) => ({ 0: 'Unspecified', 1: 'Moving Average', 2: 'Exponential Smoothing', 3: 'Regression', 4: 'Seasonal', 5: 'Causal' }[v] || '-') },
-            { key: 'accuracy', label: 'Accuracy %' },
+            { key: 'accuracyScore', label: 'Accuracy %' },
             { key: 'description', label: 'Description' }
         ],
         addText: 'Add Model',
         formFields: [
-            { key: 'modelName', label: 'Model Name', type: 'text', required: true },
+            { key: 'name', label: 'Model Name', type: 'text', required: true },
             { key: 'forecastMethod', label: 'Forecast Method', type: 'select', options: { 0: 'Unspecified', 1: 'Moving Average', 2: 'Exponential Smoothing', 3: 'Regression', 4: 'Seasonal', 5: 'Causal' } },
-            { key: 'accuracy', label: 'Accuracy %', type: 'number' },
+            { key: 'accuracyScore', label: 'Accuracy Score', type: 'number' },
             { key: 'parameters', label: 'Parameters', type: 'textarea' },
             { key: 'description', label: 'Description', type: 'textarea' }
         ]
@@ -88,16 +88,16 @@ const DEMAND_PLANNING_SERVICES = {
         idField: 'planId',
         columns: [
             { key: 'planId', label: 'ID', primary: true },
-            { key: 'planName', label: 'Plan', secondary: true, filterKey: 'planName' },
-            { key: 'startDate', label: 'Start', formatter: (v) => Layer8MUtils.formatDate(v) },
-            { key: 'endDate', label: 'End', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'name', label: 'Plan', secondary: true, filterKey: 'name' },
+            { key: 'planPeriod', label: 'Start', formatter: (v) => Layer8MUtils.formatDate(v?.startDate) },
+            { key: 'planPeriod', label: 'End', formatter: (v) => Layer8MUtils.formatDate(v?.endDate) },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
         addText: 'Add Demand Plan',
         formFields: [
-            { key: 'planName', label: 'Plan Name', type: 'text', required: true },
-            { key: 'startDate', label: 'Start Date', type: 'date', required: true },
-            { key: 'endDate', label: 'End Date', type: 'date', required: true },
+            { key: 'name', label: 'Plan Name', type: 'text', required: true },
+            { key: 'planPeriod.startDate', label: 'Start Date', type: 'date', required: true },
+            { key: 'planPeriod.endDate', label: 'End Date', type: 'date', required: true },
             { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
             { key: 'description', label: 'Description', type: 'textarea' },
             { key: 'notes', label: 'Notes', type: 'textarea' }
@@ -109,16 +109,16 @@ const DEMAND_PLANNING_SERVICES = {
         idField: 'planId',
         columns: [
             { key: 'planId', label: 'ID', primary: true },
-            { key: 'planName', label: 'Plan', secondary: true, filterKey: 'planName' },
-            { key: 'promotionType', label: 'Type' },
+            { key: 'name', label: 'Plan', secondary: true, filterKey: 'name' },
+            { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') },
             { key: 'startDate', label: 'Start', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'endDate', label: 'End', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'expectedUplift', label: 'Uplift %' }
         ],
         addText: 'Add Promotional Plan',
         formFields: [
-            { key: 'planName', label: 'Plan Name', type: 'text', required: true },
-            { key: 'promotionType', label: 'Promotion Type', type: 'text', required: true },
+            { key: 'name', label: 'Plan Name', type: 'text', required: true },
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
             { key: 'startDate', label: 'Start Date', type: 'date', required: true },
             { key: 'endDate', label: 'End Date', type: 'date', required: true },
             { key: 'expectedUplift', label: 'Expected Uplift %', type: 'number' },
@@ -131,16 +131,16 @@ const DEMAND_PLANNING_SERVICES = {
         idField: 'planId',
         columns: [
             { key: 'planId', label: 'ID', primary: true },
-            { key: 'productName', label: 'Product', secondary: true, filterKey: 'productName' },
+            { key: 'name', label: 'Product', secondary: true, filterKey: 'name' },
             { key: 'launchDate', label: 'Launch', formatter: (v) => Layer8MUtils.formatDate(v) },
-            { key: 'estimatedDemand', label: 'Est. Demand' },
+            { key: 'initialForecast', label: 'Initial Forecast' },
             { key: 'status', label: 'Status', formatter: (v) => ({ 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' }[v] || '-') }
         ],
         addText: 'Add New Product Plan',
         formFields: [
-            { key: 'productName', label: 'Product Name', type: 'text', required: true },
+            { key: 'name', label: 'Product Name', type: 'text', required: true },
             { key: 'launchDate', label: 'Launch Date', type: 'date', required: true },
-            { key: 'estimatedDemand', label: 'Estimated Demand', type: 'number' },
+            { key: 'initialForecast', label: 'Initial Forecast', type: 'number' },
             { key: 'rampUpPeriod', label: 'Ramp-Up Period', type: 'text' },
             { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } },
             { key: 'description', label: 'Description', type: 'textarea' }
@@ -154,17 +154,17 @@ const DEMAND_PLANNING_SERVICES = {
             { key: 'accuracyId', label: 'ID', primary: true },
             { key: 'forecastId', label: 'Forecast', secondary: true },
             { key: 'itemId', label: 'Item' },
-            { key: 'forecastedQty', label: 'Forecasted' },
-            { key: 'actualQty', label: 'Actual' },
-            { key: 'accuracyPercent', label: 'Accuracy %' }
+            { key: 'forecastQuantity', label: 'Forecasted' },
+            { key: 'actualQuantity', label: 'Actual' },
+            { key: 'mape', label: 'MAPE %' }
         ],
         addText: 'Add Accuracy Record',
         formFields: [
             { key: 'forecastId', label: 'Forecast', type: 'reference', lookupModel: 'ScmDemandForecast', required: true },
             { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-            { key: 'forecastedQty', label: 'Forecasted Quantity', type: 'number' },
-            { key: 'actualQty', label: 'Actual Quantity', type: 'number' },
-            { key: 'accuracyPercent', label: 'Accuracy %', type: 'number' },
+            { key: 'forecastQuantity', label: 'Forecast Quantity', type: 'number' },
+            { key: 'actualQuantity', label: 'Actual Quantity', type: 'number' },
+            { key: 'mape', label: 'MAPE %', type: 'number' },
             { key: 'notes', label: 'Notes', type: 'textarea' }
         ]
     }
@@ -233,7 +233,7 @@ function openScmDemandPlanningForm(config, item = null) {
 }
 
 async function deleteScmDemandPlanningItem(config, id, item) {
-    const name = item.forecastName || item.modelName || item.planName || item.productName || id;
+    const name = item.name || item.forecastMethod || id;
     const confirmed = await Layer8MConfirm.confirmDelete(name);
     if (confirmed) {
         try {

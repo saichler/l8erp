@@ -71,13 +71,13 @@ const INVENTORY_SERVICES = {
         idField: 'categoryId',
         columns: [
             { key: 'categoryId', label: 'ID', primary: true },
-            { key: 'categoryName', label: 'Name', secondary: true, filterKey: 'categoryName' },
+            { key: 'name', label: 'Name', secondary: true, filterKey: 'name' },
             { key: 'parentCategoryId', label: 'Parent' },
             { key: 'description', label: 'Description' }
         ],
         addText: 'Add Category',
         formFields: [
-            { key: 'categoryName', label: 'Category Name', type: 'text', required: true },
+            { key: 'name', label: 'Category Name', type: 'text', required: true },
             { key: 'parentCategoryId', label: 'Parent Category', type: 'reference', lookupModel: 'ScmItemCategory' },
             { key: 'description', label: 'Description', type: 'textarea' },
             { key: 'isActive', label: 'Active', type: 'checkbox' }
@@ -114,16 +114,16 @@ const INVENTORY_SERVICES = {
             { key: 'lotId', label: 'ID', primary: true },
             { key: 'lotNumber', label: 'Lot #', secondary: true, filterKey: 'lotNumber' },
             { key: 'itemId', label: 'Item' },
-            { key: 'manufacturingDate', label: 'Mfg Date', formatter: (v) => Layer8MUtils.formatDate(v) },
-            { key: 'expirationDate', label: 'Expiry', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'manufactureDate', label: 'Mfg Date', formatter: (v) => Layer8MUtils.formatDate(v) },
+            { key: 'expiryDate', label: 'Expiry', formatter: (v) => Layer8MUtils.formatDate(v) },
             { key: 'quantity', label: 'Qty' }
         ],
         addText: 'Add Lot',
         formFields: [
             { key: 'lotNumber', label: 'Lot Number', type: 'text', required: true },
             { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-            { key: 'manufacturingDate', label: 'Manufacturing Date', type: 'date' },
-            { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
+            { key: 'manufactureDate', label: 'Manufacture Date', type: 'date' },
+            { key: 'expiryDate', label: 'Expiry Date', type: 'date' },
             { key: 'quantity', label: 'Quantity', type: 'number' },
             { key: 'notes', label: 'Notes', type: 'textarea' }
         ]
@@ -144,7 +144,7 @@ const INVENTORY_SERVICES = {
             { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
             { key: 'lotId', label: 'Lot', type: 'reference', lookupModel: 'ScmLotNumber' },
             { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
-            { key: 'isAvailable', label: 'Available', type: 'checkbox' }
+            { key: 'status', label: 'Status', type: 'select', options: { 0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled' } }
         ]
     },
     'cycle-counts': {
@@ -179,7 +179,7 @@ const INVENTORY_SERVICES = {
             { key: 'warehouseId', label: 'Warehouse' },
             { key: 'minimumQuantity', label: 'Min Qty' },
             { key: 'reorderQuantity', label: 'Reorder Qty' },
-            { key: 'planningMethod', label: 'Method', formatter: (v) => ({ 0: 'Unspecified', 1: 'Reorder Point', 2: 'MRP', 3: 'Kanban', 4: 'Min-Max' }[v] || '-') }
+            { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
         ],
         addText: 'Add Reorder Point',
         formFields: [
@@ -188,7 +188,7 @@ const INVENTORY_SERVICES = {
             { key: 'minimumQuantity', label: 'Minimum Quantity', type: 'number', required: true },
             { key: 'reorderQuantity', label: 'Reorder Quantity', type: 'number', required: true },
             { key: 'maximumQuantity', label: 'Maximum Quantity', type: 'number' },
-            { key: 'planningMethod', label: 'Planning Method', type: 'select', options: { 0: 'Unspecified', 1: 'Reorder Point', 2: 'MRP', 3: 'Kanban', 4: 'Min-Max' } }
+            { key: 'isActive', label: 'Active', type: 'checkbox' }
         ]
     },
     'inventory-valuations': {
@@ -277,7 +277,7 @@ function openInventoryForm(config, item = null) {
 }
 
 async function deleteInventoryItem(config, id, item) {
-    const name = item.itemNumber || item.categoryName || item.lotNumber || item.serialNumber || id;
+    const name = item.itemNumber || item.name || item.lotNumber || item.serialNumber || id;
     const confirmed = await Layer8MConfirm.confirmDelete(name);
     if (confirmed) {
         try {

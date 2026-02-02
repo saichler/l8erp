@@ -25,7 +25,7 @@ limitations under the License.
     MobileLogistics.columns = {
         ScmCarrier: [
             { key: 'carrierId', label: 'ID', sortKey: 'carrierId', filterKey: 'carrierId' },
-            { key: 'carrierCode', label: 'Code', sortKey: 'carrierCode', filterKey: 'carrierCode' },
+            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'carrierType', label: 'Type', sortKey: 'carrierType', filterKey: 'carrierType', enumValues: enums.CARRIER_TYPE_VALUES, render: (item) => render.carrierType(item.carrierType) },
             { key: 'contactInfo', label: 'Contact', sortKey: 'contactInfo', filterKey: 'contactInfo' },
@@ -47,12 +47,12 @@ limitations under the License.
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
             { key: 'shipDate', label: 'Ship Date', sortKey: 'shipDate', render: (item) => Layer8MRenderers.renderDate(item.shipDate) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.SHIPMENT_STATUS_VALUES, render: (item) => render.shipmentStatus(item.status) },
-            { key: 'totalCost', label: 'Cost', sortKey: 'totalCost', render: (item) => Layer8MRenderers.renderMoney(item.totalCost) }
+            { key: 'freightCost', label: 'Cost', sortKey: 'freightCost', render: (item) => Layer8MRenderers.renderMoney(item.freightCost) }
         ],
 
         ScmRoute: [
             { key: 'routeId', label: 'ID', sortKey: 'routeId', filterKey: 'routeId' },
-            { key: 'routeName', label: 'Route', sortKey: 'routeName', filterKey: 'routeName' },
+            { key: 'name', label: 'Route', sortKey: 'name', filterKey: 'name' },
             { key: 'origin', label: 'Origin', sortKey: 'origin', filterKey: 'origin' },
             { key: 'destination', label: 'Destination', sortKey: 'destination', filterKey: 'destination' },
             { key: 'distance', label: 'Distance', sortKey: 'distance' },
@@ -61,7 +61,7 @@ limitations under the License.
 
         ScmLoadPlan: [
             { key: 'loadPlanId', label: 'ID', sortKey: 'loadPlanId', filterKey: 'loadPlanId' },
-            { key: 'planName', label: 'Plan', sortKey: 'planName', filterKey: 'planName' },
+            { key: 'plannedDate', label: 'Planned', sortKey: 'plannedDate', render: (item) => Layer8MRenderers.renderDate(item.plannedDate) },
             { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
             { key: 'vehicleId', label: 'Vehicle', sortKey: 'vehicleId', filterKey: 'vehicleId' },
             { key: 'totalWeight', label: 'Weight', sortKey: 'totalWeight' },
@@ -73,7 +73,7 @@ limitations under the License.
             { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
             { key: 'deliveryDate', label: 'Delivered', sortKey: 'deliveryDate', render: (item) => Layer8MRenderers.renderDate(item.deliveryDate) },
             { key: 'receivedBy', label: 'Received By', sortKey: 'receivedBy', filterKey: 'receivedBy' },
-            { key: 'isComplete', label: 'Complete', sortKey: 'isComplete', render: (item) => Layer8MRenderers.renderBoolean(item.isComplete) }
+            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
         ScmFreightAudit: [
@@ -81,7 +81,7 @@ limitations under the License.
             { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
             { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
             { key: 'invoicedAmount', label: 'Invoiced', sortKey: 'invoicedAmount', render: (item) => Layer8MRenderers.renderMoney(item.invoicedAmount) },
-            { key: 'auditedAmount', label: 'Audited', sortKey: 'auditedAmount', render: (item) => Layer8MRenderers.renderMoney(item.auditedAmount) },
+            { key: 'actualAmount', label: 'Actual', sortKey: 'actualAmount', render: (item) => Layer8MRenderers.renderMoney(item.actualAmount) },
             { key: 'variance', label: 'Variance', sortKey: 'variance', render: (item) => Layer8MRenderers.renderMoney(item.variance) }
         ],
 
@@ -89,7 +89,7 @@ limitations under the License.
             { key: 'rmaId', label: 'ID', sortKey: 'rmaId', filterKey: 'rmaId' },
             { key: 'rmaNumber', label: 'RMA #', sortKey: 'rmaNumber', filterKey: 'rmaNumber' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'requestDate', label: 'Requested', sortKey: 'requestDate', render: (item) => Layer8MRenderers.renderDate(item.requestDate) },
+            { key: 'returnDate', label: 'Return Date', sortKey: 'returnDate', render: (item) => Layer8MRenderers.renderDate(item.returnDate) },
             { key: 'reason', label: 'Reason', sortKey: 'reason', filterKey: 'reason' },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ]

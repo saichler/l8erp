@@ -25,33 +25,33 @@ limitations under the License.
     MobileScmDemandPlanning.columns = {
         ScmDemandForecast: [
             { key: 'forecastId', label: 'ID', sortKey: 'forecastId', filterKey: 'forecastId' },
-            { key: 'forecastName', label: 'Forecast', sortKey: 'forecastName', filterKey: 'forecastName' },
+            { key: 'forecastMethod', label: 'Method', sortKey: 'forecastMethod', filterKey: 'forecastMethod', enumValues: enums.FORECAST_METHOD_VALUES, render: (item) => render.forecastMethod(item.forecastMethod) },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'forecastDate', label: 'Date', sortKey: 'forecastDate', render: (item) => Layer8MRenderers.renderDate(item.forecastDate) },
+            { key: 'periodStart', label: 'Start', sortKey: 'periodStart', render: (item) => Layer8MRenderers.renderDate(item.periodStart) },
             { key: 'forecastQuantity', label: 'Qty', sortKey: 'forecastQuantity' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+            { key: 'confidenceLevel', label: 'Confidence', sortKey: 'confidenceLevel' }
         ],
 
         ScmForecastModel: [
             { key: 'modelId', label: 'ID', sortKey: 'modelId', filterKey: 'modelId' },
-            { key: 'modelName', label: 'Model', sortKey: 'modelName', filterKey: 'modelName' },
+            { key: 'name', label: 'Model', sortKey: 'name', filterKey: 'name' },
             { key: 'forecastMethod', label: 'Method', sortKey: 'forecastMethod', filterKey: 'forecastMethod', enumValues: enums.FORECAST_METHOD_VALUES, render: (item) => render.forecastMethod(item.forecastMethod) },
-            { key: 'accuracy', label: 'Accuracy %', sortKey: 'accuracy' },
+            { key: 'accuracyScore', label: 'Accuracy %', sortKey: 'accuracyScore' },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' }
         ],
 
         ScmDemandPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'planName', label: 'Plan', sortKey: 'planName', filterKey: 'planName' },
-            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
+            { key: 'name', label: 'Plan', sortKey: 'name', filterKey: 'name' },
+            { key: 'planPeriod', label: 'Start', sortKey: 'planPeriod.startDate', render: (item) => Layer8MRenderers.renderDate(item.planPeriod?.startDate) },
+            { key: 'planPeriod', label: 'End', sortKey: 'planPeriod.endDate', render: (item) => Layer8MRenderers.renderDate(item.planPeriod?.endDate) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
         ScmPromotionalPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'planName', label: 'Plan', sortKey: 'planName', filterKey: 'planName' },
-            { key: 'promotionType', label: 'Type', sortKey: 'promotionType', filterKey: 'promotionType' },
+            { key: 'name', label: 'Plan', sortKey: 'name', filterKey: 'name' },
+            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) },
             { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
             { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
             { key: 'expectedUplift', label: 'Uplift %', sortKey: 'expectedUplift' }
@@ -59,9 +59,9 @@ limitations under the License.
 
         ScmNewProductPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'productName', label: 'Product', sortKey: 'productName', filterKey: 'productName' },
+            { key: 'name', label: 'Product', sortKey: 'name', filterKey: 'name' },
             { key: 'launchDate', label: 'Launch', sortKey: 'launchDate', render: (item) => Layer8MRenderers.renderDate(item.launchDate) },
-            { key: 'estimatedDemand', label: 'Est. Demand', sortKey: 'estimatedDemand' },
+            { key: 'initialForecast', label: 'Initial Forecast', sortKey: 'initialForecast' },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
         ],
 
@@ -69,9 +69,9 @@ limitations under the License.
             { key: 'accuracyId', label: 'ID', sortKey: 'accuracyId', filterKey: 'accuracyId' },
             { key: 'forecastId', label: 'Forecast', sortKey: 'forecastId', filterKey: 'forecastId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'forecastedQty', label: 'Forecasted', sortKey: 'forecastedQty' },
-            { key: 'actualQty', label: 'Actual', sortKey: 'actualQty' },
-            { key: 'accuracyPercent', label: 'Accuracy %', sortKey: 'accuracyPercent' }
+            { key: 'forecastQuantity', label: 'Forecasted', sortKey: 'forecastQuantity' },
+            { key: 'actualQuantity', label: 'Actual', sortKey: 'actualQuantity' },
+            { key: 'mape', label: 'MAPE %', sortKey: 'mape' }
         ]
     };
 
