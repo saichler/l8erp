@@ -14,7 +14,6 @@
 package freightaudits
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
@@ -67,13 +66,23 @@ func FreightAudits(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func FreightAudit(auditId string, vnic ifs.IVNic) (*scm.ScmFreightAudit, error) {
 	this, ok := FreightAudits(vnic)
-	if !ok {
-		return nil, errors.New("No FreightAudit Service Found")
-	}
 	filter := &scm.ScmFreightAudit{AuditId: auditId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*scm.ScmFreightAudit), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ScmFreightAudit), nil
+	if resp.Element() != nil {
+		return resp.Element().(*scm.ScmFreightAudit), nil
+	}
+	return nil, nil
 }

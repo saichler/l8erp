@@ -45,6 +45,9 @@ func (this *AssetRevaluationServiceCallback) After(any interface{}, action ifs.A
 }
 
 func validate(assetRevaluation *fin.AssetRevaluation, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(assetRevaluation.RevaluationId, "RevaluationId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(assetRevaluation.AssetId, "AssetId"); err != nil {
 		return err
 	}

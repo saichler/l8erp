@@ -65,6 +65,9 @@ func validateTrainingRecord(entity *hcm.TrainingRecord, vnic ifs.IVNic) error {
 }
 
 func validateTrnRecRequiredFields(entity *hcm.TrainingRecord) error {
+	if err := common.ValidateRequired(entity.RecordId, "RecordId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

@@ -14,7 +14,6 @@
 package salesinvoices
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func SalesInvoices(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func SalesInvoice(invoiceId string, vnic ifs.IVNic) (*fin.SalesInvoice, error) {
 	this, ok := SalesInvoices(vnic)
-	if !ok {
-		return nil, errors.New("No SalesInvoice Service Found")
-	}
 	filter := &fin.SalesInvoice{InvoiceId: invoiceId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.SalesInvoice), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.SalesInvoice), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.SalesInvoice), nil
+	}
+	return nil, nil
 }

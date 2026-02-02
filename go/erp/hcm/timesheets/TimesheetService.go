@@ -14,7 +14,6 @@
 package timesheets
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func Timesheets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func Timesheet(timesheetId string, vnic ifs.IVNic) (*hcm.Timesheet, error) {
 	this, ok := Timesheets(vnic)
-	if !ok {
-		return nil, errors.New("No Timesheet Service Found")
-	}
 	filter := &hcm.Timesheet{TimesheetId: timesheetId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.Timesheet), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.Timesheet), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.Timesheet), nil
+	}
+	return nil, nil
 }

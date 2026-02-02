@@ -14,7 +14,6 @@
 package customers
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func Customers(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func Customer(customerId string, vnic ifs.IVNic) (*fin.Customer, error) {
 	this, ok := Customers(vnic)
-	if !ok {
-		return nil, errors.New("No Customer Service Found")
-	}
 	filter := &fin.Customer{CustomerId: customerId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.Customer), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.Customer), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.Customer), nil
+	}
+	return nil, nil
 }

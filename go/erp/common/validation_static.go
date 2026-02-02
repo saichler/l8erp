@@ -18,6 +18,19 @@ import (
 	"time"
 )
 
+// SafeCast safely casts an interface{} to a pointer of type T.
+// Returns an error instead of panicking if the element is nil.
+func SafeCast[T any](element interface{}) (*T, error) {
+	if element == nil {
+		return nil, errors.New("entity not found")
+	}
+	result, ok := element.(*T)
+	if !ok {
+		return nil, errors.New("unexpected response type")
+	}
+	return result, nil
+}
+
 // ValidateRequired checks if a string field is non-empty
 func ValidateRequired(value, fieldName string) error {
 	if value == "" {

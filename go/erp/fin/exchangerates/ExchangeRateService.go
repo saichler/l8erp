@@ -14,7 +14,6 @@
 package exchangerates
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func ExchangeRates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func ExchangeRate(exchangeRateId string, vnic ifs.IVNic) (*fin.ExchangeRate, error) {
 	this, ok := ExchangeRates(vnic)
-	if !ok {
-		return nil, errors.New("No ExchangeRate Service Found")
-	}
 	filter := &fin.ExchangeRate{ExchangeRateId: exchangeRateId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.ExchangeRate), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.ExchangeRate), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.ExchangeRate), nil
+	}
+	return nil, nil
 }

@@ -62,6 +62,9 @@ func validateTimesheet(entity *hcm.Timesheet, vnic ifs.IVNic) error {
 }
 
 func validateTimesheetRequiredFields(entity *hcm.Timesheet) error {
+	if err := common.ValidateRequired(entity.TimesheetId, "TimesheetId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

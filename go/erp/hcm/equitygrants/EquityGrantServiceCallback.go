@@ -62,6 +62,9 @@ func validateEqGrant(entity *hcm.EquityGrant, vnic ifs.IVNic) error {
 }
 
 func validateEqGrantRequiredFields(entity *hcm.EquityGrant) error {
+	if err := common.ValidateRequired(entity.GrantId, "GrantId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

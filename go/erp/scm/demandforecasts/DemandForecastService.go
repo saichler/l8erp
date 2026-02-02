@@ -14,7 +14,6 @@
 package demandforecasts
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
@@ -67,13 +66,23 @@ func DemandForecasts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func DemandForecast(forecastId string, vnic ifs.IVNic) (*scm.ScmDemandForecast, error) {
 	this, ok := DemandForecasts(vnic)
-	if !ok {
-		return nil, errors.New("No DemandForecast Service Found")
-	}
 	filter := &scm.ScmDemandForecast{ForecastId: forecastId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*scm.ScmDemandForecast), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ScmDemandForecast), nil
+	if resp.Element() != nil {
+		return resp.Element().(*scm.ScmDemandForecast), nil
+	}
+	return nil, nil
 }

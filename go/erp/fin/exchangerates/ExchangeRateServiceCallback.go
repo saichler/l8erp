@@ -45,6 +45,9 @@ func (this *ExchangeRateServiceCallback) After(any interface{}, action ifs.Actio
 }
 
 func validate(exchangeRate *fin.ExchangeRate, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(exchangeRate.ExchangeRateId, "ExchangeRateId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(exchangeRate.FromCurrencyId, "FromCurrencyId"); err != nil {
 		return err
 	}

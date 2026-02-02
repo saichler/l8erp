@@ -55,6 +55,9 @@ func validateMeritCyc(entity *hcm.MeritCycle) error {
 }
 
 func validateMeritCycEnums(entity *hcm.MeritCycle) error {
+	if err := common.ValidateRequired(entity.CycleId, "CycleId"); err != nil {
+		return err
+	}
 	if err := common.ValidateEnum(entity.Status, hcm.MeritCycleStatus_name, "Status"); err != nil {
 		return err
 	}

@@ -14,7 +14,6 @@
 package courses
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func Courses(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func Course(courseId string, vnic ifs.IVNic) (*hcm.Course, error) {
 	this, ok := Courses(vnic)
-	if !ok {
-		return nil, errors.New("No Course Service Found")
-	}
 	filter := &hcm.Course{CourseId: courseId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.Course), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.Course), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.Course), nil
+	}
+	return nil, nil
 }

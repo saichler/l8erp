@@ -61,6 +61,9 @@ func validateOrg(entity *hcm.Organization, vnic ifs.IVNic) error {
 }
 
 func validateOrgRequiredFields(entity *hcm.Organization) error {
+	if err := common.ValidateRequired(entity.OrganizationId, "OrganizationId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.Name, "Name"); err != nil {
 		return err
 	}

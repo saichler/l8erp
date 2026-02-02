@@ -14,7 +14,6 @@
 package purchaseinvoices
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func PurchaseInvoices(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func PurchaseInvoice(invoiceId string, vnic ifs.IVNic) (*fin.PurchaseInvoice, error) {
 	this, ok := PurchaseInvoices(vnic)
-	if !ok {
-		return nil, errors.New("No PurchaseInvoice Service Found")
-	}
 	filter := &fin.PurchaseInvoice{InvoiceId: invoiceId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.PurchaseInvoice), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.PurchaseInvoice), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.PurchaseInvoice), nil
+	}
+	return nil, nil
 }

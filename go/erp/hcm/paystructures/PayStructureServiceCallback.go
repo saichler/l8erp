@@ -45,6 +45,9 @@ func (this *PayStructureServiceCallback) After(any interface{}, action ifs.Actio
 }
 
 func validatePayStruct(entity *hcm.PayStructure) error {
+	if err := common.ValidateRequired(entity.PayStructureId, "PayStructureId"); err != nil {
+		return err
+	}
 	if err := validatePayStructDates(entity); err != nil {
 		return err
 	}

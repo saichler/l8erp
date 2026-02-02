@@ -45,6 +45,9 @@ func (this *JournalEntryLineServiceCallback) After(any interface{}, action ifs.A
 }
 
 func validate(line *fin.JournalEntryLine, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(line.LineId, "LineId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(line.JournalEntryId, "JournalEntryId"); err != nil {
 		return err
 	}

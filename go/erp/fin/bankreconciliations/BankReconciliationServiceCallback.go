@@ -45,6 +45,9 @@ func (this *BankReconciliationServiceCallback) After(any interface{}, action ifs
 }
 
 func validate(bankReconciliation *fin.BankReconciliation, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(bankReconciliation.ReconciliationId, "ReconciliationId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(bankReconciliation.BankAccountId, "BankAccountId"); err != nil {
 		return err
 	}

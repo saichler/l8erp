@@ -14,7 +14,6 @@
 package taxwithholdings
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func TaxWithholdings(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func TaxWithholding(withholdingId string, vnic ifs.IVNic) (*hcm.TaxWithholding, error) {
 	this, ok := TaxWithholdings(vnic)
-	if !ok {
-		return nil, errors.New("No TaxWithholding Service Found")
-	}
 	filter := &hcm.TaxWithholding{WithholdingId: withholdingId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.TaxWithholding), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.TaxWithholding), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.TaxWithholding), nil
+	}
+	return nil, nil
 }

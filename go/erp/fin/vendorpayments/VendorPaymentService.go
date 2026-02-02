@@ -14,7 +14,6 @@
 package vendorpayments
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func VendorPayments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func VendorPayment(paymentId string, vnic ifs.IVNic) (*fin.VendorPayment, error) {
 	this, ok := VendorPayments(vnic)
-	if !ok {
-		return nil, errors.New("No VendorPayment Service Found")
-	}
 	filter := &fin.VendorPayment{PaymentId: paymentId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.VendorPayment), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.VendorPayment), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.VendorPayment), nil
+	}
+	return nil, nil
 }

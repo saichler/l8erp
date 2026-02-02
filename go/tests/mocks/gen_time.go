@@ -40,6 +40,7 @@ func generateLeaveRequests(store *MockDataStore) []*hcm.LeaveRequest {
 				RequestId:     fmt.Sprintf("leavereq-%05d", idx),
 				EmployeeId:    empID,
 				LeavePolicyId: store.LeavePolicyIDs[rand.Intn(len(store.LeavePolicyIDs))],
+				LeaveType:     hcm.LeaveType(rand.Intn(4) + 1),
 				StartDate:     startDate.Unix(),
 				EndDate:       endDate.Unix(),
 				TotalDays:     float64(days),

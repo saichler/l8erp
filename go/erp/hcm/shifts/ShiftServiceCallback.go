@@ -55,6 +55,9 @@ func validateShift(entity *hcm.Shift) error {
 }
 
 func validateShiftRequiredFields(entity *hcm.Shift) error {
+	if err := common.ValidateRequired(entity.ShiftId, "ShiftId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.Name, "Name"); err != nil {
 		return err
 	}

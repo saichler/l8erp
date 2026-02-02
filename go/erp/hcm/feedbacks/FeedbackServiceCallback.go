@@ -62,6 +62,9 @@ func validateFeedback(entity *hcm.Feedback, vnic ifs.IVNic) error {
 }
 
 func validateFeedbackRequiredFields(entity *hcm.Feedback) error {
+	if err := common.ValidateRequired(entity.FeedbackId, "FeedbackId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

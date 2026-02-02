@@ -55,6 +55,9 @@ func validateLeavePol(entity *hcm.LeavePolicy) error {
 }
 
 func validateLeavePolEnums(entity *hcm.LeavePolicy) error {
+	if err := common.ValidateRequired(entity.PolicyId, "PolicyId"); err != nil {
+		return err
+	}
 	if err := common.ValidateEnum(entity.LeaveType, hcm.LeaveType_name, "LeaveType"); err != nil {
 		return err
 	}

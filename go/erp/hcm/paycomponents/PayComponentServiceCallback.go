@@ -52,6 +52,9 @@ func validatePayComp(entity *hcm.PayComponent) error {
 }
 
 func validatePayCompRequiredFields(entity *hcm.PayComponent) error {
+	if err := common.ValidateRequired(entity.ComponentId, "ComponentId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.Name, "Name"); err != nil {
 		return err
 	}

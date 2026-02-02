@@ -59,6 +59,9 @@ func validateTaxWith(entity *hcm.TaxWithholding, vnic ifs.IVNic) error {
 }
 
 func validateTaxWithRequiredFields(entity *hcm.TaxWithholding) error {
+	if err := common.ValidateRequired(entity.WithholdingId, "WithholdingId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

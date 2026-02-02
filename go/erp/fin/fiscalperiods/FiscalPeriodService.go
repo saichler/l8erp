@@ -14,7 +14,6 @@
 package fiscalperiods
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func FiscalPeriods(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func FiscalPeriod(fiscalPeriodId string, vnic ifs.IVNic) (*fin.FiscalPeriod, error) {
 	this, ok := FiscalPeriods(vnic)
-	if !ok {
-		return nil, errors.New("No FiscalPeriod Service Found")
-	}
 	filter := &fin.FiscalPeriod{FiscalPeriodId: fiscalPeriodId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.FiscalPeriod), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.FiscalPeriod), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.FiscalPeriod), nil
+	}
+	return nil, nil
 }

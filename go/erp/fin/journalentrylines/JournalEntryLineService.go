@@ -14,7 +14,6 @@
 package journalentrylines
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func JournalEntryLines(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func JournalEntryLine(lineId string, vnic ifs.IVNic) (*fin.JournalEntryLine, error) {
 	this, ok := JournalEntryLines(vnic)
-	if !ok {
-		return nil, errors.New("No JournalEntryLine Service Found")
-	}
 	filter := &fin.JournalEntryLine{LineId: lineId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.JournalEntryLine), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.JournalEntryLine), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.JournalEntryLine), nil
+	}
+	return nil, nil
 }

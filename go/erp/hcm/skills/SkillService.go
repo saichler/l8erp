@@ -14,7 +14,6 @@
 package skills
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func Skills(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func Skill(skillId string, vnic ifs.IVNic) (*hcm.Skill, error) {
 	this, ok := Skills(vnic)
-	if !ok {
-		return nil, errors.New("No Skill Service Found")
-	}
 	filter := &hcm.Skill{SkillId: skillId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.Skill), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.Skill), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.Skill), nil
+	}
+	return nil, nil
 }

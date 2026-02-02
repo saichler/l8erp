@@ -59,6 +59,9 @@ func validateOnbrdTsk(entity *hcm.OnboardingTask, vnic ifs.IVNic) error {
 }
 
 func validateOnbrdTskRequiredFields(entity *hcm.OnboardingTask) error {
+	if err := common.ValidateRequired(entity.TaskId, "TaskId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

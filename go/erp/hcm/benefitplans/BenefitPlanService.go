@@ -14,7 +14,6 @@
 package benefitplans
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func BenefitPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func BenefitPlan(planId string, vnic ifs.IVNic) (*hcm.BenefitPlan, error) {
 	this, ok := BenefitPlans(vnic)
-	if !ok {
-		return nil, errors.New("No BenefitPlan Service Found")
-	}
 	filter := &hcm.BenefitPlan{PlanId: planId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.BenefitPlan), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.BenefitPlan), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.BenefitPlan), nil
+	}
+	return nil, nil
 }

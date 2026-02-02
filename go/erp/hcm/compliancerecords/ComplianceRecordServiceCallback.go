@@ -62,6 +62,9 @@ func validateCompRec(entity *hcm.ComplianceRecord, vnic ifs.IVNic) error {
 }
 
 func validateCompRecRequiredFields(entity *hcm.ComplianceRecord) error {
+	if err := common.ValidateRequired(entity.RecordId, "RecordId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

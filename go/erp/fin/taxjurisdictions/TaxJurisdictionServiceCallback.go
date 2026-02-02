@@ -45,6 +45,9 @@ func (this *TaxJurisdictionServiceCallback) After(any interface{}, action ifs.Ac
 }
 
 func validate(taxJurisdiction *fin.TaxJurisdiction, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(taxJurisdiction.JurisdictionId, "JurisdictionId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(taxJurisdiction.Name, "Name"); err != nil {
 		return err
 	}

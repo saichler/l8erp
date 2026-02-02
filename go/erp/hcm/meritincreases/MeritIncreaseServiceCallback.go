@@ -66,6 +66,9 @@ func validateMeritInc(entity *hcm.MeritIncrease, vnic ifs.IVNic) error {
 }
 
 func validateMeritIncRequiredFields(entity *hcm.MeritIncrease) error {
+	if err := common.ValidateRequired(entity.IncreaseId, "IncreaseId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

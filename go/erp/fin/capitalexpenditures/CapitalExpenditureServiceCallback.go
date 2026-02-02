@@ -45,6 +45,9 @@ func (this *CapitalExpenditureServiceCallback) After(any interface{}, action ifs
 }
 
 func validate(capitalExpenditure *fin.CapitalExpenditure, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(capitalExpenditure.CapexId, "CapexId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(capitalExpenditure.ProjectName, "ProjectName"); err != nil {
 		return err
 	}

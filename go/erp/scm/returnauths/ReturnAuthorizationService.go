@@ -14,7 +14,6 @@
 package returnauths
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
@@ -67,13 +66,23 @@ func ReturnAuthorizations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func ReturnAuthorization(rmaId string, vnic ifs.IVNic) (*scm.ScmReturnAuthorization, error) {
 	this, ok := ReturnAuthorizations(vnic)
-	if !ok {
-		return nil, errors.New("No ReturnAuthorization Service Found")
-	}
 	filter := &scm.ScmReturnAuthorization{RmaId: rmaId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*scm.ScmReturnAuthorization), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ScmReturnAuthorization), nil
+	if resp.Element() != nil {
+		return resp.Element().(*scm.ScmReturnAuthorization), nil
+	}
+	return nil, nil
 }

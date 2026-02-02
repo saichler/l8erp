@@ -89,6 +89,9 @@ func validate(employee *hcm.Employee, vnic ifs.IVNic) error {
 }
 
 func validateRequiredFields(employee *hcm.Employee) error {
+	if err := common.ValidateRequired(employee.EmployeeId, "EmployeeId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(employee.FirstName, "FirstName"); err != nil {
 		return err
 	}

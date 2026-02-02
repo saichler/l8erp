@@ -65,6 +65,9 @@ func validateCourseSession(entity *hcm.CourseSession, vnic ifs.IVNic) error {
 }
 
 func validateSessionRequiredFields(entity *hcm.CourseSession) error {
+	if err := common.ValidateRequired(entity.SessionId, "SessionId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.CourseId, "CourseId"); err != nil {
 		return err
 	}

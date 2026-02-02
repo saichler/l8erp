@@ -59,6 +59,9 @@ func validateLifeEvt(entity *hcm.LifeEvent, vnic ifs.IVNic) error {
 }
 
 func validateLifeEvtRequiredFields(entity *hcm.LifeEvent) error {
+	if err := common.ValidateRequired(entity.LifeEventId, "LifeEventId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

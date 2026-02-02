@@ -14,7 +14,6 @@
 package waveplans
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
@@ -67,13 +66,23 @@ func WavePlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func WavePlan(wavePlanId string, vnic ifs.IVNic) (*scm.ScmWavePlan, error) {
 	this, ok := WavePlans(vnic)
-	if !ok {
-		return nil, errors.New("No WavePlan Service Found")
-	}
 	filter := &scm.ScmWavePlan{WavePlanId: wavePlanId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*scm.ScmWavePlan), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ScmWavePlan), nil
+	if resp.Element() != nil {
+		return resp.Element().(*scm.ScmWavePlan), nil
+	}
+	return nil, nil
 }

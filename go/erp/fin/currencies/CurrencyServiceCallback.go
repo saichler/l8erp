@@ -45,6 +45,9 @@ func (this *CurrencyServiceCallback) After(any interface{}, action ifs.Action, c
 }
 
 func validate(currency *fin.Currency, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(currency.CurrencyId, "CurrencyId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(currency.Code, "Code"); err != nil {
 		return err
 	}

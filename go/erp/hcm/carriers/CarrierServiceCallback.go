@@ -55,6 +55,9 @@ func validateCarrier(entity *hcm.Carrier) error {
 }
 
 func validateCarrierRequiredFields(entity *hcm.Carrier) error {
+	if err := common.ValidateRequired(entity.CarrierId, "CarrierId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.Name, "Name"); err != nil {
 		return err
 	}

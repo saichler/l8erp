@@ -68,6 +68,9 @@ func validateEmployeeCertification(entity *hcm.EmployeeCertification, vnic ifs.I
 }
 
 func validateEmpCertRequiredFields(entity *hcm.EmployeeCertification) error {
+	if err := common.ValidateRequired(entity.EmployeeCertificationId, "EmployeeCertificationId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

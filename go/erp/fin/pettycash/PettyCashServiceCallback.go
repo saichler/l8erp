@@ -45,6 +45,9 @@ func (this *PettyCashServiceCallback) After(any interface{}, action ifs.Action, 
 }
 
 func validate(pettyCash *fin.PettyCash, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(pettyCash.PettyCashId, "PettyCashId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(pettyCash.FundName, "FundName"); err != nil {
 		return err
 	}

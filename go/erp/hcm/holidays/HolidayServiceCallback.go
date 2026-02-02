@@ -55,6 +55,9 @@ func validateHoliday(entity *hcm.Holiday) error {
 }
 
 func validateHolidayRequiredFields(entity *hcm.Holiday) error {
+	if err := common.ValidateRequired(entity.HolidayId, "HolidayId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.Name, "Name"); err != nil {
 		return err
 	}

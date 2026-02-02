@@ -14,7 +14,6 @@
 package equitygrants
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func EquityGrants(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func EquityGrant(grantId string, vnic ifs.IVNic) (*hcm.EquityGrant, error) {
 	this, ok := EquityGrants(vnic)
-	if !ok {
-		return nil, errors.New("No EquityGrant Service Found")
-	}
 	filter := &hcm.EquityGrant{GrantId: grantId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.EquityGrant), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.EquityGrant), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.EquityGrant), nil
+	}
+	return nil, nil
 }

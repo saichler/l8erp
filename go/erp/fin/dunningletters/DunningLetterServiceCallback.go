@@ -45,6 +45,9 @@ func (this *DunningLetterServiceCallback) After(any interface{}, action ifs.Acti
 }
 
 func validate(dunningLetter *fin.DunningLetter, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(dunningLetter.LetterId, "LetterId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(dunningLetter.CustomerId, "CustomerId"); err != nil {
 		return err
 	}

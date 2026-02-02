@@ -45,6 +45,9 @@ func (this *BudgetTransferServiceCallback) After(any interface{}, action ifs.Act
 }
 
 func validate(budgetTransfer *fin.BudgetTransfer, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(budgetTransfer.TransferId, "TransferId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(budgetTransfer.FromBudgetLineId, "FromBudgetLineId"); err != nil {
 		return err
 	}

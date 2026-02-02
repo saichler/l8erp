@@ -59,6 +59,9 @@ func validateDirDep(entity *hcm.DirectDeposit, vnic ifs.IVNic) error {
 }
 
 func validateDirDepRequiredFields(entity *hcm.DirectDeposit) error {
+	if err := common.ValidateRequired(entity.DirectDepositId, "DirectDepositId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

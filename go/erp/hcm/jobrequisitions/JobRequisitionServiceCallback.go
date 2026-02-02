@@ -60,6 +60,9 @@ func validateJobReq(entity *hcm.JobRequisition, vnic ifs.IVNic) error {
 }
 
 func validateJobReqEnums(entity *hcm.JobRequisition) error {
+	if err := common.ValidateRequired(entity.RequisitionId, "RequisitionId"); err != nil {
+		return err
+	}
 	if err := common.ValidateEnum(entity.Status, hcm.RequisitionStatus_name, "Status"); err != nil {
 		return err
 	}

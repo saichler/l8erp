@@ -59,6 +59,9 @@ func validateJob(entity *hcm.Job, vnic ifs.IVNic) error {
 }
 
 func validateJobRequiredFields(entity *hcm.Job) error {
+	if err := common.ValidateRequired(entity.JobId, "JobId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.Title, "Title"); err != nil {
 		return err
 	}

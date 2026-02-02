@@ -14,7 +14,6 @@
 package fiscalyears
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func FiscalYears(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func FiscalYear(fiscalYearId string, vnic ifs.IVNic) (*fin.FiscalYear, error) {
 	this, ok := FiscalYears(vnic)
-	if !ok {
-		return nil, errors.New("No FiscalYear Service Found")
-	}
 	filter := &fin.FiscalYear{FiscalYearId: fiscalYearId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.FiscalYear), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.FiscalYear), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.FiscalYear), nil
+	}
+	return nil, nil
 }

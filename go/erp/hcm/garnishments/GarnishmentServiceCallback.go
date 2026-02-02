@@ -62,6 +62,9 @@ func validateGarnish(entity *hcm.Garnishment, vnic ifs.IVNic) error {
 }
 
 func validateGarnishRequiredFields(entity *hcm.Garnishment) error {
+	if err := common.ValidateRequired(entity.GarnishmentId, "GarnishmentId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

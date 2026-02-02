@@ -62,6 +62,9 @@ func validateGoal(entity *hcm.Goal, vnic ifs.IVNic) error {
 }
 
 func validateGoalRequiredFields(entity *hcm.Goal) error {
+	if err := common.ValidateRequired(entity.GoalId, "GoalId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

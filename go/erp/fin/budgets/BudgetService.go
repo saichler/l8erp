@@ -14,7 +14,6 @@
 package budgets
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func Budgets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func Budget(budgetId string, vnic ifs.IVNic) (*fin.Budget, error) {
 	this, ok := Budgets(vnic)
-	if !ok {
-		return nil, errors.New("No Budget Service Found")
-	}
 	filter := &fin.Budget{BudgetId: budgetId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.Budget), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.Budget), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.Budget), nil
+	}
+	return nil, nil
 }

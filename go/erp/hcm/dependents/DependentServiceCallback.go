@@ -59,6 +59,9 @@ func validateDep(entity *hcm.Dependent, vnic ifs.IVNic) error {
 }
 
 func validateDepRequiredFields(entity *hcm.Dependent) error {
+	if err := common.ValidateRequired(entity.DependentId, "DependentId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.FirstName, "FirstName"); err != nil {
 		return err
 	}

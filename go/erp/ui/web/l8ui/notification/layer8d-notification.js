@@ -66,7 +66,7 @@ limitations under the License.
 
     function createNotificationElement(config) {
         const el = document.createElement('div');
-        el.className = `erp-notification erp-notification-${config.type}`;
+        el.className = `layer8d-notification layer8d-notification-${config.type}`;
 
         const detailsHtml = config.details && config.details.length > 0
             ? `<ul class="layer8d-notification-details">

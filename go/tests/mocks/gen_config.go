@@ -115,6 +115,7 @@ func generateLeavePolicies(store *MockDataStore) []*hcm.LeavePolicy {
 			AllowCarryover:   true,
 			MaximumCarryover: 40, // 5 days * 8 hours
 			AccrualRate:      10, // hours per month
+			AccrualMethod:    hcm.AccrualMethod_ACCRUAL_METHOD_FIXED,
 			AccrualFrequency: hcm.AccrualFrequency_ACCRUAL_FREQUENCY_MONTHLY,
 			RequireApproval:  true,
 			AuditInfo:        createAuditInfo(),
@@ -130,6 +131,7 @@ func generateLeavePolicies(store *MockDataStore) []*hcm.LeavePolicy {
 			AllowCarryover:   true,
 			MaximumCarryover: 24, // 3 days * 8 hours
 			AccrualRate:      6.67, // hours per month
+			AccrualMethod:    hcm.AccrualMethod_ACCRUAL_METHOD_HOURS_WORKED,
 			AccrualFrequency: hcm.AccrualFrequency_ACCRUAL_FREQUENCY_MONTHLY,
 			RequireApproval:  true,
 			AuditInfo:        createAuditInfo(),
@@ -215,6 +217,7 @@ func generateBenefitPlans(store *MockDataStore) []*hcm.BenefitPlan {
 			Name:           "Gold Health Plan",
 			Code:           "HEALTH-GOLD",
 			PlanType:       hcm.BenefitPlanType_BENEFIT_PLAN_TYPE_MEDICAL,
+			Category:       hcm.BenefitPlanCategory_BENEFIT_PLAN_CATEGORY_HEALTH,
 			Description:    "Premium health coverage with low deductibles",
 			PlanYear:       2025,
 			IsActive:       true,
@@ -227,6 +230,7 @@ func generateBenefitPlans(store *MockDataStore) []*hcm.BenefitPlan {
 			Name:           "Silver Health Plan",
 			Code:           "HEALTH-SILVER",
 			PlanType:       hcm.BenefitPlanType_BENEFIT_PLAN_TYPE_MEDICAL,
+			Category:       hcm.BenefitPlanCategory_BENEFIT_PLAN_CATEGORY_HEALTH,
 			Description:    "Standard health coverage",
 			PlanYear:       2025,
 			IsActive:       true,
@@ -239,6 +243,7 @@ func generateBenefitPlans(store *MockDataStore) []*hcm.BenefitPlan {
 			Name:           "Dental Plan",
 			Code:           "DENTAL-STD",
 			PlanType:       hcm.BenefitPlanType_BENEFIT_PLAN_TYPE_DENTAL,
+			Category:       hcm.BenefitPlanCategory_BENEFIT_PLAN_CATEGORY_HEALTH,
 			Description:    "Standard dental coverage",
 			PlanYear:       2025,
 			IsActive:       true,
@@ -251,6 +256,7 @@ func generateBenefitPlans(store *MockDataStore) []*hcm.BenefitPlan {
 			Name:           "Vision Plan",
 			Code:           "VISION-STD",
 			PlanType:       hcm.BenefitPlanType_BENEFIT_PLAN_TYPE_VISION,
+			Category:       hcm.BenefitPlanCategory_BENEFIT_PLAN_CATEGORY_HEALTH,
 			Description:    "Standard vision coverage",
 			PlanYear:       2025,
 			IsActive:       true,
@@ -327,6 +333,7 @@ func generateBonusPlans(store *MockDataStore) []*hcm.BonusPlan {
 			Code:              "APB",
 			Description:       "Annual bonus based on individual and company performance",
 			PlanType:          hcm.BonusPlanType_BONUS_PLAN_TYPE_PERFORMANCE,
+			FundingType:       hcm.BonusFundingType_BONUS_FUNDING_TYPE_PERCENTAGE_OF_PROFITS,
 			PlanYear:          2025,
 			Frequency:         hcm.BonusFrequency_BONUS_FREQUENCY_ANNUAL,
 			TargetPercentage:  10.0,
@@ -340,6 +347,7 @@ func generateBonusPlans(store *MockDataStore) []*hcm.BonusPlan {
 			Code:              "QSB",
 			Description:       "Quarterly bonus for sales team based on targets",
 			PlanType:          hcm.BonusPlanType_BONUS_PLAN_TYPE_SALES_COMMISSION,
+			FundingType:       hcm.BonusFundingType_BONUS_FUNDING_TYPE_PERCENTAGE_OF_REVENUE,
 			PlanYear:          2025,
 			Frequency:         hcm.BonusFrequency_BONUS_FREQUENCY_QUARTERLY,
 			TargetPercentage:  15.0,
@@ -378,6 +386,29 @@ func generateCourses(store *MockDataStore) []*hcm.Course {
 		hcm.CourseDeliveryMethod_COURSE_DELIVERY_METHOD_E_LEARNING,
 		hcm.CourseDeliveryMethod_COURSE_DELIVERY_METHOD_BLENDED,
 	}
+	courseTypes := []hcm.CourseType{
+		hcm.CourseType_COURSE_TYPE_TRAINING,
+		hcm.CourseType_COURSE_TYPE_CERTIFICATION,
+		hcm.CourseType_COURSE_TYPE_COMPLIANCE,
+		hcm.CourseType_COURSE_TYPE_ONBOARDING,
+		hcm.CourseType_COURSE_TYPE_LEADERSHIP,
+		hcm.CourseType_COURSE_TYPE_SKILLS,
+		hcm.CourseType_COURSE_TYPE_SAFETY,
+	}
+	courseCategories := []hcm.CourseCategory{
+		hcm.CourseCategory_COURSE_CATEGORY_TECHNICAL,
+		hcm.CourseCategory_COURSE_CATEGORY_SOFT_SKILLS,
+		hcm.CourseCategory_COURSE_CATEGORY_LEADERSHIP,
+		hcm.CourseCategory_COURSE_CATEGORY_COMPLIANCE,
+		hcm.CourseCategory_COURSE_CATEGORY_SAFETY,
+		hcm.CourseCategory_COURSE_CATEGORY_PRODUCT,
+	}
+	courseLevels := []hcm.CourseLevel{
+		hcm.CourseLevel_COURSE_LEVEL_BEGINNER,
+		hcm.CourseLevel_COURSE_LEVEL_INTERMEDIATE,
+		hcm.CourseLevel_COURSE_LEVEL_ADVANCED,
+		hcm.CourseLevel_COURSE_LEVEL_EXPERT,
+	}
 
 	for i, name := range courseNames {
 		courses[i] = &hcm.Course{
@@ -386,7 +417,10 @@ func generateCourses(store *MockDataStore) []*hcm.Course {
 			Title:           name,
 			Code:            fmt.Sprintf("CRS%03d", i+1),
 			Description:     fmt.Sprintf("Training course: %s", name),
+			CourseType:      courseTypes[i%len(courseTypes)],
 			DeliveryMethod:  deliveryMethods[i%len(deliveryMethods)],
+			Category:        courseCategories[i%len(courseCategories)],
+			Level:           courseLevels[i%len(courseLevels)],
 			DurationMinutes: int32((rand.Intn(4) + 1) * 60), // 1-4 hours
 			IsActive:        true,
 			AuditInfo:       createAuditInfo(),

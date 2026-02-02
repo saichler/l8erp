@@ -45,6 +45,9 @@ func (this *CreditMemoServiceCallback) After(any interface{}, action ifs.Action,
 }
 
 func validate(creditMemo *fin.CreditMemo, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(creditMemo.CreditMemoId, "CreditMemoId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(creditMemo.CustomerId, "CustomerId"); err != nil {
 		return err
 	}

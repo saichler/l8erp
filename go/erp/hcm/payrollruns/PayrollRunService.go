@@ -14,7 +14,6 @@
 package payrollruns
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func PayrollRuns(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func PayrollRun(payrollRunId string, vnic ifs.IVNic) (*hcm.PayrollRun, error) {
 	this, ok := PayrollRuns(vnic)
-	if !ok {
-		return nil, errors.New("No PayrollRun Service Found")
-	}
 	filter := &hcm.PayrollRun{PayrollRunId: payrollRunId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.PayrollRun), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.PayrollRun), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.PayrollRun), nil
+	}
+	return nil, nil
 }

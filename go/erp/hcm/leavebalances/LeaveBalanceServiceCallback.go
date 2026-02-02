@@ -63,6 +63,9 @@ func validateLeaveBal(entity *hcm.LeaveBalance, vnic ifs.IVNic) error {
 }
 
 func validateLeaveBalRequiredFields(entity *hcm.LeaveBalance) error {
+	if err := common.ValidateRequired(entity.BalanceId, "BalanceId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

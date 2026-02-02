@@ -111,6 +111,12 @@ func generateFeedback(store *MockDataStore) []*hcm.Feedback {
 		hcm.FeedbackType_FEEDBACK_TYPE_UPWARD,
 		hcm.FeedbackType_FEEDBACK_TYPE_CONTINUOUS,
 	}
+	relationships := []hcm.FeedbackRelationship{
+		hcm.FeedbackRelationship_FEEDBACK_RELATIONSHIP_MANAGER,
+		hcm.FeedbackRelationship_FEEDBACK_RELATIONSHIP_PEER,
+		hcm.FeedbackRelationship_FEEDBACK_RELATIONSHIP_DIRECT_REPORT,
+		hcm.FeedbackRelationship_FEEDBACK_RELATIONSHIP_CROSS_FUNCTIONAL,
+	}
 
 	// Create feedback between employees
 	for i := 0; i < len(store.EmployeeIDs)/3; i++ {
@@ -125,6 +131,7 @@ func generateFeedback(store *MockDataStore) []*hcm.Feedback {
 			EmployeeId:      empID,
 			ProviderId:      providerID,
 			FeedbackType:    feedbackTypes[rand.Intn(len(feedbackTypes))],
+			Relationship:    relationships[rand.Intn(len(relationships))],
 			GeneralComments: "Great collaboration and teamwork.",
 			SubmittedDate:   time.Now().AddDate(0, -rand.Intn(6), 0).Unix(),
 			Status:          hcm.FeedbackStatus_FEEDBACK_STATUS_SUBMITTED,
@@ -154,6 +161,15 @@ func generateOnboardingTasks(store *MockDataStore) []*hcm.OnboardingTask {
 		numNewHires = 1
 	}
 
+	taskCategories := []hcm.OnboardingTaskCategory{
+		hcm.OnboardingTaskCategory_ONBOARDING_TASK_CATEGORY_PAPERWORK,
+		hcm.OnboardingTaskCategory_ONBOARDING_TASK_CATEGORY_BENEFITS,
+		hcm.OnboardingTaskCategory_ONBOARDING_TASK_CATEGORY_BENEFITS,
+		hcm.OnboardingTaskCategory_ONBOARDING_TASK_CATEGORY_COMPLIANCE,
+		hcm.OnboardingTaskCategory_ONBOARDING_TASK_CATEGORY_TRAINING,
+		hcm.OnboardingTaskCategory_ONBOARDING_TASK_CATEGORY_IT_SETUP,
+	}
+
 	for i := 0; i < numNewHires; i++ {
 		empID := store.EmployeeIDs[rand.Intn(len(store.EmployeeIDs))]
 		for j, taskName := range taskNames {
@@ -163,6 +179,7 @@ func generateOnboardingTasks(store *MockDataStore) []*hcm.OnboardingTask {
 				Name:          taskName,
 				Description:   fmt.Sprintf("Complete: %s", taskName),
 				DueDate:       time.Now().AddDate(0, 0, rand.Intn(30)).Unix(),
+				Category:      taskCategories[j%len(taskCategories)],
 				Status:        hcm.OnboardingTaskStatus(rand.Intn(3) + 1),
 				SequenceOrder: int32(j + 1),
 				AuditInfo:     createAuditInfo(),

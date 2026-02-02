@@ -73,6 +73,9 @@ func validatePos(entity *hcm.Position, vnic ifs.IVNic) error {
 }
 
 func validatePosRequiredFields(entity *hcm.Position) error {
+	if err := common.ValidateRequired(entity.PositionId, "PositionId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.Title, "Title"); err != nil {
 		return err
 	}

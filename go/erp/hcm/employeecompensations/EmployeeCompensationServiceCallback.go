@@ -66,6 +66,9 @@ func validateEmpComp(entity *hcm.EmployeeCompensation, vnic ifs.IVNic) error {
 }
 
 func validateEmpCompRequiredFields(entity *hcm.EmployeeCompensation) error {
+	if err := common.ValidateRequired(entity.CompensationId, "CompensationId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

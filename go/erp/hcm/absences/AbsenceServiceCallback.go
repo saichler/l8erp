@@ -59,6 +59,9 @@ func validateAbsence(entity *hcm.Absence, vnic ifs.IVNic) error {
 }
 
 func validateAbsenceRequiredFields(entity *hcm.Absence) error {
+	if err := common.ValidateRequired(entity.AbsenceId, "AbsenceId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

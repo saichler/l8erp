@@ -14,7 +14,6 @@
 package assetdisposals
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func AssetDisposals(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func AssetDisposal(disposalId string, vnic ifs.IVNic) (*fin.AssetDisposal, error) {
 	this, ok := AssetDisposals(vnic)
-	if !ok {
-		return nil, errors.New("No AssetDisposal Service Found")
-	}
 	filter := &fin.AssetDisposal{DisposalId: disposalId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.AssetDisposal), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.AssetDisposal), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.AssetDisposal), nil
+	}
+	return nil, nil
 }

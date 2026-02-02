@@ -14,7 +14,6 @@
 package fundtransfers
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func FundTransfers(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func FundTransfer(transferId string, vnic ifs.IVNic) (*fin.FundTransfer, error) {
 	this, ok := FundTransfers(vnic)
-	if !ok {
-		return nil, errors.New("No FundTransfer Service Found")
-	}
 	filter := &fin.FundTransfer{TransferId: transferId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.FundTransfer), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.FundTransfer), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.FundTransfer), nil
+	}
+	return nil, nil
 }

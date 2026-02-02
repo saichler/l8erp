@@ -59,6 +59,9 @@ func validateSchedule(entity *hcm.Schedule, vnic ifs.IVNic) error {
 }
 
 func validateScheduleRequiredFields(entity *hcm.Schedule) error {
+	if err := common.ValidateRequired(entity.ScheduleId, "ScheduleId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

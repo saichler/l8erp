@@ -45,6 +45,9 @@ func (this *FiscalPeriodServiceCallback) After(any interface{}, action ifs.Actio
 }
 
 func validate(fiscalPeriod *fin.FiscalPeriod, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(fiscalPeriod.FiscalPeriodId, "FiscalPeriodId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(fiscalPeriod.FiscalYearId, "FiscalYearId"); err != nil {
 		return err
 	}

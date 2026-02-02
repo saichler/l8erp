@@ -14,7 +14,6 @@
 package salarystructures
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func SalaryStructures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func SalaryStructure(structureId string, vnic ifs.IVNic) (*hcm.SalaryStructure, error) {
 	this, ok := SalaryStructures(vnic)
-	if !ok {
-		return nil, errors.New("No SalaryStructure Service Found")
-	}
 	filter := &hcm.SalaryStructure{StructureId: structureId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.SalaryStructure), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.SalaryStructure), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.SalaryStructure), nil
+	}
+	return nil, nil
 }

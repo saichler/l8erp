@@ -14,7 +14,6 @@
 package leaverequests
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func LeaveRequests(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func LeaveRequest(requestId string, vnic ifs.IVNic) (*hcm.LeaveRequest, error) {
 	this, ok := LeaveRequests(vnic)
-	if !ok {
-		return nil, errors.New("No LeaveRequest Service Found")
-	}
 	filter := &hcm.LeaveRequest{RequestId: requestId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.LeaveRequest), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.LeaveRequest), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.LeaveRequest), nil
+	}
+	return nil, nil
 }

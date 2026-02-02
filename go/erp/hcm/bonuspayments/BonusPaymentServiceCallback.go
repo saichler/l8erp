@@ -66,6 +66,9 @@ func validateBonusPay(entity *hcm.BonusPayment, vnic ifs.IVNic) error {
 }
 
 func validateBonusPayRequiredFields(entity *hcm.BonusPayment) error {
+	if err := common.ValidateRequired(entity.PaymentId, "PaymentId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

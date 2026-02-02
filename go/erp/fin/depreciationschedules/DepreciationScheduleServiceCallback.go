@@ -45,6 +45,9 @@ func (this *DepreciationScheduleServiceCallback) After(any interface{}, action i
 }
 
 func validate(depreciationSchedule *fin.DepreciationSchedule, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(depreciationSchedule.ScheduleId, "ScheduleId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(depreciationSchedule.AssetId, "AssetId"); err != nil {
 		return err
 	}

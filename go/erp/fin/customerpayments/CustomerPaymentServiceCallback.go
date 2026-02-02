@@ -45,6 +45,9 @@ func (this *CustomerPaymentServiceCallback) After(any interface{}, action ifs.Ac
 }
 
 func validate(customerPayment *fin.CustomerPayment, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(customerPayment.PaymentId, "PaymentId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(customerPayment.CustomerId, "CustomerId"); err != nil {
 		return err
 	}

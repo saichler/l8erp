@@ -14,7 +14,6 @@
 package cobraevents
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func COBRAEvents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func COBRAEvent(cobraEventId string, vnic ifs.IVNic) (*hcm.COBRAEvent, error) {
 	this, ok := COBRAEvents(vnic)
-	if !ok {
-		return nil, errors.New("No COBRAEvent Service Found")
-	}
 	filter := &hcm.COBRAEvent{CobraEventId: cobraEventId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.COBRAEvent), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.COBRAEvent), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.COBRAEvent), nil
+	}
+	return nil, nil
 }

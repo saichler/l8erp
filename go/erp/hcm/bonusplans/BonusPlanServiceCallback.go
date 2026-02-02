@@ -58,6 +58,9 @@ func validateBonusPlan(entity *hcm.BonusPlan) error {
 }
 
 func validateBonusPlanRequiredFields(entity *hcm.BonusPlan) error {
+	if err := common.ValidateRequired(entity.PlanId, "PlanId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.Name, "Name"); err != nil {
 		return err
 	}

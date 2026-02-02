@@ -45,6 +45,9 @@ func (this *TaxExemptionServiceCallback) After(any interface{}, action ifs.Actio
 }
 
 func validate(taxExemption *fin.TaxExemption, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(taxExemption.ExemptionId, "ExemptionId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(taxExemption.TaxCodeId, "TaxCodeId"); err != nil {
 		return err
 	}

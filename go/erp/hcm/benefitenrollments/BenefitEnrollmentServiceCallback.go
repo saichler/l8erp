@@ -73,6 +73,9 @@ func validateBenEnroll(entity *hcm.BenefitEnrollment, vnic ifs.IVNic) error {
 }
 
 func validateBenEnrollRequiredFields(entity *hcm.BenefitEnrollment) error {
+	if err := common.ValidateRequired(entity.EnrollmentId, "EnrollmentId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

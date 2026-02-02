@@ -14,7 +14,6 @@
 package accounts
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func Accounts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func Account(accountId string, vnic ifs.IVNic) (*fin.Account, error) {
 	this, ok := Accounts(vnic)
-	if !ok {
-		return nil, errors.New("No Account Service Found")
-	}
 	filter := &fin.Account{AccountId: accountId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.Account), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.Account), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.Account), nil
+	}
+	return nil, nil
 }

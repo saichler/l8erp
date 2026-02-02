@@ -14,7 +14,6 @@
 package jobfamilies
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func JobFamilies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func JobFamily(jobFamilyId string, vnic ifs.IVNic) (*hcm.JobFamily, error) {
 	this, ok := JobFamilies(vnic)
-	if !ok {
-		return nil, errors.New("No JobFamily Service Found")
-	}
 	filter := &hcm.JobFamily{JobFamilyId: jobFamilyId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.JobFamily), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.JobFamily), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.JobFamily), nil
+	}
+	return nil, nil
 }

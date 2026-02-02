@@ -45,6 +45,9 @@ func (this *BudgetLineServiceCallback) After(any interface{}, action ifs.Action,
 }
 
 func validate(budgetLine *fin.BudgetLine, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(budgetLine.LineId, "LineId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(budgetLine.BudgetId, "BudgetId"); err != nil {
 		return err
 	}

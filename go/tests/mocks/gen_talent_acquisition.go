@@ -38,6 +38,7 @@ func generateJobRequisitions(store *MockDataStore) []*hcm.JobRequisition {
 			PositionId:      store.PositionIDs[rand.Intn(len(store.PositionIDs))],
 			HiringManagerId: store.ManagerIDs[rand.Intn(len(store.ManagerIDs))],
 			Title:           fmt.Sprintf("Open Position %d", idx),
+			RequisitionType: hcm.RequisitionType(rand.Intn(5) + 1),
 			Status:          hcm.RequisitionStatus(rand.Intn(4) + 1),
 			Openings:        int32(rand.Intn(3) + 1),
 			TargetStartDate: time.Now().AddDate(0, rand.Intn(3)+1, 0).Unix(),
@@ -88,8 +89,10 @@ func generateApplications(store *MockDataStore) []*hcm.Application {
 				ApplicationId: fmt.Sprintf("appl-%05d", idx),
 				ApplicantId:   appID,
 				RequisitionId: store.JobRequisitionIDs[rand.Intn(len(store.JobRequisitionIDs))],
-				Status:        hcm.ApplicationStatus(rand.Intn(6) + 1),
-				AppliedDate:   time.Now().AddDate(0, 0, -rand.Intn(30)).Unix(),
+				Status:            hcm.ApplicationStatus(rand.Intn(6) + 1),
+				Stage:             hcm.ApplicationStage(rand.Intn(9) + 1),
+				DispositionReason: hcm.DispositionReason(rand.Intn(11) + 1),
+				AppliedDate:       time.Now().AddDate(0, 0, -rand.Intn(30)).Unix(),
 				AuditInfo:     createAuditInfo(),
 			})
 			idx++

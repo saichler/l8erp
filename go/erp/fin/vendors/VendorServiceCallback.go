@@ -45,6 +45,9 @@ func (this *VendorServiceCallback) After(any interface{}, action ifs.Action, con
 }
 
 func validate(vendor *fin.Vendor, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(vendor.VendorId, "VendorId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(vendor.Name, "Name"); err != nil {
 		return err
 	}

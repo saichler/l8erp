@@ -45,6 +45,9 @@ func (this *WithholdingTaxConfigServiceCallback) After(any interface{}, action i
 }
 
 func validate(withholdingTaxConfig *fin.WithholdingTaxConfig, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(withholdingTaxConfig.ConfigId, "ConfigId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(withholdingTaxConfig.VendorId, "VendorId"); err != nil {
 		return err
 	}

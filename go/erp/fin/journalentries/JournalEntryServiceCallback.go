@@ -45,6 +45,9 @@ func (this *JournalEntryServiceCallback) After(any interface{}, action ifs.Actio
 }
 
 func validate(journalEntry *fin.JournalEntry, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(journalEntry.JournalEntryId, "JournalEntryId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(journalEntry.FiscalPeriodId, "FiscalPeriodId"); err != nil {
 		return err
 	}

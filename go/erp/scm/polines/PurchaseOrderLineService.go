@@ -14,7 +14,6 @@
 package polines
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
@@ -67,13 +66,23 @@ func Polines(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func PurchaseOrderLine(lineId string, vnic ifs.IVNic) (*scm.ScmPurchaseOrderLine, error) {
 	this, ok := Polines(vnic)
-	if !ok {
-		return nil, errors.New("No PurchaseOrderLine Service Found")
-	}
 	filter := &scm.ScmPurchaseOrderLine{LineId: lineId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*scm.ScmPurchaseOrderLine), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ScmPurchaseOrderLine), nil
+	if resp.Element() != nil {
+		return resp.Element().(*scm.ScmPurchaseOrderLine), nil
+	}
+	return nil, nil
 }

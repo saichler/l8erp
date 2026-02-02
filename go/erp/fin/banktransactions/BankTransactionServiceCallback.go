@@ -45,6 +45,9 @@ func (this *BankTransactionServiceCallback) After(any interface{}, action ifs.Ac
 }
 
 func validate(bankTransaction *fin.BankTransaction, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(bankTransaction.TransactionId, "TransactionId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(bankTransaction.BankAccountId, "BankAccountId"); err != nil {
 		return err
 	}

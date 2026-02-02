@@ -14,7 +14,6 @@
 package picktasks
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
@@ -67,13 +66,23 @@ func PickTasks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func PickTask(taskId string, vnic ifs.IVNic) (*scm.ScmPickTask, error) {
 	this, ok := PickTasks(vnic)
-	if !ok {
-		return nil, errors.New("No PickTask Service Found")
-	}
 	filter := &scm.ScmPickTask{TaskId: taskId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*scm.ScmPickTask), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ScmPickTask), nil
+	if resp.Element() != nil {
+		return resp.Element().(*scm.ScmPickTask), nil
+	}
+	return nil, nil
 }

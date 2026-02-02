@@ -14,7 +14,6 @@
 package goals
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func Goals(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func Goal(goalId string, vnic ifs.IVNic) (*hcm.Goal, error) {
 	this, ok := Goals(vnic)
-	if !ok {
-		return nil, errors.New("No Goal Service Found")
-	}
 	filter := &hcm.Goal{GoalId: goalId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.Goal), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.Goal), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.Goal), nil
+	}
+	return nil, nil
 }

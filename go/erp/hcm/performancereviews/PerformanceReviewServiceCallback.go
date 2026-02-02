@@ -65,6 +65,9 @@ func validatePerfRevw(entity *hcm.PerformanceReview, vnic ifs.IVNic) error {
 }
 
 func validatePerfRevwRequiredFields(entity *hcm.PerformanceReview) error {
+	if err := common.ValidateRequired(entity.ReviewId, "ReviewId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

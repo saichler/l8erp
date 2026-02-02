@@ -14,7 +14,6 @@
 package cashforecasts
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func CashForecasts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func CashForecast(forecastId string, vnic ifs.IVNic) (*fin.CashForecast, error) {
 	this, ok := CashForecasts(vnic)
-	if !ok {
-		return nil, errors.New("No CashForecast Service Found")
-	}
 	filter := &fin.CashForecast{ForecastId: forecastId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.CashForecast), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.CashForecast), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.CashForecast), nil
+	}
+	return nil, nil
 }

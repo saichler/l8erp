@@ -59,12 +59,25 @@ func generateCarriers() []*hcm.Carrier {
 
 // generateCertifications creates certification records
 func generateCertifications() []*hcm.Certification {
+	certTypes := []hcm.CertificationType{
+		hcm.CertificationType_CERTIFICATION_TYPE_PROFESSIONAL,
+		hcm.CertificationType_CERTIFICATION_TYPE_VENDOR,
+		hcm.CertificationType_CERTIFICATION_TYPE_VENDOR,
+		hcm.CertificationType_CERTIFICATION_TYPE_PROFESSIONAL,
+		hcm.CertificationType_CERTIFICATION_TYPE_PROFESSIONAL,
+		hcm.CertificationType_CERTIFICATION_TYPE_PROFESSIONAL,
+		hcm.CertificationType_CERTIFICATION_TYPE_TECHNICAL,
+		hcm.CertificationType_CERTIFICATION_TYPE_TECHNICAL,
+		hcm.CertificationType_CERTIFICATION_TYPE_TECHNICAL,
+		hcm.CertificationType_CERTIFICATION_TYPE_VENDOR,
+	}
 	certs := make([]*hcm.Certification, len(certificationNames))
 	for i, name := range certificationNames {
 		certs[i] = &hcm.Certification{
 			CertificationId:     fmt.Sprintf("cert-%03d", i+1),
 			Name:                name,
 			Code:                fmt.Sprintf("CERT%03d", i+1),
+			CertificationType:   certTypes[i%len(certTypes)],
 			IssuingOrganization: getIssuingOrg(name),
 			Description:         fmt.Sprintf("Professional certification: %s", name),
 			ValidityMonths:      int32(rand.Intn(24) + 12), // 12-36 months

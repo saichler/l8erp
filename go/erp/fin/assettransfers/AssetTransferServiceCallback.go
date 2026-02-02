@@ -45,6 +45,9 @@ func (this *AssetTransferServiceCallback) After(any interface{}, action ifs.Acti
 }
 
 func validate(assetTransfer *fin.AssetTransfer, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(assetTransfer.TransferId, "TransferId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(assetTransfer.AssetId, "AssetId"); err != nil {
 		return err
 	}

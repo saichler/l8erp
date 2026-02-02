@@ -63,6 +63,9 @@ func validateApplctn(entity *hcm.Application, vnic ifs.IVNic) error {
 }
 
 func validateApplctnRequiredFields(entity *hcm.Application) error {
+	if err := common.ValidateRequired(entity.ApplicationId, "ApplicationId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.ApplicantId, "ApplicantId"); err != nil {
 		return err
 	}

@@ -14,7 +14,6 @@
 package bankreconciliations
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func BankReconciliations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func BankReconciliation(reconciliationId string, vnic ifs.IVNic) (*fin.BankReconciliation, error) {
 	this, ok := BankReconciliations(vnic)
-	if !ok {
-		return nil, errors.New("No BankReconciliation Service Found")
-	}
 	filter := &fin.BankReconciliation{ReconciliationId: reconciliationId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.BankReconciliation), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.BankReconciliation), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.BankReconciliation), nil
+	}
+	return nil, nil
 }

@@ -159,7 +159,7 @@ limitations under the License.
 
         var role = null;
         try {
-            role = await Layer8DForms.fetchRecord(service.endpoint, 'roleId', roleId, 'L8Role');
+            role = await Layer8DForms.fetchRecord(Layer8DConfig.resolveEndpoint(service.endpoint), 'roleId', roleId, 'L8Role');
         } catch (e) {
             Layer8DNotification.error('Failed to load role');
             return;
@@ -210,7 +210,7 @@ limitations under the License.
         };
 
         try {
-            await Layer8DForms.saveRecord(currentService.endpoint, roleData, currentIsEdit);
+            await Layer8DForms.saveRecord(Layer8DConfig.resolveEndpoint(currentService.endpoint), roleData, currentIsEdit);
             Layer8DPopup.close();
             L8Sys.refreshCurrentTable();
         } catch (e) {
@@ -442,7 +442,7 @@ limitations under the License.
     // Confirm delete
     function confirmDelete(service, roleId) {
         var serviceConfig = {
-            endpoint: service.endpoint,
+            endpoint: Layer8DConfig.resolveEndpoint(service.endpoint),
             primaryKey: 'roleId',
             modelName: 'L8Role'
         };

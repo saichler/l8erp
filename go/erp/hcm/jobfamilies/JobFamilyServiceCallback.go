@@ -52,6 +52,9 @@ func validateJobFam(entity *hcm.JobFamily) error {
 }
 
 func validateJobFamRequiredFields(entity *hcm.JobFamily) error {
+	if err := common.ValidateRequired(entity.JobFamilyId, "JobFamilyId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.Name, "Name"); err != nil {
 		return err
 	}

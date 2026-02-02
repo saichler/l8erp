@@ -45,6 +45,9 @@ func (this *AccountBalanceServiceCallback) After(any interface{}, action ifs.Act
 }
 
 func validate(accountBalance *fin.AccountBalance, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(accountBalance.BalanceId, "BalanceId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(accountBalance.AccountId, "AccountId"); err != nil {
 		return err
 	}

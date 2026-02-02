@@ -45,6 +45,9 @@ func (this *TaxCodeServiceCallback) After(any interface{}, action ifs.Action, co
 }
 
 func validate(taxCode *fin.TaxCode, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(taxCode.TaxCodeId, "TaxCodeId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(taxCode.Code, "Code"); err != nil {
 		return err
 	}

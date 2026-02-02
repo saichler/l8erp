@@ -45,6 +45,9 @@ func (this *PurchaseInvoiceServiceCallback) After(any interface{}, action ifs.Ac
 }
 
 func validate(purchaseInvoice *fin.PurchaseInvoice, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(purchaseInvoice.InvoiceId, "InvoiceId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(purchaseInvoice.VendorId, "VendorId"); err != nil {
 		return err
 	}

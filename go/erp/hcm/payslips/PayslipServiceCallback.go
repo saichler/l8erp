@@ -60,6 +60,9 @@ func validatePayslip(entity *hcm.Payslip, vnic ifs.IVNic) error {
 }
 
 func validatePayslipRequiredFields(entity *hcm.Payslip) error {
+	if err := common.ValidateRequired(entity.PayslipId, "PayslipId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

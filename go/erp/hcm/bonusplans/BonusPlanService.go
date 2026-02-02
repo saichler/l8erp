@@ -14,7 +14,6 @@
 package bonusplans
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func BonusPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func BonusPlan(planId string, vnic ifs.IVNic) (*hcm.BonusPlan, error) {
 	this, ok := BonusPlans(vnic)
-	if !ok {
-		return nil, errors.New("No BonusPlan Service Found")
-	}
 	filter := &hcm.BonusPlan{PlanId: planId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.BonusPlan), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.BonusPlan), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.BonusPlan), nil
+	}
+	return nil, nil
 }

@@ -14,7 +14,6 @@
 package taxexemptions
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func TaxExemptions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func TaxExemption(exemptionId string, vnic ifs.IVNic) (*fin.TaxExemption, error) {
 	this, ok := TaxExemptions(vnic)
-	if !ok {
-		return nil, errors.New("No TaxExemption Service Found")
-	}
 	filter := &fin.TaxExemption{ExemptionId: exemptionId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.TaxExemption), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.TaxExemption), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.TaxExemption), nil
+	}
+	return nil, nil
 }

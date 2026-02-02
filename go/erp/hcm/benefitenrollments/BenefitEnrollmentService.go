@@ -14,7 +14,6 @@
 package benefitenrollments
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func BenefitEnrollments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func BenefitEnrollment(enrollmentId string, vnic ifs.IVNic) (*hcm.BenefitEnrollment, error) {
 	this, ok := BenefitEnrollments(vnic)
-	if !ok {
-		return nil, errors.New("No BenefitEnrollment Service Found")
-	}
 	filter := &hcm.BenefitEnrollment{EnrollmentId: enrollmentId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.BenefitEnrollment), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.BenefitEnrollment), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.BenefitEnrollment), nil
+	}
+	return nil, nil
 }

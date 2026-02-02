@@ -59,6 +59,9 @@ func validateCOBRAEvt(entity *hcm.COBRAEvent, vnic ifs.IVNic) error {
 }
 
 func validateCOBRAEvtRequiredFields(entity *hcm.COBRAEvent) error {
+	if err := common.ValidateRequired(entity.CobraEventId, "CobraEventId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

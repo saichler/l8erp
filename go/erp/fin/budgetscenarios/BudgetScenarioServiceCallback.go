@@ -45,6 +45,9 @@ func (this *BudgetScenarioServiceCallback) After(any interface{}, action ifs.Act
 }
 
 func validate(budgetScenario *fin.BudgetScenario, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(budgetScenario.ScenarioId, "ScenarioId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(budgetScenario.ScenarioName, "ScenarioName"); err != nil {
 		return err
 	}

@@ -66,6 +66,9 @@ func validateBenPlan(entity *hcm.BenefitPlan, vnic ifs.IVNic) error {
 }
 
 func validateBenPlanRequiredFields(entity *hcm.BenefitPlan) error {
+	if err := common.ValidateRequired(entity.PlanId, "PlanId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.Name, "Name"); err != nil {
 		return err
 	}

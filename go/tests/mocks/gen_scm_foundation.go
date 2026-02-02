@@ -214,7 +214,7 @@ func generateForecastModels() []*scm.ScmForecastModel {
 			name:        "Regression Analysis",
 			description: "Linear regression model for trend-based forecasting",
 			method:      scm.ScmForecastMethod_FORECAST_METHOD_REGRESSION,
-			params:      map[string]string{"variables": "price,season,promotion", "confidence": "0.95"},
+			params:      map[string]string{"variables": "price|season|promotion", "confidence": "0.95"},
 			accuracyScore: 0.91,
 		},
 		{

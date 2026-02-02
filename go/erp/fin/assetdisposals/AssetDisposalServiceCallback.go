@@ -45,6 +45,9 @@ func (this *AssetDisposalServiceCallback) After(any interface{}, action ifs.Acti
 }
 
 func validate(assetDisposal *fin.AssetDisposal, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(assetDisposal.DisposalId, "DisposalId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(assetDisposal.AssetId, "AssetId"); err != nil {
 		return err
 	}

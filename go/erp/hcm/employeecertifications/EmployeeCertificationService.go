@@ -14,7 +14,6 @@
 package employeecertifications
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func EmployeeCertifications(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func EmployeeCertification(employeeCertificationId string, vnic ifs.IVNic) (*hcm.EmployeeCertification, error) {
 	this, ok := EmployeeCertifications(vnic)
-	if !ok {
-		return nil, errors.New("No EmployeeCertification Service Found")
-	}
 	filter := &hcm.EmployeeCertification{EmployeeCertificationId: employeeCertificationId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.EmployeeCertification), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.EmployeeCertification), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.EmployeeCertification), nil
+	}
+	return nil, nil
 }

@@ -52,6 +52,9 @@ func validateSalGrade(entity *hcm.SalaryGrade) error {
 }
 
 func validateSalGradeRequiredFields(entity *hcm.SalaryGrade) error {
+	if err := common.ValidateRequired(entity.GradeId, "GradeId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.Name, "Name"); err != nil {
 		return err
 	}

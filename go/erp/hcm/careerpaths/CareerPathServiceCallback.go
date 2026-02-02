@@ -56,6 +56,9 @@ func validateCarPath(entity *hcm.CareerPath, vnic ifs.IVNic) error {
 }
 
 func validateCarPathRequiredFields(entity *hcm.CareerPath) error {
+	if err := common.ValidateRequired(entity.CareerPathId, "CareerPathId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.Name, "Name"); err != nil {
 		return err
 	}

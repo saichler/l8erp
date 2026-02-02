@@ -62,6 +62,9 @@ func validatePayRun(entity *hcm.PayrollRun, vnic ifs.IVNic) error {
 }
 
 func validatePayRunRequiredFields(entity *hcm.PayrollRun) error {
+	if err := common.ValidateRequired(entity.PayrollRunId, "PayrollRunId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.OrganizationId, "OrganizationId"); err != nil {
 		return err
 	}

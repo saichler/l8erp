@@ -14,7 +14,6 @@
 package loadplans
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
@@ -67,13 +66,23 @@ func LoadPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func LoadPlan(loadPlanId string, vnic ifs.IVNic) (*scm.ScmLoadPlan, error) {
 	this, ok := LoadPlans(vnic)
-	if !ok {
-		return nil, errors.New("No LoadPlan Service Found")
-	}
 	filter := &scm.ScmLoadPlan{LoadPlanId: loadPlanId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*scm.ScmLoadPlan), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ScmLoadPlan), nil
+	if resp.Element() != nil {
+		return resp.Element().(*scm.ScmLoadPlan), nil
+	}
+	return nil, nil
 }

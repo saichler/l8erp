@@ -14,7 +14,6 @@
 package capitalexpenditures
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func CapitalExpenditures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func CapitalExpenditure(capexId string, vnic ifs.IVNic) (*fin.CapitalExpenditure, error) {
 	this, ok := CapitalExpenditures(vnic)
-	if !ok {
-		return nil, errors.New("No CapitalExpenditure Service Found")
-	}
 	filter := &fin.CapitalExpenditure{CapexId: capexId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.CapitalExpenditure), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.CapitalExpenditure), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.CapitalExpenditure), nil
+	}
+	return nil, nil
 }

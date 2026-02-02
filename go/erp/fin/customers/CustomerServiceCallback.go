@@ -45,6 +45,9 @@ func (this *CustomerServiceCallback) After(any interface{}, action ifs.Action, c
 }
 
 func validate(customer *fin.Customer, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(customer.CustomerId, "CustomerId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(customer.Name, "Name"); err != nil {
 		return err
 	}

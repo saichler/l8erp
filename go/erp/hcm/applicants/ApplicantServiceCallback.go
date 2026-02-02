@@ -55,6 +55,9 @@ func validateApplicant(entity *hcm.Applicant) error {
 }
 
 func validateApplicantRequiredFields(entity *hcm.Applicant) error {
+	if err := common.ValidateRequired(entity.ApplicantId, "ApplicantId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.FirstName, "FirstName"); err != nil {
 		return err
 	}

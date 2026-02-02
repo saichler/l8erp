@@ -14,7 +14,6 @@
 package blanketorders
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
@@ -67,13 +66,23 @@ func BlanketOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func BlanketOrder(blanketOrderId string, vnic ifs.IVNic) (*scm.ScmBlanketOrder, error) {
 	this, ok := BlanketOrders(vnic)
-	if !ok {
-		return nil, errors.New("No BlanketOrder Service Found")
-	}
 	filter := &scm.ScmBlanketOrder{BlanketOrderId: blanketOrderId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*scm.ScmBlanketOrder), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ScmBlanketOrder), nil
+	if resp.Element() != nil {
+		return resp.Element().(*scm.ScmBlanketOrder), nil
+	}
+	return nil, nil
 }

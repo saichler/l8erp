@@ -59,6 +59,9 @@ func validateMktBench(entity *hcm.MarketBenchmark, vnic ifs.IVNic) error {
 }
 
 func validateMktBenchRequiredFields(entity *hcm.MarketBenchmark) error {
+	if err := common.ValidateRequired(entity.BenchmarkId, "BenchmarkId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.JobId, "JobId"); err != nil {
 		return err
 	}

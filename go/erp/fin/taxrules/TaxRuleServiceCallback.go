@@ -45,6 +45,9 @@ func (this *TaxRuleServiceCallback) After(any interface{}, action ifs.Action, co
 }
 
 func validate(taxRule *fin.TaxRule, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(taxRule.RuleId, "RuleId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(taxRule.TaxCodeId, "TaxCodeId"); err != nil {
 		return err
 	}

@@ -14,7 +14,6 @@
 package vendorcontacts
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -67,13 +66,23 @@ func VendorContacts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func VendorContact(contactId string, vnic ifs.IVNic) (*fin.VendorContact, error) {
 	this, ok := VendorContacts(vnic)
-	if !ok {
-		return nil, errors.New("No VendorContact Service Found")
-	}
 	filter := &fin.VendorContact{ContactId: contactId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*fin.VendorContact), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*fin.VendorContact), nil
+	if resp.Element() != nil {
+		return resp.Element().(*fin.VendorContact), nil
+	}
+	return nil, nil
 }

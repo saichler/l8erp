@@ -14,7 +14,6 @@
 package stockmovements
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
@@ -67,13 +66,23 @@ func StockMovements(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func StockMovement(movementId string, vnic ifs.IVNic) (*scm.ScmStockMovement, error) {
 	this, ok := StockMovements(vnic)
-	if !ok {
-		return nil, errors.New("No StockMovement Service Found")
-	}
 	filter := &scm.ScmStockMovement{MovementId: movementId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*scm.ScmStockMovement), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*scm.ScmStockMovement), nil
+	if resp.Element() != nil {
+		return resp.Element().(*scm.ScmStockMovement), nil
+	}
+	return nil, nil
 }

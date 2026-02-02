@@ -54,6 +54,9 @@ func validateSkill(entity *hcm.Skill, vnic ifs.IVNic) error {
 }
 
 func validateSkillRequiredFields(entity *hcm.Skill) error {
+	if err := common.ValidateRequired(entity.SkillId, "SkillId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.Name, "Name"); err != nil {
 		return err
 	}

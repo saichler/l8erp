@@ -14,7 +14,6 @@
 package marketbenchmarks
 
 import (
-	"errors"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -64,13 +63,23 @@ func MarketBenchmarks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 
 func MarketBenchmark(benchmarkId string, vnic ifs.IVNic) (*hcm.MarketBenchmark, error) {
 	this, ok := MarketBenchmarks(vnic)
-	if !ok {
-		return nil, errors.New("No MarketBenchmark Service Found")
-	}
 	filter := &hcm.MarketBenchmark{BenchmarkId: benchmarkId}
-	resp := this.Get(object.New(nil, filter), vnic)
+	if ok {
+		resp := this.Get(object.New(nil, filter), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*hcm.MarketBenchmark), nil
+		}
+		return nil, nil
+	}
+	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}
-	return resp.Element().(*hcm.MarketBenchmark), nil
+	if resp.Element() != nil {
+		return resp.Element().(*hcm.MarketBenchmark), nil
+	}
+	return nil, nil
 }

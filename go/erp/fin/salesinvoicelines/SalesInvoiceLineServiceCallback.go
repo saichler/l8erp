@@ -45,6 +45,9 @@ func (this *SalesInvoiceLineServiceCallback) After(any interface{}, action ifs.A
 }
 
 func validate(line *fin.SalesInvoiceLine, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(line.LineId, "LineId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(line.InvoiceId, "InvoiceId"); err != nil {
 		return err
 	}

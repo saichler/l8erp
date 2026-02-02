@@ -165,7 +165,7 @@ limitations under the License.
 
         var cred = null;
         try {
-            cred = await Layer8DForms.fetchRecord(service.endpoint, 'id', credId, 'L8Credentials');
+            cred = await Layer8DForms.fetchRecord(Layer8DConfig.resolveEndpoint(service.endpoint), 'id', credId, 'L8Credentials');
         } catch (e) {
             Layer8DNotification.error('Failed to load credentials');
             return;
@@ -211,7 +211,7 @@ limitations under the License.
         };
 
         try {
-            await Layer8DForms.saveRecord(currentService.endpoint, credData, currentIsEdit);
+            await Layer8DForms.saveRecord(Layer8DConfig.resolveEndpoint(currentService.endpoint), credData, currentIsEdit);
             Layer8DPopup.close();
             L8Sys.refreshCurrentTable();
         } catch (e) {
@@ -327,7 +327,7 @@ limitations under the License.
     // Confirm delete
     function confirmDelete(service, credId) {
         var serviceConfig = {
-            endpoint: service.endpoint,
+            endpoint: Layer8DConfig.resolveEndpoint(service.endpoint),
             primaryKey: 'id',
             modelName: 'L8Credentials'
         };

@@ -45,6 +45,9 @@ func (this *ForecastServiceCallback) After(any interface{}, action ifs.Action, c
 }
 
 func validate(forecast *fin.Forecast, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(forecast.ForecastId, "ForecastId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(forecast.ForecastName, "ForecastName"); err != nil {
 		return err
 	}

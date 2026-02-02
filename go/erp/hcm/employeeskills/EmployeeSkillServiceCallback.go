@@ -62,6 +62,9 @@ func validateEmployeeSkill(entity *hcm.EmployeeSkill, vnic ifs.IVNic) error {
 }
 
 func validateEmpSkillRequiredFields(entity *hcm.EmployeeSkill) error {
+	if err := common.ValidateRequired(entity.EmployeeSkillId, "EmployeeSkillId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}

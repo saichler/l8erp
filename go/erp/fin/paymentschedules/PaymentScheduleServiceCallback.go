@@ -45,6 +45,9 @@ func (this *PaymentScheduleServiceCallback) After(any interface{}, action ifs.Ac
 }
 
 func validate(paymentSchedule *fin.PaymentSchedule, vnic ifs.IVNic) error {
+	if err := common.ValidateRequired(paymentSchedule.ScheduleId, "ScheduleId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(paymentSchedule.VendorId, "VendorId"); err != nil {
 		return err
 	}

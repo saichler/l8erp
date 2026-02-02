@@ -122,7 +122,7 @@ limitations under the License.
 
         var user = null;
         try {
-            user = await Layer8DForms.fetchRecord(service.endpoint, 'userId', userId, 'L8User');
+            user = await Layer8DForms.fetchRecord(Layer8DConfig.resolveEndpoint(service.endpoint), 'userId', userId, 'L8User');
         } catch (e) {
             Layer8DNotification.error('Failed to load user');
             return;
@@ -187,7 +187,7 @@ limitations under the License.
         }
 
         try {
-            await Layer8DForms.saveRecord(service.endpoint, userData, isEdit);
+            await Layer8DForms.saveRecord(Layer8DConfig.resolveEndpoint(service.endpoint), userData, isEdit);
             Layer8DPopup.close();
             L8Sys.refreshCurrentTable();
         } catch (e) {
@@ -198,7 +198,7 @@ limitations under the License.
     // Confirm delete
     function confirmDelete(service, userId) {
         var serviceConfig = {
-            endpoint: service.endpoint,
+            endpoint: Layer8DConfig.resolveEndpoint(service.endpoint),
             primaryKey: 'userId',
             modelName: 'L8User'
         };

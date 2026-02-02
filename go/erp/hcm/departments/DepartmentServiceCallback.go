@@ -63,6 +63,9 @@ func validateDept(entity *hcm.Department, vnic ifs.IVNic) error {
 }
 
 func validateDeptRequiredFields(entity *hcm.Department) error {
+	if err := common.ValidateRequired(entity.DepartmentId, "DepartmentId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.Name, "Name"); err != nil {
 		return err
 	}

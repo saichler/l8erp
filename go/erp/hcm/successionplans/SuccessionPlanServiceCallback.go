@@ -59,6 +59,9 @@ func validateSuccPlan(entity *hcm.SuccessionPlan, vnic ifs.IVNic) error {
 }
 
 func validateSuccPlanRequiredFields(entity *hcm.SuccessionPlan) error {
+	if err := common.ValidateRequired(entity.PlanId, "PlanId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.PositionId, "PositionId"); err != nil {
 		return err
 	}

@@ -62,6 +62,9 @@ func validateEmpDoc(entity *hcm.EmployeeDocument, vnic ifs.IVNic) error {
 }
 
 func validateEmpDocRequiredFields(entity *hcm.EmployeeDocument) error {
+	if err := common.ValidateRequired(entity.DocumentId, "DocumentId"); err != nil {
+		return err
+	}
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}
