@@ -33,6 +33,9 @@ func (this *JobFamilyServiceCallback) Before(any interface{}, action ifs.Action,
 	if !ok {
 		return nil, false, errors.New("invalid job family type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.JobFamilyId)
+	}
 	err := validateJobFam(entity)
 	if err != nil {
 		return nil, false, err

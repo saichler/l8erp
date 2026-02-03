@@ -32,6 +32,9 @@ func (this *FreightRateServiceCallback) Before(any interface{}, action ifs.Actio
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&item.RateId)
+	}
 	err := validate(item, vnic)
 	if err != nil {
 		return nil, false, err

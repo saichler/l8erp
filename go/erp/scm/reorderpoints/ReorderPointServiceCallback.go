@@ -33,6 +33,9 @@ func (this *ReorderPointServiceCallback) Before(any interface{}, action ifs.Acti
 	if !ok {
 		return nil, false, errors.New("invalid reorder point type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&item.ReorderPointId)
+	}
 	err := validate(item, vnic)
 	if err != nil {
 		return nil, false, err

@@ -32,6 +32,9 @@ func (this *CertificationServiceCallback) Before(any interface{}, action ifs.Act
 	if !ok {
 		return nil, false, errors.New("invalid certification type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.CertificationId)
+	}
 	err := validateCertification(entity, vnic)
 	if err != nil {
 		return nil, false, err

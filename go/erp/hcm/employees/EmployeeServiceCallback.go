@@ -37,6 +37,9 @@ func (this *EmployeeServiceCallback) Before(any interface{}, action ifs.Action, 
 	if !ok {
 		return nil, false, errors.New("invalid employee type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&employee.EmployeeId)
+	}
 	err := validate(employee, vnic)
 	if err != nil {
 		return nil, false, err

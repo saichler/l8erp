@@ -35,6 +35,9 @@ func (this *PayslipServiceCallback) Before(any interface{}, action ifs.Action, c
 	if !ok {
 		return nil, false, errors.New("invalid payslip type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.PayslipId)
+	}
 	err := validatePayslip(entity, vnic)
 	if err != nil {
 		return nil, false, err

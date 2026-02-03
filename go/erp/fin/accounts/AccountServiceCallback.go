@@ -33,6 +33,9 @@ func (this *AccountServiceCallback) Before(any interface{}, action ifs.Action, c
 	if !ok {
 		return nil, false, errors.New("invalid account type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&account.AccountId)
+	}
 	err := validate(account, vnic)
 	if err != nil {
 		return nil, false, err

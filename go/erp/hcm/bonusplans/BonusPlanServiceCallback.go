@@ -33,6 +33,9 @@ func (this *BonusPlanServiceCallback) Before(any interface{}, action ifs.Action,
 	if !ok {
 		return nil, false, errors.New("invalid bonus plan type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.PlanId)
+	}
 	err := validateBonusPlan(entity)
 	if err != nil {
 		return nil, false, err

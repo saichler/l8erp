@@ -31,16 +31,22 @@ func generateCourseEnrollments(store *MockDataStore) []*hcm.CourseEnrollment {
 	for i := 0; i < len(store.EmployeeIDs)*4/10; i++ {
 		empID := store.EmployeeIDs[rand.Intn(len(store.EmployeeIDs))]
 		enrollDate := time.Date(2024, time.Month(rand.Intn(12)+1), rand.Intn(28)+1, 0, 0, 0, 0, time.UTC)
+		status := hcm.CourseEnrollmentStatus(rand.Intn(4) + 1)
 
-		enrollments = append(enrollments, &hcm.CourseEnrollment{
+		enrollment := &hcm.CourseEnrollment{
 			EnrollmentId: fmt.Sprintf("crsenrol-%04d", idx),
 			EmployeeId:   empID,
 			CourseId:     store.CourseIDs[rand.Intn(len(store.CourseIDs))],
 			SessionId:    store.CourseSessionIDs[rand.Intn(len(store.CourseSessionIDs))],
 			EnrolledDate: enrollDate.Unix(),
-			Status:       hcm.CourseEnrollmentStatus(rand.Intn(4) + 1),
+			Status:       status,
 			AuditInfo:    createAuditInfo(),
-		})
+		}
+		if status == hcm.CourseEnrollmentStatus_COURSE_ENROLLMENT_STATUS_COMPLETED {
+			enrollment.StartedDate = enrollDate.AddDate(0, 0, 1).Unix()
+			enrollment.CompletedDate = enrollDate.AddDate(0, 0, rand.Intn(30)+7).Unix()
+		}
+		enrollments = append(enrollments, enrollment)
 		idx++
 	}
 	return enrollments

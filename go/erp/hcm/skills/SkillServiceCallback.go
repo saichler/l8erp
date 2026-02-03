@@ -32,6 +32,9 @@ func (this *SkillServiceCallback) Before(any interface{}, action ifs.Action, con
 	if !ok {
 		return nil, false, errors.New("invalid skill type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.SkillId)
+	}
 	err := validateSkill(entity, vnic)
 	if err != nil {
 		return nil, false, err

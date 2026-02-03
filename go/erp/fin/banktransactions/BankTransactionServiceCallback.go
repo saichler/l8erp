@@ -33,6 +33,9 @@ func (this *BankTransactionServiceCallback) Before(any interface{}, action ifs.A
 	if !ok {
 		return nil, false, errors.New("invalid bankTransaction type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&bankTransaction.TransactionId)
+	}
 	err := validate(bankTransaction, vnic)
 	if err != nil {
 		return nil, false, err

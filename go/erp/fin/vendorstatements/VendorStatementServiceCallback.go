@@ -33,6 +33,9 @@ func (this *VendorStatementServiceCallback) Before(any interface{}, action ifs.A
 	if !ok {
 		return nil, false, errors.New("invalid vendorStatement type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&vendorStatement.StatementId)
+	}
 	err := validate(vendorStatement, vnic)
 	if err != nil {
 		return nil, false, err

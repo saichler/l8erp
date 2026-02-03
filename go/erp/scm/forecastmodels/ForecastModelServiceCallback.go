@@ -33,6 +33,9 @@ func (this *ForecastModelServiceCallback) Before(any interface{}, action ifs.Act
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&item.ModelId)
+	}
 	err := validate(item, vnic)
 	if err != nil {
 		return nil, false, err

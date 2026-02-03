@@ -36,6 +36,9 @@ func (this *BenefitEnrollmentServiceCallback) Before(any interface{}, action ifs
 	if !ok {
 		return nil, false, errors.New("invalid benefit enrollment type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.EnrollmentId)
+	}
 	err := validateBenEnroll(entity, vnic)
 	if err != nil {
 		return nil, false, err

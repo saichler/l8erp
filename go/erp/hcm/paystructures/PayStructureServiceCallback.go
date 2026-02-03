@@ -33,6 +33,9 @@ func (this *PayStructureServiceCallback) Before(any interface{}, action ifs.Acti
 	if !ok {
 		return nil, false, errors.New("invalid pay structure type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.PayStructureId)
+	}
 	err := validatePayStruct(entity)
 	if err != nil {
 		return nil, false, err

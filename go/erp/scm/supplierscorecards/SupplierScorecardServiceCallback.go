@@ -33,6 +33,9 @@ func (this *SupplierScorecardServiceCallback) Before(any interface{}, action ifs
 	if !ok {
 		return nil, false, errors.New("invalid supplier scorecard type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&item.ScorecardId)
+	}
 	err := validate(item, vnic)
 	if err != nil {
 		return nil, false, err

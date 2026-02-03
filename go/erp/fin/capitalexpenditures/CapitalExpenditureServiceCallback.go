@@ -33,6 +33,9 @@ func (this *CapitalExpenditureServiceCallback) Before(any interface{}, action if
 	if !ok {
 		return nil, false, errors.New("invalid capitalExpenditure type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&capitalExpenditure.CapexId)
+	}
 	err := validate(capitalExpenditure, vnic)
 	if err != nil {
 		return nil, false, err

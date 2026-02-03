@@ -34,6 +34,9 @@ func (this *PerformanceReviewServiceCallback) Before(any interface{}, action ifs
 	if !ok {
 		return nil, false, errors.New("invalid performance review type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.ReviewId)
+	}
 	err := validatePerfRevw(entity, vnic)
 	if err != nil {
 		return nil, false, err

@@ -33,6 +33,9 @@ func (this *AssetRevaluationServiceCallback) Before(any interface{}, action ifs.
 	if !ok {
 		return nil, false, errors.New("invalid assetRevaluation type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&assetRevaluation.RevaluationId)
+	}
 	err := validate(assetRevaluation, vnic)
 	if err != nil {
 		return nil, false, err

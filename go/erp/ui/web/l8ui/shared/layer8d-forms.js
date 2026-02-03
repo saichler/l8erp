@@ -473,10 +473,18 @@ limitations under the License.
         return await response.json();
     }
 
-    async function deleteRecord(endpoint, id, primaryKey) {
-        const response = await fetch(`${endpoint}?${primaryKey}=${id}`, {
+    async function deleteRecord(endpoint, id, primaryKey, modelName) {
+        const query = {
+            text: `select * from ${modelName} where ${primaryKey}=${id}`
+        };
+
+        const response = await fetch(endpoint, {
             method: 'DELETE',
-            headers: typeof getAuthHeaders === 'function' ? getAuthHeaders() : {}
+            headers: {
+                'Content-Type': 'application/json',
+                ...(typeof getAuthHeaders === 'function' ? getAuthHeaders() : {})
+            },
+            body: JSON.stringify(query)
         });
 
         if (!response.ok) throw new Error('Failed to delete record');
@@ -860,7 +868,7 @@ limitations under the License.
     function confirmDelete(serviceConfig, recordId, onSuccess) {
         if (typeof Layer8DPopup === 'undefined') {
             if (confirm('Are you sure you want to delete this record?')) {
-                deleteRecord(serviceConfig.endpoint, recordId, serviceConfig.primaryKey)
+                deleteRecord(serviceConfig.endpoint, recordId, serviceConfig.primaryKey, serviceConfig.modelName)
                     .then(() => { if (onSuccess) onSuccess(); })
                     .catch(error => { Layer8DNotification.error('Error deleting', [error.message]); });
             }
@@ -881,7 +889,7 @@ limitations under the License.
             cancelButtonText: 'Cancel',
             onSave: async () => {
                 try {
-                    await deleteRecord(serviceConfig.endpoint, recordId, serviceConfig.primaryKey);
+                    await deleteRecord(serviceConfig.endpoint, recordId, serviceConfig.primaryKey, serviceConfig.modelName);
                     Layer8DPopup.close();
                     if (onSuccess) onSuccess();
                 } catch (error) {

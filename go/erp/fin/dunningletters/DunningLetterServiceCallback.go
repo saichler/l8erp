@@ -33,6 +33,9 @@ func (this *DunningLetterServiceCallback) Before(any interface{}, action ifs.Act
 	if !ok {
 		return nil, false, errors.New("invalid dunningLetter type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&dunningLetter.LetterId)
+	}
 	err := validate(dunningLetter, vnic)
 	if err != nil {
 		return nil, false, err

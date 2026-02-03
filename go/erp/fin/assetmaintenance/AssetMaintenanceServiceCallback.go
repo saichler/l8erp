@@ -33,6 +33,9 @@ func (this *AssetMaintenanceServiceCallback) Before(any interface{}, action ifs.
 	if !ok {
 		return nil, false, errors.New("invalid assetMaintenance type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&assetMaintenance.MaintenanceId)
+	}
 	err := validate(assetMaintenance, vnic)
 	if err != nil {
 		return nil, false, err

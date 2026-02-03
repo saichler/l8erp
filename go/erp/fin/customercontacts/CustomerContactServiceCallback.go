@@ -33,6 +33,9 @@ func (this *CustomerContactServiceCallback) Before(any interface{}, action ifs.A
 	if !ok {
 		return nil, false, errors.New("invalid customerContact type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&customerContact.ContactId)
+	}
 	err := validate(customerContact, vnic)
 	if err != nil {
 		return nil, false, err

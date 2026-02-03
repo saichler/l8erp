@@ -35,6 +35,9 @@ func (this *JobRequisitionServiceCallback) Before(any interface{}, action ifs.Ac
 	if !ok {
 		return nil, false, errors.New("invalid job requisition type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.RequisitionId)
+	}
 	err := validateJobReq(entity, vnic)
 	if err != nil {
 		return nil, false, err

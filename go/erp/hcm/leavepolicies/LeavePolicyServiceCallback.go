@@ -33,6 +33,9 @@ func (this *LeavePolicyServiceCallback) Before(any interface{}, action ifs.Actio
 	if !ok {
 		return nil, false, errors.New("invalid leave policy type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.PolicyId)
+	}
 	err := validateLeavePol(entity)
 	if err != nil {
 		return nil, false, err

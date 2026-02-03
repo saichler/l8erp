@@ -33,6 +33,9 @@ func (this *VendorContactServiceCallback) Before(any interface{}, action ifs.Act
 	if !ok {
 		return nil, false, errors.New("invalid vendorContact type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&vendorContact.ContactId)
+	}
 	err := validate(vendorContact, vnic)
 	if err != nil {
 		return nil, false, err

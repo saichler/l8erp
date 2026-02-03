@@ -34,6 +34,9 @@ func (this *OnboardingTaskServiceCallback) Before(any interface{}, action ifs.Ac
 	if !ok {
 		return nil, false, errors.New("invalid onboarding task type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.TaskId)
+	}
 	err := validateOnbrdTsk(entity, vnic)
 	if err != nil {
 		return nil, false, err

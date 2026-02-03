@@ -32,6 +32,9 @@ func (this *RouteServiceCallback) Before(any interface{}, action ifs.Action, con
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&item.RouteId)
+	}
 	err := validate(item, vnic)
 	if err != nil {
 		return nil, false, err

@@ -33,6 +33,9 @@ func (this *TaxReturnServiceCallback) Before(any interface{}, action ifs.Action,
 	if !ok {
 		return nil, false, errors.New("invalid taxReturn type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&taxReturn.ReturnId)
+	}
 	err := validate(taxReturn, vnic)
 	if err != nil {
 		return nil, false, err

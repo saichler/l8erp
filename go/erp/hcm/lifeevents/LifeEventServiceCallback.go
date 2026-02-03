@@ -34,6 +34,9 @@ func (this *LifeEventServiceCallback) Before(any interface{}, action ifs.Action,
 	if !ok {
 		return nil, false, errors.New("invalid life event type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.LifeEventId)
+	}
 	err := validateLifeEvt(entity, vnic)
 	if err != nil {
 		return nil, false, err

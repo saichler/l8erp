@@ -33,6 +33,9 @@ func (this *SalesInvoiceLineServiceCallback) Before(any interface{}, action ifs.
 	if !ok {
 		return nil, false, errors.New("invalid line type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&line.LineId)
+	}
 	err := validate(line, vnic)
 	if err != nil {
 		return nil, false, err

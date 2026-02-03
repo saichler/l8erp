@@ -33,6 +33,9 @@ func (this *AssetTransferServiceCallback) Before(any interface{}, action ifs.Act
 	if !ok {
 		return nil, false, errors.New("invalid assetTransfer type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&assetTransfer.TransferId)
+	}
 	err := validate(assetTransfer, vnic)
 	if err != nil {
 		return nil, false, err

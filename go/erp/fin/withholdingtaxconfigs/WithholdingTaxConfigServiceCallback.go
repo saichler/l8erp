@@ -33,6 +33,9 @@ func (this *WithholdingTaxConfigServiceCallback) Before(any interface{}, action 
 	if !ok {
 		return nil, false, errors.New("invalid withholdingTaxConfig type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&withholdingTaxConfig.ConfigId)
+	}
 	err := validate(withholdingTaxConfig, vnic)
 	if err != nil {
 		return nil, false, err

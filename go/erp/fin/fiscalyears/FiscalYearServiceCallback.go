@@ -33,6 +33,9 @@ func (this *FiscalYearServiceCallback) Before(any interface{}, action ifs.Action
 	if !ok {
 		return nil, false, errors.New("invalid fiscalYear type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&fiscalYear.FiscalYearId)
+	}
 	err := validate(fiscalYear, vnic)
 	if err != nil {
 		return nil, false, err

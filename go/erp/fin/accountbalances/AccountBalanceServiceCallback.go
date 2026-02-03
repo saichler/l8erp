@@ -33,6 +33,9 @@ func (this *AccountBalanceServiceCallback) Before(any interface{}, action ifs.Ac
 	if !ok {
 		return nil, false, errors.New("invalid accountBalance type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&accountBalance.BalanceId)
+	}
 	err := validate(accountBalance, vnic)
 	if err != nil {
 		return nil, false, err

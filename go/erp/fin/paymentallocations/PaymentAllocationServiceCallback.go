@@ -33,6 +33,9 @@ func (this *PaymentAllocationServiceCallback) Before(any interface{}, action ifs
 	if !ok {
 		return nil, false, errors.New("invalid paymentAllocation type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&paymentAllocation.AllocationId)
+	}
 	err := validate(paymentAllocation, vnic)
 	if err != nil {
 		return nil, false, err

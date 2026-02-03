@@ -33,6 +33,9 @@ func (this *ShiftServiceCallback) Before(any interface{}, action ifs.Action, con
 	if !ok {
 		return nil, false, errors.New("invalid shift type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.ShiftId)
+	}
 	err := validateShift(entity)
 	if err != nil {
 		return nil, false, err

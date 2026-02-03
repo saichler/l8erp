@@ -34,6 +34,9 @@ func (this *DependentServiceCallback) Before(any interface{}, action ifs.Action,
 	if !ok {
 		return nil, false, errors.New("invalid dependent type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.DependentId)
+	}
 	err := validateDep(entity, vnic)
 	if err != nil {
 		return nil, false, err

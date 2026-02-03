@@ -97,8 +97,8 @@ limitations under the License.
     function getFormValues() {
         var body = Layer8DPopup.getBody();
         if (!body) return { roleId: '', roleName: '' };
-        var idEl = body.querySelector('#sys-role-id');
-        var nameEl = body.querySelector('#sys-role-name');
+        var idEl = body.querySelector('#l8sys-role-id');
+        var nameEl = body.querySelector('#l8sys-role-name');
         return {
             roleId: idEl ? idEl.value : '',
             roleName: nameEl ? nameEl.value : ''
@@ -188,8 +188,8 @@ limitations under the License.
         var body = Layer8DPopup.getBody();
         if (!body) return;
 
-        var idEl = body.querySelector('#sys-role-id');
-        var nameEl = body.querySelector('#sys-role-name');
+        var idEl = body.querySelector('#l8sys-role-id');
+        var nameEl = body.querySelector('#l8sys-role-name');
         var roleId = idEl ? idEl.value.trim() : '';
         var roleName = nameEl ? nameEl.value.trim() : '';
 
@@ -292,9 +292,9 @@ limitations under the License.
     function getRuleFormValues() {
         var body = Layer8DPopup.getBody();
         if (!body) return null;
-        var idEl = body.querySelector('#sys-rule-id');
-        var typeEl = body.querySelector('#sys-rule-elem-type');
-        var allowedEl = body.querySelector('#sys-rule-allowed');
+        var idEl = body.querySelector('#l8sys-rule-id');
+        var typeEl = body.querySelector('#l8sys-rule-elem-type');
+        var allowedEl = body.querySelector('#l8sys-rule-allowed');
         return {
             ruleId: idEl ? idEl.value : '',
             elemType: typeEl ? typeEl.value : '*',
@@ -365,9 +365,9 @@ limitations under the License.
         var body = Layer8DPopup.getBody();
         if (!body) return;
 
-        var ruleId = (body.querySelector('#sys-rule-id') || {}).value || '';
-        var elemType = (body.querySelector('#sys-rule-elem-type') || {}).value || '*';
-        var allowed = ((body.querySelector('#sys-rule-allowed') || {}).value || 'true') === 'true';
+        var ruleId = (body.querySelector('#l8sys-rule-id') || {}).value || '';
+        var elemType = (body.querySelector('#l8sys-rule-elem-type') || {}).value || '*';
+        var allowed = ((body.querySelector('#l8sys-rule-allowed') || {}).value || 'true') === 'true';
 
         ruleId = ruleId.trim();
         elemType = elemType.trim();
@@ -428,11 +428,11 @@ limitations under the License.
     refreshRoleModal = function() {
         var body = Layer8DPopup.getBody();
         if (!body) return;
-        // Check if we're back in the role modal (has sys-role-id)
-        if (body.querySelector('#sys-role-id')) {
+        // Check if we're back in the role modal (has l8sys-role-id)
+        if (body.querySelector('#l8sys-role-id')) {
             var vals = {
-                roleId: (body.querySelector('#sys-role-id') || {}).value || '',
-                roleName: (body.querySelector('#sys-role-name') || {}).value || ''
+                roleId: (body.querySelector('#l8sys-role-id') || {}).value || '',
+                roleName: (body.querySelector('#l8sys-role-name') || {}).value || ''
             };
             var html = generateRoleFormHtml(vals.roleId, vals.roleName);
             Layer8DPopup.updateContent(html);

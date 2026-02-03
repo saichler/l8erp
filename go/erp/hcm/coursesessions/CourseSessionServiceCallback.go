@@ -34,6 +34,9 @@ func (this *CourseSessionServiceCallback) Before(any interface{}, action ifs.Act
 	if !ok {
 		return nil, false, errors.New("invalid course session type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.SessionId)
+	}
 	err := validateCourseSession(entity, vnic)
 	if err != nil {
 		return nil, false, err

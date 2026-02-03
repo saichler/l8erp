@@ -15,6 +15,7 @@ package common
 
 import (
 	"errors"
+	"github.com/saichler/l8types/go/ifs"
 	"time"
 )
 
@@ -113,4 +114,12 @@ func ValidateConditionalRequiredInt64(condition bool, value int64, conditionDesc
 		return errors.New(fieldName + " is required when " + conditionDesc)
 	}
 	return nil
+}
+
+// GenerateID assigns a new UUID to the given ID pointer if it is empty.
+// Used to auto-generate primary keys on POST (Add) operations.
+func GenerateID(id *string) {
+	if *id == "" {
+		*id = ifs.NewUuid()
+	}
 }

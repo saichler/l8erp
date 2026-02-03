@@ -32,6 +32,9 @@ func (this *CarrierServiceCallback) Before(any interface{}, action ifs.Action, c
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&item.CarrierId)
+	}
 	err := validate(item, vnic)
 	if err != nil {
 		return nil, false, err

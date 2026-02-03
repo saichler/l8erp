@@ -33,6 +33,9 @@ func (this *MaterialRequirementServiceCallback) Before(any interface{}, action i
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&item.RequirementId)
+	}
 	err := validate(item, vnic)
 	if err != nil {
 		return nil, false, err

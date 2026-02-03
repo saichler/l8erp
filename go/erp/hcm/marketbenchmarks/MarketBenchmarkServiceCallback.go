@@ -34,6 +34,9 @@ func (this *MarketBenchmarkServiceCallback) Before(any interface{}, action ifs.A
 	if !ok {
 		return nil, false, errors.New("invalid market benchmark type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.BenchmarkId)
+	}
 	err := validateMktBench(entity, vnic)
 	if err != nil {
 		return nil, false, err

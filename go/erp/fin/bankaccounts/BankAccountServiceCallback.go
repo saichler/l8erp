@@ -33,6 +33,9 @@ func (this *BankAccountServiceCallback) Before(any interface{}, action ifs.Actio
 	if !ok {
 		return nil, false, errors.New("invalid bankAccount type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&bankAccount.BankAccountId)
+	}
 	err := validate(bankAccount, vnic)
 	if err != nil {
 		return nil, false, err

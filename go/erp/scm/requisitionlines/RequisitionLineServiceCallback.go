@@ -33,6 +33,9 @@ func (this *RequisitionLineServiceCallback) Before(any interface{}, action ifs.A
 	if !ok {
 		return nil, false, errors.New("invalid requisition line type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&item.LineId)
+	}
 	err := validate(item, vnic)
 	if err != nil {
 		return nil, false, err

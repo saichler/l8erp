@@ -32,6 +32,9 @@ func (this *PackTaskServiceCallback) Before(any interface{}, action ifs.Action, 
 	if !ok {
 		return nil, false, errors.New("invalid type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&item.TaskId)
+	}
 	err := validate(item, vnic)
 	if err != nil {
 		return nil, false, err

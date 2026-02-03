@@ -33,6 +33,9 @@ func (this *CashForecastServiceCallback) Before(any interface{}, action ifs.Acti
 	if !ok {
 		return nil, false, errors.New("invalid cashForecast type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&cashForecast.ForecastId)
+	}
 	err := validate(cashForecast, vnic)
 	if err != nil {
 		return nil, false, err

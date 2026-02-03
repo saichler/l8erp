@@ -34,6 +34,9 @@ func (this *CompensationStatementServiceCallback) Before(any interface{}, action
 	if !ok {
 		return nil, false, errors.New("invalid compensation statement type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.StatementId)
+	}
 	err := validateCompStmt(entity, vnic)
 	if err != nil {
 		return nil, false, err

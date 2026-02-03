@@ -33,6 +33,9 @@ func (this *PettyCashServiceCallback) Before(any interface{}, action ifs.Action,
 	if !ok {
 		return nil, false, errors.New("invalid pettyCash type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&pettyCash.PettyCashId)
+	}
 	err := validate(pettyCash, vnic)
 	if err != nil {
 		return nil, false, err

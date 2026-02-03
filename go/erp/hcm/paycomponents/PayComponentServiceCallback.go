@@ -33,6 +33,9 @@ func (this *PayComponentServiceCallback) Before(any interface{}, action ifs.Acti
 	if !ok {
 		return nil, false, errors.New("invalid pay component type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.ComponentId)
+	}
 	err := validatePayComp(entity)
 	if err != nil {
 		return nil, false, err

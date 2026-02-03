@@ -33,6 +33,9 @@ func (this *PaymentApplicationServiceCallback) Before(any interface{}, action if
 	if !ok {
 		return nil, false, errors.New("invalid paymentApplication type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&paymentApplication.ApplicationId)
+	}
 	err := validate(paymentApplication, vnic)
 	if err != nil {
 		return nil, false, err

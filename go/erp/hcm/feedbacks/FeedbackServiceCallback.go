@@ -34,6 +34,9 @@ func (this *FeedbackServiceCallback) Before(any interface{}, action ifs.Action, 
 	if !ok {
 		return nil, false, errors.New("invalid feedback type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.FeedbackId)
+	}
 	err := validateFeedback(entity, vnic)
 	if err != nil {
 		return nil, false, err

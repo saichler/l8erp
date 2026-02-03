@@ -33,6 +33,9 @@ func (this *AssetCategoryServiceCallback) Before(any interface{}, action ifs.Act
 	if !ok {
 		return nil, false, errors.New("invalid assetCategory type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&assetCategory.CategoryId)
+	}
 	err := validate(assetCategory, vnic)
 	if err != nil {
 		return nil, false, err

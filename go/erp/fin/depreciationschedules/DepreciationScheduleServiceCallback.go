@@ -33,6 +33,9 @@ func (this *DepreciationScheduleServiceCallback) Before(any interface{}, action 
 	if !ok {
 		return nil, false, errors.New("invalid depreciationSchedule type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&depreciationSchedule.ScheduleId)
+	}
 	err := validate(depreciationSchedule, vnic)
 	if err != nil {
 		return nil, false, err

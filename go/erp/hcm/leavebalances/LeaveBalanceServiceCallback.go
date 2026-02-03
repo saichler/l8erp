@@ -35,6 +35,9 @@ func (this *LeaveBalanceServiceCallback) Before(any interface{}, action ifs.Acti
 	if !ok {
 		return nil, false, errors.New("invalid leave balance type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.BalanceId)
+	}
 	err := validateLeaveBal(entity, vnic)
 	if err != nil {
 		return nil, false, err

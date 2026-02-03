@@ -33,6 +33,9 @@ func (this *HolidayServiceCallback) Before(any interface{}, action ifs.Action, c
 	if !ok {
 		return nil, false, errors.New("invalid holiday type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.HolidayId)
+	}
 	err := validateHoliday(entity)
 	if err != nil {
 		return nil, false, err

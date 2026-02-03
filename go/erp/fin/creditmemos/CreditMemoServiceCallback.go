@@ -33,6 +33,9 @@ func (this *CreditMemoServiceCallback) Before(any interface{}, action ifs.Action
 	if !ok {
 		return nil, false, errors.New("invalid creditMemo type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&creditMemo.CreditMemoId)
+	}
 	err := validate(creditMemo, vnic)
 	if err != nil {
 		return nil, false, err

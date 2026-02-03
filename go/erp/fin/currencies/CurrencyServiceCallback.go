@@ -33,6 +33,9 @@ func (this *CurrencyServiceCallback) Before(any interface{}, action ifs.Action, 
 	if !ok {
 		return nil, false, errors.New("invalid currency type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&currency.CurrencyId)
+	}
 	err := validate(currency, vnic)
 	if err != nil {
 		return nil, false, err

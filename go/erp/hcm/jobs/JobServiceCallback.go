@@ -34,6 +34,9 @@ func (this *JobServiceCallback) Before(any interface{}, action ifs.Action, cont 
 	if !ok {
 		return nil, false, errors.New("invalid job type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.JobId)
+	}
 	err := validateJob(entity, vnic)
 	if err != nil {
 		return nil, false, err

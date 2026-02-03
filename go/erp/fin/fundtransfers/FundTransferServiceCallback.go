@@ -33,6 +33,9 @@ func (this *FundTransferServiceCallback) Before(any interface{}, action ifs.Acti
 	if !ok {
 		return nil, false, errors.New("invalid fundTransfer type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&fundTransfer.TransferId)
+	}
 	err := validate(fundTransfer, vnic)
 	if err != nil {
 		return nil, false, err

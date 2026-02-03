@@ -33,6 +33,9 @@ func (this *BudgetScenarioServiceCallback) Before(any interface{}, action ifs.Ac
 	if !ok {
 		return nil, false, errors.New("invalid budgetScenario type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&budgetScenario.ScenarioId)
+	}
 	err := validate(budgetScenario, vnic)
 	if err != nil {
 		return nil, false, err

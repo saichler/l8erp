@@ -35,6 +35,9 @@ func (this *CourseEnrollmentServiceCallback) Before(any interface{}, action ifs.
 	if !ok {
 		return nil, false, errors.New("invalid course enrollment type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.EnrollmentId)
+	}
 	err := validateCourseEnrollment(entity, vnic)
 	if err != nil {
 		return nil, false, err

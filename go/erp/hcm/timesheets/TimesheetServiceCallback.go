@@ -34,6 +34,9 @@ func (this *TimesheetServiceCallback) Before(any interface{}, action ifs.Action,
 	if !ok {
 		return nil, false, errors.New("invalid timesheet type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.TimesheetId)
+	}
 	err := validateTimesheet(entity, vnic)
 	if err != nil {
 		return nil, false, err

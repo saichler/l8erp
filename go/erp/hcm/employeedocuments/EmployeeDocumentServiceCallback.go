@@ -34,6 +34,9 @@ func (this *EmployeeDocumentServiceCallback) Before(any interface{}, action ifs.
 	if !ok {
 		return nil, false, errors.New("invalid employee document type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.DocumentId)
+	}
 	err := validateEmpDoc(entity, vnic)
 	if err != nil {
 		return nil, false, err

@@ -33,6 +33,9 @@ func (this *InventoryValuationServiceCallback) Before(any interface{}, action if
 	if !ok {
 		return nil, false, errors.New("invalid inventory valuation type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&item.ValuationId)
+	}
 	err := validate(item, vnic)
 	if err != nil {
 		return nil, false, err

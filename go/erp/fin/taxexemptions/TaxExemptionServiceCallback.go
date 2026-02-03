@@ -33,6 +33,9 @@ func (this *TaxExemptionServiceCallback) Before(any interface{}, action ifs.Acti
 	if !ok {
 		return nil, false, errors.New("invalid taxExemption type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&taxExemption.ExemptionId)
+	}
 	err := validate(taxExemption, vnic)
 	if err != nil {
 		return nil, false, err

@@ -33,6 +33,9 @@ func (this *PaymentScheduleServiceCallback) Before(any interface{}, action ifs.A
 	if !ok {
 		return nil, false, errors.New("invalid paymentSchedule type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&paymentSchedule.ScheduleId)
+	}
 	err := validate(paymentSchedule, vnic)
 	if err != nil {
 		return nil, false, err

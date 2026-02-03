@@ -90,9 +90,18 @@ limitations under the License.
         // Delete item
         moduleNS._deleteItem = async function(service, id) {
             try {
-                const response = await fetch(`${Layer8DConfig.resolveEndpoint(service.endpoint)}?id=${id}`, {
+                const primaryKey = Layer8DServiceRegistry.getPrimaryKey(parentModule, service.model);
+                const query = {
+                    text: `select * from ${service.model} where ${primaryKey}=${id}`
+                };
+
+                const response = await fetch(Layer8DConfig.resolveEndpoint(service.endpoint), {
                     method: 'DELETE',
-                    headers: typeof getAuthHeaders === 'function' ? getAuthHeaders() : { 'Content-Type': 'application/json' }
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(typeof getAuthHeaders === 'function' ? getAuthHeaders() : {})
+                    },
+                    body: JSON.stringify(query)
                 });
 
                 if (!response.ok) {

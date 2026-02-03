@@ -33,6 +33,9 @@ func (this *ExchangeRateServiceCallback) Before(any interface{}, action ifs.Acti
 	if !ok {
 		return nil, false, errors.New("invalid exchangeRate type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&exchangeRate.ExchangeRateId)
+	}
 	err := validate(exchangeRate, vnic)
 	if err != nil {
 		return nil, false, err

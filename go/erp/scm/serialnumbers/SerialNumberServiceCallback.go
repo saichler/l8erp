@@ -33,6 +33,9 @@ func (this *SerialNumberServiceCallback) Before(any interface{}, action ifs.Acti
 	if !ok {
 		return nil, false, errors.New("invalid serial number type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&item.SerialId)
+	}
 	err := validate(item, vnic)
 	if err != nil {
 		return nil, false, err

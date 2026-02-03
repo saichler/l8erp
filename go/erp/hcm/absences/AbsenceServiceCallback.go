@@ -34,6 +34,9 @@ func (this *AbsenceServiceCallback) Before(any interface{}, action ifs.Action, c
 	if !ok {
 		return nil, false, errors.New("invalid absence type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.AbsenceId)
+	}
 	err := validateAbsence(entity, vnic)
 	if err != nil {
 		return nil, false, err

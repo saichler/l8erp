@@ -35,6 +35,9 @@ func (this *ApplicationServiceCallback) Before(any interface{}, action ifs.Actio
 	if !ok {
 		return nil, false, errors.New("invalid application type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.ApplicationId)
+	}
 	err := validateApplctn(entity, vnic)
 	if err != nil {
 		return nil, false, err

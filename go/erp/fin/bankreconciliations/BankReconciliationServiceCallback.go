@@ -33,6 +33,9 @@ func (this *BankReconciliationServiceCallback) Before(any interface{}, action if
 	if !ok {
 		return nil, false, errors.New("invalid bankReconciliation type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&bankReconciliation.ReconciliationId)
+	}
 	err := validate(bankReconciliation, vnic)
 	if err != nil {
 		return nil, false, err

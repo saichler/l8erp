@@ -33,6 +33,9 @@ func (this *PurchaseOrderServiceCallback) Before(any interface{}, action ifs.Act
 	if !ok {
 		return nil, false, errors.New("invalid purchase order type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&item.PurchaseOrderId)
+	}
 	err := validate(item, vnic)
 	if err != nil {
 		return nil, false, err

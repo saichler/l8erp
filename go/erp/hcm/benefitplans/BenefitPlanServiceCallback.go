@@ -35,6 +35,9 @@ func (this *BenefitPlanServiceCallback) Before(any interface{}, action ifs.Actio
 	if !ok {
 		return nil, false, errors.New("invalid benefit plan type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.PlanId)
+	}
 	err := validateBenPlan(entity, vnic)
 	if err != nil {
 		return nil, false, err

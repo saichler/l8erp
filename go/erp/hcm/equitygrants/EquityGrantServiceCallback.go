@@ -34,6 +34,9 @@ func (this *EquityGrantServiceCallback) Before(any interface{}, action ifs.Actio
 	if !ok {
 		return nil, false, errors.New("invalid equity grant type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.GrantId)
+	}
 	err := validateEqGrant(entity, vnic)
 	if err != nil {
 		return nil, false, err

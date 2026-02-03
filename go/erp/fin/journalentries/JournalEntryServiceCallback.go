@@ -33,6 +33,9 @@ func (this *JournalEntryServiceCallback) Before(any interface{}, action ifs.Acti
 	if !ok {
 		return nil, false, errors.New("invalid journalEntry type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&journalEntry.JournalEntryId)
+	}
 	err := validate(journalEntry, vnic)
 	if err != nil {
 		return nil, false, err

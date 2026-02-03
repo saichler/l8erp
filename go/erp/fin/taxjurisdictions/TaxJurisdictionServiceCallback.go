@@ -33,6 +33,9 @@ func (this *TaxJurisdictionServiceCallback) Before(any interface{}, action ifs.A
 	if !ok {
 		return nil, false, errors.New("invalid taxJurisdiction type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&taxJurisdiction.JurisdictionId)
+	}
 	err := validate(taxJurisdiction, vnic)
 	if err != nil {
 		return nil, false, err

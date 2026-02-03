@@ -34,6 +34,9 @@ func (this *PayrollRunServiceCallback) Before(any interface{}, action ifs.Action
 	if !ok {
 		return nil, false, errors.New("invalid payroll run type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.PayrollRunId)
+	}
 	err := validatePayRun(entity, vnic)
 	if err != nil {
 		return nil, false, err

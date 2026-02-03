@@ -34,6 +34,9 @@ func (this *ComplianceRecordServiceCallback) Before(any interface{}, action ifs.
 	if !ok {
 		return nil, false, errors.New("invalid compliance record type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.RecordId)
+	}
 	err := validateCompRec(entity, vnic)
 	if err != nil {
 		return nil, false, err

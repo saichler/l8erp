@@ -33,6 +33,9 @@ func (this *MeritCycleServiceCallback) Before(any interface{}, action ifs.Action
 	if !ok {
 		return nil, false, errors.New("invalid merit cycle type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.CycleId)
+	}
 	err := validateMeritCyc(entity)
 	if err != nil {
 		return nil, false, err

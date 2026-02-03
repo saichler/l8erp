@@ -34,6 +34,9 @@ func (this *ScheduleServiceCallback) Before(any interface{}, action ifs.Action, 
 	if !ok {
 		return nil, false, errors.New("invalid schedule type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.ScheduleId)
+	}
 	err := validateSchedule(entity, vnic)
 	if err != nil {
 		return nil, false, err

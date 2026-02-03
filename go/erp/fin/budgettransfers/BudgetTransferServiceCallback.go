@@ -33,6 +33,9 @@ func (this *BudgetTransferServiceCallback) Before(any interface{}, action ifs.Ac
 	if !ok {
 		return nil, false, errors.New("invalid budgetTransfer type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&budgetTransfer.TransferId)
+	}
 	err := validate(budgetTransfer, vnic)
 	if err != nil {
 		return nil, false, err

@@ -34,6 +34,9 @@ func (this *TaxWithholdingServiceCallback) Before(any interface{}, action ifs.Ac
 	if !ok {
 		return nil, false, errors.New("invalid tax withholding type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.WithholdingId)
+	}
 	err := validateTaxWith(entity, vnic)
 	if err != nil {
 		return nil, false, err

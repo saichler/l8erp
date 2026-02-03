@@ -35,6 +35,9 @@ func (this *LeaveRequestServiceCallback) Before(any interface{}, action ifs.Acti
 	if !ok {
 		return nil, false, errors.New("invalid leave request type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.RequestId)
+	}
 	err := validateLeaveReq(entity, vnic)
 	if err != nil {
 		return nil, false, err

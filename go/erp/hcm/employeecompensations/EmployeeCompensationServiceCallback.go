@@ -35,6 +35,9 @@ func (this *EmployeeCompensationServiceCallback) Before(any interface{}, action 
 	if !ok {
 		return nil, false, errors.New("invalid employee compensation type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.CompensationId)
+	}
 	err := validateEmpComp(entity, vnic)
 	if err != nil {
 		return nil, false, err

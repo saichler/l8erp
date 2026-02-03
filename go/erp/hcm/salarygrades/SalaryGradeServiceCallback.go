@@ -33,6 +33,9 @@ func (this *SalaryGradeServiceCallback) Before(any interface{}, action ifs.Actio
 	if !ok {
 		return nil, false, errors.New("invalid salary grade type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.GradeId)
+	}
 	err := validateSalGrade(entity)
 	if err != nil {
 		return nil, false, err

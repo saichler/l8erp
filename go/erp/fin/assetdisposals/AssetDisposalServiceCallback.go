@@ -33,6 +33,9 @@ func (this *AssetDisposalServiceCallback) Before(any interface{}, action ifs.Act
 	if !ok {
 		return nil, false, errors.New("invalid assetDisposal type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&assetDisposal.DisposalId)
+	}
 	err := validate(assetDisposal, vnic)
 	if err != nil {
 		return nil, false, err

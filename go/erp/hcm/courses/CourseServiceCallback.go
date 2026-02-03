@@ -33,6 +33,9 @@ func (this *CourseServiceCallback) Before(any interface{}, action ifs.Action, co
 	if !ok {
 		return nil, false, errors.New("invalid course type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.CourseId)
+	}
 	err := validateCourse(entity, vnic)
 	if err != nil {
 		return nil, false, err

@@ -33,6 +33,9 @@ func (this *StockMovementServiceCallback) Before(any interface{}, action ifs.Act
 	if !ok {
 		return nil, false, errors.New("invalid stock movement type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&item.MovementId)
+	}
 	err := validate(item, vnic)
 	if err != nil {
 		return nil, false, err

@@ -34,6 +34,9 @@ func (this *EmployeeCertificationServiceCallback) Before(any interface{}, action
 	if !ok {
 		return nil, false, errors.New("invalid employee certification type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.EmployeeCertificationId)
+	}
 	err := validateEmployeeCertification(entity, vnic)
 	if err != nil {
 		return nil, false, err

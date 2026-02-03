@@ -33,6 +33,9 @@ func (this *PurchaseRequisitionServiceCallback) Before(any interface{}, action i
 	if !ok {
 		return nil, false, errors.New("invalid purchase requisition type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&item.RequisitionId)
+	}
 	err := validate(item, vnic)
 	if err != nil {
 		return nil, false, err

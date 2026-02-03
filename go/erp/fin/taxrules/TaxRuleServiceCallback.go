@@ -33,6 +33,9 @@ func (this *TaxRuleServiceCallback) Before(any interface{}, action ifs.Action, c
 	if !ok {
 		return nil, false, errors.New("invalid taxRule type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&taxRule.RuleId)
+	}
 	err := validate(taxRule, vnic)
 	if err != nil {
 		return nil, false, err

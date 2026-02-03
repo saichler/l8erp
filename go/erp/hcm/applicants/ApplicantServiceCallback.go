@@ -33,6 +33,9 @@ func (this *ApplicantServiceCallback) Before(any interface{}, action ifs.Action,
 	if !ok {
 		return nil, false, errors.New("invalid applicant type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.ApplicantId)
+	}
 	err := validateApplicant(entity)
 	if err != nil {
 		return nil, false, err

@@ -33,6 +33,9 @@ func (this *ItemCategoryServiceCallback) Before(any interface{}, action ifs.Acti
 	if !ok {
 		return nil, false, errors.New("invalid item category type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&item.CategoryId)
+	}
 	err := validate(item, vnic)
 	if err != nil {
 		return nil, false, err

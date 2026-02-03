@@ -34,6 +34,9 @@ func (this *YearEndDocumentServiceCallback) Before(any interface{}, action ifs.A
 	if !ok {
 		return nil, false, errors.New("invalid year end document type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.DocumentId)
+	}
 	err := validateYrEndDoc(entity, vnic)
 	if err != nil {
 		return nil, false, err

@@ -34,6 +34,9 @@ func (this *SuccessionPlanServiceCallback) Before(any interface{}, action ifs.Ac
 	if !ok {
 		return nil, false, errors.New("invalid succession plan type")
 	}
+	if action == ifs.POST {
+		common.GenerateID(&entity.PlanId)
+	}
 	err := validateSuccPlan(entity, vnic)
 	if err != nil {
 		return nil, false, err

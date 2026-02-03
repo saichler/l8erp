@@ -599,9 +599,12 @@ limitations under the License.
 
             if (confirmed) {
                 try {
-                    // Use correct primary key in query param (matches desktop)
+                    // Build L8Query for delete scope
                     const primaryKey = serviceConfig.idField;
-                    await Layer8MAuth.delete(`${Layer8MConfig.resolveEndpoint(serviceConfig.endpoint)}?${primaryKey}=${id}`);
+                    const query = {
+                        text: `select * from ${serviceConfig.model} where ${primaryKey}=${id}`
+                    };
+                    await Layer8MAuth.delete(Layer8MConfig.resolveEndpoint(serviceConfig.endpoint), query);
                     Layer8MUtils.showSuccess(`${serviceConfig.label.replace(/s$/, '')} deleted`);
                     if (activeTable) activeTable.refresh();
                 } catch (error) {

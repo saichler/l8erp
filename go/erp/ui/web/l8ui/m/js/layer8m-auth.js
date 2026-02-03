@@ -154,8 +154,12 @@ limitations under the License.
         /**
          * DELETE request with authentication
          */
-        async delete(url) {
-            const response = await this.makeAuthenticatedRequest(url, { method: 'DELETE' });
+        async delete(url, data = null) {
+            const options = { method: 'DELETE' };
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+            const response = await this.makeAuthenticatedRequest(url, options);
             if (!response) return null;
             if (!response.ok) throw new Error(`Request failed: ${response.status}`);
             return response.json();
