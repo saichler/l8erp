@@ -25,7 +25,7 @@ func generateSalesPhase6(client *HCMClient, store *MockDataStore) error {
 	// Generate Delivery Orders
 	fmt.Printf("  Creating Delivery Orders...")
 	deliveries := generateSalesDeliveryOrders(store)
-	if err := client.post("/erp/60/Delivery", &sales.SalesDeliveryOrderList{List: deliveries}); err != nil {
+	if err := client.post("/erp/60/DlvryOrder", &sales.SalesDeliveryOrderList{List: deliveries}); err != nil {
 		return fmt.Errorf("delivery orders: %w", err)
 	}
 	for _, d := range deliveries {
@@ -36,7 +36,7 @@ func generateSalesPhase6(client *HCMClient, store *MockDataStore) error {
 	// Generate Delivery Lines
 	fmt.Printf("  Creating Delivery Lines...")
 	deliveryLines := generateSalesDeliveryLines(store)
-	if err := client.post("/erp/60/DelivLine", &sales.SalesDeliveryLineList{List: deliveryLines}); err != nil {
+	if err := client.post("/erp/60/DlvryLine", &sales.SalesDeliveryLineList{List: deliveryLines}); err != nil {
 		return fmt.Errorf("delivery lines: %w", err)
 	}
 	for _, dl := range deliveryLines {
@@ -47,7 +47,7 @@ func generateSalesPhase6(client *HCMClient, store *MockDataStore) error {
 	// Generate Pick Releases
 	fmt.Printf("  Creating Pick Releases...")
 	pickReleases := generateSalesPickReleases(store)
-	if err := client.post("/erp/60/PickRel", &sales.SalesPickReleaseList{List: pickReleases}); err != nil {
+	if err := client.post("/erp/60/PickRlease", &sales.SalesPickReleaseList{List: pickReleases}); err != nil {
 		return fmt.Errorf("pick releases: %w", err)
 	}
 	for _, pr := range pickReleases {
@@ -96,7 +96,7 @@ func generateSalesPhase7(client *HCMClient, store *MockDataStore) error {
 	// Generate Billing Milestones
 	fmt.Printf("  Creating Billing Milestones...")
 	milestones := generateSalesBillingMilestones(store)
-	if err := client.post("/erp/60/BillMstone", &sales.SalesBillingMilestoneList{List: milestones}); err != nil {
+	if err := client.post("/erp/60/BillMilstn", &sales.SalesBillingMilestoneList{List: milestones}); err != nil {
 		return fmt.Errorf("billing milestones: %w", err)
 	}
 	for _, m := range milestones {
@@ -156,7 +156,7 @@ func generateSalesPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate Sales Targets
 	fmt.Printf("  Creating Sales Targets...")
 	targets := generateSalesTargets(store)
-	if err := client.post("/erp/60/Target", &sales.SalesTargetList{List: targets}); err != nil {
+	if err := client.post("/erp/60/SalesTrgt", &sales.SalesTargetList{List: targets}); err != nil {
 		return fmt.Errorf("sales targets: %w", err)
 	}
 	for _, t := range targets {
@@ -167,7 +167,7 @@ func generateSalesPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate Sales Forecasts
 	fmt.Printf("  Creating Sales Forecasts...")
 	forecasts := generateSalesForecasts(store)
-	if err := client.post("/erp/60/Forecast", &sales.SalesForecastList{List: forecasts}); err != nil {
+	if err := client.post("/erp/60/SalesFcast", &sales.SalesForecastList{List: forecasts}); err != nil {
 		return fmt.Errorf("sales forecasts: %w", err)
 	}
 	for _, f := range forecasts {

@@ -381,9 +381,9 @@ limitations under the License.
         ScmWarehouse: {
             idColumn: 'warehouseId',
             displayColumn: 'name',
-            selectColumns: ['warehouseId', 'warehouseCode', 'name'],
+            selectColumns: ['warehouseId', 'code', 'name'],
             displayFormat: function(item) {
-                return item.warehouseCode + ' - ' + item.name;
+                return item.code + ' - ' + item.name;
             },
             displayLabel: 'Warehouse'
         },
@@ -426,9 +426,9 @@ limitations under the License.
         ScmCarrier: {
             idColumn: 'carrierId',
             displayColumn: 'name',
-            selectColumns: ['carrierId', 'carrierCode', 'name'],
+            selectColumns: ['carrierId', 'code', 'name'],
             displayFormat: function(item) {
-                return item.carrierCode + ' - ' + item.name;
+                return item.code + ' - ' + item.name;
             },
             displayLabel: 'Carrier'
         },
@@ -444,11 +444,11 @@ limitations under the License.
         },
         ScmRoute: {
             idColumn: 'routeId',
-            displayColumn: 'routeName'
+            displayColumn: 'name'
         },
         ScmLoadPlan: {
             idColumn: 'loadPlanId',
-            displayColumn: 'planName'
+            displayColumn: 'loadPlanId'
         },
         ScmDeliveryProof: {
             idColumn: 'proofId',
@@ -470,17 +470,17 @@ limitations under the License.
         // ========================================
         ScmDemandForecast: {
             idColumn: 'forecastId',
-            displayColumn: 'forecastName',
-            selectColumns: ['forecastId', 'forecastName'],
+            displayColumn: 'forecastId',
+            selectColumns: ['forecastId', 'itemId'],
             displayLabel: 'Forecast'
         },
         ScmForecastModel: {
             idColumn: 'modelId',
-            displayColumn: 'modelName'
+            displayColumn: 'name'
         },
         ScmDemandPlan: {
             idColumn: 'planId',
-            displayColumn: 'planName'
+            displayColumn: 'name'
         },
         ScmPromotionalPlan: {
             idColumn: 'planId',
@@ -508,8 +508,8 @@ limitations under the License.
         },
         ScmSupplyPlan: {
             idColumn: 'planId',
-            displayColumn: 'planName',
-            selectColumns: ['planId', 'planName'],
+            displayColumn: 'name',
+            selectColumns: ['planId', 'name'],
             displayLabel: 'Supply Plan'
         },
         ScmSupplierCollaboration: {

@@ -25,7 +25,7 @@ func generateSalesPhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate Sales Territories
 	fmt.Printf("  Creating Sales Territories...")
 	territories := generateSalesTerritories(store)
-	if err := client.post("/erp/60/SalesTerritory", &sales.SalesTerritoryList{List: territories}); err != nil {
+	if err := client.post("/erp/60/Territory", &sales.SalesTerritoryList{List: territories}); err != nil {
 		return fmt.Errorf("sales territories: %w", err)
 	}
 	for _, t := range territories {
@@ -58,7 +58,7 @@ func generateSalesPhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate Customer Segments
 	fmt.Printf("  Creating Customer Segments...")
 	segments := generateSalesCustomerSegments()
-	if err := client.post("/erp/60/CustSeg", &sales.SalesCustomerSegmentList{List: segments}); err != nil {
+	if err := client.post("/erp/60/CustSegmt", &sales.SalesCustomerSegmentList{List: segments}); err != nil {
 		return fmt.Errorf("customer segments: %w", err)
 	}
 	for _, s := range segments {
@@ -123,7 +123,7 @@ func generateSalesPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Discount Rules
 	fmt.Printf("  Creating Discount Rules...")
 	discountRules := generateSalesDiscountRules(store)
-	if err := client.post("/erp/60/DiscRule", &sales.SalesDiscountRuleList{List: discountRules}); err != nil {
+	if err := client.post("/erp/60/DiscntRule", &sales.SalesDiscountRuleList{List: discountRules}); err != nil {
 		return fmt.Errorf("discount rules: %w", err)
 	}
 	for _, dr := range discountRules {
@@ -150,7 +150,7 @@ func generateSalesPhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate Quotations
 	fmt.Printf("  Creating Quotations...")
 	quotations := generateSalesQuotations(store)
-	if err := client.post("/erp/60/Quotation", &sales.SalesQuotationList{List: quotations}); err != nil {
+	if err := client.post("/erp/60/SalesQuote", &sales.SalesQuotationList{List: quotations}); err != nil {
 		return fmt.Errorf("quotations: %w", err)
 	}
 	for _, q := range quotations {

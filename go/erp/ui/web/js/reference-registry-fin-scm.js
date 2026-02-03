@@ -367,9 +367,9 @@ Layer8DReferenceRegistry.register({
         ScmWarehouse: {
             idColumn: 'warehouseId',
             displayColumn: 'name',
-            selectColumns: ['warehouseId', 'warehouseCode', 'name'],
+            selectColumns: ['warehouseId', 'code', 'name'],
             displayFormat: function(item) {
-                return item.warehouseCode + ' - ' + item.name;
+                return item.code + ' - ' + item.name;
             },
             displayLabel: 'Warehouse'
         },
@@ -412,9 +412,9 @@ Layer8DReferenceRegistry.register({
         ScmShipmentCarrier: {
             idColumn: 'carrierId',
             displayColumn: 'name',
-            selectColumns: ['carrierId', 'carrierCode', 'name'],
+            selectColumns: ['carrierId', 'code', 'name'],
             displayFormat: function(item) {
-                return item.carrierCode + ' - ' + item.name;
+                return item.code + ' - ' + item.name;
             },
             displayLabel: 'Carrier'
         },
@@ -454,8 +454,8 @@ Layer8DReferenceRegistry.register({
         // ========================================
         ScmDemandForecast: {
             idColumn: 'forecastId',
-            displayColumn: 'forecastName',
-            selectColumns: ['forecastId', 'forecastName'],
+            displayColumn: 'forecastId',
+            selectColumns: ['forecastId', 'itemId'],
             displayLabel: 'Forecast'
         },
         ScmForecastItem: {
@@ -484,8 +484,8 @@ Layer8DReferenceRegistry.register({
         // ========================================
         ScmSupplyPlan: {
             idColumn: 'planId',
-            displayColumn: 'planName',
-            selectColumns: ['planId', 'planName'],
+            displayColumn: 'name',
+            selectColumns: ['planId', 'name'],
             displayLabel: 'Supply Plan'
         },
         ScmPlannedOrder: {
