@@ -291,47 +291,47 @@ limitations under the License.
             // Services for each sub-module (Level 3)
             services: {
                 'customers': [
-                    { key: 'hierarchies', label: 'Hierarchies', icon: 'organizations', endpoint: '/60/CustHier', model: 'CustomerHierarchy', idField: 'hierarchyId' },
-                    { key: 'segments', label: 'Segments', icon: 'departments', endpoint: '/60/CustSegmt', model: 'CustomerSegment', idField: 'segmentId' },
-                    { key: 'contracts', label: 'Contracts', icon: 'documents', endpoint: '/60/CustContr', model: 'CustomerContract', idField: 'contractId' },
-                    { key: 'partners', label: 'Partners', icon: 'hcm', endpoint: '/60/Partner', model: 'PartnerChannel', idField: 'partnerId' }
+                    { key: 'hierarchies', label: 'Hierarchies', icon: 'organizations', endpoint: '/60/CustHier', model: 'SalesCustomerHierarchy', idField: 'hierarchyId' },
+                    { key: 'segments', label: 'Segments', icon: 'departments', endpoint: '/60/CustSegmt', model: 'SalesCustomerSegment', idField: 'segmentId' },
+                    { key: 'contracts', label: 'Contracts', icon: 'documents', endpoint: '/60/CustContr', model: 'SalesCustomerContract', idField: 'contractId' },
+                    { key: 'partners', label: 'Partners', icon: 'hcm', endpoint: '/60/Partner', model: 'SalesPartnerChannel', idField: 'partnerId' }
                 ],
                 'orders': [
                     { key: 'quotations', label: 'Quotations', icon: 'documents', endpoint: '/60/SalesQuote', model: 'SalesQuotation', idField: 'quotationId' },
-                    { key: 'quotation-lines', label: 'Quote Lines', icon: 'documents', endpoint: '/60/QuoteLine', model: 'QuotationLine', idField: 'lineId' },
+                    { key: 'quotation-lines', label: 'Quote Lines', icon: 'documents', endpoint: '/60/QuoteLine', model: 'SalesQuotationLine', idField: 'lineId' },
                     { key: 'sales-orders', label: 'Sales Orders', icon: 'procurement', endpoint: '/60/SalesOrder', model: 'SalesOrder', idField: 'salesOrderId' },
                     { key: 'order-lines', label: 'Order Lines', icon: 'documents', endpoint: '/60/OrderLine', model: 'SalesOrderLine', idField: 'lineId' },
-                    { key: 'allocations', label: 'Allocations', icon: 'inventory', endpoint: '/60/OrderAlloc', model: 'OrderAllocation', idField: 'allocationId' },
-                    { key: 'back-orders', label: 'Back Orders', icon: 'time', endpoint: '/60/BackOrder', model: 'BackOrder', idField: 'backOrderId' },
-                    { key: 'returns', label: 'Returns', icon: 'logistics', endpoint: '/60/ReturnOrd', model: 'ReturnOrder', idField: 'returnOrderId' },
-                    { key: 'return-lines', label: 'Return Lines', icon: 'documents', endpoint: '/60/ReturnLine', model: 'ReturnOrderLine', idField: 'lineId' }
+                    { key: 'allocations', label: 'Allocations', icon: 'inventory', endpoint: '/60/OrderAlloc', model: 'SalesOrderAllocation', idField: 'allocationId' },
+                    { key: 'back-orders', label: 'Back Orders', icon: 'time', endpoint: '/60/BackOrder', model: 'SalesBackOrder', idField: 'backOrderId' },
+                    { key: 'returns', label: 'Returns', icon: 'logistics', endpoint: '/60/ReturnOrd', model: 'SalesReturnOrder', idField: 'returnOrderId' },
+                    { key: 'return-lines', label: 'Return Lines', icon: 'documents', endpoint: '/60/ReturnLine', model: 'SalesReturnOrderLine', idField: 'lineId' }
                 ],
                 'pricing': [
-                    { key: 'price-lists', label: 'Price Lists', icon: 'documents', endpoint: '/60/PriceList', model: 'PriceList', idField: 'priceListId' },
-                    { key: 'price-entries', label: 'Price Entries', icon: 'documents', endpoint: '/60/PriceEntry', model: 'PriceListEntry', idField: 'entryId' },
-                    { key: 'customer-prices', label: 'Customer Prices', icon: 'financial', endpoint: '/60/CustPrice', model: 'CustomerPrice', idField: 'customerPriceId' },
-                    { key: 'discounts', label: 'Discounts', icon: 'financial', endpoint: '/60/DiscntRule', model: 'DiscountRule', idField: 'ruleId' },
-                    { key: 'promotions', label: 'Promotions', icon: 'talent', endpoint: '/60/PromoPrice', model: 'PromotionalPrice', idField: 'promoId' },
-                    { key: 'qty-breaks', label: 'Qty Breaks', icon: 'demand-planning', endpoint: '/60/QtyBreak', model: 'QuantityBreak', idField: 'breakId' }
+                    { key: 'price-lists', label: 'Price Lists', icon: 'documents', endpoint: '/60/PriceList', model: 'SalesPriceList', idField: 'priceListId' },
+                    { key: 'price-entries', label: 'Price Entries', icon: 'documents', endpoint: '/60/PriceEntry', model: 'SalesPriceListEntry', idField: 'entryId' },
+                    { key: 'customer-prices', label: 'Customer Prices', icon: 'financial', endpoint: '/60/CustPrice', model: 'SalesCustomerPrice', idField: 'customerPriceId' },
+                    { key: 'discounts', label: 'Discounts', icon: 'financial', endpoint: '/60/DiscntRule', model: 'SalesDiscountRule', idField: 'ruleId' },
+                    { key: 'promotions', label: 'Promotions', icon: 'talent', endpoint: '/60/PromoPrice', model: 'SalesPromotionalPrice', idField: 'promoId' },
+                    { key: 'qty-breaks', label: 'Qty Breaks', icon: 'demand-planning', endpoint: '/60/QtyBreak', model: 'SalesQuantityBreak', idField: 'breakId' }
                 ],
                 'shipping': [
-                    { key: 'deliveries', label: 'Deliveries', icon: 'logistics', endpoint: '/60/DlvryOrder', model: 'DeliveryOrder', idField: 'deliveryOrderId' },
-                    { key: 'delivery-lines', label: 'Delivery Lines', icon: 'documents', endpoint: '/60/DlvryLine', model: 'DeliveryLine', idField: 'lineId' },
-                    { key: 'pick-releases', label: 'Pick Releases', icon: 'warehouse', endpoint: '/60/PickRlease', model: 'PickRelease', idField: 'pickReleaseId' },
-                    { key: 'packing', label: 'Packing Slips', icon: 'inventory', endpoint: '/60/PackSlip', model: 'PackingSlip', idField: 'packingSlipId' },
-                    { key: 'ship-docs', label: 'Ship Docs', icon: 'documents', endpoint: '/60/ShipDoc', model: 'ShippingDoc', idField: 'docId' },
-                    { key: 'confirmations', label: 'Confirmations', icon: 'jobs', endpoint: '/60/DlvryConf', model: 'DeliveryConfirm', idField: 'confirmId' }
+                    { key: 'deliveries', label: 'Deliveries', icon: 'logistics', endpoint: '/60/DlvryOrder', model: 'SalesDeliveryOrder', idField: 'deliveryOrderId' },
+                    { key: 'delivery-lines', label: 'Delivery Lines', icon: 'documents', endpoint: '/60/DlvryLine', model: 'SalesDeliveryLine', idField: 'lineId' },
+                    { key: 'pick-releases', label: 'Pick Releases', icon: 'warehouse', endpoint: '/60/PickRlease', model: 'SalesPickRelease', idField: 'pickReleaseId' },
+                    { key: 'packing', label: 'Packing Slips', icon: 'inventory', endpoint: '/60/PackSlip', model: 'SalesPackingSlip', idField: 'packingSlipId' },
+                    { key: 'ship-docs', label: 'Ship Docs', icon: 'documents', endpoint: '/60/ShipDoc', model: 'SalesShippingDoc', idField: 'docId' },
+                    { key: 'confirmations', label: 'Confirmations', icon: 'jobs', endpoint: '/60/DlvryConf', model: 'SalesDeliveryConfirm', idField: 'confirmId' }
                 ],
                 'billing': [
-                    { key: 'schedules', label: 'Billing Schedules', icon: 'time', endpoint: '/60/BillSched', model: 'BillingSchedule', idField: 'scheduleId' },
-                    { key: 'milestones', label: 'Milestones', icon: 'talent', endpoint: '/60/BillMilstn', model: 'BillingMilestone', idField: 'milestoneId' },
-                    { key: 'revenue', label: 'Revenue Recog', icon: 'financial', endpoint: '/60/RevSched', model: 'RevenueSchedule', idField: 'scheduleId' }
+                    { key: 'schedules', label: 'Billing Schedules', icon: 'time', endpoint: '/60/BillSched', model: 'SalesBillingSchedule', idField: 'scheduleId' },
+                    { key: 'milestones', label: 'Milestones', icon: 'talent', endpoint: '/60/BillMilstn', model: 'SalesBillingMilestone', idField: 'milestoneId' },
+                    { key: 'revenue', label: 'Revenue Recog', icon: 'financial', endpoint: '/60/RevSched', model: 'SalesRevenueSchedule', idField: 'scheduleId' }
                 ],
                 'analytics': [
                     { key: 'targets', label: 'Sales Targets', icon: 'talent', endpoint: '/60/SalesTrgt', model: 'SalesTarget', idField: 'targetId' },
                     { key: 'territories', label: 'Territories', icon: 'organizations', endpoint: '/60/Territory', model: 'SalesTerritory', idField: 'territoryId' },
-                    { key: 'territory-assigns', label: 'Assignments', icon: 'positions', endpoint: '/60/TerrAssign', model: 'TerritoryAssign', idField: 'assignmentId' },
-                    { key: 'commission-plans', label: 'Commission Plans', icon: 'financial', endpoint: '/60/CommPlan', model: 'CommissionPlan', idField: 'planId' },
+                    { key: 'territory-assigns', label: 'Assignments', icon: 'positions', endpoint: '/60/TerrAssign', model: 'SalesTerritoryAssign', idField: 'assignmentId' },
+                    { key: 'commission-plans', label: 'Commission Plans', icon: 'financial', endpoint: '/60/CommPlan', model: 'SalesCommissionPlan', idField: 'planId' },
                     { key: 'commission-calcs', label: 'Calculations', icon: 'financial', endpoint: '/60/CommCalc', model: 'SalesCommissionCalc', idField: 'calcId' },
                     { key: 'forecasts', label: 'Forecasts', icon: 'demand-planning', endpoint: '/60/SalesFcast', model: 'SalesForecast', idField: 'forecastId' }
                 ]

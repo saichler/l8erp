@@ -27,7 +27,7 @@ limitations under the License.
     // ============================================================================
 
     SalesBilling.forms = {
-        BillingSchedule: {
+        SalesBillingSchedule: {
             title: 'Billing Schedule',
             sections: [
                 {
@@ -48,14 +48,14 @@ limitations under the License.
             ]
         },
 
-        BillingMilestone: {
+        SalesBillingMilestone: {
             title: 'Billing Milestone',
             sections: [
                 {
                     title: 'Milestone Details',
                     fields: [
                         { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'scheduleId', label: 'Billing Schedule', type: 'reference', lookupModel: 'BillingSchedule', required: true },
+                        { key: 'scheduleId', label: 'Billing Schedule', type: 'reference', lookupModel: 'SalesBillingSchedule', required: true },
                         { key: 'description', label: 'Description', type: 'textarea' },
                         { key: 'targetDate', label: 'Target Date', type: 'date', required: true },
                         { key: 'achievedDate', label: 'Achieved Date', type: 'date' },
@@ -68,7 +68,7 @@ limitations under the License.
             ]
         },
 
-        RevenueSchedule: {
+        SalesRevenueSchedule: {
             title: 'Revenue Schedule',
             sections: [
                 {
@@ -95,9 +95,9 @@ limitations under the License.
     // ============================================================================
 
     SalesBilling.primaryKeys = {
-        BillingSchedule: 'scheduleId',
-        BillingMilestone: 'milestoneId',
-        RevenueSchedule: 'scheduleId'
+        SalesBillingSchedule: 'scheduleId',
+        SalesBillingMilestone: 'milestoneId',
+        SalesRevenueSchedule: 'scheduleId'
     };
 
 })();

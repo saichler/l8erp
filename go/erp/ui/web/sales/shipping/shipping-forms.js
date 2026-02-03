@@ -27,7 +27,7 @@ limitations under the License.
     // ============================================================================
 
     SalesShipping.forms = {
-        DeliveryOrder: {
+        SalesDeliveryOrder: {
             title: 'Delivery Order',
             sections: [
                 {
@@ -47,13 +47,13 @@ limitations under the License.
             ]
         },
 
-        DeliveryLine: {
+        SalesDeliveryLine: {
             title: 'Delivery Line',
             sections: [
                 {
                     title: 'Line Details',
                     fields: [
-                        { key: 'deliveryOrderId', label: 'Delivery Order', type: 'reference', lookupModel: 'DeliveryOrder', required: true },
+                        { key: 'deliveryOrderId', label: 'Delivery Order', type: 'reference', lookupModel: 'SalesDeliveryOrder', required: true },
                         { key: 'salesOrderLineId', label: 'Order Line', type: 'reference', lookupModel: 'SalesOrderLine' },
                         { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'quantity', label: 'Quantity', type: 'number', required: true },
@@ -66,13 +66,13 @@ limitations under the License.
             ]
         },
 
-        PickRelease: {
+        SalesPickRelease: {
             title: 'Pick Release',
             sections: [
                 {
                     title: 'Release Details',
                     fields: [
-                        { key: 'deliveryOrderId', label: 'Delivery Order', type: 'reference', lookupModel: 'DeliveryOrder', required: true },
+                        { key: 'deliveryOrderId', label: 'Delivery Order', type: 'reference', lookupModel: 'SalesDeliveryOrder', required: true },
                         { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
                         { key: 'releaseDate', label: 'Release Date', type: 'date', required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.PICK_STATUS },
@@ -84,14 +84,14 @@ limitations under the License.
             ]
         },
 
-        PackingSlip: {
+        SalesPackingSlip: {
             title: 'Packing Slip',
             sections: [
                 {
                     title: 'Slip Details',
                     fields: [
                         { key: 'slipNumber', label: 'Slip #', type: 'text', required: true },
-                        { key: 'deliveryOrderId', label: 'Delivery Order', type: 'reference', lookupModel: 'DeliveryOrder', required: true },
+                        { key: 'deliveryOrderId', label: 'Delivery Order', type: 'reference', lookupModel: 'SalesDeliveryOrder', required: true },
                         { key: 'packDate', label: 'Pack Date', type: 'date', required: true },
                         { key: 'packedBy', label: 'Packed By', type: 'reference', lookupModel: 'Employee' },
                         { key: 'totalPackages', label: 'Total Packages', type: 'number' },
@@ -103,7 +103,7 @@ limitations under the License.
             ]
         },
 
-        ShippingDoc: {
+        SalesShippingDoc: {
             title: 'Shipping Document',
             sections: [
                 {
@@ -111,7 +111,7 @@ limitations under the License.
                     fields: [
                         { key: 'docNumber', label: 'Document #', type: 'text', required: true },
                         { key: 'docType', label: 'Document Type', type: 'text', required: true },
-                        { key: 'deliveryOrderId', label: 'Delivery Order', type: 'reference', lookupModel: 'DeliveryOrder', required: true },
+                        { key: 'deliveryOrderId', label: 'Delivery Order', type: 'reference', lookupModel: 'SalesDeliveryOrder', required: true },
                         { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier' },
                         { key: 'trackingNumber', label: 'Tracking Number', type: 'text' },
                         { key: 'shipDate', label: 'Ship Date', type: 'date' },
@@ -123,13 +123,13 @@ limitations under the License.
             ]
         },
 
-        DeliveryConfirm: {
+        SalesDeliveryConfirm: {
             title: 'Delivery Confirmation',
             sections: [
                 {
                     title: 'Confirmation Details',
                     fields: [
-                        { key: 'deliveryOrderId', label: 'Delivery Order', type: 'reference', lookupModel: 'DeliveryOrder', required: true },
+                        { key: 'deliveryOrderId', label: 'Delivery Order', type: 'reference', lookupModel: 'SalesDeliveryOrder', required: true },
                         { key: 'confirmDate', label: 'Confirm Date', type: 'date', required: true },
                         { key: 'receivedBy', label: 'Received By', type: 'text' },
                         { key: 'signatureOnFile', label: 'Signature On File', type: 'checkbox' },
@@ -146,12 +146,12 @@ limitations under the License.
     // ============================================================================
 
     SalesShipping.primaryKeys = {
-        DeliveryOrder: 'deliveryOrderId',
-        DeliveryLine: 'lineId',
-        PickRelease: 'pickReleaseId',
-        PackingSlip: 'packingSlipId',
-        ShippingDoc: 'docId',
-        DeliveryConfirm: 'confirmId'
+        SalesDeliveryOrder: 'deliveryOrderId',
+        SalesDeliveryLine: 'lineId',
+        SalesPickRelease: 'pickReleaseId',
+        SalesPackingSlip: 'packingSlipId',
+        SalesShippingDoc: 'docId',
+        SalesDeliveryConfirm: 'confirmId'
     };
 
 })();

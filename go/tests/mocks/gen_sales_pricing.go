@@ -183,3 +183,64 @@ func generateSalesPromotionalPrices(store *MockDataStore) []*sales.SalesPromotio
 	}
 	return promotions
 }
+
+// generateSalesQuantityBreaks creates quantity break pricing records
+func generateSalesQuantityBreaks(store *MockDataStore) []*sales.SalesQuantityBreak {
+	// Create 3 quantity breaks per price list
+	count := len(store.SalesPriceListIDs) * 3
+	if count == 0 {
+		count = 24
+	}
+
+	breaks := make([]*sales.SalesQuantityBreak, 0, count)
+	idx := 1
+	for _, priceListID := range store.SalesPriceListIDs {
+		itemID := ""
+		if len(store.ItemIDs) > 0 {
+			itemID = store.ItemIDs[idx%len(store.ItemIDs)]
+		}
+
+		// Create tiered quantity breaks
+		basePrice := int64(rand.Intn(100000) + 10000) // $100 - $1100 base price
+
+		// Tier 1: 1-10 units
+		breaks = append(breaks, &sales.SalesQuantityBreak{
+			BreakId:         fmt.Sprintf("sqb-%03d", idx),
+			PriceListId:     priceListID,
+			ItemId:          itemID,
+			FromQuantity:    1,
+			ToQuantity:      10,
+			UnitPrice:       &erp.Money{Amount: basePrice, CurrencyCode: "USD"},
+			DiscountPercent: 0,
+			AuditInfo:       createAuditInfo(),
+		})
+		idx++
+
+		// Tier 2: 11-50 units (10% off)
+		breaks = append(breaks, &sales.SalesQuantityBreak{
+			BreakId:         fmt.Sprintf("sqb-%03d", idx),
+			PriceListId:     priceListID,
+			ItemId:          itemID,
+			FromQuantity:    11,
+			ToQuantity:      50,
+			UnitPrice:       &erp.Money{Amount: basePrice * 90 / 100, CurrencyCode: "USD"},
+			DiscountPercent: 10,
+			AuditInfo:       createAuditInfo(),
+		})
+		idx++
+
+		// Tier 3: 51+ units (20% off)
+		breaks = append(breaks, &sales.SalesQuantityBreak{
+			BreakId:         fmt.Sprintf("sqb-%03d", idx),
+			PriceListId:     priceListID,
+			ItemId:          itemID,
+			FromQuantity:    51,
+			ToQuantity:      9999,
+			UnitPrice:       &erp.Money{Amount: basePrice * 80 / 100, CurrencyCode: "USD"},
+			DiscountPercent: 20,
+			AuditInfo:       createAuditInfo(),
+		})
+		idx++
+	}
+	return breaks
+}

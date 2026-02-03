@@ -66,7 +66,7 @@ limitations under the License.
             ]
         },
 
-        TerritoryAssign: {
+        SalesTerritoryAssign: {
             title: 'Territory Assignment',
             sections: [
                 {
@@ -83,7 +83,7 @@ limitations under the License.
             ]
         },
 
-        CommissionPlan: {
+        SalesCommissionPlan: {
             title: 'Commission Plan',
             sections: [
                 {
@@ -110,7 +110,7 @@ limitations under the License.
                     title: 'Calculation Details',
                     fields: [
                         { key: 'salespersonId', label: 'Salesperson', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'planId', label: 'Commission Plan', type: 'reference', lookupModel: 'CommissionPlan', required: true },
+                        { key: 'planId', label: 'Commission Plan', type: 'reference', lookupModel: 'SalesCommissionPlan', required: true },
                         { key: 'salesOrderId', label: 'Sales Order', type: 'reference', lookupModel: 'SalesOrder' },
                         { key: 'saleAmount', label: 'Sale Amount', type: 'currency', required: true },
                         { key: 'commissionRate', label: 'Commission Rate', type: 'number' },
@@ -152,8 +152,8 @@ limitations under the License.
     SalesAnalytics.primaryKeys = {
         SalesTarget: 'targetId',
         SalesTerritory: 'territoryId',
-        TerritoryAssign: 'assignmentId',
-        CommissionPlan: 'planId',
+        SalesTerritoryAssign: 'assignmentId',
+        SalesCommissionPlan: 'planId',
         SalesCommissionCalc: 'calcId',
         SalesForecast: 'forecastId'
     };

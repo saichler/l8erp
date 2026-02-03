@@ -47,7 +47,7 @@ limitations under the License.
             ]
         },
 
-        QuotationLine: {
+        SalesQuotationLine: {
             title: 'Quotation Line',
             sections: [
                 {
@@ -107,7 +107,7 @@ limitations under the License.
             ]
         },
 
-        OrderAllocation: {
+        SalesOrderAllocation: {
             title: 'Order Allocation',
             sections: [
                 {
@@ -125,7 +125,7 @@ limitations under the License.
             ]
         },
 
-        BackOrder: {
+        SalesBackOrder: {
             title: 'Back Order',
             sections: [
                 {
@@ -142,7 +142,7 @@ limitations under the License.
             ]
         },
 
-        ReturnOrder: {
+        SalesReturnOrder: {
             title: 'Return Order',
             sections: [
                 {
@@ -161,13 +161,13 @@ limitations under the License.
             ]
         },
 
-        ReturnOrderLine: {
+        SalesReturnOrderLine: {
             title: 'Return Order Line',
             sections: [
                 {
                     title: 'Line Details',
                     fields: [
-                        { key: 'returnOrderId', label: 'Return Order', type: 'reference', lookupModel: 'ReturnOrder', required: true },
+                        { key: 'returnOrderId', label: 'Return Order', type: 'reference', lookupModel: 'SalesReturnOrder', required: true },
                         { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'returnQty', label: 'Return Qty', type: 'number', required: true },
                         { key: 'reason', label: 'Reason', type: 'text' },
@@ -185,13 +185,13 @@ limitations under the License.
 
     SalesOrders.primaryKeys = {
         SalesQuotation: 'quotationId',
-        QuotationLine: 'lineId',
+        SalesQuotationLine: 'lineId',
         SalesOrder: 'salesOrderId',
         SalesOrderLine: 'lineId',
-        OrderAllocation: 'allocationId',
-        BackOrder: 'backOrderId',
-        ReturnOrder: 'returnOrderId',
-        ReturnOrderLine: 'lineId'
+        SalesOrderAllocation: 'allocationId',
+        SalesBackOrder: 'backOrderId',
+        SalesReturnOrder: 'returnOrderId',
+        SalesReturnOrderLine: 'lineId'
     };
 
 })();

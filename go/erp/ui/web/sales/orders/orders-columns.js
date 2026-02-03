@@ -58,7 +58,7 @@ limitations under the License.
             }
         ],
 
-        QuotationLine: [
+        SalesQuotationLine: [
             { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
             { key: 'quotationId', label: 'Quotation', sortKey: 'quotationId', filterKey: 'quotationId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -120,7 +120,7 @@ limitations under the License.
             }
         ],
 
-        OrderAllocation: [
+        SalesOrderAllocation: [
             { key: 'allocationId', label: 'ID', sortKey: 'allocationId', filterKey: 'allocationId' },
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -134,7 +134,7 @@ limitations under the License.
             }
         ],
 
-        BackOrder: [
+        SalesBackOrder: [
             { key: 'backOrderId', label: 'ID', sortKey: 'backOrderId', filterKey: 'backOrderId' },
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -147,7 +147,7 @@ limitations under the License.
             }
         ],
 
-        ReturnOrder: [
+        SalesReturnOrder: [
             { key: 'returnOrderId', label: 'ID', sortKey: 'returnOrderId', filterKey: 'returnOrderId' },
             { key: 'returnNumber', label: 'Return #', sortKey: 'returnNumber', filterKey: 'returnNumber' },
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
@@ -166,7 +166,7 @@ limitations under the License.
             }
         ],
 
-        ReturnOrderLine: [
+        SalesReturnOrderLine: [
             { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
             { key: 'returnOrderId', label: 'Return', sortKey: 'returnOrderId', filterKey: 'returnOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },

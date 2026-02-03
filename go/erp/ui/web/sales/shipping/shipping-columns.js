@@ -28,7 +28,7 @@ limitations under the License.
     // ============================================================================
 
     SalesShipping.columns = {
-        DeliveryOrder: [
+        SalesDeliveryOrder: [
             { key: 'deliveryOrderId', label: 'ID', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
             { key: 'deliveryNumber', label: 'Delivery #', sortKey: 'deliveryNumber', filterKey: 'deliveryNumber' },
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
@@ -47,7 +47,7 @@ limitations under the License.
             }
         ],
 
-        DeliveryLine: [
+        SalesDeliveryLine: [
             { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
             { key: 'deliveryOrderId', label: 'Delivery', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -56,7 +56,7 @@ limitations under the License.
             { key: 'shippedQty', label: 'Shipped', sortKey: 'shippedQty' }
         ],
 
-        PickRelease: [
+        SalesPickRelease: [
             { key: 'pickReleaseId', label: 'ID', sortKey: 'pickReleaseId', filterKey: 'pickReleaseId' },
             { key: 'deliveryOrderId', label: 'Delivery', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
@@ -74,7 +74,7 @@ limitations under the License.
             }
         ],
 
-        PackingSlip: [
+        SalesPackingSlip: [
             { key: 'packingSlipId', label: 'ID', sortKey: 'packingSlipId', filterKey: 'packingSlipId' },
             { key: 'slipNumber', label: 'Slip #', sortKey: 'slipNumber', filterKey: 'slipNumber' },
             { key: 'deliveryOrderId', label: 'Delivery', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
@@ -88,7 +88,7 @@ limitations under the License.
             { key: 'totalWeight', label: 'Weight', sortKey: 'totalWeight' }
         ],
 
-        ShippingDoc: [
+        SalesShippingDoc: [
             { key: 'docId', label: 'ID', sortKey: 'docId', filterKey: 'docId' },
             { key: 'docNumber', label: 'Doc #', sortKey: 'docNumber', filterKey: 'docNumber' },
             { key: 'docType', label: 'Type', sortKey: 'docType' },
@@ -97,7 +97,7 @@ limitations under the License.
             { key: 'trackingNumber', label: 'Tracking', sortKey: 'trackingNumber' }
         ],
 
-        DeliveryConfirm: [
+        SalesDeliveryConfirm: [
             { key: 'confirmId', label: 'ID', sortKey: 'confirmId', filterKey: 'confirmId' },
             { key: 'deliveryOrderId', label: 'Delivery', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
             {

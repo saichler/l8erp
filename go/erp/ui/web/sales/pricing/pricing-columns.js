@@ -28,7 +28,7 @@ limitations under the License.
     // ============================================================================
 
     SalesPricing.columns = {
-        PriceList: [
+        SalesPriceList: [
             { key: 'priceListId', label: 'ID', sortKey: 'priceListId', filterKey: 'priceListId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'currencyCode', label: 'Currency', sortKey: 'currencyCode' },
@@ -52,7 +52,7 @@ limitations under the License.
             }
         ],
 
-        PriceListEntry: [
+        SalesPriceListEntry: [
             { key: 'entryId', label: 'ID', sortKey: 'entryId', filterKey: 'entryId' },
             { key: 'priceListId', label: 'Price List', sortKey: 'priceListId', filterKey: 'priceListId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -66,7 +66,7 @@ limitations under the License.
             { key: 'minQuantity', label: 'Min Qty', sortKey: 'minQuantity' }
         ],
 
-        CustomerPrice: [
+        SalesCustomerPrice: [
             { key: 'customerPriceId', label: 'ID', sortKey: 'customerPriceId', filterKey: 'customerPriceId' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -90,7 +90,7 @@ limitations under the License.
             }
         ],
 
-        DiscountRule: [
+        SalesDiscountRule: [
             { key: 'ruleId', label: 'ID', sortKey: 'ruleId', filterKey: 'ruleId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             {
@@ -104,7 +104,7 @@ limitations under the License.
             { key: 'isActive', label: 'Active', sortKey: 'isActive' }
         ],
 
-        PromotionalPrice: [
+        SalesPromotionalPrice: [
             { key: 'promoId', label: 'ID', sortKey: 'promoId', filterKey: 'promoId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -128,7 +128,7 @@ limitations under the License.
             }
         ],
 
-        QuantityBreak: [
+        SalesQuantityBreak: [
             { key: 'breakId', label: 'ID', sortKey: 'breakId', filterKey: 'breakId' },
             { key: 'priceListId', label: 'Price List', sortKey: 'priceListId', filterKey: 'priceListId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },

@@ -269,3 +269,46 @@ func generateSalesPackingSlips(store *MockDataStore) []*sales.SalesPackingSlip {
 	}
 	return slips
 }
+
+// generateSalesDeliveryConfirms creates delivery confirmation records
+func generateSalesDeliveryConfirms(store *MockDataStore) []*sales.SalesDeliveryConfirm {
+	count := len(store.SalesDeliveryOrderIDs)
+	if count == 0 {
+		count = 20
+	}
+
+	// Only create confirms for about 60% of deliveries (those that are delivered)
+	confirmCount := count * 60 / 100
+	if confirmCount == 0 {
+		confirmCount = 12
+	}
+
+	confirms := make([]*sales.SalesDeliveryConfirm, confirmCount)
+	for i := 0; i < confirmCount; i++ {
+		deliveryID := ""
+		if len(store.SalesDeliveryOrderIDs) > 0 {
+			deliveryID = store.SalesDeliveryOrderIDs[i%len(store.SalesDeliveryOrderIDs)]
+		}
+
+		confirmDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
+		isDamaged := rand.Intn(20) == 0 // 5% chance of damage
+
+		damageDesc := ""
+		if isDamaged {
+			damageDesc = "Minor damage to packaging, contents intact"
+		}
+
+		confirms[i] = &sales.SalesDeliveryConfirm{
+			ConfirmId:         fmt.Sprintf("sdc-%03d", i+1),
+			DeliveryOrderId:   deliveryID,
+			ConfirmDate:       confirmDate.Unix(),
+			ReceivedBy:        fmt.Sprintf("Recipient %d", i+1),
+			SignaturePath:     fmt.Sprintf("/signatures/delivery_%s.png", deliveryID),
+			Notes:             fmt.Sprintf("Delivery confirmed for order %d", i+1),
+			IsDamaged:         isDamaged,
+			DamageDescription: damageDesc,
+			AuditInfo:         createAuditInfo(),
+		}
+	}
+	return confirms
+}

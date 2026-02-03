@@ -27,14 +27,14 @@ limitations under the License.
     // ============================================================================
 
     SalesCustomers.forms = {
-        CustomerHierarchy: {
+        SalesCustomerHierarchy: {
             title: 'Customer Hierarchy',
             sections: [
                 {
                     title: 'Hierarchy Details',
                     fields: [
                         { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'parentId', label: 'Parent Hierarchy', type: 'reference', lookupModel: 'CustomerHierarchy' },
+                        { key: 'parentId', label: 'Parent Hierarchy', type: 'reference', lookupModel: 'SalesCustomerHierarchy' },
                         { key: 'level', label: 'Level', type: 'number' },
                         { key: 'description', label: 'Description', type: 'textarea' }
                     ]
@@ -42,7 +42,7 @@ limitations under the License.
             ]
         },
 
-        CustomerSegment: {
+        SalesCustomerSegment: {
             title: 'Customer Segment',
             sections: [
                 {
@@ -58,7 +58,7 @@ limitations under the License.
             ]
         },
 
-        CustomerContract: {
+        SalesCustomerContract: {
             title: 'Customer Contract',
             sections: [
                 {
@@ -70,7 +70,7 @@ limitations under the License.
                         { key: 'endDate', label: 'End Date', type: 'date', required: true },
                         { key: 'status', label: 'Status', type: 'select', options: enums.CONTRACT_STATUS },
                         { key: 'contractValue', label: 'Contract Value', type: 'currency' },
-                        { key: 'priceListId', label: 'Price List', type: 'reference', lookupModel: 'PriceList' },
+                        { key: 'priceListId', label: 'Price List', type: 'reference', lookupModel: 'SalesPriceList' },
                         { key: 'paymentTerms', label: 'Payment Terms', type: 'text' },
                         { key: 'terms', label: 'Terms & Conditions', type: 'textarea' },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
@@ -79,7 +79,7 @@ limitations under the License.
             ]
         },
 
-        PartnerChannel: {
+        SalesPartnerChannel: {
             title: 'Partner Channel',
             sections: [
                 {
@@ -105,10 +105,10 @@ limitations under the License.
     // ============================================================================
 
     SalesCustomers.primaryKeys = {
-        CustomerHierarchy: 'hierarchyId',
-        CustomerSegment: 'segmentId',
-        CustomerContract: 'contractId',
-        PartnerChannel: 'partnerId'
+        SalesCustomerHierarchy: 'hierarchyId',
+        SalesCustomerSegment: 'segmentId',
+        SalesCustomerContract: 'contractId',
+        SalesPartnerChannel: 'partnerId'
     };
 
 })();

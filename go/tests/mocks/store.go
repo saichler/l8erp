@@ -228,22 +228,27 @@ type MockDataStore struct {
 	SalesCustomerPriceIDs    []string
 	SalesDiscountRuleIDs     []string
 	SalesPromotionalPriceIDs []string
+	SalesQuantityBreakIDs    []string
 
 	// Sales Phase 4: Quotations
 	SalesQuotationIDs     []string
 	SalesQuotationLineIDs []string
 
 	// Sales Phase 5: Orders
-	SalesOrderIDs       []string
-	SalesOrderLineIDs   []string
-	SalesReturnOrderIDs []string
+	SalesOrderIDs           []string
+	SalesOrderLineIDs       []string
+	SalesOrderAllocationIDs []string
+	SalesBackOrderIDs       []string
+	SalesReturnOrderIDs     []string
+	SalesReturnOrderLineIDs []string
 
 	// Sales Phase 6: Shipping
-	SalesDeliveryOrderIDs []string
-	SalesDeliveryLineIDs  []string
-	SalesPickReleaseIDs   []string
-	SalesShippingDocIDs   []string
-	SalesPackingSlipIDs   []string
+	SalesDeliveryOrderIDs  []string
+	SalesDeliveryLineIDs   []string
+	SalesPickReleaseIDs    []string
+	SalesShippingDocIDs    []string
+	SalesPackingSlipIDs    []string
+	SalesDeliveryConfirmIDs []string
 
 	// Sales Phase 7: Billing
 	SalesBillingScheduleIDs  []string

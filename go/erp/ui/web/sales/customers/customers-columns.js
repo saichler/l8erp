@@ -28,7 +28,7 @@ limitations under the License.
     // ============================================================================
 
     SalesCustomers.columns = {
-        CustomerHierarchy: [
+        SalesCustomerHierarchy: [
             { key: 'hierarchyId', label: 'ID', sortKey: 'hierarchyId', filterKey: 'hierarchyId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'parentId', label: 'Parent', sortKey: 'parentId', filterKey: 'parentId' },
@@ -36,7 +36,7 @@ limitations under the License.
             { key: 'description', label: 'Description', sortKey: 'description' }
         ],
 
-        CustomerSegment: [
+        SalesCustomerSegment: [
             { key: 'segmentId', label: 'ID', sortKey: 'segmentId', filterKey: 'segmentId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
@@ -44,7 +44,7 @@ limitations under the License.
             { key: 'isActive', label: 'Active', sortKey: 'isActive' }
         ],
 
-        CustomerContract: [
+        SalesCustomerContract: [
             { key: 'contractId', label: 'ID', sortKey: 'contractId', filterKey: 'contractId' },
             { key: 'contractNumber', label: 'Contract #', sortKey: 'contractNumber', filterKey: 'contractNumber' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
@@ -74,7 +74,7 @@ limitations under the License.
             }
         ],
 
-        PartnerChannel: [
+        SalesPartnerChannel: [
             { key: 'partnerId', label: 'ID', sortKey: 'partnerId', filterKey: 'partnerId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'partnerType', label: 'Type', sortKey: 'partnerType', filterKey: 'partnerType' },

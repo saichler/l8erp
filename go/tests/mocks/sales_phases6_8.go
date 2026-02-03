@@ -77,6 +77,17 @@ func generateSalesPhase6(client *HCMClient, store *MockDataStore) error {
 	}
 	fmt.Printf(" %d created\n", len(packingSlips))
 
+	// Generate Delivery Confirmations
+	fmt.Printf("  Creating Delivery Confirmations...")
+	confirms := generateSalesDeliveryConfirms(store)
+	if err := client.post("/erp/60/DlvryConf", &sales.SalesDeliveryConfirmList{List: confirms}); err != nil {
+		return fmt.Errorf("delivery confirmations: %w", err)
+	}
+	for _, dc := range confirms {
+		store.SalesDeliveryConfirmIDs = append(store.SalesDeliveryConfirmIDs, dc.ConfirmId)
+	}
+	fmt.Printf(" %d created\n", len(confirms))
+
 	return nil
 }
 

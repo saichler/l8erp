@@ -304,3 +304,134 @@ func generateSalesReturnOrders(store *MockDataStore) []*sales.SalesReturnOrder {
 	}
 	return returns
 }
+
+// generateSalesOrderAllocations creates order allocation records
+func generateSalesOrderAllocations(store *MockDataStore) []*sales.SalesOrderAllocation {
+	statuses := []sales.SalesAllocationStatus{
+		sales.SalesAllocationStatus_ALLOCATION_STATUS_PENDING,
+		sales.SalesAllocationStatus_ALLOCATION_STATUS_ALLOCATED,
+		sales.SalesAllocationStatus_ALLOCATION_STATUS_ALLOCATED,
+		sales.SalesAllocationStatus_ALLOCATION_STATUS_ALLOCATED,
+		sales.SalesAllocationStatus_ALLOCATION_STATUS_RELEASED,
+		sales.SalesAllocationStatus_ALLOCATION_STATUS_RELEASED,
+	}
+
+	count := len(store.SalesOrderLineIDs)
+	if count == 0 {
+		count = 30
+	}
+
+	allocations := make([]*sales.SalesOrderAllocation, count)
+	for i := 0; i < count; i++ {
+		orderID := ""
+		lineID := ""
+		if len(store.SalesOrderIDs) > 0 {
+			orderID = store.SalesOrderIDs[i%len(store.SalesOrderIDs)]
+		}
+		if len(store.SalesOrderLineIDs) > 0 {
+			lineID = store.SalesOrderLineIDs[i%len(store.SalesOrderLineIDs)]
+		}
+
+		itemID := ""
+		if len(store.ItemIDs) > 0 {
+			itemID = store.ItemIDs[i%len(store.ItemIDs)]
+		}
+
+		warehouseID := ""
+		if len(store.SCMWarehouseIDs) > 0 {
+			warehouseID = store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)]
+		}
+
+		allocations[i] = &sales.SalesOrderAllocation{
+			AllocationId:      fmt.Sprintf("soa-%03d", i+1),
+			SalesOrderId:      orderID,
+			LineId:            lineID,
+			ItemId:            itemID,
+			WarehouseId:       warehouseID,
+			AllocatedQuantity: float64(rand.Intn(20) + 1),
+			Status:            statuses[i%len(statuses)],
+			AuditInfo:         createAuditInfo(),
+		}
+	}
+	return allocations
+}
+
+// generateSalesBackOrders creates back order records
+func generateSalesBackOrders(store *MockDataStore) []*sales.SalesBackOrder {
+	count := 15
+	backOrders := make([]*sales.SalesBackOrder, count)
+
+	for i := 0; i < count; i++ {
+		orderID := ""
+		lineID := ""
+		if len(store.SalesOrderIDs) > 0 {
+			orderID = store.SalesOrderIDs[i%len(store.SalesOrderIDs)]
+		}
+		if len(store.SalesOrderLineIDs) > 0 {
+			lineID = store.SalesOrderLineIDs[i%len(store.SalesOrderLineIDs)]
+		}
+
+		itemID := ""
+		if len(store.ItemIDs) > 0 {
+			itemID = store.ItemIDs[i%len(store.ItemIDs)]
+		}
+
+		expectedDate := time.Now().AddDate(0, 0, rand.Intn(30)+7)
+
+		backOrders[i] = &sales.SalesBackOrder{
+			BackOrderId:       fmt.Sprintf("sbo-%03d", i+1),
+			SalesOrderId:      orderID,
+			LineId:            lineID,
+			ItemId:            itemID,
+			BackOrderQuantity: float64(rand.Intn(10) + 1),
+			ExpectedDate:      expectedDate.Unix(),
+			Status:            "PENDING",
+			Notes:             fmt.Sprintf("Back order for item shortage %d", i+1),
+			AuditInfo:         createAuditInfo(),
+		}
+	}
+	return backOrders
+}
+
+// generateSalesReturnOrderLines creates return order line records
+func generateSalesReturnOrderLines(store *MockDataStore) []*sales.SalesReturnOrderLine {
+	conditions := []string{"NEW", "USED", "DAMAGED", "DEFECTIVE"}
+	dispositions := []string{"RESTOCK", "REPAIR", "SCRAP", "RETURN_TO_VENDOR"}
+
+	count := len(store.SalesReturnOrderIDs) * 2
+	if count == 0 {
+		count = 30
+	}
+
+	lines := make([]*sales.SalesReturnOrderLine, 0, count)
+	idx := 1
+	for rIdx, returnOrderID := range store.SalesReturnOrderIDs {
+		for j := 0; j < 2; j++ {
+			itemID := ""
+			if len(store.ItemIDs) > 0 {
+				itemID = store.ItemIDs[(rIdx*2+j)%len(store.ItemIDs)]
+			}
+
+			qty := float64(rand.Intn(5) + 1)
+			unitPrice := int64(rand.Intn(100000) + 5000)
+			lineTotal := int64(float64(unitPrice) * qty)
+
+			lines = append(lines, &sales.SalesReturnOrderLine{
+				LineId:        fmt.Sprintf("srol-%03d", idx),
+				ReturnOrderId: returnOrderID,
+				LineNumber:    int32(j + 1),
+				ItemId:        itemID,
+				Description:   fmt.Sprintf("Return line item %d", idx),
+				Quantity:      qty,
+				UnitOfMeasure: "EA",
+				UnitPrice:     &erp.Money{Amount: unitPrice, CurrencyCode: "USD"},
+				LineTotal:     &erp.Money{Amount: lineTotal, CurrencyCode: "USD"},
+				Condition:     conditions[(rIdx*2+j)%len(conditions)],
+				Disposition:   dispositions[(rIdx*2+j)%len(dispositions)],
+				AuditInfo:     createAuditInfo(),
+			})
+			idx++
+		}
+	}
+	return lines
+}

@@ -28,7 +28,7 @@ limitations under the License.
     // ============================================================================
 
     SalesBilling.columns = {
-        BillingSchedule: [
+        SalesBillingSchedule: [
             { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
@@ -53,7 +53,7 @@ limitations under the License.
             }
         ],
 
-        BillingMilestone: [
+        SalesBillingMilestone: [
             { key: 'milestoneId', label: 'ID', sortKey: 'milestoneId', filterKey: 'milestoneId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'scheduleId', label: 'Schedule', sortKey: 'scheduleId', filterKey: 'scheduleId' },
@@ -77,7 +77,7 @@ limitations under the License.
             }
         ],
 
-        RevenueSchedule: [
+        SalesRevenueSchedule: [
             { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
             {

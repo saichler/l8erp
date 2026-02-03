@@ -142,6 +142,17 @@ func generateSalesPhase3(client *HCMClient, store *MockDataStore) error {
 	}
 	fmt.Printf(" %d created\n", len(promotions))
 
+	// Generate Quantity Breaks
+	fmt.Printf("  Creating Quantity Breaks...")
+	qtyBreaks := generateSalesQuantityBreaks(store)
+	if err := client.post("/erp/60/QtyBreak", &sales.SalesQuantityBreakList{List: qtyBreaks}); err != nil {
+		return fmt.Errorf("quantity breaks: %w", err)
+	}
+	for _, qb := range qtyBreaks {
+		store.SalesQuantityBreakIDs = append(store.SalesQuantityBreakIDs, qb.BreakId)
+	}
+	fmt.Printf(" %d created\n", len(qtyBreaks))
+
 	return nil
 }
 
@@ -196,6 +207,28 @@ func generateSalesPhase5(client *HCMClient, store *MockDataStore) error {
 	}
 	fmt.Printf(" %d created\n", len(orderLines))
 
+	// Generate Sales Order Allocations
+	fmt.Printf("  Creating Order Allocations...")
+	allocations := generateSalesOrderAllocations(store)
+	if err := client.post("/erp/60/OrderAlloc", &sales.SalesOrderAllocationList{List: allocations}); err != nil {
+		return fmt.Errorf("order allocations: %w", err)
+	}
+	for _, a := range allocations {
+		store.SalesOrderAllocationIDs = append(store.SalesOrderAllocationIDs, a.AllocationId)
+	}
+	fmt.Printf(" %d created\n", len(allocations))
+
+	// Generate Sales Back Orders
+	fmt.Printf("  Creating Back Orders...")
+	backOrders := generateSalesBackOrders(store)
+	if err := client.post("/erp/60/BackOrder", &sales.SalesBackOrderList{List: backOrders}); err != nil {
+		return fmt.Errorf("back orders: %w", err)
+	}
+	for _, bo := range backOrders {
+		store.SalesBackOrderIDs = append(store.SalesBackOrderIDs, bo.BackOrderId)
+	}
+	fmt.Printf(" %d created\n", len(backOrders))
+
 	// Generate Sales Return Orders
 	fmt.Printf("  Creating Sales Return Orders...")
 	returns := generateSalesReturnOrders(store)
@@ -206,6 +239,17 @@ func generateSalesPhase5(client *HCMClient, store *MockDataStore) error {
 		store.SalesReturnOrderIDs = append(store.SalesReturnOrderIDs, r.ReturnOrderId)
 	}
 	fmt.Printf(" %d created\n", len(returns))
+
+	// Generate Sales Return Order Lines
+	fmt.Printf("  Creating Return Order Lines...")
+	returnLines := generateSalesReturnOrderLines(store)
+	if err := client.post("/erp/60/ReturnLine", &sales.SalesReturnOrderLineList{List: returnLines}); err != nil {
+		return fmt.Errorf("return order lines: %w", err)
+	}
+	for _, rl := range returnLines {
+		store.SalesReturnOrderLineIDs = append(store.SalesReturnOrderLineIDs, rl.LineId)
+	}
+	fmt.Printf(" %d created\n", len(returnLines))
 
 	return nil
 }

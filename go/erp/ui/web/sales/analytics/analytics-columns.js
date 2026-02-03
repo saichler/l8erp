@@ -67,7 +67,7 @@ limitations under the License.
             { key: 'description', label: 'Description', sortKey: 'description' }
         ],
 
-        TerritoryAssign: [
+        SalesTerritoryAssign: [
             { key: 'assignmentId', label: 'ID', sortKey: 'assignmentId', filterKey: 'assignmentId' },
             { key: 'territoryId', label: 'Territory', sortKey: 'territoryId', filterKey: 'territoryId' },
             { key: 'salespersonId', label: 'Salesperson', sortKey: 'salespersonId', filterKey: 'salespersonId' },
@@ -86,7 +86,7 @@ limitations under the License.
             { key: 'isPrimary', label: 'Primary', sortKey: 'isPrimary' }
         ],
 
-        CommissionPlan: [
+        SalesCommissionPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             {

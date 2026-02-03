@@ -27,7 +27,7 @@ limitations under the License.
     // ============================================================================
 
     SalesPricing.forms = {
-        PriceList: {
+        SalesPriceList: {
             title: 'Price List',
             sections: [
                 {
@@ -46,13 +46,13 @@ limitations under the License.
             ]
         },
 
-        PriceListEntry: {
+        SalesPriceListEntry: {
             title: 'Price List Entry',
             sections: [
                 {
                     title: 'Entry Details',
                     fields: [
-                        { key: 'priceListId', label: 'Price List', type: 'reference', lookupModel: 'PriceList', required: true },
+                        { key: 'priceListId', label: 'Price List', type: 'reference', lookupModel: 'SalesPriceList', required: true },
                         { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'unitPrice', label: 'Unit Price', type: 'currency', required: true },
                         { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
@@ -63,7 +63,7 @@ limitations under the License.
             ]
         },
 
-        CustomerPrice: {
+        SalesCustomerPrice: {
             title: 'Customer Price',
             sections: [
                 {
@@ -74,14 +74,14 @@ limitations under the License.
                         { key: 'specialPrice', label: 'Special Price', type: 'currency', required: true },
                         { key: 'effectiveDate', label: 'Effective Date', type: 'date', required: true },
                         { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
-                        { key: 'contractId', label: 'Contract', type: 'reference', lookupModel: 'CustomerContract' },
+                        { key: 'contractId', label: 'Contract', type: 'reference', lookupModel: 'SalesCustomerContract' },
                         { key: 'notes', label: 'Notes', type: 'textarea' }
                     ]
                 }
             ]
         },
 
-        DiscountRule: {
+        SalesDiscountRule: {
             title: 'Discount Rule',
             sections: [
                 {
@@ -103,7 +103,7 @@ limitations under the License.
             ]
         },
 
-        PromotionalPrice: {
+        SalesPromotionalPrice: {
             title: 'Promotional Price',
             sections: [
                 {
@@ -122,13 +122,13 @@ limitations under the License.
             ]
         },
 
-        QuantityBreak: {
+        SalesQuantityBreak: {
             title: 'Quantity Break',
             sections: [
                 {
                     title: 'Break Details',
                     fields: [
-                        { key: 'priceListId', label: 'Price List', type: 'reference', lookupModel: 'PriceList', required: true },
+                        { key: 'priceListId', label: 'Price List', type: 'reference', lookupModel: 'SalesPriceList', required: true },
                         { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
                         { key: 'minQuantity', label: 'Min Quantity', type: 'number', required: true },
                         { key: 'maxQuantity', label: 'Max Quantity', type: 'number' },
@@ -145,12 +145,12 @@ limitations under the License.
     // ============================================================================
 
     SalesPricing.primaryKeys = {
-        PriceList: 'priceListId',
-        PriceListEntry: 'entryId',
-        CustomerPrice: 'customerPriceId',
-        DiscountRule: 'ruleId',
-        PromotionalPrice: 'promoId',
-        QuantityBreak: 'breakId'
+        SalesPriceList: 'priceListId',
+        SalesPriceListEntry: 'entryId',
+        SalesCustomerPrice: 'customerPriceId',
+        SalesDiscountRule: 'ruleId',
+        SalesPromotionalPrice: 'promoId',
+        SalesQuantityBreak: 'breakId'
     };
 
 })();
