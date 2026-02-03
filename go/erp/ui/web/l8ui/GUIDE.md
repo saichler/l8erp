@@ -535,7 +535,7 @@ Layer8MAuth.logout()                           // Clear session, redirect
 await Layer8MAuth.get(url)                     // GET, returns parsed JSON
 await Layer8MAuth.post(url, data)              // POST
 await Layer8MAuth.put(url, data)               // PUT
-await Layer8MAuth.delete(url)                  // DELETE
+await Layer8MAuth.delete(url, data?)           // DELETE (data sent as JSON body)
 ```
 
 ### 6.3 Layer8MUtils

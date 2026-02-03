@@ -9,7 +9,7 @@ require (
 	github.com/saichler/l8reflect v0.0.0-20260110160040-355459c6fd83
 	github.com/saichler/l8services v0.0.0-20260116142809-b257a28b21ee
 	github.com/saichler/l8srlz v0.0.0-20251226163123-de32dc54dd4b
-	github.com/saichler/l8types v0.0.0-20260203024205-808133be0027
+	github.com/saichler/l8types v0.0.0-20260203154629-5c67b0e416de
 	github.com/saichler/l8utils v0.0.0-20260202192751-681ece9422db
 	github.com/saichler/l8web v0.0.0-20260202194413-57ce0e7a6ba0
 	google.golang.org/protobuf v1.36.11

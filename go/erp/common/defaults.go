@@ -18,29 +18,28 @@ package common
 import (
 	"database/sql"
 	"fmt"
-	"github.com/saichler/l8types/go/sec"
-	"os"
-	"os/signal"
-	"sync"
-	"syscall"
-	"time"
-
 	"github.com/saichler/l8reflect/go/reflect/introspecting"
 	"github.com/saichler/l8services/go/services/manager"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8types/go/sec"
 	"github.com/saichler/l8types/go/types/l8sysconfig"
 	"github.com/saichler/l8utils/go/utils/logger"
 	"github.com/saichler/l8utils/go/utils/registry"
 	"github.com/saichler/l8utils/go/utils/resources"
+	"os"
+	"os/signal"
+	"sync"
+	"syscall"
 )
 
 const (
 	ERP_VNET      = 35001
 	ERP_LOGS_VNET = 35005
 	PREFIX        = "/erp/"
-	DB_CREDS      = "postgres"
-	DB_NAME       = "erp"
 )
+
+var DB_CREDS = "postgres"
+var DB_NAME = "erp"
 
 var dbInstance *sql.DB
 var dbMtx = &sync.Mutex{}
@@ -53,11 +52,7 @@ func CreateResources(alias string) ifs.IResources {
 
 	res.Set(registry.NewRegistry())
 
-	sec, err := sec.LoadSecurityProvider(res)
-	if err != nil {
-		time.Sleep(time.Second * 10)
-		panic(err.Error())
-	}
+	sec, _ := sec.LoadSecurityProvider(res)
 	res.Set(sec)
 
 	conf := &l8sysconfig.L8SysConfig{MaxDataSize: resources.DEFAULT_MAX_DATA_SIZE,

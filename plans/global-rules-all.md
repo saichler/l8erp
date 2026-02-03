@@ -4,16 +4,19 @@ These are Claude Code global rules for the Layer8 ERP project. Load this file at
 
 ---
 
-## 1. Code Maintainability Standards
+# Part 1: Generic Software Development Rules
+
+These rules apply to any software project.
+
+---
+
+## 1.1 Code Maintainability Standards
 
 ### File Size
 Files that are over 500 lines of code are not maintainable, please make sure to refactor them and break them into smaller files logically.
 
 ### No Duplicate Code
 Avoid duplicate code. Always check for existing utilities, functions, or components before writing new code. Consolidate duplicates into shared modules.
-
-### Future-Proof Design
-The ERP system has more modules that are not implemented yet. When designing components, consider that future modules (Financial, SCM, Manufacturing, Sales, CRM, Projects, BI, Documents, E-Commerce, Compliance, System) will follow similar patterns. Design shared components to be reusable across all modules.
 
 ### Read Before Implementing
 When asked to implement something similar to an existing component, you MUST read ALL the code of the referenced component(s) first. Do not make any assumptions. Read every file, understand every pattern, and only then implement following the exact same patterns.
@@ -23,17 +26,10 @@ When asked to implement something similar to an existing component, you MUST rea
 When implementing support for a component, perform deep analysis first:
 - Understand all initialization arguments and configuration options
 - Understand how endpoints are constructed (if applicable)
-- Understand how L8Query is constructed for paging, filtering, and sorting (if supported)
 - Only proceed with implementation after full understanding is documented
 
-### Demo Directory
-The `/go/demo/` directory is auto-generated and used for local testing only. Do not edit code in that directory. The source of truth is `/go/erp/ui/web/`.
-
-### ServiceName
-ServiceName should not be larger than 10 characters.
-
-### ServiceArea
-ServiceArea should be the same for Services under the same Module.
+### Vendor All Third-Party Dependencies
+All third-party dependencies must be vendored. After adding or updating any dependency, run `go mod vendor` to ensure the `vendor/` directory is up to date. Never rely on module cache alone — the vendor directory is the source of truth for third-party code.
 
 ### Guidelines
 - Target file size: under 500 lines of code
@@ -44,7 +40,7 @@ ServiceArea should be the same for Services under the same Module.
 
 ---
 
-## 2. Duplication Prevention Rules
+## 1.2 Duplication Prevention Rules
 
 ### Second Instance Rule
 When creating a second instance of any pattern (e.g., a second module, a second similar component), extract a shared abstraction immediately. Do not copy a file and replace identifiers. The second consumer is the forcing function for abstraction — do not wait for a third.
@@ -86,7 +82,38 @@ Maintain a "How to Add a New Module" guide that specifies exactly which files to
 
 ---
 
-## 3. Mock Data Generation for New ERP Modules
+# Part 2: Layer8 Oriented Rules
+
+These rules are specific to the Layer8 ERP project.
+
+---
+
+## 2.1 Layer8 Architecture Rules
+
+### Future-Proof Design
+The ERP system has more modules that are not implemented yet. When designing components, consider that future modules (Financial, SCM, Manufacturing, Sales, CRM, Projects, BI, Documents, E-Commerce, Compliance, System) will follow similar patterns. Design shared components to be reusable across all modules.
+
+### Demo Directory
+The `/go/demo/` directory is auto-generated and used for local testing only. Do not edit code in that directory. The source of truth is `/go/erp/ui/web/`.
+
+### ServiceName
+ServiceName should not be larger than 10 characters.
+
+### ServiceArea
+ServiceArea should be the same for Services under the same Module.
+
+### ServiceCallback Auto-Generate ID
+Every `*ServiceCallback.go` must auto-generate the primary key ID on POST (Add) operations. In the `Before()` method, insert `common.GenerateID(&entity.PrimaryKeyField)` between the type assertion and the `validate()` call, guarded by `if action == ifs.POST`. The primary key field name is found in the corresponding `*Service.go` file's `SetPrimaryKeys("XxxId")` call. This ensures that Add operations from the UI (which don't include the primary key field in the form) succeed without "XxxId is required" errors.
+
+### L8Query Integration
+When implementing components that interact with Layer8 services, understand how L8Query is constructed for paging, filtering, and sorting.
+
+### Mobile Parity
+Whenever implementing a UI feature, check if there is a mobile version and implement it as well.
+
+---
+
+## 2.2 Mock Data Generation for New ERP Modules
 
 ### Location
 All mock data files live in `go/tests/mocks/`. The system generates phased, dependency-ordered mock data with realistic ("flavorable") distributions.
@@ -162,9 +189,3 @@ All mock data files live in `go/tests/mocks/`. The system generates phased, depe
 #### File naming convention
 - Generator files: `gen_<module>_<group>.go`
 - Phase files: `<module>_phases.go`, `<module>_phases<N>_<M>.go`
-
----
-
-## 4. Mobile Parity
-
-Whenever implementing a UI feature, check if there is a mobile version and implement it as well.
