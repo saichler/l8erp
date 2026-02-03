@@ -226,6 +226,63 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Sales Module Phases
+	fmt.Printf("\nSales Phase 1: Foundation\n")
+	fmt.Printf("-------------------------\n")
+	if err := generateSalesPhase1(client, store); err != nil {
+		fmt.Printf("Sales Phase 1 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nSales Phase 2: Customer & Partners\n")
+	fmt.Printf("-----------------------------------\n")
+	if err := generateSalesPhase2(client, store); err != nil {
+		fmt.Printf("Sales Phase 2 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nSales Phase 3: Pricing Setup\n")
+	fmt.Printf("----------------------------\n")
+	if err := generateSalesPhase3(client, store); err != nil {
+		fmt.Printf("Sales Phase 3 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nSales Phase 4: Quotations\n")
+	fmt.Printf("-------------------------\n")
+	if err := generateSalesPhase4(client, store); err != nil {
+		fmt.Printf("Sales Phase 4 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nSales Phase 5: Orders\n")
+	fmt.Printf("---------------------\n")
+	if err := generateSalesPhase5(client, store); err != nil {
+		fmt.Printf("Sales Phase 5 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nSales Phase 6: Shipping\n")
+	fmt.Printf("-----------------------\n")
+	if err := generateSalesPhase6(client, store); err != nil {
+		fmt.Printf("Sales Phase 6 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nSales Phase 7: Billing\n")
+	fmt.Printf("----------------------\n")
+	if err := generateSalesPhase7(client, store); err != nil {
+		fmt.Printf("Sales Phase 7 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nSales Phase 8: Analytics\n")
+	fmt.Printf("------------------------\n")
+	if err := generateSalesPhase8(client, store); err != nil {
+		fmt.Printf("Sales Phase 8 failed: %v\n", err)
+		os.Exit(1)
+	}
+
 	fmt.Printf("\n=======================\n")
 	fmt.Printf("Mock data generation complete!\n")
 	fmt.Printf("\nHCM Summary:\n")
@@ -265,4 +322,17 @@ func main() {
 	fmt.Printf("  - Supply Plans: %d\n", len(store.SupplyPlanIDs))
 	fmt.Printf("  - Safety Stocks: %d\n", len(store.SafetyStockIDs))
 	fmt.Printf("  - Lead Times: %d\n", len(store.LeadTimeIDs))
+	fmt.Printf("\nSales Summary:\n")
+	fmt.Printf("  - Territories: %d\n", len(store.SalesTerritoryIDs))
+	fmt.Printf("  - Price Lists: %d\n", len(store.SalesPriceListIDs))
+	fmt.Printf("  - Channel Partners: %d\n", len(store.SalesPartnerChannelIDs))
+	fmt.Printf("  - Customer Contracts: %d\n", len(store.SalesCustomerContractIDs))
+	fmt.Printf("  - Quotations: %d\n", len(store.SalesQuotationIDs))
+	fmt.Printf("  - Sales Orders: %d\n", len(store.SalesOrderIDs))
+	fmt.Printf("  - Sales Returns: %d\n", len(store.SalesReturnOrderIDs))
+	fmt.Printf("  - Delivery Orders: %d\n", len(store.SalesDeliveryOrderIDs))
+	fmt.Printf("  - Billing Schedules: %d\n", len(store.SalesBillingScheduleIDs))
+	fmt.Printf("  - Commission Plans: %d\n", len(store.SalesCommissionPlanIDs))
+	fmt.Printf("  - Sales Targets: %d\n", len(store.SalesTargetIDs))
+	fmt.Printf("  - Sales Forecasts: %d\n", len(store.SalesForecastIDs))
 }

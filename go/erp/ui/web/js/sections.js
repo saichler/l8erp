@@ -48,6 +48,11 @@ const sectionInitializers = {
             initializeSCM();
         }
     },
+    sales: () => {
+        if (typeof initializeSales === 'function') {
+            initializeSales();
+        }
+    },
     system: () => {
         if (typeof initializeL8Sys === 'function') {
             initializeL8Sys();

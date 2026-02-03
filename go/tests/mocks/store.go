@@ -160,8 +160,8 @@ type MockDataStore struct {
 	ForecastModelIDs []string
 
 	// SCM Phase 2: Inventory Core
-	ItemIDs       []string
-	BinIDs        []string
+	ItemIDs        []string
+	BinIDs         []string
 	FreightRateIDs []string
 
 	// SCM Phase 3: Procurement
@@ -212,4 +212,48 @@ type MockDataStore struct {
 	SupplierCollaborationIDs   []string
 	SafetyStockIDs             []string
 	LeadTimeIDs                []string
+
+	// Sales Phase 1: Foundation
+	SalesTerritoryIDs         []string
+	SalesPriceListIDs         []string
+	SalesCustomerHierarchyIDs []string
+	SalesCustomerSegmentIDs   []string
+
+	// Sales Phase 2: Customer & Partners
+	SalesPartnerChannelIDs   []string
+	SalesCustomerContractIDs []string
+
+	// Sales Phase 3: Pricing Setup
+	SalesPriceListEntryIDs   []string
+	SalesCustomerPriceIDs    []string
+	SalesDiscountRuleIDs     []string
+	SalesPromotionalPriceIDs []string
+
+	// Sales Phase 4: Quotations
+	SalesQuotationIDs     []string
+	SalesQuotationLineIDs []string
+
+	// Sales Phase 5: Orders
+	SalesOrderIDs       []string
+	SalesOrderLineIDs   []string
+	SalesReturnOrderIDs []string
+
+	// Sales Phase 6: Shipping
+	SalesDeliveryOrderIDs []string
+	SalesDeliveryLineIDs  []string
+	SalesPickReleaseIDs   []string
+	SalesShippingDocIDs   []string
+	SalesPackingSlipIDs   []string
+
+	// Sales Phase 7: Billing
+	SalesBillingScheduleIDs  []string
+	SalesBillingMilestoneIDs []string
+	SalesRevenueScheduleIDs  []string
+
+	// Sales Phase 8: Analytics
+	SalesCommissionPlanIDs []string
+	SalesCommissionCalcIDs []string
+	SalesTerritoryAssignIDs []string
+	SalesTargetIDs          []string
+	SalesForecastIDs        []string
 }

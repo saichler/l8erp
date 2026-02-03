@@ -1,0 +1,164 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package sales;
+
+option go_package = "./types/sales";
+
+import "sales-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// SALES ANALYTICS MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// SalesTarget represents a sales target/quota
+message SalesTarget {
+  string target_id = 1;
+  string name = 2;
+  string salesperson_id = 3;            // Cross-ref: HCM Employee
+  string territory_id = 4;
+  SalesTargetPeriod period = 5;
+  int32 year = 6;
+  int32 quarter = 7;
+  int32 month = 8;
+  erp.Money target_amount = 9;
+  erp.Money achieved_amount = 10;
+  double achievement_percent = 11;
+  string notes = 12;
+  map<string, string> custom_fields = 13;
+  erp.AuditInfo audit_info = 14;
+}
+
+message SalesTargetList {
+  repeated SalesTarget list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesTerritory represents a sales territory
+message SalesTerritory {
+  string territory_id = 1;
+  string name = 2;
+  string description = 3;
+  SalesTerritoryType territory_type = 4;
+  string parent_territory_id = 5;
+  string region = 6;
+  repeated string country_codes = 7;
+  repeated string state_codes = 8;
+  repeated string postal_codes = 9;
+  string manager_id = 10;               // Cross-ref: HCM Employee
+  bool is_active = 11;
+  map<string, string> custom_fields = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message SalesTerritoryList {
+  repeated SalesTerritory list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesTerritoryAssign represents assignment of a salesperson to a territory
+message SalesTerritoryAssign {
+  string assignment_id = 1;
+  string territory_id = 2;
+  string salesperson_id = 3;            // Cross-ref: HCM Employee
+  int64 start_date = 4;
+  int64 end_date = 5;
+  bool is_primary = 6;
+  double allocation_percent = 7;
+  string notes = 8;
+  erp.AuditInfo audit_info = 9;
+}
+
+message SalesTerritoryAssignList {
+  repeated SalesTerritoryAssign list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesCommissionPlan represents a commission plan structure
+message SalesCommissionPlan {
+  string plan_id = 1;
+  string name = 2;
+  string description = 3;
+  SalesCommissionType commission_type = 4;
+  double base_rate = 5;
+  erp.Money base_amount = 6;
+  int64 effective_date = 7;
+  int64 expiry_date = 8;
+  bool is_active = 9;
+  string applies_to = 10;
+  string notes = 11;
+  map<string, string> custom_fields = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message SalesCommissionPlanList {
+  repeated SalesCommissionPlan list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesCommissionCalc represents a calculated commission for a salesperson
+message SalesCommissionCalc {
+  string calc_id = 1;
+  string salesperson_id = 2;            // Cross-ref: HCM Employee
+  string plan_id = 3;
+  string sales_order_id = 4;
+  int64 calculation_date = 5;
+  erp.Money sales_amount = 6;
+  double commission_rate = 7;
+  erp.Money commission_amount = 8;
+  string status = 9;
+  int64 paid_date = 10;
+  string notes = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message SalesCommissionCalcList {
+  repeated SalesCommissionCalc list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesForecast represents a sales forecast
+message SalesForecast {
+  string forecast_id = 1;
+  string name = 2;
+  string salesperson_id = 3;            // Cross-ref: HCM Employee
+  string territory_id = 4;
+  string customer_id = 5;               // Cross-ref: FIN Customer
+  SalesForecastCategory category = 6;
+  int32 year = 7;
+  int32 quarter = 8;
+  int32 month = 9;
+  erp.Money forecast_amount = 10;
+  erp.Money weighted_amount = 11;
+  double probability = 12;
+  int64 expected_close_date = 13;
+  string notes = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message SalesForecastList {
+  repeated SalesForecast list = 1;
+  l8api.L8MetaData metadata = 2;
+}

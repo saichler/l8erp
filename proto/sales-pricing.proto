@@ -1,0 +1,155 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package sales;
+
+option go_package = "./types/sales";
+
+import "sales-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// PRICING MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// SalesPriceList represents a collection of prices for items
+message SalesPriceList {
+  string price_list_id = 1;
+  string name = 2;
+  string description = 3;
+  string currency_code = 4;
+  SalesPriceListStatus status = 5;
+  int64 effective_date = 6;
+  int64 expiry_date = 7;
+  bool is_default = 8;
+  string notes = 9;
+  map<string, string> custom_fields = 10;
+  erp.AuditInfo audit_info = 11;
+}
+
+message SalesPriceListList {
+  repeated SalesPriceList list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesPriceListEntry represents a single price entry in a price list
+message SalesPriceListEntry {
+  string entry_id = 1;
+  string price_list_id = 2;
+  string item_id = 3;                   // Cross-ref: SCM Item
+  erp.Money unit_price = 4;
+  string unit_of_measure = 5;
+  double minimum_quantity = 6;
+  int64 effective_date = 7;
+  int64 expiry_date = 8;
+  erp.AuditInfo audit_info = 9;
+}
+
+message SalesPriceListEntryList {
+  repeated SalesPriceListEntry list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesCustomerPrice represents customer-specific pricing
+message SalesCustomerPrice {
+  string customer_price_id = 1;
+  string customer_id = 2;               // Cross-ref: FIN Customer
+  string item_id = 3;                   // Cross-ref: SCM Item
+  erp.Money unit_price = 4;
+  string currency_code = 5;
+  SalesPricingMethod pricing_method = 6;
+  double minimum_quantity = 7;
+  int64 effective_date = 8;
+  int64 expiry_date = 9;
+  string contract_id = 10;
+  erp.AuditInfo audit_info = 11;
+}
+
+message SalesCustomerPriceList {
+  repeated SalesCustomerPrice list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesDiscountRule represents a discount rule or policy
+message SalesDiscountRule {
+  string rule_id = 1;
+  string name = 2;
+  string description = 3;
+  SalesDiscountType discount_type = 4;
+  double discount_value = 5;
+  double minimum_amount = 6;
+  double minimum_quantity = 7;
+  string applies_to = 8;
+  repeated string customer_ids = 9;     // Cross-ref: FIN Customer
+  repeated string item_ids = 10;        // Cross-ref: SCM Item
+  int64 effective_date = 11;
+  int64 expiry_date = 12;
+  bool is_active = 13;
+  int32 priority = 14;
+  bool is_combinable = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message SalesDiscountRuleList {
+  repeated SalesDiscountRule list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesPromotionalPrice represents a time-limited promotional price
+message SalesPromotionalPrice {
+  string promo_id = 1;
+  string name = 2;
+  string description = 3;
+  string item_id = 4;                   // Cross-ref: SCM Item
+  erp.Money promotional_price = 5;
+  erp.Money original_price = 6;
+  int64 start_date = 7;
+  int64 end_date = 8;
+  double max_quantity = 9;
+  double quantity_sold = 10;
+  bool is_active = 11;
+  string promo_code = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message SalesPromotionalPriceList {
+  repeated SalesPromotionalPrice list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesQuantityBreak represents volume-based pricing tiers
+message SalesQuantityBreak {
+  string break_id = 1;
+  string price_list_id = 2;
+  string item_id = 3;                   // Cross-ref: SCM Item
+  double from_quantity = 4;
+  double to_quantity = 5;
+  erp.Money unit_price = 6;
+  double discount_percent = 7;
+  erp.AuditInfo audit_info = 8;
+}
+
+message SalesQuantityBreakList {
+  repeated SalesQuantityBreak list = 1;
+  l8api.L8MetaData metadata = 2;
+}

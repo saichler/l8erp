@@ -1,0 +1,100 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package sales;
+
+option go_package = "./types/sales";
+
+import "sales-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// BILLING MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// SalesBillingSchedule represents a billing schedule for an order or contract
+message SalesBillingSchedule {
+  string schedule_id = 1;
+  string name = 2;
+  string sales_order_id = 3;
+  string contract_id = 4;
+  string customer_id = 5;               // Cross-ref: FIN Customer
+  SalesBillingFrequency frequency = 6;
+  int64 start_date = 7;
+  int64 end_date = 8;
+  int64 next_billing_date = 9;
+  erp.Money total_amount = 10;
+  erp.Money billed_amount = 11;
+  erp.Money remaining_amount = 12;
+  SalesBillingStatus status = 13;
+  string notes = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message SalesBillingScheduleList {
+  repeated SalesBillingSchedule list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesBillingMilestone represents a billing milestone for milestone-based billing
+message SalesBillingMilestone {
+  string milestone_id = 1;
+  string schedule_id = 2;
+  string name = 3;
+  string description = 4;
+  int32 sequence = 5;
+  erp.Money amount = 6;
+  double percentage = 7;
+  int64 target_date = 8;
+  int64 actual_date = 9;
+  SalesBillingStatus status = 10;
+  string invoice_id = 11;               // Cross-ref: FIN SalesInvoice
+  string notes = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message SalesBillingMilestoneList {
+  repeated SalesBillingMilestone list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesRevenueSchedule represents revenue recognition schedule
+message SalesRevenueSchedule {
+  string schedule_id = 1;
+  string sales_order_id = 2;
+  string contract_id = 3;
+  SalesRevenueRecognition recognition_method = 4;
+  int64 start_date = 5;
+  int64 end_date = 6;
+  erp.Money total_revenue = 7;
+  erp.Money recognized_revenue = 8;
+  erp.Money deferred_revenue = 9;
+  string revenue_account_id = 10;       // Cross-ref: FIN Account
+  string deferred_account_id = 11;      // Cross-ref: FIN Account
+  string notes = 12;
+  map<string, string> custom_fields = 13;
+  erp.AuditInfo audit_info = 14;
+}
+
+message SalesRevenueScheduleList {
+  repeated SalesRevenueSchedule list = 1;
+  l8api.L8MetaData metadata = 2;
+}

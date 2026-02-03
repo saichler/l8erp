@@ -1,0 +1,219 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package sales;
+
+option go_package = "./types/sales";
+
+import "sales-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// SALES ORDER MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// SalesQuotation represents a sales quote sent to a customer
+message SalesQuotation {
+  string quotation_id = 1;
+  string quotation_number = 2;
+  string customer_id = 3;               // Cross-ref: FIN Customer
+  string salesperson_id = 4;            // Cross-ref: HCM Employee
+  int64 quotation_date = 5;
+  int64 valid_until = 6;
+  SalesQuotationStatus status = 7;
+  string ship_to_address_id = 8;
+  string bill_to_address_id = 9;
+  string payment_terms = 10;
+  string currency_code = 11;
+  erp.Money subtotal = 12;
+  erp.Money discount_total = 13;
+  erp.Money tax_total = 14;
+  erp.Money total_amount = 15;
+  string notes = 16;
+  map<string, string> custom_fields = 17;
+  erp.AuditInfo audit_info = 18;
+}
+
+message SalesQuotationList {
+  repeated SalesQuotation list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesQuotationLine represents a line item on a sales quotation
+message SalesQuotationLine {
+  string line_id = 1;
+  string quotation_id = 2;
+  int32 line_number = 3;
+  string item_id = 4;                   // Cross-ref: SCM Item
+  string description = 5;
+  double quantity = 6;
+  string unit_of_measure = 7;
+  erp.Money unit_price = 8;
+  double discount_percent = 9;
+  erp.Money discount_amount = 10;
+  erp.Money tax_amount = 11;
+  erp.Money line_total = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message SalesQuotationLineList {
+  repeated SalesQuotationLine list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesOrder represents a confirmed customer order
+message SalesOrder {
+  string sales_order_id = 1;
+  string order_number = 2;
+  string customer_id = 3;               // Cross-ref: FIN Customer
+  string salesperson_id = 4;            // Cross-ref: HCM Employee
+  int64 order_date = 5;
+  int64 requested_delivery_date = 6;
+  SalesOrderStatus status = 7;
+  string quotation_id = 8;
+  string ship_to_address_id = 9;
+  string bill_to_address_id = 10;
+  string payment_terms = 11;
+  string currency_code = 12;
+  erp.Money subtotal = 13;
+  erp.Money discount_total = 14;
+  erp.Money tax_total = 15;
+  erp.Money total_amount = 16;
+  string warehouse_id = 17;             // Cross-ref: SCM Warehouse
+  string notes = 18;
+  string priority = 19;
+  map<string, string> custom_fields = 20;
+  erp.AuditInfo audit_info = 21;
+}
+
+message SalesOrderList {
+  repeated SalesOrder list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesOrderLine represents a line item on a sales order
+message SalesOrderLine {
+  string line_id = 1;
+  string sales_order_id = 2;
+  int32 line_number = 3;
+  string item_id = 4;                   // Cross-ref: SCM Item
+  string description = 5;
+  double quantity = 6;
+  string unit_of_measure = 7;
+  erp.Money unit_price = 8;
+  double discount_percent = 9;
+  erp.Money discount_amount = 10;
+  erp.Money tax_amount = 11;
+  erp.Money line_total = 12;
+  double allocated_quantity = 13;
+  double shipped_quantity = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message SalesOrderLineList {
+  repeated SalesOrderLine list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesOrderAllocation represents inventory allocation for an order line
+message SalesOrderAllocation {
+  string allocation_id = 1;
+  string sales_order_id = 2;
+  string line_id = 3;
+  string item_id = 4;                   // Cross-ref: SCM Item
+  string warehouse_id = 5;              // Cross-ref: SCM Warehouse
+  string bin_id = 6;
+  double allocated_quantity = 7;
+  SalesAllocationStatus status = 8;
+  int64 allocation_date = 9;
+  int64 expiry_date = 10;
+  erp.AuditInfo audit_info = 11;
+}
+
+message SalesOrderAllocationList {
+  repeated SalesOrderAllocation list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesBackOrder represents an order that cannot be fulfilled due to stock shortage
+message SalesBackOrder {
+  string back_order_id = 1;
+  string sales_order_id = 2;
+  string line_id = 3;
+  string item_id = 4;                   // Cross-ref: SCM Item
+  double back_order_quantity = 5;
+  int64 expected_date = 6;
+  string status = 7;
+  string notes = 8;
+  erp.AuditInfo audit_info = 9;
+}
+
+message SalesBackOrderList {
+  repeated SalesBackOrder list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesReturnOrder represents a customer return request
+message SalesReturnOrder {
+  string return_order_id = 1;
+  string return_number = 2;
+  string sales_order_id = 3;
+  string customer_id = 4;               // Cross-ref: FIN Customer
+  int64 return_date = 5;
+  SalesReturnStatus status = 6;
+  string reason_code = 7;
+  string reason_description = 8;
+  erp.Money refund_amount = 9;
+  string warehouse_id = 10;             // Cross-ref: SCM Warehouse
+  string notes = 11;
+  map<string, string> custom_fields = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message SalesReturnOrderList {
+  repeated SalesReturnOrder list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// SalesReturnOrderLine represents a line item on a return order
+message SalesReturnOrderLine {
+  string line_id = 1;
+  string return_order_id = 2;
+  int32 line_number = 3;
+  string item_id = 4;                   // Cross-ref: SCM Item
+  string description = 5;
+  double quantity = 6;
+  string unit_of_measure = 7;
+  erp.Money unit_price = 8;
+  erp.Money line_total = 9;
+  string condition = 10;
+  string disposition = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message SalesReturnOrderLineList {
+  repeated SalesReturnOrderLine list = 1;
+  l8api.L8MetaData metadata = 2;
+}

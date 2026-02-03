@@ -38,6 +38,15 @@ docker run --user "$(id -u):$(id -g)" -e PROTO=scm-logistics.proto --mount type=
 docker run --user "$(id -u):$(id -g)" -e PROTO=scm-demand_planning.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=scm-supply_planning.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
 
+# Sales and Distribution
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-customer.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-orders.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-pricing.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-shipping.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-billing.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-analytics.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+
 rm api.proto
 
 # Now move the generated bindings to the models directory and clean up
@@ -53,3 +62,4 @@ find . -name "*.go" -type f -exec sed -i 's|"./types/l8services"|"github.com/sai
 find . -name "*.go" -type f -exec sed -i 's|"./types/l8api"|"github.com/saichler/l8types/go/types/l8api"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/erp"|"github.com/saichler/l8erp/go/types/erp"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/scm"|"github.com/saichler/l8erp/go/types/scm"|g' {} +
+find . -name "*.go" -type f -exec sed -i 's|"./types/sales"|"github.com/saichler/l8erp/go/types/sales"|g' {} +

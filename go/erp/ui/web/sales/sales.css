@@ -1,0 +1,30 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+/* ============================================ */
+/* SALES STYLES - Entry Point */
+/* ============================================ */
+/*
+ * The Sales module reuses the shared HCM layout classes
+ * (hcm-section, hcm-module-tabs, hcm-subnav, etc.) since they represent
+ * generic module layout patterns.
+ *
+ * Any Sales-specific style overrides can be added here.
+ *
+ * Load order in app.html:
+ *   1. HCM layout styles (shared)
+ *   2. sales.css (this file)
+ */
+
+/* Any additional Sales-specific styles can be added here */

@@ -23,6 +23,8 @@ Reference documents:
 | **Single Responsibility** | One service per package (2 files each). UI split into columns/forms/enums per submodule. |
 | **ServiceName <= 10 chars** | All 33 ServiceName constants are 10 characters or fewer. See Prime Objects Summary. |
 | **ServiceArea same per Module** | All Sales services use `ServiceArea = byte(60)`. |
+| **ServiceCallback Auto-Generate ID** | All callbacks include `common.GenerateID()` in `Before()` for POST actions. See Section 3b. |
+| **Vendor Dependencies** | Step 7 includes `go mod vendor` after proto generation. |
 | **Mobile Parity** | Desktop and mobile UI are implemented together. |
 
 ---
@@ -343,7 +345,49 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 
 ### 3b. Callback File Pattern (`<ServiceName>ServiceCallback.go`)
 
-Same validation pattern as HCM/FIN/SCM.
+Same validation pattern as HCM/FIN/SCM. **Critical:** Every callback must auto-generate the primary key ID on POST operations.
+
+```go
+package salesorders
+
+import (
+    "errors"
+    "github.com/saichler/l8erp/go/erp/common"
+    "github.com/saichler/l8erp/go/types/sales"
+    "github.com/saichler/l8types/go/ifs"
+)
+
+type SalesOrderServiceCallback struct{}
+
+func newSalesOrderServiceCallback() *SalesOrderServiceCallback {
+    return &SalesOrderServiceCallback{}
+}
+
+func (cb *SalesOrderServiceCallback) Before(action ifs.Action, data interface{}, resources ifs.IResources) error {
+    entity := data.(*sales.SalesOrder)
+    // CRITICAL: Auto-generate ID on POST (Add) operations
+    if action == ifs.POST {
+        common.GenerateID(&entity.SalesOrderId)
+    }
+    return validate(entity, action)
+}
+
+func (cb *SalesOrderServiceCallback) After(action ifs.Action, data interface{}, resources ifs.IResources) error {
+    return nil
+}
+
+func validate(entity *sales.SalesOrder, action ifs.Action) error {
+    if entity.CustomerId == "" {
+        return errors.New("CustomerId is required")
+    }
+    if entity.OrderDate == 0 {
+        return errors.New("OrderDate is required")
+    }
+    return nil
+}
+```
+
+**Key pattern:** The `common.GenerateID(&entity.PrimaryKeyField)` call must appear between the type assertion and the `validate()` call, guarded by `if action == ifs.POST`. This ensures Add operations from the UI succeed without "XxxId is required" errors.
 
 ### Service Directory Listing (33 packages)
 
@@ -412,28 +456,22 @@ Same validation pattern as HCM/FIN/SCM.
 
 ---
 
-## Step 4: Create `sales_main.go`
+## Step 4: Integrate Sales into Centralized `erp_main.go`
 
-Create `go/erp/sales/sales_main.go` following `go/erp/scm/scm_main.go`:
+**Important:** There is NO separate `sales_main.go` file. All modules are activated from the centralized `go/erp/main/erp_main.go`.
+
+### 4a. Add Sales Imports
+
+Add Sales service imports to `erp_main.go` after the existing HCM/FIN/SCM imports:
 
 ```go
-package main
-
-import (
-    "fmt"
-    "github.com/saichler/l8bus/go/overlay/vnic"
-    "github.com/saichler/l8erp/go/erp/common"
-    "github.com/saichler/l8types/go/ifs"
-    "os/exec"
-    "time"
-
-    // Customer Management
+    // Sales - Customer Management
     "github.com/saichler/l8erp/go/erp/sales/customerhierarchies"
     "github.com/saichler/l8erp/go/erp/sales/customersegments"
     "github.com/saichler/l8erp/go/erp/sales/customercontracts"
     "github.com/saichler/l8erp/go/erp/sales/partnerchannels"
 
-    // Sales Orders
+    // Sales - Sales Orders
     "github.com/saichler/l8erp/go/erp/sales/salesquotations"
     "github.com/saichler/l8erp/go/erp/sales/quotationlines"
     "github.com/saichler/l8erp/go/erp/sales/salesorders"
@@ -443,7 +481,7 @@ import (
     "github.com/saichler/l8erp/go/erp/sales/returnorders"
     "github.com/saichler/l8erp/go/erp/sales/returnorderlines"
 
-    // Pricing
+    // Sales - Pricing
     "github.com/saichler/l8erp/go/erp/sales/pricelists"
     "github.com/saichler/l8erp/go/erp/sales/pricelistentries"
     "github.com/saichler/l8erp/go/erp/sales/customerprices"
@@ -451,7 +489,7 @@ import (
     "github.com/saichler/l8erp/go/erp/sales/promotionalprices"
     "github.com/saichler/l8erp/go/erp/sales/quantitybreaks"
 
-    // Shipping and Delivery
+    // Sales - Shipping and Delivery
     "github.com/saichler/l8erp/go/erp/sales/deliveryorders"
     "github.com/saichler/l8erp/go/erp/sales/deliverylines"
     "github.com/saichler/l8erp/go/erp/sales/pickreleases"
@@ -459,32 +497,37 @@ import (
     "github.com/saichler/l8erp/go/erp/sales/shippingdocs"
     "github.com/saichler/l8erp/go/erp/sales/deliveryconfirms"
 
-    // Billing
+    // Sales - Billing
     "github.com/saichler/l8erp/go/erp/sales/billingschedules"
     "github.com/saichler/l8erp/go/erp/sales/billingmilestones"
     "github.com/saichler/l8erp/go/erp/sales/revenueschedules"
 
-    // Sales Analytics
+    // Sales - Analytics
     "github.com/saichler/l8erp/go/erp/sales/salestargets"
     "github.com/saichler/l8erp/go/erp/sales/salesterritories"
     "github.com/saichler/l8erp/go/erp/sales/territoryassigns"
     "github.com/saichler/l8erp/go/erp/sales/commissionplans"
     "github.com/saichler/l8erp/go/erp/sales/commissioncalcs"
     "github.com/saichler/l8erp/go/erp/sales/salesforecasts"
-)
+```
 
-func main() {
-    res := common.CreateResources("sales")
-    ifs.SetNetworkMode(ifs.NETWORK_K8s)
-    nic := vnic.NewVirtualNetworkInterface(res, nil)
-    nic.Start()
-    nic.WaitForConnection()
-    startDb(nic)
-    activateServices(nic)
-    common.WaitForSignal(res)
-}
+### 4b. Add Function Call in main()
 
-func activateServices(nic ifs.IVNic) {
+In the `main()` function, add the call after SCM:
+
+```go
+    activateHCMServices(nic)
+    activateFinServices(nic)
+    activateSCMServices(nic)
+    activateSalesServices(nic)  // Add this line
+```
+
+### 4c. Create `activateSalesServices()` Function
+
+Add this function after `activateSCMServices()`:
+
+```go
+func activateSalesServices(nic ifs.IVNic) {
     // Customer Management
     customerhierarchies.Activate(common.DB_CREDS, common.DB_NAME, nic)
     customersegments.Activate(common.DB_CREDS, common.DB_NAME, nic)
@@ -529,17 +572,6 @@ func activateServices(nic ifs.IVNic) {
     commissionplans.Activate(common.DB_CREDS, common.DB_NAME, nic)
     commissioncalcs.Activate(common.DB_CREDS, common.DB_NAME, nic)
     salesforecasts.Activate(common.DB_CREDS, common.DB_NAME, nic)
-}
-
-func startDb(nic ifs.IVNic) {
-    _, user, pass, _, err := nic.Resources().Security().Credential(common.DB_CREDS, common.DB_NAME, nic.Resources())
-    if err != nil { panic(common.DB_CREDS + " " + err.Error()) }
-    fmt.Println("/start-postgres.sh", common.DB_NAME, user, pass)
-    cmd := exec.Command("nohup", "/start-postgres.sh", common.DB_NAME, user, pass)
-    out, err := cmd.Output()
-    if err != nil { panic(err) }
-    fmt.Println(string(out))
-    time.Sleep(time.Second * 5)
 }
 ```
 
@@ -916,10 +948,11 @@ Follow `plans/global-rules-all.md` Section 3 (Mock Data Generation).
 ## Step 7: Verify Build
 
 1. Run `cd proto/ && bash make-bindings.sh`
-2. Run `go build ./...` from project root
-3. Run `go vet ./...`
-4. Verify UI loads in browser with Sales section showing module tabs
-5. Verify mobile card navigation shows Sales with all submodules
+2. Run `go mod vendor` to update vendored dependencies
+3. Run `go build ./...` from project root
+4. Run `go vet ./...`
+5. Verify UI loads in browser with Sales section showing module tabs
+6. Verify mobile card navigation shows Sales with all submodules
 
 ---
 
@@ -934,7 +967,7 @@ Follow `plans/global-rules-all.md` Section 3 (Mock Data Generation).
 7. **Billing services** - BillingSchedule, BillingMilestone, RevenueSchedule (references SalesOrder)
 8. **Analytics services** - SalesTarget, SalesTerritory, CommissionPlan, SalesForecast (references HCM Employee)
 9. **Return services** - ReturnOrder, ReturnOrderLine (references SalesOrder)
-10. **sales_main.go** - Wire everything together
+10. **erp_main.go** - Add Sales imports and `activateSalesServices()` function
 11. **Desktop UI** - Config, enums, columns, forms per submodule, section HTML, init
 12. **Mobile UI** - Enums, columns, forms, registry, nav config
 13. **Mock data** - Generator and phase files
@@ -947,6 +980,7 @@ Follow `plans/global-rules-all.md` Section 3 (Mock Data Generation).
 | File | Change |
 |------|--------|
 | `proto/make-bindings.sh` | Add `sales-*.proto` docker runs |
+| `go/erp/main/erp_main.go` | Add Sales imports + `activateSalesServices()` function + call in main() |
 | `l8ui/shared/layer8d-reference-registry.js` | Add Sales model reference configs |
 | `l8ui/m/js/layer8m-reference-registry.js` | Add Sales model reference configs |
 | `l8ui/m/js/layer8m-nav-config.js` | Enable `sales` module + add config block |
@@ -962,7 +996,6 @@ Follow `plans/global-rules-all.md` Section 3 (Mock Data Generation).
 | Sales proto files | 8 | `proto/sales-*.proto` |
 | Generated Go types | 8 | `go/types/sales/*.pb.go` (auto) |
 | Service files | 66 (33x2) | `go/erp/sales/<service>/{Service,Callback}.go` |
-| Main entry | 1 | `go/erp/sales/sales_main.go` |
 | Desktop UI config | 2 | `l8ui/sales/sales-{config,init}.js` |
 | Desktop UI CSS | 1 | `l8ui/sales/sales.css` |
 | Desktop submodule files | 24 | `l8ui/sales/<sub>/{enums,columns,forms,entry}.js` |
@@ -971,7 +1004,9 @@ Follow `plans/global-rules-all.md` Section 3 (Mock Data Generation).
 | Mobile submodule files | 18 | `m/js/sales/{enums,columns,forms}.js` per sub |
 | Mobile registry | 1 | `m/js/sales/sales-index.js` |
 | Mock data generators | 7 | `go/tests/mocks/gen_sales_*.go` + `sales_phases.go` |
-| **Total** | ~138 files | |
+| **Total** | ~137 files | |
+
+**Note:** There is NO separate `sales_main.go`. All modules are activated from the centralized `go/erp/main/erp_main.go`.
 
 ---
 
