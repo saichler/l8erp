@@ -28,7 +28,7 @@ limitations under the License.
             { key: 'scm', label: 'Supply Chain', icon: 'scm', hasSubModules: true },
             { key: 'manufacturing', label: 'Manufacturing', icon: 'manufacturing', hasSubModules: false },
             { key: 'sales', label: 'Sales', icon: 'sales', hasSubModules: true },
-            { key: 'crm', label: 'CRM', icon: 'crm', hasSubModules: false },
+            { key: 'crm', label: 'CRM', icon: 'crm', hasSubModules: true },
             { key: 'projects', label: 'Projects', icon: 'projects', hasSubModules: false },
             { key: 'bi', label: 'Analytics', icon: 'bi', hasSubModules: false },
             { key: 'documents', label: 'Documents', icon: 'documents', hasSubModules: false },
@@ -334,6 +334,70 @@ limitations under the License.
                     { key: 'commission-plans', label: 'Commission Plans', icon: 'financial', endpoint: '/60/CommPlan', model: 'SalesCommissionPlan', idField: 'planId' },
                     { key: 'commission-calcs', label: 'Calculations', icon: 'financial', endpoint: '/60/CommCalc', model: 'SalesCommissionCalc', idField: 'calcId' },
                     { key: 'forecasts', label: 'Forecasts', icon: 'demand-planning', endpoint: '/60/SalesFcast', model: 'SalesForecast', idField: 'forecastId' }
+                ]
+            }
+        },
+
+        // CRM Sub-Modules (Level 2)
+        crm: {
+            subModules: [
+                { key: 'leads', label: 'Leads', icon: 'talent' },
+                { key: 'opportunities', label: 'Opportunities', icon: 'financial' },
+                { key: 'accounts', label: 'Accounts', icon: 'organizations' },
+                { key: 'marketing', label: 'Marketing', icon: 'talent' },
+                { key: 'service', label: 'Service', icon: 'time' },
+                { key: 'fieldservice', label: 'Field Service', icon: 'logistics' }
+            ],
+
+            // Services for each sub-module (Level 3)
+            services: {
+                'leads': [
+                    { key: 'leads', label: 'Leads', icon: 'hcm', endpoint: '/80/CrmLead', model: 'CrmLead', idField: 'leadId' },
+                    { key: 'lead-sources', label: 'Lead Sources', icon: 'procurement', endpoint: '/80/CrmLeadSrc', model: 'CrmLeadSource', idField: 'sourceId' },
+                    { key: 'lead-scores', label: 'Lead Scores', icon: 'bi', endpoint: '/80/CrmLdScore', model: 'CrmLeadScore', idField: 'scoreId' },
+                    { key: 'lead-activities', label: 'Activities', icon: 'time', endpoint: '/80/CrmLdAct', model: 'CrmLeadActivity', idField: 'activityId' },
+                    { key: 'lead-assigns', label: 'Assignments', icon: 'hcm', endpoint: '/80/CrmLdAssn', model: 'CrmLeadAssign', idField: 'assignmentId' },
+                    { key: 'lead-conversions', label: 'Conversions', icon: 'jobs', endpoint: '/80/CrmLdConv', model: 'CrmLeadConversion', idField: 'conversionId' }
+                ],
+                'opportunities': [
+                    { key: 'opportunities', label: 'Opportunities', icon: 'financial', endpoint: '/80/CrmOpp', model: 'CrmOpportunity', idField: 'opportunityId' },
+                    { key: 'opp-stages', label: 'Sales Stages', icon: 'demand-planning', endpoint: '/80/CrmOppStg', model: 'CrmOppStage', idField: 'stageId' },
+                    { key: 'opp-competitors', label: 'Competitors', icon: 'talent', endpoint: '/80/CrmOppComp', model: 'CrmOppCompetitor', idField: 'competitorId' },
+                    { key: 'opp-products', label: 'Products', icon: 'inventory', endpoint: '/80/CrmOppProd', model: 'CrmOppProduct', idField: 'oppProductId' },
+                    { key: 'opp-teams', label: 'Teams', icon: 'hcm', endpoint: '/80/CrmOppTeam', model: 'CrmOppTeam', idField: 'teamMemberId' },
+                    { key: 'opp-activities', label: 'Activities', icon: 'time', endpoint: '/80/CrmOppAct', model: 'CrmOppActivity', idField: 'activityId' }
+                ],
+                'accounts': [
+                    { key: 'accounts', label: 'Accounts', icon: 'organizations', endpoint: '/80/CrmAcct', model: 'CrmAccount', idField: 'accountId' },
+                    { key: 'contacts', label: 'Contacts', icon: 'hcm', endpoint: '/80/CrmContact', model: 'CrmContact', idField: 'contactId' },
+                    { key: 'interactions', label: 'Interactions', icon: 'time', endpoint: '/80/CrmIntrctn', model: 'CrmInteraction', idField: 'interactionId' },
+                    { key: 'relationships', label: 'Relationships', icon: 'scm', endpoint: '/80/CrmRelshp', model: 'CrmRelationship', idField: 'relationshipId' },
+                    { key: 'health-scores', label: 'Health Scores', icon: 'health', endpoint: '/80/CrmHealth', model: 'CrmHealthScore', idField: 'healthScoreId' },
+                    { key: 'account-plans', label: 'Account Plans', icon: 'documents', endpoint: '/80/CrmAcctPln', model: 'CrmAccountPlan', idField: 'planId' }
+                ],
+                'marketing': [
+                    { key: 'campaigns', label: 'Campaigns', icon: 'talent', endpoint: '/80/CrmCmpgn', model: 'CrmCampaign', idField: 'campaignId' },
+                    { key: 'campaign-members', label: 'Members', icon: 'hcm', endpoint: '/80/CrmCmpgMbr', model: 'CrmCampaignMember', idField: 'memberId' },
+                    { key: 'email-templates', label: 'Email Templates', icon: 'documents', endpoint: '/80/CrmEmailTp', model: 'CrmEmailTemplate', idField: 'templateId' },
+                    { key: 'marketing-lists', label: 'Lists', icon: 'documents', endpoint: '/80/CrmMktList', model: 'CrmMarketingList', idField: 'listId' },
+                    { key: 'campaign-responses', label: 'Responses', icon: 'procurement', endpoint: '/80/CrmCmpgRsp', model: 'CrmCampaignResponse', idField: 'responseId' },
+                    { key: 'campaign-rois', label: 'ROI Tracking', icon: 'bi', endpoint: '/80/CrmCmpgROI', model: 'CrmCampaignROI', idField: 'roiId' }
+                ],
+                'service': [
+                    { key: 'cases', label: 'Cases', icon: 'documents', endpoint: '/80/CrmCase', model: 'CrmCase', idField: 'caseId' },
+                    { key: 'case-comments', label: 'Comments', icon: 'documents', endpoint: '/80/CrmCaseCmt', model: 'CrmCaseComment', idField: 'commentId' },
+                    { key: 'kb-articles', label: 'Knowledge Base', icon: 'learning', endpoint: '/80/CrmKBart', model: 'CrmKBArticle', idField: 'articleId' },
+                    { key: 'slas', label: 'SLAs', icon: 'time', endpoint: '/80/CrmSLA', model: 'CrmSLA', idField: 'slaId' },
+                    { key: 'escalations', label: 'Escalations', icon: 'compliance', endpoint: '/80/CrmEscal', model: 'CrmEscalation', idField: 'escalationId' },
+                    { key: 'surveys', label: 'Surveys', icon: 'documents', endpoint: '/80/CrmSurvey', model: 'CrmSurvey', idField: 'surveyId' }
+                ],
+                'fieldservice': [
+                    { key: 'service-orders', label: 'Service Orders', icon: 'documents', endpoint: '/80/CrmSvcOrd', model: 'CrmServiceOrder', idField: 'orderId' },
+                    { key: 'technicians', label: 'Technicians', icon: 'hcm', endpoint: '/80/CrmTech', model: 'CrmTechnician', idField: 'technicianId' },
+                    { key: 'service-contracts', label: 'Contracts', icon: 'documents', endpoint: '/80/CrmSvcCntr', model: 'CrmServiceContract', idField: 'contractId' },
+                    { key: 'service-schedules', label: 'Schedules', icon: 'time', endpoint: '/80/CrmSvcSchd', model: 'CrmServiceSchedule', idField: 'scheduleId' },
+                    { key: 'service-parts', label: 'Parts', icon: 'inventory', endpoint: '/80/CrmSvcPart', model: 'CrmServicePart', idField: 'partId' },
+                    { key: 'service-visits', label: 'Visits', icon: 'logistics', endpoint: '/80/CrmSvcVst', model: 'CrmServiceVisit', idField: 'visitId' }
                 ]
             }
         },

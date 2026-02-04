@@ -1,0 +1,177 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package crm;
+
+option go_package = "./types/crm";
+
+import "crm-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// CUSTOMER SERVICE MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// CrmCase represents a customer support case/ticket
+message CrmCase {
+  string case_id = 1;
+  string case_number = 2;
+  string subject = 3;
+  string description = 4;
+  CrmCaseStatus status = 5;
+  CrmCasePriority priority = 6;
+  CrmCaseType case_type = 7;
+  string account_id = 8;                   // cross-ref: CrmAccount
+  string contact_id = 9;                   // cross-ref: CrmContact
+  string owner_id = 10;                    // cross-ref: HCM Employee
+  string sla_id = 11;                      // cross-ref: CrmSLA (optional)
+  int64 opened_date = 12;
+  int64 closed_date = 13;
+  int64 due_date = 14;
+  string origin = 15;
+  string resolution = 16;
+  string parent_case_id = 17;              // cross-ref: CrmCase (self-reference)
+  string product_id = 18;                  // cross-ref: SCM Item (optional)
+  int32 escalation_level = 19;
+  bool is_escalated = 20;
+  map<string, string> custom_fields = 21;
+  erp.AuditInfo audit_info = 22;
+}
+
+message CrmCaseList {
+  repeated CrmCase list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmCaseComment represents a comment on a case
+message CrmCaseComment {
+  string comment_id = 1;
+  string case_id = 2;                      // cross-ref: CrmCase
+  string body = 3;
+  bool is_public = 4;
+  string created_by_id = 5;                // cross-ref: HCM Employee
+  int64 comment_date = 6;
+  map<string, string> custom_fields = 7;
+  erp.AuditInfo audit_info = 8;
+}
+
+message CrmCaseCommentList {
+  repeated CrmCaseComment list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmKBArticle represents a knowledge base article
+message CrmKBArticle {
+  string article_id = 1;
+  string article_number = 2;
+  string title = 3;
+  string summary = 4;
+  string body = 5;
+  CrmArticleStatus status = 6;
+  string category = 7;
+  string subcategory = 8;
+  repeated string keywords = 9;
+  int32 view_count = 10;
+  int32 helpful_count = 11;
+  int32 not_helpful_count = 12;
+  string author_id = 13;                   // cross-ref: HCM Employee
+  int64 publish_date = 14;
+  int64 expiry_date = 15;
+  string version = 16;
+  bool is_featured = 17;
+  map<string, string> custom_fields = 18;
+  erp.AuditInfo audit_info = 19;
+}
+
+message CrmKBArticleList {
+  repeated CrmKBArticle list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmSLA represents a service level agreement
+message CrmSLA {
+  string sla_id = 1;
+  string name = 2;
+  string description = 3;
+  int32 first_response_minutes = 4;
+  int32 resolution_minutes = 5;
+  bool is_active = 6;
+  string business_hours = 7;
+  bool include_weekends = 8;
+  string escalation_rules = 9;
+  CrmCasePriority applies_to_priority = 10;
+  map<string, string> custom_fields = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message CrmSLAList {
+  repeated CrmSLA list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmEscalation represents an escalation rule or record
+message CrmEscalation {
+  string escalation_id = 1;
+  string name = 2;
+  string description = 3;
+  CrmEscalationLevel level = 4;
+  int32 trigger_minutes = 5;
+  string escalate_to_user_id = 6;          // cross-ref: HCM Employee
+  string escalate_to_queue = 7;
+  bool notify_owner = 8;
+  bool notify_manager = 9;
+  string criteria = 10;
+  bool is_active = 11;
+  map<string, string> custom_fields = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message CrmEscalationList {
+  repeated CrmEscalation list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmSurvey represents a customer satisfaction survey
+message CrmSurvey {
+  string survey_id = 1;
+  string name = 2;
+  string description = 3;
+  CrmSurveyStatus status = 4;
+  string case_id = 5;                      // cross-ref: CrmCase (optional)
+  string account_id = 6;                   // cross-ref: CrmAccount
+  string contact_id = 7;                   // cross-ref: CrmContact
+  int64 sent_date = 8;
+  int64 completed_date = 9;
+  int32 overall_rating = 10;
+  string feedback = 11;
+  bool would_recommend = 12;
+  string survey_type = 13;
+  string owner_id = 14;                    // cross-ref: HCM Employee
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message CrmSurveyList {
+  repeated CrmSurvey list = 1;
+  l8api.L8MetaData metadata = 2;
+}

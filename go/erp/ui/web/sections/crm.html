@@ -12,14 +12,244 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<div class="section-container">
-    <h2 class="section-title">Customer Relationship Management</h2>
+<div class="section-container hcm-section crm-section">
+    <!-- Header with Parallax Effect -->
+    <div class="hcm-header-frame parallax-container">
+        <!-- Background Illustration Layer -->
+        <div class="hcm-header-bg parallax-layer" data-speed="0.5">
+            <svg class="hcm-illustration" viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="crmGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#14b8a6;stop-opacity:0.4" />
+                        <stop offset="100%" style="stop-color:#0d9488;stop-opacity:0.2" />
+                    </linearGradient>
+                </defs>
+
+                <!-- Grid Background -->
+                <g opacity="0.1">
+                    <line x1="0" y1="30" x2="1200" y2="30" stroke="#14b8a6" stroke-width="0.5"/>
+                    <line x1="0" y1="60" x2="1200" y2="60" stroke="#14b8a6" stroke-width="0.5"/>
+                    <line x1="0" y1="90" x2="1200" y2="90" stroke="#14b8a6" stroke-width="0.5"/>
+                    <line x1="200" y1="0" x2="200" y2="120" stroke="#14b8a6" stroke-width="0.5"/>
+                    <line x1="400" y1="0" x2="400" y2="120" stroke="#14b8a6" stroke-width="0.5"/>
+                    <line x1="600" y1="0" x2="600" y2="120" stroke="#14b8a6" stroke-width="0.5"/>
+                    <line x1="800" y1="0" x2="800" y2="120" stroke="#14b8a6" stroke-width="0.5"/>
+                    <line x1="1000" y1="0" x2="1000" y2="120" stroke="#14b8a6" stroke-width="0.5"/>
+                </g>
+
+                <!-- CRM Icons -->
+                <g class="people-animation">
+                    <!-- Handshake -->
+                    <path d="M 170,55 Q 180,50 190,55 L 200,60 Q 210,65 200,70 L 190,65 Q 180,60 175,65" fill="none" stroke="url(#crmGradient1)" stroke-width="3" opacity="0.6"/>
+                    <path d="M 210,55 Q 200,50 190,55" fill="none" stroke="url(#crmGradient1)" stroke-width="3" opacity="0.6"/>
+                    <circle cx="175" cy="50" r="6" fill="url(#crmGradient1)" opacity="0.5"/>
+                    <circle cx="205" cy="50" r="6" fill="url(#crmGradient1)" opacity="0.5"/>
+
+                    <!-- Target/Bullseye (Leads) -->
+                    <circle cx="400" cy="60" r="18" fill="none" stroke="url(#crmGradient1)" stroke-width="2" opacity="0.5"/>
+                    <circle cx="400" cy="60" r="12" fill="none" stroke="url(#crmGradient1)" stroke-width="2" opacity="0.6"/>
+                    <circle cx="400" cy="60" r="6" fill="url(#crmGradient1)" opacity="0.7"/>
+
+                    <!-- Funnel (Opportunities) -->
+                    <path d="M 580,45 L 620,45 L 610,65 L 590,65 Z" fill="url(#crmGradient1)" opacity="0.5"/>
+                    <rect x="593" y="65" width="14" height="15" rx="2" fill="url(#crmGradient1)" opacity="0.6"/>
+
+                    <!-- Person with Heart (Customer Care) -->
+                    <circle cx="795" cy="48" r="8" fill="url(#crmGradient1)" opacity="0.5"/>
+                    <path d="M 780,60 Q 795,75 810,60" fill="url(#crmGradient1)" opacity="0.4"/>
+                    <path d="M 790,70 L 795,78 L 800,70 Q 795,65 790,70" fill="#14b8a6" opacity="0.6"/>
+
+                    <!-- Growth Chart (Analytics) -->
+                    <rect x="975" y="60" width="8" height="20" rx="1" fill="url(#crmGradient1)" opacity="0.5"/>
+                    <rect x="988" y="50" width="8" height="30" rx="1" fill="url(#crmGradient1)" opacity="0.6"/>
+                    <rect x="1001" y="40" width="8" height="40" rx="1" fill="url(#crmGradient1)" opacity="0.7"/>
+                    <path d="M 979,58 L 992,48 L 1005,38" fill="none" stroke="#14b8a6" stroke-width="2" opacity="0.8"/>
+                </g>
+
+                <!-- Connection Lines -->
+                <path d="M 215,60 Q 300,45 380,55" fill="none" stroke="#14b8a6" stroke-width="1" opacity="0.3"/>
+                <path d="M 420,60 Q 500,75 580,55" fill="none" stroke="#14b8a6" stroke-width="1" opacity="0.3"/>
+                <path d="M 620,60 Q 700,45 780,55" fill="none" stroke="#14b8a6" stroke-width="1" opacity="0.3"/>
+                <path d="M 815,60 Q 895,75 975,55" fill="none" stroke="#14b8a6" stroke-width="1" opacity="0.3"/>
+
+                <!-- Animated Dots -->
+                <circle cx="300" cy="50" r="3" fill="#14b8a6" opacity="0.8">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="700" cy="50" r="3" fill="#14b8a6" opacity="0.8">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+
+        <!-- Header Content Layer -->
+        <div class="hcm-header-content parallax-layer" data-speed="1">
+            <div class="hcm-header-title">
+                <div class="hcm-icon">🤝</div>
+                <div>
+                    <h1 class="hcm-title">Customer Relationship Management</h1>
+                    <p class="hcm-subtitle">Leads, Opportunities, Accounts, Marketing, Service & Field Service</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module Tabs -->
+    <div class="hcm-module-tabs">
+        <button class="hcm-module-tab" data-module="leads">
+            <span class="tab-icon">🎯</span>
+            <span class="tab-label">Leads</span>
+        </button>
+        <button class="hcm-module-tab active" data-module="opportunities">
+            <span class="tab-icon">💼</span>
+            <span class="tab-label">Opportunities</span>
+        </button>
+        <button class="hcm-module-tab" data-module="accounts">
+            <span class="tab-icon">🏢</span>
+            <span class="tab-label">Accounts</span>
+        </button>
+        <button class="hcm-module-tab" data-module="marketing">
+            <span class="tab-icon">📣</span>
+            <span class="tab-label">Marketing</span>
+        </button>
+        <button class="hcm-module-tab" data-module="service">
+            <span class="tab-icon">🎧</span>
+            <span class="tab-label">Service</span>
+        </button>
+        <button class="hcm-module-tab" data-module="fieldservice">
+            <span class="tab-icon">🔧</span>
+            <span class="tab-label">Field Service</span>
+        </button>
+    </div>
+
     <div class="section-content">
-        <p class="section-description">Lead Management, Opportunity Tracking, Marketing Automation, Customer Service</p>
-        <div style="padding: 40px; text-align: center; color: #718096;">
-            <p style="font-size: 48px; margin-bottom: 20px;">🤝</p>
-            <p>This module is under development.</p>
-            <p style="margin-top: 10px; font-size: 12px;">360-degree customer view including lead tracking, sales pipeline, marketing campaigns, and customer support management.</p>
+        <!-- Leads Module -->
+        <div class="hcm-module-content" data-module="leads">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="leads"><span class="subnav-icon">🎯</span><span class="subnav-label">Leads</span></a>
+                <a class="hcm-subnav-item" data-service="lead-sources"><span class="subnav-icon">📍</span><span class="subnav-label">Lead Sources</span></a>
+                <a class="hcm-subnav-item" data-service="lead-scores"><span class="subnav-icon">📊</span><span class="subnav-label">Lead Scores</span></a>
+                <a class="hcm-subnav-item" data-service="lead-activities"><span class="subnav-icon">📝</span><span class="subnav-label">Activities</span></a>
+                <a class="hcm-subnav-item" data-service="lead-assigns"><span class="subnav-icon">👤</span><span class="subnav-label">Assignments</span></a>
+                <a class="hcm-subnav-item" data-service="lead-conversions"><span class="subnav-icon">🔄</span><span class="subnav-label">Conversions</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="leads"><div class="hcm-table-container" id="leads-leads-table-container"></div></div>
+                <div class="hcm-service-view" data-service="lead-sources"><div class="hcm-table-container" id="leads-lead-sources-table-container"></div></div>
+                <div class="hcm-service-view" data-service="lead-scores"><div class="hcm-table-container" id="leads-lead-scores-table-container"></div></div>
+                <div class="hcm-service-view" data-service="lead-activities"><div class="hcm-table-container" id="leads-lead-activities-table-container"></div></div>
+                <div class="hcm-service-view" data-service="lead-assigns"><div class="hcm-table-container" id="leads-lead-assigns-table-container"></div></div>
+                <div class="hcm-service-view" data-service="lead-conversions"><div class="hcm-table-container" id="leads-lead-conversions-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Opportunities Module -->
+        <div class="hcm-module-content active" data-module="opportunities">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="opportunities"><span class="subnav-icon">💼</span><span class="subnav-label">Opportunities</span></a>
+                <a class="hcm-subnav-item" data-service="opp-stages"><span class="subnav-icon">📈</span><span class="subnav-label">Stages</span></a>
+                <a class="hcm-subnav-item" data-service="opp-competitors"><span class="subnav-icon">🏁</span><span class="subnav-label">Competitors</span></a>
+                <a class="hcm-subnav-item" data-service="opp-products"><span class="subnav-icon">📦</span><span class="subnav-label">Products</span></a>
+                <a class="hcm-subnav-item" data-service="opp-teams"><span class="subnav-icon">👥</span><span class="subnav-label">Teams</span></a>
+                <a class="hcm-subnav-item" data-service="opp-activities"><span class="subnav-icon">📝</span><span class="subnav-label">Activities</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="opportunities"><div class="hcm-table-container" id="opportunities-opportunities-table-container"></div></div>
+                <div class="hcm-service-view" data-service="opp-stages"><div class="hcm-table-container" id="opportunities-opp-stages-table-container"></div></div>
+                <div class="hcm-service-view" data-service="opp-competitors"><div class="hcm-table-container" id="opportunities-opp-competitors-table-container"></div></div>
+                <div class="hcm-service-view" data-service="opp-products"><div class="hcm-table-container" id="opportunities-opp-products-table-container"></div></div>
+                <div class="hcm-service-view" data-service="opp-teams"><div class="hcm-table-container" id="opportunities-opp-teams-table-container"></div></div>
+                <div class="hcm-service-view" data-service="opp-activities"><div class="hcm-table-container" id="opportunities-opp-activities-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Accounts Module -->
+        <div class="hcm-module-content" data-module="accounts">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="accounts"><span class="subnav-icon">🏢</span><span class="subnav-label">Accounts</span></a>
+                <a class="hcm-subnav-item" data-service="contacts"><span class="subnav-icon">👤</span><span class="subnav-label">Contacts</span></a>
+                <a class="hcm-subnav-item" data-service="interactions"><span class="subnav-icon">💬</span><span class="subnav-label">Interactions</span></a>
+                <a class="hcm-subnav-item" data-service="relationships"><span class="subnav-icon">🔗</span><span class="subnav-label">Relationships</span></a>
+                <a class="hcm-subnav-item" data-service="health-scores"><span class="subnav-icon">❤️</span><span class="subnav-label">Health Scores</span></a>
+                <a class="hcm-subnav-item" data-service="account-plans"><span class="subnav-icon">📋</span><span class="subnav-label">Account Plans</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="accounts"><div class="hcm-table-container" id="accounts-accounts-table-container"></div></div>
+                <div class="hcm-service-view" data-service="contacts"><div class="hcm-table-container" id="accounts-contacts-table-container"></div></div>
+                <div class="hcm-service-view" data-service="interactions"><div class="hcm-table-container" id="accounts-interactions-table-container"></div></div>
+                <div class="hcm-service-view" data-service="relationships"><div class="hcm-table-container" id="accounts-relationships-table-container"></div></div>
+                <div class="hcm-service-view" data-service="health-scores"><div class="hcm-table-container" id="accounts-health-scores-table-container"></div></div>
+                <div class="hcm-service-view" data-service="account-plans"><div class="hcm-table-container" id="accounts-account-plans-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Marketing Module -->
+        <div class="hcm-module-content" data-module="marketing">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="campaigns"><span class="subnav-icon">📣</span><span class="subnav-label">Campaigns</span></a>
+                <a class="hcm-subnav-item" data-service="campaign-members"><span class="subnav-icon">👥</span><span class="subnav-label">Members</span></a>
+                <a class="hcm-subnav-item" data-service="email-templates"><span class="subnav-icon">📧</span><span class="subnav-label">Email Templates</span></a>
+                <a class="hcm-subnav-item" data-service="marketing-lists"><span class="subnav-icon">📋</span><span class="subnav-label">Marketing Lists</span></a>
+                <a class="hcm-subnav-item" data-service="campaign-responses"><span class="subnav-icon">💬</span><span class="subnav-label">Responses</span></a>
+                <a class="hcm-subnav-item" data-service="campaign-rois"><span class="subnav-icon">📊</span><span class="subnav-label">Campaign ROI</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="campaigns"><div class="hcm-table-container" id="marketing-campaigns-table-container"></div></div>
+                <div class="hcm-service-view" data-service="campaign-members"><div class="hcm-table-container" id="marketing-campaign-members-table-container"></div></div>
+                <div class="hcm-service-view" data-service="email-templates"><div class="hcm-table-container" id="marketing-email-templates-table-container"></div></div>
+                <div class="hcm-service-view" data-service="marketing-lists"><div class="hcm-table-container" id="marketing-marketing-lists-table-container"></div></div>
+                <div class="hcm-service-view" data-service="campaign-responses"><div class="hcm-table-container" id="marketing-campaign-responses-table-container"></div></div>
+                <div class="hcm-service-view" data-service="campaign-rois"><div class="hcm-table-container" id="marketing-campaign-rois-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Service Module -->
+        <div class="hcm-module-content" data-module="service">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="cases"><span class="subnav-icon">🎫</span><span class="subnav-label">Cases</span></a>
+                <a class="hcm-subnav-item" data-service="case-comments"><span class="subnav-icon">💬</span><span class="subnav-label">Comments</span></a>
+                <a class="hcm-subnav-item" data-service="kb-articles"><span class="subnav-icon">📚</span><span class="subnav-label">KB Articles</span></a>
+                <a class="hcm-subnav-item" data-service="slas"><span class="subnav-icon">⏱️</span><span class="subnav-label">SLAs</span></a>
+                <a class="hcm-subnav-item" data-service="escalations"><span class="subnav-icon">🚨</span><span class="subnav-label">Escalations</span></a>
+                <a class="hcm-subnav-item" data-service="surveys"><span class="subnav-icon">📝</span><span class="subnav-label">Surveys</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="cases"><div class="hcm-table-container" id="service-cases-table-container"></div></div>
+                <div class="hcm-service-view" data-service="case-comments"><div class="hcm-table-container" id="service-case-comments-table-container"></div></div>
+                <div class="hcm-service-view" data-service="kb-articles"><div class="hcm-table-container" id="service-kb-articles-table-container"></div></div>
+                <div class="hcm-service-view" data-service="slas"><div class="hcm-table-container" id="service-slas-table-container"></div></div>
+                <div class="hcm-service-view" data-service="escalations"><div class="hcm-table-container" id="service-escalations-table-container"></div></div>
+                <div class="hcm-service-view" data-service="surveys"><div class="hcm-table-container" id="service-surveys-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Field Service Module -->
+        <div class="hcm-module-content" data-module="fieldservice">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="service-orders"><span class="subnav-icon">📋</span><span class="subnav-label">Service Orders</span></a>
+                <a class="hcm-subnav-item" data-service="technicians"><span class="subnav-icon">👷</span><span class="subnav-label">Technicians</span></a>
+                <a class="hcm-subnav-item" data-service="service-contracts"><span class="subnav-icon">📄</span><span class="subnav-label">Contracts</span></a>
+                <a class="hcm-subnav-item" data-service="service-schedules"><span class="subnav-icon">📅</span><span class="subnav-label">Schedules</span></a>
+                <a class="hcm-subnav-item" data-service="service-parts"><span class="subnav-icon">🔩</span><span class="subnav-label">Parts</span></a>
+                <a class="hcm-subnav-item" data-service="service-visits"><span class="subnav-icon">🚗</span><span class="subnav-label">Visits</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="service-orders"><div class="hcm-table-container" id="fieldservice-service-orders-table-container"></div></div>
+                <div class="hcm-service-view" data-service="technicians"><div class="hcm-table-container" id="fieldservice-technicians-table-container"></div></div>
+                <div class="hcm-service-view" data-service="service-contracts"><div class="hcm-table-container" id="fieldservice-service-contracts-table-container"></div></div>
+                <div class="hcm-service-view" data-service="service-schedules"><div class="hcm-table-container" id="fieldservice-service-schedules-table-container"></div></div>
+                <div class="hcm-service-view" data-service="service-parts"><div class="hcm-table-container" id="fieldservice-service-parts-table-container"></div></div>
+                <div class="hcm-service-view" data-service="service-visits"><div class="hcm-table-container" id="fieldservice-service-visits-table-container"></div></div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Initialize CRM when section loads
+    if (typeof initializeCrm === 'function') {
+        initializeCrm();
+    } else if (typeof Crm !== 'undefined' && Crm.initialize) {
+        Crm.initialize();
+    }
+</script>

@@ -1,0 +1,163 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package crm;
+
+option go_package = "./types/crm";
+
+import "crm-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// LEAD MANAGEMENT MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// CrmLead represents a sales lead or prospect
+message CrmLead {
+  string lead_id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string email = 4;
+  string phone = 5;
+  string company = 6;
+  string title = 7;
+  string industry = 8;
+  string source_id = 9;                    // cross-ref: CrmLeadSource
+  CrmLeadStatus status = 10;
+  CrmLeadRating rating = 11;
+  string owner_id = 12;                    // cross-ref: HCM Employee
+  string description = 13;
+  string website = 14;
+  int32 employee_count = 15;
+  erp.Money annual_revenue = 16;
+  erp.Address address = 17;
+  int64 last_activity_date = 18;
+  int32 score = 19;
+  string campaign_id = 20;                 // cross-ref: CrmCampaign (optional)
+  map<string, string> custom_fields = 21;
+  erp.AuditInfo audit_info = 22;
+}
+
+message CrmLeadList {
+  repeated CrmLead list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmLeadSource represents a source of leads
+message CrmLeadSource {
+  string source_id = 1;
+  string name = 2;
+  string description = 3;
+  CrmLeadSourceType source_type = 4;
+  bool is_active = 5;
+  double default_cost = 6;
+  map<string, string> custom_fields = 7;
+  erp.AuditInfo audit_info = 8;
+}
+
+message CrmLeadSourceList {
+  repeated CrmLeadSource list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmLeadScore represents lead scoring rules and models
+message CrmLeadScore {
+  string score_id = 1;
+  string name = 2;
+  string description = 3;
+  string field_name = 4;
+  string field_value = 5;
+  int32 score_value = 6;
+  bool is_active = 7;
+  int32 priority = 8;
+  map<string, string> custom_fields = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message CrmLeadScoreList {
+  repeated CrmLeadScore list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmLeadActivity represents an activity on a lead
+message CrmLeadActivity {
+  string activity_id = 1;
+  string lead_id = 2;                      // cross-ref: CrmLead
+  CrmActivityType activity_type = 3;
+  string subject = 4;
+  string description = 5;
+  int64 activity_date = 6;
+  CrmActivityStatus status = 7;
+  string assigned_to = 8;                  // cross-ref: HCM Employee
+  int32 duration_minutes = 9;
+  string outcome = 10;
+  bool is_completed = 11;
+  map<string, string> custom_fields = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message CrmLeadActivityList {
+  repeated CrmLeadActivity list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmLeadAssign represents lead assignment rules
+message CrmLeadAssign {
+  string assignment_id = 1;
+  string name = 2;
+  string description = 3;
+  string criteria_field = 4;
+  string criteria_value = 5;
+  string assign_to_user_id = 6;            // cross-ref: HCM Employee
+  string assign_to_team_id = 7;
+  int32 priority = 8;
+  bool is_active = 9;
+  bool round_robin = 10;
+  map<string, string> custom_fields = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message CrmLeadAssignList {
+  repeated CrmLeadAssign list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmLeadConversion represents a lead conversion record
+message CrmLeadConversion {
+  string conversion_id = 1;
+  string lead_id = 2;                      // cross-ref: CrmLead
+  string account_id = 3;                   // cross-ref: CrmAccount
+  string contact_id = 4;                   // cross-ref: CrmContact
+  string opportunity_id = 5;               // cross-ref: CrmOpportunity (optional)
+  int64 conversion_date = 6;
+  string converted_by = 7;                 // cross-ref: HCM Employee
+  string notes = 8;
+  bool create_opportunity = 9;
+  map<string, string> custom_fields = 10;
+  erp.AuditInfo audit_info = 11;
+}
+
+message CrmLeadConversionList {
+  repeated CrmLeadConversion list = 1;
+  l8api.L8MetaData metadata = 2;
+}

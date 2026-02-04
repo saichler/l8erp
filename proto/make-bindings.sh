@@ -56,6 +56,15 @@ docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-quality.proto --mount type=bi
 docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-planning.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-costing.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
 
+# Customer Relationship Management
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-leads.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-opportunities.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-accounts.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-marketing.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-service.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-fieldservice.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+
 rm api.proto
 
 # Now move the generated bindings to the models directory and clean up
@@ -73,3 +82,4 @@ find . -name "*.go" -type f -exec sed -i 's|"./types/erp"|"github.com/saichler/l
 find . -name "*.go" -type f -exec sed -i 's|"./types/scm"|"github.com/saichler/l8erp/go/types/scm"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/sales"|"github.com/saichler/l8erp/go/types/sales"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/mfg"|"github.com/saichler/l8erp/go/types/mfg"|g' {} +
+find . -name "*.go" -type f -exec sed -i 's|"./types/crm"|"github.com/saichler/l8erp/go/types/crm"|g' {} +

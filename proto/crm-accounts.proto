@@ -1,0 +1,184 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package crm;
+
+option go_package = "./types/crm";
+
+import "crm-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// ACCOUNT MANAGEMENT MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// CrmAccount represents a customer or prospect account
+message CrmAccount {
+  string account_id = 1;
+  string name = 2;
+  CrmAccountType account_type = 3;
+  CrmAccountStatus status = 4;
+  string parent_account_id = 5;            // cross-ref: CrmAccount (self-reference)
+  string industry = 6;
+  string website = 7;
+  string phone = 8;
+  string fax = 9;
+  erp.Address billing_address = 10;
+  erp.Address shipping_address = 11;
+  int32 employee_count = 12;
+  erp.Money annual_revenue = 13;
+  string owner_id = 14;                    // cross-ref: HCM Employee
+  string description = 15;
+  string sic_code = 16;
+  string ticker_symbol = 17;
+  string customer_id = 18;                 // cross-ref: FIN Customer (optional)
+  int64 last_activity_date = 19;
+  map<string, string> custom_fields = 20;
+  erp.AuditInfo audit_info = 21;
+}
+
+message CrmAccountList {
+  repeated CrmAccount list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmContact represents a contact person at an account
+message CrmContact {
+  string contact_id = 1;
+  string account_id = 2;                   // cross-ref: CrmAccount
+  string first_name = 3;
+  string last_name = 4;
+  string title = 5;
+  string department = 6;
+  string email = 7;
+  string phone = 8;
+  string mobile = 9;
+  string fax = 10;
+  erp.Address mailing_address = 11;
+  string reports_to_id = 12;               // cross-ref: CrmContact (self-reference)
+  string owner_id = 13;                    // cross-ref: HCM Employee
+  bool is_primary = 14;
+  string description = 15;
+  int64 birthdate = 16;
+  bool do_not_call = 17;
+  bool do_not_email = 18;
+  string lead_source_id = 19;              // cross-ref: CrmLeadSource
+  int64 last_activity_date = 20;
+  map<string, string> custom_fields = 21;
+  erp.AuditInfo audit_info = 22;
+}
+
+message CrmContactList {
+  repeated CrmContact list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmInteraction represents an interaction with an account or contact
+message CrmInteraction {
+  string interaction_id = 1;
+  string account_id = 2;                   // cross-ref: CrmAccount
+  string contact_id = 3;                   // cross-ref: CrmContact
+  CrmInteractionType interaction_type = 4;
+  CrmInteractionDirection direction = 5;
+  string subject = 6;
+  string description = 7;
+  int64 interaction_date = 8;
+  int32 duration_minutes = 9;
+  string performed_by = 10;                // cross-ref: HCM Employee
+  string outcome = 11;
+  string case_id = 12;                     // cross-ref: CrmCase (optional)
+  string opportunity_id = 13;              // cross-ref: CrmOpportunity (optional)
+  map<string, string> custom_fields = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message CrmInteractionList {
+  repeated CrmInteraction list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmRelationship represents a relationship between accounts
+message CrmRelationship {
+  string relationship_id = 1;
+  string account_id = 2;                   // cross-ref: CrmAccount
+  string related_account_id = 3;           // cross-ref: CrmAccount
+  CrmRelationshipType relationship_type = 4;
+  string description = 5;
+  int64 start_date = 6;
+  int64 end_date = 7;
+  bool is_active = 8;
+  map<string, string> custom_fields = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message CrmRelationshipList {
+  repeated CrmRelationship list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmHealthScore represents a customer health score record
+message CrmHealthScore {
+  string score_id = 1;
+  string account_id = 2;                   // cross-ref: CrmAccount
+  CrmHealthStatus health_status = 3;
+  int32 overall_score = 4;
+  int32 engagement_score = 5;
+  int32 usage_score = 6;
+  int32 satisfaction_score = 7;
+  int32 financial_score = 8;
+  int64 score_date = 9;
+  string notes = 10;
+  string calculated_by = 11;               // cross-ref: HCM Employee or "System"
+  map<string, string> custom_fields = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message CrmHealthScoreList {
+  repeated CrmHealthScore list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmAccountPlan represents an account planning record
+message CrmAccountPlan {
+  string plan_id = 1;
+  string account_id = 2;                   // cross-ref: CrmAccount
+  string name = 3;
+  string fiscal_year = 4;
+  erp.Money revenue_target = 5;
+  erp.Money current_revenue = 6;
+  string objectives = 7;
+  string strategies = 8;
+  string action_items = 9;
+  string risks = 10;
+  string owner_id = 11;                    // cross-ref: HCM Employee
+  int64 start_date = 12;
+  int64 end_date = 13;
+  string status = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message CrmAccountPlanList {
+  repeated CrmAccountPlan list = 1;
+  l8api.L8MetaData metadata = 2;
+}

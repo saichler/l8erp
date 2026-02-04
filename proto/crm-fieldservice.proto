@@ -1,0 +1,188 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package crm;
+
+option go_package = "./types/crm";
+
+import "crm-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// FIELD SERVICE MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// CrmServiceOrder represents a field service work order
+message CrmServiceOrder {
+  string order_id = 1;
+  string order_number = 2;
+  CrmServiceOrderType order_type = 3;
+  CrmServiceOrderStatus status = 4;
+  CrmServiceOrderPriority priority = 5;
+  string account_id = 6;                   // cross-ref: CrmAccount
+  string contact_id = 7;                   // cross-ref: CrmContact
+  string case_id = 8;                      // cross-ref: CrmCase (optional)
+  string contract_id = 9;                  // cross-ref: CrmServiceContract (optional)
+  string description = 10;
+  erp.Address service_address = 11;
+  int64 scheduled_start = 12;
+  int64 scheduled_end = 13;
+  int64 actual_start = 14;
+  int64 actual_end = 15;
+  string technician_id = 16;               // cross-ref: CrmTechnician
+  string product_id = 17;                  // cross-ref: SCM Item (optional)
+  string serial_number = 18;
+  erp.Money estimated_cost = 19;
+  erp.Money actual_cost = 20;
+  string resolution = 21;
+  string owner_id = 22;                    // cross-ref: HCM Employee
+  map<string, string> custom_fields = 23;
+  erp.AuditInfo audit_info = 24;
+}
+
+message CrmServiceOrderList {
+  repeated CrmServiceOrder list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmTechnician represents a field service technician
+message CrmTechnician {
+  string technician_id = 1;
+  string employee_id = 2;                  // cross-ref: HCM Employee
+  string name = 3;
+  string email = 4;
+  string phone = 5;
+  CrmTechnicianStatus status = 6;
+  repeated string skills = 7;
+  string territory = 8;
+  erp.Address home_location = 9;
+  double hourly_rate = 10;
+  double overtime_rate = 11;
+  int32 max_daily_orders = 12;
+  bool is_active = 13;
+  map<string, string> custom_fields = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message CrmTechnicianList {
+  repeated CrmTechnician list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmServiceContract represents a service contract
+message CrmServiceContract {
+  string contract_id = 1;
+  string contract_number = 2;
+  string account_id = 3;                   // cross-ref: CrmAccount
+  CrmContractType contract_type = 4;
+  CrmContractStatus status = 5;
+  int64 start_date = 6;
+  int64 end_date = 7;
+  erp.Money contract_value = 8;
+  int32 included_hours = 9;
+  int32 used_hours = 10;
+  int32 included_visits = 11;
+  int32 used_visits = 12;
+  string sla_id = 13;                      // cross-ref: CrmSLA
+  string billing_frequency = 14;
+  string terms = 15;
+  string owner_id = 16;                    // cross-ref: HCM Employee
+  bool auto_renew = 17;
+  int32 renewal_notice_days = 18;
+  map<string, string> custom_fields = 19;
+  erp.AuditInfo audit_info = 20;
+}
+
+message CrmServiceContractList {
+  repeated CrmServiceContract list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmServiceSchedule represents a technician's schedule
+message CrmServiceSchedule {
+  string schedule_id = 1;
+  string technician_id = 2;                // cross-ref: CrmTechnician
+  int64 schedule_date = 3;
+  int64 start_time = 4;
+  int64 end_time = 5;
+  string schedule_type = 6;
+  bool is_available = 7;
+  string service_order_id = 8;             // cross-ref: CrmServiceOrder (optional)
+  string notes = 9;
+  map<string, string> custom_fields = 10;
+  erp.AuditInfo audit_info = 11;
+}
+
+message CrmServiceScheduleList {
+  repeated CrmServiceSchedule list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmServicePart represents a part used in a service order
+message CrmServicePart {
+  string part_id = 1;
+  string service_order_id = 2;             // cross-ref: CrmServiceOrder
+  string item_id = 3;                      // cross-ref: SCM Item
+  string item_name = 4;
+  double quantity = 5;
+  erp.Money unit_cost = 6;
+  erp.Money total_cost = 7;
+  string serial_number = 8;
+  bool is_warranty = 9;
+  string warehouse_id = 10;                // cross-ref: SCM Warehouse
+  string notes = 11;
+  map<string, string> custom_fields = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message CrmServicePartList {
+  repeated CrmServicePart list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmServiceVisit represents a field service visit
+message CrmServiceVisit {
+  string visit_id = 1;
+  string service_order_id = 2;             // cross-ref: CrmServiceOrder
+  string technician_id = 3;                // cross-ref: CrmTechnician
+  CrmVisitStatus status = 4;
+  int64 scheduled_arrival = 5;
+  int64 actual_arrival = 6;
+  int64 departure_time = 7;
+  double labor_hours = 8;
+  double travel_hours = 9;
+  double travel_distance = 10;
+  string work_performed = 11;
+  string customer_signature = 12;
+  int32 customer_rating = 13;
+  string customer_feedback = 14;
+  erp.Money labor_cost = 15;
+  erp.Money travel_cost = 16;
+  map<string, string> custom_fields = 17;
+  erp.AuditInfo audit_info = 18;
+}
+
+message CrmServiceVisitList {
+  repeated CrmServiceVisit list = 1;
+  l8api.L8MetaData metadata = 2;
+}

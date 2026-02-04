@@ -1,0 +1,167 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package crm;
+
+option go_package = "./types/crm";
+
+import "crm-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// MARKETING MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// CrmCampaign represents a marketing campaign
+message CrmCampaign {
+  string campaign_id = 1;
+  string name = 2;
+  CrmCampaignType campaign_type = 3;
+  CrmCampaignStatus status = 4;
+  string description = 5;
+  int64 start_date = 6;
+  int64 end_date = 7;
+  erp.Money budgeted_cost = 8;
+  erp.Money actual_cost = 9;
+  erp.Money expected_revenue = 10;
+  int32 expected_response_rate = 11;
+  int32 num_sent = 12;
+  int32 num_responses = 13;
+  string owner_id = 14;                    // cross-ref: HCM Employee
+  string parent_campaign_id = 15;          // cross-ref: CrmCampaign (self-reference)
+  bool is_active = 16;
+  map<string, string> custom_fields = 17;
+  erp.AuditInfo audit_info = 18;
+}
+
+message CrmCampaignList {
+  repeated CrmCampaign list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmCampaignMember represents a member/target of a campaign
+message CrmCampaignMember {
+  string member_id = 1;
+  string campaign_id = 2;                  // cross-ref: CrmCampaign
+  string lead_id = 3;                      // cross-ref: CrmLead (optional)
+  string contact_id = 4;                   // cross-ref: CrmContact (optional)
+  CrmCampaignMemberStatus status = 5;
+  int64 first_responded_date = 6;
+  bool has_responded = 7;
+  string source_list_id = 8;               // cross-ref: CrmMarketingList
+  map<string, string> custom_fields = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message CrmCampaignMemberList {
+  repeated CrmCampaignMember list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmEmailTemplate represents an email template
+message CrmEmailTemplate {
+  string template_id = 1;
+  string name = 2;
+  string description = 3;
+  string subject = 4;
+  string body_html = 5;
+  string body_text = 6;
+  string folder = 7;
+  bool is_active = 8;
+  string owner_id = 9;                     // cross-ref: HCM Employee
+  string template_type = 10;
+  int32 times_used = 11;
+  int64 last_used_date = 12;
+  map<string, string> custom_fields = 13;
+  erp.AuditInfo audit_info = 14;
+}
+
+message CrmEmailTemplateList {
+  repeated CrmEmailTemplate list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmMarketingList represents a marketing/mailing list
+message CrmMarketingList {
+  string list_id = 1;
+  string name = 2;
+  string description = 3;
+  string list_type = 4;
+  int32 member_count = 5;
+  string owner_id = 6;                     // cross-ref: HCM Employee
+  bool is_dynamic = 7;
+  string criteria = 8;
+  int64 last_used_date = 9;
+  bool is_active = 10;
+  map<string, string> custom_fields = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message CrmMarketingListList {
+  repeated CrmMarketingList list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmCampaignResponse represents a response to a campaign
+message CrmCampaignResponse {
+  string response_id = 1;
+  string campaign_id = 2;                  // cross-ref: CrmCampaign
+  string campaign_member_id = 3;           // cross-ref: CrmCampaignMember
+  CrmResponseType response_type = 4;
+  int64 response_date = 5;
+  string details = 6;
+  string lead_id = 7;                      // cross-ref: CrmLead (if created)
+  string opportunity_id = 8;               // cross-ref: CrmOpportunity (if created)
+  erp.Money revenue_value = 9;
+  map<string, string> custom_fields = 10;
+  erp.AuditInfo audit_info = 11;
+}
+
+message CrmCampaignResponseList {
+  repeated CrmCampaignResponse list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// CrmCampaignROI represents campaign ROI tracking
+message CrmCampaignROI {
+  string roi_id = 1;
+  string campaign_id = 2;                  // cross-ref: CrmCampaign
+  int64 calculation_date = 3;
+  erp.Money total_cost = 4;
+  erp.Money total_revenue = 5;
+  double roi_percentage = 6;
+  int32 leads_generated = 7;
+  int32 opportunities_created = 8;
+  int32 deals_won = 9;
+  erp.Money cost_per_lead = 10;
+  erp.Money cost_per_opportunity = 11;
+  double conversion_rate = 12;
+  string notes = 13;
+  map<string, string> custom_fields = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message CrmCampaignROIList {
+  repeated CrmCampaignROI list = 1;
+  l8api.L8MetaData metadata = 2;
+}

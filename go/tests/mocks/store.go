@@ -311,4 +311,56 @@ type MockDataStore struct {
 	MfgCostVarianceIDs  []string
 	MfgOverheadIDs      []string
 	MfgOverheadAllocIDs []string
+
+	// CRM Phase 1: Leads Foundation
+	CrmLeadSourceIDs []string
+	CrmLeadScoreIDs  []string
+	CrmLeadAssignIDs []string
+
+	// CRM Phase 2: Leads
+	CrmLeadIDs           []string
+	CrmLeadActivityIDs   []string
+	CrmLeadConversionIDs []string
+
+	// CRM Phase 3: Opportunities Foundation
+	CrmOppStageIDs []string
+
+	// CRM Phase 4: Opportunities
+	CrmOpportunityIDs   []string
+	CrmOppCompetitorIDs []string
+	CrmOppProductIDs    []string
+	CrmOppTeamIDs       []string
+	CrmOppActivityIDs   []string
+
+	// CRM Phase 5: Accounts
+	CrmAccountIDs      []string
+	CrmContactIDs      []string
+	CrmInteractionIDs  []string
+	CrmRelationshipIDs []string
+	CrmHealthScoreIDs  []string
+	CrmAccountPlanIDs  []string
+
+	// CRM Phase 6: Marketing
+	CrmCampaignIDs         []string
+	CrmCampaignMemberIDs   []string
+	CrmEmailTemplateIDs    []string
+	CrmMarketingListIDs    []string
+	CrmCampaignResponseIDs []string
+	CrmCampaignROIIDs      []string
+
+	// CRM Phase 7: Customer Service
+	CrmSLAIDs         []string
+	CrmEscalationIDs  []string
+	CrmCaseIDs        []string
+	CrmCaseCommentIDs []string
+	CrmKBArticleIDs   []string
+	CrmSurveyIDs      []string
+
+	// CRM Phase 8: Field Service
+	CrmTechnicianIDs       []string
+	CrmServiceContractIDs  []string
+	CrmServiceOrderIDs     []string
+	CrmServiceScheduleIDs  []string
+	CrmServicePartIDs      []string
+	CrmServiceVisitIDs     []string
 }

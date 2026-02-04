@@ -333,6 +333,70 @@ func main() {
 		os.Exit(1)
 	}
 
+	// CRM Module Phases
+	fmt.Printf("\nCRM Phase 1: Leads Foundation\n")
+	fmt.Printf("-----------------------------\n")
+	if err := generateCrmPhase1(client, store); err != nil {
+		fmt.Printf("CRM Phase 1 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nCRM Phase 2: Opportunity Stages\n")
+	fmt.Printf("--------------------------------\n")
+	if err := generateCrmPhase2(client, store); err != nil {
+		fmt.Printf("CRM Phase 2 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nCRM Phase 3: Accounts & Contacts\n")
+	fmt.Printf("---------------------------------\n")
+	if err := generateCrmPhase3(client, store); err != nil {
+		fmt.Printf("CRM Phase 3 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nCRM Phase 4: Marketing\n")
+	fmt.Printf("-----------------------\n")
+	if err := generateCrmPhase4(client, store); err != nil {
+		fmt.Printf("CRM Phase 4 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nCRM Phase 5: Leads\n")
+	fmt.Printf("------------------\n")
+	if err := generateCrmPhase5(client, store); err != nil {
+		fmt.Printf("CRM Phase 5 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nCRM Phase 6: Opportunities\n")
+	fmt.Printf("--------------------------\n")
+	if err := generateCrmPhase6(client, store); err != nil {
+		fmt.Printf("CRM Phase 6 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nCRM Phase 7: Account Management\n")
+	fmt.Printf("--------------------------------\n")
+	if err := generateCrmPhase7(client, store); err != nil {
+		fmt.Printf("CRM Phase 7 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nCRM Phase 8: Customer Service\n")
+	fmt.Printf("-----------------------------\n")
+	if err := generateCrmPhase8(client, store); err != nil {
+		fmt.Printf("CRM Phase 8 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nCRM Phase 9: Field Service\n")
+	fmt.Printf("--------------------------\n")
+	if err := generateCrmPhase9(client, store); err != nil {
+		fmt.Printf("CRM Phase 9 failed: %v\n", err)
+		os.Exit(1)
+	}
+
 	fmt.Printf("\n=======================\n")
 	fmt.Printf("Mock data generation complete!\n")
 	fmt.Printf("\nHCM Summary:\n")
@@ -400,4 +464,17 @@ func main() {
 	fmt.Printf("  - Capacity Plans: %d\n", len(store.MfgCapacityPlanIDs))
 	fmt.Printf("  - Standard Costs: %d\n", len(store.MfgStandardCostIDs))
 	fmt.Printf("  - Overheads: %d\n", len(store.MfgOverheadIDs))
+	fmt.Printf("\nCRM Summary:\n")
+	fmt.Printf("  - Lead Sources: %d\n", len(store.CrmLeadSourceIDs))
+	fmt.Printf("  - Leads: %d\n", len(store.CrmLeadIDs))
+	fmt.Printf("  - Accounts: %d\n", len(store.CrmAccountIDs))
+	fmt.Printf("  - Contacts: %d\n", len(store.CrmContactIDs))
+	fmt.Printf("  - Opportunities: %d\n", len(store.CrmOpportunityIDs))
+	fmt.Printf("  - Campaigns: %d\n", len(store.CrmCampaignIDs))
+	fmt.Printf("  - Cases: %d\n", len(store.CrmCaseIDs))
+	fmt.Printf("  - KB Articles: %d\n", len(store.CrmKBArticleIDs))
+	fmt.Printf("  - Technicians: %d\n", len(store.CrmTechnicianIDs))
+	fmt.Printf("  - Service Contracts: %d\n", len(store.CrmServiceContractIDs))
+	fmt.Printf("  - Service Orders: %d\n", len(store.CrmServiceOrderIDs))
+	fmt.Printf("  - Surveys: %d\n", len(store.CrmSurveyIDs))
 }

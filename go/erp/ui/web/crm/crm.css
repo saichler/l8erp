@@ -1,0 +1,162 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+/* CRM Module Styles */
+/* Uses shared HCM layout classes - minimal overrides needed */
+
+/* CRM-specific color accent (teal/blue for customer relationships) */
+.crm-section .hcm-header-frame {
+    background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%);
+}
+
+.crm-section .hcm-module-tab.active {
+    border-bottom-color: #14b8a6;
+    color: #14b8a6;
+}
+
+.crm-section .hcm-subnav-item.active {
+    color: #14b8a6;
+    border-bottom-color: #14b8a6;
+}
+
+/* Lead Status Colors */
+.crm-lead-status-new {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.crm-lead-status-contacted {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.crm-lead-status-qualified {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.crm-lead-status-unqualified {
+    background-color: #fecaca;
+    color: #991b1b;
+}
+
+.crm-lead-status-converted {
+    background-color: #bbf7d0;
+    color: #166534;
+}
+
+/* Opportunity Stage Colors */
+.crm-opp-stage-prospecting {
+    background-color: #e0e7ff;
+    color: #3730a3;
+}
+
+.crm-opp-stage-qualification {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.crm-opp-stage-proposal {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.crm-opp-stage-negotiation {
+    background-color: #fed7aa;
+    color: #9a3412;
+}
+
+.crm-opp-stage-closed-won {
+    background-color: #bbf7d0;
+    color: #166534;
+}
+
+.crm-opp-stage-closed-lost {
+    background-color: #fecaca;
+    color: #991b1b;
+}
+
+/* Case Priority Colors */
+.crm-case-priority-low {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+.crm-case-priority-medium {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.crm-case-priority-high {
+    background-color: #fed7aa;
+    color: #9a3412;
+}
+
+.crm-case-priority-critical {
+    background-color: #fecaca;
+    color: #991b1b;
+}
+
+/* Case Status Colors */
+.crm-case-status-open {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.crm-case-status-in-progress {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.crm-case-status-pending {
+    background-color: #e0e7ff;
+    color: #3730a3;
+}
+
+.crm-case-status-resolved {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.crm-case-status-closed {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+/* Health Score Colors */
+.crm-health-excellent {
+    background-color: #bbf7d0;
+    color: #166534;
+}
+
+.crm-health-good {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.crm-health-fair {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.crm-health-at-risk {
+    background-color: #fed7aa;
+    color: #9a3412;
+}
+
+.crm-health-critical {
+    background-color: #fecaca;
+    color: #991b1b;
+}
