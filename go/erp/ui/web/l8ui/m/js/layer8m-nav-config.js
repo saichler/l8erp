@@ -30,7 +30,7 @@ limitations under the License.
             { key: 'sales', label: 'Sales', icon: 'sales', hasSubModules: true },
             { key: 'crm', label: 'CRM', icon: 'crm', hasSubModules: true },
             { key: 'projects', label: 'Projects', icon: 'projects', hasSubModules: true },
-            { key: 'bi', label: 'Analytics', icon: 'bi', hasSubModules: true },
+            { key: 'bi', label: 'Business Intelligence', icon: 'bi', hasSubModules: true },
             { key: 'documents', label: 'Documents', icon: 'documents', hasSubModules: false },
             { key: 'ecommerce', label: 'E-Commerce', icon: 'ecommerce', hasSubModules: false },
             { key: 'compliance', label: 'Compliance', icon: 'compliance', hasSubModules: false },

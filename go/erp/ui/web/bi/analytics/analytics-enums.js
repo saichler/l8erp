@@ -110,6 +110,6 @@ limitations under the License.
     );
 
     BiAnalytics.render.date = Layer8DRenderers.renderDate;
-    BiAnalytics.render.percent = Layer8DRenderers.renderPercent;
+    BiAnalytics.render.percent = Layer8DRenderers.renderPercentage;
 
 })();

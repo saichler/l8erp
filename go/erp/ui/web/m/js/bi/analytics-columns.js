@@ -40,7 +40,7 @@ limitations under the License.
             { key: 'modelType', label: 'Type', sortKey: 'modelType', filterKey: 'modelType', enumValues: enums.MODEL_TYPE_VALUES, render: (item) => render.modelType(item.modelType) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.MODEL_STATUS_VALUES, render: (item) => render.modelStatus(item.status) },
             { key: 'algorithm', label: 'Algorithm', sortKey: 'algorithm' },
-            { key: 'accuracy', label: 'Accuracy', sortKey: 'accuracy', render: (item) => Layer8MRenderers.renderPercent(item.accuracy) },
+            { key: 'accuracy', label: 'Accuracy', sortKey: 'accuracy', render: (item) => Layer8MRenderers.renderPercentage(item.accuracy) },
             { key: 'trainingDate', label: 'Training Date', sortKey: 'trainingDate', render: (item) => Layer8MRenderers.renderDate(item.trainingDate) },
             { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' }
         ],
@@ -50,7 +50,7 @@ limitations under the License.
             { key: 'modelId', label: 'Model', sortKey: 'modelId', filterKey: 'modelId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'predictionDate', label: 'Prediction Date', sortKey: 'predictionDate', render: (item) => Layer8MRenderers.renderDate(item.predictionDate) },
-            { key: 'confidence', label: 'Confidence', sortKey: 'confidence', render: (item) => Layer8MRenderers.renderPercent(item.confidence) },
+            { key: 'confidence', label: 'Confidence', sortKey: 'confidence', render: (item) => Layer8MRenderers.renderPercentage(item.confidence) },
             { key: 'predictedBy', label: 'Predicted By', sortKey: 'predictedBy' },
             { key: 'notes', label: 'Notes', sortKey: 'notes' }
         ],
@@ -61,7 +61,7 @@ limitations under the License.
             { key: 'metric', label: 'Metric', sortKey: 'metric' },
             { key: 'timePeriod', label: 'Time Period', sortKey: 'timePeriod' },
             { key: 'direction', label: 'Direction', sortKey: 'direction', filterKey: 'direction', enumValues: enums.TREND_DIRECTION_VALUES, render: (item) => render.trendDirection(item.direction) },
-            { key: 'changePercent', label: 'Change %', sortKey: 'changePercent', render: (item) => Layer8MRenderers.renderPercent(item.changePercent) },
+            { key: 'changePercent', label: 'Change %', sortKey: 'changePercent', render: (item) => Layer8MRenderers.renderPercentage(item.changePercent) },
             { key: 'startDate', label: 'Start Date', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
             { key: 'endDate', label: 'End Date', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) }
         ],
@@ -84,7 +84,7 @@ limitations under the License.
             { key: 'metric', label: 'Metric', sortKey: 'metric' },
             { key: 'internalValue', label: 'Internal Value', sortKey: 'internalValue' },
             { key: 'benchmarkValue', label: 'Benchmark Value', sortKey: 'benchmarkValue' },
-            { key: 'variancePercent', label: 'Variance %', sortKey: 'variancePercent', render: (item) => Layer8MRenderers.renderPercent(item.variancePercent) },
+            { key: 'variancePercent', label: 'Variance %', sortKey: 'variancePercent', render: (item) => Layer8MRenderers.renderPercentage(item.variancePercent) },
             { key: 'industry', label: 'Industry', sortKey: 'industry' }
         ]
     };

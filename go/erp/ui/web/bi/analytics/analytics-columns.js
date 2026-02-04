@@ -19,7 +19,7 @@ limitations under the License.
 
     window.BiAnalytics = window.BiAnalytics || {};
 
-    const { renderDate, renderPercent } = Layer8DRenderers;
+    const { renderDate, renderPercentage } = Layer8DRenderers;
     const render = BiAnalytics.render;
 
     BiAnalytics.columns = {
@@ -64,7 +64,7 @@ limitations under the License.
                 key: 'accuracy',
                 label: 'Accuracy',
                 sortKey: 'accuracy',
-                render: (item) => renderPercent(item.accuracy)
+                render: (item) => renderPercentage(item.accuracy)
             },
             {
                 key: 'trainingDate',
@@ -89,7 +89,7 @@ limitations under the License.
                 key: 'confidence',
                 label: 'Confidence',
                 sortKey: 'confidence',
-                render: (item) => renderPercent(item.confidence)
+                render: (item) => renderPercentage(item.confidence)
             },
             { key: 'predictedBy', label: 'Predicted By', sortKey: 'predictedBy' },
             { key: 'notes', label: 'Notes', sortKey: 'notes' }
@@ -110,7 +110,7 @@ limitations under the License.
                 key: 'changePercent',
                 label: 'Change %',
                 sortKey: 'changePercent',
-                render: (item) => renderPercent(item.changePercent)
+                render: (item) => renderPercentage(item.changePercent)
             },
             {
                 key: 'startDate',
@@ -163,7 +163,7 @@ limitations under the License.
                 key: 'variancePercent',
                 label: 'Variance %',
                 sortKey: 'variancePercent',
-                render: (item) => renderPercent(item.variancePercent)
+                render: (item) => renderPercentage(item.variancePercent)
             },
             { key: 'industry', label: 'Industry', sortKey: 'industry' }
         ]
