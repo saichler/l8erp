@@ -26,7 +26,7 @@ limitations under the License.
             { key: 'financial', label: 'Financial', icon: 'financial', hasSubModules: true },
             { key: 'hcm', label: 'Human Capital', icon: 'hcm', hasSubModules: true },
             { key: 'scm', label: 'Supply Chain', icon: 'scm', hasSubModules: true },
-            { key: 'manufacturing', label: 'Manufacturing', icon: 'manufacturing', hasSubModules: false },
+            { key: 'manufacturing', label: 'Manufacturing', icon: 'manufacturing', hasSubModules: true },
             { key: 'sales', label: 'Sales', icon: 'sales', hasSubModules: true },
             { key: 'crm', label: 'CRM', icon: 'crm', hasSubModules: true },
             { key: 'projects', label: 'Projects', icon: 'projects', hasSubModules: true },
@@ -273,6 +273,70 @@ limitations under the License.
                     { key: 'supplier-collaborations', label: 'Collaborations', icon: 'supply-planning', endpoint: '/50/SupCollab', model: 'ScmSupplierCollaboration', idField: 'collaborationId' },
                     { key: 'safety-stocks', label: 'Safety Stock', icon: 'supply-planning', endpoint: '/50/SafeStock', model: 'ScmSafetyStock', idField: 'safetyStockId' },
                     { key: 'lead-times', label: 'Lead Times', icon: 'supply-planning', endpoint: '/50/LeadTime', model: 'ScmLeadTime', idField: 'leadTimeId' }
+                ]
+            }
+        },
+
+        // Manufacturing Sub-Modules (Level 2)
+        manufacturing: {
+            subModules: [
+                { key: 'engineering', label: 'Engineering', icon: 'manufacturing' },
+                { key: 'production', label: 'Production', icon: 'manufacturing' },
+                { key: 'shopfloor', label: 'Shop Floor', icon: 'manufacturing' },
+                { key: 'quality', label: 'Quality', icon: 'compliance' },
+                { key: 'planning', label: 'Planning', icon: 'demand-planning' },
+                { key: 'costing', label: 'Costing', icon: 'financial' }
+            ],
+
+            // Services for each sub-module (Level 3) - EXACT order from desktop mfg-config.js
+            services: {
+                'engineering': [
+                    { key: 'boms', label: 'BOMs', icon: 'documents', endpoint: '/70/MfgBom', model: 'MfgBom', idField: 'bomId' },
+                    { key: 'bom-lines', label: 'BOM Lines', icon: 'documents', endpoint: '/70/MfgBomLine', model: 'MfgBomLine', idField: 'lineId' },
+                    { key: 'routings', label: 'Routings', icon: 'scm', endpoint: '/70/MfgRouting', model: 'MfgRouting', idField: 'routingId' },
+                    { key: 'routing-ops', label: 'Routing Ops', icon: 'jobs', endpoint: '/70/MfgRtngOp', model: 'MfgRoutingOperation', idField: 'operationId' },
+                    { key: 'change-orders', label: 'Change Orders', icon: 'documents', endpoint: '/70/MfgECO', model: 'MfgEngChangeOrder', idField: 'changeOrderId' },
+                    { key: 'change-details', label: 'ECO Details', icon: 'documents', endpoint: '/70/MfgECODtl', model: 'MfgEngChangeDetail', idField: 'detailId' }
+                ],
+                'production': [
+                    { key: 'work-orders', label: 'Work Orders', icon: 'inventory', endpoint: '/70/MfgWorkOrd', model: 'MfgWorkOrder', idField: 'workOrderId' },
+                    { key: 'wo-operations', label: 'WO Operations', icon: 'jobs', endpoint: '/70/MfgWOOp', model: 'MfgWorkOrderOp', idField: 'operationId' },
+                    { key: 'prod-orders', label: 'Prod Orders', icon: 'documents', endpoint: '/70/MfgProdOrd', model: 'MfgProductionOrder', idField: 'prodOrderId' },
+                    { key: 'prod-lines', label: 'Prod Lines', icon: 'documents', endpoint: '/70/MfgPOLine', model: 'MfgProdOrderLine', idField: 'lineId' },
+                    { key: 'batches', label: 'Batches', icon: 'inventory', endpoint: '/70/MfgBatch', model: 'MfgProdBatch', idField: 'batchId' },
+                    { key: 'consumptions', label: 'Consumptions', icon: 'demand-planning', endpoint: '/70/MfgConsump', model: 'MfgProdConsumption', idField: 'consumptionId' }
+                ],
+                'shopfloor': [
+                    { key: 'work-centers', label: 'Work Centers', icon: 'manufacturing', endpoint: '/70/MfgWorkCtr', model: 'MfgWorkCenter', idField: 'workCenterId' },
+                    { key: 'wc-capacity', label: 'WC Capacity', icon: 'demand-planning', endpoint: '/70/MfgWCCap', model: 'MfgWorkCenterCap', idField: 'capacityId' },
+                    { key: 'labor', label: 'Labor Entries', icon: 'hcm', endpoint: '/70/MfgLabor', model: 'MfgLaborEntry', idField: 'entryId' },
+                    { key: 'machine', label: 'Machine Entries', icon: 'jobs', endpoint: '/70/MfgMachine', model: 'MfgMachineEntry', idField: 'entryId' },
+                    { key: 'shifts', label: 'Shift Schedules', icon: 'time', endpoint: '/70/MfgShift', model: 'MfgShiftSchedule', idField: 'scheduleId' },
+                    { key: 'downtime', label: 'Downtime', icon: 'time', endpoint: '/70/MfgDowntm', model: 'MfgDowntimeEvent', idField: 'eventId' }
+                ],
+                'quality': [
+                    { key: 'plans', label: 'Quality Plans', icon: 'documents', endpoint: '/70/MfgQCPlan', model: 'MfgQualityPlan', idField: 'planId' },
+                    { key: 'inspection-points', label: 'Insp Points', icon: 'talent', endpoint: '/70/MfgInspPt', model: 'MfgInspectionPoint', idField: 'pointId' },
+                    { key: 'inspections', label: 'Inspections', icon: 'compliance', endpoint: '/70/MfgQCInsp', model: 'MfgQualityInspection', idField: 'inspectionId' },
+                    { key: 'test-results', label: 'Test Results', icon: 'demand-planning', endpoint: '/70/MfgTestRes', model: 'MfgTestResult', idField: 'resultId' },
+                    { key: 'ncrs', label: 'NCRs', icon: 'compliance', endpoint: '/70/MfgNCR', model: 'MfgNCR', idField: 'ncrId' },
+                    { key: 'ncr-actions', label: 'NCR Actions', icon: 'documents', endpoint: '/70/MfgNCRAct', model: 'MfgNCRAction', idField: 'actionId' }
+                ],
+                'planning': [
+                    { key: 'mrp-runs', label: 'MRP Runs', icon: 'scm', endpoint: '/70/MfgMrpRun', model: 'MfgMrpRun', idField: 'runId' },
+                    { key: 'mrp-requirements', label: 'MRP Reqs', icon: 'documents', endpoint: '/70/MfgMrpReq', model: 'MfgMrpRequirement', idField: 'requirementId' },
+                    { key: 'capacity-plans', label: 'Capacity Plans', icon: 'demand-planning', endpoint: '/70/MfgCapPlan', model: 'MfgCapacityPlan', idField: 'planId' },
+                    { key: 'capacity-loads', label: 'Capacity Loads', icon: 'demand-planning', endpoint: '/70/MfgCapLoad', model: 'MfgCapacityLoad', idField: 'loadId' },
+                    { key: 'schedules', label: 'Prod Schedules', icon: 'time', endpoint: '/70/MfgProdSch', model: 'MfgProdSchedule', idField: 'scheduleId' },
+                    { key: 'schedule-blocks', label: 'Sched Blocks', icon: 'time', endpoint: '/70/MfgSchBlk', model: 'MfgScheduleBlock', idField: 'blockId' }
+                ],
+                'costing': [
+                    { key: 'standard-costs', label: 'Standard Costs', icon: 'financial', endpoint: '/70/MfgStdCost', model: 'MfgStandardCost', idField: 'costId' },
+                    { key: 'cost-rollups', label: 'Cost Rollups', icon: 'demand-planning', endpoint: '/70/MfgRollup', model: 'MfgCostRollup', idField: 'rollupId' },
+                    { key: 'actual-costs', label: 'Actual Costs', icon: 'financial', endpoint: '/70/MfgActCost', model: 'MfgActualCost', idField: 'actualCostId' },
+                    { key: 'variances', label: 'Variances', icon: 'demand-planning', endpoint: '/70/MfgCostVar', model: 'MfgCostVariance', idField: 'varianceId' },
+                    { key: 'overheads', label: 'Overheads', icon: 'organizations', endpoint: '/70/MfgOverhd', model: 'MfgOverhead', idField: 'overheadId' },
+                    { key: 'overhead-allocs', label: 'OH Allocations', icon: 'documents', endpoint: '/70/MfgOHAlloc', model: 'MfgOverheadAlloc', idField: 'allocationId' }
                 ]
             }
         },

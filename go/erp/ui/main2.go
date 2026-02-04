@@ -24,10 +24,10 @@ import (
 )
 
 func main() {
-	startWebServer(2773, "/data/probler")
+	startWebServer2(7773, "/data/erp")
 }
 
-func startWebServer(port int, cert string) {
+func startWebServer2(port int, cert string) {
 	serverConfig := &server.RestServerConfig{
 		Host:           ipsegment.MachineIP,
 		Port:           port,
