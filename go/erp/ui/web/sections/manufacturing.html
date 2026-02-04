@@ -12,14 +12,243 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<div class="section-container">
-    <h2 class="section-title">Manufacturing</h2>
+<div class="section-container hcm-section mfg-section">
+    <!-- Header with Parallax Effect -->
+    <div class="hcm-header-frame parallax-container">
+        <!-- Background Illustration Layer -->
+        <div class="hcm-header-bg parallax-layer" data-speed="0.5">
+            <svg class="hcm-illustration" viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="mfgGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.4" />
+                        <stop offset="100%" style="stop-color:#1e40af;stop-opacity:0.2" />
+                    </linearGradient>
+                </defs>
+
+                <!-- Grid Background -->
+                <g opacity="0.1">
+                    <line x1="0" y1="30" x2="1200" y2="30" stroke="#3b82f6" stroke-width="0.5"/>
+                    <line x1="0" y1="60" x2="1200" y2="60" stroke="#3b82f6" stroke-width="0.5"/>
+                    <line x1="0" y1="90" x2="1200" y2="90" stroke="#3b82f6" stroke-width="0.5"/>
+                    <line x1="200" y1="0" x2="200" y2="120" stroke="#3b82f6" stroke-width="0.5"/>
+                    <line x1="400" y1="0" x2="400" y2="120" stroke="#3b82f6" stroke-width="0.5"/>
+                    <line x1="600" y1="0" x2="600" y2="120" stroke="#3b82f6" stroke-width="0.5"/>
+                    <line x1="800" y1="0" x2="800" y2="120" stroke="#3b82f6" stroke-width="0.5"/>
+                    <line x1="1000" y1="0" x2="1000" y2="120" stroke="#3b82f6" stroke-width="0.5"/>
+                </g>
+
+                <!-- Manufacturing Icons -->
+                <g class="people-animation">
+                    <!-- Gear 1 -->
+                    <circle cx="190" cy="60" r="20" fill="none" stroke="url(#mfgGradient1)" stroke-width="3" opacity="0.6"/>
+                    <circle cx="190" cy="60" r="8" fill="url(#mfgGradient1)" opacity="0.4"/>
+
+                    <!-- Factory -->
+                    <rect x="375" y="40" width="50" height="40" rx="2" fill="url(#mfgGradient1)" opacity="0.5"/>
+                    <rect x="380" y="30" width="10" height="10" fill="url(#mfgGradient1)" opacity="0.6"/>
+                    <rect x="395" y="25" width="10" height="15" fill="url(#mfgGradient1)" opacity="0.6"/>
+                    <rect x="410" y="35" width="10" height="5" fill="url(#mfgGradient1)" opacity="0.6"/>
+
+                    <!-- Assembly Line -->
+                    <rect x="575" y="55" width="50" height="10" rx="2" fill="url(#mfgGradient1)" opacity="0.5"/>
+                    <circle cx="585" cy="60" r="6" fill="#3b82f6" opacity="0.6"/>
+                    <circle cx="600" cy="60" r="6" fill="#3b82f6" opacity="0.5"/>
+                    <circle cx="615" cy="60" r="6" fill="#3b82f6" opacity="0.4"/>
+
+                    <!-- Quality Check -->
+                    <rect x="775" y="45" width="30" height="30" rx="3" fill="url(#mfgGradient1)" opacity="0.5"/>
+                    <path d="M 782,60 L 788,66 L 798,54" fill="none" stroke="#fff" stroke-width="2" opacity="0.6"/>
+
+                    <!-- Chart/Planning -->
+                    <rect x="975" y="55" width="8" height="25" rx="1" fill="url(#mfgGradient1)" opacity="0.5"/>
+                    <rect x="988" y="45" width="8" height="35" rx="1" fill="url(#mfgGradient1)" opacity="0.6"/>
+                    <rect x="1001" y="50" width="8" height="30" rx="1" fill="url(#mfgGradient1)" opacity="0.7"/>
+                </g>
+
+                <!-- Connection Lines -->
+                <path d="M 210,60 Q 290,45 375,55" fill="none" stroke="#3b82f6" stroke-width="1" opacity="0.3"/>
+                <path d="M 425,60 Q 500,75 575,60" fill="none" stroke="#3b82f6" stroke-width="1" opacity="0.3"/>
+                <path d="M 625,60 Q 700,45 775,55" fill="none" stroke="#3b82f6" stroke-width="1" opacity="0.3"/>
+                <path d="M 805,60 Q 890,75 975,55" fill="none" stroke="#3b82f6" stroke-width="1" opacity="0.3"/>
+
+                <!-- Animated Dots -->
+                <circle cx="290" cy="52" r="3" fill="#3b82f6" opacity="0.8">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="700" cy="52" r="3" fill="#3b82f6" opacity="0.8">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+
+        <!-- Header Content Layer -->
+        <div class="hcm-header-content parallax-layer" data-speed="1">
+            <div class="hcm-header-title">
+                <div class="hcm-icon">🏭</div>
+                <div>
+                    <h1 class="hcm-title">Manufacturing</h1>
+                    <p class="hcm-subtitle">Engineering, Production, Shop Floor, Quality, Planning & Costing</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module Tabs -->
+    <div class="hcm-module-tabs">
+        <button class="hcm-module-tab" data-module="engineering">
+            <span class="tab-icon">📐</span>
+            <span class="tab-label">Engineering</span>
+        </button>
+        <button class="hcm-module-tab active" data-module="production">
+            <span class="tab-icon">🏭</span>
+            <span class="tab-label">Production</span>
+        </button>
+        <button class="hcm-module-tab" data-module="shopfloor">
+            <span class="tab-icon">🔧</span>
+            <span class="tab-label">Shop Floor</span>
+        </button>
+        <button class="hcm-module-tab" data-module="quality">
+            <span class="tab-icon">✅</span>
+            <span class="tab-label">Quality</span>
+        </button>
+        <button class="hcm-module-tab" data-module="planning">
+            <span class="tab-icon">📈</span>
+            <span class="tab-label">Planning</span>
+        </button>
+        <button class="hcm-module-tab" data-module="costing">
+            <span class="tab-icon">💰</span>
+            <span class="tab-label">Costing</span>
+        </button>
+    </div>
+
     <div class="section-content">
-        <p class="section-description">Bill of Materials, Production Planning, Shop Floor Control, Quality Management, Maintenance</p>
-        <div style="padding: 40px; text-align: center; color: #718096;">
-            <p style="font-size: 48px; margin-bottom: 20px;">🏭</p>
-            <p>This module is under development.</p>
-            <p style="margin-top: 10px; font-size: 12px;">Complete manufacturing execution including BOM management, production scheduling, shop floor tracking, quality assurance, and equipment maintenance.</p>
+        <!-- Engineering Module -->
+        <div class="hcm-module-content" data-module="engineering">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="boms"><span class="subnav-icon">📋</span><span class="subnav-label">BOMs</span></a>
+                <a class="hcm-subnav-item" data-service="bom-lines"><span class="subnav-icon">📝</span><span class="subnav-label">BOM Lines</span></a>
+                <a class="hcm-subnav-item" data-service="routings"><span class="subnav-icon">🔄</span><span class="subnav-label">Routings</span></a>
+                <a class="hcm-subnav-item" data-service="routing-ops"><span class="subnav-icon">⚙️</span><span class="subnav-label">Routing Ops</span></a>
+                <a class="hcm-subnav-item" data-service="change-orders"><span class="subnav-icon">📑</span><span class="subnav-label">Change Orders</span></a>
+                <a class="hcm-subnav-item" data-service="change-details"><span class="subnav-icon">📄</span><span class="subnav-label">ECO Details</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="boms"><div class="hcm-table-container" id="engineering-boms-table-container"></div></div>
+                <div class="hcm-service-view" data-service="bom-lines"><div class="hcm-table-container" id="engineering-bom-lines-table-container"></div></div>
+                <div class="hcm-service-view" data-service="routings"><div class="hcm-table-container" id="engineering-routings-table-container"></div></div>
+                <div class="hcm-service-view" data-service="routing-ops"><div class="hcm-table-container" id="engineering-routing-ops-table-container"></div></div>
+                <div class="hcm-service-view" data-service="change-orders"><div class="hcm-table-container" id="engineering-change-orders-table-container"></div></div>
+                <div class="hcm-service-view" data-service="change-details"><div class="hcm-table-container" id="engineering-change-details-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Production Module -->
+        <div class="hcm-module-content active" data-module="production">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="work-orders"><span class="subnav-icon">📦</span><span class="subnav-label">Work Orders</span></a>
+                <a class="hcm-subnav-item" data-service="wo-operations"><span class="subnav-icon">⚙️</span><span class="subnav-label">WO Operations</span></a>
+                <a class="hcm-subnav-item" data-service="prod-orders"><span class="subnav-icon">📋</span><span class="subnav-label">Prod Orders</span></a>
+                <a class="hcm-subnav-item" data-service="prod-lines"><span class="subnav-icon">📝</span><span class="subnav-label">Prod Lines</span></a>
+                <a class="hcm-subnav-item" data-service="batches"><span class="subnav-icon">📦</span><span class="subnav-label">Batches</span></a>
+                <a class="hcm-subnav-item" data-service="consumptions"><span class="subnav-icon">📉</span><span class="subnav-label">Consumptions</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="work-orders"><div class="hcm-table-container" id="production-work-orders-table-container"></div></div>
+                <div class="hcm-service-view" data-service="wo-operations"><div class="hcm-table-container" id="production-wo-operations-table-container"></div></div>
+                <div class="hcm-service-view" data-service="prod-orders"><div class="hcm-table-container" id="production-prod-orders-table-container"></div></div>
+                <div class="hcm-service-view" data-service="prod-lines"><div class="hcm-table-container" id="production-prod-lines-table-container"></div></div>
+                <div class="hcm-service-view" data-service="batches"><div class="hcm-table-container" id="production-batches-table-container"></div></div>
+                <div class="hcm-service-view" data-service="consumptions"><div class="hcm-table-container" id="production-consumptions-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Shop Floor Module -->
+        <div class="hcm-module-content" data-module="shopfloor">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="work-centers"><span class="subnav-icon">🏭</span><span class="subnav-label">Work Centers</span></a>
+                <a class="hcm-subnav-item" data-service="wc-capacity"><span class="subnav-icon">📊</span><span class="subnav-label">WC Capacity</span></a>
+                <a class="hcm-subnav-item" data-service="labor"><span class="subnav-icon">👷</span><span class="subnav-label">Labor Entries</span></a>
+                <a class="hcm-subnav-item" data-service="machine"><span class="subnav-icon">⚙️</span><span class="subnav-label">Machine Entries</span></a>
+                <a class="hcm-subnav-item" data-service="shifts"><span class="subnav-icon">📅</span><span class="subnav-label">Shift Schedules</span></a>
+                <a class="hcm-subnav-item" data-service="downtime"><span class="subnav-icon">⏸️</span><span class="subnav-label">Downtime</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="work-centers"><div class="hcm-table-container" id="shopfloor-work-centers-table-container"></div></div>
+                <div class="hcm-service-view" data-service="wc-capacity"><div class="hcm-table-container" id="shopfloor-wc-capacity-table-container"></div></div>
+                <div class="hcm-service-view" data-service="labor"><div class="hcm-table-container" id="shopfloor-labor-table-container"></div></div>
+                <div class="hcm-service-view" data-service="machine"><div class="hcm-table-container" id="shopfloor-machine-table-container"></div></div>
+                <div class="hcm-service-view" data-service="shifts"><div class="hcm-table-container" id="shopfloor-shifts-table-container"></div></div>
+                <div class="hcm-service-view" data-service="downtime"><div class="hcm-table-container" id="shopfloor-downtime-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Quality Module -->
+        <div class="hcm-module-content" data-module="quality">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="plans"><span class="subnav-icon">📋</span><span class="subnav-label">Quality Plans</span></a>
+                <a class="hcm-subnav-item" data-service="inspection-points"><span class="subnav-icon">🎯</span><span class="subnav-label">Insp Points</span></a>
+                <a class="hcm-subnav-item" data-service="inspections"><span class="subnav-icon">🔍</span><span class="subnav-label">Inspections</span></a>
+                <a class="hcm-subnav-item" data-service="test-results"><span class="subnav-icon">📊</span><span class="subnav-label">Test Results</span></a>
+                <a class="hcm-subnav-item" data-service="ncrs"><span class="subnav-icon">⚠️</span><span class="subnav-label">NCRs</span></a>
+                <a class="hcm-subnav-item" data-service="ncr-actions"><span class="subnav-icon">📝</span><span class="subnav-label">NCR Actions</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="plans"><div class="hcm-table-container" id="quality-plans-table-container"></div></div>
+                <div class="hcm-service-view" data-service="inspection-points"><div class="hcm-table-container" id="quality-inspection-points-table-container"></div></div>
+                <div class="hcm-service-view" data-service="inspections"><div class="hcm-table-container" id="quality-inspections-table-container"></div></div>
+                <div class="hcm-service-view" data-service="test-results"><div class="hcm-table-container" id="quality-test-results-table-container"></div></div>
+                <div class="hcm-service-view" data-service="ncrs"><div class="hcm-table-container" id="quality-ncrs-table-container"></div></div>
+                <div class="hcm-service-view" data-service="ncr-actions"><div class="hcm-table-container" id="quality-ncr-actions-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Planning Module -->
+        <div class="hcm-module-content" data-module="planning">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="mrp-runs"><span class="subnav-icon">🔄</span><span class="subnav-label">MRP Runs</span></a>
+                <a class="hcm-subnav-item" data-service="mrp-requirements"><span class="subnav-icon">📋</span><span class="subnav-label">MRP Reqs</span></a>
+                <a class="hcm-subnav-item" data-service="capacity-plans"><span class="subnav-icon">📊</span><span class="subnav-label">Capacity Plans</span></a>
+                <a class="hcm-subnav-item" data-service="capacity-loads"><span class="subnav-icon">📈</span><span class="subnav-label">Capacity Loads</span></a>
+                <a class="hcm-subnav-item" data-service="schedules"><span class="subnav-icon">📅</span><span class="subnav-label">Prod Schedules</span></a>
+                <a class="hcm-subnav-item" data-service="schedule-blocks"><span class="subnav-icon">🗓️</span><span class="subnav-label">Sched Blocks</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="mrp-runs"><div class="hcm-table-container" id="planning-mrp-runs-table-container"></div></div>
+                <div class="hcm-service-view" data-service="mrp-requirements"><div class="hcm-table-container" id="planning-mrp-requirements-table-container"></div></div>
+                <div class="hcm-service-view" data-service="capacity-plans"><div class="hcm-table-container" id="planning-capacity-plans-table-container"></div></div>
+                <div class="hcm-service-view" data-service="capacity-loads"><div class="hcm-table-container" id="planning-capacity-loads-table-container"></div></div>
+                <div class="hcm-service-view" data-service="schedules"><div class="hcm-table-container" id="planning-schedules-table-container"></div></div>
+                <div class="hcm-service-view" data-service="schedule-blocks"><div class="hcm-table-container" id="planning-schedule-blocks-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Costing Module -->
+        <div class="hcm-module-content" data-module="costing">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="standard-costs"><span class="subnav-icon">💵</span><span class="subnav-label">Standard Costs</span></a>
+                <a class="hcm-subnav-item" data-service="cost-rollups"><span class="subnav-icon">📊</span><span class="subnav-label">Cost Rollups</span></a>
+                <a class="hcm-subnav-item" data-service="actual-costs"><span class="subnav-icon">💰</span><span class="subnav-label">Actual Costs</span></a>
+                <a class="hcm-subnav-item" data-service="variances"><span class="subnav-icon">📉</span><span class="subnav-label">Variances</span></a>
+                <a class="hcm-subnav-item" data-service="overheads"><span class="subnav-icon">🏢</span><span class="subnav-label">Overheads</span></a>
+                <a class="hcm-subnav-item" data-service="overhead-allocs"><span class="subnav-icon">📋</span><span class="subnav-label">OH Allocations</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="standard-costs"><div class="hcm-table-container" id="costing-standard-costs-table-container"></div></div>
+                <div class="hcm-service-view" data-service="cost-rollups"><div class="hcm-table-container" id="costing-cost-rollups-table-container"></div></div>
+                <div class="hcm-service-view" data-service="actual-costs"><div class="hcm-table-container" id="costing-actual-costs-table-container"></div></div>
+                <div class="hcm-service-view" data-service="variances"><div class="hcm-table-container" id="costing-variances-table-container"></div></div>
+                <div class="hcm-service-view" data-service="overheads"><div class="hcm-table-container" id="costing-overheads-table-container"></div></div>
+                <div class="hcm-service-view" data-service="overhead-allocs"><div class="hcm-table-container" id="costing-overhead-allocs-table-container"></div></div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Initialize Manufacturing when section loads
+    if (typeof initializeMfg === 'function') {
+        initializeMfg();
+    } else if (typeof Mfg !== 'undefined' && Mfg.initialize) {
+        Mfg.initialize();
+    }
+</script>

@@ -47,6 +47,15 @@ docker run --user "$(id -u):$(id -g)" -e PROTO=sales-shipping.proto --mount type
 docker run --user "$(id -u):$(id -g)" -e PROTO=sales-billing.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=sales-analytics.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
 
+# Manufacturing
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-engineering.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-production.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-shopfloor.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-quality.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-planning.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-costing.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+
 rm api.proto
 
 # Now move the generated bindings to the models directory and clean up
@@ -63,3 +72,4 @@ find . -name "*.go" -type f -exec sed -i 's|"./types/l8api"|"github.com/saichler
 find . -name "*.go" -type f -exec sed -i 's|"./types/erp"|"github.com/saichler/l8erp/go/types/erp"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/scm"|"github.com/saichler/l8erp/go/types/scm"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/sales"|"github.com/saichler/l8erp/go/types/sales"|g' {} +
+find . -name "*.go" -type f -exec sed -i 's|"./types/mfg"|"github.com/saichler/l8erp/go/types/mfg"|g' {} +

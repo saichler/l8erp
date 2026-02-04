@@ -1,0 +1,174 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package mfg;
+
+option go_package = "./types/mfg";
+
+import "mfg-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// STANDARD COST MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgStandardCost represents standard costs for an item
+message MfgStandardCost {
+  string cost_id = 1;
+  string item_id = 2;                    // cross-ref: SCM Item
+  string cost_version = 3;
+  int64 effective_date = 4;
+  int64 expiry_date = 5;
+  erp.Money material_cost = 6;
+  erp.Money labor_cost = 7;
+  erp.Money overhead_cost = 8;
+  erp.Money outside_processing_cost = 9;
+  erp.Money total_cost = 10;
+  string currency_code = 11;
+  string cost_method = 12;               // STANDARD, ACTUAL, AVERAGE
+  bool is_current = 13;
+  string notes = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message MfgStandardCostList {
+  repeated MfgStandardCost list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgCostRollup represents a cost rollup calculation
+message MfgCostRollup {
+  string rollup_id = 1;
+  string rollup_number = 2;
+  string description = 3;
+  string cost_version = 4;
+  int64 effective_date = 5;
+  string status = 6;                     // DRAFT, COMPLETED, APPLIED
+  string run_by = 7;                     // cross-ref: HCM Employee
+  int64 run_date = 8;
+  int32 items_processed = 9;
+  int32 boms_processed = 10;
+  string notes = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message MfgCostRollupList {
+  repeated MfgCostRollup list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// ============================================================================
+// ACTUAL COST MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgActualCost represents actual costs for a work order
+message MfgActualCost {
+  string actual_cost_id = 1;
+  string work_order_id = 2;              // cross-ref: MfgWorkOrder
+  MfgCostType cost_type = 3;
+  string cost_element = 4;
+  erp.Money amount = 5;
+  double quantity = 6;
+  string unit_of_measure = 7;
+  erp.Money unit_cost = 8;
+  string source_type = 9;                // LABOR, MACHINE, MATERIAL, PO
+  string source_id = 10;                 // ID of source transaction
+  int64 transaction_date = 11;
+  string notes = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message MfgActualCostList {
+  repeated MfgActualCost list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgCostVariance represents cost variance analysis
+message MfgCostVariance {
+  string variance_id = 1;
+  string work_order_id = 2;              // cross-ref: MfgWorkOrder
+  MfgVarianceType variance_type = 3;
+  MfgCostType cost_type = 4;
+  erp.Money standard_cost = 5;
+  erp.Money actual_cost = 6;
+  erp.Money variance_amount = 7;
+  double variance_percent = 8;
+  string variance_reason = 9;
+  int64 analysis_date = 10;
+  string analyzed_by = 11;               // cross-ref: HCM Employee
+  string notes = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message MfgCostVarianceList {
+  repeated MfgCostVariance list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// ============================================================================
+// OVERHEAD MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgOverhead represents an overhead cost definition
+message MfgOverhead {
+  string overhead_id = 1;
+  string code = 2;
+  string name = 3;
+  string description = 4;
+  MfgOverheadMethod allocation_method = 5;
+  double rate = 6;
+  string rate_unit = 7;                  // PER_HOUR, PER_UNIT, PERCENT
+  string currency_code = 8;
+  string cost_center = 9;
+  bool is_active = 10;
+  int64 effective_date = 11;
+  int64 expiry_date = 12;
+  string notes = 13;
+  erp.AuditInfo audit_info = 14;
+}
+
+message MfgOverheadList {
+  repeated MfgOverhead list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgOverheadAlloc represents overhead allocation to a work order
+message MfgOverheadAlloc {
+  string allocation_id = 1;
+  string overhead_id = 2;                // cross-ref: MfgOverhead
+  string work_order_id = 3;              // cross-ref: MfgWorkOrder
+  string work_center_id = 4;             // cross-ref: MfgWorkCenter
+  double allocation_base = 5;            // hours, units, etc.
+  double rate = 6;
+  erp.Money allocated_amount = 7;
+  int64 allocation_date = 8;
+  string period = 9;                     // YYYY-MM format
+  string notes = 10;
+  erp.AuditInfo audit_info = 11;
+}
+
+message MfgOverheadAllocList {
+  repeated MfgOverheadAlloc list = 1;
+  l8api.L8MetaData metadata = 2;
+}

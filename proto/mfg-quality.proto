@@ -1,0 +1,195 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package mfg;
+
+option go_package = "./types/mfg";
+
+import "mfg-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// QUALITY PLAN MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgQualityPlan represents a quality control plan
+message MfgQualityPlan {
+  string plan_id = 1;
+  string plan_number = 2;
+  string name = 3;
+  string description = 4;
+  string item_id = 5;                    // cross-ref: SCM Item (optional)
+  string routing_id = 6;                 // cross-ref: MfgRouting (optional)
+  MfgBomStatus status = 7;
+  int64 effective_date = 8;
+  int64 expiry_date = 9;
+  string revision = 10;
+  string notes = 11;
+  map<string, string> custom_fields = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message MfgQualityPlanList {
+  repeated MfgQualityPlan list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgInspectionPoint represents an inspection point in a quality plan
+message MfgInspectionPoint {
+  string point_id = 1;
+  string plan_id = 2;                    // cross-ref: MfgQualityPlan
+  int32 sequence = 3;
+  string name = 4;
+  string description = 5;
+  MfgInspectionType inspection_type = 6;
+  string operation_id = 7;               // cross-ref: MfgRoutingOperation (optional)
+  string characteristic = 8;
+  string specification = 9;
+  double lower_limit = 10;
+  double upper_limit = 11;
+  string unit_of_measure = 12;
+  string sampling_method = 13;
+  int32 sample_size = 14;
+  bool is_mandatory = 15;
+  string notes = 16;
+  erp.AuditInfo audit_info = 17;
+}
+
+message MfgInspectionPointList {
+  repeated MfgInspectionPoint list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// ============================================================================
+// QUALITY INSPECTION MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgQualityInspection represents a quality inspection record
+message MfgQualityInspection {
+  string inspection_id = 1;
+  string inspection_number = 2;
+  string plan_id = 3;                    // cross-ref: MfgQualityPlan
+  string work_order_id = 4;              // cross-ref: MfgWorkOrder (optional)
+  string item_id = 5;                    // cross-ref: SCM Item
+  string lot_number = 6;
+  double quantity_inspected = 7;
+  double quantity_accepted = 8;
+  double quantity_rejected = 9;
+  MfgInspectionType inspection_type = 10;
+  MfgInspectionResult overall_result = 11;
+  string inspector_id = 12;              // cross-ref: HCM Employee
+  int64 inspection_date = 13;
+  int64 completed_date = 14;
+  string warehouse_id = 15;              // cross-ref: SCM Warehouse
+  string notes = 16;
+  map<string, string> custom_fields = 17;
+  erp.AuditInfo audit_info = 18;
+}
+
+message MfgQualityInspectionList {
+  repeated MfgQualityInspection list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgTestResult represents a test result for an inspection point
+message MfgTestResult {
+  string result_id = 1;
+  string inspection_id = 2;              // cross-ref: MfgQualityInspection
+  string point_id = 3;                   // cross-ref: MfgInspectionPoint
+  int32 sample_number = 4;
+  double measured_value = 5;
+  string text_value = 6;
+  MfgInspectionResult result = 7;
+  bool is_in_spec = 8;
+  string tester_id = 9;                  // cross-ref: HCM Employee
+  int64 test_date = 10;
+  string equipment_id = 11;
+  string notes = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message MfgTestResultList {
+  repeated MfgTestResult list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// ============================================================================
+// NON-CONFORMANCE REPORT (NCR) MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgNCR represents a non-conformance report
+message MfgNCR {
+  string ncr_id = 1;
+  string ncr_number = 2;
+  string title = 3;
+  string description = 4;
+  string inspection_id = 5;              // cross-ref: MfgQualityInspection (optional)
+  string work_order_id = 6;              // cross-ref: MfgWorkOrder (optional)
+  string item_id = 7;                    // cross-ref: SCM Item
+  string lot_number = 8;
+  double quantity_affected = 9;
+  MfgNCRSeverity severity = 10;
+  MfgNCRStatus status = 11;
+  MfgNCRDisposition disposition = 12;
+  string defect_code = 13;
+  string root_cause = 14;
+  string corrective_action = 15;
+  string reported_by = 16;               // cross-ref: HCM Employee
+  int64 reported_date = 17;
+  string assigned_to = 18;               // cross-ref: HCM Employee
+  int64 due_date = 19;
+  int64 closed_date = 20;
+  erp.Money estimated_cost = 21;
+  erp.Money actual_cost = 22;
+  string notes = 23;
+  map<string, string> custom_fields = 24;
+  erp.AuditInfo audit_info = 25;
+}
+
+message MfgNCRList {
+  repeated MfgNCR list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgNCRAction represents an action item for an NCR
+message MfgNCRAction {
+  string action_id = 1;
+  string ncr_id = 2;                     // cross-ref: MfgNCR
+  int32 action_number = 3;
+  string action_type = 4;                // CORRECTIVE, PREVENTIVE, CONTAINMENT
+  string description = 5;
+  string assigned_to = 6;                // cross-ref: HCM Employee
+  int64 due_date = 7;
+  int64 completed_date = 8;
+  string status = 9;                     // OPEN, IN_PROGRESS, COMPLETED, VERIFIED
+  string verification_notes = 10;
+  string verified_by = 11;               // cross-ref: HCM Employee
+  int64 verified_date = 12;
+  string notes = 13;
+  erp.AuditInfo audit_info = 14;
+}
+
+message MfgNCRActionList {
+  repeated MfgNCRAction list = 1;
+  l8api.L8MetaData metadata = 2;
+}

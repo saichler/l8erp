@@ -1,0 +1,84 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+/* Manufacturing Module Styles */
+/* Uses shared HCM layout classes - minimal overrides needed */
+
+/* Manufacturing-specific color accent (industrial blue-gray) */
+.mfg-section .hcm-header-frame {
+    background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
+}
+
+.mfg-section .hcm-module-tab.active {
+    border-bottom-color: #3b82f6;
+    color: #3b82f6;
+}
+
+.mfg-section .hcm-subnav-item.active {
+    color: #3b82f6;
+    border-bottom-color: #3b82f6;
+}
+
+/* Work Order Status Colors */
+.mfg-wo-status-planned {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.mfg-wo-status-released {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.mfg-wo-status-in-progress {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.mfg-wo-status-on-hold {
+    background-color: #fed7aa;
+    color: #9a3412;
+}
+
+.mfg-wo-status-completed {
+    background-color: #bbf7d0;
+    color: #166534;
+}
+
+.mfg-wo-status-closed {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+.mfg-wo-status-cancelled {
+    background-color: #fecaca;
+    color: #991b1b;
+}
+
+/* Quality Status Colors */
+.mfg-quality-pass {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.mfg-quality-fail {
+    background-color: #fecaca;
+    color: #991b1b;
+}
+
+.mfg-quality-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}

@@ -1,0 +1,178 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package mfg;
+
+option go_package = "./types/mfg";
+
+import "mfg-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// WORK CENTER MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgWorkCenter represents a work center/machine/station
+message MfgWorkCenter {
+  string work_center_id = 1;
+  string code = 2;
+  string name = 3;
+  string description = 4;
+  MfgWorkCenterType work_center_type = 5;
+  string department_id = 6;              // cross-ref: HCM Department
+  string warehouse_id = 7;               // cross-ref: SCM Warehouse
+  double hourly_rate = 8;
+  string currency_code = 9;
+  int32 capacity_units = 10;
+  double efficiency_percent = 11;
+  double utilization_percent = 12;
+  bool is_active = 13;
+  string notes = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message MfgWorkCenterList {
+  repeated MfgWorkCenter list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgWorkCenterCap represents work center capacity
+message MfgWorkCenterCap {
+  string capacity_id = 1;
+  string work_center_id = 2;             // cross-ref: MfgWorkCenter
+  int64 effective_date = 3;
+  int64 expiry_date = 4;
+  double available_hours = 5;
+  double capacity_units = 6;
+  string shift_id = 7;                   // cross-ref: MfgShiftSchedule
+  int32 day_of_week = 8;                 // 0=Sunday, 6=Saturday
+  string notes = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message MfgWorkCenterCapList {
+  repeated MfgWorkCenterCap list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// ============================================================================
+// LABOR AND MACHINE ENTRY MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgLaborEntry represents labor time recording
+message MfgLaborEntry {
+  string entry_id = 1;
+  string work_order_id = 2;              // cross-ref: MfgWorkOrder
+  string operation_id = 3;               // cross-ref: MfgWorkOrderOp
+  string employee_id = 4;                // cross-ref: HCM Employee
+  string work_center_id = 5;             // cross-ref: MfgWorkCenter
+  int64 start_time = 6;
+  int64 end_time = 7;
+  double hours_worked = 8;
+  double quantity_completed = 9;
+  double quantity_scrapped = 10;
+  string labor_type = 11;                // DIRECT, INDIRECT, SETUP
+  double hourly_rate = 12;
+  erp.Money labor_cost = 13;
+  string notes = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message MfgLaborEntryList {
+  repeated MfgLaborEntry list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgMachineEntry represents machine time recording
+message MfgMachineEntry {
+  string entry_id = 1;
+  string work_order_id = 2;              // cross-ref: MfgWorkOrder
+  string operation_id = 3;               // cross-ref: MfgWorkOrderOp
+  string work_center_id = 4;             // cross-ref: MfgWorkCenter
+  int64 start_time = 5;
+  int64 end_time = 6;
+  double machine_hours = 7;
+  double quantity_completed = 8;
+  double quantity_scrapped = 9;
+  string machine_status = 10;            // RUNNING, IDLE, SETUP
+  double hourly_rate = 11;
+  erp.Money machine_cost = 12;
+  string operator_id = 13;               // cross-ref: HCM Employee
+  string notes = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message MfgMachineEntryList {
+  repeated MfgMachineEntry list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// ============================================================================
+// SHIFT AND DOWNTIME MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgShiftSchedule represents a shift schedule definition
+message MfgShiftSchedule {
+  string schedule_id = 1;
+  string name = 2;
+  string description = 3;
+  MfgShiftType shift_type = 4;
+  string start_time = 5;                 // HH:MM format
+  string end_time = 6;                   // HH:MM format
+  double break_duration = 7;             // minutes
+  bool is_overnight = 8;
+  bool is_active = 9;
+  int64 effective_date = 10;
+  int64 expiry_date = 11;
+  string notes = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message MfgShiftScheduleList {
+  repeated MfgShiftSchedule list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgDowntimeEvent represents a downtime event
+message MfgDowntimeEvent {
+  string event_id = 1;
+  string work_center_id = 2;             // cross-ref: MfgWorkCenter
+  string work_order_id = 3;              // cross-ref: MfgWorkOrder (optional)
+  MfgDowntimeType downtime_type = 4;
+  string reason_code = 5;
+  string description = 6;
+  int64 start_time = 7;
+  int64 end_time = 8;
+  double duration_minutes = 9;
+  string reported_by = 10;               // cross-ref: HCM Employee
+  string resolved_by = 11;               // cross-ref: HCM Employee
+  erp.Money estimated_loss = 12;
+  string notes = 13;
+  erp.AuditInfo audit_info = 14;
+}
+
+message MfgDowntimeEventList {
+  repeated MfgDowntimeEvent list = 1;
+  l8api.L8MetaData metadata = 2;
+}

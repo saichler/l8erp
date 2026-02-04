@@ -257,8 +257,58 @@ type MockDataStore struct {
 
 	// Sales Phase 8: Analytics
 	SalesCommissionPlanIDs []string
-	SalesCommissionCalcIDs []string
+	SalesCommissionCalcIDs  []string
 	SalesTerritoryAssignIDs []string
 	SalesTargetIDs          []string
 	SalesForecastIDs        []string
+
+	// MFG Phase 1: Foundation (Shop Floor & Engineering)
+	MfgWorkCenterIDs     []string
+	MfgWorkCenterCapIDs  []string
+	MfgShiftScheduleIDs  []string
+	MfgBomIDs            []string
+	MfgBomLineIDs        []string
+	MfgRoutingIDs        []string
+	MfgRoutingOpIDs      []string
+
+	// MFG Phase 2: Engineering Change & Quality Plans
+	MfgEngChangeOrderIDs  []string
+	MfgEngChangeDetailIDs []string
+	MfgQualityPlanIDs     []string
+	MfgInspectionPointIDs []string
+
+	// MFG Phase 3: Work Orders & Production
+	MfgWorkOrderIDs      []string
+	MfgWorkOrderOpIDs    []string
+	MfgProductionOrderIDs []string
+	MfgProdOrderLineIDs  []string
+	MfgProdBatchIDs      []string
+
+	// MFG Phase 4: Shop Floor Transactions
+	MfgLaborEntryIDs    []string
+	MfgMachineEntryIDs  []string
+	MfgDowntimeEventIDs []string
+	MfgProdConsumpIDs   []string
+
+	// MFG Phase 5: Quality Transactions
+	MfgQualityInspectionIDs []string
+	MfgTestResultIDs        []string
+	MfgNCRIDs               []string
+	MfgNCRActionIDs         []string
+
+	// MFG Phase 6: Planning
+	MfgMrpRunIDs         []string
+	MfgMrpRequirementIDs []string
+	MfgCapacityPlanIDs   []string
+	MfgCapacityLoadIDs   []string
+	MfgProdScheduleIDs   []string
+	MfgScheduleBlockIDs  []string
+
+	// MFG Phase 7: Costing
+	MfgStandardCostIDs  []string
+	MfgCostRollupIDs    []string
+	MfgActualCostIDs    []string
+	MfgCostVarianceIDs  []string
+	MfgOverheadIDs      []string
+	MfgOverheadAllocIDs []string
 }

@@ -1,0 +1,183 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package mfg;
+
+option go_package = "./types/mfg";
+
+import "mfg-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// BILL OF MATERIALS (BOM) MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgBom represents a bill of materials for a manufactured item
+message MfgBom {
+  string bom_id = 1;
+  string bom_number = 2;
+  string item_id = 3;                    // cross-ref: SCM Item (finished good)
+  string description = 4;
+  MfgBomType bom_type = 5;
+  MfgBomStatus status = 6;
+  string revision = 7;
+  int64 effective_date = 8;
+  int64 expiry_date = 9;
+  double base_quantity = 10;
+  string unit_of_measure = 11;
+  string notes = 12;
+  map<string, string> custom_fields = 13;
+  erp.AuditInfo audit_info = 14;
+}
+
+message MfgBomList {
+  repeated MfgBom list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgBomLine represents a component line in a BOM
+message MfgBomLine {
+  string line_id = 1;
+  string bom_id = 2;                     // cross-ref: MfgBom
+  int32 line_number = 3;
+  string component_item_id = 4;          // cross-ref: SCM Item
+  string description = 5;
+  double quantity_per = 6;
+  string unit_of_measure = 7;
+  double scrap_percent = 8;
+  string operation_id = 9;               // cross-ref: MfgRoutingOperation
+  bool is_critical = 10;
+  string substitute_item_id = 11;        // cross-ref: SCM Item (optional)
+  int64 effective_date = 12;
+  int64 expiry_date = 13;
+  string notes = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message MfgBomLineList {
+  repeated MfgBomLine list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// ============================================================================
+// ROUTING MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgRouting represents a manufacturing routing/process
+message MfgRouting {
+  string routing_id = 1;
+  string routing_number = 2;
+  string item_id = 3;                    // cross-ref: SCM Item
+  string description = 4;
+  string revision = 5;
+  MfgBomStatus status = 6;
+  int64 effective_date = 7;
+  int64 expiry_date = 8;
+  double base_quantity = 9;
+  string unit_of_measure = 10;
+  string notes = 11;
+  map<string, string> custom_fields = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message MfgRoutingList {
+  repeated MfgRouting list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgRoutingOperation represents an operation step in a routing
+message MfgRoutingOperation {
+  string operation_id = 1;
+  string routing_id = 2;                 // cross-ref: MfgRouting
+  int32 operation_number = 3;
+  string operation_name = 4;
+  string description = 5;
+  string work_center_id = 6;             // cross-ref: MfgWorkCenter
+  double setup_time = 7;                 // minutes
+  double run_time = 8;                   // minutes per unit
+  double queue_time = 9;                 // minutes
+  double move_time = 10;                 // minutes
+  string time_unit = 11;
+  int32 overlap_percent = 12;
+  bool is_subcontract = 13;
+  string vendor_id = 14;                 // cross-ref: FIN Vendor (if subcontract)
+  string quality_plan_id = 15;           // cross-ref: MfgQualityPlan
+  string notes = 16;
+  erp.AuditInfo audit_info = 17;
+}
+
+message MfgRoutingOperationList {
+  repeated MfgRoutingOperation list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// ============================================================================
+// ENGINEERING CHANGE MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgEngChangeOrder represents an engineering change order (ECO)
+message MfgEngChangeOrder {
+  string change_order_id = 1;
+  string eco_number = 2;
+  string title = 3;
+  string description = 4;
+  MfgChangeOrderStatus status = 5;
+  string reason = 6;
+  int32 priority = 7;
+  string requested_by = 8;               // cross-ref: HCM Employee
+  int64 request_date = 9;
+  int64 required_date = 10;
+  int64 approval_date = 11;
+  string approved_by = 12;               // cross-ref: HCM Employee
+  int64 implementation_date = 13;
+  erp.Money estimated_cost = 14;
+  erp.Money actual_cost = 15;
+  string notes = 16;
+  map<string, string> custom_fields = 17;
+  erp.AuditInfo audit_info = 18;
+}
+
+message MfgEngChangeOrderList {
+  repeated MfgEngChangeOrder list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgEngChangeDetail represents a detail line of an engineering change
+message MfgEngChangeDetail {
+  string detail_id = 1;
+  string change_order_id = 2;            // cross-ref: MfgEngChangeOrder
+  MfgChangeType change_type = 3;
+  string affected_id = 4;                // ID of affected BOM/Routing/Item
+  string description = 5;
+  string old_value = 6;
+  string new_value = 7;
+  string old_revision = 8;
+  string new_revision = 9;
+  string notes = 10;
+  erp.AuditInfo audit_info = 11;
+}
+
+message MfgEngChangeDetailList {
+  repeated MfgEngChangeDetail list = 1;
+  l8api.L8MetaData metadata = 2;
+}

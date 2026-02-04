@@ -1,0 +1,192 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package mfg;
+
+option go_package = "./types/mfg";
+
+import "mfg-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// WORK ORDER MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgWorkOrder represents a manufacturing work order
+message MfgWorkOrder {
+  string work_order_id = 1;
+  string work_order_number = 2;
+  string item_id = 3;                    // cross-ref: SCM Item (finished good)
+  string bom_id = 4;                     // cross-ref: MfgBom
+  string routing_id = 5;                 // cross-ref: MfgRouting
+  double quantity_ordered = 6;
+  double quantity_completed = 7;
+  double quantity_scrapped = 8;
+  int64 planned_start_date = 9;
+  int64 planned_end_date = 10;
+  int64 actual_start_date = 11;
+  int64 actual_end_date = 12;
+  MfgWorkOrderStatus status = 13;
+  string warehouse_id = 14;              // cross-ref: SCM Warehouse
+  string work_center_id = 15;            // cross-ref: MfgWorkCenter
+  string sales_order_id = 16;            // cross-ref: Sales Order (for MTO)
+  int32 priority = 17;
+  erp.Money estimated_cost = 18;
+  erp.Money actual_cost = 19;
+  string notes = 20;
+  map<string, string> custom_fields = 21;
+  erp.AuditInfo audit_info = 22;
+}
+
+message MfgWorkOrderList {
+  repeated MfgWorkOrder list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgWorkOrderOp represents an operation on a work order
+message MfgWorkOrderOp {
+  string operation_id = 1;
+  string work_order_id = 2;              // cross-ref: MfgWorkOrder
+  int32 operation_number = 3;
+  string operation_name = 4;
+  string work_center_id = 5;             // cross-ref: MfgWorkCenter
+  string routing_operation_id = 6;       // cross-ref: MfgRoutingOperation
+  MfgOperationStatus status = 7;
+  double setup_time_planned = 8;
+  double setup_time_actual = 9;
+  double run_time_planned = 10;
+  double run_time_actual = 11;
+  double quantity_completed = 12;
+  double quantity_scrapped = 13;
+  int64 scheduled_start = 14;
+  int64 scheduled_end = 15;
+  int64 actual_start = 16;
+  int64 actual_end = 17;
+  string operator_id = 18;               // cross-ref: HCM Employee
+  string notes = 19;
+  erp.AuditInfo audit_info = 20;
+}
+
+message MfgWorkOrderOpList {
+  repeated MfgWorkOrderOp list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// ============================================================================
+// PRODUCTION ORDER MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgProductionOrder represents a production order (higher level than work order)
+message MfgProductionOrder {
+  string prod_order_id = 1;
+  string order_number = 2;
+  string customer_id = 3;                // cross-ref: FIN Customer (optional)
+  string sales_order_id = 4;             // cross-ref: Sales Order (optional)
+  int64 order_date = 5;
+  int64 required_date = 6;
+  MfgProductionOrderStatus status = 7;
+  int32 priority = 8;
+  string planner_id = 9;                 // cross-ref: HCM Employee
+  erp.Money total_estimated_cost = 10;
+  erp.Money total_actual_cost = 11;
+  string notes = 12;
+  map<string, string> custom_fields = 13;
+  erp.AuditInfo audit_info = 14;
+}
+
+message MfgProductionOrderList {
+  repeated MfgProductionOrder list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgProdOrderLine represents a line item in a production order
+message MfgProdOrderLine {
+  string line_id = 1;
+  string prod_order_id = 2;              // cross-ref: MfgProductionOrder
+  int32 line_number = 3;
+  string item_id = 4;                    // cross-ref: SCM Item
+  string work_order_id = 5;              // cross-ref: MfgWorkOrder
+  double quantity_ordered = 6;
+  double quantity_completed = 7;
+  int64 required_date = 8;
+  int64 promised_date = 9;
+  string warehouse_id = 10;              // cross-ref: SCM Warehouse
+  string notes = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message MfgProdOrderLineList {
+  repeated MfgProdOrderLine list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// ============================================================================
+// BATCH AND CONSUMPTION MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgProdBatch represents a production batch/lot
+message MfgProdBatch {
+  string batch_id = 1;
+  string batch_number = 2;
+  string work_order_id = 3;              // cross-ref: MfgWorkOrder
+  string item_id = 4;                    // cross-ref: SCM Item
+  double quantity = 5;
+  int64 production_date = 6;
+  int64 expiry_date = 7;
+  string lot_number = 8;
+  string serial_number = 9;
+  string warehouse_id = 10;              // cross-ref: SCM Warehouse
+  string bin_id = 11;                    // cross-ref: SCM Bin
+  string quality_status = 12;
+  string notes = 13;
+  erp.AuditInfo audit_info = 14;
+}
+
+message MfgProdBatchList {
+  repeated MfgProdBatch list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgProdConsumption represents material consumption for production
+message MfgProdConsumption {
+  string consumption_id = 1;
+  string work_order_id = 2;              // cross-ref: MfgWorkOrder
+  string operation_id = 3;               // cross-ref: MfgWorkOrderOp
+  string item_id = 4;                    // cross-ref: SCM Item
+  double quantity_planned = 5;
+  double quantity_consumed = 6;
+  string unit_of_measure = 7;
+  string lot_number = 8;
+  string warehouse_id = 9;               // cross-ref: SCM Warehouse
+  string bin_id = 10;                    // cross-ref: SCM Bin
+  int64 consumption_date = 11;
+  erp.Money unit_cost = 12;
+  erp.Money total_cost = 13;
+  string notes = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message MfgProdConsumptionList {
+  repeated MfgProdConsumption list = 1;
+  l8api.L8MetaData metadata = 2;
+}

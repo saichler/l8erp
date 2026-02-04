@@ -53,6 +53,11 @@ const sectionInitializers = {
             initializeSales();
         }
     },
+    manufacturing: () => {
+        if (typeof initializeMfg === 'function') {
+            initializeMfg();
+        }
+    },
     system: () => {
         if (typeof initializeL8Sys === 'function') {
             initializeL8Sys();

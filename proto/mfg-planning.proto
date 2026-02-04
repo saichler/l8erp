@@ -1,0 +1,180 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package mfg;
+
+option go_package = "./types/mfg";
+
+import "mfg-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// MRP (MATERIAL REQUIREMENTS PLANNING) MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgMrpRun represents an MRP run/regeneration
+message MfgMrpRun {
+  string run_id = 1;
+  string run_number = 2;
+  string description = 3;
+  MfgMrpStatus status = 4;
+  int64 run_date = 5;
+  int64 planning_horizon_start = 6;
+  int64 planning_horizon_end = 7;
+  bool include_safety_stock = 8;
+  bool include_forecasts = 9;
+  bool include_open_orders = 10;
+  string run_by = 11;                    // cross-ref: HCM Employee
+  int64 start_time = 12;
+  int64 end_time = 13;
+  int32 items_processed = 14;
+  int32 exceptions_generated = 15;
+  string notes = 16;
+  map<string, string> custom_fields = 17;
+  erp.AuditInfo audit_info = 18;
+}
+
+message MfgMrpRunList {
+  repeated MfgMrpRun list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgMrpRequirement represents an MRP requirement/recommendation
+message MfgMrpRequirement {
+  string requirement_id = 1;
+  string run_id = 2;                     // cross-ref: MfgMrpRun
+  string item_id = 3;                    // cross-ref: SCM Item
+  MfgRequirementType requirement_type = 4;
+  double quantity = 5;
+  string unit_of_measure = 6;
+  int64 required_date = 7;
+  int64 due_date = 8;
+  string source_type = 9;                // SALES_ORDER, FORECAST, SAFETY_STOCK
+  string source_id = 10;                 // ID of source document
+  string warehouse_id = 11;              // cross-ref: SCM Warehouse
+  string action_message = 12;
+  bool is_firmed = 13;
+  string notes = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message MfgMrpRequirementList {
+  repeated MfgMrpRequirement list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// ============================================================================
+// CAPACITY PLANNING MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgCapacityPlan represents a capacity planning run
+message MfgCapacityPlan {
+  string plan_id = 1;
+  string plan_number = 2;
+  string description = 3;
+  MfgScheduleStatus status = 4;
+  int64 planning_start = 5;
+  int64 planning_end = 6;
+  string time_bucket = 7;                // DAY, WEEK, MONTH
+  string run_by = 8;                     // cross-ref: HCM Employee
+  int64 run_date = 9;
+  string notes = 10;
+  map<string, string> custom_fields = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message MfgCapacityPlanList {
+  repeated MfgCapacityPlan list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgCapacityLoad represents capacity load for a work center
+message MfgCapacityLoad {
+  string load_id = 1;
+  string plan_id = 2;                    // cross-ref: MfgCapacityPlan
+  string work_center_id = 3;             // cross-ref: MfgWorkCenter
+  int64 period_start = 4;
+  int64 period_end = 5;
+  double available_hours = 6;
+  double required_hours = 7;
+  double load_percent = 8;
+  int32 work_orders_count = 9;
+  bool is_overloaded = 10;
+  string notes = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message MfgCapacityLoadList {
+  repeated MfgCapacityLoad list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// ============================================================================
+// PRODUCTION SCHEDULING MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// MfgProdSchedule represents a production schedule
+message MfgProdSchedule {
+  string schedule_id = 1;
+  string schedule_number = 2;
+  string description = 3;
+  MfgScheduleType schedule_type = 4;
+  MfgScheduleStatus status = 5;
+  int64 schedule_start = 6;
+  int64 schedule_end = 7;
+  string created_by = 8;                 // cross-ref: HCM Employee
+  int64 created_date = 9;
+  string published_by = 10;              // cross-ref: HCM Employee
+  int64 published_date = 11;
+  int32 work_orders_scheduled = 12;
+  string notes = 13;
+  map<string, string> custom_fields = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message MfgProdScheduleList {
+  repeated MfgProdSchedule list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MfgScheduleBlock represents a scheduled time block for a work order operation
+message MfgScheduleBlock {
+  string block_id = 1;
+  string schedule_id = 2;                // cross-ref: MfgProdSchedule
+  string work_order_id = 3;              // cross-ref: MfgWorkOrder
+  string operation_id = 4;               // cross-ref: MfgWorkOrderOp
+  string work_center_id = 5;             // cross-ref: MfgWorkCenter
+  int64 scheduled_start = 6;
+  int64 scheduled_end = 7;
+  double setup_hours = 8;
+  double run_hours = 9;
+  int32 sequence = 10;
+  bool is_locked = 11;
+  string notes = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message MfgScheduleBlockList {
+  repeated MfgScheduleBlock list = 1;
+  l8api.L8MetaData metadata = 2;
+}

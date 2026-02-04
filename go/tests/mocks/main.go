@@ -283,6 +283,56 @@ func main() {
 		os.Exit(1)
 	}
 
+	// MFG Module Phases
+	fmt.Printf("\nMFG Phase 1: Foundation\n")
+	fmt.Printf("-----------------------\n")
+	if err := generateMfgPhase1(client, store); err != nil {
+		fmt.Printf("MFG Phase 1 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nMFG Phase 2: Engineering & Quality Plans\n")
+	fmt.Printf("-----------------------------------------\n")
+	if err := generateMfgPhase2(client, store); err != nil {
+		fmt.Printf("MFG Phase 2 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nMFG Phase 3: Work Orders & Production\n")
+	fmt.Printf("--------------------------------------\n")
+	if err := generateMfgPhase3(client, store); err != nil {
+		fmt.Printf("MFG Phase 3 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nMFG Phase 4: Shop Floor\n")
+	fmt.Printf("-----------------------\n")
+	if err := generateMfgPhase4(client, store); err != nil {
+		fmt.Printf("MFG Phase 4 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nMFG Phase 5: Quality Transactions\n")
+	fmt.Printf("----------------------------------\n")
+	if err := generateMfgPhase5(client, store); err != nil {
+		fmt.Printf("MFG Phase 5 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nMFG Phase 6: Planning\n")
+	fmt.Printf("---------------------\n")
+	if err := generateMfgPhase6(client, store); err != nil {
+		fmt.Printf("MFG Phase 6 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nMFG Phase 7: Costing\n")
+	fmt.Printf("--------------------\n")
+	if err := generateMfgPhase7(client, store); err != nil {
+		fmt.Printf("MFG Phase 7 failed: %v\n", err)
+		os.Exit(1)
+	}
+
 	fmt.Printf("\n=======================\n")
 	fmt.Printf("Mock data generation complete!\n")
 	fmt.Printf("\nHCM Summary:\n")
@@ -335,4 +385,19 @@ func main() {
 	fmt.Printf("  - Commission Plans: %d\n", len(store.SalesCommissionPlanIDs))
 	fmt.Printf("  - Sales Targets: %d\n", len(store.SalesTargetIDs))
 	fmt.Printf("  - Sales Forecasts: %d\n", len(store.SalesForecastIDs))
+	fmt.Printf("\nMFG Summary:\n")
+	fmt.Printf("  - Work Centers: %d\n", len(store.MfgWorkCenterIDs))
+	fmt.Printf("  - BOMs: %d\n", len(store.MfgBomIDs))
+	fmt.Printf("  - Routings: %d\n", len(store.MfgRoutingIDs))
+	fmt.Printf("  - Engineering Change Orders: %d\n", len(store.MfgEngChangeOrderIDs))
+	fmt.Printf("  - Work Orders: %d\n", len(store.MfgWorkOrderIDs))
+	fmt.Printf("  - Production Orders: %d\n", len(store.MfgProductionOrderIDs))
+	fmt.Printf("  - Production Batches: %d\n", len(store.MfgProdBatchIDs))
+	fmt.Printf("  - Quality Plans: %d\n", len(store.MfgQualityPlanIDs))
+	fmt.Printf("  - Quality Inspections: %d\n", len(store.MfgQualityInspectionIDs))
+	fmt.Printf("  - NCRs: %d\n", len(store.MfgNCRIDs))
+	fmt.Printf("  - MRP Runs: %d\n", len(store.MfgMrpRunIDs))
+	fmt.Printf("  - Capacity Plans: %d\n", len(store.MfgCapacityPlanIDs))
+	fmt.Printf("  - Standard Costs: %d\n", len(store.MfgStandardCostIDs))
+	fmt.Printf("  - Overheads: %d\n", len(store.MfgOverheadIDs))
 }
