@@ -78,7 +78,7 @@ func generateCrmPhase2(client *HCMClient, store *MockDataStore) error {
 func generateCrmPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Accounts
 	fmt.Printf("  Creating Accounts...")
-	accounts := generateAccounts(store)
+	accounts := generateCrmAccounts(store)
 	if err := client.post("/erp/80/CrmAcct", &crm.CrmAccountList{List: accounts}); err != nil {
 		return fmt.Errorf("accounts: %w", err)
 	}
@@ -89,7 +89,7 @@ func generateCrmPhase3(client *HCMClient, store *MockDataStore) error {
 
 	// Generate Contacts
 	fmt.Printf("  Creating Contacts...")
-	contacts := generateContacts(store)
+	contacts := generateCrmContacts(store)
 	if err := client.post("/erp/80/CrmContact", &crm.CrmContactList{List: contacts}); err != nil {
 		return fmt.Errorf("contacts: %w", err)
 	}
@@ -263,7 +263,7 @@ func generateCrmPhase6(client *HCMClient, store *MockDataStore) error {
 func generateCrmPhase7(client *HCMClient, store *MockDataStore) error {
 	// Generate Interactions
 	fmt.Printf("  Creating Interactions...")
-	interactions := generateInteractions(store)
+	interactions := generateCrmInteractions(store)
 	if err := client.post("/erp/80/CrmIntrctn", &crm.CrmInteractionList{List: interactions}); err != nil {
 		return fmt.Errorf("interactions: %w", err)
 	}
@@ -274,7 +274,7 @@ func generateCrmPhase7(client *HCMClient, store *MockDataStore) error {
 
 	// Generate Relationships
 	fmt.Printf("  Creating Relationships...")
-	relationships := generateRelationships(store)
+	relationships := generateCrmRelationships(store)
 	if err := client.post("/erp/80/CrmRelshp", &crm.CrmRelationshipList{List: relationships}); err != nil {
 		return fmt.Errorf("relationships: %w", err)
 	}
@@ -285,7 +285,7 @@ func generateCrmPhase7(client *HCMClient, store *MockDataStore) error {
 
 	// Generate Health Scores
 	fmt.Printf("  Creating Health Scores...")
-	healthScores := generateHealthScores(store)
+	healthScores := generateCrmHealthScores(store)
 	if err := client.post("/erp/80/CrmHealth", &crm.CrmHealthScoreList{List: healthScores}); err != nil {
 		return fmt.Errorf("health scores: %w", err)
 	}
@@ -296,7 +296,7 @@ func generateCrmPhase7(client *HCMClient, store *MockDataStore) error {
 
 	// Generate Account Plans
 	fmt.Printf("  Creating Account Plans...")
-	accountPlans := generateAccountPlans(store)
+	accountPlans := generateCrmAccountPlans(store)
 	if err := client.post("/erp/80/CrmAcctPln", &crm.CrmAccountPlanList{List: accountPlans}); err != nil {
 		return fmt.Errorf("account plans: %w", err)
 	}

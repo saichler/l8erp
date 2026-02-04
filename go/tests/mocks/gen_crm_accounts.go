@@ -23,8 +23,8 @@ import (
 	"github.com/saichler/l8erp/go/types/erp"
 )
 
-// generateAccounts creates account records
-func generateAccounts(store *MockDataStore) []*crm.CrmAccount {
+// generateCrmAccounts creates CRM account records
+func generateCrmAccounts(store *MockDataStore) []*crm.CrmAccount {
 	accountTypes := []crm.CrmAccountType{
 		crm.CrmAccountType_CRM_ACCOUNT_TYPE_CUSTOMER,
 		crm.CrmAccountType_CRM_ACCOUNT_TYPE_PROSPECT,
@@ -82,18 +82,18 @@ func generateAccounts(store *MockDataStore) []*crm.CrmAccount {
 			Website:         fmt.Sprintf("https://www.%s.com", customerNames[i%len(customerNames)]),
 			Phone:           fmt.Sprintf("555-%03d-%04d", rand.Intn(1000), rand.Intn(10000)),
 			BillingAddress: &erp.Address{
-				Street1: fmt.Sprintf("%d %s", rand.Intn(9999)+1, streetNames[i%len(streetNames)]),
-				City:    cities[i%len(cities)],
-				State:   states[i%len(states)],
-				ZipCode: fmt.Sprintf("%05d", rand.Intn(100000)),
-				Country: "USA",
+				Line1:         fmt.Sprintf("%d %s", rand.Intn(9999)+1, streetNames[i%len(streetNames)]),
+				City:          cities[i%len(cities)],
+				StateProvince: states[i%len(states)],
+				PostalCode:    fmt.Sprintf("%05d", rand.Intn(100000)),
+				CountryCode:   "US",
 			},
 			ShippingAddress: &erp.Address{
-				Street1: fmt.Sprintf("%d %s", rand.Intn(9999)+1, streetNames[i%len(streetNames)]),
-				City:    cities[i%len(cities)],
-				State:   states[i%len(states)],
-				ZipCode: fmt.Sprintf("%05d", rand.Intn(100000)),
-				Country: "USA",
+				Line1:         fmt.Sprintf("%d %s", rand.Intn(9999)+1, streetNames[i%len(streetNames)]),
+				City:          cities[i%len(cities)],
+				StateProvince: states[i%len(states)],
+				PostalCode:    fmt.Sprintf("%05d", rand.Intn(100000)),
+				CountryCode:   "US",
 			},
 			EmployeeCount:    int32(rand.Intn(5000) + 50),
 			AnnualRevenue:    &erp.Money{Amount: int64(rand.Intn(100000000) + 1000000), CurrencyCode: "USD"},
@@ -107,8 +107,8 @@ func generateAccounts(store *MockDataStore) []*crm.CrmAccount {
 	return accounts
 }
 
-// generateContacts creates contact records
-func generateContacts(store *MockDataStore) []*crm.CrmContact {
+// generateCrmContacts creates CRM contact records
+func generateCrmContacts(store *MockDataStore) []*crm.CrmContact {
 	titles := []string{"CEO", "CTO", "VP Sales", "Director", "Manager", "Engineer", "Analyst"}
 	departments := []string{"Executive", "Sales", "Marketing", "IT", "Operations", "Finance"}
 
@@ -130,21 +130,21 @@ func generateContacts(store *MockDataStore) []*crm.CrmContact {
 			lastName := lastNames[(idx-1)%len(lastNames)]
 
 			contacts = append(contacts, &crm.CrmContact{
-				ContactId:   fmt.Sprintf("contact-%03d", idx),
-				AccountId:   accountID,
-				FirstName:   firstName,
-				LastName:    lastName,
-				Title:       titles[(idx-1)%len(titles)],
-				Department:  departments[(idx-1)%len(departments)],
-				Email:       fmt.Sprintf("%s.%s@company.com", firstName, lastName),
-				Phone:       fmt.Sprintf("555-%03d-%04d", rand.Intn(1000), rand.Intn(10000)),
-				Mobile:      fmt.Sprintf("555-%03d-%04d", rand.Intn(1000), rand.Intn(10000)),
+				ContactId:  fmt.Sprintf("contact-%03d", idx),
+				AccountId:  accountID,
+				FirstName:  firstName,
+				LastName:   lastName,
+				Title:      titles[(idx-1)%len(titles)],
+				Department: departments[(idx-1)%len(departments)],
+				Email:      fmt.Sprintf("%s.%s@company.com", firstName, lastName),
+				Phone:      fmt.Sprintf("555-%03d-%04d", rand.Intn(1000), rand.Intn(10000)),
+				Mobile:     fmt.Sprintf("555-%03d-%04d", rand.Intn(1000), rand.Intn(10000)),
 				MailingAddress: &erp.Address{
-					Street1: fmt.Sprintf("%d %s", rand.Intn(9999)+1, streetNames[(idx-1)%len(streetNames)]),
-					City:    cities[(idx-1)%len(cities)],
-					State:   states[(idx-1)%len(states)],
-					ZipCode: fmt.Sprintf("%05d", rand.Intn(100000)),
-					Country: "USA",
+					Line1:         fmt.Sprintf("%d %s", rand.Intn(9999)+1, streetNames[(idx-1)%len(streetNames)]),
+					City:          cities[(idx-1)%len(cities)],
+					StateProvince: states[(idx-1)%len(states)],
+					PostalCode:    fmt.Sprintf("%05d", rand.Intn(100000)),
+					CountryCode:   "US",
 				},
 				OwnerId:          ownerID,
 				IsPrimary:        j == 0,
@@ -161,8 +161,8 @@ func generateContacts(store *MockDataStore) []*crm.CrmContact {
 	return contacts
 }
 
-// generateInteractions creates interaction records
-func generateInteractions(store *MockDataStore) []*crm.CrmInteraction {
+// generateCrmInteractions creates CRM interaction records
+func generateCrmInteractions(store *MockDataStore) []*crm.CrmInteraction {
 	types := []crm.CrmInteractionType{
 		crm.CrmInteractionType_CRM_INTERACTION_TYPE_CALL,
 		crm.CrmInteractionType_CRM_INTERACTION_TYPE_EMAIL,
@@ -208,8 +208,8 @@ func generateInteractions(store *MockDataStore) []*crm.CrmInteraction {
 	return interactions
 }
 
-// generateRelationships creates relationship records between accounts
-func generateRelationships(store *MockDataStore) []*crm.CrmRelationship {
+// generateCrmRelationships creates CRM relationship records between accounts
+func generateCrmRelationships(store *MockDataStore) []*crm.CrmRelationship {
 	types := []crm.CrmRelationshipType{
 		crm.CrmRelationshipType_CRM_RELATIONSHIP_TYPE_PARENT,
 		crm.CrmRelationshipType_CRM_RELATIONSHIP_TYPE_SUBSIDIARY,
@@ -245,8 +245,8 @@ func generateRelationships(store *MockDataStore) []*crm.CrmRelationship {
 	return relationships
 }
 
-// generateHealthScores creates health score records
-func generateHealthScores(store *MockDataStore) []*crm.CrmHealthScore {
+// generateCrmHealthScores creates CRM health score records
+func generateCrmHealthScores(store *MockDataStore) []*crm.CrmHealthScore {
 	statuses := []crm.CrmHealthStatus{
 		crm.CrmHealthStatus_CRM_HEALTH_STATUS_HEALTHY,
 		crm.CrmHealthStatus_CRM_HEALTH_STATUS_AT_RISK,
@@ -292,8 +292,8 @@ func generateHealthScores(store *MockDataStore) []*crm.CrmHealthScore {
 	return scores
 }
 
-// generateAccountPlans creates account plan records
-func generateAccountPlans(store *MockDataStore) []*crm.CrmAccountPlan {
+// generateCrmAccountPlans creates CRM account plan records
+func generateCrmAccountPlans(store *MockDataStore) []*crm.CrmAccountPlan {
 	planStatuses := []string{"Draft", "Active", "Completed", "On Hold"}
 
 	count := len(store.CrmAccountIDs) / 2

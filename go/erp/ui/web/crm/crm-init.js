@@ -9,7 +9,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         namespace: 'Crm',
         defaultModule: 'opportunities',
         defaultService: 'opportunities',
-        sectionSelector: 'crm',
+        sectionSelector: 'opportunities',
         initializerName: 'initializeCrm',
         requiredNamespaces: ['CrmLeads', 'CrmOpportunities', 'CrmAccounts', 'CrmMarketing', 'CrmService', 'CrmFieldService']
     });
