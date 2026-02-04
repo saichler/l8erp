@@ -1,0 +1,224 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package prj;
+
+option go_package = "./types/prj";
+
+import "prj-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// PROJECT BILLING MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// PrjBillingRate represents a billing rate configuration
+message PrjBillingRate {
+  string rate_id = 1;
+  string name = 2;
+  string description = 3;
+  string project_id = 4;                   // cross-ref: PrjProject (optional, null for global)
+  string resource_id = 5;                  // cross-ref: PrjResource (optional)
+  string role = 6;
+  string skill_category = 7;
+  erp.Money rate = 8;
+  string rate_unit = 9;                    // hourly, daily, weekly
+  erp.Money overtime_rate = 10;
+  int64 effective_from = 11;
+  int64 effective_until = 12;
+  bool is_active = 13;
+  string currency_code = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message PrjBillingRateList {
+  repeated PrjBillingRate list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjBillingSchedule represents a project billing schedule
+message PrjBillingSchedule {
+  string schedule_id = 1;
+  string project_id = 2;                   // cross-ref: PrjProject
+  string name = 3;
+  string description = 4;
+  PrjBillingType billing_type = 5;
+  string billing_frequency = 6;            // weekly, bi-weekly, monthly, milestone
+  int32 billing_day = 7;                   // day of month for billing
+  erp.Money fixed_amount = 8;              // for fixed price billing
+  erp.Money retainer_amount = 9;           // for retainer billing
+  bool include_expenses = 10;
+  double expense_markup_percent = 11;
+  bool is_active = 12;
+  int64 start_date = 13;
+  int64 end_date = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message PrjBillingScheduleList {
+  repeated PrjBillingSchedule list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjBillingMilestone represents a billing milestone
+message PrjBillingMilestone {
+  string milestone_id = 1;
+  string schedule_id = 2;                  // cross-ref: PrjBillingSchedule
+  string project_id = 3;                   // cross-ref: PrjProject
+  string project_milestone_id = 4;         // cross-ref: PrjMilestone
+  string name = 5;
+  string description = 6;
+  erp.Money amount = 7;
+  double percentage = 8;                   // percentage of total project value
+  int64 due_date = 9;
+  int64 billed_date = 10;
+  string invoice_id = 11;                  // cross-ref: PrjProjectInvoice
+  bool is_billed = 12;
+  string deliverables = 13;
+  map<string, string> custom_fields = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message PrjBillingMilestoneList {
+  repeated PrjBillingMilestone list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjProjectInvoice represents a project invoice
+message PrjProjectInvoice {
+  string invoice_id = 1;
+  string project_id = 2;                   // cross-ref: PrjProject
+  string customer_id = 3;                  // cross-ref: FIN Customer
+  string invoice_number = 4;
+  string po_number = 5;
+  int64 invoice_date = 6;
+  int64 due_date = 7;
+  int64 period_start = 8;
+  int64 period_end = 9;
+  erp.Money subtotal = 10;
+  erp.Money tax_amount = 11;
+  erp.Money total_amount = 12;
+  erp.Money paid_amount = 13;
+  erp.Money balance_due = 14;
+  PrjInvoiceStatus status = 15;
+  string payment_terms = 16;
+  string notes = 17;
+  int64 sent_date = 18;
+  int64 paid_date = 19;
+  string currency_code = 20;
+  map<string, string> custom_fields = 21;
+  erp.AuditInfo audit_info = 22;
+}
+
+message PrjProjectInvoiceList {
+  repeated PrjProjectInvoice list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjInvoiceLine represents an invoice line item
+message PrjInvoiceLine {
+  string line_id = 1;
+  string invoice_id = 2;                   // cross-ref: PrjProjectInvoice
+  string project_id = 3;                   // cross-ref: PrjProject
+  string task_id = 4;                      // cross-ref: PrjTask
+  string timesheet_entry_id = 5;           // cross-ref: PrjTimesheetEntry
+  string expense_entry_id = 6;             // cross-ref: PrjExpenseEntry
+  string billing_milestone_id = 7;         // cross-ref: PrjBillingMilestone
+  int32 line_number = 8;
+  string description = 9;
+  double quantity = 10;
+  string unit = 11;
+  erp.Money unit_price = 12;
+  erp.Money amount = 13;
+  erp.Money tax_amount = 14;
+  erp.Money total_amount = 15;
+  string line_type = 16;                   // time, expense, milestone, fixed
+  bool is_taxable = 17;
+  map<string, string> custom_fields = 18;
+  erp.AuditInfo audit_info = 19;
+}
+
+message PrjInvoiceLineList {
+  repeated PrjInvoiceLine list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjRevenueRecognition represents revenue recognition for a project
+message PrjRevenueRecognition {
+  string recognition_id = 1;
+  string project_id = 2;                   // cross-ref: PrjProject
+  string invoice_id = 3;                   // cross-ref: PrjProjectInvoice
+  int64 recognition_date = 4;
+  int64 period_start = 5;
+  int64 period_end = 6;
+  erp.Money recognized_amount = 7;
+  erp.Money deferred_amount = 8;
+  erp.Money cumulative_recognized = 9;
+  PrjRevenueRecognitionMethod method = 10;
+  double percent_complete = 11;
+  string gl_account = 12;
+  string deferred_gl_account = 13;
+  string notes = 14;
+  bool is_posted = 15;
+  int64 posted_date = 16;
+  map<string, string> custom_fields = 17;
+  erp.AuditInfo audit_info = 18;
+}
+
+message PrjRevenueRecognitionList {
+  repeated PrjRevenueRecognition list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjProjectBudget represents a project budget
+message PrjProjectBudget {
+  string budget_id = 1;
+  string project_id = 2;                   // cross-ref: PrjProject
+  string name = 3;
+  string description = 4;
+  string budget_type = 5;                  // labor, expense, total, phase
+  string phase_id = 6;                     // cross-ref: PrjPhase (optional)
+  erp.Money budgeted_amount = 7;
+  erp.Money committed_amount = 8;
+  erp.Money actual_amount = 9;
+  erp.Money remaining_amount = 10;
+  double budgeted_hours = 11;
+  double actual_hours = 12;
+  double remaining_hours = 13;
+  int64 period_start = 14;
+  int64 period_end = 15;
+  bool is_approved = 16;
+  string approved_by = 17;                 // cross-ref: HCM Employee
+  int64 approved_date = 18;
+  int32 version = 19;
+  map<string, string> custom_fields = 20;
+  erp.AuditInfo audit_info = 21;
+}
+
+message PrjProjectBudgetList {
+  repeated PrjProjectBudget list = 1;
+  l8api.L8MetaData metadata = 2;
+}

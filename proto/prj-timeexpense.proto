@@ -1,0 +1,212 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package prj;
+
+option go_package = "./types/prj";
+
+import "prj-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// TIME & EXPENSE MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// PrjTimesheet represents a timesheet
+message PrjTimesheet {
+  string timesheet_id = 1;
+  string employee_id = 2;                  // cross-ref: HCM Employee
+  int64 week_start_date = 3;
+  int64 week_end_date = 4;
+  PrjTimesheetStatus status = 5;
+  double total_hours = 6;
+  double billable_hours = 7;
+  double non_billable_hours = 8;
+  int64 submitted_date = 9;
+  string submitted_by = 10;                // cross-ref: HCM Employee
+  int64 approved_date = 11;
+  string approved_by = 12;                 // cross-ref: HCM Employee
+  string rejection_reason = 13;
+  string notes = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message PrjTimesheetList {
+  repeated PrjTimesheet list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjTimesheetEntry represents a timesheet line entry
+message PrjTimesheetEntry {
+  string entry_id = 1;
+  string timesheet_id = 2;                 // cross-ref: PrjTimesheet
+  string project_id = 3;                   // cross-ref: PrjProject
+  string task_id = 4;                      // cross-ref: PrjTask
+  string phase_id = 5;                     // cross-ref: PrjPhase
+  int64 work_date = 6;
+  double hours = 7;
+  bool is_billable = 8;
+  erp.Money billing_rate = 9;
+  erp.Money billing_amount = 10;
+  string description = 11;
+  string activity_type = 12;
+  bool is_overtime = 13;
+  map<string, string> custom_fields = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message PrjTimesheetEntryList {
+  repeated PrjTimesheetEntry list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjExpenseReport represents an expense report
+message PrjExpenseReport {
+  string report_id = 1;
+  string employee_id = 2;                  // cross-ref: HCM Employee
+  string project_id = 3;                   // cross-ref: PrjProject
+  string report_number = 4;
+  string title = 5;
+  string description = 6;
+  PrjExpenseStatus status = 7;
+  erp.Money total_amount = 8;
+  erp.Money approved_amount = 9;
+  erp.Money reimbursed_amount = 10;
+  int64 submit_date = 11;
+  int64 approved_date = 12;
+  string approved_by = 13;                 // cross-ref: HCM Employee
+  int64 paid_date = 14;
+  string rejection_reason = 15;
+  string notes = 16;
+  map<string, string> custom_fields = 17;
+  erp.AuditInfo audit_info = 18;
+}
+
+message PrjExpenseReportList {
+  repeated PrjExpenseReport list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjExpenseEntry represents an expense line item
+message PrjExpenseEntry {
+  string entry_id = 1;
+  string report_id = 2;                    // cross-ref: PrjExpenseReport
+  string project_id = 3;                   // cross-ref: PrjProject
+  string task_id = 4;                      // cross-ref: PrjTask
+  string category_id = 5;                  // cross-ref: PrjExpenseCategory
+  int64 expense_date = 6;
+  string description = 7;
+  string vendor = 8;
+  erp.Money amount = 9;
+  string currency_code = 10;
+  erp.Money converted_amount = 11;
+  double exchange_rate = 12;
+  bool is_billable = 13;
+  bool is_reimbursable = 14;
+  string receipt_url = 15;
+  bool receipt_attached = 16;
+  PrjExpenseType expense_type = 17;
+  string payment_method = 18;
+  map<string, string> custom_fields = 19;
+  erp.AuditInfo audit_info = 20;
+}
+
+message PrjExpenseEntryList {
+  repeated PrjExpenseEntry list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjApprovalRule represents an approval rule configuration
+message PrjApprovalRule {
+  string rule_id = 1;
+  string name = 2;
+  string description = 3;
+  PrjApprovalType approval_type = 4;
+  erp.Money threshold_amount = 5;
+  double threshold_hours = 6;
+  string approver_id = 7;                  // cross-ref: HCM Employee
+  string approver_role = 8;
+  bool requires_manager_approval = 9;
+  bool requires_project_manager_approval = 10;
+  int32 approval_levels = 11;
+  bool is_active = 12;
+  int32 priority = 13;
+  map<string, string> custom_fields = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message PrjApprovalRuleList {
+  repeated PrjApprovalRule list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjExpenseCategory represents an expense category
+message PrjExpenseCategory {
+  string category_id = 1;
+  string name = 2;
+  string description = 3;
+  string parent_category_id = 4;           // cross-ref: PrjExpenseCategory
+  string gl_account = 5;
+  PrjExpenseType expense_type = 6;
+  erp.Money default_limit = 7;
+  bool requires_receipt = 8;
+  bool is_billable_default = 9;
+  bool is_reimbursable_default = 10;
+  bool is_active = 11;
+  int32 sort_order = 12;
+  map<string, string> custom_fields = 13;
+  erp.AuditInfo audit_info = 14;
+}
+
+message PrjExpenseCategoryList {
+  repeated PrjExpenseCategory list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjExpensePolicy represents expense policy rules
+message PrjExpensePolicy {
+  string policy_id = 1;
+  string name = 2;
+  string description = 3;
+  erp.Money daily_meal_limit = 4;
+  erp.Money daily_lodging_limit = 5;
+  erp.Money mileage_rate = 6;
+  erp.Money max_single_expense = 7;
+  bool receipt_required_above = 8;
+  erp.Money receipt_threshold = 9;
+  bool advance_approval_required = 10;
+  erp.Money advance_approval_threshold = 11;
+  int32 submission_deadline_days = 12;
+  bool is_active = 13;
+  int64 effective_date = 14;
+  int64 expiry_date = 15;
+  map<string, string> custom_fields = 16;
+  erp.AuditInfo audit_info = 17;
+}
+
+message PrjExpensePolicyList {
+  repeated PrjExpensePolicy list = 1;
+  l8api.L8MetaData metadata = 2;
+}

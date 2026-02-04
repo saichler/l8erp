@@ -1,0 +1,195 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package prj;
+
+option go_package = "./types/prj";
+
+import "prj-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// RESOURCE MANAGEMENT MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// PrjResourcePool represents a pool of resources
+message PrjResourcePool {
+  string pool_id = 1;
+  string name = 2;
+  string description = 3;
+  string manager_id = 4;                   // cross-ref: HCM Employee
+  string department_id = 5;                // cross-ref: HCM Department
+  bool is_active = 6;
+  double total_capacity_hours = 7;
+  map<string, string> custom_fields = 8;
+  erp.AuditInfo audit_info = 9;
+}
+
+message PrjResourcePoolList {
+  repeated PrjResourcePool list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjResource represents a project resource
+message PrjResource {
+  string resource_id = 1;
+  string name = 2;
+  string employee_id = 3;                  // cross-ref: HCM Employee
+  string pool_id = 4;                      // cross-ref: PrjResourcePool
+  PrjResourceType resource_type = 5;
+  string job_title = 6;
+  erp.Money hourly_cost = 7;
+  erp.Money billing_rate = 8;
+  double availability_percent = 9;         // 0-100
+  double capacity_hours_per_week = 10;
+  int64 available_from = 11;
+  int64 available_until = 12;
+  bool is_active = 13;
+  string location = 14;
+  string time_zone = 15;
+  map<string, string> custom_fields = 16;
+  erp.AuditInfo audit_info = 17;
+}
+
+message PrjResourceList {
+  repeated PrjResource list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjResourceSkill represents a skill for a resource
+message PrjResourceSkill {
+  string skill_id = 1;
+  string resource_id = 2;                  // cross-ref: PrjResource
+  string skill_name = 3;
+  string skill_category = 4;
+  int32 proficiency_level = 5;             // 1-5 scale
+  int32 years_experience = 6;
+  bool is_primary = 7;
+  int64 certified_date = 8;
+  int64 certification_expiry = 9;
+  map<string, string> custom_fields = 10;
+  erp.AuditInfo audit_info = 11;
+}
+
+message PrjResourceSkillList {
+  repeated PrjResourceSkill list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjAllocation represents resource allocation to a project
+message PrjAllocation {
+  string allocation_id = 1;
+  string project_id = 2;                   // cross-ref: PrjProject
+  string resource_id = 3;                  // cross-ref: PrjResource
+  string task_id = 4;                      // cross-ref: PrjTask (optional)
+  string phase_id = 5;                     // cross-ref: PrjPhase (optional)
+  int64 start_date = 6;
+  int64 end_date = 7;
+  double allocated_hours = 8;
+  double allocated_percent = 9;            // 0-100
+  PrjAllocationStatus status = 10;
+  erp.Money billing_rate = 11;
+  bool is_billable = 12;
+  string role = 13;
+  string notes = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message PrjAllocationList {
+  repeated PrjAllocation list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjBooking represents a resource booking request
+message PrjBooking {
+  string booking_id = 1;
+  string project_id = 2;                   // cross-ref: PrjProject
+  string resource_id = 3;                  // cross-ref: PrjResource
+  string requested_by = 4;                 // cross-ref: HCM Employee
+  string approved_by = 5;                  // cross-ref: HCM Employee
+  int64 start_date = 6;
+  int64 end_date = 7;
+  double requested_hours = 8;
+  double approved_hours = 9;
+  PrjBookingStatus status = 10;
+  string role = 11;
+  string skill_required = 12;
+  string notes = 13;
+  int64 requested_date = 14;
+  int64 decision_date = 15;
+  map<string, string> custom_fields = 16;
+  erp.AuditInfo audit_info = 17;
+}
+
+message PrjBookingList {
+  repeated PrjBooking list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjCapacityPlan represents resource capacity planning
+message PrjCapacityPlan {
+  string plan_id = 1;
+  string name = 2;
+  string description = 3;
+  string pool_id = 4;                      // cross-ref: PrjResourcePool
+  int64 period_start = 5;
+  int64 period_end = 6;
+  double total_capacity_hours = 7;
+  double allocated_hours = 8;
+  double available_hours = 9;
+  double utilization_target = 10;          // 0-100 percentage
+  bool is_active = 11;
+  map<string, string> custom_fields = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message PrjCapacityPlanList {
+  repeated PrjCapacityPlan list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjUtilization represents resource utilization tracking
+message PrjUtilization {
+  string utilization_id = 1;
+  string resource_id = 2;                  // cross-ref: PrjResource
+  string project_id = 3;                   // cross-ref: PrjProject (optional)
+  int64 period_start = 4;
+  int64 period_end = 5;
+  double capacity_hours = 6;
+  double billable_hours = 7;
+  double non_billable_hours = 8;
+  double total_hours = 9;
+  double utilization_percent = 10;
+  double billable_utilization_percent = 11;
+  erp.Money revenue = 12;
+  erp.Money cost = 13;
+  map<string, string> custom_fields = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message PrjUtilizationList {
+  repeated PrjUtilization list = 1;
+  l8api.L8MetaData metadata = 2;
+}

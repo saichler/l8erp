@@ -397,6 +397,63 @@ func main() {
 		os.Exit(1)
 	}
 
+	// PRJ Module Phases
+	fmt.Printf("\nPRJ Phase 1: Foundation\n")
+	fmt.Printf("-----------------------\n")
+	if err := generatePrjPhase1(client, store); err != nil {
+		fmt.Printf("PRJ Phase 1 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nPRJ Phase 2: Projects & Phases\n")
+	fmt.Printf("------------------------------\n")
+	if err := generatePrjPhase2(client, store); err != nil {
+		fmt.Printf("PRJ Phase 2 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nPRJ Phase 3: Resources\n")
+	fmt.Printf("----------------------\n")
+	if err := generatePrjPhase3(client, store); err != nil {
+		fmt.Printf("PRJ Phase 3 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nPRJ Phase 4: Project Details\n")
+	fmt.Printf("----------------------------\n")
+	if err := generatePrjPhase4(client, store); err != nil {
+		fmt.Printf("PRJ Phase 4 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nPRJ Phase 5: Resource Management\n")
+	fmt.Printf("---------------------------------\n")
+	if err := generatePrjPhase5(client, store); err != nil {
+		fmt.Printf("PRJ Phase 5 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nPRJ Phase 6: Time & Expense\n")
+	fmt.Printf("---------------------------\n")
+	if err := generatePrjPhase6(client, store); err != nil {
+		fmt.Printf("PRJ Phase 6 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nPRJ Phase 7: Billing\n")
+	fmt.Printf("--------------------\n")
+	if err := generatePrjPhase7(client, store); err != nil {
+		fmt.Printf("PRJ Phase 7 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nPRJ Phase 8: Analytics\n")
+	fmt.Printf("----------------------\n")
+	if err := generatePrjPhase8(client, store); err != nil {
+		fmt.Printf("PRJ Phase 8 failed: %v\n", err)
+		os.Exit(1)
+	}
+
 	fmt.Printf("\n=======================\n")
 	fmt.Printf("Mock data generation complete!\n")
 	fmt.Printf("\nHCM Summary:\n")
@@ -477,4 +534,17 @@ func main() {
 	fmt.Printf("  - Service Contracts: %d\n", len(store.CrmServiceContractIDs))
 	fmt.Printf("  - Service Orders: %d\n", len(store.CrmServiceOrderIDs))
 	fmt.Printf("  - Surveys: %d\n", len(store.CrmSurveyIDs))
+	fmt.Printf("\nPRJ Summary:\n")
+	fmt.Printf("  - Project Templates: %d\n", len(store.PrjProjectTemplateIDs))
+	fmt.Printf("  - Projects: %d\n", len(store.PrjProjectIDs))
+	fmt.Printf("  - Phases: %d\n", len(store.PrjPhaseIDs))
+	fmt.Printf("  - Tasks: %d\n", len(store.PrjTaskIDs))
+	fmt.Printf("  - Milestones: %d\n", len(store.PrjMilestoneIDs))
+	fmt.Printf("  - Resources: %d\n", len(store.PrjResourceIDs))
+	fmt.Printf("  - Timesheets: %d\n", len(store.PrjTimesheetIDs))
+	fmt.Printf("  - Expense Reports: %d\n", len(store.PrjExpenseReportIDs))
+	fmt.Printf("  - Project Invoices: %d\n", len(store.PrjProjectInvoiceIDs))
+	fmt.Printf("  - Project Budgets: %d\n", len(store.PrjProjectBudgetIDs))
+	fmt.Printf("  - Status Reports: %d\n", len(store.PrjStatusReportIDs))
+	fmt.Printf("  - Project Issues: %d\n", len(store.PrjProjectIssueIDs))
 }

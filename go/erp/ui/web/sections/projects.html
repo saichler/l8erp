@@ -12,14 +12,228 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<div class="section-container">
-    <h2 class="section-title">Project Management</h2>
+<div class="section-container hcm-section prj-section">
+    <!-- Header with Parallax Effect -->
+    <div class="hcm-header-frame parallax-container">
+        <!-- Background Illustration Layer -->
+        <div class="hcm-header-bg parallax-layer" data-speed="0.5">
+            <svg class="hcm-illustration" viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="prjGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.4" />
+                        <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:0.2" />
+                    </linearGradient>
+                </defs>
+
+                <!-- Grid Background -->
+                <g opacity="0.1">
+                    <line x1="0" y1="30" x2="1200" y2="30" stroke="#8b5cf6" stroke-width="0.5"/>
+                    <line x1="0" y1="60" x2="1200" y2="60" stroke="#8b5cf6" stroke-width="0.5"/>
+                    <line x1="0" y1="90" x2="1200" y2="90" stroke="#8b5cf6" stroke-width="0.5"/>
+                    <line x1="200" y1="0" x2="200" y2="120" stroke="#8b5cf6" stroke-width="0.5"/>
+                    <line x1="400" y1="0" x2="400" y2="120" stroke="#8b5cf6" stroke-width="0.5"/>
+                    <line x1="600" y1="0" x2="600" y2="120" stroke="#8b5cf6" stroke-width="0.5"/>
+                    <line x1="800" y1="0" x2="800" y2="120" stroke="#8b5cf6" stroke-width="0.5"/>
+                    <line x1="1000" y1="0" x2="1000" y2="120" stroke="#8b5cf6" stroke-width="0.5"/>
+                </g>
+
+                <!-- Project Icons -->
+                <g class="people-animation">
+                    <!-- Gantt Chart -->
+                    <rect x="160" y="45" width="60" height="8" rx="2" fill="url(#prjGradient1)" opacity="0.6"/>
+                    <rect x="170" y="57" width="45" height="8" rx="2" fill="url(#prjGradient1)" opacity="0.5"/>
+                    <rect x="180" y="69" width="35" height="8" rx="2" fill="url(#prjGradient1)" opacity="0.4"/>
+
+                    <!-- Milestone Flag -->
+                    <path d="M 400,45 L 400,85 M 400,45 L 425,55 L 400,65" fill="none" stroke="url(#prjGradient1)" stroke-width="3" opacity="0.6"/>
+                    <circle cx="400" cy="85" r="4" fill="url(#prjGradient1)" opacity="0.7"/>
+
+                    <!-- Team/Resources -->
+                    <circle cx="590" cy="55" r="10" fill="url(#prjGradient1)" opacity="0.5"/>
+                    <circle cx="610" cy="55" r="10" fill="url(#prjGradient1)" opacity="0.6"/>
+                    <circle cx="600" cy="75" r="10" fill="url(#prjGradient1)" opacity="0.7"/>
+
+                    <!-- Time Clock -->
+                    <circle cx="800" cy="60" r="20" fill="none" stroke="url(#prjGradient1)" stroke-width="3" opacity="0.5"/>
+                    <path d="M 800,60 L 800,48 M 800,60 L 812,60" fill="none" stroke="url(#prjGradient1)" stroke-width="2" opacity="0.7"/>
+
+                    <!-- Budget/Dollar -->
+                    <circle cx="1000" cy="60" r="18" fill="none" stroke="url(#prjGradient1)" stroke-width="2" opacity="0.5"/>
+                    <text x="992" y="68" font-size="20" fill="url(#prjGradient1)" opacity="0.7">$</text>
+                </g>
+
+                <!-- Connection Lines -->
+                <path d="M 225,60 Q 310,45 385,55" fill="none" stroke="#8b5cf6" stroke-width="1" opacity="0.3"/>
+                <path d="M 430,60 Q 510,75 575,55" fill="none" stroke="#8b5cf6" stroke-width="1" opacity="0.3"/>
+                <path d="M 625,60 Q 710,45 780,55" fill="none" stroke="#8b5cf6" stroke-width="1" opacity="0.3"/>
+                <path d="M 825,60 Q 910,75 975,55" fill="none" stroke="#8b5cf6" stroke-width="1" opacity="0.3"/>
+
+                <!-- Animated Dots -->
+                <circle cx="310" cy="50" r="3" fill="#8b5cf6" opacity="0.8">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="710" cy="50" r="3" fill="#8b5cf6" opacity="0.8">
+                    <animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+
+        <!-- Header Content Layer -->
+        <div class="hcm-header-content parallax-layer" data-speed="1">
+            <div class="hcm-header-title">
+                <div class="hcm-icon">📋</div>
+                <div>
+                    <h1 class="hcm-title">Project Management</h1>
+                    <p class="hcm-subtitle">Planning, Resources, Time & Expense, Billing & Analytics</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Module Tabs -->
+    <div class="hcm-module-tabs">
+        <button class="hcm-module-tab active" data-module="planning">
+            <span class="tab-icon">📋</span>
+            <span class="tab-label">Planning</span>
+        </button>
+        <button class="hcm-module-tab" data-module="resources">
+            <span class="tab-icon">👥</span>
+            <span class="tab-label">Resources</span>
+        </button>
+        <button class="hcm-module-tab" data-module="timeexpense">
+            <span class="tab-icon">⏱️</span>
+            <span class="tab-label">Time & Expense</span>
+        </button>
+        <button class="hcm-module-tab" data-module="billing">
+            <span class="tab-icon">💵</span>
+            <span class="tab-label">Billing</span>
+        </button>
+        <button class="hcm-module-tab" data-module="analytics">
+            <span class="tab-icon">📊</span>
+            <span class="tab-label">Analytics</span>
+        </button>
+    </div>
+
     <div class="section-content">
-        <p class="section-description">Project Planning, Resource Management, Time & Expense Tracking, Project Billing</p>
-        <div style="padding: 40px; text-align: center; color: #718096;">
-            <p style="font-size: 48px; margin-bottom: 20px;">📋</p>
-            <p>This module is under development.</p>
-            <p style="margin-top: 10px; font-size: 12px;">Complete project lifecycle management including planning, resource allocation, time tracking, expense management, and project accounting.</p>
+        <!-- Planning Module -->
+        <div class="hcm-module-content active" data-module="planning">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="projects"><span class="subnav-icon">📁</span><span class="subnav-label">Projects</span></a>
+                <a class="hcm-subnav-item" data-service="templates"><span class="subnav-icon">📄</span><span class="subnav-label">Templates</span></a>
+                <a class="hcm-subnav-item" data-service="phases"><span class="subnav-icon">🔢</span><span class="subnav-label">Phases</span></a>
+                <a class="hcm-subnav-item" data-service="tasks"><span class="subnav-icon">✅</span><span class="subnav-label">Tasks</span></a>
+                <a class="hcm-subnav-item" data-service="milestones"><span class="subnav-icon">🎯</span><span class="subnav-label">Milestones</span></a>
+                <a class="hcm-subnav-item" data-service="deliverables"><span class="subnav-icon">📦</span><span class="subnav-label">Deliverables</span></a>
+                <a class="hcm-subnav-item" data-service="dependencies"><span class="subnav-icon">🔗</span><span class="subnav-label">Dependencies</span></a>
+                <a class="hcm-subnav-item" data-service="risks"><span class="subnav-icon">⚠️</span><span class="subnav-label">Risks</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="projects"><div class="hcm-table-container" id="planning-projects-table-container"></div></div>
+                <div class="hcm-service-view" data-service="templates"><div class="hcm-table-container" id="planning-templates-table-container"></div></div>
+                <div class="hcm-service-view" data-service="phases"><div class="hcm-table-container" id="planning-phases-table-container"></div></div>
+                <div class="hcm-service-view" data-service="tasks"><div class="hcm-table-container" id="planning-tasks-table-container"></div></div>
+                <div class="hcm-service-view" data-service="milestones"><div class="hcm-table-container" id="planning-milestones-table-container"></div></div>
+                <div class="hcm-service-view" data-service="deliverables"><div class="hcm-table-container" id="planning-deliverables-table-container"></div></div>
+                <div class="hcm-service-view" data-service="dependencies"><div class="hcm-table-container" id="planning-dependencies-table-container"></div></div>
+                <div class="hcm-service-view" data-service="risks"><div class="hcm-table-container" id="planning-risks-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Resources Module -->
+        <div class="hcm-module-content" data-module="resources">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="resource-pools"><span class="subnav-icon">🏊</span><span class="subnav-label">Resource Pools</span></a>
+                <a class="hcm-subnav-item" data-service="resources"><span class="subnav-icon">👤</span><span class="subnav-label">Resources</span></a>
+                <a class="hcm-subnav-item" data-service="resource-skills"><span class="subnav-icon">🎓</span><span class="subnav-label">Skills</span></a>
+                <a class="hcm-subnav-item" data-service="allocations"><span class="subnav-icon">📊</span><span class="subnav-label">Allocations</span></a>
+                <a class="hcm-subnav-item" data-service="bookings"><span class="subnav-icon">📅</span><span class="subnav-label">Bookings</span></a>
+                <a class="hcm-subnav-item" data-service="capacity-plans"><span class="subnav-icon">📈</span><span class="subnav-label">Capacity Plans</span></a>
+                <a class="hcm-subnav-item" data-service="utilizations"><span class="subnav-icon">⚡</span><span class="subnav-label">Utilizations</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="resource-pools"><div class="hcm-table-container" id="resources-resource-pools-table-container"></div></div>
+                <div class="hcm-service-view" data-service="resources"><div class="hcm-table-container" id="resources-resources-table-container"></div></div>
+                <div class="hcm-service-view" data-service="resource-skills"><div class="hcm-table-container" id="resources-resource-skills-table-container"></div></div>
+                <div class="hcm-service-view" data-service="allocations"><div class="hcm-table-container" id="resources-allocations-table-container"></div></div>
+                <div class="hcm-service-view" data-service="bookings"><div class="hcm-table-container" id="resources-bookings-table-container"></div></div>
+                <div class="hcm-service-view" data-service="capacity-plans"><div class="hcm-table-container" id="resources-capacity-plans-table-container"></div></div>
+                <div class="hcm-service-view" data-service="utilizations"><div class="hcm-table-container" id="resources-utilizations-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Time & Expense Module -->
+        <div class="hcm-module-content" data-module="timeexpense">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="timesheets"><span class="subnav-icon">📝</span><span class="subnav-label">Timesheets</span></a>
+                <a class="hcm-subnav-item" data-service="timesheet-entries"><span class="subnav-icon">⏰</span><span class="subnav-label">Time Entries</span></a>
+                <a class="hcm-subnav-item" data-service="expense-reports"><span class="subnav-icon">💰</span><span class="subnav-label">Expense Reports</span></a>
+                <a class="hcm-subnav-item" data-service="expense-entries"><span class="subnav-icon">💳</span><span class="subnav-label">Expenses</span></a>
+                <a class="hcm-subnav-item" data-service="approval-rules"><span class="subnav-icon">✔️</span><span class="subnav-label">Approval Rules</span></a>
+                <a class="hcm-subnav-item" data-service="expense-categories"><span class="subnav-icon">🏷️</span><span class="subnav-label">Categories</span></a>
+                <a class="hcm-subnav-item" data-service="expense-policies"><span class="subnav-icon">📜</span><span class="subnav-label">Policies</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="timesheets"><div class="hcm-table-container" id="timeexpense-timesheets-table-container"></div></div>
+                <div class="hcm-service-view" data-service="timesheet-entries"><div class="hcm-table-container" id="timeexpense-timesheet-entries-table-container"></div></div>
+                <div class="hcm-service-view" data-service="expense-reports"><div class="hcm-table-container" id="timeexpense-expense-reports-table-container"></div></div>
+                <div class="hcm-service-view" data-service="expense-entries"><div class="hcm-table-container" id="timeexpense-expense-entries-table-container"></div></div>
+                <div class="hcm-service-view" data-service="approval-rules"><div class="hcm-table-container" id="timeexpense-approval-rules-table-container"></div></div>
+                <div class="hcm-service-view" data-service="expense-categories"><div class="hcm-table-container" id="timeexpense-expense-categories-table-container"></div></div>
+                <div class="hcm-service-view" data-service="expense-policies"><div class="hcm-table-container" id="timeexpense-expense-policies-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Billing Module -->
+        <div class="hcm-module-content" data-module="billing">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="billing-rates"><span class="subnav-icon">💲</span><span class="subnav-label">Billing Rates</span></a>
+                <a class="hcm-subnav-item" data-service="billing-schedules"><span class="subnav-icon">📅</span><span class="subnav-label">Schedules</span></a>
+                <a class="hcm-subnav-item" data-service="billing-milestones"><span class="subnav-icon">🎯</span><span class="subnav-label">Milestones</span></a>
+                <a class="hcm-subnav-item" data-service="invoices"><span class="subnav-icon">📃</span><span class="subnav-label">Invoices</span></a>
+                <a class="hcm-subnav-item" data-service="invoice-lines"><span class="subnav-icon">📝</span><span class="subnav-label">Invoice Lines</span></a>
+                <a class="hcm-subnav-item" data-service="revenue-recognition"><span class="subnav-icon">📈</span><span class="subnav-label">Revenue</span></a>
+                <a class="hcm-subnav-item" data-service="budgets"><span class="subnav-icon">💼</span><span class="subnav-label">Budgets</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="billing-rates"><div class="hcm-table-container" id="billing-billing-rates-table-container"></div></div>
+                <div class="hcm-service-view" data-service="billing-schedules"><div class="hcm-table-container" id="billing-billing-schedules-table-container"></div></div>
+                <div class="hcm-service-view" data-service="billing-milestones"><div class="hcm-table-container" id="billing-billing-milestones-table-container"></div></div>
+                <div class="hcm-service-view" data-service="invoices"><div class="hcm-table-container" id="billing-invoices-table-container"></div></div>
+                <div class="hcm-service-view" data-service="invoice-lines"><div class="hcm-table-container" id="billing-invoice-lines-table-container"></div></div>
+                <div class="hcm-service-view" data-service="revenue-recognition"><div class="hcm-table-container" id="billing-revenue-recognition-table-container"></div></div>
+                <div class="hcm-service-view" data-service="budgets"><div class="hcm-table-container" id="billing-budgets-table-container"></div></div>
+            </div>
+        </div>
+
+        <!-- Analytics Module -->
+        <div class="hcm-module-content" data-module="analytics">
+            <nav class="hcm-subnav">
+                <a class="hcm-subnav-item active" data-service="status-reports"><span class="subnav-icon">📋</span><span class="subnav-label">Status Reports</span></a>
+                <a class="hcm-subnav-item" data-service="earned-values"><span class="subnav-icon">📈</span><span class="subnav-label">Earned Value</span></a>
+                <a class="hcm-subnav-item" data-service="budget-variances"><span class="subnav-icon">📉</span><span class="subnav-label">Variances</span></a>
+                <a class="hcm-subnav-item" data-service="resource-forecasts"><span class="subnav-icon">🔮</span><span class="subnav-label">Forecasts</span></a>
+                <a class="hcm-subnav-item" data-service="portfolio-views"><span class="subnav-icon">🗂️</span><span class="subnav-label">Portfolio</span></a>
+                <a class="hcm-subnav-item" data-service="kpis"><span class="subnav-icon">🎯</span><span class="subnav-label">KPIs</span></a>
+                <a class="hcm-subnav-item" data-service="issues"><span class="subnav-icon">🐛</span><span class="subnav-label">Issues</span></a>
+            </nav>
+            <div class="hcm-service-content">
+                <div class="hcm-service-view active" data-service="status-reports"><div class="hcm-table-container" id="analytics-status-reports-table-container"></div></div>
+                <div class="hcm-service-view" data-service="earned-values"><div class="hcm-table-container" id="analytics-earned-values-table-container"></div></div>
+                <div class="hcm-service-view" data-service="budget-variances"><div class="hcm-table-container" id="analytics-budget-variances-table-container"></div></div>
+                <div class="hcm-service-view" data-service="resource-forecasts"><div class="hcm-table-container" id="analytics-resource-forecasts-table-container"></div></div>
+                <div class="hcm-service-view" data-service="portfolio-views"><div class="hcm-table-container" id="analytics-portfolio-views-table-container"></div></div>
+                <div class="hcm-service-view" data-service="kpis"><div class="hcm-table-container" id="analytics-kpis-table-container"></div></div>
+                <div class="hcm-service-view" data-service="issues"><div class="hcm-table-container" id="analytics-issues-table-container"></div></div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Initialize PRJ when section loads
+    if (typeof initializePrj === 'function') {
+        initializePrj();
+    } else if (typeof Prj !== 'undefined' && Prj.initialize) {
+        Prj.initialize();
+    }
+</script>

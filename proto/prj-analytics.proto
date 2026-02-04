@@ -1,0 +1,226 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package prj;
+
+option go_package = "./types/prj";
+
+import "prj-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// PROJECT ANALYTICS MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// PrjStatusReport represents a project status report
+message PrjStatusReport {
+  string status_id = 1;
+  string project_id = 2;                   // cross-ref: PrjProject
+  int64 report_date = 3;
+  int64 period_start = 4;
+  int64 period_end = 5;
+  PrjHealthIndicator overall_health = 6;
+  PrjHealthIndicator schedule_health = 7;
+  PrjHealthIndicator budget_health = 8;
+  PrjHealthIndicator scope_health = 9;
+  PrjHealthIndicator resource_health = 10;
+  int32 percent_complete = 11;
+  string accomplishments = 12;
+  string planned_activities = 13;
+  string issues_summary = 14;
+  string risks_summary = 15;
+  string decisions_needed = 16;
+  string reported_by = 17;                 // cross-ref: HCM Employee
+  map<string, string> custom_fields = 18;
+  erp.AuditInfo audit_info = 19;
+}
+
+message PrjStatusReportList {
+  repeated PrjStatusReport list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjEarnedValue represents earned value metrics for a project
+message PrjEarnedValue {
+  string earned_value_id = 1;
+  string project_id = 2;                   // cross-ref: PrjProject
+  int64 as_of_date = 3;
+  erp.Money budget_at_completion = 4;      // BAC
+  erp.Money planned_value = 5;             // PV (BCWS)
+  erp.Money earned_value = 6;              // EV (BCWP)
+  erp.Money actual_cost = 7;               // AC (ACWP)
+  erp.Money schedule_variance = 8;         // SV = EV - PV
+  erp.Money cost_variance = 9;             // CV = EV - AC
+  double schedule_performance_index = 10;  // SPI = EV / PV
+  double cost_performance_index = 11;      // CPI = EV / AC
+  erp.Money estimate_at_completion = 12;   // EAC
+  erp.Money estimate_to_complete = 13;     // ETC
+  erp.Money variance_at_completion = 14;   // VAC = BAC - EAC
+  double to_complete_performance_index = 15; // TCPI
+  double percent_complete = 16;
+  double percent_spent = 17;
+  map<string, string> custom_fields = 18;
+  erp.AuditInfo audit_info = 19;
+}
+
+message PrjEarnedValueList {
+  repeated PrjEarnedValue list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjBudgetVariance represents budget variance analysis
+message PrjBudgetVariance {
+  string variance_id = 1;
+  string project_id = 2;                   // cross-ref: PrjProject
+  string budget_id = 3;                    // cross-ref: PrjProjectBudget
+  string phase_id = 4;                     // cross-ref: PrjPhase
+  int64 as_of_date = 5;
+  string category = 6;                     // labor, expense, materials, etc.
+  erp.Money budgeted_amount = 7;
+  erp.Money actual_amount = 8;
+  erp.Money variance_amount = 9;
+  double variance_percent = 10;
+  double budgeted_hours = 11;
+  double actual_hours = 12;
+  double hours_variance = 13;
+  string variance_explanation = 14;
+  string corrective_action = 15;
+  map<string, string> custom_fields = 16;
+  erp.AuditInfo audit_info = 17;
+}
+
+message PrjBudgetVarianceList {
+  repeated PrjBudgetVariance list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjResourceForecast represents resource demand forecasting
+message PrjResourceForecast {
+  string forecast_id = 1;
+  string project_id = 2;                   // cross-ref: PrjProject
+  string resource_id = 3;                  // cross-ref: PrjResource
+  string pool_id = 4;                      // cross-ref: PrjResourcePool
+  string skill_category = 5;
+  string role = 6;
+  int64 period_start = 7;
+  int64 period_end = 8;
+  double forecasted_hours = 9;
+  double confirmed_hours = 10;
+  double gap_hours = 11;
+  int32 headcount_needed = 12;
+  int32 headcount_available = 13;
+  double confidence_level = 14;            // 0-100 percentage
+  string notes = 15;
+  map<string, string> custom_fields = 16;
+  erp.AuditInfo audit_info = 17;
+}
+
+message PrjResourceForecastList {
+  repeated PrjResourceForecast list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjPortfolioView represents a portfolio-level view of projects
+message PrjPortfolioView {
+  string view_id = 1;
+  string name = 2;
+  string description = 3;
+  repeated string project_ids = 4;         // cross-ref: PrjProject
+  string owner_id = 5;                     // cross-ref: HCM Employee
+  string department_id = 6;                // cross-ref: HCM Department
+  erp.Money total_budget = 7;
+  erp.Money total_actual_cost = 8;
+  erp.Money total_revenue = 9;
+  erp.Money total_profit = 10;
+  int32 total_projects = 11;
+  int32 on_track_count = 12;
+  int32 at_risk_count = 13;
+  int32 off_track_count = 14;
+  double avg_utilization = 15;
+  double avg_margin = 16;
+  int64 as_of_date = 17;
+  map<string, string> custom_fields = 18;
+  erp.AuditInfo audit_info = 19;
+}
+
+message PrjPortfolioViewList {
+  repeated PrjPortfolioView list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjProjectKPI represents key performance indicators for a project
+message PrjProjectKPI {
+  string kpi_id = 1;
+  string project_id = 2;                   // cross-ref: PrjProject
+  string kpi_name = 3;
+  string kpi_category = 4;
+  string description = 5;
+  double target_value = 6;
+  double actual_value = 7;
+  string unit_of_measure = 8;
+  PrjHealthIndicator status = 9;
+  double variance = 10;
+  double variance_percent = 11;
+  int64 measurement_date = 12;
+  string measurement_period = 13;
+  string trend = 14;                       // improving, stable, declining
+  string notes = 15;
+  map<string, string> custom_fields = 16;
+  erp.AuditInfo audit_info = 17;
+}
+
+message PrjProjectKPIList {
+  repeated PrjProjectKPI list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// PrjProjectIssue represents a project issue
+message PrjProjectIssue {
+  string issue_id = 1;
+  string project_id = 2;                   // cross-ref: PrjProject
+  string task_id = 3;                      // cross-ref: PrjTask
+  string issue_number = 4;
+  string title = 5;
+  string description = 6;
+  string category = 7;
+  PrjIssueStatus status = 8;
+  PrjIssuePriority priority = 9;
+  string reported_by = 10;                 // cross-ref: HCM Employee
+  string assigned_to = 11;                 // cross-ref: HCM Employee
+  int64 reported_date = 12;
+  int64 due_date = 13;
+  int64 resolved_date = 14;
+  string resolution = 15;
+  string root_cause = 16;
+  erp.Money impact_cost = 17;
+  int32 impact_days = 18;
+  string related_risk_id = 19;             // cross-ref: PrjRisk
+  map<string, string> custom_fields = 20;
+  erp.AuditInfo audit_info = 21;
+}
+
+message PrjProjectIssueList {
+  repeated PrjProjectIssue list = 1;
+  l8api.L8MetaData metadata = 2;
+}

@@ -1,0 +1,582 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+package main
+
+// Generates:
+// - PrjStatusReport
+// - PrjEarnedValue
+// - PrjBudgetVariance
+// - PrjResourceForecast
+// - PrjPortfolioView
+// - PrjProjectKPI
+// - PrjProjectIssue
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+
+	"github.com/saichler/l8erp/go/types/erp"
+	"github.com/saichler/l8erp/go/types/prj"
+)
+
+// generateStatusReports creates status report records for projects
+func generateStatusReports(store *MockDataStore) []*prj.PrjStatusReport {
+	count := 45 // ~3 per project
+
+	// Flavorable health distributions: 60% GREEN, 25% YELLOW, 15% RED
+	healthIndicators := []prj.PrjHealthIndicator{
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_GREEN,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_GREEN,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_GREEN,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_GREEN,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_GREEN,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_GREEN,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_YELLOW,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_YELLOW,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_YELLOW,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_RED,
+	}
+
+	accomplishments := []string{
+		"Completed sprint deliverables ahead of schedule",
+		"Successfully deployed to production environment",
+		"All test cases passed with 100% coverage",
+		"Stakeholder review completed with positive feedback",
+		"Major milestone achieved on time",
+		"Resource allocation optimized for next phase",
+		"Integration testing completed successfully",
+		"Documentation updated and approved",
+	}
+
+	plannedActivities := []string{
+		"Begin next sprint planning and backlog grooming",
+		"Continue development of core features",
+		"Conduct user acceptance testing",
+		"Prepare for production deployment",
+		"Complete security audit requirements",
+		"Finalize resource allocation for next phase",
+		"Begin integration with external systems",
+		"Start performance optimization phase",
+	}
+
+	reports := make([]*prj.PrjStatusReport, count)
+	for i := 0; i < count; i++ {
+		projectID := ""
+		if len(store.PrjProjectIDs) > 0 {
+			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
+		}
+
+		reportedBy := ""
+		if len(store.EmployeeIDs) > 0 {
+			reportedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
+		}
+
+		reportDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
+		periodStart := reportDate.AddDate(0, 0, -14)
+		periodEnd := reportDate
+
+		reports[i] = &prj.PrjStatusReport{
+			StatusId:          fmt.Sprintf("psr-%03d", i+1),
+			ProjectId:         projectID,
+			ReportDate:        reportDate.Unix(),
+			PeriodStart:       periodStart.Unix(),
+			PeriodEnd:         periodEnd.Unix(),
+			OverallHealth:     healthIndicators[i%len(healthIndicators)],
+			ScheduleHealth:    healthIndicators[(i+1)%len(healthIndicators)],
+			BudgetHealth:      healthIndicators[(i+2)%len(healthIndicators)],
+			ScopeHealth:       healthIndicators[(i+3)%len(healthIndicators)],
+			ResourceHealth:    healthIndicators[(i+4)%len(healthIndicators)],
+			PercentComplete:   int32(rand.Intn(80) + 10),
+			Accomplishments:   accomplishments[i%len(accomplishments)],
+			PlannedActivities: plannedActivities[i%len(plannedActivities)],
+			IssuesSummary:     fmt.Sprintf("Issue summary for report period %d", i+1),
+			RisksSummary:      fmt.Sprintf("Risk assessment for period %d", i+1),
+			DecisionsNeeded:   fmt.Sprintf("Decisions needed for phase %d", (i%5)+1),
+			ReportedBy:        reportedBy,
+			AuditInfo:         createAuditInfo(),
+		}
+	}
+	return reports
+}
+
+// generateEarnedValues creates earned value metrics for projects
+func generateEarnedValues(store *MockDataStore) []*prj.PrjEarnedValue {
+	count := 15
+
+	earnedValues := make([]*prj.PrjEarnedValue, count)
+	for i := 0; i < count; i++ {
+		projectID := ""
+		if len(store.PrjProjectIDs) > 0 {
+			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
+		}
+
+		asOfDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
+
+		// Generate realistic EVM data
+		bac := int64(rand.Intn(500000000) + 100000000) // $1M - $6M Budget at Completion
+		percentComplete := float64(rand.Intn(80)+10) / 100
+		percentSpent := percentComplete * (0.85 + rand.Float64()*0.3) // +/- 15% variance
+
+		pv := int64(float64(bac) * percentComplete)
+		ev := int64(float64(pv) * (0.9 + rand.Float64()*0.2))  // EV within 10% of PV
+		ac := int64(float64(ev) * (0.85 + rand.Float64()*0.3)) // AC with variance
+
+		sv := ev - pv
+		cv := ev - ac
+
+		var spi, cpi float64
+		if pv > 0 {
+			spi = float64(ev) / float64(pv)
+		}
+		if ac > 0 {
+			cpi = float64(ev) / float64(ac)
+		}
+
+		var eac int64
+		if cpi > 0 {
+			eac = int64(float64(bac) / cpi)
+		} else {
+			eac = bac
+		}
+
+		etc := eac - ac
+		vac := bac - eac
+
+		var tcpi float64
+		if bac-ev > 0 {
+			tcpi = float64(bac-ev) / float64(bac-ac)
+		}
+
+		earnedValues[i] = &prj.PrjEarnedValue{
+			EarnedValueId:              fmt.Sprintf("pev-%03d", i+1),
+			ProjectId:                  projectID,
+			AsOfDate:                   asOfDate.Unix(),
+			BudgetAtCompletion:         &erp.Money{Amount: bac, CurrencyCode: "USD"},
+			PlannedValue:               &erp.Money{Amount: pv, CurrencyCode: "USD"},
+			EarnedValue:                &erp.Money{Amount: ev, CurrencyCode: "USD"},
+			ActualCost:                 &erp.Money{Amount: ac, CurrencyCode: "USD"},
+			ScheduleVariance:           &erp.Money{Amount: sv, CurrencyCode: "USD"},
+			CostVariance:               &erp.Money{Amount: cv, CurrencyCode: "USD"},
+			SchedulePerformanceIndex:   spi,
+			CostPerformanceIndex:       cpi,
+			EstimateAtCompletion:       &erp.Money{Amount: eac, CurrencyCode: "USD"},
+			EstimateToComplete:         &erp.Money{Amount: etc, CurrencyCode: "USD"},
+			VarianceAtCompletion:       &erp.Money{Amount: vac, CurrencyCode: "USD"},
+			ToCompletePerformanceIndex: tcpi,
+			PercentComplete:            percentComplete * 100,
+			PercentSpent:               percentSpent * 100,
+			AuditInfo:                  createAuditInfo(),
+		}
+	}
+	return earnedValues
+}
+
+// generateBudgetVariances creates budget variance records for projects
+func generateBudgetVariances(store *MockDataStore) []*prj.PrjBudgetVariance {
+	count := 30
+
+	categories := []string{"Labor", "Materials", "Equipment", "Travel", "Software", "Consulting"}
+	explanations := []string{
+		"Additional resources required for accelerated timeline",
+		"Scope change approved by steering committee",
+		"Market rate increases for specialized skills",
+		"Unexpected technical complexity",
+		"Vendor pricing adjustment",
+		"Efficiency improvements reduced costs",
+	}
+	correctiveActions := []string{
+		"Reallocate budget from contingency reserve",
+		"Submit change request for additional funding",
+		"Negotiate with vendor for better rates",
+		"Optimize resource utilization",
+		"Defer non-critical activities",
+		"No action required - within tolerance",
+	}
+
+	variances := make([]*prj.PrjBudgetVariance, count)
+	for i := 0; i < count; i++ {
+		projectID := ""
+		if len(store.PrjProjectIDs) > 0 {
+			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
+		}
+
+		budgetID := ""
+		if len(store.PrjProjectBudgetIDs) > 0 {
+			budgetID = store.PrjProjectBudgetIDs[i%len(store.PrjProjectBudgetIDs)]
+		}
+
+		phaseID := ""
+		if len(store.PrjPhaseIDs) > 0 {
+			phaseID = store.PrjPhaseIDs[i%len(store.PrjPhaseIDs)]
+		}
+
+		asOfDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
+
+		budgetedAmount := int64(rand.Intn(100000000) + 10000000) // $100k - $1.1M
+		variancePercent := (rand.Float64()*40 - 20)             // -20% to +20% variance
+		actualAmount := int64(float64(budgetedAmount) * (1 + variancePercent/100))
+		varianceAmount := actualAmount - budgetedAmount
+
+		budgetedHours := float64(rand.Intn(500) + 100)
+		actualHours := budgetedHours * (1 + variancePercent/100)
+		hoursVariance := actualHours - budgetedHours
+
+		variances[i] = &prj.PrjBudgetVariance{
+			VarianceId:          fmt.Sprintf("pbv-%03d", i+1),
+			ProjectId:           projectID,
+			BudgetId:            budgetID,
+			PhaseId:             phaseID,
+			AsOfDate:            asOfDate.Unix(),
+			Category:            categories[i%len(categories)],
+			BudgetedAmount:      &erp.Money{Amount: budgetedAmount, CurrencyCode: "USD"},
+			ActualAmount:        &erp.Money{Amount: actualAmount, CurrencyCode: "USD"},
+			VarianceAmount:      &erp.Money{Amount: varianceAmount, CurrencyCode: "USD"},
+			VariancePercent:     variancePercent,
+			BudgetedHours:       budgetedHours,
+			ActualHours:         actualHours,
+			HoursVariance:       hoursVariance,
+			VarianceExplanation: explanations[i%len(explanations)],
+			CorrectiveAction:    correctiveActions[i%len(correctiveActions)],
+			AuditInfo:           createAuditInfo(),
+		}
+	}
+	return variances
+}
+
+// generateResourceForecasts creates resource forecast records
+func generateResourceForecasts(store *MockDataStore) []*prj.PrjResourceForecast {
+	count := 20
+
+	skillCategories := []string{"Development", "Testing", "Design", "Architecture", "Management", "Analysis"}
+	roles := []string{"Developer", "QA Engineer", "UI Designer", "Solution Architect", "Project Manager", "Business Analyst"}
+
+	forecasts := make([]*prj.PrjResourceForecast, count)
+	for i := 0; i < count; i++ {
+		projectID := ""
+		if len(store.PrjProjectIDs) > 0 {
+			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
+		}
+
+		resourceID := ""
+		if len(store.PrjResourceIDs) > 0 {
+			resourceID = store.PrjResourceIDs[i%len(store.PrjResourceIDs)]
+		}
+
+		poolID := ""
+		if len(store.PrjResourcePoolIDs) > 0 {
+			poolID = store.PrjResourcePoolIDs[i%len(store.PrjResourcePoolIDs)]
+		}
+
+		periodStart := time.Now().AddDate(0, rand.Intn(3), 0)
+		periodEnd := periodStart.AddDate(0, 1, 0)
+
+		forecastedHours := float64(rand.Intn(200) + 40)
+		confirmedHours := forecastedHours * (0.5 + rand.Float64()*0.5)
+		gapHours := forecastedHours - confirmedHours
+
+		headcountNeeded := int32(rand.Intn(5) + 1)
+		headcountAvailable := int32(float64(headcountNeeded) * (0.6 + rand.Float64()*0.6))
+
+		forecasts[i] = &prj.PrjResourceForecast{
+			ForecastId:         fmt.Sprintf("prf-%03d", i+1),
+			ProjectId:          projectID,
+			ResourceId:         resourceID,
+			PoolId:             poolID,
+			SkillCategory:      skillCategories[i%len(skillCategories)],
+			Role:               roles[i%len(roles)],
+			PeriodStart:        periodStart.Unix(),
+			PeriodEnd:          periodEnd.Unix(),
+			ForecastedHours:    forecastedHours,
+			ConfirmedHours:     confirmedHours,
+			GapHours:           gapHours,
+			HeadcountNeeded:    headcountNeeded,
+			HeadcountAvailable: headcountAvailable,
+			ConfidenceLevel:    float64(rand.Intn(40) + 60), // 60-100%
+			Notes:              fmt.Sprintf("Resource forecast for %s role", roles[i%len(roles)]),
+			AuditInfo:          createAuditInfo(),
+		}
+	}
+	return forecasts
+}
+
+// generatePortfolioViews creates portfolio view records
+func generatePortfolioViews(store *MockDataStore) []*prj.PrjPortfolioView {
+	count := 5
+
+	names := []string{
+		"Enterprise Portfolio Overview",
+		"IT Project Portfolio",
+		"Strategic Initiatives",
+		"Product Development Portfolio",
+		"Infrastructure Projects",
+	}
+	descriptions := []string{
+		"Overview of all active enterprise projects",
+		"Information technology project portfolio",
+		"Strategic business initiatives dashboard",
+		"Product development and innovation projects",
+		"Infrastructure and facilities projects",
+	}
+
+	views := make([]*prj.PrjPortfolioView, count)
+	for i := 0; i < count; i++ {
+		ownerID := ""
+		if len(store.EmployeeIDs) > 0 {
+			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
+		}
+
+		departmentID := ""
+		if len(store.DepartmentIDs) > 0 {
+			departmentID = store.DepartmentIDs[i%len(store.DepartmentIDs)]
+		}
+
+		// Assign 3-5 projects to each portfolio view
+		var projectIds []string
+		if len(store.PrjProjectIDs) > 0 {
+			numProjects := rand.Intn(3) + 3
+			for j := 0; j < numProjects && j < len(store.PrjProjectIDs); j++ {
+				idx := (i*3 + j) % len(store.PrjProjectIDs)
+				projectIds = append(projectIds, store.PrjProjectIDs[idx])
+			}
+		}
+
+		totalProjects := int32(len(projectIds))
+		onTrackCount := int32(float64(totalProjects) * 0.6)    // 60% on track
+		atRiskCount := int32(float64(totalProjects) * 0.25)    // 25% at risk
+		offTrackCount := totalProjects - onTrackCount - atRiskCount
+
+		totalBudget := int64(rand.Intn(1000000000)+500000000) * int64(totalProjects) / 5
+		actualCost := int64(float64(totalBudget) * (0.4 + rand.Float64()*0.3))
+		totalRevenue := int64(float64(totalBudget) * (0.7 + rand.Float64()*0.4))
+		totalProfit := totalRevenue - actualCost
+
+		views[i] = &prj.PrjPortfolioView{
+			ViewId:          fmt.Sprintf("ppv-%03d", i+1),
+			Name:            names[i%len(names)],
+			Description:     descriptions[i%len(descriptions)],
+			ProjectIds:      projectIds,
+			OwnerId:         ownerID,
+			DepartmentId:    departmentID,
+			TotalBudget:     &erp.Money{Amount: totalBudget, CurrencyCode: "USD"},
+			TotalActualCost: &erp.Money{Amount: actualCost, CurrencyCode: "USD"},
+			TotalRevenue:    &erp.Money{Amount: totalRevenue, CurrencyCode: "USD"},
+			TotalProfit:     &erp.Money{Amount: totalProfit, CurrencyCode: "USD"},
+			TotalProjects:   totalProjects,
+			OnTrackCount:    onTrackCount,
+			AtRiskCount:     atRiskCount,
+			OffTrackCount:   offTrackCount,
+			AvgUtilization:  float64(rand.Intn(30)+60) / 100, // 60-90%
+			AvgMargin:       float64(rand.Intn(20)+10) / 100, // 10-30%
+			AsOfDate:        time.Now().Unix(),
+			AuditInfo:       createAuditInfo(),
+		}
+	}
+	return views
+}
+
+// generateProjectKPIs creates KPI records for projects
+func generateProjectKPIs(store *MockDataStore) []*prj.PrjProjectKPI {
+	count := 60 // ~4 per project
+
+	// Flavorable health distributions: 60% GREEN, 25% YELLOW, 15% RED
+	healthIndicators := []prj.PrjHealthIndicator{
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_GREEN,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_GREEN,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_GREEN,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_GREEN,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_GREEN,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_GREEN,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_YELLOW,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_YELLOW,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_YELLOW,
+		prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_RED,
+	}
+
+	kpiCategories := []string{"Schedule", "Cost", "Quality", "Scope", "Resource", "Customer"}
+	units := []string{"%", "index", "defects/KLOC", "days", "FTE", "score"}
+	trends := []string{"improving", "stable", "declining"}
+	measurementPeriods := []string{"Weekly", "Bi-weekly", "Monthly", "Quarterly"}
+
+	kpis := make([]*prj.PrjProjectKPI, count)
+	for i := 0; i < count; i++ {
+		projectID := ""
+		if len(store.PrjProjectIDs) > 0 {
+			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
+		}
+
+		kpiName := prjKPINames[i%len(prjKPINames)]
+		category := kpiCategories[i%len(kpiCategories)]
+		unit := units[i%len(units)]
+
+		targetValue := float64(rand.Intn(100) + 50)
+		variancePercent := (rand.Float64()*30 - 15) // -15% to +15%
+		actualValue := targetValue * (1 + variancePercent/100)
+		variance := actualValue - targetValue
+
+		// Determine status based on variance
+		var status prj.PrjHealthIndicator
+		if variancePercent >= -5 && variancePercent <= 5 {
+			status = prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_GREEN
+		} else if variancePercent >= -15 && variancePercent <= 15 {
+			status = prj.PrjHealthIndicator_PRJ_HEALTH_INDICATOR_YELLOW
+		} else {
+			status = healthIndicators[i%len(healthIndicators)]
+		}
+
+		measurementDate := time.Now().AddDate(0, 0, -rand.Intn(30))
+
+		kpis[i] = &prj.PrjProjectKPI{
+			KpiId:             fmt.Sprintf("pkpi-%03d", i+1),
+			ProjectId:         projectID,
+			KpiName:           kpiName,
+			KpiCategory:       category,
+			Description:       fmt.Sprintf("Measures %s for the project", kpiName),
+			TargetValue:       targetValue,
+			ActualValue:       actualValue,
+			UnitOfMeasure:     unit,
+			Status:            status,
+			Variance:          variance,
+			VariancePercent:   variancePercent,
+			MeasurementDate:   measurementDate.Unix(),
+			MeasurementPeriod: measurementPeriods[i%len(measurementPeriods)],
+			Trend:             trends[i%len(trends)],
+			Notes:             fmt.Sprintf("KPI tracking for %s", kpiName),
+			AuditInfo:         createAuditInfo(),
+		}
+	}
+	return kpis
+}
+
+// generateProjectIssues creates issue records for projects
+func generateProjectIssues(store *MockDataStore) []*prj.PrjProjectIssue {
+	count := 40
+
+	// Flavorable status distributions: 30% OPEN, 35% IN_PROGRESS, 20% RESOLVED, 15% CLOSED
+	issueStatuses := []prj.PrjIssueStatus{
+		prj.PrjIssueStatus_PRJ_ISSUE_STATUS_OPEN,
+		prj.PrjIssueStatus_PRJ_ISSUE_STATUS_OPEN,
+		prj.PrjIssueStatus_PRJ_ISSUE_STATUS_OPEN,
+		prj.PrjIssueStatus_PRJ_ISSUE_STATUS_IN_PROGRESS,
+		prj.PrjIssueStatus_PRJ_ISSUE_STATUS_IN_PROGRESS,
+		prj.PrjIssueStatus_PRJ_ISSUE_STATUS_IN_PROGRESS,
+		prj.PrjIssueStatus_PRJ_ISSUE_STATUS_IN_PROGRESS,
+		prj.PrjIssueStatus_PRJ_ISSUE_STATUS_RESOLVED,
+		prj.PrjIssueStatus_PRJ_ISSUE_STATUS_RESOLVED,
+		prj.PrjIssueStatus_PRJ_ISSUE_STATUS_CLOSED,
+	}
+
+	// Flavorable priority distributions: 40% MEDIUM, 30% HIGH, 20% LOW, 10% CRITICAL
+	issuePriorities := []prj.PrjIssuePriority{
+		prj.PrjIssuePriority_PRJ_ISSUE_PRIORITY_LOW,
+		prj.PrjIssuePriority_PRJ_ISSUE_PRIORITY_LOW,
+		prj.PrjIssuePriority_PRJ_ISSUE_PRIORITY_MEDIUM,
+		prj.PrjIssuePriority_PRJ_ISSUE_PRIORITY_MEDIUM,
+		prj.PrjIssuePriority_PRJ_ISSUE_PRIORITY_MEDIUM,
+		prj.PrjIssuePriority_PRJ_ISSUE_PRIORITY_MEDIUM,
+		prj.PrjIssuePriority_PRJ_ISSUE_PRIORITY_HIGH,
+		prj.PrjIssuePriority_PRJ_ISSUE_PRIORITY_HIGH,
+		prj.PrjIssuePriority_PRJ_ISSUE_PRIORITY_HIGH,
+		prj.PrjIssuePriority_PRJ_ISSUE_PRIORITY_CRITICAL,
+	}
+
+	issueTitles := []string{
+		"Resource availability conflict",
+		"Integration test failures",
+		"Environment setup delays",
+		"Vendor delivery delay",
+		"Requirements clarification needed",
+		"Performance degradation detected",
+		"Security vulnerability identified",
+		"Data migration issues",
+		"Third-party API changes",
+		"Scope creep concerns",
+	}
+
+	resolutions := []string{
+		"Implemented workaround solution",
+		"Root cause identified and fixed",
+		"Vendor issue resolved",
+		"Additional resources allocated",
+		"Requirements updated and approved",
+		"",
+		"",
+		"",
+	}
+
+	issues := make([]*prj.PrjProjectIssue, count)
+	for i := 0; i < count; i++ {
+		projectID := ""
+		if len(store.PrjProjectIDs) > 0 {
+			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
+		}
+
+		taskID := ""
+		if len(store.PrjTaskIDs) > 0 {
+			taskID = store.PrjTaskIDs[i%len(store.PrjTaskIDs)]
+		}
+
+		reportedBy := ""
+		if len(store.EmployeeIDs) > 0 {
+			reportedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
+		}
+
+		assignedTo := ""
+		if len(store.EmployeeIDs) > 0 {
+			assignedTo = store.EmployeeIDs[(i+5)%len(store.EmployeeIDs)]
+		}
+
+		riskID := ""
+		if len(store.PrjRiskIDs) > 0 && i%4 == 0 { // 25% linked to risks
+			riskID = store.PrjRiskIDs[i%len(store.PrjRiskIDs)]
+		}
+
+		reportedDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
+		dueDate := reportedDate.AddDate(0, 0, rand.Intn(30)+7)
+
+		status := issueStatuses[i%len(issueStatuses)]
+		var resolvedDate int64
+		resolution := ""
+		if status == prj.PrjIssueStatus_PRJ_ISSUE_STATUS_RESOLVED ||
+			status == prj.PrjIssueStatus_PRJ_ISSUE_STATUS_CLOSED {
+			resolvedDate = reportedDate.AddDate(0, 0, rand.Intn(20)+3).Unix()
+			resolution = resolutions[i%len(resolutions)]
+		}
+
+		issues[i] = &prj.PrjProjectIssue{
+			IssueId:       fmt.Sprintf("pis-%03d", i+1),
+			ProjectId:     projectID,
+			TaskId:        taskID,
+			IssueNumber:   fmt.Sprintf("ISS-%04d", i+1),
+			Title:         issueTitles[i%len(issueTitles)],
+			Description:   fmt.Sprintf("Detailed description of issue: %s", issueTitles[i%len(issueTitles)]),
+			Category:      prjIssueCategories[i%len(prjIssueCategories)],
+			Status:        status,
+			Priority:      issuePriorities[i%len(issuePriorities)],
+			ReportedBy:    reportedBy,
+			AssignedTo:    assignedTo,
+			ReportedDate:  reportedDate.Unix(),
+			DueDate:       dueDate.Unix(),
+			ResolvedDate:  resolvedDate,
+			Resolution:    resolution,
+			RootCause:     fmt.Sprintf("Root cause analysis for issue %d", i+1),
+			ImpactCost:    &erp.Money{Amount: int64(rand.Intn(100000) + 5000), CurrencyCode: "USD"},
+			ImpactDays:    int32(rand.Intn(10) + 1),
+			RelatedRiskId: riskID,
+			AuditInfo:     createAuditInfo(),
+		}
+	}
+	return issues
+}

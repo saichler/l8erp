@@ -63,6 +63,11 @@ const sectionInitializers = {
             initializeMfg();
         }
     },
+    projects: () => {
+        if (typeof initializePrj === 'function') {
+            initializePrj();
+        }
+    },
     system: () => {
         if (typeof initializeL8Sys === 'function') {
             initializeL8Sys();
