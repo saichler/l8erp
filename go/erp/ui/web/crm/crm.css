@@ -16,21 +16,6 @@ limitations under the License.
 /* CRM Module Styles */
 /* Uses shared HCM layout classes - minimal overrides needed */
 
-/* CRM-specific color accent (teal/blue for customer relationships) */
-.crm-section .hcm-header-frame {
-    background: linear-gradient(135deg, #0d9488 0%, #0891b2 100%);
-}
-
-.crm-section .hcm-module-tab.active {
-    border-bottom-color: #14b8a6;
-    color: #14b8a6;
-}
-
-.crm-section .hcm-subnav-item.active {
-    color: #14b8a6;
-    border-bottom-color: #14b8a6;
-}
-
 /* Lead Status Colors */
 .crm-lead-status-new {
     background-color: #dbeafe;

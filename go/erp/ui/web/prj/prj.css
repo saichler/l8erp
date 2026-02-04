@@ -16,21 +16,6 @@ limitations under the License.
 /* PRJ Module Styles */
 /* Uses shared HCM layout classes - minimal overrides needed */
 
-/* PRJ-specific color accent (purple for project management) */
-.prj-section .hcm-header-frame {
-    background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
-}
-
-.prj-section .hcm-module-tab.active {
-    border-bottom-color: #8b5cf6;
-    color: #8b5cf6;
-}
-
-.prj-section .hcm-subnav-item.active {
-    color: #8b5cf6;
-    border-bottom-color: #8b5cf6;
-}
-
 /* Project Status Colors */
 .prj-status-draft {
     background-color: #e5e7eb;
