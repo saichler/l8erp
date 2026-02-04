@@ -68,6 +68,11 @@ const sectionInitializers = {
             initializePrj();
         }
     },
+    bi: () => {
+        if (typeof initializeBi === 'function') {
+            initializeBi();
+        }
+    },
     system: () => {
         if (typeof initializeL8Sys === 'function') {
             initializeL8Sys();

@@ -454,6 +454,42 @@ func main() {
 		os.Exit(1)
 	}
 
+	// BI Module Phases
+	fmt.Printf("\nBI Phase 1: Foundation\n")
+	fmt.Printf("----------------------\n")
+	if err := generateBiPhase1(client, store); err != nil {
+		fmt.Printf("BI Phase 1 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nBI Phase 2: Report Management\n")
+	fmt.Printf("-----------------------------\n")
+	if err := generateBiPhase2(client, store); err != nil {
+		fmt.Printf("BI Phase 2 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nBI Phase 3: Dashboard Management\n")
+	fmt.Printf("--------------------------------\n")
+	if err := generateBiPhase3(client, store); err != nil {
+		fmt.Printf("BI Phase 3 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nBI Phase 4: Analytics\n")
+	fmt.Printf("---------------------\n")
+	if err := generateBiPhase4(client, store); err != nil {
+		fmt.Printf("BI Phase 4 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nBI Phase 5: Data Management\n")
+	fmt.Printf("---------------------------\n")
+	if err := generateBiPhase5(client, store); err != nil {
+		fmt.Printf("BI Phase 5 failed: %v\n", err)
+		os.Exit(1)
+	}
+
 	fmt.Printf("\n=======================\n")
 	fmt.Printf("Mock data generation complete!\n")
 	fmt.Printf("\nHCM Summary:\n")
@@ -547,4 +583,17 @@ func main() {
 	fmt.Printf("  - Project Budgets: %d\n", len(store.PrjProjectBudgetIDs))
 	fmt.Printf("  - Status Reports: %d\n", len(store.PrjStatusReportIDs))
 	fmt.Printf("  - Project Issues: %d\n", len(store.PrjProjectIssueIDs))
+	fmt.Printf("\nBI Summary:\n")
+	fmt.Printf("  - Reports: %d\n", len(store.BiReportIDs))
+	fmt.Printf("  - Report Templates: %d\n", len(store.BiReportTemplateIDs))
+	fmt.Printf("  - Dashboards: %d\n", len(store.BiDashboardIDs))
+	fmt.Printf("  - Dashboard Widgets: %d\n", len(store.BiDashboardWidgetIDs))
+	fmt.Printf("  - KPIs: %d\n", len(store.BiKPIIDs))
+	fmt.Printf("  - Data Cubes: %d\n", len(store.BiDataCubeIDs))
+	fmt.Printf("  - Analysis Models: %d\n", len(store.BiAnalysisModelIDs))
+	fmt.Printf("  - Predictions: %d\n", len(store.BiPredictionIDs))
+	fmt.Printf("  - Data Sources: %d\n", len(store.BiDataSourceIDs))
+	fmt.Printf("  - ETL Jobs: %d\n", len(store.BiETLJobIDs))
+	fmt.Printf("  - Data Quality Rules: %d\n", len(store.BiDataQualityRuleIDs))
+	fmt.Printf("  - Data Governance: %d\n", len(store.BiDataGovernanceIDs))
 }

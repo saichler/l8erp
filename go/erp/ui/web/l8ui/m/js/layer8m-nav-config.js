@@ -30,7 +30,7 @@ limitations under the License.
             { key: 'sales', label: 'Sales', icon: 'sales', hasSubModules: true },
             { key: 'crm', label: 'CRM', icon: 'crm', hasSubModules: true },
             { key: 'projects', label: 'Projects', icon: 'projects', hasSubModules: true },
-            { key: 'bi', label: 'Analytics', icon: 'bi', hasSubModules: false },
+            { key: 'bi', label: 'Analytics', icon: 'bi', hasSubModules: true },
             { key: 'documents', label: 'Documents', icon: 'documents', hasSubModules: false },
             { key: 'ecommerce', label: 'E-Commerce', icon: 'ecommerce', hasSubModules: false },
             { key: 'compliance', label: 'Compliance', icon: 'compliance', hasSubModules: false },
@@ -523,6 +523,52 @@ limitations under the License.
                     { key: 'portfolio-views', label: 'Portfolio', icon: 'projects', endpoint: '/90/PrjPortflo', model: 'PrjPortfolioView', idField: 'viewId' },
                     { key: 'kpis', label: 'KPIs', icon: 'talent', endpoint: '/90/PrjKPI', model: 'PrjProjectKPI', idField: 'kpiId' },
                     { key: 'issues', label: 'Issues', icon: 'compliance', endpoint: '/90/PrjIssue', model: 'PrjProjectIssue', idField: 'issueId' }
+                ]
+            }
+        },
+
+        // BI Sub-Modules (Level 2)
+        bi: {
+            subModules: [
+                { key: 'reporting', label: 'Reporting', icon: 'bi' },
+                { key: 'dashboards', label: 'Dashboards', icon: 'bi' },
+                { key: 'analytics', label: 'Analytics', icon: 'bi' },
+                { key: 'datamanagement', label: 'Data Management', icon: 'bi' }
+            ],
+
+            // Services for each sub-module (Level 3)
+            services: {
+                'reporting': [
+                    { key: 'reports', label: 'Reports', icon: 'documents', endpoint: '/35/BiReport', model: 'BiReport', idField: 'reportId' },
+                    { key: 'report-templates', label: 'Templates', icon: 'documents', endpoint: '/35/BiRptTpl', model: 'BiReportTemplate', idField: 'templateId' },
+                    { key: 'report-schedules', label: 'Schedules', icon: 'time', endpoint: '/35/BiRptSched', model: 'BiReportSchedule', idField: 'scheduleId' },
+                    { key: 'report-executions', label: 'Executions', icon: 'jobs', endpoint: '/35/BiRptExec', model: 'BiReportExecution', idField: 'executionId' },
+                    { key: 'report-accesses', label: 'Access', icon: 'security', endpoint: '/35/BiRptAccs', model: 'BiReportAccess', idField: 'accessId' },
+                    { key: 'report-subscriptions', label: 'Subscriptions', icon: 'hcm', endpoint: '/35/BiRptSub', model: 'BiReportSubscription', idField: 'subscriptionId' }
+                ],
+                'dashboards': [
+                    { key: 'dashboards', label: 'Dashboards', icon: 'bi', endpoint: '/35/BiDashbrd', model: 'BiDashboard', idField: 'dashboardId' },
+                    { key: 'widgets', label: 'Widgets', icon: 'inventory', endpoint: '/35/BiWidget', model: 'BiDashboardWidget', idField: 'widgetId' },
+                    { key: 'kpis', label: 'KPIs', icon: 'talent', endpoint: '/35/BiKPI', model: 'BiKPI', idField: 'kpiId' },
+                    { key: 'kpi-thresholds', label: 'Thresholds', icon: 'compliance', endpoint: '/35/BiKPIThrs', model: 'BiKPIThreshold', idField: 'thresholdId' },
+                    { key: 'drilldowns', label: 'Drilldowns', icon: 'demand-planning', endpoint: '/35/BiDrill', model: 'BiDrilldown', idField: 'drilldownId' },
+                    { key: 'dashboard-shares', label: 'Shares', icon: 'scm', endpoint: '/35/BiDashShr', model: 'BiDashboardShare', idField: 'shareId' }
+                ],
+                'analytics': [
+                    { key: 'data-cubes', label: 'Data Cubes', icon: 'inventory', endpoint: '/35/BiCube', model: 'BiDataCube', idField: 'cubeId' },
+                    { key: 'analysis-models', label: 'Models', icon: 'learning', endpoint: '/35/BiAnaModel', model: 'BiAnalysisModel', idField: 'modelId' },
+                    { key: 'predictions', label: 'Predictions', icon: 'talent', endpoint: '/35/BiPredict', model: 'BiPrediction', idField: 'predictionId' },
+                    { key: 'trend-analyses', label: 'Trends', icon: 'demand-planning', endpoint: '/35/BiTrend', model: 'BiTrendAnalysis', idField: 'analysisId' },
+                    { key: 'scenarios', label: 'Scenarios', icon: 'documents', endpoint: '/35/BiScenario', model: 'BiScenario', idField: 'scenarioId' },
+                    { key: 'benchmarks', label: 'Benchmarks', icon: 'financial', endpoint: '/35/BiBenchmrk', model: 'BiBenchmark', idField: 'benchmarkId' }
+                ],
+                'datamanagement': [
+                    { key: 'data-sources', label: 'Data Sources', icon: 'scm', endpoint: '/35/BiDataSrc', model: 'BiDataSource', idField: 'sourceId' },
+                    { key: 'etl-jobs', label: 'ETL Jobs', icon: 'jobs', endpoint: '/35/BiETLJob', model: 'BiETLJob', idField: 'jobId' },
+                    { key: 'etl-schedules', label: 'ETL Schedules', icon: 'time', endpoint: '/35/BiETLSched', model: 'BiETLSchedule', idField: 'scheduleId' },
+                    { key: 'data-quality-rules', label: 'Quality Rules', icon: 'compliance', endpoint: '/35/BiDQRule', model: 'BiDataQualityRule', idField: 'ruleId' },
+                    { key: 'master-data-configs', label: 'Master Data', icon: 'organizations', endpoint: '/35/BiMDConfig', model: 'BiMasterDataConfig', idField: 'configId' },
+                    { key: 'data-governances', label: 'Governance', icon: 'security', endpoint: '/35/BiDataGov', model: 'BiDataGovernance', idField: 'governanceId' }
                 ]
             }
         },

@@ -73,6 +73,13 @@ docker run --user "$(id -u):$(id -g)" -e PROTO=prj-timeexpense.proto --mount typ
 docker run --user "$(id -u):$(id -g)" -e PROTO=prj-billing.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=prj-analytics.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
 
+# Business Intelligence
+docker run --user "$(id -u):$(id -g)" -e PROTO=bi-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=bi-reporting.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=bi-dashboards.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=bi-analytics.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=bi-datamanagement.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+
 rm api.proto
 
 # Now move the generated bindings to the models directory and clean up
@@ -92,3 +99,4 @@ find . -name "*.go" -type f -exec sed -i 's|"./types/sales"|"github.com/saichler
 find . -name "*.go" -type f -exec sed -i 's|"./types/mfg"|"github.com/saichler/l8erp/go/types/mfg"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/crm"|"github.com/saichler/l8erp/go/types/crm"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/prj"|"github.com/saichler/l8erp/go/types/prj"|g' {} +
+find . -name "*.go" -type f -exec sed -i 's|"./types/bi"|"github.com/saichler/l8erp/go/types/bi"|g' {} +

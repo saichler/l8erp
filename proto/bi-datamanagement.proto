@@ -1,0 +1,187 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package bi;
+
+option go_package = "./types/bi";
+
+import "bi-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// DATA MANAGEMENT MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// BiDataSource represents a data source configuration
+message BiDataSource {
+  string source_id = 1;
+  string name = 2;
+  string description = 3;
+  BiDataSourceType source_type = 4;
+  string connection_string = 5;
+  string host = 6;
+  int32 port = 7;
+  string database = 8;
+  string username = 9;
+  string schema = 10;
+  BiConnectionStatus connection_status = 11;
+  int64 last_connected = 12;
+  int64 last_sync = 13;
+  bool is_active = 14;
+  map<string, string> connection_params = 15;
+  map<string, string> custom_fields = 16;
+  erp.AuditInfo audit_info = 17;
+}
+
+message BiDataSourceList {
+  repeated BiDataSource list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// BiETLJob represents an ETL job definition
+message BiETLJob {
+  string job_id = 1;
+  string name = 2;
+  string description = 3;
+  string source_id = 4;                     // cross-ref: BiDataSource
+  string target_id = 5;                     // cross-ref: BiDataSource
+  BiETLStatus status = 6;
+  string extract_query = 7;
+  string transform_config = 8;              // JSON transformation rules
+  string load_target = 9;
+  string load_mode = 10;                    // APPEND, REPLACE, MERGE
+  int64 last_run = 11;
+  int64 last_success = 12;
+  int64 rows_processed = 13;
+  int64 rows_failed = 14;
+  string error_message = 15;
+  string owner_id = 16;                     // cross-ref: HCM Employee
+  bool is_active = 17;
+  map<string, string> custom_fields = 18;
+  erp.AuditInfo audit_info = 19;
+}
+
+message BiETLJobList {
+  repeated BiETLJob list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// BiETLSchedule represents an ETL schedule
+message BiETLSchedule {
+  string schedule_id = 1;
+  string job_id = 2;                        // cross-ref: BiETLJob
+  string name = 3;
+  string description = 4;
+  BiScheduleFrequency frequency = 5;
+  int64 start_date = 6;
+  int64 end_date = 7;
+  string run_time = 8;                      // Time of day (HH:MM)
+  int32 day_of_week = 9;
+  int32 day_of_month = 10;
+  int64 next_run = 11;
+  int64 last_run = 12;
+  bool is_active = 13;
+  map<string, string> custom_fields = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message BiETLScheduleList {
+  repeated BiETLSchedule list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// BiDataQualityRule represents a data quality rule
+message BiDataQualityRule {
+  string rule_id = 1;
+  string name = 2;
+  string description = 3;
+  string data_source_id = 4;                // cross-ref: BiDataSource
+  string table_name = 5;
+  string column_name = 6;
+  string rule_type = 7;                     // COMPLETENESS, UNIQUENESS, VALIDITY, etc.
+  string rule_expression = 8;
+  double threshold = 9;
+  BiDataQualityStatus last_status = 10;
+  double last_score = 11;
+  int64 last_check = 12;
+  int64 records_checked = 13;
+  int64 records_passed = 14;
+  int64 records_failed = 15;
+  bool is_active = 16;
+  map<string, string> custom_fields = 17;
+  erp.AuditInfo audit_info = 18;
+}
+
+message BiDataQualityRuleList {
+  repeated BiDataQualityRule list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// BiMasterDataConfig represents master data management configuration
+message BiMasterDataConfig {
+  string config_id = 1;
+  string name = 2;
+  string description = 3;
+  string entity_type = 4;                   // CUSTOMER, PRODUCT, VENDOR, etc.
+  string source_system_id = 5;              // cross-ref: BiDataSource
+  string match_rules = 6;                   // JSON matching rules
+  string merge_rules = 7;                   // JSON merge/survivorship rules
+  string golden_record_id = 8;
+  int64 last_sync = 9;
+  int64 total_records = 10;
+  int64 matched_records = 11;
+  int64 duplicate_records = 12;
+  bool is_active = 13;
+  map<string, string> custom_fields = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message BiMasterDataConfigList {
+  repeated BiMasterDataConfig list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// BiDataGovernance represents data governance policy
+message BiDataGovernance {
+  string governance_id = 1;
+  string name = 2;
+  string description = 3;
+  string data_domain = 4;
+  BiGovernanceLevel classification = 5;
+  string data_owner_id = 6;                 // cross-ref: HCM Employee
+  string data_steward_id = 7;               // cross-ref: HCM Employee
+  string retention_policy = 8;
+  int32 retention_days = 9;
+  string access_policy = 10;
+  string compliance_requirements = 11;      // JSON list of requirements
+  int64 last_review = 12;
+  int64 next_review = 13;
+  bool is_active = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message BiDataGovernanceList {
+  repeated BiDataGovernance list = 1;
+  l8api.L8MetaData metadata = 2;
+}

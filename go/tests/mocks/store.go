@@ -415,4 +415,38 @@ type MockDataStore struct {
 	PrjPortfolioViewIDs    []string
 	PrjProjectKPIIDs       []string
 	PrjProjectIssueIDs     []string
+
+	// BI Phase 1: Foundation (Reporting & Dashboards)
+	BiReportIDs         []string
+	BiReportTemplateIDs []string
+	BiDashboardIDs      []string
+	BiKPIIDs            []string
+
+	// BI Phase 2: Report Management
+	BiReportScheduleIDs     []string
+	BiReportExecutionIDs    []string
+	BiReportAccessIDs       []string
+	BiReportSubscriptionIDs []string
+
+	// BI Phase 3: Dashboard Management
+	BiDashboardWidgetIDs []string
+	BiKPIThresholdIDs    []string
+	BiDrilldownIDs       []string
+	BiDashboardShareIDs  []string
+
+	// BI Phase 4: Analytics
+	BiDataCubeIDs      []string
+	BiAnalysisModelIDs []string
+	BiPredictionIDs    []string
+	BiTrendAnalysisIDs []string
+	BiScenarioIDs      []string
+	BiBenchmarkIDs     []string
+
+	// BI Phase 5: Data Management
+	BiDataSourceIDs       []string
+	BiETLJobIDs           []string
+	BiETLScheduleIDs      []string
+	BiDataQualityRuleIDs  []string
+	BiMasterDataConfigIDs []string
+	BiDataGovernanceIDs   []string
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/saichler/l8bus/go/overlay/vnic"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -163,6 +164,7 @@ func registerTypes(resources ifs.IResources) {
 	registerMfgTypes(resources)
 	registerCrmTypes(resources)
 	registerPrjTypes(resources)
+	registerBiTypes(resources)
 }
 
 func registerFinTypes(resources ifs.IResources) {
@@ -715,4 +717,62 @@ func registerPrjTypes(resources ifs.IResources) {
 	resources.Registry().Register(&prj.PrjProjectKPIList{})
 	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjProjectIssue{}, "IssueId")
 	resources.Registry().Register(&prj.PrjProjectIssueList{})
+}
+
+func registerBiTypes(resources ifs.IResources) {
+	// Reporting
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiReport{}, "ReportId")
+	resources.Registry().Register(&bi.BiReportList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiReportTemplate{}, "TemplateId")
+	resources.Registry().Register(&bi.BiReportTemplateList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiReportSchedule{}, "ScheduleId")
+	resources.Registry().Register(&bi.BiReportScheduleList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiReportExecution{}, "ExecutionId")
+	resources.Registry().Register(&bi.BiReportExecutionList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiReportAccess{}, "AccessId")
+	resources.Registry().Register(&bi.BiReportAccessList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiReportSubscription{}, "SubscriptionId")
+	resources.Registry().Register(&bi.BiReportSubscriptionList{})
+
+	// Dashboards
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiDashboard{}, "DashboardId")
+	resources.Registry().Register(&bi.BiDashboardList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiDashboardWidget{}, "WidgetId")
+	resources.Registry().Register(&bi.BiDashboardWidgetList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiKPI{}, "KpiId")
+	resources.Registry().Register(&bi.BiKPIList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiKPIThreshold{}, "ThresholdId")
+	resources.Registry().Register(&bi.BiKPIThresholdList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiDrilldown{}, "DrilldownId")
+	resources.Registry().Register(&bi.BiDrilldownList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiDashboardShare{}, "ShareId")
+	resources.Registry().Register(&bi.BiDashboardShareList{})
+
+	// Analytics
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiDataCube{}, "CubeId")
+	resources.Registry().Register(&bi.BiDataCubeList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiAnalysisModel{}, "ModelId")
+	resources.Registry().Register(&bi.BiAnalysisModelList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiPrediction{}, "PredictionId")
+	resources.Registry().Register(&bi.BiPredictionList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiTrendAnalysis{}, "AnalysisId")
+	resources.Registry().Register(&bi.BiTrendAnalysisList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiScenario{}, "ScenarioId")
+	resources.Registry().Register(&bi.BiScenarioList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiBenchmark{}, "BenchmarkId")
+	resources.Registry().Register(&bi.BiBenchmarkList{})
+
+	// Data Management
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiDataSource{}, "SourceId")
+	resources.Registry().Register(&bi.BiDataSourceList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiETLJob{}, "JobId")
+	resources.Registry().Register(&bi.BiETLJobList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiETLSchedule{}, "ScheduleId")
+	resources.Registry().Register(&bi.BiETLScheduleList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiDataQualityRule{}, "RuleId")
+	resources.Registry().Register(&bi.BiDataQualityRuleList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiMasterDataConfig{}, "ConfigId")
+	resources.Registry().Register(&bi.BiMasterDataConfigList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiDataGovernance{}, "GovernanceId")
+	resources.Registry().Register(&bi.BiDataGovernanceList{})
 }

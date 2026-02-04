@@ -1,0 +1,173 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package bi;
+
+option go_package = "./types/bi";
+
+import "bi-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// ============================================================================
+// DASHBOARD MESSAGES
+// ============================================================================
+
+// @PrimeObject
+// BiDashboard represents a dashboard
+message BiDashboard {
+  string dashboard_id = 1;
+  string code = 2;
+  string name = 3;
+  string description = 4;
+  BiDashboardStatus status = 5;
+  string category = 6;
+  string owner_id = 7;                      // cross-ref: HCM Employee
+  bool is_default = 8;
+  bool is_public = 9;
+  int32 refresh_interval = 10;              // in seconds
+  string layout_config = 11;                // JSON layout configuration
+  map<string, string> filters = 12;
+  map<string, string> custom_fields = 13;
+  erp.AuditInfo audit_info = 14;
+}
+
+message BiDashboardList {
+  repeated BiDashboard list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// BiDashboardWidget represents a dashboard widget
+message BiDashboardWidget {
+  string widget_id = 1;
+  string dashboard_id = 2;                  // cross-ref: BiDashboard
+  string name = 3;
+  string description = 4;
+  BiWidgetType widget_type = 5;
+  BiChartType chart_type = 6;
+  string data_source_id = 7;                // cross-ref: BiDataSource
+  string report_id = 8;                     // cross-ref: BiReport
+  string kpi_id = 9;                        // cross-ref: BiKPI
+  int32 position_x = 10;
+  int32 position_y = 11;
+  int32 width = 12;
+  int32 height = 13;
+  string query = 14;
+  string config = 15;                       // JSON widget configuration
+  int32 refresh_interval = 16;              // in seconds (overrides dashboard)
+  map<string, string> custom_fields = 17;
+  erp.AuditInfo audit_info = 18;
+}
+
+message BiDashboardWidgetList {
+  repeated BiDashboardWidget list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// BiKPI represents a Key Performance Indicator
+message BiKPI {
+  string kpi_id = 1;
+  string code = 2;
+  string name = 3;
+  string description = 4;
+  string category = 5;
+  string unit = 6;                          // e.g., "%", "$", "units"
+  string data_source_id = 7;                // cross-ref: BiDataSource
+  string calculation_formula = 8;
+  double current_value = 9;
+  double target_value = 10;
+  double previous_value = 11;
+  BiKPIStatus status = 12;
+  BiTrendDirection trend = 13;
+  string owner_id = 14;                     // cross-ref: HCM Employee
+  int32 refresh_interval = 15;              // in seconds
+  int64 last_updated = 16;
+  bool is_active = 17;
+  map<string, string> custom_fields = 18;
+  erp.AuditInfo audit_info = 19;
+}
+
+message BiKPIList {
+  repeated BiKPI list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// BiKPIThreshold represents a KPI threshold/alert
+message BiKPIThreshold {
+  string threshold_id = 1;
+  string kpi_id = 2;                        // cross-ref: BiKPI
+  string name = 3;
+  string description = 4;
+  BiThresholdOperator operator = 5;
+  double value = 6;
+  double value_upper = 7;                   // for BETWEEN operator
+  string severity = 8;                      // WARNING, CRITICAL
+  string notification_email = 9;
+  bool is_active = 10;
+  int64 last_triggered = 11;
+  map<string, string> custom_fields = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message BiKPIThresholdList {
+  repeated BiKPIThreshold list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// BiDrilldown represents a drilldown configuration
+message BiDrilldown {
+  string drilldown_id = 1;
+  string name = 2;
+  string description = 3;
+  string source_report_id = 4;              // cross-ref: BiReport
+  string source_widget_id = 5;              // cross-ref: BiDashboardWidget
+  string target_report_id = 6;              // cross-ref: BiReport
+  string target_dashboard_id = 7;           // cross-ref: BiDashboard
+  string source_field = 8;
+  string target_parameter = 9;
+  bool is_active = 10;
+  map<string, string> custom_fields = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message BiDrilldownList {
+  repeated BiDrilldown list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// BiDashboardShare represents dashboard sharing
+message BiDashboardShare {
+  string share_id = 1;
+  string dashboard_id = 2;                  // cross-ref: BiDashboard
+  string shared_with_id = 3;                // User or Role ID
+  string shared_with_type = 4;              // "USER" or "ROLE"
+  BiAccessLevel access_level = 5;
+  int64 shared_date = 6;
+  string shared_by = 7;                     // cross-ref: HCM Employee
+  int64 expiry_date = 8;
+  map<string, string> custom_fields = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message BiDashboardShareList {
+  repeated BiDashboardShare list = 1;
+  l8api.L8MetaData metadata = 2;
+}
