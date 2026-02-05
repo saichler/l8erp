@@ -20,20 +20,35 @@
 
 ## Overview
 
-ERP by Layer 8 is a comprehensive Enterprise Resource Planning system designed for modern businesses. Built from the ground up with Go, it provides a unified platform for managing all aspects of your organization - from financial operations and human capital to supply chain and manufacturing.
+ERP by Layer 8 is a comprehensive Enterprise Resource Planning system designed for modern businesses. Built from the ground up with Go, it provides a unified platform for managing all aspects of your organization - from financial operations and human capital to supply chain, manufacturing, sales, and more.
+
+With **10 fully implemented modules** and **244+ business services**, this ERP covers the complete enterprise lifecycle including:
+- **Financial Management** - GL, AP, AR, Cash, Assets, Budgeting, Tax
+- **Human Capital** - Core HR, Payroll, Benefits, Talent, Learning, Compensation
+- **Supply Chain** - Procurement, Inventory, Warehouse, Logistics, Planning
+- **Manufacturing** - Engineering, Production, Quality, Costing
+- **Sales** - Customers, Orders, Pricing, Shipping, Billing
+- **CRM** - Accounts, Contacts, Opportunities, Campaigns, Support
+- **Projects** - Planning, Resources, Time Tracking, Budgets
+- **Business Intelligence** - Dashboards, Reports, Analytics, KPIs
+- **Documents** - Storage, Workflows, Signatures, Compliance
 
 Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared components, consistent patterns, and a unified approach to enterprise software development.
 
 ## Features
 
-- **Unified Data Model** - Single source of truth across all modules
-- **Real-time Analytics** - Live dashboards and instant reporting
-- **Workflow Automation** - Automated business processes and approvals
+- **10+ Integrated Modules** - HCM, Finance, SCM, Manufacturing, Sales, CRM, Projects, BI, Documents
+- **244+ Business Services** - Comprehensive coverage of enterprise operations
+- **Unified Data Model** - Single source of truth across all modules with cross-references
+- **Real-time Analytics** - Live dashboards, KPIs, and instant reporting via BI module
+- **Document Management** - Storage, workflows, approvals, signatures, and compliance
+- **Workflow Automation** - Automated business processes, approvals, and notifications
 - **Role-based Access** - Granular security and permissions
 - **Multi-currency Support** - Global financial operations
 - **API-first Design** - RESTful APIs for easy integrations
-- **Mobile App** - Dedicated mobile application with floating headers and optimized tables
-- **Full Audit Trail** - Complete transaction history
+- **Mobile App** - Full-featured mobile application with all modules
+- **Full Audit Trail** - Complete transaction history across all modules
+- **Mock Data Generation** - Realistic test data generators for all modules
 - **Kubernetes Native** - Deploy on any K8s cluster with included manifests
 - **Zero Frontend Dependencies** - Pure vanilla JavaScript for maximum performance
 
@@ -41,26 +56,31 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared componen
 
 | Module | Description | Status |
 |--------|-------------|--------|
-| **Dashboard** | Real-time business insights and KPIs | Active |
-| **Human Capital (HCM)** | Core HR, Payroll, Benefits, Talent, Learning | Active |
-| **Financial Management** | GL, AP, AR, Budgeting, Asset Management | Planned |
-| **Supply Chain** | Procurement, Inventory, Logistics | Planned |
-| **Manufacturing** | Production Planning, Shop Floor, Quality | Planned |
-| **Sales & Distribution** | Order Management, Pricing, Shipping | Planned |
-| **CRM** | Customer Management, Opportunities, Support | Planned |
-| **Project Management** | Projects, Resources, Time Tracking | Planned |
-| **Business Intelligence** | Analytics, Reports, Dashboards | Planned |
-| **Document Management** | Document Storage, Workflows, Signatures | Planned |
-| **E-Commerce** | Online Store, Order Integration | Planned |
-| **Compliance & Risk** | Regulatory, Audit, Risk Management | Planned |
-| **System Administration** | Users, Settings, Integrations | Active |
+| **Dashboard** | Real-time business insights and KPIs | ✅ Active |
+| **Human Capital (HCM)** | Core HR, Payroll, Benefits, Talent, Learning, Compensation | ✅ Active |
+| **Financial Management** | GL, AP, AR, Cash, Fixed Assets, Budgeting, Tax | ✅ Active |
+| **Supply Chain (SCM)** | Procurement, Inventory, Warehouse, Logistics, Planning | ✅ Active |
+| **Manufacturing (MFG)** | Engineering, Production, Planning, Quality, Costing | ✅ Active |
+| **Sales & Distribution** | Customers, Orders, Pricing, Shipping, Billing, Analytics | ✅ Active |
+| **CRM** | Accounts, Contacts, Opportunities, Campaigns, Support | ✅ Active |
+| **Project Management** | Projects, Resources, Time Tracking, Budgets | ✅ Active |
+| **Business Intelligence** | Dashboards, Reports, Analytics, KPIs, Data Sources | ✅ Active |
+| **Document Management** | Storage, Workflows, Signatures, Compliance, Integration | ✅ Active |
+| **E-Commerce** | Online Store, Order Integration | 🔜 Planned |
+| **Compliance & Risk** | Regulatory, Audit, Risk Management | 🔜 Planned |
+| **System Administration** | Users, Settings, Security, Integrations | ✅ Active |
 
 ## Recent Updates
 
-- **Mobile App** - Full mobile application with responsive design and floating headers
-- **Table Sorting** - Column sorting for mobile and desktop table views
-- **Kubernetes Support** - Production-ready K8s manifests for all services
-- **Marketing Site** - Modern landing page with glass morphism design
+- **Document Management Module** - Complete document lifecycle: storage, workflows, approvals, signatures, compliance, email capture, and scanning
+- **Business Intelligence Module** - Dashboards, reports, KPIs, analytics, and data source management
+- **Project Management Module** - Projects, resources, time tracking, budgets, and milestones
+- **CRM Module** - Customer accounts, contacts, opportunities, campaigns, and support tickets
+- **Sales Module** - Complete order-to-cash: customers, orders, pricing, shipping, billing, and analytics
+- **Manufacturing Module** - Engineering, production, planning, quality control, and costing
+- **Supply Chain Module** - Procurement, inventory, warehouse, logistics, and demand/supply planning
+- **Financial Module** - GL, AP, AR, cash management, fixed assets, budgeting, and tax
+- **Mobile App** - Full mobile application with all modules, responsive design, and floating headers
 - **Component Library** - Reusable UI components (date picker, reference picker, edit tables)
 
 ## Quick Start
@@ -125,31 +145,47 @@ l8erp/
 ├── go/
 │   ├── erp/
 │   │   ├── common/           # Shared utilities (defaults, validation)
-│   │   ├── hcm/              # Human Capital Management module (59 sub-packages)
+│   │   ├── hcm/              # Human Capital Management (59 services)
+│   │   ├── fin/              # Financial Management (28 services)
+│   │   ├── scm/              # Supply Chain Management (24 services)
+│   │   ├── mfg/              # Manufacturing (24 services)
+│   │   ├── sales/            # Sales & Distribution (33 services)
+│   │   ├── crm/              # Customer Relationship Management (20 services)
+│   │   ├── prj/              # Project Management (16 services)
+│   │   ├── bi/               # Business Intelligence (20 services)
+│   │   ├── doc/              # Document Management (20 services)
+│   │   ├── sys/              # System Administration
 │   │   ├── ui/
 │   │   │   ├── main.go       # Web server entry point
 │   │   │   └── web/          # Web application
 │   │   │       ├── marketing/    # Marketing landing page
 │   │   │       ├── login/        # Login page
-│   │   │       ├── shared/       # Shared CSS/JS components
+│   │   │       ├── l8ui/         # Shared UI framework
 │   │   │       ├── hcm/          # HCM module UI
+│   │   │       ├── fin/          # Financial module UI
+│   │   │       ├── scm/          # SCM module UI
+│   │   │       ├── mfg/          # Manufacturing module UI
+│   │   │       ├── sales/        # Sales module UI
+│   │   │       ├── crm/          # CRM module UI
+│   │   │       ├── prj/          # Project module UI
+│   │   │       ├── bi/           # BI module UI
+│   │   │       ├── documents/    # Documents module UI
 │   │   │       ├── m/            # Mobile app version
-│   │   │       ├── popup/        # Popup component
-│   │   │       ├── datepicker/   # Date picker component
-│   │   │       ├── reference_picker/  # Reference picker
-│   │   │       ├── edit_table/   # Editable table component
-│   │   │       ├── notification/ # Notification component
-│   │   │       ├── input_formatters/ # Input formatting utilities
 │   │   │       └── app.html      # Main application
 │   │   └── vnet/             # Virtual network layer
-│   ├── types/
-│   │   └── hcm/              # HCM type definitions (Protocol Buffer generated)
-│   ├── tests/                # Test files
+│   ├── types/                # Protocol Buffer generated types
+│   │   ├── hcm/              # HCM types
+│   │   ├── fin/              # Financial types
+│   │   ├── scm/              # SCM types
+│   │   ├── mfg/              # Manufacturing types
+│   │   ├── sales/            # Sales types
+│   │   ├── crm/              # CRM types
+│   │   ├── prj/              # Project types
+│   │   ├── bi/               # BI types
+│   │   └── doc/              # Document types
+│   ├── tests/                # Test files and mock data generators
 │   └── vendor/               # Go dependencies
 ├── k8s/                      # Kubernetes deployment manifests
-│   ├── web.yaml              # Web UI deployment (DaemonSet)
-│   ├── hcm.yaml              # HCM service (StatefulSet)
-│   └── vnet.yaml             # Virtual network (DaemonSet)
 ├── proto/                    # Protocol buffer definitions
 ├── ERP_MODULES.md           # Detailed module documentation
 └── README.md                # This file

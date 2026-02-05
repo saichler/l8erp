@@ -209,6 +209,26 @@ limitations under the License.
             const f = filled ?? 0;
             const t = total ?? 0;
             return `${f}/${t}`;
+        },
+
+        /**
+         * Render file size in human-readable format
+         * @param {number} bytes - File size in bytes
+         * @returns {string} Formatted file size
+         */
+        renderFileSize(bytes) {
+            if (bytes === null || bytes === undefined || bytes === 0) return '-';
+
+            const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+            let unitIndex = 0;
+            let size = bytes;
+
+            while (size >= 1024 && unitIndex < units.length - 1) {
+                size /= 1024;
+                unitIndex++;
+            }
+
+            return size.toFixed(unitIndex === 0 ? 0 : 1) + ' ' + units[unitIndex];
         }
     };
 
