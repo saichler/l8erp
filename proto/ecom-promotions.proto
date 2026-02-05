@@ -1,0 +1,190 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax = "proto3";
+
+package ecom;
+
+option go_package = "./types/ecom";
+
+import "ecom-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// =====================
+// PROMOTION
+// =====================
+
+// @PrimeObject
+// EcomPromotion represents a promotional campaign
+message EcomPromotion {
+    string promotion_id = 1;
+    string name = 2;
+    string description = 3;
+    EcomPromotionType promotion_type = 4;
+    double discount_value = 5;
+    erp.Money max_discount = 6;
+    erp.Money min_purchase = 7;
+    int64 start_date = 8;
+    int64 end_date = 9;
+    bool is_active = 10;
+    int32 usage_limit = 11;
+    int32 usage_count = 12;
+    int32 per_customer_limit = 13;
+    repeated string applicable_product_ids = 14;
+    repeated string applicable_category_ids = 15;
+    repeated string excluded_product_ids = 16;
+    string customer_group = 17;
+    bool stackable = 18;
+    int32 priority = 19;
+    map<string, string> custom_fields = 20;
+    erp.AuditInfo audit_info = 21;
+}
+
+message EcomPromotionList {
+    repeated EcomPromotion items = 1;
+}
+
+// =====================
+// COUPON
+// =====================
+
+// @PrimeObject
+// EcomCoupon represents a discount coupon code
+message EcomCoupon {
+    string coupon_id = 1;
+    string code = 2;
+    string description = 3;
+    EcomDiscountType discount_type = 4;
+    double discount_value = 5;
+    erp.Money max_discount = 6;
+    erp.Money min_purchase = 7;
+    int64 start_date = 8;
+    int64 end_date = 9;
+    bool is_active = 10;
+    int32 usage_limit = 11;
+    int32 usage_count = 12;
+    int32 per_customer_limit = 13;
+    bool first_order_only = 14;
+    repeated string applicable_product_ids = 15;
+    repeated string applicable_category_ids = 16;
+    string customer_group = 17;
+    bool free_shipping = 18;
+    map<string, string> custom_fields = 19;
+    erp.AuditInfo audit_info = 20;
+}
+
+message EcomCouponList {
+    repeated EcomCoupon items = 1;
+}
+
+// =====================
+// PRICE RULE
+// =====================
+
+// @PrimeObject
+// EcomPriceRule defines dynamic pricing rules
+message EcomPriceRule {
+    string rule_id = 1;
+    string name = 2;
+    string description = 3;
+    EcomDiscountType discount_type = 4;
+    double discount_value = 5;
+    int64 start_date = 6;
+    int64 end_date = 7;
+    bool is_active = 8;
+    int32 priority = 9;
+    string customer_group = 10;
+    erp.Money min_quantity = 11;
+    erp.Money max_quantity = 12;
+    repeated string applicable_product_ids = 13;
+    repeated string applicable_category_ids = 14;
+    bool apply_to_all = 15;
+    map<string, string> conditions = 16;
+    map<string, string> custom_fields = 17;
+    erp.AuditInfo audit_info = 18;
+}
+
+message EcomPriceRuleList {
+    repeated EcomPriceRule items = 1;
+}
+
+// =====================
+// SHIPPING METHOD
+// =====================
+
+// @PrimeObject
+// EcomShippingMethod defines available shipping options
+message EcomShippingMethod {
+    string method_id = 1;
+    string name = 2;
+    string description = 3;
+    string carrier = 4;
+    string carrier_service = 5;
+    erp.Money base_rate = 6;
+    erp.Money per_item_rate = 7;
+    erp.Money per_weight_rate = 8;
+    erp.Money free_shipping_threshold = 9;
+    int32 min_delivery_days = 10;
+    int32 max_delivery_days = 11;
+    bool is_active = 12;
+    repeated string applicable_zones = 13;
+    repeated string excluded_zones = 14;
+    erp.Money min_order_amount = 15;
+    erp.Money max_order_amount = 16;
+    double max_weight = 17;
+    int32 sort_order = 18;
+    bool tracking_available = 19;
+    map<string, string> custom_fields = 20;
+    erp.AuditInfo audit_info = 21;
+}
+
+message EcomShippingMethodList {
+    repeated EcomShippingMethod items = 1;
+}
+
+// =====================
+// PAYMENT METHOD
+// =====================
+
+// @PrimeObject
+// EcomPaymentMethod defines available payment options
+message EcomPaymentMethod {
+    string method_id = 1;
+    string name = 2;
+    string description = 3;
+    string provider = 4;
+    string provider_config = 5;
+    bool is_active = 6;
+    bool is_test_mode = 7;
+    repeated string supported_currencies = 8;
+    repeated string supported_countries = 9;
+    erp.Money min_amount = 10;
+    erp.Money max_amount = 11;
+    double transaction_fee_percent = 12;
+    erp.Money transaction_fee_fixed = 13;
+    int32 sort_order = 14;
+    string icon_url = 15;
+    string instructions = 16;
+    bool requires_billing_address = 17;
+    bool supports_refunds = 18;
+    bool supports_partial_refunds = 19;
+    map<string, string> custom_fields = 20;
+    erp.AuditInfo audit_info = 21;
+}
+
+message EcomPaymentMethodList {
+    repeated EcomPaymentMethod items = 1;
+}

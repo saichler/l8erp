@@ -1,0 +1,175 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax = "proto3";
+
+package ecom;
+
+option go_package = "./types/ecom";
+
+import "ecom-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// =====================
+// ORDER
+// =====================
+
+// @PrimeObject
+// EcomOrder represents an e-commerce order
+message EcomOrder {
+    string order_id = 1;
+    string order_number = 2;
+    string customer_id = 3;                 // cross-ref: EcomCustomer
+    EcomOrderStatus status = 4;
+    EcomPaymentStatus payment_status = 5;
+    int64 order_date = 6;
+    erp.Money subtotal = 7;
+    erp.Money discount_amount = 8;
+    erp.Money shipping_amount = 9;
+    erp.Money tax_amount = 10;
+    erp.Money total_amount = 11;
+    string coupon_code = 12;
+    string shipping_method_id = 13;         // cross-ref: EcomShippingMethod
+    string payment_method_id = 14;          // cross-ref: EcomPaymentMethod
+    erp.Address billing_address = 15;
+    erp.Address shipping_address = 16;
+    string notes = 17;
+    string customer_notes = 18;
+    string ip_address = 19;
+    string user_agent = 20;
+    string sales_order_id = 21;             // cross-ref: Sales SalesOrder
+    string warehouse_id = 22;               // cross-ref: SCM Warehouse
+    int64 shipped_date = 23;
+    int64 delivered_date = 24;
+    string tracking_number = 25;
+    map<string, string> custom_fields = 26;
+    erp.AuditInfo audit_info = 27;
+}
+
+message EcomOrderList {
+    repeated EcomOrder items = 1;
+}
+
+// =====================
+// ORDER LINE
+// =====================
+
+// @PrimeObject
+// EcomOrderLine represents a line item in an order
+message EcomOrderLine {
+    string line_id = 1;
+    string order_id = 2;                    // cross-ref: EcomOrder
+    string product_id = 3;                  // cross-ref: EcomProduct
+    string variant_id = 4;                  // cross-ref: EcomVariant
+    string sku = 5;
+    string name = 6;
+    int32 quantity = 7;
+    erp.Money unit_price = 8;
+    erp.Money discount_amount = 9;
+    erp.Money tax_amount = 10;
+    erp.Money line_total = 11;
+    double weight = 12;
+    bool is_gift = 13;
+    string gift_message = 14;
+    map<string, string> attributes = 15;
+    map<string, string> custom_fields = 16;
+    erp.AuditInfo audit_info = 17;
+}
+
+message EcomOrderLineList {
+    repeated EcomOrderLine items = 1;
+}
+
+// =====================
+// ORDER STATUS HISTORY
+// =====================
+
+// @PrimeObject
+// EcomOrderStatusHistory tracks order status changes
+message EcomOrderStatusHistory {
+    string status_id = 1;
+    string order_id = 2;                    // cross-ref: EcomOrder
+    EcomOrderStatus previous_status = 3;
+    EcomOrderStatus new_status = 4;
+    int64 changed_at = 5;
+    string changed_by = 6;                  // cross-ref: HCM Employee
+    string notes = 7;
+    bool notify_customer = 8;
+    map<string, string> custom_fields = 9;
+    erp.AuditInfo audit_info = 10;
+}
+
+message EcomOrderStatusHistoryList {
+    repeated EcomOrderStatusHistory items = 1;
+}
+
+// =====================
+// RETURN
+// =====================
+
+// @PrimeObject
+// EcomReturn represents a return/RMA request
+message EcomReturn {
+    string return_id = 1;
+    string return_number = 2;
+    string order_id = 3;                    // cross-ref: EcomOrder
+    string customer_id = 4;                 // cross-ref: EcomCustomer
+    EcomReturnStatus status = 5;
+    string reason = 6;
+    string notes = 7;
+    int64 requested_date = 8;
+    int64 approved_date = 9;
+    int64 received_date = 10;
+    int64 refunded_date = 11;
+    erp.Money refund_amount = 12;
+    string refund_method = 13;
+    string approved_by = 14;                // cross-ref: HCM Employee
+    string tracking_number = 15;
+    string shipping_carrier = 16;
+    map<string, string> custom_fields = 17;
+    erp.AuditInfo audit_info = 18;
+}
+
+message EcomReturnList {
+    repeated EcomReturn items = 1;
+}
+
+// =====================
+// RETURN LINE
+// =====================
+
+// @PrimeObject
+// EcomReturnLine represents a line item being returned
+message EcomReturnLine {
+    string line_id = 1;
+    string return_id = 2;                   // cross-ref: EcomReturn
+    string order_line_id = 3;               // cross-ref: EcomOrderLine
+    string product_id = 4;                  // cross-ref: EcomProduct
+    string variant_id = 5;                  // cross-ref: EcomVariant
+    string sku = 6;
+    string name = 7;
+    int32 quantity = 8;
+    erp.Money refund_amount = 9;
+    string reason = 10;
+    string condition = 11;
+    bool restock = 12;
+    map<string, string> custom_fields = 13;
+    erp.AuditInfo audit_info = 14;
+}
+
+message EcomReturnLineList {
+    repeated EcomReturnLine items = 1;
+}

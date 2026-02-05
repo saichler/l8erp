@@ -1,0 +1,178 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax = "proto3";
+
+package ecom;
+
+option go_package = "./types/ecom";
+
+import "ecom-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// =====================
+// PRODUCT
+// =====================
+
+// @PrimeObject
+// EcomProduct represents a product in the e-commerce catalog
+message EcomProduct {
+    string product_id = 1;
+    string sku = 2;
+    string name = 3;
+    string description = 4;
+    string short_description = 5;
+    EcomProductType product_type = 6;
+    EcomProductStatus status = 7;
+    string category_id = 8;                 // cross-ref: EcomCategory
+    erp.Money price = 9;
+    erp.Money compare_at_price = 10;
+    erp.Money cost_price = 11;
+    int32 stock_quantity = 12;
+    int32 low_stock_threshold = 13;
+    bool track_inventory = 14;
+    bool allow_backorder = 15;
+    string slug = 16;
+    string meta_title = 17;
+    string meta_description = 18;
+    repeated string tag_ids = 19;
+    string brand = 20;
+    double weight = 21;
+    string weight_unit = 22;
+    string item_id = 23;                    // cross-ref: SCM Item
+    bool is_taxable = 24;
+    string tax_class = 25;
+    map<string, string> custom_fields = 26;
+    erp.AuditInfo audit_info = 27;
+}
+
+message EcomProductList {
+    repeated EcomProduct items = 1;
+}
+
+// =====================
+// CATEGORY
+// =====================
+
+// @PrimeObject
+// EcomCategory represents a product category hierarchy
+message EcomCategory {
+    string category_id = 1;
+    string name = 2;
+    string description = 3;
+    string parent_category_id = 4;          // self-ref: EcomCategory
+    string slug = 5;
+    string image_url = 6;
+    int32 sort_order = 7;
+    bool is_active = 8;
+    string meta_title = 9;
+    string meta_description = 10;
+    int32 level = 11;
+    string path = 12;
+    map<string, string> custom_fields = 13;
+    erp.AuditInfo audit_info = 14;
+}
+
+message EcomCategoryList {
+    repeated EcomCategory items = 1;
+}
+
+// =====================
+// ATTRIBUTE
+// =====================
+
+// @PrimeObject
+// EcomAttribute defines custom product attributes
+message EcomAttribute {
+    string attribute_id = 1;
+    string name = 2;
+    string code = 3;
+    EcomAttributeType attribute_type = 4;
+    string description = 5;
+    bool is_required = 6;
+    bool is_filterable = 7;
+    bool is_visible = 8;
+    bool is_searchable = 9;
+    repeated string options = 10;           // for select/multi-select types
+    string default_value = 11;
+    int32 sort_order = 12;
+    map<string, string> custom_fields = 13;
+    erp.AuditInfo audit_info = 14;
+}
+
+message EcomAttributeList {
+    repeated EcomAttribute items = 1;
+}
+
+// =====================
+// IMAGE
+// =====================
+
+// @PrimeObject
+// EcomImage represents product images and media
+message EcomImage {
+    string image_id = 1;
+    string product_id = 2;                  // cross-ref: EcomProduct
+    string variant_id = 3;                  // cross-ref: EcomVariant (optional)
+    string file_name = 4;
+    string url = 5;
+    string thumbnail_url = 6;
+    EcomImageType image_type = 7;
+    string alt_text = 8;
+    string title = 9;
+    int32 width = 10;
+    int32 height = 11;
+    int64 file_size = 12;
+    string mime_type = 13;
+    int32 sort_order = 14;
+    bool is_primary = 15;
+    map<string, string> custom_fields = 16;
+    erp.AuditInfo audit_info = 17;
+}
+
+message EcomImageList {
+    repeated EcomImage items = 1;
+}
+
+// =====================
+// VARIANT
+// =====================
+
+// @PrimeObject
+// EcomVariant represents product variants (size, color, etc.)
+message EcomVariant {
+    string variant_id = 1;
+    string product_id = 2;                  // cross-ref: EcomProduct
+    string sku = 3;
+    string name = 4;
+    erp.Money price = 5;
+    erp.Money compare_at_price = 6;
+    erp.Money cost_price = 7;
+    int32 stock_quantity = 8;
+    double weight = 9;
+    string weight_unit = 10;
+    string barcode = 11;
+    map<string, string> attributes = 12;   // attribute_code -> value
+    bool is_active = 13;
+    int32 sort_order = 14;
+    string image_id = 15;                   // cross-ref: EcomImage
+    map<string, string> custom_fields = 16;
+    erp.AuditInfo audit_info = 17;
+}
+
+message EcomVariantList {
+    repeated EcomVariant items = 1;
+}

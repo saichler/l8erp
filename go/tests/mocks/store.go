@@ -479,4 +479,34 @@ type MockDataStore struct {
 	DocAccessLogIDs       []string
 	DocArchiveJobIDs      []string
 	DocAuditTrailIDs      []string
+
+	// ECOM Phase 1: Catalog Foundation
+	EcomCategoryIDs  []string
+	EcomAttributeIDs []string
+
+	// ECOM Phase 2: Products
+	EcomProductIDs []string
+	EcomImageIDs   []string
+	EcomVariantIDs []string
+
+	// ECOM Phase 3: Customers
+	EcomCustomerIDs []string
+	EcomAddressIDs  []string
+	EcomWishlistIDs []string
+	EcomWishItemIDs []string
+	EcomCartIDs     []string
+
+	// ECOM Phase 4: Promotions & Methods
+	EcomPromotionIDs []string
+	EcomCouponIDs    []string
+	EcomPriceRuleIDs []string
+	EcomShippingIDs  []string
+	EcomPaymentIDs   []string
+
+	// ECOM Phase 5: Orders
+	EcomOrderIDs       []string
+	EcomOrderLineIDs   []string
+	EcomOrderStatusIDs []string
+	EcomReturnIDs      []string
+	EcomReturnLineIDs  []string
 }

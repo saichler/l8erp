@@ -32,7 +32,7 @@ limitations under the License.
             { key: 'projects', label: 'Projects', icon: 'projects', hasSubModules: true },
             { key: 'bi', label: 'Business Intelligence', icon: 'bi', hasSubModules: true },
             { key: 'documents', label: 'Documents', icon: 'documents', hasSubModules: true },
-            { key: 'ecommerce', label: 'E-Commerce', icon: 'ecommerce', hasSubModules: false },
+            { key: 'ecommerce', label: 'E-Commerce', icon: 'ecommerce', hasSubModules: true },
             { key: 'compliance', label: 'Compliance', icon: 'compliance', hasSubModules: false },
             { key: 'system', label: 'System', icon: 'system', hasSubModules: true }
         ],
@@ -610,6 +610,47 @@ limitations under the License.
                     { key: 'access-logs', label: 'Access Logs', icon: 'bi', endpoint: '/45/DocAccLog', model: 'DocAccessLog', idField: 'logId' },
                     { key: 'archive-jobs', label: 'Archives', icon: 'warehouse', endpoint: '/45/DocArchive', model: 'DocArchiveJob', idField: 'jobId' },
                     { key: 'audit-trails', label: 'Audit Trails', icon: 'security', endpoint: '/45/DocAudit', model: 'DocAuditTrail', idField: 'trailId' }
+                ]
+            }
+        },
+
+        // E-Commerce Sub-Modules (Level 2)
+        ecommerce: {
+            subModules: [
+                { key: 'catalog', label: 'Catalog', icon: 'inventory' },
+                { key: 'orders', label: 'Orders', icon: 'procurement' },
+                { key: 'customers', label: 'Customers', icon: 'hcm' },
+                { key: 'promotions', label: 'Promotions', icon: 'sales' }
+            ],
+
+            services: {
+                'catalog': [
+                    { key: 'products', label: 'Products', icon: 'inventory', endpoint: '/100/EcomProd', model: 'EcomProduct', idField: 'productId' },
+                    { key: 'categories', label: 'Categories', icon: 'job-families', endpoint: '/100/EcomCat', model: 'EcomCategory', idField: 'categoryId' },
+                    { key: 'attributes', label: 'Attributes', icon: 'positions', endpoint: '/100/EcomAttr', model: 'EcomAttribute', idField: 'attributeId' },
+                    { key: 'images', label: 'Images', icon: 'documents', endpoint: '/100/EcomImage', model: 'EcomImage', idField: 'imageId' },
+                    { key: 'variants', label: 'Variants', icon: 'inventory', endpoint: '/100/EcomVar', model: 'EcomVariant', idField: 'variantId' }
+                ],
+                'orders': [
+                    { key: 'orders', label: 'Orders', icon: 'procurement', endpoint: '/100/EcomOrder', model: 'EcomOrder', idField: 'orderId' },
+                    { key: 'order-lines', label: 'Order Lines', icon: 'positions', endpoint: '/100/EcomOrdLn', model: 'EcomOrderLine', idField: 'lineId' },
+                    { key: 'order-statuses', label: 'Status History', icon: 'time', endpoint: '/100/EcomOrdSts', model: 'EcomOrderStatusHistory', idField: 'statusId' },
+                    { key: 'returns', label: 'Returns', icon: 'logistics', endpoint: '/100/EcomReturn', model: 'EcomReturn', idField: 'returnId' },
+                    { key: 'return-lines', label: 'Return Lines', icon: 'positions', endpoint: '/100/EcomRetLn', model: 'EcomReturnLine', idField: 'lineId' }
+                ],
+                'customers': [
+                    { key: 'customers', label: 'Customers', icon: 'hcm', endpoint: '/100/EcomCust', model: 'EcomCustomer', idField: 'customerId' },
+                    { key: 'addresses', label: 'Addresses', icon: 'warehouse', endpoint: '/100/EcomAddr', model: 'EcomCustomerAddress', idField: 'addressId' },
+                    { key: 'wishlists', label: 'Wishlists', icon: 'benefits', endpoint: '/100/EcomWish', model: 'EcomWishlist', idField: 'wishlistId' },
+                    { key: 'wishlist-items', label: 'Wishlist Items', icon: 'inventory', endpoint: '/100/EcomWishIt', model: 'EcomWishlistItem', idField: 'itemId' },
+                    { key: 'carts', label: 'Carts', icon: 'ecommerce', endpoint: '/100/EcomCart', model: 'EcomCart', idField: 'cartId' }
+                ],
+                'promotions': [
+                    { key: 'promotions', label: 'Promotions', icon: 'sales', endpoint: '/100/EcomPromo', model: 'EcomPromotion', idField: 'promotionId' },
+                    { key: 'coupons', label: 'Coupons', icon: 'benefits', endpoint: '/100/EcomCoupon', model: 'EcomCoupon', idField: 'couponId' },
+                    { key: 'price-rules', label: 'Price Rules', icon: 'financial', endpoint: '/100/EcomPrcRl', model: 'EcomPriceRule', idField: 'ruleId' },
+                    { key: 'shipping-methods', label: 'Shipping', icon: 'logistics', endpoint: '/100/EcomShip', model: 'EcomShippingMethod', idField: 'methodId' },
+                    { key: 'payment-methods', label: 'Payment', icon: 'financial', endpoint: '/100/EcomPay', model: 'EcomPaymentMethod', idField: 'methodId' }
                 ]
             }
         },

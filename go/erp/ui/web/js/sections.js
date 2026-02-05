@@ -83,6 +83,11 @@ const sectionInitializers = {
             initializeDoc();
         }
     },
+    ecommerce: () => {
+        if (typeof initializeEcom === 'function') {
+            initializeEcom();
+        }
+    },
     system: () => {
         if (typeof initializeL8Sys === 'function') {
             initializeL8Sys();

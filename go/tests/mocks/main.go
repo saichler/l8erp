@@ -533,6 +533,42 @@ func main() {
 		os.Exit(1)
 	}
 
+	// ECOM Module Phases
+	fmt.Printf("\nECOM Phase 1: Catalog Foundation\n")
+	fmt.Printf("---------------------------------\n")
+	if err := generateEcomPhase1(client, store); err != nil {
+		fmt.Printf("ECOM Phase 1 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nECOM Phase 2: Products\n")
+	fmt.Printf("----------------------\n")
+	if err := generateEcomPhase2(client, store); err != nil {
+		fmt.Printf("ECOM Phase 2 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nECOM Phase 3: Customers\n")
+	fmt.Printf("-----------------------\n")
+	if err := generateEcomPhase3(client, store); err != nil {
+		fmt.Printf("ECOM Phase 3 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nECOM Phase 4: Promotions & Methods\n")
+	fmt.Printf("-----------------------------------\n")
+	if err := generateEcomPhase4(client, store); err != nil {
+		fmt.Printf("ECOM Phase 4 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nECOM Phase 5: Orders\n")
+	fmt.Printf("--------------------\n")
+	if err := generateEcomPhase5(client, store); err != nil {
+		fmt.Printf("ECOM Phase 5 failed: %v\n", err)
+		os.Exit(1)
+	}
+
 	fmt.Printf("\n=======================\n")
 	fmt.Printf("Mock data generation complete!\n")
 	fmt.Printf("\nHCM Summary:\n")
@@ -660,4 +696,22 @@ func main() {
 	fmt.Printf("  - Access Logs: %d\n", len(store.DocAccessLogIDs))
 	fmt.Printf("  - Archive Jobs: %d\n", len(store.DocArchiveJobIDs))
 	fmt.Printf("  - Audit Trails: %d\n", len(store.DocAuditTrailIDs))
+	fmt.Printf("\nECOM Summary:\n")
+	fmt.Printf("  - Categories: %d\n", len(store.EcomCategoryIDs))
+	fmt.Printf("  - Attributes: %d\n", len(store.EcomAttributeIDs))
+	fmt.Printf("  - Products: %d\n", len(store.EcomProductIDs))
+	fmt.Printf("  - Product Images: %d\n", len(store.EcomImageIDs))
+	fmt.Printf("  - Product Variants: %d\n", len(store.EcomVariantIDs))
+	fmt.Printf("  - Customers: %d\n", len(store.EcomCustomerIDs))
+	fmt.Printf("  - Customer Addresses: %d\n", len(store.EcomAddressIDs))
+	fmt.Printf("  - Wishlists: %d\n", len(store.EcomWishlistIDs))
+	fmt.Printf("  - Shopping Carts: %d\n", len(store.EcomCartIDs))
+	fmt.Printf("  - Promotions: %d\n", len(store.EcomPromotionIDs))
+	fmt.Printf("  - Coupons: %d\n", len(store.EcomCouponIDs))
+	fmt.Printf("  - Price Rules: %d\n", len(store.EcomPriceRuleIDs))
+	fmt.Printf("  - Shipping Methods: %d\n", len(store.EcomShippingIDs))
+	fmt.Printf("  - Payment Methods: %d\n", len(store.EcomPaymentIDs))
+	fmt.Printf("  - Orders: %d\n", len(store.EcomOrderIDs))
+	fmt.Printf("  - Order Lines: %d\n", len(store.EcomOrderLineIDs))
+	fmt.Printf("  - Returns: %d\n", len(store.EcomReturnIDs))
 }
