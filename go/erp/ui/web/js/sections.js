@@ -33,6 +33,11 @@ const sections = {
 
 // Section initialization functions
 const sectionInitializers = {
+    dashboard: () => {
+        if (typeof initializeDashboard === 'function') {
+            initializeDashboard();
+        }
+    },
     hcm: () => {
         if (typeof initializeHCM === 'function') {
             initializeHCM();

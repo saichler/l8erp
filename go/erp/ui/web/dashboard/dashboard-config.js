@@ -1,0 +1,142 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+// Dashboard KPI Configuration
+window.DashboardConfig = {
+    // KPI definitions with endpoints and queries
+    kpis: [
+        {
+            id: 'employees',
+            label: 'Total Employees',
+            icon: 'hcm',
+            endpoint: '/30/Employee',
+            model: 'Employee',
+            query: 'select * from Employee limit 1 page 0',
+            section: 'hcm',
+            countField: 'Total'
+        },
+        {
+            id: 'pending-leave',
+            label: 'Pending Leave',
+            icon: 'warning',
+            endpoint: '/30/LeaveReq',
+            model: 'LeaveRequest',
+            query: 'select * from LeaveRequest where status=2 limit 1 page 0',
+            section: 'hcm',
+            countField: 'Total'
+        },
+        {
+            id: 'open-sales-orders',
+            label: 'Open Sales Orders',
+            icon: 'sales',
+            endpoint: '/60/SalesOrder',
+            model: 'SalesOrder',
+            query: 'select * from SalesOrder where status=1 limit 1 page 0',
+            section: 'sales',
+            countField: 'Total'
+        },
+        {
+            id: 'open-cases',
+            label: 'Open Support Cases',
+            icon: 'crm',
+            endpoint: '/80/CrmCase',
+            model: 'CrmCase',
+            query: 'select * from CrmCase where status=1 limit 1 page 0',
+            section: 'crm',
+            countField: 'Total'
+        },
+        {
+            id: 'active-projects',
+            label: 'Active Projects',
+            icon: 'projects',
+            endpoint: '/90/PrjProj',
+            model: 'PrjProject',
+            query: 'select * from PrjProject where status=2 limit 1 page 0',
+            section: 'projects',
+            countField: 'Total'
+        },
+        {
+            id: 'pending-invoices',
+            label: 'Pending Invoices',
+            icon: 'fin',
+            endpoint: '/40/SalesInv',
+            model: 'SalesInvoice',
+            query: 'select * from SalesInvoice where status=1 limit 1 page 0',
+            section: 'financial',
+            countField: 'Total'
+        },
+        {
+            id: 'open-pos',
+            label: 'Open POs',
+            icon: 'scm',
+            endpoint: '/50/PurchOrder',
+            model: 'ScmPurchaseOrder',
+            query: 'select * from ScmPurchaseOrder where status=1 limit 1 page 0',
+            section: 'scm',
+            countField: 'Total'
+        },
+        {
+            id: 'wos-in-progress',
+            label: 'WOs In Progress',
+            icon: 'mfg',
+            endpoint: '/70/MfgWorkOrd',
+            model: 'MfgWorkOrder',
+            query: 'select * from MfgWorkOrder where status=2 limit 1 page 0',
+            section: 'manufacturing',
+            countField: 'Total'
+        }
+    ],
+
+    // SVG icons for each KPI type
+    icons: {
+        hcm: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>`,
+        sales: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>`,
+        crm: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>`,
+        projects: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+        </svg>`,
+        fin: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+        </svg>`,
+        scm: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"></rect>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+        </svg>`,
+        mfg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+        </svg>`,
+        warning: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>`,
+        success: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>`
+    }
+};
