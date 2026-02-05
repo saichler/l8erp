@@ -1,0 +1,174 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax = "proto3";
+
+package doc;
+
+option go_package = "./types/doc";
+
+import "doc-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// =====================
+// ATTACHMENT
+// =====================
+
+// @PrimeObject
+// DocAttachment links a document to any entity in any module
+message DocAttachment {
+  string attachment_id = 1;
+  string document_id = 2;                   // cross-ref: DocDocument
+  string entity_type = 3;                   // e.g., "SalesOrder", "Employee", "Invoice"
+  string entity_id = 4;                     // ID of the entity
+  string module = 5;                        // e.g., "sales", "hcm", "fin"
+  string relationship_type = 6;             // e.g., "primary", "supporting", "reference"
+  string description = 7;
+  int32 sort_order = 8;
+  string attached_by = 9;                   // cross-ref: HCM Employee
+  int64 attached_date = 10;
+  map<string, string> custom_fields = 11;
+  erp.AuditInfo audit_info = 12;
+}
+
+message DocAttachmentList {
+  repeated DocAttachment list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// TEMPLATE
+// =====================
+
+// @PrimeObject
+// DocTemplate represents a document template
+message DocTemplate {
+  string template_id = 1;
+  string name = 2;
+  string description = 3;
+  DocTemplateType template_type = 4;
+  string category = 5;
+  DocFileFormat output_format = 6;
+  string content = 7;
+  string storage_path = 8;
+  string owner_id = 9;                      // cross-ref: HCM Employee
+  bool is_active = 10;
+  bool is_system = 11;
+  int32 version = 12;
+  int64 last_used_date = 13;
+  int32 usage_count = 14;
+  map<string, string> default_values = 15;
+  map<string, string> custom_fields = 16;
+  erp.AuditInfo audit_info = 17;
+}
+
+message DocTemplateList {
+  repeated DocTemplate list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// TEMPLATE FIELD
+// =====================
+
+// @PrimeObject
+// DocTemplateField represents a field in a document template
+message DocTemplateField {
+  string field_id = 1;
+  string template_id = 2;                   // cross-ref: DocTemplate
+  string name = 3;
+  string label = 4;
+  string description = 5;
+  DocFieldType field_type = 6;
+  bool is_required = 7;
+  string default_value = 8;
+  string placeholder = 9;
+  string validation_pattern = 10;
+  string validation_message = 11;
+  int32 sort_order = 12;
+  string options = 13;                      // JSON array for select fields
+  string reference_model = 14;              // For reference fields
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message DocTemplateFieldList {
+  repeated DocTemplateField list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// EMAIL CAPTURE
+// =====================
+
+// @PrimeObject
+// DocEmailCapture represents an email captured as a document
+message DocEmailCapture {
+  string capture_id = 1;
+  string document_id = 2;                   // cross-ref: DocDocument (created)
+  DocEmailCaptureStatus status = 3;
+  string from_address = 4;
+  string to_addresses = 5;
+  string cc_addresses = 6;
+  string subject = 7;
+  string body_preview = 8;
+  int64 received_date = 9;
+  int64 processed_date = 10;
+  string folder_id = 11;                    // cross-ref: DocFolder (destination)
+  string processed_by = 12;                 // cross-ref: HCM Employee
+  int32 attachment_count = 13;
+  string error_message = 14;
+  map<string, string> headers = 15;
+  map<string, string> custom_fields = 16;
+  erp.AuditInfo audit_info = 17;
+}
+
+message DocEmailCaptureList {
+  repeated DocEmailCapture list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// SCAN JOB
+// =====================
+
+// @PrimeObject
+// DocScanJob represents a document scanning job
+message DocScanJob {
+  string scan_job_id = 1;
+  string name = 2;
+  DocScanStatus status = 3;
+  string scanner_id = 4;
+  string folder_id = 5;                     // cross-ref: DocFolder (destination)
+  string category_id = 6;                   // cross-ref: DocCategory
+  int32 page_count = 7;
+  int32 document_count = 8;
+  string initiated_by = 9;                  // cross-ref: HCM Employee
+  int64 initiated_date = 10;
+  int64 completed_date = 11;
+  bool ocr_enabled = 12;
+  string ocr_language = 13;
+  string error_message = 14;
+  repeated string document_ids = 15;        // cross-ref: DocDocument (created)
+  map<string, string> settings = 16;
+  map<string, string> custom_fields = 17;
+  erp.AuditInfo audit_info = 18;
+}
+
+message DocScanJobList {
+  repeated DocScanJob list = 1;
+  l8api.L8MetaData metadata = 2;
+}

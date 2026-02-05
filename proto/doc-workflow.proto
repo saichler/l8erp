@@ -1,0 +1,165 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax = "proto3";
+
+package doc;
+
+option go_package = "./types/doc";
+
+import "doc-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// =====================
+// CHECKOUT
+// =====================
+
+// @PrimeObject
+// DocCheckout represents a document checkout record
+message DocCheckout {
+  string checkout_id = 1;
+  string document_id = 2;                   // cross-ref: DocDocument
+  string version_id = 3;                    // cross-ref: DocDocumentVersion
+  DocCheckoutStatus status = 4;
+  string checked_out_by = 5;                // cross-ref: HCM Employee
+  int64 checkout_date = 6;
+  int64 checkin_date = 7;
+  string checkout_notes = 8;
+  string checkin_notes = 9;
+  map<string, string> custom_fields = 10;
+  erp.AuditInfo audit_info = 11;
+}
+
+message DocCheckoutList {
+  repeated DocCheckout list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// APPROVAL WORKFLOW
+// =====================
+
+// @PrimeObject
+// DocApprovalWorkflow represents a document approval workflow
+message DocApprovalWorkflow {
+  string workflow_id = 1;
+  string name = 2;
+  string description = 3;
+  string document_id = 4;                   // cross-ref: DocDocument
+  DocWorkflowStatus status = 5;
+  string initiated_by = 6;                  // cross-ref: HCM Employee
+  int64 initiated_date = 7;
+  int64 completed_date = 8;
+  int32 current_step = 9;
+  int32 total_steps = 10;
+  string comments = 11;
+  map<string, string> custom_fields = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message DocApprovalWorkflowList {
+  repeated DocApprovalWorkflow list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// WORKFLOW STEP
+// =====================
+
+// @PrimeObject
+// DocWorkflowStep represents a step in an approval workflow
+message DocWorkflowStep {
+  string step_id = 1;
+  string workflow_id = 2;                   // cross-ref: DocApprovalWorkflow
+  int32 step_number = 3;
+  string name = 4;
+  string description = 5;
+  DocStepStatus status = 6;
+  string assignee_id = 7;                   // cross-ref: HCM Employee
+  int64 due_date = 8;
+  int64 completed_date = 9;
+  string completed_by = 10;                 // cross-ref: HCM Employee
+  string action_taken = 11;
+  string comments = 12;
+  bool is_required = 13;
+  map<string, string> custom_fields = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message DocWorkflowStepList {
+  repeated DocWorkflowStep list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// SIGNATURE
+// =====================
+
+// @PrimeObject
+// DocSignature represents a digital signature on a document
+message DocSignature {
+  string signature_id = 1;
+  string document_id = 2;                   // cross-ref: DocDocument
+  string version_id = 3;                    // cross-ref: DocDocumentVersion
+  DocSignatureType signature_type = 4;
+  DocSignatureStatus status = 5;
+  string signer_id = 6;                     // cross-ref: HCM Employee
+  string signer_name = 7;
+  string signer_email = 8;
+  int64 requested_date = 9;
+  int64 signed_date = 10;
+  int64 expiry_date = 11;
+  string signature_data = 12;
+  string certificate_id = 13;
+  string ip_address = 14;
+  string reason = 15;
+  map<string, string> custom_fields = 16;
+  erp.AuditInfo audit_info = 17;
+}
+
+message DocSignatureList {
+  repeated DocSignature list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// REVIEW COMMENT
+// =====================
+
+// @PrimeObject
+// DocReviewComment represents a review comment on a document
+message DocReviewComment {
+  string comment_id = 1;
+  string document_id = 2;                   // cross-ref: DocDocument
+  string version_id = 3;                    // cross-ref: DocDocumentVersion
+  string workflow_id = 4;                   // cross-ref: DocApprovalWorkflow
+  string parent_comment_id = 5;             // cross-ref: DocReviewComment (self)
+  string author_id = 6;                     // cross-ref: HCM Employee
+  string content = 7;
+  int32 page_number = 8;
+  string position = 9;
+  bool is_resolved = 10;
+  string resolved_by = 11;                  // cross-ref: HCM Employee
+  int64 resolved_date = 12;
+  int64 created_date = 13;
+  map<string, string> custom_fields = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message DocReviewCommentList {
+  repeated DocReviewComment list = 1;
+  l8api.L8MetaData metadata = 2;
+}

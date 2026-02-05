@@ -73,6 +73,11 @@ const sectionInitializers = {
             initializeBi();
         }
     },
+    documents: () => {
+        if (typeof initializeDoc === 'function') {
+            initializeDoc();
+        }
+    },
     system: () => {
         if (typeof initializeL8Sys === 'function') {
             initializeL8Sys();

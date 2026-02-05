@@ -31,7 +31,7 @@ limitations under the License.
             { key: 'crm', label: 'CRM', icon: 'crm', hasSubModules: true },
             { key: 'projects', label: 'Projects', icon: 'projects', hasSubModules: true },
             { key: 'bi', label: 'Business Intelligence', icon: 'bi', hasSubModules: true },
-            { key: 'documents', label: 'Documents', icon: 'documents', hasSubModules: false },
+            { key: 'documents', label: 'Documents', icon: 'documents', hasSubModules: true },
             { key: 'ecommerce', label: 'E-Commerce', icon: 'ecommerce', hasSubModules: false },
             { key: 'compliance', label: 'Compliance', icon: 'compliance', hasSubModules: false },
             { key: 'system', label: 'System', icon: 'system', hasSubModules: true }
@@ -569,6 +569,47 @@ limitations under the License.
                     { key: 'data-quality-rules', label: 'Quality Rules', icon: 'compliance', endpoint: '/35/BiDQRule', model: 'BiDataQualityRule', idField: 'ruleId' },
                     { key: 'master-data-configs', label: 'Master Data', icon: 'organizations', endpoint: '/35/BiMDConfig', model: 'BiMasterDataConfig', idField: 'configId' },
                     { key: 'data-governances', label: 'Governance', icon: 'security', endpoint: '/35/BiDataGov', model: 'BiDataGovernance', idField: 'governanceId' }
+                ]
+            }
+        },
+
+        // Documents Sub-Modules (Level 2)
+        documents: {
+            subModules: [
+                { key: 'storage', label: 'Storage', icon: 'documents' },
+                { key: 'workflow', label: 'Workflow', icon: 'projects' },
+                { key: 'integration', label: 'Integration', icon: 'scm' },
+                { key: 'compliance', label: 'Compliance', icon: 'compliance' }
+            ],
+
+            services: {
+                'storage': [
+                    { key: 'documents', label: 'Documents', icon: 'documents', endpoint: '/45/DocDoc', model: 'DocDocument', idField: 'documentId' },
+                    { key: 'folders', label: 'Folders', icon: 'job-families', endpoint: '/45/DocFolder', model: 'DocFolder', idField: 'folderId' },
+                    { key: 'categories', label: 'Categories', icon: 'inventory', endpoint: '/45/DocCategry', model: 'DocCategory', idField: 'categoryId' },
+                    { key: 'tags', label: 'Tags', icon: 'benefits', endpoint: '/45/DocTag', model: 'DocTag', idField: 'tagId' },
+                    { key: 'versions', label: 'Versions', icon: 'time', endpoint: '/45/DocVersion', model: 'DocDocumentVersion', idField: 'versionId' }
+                ],
+                'workflow': [
+                    { key: 'checkouts', label: 'Checkouts', icon: 'procurement', endpoint: '/45/DocChkout', model: 'DocCheckout', idField: 'checkoutId' },
+                    { key: 'approval-workflows', label: 'Approvals', icon: 'projects', endpoint: '/45/DocAprvWf', model: 'DocApprovalWorkflow', idField: 'workflowId' },
+                    { key: 'workflow-steps', label: 'Steps', icon: 'jobs', endpoint: '/45/DocWfStep', model: 'DocWorkflowStep', idField: 'stepId' },
+                    { key: 'signatures', label: 'Signatures', icon: 'hcm', endpoint: '/45/DocSign', model: 'DocSignature', idField: 'signatureId' },
+                    { key: 'review-comments', label: 'Comments', icon: 'crm', endpoint: '/45/DocReview', model: 'DocReviewComment', idField: 'commentId' }
+                ],
+                'integration': [
+                    { key: 'attachments', label: 'Attachments', icon: 'documents', endpoint: '/45/DocAttach', model: 'DocAttachment', idField: 'attachmentId' },
+                    { key: 'templates', label: 'Templates', icon: 'learning', endpoint: '/45/DocTmpl', model: 'DocTemplate', idField: 'templateId' },
+                    { key: 'template-fields', label: 'Fields', icon: 'positions', endpoint: '/45/DocTmplFld', model: 'DocTemplateField', idField: 'fieldId' },
+                    { key: 'email-captures', label: 'Email Capture', icon: 'crm', endpoint: '/45/DocEmail', model: 'DocEmailCapture', idField: 'captureId' },
+                    { key: 'scan-jobs', label: 'Scan Jobs', icon: 'jobs', endpoint: '/45/DocScan', model: 'DocScanJob', idField: 'scanJobId' }
+                ],
+                'compliance': [
+                    { key: 'retention-policies', label: 'Retention', icon: 'time', endpoint: '/45/DocRetPol', model: 'DocRetentionPolicy', idField: 'policyId' },
+                    { key: 'legal-holds', label: 'Legal Holds', icon: 'compliance', endpoint: '/45/DocLglHold', model: 'DocLegalHold', idField: 'holdId' },
+                    { key: 'access-logs', label: 'Access Logs', icon: 'bi', endpoint: '/45/DocAccLog', model: 'DocAccessLog', idField: 'logId' },
+                    { key: 'archive-jobs', label: 'Archives', icon: 'warehouse', endpoint: '/45/DocArchive', model: 'DocArchiveJob', idField: 'jobId' },
+                    { key: 'audit-trails', label: 'Audit Trails', icon: 'security', endpoint: '/45/DocAudit', model: 'DocAuditTrail', idField: 'trailId' }
                 ]
             }
         },

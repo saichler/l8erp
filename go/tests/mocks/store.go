@@ -449,4 +449,34 @@ type MockDataStore struct {
 	BiDataQualityRuleIDs  []string
 	BiMasterDataConfigIDs []string
 	BiDataGovernanceIDs   []string
+
+	// DOC Phase 1: Storage Foundation
+	DocFolderIDs   []string
+	DocCategoryIDs []string
+	DocTagIDs      []string
+
+	// DOC Phase 2: Documents & Versions
+	DocDocumentIDs []string
+	DocVersionIDs  []string
+
+	// DOC Phase 3: Workflow
+	DocCheckoutIDs         []string
+	DocApprovalWorkflowIDs []string
+	DocWorkflowStepIDs     []string
+	DocSignatureIDs        []string
+	DocReviewCommentIDs    []string
+
+	// DOC Phase 4: Integration
+	DocAttachmentIDs    []string
+	DocTemplateIDs      []string
+	DocTemplateFieldIDs []string
+	DocEmailCaptureIDs  []string
+	DocScanJobIDs       []string
+
+	// DOC Phase 5: Compliance
+	DocRetentionPolicyIDs []string
+	DocLegalHoldIDs       []string
+	DocAccessLogIDs       []string
+	DocArchiveJobIDs      []string
+	DocAuditTrailIDs      []string
 }

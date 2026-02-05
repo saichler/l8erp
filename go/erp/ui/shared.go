@@ -5,6 +5,7 @@ import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8erp/go/types/crm"
+	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8erp/go/types/mfg"
@@ -165,6 +166,7 @@ func registerTypes(resources ifs.IResources) {
 	registerCrmTypes(resources)
 	registerPrjTypes(resources)
 	registerBiTypes(resources)
+	registerDocTypes(resources)
 }
 
 func registerFinTypes(resources ifs.IResources) {
@@ -775,4 +777,54 @@ func registerBiTypes(resources ifs.IResources) {
 	resources.Registry().Register(&bi.BiMasterDataConfigList{})
 	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&bi.BiDataGovernance{}, "GovernanceId")
 	resources.Registry().Register(&bi.BiDataGovernanceList{})
+}
+
+func registerDocTypes(resources ifs.IResources) {
+	// Storage
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocDocument{}, "DocumentId")
+	resources.Registry().Register(&doc.DocDocumentList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocFolder{}, "FolderId")
+	resources.Registry().Register(&doc.DocFolderList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocCategory{}, "CategoryId")
+	resources.Registry().Register(&doc.DocCategoryList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocTag{}, "TagId")
+	resources.Registry().Register(&doc.DocTagList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocDocumentVersion{}, "VersionId")
+	resources.Registry().Register(&doc.DocDocumentVersionList{})
+
+	// Workflow
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocCheckout{}, "CheckoutId")
+	resources.Registry().Register(&doc.DocCheckoutList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocApprovalWorkflow{}, "WorkflowId")
+	resources.Registry().Register(&doc.DocApprovalWorkflowList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocWorkflowStep{}, "StepId")
+	resources.Registry().Register(&doc.DocWorkflowStepList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocSignature{}, "SignatureId")
+	resources.Registry().Register(&doc.DocSignatureList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocReviewComment{}, "CommentId")
+	resources.Registry().Register(&doc.DocReviewCommentList{})
+
+	// Integration
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocAttachment{}, "AttachmentId")
+	resources.Registry().Register(&doc.DocAttachmentList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocTemplate{}, "TemplateId")
+	resources.Registry().Register(&doc.DocTemplateList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocTemplateField{}, "FieldId")
+	resources.Registry().Register(&doc.DocTemplateFieldList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocEmailCapture{}, "CaptureId")
+	resources.Registry().Register(&doc.DocEmailCaptureList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocScanJob{}, "ScanJobId")
+	resources.Registry().Register(&doc.DocScanJobList{})
+
+	// Compliance
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocRetentionPolicy{}, "PolicyId")
+	resources.Registry().Register(&doc.DocRetentionPolicyList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocLegalHold{}, "HoldId")
+	resources.Registry().Register(&doc.DocLegalHoldList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocAccessLog{}, "LogId")
+	resources.Registry().Register(&doc.DocAccessLogList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocArchiveJob{}, "JobId")
+	resources.Registry().Register(&doc.DocArchiveJobList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocAuditTrail{}, "TrailId")
+	resources.Registry().Register(&doc.DocAuditTrailList{})
 }

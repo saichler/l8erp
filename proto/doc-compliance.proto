@@ -1,0 +1,177 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax = "proto3";
+
+package doc;
+
+option go_package = "./types/doc";
+
+import "doc-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// =====================
+// RETENTION POLICY
+// =====================
+
+// @PrimeObject
+// DocRetentionPolicy defines document retention rules
+message DocRetentionPolicy {
+  string policy_id = 1;
+  string name = 2;
+  string description = 3;
+  string code = 4;
+  int32 retention_days = 5;
+  DocRetentionAction action_on_expiry = 6;
+  string category_id = 7;                   // cross-ref: DocCategory (applies to)
+  DocDocumentType document_type = 8;        // applies to this type
+  bool is_active = 9;
+  bool is_mandatory = 10;
+  string legal_basis = 11;
+  string owner_id = 12;                     // cross-ref: HCM Employee
+  int64 effective_date = 13;
+  int64 expiry_date = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message DocRetentionPolicyList {
+  repeated DocRetentionPolicy list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// LEGAL HOLD
+// =====================
+
+// @PrimeObject
+// DocLegalHold represents a legal hold on documents
+message DocLegalHold {
+  string hold_id = 1;
+  string name = 2;
+  string description = 3;
+  string matter_id = 4;
+  string matter_name = 5;
+  DocLegalHoldStatus status = 6;
+  string custodian_id = 7;                  // cross-ref: HCM Employee
+  string legal_counsel = 8;
+  int64 effective_date = 9;
+  int64 release_date = 10;
+  string release_reason = 11;
+  string released_by = 12;                  // cross-ref: HCM Employee
+  repeated string document_ids = 13;        // cross-ref: DocDocument
+  repeated string folder_ids = 14;          // cross-ref: DocFolder
+  string search_criteria = 15;              // JSON search criteria
+  int32 document_count = 16;
+  string notes = 17;
+  map<string, string> custom_fields = 18;
+  erp.AuditInfo audit_info = 19;
+}
+
+message DocLegalHoldList {
+  repeated DocLegalHold list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// ACCESS LOG
+// =====================
+
+// @PrimeObject
+// DocAccessLog records document access events
+message DocAccessLog {
+  string log_id = 1;
+  string document_id = 2;                   // cross-ref: DocDocument
+  string version_id = 3;                    // cross-ref: DocDocumentVersion
+  DocAccessAction action = 4;
+  string user_id = 5;                       // cross-ref: HCM Employee
+  string user_name = 6;
+  int64 access_date = 7;
+  string ip_address = 8;
+  string user_agent = 9;
+  string session_id = 10;
+  bool success = 11;
+  string failure_reason = 12;
+  string details = 13;
+  map<string, string> custom_fields = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
+message DocAccessLogList {
+  repeated DocAccessLog list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// ARCHIVE JOB
+// =====================
+
+// @PrimeObject
+// DocArchiveJob represents a document archiving job
+message DocArchiveJob {
+  string job_id = 1;
+  string name = 2;
+  string description = 3;
+  DocArchiveStatus status = 4;
+  string source_folder_id = 5;              // cross-ref: DocFolder
+  string archive_location = 6;
+  string retention_policy_id = 7;           // cross-ref: DocRetentionPolicy
+  string search_criteria = 8;               // JSON search criteria
+  int32 document_count = 9;
+  int64 total_size = 10;
+  string initiated_by = 11;                 // cross-ref: HCM Employee
+  int64 initiated_date = 12;
+  int64 completed_date = 13;
+  string error_message = 14;
+  repeated string document_ids = 15;        // cross-ref: DocDocument (archived)
+  map<string, string> custom_fields = 16;
+  erp.AuditInfo audit_info = 17;
+}
+
+message DocArchiveJobList {
+  repeated DocArchiveJob list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// AUDIT TRAIL
+// =====================
+
+// @PrimeObject
+// DocAuditTrail records all changes to documents
+message DocAuditTrail {
+  string trail_id = 1;
+  string document_id = 2;                   // cross-ref: DocDocument
+  string version_id = 3;                    // cross-ref: DocDocumentVersion
+  string action = 4;                        // e.g., "created", "modified", "deleted"
+  string entity_type = 5;                   // e.g., "document", "folder", "workflow"
+  string entity_id = 6;
+  string user_id = 7;                       // cross-ref: HCM Employee
+  string user_name = 8;
+  int64 timestamp = 9;
+  string old_values = 10;                   // JSON of previous state
+  string new_values = 11;                   // JSON of new state
+  string change_summary = 12;
+  string ip_address = 13;
+  string session_id = 14;
+  map<string, string> custom_fields = 15;
+  erp.AuditInfo audit_info = 16;
+}
+
+message DocAuditTrailList {
+  repeated DocAuditTrail list = 1;
+  l8api.L8MetaData metadata = 2;
+}

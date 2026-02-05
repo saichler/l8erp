@@ -1,0 +1,162 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax = "proto3";
+
+package doc;
+
+option go_package = "./types/doc";
+
+import "doc-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// =====================
+// DOCUMENT
+// =====================
+
+// @PrimeObject
+// DocDocument represents a document in the repository
+message DocDocument {
+  string document_id = 1;
+  string name = 2;
+  string description = 3;
+  DocDocumentType document_type = 4;
+  DocDocumentStatus status = 5;
+  DocFileFormat file_format = 6;
+  string file_name = 7;
+  string mime_type = 8;
+  int64 file_size = 9;
+  string storage_path = 10;
+  string folder_id = 11;                    // cross-ref: DocFolder
+  string category_id = 12;                  // cross-ref: DocCategory
+  DocAccessLevel access_level = 13;
+  string owner_id = 14;                     // cross-ref: HCM Employee
+  bool is_public = 15;
+  int32 current_version = 16;
+  string checksum = 17;
+  int64 created_date = 18;
+  int64 modified_date = 19;
+  int64 expiry_date = 20;
+  repeated string tag_ids = 21;             // cross-ref: DocTag
+  map<string, string> metadata = 22;
+  map<string, string> custom_fields = 23;
+  erp.AuditInfo audit_info = 24;
+}
+
+message DocDocumentList {
+  repeated DocDocument list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// FOLDER
+// =====================
+
+// @PrimeObject
+// DocFolder represents a folder in the document hierarchy
+message DocFolder {
+  string folder_id = 1;
+  string name = 2;
+  string description = 3;
+  string parent_folder_id = 4;              // cross-ref: DocFolder (self)
+  string path = 5;
+  DocAccessLevel access_level = 6;
+  string owner_id = 7;                      // cross-ref: HCM Employee
+  string department_id = 8;                 // cross-ref: HCM Department
+  bool is_system = 9;
+  int32 document_count = 10;
+  int32 subfolder_count = 11;
+  map<string, string> custom_fields = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message DocFolderList {
+  repeated DocFolder list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// CATEGORY
+// =====================
+
+// @PrimeObject
+// DocCategory represents a document category for classification
+message DocCategory {
+  string category_id = 1;
+  string name = 2;
+  string description = 3;
+  string parent_category_id = 4;            // cross-ref: DocCategory (self)
+  string code = 5;
+  int32 sort_order = 6;
+  bool is_active = 7;
+  string retention_policy_id = 8;           // cross-ref: DocRetentionPolicy
+  map<string, string> custom_fields = 9;
+  erp.AuditInfo audit_info = 10;
+}
+
+message DocCategoryList {
+  repeated DocCategory list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// TAG
+// =====================
+
+// @PrimeObject
+// DocTag represents a tag for document labeling
+message DocTag {
+  string tag_id = 1;
+  string name = 2;
+  string description = 3;
+  string color = 4;
+  int32 usage_count = 5;
+  bool is_active = 6;
+  map<string, string> custom_fields = 7;
+  erp.AuditInfo audit_info = 8;
+}
+
+message DocTagList {
+  repeated DocTag list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// DOCUMENT VERSION
+// =====================
+
+// @PrimeObject
+// DocDocumentVersion represents a version of a document
+message DocDocumentVersion {
+  string version_id = 1;
+  string document_id = 2;                   // cross-ref: DocDocument
+  int32 version_number = 3;
+  string change_notes = 4;
+  string file_name = 5;
+  int64 file_size = 6;
+  string storage_path = 7;
+  string checksum = 8;
+  bool is_major_version = 9;
+  string created_by = 10;                   // cross-ref: HCM Employee
+  int64 created_date = 11;
+  map<string, string> custom_fields = 12;
+  erp.AuditInfo audit_info = 13;
+}
+
+message DocDocumentVersionList {
+  repeated DocDocumentVersion list = 1;
+  l8api.L8MetaData metadata = 2;
+}

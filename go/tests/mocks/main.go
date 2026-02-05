@@ -490,6 +490,49 @@ func main() {
 		os.Exit(1)
 	}
 
+	// DOC Module Phases
+	fmt.Printf("\nDOC Phase 1: Compliance Foundation\n")
+	fmt.Printf("-----------------------------------\n")
+	if err := generateDocPhase1(client, store); err != nil {
+		fmt.Printf("DOC Phase 1 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nDOC Phase 2: Storage Foundation\n")
+	fmt.Printf("--------------------------------\n")
+	if err := generateDocPhase2(client, store); err != nil {
+		fmt.Printf("DOC Phase 2 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nDOC Phase 3: Documents & Versions\n")
+	fmt.Printf("----------------------------------\n")
+	if err := generateDocPhase3(client, store); err != nil {
+		fmt.Printf("DOC Phase 3 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nDOC Phase 4: Workflow\n")
+	fmt.Printf("---------------------\n")
+	if err := generateDocPhase4(client, store); err != nil {
+		fmt.Printf("DOC Phase 4 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nDOC Phase 5: Integration\n")
+	fmt.Printf("------------------------\n")
+	if err := generateDocPhase5(client, store); err != nil {
+		fmt.Printf("DOC Phase 5 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nDOC Phase 6: Compliance\n")
+	fmt.Printf("-----------------------\n")
+	if err := generateDocPhase6(client, store); err != nil {
+		fmt.Printf("DOC Phase 6 failed: %v\n", err)
+		os.Exit(1)
+	}
+
 	fmt.Printf("\n=======================\n")
 	fmt.Printf("Mock data generation complete!\n")
 	fmt.Printf("\nHCM Summary:\n")
@@ -596,4 +639,25 @@ func main() {
 	fmt.Printf("  - ETL Jobs: %d\n", len(store.BiETLJobIDs))
 	fmt.Printf("  - Data Quality Rules: %d\n", len(store.BiDataQualityRuleIDs))
 	fmt.Printf("  - Data Governance: %d\n", len(store.BiDataGovernanceIDs))
+	fmt.Printf("\nDOC Summary:\n")
+	fmt.Printf("  - Folders: %d\n", len(store.DocFolderIDs))
+	fmt.Printf("  - Categories: %d\n", len(store.DocCategoryIDs))
+	fmt.Printf("  - Tags: %d\n", len(store.DocTagIDs))
+	fmt.Printf("  - Documents: %d\n", len(store.DocDocumentIDs))
+	fmt.Printf("  - Document Versions: %d\n", len(store.DocVersionIDs))
+	fmt.Printf("  - Checkouts: %d\n", len(store.DocCheckoutIDs))
+	fmt.Printf("  - Approval Workflows: %d\n", len(store.DocApprovalWorkflowIDs))
+	fmt.Printf("  - Workflow Steps: %d\n", len(store.DocWorkflowStepIDs))
+	fmt.Printf("  - Signatures: %d\n", len(store.DocSignatureIDs))
+	fmt.Printf("  - Review Comments: %d\n", len(store.DocReviewCommentIDs))
+	fmt.Printf("  - Attachments: %d\n", len(store.DocAttachmentIDs))
+	fmt.Printf("  - Templates: %d\n", len(store.DocTemplateIDs))
+	fmt.Printf("  - Template Fields: %d\n", len(store.DocTemplateFieldIDs))
+	fmt.Printf("  - Email Captures: %d\n", len(store.DocEmailCaptureIDs))
+	fmt.Printf("  - Scan Jobs: %d\n", len(store.DocScanJobIDs))
+	fmt.Printf("  - Retention Policies: %d\n", len(store.DocRetentionPolicyIDs))
+	fmt.Printf("  - Legal Holds: %d\n", len(store.DocLegalHoldIDs))
+	fmt.Printf("  - Access Logs: %d\n", len(store.DocAccessLogIDs))
+	fmt.Printf("  - Archive Jobs: %d\n", len(store.DocArchiveJobIDs))
+	fmt.Printf("  - Audit Trails: %d\n", len(store.DocAuditTrailIDs))
 }
