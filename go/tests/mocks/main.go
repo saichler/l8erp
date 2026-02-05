@@ -569,6 +569,42 @@ func main() {
 		os.Exit(1)
 	}
 
+	// COMP Module Phases
+	fmt.Printf("\nCOMP Phase 1: Foundation\n")
+	fmt.Printf("------------------------\n")
+	if err := generateCompPhase1(client, store); err != nil {
+		fmt.Printf("COMP Phase 1 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nCOMP Phase 2: Core\n")
+	fmt.Printf("------------------\n")
+	if err := generateCompPhase2(client, store); err != nil {
+		fmt.Printf("COMP Phase 2 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nCOMP Phase 3: Assessments\n")
+	fmt.Printf("-------------------------\n")
+	if err := generateCompPhase3(client, store); err != nil {
+		fmt.Printf("COMP Phase 3 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nCOMP Phase 4: Events\n")
+	fmt.Printf("--------------------\n")
+	if err := generateCompPhase4(client, store); err != nil {
+		fmt.Printf("COMP Phase 4 failed: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("\nCOMP Phase 5: Reports\n")
+	fmt.Printf("---------------------\n")
+	if err := generateCompPhase5(client, store); err != nil {
+		fmt.Printf("COMP Phase 5 failed: %v\n", err)
+		os.Exit(1)
+	}
+
 	fmt.Printf("\n=======================\n")
 	fmt.Printf("Mock data generation complete!\n")
 	fmt.Printf("\nHCM Summary:\n")
@@ -714,4 +750,25 @@ func main() {
 	fmt.Printf("  - Orders: %d\n", len(store.EcomOrderIDs))
 	fmt.Printf("  - Order Lines: %d\n", len(store.EcomOrderLineIDs))
 	fmt.Printf("  - Returns: %d\n", len(store.EcomReturnIDs))
+	fmt.Printf("\nCOMP Summary:\n")
+	fmt.Printf("  - Regulations: %d\n", len(store.CompRegulationIDs))
+	fmt.Printf("  - Controls: %d\n", len(store.CompControlIDs))
+	fmt.Printf("  - Policy Documents: %d\n", len(store.CompPolicyDocumentIDs))
+	fmt.Printf("  - Insurance Policies: %d\n", len(store.CompInsurancePolicyIDs))
+	fmt.Printf("  - Requirements: %d\n", len(store.CompRequirementIDs))
+	fmt.Printf("  - Approval Matrices: %d\n", len(store.CompApprovalMatrixIDs))
+	fmt.Printf("  - Segregation Rules: %d\n", len(store.CompSegregationRuleIDs))
+	fmt.Printf("  - Risk Registers: %d\n", len(store.CompRiskRegisterIDs))
+	fmt.Printf("  - Audit Schedules: %d\n", len(store.CompAuditScheduleIDs))
+	fmt.Printf("  - Compliance Statuses: %d\n", len(store.CompComplianceStatusIDs))
+	fmt.Printf("  - Control Assessments: %d\n", len(store.CompControlAssessmentIDs))
+	fmt.Printf("  - Certifications: %d\n", len(store.CompCertificationIDs))
+	fmt.Printf("  - Risk Assessments: %d\n", len(store.CompRiskAssessmentIDs))
+	fmt.Printf("  - Mitigation Plans: %d\n", len(store.CompMitigationPlanIDs))
+	fmt.Printf("  - Violation Records: %d\n", len(store.CompViolationRecordIDs))
+	fmt.Printf("  - Incidents: %d\n", len(store.CompIncidentIDs))
+	fmt.Printf("  - Audit Findings: %d\n", len(store.CompAuditFindingIDs))
+	fmt.Printf("  - Remediation Actions: %d\n", len(store.CompRemediationActionIDs))
+	fmt.Printf("  - Audit Reports: %d\n", len(store.CompAuditReportIDs))
+	fmt.Printf("  - Compliance Reports: %d\n", len(store.CompComplianceReportIDs))
 }

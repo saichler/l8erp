@@ -55,7 +55,8 @@ message EcomCustomer {
 }
 
 message EcomCustomerList {
-    repeated EcomCustomer items = 1;
+    repeated EcomCustomer list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -85,7 +86,8 @@ message EcomCustomerAddress {
 }
 
 message EcomCustomerAddressList {
-    repeated EcomCustomerAddress items = 1;
+    repeated EcomCustomerAddress list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -109,7 +111,8 @@ message EcomWishlist {
 }
 
 message EcomWishlistList {
-    repeated EcomWishlist items = 1;
+    repeated EcomWishlist list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -133,7 +136,8 @@ message EcomWishlistItem {
 }
 
 message EcomWishlistItemList {
-    repeated EcomWishlistItem items = 1;
+    repeated EcomWishlistItem list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -164,5 +168,6 @@ message EcomCart {
 }
 
 message EcomCartList {
-    repeated EcomCart items = 1;
+    repeated EcomCart list = 1;
+    l8api.L8MetaData metadata = 2;
 }

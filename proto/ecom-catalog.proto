@@ -60,7 +60,8 @@ message EcomProduct {
 }
 
 message EcomProductList {
-    repeated EcomProduct items = 1;
+    repeated EcomProduct list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -87,7 +88,8 @@ message EcomCategory {
 }
 
 message EcomCategoryList {
-    repeated EcomCategory items = 1;
+    repeated EcomCategory list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -114,7 +116,8 @@ message EcomAttribute {
 }
 
 message EcomAttributeList {
-    repeated EcomAttribute items = 1;
+    repeated EcomAttribute list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -144,7 +147,8 @@ message EcomImage {
 }
 
 message EcomImageList {
-    repeated EcomImage items = 1;
+    repeated EcomImage list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -174,5 +178,6 @@ message EcomVariant {
 }
 
 message EcomVariantList {
-    repeated EcomVariant items = 1;
+    repeated EcomVariant list = 1;
+    l8api.L8MetaData metadata = 2;
 }

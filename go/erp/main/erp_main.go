@@ -232,211 +232,267 @@ import (
 	"github.com/saichler/l8erp/go/erp/sales/salesterritories"
 	"github.com/saichler/l8erp/go/erp/sales/territoryassigns"
 
+	"github.com/saichler/l8erp/go/erp/mfg/bomlines"
 	// Manufacturing - Engineering
 	"github.com/saichler/l8erp/go/erp/mfg/boms"
-	"github.com/saichler/l8erp/go/erp/mfg/bomlines"
-	"github.com/saichler/l8erp/go/erp/mfg/routings"
-	"github.com/saichler/l8erp/go/erp/mfg/routingoperations"
-	"github.com/saichler/l8erp/go/erp/mfg/engchangeorders"
 	"github.com/saichler/l8erp/go/erp/mfg/engchangedetails"
+	"github.com/saichler/l8erp/go/erp/mfg/engchangeorders"
+	"github.com/saichler/l8erp/go/erp/mfg/routingoperations"
+	"github.com/saichler/l8erp/go/erp/mfg/routings"
 
-	// Manufacturing - Production
-	"github.com/saichler/l8erp/go/erp/mfg/workorders"
-	"github.com/saichler/l8erp/go/erp/mfg/workorderops"
-	"github.com/saichler/l8erp/go/erp/mfg/productionorders"
-	"github.com/saichler/l8erp/go/erp/mfg/prodorderlines"
 	"github.com/saichler/l8erp/go/erp/mfg/prodbatches"
 	"github.com/saichler/l8erp/go/erp/mfg/prodconsumptions"
+	"github.com/saichler/l8erp/go/erp/mfg/prodorderlines"
+	"github.com/saichler/l8erp/go/erp/mfg/productionorders"
+	"github.com/saichler/l8erp/go/erp/mfg/workorderops"
+	// Manufacturing - Production
+	"github.com/saichler/l8erp/go/erp/mfg/workorders"
 
-	// Manufacturing - Shop Floor
-	"github.com/saichler/l8erp/go/erp/mfg/workcenters"
-	"github.com/saichler/l8erp/go/erp/mfg/workcentercaps"
+	"github.com/saichler/l8erp/go/erp/mfg/downtimeevents"
 	"github.com/saichler/l8erp/go/erp/mfg/laborentries"
 	"github.com/saichler/l8erp/go/erp/mfg/machineentries"
 	"github.com/saichler/l8erp/go/erp/mfg/shiftschedules"
-	"github.com/saichler/l8erp/go/erp/mfg/downtimeevents"
+	"github.com/saichler/l8erp/go/erp/mfg/workcentercaps"
+	// Manufacturing - Shop Floor
+	"github.com/saichler/l8erp/go/erp/mfg/workcenters"
 
+	"github.com/saichler/l8erp/go/erp/mfg/inspectionpoints"
+	"github.com/saichler/l8erp/go/erp/mfg/ncractions"
+	"github.com/saichler/l8erp/go/erp/mfg/ncrs"
+	"github.com/saichler/l8erp/go/erp/mfg/qualityinspections"
 	// Manufacturing - Quality
 	"github.com/saichler/l8erp/go/erp/mfg/qualityplans"
-	"github.com/saichler/l8erp/go/erp/mfg/inspectionpoints"
-	"github.com/saichler/l8erp/go/erp/mfg/qualityinspections"
 	"github.com/saichler/l8erp/go/erp/mfg/testresults"
-	"github.com/saichler/l8erp/go/erp/mfg/ncrs"
-	"github.com/saichler/l8erp/go/erp/mfg/ncractions"
 
+	"github.com/saichler/l8erp/go/erp/mfg/capacityloads"
+	"github.com/saichler/l8erp/go/erp/mfg/capacityplans"
+	"github.com/saichler/l8erp/go/erp/mfg/mrprequirements"
 	// Manufacturing - Planning
 	"github.com/saichler/l8erp/go/erp/mfg/mrpruns"
-	"github.com/saichler/l8erp/go/erp/mfg/mrprequirements"
-	"github.com/saichler/l8erp/go/erp/mfg/capacityplans"
-	"github.com/saichler/l8erp/go/erp/mfg/capacityloads"
 	"github.com/saichler/l8erp/go/erp/mfg/prodschedules"
 	"github.com/saichler/l8erp/go/erp/mfg/scheduleblocks"
 
+	"github.com/saichler/l8erp/go/erp/mfg/actualcosts"
+	"github.com/saichler/l8erp/go/erp/mfg/costrollups"
+	"github.com/saichler/l8erp/go/erp/mfg/costvariances"
+	"github.com/saichler/l8erp/go/erp/mfg/overheadallocs"
+	"github.com/saichler/l8erp/go/erp/mfg/overheads"
 	// Manufacturing - Costing
 	"github.com/saichler/l8erp/go/erp/mfg/standardcosts"
-	"github.com/saichler/l8erp/go/erp/mfg/costrollups"
-	"github.com/saichler/l8erp/go/erp/mfg/actualcosts"
-	"github.com/saichler/l8erp/go/erp/mfg/costvariances"
-	"github.com/saichler/l8erp/go/erp/mfg/overheads"
-	"github.com/saichler/l8erp/go/erp/mfg/overheadallocs"
 
-	// CRM - Lead Management
-	"github.com/saichler/l8erp/go/erp/crm/leads"
-	"github.com/saichler/l8erp/go/erp/crm/leadsources"
-	"github.com/saichler/l8erp/go/erp/crm/leadscores"
 	"github.com/saichler/l8erp/go/erp/crm/leadactivities"
 	"github.com/saichler/l8erp/go/erp/crm/leadassigns"
 	"github.com/saichler/l8erp/go/erp/crm/leadconversions"
+	// CRM - Lead Management
+	"github.com/saichler/l8erp/go/erp/crm/leads"
+	"github.com/saichler/l8erp/go/erp/crm/leadscores"
+	"github.com/saichler/l8erp/go/erp/crm/leadsources"
 
+	"github.com/saichler/l8erp/go/erp/crm/oppactivities"
+	"github.com/saichler/l8erp/go/erp/crm/oppcompetitors"
 	// CRM - Opportunity Management
 	"github.com/saichler/l8erp/go/erp/crm/opportunities"
-	"github.com/saichler/l8erp/go/erp/crm/oppstages"
-	"github.com/saichler/l8erp/go/erp/crm/oppcompetitors"
 	"github.com/saichler/l8erp/go/erp/crm/oppproducts"
+	"github.com/saichler/l8erp/go/erp/crm/oppstages"
 	"github.com/saichler/l8erp/go/erp/crm/oppteams"
-	"github.com/saichler/l8erp/go/erp/crm/oppactivities"
 
+	"github.com/saichler/l8erp/go/erp/crm/accountplans"
 	// CRM - Account Management
 	crmaccounts "github.com/saichler/l8erp/go/erp/crm/accounts"
 	"github.com/saichler/l8erp/go/erp/crm/contacts"
+	"github.com/saichler/l8erp/go/erp/crm/healthscores"
 	"github.com/saichler/l8erp/go/erp/crm/interactions"
 	"github.com/saichler/l8erp/go/erp/crm/relationships"
-	"github.com/saichler/l8erp/go/erp/crm/healthscores"
-	"github.com/saichler/l8erp/go/erp/crm/accountplans"
 
-	// CRM - Marketing
-	"github.com/saichler/l8erp/go/erp/crm/campaigns"
 	"github.com/saichler/l8erp/go/erp/crm/campaignmembers"
-	"github.com/saichler/l8erp/go/erp/crm/emailtemplates"
-	"github.com/saichler/l8erp/go/erp/crm/marketinglists"
 	"github.com/saichler/l8erp/go/erp/crm/campaignresponses"
 	"github.com/saichler/l8erp/go/erp/crm/campaignrois"
+	// CRM - Marketing
+	"github.com/saichler/l8erp/go/erp/crm/campaigns"
+	"github.com/saichler/l8erp/go/erp/crm/emailtemplates"
+	"github.com/saichler/l8erp/go/erp/crm/marketinglists"
 
+	"github.com/saichler/l8erp/go/erp/crm/casecomments"
 	// CRM - Customer Service
 	"github.com/saichler/l8erp/go/erp/crm/cases"
-	"github.com/saichler/l8erp/go/erp/crm/casecomments"
+	"github.com/saichler/l8erp/go/erp/crm/escalations"
 	"github.com/saichler/l8erp/go/erp/crm/kbarticles"
 	"github.com/saichler/l8erp/go/erp/crm/slas"
-	"github.com/saichler/l8erp/go/erp/crm/escalations"
 	"github.com/saichler/l8erp/go/erp/crm/surveys"
 
+	"github.com/saichler/l8erp/go/erp/crm/servicecontracts"
 	// CRM - Field Service
 	"github.com/saichler/l8erp/go/erp/crm/serviceorders"
-	"github.com/saichler/l8erp/go/erp/crm/technicians"
-	"github.com/saichler/l8erp/go/erp/crm/servicecontracts"
-	"github.com/saichler/l8erp/go/erp/crm/serviceschedules"
 	"github.com/saichler/l8erp/go/erp/crm/serviceparts"
+	"github.com/saichler/l8erp/go/erp/crm/serviceschedules"
 	"github.com/saichler/l8erp/go/erp/crm/servicevisits"
+	"github.com/saichler/l8erp/go/erp/crm/technicians"
 
+	"github.com/saichler/l8erp/go/erp/prj/deliverables"
+	"github.com/saichler/l8erp/go/erp/prj/dependencies"
+	"github.com/saichler/l8erp/go/erp/prj/milestones"
+	"github.com/saichler/l8erp/go/erp/prj/phases"
 	// Projects - Planning
 	"github.com/saichler/l8erp/go/erp/prj/projects"
 	"github.com/saichler/l8erp/go/erp/prj/projecttemplates"
-	"github.com/saichler/l8erp/go/erp/prj/phases"
-	"github.com/saichler/l8erp/go/erp/prj/tasks"
-	"github.com/saichler/l8erp/go/erp/prj/milestones"
-	"github.com/saichler/l8erp/go/erp/prj/deliverables"
-	"github.com/saichler/l8erp/go/erp/prj/dependencies"
 	"github.com/saichler/l8erp/go/erp/prj/risks"
+	"github.com/saichler/l8erp/go/erp/prj/tasks"
 
+	"github.com/saichler/l8erp/go/erp/prj/allocations"
+	"github.com/saichler/l8erp/go/erp/prj/bookings"
+	prjcapacityplans "github.com/saichler/l8erp/go/erp/prj/capacityplans"
 	// Projects - Resources
 	"github.com/saichler/l8erp/go/erp/prj/resourcepools"
 	"github.com/saichler/l8erp/go/erp/prj/resources"
 	"github.com/saichler/l8erp/go/erp/prj/resourceskills"
-	"github.com/saichler/l8erp/go/erp/prj/allocations"
-	"github.com/saichler/l8erp/go/erp/prj/bookings"
-	prjcapacityplans "github.com/saichler/l8erp/go/erp/prj/capacityplans"
 	"github.com/saichler/l8erp/go/erp/prj/utilizations"
 
-	// Projects - Time & Expense
-	prjtimesheets "github.com/saichler/l8erp/go/erp/prj/timesheets"
-	"github.com/saichler/l8erp/go/erp/prj/timesheetentries"
-	"github.com/saichler/l8erp/go/erp/prj/expensereports"
-	"github.com/saichler/l8erp/go/erp/prj/expenseentries"
 	"github.com/saichler/l8erp/go/erp/prj/approvalrules"
 	"github.com/saichler/l8erp/go/erp/prj/expensecategories"
+	"github.com/saichler/l8erp/go/erp/prj/expenseentries"
 	"github.com/saichler/l8erp/go/erp/prj/expensepolicies"
+	"github.com/saichler/l8erp/go/erp/prj/expensereports"
+	"github.com/saichler/l8erp/go/erp/prj/timesheetentries"
+	// Projects - Time & Expense
+	prjtimesheets "github.com/saichler/l8erp/go/erp/prj/timesheets"
 
+	prjbillingmilestones "github.com/saichler/l8erp/go/erp/prj/billingmilestones"
 	// Projects - Billing
 	"github.com/saichler/l8erp/go/erp/prj/billingrates"
 	prjbillingschedules "github.com/saichler/l8erp/go/erp/prj/billingschedules"
-	prjbillingmilestones "github.com/saichler/l8erp/go/erp/prj/billingmilestones"
-	"github.com/saichler/l8erp/go/erp/prj/projectinvoices"
 	"github.com/saichler/l8erp/go/erp/prj/invoicelines"
-	"github.com/saichler/l8erp/go/erp/prj/revenuerecognitions"
 	"github.com/saichler/l8erp/go/erp/prj/projectbudgets"
+	"github.com/saichler/l8erp/go/erp/prj/projectinvoices"
+	"github.com/saichler/l8erp/go/erp/prj/revenuerecognitions"
 
+	"github.com/saichler/l8erp/go/erp/prj/budgetvariances"
+	"github.com/saichler/l8erp/go/erp/prj/earnedvalues"
+	"github.com/saichler/l8erp/go/erp/prj/portfolioviews"
+	"github.com/saichler/l8erp/go/erp/prj/projectissues"
+	"github.com/saichler/l8erp/go/erp/prj/projectkpis"
 	// Projects - Analytics
 	"github.com/saichler/l8erp/go/erp/prj/projectstatuses"
-	"github.com/saichler/l8erp/go/erp/prj/earnedvalues"
-	"github.com/saichler/l8erp/go/erp/prj/budgetvariances"
 	"github.com/saichler/l8erp/go/erp/prj/resourceforecasts"
-	"github.com/saichler/l8erp/go/erp/prj/portfolioviews"
-	"github.com/saichler/l8erp/go/erp/prj/projectkpis"
-	"github.com/saichler/l8erp/go/erp/prj/projectissues"
 
+	"github.com/saichler/l8erp/go/erp/bi/reportaccesses"
+	"github.com/saichler/l8erp/go/erp/bi/reportexecutions"
 	// BI - Reporting
 	"github.com/saichler/l8erp/go/erp/bi/reports"
-	"github.com/saichler/l8erp/go/erp/bi/reporttemplates"
 	"github.com/saichler/l8erp/go/erp/bi/reportschedules"
-	"github.com/saichler/l8erp/go/erp/bi/reportexecutions"
-	"github.com/saichler/l8erp/go/erp/bi/reportaccesses"
 	"github.com/saichler/l8erp/go/erp/bi/reportsubscriptions"
+	"github.com/saichler/l8erp/go/erp/bi/reporttemplates"
 
 	// BI - Dashboards
 	"github.com/saichler/l8erp/go/erp/bi/dashboards"
+	"github.com/saichler/l8erp/go/erp/bi/dashboardshares"
 	"github.com/saichler/l8erp/go/erp/bi/dashboardwidgets"
+	"github.com/saichler/l8erp/go/erp/bi/drilldowns"
 	"github.com/saichler/l8erp/go/erp/bi/kpis"
 	"github.com/saichler/l8erp/go/erp/bi/kpithresholds"
-	"github.com/saichler/l8erp/go/erp/bi/drilldowns"
-	"github.com/saichler/l8erp/go/erp/bi/dashboardshares"
 
+	"github.com/saichler/l8erp/go/erp/bi/analysismodels"
+	"github.com/saichler/l8erp/go/erp/bi/benchmarks"
 	// BI - Analytics
 	"github.com/saichler/l8erp/go/erp/bi/datacubes"
-	"github.com/saichler/l8erp/go/erp/bi/analysismodels"
 	"github.com/saichler/l8erp/go/erp/bi/predictions"
-	"github.com/saichler/l8erp/go/erp/bi/trendanalyses"
 	biscenarios "github.com/saichler/l8erp/go/erp/bi/scenarios"
-	"github.com/saichler/l8erp/go/erp/bi/benchmarks"
+	"github.com/saichler/l8erp/go/erp/bi/trendanalyses"
 
+	"github.com/saichler/l8erp/go/erp/bi/datagovernances"
+	"github.com/saichler/l8erp/go/erp/bi/dataqualityrules"
 	// BI - Data Management
 	"github.com/saichler/l8erp/go/erp/bi/datasources"
 	"github.com/saichler/l8erp/go/erp/bi/etljobs"
 	"github.com/saichler/l8erp/go/erp/bi/etlschedules"
-	"github.com/saichler/l8erp/go/erp/bi/dataqualityrules"
 	"github.com/saichler/l8erp/go/erp/bi/masterdataconfigs"
-	"github.com/saichler/l8erp/go/erp/bi/datagovernances"
 
+	"github.com/saichler/l8erp/go/erp/doc/categories"
 	// Documents - Storage
 	"github.com/saichler/l8erp/go/erp/doc/documents"
 	"github.com/saichler/l8erp/go/erp/doc/folders"
-	"github.com/saichler/l8erp/go/erp/doc/categories"
 	"github.com/saichler/l8erp/go/erp/doc/tags"
 	"github.com/saichler/l8erp/go/erp/doc/versions"
 
+	"github.com/saichler/l8erp/go/erp/doc/approvalworkflows"
 	// Documents - Workflow
 	"github.com/saichler/l8erp/go/erp/doc/checkouts"
-	"github.com/saichler/l8erp/go/erp/doc/approvalworkflows"
-	"github.com/saichler/l8erp/go/erp/doc/workflowsteps"
-	"github.com/saichler/l8erp/go/erp/doc/signatures"
 	"github.com/saichler/l8erp/go/erp/doc/reviewcomments"
+	"github.com/saichler/l8erp/go/erp/doc/signatures"
+	"github.com/saichler/l8erp/go/erp/doc/workflowsteps"
 
 	// Documents - Integration
 	"github.com/saichler/l8erp/go/erp/doc/attachments"
-	doctemplates "github.com/saichler/l8erp/go/erp/doc/templates"
-	"github.com/saichler/l8erp/go/erp/doc/templatefields"
 	"github.com/saichler/l8erp/go/erp/doc/emailcaptures"
 	"github.com/saichler/l8erp/go/erp/doc/scanjobs"
+	"github.com/saichler/l8erp/go/erp/doc/templatefields"
+	doctemplates "github.com/saichler/l8erp/go/erp/doc/templates"
 
-	// Documents - Compliance
-	"github.com/saichler/l8erp/go/erp/doc/retentionpolicies"
-	"github.com/saichler/l8erp/go/erp/doc/legalholds"
 	"github.com/saichler/l8erp/go/erp/doc/accesslogs"
 	"github.com/saichler/l8erp/go/erp/doc/archivejobs"
 	"github.com/saichler/l8erp/go/erp/doc/audittrails"
+	"github.com/saichler/l8erp/go/erp/doc/legalholds"
+	// Documents - Compliance
+	"github.com/saichler/l8erp/go/erp/doc/retentionpolicies"
+
+	"github.com/saichler/l8erp/go/erp/ecom/attributes"
+	ecomcategories "github.com/saichler/l8erp/go/erp/ecom/categories"
+	"github.com/saichler/l8erp/go/erp/ecom/images"
+	// E-Commerce - Catalog
+	"github.com/saichler/l8erp/go/erp/ecom/products"
+	"github.com/saichler/l8erp/go/erp/ecom/variants"
+
+	"github.com/saichler/l8erp/go/erp/ecom/orderlines"
+	// E-Commerce - Orders
+	"github.com/saichler/l8erp/go/erp/ecom/orders"
+	"github.com/saichler/l8erp/go/erp/ecom/orderstatuses"
+	"github.com/saichler/l8erp/go/erp/ecom/returnlines"
+	"github.com/saichler/l8erp/go/erp/ecom/returns"
+
+	"github.com/saichler/l8erp/go/erp/ecom/carts"
+	"github.com/saichler/l8erp/go/erp/ecom/customeraddresses"
+	// E-Commerce - Customers
+	ecomcustomers "github.com/saichler/l8erp/go/erp/ecom/customers"
+	"github.com/saichler/l8erp/go/erp/ecom/wishlistitems"
+	"github.com/saichler/l8erp/go/erp/ecom/wishlists"
+
+	"github.com/saichler/l8erp/go/erp/ecom/coupons"
+	"github.com/saichler/l8erp/go/erp/ecom/paymentmethods"
+	"github.com/saichler/l8erp/go/erp/ecom/pricerules"
+	// E-Commerce - Promotions
+	"github.com/saichler/l8erp/go/erp/ecom/promotions"
+	"github.com/saichler/l8erp/go/erp/ecom/shippingmethods"
+
+	compcertifications "github.com/saichler/l8erp/go/erp/comp/certifications"
+	"github.com/saichler/l8erp/go/erp/comp/compliancestatuses"
+	// Compliance - Regulatory
+	"github.com/saichler/l8erp/go/erp/comp/regulations"
+	"github.com/saichler/l8erp/go/erp/comp/requirements"
+	"github.com/saichler/l8erp/go/erp/comp/violationrecords"
+
+	"github.com/saichler/l8erp/go/erp/comp/approvalmatrices"
+	"github.com/saichler/l8erp/go/erp/comp/controlassessments"
+	// Compliance - Internal Controls
+	"github.com/saichler/l8erp/go/erp/comp/controls"
+	"github.com/saichler/l8erp/go/erp/comp/policydocuments"
+	"github.com/saichler/l8erp/go/erp/comp/segregationrules"
+
+	"github.com/saichler/l8erp/go/erp/comp/incidents"
+	"github.com/saichler/l8erp/go/erp/comp/insurancepolicies"
+	"github.com/saichler/l8erp/go/erp/comp/mitigationplans"
+	"github.com/saichler/l8erp/go/erp/comp/riskassessments"
+	// Compliance - Risk Management
+	"github.com/saichler/l8erp/go/erp/comp/riskregisters"
+
+	"github.com/saichler/l8erp/go/erp/comp/auditfindings"
+	"github.com/saichler/l8erp/go/erp/comp/auditreports"
+	// Compliance - Audit Management
+	"github.com/saichler/l8erp/go/erp/comp/auditschedules"
+	"github.com/saichler/l8erp/go/erp/comp/compliancereports"
+	"github.com/saichler/l8erp/go/erp/comp/remediationactions"
 )
 
 func main() {
-	res := common.CreateResources("hcm")
+	res := common.CreateResources("ERPServices")
 	ifs.SetNetworkMode(ifs.NETWORK_K8s)
 	nic := vnic.NewVirtualNetworkInterface(res, nil)
 	nic.Start()
@@ -454,6 +510,8 @@ func main() {
 	activatePrjServices(nic)
 	activateBiServices(nic)
 	activateDocServices(nic)
+	activateEcomServices(nic)
+	activateCompServices(nic)
 
 	common.WaitForSignal(res)
 }
@@ -931,4 +989,64 @@ func activateDocServices(nic ifs.IVNic) {
 	accesslogs.Activate(common.DB_CREDS, common.DB_NAME, nic)
 	archivejobs.Activate(common.DB_CREDS, common.DB_NAME, nic)
 	audittrails.Activate(common.DB_CREDS, common.DB_NAME, nic)
+}
+
+func activateEcomServices(nic ifs.IVNic) {
+	// Catalog
+	products.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	ecomcategories.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	attributes.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	images.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	variants.Activate(common.DB_CREDS, common.DB_NAME, nic)
+
+	// Orders
+	orders.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	orderlines.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	orderstatuses.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	returns.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	returnlines.Activate(common.DB_CREDS, common.DB_NAME, nic)
+
+	// Customers
+	ecomcustomers.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	customeraddresses.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	wishlists.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	wishlistitems.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	carts.Activate(common.DB_CREDS, common.DB_NAME, nic)
+
+	// Promotions
+	promotions.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	coupons.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	pricerules.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	shippingmethods.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	paymentmethods.Activate(common.DB_CREDS, common.DB_NAME, nic)
+}
+
+func activateCompServices(nic ifs.IVNic) {
+	// Regulatory
+	regulations.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	requirements.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	compliancestatuses.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	compcertifications.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	violationrecords.Activate(common.DB_CREDS, common.DB_NAME, nic)
+
+	// Internal Controls
+	controls.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	controlassessments.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	policydocuments.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	approvalmatrices.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	segregationrules.Activate(common.DB_CREDS, common.DB_NAME, nic)
+
+	// Risk Management
+	riskregisters.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	riskassessments.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	incidents.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	mitigationplans.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	insurancepolicies.Activate(common.DB_CREDS, common.DB_NAME, nic)
+
+	// Audit Management
+	auditschedules.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	auditfindings.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	remediationactions.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	auditreports.Activate(common.DB_CREDS, common.DB_NAME, nic)
+	compliancereports.Activate(common.DB_CREDS, common.DB_NAME, nic)
 }

@@ -1,0 +1,211 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax = "proto3";
+
+package comp;
+
+option go_package = "./types/comp";
+
+import "comp-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// =====================
+// AUDIT SCHEDULE
+// =====================
+
+// @PrimeObject
+// CompAuditSchedule plans and tracks audit engagements
+message CompAuditSchedule {
+    string schedule_id = 1;
+    string name = 2;
+    string description = 3;
+    CompAuditType audit_type = 4;
+    CompAuditStatus status = 5;
+    int32 fiscal_year = 6;
+    string audit_scope = 7;
+    repeated string departments = 8;           // cross-ref: Department
+    repeated string processes = 9;
+    int64 planned_start_date = 10;
+    int64 planned_end_date = 11;
+    int64 actual_start_date = 12;
+    int64 actual_end_date = 13;
+    string lead_auditor_id = 14;               // cross-ref: Employee
+    repeated string auditor_ids = 15;          // cross-ref: Employee
+    string audit_firm = 16;                    // For external audits
+    erp.Money budget = 17;
+    erp.Money actual_cost = 18;
+    string audit_plan_document_id = 19;        // cross-ref: DocDocument
+    repeated string related_regulation_ids = 20;   // cross-ref: CompRegulation
+    map<string, string> custom_fields = 21;
+    erp.AuditInfo audit_info = 22;
+}
+
+message CompAuditScheduleList {
+    repeated CompAuditSchedule list = 1;
+    l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// AUDIT FINDING
+// =====================
+
+// @PrimeObject
+// CompAuditFinding documents issues discovered during audits
+message CompAuditFinding {
+    string finding_id = 1;
+    string audit_schedule_id = 2;              // cross-ref: CompAuditSchedule
+    string finding_number = 3;
+    string title = 4;
+    string description = 5;
+    CompSeverityLevel severity = 6;
+    CompFindingStatus status = 7;
+    string condition = 8;                      // What was found
+    string criteria = 9;                       // What should be
+    string cause = 10;                         // Why it happened
+    string effect = 11;                        // Impact/consequence
+    string recommendation = 12;
+    string management_response = 13;
+    string responsible_id = 14;                // cross-ref: Employee
+    int64 discovery_date = 15;
+    int64 due_date = 16;
+    int64 closed_date = 17;
+    repeated string related_control_ids = 18;  // cross-ref: CompControl
+    repeated string related_requirement_ids = 19;  // cross-ref: CompRequirement
+    string evidence_document_id = 20;          // cross-ref: DocDocument
+    bool repeat_finding = 21;
+    string prior_finding_id = 22;              // cross-ref: CompAuditFinding
+    map<string, string> custom_fields = 23;
+    erp.AuditInfo audit_info = 24;
+}
+
+message CompAuditFindingList {
+    repeated CompAuditFinding list = 1;
+    l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// REMEDIATION ACTION
+// =====================
+
+// @PrimeObject
+// CompRemediationAction tracks corrective actions for findings
+message CompRemediationAction {
+    string action_id = 1;
+    string finding_id = 2;                     // cross-ref: CompAuditFinding
+    string action_number = 3;
+    string title = 4;
+    string description = 5;
+    CompRemediationStatus status = 6;
+    string owner_id = 7;                       // cross-ref: Employee
+    int64 assigned_date = 8;
+    int64 due_date = 9;
+    int64 completion_date = 10;
+    int64 verification_date = 11;
+    string verifier_id = 12;                   // cross-ref: Employee
+    string progress_notes = 13;
+    int32 percent_complete = 14;
+    erp.Money estimated_cost = 15;
+    erp.Money actual_cost = 16;
+    string evidence_document_id = 17;          // cross-ref: DocDocument
+    bool is_overdue = 18;
+    int32 extension_count = 19;
+    string extension_reason = 20;
+    map<string, string> custom_fields = 21;
+    erp.AuditInfo audit_info = 22;
+}
+
+message CompRemediationActionList {
+    repeated CompRemediationAction list = 1;
+    l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// AUDIT REPORT
+// =====================
+
+// @PrimeObject
+// CompAuditReport summarizes audit engagement results
+message CompAuditReport {
+    string report_id = 1;
+    string audit_schedule_id = 2;              // cross-ref: CompAuditSchedule
+    string report_number = 3;
+    string title = 4;
+    CompAuditStatus status = 5;
+    string executive_summary = 6;
+    string scope_description = 7;
+    string methodology = 8;
+    string overall_opinion = 9;                // e.g., "Satisfactory", "Needs Improvement"
+    int32 findings_critical = 10;
+    int32 findings_high = 11;
+    int32 findings_medium = 12;
+    int32 findings_low = 13;
+    int64 draft_date = 14;
+    int64 final_date = 15;
+    int64 distribution_date = 16;
+    repeated string distribution_list = 17;
+    string lead_auditor_id = 18;               // cross-ref: Employee
+    string report_document_id = 19;            // cross-ref: DocDocument
+    string management_letter_id = 20;          // cross-ref: DocDocument
+    map<string, string> custom_fields = 21;
+    erp.AuditInfo audit_info = 22;
+}
+
+message CompAuditReportList {
+    repeated CompAuditReport list = 1;
+    l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// COMPLIANCE REPORT
+// =====================
+
+// @PrimeObject
+// CompComplianceReport provides periodic compliance status reporting
+message CompComplianceReport {
+    string report_id = 1;
+    string report_number = 2;
+    string title = 3;
+    string report_type = 4;                    // Quarterly, Annual, Ad-hoc
+    string regulation_id = 5;                  // cross-ref: CompRegulation (optional)
+    int64 period_start = 6;
+    int64 period_end = 7;
+    string status = 8;                         // Draft, Under Review, Final
+    string executive_summary = 9;
+    double overall_compliance_rate = 10;
+    int32 requirements_total = 11;
+    int32 requirements_compliant = 12;
+    int32 requirements_partial = 13;
+    int32 requirements_non_compliant = 14;
+    int32 open_violations = 15;
+    int32 open_findings = 16;
+    int32 overdue_remediations = 17;
+    string key_achievements = 18;
+    string areas_of_concern = 19;
+    string recommendations = 20;
+    int64 report_date = 21;
+    string prepared_by_id = 22;                // cross-ref: Employee
+    string approved_by_id = 23;                // cross-ref: Employee
+    string report_document_id = 24;            // cross-ref: DocDocument
+    repeated string distribution_list = 25;
+    map<string, string> custom_fields = 26;
+    erp.AuditInfo audit_info = 27;
+}
+
+message CompComplianceReportList {
+    repeated CompComplianceReport list = 1;
+    l8api.L8MetaData metadata = 2;
+}

@@ -1,0 +1,180 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax = "proto3";
+
+package comp;
+
+option go_package = "./types/comp";
+
+import "comp-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// =====================
+// CONTROL
+// =====================
+
+// @PrimeObject
+// CompControl represents an internal control activity
+message CompControl {
+    string control_id = 1;
+    string code = 2;
+    string name = 3;
+    string description = 4;
+    CompControlType control_type = 5;
+    string control_objective = 6;
+    string process_area = 7;
+    string department_id = 8;                  // cross-ref: Department
+    string owner_id = 9;                       // cross-ref: Employee
+    bool is_key_control = 10;
+    bool is_automated = 11;
+    int32 test_frequency_days = 12;
+    string test_procedure = 13;
+    repeated string related_requirement_ids = 14;  // cross-ref: CompRequirement
+    repeated string related_risk_ids = 15;     // cross-ref: CompRiskRegister
+    bool is_active = 16;
+    map<string, string> custom_fields = 17;
+    erp.AuditInfo audit_info = 18;
+}
+
+message CompControlList {
+    repeated CompControl list = 1;
+    l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// CONTROL ASSESSMENT
+// =====================
+
+// @PrimeObject
+// CompControlAssessment records the evaluation of a control's effectiveness
+message CompControlAssessment {
+    string assessment_id = 1;
+    string control_id = 2;                     // cross-ref: CompControl
+    int64 assessment_date = 3;
+    string assessor_id = 4;                    // cross-ref: Employee
+    CompControlEffectiveness effectiveness = 5;
+    string test_performed = 6;
+    string test_results = 7;
+    int32 sample_size = 8;
+    int32 exceptions_found = 9;
+    string exception_details = 10;
+    string conclusion = 11;
+    string recommendations = 12;
+    int64 next_assessment_date = 13;
+    string evidence_document_id = 14;          // cross-ref: DocDocument
+    string audit_schedule_id = 15;             // cross-ref: CompAuditSchedule
+    map<string, string> custom_fields = 16;
+    erp.AuditInfo audit_info = 17;
+}
+
+message CompControlAssessmentList {
+    repeated CompControlAssessment list = 1;
+    l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// POLICY DOCUMENT
+// =====================
+
+// @PrimeObject
+// CompPolicyDocument represents an organizational policy or procedure
+message CompPolicyDocument {
+    string policy_id = 1;
+    string code = 2;
+    string title = 3;
+    string description = 4;
+    string policy_type = 5;                    // Policy, Procedure, Standard, Guideline
+    string department_id = 6;                  // cross-ref: Department
+    string owner_id = 7;                       // cross-ref: Employee
+    string approver_id = 8;                    // cross-ref: Employee
+    string version = 9;
+    int64 effective_date = 10;
+    int64 review_date = 11;
+    int64 next_review_date = 12;
+    int32 review_frequency_days = 13;
+    string status = 14;                        // Draft, Under Review, Approved, Retired
+    string document_id = 15;                   // cross-ref: DocDocument
+    repeated string related_regulation_ids = 16;   // cross-ref: CompRegulation
+    repeated string related_control_ids = 17;      // cross-ref: CompControl
+    bool requires_acknowledgment = 18;
+    map<string, string> custom_fields = 19;
+    erp.AuditInfo audit_info = 20;
+}
+
+message CompPolicyDocumentList {
+    repeated CompPolicyDocument list = 1;
+    l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// APPROVAL MATRIX
+// =====================
+
+// @PrimeObject
+// CompApprovalMatrix defines approval authorities and thresholds
+message CompApprovalMatrix {
+    string matrix_id = 1;
+    string name = 2;
+    string description = 3;
+    string transaction_type = 4;               // e.g., "Purchase Order", "Expense Report"
+    string department_id = 5;                  // cross-ref: Department
+    erp.Money threshold_min = 6;
+    erp.Money threshold_max = 7;
+    repeated string approver_role_ids = 8;     // Roles that can approve
+    int32 required_approvals = 9;
+    bool requires_sequential = 10;
+    int32 escalation_days = 11;
+    string escalation_to_id = 12;              // cross-ref: Employee
+    bool is_active = 13;
+    int32 priority = 14;
+    map<string, string> custom_fields = 15;
+    erp.AuditInfo audit_info = 16;
+}
+
+message CompApprovalMatrixList {
+    repeated CompApprovalMatrix list = 1;
+    l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// SEGREGATION RULE
+// =====================
+
+// @PrimeObject
+// CompSegregationRule defines segregation of duties requirements
+message CompSegregationRule {
+    string rule_id = 1;
+    string code = 2;
+    string name = 3;
+    string description = 4;
+    string conflicting_function_a = 5;
+    string conflicting_function_b = 6;
+    CompSeverityLevel risk_level = 7;
+    string mitigation_control = 8;
+    string control_id = 9;                     // cross-ref: CompControl
+    bool is_active = 10;
+    string owner_id = 11;                      // cross-ref: Employee
+    repeated string applicable_role_ids = 12;
+    string business_justification = 13;
+    map<string, string> custom_fields = 14;
+    erp.AuditInfo audit_info = 15;
+}
+
+message CompSegregationRuleList {
+    repeated CompSegregationRule list = 1;
+    l8api.L8MetaData metadata = 2;
+}

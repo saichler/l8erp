@@ -4,8 +4,10 @@ import (
 	"github.com/saichler/l8bus/go/overlay/vnic"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/bi"
+	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8erp/go/types/doc"
+	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8erp/go/types/mfg"
@@ -167,6 +169,8 @@ func registerTypes(resources ifs.IResources) {
 	registerPrjTypes(resources)
 	registerBiTypes(resources)
 	registerDocTypes(resources)
+	registerEcomTypes(resources)
+	registerCompTypes(resources)
 }
 
 func registerFinTypes(resources ifs.IResources) {
@@ -827,4 +831,104 @@ func registerDocTypes(resources ifs.IResources) {
 	resources.Registry().Register(&doc.DocArchiveJobList{})
 	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&doc.DocAuditTrail{}, "TrailId")
 	resources.Registry().Register(&doc.DocAuditTrailList{})
+}
+
+func registerEcomTypes(resources ifs.IResources) {
+	// Catalog
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomProduct{}, "ProductId")
+	resources.Registry().Register(&ecom.EcomProductList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomCategory{}, "CategoryId")
+	resources.Registry().Register(&ecom.EcomCategoryList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomAttribute{}, "AttributeId")
+	resources.Registry().Register(&ecom.EcomAttributeList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomImage{}, "ImageId")
+	resources.Registry().Register(&ecom.EcomImageList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomVariant{}, "VariantId")
+	resources.Registry().Register(&ecom.EcomVariantList{})
+
+	// Orders
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomOrder{}, "OrderId")
+	resources.Registry().Register(&ecom.EcomOrderList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomOrderLine{}, "LineId")
+	resources.Registry().Register(&ecom.EcomOrderLineList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomOrderStatusHistory{}, "StatusId")
+	resources.Registry().Register(&ecom.EcomOrderStatusHistoryList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomReturn{}, "ReturnId")
+	resources.Registry().Register(&ecom.EcomReturnList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomReturnLine{}, "LineId")
+	resources.Registry().Register(&ecom.EcomReturnLineList{})
+
+	// Customers
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomCustomer{}, "CustomerId")
+	resources.Registry().Register(&ecom.EcomCustomerList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomCustomerAddress{}, "AddressId")
+	resources.Registry().Register(&ecom.EcomCustomerAddressList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomWishlist{}, "WishlistId")
+	resources.Registry().Register(&ecom.EcomWishlistList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomWishlistItem{}, "ItemId")
+	resources.Registry().Register(&ecom.EcomWishlistItemList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomCart{}, "CartId")
+	resources.Registry().Register(&ecom.EcomCartList{})
+
+	// Promotions
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomPromotion{}, "PromotionId")
+	resources.Registry().Register(&ecom.EcomPromotionList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomCoupon{}, "CouponId")
+	resources.Registry().Register(&ecom.EcomCouponList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomPriceRule{}, "RuleId")
+	resources.Registry().Register(&ecom.EcomPriceRuleList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomShippingMethod{}, "MethodId")
+	resources.Registry().Register(&ecom.EcomShippingMethodList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&ecom.EcomPaymentMethod{}, "MethodId")
+	resources.Registry().Register(&ecom.EcomPaymentMethodList{})
+}
+
+func registerCompTypes(resources ifs.IResources) {
+	// Regulatory
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompRegulation{}, "RegulationId")
+	resources.Registry().Register(&comp.CompRegulationList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompRequirement{}, "RequirementId")
+	resources.Registry().Register(&comp.CompRequirementList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompComplianceStatus{}, "StatusId")
+	resources.Registry().Register(&comp.CompComplianceStatusList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompCertification{}, "CertificationId")
+	resources.Registry().Register(&comp.CompCertificationList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompViolationRecord{}, "ViolationId")
+	resources.Registry().Register(&comp.CompViolationRecordList{})
+
+	// Internal Controls
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompControl{}, "ControlId")
+	resources.Registry().Register(&comp.CompControlList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompControlAssessment{}, "AssessmentId")
+	resources.Registry().Register(&comp.CompControlAssessmentList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompPolicyDocument{}, "PolicyId")
+	resources.Registry().Register(&comp.CompPolicyDocumentList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompApprovalMatrix{}, "MatrixId")
+	resources.Registry().Register(&comp.CompApprovalMatrixList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompSegregationRule{}, "RuleId")
+	resources.Registry().Register(&comp.CompSegregationRuleList{})
+
+	// Risk Management
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompRiskRegister{}, "RiskId")
+	resources.Registry().Register(&comp.CompRiskRegisterList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompRiskAssessment{}, "AssessmentId")
+	resources.Registry().Register(&comp.CompRiskAssessmentList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompIncident{}, "IncidentId")
+	resources.Registry().Register(&comp.CompIncidentList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompMitigationPlan{}, "PlanId")
+	resources.Registry().Register(&comp.CompMitigationPlanList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompInsurancePolicy{}, "PolicyId")
+	resources.Registry().Register(&comp.CompInsurancePolicyList{})
+
+	// Audit Management
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompAuditSchedule{}, "ScheduleId")
+	resources.Registry().Register(&comp.CompAuditScheduleList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompAuditFinding{}, "FindingId")
+	resources.Registry().Register(&comp.CompAuditFindingList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompRemediationAction{}, "ActionId")
+	resources.Registry().Register(&comp.CompRemediationActionList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompAuditReport{}, "ReportId")
+	resources.Registry().Register(&comp.CompAuditReportList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&comp.CompComplianceReport{}, "ReportId")
+	resources.Registry().Register(&comp.CompComplianceReportList{})
 }

@@ -509,4 +509,34 @@ type MockDataStore struct {
 	EcomOrderStatusIDs []string
 	EcomReturnIDs      []string
 	EcomReturnLineIDs  []string
+
+	// COMP Phase 1: Foundation (Configuration)
+	CompRegulationIDs     []string
+	CompControlIDs        []string
+	CompPolicyDocumentIDs []string
+	CompInsurancePolicyIDs []string
+
+	// COMP Phase 2: Core (Requirements, Matrices, Rules, Risks, Schedules)
+	CompRequirementIDs    []string
+	CompApprovalMatrixIDs []string
+	CompSegregationRuleIDs []string
+	CompRiskRegisterIDs   []string
+	CompAuditScheduleIDs  []string
+
+	// COMP Phase 3: Assessments
+	CompComplianceStatusIDs  []string
+	CompControlAssessmentIDs []string
+	CompCertificationIDs     []string
+	CompRiskAssessmentIDs    []string
+	CompMitigationPlanIDs    []string
+
+	// COMP Phase 4: Events (Violations, Incidents, Findings)
+	CompViolationRecordIDs []string
+	CompIncidentIDs        []string
+	CompAuditFindingIDs    []string
+
+	// COMP Phase 5: Reports (Remediation, Audit Reports, Compliance Reports)
+	CompRemediationActionIDs []string
+	CompAuditReportIDs       []string
+	CompComplianceReportIDs  []string
 }

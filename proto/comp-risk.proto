@@ -1,0 +1,204 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax = "proto3";
+
+package comp;
+
+option go_package = "./types/comp";
+
+import "comp-common.proto";
+import "erp-common.proto";
+import "api.proto";
+
+// =====================
+// RISK REGISTER
+// =====================
+
+// @PrimeObject
+// CompRiskRegister tracks identified risks in the organization
+message CompRiskRegister {
+    string risk_id = 1;
+    string code = 2;
+    string title = 3;
+    string description = 4;
+    CompRiskCategory category = 5;
+    CompRiskStatus status = 6;
+    string department_id = 7;                  // cross-ref: Department
+    string owner_id = 8;                       // cross-ref: Employee
+    int32 inherent_likelihood = 9;             // 1-5 scale
+    int32 inherent_impact = 10;                // 1-5 scale
+    int32 inherent_risk_score = 11;            // likelihood * impact
+    int32 residual_likelihood = 12;
+    int32 residual_impact = 13;
+    int32 residual_risk_score = 14;
+    string risk_response = 15;                 // Accept, Mitigate, Transfer, Avoid
+    erp.Money potential_financial_impact = 16;
+    int64 identified_date = 17;
+    int64 last_review_date = 18;
+    int64 next_review_date = 19;
+    repeated string related_control_ids = 20;  // cross-ref: CompControl
+    repeated string related_requirement_ids = 21;  // cross-ref: CompRequirement
+    string trigger_events = 22;
+    map<string, string> custom_fields = 23;
+    erp.AuditInfo audit_info = 24;
+}
+
+message CompRiskRegisterList {
+    repeated CompRiskRegister list = 1;
+    l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// RISK ASSESSMENT
+// =====================
+
+// @PrimeObject
+// CompRiskAssessment records periodic risk evaluation
+message CompRiskAssessment {
+    string assessment_id = 1;
+    string risk_id = 2;                        // cross-ref: CompRiskRegister
+    int64 assessment_date = 3;
+    string assessor_id = 4;                    // cross-ref: Employee
+    int32 likelihood_rating = 5;
+    int32 impact_rating = 6;
+    int32 risk_score = 7;
+    string likelihood_justification = 8;
+    string impact_justification = 9;
+    string control_effectiveness = 10;
+    string recommendations = 11;
+    string status_change_notes = 12;
+    bool requires_escalation = 13;
+    string evidence_document_id = 14;          // cross-ref: DocDocument
+    map<string, string> custom_fields = 15;
+    erp.AuditInfo audit_info = 16;
+}
+
+message CompRiskAssessmentList {
+    repeated CompRiskAssessment list = 1;
+    l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// INCIDENT
+// =====================
+
+// @PrimeObject
+// CompIncident tracks risk events and security incidents
+message CompIncident {
+    string incident_id = 1;
+    string incident_number = 2;
+    string title = 3;
+    string description = 4;
+    CompSeverityLevel severity = 5;
+    CompIncidentStatus status = 6;
+    CompRiskCategory category = 7;
+    int64 occurred_date = 8;
+    int64 discovered_date = 9;
+    int64 reported_date = 10;
+    string reported_by_id = 11;                // cross-ref: Employee
+    string assigned_to_id = 12;                // cross-ref: Employee
+    string department_id = 13;                 // cross-ref: Department
+    string root_cause = 14;
+    string immediate_action = 15;
+    string corrective_action = 16;
+    string preventive_action = 17;
+    erp.Money financial_impact = 18;
+    int32 people_affected = 19;
+    bool regulatory_reportable = 20;
+    int64 regulatory_report_date = 21;
+    string related_risk_id = 22;               // cross-ref: CompRiskRegister
+    int64 closed_date = 23;
+    string lessons_learned = 24;
+    map<string, string> custom_fields = 25;
+    erp.AuditInfo audit_info = 26;
+}
+
+message CompIncidentList {
+    repeated CompIncident list = 1;
+    l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// MITIGATION PLAN
+// =====================
+
+// @PrimeObject
+// CompMitigationPlan defines actions to reduce risk
+message CompMitigationPlan {
+    string plan_id = 1;
+    string risk_id = 2;                        // cross-ref: CompRiskRegister
+    string name = 3;
+    string description = 4;
+    string strategy = 5;                       // Reduce, Transfer, Accept, Avoid
+    CompRemediationStatus status = 6;
+    string owner_id = 7;                       // cross-ref: Employee
+    int64 start_date = 8;
+    int64 target_date = 9;
+    int64 completion_date = 10;
+    erp.Money estimated_cost = 11;
+    erp.Money actual_cost = 12;
+    int32 target_risk_reduction = 13;          // Expected reduction in risk score
+    int32 actual_risk_reduction = 14;
+    string success_criteria = 15;
+    string progress_notes = 16;
+    repeated string action_items = 17;
+    repeated string related_control_ids = 18;  // cross-ref: CompControl
+    map<string, string> custom_fields = 19;
+    erp.AuditInfo audit_info = 20;
+}
+
+message CompMitigationPlanList {
+    repeated CompMitigationPlan list = 1;
+    l8api.L8MetaData metadata = 2;
+}
+
+// =====================
+// INSURANCE POLICY
+// =====================
+
+// @PrimeObject
+// CompInsurancePolicy tracks insurance coverage for risk transfer
+message CompInsurancePolicy {
+    string insurance_id = 1;
+    string policy_number = 2;
+    string name = 3;
+    string description = 4;
+    string policy_type = 5;                    // General Liability, Cyber, D&O, etc.
+    string provider = 6;
+    string broker = 7;
+    erp.Money coverage_amount = 8;
+    erp.Money deductible = 9;
+    erp.Money premium = 10;
+    string premium_frequency = 11;             // Annual, Monthly, Quarterly
+    int64 effective_date = 12;
+    int64 expiry_date = 13;
+    string status = 14;                        // Active, Expired, Pending Renewal
+    repeated string covered_risks = 15;
+    repeated string exclusions = 16;
+    string policy_document_id = 17;            // cross-ref: DocDocument
+    string contact_name = 18;
+    string contact_phone = 19;
+    string contact_email = 20;
+    int32 renewal_lead_days = 21;
+    string responsible_id = 22;                // cross-ref: Employee
+    map<string, string> custom_fields = 23;
+    erp.AuditInfo audit_info = 24;
+}
+
+message CompInsurancePolicyList {
+    repeated CompInsurancePolicy list = 1;
+    l8api.L8MetaData metadata = 2;
+}

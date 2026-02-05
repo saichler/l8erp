@@ -54,7 +54,8 @@ message EcomPromotion {
 }
 
 message EcomPromotionList {
-    repeated EcomPromotion items = 1;
+    repeated EcomPromotion list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -87,7 +88,8 @@ message EcomCoupon {
 }
 
 message EcomCouponList {
-    repeated EcomCoupon items = 1;
+    repeated EcomCoupon list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -118,7 +120,8 @@ message EcomPriceRule {
 }
 
 message EcomPriceRuleList {
-    repeated EcomPriceRule items = 1;
+    repeated EcomPriceRule list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -152,7 +155,8 @@ message EcomShippingMethod {
 }
 
 message EcomShippingMethodList {
-    repeated EcomShippingMethod items = 1;
+    repeated EcomShippingMethod list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -186,5 +190,6 @@ message EcomPaymentMethod {
 }
 
 message EcomPaymentMethodList {
-    repeated EcomPaymentMethod items = 1;
+    repeated EcomPaymentMethod list = 1;
+    l8api.L8MetaData metadata = 2;
 }

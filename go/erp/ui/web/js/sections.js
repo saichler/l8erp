@@ -88,6 +88,11 @@ const sectionInitializers = {
             initializeEcom();
         }
     },
+    compliance: () => {
+        if (typeof initializeComp === 'function') {
+            initializeComp();
+        }
+    },
     system: () => {
         if (typeof initializeL8Sys === 'function') {
             initializeL8Sys();

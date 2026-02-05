@@ -25,7 +25,7 @@ func generateEcomPhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate Categories
 	fmt.Printf("  Creating E-Commerce Categories...")
 	categories := generateEcomCategories()
-	if err := client.post("/erp/100/EcomCat", &ecom.EcomCategoryList{Items: categories}); err != nil {
+	if err := client.post("/erp/100/EcomCat", &ecom.EcomCategoryList{List: categories}); err != nil {
 		return fmt.Errorf("categories: %w", err)
 	}
 	for _, cat := range categories {
@@ -36,7 +36,7 @@ func generateEcomPhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate Attributes
 	fmt.Printf("  Creating E-Commerce Attributes...")
 	attributes := generateEcomAttributes()
-	if err := client.post("/erp/100/EcomAttr", &ecom.EcomAttributeList{Items: attributes}); err != nil {
+	if err := client.post("/erp/100/EcomAttr", &ecom.EcomAttributeList{List: attributes}); err != nil {
 		return fmt.Errorf("attributes: %w", err)
 	}
 	for _, attr := range attributes {
@@ -52,7 +52,7 @@ func generateEcomPhase2(client *HCMClient, store *MockDataStore) error {
 	// Generate Products
 	fmt.Printf("  Creating E-Commerce Products...")
 	products := generateEcomProducts(store)
-	if err := client.post("/erp/100/EcomProd", &ecom.EcomProductList{Items: products}); err != nil {
+	if err := client.post("/erp/100/EcomProd", &ecom.EcomProductList{List: products}); err != nil {
 		return fmt.Errorf("products: %w", err)
 	}
 	for _, prod := range products {
@@ -63,7 +63,7 @@ func generateEcomPhase2(client *HCMClient, store *MockDataStore) error {
 	// Generate Images
 	fmt.Printf("  Creating E-Commerce Product Images...")
 	images := generateEcomImages(store)
-	if err := client.post("/erp/100/EcomImage", &ecom.EcomImageList{Items: images}); err != nil {
+	if err := client.post("/erp/100/EcomImage", &ecom.EcomImageList{List: images}); err != nil {
 		return fmt.Errorf("images: %w", err)
 	}
 	for _, img := range images {
@@ -74,7 +74,7 @@ func generateEcomPhase2(client *HCMClient, store *MockDataStore) error {
 	// Generate Variants
 	fmt.Printf("  Creating E-Commerce Product Variants...")
 	variants := generateEcomVariants(store)
-	if err := client.post("/erp/100/EcomVar", &ecom.EcomVariantList{Items: variants}); err != nil {
+	if err := client.post("/erp/100/EcomVar", &ecom.EcomVariantList{List: variants}); err != nil {
 		return fmt.Errorf("variants: %w", err)
 	}
 	for _, v := range variants {
@@ -90,7 +90,7 @@ func generateEcomPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Customers
 	fmt.Printf("  Creating E-Commerce Customers...")
 	customers := generateEcomCustomers()
-	if err := client.post("/erp/100/EcomCust", &ecom.EcomCustomerList{Items: customers}); err != nil {
+	if err := client.post("/erp/100/EcomCust", &ecom.EcomCustomerList{List: customers}); err != nil {
 		return fmt.Errorf("customers: %w", err)
 	}
 	for _, cust := range customers {
@@ -101,7 +101,7 @@ func generateEcomPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Addresses
 	fmt.Printf("  Creating E-Commerce Customer Addresses...")
 	addresses := generateEcomAddresses(store)
-	if err := client.post("/erp/100/EcomAddr", &ecom.EcomCustomerAddressList{Items: addresses}); err != nil {
+	if err := client.post("/erp/100/EcomAddr", &ecom.EcomCustomerAddressList{List: addresses}); err != nil {
 		return fmt.Errorf("addresses: %w", err)
 	}
 	for _, addr := range addresses {
@@ -112,7 +112,7 @@ func generateEcomPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Wishlists
 	fmt.Printf("  Creating E-Commerce Wishlists...")
 	wishlists := generateEcomWishlists(store)
-	if err := client.post("/erp/100/EcomWish", &ecom.EcomWishlistList{Items: wishlists}); err != nil {
+	if err := client.post("/erp/100/EcomWish", &ecom.EcomWishlistList{List: wishlists}); err != nil {
 		return fmt.Errorf("wishlists: %w", err)
 	}
 	for _, wl := range wishlists {
@@ -123,7 +123,7 @@ func generateEcomPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Wishlist Items
 	fmt.Printf("  Creating E-Commerce Wishlist Items...")
 	wishlistItems := generateEcomWishlistItems(store)
-	if err := client.post("/erp/100/EcomWishIt", &ecom.EcomWishlistItemList{Items: wishlistItems}); err != nil {
+	if err := client.post("/erp/100/EcomWishIt", &ecom.EcomWishlistItemList{List: wishlistItems}); err != nil {
 		return fmt.Errorf("wishlist items: %w", err)
 	}
 	for _, item := range wishlistItems {
@@ -134,7 +134,7 @@ func generateEcomPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Carts
 	fmt.Printf("  Creating E-Commerce Shopping Carts...")
 	carts := generateEcomCarts(store)
-	if err := client.post("/erp/100/EcomCart", &ecom.EcomCartList{Items: carts}); err != nil {
+	if err := client.post("/erp/100/EcomCart", &ecom.EcomCartList{List: carts}); err != nil {
 		return fmt.Errorf("carts: %w", err)
 	}
 	for _, cart := range carts {
@@ -150,7 +150,7 @@ func generateEcomPhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate Promotions
 	fmt.Printf("  Creating E-Commerce Promotions...")
 	promotions := generateEcomPromotions()
-	if err := client.post("/erp/100/EcomPromo", &ecom.EcomPromotionList{Items: promotions}); err != nil {
+	if err := client.post("/erp/100/EcomPromo", &ecom.EcomPromotionList{List: promotions}); err != nil {
 		return fmt.Errorf("promotions: %w", err)
 	}
 	for _, promo := range promotions {
@@ -161,7 +161,7 @@ func generateEcomPhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate Coupons
 	fmt.Printf("  Creating E-Commerce Coupons...")
 	coupons := generateEcomCoupons(store)
-	if err := client.post("/erp/100/EcomCoupon", &ecom.EcomCouponList{Items: coupons}); err != nil {
+	if err := client.post("/erp/100/EcomCoupon", &ecom.EcomCouponList{List: coupons}); err != nil {
 		return fmt.Errorf("coupons: %w", err)
 	}
 	for _, cpn := range coupons {
@@ -172,7 +172,7 @@ func generateEcomPhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate Price Rules
 	fmt.Printf("  Creating E-Commerce Price Rules...")
 	priceRules := generateEcomPriceRules(store)
-	if err := client.post("/erp/100/EcomPrcRl", &ecom.EcomPriceRuleList{Items: priceRules}); err != nil {
+	if err := client.post("/erp/100/EcomPrcRl", &ecom.EcomPriceRuleList{List: priceRules}); err != nil {
 		return fmt.Errorf("price rules: %w", err)
 	}
 	for _, rule := range priceRules {
@@ -183,7 +183,7 @@ func generateEcomPhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate Shipping Methods
 	fmt.Printf("  Creating E-Commerce Shipping Methods...")
 	shippingMethods := generateEcomShippingMethods()
-	if err := client.post("/erp/100/EcomShip", &ecom.EcomShippingMethodList{Items: shippingMethods}); err != nil {
+	if err := client.post("/erp/100/EcomShip", &ecom.EcomShippingMethodList{List: shippingMethods}); err != nil {
 		return fmt.Errorf("shipping methods: %w", err)
 	}
 	for _, sm := range shippingMethods {
@@ -194,7 +194,7 @@ func generateEcomPhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate Payment Methods
 	fmt.Printf("  Creating E-Commerce Payment Methods...")
 	paymentMethods := generateEcomPaymentMethods()
-	if err := client.post("/erp/100/EcomPay", &ecom.EcomPaymentMethodList{Items: paymentMethods}); err != nil {
+	if err := client.post("/erp/100/EcomPay", &ecom.EcomPaymentMethodList{List: paymentMethods}); err != nil {
 		return fmt.Errorf("payment methods: %w", err)
 	}
 	for _, pm := range paymentMethods {
@@ -210,7 +210,7 @@ func generateEcomPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Orders
 	fmt.Printf("  Creating E-Commerce Orders...")
 	orders := generateEcomOrders(store)
-	if err := client.post("/erp/100/EcomOrder", &ecom.EcomOrderList{Items: orders}); err != nil {
+	if err := client.post("/erp/100/EcomOrder", &ecom.EcomOrderList{List: orders}); err != nil {
 		return fmt.Errorf("orders: %w", err)
 	}
 	for _, ord := range orders {
@@ -221,7 +221,7 @@ func generateEcomPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Order Lines
 	fmt.Printf("  Creating E-Commerce Order Lines...")
 	orderLines := generateEcomOrderLines(store)
-	if err := client.post("/erp/100/EcomOrdLn", &ecom.EcomOrderLineList{Items: orderLines}); err != nil {
+	if err := client.post("/erp/100/EcomOrdLn", &ecom.EcomOrderLineList{List: orderLines}); err != nil {
 		return fmt.Errorf("order lines: %w", err)
 	}
 	for _, line := range orderLines {
@@ -232,7 +232,7 @@ func generateEcomPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Order Status History
 	fmt.Printf("  Creating E-Commerce Order Status History...")
 	orderStatuses := generateEcomOrderStatuses(store)
-	if err := client.post("/erp/100/EcomOrdSts", &ecom.EcomOrderStatusHistoryList{Items: orderStatuses}); err != nil {
+	if err := client.post("/erp/100/EcomOrdSts", &ecom.EcomOrderStatusHistoryList{List: orderStatuses}); err != nil {
 		return fmt.Errorf("order statuses: %w", err)
 	}
 	for _, status := range orderStatuses {
@@ -243,7 +243,7 @@ func generateEcomPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Returns
 	fmt.Printf("  Creating E-Commerce Returns...")
 	returns := generateEcomReturns(store)
-	if err := client.post("/erp/100/EcomReturn", &ecom.EcomReturnList{Items: returns}); err != nil {
+	if err := client.post("/erp/100/EcomReturn", &ecom.EcomReturnList{List: returns}); err != nil {
 		return fmt.Errorf("returns: %w", err)
 	}
 	for _, ret := range returns {
@@ -254,7 +254,7 @@ func generateEcomPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Return Lines
 	fmt.Printf("  Creating E-Commerce Return Lines...")
 	returnLines := generateEcomReturnLines(store)
-	if err := client.post("/erp/100/EcomRetLn", &ecom.EcomReturnLineList{Items: returnLines}); err != nil {
+	if err := client.post("/erp/100/EcomRetLn", &ecom.EcomReturnLineList{List: returnLines}); err != nil {
 		return fmt.Errorf("return lines: %w", err)
 	}
 	for _, line := range returnLines {

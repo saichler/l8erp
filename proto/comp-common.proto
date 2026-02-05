@@ -1,0 +1,188 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+syntax = "proto3";
+
+package comp;
+
+option go_package = "./types/comp";
+
+// =====================
+// REGULATION TYPE
+// =====================
+enum CompRegulationType {
+    COMP_REGULATION_TYPE_UNSPECIFIED = 0;
+    COMP_REGULATION_TYPE_SOX = 1;
+    COMP_REGULATION_TYPE_GDPR = 2;
+    COMP_REGULATION_TYPE_HIPAA = 3;
+    COMP_REGULATION_TYPE_PCI_DSS = 4;
+    COMP_REGULATION_TYPE_FDA = 5;
+    COMP_REGULATION_TYPE_ENVIRONMENTAL = 6;
+    COMP_REGULATION_TYPE_EXPORT_CONTROL = 7;
+    COMP_REGULATION_TYPE_INDUSTRY_SPECIFIC = 8;
+    COMP_REGULATION_TYPE_INTERNAL_POLICY = 9;
+    COMP_REGULATION_TYPE_OTHER = 10;
+}
+
+// =====================
+// COMPLIANCE STATUS
+// =====================
+enum CompComplianceStatusType {
+    COMP_COMPLIANCE_STATUS_UNSPECIFIED = 0;
+    COMP_COMPLIANCE_STATUS_COMPLIANT = 1;
+    COMP_COMPLIANCE_STATUS_PARTIALLY_COMPLIANT = 2;
+    COMP_COMPLIANCE_STATUS_NON_COMPLIANT = 3;
+    COMP_COMPLIANCE_STATUS_UNDER_REVIEW = 4;
+    COMP_COMPLIANCE_STATUS_EXEMPT = 5;
+    COMP_COMPLIANCE_STATUS_NOT_APPLICABLE = 6;
+}
+
+// =====================
+// SEVERITY LEVEL
+// =====================
+enum CompSeverityLevel {
+    COMP_SEVERITY_UNSPECIFIED = 0;
+    COMP_SEVERITY_CRITICAL = 1;
+    COMP_SEVERITY_HIGH = 2;
+    COMP_SEVERITY_MEDIUM = 3;
+    COMP_SEVERITY_LOW = 4;
+    COMP_SEVERITY_INFORMATIONAL = 5;
+}
+
+// =====================
+// CERTIFICATION STATUS
+// =====================
+enum CompCertificationStatus {
+    COMP_CERTIFICATION_STATUS_UNSPECIFIED = 0;
+    COMP_CERTIFICATION_STATUS_ACTIVE = 1;
+    COMP_CERTIFICATION_STATUS_PENDING = 2;
+    COMP_CERTIFICATION_STATUS_EXPIRED = 3;
+    COMP_CERTIFICATION_STATUS_REVOKED = 4;
+    COMP_CERTIFICATION_STATUS_UNDER_RENEWAL = 5;
+}
+
+// =====================
+// CONTROL TYPE
+// =====================
+enum CompControlType {
+    COMP_CONTROL_TYPE_UNSPECIFIED = 0;
+    COMP_CONTROL_TYPE_PREVENTIVE = 1;
+    COMP_CONTROL_TYPE_DETECTIVE = 2;
+    COMP_CONTROL_TYPE_CORRECTIVE = 3;
+    COMP_CONTROL_TYPE_COMPENSATING = 4;
+    COMP_CONTROL_TYPE_DIRECTIVE = 5;
+}
+
+// =====================
+// CONTROL EFFECTIVENESS
+// =====================
+enum CompControlEffectiveness {
+    COMP_CONTROL_EFFECTIVENESS_UNSPECIFIED = 0;
+    COMP_CONTROL_EFFECTIVENESS_EFFECTIVE = 1;
+    COMP_CONTROL_EFFECTIVENESS_PARTIALLY_EFFECTIVE = 2;
+    COMP_CONTROL_EFFECTIVENESS_INEFFECTIVE = 3;
+    COMP_CONTROL_EFFECTIVENESS_NOT_TESTED = 4;
+}
+
+// =====================
+// RISK CATEGORY
+// =====================
+enum CompRiskCategory {
+    COMP_RISK_CATEGORY_UNSPECIFIED = 0;
+    COMP_RISK_CATEGORY_STRATEGIC = 1;
+    COMP_RISK_CATEGORY_OPERATIONAL = 2;
+    COMP_RISK_CATEGORY_FINANCIAL = 3;
+    COMP_RISK_CATEGORY_COMPLIANCE = 4;
+    COMP_RISK_CATEGORY_REPUTATIONAL = 5;
+    COMP_RISK_CATEGORY_TECHNOLOGY = 6;
+    COMP_RISK_CATEGORY_CYBER_SECURITY = 7;
+    COMP_RISK_CATEGORY_LEGAL = 8;
+}
+
+// =====================
+// RISK STATUS
+// =====================
+enum CompRiskStatus {
+    COMP_RISK_STATUS_UNSPECIFIED = 0;
+    COMP_RISK_STATUS_IDENTIFIED = 1;
+    COMP_RISK_STATUS_ASSESSED = 2;
+    COMP_RISK_STATUS_MITIGATING = 3;
+    COMP_RISK_STATUS_ACCEPTED = 4;
+    COMP_RISK_STATUS_TRANSFERRED = 5;
+    COMP_RISK_STATUS_CLOSED = 6;
+}
+
+// =====================
+// INCIDENT STATUS
+// =====================
+enum CompIncidentStatus {
+    COMP_INCIDENT_STATUS_UNSPECIFIED = 0;
+    COMP_INCIDENT_STATUS_REPORTED = 1;
+    COMP_INCIDENT_STATUS_INVESTIGATING = 2;
+    COMP_INCIDENT_STATUS_CONTAINED = 3;
+    COMP_INCIDENT_STATUS_RESOLVED = 4;
+    COMP_INCIDENT_STATUS_CLOSED = 5;
+}
+
+// =====================
+// AUDIT TYPE
+// =====================
+enum CompAuditType {
+    COMP_AUDIT_TYPE_UNSPECIFIED = 0;
+    COMP_AUDIT_TYPE_INTERNAL = 1;
+    COMP_AUDIT_TYPE_EXTERNAL = 2;
+    COMP_AUDIT_TYPE_REGULATORY = 3;
+    COMP_AUDIT_TYPE_COMPLIANCE = 4;
+    COMP_AUDIT_TYPE_FINANCIAL = 5;
+    COMP_AUDIT_TYPE_OPERATIONAL = 6;
+    COMP_AUDIT_TYPE_IT = 7;
+}
+
+// =====================
+// AUDIT STATUS
+// =====================
+enum CompAuditStatus {
+    COMP_AUDIT_STATUS_UNSPECIFIED = 0;
+    COMP_AUDIT_STATUS_PLANNED = 1;
+    COMP_AUDIT_STATUS_IN_PROGRESS = 2;
+    COMP_AUDIT_STATUS_FIELDWORK_COMPLETE = 3;
+    COMP_AUDIT_STATUS_DRAFT_REPORT = 4;
+    COMP_AUDIT_STATUS_FINAL_REPORT = 5;
+    COMP_AUDIT_STATUS_CLOSED = 6;
+}
+
+// =====================
+// FINDING STATUS
+// =====================
+enum CompFindingStatus {
+    COMP_FINDING_STATUS_UNSPECIFIED = 0;
+    COMP_FINDING_STATUS_OPEN = 1;
+    COMP_FINDING_STATUS_IN_REMEDIATION = 2;
+    COMP_FINDING_STATUS_PENDING_VERIFICATION = 3;
+    COMP_FINDING_STATUS_CLOSED = 4;
+    COMP_FINDING_STATUS_RISK_ACCEPTED = 5;
+}
+
+// =====================
+// REMEDIATION STATUS
+// =====================
+enum CompRemediationStatus {
+    COMP_REMEDIATION_STATUS_UNSPECIFIED = 0;
+    COMP_REMEDIATION_STATUS_NOT_STARTED = 1;
+    COMP_REMEDIATION_STATUS_IN_PROGRESS = 2;
+    COMP_REMEDIATION_STATUS_COMPLETED = 3;
+    COMP_REMEDIATION_STATUS_VERIFIED = 4;
+    COMP_REMEDIATION_STATUS_OVERDUE = 5;
+}

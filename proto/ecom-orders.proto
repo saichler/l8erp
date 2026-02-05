@@ -60,7 +60,8 @@ message EcomOrder {
 }
 
 message EcomOrderList {
-    repeated EcomOrder items = 1;
+    repeated EcomOrder list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -90,7 +91,8 @@ message EcomOrderLine {
 }
 
 message EcomOrderLineList {
-    repeated EcomOrderLine items = 1;
+    repeated EcomOrderLine list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -113,7 +115,8 @@ message EcomOrderStatusHistory {
 }
 
 message EcomOrderStatusHistoryList {
-    repeated EcomOrderStatusHistory items = 1;
+    repeated EcomOrderStatusHistory list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -144,7 +147,8 @@ message EcomReturn {
 }
 
 message EcomReturnList {
-    repeated EcomReturn items = 1;
+    repeated EcomReturn list = 1;
+    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -171,5 +175,6 @@ message EcomReturnLine {
 }
 
 message EcomReturnLineList {
-    repeated EcomReturnLine items = 1;
+    repeated EcomReturnLine list = 1;
+    l8api.L8MetaData metadata = 2;
 }
