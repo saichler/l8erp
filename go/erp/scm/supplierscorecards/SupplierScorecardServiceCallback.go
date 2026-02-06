@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package supplierscorecards
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type SupplierScorecardServiceCallback struct{}
-
-func newSupplierScorecardServiceCallback() *SupplierScorecardServiceCallback {
-	return &SupplierScorecardServiceCallback{}
-}
-
-func (this *SupplierScorecardServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmSupplierScorecard)
-	if !ok {
-		return nil, false, errors.New("invalid supplier scorecard type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ScorecardId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *SupplierScorecardServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newSupplierScorecardServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmSupplierScorecard",
+		func(e *scm.ScmSupplierScorecard) { common.GenerateID(&e.ScorecardId) },
+		validate)
 }
 
 func validate(item *scm.ScmSupplierScorecard, vnic ifs.IVNic) error {

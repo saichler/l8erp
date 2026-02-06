@@ -26,7 +26,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -72,22 +71,16 @@ func generateStatusReports(store *MockDataStore) []*prj.PrjStatusReport {
 
 	reports := make([]*prj.PrjStatusReport, count)
 	for i := 0; i < count; i++ {
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
 
-		reportedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			reportedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		reportedBy := pickRef(store.EmployeeIDs, i)
 
 		reportDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 		periodStart := reportDate.AddDate(0, 0, -14)
 		periodEnd := reportDate
 
 		reports[i] = &prj.PrjStatusReport{
-			StatusId:          fmt.Sprintf("psr-%03d", i+1),
+			StatusId:          genID("psr", i),
 			ProjectId:         projectID,
 			ReportDate:        reportDate.Unix(),
 			PeriodStart:       periodStart.Unix(),
@@ -116,10 +109,7 @@ func generateEarnedValues(store *MockDataStore) []*prj.PrjEarnedValue {
 
 	earnedValues := make([]*prj.PrjEarnedValue, count)
 	for i := 0; i < count; i++ {
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
 
 		asOfDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
 
@@ -159,20 +149,20 @@ func generateEarnedValues(store *MockDataStore) []*prj.PrjEarnedValue {
 		}
 
 		earnedValues[i] = &prj.PrjEarnedValue{
-			EarnedValueId:              fmt.Sprintf("pev-%03d", i+1),
+			EarnedValueId:              genID("pev", i),
 			ProjectId:                  projectID,
 			AsOfDate:                   asOfDate.Unix(),
-			BudgetAtCompletion:         &erp.Money{Amount: bac, CurrencyCode: "USD"},
-			PlannedValue:               &erp.Money{Amount: pv, CurrencyCode: "USD"},
-			EarnedValue:                &erp.Money{Amount: ev, CurrencyCode: "USD"},
-			ActualCost:                 &erp.Money{Amount: ac, CurrencyCode: "USD"},
-			ScheduleVariance:           &erp.Money{Amount: sv, CurrencyCode: "USD"},
-			CostVariance:               &erp.Money{Amount: cv, CurrencyCode: "USD"},
+			BudgetAtCompletion:         money(bac),
+			PlannedValue:               money(pv),
+			EarnedValue:                money(ev),
+			ActualCost:                 money(ac),
+			ScheduleVariance:           money(sv),
+			CostVariance:               money(cv),
 			SchedulePerformanceIndex:   spi,
 			CostPerformanceIndex:       cpi,
-			EstimateAtCompletion:       &erp.Money{Amount: eac, CurrencyCode: "USD"},
-			EstimateToComplete:         &erp.Money{Amount: etc, CurrencyCode: "USD"},
-			VarianceAtCompletion:       &erp.Money{Amount: vac, CurrencyCode: "USD"},
+			EstimateAtCompletion:       money(eac),
+			EstimateToComplete:         money(etc),
+			VarianceAtCompletion:       money(vac),
 			ToCompletePerformanceIndex: tcpi,
 			PercentComplete:            percentComplete * 100,
 			PercentSpent:               percentSpent * 100,
@@ -206,20 +196,11 @@ func generateBudgetVariances(store *MockDataStore) []*prj.PrjBudgetVariance {
 
 	variances := make([]*prj.PrjBudgetVariance, count)
 	for i := 0; i < count; i++ {
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
 
-		budgetID := ""
-		if len(store.PrjProjectBudgetIDs) > 0 {
-			budgetID = store.PrjProjectBudgetIDs[i%len(store.PrjProjectBudgetIDs)]
-		}
+		budgetID := pickRef(store.PrjProjectBudgetIDs, i)
 
-		phaseID := ""
-		if len(store.PrjPhaseIDs) > 0 {
-			phaseID = store.PrjPhaseIDs[i%len(store.PrjPhaseIDs)]
-		}
+		phaseID := pickRef(store.PrjPhaseIDs, i)
 
 		asOfDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 
@@ -233,15 +214,15 @@ func generateBudgetVariances(store *MockDataStore) []*prj.PrjBudgetVariance {
 		hoursVariance := actualHours - budgetedHours
 
 		variances[i] = &prj.PrjBudgetVariance{
-			VarianceId:          fmt.Sprintf("pbv-%03d", i+1),
+			VarianceId:          genID("pbv", i),
 			ProjectId:           projectID,
 			BudgetId:            budgetID,
 			PhaseId:             phaseID,
 			AsOfDate:            asOfDate.Unix(),
 			Category:            categories[i%len(categories)],
-			BudgetedAmount:      &erp.Money{Amount: budgetedAmount, CurrencyCode: "USD"},
-			ActualAmount:        &erp.Money{Amount: actualAmount, CurrencyCode: "USD"},
-			VarianceAmount:      &erp.Money{Amount: varianceAmount, CurrencyCode: "USD"},
+			BudgetedAmount:      money(budgetedAmount),
+			ActualAmount:        money(actualAmount),
+			VarianceAmount:      money(varianceAmount),
 			VariancePercent:     variancePercent,
 			BudgetedHours:       budgetedHours,
 			ActualHours:         actualHours,
@@ -263,20 +244,11 @@ func generateResourceForecasts(store *MockDataStore) []*prj.PrjResourceForecast 
 
 	forecasts := make([]*prj.PrjResourceForecast, count)
 	for i := 0; i < count; i++ {
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
 
-		resourceID := ""
-		if len(store.PrjResourceIDs) > 0 {
-			resourceID = store.PrjResourceIDs[i%len(store.PrjResourceIDs)]
-		}
+		resourceID := pickRef(store.PrjResourceIDs, i)
 
-		poolID := ""
-		if len(store.PrjResourcePoolIDs) > 0 {
-			poolID = store.PrjResourcePoolIDs[i%len(store.PrjResourcePoolIDs)]
-		}
+		poolID := pickRef(store.PrjResourcePoolIDs, i)
 
 		periodStart := time.Now().AddDate(0, rand.Intn(3), 0)
 		periodEnd := periodStart.AddDate(0, 1, 0)
@@ -289,7 +261,7 @@ func generateResourceForecasts(store *MockDataStore) []*prj.PrjResourceForecast 
 		headcountAvailable := int32(float64(headcountNeeded) * (0.6 + rand.Float64()*0.6))
 
 		forecasts[i] = &prj.PrjResourceForecast{
-			ForecastId:         fmt.Sprintf("prf-%03d", i+1),
+			ForecastId:         genID("prf", i),
 			ProjectId:          projectID,
 			ResourceId:         resourceID,
 			PoolId:             poolID,

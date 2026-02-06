@@ -15,37 +15,16 @@ limitations under the License.
 package onboardingtasks
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type OnboardingTaskServiceCallback struct {
-}
-
-func newOnboardingTaskServiceCallback() *OnboardingTaskServiceCallback {
-	return &OnboardingTaskServiceCallback{}
-}
-
-func (this *OnboardingTaskServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.OnboardingTask)
-	if !ok {
-		return nil, false, errors.New("invalid onboarding task type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.TaskId)
-	}
-	err := validateOnbrdTsk(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *OnboardingTaskServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newOnboardingTaskServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("OnboardingTask",
+		func(e *hcm.OnboardingTask) { common.GenerateID(&e.TaskId) },
+		validateOnbrdTsk)
 }
 
 func validateOnbrdTsk(entity *hcm.OnboardingTask, vnic ifs.IVNic) error {

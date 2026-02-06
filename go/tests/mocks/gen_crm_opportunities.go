@@ -20,7 +20,6 @@ import (
 	"time"
 
 	"github.com/saichler/l8erp/go/types/crm"
-	"github.com/saichler/l8erp/go/types/erp"
 )
 
 // generateOppStages creates opportunity stage definitions
@@ -34,7 +33,7 @@ func generateOppStages() []*crm.CrmOppStage {
 		isWon := name == "Closed Won"
 
 		stages[i] = &crm.CrmOppStage{
-			StageId:          fmt.Sprintf("oppstg-%03d", i+1),
+			StageId:          genID("oppstg", i),
 			Name:             name,
 			Description:      fmt.Sprintf("Sales stage: %s", name),
 			Sequence:         int32(i + 1),
@@ -70,26 +69,11 @@ func generateOpportunities(store *MockDataStore) []*crm.CrmOpportunity {
 	count := 40
 	opps := make([]*crm.CrmOpportunity, count)
 	for i := 0; i < count; i++ {
-		accountID := ""
-		if len(store.CrmAccountIDs) > 0 {
-			accountID = store.CrmAccountIDs[i%len(store.CrmAccountIDs)]
-		}
-		contactID := ""
-		if len(store.CrmContactIDs) > 0 {
-			contactID = store.CrmContactIDs[i%len(store.CrmContactIDs)]
-		}
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
-		sourceID := ""
-		if len(store.CrmLeadSourceIDs) > 0 {
-			sourceID = store.CrmLeadSourceIDs[i%len(store.CrmLeadSourceIDs)]
-		}
-		campaignID := ""
-		if len(store.CrmCampaignIDs) > 0 {
-			campaignID = store.CrmCampaignIDs[i%len(store.CrmCampaignIDs)]
-		}
+		accountID := pickRef(store.CrmAccountIDs, i)
+		contactID := pickRef(store.CrmContactIDs, i)
+		ownerID := pickRef(store.EmployeeIDs, i)
+		sourceID := pickRef(store.CrmLeadSourceIDs, i)
+		campaignID := pickRef(store.CrmCampaignIDs, i)
 
 		amount := int64(rand.Intn(500000) + 10000)
 		probability := int32(rand.Intn(80) + 10)
@@ -108,11 +92,11 @@ func generateOpportunities(store *MockDataStore) []*crm.CrmOpportunity {
 		}
 
 		opps[i] = &crm.CrmOpportunity{
-			OpportunityId:    fmt.Sprintf("opp-%03d", i+1),
+			OpportunityId:    genID("opp", i),
 			Name:             fmt.Sprintf("Opportunity %d - %s", i+1, customerNames[i%len(customerNames)]),
 			AccountId:        accountID,
 			PrimaryContactId: contactID,
-			Amount:           &erp.Money{Amount: amount, CurrencyCode: "USD"},
+			Amount:           money(amount),
 			Stage:            stages[i%len(stages)],
 			Probability:      probability,
 			CloseDate:        time.Now().AddDate(0, rand.Intn(6)+1, 0).Unix(),
@@ -122,7 +106,7 @@ func generateOpportunities(store *MockDataStore) []*crm.CrmOpportunity {
 			CampaignId:       campaignID,
 			Description:      fmt.Sprintf("Sales opportunity for %s", customerNames[i%len(customerNames)]),
 			NextStep:         "Schedule follow-up call",
-			ExpectedRevenue:  &erp.Money{Amount: expectedRevenue, CurrencyCode: "USD"},
+			ExpectedRevenue:  money(expectedRevenue),
 			LastActivityDate: time.Now().AddDate(0, 0, -rand.Intn(7)).Unix(),
 			AuditInfo:        createAuditInfo(),
 		}
@@ -150,7 +134,7 @@ func generateOppCompetitors(store *MockDataStore) []*crm.CrmOppCompetitor {
 				Strengths:       "Strong market presence",
 				Weaknesses:      "Limited support options",
 				ThreatLevel:     threatLevels[idx%len(threatLevels)],
-				CompetitorPrice: &erp.Money{Amount: int64(rand.Intn(100000) + 5000), CurrencyCode: "USD"},
+				CompetitorPrice: randomMoney(5000, 100000),
 				Notes:           fmt.Sprintf("Key competitor on opportunity"),
 				IsPrimary:       true,
 				AuditInfo:       createAuditInfo(),
@@ -185,9 +169,9 @@ func generateOppProducts(store *MockDataStore) []*crm.CrmOppProduct {
 				ProductId:       productID,
 				ProductName:     productName,
 				Quantity:        quantity,
-				UnitPrice:       &erp.Money{Amount: unitPrice, CurrencyCode: "USD"},
+				UnitPrice:       money(unitPrice),
 				DiscountPercent: discount,
-				TotalPrice:      &erp.Money{Amount: totalPrice, CurrencyCode: "USD"},
+				TotalPrice:      money(totalPrice),
 				Description:     fmt.Sprintf("Product line %d", j+1),
 				LineNumber:      int32((j + 1) * 10),
 				AuditInfo:       createAuditInfo(),
@@ -207,10 +191,7 @@ func generateOppTeams(store *MockDataStore) []*crm.CrmOppTeam {
 	for _, oppID := range store.CrmOpportunityIDs {
 		numMembers := rand.Intn(2) + 1
 		for j := 0; j < numMembers; j++ {
-			employeeID := ""
-			if len(store.EmployeeIDs) > 0 {
-				employeeID = store.EmployeeIDs[(idx-1)%len(store.EmployeeIDs)]
-			}
+			employeeID := pickRef(store.EmployeeIDs, (idx-1))
 
 			teams = append(teams, &crm.CrmOppTeam{
 				MemberId:      fmt.Sprintf("oppteam-%03d", idx),
@@ -248,10 +229,7 @@ func generateOppActivities(store *MockDataStore) []*crm.CrmOppActivity {
 	idx := 1
 	for _, oppID := range store.CrmOpportunityIDs {
 		for j := 0; j < 2; j++ {
-			assignedTo := ""
-			if len(store.EmployeeIDs) > 0 {
-				assignedTo = store.EmployeeIDs[(idx-1)%len(store.EmployeeIDs)]
-			}
+			assignedTo := pickRef(store.EmployeeIDs, (idx-1))
 
 			isCompleted := statuses[(idx-1)%len(statuses)] == crm.CrmActivityStatus_CRM_ACTIVITY_STATUS_COMPLETED
 

@@ -15,38 +15,17 @@ limitations under the License.
 package bonuspayments
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/bonusplans"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type BonusPaymentServiceCallback struct {
-}
-
-func newBonusPaymentServiceCallback() *BonusPaymentServiceCallback {
-	return &BonusPaymentServiceCallback{}
-}
-
-func (this *BonusPaymentServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.BonusPayment)
-	if !ok {
-		return nil, false, errors.New("invalid bonus payment type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.PaymentId)
-	}
-	err := validateBonusPay(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BonusPaymentServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBonusPaymentServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("BonusPayment",
+		func(e *hcm.BonusPayment) { common.GenerateID(&e.PaymentId) },
+		validateBonusPay)
 }
 
 func validateBonusPay(entity *hcm.BonusPayment, vnic ifs.IVNic) error {

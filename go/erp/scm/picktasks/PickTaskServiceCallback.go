@@ -15,35 +15,15 @@ limitations under the License.
 package picktasks
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type PickTaskServiceCallback struct{}
-
-func newPickTaskServiceCallback() *PickTaskServiceCallback {
-	return &PickTaskServiceCallback{}
-}
-
-func (this *PickTaskServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmPickTask)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.TaskId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PickTaskServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPickTaskServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmPickTask",
+		func(e *scm.ScmPickTask) { common.GenerateID(&e.TaskId) },
+		validate)
 }
 
 func validate(item *scm.ScmPickTask, vnic ifs.IVNic) error {

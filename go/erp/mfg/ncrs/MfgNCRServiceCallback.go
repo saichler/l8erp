@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package ncrs
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type MfgNCRServiceCallback struct{}
-
-func newMfgNCRServiceCallback() *MfgNCRServiceCallback {
-	return &MfgNCRServiceCallback{}
-}
-
-func (this *MfgNCRServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgNCR)
-	if !ok {
-		return nil, false, errors.New("invalid MfgNCR type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.NcrId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgNCRServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgNCRServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgNCR",
+		func(e *mfg.MfgNCR) { common.GenerateID(&e.NcrId) },
+		validate)
 }
 
 func validate(item *mfg.MfgNCR, vnic ifs.IVNic) error {

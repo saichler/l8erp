@@ -14,16 +14,9 @@
 package holidays
 
 import (
-	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8orm/go/orm/persist"
-	"github.com/saichler/l8orm/go/orm/plugins/postgres"
-	"github.com/saichler/l8srlz/go/serialize/object"
 	"github.com/saichler/l8types/go/ifs"
-	"github.com/saichler/l8types/go/types/l8api"
-	"github.com/saichler/l8types/go/types/l8web"
-	"github.com/saichler/l8utils/go/utils/web"
 )
 
 const (
@@ -32,54 +25,16 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	_, user, pass, _, err := vnic.Resources().Security().Credential(creds, dbname, vnic.Resources())
-	if err != nil {
-		panic(err)
-	}
-	db := common.OpenDBConection(dbname, user, pass)
-	p := postgres.NewPostgres(db, vnic.Resources())
-
-	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newHolidayServiceCallback())
-	sla.SetServiceItem(&hcm.Holiday{})
-	sla.SetServiceItemList(&hcm.HolidayList{})
-	sla.SetPrimaryKeys("HolidayId")
-	sla.SetArgs(p)
-
-	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&hcm.Holiday{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&hcm.HolidayList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&hcm.Holiday{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&hcm.Holiday{}, ifs.PATCH, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &hcm.HolidayList{})
-	sla.SetWebService(ws)
-
-	vnic.Resources().Services().Activate(sla, vnic)
+	common.ActivateService[hcm.Holiday, hcm.HolidayList](common.ServiceConfig{
+		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "HolidayId", Callback: newHolidayServiceCallback(),
+	}, creds, dbname, vnic)
 }
 
 func Holidays(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
-	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
+	return common.ServiceHandler(ServiceName, ServiceArea, vnic)
 }
 
 func Holiday(holidayId string, vnic ifs.IVNic) (*hcm.Holiday, error) {
-	this, ok := Holidays(vnic)
-	filter := &hcm.Holiday{HolidayId: holidayId}
-	if ok {
-		resp := this.Get(object.New(nil, filter), vnic)
-		if resp.Error() != nil {
-			return nil, resp.Error()
-		}
-		if resp.Element() != nil {
-			return resp.Element().(*hcm.Holiday), nil
-		}
-		return nil, nil
-	}
-	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
-	if resp.Error() != nil {
-		return nil, resp.Error()
-	}
-	if resp.Element() != nil {
-		return resp.Element().(*hcm.Holiday), nil
-	}
-	return nil, nil
+	return common.GetEntity(ServiceName, ServiceArea, &hcm.Holiday{HolidayId: holidayId}, vnic)
 }

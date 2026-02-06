@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package paymentapplications
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type PaymentApplicationServiceCallback struct{}
-
-func newPaymentApplicationServiceCallback() *PaymentApplicationServiceCallback {
-	return &PaymentApplicationServiceCallback{}
-}
-
-func (this *PaymentApplicationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	paymentApplication, ok := any.(*fin.PaymentApplication)
-	if !ok {
-		return nil, false, errors.New("invalid paymentApplication type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&paymentApplication.ApplicationId)
-	}
-	err := validate(paymentApplication, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PaymentApplicationServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPaymentApplicationServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("PaymentApplication",
+		func(e *fin.PaymentApplication) { common.GenerateID(&e.ApplicationId) },
+		validate)
 }
 
 func validate(paymentApplication *fin.PaymentApplication, vnic ifs.IVNic) error {

@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package leadtimes
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type LeadTimeServiceCallback struct{}
-
-func newLeadTimeServiceCallback() *LeadTimeServiceCallback {
-	return &LeadTimeServiceCallback{}
-}
-
-func (this *LeadTimeServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmLeadTime)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.LeadTimeId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *LeadTimeServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newLeadTimeServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmLeadTime",
+		func(e *scm.ScmLeadTime) { common.GenerateID(&e.LeadTimeId) },
+		validate)
 }
 
 func validate(item *scm.ScmLeadTime, vnic ifs.IVNic) error {

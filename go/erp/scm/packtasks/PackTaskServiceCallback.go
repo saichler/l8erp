@@ -15,35 +15,15 @@ limitations under the License.
 package packtasks
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type PackTaskServiceCallback struct{}
-
-func newPackTaskServiceCallback() *PackTaskServiceCallback {
-	return &PackTaskServiceCallback{}
-}
-
-func (this *PackTaskServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmPackTask)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.TaskId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PackTaskServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPackTaskServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmPackTask",
+		func(e *scm.ScmPackTask) { common.GenerateID(&e.TaskId) },
+		validate)
 }
 
 func validate(item *scm.ScmPackTask, vnic ifs.IVNic) error {

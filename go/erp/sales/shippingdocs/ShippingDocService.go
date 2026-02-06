@@ -14,16 +14,9 @@
 package shippingdocs
 
 import (
-	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
-	"github.com/saichler/l8orm/go/orm/persist"
-	"github.com/saichler/l8orm/go/orm/plugins/postgres"
-	"github.com/saichler/l8srlz/go/serialize/object"
 	"github.com/saichler/l8types/go/ifs"
-	"github.com/saichler/l8types/go/types/l8api"
-	"github.com/saichler/l8types/go/types/l8web"
-	"github.com/saichler/l8utils/go/utils/web"
 )
 
 const (
@@ -32,57 +25,17 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	_, user, pass, _, err := vnic.Resources().Security().Credential(creds, dbname, vnic.Resources())
-	if err != nil {
-		panic(err)
-	}
-	db := common.OpenDBConection(dbname, user, pass)
-	p := postgres.NewPostgres(db, vnic.Resources())
-
-	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newShippingDocServiceCallback())
-	sla.SetServiceItem(&sales.SalesShippingDoc{})
-	sla.SetServiceItemList(&sales.SalesShippingDocList{})
-	sla.SetPrimaryKeys("DocId")
-	sla.SetArgs(p)
-	sla.SetTransactional(true)
-	sla.SetReplication(true)
-	sla.SetReplicationCount(3)
-
-	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&sales.SalesShippingDoc{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&sales.SalesShippingDocList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&sales.SalesShippingDoc{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&sales.SalesShippingDoc{}, ifs.PATCH, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &sales.SalesShippingDocList{})
-	sla.SetWebService(ws)
-
-	vnic.Resources().Services().Activate(sla, vnic)
+	common.ActivateService[sales.SalesShippingDoc, sales.SalesShippingDocList](common.ServiceConfig{
+		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "DocId", Callback: newShippingDocServiceCallback(),
+		Transactional: true,
+	}, creds, dbname, vnic)
 }
 
 func ShippingDocs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
-	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
+	return common.ServiceHandler(ServiceName, ServiceArea, vnic)
 }
 
 func ShippingDoc(docId string, vnic ifs.IVNic) (*sales.SalesShippingDoc, error) {
-	this, ok := ShippingDocs(vnic)
-	filter := &sales.SalesShippingDoc{DocId: docId}
-	if ok {
-		resp := this.Get(object.New(nil, filter), vnic)
-		if resp.Error() != nil {
-			return nil, resp.Error()
-		}
-		if resp.Element() != nil {
-			return resp.Element().(*sales.SalesShippingDoc), nil
-		}
-		return nil, nil
-	}
-	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
-	if resp.Error() != nil {
-		return nil, resp.Error()
-	}
-	if resp.Element() != nil {
-		return resp.Element().(*sales.SalesShippingDoc), nil
-	}
-	return nil, nil
+	return common.GetEntity(ServiceName, ServiceArea, &sales.SalesShippingDoc{DocId: docId}, vnic)
 }

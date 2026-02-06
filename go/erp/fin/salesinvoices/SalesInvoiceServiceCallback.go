@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package salesinvoices
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type SalesInvoiceServiceCallback struct{}
-
-func newSalesInvoiceServiceCallback() *SalesInvoiceServiceCallback {
-	return &SalesInvoiceServiceCallback{}
-}
-
-func (this *SalesInvoiceServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	salesInvoice, ok := any.(*fin.SalesInvoice)
-	if !ok {
-		return nil, false, errors.New("invalid salesInvoice type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&salesInvoice.InvoiceId)
-	}
-	err := validate(salesInvoice, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *SalesInvoiceServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newSalesInvoiceServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SalesInvoice",
+		func(e *fin.SalesInvoice) { common.GenerateID(&e.InvoiceId) },
+		validate)
 }
 
 func validate(salesInvoice *fin.SalesInvoice, vnic ifs.IVNic) error {

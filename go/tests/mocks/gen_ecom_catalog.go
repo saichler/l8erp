@@ -21,7 +21,6 @@ import (
 	"time"
 
 	"github.com/saichler/l8erp/go/types/ecom"
-	"github.com/saichler/l8erp/go/types/erp"
 )
 
 // generateEcomCategories creates e-commerce category records (foundation - no store needed)
@@ -32,7 +31,7 @@ func generateEcomCategories() []*ecom.EcomCategory {
 		slug = strings.ReplaceAll(slug, " ", "-")
 
 		cat := &ecom.EcomCategory{
-			CategoryId:      fmt.Sprintf("ecat-%03d", i+1),
+			CategoryId:      genID("ecat", i),
 			Name:            name,
 			Description:     fmt.Sprintf("Browse our %s collection", name),
 			Slug:            slug,
@@ -48,7 +47,7 @@ func generateEcomCategories() []*ecom.EcomCategory {
 		// First 4 categories are top-level; rest link to one of the first 4
 		if i >= 4 {
 			parentIdx := i % 4
-			cat.ParentCategoryId = fmt.Sprintf("ecat-%03d", parentIdx+1)
+			cat.ParentCategoryId = genID("ecat", parentIdx)
 			cat.Level = 2
 			cat.Path = fmt.Sprintf("/%s/%s", strings.ToLower(strings.ReplaceAll(ecomCategoryNames[parentIdx], " & ", "-")), slug)
 		}
@@ -90,7 +89,7 @@ func generateEcomAttributes() []*ecom.EcomAttribute {
 		attrType := attributeTypes[i%len(attributeTypes)]
 
 		attr := &ecom.EcomAttribute{
-			AttributeId:   fmt.Sprintf("eattr-%03d", i+1),
+			AttributeId:   genID("eattr", i),
 			Name:          name,
 			Code:          code,
 			AttributeType: attrType,
@@ -148,13 +147,10 @@ func generateEcomProducts(store *MockDataStore) []*ecom.EcomProduct {
 		// Cost price is 40-60% of base price
 		costPrice := int64(float64(basePrice) * (0.4 + rand.Float64()*0.2))
 
-		categoryID := ""
-		if len(store.EcomCategoryIDs) > 0 {
-			categoryID = store.EcomCategoryIDs[i%len(store.EcomCategoryIDs)]
-		}
+		categoryID := pickRef(store.EcomCategoryIDs, i)
 
 		products[i] = &ecom.EcomProduct{
-			ProductId:        fmt.Sprintf("eprod-%03d", i+1),
+			ProductId:        genID("eprod", i),
 			Sku:              fmt.Sprintf("SKU-%05d", 10000+i+1),
 			Name:             name,
 			Description:      fmt.Sprintf("High-quality %s with premium features and excellent durability.", name),
@@ -162,18 +158,9 @@ func generateEcomProducts(store *MockDataStore) []*ecom.EcomProduct {
 			ProductType:      productTypes[i%len(productTypes)],
 			Status:           productStatuses[i%len(productStatuses)],
 			CategoryId:       categoryID,
-			Price: &erp.Money{
-				Amount:       basePrice,
-				CurrencyCode: "USD",
-			},
-			CompareAtPrice: &erp.Money{
-				Amount:       compareAtPrice,
-				CurrencyCode: "USD",
-			},
-			CostPrice: &erp.Money{
-				Amount:       costPrice,
-				CurrencyCode: "USD",
-			},
+			Price: money(basePrice),
+			CompareAtPrice: money(compareAtPrice),
+			CostPrice: money(costPrice),
 			StockQuantity:     int32(rand.Intn(500) + 10),
 			LowStockThreshold: int32(rand.Intn(20) + 5),
 			TrackInventory:    true,
@@ -260,18 +247,9 @@ func generateEcomVariants(store *MockDataStore) []*ecom.EcomVariant {
 				ProductId: productID,
 				Sku:       fmt.Sprintf("SKU-%05d-%s-%s", 10000+prodIdx+1, strings.ToUpper(color[:1]), size),
 				Name:      fmt.Sprintf("%s - %s", color, size),
-				Price: &erp.Money{
-					Amount:       variantPrice,
-					CurrencyCode: "USD",
-				},
-				CompareAtPrice: &erp.Money{
-					Amount:       compareAtPrice,
-					CurrencyCode: "USD",
-				},
-				CostPrice: &erp.Money{
-					Amount:       costPrice,
-					CurrencyCode: "USD",
-				},
+				Price: money(variantPrice),
+				CompareAtPrice: money(compareAtPrice),
+				CostPrice: money(costPrice),
 				StockQuantity: int32(rand.Intn(100) + 5),
 				Weight:        float64(rand.Intn(3000)+200) / 1000.0, // 0.2 to 3.2 kg
 				WeightUnit:    "kg",

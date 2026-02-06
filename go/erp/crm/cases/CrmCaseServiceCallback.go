@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package cases
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/crm"
 )
 
-type CrmCaseServiceCallback struct{}
-
-func newCrmCaseServiceCallback() *CrmCaseServiceCallback {
-	return &CrmCaseServiceCallback{}
-}
-
-func (this *CrmCaseServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*crm.CrmCase)
-	if !ok {
-		return nil, false, errors.New("invalid CrmCase type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.CaseId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CrmCaseServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCrmCaseServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("CrmCase",
+		func(e *crm.CrmCase) { common.GenerateID(&e.CaseId) },
+		validate)
 }
 
 func validate(item *crm.CrmCase, vnic ifs.IVNic) error {

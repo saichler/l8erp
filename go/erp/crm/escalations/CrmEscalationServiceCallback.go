@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package escalations
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/crm"
 )
 
-type CrmEscalationServiceCallback struct{}
-
-func newCrmEscalationServiceCallback() *CrmEscalationServiceCallback {
-	return &CrmEscalationServiceCallback{}
-}
-
-func (this *CrmEscalationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*crm.CrmEscalation)
-	if !ok {
-		return nil, false, errors.New("invalid CrmEscalation type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.EscalationId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CrmEscalationServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCrmEscalationServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("CrmEscalation",
+		func(e *crm.CrmEscalation) { common.GenerateID(&e.EscalationId) },
+		validate)
 }
 
 func validate(item *crm.CrmEscalation, vnic ifs.IVNic) error {

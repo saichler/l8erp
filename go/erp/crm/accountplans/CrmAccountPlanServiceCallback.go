@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package accountplans
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/crm"
 )
 
-type CrmAccountPlanServiceCallback struct{}
-
-func newCrmAccountPlanServiceCallback() *CrmAccountPlanServiceCallback {
-	return &CrmAccountPlanServiceCallback{}
-}
-
-func (this *CrmAccountPlanServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*crm.CrmAccountPlan)
-	if !ok {
-		return nil, false, errors.New("invalid CrmAccountPlan type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.PlanId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CrmAccountPlanServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCrmAccountPlanServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("CrmAccountPlan",
+		func(e *crm.CrmAccountPlan) { common.GenerateID(&e.PlanId) },
+		validate)
 }
 
 func validate(item *crm.CrmAccountPlan, vnic ifs.IVNic) error {

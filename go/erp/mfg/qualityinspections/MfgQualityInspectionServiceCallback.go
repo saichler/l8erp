@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package qualityinspections
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type MfgQualityInspectionServiceCallback struct{}
-
-func newMfgQualityInspectionServiceCallback() *MfgQualityInspectionServiceCallback {
-	return &MfgQualityInspectionServiceCallback{}
-}
-
-func (this *MfgQualityInspectionServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgQualityInspection)
-	if !ok {
-		return nil, false, errors.New("invalid MfgQualityInspection type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.InspectionId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgQualityInspectionServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgQualityInspectionServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgQualityInspection",
+		func(e *mfg.MfgQualityInspection) { common.GenerateID(&e.InspectionId) },
+		validate)
 }
 
 func validate(item *mfg.MfgQualityInspection, vnic ifs.IVNic) error {

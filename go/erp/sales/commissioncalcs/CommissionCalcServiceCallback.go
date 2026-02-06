@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package commissioncalcs
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/sales"
 )
 
-type CommissionCalcServiceCallback struct{}
-
-func newCommissionCalcServiceCallback() *CommissionCalcServiceCallback {
-	return &CommissionCalcServiceCallback{}
-}
-
-func (this *CommissionCalcServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*sales.SalesCommissionCalc)
-	if !ok {
-		return nil, false, errors.New("invalid commission calc type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.CalcId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CommissionCalcServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCommissionCalcServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SalesCommissionCalc",
+		func(e *sales.SalesCommissionCalc) { common.GenerateID(&e.CalcId) },
+		validate)
 }
 
 func validate(item *sales.SalesCommissionCalc, vnic ifs.IVNic) error {

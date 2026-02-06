@@ -25,7 +25,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -64,20 +63,11 @@ func generateInvoiceLines(store *MockDataStore) []*prj.PrjInvoiceLine {
 	lines := make([]*prj.PrjInvoiceLine, count)
 
 	for i := 0; i < count; i++ {
-		invoiceID := ""
-		if len(store.PrjProjectInvoiceIDs) > 0 {
-			invoiceID = store.PrjProjectInvoiceIDs[i%len(store.PrjProjectInvoiceIDs)]
-		}
+		invoiceID := pickRef(store.PrjProjectInvoiceIDs, i)
 
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
 
-		taskID := ""
-		if len(store.PrjTaskIDs) > 0 {
-			taskID = store.PrjTaskIDs[i%len(store.PrjTaskIDs)]
-		}
+		taskID := pickRef(store.PrjTaskIDs, i)
 
 		// Optional references to timesheet or expense entries
 		timesheetEntryID := ""
@@ -125,7 +115,7 @@ func generateInvoiceLines(store *MockDataStore) []*prj.PrjInvoiceLine {
 		isTaxable := i < count*80/100
 
 		lines[i] = &prj.PrjInvoiceLine{
-			LineId:             fmt.Sprintf("pil-%03d", i+1),
+			LineId:             genID("pil", i),
 			InvoiceId:          invoiceID,
 			ProjectId:          projectID,
 			TaskId:             taskID,
@@ -136,10 +126,10 @@ func generateInvoiceLines(store *MockDataStore) []*prj.PrjInvoiceLine {
 			Description:        invoiceDescriptions[i%len(invoiceDescriptions)],
 			Quantity:           quantity,
 			Unit:               unit,
-			UnitPrice:          &erp.Money{Amount: unitPriceAmount, CurrencyCode: "USD"},
-			Amount:             &erp.Money{Amount: amount, CurrencyCode: "USD"},
-			TaxAmount:          &erp.Money{Amount: taxAmount, CurrencyCode: "USD"},
-			TotalAmount:        &erp.Money{Amount: totalAmount, CurrencyCode: "USD"},
+			UnitPrice:          money(unitPriceAmount),
+			Amount:             money(amount),
+			TaxAmount:          money(taxAmount),
+			TotalAmount:        money(totalAmount),
 			LineType:           lineType,
 			IsTaxable:          isTaxable,
 			AuditInfo:          createAuditInfo(),
@@ -161,15 +151,9 @@ func generateRevenueRecognitions(store *MockDataStore) []*prj.PrjRevenueRecognit
 	recognitions := make([]*prj.PrjRevenueRecognition, count)
 
 	for i := 0; i < count; i++ {
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
 
-		invoiceID := ""
-		if len(store.PrjProjectInvoiceIDs) > 0 {
-			invoiceID = store.PrjProjectInvoiceIDs[i%len(store.PrjProjectInvoiceIDs)]
-		}
+		invoiceID := pickRef(store.PrjProjectInvoiceIDs, i)
 
 		recognitionDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 		periodStart := recognitionDate.AddDate(0, 0, -recognitionDate.Day()+1)
@@ -199,15 +183,15 @@ func generateRevenueRecognitions(store *MockDataStore) []*prj.PrjRevenueRecognit
 		}
 
 		recognitions[i] = &prj.PrjRevenueRecognition{
-			RecognitionId:        fmt.Sprintf("prr-%03d", i+1),
+			RecognitionId:        genID("prr", i),
 			ProjectId:            projectID,
 			InvoiceId:            invoiceID,
 			RecognitionDate:      recognitionDate.Unix(),
 			PeriodStart:          periodStart.Unix(),
 			PeriodEnd:            periodEnd.Unix(),
-			RecognizedAmount:     &erp.Money{Amount: recognizedAmount, CurrencyCode: "USD"},
-			DeferredAmount:       &erp.Money{Amount: deferredAmount, CurrencyCode: "USD"},
-			CumulativeRecognized: &erp.Money{Amount: cumulativeRecognized, CurrencyCode: "USD"},
+			RecognizedAmount:     money(recognizedAmount),
+			DeferredAmount:       money(deferredAmount),
+			CumulativeRecognized: money(cumulativeRecognized),
 			Method:               method,
 			PercentComplete:      percentComplete,
 			GlAccount:            glAccount,
@@ -229,10 +213,7 @@ func generateProjectBudgets(store *MockDataStore) []*prj.PrjProjectBudget {
 	budgets := make([]*prj.PrjProjectBudget, count)
 
 	for i := 0; i < count; i++ {
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
 
 		phaseID := ""
 		if i%2 == 0 && len(store.PrjPhaseIDs) > 0 {
@@ -263,16 +244,16 @@ func generateProjectBudgets(store *MockDataStore) []*prj.PrjProjectBudget {
 		}
 
 		budgets[i] = &prj.PrjProjectBudget{
-			BudgetId:        fmt.Sprintf("ppb-%03d", i+1),
+			BudgetId:        genID("ppb", i),
 			ProjectId:       projectID,
 			Name:            budgetNames[i%len(budgetNames)],
 			Description:     fmt.Sprintf("Budget: %s", budgetNames[i%len(budgetNames)]),
 			BudgetType:      budgetTypes[i%len(budgetTypes)],
 			PhaseId:         phaseID,
-			BudgetedAmount:  &erp.Money{Amount: budgetedAmount, CurrencyCode: "USD"},
-			CommittedAmount: &erp.Money{Amount: committedAmount, CurrencyCode: "USD"},
-			ActualAmount:    &erp.Money{Amount: actualAmount, CurrencyCode: "USD"},
-			RemainingAmount: &erp.Money{Amount: remainingAmount, CurrencyCode: "USD"},
+			BudgetedAmount:  money(budgetedAmount),
+			CommittedAmount: money(committedAmount),
+			ActualAmount:    money(actualAmount),
+			RemainingAmount: money(remainingAmount),
 			BudgetedHours:   budgetedHours,
 			ActualHours:     actualHours,
 			RemainingHours:  remainingHours,

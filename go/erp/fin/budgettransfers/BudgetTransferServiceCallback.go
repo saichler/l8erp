@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package budgettransfers
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type BudgetTransferServiceCallback struct{}
-
-func newBudgetTransferServiceCallback() *BudgetTransferServiceCallback {
-	return &BudgetTransferServiceCallback{}
-}
-
-func (this *BudgetTransferServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	budgetTransfer, ok := any.(*fin.BudgetTransfer)
-	if !ok {
-		return nil, false, errors.New("invalid budgetTransfer type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&budgetTransfer.TransferId)
-	}
-	err := validate(budgetTransfer, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BudgetTransferServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBudgetTransferServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("BudgetTransfer",
+		func(e *fin.BudgetTransfer) { common.GenerateID(&e.TransferId) },
+		validate)
 }
 
 func validate(budgetTransfer *fin.BudgetTransfer, vnic ifs.IVNic) error {

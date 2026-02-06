@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package customers
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type CustomerServiceCallback struct{}
-
-func newCustomerServiceCallback() *CustomerServiceCallback {
-	return &CustomerServiceCallback{}
-}
-
-func (this *CustomerServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	customer, ok := any.(*fin.Customer)
-	if !ok {
-		return nil, false, errors.New("invalid customer type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&customer.CustomerId)
-	}
-	err := validate(customer, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CustomerServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCustomerServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Customer",
+		func(e *fin.Customer) { common.GenerateID(&e.CustomerId) },
+		validate)
 }
 
 func validate(customer *fin.Customer, vnic ifs.IVNic) error {

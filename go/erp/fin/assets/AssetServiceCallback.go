@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package assets
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type AssetServiceCallback struct{}
-
-func newAssetServiceCallback() *AssetServiceCallback {
-	return &AssetServiceCallback{}
-}
-
-func (this *AssetServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	asset, ok := any.(*fin.Asset)
-	if !ok {
-		return nil, false, errors.New("invalid asset type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&asset.AssetId)
-	}
-	err := validate(asset, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *AssetServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newAssetServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Asset",
+		func(e *fin.Asset) { common.GenerateID(&e.AssetId) },
+		validate)
 }
 
 func validate(asset *fin.Asset, vnic ifs.IVNic) error {

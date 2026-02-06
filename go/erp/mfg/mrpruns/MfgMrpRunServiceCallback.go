@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package mrpruns
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type MfgMrpRunServiceCallback struct{}
-
-func newMfgMrpRunServiceCallback() *MfgMrpRunServiceCallback {
-	return &MfgMrpRunServiceCallback{}
-}
-
-func (this *MfgMrpRunServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgMrpRun)
-	if !ok {
-		return nil, false, errors.New("invalid MfgMrpRun type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.RunId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgMrpRunServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgMrpRunServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgMrpRun",
+		func(e *mfg.MfgMrpRun) { common.GenerateID(&e.RunId) },
+		validate)
 }
 
 func validate(item *mfg.MfgMrpRun, vnic ifs.IVNic) error {

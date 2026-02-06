@@ -15,38 +15,17 @@ limitations under the License.
 package jobrequisitions
 
 import (
-	"errors"
+	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/departments"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
-	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type JobRequisitionServiceCallback struct {
-}
-
-func newJobRequisitionServiceCallback() *JobRequisitionServiceCallback {
-	return &JobRequisitionServiceCallback{}
-}
-
-func (this *JobRequisitionServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.JobRequisition)
-	if !ok {
-		return nil, false, errors.New("invalid job requisition type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.RequisitionId)
-	}
-	err := validateJobReq(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *JobRequisitionServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newJobRequisitionServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("JobRequisition",
+		func(e *hcm.JobRequisition) { common.GenerateID(&e.RequisitionId) },
+		validateJobReq)
 }
 
 func validateJobReq(entity *hcm.JobRequisition, vnic ifs.IVNic) error {

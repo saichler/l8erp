@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package oppcompetitors
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/crm"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type CrmOppCompetitorServiceCallback struct{}
-
-func newCrmOppCompetitorServiceCallback() *CrmOppCompetitorServiceCallback {
-	return &CrmOppCompetitorServiceCallback{}
-}
-
-func (this *CrmOppCompetitorServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*crm.CrmOppCompetitor)
-	if !ok {
-		return nil, false, errors.New("invalid CrmOppCompetitor type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.CompetitorId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CrmOppCompetitorServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCrmOppCompetitorServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("CrmOppCompetitor",
+		func(e *crm.CrmOppCompetitor) { common.GenerateID(&e.CompetitorId) },
+		validate)
 }
 
 func validate(item *crm.CrmOppCompetitor, vnic ifs.IVNic) error {

@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package inspectionpoints
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type MfgInspectionPointServiceCallback struct{}
-
-func newMfgInspectionPointServiceCallback() *MfgInspectionPointServiceCallback {
-	return &MfgInspectionPointServiceCallback{}
-}
-
-func (this *MfgInspectionPointServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgInspectionPoint)
-	if !ok {
-		return nil, false, errors.New("invalid MfgInspectionPoint type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.PointId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgInspectionPointServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgInspectionPointServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgInspectionPoint",
+		func(e *mfg.MfgInspectionPoint) { common.GenerateID(&e.PointId) },
+		validate)
 }
 
 func validate(item *mfg.MfgInspectionPoint, vnic ifs.IVNic) error {

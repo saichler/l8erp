@@ -5,22 +5,18 @@
 //
 //     http://www.apache.org/licenses/LICENSE-2.0
 //
-// This software is provided "as-is," without warranty. See the License
-// for details.
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 package timesheetentries
 
 import (
-	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
-	"github.com/saichler/l8orm/go/orm/persist"
-	"github.com/saichler/l8orm/go/orm/plugins/postgres"
-	"github.com/saichler/l8srlz/go/serialize/object"
 	"github.com/saichler/l8types/go/ifs"
-	"github.com/saichler/l8types/go/types/l8api"
-	"github.com/saichler/l8types/go/types/l8web"
-	"github.com/saichler/l8utils/go/utils/web"
 )
 
 const (
@@ -29,57 +25,17 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	_, user, pass, _, err := vnic.Resources().Security().Credential(creds, dbname, vnic.Resources())
-	if err != nil {
-		panic(err)
-	}
-	db := common.OpenDBConection(dbname, user, pass)
-	p := postgres.NewPostgres(db, vnic.Resources())
-
-	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newPrjTimesheetEntryServiceCallback())
-	sla.SetServiceItem(&prj.PrjTimesheetEntry{})
-	sla.SetServiceItemList(&prj.PrjTimesheetEntryList{})
-	sla.SetPrimaryKeys("EntryId")
-	sla.SetArgs(p)
-	sla.SetTransactional(true)
-	sla.SetReplication(true)
-	sla.SetReplicationCount(3)
-
-	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&prj.PrjTimesheetEntry{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&prj.PrjTimesheetEntryList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&prj.PrjTimesheetEntry{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&prj.PrjTimesheetEntry{}, ifs.PATCH, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &prj.PrjTimesheetEntryList{})
-	sla.SetWebService(ws)
-
-	vnic.Resources().Services().Activate(sla, vnic)
+	common.ActivateService[prj.PrjTimesheetEntry, prj.PrjTimesheetEntryList](common.ServiceConfig{
+		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "EntryId", Callback: newPrjTimesheetEntryServiceCallback(),
+		Transactional: true,
+	}, creds, dbname, vnic)
 }
 
 func PrjTimesheetEntries(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
-	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
+	return common.ServiceHandler(ServiceName, ServiceArea, vnic)
 }
 
 func PrjTimesheetEntry(entryId string, vnic ifs.IVNic) (*prj.PrjTimesheetEntry, error) {
-	this, ok := PrjTimesheetEntries(vnic)
-	filter := &prj.PrjTimesheetEntry{EntryId: entryId}
-	if ok {
-		resp := this.Get(object.New(nil, filter), vnic)
-		if resp.Error() != nil {
-			return nil, resp.Error()
-		}
-		if resp.Element() != nil {
-			return resp.Element().(*prj.PrjTimesheetEntry), nil
-		}
-		return nil, nil
-	}
-	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
-	if resp.Error() != nil {
-		return nil, resp.Error()
-	}
-	if resp.Element() != nil {
-		return resp.Element().(*prj.PrjTimesheetEntry), nil
-	}
-	return nil, nil
+	return common.GetEntity(ServiceName, ServiceArea, &prj.PrjTimesheetEntry{EntryId: entryId}, vnic)
 }

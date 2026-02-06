@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package capacityplans
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/prj"
 )
 
-type PrjCapacityPlanServiceCallback struct{}
-
-func newPrjCapacityPlanServiceCallback() *PrjCapacityPlanServiceCallback {
-	return &PrjCapacityPlanServiceCallback{}
-}
-
-func (this *PrjCapacityPlanServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*prj.PrjCapacityPlan)
-	if !ok {
-		return nil, false, errors.New("invalid PrjCapacityPlan type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.PlanId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PrjCapacityPlanServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPrjCapacityPlanServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("PrjCapacityPlan",
+		func(e *prj.PrjCapacityPlan) { common.GenerateID(&e.PlanId) },
+		validate)
 }
 
 func validate(item *prj.PrjCapacityPlan, vnic ifs.IVNic) error {

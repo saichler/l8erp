@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package taxcodes
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type TaxCodeServiceCallback struct{}
-
-func newTaxCodeServiceCallback() *TaxCodeServiceCallback {
-	return &TaxCodeServiceCallback{}
-}
-
-func (this *TaxCodeServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	taxCode, ok := any.(*fin.TaxCode)
-	if !ok {
-		return nil, false, errors.New("invalid taxCode type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&taxCode.TaxCodeId)
-	}
-	err := validate(taxCode, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *TaxCodeServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newTaxCodeServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("TaxCode",
+		func(e *fin.TaxCode) { common.GenerateID(&e.TaxCodeId) },
+		validate)
 }
 
 func validate(taxCode *fin.TaxCode, vnic ifs.IVNic) error {

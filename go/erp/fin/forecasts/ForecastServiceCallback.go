@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package forecasts
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type ForecastServiceCallback struct{}
-
-func newForecastServiceCallback() *ForecastServiceCallback {
-	return &ForecastServiceCallback{}
-}
-
-func (this *ForecastServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	forecast, ok := any.(*fin.Forecast)
-	if !ok {
-		return nil, false, errors.New("invalid forecast type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&forecast.ForecastId)
-	}
-	err := validate(forecast, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *ForecastServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newForecastServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Forecast",
+		func(e *fin.Forecast) { common.GenerateID(&e.ForecastId) },
+		validate)
 }
 
 func validate(forecast *fin.Forecast, vnic ifs.IVNic) error {

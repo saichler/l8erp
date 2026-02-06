@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package shippingdocs
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/sales"
 )
 
-type ShippingDocServiceCallback struct{}
-
-func newShippingDocServiceCallback() *ShippingDocServiceCallback {
-	return &ShippingDocServiceCallback{}
-}
-
-func (this *ShippingDocServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*sales.SalesShippingDoc)
-	if !ok {
-		return nil, false, errors.New("invalid shipping doc type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.DocId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *ShippingDocServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newShippingDocServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SalesShippingDoc",
+		func(e *sales.SalesShippingDoc) { common.GenerateID(&e.DocId) },
+		validate)
 }
 
 func validate(item *sales.SalesShippingDoc, vnic ifs.IVNic) error {

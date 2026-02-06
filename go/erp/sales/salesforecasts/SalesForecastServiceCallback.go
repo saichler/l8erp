@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package salesforecasts
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/sales"
 )
 
-type SalesForecastServiceCallback struct{}
-
-func newSalesForecastServiceCallback() *SalesForecastServiceCallback {
-	return &SalesForecastServiceCallback{}
-}
-
-func (this *SalesForecastServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*sales.SalesForecast)
-	if !ok {
-		return nil, false, errors.New("invalid sales forecast type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ForecastId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *SalesForecastServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newSalesForecastServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SalesForecast",
+		func(e *sales.SalesForecast) { common.GenerateID(&e.ForecastId) },
+		validate)
 }
 
 func validate(item *sales.SalesForecast, vnic ifs.IVNic) error {

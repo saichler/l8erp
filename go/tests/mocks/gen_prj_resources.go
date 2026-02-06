@@ -25,7 +25,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -37,16 +36,10 @@ func generateResourcePools(store *MockDataStore) []*prj.PrjResourcePool {
 		name := prjResourcePoolNames[i%len(prjResourcePoolNames)]
 
 		// Manager assignment
-		managerID := ""
-		if len(store.ManagerIDs) > 0 {
-			managerID = store.ManagerIDs[i%len(store.ManagerIDs)]
-		}
+		managerID := pickRef(store.ManagerIDs, i)
 
 		// Department assignment
-		departmentID := ""
-		if len(store.DepartmentIDs) > 0 {
-			departmentID = store.DepartmentIDs[i%len(store.DepartmentIDs)]
-		}
+		departmentID := pickRef(store.DepartmentIDs, i)
 
 		// IsActive: 90% active, 10% inactive
 		isActive := i < 9
@@ -55,7 +48,7 @@ func generateResourcePools(store *MockDataStore) []*prj.PrjResourcePool {
 		totalCapacityHours := float64(rand.Intn(241) + 160)
 
 		pools[i] = &prj.PrjResourcePool{
-			PoolId:             fmt.Sprintf("pool-%03d", i+1),
+			PoolId:             genID("pool", i),
 			Name:               name,
 			Description:        fmt.Sprintf("%s resource pool for project assignments", name),
 			ManagerId:          managerID,
@@ -104,10 +97,7 @@ func generateResources(store *MockDataStore) []*prj.PrjResource {
 		}
 
 		// Pool assignment
-		poolID := ""
-		if len(store.PrjResourcePoolIDs) > 0 {
-			poolID = store.PrjResourcePoolIDs[i%len(store.PrjResourcePoolIDs)]
-		}
+		poolID := pickRef(store.PrjResourcePoolIDs, i)
 
 		// Employee assignment (only for EMPLOYEE type)
 		employeeID := ""
@@ -146,14 +136,14 @@ func generateResources(store *MockDataStore) []*prj.PrjResource {
 		isActive := i < 22
 
 		resources[i] = &prj.PrjResource{
-			ResourceId:           fmt.Sprintf("res-%03d", i+1),
+			ResourceId:           genID("res", i),
 			Name:                 name,
 			EmployeeId:           employeeID,
 			PoolId:               poolID,
 			ResourceType:         resourceType,
 			JobTitle:             jobTitles[i%len(jobTitles)],
-			HourlyCost:           &erp.Money{Amount: hourlyCost, CurrencyCode: "USD"},
-			BillingRate:          &erp.Money{Amount: billingRate, CurrencyCode: "USD"},
+			HourlyCost:           money(hourlyCost),
+			BillingRate:          money(billingRate),
 			AvailabilityPercent:  availabilityPercent,
 			CapacityHoursPerWeek: capacityHoursPerWeek,
 			AvailableFrom:        availableFrom.Unix(),
@@ -178,10 +168,7 @@ func generateResourceSkills(store *MockDataStore) []*prj.PrjResourceSkill {
 
 	for i := 0; i < 50; i++ {
 		// Resource assignment
-		resourceID := ""
-		if len(store.PrjResourceIDs) > 0 {
-			resourceID = store.PrjResourceIDs[i%len(store.PrjResourceIDs)]
-		}
+		resourceID := pickRef(store.PrjResourceIDs, i)
 
 		// Skill name from data array
 		skillName := prjSkillNames[i%len(prjSkillNames)]
@@ -214,7 +201,7 @@ func generateResourceSkills(store *MockDataStore) []*prj.PrjResourceSkill {
 		}
 
 		skills[i] = &prj.PrjResourceSkill{
-			SkillId:             fmt.Sprintf("rskill-%03d", i+1),
+			SkillId:             genID("rskill", i),
 			ResourceId:          resourceID,
 			SkillName:           skillName,
 			SkillCategory:       skillCategories[i%len(skillCategories)],
@@ -246,10 +233,7 @@ func generatePrjCapacityPlans(store *MockDataStore) []*prj.PrjCapacityPlan {
 
 	for i := 0; i < 15; i++ {
 		// Pool assignment
-		poolID := ""
-		if len(store.PrjResourcePoolIDs) > 0 {
-			poolID = store.PrjResourcePoolIDs[i%len(store.PrjResourcePoolIDs)]
-		}
+		poolID := pickRef(store.PrjResourcePoolIDs, i)
 
 		// Period dates: staggered quarterly periods
 		quarter := (i % 4) + 1
@@ -277,7 +261,7 @@ func generatePrjCapacityPlans(store *MockDataStore) []*prj.PrjCapacityPlan {
 		isActive := i < 13
 
 		plans[i] = &prj.PrjCapacityPlan{
-			PlanId:             fmt.Sprintf("cplan-%03d", i+1),
+			PlanId:             genID("cplan", i),
 			Name:               planNames[i%len(planNames)],
 			Description:        fmt.Sprintf("Capacity planning for %s", planNames[i%len(planNames)]),
 			PoolId:             poolID,

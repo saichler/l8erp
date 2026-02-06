@@ -15,36 +15,15 @@ limitations under the License.
 package jobfamilies
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-type JobFamilyServiceCallback struct {
-}
-
-func newJobFamilyServiceCallback() *JobFamilyServiceCallback {
-	return &JobFamilyServiceCallback{}
-}
-
-func (this *JobFamilyServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.JobFamily)
-	if !ok {
-		return nil, false, errors.New("invalid job family type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.JobFamilyId)
-	}
-	err := validateJobFam(entity)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *JobFamilyServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newJobFamilyServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("JobFamily",
+		func(e *hcm.JobFamily) { common.GenerateID(&e.JobFamilyId) },
+		nil)
 }
 
 func validateJobFam(entity *hcm.JobFamily) error {

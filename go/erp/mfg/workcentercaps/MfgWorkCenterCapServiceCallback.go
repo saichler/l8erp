@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package workcentercaps
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
+	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-type MfgWorkCenterCapServiceCallback struct{}
-
-func newMfgWorkCenterCapServiceCallback() *MfgWorkCenterCapServiceCallback {
-	return &MfgWorkCenterCapServiceCallback{}
-}
-
-func (this *MfgWorkCenterCapServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgWorkCenterCap)
-	if !ok {
-		return nil, false, errors.New("invalid MfgWorkCenterCap type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.CapacityId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgWorkCenterCapServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgWorkCenterCapServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgWorkCenterCap",
+		func(e *mfg.MfgWorkCenterCap) { common.GenerateID(&e.CapacityId) },
+		validate)
 }
 
 func validate(item *mfg.MfgWorkCenterCap, vnic ifs.IVNic) error {

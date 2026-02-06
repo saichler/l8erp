@@ -15,37 +15,16 @@ limitations under the License.
 package marketbenchmarks
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/jobs"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type MarketBenchmarkServiceCallback struct {
-}
-
-func newMarketBenchmarkServiceCallback() *MarketBenchmarkServiceCallback {
-	return &MarketBenchmarkServiceCallback{}
-}
-
-func (this *MarketBenchmarkServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.MarketBenchmark)
-	if !ok {
-		return nil, false, errors.New("invalid market benchmark type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.BenchmarkId)
-	}
-	err := validateMktBench(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MarketBenchmarkServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMarketBenchmarkServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MarketBenchmark",
+		func(e *hcm.MarketBenchmark) { common.GenerateID(&e.BenchmarkId) },
+		validateMktBench)
 }
 
 func validateMktBench(entity *hcm.MarketBenchmark, vnic ifs.IVNic) error {

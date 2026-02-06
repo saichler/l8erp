@@ -15,7 +15,6 @@ limitations under the License.
 package main
 
 import (
-	"fmt"
 
 	"github.com/saichler/l8erp/go/types/hcm"
 )
@@ -23,257 +22,142 @@ import (
 // Phase 5: Transaction & Additional Objects
 func generatePhase5(client *HCMClient, store *MockDataStore) error {
 	// PayrollRun
-	fmt.Printf("  Creating Payroll Runs...")
 	payrollRuns := generatePayrollRuns(store)
-	if err := client.post("/erp/30/PayRun", &hcm.PayrollRunList{List: payrollRuns}); err != nil {
-		return fmt.Errorf("payroll runs: %w", err)
+	if err := runOp(client, "Payroll Runs", "/erp/30/PayRun", &hcm.PayrollRunList{List: payrollRuns}, extractIDs(payrollRuns, func(e *hcm.PayrollRun) string { return e.PayrollRunId }), &store.PayrollRunIDs); err != nil {
+		return err
 	}
-	for _, pr := range payrollRuns {
-		store.PayrollRunIDs = append(store.PayrollRunIDs, pr.PayrollRunId)
-	}
-	fmt.Printf(" %d created\n", len(payrollRuns))
 
 	// Payslip
-	fmt.Printf("  Creating Payslips...")
 	payslips := generatePayslips(store)
-	if err := client.post("/erp/30/Payslip", &hcm.PayslipList{List: payslips}); err != nil {
-		return fmt.Errorf("payslips: %w", err)
+	if err := runOp(client, "Payslips", "/erp/30/Payslip", &hcm.PayslipList{List: payslips}, extractIDs(payslips, func(e *hcm.Payslip) string { return e.PayslipId }), &store.PayslipIDs); err != nil {
+		return err
 	}
-	for _, ps := range payslips {
-		store.PayslipIDs = append(store.PayslipIDs, ps.PayslipId)
-	}
-	fmt.Printf(" %d created\n", len(payslips))
 
 	// TaxWithholding
-	fmt.Printf("  Creating Tax Withholdings...")
 	taxWithholdings := generateTaxWithholdings(store)
-	if err := client.post("/erp/30/TaxWith", &hcm.TaxWithholdingList{List: taxWithholdings}); err != nil {
-		return fmt.Errorf("tax withholdings: %w", err)
+	if err := runOp(client, "Tax Withholdings", "/erp/30/TaxWith", &hcm.TaxWithholdingList{List: taxWithholdings}, extractIDs(taxWithholdings, func(e *hcm.TaxWithholding) string { return e.WithholdingId }), &store.TaxWithholdingIDs); err != nil {
+		return err
 	}
-	for _, tw := range taxWithholdings {
-		store.TaxWithholdingIDs = append(store.TaxWithholdingIDs, tw.WithholdingId)
-	}
-	fmt.Printf(" %d created\n", len(taxWithholdings))
 
 	// DirectDeposit
-	fmt.Printf("  Creating Direct Deposits...")
 	directDeposits := generateDirectDeposits(store)
-	if err := client.post("/erp/30/DirDep", &hcm.DirectDepositList{List: directDeposits}); err != nil {
-		return fmt.Errorf("direct deposits: %w", err)
+	if err := runOp(client, "Direct Deposits", "/erp/30/DirDep", &hcm.DirectDepositList{List: directDeposits}, extractIDs(directDeposits, func(e *hcm.DirectDeposit) string { return e.DirectDepositId }), &store.DirectDepositIDs); err != nil {
+		return err
 	}
-	for _, dd := range directDeposits {
-		store.DirectDepositIDs = append(store.DirectDepositIDs, dd.DirectDepositId)
-	}
-	fmt.Printf(" %d created\n", len(directDeposits))
 
 	// Garnishment (only a few employees)
-	fmt.Printf("  Creating Garnishments...")
 	garnishments := generateGarnishments(store)
-	if err := client.post("/erp/30/Garnish", &hcm.GarnishmentList{List: garnishments}); err != nil {
-		return fmt.Errorf("garnishments: %w", err)
+	if err := runOp(client, "Garnishments", "/erp/30/Garnish", &hcm.GarnishmentList{List: garnishments}, extractIDs(garnishments, func(e *hcm.Garnishment) string { return e.GarnishmentId }), &store.GarnishmentIDs); err != nil {
+		return err
 	}
-	for _, g := range garnishments {
-		store.GarnishmentIDs = append(store.GarnishmentIDs, g.GarnishmentId)
-	}
-	fmt.Printf(" %d created\n", len(garnishments))
 
 	// YearEndDocument
-	fmt.Printf("  Creating Year-End Documents...")
 	yearEndDocs := generateYearEndDocuments(store)
-	if err := client.post("/erp/30/YrEndDoc", &hcm.YearEndDocumentList{List: yearEndDocs}); err != nil {
-		return fmt.Errorf("year-end documents: %w", err)
+	if err := runOp(client, "Year-End Documents", "/erp/30/YrEndDoc", &hcm.YearEndDocumentList{List: yearEndDocs}, extractIDs(yearEndDocs, func(e *hcm.YearEndDocument) string { return e.DocumentId }), &store.YearEndDocumentIDs); err != nil {
+		return err
 	}
-	for _, yed := range yearEndDocs {
-		store.YearEndDocumentIDs = append(store.YearEndDocumentIDs, yed.DocumentId)
-	}
-	fmt.Printf(" %d created\n", len(yearEndDocs))
 
 	// LeaveRequest
-	fmt.Printf("  Creating Leave Requests...")
 	leaveRequests := generateLeaveRequests(store)
-	if err := client.post("/erp/30/LeaveReq", &hcm.LeaveRequestList{List: leaveRequests}); err != nil {
-		return fmt.Errorf("leave requests: %w", err)
+	if err := runOp(client, "Leave Requests", "/erp/30/LeaveReq", &hcm.LeaveRequestList{List: leaveRequests}, extractIDs(leaveRequests, func(e *hcm.LeaveRequest) string { return e.RequestId }), &store.LeaveRequestIDs); err != nil {
+		return err
 	}
-	for _, lr := range leaveRequests {
-		store.LeaveRequestIDs = append(store.LeaveRequestIDs, lr.RequestId)
-	}
-	fmt.Printf(" %d created\n", len(leaveRequests))
 
 	// Schedule
-	fmt.Printf("  Creating Schedules...")
 	schedules := generateSchedules(store)
-	if err := client.post("/erp/30/Schedule", &hcm.ScheduleList{List: schedules}); err != nil {
-		return fmt.Errorf("schedules: %w", err)
+	if err := runOp(client, "Schedules", "/erp/30/Schedule", &hcm.ScheduleList{List: schedules}, extractIDs(schedules, func(e *hcm.Schedule) string { return e.ScheduleId }), &store.ScheduleIDs); err != nil {
+		return err
 	}
-	for _, s := range schedules {
-		store.ScheduleIDs = append(store.ScheduleIDs, s.ScheduleId)
-	}
-	fmt.Printf(" %d created\n", len(schedules))
 
 	// Absence
-	fmt.Printf("  Creating Absences...")
 	absences := generateAbsences(store)
-	if err := client.post("/erp/30/Absence", &hcm.AbsenceList{List: absences}); err != nil {
-		return fmt.Errorf("absences: %w", err)
+	if err := runOp(client, "Absences", "/erp/30/Absence", &hcm.AbsenceList{List: absences}, extractIDs(absences, func(e *hcm.Absence) string { return e.AbsenceId }), &store.AbsenceIDs); err != nil {
+		return err
 	}
-	for _, a := range absences {
-		store.AbsenceIDs = append(store.AbsenceIDs, a.AbsenceId)
-	}
-	fmt.Printf(" %d created\n", len(absences))
 
 	// Dependent
-	fmt.Printf("  Creating Dependents...")
 	dependents := generateDependents(store)
-	if err := client.post("/erp/30/Dependent", &hcm.DependentList{List: dependents}); err != nil {
-		return fmt.Errorf("dependents: %w", err)
+	if err := runOp(client, "Dependents", "/erp/30/Dependent", &hcm.DependentList{List: dependents}, extractIDs(dependents, func(e *hcm.Dependent) string { return e.DependentId }), &store.DependentIDs); err != nil {
+		return err
 	}
-	for _, d := range dependents {
-		store.DependentIDs = append(store.DependentIDs, d.DependentId)
-	}
-	fmt.Printf(" %d created\n", len(dependents))
 
 	// LifeEvent
-	fmt.Printf("  Creating Life Events...")
 	lifeEvents := generateLifeEvents(store)
-	if err := client.post("/erp/30/LifeEvent", &hcm.LifeEventList{List: lifeEvents}); err != nil {
-		return fmt.Errorf("life events: %w", err)
+	if err := runOp(client, "Life Events", "/erp/30/LifeEvent", &hcm.LifeEventList{List: lifeEvents}, extractIDs(lifeEvents, func(e *hcm.LifeEvent) string { return e.LifeEventId }), &store.LifeEventIDs); err != nil {
+		return err
 	}
-	for _, le := range lifeEvents {
-		store.LifeEventIDs = append(store.LifeEventIDs, le.LifeEventId)
-	}
-	fmt.Printf(" %d created\n", len(lifeEvents))
 
 	// COBRAEvent
-	fmt.Printf("  Creating COBRA Events...")
 	cobraEvents := generateCOBRAEvents(store)
-	if err := client.post("/erp/30/COBRAEvt", &hcm.COBRAEventList{List: cobraEvents}); err != nil {
-		return fmt.Errorf("cobra events: %w", err)
+	if err := runOp(client, "COBRA Events", "/erp/30/COBRAEvt", &hcm.COBRAEventList{List: cobraEvents}, extractIDs(cobraEvents, func(e *hcm.COBRAEvent) string { return e.CobraEventId }), &store.COBRAEventIDs); err != nil {
+		return err
 	}
-	for _, ce := range cobraEvents {
-		store.COBRAEventIDs = append(store.COBRAEventIDs, ce.CobraEventId)
-	}
-	fmt.Printf(" %d created\n", len(cobraEvents))
 
 	// ComplianceRecord
-	fmt.Printf("  Creating Compliance Records...")
 	complianceRecords := generateComplianceRecords(store)
-	if err := client.post("/erp/30/CompRec", &hcm.ComplianceRecordList{List: complianceRecords}); err != nil {
-		return fmt.Errorf("compliance records: %w", err)
+	if err := runOp(client, "Compliance Records", "/erp/30/CompRec", &hcm.ComplianceRecordList{List: complianceRecords}, extractIDs(complianceRecords, func(e *hcm.ComplianceRecord) string { return e.RecordId }), &store.ComplianceRecordIDs); err != nil {
+		return err
 	}
-	for _, cr := range complianceRecords {
-		store.ComplianceRecordIDs = append(store.ComplianceRecordIDs, cr.RecordId)
-	}
-	fmt.Printf(" %d created\n", len(complianceRecords))
 
 	// MeritIncrease
-	fmt.Printf("  Creating Merit Increases...")
 	meritIncreases := generateMeritIncreases(store)
-	if err := client.post("/erp/30/MeritInc", &hcm.MeritIncreaseList{List: meritIncreases}); err != nil {
-		return fmt.Errorf("merit increases: %w", err)
+	if err := runOp(client, "Merit Increases", "/erp/30/MeritInc", &hcm.MeritIncreaseList{List: meritIncreases}, extractIDs(meritIncreases, func(e *hcm.MeritIncrease) string { return e.IncreaseId }), &store.MeritIncreaseIDs); err != nil {
+		return err
 	}
-	for _, mi := range meritIncreases {
-		store.MeritIncreaseIDs = append(store.MeritIncreaseIDs, mi.IncreaseId)
-	}
-	fmt.Printf(" %d created\n", len(meritIncreases))
 
 	// BonusPayment
-	fmt.Printf("  Creating Bonus Payments...")
 	bonusPayments := generateBonusPayments(store)
-	if err := client.post("/erp/30/BonusPay", &hcm.BonusPaymentList{List: bonusPayments}); err != nil {
-		return fmt.Errorf("bonus payments: %w", err)
+	if err := runOp(client, "Bonus Payments", "/erp/30/BonusPay", &hcm.BonusPaymentList{List: bonusPayments}, extractIDs(bonusPayments, func(e *hcm.BonusPayment) string { return e.PaymentId }), &store.BonusPaymentIDs); err != nil {
+		return err
 	}
-	for _, bp := range bonusPayments {
-		store.BonusPaymentIDs = append(store.BonusPaymentIDs, bp.PaymentId)
-	}
-	fmt.Printf(" %d created\n", len(bonusPayments))
 
 	// EquityGrant
-	fmt.Printf("  Creating Equity Grants...")
 	equityGrants := generateEquityGrants(store)
-	if err := client.post("/erp/30/EqGrant", &hcm.EquityGrantList{List: equityGrants}); err != nil {
-		return fmt.Errorf("equity grants: %w", err)
+	if err := runOp(client, "Equity Grants", "/erp/30/EqGrant", &hcm.EquityGrantList{List: equityGrants}, extractIDs(equityGrants, func(e *hcm.EquityGrant) string { return e.GrantId }), &store.EquityGrantIDs); err != nil {
+		return err
 	}
-	for _, eg := range equityGrants {
-		store.EquityGrantIDs = append(store.EquityGrantIDs, eg.GrantId)
-	}
-	fmt.Printf(" %d created\n", len(equityGrants))
 
 	// CompensationStatement
-	fmt.Printf("  Creating Compensation Statements...")
 	compStatements := generateCompensationStatements(store)
-	if err := client.post("/erp/30/CompStmt", &hcm.CompensationStatementList{List: compStatements}); err != nil {
-		return fmt.Errorf("compensation statements: %w", err)
+	if err := runOp(client, "Compensation Statements", "/erp/30/CompStmt", &hcm.CompensationStatementList{List: compStatements}, extractIDs(compStatements, func(e *hcm.CompensationStatement) string { return e.StatementId }), &store.CompStatementIDs); err != nil {
+		return err
 	}
-	for _, cs := range compStatements {
-		store.CompStatementIDs = append(store.CompStatementIDs, cs.StatementId)
-	}
-	fmt.Printf(" %d created\n", len(compStatements))
 
 	// MarketBenchmark
-	fmt.Printf("  Creating Market Benchmarks...")
 	benchmarks := generateMarketBenchmarks(store)
-	if err := client.post("/erp/30/MktBench", &hcm.MarketBenchmarkList{List: benchmarks}); err != nil {
-		return fmt.Errorf("market benchmarks: %w", err)
+	if err := runOp(client, "Market Benchmarks", "/erp/30/MktBench", &hcm.MarketBenchmarkList{List: benchmarks}, extractIDs(benchmarks, func(e *hcm.MarketBenchmark) string { return e.BenchmarkId }), &store.MarketBenchmarkIDs); err != nil {
+		return err
 	}
-	for _, mb := range benchmarks {
-		store.MarketBenchmarkIDs = append(store.MarketBenchmarkIDs, mb.BenchmarkId)
-	}
-	fmt.Printf(" %d created\n", len(benchmarks))
 
 	// CourseEnrollment
-	fmt.Printf("  Creating Course Enrollments...")
 	courseEnrollments := generateCourseEnrollments(store)
-	if err := client.post("/erp/30/CrsEnrol", &hcm.CourseEnrollmentList{List: courseEnrollments}); err != nil {
-		return fmt.Errorf("course enrollments: %w", err)
+	if err := runOp(client, "Course Enrollments", "/erp/30/CrsEnrol", &hcm.CourseEnrollmentList{List: courseEnrollments}, extractIDs(courseEnrollments, func(e *hcm.CourseEnrollment) string { return e.EnrollmentId }), &store.CourseEnrollmentIDs); err != nil {
+		return err
 	}
-	for _, ce := range courseEnrollments {
-		store.CourseEnrollmentIDs = append(store.CourseEnrollmentIDs, ce.EnrollmentId)
-	}
-	fmt.Printf(" %d created\n", len(courseEnrollments))
 
 	// EmployeeCertification
-	fmt.Printf("  Creating Employee Certifications...")
 	empCertifications := generateEmployeeCertifications(store)
-	if err := client.post("/erp/30/EmpCert", &hcm.EmployeeCertificationList{List: empCertifications}); err != nil {
-		return fmt.Errorf("employee certifications: %w", err)
+	if err := runOp(client, "Employee Certifications", "/erp/30/EmpCert", &hcm.EmployeeCertificationList{List: empCertifications}, extractIDs(empCertifications, func(e *hcm.EmployeeCertification) string { return e.EmployeeCertificationId }), &store.EmpCertificationIDs); err != nil {
+		return err
 	}
-	for _, ec := range empCertifications {
-		store.EmpCertificationIDs = append(store.EmpCertificationIDs, ec.EmployeeCertificationId)
-	}
-	fmt.Printf(" %d created\n", len(empCertifications))
 
 	// TrainingRecord
-	fmt.Printf("  Creating Training Records...")
 	trainingRecords := generateTrainingRecords(store)
-	if err := client.post("/erp/30/TrnRec", &hcm.TrainingRecordList{List: trainingRecords}); err != nil {
-		return fmt.Errorf("training records: %w", err)
+	if err := runOp(client, "Training Records", "/erp/30/TrnRec", &hcm.TrainingRecordList{List: trainingRecords}, extractIDs(trainingRecords, func(e *hcm.TrainingRecord) string { return e.RecordId }), &store.TrainingRecordIDs); err != nil {
+		return err
 	}
-	for _, tr := range trainingRecords {
-		store.TrainingRecordIDs = append(store.TrainingRecordIDs, tr.RecordId)
-	}
-	fmt.Printf(" %d created\n", len(trainingRecords))
 
 	// Feedback
-	fmt.Printf("  Creating Feedback...")
 	feedback := generateFeedback(store)
-	if err := client.post("/erp/30/Feedback", &hcm.FeedbackList{List: feedback}); err != nil {
-		return fmt.Errorf("feedback: %w", err)
+	if err := runOp(client, "Feedback", "/erp/30/Feedback", &hcm.FeedbackList{List: feedback}, extractIDs(feedback, func(e *hcm.Feedback) string { return e.FeedbackId }), &store.FeedbackIDs); err != nil {
+		return err
 	}
-	for _, f := range feedback {
-		store.FeedbackIDs = append(store.FeedbackIDs, f.FeedbackId)
-	}
-	fmt.Printf(" %d created\n", len(feedback))
 
 	// OnboardingTask
-	fmt.Printf("  Creating Onboarding Tasks...")
 	onboardingTasks := generateOnboardingTasks(store)
-	if err := client.post("/erp/30/OnbrdTsk", &hcm.OnboardingTaskList{List: onboardingTasks}); err != nil {
-		return fmt.Errorf("onboarding tasks: %w", err)
+	if err := runOp(client, "Onboarding Tasks", "/erp/30/OnbrdTsk", &hcm.OnboardingTaskList{List: onboardingTasks}, extractIDs(onboardingTasks, func(e *hcm.OnboardingTask) string { return e.TaskId }), &store.OnboardingTaskIDs); err != nil {
+		return err
 	}
-	for _, ot := range onboardingTasks {
-		store.OnboardingTaskIDs = append(store.OnboardingTaskIDs, ot.TaskId)
-	}
-	fmt.Printf(" %d created\n", len(onboardingTasks))
 
 	return nil
 }
@@ -281,59 +165,34 @@ func generatePhase5(client *HCMClient, store *MockDataStore) error {
 // Phase 6: Talent Acquisition
 func generatePhase6(client *HCMClient, store *MockDataStore) error {
 	// JobRequisition
-	fmt.Printf("  Creating Job Requisitions...")
 	requisitions := generateJobRequisitions(store)
-	if err := client.post("/erp/30/JobReq", &hcm.JobRequisitionList{List: requisitions}); err != nil {
-		return fmt.Errorf("job requisitions: %w", err)
+	if err := runOp(client, "Job Requisitions", "/erp/30/JobReq", &hcm.JobRequisitionList{List: requisitions}, extractIDs(requisitions, func(e *hcm.JobRequisition) string { return e.RequisitionId }), &store.JobRequisitionIDs); err != nil {
+		return err
 	}
-	for _, jr := range requisitions {
-		store.JobRequisitionIDs = append(store.JobRequisitionIDs, jr.RequisitionId)
-	}
-	fmt.Printf(" %d created\n", len(requisitions))
 
 	// Applicant
-	fmt.Printf("  Creating Applicants...")
 	applicants := generateApplicants(store)
-	if err := client.post("/erp/30/Applicant", &hcm.ApplicantList{List: applicants}); err != nil {
-		return fmt.Errorf("applicants: %w", err)
+	if err := runOp(client, "Applicants", "/erp/30/Applicant", &hcm.ApplicantList{List: applicants}, extractIDs(applicants, func(e *hcm.Applicant) string { return e.ApplicantId }), &store.ApplicantIDs); err != nil {
+		return err
 	}
-	for _, a := range applicants {
-		store.ApplicantIDs = append(store.ApplicantIDs, a.ApplicantId)
-	}
-	fmt.Printf(" %d created\n", len(applicants))
 
 	// Application
-	fmt.Printf("  Creating Applications...")
 	applications := generateApplications(store)
-	if err := client.post("/erp/30/Applctn", &hcm.ApplicationList{List: applications}); err != nil {
-		return fmt.Errorf("applications: %w", err)
+	if err := runOp(client, "Applications", "/erp/30/Applctn", &hcm.ApplicationList{List: applications}, extractIDs(applications, func(e *hcm.Application) string { return e.ApplicationId }), &store.ApplicationIDs); err != nil {
+		return err
 	}
-	for _, a := range applications {
-		store.ApplicationIDs = append(store.ApplicationIDs, a.ApplicationId)
-	}
-	fmt.Printf(" %d created\n", len(applications))
 
 	// SuccessionPlan
-	fmt.Printf("  Creating Succession Plans...")
 	successionPlans := generateSuccessionPlans(store)
-	if err := client.post("/erp/30/SuccPlan", &hcm.SuccessionPlanList{List: successionPlans}); err != nil {
-		return fmt.Errorf("succession plans: %w", err)
+	if err := runOp(client, "Succession Plans", "/erp/30/SuccPlan", &hcm.SuccessionPlanList{List: successionPlans}, extractIDs(successionPlans, func(e *hcm.SuccessionPlan) string { return e.PlanId }), &store.SuccessionPlanIDs); err != nil {
+		return err
 	}
-	for _, sp := range successionPlans {
-		store.SuccessionPlanIDs = append(store.SuccessionPlanIDs, sp.PlanId)
-	}
-	fmt.Printf(" %d created\n", len(successionPlans))
 
 	// CareerPath
-	fmt.Printf("  Creating Career Paths...")
 	careerPaths := generateCareerPaths(store)
-	if err := client.post("/erp/30/CarPath", &hcm.CareerPathList{List: careerPaths}); err != nil {
-		return fmt.Errorf("career paths: %w", err)
+	if err := runOp(client, "Career Paths", "/erp/30/CarPath", &hcm.CareerPathList{List: careerPaths}, extractIDs(careerPaths, func(e *hcm.CareerPath) string { return e.CareerPathId }), &store.CareerPathIDs); err != nil {
+		return err
 	}
-	for _, cp := range careerPaths {
-		store.CareerPathIDs = append(store.CareerPathIDs, cp.CareerPathId)
-	}
-	fmt.Printf(" %d created\n", len(careerPaths))
 
 	return nil
 }

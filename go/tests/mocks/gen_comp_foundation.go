@@ -27,7 +27,6 @@ import (
 	"time"
 
 	"github.com/saichler/l8erp/go/types/comp"
-	"github.com/saichler/l8erp/go/types/erp"
 )
 
 // generateCompRegulations creates compliance regulation records (foundation - no store needed)
@@ -53,7 +52,7 @@ func generateCompRegulations() []*comp.CompRegulation {
 		sunsetDate := effectiveDate.AddDate(5, 0, 0) // 5 years validity
 
 		regulations[i] = &comp.CompRegulation{
-			RegulationId:         fmt.Sprintf("creg-%03d", i+1),
+			RegulationId:         genID("creg", i),
 			Code:                 fmt.Sprintf("REG-%04d", 1000+i+1),
 			Name:                 compRegulationNames[i],
 			Description:          fmt.Sprintf("Compliance requirements for %s framework", compRegulationNames[i]),
@@ -63,7 +62,7 @@ func generateCompRegulations() []*comp.CompRegulation {
 			EffectiveDate:        effectiveDate.Unix(),
 			SunsetDate:           sunsetDate.Unix(),
 			Version:              fmt.Sprintf("%d.%d", rand.Intn(3)+1, rand.Intn(5)),
-			SourceUrl:            fmt.Sprintf("https://regulations.example.com/%s", fmt.Sprintf("reg-%03d", i+1)),
+			SourceUrl:            fmt.Sprintf("https://regulations.example.com/%s", genID("reg", i)),
 			IsActive:             i < 8, // First 8 are active
 			ApplicableIndustries: compIndustries[:rand.Intn(4)+2],
 			ApplicableRegions:    compJurisdictions[:rand.Intn(3)+1],
@@ -88,19 +87,13 @@ func generateCompControls(store *MockDataStore) []*comp.CompControl {
 
 	for i := 0; i < count; i++ {
 		// Assign owner
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		// Assign department
-		departmentID := ""
-		if len(store.DepartmentIDs) > 0 {
-			departmentID = store.DepartmentIDs[i%len(store.DepartmentIDs)]
-		}
+		departmentID := pickRef(store.DepartmentIDs, i)
 
 		controls[i] = &comp.CompControl{
-			ControlId:         fmt.Sprintf("cctl-%03d", i+1),
+			ControlId:         genID("cctl", i),
 			Code:              fmt.Sprintf("CTL-%04d", 2000+i+1),
 			Name:              compControlNames[i],
 			Description:       fmt.Sprintf("Internal control for %s", compControlNames[i]),
@@ -128,20 +121,11 @@ func generateCompPolicyDocuments(store *MockDataStore) []*comp.CompPolicyDocumen
 	policies := make([]*comp.CompPolicyDocument, count)
 
 	for i := 0; i < count; i++ {
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
-		approverID := ""
-		if len(store.ManagerIDs) > 0 {
-			approverID = store.ManagerIDs[i%len(store.ManagerIDs)]
-		}
+		approverID := pickRef(store.ManagerIDs, i)
 
-		departmentID := ""
-		if len(store.DepartmentIDs) > 0 {
-			departmentID = store.DepartmentIDs[i%len(store.DepartmentIDs)]
-		}
+		departmentID := pickRef(store.DepartmentIDs, i)
 
 		effectiveDate := time.Now().AddDate(-rand.Intn(2), -rand.Intn(6), 0)
 		reviewDate := effectiveDate.AddDate(0, 6, 0)
@@ -158,7 +142,7 @@ func generateCompPolicyDocuments(store *MockDataStore) []*comp.CompPolicyDocumen
 		}
 
 		policies[i] = &comp.CompPolicyDocument{
-			PolicyId:               fmt.Sprintf("cpol-%03d", i+1),
+			PolicyId:               genID("cpol", i),
 			Code:                   fmt.Sprintf("POL-%04d", 3000+i+1),
 			Title:                  compPolicyTitles[i],
 			Description:            fmt.Sprintf("Organizational policy governing %s", compPolicyTitles[i]),
@@ -188,10 +172,7 @@ func generateCompInsurancePolicies(store *MockDataStore) []*comp.CompInsurancePo
 	insurances := make([]*comp.CompInsurancePolicy, count)
 
 	for i := 0; i < count; i++ {
-		responsibleID := ""
-		if len(store.EmployeeIDs) > 0 {
-			responsibleID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		responsibleID := pickRef(store.EmployeeIDs, i)
 
 		effectiveDate := time.Now().AddDate(0, -rand.Intn(6), 0)
 		expiryDate := effectiveDate.AddDate(1, 0, 0) // 1 year policy
@@ -201,25 +182,16 @@ func generateCompInsurancePolicies(store *MockDataStore) []*comp.CompInsurancePo
 		premium := int64((rand.Intn(50) + 10) * 1000)       // $10K to $60K
 
 		insurances[i] = &comp.CompInsurancePolicy{
-			InsuranceId:  fmt.Sprintf("cins-%03d", i+1),
+			InsuranceId:  genID("cins", i),
 			PolicyNumber: fmt.Sprintf("INS-%06d", 100000+rand.Intn(900000)),
 			Name:         fmt.Sprintf("%s Policy", compInsuranceTypes[i]),
 			Description:  fmt.Sprintf("Insurance coverage for %s risks", compInsuranceTypes[i]),
 			PolicyType:   compInsuranceTypes[i],
 			Provider:     compInsuranceProviders[i%len(compInsuranceProviders)],
 			Broker:       fmt.Sprintf("%s Insurance Brokers", lastNames[i%len(lastNames)]),
-			CoverageAmount: &erp.Money{
-				Amount:       coverageAmount,
-				CurrencyCode: "USD",
-			},
-			Deductible: &erp.Money{
-				Amount:       deductible,
-				CurrencyCode: "USD",
-			},
-			Premium: &erp.Money{
-				Amount:       premium,
-				CurrencyCode: "USD",
-			},
+			CoverageAmount: money(coverageAmount),
+			Deductible: money(deductible),
+			Premium: money(premium),
 			PremiumFrequency: premiumFrequencies[i%len(premiumFrequencies)],
 			EffectiveDate:    effectiveDate.Unix(),
 			ExpiryDate:       expiryDate.Unix(),

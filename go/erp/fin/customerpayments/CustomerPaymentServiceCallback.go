@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package customerpayments
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type CustomerPaymentServiceCallback struct{}
-
-func newCustomerPaymentServiceCallback() *CustomerPaymentServiceCallback {
-	return &CustomerPaymentServiceCallback{}
-}
-
-func (this *CustomerPaymentServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	customerPayment, ok := any.(*fin.CustomerPayment)
-	if !ok {
-		return nil, false, errors.New("invalid customerPayment type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&customerPayment.PaymentId)
-	}
-	err := validate(customerPayment, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CustomerPaymentServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCustomerPaymentServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("CustomerPayment",
+		func(e *fin.CustomerPayment) { common.GenerateID(&e.PaymentId) },
+		validate)
 }
 
 func validate(customerPayment *fin.CustomerPayment, vnic ifs.IVNic) error {

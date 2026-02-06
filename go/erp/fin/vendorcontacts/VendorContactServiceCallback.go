@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package vendorcontacts
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type VendorContactServiceCallback struct{}
-
-func newVendorContactServiceCallback() *VendorContactServiceCallback {
-	return &VendorContactServiceCallback{}
-}
-
-func (this *VendorContactServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	vendorContact, ok := any.(*fin.VendorContact)
-	if !ok {
-		return nil, false, errors.New("invalid vendorContact type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&vendorContact.ContactId)
-	}
-	err := validate(vendorContact, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *VendorContactServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newVendorContactServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("VendorContact",
+		func(e *fin.VendorContact) { common.GenerateID(&e.ContactId) },
+		validate)
 }
 
 func validate(vendorContact *fin.VendorContact, vnic ifs.IVNic) error {

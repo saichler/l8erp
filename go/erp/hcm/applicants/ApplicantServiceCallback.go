@@ -15,36 +15,15 @@ limitations under the License.
 package applicants
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-type ApplicantServiceCallback struct {
-}
-
-func newApplicantServiceCallback() *ApplicantServiceCallback {
-	return &ApplicantServiceCallback{}
-}
-
-func (this *ApplicantServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.Applicant)
-	if !ok {
-		return nil, false, errors.New("invalid applicant type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.ApplicantId)
-	}
-	err := validateApplicant(entity)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *ApplicantServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newApplicantServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Applicant",
+		func(e *hcm.Applicant) { common.GenerateID(&e.ApplicantId) },
+		nil)
 }
 
 func validateApplicant(entity *hcm.Applicant) error {

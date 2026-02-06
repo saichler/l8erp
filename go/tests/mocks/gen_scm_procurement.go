@@ -53,7 +53,7 @@ func generatePurchaseRequisitions(store *MockDataStore) []*scm.ScmPurchaseRequis
 		estimatedTotal := int64(rand.Intn(495001)+5000) // 5000 to 500000 cents
 
 		requisitions[i] = &scm.ScmPurchaseRequisition{
-			RequisitionId:      fmt.Sprintf("preq-%03d", i+1),
+			RequisitionId:      genID("preq", i),
 			RequisitionNumber:  fmt.Sprintf("PR-%06d", i+1),
 			RequesterId:        requesterId,
 			DepartmentId:       departmentId,
@@ -61,8 +61,8 @@ func generatePurchaseRequisitions(store *MockDataStore) []*scm.ScmPurchaseRequis
 			Status:             status,
 			Description:        fmt.Sprintf("Purchase requisition %d from department %s", i+1, departmentId),
 			Priority:           priorities[i%len(priorities)],
-			EstimatedTotal:     &erp.Money{Amount: estimatedTotal, CurrencyCode: "USD"},
-			ApprovalWorkflowId: fmt.Sprintf("wf-%03d", i+1),
+			EstimatedTotal:     money(estimatedTotal),
+			ApprovalWorkflowId: genID("wf", i),
 			AuditInfo:          createAuditInfo(),
 		}
 	}
@@ -108,8 +108,8 @@ func generateRequisitionLines(store *MockDataStore) []*scm.ScmRequisitionLine {
 				Description:        descriptions[rand.Intn(len(descriptions))],
 				Quantity:           quantity,
 				UnitOfMeasure:      uoms[rand.Intn(len(uoms))],
-				EstimatedUnitPrice: &erp.Money{Amount: unitPrice, CurrencyCode: "USD"},
-				EstimatedTotal:     &erp.Money{Amount: lineTotal, CurrencyCode: "USD"},
+				EstimatedUnitPrice: money(unitPrice),
+				EstimatedTotal:     money(lineTotal),
 				VendorId:           vendorId,
 				DeliveryDate:       deliveryDate.Unix(),
 				AuditInfo:          createAuditInfo(),
@@ -143,7 +143,7 @@ func generateRFQs(store *MockDataStore) []*scm.ScmRequestForQuotation {
 		}
 
 		rfqs[i] = &scm.ScmRequestForQuotation{
-			RfqId:            fmt.Sprintf("rfq-%03d", i+1),
+			RfqId:            genID("rfq", i),
 			RfqNumber:        fmt.Sprintf("RFQ-%06d", i+1),
 			RequisitionId:    requisitionId,
 			VendorIds:        vendorIds,
@@ -178,13 +178,13 @@ func generateBlanketOrders(store *MockDataStore) []*scm.ScmBlanketOrder {
 		usedAmount := maxAmount * int64(usedPercent) / 100
 
 		orders[i] = &scm.ScmBlanketOrder{
-			BlanketOrderId: fmt.Sprintf("bo-%03d", i+1),
+			BlanketOrderId: genID("bo", i),
 			OrderNumber:    fmt.Sprintf("BO-%06d", i+1),
 			VendorId:       vendorId,
 			StartDate:      startDate.Unix(),
 			EndDate:        endDate.Unix(),
-			MaxAmount:      &erp.Money{Amount: maxAmount, CurrencyCode: "USD"},
-			UsedAmount:     &erp.Money{Amount: usedAmount, CurrencyCode: "USD"},
+			MaxAmount:      money(maxAmount),
+			UsedAmount:     money(usedAmount),
 			Status:         statuses[i%len(statuses)],
 			Description:    fmt.Sprintf("Blanket order with vendor %s", vendorId),
 			AuditInfo:      createAuditInfo(),
@@ -226,23 +226,17 @@ func generateSCMPurchaseOrders(store *MockDataStore) []*scm.ScmPurchaseOrder {
 			status = statuses[i%len(statuses)]
 		}
 
-		requisitionID := ""
-		if len(store.PurchaseRequisitionIDs) > 0 {
-			requisitionID = store.PurchaseRequisitionIDs[i%len(store.PurchaseRequisitionIDs)]
-		}
-		rfqID := ""
-		if len(store.RFQIDs) > 0 {
-			rfqID = store.RFQIDs[i%len(store.RFQIDs)]
-		}
+		requisitionID := pickRef(store.PurchaseRequisitionIDs, i)
+		rfqID := pickRef(store.RFQIDs, i)
 
 		orders[i] = &scm.ScmPurchaseOrder{
-			PurchaseOrderId:  fmt.Sprintf("spo-%03d", i+1),
+			PurchaseOrderId:  genID("spo", i),
 			OrderNumber:      fmt.Sprintf("PO-%06d", i+1),
 			VendorId:         vendorID,
 			OrderDate:        orderDate.Unix(),
 			ExpectedDelivery: expectedDelivery.Unix(),
 			Status:           status,
-			TotalAmount:      &erp.Money{Amount: totalAmount, CurrencyCode: "USD"},
+			TotalAmount:      money(totalAmount),
 			ShippingAddress:  createAddress(),
 			PaymentTerms:     paymentTerms[i%len(paymentTerms)],
 			Notes:            fmt.Sprintf("Purchase order %d for vendor %s", i+1, vendorID),
@@ -284,8 +278,8 @@ func generatePOLines(store *MockDataStore) []*scm.ScmPurchaseOrderLine {
 				ItemId:           itemID,
 				Description:      fmt.Sprintf("PO line for %s", itemID),
 				Quantity:         quantity,
-				UnitPrice:        &erp.Money{Amount: unitPrice, CurrencyCode: "USD"},
-				TotalPrice:       &erp.Money{Amount: totalPrice, CurrencyCode: "USD"},
+				UnitPrice:        money(unitPrice),
+				TotalPrice:       money(totalPrice),
 				UnitOfMeasure:    uoms[idx%len(uoms)],
 				ReceivedQuantity: receivedQty,
 				AuditInfo:        createAuditInfo(),
@@ -321,7 +315,7 @@ func generateSupplierScorecards(store *MockDataStore) []*scm.ScmSupplierScorecar
 		overallScore := (qualityScore + deliveryScore + priceScore + serviceScore) / 4.0
 
 		scorecards[i] = &scm.ScmSupplierScorecard{
-			ScorecardId: fmt.Sprintf("ssc-%03d", i+1),
+			ScorecardId: genID("ssc", i),
 			VendorId:    vendorId,
 			EvaluationPeriod: &erp.DateRange{
 				StartDate: periodStart.Unix(),

@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package bankreconciliations
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type BankReconciliationServiceCallback struct{}
-
-func newBankReconciliationServiceCallback() *BankReconciliationServiceCallback {
-	return &BankReconciliationServiceCallback{}
-}
-
-func (this *BankReconciliationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	bankReconciliation, ok := any.(*fin.BankReconciliation)
-	if !ok {
-		return nil, false, errors.New("invalid bankReconciliation type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&bankReconciliation.ReconciliationId)
-	}
-	err := validate(bankReconciliation, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BankReconciliationServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBankReconciliationServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("BankReconciliation",
+		func(e *fin.BankReconciliation) { common.GenerateID(&e.ReconciliationId) },
+		validate)
 }
 
 func validate(bankReconciliation *fin.BankReconciliation, vnic ifs.IVNic) error {

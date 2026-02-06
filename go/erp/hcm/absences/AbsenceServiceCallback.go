@@ -15,37 +15,16 @@ limitations under the License.
 package absences
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
+	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-type AbsenceServiceCallback struct {
-}
-
-func newAbsenceServiceCallback() *AbsenceServiceCallback {
-	return &AbsenceServiceCallback{}
-}
-
-func (this *AbsenceServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.Absence)
-	if !ok {
-		return nil, false, errors.New("invalid absence type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.AbsenceId)
-	}
-	err := validateAbsence(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *AbsenceServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newAbsenceServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Absence",
+		func(e *hcm.Absence) { common.GenerateID(&e.AbsenceId) },
+		validateAbsence)
 }
 
 func validateAbsence(entity *hcm.Absence, vnic ifs.IVNic) error {

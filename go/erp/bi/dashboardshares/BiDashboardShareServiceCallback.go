@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package dashboardshares
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/bi"
 )
 
-type BiDashboardShareServiceCallback struct{}
-
-func newBiDashboardShareServiceCallback() *BiDashboardShareServiceCallback {
-	return &BiDashboardShareServiceCallback{}
-}
-
-func (this *BiDashboardShareServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*bi.BiDashboardShare)
-	if !ok {
-		return nil, false, errors.New("invalid BiDashboardShare type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ShareId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BiDashboardShareServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBiDashboardShareServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("BiDashboardShare",
+		func(e *bi.BiDashboardShare) { common.GenerateID(&e.ShareId) },
+		validate)
 }
 
 func validate(item *bi.BiDashboardShare, vnic ifs.IVNic) error {

@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package tags
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/doc"
 )
 
-type DocTagServiceCallback struct{}
-
-func newDocTagServiceCallback() *DocTagServiceCallback {
-	return &DocTagServiceCallback{}
-}
-
-func (this *DocTagServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*doc.DocTag)
-	if !ok {
-		return nil, false, errors.New("invalid DocTag type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.TagId)
-	}
-	err := validateDocTag(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *DocTagServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newDocTagServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("DocTag",
+		func(e *doc.DocTag) { common.GenerateID(&e.TagId) },
+		validateDocTag)
 }
 
 func validateDocTag(item *doc.DocTag, vnic ifs.IVNic) error {

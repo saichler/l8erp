@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package prodconsumptions
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-type MfgProdConsumptionServiceCallback struct{}
-
-func newMfgProdConsumptionServiceCallback() *MfgProdConsumptionServiceCallback {
-	return &MfgProdConsumptionServiceCallback{}
-}
-
-func (this *MfgProdConsumptionServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgProdConsumption)
-	if !ok {
-		return nil, false, errors.New("invalid MfgProdConsumption type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ConsumptionId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgProdConsumptionServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgProdConsumptionServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgProdConsumption",
+		func(e *mfg.MfgProdConsumption) { common.GenerateID(&e.ConsumptionId) },
+		validate)
 }
 
 func validate(item *mfg.MfgProdConsumption, vnic ifs.IVNic) error {

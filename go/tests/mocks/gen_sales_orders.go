@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -38,15 +37,9 @@ func generateSalesQuotations(store *MockDataStore) []*sales.SalesQuotation {
 	count := 25
 	quotations := make([]*sales.SalesQuotation, count)
 	for i := 0; i < count; i++ {
-		customerID := ""
-		if len(store.CustomerIDs) > 0 {
-			customerID = store.CustomerIDs[i%len(store.CustomerIDs)]
-		}
+		customerID := pickRef(store.CustomerIDs, i)
 
-		salespersonID := ""
-		if len(store.EmployeeIDs) > 0 {
-			salespersonID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		salespersonID := pickRef(store.EmployeeIDs, i)
 
 		quotationDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
 		validUntil := quotationDate.AddDate(0, 0, 30)
@@ -57,7 +50,7 @@ func generateSalesQuotations(store *MockDataStore) []*sales.SalesQuotation {
 		totalAmount := subtotal - discountTotal + taxTotal
 
 		quotations[i] = &sales.SalesQuotation{
-			QuotationId:     fmt.Sprintf("sq-%03d", i+1),
+			QuotationId:     genID("sq", i),
 			QuotationNumber: fmt.Sprintf("QT-%04d", rand.Intn(9000)+1000),
 			CustomerId:      customerID,
 			SalespersonId:   salespersonID,
@@ -66,10 +59,10 @@ func generateSalesQuotations(store *MockDataStore) []*sales.SalesQuotation {
 			Status:          statuses[i%len(statuses)],
 			PaymentTerms:    "Net 30",
 			CurrencyCode:    "USD",
-			Subtotal:        &erp.Money{Amount: subtotal, CurrencyCode: "USD"},
-			DiscountTotal:   &erp.Money{Amount: discountTotal, CurrencyCode: "USD"},
-			TaxTotal:        &erp.Money{Amount: taxTotal, CurrencyCode: "USD"},
-			TotalAmount:     &erp.Money{Amount: totalAmount, CurrencyCode: "USD"},
+			Subtotal:        money(subtotal),
+			DiscountTotal:   money(discountTotal),
+			TaxTotal:        money(taxTotal),
+			TotalAmount:     money(totalAmount),
 			Notes:           fmt.Sprintf("Quotation for customer %d", i+1),
 			AuditInfo:       createAuditInfo(),
 		}
@@ -110,11 +103,11 @@ func generateSalesQuotationLines(store *MockDataStore) []*sales.SalesQuotationLi
 				Description:     description,
 				Quantity:        quantity,
 				UnitOfMeasure:   "EA",
-				UnitPrice:       &erp.Money{Amount: unitPrice, CurrencyCode: "USD"},
+				UnitPrice:       money(unitPrice),
 				DiscountPercent: discountPercent,
-				DiscountAmount:  &erp.Money{Amount: discountAmount, CurrencyCode: "USD"},
-				TaxAmount:       &erp.Money{Amount: taxAmount, CurrencyCode: "USD"},
-				LineTotal:       &erp.Money{Amount: lineTotal, CurrencyCode: "USD"},
+				DiscountAmount:  money(discountAmount),
+				TaxAmount:       money(taxAmount),
+				LineTotal:       money(lineTotal),
 				AuditInfo:       createAuditInfo(),
 			})
 			idx++
@@ -141,25 +134,16 @@ func generateSalesOrders(store *MockDataStore) []*sales.SalesOrder {
 	count := 30
 	orders := make([]*sales.SalesOrder, count)
 	for i := 0; i < count; i++ {
-		customerID := ""
-		if len(store.CustomerIDs) > 0 {
-			customerID = store.CustomerIDs[i%len(store.CustomerIDs)]
-		}
+		customerID := pickRef(store.CustomerIDs, i)
 
-		salespersonID := ""
-		if len(store.EmployeeIDs) > 0 {
-			salespersonID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		salespersonID := pickRef(store.EmployeeIDs, i)
 
 		quotationID := ""
 		if len(store.SalesQuotationIDs) > 0 && i < len(store.SalesQuotationIDs) {
 			quotationID = store.SalesQuotationIDs[i%len(store.SalesQuotationIDs)]
 		}
 
-		warehouseID := ""
-		if len(store.SCMWarehouseIDs) > 0 {
-			warehouseID = store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)]
-		}
+		warehouseID := pickRef(store.SCMWarehouseIDs, i)
 
 		orderDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 		requestedDate := orderDate.AddDate(0, 0, rand.Intn(14)+7)
@@ -171,7 +155,7 @@ func generateSalesOrders(store *MockDataStore) []*sales.SalesOrder {
 		totalAmount := subtotal - discountTotal + shippingAmount + taxTotal
 
 		orders[i] = &sales.SalesOrder{
-			SalesOrderId:          fmt.Sprintf("so-%03d", i+1),
+			SalesOrderId:          genID("so", i),
 			OrderNumber:           fmt.Sprintf("SO-%04d", rand.Intn(9000)+1000),
 			CustomerId:            customerID,
 			SalespersonId:         salespersonID,
@@ -182,10 +166,10 @@ func generateSalesOrders(store *MockDataStore) []*sales.SalesOrder {
 			PaymentTerms:          "Net 30",
 			CurrencyCode:          "USD",
 			WarehouseId:           warehouseID,
-			Subtotal:              &erp.Money{Amount: subtotal, CurrencyCode: "USD"},
-			DiscountTotal:         &erp.Money{Amount: discountTotal, CurrencyCode: "USD"},
-			TaxTotal:              &erp.Money{Amount: taxTotal, CurrencyCode: "USD"},
-			TotalAmount:           &erp.Money{Amount: totalAmount, CurrencyCode: "USD"},
+			Subtotal:              money(subtotal),
+			DiscountTotal:         money(discountTotal),
+			TaxTotal:              money(taxTotal),
+			TotalAmount:           money(totalAmount),
 			Notes:                 fmt.Sprintf("Sales order for customer %d", i+1),
 			AuditInfo:             createAuditInfo(),
 		}
@@ -234,11 +218,11 @@ func generateSalesOrderLines(store *MockDataStore) []*sales.SalesOrderLine {
 				Quantity:        quantity,
 				ShippedQuantity: shippedQty,
 				UnitOfMeasure:   "EA",
-				UnitPrice:       &erp.Money{Amount: unitPrice, CurrencyCode: "USD"},
+				UnitPrice:       money(unitPrice),
 				DiscountPercent: discountPercent,
-				DiscountAmount:  &erp.Money{Amount: discountAmount, CurrencyCode: "USD"},
-				TaxAmount:       &erp.Money{Amount: taxAmount, CurrencyCode: "USD"},
-				LineTotal:       &erp.Money{Amount: lineTotal, CurrencyCode: "USD"},
+				DiscountAmount:  money(discountAmount),
+				TaxAmount:       money(taxAmount),
+				LineTotal:       money(lineTotal),
 				AuditInfo:       createAuditInfo(),
 			})
 			idx++
@@ -268,27 +252,18 @@ func generateSalesReturnOrders(store *MockDataStore) []*sales.SalesReturnOrder {
 	count := 15
 	returns := make([]*sales.SalesReturnOrder, count)
 	for i := 0; i < count; i++ {
-		orderID := ""
-		if len(store.SalesOrderIDs) > 0 {
-			orderID = store.SalesOrderIDs[i%len(store.SalesOrderIDs)]
-		}
+		orderID := pickRef(store.SalesOrderIDs, i)
 
-		customerID := ""
-		if len(store.CustomerIDs) > 0 {
-			customerID = store.CustomerIDs[i%len(store.CustomerIDs)]
-		}
+		customerID := pickRef(store.CustomerIDs, i)
 
-		warehouseID := ""
-		if len(store.SCMWarehouseIDs) > 0 {
-			warehouseID = store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)]
-		}
+		warehouseID := pickRef(store.SCMWarehouseIDs, i)
 
 		returnDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
 
 		refundAmount := int64(rand.Intn(20000000) + 100000)
 
 		returns[i] = &sales.SalesReturnOrder{
-			ReturnOrderId:     fmt.Sprintf("sro-%03d", i+1),
+			ReturnOrderId:     genID("sro", i),
 			ReturnNumber:      fmt.Sprintf("RMA-%04d", rand.Intn(9000)+1000),
 			SalesOrderId:      orderID,
 			CustomerId:        customerID,
@@ -296,7 +271,7 @@ func generateSalesReturnOrders(store *MockDataStore) []*sales.SalesReturnOrder {
 			Status:            statuses[i%len(statuses)],
 			ReasonCode:        reasonCodes[i%len(reasonCodes)],
 			ReasonDescription: fmt.Sprintf("Customer reported issue: %s", reasonCodes[i%len(reasonCodes)]),
-			RefundAmount:      &erp.Money{Amount: refundAmount, CurrencyCode: "USD"},
+			RefundAmount:      money(refundAmount),
 			WarehouseId:       warehouseID,
 			Notes:             fmt.Sprintf("Return request %d", i+1),
 			AuditInfo:         createAuditInfo(),
@@ -332,18 +307,12 @@ func generateSalesOrderAllocations(store *MockDataStore) []*sales.SalesOrderAllo
 			lineID = store.SalesOrderLineIDs[i%len(store.SalesOrderLineIDs)]
 		}
 
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[i%len(store.ItemIDs)]
-		}
+		itemID := pickRef(store.ItemIDs, i)
 
-		warehouseID := ""
-		if len(store.SCMWarehouseIDs) > 0 {
-			warehouseID = store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)]
-		}
+		warehouseID := pickRef(store.SCMWarehouseIDs, i)
 
 		allocations[i] = &sales.SalesOrderAllocation{
-			AllocationId:      fmt.Sprintf("soa-%03d", i+1),
+			AllocationId:      genID("soa", i),
 			SalesOrderId:      orderID,
 			LineId:            lineID,
 			ItemId:            itemID,
@@ -371,15 +340,12 @@ func generateSalesBackOrders(store *MockDataStore) []*sales.SalesBackOrder {
 			lineID = store.SalesOrderLineIDs[i%len(store.SalesOrderLineIDs)]
 		}
 
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[i%len(store.ItemIDs)]
-		}
+		itemID := pickRef(store.ItemIDs, i)
 
 		expectedDate := time.Now().AddDate(0, 0, rand.Intn(30)+7)
 
 		backOrders[i] = &sales.SalesBackOrder{
-			BackOrderId:       fmt.Sprintf("sbo-%03d", i+1),
+			BackOrderId:       genID("sbo", i),
 			SalesOrderId:      orderID,
 			LineId:            lineID,
 			ItemId:            itemID,
@@ -407,10 +373,7 @@ func generateSalesReturnOrderLines(store *MockDataStore) []*sales.SalesReturnOrd
 	idx := 1
 	for rIdx, returnOrderID := range store.SalesReturnOrderIDs {
 		for j := 0; j < 2; j++ {
-			itemID := ""
-			if len(store.ItemIDs) > 0 {
-				itemID = store.ItemIDs[(rIdx*2+j)%len(store.ItemIDs)]
-			}
+			itemID := pickRef(store.ItemIDs, (rIdx*2+j))
 
 			qty := float64(rand.Intn(5) + 1)
 			unitPrice := int64(rand.Intn(100000) + 5000)
@@ -424,8 +387,8 @@ func generateSalesReturnOrderLines(store *MockDataStore) []*sales.SalesReturnOrd
 				Description:   fmt.Sprintf("Return line item %d", idx),
 				Quantity:      qty,
 				UnitOfMeasure: "EA",
-				UnitPrice:     &erp.Money{Amount: unitPrice, CurrencyCode: "USD"},
-				LineTotal:     &erp.Money{Amount: lineTotal, CurrencyCode: "USD"},
+				UnitPrice:     money(unitPrice),
+				LineTotal:     money(lineTotal),
 				Condition:     conditions[(rIdx*2+j)%len(conditions)],
 				Disposition:   dispositions[(rIdx*2+j)%len(dispositions)],
 				AuditInfo:     createAuditInfo(),

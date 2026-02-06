@@ -15,38 +15,17 @@ limitations under the License.
 package employeecompensations
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/erp/hcm/salarygrades"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type EmployeeCompensationServiceCallback struct {
-}
-
-func newEmployeeCompensationServiceCallback() *EmployeeCompensationServiceCallback {
-	return &EmployeeCompensationServiceCallback{}
-}
-
-func (this *EmployeeCompensationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.EmployeeCompensation)
-	if !ok {
-		return nil, false, errors.New("invalid employee compensation type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.CompensationId)
-	}
-	err := validateEmpComp(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *EmployeeCompensationServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newEmployeeCompensationServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("EmployeeCompensation",
+		func(e *hcm.EmployeeCompensation) { common.GenerateID(&e.CompensationId) },
+		validateEmpComp)
 }
 
 func validateEmpComp(entity *hcm.EmployeeCompensation, vnic ifs.IVNic) error {

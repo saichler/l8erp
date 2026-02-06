@@ -34,10 +34,7 @@ func generateSalesPriceListEntries(store *MockDataStore) []*sales.SalesPriceList
 	idx := 1
 	for _, priceListID := range store.SalesPriceListIDs {
 		for j := 0; j < 3; j++ {
-			itemID := ""
-			if len(store.ItemIDs) > 0 {
-				itemID = store.ItemIDs[(idx-1)%len(store.ItemIDs)]
-			}
+			itemID := pickRef(store.ItemIDs, (idx-1))
 
 			effectiveDate := time.Now().AddDate(0, -rand.Intn(3), 0)
 			expiryDate := effectiveDate.AddDate(0, 6, 0)
@@ -71,21 +68,15 @@ func generateSalesCustomerPrices(store *MockDataStore) []*sales.SalesCustomerPri
 
 	prices := make([]*sales.SalesCustomerPrice, count)
 	for i := 0; i < count; i++ {
-		customerID := ""
-		if len(store.CustomerIDs) > 0 {
-			customerID = store.CustomerIDs[i%len(store.CustomerIDs)]
-		}
+		customerID := pickRef(store.CustomerIDs, i)
 
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[i%len(store.ItemIDs)]
-		}
+		itemID := pickRef(store.ItemIDs, i)
 
 		effectiveDate := time.Now().AddDate(0, -rand.Intn(6), 0)
 		expiryDate := effectiveDate.AddDate(1, 0, 0)
 
 		prices[i] = &sales.SalesCustomerPrice{
-			CustomerPriceId: fmt.Sprintf("scpr-%03d", i+1),
+			CustomerPriceId: genID("scpr", i),
 			CustomerId:      customerID,
 			ItemId:          itemID,
 			UnitPrice: &erp.Money{
@@ -128,7 +119,7 @@ func generateSalesDiscountRules(store *MockDataStore) []*sales.SalesDiscountRule
 		}
 
 		rules[i] = &sales.SalesDiscountRule{
-			RuleId:          fmt.Sprintf("sdr-%03d", i+1),
+			RuleId:          genID("sdr", i),
 			Name:            salesDiscountNames[i],
 			Description:     fmt.Sprintf("Discount rule: %s", salesDiscountNames[i]),
 			DiscountType:    discountTypes[i%len(discountTypes)],
@@ -154,10 +145,7 @@ func generateSalesPromotionalPrices(store *MockDataStore) []*sales.SalesPromotio
 	count := len(salesPromotionNames)
 	promotions := make([]*sales.SalesPromotionalPrice, count)
 	for i := 0; i < count; i++ {
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[i%len(store.ItemIDs)]
-		}
+		itemID := pickRef(store.ItemIDs, i)
 
 		startDate := time.Now().AddDate(0, -rand.Intn(3), 0)
 		endDate := startDate.AddDate(0, rand.Intn(3)+1, 0)
@@ -166,12 +154,12 @@ func generateSalesPromotionalPrices(store *MockDataStore) []*sales.SalesPromotio
 		promoPrice := originalPrice * int64(100-rand.Intn(30)-5) / 100 // 5-35% off
 
 		promotions[i] = &sales.SalesPromotionalPrice{
-			PromoId:          fmt.Sprintf("spromo-%03d", i+1),
+			PromoId:          genID("spromo", i),
 			Name:             salesPromotionNames[i],
 			Description:      fmt.Sprintf("Promotional campaign: %s", salesPromotionNames[i]),
 			ItemId:           itemID,
-			PromotionalPrice: &erp.Money{Amount: promoPrice, CurrencyCode: "USD"},
-			OriginalPrice:    &erp.Money{Amount: originalPrice, CurrencyCode: "USD"},
+			PromotionalPrice: money(promoPrice),
+			OriginalPrice:    money(originalPrice),
 			StartDate:        startDate.Unix(),
 			EndDate:          endDate.Unix(),
 			MaxQuantity:      float64(rand.Intn(1000) + 100),
@@ -195,10 +183,7 @@ func generateSalesQuantityBreaks(store *MockDataStore) []*sales.SalesQuantityBre
 	breaks := make([]*sales.SalesQuantityBreak, 0, count)
 	idx := 1
 	for _, priceListID := range store.SalesPriceListIDs {
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[idx%len(store.ItemIDs)]
-		}
+		itemID := pickRef(store.ItemIDs, idx)
 
 		// Create tiered quantity breaks
 		basePrice := int64(rand.Intn(100000) + 10000) // $100 - $1100 base price
@@ -210,7 +195,7 @@ func generateSalesQuantityBreaks(store *MockDataStore) []*sales.SalesQuantityBre
 			ItemId:          itemID,
 			FromQuantity:    1,
 			ToQuantity:      10,
-			UnitPrice:       &erp.Money{Amount: basePrice, CurrencyCode: "USD"},
+			UnitPrice:       money(basePrice),
 			DiscountPercent: 0,
 			AuditInfo:       createAuditInfo(),
 		})
@@ -223,7 +208,7 @@ func generateSalesQuantityBreaks(store *MockDataStore) []*sales.SalesQuantityBre
 			ItemId:          itemID,
 			FromQuantity:    11,
 			ToQuantity:      50,
-			UnitPrice:       &erp.Money{Amount: basePrice * 90 / 100, CurrencyCode: "USD"},
+			UnitPrice:       money(basePrice * 90 / 100),
 			DiscountPercent: 10,
 			AuditInfo:       createAuditInfo(),
 		})
@@ -236,7 +221,7 @@ func generateSalesQuantityBreaks(store *MockDataStore) []*sales.SalesQuantityBre
 			ItemId:          itemID,
 			FromQuantity:    51,
 			ToQuantity:      9999,
-			UnitPrice:       &erp.Money{Amount: basePrice * 80 / 100, CurrencyCode: "USD"},
+			UnitPrice:       money(basePrice * 80 / 100),
 			DiscountPercent: 20,
 			AuditInfo:       createAuditInfo(),
 		})

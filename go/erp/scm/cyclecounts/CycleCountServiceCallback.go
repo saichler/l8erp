@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package cyclecounts
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type CycleCountServiceCallback struct{}
-
-func newCycleCountServiceCallback() *CycleCountServiceCallback {
-	return &CycleCountServiceCallback{}
-}
-
-func (this *CycleCountServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmCycleCount)
-	if !ok {
-		return nil, false, errors.New("invalid cycle count type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.CycleCountId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CycleCountServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCycleCountServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmCycleCount",
+		func(e *scm.ScmCycleCount) { common.GenerateID(&e.CycleCountId) },
+		validate)
 }
 
 func validate(item *scm.ScmCycleCount, vnic ifs.IVNic) error {

@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package testresults
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-type MfgTestResultServiceCallback struct{}
-
-func newMfgTestResultServiceCallback() *MfgTestResultServiceCallback {
-	return &MfgTestResultServiceCallback{}
-}
-
-func (this *MfgTestResultServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgTestResult)
-	if !ok {
-		return nil, false, errors.New("invalid MfgTestResult type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ResultId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgTestResultServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgTestResultServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgTestResult",
+		func(e *mfg.MfgTestResult) { common.GenerateID(&e.ResultId) },
+		validate)
 }
 
 func validate(item *mfg.MfgTestResult, vnic ifs.IVNic) error {

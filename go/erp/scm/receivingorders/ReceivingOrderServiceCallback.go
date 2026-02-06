@@ -15,35 +15,15 @@ limitations under the License.
 package receivingorders
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type ReceivingOrderServiceCallback struct{}
-
-func newReceivingOrderServiceCallback() *ReceivingOrderServiceCallback {
-	return &ReceivingOrderServiceCallback{}
-}
-
-func (this *ReceivingOrderServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmReceivingOrder)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ReceivingOrderId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *ReceivingOrderServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newReceivingOrderServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmReceivingOrder",
+		func(e *scm.ScmReceivingOrder) { common.GenerateID(&e.ReceivingOrderId) },
+		validate)
 }
 
 func validate(item *scm.ScmReceivingOrder, vnic ifs.IVNic) error {

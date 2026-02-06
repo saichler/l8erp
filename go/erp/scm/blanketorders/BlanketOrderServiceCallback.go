@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package blanketorders
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type BlanketOrderServiceCallback struct{}
-
-func newBlanketOrderServiceCallback() *BlanketOrderServiceCallback {
-	return &BlanketOrderServiceCallback{}
-}
-
-func (this *BlanketOrderServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmBlanketOrder)
-	if !ok {
-		return nil, false, errors.New("invalid blanket order type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.BlanketOrderId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BlanketOrderServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBlanketOrderServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmBlanketOrder",
+		func(e *scm.ScmBlanketOrder) { common.GenerateID(&e.BlanketOrderId) },
+		validate)
 }
 
 func validate(item *scm.ScmBlanketOrder, vnic ifs.IVNic) error {

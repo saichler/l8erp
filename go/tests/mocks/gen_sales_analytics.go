@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -37,7 +36,7 @@ func generateSalesCommissionPlans() []*sales.SalesCommissionPlan {
 		expiryDate := effectiveDate.AddDate(1, 0, 0)
 
 		plan := &sales.SalesCommissionPlan{
-			PlanId:         fmt.Sprintf("scpl-%03d", i+1),
+			PlanId:         genID("scpl", i),
 			Name:           name,
 			Description:    fmt.Sprintf("Commission plan: %s", name),
 			CommissionType: commissionTypes[i%len(commissionTypes)],
@@ -51,10 +50,7 @@ func generateSalesCommissionPlans() []*sales.SalesCommissionPlan {
 		if commissionTypes[i%len(commissionTypes)] == sales.SalesCommissionType_COMMISSION_TYPE_PERCENTAGE {
 			plan.BaseRate = float64(rand.Intn(10)+5) / 100 // 5-15%
 		} else if commissionTypes[i%len(commissionTypes)] == sales.SalesCommissionType_COMMISSION_TYPE_FIXED {
-			plan.BaseAmount = &erp.Money{
-				Amount:       int64(rand.Intn(50000) + 5000),
-				CurrencyCode: "USD",
-			}
+			plan.BaseAmount = money(int64(rand.Intn(50000) + 5000))
 		}
 
 		plans[i] = plan
@@ -69,20 +65,11 @@ func generateSalesCommissionCalcs(store *MockDataStore) []*sales.SalesCommission
 	count := 25
 	calcs := make([]*sales.SalesCommissionCalc, count)
 	for i := 0; i < count; i++ {
-		planID := ""
-		if len(store.SalesCommissionPlanIDs) > 0 {
-			planID = store.SalesCommissionPlanIDs[i%len(store.SalesCommissionPlanIDs)]
-		}
+		planID := pickRef(store.SalesCommissionPlanIDs, i)
 
-		salespersonID := ""
-		if len(store.EmployeeIDs) > 0 {
-			salespersonID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		salespersonID := pickRef(store.EmployeeIDs, i)
 
-		orderID := ""
-		if len(store.SalesOrderIDs) > 0 {
-			orderID = store.SalesOrderIDs[i%len(store.SalesOrderIDs)]
-		}
+		orderID := pickRef(store.SalesOrderIDs, i)
 
 		calcDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
 
@@ -97,14 +84,14 @@ func generateSalesCommissionCalcs(store *MockDataStore) []*sales.SalesCommission
 		}
 
 		calcs[i] = &sales.SalesCommissionCalc{
-			CalcId:           fmt.Sprintf("scc-%03d", i+1),
+			CalcId:           genID("scc", i),
 			PlanId:           planID,
 			SalespersonId:    salespersonID,
 			SalesOrderId:     orderID,
 			CalculationDate:  calcDate.Unix(),
-			SalesAmount:      &erp.Money{Amount: salesAmount, CurrencyCode: "USD"},
+			SalesAmount:      money(salesAmount),
 			CommissionRate:   commissionRate,
-			CommissionAmount: &erp.Money{Amount: commissionAmount, CurrencyCode: "USD"},
+			CommissionAmount: money(commissionAmount),
 			Status:           status,
 			PaidDate:         paidDate,
 			Notes:            fmt.Sprintf("Commission calculation for order %d", i+1),
@@ -123,15 +110,9 @@ func generateSalesTerritoryAssigns(store *MockDataStore) []*sales.SalesTerritory
 
 	assigns := make([]*sales.SalesTerritoryAssign, count)
 	for i := 0; i < count; i++ {
-		territoryID := ""
-		if len(store.SalesTerritoryIDs) > 0 {
-			territoryID = store.SalesTerritoryIDs[i%len(store.SalesTerritoryIDs)]
-		}
+		territoryID := pickRef(store.SalesTerritoryIDs, i)
 
-		salespersonID := ""
-		if len(store.EmployeeIDs) > 0 {
-			salespersonID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		salespersonID := pickRef(store.EmployeeIDs, i)
 
 		startDate := time.Now().AddDate(0, -rand.Intn(12), 0)
 		var endDate int64
@@ -140,7 +121,7 @@ func generateSalesTerritoryAssigns(store *MockDataStore) []*sales.SalesTerritory
 		}
 
 		assigns[i] = &sales.SalesTerritoryAssign{
-			AssignmentId:      fmt.Sprintf("sta-%03d", i+1),
+			AssignmentId:      genID("sta", i),
 			TerritoryId:       territoryID,
 			SalespersonId:     salespersonID,
 			StartDate:         startDate.Unix(),
@@ -167,15 +148,9 @@ func generateSalesTargets(store *MockDataStore) []*sales.SalesTarget {
 	count := 20
 	targets := make([]*sales.SalesTarget, count)
 	for i := 0; i < count; i++ {
-		salespersonID := ""
-		if len(store.EmployeeIDs) > 0 {
-			salespersonID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		salespersonID := pickRef(store.EmployeeIDs, i)
 
-		territoryID := ""
-		if len(store.SalesTerritoryIDs) > 0 {
-			territoryID = store.SalesTerritoryIDs[i%len(store.SalesTerritoryIDs)]
-		}
+		territoryID := pickRef(store.SalesTerritoryIDs, i)
 
 		period := periods[i%len(periods)]
 		year := 2025
@@ -187,7 +162,7 @@ func generateSalesTargets(store *MockDataStore) []*sales.SalesTarget {
 		achievementPercent := float64(achievedAmount) / float64(targetAmount) * 100
 
 		targets[i] = &sales.SalesTarget{
-			TargetId:           fmt.Sprintf("stgt-%03d", i+1),
+			TargetId:           genID("stgt", i),
 			Name:               fmt.Sprintf("Sales Target %d - Q%d %d", i+1, quarter, year),
 			SalespersonId:      salespersonID,
 			TerritoryId:        territoryID,
@@ -195,8 +170,8 @@ func generateSalesTargets(store *MockDataStore) []*sales.SalesTarget {
 			Year:               int32(year),
 			Quarter:            quarter,
 			Month:              month,
-			TargetAmount:       &erp.Money{Amount: targetAmount, CurrencyCode: "USD"},
-			AchievedAmount:     &erp.Money{Amount: achievedAmount, CurrencyCode: "USD"},
+			TargetAmount:       money(targetAmount),
+			AchievedAmount:     money(achievedAmount),
 			AchievementPercent: achievementPercent,
 			Notes:              fmt.Sprintf("Target for period %d", i+1),
 			AuditInfo:          createAuditInfo(),
@@ -218,20 +193,11 @@ func generateSalesForecasts(store *MockDataStore) []*sales.SalesForecast {
 	count := 20
 	forecasts := make([]*sales.SalesForecast, count)
 	for i := 0; i < count; i++ {
-		salespersonID := ""
-		if len(store.EmployeeIDs) > 0 {
-			salespersonID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		salespersonID := pickRef(store.EmployeeIDs, i)
 
-		territoryID := ""
-		if len(store.SalesTerritoryIDs) > 0 {
-			territoryID = store.SalesTerritoryIDs[i%len(store.SalesTerritoryIDs)]
-		}
+		territoryID := pickRef(store.SalesTerritoryIDs, i)
 
-		customerID := ""
-		if len(store.CustomerIDs) > 0 {
-			customerID = store.CustomerIDs[i%len(store.CustomerIDs)]
-		}
+		customerID := pickRef(store.CustomerIDs, i)
 
 		year := 2025
 		quarter := int32((i % 4) + 1)
@@ -254,7 +220,7 @@ func generateSalesForecasts(store *MockDataStore) []*sales.SalesForecast {
 		expectedCloseDate := time.Now().AddDate(0, rand.Intn(6), rand.Intn(28))
 
 		forecasts[i] = &sales.SalesForecast{
-			ForecastId:        fmt.Sprintf("sfcs-%03d", i+1),
+			ForecastId:        genID("sfcs", i),
 			Name:              fmt.Sprintf("Forecast %d - Q%d %d", i+1, quarter, year),
 			SalespersonId:     salespersonID,
 			TerritoryId:       territoryID,
@@ -263,8 +229,8 @@ func generateSalesForecasts(store *MockDataStore) []*sales.SalesForecast {
 			Year:              int32(year),
 			Quarter:           quarter,
 			Month:             month,
-			ForecastAmount:    &erp.Money{Amount: forecastAmount, CurrencyCode: "USD"},
-			WeightedAmount:    &erp.Money{Amount: weightedAmount, CurrencyCode: "USD"},
+			ForecastAmount:    money(forecastAmount),
+			WeightedAmount:    money(weightedAmount),
 			Probability:       probability,
 			ExpectedCloseDate: expectedCloseDate.Unix(),
 			Notes:             fmt.Sprintf("Forecast for period %d", i+1),

@@ -15,35 +15,15 @@ limitations under the License.
 package bins
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type BinServiceCallback struct{}
-
-func newBinServiceCallback() *BinServiceCallback {
-	return &BinServiceCallback{}
-}
-
-func (this *BinServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmBin)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.BinId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BinServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBinServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmBin",
+		func(e *scm.ScmBin) { common.GenerateID(&e.BinId) },
+		validate)
 }
 
 func validate(item *scm.ScmBin, vnic ifs.IVNic) error {

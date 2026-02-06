@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
@@ -61,15 +60,15 @@ func generateItems(store *MockDataStore) []*scm.ScmItem {
 		}
 
 		items[i] = &scm.ScmItem{
-			ItemId:             fmt.Sprintf("item-%03d", i+1),
+			ItemId:             genID("item", i),
 			ItemNumber:         fmt.Sprintf("ITM-%05d", i+1),
 			Name:               itemNames[i],
 			Description:        fmt.Sprintf("Inventory item: %s", itemNames[i]),
 			ItemType:           itemTypes[i%len(itemTypes)],
 			CategoryId:         store.ItemCategoryIDs[i%len(store.ItemCategoryIDs)],
 			UnitOfMeasure:      uoms[i%len(uoms)],
-			UnitCost:           &erp.Money{Amount: unitCost, CurrencyCode: "USD"},
-			UnitPrice:          &erp.Money{Amount: unitPrice, CurrencyCode: "USD"},
+			UnitCost:           money(unitCost),
+			UnitPrice:          money(unitPrice),
 			ValuationMethod:    valuationMethods[i%len(valuationMethods)],
 			PlanningMethod:     planningMethods[i%len(planningMethods)],
 			IsLotTracked:       isLotTracked,
@@ -118,7 +117,7 @@ func generateStockMovements(store *MockDataStore) []*scm.ScmStockMovement {
 		movementDate := now.AddDate(0, 0, -rand.Intn(90))
 
 		movements[i] = &scm.ScmStockMovement{
-			MovementId:    fmt.Sprintf("smov-%03d", i+1),
+			MovementId:    genID("smov", i),
 			ItemId:        store.ItemIDs[i%len(store.ItemIDs)],
 			WarehouseId:   store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)],
 			BinId:         store.BinIDs[i%len(store.BinIDs)],
@@ -128,7 +127,7 @@ func generateStockMovements(store *MockDataStore) []*scm.ScmStockMovement {
 			ReferenceId:   referenceId,
 			ReferenceType: referenceType,
 			MovementDate:  movementDate.Unix(),
-			Cost:          &erp.Money{Amount: int64(rand.Intn(99000)+1000) * 1, CurrencyCode: "USD"},
+			Cost:          money(int64(rand.Intn(99000)+1000) * 1),
 			Notes:         fmt.Sprintf("Stock movement %d - %s", i+1, referenceType),
 			AuditInfo:     createAuditInfo(),
 		}
@@ -154,7 +153,7 @@ func generateLotNumbers(store *MockDataStore) []*scm.ScmLotNumber {
 		expiryDate := manufactureDate.AddDate(0, 0, shelfDays)
 
 		lots[i] = &scm.ScmLotNumber{
-			LotId:           fmt.Sprintf("lot-%03d", i+1),
+			LotId:           genID("lot", i),
 			ItemId:          lotTrackedItemIDs[i%len(lotTrackedItemIDs)],
 			LotNumber:       fmt.Sprintf("LOT-%06d", i+1),
 			WarehouseId:     store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)],
@@ -185,7 +184,7 @@ func generateSerialNumbers(store *MockDataStore) []*scm.ScmSerialNumber {
 
 	for i := 0; i < 25; i++ {
 		serials[i] = &scm.ScmSerialNumber{
-			SerialId:     fmt.Sprintf("ser-%03d", i+1),
+			SerialId:     genID("ser", i),
 			ItemId:       serialTrackedItemIDs[i%len(serialTrackedItemIDs)],
 			SerialNumber: fmt.Sprintf("SN-%08d", i+1),
 			WarehouseId:  store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)],
@@ -212,7 +211,7 @@ func generateCycleCounts(store *MockDataStore) []*scm.ScmCycleCount {
 		countDate := now.AddDate(0, 0, -rand.Intn(30))
 
 		counts[i] = &scm.ScmCycleCount{
-			CycleCountId:  fmt.Sprintf("cc-%03d", i+1),
+			CycleCountId:  genID("cc", i),
 			WarehouseId:   store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)],
 			CountDate:     countDate.Unix(),
 			Status:        taskStatuses[i%len(taskStatuses)],
@@ -236,7 +235,7 @@ func generateReorderPoints(store *MockDataStore) []*scm.ScmReorderPoint {
 		reorderQty := float64(rand.Intn(401) + 100) // 100-500
 
 		points[i] = &scm.ScmReorderPoint{
-			ReorderPointId:  fmt.Sprintf("rop-%03d", i+1),
+			ReorderPointId:  genID("rop", i),
 			ItemId:          store.ItemIDs[i%len(store.ItemIDs)],
 			WarehouseId:     store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)],
 			MinimumQuantity: minQty,
@@ -268,12 +267,12 @@ func generateInventoryValuations(store *MockDataStore) []*scm.ScmInventoryValuat
 		valuationDate := now.AddDate(0, 0, -rand.Intn(30))
 
 		valuations[i] = &scm.ScmInventoryValuation{
-			ValuationId:     fmt.Sprintf("ival-%03d", i+1),
+			ValuationId:     genID("ival", i),
 			ItemId:          store.ItemIDs[i%len(store.ItemIDs)],
 			WarehouseId:     store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)],
 			QuantityOnHand:  qtyOnHand,
-			UnitCost:        &erp.Money{Amount: unitCost, CurrencyCode: "USD"},
-			TotalValue:      &erp.Money{Amount: totalValue, CurrencyCode: "USD"},
+			UnitCost:        money(unitCost),
+			TotalValue:      money(totalValue),
 			ValuationMethod: valuationMethods[i%len(valuationMethods)],
 			ValuationDate:   valuationDate.Unix(),
 			AuditInfo:       createAuditInfo(),

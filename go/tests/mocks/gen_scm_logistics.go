@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
@@ -59,7 +58,7 @@ func generateShipments(store *MockDataStore) []*scm.ScmShipment {
 		freightCost := int64(rand.Intn(95001) + 5000)  // 5000-100000 cents
 
 		shipments[i] = &scm.ScmShipment{
-			ShipmentId:         fmt.Sprintf("shp-%03d", i+1),
+			ShipmentId:         genID("shp", i),
 			ShipmentNumber:     fmt.Sprintf("SHP-%06d", i+1),
 			CarrierId:          carrierID,
 			OriginWarehouseId:  warehouseID,
@@ -71,7 +70,7 @@ func generateShipments(store *MockDataStore) []*scm.ScmShipment {
 			Status:             status,
 			TrackingNumber:     fmt.Sprintf("SHIP-%010d", i+1),
 			TotalWeight:        totalWeight,
-			FreightCost:        &erp.Money{Amount: freightCost, CurrencyCode: "USD"},
+			FreightCost:        money(freightCost),
 			Notes:              fmt.Sprintf("Shipment %d for customer %s", i+1, customerID),
 			AuditInfo:          createAuditInfo(),
 		}
@@ -90,7 +89,7 @@ func generateRoutes(store *MockDataStore) []*scm.ScmRoute {
 		carrierID := store.SCMCarrierIDs[i%len(store.SCMCarrierIDs)]
 
 		routes[i] = &scm.ScmRoute{
-			RouteId:       fmt.Sprintf("rte-%03d", i+1),
+			RouteId:       genID("rte", i),
 			Name:          name,
 			Description:   fmt.Sprintf("Logistics route: %s", name),
 			Origin:        store.SCMWarehouseIDs[originIdx],
@@ -126,9 +125,9 @@ func generateLoadPlans(store *MockDataStore) []*scm.ScmLoadPlan {
 		plannedDate := time.Date(2025, time.Month((i%12)+1), (i%28)+1, 0, 0, 0, 0, time.UTC)
 
 		plans[i] = &scm.ScmLoadPlan{
-			LoadPlanId:  fmt.Sprintf("lp-%03d", i+1),
+			LoadPlanId:  genID("lp", i),
 			ShipmentId:  shipmentID,
-			VehicleId:   fmt.Sprintf("veh-%03d", i+1),
+			VehicleId:   genID("veh", i),
 			TotalWeight: currentWeight,
 			TotalVolume: float64(rand.Intn(2001) + 500),
 			MaxWeight:   maxWeight,
@@ -154,7 +153,7 @@ func generateDeliveryProofs(store *MockDataStore) []*scm.ScmDeliveryProof {
 		deliveryDate := time.Date(2025, time.Month((i%12)+1), (i%28)+1, 14, 30, 0, 0, time.UTC)
 
 		proofs[i] = &scm.ScmDeliveryProof{
-			ProofId:      fmt.Sprintf("dprf-%03d", i+1),
+			ProofId:      genID("dprf", i),
 			ShipmentId:   shipmentID,
 			DeliveryDate: deliveryDate.Unix(),
 			ReceivedBy:   randomName(),
@@ -187,12 +186,12 @@ func generateFreightAudits(store *MockDataStore) []*scm.ScmFreightAudit {
 		varianceAmount := actualAmount - invoicedAmount
 
 		audits[i] = &scm.ScmFreightAudit{
-			AuditId:        fmt.Sprintf("faud-%03d", i+1),
+			AuditId:        genID("faud", i),
 			ShipmentId:     shipmentID,
 			CarrierId:      carrierID,
-			InvoicedAmount: &erp.Money{Amount: invoicedAmount, CurrencyCode: "USD"},
-			ActualAmount:   &erp.Money{Amount: actualAmount, CurrencyCode: "USD"},
-			Variance:       &erp.Money{Amount: varianceAmount, CurrencyCode: "USD"},
+			InvoicedAmount: money(invoicedAmount),
+			ActualAmount:   money(actualAmount),
+			Variance:       money(varianceAmount),
 			AuditDate:      auditDate.Unix(),
 			Status:         auditStatuses[i%len(auditStatuses)],
 			Notes:          fmt.Sprintf("Freight audit for shipment %s", shipmentID),
@@ -230,7 +229,7 @@ func generateReturnAuthorizations(store *MockDataStore) []*scm.ScmReturnAuthoriz
 		}
 
 		returns[i] = &scm.ScmReturnAuthorization{
-			RmaId:              fmt.Sprintf("rma-%03d", i+1),
+			RmaId:              genID("rma", i),
 			RmaNumber:          fmt.Sprintf("RMA-%06d", i+1),
 			CustomerId:         customerID,
 			OriginalShipmentId: shipmentID,
@@ -238,7 +237,7 @@ func generateReturnAuthorizations(store *MockDataStore) []*scm.ScmReturnAuthoriz
 			Status:             returnStatuses[i%len(returnStatuses)],
 			ReturnDate:         returnDate.Unix(),
 			ItemsDescription:   itemDesc,
-			RefundAmount:       &erp.Money{Amount: refundAmount, CurrencyCode: "USD"},
+			RefundAmount:       money(refundAmount),
 			Notes:              fmt.Sprintf("RMA for customer %s - %s", customerID, reasons[i%len(reasons)]),
 			AuditInfo:          createAuditInfo(),
 		}

@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package boms
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-type MfgBomServiceCallback struct{}
-
-func newMfgBomServiceCallback() *MfgBomServiceCallback {
-	return &MfgBomServiceCallback{}
-}
-
-func (this *MfgBomServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgBom)
-	if !ok {
-		return nil, false, errors.New("invalid MfgBom type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.BomId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgBomServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgBomServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgBom",
+		func(e *mfg.MfgBom) { common.GenerateID(&e.BomId) },
+		validate)
 }
 
 func validate(item *mfg.MfgBom, vnic ifs.IVNic) error {

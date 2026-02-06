@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package forecastmodels
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type ForecastModelServiceCallback struct{}
-
-func newForecastModelServiceCallback() *ForecastModelServiceCallback {
-	return &ForecastModelServiceCallback{}
-}
-
-func (this *ForecastModelServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmForecastModel)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ModelId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *ForecastModelServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newForecastModelServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmForecastModel",
+		func(e *scm.ScmForecastModel) { common.GenerateID(&e.ModelId) },
+		validate)
 }
 
 func validate(item *scm.ScmForecastModel, vnic ifs.IVNic) error {

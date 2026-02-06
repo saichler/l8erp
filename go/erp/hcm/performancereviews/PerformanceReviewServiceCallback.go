@@ -15,37 +15,16 @@ limitations under the License.
 package performancereviews
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type PerformanceReviewServiceCallback struct {
-}
-
-func newPerformanceReviewServiceCallback() *PerformanceReviewServiceCallback {
-	return &PerformanceReviewServiceCallback{}
-}
-
-func (this *PerformanceReviewServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.PerformanceReview)
-	if !ok {
-		return nil, false, errors.New("invalid performance review type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.ReviewId)
-	}
-	err := validatePerfRevw(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PerformanceReviewServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPerformanceReviewServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("PerformanceReview",
+		func(e *hcm.PerformanceReview) { common.GenerateID(&e.ReviewId) },
+		validatePerfRevw)
 }
 
 func validatePerfRevw(entity *hcm.PerformanceReview, vnic ifs.IVNic) error {

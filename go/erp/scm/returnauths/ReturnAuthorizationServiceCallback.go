@@ -15,35 +15,15 @@ limitations under the License.
 package returnauths
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type ReturnAuthorizationServiceCallback struct{}
-
-func newReturnAuthorizationServiceCallback() *ReturnAuthorizationServiceCallback {
-	return &ReturnAuthorizationServiceCallback{}
-}
-
-func (this *ReturnAuthorizationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmReturnAuthorization)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.RmaId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *ReturnAuthorizationServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newReturnAuthorizationServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmReturnAuthorization",
+		func(e *scm.ScmReturnAuthorization) { common.GenerateID(&e.RmaId) },
+		validate)
 }
 
 func validate(item *scm.ScmReturnAuthorization, vnic ifs.IVNic) error {

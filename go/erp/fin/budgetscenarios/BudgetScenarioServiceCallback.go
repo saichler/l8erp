@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package budgetscenarios
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type BudgetScenarioServiceCallback struct{}
-
-func newBudgetScenarioServiceCallback() *BudgetScenarioServiceCallback {
-	return &BudgetScenarioServiceCallback{}
-}
-
-func (this *BudgetScenarioServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	budgetScenario, ok := any.(*fin.BudgetScenario)
-	if !ok {
-		return nil, false, errors.New("invalid budgetScenario type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&budgetScenario.ScenarioId)
-	}
-	err := validate(budgetScenario, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BudgetScenarioServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBudgetScenarioServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("BudgetScenario",
+		func(e *fin.BudgetScenario) { common.GenerateID(&e.ScenarioId) },
+		validate)
 }
 
 func validate(budgetScenario *fin.BudgetScenario, vnic ifs.IVNic) error {

@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package newproductplans
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type NewProductPlanServiceCallback struct{}
-
-func newNewProductPlanServiceCallback() *NewProductPlanServiceCallback {
-	return &NewProductPlanServiceCallback{}
-}
-
-func (this *NewProductPlanServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmNewProductPlan)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.PlanId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *NewProductPlanServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newNewProductPlanServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmNewProductPlan",
+		func(e *scm.ScmNewProductPlan) { common.GenerateID(&e.PlanId) },
+		validate)
 }
 
 func validate(item *scm.ScmNewProductPlan, vnic ifs.IVNic) error {

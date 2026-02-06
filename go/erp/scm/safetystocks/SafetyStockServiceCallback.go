@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package safetystocks
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type SafetyStockServiceCallback struct{}
-
-func newSafetyStockServiceCallback() *SafetyStockServiceCallback {
-	return &SafetyStockServiceCallback{}
-}
-
-func (this *SafetyStockServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmSafetyStock)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.SafetyStockId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *SafetyStockServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newSafetyStockServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmSafetyStock",
+		func(e *scm.ScmSafetyStock) { common.GenerateID(&e.SafetyStockId) },
+		validate)
 }
 
 func validate(item *scm.ScmSafetyStock, vnic ifs.IVNic) error {

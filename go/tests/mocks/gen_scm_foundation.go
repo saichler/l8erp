@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
@@ -28,7 +27,7 @@ func generateItemCategories() []*scm.ScmItemCategory {
 	categories := make([]*scm.ScmItemCategory, len(itemCategoryNames))
 	for i, name := range itemCategoryNames {
 		cat := &scm.ScmItemCategory{
-			CategoryId:  fmt.Sprintf("icat-%03d", i+1),
+			CategoryId:  genID("icat", i),
 			Name:        name,
 			Description: fmt.Sprintf("Category for %s", name),
 			IsActive:    true,
@@ -64,8 +63,8 @@ func generateWarehouses(store *MockDataStore) []*scm.ScmWarehouse {
 		}
 
 		warehouses[i] = &scm.ScmWarehouse{
-			WarehouseId:   fmt.Sprintf("wh-%03d", i+1),
-			Code:          fmt.Sprintf("WH%03d", i+1),
+			WarehouseId:   genID("wh", i),
+			Code:          genCode("WH", i),
 			Name:          name,
 			WarehouseType: warehouseTypes[i],
 			Address:       createAddress(),
@@ -135,8 +134,8 @@ func generateSCMCarriers() []*scm.ScmCarrier {
 	carriers := make([]*scm.ScmCarrier, len(scmCarrierNames))
 	for i, name := range scmCarrierNames {
 		carriers[i] = &scm.ScmCarrier{
-			CarrierId:   fmt.Sprintf("sccar-%03d", i+1),
-			Code:        fmt.Sprintf("CR%03d", i+1),
+			CarrierId:   genID("sccar", i),
+			Code:        genCode("CR", i),
 			Name:        name,
 			CarrierType: carrierTypes[i%len(carrierTypes)],
 			ContactInfo: createContact(),
@@ -167,10 +166,7 @@ func generateFreightRates(store *MockDataStore) []*scm.ScmFreightRate {
 				CarrierId: carrierID,
 				Origin:    cities[originIdx],
 				Destination: cities[destIdx],
-				RatePerUnit: &erp.Money{
-					Amount:       int64(rand.Intn(4501) + 500),
-					CurrencyCode: "USD",
-				},
+				RatePerUnit: money(int64(rand.Intn(4501) + 500)),
 				UnitType:      unitTypes[j%len(unitTypes)],
 				EffectiveDate: effectiveDate.Unix(),
 				ExpiryDate:    expiryDate.Unix(),
@@ -236,7 +232,7 @@ func generateForecastModels() []*scm.ScmForecastModel {
 	models := make([]*scm.ScmForecastModel, len(defs))
 	for i, d := range defs {
 		models[i] = &scm.ScmForecastModel{
-			ModelId:        fmt.Sprintf("fmdl-%03d", i+1),
+			ModelId:        genID("fmdl", i),
 			Name:           d.name,
 			Description:    d.description,
 			ForecastMethod: d.method,

@@ -26,9 +26,9 @@ func generateJobFamilies() []*hcm.JobFamily {
 	families := make([]*hcm.JobFamily, len(jobFamilyNames))
 	for i, name := range jobFamilyNames {
 		families[i] = &hcm.JobFamily{
-			JobFamilyId: fmt.Sprintf("jf-%03d", i+1),
+			JobFamilyId: genID("jf", i),
 			Name:        name,
-			Code:        fmt.Sprintf("JF%03d", i+1),
+			Code:        genCode("JF", i),
 			Description: fmt.Sprintf("%s job family including related roles and career paths", name),
 			IsActive:    true,
 			AuditInfo:   createAuditInfo(),
@@ -42,9 +42,9 @@ func generateCarriers() []*hcm.Carrier {
 	carriers := make([]*hcm.Carrier, len(carrierNames))
 	for i, name := range carrierNames {
 		carriers[i] = &hcm.Carrier{
-			CarrierId:   fmt.Sprintf("car-%03d", i+1),
+			CarrierId:   genID("car", i),
 			Name:        name,
-			Code:        fmt.Sprintf("CAR%03d", i+1),
+			Code:        genCode("CAR", i),
 			CarrierType: hcm.CarrierType(rand.Intn(4) + 1),
 			ContactName: randomName(),
 			Email:       fmt.Sprintf("contact@%s.com", sanitizeEmail(name)),
@@ -74,9 +74,9 @@ func generateCertifications() []*hcm.Certification {
 	certs := make([]*hcm.Certification, len(certificationNames))
 	for i, name := range certificationNames {
 		certs[i] = &hcm.Certification{
-			CertificationId:     fmt.Sprintf("cert-%03d", i+1),
+			CertificationId:     genID("cert", i),
 			Name:                name,
-			Code:                fmt.Sprintf("CERT%03d", i+1),
+			Code:                genCode("CERT", i),
 			CertificationType:   certTypes[i%len(certTypes)],
 			IssuingOrganization: getIssuingOrg(name),
 			Description:         fmt.Sprintf("Professional certification: %s", name),
@@ -99,9 +99,9 @@ func generateSkills() []*hcm.Skill {
 	}
 	for i, name := range skillNames {
 		skills[i] = &hcm.Skill{
-			SkillId:     fmt.Sprintf("skill-%03d", i+1),
+			SkillId:     genID("skill", i),
 			Name:        name,
-			Code:        fmt.Sprintf("SK%03d", i+1),
+			Code:        genCode("SK", i),
 			Category:    categories[i%len(categories)],
 			Description: fmt.Sprintf("Proficiency in %s", name),
 			IsActive:    true,

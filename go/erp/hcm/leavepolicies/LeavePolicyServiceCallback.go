@@ -15,36 +15,15 @@ limitations under the License.
 package leavepolicies
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-type LeavePolicyServiceCallback struct {
-}
-
-func newLeavePolicyServiceCallback() *LeavePolicyServiceCallback {
-	return &LeavePolicyServiceCallback{}
-}
-
-func (this *LeavePolicyServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.LeavePolicy)
-	if !ok {
-		return nil, false, errors.New("invalid leave policy type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.PolicyId)
-	}
-	err := validateLeavePol(entity)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *LeavePolicyServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newLeavePolicyServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("LeavePolicy",
+		func(e *hcm.LeavePolicy) { common.GenerateID(&e.PolicyId) },
+		nil)
 }
 
 func validateLeavePol(entity *hcm.LeavePolicy) error {

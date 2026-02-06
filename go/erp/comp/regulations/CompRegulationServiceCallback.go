@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package regulations
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/comp"
 )
 
-type CompRegulationServiceCallback struct{}
-
-func newCompRegulationServiceCallback() *CompRegulationServiceCallback {
-	return &CompRegulationServiceCallback{}
-}
-
-func (this *CompRegulationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*comp.CompRegulation)
-	if !ok {
-		return nil, false, errors.New("invalid CompRegulation type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.RegulationId)
-	}
-	err := validateCompRegulation(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CompRegulationServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCompRegulationServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("CompRegulation",
+		func(e *comp.CompRegulation) { common.GenerateID(&e.RegulationId) },
+		validateCompRegulation)
 }
 
 func validateCompRegulation(item *comp.CompRegulation, vnic ifs.IVNic) error {

@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package tasks
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/prj"
 )
 
-type PrjTaskServiceCallback struct{}
-
-func newPrjTaskServiceCallback() *PrjTaskServiceCallback {
-	return &PrjTaskServiceCallback{}
-}
-
-func (this *PrjTaskServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*prj.PrjTask)
-	if !ok {
-		return nil, false, errors.New("invalid PrjTask type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.TaskId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PrjTaskServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPrjTaskServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("PrjTask",
+		func(e *prj.PrjTask) { common.GenerateID(&e.TaskId) },
+		validate)
 }
 
 func validate(item *prj.PrjTask, vnic ifs.IVNic) error {

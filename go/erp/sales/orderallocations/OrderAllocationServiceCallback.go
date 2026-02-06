@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package orderallocations
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/sales"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type OrderAllocationServiceCallback struct{}
-
-func newOrderAllocationServiceCallback() *OrderAllocationServiceCallback {
-	return &OrderAllocationServiceCallback{}
-}
-
-func (this *OrderAllocationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*sales.SalesOrderAllocation)
-	if !ok {
-		return nil, false, errors.New("invalid order allocation type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.AllocationId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *OrderAllocationServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newOrderAllocationServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SalesOrderAllocation",
+		func(e *sales.SalesOrderAllocation) { common.GenerateID(&e.AllocationId) },
+		validate)
 }
 
 func validate(item *sales.SalesOrderAllocation, vnic ifs.IVNic) error {

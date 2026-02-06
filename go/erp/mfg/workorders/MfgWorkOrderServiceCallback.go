@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package workorders
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-type MfgWorkOrderServiceCallback struct{}
-
-func newMfgWorkOrderServiceCallback() *MfgWorkOrderServiceCallback {
-	return &MfgWorkOrderServiceCallback{}
-}
-
-func (this *MfgWorkOrderServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgWorkOrder)
-	if !ok {
-		return nil, false, errors.New("invalid MfgWorkOrder type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.WorkOrderId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgWorkOrderServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgWorkOrderServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgWorkOrder",
+		func(e *mfg.MfgWorkOrder) { common.GenerateID(&e.WorkOrderId) },
+		validate)
 }
 
 func validate(item *mfg.MfgWorkOrder, vnic ifs.IVNic) error {

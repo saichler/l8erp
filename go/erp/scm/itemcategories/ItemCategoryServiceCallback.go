@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package itemcategories
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type ItemCategoryServiceCallback struct{}
-
-func newItemCategoryServiceCallback() *ItemCategoryServiceCallback {
-	return &ItemCategoryServiceCallback{}
-}
-
-func (this *ItemCategoryServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmItemCategory)
-	if !ok {
-		return nil, false, errors.New("invalid item category type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.CategoryId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *ItemCategoryServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newItemCategoryServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmItemCategory",
+		func(e *scm.ScmItemCategory) { common.GenerateID(&e.CategoryId) },
+		validate)
 }
 
 func validate(item *scm.ScmItemCategory, vnic ifs.IVNic) error {

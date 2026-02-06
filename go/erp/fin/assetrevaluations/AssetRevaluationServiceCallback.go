@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package assetrevaluations
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type AssetRevaluationServiceCallback struct{}
-
-func newAssetRevaluationServiceCallback() *AssetRevaluationServiceCallback {
-	return &AssetRevaluationServiceCallback{}
-}
-
-func (this *AssetRevaluationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	assetRevaluation, ok := any.(*fin.AssetRevaluation)
-	if !ok {
-		return nil, false, errors.New("invalid assetRevaluation type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&assetRevaluation.RevaluationId)
-	}
-	err := validate(assetRevaluation, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *AssetRevaluationServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newAssetRevaluationServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("AssetRevaluation",
+		func(e *fin.AssetRevaluation) { common.GenerateID(&e.RevaluationId) },
+		validate)
 }
 
 func validate(assetRevaluation *fin.AssetRevaluation, vnic ifs.IVNic) error {

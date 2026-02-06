@@ -15,37 +15,16 @@ limitations under the License.
 package equitygrants
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type EquityGrantServiceCallback struct {
-}
-
-func newEquityGrantServiceCallback() *EquityGrantServiceCallback {
-	return &EquityGrantServiceCallback{}
-}
-
-func (this *EquityGrantServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.EquityGrant)
-	if !ok {
-		return nil, false, errors.New("invalid equity grant type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.GrantId)
-	}
-	err := validateEqGrant(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *EquityGrantServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newEquityGrantServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("EquityGrant",
+		func(e *hcm.EquityGrant) { common.GenerateID(&e.GrantId) },
+		validateEqGrant)
 }
 
 func validateEqGrant(entity *hcm.EquityGrant, vnic ifs.IVNic) error {

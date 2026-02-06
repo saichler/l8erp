@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
@@ -119,9 +118,9 @@ func generateCOBRAEvents(store *MockDataStore) []*hcm.COBRAEvent {
 			CoverageEndDate:     qualifyingDate.AddDate(0, 18, 0).Unix(),
 			CoverageMonths:      18,
 			Status:              hcm.COBRAStatus_COBRA_STATUS_NOTIFIED,
-			MonthlyPremium:      &erp.Money{Amount: monthlyPremium, CurrencyCode: "USD"},
+			MonthlyPremium:      money(monthlyPremium),
 			AdminFeePercentage:  2.0,
-			TotalMonthlyCost:    &erp.Money{Amount: int64(float64(monthlyPremium) * 1.02), CurrencyCode: "USD"},
+			TotalMonthlyCost:    money(int64(float64(monthlyPremium) * 1.02)),
 			AuditInfo:           createAuditInfo(),
 		})
 		idx++

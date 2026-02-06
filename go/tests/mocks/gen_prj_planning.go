@@ -61,26 +61,11 @@ func generateProjects(store *MockDataStore) []*prj.PrjProject {
 
 	for i := 0; i < count; i++ {
 		// Cross-module references
-		customerID := ""
-		if len(store.CustomerIDs) > 0 {
-			customerID = store.CustomerIDs[i%len(store.CustomerIDs)]
-		}
-		accountID := ""
-		if len(store.CrmAccountIDs) > 0 {
-			accountID = store.CrmAccountIDs[i%len(store.CrmAccountIDs)]
-		}
-		managerID := ""
-		if len(store.ManagerIDs) > 0 {
-			managerID = store.ManagerIDs[i%len(store.ManagerIDs)]
-		}
-		departmentID := ""
-		if len(store.DepartmentIDs) > 0 {
-			departmentID = store.DepartmentIDs[i%len(store.DepartmentIDs)]
-		}
-		templateID := ""
-		if len(store.PrjProjectTemplateIDs) > 0 {
-			templateID = store.PrjProjectTemplateIDs[i%len(store.PrjProjectTemplateIDs)]
-		}
+		customerID := pickRef(store.CustomerIDs, i)
+		accountID := pickRef(store.CrmAccountIDs, i)
+		managerID := pickRef(store.ManagerIDs, i)
+		departmentID := pickRef(store.DepartmentIDs, i)
+		templateID := pickRef(store.PrjProjectTemplateIDs, i)
 
 		// Dates
 		startDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(30))
@@ -124,7 +109,7 @@ func generateProjects(store *MockDataStore) []*prj.PrjProject {
 		}
 
 		projects[i] = &prj.PrjProject{
-			ProjectId:       fmt.Sprintf("prj-%03d", i+1),
+			ProjectId:       genID("prj", i),
 			Code:            fmt.Sprintf("PRJ-%04d", 1000+i+1),
 			Name:            prjProjectNames[i%len(prjProjectNames)],
 			Description:     fmt.Sprintf("Description for project: %s", prjProjectNames[i%len(prjProjectNames)]),
@@ -140,8 +125,8 @@ func generateProjects(store *MockDataStore) []*prj.PrjProject {
 			EndDate:         endDate.Unix(),
 			EstimatedHours:  estimatedHours,
 			ActualHours:     actualHours,
-			Budget:          &erp.Money{Amount: budgetAmount, CurrencyCode: "USD"},
-			ActualCost:      &erp.Money{Amount: actualCost, CurrencyCode: "USD"},
+			Budget:          money(budgetAmount),
+			ActualCost:      money(actualCost),
 			PercentComplete: percentComplete,
 			BillingType:     billingTypes[i%len(billingTypes)],
 			AuditInfo:       createAuditInfo(),
@@ -157,10 +142,7 @@ func generatePhases(store *MockDataStore) []*prj.PrjPhase {
 
 	for i := 0; i < count; i++ {
 		// Reference to project (distribute phases across projects)
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
 
 		// Sequence within project (roughly 3-4 phases per project)
 		sequence := int32((i % 4) + 1)
@@ -191,7 +173,7 @@ func generatePhases(store *MockDataStore) []*prj.PrjPhase {
 		}
 
 		phases[i] = &prj.PrjPhase{
-			PhaseId:         fmt.Sprintf("phase-%03d", i+1),
+			PhaseId:         genID("phase", i),
 			ProjectId:       projectID,
 			Name:            prjPhaseNames[i%len(prjPhaseNames)],
 			Description:     fmt.Sprintf("Phase: %s", prjPhaseNames[i%len(prjPhaseNames)]),
@@ -222,18 +204,9 @@ func generateTasks(store *MockDataStore) []*prj.PrjTask {
 
 	for i := 0; i < count; i++ {
 		// References
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
-		phaseID := ""
-		if len(store.PrjPhaseIDs) > 0 {
-			phaseID = store.PrjPhaseIDs[i%len(store.PrjPhaseIDs)]
-		}
-		assigneeID := ""
-		if len(store.EmployeeIDs) > 0 {
-			assigneeID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
+		phaseID := pickRef(store.PrjPhaseIDs, i)
+		assigneeID := pickRef(store.EmployeeIDs, i)
 
 		// Dates
 		startDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(30))
@@ -278,7 +251,7 @@ func generateTasks(store *MockDataStore) []*prj.PrjTask {
 		wbsCode := fmt.Sprintf("%d.%d.%d", (i%15)+1, (i%4)+1, (i%10)+1)
 
 		tasks[i] = &prj.PrjTask{
-			TaskId:          fmt.Sprintf("task-%03d", i+1),
+			TaskId:          genID("task", i),
 			ProjectId:       projectID,
 			PhaseId:         phaseID,
 			WbsCode:         wbsCode,
@@ -308,18 +281,9 @@ func generateMilestones(store *MockDataStore) []*prj.PrjMilestone {
 
 	for i := 0; i < count; i++ {
 		// References
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
-		phaseID := ""
-		if len(store.PrjPhaseIDs) > 0 {
-			phaseID = store.PrjPhaseIDs[i%len(store.PrjPhaseIDs)]
-		}
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
+		phaseID := pickRef(store.PrjPhaseIDs, i)
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		// Dates
 		targetDate := time.Now().AddDate(0, 0, rand.Intn(90)-30)
@@ -343,11 +307,11 @@ func generateMilestones(store *MockDataStore) []*prj.PrjMilestone {
 		isBillable := i%3 == 0
 		var billingAmount *erp.Money
 		if isBillable {
-			billingAmount = &erp.Money{Amount: int64(rand.Intn(50000) + 5000), CurrencyCode: "USD"}
+			billingAmount = randomMoney(5000, 50000)
 		}
 
 		milestones[i] = &prj.PrjMilestone{
-			MilestoneId:   fmt.Sprintf("mlstn-%03d", i+1),
+			MilestoneId:   genID("mlstn", i),
 			ProjectId:     projectID,
 			PhaseId:       phaseID,
 			Name:          prjMilestoneNames[i%len(prjMilestoneNames)],

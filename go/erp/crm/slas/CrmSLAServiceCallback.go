@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package slas
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/crm"
 )
 
-type CrmSLAServiceCallback struct{}
-
-func newCrmSLAServiceCallback() *CrmSLAServiceCallback {
-	return &CrmSLAServiceCallback{}
-}
-
-func (this *CrmSLAServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*crm.CrmSLA)
-	if !ok {
-		return nil, false, errors.New("invalid CrmSLA type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.SlaId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CrmSLAServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCrmSLAServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("CrmSLA",
+		func(e *crm.CrmSLA) { common.GenerateID(&e.SlaId) },
+		validate)
 }
 
 func validate(item *crm.CrmSLA, vnic ifs.IVNic) error {

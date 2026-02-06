@@ -56,7 +56,7 @@ func generateEcomCustomers() []*ecom.EcomCustomer {
 		totalSpent := int64(totalOrders) * int64(rand.Intn(10000)+5000) // $50-$150 avg per order
 
 		customers[i] = &ecom.EcomCustomer{
-			CustomerId:       fmt.Sprintf("ecust-%03d", i+1),
+			CustomerId:       genID("ecust", i),
 			Email:            email,
 			FirstName:        firstName,
 			LastName:         lastName,
@@ -68,7 +68,7 @@ func generateEcomCustomers() []*ecom.EcomCustomer {
 			CreatedDate:      createdDate.Unix(),
 			LastLoginDate:    lastLoginDate.Unix(),
 			TotalOrders:      totalOrders,
-			TotalSpent:       &erp.Money{Amount: totalSpent, CurrencyCode: "USD"},
+			TotalSpent:       money(totalSpent),
 			CustomerGroup:    customerGroups[i%len(customerGroups)],
 			AcceptsMarketing: rand.Intn(2) == 1,
 			Locale:           locales[i%len(locales)],
@@ -91,17 +91,14 @@ func generateEcomAddresses(store *MockDataStore) []*ecom.EcomCustomerAddress {
 	addresses := make([]*ecom.EcomCustomerAddress, count)
 	for i := 0; i < count; i++ {
 		customerIdx := i / 2
-		customerID := ""
-		if len(store.EcomCustomerIDs) > 0 {
-			customerID = store.EcomCustomerIDs[customerIdx%len(store.EcomCustomerIDs)]
-		}
+		customerID := pickRef(store.EcomCustomerIDs, customerIdx)
 
 		firstName := firstNames[rand.Intn(len(firstNames))]
 		lastName := lastNames[rand.Intn(len(lastNames))]
 		isFirst := i%2 == 0
 
 		addresses[i] = &ecom.EcomCustomerAddress{
-			AddressId:         fmt.Sprintf("eaddr-%03d", i+1),
+			AddressId:         genID("eaddr", i),
 			CustomerId:        customerID,
 			Label:             addressLabels[i%len(addressLabels)],
 			FirstName:         firstName,
@@ -146,10 +143,7 @@ func generateEcomWishlists(store *MockDataStore) []*ecom.EcomWishlist {
 
 	wishlists := make([]*ecom.EcomWishlist, count)
 	for i := 0; i < count; i++ {
-		customerID := ""
-		if len(store.EcomCustomerIDs) > 0 {
-			customerID = store.EcomCustomerIDs[(i*3)%len(store.EcomCustomerIDs)]
-		}
+		customerID := pickRef(store.EcomCustomerIDs, (i*3))
 
 		createdDate := time.Now().AddDate(0, -rand.Intn(12), -rand.Intn(28))
 		updatedDate := createdDate.Add(time.Duration(rand.Intn(30*24)) * time.Hour)
@@ -158,7 +152,7 @@ func generateEcomWishlists(store *MockDataStore) []*ecom.EcomWishlist {
 		}
 
 		wishlists[i] = &ecom.EcomWishlist{
-			WishlistId:  fmt.Sprintf("ewish-%03d", i+1),
+			WishlistId:  genID("ewish", i),
 			CustomerId:  customerID,
 			Name:        wishlistNames[i%len(wishlistNames)],
 			Description: fmt.Sprintf("A curated list of desired items - %s", wishlistNames[i%len(wishlistNames)]),
@@ -183,10 +177,7 @@ func generateEcomWishlistItems(store *MockDataStore) []*ecom.EcomWishlistItem {
 	items := make([]*ecom.EcomWishlistItem, count)
 	for i := 0; i < count; i++ {
 		wishlistIdx := i / 3
-		wishlistID := ""
-		if len(store.EcomWishlistIDs) > 0 {
-			wishlistID = store.EcomWishlistIDs[wishlistIdx%len(store.EcomWishlistIDs)]
-		}
+		wishlistID := pickRef(store.EcomWishlistIDs, wishlistIdx)
 
 		productID := ""
 		if len(store.EcomProductIDs) > 0 {
@@ -201,7 +192,7 @@ func generateEcomWishlistItems(store *MockDataStore) []*ecom.EcomWishlistItem {
 		addedDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 
 		items[i] = &ecom.EcomWishlistItem{
-			ItemId:     fmt.Sprintf("ewitem-%03d", i+1),
+			ItemId:     genID("ewitem", i),
 			WishlistId: wishlistID,
 			ProductId:  productID,
 			VariantId:  variantID,
@@ -273,17 +264,17 @@ func generateEcomCarts(store *MockDataStore) []*ecom.EcomCart {
 		itemCount := int32(rand.Intn(8) + 1)
 
 		carts[i] = &ecom.EcomCart{
-			CartId:         fmt.Sprintf("ecart-%03d", i+1),
+			CartId:         genID("ecart", i),
 			CustomerId:     customerID,
 			SessionId:      fmt.Sprintf("sess-%s", randomToken(16)),
 			Status:         cartStatuses[i%len(cartStatuses)],
 			CreatedDate:    createdDate.Unix(),
 			UpdatedDate:    updatedDate.Unix(),
 			ExpiresAt:      expiresAt.Unix(),
-			Subtotal:       &erp.Money{Amount: subtotal, CurrencyCode: "USD"},
-			DiscountAmount: &erp.Money{Amount: discountAmount, CurrencyCode: "USD"},
-			TaxAmount:      &erp.Money{Amount: taxAmount, CurrencyCode: "USD"},
-			Total:          &erp.Money{Amount: total, CurrencyCode: "USD"},
+			Subtotal:       money(subtotal),
+			DiscountAmount: money(discountAmount),
+			TaxAmount:      money(taxAmount),
+			Total:          money(total),
 			CouponCode:     "",
 			CurrencyCode:   "USD",
 			ItemCount:      itemCount,

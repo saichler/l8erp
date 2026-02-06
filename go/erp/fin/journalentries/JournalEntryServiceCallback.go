@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package journalentries
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type JournalEntryServiceCallback struct{}
-
-func newJournalEntryServiceCallback() *JournalEntryServiceCallback {
-	return &JournalEntryServiceCallback{}
-}
-
-func (this *JournalEntryServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	journalEntry, ok := any.(*fin.JournalEntry)
-	if !ok {
-		return nil, false, errors.New("invalid journalEntry type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&journalEntry.JournalEntryId)
-	}
-	err := validate(journalEntry, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *JournalEntryServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newJournalEntryServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("JournalEntry",
+		func(e *fin.JournalEntry) { common.GenerateID(&e.JournalEntryId) },
+		validate)
 }
 
 func validate(journalEntry *fin.JournalEntry, vnic ifs.IVNic) error {

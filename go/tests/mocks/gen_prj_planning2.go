@@ -25,7 +25,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -36,22 +35,10 @@ func generateDeliverables(store *MockDataStore) []*prj.PrjDeliverable {
 
 	for i := 0; i < count; i++ {
 		// References
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
-		milestoneID := ""
-		if len(store.PrjMilestoneIDs) > 0 {
-			milestoneID = store.PrjMilestoneIDs[i%len(store.PrjMilestoneIDs)]
-		}
-		taskID := ""
-		if len(store.PrjTaskIDs) > 0 {
-			taskID = store.PrjTaskIDs[i%len(store.PrjTaskIDs)]
-		}
-		acceptedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			acceptedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
+		milestoneID := pickRef(store.PrjMilestoneIDs, i)
+		taskID := pickRef(store.PrjTaskIDs, i)
+		acceptedBy := pickRef(store.EmployeeIDs, i)
 
 		// Dates
 		dueDate := time.Now().AddDate(0, 0, rand.Intn(60)-15)
@@ -71,7 +58,7 @@ func generateDeliverables(store *MockDataStore) []*prj.PrjDeliverable {
 		}
 
 		deliverables[i] = &prj.PrjDeliverable{
-			DeliverableId:  fmt.Sprintf("dlvrbl-%03d", i+1),
+			DeliverableId:  genID("dlvrbl", i),
 			ProjectId:      projectID,
 			MilestoneId:    milestoneID,
 			TaskId:         taskID,
@@ -103,10 +90,7 @@ func generateDependencies(store *MockDataStore) []*prj.PrjDependency {
 
 	for i := 0; i < count; i++ {
 		// Reference to project
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
 
 		// Task references (ensure different tasks)
 		predecessorTaskID := ""
@@ -137,7 +121,7 @@ func generateDependencies(store *MockDataStore) []*prj.PrjDependency {
 		}
 
 		dependencies[i] = &prj.PrjDependency{
-			DependencyId:      fmt.Sprintf("dep-%03d", i+1),
+			DependencyId:      genID("dep", i),
 			ProjectId:         projectID,
 			PredecessorTaskId: predecessorTaskID,
 			SuccessorTaskId:   successorTaskID,
@@ -174,20 +158,14 @@ func generateRisks(store *MockDataStore) []*prj.PrjRisk {
 
 	for i := 0; i < count; i++ {
 		// Reference to project
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		// Probability (1-100)
 		probability := int32(rand.Intn(80) + 10)
 
 		// Potential impact
-		potentialImpact := &erp.Money{Amount: int64(rand.Intn(100000) + 5000), CurrencyCode: "USD"}
+		potentialImpact := randomMoney(5000, 100000)
 
 		// Identified date
 		identifiedDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(30))
@@ -219,7 +197,7 @@ func generateRisks(store *MockDataStore) []*prj.PrjRisk {
 		}
 
 		risks[i] = &prj.PrjRisk{
-			RiskId:            fmt.Sprintf("risk-%03d", i+1),
+			RiskId:            genID("risk", i),
 			ProjectId:         projectID,
 			Name:              prjRiskNames[i%len(prjRiskNames)],
 			Description:       fmt.Sprintf("Risk description: %s", prjRiskNames[i%len(prjRiskNames)]),

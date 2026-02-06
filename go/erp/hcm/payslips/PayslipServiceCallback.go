@@ -15,38 +15,17 @@ limitations under the License.
 package payslips
 
 import (
-	"errors"
+	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/erp/hcm/payrollruns"
-	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type PayslipServiceCallback struct {
-}
-
-func newPayslipServiceCallback() *PayslipServiceCallback {
-	return &PayslipServiceCallback{}
-}
-
-func (this *PayslipServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.Payslip)
-	if !ok {
-		return nil, false, errors.New("invalid payslip type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.PayslipId)
-	}
-	err := validatePayslip(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PayslipServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPayslipServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Payslip",
+		func(e *hcm.Payslip) { common.GenerateID(&e.PayslipId) },
+		validatePayslip)
 }
 
 func validatePayslip(entity *hcm.Payslip, vnic ifs.IVNic) error {

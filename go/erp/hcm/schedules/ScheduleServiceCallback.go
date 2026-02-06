@@ -15,37 +15,16 @@ limitations under the License.
 package schedules
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type ScheduleServiceCallback struct {
-}
-
-func newScheduleServiceCallback() *ScheduleServiceCallback {
-	return &ScheduleServiceCallback{}
-}
-
-func (this *ScheduleServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.Schedule)
-	if !ok {
-		return nil, false, errors.New("invalid schedule type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.ScheduleId)
-	}
-	err := validateSchedule(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *ScheduleServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newScheduleServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Schedule",
+		func(e *hcm.Schedule) { common.GenerateID(&e.ScheduleId) },
+		validateSchedule)
 }
 
 func validateSchedule(entity *hcm.Schedule, vnic ifs.IVNic) error {

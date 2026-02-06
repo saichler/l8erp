@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package lotnumbers
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type LotNumberServiceCallback struct{}
-
-func newLotNumberServiceCallback() *LotNumberServiceCallback {
-	return &LotNumberServiceCallback{}
-}
-
-func (this *LotNumberServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmLotNumber)
-	if !ok {
-		return nil, false, errors.New("invalid lot number type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.LotId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *LotNumberServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newLotNumberServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmLotNumber",
+		func(e *scm.ScmLotNumber) { common.GenerateID(&e.LotId) },
+		validate)
 }
 
 func validate(item *scm.ScmLotNumber, vnic ifs.IVNic) error {

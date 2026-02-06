@@ -27,7 +27,6 @@ import (
 	"time"
 
 	"github.com/saichler/l8erp/go/types/comp"
-	"github.com/saichler/l8erp/go/types/erp"
 )
 
 // generateCompRiskRegisters creates risk register entries
@@ -55,15 +54,9 @@ func generateCompRiskRegisters(store *MockDataStore) []*comp.CompRiskRegister {
 	risks := make([]*comp.CompRiskRegister, count)
 
 	for i := 0; i < count; i++ {
-		departmentID := ""
-		if len(store.DepartmentIDs) > 0 {
-			departmentID = store.DepartmentIDs[i%len(store.DepartmentIDs)]
-		}
+		departmentID := pickRef(store.DepartmentIDs, i)
 
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		// Get related controls and requirements
 		relatedControlIDs := []string{}
@@ -107,7 +100,7 @@ func generateCompRiskRegisters(store *MockDataStore) []*comp.CompRiskRegister {
 		potentialImpact := int64((rand.Intn(100) + 10) * 10000) // $100K to $1.1M
 
 		risks[i] = &comp.CompRiskRegister{
-			RiskId:             fmt.Sprintf("crsk-%03d", i+1),
+			RiskId:             genID("crsk", i),
 			Code:               fmt.Sprintf("RISK-%04d", 6000+i+1),
 			Title:              compRiskTitles[i],
 			Description:        fmt.Sprintf("Risk assessment for %s including potential business impact", compRiskTitles[i]),
@@ -122,10 +115,7 @@ func generateCompRiskRegisters(store *MockDataStore) []*comp.CompRiskRegister {
 			ResidualImpact:     residualImpact,
 			ResidualRiskScore:  residualRiskScore,
 			RiskResponse:       compRiskResponses[i%len(compRiskResponses)],
-			PotentialFinancialImpact: &erp.Money{
-				Amount:       potentialImpact,
-				CurrencyCode: "USD",
-			},
+			PotentialFinancialImpact: money(potentialImpact),
 			IdentifiedDate:        identifiedDate.Unix(),
 			LastReviewDate:        lastReviewDate.Unix(),
 			NextReviewDate:        nextReviewDate.Unix(),
@@ -151,15 +141,9 @@ func generateCompRiskAssessments(store *MockDataStore) []*comp.CompRiskAssessmen
 	assessments := make([]*comp.CompRiskAssessment, count)
 
 	for i := 0; i < count; i++ {
-		riskID := ""
-		if len(store.CompRiskRegisterIDs) > 0 {
-			riskID = store.CompRiskRegisterIDs[i%len(store.CompRiskRegisterIDs)]
-		}
+		riskID := pickRef(store.CompRiskRegisterIDs, i)
 
-		assessorID := ""
-		if len(store.EmployeeIDs) > 0 {
-			assessorID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		assessorID := pickRef(store.EmployeeIDs, i)
 
 		assessmentDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 
@@ -170,7 +154,7 @@ func generateCompRiskAssessments(store *MockDataStore) []*comp.CompRiskAssessmen
 		requiresEscalation := riskScore >= 16 // High risk threshold
 
 		assessments[i] = &comp.CompRiskAssessment{
-			AssessmentId:            fmt.Sprintf("cras-%03d", i+1),
+			AssessmentId:            genID("cras", i),
 			RiskId:                  riskID,
 			AssessmentDate:          assessmentDate.Unix(),
 			AssessorId:              assessorID,
@@ -229,25 +213,13 @@ func generateCompIncidents(store *MockDataStore) []*comp.CompIncident {
 	incidents := make([]*comp.CompIncident, count)
 
 	for i := 0; i < count; i++ {
-		reportedByID := ""
-		if len(store.EmployeeIDs) > 0 {
-			reportedByID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		reportedByID := pickRef(store.EmployeeIDs, i)
 
-		assignedToID := ""
-		if len(store.ManagerIDs) > 0 {
-			assignedToID = store.ManagerIDs[i%len(store.ManagerIDs)]
-		}
+		assignedToID := pickRef(store.ManagerIDs, i)
 
-		departmentID := ""
-		if len(store.DepartmentIDs) > 0 {
-			departmentID = store.DepartmentIDs[i%len(store.DepartmentIDs)]
-		}
+		departmentID := pickRef(store.DepartmentIDs, i)
 
-		relatedRiskID := ""
-		if len(store.CompRiskRegisterIDs) > 0 {
-			relatedRiskID = store.CompRiskRegisterIDs[i%len(store.CompRiskRegisterIDs)]
-		}
+		relatedRiskID := pickRef(store.CompRiskRegisterIDs, i)
 
 		occurredDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 		discoveredDate := occurredDate.Add(time.Duration(rand.Intn(24)) * time.Hour)
@@ -283,7 +255,7 @@ func generateCompIncidents(store *MockDataStore) []*comp.CompIncident {
 		peopleAffected := int32(rand.Intn(100) + 1)
 
 		incidents[i] = &comp.CompIncident{
-			IncidentId:           fmt.Sprintf("cinc-%03d", i+1),
+			IncidentId:           genID("cinc", i),
 			IncidentNumber:       fmt.Sprintf("INC-%04d-%02d", time.Now().Year(), i+1),
 			Title:                incidentTitles[i],
 			Description:          fmt.Sprintf("Incident report: %s. Requires investigation and remediation.", incidentTitles[i]),
@@ -300,10 +272,7 @@ func generateCompIncidents(store *MockDataStore) []*comp.CompIncident {
 			ImmediateAction:      fmt.Sprintf("Containment measures implemented for %s", incidentTitles[i]),
 			CorrectiveAction:     fmt.Sprintf("Implement corrective measures to address root cause"),
 			PreventiveAction:     fmt.Sprintf("Strengthen controls to prevent recurrence"),
-			FinancialImpact: &erp.Money{
-				Amount:       financialImpact,
-				CurrencyCode: "USD",
-			},
+			FinancialImpact: money(financialImpact),
 			PeopleAffected:       peopleAffected,
 			RegulatoryReportable: i < 3, // First 3 require regulatory reporting
 			RelatedRiskId:        relatedRiskID,
@@ -333,15 +302,9 @@ func generateCompMitigationPlans(store *MockDataStore) []*comp.CompMitigationPla
 	plans := make([]*comp.CompMitigationPlan, count)
 
 	for i := 0; i < count; i++ {
-		riskID := ""
-		if len(store.CompRiskRegisterIDs) > 0 {
-			riskID = store.CompRiskRegisterIDs[i%len(store.CompRiskRegisterIDs)]
-		}
+		riskID := pickRef(store.CompRiskRegisterIDs, i)
 
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		relatedControlIDs := []string{}
 		if len(store.CompControlIDs) > 0 {
@@ -382,7 +345,7 @@ func generateCompMitigationPlans(store *MockDataStore) []*comp.CompMitigationPla
 		}
 
 		plans[i] = &comp.CompMitigationPlan{
-			PlanId:              fmt.Sprintf("cmit-%03d", i+1),
+			PlanId:              genID("cmit", i),
 			RiskId:              riskID,
 			Name:                fmt.Sprintf("Mitigation Plan: %s", compMitigationStrategies[i%len(compMitigationStrategies)]),
 			Description:         fmt.Sprintf("Risk mitigation plan to address identified risks through %s strategy", compMitigationStrategies[i%len(compMitigationStrategies)]),
@@ -392,14 +355,8 @@ func generateCompMitigationPlans(store *MockDataStore) []*comp.CompMitigationPla
 			StartDate:           startDate.Unix(),
 			TargetDate:          targetDate.Unix(),
 			CompletionDate:      completionDate,
-			EstimatedCost: &erp.Money{
-				Amount:       estimatedCost,
-				CurrencyCode: "USD",
-			},
-			ActualCost: &erp.Money{
-				Amount:       actualCost,
-				CurrencyCode: "USD",
-			},
+			EstimatedCost: money(estimatedCost),
+			ActualCost: money(actualCost),
 			TargetRiskReduction: targetRiskReduction,
 			ActualRiskReduction: actualRiskReduction,
 			SuccessCriteria:     fmt.Sprintf("Risk score reduced by at least %d points", targetRiskReduction),

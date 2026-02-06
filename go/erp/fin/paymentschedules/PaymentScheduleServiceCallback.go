@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package paymentschedules
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type PaymentScheduleServiceCallback struct{}
-
-func newPaymentScheduleServiceCallback() *PaymentScheduleServiceCallback {
-	return &PaymentScheduleServiceCallback{}
-}
-
-func (this *PaymentScheduleServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	paymentSchedule, ok := any.(*fin.PaymentSchedule)
-	if !ok {
-		return nil, false, errors.New("invalid paymentSchedule type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&paymentSchedule.ScheduleId)
-	}
-	err := validate(paymentSchedule, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PaymentScheduleServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPaymentScheduleServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("PaymentSchedule",
+		func(e *fin.PaymentSchedule) { common.GenerateID(&e.ScheduleId) },
+		validate)
 }
 
 func validate(paymentSchedule *fin.PaymentSchedule, vnic ifs.IVNic) error {

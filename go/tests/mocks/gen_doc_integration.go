@@ -30,21 +30,15 @@ func generateDocAttachments(store *MockDataStore) []*doc.DocAttachment {
 
 	attachments := make([]*doc.DocAttachment, count)
 	for i := 0; i < count; i++ {
-		documentID := ""
-		if len(store.DocDocumentIDs) > 0 {
-			documentID = store.DocDocumentIDs[i%len(store.DocDocumentIDs)]
-		}
+		documentID := pickRef(store.DocDocumentIDs, i)
 
-		attachedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			attachedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		attachedBy := pickRef(store.EmployeeIDs, i)
 
 		attachments[i] = &doc.DocAttachment{
-			AttachmentId:     fmt.Sprintf("att-%03d", i+1),
+			AttachmentId:     genID("att", i),
 			DocumentId:       documentID,
 			EntityType:       entityTypes[i%len(entityTypes)],
-			EntityId:         fmt.Sprintf("ent-%03d", i+1),
+			EntityId:         genID("ent", i),
 			Module:           modules[i%len(modules)],
 			RelationshipType: relationshipTypes[i%len(relationshipTypes)],
 			Description:      fmt.Sprintf("Attachment for %s entity", entityTypes[i%len(entityTypes)]),
@@ -80,13 +74,10 @@ func generateDocTemplates(store *MockDataStore) []*doc.DocTemplate {
 
 	templates := make([]*doc.DocTemplate, count)
 	for i := 0; i < count; i++ {
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		templates[i] = &doc.DocTemplate{
-			TemplateId:   fmt.Sprintf("tpl-%03d", i+1),
+			TemplateId:   genID("tpl", i),
 			Name:         docTemplateNames[i%len(docTemplateNames)],
 			Description:  fmt.Sprintf("Template for %s", docTemplateNames[i%len(docTemplateNames)]),
 			TemplateType: templateTypes[i%len(templateTypes)],
@@ -127,10 +118,7 @@ func generateDocTemplateFields(store *MockDataStore) []*doc.DocTemplateField {
 
 	fields := make([]*doc.DocTemplateField, count)
 	for i := 0; i < count; i++ {
-		templateID := ""
-		if len(store.DocTemplateIDs) > 0 {
-			templateID = store.DocTemplateIDs[i%len(store.DocTemplateIDs)]
-		}
+		templateID := pickRef(store.DocTemplateIDs, i)
 
 		fieldType := fieldTypes[i%len(fieldTypes)]
 		var defaultValue string
@@ -144,7 +132,7 @@ func generateDocTemplateFields(store *MockDataStore) []*doc.DocTemplateField {
 		}
 
 		fields[i] = &doc.DocTemplateField{
-			FieldId:      fmt.Sprintf("fld-%03d", i+1),
+			FieldId:      genID("fld", i),
 			TemplateId:   templateID,
 			Name:         fieldNames[i%len(fieldNames)],
 			Label:        fieldNames[i%len(fieldNames)],
@@ -181,15 +169,9 @@ func generateDocEmailCaptures(store *MockDataStore) []*doc.DocEmailCapture {
 
 	emails := make([]*doc.DocEmailCapture, count)
 	for i := 0; i < count; i++ {
-		documentID := ""
-		if len(store.DocDocumentIDs) > 0 {
-			documentID = store.DocDocumentIDs[i%len(store.DocDocumentIDs)]
-		}
+		documentID := pickRef(store.DocDocumentIDs, i)
 
-		folderID := ""
-		if len(store.DocFolderIDs) > 0 {
-			folderID = store.DocFolderIDs[i%len(store.DocFolderIDs)]
-		}
+		folderID := pickRef(store.DocFolderIDs, i)
 
 		processedBy := ""
 		var processedDate int64
@@ -200,7 +182,7 @@ func generateDocEmailCaptures(store *MockDataStore) []*doc.DocEmailCapture {
 		}
 
 		emails[i] = &doc.DocEmailCapture{
-			CaptureId:       fmt.Sprintf("eml-%03d", i+1),
+			CaptureId:       genID("eml", i),
 			DocumentId:      documentID,
 			Status:          status,
 			FromAddress:     fmt.Sprintf("sender%d@external.com", i+1),
@@ -239,20 +221,11 @@ func generateDocScanJobs(store *MockDataStore) []*doc.DocScanJob {
 
 	scanJobs := make([]*doc.DocScanJob, count)
 	for i := 0; i < count; i++ {
-		folderID := ""
-		if len(store.DocFolderIDs) > 0 {
-			folderID = store.DocFolderIDs[i%len(store.DocFolderIDs)]
-		}
+		folderID := pickRef(store.DocFolderIDs, i)
 
-		categoryID := ""
-		if len(store.DocCategoryIDs) > 0 {
-			categoryID = store.DocCategoryIDs[i%len(store.DocCategoryIDs)]
-		}
+		categoryID := pickRef(store.DocCategoryIDs, i)
 
-		initiatedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			initiatedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		initiatedBy := pickRef(store.EmployeeIDs, i)
 
 		status := scanStatuses[i%len(scanStatuses)]
 		var completedDate int64
@@ -264,7 +237,7 @@ func generateDocScanJobs(store *MockDataStore) []*doc.DocScanJob {
 		}
 
 		scanJobs[i] = &doc.DocScanJob{
-			ScanJobId:     fmt.Sprintf("scn-%03d", i+1),
+			ScanJobId:     genID("scn", i),
 			Name:          fmt.Sprintf("Scan Job %03d", i+1),
 			Status:        status,
 			ScannerId:     scannerIDs[i%len(scannerIDs)],

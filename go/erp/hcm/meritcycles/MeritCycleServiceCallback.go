@@ -15,36 +15,15 @@ limitations under the License.
 package meritcycles
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/hcm"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type MeritCycleServiceCallback struct {
-}
-
-func newMeritCycleServiceCallback() *MeritCycleServiceCallback {
-	return &MeritCycleServiceCallback{}
-}
-
-func (this *MeritCycleServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.MeritCycle)
-	if !ok {
-		return nil, false, errors.New("invalid merit cycle type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.CycleId)
-	}
-	err := validateMeritCyc(entity)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MeritCycleServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMeritCycleServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MeritCycle",
+		func(e *hcm.MeritCycle) { common.GenerateID(&e.CycleId) },
+		nil)
 }
 
 func validateMeritCyc(entity *hcm.MeritCycle) error {

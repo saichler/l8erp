@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
@@ -44,10 +43,10 @@ func generateMeritIncreases(store *MockDataStore) []*hcm.MeritIncrease {
 			EmployeeId:         empID,
 			MeritCycleId:       store.MeritCycleIDs[rand.Intn(len(store.MeritCycleIDs))],
 			ReviewId:           store.PerformanceReviewIDs[rand.Intn(len(store.PerformanceReviewIDs))],
-			CurrentSalary:      &erp.Money{Amount: currentSalary, CurrencyCode: "USD"},
-			ProposedIncrease:   &erp.Money{Amount: proposedIncrease, CurrencyCode: "USD"},
+			CurrentSalary:      money(currentSalary),
+			ProposedIncrease:   money(proposedIncrease),
 			ProposedPercentage: increasePercent,
-			NewSalary:          &erp.Money{Amount: currentSalary + proposedIncrease, CurrencyCode: "USD"},
+			NewSalary:          money(currentSalary + proposedIncrease),
 			EffectiveDate:      time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),
 			Status:             hcm.MeritIncreaseStatus_MERIT_INCREASE_STATUS_APPROVED,
 			AuditInfo:          createAuditInfo(),
@@ -74,8 +73,8 @@ func generateBonusPayments(store *MockDataStore) []*hcm.BonusPayment {
 			PaymentId:    fmt.Sprintf("bonus-%04d", idx),
 			EmployeeId:   empID,
 			BonusPlanId:  store.BonusPlanIDs[rand.Intn(len(store.BonusPlanIDs))],
-			TargetAmount: &erp.Money{Amount: bonusAmount, CurrencyCode: "USD"},
-			ActualAmount: &erp.Money{Amount: bonusAmount, CurrencyCode: "USD"},
+			TargetAmount: money(bonusAmount),
+			ActualAmount: money(bonusAmount),
 			AwardDate:    time.Date(2024, 12, 15, 0, 0, 0, 0, time.UTC).Unix(),
 			PaymentDate:  time.Date(2024, 12, 20, 0, 0, 0, 0, time.UTC).Unix(),
 			Status:       hcm.BonusPaymentStatus_BONUS_PAYMENT_STATUS_PAID,
@@ -133,11 +132,11 @@ func generateCompensationStatements(store *MockDataStore) []*hcm.CompensationSta
 			EmployeeId:            empID,
 			StatementYear:         2024,
 			AsOfDate:              time.Date(2024, 12, 31, 0, 0, 0, 0, time.UTC).Unix(),
-			BaseSalary:            &erp.Money{Amount: baseSalary, CurrencyCode: "USD"},
-			BonusActual:           &erp.Money{Amount: bonusActual, CurrencyCode: "USD"},
-			TotalCashCompensation: &erp.Money{Amount: baseSalary + bonusActual, CurrencyCode: "USD"},
-			TotalBenefitsValue:    &erp.Money{Amount: benefitsValue, CurrencyCode: "USD"},
-			TotalCompensation:     &erp.Money{Amount: baseSalary + bonusActual + benefitsValue, CurrencyCode: "USD"},
+			BaseSalary:            money(baseSalary),
+			BonusActual:           money(bonusActual),
+			TotalCashCompensation: money(baseSalary + bonusActual),
+			TotalBenefitsValue:    money(benefitsValue),
+			TotalCompensation:     money(baseSalary + bonusActual + benefitsValue),
 			AuditInfo:             createAuditInfo(),
 		})
 		idx++
@@ -158,9 +157,9 @@ func generateMarketBenchmarks(store *MockDataStore) []*hcm.MarketBenchmark {
 			EffectiveDate:  time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),
 			SurveySource:   "Industry Survey",
 			SurveyYear:     2024,
-			Market_25Th:    &erp.Money{Amount: int64(rand.Intn(30000)+40000) * 100, CurrencyCode: "USD"},
-			Market_50Th:    &erp.Money{Amount: int64(rand.Intn(40000)+60000) * 100, CurrencyCode: "USD"},
-			Market_75Th:    &erp.Money{Amount: int64(rand.Intn(50000)+90000) * 100, CurrencyCode: "USD"},
+			Market_25Th:    money(int64(rand.Intn(30000)+40000) * 100),
+			Market_50Th:    money(int64(rand.Intn(40000)+60000) * 100),
+			Market_75Th:    money(int64(rand.Intn(50000)+90000) * 100),
 			AuditInfo:      createAuditInfo(),
 		})
 		idx++

@@ -15,37 +15,16 @@ limitations under the License.
 package payrollruns
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/erp/hcm/organizations"
 	"github.com/saichler/l8erp/go/types/hcm"
+	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-type PayrollRunServiceCallback struct {
-}
-
-func newPayrollRunServiceCallback() *PayrollRunServiceCallback {
-	return &PayrollRunServiceCallback{}
-}
-
-func (this *PayrollRunServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.PayrollRun)
-	if !ok {
-		return nil, false, errors.New("invalid payroll run type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.PayrollRunId)
-	}
-	err := validatePayRun(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PayrollRunServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPayrollRunServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("PayrollRun",
+		func(e *hcm.PayrollRun) { common.GenerateID(&e.PayrollRunId) },
+		validatePayRun)
 }
 
 func validatePayRun(entity *hcm.PayrollRun, vnic ifs.IVNic) error {

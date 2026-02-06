@@ -15,39 +15,18 @@ limitations under the License.
 package positions
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/departments"
 	"github.com/saichler/l8erp/go/erp/hcm/jobs"
 	"github.com/saichler/l8erp/go/erp/hcm/organizations"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type PositionServiceCallback struct {
-}
-
-func newPositionServiceCallback() *PositionServiceCallback {
-	return &PositionServiceCallback{}
-}
-
-func (this *PositionServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.Position)
-	if !ok {
-		return nil, false, errors.New("invalid position type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.PositionId)
-	}
-	err := validatePos(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PositionServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPositionServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Position",
+		func(e *hcm.Position) { common.GenerateID(&e.PositionId) },
+		validatePos)
 }
 
 func validatePos(entity *hcm.Position, vnic ifs.IVNic) error {

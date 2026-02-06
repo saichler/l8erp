@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -69,7 +68,7 @@ func generateJournalEntries(store *MockDataStore) []*fin.JournalEntry {
 		totalAmount := int64(rand.Intn(95001)+5000) * 100 // 5000_00 to 100000_00 cents
 
 		entry := &fin.JournalEntry{
-			JournalEntryId: fmt.Sprintf("je-%03d", i+1),
+			JournalEntryId: genID("je", i),
 			EntryNumber:    fmt.Sprintf("JE-%06d", i+1),
 			EntryDate:      entryDate.Unix(),
 			FiscalPeriodId: store.FiscalPeriodIDs[periodIdx],
@@ -77,7 +76,7 @@ func generateJournalEntries(store *MockDataStore) []*fin.JournalEntry {
 			Source:         sources[i%len(sources)],
 			Reference:      fmt.Sprintf("REF-%06d", i+1),
 			Status:         status,
-			TotalAmount:    &erp.Money{Amount: totalAmount, CurrencyCode: "USD"},
+			TotalAmount:    money(totalAmount),
 			AuditInfo:      createAuditInfo(),
 		}
 
@@ -123,8 +122,8 @@ func generateJournalEntryLines(store *MockDataStore) []*fin.JournalEntryLine {
 			LineNumber:     1,
 			AccountId:      store.AccountIDs[acctIdx1],
 			Description:    lineDescriptions[0],
-			DebitAmount:    &erp.Money{Amount: debit1, CurrencyCode: "USD"},
-			CreditAmount:   &erp.Money{Amount: 0, CurrencyCode: "USD"},
+			DebitAmount:    money(debit1),
+			CreditAmount:   money(0),
 			AuditInfo:      createAuditInfo(),
 		})
 		lineIdx++
@@ -137,8 +136,8 @@ func generateJournalEntryLines(store *MockDataStore) []*fin.JournalEntryLine {
 			LineNumber:     2,
 			AccountId:      store.AccountIDs[acctIdx2],
 			Description:    lineDescriptions[1],
-			DebitAmount:    &erp.Money{Amount: debit2, CurrencyCode: "USD"},
-			CreditAmount:   &erp.Money{Amount: 0, CurrencyCode: "USD"},
+			DebitAmount:    money(debit2),
+			CreditAmount:   money(0),
 			AuditInfo:      createAuditInfo(),
 		})
 		lineIdx++
@@ -151,8 +150,8 @@ func generateJournalEntryLines(store *MockDataStore) []*fin.JournalEntryLine {
 			LineNumber:     3,
 			AccountId:      store.AccountIDs[acctIdx3],
 			Description:    lineDescriptions[2],
-			DebitAmount:    &erp.Money{Amount: 0, CurrencyCode: "USD"},
-			CreditAmount:   &erp.Money{Amount: credit3, CurrencyCode: "USD"},
+			DebitAmount:    money(0),
+			CreditAmount:   money(credit3),
 			AuditInfo:      createAuditInfo(),
 		})
 		lineIdx++
@@ -195,12 +194,12 @@ func generateAccountBalances(store *MockDataStore) []*fin.AccountBalance {
 				BalanceId:        fmt.Sprintf("abal-%03d", balIdx),
 				AccountId:        accountID,
 				FiscalPeriodId:   store.FiscalPeriodIDs[periodIdx],
-				BeginningBalance: &erp.Money{Amount: beginningBalance, CurrencyCode: "USD"},
-				PeriodDebit:      &erp.Money{Amount: periodDebit, CurrencyCode: "USD"},
-				PeriodCredit:     &erp.Money{Amount: periodCredit, CurrencyCode: "USD"},
-				EndingBalance:    &erp.Money{Amount: endingBalance, CurrencyCode: "USD"},
-				YtdDebit:         &erp.Money{Amount: ytdDebit, CurrencyCode: "USD"},
-				YtdCredit:        &erp.Money{Amount: ytdCredit, CurrencyCode: "USD"},
+				BeginningBalance: money(beginningBalance),
+				PeriodDebit:      money(periodDebit),
+				PeriodCredit:     money(periodCredit),
+				EndingBalance:    money(endingBalance),
+				YtdDebit:         money(ytdDebit),
+				YtdCredit:        money(ytdCredit),
 				AuditInfo:        createAuditInfo(),
 			})
 			balIdx++
@@ -259,16 +258,16 @@ func generateTaxReturns(store *MockDataStore) []*fin.TaxReturn {
 		}
 
 		ret := &fin.TaxReturn{
-			ReturnId:       fmt.Sprintf("txrtn-%03d", i+1),
+			ReturnId:       genID("txrtn", i),
 			JurisdictionId: jurisdictionID,
 			FiscalPeriodId: store.FiscalPeriodIDs[periodIdx],
 			TaxType:        fin.TaxType_TAX_TYPE_INCOME,
 			Status:         status,
 			DueDate:        dueDate.Unix(),
-			TaxableAmount:  &erp.Money{Amount: taxableAmount, CurrencyCode: "USD"},
-			TaxAmount:      &erp.Money{Amount: taxAmount, CurrencyCode: "USD"},
-			AmountPaid:     &erp.Money{Amount: amountPaid, CurrencyCode: "USD"},
-			AmountDue:      &erp.Money{Amount: amountDue, CurrencyCode: "USD"},
+			TaxableAmount:  money(taxableAmount),
+			TaxAmount:      money(taxAmount),
+			AmountPaid:     money(amountPaid),
+			AmountDue:      money(amountDue),
 			Notes:          fmt.Sprintf("Q%d 2025 Federal Income Tax Return", i+1),
 			AuditInfo:      createAuditInfo(),
 		}

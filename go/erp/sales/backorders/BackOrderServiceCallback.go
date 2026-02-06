@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package backorders
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/sales"
 )
 
-type BackOrderServiceCallback struct{}
-
-func newBackOrderServiceCallback() *BackOrderServiceCallback {
-	return &BackOrderServiceCallback{}
-}
-
-func (this *BackOrderServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*sales.SalesBackOrder)
-	if !ok {
-		return nil, false, errors.New("invalid back order type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.BackOrderId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BackOrderServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBackOrderServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SalesBackOrder",
+		func(e *sales.SalesBackOrder) { common.GenerateID(&e.BackOrderId) },
+		validate)
 }
 
 func validate(item *sales.SalesBackOrder, vnic ifs.IVNic) error {

@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -69,8 +68,8 @@ func generateBankTransactions(store *MockDataStore) []*fin.BankTransaction {
 			TransactionDate: txnDate.Unix(),
 			ValueDate:       txnDate.Unix(),
 			TransactionType: txnType,
-			Amount:          &erp.Money{Amount: amount, CurrencyCode: "USD"},
-			RunningBalance:  &erp.Money{Amount: runningBalance, CurrencyCode: "USD"},
+			Amount:          money(amount),
+			RunningBalance:  money(runningBalance),
 			Description:     desc,
 			Reference:       fmt.Sprintf("REF-%06d", rand.Intn(999999)+1),
 			IsReconciled:    i < 48, // older ones reconciled
@@ -94,15 +93,15 @@ func generateBankReconciliations(store *MockDataStore) []*fin.BankReconciliation
 		difference := adjustedBalance - bookBalance
 
 		recs[i] = &fin.BankReconciliation{
-			ReconciliationId: fmt.Sprintf("brec-%03d", i+1),
+			ReconciliationId: genID("brec", i),
 			BankAccountId:    store.BankAccountIDs[i],
 			StatementDate:    periodEnd.Unix(),
 			PeriodStart:      periodStart.Unix(),
 			PeriodEnd:        periodEnd.Unix(),
-			StatementBalance: &erp.Money{Amount: stmtBalance, CurrencyCode: "USD"},
-			BookBalance:      &erp.Money{Amount: bookBalance, CurrencyCode: "USD"},
-			AdjustedBalance:  &erp.Money{Amount: adjustedBalance, CurrencyCode: "USD"},
-			Difference:       &erp.Money{Amount: difference, CurrencyCode: "USD"},
+			StatementBalance: money(stmtBalance),
+			BookBalance:      money(bookBalance),
+			AdjustedBalance:  money(adjustedBalance),
+			Difference:       money(difference),
 			Status:           fin.ReconciliationStatus_RECONCILIATION_STATUS_COMPLETED,
 			MatchedCount:     int32(rand.Intn(20) + 10),
 			UnmatchedCount:   int32(rand.Intn(3)),
@@ -129,16 +128,16 @@ func generateCashForecasts(store *MockDataStore) []*fin.CashForecast {
 		closingBalance := openingBalance + netCashFlow
 
 		forecasts[i] = &fin.CashForecast{
-			ForecastId:        fmt.Sprintf("cfcst-%03d", i+1),
+			ForecastId:        genID("cfcst", i),
 			ForecastName:      quarterNames[i],
 			ForecastDate:      qStart.Unix(),
 			PeriodStart:       qStart.Unix(),
 			PeriodEnd:         qEnd.Unix(),
-			OpeningBalance:    &erp.Money{Amount: openingBalance, CurrencyCode: "USD"},
-			ProjectedInflows:  &erp.Money{Amount: inflows, CurrencyCode: "USD"},
-			ProjectedOutflows: &erp.Money{Amount: outflows, CurrencyCode: "USD"},
-			NetCashFlow:       &erp.Money{Amount: netCashFlow, CurrencyCode: "USD"},
-			ClosingBalance:    &erp.Money{Amount: closingBalance, CurrencyCode: "USD"},
+			OpeningBalance:    money(openingBalance),
+			ProjectedInflows:  money(inflows),
+			ProjectedOutflows: money(outflows),
+			NetCashFlow:       money(netCashFlow),
+			ClosingBalance:    money(closingBalance),
 			AuditInfo:         createAuditInfo(),
 		}
 		openingBalance = closingBalance
@@ -160,10 +159,10 @@ func generateFundTransfers(store *MockDataStore) []*fin.FundTransfer {
 		}
 
 		transfers[i] = &fin.FundTransfer{
-			TransferId:        fmt.Sprintf("fxfr-%03d", i+1),
+			TransferId:        genID("fxfr", i),
 			FromBankAccountId: store.BankAccountIDs[fromIdx],
 			ToBankAccountId:   store.BankAccountIDs[toIdx],
-			Amount:            &erp.Money{Amount: int64(rand.Intn(100000)+10000) * 100, CurrencyCode: "USD"},
+			Amount:            money(int64(rand.Intn(100000)+10000) * 100),
 			TransferDate:      transferDate.Unix(),
 			ValueDate:         transferDate.Unix(),
 			Status:            status,
@@ -184,11 +183,11 @@ func generatePettyCash(store *MockDataStore) []*fin.PettyCash {
 		currentBalance := int64(rand.Intn(40000) + 10000) // random fraction of limit
 
 		funds[i] = &fin.PettyCash{
-			PettyCashId:         fmt.Sprintf("pcash-%03d", i+1),
+			PettyCashId:         genID("pcash", i),
 			FundName:            fundNames[i],
 			CustodianEmployeeId: store.EmployeeIDs[empIdx],
-			FundLimit:           &erp.Money{Amount: 50000, CurrencyCode: "USD"},
-			CurrentBalance:      &erp.Money{Amount: currentBalance, CurrencyCode: "USD"},
+			FundLimit:           money(50000),
+			CurrentBalance:      money(currentBalance),
 			LastReplenishedDate: time.Date(2025, 1, 15, 0, 0, 0, 0, time.UTC).Unix(),
 			IsActive:            true,
 			AuditInfo:           createAuditInfo(),
@@ -239,7 +238,7 @@ func generateAssets(store *MockDataStore) []*fin.Asset {
 		netBookValue := acqCost - accumulated
 
 		assets[i] = &fin.Asset{
-			AssetId:                 fmt.Sprintf("ast-%03d", i+1),
+			AssetId:                 genID("ast", i),
 			AssetNumber:             fmt.Sprintf("FA-%05d", i+1),
 			Name:                    assetNames[i],
 			Description:             fmt.Sprintf("Fixed asset: %s", assetNames[i]),
@@ -247,12 +246,12 @@ func generateAssets(store *MockDataStore) []*fin.Asset {
 			SerialNumber:            fmt.Sprintf("SN-%08d", rand.Intn(99999999)+1),
 			Status:                  status,
 			AcquisitionDate:         acqDate.Unix(),
-			AcquisitionCost:         &erp.Money{Amount: acqCost, CurrencyCode: "USD"},
-			SalvageValue:            &erp.Money{Amount: salvageValue, CurrencyCode: "USD"},
+			AcquisitionCost:         money(acqCost),
+			SalvageValue:            money(salvageValue),
 			UsefulLifeMonths:        usefulLife,
 			DepreciationMethod:      fin.DepreciationMethod_DEPRECIATION_METHOD_STRAIGHT_LINE,
-			AccumulatedDepreciation: &erp.Money{Amount: accumulated, CurrencyCode: "USD"},
-			NetBookValue:            &erp.Money{Amount: netBookValue, CurrencyCode: "USD"},
+			AccumulatedDepreciation: money(accumulated),
+			NetBookValue:            money(netBookValue),
 			DepartmentId:            store.DepartmentIDs[deptIdx],
 			Location:                fmt.Sprintf("Building %d, Floor %d", (i/5)+1, (i%5)+1),
 			GlAccountId:            fixedAssetsAccountID,
@@ -279,13 +278,13 @@ func generateDepreciationSchedules(store *MockDataStore) []*fin.DepreciationSche
 		deprDate := time.Date(2025, 1, 31, 0, 0, 0, 0, time.UTC)
 
 		schedules[i] = &fin.DepreciationSchedule{
-			ScheduleId:         fmt.Sprintf("depr-%03d", i+1),
+			ScheduleId:         genID("depr", i),
 			AssetId:            store.AssetIDs[assetIdx],
 			FiscalPeriodId:     store.FiscalPeriodIDs[periodIdx],
 			DepreciationDate:   deprDate.Unix(),
-			DepreciationAmount: &erp.Money{Amount: depreciationAmount, CurrencyCode: "USD"},
-			AccumulatedAmount:  &erp.Money{Amount: accumulated, CurrencyCode: "USD"},
-			RemainingValue:     &erp.Money{Amount: remaining, CurrencyCode: "USD"},
+			DepreciationAmount: money(depreciationAmount),
+			AccumulatedAmount:  money(accumulated),
+			RemainingValue:     money(remaining),
 			IsPosted:           true,
 			AuditInfo:          createAuditInfo(),
 		}
@@ -319,13 +318,13 @@ func generateAssetDisposals(store *MockDataStore) []*fin.AssetDisposal {
 		gainLossAcctIdx := minInt(25, len(store.AccountIDs)-1)
 
 		disposals[i] = &fin.AssetDisposal{
-			DisposalId:             fmt.Sprintf("adisp-%03d", i+1),
+			DisposalId:             genID("adisp", i),
 			AssetId:                store.AssetIDs[assetIdx],
 			DisposalDate:           disposalDate.Unix(),
 			DisposalMethod:         methods[i],
-			DisposalProceeds:       &erp.Money{Amount: proceeds, CurrencyCode: "USD"},
-			NetBookValueAtDisposal: &erp.Money{Amount: netBookValue, CurrencyCode: "USD"},
-			GainLoss:               &erp.Money{Amount: gainLoss, CurrencyCode: "USD"},
+			DisposalProceeds:       money(proceeds),
+			NetBookValueAtDisposal: money(netBookValue),
+			GainLoss:               money(gainLoss),
 			GainLossAccountId:      store.AccountIDs[gainLossAcctIdx],
 			BuyerName:              buyerNames[i],
 			AuditInfo:              createAuditInfo(),
@@ -352,7 +351,7 @@ func generateAssetTransfers(store *MockDataStore) []*fin.AssetTransfer {
 		transferDate := time.Date(2025, time.Month(i+1), 10, 0, 0, 0, 0, time.UTC)
 
 		transfers[i] = &fin.AssetTransfer{
-			TransferId:       fmt.Sprintf("axfr-%03d", i+1),
+			TransferId:       genID("axfr", i),
 			AssetId:          store.AssetIDs[assetIdx],
 			TransferDate:     transferDate.Unix(),
 			FromDepartmentId: store.DepartmentIDs[fromDeptIdx],
@@ -399,14 +398,14 @@ func generateAssetMaintenance(store *MockDataStore) []*fin.AssetMaintenance {
 		}
 
 		records[i] = &fin.AssetMaintenance{
-			MaintenanceId:   fmt.Sprintf("amnt-%03d", i+1),
+			MaintenanceId:   genID("amnt", i),
 			AssetId:         store.AssetIDs[assetIdx],
 			MaintenanceType: mType,
 			Status:          status,
 			ScheduledDate:   scheduledDate.Unix(),
 			CompletedDate:   completedDate,
 			VendorId:        store.VendorIDs[vendorIdx],
-			Cost:            &erp.Money{Amount: int64(rand.Intn(5000)+200) * 100, CurrencyCode: "USD"},
+			Cost:            money(int64(rand.Intn(5000)+200) * 100),
 			Description:     descriptions[i%len(descriptions)],
 			WorkOrderNumber: fmt.Sprintf("WO-%06d", rand.Intn(999999)+1),
 			AuditInfo:       createAuditInfo(),
@@ -434,12 +433,12 @@ func generateAssetRevaluations(store *MockDataStore) []*fin.AssetRevaluation {
 		newValue := previousValue + adjustment
 
 		revals[i] = &fin.AssetRevaluation{
-			RevaluationId:    fmt.Sprintf("arval-%03d", i+1),
+			RevaluationId:    genID("arval", i),
 			AssetId:          store.AssetIDs[assetIdx],
 			RevaluationDate:  revalDate.Unix(),
-			PreviousValue:    &erp.Money{Amount: previousValue, CurrencyCode: "USD"},
-			NewValue:         &erp.Money{Amount: newValue, CurrencyCode: "USD"},
-			AdjustmentAmount: &erp.Money{Amount: adjustment, CurrencyCode: "USD"},
+			PreviousValue:    money(previousValue),
+			NewValue:         money(newValue),
+			AdjustmentAmount: money(adjustment),
 			Reason:           reasons[i],
 			Appraiser:        "Independent Appraiser LLC",
 			AuditInfo:        createAuditInfo(),

@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package capacityloads
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-type MfgCapacityLoadServiceCallback struct{}
-
-func newMfgCapacityLoadServiceCallback() *MfgCapacityLoadServiceCallback {
-	return &MfgCapacityLoadServiceCallback{}
-}
-
-func (this *MfgCapacityLoadServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgCapacityLoad)
-	if !ok {
-		return nil, false, errors.New("invalid MfgCapacityLoad type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.LoadId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgCapacityLoadServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgCapacityLoadServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgCapacityLoad",
+		func(e *mfg.MfgCapacityLoad) { common.GenerateID(&e.LoadId) },
+		validate)
 }
 
 func validate(item *mfg.MfgCapacityLoad, vnic ifs.IVNic) error {

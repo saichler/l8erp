@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package fundtransfers
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type FundTransferServiceCallback struct{}
-
-func newFundTransferServiceCallback() *FundTransferServiceCallback {
-	return &FundTransferServiceCallback{}
-}
-
-func (this *FundTransferServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	fundTransfer, ok := any.(*fin.FundTransfer)
-	if !ok {
-		return nil, false, errors.New("invalid fundTransfer type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&fundTransfer.TransferId)
-	}
-	err := validate(fundTransfer, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *FundTransferServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newFundTransferServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("FundTransfer",
+		func(e *fin.FundTransfer) { common.GenerateID(&e.TransferId) },
+		validate)
 }
 
 func validate(fundTransfer *fin.FundTransfer, vnic ifs.IVNic) error {

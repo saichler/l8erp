@@ -15,38 +15,17 @@ limitations under the License.
 package leavebalances
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/erp/hcm/leavepolicies"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type LeaveBalanceServiceCallback struct {
-}
-
-func newLeaveBalanceServiceCallback() *LeaveBalanceServiceCallback {
-	return &LeaveBalanceServiceCallback{}
-}
-
-func (this *LeaveBalanceServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.LeaveBalance)
-	if !ok {
-		return nil, false, errors.New("invalid leave balance type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.BalanceId)
-	}
-	err := validateLeaveBal(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *LeaveBalanceServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newLeaveBalanceServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("LeaveBalance",
+		func(e *hcm.LeaveBalance) { common.GenerateID(&e.BalanceId) },
+		validateLeaveBal)
 }
 
 func validateLeaveBal(entity *hcm.LeaveBalance, vnic ifs.IVNic) error {

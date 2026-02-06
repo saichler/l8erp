@@ -47,7 +47,7 @@ func generateMrpRuns() []*mfg.MfgMrpRun {
 		}
 
 		runs[i] = &mfg.MfgMrpRun{
-			RunId:                fmt.Sprintf("mrprun-%03d", i+1),
+			RunId:                genID("mrprun", i),
 			RunNumber:            fmt.Sprintf("MRP-%06d", 700000+i+1),
 			Description:          fmt.Sprintf("Material requirements planning run %d", i+1),
 			Status:               status,
@@ -83,14 +83,8 @@ func generateMrpRequirements(store *MockDataStore) []*mfg.MfgMrpRequirement {
 	idx := 1
 	for runIdx, runID := range store.MfgMrpRunIDs {
 		for j := 0; j < 3; j++ {
-			itemID := ""
-			if len(store.ItemIDs) > 0 {
-				itemID = store.ItemIDs[(runIdx*3+j)%len(store.ItemIDs)]
-			}
-			warehouseID := ""
-			if len(store.SCMWarehouseIDs) > 0 {
-				warehouseID = store.SCMWarehouseIDs[(runIdx+j)%len(store.SCMWarehouseIDs)]
-			}
+			itemID := pickRef(store.ItemIDs, (runIdx*3+j))
+			warehouseID := pickRef(store.SCMWarehouseIDs, (runIdx+j))
 
 			requiredDate := time.Now().AddDate(0, 0, rand.Intn(60)+7)
 			dueDate := requiredDate.AddDate(0, 0, rand.Intn(7)+1)
@@ -141,7 +135,7 @@ func generateCapacityPlans() []*mfg.MfgCapacityPlan {
 		}
 
 		plans[i] = &mfg.MfgCapacityPlan{
-			PlanId:        fmt.Sprintf("capplan-%03d", i+1),
+			PlanId:        genID("capplan", i),
 			PlanNumber:    fmt.Sprintf("CP-%05d", 80000+i+1),
 			Description:   fmt.Sprintf("Quarterly capacity planning %d", i+1),
 			Status:        status,
@@ -226,7 +220,7 @@ func generateProdSchedules() []*mfg.MfgProdSchedule {
 		}
 
 		schedules[i] = &mfg.MfgProdSchedule{
-			ScheduleId:          fmt.Sprintf("prodsched-%03d", i+1),
+			ScheduleId:          genID("prodsched", i),
 			ScheduleNumber:      fmt.Sprintf("PS-%05d", 60000+i+1),
 			Description:         fmt.Sprintf("Weekly production schedule %d", i+1),
 			ScheduleType:        scheduleTypes[i%len(scheduleTypes)],
@@ -251,18 +245,9 @@ func generateScheduleBlocks(store *MockDataStore) []*mfg.MfgScheduleBlock {
 	idx := 1
 	for schedIdx, schedID := range store.MfgProdScheduleIDs {
 		for j := 0; j < 3; j++ {
-			woID := ""
-			if len(store.MfgWorkOrderIDs) > 0 {
-				woID = store.MfgWorkOrderIDs[(schedIdx*3+j)%len(store.MfgWorkOrderIDs)]
-			}
-			opID := ""
-			if len(store.MfgWorkOrderOpIDs) > 0 {
-				opID = store.MfgWorkOrderOpIDs[(schedIdx*3+j)%len(store.MfgWorkOrderOpIDs)]
-			}
-			wcID := ""
-			if len(store.MfgWorkCenterIDs) > 0 {
-				wcID = store.MfgWorkCenterIDs[(schedIdx+j)%len(store.MfgWorkCenterIDs)]
-			}
+			woID := pickRef(store.MfgWorkOrderIDs, (schedIdx*3+j))
+			opID := pickRef(store.MfgWorkOrderOpIDs, (schedIdx*3+j))
+			wcID := pickRef(store.MfgWorkCenterIDs, (schedIdx+j))
 
 			scheduledStart := time.Now().AddDate(0, 0, schedIdx).Add(time.Duration(j*4+6) * time.Hour)
 			scheduledEnd := scheduledStart.Add(time.Duration(rand.Intn(4)+2) * time.Hour)

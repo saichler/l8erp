@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package datacubes
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/bi"
+	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-type BiDataCubeServiceCallback struct{}
-
-func newBiDataCubeServiceCallback() *BiDataCubeServiceCallback {
-	return &BiDataCubeServiceCallback{}
-}
-
-func (this *BiDataCubeServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*bi.BiDataCube)
-	if !ok {
-		return nil, false, errors.New("invalid BiDataCube type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.CubeId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BiDataCubeServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBiDataCubeServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("BiDataCube",
+		func(e *bi.BiDataCube) { common.GenerateID(&e.CubeId) },
+		validate)
 }
 
 func validate(item *bi.BiDataCube, vnic ifs.IVNic) error {

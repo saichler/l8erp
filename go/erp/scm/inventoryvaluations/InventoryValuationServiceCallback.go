@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package inventoryvaluations
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type InventoryValuationServiceCallback struct{}
-
-func newInventoryValuationServiceCallback() *InventoryValuationServiceCallback {
-	return &InventoryValuationServiceCallback{}
-}
-
-func (this *InventoryValuationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmInventoryValuation)
-	if !ok {
-		return nil, false, errors.New("invalid inventory valuation type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ValuationId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *InventoryValuationServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newInventoryValuationServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmInventoryValuation",
+		func(e *scm.ScmInventoryValuation) { common.GenerateID(&e.ValuationId) },
+		validate)
 }
 
 func validate(item *scm.ScmInventoryValuation, vnic ifs.IVNic) error {

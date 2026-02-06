@@ -15,35 +15,15 @@ limitations under the License.
 package freightaudits
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type FreightAuditServiceCallback struct{}
-
-func newFreightAuditServiceCallback() *FreightAuditServiceCallback {
-	return &FreightAuditServiceCallback{}
-}
-
-func (this *FreightAuditServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmFreightAudit)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.AuditId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *FreightAuditServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newFreightAuditServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmFreightAudit",
+		func(e *scm.ScmFreightAudit) { common.GenerateID(&e.AuditId) },
+		validate)
 }
 
 func validate(item *scm.ScmFreightAudit, vnic ifs.IVNic) error {

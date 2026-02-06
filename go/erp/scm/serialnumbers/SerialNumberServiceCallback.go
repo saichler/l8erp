@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package serialnumbers
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type SerialNumberServiceCallback struct{}
-
-func newSerialNumberServiceCallback() *SerialNumberServiceCallback {
-	return &SerialNumberServiceCallback{}
-}
-
-func (this *SerialNumberServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmSerialNumber)
-	if !ok {
-		return nil, false, errors.New("invalid serial number type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.SerialId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *SerialNumberServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newSerialNumberServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmSerialNumber",
+		func(e *scm.ScmSerialNumber) { common.GenerateID(&e.SerialId) },
+		validate)
 }
 
 func validate(item *scm.ScmSerialNumber, vnic ifs.IVNic) error {

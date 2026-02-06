@@ -34,10 +34,7 @@ func generateTechnicians(store *MockDataStore) []*crm.CrmTechnician {
 	count := 15
 	technicians := make([]*crm.CrmTechnician, count)
 	for i := 0; i < count; i++ {
-		employeeID := ""
-		if len(store.EmployeeIDs) > 0 {
-			employeeID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		employeeID := pickRef(store.EmployeeIDs, i)
 
 		firstName := firstNames[i%len(firstNames)]
 		lastName := lastNames[i%len(lastNames)]
@@ -60,7 +57,7 @@ func generateTechnicians(store *MockDataStore) []*crm.CrmTechnician {
 		}
 
 		technicians[i] = &crm.CrmTechnician{
-			TechnicianId: fmt.Sprintf("tech-%03d", i+1),
+			TechnicianId: genID("tech", i),
 			EmployeeId:   employeeID,
 			Name:         fmt.Sprintf("%s %s", firstName, lastName),
 			Email:        fmt.Sprintf("%s.%s@company.com", firstName, lastName),
@@ -103,18 +100,9 @@ func generateServiceContracts(store *MockDataStore) []*crm.CrmServiceContract {
 	count := 25
 	contracts := make([]*crm.CrmServiceContract, count)
 	for i := 0; i < count; i++ {
-		accountID := ""
-		if len(store.CrmAccountIDs) > 0 {
-			accountID = store.CrmAccountIDs[i%len(store.CrmAccountIDs)]
-		}
-		slaID := ""
-		if len(store.CrmSLAIDs) > 0 {
-			slaID = store.CrmSLAIDs[i%len(store.CrmSLAIDs)]
-		}
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		accountID := pickRef(store.CrmAccountIDs, i)
+		slaID := pickRef(store.CrmSLAIDs, i)
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		// Status distribution: 70% active, 20% draft, 10% expired
 		var status crm.CrmContractStatus
@@ -130,14 +118,14 @@ func generateServiceContracts(store *MockDataStore) []*crm.CrmServiceContract {
 		includedVisits := int32(rand.Intn(12) + 4)
 
 		contracts[i] = &crm.CrmServiceContract{
-			ContractId:        fmt.Sprintf("svccontr-%03d", i+1),
+			ContractId:        genID("svccontr", i),
 			ContractNumber:    fmt.Sprintf("SC-%05d", 10000+i+1),
 			AccountId:         accountID,
 			ContractType:      types[i%len(types)],
 			Status:            status,
 			StartDate:         time.Now().AddDate(-1, 0, 0).Unix(),
 			EndDate:           time.Now().AddDate(1, 0, 0).Unix(),
-			ContractValue:     &erp.Money{Amount: int64(rand.Intn(50000) + 5000), CurrencyCode: "USD"},
+			ContractValue:     randomMoney(5000, 50000),
 			IncludedHours:     includedHours,
 			UsedHours:         int32(float64(includedHours) * (float64(rand.Intn(80)) / 100)),
 			IncludedVisits:    includedVisits,
@@ -178,30 +166,15 @@ func generateServiceOrders(store *MockDataStore) []*crm.CrmServiceOrder {
 	count := 40
 	orders := make([]*crm.CrmServiceOrder, count)
 	for i := 0; i < count; i++ {
-		accountID := ""
-		if len(store.CrmAccountIDs) > 0 {
-			accountID = store.CrmAccountIDs[i%len(store.CrmAccountIDs)]
-		}
-		contactID := ""
-		if len(store.CrmContactIDs) > 0 {
-			contactID = store.CrmContactIDs[i%len(store.CrmContactIDs)]
-		}
+		accountID := pickRef(store.CrmAccountIDs, i)
+		contactID := pickRef(store.CrmContactIDs, i)
 		caseID := ""
 		if len(store.CrmCaseIDs) > 0 && i%3 == 0 {
 			caseID = store.CrmCaseIDs[i%len(store.CrmCaseIDs)]
 		}
-		contractID := ""
-		if len(store.CrmServiceContractIDs) > 0 {
-			contractID = store.CrmServiceContractIDs[i%len(store.CrmServiceContractIDs)]
-		}
-		technicianID := ""
-		if len(store.CrmTechnicianIDs) > 0 {
-			technicianID = store.CrmTechnicianIDs[i%len(store.CrmTechnicianIDs)]
-		}
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		contractID := pickRef(store.CrmServiceContractIDs, i)
+		technicianID := pickRef(store.CrmTechnicianIDs, i)
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		// Status distribution: 10% new, 30% scheduled, 30% in progress, 30% completed
 		var status crm.CrmServiceOrderStatus
@@ -232,7 +205,7 @@ func generateServiceOrders(store *MockDataStore) []*crm.CrmServiceOrder {
 		}
 
 		orders[i] = &crm.CrmServiceOrder{
-			OrderId:     fmt.Sprintf("svcord-%03d", i+1),
+			OrderId:     genID("svcord", i),
 			OrderNumber: fmt.Sprintf("SO-%05d", 10000+i+1),
 			OrderType:   types[i%len(types)],
 			Status:      status,
@@ -255,8 +228,8 @@ func generateServiceOrders(store *MockDataStore) []*crm.CrmServiceOrder {
 			ActualEnd:      actualEnd,
 			TechnicianId:   technicianID,
 			SerialNumber:   fmt.Sprintf("SN-%08d", rand.Intn(100000000)),
-			EstimatedCost:  &erp.Money{Amount: estimatedCost, CurrencyCode: "USD"},
-			ActualCost:     &erp.Money{Amount: actualCost, CurrencyCode: "USD"},
+			EstimatedCost:  money(estimatedCost),
+			ActualCost:     money(actualCost),
 			Resolution:     "Service completed successfully",
 			OwnerId:        ownerID,
 			AuditInfo:      createAuditInfo(),
@@ -312,10 +285,7 @@ func generateServiceParts(store *MockDataStore) []*crm.CrmServicePart {
 			if len(store.ItemIDs) > 0 {
 				itemID = store.ItemIDs[(idx-1)%len(store.ItemIDs)]
 			}
-			warehouseID := ""
-			if len(store.SCMWarehouseIDs) > 0 {
-				warehouseID = store.SCMWarehouseIDs[(idx-1)%len(store.SCMWarehouseIDs)]
-			}
+			warehouseID := pickRef(store.SCMWarehouseIDs, (idx-1))
 
 			quantity := float64(rand.Intn(5) + 1)
 			unitCost := int64(rand.Intn(500) + 50)
@@ -327,8 +297,8 @@ func generateServiceParts(store *MockDataStore) []*crm.CrmServicePart {
 				ItemId:         itemID,
 				ItemName:       itemName,
 				Quantity:       quantity,
-				UnitCost:       &erp.Money{Amount: unitCost, CurrencyCode: "USD"},
-				TotalCost:      &erp.Money{Amount: totalCost, CurrencyCode: "USD"},
+				UnitCost:       money(unitCost),
+				TotalCost:      money(totalCost),
 				SerialNumber:   fmt.Sprintf("PN-%08d", rand.Intn(100000000)),
 				IsWarranty:     idx%5 == 0,
 				WarehouseId:    warehouseID,
@@ -353,10 +323,7 @@ func generateServiceVisits(store *MockDataStore) []*crm.CrmServiceVisit {
 	visits := make([]*crm.CrmServiceVisit, 0, len(store.CrmServiceOrderIDs))
 	idx := 1
 	for _, orderID := range store.CrmServiceOrderIDs {
-		technicianID := ""
-		if len(store.CrmTechnicianIDs) > 0 {
-			technicianID = store.CrmTechnicianIDs[(idx-1)%len(store.CrmTechnicianIDs)]
-		}
+		technicianID := pickRef(store.CrmTechnicianIDs, (idx-1))
 
 		// Status distribution: 10% scheduled, 10% en route, 20% on site, 60% completed
 		var status crm.CrmVisitStatus
@@ -400,8 +367,8 @@ func generateServiceVisits(store *MockDataStore) []*crm.CrmServiceVisit {
 			CustomerSignature: "J. Smith",
 			CustomerRating:    int32(rand.Intn(5) + 1),
 			CustomerFeedback:  "Excellent service!",
-			LaborCost:         &erp.Money{Amount: laborCost, CurrencyCode: "USD"},
-			TravelCost:        &erp.Money{Amount: travelCost, CurrencyCode: "USD"},
+			LaborCost:         money(laborCost),
+			TravelCost:        money(travelCost),
 			AuditInfo:         createAuditInfo(),
 		})
 		idx++

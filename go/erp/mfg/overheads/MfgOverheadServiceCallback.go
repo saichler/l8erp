@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package overheads
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type MfgOverheadServiceCallback struct{}
-
-func newMfgOverheadServiceCallback() *MfgOverheadServiceCallback {
-	return &MfgOverheadServiceCallback{}
-}
-
-func (this *MfgOverheadServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgOverhead)
-	if !ok {
-		return nil, false, errors.New("invalid MfgOverhead type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.OverheadId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgOverheadServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgOverheadServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgOverhead",
+		func(e *mfg.MfgOverhead) { common.GenerateID(&e.OverheadId) },
+		validate)
 }
 
 func validate(item *mfg.MfgOverhead, vnic ifs.IVNic) error {

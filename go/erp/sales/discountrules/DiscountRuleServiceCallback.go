@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package discountrules
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/sales"
 )
 
-type DiscountRuleServiceCallback struct{}
-
-func newDiscountRuleServiceCallback() *DiscountRuleServiceCallback {
-	return &DiscountRuleServiceCallback{}
-}
-
-func (this *DiscountRuleServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*sales.SalesDiscountRule)
-	if !ok {
-		return nil, false, errors.New("invalid discount rule type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.RuleId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *DiscountRuleServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newDiscountRuleServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SalesDiscountRule",
+		func(e *sales.SalesDiscountRule) { common.GenerateID(&e.RuleId) },
+		validate)
 }
 
 func validate(item *sales.SalesDiscountRule, vnic ifs.IVNic) error {

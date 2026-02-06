@@ -37,7 +37,7 @@ func generateVendors(store *MockDataStore) []*fin.Vendor {
 		}
 
 		vendors[i] = &fin.Vendor{
-			VendorId:               fmt.Sprintf("vnd-%03d", i+1),
+			VendorId:               genID("vnd", i),
 			VendorNumber:           fmt.Sprintf("V%04d", i+1),
 			Name:                   name,
 			LegalName:              name + " LLC",
@@ -106,7 +106,7 @@ func generateCustomers(store *MockDataStore) []*fin.Customer {
 		creditAmount := int64(rand.Intn(450001)+50000) * 100 // 50000_00 to 500000_00 cents
 
 		customers[i] = &fin.Customer{
-			CustomerId:       fmt.Sprintf("cust-%03d", i+1),
+			CustomerId:       genID("cust", i),
 			CustomerNumber:   fmt.Sprintf("C%04d", i+1),
 			Name:             name,
 			LegalName:        name + " Inc.",
@@ -115,7 +115,7 @@ func generateCustomers(store *MockDataStore) []*fin.Customer {
 			DefaultAccountId: defaultAccountId,
 			CurrencyId:       store.CurrencyIDs[0],
 			PaymentTermDays:  30,
-			CreditLimit:      &erp.Money{Amount: creditAmount, CurrencyCode: "USD"},
+			CreditLimit:      money(creditAmount),
 			Addresses:        []*erp.Address{createAddress()},
 			Contacts:         []*erp.ContactInfo{createContact()},
 			Website:          fmt.Sprintf("www.%s.com", sanitized),
@@ -182,7 +182,7 @@ func generateBankAccounts(store *MockDataStore) []*fin.BankAccount {
 		balance := int64(rand.Intn(5000000)+500000) * 100 // large amount in cents
 
 		accounts[i] = &fin.BankAccount{
-			BankAccountId:       fmt.Sprintf("bank-%03d", i+1),
+			BankAccountId:       genID("bank", i),
 			AccountName:         fmt.Sprintf("Operating - %s", bankName),
 			BankName:            bankName,
 			AccountNumberMasked: fmt.Sprintf("****%04d", rand.Intn(10000)),
@@ -191,7 +191,7 @@ func generateBankAccounts(store *MockDataStore) []*fin.BankAccount {
 			Status:              fin.BankAccountStatus_BANK_ACCOUNT_STATUS_ACTIVE,
 			CurrencyId:          store.CurrencyIDs[0],
 			GlAccountId:         glAccountId,
-			CurrentBalance:      &erp.Money{Amount: balance, CurrencyCode: "USD"},
+			CurrentBalance:      money(balance),
 			AuditInfo:           createAuditInfo(),
 		}
 	}
@@ -227,7 +227,7 @@ func generateExchangeRates(store *MockDataStore) []*fin.ExchangeRate {
 			}
 
 			rates[idx] = &fin.ExchangeRate{
-				ExchangeRateId: fmt.Sprintf("xr-%03d", idx+1),
+				ExchangeRateId: genID("xr", idx),
 				FromCurrencyId: store.CurrencyIDs[0],
 				ToCurrencyId:   toCurrencyId,
 				Rate:           rate,

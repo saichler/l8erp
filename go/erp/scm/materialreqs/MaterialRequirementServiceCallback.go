@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package materialreqs
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type MaterialRequirementServiceCallback struct{}
-
-func newMaterialRequirementServiceCallback() *MaterialRequirementServiceCallback {
-	return &MaterialRequirementServiceCallback{}
-}
-
-func (this *MaterialRequirementServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmMaterialRequirement)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.RequirementId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MaterialRequirementServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMaterialRequirementServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmMaterialRequirement",
+		func(e *scm.ScmMaterialRequirement) { common.GenerateID(&e.RequirementId) },
+		validate)
 }
 
 func validate(item *scm.ScmMaterialRequirement, vnic ifs.IVNic) error {

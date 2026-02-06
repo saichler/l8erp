@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package stockmovements
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type StockMovementServiceCallback struct{}
-
-func newStockMovementServiceCallback() *StockMovementServiceCallback {
-	return &StockMovementServiceCallback{}
-}
-
-func (this *StockMovementServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmStockMovement)
-	if !ok {
-		return nil, false, errors.New("invalid stock movement type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.MovementId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *StockMovementServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newStockMovementServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmStockMovement",
+		func(e *scm.ScmStockMovement) { common.GenerateID(&e.MovementId) },
+		validate)
 }
 
 func validate(item *scm.ScmStockMovement, vnic ifs.IVNic) error {

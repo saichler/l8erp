@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package fiscalyears
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type FiscalYearServiceCallback struct{}
-
-func newFiscalYearServiceCallback() *FiscalYearServiceCallback {
-	return &FiscalYearServiceCallback{}
-}
-
-func (this *FiscalYearServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	fiscalYear, ok := any.(*fin.FiscalYear)
-	if !ok {
-		return nil, false, errors.New("invalid fiscalYear type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&fiscalYear.FiscalYearId)
-	}
-	err := validate(fiscalYear, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *FiscalYearServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newFiscalYearServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("FiscalYear",
+		func(e *fin.FiscalYear) { common.GenerateID(&e.FiscalYearId) },
+		validate)
 }
 
 func validate(fiscalYear *fin.FiscalYear, vnic ifs.IVNic) error {

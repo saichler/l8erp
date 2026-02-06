@@ -15,37 +15,16 @@ limitations under the License.
 package lifeevents
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type LifeEventServiceCallback struct {
-}
-
-func newLifeEventServiceCallback() *LifeEventServiceCallback {
-	return &LifeEventServiceCallback{}
-}
-
-func (this *LifeEventServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.LifeEvent)
-	if !ok {
-		return nil, false, errors.New("invalid life event type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.LifeEventId)
-	}
-	err := validateLifeEvt(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *LifeEventServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newLifeEventServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("LifeEvent",
+		func(e *hcm.LifeEvent) { common.GenerateID(&e.LifeEventId) },
+		validateLifeEvt)
 }
 
 func validateLifeEvt(entity *hcm.LifeEvent, vnic ifs.IVNic) error {

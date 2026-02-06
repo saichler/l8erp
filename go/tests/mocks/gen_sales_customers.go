@@ -35,10 +35,7 @@ func generateSalesPartnerChannels(store *MockDataStore) []*sales.SalesPartnerCha
 
 	partners := make([]*sales.SalesPartnerChannel, len(salesPartnerNames))
 	for i, name := range salesPartnerNames {
-		territoryID := ""
-		if len(store.SalesTerritoryIDs) > 0 {
-			territoryID = store.SalesTerritoryIDs[i%len(store.SalesTerritoryIDs)]
-		}
+		territoryID := pickRef(store.SalesTerritoryIDs, i)
 
 		startDate := time.Now().AddDate(-rand.Intn(3), 0, 0)
 		var endDate int64
@@ -47,7 +44,7 @@ func generateSalesPartnerChannels(store *MockDataStore) []*sales.SalesPartnerCha
 		}
 
 		partners[i] = &sales.SalesPartnerChannel{
-			PartnerId:      fmt.Sprintf("spc-%03d", i+1),
+			PartnerId:      genID("spc", i),
 			Name:           name,
 			PartnerType:    partnerTypes[i%len(partnerTypes)],
 			ContactName:    randomName(),
@@ -85,26 +82,17 @@ func generateSalesCustomerContracts(store *MockDataStore) []*sales.SalesCustomer
 
 	contracts := make([]*sales.SalesCustomerContract, count)
 	for i := 0; i < count; i++ {
-		customerID := ""
-		if len(store.CustomerIDs) > 0 {
-			customerID = store.CustomerIDs[i%len(store.CustomerIDs)]
-		}
+		customerID := pickRef(store.CustomerIDs, i)
 
-		salespersonID := ""
-		if len(store.EmployeeIDs) > 0 {
-			salespersonID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		salespersonID := pickRef(store.EmployeeIDs, i)
 
-		priceListID := ""
-		if len(store.SalesPriceListIDs) > 0 {
-			priceListID = store.SalesPriceListIDs[i%len(store.SalesPriceListIDs)]
-		}
+		priceListID := pickRef(store.SalesPriceListIDs, i)
 
 		startDate := time.Now().AddDate(0, -rand.Intn(12), 0)
 		endDate := startDate.AddDate(1, 0, 0)
 
 		contracts[i] = &sales.SalesCustomerContract{
-			ContractId:     fmt.Sprintf("scc-%03d", i+1),
+			ContractId:     genID("scc", i),
 			ContractNumber: fmt.Sprintf("CTR-%04d", rand.Intn(9000)+1000),
 			CustomerId:     customerID,
 			Name:           fmt.Sprintf("Customer Contract %d", i+1),

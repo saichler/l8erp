@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package banktransactions
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
+	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-type BankTransactionServiceCallback struct{}
-
-func newBankTransactionServiceCallback() *BankTransactionServiceCallback {
-	return &BankTransactionServiceCallback{}
-}
-
-func (this *BankTransactionServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	bankTransaction, ok := any.(*fin.BankTransaction)
-	if !ok {
-		return nil, false, errors.New("invalid bankTransaction type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&bankTransaction.TransactionId)
-	}
-	err := validate(bankTransaction, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BankTransactionServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBankTransactionServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("BankTransaction",
+		func(e *fin.BankTransaction) { common.GenerateID(&e.TransactionId) },
+		validate)
 }
 
 func validate(bankTransaction *fin.BankTransaction, vnic ifs.IVNic) error {

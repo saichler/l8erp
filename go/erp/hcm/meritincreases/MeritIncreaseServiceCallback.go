@@ -15,38 +15,17 @@ limitations under the License.
 package meritincreases
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/erp/hcm/meritcycles"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type MeritIncreaseServiceCallback struct {
-}
-
-func newMeritIncreaseServiceCallback() *MeritIncreaseServiceCallback {
-	return &MeritIncreaseServiceCallback{}
-}
-
-func (this *MeritIncreaseServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.MeritIncrease)
-	if !ok {
-		return nil, false, errors.New("invalid merit increase type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.IncreaseId)
-	}
-	err := validateMeritInc(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MeritIncreaseServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMeritIncreaseServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MeritIncrease",
+		func(e *hcm.MeritIncrease) { common.GenerateID(&e.IncreaseId) },
+		validateMeritInc)
 }
 
 func validateMeritInc(entity *hcm.MeritIncrease, vnic ifs.IVNic) error {

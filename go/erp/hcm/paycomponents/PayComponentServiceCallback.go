@@ -15,36 +15,15 @@ limitations under the License.
 package paycomponents
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-type PayComponentServiceCallback struct {
-}
-
-func newPayComponentServiceCallback() *PayComponentServiceCallback {
-	return &PayComponentServiceCallback{}
-}
-
-func (this *PayComponentServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.PayComponent)
-	if !ok {
-		return nil, false, errors.New("invalid pay component type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.ComponentId)
-	}
-	err := validatePayComp(entity)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PayComponentServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPayComponentServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("PayComponent",
+		func(e *hcm.PayComponent) { common.GenerateID(&e.ComponentId) },
+		nil)
 }
 
 func validatePayComp(entity *hcm.PayComponent) error {

@@ -107,7 +107,7 @@ func generateDataSources() []*bi.BiDataSource {
 		lastSync := lastConnected.AddDate(0, 0, -rand.Intn(3))
 
 		sources[i] = &bi.BiDataSource{
-			SourceId:         fmt.Sprintf("bds-%03d", i+1),
+			SourceId:         genID("bds", i),
 			Name:             sourceNames[i%len(sourceNames)],
 			Description:      fmt.Sprintf("Data source configuration for %s", sourceNames[i%len(sourceNames)]),
 			SourceType:       sourceTypes[i%len(sourceTypes)],
@@ -186,10 +186,7 @@ func generateETLJobs(store *MockDataStore) []*bi.BiETLJob {
 			targetID = store.BiDataSourceIDs[(i+1)%len(store.BiDataSourceIDs)]
 		}
 
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		lastRun := time.Now().AddDate(0, 0, -rand.Intn(7))
 		lastSuccess := lastRun
@@ -209,7 +206,7 @@ func generateETLJobs(store *MockDataStore) []*bi.BiETLJob {
 		}
 
 		jobs[i] = &bi.BiETLJob{
-			JobId:           fmt.Sprintf("betl-%03d", i+1),
+			JobId:           genID("betl", i),
 			Name:            jobNames[i%len(jobNames)],
 			Description:     fmt.Sprintf("ETL job for %s data extraction and loading", jobNames[i%len(jobNames)]),
 			SourceId:        sourceID,
@@ -267,10 +264,7 @@ func generateETLSchedules(store *MockDataStore) []*bi.BiETLSchedule {
 
 	schedules := make([]*bi.BiETLSchedule, count)
 	for i := 0; i < count; i++ {
-		jobID := ""
-		if len(store.BiETLJobIDs) > 0 {
-			jobID = store.BiETLJobIDs[i%len(store.BiETLJobIDs)]
-		}
+		jobID := pickRef(store.BiETLJobIDs, i)
 
 		startDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 		endDate := time.Now().AddDate(1, 0, 0)
@@ -278,7 +272,7 @@ func generateETLSchedules(store *MockDataStore) []*bi.BiETLSchedule {
 		nextRun := time.Now().AddDate(0, 0, rand.Intn(7)+1)
 
 		schedules[i] = &bi.BiETLSchedule{
-			ScheduleId:  fmt.Sprintf("bsch-%03d", i+1),
+			ScheduleId:  genID("bsch", i),
 			JobId:       jobID,
 			Name:        scheduleNames[i%len(scheduleNames)],
 			Description: fmt.Sprintf("Schedule configuration for %s", scheduleNames[i%len(scheduleNames)]),

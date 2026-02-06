@@ -23,48 +23,28 @@ import (
 // Phase 1: Foundation Objects (No Dependencies)
 func generatePhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate Job Families
-	fmt.Printf("  Creating Job Families...")
 	jobFamilies := generateJobFamilies()
-	if err := client.post("/erp/30/JobFamily", &hcm.JobFamilyList{List: jobFamilies}); err != nil {
-		return fmt.Errorf("job families: %w", err)
+	if err := runOp(client, "Job Families", "/erp/30/JobFamily", &hcm.JobFamilyList{List: jobFamilies}, extractIDs(jobFamilies, func(e *hcm.JobFamily) string { return e.JobFamilyId }), &store.JobFamilyIDs); err != nil {
+		return err
 	}
-	for _, jf := range jobFamilies {
-		store.JobFamilyIDs = append(store.JobFamilyIDs, jf.JobFamilyId)
-	}
-	fmt.Printf(" %d created\n", len(jobFamilies))
 
 	// Generate Carriers
-	fmt.Printf("  Creating Carriers...")
 	carriers := generateCarriers()
-	if err := client.post("/erp/30/Carrier", &hcm.CarrierList{List: carriers}); err != nil {
-		return fmt.Errorf("carriers: %w", err)
+	if err := runOp(client, "Carriers", "/erp/30/Carrier", &hcm.CarrierList{List: carriers}, extractIDs(carriers, func(e *hcm.Carrier) string { return e.CarrierId }), &store.CarrierIDs); err != nil {
+		return err
 	}
-	for _, c := range carriers {
-		store.CarrierIDs = append(store.CarrierIDs, c.CarrierId)
-	}
-	fmt.Printf(" %d created\n", len(carriers))
 
 	// Generate Certifications
-	fmt.Printf("  Creating Certifications...")
 	certifications := generateCertifications()
-	if err := client.post("/erp/30/Cert", &hcm.CertificationList{List: certifications}); err != nil {
-		return fmt.Errorf("certifications: %w", err)
+	if err := runOp(client, "Certifications", "/erp/30/Cert", &hcm.CertificationList{List: certifications}, extractIDs(certifications, func(e *hcm.Certification) string { return e.CertificationId }), &store.CertificationIDs); err != nil {
+		return err
 	}
-	for _, c := range certifications {
-		store.CertificationIDs = append(store.CertificationIDs, c.CertificationId)
-	}
-	fmt.Printf(" %d created\n", len(certifications))
 
 	// Generate Skills
-	fmt.Printf("  Creating Skills...")
 	skills := generateSkills()
-	if err := client.post("/erp/30/Skill", &hcm.SkillList{List: skills}); err != nil {
-		return fmt.Errorf("skills: %w", err)
+	if err := runOp(client, "Skills", "/erp/30/Skill", &hcm.SkillList{List: skills}, extractIDs(skills, func(e *hcm.Skill) string { return e.SkillId }), &store.SkillIDs); err != nil {
+		return err
 	}
-	for _, s := range skills {
-		store.SkillIDs = append(store.SkillIDs, s.SkillId)
-	}
-	fmt.Printf(" %d created\n", len(skills))
 
 	return nil
 }
@@ -72,48 +52,28 @@ func generatePhase1(client *HCMClient, store *MockDataStore) error {
 // Phase 2: Core Organizational Structure
 func generatePhase2(client *HCMClient, store *MockDataStore) error {
 	// Generate Organizations (hierarchical)
-	fmt.Printf("  Creating Organizations...")
 	organizations := generateOrganizations()
-	if err := client.post("/erp/30/Org", &hcm.OrganizationList{List: organizations}); err != nil {
-		return fmt.Errorf("organizations: %w", err)
+	if err := runOp(client, "Organizations", "/erp/30/Org", &hcm.OrganizationList{List: organizations}, extractIDs(organizations, func(e *hcm.Organization) string { return e.OrganizationId }), &store.OrganizationIDs); err != nil {
+		return err
 	}
-	for _, o := range organizations {
-		store.OrganizationIDs = append(store.OrganizationIDs, o.OrganizationId)
-	}
-	fmt.Printf(" %d created\n", len(organizations))
 
 	// Generate Jobs
-	fmt.Printf("  Creating Jobs...")
 	jobs := generateJobs(store)
-	if err := client.post("/erp/30/Job", &hcm.JobList{List: jobs}); err != nil {
-		return fmt.Errorf("jobs: %w", err)
+	if err := runOp(client, "Jobs", "/erp/30/Job", &hcm.JobList{List: jobs}, extractIDs(jobs, func(e *hcm.Job) string { return e.JobId }), &store.JobIDs); err != nil {
+		return err
 	}
-	for _, j := range jobs {
-		store.JobIDs = append(store.JobIDs, j.JobId)
-	}
-	fmt.Printf(" %d created\n", len(jobs))
 
 	// Generate Departments
-	fmt.Printf("  Creating Departments...")
 	departments := generateDepartments(store)
-	if err := client.post("/erp/30/Dept", &hcm.DepartmentList{List: departments}); err != nil {
-		return fmt.Errorf("departments: %w", err)
+	if err := runOp(client, "Departments", "/erp/30/Dept", &hcm.DepartmentList{List: departments}, extractIDs(departments, func(e *hcm.Department) string { return e.DepartmentId }), &store.DepartmentIDs); err != nil {
+		return err
 	}
-	for _, d := range departments {
-		store.DepartmentIDs = append(store.DepartmentIDs, d.DepartmentId)
-	}
-	fmt.Printf(" %d created\n", len(departments))
 
 	// Generate Positions
-	fmt.Printf("  Creating Positions...")
 	positions := generatePositions(store)
-	if err := client.post("/erp/30/Position", &hcm.PositionList{List: positions}); err != nil {
-		return fmt.Errorf("positions: %w", err)
+	if err := runOp(client, "Positions", "/erp/30/Position", &hcm.PositionList{List: positions}, extractIDs(positions, func(e *hcm.Position) string { return e.PositionId }), &store.PositionIDs); err != nil {
+		return err
 	}
-	for _, p := range positions {
-		store.PositionIDs = append(store.PositionIDs, p.PositionId)
-	}
-	fmt.Printf(" %d created\n", len(positions))
 
 	return nil
 }
@@ -121,149 +81,85 @@ func generatePhase2(client *HCMClient, store *MockDataStore) error {
 // Phase 3: Employees & Configuration
 func generatePhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Employees (managers first, then others)
-	fmt.Printf("  Creating Employees...")
 	employees := generateEmployees(store)
-	if err := client.post("/erp/30/Employee", &hcm.EmployeeList{List: employees}); err != nil {
-		return fmt.Errorf("employees: %w", err)
-	}
-	for _, e := range employees {
-		store.EmployeeIDs = append(store.EmployeeIDs, e.EmployeeId)
+	if err := runOp(client, "Employees", "/erp/30/Employee", &hcm.EmployeeList{List: employees}, extractIDs(employees, func(e *hcm.Employee) string { return e.EmployeeId }), &store.EmployeeIDs); err != nil {
+		return err
 	}
 	// First 10 employees are managers (including CEO)
 	store.ManagerIDs = store.EmployeeIDs[:minInt(10, len(store.EmployeeIDs))]
 	fmt.Printf(" %d created\n", len(employees))
 
 	// Generate Pay Structures
-	fmt.Printf("  Creating Pay Structures...")
 	payStructures := generatePayStructures(store)
-	if err := client.post("/erp/30/PayStruct", &hcm.PayStructureList{List: payStructures}); err != nil {
-		return fmt.Errorf("pay structures: %w", err)
+	if err := runOp(client, "Pay Structures", "/erp/30/PayStruct", &hcm.PayStructureList{List: payStructures}, extractIDs(payStructures, func(e *hcm.PayStructure) string { return e.PayStructureId }), &store.PayStructureIDs); err != nil {
+		return err
 	}
-	for _, ps := range payStructures {
-		store.PayStructureIDs = append(store.PayStructureIDs, ps.PayStructureId)
-	}
-	fmt.Printf(" %d created\n", len(payStructures))
 
 	// Generate Pay Components
-	fmt.Printf("  Creating Pay Components...")
 	payComponents := generatePayComponents(store)
-	if err := client.post("/erp/30/PayComp", &hcm.PayComponentList{List: payComponents}); err != nil {
-		return fmt.Errorf("pay components: %w", err)
+	if err := runOp(client, "Pay Components", "/erp/30/PayComp", &hcm.PayComponentList{List: payComponents}, extractIDs(payComponents, func(e *hcm.PayComponent) string { return e.ComponentId }), &store.PayComponentIDs); err != nil {
+		return err
 	}
-	for _, pc := range payComponents {
-		store.PayComponentIDs = append(store.PayComponentIDs, pc.ComponentId)
-	}
-	fmt.Printf(" %d created\n", len(payComponents))
 
 	// Generate Leave Policies
-	fmt.Printf("  Creating Leave Policies...")
 	leavePolicies := generateLeavePolicies(store)
-	if err := client.post("/erp/30/LeavePol", &hcm.LeavePolicyList{List: leavePolicies}); err != nil {
-		return fmt.Errorf("leave policies: %w", err)
+	if err := runOp(client, "Leave Policies", "/erp/30/LeavePol", &hcm.LeavePolicyList{List: leavePolicies}, extractIDs(leavePolicies, func(e *hcm.LeavePolicy) string { return e.PolicyId }), &store.LeavePolicyIDs); err != nil {
+		return err
 	}
-	for _, lp := range leavePolicies {
-		store.LeavePolicyIDs = append(store.LeavePolicyIDs, lp.PolicyId)
-	}
-	fmt.Printf(" %d created\n", len(leavePolicies))
 
 	// Generate Shifts
-	fmt.Printf("  Creating Shifts...")
 	shifts := generateShifts()
-	if err := client.post("/erp/30/Shift", &hcm.ShiftList{List: shifts}); err != nil {
-		return fmt.Errorf("shifts: %w", err)
+	if err := runOp(client, "Shifts", "/erp/30/Shift", &hcm.ShiftList{List: shifts}, extractIDs(shifts, func(e *hcm.Shift) string { return e.ShiftId }), &store.ShiftIDs); err != nil {
+		return err
 	}
-	for _, s := range shifts {
-		store.ShiftIDs = append(store.ShiftIDs, s.ShiftId)
-	}
-	fmt.Printf(" %d created\n", len(shifts))
 
 	// Generate Holidays
-	fmt.Printf("  Creating Holidays...")
 	holidays := generateHolidays(store)
-	if err := client.post("/erp/30/Holiday", &hcm.HolidayList{List: holidays}); err != nil {
-		return fmt.Errorf("holidays: %w", err)
+	if err := runOp(client, "Holidays", "/erp/30/Holiday", &hcm.HolidayList{List: holidays}, extractIDs(holidays, func(e *hcm.Holiday) string { return e.HolidayId }), &store.HolidayIDs); err != nil {
+		return err
 	}
-	for _, h := range holidays {
-		store.HolidayIDs = append(store.HolidayIDs, h.HolidayId)
-	}
-	fmt.Printf(" %d created\n", len(holidays))
 
 	// Generate Benefit Plans
-	fmt.Printf("  Creating Benefit Plans...")
 	benefitPlans := generateBenefitPlans(store)
-	if err := client.post("/erp/30/BenPlan", &hcm.BenefitPlanList{List: benefitPlans}); err != nil {
-		return fmt.Errorf("benefit plans: %w", err)
+	if err := runOp(client, "Benefit Plans", "/erp/30/BenPlan", &hcm.BenefitPlanList{List: benefitPlans}, extractIDs(benefitPlans, func(e *hcm.BenefitPlan) string { return e.PlanId }), &store.BenefitPlanIDs); err != nil {
+		return err
 	}
-	for _, bp := range benefitPlans {
-		store.BenefitPlanIDs = append(store.BenefitPlanIDs, bp.PlanId)
-	}
-	fmt.Printf(" %d created\n", len(benefitPlans))
 
 	// Generate Salary Structures
-	fmt.Printf("  Creating Salary Structures...")
 	salaryStructures := generateSalaryStructures(store)
-	if err := client.post("/erp/30/SalStrct", &hcm.SalaryStructureList{List: salaryStructures}); err != nil {
-		return fmt.Errorf("salary structures: %w", err)
+	if err := runOp(client, "Salary Structures", "/erp/30/SalStrct", &hcm.SalaryStructureList{List: salaryStructures}, extractIDs(salaryStructures, func(e *hcm.SalaryStructure) string { return e.StructureId }), &store.SalaryStructureIDs); err != nil {
+		return err
 	}
-	for _, ss := range salaryStructures {
-		store.SalaryStructureIDs = append(store.SalaryStructureIDs, ss.StructureId)
-	}
-	fmt.Printf(" %d created\n", len(salaryStructures))
 
 	// Generate Salary Grades
-	fmt.Printf("  Creating Salary Grades...")
 	salaryGrades := generateSalaryGrades(store)
-	if err := client.post("/erp/30/SalGrade", &hcm.SalaryGradeList{List: salaryGrades}); err != nil {
-		return fmt.Errorf("salary grades: %w", err)
+	if err := runOp(client, "Salary Grades", "/erp/30/SalGrade", &hcm.SalaryGradeList{List: salaryGrades}, extractIDs(salaryGrades, func(e *hcm.SalaryGrade) string { return e.GradeId }), &store.SalaryGradeIDs); err != nil {
+		return err
 	}
-	for _, sg := range salaryGrades {
-		store.SalaryGradeIDs = append(store.SalaryGradeIDs, sg.GradeId)
-	}
-	fmt.Printf(" %d created\n", len(salaryGrades))
 
 	// Generate Bonus Plans
-	fmt.Printf("  Creating Bonus Plans...")
 	bonusPlans := generateBonusPlans(store)
-	if err := client.post("/erp/30/BonusPlan", &hcm.BonusPlanList{List: bonusPlans}); err != nil {
-		return fmt.Errorf("bonus plans: %w", err)
+	if err := runOp(client, "Bonus Plans", "/erp/30/BonusPlan", &hcm.BonusPlanList{List: bonusPlans}, extractIDs(bonusPlans, func(e *hcm.BonusPlan) string { return e.PlanId }), &store.BonusPlanIDs); err != nil {
+		return err
 	}
-	for _, bp := range bonusPlans {
-		store.BonusPlanIDs = append(store.BonusPlanIDs, bp.PlanId)
-	}
-	fmt.Printf(" %d created\n", len(bonusPlans))
 
 	// Generate Merit Cycles
-	fmt.Printf("  Creating Merit Cycles...")
 	meritCycles := generateMeritCycles(store)
-	if err := client.post("/erp/30/MrtCycle", &hcm.MeritCycleList{List: meritCycles}); err != nil {
-		return fmt.Errorf("merit cycles: %w", err)
+	if err := runOp(client, "Merit Cycles", "/erp/30/MrtCycle", &hcm.MeritCycleList{List: meritCycles}, extractIDs(meritCycles, func(e *hcm.MeritCycle) string { return e.CycleId }), &store.MeritCycleIDs); err != nil {
+		return err
 	}
-	for _, mc := range meritCycles {
-		store.MeritCycleIDs = append(store.MeritCycleIDs, mc.CycleId)
-	}
-	fmt.Printf(" %d created\n", len(meritCycles))
 
 	// Generate Courses
-	fmt.Printf("  Creating Courses...")
 	courses := generateCourses(store)
-	if err := client.post("/erp/30/Course", &hcm.CourseList{List: courses}); err != nil {
-		return fmt.Errorf("courses: %w", err)
+	if err := runOp(client, "Courses", "/erp/30/Course", &hcm.CourseList{List: courses}, extractIDs(courses, func(e *hcm.Course) string { return e.CourseId }), &store.CourseIDs); err != nil {
+		return err
 	}
-	for _, c := range courses {
-		store.CourseIDs = append(store.CourseIDs, c.CourseId)
-	}
-	fmt.Printf(" %d created\n", len(courses))
 
 	// Generate Course Sessions
-	fmt.Printf("  Creating Course Sessions...")
 	sessions := generateCourseSessions(store)
-	if err := client.post("/erp/30/CrsSess", &hcm.CourseSessionList{List: sessions}); err != nil {
-		return fmt.Errorf("course sessions: %w", err)
+	if err := runOp(client, "Course Sessions", "/erp/30/CrsSess", &hcm.CourseSessionList{List: sessions}, extractIDs(sessions, func(e *hcm.CourseSession) string { return e.SessionId }), &store.CourseSessionIDs); err != nil {
+		return err
 	}
-	for _, s := range sessions {
-		store.CourseSessionIDs = append(store.CourseSessionIDs, s.SessionId)
-	}
-	fmt.Printf(" %d created\n", len(sessions))
 
 	return nil
 }
@@ -271,71 +167,52 @@ func generatePhase3(client *HCMClient, store *MockDataStore) error {
 // Phase 4: Employee-Dependent Objects
 func generatePhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate Employee Documents
-	fmt.Printf("  Creating Employee Documents...")
 	documents := generateEmployeeDocuments(store)
-	if err := client.post("/erp/30/EmpDoc", &hcm.EmployeeDocumentList{List: documents}); err != nil {
-		return fmt.Errorf("employee documents: %w", err)
+	if err := runOp(client, "Employee Documents", "/erp/30/EmpDoc", &hcm.EmployeeDocumentList{List: documents}, nil, nil); err != nil {
+		return err
 	}
-	fmt.Printf(" %d created\n", len(documents))
 
 	// Generate Timesheets
-	fmt.Printf("  Creating Timesheets...")
 	timesheets := generateTimesheets(store)
-	if err := client.post("/erp/30/Timesheet", &hcm.TimesheetList{List: timesheets}); err != nil {
-		return fmt.Errorf("timesheets: %w", err)
+	if err := runOp(client, "Timesheets", "/erp/30/Timesheet", &hcm.TimesheetList{List: timesheets}, nil, nil); err != nil {
+		return err
 	}
-	fmt.Printf(" %d created\n", len(timesheets))
 
 	// Generate Leave Balances
-	fmt.Printf("  Creating Leave Balances...")
 	leaveBalances := generateLeaveBalances(store)
-	if err := client.post("/erp/30/LeaveBal", &hcm.LeaveBalanceList{List: leaveBalances}); err != nil {
-		return fmt.Errorf("leave balances: %w", err)
+	if err := runOp(client, "Leave Balances", "/erp/30/LeaveBal", &hcm.LeaveBalanceList{List: leaveBalances}, nil, nil); err != nil {
+		return err
 	}
-	fmt.Printf(" %d created\n", len(leaveBalances))
 
 	// Generate Benefit Enrollments
-	fmt.Printf("  Creating Benefit Enrollments...")
 	enrollments := generateBenefitEnrollments(store)
-	if err := client.post("/erp/30/BenEnrol", &hcm.BenefitEnrollmentList{List: enrollments}); err != nil {
-		return fmt.Errorf("benefit enrollments: %w", err)
+	if err := runOp(client, "Benefit Enrollments", "/erp/30/BenEnrol", &hcm.BenefitEnrollmentList{List: enrollments}, nil, nil); err != nil {
+		return err
 	}
-	fmt.Printf(" %d created\n", len(enrollments))
 
 	// Generate Employee Skills
-	fmt.Printf("  Creating Employee Skills...")
 	empSkills := generateEmployeeSkills(store)
-	if err := client.post("/erp/30/EmpSkill", &hcm.EmployeeSkillList{List: empSkills}); err != nil {
-		return fmt.Errorf("employee skills: %w", err)
+	if err := runOp(client, "Employee Skills", "/erp/30/EmpSkill", &hcm.EmployeeSkillList{List: empSkills}, nil, nil); err != nil {
+		return err
 	}
-	fmt.Printf(" %d created\n", len(empSkills))
 
 	// Generate Performance Reviews
-	fmt.Printf("  Creating Performance Reviews...")
 	reviews := generatePerformanceReviews(store)
-	if err := client.post("/erp/30/PerfRevw", &hcm.PerformanceReviewList{List: reviews}); err != nil {
-		return fmt.Errorf("performance reviews: %w", err)
+	if err := runOp(client, "Performance Reviews", "/erp/30/PerfRevw", &hcm.PerformanceReviewList{List: reviews}, extractIDs(reviews, func(e *hcm.PerformanceReview) string { return e.ReviewId }), &store.PerformanceReviewIDs); err != nil {
+		return err
 	}
-	for _, r := range reviews {
-		store.PerformanceReviewIDs = append(store.PerformanceReviewIDs, r.ReviewId)
-	}
-	fmt.Printf(" %d created\n", len(reviews))
 
 	// Generate Goals
-	fmt.Printf("  Creating Goals...")
 	goals := generateGoals(store)
-	if err := client.post("/erp/30/Goal", &hcm.GoalList{List: goals}); err != nil {
-		return fmt.Errorf("goals: %w", err)
+	if err := runOp(client, "Goals", "/erp/30/Goal", &hcm.GoalList{List: goals}, nil, nil); err != nil {
+		return err
 	}
-	fmt.Printf(" %d created\n", len(goals))
 
 	// Generate Employee Compensation
-	fmt.Printf("  Creating Employee Compensation...")
 	empComp := generateEmployeeCompensation(store)
-	if err := client.post("/erp/30/EmpComp", &hcm.EmployeeCompensationList{List: empComp}); err != nil {
-		return fmt.Errorf("employee compensation: %w", err)
+	if err := runOp(client, "Employee Compensation", "/erp/30/EmpComp", &hcm.EmployeeCompensationList{List: empComp}, nil, nil); err != nil {
+		return err
 	}
-	fmt.Printf(" %d created\n", len(empComp))
 
 	return nil
 }

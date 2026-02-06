@@ -15,37 +15,16 @@ limitations under the License.
 package taxwithholdings
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type TaxWithholdingServiceCallback struct {
-}
-
-func newTaxWithholdingServiceCallback() *TaxWithholdingServiceCallback {
-	return &TaxWithholdingServiceCallback{}
-}
-
-func (this *TaxWithholdingServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.TaxWithholding)
-	if !ok {
-		return nil, false, errors.New("invalid tax withholding type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.WithholdingId)
-	}
-	err := validateTaxWith(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *TaxWithholdingServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newTaxWithholdingServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("TaxWithholding",
+		func(e *hcm.TaxWithholding) { common.GenerateID(&e.WithholdingId) },
+		validateTaxWith)
 }
 
 func validateTaxWith(entity *hcm.TaxWithholding, vnic ifs.IVNic) error {

@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package assetdisposals
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
+	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-type AssetDisposalServiceCallback struct{}
-
-func newAssetDisposalServiceCallback() *AssetDisposalServiceCallback {
-	return &AssetDisposalServiceCallback{}
-}
-
-func (this *AssetDisposalServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	assetDisposal, ok := any.(*fin.AssetDisposal)
-	if !ok {
-		return nil, false, errors.New("invalid assetDisposal type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&assetDisposal.DisposalId)
-	}
-	err := validate(assetDisposal, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *AssetDisposalServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newAssetDisposalServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("AssetDisposal",
+		func(e *fin.AssetDisposal) { common.GenerateID(&e.DisposalId) },
+		validate)
 }
 
 func validate(assetDisposal *fin.AssetDisposal, vnic ifs.IVNic) error {

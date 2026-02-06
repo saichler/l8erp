@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package suppliercollabs
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type SupplierCollaborationServiceCallback struct{}
-
-func newSupplierCollaborationServiceCallback() *SupplierCollaborationServiceCallback {
-	return &SupplierCollaborationServiceCallback{}
-}
-
-func (this *SupplierCollaborationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmSupplierCollaboration)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.CollaborationId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *SupplierCollaborationServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newSupplierCollaborationServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmSupplierCollaboration",
+		func(e *scm.ScmSupplierCollaboration) { common.GenerateID(&e.CollaborationId) },
+		validate)
 }
 
 func validate(item *scm.ScmSupplierCollaboration, vnic ifs.IVNic) error {

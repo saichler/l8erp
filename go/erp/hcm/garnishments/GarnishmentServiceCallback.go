@@ -15,37 +15,16 @@ limitations under the License.
 package garnishments
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type GarnishmentServiceCallback struct {
-}
-
-func newGarnishmentServiceCallback() *GarnishmentServiceCallback {
-	return &GarnishmentServiceCallback{}
-}
-
-func (this *GarnishmentServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.Garnishment)
-	if !ok {
-		return nil, false, errors.New("invalid garnishment type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.GarnishmentId)
-	}
-	err := validateGarnish(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *GarnishmentServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newGarnishmentServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Garnishment",
+		func(e *hcm.Garnishment) { common.GenerateID(&e.GarnishmentId) },
+		validateGarnish)
 }
 
 func validateGarnish(entity *hcm.Garnishment, vnic ifs.IVNic) error {

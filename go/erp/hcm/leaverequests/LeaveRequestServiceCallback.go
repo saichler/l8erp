@@ -15,38 +15,17 @@ limitations under the License.
 package leaverequests
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/erp/hcm/leavepolicies"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type LeaveRequestServiceCallback struct {
-}
-
-func newLeaveRequestServiceCallback() *LeaveRequestServiceCallback {
-	return &LeaveRequestServiceCallback{}
-}
-
-func (this *LeaveRequestServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.LeaveRequest)
-	if !ok {
-		return nil, false, errors.New("invalid leave request type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.RequestId)
-	}
-	err := validateLeaveReq(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *LeaveRequestServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newLeaveRequestServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("LeaveRequest",
+		func(e *hcm.LeaveRequest) { common.GenerateID(&e.RequestId) },
+		validateLeaveReq)
 }
 
 func validateLeaveReq(entity *hcm.LeaveRequest, vnic ifs.IVNic) error {

@@ -15,36 +15,15 @@ limitations under the License.
 package bonusplans
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-type BonusPlanServiceCallback struct {
-}
-
-func newBonusPlanServiceCallback() *BonusPlanServiceCallback {
-	return &BonusPlanServiceCallback{}
-}
-
-func (this *BonusPlanServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.BonusPlan)
-	if !ok {
-		return nil, false, errors.New("invalid bonus plan type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.PlanId)
-	}
-	err := validateBonusPlan(entity)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BonusPlanServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBonusPlanServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("BonusPlan",
+		func(e *hcm.BonusPlan) { common.GenerateID(&e.PlanId) },
+		nil)
 }
 
 func validateBonusPlan(entity *hcm.BonusPlan) error {

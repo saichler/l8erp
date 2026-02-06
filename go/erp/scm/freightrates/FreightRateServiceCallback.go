@@ -15,35 +15,15 @@ limitations under the License.
 package freightrates
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
+	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-type FreightRateServiceCallback struct{}
-
-func newFreightRateServiceCallback() *FreightRateServiceCallback {
-	return &FreightRateServiceCallback{}
-}
-
-func (this *FreightRateServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmFreightRate)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.RateId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *FreightRateServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newFreightRateServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmFreightRate",
+		func(e *scm.ScmFreightRate) { common.GenerateID(&e.RateId) },
+		validate)
 }
 
 func validate(item *scm.ScmFreightRate, vnic ifs.IVNic) error {

@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package commissionplans
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/sales"
 )
 
-type CommissionPlanServiceCallback struct{}
-
-func newCommissionPlanServiceCallback() *CommissionPlanServiceCallback {
-	return &CommissionPlanServiceCallback{}
-}
-
-func (this *CommissionPlanServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*sales.SalesCommissionPlan)
-	if !ok {
-		return nil, false, errors.New("invalid commission plan type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.PlanId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CommissionPlanServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCommissionPlanServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SalesCommissionPlan",
+		func(e *sales.SalesCommissionPlan) { common.GenerateID(&e.PlanId) },
+		validate)
 }
 
 func validate(item *sales.SalesCommissionPlan, vnic ifs.IVNic) error {

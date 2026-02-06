@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package portfolioviews
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/prj"
 )
 
-type PrjPortfolioViewServiceCallback struct{}
-
-func newPrjPortfolioViewServiceCallback() *PrjPortfolioViewServiceCallback {
-	return &PrjPortfolioViewServiceCallback{}
-}
-
-func (this *PrjPortfolioViewServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*prj.PrjPortfolioView)
-	if !ok {
-		return nil, false, errors.New("invalid PrjPortfolioView type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ViewId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PrjPortfolioViewServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPrjPortfolioViewServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("PrjPortfolioView",
+		func(e *prj.PrjPortfolioView) { common.GenerateID(&e.ViewId) },
+		validate)
 }
 
 func validate(item *prj.PrjPortfolioView, vnic ifs.IVNic) error {

@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package billingschedules
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/prj"
 )
 
-type PrjBillingScheduleServiceCallback struct{}
-
-func newPrjBillingScheduleServiceCallback() *PrjBillingScheduleServiceCallback {
-	return &PrjBillingScheduleServiceCallback{}
-}
-
-func (this *PrjBillingScheduleServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*prj.PrjBillingSchedule)
-	if !ok {
-		return nil, false, errors.New("invalid PrjBillingSchedule type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ScheduleId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PrjBillingScheduleServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPrjBillingScheduleServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("PrjBillingSchedule",
+		func(e *prj.PrjBillingSchedule) { common.GenerateID(&e.ScheduleId) },
+		validate)
 }
 
 func validate(item *prj.PrjBillingSchedule, vnic ifs.IVNic) error {

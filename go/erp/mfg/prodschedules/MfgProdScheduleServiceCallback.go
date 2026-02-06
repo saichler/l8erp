@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package prodschedules
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-type MfgProdScheduleServiceCallback struct{}
-
-func newMfgProdScheduleServiceCallback() *MfgProdScheduleServiceCallback {
-	return &MfgProdScheduleServiceCallback{}
-}
-
-func (this *MfgProdScheduleServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgProdSchedule)
-	if !ok {
-		return nil, false, errors.New("invalid MfgProdSchedule type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ScheduleId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgProdScheduleServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgProdScheduleServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgProdSchedule",
+		func(e *mfg.MfgProdSchedule) { common.GenerateID(&e.ScheduleId) },
+		validate)
 }
 
 func validate(item *mfg.MfgProdSchedule, vnic ifs.IVNic) error {

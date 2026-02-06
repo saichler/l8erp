@@ -15,7 +15,6 @@ limitations under the License.
 package main
 
 import (
-	"fmt"
 
 	"github.com/saichler/l8erp/go/types/fin"
 )
@@ -23,70 +22,40 @@ import (
 // FIN Phase 6: AR Transactions
 func generateFinPhase6(client *HCMClient, store *MockDataStore) error {
 	// Generate Sales Invoices
-	fmt.Printf("  Creating Sales Invoices...")
 	salesInvoices := generateSalesInvoices(store)
-	if err := client.post("/erp/40/SalesInv", &fin.SalesInvoiceList{List: salesInvoices}); err != nil {
-		return fmt.Errorf("sales invoices: %w", err)
+	if err := runOp(client, "Sales Invoices", "/erp/40/SalesInv", &fin.SalesInvoiceList{List: salesInvoices}, extractIDs(salesInvoices, func(e *fin.SalesInvoice) string { return e.InvoiceId }), &store.SalesInvoiceIDs); err != nil {
+		return err
 	}
-	for _, si := range salesInvoices {
-		store.SalesInvoiceIDs = append(store.SalesInvoiceIDs, si.InvoiceId)
-	}
-	fmt.Printf(" %d created\n", len(salesInvoices))
 
 	// Generate Sales Invoice Lines
-	fmt.Printf("  Creating Sales Invoice Lines...")
 	salesInvoiceLines := generateSalesInvoiceLines(store)
-	if err := client.post("/erp/40/SalesLine", &fin.SalesInvoiceLineList{List: salesInvoiceLines}); err != nil {
-		return fmt.Errorf("sales invoice lines: %w", err)
+	if err := runOp(client, "Sales Invoice Lines", "/erp/40/SalesLine", &fin.SalesInvoiceLineList{List: salesInvoiceLines}, extractIDs(salesInvoiceLines, func(e *fin.SalesInvoiceLine) string { return e.LineId }), &store.SalesInvoiceLineIDs); err != nil {
+		return err
 	}
-	for _, sl := range salesInvoiceLines {
-		store.SalesInvoiceLineIDs = append(store.SalesInvoiceLineIDs, sl.LineId)
-	}
-	fmt.Printf(" %d created\n", len(salesInvoiceLines))
 
 	// Generate Customer Payments
-	fmt.Printf("  Creating Customer Payments...")
 	customerPayments := generateCustomerPayments(store)
-	if err := client.post("/erp/40/CustPmt", &fin.CustomerPaymentList{List: customerPayments}); err != nil {
-		return fmt.Errorf("customer payments: %w", err)
+	if err := runOp(client, "Customer Payments", "/erp/40/CustPmt", &fin.CustomerPaymentList{List: customerPayments}, extractIDs(customerPayments, func(e *fin.CustomerPayment) string { return e.PaymentId }), &store.CustomerPaymentIDs); err != nil {
+		return err
 	}
-	for _, cp := range customerPayments {
-		store.CustomerPaymentIDs = append(store.CustomerPaymentIDs, cp.PaymentId)
-	}
-	fmt.Printf(" %d created\n", len(customerPayments))
 
 	// Generate Payment Applications
-	fmt.Printf("  Creating Payment Applications...")
 	paymentApplications := generatePaymentApplications(store)
-	if err := client.post("/erp/40/PmtApp", &fin.PaymentApplicationList{List: paymentApplications}); err != nil {
-		return fmt.Errorf("payment applications: %w", err)
+	if err := runOp(client, "Payment Applications", "/erp/40/PmtApp", &fin.PaymentApplicationList{List: paymentApplications}, extractIDs(paymentApplications, func(e *fin.PaymentApplication) string { return e.ApplicationId }), &store.PaymentAppIDs); err != nil {
+		return err
 	}
-	for _, pa := range paymentApplications {
-		store.PaymentAppIDs = append(store.PaymentAppIDs, pa.ApplicationId)
-	}
-	fmt.Printf(" %d created\n", len(paymentApplications))
 
 	// Generate Credit Memos
-	fmt.Printf("  Creating Credit Memos...")
 	creditMemos := generateCreditMemos(store)
-	if err := client.post("/erp/40/CrdtMemo", &fin.CreditMemoList{List: creditMemos}); err != nil {
-		return fmt.Errorf("credit memos: %w", err)
+	if err := runOp(client, "Credit Memos", "/erp/40/CrdtMemo", &fin.CreditMemoList{List: creditMemos}, extractIDs(creditMemos, func(e *fin.CreditMemo) string { return e.CreditMemoId }), &store.CreditMemoIDs); err != nil {
+		return err
 	}
-	for _, cm := range creditMemos {
-		store.CreditMemoIDs = append(store.CreditMemoIDs, cm.CreditMemoId)
-	}
-	fmt.Printf(" %d created\n", len(creditMemos))
 
 	// Generate Dunning Letters
-	fmt.Printf("  Creating Dunning Letters...")
 	dunningLetters := generateDunningLetters(store)
-	if err := client.post("/erp/40/DunLtr", &fin.DunningLetterList{List: dunningLetters}); err != nil {
-		return fmt.Errorf("dunning letters: %w", err)
+	if err := runOp(client, "Dunning Letters", "/erp/40/DunLtr", &fin.DunningLetterList{List: dunningLetters}, extractIDs(dunningLetters, func(e *fin.DunningLetter) string { return e.LetterId }), &store.DunningLetterIDs); err != nil {
+		return err
 	}
-	for _, dl := range dunningLetters {
-		store.DunningLetterIDs = append(store.DunningLetterIDs, dl.LetterId)
-	}
-	fmt.Printf(" %d created\n", len(dunningLetters))
 
 	return nil
 }
@@ -94,37 +63,22 @@ func generateFinPhase6(client *HCMClient, store *MockDataStore) error {
 // FIN Phase 7: GL Transactions
 func generateFinPhase7(client *HCMClient, store *MockDataStore) error {
 	// Generate Journal Entries
-	fmt.Printf("  Creating Journal Entries...")
 	journalEntries := generateJournalEntries(store)
-	if err := client.post("/erp/40/JrnlEntry", &fin.JournalEntryList{List: journalEntries}); err != nil {
-		return fmt.Errorf("journal entries: %w", err)
+	if err := runOp(client, "Journal Entries", "/erp/40/JrnlEntry", &fin.JournalEntryList{List: journalEntries}, extractIDs(journalEntries, func(e *fin.JournalEntry) string { return e.JournalEntryId }), &store.JournalEntryIDs); err != nil {
+		return err
 	}
-	for _, je := range journalEntries {
-		store.JournalEntryIDs = append(store.JournalEntryIDs, je.JournalEntryId)
-	}
-	fmt.Printf(" %d created\n", len(journalEntries))
 
 	// Generate Journal Entry Lines
-	fmt.Printf("  Creating Journal Entry Lines...")
 	journalEntryLines := generateJournalEntryLines(store)
-	if err := client.post("/erp/40/JrnlLine", &fin.JournalEntryLineList{List: journalEntryLines}); err != nil {
-		return fmt.Errorf("journal entry lines: %w", err)
+	if err := runOp(client, "Journal Entry Lines", "/erp/40/JrnlLine", &fin.JournalEntryLineList{List: journalEntryLines}, extractIDs(journalEntryLines, func(e *fin.JournalEntryLine) string { return e.LineId }), &store.JournalEntryLineIDs); err != nil {
+		return err
 	}
-	for _, jl := range journalEntryLines {
-		store.JournalEntryLineIDs = append(store.JournalEntryLineIDs, jl.LineId)
-	}
-	fmt.Printf(" %d created\n", len(journalEntryLines))
 
 	// Generate Account Balances
-	fmt.Printf("  Creating Account Balances...")
 	accountBalances := generateAccountBalances(store)
-	if err := client.post("/erp/40/AcctBal", &fin.AccountBalanceList{List: accountBalances}); err != nil {
-		return fmt.Errorf("account balances: %w", err)
+	if err := runOp(client, "Account Balances", "/erp/40/AcctBal", &fin.AccountBalanceList{List: accountBalances}, extractIDs(accountBalances, func(e *fin.AccountBalance) string { return e.BalanceId }), &store.AccountBalanceIDs); err != nil {
+		return err
 	}
-	for _, ab := range accountBalances {
-		store.AccountBalanceIDs = append(store.AccountBalanceIDs, ab.BalanceId)
-	}
-	fmt.Printf(" %d created\n", len(accountBalances))
 
 	return nil
 }
@@ -132,125 +86,70 @@ func generateFinPhase7(client *HCMClient, store *MockDataStore) error {
 // FIN Phase 8: Cash & Assets
 func generateFinPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate Bank Transactions
-	fmt.Printf("  Creating Bank Transactions...")
 	bankTransactions := generateBankTransactions(store)
-	if err := client.post("/erp/40/BankTxn", &fin.BankTransactionList{List: bankTransactions}); err != nil {
-		return fmt.Errorf("bank transactions: %w", err)
+	if err := runOp(client, "Bank Transactions", "/erp/40/BankTxn", &fin.BankTransactionList{List: bankTransactions}, extractIDs(bankTransactions, func(e *fin.BankTransaction) string { return e.TransactionId }), &store.BankTransactionIDs); err != nil {
+		return err
 	}
-	for _, bt := range bankTransactions {
-		store.BankTransactionIDs = append(store.BankTransactionIDs, bt.TransactionId)
-	}
-	fmt.Printf(" %d created\n", len(bankTransactions))
 
 	// Generate Bank Reconciliations
-	fmt.Printf("  Creating Bank Reconciliations...")
 	bankReconciliations := generateBankReconciliations(store)
-	if err := client.post("/erp/40/BankRec", &fin.BankReconciliationList{List: bankReconciliations}); err != nil {
-		return fmt.Errorf("bank reconciliations: %w", err)
+	if err := runOp(client, "Bank Reconciliations", "/erp/40/BankRec", &fin.BankReconciliationList{List: bankReconciliations}, extractIDs(bankReconciliations, func(e *fin.BankReconciliation) string { return e.ReconciliationId }), &store.BankReconIDs); err != nil {
+		return err
 	}
-	for _, br := range bankReconciliations {
-		store.BankReconIDs = append(store.BankReconIDs, br.ReconciliationId)
-	}
-	fmt.Printf(" %d created\n", len(bankReconciliations))
 
 	// Generate Cash Forecasts
-	fmt.Printf("  Creating Cash Forecasts...")
 	cashForecasts := generateCashForecasts(store)
-	if err := client.post("/erp/40/CashFcst", &fin.CashForecastList{List: cashForecasts}); err != nil {
-		return fmt.Errorf("cash forecasts: %w", err)
+	if err := runOp(client, "Cash Forecasts", "/erp/40/CashFcst", &fin.CashForecastList{List: cashForecasts}, extractIDs(cashForecasts, func(e *fin.CashForecast) string { return e.ForecastId }), &store.CashForecastIDs); err != nil {
+		return err
 	}
-	for _, cf := range cashForecasts {
-		store.CashForecastIDs = append(store.CashForecastIDs, cf.ForecastId)
-	}
-	fmt.Printf(" %d created\n", len(cashForecasts))
 
 	// Generate Fund Transfers
-	fmt.Printf("  Creating Fund Transfers...")
 	fundTransfers := generateFundTransfers(store)
-	if err := client.post("/erp/40/FundXfer", &fin.FundTransferList{List: fundTransfers}); err != nil {
-		return fmt.Errorf("fund transfers: %w", err)
+	if err := runOp(client, "Fund Transfers", "/erp/40/FundXfer", &fin.FundTransferList{List: fundTransfers}, extractIDs(fundTransfers, func(e *fin.FundTransfer) string { return e.TransferId }), &store.FundTransferIDs); err != nil {
+		return err
 	}
-	for _, ft := range fundTransfers {
-		store.FundTransferIDs = append(store.FundTransferIDs, ft.TransferId)
-	}
-	fmt.Printf(" %d created\n", len(fundTransfers))
 
 	// Generate Petty Cash
-	fmt.Printf("  Creating Petty Cash...")
 	pettyCash := generatePettyCash(store)
-	if err := client.post("/erp/40/PettyCash", &fin.PettyCashList{List: pettyCash}); err != nil {
-		return fmt.Errorf("petty cash: %w", err)
+	if err := runOp(client, "Petty Cash", "/erp/40/PettyCash", &fin.PettyCashList{List: pettyCash}, extractIDs(pettyCash, func(e *fin.PettyCash) string { return e.PettyCashId }), &store.PettyCashIDs); err != nil {
+		return err
 	}
-	for _, pc := range pettyCash {
-		store.PettyCashIDs = append(store.PettyCashIDs, pc.PettyCashId)
-	}
-	fmt.Printf(" %d created\n", len(pettyCash))
 
 	// Generate Assets
-	fmt.Printf("  Creating Assets...")
 	assets := generateAssets(store)
-	if err := client.post("/erp/40/Asset", &fin.AssetList{List: assets}); err != nil {
-		return fmt.Errorf("assets: %w", err)
+	if err := runOp(client, "Assets", "/erp/40/Asset", &fin.AssetList{List: assets}, extractIDs(assets, func(e *fin.Asset) string { return e.AssetId }), &store.AssetIDs); err != nil {
+		return err
 	}
-	for _, a := range assets {
-		store.AssetIDs = append(store.AssetIDs, a.AssetId)
-	}
-	fmt.Printf(" %d created\n", len(assets))
 
 	// Generate Depreciation Schedules
-	fmt.Printf("  Creating Depreciation Schedules...")
 	depreciationSchedules := generateDepreciationSchedules(store)
-	if err := client.post("/erp/40/DeprSched", &fin.DepreciationScheduleList{List: depreciationSchedules}); err != nil {
-		return fmt.Errorf("depreciation schedules: %w", err)
+	if err := runOp(client, "Depreciation Schedules", "/erp/40/DeprSched", &fin.DepreciationScheduleList{List: depreciationSchedules}, extractIDs(depreciationSchedules, func(e *fin.DepreciationSchedule) string { return e.ScheduleId }), &store.DepreciationIDs); err != nil {
+		return err
 	}
-	for _, ds := range depreciationSchedules {
-		store.DepreciationIDs = append(store.DepreciationIDs, ds.ScheduleId)
-	}
-	fmt.Printf(" %d created\n", len(depreciationSchedules))
 
 	// Generate Asset Disposals
-	fmt.Printf("  Creating Asset Disposals...")
 	assetDisposals := generateAssetDisposals(store)
-	if err := client.post("/erp/40/AstDisp", &fin.AssetDisposalList{List: assetDisposals}); err != nil {
-		return fmt.Errorf("asset disposals: %w", err)
+	if err := runOp(client, "Asset Disposals", "/erp/40/AstDisp", &fin.AssetDisposalList{List: assetDisposals}, extractIDs(assetDisposals, func(e *fin.AssetDisposal) string { return e.DisposalId }), &store.AssetDisposalIDs); err != nil {
+		return err
 	}
-	for _, ad := range assetDisposals {
-		store.AssetDisposalIDs = append(store.AssetDisposalIDs, ad.DisposalId)
-	}
-	fmt.Printf(" %d created\n", len(assetDisposals))
 
 	// Generate Asset Transfers
-	fmt.Printf("  Creating Asset Transfers...")
 	assetTransfers := generateAssetTransfers(store)
-	if err := client.post("/erp/40/AstXfer", &fin.AssetTransferList{List: assetTransfers}); err != nil {
-		return fmt.Errorf("asset transfers: %w", err)
+	if err := runOp(client, "Asset Transfers", "/erp/40/AstXfer", &fin.AssetTransferList{List: assetTransfers}, extractIDs(assetTransfers, func(e *fin.AssetTransfer) string { return e.TransferId }), &store.AssetTransferIDs); err != nil {
+		return err
 	}
-	for _, at := range assetTransfers {
-		store.AssetTransferIDs = append(store.AssetTransferIDs, at.TransferId)
-	}
-	fmt.Printf(" %d created\n", len(assetTransfers))
 
 	// Generate Asset Maintenance
-	fmt.Printf("  Creating Asset Maintenance...")
 	assetMaintenance := generateAssetMaintenance(store)
-	if err := client.post("/erp/40/AstMaint", &fin.AssetMaintenanceList{List: assetMaintenance}); err != nil {
-		return fmt.Errorf("asset maintenance: %w", err)
+	if err := runOp(client, "Asset Maintenance", "/erp/40/AstMaint", &fin.AssetMaintenanceList{List: assetMaintenance}, extractIDs(assetMaintenance, func(e *fin.AssetMaintenance) string { return e.MaintenanceId }), &store.AssetMaintenanceIDs); err != nil {
+		return err
 	}
-	for _, am := range assetMaintenance {
-		store.AssetMaintenanceIDs = append(store.AssetMaintenanceIDs, am.MaintenanceId)
-	}
-	fmt.Printf(" %d created\n", len(assetMaintenance))
 
 	// Generate Asset Revaluations
-	fmt.Printf("  Creating Asset Revaluations...")
 	assetRevaluations := generateAssetRevaluations(store)
-	if err := client.post("/erp/40/AstReval", &fin.AssetRevaluationList{List: assetRevaluations}); err != nil {
-		return fmt.Errorf("asset revaluations: %w", err)
+	if err := runOp(client, "Asset Revaluations", "/erp/40/AstReval", &fin.AssetRevaluationList{List: assetRevaluations}, extractIDs(assetRevaluations, func(e *fin.AssetRevaluation) string { return e.RevaluationId }), &store.AssetRevaluationIDs); err != nil {
+		return err
 	}
-	for _, ar := range assetRevaluations {
-		store.AssetRevaluationIDs = append(store.AssetRevaluationIDs, ar.RevaluationId)
-	}
-	fmt.Printf(" %d created\n", len(assetRevaluations))
 
 	return nil
 }
@@ -258,15 +157,10 @@ func generateFinPhase8(client *HCMClient, store *MockDataStore) error {
 // FIN Phase 9: Tax Filing
 func generateFinPhase9(client *HCMClient, store *MockDataStore) error {
 	// Generate Tax Returns
-	fmt.Printf("  Creating Tax Returns...")
 	taxReturns := generateTaxReturns(store)
-	if err := client.post("/erp/40/TaxRtn", &fin.TaxReturnList{List: taxReturns}); err != nil {
-		return fmt.Errorf("tax returns: %w", err)
+	if err := runOp(client, "Tax Returns", "/erp/40/TaxRtn", &fin.TaxReturnList{List: taxReturns}, extractIDs(taxReturns, func(e *fin.TaxReturn) string { return e.ReturnId }), &store.TaxReturnIDs); err != nil {
+		return err
 	}
-	for _, tr := range taxReturns {
-		store.TaxReturnIDs = append(store.TaxReturnIDs, tr.ReturnId)
-	}
-	fmt.Printf(" %d created\n", len(taxReturns))
 
 	return nil
 }

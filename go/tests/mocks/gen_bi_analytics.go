@@ -102,10 +102,7 @@ func generateDataCubes(store *MockDataStore) []*bi.BiDataCube {
 
 	cubes := make([]*bi.BiDataCube, count)
 	for i := 0; i < count; i++ {
-		dataSourceID := ""
-		if len(store.BiDataSourceIDs) > 0 {
-			dataSourceID = store.BiDataSourceIDs[i%len(store.BiDataSourceIDs)]
-		}
+		dataSourceID := pickRef(store.BiDataSourceIDs, i)
 
 		lastRefresh := time.Now().Add(-time.Duration(rand.Intn(24)) * time.Hour)
 		rowCount := int64(rand.Intn(1000000) + 10000)
@@ -114,7 +111,7 @@ func generateDataCubes(store *MockDataStore) []*bi.BiDataCube {
 		isActive := i < 7
 
 		cubes[i] = &bi.BiDataCube{
-			CubeId:          fmt.Sprintf("cube-%03d", i+1),
+			CubeId:          genID("cube", i),
 			Name:            dataCubeNames[i%len(dataCubeNames)],
 			Description:     fmt.Sprintf("OLAP cube for %s analysis", dataCubeNames[i%len(dataCubeNames)]),
 			DataSourceId:    dataSourceID,
@@ -177,15 +174,9 @@ func generateAnalysisModels(store *MockDataStore) []*bi.BiAnalysisModel {
 
 	models := make([]*bi.BiAnalysisModel, count)
 	for i := 0; i < count; i++ {
-		dataSourceID := ""
-		if len(store.BiDataSourceIDs) > 0 {
-			dataSourceID = store.BiDataSourceIDs[i%len(store.BiDataSourceIDs)]
-		}
+		dataSourceID := pickRef(store.BiDataSourceIDs, i)
 
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		trainingDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 		lastPrediction := trainingDate.Add(time.Duration(rand.Intn(30*24)) * time.Hour)
@@ -196,7 +187,7 @@ func generateAnalysisModels(store *MockDataStore) []*bi.BiAnalysisModel {
 		recall := 0.60 + rand.Float64()*0.35
 
 		models[i] = &bi.BiAnalysisModel{
-			ModelId:          fmt.Sprintf("model-%03d", i+1),
+			ModelId:          genID("model", i),
 			Name:             analysisModelNames[i%len(analysisModelNames)],
 			Description:      fmt.Sprintf("Machine learning model for %s", analysisModelNames[i%len(analysisModelNames)]),
 			ModelType:        modelTypes[i%len(modelTypes)],
@@ -240,15 +231,9 @@ func generatePredictions(store *MockDataStore) []*bi.BiPrediction {
 
 	predictions := make([]*bi.BiPrediction, count)
 	for i := 0; i < count; i++ {
-		modelID := ""
-		if len(store.BiAnalysisModelIDs) > 0 {
-			modelID = store.BiAnalysisModelIDs[i%len(store.BiAnalysisModelIDs)]
-		}
+		modelID := pickRef(store.BiAnalysisModelIDs, i)
 
-		predictedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			predictedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		predictedBy := pickRef(store.EmployeeIDs, i)
 
 		predictionDate := time.Now().AddDate(0, 0, -rand.Intn(30))
 
@@ -256,7 +241,7 @@ func generatePredictions(store *MockDataStore) []*bi.BiPrediction {
 		confidence := 0.65 + rand.Float64()*0.33
 
 		predictions[i] = &bi.BiPrediction{
-			PredictionId:   fmt.Sprintf("pred-%03d", i+1),
+			PredictionId:   genID("pred", i),
 			ModelId:        modelID,
 			Name:           predictionNames[i%len(predictionNames)],
 			Description:    fmt.Sprintf("Prediction run for %s", predictionNames[i%len(predictionNames)]),

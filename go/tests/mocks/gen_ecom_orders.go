@@ -20,7 +20,6 @@ import (
 	"time"
 
 	"github.com/saichler/l8erp/go/types/ecom"
-	"github.com/saichler/l8erp/go/types/erp"
 )
 
 // generateEcomOrders creates e-commerce order records
@@ -53,25 +52,13 @@ func generateEcomOrders(store *MockDataStore) []*ecom.EcomOrder {
 	orders := make([]*ecom.EcomOrder, count)
 
 	for i := 0; i < count; i++ {
-		customerID := ""
-		if len(store.EcomCustomerIDs) > 0 {
-			customerID = store.EcomCustomerIDs[i%len(store.EcomCustomerIDs)]
-		}
+		customerID := pickRef(store.EcomCustomerIDs, i)
 
-		shippingMethodID := ""
-		if len(store.EcomShippingIDs) > 0 {
-			shippingMethodID = store.EcomShippingIDs[i%len(store.EcomShippingIDs)]
-		}
+		shippingMethodID := pickRef(store.EcomShippingIDs, i)
 
-		paymentMethodID := ""
-		if len(store.EcomPaymentIDs) > 0 {
-			paymentMethodID = store.EcomPaymentIDs[i%len(store.EcomPaymentIDs)]
-		}
+		paymentMethodID := pickRef(store.EcomPaymentIDs, i)
 
-		warehouseID := ""
-		if len(store.SCMWarehouseIDs) > 0 {
-			warehouseID = store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)]
-		}
+		warehouseID := pickRef(store.SCMWarehouseIDs, i)
 
 		orderDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 		orderStatus := orderStatuses[i%len(orderStatuses)]
@@ -100,17 +87,17 @@ func generateEcomOrders(store *MockDataStore) []*ecom.EcomOrder {
 		}
 
 		orders[i] = &ecom.EcomOrder{
-			OrderId:          fmt.Sprintf("eco-%03d", i+1),
+			OrderId:          genID("eco", i),
 			OrderNumber:      fmt.Sprintf("ORD-%06d", i+1),
 			CustomerId:       customerID,
 			Status:           orderStatus,
 			PaymentStatus:    paymentStatuses[i%len(paymentStatuses)],
 			OrderDate:        orderDate.Unix(),
-			Subtotal:         &erp.Money{Amount: subtotal, CurrencyCode: "USD"},
-			DiscountAmount:   &erp.Money{Amount: discountAmount, CurrencyCode: "USD"},
-			ShippingAmount:   &erp.Money{Amount: shippingAmount, CurrencyCode: "USD"},
-			TaxAmount:        &erp.Money{Amount: taxAmount, CurrencyCode: "USD"},
-			TotalAmount:      &erp.Money{Amount: totalAmount, CurrencyCode: "USD"},
+			Subtotal:         money(subtotal),
+			DiscountAmount:   money(discountAmount),
+			ShippingAmount:   money(shippingAmount),
+			TaxAmount:        money(taxAmount),
+			TotalAmount:      money(totalAmount),
 			CouponCode:       ecomCouponCodes[i%len(ecomCouponCodes)],
 			ShippingMethodId: shippingMethodID,
 			PaymentMethodId:  paymentMethodID,
@@ -143,15 +130,9 @@ func generateEcomOrderLines(store *MockDataStore) []*ecom.EcomOrderLine {
 	for oIdx, orderID := range store.EcomOrderIDs {
 		linesPerOrder := rand.Intn(2) + 2 // 2-3 lines per order
 		for j := 0; j < linesPerOrder; j++ {
-			productID := ""
-			if len(store.EcomProductIDs) > 0 {
-				productID = store.EcomProductIDs[(oIdx*3+j)%len(store.EcomProductIDs)]
-			}
+			productID := pickRef(store.EcomProductIDs, (oIdx*3+j))
 
-			variantID := ""
-			if len(store.EcomVariantIDs) > 0 {
-				variantID = store.EcomVariantIDs[(oIdx*3+j)%len(store.EcomVariantIDs)]
-			}
+			variantID := pickRef(store.EcomVariantIDs, (oIdx*3+j))
 
 			productName := ecomProductNames[(oIdx*3+j)%len(ecomProductNames)]
 			quantity := int32(rand.Intn(5) + 1)
@@ -168,10 +149,10 @@ func generateEcomOrderLines(store *MockDataStore) []*ecom.EcomOrderLine {
 				Sku:            fmt.Sprintf("SKU-%05d", (oIdx*3+j)%99999+1),
 				Name:           productName,
 				Quantity:       quantity,
-				UnitPrice:      &erp.Money{Amount: unitPrice, CurrencyCode: "USD"},
-				DiscountAmount: &erp.Money{Amount: discountAmount, CurrencyCode: "USD"},
-				TaxAmount:      &erp.Money{Amount: taxAmount, CurrencyCode: "USD"},
-				LineTotal:      &erp.Money{Amount: lineTotal, CurrencyCode: "USD"},
+				UnitPrice:      money(unitPrice),
+				DiscountAmount: money(discountAmount),
+				TaxAmount:      money(taxAmount),
+				LineTotal:      money(lineTotal),
 				Weight:         float64(rand.Intn(500)+100) / 100.0, // 1.0 - 6.0 lbs
 				IsGift:         idx%10 == 0,
 				GiftMessage:    "",
@@ -212,10 +193,7 @@ func generateEcomOrderStatuses(store *MockDataStore) []*ecom.EcomOrderStatusHist
 				newStatusIdx = len(statusProgression) - 1
 			}
 
-			changedBy := ""
-			if len(store.EmployeeIDs) > 0 {
-				changedBy = store.EmployeeIDs[(oIdx*2+j)%len(store.EmployeeIDs)]
-			}
+			changedBy := pickRef(store.EmployeeIDs, (oIdx*2+j))
 
 			changedAt := orderDate.Add(time.Duration(j*24+rand.Intn(24)) * time.Hour)
 
@@ -269,20 +247,11 @@ func generateEcomReturns(store *MockDataStore) []*ecom.EcomReturn {
 	returns := make([]*ecom.EcomReturn, count)
 
 	for i := 0; i < count; i++ {
-		orderID := ""
-		if len(store.EcomOrderIDs) > 0 {
-			orderID = store.EcomOrderIDs[i%len(store.EcomOrderIDs)]
-		}
+		orderID := pickRef(store.EcomOrderIDs, i)
 
-		customerID := ""
-		if len(store.EcomCustomerIDs) > 0 {
-			customerID = store.EcomCustomerIDs[i%len(store.EcomCustomerIDs)]
-		}
+		customerID := pickRef(store.EcomCustomerIDs, i)
 
-		approvedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			approvedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		approvedBy := pickRef(store.EmployeeIDs, i)
 
 		requestedDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
 		returnStatus := returnStatuses[i%len(returnStatuses)]
@@ -310,7 +279,7 @@ func generateEcomReturns(store *MockDataStore) []*ecom.EcomReturn {
 		}
 
 		returns[i] = &ecom.EcomReturn{
-			ReturnId:        fmt.Sprintf("ert-%03d", i+1),
+			ReturnId:        genID("ert", i),
 			ReturnNumber:    fmt.Sprintf("RMA-%06d", i+1),
 			OrderId:         orderID,
 			CustomerId:      customerID,
@@ -321,7 +290,7 @@ func generateEcomReturns(store *MockDataStore) []*ecom.EcomReturn {
 			ApprovedDate:    approvedDate,
 			ReceivedDate:    receivedDate,
 			RefundedDate:    refundedDate,
-			RefundAmount:    &erp.Money{Amount: refundAmount, CurrencyCode: "USD"},
+			RefundAmount:    money(refundAmount),
 			RefundMethod:    refundMethods[i%len(refundMethods)],
 			ApprovedBy:      approvedBy,
 			TrackingNumber:  trackingNumber,
@@ -356,20 +325,11 @@ func generateEcomReturnLines(store *MockDataStore) []*ecom.EcomReturnLine {
 	for rIdx, returnID := range store.EcomReturnIDs {
 		linesPerReturn := rand.Intn(2) + 1 // 1-2 lines per return
 		for j := 0; j < linesPerReturn; j++ {
-			orderLineID := ""
-			if len(store.EcomOrderLineIDs) > 0 {
-				orderLineID = store.EcomOrderLineIDs[(rIdx*2+j)%len(store.EcomOrderLineIDs)]
-			}
+			orderLineID := pickRef(store.EcomOrderLineIDs, (rIdx*2+j))
 
-			productID := ""
-			if len(store.EcomProductIDs) > 0 {
-				productID = store.EcomProductIDs[(rIdx*2+j)%len(store.EcomProductIDs)]
-			}
+			productID := pickRef(store.EcomProductIDs, (rIdx*2+j))
 
-			variantID := ""
-			if len(store.EcomVariantIDs) > 0 {
-				variantID = store.EcomVariantIDs[(rIdx*2+j)%len(store.EcomVariantIDs)]
-			}
+			variantID := pickRef(store.EcomVariantIDs, (rIdx*2+j))
 
 			productName := ecomProductNames[(rIdx*2+j)%len(ecomProductNames)]
 			quantity := int32(rand.Intn(3) + 1)
@@ -384,7 +344,7 @@ func generateEcomReturnLines(store *MockDataStore) []*ecom.EcomReturnLine {
 				Sku:          fmt.Sprintf("SKU-%05d", (rIdx*2+j)%99999+1),
 				Name:         productName,
 				Quantity:     quantity,
-				RefundAmount: &erp.Money{Amount: refundAmount, CurrencyCode: "USD"},
+				RefundAmount: money(refundAmount),
 				Reason:       returnReasons[(rIdx*2+j)%len(returnReasons)],
 				Condition:    conditions[(rIdx*2+j)%len(conditions)],
 				Restock:      (rIdx*2+j)%3 != 0, // 2/3 get restocked

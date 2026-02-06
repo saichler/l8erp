@@ -27,7 +27,6 @@ import (
 	"time"
 
 	"github.com/saichler/l8erp/go/types/comp"
-	"github.com/saichler/l8erp/go/types/erp"
 )
 
 // generateCompRequirements creates compliance requirement records
@@ -63,15 +62,9 @@ func generateCompRequirements(store *MockDataStore) []*comp.CompRequirement {
 	requirements := make([]*comp.CompRequirement, count)
 
 	for i := 0; i < count; i++ {
-		regulationID := ""
-		if len(store.CompRegulationIDs) > 0 {
-			regulationID = store.CompRegulationIDs[i%len(store.CompRegulationIDs)]
-		}
+		regulationID := pickRef(store.CompRegulationIDs, i)
 
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		// Priority distribution: 20% Critical, 30% High, 35% Medium, 15% Low
 		var priority comp.CompSeverityLevel
@@ -86,7 +79,7 @@ func generateCompRequirements(store *MockDataStore) []*comp.CompRequirement {
 		}
 
 		requirements[i] = &comp.CompRequirement{
-			RequirementId:        fmt.Sprintf("creq-%03d", i+1),
+			RequirementId:        genID("creq", i),
 			RegulationId:         regulationID,
 			Code:                 fmt.Sprintf("REQ-%04d", 4000+i+1),
 			Title:                requirementTitles[i],
@@ -133,15 +126,9 @@ func generateCompComplianceStatuses(store *MockDataStore) []*comp.CompCompliance
 	statuses := make([]*comp.CompComplianceStatus, count)
 
 	for i := 0; i < count; i++ {
-		requirementID := ""
-		if len(store.CompRequirementIDs) > 0 {
-			requirementID = store.CompRequirementIDs[i%len(store.CompRequirementIDs)]
-		}
+		requirementID := pickRef(store.CompRequirementIDs, i)
 
-		assessorID := ""
-		if len(store.EmployeeIDs) > 0 {
-			assessorID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		assessorID := pickRef(store.EmployeeIDs, i)
 
 		assessmentDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 		nextReviewDate := assessmentDate.AddDate(0, rand.Intn(6)+3, 0)
@@ -177,7 +164,7 @@ func generateCompComplianceStatuses(store *MockDataStore) []*comp.CompCompliance
 		}
 
 		statuses[i] = &comp.CompComplianceStatus{
-			StatusId:        fmt.Sprintf("csts-%03d", i+1),
+			StatusId:        genID("csts", i),
 			RequirementId:   requirementID,
 			EntityType:      entityTypes[i%len(entityTypes)],
 			EntityId:        fmt.Sprintf("entity-%03d", rand.Intn(50)+1),
@@ -212,15 +199,9 @@ func generateCompCertifications(store *MockDataStore) []*comp.CompCertification 
 	certifications := make([]*comp.CompCertification, count)
 
 	for i := 0; i < count; i++ {
-		regulationID := ""
-		if len(store.CompRegulationIDs) > 0 {
-			regulationID = store.CompRegulationIDs[i%len(store.CompRegulationIDs)]
-		}
+		regulationID := pickRef(store.CompRegulationIDs, i)
 
-		responsibleID := ""
-		if len(store.EmployeeIDs) > 0 {
-			responsibleID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		responsibleID := pickRef(store.EmployeeIDs, i)
 
 		issueDate := time.Now().AddDate(-rand.Intn(2), -rand.Intn(6), 0)
 		expiryDate := issueDate.AddDate(3, 0, 0) // 3 year validity
@@ -228,7 +209,7 @@ func generateCompCertifications(store *MockDataStore) []*comp.CompCertification 
 		certCost := int64((rand.Intn(50) + 10) * 1000) // $10K to $60K
 
 		certifications[i] = &comp.CompCertification{
-			CertificationId:   fmt.Sprintf("ccrt-%03d", i+1),
+			CertificationId:   genID("ccrt", i),
 			Name:              compCertificationNames[i],
 			Description:       fmt.Sprintf("Organizational certification for %s compliance", compCertificationNames[i]),
 			IssuingBody:       compIssuingBodies[i%len(compIssuingBodies)],
@@ -241,10 +222,7 @@ func generateCompCertifications(store *MockDataStore) []*comp.CompCertification 
 			CoveredProcesses:  processes[:rand.Intn(4)+1],
 			RegulationId:      regulationID,
 			ResponsibleId:     responsibleID,
-			CertificationCost: &erp.Money{
-				Amount:       certCost,
-				CurrencyCode: "USD",
-			},
+			CertificationCost: money(certCost),
 			RenewalLeadDays: int32(90),
 			AuditInfo:       createAuditInfo(),
 		}
@@ -287,20 +265,11 @@ func generateCompViolationRecords(store *MockDataStore) []*comp.CompViolationRec
 	violations := make([]*comp.CompViolationRecord, count)
 
 	for i := 0; i < count; i++ {
-		requirementID := ""
-		if len(store.CompRequirementIDs) > 0 {
-			requirementID = store.CompRequirementIDs[i%len(store.CompRequirementIDs)]
-		}
+		requirementID := pickRef(store.CompRequirementIDs, i)
 
-		discoveredByID := ""
-		if len(store.EmployeeIDs) > 0 {
-			discoveredByID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		discoveredByID := pickRef(store.EmployeeIDs, i)
 
-		assignedToID := ""
-		if len(store.ManagerIDs) > 0 {
-			assignedToID = store.ManagerIDs[i%len(store.ManagerIDs)]
-		}
+		assignedToID := pickRef(store.ManagerIDs, i)
 
 		discoveryDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 		dueDate := discoveryDate.AddDate(0, 0, rand.Intn(60)+30) // 30-90 days after discovery
@@ -334,7 +303,7 @@ func generateCompViolationRecords(store *MockDataStore) []*comp.CompViolationRec
 		}
 
 		violations[i] = &comp.CompViolationRecord{
-			ViolationId:     fmt.Sprintf("cvio-%03d", i+1),
+			ViolationId:     genID("cvio", i),
 			RequirementId:   requirementID,
 			ViolationNumber: fmt.Sprintf("VIO-%04d-%02d", time.Now().Year(), i+1),
 			Title:           violationTitles[i],
@@ -349,14 +318,8 @@ func generateCompViolationRecords(store *MockDataStore) []*comp.CompViolationRec
 			RootCause:       rootCauses[i%len(rootCauses)],
 			CorrectiveAction: fmt.Sprintf("Implement corrective measures to address %s", violationTitles[i]),
 			DueDate:         dueDate.Unix(),
-			PotentialPenalty: &erp.Money{
-				Amount:       potentialPenalty,
-				CurrencyCode: "USD",
-			},
-			ActualPenalty: &erp.Money{
-				Amount:       actualPenalty,
-				CurrencyCode: "USD",
-			},
+			PotentialPenalty: money(potentialPenalty),
+			ActualPenalty: money(actualPenalty),
 			AuditInfo: createAuditInfo(),
 		}
 

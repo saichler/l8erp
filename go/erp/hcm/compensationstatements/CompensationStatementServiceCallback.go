@@ -15,37 +15,16 @@ limitations under the License.
 package compensationstatements
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type CompensationStatementServiceCallback struct {
-}
-
-func newCompensationStatementServiceCallback() *CompensationStatementServiceCallback {
-	return &CompensationStatementServiceCallback{}
-}
-
-func (this *CompensationStatementServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.CompensationStatement)
-	if !ok {
-		return nil, false, errors.New("invalid compensation statement type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.StatementId)
-	}
-	err := validateCompStmt(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CompensationStatementServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCompensationStatementServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("CompensationStatement",
+		func(e *hcm.CompensationStatement) { common.GenerateID(&e.StatementId) },
+		validateCompStmt)
 }
 
 func validateCompStmt(entity *hcm.CompensationStatement, vnic ifs.IVNic) error {

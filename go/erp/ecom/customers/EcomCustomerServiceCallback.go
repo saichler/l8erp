@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package customers
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/ecom"
 )
 
-type EcomCustomerServiceCallback struct{}
-
-func newEcomCustomerServiceCallback() *EcomCustomerServiceCallback {
-	return &EcomCustomerServiceCallback{}
-}
-
-func (this *EcomCustomerServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*ecom.EcomCustomer)
-	if !ok {
-		return nil, false, errors.New("invalid EcomCustomer type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.CustomerId)
-	}
-	err := validateEcomCustomer(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *EcomCustomerServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newEcomCustomerServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("EcomCustomer",
+		func(e *ecom.EcomCustomer) { common.GenerateID(&e.CustomerId) },
+		validateEcomCustomer)
 }
 
 func validateEcomCustomer(item *ecom.EcomCustomer, vnic ifs.IVNic) error {

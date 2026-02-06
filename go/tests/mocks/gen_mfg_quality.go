@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
@@ -29,14 +28,11 @@ func generateQualityPlans(store *MockDataStore) []*mfg.MfgQualityPlan {
 	plans := make([]*mfg.MfgQualityPlan, count)
 
 	for i := 0; i < count; i++ {
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[i%len(store.ItemIDs)]
-		}
+		itemID := pickRef(store.ItemIDs, i)
 		effectiveDate := time.Now().AddDate(0, -rand.Intn(6), 0)
 
 		plans[i] = &mfg.MfgQualityPlan{
-			PlanId:        fmt.Sprintf("qplan-%03d", i+1),
+			PlanId:        genID("qplan", i),
 			PlanNumber:    fmt.Sprintf("QP-%05d", 40000+i+1),
 			Name:          fmt.Sprintf("Quality Plan %d", i+1),
 			Description:   fmt.Sprintf("Quality control plan for product line %d", i+1),
@@ -64,10 +60,7 @@ func generateInspectionPoints(store *MockDataStore) []*mfg.MfgInspectionPoint {
 	idx := 1
 	for planIdx, planID := range store.MfgQualityPlanIDs {
 		for j := 0; j < 3; j++ {
-			opID := ""
-			if len(store.MfgRoutingOpIDs) > 0 {
-				opID = store.MfgRoutingOpIDs[(planIdx*3+j)%len(store.MfgRoutingOpIDs)]
-			}
+			opID := pickRef(store.MfgRoutingOpIDs, (planIdx*3+j))
 
 			lowerLimit := float64(rand.Intn(40)+30) / 10.0
 			upperLimit := float64(rand.Intn(40)+70) / 10.0
@@ -110,26 +103,11 @@ func generateQualityInspections(store *MockDataStore) []*mfg.MfgQualityInspectio
 	}
 
 	for i := 0; i < count; i++ {
-		planID := ""
-		if len(store.MfgQualityPlanIDs) > 0 {
-			planID = store.MfgQualityPlanIDs[i%len(store.MfgQualityPlanIDs)]
-		}
-		woID := ""
-		if len(store.MfgWorkOrderIDs) > 0 {
-			woID = store.MfgWorkOrderIDs[i%len(store.MfgWorkOrderIDs)]
-		}
-		inspectorID := ""
-		if len(store.EmployeeIDs) > 0 {
-			inspectorID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[i%len(store.ItemIDs)]
-		}
-		warehouseID := ""
-		if len(store.SCMWarehouseIDs) > 0 {
-			warehouseID = store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)]
-		}
+		planID := pickRef(store.MfgQualityPlanIDs, i)
+		woID := pickRef(store.MfgWorkOrderIDs, i)
+		inspectorID := pickRef(store.EmployeeIDs, i)
+		itemID := pickRef(store.ItemIDs, i)
+		warehouseID := pickRef(store.SCMWarehouseIDs, i)
 
 		inspDate := time.Now().AddDate(0, 0, -rand.Intn(14))
 		completedDate := inspDate.AddDate(0, 0, rand.Intn(3)+1)
@@ -151,7 +129,7 @@ func generateQualityInspections(store *MockDataStore) []*mfg.MfgQualityInspectio
 		}
 
 		inspections[i] = &mfg.MfgQualityInspection{
-			InspectionId:      fmt.Sprintf("qinsp-%03d", i+1),
+			InspectionId:      genID("qinsp", i),
 			InspectionNumber:  fmt.Sprintf("QI-%06d", 500000+i+1),
 			PlanId:            planID,
 			WorkOrderId:       woID,
@@ -179,14 +157,8 @@ func generateTestResults(store *MockDataStore) []*mfg.MfgTestResult {
 	idx := 1
 	for inspIdx, inspID := range store.MfgQualityInspectionIDs {
 		for j := 0; j < 2; j++ {
-			pointID := ""
-			if len(store.MfgInspectionPointIDs) > 0 {
-				pointID = store.MfgInspectionPointIDs[(inspIdx*2+j)%len(store.MfgInspectionPointIDs)]
-			}
-			testerID := ""
-			if len(store.EmployeeIDs) > 0 {
-				testerID = store.EmployeeIDs[(inspIdx+j)%len(store.EmployeeIDs)]
-			}
+			pointID := pickRef(store.MfgInspectionPointIDs, (inspIdx*2+j))
+			testerID := pickRef(store.EmployeeIDs, (inspIdx+j))
 
 			testDate := time.Now().AddDate(0, 0, -rand.Intn(14))
 			measuredValue := float64(rand.Intn(100)+40) / 10.0
@@ -241,26 +213,11 @@ func generateNCRs(store *MockDataStore) []*mfg.MfgNCR {
 	ncrs := make([]*mfg.MfgNCR, count)
 
 	for i := 0; i < count; i++ {
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[i%len(store.ItemIDs)]
-		}
-		woID := ""
-		if len(store.MfgWorkOrderIDs) > 0 {
-			woID = store.MfgWorkOrderIDs[i%len(store.MfgWorkOrderIDs)]
-		}
-		inspID := ""
-		if len(store.MfgQualityInspectionIDs) > 0 {
-			inspID = store.MfgQualityInspectionIDs[i%len(store.MfgQualityInspectionIDs)]
-		}
-		reportedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			reportedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
-		assignedTo := ""
-		if len(store.EmployeeIDs) > 0 {
-			assignedTo = store.EmployeeIDs[(i+1)%len(store.EmployeeIDs)]
-		}
+		itemID := pickRef(store.ItemIDs, i)
+		woID := pickRef(store.MfgWorkOrderIDs, i)
+		inspID := pickRef(store.MfgQualityInspectionIDs, i)
+		reportedBy := pickRef(store.EmployeeIDs, i)
+		assignedTo := pickRef(store.EmployeeIDs, (i+1))
 
 		reportedDate := time.Now().AddDate(0, 0, -rand.Intn(30))
 		dueDate := reportedDate.AddDate(0, 0, rand.Intn(14)+7)
@@ -286,7 +243,7 @@ func generateNCRs(store *MockDataStore) []*mfg.MfgNCR {
 		}
 
 		ncrs[i] = &mfg.MfgNCR{
-			NcrId:            fmt.Sprintf("ncr-%03d", i+1),
+			NcrId:            genID("ncr", i),
 			NcrNumber:        fmt.Sprintf("NCR-%06d", 600000+i+1),
 			Title:            fmt.Sprintf("NCR: %s", mfgNCRReasons[i%len(mfgNCRReasons)]),
 			Description:      fmt.Sprintf("Non-conformance report for issue %d", i+1),
@@ -306,8 +263,8 @@ func generateNCRs(store *MockDataStore) []*mfg.MfgNCR {
 			AssignedTo:       assignedTo,
 			DueDate:          dueDate.Unix(),
 			ClosedDate:       closedDate,
-			EstimatedCost:    &erp.Money{Amount: estCost, CurrencyCode: "USD"},
-			ActualCost:       &erp.Money{Amount: actCost, CurrencyCode: "USD"},
+			EstimatedCost:    money(estCost),
+			ActualCost:       money(actCost),
 			Notes:            fmt.Sprintf("NCR notes %d", i+1),
 			AuditInfo:        createAuditInfo(),
 		}
@@ -323,10 +280,7 @@ func generateNCRActions(store *MockDataStore) []*mfg.MfgNCRAction {
 	idx := 1
 	for ncrIdx, ncrID := range store.MfgNCRIDs {
 		for j := 0; j < 2; j++ {
-			assignedTo := ""
-			if len(store.EmployeeIDs) > 0 {
-				assignedTo = store.EmployeeIDs[(ncrIdx*2+j)%len(store.EmployeeIDs)]
-			}
+			assignedTo := pickRef(store.EmployeeIDs, (ncrIdx*2+j))
 
 			dueDate := time.Now().AddDate(0, 0, rand.Intn(30)+7)
 			var completedDate int64

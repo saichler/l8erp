@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package vendorstatements
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type VendorStatementServiceCallback struct{}
-
-func newVendorStatementServiceCallback() *VendorStatementServiceCallback {
-	return &VendorStatementServiceCallback{}
-}
-
-func (this *VendorStatementServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	vendorStatement, ok := any.(*fin.VendorStatement)
-	if !ok {
-		return nil, false, errors.New("invalid vendorStatement type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&vendorStatement.StatementId)
-	}
-	err := validate(vendorStatement, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *VendorStatementServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newVendorStatementServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("VendorStatement",
+		func(e *fin.VendorStatement) { common.GenerateID(&e.StatementId) },
+		validate)
 }
 
 func validate(vendorStatement *fin.VendorStatement, vnic ifs.IVNic) error {

@@ -34,15 +34,9 @@ func generateDocFolders(store *MockDataStore) []*doc.DocFolder {
 
 	folders := make([]*doc.DocFolder, count)
 	for i := 0; i < count; i++ {
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
-		departmentID := ""
-		if len(store.DepartmentIDs) > 0 {
-			departmentID = store.DepartmentIDs[i%len(store.DepartmentIDs)]
-		}
+		departmentID := pickRef(store.DepartmentIDs, i)
 
 		parentFolderID := ""
 		if i > 3 && len(store.DocFolderIDs) > 0 {
@@ -50,7 +44,7 @@ func generateDocFolders(store *MockDataStore) []*doc.DocFolder {
 		}
 
 		folders[i] = &doc.DocFolder{
-			FolderId:       fmt.Sprintf("fld-%03d", i+1),
+			FolderId:       genID("fld", i),
 			Name:           docFolderNames[i%len(docFolderNames)],
 			Description:    fmt.Sprintf("Folder for %s documents", docFolderNames[i%len(docFolderNames)]),
 			ParentFolderId: parentFolderID,
@@ -78,17 +72,14 @@ func generateDocCategories(store *MockDataStore) []*doc.DocCategory {
 			parentCategoryID = store.DocCategoryIDs[i%len(store.DocCategoryIDs)]
 		}
 
-		retentionPolicyID := ""
-		if len(store.DocRetentionPolicyIDs) > 0 {
-			retentionPolicyID = store.DocRetentionPolicyIDs[i%len(store.DocRetentionPolicyIDs)]
-		}
+		retentionPolicyID := pickRef(store.DocRetentionPolicyIDs, i)
 
 		categories[i] = &doc.DocCategory{
-			CategoryId:        fmt.Sprintf("cat-%03d", i+1),
+			CategoryId:        genID("cat", i),
 			Name:              docCategoryNames[i%len(docCategoryNames)],
 			Description:       fmt.Sprintf("Category for %s documents", docCategoryNames[i%len(docCategoryNames)]),
 			ParentCategoryId:  parentCategoryID,
-			Code:              fmt.Sprintf("CAT%03d", i+1),
+			Code:              genCode("CAT", i),
 			SortOrder:         int32(i + 1),
 			IsActive:          i < 8,
 			RetentionPolicyId: retentionPolicyID,
@@ -106,7 +97,7 @@ func generateDocTags() []*doc.DocTag {
 	for i := 0; i < count; i++ {
 		colors := []string{"#FF5733", "#33FF57", "#3357FF", "#FF33F5", "#F5FF33", "#33FFF5"}
 		tags[i] = &doc.DocTag{
-			TagId:       fmt.Sprintf("tag-%03d", i+1),
+			TagId:       genID("tag", i),
 			Name:        docTagNames[i%len(docTagNames)],
 			Description: fmt.Sprintf("Tag for %s documents", docTagNames[i%len(docTagNames)]),
 			Color:       colors[i%len(colors)],
@@ -168,20 +159,11 @@ func generateDocDocuments(store *MockDataStore) []*doc.DocDocument {
 
 	documents := make([]*doc.DocDocument, count)
 	for i := 0; i < count; i++ {
-		folderID := ""
-		if len(store.DocFolderIDs) > 0 {
-			folderID = store.DocFolderIDs[i%len(store.DocFolderIDs)]
-		}
+		folderID := pickRef(store.DocFolderIDs, i)
 
-		categoryID := ""
-		if len(store.DocCategoryIDs) > 0 {
-			categoryID = store.DocCategoryIDs[i%len(store.DocCategoryIDs)]
-		}
+		categoryID := pickRef(store.DocCategoryIDs, i)
 
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		fileFormat := fileFormats[i%len(fileFormats)]
 		ext := map[doc.DocFileFormat]string{
@@ -192,7 +174,7 @@ func generateDocDocuments(store *MockDataStore) []*doc.DocDocument {
 		}
 
 		documents[i] = &doc.DocDocument{
-			DocumentId:     fmt.Sprintf("doc-%03d", i+1),
+			DocumentId:     genID("doc", i),
 			Name:           docDocumentNames[i%len(docDocumentNames)],
 			Description:    fmt.Sprintf("Document: %s", docDocumentNames[i%len(docDocumentNames)]),
 			DocumentType:   docTypes[i%len(docTypes)],
@@ -222,21 +204,15 @@ func generateDocDocumentVersions(store *MockDataStore) []*doc.DocDocumentVersion
 
 	versions := make([]*doc.DocDocumentVersion, count)
 	for i := 0; i < count; i++ {
-		documentID := ""
-		if len(store.DocDocumentIDs) > 0 {
-			documentID = store.DocDocumentIDs[i%len(store.DocDocumentIDs)]
-		}
+		documentID := pickRef(store.DocDocumentIDs, i)
 
-		createdBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			createdBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		createdBy := pickRef(store.EmployeeIDs, i)
 
 		versionNum := (i % 5) + 1
 		ext := fileExtensions[i%len(fileExtensions)]
 
 		versions[i] = &doc.DocDocumentVersion{
-			VersionId:      fmt.Sprintf("ver-%03d", i+1),
+			VersionId:      genID("ver", i),
 			DocumentId:     documentID,
 			VersionNumber:  int32(versionNum),
 			ChangeNotes:    fmt.Sprintf("Version %d changes and updates", versionNum),

@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package distributionreqs
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type DistributionRequirementServiceCallback struct{}
-
-func newDistributionRequirementServiceCallback() *DistributionRequirementServiceCallback {
-	return &DistributionRequirementServiceCallback{}
-}
-
-func (this *DistributionRequirementServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmDistributionRequirement)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.RequirementId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *DistributionRequirementServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newDistributionRequirementServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmDistributionRequirement",
+		func(e *scm.ScmDistributionRequirement) { common.GenerateID(&e.RequirementId) },
+		validate)
 }
 
 func validate(item *scm.ScmDistributionRequirement, vnic ifs.IVNic) error {

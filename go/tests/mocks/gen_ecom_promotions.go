@@ -20,7 +20,6 @@ import (
 	"time"
 
 	"github.com/saichler/l8erp/go/types/ecom"
-	"github.com/saichler/l8erp/go/types/erp"
 )
 
 // generateEcomPromotions creates promotional campaign records
@@ -53,13 +52,13 @@ func generateEcomPromotions() []*ecom.EcomPromotion {
 		}
 
 		promotions[i] = &ecom.EcomPromotion{
-			PromotionId:      fmt.Sprintf("epromo-%03d", i+1),
+			PromotionId:      genID("epromo", i),
 			Name:             name,
 			Description:      fmt.Sprintf("Promotional campaign: %s", name),
 			PromotionType:    promotionType,
 			DiscountValue:    discountValue,
-			MaxDiscount:      &erp.Money{Amount: int64(rand.Intn(10000) + 1000), CurrencyCode: "USD"},
-			MinPurchase:      &erp.Money{Amount: int64(rand.Intn(5000) + 2500), CurrencyCode: "USD"},
+			MaxDiscount:      randomMoney(1000, 10000),
+			MinPurchase:      randomMoney(2500, 5000),
 			StartDate:        startDate.Unix(),
 			EndDate:          endDate.Unix(),
 			IsActive:         isActive,
@@ -110,13 +109,13 @@ func generateEcomCoupons(store *MockDataStore) []*ecom.EcomCoupon {
 		}
 
 		coupons[i] = &ecom.EcomCoupon{
-			CouponId:              fmt.Sprintf("ecpn-%03d", i+1),
+			CouponId:              genID("ecpn", i),
 			Code:                  code,
 			Description:           fmt.Sprintf("Coupon: %s - Use code at checkout", code),
 			DiscountType:          discountType,
 			DiscountValue:         discountValue,
-			MaxDiscount:           &erp.Money{Amount: int64(rand.Intn(5000) + 1000), CurrencyCode: "USD"},
-			MinPurchase:           &erp.Money{Amount: int64(rand.Intn(5000) + 1500), CurrencyCode: "USD"},
+			MaxDiscount:           randomMoney(1000, 5000),
+			MinPurchase:           randomMoney(1500, 5000),
 			StartDate:             startDate.Unix(),
 			EndDate:               endDate.Unix(),
 			IsActive:              isActive,
@@ -189,8 +188,8 @@ func generateEcomPriceRules(store *MockDataStore) []*ecom.EcomPriceRule {
 			IsActive:              isActive,
 			Priority:              int32(i + 1),
 			CustomerGroup:         customerGroups[i%len(customerGroups)],
-			MinQuantity:           &erp.Money{Amount: int64(rand.Intn(10) + 1), CurrencyCode: "USD"},
-			MaxQuantity:           &erp.Money{Amount: int64(rand.Intn(100) + 50), CurrencyCode: "USD"},
+			MinQuantity:           randomMoney(1, 10),
+			MaxQuantity:           randomMoney(50, 100),
 			ApplicableCategoryIds: categoryIds,
 			ApplyToAll:            applyToAll,
 			AuditInfo:             createAuditInfo(),
@@ -230,21 +229,21 @@ func generateEcomShippingMethods() []*ecom.EcomShippingMethod {
 		maxDays := minDays + rand.Intn(3) + 1
 
 		methods[i] = &ecom.EcomShippingMethod{
-			MethodId:              fmt.Sprintf("eship-%03d", i+1),
+			MethodId:              genID("eship", i),
 			Name:                  methodNames[i%len(methodNames)],
 			Description:           fmt.Sprintf("%s shipping via %s", methodNames[i%len(methodNames)], carrier),
 			Carrier:               carrier,
 			CarrierService:        fmt.Sprintf("%s-%s", carrier, methodNames[i%len(methodNames)]),
-			BaseRate:              &erp.Money{Amount: baseRate, CurrencyCode: "USD"},
-			PerItemRate:           &erp.Money{Amount: int64(rand.Intn(200) + 50), CurrencyCode: "USD"},
-			PerWeightRate:         &erp.Money{Amount: int64(rand.Intn(100) + 25), CurrencyCode: "USD"},
-			FreeShippingThreshold: &erp.Money{Amount: int64(rand.Intn(5000) + 4900), CurrencyCode: "USD"},
+			BaseRate:              money(baseRate),
+			PerItemRate:           randomMoney(50, 200),
+			PerWeightRate:         randomMoney(25, 100),
+			FreeShippingThreshold: randomMoney(4900, 5000),
 			MinDeliveryDays:       int32(minDays),
 			MaxDeliveryDays:       int32(maxDays),
 			IsActive:              true,
 			ApplicableZones:       shippingZones[i%len(shippingZones)],
-			MinOrderAmount:        &erp.Money{Amount: 0, CurrencyCode: "USD"},
-			MaxOrderAmount:        &erp.Money{Amount: int64(rand.Intn(100000) + 50000), CurrencyCode: "USD"},
+			MinOrderAmount:        money(0),
+			MaxOrderAmount:        randomMoney(50000, 100000),
 			MaxWeight:             float64(rand.Intn(100) + 50),
 			SortOrder:             int32(i + 1),
 			TrackingAvailable:     true,
@@ -286,7 +285,7 @@ func generateEcomPaymentMethods() []*ecom.EcomPaymentMethod {
 	methods := make([]*ecom.EcomPaymentMethod, len(ecomPaymentProviders))
 	for i, provider := range ecomPaymentProviders {
 		methods[i] = &ecom.EcomPaymentMethod{
-			MethodId:               fmt.Sprintf("epay-%03d", i+1),
+			MethodId:               genID("epay", i),
 			Name:                   methodNames[i%len(methodNames)],
 			Description:            fmt.Sprintf("Pay securely with %s via %s", methodNames[i%len(methodNames)], provider),
 			Provider:               provider,
@@ -295,10 +294,10 @@ func generateEcomPaymentMethods() []*ecom.EcomPaymentMethod {
 			IsTestMode:             false,
 			SupportedCurrencies:    currencies[i%len(currencies)],
 			SupportedCountries:     countries[i%len(countries)],
-			MinAmount:              &erp.Money{Amount: 100, CurrencyCode: "USD"},
-			MaxAmount:              &erp.Money{Amount: int64(rand.Intn(100000000) + 10000000), CurrencyCode: "USD"},
+			MinAmount:              money(100),
+			MaxAmount:              randomMoney(10000000, 100000000),
 			TransactionFeePercent:  feePercents[i%len(feePercents)],
-			TransactionFeeFixed:    &erp.Money{Amount: feeFixed[i%len(feeFixed)], CurrencyCode: "USD"},
+			TransactionFeeFixed:    money(feeFixed[i%len(feeFixed)]),
 			SortOrder:              int32(i + 1),
 			IconUrl:                fmt.Sprintf("/assets/payment/%s.svg", provider),
 			Instructions:           fmt.Sprintf("Complete your payment using %s", methodNames[i%len(methodNames)]),

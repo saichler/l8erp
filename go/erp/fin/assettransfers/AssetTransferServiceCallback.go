@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package assettransfers
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type AssetTransferServiceCallback struct{}
-
-func newAssetTransferServiceCallback() *AssetTransferServiceCallback {
-	return &AssetTransferServiceCallback{}
-}
-
-func (this *AssetTransferServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	assetTransfer, ok := any.(*fin.AssetTransfer)
-	if !ok {
-		return nil, false, errors.New("invalid assetTransfer type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&assetTransfer.TransferId)
-	}
-	err := validate(assetTransfer, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *AssetTransferServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newAssetTransferServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("AssetTransfer",
+		func(e *fin.AssetTransfer) { common.GenerateID(&e.TransferId) },
+		validate)
 }
 
 func validate(assetTransfer *fin.AssetTransfer, vnic ifs.IVNic) error {

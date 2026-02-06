@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -49,20 +48,11 @@ func generateSalesBillingSchedules(store *MockDataStore) []*sales.SalesBillingSc
 
 	schedules := make([]*sales.SalesBillingSchedule, count)
 	for i := 0; i < count; i++ {
-		orderID := ""
-		if len(store.SalesOrderIDs) > 0 {
-			orderID = store.SalesOrderIDs[i%len(store.SalesOrderIDs)]
-		}
+		orderID := pickRef(store.SalesOrderIDs, i)
 
-		contractID := ""
-		if len(store.SalesCustomerContractIDs) > 0 {
-			contractID = store.SalesCustomerContractIDs[i%len(store.SalesCustomerContractIDs)]
-		}
+		contractID := pickRef(store.SalesCustomerContractIDs, i)
 
-		customerID := ""
-		if len(store.CustomerIDs) > 0 {
-			customerID = store.CustomerIDs[i%len(store.CustomerIDs)]
-		}
+		customerID := pickRef(store.CustomerIDs, i)
 
 		startDate := time.Now().AddDate(0, -rand.Intn(6), 0)
 		endDate := startDate.AddDate(1, 0, 0)
@@ -73,7 +63,7 @@ func generateSalesBillingSchedules(store *MockDataStore) []*sales.SalesBillingSc
 		remainingAmount := totalAmount - billedAmount
 
 		schedules[i] = &sales.SalesBillingSchedule{
-			ScheduleId:      fmt.Sprintf("sbs-%03d", i+1),
+			ScheduleId:      genID("sbs", i),
 			Name:            fmt.Sprintf("Billing Schedule %d", i+1),
 			SalesOrderId:    orderID,
 			ContractId:      contractID,
@@ -82,9 +72,9 @@ func generateSalesBillingSchedules(store *MockDataStore) []*sales.SalesBillingSc
 			StartDate:       startDate.Unix(),
 			EndDate:         endDate.Unix(),
 			NextBillingDate: nextBillingDate.Unix(),
-			TotalAmount:     &erp.Money{Amount: totalAmount, CurrencyCode: "USD"},
-			BilledAmount:    &erp.Money{Amount: billedAmount, CurrencyCode: "USD"},
-			RemainingAmount: &erp.Money{Amount: remainingAmount, CurrencyCode: "USD"},
+			TotalAmount:     money(totalAmount),
+			BilledAmount:    money(billedAmount),
+			RemainingAmount: money(remainingAmount),
 			Status:          statuses[i%len(statuses)],
 			Notes:           fmt.Sprintf("Billing schedule for order/contract %d", i+1),
 			AuditInfo:       createAuditInfo(),
@@ -133,7 +123,7 @@ func generateSalesBillingMilestones(store *MockDataStore) []*sales.SalesBillingM
 				Name:        fmt.Sprintf("%s Milestone", milestonePrefixes[j%len(milestonePrefixes)]),
 				Description: fmt.Sprintf("Billing milestone %d for schedule", j+1),
 				Sequence:    int32(j + 1),
-				Amount:      &erp.Money{Amount: amount, CurrencyCode: "USD"},
+				Amount:      money(amount),
 				Percentage:  percentage,
 				TargetDate:  targetDate.Unix(),
 				ActualDate:  actualDate,
@@ -163,20 +153,11 @@ func generateSalesRevenueSchedules(store *MockDataStore) []*sales.SalesRevenueSc
 
 	schedules := make([]*sales.SalesRevenueSchedule, count)
 	for i := 0; i < count; i++ {
-		orderID := ""
-		if len(store.SalesOrderIDs) > 0 {
-			orderID = store.SalesOrderIDs[i%len(store.SalesOrderIDs)]
-		}
+		orderID := pickRef(store.SalesOrderIDs, i)
 
-		contractID := ""
-		if len(store.SalesCustomerContractIDs) > 0 {
-			contractID = store.SalesCustomerContractIDs[i%len(store.SalesCustomerContractIDs)]
-		}
+		contractID := pickRef(store.SalesCustomerContractIDs, i)
 
-		accountID := ""
-		if len(store.AccountIDs) > 0 {
-			accountID = store.AccountIDs[i%len(store.AccountIDs)]
-		}
+		accountID := pickRef(store.AccountIDs, i)
 
 		startDate := time.Now().AddDate(0, -rand.Intn(6), 0)
 		endDate := startDate.AddDate(1, 0, 0)
@@ -186,15 +167,15 @@ func generateSalesRevenueSchedules(store *MockDataStore) []*sales.SalesRevenueSc
 		deferredRevenue := totalRevenue - recognizedRevenue
 
 		schedules[i] = &sales.SalesRevenueSchedule{
-			ScheduleId:        fmt.Sprintf("srs-%03d", i+1),
+			ScheduleId:        genID("srs", i),
 			SalesOrderId:      orderID,
 			ContractId:        contractID,
 			RecognitionMethod: recognitionMethods[i%len(recognitionMethods)],
 			StartDate:         startDate.Unix(),
 			EndDate:           endDate.Unix(),
-			TotalRevenue:      &erp.Money{Amount: totalRevenue, CurrencyCode: "USD"},
-			RecognizedRevenue: &erp.Money{Amount: recognizedRevenue, CurrencyCode: "USD"},
-			DeferredRevenue:   &erp.Money{Amount: deferredRevenue, CurrencyCode: "USD"},
+			TotalRevenue:      money(totalRevenue),
+			RecognizedRevenue: money(recognizedRevenue),
+			DeferredRevenue:   money(deferredRevenue),
 			RevenueAccountId:  accountID,
 			Notes:             fmt.Sprintf("Revenue recognition schedule for order %d", i+1),
 			AuditInfo:         createAuditInfo(),

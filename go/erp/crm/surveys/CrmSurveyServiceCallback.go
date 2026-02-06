@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package surveys
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/crm"
 )
 
-type CrmSurveyServiceCallback struct{}
-
-func newCrmSurveyServiceCallback() *CrmSurveyServiceCallback {
-	return &CrmSurveyServiceCallback{}
-}
-
-func (this *CrmSurveyServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*crm.CrmSurvey)
-	if !ok {
-		return nil, false, errors.New("invalid CrmSurvey type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.SurveyId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CrmSurveyServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCrmSurveyServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("CrmSurvey",
+		func(e *crm.CrmSurvey) { common.GenerateID(&e.SurveyId) },
+		validate)
 }
 
 func validate(item *crm.CrmSurvey, vnic ifs.IVNic) error {

@@ -15,38 +15,17 @@ limitations under the License.
 package benefitplans
 
 import (
-	"errors"
+	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/carriers"
 	"github.com/saichler/l8erp/go/erp/hcm/organizations"
-	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type BenefitPlanServiceCallback struct {
-}
-
-func newBenefitPlanServiceCallback() *BenefitPlanServiceCallback {
-	return &BenefitPlanServiceCallback{}
-}
-
-func (this *BenefitPlanServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.BenefitPlan)
-	if !ok {
-		return nil, false, errors.New("invalid benefit plan type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.PlanId)
-	}
-	err := validateBenPlan(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BenefitPlanServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBenefitPlanServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("BenefitPlan",
+		func(e *hcm.BenefitPlan) { common.GenerateID(&e.PlanId) },
+		validateBenPlan)
 }
 
 func validateBenPlan(entity *hcm.BenefitPlan, vnic ifs.IVNic) error {

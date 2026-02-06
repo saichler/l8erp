@@ -26,7 +26,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -42,22 +41,13 @@ func generateAllocations(store *MockDataStore) []*prj.PrjAllocation {
 	count := 50
 	allocations := make([]*prj.PrjAllocation, count)
 	for i := 0; i < count; i++ {
-		resourceID := ""
-		if len(store.PrjResourceIDs) > 0 {
-			resourceID = store.PrjResourceIDs[i%len(store.PrjResourceIDs)]
-		}
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
+		resourceID := pickRef(store.PrjResourceIDs, i)
+		projectID := pickRef(store.PrjProjectIDs, i)
 		taskID := ""
 		if len(store.PrjTaskIDs) > 0 && i%2 == 0 {
 			taskID = store.PrjTaskIDs[i%len(store.PrjTaskIDs)]
 		}
-		phaseID := ""
-		if len(store.PrjPhaseIDs) > 0 {
-			phaseID = store.PrjPhaseIDs[i%len(store.PrjPhaseIDs)]
-		}
+		phaseID := pickRef(store.PrjPhaseIDs, i)
 
 		// Status distribution: 60% confirmed, 25% tentative, 15% cancelled
 		var status prj.PrjAllocationStatus
@@ -76,7 +66,7 @@ func generateAllocations(store *MockDataStore) []*prj.PrjAllocation {
 		billingRate := int64(rand.Intn(15000)+5000) * 100 // $50-$200/hour in cents
 
 		allocations[i] = &prj.PrjAllocation{
-			AllocationId:     fmt.Sprintf("alloc-%03d", i+1),
+			AllocationId:     genID("alloc", i),
 			ResourceId:       resourceID,
 			ProjectId:        projectID,
 			TaskId:           taskID,
@@ -86,7 +76,7 @@ func generateAllocations(store *MockDataStore) []*prj.PrjAllocation {
 			AllocatedHours:   allocatedHours,
 			AllocatedPercent: allocatedPercent,
 			Status:           status,
-			BillingRate:      &erp.Money{Amount: billingRate, CurrencyCode: "USD"},
+			BillingRate:      money(billingRate),
 			IsBillable:       i%5 != 0, // 80% billable
 			Role:             roles[i%len(roles)],
 			Notes:            fmt.Sprintf("Resource allocation for project work - %s", roles[i%len(roles)]),
@@ -110,22 +100,10 @@ func generateBookings(store *MockDataStore) []*prj.PrjBooking {
 	count := 40
 	bookings := make([]*prj.PrjBooking, count)
 	for i := 0; i < count; i++ {
-		resourceID := ""
-		if len(store.PrjResourceIDs) > 0 {
-			resourceID = store.PrjResourceIDs[i%len(store.PrjResourceIDs)]
-		}
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
-		requestedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			requestedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
-		approvedBy := ""
-		if len(store.ManagerIDs) > 0 {
-			approvedBy = store.ManagerIDs[i%len(store.ManagerIDs)]
-		}
+		resourceID := pickRef(store.PrjResourceIDs, i)
+		projectID := pickRef(store.PrjProjectIDs, i)
+		requestedBy := pickRef(store.EmployeeIDs, i)
+		approvedBy := pickRef(store.ManagerIDs, i)
 
 		// Status distribution: 55% approved, 25% requested, 10% rejected, 10% cancelled
 		var status prj.PrjBookingStatus
@@ -151,7 +129,7 @@ func generateBookings(store *MockDataStore) []*prj.PrjBooking {
 		}
 
 		bookings[i] = &prj.PrjBooking{
-			BookingId:      fmt.Sprintf("book-%03d", i+1),
+			BookingId:      genID("book", i),
 			ResourceId:     resourceID,
 			ProjectId:      projectID,
 			RequestedBy:    requestedBy,
@@ -177,10 +155,7 @@ func generateUtilizations(store *MockDataStore) []*prj.PrjUtilization {
 	count := 75
 	utilizations := make([]*prj.PrjUtilization, count)
 	for i := 0; i < count; i++ {
-		resourceID := ""
-		if len(store.PrjResourceIDs) > 0 {
-			resourceID = store.PrjResourceIDs[i%len(store.PrjResourceIDs)]
-		}
+		resourceID := pickRef(store.PrjResourceIDs, i)
 		projectID := ""
 		if len(store.PrjProjectIDs) > 0 && i%2 == 0 {
 			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
@@ -202,7 +177,7 @@ func generateUtilizations(store *MockDataStore) []*prj.PrjUtilization {
 		cost := int64(billableHours * float64(rand.Intn(5000)+2500))     // $25-$75/hour
 
 		utilizations[i] = &prj.PrjUtilization{
-			UtilizationId:              fmt.Sprintf("util-%03d", i+1),
+			UtilizationId:              genID("util", i),
 			ResourceId:                 resourceID,
 			ProjectId:                  projectID,
 			PeriodStart:                periodStart.Unix(),
@@ -213,8 +188,8 @@ func generateUtilizations(store *MockDataStore) []*prj.PrjUtilization {
 			TotalHours:                 totalHours,
 			UtilizationPercent:         utilizationPercent,
 			BillableUtilizationPercent: billableUtilizationPercent,
-			Revenue:                    &erp.Money{Amount: revenue, CurrencyCode: "USD"},
-			Cost:                       &erp.Money{Amount: cost, CurrencyCode: "USD"},
+			Revenue:                    money(revenue),
+			Cost:                       money(cost),
 			AuditInfo:                  createAuditInfo(),
 		}
 	}
@@ -233,14 +208,8 @@ func generatePrjTimesheets(store *MockDataStore) []*prj.PrjTimesheet {
 	count := 30
 	timesheets := make([]*prj.PrjTimesheet, count)
 	for i := 0; i < count; i++ {
-		employeeID := ""
-		if len(store.EmployeeIDs) > 0 {
-			employeeID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
-		approvedBy := ""
-		if len(store.ManagerIDs) > 0 {
-			approvedBy = store.ManagerIDs[i%len(store.ManagerIDs)]
-		}
+		employeeID := pickRef(store.EmployeeIDs, i)
+		approvedBy := pickRef(store.ManagerIDs, i)
 
 		// Status distribution: 50% approved, 25% submitted, 15% draft, 10% rejected
 		var status prj.PrjTimesheetStatus
@@ -281,7 +250,7 @@ func generatePrjTimesheets(store *MockDataStore) []*prj.PrjTimesheet {
 		}
 
 		timesheets[i] = &prj.PrjTimesheet{
-			TimesheetId:      fmt.Sprintf("tsheet-%03d", i+1),
+			TimesheetId:      genID("tsheet", i),
 			EmployeeId:       employeeID,
 			WeekStartDate:    weekStart.Unix(),
 			WeekEndDate:      weekEnd.Unix(),

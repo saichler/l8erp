@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package customerhierarchies
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/sales"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type CustomerHierarchyServiceCallback struct{}
-
-func newCustomerHierarchyServiceCallback() *CustomerHierarchyServiceCallback {
-	return &CustomerHierarchyServiceCallback{}
-}
-
-func (this *CustomerHierarchyServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*sales.SalesCustomerHierarchy)
-	if !ok {
-		return nil, false, errors.New("invalid customer hierarchy type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.HierarchyId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CustomerHierarchyServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCustomerHierarchyServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SalesCustomerHierarchy",
+		func(e *sales.SalesCustomerHierarchy) { common.GenerateID(&e.HierarchyId) },
+		validate)
 }
 
 func validate(item *sales.SalesCustomerHierarchy, vnic ifs.IVNic) error {

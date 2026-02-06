@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package costvariances
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
+	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-type MfgCostVarianceServiceCallback struct{}
-
-func newMfgCostVarianceServiceCallback() *MfgCostVarianceServiceCallback {
-	return &MfgCostVarianceServiceCallback{}
-}
-
-func (this *MfgCostVarianceServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgCostVariance)
-	if !ok {
-		return nil, false, errors.New("invalid MfgCostVariance type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.VarianceId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgCostVarianceServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgCostVarianceServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgCostVariance",
+		func(e *mfg.MfgCostVariance) { common.GenerateID(&e.VarianceId) },
+		validate)
 }
 
 func validate(item *mfg.MfgCostVariance, vnic ifs.IVNic) error {

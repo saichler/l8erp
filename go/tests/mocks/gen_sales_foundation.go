@@ -41,7 +41,7 @@ func generateSalesTerritories(store *MockDataStore) []*sales.SalesTerritory {
 		}
 
 		territory := &sales.SalesTerritory{
-			TerritoryId:   fmt.Sprintf("sterr-%03d", i+1),
+			TerritoryId:   genID("sterr", i),
 			Name:          name,
 			Description:   fmt.Sprintf("Sales territory for %s", name),
 			TerritoryType: territoryTypes[i%len(territoryTypes)],
@@ -87,7 +87,7 @@ func generateSalesPriceLists() []*sales.SalesPriceList {
 		expiryDate := effectiveDate.AddDate(1, 0, 0)
 
 		priceLists[i] = &sales.SalesPriceList{
-			PriceListId:   fmt.Sprintf("spl-%03d", i+1),
+			PriceListId:   genID("spl", i),
 			Name:          name,
 			Description:   fmt.Sprintf("Price list: %s", name),
 			CurrencyCode:  "USD",
@@ -107,7 +107,7 @@ func generateSalesCustomerHierarchies(store *MockDataStore) []*sales.SalesCustom
 	hierarchies := make([]*sales.SalesCustomerHierarchy, len(salesHierarchyNames))
 	for i, name := range salesHierarchyNames {
 		hierarchy := &sales.SalesCustomerHierarchy{
-			HierarchyId: fmt.Sprintf("sch-%03d", i+1),
+			HierarchyId: genID("sch", i),
 			Name:        name,
 			Description: fmt.Sprintf("Customer hierarchy for %s", name),
 			Level:       int32((i % 3) + 1),
@@ -148,7 +148,7 @@ func generateSalesCustomerSegments() []*sales.SalesCustomerSegment {
 	segments := make([]*sales.SalesCustomerSegment, len(salesSegmentNames))
 	for i, name := range salesSegmentNames {
 		segments[i] = &sales.SalesCustomerSegment{
-			SegmentId:     fmt.Sprintf("sseg-%03d", i+1),
+			SegmentId:     genID("sseg", i),
 			Name:          name,
 			Description:   fmt.Sprintf("Customer segment: %s", name),
 			SegmentType:   segmentTypes[i%len(segmentTypes)],

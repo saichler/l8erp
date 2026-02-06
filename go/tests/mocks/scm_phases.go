@@ -15,7 +15,6 @@ limitations under the License.
 package main
 
 import (
-	"fmt"
 
 	"github.com/saichler/l8erp/go/types/scm"
 )
@@ -23,48 +22,28 @@ import (
 // SCM Phase 1: Foundation
 func generateScmPhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate Item Categories
-	fmt.Printf("  Creating Item Categories...")
 	itemCategories := generateItemCategories()
-	if err := client.post("/erp/50/ItemCat", &scm.ScmItemCategoryList{List: itemCategories}); err != nil {
-		return fmt.Errorf("item categories: %w", err)
+	if err := runOp(client, "Item Categories", "/erp/50/ItemCat", &scm.ScmItemCategoryList{List: itemCategories}, extractIDs(itemCategories, func(e *scm.ScmItemCategory) string { return e.CategoryId }), &store.ItemCategoryIDs); err != nil {
+		return err
 	}
-	for _, ic := range itemCategories {
-		store.ItemCategoryIDs = append(store.ItemCategoryIDs, ic.CategoryId)
-	}
-	fmt.Printf(" %d created\n", len(itemCategories))
 
 	// Generate Warehouses
-	fmt.Printf("  Creating Warehouses...")
 	warehouses := generateWarehouses(store)
-	if err := client.post("/erp/50/Warehouse", &scm.ScmWarehouseList{List: warehouses}); err != nil {
-		return fmt.Errorf("warehouses: %w", err)
+	if err := runOp(client, "Warehouses", "/erp/50/Warehouse", &scm.ScmWarehouseList{List: warehouses}, extractIDs(warehouses, func(e *scm.ScmWarehouse) string { return e.WarehouseId }), &store.SCMWarehouseIDs); err != nil {
+		return err
 	}
-	for _, w := range warehouses {
-		store.SCMWarehouseIDs = append(store.SCMWarehouseIDs, w.WarehouseId)
-	}
-	fmt.Printf(" %d created\n", len(warehouses))
 
 	// Generate SCM Carriers
-	fmt.Printf("  Creating SCM Carriers...")
 	carriers := generateSCMCarriers()
-	if err := client.post("/erp/50/ScmCarrier", &scm.ScmCarrierList{List: carriers}); err != nil {
-		return fmt.Errorf("scm carriers: %w", err)
+	if err := runOp(client, "SCM Carriers", "/erp/50/ScmCarrier", &scm.ScmCarrierList{List: carriers}, extractIDs(carriers, func(e *scm.ScmCarrier) string { return e.CarrierId }), &store.SCMCarrierIDs); err != nil {
+		return err
 	}
-	for _, c := range carriers {
-		store.SCMCarrierIDs = append(store.SCMCarrierIDs, c.CarrierId)
-	}
-	fmt.Printf(" %d created\n", len(carriers))
 
 	// Generate Forecast Models
-	fmt.Printf("  Creating Forecast Models...")
 	forecastModels := generateForecastModels()
-	if err := client.post("/erp/50/FcastModel", &scm.ScmForecastModelList{List: forecastModels}); err != nil {
-		return fmt.Errorf("forecast models: %w", err)
+	if err := runOp(client, "Forecast Models", "/erp/50/FcastModel", &scm.ScmForecastModelList{List: forecastModels}, extractIDs(forecastModels, func(e *scm.ScmForecastModel) string { return e.ModelId }), &store.ForecastModelIDs); err != nil {
+		return err
 	}
-	for _, fm := range forecastModels {
-		store.ForecastModelIDs = append(store.ForecastModelIDs, fm.ModelId)
-	}
-	fmt.Printf(" %d created\n", len(forecastModels))
 
 	return nil
 }
@@ -72,37 +51,22 @@ func generateScmPhase1(client *HCMClient, store *MockDataStore) error {
 // SCM Phase 2: Inventory Core
 func generateScmPhase2(client *HCMClient, store *MockDataStore) error {
 	// Generate Items
-	fmt.Printf("  Creating Items...")
 	items := generateItems(store)
-	if err := client.post("/erp/50/Item", &scm.ScmItemList{List: items}); err != nil {
-		return fmt.Errorf("items: %w", err)
+	if err := runOp(client, "Items", "/erp/50/Item", &scm.ScmItemList{List: items}, extractIDs(items, func(e *scm.ScmItem) string { return e.ItemId }), &store.ItemIDs); err != nil {
+		return err
 	}
-	for _, item := range items {
-		store.ItemIDs = append(store.ItemIDs, item.ItemId)
-	}
-	fmt.Printf(" %d created\n", len(items))
 
 	// Generate Bins
-	fmt.Printf("  Creating Bins...")
 	bins := generateBins(store)
-	if err := client.post("/erp/50/Bin", &scm.ScmBinList{List: bins}); err != nil {
-		return fmt.Errorf("bins: %w", err)
+	if err := runOp(client, "Bins", "/erp/50/Bin", &scm.ScmBinList{List: bins}, extractIDs(bins, func(e *scm.ScmBin) string { return e.BinId }), &store.BinIDs); err != nil {
+		return err
 	}
-	for _, b := range bins {
-		store.BinIDs = append(store.BinIDs, b.BinId)
-	}
-	fmt.Printf(" %d created\n", len(bins))
 
 	// Generate Freight Rates
-	fmt.Printf("  Creating Freight Rates...")
 	freightRates := generateFreightRates(store)
-	if err := client.post("/erp/50/FreightRt", &scm.ScmFreightRateList{List: freightRates}); err != nil {
-		return fmt.Errorf("freight rates: %w", err)
+	if err := runOp(client, "Freight Rates", "/erp/50/FreightRt", &scm.ScmFreightRateList{List: freightRates}, extractIDs(freightRates, func(e *scm.ScmFreightRate) string { return e.RateId }), &store.FreightRateIDs); err != nil {
+		return err
 	}
-	for _, fr := range freightRates {
-		store.FreightRateIDs = append(store.FreightRateIDs, fr.RateId)
-	}
-	fmt.Printf(" %d created\n", len(freightRates))
 
 	return nil
 }
@@ -110,59 +74,34 @@ func generateScmPhase2(client *HCMClient, store *MockDataStore) error {
 // SCM Phase 3: Procurement
 func generateScmPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Purchase Requisitions
-	fmt.Printf("  Creating Purchase Requisitions...")
 	requisitions := generatePurchaseRequisitions(store)
-	if err := client.post("/erp/50/PurchReq", &scm.ScmPurchaseRequisitionList{List: requisitions}); err != nil {
-		return fmt.Errorf("purchase requisitions: %w", err)
+	if err := runOp(client, "Purchase Requisitions", "/erp/50/PurchReq", &scm.ScmPurchaseRequisitionList{List: requisitions}, extractIDs(requisitions, func(e *scm.ScmPurchaseRequisition) string { return e.RequisitionId }), &store.PurchaseRequisitionIDs); err != nil {
+		return err
 	}
-	for _, r := range requisitions {
-		store.PurchaseRequisitionIDs = append(store.PurchaseRequisitionIDs, r.RequisitionId)
-	}
-	fmt.Printf(" %d created\n", len(requisitions))
 
 	// Generate Requisition Lines
-	fmt.Printf("  Creating Requisition Lines...")
 	reqLines := generateRequisitionLines(store)
-	if err := client.post("/erp/50/ReqLine", &scm.ScmRequisitionLineList{List: reqLines}); err != nil {
-		return fmt.Errorf("requisition lines: %w", err)
+	if err := runOp(client, "Requisition Lines", "/erp/50/ReqLine", &scm.ScmRequisitionLineList{List: reqLines}, extractIDs(reqLines, func(e *scm.ScmRequisitionLine) string { return e.LineId }), &store.RequisitionLineIDs); err != nil {
+		return err
 	}
-	for _, rl := range reqLines {
-		store.RequisitionLineIDs = append(store.RequisitionLineIDs, rl.LineId)
-	}
-	fmt.Printf(" %d created\n", len(reqLines))
 
 	// Generate RFQs
-	fmt.Printf("  Creating RFQs...")
 	rfqs := generateRFQs(store)
-	if err := client.post("/erp/50/RFQ", &scm.ScmRequestForQuotationList{List: rfqs}); err != nil {
-		return fmt.Errorf("rfqs: %w", err)
+	if err := runOp(client, "RFQs", "/erp/50/RFQ", &scm.ScmRequestForQuotationList{List: rfqs}, extractIDs(rfqs, func(e *scm.ScmRequestForQuotation) string { return e.RfqId }), &store.RFQIDs); err != nil {
+		return err
 	}
-	for _, rfq := range rfqs {
-		store.RFQIDs = append(store.RFQIDs, rfq.RfqId)
-	}
-	fmt.Printf(" %d created\n", len(rfqs))
 
 	// Generate Blanket Orders
-	fmt.Printf("  Creating Blanket Orders...")
 	blanketOrders := generateBlanketOrders(store)
-	if err := client.post("/erp/50/BlnktOrder", &scm.ScmBlanketOrderList{List: blanketOrders}); err != nil {
-		return fmt.Errorf("blanket orders: %w", err)
+	if err := runOp(client, "Blanket Orders", "/erp/50/BlnktOrder", &scm.ScmBlanketOrderList{List: blanketOrders}, extractIDs(blanketOrders, func(e *scm.ScmBlanketOrder) string { return e.BlanketOrderId }), &store.BlanketOrderIDs); err != nil {
+		return err
 	}
-	for _, bo := range blanketOrders {
-		store.BlanketOrderIDs = append(store.BlanketOrderIDs, bo.BlanketOrderId)
-	}
-	fmt.Printf(" %d created\n", len(blanketOrders))
 
 	// Generate Supplier Scorecards
-	fmt.Printf("  Creating Supplier Scorecards...")
 	scorecards := generateSupplierScorecards(store)
-	if err := client.post("/erp/50/SupplrCard", &scm.ScmSupplierScorecardList{List: scorecards}); err != nil {
-		return fmt.Errorf("supplier scorecards: %w", err)
+	if err := runOp(client, "Supplier Scorecards", "/erp/50/SupplrCard", &scm.ScmSupplierScorecardList{List: scorecards}, extractIDs(scorecards, func(e *scm.ScmSupplierScorecard) string { return e.ScorecardId }), &store.SupplierScorecardIDs); err != nil {
+		return err
 	}
-	for _, sc := range scorecards {
-		store.SupplierScorecardIDs = append(store.SupplierScorecardIDs, sc.ScorecardId)
-	}
-	fmt.Printf(" %d created\n", len(scorecards))
 
 	return nil
 }
@@ -170,26 +109,16 @@ func generateScmPhase3(client *HCMClient, store *MockDataStore) error {
 // SCM Phase 4: Purchase Orders
 func generateScmPhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate Purchase Orders
-	fmt.Printf("  Creating Purchase Orders...")
 	purchaseOrders := generateSCMPurchaseOrders(store)
-	if err := client.post("/erp/50/PurchOrder", &scm.ScmPurchaseOrderList{List: purchaseOrders}); err != nil {
-		return fmt.Errorf("purchase orders: %w", err)
+	if err := runOp(client, "Purchase Orders", "/erp/50/PurchOrder", &scm.ScmPurchaseOrderList{List: purchaseOrders}, extractIDs(purchaseOrders, func(e *scm.ScmPurchaseOrder) string { return e.PurchaseOrderId }), &store.SCMPurchaseOrderIDs); err != nil {
+		return err
 	}
-	for _, po := range purchaseOrders {
-		store.SCMPurchaseOrderIDs = append(store.SCMPurchaseOrderIDs, po.PurchaseOrderId)
-	}
-	fmt.Printf(" %d created\n", len(purchaseOrders))
 
 	// Generate PO Lines
-	fmt.Printf("  Creating PO Lines...")
 	poLines := generatePOLines(store)
-	if err := client.post("/erp/50/POLine", &scm.ScmPurchaseOrderLineList{List: poLines}); err != nil {
-		return fmt.Errorf("po lines: %w", err)
+	if err := runOp(client, "PO Lines", "/erp/50/POLine", &scm.ScmPurchaseOrderLineList{List: poLines}, extractIDs(poLines, func(e *scm.ScmPurchaseOrderLine) string { return e.LineId }), &store.POLineIDs); err != nil {
+		return err
 	}
-	for _, pl := range poLines {
-		store.POLineIDs = append(store.POLineIDs, pl.LineId)
-	}
-	fmt.Printf(" %d created\n", len(poLines))
 
 	return nil
 }
@@ -197,81 +126,46 @@ func generateScmPhase4(client *HCMClient, store *MockDataStore) error {
 // SCM Phase 5: Warehouse Operations
 func generateScmPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Receiving Orders
-	fmt.Printf("  Creating Receiving Orders...")
 	receivingOrders := generateReceivingOrders(store)
-	if err := client.post("/erp/50/RecvOrder", &scm.ScmReceivingOrderList{List: receivingOrders}); err != nil {
-		return fmt.Errorf("receiving orders: %w", err)
+	if err := runOp(client, "Receiving Orders", "/erp/50/RecvOrder", &scm.ScmReceivingOrderList{List: receivingOrders}, extractIDs(receivingOrders, func(e *scm.ScmReceivingOrder) string { return e.ReceivingOrderId }), &store.ReceivingOrderIDs); err != nil {
+		return err
 	}
-	for _, ro := range receivingOrders {
-		store.ReceivingOrderIDs = append(store.ReceivingOrderIDs, ro.ReceivingOrderId)
-	}
-	fmt.Printf(" %d created\n", len(receivingOrders))
 
 	// Generate Putaway Tasks
-	fmt.Printf("  Creating Putaway Tasks...")
 	putawayTasks := generatePutawayTasks(store)
-	if err := client.post("/erp/50/PutAway", &scm.ScmPutawayTaskList{List: putawayTasks}); err != nil {
-		return fmt.Errorf("putaway tasks: %w", err)
+	if err := runOp(client, "Putaway Tasks", "/erp/50/PutAway", &scm.ScmPutawayTaskList{List: putawayTasks}, extractIDs(putawayTasks, func(e *scm.ScmPutawayTask) string { return e.TaskId }), &store.PutawayTaskIDs); err != nil {
+		return err
 	}
-	for _, pt := range putawayTasks {
-		store.PutawayTaskIDs = append(store.PutawayTaskIDs, pt.TaskId)
-	}
-	fmt.Printf(" %d created\n", len(putawayTasks))
 
 	// Generate Pick Tasks
-	fmt.Printf("  Creating Pick Tasks...")
 	pickTasks := generatePickTasks(store)
-	if err := client.post("/erp/50/PickTask", &scm.ScmPickTaskList{List: pickTasks}); err != nil {
-		return fmt.Errorf("pick tasks: %w", err)
+	if err := runOp(client, "Pick Tasks", "/erp/50/PickTask", &scm.ScmPickTaskList{List: pickTasks}, extractIDs(pickTasks, func(e *scm.ScmPickTask) string { return e.TaskId }), &store.PickTaskIDs); err != nil {
+		return err
 	}
-	for _, pk := range pickTasks {
-		store.PickTaskIDs = append(store.PickTaskIDs, pk.TaskId)
-	}
-	fmt.Printf(" %d created\n", len(pickTasks))
 
 	// Generate Pack Tasks
-	fmt.Printf("  Creating Pack Tasks...")
 	packTasks := generatePackTasks(store)
-	if err := client.post("/erp/50/PackTask", &scm.ScmPackTaskList{List: packTasks}); err != nil {
-		return fmt.Errorf("pack tasks: %w", err)
+	if err := runOp(client, "Pack Tasks", "/erp/50/PackTask", &scm.ScmPackTaskList{List: packTasks}, extractIDs(packTasks, func(e *scm.ScmPackTask) string { return e.TaskId }), &store.PackTaskIDs); err != nil {
+		return err
 	}
-	for _, pk := range packTasks {
-		store.PackTaskIDs = append(store.PackTaskIDs, pk.TaskId)
-	}
-	fmt.Printf(" %d created\n", len(packTasks))
 
 	// Generate Ship Tasks
-	fmt.Printf("  Creating Ship Tasks...")
 	shipTasks := generateShipTasks(store)
-	if err := client.post("/erp/50/ShipTask", &scm.ScmShipTaskList{List: shipTasks}); err != nil {
-		return fmt.Errorf("ship tasks: %w", err)
+	if err := runOp(client, "Ship Tasks", "/erp/50/ShipTask", &scm.ScmShipTaskList{List: shipTasks}, extractIDs(shipTasks, func(e *scm.ScmShipTask) string { return e.TaskId }), &store.ShipTaskIDs); err != nil {
+		return err
 	}
-	for _, st := range shipTasks {
-		store.ShipTaskIDs = append(store.ShipTaskIDs, st.TaskId)
-	}
-	fmt.Printf(" %d created\n", len(shipTasks))
 
 	// Generate Wave Plans
-	fmt.Printf("  Creating Wave Plans...")
 	wavePlans := generateWavePlans(store)
-	if err := client.post("/erp/50/WavePlan", &scm.ScmWavePlanList{List: wavePlans}); err != nil {
-		return fmt.Errorf("wave plans: %w", err)
+	if err := runOp(client, "Wave Plans", "/erp/50/WavePlan", &scm.ScmWavePlanList{List: wavePlans}, extractIDs(wavePlans, func(e *scm.ScmWavePlan) string { return e.WavePlanId }), &store.WavePlanIDs); err != nil {
+		return err
 	}
-	for _, wp := range wavePlans {
-		store.WavePlanIDs = append(store.WavePlanIDs, wp.WavePlanId)
-	}
-	fmt.Printf(" %d created\n", len(wavePlans))
 
 	// Generate Dock Schedules
-	fmt.Printf("  Creating Dock Schedules...")
 	dockSchedules := generateDockSchedules(store)
-	if err := client.post("/erp/50/DockSched", &scm.ScmDockScheduleList{List: dockSchedules}); err != nil {
-		return fmt.Errorf("dock schedules: %w", err)
+	if err := runOp(client, "Dock Schedules", "/erp/50/DockSched", &scm.ScmDockScheduleList{List: dockSchedules}, extractIDs(dockSchedules, func(e *scm.ScmDockSchedule) string { return e.ScheduleId }), &store.DockScheduleIDs); err != nil {
+		return err
 	}
-	for _, ds := range dockSchedules {
-		store.DockScheduleIDs = append(store.DockScheduleIDs, ds.ScheduleId)
-	}
-	fmt.Printf(" %d created\n", len(dockSchedules))
 
 	return nil
 }

@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package items
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type ItemServiceCallback struct{}
-
-func newItemServiceCallback() *ItemServiceCallback {
-	return &ItemServiceCallback{}
-}
-
-func (this *ItemServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmItem)
-	if !ok {
-		return nil, false, errors.New("invalid item type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ItemId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *ItemServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newItemServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmItem",
+		func(e *scm.ScmItem) { common.GenerateID(&e.ItemId) },
+		validate)
 }
 
 func validate(item *scm.ScmItem, vnic ifs.IVNic) error {

@@ -15,35 +15,15 @@ limitations under the License.
 package warehouses
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type WarehouseServiceCallback struct{}
-
-func newWarehouseServiceCallback() *WarehouseServiceCallback {
-	return &WarehouseServiceCallback{}
-}
-
-func (this *WarehouseServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmWarehouse)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.WarehouseId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *WarehouseServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newWarehouseServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmWarehouse",
+		func(e *scm.ScmWarehouse) { common.GenerateID(&e.WarehouseId) },
+		validate)
 }
 
 func validate(item *scm.ScmWarehouse, vnic ifs.IVNic) error {

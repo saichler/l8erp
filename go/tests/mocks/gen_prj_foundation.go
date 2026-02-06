@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -57,15 +56,12 @@ func generateProjectTemplates() []*prj.PrjProjectTemplate {
 		budgetAmount := int64(rand.Intn(49000001) + 1000000)
 
 		templates[i] = &prj.PrjProjectTemplate{
-			TemplateId:            fmt.Sprintf("ptmpl-%03d", i+1),
+			TemplateId:            genID("ptmpl", i),
 			Name:                  name,
 			Description:           fmt.Sprintf("Project template for %s engagements", name),
 			ProjectType:           projectTypes[i%len(projectTypes)],
 			DefaultEstimatedHours: estimatedHours,
-			DefaultBudget: &erp.Money{
-				Amount:       budgetAmount,
-				CurrencyCode: "USD",
-			},
+			DefaultBudget: money(budgetAmount),
 			DefaultBillingType: billingTypes[i%len(billingTypes)],
 			IsActive:           true,
 			AuditInfo:          createAuditInfo(),
@@ -108,15 +104,12 @@ func generateExpenseCategories() []*prj.PrjExpenseCategory {
 	categories := make([]*prj.PrjExpenseCategory, len(prjExpenseCategoryNames))
 	for i, name := range prjExpenseCategoryNames {
 		categories[i] = &prj.PrjExpenseCategory{
-			CategoryId:            fmt.Sprintf("pexcat-%03d", i+1),
+			CategoryId:            genID("pexcat", i),
 			Name:                  name,
 			Description:           fmt.Sprintf("Expense category for %s related costs", name),
 			GlAccount:             fmt.Sprintf("5%03d", 70+i),
 			ExpenseType:           expenseTypes[i%len(expenseTypes)],
-			DefaultLimit: &erp.Money{
-				Amount:       defaultLimits[i%len(defaultLimits)],
-				CurrencyCode: "USD",
-			},
+			DefaultLimit: money(defaultLimits[i%len(defaultLimits)]),
 			RequiresReceipt:       requiresReceipt[i%len(requiresReceipt)],
 			IsBillableDefault:     i < 7, // First 7 categories billable by default
 			IsReimbursableDefault: true,
@@ -149,35 +142,17 @@ func generateExpensePolicies() []*prj.PrjExpensePolicy {
 		expiryDate := effectiveDate.AddDate(2, 0, 0)
 
 		policies[i] = &prj.PrjExpensePolicy{
-			PolicyId:    fmt.Sprintf("pexpol-%03d", i+1),
+			PolicyId:    genID("pexpol", i),
 			Name:        name,
 			Description: fmt.Sprintf("Expense reimbursement policy: %s", name),
-			DailyMealLimit: &erp.Money{
-				Amount:       dailyMealLimits[i%len(dailyMealLimits)],
-				CurrencyCode: "USD",
-			},
-			DailyLodgingLimit: &erp.Money{
-				Amount:       dailyLodgingLimits[i%len(dailyLodgingLimits)],
-				CurrencyCode: "USD",
-			},
-			MileageRate: &erp.Money{
-				Amount:       mileageRates[i%len(mileageRates)],
-				CurrencyCode: "USD",
-			},
-			MaxSingleExpense: &erp.Money{
-				Amount:       maxSingleExpenses[i%len(maxSingleExpenses)],
-				CurrencyCode: "USD",
-			},
+			DailyMealLimit: money(dailyMealLimits[i%len(dailyMealLimits)]),
+			DailyLodgingLimit: money(dailyLodgingLimits[i%len(dailyLodgingLimits)]),
+			MileageRate: money(mileageRates[i%len(mileageRates)]),
+			MaxSingleExpense: money(maxSingleExpenses[i%len(maxSingleExpenses)]),
 			ReceiptRequiredAbove: true,
-			ReceiptThreshold: &erp.Money{
-				Amount:       receiptThresholds[i%len(receiptThresholds)],
-				CurrencyCode: "USD",
-			},
+			ReceiptThreshold: money(receiptThresholds[i%len(receiptThresholds)]),
 			AdvanceApprovalRequired: i > 0, // First policy doesn't require advance approval
-			AdvanceApprovalThreshold: &erp.Money{
-				Amount:       advanceThresholds[i%len(advanceThresholds)],
-				CurrencyCode: "USD",
-			},
+			AdvanceApprovalThreshold: money(advanceThresholds[i%len(advanceThresholds)]),
 			SubmissionDeadlineDays: int32(30 + rand.Intn(31)),
 			IsActive:               true,
 			EffectiveDate:          effectiveDate.Unix(),
@@ -234,24 +209,18 @@ func generateApprovalRules(store *MockDataStore) []*prj.PrjApprovalRule {
 	rules := make([]*prj.PrjApprovalRule, 6)
 	for i := 0; i < 6; i++ {
 		// Get an approver from managers if available
-		approverId := ""
-		if len(store.ManagerIDs) > 0 {
-			approverId = store.ManagerIDs[i%len(store.ManagerIDs)]
-		}
+		approverId := pickRef(store.ManagerIDs, i)
 
 		// Distribution: 60% require manager approval, 40% require PM approval
 		requiresManager := i < 4
 		requiresPM := i >= 2
 
 		rules[i] = &prj.PrjApprovalRule{
-			RuleId:       fmt.Sprintf("papprv-%03d", i+1),
+			RuleId:       genID("papprv", i),
 			Name:         ruleNames[i],
 			Description:  ruleDescriptions[i],
 			ApprovalType: approvalTypes[i],
-			ThresholdAmount: &erp.Money{
-				Amount:       thresholdAmounts[i],
-				CurrencyCode: "USD",
-			},
+			ThresholdAmount: money(thresholdAmounts[i]),
 			ThresholdHours:                 thresholdHours[i],
 			ApproverId:                     approverId,
 			ApproverRole:                   approverRoles[i],

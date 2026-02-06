@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package qualityplans
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-type MfgQualityPlanServiceCallback struct{}
-
-func newMfgQualityPlanServiceCallback() *MfgQualityPlanServiceCallback {
-	return &MfgQualityPlanServiceCallback{}
-}
-
-func (this *MfgQualityPlanServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgQualityPlan)
-	if !ok {
-		return nil, false, errors.New("invalid MfgQualityPlan type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.PlanId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgQualityPlanServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgQualityPlanServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgQualityPlan",
+		func(e *mfg.MfgQualityPlan) { common.GenerateID(&e.PlanId) },
+		validate)
 }
 
 func validate(item *mfg.MfgQualityPlan, vnic ifs.IVNic) error {

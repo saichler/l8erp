@@ -15,35 +15,15 @@ limitations under the License.
 package putawaytasks
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type PutawayTaskServiceCallback struct{}
-
-func newPutawayTaskServiceCallback() *PutawayTaskServiceCallback {
-	return &PutawayTaskServiceCallback{}
-}
-
-func (this *PutawayTaskServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmPutawayTask)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.TaskId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PutawayTaskServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPutawayTaskServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmPutawayTask",
+		func(e *scm.ScmPutawayTask) { common.GenerateID(&e.TaskId) },
+		validate)
 }
 
 func validate(item *scm.ScmPutawayTask, vnic ifs.IVNic) error {

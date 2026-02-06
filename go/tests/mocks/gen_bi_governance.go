@@ -105,10 +105,7 @@ func generateDataQualityRules(store *MockDataStore) []*bi.BiDataQualityRule {
 
 	rules := make([]*bi.BiDataQualityRule, count)
 	for i := 0; i < count; i++ {
-		dataSourceID := ""
-		if len(store.BiDataSourceIDs) > 0 {
-			dataSourceID = store.BiDataSourceIDs[i%len(store.BiDataSourceIDs)]
-		}
+		dataSourceID := pickRef(store.BiDataSourceIDs, i)
 
 		lastCheck := time.Now().AddDate(0, 0, -rand.Intn(7))
 		status := qualityStatuses[i%len(qualityStatuses)]
@@ -129,7 +126,7 @@ func generateDataQualityRules(store *MockDataStore) []*bi.BiDataQualityRule {
 		recordsFailed := recordsChecked - recordsPassed
 
 		rules[i] = &bi.BiDataQualityRule{
-			RuleId:         fmt.Sprintf("bdqr-%03d", i+1),
+			RuleId:         genID("bdqr", i),
 			Name:           ruleNames[i%len(ruleNames)],
 			Description:    fmt.Sprintf("Data quality rule for %s validation", ruleNames[i%len(ruleNames)]),
 			DataSourceId:   dataSourceID,
@@ -195,10 +192,7 @@ func generateMasterDataConfigs(store *MockDataStore) []*bi.BiMasterDataConfig {
 
 	configs := make([]*bi.BiMasterDataConfig, count)
 	for i := 0; i < count; i++ {
-		sourceSystemID := ""
-		if len(store.BiDataSourceIDs) > 0 {
-			sourceSystemID = store.BiDataSourceIDs[i%len(store.BiDataSourceIDs)]
-		}
+		sourceSystemID := pickRef(store.BiDataSourceIDs, i)
 
 		lastSync := time.Now().AddDate(0, 0, -rand.Intn(7))
 		totalRecords := int64(rand.Intn(50000) + 10000)
@@ -206,7 +200,7 @@ func generateMasterDataConfigs(store *MockDataStore) []*bi.BiMasterDataConfig {
 		duplicateRecords := int64(float64(totalRecords) * (0.01 + rand.Float64()*0.04))
 
 		configs[i] = &bi.BiMasterDataConfig{
-			ConfigId:         fmt.Sprintf("bmdc-%03d", i+1),
+			ConfigId:         genID("bmdc", i),
 			Name:             configNames[i%len(configNames)],
 			Description:      fmt.Sprintf("Master data management configuration for %s", entityTypes[i%len(entityTypes)]),
 			EntityType:       entityTypes[i%len(entityTypes)],
@@ -317,7 +311,7 @@ func generateDataGovernance(store *MockDataStore) []*bi.BiDataGovernance {
 		retentionDays := int32(365 * (2 + rand.Intn(8))) // 2-10 years
 
 		governance[i] = &bi.BiDataGovernance{
-			GovernanceId:           fmt.Sprintf("bdgv-%03d", i+1),
+			GovernanceId:           genID("bdgv", i),
 			Name:                   governanceNames[i%len(governanceNames)],
 			Description:            fmt.Sprintf("Data governance policy for %s domain data", dataDomains[i%len(dataDomains)]),
 			DataDomain:             dataDomains[i%len(dataDomains)],

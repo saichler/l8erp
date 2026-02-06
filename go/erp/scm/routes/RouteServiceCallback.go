@@ -15,35 +15,15 @@ limitations under the License.
 package routes
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type RouteServiceCallback struct{}
-
-func newRouteServiceCallback() *RouteServiceCallback {
-	return &RouteServiceCallback{}
-}
-
-func (this *RouteServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmRoute)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.RouteId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *RouteServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newRouteServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmRoute",
+		func(e *scm.ScmRoute) { common.GenerateID(&e.RouteId) },
+		validate)
 }
 
 func validate(item *scm.ScmRoute, vnic ifs.IVNic) error {

@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -40,7 +39,7 @@ func generateTaxRules(store *MockDataStore) []*fin.TaxRule {
 	rules := make([]*fin.TaxRule, len(ruleNames))
 	for i, name := range ruleNames {
 		rules[i] = &fin.TaxRule{
-			RuleId:         fmt.Sprintf("trule-%03d", i+1),
+			RuleId:         genID("trule", i),
 			TaxCodeId:      store.TaxCodeIDs[i%len(store.TaxCodeIDs)],
 			JurisdictionId: store.TaxJurisdictionIDs[i%len(store.TaxJurisdictionIDs)],
 			Name:           name,
@@ -59,7 +58,7 @@ func generateTaxExemptions(store *MockDataStore) []*fin.TaxExemption {
 	exemptions := make([]*fin.TaxExemption, 4)
 	for i := 0; i < 4; i++ {
 		ex := &fin.TaxExemption{
-			ExemptionId:     fmt.Sprintf("texmpt-%03d", i+1),
+			ExemptionId:     genID("texmpt", i),
 			TaxCodeId:       store.TaxCodeIDs[i%len(store.TaxCodeIDs)],
 			ExemptionNumber: fmt.Sprintf("EX%06d", rand.Intn(999999)+1),
 			Reason:          reasons[i],
@@ -87,11 +86,11 @@ func generateWithholdingTaxConfigs(store *MockDataStore) []*fin.WithholdingTaxCo
 	configs := make([]*fin.WithholdingTaxConfig, 4)
 	for i := 0; i < 4; i++ {
 		configs[i] = &fin.WithholdingTaxConfig{
-			ConfigId:        fmt.Sprintf("whtc-%03d", i+1),
+			ConfigId:        genID("whtc", i),
 			VendorId:        store.VendorIDs[i%len(store.VendorIDs)],
 			TaxCodeId:       store.TaxCodeIDs[i%len(store.TaxCodeIDs)],
 			WithholdingRate: whRates[i],
-			ThresholdAmount: &erp.Money{Amount: thresholds[i], CurrencyCode: "USD"},
+			ThresholdAmount: money(thresholds[i]),
 			EffectiveDate:   time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),
 			IsActive:        true,
 			AuditInfo:       createAuditInfo(),
@@ -106,14 +105,14 @@ func generateBudgets(store *MockDataStore) []*fin.Budget {
 	for i, name := range departmentNames {
 		totalAmount := int64(rand.Intn(400000_00)+100000_00) // $100k-$500k in cents
 		budgets[i] = &fin.Budget{
-			BudgetId:     fmt.Sprintf("bdgt-%03d", i+1),
+			BudgetId:     genID("bdgt", i),
 			BudgetName:   fmt.Sprintf("Operating Budget - %s", name),
 			Description:  fmt.Sprintf("FY2025 operating budget for %s department", name),
 			BudgetType:   fin.BudgetType_BUDGET_TYPE_DEPARTMENTAL,
 			Status:       fin.BudgetStatus_BUDGET_STATUS_ACTIVE,
 			FiscalYearId: store.FiscalYearIDs[1], // 2025
 			DepartmentId: store.DepartmentIDs[i],
-			TotalAmount:  &erp.Money{Amount: totalAmount, CurrencyCode: "USD"},
+			TotalAmount:  money(totalAmount),
 			ApprovedBy:   "mock-generator",
 			ApprovedDate: time.Date(2025, 1, 15, 0, 0, 0, 0, time.UTC).Unix(),
 			AuditInfo:    createAuditInfo(),
@@ -142,9 +141,9 @@ func generateBudgetLines(store *MockDataStore) []*fin.BudgetLine {
 				BudgetId:       budgetID,
 				AccountId:      store.AccountIDs[(lineIdx-1)%len(store.AccountIDs)],
 				FiscalPeriodId: store.FiscalPeriodIDs[periodIdx],
-				BudgetedAmount: &erp.Money{Amount: budgeted, CurrencyCode: "USD"},
-				ActualAmount:   &erp.Money{Amount: actual, CurrencyCode: "USD"},
-				Variance:       &erp.Money{Amount: variance, CurrencyCode: "USD"},
+				BudgetedAmount: money(budgeted),
+				ActualAmount:   money(actual),
+				Variance:       money(variance),
 				Description:    fmt.Sprintf("Budget line %d", lineIdx),
 				AuditInfo:      createAuditInfo(),
 			})
@@ -169,10 +168,10 @@ func generateBudgetTransfers(store *MockDataStore) []*fin.BudgetTransfer {
 		fromIdx := (i * 2) % len(store.BudgetLineIDs)
 		toIdx := (i*2 + 1) % len(store.BudgetLineIDs)
 		transfers[i] = &fin.BudgetTransfer{
-			TransferId:       fmt.Sprintf("bxfr-%03d", i+1),
+			TransferId:       genID("bxfr", i),
 			FromBudgetLineId: store.BudgetLineIDs[fromIdx],
 			ToBudgetLineId:   store.BudgetLineIDs[toIdx],
-			Amount:           &erp.Money{Amount: int64(rand.Intn(10000_00) + 1000_00), CurrencyCode: "USD"},
+			Amount:           money(int64(rand.Intn(10000_00) + 1000_00)),
 			TransferDate:     time.Now().Unix(),
 			Reason:           reasons[i],
 			ApprovedBy:       "mock-generator",
@@ -237,14 +236,14 @@ func generateCapitalExpenditures(store *MockDataStore) []*fin.CapitalExpenditure
 	items := make([]*fin.CapitalExpenditure, len(projects))
 	for i, p := range projects {
 		items[i] = &fin.CapitalExpenditure{
-			CapexId:                fmt.Sprintf("capx-%03d", i+1),
+			CapexId:                genID("capx", i),
 			ProjectName:            p.name,
 			Description:            p.description,
 			DepartmentId:           store.DepartmentIDs[i%len(store.DepartmentIDs)],
 			FiscalYearId:           store.FiscalYearIDs[1], // 2025
 			Status:                 p.status,
-			RequestedAmount:        &erp.Money{Amount: p.requested, CurrencyCode: "USD"},
-			ApprovedAmount:         &erp.Money{Amount: p.approved, CurrencyCode: "USD"},
+			RequestedAmount:        money(p.requested),
+			ApprovedAmount:         money(p.approved),
 			RequestedDate:          time.Date(2025, 1, 15, 0, 0, 0, 0, time.UTC).Unix(),
 			RequestedBy:            "mock-generator",
 			ApprovedBy:             "mock-generator",
@@ -285,7 +284,7 @@ func generateForecasts(store *MockDataStore) []*fin.Forecast {
 		periodEnd := periodStart.AddDate(0, f.periodMonths, -1)
 
 		forecasts[i] = &fin.Forecast{
-			ForecastId:      fmt.Sprintf("fcst-%03d", i+1),
+			ForecastId:      genID("fcst", i),
 			ForecastName:    f.name,
 			Description:     fmt.Sprintf("FY2025 %s", f.name),
 			ForecastType:    f.ftype,
@@ -293,9 +292,9 @@ func generateForecasts(store *MockDataStore) []*fin.Forecast {
 			ForecastDate:    time.Now().Unix(),
 			PeriodStart:     periodStart.Unix(),
 			PeriodEnd:       periodEnd.Unix(),
-			ProjectedAmount: &erp.Money{Amount: f.projected, CurrencyCode: "USD"},
-			ActualAmount:    &erp.Money{Amount: f.actual, CurrencyCode: "USD"},
-			Variance:        &erp.Money{Amount: variance, CurrencyCode: "USD"},
+			ProjectedAmount: money(f.projected),
+			ActualAmount:    money(f.actual),
+			Variance:        money(variance),
 			AuditInfo:       createAuditInfo(),
 		}
 	}

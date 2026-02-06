@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package withholdingtaxconfigs
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type WithholdingTaxConfigServiceCallback struct{}
-
-func newWithholdingTaxConfigServiceCallback() *WithholdingTaxConfigServiceCallback {
-	return &WithholdingTaxConfigServiceCallback{}
-}
-
-func (this *WithholdingTaxConfigServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	withholdingTaxConfig, ok := any.(*fin.WithholdingTaxConfig)
-	if !ok {
-		return nil, false, errors.New("invalid withholdingTaxConfig type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&withholdingTaxConfig.ConfigId)
-	}
-	err := validate(withholdingTaxConfig, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *WithholdingTaxConfigServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newWithholdingTaxConfigServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("WithholdingTaxConfig",
+		func(e *fin.WithholdingTaxConfig) { common.GenerateID(&e.ConfigId) },
+		validate)
 }
 
 func validate(withholdingTaxConfig *fin.WithholdingTaxConfig, vnic ifs.IVNic) error {

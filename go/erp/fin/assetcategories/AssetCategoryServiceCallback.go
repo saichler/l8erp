@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package assetcategories
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type AssetCategoryServiceCallback struct{}
-
-func newAssetCategoryServiceCallback() *AssetCategoryServiceCallback {
-	return &AssetCategoryServiceCallback{}
-}
-
-func (this *AssetCategoryServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	assetCategory, ok := any.(*fin.AssetCategory)
-	if !ok {
-		return nil, false, errors.New("invalid assetCategory type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&assetCategory.CategoryId)
-	}
-	err := validate(assetCategory, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *AssetCategoryServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newAssetCategoryServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("AssetCategory",
+		func(e *fin.AssetCategory) { common.GenerateID(&e.CategoryId) },
+		validate)
 }
 
 func validate(assetCategory *fin.AssetCategory, vnic ifs.IVNic) error {

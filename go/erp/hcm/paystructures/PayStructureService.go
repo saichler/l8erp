@@ -14,16 +14,9 @@
 package paystructures
 
 import (
-	_ "github.com/lib/pq"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8orm/go/orm/persist"
-	"github.com/saichler/l8orm/go/orm/plugins/postgres"
-	"github.com/saichler/l8srlz/go/serialize/object"
 	"github.com/saichler/l8types/go/ifs"
-	"github.com/saichler/l8types/go/types/l8api"
-	"github.com/saichler/l8types/go/types/l8web"
-	"github.com/saichler/l8utils/go/utils/web"
 )
 
 const (
@@ -32,54 +25,16 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	_, user, pass, _, err := vnic.Resources().Security().Credential(creds, dbname, vnic.Resources())
-	if err != nil {
-		panic(err)
-	}
-	db := common.OpenDBConection(dbname, user, pass)
-	p := postgres.NewPostgres(db, vnic.Resources())
-
-	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, ServiceName, ServiceArea, true, newPayStructureServiceCallback())
-	sla.SetServiceItem(&hcm.PayStructure{})
-	sla.SetServiceItemList(&hcm.PayStructureList{})
-	sla.SetPrimaryKeys("PayStructureId")
-	sla.SetArgs(p)
-
-	ws := web.New(ServiceName, ServiceArea, 0)
-	ws.AddEndpoint(&hcm.PayStructure{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&hcm.PayStructureList{}, ifs.POST, &l8web.L8Empty{})
-	ws.AddEndpoint(&hcm.PayStructure{}, ifs.PUT, &l8web.L8Empty{})
-	ws.AddEndpoint(&hcm.PayStructure{}, ifs.PATCH, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.DELETE, &l8web.L8Empty{})
-	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, &hcm.PayStructureList{})
-	sla.SetWebService(ws)
-
-	vnic.Resources().Services().Activate(sla, vnic)
+	common.ActivateService[hcm.PayStructure, hcm.PayStructureList](common.ServiceConfig{
+		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "PayStructureId", Callback: newPayStructureServiceCallback(),
+	}, creds, dbname, vnic)
 }
 
 func PayStructures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
-	return vnic.Resources().Services().ServiceHandler(ServiceName, ServiceArea)
+	return common.ServiceHandler(ServiceName, ServiceArea, vnic)
 }
 
 func PayStructure(payStructureId string, vnic ifs.IVNic) (*hcm.PayStructure, error) {
-	this, ok := PayStructures(vnic)
-	filter := &hcm.PayStructure{PayStructureId: payStructureId}
-	if ok {
-		resp := this.Get(object.New(nil, filter), vnic)
-		if resp.Error() != nil {
-			return nil, resp.Error()
-		}
-		if resp.Element() != nil {
-			return resp.Element().(*hcm.PayStructure), nil
-		}
-		return nil, nil
-	}
-	resp := vnic.Request("", ServiceName, ServiceArea, ifs.GET, filter, 30)
-	if resp.Error() != nil {
-		return nil, resp.Error()
-	}
-	if resp.Element() != nil {
-		return resp.Element().(*hcm.PayStructure), nil
-	}
-	return nil, nil
+	return common.GetEntity(ServiceName, ServiceArea, &hcm.PayStructure{PayStructureId: payStructureId}, vnic)
 }

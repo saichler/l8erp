@@ -22,6 +22,44 @@ import (
 	"github.com/saichler/l8erp/go/types/erp"
 )
 
+// pickRef safely picks a reference ID by modulo index, returns "" if slice empty
+func pickRef(ids []string, index int) string {
+	if len(ids) == 0 {
+		return ""
+	}
+	return ids[index%len(ids)]
+}
+
+// randomMoney generates a Money with random amount in [min, min+rangeSize) cents
+func randomMoney(min, rangeSize int) *erp.Money {
+	return &erp.Money{Amount: int64(rand.Intn(rangeSize) + min), CurrencyCode: "USD"}
+}
+
+// money creates a Money with exact amount in cents
+func money(amount int64) *erp.Money {
+	return &erp.Money{Amount: amount, CurrencyCode: "USD"}
+}
+
+// randomPastDate returns Unix timestamp randomly in the past
+func randomPastDate(maxMonths, maxDays int) int64 {
+	return time.Now().AddDate(0, -rand.Intn(maxMonths), -rand.Intn(maxDays)).Unix()
+}
+
+// randomFutureDate returns Unix timestamp randomly in the future
+func randomFutureDate(maxMonths, maxDays int) int64 {
+	return time.Now().AddDate(0, rand.Intn(maxMonths), rand.Intn(maxDays)).Unix()
+}
+
+// genID creates an ID like "prefix-001"
+func genID(prefix string, index int) string {
+	return fmt.Sprintf("%s-%03d", prefix, index+1)
+}
+
+// genCode creates a code like "PREFIX001"
+func genCode(prefix string, index int) string {
+	return fmt.Sprintf("%s%03d", prefix, index+1)
+}
+
 func createAuditInfo() *erp.AuditInfo {
 	now := time.Now().Unix()
 	return &erp.AuditInfo{

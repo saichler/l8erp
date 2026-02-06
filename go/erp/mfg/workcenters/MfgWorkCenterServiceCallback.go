@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package workcenters
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-type MfgWorkCenterServiceCallback struct{}
-
-func newMfgWorkCenterServiceCallback() *MfgWorkCenterServiceCallback {
-	return &MfgWorkCenterServiceCallback{}
-}
-
-func (this *MfgWorkCenterServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgWorkCenter)
-	if !ok {
-		return nil, false, errors.New("invalid MfgWorkCenter type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.WorkCenterId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgWorkCenterServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgWorkCenterServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgWorkCenter",
+		func(e *mfg.MfgWorkCenter) { common.GenerateID(&e.WorkCenterId) },
+		validate)
 }
 
 func validate(item *mfg.MfgWorkCenter, vnic ifs.IVNic) error {

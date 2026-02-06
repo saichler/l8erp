@@ -15,7 +15,6 @@ limitations under the License.
 package main
 
 import (
-	"fmt"
 
 	"github.com/saichler/l8erp/go/types/ecom"
 )
@@ -23,26 +22,16 @@ import (
 // ECOM Phase 1: Catalog Foundation (Categories, Attributes)
 func generateEcomPhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate Categories
-	fmt.Printf("  Creating E-Commerce Categories...")
 	categories := generateEcomCategories()
-	if err := client.post("/erp/100/EcomCat", &ecom.EcomCategoryList{List: categories}); err != nil {
-		return fmt.Errorf("categories: %w", err)
+	if err := runOp(client, "E-Commerce Categories", "/erp/100/EcomCat", &ecom.EcomCategoryList{List: categories}, extractIDs(categories, func(e *ecom.EcomCategory) string { return e.CategoryId }), &store.EcomCategoryIDs); err != nil {
+		return err
 	}
-	for _, cat := range categories {
-		store.EcomCategoryIDs = append(store.EcomCategoryIDs, cat.CategoryId)
-	}
-	fmt.Printf(" %d created\n", len(categories))
 
 	// Generate Attributes
-	fmt.Printf("  Creating E-Commerce Attributes...")
 	attributes := generateEcomAttributes()
-	if err := client.post("/erp/100/EcomAttr", &ecom.EcomAttributeList{List: attributes}); err != nil {
-		return fmt.Errorf("attributes: %w", err)
+	if err := runOp(client, "E-Commerce Attributes", "/erp/100/EcomAttr", &ecom.EcomAttributeList{List: attributes}, extractIDs(attributes, func(e *ecom.EcomAttribute) string { return e.AttributeId }), &store.EcomAttributeIDs); err != nil {
+		return err
 	}
-	for _, attr := range attributes {
-		store.EcomAttributeIDs = append(store.EcomAttributeIDs, attr.AttributeId)
-	}
-	fmt.Printf(" %d created\n", len(attributes))
 
 	return nil
 }
@@ -50,37 +39,22 @@ func generateEcomPhase1(client *HCMClient, store *MockDataStore) error {
 // ECOM Phase 2: Products
 func generateEcomPhase2(client *HCMClient, store *MockDataStore) error {
 	// Generate Products
-	fmt.Printf("  Creating E-Commerce Products...")
 	products := generateEcomProducts(store)
-	if err := client.post("/erp/100/EcomProd", &ecom.EcomProductList{List: products}); err != nil {
-		return fmt.Errorf("products: %w", err)
+	if err := runOp(client, "E-Commerce Products", "/erp/100/EcomProd", &ecom.EcomProductList{List: products}, extractIDs(products, func(e *ecom.EcomProduct) string { return e.ProductId }), &store.EcomProductIDs); err != nil {
+		return err
 	}
-	for _, prod := range products {
-		store.EcomProductIDs = append(store.EcomProductIDs, prod.ProductId)
-	}
-	fmt.Printf(" %d created\n", len(products))
 
 	// Generate Images
-	fmt.Printf("  Creating E-Commerce Product Images...")
 	images := generateEcomImages(store)
-	if err := client.post("/erp/100/EcomImage", &ecom.EcomImageList{List: images}); err != nil {
-		return fmt.Errorf("images: %w", err)
+	if err := runOp(client, "E-Commerce Product Images", "/erp/100/EcomImage", &ecom.EcomImageList{List: images}, extractIDs(images, func(e *ecom.EcomImage) string { return e.ImageId }), &store.EcomImageIDs); err != nil {
+		return err
 	}
-	for _, img := range images {
-		store.EcomImageIDs = append(store.EcomImageIDs, img.ImageId)
-	}
-	fmt.Printf(" %d created\n", len(images))
 
 	// Generate Variants
-	fmt.Printf("  Creating E-Commerce Product Variants...")
 	variants := generateEcomVariants(store)
-	if err := client.post("/erp/100/EcomVar", &ecom.EcomVariantList{List: variants}); err != nil {
-		return fmt.Errorf("variants: %w", err)
+	if err := runOp(client, "E-Commerce Product Variants", "/erp/100/EcomVar", &ecom.EcomVariantList{List: variants}, extractIDs(variants, func(e *ecom.EcomVariant) string { return e.VariantId }), &store.EcomVariantIDs); err != nil {
+		return err
 	}
-	for _, v := range variants {
-		store.EcomVariantIDs = append(store.EcomVariantIDs, v.VariantId)
-	}
-	fmt.Printf(" %d created\n", len(variants))
 
 	return nil
 }
@@ -88,59 +62,34 @@ func generateEcomPhase2(client *HCMClient, store *MockDataStore) error {
 // ECOM Phase 3: Customers
 func generateEcomPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Customers
-	fmt.Printf("  Creating E-Commerce Customers...")
 	customers := generateEcomCustomers()
-	if err := client.post("/erp/100/EcomCust", &ecom.EcomCustomerList{List: customers}); err != nil {
-		return fmt.Errorf("customers: %w", err)
+	if err := runOp(client, "E-Commerce Customers", "/erp/100/EcomCust", &ecom.EcomCustomerList{List: customers}, extractIDs(customers, func(e *ecom.EcomCustomer) string { return e.CustomerId }), &store.EcomCustomerIDs); err != nil {
+		return err
 	}
-	for _, cust := range customers {
-		store.EcomCustomerIDs = append(store.EcomCustomerIDs, cust.CustomerId)
-	}
-	fmt.Printf(" %d created\n", len(customers))
 
 	// Generate Addresses
-	fmt.Printf("  Creating E-Commerce Customer Addresses...")
 	addresses := generateEcomAddresses(store)
-	if err := client.post("/erp/100/EcomAddr", &ecom.EcomCustomerAddressList{List: addresses}); err != nil {
-		return fmt.Errorf("addresses: %w", err)
+	if err := runOp(client, "E-Commerce Customer Addresses", "/erp/100/EcomAddr", &ecom.EcomCustomerAddressList{List: addresses}, extractIDs(addresses, func(e *ecom.EcomCustomerAddress) string { return e.AddressId }), &store.EcomAddressIDs); err != nil {
+		return err
 	}
-	for _, addr := range addresses {
-		store.EcomAddressIDs = append(store.EcomAddressIDs, addr.AddressId)
-	}
-	fmt.Printf(" %d created\n", len(addresses))
 
 	// Generate Wishlists
-	fmt.Printf("  Creating E-Commerce Wishlists...")
 	wishlists := generateEcomWishlists(store)
-	if err := client.post("/erp/100/EcomWish", &ecom.EcomWishlistList{List: wishlists}); err != nil {
-		return fmt.Errorf("wishlists: %w", err)
+	if err := runOp(client, "E-Commerce Wishlists", "/erp/100/EcomWish", &ecom.EcomWishlistList{List: wishlists}, extractIDs(wishlists, func(e *ecom.EcomWishlist) string { return e.WishlistId }), &store.EcomWishlistIDs); err != nil {
+		return err
 	}
-	for _, wl := range wishlists {
-		store.EcomWishlistIDs = append(store.EcomWishlistIDs, wl.WishlistId)
-	}
-	fmt.Printf(" %d created\n", len(wishlists))
 
 	// Generate Wishlist Items
-	fmt.Printf("  Creating E-Commerce Wishlist Items...")
 	wishlistItems := generateEcomWishlistItems(store)
-	if err := client.post("/erp/100/EcomWishIt", &ecom.EcomWishlistItemList{List: wishlistItems}); err != nil {
-		return fmt.Errorf("wishlist items: %w", err)
+	if err := runOp(client, "E-Commerce Wishlist Items", "/erp/100/EcomWishIt", &ecom.EcomWishlistItemList{List: wishlistItems}, extractIDs(wishlistItems, func(e *ecom.EcomWishlistItem) string { return e.ItemId }), &store.EcomWishItemIDs); err != nil {
+		return err
 	}
-	for _, item := range wishlistItems {
-		store.EcomWishItemIDs = append(store.EcomWishItemIDs, item.ItemId)
-	}
-	fmt.Printf(" %d created\n", len(wishlistItems))
 
 	// Generate Carts
-	fmt.Printf("  Creating E-Commerce Shopping Carts...")
 	carts := generateEcomCarts(store)
-	if err := client.post("/erp/100/EcomCart", &ecom.EcomCartList{List: carts}); err != nil {
-		return fmt.Errorf("carts: %w", err)
+	if err := runOp(client, "E-Commerce Shopping Carts", "/erp/100/EcomCart", &ecom.EcomCartList{List: carts}, extractIDs(carts, func(e *ecom.EcomCart) string { return e.CartId }), &store.EcomCartIDs); err != nil {
+		return err
 	}
-	for _, cart := range carts {
-		store.EcomCartIDs = append(store.EcomCartIDs, cart.CartId)
-	}
-	fmt.Printf(" %d created\n", len(carts))
 
 	return nil
 }
@@ -148,59 +97,34 @@ func generateEcomPhase3(client *HCMClient, store *MockDataStore) error {
 // ECOM Phase 4: Promotions & Methods
 func generateEcomPhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate Promotions
-	fmt.Printf("  Creating E-Commerce Promotions...")
 	promotions := generateEcomPromotions()
-	if err := client.post("/erp/100/EcomPromo", &ecom.EcomPromotionList{List: promotions}); err != nil {
-		return fmt.Errorf("promotions: %w", err)
+	if err := runOp(client, "E-Commerce Promotions", "/erp/100/EcomPromo", &ecom.EcomPromotionList{List: promotions}, extractIDs(promotions, func(e *ecom.EcomPromotion) string { return e.PromotionId }), &store.EcomPromotionIDs); err != nil {
+		return err
 	}
-	for _, promo := range promotions {
-		store.EcomPromotionIDs = append(store.EcomPromotionIDs, promo.PromotionId)
-	}
-	fmt.Printf(" %d created\n", len(promotions))
 
 	// Generate Coupons
-	fmt.Printf("  Creating E-Commerce Coupons...")
 	coupons := generateEcomCoupons(store)
-	if err := client.post("/erp/100/EcomCoupon", &ecom.EcomCouponList{List: coupons}); err != nil {
-		return fmt.Errorf("coupons: %w", err)
+	if err := runOp(client, "E-Commerce Coupons", "/erp/100/EcomCoupon", &ecom.EcomCouponList{List: coupons}, extractIDs(coupons, func(e *ecom.EcomCoupon) string { return e.CouponId }), &store.EcomCouponIDs); err != nil {
+		return err
 	}
-	for _, cpn := range coupons {
-		store.EcomCouponIDs = append(store.EcomCouponIDs, cpn.CouponId)
-	}
-	fmt.Printf(" %d created\n", len(coupons))
 
 	// Generate Price Rules
-	fmt.Printf("  Creating E-Commerce Price Rules...")
 	priceRules := generateEcomPriceRules(store)
-	if err := client.post("/erp/100/EcomPrcRl", &ecom.EcomPriceRuleList{List: priceRules}); err != nil {
-		return fmt.Errorf("price rules: %w", err)
+	if err := runOp(client, "E-Commerce Price Rules", "/erp/100/EcomPrcRl", &ecom.EcomPriceRuleList{List: priceRules}, extractIDs(priceRules, func(e *ecom.EcomPriceRule) string { return e.RuleId }), &store.EcomPriceRuleIDs); err != nil {
+		return err
 	}
-	for _, rule := range priceRules {
-		store.EcomPriceRuleIDs = append(store.EcomPriceRuleIDs, rule.RuleId)
-	}
-	fmt.Printf(" %d created\n", len(priceRules))
 
 	// Generate Shipping Methods
-	fmt.Printf("  Creating E-Commerce Shipping Methods...")
 	shippingMethods := generateEcomShippingMethods()
-	if err := client.post("/erp/100/EcomShip", &ecom.EcomShippingMethodList{List: shippingMethods}); err != nil {
-		return fmt.Errorf("shipping methods: %w", err)
+	if err := runOp(client, "E-Commerce Shipping Methods", "/erp/100/EcomShip", &ecom.EcomShippingMethodList{List: shippingMethods}, extractIDs(shippingMethods, func(e *ecom.EcomShippingMethod) string { return e.MethodId }), &store.EcomShippingIDs); err != nil {
+		return err
 	}
-	for _, sm := range shippingMethods {
-		store.EcomShippingIDs = append(store.EcomShippingIDs, sm.MethodId)
-	}
-	fmt.Printf(" %d created\n", len(shippingMethods))
 
 	// Generate Payment Methods
-	fmt.Printf("  Creating E-Commerce Payment Methods...")
 	paymentMethods := generateEcomPaymentMethods()
-	if err := client.post("/erp/100/EcomPay", &ecom.EcomPaymentMethodList{List: paymentMethods}); err != nil {
-		return fmt.Errorf("payment methods: %w", err)
+	if err := runOp(client, "E-Commerce Payment Methods", "/erp/100/EcomPay", &ecom.EcomPaymentMethodList{List: paymentMethods}, extractIDs(paymentMethods, func(e *ecom.EcomPaymentMethod) string { return e.MethodId }), &store.EcomPaymentIDs); err != nil {
+		return err
 	}
-	for _, pm := range paymentMethods {
-		store.EcomPaymentIDs = append(store.EcomPaymentIDs, pm.MethodId)
-	}
-	fmt.Printf(" %d created\n", len(paymentMethods))
 
 	return nil
 }
@@ -208,59 +132,34 @@ func generateEcomPhase4(client *HCMClient, store *MockDataStore) error {
 // ECOM Phase 5: Orders
 func generateEcomPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Orders
-	fmt.Printf("  Creating E-Commerce Orders...")
 	orders := generateEcomOrders(store)
-	if err := client.post("/erp/100/EcomOrder", &ecom.EcomOrderList{List: orders}); err != nil {
-		return fmt.Errorf("orders: %w", err)
+	if err := runOp(client, "E-Commerce Orders", "/erp/100/EcomOrder", &ecom.EcomOrderList{List: orders}, extractIDs(orders, func(e *ecom.EcomOrder) string { return e.OrderId }), &store.EcomOrderIDs); err != nil {
+		return err
 	}
-	for _, ord := range orders {
-		store.EcomOrderIDs = append(store.EcomOrderIDs, ord.OrderId)
-	}
-	fmt.Printf(" %d created\n", len(orders))
 
 	// Generate Order Lines
-	fmt.Printf("  Creating E-Commerce Order Lines...")
 	orderLines := generateEcomOrderLines(store)
-	if err := client.post("/erp/100/EcomOrdLn", &ecom.EcomOrderLineList{List: orderLines}); err != nil {
-		return fmt.Errorf("order lines: %w", err)
+	if err := runOp(client, "E-Commerce Order Lines", "/erp/100/EcomOrdLn", &ecom.EcomOrderLineList{List: orderLines}, extractIDs(orderLines, func(e *ecom.EcomOrderLine) string { return e.LineId }), &store.EcomOrderLineIDs); err != nil {
+		return err
 	}
-	for _, line := range orderLines {
-		store.EcomOrderLineIDs = append(store.EcomOrderLineIDs, line.LineId)
-	}
-	fmt.Printf(" %d created\n", len(orderLines))
 
 	// Generate Order Status History
-	fmt.Printf("  Creating E-Commerce Order Status History...")
 	orderStatuses := generateEcomOrderStatuses(store)
-	if err := client.post("/erp/100/EcomOrdSts", &ecom.EcomOrderStatusHistoryList{List: orderStatuses}); err != nil {
-		return fmt.Errorf("order statuses: %w", err)
+	if err := runOp(client, "E-Commerce Order Status History", "/erp/100/EcomOrdSts", &ecom.EcomOrderStatusHistoryList{List: orderStatuses}, extractIDs(orderStatuses, func(e *ecom.EcomOrderStatusHistory) string { return e.StatusId }), &store.EcomOrderStatusIDs); err != nil {
+		return err
 	}
-	for _, status := range orderStatuses {
-		store.EcomOrderStatusIDs = append(store.EcomOrderStatusIDs, status.StatusId)
-	}
-	fmt.Printf(" %d created\n", len(orderStatuses))
 
 	// Generate Returns
-	fmt.Printf("  Creating E-Commerce Returns...")
 	returns := generateEcomReturns(store)
-	if err := client.post("/erp/100/EcomReturn", &ecom.EcomReturnList{List: returns}); err != nil {
-		return fmt.Errorf("returns: %w", err)
+	if err := runOp(client, "E-Commerce Returns", "/erp/100/EcomReturn", &ecom.EcomReturnList{List: returns}, extractIDs(returns, func(e *ecom.EcomReturn) string { return e.ReturnId }), &store.EcomReturnIDs); err != nil {
+		return err
 	}
-	for _, ret := range returns {
-		store.EcomReturnIDs = append(store.EcomReturnIDs, ret.ReturnId)
-	}
-	fmt.Printf(" %d created\n", len(returns))
 
 	// Generate Return Lines
-	fmt.Printf("  Creating E-Commerce Return Lines...")
 	returnLines := generateEcomReturnLines(store)
-	if err := client.post("/erp/100/EcomRetLn", &ecom.EcomReturnLineList{List: returnLines}); err != nil {
-		return fmt.Errorf("return lines: %w", err)
+	if err := runOp(client, "E-Commerce Return Lines", "/erp/100/EcomRetLn", &ecom.EcomReturnLineList{List: returnLines}, extractIDs(returnLines, func(e *ecom.EcomReturnLine) string { return e.LineId }), &store.EcomReturnLineIDs); err != nil {
+		return err
 	}
-	for _, line := range returnLines {
-		store.EcomReturnLineIDs = append(store.EcomReturnLineIDs, line.LineId)
-	}
-	fmt.Printf(" %d created\n", len(returnLines))
 
 	return nil
 }

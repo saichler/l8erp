@@ -20,7 +20,6 @@ import (
 	"time"
 
 	"github.com/saichler/l8erp/go/types/crm"
-	"github.com/saichler/l8erp/go/types/erp"
 )
 
 // generateCampaigns creates marketing campaign records
@@ -40,10 +39,7 @@ func generateCampaigns(store *MockDataStore) []*crm.CrmCampaign {
 
 	campaigns := make([]*crm.CrmCampaign, len(crmCampaignNames))
 	for i, name := range crmCampaignNames {
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 		parentID := ""
 		if i > 3 && i%4 == 0 {
 			parentID = fmt.Sprintf("cmpgn-%03d", (i%4)+1)
@@ -64,16 +60,16 @@ func generateCampaigns(store *MockDataStore) []*crm.CrmCampaign {
 		}
 
 		campaigns[i] = &crm.CrmCampaign{
-			CampaignId:           fmt.Sprintf("cmpgn-%03d", i+1),
+			CampaignId:           genID("cmpgn", i),
 			Name:                 name,
 			CampaignType:         types[i%len(types)],
 			Status:               status,
 			Description:          fmt.Sprintf("Marketing campaign: %s", name),
 			StartDate:            time.Now().AddDate(0, -rand.Intn(3), 0).Unix(),
 			EndDate:              time.Now().AddDate(0, rand.Intn(3)+1, 0).Unix(),
-			BudgetedCost:         &erp.Money{Amount: budgetedCost, CurrencyCode: "USD"},
-			ActualCost:           &erp.Money{Amount: actualCost, CurrencyCode: "USD"},
-			ExpectedRevenue:      &erp.Money{Amount: expectedRevenue, CurrencyCode: "USD"},
+			BudgetedCost:         money(budgetedCost),
+			ActualCost:           money(actualCost),
+			ExpectedRevenue:      money(expectedRevenue),
 			ExpectedResponseRate: int32(rand.Intn(20) + 5),
 			NumSent:              int32(rand.Intn(10000) + 1000),
 			NumResponses:         int32(rand.Intn(500) + 50),
@@ -106,10 +102,7 @@ func generateCampaignMembers(store *MockDataStore) []*crm.CrmCampaignMember {
 			} else if len(store.CrmContactIDs) > 0 {
 				contactID = store.CrmContactIDs[(idx-1)%len(store.CrmContactIDs)]
 			}
-			listID := ""
-			if len(store.CrmMarketingListIDs) > 0 {
-				listID = store.CrmMarketingListIDs[(idx-1)%len(store.CrmMarketingListIDs)]
-			}
+			listID := pickRef(store.CrmMarketingListIDs, (idx-1))
 
 			status := statuses[(idx-1)%len(statuses)]
 			hasResponded := status != crm.CrmCampaignMemberStatus_CRM_CAMPAIGN_MEMBER_STATUS_SENT
@@ -137,13 +130,10 @@ func generateEmailTemplates(store *MockDataStore) []*crm.CrmEmailTemplate {
 
 	templates := make([]*crm.CrmEmailTemplate, len(crmEmailTemplateNames))
 	for i, name := range crmEmailTemplateNames {
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		templates[i] = &crm.CrmEmailTemplate{
-			TemplateId:   fmt.Sprintf("emailtpl-%03d", i+1),
+			TemplateId:   genID("emailtpl", i),
 			Name:         name,
 			Description:  fmt.Sprintf("Email template for %s", name),
 			Subject:      fmt.Sprintf("%s - Your Company", name),
@@ -167,15 +157,12 @@ func generateMarketingLists(store *MockDataStore) []*crm.CrmMarketingList {
 
 	lists := make([]*crm.CrmMarketingList, len(crmMarketingListNames))
 	for i, name := range crmMarketingListNames {
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		isDynamic := listTypes[i%len(listTypes)] == "Dynamic"
 
 		lists[i] = &crm.CrmMarketingList{
-			ListId:       fmt.Sprintf("mktlist-%03d", i+1),
+			ListId:       genID("mktlist", i),
 			Name:         name,
 			Description:  fmt.Sprintf("Marketing list: %s", name),
 			ListType:     listTypes[i%len(listTypes)],
@@ -204,10 +191,7 @@ func generateCampaignResponses(store *MockDataStore) []*crm.CrmCampaignResponse 
 	idx := 1
 	for i, memberID := range store.CrmCampaignMemberIDs {
 		if i%2 == 0 {
-			campaignID := ""
-			if len(store.CrmCampaignIDs) > 0 {
-				campaignID = store.CrmCampaignIDs[i%len(store.CrmCampaignIDs)]
-			}
+			campaignID := pickRef(store.CrmCampaignIDs, i)
 
 			responses = append(responses, &crm.CrmCampaignResponse{
 				ResponseId:       fmt.Sprintf("cmpgrsp-%03d", idx),
@@ -216,7 +200,7 @@ func generateCampaignResponses(store *MockDataStore) []*crm.CrmCampaignResponse 
 				ResponseType:     types[(idx-1)%len(types)],
 				ResponseDate:     time.Now().AddDate(0, 0, -rand.Intn(14)).Unix(),
 				Details:          fmt.Sprintf("Response %d details", idx),
-				RevenueValue:     &erp.Money{Amount: int64(rand.Intn(10000) + 100), CurrencyCode: "USD"},
+				RevenueValue:     randomMoney(100, 10000),
 				AuditInfo:        createAuditInfo(),
 			})
 			idx++
@@ -237,17 +221,17 @@ func generateCampaignROIs(store *MockDataStore) []*crm.CrmCampaignROI {
 		dealsWon := int32(float64(oppsCreated) * 0.25)
 
 		rois[i] = &crm.CrmCampaignROI{
-			RoiId:                 fmt.Sprintf("roi-%03d", i+1),
+			RoiId:                 genID("roi", i),
 			CampaignId:            campaignID,
 			CalculationDate:       time.Now().Unix(),
-			TotalCost:             &erp.Money{Amount: totalCost, CurrencyCode: "USD"},
-			TotalRevenue:          &erp.Money{Amount: totalRevenue, CurrencyCode: "USD"},
+			TotalCost:             money(totalCost),
+			TotalRevenue:          money(totalRevenue),
 			RoiPercentage:         roiPercent,
 			LeadsGenerated:        leadsGen,
 			OpportunitiesCreated:  oppsCreated,
 			DealsWon:              dealsWon,
-			CostPerLead:           &erp.Money{Amount: totalCost / int64(leadsGen), CurrencyCode: "USD"},
-			CostPerOpportunity:    &erp.Money{Amount: totalCost / int64(oppsCreated+1), CurrencyCode: "USD"},
+			CostPerLead:           money(totalCost / int64(leadsGen)),
+			CostPerOpportunity:    money(totalCost / int64(oppsCreated+1)),
 			ConversionRate:        float64(dealsWon) / float64(leadsGen+1) * 100,
 			Notes:                 fmt.Sprintf("ROI calculation for campaign %d", i+1),
 			AuditInfo:             createAuditInfo(),

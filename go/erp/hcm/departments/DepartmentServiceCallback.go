@@ -15,37 +15,16 @@ limitations under the License.
 package departments
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/organizations"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type DepartmentServiceCallback struct {
-}
-
-func newDepartmentServiceCallback() *DepartmentServiceCallback {
-	return &DepartmentServiceCallback{}
-}
-
-func (this *DepartmentServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.Department)
-	if !ok {
-		return nil, false, errors.New("invalid department type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.DepartmentId)
-	}
-	err := validateDept(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *DepartmentServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newDepartmentServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Department",
+		func(e *hcm.Department) { common.GenerateID(&e.DepartmentId) },
+		validateDept)
 }
 
 func validateDept(entity *hcm.Department, vnic ifs.IVNic) error {

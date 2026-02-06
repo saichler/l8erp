@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package orderstatuses
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/ecom"
 )
 
-type EcomOrderStatusHistoryServiceCallback struct{}
-
-func newEcomOrderStatusHistoryServiceCallback() *EcomOrderStatusHistoryServiceCallback {
-	return &EcomOrderStatusHistoryServiceCallback{}
-}
-
-func (this *EcomOrderStatusHistoryServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*ecom.EcomOrderStatusHistory)
-	if !ok {
-		return nil, false, errors.New("invalid EcomOrderStatusHistory type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.StatusId)
-	}
-	err := validateEcomOrderStatusHistory(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *EcomOrderStatusHistoryServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newEcomOrderStatusHistoryServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("EcomOrderStatusHistory",
+		func(e *ecom.EcomOrderStatusHistory) { common.GenerateID(&e.StatusId) },
+		validateEcomOrderStatusHistory)
 }
 
 func validateEcomOrderStatusHistory(item *ecom.EcomOrderStatusHistory, vnic ifs.IVNic) error {

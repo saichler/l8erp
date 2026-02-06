@@ -39,14 +39,8 @@ func generateCrmAccounts(store *MockDataStore) []*crm.CrmAccount {
 	count := 30
 	accounts := make([]*crm.CrmAccount, count)
 	for i := 0; i < count; i++ {
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
-		customerID := ""
-		if len(store.CustomerIDs) > 0 {
-			customerID = store.CustomerIDs[i%len(store.CustomerIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
+		customerID := pickRef(store.CustomerIDs, i)
 		parentID := ""
 		if i > 5 && i%5 == 0 {
 			parentID = fmt.Sprintf("acct-%03d", (i%5)+1)
@@ -73,7 +67,7 @@ func generateCrmAccounts(store *MockDataStore) []*crm.CrmAccount {
 		}
 
 		accounts[i] = &crm.CrmAccount{
-			AccountId:       fmt.Sprintf("acct-%03d", i+1),
+			AccountId:       genID("acct", i),
 			Name:            customerNames[i%len(customerNames)],
 			AccountType:     accType,
 			Status:          status,
@@ -96,7 +90,7 @@ func generateCrmAccounts(store *MockDataStore) []*crm.CrmAccount {
 				CountryCode:   "US",
 			},
 			EmployeeCount:    int32(rand.Intn(5000) + 50),
-			AnnualRevenue:    &erp.Money{Amount: int64(rand.Intn(100000000) + 1000000), CurrencyCode: "USD"},
+			AnnualRevenue:    randomMoney(1000000, 100000000),
 			OwnerId:          ownerID,
 			Description:      fmt.Sprintf("Account for %s", customerNames[i%len(customerNames)]),
 			CustomerId:       customerID,
@@ -117,14 +111,8 @@ func generateCrmContacts(store *MockDataStore) []*crm.CrmContact {
 	for _, accountID := range store.CrmAccountIDs {
 		numContacts := rand.Intn(3) + 2
 		for j := 0; j < numContacts; j++ {
-			ownerID := ""
-			if len(store.EmployeeIDs) > 0 {
-				ownerID = store.EmployeeIDs[(idx-1)%len(store.EmployeeIDs)]
-			}
-			sourceID := ""
-			if len(store.CrmLeadSourceIDs) > 0 {
-				sourceID = store.CrmLeadSourceIDs[(idx-1)%len(store.CrmLeadSourceIDs)]
-			}
+			ownerID := pickRef(store.EmployeeIDs, (idx-1))
+			sourceID := pickRef(store.CrmLeadSourceIDs, (idx-1))
 
 			firstName := firstNames[(idx-1)%len(firstNames)]
 			lastName := lastNames[(idx-1)%len(lastNames)]
@@ -178,14 +166,8 @@ func generateCrmInteractions(store *MockDataStore) []*crm.CrmInteraction {
 	interactions := make([]*crm.CrmInteraction, 0, len(store.CrmAccountIDs)*2)
 	idx := 1
 	for i, accountID := range store.CrmAccountIDs {
-		contactID := ""
-		if len(store.CrmContactIDs) > 0 {
-			contactID = store.CrmContactIDs[i%len(store.CrmContactIDs)]
-		}
-		performedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			performedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		contactID := pickRef(store.CrmContactIDs, i)
+		performedBy := pickRef(store.EmployeeIDs, i)
 
 		for j := 0; j < 2; j++ {
 			interactions = append(interactions, &crm.CrmInteraction{
@@ -232,7 +214,7 @@ func generateCrmRelationships(store *MockDataStore) []*crm.CrmRelationship {
 		}
 
 		relationships[i] = &crm.CrmRelationship{
-			RelationshipId:   fmt.Sprintf("relshp-%03d", i+1),
+			RelationshipId:   genID("relshp", i),
 			AccountId:        accountID,
 			RelatedAccountId: relatedAccountID,
 			RelationshipType: types[i%len(types)],
@@ -303,25 +285,19 @@ func generateCrmAccountPlans(store *MockDataStore) []*crm.CrmAccountPlan {
 
 	plans := make([]*crm.CrmAccountPlan, count)
 	for i := 0; i < count; i++ {
-		accountID := ""
-		if len(store.CrmAccountIDs) > 0 {
-			accountID = store.CrmAccountIDs[i%len(store.CrmAccountIDs)]
-		}
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		accountID := pickRef(store.CrmAccountIDs, i)
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		revenueTarget := int64(rand.Intn(1000000) + 100000)
 		currentRevenue := int64(float64(revenueTarget) * (float64(rand.Intn(80)+10) / 100))
 
 		plans[i] = &crm.CrmAccountPlan{
-			PlanId:         fmt.Sprintf("acctpln-%03d", i+1),
+			PlanId:         genID("acctpln", i),
 			AccountId:      accountID,
 			Name:           fmt.Sprintf("Account Plan %d - FY2025", i+1),
 			FiscalYear:     "2025",
-			RevenueTarget:  &erp.Money{Amount: revenueTarget, CurrencyCode: "USD"},
-			CurrentRevenue: &erp.Money{Amount: currentRevenue, CurrencyCode: "USD"},
+			RevenueTarget:  money(revenueTarget),
+			CurrentRevenue: money(currentRevenue),
 			Objectives:     "Increase revenue and customer satisfaction",
 			Strategies:     "Upsell existing products, cross-sell new solutions",
 			ActionItems:    "Quarterly business reviews, executive engagement",

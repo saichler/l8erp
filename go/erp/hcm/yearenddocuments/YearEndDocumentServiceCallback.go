@@ -15,37 +15,16 @@ limitations under the License.
 package yearenddocuments
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type YearEndDocumentServiceCallback struct {
-}
-
-func newYearEndDocumentServiceCallback() *YearEndDocumentServiceCallback {
-	return &YearEndDocumentServiceCallback{}
-}
-
-func (this *YearEndDocumentServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.YearEndDocument)
-	if !ok {
-		return nil, false, errors.New("invalid year end document type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.DocumentId)
-	}
-	err := validateYrEndDoc(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *YearEndDocumentServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newYearEndDocumentServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("YearEndDocument",
+		func(e *hcm.YearEndDocument) { common.GenerateID(&e.DocumentId) },
+		validateYrEndDoc)
 }
 
 func validateYrEndDoc(entity *hcm.YearEndDocument, vnic ifs.IVNic) error {

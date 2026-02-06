@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package promotionalprices
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/sales"
 )
 
-type PromotionalPriceServiceCallback struct{}
-
-func newPromotionalPriceServiceCallback() *PromotionalPriceServiceCallback {
-	return &PromotionalPriceServiceCallback{}
-}
-
-func (this *PromotionalPriceServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*sales.SalesPromotionalPrice)
-	if !ok {
-		return nil, false, errors.New("invalid promotional price type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.PromoId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PromotionalPriceServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPromotionalPriceServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SalesPromotionalPrice",
+		func(e *sales.SalesPromotionalPrice) { common.GenerateID(&e.PromoId) },
+		validate)
 }
 
 func validate(item *sales.SalesPromotionalPrice, vnic ifs.IVNic) error {

@@ -15,7 +15,6 @@ limitations under the License.
 package main
 
 import (
-	"fmt"
 
 	"github.com/saichler/l8erp/go/types/sales"
 )
@@ -23,48 +22,28 @@ import (
 // Sales Phase 1: Foundation
 func generateSalesPhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate Sales Territories
-	fmt.Printf("  Creating Sales Territories...")
 	territories := generateSalesTerritories(store)
-	if err := client.post("/erp/60/Territory", &sales.SalesTerritoryList{List: territories}); err != nil {
-		return fmt.Errorf("sales territories: %w", err)
+	if err := runOp(client, "Sales Territories", "/erp/60/Territory", &sales.SalesTerritoryList{List: territories}, extractIDs(territories, func(e *sales.SalesTerritory) string { return e.TerritoryId }), &store.SalesTerritoryIDs); err != nil {
+		return err
 	}
-	for _, t := range territories {
-		store.SalesTerritoryIDs = append(store.SalesTerritoryIDs, t.TerritoryId)
-	}
-	fmt.Printf(" %d created\n", len(territories))
 
 	// Generate Sales Price Lists
-	fmt.Printf("  Creating Sales Price Lists...")
 	priceLists := generateSalesPriceLists()
-	if err := client.post("/erp/60/PriceList", &sales.SalesPriceListList{List: priceLists}); err != nil {
-		return fmt.Errorf("sales price lists: %w", err)
+	if err := runOp(client, "Sales Price Lists", "/erp/60/PriceList", &sales.SalesPriceListList{List: priceLists}, extractIDs(priceLists, func(e *sales.SalesPriceList) string { return e.PriceListId }), &store.SalesPriceListIDs); err != nil {
+		return err
 	}
-	for _, pl := range priceLists {
-		store.SalesPriceListIDs = append(store.SalesPriceListIDs, pl.PriceListId)
-	}
-	fmt.Printf(" %d created\n", len(priceLists))
 
 	// Generate Customer Hierarchies
-	fmt.Printf("  Creating Customer Hierarchies...")
 	hierarchies := generateSalesCustomerHierarchies(store)
-	if err := client.post("/erp/60/CustHier", &sales.SalesCustomerHierarchyList{List: hierarchies}); err != nil {
-		return fmt.Errorf("customer hierarchies: %w", err)
+	if err := runOp(client, "Customer Hierarchies", "/erp/60/CustHier", &sales.SalesCustomerHierarchyList{List: hierarchies}, extractIDs(hierarchies, func(e *sales.SalesCustomerHierarchy) string { return e.HierarchyId }), &store.SalesCustomerHierarchyIDs); err != nil {
+		return err
 	}
-	for _, h := range hierarchies {
-		store.SalesCustomerHierarchyIDs = append(store.SalesCustomerHierarchyIDs, h.HierarchyId)
-	}
-	fmt.Printf(" %d created\n", len(hierarchies))
 
 	// Generate Customer Segments
-	fmt.Printf("  Creating Customer Segments...")
 	segments := generateSalesCustomerSegments()
-	if err := client.post("/erp/60/CustSegmt", &sales.SalesCustomerSegmentList{List: segments}); err != nil {
-		return fmt.Errorf("customer segments: %w", err)
+	if err := runOp(client, "Customer Segments", "/erp/60/CustSegmt", &sales.SalesCustomerSegmentList{List: segments}, extractIDs(segments, func(e *sales.SalesCustomerSegment) string { return e.SegmentId }), &store.SalesCustomerSegmentIDs); err != nil {
+		return err
 	}
-	for _, s := range segments {
-		store.SalesCustomerSegmentIDs = append(store.SalesCustomerSegmentIDs, s.SegmentId)
-	}
-	fmt.Printf(" %d created\n", len(segments))
 
 	return nil
 }
@@ -72,26 +51,16 @@ func generateSalesPhase1(client *HCMClient, store *MockDataStore) error {
 // Sales Phase 2: Customer & Partners
 func generateSalesPhase2(client *HCMClient, store *MockDataStore) error {
 	// Generate Partner Channels
-	fmt.Printf("  Creating Partner Channels...")
 	partners := generateSalesPartnerChannels(store)
-	if err := client.post("/erp/60/Partner", &sales.SalesPartnerChannelList{List: partners}); err != nil {
-		return fmt.Errorf("partner channels: %w", err)
+	if err := runOp(client, "Partner Channels", "/erp/60/Partner", &sales.SalesPartnerChannelList{List: partners}, extractIDs(partners, func(e *sales.SalesPartnerChannel) string { return e.PartnerId }), &store.SalesPartnerChannelIDs); err != nil {
+		return err
 	}
-	for _, p := range partners {
-		store.SalesPartnerChannelIDs = append(store.SalesPartnerChannelIDs, p.PartnerId)
-	}
-	fmt.Printf(" %d created\n", len(partners))
 
 	// Generate Customer Contracts
-	fmt.Printf("  Creating Customer Contracts...")
 	contracts := generateSalesCustomerContracts(store)
-	if err := client.post("/erp/60/CustContr", &sales.SalesCustomerContractList{List: contracts}); err != nil {
-		return fmt.Errorf("customer contracts: %w", err)
+	if err := runOp(client, "Customer Contracts", "/erp/60/CustContr", &sales.SalesCustomerContractList{List: contracts}, extractIDs(contracts, func(e *sales.SalesCustomerContract) string { return e.ContractId }), &store.SalesCustomerContractIDs); err != nil {
+		return err
 	}
-	for _, c := range contracts {
-		store.SalesCustomerContractIDs = append(store.SalesCustomerContractIDs, c.ContractId)
-	}
-	fmt.Printf(" %d created\n", len(contracts))
 
 	return nil
 }
@@ -99,59 +68,34 @@ func generateSalesPhase2(client *HCMClient, store *MockDataStore) error {
 // Sales Phase 3: Pricing Setup
 func generateSalesPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Price List Entries
-	fmt.Printf("  Creating Price List Entries...")
 	entries := generateSalesPriceListEntries(store)
-	if err := client.post("/erp/60/PriceEntry", &sales.SalesPriceListEntryList{List: entries}); err != nil {
-		return fmt.Errorf("price list entries: %w", err)
+	if err := runOp(client, "Price List Entries", "/erp/60/PriceEntry", &sales.SalesPriceListEntryList{List: entries}, extractIDs(entries, func(e *sales.SalesPriceListEntry) string { return e.EntryId }), &store.SalesPriceListEntryIDs); err != nil {
+		return err
 	}
-	for _, e := range entries {
-		store.SalesPriceListEntryIDs = append(store.SalesPriceListEntryIDs, e.EntryId)
-	}
-	fmt.Printf(" %d created\n", len(entries))
 
 	// Generate Customer Prices
-	fmt.Printf("  Creating Customer Prices...")
 	customerPrices := generateSalesCustomerPrices(store)
-	if err := client.post("/erp/60/CustPrice", &sales.SalesCustomerPriceList{List: customerPrices}); err != nil {
-		return fmt.Errorf("customer prices: %w", err)
+	if err := runOp(client, "Customer Prices", "/erp/60/CustPrice", &sales.SalesCustomerPriceList{List: customerPrices}, extractIDs(customerPrices, func(e *sales.SalesCustomerPrice) string { return e.CustomerPriceId }), &store.SalesCustomerPriceIDs); err != nil {
+		return err
 	}
-	for _, cp := range customerPrices {
-		store.SalesCustomerPriceIDs = append(store.SalesCustomerPriceIDs, cp.CustomerPriceId)
-	}
-	fmt.Printf(" %d created\n", len(customerPrices))
 
 	// Generate Discount Rules
-	fmt.Printf("  Creating Discount Rules...")
 	discountRules := generateSalesDiscountRules(store)
-	if err := client.post("/erp/60/DiscntRule", &sales.SalesDiscountRuleList{List: discountRules}); err != nil {
-		return fmt.Errorf("discount rules: %w", err)
+	if err := runOp(client, "Discount Rules", "/erp/60/DiscntRule", &sales.SalesDiscountRuleList{List: discountRules}, extractIDs(discountRules, func(e *sales.SalesDiscountRule) string { return e.RuleId }), &store.SalesDiscountRuleIDs); err != nil {
+		return err
 	}
-	for _, dr := range discountRules {
-		store.SalesDiscountRuleIDs = append(store.SalesDiscountRuleIDs, dr.RuleId)
-	}
-	fmt.Printf(" %d created\n", len(discountRules))
 
 	// Generate Promotional Prices
-	fmt.Printf("  Creating Promotional Prices...")
 	promotions := generateSalesPromotionalPrices(store)
-	if err := client.post("/erp/60/PromoPrice", &sales.SalesPromotionalPriceList{List: promotions}); err != nil {
-		return fmt.Errorf("promotional prices: %w", err)
+	if err := runOp(client, "Promotional Prices", "/erp/60/PromoPrice", &sales.SalesPromotionalPriceList{List: promotions}, extractIDs(promotions, func(e *sales.SalesPromotionalPrice) string { return e.PromoId }), &store.SalesPromotionalPriceIDs); err != nil {
+		return err
 	}
-	for _, p := range promotions {
-		store.SalesPromotionalPriceIDs = append(store.SalesPromotionalPriceIDs, p.PromoId)
-	}
-	fmt.Printf(" %d created\n", len(promotions))
 
 	// Generate Quantity Breaks
-	fmt.Printf("  Creating Quantity Breaks...")
 	qtyBreaks := generateSalesQuantityBreaks(store)
-	if err := client.post("/erp/60/QtyBreak", &sales.SalesQuantityBreakList{List: qtyBreaks}); err != nil {
-		return fmt.Errorf("quantity breaks: %w", err)
+	if err := runOp(client, "Quantity Breaks", "/erp/60/QtyBreak", &sales.SalesQuantityBreakList{List: qtyBreaks}, extractIDs(qtyBreaks, func(e *sales.SalesQuantityBreak) string { return e.BreakId }), &store.SalesQuantityBreakIDs); err != nil {
+		return err
 	}
-	for _, qb := range qtyBreaks {
-		store.SalesQuantityBreakIDs = append(store.SalesQuantityBreakIDs, qb.BreakId)
-	}
-	fmt.Printf(" %d created\n", len(qtyBreaks))
 
 	return nil
 }
@@ -159,26 +103,16 @@ func generateSalesPhase3(client *HCMClient, store *MockDataStore) error {
 // Sales Phase 4: Quotations
 func generateSalesPhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate Quotations
-	fmt.Printf("  Creating Quotations...")
 	quotations := generateSalesQuotations(store)
-	if err := client.post("/erp/60/SalesQuote", &sales.SalesQuotationList{List: quotations}); err != nil {
-		return fmt.Errorf("quotations: %w", err)
+	if err := runOp(client, "Quotations", "/erp/60/SalesQuote", &sales.SalesQuotationList{List: quotations}, extractIDs(quotations, func(e *sales.SalesQuotation) string { return e.QuotationId }), &store.SalesQuotationIDs); err != nil {
+		return err
 	}
-	for _, q := range quotations {
-		store.SalesQuotationIDs = append(store.SalesQuotationIDs, q.QuotationId)
-	}
-	fmt.Printf(" %d created\n", len(quotations))
 
 	// Generate Quotation Lines
-	fmt.Printf("  Creating Quotation Lines...")
 	quotationLines := generateSalesQuotationLines(store)
-	if err := client.post("/erp/60/QuoteLine", &sales.SalesQuotationLineList{List: quotationLines}); err != nil {
-		return fmt.Errorf("quotation lines: %w", err)
+	if err := runOp(client, "Quotation Lines", "/erp/60/QuoteLine", &sales.SalesQuotationLineList{List: quotationLines}, extractIDs(quotationLines, func(e *sales.SalesQuotationLine) string { return e.LineId }), &store.SalesQuotationLineIDs); err != nil {
+		return err
 	}
-	for _, ql := range quotationLines {
-		store.SalesQuotationLineIDs = append(store.SalesQuotationLineIDs, ql.LineId)
-	}
-	fmt.Printf(" %d created\n", len(quotationLines))
 
 	return nil
 }
@@ -186,70 +120,40 @@ func generateSalesPhase4(client *HCMClient, store *MockDataStore) error {
 // Sales Phase 5: Orders
 func generateSalesPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Sales Orders
-	fmt.Printf("  Creating Sales Orders...")
 	orders := generateSalesOrders(store)
-	if err := client.post("/erp/60/SalesOrder", &sales.SalesOrderList{List: orders}); err != nil {
-		return fmt.Errorf("sales orders: %w", err)
+	if err := runOp(client, "Sales Orders", "/erp/60/SalesOrder", &sales.SalesOrderList{List: orders}, extractIDs(orders, func(e *sales.SalesOrder) string { return e.SalesOrderId }), &store.SalesOrderIDs); err != nil {
+		return err
 	}
-	for _, o := range orders {
-		store.SalesOrderIDs = append(store.SalesOrderIDs, o.SalesOrderId)
-	}
-	fmt.Printf(" %d created\n", len(orders))
 
 	// Generate Sales Order Lines
-	fmt.Printf("  Creating Sales Order Lines...")
 	orderLines := generateSalesOrderLines(store)
-	if err := client.post("/erp/60/OrderLine", &sales.SalesOrderLineList{List: orderLines}); err != nil {
-		return fmt.Errorf("sales order lines: %w", err)
+	if err := runOp(client, "Sales Order Lines", "/erp/60/OrderLine", &sales.SalesOrderLineList{List: orderLines}, extractIDs(orderLines, func(e *sales.SalesOrderLine) string { return e.LineId }), &store.SalesOrderLineIDs); err != nil {
+		return err
 	}
-	for _, ol := range orderLines {
-		store.SalesOrderLineIDs = append(store.SalesOrderLineIDs, ol.LineId)
-	}
-	fmt.Printf(" %d created\n", len(orderLines))
 
 	// Generate Sales Order Allocations
-	fmt.Printf("  Creating Order Allocations...")
 	allocations := generateSalesOrderAllocations(store)
-	if err := client.post("/erp/60/OrderAlloc", &sales.SalesOrderAllocationList{List: allocations}); err != nil {
-		return fmt.Errorf("order allocations: %w", err)
+	if err := runOp(client, "Order Allocations", "/erp/60/OrderAlloc", &sales.SalesOrderAllocationList{List: allocations}, extractIDs(allocations, func(e *sales.SalesOrderAllocation) string { return e.AllocationId }), &store.SalesOrderAllocationIDs); err != nil {
+		return err
 	}
-	for _, a := range allocations {
-		store.SalesOrderAllocationIDs = append(store.SalesOrderAllocationIDs, a.AllocationId)
-	}
-	fmt.Printf(" %d created\n", len(allocations))
 
 	// Generate Sales Back Orders
-	fmt.Printf("  Creating Back Orders...")
 	backOrders := generateSalesBackOrders(store)
-	if err := client.post("/erp/60/BackOrder", &sales.SalesBackOrderList{List: backOrders}); err != nil {
-		return fmt.Errorf("back orders: %w", err)
+	if err := runOp(client, "Back Orders", "/erp/60/BackOrder", &sales.SalesBackOrderList{List: backOrders}, extractIDs(backOrders, func(e *sales.SalesBackOrder) string { return e.BackOrderId }), &store.SalesBackOrderIDs); err != nil {
+		return err
 	}
-	for _, bo := range backOrders {
-		store.SalesBackOrderIDs = append(store.SalesBackOrderIDs, bo.BackOrderId)
-	}
-	fmt.Printf(" %d created\n", len(backOrders))
 
 	// Generate Sales Return Orders
-	fmt.Printf("  Creating Sales Return Orders...")
 	returns := generateSalesReturnOrders(store)
-	if err := client.post("/erp/60/ReturnOrd", &sales.SalesReturnOrderList{List: returns}); err != nil {
-		return fmt.Errorf("sales return orders: %w", err)
+	if err := runOp(client, "Sales Return Orders", "/erp/60/ReturnOrd", &sales.SalesReturnOrderList{List: returns}, extractIDs(returns, func(e *sales.SalesReturnOrder) string { return e.ReturnOrderId }), &store.SalesReturnOrderIDs); err != nil {
+		return err
 	}
-	for _, r := range returns {
-		store.SalesReturnOrderIDs = append(store.SalesReturnOrderIDs, r.ReturnOrderId)
-	}
-	fmt.Printf(" %d created\n", len(returns))
 
 	// Generate Sales Return Order Lines
-	fmt.Printf("  Creating Return Order Lines...")
 	returnLines := generateSalesReturnOrderLines(store)
-	if err := client.post("/erp/60/ReturnLine", &sales.SalesReturnOrderLineList{List: returnLines}); err != nil {
-		return fmt.Errorf("return order lines: %w", err)
+	if err := runOp(client, "Return Order Lines", "/erp/60/ReturnLine", &sales.SalesReturnOrderLineList{List: returnLines}, extractIDs(returnLines, func(e *sales.SalesReturnOrderLine) string { return e.LineId }), &store.SalesReturnOrderLineIDs); err != nil {
+		return err
 	}
-	for _, rl := range returnLines {
-		store.SalesReturnOrderLineIDs = append(store.SalesReturnOrderLineIDs, rl.LineId)
-	}
-	fmt.Printf(" %d created\n", len(returnLines))
 
 	return nil
 }

@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package prodbatches
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-type MfgProdBatchServiceCallback struct{}
-
-func newMfgProdBatchServiceCallback() *MfgProdBatchServiceCallback {
-	return &MfgProdBatchServiceCallback{}
-}
-
-func (this *MfgProdBatchServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgProdBatch)
-	if !ok {
-		return nil, false, errors.New("invalid MfgProdBatch type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.BatchId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgProdBatchServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgProdBatchServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgProdBatch",
+		func(e *mfg.MfgProdBatch) { common.GenerateID(&e.BatchId) },
+		validate)
 }
 
 func validate(item *mfg.MfgProdBatch, vnic ifs.IVNic) error {

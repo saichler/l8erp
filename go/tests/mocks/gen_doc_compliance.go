@@ -43,10 +43,10 @@ func generateDocRetentionPolicies() []*doc.DocRetentionPolicy {
 	policies := make([]*doc.DocRetentionPolicy, count)
 	for i := 0; i < count; i++ {
 		policies[i] = &doc.DocRetentionPolicy{
-			PolicyId:       fmt.Sprintf("rtp-%03d", i+1),
+			PolicyId:       genID("rtp", i),
 			Name:           docRetentionPolicyNames[i%len(docRetentionPolicyNames)],
 			Description:    fmt.Sprintf("Retention policy: %s", docRetentionPolicyNames[i%len(docRetentionPolicyNames)]),
-			Code:           fmt.Sprintf("RET%03d", i+1),
+			Code:           genCode("RET", i),
 			RetentionDays:  retentionDays[i%len(retentionDays)],
 			ActionOnExpiry: retentionActions[i%len(retentionActions)],
 			DocumentType:   docTypes[i%len(docTypes)],
@@ -85,10 +85,7 @@ func generateDocLegalHolds(store *MockDataStore) []*doc.DocLegalHold {
 
 	holds := make([]*doc.DocLegalHold, count)
 	for i := 0; i < count; i++ {
-		custodianID := ""
-		if len(store.EmployeeIDs) > 0 {
-			custodianID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		custodianID := pickRef(store.EmployeeIDs, i)
 
 		status := holdStatuses[i%len(holdStatuses)]
 		var releaseDate int64
@@ -103,7 +100,7 @@ func generateDocLegalHolds(store *MockDataStore) []*doc.DocLegalHold {
 		}
 
 		holds[i] = &doc.DocLegalHold{
-			HoldId:        fmt.Sprintf("lgh-%03d", i+1),
+			HoldId:        genID("lgh", i),
 			Name:          fmt.Sprintf("Legal Hold %03d", i+1),
 			Description:   fmt.Sprintf("Legal hold for matter %d", i+1),
 			MatterId:      fmt.Sprintf("MTR-%04d", rand.Intn(9999)+1000),
@@ -147,15 +144,9 @@ func generateDocAccessLogs(store *MockDataStore) []*doc.DocAccessLog {
 
 	logs := make([]*doc.DocAccessLog, count)
 	for i := 0; i < count; i++ {
-		documentID := ""
-		if len(store.DocDocumentIDs) > 0 {
-			documentID = store.DocDocumentIDs[i%len(store.DocDocumentIDs)]
-		}
+		documentID := pickRef(store.DocDocumentIDs, i)
 
-		versionID := ""
-		if len(store.DocVersionIDs) > 0 {
-			versionID = store.DocVersionIDs[i%len(store.DocVersionIDs)]
-		}
+		versionID := pickRef(store.DocVersionIDs, i)
 
 		userID := ""
 		userName := fmt.Sprintf("User %d", i+1)
@@ -170,7 +161,7 @@ func generateDocAccessLogs(store *MockDataStore) []*doc.DocAccessLog {
 		}
 
 		logs[i] = &doc.DocAccessLog{
-			LogId:         fmt.Sprintf("log-%03d", i+1),
+			LogId:         genID("log", i),
 			DocumentId:    documentID,
 			VersionId:     versionID,
 			Action:        accessActions[i%len(accessActions)],
@@ -211,20 +202,11 @@ func generateDocArchiveJobs(store *MockDataStore) []*doc.DocArchiveJob {
 
 	jobs := make([]*doc.DocArchiveJob, count)
 	for i := 0; i < count; i++ {
-		folderID := ""
-		if len(store.DocFolderIDs) > 0 {
-			folderID = store.DocFolderIDs[i%len(store.DocFolderIDs)]
-		}
+		folderID := pickRef(store.DocFolderIDs, i)
 
-		policyID := ""
-		if len(store.DocRetentionPolicyIDs) > 0 {
-			policyID = store.DocRetentionPolicyIDs[i%len(store.DocRetentionPolicyIDs)]
-		}
+		policyID := pickRef(store.DocRetentionPolicyIDs, i)
 
-		initiatedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			initiatedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		initiatedBy := pickRef(store.EmployeeIDs, i)
 
 		status := archiveStatuses[i%len(archiveStatuses)]
 		var completedDate int64
@@ -236,7 +218,7 @@ func generateDocArchiveJobs(store *MockDataStore) []*doc.DocArchiveJob {
 		}
 
 		jobs[i] = &doc.DocArchiveJob{
-			JobId:             fmt.Sprintf("arc-%03d", i+1),
+			JobId:             genID("arc", i),
 			Name:              fmt.Sprintf("Archive Job %03d", i+1),
 			Description:       fmt.Sprintf("Archive job for documents in folder %d", i+1),
 			Status:            status,
@@ -269,15 +251,9 @@ func generateDocAuditTrails(store *MockDataStore) []*doc.DocAuditTrail {
 
 	trails := make([]*doc.DocAuditTrail, count)
 	for i := 0; i < count; i++ {
-		documentID := ""
-		if len(store.DocDocumentIDs) > 0 {
-			documentID = store.DocDocumentIDs[i%len(store.DocDocumentIDs)]
-		}
+		documentID := pickRef(store.DocDocumentIDs, i)
 
-		versionID := ""
-		if len(store.DocVersionIDs) > 0 {
-			versionID = store.DocVersionIDs[i%len(store.DocVersionIDs)]
-		}
+		versionID := pickRef(store.DocVersionIDs, i)
 
 		userID := ""
 		userName := fmt.Sprintf("User %d", i+1)
@@ -310,11 +286,11 @@ func generateDocAuditTrails(store *MockDataStore) []*doc.DocAuditTrail {
 			}
 		}
 		if entityID == "" {
-			entityID = fmt.Sprintf("ent-%03d", i+1)
+			entityID = genID("ent", i)
 		}
 
 		trails[i] = &doc.DocAuditTrail{
-			TrailId:       fmt.Sprintf("aud-%03d", i+1),
+			TrailId:       genID("aud", i),
 			DocumentId:    documentID,
 			VersionId:     versionID,
 			Action:        auditActions[i%len(auditActions)],

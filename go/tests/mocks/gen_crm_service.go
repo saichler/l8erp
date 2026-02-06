@@ -38,7 +38,7 @@ func generateSLAs() []*crm.CrmSLA {
 	slas := make([]*crm.CrmSLA, len(crmSLANames))
 	for i, name := range crmSLANames {
 		slas[i] = &crm.CrmSLA{
-			SlaId:                fmt.Sprintf("sla-%03d", i+1),
+			SlaId:                genID("sla", i),
 			Name:                 name,
 			Description:          fmt.Sprintf("Service level agreement: %s", name),
 			FirstResponseMinutes: responseTimes[i%len(responseTimes)],
@@ -66,13 +66,10 @@ func generateEscalations(store *MockDataStore) []*crm.CrmEscalation {
 
 	escalations := make([]*crm.CrmEscalation, len(crmEscalationNames))
 	for i, name := range crmEscalationNames {
-		escalateTo := ""
-		if len(store.ManagerIDs) > 0 {
-			escalateTo = store.ManagerIDs[i%len(store.ManagerIDs)]
-		}
+		escalateTo := pickRef(store.ManagerIDs, i)
 
 		escalations[i] = &crm.CrmEscalation{
-			EscalationId:     fmt.Sprintf("escal-%03d", i+1),
+			EscalationId:     genID("escal", i),
 			Name:             name,
 			Description:      fmt.Sprintf("Escalation rule: %s", name),
 			Level:            levels[i%len(levels)],
@@ -116,22 +113,10 @@ func generateCases(store *MockDataStore) []*crm.CrmCase {
 	count := 60
 	cases := make([]*crm.CrmCase, count)
 	for i := 0; i < count; i++ {
-		accountID := ""
-		if len(store.CrmAccountIDs) > 0 {
-			accountID = store.CrmAccountIDs[i%len(store.CrmAccountIDs)]
-		}
-		contactID := ""
-		if len(store.CrmContactIDs) > 0 {
-			contactID = store.CrmContactIDs[i%len(store.CrmContactIDs)]
-		}
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
-		slaID := ""
-		if len(store.CrmSLAIDs) > 0 {
-			slaID = store.CrmSLAIDs[i%len(store.CrmSLAIDs)]
-		}
+		accountID := pickRef(store.CrmAccountIDs, i)
+		contactID := pickRef(store.CrmContactIDs, i)
+		ownerID := pickRef(store.EmployeeIDs, i)
+		slaID := pickRef(store.CrmSLAIDs, i)
 
 		// Status distribution: 15% new, 35% in progress, 10% waiting, 25% resolved, 15% closed
 		var status crm.CrmCaseStatus
@@ -154,7 +139,7 @@ func generateCases(store *MockDataStore) []*crm.CrmCase {
 		}
 
 		cases[i] = &crm.CrmCase{
-			CaseId:          fmt.Sprintf("case-%03d", i+1),
+			CaseId:          genID("case", i),
 			CaseNumber:      fmt.Sprintf("CS-%05d", 10000+i+1),
 			Subject:         subjects[i%len(subjects)],
 			Description:     fmt.Sprintf("Customer reported issue: %s", subjects[i%len(subjects)]),
@@ -185,10 +170,7 @@ func generateCaseComments(store *MockDataStore) []*crm.CrmCaseComment {
 	for _, caseID := range store.CrmCaseIDs {
 		numComments := rand.Intn(3) + 1
 		for j := 0; j < numComments; j++ {
-			createdBy := ""
-			if len(store.EmployeeIDs) > 0 {
-				createdBy = store.EmployeeIDs[(idx-1)%len(store.EmployeeIDs)]
-			}
+			createdBy := pickRef(store.EmployeeIDs, (idx-1))
 
 			comments = append(comments, &crm.CrmCaseComment{
 				CommentId:   fmt.Sprintf("casecmt-%03d", idx),
@@ -215,10 +197,7 @@ func generateKBArticles(store *MockDataStore) []*crm.CrmKBArticle {
 
 	articles := make([]*crm.CrmKBArticle, len(crmKBArticleTitles))
 	for i, title := range crmKBArticleTitles {
-		authorID := ""
-		if len(store.EmployeeIDs) > 0 {
-			authorID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		authorID := pickRef(store.EmployeeIDs, i)
 
 		// Status distribution: 80% published, 15% draft, 5% archived
 		var status crm.CrmArticleStatus
@@ -231,7 +210,7 @@ func generateKBArticles(store *MockDataStore) []*crm.CrmKBArticle {
 		}
 
 		articles[i] = &crm.CrmKBArticle{
-			ArticleId:       fmt.Sprintf("kbart-%03d", i+1),
+			ArticleId:       genID("kbart", i),
 			ArticleNumber:   fmt.Sprintf("KB-%05d", 10000+i+1),
 			Title:           title,
 			Summary:         fmt.Sprintf("Summary: %s", title),
@@ -270,18 +249,9 @@ func generateSurveys(store *MockDataStore) []*crm.CrmSurvey {
 		if len(store.CrmCaseIDs) > 0 && i%2 == 0 {
 			caseID = store.CrmCaseIDs[i%len(store.CrmCaseIDs)]
 		}
-		accountID := ""
-		if len(store.CrmAccountIDs) > 0 {
-			accountID = store.CrmAccountIDs[i%len(store.CrmAccountIDs)]
-		}
-		contactID := ""
-		if len(store.CrmContactIDs) > 0 {
-			contactID = store.CrmContactIDs[i%len(store.CrmContactIDs)]
-		}
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		accountID := pickRef(store.CrmAccountIDs, i)
+		contactID := pickRef(store.CrmContactIDs, i)
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		// Status distribution: 60% closed (completed), 30% active, 10% draft
 		var status crm.CrmSurveyStatus
@@ -300,7 +270,7 @@ func generateSurveys(store *MockDataStore) []*crm.CrmSurvey {
 		}
 
 		surveys[i] = &crm.CrmSurvey{
-			SurveyId:       fmt.Sprintf("survey-%03d", i+1),
+			SurveyId:       genID("survey", i),
 			Name:           surveyNames[i%len(surveyNames)],
 			Description:    fmt.Sprintf("Survey %d for customer feedback", i+1),
 			Status:         status,

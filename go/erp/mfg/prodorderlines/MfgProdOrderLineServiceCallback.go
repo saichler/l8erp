@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package prodorderlines
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-type MfgProdOrderLineServiceCallback struct{}
-
-func newMfgProdOrderLineServiceCallback() *MfgProdOrderLineServiceCallback {
-	return &MfgProdOrderLineServiceCallback{}
-}
-
-func (this *MfgProdOrderLineServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgProdOrderLine)
-	if !ok {
-		return nil, false, errors.New("invalid MfgProdOrderLine type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.LineId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgProdOrderLineServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgProdOrderLineServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgProdOrderLine",
+		func(e *mfg.MfgProdOrderLine) { common.GenerateID(&e.LineId) },
+		validate)
 }
 
 func validate(item *mfg.MfgProdOrderLine, vnic ifs.IVNic) error {

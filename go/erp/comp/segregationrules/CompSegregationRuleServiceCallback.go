@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package segregationrules
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/comp"
 )
 
-type CompSegregationRuleServiceCallback struct{}
-
-func newCompSegregationRuleServiceCallback() *CompSegregationRuleServiceCallback {
-	return &CompSegregationRuleServiceCallback{}
-}
-
-func (this *CompSegregationRuleServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*comp.CompSegregationRule)
-	if !ok {
-		return nil, false, errors.New("invalid CompSegregationRule type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.RuleId)
-	}
-	err := validateCompSegregationRule(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CompSegregationRuleServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCompSegregationRuleServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("CompSegregationRule",
+		func(e *comp.CompSegregationRule) { common.GenerateID(&e.RuleId) },
+		validateCompSegregationRule)
 }
 
 func validateCompSegregationRule(item *comp.CompSegregationRule, vnic ifs.IVNic) error {

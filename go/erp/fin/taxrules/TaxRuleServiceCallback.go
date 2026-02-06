@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package taxrules
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type TaxRuleServiceCallback struct{}
-
-func newTaxRuleServiceCallback() *TaxRuleServiceCallback {
-	return &TaxRuleServiceCallback{}
-}
-
-func (this *TaxRuleServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	taxRule, ok := any.(*fin.TaxRule)
-	if !ok {
-		return nil, false, errors.New("invalid taxRule type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&taxRule.RuleId)
-	}
-	err := validate(taxRule, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *TaxRuleServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newTaxRuleServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("TaxRule",
+		func(e *fin.TaxRule) { common.GenerateID(&e.RuleId) },
+		validate)
 }
 
 func validate(taxRule *fin.TaxRule, vnic ifs.IVNic) error {

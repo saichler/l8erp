@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package requirements
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/comp"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type CompRequirementServiceCallback struct{}
-
-func newCompRequirementServiceCallback() *CompRequirementServiceCallback {
-	return &CompRequirementServiceCallback{}
-}
-
-func (this *CompRequirementServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*comp.CompRequirement)
-	if !ok {
-		return nil, false, errors.New("invalid CompRequirement type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.RequirementId)
-	}
-	err := validateCompRequirement(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CompRequirementServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCompRequirementServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("CompRequirement",
+		func(e *comp.CompRequirement) { common.GenerateID(&e.RequirementId) },
+		validateCompRequirement)
 }
 
 func validateCompRequirement(item *comp.CompRequirement, vnic ifs.IVNic) error {

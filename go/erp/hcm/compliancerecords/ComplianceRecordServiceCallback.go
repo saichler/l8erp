@@ -15,37 +15,16 @@ limitations under the License.
 package compliancerecords
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type ComplianceRecordServiceCallback struct {
-}
-
-func newComplianceRecordServiceCallback() *ComplianceRecordServiceCallback {
-	return &ComplianceRecordServiceCallback{}
-}
-
-func (this *ComplianceRecordServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.ComplianceRecord)
-	if !ok {
-		return nil, false, errors.New("invalid compliance record type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.RecordId)
-	}
-	err := validateCompRec(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *ComplianceRecordServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newComplianceRecordServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ComplianceRecord",
+		func(e *hcm.ComplianceRecord) { common.GenerateID(&e.RecordId) },
+		validateCompRec)
 }
 
 func validateCompRec(entity *hcm.ComplianceRecord, vnic ifs.IVNic) error {

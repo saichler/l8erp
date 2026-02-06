@@ -94,10 +94,10 @@ func generateDepartments(store *MockDataStore) []*hcm.Department {
 	depts := make([]*hcm.Department, len(departmentNames))
 	for i, name := range departmentNames {
 		depts[i] = &hcm.Department{
-			DepartmentId:   fmt.Sprintf("dept-%03d", i+1),
+			DepartmentId:   genID("dept", i),
 			OrganizationId: store.OrganizationIDs[0],
 			Name:           name,
-			Code:           fmt.Sprintf("DEPT%03d", i+1),
+			Code:           genCode("DEPT", i),
 			Description:    fmt.Sprintf("The %s department", name),
 			IsActive:       true,
 			EffectiveDate:  time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),

@@ -15,39 +15,18 @@ limitations under the License.
 package benefitenrollments
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/erp/hcm/benefitplans"
-	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/erp/hcm/lifeevents"
 	"github.com/saichler/l8erp/go/types/hcm"
+	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/erp/hcm/benefitplans"
+	"github.com/saichler/l8erp/go/erp/hcm/employees"
 )
 
-type BenefitEnrollmentServiceCallback struct {
-}
-
-func newBenefitEnrollmentServiceCallback() *BenefitEnrollmentServiceCallback {
-	return &BenefitEnrollmentServiceCallback{}
-}
-
-func (this *BenefitEnrollmentServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.BenefitEnrollment)
-	if !ok {
-		return nil, false, errors.New("invalid benefit enrollment type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.EnrollmentId)
-	}
-	err := validateBenEnroll(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BenefitEnrollmentServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBenefitEnrollmentServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("BenefitEnrollment",
+		func(e *hcm.BenefitEnrollment) { common.GenerateID(&e.EnrollmentId) },
+		validateBenEnroll)
 }
 
 func validateBenEnroll(entity *hcm.BenefitEnrollment, vnic ifs.IVNic) error {

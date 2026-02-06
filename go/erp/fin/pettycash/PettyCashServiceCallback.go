@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package pettycash
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type PettyCashServiceCallback struct{}
-
-func newPettyCashServiceCallback() *PettyCashServiceCallback {
-	return &PettyCashServiceCallback{}
-}
-
-func (this *PettyCashServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	pettyCash, ok := any.(*fin.PettyCash)
-	if !ok {
-		return nil, false, errors.New("invalid pettyCash type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&pettyCash.PettyCashId)
-	}
-	err := validate(pettyCash, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PettyCashServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPettyCashServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("PettyCash",
+		func(e *fin.PettyCash) { common.GenerateID(&e.PettyCashId) },
+		validate)
 }
 
 func validate(pettyCash *fin.PettyCash, vnic ifs.IVNic) error {

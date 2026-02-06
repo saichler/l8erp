@@ -15,37 +15,16 @@ limitations under the License.
 package feedbacks
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
+	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-type FeedbackServiceCallback struct {
-}
-
-func newFeedbackServiceCallback() *FeedbackServiceCallback {
-	return &FeedbackServiceCallback{}
-}
-
-func (this *FeedbackServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.Feedback)
-	if !ok {
-		return nil, false, errors.New("invalid feedback type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.FeedbackId)
-	}
-	err := validateFeedback(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *FeedbackServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newFeedbackServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Feedback",
+		func(e *hcm.Feedback) { common.GenerateID(&e.FeedbackId) },
+		validateFeedback)
 }
 
 func validateFeedback(entity *hcm.Feedback, vnic ifs.IVNic) error {

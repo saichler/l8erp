@@ -6,7 +6,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 	"math/rand"
 	"time"
@@ -44,8 +43,8 @@ func generateTimesheetEntries(store *MockDataStore) []*prj.PrjTimesheetEntry {
 
 		if isBillable {
 			rate := int64((rand.Intn(100) + 100) * 100) // $100-$200 hourly rate
-			entry.BillingRate = &erp.Money{Amount: rate, CurrencyCode: "USD"}
-			entry.BillingAmount = &erp.Money{Amount: int64(hours * float64(rate)), CurrencyCode: "USD"}
+			entry.BillingRate = money(rate)
+			entry.BillingAmount = money(int64(hours * float64(rate)))
 		}
 
 		entries[i] = entry
@@ -84,13 +83,13 @@ func generateExpenseReports(store *MockDataStore) []*prj.PrjExpenseReport {
 			Title:        fmt.Sprintf("Expense Report %s", submitDate.Format("Jan 2006")),
 			Description:  "Monthly project expenses",
 			Status:       status,
-			TotalAmount:  &erp.Money{Amount: totalAmount, CurrencyCode: "USD"},
+			TotalAmount:  money(totalAmount),
 			SubmitDate:   submitDate.Unix(),
 			AuditInfo:    createAuditInfo(),
 		}
 
 		if status == prj.PrjExpenseStatus_PRJ_EXPENSE_STATUS_APPROVED || status == prj.PrjExpenseStatus_PRJ_EXPENSE_STATUS_PAID {
-			report.ApprovedAmount = &erp.Money{Amount: totalAmount, CurrencyCode: "USD"}
+			report.ApprovedAmount = money(totalAmount)
 			report.ApprovedDate = submitDate.AddDate(0, 0, rand.Intn(5)+1).Unix()
 			if len(store.ManagerIDs) > 0 {
 				report.ApprovedBy = store.ManagerIDs[i%len(store.ManagerIDs)]
@@ -98,7 +97,7 @@ func generateExpenseReports(store *MockDataStore) []*prj.PrjExpenseReport {
 		}
 
 		if status == prj.PrjExpenseStatus_PRJ_EXPENSE_STATUS_PAID {
-			report.ReimbursedAmount = &erp.Money{Amount: totalAmount, CurrencyCode: "USD"}
+			report.ReimbursedAmount = money(totalAmount)
 			report.PaidDate = submitDate.AddDate(0, 0, rand.Intn(10)+5).Unix()
 		}
 
@@ -147,9 +146,9 @@ func generateExpenseEntries(store *MockDataStore) []*prj.PrjExpenseEntry {
 			ExpenseDate:     expenseDate.Unix(),
 			Description:     fmt.Sprintf("Expense for %s", expenseDate.Format("2006-01-02")),
 			Vendor:          vendors[i%len(vendors)],
-			Amount:          &erp.Money{Amount: amount, CurrencyCode: "USD"},
+			Amount:          money(amount),
 			CurrencyCode:    "USD",
-			ConvertedAmount: &erp.Money{Amount: amount, CurrencyCode: "USD"},
+			ConvertedAmount: money(amount),
 			ExchangeRate:    1.0,
 			IsBillable:      i%3 != 0,
 			IsReimbursable:  i%4 != 0,

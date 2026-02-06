@@ -15,35 +15,15 @@ limitations under the License.
 package deliveryproofs
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type DeliveryProofServiceCallback struct{}
-
-func newDeliveryProofServiceCallback() *DeliveryProofServiceCallback {
-	return &DeliveryProofServiceCallback{}
-}
-
-func (this *DeliveryProofServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmDeliveryProof)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ProofId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *DeliveryProofServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newDeliveryProofServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmDeliveryProof",
+		func(e *scm.ScmDeliveryProof) { common.GenerateID(&e.ProofId) },
+		validate)
 }
 
 func validate(item *scm.ScmDeliveryProof, vnic ifs.IVNic) error {

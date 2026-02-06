@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package actualcosts
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-type MfgActualCostServiceCallback struct{}
-
-func newMfgActualCostServiceCallback() *MfgActualCostServiceCallback {
-	return &MfgActualCostServiceCallback{}
-}
-
-func (this *MfgActualCostServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgActualCost)
-	if !ok {
-		return nil, false, errors.New("invalid MfgActualCost type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ActualCostId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgActualCostServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgActualCostServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgActualCost",
+		func(e *mfg.MfgActualCost) { common.GenerateID(&e.ActualCostId) },
+		validate)
 }
 
 func validate(item *mfg.MfgActualCost, vnic ifs.IVNic) error {

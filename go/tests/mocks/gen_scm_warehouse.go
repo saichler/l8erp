@@ -40,15 +40,9 @@ func generateReceivingOrders(store *MockDataStore) []*scm.ScmReceivingOrder {
 			status = scm.ScmTaskStatus_TASK_STATUS_PENDING
 		}
 
-		poID := ""
-		if len(store.SCMPurchaseOrderIDs) > 0 {
-			poID = store.SCMPurchaseOrderIDs[i%len(store.SCMPurchaseOrderIDs)]
-		}
+		poID := pickRef(store.SCMPurchaseOrderIDs, i)
 
-		whID := ""
-		if len(store.SCMWarehouseIDs) > 0 {
-			whID = store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)]
-		}
+		whID := pickRef(store.SCMWarehouseIDs, i)
 
 		receivedBy := "mock-generator"
 		if len(store.EmployeeIDs) > 0 {
@@ -56,7 +50,7 @@ func generateReceivingOrders(store *MockDataStore) []*scm.ScmReceivingOrder {
 		}
 
 		orders[i] = &scm.ScmReceivingOrder{
-			ReceivingOrderId: fmt.Sprintf("ro-%03d", i+1),
+			ReceivingOrderId: genID("ro", i),
 			PurchaseOrderId:  poID,
 			WarehouseId:      whID,
 			ReceivingDate:    receivingDate.Unix(),
@@ -79,10 +73,7 @@ func generatePutawayTasks(store *MockDataStore) []*scm.ScmPutawayTask {
 	tasks := make([]*scm.ScmPutawayTask, count)
 
 	for i := 0; i < count; i++ {
-		receivingOrderID := ""
-		if len(store.ReceivingOrderIDs) > 0 {
-			receivingOrderID = store.ReceivingOrderIDs[i%len(store.ReceivingOrderIDs)]
-		}
+		receivingOrderID := pickRef(store.ReceivingOrderIDs, i)
 
 		fromBinID := ""
 		toBinID := ""
@@ -91,10 +82,7 @@ func generatePutawayTasks(store *MockDataStore) []*scm.ScmPutawayTask {
 			toBinID = store.BinIDs[(i+1)%len(store.BinIDs)]
 		}
 
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[i%len(store.ItemIDs)]
-		}
+		itemID := pickRef(store.ItemIDs, i)
 
 		assignedTo := "mock-generator"
 		if len(store.EmployeeIDs) > 0 {
@@ -108,7 +96,7 @@ func generatePutawayTasks(store *MockDataStore) []*scm.ScmPutawayTask {
 		}
 
 		task := &scm.ScmPutawayTask{
-			TaskId:           fmt.Sprintf("put-%03d", i+1),
+			TaskId:           genID("put", i),
 			ReceivingOrderId: receivingOrderID,
 			ItemId:           itemID,
 			FromBinId:        fromBinID,
@@ -136,20 +124,11 @@ func generatePickTasks(store *MockDataStore) []*scm.ScmPickTask {
 	priorities := []string{"High", "Medium", "Low"}
 
 	for i := 0; i < 20; i++ {
-		wavePlanID := ""
-		if len(store.WavePlanIDs) > 0 {
-			wavePlanID = store.WavePlanIDs[i%len(store.WavePlanIDs)]
-		}
+		wavePlanID := pickRef(store.WavePlanIDs, i)
 
-		fromBinID := ""
-		if len(store.BinIDs) > 0 {
-			fromBinID = store.BinIDs[i%len(store.BinIDs)]
-		}
+		fromBinID := pickRef(store.BinIDs, i)
 
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[i%len(store.ItemIDs)]
-		}
+		itemID := pickRef(store.ItemIDs, i)
 
 		assignedTo := "mock-generator"
 		if len(store.EmployeeIDs) > 0 {
@@ -168,7 +147,7 @@ func generatePickTasks(store *MockDataStore) []*scm.ScmPickTask {
 		}
 
 		task := &scm.ScmPickTask{
-			TaskId:         fmt.Sprintf("pick-%03d", i+1),
+			TaskId:         genID("pick", i),
 			WavePlanId:     wavePlanID,
 			ItemId:         itemID,
 			FromBinId:      fromBinID,
@@ -195,15 +174,9 @@ func generatePackTasks(store *MockDataStore) []*scm.ScmPackTask {
 	tasks := make([]*scm.ScmPackTask, 15)
 
 	for i := 0; i < 15; i++ {
-		pickTaskID := ""
-		if len(store.PickTaskIDs) > 0 {
-			pickTaskID = store.PickTaskIDs[i%len(store.PickTaskIDs)]
-		}
+		pickTaskID := pickRef(store.PickTaskIDs, i)
 
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[i%len(store.ItemIDs)]
-		}
+		itemID := pickRef(store.ItemIDs, i)
 
 		assignedTo := "mock-generator"
 		if len(store.EmployeeIDs) > 0 {
@@ -222,7 +195,7 @@ func generatePackTasks(store *MockDataStore) []*scm.ScmPackTask {
 		}
 
 		task := &scm.ScmPackTask{
-			TaskId:     fmt.Sprintf("pack-%03d", i+1),
+			TaskId:     genID("pack", i),
 			PickTaskId: pickTaskID,
 			ItemId:     itemID,
 			Quantity:   float64(rand.Intn(50) + 1),
@@ -248,15 +221,9 @@ func generateShipTasks(store *MockDataStore) []*scm.ScmShipTask {
 	tasks := make([]*scm.ScmShipTask, 12)
 
 	for i := 0; i < 12; i++ {
-		packTaskID := ""
-		if len(store.PackTaskIDs) > 0 {
-			packTaskID = store.PackTaskIDs[i%len(store.PackTaskIDs)]
-		}
+		packTaskID := pickRef(store.PackTaskIDs, i)
 
-		carrierID := ""
-		if len(store.SCMCarrierIDs) > 0 {
-			carrierID = store.SCMCarrierIDs[i%len(store.SCMCarrierIDs)]
-		}
+		carrierID := pickRef(store.SCMCarrierIDs, i)
 
 		// Status: COMPLETED (60%), IN_PROGRESS (25%), PENDING (15%)
 		var status scm.ScmTaskStatus
@@ -270,9 +237,9 @@ func generateShipTasks(store *MockDataStore) []*scm.ScmShipTask {
 		}
 
 		task := &scm.ScmShipTask{
-			TaskId:         fmt.Sprintf("ship-%03d", i+1),
+			TaskId:         genID("ship", i),
 			PackTaskId:     packTaskID,
-			ShipmentId:     fmt.Sprintf("shp-%03d", i+1),
+			ShipmentId:     genID("shp", i),
 			CarrierId:      carrierID,
 			TrackingNumber: fmt.Sprintf("TRK-%010d", rand.Intn(9000000000)+1000000000),
 			Status:         status,
@@ -295,10 +262,7 @@ func generateWavePlans(store *MockDataStore) []*scm.ScmWavePlan {
 	plans := make([]*scm.ScmWavePlan, 5)
 
 	for i := 0; i < 5; i++ {
-		whID := ""
-		if len(store.SCMWarehouseIDs) > 0 {
-			whID = store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)]
-		}
+		whID := pickRef(store.SCMWarehouseIDs, i)
 
 		assignedTo := "mock-generator"
 		if len(store.EmployeeIDs) > 0 {
@@ -317,7 +281,7 @@ func generateWavePlans(store *MockDataStore) []*scm.ScmWavePlan {
 		totalItems := totalOrders * int32(rand.Intn(4)+2)
 
 		plans[i] = &scm.ScmWavePlan{
-			WavePlanId:  fmt.Sprintf("wave-%03d", i+1),
+			WavePlanId:  genID("wave", i),
 			WarehouseId: whID,
 			PlanDate:    planDate.Unix(),
 			Status:      status,
@@ -339,15 +303,9 @@ func generateDockSchedules(store *MockDataStore) []*scm.ScmDockSchedule {
 	directions := []string{"Inbound", "Outbound"}
 
 	for i := 0; i < 10; i++ {
-		whID := ""
-		if len(store.SCMWarehouseIDs) > 0 {
-			whID = store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)]
-		}
+		whID := pickRef(store.SCMWarehouseIDs, i)
 
-		carrierID := ""
-		if len(store.SCMCarrierIDs) > 0 {
-			carrierID = store.SCMCarrierIDs[i%len(store.SCMCarrierIDs)]
-		}
+		carrierID := pickRef(store.SCMCarrierIDs, i)
 
 		scheduleDate := time.Date(2025, time.Month((i%12)+1), (i%28)+1, 0, 0, 0, 0, time.UTC)
 		startTime := scheduleDate.Add(time.Duration(8+i%4) * time.Hour)
@@ -355,7 +313,7 @@ func generateDockSchedules(store *MockDataStore) []*scm.ScmDockSchedule {
 
 		direction := directions[i%len(directions)]
 
-		shipmentID := fmt.Sprintf("shp-%03d", i+1)
+		shipmentID := genID("shp", i)
 
 		// Status: COMPLETED (50%), IN_PROGRESS (30%), PENDING (20%)
 		var status scm.ScmTaskStatus
@@ -369,7 +327,7 @@ func generateDockSchedules(store *MockDataStore) []*scm.ScmDockSchedule {
 		}
 
 		schedules[i] = &scm.ScmDockSchedule{
-			ScheduleId:   fmt.Sprintf("dock-%03d", i+1),
+			ScheduleId:   genID("dock", i),
 			WarehouseId:  whID,
 			DockNumber:   dockNumbers[i%len(dockNumbers)],
 			ScheduleDate: scheduleDate.Unix(),

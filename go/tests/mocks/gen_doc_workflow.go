@@ -35,20 +35,11 @@ func generateDocCheckouts(store *MockDataStore) []*doc.DocCheckout {
 
 	checkouts := make([]*doc.DocCheckout, count)
 	for i := 0; i < count; i++ {
-		documentID := ""
-		if len(store.DocDocumentIDs) > 0 {
-			documentID = store.DocDocumentIDs[i%len(store.DocDocumentIDs)]
-		}
+		documentID := pickRef(store.DocDocumentIDs, i)
 
-		versionID := ""
-		if len(store.DocVersionIDs) > 0 {
-			versionID = store.DocVersionIDs[i%len(store.DocVersionIDs)]
-		}
+		versionID := pickRef(store.DocVersionIDs, i)
 
-		checkedOutBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			checkedOutBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		checkedOutBy := pickRef(store.EmployeeIDs, i)
 
 		checkoutDate := time.Now().AddDate(0, 0, -rand.Intn(30))
 		var checkinDate int64
@@ -58,7 +49,7 @@ func generateDocCheckouts(store *MockDataStore) []*doc.DocCheckout {
 		}
 
 		checkouts[i] = &doc.DocCheckout{
-			CheckoutId:    fmt.Sprintf("chk-%03d", i+1),
+			CheckoutId:    genID("chk", i),
 			DocumentId:    documentID,
 			VersionId:     versionID,
 			Status:        status,
@@ -89,15 +80,9 @@ func generateDocApprovalWorkflows(store *MockDataStore) []*doc.DocApprovalWorkfl
 
 	workflows := make([]*doc.DocApprovalWorkflow, count)
 	for i := 0; i < count; i++ {
-		documentID := ""
-		if len(store.DocDocumentIDs) > 0 {
-			documentID = store.DocDocumentIDs[i%len(store.DocDocumentIDs)]
-		}
+		documentID := pickRef(store.DocDocumentIDs, i)
 
-		initiatedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			initiatedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		initiatedBy := pickRef(store.EmployeeIDs, i)
 
 		initiatedDate := time.Now().AddDate(0, 0, -rand.Intn(60))
 		var completedDate int64
@@ -107,7 +92,7 @@ func generateDocApprovalWorkflows(store *MockDataStore) []*doc.DocApprovalWorkfl
 		}
 
 		workflows[i] = &doc.DocApprovalWorkflow{
-			WorkflowId:    fmt.Sprintf("wfl-%03d", i+1),
+			WorkflowId:    genID("wfl", i),
 			Name:          docWorkflowNames[i%len(docWorkflowNames)],
 			Description:   fmt.Sprintf("Workflow for %s", docWorkflowNames[i%len(docWorkflowNames)]),
 			DocumentId:    documentID,
@@ -149,15 +134,9 @@ func generateDocWorkflowSteps(store *MockDataStore) []*doc.DocWorkflowStep {
 
 	steps := make([]*doc.DocWorkflowStep, count)
 	for i := 0; i < count; i++ {
-		workflowID := ""
-		if len(store.DocApprovalWorkflowIDs) > 0 {
-			workflowID = store.DocApprovalWorkflowIDs[i%len(store.DocApprovalWorkflowIDs)]
-		}
+		workflowID := pickRef(store.DocApprovalWorkflowIDs, i)
 
-		assigneeID := ""
-		if len(store.EmployeeIDs) > 0 {
-			assigneeID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		assigneeID := pickRef(store.EmployeeIDs, i)
 
 		completedBy := ""
 		status := stepStatuses[i%len(stepStatuses)]
@@ -172,7 +151,7 @@ func generateDocWorkflowSteps(store *MockDataStore) []*doc.DocWorkflowStep {
 		}
 
 		steps[i] = &doc.DocWorkflowStep{
-			StepId:        fmt.Sprintf("stp-%03d", i+1),
+			StepId:        genID("stp", i),
 			WorkflowId:    workflowID,
 			StepNumber:    int32((i % 5) + 1),
 			Name:          stepNames[i%len(stepNames)],
@@ -218,20 +197,11 @@ func generateDocSignatures(store *MockDataStore) []*doc.DocSignature {
 
 	signatures := make([]*doc.DocSignature, count)
 	for i := 0; i < count; i++ {
-		documentID := ""
-		if len(store.DocDocumentIDs) > 0 {
-			documentID = store.DocDocumentIDs[i%len(store.DocDocumentIDs)]
-		}
+		documentID := pickRef(store.DocDocumentIDs, i)
 
-		versionID := ""
-		if len(store.DocVersionIDs) > 0 {
-			versionID = store.DocVersionIDs[i%len(store.DocVersionIDs)]
-		}
+		versionID := pickRef(store.DocVersionIDs, i)
 
-		signerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			signerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		signerID := pickRef(store.EmployeeIDs, i)
 
 		signerName := signerNames[i%len(signerNames)]
 		status := signatureStatuses[i%len(signatureStatuses)]
@@ -242,7 +212,7 @@ func generateDocSignatures(store *MockDataStore) []*doc.DocSignature {
 		}
 
 		signatures[i] = &doc.DocSignature{
-			SignatureId:   fmt.Sprintf("sig-%03d", i+1),
+			SignatureId:   genID("sig", i),
 			DocumentId:    documentID,
 			VersionId:     versionID,
 			SignatureType: signatureTypes[i%len(signatureTypes)],
@@ -280,25 +250,13 @@ func generateDocReviewComments(store *MockDataStore) []*doc.DocReviewComment {
 
 	comments := make([]*doc.DocReviewComment, count)
 	for i := 0; i < count; i++ {
-		documentID := ""
-		if len(store.DocDocumentIDs) > 0 {
-			documentID = store.DocDocumentIDs[i%len(store.DocDocumentIDs)]
-		}
+		documentID := pickRef(store.DocDocumentIDs, i)
 
-		versionID := ""
-		if len(store.DocVersionIDs) > 0 {
-			versionID = store.DocVersionIDs[i%len(store.DocVersionIDs)]
-		}
+		versionID := pickRef(store.DocVersionIDs, i)
 
-		workflowID := ""
-		if len(store.DocApprovalWorkflowIDs) > 0 {
-			workflowID = store.DocApprovalWorkflowIDs[i%len(store.DocApprovalWorkflowIDs)]
-		}
+		workflowID := pickRef(store.DocApprovalWorkflowIDs, i)
 
-		authorID := ""
-		if len(store.EmployeeIDs) > 0 {
-			authorID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		authorID := pickRef(store.EmployeeIDs, i)
 
 		resolvedBy := ""
 		var resolvedDate int64
@@ -314,7 +272,7 @@ func generateDocReviewComments(store *MockDataStore) []*doc.DocReviewComment {
 		}
 
 		comments[i] = &doc.DocReviewComment{
-			CommentId:       fmt.Sprintf("cmt-%03d", i+1),
+			CommentId:       genID("cmt", i),
 			DocumentId:      documentID,
 			VersionId:       versionID,
 			WorkflowId:      workflowID,

@@ -71,14 +71,11 @@ func generateBiDashboards(store *MockDataStore) []*bi.BiDashboard {
 
 	dashboards := make([]*bi.BiDashboard, count)
 	for i := 0; i < count; i++ {
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
 		dashboards[i] = &bi.BiDashboard{
-			DashboardId:     fmt.Sprintf("dash-%03d", i+1),
-			Code:            fmt.Sprintf("DASH%03d", i+1),
+			DashboardId:     genID("dash", i),
+			Code:            genCode("DASH", i),
 			Name:            names[i%len(names)],
 			Description:     fmt.Sprintf("Dashboard for %s metrics and analytics", categories[i%len(categories)]),
 			Status:          statuses[i%len(statuses)],
@@ -141,32 +138,20 @@ func generateBiDashboardWidgets(store *MockDataStore) []*bi.BiDashboardWidget {
 
 	widgets := make([]*bi.BiDashboardWidget, count)
 	for i := 0; i < count; i++ {
-		dashboardID := ""
-		if len(store.BiDashboardIDs) > 0 {
-			dashboardID = store.BiDashboardIDs[i%len(store.BiDashboardIDs)]
-		}
+		dashboardID := pickRef(store.BiDashboardIDs, i)
 
-		dataSourceID := ""
-		if len(store.BiDataSourceIDs) > 0 {
-			dataSourceID = store.BiDataSourceIDs[i%len(store.BiDataSourceIDs)]
-		}
+		dataSourceID := pickRef(store.BiDataSourceIDs, i)
 
-		reportID := ""
-		if len(store.BiReportIDs) > 0 {
-			reportID = store.BiReportIDs[i%len(store.BiReportIDs)]
-		}
+		reportID := pickRef(store.BiReportIDs, i)
 
-		kpiID := ""
-		if len(store.BiKPIIDs) > 0 {
-			kpiID = store.BiKPIIDs[i%len(store.BiKPIIDs)]
-		}
+		kpiID := pickRef(store.BiKPIIDs, i)
 
 		// Grid positioning: 4 widgets per row
 		posX := int32((i % 4) * 3)
 		posY := int32((i / 4) * 2)
 
 		widgets[i] = &bi.BiDashboardWidget{
-			WidgetId:        fmt.Sprintf("wdgt-%03d", i+1),
+			WidgetId:        genID("wdgt", i),
 			DashboardId:     dashboardID,
 			Name:            fmt.Sprintf("%s %d", names[i%len(names)], (i/len(names))+1),
 			Description:     fmt.Sprintf("Widget displaying %s data", names[i%len(names)]),
@@ -250,15 +235,9 @@ func generateBiKPIs(store *MockDataStore) []*bi.BiKPI {
 
 	kpis := make([]*bi.BiKPI, count)
 	for i := 0; i < count; i++ {
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
-		dataSourceID := ""
-		if len(store.BiDataSourceIDs) > 0 {
-			dataSourceID = store.BiDataSourceIDs[i%len(store.BiDataSourceIDs)]
-		}
+		dataSourceID := pickRef(store.BiDataSourceIDs, i)
 
 		targetValue := float64(rand.Intn(100) + 50)
 		variancePercent := (rand.Float64()*30 - 15)
@@ -266,8 +245,8 @@ func generateBiKPIs(store *MockDataStore) []*bi.BiKPI {
 		previousValue := targetValue * (1 + (rand.Float64()*20-10)/100)
 
 		kpis[i] = &bi.BiKPI{
-			KpiId:              fmt.Sprintf("kpi-%03d", i+1),
-			Code:               fmt.Sprintf("KPI%03d", i+1),
+			KpiId:              genID("kpi", i),
+			Code:               genCode("KPI", i),
 			Name:               names[i%len(names)],
 			Description:        fmt.Sprintf("Measures %s for organizational performance", names[i%len(names)]),
 			Category:           categories[i%len(categories)],
@@ -316,10 +295,7 @@ func generateBiKPIThresholds(store *MockDataStore) []*bi.BiKPIThreshold {
 
 	thresholds := make([]*bi.BiKPIThreshold, count)
 	for i := 0; i < count; i++ {
-		kpiID := ""
-		if len(store.BiKPIIDs) > 0 {
-			kpiID = store.BiKPIIDs[i%len(store.BiKPIIDs)]
-		}
+		kpiID := pickRef(store.BiKPIIDs, i)
 
 		operator := operators[i%len(operators)]
 		value := float64(rand.Intn(100) + 10)
@@ -334,7 +310,7 @@ func generateBiKPIThresholds(store *MockDataStore) []*bi.BiKPIThreshold {
 		}
 
 		thresholds[i] = &bi.BiKPIThreshold{
-			ThresholdId:       fmt.Sprintf("kthr-%03d", i+1),
+			ThresholdId:       genID("kthr", i),
 			KpiId:             kpiID,
 			Name:              fmt.Sprintf("%s %d", names[i%len(names)], (i/len(names))+1),
 			Description:       fmt.Sprintf("Threshold rule for KPI monitoring at level %d", i+1),
@@ -379,28 +355,16 @@ func generateBiDrilldowns(store *MockDataStore) []*bi.BiDrilldown {
 
 	drilldowns := make([]*bi.BiDrilldown, count)
 	for i := 0; i < count; i++ {
-		sourceReportID := ""
-		if len(store.BiReportIDs) > 0 {
-			sourceReportID = store.BiReportIDs[i%len(store.BiReportIDs)]
-		}
+		sourceReportID := pickRef(store.BiReportIDs, i)
 
-		sourceWidgetID := ""
-		if len(store.BiDashboardWidgetIDs) > 0 {
-			sourceWidgetID = store.BiDashboardWidgetIDs[i%len(store.BiDashboardWidgetIDs)]
-		}
+		sourceWidgetID := pickRef(store.BiDashboardWidgetIDs, i)
 
-		targetReportID := ""
-		if len(store.BiReportIDs) > 0 {
-			targetReportID = store.BiReportIDs[(i+3)%len(store.BiReportIDs)]
-		}
+		targetReportID := pickRef(store.BiReportIDs, (i+3))
 
-		targetDashboardID := ""
-		if len(store.BiDashboardIDs) > 0 {
-			targetDashboardID = store.BiDashboardIDs[(i+1)%len(store.BiDashboardIDs)]
-		}
+		targetDashboardID := pickRef(store.BiDashboardIDs, (i+1))
 
 		drilldowns[i] = &bi.BiDrilldown{
-			DrilldownId:       fmt.Sprintf("drld-%03d", i+1),
+			DrilldownId:       genID("drld", i),
 			Name:              fmt.Sprintf("Drilldown %d: %s Detail", i+1, sourceFields[i%len(sourceFields)]),
 			Description:       fmt.Sprintf("Drilldown from %s to detailed view", sourceFields[i%len(sourceFields)]),
 			SourceReportId:    sourceReportID,
@@ -438,15 +402,9 @@ func generateBiDashboardShares(store *MockDataStore) []*bi.BiDashboardShare {
 
 	shares := make([]*bi.BiDashboardShare, count)
 	for i := 0; i < count; i++ {
-		dashboardID := ""
-		if len(store.BiDashboardIDs) > 0 {
-			dashboardID = store.BiDashboardIDs[i%len(store.BiDashboardIDs)]
-		}
+		dashboardID := pickRef(store.BiDashboardIDs, i)
 
-		sharedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			sharedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		sharedBy := pickRef(store.EmployeeIDs, i)
 
 		sharedWithType := sharedWithTypes[i%len(sharedWithTypes)]
 		var sharedWithID string
@@ -463,7 +421,7 @@ func generateBiDashboardShares(store *MockDataStore) []*bi.BiDashboardShare {
 		}
 
 		shares[i] = &bi.BiDashboardShare{
-			ShareId:        fmt.Sprintf("dshr-%03d", i+1),
+			ShareId:        genID("dshr", i),
 			DashboardId:    dashboardID,
 			SharedWithId:   sharedWithID,
 			SharedWithType: sharedWithType,

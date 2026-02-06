@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package audittrails
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/doc"
 )
 
-type DocAuditTrailServiceCallback struct{}
-
-func newDocAuditTrailServiceCallback() *DocAuditTrailServiceCallback {
-	return &DocAuditTrailServiceCallback{}
-}
-
-func (this *DocAuditTrailServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*doc.DocAuditTrail)
-	if !ok {
-		return nil, false, errors.New("invalid DocAuditTrail type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.TrailId)
-	}
-	err := validateDocAuditTrail(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *DocAuditTrailServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newDocAuditTrailServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("DocAuditTrail",
+		func(e *doc.DocAuditTrail) { common.GenerateID(&e.TrailId) },
+		validateDocAuditTrail)
 }
 
 func validateDocAuditTrail(item *doc.DocAuditTrail, vnic ifs.IVNic) error {

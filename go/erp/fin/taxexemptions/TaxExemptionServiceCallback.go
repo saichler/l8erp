@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package taxexemptions
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type TaxExemptionServiceCallback struct{}
-
-func newTaxExemptionServiceCallback() *TaxExemptionServiceCallback {
-	return &TaxExemptionServiceCallback{}
-}
-
-func (this *TaxExemptionServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	taxExemption, ok := any.(*fin.TaxExemption)
-	if !ok {
-		return nil, false, errors.New("invalid taxExemption type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&taxExemption.ExemptionId)
-	}
-	err := validate(taxExemption, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *TaxExemptionServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newTaxExemptionServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("TaxExemption",
+		func(e *fin.TaxExemption) { common.GenerateID(&e.ExemptionId) },
+		validate)
 }
 
 func validate(taxExemption *fin.TaxExemption, vnic ifs.IVNic) error {

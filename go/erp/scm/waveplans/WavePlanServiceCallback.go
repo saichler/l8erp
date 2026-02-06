@@ -15,35 +15,15 @@ limitations under the License.
 package waveplans
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type WavePlanServiceCallback struct{}
-
-func newWavePlanServiceCallback() *WavePlanServiceCallback {
-	return &WavePlanServiceCallback{}
-}
-
-func (this *WavePlanServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmWavePlan)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.WavePlanId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *WavePlanServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newWavePlanServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmWavePlan",
+		func(e *scm.ScmWavePlan) { common.GenerateID(&e.WavePlanId) },
+		validate)
 }
 
 func validate(item *scm.ScmWavePlan, vnic ifs.IVNic) error {

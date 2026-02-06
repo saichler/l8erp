@@ -15,37 +15,16 @@ limitations under the License.
 package goals
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type GoalServiceCallback struct {
-}
-
-func newGoalServiceCallback() *GoalServiceCallback {
-	return &GoalServiceCallback{}
-}
-
-func (this *GoalServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.Goal)
-	if !ok {
-		return nil, false, errors.New("invalid goal type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.GoalId)
-	}
-	err := validateGoal(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *GoalServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newGoalServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Goal",
+		func(e *hcm.Goal) { common.GenerateID(&e.GoalId) },
+		validateGoal)
 }
 
 func validateGoal(entity *hcm.Goal, vnic ifs.IVNic) error {

@@ -15,37 +15,16 @@ limitations under the License.
 package dependents
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type DependentServiceCallback struct {
-}
-
-func newDependentServiceCallback() *DependentServiceCallback {
-	return &DependentServiceCallback{}
-}
-
-func (this *DependentServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.Dependent)
-	if !ok {
-		return nil, false, errors.New("invalid dependent type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.DependentId)
-	}
-	err := validateDep(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *DependentServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newDependentServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Dependent",
+		func(e *hcm.Dependent) { common.GenerateID(&e.DependentId) },
+		validateDep)
 }
 
 func validateDep(entity *hcm.Dependent, vnic ifs.IVNic) error {

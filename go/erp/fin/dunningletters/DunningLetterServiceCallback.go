@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package dunningletters
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
+	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-type DunningLetterServiceCallback struct{}
-
-func newDunningLetterServiceCallback() *DunningLetterServiceCallback {
-	return &DunningLetterServiceCallback{}
-}
-
-func (this *DunningLetterServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	dunningLetter, ok := any.(*fin.DunningLetter)
-	if !ok {
-		return nil, false, errors.New("invalid dunningLetter type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&dunningLetter.LetterId)
-	}
-	err := validate(dunningLetter, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *DunningLetterServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newDunningLetterServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("DunningLetter",
+		func(e *fin.DunningLetter) { common.GenerateID(&e.LetterId) },
+		validate)
 }
 
 func validate(dunningLetter *fin.DunningLetter, vnic ifs.IVNic) error {

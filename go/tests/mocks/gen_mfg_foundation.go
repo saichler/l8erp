@@ -42,8 +42,8 @@ func generateWorkCenters() []*mfg.MfgWorkCenter {
 	workCenters := make([]*mfg.MfgWorkCenter, len(mfgWorkCenterNames))
 	for i, name := range mfgWorkCenterNames {
 		workCenters[i] = &mfg.MfgWorkCenter{
-			WorkCenterId:       fmt.Sprintf("wc-%03d", i+1),
-			Code:               fmt.Sprintf("WC%03d", i+1),
+			WorkCenterId:       genID("wc", i),
+			Code:               genCode("WC", i),
 			Name:               name,
 			Description:        fmt.Sprintf("Manufacturing %s", name),
 			WorkCenterType:     workCenterTypes[i%len(workCenterTypes)],
@@ -68,10 +68,7 @@ func generateWorkCenterCaps(store *MockDataStore) []*mfg.MfgWorkCenterCap {
 		for j := 0; j < 2; j++ {
 			effectiveDate := time.Now().AddDate(0, -j*3, 0)
 			expiryDate := effectiveDate.AddDate(0, 6, 0)
-			shiftID := ""
-			if len(store.MfgShiftScheduleIDs) > 0 {
-				shiftID = store.MfgShiftScheduleIDs[(idx-1)%len(store.MfgShiftScheduleIDs)]
-			}
+			shiftID := pickRef(store.MfgShiftScheduleIDs, (idx-1))
 
 			caps = append(caps, &mfg.MfgWorkCenterCap{
 				CapacityId:     fmt.Sprintf("wccap-%03d", idx),
@@ -111,7 +108,7 @@ func generateShiftSchedules() []*mfg.MfgShiftSchedule {
 		expiryDate := effectiveDate.AddDate(1, 0, 0)
 
 		shifts[i] = &mfg.MfgShiftSchedule{
-			ScheduleId:    fmt.Sprintf("shift-%03d", i+1),
+			ScheduleId:    genID("shift", i),
 			Name:          name,
 			Description:   fmt.Sprintf("Standard %s schedule", name),
 			ShiftType:     shiftTypes[i%len(shiftTypes)],
@@ -149,10 +146,7 @@ func generateBoms(store *MockDataStore) []*mfg.MfgBom {
 
 	boms := make([]*mfg.MfgBom, count)
 	for i := 0; i < count; i++ {
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[i%len(store.ItemIDs)]
-		}
+		itemID := pickRef(store.ItemIDs, i)
 		effectiveDate := time.Now().AddDate(0, -rand.Intn(6), 0)
 
 		// Status distribution: 70% Active, 20% Draft, 10% Obsolete
@@ -166,7 +160,7 @@ func generateBoms(store *MockDataStore) []*mfg.MfgBom {
 		}
 
 		boms[i] = &mfg.MfgBom{
-			BomId:         fmt.Sprintf("bom-%03d", i+1),
+			BomId:         genID("bom", i),
 			BomNumber:     fmt.Sprintf("BOM-%05d", 10000+i+1),
 			ItemId:        itemID,
 			Description:   fmt.Sprintf("Bill of Materials #%d", i+1),
@@ -189,14 +183,8 @@ func generateBomLines(store *MockDataStore) []*mfg.MfgBomLine {
 	idx := 1
 	for bomIdx, bomID := range store.MfgBomIDs {
 		for j := 0; j < 3; j++ {
-			compItemID := ""
-			if len(store.ItemIDs) > 0 {
-				compItemID = store.ItemIDs[(bomIdx*3+j)%len(store.ItemIDs)]
-			}
-			opID := ""
-			if len(store.MfgRoutingOpIDs) > 0 {
-				opID = store.MfgRoutingOpIDs[(bomIdx+j)%len(store.MfgRoutingOpIDs)]
-			}
+			compItemID := pickRef(store.ItemIDs, (bomIdx*3+j))
+			opID := pickRef(store.MfgRoutingOpIDs, (bomIdx+j))
 
 			lines = append(lines, &mfg.MfgBomLine{
 				LineId:          fmt.Sprintf("bomln-%03d", idx),
@@ -228,10 +216,7 @@ func generateRoutings(store *MockDataStore) []*mfg.MfgRouting {
 
 	routings := make([]*mfg.MfgRouting, count)
 	for i := 0; i < count; i++ {
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[i%len(store.ItemIDs)]
-		}
+		itemID := pickRef(store.ItemIDs, i)
 		effectiveDate := time.Now().AddDate(0, -rand.Intn(6), 0)
 		expiryDate := effectiveDate.AddDate(1, 0, 0)
 
@@ -246,7 +231,7 @@ func generateRoutings(store *MockDataStore) []*mfg.MfgRouting {
 		}
 
 		routings[i] = &mfg.MfgRouting{
-			RoutingId:     fmt.Sprintf("rtng-%03d", i+1),
+			RoutingId:     genID("rtng", i),
 			RoutingNumber: fmt.Sprintf("RTG-%05d", 10000+i+1),
 			ItemId:        itemID,
 			Description:   fmt.Sprintf("Manufacturing routing #%d", i+1),
@@ -269,10 +254,7 @@ func generateRoutingOperations(store *MockDataStore) []*mfg.MfgRoutingOperation 
 	idx := 1
 	for rtngIdx, routingID := range store.MfgRoutingIDs {
 		for j := 0; j < 4; j++ {
-			wcID := ""
-			if len(store.MfgWorkCenterIDs) > 0 {
-				wcID = store.MfgWorkCenterIDs[(rtngIdx+j)%len(store.MfgWorkCenterIDs)]
-			}
+			wcID := pickRef(store.MfgWorkCenterIDs, (rtngIdx+j))
 			opName := mfgOperationNames[(rtngIdx*4+j)%len(mfgOperationNames)]
 
 			ops = append(ops, &mfg.MfgRoutingOperation{

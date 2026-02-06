@@ -15,36 +15,15 @@ limitations under the License.
 package holidays
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-type HolidayServiceCallback struct {
-}
-
-func newHolidayServiceCallback() *HolidayServiceCallback {
-	return &HolidayServiceCallback{}
-}
-
-func (this *HolidayServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.Holiday)
-	if !ok {
-		return nil, false, errors.New("invalid holiday type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.HolidayId)
-	}
-	err := validateHoliday(entity)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *HolidayServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newHolidayServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Holiday",
+		func(e *hcm.Holiday) { common.GenerateID(&e.HolidayId) },
+		nil)
 }
 
 func validateHoliday(entity *hcm.Holiday) error {

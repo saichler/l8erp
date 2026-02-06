@@ -15,35 +15,15 @@ limitations under the License.
 package shipments
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type ShipmentServiceCallback struct{}
-
-func newShipmentServiceCallback() *ShipmentServiceCallback {
-	return &ShipmentServiceCallback{}
-}
-
-func (this *ShipmentServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmShipment)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ShipmentId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *ShipmentServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newShipmentServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmShipment",
+		func(e *scm.ScmShipment) { common.GenerateID(&e.ShipmentId) },
+		validate)
 }
 
 func validate(item *scm.ScmShipment, vnic ifs.IVNic) error {

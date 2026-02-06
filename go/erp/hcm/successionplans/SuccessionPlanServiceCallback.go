@@ -15,37 +15,16 @@ limitations under the License.
 package successionplans
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/positions"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type SuccessionPlanServiceCallback struct {
-}
-
-func newSuccessionPlanServiceCallback() *SuccessionPlanServiceCallback {
-	return &SuccessionPlanServiceCallback{}
-}
-
-func (this *SuccessionPlanServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.SuccessionPlan)
-	if !ok {
-		return nil, false, errors.New("invalid succession plan type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.PlanId)
-	}
-	err := validateSuccPlan(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *SuccessionPlanServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newSuccessionPlanServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SuccessionPlan",
+		func(e *hcm.SuccessionPlan) { common.GenerateID(&e.PlanId) },
+		validateSuccPlan)
 }
 
 func validateSuccPlan(entity *hcm.SuccessionPlan, vnic ifs.IVNic) error {

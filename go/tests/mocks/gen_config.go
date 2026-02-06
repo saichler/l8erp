@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
@@ -304,15 +303,15 @@ func generateSalaryGrades(store *MockDataStore) []*hcm.SalaryGrade {
 
 	for i, r := range baseRanges {
 		grades = append(grades, &hcm.SalaryGrade{
-			GradeId:           fmt.Sprintf("grade-%03d", i+1),
+			GradeId:           genID("grade", i),
 			OrganizationId:    store.OrganizationIDs[0],
 			SalaryStructureId: store.SalaryStructureIDs[0],
 			Name:              fmt.Sprintf("Grade %s", r.level),
 			GradeCode:         r.level,
 			Level:             int32(i + 1),
-			Minimum:           &erp.Money{Amount: r.min, CurrencyCode: "USD"},
-			Midpoint:          &erp.Money{Amount: r.mid, CurrencyCode: "USD"},
-			Maximum:           &erp.Money{Amount: r.max, CurrencyCode: "USD"},
+			Minimum:           money(r.min),
+			Midpoint:          money(r.mid),
+			Maximum:           money(r.max),
 			CurrencyCode:      "USD",
 			PayFrequency:      hcm.PayFrequency_PAY_FREQUENCY_ANNUALLY,
 			IsActive:          true,
@@ -412,10 +411,10 @@ func generateCourses(store *MockDataStore) []*hcm.Course {
 
 	for i, name := range courseNames {
 		courses[i] = &hcm.Course{
-			CourseId:        fmt.Sprintf("course-%03d", i+1),
+			CourseId:        genID("course", i),
 			OrganizationId:  store.OrganizationIDs[0],
 			Title:           name,
-			Code:            fmt.Sprintf("CRS%03d", i+1),
+			Code:            genCode("CRS", i),
 			Description:     fmt.Sprintf("Training course: %s", name),
 			CourseType:      courseTypes[i%len(courseTypes)],
 			DeliveryMethod:  deliveryMethods[i%len(deliveryMethods)],

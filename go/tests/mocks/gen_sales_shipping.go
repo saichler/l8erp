@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -42,25 +41,13 @@ func generateSalesDeliveryOrders(store *MockDataStore) []*sales.SalesDeliveryOrd
 
 	deliveries := make([]*sales.SalesDeliveryOrder, count)
 	for i := 0; i < count; i++ {
-		orderID := ""
-		if len(store.SalesOrderIDs) > 0 {
-			orderID = store.SalesOrderIDs[i%len(store.SalesOrderIDs)]
-		}
+		orderID := pickRef(store.SalesOrderIDs, i)
 
-		customerID := ""
-		if len(store.CustomerIDs) > 0 {
-			customerID = store.CustomerIDs[i%len(store.CustomerIDs)]
-		}
+		customerID := pickRef(store.CustomerIDs, i)
 
-		warehouseID := ""
-		if len(store.SCMWarehouseIDs) > 0 {
-			warehouseID = store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)]
-		}
+		warehouseID := pickRef(store.SCMWarehouseIDs, i)
 
-		carrierID := ""
-		if len(store.SCMCarrierIDs) > 0 {
-			carrierID = store.SCMCarrierIDs[i%len(store.SCMCarrierIDs)]
-		}
+		carrierID := pickRef(store.SCMCarrierIDs, i)
 
 		plannedShipDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
 		plannedDeliveryDate := plannedShipDate.AddDate(0, 0, rand.Intn(7)+2)
@@ -75,7 +62,7 @@ func generateSalesDeliveryOrders(store *MockDataStore) []*sales.SalesDeliveryOrd
 		}
 
 		deliveries[i] = &sales.SalesDeliveryOrder{
-			DeliveryOrderId:     fmt.Sprintf("sdo-%03d", i+1),
+			DeliveryOrderId:     genID("sdo", i),
 			DeliveryNumber:      fmt.Sprintf("DO-%04d", rand.Intn(9000)+1000),
 			SalesOrderId:        orderID,
 			CustomerId:          customerID,
@@ -89,10 +76,7 @@ func generateSalesDeliveryOrders(store *MockDataStore) []*sales.SalesDeliveryOrd
 			CarrierId:           carrierID,
 			TrackingNumber:      fmt.Sprintf("1Z%s%08d", "9999", rand.Intn(99999999)),
 			ShippingMethod:      shippingMethodNames[i%len(shippingMethodNames)],
-			ShippingCost: &erp.Money{
-				Amount:       int64(rand.Intn(50000) + 5000),
-				CurrencyCode: "USD",
-			},
+			ShippingCost: money(int64(rand.Intn(50000) + 5000)),
 			Notes:     fmt.Sprintf("Delivery for order %d", i+1),
 			AuditInfo: createAuditInfo(),
 		}
@@ -118,10 +102,7 @@ func generateSalesDeliveryLines(store *MockDataStore) []*sales.SalesDeliveryLine
 				description = itemNames[(dIdx*3+j)%len(itemNames)]
 			}
 
-			orderLineID := ""
-			if len(store.SalesOrderLineIDs) > 0 {
-				orderLineID = store.SalesOrderLineIDs[(dIdx*3+j)%len(store.SalesOrderLineIDs)]
-			}
+			orderLineID := pickRef(store.SalesOrderLineIDs, (dIdx*3+j))
 
 			lines = append(lines, &sales.SalesDeliveryLine{
 				LineId:           fmt.Sprintf("sdl-%03d", idx),
@@ -160,20 +141,11 @@ func generateSalesPickReleases(store *MockDataStore) []*sales.SalesPickRelease {
 
 	pickReleases := make([]*sales.SalesPickRelease, count)
 	for i := 0; i < count; i++ {
-		deliveryID := ""
-		if len(store.SalesDeliveryOrderIDs) > 0 {
-			deliveryID = store.SalesDeliveryOrderIDs[i%len(store.SalesDeliveryOrderIDs)]
-		}
+		deliveryID := pickRef(store.SalesDeliveryOrderIDs, i)
 
-		warehouseID := ""
-		if len(store.SCMWarehouseIDs) > 0 {
-			warehouseID = store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)]
-		}
+		warehouseID := pickRef(store.SCMWarehouseIDs, i)
 
-		assignedTo := ""
-		if len(store.EmployeeIDs) > 0 {
-			assignedTo = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		assignedTo := pickRef(store.EmployeeIDs, i)
 
 		releaseDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
 		status := statuses[i%len(statuses)]
@@ -183,7 +155,7 @@ func generateSalesPickReleases(store *MockDataStore) []*sales.SalesPickRelease {
 		}
 
 		pickReleases[i] = &sales.SalesPickRelease{
-			PickReleaseId:   fmt.Sprintf("spr-%03d", i+1),
+			PickReleaseId:   genID("spr", i),
 			PickNumber:      fmt.Sprintf("PK-%04d", rand.Intn(9000)+1000),
 			DeliveryOrderId: deliveryID,
 			WarehouseId:     warehouseID,
@@ -216,15 +188,12 @@ func generateSalesShippingDocs(store *MockDataStore) []*sales.SalesShippingDoc {
 
 	docs := make([]*sales.SalesShippingDoc, count)
 	for i := 0; i < count; i++ {
-		deliveryID := ""
-		if len(store.SalesDeliveryOrderIDs) > 0 {
-			deliveryID = store.SalesDeliveryOrderIDs[i%len(store.SalesDeliveryOrderIDs)]
-		}
+		deliveryID := pickRef(store.SalesDeliveryOrderIDs, i)
 
 		issueDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
 
 		docs[i] = &sales.SalesShippingDoc{
-			DocId:           fmt.Sprintf("ssd-%03d", i+1),
+			DocId:           genID("ssd", i),
 			DeliveryOrderId: deliveryID,
 			DocType:         docTypes[i%len(docTypes)],
 			DocNumber:       fmt.Sprintf("DOC-%06d", rand.Intn(999999)),
@@ -246,17 +215,14 @@ func generateSalesPackingSlips(store *MockDataStore) []*sales.SalesPackingSlip {
 
 	slips := make([]*sales.SalesPackingSlip, count)
 	for i := 0; i < count; i++ {
-		deliveryID := ""
-		if len(store.SalesDeliveryOrderIDs) > 0 {
-			deliveryID = store.SalesDeliveryOrderIDs[i%len(store.SalesDeliveryOrderIDs)]
-		}
+		deliveryID := pickRef(store.SalesDeliveryOrderIDs, i)
 
 		packDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
 		totalPackages := int32(rand.Intn(5) + 1)
 		totalWeight := float64(rand.Intn(500)+10) * float64(totalPackages)
 
 		slips[i] = &sales.SalesPackingSlip{
-			PackingSlipId:   fmt.Sprintf("sps-%03d", i+1),
+			PackingSlipId:   genID("sps", i),
 			SlipNumber:      fmt.Sprintf("PS-%06d", rand.Intn(999999)),
 			DeliveryOrderId: deliveryID,
 			PackDate:        packDate.Unix(),
@@ -285,10 +251,7 @@ func generateSalesDeliveryConfirms(store *MockDataStore) []*sales.SalesDeliveryC
 
 	confirms := make([]*sales.SalesDeliveryConfirm, confirmCount)
 	for i := 0; i < confirmCount; i++ {
-		deliveryID := ""
-		if len(store.SalesDeliveryOrderIDs) > 0 {
-			deliveryID = store.SalesDeliveryOrderIDs[i%len(store.SalesDeliveryOrderIDs)]
-		}
+		deliveryID := pickRef(store.SalesDeliveryOrderIDs, i)
 
 		confirmDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
 		isDamaged := rand.Intn(20) == 0 // 5% chance of damage
@@ -299,7 +262,7 @@ func generateSalesDeliveryConfirms(store *MockDataStore) []*sales.SalesDeliveryC
 		}
 
 		confirms[i] = &sales.SalesDeliveryConfirm{
-			ConfirmId:         fmt.Sprintf("sdc-%03d", i+1),
+			ConfirmId:         genID("sdc", i),
 			DeliveryOrderId:   deliveryID,
 			ConfirmDate:       confirmDate.Unix(),
 			ReceivedBy:        fmt.Sprintf("Recipient %d", i+1),

@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package pricelists
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/sales"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type PriceListServiceCallback struct{}
-
-func newPriceListServiceCallback() *PriceListServiceCallback {
-	return &PriceListServiceCallback{}
-}
-
-func (this *PriceListServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*sales.SalesPriceList)
-	if !ok {
-		return nil, false, errors.New("invalid price list type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.PriceListId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PriceListServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPriceListServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SalesPriceList",
+		func(e *sales.SalesPriceList) { common.GenerateID(&e.PriceListId) },
+		validate)
 }
 
 func validate(item *sales.SalesPriceList, vnic ifs.IVNic) error {

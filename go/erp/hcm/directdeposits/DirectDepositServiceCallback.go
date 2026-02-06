@@ -15,37 +15,16 @@ limitations under the License.
 package directdeposits
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
+	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/erp/hcm/employees"
 )
 
-type DirectDepositServiceCallback struct {
-}
-
-func newDirectDepositServiceCallback() *DirectDepositServiceCallback {
-	return &DirectDepositServiceCallback{}
-}
-
-func (this *DirectDepositServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.DirectDeposit)
-	if !ok {
-		return nil, false, errors.New("invalid direct deposit type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.DirectDepositId)
-	}
-	err := validateDirDep(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *DirectDepositServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newDirectDepositServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("DirectDeposit",
+		func(e *hcm.DirectDeposit) { common.GenerateID(&e.DirectDepositId) },
+		validateDirDep)
 }
 
 func validateDirDep(entity *hcm.DirectDeposit, vnic ifs.IVNic) error {

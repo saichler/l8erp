@@ -56,7 +56,7 @@ func generateEmployees(store *MockDataStore) []*hcm.Employee {
 		}
 
 		employees[i] = &hcm.Employee{
-			EmployeeId:     fmt.Sprintf("emp-%03d", i+1),
+			EmployeeId:     genID("emp", i),
 			EmployeeNumber: fmt.Sprintf("E%05d", i+1),
 			FirstName:      firstName,
 			LastName:       lastName,

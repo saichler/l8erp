@@ -15,37 +15,16 @@ limitations under the License.
 package employeedocuments
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type EmployeeDocumentServiceCallback struct {
-}
-
-func newEmployeeDocumentServiceCallback() *EmployeeDocumentServiceCallback {
-	return &EmployeeDocumentServiceCallback{}
-}
-
-func (this *EmployeeDocumentServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.EmployeeDocument)
-	if !ok {
-		return nil, false, errors.New("invalid employee document type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.DocumentId)
-	}
-	err := validateEmpDoc(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *EmployeeDocumentServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newEmployeeDocumentServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("EmployeeDocument",
+		func(e *hcm.EmployeeDocument) { common.GenerateID(&e.DocumentId) },
+		validateEmpDoc)
 }
 
 func validateEmpDoc(entity *hcm.EmployeeDocument, vnic ifs.IVNic) error {

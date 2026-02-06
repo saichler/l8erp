@@ -15,40 +15,19 @@ limitations under the License.
 package employees
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/departments"
 	"github.com/saichler/l8erp/go/erp/hcm/jobs"
 	"github.com/saichler/l8erp/go/erp/hcm/organizations"
 	"github.com/saichler/l8erp/go/erp/hcm/positions"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type EmployeeServiceCallback struct {
-}
-
-func newEmployeeServiceCallback() *EmployeeServiceCallback {
-	return &EmployeeServiceCallback{}
-}
-
-func (this *EmployeeServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	employee, ok := any.(*hcm.Employee)
-	if !ok {
-		return nil, false, errors.New("invalid employee type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&employee.EmployeeId)
-	}
-	err := validate(employee, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *EmployeeServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newEmployeeServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Employee",
+		func(e *hcm.Employee) { common.GenerateID(&e.EmployeeId) },
+		validate)
 }
 
 func validate(employee *hcm.Employee, vnic ifs.IVNic) error {

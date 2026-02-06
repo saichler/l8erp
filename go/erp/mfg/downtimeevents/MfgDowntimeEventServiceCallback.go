@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package downtimeevents
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type MfgDowntimeEventServiceCallback struct{}
-
-func newMfgDowntimeEventServiceCallback() *MfgDowntimeEventServiceCallback {
-	return &MfgDowntimeEventServiceCallback{}
-}
-
-func (this *MfgDowntimeEventServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgDowntimeEvent)
-	if !ok {
-		return nil, false, errors.New("invalid MfgDowntimeEvent type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.EventId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgDowntimeEventServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgDowntimeEventServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgDowntimeEvent",
+		func(e *mfg.MfgDowntimeEvent) { common.GenerateID(&e.EventId) },
+		validate)
 }
 
 func validate(item *mfg.MfgDowntimeEvent, vnic ifs.IVNic) error {

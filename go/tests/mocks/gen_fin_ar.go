@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -75,11 +74,11 @@ func generateSalesInvoices(store *MockDataStore) []*fin.SalesInvoice {
 			CurrencyId:     store.CurrencyIDs[0],
 			FiscalPeriodId: store.FiscalPeriodIDs[periodIdx],
 			Status:         status,
-			Subtotal:       &erp.Money{Amount: subtotal, CurrencyCode: "USD"},
-			TaxAmount:      &erp.Money{Amount: taxAmount, CurrencyCode: "USD"},
-			TotalAmount:    &erp.Money{Amount: totalAmount, CurrencyCode: "USD"},
-			AmountPaid:     &erp.Money{Amount: amountPaid, CurrencyCode: "USD"},
-			BalanceDue:     &erp.Money{Amount: balanceDue, CurrencyCode: "USD"},
+			Subtotal:       money(subtotal),
+			TaxAmount:      money(taxAmount),
+			TotalAmount:    money(totalAmount),
+			AmountPaid:     money(amountPaid),
+			BalanceDue:     money(balanceDue),
 			PaymentTermDays: 30,
 			ArAccountId:    store.AccountIDs[arAccountIdx],
 			Description:    fmt.Sprintf("Sales Invoice for Customer %s", store.CustomerIDs[custIdx]),
@@ -113,10 +112,10 @@ func generateSalesInvoiceLines(store *MockDataStore) []*fin.SalesInvoiceLine {
 				AccountId:   store.AccountIDs[accountIdx],
 				Description: descriptions[lineNum-1],
 				Quantity:    quantity,
-				UnitPrice:   &erp.Money{Amount: unitPrice, CurrencyCode: "USD"},
-				LineAmount:  &erp.Money{Amount: lineAmount, CurrencyCode: "USD"},
+				UnitPrice:   money(unitPrice),
+				LineAmount:  money(lineAmount),
 				TaxCodeId:   store.TaxCodeIDs[taxCodeIdx],
-				TaxAmount:   &erp.Money{Amount: taxAmount, CurrencyCode: "USD"},
+				TaxAmount:   money(taxAmount),
 				AuditInfo:   createAuditInfo(),
 			})
 			idx++
@@ -156,7 +155,7 @@ func generateCustomerPayments(store *MockDataStore) []*fin.CustomerPayment {
 			PaymentId:     fmt.Sprintf("cpmt-%04d", i+1),
 			CustomerId:    store.CustomerIDs[custIdx],
 			PaymentDate:   paymentDate.Unix(),
-			Amount:        &erp.Money{Amount: amount, CurrencyCode: "USD"},
+			Amount:        money(amount),
 			PaymentMethod: method,
 			Status:        fin.PaymentStatus_PAYMENT_STATUS_COMPLETED,
 			BankAccountId: bankAccountId,
@@ -188,8 +187,8 @@ func generatePaymentApplications(store *MockDataStore) []*fin.PaymentApplication
 			ApplicationId: fmt.Sprintf("papp-%04d", i+1),
 			PaymentId:     store.CustomerPaymentIDs[paymentIdx],
 			InvoiceId:     store.SalesInvoiceIDs[invoiceIdx],
-			AppliedAmount: &erp.Money{Amount: appliedAmount, CurrencyCode: "USD"},
-			DiscountTaken: &erp.Money{Amount: discountTaken, CurrencyCode: "USD"},
+			AppliedAmount: money(appliedAmount),
+			DiscountTaken: money(discountTaken),
 			AuditInfo:     createAuditInfo(),
 		}
 	}
@@ -214,12 +213,12 @@ func generateCreditMemos(store *MockDataStore) []*fin.CreditMemo {
 		amount := int64(rand.Intn(4501)+500) * 100 // 500_00 to 5000_00 cents
 
 		memos[i] = &fin.CreditMemo{
-			CreditMemoId:      fmt.Sprintf("cmemo-%03d", i+1),
+			CreditMemoId:      genID("cmemo", i),
 			MemoNumber:        fmt.Sprintf("CM-%06d", i+1),
 			CustomerId:        store.CustomerIDs[custIdx],
 			OriginalInvoiceId: store.SalesInvoiceIDs[invoiceIdx],
 			MemoDate:          time.Now().Unix(),
-			Amount:            &erp.Money{Amount: amount, CurrencyCode: "USD"},
+			Amount:            money(amount),
 			Status:            fin.CreditMemoStatus_CREDIT_MEMO_STATUS_APPROVED,
 			Reason:            reasons[i],
 			Description:       fmt.Sprintf("Credit memo: %s", reasons[i]),
@@ -264,12 +263,12 @@ func generateDunningLetters(store *MockDataStore) []*fin.DunningLetter {
 		}
 
 		letters[i] = &fin.DunningLetter{
-			LetterId:     fmt.Sprintf("dunl-%03d", i+1),
+			LetterId:     genID("dunl", i),
 			CustomerId:   store.CustomerIDs[custIdx],
 			DunningLevel: levels[i],
 			LetterDate:   letterDate.Unix(),
 			DueDate:      dueDate.Unix(),
-			TotalOverdue: &erp.Money{Amount: totalOverdue, CurrencyCode: "USD"},
+			TotalOverdue: money(totalOverdue),
 			DaysOverdue:  daysOverdue,
 			InvoiceIds:   invoiceIDs,
 			IsSent:       isSent,

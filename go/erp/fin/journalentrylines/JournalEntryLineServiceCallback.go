@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package journalentrylines
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type JournalEntryLineServiceCallback struct{}
-
-func newJournalEntryLineServiceCallback() *JournalEntryLineServiceCallback {
-	return &JournalEntryLineServiceCallback{}
-}
-
-func (this *JournalEntryLineServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	line, ok := any.(*fin.JournalEntryLine)
-	if !ok {
-		return nil, false, errors.New("invalid line type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&line.LineId)
-	}
-	err := validate(line, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *JournalEntryLineServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newJournalEntryLineServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("JournalEntryLine",
+		func(e *fin.JournalEntryLine) { common.GenerateID(&e.LineId) },
+		validate)
 }
 
 func validate(line *fin.JournalEntryLine, vnic ifs.IVNic) error {

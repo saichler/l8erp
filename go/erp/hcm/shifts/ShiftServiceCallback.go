@@ -15,36 +15,15 @@ limitations under the License.
 package shifts
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-type ShiftServiceCallback struct {
-}
-
-func newShiftServiceCallback() *ShiftServiceCallback {
-	return &ShiftServiceCallback{}
-}
-
-func (this *ShiftServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.Shift)
-	if !ok {
-		return nil, false, errors.New("invalid shift type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.ShiftId)
-	}
-	err := validateShift(entity)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *ShiftServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newShiftServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Shift",
+		func(e *hcm.Shift) { common.GenerateID(&e.ShiftId) },
+		nil)
 }
 
 func validateShift(entity *hcm.Shift) error {

@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package reporttemplates
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/bi"
 )
 
-type BiReportTemplateServiceCallback struct{}
-
-func newBiReportTemplateServiceCallback() *BiReportTemplateServiceCallback {
-	return &BiReportTemplateServiceCallback{}
-}
-
-func (this *BiReportTemplateServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*bi.BiReportTemplate)
-	if !ok {
-		return nil, false, errors.New("invalid BiReportTemplate type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.TemplateId)
-	}
-	err := validateBiReportTemplate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BiReportTemplateServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBiReportTemplateServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("BiReportTemplate",
+		func(e *bi.BiReportTemplate) { common.GenerateID(&e.TemplateId) },
+		validateBiReportTemplate)
 }
 
 func validateBiReportTemplate(item *bi.BiReportTemplate, vnic ifs.IVNic) error {

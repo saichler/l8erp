@@ -68,10 +68,7 @@ func generateBillingRates(store *MockDataStore) []*prj.PrjBillingRate {
 
 	for i := 0; i < count; i++ {
 		// Reference resource pool if available
-		resourceID := ""
-		if len(store.PrjResourceIDs) > 0 {
-			resourceID = store.PrjResourceIDs[i%len(store.PrjResourceIDs)]
-		}
+		resourceID := pickRef(store.PrjResourceIDs, i)
 
 		// Reference project (some rates are global, some project-specific)
 		projectID := ""
@@ -91,16 +88,16 @@ func generateBillingRates(store *MockDataStore) []*prj.PrjBillingRate {
 		isActive := i < count*85/100
 
 		rates[i] = &prj.PrjBillingRate{
-			RateId:         fmt.Sprintf("pbr-%03d", i+1),
+			RateId:         genID("pbr", i),
 			Name:           billingRateNames[i%len(billingRateNames)],
 			Description:    fmt.Sprintf("Billing rate for %s role", billingRateNames[i%len(billingRateNames)]),
 			ProjectId:      projectID,
 			ResourceId:     resourceID,
 			Role:           billingRateNames[i%len(billingRateNames)],
 			SkillCategory:  skillCategories[i%len(skillCategories)],
-			Rate:           &erp.Money{Amount: baseRate, CurrencyCode: "USD"},
+			Rate:           money(baseRate),
 			RateUnit:       rateUnits[i%len(rateUnits)],
-			OvertimeRate:   &erp.Money{Amount: overtimeRate, CurrencyCode: "USD"},
+			OvertimeRate:   money(overtimeRate),
 			EffectiveFrom:  effectiveFrom.Unix(),
 			EffectiveUntil: effectiveUntil.Unix(),
 			IsActive:       isActive,
@@ -127,10 +124,7 @@ func generateBillingSchedules(store *MockDataStore) []*prj.PrjBillingSchedule {
 	schedules := make([]*prj.PrjBillingSchedule, count)
 
 	for i := 0; i < count; i++ {
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
 
 		billingType := billingTypes[i%len(billingTypes)]
 		startDate := time.Now().AddDate(0, -rand.Intn(6), 0)
@@ -140,9 +134,9 @@ func generateBillingSchedules(store *MockDataStore) []*prj.PrjBillingSchedule {
 		var fixedAmount *erp.Money
 		var retainerAmount *erp.Money
 		if billingType == prj.PrjBillingType_PRJ_BILLING_TYPE_FIXED_PRICE {
-			fixedAmount = &erp.Money{Amount: int64(rand.Intn(500000)+50000) * 100, CurrencyCode: "USD"}
+			fixedAmount = money(int64(rand.Intn(500000)+50000) * 100)
 		} else if billingType == prj.PrjBillingType_PRJ_BILLING_TYPE_RETAINER {
-			retainerAmount = &erp.Money{Amount: int64(rand.Intn(50000)+10000) * 100, CurrencyCode: "USD"}
+			retainerAmount = money(int64(rand.Intn(50000)+10000) * 100)
 		}
 
 		// 80% active, 20% inactive
@@ -153,7 +147,7 @@ func generateBillingSchedules(store *MockDataStore) []*prj.PrjBillingSchedule {
 			billingType == prj.PrjBillingType_PRJ_BILLING_TYPE_RETAINER
 
 		schedules[i] = &prj.PrjBillingSchedule{
-			ScheduleId:           fmt.Sprintf("pbs-%03d", i+1),
+			ScheduleId:           genID("pbs", i),
 			ProjectId:            projectID,
 			Name:                 billingScheduleNames[i%len(billingScheduleNames)],
 			Description:          fmt.Sprintf("Billing schedule: %s", billingScheduleNames[i%len(billingScheduleNames)]),
@@ -179,21 +173,12 @@ func generateBillingMilestones(store *MockDataStore) []*prj.PrjBillingMilestone 
 	milestones := make([]*prj.PrjBillingMilestone, count)
 
 	for i := 0; i < count; i++ {
-		scheduleID := ""
-		if len(store.PrjBillingScheduleIDs) > 0 {
-			scheduleID = store.PrjBillingScheduleIDs[i%len(store.PrjBillingScheduleIDs)]
-		}
+		scheduleID := pickRef(store.PrjBillingScheduleIDs, i)
 
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
 
 		// Reference project milestone if available
-		projectMilestoneID := ""
-		if len(store.PrjMilestoneIDs) > 0 {
-			projectMilestoneID = store.PrjMilestoneIDs[i%len(store.PrjMilestoneIDs)]
-		}
+		projectMilestoneID := pickRef(store.PrjMilestoneIDs, i)
 
 		dueDate := time.Now().AddDate(0, rand.Intn(6)-3, rand.Intn(28))
 		amount := int64(rand.Intn(100000)+10000) * 100 // $10,000 to $110,000
@@ -212,13 +197,13 @@ func generateBillingMilestones(store *MockDataStore) []*prj.PrjBillingMilestone 
 		}
 
 		milestones[i] = &prj.PrjBillingMilestone{
-			MilestoneId:        fmt.Sprintf("pbm-%03d", i+1),
+			MilestoneId:        genID("pbm", i),
 			ScheduleId:         scheduleID,
 			ProjectId:          projectID,
 			ProjectMilestoneId: projectMilestoneID,
 			Name:               billingMilestoneNames[i%len(billingMilestoneNames)],
 			Description:        fmt.Sprintf("Billing milestone: %s", billingMilestoneNames[i%len(billingMilestoneNames)]),
-			Amount:             &erp.Money{Amount: amount, CurrencyCode: "USD"},
+			Amount:             money(amount),
 			Percentage:         percentage,
 			DueDate:            dueDate.Unix(),
 			BilledDate:         billedDate,
@@ -250,15 +235,9 @@ func generateProjectInvoices(store *MockDataStore) []*prj.PrjProjectInvoice {
 	invoices := make([]*prj.PrjProjectInvoice, count)
 
 	for i := 0; i < count; i++ {
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
 
-		customerID := ""
-		if len(store.CustomerIDs) > 0 {
-			customerID = store.CustomerIDs[i%len(store.CustomerIDs)]
-		}
+		customerID := pickRef(store.CustomerIDs, i)
 
 		invoiceDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 		dueDate := invoiceDate.AddDate(0, 0, 30+rand.Intn(30))
@@ -294,7 +273,7 @@ func generateProjectInvoices(store *MockDataStore) []*prj.PrjProjectInvoice {
 		}
 
 		invoices[i] = &prj.PrjProjectInvoice{
-			InvoiceId:     fmt.Sprintf("pinv-%03d", i+1),
+			InvoiceId:     genID("pinv", i),
 			ProjectId:     projectID,
 			CustomerId:    customerID,
 			InvoiceNumber: fmt.Sprintf("INV-%04d-%03d", time.Now().Year(), i+1),
@@ -303,11 +282,11 @@ func generateProjectInvoices(store *MockDataStore) []*prj.PrjProjectInvoice {
 			DueDate:       dueDate.Unix(),
 			PeriodStart:   periodStart.Unix(),
 			PeriodEnd:     periodEnd.Unix(),
-			Subtotal:      &erp.Money{Amount: subtotal, CurrencyCode: "USD"},
-			TaxAmount:     &erp.Money{Amount: taxAmount, CurrencyCode: "USD"},
-			TotalAmount:   &erp.Money{Amount: totalAmount, CurrencyCode: "USD"},
-			PaidAmount:    &erp.Money{Amount: paidAmount, CurrencyCode: "USD"},
-			BalanceDue:    &erp.Money{Amount: balanceDue, CurrencyCode: "USD"},
+			Subtotal:      money(subtotal),
+			TaxAmount:     money(taxAmount),
+			TotalAmount:   money(totalAmount),
+			PaidAmount:    money(paidAmount),
+			BalanceDue:    money(balanceDue),
 			Status:        status,
 			PaymentTerms:  paymentTerms[i%len(paymentTerms)],
 			Notes:         fmt.Sprintf("Invoice for project services - Period %d", i+1),

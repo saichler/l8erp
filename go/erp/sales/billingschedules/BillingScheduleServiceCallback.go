@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package billingschedules
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
+	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-type BillingScheduleServiceCallback struct{}
-
-func newBillingScheduleServiceCallback() *BillingScheduleServiceCallback {
-	return &BillingScheduleServiceCallback{}
-}
-
-func (this *BillingScheduleServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*sales.SalesBillingSchedule)
-	if !ok {
-		return nil, false, errors.New("invalid billing schedule type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ScheduleId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BillingScheduleServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBillingScheduleServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SalesBillingSchedule",
+		func(e *sales.SalesBillingSchedule) { common.GenerateID(&e.ScheduleId) },
+		validate)
 }
 
 func validate(item *sales.SalesBillingSchedule, vnic ifs.IVNic) error {

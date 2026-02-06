@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package returnlines
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/ecom"
 )
 
-type EcomReturnLineServiceCallback struct{}
-
-func newEcomReturnLineServiceCallback() *EcomReturnLineServiceCallback {
-	return &EcomReturnLineServiceCallback{}
-}
-
-func (this *EcomReturnLineServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*ecom.EcomReturnLine)
-	if !ok {
-		return nil, false, errors.New("invalid EcomReturnLine type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.LineId)
-	}
-	err := validateEcomReturnLine(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *EcomReturnLineServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newEcomReturnLineServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("EcomReturnLine",
+		func(e *ecom.EcomReturnLine) { common.GenerateID(&e.LineId) },
+		validateEcomReturnLine)
 }
 
 func validateEcomReturnLine(item *ecom.EcomReturnLine, vnic ifs.IVNic) error {

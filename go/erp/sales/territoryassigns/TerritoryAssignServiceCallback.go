@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package territoryassigns
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/sales"
 )
 
-type TerritoryAssignServiceCallback struct{}
-
-func newTerritoryAssignServiceCallback() *TerritoryAssignServiceCallback {
-	return &TerritoryAssignServiceCallback{}
-}
-
-func (this *TerritoryAssignServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*sales.SalesTerritoryAssign)
-	if !ok {
-		return nil, false, errors.New("invalid territory assign type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.AssignmentId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *TerritoryAssignServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newTerritoryAssignServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SalesTerritoryAssign",
+		func(e *sales.SalesTerritoryAssign) { common.GenerateID(&e.AssignmentId) },
+		validate)
 }
 
 func validate(item *sales.SalesTerritoryAssign, vnic ifs.IVNic) error {

@@ -15,37 +15,16 @@ limitations under the License.
 package timesheets
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type TimesheetServiceCallback struct {
-}
-
-func newTimesheetServiceCallback() *TimesheetServiceCallback {
-	return &TimesheetServiceCallback{}
-}
-
-func (this *TimesheetServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.Timesheet)
-	if !ok {
-		return nil, false, errors.New("invalid timesheet type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.TimesheetId)
-	}
-	err := validateTimesheet(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *TimesheetServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newTimesheetServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Timesheet",
+		func(e *hcm.Timesheet) { common.GenerateID(&e.TimesheetId) },
+		validateTimesheet)
 }
 
 func validateTimesheet(entity *hcm.Timesheet, vnic ifs.IVNic) error {

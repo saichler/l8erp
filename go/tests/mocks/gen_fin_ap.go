@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -70,7 +69,7 @@ func generatePurchaseInvoices(store *MockDataStore) []*fin.PurchaseInvoice {
 		}
 
 		invoices[i] = &fin.PurchaseInvoice{
-			InvoiceId:      fmt.Sprintf("pinv-%03d", i+1),
+			InvoiceId:      genID("pinv", i),
 			InvoiceNumber:  fmt.Sprintf("PI-%06d", i+1),
 			VendorId:       vendorId,
 			InvoiceDate:    invoiceDate.Unix(),
@@ -78,11 +77,11 @@ func generatePurchaseInvoices(store *MockDataStore) []*fin.PurchaseInvoice {
 			CurrencyId:     store.CurrencyIDs[0],
 			FiscalPeriodId: store.FiscalPeriodIDs[periodIdx],
 			Status:         status,
-			Subtotal:       &erp.Money{Amount: subtotal, CurrencyCode: "USD"},
-			TaxAmount:      &erp.Money{Amount: taxAmount, CurrencyCode: "USD"},
-			TotalAmount:    &erp.Money{Amount: totalAmount, CurrencyCode: "USD"},
-			AmountPaid:     &erp.Money{Amount: amountPaid, CurrencyCode: "USD"},
-			BalanceDue:     &erp.Money{Amount: balanceDue, CurrencyCode: "USD"},
+			Subtotal:       money(subtotal),
+			TaxAmount:      money(taxAmount),
+			TotalAmount:    money(totalAmount),
+			AmountPaid:     money(amountPaid),
+			BalanceDue:     money(balanceDue),
 			PaymentTermDays: 30,
 			ApAccountId:    store.AccountIDs[apAccountIdx],
 			Description:    fmt.Sprintf("Purchase Invoice from vendor %s", vendorId),
@@ -137,10 +136,10 @@ func generatePurchaseInvoiceLines(store *MockDataStore) []*fin.PurchaseInvoiceLi
 				AccountId:   store.AccountIDs[accountIdx],
 				Description: descriptions[rand.Intn(len(descriptions))],
 				Quantity:    quantity,
-				UnitPrice:   &erp.Money{Amount: unitPrice, CurrencyCode: "USD"},
-				LineAmount:  &erp.Money{Amount: lineAmount, CurrencyCode: "USD"},
+				UnitPrice:   money(unitPrice),
+				LineAmount:  money(lineAmount),
 				TaxCodeId:   store.TaxCodeIDs[rand.Intn(len(store.TaxCodeIDs))],
-				TaxAmount:   &erp.Money{Amount: taxAmount, CurrencyCode: "USD"},
+				TaxAmount:   money(taxAmount),
 				AuditInfo:   createAuditInfo(),
 			})
 			idx++
@@ -167,11 +166,11 @@ func generatePaymentSchedules(store *MockDataStore) []*fin.PaymentSchedule {
 		isPaid := (i % 4) == 2 // PAID status
 
 		schedules[i] = &fin.PaymentSchedule{
-			ScheduleId:    fmt.Sprintf("psched-%03d", i+1),
+			ScheduleId:    genID("psched", i),
 			VendorId:      vendorId,
 			InvoiceId:     invoiceId,
 			ScheduledDate: scheduledDate.Unix(),
-			Amount:        &erp.Money{Amount: amount, CurrencyCode: "USD"},
+			Amount:        money(amount),
 			IsPaid:        isPaid,
 			Notes:         fmt.Sprintf("Payment schedule for invoice %s", invoiceId),
 			AuditInfo:     createAuditInfo(),
@@ -203,10 +202,10 @@ func generateVendorPayments(store *MockDataStore) []*fin.VendorPayment {
 		}
 
 		payments[i] = &fin.VendorPayment{
-			PaymentId:     fmt.Sprintf("vpmt-%03d", i+1),
+			PaymentId:     genID("vpmt", i),
 			VendorId:      vendorId,
 			PaymentDate:   paymentDate.Unix(),
-			Amount:        &erp.Money{Amount: amount, CurrencyCode: "USD"},
+			Amount:        money(amount),
 			PaymentMethod: method,
 			Status:        fin.PaymentStatus_PAYMENT_STATUS_COMPLETED,
 			BankAccountId: store.BankAccountIDs[0],
@@ -236,11 +235,11 @@ func generatePaymentAllocations(store *MockDataStore) []*fin.PaymentAllocation {
 		}
 
 		allocations[i] = &fin.PaymentAllocation{
-			AllocationId:    fmt.Sprintf("palloc-%03d", i+1),
+			AllocationId:    genID("palloc", i),
 			PaymentId:       paymentId,
 			InvoiceId:       invoiceId,
-			AllocatedAmount: &erp.Money{Amount: amount, CurrencyCode: "USD"},
-			DiscountTaken:   &erp.Money{Amount: discountAmount, CurrencyCode: "USD"},
+			AllocatedAmount: money(amount),
+			DiscountTaken:   money(discountAmount),
 			AuditInfo:       createAuditInfo(),
 		}
 	}
@@ -264,15 +263,15 @@ func generateVendorStatements(store *MockDataStore) []*fin.VendorStatement {
 		closingBalance := openingBalance + totalInvoices - totalPayments
 
 		statements[i] = &fin.VendorStatement{
-			StatementId:    fmt.Sprintf("vstmt-%03d", i+1),
+			StatementId:    genID("vstmt", i),
 			VendorId:       vendorId,
 			StatementDate:  now.Unix(),
 			PeriodStart:    periodStart.Unix(),
 			PeriodEnd:      periodEnd.Unix(),
-			OpeningBalance: &erp.Money{Amount: openingBalance, CurrencyCode: "USD"},
-			TotalInvoices:  &erp.Money{Amount: totalInvoices, CurrencyCode: "USD"},
-			TotalPayments:  &erp.Money{Amount: totalPayments, CurrencyCode: "USD"},
-			ClosingBalance: &erp.Money{Amount: closingBalance, CurrencyCode: "USD"},
+			OpeningBalance: money(openingBalance),
+			TotalInvoices:  money(totalInvoices),
+			TotalPayments:  money(totalPayments),
+			ClosingBalance: money(closingBalance),
 			Notes:          fmt.Sprintf("Monthly statement for vendor %s", vendorId),
 			AuditInfo:      createAuditInfo(),
 		}

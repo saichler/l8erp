@@ -25,7 +25,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -50,15 +49,9 @@ func generatePortfolioViews(store *MockDataStore) []*prj.PrjPortfolioView {
 
 	views := make([]*prj.PrjPortfolioView, count)
 	for i := 0; i < count; i++ {
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
-		departmentID := ""
-		if len(store.DepartmentIDs) > 0 {
-			departmentID = store.DepartmentIDs[i%len(store.DepartmentIDs)]
-		}
+		departmentID := pickRef(store.DepartmentIDs, i)
 
 		// Assign 3-5 projects to each portfolio view
 		var projectIds []string
@@ -81,16 +74,16 @@ func generatePortfolioViews(store *MockDataStore) []*prj.PrjPortfolioView {
 		totalProfit := totalRevenue - actualCost
 
 		views[i] = &prj.PrjPortfolioView{
-			ViewId:          fmt.Sprintf("ppv-%03d", i+1),
+			ViewId:          genID("ppv", i),
 			Name:            names[i%len(names)],
 			Description:     descriptions[i%len(descriptions)],
 			ProjectIds:      projectIds,
 			OwnerId:         ownerID,
 			DepartmentId:    departmentID,
-			TotalBudget:     &erp.Money{Amount: totalBudget, CurrencyCode: "USD"},
-			TotalActualCost: &erp.Money{Amount: actualCost, CurrencyCode: "USD"},
-			TotalRevenue:    &erp.Money{Amount: totalRevenue, CurrencyCode: "USD"},
-			TotalProfit:     &erp.Money{Amount: totalProfit, CurrencyCode: "USD"},
+			TotalBudget:     money(totalBudget),
+			TotalActualCost: money(actualCost),
+			TotalRevenue:    money(totalRevenue),
+			TotalProfit:     money(totalProfit),
 			TotalProjects:   totalProjects,
 			OnTrackCount:    onTrackCount,
 			AtRiskCount:     atRiskCount,
@@ -129,10 +122,7 @@ func generateProjectKPIs(store *MockDataStore) []*prj.PrjProjectKPI {
 
 	kpis := make([]*prj.PrjProjectKPI, count)
 	for i := 0; i < count; i++ {
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
 
 		kpiName := prjKPINames[i%len(prjKPINames)]
 		category := kpiCategories[i%len(kpiCategories)]
@@ -156,7 +146,7 @@ func generateProjectKPIs(store *MockDataStore) []*prj.PrjProjectKPI {
 		measurementDate := time.Now().AddDate(0, 0, -rand.Intn(30))
 
 		kpis[i] = &prj.PrjProjectKPI{
-			KpiId:             fmt.Sprintf("pkpi-%03d", i+1),
+			KpiId:             genID("pkpi", i),
 			ProjectId:         projectID,
 			KpiName:           kpiName,
 			KpiCategory:       category,
@@ -235,25 +225,13 @@ func generateProjectIssues(store *MockDataStore) []*prj.PrjProjectIssue {
 
 	issues := make([]*prj.PrjProjectIssue, count)
 	for i := 0; i < count; i++ {
-		projectID := ""
-		if len(store.PrjProjectIDs) > 0 {
-			projectID = store.PrjProjectIDs[i%len(store.PrjProjectIDs)]
-		}
+		projectID := pickRef(store.PrjProjectIDs, i)
 
-		taskID := ""
-		if len(store.PrjTaskIDs) > 0 {
-			taskID = store.PrjTaskIDs[i%len(store.PrjTaskIDs)]
-		}
+		taskID := pickRef(store.PrjTaskIDs, i)
 
-		reportedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			reportedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		reportedBy := pickRef(store.EmployeeIDs, i)
 
-		assignedTo := ""
-		if len(store.EmployeeIDs) > 0 {
-			assignedTo = store.EmployeeIDs[(i+5)%len(store.EmployeeIDs)]
-		}
+		assignedTo := pickRef(store.EmployeeIDs, (i+5))
 
 		riskID := ""
 		if len(store.PrjRiskIDs) > 0 && i%4 == 0 { // 25% linked to risks
@@ -273,7 +251,7 @@ func generateProjectIssues(store *MockDataStore) []*prj.PrjProjectIssue {
 		}
 
 		issues[i] = &prj.PrjProjectIssue{
-			IssueId:       fmt.Sprintf("pis-%03d", i+1),
+			IssueId:       genID("pis", i),
 			ProjectId:     projectID,
 			TaskId:        taskID,
 			IssueNumber:   fmt.Sprintf("ISS-%04d", i+1),
@@ -289,7 +267,7 @@ func generateProjectIssues(store *MockDataStore) []*prj.PrjProjectIssue {
 			ResolvedDate:  resolvedDate,
 			Resolution:    resolution,
 			RootCause:     fmt.Sprintf("Root cause analysis for issue %d", i+1),
-			ImpactCost:    &erp.Money{Amount: int64(rand.Intn(100000) + 5000), CurrencyCode: "USD"},
+			ImpactCost:    randomMoney(5000, 100000),
 			ImpactDays:    int32(rand.Intn(10) + 1),
 			RelatedRiskId: riskID,
 			AuditInfo:     createAuditInfo(),

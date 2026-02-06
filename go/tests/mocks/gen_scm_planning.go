@@ -47,7 +47,7 @@ func generateDemandForecasts(store *MockDataStore) []*scm.ScmDemandForecast {
 		confidenceLevel := 0.65 + rand.Float64()*0.30 // 0.65-0.95
 
 		forecasts[i] = &scm.ScmDemandForecast{
-			ForecastId:       fmt.Sprintf("dfcast-%03d", i+1),
+			ForecastId:       genID("dfcast", i),
 			ItemId:           store.ItemIDs[itemIdx],
 			PeriodStart:      periodStart.Unix(),
 			PeriodEnd:        periodEnd.Unix(),
@@ -107,7 +107,7 @@ func generateDemandPlans(store *MockDataStore) []*scm.ScmDemandPlan {
 		endDate := time.Date(2025, d.endMonth+1, 0, 0, 0, 0, 0, time.UTC)
 
 		plans[i] = &scm.ScmDemandPlan{
-			PlanId:      fmt.Sprintf("dplan-%03d", i+1),
+			PlanId:      genID("dplan", i),
 			Name:        d.name,
 			Description: d.description,
 			PlanPeriod: &erp.DateRange{
@@ -158,7 +158,7 @@ func generatePromotionalPlans(store *MockDataStore) []*scm.ScmPromotionalPlan {
 		}
 
 		plans[i] = &scm.ScmPromotionalPlan{
-			PlanId:         fmt.Sprintf("promo-%03d", i+1),
+			PlanId:         genID("promo", i),
 			Name:           d.name,
 			Description:    d.description,
 			StartDate:      startDate.Unix(),
@@ -199,7 +199,7 @@ func generateNewProductPlans(store *MockDataStore) []*scm.ScmNewProductPlan {
 		comparableIdx := (d.itemIdx + 1) % len(store.ItemIDs)
 
 		plans[i] = &scm.ScmNewProductPlan{
-			PlanId:           fmt.Sprintf("npp-%03d", i+1),
+			PlanId:           genID("npp", i),
 			Name:             d.name,
 			ItemId:           store.ItemIDs[d.itemIdx%len(store.ItemIDs)],
 			LaunchDate:       launchDate.Unix(),
@@ -238,7 +238,7 @@ func generateForecastAccuracy(store *MockDataStore) []*scm.ScmForecastAccuracy {
 		periodEnd := periodStart.AddDate(0, 1, -1)
 
 		records[i] = &scm.ScmForecastAccuracy{
-			AccuracyId:       fmt.Sprintf("facc-%03d", i+1),
+			AccuracyId:       genID("facc", i),
 			ForecastId:       store.DemandForecastIDs[forecastIdx],
 			ItemId:           store.ItemIDs[itemIdx],
 			Period: &erp.DateRange{
@@ -286,7 +286,7 @@ func generateMaterialRequirements(store *MockDataStore) []*scm.ScmMaterialRequir
 		shortageQty := requiredQty - availableQty
 
 		requirements[i] = &scm.ScmMaterialRequirement{
-			RequirementId:     fmt.Sprintf("mreq-%03d", i+1),
+			RequirementId:     genID("mreq", i),
 			ItemId:            store.ItemIDs[itemIdx],
 			RequiredDate:      requiredDate.Unix(),
 			RequiredQuantity:  requiredQty,
@@ -327,7 +327,7 @@ func generateDistributionRequirements(store *MockDataStore) []*scm.ScmDistributi
 		transferQty := requiredQty * (0.8 + rand.Float64()*0.2)
 
 		requirements[i] = &scm.ScmDistributionRequirement{
-			RequirementId:          fmt.Sprintf("dreq-%03d", i+1),
+			RequirementId:          genID("dreq", i),
 			ItemId:                 store.ItemIDs[itemIdx],
 			SourceWarehouseId:      store.SCMWarehouseIDs[sourceIdx],
 			DestinationWarehouseId: store.SCMWarehouseIDs[destIdx],
@@ -387,7 +387,7 @@ func generateSupplyPlans(store *MockDataStore) []*scm.ScmSupplyPlan {
 		endDate := time.Date(2025, d.endMonth+1, 0, 0, 0, 0, 0, time.UTC)
 
 		plans[i] = &scm.ScmSupplyPlan{
-			PlanId:      fmt.Sprintf("splan-%03d", i+1),
+			PlanId:      genID("splan", i),
 			Name:        d.name,
 			Description: d.description,
 			PlanPeriod: &erp.DateRange{
@@ -416,7 +416,7 @@ func generateSupplierCollaborations(store *MockDataStore) []*scm.ScmSupplierColl
 		itemIdx := i % len(store.ItemIDs)
 
 		collaborations[i] = &scm.ScmSupplierCollaboration{
-			CollaborationId:  fmt.Sprintf("scollab-%03d", i+1),
+			CollaborationId:  genID("scollab", i),
 			VendorId:         store.VendorIDs[vendorIdx],
 			ItemId:           store.ItemIDs[itemIdx],
 			ForecastShared:   i%2 == 0,
@@ -444,7 +444,7 @@ func generateSafetyStocks(store *MockDataStore) []*scm.ScmSafetyStock {
 		serviceLevel := 0.90 + rand.Float64()*0.09      // 0.90-0.99
 
 		stocks[i] = &scm.ScmSafetyStock{
-			SafetyStockId:       fmt.Sprintf("sstock-%03d", i+1),
+			SafetyStockId:       genID("sstock", i),
 			ItemId:              itemID,
 			WarehouseId:         store.SCMWarehouseIDs[warehouseIdx],
 			SafetyStockQuantity: safetyStockQty,
@@ -472,7 +472,7 @@ func generateLeadTimes(store *MockDataStore) []*scm.ScmLeadTime {
 		totalDays := leadTimeDays + transitDays + receivingDays
 
 		leadTimes[i] = &scm.ScmLeadTime{
-			LeadTimeId:    fmt.Sprintf("lt-%03d", i+1),
+			LeadTimeId:    genID("lt", i),
 			ItemId:        itemID,
 			VendorId:      store.VendorIDs[vendorIdx],
 			LeadTimeDays:  leadTimeDays,

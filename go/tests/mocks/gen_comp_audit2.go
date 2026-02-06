@@ -26,7 +26,6 @@ import (
 	"time"
 
 	"github.com/saichler/l8erp/go/types/comp"
-	"github.com/saichler/l8erp/go/types/erp"
 )
 
 // generateCompRemediationActions creates remediation action records
@@ -52,20 +51,11 @@ func generateCompRemediationActions(store *MockDataStore) []*comp.CompRemediatio
 	actions := make([]*comp.CompRemediationAction, count)
 
 	for i := 0; i < count; i++ {
-		findingID := ""
-		if len(store.CompAuditFindingIDs) > 0 {
-			findingID = store.CompAuditFindingIDs[i%len(store.CompAuditFindingIDs)]
-		}
+		findingID := pickRef(store.CompAuditFindingIDs, i)
 
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
-		verifierID := ""
-		if len(store.ManagerIDs) > 0 {
-			verifierID = store.ManagerIDs[i%len(store.ManagerIDs)]
-		}
+		verifierID := pickRef(store.ManagerIDs, i)
 
 		assignedDate := time.Now().AddDate(0, -rand.Intn(4), -rand.Intn(28))
 		dueDate := assignedDate.AddDate(0, 0, rand.Intn(60)+30) // 1-3 months
@@ -115,7 +105,7 @@ func generateCompRemediationActions(store *MockDataStore) []*comp.CompRemediatio
 			status != comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_VERIFIED
 
 		actions[i] = &comp.CompRemediationAction{
-			ActionId:         fmt.Sprintf("crem-%03d", i+1),
+			ActionId:         genID("crem", i),
 			FindingId:        findingID,
 			ActionNumber:     fmt.Sprintf("ACT-%04d-%02d", time.Now().Year(), i+1),
 			Title:            actionTitles[i],
@@ -129,14 +119,8 @@ func generateCompRemediationActions(store *MockDataStore) []*comp.CompRemediatio
 			VerifierId:       verifierID,
 			ProgressNotes:    fmt.Sprintf("Progress on %s: %d%% complete", actionTitles[i], percentComplete),
 			PercentComplete:  percentComplete,
-			EstimatedCost: &erp.Money{
-				Amount:       estimatedCost,
-				CurrencyCode: "USD",
-			},
-			ActualCost: &erp.Money{
-				Amount:       actualCost,
-				CurrencyCode: "USD",
-			},
+			EstimatedCost: money(estimatedCost),
+			ActualCost: money(actualCost),
 			IsOverdue:      isOverdue,
 			ExtensionCount: int32(rand.Intn(2)),
 			AuditInfo:      createAuditInfo(),
@@ -161,15 +145,9 @@ func generateCompAuditReports(store *MockDataStore) []*comp.CompAuditReport {
 	reports := make([]*comp.CompAuditReport, count)
 
 	for i := 0; i < count; i++ {
-		auditScheduleID := ""
-		if len(store.CompAuditScheduleIDs) > 0 {
-			auditScheduleID = store.CompAuditScheduleIDs[i%len(store.CompAuditScheduleIDs)]
-		}
+		auditScheduleID := pickRef(store.CompAuditScheduleIDs, i)
 
-		leadAuditorID := ""
-		if len(store.EmployeeIDs) > 0 {
-			leadAuditorID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		leadAuditorID := pickRef(store.EmployeeIDs, i)
 
 		draftDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
 		finalDate := draftDate.AddDate(0, 0, rand.Intn(14)+7) // 1-3 weeks after draft
@@ -190,7 +168,7 @@ func generateCompAuditReports(store *MockDataStore) []*comp.CompAuditReport {
 		findingsLow := int32(rand.Intn(5) + 1)
 
 		reports[i] = &comp.CompAuditReport{
-			ReportId:         fmt.Sprintf("crpt-%03d", i+1),
+			ReportId:         genID("crpt", i),
 			AuditScheduleId:  auditScheduleID,
 			ReportNumber:     fmt.Sprintf("RPT-%04d-%02d", time.Now().Year(), i+1),
 			Title:            fmt.Sprintf("Audit Report: %s", compAuditNames[i%len(compAuditNames)]),
@@ -223,20 +201,11 @@ func generateCompComplianceReports(store *MockDataStore) []*comp.CompComplianceR
 	reports := make([]*comp.CompComplianceReport, count)
 
 	for i := 0; i < count; i++ {
-		regulationID := ""
-		if len(store.CompRegulationIDs) > 0 {
-			regulationID = store.CompRegulationIDs[i%len(store.CompRegulationIDs)]
-		}
+		regulationID := pickRef(store.CompRegulationIDs, i)
 
-		preparedByID := ""
-		if len(store.EmployeeIDs) > 0 {
-			preparedByID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		preparedByID := pickRef(store.EmployeeIDs, i)
 
-		approvedByID := ""
-		if len(store.ManagerIDs) > 0 {
-			approvedByID = store.ManagerIDs[i%len(store.ManagerIDs)]
-		}
+		approvedByID := pickRef(store.ManagerIDs, i)
 
 		// Calculate period based on report type
 		periodEnd := time.Now().AddDate(0, -rand.Intn(3), 0)
@@ -268,7 +237,7 @@ func generateCompComplianceReports(store *MockDataStore) []*comp.CompComplianceR
 		}
 
 		reports[i] = &comp.CompComplianceReport{
-			ReportId:                 fmt.Sprintf("ccmp-%03d", i+1),
+			ReportId:                 genID("ccmp", i),
 			ReportNumber:             fmt.Sprintf("COMP-%04d-%02d", time.Now().Year(), i+1),
 			Title:                    fmt.Sprintf("%s Compliance Report - Q%d %d", reportTypes[i%len(reportTypes)], (int(periodEnd.Month())-1)/3+1, periodEnd.Year()),
 			ReportType:               reportTypes[i%len(reportTypes)],

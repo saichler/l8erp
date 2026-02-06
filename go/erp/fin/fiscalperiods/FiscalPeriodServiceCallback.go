@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package fiscalperiods
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type FiscalPeriodServiceCallback struct{}
-
-func newFiscalPeriodServiceCallback() *FiscalPeriodServiceCallback {
-	return &FiscalPeriodServiceCallback{}
-}
-
-func (this *FiscalPeriodServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	fiscalPeriod, ok := any.(*fin.FiscalPeriod)
-	if !ok {
-		return nil, false, errors.New("invalid fiscalPeriod type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&fiscalPeriod.FiscalPeriodId)
-	}
-	err := validate(fiscalPeriod, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *FiscalPeriodServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newFiscalPeriodServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("FiscalPeriod",
+		func(e *fin.FiscalPeriod) { common.GenerateID(&e.FiscalPeriodId) },
+		validate)
 }
 
 func validate(fiscalPeriod *fin.FiscalPeriod, vnic ifs.IVNic) error {

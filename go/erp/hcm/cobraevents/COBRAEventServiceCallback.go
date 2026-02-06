@@ -15,37 +15,16 @@ limitations under the License.
 package cobraevents
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
+	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-type COBRAEventServiceCallback struct {
-}
-
-func newCOBRAEventServiceCallback() *COBRAEventServiceCallback {
-	return &COBRAEventServiceCallback{}
-}
-
-func (this *COBRAEventServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.COBRAEvent)
-	if !ok {
-		return nil, false, errors.New("invalid COBRA event type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.CobraEventId)
-	}
-	err := validateCOBRAEvt(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *COBRAEventServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCOBRAEventServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("COBRAEvent",
+		func(e *hcm.COBRAEvent) { common.GenerateID(&e.CobraEventId) },
+		validateCOBRAEvt)
 }
 
 func validateCOBRAEvt(entity *hcm.COBRAEvent, vnic ifs.IVNic) error {

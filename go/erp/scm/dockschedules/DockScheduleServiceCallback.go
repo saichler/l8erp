@@ -15,35 +15,15 @@ limitations under the License.
 package dockschedules
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type DockScheduleServiceCallback struct{}
-
-func newDockScheduleServiceCallback() *DockScheduleServiceCallback {
-	return &DockScheduleServiceCallback{}
-}
-
-func (this *DockScheduleServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmDockSchedule)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ScheduleId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *DockScheduleServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newDockScheduleServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmDockSchedule",
+		func(e *scm.ScmDockSchedule) { common.GenerateID(&e.ScheduleId) },
+		validate)
 }
 
 func validate(item *scm.ScmDockSchedule, vnic ifs.IVNic) error {

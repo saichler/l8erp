@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package salesquotations
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/sales"
 )
 
-type SalesQuotationServiceCallback struct{}
-
-func newSalesQuotationServiceCallback() *SalesQuotationServiceCallback {
-	return &SalesQuotationServiceCallback{}
-}
-
-func (this *SalesQuotationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*sales.SalesQuotation)
-	if !ok {
-		return nil, false, errors.New("invalid sales quotation type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.QuotationId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *SalesQuotationServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newSalesQuotationServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SalesQuotation",
+		func(e *sales.SalesQuotation) { common.GenerateID(&e.QuotationId) },
+		validate)
 }
 
 func validate(item *sales.SalesQuotation, vnic ifs.IVNic) error {

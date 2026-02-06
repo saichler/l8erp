@@ -15,36 +15,15 @@ limitations under the License.
 package organizations
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-type OrganizationServiceCallback struct {
-}
-
-func newOrganizationServiceCallback() *OrganizationServiceCallback {
-	return &OrganizationServiceCallback{}
-}
-
-func (this *OrganizationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.Organization)
-	if !ok {
-		return nil, false, errors.New("invalid organization type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.OrganizationId)
-	}
-	err := validateOrg(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *OrganizationServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newOrganizationServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Organization",
+		func(e *hcm.Organization) { common.GenerateID(&e.OrganizationId) },
+		validateOrg)
 }
 
 func validateOrg(entity *hcm.Organization, vnic ifs.IVNic) error {

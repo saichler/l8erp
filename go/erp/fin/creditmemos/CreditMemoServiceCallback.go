@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package creditmemos
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type CreditMemoServiceCallback struct{}
-
-func newCreditMemoServiceCallback() *CreditMemoServiceCallback {
-	return &CreditMemoServiceCallback{}
-}
-
-func (this *CreditMemoServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	creditMemo, ok := any.(*fin.CreditMemo)
-	if !ok {
-		return nil, false, errors.New("invalid creditMemo type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&creditMemo.CreditMemoId)
-	}
-	err := validate(creditMemo, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CreditMemoServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCreditMemoServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("CreditMemo",
+		func(e *fin.CreditMemo) { common.GenerateID(&e.CreditMemoId) },
+		validate)
 }
 
 func validate(creditMemo *fin.CreditMemo, vnic ifs.IVNic) error {

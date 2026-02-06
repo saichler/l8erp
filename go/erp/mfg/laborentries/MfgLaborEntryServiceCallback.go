@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package laborentries
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type MfgLaborEntryServiceCallback struct{}
-
-func newMfgLaborEntryServiceCallback() *MfgLaborEntryServiceCallback {
-	return &MfgLaborEntryServiceCallback{}
-}
-
-func (this *MfgLaborEntryServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgLaborEntry)
-	if !ok {
-		return nil, false, errors.New("invalid MfgLaborEntry type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.EntryId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgLaborEntryServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgLaborEntryServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgLaborEntry",
+		func(e *mfg.MfgLaborEntry) { common.GenerateID(&e.EntryId) },
+		validate)
 }
 
 func validate(item *mfg.MfgLaborEntry, vnic ifs.IVNic) error {

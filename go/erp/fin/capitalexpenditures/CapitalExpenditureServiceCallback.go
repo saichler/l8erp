@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package capitalexpenditures
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type CapitalExpenditureServiceCallback struct{}
-
-func newCapitalExpenditureServiceCallback() *CapitalExpenditureServiceCallback {
-	return &CapitalExpenditureServiceCallback{}
-}
-
-func (this *CapitalExpenditureServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	capitalExpenditure, ok := any.(*fin.CapitalExpenditure)
-	if !ok {
-		return nil, false, errors.New("invalid capitalExpenditure type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&capitalExpenditure.CapexId)
-	}
-	err := validate(capitalExpenditure, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CapitalExpenditureServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCapitalExpenditureServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("CapitalExpenditure",
+		func(e *fin.CapitalExpenditure) { common.GenerateID(&e.CapexId) },
+		validate)
 }
 
 func validate(capitalExpenditure *fin.CapitalExpenditure, vnic ifs.IVNic) error {

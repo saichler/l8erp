@@ -15,35 +15,15 @@ limitations under the License.
 package shiptasks
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type ShipTaskServiceCallback struct{}
-
-func newShipTaskServiceCallback() *ShipTaskServiceCallback {
-	return &ShipTaskServiceCallback{}
-}
-
-func (this *ShipTaskServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmShipTask)
-	if !ok {
-		return nil, false, errors.New("invalid type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.TaskId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *ShipTaskServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newShipTaskServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmShipTask",
+		func(e *scm.ScmShipTask) { common.GenerateID(&e.TaskId) },
+		validate)
 }
 
 func validate(item *scm.ScmShipTask, vnic ifs.IVNic) error {

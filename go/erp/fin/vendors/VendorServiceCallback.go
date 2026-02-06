@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package vendors
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type VendorServiceCallback struct{}
-
-func newVendorServiceCallback() *VendorServiceCallback {
-	return &VendorServiceCallback{}
-}
-
-func (this *VendorServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	vendor, ok := any.(*fin.Vendor)
-	if !ok {
-		return nil, false, errors.New("invalid vendor type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&vendor.VendorId)
-	}
-	err := validate(vendor, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *VendorServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newVendorServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Vendor",
+		func(e *fin.Vendor) { common.GenerateID(&e.VendorId) },
+		validate)
 }
 
 func validate(vendor *fin.Vendor, vnic ifs.IVNic) error {

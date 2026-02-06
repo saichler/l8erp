@@ -109,15 +109,9 @@ func generateTrendAnalyses(store *MockDataStore) []*bi.BiTrendAnalysis {
 
 	analyses := make([]*bi.BiTrendAnalysis, count)
 	for i := 0; i < count; i++ {
-		dataSourceID := ""
-		if len(store.BiDataSourceIDs) > 0 {
-			dataSourceID = store.BiDataSourceIDs[i%len(store.BiDataSourceIDs)]
-		}
+		dataSourceID := pickRef(store.BiDataSourceIDs, i)
 
-		analyzedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			analyzedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		analyzedBy := pickRef(store.EmployeeIDs, i)
 
 		endDate := time.Now().AddDate(0, 0, -rand.Intn(7))
 		startDate := endDate.AddDate(0, -rand.Intn(6)-1, 0)
@@ -144,7 +138,7 @@ func generateTrendAnalyses(store *MockDataStore) []*bi.BiTrendAnalysis {
 		rSquared := 0.65 + rand.Float64()*0.33
 
 		analyses[i] = &bi.BiTrendAnalysis{
-			AnalysisId:     fmt.Sprintf("trend-%03d", i+1),
+			AnalysisId:     genID("trend", i),
 			Name:           trendAnalysisNames[i%len(trendAnalysisNames)],
 			Description:    fmt.Sprintf("Trend analysis for %s over time", trendMetrics[i%len(trendMetrics)]),
 			DataSourceId:   dataSourceID,
@@ -201,15 +195,9 @@ func generateScenarios(store *MockDataStore) []*bi.BiScenario {
 
 	scenarios := make([]*bi.BiScenario, count)
 	for i := 0; i < count; i++ {
-		dataSourceID := ""
-		if len(store.BiDataSourceIDs) > 0 {
-			dataSourceID = store.BiDataSourceIDs[i%len(store.BiDataSourceIDs)]
-		}
+		dataSourceID := pickRef(store.BiDataSourceIDs, i)
 
-		createdBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			createdBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		createdBy := pickRef(store.EmployeeIDs, i)
 
 		// Base scenario for derived scenarios (first 3 are base scenarios)
 		baseScenarioID := ""
@@ -223,7 +211,7 @@ func generateScenarios(store *MockDataStore) []*bi.BiScenario {
 		isActive := i < 8
 
 		scenarios[i] = &bi.BiScenario{
-			ScenarioId:     fmt.Sprintf("scen-%03d", i+1),
+			ScenarioId:     genID("scen", i),
 			Name:           scenarioNames[i%len(scenarioNames)],
 			Description:    fmt.Sprintf("What-if scenario: %s", scenarioNames[i%len(scenarioNames)]),
 			ScenarioType:   scenarioTypes[i%len(scenarioTypes)],
@@ -285,7 +273,7 @@ func generateBenchmarks(store *MockDataStore) []*bi.BiBenchmark {
 		variancePercent := (variance / benchmarkValue) * 100
 
 		benchmarks[i] = &bi.BiBenchmark{
-			BenchmarkId:     fmt.Sprintf("bench-%03d", i+1),
+			BenchmarkId:     genID("bench", i),
 			Name:            benchmarkNames[i%len(benchmarkNames)],
 			Description:     fmt.Sprintf("Industry benchmark comparison for %s", benchmarkNames[i%len(benchmarkNames)]),
 			Category:        benchmarkCategories[i%len(benchmarkCategories)],

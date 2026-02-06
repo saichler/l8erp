@@ -15,36 +15,15 @@ limitations under the License.
 package paystructures
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-type PayStructureServiceCallback struct {
-}
-
-func newPayStructureServiceCallback() *PayStructureServiceCallback {
-	return &PayStructureServiceCallback{}
-}
-
-func (this *PayStructureServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.PayStructure)
-	if !ok {
-		return nil, false, errors.New("invalid pay structure type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.PayStructureId)
-	}
-	err := validatePayStruct(entity)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PayStructureServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPayStructureServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("PayStructure",
+		func(e *hcm.PayStructure) { common.GenerateID(&e.PayStructureId) },
+		nil)
 }
 
 func validatePayStruct(entity *hcm.PayStructure) error {

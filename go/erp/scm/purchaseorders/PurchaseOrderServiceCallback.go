@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package purchaseorders
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/scm"
 )
 
-type PurchaseOrderServiceCallback struct{}
-
-func newPurchaseOrderServiceCallback() *PurchaseOrderServiceCallback {
-	return &PurchaseOrderServiceCallback{}
-}
-
-func (this *PurchaseOrderServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*scm.ScmPurchaseOrder)
-	if !ok {
-		return nil, false, errors.New("invalid purchase order type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.PurchaseOrderId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *PurchaseOrderServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newPurchaseOrderServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("ScmPurchaseOrder",
+		func(e *scm.ScmPurchaseOrder) { common.GenerateID(&e.PurchaseOrderId) },
+		validate)
 }
 
 func validate(item *scm.ScmPurchaseOrder, vnic ifs.IVNic) error {

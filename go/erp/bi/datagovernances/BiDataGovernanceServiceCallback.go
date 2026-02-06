@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package datagovernances
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/bi"
 )
 
-type BiDataGovernanceServiceCallback struct{}
-
-func newBiDataGovernanceServiceCallback() *BiDataGovernanceServiceCallback {
-	return &BiDataGovernanceServiceCallback{}
-}
-
-func (this *BiDataGovernanceServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*bi.BiDataGovernance)
-	if !ok {
-		return nil, false, errors.New("invalid BiDataGovernance type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.GovernanceId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *BiDataGovernanceServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newBiDataGovernanceServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("BiDataGovernance",
+		func(e *bi.BiDataGovernance) { common.GenerateID(&e.GovernanceId) },
+		validate)
 }
 
 func validate(item *bi.BiDataGovernance, vnic ifs.IVNic) error {

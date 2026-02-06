@@ -40,7 +40,7 @@ func generateCurrencies() []*fin.Currency {
 	currencies := make([]*fin.Currency, len(defs))
 	for i, d := range defs {
 		currencies[i] = &fin.Currency{
-			CurrencyId:    fmt.Sprintf("cur-%03d", i+1),
+			CurrencyId:    genID("cur", i),
 			Code:          d.code,
 			Name:          d.name,
 			Symbol:        d.symbol,
@@ -86,9 +86,9 @@ func generateAssetCategories() []*fin.AssetCategory {
 	categories := make([]*fin.AssetCategory, len(assetCategoryNames))
 	for i, name := range assetCategoryNames {
 		categories[i] = &fin.AssetCategory{
-			CategoryId:                fmt.Sprintf("acat-%03d", i+1),
+			CategoryId:                genID("acat", i),
 			Name:                      name,
-			Code:                      fmt.Sprintf("AC%03d", i+1),
+			Code:                      genCode("AC", i),
 			Description:               fmt.Sprintf("Category for %s", name),
 			DefaultDepreciationMethod: fin.DepreciationMethod_DEPRECIATION_METHOD_STRAIGHT_LINE,
 			DefaultUsefulLifeMonths:   usefulLifeMonths[i],
@@ -106,9 +106,9 @@ func generateTaxJurisdictions() []*fin.TaxJurisdiction {
 	jurisdictions := make([]*fin.TaxJurisdiction, len(taxJurisdictionNames))
 	for i, name := range taxJurisdictionNames {
 		j := &fin.TaxJurisdiction{
-			JurisdictionId: fmt.Sprintf("tjur-%03d", i+1),
+			JurisdictionId: genID("tjur", i),
 			Name:           name,
-			Code:           fmt.Sprintf("TJ%03d", i+1),
+			Code:           genCode("TJ", i),
 			CountryCode:    "US",
 			IsActive:       true,
 			AuditInfo:      createAuditInfo(),
@@ -223,7 +223,7 @@ func generateAccounts(store *MockDataStore) []*fin.Account {
 	accounts := make([]*fin.Account, len(defs))
 	for i, d := range defs {
 		accounts[i] = &fin.Account{
-			AccountId:     fmt.Sprintf("acct-%03d", i+1),
+			AccountId:     genID("acct", i),
 			AccountNumber: d.number,
 			Name:          d.name,
 			Description:   fmt.Sprintf("GL account for %s", d.name),
@@ -265,8 +265,8 @@ func generateTaxCodes(store *MockDataStore) []*fin.TaxCode {
 	taxCodes := make([]*fin.TaxCode, len(defs))
 	for i, d := range defs {
 		taxCodes[i] = &fin.TaxCode{
-			TaxCodeId:   fmt.Sprintf("tc-%03d", i+1),
-			Code:        fmt.Sprintf("TX%03d", i+1),
+			TaxCodeId:   genID("tc", i),
+			Code:        genCode("TX", i),
 			Name:        d.name,
 			Description: fmt.Sprintf("Tax code for %s", d.name),
 			TaxType:     d.taxType,

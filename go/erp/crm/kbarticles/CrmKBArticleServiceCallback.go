@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package kbarticles
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/crm"
 )
 
-type CrmKBArticleServiceCallback struct{}
-
-func newCrmKBArticleServiceCallback() *CrmKBArticleServiceCallback {
-	return &CrmKBArticleServiceCallback{}
-}
-
-func (this *CrmKBArticleServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*crm.CrmKBArticle)
-	if !ok {
-		return nil, false, errors.New("invalid CrmKBArticle type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ArticleId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CrmKBArticleServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCrmKBArticleServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("CrmKBArticle",
+		func(e *crm.CrmKBArticle) { common.GenerateID(&e.ArticleId) },
+		validate)
 }
 
 func validate(item *crm.CrmKBArticle, vnic ifs.IVNic) error {

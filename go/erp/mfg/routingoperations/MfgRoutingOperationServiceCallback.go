@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package routingoperations
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-type MfgRoutingOperationServiceCallback struct{}
-
-func newMfgRoutingOperationServiceCallback() *MfgRoutingOperationServiceCallback {
-	return &MfgRoutingOperationServiceCallback{}
-}
-
-func (this *MfgRoutingOperationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*mfg.MfgRoutingOperation)
-	if !ok {
-		return nil, false, errors.New("invalid MfgRoutingOperation type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.OperationId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *MfgRoutingOperationServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newMfgRoutingOperationServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("MfgRoutingOperation",
+		func(e *mfg.MfgRoutingOperation) { common.GenerateID(&e.OperationId) },
+		validate)
 }
 
 func validate(item *mfg.MfgRoutingOperation, vnic ifs.IVNic) error {

@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package taxreturns
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/fin"
 )
 
-type TaxReturnServiceCallback struct{}
-
-func newTaxReturnServiceCallback() *TaxReturnServiceCallback {
-	return &TaxReturnServiceCallback{}
-}
-
-func (this *TaxReturnServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	taxReturn, ok := any.(*fin.TaxReturn)
-	if !ok {
-		return nil, false, errors.New("invalid taxReturn type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&taxReturn.ReturnId)
-	}
-	err := validate(taxReturn, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *TaxReturnServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newTaxReturnServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("TaxReturn",
+		func(e *fin.TaxReturn) { common.GenerateID(&e.ReturnId) },
+		validate)
 }
 
 func validate(taxReturn *fin.TaxReturn, vnic ifs.IVNic) error {

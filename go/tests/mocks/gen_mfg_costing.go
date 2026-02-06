@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
@@ -32,10 +31,7 @@ func generateStandardCosts(store *MockDataStore) []*mfg.MfgStandardCost {
 
 	costs := make([]*mfg.MfgStandardCost, count)
 	for i := 0; i < count; i++ {
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[i%len(store.ItemIDs)]
-		}
+		itemID := pickRef(store.ItemIDs, i)
 
 		effectiveDate := time.Now().AddDate(0, -rand.Intn(6), 0)
 		expiryDate := effectiveDate.AddDate(1, 0, 0)
@@ -47,16 +43,16 @@ func generateStandardCosts(store *MockDataStore) []*mfg.MfgStandardCost {
 		totalCost := materialCost + laborCost + overheadCost + outsideCost
 
 		costs[i] = &mfg.MfgStandardCost{
-			CostId:                fmt.Sprintf("stdcost-%03d", i+1),
+			CostId:                genID("stdcost", i),
 			ItemId:                itemID,
 			CostVersion:           fmt.Sprintf("V%d", rand.Intn(3)+1),
 			EffectiveDate:         effectiveDate.Unix(),
 			ExpiryDate:            expiryDate.Unix(),
-			MaterialCost:          &erp.Money{Amount: materialCost, CurrencyCode: "USD"},
-			LaborCost:             &erp.Money{Amount: laborCost, CurrencyCode: "USD"},
-			OverheadCost:          &erp.Money{Amount: overheadCost, CurrencyCode: "USD"},
-			OutsideProcessingCost: &erp.Money{Amount: outsideCost, CurrencyCode: "USD"},
-			TotalCost:             &erp.Money{Amount: totalCost, CurrencyCode: "USD"},
+			MaterialCost:          money(materialCost),
+			LaborCost:             money(laborCost),
+			OverheadCost:          money(overheadCost),
+			OutsideProcessingCost: money(outsideCost),
+			TotalCost:             money(totalCost),
 			CurrencyCode:          "USD",
 			CostMethod:            []string{"STANDARD", "ACTUAL", "AVERAGE"}[i%3],
 			IsCurrent:             i < count*7/10,
@@ -79,7 +75,7 @@ func generateCostRollups() []*mfg.MfgCostRollup {
 		effectiveDate := runDate.AddDate(0, 0, rand.Intn(7))
 
 		rollups[i] = &mfg.MfgCostRollup{
-			RollupId:       fmt.Sprintf("rollup-%03d", i+1),
+			RollupId:       genID("rollup", i),
 			RollupNumber:   fmt.Sprintf("CR-%05d", 90000+i+1),
 			Description:    fmt.Sprintf("Manufacturing cost rollup %d", i+1),
 			CostVersion:    fmt.Sprintf("V%d", rand.Intn(3)+1),
@@ -120,10 +116,10 @@ func generateActualCosts(store *MockDataStore) []*mfg.MfgActualCost {
 				WorkOrderId:     woID,
 				CostType:        costTypes[(woIdx*2+j)%len(costTypes)],
 				CostElement:     fmt.Sprintf("CE-%03d", idx),
-				Amount:          &erp.Money{Amount: amount, CurrencyCode: "USD"},
+				Amount:          money(amount),
 				Quantity:        quantity,
 				UnitOfMeasure:   "EA",
-				UnitCost:        &erp.Money{Amount: unitCost, CurrencyCode: "USD"},
+				UnitCost:        money(unitCost),
 				SourceType:      sourceTypes[(woIdx*2+j)%len(sourceTypes)],
 				SourceId:        fmt.Sprintf("SRC-%06d", 100000+idx),
 				TransactionDate: transDate.Unix(),
@@ -161,19 +157,16 @@ func generateCostVariances(store *MockDataStore) []*mfg.MfgCostVariance {
 		varianceAmount := actualCost - standardCost
 		variancePercent := float64(varianceAmount) / float64(standardCost) * 100
 
-		analyzedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			analyzedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		analyzedBy := pickRef(store.EmployeeIDs, i)
 
 		variances[i] = &mfg.MfgCostVariance{
-			VarianceId:      fmt.Sprintf("costvar-%03d", i+1),
+			VarianceId:      genID("costvar", i),
 			WorkOrderId:     woID,
 			VarianceType:    varianceTypes[i%len(varianceTypes)],
 			CostType:        costTypes[i%len(costTypes)],
-			StandardCost:    &erp.Money{Amount: standardCost, CurrencyCode: "USD"},
-			ActualCost:      &erp.Money{Amount: actualCost, CurrencyCode: "USD"},
-			VarianceAmount:  &erp.Money{Amount: varianceAmount, CurrencyCode: "USD"},
+			StandardCost:    money(standardCost),
+			ActualCost:      money(actualCost),
+			VarianceAmount:  money(varianceAmount),
 			VariancePercent: variancePercent,
 			VarianceReason:  fmt.Sprintf("Variance reason for WO %s", woID),
 			AnalysisDate:    analysisDate.Unix(),
@@ -201,8 +194,8 @@ func generateOverheads(store *MockDataStore) []*mfg.MfgOverhead {
 		expiryDate := effectiveDate.AddDate(1, 0, 0)
 
 		overheads[i] = &mfg.MfgOverhead{
-			OverheadId:       fmt.Sprintf("overhead-%03d", i+1),
-			Code:             fmt.Sprintf("OH%03d", i+1),
+			OverheadId:       genID("overhead", i),
+			Code:             genCode("OH", i),
 			Name:             name,
 			Description:      fmt.Sprintf("Manufacturing overhead: %s", name),
 			AllocationMethod: allocMethods[i%len(allocMethods)],
@@ -226,14 +219,8 @@ func generateOverheadAllocs(store *MockDataStore) []*mfg.MfgOverheadAlloc {
 	idx := 1
 	for ohIdx, ohID := range store.MfgOverheadIDs {
 		for j := 0; j < 2; j++ {
-			woID := ""
-			if len(store.MfgWorkOrderIDs) > 0 {
-				woID = store.MfgWorkOrderIDs[(ohIdx*2+j)%len(store.MfgWorkOrderIDs)]
-			}
-			wcID := ""
-			if len(store.MfgWorkCenterIDs) > 0 {
-				wcID = store.MfgWorkCenterIDs[(ohIdx+j)%len(store.MfgWorkCenterIDs)]
-			}
+			woID := pickRef(store.MfgWorkOrderIDs, (ohIdx*2+j))
+			wcID := pickRef(store.MfgWorkCenterIDs, (ohIdx+j))
 
 			allocDate := time.Now().AddDate(0, 0, -rand.Intn(14))
 			allocBase := float64(rand.Intn(100) + 20)
@@ -247,7 +234,7 @@ func generateOverheadAllocs(store *MockDataStore) []*mfg.MfgOverheadAlloc {
 				WorkCenterId:    wcID,
 				AllocationBase:  allocBase,
 				Rate:            rate,
-				AllocatedAmount: &erp.Money{Amount: allocAmount, CurrencyCode: "USD"},
+				AllocatedAmount: money(allocAmount),
 				AllocationDate:  allocDate.Unix(),
 				Period:          allocDate.Format("2006-01"),
 				Notes:           fmt.Sprintf("Overhead allocation %d", idx),

@@ -15,38 +15,17 @@ limitations under the License.
 package applications
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/applicants"
 	"github.com/saichler/l8erp/go/erp/hcm/jobrequisitions"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8types/go/ifs"
 )
 
-type ApplicationServiceCallback struct {
-}
-
-func newApplicationServiceCallback() *ApplicationServiceCallback {
-	return &ApplicationServiceCallback{}
-}
-
-func (this *ApplicationServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*hcm.Application)
-	if !ok {
-		return nil, false, errors.New("invalid application type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&entity.ApplicationId)
-	}
-	err := validateApplctn(entity, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *ApplicationServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newApplicationServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("Application",
+		func(e *hcm.Application) { common.GenerateID(&e.ApplicationId) },
+		validateApplctn)
 }
 
 func validateApplctn(entity *hcm.Application, vnic ifs.IVNic) error {

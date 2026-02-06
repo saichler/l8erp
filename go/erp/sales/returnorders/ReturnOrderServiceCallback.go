@@ -12,39 +12,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-
 package returnorders
 
 import (
-	"errors"
 	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/sales"
 )
 
-type ReturnOrderServiceCallback struct{}
-
-func newReturnOrderServiceCallback() *ReturnOrderServiceCallback {
-	return &ReturnOrderServiceCallback{}
-}
-
-func (this *ReturnOrderServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*sales.SalesReturnOrder)
-	if !ok {
-		return nil, false, errors.New("invalid return order type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.ReturnOrderId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *ReturnOrderServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newReturnOrderServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("SalesReturnOrder",
+		func(e *sales.SalesReturnOrder) { common.GenerateID(&e.ReturnOrderId) },
+		validate)
 }
 
 func validate(item *sales.SalesReturnOrder, vnic ifs.IVNic) error {

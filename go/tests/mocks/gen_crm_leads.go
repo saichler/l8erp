@@ -20,7 +20,6 @@ import (
 	"time"
 
 	"github.com/saichler/l8erp/go/types/crm"
-	"github.com/saichler/l8erp/go/types/erp"
 )
 
 // generateLeadSources creates lead source records
@@ -41,7 +40,7 @@ func generateLeadSources() []*crm.CrmLeadSource {
 	sources := make([]*crm.CrmLeadSource, len(crmLeadSourceNames))
 	for i, name := range crmLeadSourceNames {
 		sources[i] = &crm.CrmLeadSource{
-			SourceId:    fmt.Sprintf("ldsrc-%03d", i+1),
+			SourceId:    genID("ldsrc", i),
 			Name:        name,
 			Description: fmt.Sprintf("Lead source: %s", name),
 			SourceType:  sourceTypes[i%len(sourceTypes)],
@@ -61,7 +60,7 @@ func generateLeadScoreRules() []*crm.CrmLeadScore {
 	rules := make([]*crm.CrmLeadScore, 10)
 	for i := 0; i < 10; i++ {
 		rules[i] = &crm.CrmLeadScore{
-			ScoreId:     fmt.Sprintf("ldscore-%03d", i+1),
+			ScoreId:     genID("ldscore", i),
 			Name:        fmt.Sprintf("Score Rule %d", i+1),
 			Description: fmt.Sprintf("Lead scoring rule for %s", fields[i%len(fields)]),
 			FieldName:   fields[i%len(fields)],
@@ -81,13 +80,10 @@ func generateLeadAssignRules(store *MockDataStore) []*crm.CrmLeadAssign {
 
 	rules := make([]*crm.CrmLeadAssign, 8)
 	for i := 0; i < 8; i++ {
-		assignTo := ""
-		if len(store.EmployeeIDs) > 0 {
-			assignTo = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		assignTo := pickRef(store.EmployeeIDs, i)
 
 		rules[i] = &crm.CrmLeadAssign{
-			AssignmentId:   fmt.Sprintf("ldassn-%03d", i+1),
+			AssignmentId:   genID("ldassn", i),
 			Name:           fmt.Sprintf("Assignment Rule %d", i+1),
 			Description:    fmt.Sprintf("Assign leads based on %s", criteria[i%len(criteria)]),
 			CriteriaField:  criteria[i%len(criteria)],
@@ -120,18 +116,9 @@ func generateLeads(store *MockDataStore) []*crm.CrmLead {
 	count := 50
 	leads := make([]*crm.CrmLead, count)
 	for i := 0; i < count; i++ {
-		sourceID := ""
-		if len(store.CrmLeadSourceIDs) > 0 {
-			sourceID = store.CrmLeadSourceIDs[i%len(store.CrmLeadSourceIDs)]
-		}
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
-		campaignID := ""
-		if len(store.CrmCampaignIDs) > 0 {
-			campaignID = store.CrmCampaignIDs[i%len(store.CrmCampaignIDs)]
-		}
+		sourceID := pickRef(store.CrmLeadSourceIDs, i)
+		ownerID := pickRef(store.EmployeeIDs, i)
+		campaignID := pickRef(store.CrmCampaignIDs, i)
 
 		// Status distribution: 30% new, 25% contacted, 25% qualified, 10% unqualified, 10% converted
 		var status crm.CrmLeadStatus
@@ -148,7 +135,7 @@ func generateLeads(store *MockDataStore) []*crm.CrmLead {
 		}
 
 		leads[i] = &crm.CrmLead{
-			LeadId:           fmt.Sprintf("lead-%03d", i+1),
+			LeadId:           genID("lead", i),
 			FirstName:        firstNames[i%len(firstNames)],
 			LastName:         lastNames[i%len(lastNames)],
 			Email:            fmt.Sprintf("%s.%s@example.com", firstNames[i%len(firstNames)], lastNames[i%len(lastNames)]),
@@ -163,7 +150,7 @@ func generateLeads(store *MockDataStore) []*crm.CrmLead {
 			Description:      fmt.Sprintf("Lead #%d from %s", i+1, crmLeadSourceNames[i%len(crmLeadSourceNames)]),
 			Website:          fmt.Sprintf("https://www.company%d.com", i+1),
 			EmployeeCount:    int32(rand.Intn(1000) + 10),
-			AnnualRevenue:    &erp.Money{Amount: int64(rand.Intn(10000000) + 100000), CurrencyCode: "USD"},
+			AnnualRevenue:    randomMoney(100000, 10000000),
 			LastActivityDate: time.Now().AddDate(0, 0, -rand.Intn(30)).Unix(),
 			Score:            int32(rand.Intn(100)),
 			CampaignId:       campaignID,
@@ -193,10 +180,7 @@ func generateLeadActivities(store *MockDataStore) []*crm.CrmLeadActivity {
 	idx := 1
 	for _, leadID := range store.CrmLeadIDs {
 		for j := 0; j < 2; j++ {
-			assignedTo := ""
-			if len(store.EmployeeIDs) > 0 {
-				assignedTo = store.EmployeeIDs[(idx-1)%len(store.EmployeeIDs)]
-			}
+			assignedTo := pickRef(store.EmployeeIDs, (idx-1))
 
 			isCompleted := statuses[(idx-1)%len(statuses)] == crm.CrmActivityStatus_CRM_ACTIVITY_STATUS_COMPLETED
 
@@ -230,29 +214,17 @@ func generateLeadConversions(store *MockDataStore) []*crm.CrmLeadConversion {
 
 	conversions := make([]*crm.CrmLeadConversion, count)
 	for i := 0; i < count; i++ {
-		leadID := ""
-		if len(store.CrmLeadIDs) > 0 {
-			leadID = store.CrmLeadIDs[i%len(store.CrmLeadIDs)]
-		}
-		accountID := ""
-		if len(store.CrmAccountIDs) > 0 {
-			accountID = store.CrmAccountIDs[i%len(store.CrmAccountIDs)]
-		}
-		contactID := ""
-		if len(store.CrmContactIDs) > 0 {
-			contactID = store.CrmContactIDs[i%len(store.CrmContactIDs)]
-		}
+		leadID := pickRef(store.CrmLeadIDs, i)
+		accountID := pickRef(store.CrmAccountIDs, i)
+		contactID := pickRef(store.CrmContactIDs, i)
 		opportunityID := ""
 		if len(store.CrmOpportunityIDs) > 0 && i%2 == 0 {
 			opportunityID = store.CrmOpportunityIDs[i%len(store.CrmOpportunityIDs)]
 		}
-		convertedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			convertedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		convertedBy := pickRef(store.EmployeeIDs, i)
 
 		conversions[i] = &crm.CrmLeadConversion{
-			ConversionId:      fmt.Sprintf("ldconv-%03d", i+1),
+			ConversionId:      genID("ldconv", i),
 			LeadId:            leadID,
 			AccountId:         accountID,
 			ContactId:         contactID,

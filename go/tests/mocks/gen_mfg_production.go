@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
@@ -27,10 +26,7 @@ import (
 func generateEngChangeOrders(store *MockDataStore) []*mfg.MfgEngChangeOrder {
 	ecos := make([]*mfg.MfgEngChangeOrder, 10)
 	for i := 0; i < 10; i++ {
-		requestedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			requestedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		requestedBy := pickRef(store.EmployeeIDs, i)
 		requestDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(30))
 		requiredDate := requestDate.AddDate(0, 1, rand.Intn(30))
 
@@ -53,7 +49,7 @@ func generateEngChangeOrders(store *MockDataStore) []*mfg.MfgEngChangeOrder {
 		}
 
 		ecos[i] = &mfg.MfgEngChangeOrder{
-			ChangeOrderId: fmt.Sprintf("eco-%03d", i+1),
+			ChangeOrderId: genID("eco", i),
 			EcoNumber:     fmt.Sprintf("ECO-%05d", 20000+i+1),
 			Title:         fmt.Sprintf("Engineering Change %d", i+1),
 			Description:   fmt.Sprintf("Engineering change order for process improvement #%d", i+1),
@@ -63,8 +59,8 @@ func generateEngChangeOrders(store *MockDataStore) []*mfg.MfgEngChangeOrder {
 			RequiredDate:  requiredDate.Unix(),
 			Priority:      int32(rand.Intn(5) + 1),
 			Reason:        fmt.Sprintf("Improve quality and reduce costs for product line %d", i+1),
-			EstimatedCost: &erp.Money{Amount: estCost, CurrencyCode: "USD"},
-			ActualCost:    &erp.Money{Amount: actCost, CurrencyCode: "USD"},
+			EstimatedCost: money(estCost),
+			ActualCost:    money(actCost),
 			Notes:         fmt.Sprintf("ECO notes for change order %d", i+1),
 			AuditInfo:     createAuditInfo(),
 		}
@@ -128,26 +124,11 @@ func generateWorkOrders(store *MockDataStore) []*mfg.MfgWorkOrder {
 	workOrders := make([]*mfg.MfgWorkOrder, count)
 
 	for i := 0; i < count; i++ {
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[i%len(store.ItemIDs)]
-		}
-		bomID := ""
-		if len(store.MfgBomIDs) > 0 {
-			bomID = store.MfgBomIDs[i%len(store.MfgBomIDs)]
-		}
-		routingID := ""
-		if len(store.MfgRoutingIDs) > 0 {
-			routingID = store.MfgRoutingIDs[i%len(store.MfgRoutingIDs)]
-		}
-		wcID := ""
-		if len(store.MfgWorkCenterIDs) > 0 {
-			wcID = store.MfgWorkCenterIDs[i%len(store.MfgWorkCenterIDs)]
-		}
-		warehouseID := ""
-		if len(store.SCMWarehouseIDs) > 0 {
-			warehouseID = store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)]
-		}
+		itemID := pickRef(store.ItemIDs, i)
+		bomID := pickRef(store.MfgBomIDs, i)
+		routingID := pickRef(store.MfgRoutingIDs, i)
+		wcID := pickRef(store.MfgWorkCenterIDs, i)
+		warehouseID := pickRef(store.SCMWarehouseIDs, i)
 		salesOrderID := ""
 		if len(store.SalesOrderIDs) > 0 && i < 5 {
 			salesOrderID = store.SalesOrderIDs[i%len(store.SalesOrderIDs)]
@@ -186,7 +167,7 @@ func generateWorkOrders(store *MockDataStore) []*mfg.MfgWorkOrder {
 		}
 
 		workOrders[i] = &mfg.MfgWorkOrder{
-			WorkOrderId:       fmt.Sprintf("wo-%03d", i+1),
+			WorkOrderId:       genID("wo", i),
 			WorkOrderNumber:   fmt.Sprintf("WO-%06d", 100000+i+1),
 			ItemId:            itemID,
 			BomId:             bomID,
@@ -201,8 +182,8 @@ func generateWorkOrders(store *MockDataStore) []*mfg.MfgWorkOrder {
 			WorkCenterId:      wcID,
 			SalesOrderId:      salesOrderID,
 			Priority:          int32(rand.Intn(5) + 1),
-			EstimatedCost:     &erp.Money{Amount: estCost, CurrencyCode: "USD"},
-			ActualCost:        &erp.Money{Amount: actCost, CurrencyCode: "USD"},
+			EstimatedCost:     money(estCost),
+			ActualCost:        money(actCost),
 			Notes:             fmt.Sprintf("Work order for manufacturing batch %d", i+1),
 			AuditInfo:         createAuditInfo(),
 		}
@@ -222,18 +203,9 @@ func generateWorkOrderOps(store *MockDataStore) []*mfg.MfgWorkOrderOp {
 	idx := 1
 	for woIdx, woID := range store.MfgWorkOrderIDs {
 		for j := 0; j < 3; j++ {
-			wcID := ""
-			if len(store.MfgWorkCenterIDs) > 0 {
-				wcID = store.MfgWorkCenterIDs[(woIdx+j)%len(store.MfgWorkCenterIDs)]
-			}
-			rtngOpID := ""
-			if len(store.MfgRoutingOpIDs) > 0 {
-				rtngOpID = store.MfgRoutingOpIDs[(woIdx*3+j)%len(store.MfgRoutingOpIDs)]
-			}
-			operatorID := ""
-			if len(store.EmployeeIDs) > 0 {
-				operatorID = store.EmployeeIDs[(woIdx+j)%len(store.EmployeeIDs)]
-			}
+			wcID := pickRef(store.MfgWorkCenterIDs, (woIdx+j))
+			rtngOpID := pickRef(store.MfgRoutingOpIDs, (woIdx*3+j))
+			operatorID := pickRef(store.EmployeeIDs, (woIdx+j))
 			opName := mfgOperationNames[(woIdx*3+j)%len(mfgOperationNames)]
 
 			setupPlanned := float64(rand.Intn(30)+10) / 60.0
@@ -281,18 +253,12 @@ func generateProductionOrders(store *MockDataStore) []*mfg.MfgProductionOrder {
 	orders := make([]*mfg.MfgProductionOrder, count)
 
 	for i := 0; i < count; i++ {
-		customerID := ""
-		if len(store.CustomerIDs) > 0 {
-			customerID = store.CustomerIDs[i%len(store.CustomerIDs)]
-		}
+		customerID := pickRef(store.CustomerIDs, i)
 		salesOrderID := ""
 		if len(store.SalesOrderIDs) > 0 && i < 5 {
 			salesOrderID = store.SalesOrderIDs[i%len(store.SalesOrderIDs)]
 		}
-		plannerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			plannerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		plannerID := pickRef(store.EmployeeIDs, i)
 
 		orderDate := time.Now().AddDate(0, 0, -rand.Intn(30))
 		requiredDate := orderDate.AddDate(0, 0, rand.Intn(30)+14)
@@ -316,7 +282,7 @@ func generateProductionOrders(store *MockDataStore) []*mfg.MfgProductionOrder {
 		}
 
 		orders[i] = &mfg.MfgProductionOrder{
-			ProdOrderId:        fmt.Sprintf("pord-%03d", i+1),
+			ProdOrderId:        genID("pord", i),
 			OrderNumber:        fmt.Sprintf("PO-%06d", 200000+i+1),
 			CustomerId:         customerID,
 			SalesOrderId:       salesOrderID,
@@ -325,8 +291,8 @@ func generateProductionOrders(store *MockDataStore) []*mfg.MfgProductionOrder {
 			Status:             status,
 			Priority:           int32(rand.Intn(5) + 1),
 			PlannerId:          plannerID,
-			TotalEstimatedCost: &erp.Money{Amount: estCost, CurrencyCode: "USD"},
-			TotalActualCost:    &erp.Money{Amount: actCost, CurrencyCode: "USD"},
+			TotalEstimatedCost: money(estCost),
+			TotalActualCost:    money(actCost),
 			Notes:              fmt.Sprintf("Production order for batch manufacturing %d", i+1),
 			AuditInfo:          createAuditInfo(),
 		}
@@ -340,18 +306,9 @@ func generateProdOrderLines(store *MockDataStore) []*mfg.MfgProdOrderLine {
 	idx := 1
 	for ordIdx, ordID := range store.MfgProductionOrderIDs {
 		for j := 0; j < 2; j++ {
-			itemID := ""
-			if len(store.ItemIDs) > 0 {
-				itemID = store.ItemIDs[(ordIdx*2+j)%len(store.ItemIDs)]
-			}
-			warehouseID := ""
-			if len(store.SCMWarehouseIDs) > 0 {
-				warehouseID = store.SCMWarehouseIDs[(ordIdx+j)%len(store.SCMWarehouseIDs)]
-			}
-			woID := ""
-			if len(store.MfgWorkOrderIDs) > 0 {
-				woID = store.MfgWorkOrderIDs[(ordIdx*2+j)%len(store.MfgWorkOrderIDs)]
-			}
+			itemID := pickRef(store.ItemIDs, (ordIdx*2+j))
+			warehouseID := pickRef(store.SCMWarehouseIDs, (ordIdx+j))
+			woID := pickRef(store.MfgWorkOrderIDs, (ordIdx*2+j))
 
 			qtyOrdered := float64(rand.Intn(100) + 10)
 			qtyCompleted := qtyOrdered * float64(rand.Intn(80)) / 100.0
@@ -386,24 +343,15 @@ func generateProdBatches(store *MockDataStore) []*mfg.MfgProdBatch {
 	qualityStatuses := []string{"PASSED", "PENDING", "FAILED", "HOLD"}
 
 	for i := 0; i < count; i++ {
-		woID := ""
-		if len(store.MfgWorkOrderIDs) > 0 {
-			woID = store.MfgWorkOrderIDs[i%len(store.MfgWorkOrderIDs)]
-		}
-		itemID := ""
-		if len(store.ItemIDs) > 0 {
-			itemID = store.ItemIDs[i%len(store.ItemIDs)]
-		}
-		warehouseID := ""
-		if len(store.SCMWarehouseIDs) > 0 {
-			warehouseID = store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)]
-		}
+		woID := pickRef(store.MfgWorkOrderIDs, i)
+		itemID := pickRef(store.ItemIDs, i)
+		warehouseID := pickRef(store.SCMWarehouseIDs, i)
 
 		productionDate := time.Now().AddDate(0, 0, -rand.Intn(60))
 		expiryDate := productionDate.AddDate(1, 0, 0) // 1 year expiry
 
 		batches[i] = &mfg.MfgProdBatch{
-			BatchId:        fmt.Sprintf("batch-%03d", i+1),
+			BatchId:        genID("batch", i),
 			BatchNumber:    fmt.Sprintf("BATCH-%06d", 300000+i+1),
 			WorkOrderId:    woID,
 			ItemId:         itemID,

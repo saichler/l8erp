@@ -82,26 +82,17 @@ func generateBiReports(store *MockDataStore) []*bi.BiReport {
 
 	reports := make([]*bi.BiReport, count)
 	for i := 0; i < count; i++ {
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
-		dataSourceID := ""
-		if len(store.BiDataSourceIDs) > 0 {
-			dataSourceID = store.BiDataSourceIDs[i%len(store.BiDataSourceIDs)]
-		}
+		dataSourceID := pickRef(store.BiDataSourceIDs, i)
 
-		templateID := ""
-		if len(store.BiReportTemplateIDs) > 0 {
-			templateID = store.BiReportTemplateIDs[i%len(store.BiReportTemplateIDs)]
-		}
+		templateID := pickRef(store.BiReportTemplateIDs, i)
 
 		lastExecuted := time.Now().AddDate(0, 0, -rand.Intn(30))
 
 		reports[i] = &bi.BiReport{
-			ReportId:       fmt.Sprintf("rpt-%03d", i+1),
-			Code:           fmt.Sprintf("RPT%03d", i+1),
+			ReportId:       genID("rpt", i),
+			Code:           genCode("RPT", i),
 			Name:           biReportNames[i%len(biReportNames)],
 			Description:    fmt.Sprintf("Comprehensive %s for business analytics", biReportNames[i%len(biReportNames)]),
 			ReportType:     reportTypes[i%len(reportTypes)],
@@ -164,7 +155,7 @@ func generateBiReportTemplates(store *MockDataStore) []*bi.BiReportTemplate {
 	templates := make([]*bi.BiReportTemplate, count)
 	for i := 0; i < count; i++ {
 		templates[i] = &bi.BiReportTemplate{
-			TemplateId:     fmt.Sprintf("tpl-%03d", i+1),
+			TemplateId:     genID("tpl", i),
 			Name:           templateNames[i%len(templateNames)],
 			Description:    fmt.Sprintf("Template for creating %s reports", templateNames[i%len(templateNames)]),
 			ReportType:     reportTypes[i%len(reportTypes)],
@@ -213,10 +204,7 @@ func generateBiReportSchedules(store *MockDataStore) []*bi.BiReportSchedule {
 
 	schedules := make([]*bi.BiReportSchedule, count)
 	for i := 0; i < count; i++ {
-		reportID := ""
-		if len(store.BiReportIDs) > 0 {
-			reportID = store.BiReportIDs[i%len(store.BiReportIDs)]
-		}
+		reportID := pickRef(store.BiReportIDs, i)
 
 		startDate := time.Now().AddDate(0, -rand.Intn(6), 0)
 		endDate := startDate.AddDate(1, 0, 0)
@@ -224,7 +212,7 @@ func generateBiReportSchedules(store *MockDataStore) []*bi.BiReportSchedule {
 		nextRun := time.Now().AddDate(0, 0, rand.Intn(7)+1)
 
 		schedules[i] = &bi.BiReportSchedule{
-			ScheduleId:    fmt.Sprintf("sch-%03d", i+1),
+			ScheduleId:    genID("sch", i),
 			ReportId:      reportID,
 			Name:          scheduleNames[i%len(scheduleNames)],
 			Description:   fmt.Sprintf("Automated schedule for %s", scheduleNames[i%len(scheduleNames)]),
@@ -285,20 +273,14 @@ func generateBiReportExecutions(store *MockDataStore) []*bi.BiReportExecution {
 
 	executions := make([]*bi.BiReportExecution, count)
 	for i := 0; i < count; i++ {
-		reportID := ""
-		if len(store.BiReportIDs) > 0 {
-			reportID = store.BiReportIDs[i%len(store.BiReportIDs)]
-		}
+		reportID := pickRef(store.BiReportIDs, i)
 
 		scheduleID := ""
 		if len(store.BiReportScheduleIDs) > 0 && i%2 == 0 { // 50% scheduled executions
 			scheduleID = store.BiReportScheduleIDs[i%len(store.BiReportScheduleIDs)]
 		}
 
-		executedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			executedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		executedBy := pickRef(store.EmployeeIDs, i)
 
 		startTime := time.Now().AddDate(0, 0, -rand.Intn(30)).Add(time.Duration(-rand.Intn(24)) * time.Hour)
 		executionDuration := time.Duration(rand.Intn(300)+10) * time.Second
@@ -314,7 +296,7 @@ func generateBiReportExecutions(store *MockDataStore) []*bi.BiReportExecution {
 		fileSize := int64(rowCount) * int64(rand.Intn(100)+50) // Approximate bytes per row
 
 		executions[i] = &bi.BiReportExecution{
-			ExecutionId:  fmt.Sprintf("exe-%03d", i+1),
+			ExecutionId:  genID("exe", i),
 			ReportId:     reportID,
 			ScheduleId:   scheduleID,
 			Status:       status,
@@ -360,10 +342,7 @@ func generateBiReportAccess(store *MockDataStore) []*bi.BiReportAccess {
 
 	accessRecords := make([]*bi.BiReportAccess, count)
 	for i := 0; i < count; i++ {
-		reportID := ""
-		if len(store.BiReportIDs) > 0 {
-			reportID = store.BiReportIDs[i%len(store.BiReportIDs)]
-		}
+		reportID := pickRef(store.BiReportIDs, i)
 
 		principalType := principalTypes[i%len(principalTypes)]
 		var principalID string
@@ -373,10 +352,7 @@ func generateBiReportAccess(store *MockDataStore) []*bi.BiReportAccess {
 			principalID = roleNames[i%len(roleNames)]
 		}
 
-		grantedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			grantedBy = store.EmployeeIDs[(i+5)%len(store.EmployeeIDs)]
-		}
+		grantedBy := pickRef(store.EmployeeIDs, (i+5))
 
 		grantedDate := time.Now().AddDate(0, -rand.Intn(12), -rand.Intn(28))
 		var expiryDate int64
@@ -385,7 +361,7 @@ func generateBiReportAccess(store *MockDataStore) []*bi.BiReportAccess {
 		}
 
 		accessRecords[i] = &bi.BiReportAccess{
-			AccessId:      fmt.Sprintf("acc-%03d", i+1),
+			AccessId:      genID("acc", i),
 			ReportId:      reportID,
 			PrincipalId:   principalID,
 			PrincipalType: principalType,
@@ -419,23 +395,14 @@ func generateBiReportSubscriptions(store *MockDataStore) []*bi.BiReportSubscript
 
 	subscriptions := make([]*bi.BiReportSubscription, count)
 	for i := 0; i < count; i++ {
-		reportID := ""
-		if len(store.BiReportIDs) > 0 {
-			reportID = store.BiReportIDs[i%len(store.BiReportIDs)]
-		}
+		reportID := pickRef(store.BiReportIDs, i)
 
-		scheduleID := ""
-		if len(store.BiReportScheduleIDs) > 0 {
-			scheduleID = store.BiReportScheduleIDs[i%len(store.BiReportScheduleIDs)]
-		}
+		scheduleID := pickRef(store.BiReportScheduleIDs, i)
 
-		subscriberID := ""
-		if len(store.EmployeeIDs) > 0 {
-			subscriberID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		subscriberID := pickRef(store.EmployeeIDs, i)
 
 		subscriptions[i] = &bi.BiReportSubscription{
-			SubscriptionId: fmt.Sprintf("sub-%03d", i+1),
+			SubscriptionId: genID("sub", i),
 			ReportId:       reportID,
 			ScheduleId:     scheduleID,
 			SubscriberId:   subscriberID,

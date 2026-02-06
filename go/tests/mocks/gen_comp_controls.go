@@ -35,22 +35,16 @@ func generateCompApprovalMatrices(store *MockDataStore) []*comp.CompApprovalMatr
 	matrices := make([]*comp.CompApprovalMatrix, count)
 
 	for i := 0; i < count; i++ {
-		departmentID := ""
-		if len(store.DepartmentIDs) > 0 {
-			departmentID = store.DepartmentIDs[i%len(store.DepartmentIDs)]
-		}
+		departmentID := pickRef(store.DepartmentIDs, i)
 
-		escalationToID := ""
-		if len(store.ManagerIDs) > 0 {
-			escalationToID = store.ManagerIDs[i%len(store.ManagerIDs)]
-		}
+		escalationToID := pickRef(store.ManagerIDs, i)
 
 		thresholdMin := int64((i + 1) * 1000)                     // $1K to $12K
 		thresholdMax := int64((i + 1) * 10000)                    // $10K to $120K
 		requiredApprovals := int32(minInt(rand.Intn(3)+1, i+1))   // 1-3 approvals
 
 		matrices[i] = &comp.CompApprovalMatrix{
-			MatrixId:      fmt.Sprintf("capm-%03d", i+1),
+			MatrixId:      genID("capm", i),
 			Name:          fmt.Sprintf("%s Approval Matrix", compTransactionTypes[i]),
 			Description:   fmt.Sprintf("Approval authority matrix for %s transactions", compTransactionTypes[i]),
 			TransactionType: compTransactionTypes[i],
@@ -59,10 +53,7 @@ func generateCompApprovalMatrices(store *MockDataStore) []*comp.CompApprovalMatr
 				Amount:       thresholdMin * 100, // Convert to cents
 				CurrencyCode: "USD",
 			},
-			ThresholdMax: &erp.Money{
-				Amount:       thresholdMax * 100,
-				CurrencyCode: "USD",
-			},
+			ThresholdMax: money(thresholdMax * 100),
 			ApproverRoleIds:    []string{fmt.Sprintf("role-%03d", (i%5)+1), fmt.Sprintf("role-%03d", (i%5)+6)},
 			RequiredApprovals:  requiredApprovals,
 			RequiresSequential: i%3 == 0,
@@ -89,15 +80,9 @@ func generateCompSegregationRules(store *MockDataStore) []*comp.CompSegregationR
 	rules := make([]*comp.CompSegregationRule, count)
 
 	for i := 0; i < count; i++ {
-		ownerID := ""
-		if len(store.EmployeeIDs) > 0 {
-			ownerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		ownerID := pickRef(store.EmployeeIDs, i)
 
-		controlID := ""
-		if len(store.CompControlIDs) > 0 {
-			controlID = store.CompControlIDs[i%len(store.CompControlIDs)]
-		}
+		controlID := pickRef(store.CompControlIDs, i)
 
 		// Risk level distribution: 10% Critical, 30% High, 40% Medium, 20% Low
 		var riskLevel comp.CompSeverityLevel
@@ -118,7 +103,7 @@ func generateCompSegregationRules(store *MockDataStore) []*comp.CompSegregationR
 		}
 
 		rules[i] = &comp.CompSegregationRule{
-			RuleId:               fmt.Sprintf("csod-%03d", i+1),
+			RuleId:               genID("csod", i),
 			Code:                 fmt.Sprintf("SOD-%04d", 5000+i+1),
 			Name:                 fmt.Sprintf("SoD Rule: %s vs %s", compSoDFunctions[funcAIdx], compSoDFunctions[funcBIdx]),
 			Description:          fmt.Sprintf("Segregation of duties rule preventing same user from performing %s and %s", compSoDFunctions[funcAIdx], compSoDFunctions[funcBIdx]),
@@ -166,20 +151,11 @@ func generateCompControlAssessments(store *MockDataStore) []*comp.CompControlAss
 	assessments := make([]*comp.CompControlAssessment, count)
 
 	for i := 0; i < count; i++ {
-		controlID := ""
-		if len(store.CompControlIDs) > 0 {
-			controlID = store.CompControlIDs[i%len(store.CompControlIDs)]
-		}
+		controlID := pickRef(store.CompControlIDs, i)
 
-		assessorID := ""
-		if len(store.EmployeeIDs) > 0 {
-			assessorID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		assessorID := pickRef(store.EmployeeIDs, i)
 
-		auditScheduleID := ""
-		if len(store.CompAuditScheduleIDs) > 0 {
-			auditScheduleID = store.CompAuditScheduleIDs[i%len(store.CompAuditScheduleIDs)]
-		}
+		auditScheduleID := pickRef(store.CompAuditScheduleIDs, i)
 
 		assessmentDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 		nextAssessmentDate := assessmentDate.AddDate(0, rand.Intn(6)+3, 0)
@@ -206,7 +182,7 @@ func generateCompControlAssessments(store *MockDataStore) []*comp.CompControlAss
 		}
 
 		assessments[i] = &comp.CompControlAssessment{
-			AssessmentId:       fmt.Sprintf("ccas-%03d", i+1),
+			AssessmentId:       genID("ccas", i),
 			ControlId:          controlID,
 			AssessmentDate:     assessmentDate.Unix(),
 			AssessorId:         assessorID,

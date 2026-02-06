@@ -6,42 +6,24 @@ You may obtain a copy of the License at:
 
     http://www.apache.org/licenses/LICENSE-2.0
 
-This software is provided "as-is," without warranty. See the License
-for details.
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
-
 package servicevisits
 
 import (
-	"errors"
-	"github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8erp/go/types/crm"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
-type CrmServiceVisitServiceCallback struct{}
-
-func newCrmServiceVisitServiceCallback() *CrmServiceVisitServiceCallback {
-	return &CrmServiceVisitServiceCallback{}
-}
-
-func (this *CrmServiceVisitServiceCallback) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	item, ok := any.(*crm.CrmServiceVisit)
-	if !ok {
-		return nil, false, errors.New("invalid CrmServiceVisit type")
-	}
-	if action == ifs.POST {
-		common.GenerateID(&item.VisitId)
-	}
-	err := validate(item, vnic)
-	if err != nil {
-		return nil, false, err
-	}
-	return nil, true, nil
-}
-
-func (this *CrmServiceVisitServiceCallback) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	return nil, true, nil
+func newCrmServiceVisitServiceCallback() ifs.IServiceCallback {
+	return common.NewServiceCallback("CrmServiceVisit",
+		func(e *crm.CrmServiceVisit) { common.GenerateID(&e.VisitId) },
+		validate)
 }
 
 func validate(item *crm.CrmServiceVisit, vnic ifs.IVNic) error {

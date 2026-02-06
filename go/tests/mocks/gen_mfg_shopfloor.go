@@ -19,7 +19,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
@@ -31,18 +30,9 @@ func generateLaborEntries(store *MockDataStore) []*mfg.MfgLaborEntry {
 	idx := 1
 	for woIdx, woID := range store.MfgWorkOrderIDs {
 		for j := 0; j < 2; j++ {
-			empID := ""
-			if len(store.EmployeeIDs) > 0 {
-				empID = store.EmployeeIDs[(woIdx*2+j)%len(store.EmployeeIDs)]
-			}
-			wcID := ""
-			if len(store.MfgWorkCenterIDs) > 0 {
-				wcID = store.MfgWorkCenterIDs[(woIdx+j)%len(store.MfgWorkCenterIDs)]
-			}
-			opID := ""
-			if len(store.MfgWorkOrderOpIDs) > 0 {
-				opID = store.MfgWorkOrderOpIDs[(woIdx*2+j)%len(store.MfgWorkOrderOpIDs)]
-			}
+			empID := pickRef(store.EmployeeIDs, (woIdx*2+j))
+			wcID := pickRef(store.MfgWorkCenterIDs, (woIdx+j))
+			opID := pickRef(store.MfgWorkOrderOpIDs, (woIdx*2+j))
 
 			startTime := time.Now().AddDate(0, 0, -rand.Intn(14)).Add(time.Duration(rand.Intn(8)+6) * time.Hour)
 			hoursWorked := float64(rand.Intn(4)+4) + rand.Float64()
@@ -63,7 +53,7 @@ func generateLaborEntries(store *MockDataStore) []*mfg.MfgLaborEntry {
 				QuantityScrapped:  float64(rand.Intn(3)),
 				LaborType:         laborTypes[(woIdx*2+j)%len(laborTypes)],
 				HourlyRate:        hourlyRate,
-				LaborCost:         &erp.Money{Amount: laborCost, CurrencyCode: "USD"},
+				LaborCost:         money(laborCost),
 				Notes:             fmt.Sprintf("Labor entry for work order operation %d", idx),
 				AuditInfo:         createAuditInfo(),
 			})
@@ -81,18 +71,9 @@ func generateMachineEntries(store *MockDataStore) []*mfg.MfgMachineEntry {
 	idx := 1
 	for woIdx, woID := range store.MfgWorkOrderIDs {
 		for j := 0; j < 2; j++ {
-			wcID := ""
-			if len(store.MfgWorkCenterIDs) > 0 {
-				wcID = store.MfgWorkCenterIDs[(woIdx+j)%len(store.MfgWorkCenterIDs)]
-			}
-			opID := ""
-			if len(store.MfgWorkOrderOpIDs) > 0 {
-				opID = store.MfgWorkOrderOpIDs[(woIdx*2+j)%len(store.MfgWorkOrderOpIDs)]
-			}
-			operatorID := ""
-			if len(store.EmployeeIDs) > 0 {
-				operatorID = store.EmployeeIDs[(woIdx*2+j)%len(store.EmployeeIDs)]
-			}
+			wcID := pickRef(store.MfgWorkCenterIDs, (woIdx+j))
+			opID := pickRef(store.MfgWorkOrderOpIDs, (woIdx*2+j))
+			operatorID := pickRef(store.EmployeeIDs, (woIdx*2+j))
 
 			startTime := time.Now().AddDate(0, 0, -rand.Intn(14)).Add(time.Duration(rand.Intn(8)+6) * time.Hour)
 			machineHours := float64(rand.Intn(6)+2) + rand.Float64()
@@ -112,7 +93,7 @@ func generateMachineEntries(store *MockDataStore) []*mfg.MfgMachineEntry {
 				QuantityScrapped:  float64(rand.Intn(5)),
 				MachineStatus:     machineStatuses[(woIdx*2+j)%len(machineStatuses)],
 				HourlyRate:        hourlyRate,
-				MachineCost:       &erp.Money{Amount: machineCost, CurrencyCode: "USD"},
+				MachineCost:       money(machineCost),
 				OperatorId:        operatorID,
 				Notes:             fmt.Sprintf("Machine entry for work order %d", idx),
 				AuditInfo:         createAuditInfo(),
@@ -136,18 +117,9 @@ func generateDowntimeEvents(store *MockDataStore) []*mfg.MfgDowntimeEvent {
 
 	events := make([]*mfg.MfgDowntimeEvent, len(store.MfgWorkCenterIDs))
 	for i, wcID := range store.MfgWorkCenterIDs {
-		woID := ""
-		if len(store.MfgWorkOrderIDs) > 0 {
-			woID = store.MfgWorkOrderIDs[i%len(store.MfgWorkOrderIDs)]
-		}
-		reportedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			reportedBy = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
-		resolvedBy := ""
-		if len(store.EmployeeIDs) > 0 {
-			resolvedBy = store.EmployeeIDs[(i+1)%len(store.EmployeeIDs)]
-		}
+		woID := pickRef(store.MfgWorkOrderIDs, i)
+		reportedBy := pickRef(store.EmployeeIDs, i)
+		resolvedBy := pickRef(store.EmployeeIDs, (i+1))
 
 		startTime := time.Now().AddDate(0, 0, -rand.Intn(7)).Add(time.Duration(rand.Intn(12)+6) * time.Hour)
 		durationMinutes := float64(rand.Intn(180) + 30)
@@ -155,7 +127,7 @@ func generateDowntimeEvents(store *MockDataStore) []*mfg.MfgDowntimeEvent {
 		estimatedLoss := int64(durationMinutes * 50 * 100) // ~$50/minute
 
 		events[i] = &mfg.MfgDowntimeEvent{
-			EventId:         fmt.Sprintf("downtime-%03d", i+1),
+			EventId:         genID("downtime", i),
 			WorkCenterId:    wcID,
 			WorkOrderId:     woID,
 			DowntimeType:    downtimeTypes[i%len(downtimeTypes)],
@@ -166,7 +138,7 @@ func generateDowntimeEvents(store *MockDataStore) []*mfg.MfgDowntimeEvent {
 			DurationMinutes: durationMinutes,
 			ReportedBy:      reportedBy,
 			ResolvedBy:      resolvedBy,
-			EstimatedLoss:   &erp.Money{Amount: estimatedLoss, CurrencyCode: "USD"},
+			EstimatedLoss:   money(estimatedLoss),
 			Notes:           fmt.Sprintf("Downtime notes for event %d", i+1),
 			AuditInfo:       createAuditInfo(),
 		}
@@ -180,22 +152,10 @@ func generateProdConsumptions(store *MockDataStore) []*mfg.MfgProdConsumption {
 	idx := 1
 	for woIdx, woID := range store.MfgWorkOrderIDs {
 		for j := 0; j < 2; j++ {
-			itemID := ""
-			if len(store.ItemIDs) > 0 {
-				itemID = store.ItemIDs[(woIdx*2+j)%len(store.ItemIDs)]
-			}
-			warehouseID := ""
-			if len(store.SCMWarehouseIDs) > 0 {
-				warehouseID = store.SCMWarehouseIDs[(woIdx+j)%len(store.SCMWarehouseIDs)]
-			}
-			binID := ""
-			if len(store.BinIDs) > 0 {
-				binID = store.BinIDs[(woIdx*2+j)%len(store.BinIDs)]
-			}
-			opID := ""
-			if len(store.MfgWorkOrderOpIDs) > 0 {
-				opID = store.MfgWorkOrderOpIDs[(woIdx*2+j)%len(store.MfgWorkOrderOpIDs)]
-			}
+			itemID := pickRef(store.ItemIDs, (woIdx*2+j))
+			warehouseID := pickRef(store.SCMWarehouseIDs, (woIdx+j))
+			binID := pickRef(store.BinIDs, (woIdx*2+j))
+			opID := pickRef(store.MfgWorkOrderOpIDs, (woIdx*2+j))
 
 			consumptionDate := time.Now().AddDate(0, 0, -rand.Intn(14))
 			qtyPlanned := float64(rand.Intn(50) + 5)
@@ -215,8 +175,8 @@ func generateProdConsumptions(store *MockDataStore) []*mfg.MfgProdConsumption {
 				WarehouseId:      warehouseID,
 				BinId:            binID,
 				ConsumptionDate:  consumptionDate.Unix(),
-				UnitCost:         &erp.Money{Amount: unitCost, CurrencyCode: "USD"},
-				TotalCost:        &erp.Money{Amount: totalCost, CurrencyCode: "USD"},
+				UnitCost:         money(unitCost),
+				TotalCost:        money(totalCost),
 				Notes:            fmt.Sprintf("Material consumption for WO operation %d", idx),
 				AuditInfo:        createAuditInfo(),
 			})

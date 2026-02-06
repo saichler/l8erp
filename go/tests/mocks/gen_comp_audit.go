@@ -25,7 +25,6 @@ import (
 	"time"
 
 	"github.com/saichler/l8erp/go/types/comp"
-	"github.com/saichler/l8erp/go/types/erp"
 )
 
 // generateCompAuditSchedules creates audit schedule records
@@ -53,10 +52,7 @@ func generateCompAuditSchedules(store *MockDataStore) []*comp.CompAuditSchedule 
 	schedules := make([]*comp.CompAuditSchedule, count)
 
 	for i := 0; i < count; i++ {
-		leadAuditorID := ""
-		if len(store.EmployeeIDs) > 0 {
-			leadAuditorID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
+		leadAuditorID := pickRef(store.EmployeeIDs, i)
 
 		auditorIDs := []string{}
 		if len(store.EmployeeIDs) > 2 {
@@ -114,7 +110,7 @@ func generateCompAuditSchedules(store *MockDataStore) []*comp.CompAuditSchedule 
 		}
 
 		schedules[i] = &comp.CompAuditSchedule{
-			ScheduleId:           fmt.Sprintf("caud-%03d", i+1),
+			ScheduleId:           genID("caud", i),
 			Name:                 compAuditNames[i],
 			Description:          fmt.Sprintf("Audit engagement for %s", compAuditNames[i]),
 			AuditType:            auditTypes[i%len(auditTypes)],
@@ -130,14 +126,8 @@ func generateCompAuditSchedules(store *MockDataStore) []*comp.CompAuditSchedule 
 			LeadAuditorId:        leadAuditorID,
 			AuditorIds:           auditorIDs,
 			AuditFirm:            auditFirm,
-			Budget: &erp.Money{
-				Amount:       budget,
-				CurrencyCode: "USD",
-			},
-			ActualCost: &erp.Money{
-				Amount:       actualCost,
-				CurrencyCode: "USD",
-			},
+			Budget: money(budget),
+			ActualCost: money(actualCost),
 			RelatedRegulationIds: relatedRegulationIDs,
 			AuditInfo:            createAuditInfo(),
 		}
@@ -166,15 +156,9 @@ func generateCompAuditFindings(store *MockDataStore) []*comp.CompAuditFinding {
 	findings := make([]*comp.CompAuditFinding, count)
 
 	for i := 0; i < count; i++ {
-		auditScheduleID := ""
-		if len(store.CompAuditScheduleIDs) > 0 {
-			auditScheduleID = store.CompAuditScheduleIDs[i%len(store.CompAuditScheduleIDs)]
-		}
+		auditScheduleID := pickRef(store.CompAuditScheduleIDs, i)
 
-		responsibleID := ""
-		if len(store.ManagerIDs) > 0 {
-			responsibleID = store.ManagerIDs[i%len(store.ManagerIDs)]
-		}
+		responsibleID := pickRef(store.ManagerIDs, i)
 
 		relatedControlIDs := []string{}
 		if len(store.CompControlIDs) > 0 {
@@ -216,7 +200,7 @@ func generateCompAuditFindings(store *MockDataStore) []*comp.CompAuditFinding {
 		}
 
 		findings[i] = &comp.CompAuditFinding{
-			FindingId:             fmt.Sprintf("cfnd-%03d", i+1),
+			FindingId:             genID("cfnd", i),
 			AuditScheduleId:       auditScheduleID,
 			FindingNumber:         fmt.Sprintf("FND-%04d-%02d", time.Now().Year(), i+1),
 			Title:                 compFindingTitles[i],
