@@ -12,73 +12,57 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Sales Customers Module - Enum Definitions
-// All enum constants and value mappings for Sales Customer Management models
+// Sales Customers Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Create SalesCustomers namespace
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8DRenderers;
+
     window.SalesCustomers = window.SalesCustomers || {};
-    SalesCustomers.enums = {};
 
     // ============================================================================
-    // CONTRACT STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    SalesCustomers.enums.CONTRACT_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Active',
-        3: 'Expired',
-        4: 'Terminated',
-        5: 'Renewed'
-    };
+    const CONTRACT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Active', 'active', 'layer8d-status-active'],
+        ['Expired', 'expired', 'layer8d-status-inactive'],
+        ['Terminated', 'terminated', 'layer8d-status-terminated'],
+        ['Renewed', 'renewed', 'layer8d-status-active']
+    ]);
 
-    SalesCustomers.enums.CONTRACT_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-inactive',
-        4: 'layer8d-status-terminated',
-        5: 'layer8d-status-active'
-    };
+    const PARTNER_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Active', 'active', 'layer8d-status-active'],
+        ['Inactive', 'inactive', 'layer8d-status-inactive'],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Suspended', 'suspended', 'layer8d-status-terminated']
+    ]);
 
     // ============================================================================
-    // PARTNER STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    SalesCustomers.enums.PARTNER_STATUS = {
-        0: 'Unspecified',
-        1: 'Active',
-        2: 'Inactive',
-        3: 'Pending',
-        4: 'Suspended'
-    };
-
-    SalesCustomers.enums.PARTNER_STATUS_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-inactive',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-terminated'
+    SalesCustomers.enums = {
+        CONTRACT_STATUS: CONTRACT_STATUS.enum,
+        CONTRACT_STATUS_CLASSES: CONTRACT_STATUS.classes,
+        PARTNER_STATUS: PARTNER_STATUS.enum,
+        PARTNER_STATUS_CLASSES: PARTNER_STATUS.classes
     };
 
     // ============================================================================
     // RENDERERS
     // ============================================================================
 
-    SalesCustomers.render = {};
-
-    SalesCustomers.render.contractStatus = Layer8DRenderers.createStatusRenderer(
-        SalesCustomers.enums.CONTRACT_STATUS,
-        SalesCustomers.enums.CONTRACT_STATUS_CLASSES
-    );
-
-    SalesCustomers.render.partnerStatus = Layer8DRenderers.createStatusRenderer(
-        SalesCustomers.enums.PARTNER_STATUS,
-        SalesCustomers.enums.PARTNER_STATUS_CLASSES
-    );
-
-    SalesCustomers.render.date = Layer8DRenderers.renderDate;
-    SalesCustomers.render.money = Layer8DRenderers.renderMoney;
+    SalesCustomers.render = {
+        contractStatus: createStatusRenderer(CONTRACT_STATUS.enum, CONTRACT_STATUS.classes),
+        partnerStatus: createStatusRenderer(PARTNER_STATUS.enum, PARTNER_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

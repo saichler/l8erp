@@ -12,108 +12,84 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Manufacturing Engineering Module - Enum Definitions
+// Manufacturing Engineering Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate, renderMoney } = Layer8DRenderers;
+
     window.MfgEngineering = window.MfgEngineering || {};
-    MfgEngineering.enums = {};
 
-    // BOM TYPE
-    MfgEngineering.enums.BOM_TYPE = {
-        0: 'Unspecified',
-        1: 'Manufacturing',
-        2: 'Engineering',
-        3: 'Planning',
-        4: 'Costing'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const BOM_TYPE = factory.simple([
+        'Unspecified', 'Manufacturing', 'Engineering', 'Planning', 'Costing'
+    ]);
+
+    const BOM_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Pending Approval', 'pending', 'layer8d-status-pending'],
+        ['Active', 'active', 'layer8d-status-active'],
+        ['Obsolete', 'obsolete', 'layer8d-status-inactive'],
+        ['Superseded', 'superseded', 'layer8d-status-inactive']
+    ]);
+
+    const ROUTING_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Pending Approval', 'pending', 'layer8d-status-pending'],
+        ['Active', 'active', 'layer8d-status-active'],
+        ['Obsolete', 'obsolete', 'layer8d-status-inactive']
+    ]);
+
+    const ECO_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Submitted', 'submitted', 'layer8d-status-pending'],
+        ['Under Review', 'review', 'layer8d-status-pending'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['Rejected', 'rejected', 'layer8d-status-terminated'],
+        ['Implemented', 'implemented', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive']
+    ]);
+
+    const ECO_CHANGE_TYPE = factory.simple([
+        'Unspecified', 'Design Change', 'Process Change', 'Material Change',
+        'Cost Reduction', 'Quality Improvement'
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    MfgEngineering.enums = {
+        BOM_TYPE: BOM_TYPE.enum,
+        BOM_STATUS: BOM_STATUS.enum,
+        BOM_STATUS_CLASSES: BOM_STATUS.classes,
+        ROUTING_STATUS: ROUTING_STATUS.enum,
+        ROUTING_STATUS_CLASSES: ROUTING_STATUS.classes,
+        ECO_STATUS: ECO_STATUS.enum,
+        ECO_STATUS_CLASSES: ECO_STATUS.classes,
+        ECO_CHANGE_TYPE: ECO_CHANGE_TYPE.enum
     };
 
-    // BOM STATUS
-    MfgEngineering.enums.BOM_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Pending Approval',
-        3: 'Active',
-        4: 'Obsolete',
-        5: 'Superseded'
-    };
-
-    MfgEngineering.enums.BOM_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-inactive',
-        5: 'layer8d-status-inactive'
-    };
-
-    // ROUTING STATUS
-    MfgEngineering.enums.ROUTING_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Pending Approval',
-        3: 'Active',
-        4: 'Obsolete'
-    };
-
-    MfgEngineering.enums.ROUTING_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-inactive'
-    };
-
-    // ECO STATUS
-    MfgEngineering.enums.ECO_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Submitted',
-        3: 'Under Review',
-        4: 'Approved',
-        5: 'Rejected',
-        6: 'Implemented',
-        7: 'Cancelled'
-    };
-
-    MfgEngineering.enums.ECO_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-terminated',
-        6: 'layer8d-status-active',
-        7: 'layer8d-status-inactive'
-    };
-
-    // ECO CHANGE TYPE
-    MfgEngineering.enums.ECO_CHANGE_TYPE = {
-        0: 'Unspecified',
-        1: 'Design Change',
-        2: 'Process Change',
-        3: 'Material Change',
-        4: 'Cost Reduction',
-        5: 'Quality Improvement'
-    };
-
+    // ============================================================================
     // RENDERERS
-    MfgEngineering.render = {};
+    // ============================================================================
 
-    MfgEngineering.render.bomStatus = Layer8DRenderers.createStatusRenderer(
-        MfgEngineering.enums.BOM_STATUS,
-        MfgEngineering.enums.BOM_STATUS_CLASSES
-    );
-
-    MfgEngineering.render.routingStatus = Layer8DRenderers.createStatusRenderer(
-        MfgEngineering.enums.ROUTING_STATUS,
-        MfgEngineering.enums.ROUTING_STATUS_CLASSES
-    );
-
-    MfgEngineering.render.ecoStatus = Layer8DRenderers.createStatusRenderer(
-        MfgEngineering.enums.ECO_STATUS,
-        MfgEngineering.enums.ECO_STATUS_CLASSES
-    );
-
-    MfgEngineering.render.date = Layer8DRenderers.renderDate;
-    MfgEngineering.render.money = Layer8DRenderers.renderMoney;
+    MfgEngineering.render = {
+        bomType: (v) => renderEnum(v, BOM_TYPE.enum),
+        bomStatus: createStatusRenderer(BOM_STATUS.enum, BOM_STATUS.classes),
+        routingStatus: createStatusRenderer(ROUTING_STATUS.enum, ROUTING_STATUS.classes),
+        ecoStatus: createStatusRenderer(ECO_STATUS.enum, ECO_STATUS.classes),
+        ecoChangeType: (v) => renderEnum(v, ECO_CHANGE_TYPE.enum),
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

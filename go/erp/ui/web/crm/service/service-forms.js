@@ -2,212 +2,139 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // CRM Service Module - Form Definitions
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
     window.CrmService = window.CrmService || {};
 
+    const f = window.Layer8FormFactory;
     const enums = CrmService.enums;
 
     CrmService.forms = {
-        CrmCase: {
-            title: 'Case',
-            sections: [
-                {
-                    title: 'Case Details',
-                    fields: [
-                        { key: 'caseNumber', label: 'Case Number', type: 'text', required: true },
-                        { key: 'subject', label: 'Subject', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'CrmAccount', required: true },
-                        { key: 'contactId', label: 'Contact', type: 'reference', lookupModel: 'CrmContact' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'HcmEmployee' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.CASE_STATUS },
-                        { key: 'priority', label: 'Priority', type: 'select', options: enums.CASE_PRIORITY },
-                        { key: 'caseType', label: 'Type', type: 'select', options: enums.CASE_TYPE }
-                    ]
-                },
-                {
-                    title: 'SLA & Escalation',
-                    fields: [
-                        { key: 'slaId', label: 'SLA', type: 'reference', lookupModel: 'CrmSLA' },
-                        { key: 'escalationLevel', label: 'Escalation Level', type: 'number' },
-                        { key: 'isEscalated', label: 'Escalated', type: 'checkbox' },
-                        { key: 'parentCaseId', label: 'Parent Case', type: 'reference', lookupModel: 'CrmCase' }
-                    ]
-                },
-                {
-                    title: 'Dates & Resolution',
-                    fields: [
-                        { key: 'openedDate', label: 'Opened Date', type: 'date' },
-                        { key: 'dueDate', label: 'Due Date', type: 'date' },
-                        { key: 'closedDate', label: 'Closed Date', type: 'date' },
-                        { key: 'origin', label: 'Origin', type: 'text' },
-                        { key: 'resolution', label: 'Resolution', type: 'textarea' },
-                        { key: 'productId', label: 'Product', type: 'reference', lookupModel: 'ScmItem' }
-                    ]
-                }
-            ]
-        },
+        CrmCase: f.form('Case', [
+            f.section('Case Details', [
+                ...f.text('caseNumber', 'Case Number', true),
+                ...f.text('subject', 'Subject', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('accountId', 'Account', 'CrmAccount', true),
+                ...f.reference('contactId', 'Contact', 'CrmContact'),
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.select('status', 'Status', enums.CASE_STATUS),
+                ...f.select('priority', 'Priority', enums.CASE_PRIORITY),
+                ...f.select('caseType', 'Type', enums.CASE_TYPE)
+            ]),
+            f.section('SLA & Escalation', [
+                ...f.reference('slaId', 'SLA', 'CrmSLA'),
+                ...f.number('escalationLevel', 'Escalation Level'),
+                ...f.checkbox('isEscalated', 'Escalated'),
+                ...f.reference('parentCaseId', 'Parent Case', 'CrmCase')
+            ]),
+            f.section('Dates & Resolution', [
+                ...f.date('openedDate', 'Opened Date'),
+                ...f.date('dueDate', 'Due Date'),
+                ...f.date('closedDate', 'Closed Date'),
+                ...f.text('origin', 'Origin'),
+                ...f.textarea('resolution', 'Resolution'),
+                ...f.reference('productId', 'Product', 'ScmItem')
+            ])
+        ]),
 
-        CrmCaseComment: {
-            title: 'Case Comment',
-            sections: [
-                {
-                    title: 'Comment Details',
-                    fields: [
-                        { key: 'caseId', label: 'Case', type: 'reference', lookupModel: 'CrmCase', required: true },
-                        { key: 'body', label: 'Comment', type: 'textarea', required: true },
-                        { key: 'isPublic', label: 'Public', type: 'checkbox' },
-                        { key: 'createdById', label: 'Created By', type: 'reference', lookupModel: 'HcmEmployee' },
-                        { key: 'commentDate', label: 'Date', type: 'date' }
-                    ]
-                }
-            ]
-        },
+        CrmCaseComment: f.form('Case Comment', [
+            f.section('Comment Details', [
+                ...f.reference('caseId', 'Case', 'CrmCase', true),
+                ...f.textarea('body', 'Comment', true),
+                ...f.checkbox('isPublic', 'Public'),
+                ...f.reference('createdById', 'Created By', 'Employee'),
+                ...f.date('commentDate', 'Date')
+            ])
+        ]),
 
-        CrmKBArticle: {
-            title: 'Knowledge Base Article',
-            sections: [
-                {
-                    title: 'Article Details',
-                    fields: [
-                        { key: 'articleNumber', label: 'Article Number', type: 'text', required: true },
-                        { key: 'title', label: 'Title', type: 'text', required: true },
-                        { key: 'summary', label: 'Summary', type: 'textarea' },
-                        { key: 'body', label: 'Body', type: 'textarea', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.ARTICLE_STATUS },
-                        { key: 'authorId', label: 'Author', type: 'reference', lookupModel: 'HcmEmployee' }
-                    ]
-                },
-                {
-                    title: 'Categorization',
-                    fields: [
-                        { key: 'category', label: 'Category', type: 'text' },
-                        { key: 'subcategory', label: 'Subcategory', type: 'text' },
-                        { key: 'version', label: 'Version', type: 'text' },
-                        { key: 'isFeatured', label: 'Featured', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Publishing',
-                    fields: [
-                        { key: 'publishDate', label: 'Publish Date', type: 'date' },
-                        { key: 'expiryDate', label: 'Expiry Date', type: 'date' },
-                        { key: 'viewCount', label: 'View Count', type: 'number', readonly: true },
-                        { key: 'helpfulCount', label: 'Helpful Count', type: 'number', readonly: true },
-                        { key: 'notHelpfulCount', label: 'Not Helpful Count', type: 'number', readonly: true }
-                    ]
-                }
-            ]
-        },
+        CrmKBArticle: f.form('Knowledge Base Article', [
+            f.section('Article Details', [
+                ...f.text('articleNumber', 'Article Number', true),
+                ...f.text('title', 'Title', true),
+                ...f.textarea('summary', 'Summary'),
+                ...f.textarea('body', 'Body', true),
+                ...f.select('status', 'Status', enums.ARTICLE_STATUS),
+                ...f.reference('authorId', 'Author', 'Employee')
+            ]),
+            f.section('Categorization', [
+                ...f.text('category', 'Category'),
+                ...f.text('subcategory', 'Subcategory'),
+                ...f.text('version', 'Version'),
+                ...f.checkbox('isFeatured', 'Featured')
+            ]),
+            f.section('Publishing', [
+                ...f.date('publishDate', 'Publish Date'),
+                ...f.date('expiryDate', 'Expiry Date'),
+                ...f.number('viewCount', 'View Count'),
+                ...f.number('helpfulCount', 'Helpful Count'),
+                ...f.number('notHelpfulCount', 'Not Helpful Count')
+            ])
+        ]),
 
-        CrmSLA: {
-            title: 'Service Level Agreement',
-            sections: [
-                {
-                    title: 'SLA Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Response Times',
-                    fields: [
-                        { key: 'firstResponseMinutes', label: 'First Response (minutes)', type: 'number', required: true },
-                        { key: 'resolutionMinutes', label: 'Resolution (minutes)', type: 'number', required: true },
-                        { key: 'appliesToPriority', label: 'Applies To Priority', type: 'select', options: enums.CASE_PRIORITY }
-                    ]
-                },
-                {
-                    title: 'Business Hours',
-                    fields: [
-                        { key: 'businessHours', label: 'Business Hours', type: 'text' },
-                        { key: 'includeWeekends', label: 'Include Weekends', type: 'checkbox' },
-                        { key: 'escalationRules', label: 'Escalation Rules', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        CrmSLA: f.form('Service Level Agreement', [
+            f.section('SLA Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Response Times', [
+                ...f.number('firstResponseMinutes', 'First Response (minutes)', true),
+                ...f.number('resolutionMinutes', 'Resolution (minutes)', true),
+                ...f.select('appliesToPriority', 'Applies To Priority', enums.CASE_PRIORITY)
+            ]),
+            f.section('Business Hours', [
+                ...f.text('businessHours', 'Business Hours'),
+                ...f.checkbox('includeWeekends', 'Include Weekends'),
+                ...f.textarea('escalationRules', 'Escalation Rules')
+            ])
+        ]),
 
-        CrmEscalation: {
-            title: 'Escalation Rule',
-            sections: [
-                {
-                    title: 'Escalation Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'level', label: 'Level', type: 'select', options: enums.ESCALATION_LEVEL },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Trigger & Actions',
-                    fields: [
-                        { key: 'triggerMinutes', label: 'Trigger After (minutes)', type: 'number', required: true },
-                        { key: 'criteria', label: 'Criteria', type: 'textarea' },
-                        { key: 'escalateToUserId', label: 'Escalate To User', type: 'reference', lookupModel: 'HcmEmployee' },
-                        { key: 'escalateToQueue', label: 'Escalate To Queue', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Notifications',
-                    fields: [
-                        { key: 'notifyOwner', label: 'Notify Owner', type: 'checkbox' },
-                        { key: 'notifyManager', label: 'Notify Manager', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CrmEscalation: f.form('Escalation Rule', [
+            f.section('Escalation Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('level', 'Level', enums.ESCALATION_LEVEL),
+                ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Trigger & Actions', [
+                ...f.number('triggerMinutes', 'Trigger After (minutes)', true),
+                ...f.textarea('criteria', 'Criteria'),
+                ...f.reference('escalateToUserId', 'Escalate To User', 'Employee'),
+                ...f.text('escalateToQueue', 'Escalate To Queue')
+            ]),
+            f.section('Notifications', [
+                ...f.checkbox('notifyOwner', 'Notify Owner'),
+                ...f.checkbox('notifyManager', 'Notify Manager')
+            ])
+        ]),
 
-        CrmSurvey: {
-            title: 'Customer Survey',
-            sections: [
-                {
-                    title: 'Survey Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'surveyType', label: 'Survey Type', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.SURVEY_STATUS },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'HcmEmployee' }
-                    ]
-                },
-                {
-                    title: 'Target',
-                    fields: [
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'CrmAccount' },
-                        { key: 'contactId', label: 'Contact', type: 'reference', lookupModel: 'CrmContact' },
-                        { key: 'caseId', label: 'Case', type: 'reference', lookupModel: 'CrmCase' }
-                    ]
-                },
-                {
-                    title: 'Response',
-                    fields: [
-                        { key: 'sentDate', label: 'Sent Date', type: 'date' },
-                        { key: 'completedDate', label: 'Completed Date', type: 'date' },
-                        { key: 'overallRating', label: 'Overall Rating', type: 'number' },
-                        { key: 'wouldRecommend', label: 'Would Recommend', type: 'checkbox' },
-                        { key: 'feedback', label: 'Feedback', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
+        CrmSurvey: f.form('Customer Survey', [
+            f.section('Survey Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.text('surveyType', 'Survey Type'),
+                ...f.select('status', 'Status', enums.SURVEY_STATUS),
+                ...f.reference('ownerId', 'Owner', 'Employee')
+            ]),
+            f.section('Target', [
+                ...f.reference('accountId', 'Account', 'CrmAccount'),
+                ...f.reference('contactId', 'Contact', 'CrmContact'),
+                ...f.reference('caseId', 'Case', 'CrmCase')
+            ]),
+            f.section('Response', [
+                ...f.date('sentDate', 'Sent Date'),
+                ...f.date('completedDate', 'Completed Date'),
+                ...f.number('overallRating', 'Overall Rating'),
+                ...f.checkbox('wouldRecommend', 'Would Recommend'),
+                ...f.textarea('feedback', 'Feedback')
+            ])
+        ])
     };
 
     CrmService.primaryKeys = {

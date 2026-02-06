@@ -3,105 +3,74 @@
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
 // Documents Integration Module - Form Definitions
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
     window.DocIntegration = window.DocIntegration || {};
 
+    const f = window.Layer8FormFactory;
     const enums = DocIntegration.enums;
 
     DocIntegration.forms = {
-        DocAttachment: {
-            title: 'Attachment',
-            sections: [
-                {
-                    title: 'Attachment Details',
-                    fields: [
-                        { key: 'fileName', label: 'File Name', type: 'text', required: true },
-                        { key: 'entityType', label: 'Entity Type', type: 'text', required: true },
-                        { key: 'entityId', label: 'Entity ID', type: 'text', required: true },
-                        { key: 'mimeType', label: 'MIME Type', type: 'text' },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'uploadedBy', label: 'Uploaded By', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                }
-            ]
-        },
+        DocAttachment: f.form('Attachment', [
+            f.section('Attachment Details', [
+                ...f.text('fileName', 'File Name', true),
+                ...f.text('entityType', 'Entity Type', true),
+                ...f.text('entityId', 'Entity ID', true),
+                ...f.text('mimeType', 'MIME Type'),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('uploadedBy', 'Uploaded By', 'Employee')
+            ])
+        ]),
 
-        DocTemplate: {
-            title: 'Template',
-            sections: [
-                {
-                    title: 'Template Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'templateType', label: 'Template Type', type: 'select', options: enums.TEMPLATE_TYPE },
-                        { key: 'version', label: 'Version', type: 'text' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Template Content',
-                    fields: [
-                        { key: 'content', label: 'Content', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        DocTemplate: f.form('Template', [
+            f.section('Template Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('templateType', 'Template Type', enums.TEMPLATE_TYPE),
+                ...f.text('version', 'Version'),
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Template Content', [
+                ...f.textarea('content', 'Content')
+            ])
+        ]),
 
-        DocTemplateField: {
-            title: 'Template Field',
-            sections: [
-                {
-                    title: 'Field Details',
-                    fields: [
-                        { key: 'templateId', label: 'Template', type: 'reference', lookupModel: 'DocTemplate', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'fieldType', label: 'Field Type', type: 'select', options: enums.FIELD_TYPE },
-                        { key: 'defaultValue', label: 'Default Value', type: 'text' },
-                        { key: 'placeholder', label: 'Placeholder', type: 'text' },
-                        { key: 'displayOrder', label: 'Display Order', type: 'number' },
-                        { key: 'isRequired', label: 'Required', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        DocTemplateField: f.form('Template Field', [
+            f.section('Field Details', [
+                ...f.reference('templateId', 'Template', 'DocTemplate', true),
+                ...f.text('name', 'Name', true),
+                ...f.select('fieldType', 'Field Type', enums.FIELD_TYPE),
+                ...f.text('defaultValue', 'Default Value'),
+                ...f.text('placeholder', 'Placeholder'),
+                ...f.number('displayOrder', 'Display Order'),
+                ...f.checkbox('isRequired', 'Required')
+            ])
+        ]),
 
-        DocEmailCapture: {
-            title: 'Email Capture',
-            sections: [
-                {
-                    title: 'Email Details',
-                    fields: [
-                        { key: 'subject', label: 'Subject', type: 'text', required: true },
-                        { key: 'fromAddress', label: 'From Address', type: 'text', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.EMAIL_CAPTURE_STATUS },
-                        { key: 'folderId', label: 'Destination Folder', type: 'reference', lookupModel: 'DocFolder' },
-                        { key: 'documentId', label: 'Created Document', type: 'reference', lookupModel: 'DocDocument' }
-                    ]
-                }
-            ]
-        },
+        DocEmailCapture: f.form('Email Capture', [
+            f.section('Email Details', [
+                ...f.text('subject', 'Subject', true),
+                ...f.text('fromAddress', 'From Address', true),
+                ...f.select('status', 'Status', enums.EMAIL_CAPTURE_STATUS),
+                ...f.reference('folderId', 'Destination Folder', 'DocFolder'),
+                ...f.reference('documentId', 'Created Document', 'DocDocument')
+            ])
+        ]),
 
-        DocScanJob: {
-            title: 'Scan Job',
-            sections: [
-                {
-                    title: 'Scan Details',
-                    fields: [
-                        { key: 'sourceName', label: 'Source Name', type: 'text', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.SCAN_STATUS },
-                        { key: 'pageCount', label: 'Page Count', type: 'number' },
-                        { key: 'scannedBy', label: 'Scanned By', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'folderId', label: 'Destination Folder', type: 'reference', lookupModel: 'DocFolder' },
-                        { key: 'documentId', label: 'Created Document', type: 'reference', lookupModel: 'DocDocument' }
-                    ]
-                }
-            ]
-        }
+        DocScanJob: f.form('Scan Job', [
+            f.section('Scan Details', [
+                ...f.text('sourceName', 'Source Name', true),
+                ...f.select('status', 'Status', enums.SCAN_STATUS),
+                ...f.number('pageCount', 'Page Count'),
+                ...f.reference('scannedBy', 'Scanned By', 'Employee'),
+                ...f.reference('folderId', 'Destination Folder', 'DocFolder'),
+                ...f.reference('documentId', 'Created Document', 'DocDocument')
+            ])
+        ])
     };
 
     DocIntegration.primaryKeys = {

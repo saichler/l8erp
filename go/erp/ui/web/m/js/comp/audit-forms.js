@@ -12,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// Uses Layer8FormFactory for reduced boilerplate
 /**
  * Mobile COMP Audit Module - Form Configurations
  * Desktop Equivalent: comp/audit/audit-forms.js
@@ -19,177 +20,119 @@ limitations under the License.
 (function() {
     'use strict';
 
+    window.MobileCompAudit = window.MobileCompAudit || {};
+    const f = window.Layer8FormFactory;
     const enums = MobileCompAudit.enums;
 
     MobileCompAudit.forms = {
-        CompAuditSchedule: {
-            title: 'Audit Schedule',
-            sections: [
-                {
-                    title: 'Audit Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'auditType', label: 'Audit Type', type: 'select', options: enums.AUDIT_TYPE },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.AUDIT_STATUS },
-                        { key: 'fiscalYear', label: 'Fiscal Year', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Schedule',
-                    fields: [
-                        { key: 'plannedStartDate', label: 'Planned Start Date', type: 'date' },
-                        { key: 'plannedEndDate', label: 'Planned End Date', type: 'date' },
-                        { key: 'actualStartDate', label: 'Actual Start Date', type: 'date' },
-                        { key: 'actualEndDate', label: 'Actual End Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Audit Team',
-                    fields: [
-                        { key: 'leadAuditorId', label: 'Lead Auditor', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'auditFirm', label: 'Audit Firm', type: 'text' },
-                        { key: 'scope', label: 'Scope', type: 'textarea' },
-                        { key: 'objectives', label: 'Objectives', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        CompAuditSchedule: f.form('Audit Schedule', [
+            f.section('Audit Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('auditType', 'Audit Type', enums.AUDIT_TYPE),
+                ...f.select('status', 'Status', enums.AUDIT_STATUS),
+                ...f.number('fiscalYear', 'Fiscal Year')
+            ]),
+            f.section('Schedule', [
+                ...f.date('plannedStartDate', 'Planned Start Date'),
+                ...f.date('plannedEndDate', 'Planned End Date'),
+                ...f.date('actualStartDate', 'Actual Start Date'),
+                ...f.date('actualEndDate', 'Actual End Date')
+            ]),
+            f.section('Audit Team', [
+                ...f.reference('leadAuditorId', 'Lead Auditor', 'Employee'),
+                ...f.text('auditFirm', 'Audit Firm'),
+                ...f.textarea('scope', 'Scope'),
+                ...f.textarea('objectives', 'Objectives')
+            ])
+        ]),
 
-        CompAuditFinding: {
-            title: 'Audit Finding',
-            sections: [
-                {
-                    title: 'Finding Details',
-                    fields: [
-                        { key: 'findingNumber', label: 'Finding Number', type: 'text' },
-                        { key: 'title', label: 'Title', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'auditScheduleId', label: 'Audit', type: 'reference', lookupModel: 'CompAuditSchedule', required: true },
-                        { key: 'severity', label: 'Severity', type: 'select', options: enums.SEVERITY_LEVEL },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.FINDING_STATUS }
-                    ]
-                },
-                {
-                    title: 'Timeline',
-                    fields: [
-                        { key: 'discoveryDate', label: 'Discovery Date', type: 'date' },
-                        { key: 'dueDate', label: 'Due Date', type: 'date' },
-                        { key: 'closedDate', label: 'Closed Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Details & Assignment',
-                    fields: [
-                        { key: 'responsibleId', label: 'Responsible', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'rootCause', label: 'Root Cause', type: 'textarea' },
-                        { key: 'recommendation', label: 'Recommendation', type: 'textarea' },
-                        { key: 'managementResponse', label: 'Management Response', type: 'textarea' },
-                        { key: 'repeatFinding', label: 'Repeat Finding', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CompAuditFinding: f.form('Audit Finding', [
+            f.section('Finding Details', [
+                ...f.text('findingNumber', 'Finding Number'),
+                ...f.text('title', 'Title', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('auditScheduleId', 'Audit', 'CompAuditSchedule', true),
+                ...f.select('severity', 'Severity', enums.SEVERITY_LEVEL),
+                ...f.select('status', 'Status', enums.FINDING_STATUS)
+            ]),
+            f.section('Timeline', [
+                ...f.date('discoveryDate', 'Discovery Date'),
+                ...f.date('dueDate', 'Due Date'),
+                ...f.date('closedDate', 'Closed Date')
+            ]),
+            f.section('Details & Assignment', [
+                ...f.reference('responsibleId', 'Responsible', 'Employee'),
+                ...f.textarea('rootCause', 'Root Cause'),
+                ...f.textarea('recommendation', 'Recommendation'),
+                ...f.textarea('managementResponse', 'Management Response'),
+                ...f.checkbox('repeatFinding', 'Repeat Finding')
+            ])
+        ]),
 
-        CompRemediationAction: {
-            title: 'Remediation Action',
-            sections: [
-                {
-                    title: 'Action Details',
-                    fields: [
-                        { key: 'actionNumber', label: 'Action Number', type: 'text' },
-                        { key: 'title', label: 'Title', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'findingId', label: 'Finding', type: 'reference', lookupModel: 'CompAuditFinding', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.REMEDIATION_STATUS }
-                    ]
-                },
-                {
-                    title: 'Timeline',
-                    fields: [
-                        { key: 'dueDate', label: 'Due Date', type: 'date' },
-                        { key: 'completedDate', label: 'Completed Date', type: 'date' },
-                        { key: 'verifiedDate', label: 'Verified Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Progress & Ownership',
-                    fields: [
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'percentComplete', label: 'Percent Complete', type: 'number' },
-                        { key: 'isOverdue', label: 'Overdue', type: 'checkbox' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        CompRemediationAction: f.form('Remediation Action', [
+            f.section('Action Details', [
+                ...f.text('actionNumber', 'Action Number'),
+                ...f.text('title', 'Title', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('findingId', 'Finding', 'CompAuditFinding', true),
+                ...f.select('status', 'Status', enums.REMEDIATION_STATUS)
+            ]),
+            f.section('Timeline', [
+                ...f.date('dueDate', 'Due Date'),
+                ...f.date('completedDate', 'Completed Date'),
+                ...f.date('verifiedDate', 'Verified Date')
+            ]),
+            f.section('Progress & Ownership', [
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.number('percentComplete', 'Percent Complete'),
+                ...f.checkbox('isOverdue', 'Overdue'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        CompAuditReport: {
-            title: 'Audit Report',
-            sections: [
-                {
-                    title: 'Report Details',
-                    fields: [
-                        { key: 'reportNumber', label: 'Report Number', type: 'text' },
-                        { key: 'title', label: 'Title', type: 'text', required: true },
-                        { key: 'auditScheduleId', label: 'Audit', type: 'reference', lookupModel: 'CompAuditSchedule', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.AUDIT_STATUS },
-                        { key: 'overallOpinion', label: 'Overall Opinion', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Findings Summary',
-                    fields: [
-                        { key: 'findingsCritical', label: 'Critical Findings', type: 'number' },
-                        { key: 'findingsHigh', label: 'High Findings', type: 'number' },
-                        { key: 'findingsMedium', label: 'Medium Findings', type: 'number' },
-                        { key: 'findingsLow', label: 'Low Findings', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Dates & Content',
-                    fields: [
-                        { key: 'draftDate', label: 'Draft Date', type: 'date' },
-                        { key: 'finalDate', label: 'Final Date', type: 'date' },
-                        { key: 'executiveSummary', label: 'Executive Summary', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        CompAuditReport: f.form('Audit Report', [
+            f.section('Report Details', [
+                ...f.text('reportNumber', 'Report Number'),
+                ...f.text('title', 'Title', true),
+                ...f.reference('auditScheduleId', 'Audit', 'CompAuditSchedule', true),
+                ...f.select('status', 'Status', enums.AUDIT_STATUS),
+                ...f.text('overallOpinion', 'Overall Opinion')
+            ]),
+            f.section('Findings Summary', [
+                ...f.number('findingsCritical', 'Critical Findings'),
+                ...f.number('findingsHigh', 'High Findings'),
+                ...f.number('findingsMedium', 'Medium Findings'),
+                ...f.number('findingsLow', 'Low Findings')
+            ]),
+            f.section('Dates & Content', [
+                ...f.date('draftDate', 'Draft Date'),
+                ...f.date('finalDate', 'Final Date'),
+                ...f.textarea('executiveSummary', 'Executive Summary')
+            ])
+        ]),
 
-        CompComplianceReport: {
-            title: 'Compliance Report',
-            sections: [
-                {
-                    title: 'Report Details',
-                    fields: [
-                        { key: 'reportNumber', label: 'Report Number', type: 'text' },
-                        { key: 'title', label: 'Title', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'reportType', label: 'Report Type', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Period & Metrics',
-                    fields: [
-                        { key: 'periodStart', label: 'Period Start', type: 'date' },
-                        { key: 'periodEnd', label: 'Period End', type: 'date' },
-                        { key: 'overallComplianceRate', label: 'Overall Compliance Rate (%)', type: 'number' },
-                        { key: 'openFindings', label: 'Open Findings', type: 'number' },
-                        { key: 'closedFindings', label: 'Closed Findings', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Report Information',
-                    fields: [
-                        { key: 'reportDate', label: 'Report Date', type: 'date' },
-                        { key: 'preparedById', label: 'Prepared By', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'executiveSummary', label: 'Executive Summary', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
+        CompComplianceReport: f.form('Compliance Report', [
+            f.section('Report Details', [
+                ...f.text('reportNumber', 'Report Number'),
+                ...f.text('title', 'Title', true),
+                ...f.textarea('description', 'Description'),
+                ...f.text('reportType', 'Report Type'),
+                ...f.text('status', 'Status')
+            ]),
+            f.section('Period & Metrics', [
+                ...f.date('periodStart', 'Period Start'),
+                ...f.date('periodEnd', 'Period End'),
+                ...f.number('overallComplianceRate', 'Overall Compliance Rate (%)'),
+                ...f.number('openFindings', 'Open Findings'),
+                ...f.number('closedFindings', 'Closed Findings')
+            ]),
+            f.section('Report Information', [
+                ...f.date('reportDate', 'Report Date'),
+                ...f.reference('preparedById', 'Prepared By', 'Employee'),
+                ...f.textarea('executiveSummary', 'Executive Summary')
+            ])
+        ])
     };
 
 })();

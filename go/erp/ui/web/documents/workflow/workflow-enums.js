@@ -2,122 +2,84 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
-// Documents Workflow Module - Enum Definitions
+// Documents Workflow Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate } = Layer8DRenderers;
+
     window.DocWorkflow = window.DocWorkflow || {};
-    DocWorkflow.enums = {};
 
-    // CHECKOUT STATUS
-    DocWorkflow.enums.CHECKOUT_STATUS = {
-        0: 'Unspecified',
-        1: 'Checked Out',
-        2: 'Checked In',
-        3: 'Cancelled'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const CHECKOUT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Checked Out', 'out', 'layer8d-status-pending'],
+        ['Checked In', 'in', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive']
+    ]);
+
+    const WORKFLOW_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Active', 'active', 'layer8d-status-active'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive'],
+        ['Rejected', 'rejected', 'layer8d-status-terminated']
+    ]);
+
+    const STEP_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['In Progress', 'progress', 'layer8d-status-active'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['Rejected', 'rejected', 'layer8d-status-terminated'],
+        ['Skipped', 'skipped', 'layer8d-status-inactive']
+    ]);
+
+    const SIGNATURE_TYPE = factory.simple([
+        'Unspecified', 'Electronic', 'Digital', 'Handwritten'
+    ]);
+
+    const SIGNATURE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Signed', 'signed', 'layer8d-status-active'],
+        ['Declined', 'declined', 'layer8d-status-terminated'],
+        ['Expired', 'expired', 'layer8d-status-inactive']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    DocWorkflow.enums = {
+        CHECKOUT_STATUS: CHECKOUT_STATUS.enum,
+        CHECKOUT_STATUS_CLASSES: CHECKOUT_STATUS.classes,
+        WORKFLOW_STATUS: WORKFLOW_STATUS.enum,
+        WORKFLOW_STATUS_CLASSES: WORKFLOW_STATUS.classes,
+        STEP_STATUS: STEP_STATUS.enum,
+        STEP_STATUS_CLASSES: STEP_STATUS.classes,
+        SIGNATURE_TYPE: SIGNATURE_TYPE.enum,
+        SIGNATURE_STATUS: SIGNATURE_STATUS.enum,
+        SIGNATURE_STATUS_CLASSES: SIGNATURE_STATUS.classes
     };
 
-    DocWorkflow.enums.CHECKOUT_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-inactive'
-    };
-
-    // WORKFLOW STATUS
-    DocWorkflow.enums.WORKFLOW_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Active',
-        3: 'Completed',
-        4: 'Cancelled',
-        5: 'Rejected'
-    };
-
-    DocWorkflow.enums.WORKFLOW_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-inactive',
-        5: 'layer8d-status-terminated'
-    };
-
-    // STEP STATUS
-    DocWorkflow.enums.STEP_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'In Progress',
-        3: 'Approved',
-        4: 'Rejected',
-        5: 'Skipped'
-    };
-
-    DocWorkflow.enums.STEP_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated',
-        5: 'layer8d-status-inactive'
-    };
-
-    // SIGNATURE TYPE
-    DocWorkflow.enums.SIGNATURE_TYPE = {
-        0: 'Unspecified',
-        1: 'Electronic',
-        2: 'Digital',
-        3: 'Handwritten'
-    };
-
-    DocWorkflow.enums.SIGNATURE_TYPE_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-pending'
-    };
-
-    // SIGNATURE STATUS
-    DocWorkflow.enums.SIGNATURE_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'Signed',
-        3: 'Declined',
-        4: 'Expired'
-    };
-
-    DocWorkflow.enums.SIGNATURE_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-terminated',
-        4: 'layer8d-status-inactive'
-    };
-
+    // ============================================================================
     // RENDERERS
-    DocWorkflow.render = {};
+    // ============================================================================
 
-    DocWorkflow.render.checkoutStatus = Layer8DRenderers.createStatusRenderer(
-        DocWorkflow.enums.CHECKOUT_STATUS,
-        DocWorkflow.enums.CHECKOUT_STATUS_CLASSES
-    );
-
-    DocWorkflow.render.workflowStatus = Layer8DRenderers.createStatusRenderer(
-        DocWorkflow.enums.WORKFLOW_STATUS,
-        DocWorkflow.enums.WORKFLOW_STATUS_CLASSES
-    );
-
-    DocWorkflow.render.stepStatus = Layer8DRenderers.createStatusRenderer(
-        DocWorkflow.enums.STEP_STATUS,
-        DocWorkflow.enums.STEP_STATUS_CLASSES
-    );
-
-    DocWorkflow.render.signatureType = Layer8DRenderers.createStatusRenderer(
-        DocWorkflow.enums.SIGNATURE_TYPE,
-        DocWorkflow.enums.SIGNATURE_TYPE_CLASSES
-    );
-
-    DocWorkflow.render.signatureStatus = Layer8DRenderers.createStatusRenderer(
-        DocWorkflow.enums.SIGNATURE_STATUS,
-        DocWorkflow.enums.SIGNATURE_STATUS_CLASSES
-    );
-
-    DocWorkflow.render.date = Layer8DRenderers.renderDate;
+    DocWorkflow.render = {
+        checkoutStatus: createStatusRenderer(CHECKOUT_STATUS.enum, CHECKOUT_STATUS.classes),
+        workflowStatus: createStatusRenderer(WORKFLOW_STATUS.enum, WORKFLOW_STATUS.classes),
+        stepStatus: createStatusRenderer(STEP_STATUS.enum, STEP_STATUS.classes),
+        signatureType: (v) => renderEnum(v, SIGNATURE_TYPE.enum),
+        signatureStatus: createStatusRenderer(SIGNATURE_STATUS.enum, SIGNATURE_STATUS.classes),
+        date: renderDate
+    };
 
 })();

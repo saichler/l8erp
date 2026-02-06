@@ -2,179 +2,130 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // Projects Resources Module - Form Definitions
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
     window.PrjResources = window.PrjResources || {};
 
+    const f = window.Layer8FormFactory;
     const enums = PrjResources.enums;
 
     PrjResources.forms = {
-        PrjResourcePool: {
-            title: 'Resource Pool',
-            sections: [
-                {
-                    title: 'Pool Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'managerId', label: 'Manager', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'Department' },
-                        { key: 'totalCapacityHours', label: 'Total Capacity Hours', type: 'number' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        PrjResourcePool: f.form('Resource Pool', [
+            f.section('Pool Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('managerId', 'Manager', 'Employee'),
+                ...f.reference('departmentId', 'Department', 'Department'),
+                ...f.number('totalCapacityHours', 'Total Capacity Hours'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        PrjResource: {
-            title: 'Resource',
-            sections: [
-                {
-                    title: 'Resource Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'poolId', label: 'Resource Pool', type: 'reference', lookupModel: 'PrjResourcePool' },
-                        { key: 'resourceType', label: 'Resource Type', type: 'select', options: enums.RESOURCE_TYPE, required: true },
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'jobTitle', label: 'Job Title', type: 'text' },
-                        { key: 'hourlyCost', label: 'Hourly Cost', type: 'money' },
-                        { key: 'billingRate', label: 'Billing Rate', type: 'money' },
-                        { key: 'availabilityPercent', label: 'Availability %', type: 'number' },
-                        { key: 'capacityHoursPerWeek', label: 'Capacity Hours/Week', type: 'number' },
-                        { key: 'availableFrom', label: 'Available From', type: 'date' },
-                        { key: 'availableUntil', label: 'Available Until', type: 'date' },
-                        { key: 'location', label: 'Location', type: 'text' },
-                        { key: 'timeZone', label: 'Time Zone', type: 'text' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        PrjResource: f.form('Resource', [
+            f.section('Resource Details', [
+                ...f.text('name', 'Name', true),
+                ...f.reference('poolId', 'Resource Pool', 'PrjResourcePool'),
+                ...f.select('resourceType', 'Resource Type', enums.RESOURCE_TYPE, true),
+                ...f.reference('employeeId', 'Employee', 'Employee'),
+                ...f.text('jobTitle', 'Job Title'),
+                ...f.money('hourlyCost', 'Hourly Cost'),
+                ...f.money('billingRate', 'Billing Rate'),
+                ...f.number('availabilityPercent', 'Availability %'),
+                ...f.number('capacityHoursPerWeek', 'Capacity Hours/Week'),
+                ...f.date('availableFrom', 'Available From'),
+                ...f.date('availableUntil', 'Available Until'),
+                ...f.text('location', 'Location'),
+                ...f.text('timeZone', 'Time Zone'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        PrjResourceSkill: {
-            title: 'Resource Skill',
-            sections: [
-                {
-                    title: 'Skill Details',
-                    fields: [
-                        { key: 'resourceId', label: 'Resource', type: 'reference', lookupModel: 'PrjResource', required: true },
-                        { key: 'skillName', label: 'Skill Name', type: 'text', required: true },
-                        { key: 'skillCategory', label: 'Skill Category', type: 'text' },
-                        { key: 'proficiencyLevel', label: 'Proficiency Level (1-5)', type: 'number', required: true },
-                        { key: 'yearsExperience', label: 'Years Experience', type: 'number' },
-                        { key: 'isPrimary', label: 'Primary Skill', type: 'checkbox' },
-                        { key: 'certifiedDate', label: 'Certified Date', type: 'date' },
-                        { key: 'certificationExpiry', label: 'Certification Expiry', type: 'date' }
-                    ]
-                }
-            ]
-        },
+        PrjResourceSkill: f.form('Resource Skill', [
+            f.section('Skill Details', [
+                ...f.reference('resourceId', 'Resource', 'PrjResource', true),
+                ...f.text('skillName', 'Skill Name', true),
+                ...f.text('skillCategory', 'Skill Category'),
+                ...f.number('proficiencyLevel', 'Proficiency Level (1-5)', true),
+                ...f.number('yearsExperience', 'Years Experience'),
+                ...f.checkbox('isPrimary', 'Primary Skill'),
+                ...f.date('certifiedDate', 'Certified Date'),
+                ...f.date('certificationExpiry', 'Certification Expiry')
+            ])
+        ]),
 
-        PrjAllocation: {
-            title: 'Resource Allocation',
-            sections: [
-                {
-                    title: 'Allocation Details',
-                    fields: [
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject', required: true },
-                        { key: 'resourceId', label: 'Resource', type: 'reference', lookupModel: 'PrjResource', required: true },
-                        { key: 'taskId', label: 'Task', type: 'reference', lookupModel: 'PrjTask' },
-                        { key: 'phaseId', label: 'Phase', type: 'reference', lookupModel: 'PrjPhase' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.ALLOCATION_STATUS },
-                        { key: 'startDate', label: 'Start Date', type: 'date', required: true },
-                        { key: 'endDate', label: 'End Date', type: 'date', required: true },
-                        { key: 'allocatedHours', label: 'Allocated Hours', type: 'number' },
-                        { key: 'allocatedPercent', label: 'Allocation %', type: 'number' },
-                        { key: 'billingRate', label: 'Billing Rate', type: 'money' },
-                        { key: 'isBillable', label: 'Billable', type: 'checkbox' },
-                        { key: 'role', label: 'Role', type: 'text' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        PrjAllocation: f.form('Resource Allocation', [
+            f.section('Allocation Details', [
+                ...f.reference('projectId', 'Project', 'PrjProject', true),
+                ...f.reference('resourceId', 'Resource', 'PrjResource', true),
+                ...f.reference('taskId', 'Task', 'PrjTask'),
+                ...f.reference('phaseId', 'Phase', 'PrjPhase'),
+                ...f.select('status', 'Status', enums.ALLOCATION_STATUS),
+                ...f.date('startDate', 'Start Date', true),
+                ...f.date('endDate', 'End Date', true),
+                ...f.number('allocatedHours', 'Allocated Hours'),
+                ...f.number('allocatedPercent', 'Allocation %'),
+                ...f.money('billingRate', 'Billing Rate'),
+                ...f.checkbox('isBillable', 'Billable'),
+                ...f.text('role', 'Role'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        PrjBooking: {
-            title: 'Resource Booking',
-            sections: [
-                {
-                    title: 'Booking Details',
-                    fields: [
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject', required: true },
-                        { key: 'resourceId', label: 'Resource', type: 'reference', lookupModel: 'PrjResource', required: true },
-                        { key: 'requestedBy', label: 'Requested By', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'approvedBy', label: 'Approved By', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.BOOKING_STATUS },
-                        { key: 'startDate', label: 'Start Date', type: 'date', required: true },
-                        { key: 'endDate', label: 'End Date', type: 'date', required: true },
-                        { key: 'requestedHours', label: 'Requested Hours', type: 'number' },
-                        { key: 'approvedHours', label: 'Approved Hours', type: 'number' },
-                        { key: 'role', label: 'Role', type: 'text' },
-                        { key: 'skillRequired', label: 'Skill Required', type: 'text' },
-                        { key: 'requestedDate', label: 'Requested Date', type: 'date' },
-                        { key: 'decisionDate', label: 'Decision Date', type: 'date' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        PrjBooking: f.form('Resource Booking', [
+            f.section('Booking Details', [
+                ...f.reference('projectId', 'Project', 'PrjProject', true),
+                ...f.reference('resourceId', 'Resource', 'PrjResource', true),
+                ...f.reference('requestedBy', 'Requested By', 'Employee'),
+                ...f.reference('approvedBy', 'Approved By', 'Employee'),
+                ...f.select('status', 'Status', enums.BOOKING_STATUS),
+                ...f.date('startDate', 'Start Date', true),
+                ...f.date('endDate', 'End Date', true),
+                ...f.number('requestedHours', 'Requested Hours'),
+                ...f.number('approvedHours', 'Approved Hours'),
+                ...f.text('role', 'Role'),
+                ...f.text('skillRequired', 'Skill Required'),
+                ...f.date('requestedDate', 'Requested Date'),
+                ...f.date('decisionDate', 'Decision Date'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        PrjCapacityPlan: {
-            title: 'Capacity Plan',
-            sections: [
-                {
-                    title: 'Plan Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'poolId', label: 'Resource Pool', type: 'reference', lookupModel: 'PrjResourcePool' },
-                        { key: 'periodStart', label: 'Period Start', type: 'date', required: true },
-                        { key: 'periodEnd', label: 'Period End', type: 'date', required: true },
-                        { key: 'totalCapacityHours', label: 'Total Capacity Hours', type: 'number' },
-                        { key: 'allocatedHours', label: 'Allocated Hours', type: 'number' },
-                        { key: 'availableHours', label: 'Available Hours', type: 'number' },
-                        { key: 'utilizationTarget', label: 'Utilization Target %', type: 'number' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        PrjCapacityPlan: f.form('Capacity Plan', [
+            f.section('Plan Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('poolId', 'Resource Pool', 'PrjResourcePool'),
+                ...f.date('periodStart', 'Period Start', true),
+                ...f.date('periodEnd', 'Period End', true),
+                ...f.number('totalCapacityHours', 'Total Capacity Hours'),
+                ...f.number('allocatedHours', 'Allocated Hours'),
+                ...f.number('availableHours', 'Available Hours'),
+                ...f.number('utilizationTarget', 'Utilization Target %'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        PrjUtilization: {
-            title: 'Resource Utilization',
-            sections: [
-                {
-                    title: 'Utilization Details',
-                    fields: [
-                        { key: 'resourceId', label: 'Resource', type: 'reference', lookupModel: 'PrjResource', required: true },
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject' },
-                        { key: 'periodStart', label: 'Period Start', type: 'date', required: true },
-                        { key: 'periodEnd', label: 'Period End', type: 'date', required: true },
-                        { key: 'capacityHours', label: 'Capacity Hours', type: 'number' },
-                        { key: 'billableHours', label: 'Billable Hours', type: 'number' },
-                        { key: 'nonBillableHours', label: 'Non-Billable Hours', type: 'number' },
-                        { key: 'totalHours', label: 'Total Hours', type: 'number' },
-                        { key: 'utilizationPercent', label: 'Utilization %', type: 'number' },
-                        { key: 'billableUtilizationPercent', label: 'Billable Utilization %', type: 'number' },
-                        { key: 'revenue', label: 'Revenue', type: 'money' },
-                        { key: 'cost', label: 'Cost', type: 'money' }
-                    ]
-                }
-            ]
-        }
+        PrjUtilization: f.form('Resource Utilization', [
+            f.section('Utilization Details', [
+                ...f.reference('resourceId', 'Resource', 'PrjResource', true),
+                ...f.reference('projectId', 'Project', 'PrjProject'),
+                ...f.date('periodStart', 'Period Start', true),
+                ...f.date('periodEnd', 'Period End', true),
+                ...f.number('capacityHours', 'Capacity Hours'),
+                ...f.number('billableHours', 'Billable Hours'),
+                ...f.number('nonBillableHours', 'Non-Billable Hours'),
+                ...f.number('totalHours', 'Total Hours'),
+                ...f.number('utilizationPercent', 'Utilization %'),
+                ...f.number('billableUtilizationPercent', 'Billable Utilization %'),
+                ...f.money('revenue', 'Revenue'),
+                ...f.money('cost', 'Cost')
+            ])
+        ])
     };
 
     PrjResources.primaryKeys = {

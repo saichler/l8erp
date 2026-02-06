@@ -2,165 +2,122 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // CRM Accounts Module - Form Definitions
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
     window.CrmAccounts = window.CrmAccounts || {};
 
+    const f = window.Layer8FormFactory;
     const enums = CrmAccounts.enums;
 
     CrmAccounts.forms = {
-        CrmAccount: {
-            title: 'Account',
-            sections: [
-                {
-                    title: 'Account Information',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'accountType', label: 'Type', type: 'select', options: enums.ACCOUNT_TYPE },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.ACCOUNT_STATUS },
-                        { key: 'parentAccountId', label: 'Parent Account', type: 'reference', lookupModel: 'CrmAccount' },
-                        { key: 'industry', label: 'Industry', type: 'text' },
-                        { key: 'website', label: 'Website', type: 'text' },
-                        { key: 'phone', label: 'Phone', type: 'text' },
-                        { key: 'fax', label: 'Fax', type: 'text' },
-                        { key: 'employeeCount', label: 'Employee Count', type: 'number' },
-                        { key: 'annualRevenue', label: 'Annual Revenue', type: 'money' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'HcmEmployee' },
-                        { key: 'sicCode', label: 'SIC Code', type: 'text' },
-                        { key: 'tickerSymbol', label: 'Ticker Symbol', type: 'text' },
-                        { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'FinCustomer' },
-                        { key: 'description', label: 'Description', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        CrmAccount: f.form('Account', [
+            f.section('Account Information', [
+                ...f.text('name', 'Name', true),
+                ...f.select('accountType', 'Type', enums.ACCOUNT_TYPE),
+                ...f.select('status', 'Status', enums.ACCOUNT_STATUS),
+                ...f.reference('parentAccountId', 'Parent Account', 'CrmAccount'),
+                ...f.text('industry', 'Industry'),
+                ...f.text('website', 'Website'),
+                ...f.text('phone', 'Phone'),
+                ...f.text('fax', 'Fax'),
+                ...f.number('employeeCount', 'Employee Count'),
+                ...f.money('annualRevenue', 'Annual Revenue'),
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.text('sicCode', 'SIC Code'),
+                ...f.text('tickerSymbol', 'Ticker Symbol'),
+                ...f.reference('customerId', 'Customer', 'Customer'),
+                ...f.textarea('description', 'Description')
+            ])
+        ]),
 
-        CrmContact: {
-            title: 'Contact',
-            sections: [
-                {
-                    title: 'Contact Information',
-                    fields: [
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'CrmAccount', required: true },
-                        { key: 'firstName', label: 'First Name', type: 'text', required: true },
-                        { key: 'lastName', label: 'Last Name', type: 'text', required: true },
-                        { key: 'title', label: 'Title', type: 'text' },
-                        { key: 'department', label: 'Department', type: 'text' },
-                        { key: 'email', label: 'Email', type: 'text' },
-                        { key: 'phone', label: 'Phone', type: 'text' },
-                        { key: 'mobile', label: 'Mobile', type: 'text' },
-                        { key: 'fax', label: 'Fax', type: 'text' },
-                        { key: 'reportsToId', label: 'Reports To', type: 'reference', lookupModel: 'CrmContact' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'HcmEmployee' },
-                        { key: 'isPrimary', label: 'Primary Contact', type: 'checkbox' },
-                        { key: 'birthdate', label: 'Birthdate', type: 'date' },
-                        { key: 'doNotCall', label: 'Do Not Call', type: 'checkbox' },
-                        { key: 'doNotEmail', label: 'Do Not Email', type: 'checkbox' },
-                        { key: 'leadSourceId', label: 'Lead Source', type: 'reference', lookupModel: 'CrmLeadSource' },
-                        { key: 'description', label: 'Description', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        CrmContact: f.form('Contact', [
+            f.section('Contact Information', [
+                ...f.reference('accountId', 'Account', 'CrmAccount', true),
+                ...f.text('firstName', 'First Name', true),
+                ...f.text('lastName', 'Last Name', true),
+                ...f.text('title', 'Title'),
+                ...f.text('department', 'Department'),
+                ...f.text('email', 'Email'),
+                ...f.text('phone', 'Phone'),
+                ...f.text('mobile', 'Mobile'),
+                ...f.text('fax', 'Fax'),
+                ...f.reference('reportsToId', 'Reports To', 'CrmContact'),
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.checkbox('isPrimary', 'Primary Contact'),
+                ...f.date('birthdate', 'Birthdate'),
+                ...f.checkbox('doNotCall', 'Do Not Call'),
+                ...f.checkbox('doNotEmail', 'Do Not Email'),
+                ...f.reference('leadSourceId', 'Lead Source', 'CrmLeadSource'),
+                ...f.textarea('description', 'Description')
+            ])
+        ]),
 
-        CrmInteraction: {
-            title: 'Interaction',
-            sections: [
-                {
-                    title: 'Interaction Details',
-                    fields: [
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'CrmAccount', required: true },
-                        { key: 'contactId', label: 'Contact', type: 'reference', lookupModel: 'CrmContact' },
-                        { key: 'interactionType', label: 'Type', type: 'select', options: enums.INTERACTION_TYPE, required: true },
-                        { key: 'direction', label: 'Direction', type: 'select', options: enums.INTERACTION_DIRECTION },
-                        { key: 'subject', label: 'Subject', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'interactionDate', label: 'Date', type: 'date' },
-                        { key: 'durationMinutes', label: 'Duration (min)', type: 'number' },
-                        { key: 'performedBy', label: 'Performed By', type: 'reference', lookupModel: 'HcmEmployee' },
-                        { key: 'outcome', label: 'Outcome', type: 'text' },
-                        { key: 'caseId', label: 'Case', type: 'reference', lookupModel: 'CrmCase' },
-                        { key: 'opportunityId', label: 'Opportunity', type: 'reference', lookupModel: 'CrmOpportunity' }
-                    ]
-                }
-            ]
-        },
+        CrmInteraction: f.form('Interaction', [
+            f.section('Interaction Details', [
+                ...f.reference('accountId', 'Account', 'CrmAccount', true),
+                ...f.reference('contactId', 'Contact', 'CrmContact'),
+                ...f.select('interactionType', 'Type', enums.INTERACTION_TYPE, true),
+                ...f.select('direction', 'Direction', enums.INTERACTION_DIRECTION),
+                ...f.text('subject', 'Subject', true),
+                ...f.textarea('description', 'Description'),
+                ...f.date('interactionDate', 'Date'),
+                ...f.number('durationMinutes', 'Duration (min)'),
+                ...f.reference('performedBy', 'Performed By', 'Employee'),
+                ...f.text('outcome', 'Outcome'),
+                ...f.reference('caseId', 'Case', 'CrmCase'),
+                ...f.reference('opportunityId', 'Opportunity', 'CrmOpportunity')
+            ])
+        ]),
 
-        CrmRelationship: {
-            title: 'Relationship',
-            sections: [
-                {
-                    title: 'Relationship Details',
-                    fields: [
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'CrmAccount', required: true },
-                        { key: 'relatedAccountId', label: 'Related Account', type: 'reference', lookupModel: 'CrmAccount', required: true },
-                        { key: 'relationshipType', label: 'Type', type: 'select', options: enums.RELATIONSHIP_TYPE, required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'startDate', label: 'Start Date', type: 'date' },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CrmRelationship: f.form('Relationship', [
+            f.section('Relationship Details', [
+                ...f.reference('accountId', 'Account', 'CrmAccount', true),
+                ...f.reference('relatedAccountId', 'Related Account', 'CrmAccount', true),
+                ...f.select('relationshipType', 'Type', enums.RELATIONSHIP_TYPE, true),
+                ...f.textarea('description', 'Description'),
+                ...f.date('startDate', 'Start Date'),
+                ...f.date('endDate', 'End Date'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        CrmHealthScore: {
-            title: 'Health Score',
-            sections: [
-                {
-                    title: 'Health Score Details',
-                    fields: [
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'CrmAccount', required: true },
-                        { key: 'healthStatus', label: 'Health Status', type: 'select', options: enums.HEALTH_STATUS },
-                        { key: 'overallScore', label: 'Overall Score', type: 'number' },
-                        { key: 'engagementScore', label: 'Engagement Score', type: 'number' },
-                        { key: 'usageScore', label: 'Usage Score', type: 'number' },
-                        { key: 'satisfactionScore', label: 'Satisfaction Score', type: 'number' },
-                        { key: 'financialScore', label: 'Financial Score', type: 'number' },
-                        { key: 'scoreDate', label: 'Score Date', type: 'date' },
-                        { key: 'calculatedBy', label: 'Calculated By', type: 'text' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        CrmHealthScore: f.form('Health Score', [
+            f.section('Health Score Details', [
+                ...f.reference('accountId', 'Account', 'CrmAccount', true),
+                ...f.select('healthStatus', 'Health Status', enums.HEALTH_STATUS),
+                ...f.number('overallScore', 'Overall Score'),
+                ...f.number('engagementScore', 'Engagement Score'),
+                ...f.number('usageScore', 'Usage Score'),
+                ...f.number('satisfactionScore', 'Satisfaction Score'),
+                ...f.number('financialScore', 'Financial Score'),
+                ...f.date('scoreDate', 'Score Date'),
+                ...f.text('calculatedBy', 'Calculated By'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        CrmAccountPlan: {
-            title: 'Account Plan',
-            sections: [
-                {
-                    title: 'Plan Details',
-                    fields: [
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'CrmAccount', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'fiscalYear', label: 'Fiscal Year', type: 'text' },
-                        { key: 'revenueTarget', label: 'Revenue Target', type: 'money' },
-                        { key: 'currentRevenue', label: 'Current Revenue', type: 'money' },
-                        { key: 'objectives', label: 'Objectives', type: 'textarea' },
-                        { key: 'strategies', label: 'Strategies', type: 'textarea' },
-                        { key: 'actionItems', label: 'Action Items', type: 'textarea' },
-                        { key: 'risks', label: 'Risks', type: 'textarea' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'HcmEmployee' },
-                        { key: 'startDate', label: 'Start Date', type: 'date' },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'status', label: 'Status', type: 'text' }
-                    ]
-                }
-            ]
-        }
+        CrmAccountPlan: f.form('Account Plan', [
+            f.section('Plan Details', [
+                ...f.reference('accountId', 'Account', 'CrmAccount', true),
+                ...f.text('name', 'Name', true),
+                ...f.text('fiscalYear', 'Fiscal Year'),
+                ...f.money('revenueTarget', 'Revenue Target'),
+                ...f.money('currentRevenue', 'Current Revenue'),
+                ...f.textarea('objectives', 'Objectives'),
+                ...f.textarea('strategies', 'Strategies'),
+                ...f.textarea('actionItems', 'Action Items'),
+                ...f.textarea('risks', 'Risks'),
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.date('startDate', 'Start Date'),
+                ...f.date('endDate', 'End Date'),
+                ...f.text('status', 'Status')
+            ])
+        ])
     };
 
     CrmAccounts.primaryKeys = {

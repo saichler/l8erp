@@ -12,70 +12,102 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Accounts Receivable Module - Enum Definitions
-// Part 1 of 4 - Load this file first
+// Accounts Receivable Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Create AccountsReceivable namespace
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+
     window.AccountsReceivable = window.AccountsReceivable || {};
-    AccountsReceivable.enums = {};
 
     // ============================================================================
-    // CUSTOMER STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    AccountsReceivable.enums.CUSTOMER_STATUS = { 0: 'Unspecified', 1: 'Active', 2: 'Inactive', 3: 'On Hold', 4: 'Blocked' };
-    AccountsReceivable.enums.CUSTOMER_STATUS_CLASSES = { 1: 'layer8d-status-active', 2: 'layer8d-status-inactive', 3: 'layer8d-status-pending', 4: 'layer8d-status-terminated' };
+    const CUSTOMER_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Active', 'active', 'layer8d-status-active'],
+        ['Inactive', 'inactive', 'layer8d-status-inactive'],
+        ['On Hold', 'hold', 'layer8d-status-pending'],
+        ['Blocked', 'blocked', 'layer8d-status-terminated']
+    ]);
+
+    const INVOICE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Submitted', 'submitted', 'layer8d-status-pending'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['Partially Paid', 'partial', 'layer8d-status-pending'],
+        ['Paid', 'paid', 'layer8d-status-active'],
+        ['Overdue', 'overdue', 'layer8d-status-terminated'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive'],
+        ['Void', 'void', 'layer8d-status-terminated']
+    ]);
+
+    const PAYMENT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Processing', 'processing', 'layer8d-status-pending'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Failed', 'failed', 'layer8d-status-terminated'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive'],
+        ['Reversed', 'reversed', 'layer8d-status-terminated']
+    ]);
+
+    const CREDIT_MEMO_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['Applied', 'applied', 'layer8d-status-active'],
+        ['Void', 'void', 'layer8d-status-terminated']
+    ]);
+
+    const DUNNING_LEVEL = factory.simple([
+        'Unspecified', 'Reminder', 'First Notice', 'Second Notice', 'Final Notice', 'Collection'
+    ]);
+
+    const PAYMENT_METHOD = factory.simple([
+        'Unspecified', 'Check', 'ACH', 'Wire', 'Credit Card', 'Cash', 'Other'
+    ]);
 
     // ============================================================================
-    // INVOICE STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    AccountsReceivable.enums.INVOICE_STATUS = { 0: 'Unspecified', 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Partially Paid', 5: 'Paid', 6: 'Overdue', 7: 'Cancelled', 8: 'Void' };
-    AccountsReceivable.enums.INVOICE_STATUS_CLASSES = { 1: 'layer8d-status-pending', 2: 'layer8d-status-pending', 3: 'layer8d-status-active', 4: 'layer8d-status-pending', 5: 'layer8d-status-active', 6: 'layer8d-status-terminated', 7: 'layer8d-status-inactive', 8: 'layer8d-status-terminated' };
-
-    // ============================================================================
-    // PAYMENT STATUS
-    // ============================================================================
-
-    AccountsReceivable.enums.PAYMENT_STATUS = { 0: 'Unspecified', 1: 'Pending', 2: 'Processing', 3: 'Completed', 4: 'Failed', 5: 'Cancelled', 6: 'Reversed' };
-    AccountsReceivable.enums.PAYMENT_STATUS_CLASSES = { 1: 'layer8d-status-pending', 2: 'layer8d-status-pending', 3: 'layer8d-status-active', 4: 'layer8d-status-terminated', 5: 'layer8d-status-inactive', 6: 'layer8d-status-terminated' };
-
-    // ============================================================================
-    // CREDIT MEMO STATUS
-    // ============================================================================
-
-    AccountsReceivable.enums.CREDIT_MEMO_STATUS = { 0: 'Unspecified', 1: 'Draft', 2: 'Approved', 3: 'Applied', 4: 'Void' };
-    AccountsReceivable.enums.CREDIT_MEMO_STATUS_CLASSES = { 1: 'layer8d-status-pending', 2: 'layer8d-status-active', 3: 'layer8d-status-active', 4: 'layer8d-status-terminated' };
-
-    // ============================================================================
-    // DUNNING LEVEL
-    // ============================================================================
-
-    AccountsReceivable.enums.DUNNING_LEVEL = { 0: 'Unspecified', 1: 'Reminder', 2: 'First Notice', 3: 'Second Notice', 4: 'Final Notice', 5: 'Collection' };
-
-    // ============================================================================
-    // PAYMENT METHOD
-    // ============================================================================
-
-    AccountsReceivable.enums.PAYMENT_METHOD = { 0: 'Unspecified', 1: 'Check', 2: 'ACH', 3: 'Wire', 4: 'Credit Card', 5: 'Cash', 6: 'Other' };
+    window.AccountsReceivable.enums = {
+        CUSTOMER_STATUS: CUSTOMER_STATUS.enum,
+        CUSTOMER_STATUS_CLASSES: CUSTOMER_STATUS.classes,
+        INVOICE_STATUS: INVOICE_STATUS.enum,
+        INVOICE_STATUS_CLASSES: INVOICE_STATUS.classes,
+        PAYMENT_STATUS: PAYMENT_STATUS.enum,
+        PAYMENT_STATUS_CLASSES: PAYMENT_STATUS.classes,
+        CREDIT_MEMO_STATUS: CREDIT_MEMO_STATUS.enum,
+        CREDIT_MEMO_STATUS_CLASSES: CREDIT_MEMO_STATUS.classes,
+        DUNNING_LEVEL: DUNNING_LEVEL.enum,
+        PAYMENT_METHOD: PAYMENT_METHOD.enum
+    };
 
     // ============================================================================
     // RENDERERS
     // ============================================================================
 
-    AccountsReceivable.render = {};
+    const renderCustomerStatus = createStatusRenderer(CUSTOMER_STATUS.enum, CUSTOMER_STATUS.classes);
+    const renderInvoiceStatus = createStatusRenderer(INVOICE_STATUS.enum, INVOICE_STATUS.classes);
+    const renderPaymentStatus = createStatusRenderer(PAYMENT_STATUS.enum, PAYMENT_STATUS.classes);
+    const renderCreditMemoStatus = createStatusRenderer(CREDIT_MEMO_STATUS.enum, CREDIT_MEMO_STATUS.classes);
 
-    AccountsReceivable.render.customerStatus = Layer8DRenderers.createStatusRenderer(AccountsReceivable.enums.CUSTOMER_STATUS, AccountsReceivable.enums.CUSTOMER_STATUS_CLASSES);
-    AccountsReceivable.render.invoiceStatus = Layer8DRenderers.createStatusRenderer(AccountsReceivable.enums.INVOICE_STATUS, AccountsReceivable.enums.INVOICE_STATUS_CLASSES);
-    AccountsReceivable.render.paymentStatus = Layer8DRenderers.createStatusRenderer(AccountsReceivable.enums.PAYMENT_STATUS, AccountsReceivable.enums.PAYMENT_STATUS_CLASSES);
-    AccountsReceivable.render.creditMemoStatus = Layer8DRenderers.createStatusRenderer(AccountsReceivable.enums.CREDIT_MEMO_STATUS, AccountsReceivable.enums.CREDIT_MEMO_STATUS_CLASSES);
-    AccountsReceivable.render.dunningLevel = (level) => Layer8DRenderers.renderEnum(level, AccountsReceivable.enums.DUNNING_LEVEL);
-    AccountsReceivable.render.paymentMethod = (type) => Layer8DRenderers.renderEnum(type, AccountsReceivable.enums.PAYMENT_METHOD);
-    AccountsReceivable.render.boolean = Layer8DRenderers.renderBoolean;
-    AccountsReceivable.render.date = Layer8DRenderers.renderDate;
-    AccountsReceivable.render.money = Layer8DRenderers.renderMoney;
+    window.AccountsReceivable.render = {
+        customerStatus: renderCustomerStatus,
+        invoiceStatus: renderInvoiceStatus,
+        paymentStatus: renderPaymentStatus,
+        creditMemoStatus: renderCreditMemoStatus,
+        dunningLevel: (v) => renderEnum(v, DUNNING_LEVEL.enum),
+        paymentMethod: (v) => renderEnum(v, PAYMENT_METHOD.enum),
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

@@ -2,176 +2,111 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // Logistics Module - Form Definitions
-// Form field configurations for all Logistics models
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
-    // Ensure Logistics namespace exists
     window.Logistics = window.Logistics || {};
 
+    const f = window.Layer8FormFactory;
     const enums = Logistics.enums;
 
-    // ============================================================================
-    // FORM FIELD DEFINITIONS
-    // ============================================================================
-
     Logistics.forms = {
-        ScmCarrier: {
-            title: 'ScmCarrier',
-            sections: [
-                {
-                    title: 'Carrier Information',
-                    fields: [
-                        { key: 'code', label: 'Carrier Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'carrierType', label: 'Carrier Type', type: 'select', options: enums.CARRIER_TYPE, required: true },
-                        { key: 'contactInfo', label: 'Contact Info', type: 'text' },
-                        { key: 'website', label: 'Website', type: 'text' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        ScmCarrier: f.form('Carrier', [
+            f.section('Carrier Information', [
+                ...f.text('code', 'Carrier Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.select('carrierType', 'Carrier Type', enums.CARRIER_TYPE, true),
+                ...f.text('contactInfo', 'Contact Info'),
+                ...f.text('website', 'Website'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        ScmFreightRate: {
-            title: 'Freight Rate',
-            sections: [
-                {
-                    title: 'Rate Details',
-                    fields: [
-                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier', required: true },
-                        { key: 'origin', label: 'Origin', type: 'text', required: true },
-                        { key: 'destination', label: 'Destination', type: 'text', required: true },
-                        { key: 'ratePerUnit', label: 'Rate per Unit', type: 'currency', required: true },
-                        { key: 'unitOfMeasure', label: 'Unit of Measure', type: 'text' },
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date', required: true },
-                        { key: 'expirationDate', label: 'Expiration Date', type: 'date' }
-                    ]
-                }
-            ]
-        },
+        ScmFreightRate: f.form('Freight Rate', [
+            f.section('Rate Details', [
+                ...f.reference('carrierId', 'Carrier', 'ScmCarrier', true),
+                ...f.text('origin', 'Origin', true),
+                ...f.text('destination', 'Destination', true),
+                ...f.money('ratePerUnit', 'Rate per Unit', true),
+                ...f.text('unitOfMeasure', 'Unit of Measure'),
+                ...f.date('effectiveDate', 'Effective Date', true),
+                ...f.date('expirationDate', 'Expiration Date')
+            ])
+        ]),
 
-        ScmShipment: {
-            title: 'ScmShipment',
-            sections: [
-                {
-                    title: 'Shipment Details',
-                    fields: [
-                        { key: 'shipmentNumber', label: 'Shipment Number', type: 'text', required: true },
-                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier', required: true },
-                        { key: 'origin', label: 'Origin', type: 'text' },
-                        { key: 'destination', label: 'Destination', type: 'text' },
-                        { key: 'shipDate', label: 'Ship Date', type: 'date', required: true },
-                        { key: 'expectedDelivery', label: 'Expected Delivery', type: 'date' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.SHIPMENT_STATUS },
-                        { key: 'freightCost', label: 'Freight Cost', type: 'currency' }
-                    ]
-                }
-            ]
-        },
+        ScmShipment: f.form('Shipment', [
+            f.section('Shipment Details', [
+                ...f.text('shipmentNumber', 'Shipment Number', true),
+                ...f.reference('carrierId', 'Carrier', 'ScmCarrier', true),
+                ...f.text('origin', 'Origin'),
+                ...f.text('destination', 'Destination'),
+                ...f.date('shipDate', 'Ship Date', true),
+                ...f.date('expectedDelivery', 'Expected Delivery'),
+                ...f.select('status', 'Status', enums.SHIPMENT_STATUS),
+                ...f.money('freightCost', 'Freight Cost')
+            ])
+        ]),
 
-        ScmRoute: {
-            title: 'ScmRoute',
-            sections: [
-                {
-                    title: 'Route Details',
-                    fields: [
-                        { key: 'name', label: 'Route Name', type: 'text', required: true },
-                        { key: 'origin', label: 'Origin', type: 'text', required: true },
-                        { key: 'destination', label: 'Destination', type: 'text', required: true },
-                        { key: 'distance', label: 'Distance', type: 'number' },
-                        { key: 'estimatedTime', label: 'Estimated Time', type: 'text' },
-                        { key: 'description', label: 'Description', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        ScmRoute: f.form('Route', [
+            f.section('Route Details', [
+                ...f.text('name', 'Route Name', true),
+                ...f.text('origin', 'Origin', true),
+                ...f.text('destination', 'Destination', true),
+                ...f.number('distance', 'Distance'),
+                ...f.text('estimatedTime', 'Estimated Time'),
+                ...f.textarea('description', 'Description')
+            ])
+        ]),
 
-        ScmLoadPlan: {
-            title: 'Load Plan',
-            sections: [
-                {
-                    title: 'Plan Details',
-                    fields: [
-                        { key: 'plannedDate', label: 'Planned Date', type: 'date' },
-                        { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
-                        { key: 'vehicleId', label: 'Vehicle', type: 'text' },
-                        { key: 'totalWeight', label: 'Total Weight', type: 'number' },
-                        { key: 'totalVolume', label: 'Total Volume', type: 'number' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        ScmLoadPlan: f.form('Load Plan', [
+            f.section('Plan Details', [
+                ...f.date('plannedDate', 'Planned Date'),
+                ...f.reference('shipmentId', 'Shipment', 'ScmShipment', true),
+                ...f.text('vehicleId', 'Vehicle'),
+                ...f.number('totalWeight', 'Total Weight'),
+                ...f.number('totalVolume', 'Total Volume'),
+                ...f.select('status', 'Status', enums.TASK_STATUS),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        ScmDeliveryProof: {
-            title: 'Delivery Proof',
-            sections: [
-                {
-                    title: 'Proof Details',
-                    fields: [
-                        { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
-                        { key: 'deliveryDate', label: 'Delivery Date', type: 'date', required: true },
-                        { key: 'receivedBy', label: 'Received By', type: 'text', required: true },
-                        { key: 'signatureRef', label: 'Signature Reference', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        ScmDeliveryProof: f.form('Delivery Proof', [
+            f.section('Proof Details', [
+                ...f.reference('shipmentId', 'Shipment', 'ScmShipment', true),
+                ...f.date('deliveryDate', 'Delivery Date', true),
+                ...f.text('receivedBy', 'Received By', true),
+                ...f.text('signatureRef', 'Signature Reference'),
+                ...f.select('status', 'Status', enums.TASK_STATUS),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        ScmFreightAudit: {
-            title: 'Freight Audit',
-            sections: [
-                {
-                    title: 'Audit Details',
-                    fields: [
-                        { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
-                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier', required: true },
-                        { key: 'invoicedAmount', label: 'Invoiced Amount', type: 'currency', required: true },
-                        { key: 'actualAmount', label: 'Actual Amount', type: 'currency' },
-                        { key: 'variance', label: 'Variance', type: 'currency' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        ScmFreightAudit: f.form('Freight Audit', [
+            f.section('Audit Details', [
+                ...f.reference('shipmentId', 'Shipment', 'ScmShipment', true),
+                ...f.reference('carrierId', 'Carrier', 'ScmCarrier', true),
+                ...f.money('invoicedAmount', 'Invoiced Amount', true),
+                ...f.money('actualAmount', 'Actual Amount'),
+                ...f.money('variance', 'Variance'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        ScmReturnAuthorization: {
-            title: 'Return Authorization',
-            sections: [
-                {
-                    title: 'RMA Details',
-                    fields: [
-                        { key: 'rmaNumber', label: 'RMA Number', type: 'text', required: true },
-                        { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'Customer' },
-                        { key: 'returnDate', label: 'Return Date', type: 'date', required: true },
-                        { key: 'reason', label: 'Reason', type: 'textarea', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
+        ScmReturnAuthorization: f.form('Return Authorization', [
+            f.section('RMA Details', [
+                ...f.text('rmaNumber', 'RMA Number', true),
+                ...f.reference('customerId', 'Customer', 'Customer'),
+                ...f.date('returnDate', 'Return Date', true),
+                ...f.textarea('reason', 'Reason', true),
+                ...f.select('status', 'Status', enums.TASK_STATUS),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ])
     };
-
-    // ============================================================================
-    // PRIMARY KEY MAPPING
-    // ============================================================================
 
     Logistics.primaryKeys = {
         ScmCarrier: 'carrierId',

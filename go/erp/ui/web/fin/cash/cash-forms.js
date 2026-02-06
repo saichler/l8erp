@@ -2,140 +2,83 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // Cash Management Module - Form Definitions
-// Part 3 of 4 - Load after cash-columns.js
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
-    // Get enums from cash-enums.js
+    window.CashManagement = window.CashManagement || {};
+
+    const f = window.Layer8FormFactory;
     const enums = window.CashManagement.enums;
 
-    // ============================================================================
-    // FORM FIELD DEFINITIONS
-    // ============================================================================
+    CashManagement.forms = {
+        BankAccount: f.form('Bank Account', [
+            f.section('Account Information', [
+                ...f.text('accountName', 'Account Name', true),
+                ...f.text('bankName', 'Bank Name', true),
+                ...f.select('accountType', 'Account Type', enums.BANK_ACCOUNT_TYPE, true),
+                ...f.select('status', 'Status', enums.BANK_ACCOUNT_STATUS, true)
+            ]),
+            f.section('Balance', [
+                ...f.number('currentBalance', 'Current Balance')
+            ])
+        ]),
 
-    const CASH_FORMS = {
-        BankAccount: {
-            title: 'Bank Account',
-            sections: [
-                {
-                    title: 'Account Information',
-                    fields: [
-                        { key: 'accountName', label: 'Account Name', type: 'text', required: true },
-                        { key: 'bankName', label: 'Bank Name', type: 'text', required: true },
-                        { key: 'accountType', label: 'Account Type', type: 'select', options: enums.BANK_ACCOUNT_TYPE, required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.BANK_ACCOUNT_STATUS, required: true }
-                    ]
-                },
-                {
-                    title: 'Balance',
-                    fields: [
-                        { key: 'currentBalance', label: 'Current Balance', type: 'number' }
-                    ]
-                }
-            ]
-        },
+        BankTransaction: f.form('Bank Transaction', [
+            f.section('Transaction Details', [
+                ...f.reference('bankAccountId', 'Bank Account', 'BankAccount', true),
+                ...f.date('transactionDate', 'Transaction Date', true),
+                ...f.select('transactionType', 'Transaction Type', enums.TRANSACTION_TYPE, true),
+                ...f.number('amount', 'Amount', true),
+                ...f.text('description', 'Description')
+            ])
+        ]),
 
-        BankTransaction: {
-            title: 'Bank Transaction',
-            sections: [
-                {
-                    title: 'Transaction Details',
-                    fields: [
-                        { key: 'bankAccountId', label: 'Bank Account', type: 'reference', lookupModel: 'BankAccount', required: true },
-                        { key: 'transactionDate', label: 'Transaction Date', type: 'date', required: true },
-                        { key: 'transactionType', label: 'Transaction Type', type: 'select', options: enums.TRANSACTION_TYPE, required: true },
-                        { key: 'amount', label: 'Amount', type: 'number', required: true },
-                        { key: 'description', label: 'Description', type: 'text' }
-                    ]
-                }
-            ]
-        },
+        BankReconciliation: f.form('Bank Reconciliation', [
+            f.section('Reconciliation Details', [
+                ...f.reference('bankAccountId', 'Bank Account', 'BankAccount', true),
+                ...f.date('reconciliationDate', 'Reconciliation Date', true),
+                ...f.select('status', 'Status', enums.RECONCILIATION_STATUS, true)
+            ]),
+            f.section('Balances', [
+                ...f.number('statementBalance', 'Statement Balance', true),
+                ...f.number('bookBalance', 'Book Balance', true)
+            ])
+        ]),
 
-        BankReconciliation: {
-            title: 'Bank Reconciliation',
-            sections: [
-                {
-                    title: 'Reconciliation Details',
-                    fields: [
-                        { key: 'bankAccountId', label: 'Bank Account', type: 'reference', lookupModel: 'BankAccount', required: true },
-                        { key: 'reconciliationDate', label: 'Reconciliation Date', type: 'date', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.RECONCILIATION_STATUS, required: true }
-                    ]
-                },
-                {
-                    title: 'Balances',
-                    fields: [
-                        { key: 'statementBalance', label: 'Statement Balance', type: 'number', required: true },
-                        { key: 'bookBalance', label: 'Book Balance', type: 'number', required: true }
-                    ]
-                }
-            ]
-        },
+        CashForecast: f.form('Cash Forecast', [
+            f.section('Forecast Details', [
+                ...f.date('forecastDate', 'Forecast Date', true),
+                ...f.number('projectedInflow', 'Projected Inflow', true),
+                ...f.number('projectedOutflow', 'Projected Outflow', true),
+                ...f.number('netCashFlow', 'Net Cash Flow')
+            ])
+        ]),
 
-        CashForecast: {
-            title: 'Cash Forecast',
-            sections: [
-                {
-                    title: 'Forecast Details',
-                    fields: [
-                        { key: 'forecastDate', label: 'Forecast Date', type: 'date', required: true },
-                        { key: 'projectedInflow', label: 'Projected Inflow', type: 'number', required: true },
-                        { key: 'projectedOutflow', label: 'Projected Outflow', type: 'number', required: true },
-                        { key: 'netCashFlow', label: 'Net Cash Flow', type: 'number' }
-                    ]
-                }
-            ]
-        },
+        FundTransfer: f.form('Fund Transfer', [
+            f.section('Transfer Details', [
+                ...f.reference('fromAccountId', 'From Account', 'BankAccount', true),
+                ...f.reference('toAccountId', 'To Account', 'BankAccount', true),
+                ...f.number('amount', 'Amount', true),
+                ...f.date('transferDate', 'Transfer Date', true),
+                ...f.select('status', 'Status', enums.TRANSFER_STATUS, true)
+            ])
+        ]),
 
-        FundTransfer: {
-            title: 'Fund Transfer',
-            sections: [
-                {
-                    title: 'Transfer Details',
-                    fields: [
-                        { key: 'fromAccountId', label: 'From Account', type: 'reference', lookupModel: 'BankAccount', required: true },
-                        { key: 'toAccountId', label: 'To Account', type: 'reference', lookupModel: 'BankAccount', required: true },
-                        { key: 'amount', label: 'Amount', type: 'number', required: true },
-                        { key: 'transferDate', label: 'Transfer Date', type: 'date', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TRANSFER_STATUS, required: true }
-                    ]
-                }
-            ]
-        },
-
-        PettyCash: {
-            title: 'Petty Cash',
-            sections: [
-                {
-                    title: 'Fund Details',
-                    fields: [
-                        { key: 'custodianName', label: 'Custodian Name', type: 'text', required: true },
-                        { key: 'fundAmount', label: 'Fund Amount', type: 'number', required: true },
-                        { key: 'currentBalance', label: 'Current Balance', type: 'number' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        }
+        PettyCash: f.form('Petty Cash', [
+            f.section('Fund Details', [
+                ...f.text('custodianName', 'Custodian Name', true),
+                ...f.number('fundAmount', 'Fund Amount', true),
+                ...f.number('currentBalance', 'Current Balance'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ])
     };
 
-    // ============================================================================
-    // PRIMARY KEY MAPPING
-    // ============================================================================
-
-    const CASH_PRIMARY_KEYS = {
+    CashManagement.primaryKeys = {
         BankAccount: 'bankAccountId',
         BankTransaction: 'transactionId',
         BankReconciliation: 'reconciliationId',
@@ -143,12 +86,5 @@ limitations under the License.
         FundTransfer: 'transferId',
         PettyCash: 'pettyCashId'
     };
-
-    // ============================================================================
-    // EXPORT FORMS TO NAMESPACE
-    // ============================================================================
-
-    window.CashManagement.forms = CASH_FORMS;
-    window.CashManagement.primaryKeys = CASH_PRIMARY_KEYS;
 
 })();

@@ -13,169 +13,125 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Time & Attendance Module - Enum Definitions
+ * Mobile Time & Attendance Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: hcm/time/time-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderHours, renderPeriod, renderBoolean, renderDate } = Layer8MRenderers;
+
     window.MobileTime = window.MobileTime || {};
-    MobileTime.enums = {};
 
     // ============================================================================
-    // TIMESHEET STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileTime.enums.TIMESHEET_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Submitted', 3: 'Approved', 4: 'Rejected', 5: 'Processed'
-    };
+    const TIMESHEET_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-inactive'],
+        ['Submitted', 'submitted', 'status-pending'],
+        ['Approved', 'approved', 'status-active'],
+        ['Rejected', 'rejected', 'status-terminated'],
+        ['Processed', 'processed', 'status-active']
+    ]);
 
-    MobileTime.enums.TIMESHEET_STATUS_VALUES = {
-        'draft': 1, 'submitted': 2, 'approved': 3, 'rejected': 4, 'processed': 5
-    };
+    const TIME_ENTRY_TYPE = factory.withValues([
+        ['Unspecified', null], ['Regular', 'regular'], ['Overtime', 'overtime'],
+        ['Double Time', 'double'], ['PTO', 'pto'], ['Sick', 'sick'], ['Holiday', 'holiday'],
+        ['Bereavement', 'bereavement'], ['Jury Duty', 'jury'], ['Training', 'training'],
+        ['Unpaid', 'unpaid'], ['On-Call', 'oncall'], ['Travel', 'travel']
+    ]);
 
-    MobileTime.enums.TIMESHEET_STATUS_CLASSES = {
-        1: 'status-inactive', 2: 'status-pending', 3: 'status-active', 4: 'status-terminated', 5: 'status-active'
-    };
+    const TIME_ENTRY_SOURCE = factory.withValues([
+        ['Unspecified', null], ['Manual', 'manual'], ['Time Clock', 'clock'],
+        ['Mobile', 'mobile'], ['Badge', 'badge'], ['Biometric', 'biometric'], ['Import', 'import']
+    ]);
 
-    // ============================================================================
-    // TIME ENTRY TYPE
-    // ============================================================================
+    const LEAVE_TYPE = factory.withValues([
+        ['Unspecified', null], ['PTO', 'pto'], ['Vacation', 'vacation'], ['Sick', 'sick'],
+        ['Personal', 'personal'], ['Bereavement', 'bereavement'], ['Jury Duty', 'jury'],
+        ['Military', 'military'], ['FMLA', 'fmla'], ['Parental', 'parental'],
+        ['Maternity', 'maternity'], ['Paternity', 'paternity'], ['Sabbatical', 'sabbatical'],
+        ['Unpaid', 'unpaid'], ['Administrative', 'administrative'], ['Volunteer', 'volunteer']
+    ]);
 
-    MobileTime.enums.TIME_ENTRY_TYPE = {
-        0: 'Unspecified', 1: 'Regular', 2: 'Overtime', 3: 'Double Time', 4: 'PTO',
-        5: 'Sick', 6: 'Holiday', 7: 'Bereavement', 8: 'Jury Duty', 9: 'Training',
-        10: 'Unpaid', 11: 'On-Call', 12: 'Travel'
-    };
+    const LEAVE_REQUEST_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-inactive'],
+        ['Pending', 'pending', 'status-pending'],
+        ['Approved', 'approved', 'status-active'],
+        ['Rejected', 'rejected', 'status-terminated'],
+        ['Cancelled', 'cancelled', 'status-terminated'],
+        ['Taken', 'taken', 'status-active']
+    ]);
 
-    MobileTime.enums.TIME_ENTRY_TYPE_VALUES = {
-        'regular': 1, 'overtime': 2, 'double': 3, 'pto': 4, 'sick': 5, 'holiday': 6,
-        'bereavement': 7, 'jury': 8, 'training': 9, 'unpaid': 10, 'oncall': 11, 'on-call': 11, 'travel': 12
-    };
+    const ACCRUAL_METHOD = factory.withValues([
+        ['Unspecified', null], ['Fixed', 'fixed'], ['Hours Worked', 'hours'],
+        ['Tenure Based', 'tenure'], ['Front Loaded', 'front']
+    ]);
 
-    // ============================================================================
-    // TIME ENTRY SOURCE
-    // ============================================================================
+    const ACCRUAL_FREQUENCY = factory.withValues([
+        ['Unspecified', null], ['Per Pay Period', 'pay'], ['Monthly', 'monthly'],
+        ['Quarterly', 'quarterly'], ['Annually', 'annually'], ['Anniversary', 'anniversary']
+    ]);
 
-    MobileTime.enums.TIME_ENTRY_SOURCE = {
-        0: 'Unspecified', 1: 'Manual', 2: 'Time Clock', 3: 'Mobile', 4: 'Badge', 5: 'Biometric', 6: 'Import'
-    };
+    const SHIFT_TYPE = factory.withValues([
+        ['Unspecified', null], ['Day', 'day'], ['Evening', 'evening'], ['Night', 'night'],
+        ['Overnight', 'overnight'], ['Rotating', 'rotating'], ['Split', 'split'], ['On-Call', 'oncall']
+    ]);
 
-    MobileTime.enums.TIME_ENTRY_SOURCE_VALUES = {
-        'manual': 1, 'clock': 2, 'mobile': 3, 'badge': 4, 'biometric': 5, 'import': 6
-    };
+    const SCHEDULE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-inactive'],
+        ['Published', 'published', 'status-active'],
+        ['Archived', 'archived', 'status-inactive']
+    ]);
 
-    // ============================================================================
-    // LEAVE TYPE
-    // ============================================================================
+    const HOLIDAY_TYPE = factory.withValues([
+        ['Unspecified', null], ['Fixed', 'fixed'], ['Floating', 'floating'],
+        ['Personal', 'personal'], ['Observed', 'observed']
+    ]);
 
-    MobileTime.enums.LEAVE_TYPE = {
-        0: 'Unspecified', 1: 'PTO', 2: 'Vacation', 3: 'Sick', 4: 'Personal', 5: 'Bereavement',
-        6: 'Jury Duty', 7: 'Military', 8: 'FMLA', 9: 'Parental', 10: 'Maternity',
-        11: 'Paternity', 12: 'Sabbatical', 13: 'Unpaid', 14: 'Administrative', 15: 'Volunteer'
-    };
-
-    MobileTime.enums.LEAVE_TYPE_VALUES = {
-        'pto': 1, 'vacation': 2, 'sick': 3, 'personal': 4, 'bereavement': 5, 'jury': 6,
-        'military': 7, 'fmla': 8, 'parental': 9, 'maternity': 10, 'paternity': 11,
-        'sabbatical': 12, 'unpaid': 13, 'administrative': 14, 'volunteer': 15
-    };
-
-    // ============================================================================
-    // LEAVE REQUEST STATUS
-    // ============================================================================
-
-    MobileTime.enums.LEAVE_REQUEST_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Pending', 3: 'Approved', 4: 'Rejected', 5: 'Cancelled', 6: 'Taken'
-    };
-
-    MobileTime.enums.LEAVE_REQUEST_STATUS_VALUES = {
-        'draft': 1, 'pending': 2, 'approved': 3, 'rejected': 4, 'cancelled': 5, 'taken': 6
-    };
-
-    MobileTime.enums.LEAVE_REQUEST_STATUS_CLASSES = {
-        1: 'status-inactive', 2: 'status-pending', 3: 'status-active',
-        4: 'status-terminated', 5: 'status-terminated', 6: 'status-active'
-    };
-
-    // ============================================================================
-    // ACCRUAL METHOD
-    // ============================================================================
-
-    MobileTime.enums.ACCRUAL_METHOD = {
-        0: 'Unspecified', 1: 'Fixed', 2: 'Hours Worked', 3: 'Tenure Based', 4: 'Front Loaded'
-    };
-
-    MobileTime.enums.ACCRUAL_METHOD_VALUES = {
-        'fixed': 1, 'hours': 2, 'worked': 2, 'tenure': 3, 'front': 4, 'loaded': 4
-    };
+    const ABSENCE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Scheduled', 'scheduled', 'status-pending'],
+        ['Taken', 'taken', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-terminated']
+    ]);
 
     // ============================================================================
-    // ACCRUAL FREQUENCY
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileTime.enums.ACCRUAL_FREQUENCY = {
-        0: 'Unspecified', 1: 'Per Pay Period', 2: 'Monthly', 3: 'Quarterly', 4: 'Annually', 5: 'Anniversary'
-    };
-
-    MobileTime.enums.ACCRUAL_FREQUENCY_VALUES = {
-        'pay': 1, 'period': 1, 'monthly': 2, 'quarterly': 3, 'annually': 4, 'annual': 4, 'anniversary': 5
-    };
-
-    // ============================================================================
-    // SHIFT TYPE
-    // ============================================================================
-
-    MobileTime.enums.SHIFT_TYPE = {
-        0: 'Unspecified', 1: 'Day', 2: 'Evening', 3: 'Night', 4: 'Overnight', 5: 'Rotating', 6: 'Split', 7: 'On-Call'
-    };
-
-    MobileTime.enums.SHIFT_TYPE_VALUES = {
-        'day': 1, 'evening': 2, 'night': 3, 'overnight': 4, 'rotating': 5, 'split': 6, 'oncall': 7, 'on-call': 7
-    };
-
-    // ============================================================================
-    // SCHEDULE STATUS
-    // ============================================================================
-
-    MobileTime.enums.SCHEDULE_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Published', 3: 'Archived'
-    };
-
-    MobileTime.enums.SCHEDULE_STATUS_VALUES = {
-        'draft': 1, 'published': 2, 'archived': 3
-    };
-
-    MobileTime.enums.SCHEDULE_STATUS_CLASSES = {
-        1: 'status-inactive', 2: 'status-active', 3: 'status-inactive'
-    };
-
-    // ============================================================================
-    // HOLIDAY TYPE
-    // ============================================================================
-
-    MobileTime.enums.HOLIDAY_TYPE = {
-        0: 'Unspecified', 1: 'Fixed', 2: 'Floating', 3: 'Personal', 4: 'Observed'
-    };
-
-    MobileTime.enums.HOLIDAY_TYPE_VALUES = {
-        'fixed': 1, 'floating': 2, 'personal': 3, 'observed': 4
-    };
-
-    // ============================================================================
-    // ABSENCE STATUS
-    // ============================================================================
-
-    MobileTime.enums.ABSENCE_STATUS = {
-        0: 'Unspecified', 1: 'Scheduled', 2: 'Taken', 3: 'Cancelled'
-    };
-
-    MobileTime.enums.ABSENCE_STATUS_VALUES = {
-        'scheduled': 1, 'taken': 2, 'cancelled': 3
-    };
-
-    MobileTime.enums.ABSENCE_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-terminated'
+    MobileTime.enums = {
+        TIMESHEET_STATUS: TIMESHEET_STATUS.enum,
+        TIMESHEET_STATUS_VALUES: TIMESHEET_STATUS.values,
+        TIMESHEET_STATUS_CLASSES: TIMESHEET_STATUS.classes,
+        TIME_ENTRY_TYPE: TIME_ENTRY_TYPE.enum,
+        TIME_ENTRY_TYPE_VALUES: TIME_ENTRY_TYPE.values,
+        TIME_ENTRY_SOURCE: TIME_ENTRY_SOURCE.enum,
+        TIME_ENTRY_SOURCE_VALUES: TIME_ENTRY_SOURCE.values,
+        LEAVE_TYPE: LEAVE_TYPE.enum,
+        LEAVE_TYPE_VALUES: LEAVE_TYPE.values,
+        LEAVE_REQUEST_STATUS: LEAVE_REQUEST_STATUS.enum,
+        LEAVE_REQUEST_STATUS_VALUES: LEAVE_REQUEST_STATUS.values,
+        LEAVE_REQUEST_STATUS_CLASSES: LEAVE_REQUEST_STATUS.classes,
+        ACCRUAL_METHOD: ACCRUAL_METHOD.enum,
+        ACCRUAL_METHOD_VALUES: ACCRUAL_METHOD.values,
+        ACCRUAL_FREQUENCY: ACCRUAL_FREQUENCY.enum,
+        ACCRUAL_FREQUENCY_VALUES: ACCRUAL_FREQUENCY.values,
+        SHIFT_TYPE: SHIFT_TYPE.enum,
+        SHIFT_TYPE_VALUES: SHIFT_TYPE.values,
+        SCHEDULE_STATUS: SCHEDULE_STATUS.enum,
+        SCHEDULE_STATUS_VALUES: SCHEDULE_STATUS.values,
+        SCHEDULE_STATUS_CLASSES: SCHEDULE_STATUS.classes,
+        HOLIDAY_TYPE: HOLIDAY_TYPE.enum,
+        HOLIDAY_TYPE_VALUES: HOLIDAY_TYPE.values,
+        ABSENCE_STATUS: ABSENCE_STATUS.enum,
+        ABSENCE_STATUS_VALUES: ABSENCE_STATUS.values,
+        ABSENCE_STATUS_CLASSES: ABSENCE_STATUS.classes
     };
 
     // ============================================================================
@@ -183,41 +139,29 @@ limitations under the License.
     // ============================================================================
 
     MobileTime.render = {
-        timesheetStatus: Layer8MRenderers.createStatusRenderer(
-            MobileTime.enums.TIMESHEET_STATUS,
-            MobileTime.enums.TIMESHEET_STATUS_CLASSES
-        ),
-        timeEntryType: (v) => Layer8MRenderers.renderEnum(v, MobileTime.enums.TIME_ENTRY_TYPE),
-        timeEntrySource: (v) => Layer8MRenderers.renderEnum(v, MobileTime.enums.TIME_ENTRY_SOURCE),
-        leaveType: (v) => Layer8MRenderers.renderEnum(v, MobileTime.enums.LEAVE_TYPE),
-        leaveRequestStatus: Layer8MRenderers.createStatusRenderer(
-            MobileTime.enums.LEAVE_REQUEST_STATUS,
-            MobileTime.enums.LEAVE_REQUEST_STATUS_CLASSES
-        ),
-        accrualMethod: (v) => Layer8MRenderers.renderEnum(v, MobileTime.enums.ACCRUAL_METHOD),
-        accrualFrequency: (v) => Layer8MRenderers.renderEnum(v, MobileTime.enums.ACCRUAL_FREQUENCY),
+        timesheetStatus: createStatusRenderer(TIMESHEET_STATUS.enum, TIMESHEET_STATUS.classes),
+        timeEntryType: (v) => renderEnum(v, TIME_ENTRY_TYPE.enum),
+        timeEntrySource: (v) => renderEnum(v, TIME_ENTRY_SOURCE.enum),
+        leaveType: (v) => renderEnum(v, LEAVE_TYPE.enum),
+        leaveRequestStatus: createStatusRenderer(LEAVE_REQUEST_STATUS.enum, LEAVE_REQUEST_STATUS.classes),
+        accrualMethod: (v) => renderEnum(v, ACCRUAL_METHOD.enum),
+        accrualFrequency: (v) => renderEnum(v, ACCRUAL_FREQUENCY.enum),
         shiftType: (type) => {
             const shiftColors = {
                 1: '#10b981', 2: '#f59e0b', 3: '#6366f1', 4: '#8b5cf6',
                 5: '#06b6d4', 6: '#ec4899', 7: '#ef4444'
             };
-            const label = MobileTime.enums.SHIFT_TYPE[type] || 'Unknown';
+            const label = SHIFT_TYPE.enum[type] || 'Unknown';
             const color = shiftColors[type] || '#64748b';
             return `<span style="color: ${color}; font-weight: 500;">${Layer8MUtils.escapeHtml(label)}</span>`;
         },
-        scheduleStatus: Layer8MRenderers.createStatusRenderer(
-            MobileTime.enums.SCHEDULE_STATUS,
-            MobileTime.enums.SCHEDULE_STATUS_CLASSES
-        ),
-        holidayType: (v) => Layer8MRenderers.renderEnum(v, MobileTime.enums.HOLIDAY_TYPE),
-        absenceStatus: Layer8MRenderers.createStatusRenderer(
-            MobileTime.enums.ABSENCE_STATUS,
-            MobileTime.enums.ABSENCE_STATUS_CLASSES
-        ),
-        hours: Layer8MRenderers.renderHours,
-        period: Layer8MRenderers.renderPeriod,
-        boolean: Layer8MRenderers.renderBoolean,
-        date: Layer8MRenderers.renderDate
+        scheduleStatus: createStatusRenderer(SCHEDULE_STATUS.enum, SCHEDULE_STATUS.classes),
+        holidayType: (v) => renderEnum(v, HOLIDAY_TYPE.enum),
+        absenceStatus: createStatusRenderer(ABSENCE_STATUS.enum, ABSENCE_STATUS.classes),
+        hours: renderHours,
+        period: renderPeriod,
+        boolean: renderBoolean,
+        date: renderDate
     };
 
 })();

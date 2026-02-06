@@ -13,69 +13,78 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Sales Orders Module - Enum Definitions
+ * Mobile Sales Orders Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: sales/orders/orders-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileSalesOrders = window.MobileSalesOrders || {};
-    MobileSalesOrders.enums = {};
 
     // ============================================================================
-    // QUOTATION STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileSalesOrders.enums.QUOTATION_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Sent', 3: 'Accepted', 4: 'Rejected', 5: 'Expired', 6: 'Cancelled'
-    };
-    MobileSalesOrders.enums.QUOTATION_STATUS_VALUES = {
-        'draft': 1, 'sent': 2, 'accepted': 3, 'rejected': 4, 'expired': 5, 'cancelled': 6
-    };
-    MobileSalesOrders.enums.QUOTATION_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-terminated', 5: 'status-inactive', 6: 'status-inactive'
-    };
+    const QUOTATION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Sent', 'sent', 'status-active'],
+        ['Accepted', 'accepted', 'status-active'],
+        ['Rejected', 'rejected', 'status-terminated'],
+        ['Expired', 'expired', 'status-inactive'],
+        ['Cancelled', 'cancelled', 'status-inactive']
+    ]);
+
+    const ORDER_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Confirmed', 'confirmed', 'status-active'],
+        ['In Progress', 'in progress', 'status-active'],
+        ['Partially Shipped', 'partial', 'status-pending'],
+        ['Shipped', 'shipped', 'status-active'],
+        ['Delivered', 'delivered', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-terminated']
+    ]);
+
+    const RETURN_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Requested', 'requested', 'status-pending'],
+        ['Approved', 'approved', 'status-active'],
+        ['Received', 'received', 'status-active'],
+        ['Inspected', 'inspected', 'status-pending'],
+        ['Processed', 'processed', 'status-active'],
+        ['Rejected', 'rejected', 'status-terminated']
+    ]);
+
+    const ALLOCATION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'status-pending'],
+        ['Allocated', 'allocated', 'status-active'],
+        ['Partially Allocated', 'partial', 'status-pending'],
+        ['Released', 'released', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-inactive']
+    ]);
 
     // ============================================================================
-    // SALES ORDER STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileSalesOrders.enums.ORDER_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Confirmed', 3: 'In Progress', 4: 'Partially Shipped', 5: 'Shipped', 6: 'Delivered', 7: 'Cancelled'
-    };
-    MobileSalesOrders.enums.ORDER_STATUS_VALUES = {
-        'draft': 1, 'confirmed': 2, 'in progress': 3, 'progress': 3, 'partial': 4, 'shipped': 5, 'delivered': 6, 'cancelled': 7
-    };
-    MobileSalesOrders.enums.ORDER_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-pending', 5: 'status-active', 6: 'status-active', 7: 'status-terminated'
-    };
-
-    // ============================================================================
-    // RETURN STATUS
-    // ============================================================================
-
-    MobileSalesOrders.enums.RETURN_STATUS = {
-        0: 'Unspecified', 1: 'Requested', 2: 'Approved', 3: 'Received', 4: 'Inspected', 5: 'Processed', 6: 'Rejected'
-    };
-    MobileSalesOrders.enums.RETURN_STATUS_VALUES = {
-        'requested': 1, 'approved': 2, 'received': 3, 'inspected': 4, 'processed': 5, 'rejected': 6
-    };
-    MobileSalesOrders.enums.RETURN_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-pending', 5: 'status-active', 6: 'status-terminated'
-    };
-
-    // ============================================================================
-    // ALLOCATION STATUS
-    // ============================================================================
-
-    MobileSalesOrders.enums.ALLOCATION_STATUS = {
-        0: 'Unspecified', 1: 'Pending', 2: 'Allocated', 3: 'Partially Allocated', 4: 'Released', 5: 'Cancelled'
-    };
-    MobileSalesOrders.enums.ALLOCATION_STATUS_VALUES = {
-        'pending': 1, 'allocated': 2, 'partial': 3, 'released': 4, 'cancelled': 5
-    };
-    MobileSalesOrders.enums.ALLOCATION_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-pending', 4: 'status-active', 5: 'status-inactive'
+    MobileSalesOrders.enums = {
+        QUOTATION_STATUS: QUOTATION_STATUS.enum,
+        QUOTATION_STATUS_VALUES: QUOTATION_STATUS.values,
+        QUOTATION_STATUS_CLASSES: QUOTATION_STATUS.classes,
+        ORDER_STATUS: ORDER_STATUS.enum,
+        ORDER_STATUS_VALUES: ORDER_STATUS.values,
+        ORDER_STATUS_CLASSES: ORDER_STATUS.classes,
+        RETURN_STATUS: RETURN_STATUS.enum,
+        RETURN_STATUS_VALUES: RETURN_STATUS.values,
+        RETURN_STATUS_CLASSES: RETURN_STATUS.classes,
+        ALLOCATION_STATUS: ALLOCATION_STATUS.enum,
+        ALLOCATION_STATUS_VALUES: ALLOCATION_STATUS.values,
+        ALLOCATION_STATUS_CLASSES: ALLOCATION_STATUS.classes
     };
 
     // ============================================================================
@@ -83,24 +92,12 @@ limitations under the License.
     // ============================================================================
 
     MobileSalesOrders.render = {
-        quotationStatus: Layer8MRenderers.createStatusRenderer(
-            MobileSalesOrders.enums.QUOTATION_STATUS,
-            MobileSalesOrders.enums.QUOTATION_STATUS_CLASSES
-        ),
-        orderStatus: Layer8MRenderers.createStatusRenderer(
-            MobileSalesOrders.enums.ORDER_STATUS,
-            MobileSalesOrders.enums.ORDER_STATUS_CLASSES
-        ),
-        returnStatus: Layer8MRenderers.createStatusRenderer(
-            MobileSalesOrders.enums.RETURN_STATUS,
-            MobileSalesOrders.enums.RETURN_STATUS_CLASSES
-        ),
-        allocationStatus: Layer8MRenderers.createStatusRenderer(
-            MobileSalesOrders.enums.ALLOCATION_STATUS,
-            MobileSalesOrders.enums.ALLOCATION_STATUS_CLASSES
-        ),
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        quotationStatus: createStatusRenderer(QUOTATION_STATUS.enum, QUOTATION_STATUS.classes),
+        orderStatus: createStatusRenderer(ORDER_STATUS.enum, ORDER_STATUS.classes),
+        returnStatus: createStatusRenderer(RETURN_STATUS.enum, RETURN_STATUS.classes),
+        allocationStatus: createStatusRenderer(ALLOCATION_STATUS.enum, ALLOCATION_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

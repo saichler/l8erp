@@ -6,209 +6,95 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 /**
  * Mobile Reference Registry - CRM Module
  * Reference configurations for Customer Relationship Management models
+ * Uses Layer8RefFactory for reduced boilerplate
  */
-(function() {
-    'use strict';
+const refCrmM = window.Layer8RefFactory;
 
-    window.Layer8MReferenceRegistryCRM = {
-        // ========================================
-        // CRM - Leads Management
-        // ========================================
-        CrmLead: {
-            idColumn: 'leadId',
-            displayColumn: 'lastName',
-            selectColumns: ['leadId', 'firstName', 'lastName', 'company'],
-            displayFormat: function(item) {
-                return item.firstName + ' ' + item.lastName + (item.company ? ' (' + item.company + ')' : '');
-            },
-            displayLabel: 'Lead'
+window.Layer8MReferenceRegistryCRM = {
+    // ========================================
+    // CRM - Leads Management
+    // ========================================
+    // Custom displayFormat for lead (firstName lastName (company))
+    CrmLead: {
+        idColumn: 'leadId',
+        displayColumn: 'lastName',
+        selectColumns: ['leadId', 'firstName', 'lastName', 'company'],
+        displayFormat: function(item) {
+            return item.firstName + ' ' + item.lastName + (item.company ? ' (' + item.company + ')' : '');
         },
-        CrmLeadSource: {
-            idColumn: 'sourceId',
-            displayColumn: 'name'
-        },
-        CrmLeadScore: {
-            idColumn: 'scoreId',
-            displayColumn: 'name'
-        },
-        CrmLeadActivity: {
-            idColumn: 'activityId',
-            displayColumn: 'subject'
-        },
-        CrmLeadAssign: {
-            idColumn: 'assignmentId',
-            displayColumn: 'name'
-        },
-        CrmLeadConversion: {
-            idColumn: 'conversionId',
-            displayColumn: 'conversionId'
-        },
+        displayLabel: 'Lead'
+    },
+    ...refCrmM.simple('CrmLeadSource', 'sourceId', 'name'),
+    ...refCrmM.simple('CrmLeadScore', 'scoreId', 'name'),
+    ...refCrmM.simple('CrmLeadActivity', 'activityId', 'subject'),
+    ...refCrmM.simple('CrmLeadAssign', 'assignmentId', 'name'),
+    ...refCrmM.idOnly('CrmLeadConversion', 'conversionId'),
 
-        // ========================================
-        // CRM - Opportunities Management
-        // ========================================
-        CrmOpportunity: {
-            idColumn: 'opportunityId',
-            displayColumn: 'name',
-            selectColumns: ['opportunityId', 'name'],
-            displayLabel: 'Opportunity'
-        },
-        CrmOppStage: {
-            idColumn: 'stageId',
-            displayColumn: 'name'
-        },
-        CrmOppCompetitor: {
-            idColumn: 'competitorId',
-            displayColumn: 'competitorName'
-        },
-        CrmOppProduct: {
-            idColumn: 'oppProductId',
-            displayColumn: 'oppProductId'
-        },
-        CrmOppTeam: {
-            idColumn: 'teamMemberId',
-            displayColumn: 'teamMemberId'
-        },
-        CrmOppActivity: {
-            idColumn: 'activityId',
-            displayColumn: 'subject'
-        },
+    // ========================================
+    // CRM - Opportunities Management
+    // ========================================
+    ...refCrmM.simple('CrmOpportunity', 'opportunityId', 'name', 'Opportunity'),
+    ...refCrmM.simple('CrmOppStage', 'stageId', 'name'),
+    ...refCrmM.simple('CrmOppCompetitor', 'competitorId', 'competitorName'),
+    ...refCrmM.idOnly('CrmOppProduct', 'oppProductId'),
+    ...refCrmM.idOnly('CrmOppTeam', 'teamMemberId'),
+    ...refCrmM.simple('CrmOppActivity', 'activityId', 'subject'),
 
-        // ========================================
-        // CRM - Accounts Management
-        // ========================================
-        CrmAccount: {
-            idColumn: 'accountId',
-            displayColumn: 'name',
-            selectColumns: ['accountId', 'name'],
-            displayLabel: 'Account'
-        },
-        CrmContact: {
-            idColumn: 'contactId',
-            displayColumn: 'lastName',
-            selectColumns: ['contactId', 'firstName', 'lastName'],
-            displayFormat: function(item) {
-                return item.firstName + ' ' + item.lastName;
-            },
-            displayLabel: 'Contact'
-        },
-        CrmInteraction: {
-            idColumn: 'interactionId',
-            displayColumn: 'subject'
-        },
-        CrmRelationship: {
-            idColumn: 'relationshipId',
-            displayColumn: 'relationshipId'
-        },
-        CrmHealthScore: {
-            idColumn: 'healthScoreId',
-            displayColumn: 'healthScoreId'
-        },
-        CrmAccountPlan: {
-            idColumn: 'planId',
-            displayColumn: 'name'
-        },
+    // ========================================
+    // CRM - Accounts Management
+    // ========================================
+    ...refCrmM.simple('CrmAccount', 'accountId', 'name', 'Account'),
+    ...refCrmM.person('CrmContact', 'contactId', 'lastName', 'firstName'),
+    ...refCrmM.simple('CrmInteraction', 'interactionId', 'subject'),
+    ...refCrmM.idOnly('CrmRelationship', 'relationshipId'),
+    ...refCrmM.idOnly('CrmHealthScore', 'healthScoreId'),
+    ...refCrmM.simple('CrmAccountPlan', 'planId', 'name'),
 
-        // ========================================
-        // CRM - Marketing Management
-        // ========================================
-        CrmCampaign: {
-            idColumn: 'campaignId',
-            displayColumn: 'name',
-            selectColumns: ['campaignId', 'name'],
-            displayLabel: 'Campaign'
-        },
-        CrmCampaignMember: {
-            idColumn: 'memberId',
-            displayColumn: 'memberId'
-        },
-        CrmEmailTemplate: {
-            idColumn: 'templateId',
-            displayColumn: 'name'
-        },
-        CrmMarketingList: {
-            idColumn: 'listId',
-            displayColumn: 'name'
-        },
-        CrmCampaignResponse: {
-            idColumn: 'responseId',
-            displayColumn: 'responseId'
-        },
-        CrmCampaignROI: {
-            idColumn: 'roiId',
-            displayColumn: 'roiId'
-        },
+    // ========================================
+    // CRM - Marketing Management
+    // ========================================
+    ...refCrmM.simple('CrmCampaign', 'campaignId', 'name', 'Campaign'),
+    ...refCrmM.idOnly('CrmCampaignMember', 'memberId'),
+    ...refCrmM.simple('CrmEmailTemplate', 'templateId', 'name'),
+    ...refCrmM.simple('CrmMarketingList', 'listId', 'name'),
+    ...refCrmM.idOnly('CrmCampaignResponse', 'responseId'),
+    ...refCrmM.idOnly('CrmCampaignROI', 'roiId'),
 
-        // ========================================
-        // CRM - Customer Service
-        // ========================================
-        CrmCase: {
-            idColumn: 'caseId',
-            displayColumn: 'subject',
-            selectColumns: ['caseId', 'caseNumber', 'subject'],
-            displayFormat: function(item) {
-                return item.caseNumber + ' - ' + item.subject;
-            },
-            displayLabel: 'Case'
+    // ========================================
+    // CRM - Customer Service
+    // ========================================
+    // Custom displayFormat for case (caseNumber - subject)
+    CrmCase: {
+        idColumn: 'caseId',
+        displayColumn: 'subject',
+        selectColumns: ['caseId', 'caseNumber', 'subject'],
+        displayFormat: function(item) {
+            return item.caseNumber + ' - ' + item.subject;
         },
-        CrmCaseComment: {
-            idColumn: 'commentId',
-            displayColumn: 'commentId'
+        displayLabel: 'Case'
+    },
+    ...refCrmM.idOnly('CrmCaseComment', 'commentId'),
+    // Custom displayFormat for KB article (articleNumber - title)
+    CrmKBArticle: {
+        idColumn: 'articleId',
+        displayColumn: 'title',
+        selectColumns: ['articleId', 'articleNumber', 'title'],
+        displayFormat: function(item) {
+            return item.articleNumber + ' - ' + item.title;
         },
-        CrmKBArticle: {
-            idColumn: 'articleId',
-            displayColumn: 'title',
-            selectColumns: ['articleId', 'articleNumber', 'title'],
-            displayFormat: function(item) {
-                return item.articleNumber + ' - ' + item.title;
-            },
-            displayLabel: 'KB Article'
-        },
-        CrmSLA: {
-            idColumn: 'slaId',
-            displayColumn: 'name'
-        },
-        CrmEscalation: {
-            idColumn: 'escalationId',
-            displayColumn: 'name'
-        },
-        CrmSurvey: {
-            idColumn: 'surveyId',
-            displayColumn: 'name'
-        },
+        displayLabel: 'KB Article'
+    },
+    ...refCrmM.simple('CrmSLA', 'slaId', 'name'),
+    ...refCrmM.simple('CrmEscalation', 'escalationId', 'name'),
+    ...refCrmM.simple('CrmSurvey', 'surveyId', 'name'),
 
-        // ========================================
-        // CRM - Field Service
-        // ========================================
-        CrmServiceOrder: {
-            idColumn: 'orderId',
-            displayColumn: 'orderNumber',
-            selectColumns: ['orderId', 'orderNumber'],
-            displayLabel: 'Service Order'
-        },
-        CrmTechnician: {
-            idColumn: 'technicianId',
-            displayColumn: 'name',
-            selectColumns: ['technicianId', 'name'],
-            displayLabel: 'Technician'
-        },
-        CrmServiceContract: {
-            idColumn: 'contractId',
-            displayColumn: 'contractNumber',
-            selectColumns: ['contractId', 'contractNumber'],
-            displayLabel: 'Service Contract'
-        },
-        CrmServiceSchedule: {
-            idColumn: 'scheduleId',
-            displayColumn: 'scheduleId'
-        },
-        CrmServicePart: {
-            idColumn: 'partId',
-            displayColumn: 'itemName'
-        },
-        CrmServiceVisit: {
-            idColumn: 'visitId',
-            displayColumn: 'visitId'
-        }
-    };
-})();
+    // ========================================
+    // CRM - Field Service
+    // ========================================
+    ...refCrmM.simple('CrmServiceOrder', 'orderId', 'orderNumber', 'Service Order'),
+    ...refCrmM.simple('CrmTechnician', 'technicianId', 'name', 'Technician'),
+    ...refCrmM.simple('CrmServiceContract', 'contractId', 'contractNumber', 'Service Contract'),
+    ...refCrmM.idOnly('CrmServiceSchedule', 'scheduleId'),
+    ...refCrmM.simple('CrmServicePart', 'partId', 'itemName'),
+    ...refCrmM.idOnly('CrmServiceVisit', 'visitId')
+};

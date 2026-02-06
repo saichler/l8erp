@@ -12,128 +12,96 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// Uses Layer8FormFactory for reduced boilerplate
 /**
  * Mobile Sales Shipping Module - Form Configurations
  * Desktop Equivalent: sales/shipping/shipping-forms.js
  */
+window.MobileSalesShipping = window.MobileSalesShipping || {};
+
 (function() {
     'use strict';
 
+    const f = window.Layer8FormFactory;
     const enums = MobileSalesShipping.enums;
 
     MobileSalesShipping.forms = {
-        DeliveryOrder: {
-            title: 'Delivery Order',
-            sections: [
-                {
-                    title: 'Delivery Details',
-                    fields: [
-                        { key: 'deliveryNumber', label: 'Delivery #', type: 'text', required: true },
-                        { key: 'salesOrderId', label: 'Sales Order', type: 'reference', lookupModel: 'SalesOrder', required: true },
-                        { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'Customer', required: true },
-                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
-                        { key: 'plannedDate', label: 'Planned Date', type: 'date', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.DELIVERY_STATUS },
-                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier' },
-                        { key: 'shippingMethod', label: 'Shipping Method', type: 'text' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        DeliveryOrder: f.form('Delivery Order', [
+            f.section('Delivery Details', [
+                ...f.text('deliveryNumber', 'Delivery #', true),
+                ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder', true),
+                ...f.reference('customerId', 'Customer', 'Customer', true),
+                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse', true),
+                ...f.date('plannedDate', 'Planned Date', true),
+                ...f.select('status', 'Status', enums.DELIVERY_STATUS),
+                ...f.reference('carrierId', 'Carrier', 'ScmCarrier'),
+                ...f.text('shippingMethod', 'Shipping Method'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        DeliveryLine: {
-            title: 'Delivery Line',
-            sections: [
-                {
-                    title: 'Line Details',
-                    fields: [
-                        { key: 'deliveryOrderId', label: 'Delivery Order', type: 'reference', lookupModel: 'DeliveryOrder', required: true },
-                        { key: 'salesOrderLineId', label: 'Order Line', type: 'reference', lookupModel: 'SalesOrderLine' },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                        { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                        { key: 'pickedQty', label: 'Picked Qty', type: 'number' },
-                        { key: 'shippedQty', label: 'Shipped Qty', type: 'number' },
-                        { key: 'lotNumber', label: 'Lot #', type: 'text' },
-                        { key: 'serialNumber', label: 'Serial #', type: 'text' }
-                    ]
-                }
-            ]
-        },
+        DeliveryLine: f.form('Delivery Line', [
+            f.section('Line Details', [
+                ...f.reference('deliveryOrderId', 'Delivery Order', 'DeliveryOrder', true),
+                ...f.reference('salesOrderLineId', 'Order Line', 'SalesOrderLine'),
+                ...f.reference('itemId', 'Item', 'ScmItem', true),
+                ...f.number('quantity', 'Quantity', true),
+                ...f.number('pickedQty', 'Picked Qty'),
+                ...f.number('shippedQty', 'Shipped Qty'),
+                ...f.text('lotNumber', 'Lot #'),
+                ...f.text('serialNumber', 'Serial #')
+            ])
+        ]),
 
-        PickRelease: {
-            title: 'Pick Release',
-            sections: [
-                {
-                    title: 'Release Details',
-                    fields: [
-                        { key: 'deliveryOrderId', label: 'Delivery Order', type: 'reference', lookupModel: 'DeliveryOrder', required: true },
-                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
-                        { key: 'releaseDate', label: 'Release Date', type: 'date', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.PICK_STATUS },
-                        { key: 'priority', label: 'Priority', type: 'number' },
-                        { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        PickRelease: f.form('Pick Release', [
+            f.section('Release Details', [
+                ...f.reference('deliveryOrderId', 'Delivery Order', 'DeliveryOrder', true),
+                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse', true),
+                ...f.date('releaseDate', 'Release Date', true),
+                ...f.select('status', 'Status', enums.PICK_STATUS),
+                ...f.number('priority', 'Priority'),
+                ...f.reference('assignedTo', 'Assigned To', 'Employee'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        PackingSlip: {
-            title: 'Packing Slip',
-            sections: [
-                {
-                    title: 'Slip Details',
-                    fields: [
-                        { key: 'slipNumber', label: 'Slip #', type: 'text', required: true },
-                        { key: 'deliveryOrderId', label: 'Delivery Order', type: 'reference', lookupModel: 'DeliveryOrder', required: true },
-                        { key: 'packDate', label: 'Pack Date', type: 'date', required: true },
-                        { key: 'packedBy', label: 'Packed By', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'totalPackages', label: 'Total Packages', type: 'number' },
-                        { key: 'totalWeight', label: 'Total Weight', type: 'number' },
-                        { key: 'weightUnit', label: 'Weight Unit', type: 'text' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        PackingSlip: f.form('Packing Slip', [
+            f.section('Slip Details', [
+                ...f.text('slipNumber', 'Slip #', true),
+                ...f.reference('deliveryOrderId', 'Delivery Order', 'DeliveryOrder', true),
+                ...f.date('packDate', 'Pack Date', true),
+                ...f.reference('packedBy', 'Packed By', 'Employee'),
+                ...f.number('totalPackages', 'Total Packages'),
+                ...f.number('totalWeight', 'Total Weight'),
+                ...f.text('weightUnit', 'Weight Unit'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        ShippingDoc: {
-            title: 'Shipping Document',
-            sections: [
-                {
-                    title: 'Document Details',
-                    fields: [
-                        { key: 'docNumber', label: 'Document #', type: 'text', required: true },
-                        { key: 'docType', label: 'Document Type', type: 'text', required: true },
-                        { key: 'deliveryOrderId', label: 'Delivery Order', type: 'reference', lookupModel: 'DeliveryOrder', required: true },
-                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier' },
-                        { key: 'trackingNumber', label: 'Tracking Number', type: 'text' },
-                        { key: 'shipDate', label: 'Ship Date', type: 'date' },
-                        { key: 'estimatedArrival', label: 'Est. Arrival', type: 'date' },
-                        { key: 'freightCost', label: 'Freight Cost', type: 'currency' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        ShippingDoc: f.form('Shipping Document', [
+            f.section('Document Details', [
+                ...f.text('docNumber', 'Document #', true),
+                ...f.text('docType', 'Document Type', true),
+                ...f.reference('deliveryOrderId', 'Delivery Order', 'DeliveryOrder', true),
+                ...f.reference('carrierId', 'Carrier', 'ScmCarrier'),
+                ...f.text('trackingNumber', 'Tracking Number'),
+                ...f.date('shipDate', 'Ship Date'),
+                ...f.date('estimatedArrival', 'Est. Arrival'),
+                ...f.money('freightCost', 'Freight Cost'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        DeliveryConfirm: {
-            title: 'Delivery Confirmation',
-            sections: [
-                {
-                    title: 'Confirmation Details',
-                    fields: [
-                        { key: 'deliveryOrderId', label: 'Delivery Order', type: 'reference', lookupModel: 'DeliveryOrder', required: true },
-                        { key: 'confirmDate', label: 'Confirm Date', type: 'date', required: true },
-                        { key: 'receivedBy', label: 'Received By', type: 'text' },
-                        { key: 'signatureOnFile', label: 'Signature On File', type: 'checkbox' },
-                        { key: 'condition', label: 'Condition', type: 'text' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
+        DeliveryConfirm: f.form('Delivery Confirmation', [
+            f.section('Confirmation Details', [
+                ...f.reference('deliveryOrderId', 'Delivery Order', 'DeliveryOrder', true),
+                ...f.date('confirmDate', 'Confirm Date', true),
+                ...f.text('receivedBy', 'Received By'),
+                ...f.checkbox('signatureOnFile', 'Signature On File'),
+                ...f.text('condition', 'Condition'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ])
     };
 
 })();

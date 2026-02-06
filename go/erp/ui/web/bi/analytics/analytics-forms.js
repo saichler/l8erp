@@ -2,218 +2,142 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // BI Analytics Module - Form Definitions
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
     window.BiAnalytics = window.BiAnalytics || {};
 
+    const f = window.Layer8FormFactory;
     const enums = BiAnalytics.enums;
 
     BiAnalytics.forms = {
-        BiDataCube: {
-            title: 'Data Cube',
-            sections: [
-                {
-                    title: 'Cube Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'dataSourceId', label: 'Data Source', type: 'reference', lookupModel: 'BiDataSource' },
-                        { key: 'refreshSchedule', label: 'Refresh Schedule', type: 'text' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Configuration',
-                    fields: [
-                        { key: 'dimensions', label: 'Dimensions (comma separated)', type: 'text' },
-                        { key: 'measures', label: 'Measures (comma separated)', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Status',
-                    fields: [
-                        { key: 'lastRefresh', label: 'Last Refresh', type: 'date' },
-                        { key: 'rowCount', label: 'Row Count', type: 'number' }
-                    ]
-                }
-            ]
-        },
+        BiDataCube: f.form('Data Cube', [
+            f.section('Cube Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('dataSourceId', 'Data Source', 'BiDataSource'),
+                ...f.text('refreshSchedule', 'Refresh Schedule'),
+                ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Configuration', [
+                ...f.text('dimensions', 'Dimensions (comma separated)'),
+                ...f.text('measures', 'Measures (comma separated)')
+            ]),
+            f.section('Status', [
+                ...f.date('lastRefresh', 'Last Refresh'),
+                ...f.number('rowCount', 'Row Count')
+            ])
+        ]),
 
-        BiAnalysisModel: {
-            title: 'Analysis Model',
-            sections: [
-                {
-                    title: 'Model Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'modelType', label: 'Model Type', type: 'select', options: enums.MODEL_TYPE },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.MODEL_STATUS },
-                        { key: 'dataSourceId', label: 'Data Source', type: 'reference', lookupModel: 'BiDataSource' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                },
-                {
-                    title: 'Configuration',
-                    fields: [
-                        { key: 'algorithm', label: 'Algorithm', type: 'text' },
-                        { key: 'targetVariable', label: 'Target Variable', type: 'text' },
-                        { key: 'featureVariables', label: 'Feature Variables (comma separated)', type: 'text' },
-                        { key: 'hyperparameters', label: 'Hyperparameters (JSON)', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Performance Metrics',
-                    fields: [
-                        { key: 'accuracy', label: 'Accuracy', type: 'number' },
-                        { key: 'precisionScore', label: 'Precision Score', type: 'number' },
-                        { key: 'recallScore', label: 'Recall Score', type: 'number' },
-                        { key: 'trainingDate', label: 'Training Date', type: 'date' },
-                        { key: 'lastPrediction', label: 'Last Prediction', type: 'date' }
-                    ]
-                }
-            ]
-        },
+        BiAnalysisModel: f.form('Analysis Model', [
+            f.section('Model Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('modelType', 'Model Type', enums.MODEL_TYPE),
+                ...f.select('status', 'Status', enums.MODEL_STATUS),
+                ...f.reference('dataSourceId', 'Data Source', 'BiDataSource'),
+                ...f.reference('ownerId', 'Owner', 'Employee')
+            ]),
+            f.section('Configuration', [
+                ...f.text('algorithm', 'Algorithm'),
+                ...f.text('targetVariable', 'Target Variable'),
+                ...f.text('featureVariables', 'Feature Variables (comma separated)'),
+                ...f.textarea('hyperparameters', 'Hyperparameters (JSON)')
+            ]),
+            f.section('Performance Metrics', [
+                ...f.number('accuracy', 'Accuracy'),
+                ...f.number('precisionScore', 'Precision Score'),
+                ...f.number('recallScore', 'Recall Score'),
+                ...f.date('trainingDate', 'Training Date'),
+                ...f.date('lastPrediction', 'Last Prediction')
+            ])
+        ]),
 
-        BiPrediction: {
-            title: 'Prediction',
-            sections: [
-                {
-                    title: 'Prediction Details',
-                    fields: [
-                        { key: 'modelId', label: 'Model', type: 'reference', lookupModel: 'BiAnalysisModel', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'predictionDate', label: 'Prediction Date', type: 'date' },
-                        { key: 'predictedBy', label: 'Predicted By', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                },
-                {
-                    title: 'Data',
-                    fields: [
-                        { key: 'inputData', label: 'Input Data (JSON)', type: 'textarea' },
-                        { key: 'outputData', label: 'Output Data (JSON)', type: 'textarea' },
-                        { key: 'confidence', label: 'Confidence', type: 'number' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        BiPrediction: f.form('Prediction', [
+            f.section('Prediction Details', [
+                ...f.reference('modelId', 'Model', 'BiAnalysisModel', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.date('predictionDate', 'Prediction Date'),
+                ...f.reference('predictedBy', 'Predicted By', 'Employee')
+            ]),
+            f.section('Data', [
+                ...f.textarea('inputData', 'Input Data (JSON)'),
+                ...f.textarea('outputData', 'Output Data (JSON)'),
+                ...f.number('confidence', 'Confidence'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        BiTrendAnalysis: {
-            title: 'Trend Analysis',
-            sections: [
-                {
-                    title: 'Analysis Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'dataSourceId', label: 'Data Source', type: 'reference', lookupModel: 'BiDataSource' },
-                        { key: 'metric', label: 'Metric', type: 'text', required: true },
-                        { key: 'timePeriod', label: 'Time Period', type: 'text' },
-                        { key: 'analyzedBy', label: 'Analyzed By', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                },
-                {
-                    title: 'Date Range',
-                    fields: [
-                        { key: 'startDate', label: 'Start Date', type: 'date' },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'analysisDate', label: 'Analysis Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Results',
-                    fields: [
-                        { key: 'direction', label: 'Direction', type: 'select', options: enums.TREND_DIRECTION },
-                        { key: 'slope', label: 'Slope', type: 'number' },
-                        { key: 'rSquared', label: 'R-Squared', type: 'number' },
-                        { key: 'changePercent', label: 'Change %', type: 'number' },
-                        { key: 'analysisResult', label: 'Analysis Result (JSON)', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        BiTrendAnalysis: f.form('Trend Analysis', [
+            f.section('Analysis Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('dataSourceId', 'Data Source', 'BiDataSource'),
+                ...f.text('metric', 'Metric', true),
+                ...f.text('timePeriod', 'Time Period'),
+                ...f.reference('analyzedBy', 'Analyzed By', 'Employee')
+            ]),
+            f.section('Date Range', [
+                ...f.date('startDate', 'Start Date'),
+                ...f.date('endDate', 'End Date'),
+                ...f.date('analysisDate', 'Analysis Date')
+            ]),
+            f.section('Results', [
+                ...f.select('direction', 'Direction', enums.TREND_DIRECTION),
+                ...f.number('slope', 'Slope'),
+                ...f.number('rSquared', 'R-Squared'),
+                ...f.number('changePercent', 'Change %'),
+                ...f.textarea('analysisResult', 'Analysis Result (JSON)')
+            ])
+        ]),
 
-        BiScenario: {
-            title: 'Scenario',
-            sections: [
-                {
-                    title: 'Scenario Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'scenarioType', label: 'Scenario Type', type: 'select', options: enums.SCENARIO_TYPE },
-                        { key: 'baseScenarioId', label: 'Base Scenario', type: 'reference', lookupModel: 'BiScenario' },
-                        { key: 'dataSourceId', label: 'Data Source', type: 'reference', lookupModel: 'BiDataSource' },
-                        { key: 'createdBy', label: 'Created By', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Configuration',
-                    fields: [
-                        { key: 'assumptions', label: 'Assumptions (JSON)', type: 'textarea' },
-                        { key: 'variables', label: 'Variables (JSON)', type: 'textarea' },
-                        { key: 'results', label: 'Results (JSON)', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Metadata',
-                    fields: [
-                        { key: 'createdDate', label: 'Created Date', type: 'date' }
-                    ]
-                }
-            ]
-        },
+        BiScenario: f.form('Scenario', [
+            f.section('Scenario Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('scenarioType', 'Scenario Type', enums.SCENARIO_TYPE),
+                ...f.reference('baseScenarioId', 'Base Scenario', 'BiScenario'),
+                ...f.reference('dataSourceId', 'Data Source', 'BiDataSource'),
+                ...f.reference('createdBy', 'Created By', 'Employee'),
+                ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Configuration', [
+                ...f.textarea('assumptions', 'Assumptions (JSON)'),
+                ...f.textarea('variables', 'Variables (JSON)'),
+                ...f.textarea('results', 'Results (JSON)')
+            ]),
+            f.section('Metadata', [
+                ...f.date('createdDate', 'Created Date')
+            ])
+        ]),
 
-        BiBenchmark: {
-            title: 'Benchmark',
-            sections: [
-                {
-                    title: 'Benchmark Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'category', label: 'Category', type: 'text' },
-                        { key: 'metric', label: 'Metric', type: 'text', required: true },
-                        { key: 'benchmarkSource', label: 'Benchmark Source', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Values',
-                    fields: [
-                        { key: 'internalValue', label: 'Internal Value', type: 'number' },
-                        { key: 'benchmarkValue', label: 'Benchmark Value', type: 'number' },
-                        { key: 'variance', label: 'Variance', type: 'number' },
-                        { key: 'variancePercent', label: 'Variance %', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Context',
-                    fields: [
-                        { key: 'industry', label: 'Industry', type: 'text' },
-                        { key: 'region', label: 'Region', type: 'text' },
-                        { key: 'periodStart', label: 'Period Start', type: 'date' },
-                        { key: 'periodEnd', label: 'Period End', type: 'date' },
-                        { key: 'lastUpdated', label: 'Last Updated', type: 'date' }
-                    ]
-                }
-            ]
-        }
+        BiBenchmark: f.form('Benchmark', [
+            f.section('Benchmark Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.text('category', 'Category'),
+                ...f.text('metric', 'Metric', true),
+                ...f.text('benchmarkSource', 'Benchmark Source')
+            ]),
+            f.section('Values', [
+                ...f.number('internalValue', 'Internal Value'),
+                ...f.number('benchmarkValue', 'Benchmark Value'),
+                ...f.number('variance', 'Variance'),
+                ...f.number('variancePercent', 'Variance %')
+            ]),
+            f.section('Context', [
+                ...f.text('industry', 'Industry'),
+                ...f.text('region', 'Region'),
+                ...f.date('periodStart', 'Period Start'),
+                ...f.date('periodEnd', 'Period End'),
+                ...f.date('lastUpdated', 'Last Updated')
+            ])
+        ])
     };
 
     BiAnalytics.primaryKeys = {

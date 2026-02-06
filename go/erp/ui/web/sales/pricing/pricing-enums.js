@@ -12,95 +12,67 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Sales Pricing Module - Enum Definitions
-// All enum constants and value mappings for Sales Pricing models
+// Sales Pricing Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Create SalesPricing namespace
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8DRenderers;
+
     window.SalesPricing = window.SalesPricing || {};
-    SalesPricing.enums = {};
 
     // ============================================================================
-    // PRICING METHOD
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    SalesPricing.enums.PRICING_METHOD = {
-        0: 'Unspecified',
-        1: 'Fixed',
-        2: 'Cost Plus',
-        3: 'Volume',
-        4: 'Contract'
-    };
+    const PRICING_METHOD = factory.create([
+        ['Unspecified', null, ''],
+        ['Fixed', 'fixed', 'layer8d-status-active'],
+        ['Cost Plus', 'costplus', 'layer8d-status-active'],
+        ['Volume', 'volume', 'layer8d-status-pending'],
+        ['Contract', 'contract', 'layer8d-status-active']
+    ]);
 
-    SalesPricing.enums.PRICING_METHOD_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-active'
-    };
+    const DISCOUNT_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Percentage', 'percentage', 'layer8d-status-active'],
+        ['Fixed Amount', 'fixed', 'layer8d-status-active'],
+        ['Buy X Get Y', 'bxgy', 'layer8d-status-pending'],
+        ['Tiered', 'tiered', 'layer8d-status-pending']
+    ]);
 
-    // ============================================================================
-    // DISCOUNT TYPE
-    // ============================================================================
-
-    SalesPricing.enums.DISCOUNT_TYPE = {
-        0: 'Unspecified',
-        1: 'Percentage',
-        2: 'Fixed Amount',
-        3: 'Buy X Get Y',
-        4: 'Tiered'
-    };
-
-    SalesPricing.enums.DISCOUNT_TYPE_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-pending'
-    };
+    const PRICE_LIST_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Active', 'active', 'layer8d-status-active'],
+        ['Inactive', 'inactive', 'layer8d-status-inactive'],
+        ['Expired', 'expired', 'layer8d-status-terminated']
+    ]);
 
     // ============================================================================
-    // PRICE LIST STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    SalesPricing.enums.PRICE_LIST_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Active',
-        3: 'Inactive',
-        4: 'Expired'
-    };
-
-    SalesPricing.enums.PRICE_LIST_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-inactive',
-        4: 'layer8d-status-terminated'
+    SalesPricing.enums = {
+        PRICING_METHOD: PRICING_METHOD.enum,
+        PRICING_METHOD_CLASSES: PRICING_METHOD.classes,
+        DISCOUNT_TYPE: DISCOUNT_TYPE.enum,
+        DISCOUNT_TYPE_CLASSES: DISCOUNT_TYPE.classes,
+        PRICE_LIST_STATUS: PRICE_LIST_STATUS.enum,
+        PRICE_LIST_STATUS_CLASSES: PRICE_LIST_STATUS.classes
     };
 
     // ============================================================================
     // RENDERERS
     // ============================================================================
 
-    SalesPricing.render = {};
-
-    SalesPricing.render.pricingMethod = Layer8DRenderers.createStatusRenderer(
-        SalesPricing.enums.PRICING_METHOD,
-        SalesPricing.enums.PRICING_METHOD_CLASSES
-    );
-
-    SalesPricing.render.discountType = Layer8DRenderers.createStatusRenderer(
-        SalesPricing.enums.DISCOUNT_TYPE,
-        SalesPricing.enums.DISCOUNT_TYPE_CLASSES
-    );
-
-    SalesPricing.render.priceListStatus = Layer8DRenderers.createStatusRenderer(
-        SalesPricing.enums.PRICE_LIST_STATUS,
-        SalesPricing.enums.PRICE_LIST_STATUS_CLASSES
-    );
-
-    SalesPricing.render.date = Layer8DRenderers.renderDate;
-    SalesPricing.render.money = Layer8DRenderers.renderMoney;
+    SalesPricing.render = {
+        pricingMethod: createStatusRenderer(PRICING_METHOD.enum, PRICING_METHOD.classes),
+        discountType: createStatusRenderer(DISCOUNT_TYPE.enum, DISCOUNT_TYPE.classes),
+        priceListStatus: createStatusRenderer(PRICE_LIST_STATUS.enum, PRICE_LIST_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

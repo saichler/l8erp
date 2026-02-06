@@ -1,89 +1,120 @@
 /*
 © 2025 Sharon Aicler (saichler@gmail.com)
-Layer 8 Ecosystem - Apache 2.0
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
+/**
+ * Mobile CRM Service Module - Enum Definitions using Layer8EnumFactory
+ * Desktop Equivalent: crm/service/service-enums.js
+ */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileCrmService = window.MobileCrmService || {};
-    MobileCrmService.enums = {};
 
-    // CASE STATUS
-    MobileCrmService.enums.CASE_STATUS = {
-        0: 'Unspecified', 1: 'New', 2: 'In Progress', 3: 'On Hold', 4: 'Escalated', 5: 'Resolved', 6: 'Closed'
-    };
-    MobileCrmService.enums.CASE_STATUS_VALUES = {
-        'new': 1, 'inprogress': 2, 'onhold': 3, 'escalated': 4, 'resolved': 5, 'closed': 6
-    };
-    MobileCrmService.enums.CASE_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-inactive', 4: 'status-terminated', 5: 'status-active', 6: 'status-active'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const CASE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['New', 'new', 'status-pending'],
+        ['In Progress', 'inprogress', 'status-active'],
+        ['On Hold', 'onhold', 'status-inactive'],
+        ['Escalated', 'escalated', 'status-terminated'],
+        ['Resolved', 'resolved', 'status-active'],
+        ['Closed', 'closed', 'status-active']
+    ]);
+
+    const CASE_PRIORITY = factory.create([
+        ['Unspecified', null, ''],
+        ['Low', 'low', 'status-inactive'],
+        ['Medium', 'medium', 'status-pending'],
+        ['High', 'high', 'status-active'],
+        ['Critical', 'critical', 'status-terminated']
+    ]);
+
+    const CASE_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Question', 'question', 'status-active'],
+        ['Problem', 'problem', 'status-pending'],
+        ['Feature Request', 'featurerequest', 'status-active'],
+        ['Incident', 'incident', 'status-terminated']
+    ]);
+
+    const ARTICLE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Published', 'published', 'status-active'],
+        ['Archived', 'archived', 'status-inactive']
+    ]);
+
+    const ESCALATION_LEVEL = factory.create([
+        ['Unspecified', null, ''],
+        ['Level 1', 'level1', 'status-active'],
+        ['Level 2', 'level2', 'status-pending'],
+        ['Level 3', 'level3', 'status-pending'],
+        ['Executive', 'executive', 'status-terminated']
+    ]);
+
+    const SURVEY_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Sent', 'sent', 'status-pending'],
+        ['Opened', 'opened', 'status-active'],
+        ['Completed', 'completed', 'status-active'],
+        ['Expired', 'expired', 'status-inactive']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    MobileCrmService.enums = {
+        CASE_STATUS: CASE_STATUS.enum,
+        CASE_STATUS_VALUES: CASE_STATUS.values,
+        CASE_STATUS_CLASSES: CASE_STATUS.classes,
+        CASE_PRIORITY: CASE_PRIORITY.enum,
+        CASE_PRIORITY_VALUES: CASE_PRIORITY.values,
+        CASE_PRIORITY_CLASSES: CASE_PRIORITY.classes,
+        CASE_TYPE: CASE_TYPE.enum,
+        CASE_TYPE_VALUES: CASE_TYPE.values,
+        CASE_TYPE_CLASSES: CASE_TYPE.classes,
+        ARTICLE_STATUS: ARTICLE_STATUS.enum,
+        ARTICLE_STATUS_VALUES: ARTICLE_STATUS.values,
+        ARTICLE_STATUS_CLASSES: ARTICLE_STATUS.classes,
+        ESCALATION_LEVEL: ESCALATION_LEVEL.enum,
+        ESCALATION_LEVEL_VALUES: ESCALATION_LEVEL.values,
+        ESCALATION_LEVEL_CLASSES: ESCALATION_LEVEL.classes,
+        SURVEY_STATUS: SURVEY_STATUS.enum,
+        SURVEY_STATUS_VALUES: SURVEY_STATUS.values,
+        SURVEY_STATUS_CLASSES: SURVEY_STATUS.classes
     };
 
-    // CASE PRIORITY
-    MobileCrmService.enums.CASE_PRIORITY = {
-        0: 'Unspecified', 1: 'Low', 2: 'Medium', 3: 'High', 4: 'Critical'
-    };
-    MobileCrmService.enums.CASE_PRIORITY_VALUES = {
-        'low': 1, 'medium': 2, 'high': 3, 'critical': 4
-    };
-    MobileCrmService.enums.CASE_PRIORITY_CLASSES = {
-        1: 'status-inactive', 2: 'status-pending', 3: 'status-active', 4: 'status-terminated'
-    };
-
-    // CASE TYPE
-    MobileCrmService.enums.CASE_TYPE = {
-        0: 'Unspecified', 1: 'Question', 2: 'Problem', 3: 'Feature Request', 4: 'Incident'
-    };
-    MobileCrmService.enums.CASE_TYPE_VALUES = {
-        'question': 1, 'problem': 2, 'featurerequest': 3, 'incident': 4
-    };
-    MobileCrmService.enums.CASE_TYPE_CLASSES = {
-        1: 'status-active', 2: 'status-pending', 3: 'status-active', 4: 'status-terminated'
-    };
-
-    // ARTICLE STATUS
-    MobileCrmService.enums.ARTICLE_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Published', 3: 'Archived'
-    };
-    MobileCrmService.enums.ARTICLE_STATUS_VALUES = {
-        'draft': 1, 'published': 2, 'archived': 3
-    };
-    MobileCrmService.enums.ARTICLE_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-inactive'
-    };
-
-    // ESCALATION LEVEL
-    MobileCrmService.enums.ESCALATION_LEVEL = {
-        0: 'Unspecified', 1: 'Level 1', 2: 'Level 2', 3: 'Level 3', 4: 'Executive'
-    };
-    MobileCrmService.enums.ESCALATION_LEVEL_VALUES = {
-        'level1': 1, 'level2': 2, 'level3': 3, 'executive': 4
-    };
-    MobileCrmService.enums.ESCALATION_LEVEL_CLASSES = {
-        1: 'status-active', 2: 'status-pending', 3: 'status-pending', 4: 'status-terminated'
-    };
-
-    // SURVEY STATUS
-    MobileCrmService.enums.SURVEY_STATUS = {
-        0: 'Unspecified', 1: 'Sent', 2: 'Opened', 3: 'Completed', 4: 'Expired'
-    };
-    MobileCrmService.enums.SURVEY_STATUS_VALUES = {
-        'sent': 1, 'opened': 2, 'completed': 3, 'expired': 4
-    };
-    MobileCrmService.enums.SURVEY_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-inactive'
-    };
-
+    // ============================================================================
     // RENDER FUNCTIONS
+    // ============================================================================
+
     MobileCrmService.render = {
-        caseStatus: Layer8MRenderers.createStatusRenderer(MobileCrmService.enums.CASE_STATUS, MobileCrmService.enums.CASE_STATUS_CLASSES),
-        casePriority: Layer8MRenderers.createStatusRenderer(MobileCrmService.enums.CASE_PRIORITY, MobileCrmService.enums.CASE_PRIORITY_CLASSES),
-        caseType: Layer8MRenderers.createStatusRenderer(MobileCrmService.enums.CASE_TYPE, MobileCrmService.enums.CASE_TYPE_CLASSES),
-        articleStatus: Layer8MRenderers.createStatusRenderer(MobileCrmService.enums.ARTICLE_STATUS, MobileCrmService.enums.ARTICLE_STATUS_CLASSES),
-        escalationLevel: Layer8MRenderers.createStatusRenderer(MobileCrmService.enums.ESCALATION_LEVEL, MobileCrmService.enums.ESCALATION_LEVEL_CLASSES),
-        surveyStatus: Layer8MRenderers.createStatusRenderer(MobileCrmService.enums.SURVEY_STATUS, MobileCrmService.enums.SURVEY_STATUS_CLASSES),
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        caseStatus: createStatusRenderer(CASE_STATUS.enum, CASE_STATUS.classes),
+        casePriority: createStatusRenderer(CASE_PRIORITY.enum, CASE_PRIORITY.classes),
+        caseType: createStatusRenderer(CASE_TYPE.enum, CASE_TYPE.classes),
+        articleStatus: createStatusRenderer(ARTICLE_STATUS.enum, ARTICLE_STATUS.classes),
+        escalationLevel: createStatusRenderer(ESCALATION_LEVEL.enum, ESCALATION_LEVEL.classes),
+        surveyStatus: createStatusRenderer(SURVEY_STATUS.enum, SURVEY_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

@@ -13,71 +13,70 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Accounts Payable Module - Enum Definitions
+ * Mobile Accounts Payable Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: fin/accounts-payable/accounts-payable-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileAccountsPayable = window.MobileAccountsPayable || {};
-    MobileAccountsPayable.enums = {};
 
     // ============================================================================
-    // VENDOR STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileAccountsPayable.enums.VENDOR_STATUS = {
-        0: 'Unspecified', 1: 'Active', 2: 'Inactive', 3: 'On Hold', 4: 'Blocked'
-    };
-    MobileAccountsPayable.enums.VENDOR_STATUS_VALUES = {
-        'active': 1, 'inactive': 2, 'on hold': 3, 'blocked': 4
-    };
-    MobileAccountsPayable.enums.VENDOR_STATUS_CLASSES = {
-        1: 'status-active', 2: 'status-inactive', 3: 'status-pending', 4: 'status-terminated'
-    };
+    const VENDOR_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Active', 'active', 'status-active'],
+        ['Inactive', 'inactive', 'status-inactive'],
+        ['On Hold', 'on hold', 'status-pending'],
+        ['Blocked', 'blocked', 'status-terminated']
+    ]);
+
+    const INVOICE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Submitted', 'submitted', 'status-pending'],
+        ['Approved', 'approved', 'status-active'],
+        ['Partially Paid', 'partially paid', 'status-pending'],
+        ['Paid', 'paid', 'status-active'],
+        ['Overdue', 'overdue', 'status-terminated'],
+        ['Cancelled', 'cancelled', 'status-inactive'],
+        ['Void', 'void', 'status-terminated']
+    ]);
+
+    const PAYMENT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'status-pending'],
+        ['Processing', 'processing', 'status-pending'],
+        ['Completed', 'completed', 'status-active'],
+        ['Failed', 'failed', 'status-terminated'],
+        ['Cancelled', 'cancelled', 'status-inactive'],
+        ['Reversed', 'reversed', 'status-terminated']
+    ]);
+
+    const PAYMENT_METHOD = factory.simple([
+        'Unspecified', 'Check', 'ACH', 'Wire', 'Credit Card', 'Cash', 'Other'
+    ]);
 
     // ============================================================================
-    // INVOICE STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileAccountsPayable.enums.INVOICE_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Submitted', 3: 'Approved',
-        4: 'Partially Paid', 5: 'Paid', 6: 'Overdue', 7: 'Cancelled', 8: 'Void'
-    };
-    MobileAccountsPayable.enums.INVOICE_STATUS_VALUES = {
-        'draft': 1, 'submitted': 2, 'approved': 3, 'partially paid': 4,
-        'paid': 5, 'overdue': 6, 'cancelled': 7, 'void': 8
-    };
-    MobileAccountsPayable.enums.INVOICE_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-active',
-        4: 'status-pending', 5: 'status-active', 6: 'status-terminated',
-        7: 'status-inactive', 8: 'status-terminated'
-    };
-
-    // ============================================================================
-    // PAYMENT STATUS
-    // ============================================================================
-
-    MobileAccountsPayable.enums.PAYMENT_STATUS = {
-        0: 'Unspecified', 1: 'Pending', 2: 'Processing', 3: 'Completed',
-        4: 'Failed', 5: 'Cancelled', 6: 'Reversed'
-    };
-    MobileAccountsPayable.enums.PAYMENT_STATUS_VALUES = {
-        'pending': 1, 'processing': 2, 'completed': 3,
-        'failed': 4, 'cancelled': 5, 'reversed': 6
-    };
-    MobileAccountsPayable.enums.PAYMENT_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-active',
-        4: 'status-terminated', 5: 'status-inactive', 6: 'status-terminated'
-    };
-
-    // ============================================================================
-    // PAYMENT METHOD
-    // ============================================================================
-
-    MobileAccountsPayable.enums.PAYMENT_METHOD = {
-        0: 'Unspecified', 1: 'Check', 2: 'ACH', 3: 'Wire',
-        4: 'Credit Card', 5: 'Cash', 6: 'Other'
+    MobileAccountsPayable.enums = {
+        VENDOR_STATUS: VENDOR_STATUS.enum,
+        VENDOR_STATUS_VALUES: VENDOR_STATUS.values,
+        VENDOR_STATUS_CLASSES: VENDOR_STATUS.classes,
+        INVOICE_STATUS: INVOICE_STATUS.enum,
+        INVOICE_STATUS_VALUES: INVOICE_STATUS.values,
+        INVOICE_STATUS_CLASSES: INVOICE_STATUS.classes,
+        PAYMENT_STATUS: PAYMENT_STATUS.enum,
+        PAYMENT_STATUS_VALUES: PAYMENT_STATUS.values,
+        PAYMENT_STATUS_CLASSES: PAYMENT_STATUS.classes,
+        PAYMENT_METHOD: PAYMENT_METHOD.enum
     };
 
     // ============================================================================
@@ -85,22 +84,13 @@ limitations under the License.
     // ============================================================================
 
     MobileAccountsPayable.render = {
-        vendorStatus: Layer8MRenderers.createStatusRenderer(
-            MobileAccountsPayable.enums.VENDOR_STATUS,
-            MobileAccountsPayable.enums.VENDOR_STATUS_CLASSES
-        ),
-        invoiceStatus: Layer8MRenderers.createStatusRenderer(
-            MobileAccountsPayable.enums.INVOICE_STATUS,
-            MobileAccountsPayable.enums.INVOICE_STATUS_CLASSES
-        ),
-        paymentStatus: Layer8MRenderers.createStatusRenderer(
-            MobileAccountsPayable.enums.PAYMENT_STATUS,
-            MobileAccountsPayable.enums.PAYMENT_STATUS_CLASSES
-        ),
-        paymentMethod: (type) => Layer8MRenderers.renderEnum(type, MobileAccountsPayable.enums.PAYMENT_METHOD),
-        boolean: Layer8MRenderers.renderBoolean,
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        vendorStatus: createStatusRenderer(VENDOR_STATUS.enum, VENDOR_STATUS.classes),
+        invoiceStatus: createStatusRenderer(INVOICE_STATUS.enum, INVOICE_STATUS.classes),
+        paymentStatus: createStatusRenderer(PAYMENT_STATUS.enum, PAYMENT_STATUS.classes),
+        paymentMethod: (type) => renderEnum(type, PAYMENT_METHOD.enum),
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

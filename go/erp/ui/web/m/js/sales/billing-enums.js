@@ -13,55 +13,59 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Sales Billing Module - Enum Definitions
+ * Mobile Sales Billing Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: sales/billing/billing-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileSalesBilling = window.MobileSalesBilling || {};
-    MobileSalesBilling.enums = {};
 
     // ============================================================================
-    // BILLING FREQUENCY
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileSalesBilling.enums.BILLING_FREQUENCY = {
-        0: 'Unspecified', 1: 'One-Time', 2: 'Monthly', 3: 'Quarterly', 4: 'Milestone'
-    };
-    MobileSalesBilling.enums.BILLING_FREQUENCY_VALUES = {
-        'one-time': 1, 'onetime': 1, 'monthly': 2, 'quarterly': 3, 'milestone': 4
-    };
-    MobileSalesBilling.enums.BILLING_FREQUENCY_CLASSES = {
-        1: 'status-active', 2: 'status-active', 3: 'status-active', 4: 'status-pending'
-    };
+    const BILLING_FREQUENCY = factory.create([
+        ['Unspecified', null, ''],
+        ['One-Time', 'one-time', 'status-active'],
+        ['Monthly', 'monthly', 'status-active'],
+        ['Quarterly', 'quarterly', 'status-active'],
+        ['Milestone', 'milestone', 'status-pending']
+    ]);
+
+    const MILESTONE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'status-pending'],
+        ['Achieved', 'achieved', 'status-active'],
+        ['Billed', 'billed', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-inactive']
+    ]);
+
+    const REVENUE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Deferred', 'deferred', 'status-pending'],
+        ['Partially Recognized', 'partial', 'status-pending'],
+        ['Recognized', 'recognized', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-inactive']
+    ]);
 
     // ============================================================================
-    // MILESTONE STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileSalesBilling.enums.MILESTONE_STATUS = {
-        0: 'Unspecified', 1: 'Pending', 2: 'Achieved', 3: 'Billed', 4: 'Cancelled'
-    };
-    MobileSalesBilling.enums.MILESTONE_STATUS_VALUES = {
-        'pending': 1, 'achieved': 2, 'billed': 3, 'cancelled': 4
-    };
-    MobileSalesBilling.enums.MILESTONE_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-inactive'
-    };
-
-    // ============================================================================
-    // REVENUE STATUS
-    // ============================================================================
-
-    MobileSalesBilling.enums.REVENUE_STATUS = {
-        0: 'Unspecified', 1: 'Deferred', 2: 'Partially Recognized', 3: 'Recognized', 4: 'Cancelled'
-    };
-    MobileSalesBilling.enums.REVENUE_STATUS_VALUES = {
-        'deferred': 1, 'partial': 2, 'recognized': 3, 'cancelled': 4
-    };
-    MobileSalesBilling.enums.REVENUE_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-active', 4: 'status-inactive'
+    MobileSalesBilling.enums = {
+        BILLING_FREQUENCY: BILLING_FREQUENCY.enum,
+        BILLING_FREQUENCY_VALUES: BILLING_FREQUENCY.values,
+        BILLING_FREQUENCY_CLASSES: BILLING_FREQUENCY.classes,
+        MILESTONE_STATUS: MILESTONE_STATUS.enum,
+        MILESTONE_STATUS_VALUES: MILESTONE_STATUS.values,
+        MILESTONE_STATUS_CLASSES: MILESTONE_STATUS.classes,
+        REVENUE_STATUS: REVENUE_STATUS.enum,
+        REVENUE_STATUS_VALUES: REVENUE_STATUS.values,
+        REVENUE_STATUS_CLASSES: REVENUE_STATUS.classes
     };
 
     // ============================================================================
@@ -69,20 +73,11 @@ limitations under the License.
     // ============================================================================
 
     MobileSalesBilling.render = {
-        billingFrequency: Layer8MRenderers.createStatusRenderer(
-            MobileSalesBilling.enums.BILLING_FREQUENCY,
-            MobileSalesBilling.enums.BILLING_FREQUENCY_CLASSES
-        ),
-        milestoneStatus: Layer8MRenderers.createStatusRenderer(
-            MobileSalesBilling.enums.MILESTONE_STATUS,
-            MobileSalesBilling.enums.MILESTONE_STATUS_CLASSES
-        ),
-        revenueStatus: Layer8MRenderers.createStatusRenderer(
-            MobileSalesBilling.enums.REVENUE_STATUS,
-            MobileSalesBilling.enums.REVENUE_STATUS_CLASSES
-        ),
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        billingFrequency: createStatusRenderer(BILLING_FREQUENCY.enum, BILLING_FREQUENCY.classes),
+        milestoneStatus: createStatusRenderer(MILESTONE_STATUS.enum, MILESTONE_STATUS.classes),
+        revenueStatus: createStatusRenderer(REVENUE_STATUS.enum, REVENUE_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

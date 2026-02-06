@@ -13,41 +13,51 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Sales Shipping Module - Enum Definitions
+ * Mobile Sales Shipping Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: sales/shipping/shipping-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileSalesShipping = window.MobileSalesShipping || {};
-    MobileSalesShipping.enums = {};
 
     // ============================================================================
-    // DELIVERY STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileSalesShipping.enums.DELIVERY_STATUS = {
-        0: 'Unspecified', 1: 'Planned', 2: 'Picking', 3: 'Packed', 4: 'Shipped', 5: 'Delivered', 6: 'Failed'
-    };
-    MobileSalesShipping.enums.DELIVERY_STATUS_VALUES = {
-        'planned': 1, 'picking': 2, 'packed': 3, 'shipped': 4, 'delivered': 5, 'failed': 6
-    };
-    MobileSalesShipping.enums.DELIVERY_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-active', 4: 'status-active', 5: 'status-active', 6: 'status-terminated'
-    };
+    const DELIVERY_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Planned', 'planned', 'status-pending'],
+        ['Picking', 'picking', 'status-pending'],
+        ['Packed', 'packed', 'status-active'],
+        ['Shipped', 'shipped', 'status-active'],
+        ['Delivered', 'delivered', 'status-active'],
+        ['Failed', 'failed', 'status-terminated']
+    ]);
+
+    const PICK_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Open', 'open', 'status-pending'],
+        ['Released', 'released', 'status-active'],
+        ['In Progress', 'in progress', 'status-pending'],
+        ['Completed', 'completed', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-inactive']
+    ]);
 
     // ============================================================================
-    // PICK STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileSalesShipping.enums.PICK_STATUS = {
-        0: 'Unspecified', 1: 'Open', 2: 'Released', 3: 'In Progress', 4: 'Completed', 5: 'Cancelled'
-    };
-    MobileSalesShipping.enums.PICK_STATUS_VALUES = {
-        'open': 1, 'released': 2, 'in progress': 3, 'progress': 3, 'completed': 4, 'cancelled': 5
-    };
-    MobileSalesShipping.enums.PICK_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-pending', 4: 'status-active', 5: 'status-inactive'
+    MobileSalesShipping.enums = {
+        DELIVERY_STATUS: DELIVERY_STATUS.enum,
+        DELIVERY_STATUS_VALUES: DELIVERY_STATUS.values,
+        DELIVERY_STATUS_CLASSES: DELIVERY_STATUS.classes,
+        PICK_STATUS: PICK_STATUS.enum,
+        PICK_STATUS_VALUES: PICK_STATUS.values,
+        PICK_STATUS_CLASSES: PICK_STATUS.classes
     };
 
     // ============================================================================
@@ -55,16 +65,10 @@ limitations under the License.
     // ============================================================================
 
     MobileSalesShipping.render = {
-        deliveryStatus: Layer8MRenderers.createStatusRenderer(
-            MobileSalesShipping.enums.DELIVERY_STATUS,
-            MobileSalesShipping.enums.DELIVERY_STATUS_CLASSES
-        ),
-        pickStatus: Layer8MRenderers.createStatusRenderer(
-            MobileSalesShipping.enums.PICK_STATUS,
-            MobileSalesShipping.enums.PICK_STATUS_CLASSES
-        ),
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        deliveryStatus: createStatusRenderer(DELIVERY_STATUS.enum, DELIVERY_STATUS.classes),
+        pickStatus: createStatusRenderer(PICK_STATUS.enum, PICK_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

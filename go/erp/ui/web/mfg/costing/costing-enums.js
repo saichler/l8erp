@@ -12,84 +12,66 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Manufacturing Costing Module - Enum Definitions
+// Manufacturing Costing Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate, renderMoney } = Layer8DRenderers;
+
     window.MfgCosting = window.MfgCosting || {};
-    MfgCosting.enums = {};
 
-    // COST ELEMENT TYPE
-    MfgCosting.enums.COST_ELEMENT_TYPE = {
-        0: 'Unspecified',
-        1: 'Material',
-        2: 'Labor',
-        3: 'Machine',
-        4: 'Overhead',
-        5: 'Subcontracting',
-        6: 'Other'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const COST_ELEMENT_TYPE = factory.simple([
+        'Unspecified', 'Material', 'Labor', 'Machine', 'Overhead',
+        'Subcontracting', 'Other'
+    ]);
+
+    const ROLLUP_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['In Progress', 'progress', 'layer8d-status-active'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Failed', 'failed', 'layer8d-status-terminated']
+    ]);
+
+    const VARIANCE_TYPE = factory.simple([
+        'Unspecified', 'Material Price', 'Material Usage', 'Labor Rate',
+        'Labor Efficiency', 'Overhead', 'Yield', 'Mix'
+    ]);
+
+    const ALLOCATION_METHOD = factory.simple([
+        'Unspecified', 'Direct Labor Hours', 'Machine Hours', 'Direct Labor Cost',
+        'Material Cost', 'Units Produced'
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    MfgCosting.enums = {
+        COST_ELEMENT_TYPE: COST_ELEMENT_TYPE.enum,
+        ROLLUP_STATUS: ROLLUP_STATUS.enum,
+        ROLLUP_STATUS_CLASSES: ROLLUP_STATUS.classes,
+        VARIANCE_TYPE: VARIANCE_TYPE.enum,
+        ALLOCATION_METHOD: ALLOCATION_METHOD.enum
     };
 
-    // ROLLUP STATUS
-    MfgCosting.enums.ROLLUP_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'In Progress',
-        3: 'Completed',
-        4: 'Failed'
-    };
-
-    MfgCosting.enums.ROLLUP_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated'
-    };
-
-    // VARIANCE TYPE
-    MfgCosting.enums.VARIANCE_TYPE = {
-        0: 'Unspecified',
-        1: 'Material Price',
-        2: 'Material Usage',
-        3: 'Labor Rate',
-        4: 'Labor Efficiency',
-        5: 'Overhead',
-        6: 'Yield',
-        7: 'Mix'
-    };
-
-    // OVERHEAD ALLOCATION METHOD
-    MfgCosting.enums.ALLOCATION_METHOD = {
-        0: 'Unspecified',
-        1: 'Direct Labor Hours',
-        2: 'Machine Hours',
-        3: 'Direct Labor Cost',
-        4: 'Material Cost',
-        5: 'Units Produced'
-    };
-
+    // ============================================================================
     // RENDERERS
-    MfgCosting.render = {};
+    // ============================================================================
 
-    MfgCosting.render.costElementType = function(type) {
-        return MfgCosting.enums.COST_ELEMENT_TYPE[type] || 'Unknown';
+    MfgCosting.render = {
+        costElementType: (v) => renderEnum(v, COST_ELEMENT_TYPE.enum),
+        rollupStatus: createStatusRenderer(ROLLUP_STATUS.enum, ROLLUP_STATUS.classes),
+        varianceType: (v) => renderEnum(v, VARIANCE_TYPE.enum),
+        allocationMethod: (v) => renderEnum(v, ALLOCATION_METHOD.enum),
+        date: renderDate,
+        money: renderMoney
     };
-
-    MfgCosting.render.rollupStatus = Layer8DRenderers.createStatusRenderer(
-        MfgCosting.enums.ROLLUP_STATUS,
-        MfgCosting.enums.ROLLUP_STATUS_CLASSES
-    );
-
-    MfgCosting.render.varianceType = function(type) {
-        return MfgCosting.enums.VARIANCE_TYPE[type] || 'Unknown';
-    };
-
-    MfgCosting.render.allocationMethod = function(method) {
-        return MfgCosting.enums.ALLOCATION_METHOD[method] || 'Unknown';
-    };
-
-    MfgCosting.render.date = Layer8DRenderers.renderDate;
-    MfgCosting.render.money = Layer8DRenderers.renderMoney;
 
 })();

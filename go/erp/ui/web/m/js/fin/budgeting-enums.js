@@ -13,61 +13,60 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Budgeting Module - Enum Definitions
+ * Mobile Budgeting Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: fin/budgeting/budgeting-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileBudgeting = window.MobileBudgeting || {};
-    MobileBudgeting.enums = {};
 
     // ============================================================================
-    // BUDGET STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileBudgeting.enums.BUDGET_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Submitted', 3: 'Approved',
-        4: 'Active', 5: 'Closed'
-    };
-    MobileBudgeting.enums.BUDGET_STATUS_VALUES = {
-        'draft': 1, 'submitted': 2, 'approved': 3, 'active': 4, 'closed': 5
-    };
-    MobileBudgeting.enums.BUDGET_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-active',
-        4: 'status-active', 5: 'status-inactive'
-    };
+    const BUDGET_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Submitted', 'submitted', 'status-pending'],
+        ['Approved', 'approved', 'status-active'],
+        ['Active', 'active', 'status-active'],
+        ['Closed', 'closed', 'status-inactive']
+    ]);
+
+    const BUDGET_TYPE = factory.simple([
+        'Unspecified', 'Operating', 'Capital', 'Project', 'Departmental'
+    ]);
+
+    const FORECAST_TYPE = factory.simple([
+        'Unspecified', 'Cash Flow', 'Revenue', 'Expense', 'Balance Sheet'
+    ]);
+
+    const CAPEX_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Proposed', 'proposed', 'status-pending'],
+        ['Approved', 'approved', 'status-active'],
+        ['In Progress', 'in progress', 'status-pending'],
+        ['Completed', 'completed', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-inactive']
+    ]);
 
     // ============================================================================
-    // BUDGET TYPE
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileBudgeting.enums.BUDGET_TYPE = {
-        0: 'Unspecified', 1: 'Operating', 2: 'Capital', 3: 'Project', 4: 'Departmental'
-    };
-
-    // ============================================================================
-    // FORECAST TYPE
-    // ============================================================================
-
-    MobileBudgeting.enums.FORECAST_TYPE = {
-        0: 'Unspecified', 1: 'Cash Flow', 2: 'Revenue', 3: 'Expense', 4: 'Balance Sheet'
-    };
-
-    // ============================================================================
-    // CAPEX STATUS
-    // ============================================================================
-
-    MobileBudgeting.enums.CAPEX_STATUS = {
-        0: 'Unspecified', 1: 'Proposed', 2: 'Approved', 3: 'In Progress',
-        4: 'Completed', 5: 'Cancelled'
-    };
-    MobileBudgeting.enums.CAPEX_STATUS_VALUES = {
-        'proposed': 1, 'approved': 2, 'in progress': 3, 'completed': 4, 'cancelled': 5
-    };
-    MobileBudgeting.enums.CAPEX_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-pending',
-        4: 'status-active', 5: 'status-inactive'
+    MobileBudgeting.enums = {
+        BUDGET_STATUS: BUDGET_STATUS.enum,
+        BUDGET_STATUS_VALUES: BUDGET_STATUS.values,
+        BUDGET_STATUS_CLASSES: BUDGET_STATUS.classes,
+        BUDGET_TYPE: BUDGET_TYPE.enum,
+        FORECAST_TYPE: FORECAST_TYPE.enum,
+        CAPEX_STATUS: CAPEX_STATUS.enum,
+        CAPEX_STATUS_VALUES: CAPEX_STATUS.values,
+        CAPEX_STATUS_CLASSES: CAPEX_STATUS.classes
     };
 
     // ============================================================================
@@ -75,19 +74,13 @@ limitations under the License.
     // ============================================================================
 
     MobileBudgeting.render = {
-        budgetStatus: Layer8MRenderers.createStatusRenderer(
-            MobileBudgeting.enums.BUDGET_STATUS,
-            MobileBudgeting.enums.BUDGET_STATUS_CLASSES
-        ),
-        budgetType: (type) => Layer8MRenderers.renderEnum(type, MobileBudgeting.enums.BUDGET_TYPE),
-        forecastType: (type) => Layer8MRenderers.renderEnum(type, MobileBudgeting.enums.FORECAST_TYPE),
-        capexStatus: Layer8MRenderers.createStatusRenderer(
-            MobileBudgeting.enums.CAPEX_STATUS,
-            MobileBudgeting.enums.CAPEX_STATUS_CLASSES
-        ),
-        boolean: Layer8MRenderers.renderBoolean,
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        budgetStatus: createStatusRenderer(BUDGET_STATUS.enum, BUDGET_STATUS.classes),
+        budgetType: (type) => renderEnum(type, BUDGET_TYPE.enum),
+        forecastType: (type) => renderEnum(type, FORECAST_TYPE.enum),
+        capexStatus: createStatusRenderer(CAPEX_STATUS.enum, CAPEX_STATUS.classes),
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

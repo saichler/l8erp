@@ -13,66 +13,84 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Manufacturing Quality Module - Enum Definitions
+ * Mobile Manufacturing Quality Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: mfg/quality/quality-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate } = Layer8MRenderers;
+
     window.MobileMfgQuality = window.MobileMfgQuality || {};
-    MobileMfgQuality.enums = {};
 
-    // INSPECTION TYPE
-    MobileMfgQuality.enums.INSPECTION_TYPE = {
-        0: 'Unspecified', 1: 'Incoming', 2: 'In-Process', 3: 'Final', 4: 'Receiving', 5: 'Periodic'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const INSPECTION_TYPE = factory.simple([
+        'Unspecified', 'Incoming', 'In-Process', 'Final', 'Receiving', 'Periodic'
+    ]);
+
+    const INSPECTION_RESULT = factory.create([
+        ['Unspecified', null, ''],
+        ['Pass', 'pass', 'status-active'],
+        ['Fail', 'fail', 'status-terminated'],
+        ['Conditional', 'conditional', 'status-pending'],
+        ['Pending', 'pending', 'status-inactive']
+    ]);
+
+    const NCR_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Open', 'open', 'status-pending'],
+        ['Under Investigation', 'investigation', 'status-active'],
+        ['Pending Disposition', 'disposition', 'status-pending'],
+        ['In Corrective Action', 'corrective', 'status-active'],
+        ['Closed', 'closed', 'status-inactive'],
+        ['Cancelled', 'cancelled', 'status-inactive']
+    ]);
+
+    const NCR_DISPOSITION = factory.simple([
+        'Unspecified', 'Use As Is', 'Rework', 'Repair', 'Scrap', 'Return to Vendor', 'Deviate'
+    ]);
+
+    const NCR_SEVERITY = factory.create([
+        ['Unspecified', null, ''],
+        ['Critical', 'critical', 'status-terminated'],
+        ['Major', 'major', 'status-pending'],
+        ['Minor', 'minor', 'status-inactive'],
+        ['Cosmetic', 'cosmetic', 'status-inactive']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    MobileMfgQuality.enums = {
+        INSPECTION_TYPE: INSPECTION_TYPE.enum,
+        INSPECTION_RESULT: INSPECTION_RESULT.enum,
+        INSPECTION_RESULT_VALUES: INSPECTION_RESULT.values,
+        INSPECTION_RESULT_CLASSES: INSPECTION_RESULT.classes,
+        NCR_STATUS: NCR_STATUS.enum,
+        NCR_STATUS_VALUES: NCR_STATUS.values,
+        NCR_STATUS_CLASSES: NCR_STATUS.classes,
+        NCR_DISPOSITION: NCR_DISPOSITION.enum,
+        NCR_SEVERITY: NCR_SEVERITY.enum,
+        NCR_SEVERITY_VALUES: NCR_SEVERITY.values,
+        NCR_SEVERITY_CLASSES: NCR_SEVERITY.classes
     };
 
-    // INSPECTION RESULT
-    MobileMfgQuality.enums.INSPECTION_RESULT = {
-        0: 'Unspecified', 1: 'Pass', 2: 'Fail', 3: 'Conditional', 4: 'Pending'
-    };
-    MobileMfgQuality.enums.INSPECTION_RESULT_CLASSES = {
-        1: 'status-active', 2: 'status-terminated', 3: 'status-pending', 4: 'status-inactive'
-    };
-
-    // NCR STATUS
-    MobileMfgQuality.enums.NCR_STATUS = {
-        0: 'Unspecified', 1: 'Open', 2: 'Under Investigation', 3: 'Pending Disposition', 4: 'In Corrective Action', 5: 'Closed', 6: 'Cancelled'
-    };
-    MobileMfgQuality.enums.NCR_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-pending', 4: 'status-active', 5: 'status-inactive', 6: 'status-inactive'
-    };
-
-    // NCR DISPOSITION
-    MobileMfgQuality.enums.NCR_DISPOSITION = {
-        0: 'Unspecified', 1: 'Use As Is', 2: 'Rework', 3: 'Repair', 4: 'Scrap', 5: 'Return to Vendor', 6: 'Deviate'
-    };
-
-    // NCR SEVERITY
-    MobileMfgQuality.enums.NCR_SEVERITY = {
-        0: 'Unspecified', 1: 'Critical', 2: 'Major', 3: 'Minor', 4: 'Cosmetic'
-    };
-    MobileMfgQuality.enums.NCR_SEVERITY_CLASSES = {
-        1: 'status-terminated', 2: 'status-pending', 3: 'status-inactive', 4: 'status-inactive'
-    };
-
+    // ============================================================================
     // RENDER FUNCTIONS
+    // ============================================================================
+
     MobileMfgQuality.render = {
-        inspectionType: function(type) { return MobileMfgQuality.enums.INSPECTION_TYPE[type] || 'Unknown'; },
-        inspectionResult: Layer8MRenderers.createStatusRenderer(
-            MobileMfgQuality.enums.INSPECTION_RESULT,
-            MobileMfgQuality.enums.INSPECTION_RESULT_CLASSES
-        ),
-        ncrStatus: Layer8MRenderers.createStatusRenderer(
-            MobileMfgQuality.enums.NCR_STATUS,
-            MobileMfgQuality.enums.NCR_STATUS_CLASSES
-        ),
-        ncrSeverity: Layer8MRenderers.createStatusRenderer(
-            MobileMfgQuality.enums.NCR_SEVERITY,
-            MobileMfgQuality.enums.NCR_SEVERITY_CLASSES
-        ),
-        ncrDisposition: function(disp) { return MobileMfgQuality.enums.NCR_DISPOSITION[disp] || 'Unknown'; },
-        date: Layer8MRenderers.renderDate
+        inspectionType: (type) => renderEnum(type, INSPECTION_TYPE.enum),
+        inspectionResult: createStatusRenderer(INSPECTION_RESULT.enum, INSPECTION_RESULT.classes),
+        ncrStatus: createStatusRenderer(NCR_STATUS.enum, NCR_STATUS.classes),
+        ncrSeverity: createStatusRenderer(NCR_SEVERITY.enum, NCR_SEVERITY.classes),
+        ncrDisposition: (disp) => renderEnum(disp, NCR_DISPOSITION.enum),
+        date: renderDate
     };
 
 })();

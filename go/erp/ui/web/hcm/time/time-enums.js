@@ -12,299 +12,137 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Time & Attendance Module - Enum Definitions and Render Functions
-// Part 1 of 4 - Load this file first
+// Time & Attendance Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Initialize Time namespace
-    window.Time = window.Time || {};
-
-    // Import shared utilities
+    const factory = window.Layer8EnumFactory;
     const { escapeHtml, formatDate } = Layer8DUtils;
-    const { renderEnum, createStatusRenderer, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+
+    window.Time = window.Time || {};
 
     // ============================================================================
     // ENUM DEFINITIONS
     // ============================================================================
 
-    const TIMESHEET_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Submitted',
-        3: 'Approved',
-        4: 'Rejected',
-        5: 'Processed'
-    };
+    const TIMESHEET_STATUS = factory.create([
+        ['Unspecified', null, ''], ['Draft', 'draft', 'layer8d-status-inactive'],
+        ['Submitted', 'submitted', 'layer8d-status-pending'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['Rejected', 'rejected', 'layer8d-status-terminated'],
+        ['Processed', 'processed', 'layer8d-status-active']
+    ]);
 
-    const TIMESHEET_STATUS_VALUES = {
-        'draft': 1,
-        'submitted': 2,
-        'approved': 3,
-        'rejected': 4,
-        'processed': 5
-    };
+    const TIME_ENTRY_TYPE = factory.withValues([
+        ['Unspecified', null], ['Regular', 'regular'], ['Overtime', 'overtime'],
+        ['Double Time', 'double'], ['PTO', 'pto'], ['Sick', 'sick'], ['Holiday', 'holiday'],
+        ['Bereavement', 'bereavement'], ['Jury Duty', 'jury'], ['Training', 'training'],
+        ['Unpaid', 'unpaid'], ['On-Call', 'oncall'], ['On-Call', 'on-call'], ['Travel', 'travel']
+    ]);
 
-    const TIMESHEET_STATUS_CLASSES = {
-        1: 'layer8d-status-inactive',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated',
-        5: 'layer8d-status-active'
-    };
+    const TIME_ENTRY_SOURCE = factory.withValues([
+        ['Unspecified', null], ['Manual', 'manual'], ['Time Clock', 'clock'],
+        ['Mobile', 'mobile'], ['Badge', 'badge'], ['Biometric', 'biometric'], ['Import', 'import']
+    ]);
 
-    const TIME_ENTRY_TYPE = {
-        0: 'Unspecified',
-        1: 'Regular',
-        2: 'Overtime',
-        3: 'Double Time',
-        4: 'PTO',
-        5: 'Sick',
-        6: 'Holiday',
-        7: 'Bereavement',
-        8: 'Jury Duty',
-        9: 'Training',
-        10: 'Unpaid',
-        11: 'On-Call',
-        12: 'Travel'
-    };
+    const LEAVE_TYPE = factory.withValues([
+        ['Unspecified', null], ['PTO', 'pto'], ['Vacation', 'vacation'], ['Sick', 'sick'],
+        ['Personal', 'personal'], ['Bereavement', 'bereavement'], ['Jury Duty', 'jury'],
+        ['Military', 'military'], ['FMLA', 'fmla'], ['Parental', 'parental'],
+        ['Maternity', 'maternity'], ['Paternity', 'paternity'], ['Sabbatical', 'sabbatical'],
+        ['Unpaid', 'unpaid'], ['Administrative', 'administrative'], ['Volunteer', 'volunteer']
+    ]);
 
-    const TIME_ENTRY_TYPE_VALUES = {
-        'regular': 1,
-        'overtime': 2,
-        'double': 3,
-        'pto': 4,
-        'sick': 5,
-        'holiday': 6,
-        'bereavement': 7,
-        'jury': 8,
-        'training': 9,
-        'unpaid': 10,
-        'oncall': 11,
-        'on-call': 11,
-        'travel': 12
-    };
+    const LEAVE_REQUEST_STATUS = factory.create([
+        ['Unspecified', null, ''], ['Draft', 'draft', 'layer8d-status-inactive'],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['Rejected', 'rejected', 'layer8d-status-terminated'],
+        ['Cancelled', 'cancelled', 'layer8d-status-terminated'],
+        ['Taken', 'taken', 'layer8d-status-active']
+    ]);
 
-    const TIME_ENTRY_SOURCE = {
-        0: 'Unspecified',
-        1: 'Manual',
-        2: 'Time Clock',
-        3: 'Mobile',
-        4: 'Badge',
-        5: 'Biometric',
-        6: 'Import'
-    };
+    const ACCRUAL_METHOD = factory.withValues([
+        ['Unspecified', null], ['Fixed', 'fixed'], ['Hours Worked', 'hours'],
+        ['Hours Worked', 'worked'], ['Tenure Based', 'tenure'],
+        ['Front Loaded', 'front'], ['Front Loaded', 'loaded']
+    ]);
 
-    const TIME_ENTRY_SOURCE_VALUES = {
-        'manual': 1,
-        'clock': 2,
-        'mobile': 3,
-        'badge': 4,
-        'biometric': 5,
-        'import': 6
-    };
+    const ACCRUAL_FREQUENCY = factory.withValues([
+        ['Unspecified', null], ['Per Pay Period', 'pay'], ['Per Pay Period', 'period'],
+        ['Monthly', 'monthly'], ['Quarterly', 'quarterly'],
+        ['Annually', 'annually'], ['Annually', 'annual'], ['Anniversary', 'anniversary']
+    ]);
 
-    const LEAVE_TYPE = {
-        0: 'Unspecified',
-        1: 'PTO',
-        2: 'Vacation',
-        3: 'Sick',
-        4: 'Personal',
-        5: 'Bereavement',
-        6: 'Jury Duty',
-        7: 'Military',
-        8: 'FMLA',
-        9: 'Parental',
-        10: 'Maternity',
-        11: 'Paternity',
-        12: 'Sabbatical',
-        13: 'Unpaid',
-        14: 'Administrative',
-        15: 'Volunteer'
-    };
+    const SHIFT_TYPE = factory.withValues([
+        ['Unspecified', null], ['Day', 'day'], ['Evening', 'evening'], ['Night', 'night'],
+        ['Overnight', 'overnight'], ['Rotating', 'rotating'], ['Split', 'split'],
+        ['On-Call', 'oncall'], ['On-Call', 'on-call']
+    ]);
 
-    const LEAVE_TYPE_VALUES = {
-        'pto': 1,
-        'vacation': 2,
-        'sick': 3,
-        'personal': 4,
-        'bereavement': 5,
-        'jury': 6,
-        'military': 7,
-        'fmla': 8,
-        'parental': 9,
-        'maternity': 10,
-        'paternity': 11,
-        'sabbatical': 12,
-        'unpaid': 13,
-        'administrative': 14,
-        'volunteer': 15
-    };
+    const SCHEDULE_STATUS = factory.create([
+        ['Unspecified', null, ''], ['Draft', 'draft', 'layer8d-status-inactive'],
+        ['Published', 'published', 'layer8d-status-active'],
+        ['Archived', 'archived', 'layer8d-status-inactive']
+    ]);
 
-    const LEAVE_REQUEST_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Pending',
-        3: 'Approved',
-        4: 'Rejected',
-        5: 'Cancelled',
-        6: 'Taken'
-    };
+    const HOLIDAY_TYPE = factory.withValues([
+        ['Unspecified', null], ['Fixed', 'fixed'], ['Floating', 'floating'],
+        ['Personal', 'personal'], ['Observed', 'observed']
+    ]);
 
-    const LEAVE_REQUEST_STATUS_VALUES = {
-        'draft': 1,
-        'pending': 2,
-        'approved': 3,
-        'rejected': 4,
-        'cancelled': 5,
-        'taken': 6
-    };
+    const ABSENCE_STATUS = factory.create([
+        ['Unspecified', null, ''], ['Scheduled', 'scheduled', 'layer8d-status-pending'],
+        ['Taken', 'taken', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-terminated']
+    ]);
 
-    const LEAVE_REQUEST_STATUS_CLASSES = {
-        1: 'layer8d-status-inactive',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated',
-        5: 'layer8d-status-terminated',
-        6: 'layer8d-status-active'
-    };
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
 
-    const ACCRUAL_METHOD = {
-        0: 'Unspecified',
-        1: 'Fixed',
-        2: 'Hours Worked',
-        3: 'Tenure Based',
-        4: 'Front Loaded'
-    };
-
-    const ACCRUAL_METHOD_VALUES = {
-        'fixed': 1,
-        'hours': 2,
-        'worked': 2,
-        'tenure': 3,
-        'front': 4,
-        'loaded': 4
-    };
-
-    const ACCRUAL_FREQUENCY = {
-        0: 'Unspecified',
-        1: 'Per Pay Period',
-        2: 'Monthly',
-        3: 'Quarterly',
-        4: 'Annually',
-        5: 'Anniversary'
-    };
-
-    const ACCRUAL_FREQUENCY_VALUES = {
-        'pay': 1,
-        'period': 1,
-        'monthly': 2,
-        'quarterly': 3,
-        'annually': 4,
-        'annual': 4,
-        'anniversary': 5
-    };
-
-    const SHIFT_TYPE = {
-        0: 'Unspecified',
-        1: 'Day',
-        2: 'Evening',
-        3: 'Night',
-        4: 'Overnight',
-        5: 'Rotating',
-        6: 'Split',
-        7: 'On-Call'
-    };
-
-    const SHIFT_TYPE_VALUES = {
-        'day': 1,
-        'evening': 2,
-        'night': 3,
-        'overnight': 4,
-        'rotating': 5,
-        'split': 6,
-        'oncall': 7,
-        'on-call': 7
-    };
-
-    const SCHEDULE_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Published',
-        3: 'Archived'
-    };
-
-    const SCHEDULE_STATUS_VALUES = {
-        'draft': 1,
-        'published': 2,
-        'archived': 3
-    };
-
-    const SCHEDULE_STATUS_CLASSES = {
-        1: 'layer8d-status-inactive',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-inactive'
-    };
-
-    const HOLIDAY_TYPE = {
-        0: 'Unspecified',
-        1: 'Fixed',
-        2: 'Floating',
-        3: 'Personal',
-        4: 'Observed'
-    };
-
-    const HOLIDAY_TYPE_VALUES = {
-        'fixed': 1,
-        'floating': 2,
-        'personal': 3,
-        'observed': 4
-    };
-
-    const ABSENCE_STATUS = {
-        0: 'Unspecified',
-        1: 'Scheduled',
-        2: 'Taken',
-        3: 'Cancelled'
-    };
-
-    const ABSENCE_STATUS_VALUES = {
-        'scheduled': 1,
-        'taken': 2,
-        'cancelled': 3
-    };
-
-    const ABSENCE_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-terminated'
+    window.Time.enums = {
+        TIMESHEET_STATUS: TIMESHEET_STATUS.enum,
+        TIMESHEET_STATUS_VALUES: TIMESHEET_STATUS.values,
+        TIME_ENTRY_TYPE: TIME_ENTRY_TYPE.enum,
+        TIME_ENTRY_TYPE_VALUES: TIME_ENTRY_TYPE.values,
+        TIME_ENTRY_SOURCE: TIME_ENTRY_SOURCE.enum,
+        TIME_ENTRY_SOURCE_VALUES: TIME_ENTRY_SOURCE.values,
+        LEAVE_TYPE: LEAVE_TYPE.enum,
+        LEAVE_TYPE_VALUES: LEAVE_TYPE.values,
+        LEAVE_REQUEST_STATUS: LEAVE_REQUEST_STATUS.enum,
+        LEAVE_REQUEST_STATUS_VALUES: LEAVE_REQUEST_STATUS.values,
+        ACCRUAL_METHOD: ACCRUAL_METHOD.enum,
+        ACCRUAL_METHOD_VALUES: ACCRUAL_METHOD.values,
+        ACCRUAL_FREQUENCY: ACCRUAL_FREQUENCY.enum,
+        ACCRUAL_FREQUENCY_VALUES: ACCRUAL_FREQUENCY.values,
+        SHIFT_TYPE: SHIFT_TYPE.enum,
+        SHIFT_TYPE_VALUES: SHIFT_TYPE.values,
+        SCHEDULE_STATUS: SCHEDULE_STATUS.enum,
+        SCHEDULE_STATUS_VALUES: SCHEDULE_STATUS.values,
+        HOLIDAY_TYPE: HOLIDAY_TYPE.enum,
+        HOLIDAY_TYPE_VALUES: HOLIDAY_TYPE.values,
+        ABSENCE_STATUS: ABSENCE_STATUS.enum,
+        ABSENCE_STATUS_VALUES: ABSENCE_STATUS.values
     };
 
     // ============================================================================
-    // STATUS RENDERERS (using shared factory)
+    // RENDERERS
     // ============================================================================
 
-    const renderTimesheetStatus = createStatusRenderer(TIMESHEET_STATUS, TIMESHEET_STATUS_CLASSES);
-    const renderLeaveRequestStatus = createStatusRenderer(LEAVE_REQUEST_STATUS, LEAVE_REQUEST_STATUS_CLASSES);
-    const renderScheduleStatus = createStatusRenderer(SCHEDULE_STATUS, SCHEDULE_STATUS_CLASSES);
-    const renderAbsenceStatus = createStatusRenderer(ABSENCE_STATUS, ABSENCE_STATUS_CLASSES);
-
-    // ============================================================================
-    // MODULE-SPECIFIC RENDER HELPERS
-    // ============================================================================
+    const renderTimesheetStatus = createStatusRenderer(TIMESHEET_STATUS.enum, TIMESHEET_STATUS.classes);
+    const renderLeaveRequestStatus = createStatusRenderer(LEAVE_REQUEST_STATUS.enum, LEAVE_REQUEST_STATUS.classes);
+    const renderScheduleStatus = createStatusRenderer(SCHEDULE_STATUS.enum, SCHEDULE_STATUS.classes);
+    const renderAbsenceStatus = createStatusRenderer(ABSENCE_STATUS.enum, ABSENCE_STATUS.classes);
 
     function renderShiftType(type) {
         const shiftColors = {
-            1: '#10b981',  // Day - green
-            2: '#f59e0b',  // Evening - amber
-            3: '#6366f1',  // Night - indigo
-            4: '#8b5cf6',  // Overnight - purple
-            5: '#06b6d4',  // Rotating - cyan
-            6: '#ec4899',  // Split - pink
-            7: '#ef4444'   // On-Call - red
+            1: '#10b981', 2: '#f59e0b', 3: '#6366f1', 4: '#8b5cf6',
+            5: '#06b6d4', 6: '#ec4899', 7: '#ef4444'
         };
-        const label = SHIFT_TYPE[type] || 'Unknown';
+        const label = SHIFT_TYPE.enum[type] || 'Unknown';
         const color = shiftColors[type] || '#64748b';
         return `<span style="color: ${color}; font-weight: 500;">${escapeHtml(label)}</span>`;
     }
@@ -321,46 +159,17 @@ limitations under the License.
         return `${start} - ${end}`;
     }
 
-    // ============================================================================
-    // EXPORT ENUMS TO NAMESPACE
-    // ============================================================================
-
-    window.Time.enums = {
-        TIMESHEET_STATUS,
-        TIMESHEET_STATUS_VALUES,
-        TIME_ENTRY_TYPE,
-        TIME_ENTRY_TYPE_VALUES,
-        TIME_ENTRY_SOURCE,
-        TIME_ENTRY_SOURCE_VALUES,
-        LEAVE_TYPE,
-        LEAVE_TYPE_VALUES,
-        LEAVE_REQUEST_STATUS,
-        LEAVE_REQUEST_STATUS_VALUES,
-        ACCRUAL_METHOD,
-        ACCRUAL_METHOD_VALUES,
-        ACCRUAL_FREQUENCY,
-        ACCRUAL_FREQUENCY_VALUES,
-        SHIFT_TYPE,
-        SHIFT_TYPE_VALUES,
-        SCHEDULE_STATUS,
-        SCHEDULE_STATUS_VALUES,
-        HOLIDAY_TYPE,
-        HOLIDAY_TYPE_VALUES,
-        ABSENCE_STATUS,
-        ABSENCE_STATUS_VALUES
-    };
-
     window.Time.render = {
         timesheetStatus: renderTimesheetStatus,
-        timeEntryType: (v) => renderEnum(v, TIME_ENTRY_TYPE),
-        timeEntrySource: (v) => renderEnum(v, TIME_ENTRY_SOURCE),
-        leaveType: (v) => renderEnum(v, LEAVE_TYPE),
+        timeEntryType: (v) => renderEnum(v, TIME_ENTRY_TYPE.enum),
+        timeEntrySource: (v) => renderEnum(v, TIME_ENTRY_SOURCE.enum),
+        leaveType: (v) => renderEnum(v, LEAVE_TYPE.enum),
         leaveRequestStatus: renderLeaveRequestStatus,
-        accrualMethod: (v) => renderEnum(v, ACCRUAL_METHOD),
-        accrualFrequency: (v) => renderEnum(v, ACCRUAL_FREQUENCY),
+        accrualMethod: (v) => renderEnum(v, ACCRUAL_METHOD.enum),
+        accrualFrequency: (v) => renderEnum(v, ACCRUAL_FREQUENCY.enum),
         shiftType: renderShiftType,
         scheduleStatus: renderScheduleStatus,
-        holidayType: (v) => renderEnum(v, HOLIDAY_TYPE),
+        holidayType: (v) => renderEnum(v, HOLIDAY_TYPE.enum),
         absenceStatus: renderAbsenceStatus,
         money: renderMoney,
         boolean: renderBoolean,
@@ -369,15 +178,9 @@ limitations under the License.
         period: renderTimePeriod
     };
 
-    // Export internal functions for use by other time files
     window.Time._internal = {
-        renderTimesheetStatus,
-        renderLeaveRequestStatus,
-        renderScheduleStatus,
-        renderAbsenceStatus,
-        renderShiftType,
-        renderHoursTime,
-        renderTimePeriod
+        renderTimesheetStatus, renderLeaveRequestStatus, renderScheduleStatus, renderAbsenceStatus,
+        renderShiftType, renderHoursTime, renderTimePeriod
     };
 
 })();

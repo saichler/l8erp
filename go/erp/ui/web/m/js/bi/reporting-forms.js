@@ -12,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// Uses Layer8FormFactory for reduced boilerplate
 /**
  * Mobile BI Reporting Module - Form Configurations
  * Desktop Equivalent: bi/reporting/reporting-forms.js
@@ -19,175 +20,114 @@ limitations under the License.
 (function() {
     'use strict';
 
+    window.MobileBiReporting = window.MobileBiReporting || {};
+    const f = window.Layer8FormFactory;
     const enums = MobileBiReporting.enums;
 
     MobileBiReporting.forms = {
-        BiReport: {
-            title: 'Report',
-            sections: [
-                {
-                    title: 'Report Details',
-                    fields: [
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'reportType', label: 'Report Type', type: 'select', options: enums.REPORT_TYPE },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.REPORT_STATUS },
-                        { key: 'category', label: 'Category', type: 'text' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                },
-                {
-                    title: 'Data Configuration',
-                    fields: [
-                        { key: 'dataSourceId', label: 'Data Source', type: 'reference', lookupModel: 'BiDataSource' },
-                        { key: 'templateId', label: 'Template', type: 'reference', lookupModel: 'BiReportTemplate' },
-                        { key: 'query', label: 'Query', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Output Settings',
-                    fields: [
-                        { key: 'defaultFormat', label: 'Default Format', type: 'select', options: enums.EXPORT_FORMAT },
-                        { key: 'isPublic', label: 'Public', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        BiReport: f.form('Report', [
+            f.section('Report Details', [
+                ...f.text('code', 'Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('reportType', 'Report Type', enums.REPORT_TYPE),
+                ...f.select('status', 'Status', enums.REPORT_STATUS),
+                ...f.text('category', 'Category'),
+                ...f.reference('ownerId', 'Owner', 'Employee')
+            ]),
+            f.section('Data Configuration', [
+                ...f.reference('dataSourceId', 'Data Source', 'BiDataSource'),
+                ...f.reference('templateId', 'Template', 'BiReportTemplate'),
+                ...f.textarea('query', 'Query')
+            ]),
+            f.section('Output Settings', [
+                ...f.select('defaultFormat', 'Default Format', enums.EXPORT_FORMAT),
+                ...f.checkbox('isPublic', 'Public')
+            ])
+        ]),
 
-        BiReportTemplate: {
-            title: 'Report Template',
-            sections: [
-                {
-                    title: 'Template Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'reportType', label: 'Report Type', type: 'select', options: enums.REPORT_TYPE },
-                        { key: 'category', label: 'Category', type: 'text' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Template Configuration',
-                    fields: [
-                        { key: 'layoutTemplate', label: 'Layout Template', type: 'textarea' },
-                        { key: 'styleTemplate', label: 'Style Template', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        BiReportTemplate: f.form('Report Template', [
+            f.section('Template Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('reportType', 'Report Type', enums.REPORT_TYPE),
+                ...f.text('category', 'Category'),
+                ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Template Configuration', [
+                ...f.textarea('layoutTemplate', 'Layout Template'),
+                ...f.textarea('styleTemplate', 'Style Template')
+            ])
+        ]),
 
-        BiReportSchedule: {
-            title: 'Report Schedule',
-            sections: [
-                {
-                    title: 'Schedule Details',
-                    fields: [
-                        { key: 'reportId', label: 'Report', type: 'reference', lookupModel: 'BiReport', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'frequency', label: 'Frequency', type: 'select', options: enums.SCHEDULE_FREQUENCY },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Timing',
-                    fields: [
-                        { key: 'startDate', label: 'Start Date', type: 'date' },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'runTime', label: 'Run Time (HH:MM)', type: 'text' },
-                        { key: 'dayOfWeek', label: 'Day of Week (0-6)', type: 'number' },
-                        { key: 'dayOfMonth', label: 'Day of Month (1-31)', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Output & Delivery',
-                    fields: [
-                        { key: 'outputFormat', label: 'Output Format', type: 'select', options: enums.EXPORT_FORMAT },
-                        { key: 'deliveryEmail', label: 'Delivery Email', type: 'text' }
-                    ]
-                }
-            ]
-        },
+        BiReportSchedule: f.form('Report Schedule', [
+            f.section('Schedule Details', [
+                ...f.reference('reportId', 'Report', 'BiReport', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('frequency', 'Frequency', enums.SCHEDULE_FREQUENCY),
+                ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Timing', [
+                ...f.date('startDate', 'Start Date'),
+                ...f.date('endDate', 'End Date'),
+                ...f.text('runTime', 'Run Time (HH:MM)'),
+                ...f.number('dayOfWeek', 'Day of Week (0-6)'),
+                ...f.number('dayOfMonth', 'Day of Month (1-31)')
+            ]),
+            f.section('Output & Delivery', [
+                ...f.select('outputFormat', 'Output Format', enums.EXPORT_FORMAT),
+                ...f.text('deliveryEmail', 'Delivery Email')
+            ])
+        ]),
 
-        BiReportExecution: {
-            title: 'Report Execution',
-            sections: [
-                {
-                    title: 'Execution Details',
-                    fields: [
-                        { key: 'reportId', label: 'Report', type: 'reference', lookupModel: 'BiReport', required: true },
-                        { key: 'scheduleId', label: 'Schedule', type: 'reference', lookupModel: 'BiReportSchedule' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.EXECUTION_STATUS },
-                        { key: 'executedBy', label: 'Executed By', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                },
-                {
-                    title: 'Timing',
-                    fields: [
-                        { key: 'startTime', label: 'Start Time', type: 'date' },
-                        { key: 'endTime', label: 'End Time', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Results',
-                    fields: [
-                        { key: 'rowCount', label: 'Row Count', type: 'number' },
-                        { key: 'fileSize', label: 'File Size (bytes)', type: 'number' },
-                        { key: 'outputPath', label: 'Output Path', type: 'text' },
-                        { key: 'outputFormat', label: 'Output Format', type: 'select', options: enums.EXPORT_FORMAT },
-                        { key: 'errorMessage', label: 'Error Message', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        BiReportExecution: f.form('Report Execution', [
+            f.section('Execution Details', [
+                ...f.reference('reportId', 'Report', 'BiReport', true),
+                ...f.reference('scheduleId', 'Schedule', 'BiReportSchedule'),
+                ...f.select('status', 'Status', enums.EXECUTION_STATUS),
+                ...f.reference('executedBy', 'Executed By', 'Employee')
+            ]),
+            f.section('Timing', [
+                ...f.date('startTime', 'Start Time'),
+                ...f.date('endTime', 'End Time')
+            ]),
+            f.section('Results', [
+                ...f.number('rowCount', 'Row Count'),
+                ...f.number('fileSize', 'File Size (bytes)'),
+                ...f.text('outputPath', 'Output Path'),
+                ...f.select('outputFormat', 'Output Format', enums.EXPORT_FORMAT),
+                ...f.textarea('errorMessage', 'Error Message')
+            ])
+        ]),
 
-        BiReportAccess: {
-            title: 'Report Access',
-            sections: [
-                {
-                    title: 'Access Details',
-                    fields: [
-                        { key: 'reportId', label: 'Report', type: 'reference', lookupModel: 'BiReport', required: true },
-                        { key: 'principalId', label: 'Principal ID', type: 'text', required: true },
-                        { key: 'principalType', label: 'Principal Type', type: 'text' },
-                        { key: 'accessLevel', label: 'Access Level', type: 'select', options: enums.ACCESS_LEVEL }
-                    ]
-                },
-                {
-                    title: 'Grant Information',
-                    fields: [
-                        { key: 'grantedDate', label: 'Granted Date', type: 'date' },
-                        { key: 'grantedBy', label: 'Granted By', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'expiryDate', label: 'Expiry Date', type: 'date' }
-                    ]
-                }
-            ]
-        },
+        BiReportAccess: f.form('Report Access', [
+            f.section('Access Details', [
+                ...f.reference('reportId', 'Report', 'BiReport', true),
+                ...f.text('principalId', 'Principal ID', true),
+                ...f.text('principalType', 'Principal Type'),
+                ...f.select('accessLevel', 'Access Level', enums.ACCESS_LEVEL)
+            ]),
+            f.section('Grant Information', [
+                ...f.date('grantedDate', 'Granted Date'),
+                ...f.reference('grantedBy', 'Granted By', 'Employee'),
+                ...f.date('expiryDate', 'Expiry Date')
+            ])
+        ]),
 
-        BiReportSubscription: {
-            title: 'Report Subscription',
-            sections: [
-                {
-                    title: 'Subscription Details',
-                    fields: [
-                        { key: 'reportId', label: 'Report', type: 'reference', lookupModel: 'BiReport', required: true },
-                        { key: 'scheduleId', label: 'Schedule', type: 'reference', lookupModel: 'BiReportSchedule', required: true },
-                        { key: 'subscriberId', label: 'Subscriber', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Delivery Settings',
-                    fields: [
-                        { key: 'format', label: 'Format', type: 'select', options: enums.EXPORT_FORMAT },
-                        { key: 'deliveryEmail', label: 'Delivery Email', type: 'text' },
-                        { key: 'includeEmpty', label: 'Include Empty Reports', type: 'checkbox' }
-                    ]
-                }
-            ]
-        }
+        BiReportSubscription: f.form('Report Subscription', [
+            f.section('Subscription Details', [
+                ...f.reference('reportId', 'Report', 'BiReport', true),
+                ...f.reference('scheduleId', 'Schedule', 'BiReportSchedule', true),
+                ...f.reference('subscriberId', 'Subscriber', 'Employee', true),
+                ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Delivery Settings', [
+                ...f.select('format', 'Format', enums.EXPORT_FORMAT),
+                ...f.text('deliveryEmail', 'Delivery Email'),
+                ...f.checkbox('includeEmpty', 'Include Empty Reports')
+            ])
+        ])
     };
 
 })();

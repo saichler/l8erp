@@ -14,138 +14,54 @@ limitations under the License.
 */
 /**
  * ERP Reference Registry - Financial Models
- * Registers GL, AP, AR, Cash, Fixed Assets, Budgeting, Tax models.
+ * Uses Layer8RefFactory for reduced boilerplate
  */
+const refFin = window.Layer8RefFactory;
+
 window.Layer8DReferenceRegistryFIN = {
     // ========================================
     // Financial Management - General Ledger
     // ========================================
-    Account: {
-        idColumn: 'accountId',
-        displayColumn: 'name',
-        selectColumns: ['accountId', 'accountNumber', 'name'],
-        displayFormat: function(item) {
-            return item.accountNumber + ' - ' + item.name;
-        },
-        displayLabel: 'Account'
-    },
-    JournalEntry: {
-        idColumn: 'journalEntryId',
-        displayColumn: 'entryNumber'
-    },
-    JournalEntryLine: {
-        idColumn: 'lineId',
-        displayColumn: 'lineId'
-    },
-    FiscalYear: {
-        idColumn: 'fiscalYearId',
-        displayColumn: 'yearName',
-        selectColumns: ['fiscalYearId', 'yearName']
-    },
-    FiscalPeriod: {
-        idColumn: 'fiscalPeriodId',
-        displayColumn: 'periodName',
-        selectColumns: ['fiscalPeriodId', 'periodName']
-    },
-    Currency: {
-        idColumn: 'currencyId',
-        displayColumn: 'name',
-        selectColumns: ['currencyId', 'code', 'name'],
-        displayFormat: function(item) {
-            return item.code + ' - ' + item.name;
-        },
-        displayLabel: 'Currency'
-    },
-    ExchangeRate: {
-        idColumn: 'exchangeRateId',
-        displayColumn: 'exchangeRateId'
-    },
-    AccountBalance: {
-        idColumn: 'balanceId',
-        displayColumn: 'balanceId'
-    },
+    ...refFin.coded('Account', 'accountId', 'accountNumber', 'name'),
+    ...refFin.coded('FinAccount', 'accountId', 'accountNumber', 'name'),  // Alias for Account
+    ...refFin.simple('JournalEntry', 'journalEntryId', 'entryNumber'),
+    ...refFin.idOnly('JournalEntryLine', 'lineId'),
+    ...refFin.batch([
+        ['FiscalYear', 'fiscalYearId', 'yearName'],
+        ['FiscalPeriod', 'fiscalPeriodId', 'periodName']
+    ]),
+    ...refFin.coded('Currency', 'currencyId', 'code', 'name'),
+    ...refFin.batchIdOnly([
+        ['ExchangeRate', 'exchangeRateId'],
+        ['AccountBalance', 'balanceId']
+    ]),
 
     // ========================================
     // Financial Management - Accounts Payable
     // ========================================
-    Vendor: {
-        idColumn: 'vendorId',
-        displayColumn: 'name',
-        selectColumns: ['vendorId', 'vendorNumber', 'name'],
-        displayFormat: function(item) {
-            return item.vendorNumber + ' - ' + item.name;
-        },
-        displayLabel: 'Vendor'
-    },
-    VendorContact: {
-        idColumn: 'contactId',
-        displayColumn: 'contactName'
-    },
-    PurchaseInvoice: {
-        idColumn: 'invoiceId',
-        displayColumn: 'invoiceNumber'
-    },
-    PurchaseInvoiceLine: {
-        idColumn: 'lineId',
-        displayColumn: 'lineId'
-    },
-    PaymentSchedule: {
-        idColumn: 'scheduleId',
-        displayColumn: 'scheduleId'
-    },
-    VendorPayment: {
-        idColumn: 'paymentId',
-        displayColumn: 'paymentNumber'
-    },
-    PaymentAllocation: {
-        idColumn: 'allocationId',
-        displayColumn: 'allocationId'
-    },
-    VendorStatement: {
-        idColumn: 'statementId',
-        displayColumn: 'statementId'
-    },
+    ...refFin.coded('Vendor', 'vendorId', 'vendorNumber', 'name'),
+    ...refFin.simple('VendorContact', 'contactId', 'contactName'),
+    ...refFin.simple('PurchaseInvoice', 'invoiceId', 'invoiceNumber'),
+    ...refFin.idOnly('PurchaseInvoiceLine', 'lineId'),
+    ...refFin.idOnly('PaymentSchedule', 'scheduleId'),
+    ...refFin.simple('VendorPayment', 'paymentId', 'paymentNumber'),
+    ...refFin.batchIdOnly([
+        ['PaymentAllocation', 'allocationId'],
+        ['VendorStatement', 'statementId']
+    ]),
 
     // ========================================
     // Financial Management - Accounts Receivable
     // ========================================
-    Customer: {
-        idColumn: 'customerId',
-        displayColumn: 'name',
-        selectColumns: ['customerId', 'customerNumber', 'name'],
-        displayFormat: function(item) {
-            return item.customerNumber + ' - ' + item.name;
-        },
-        displayLabel: 'Customer'
-    },
-    CustomerContact: {
-        idColumn: 'contactId',
-        displayColumn: 'contactName'
-    },
-    SalesInvoice: {
-        idColumn: 'invoiceId',
-        displayColumn: 'invoiceNumber'
-    },
-    SalesInvoiceLine: {
-        idColumn: 'lineId',
-        displayColumn: 'lineId'
-    },
-    CustomerPayment: {
-        idColumn: 'paymentId',
-        displayColumn: 'paymentNumber'
-    },
-    PaymentApplication: {
-        idColumn: 'applicationId',
-        displayColumn: 'applicationId'
-    },
-    CreditMemo: {
-        idColumn: 'creditMemoId',
-        displayColumn: 'memoNumber'
-    },
-    DunningLetter: {
-        idColumn: 'letterId',
-        displayColumn: 'letterId'
-    },
+    ...refFin.coded('Customer', 'customerId', 'customerNumber', 'name'),
+    ...refFin.coded('SalesCustomer', 'customerId', 'customerNumber', 'name'),  // Alias for Customer
+    ...refFin.simple('CustomerContact', 'contactId', 'contactName'),
+    ...refFin.simple('SalesInvoice', 'invoiceId', 'invoiceNumber'),
+    ...refFin.idOnly('SalesInvoiceLine', 'lineId'),
+    ...refFin.simple('CustomerPayment', 'paymentId', 'paymentNumber'),
+    ...refFin.idOnly('PaymentApplication', 'applicationId'),
+    ...refFin.simple('CreditMemo', 'creditMemoId', 'memoNumber'),
+    ...refFin.idOnly('DunningLetter', 'letterId'),
 
     // ========================================
     // Financial Management - Cash Management
@@ -159,124 +75,50 @@ window.Layer8DReferenceRegistryFIN = {
         },
         displayLabel: 'Bank Account'
     },
-    BankTransaction: {
-        idColumn: 'transactionId',
-        displayColumn: 'transactionId'
-    },
-    BankReconciliation: {
-        idColumn: 'reconciliationId',
-        displayColumn: 'reconciliationId'
-    },
-    CashForecast: {
-        idColumn: 'forecastId',
-        displayColumn: 'forecastId'
-    },
-    FundTransfer: {
-        idColumn: 'transferId',
-        displayColumn: 'transferId'
-    },
-    PettyCash: {
-        idColumn: 'pettyCashId',
-        displayColumn: 'pettyCashId'
-    },
+    ...refFin.batchIdOnly([
+        ['BankTransaction', 'transactionId'],
+        ['BankReconciliation', 'reconciliationId'],
+        ['CashForecast', 'forecastId'],
+        ['FundTransfer', 'transferId'],
+        ['PettyCash', 'pettyCashId']
+    ]),
 
     // ========================================
     // Financial Management - Fixed Assets
     // ========================================
-    Asset: {
-        idColumn: 'assetId',
-        displayColumn: 'name',
-        selectColumns: ['assetId', 'assetNumber', 'name'],
-        displayFormat: function(item) {
-            return item.assetNumber + ' - ' + item.name;
-        },
-        displayLabel: 'Asset'
-    },
-    AssetCategory: {
-        idColumn: 'categoryId',
-        displayColumn: 'name',
-        selectColumns: ['categoryId', 'name']
-    },
-    DepreciationSchedule: {
-        idColumn: 'scheduleId',
-        displayColumn: 'scheduleId'
-    },
-    AssetDisposal: {
-        idColumn: 'disposalId',
-        displayColumn: 'disposalId'
-    },
-    AssetTransfer: {
-        idColumn: 'transferId',
-        displayColumn: 'transferId'
-    },
-    AssetMaintenance: {
-        idColumn: 'maintenanceId',
-        displayColumn: 'maintenanceId'
-    },
-    AssetRevaluation: {
-        idColumn: 'revaluationId',
-        displayColumn: 'revaluationId'
-    },
+    ...refFin.coded('Asset', 'assetId', 'assetNumber', 'name'),
+    ...refFin.simple('AssetCategory', 'categoryId', 'name', 'Category'),
+    ...refFin.batchIdOnly([
+        ['DepreciationSchedule', 'scheduleId'],
+        ['AssetDisposal', 'disposalId'],
+        ['AssetTransfer', 'transferId'],
+        ['AssetMaintenance', 'maintenanceId'],
+        ['AssetRevaluation', 'revaluationId']
+    ]),
 
     // ========================================
     // Financial Management - Budgeting
     // ========================================
-    Budget: {
-        idColumn: 'budgetId',
-        displayColumn: 'budgetName',
-        selectColumns: ['budgetId', 'budgetName']
-    },
-    BudgetLine: {
-        idColumn: 'lineId',
-        displayColumn: 'lineId'
-    },
-    BudgetTransfer: {
-        idColumn: 'transferId',
-        displayColumn: 'transferId'
-    },
-    BudgetScenario: {
-        idColumn: 'scenarioId',
-        displayColumn: 'name'
-    },
-    CapitalExpenditure: {
-        idColumn: 'capexId',
-        displayColumn: 'name'
-    },
-    Forecast: {
-        idColumn: 'forecastId',
-        displayColumn: 'forecastId'
-    },
+    ...refFin.simple('Budget', 'budgetId', 'budgetName', 'Budget'),
+    ...refFin.idOnly('BudgetLine', 'lineId'),
+    ...refFin.idOnly('BudgetTransfer', 'transferId'),
+    ...refFin.batch([
+        ['BudgetScenario', 'scenarioId', 'name'],
+        ['CapitalExpenditure', 'capexId', 'name']
+    ]),
+    ...refFin.idOnly('Forecast', 'forecastId'),
 
     // ========================================
     // Financial Management - Tax
     // ========================================
-    TaxCode: {
-        idColumn: 'taxCodeId',
-        displayColumn: 'name',
-        selectColumns: ['taxCodeId', 'code', 'name'],
-        displayFormat: function(item) {
-            return item.code + ' - ' + item.name;
-        },
-        displayLabel: 'Tax Code'
-    },
-    TaxJurisdiction: {
-        idColumn: 'jurisdictionId',
-        displayColumn: 'name'
-    },
-    TaxRule: {
-        idColumn: 'ruleId',
-        displayColumn: 'name'
-    },
-    TaxReturn: {
-        idColumn: 'returnId',
-        displayColumn: 'returnId'
-    },
-    TaxExemption: {
-        idColumn: 'exemptionId',
-        displayColumn: 'exemptionId'
-    },
-    WithholdingTaxConfig: {
-        idColumn: 'configId',
-        displayColumn: 'name'
-    }
+    ...refFin.coded('TaxCode', 'taxCodeId', 'code', 'name'),
+    ...refFin.batch([
+        ['TaxJurisdiction', 'jurisdictionId', 'name'],
+        ['TaxRule', 'ruleId', 'name'],
+        ['WithholdingTaxConfig', 'configId', 'name']
+    ]),
+    ...refFin.batchIdOnly([
+        ['TaxReturn', 'returnId'],
+        ['TaxExemption', 'exemptionId']
+    ])
 };

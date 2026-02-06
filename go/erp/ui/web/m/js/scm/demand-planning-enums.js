@@ -13,40 +13,44 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Demand Planning Module - Enum Definitions
+ * Mobile Demand Planning Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: scm/demand-planning/demand-planning-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileScmDemandPlanning = window.MobileScmDemandPlanning || {};
-    MobileScmDemandPlanning.enums = {};
 
     // ============================================================================
-    // FORECAST METHOD
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileScmDemandPlanning.enums.FORECAST_METHOD = {
-        0: 'Unspecified', 1: 'Moving Average', 2: 'Exponential Smoothing',
-        3: 'Regression', 4: 'Seasonal', 5: 'Causal'
-    };
-    MobileScmDemandPlanning.enums.FORECAST_METHOD_VALUES = {
-        'moving': 1, 'average': 1, 'exponential': 2, 'smoothing': 2,
-        'regression': 3, 'seasonal': 4, 'causal': 5
-    };
+    const FORECAST_METHOD = factory.withValues([
+        ['Unspecified', null], ['Moving Average', 'moving'], ['Exponential Smoothing', 'exponential'],
+        ['Regression', 'regression'], ['Seasonal', 'seasonal'], ['Causal', 'causal']
+    ]);
+
+    const TASK_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'status-pending'],
+        ['In Progress', 'progress', 'status-active'],
+        ['Completed', 'completed', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-terminated']
+    ]);
 
     // ============================================================================
-    // TASK STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileScmDemandPlanning.enums.TASK_STATUS = {
-        0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled'
-    };
-    MobileScmDemandPlanning.enums.TASK_STATUS_VALUES = {
-        'pending': 1, 'progress': 2, 'in': 2, 'completed': 3, 'cancelled': 4
-    };
-    MobileScmDemandPlanning.enums.TASK_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-terminated'
+    MobileScmDemandPlanning.enums = {
+        FORECAST_METHOD: FORECAST_METHOD.enum,
+        FORECAST_METHOD_VALUES: FORECAST_METHOD.values,
+        TASK_STATUS: TASK_STATUS.enum,
+        TASK_STATUS_VALUES: TASK_STATUS.values,
+        TASK_STATUS_CLASSES: TASK_STATUS.classes
     };
 
     // ============================================================================
@@ -54,14 +58,11 @@ limitations under the License.
     // ============================================================================
 
     MobileScmDemandPlanning.render = {
-        forecastMethod: (v) => Layer8MRenderers.renderEnum(v, MobileScmDemandPlanning.enums.FORECAST_METHOD),
-        taskStatus: Layer8MRenderers.createStatusRenderer(
-            MobileScmDemandPlanning.enums.TASK_STATUS,
-            MobileScmDemandPlanning.enums.TASK_STATUS_CLASSES
-        ),
-        boolean: Layer8MRenderers.renderBoolean,
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        forecastMethod: (v) => renderEnum(v, FORECAST_METHOD.enum),
+        taskStatus: createStatusRenderer(TASK_STATUS.enum, TASK_STATUS.classes),
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

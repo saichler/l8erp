@@ -12,135 +12,86 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Sales Orders Module - Enum Definitions
-// All enum constants and value mappings for Sales Orders models
+// Sales Orders Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Create SalesOrders namespace
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8DRenderers;
+
     window.SalesOrders = window.SalesOrders || {};
-    SalesOrders.enums = {};
 
     // ============================================================================
-    // QUOTATION STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    SalesOrders.enums.QUOTATION_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Sent',
-        3: 'Accepted',
-        4: 'Rejected',
-        5: 'Expired',
-        6: 'Cancelled'
-    };
+    const QUOTATION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Sent', 'sent', 'layer8d-status-active'],
+        ['Accepted', 'accepted', 'layer8d-status-active'],
+        ['Rejected', 'rejected', 'layer8d-status-terminated'],
+        ['Expired', 'expired', 'layer8d-status-inactive'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive']
+    ]);
 
-    SalesOrders.enums.QUOTATION_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated',
-        5: 'layer8d-status-inactive',
-        6: 'layer8d-status-inactive'
-    };
+    const ORDER_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Confirmed', 'confirmed', 'layer8d-status-active'],
+        ['In Progress', 'progress', 'layer8d-status-active'],
+        ['Partially Shipped', 'partial', 'layer8d-status-pending'],
+        ['Shipped', 'shipped', 'layer8d-status-active'],
+        ['Delivered', 'delivered', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-terminated']
+    ]);
 
-    // ============================================================================
-    // SALES ORDER STATUS
-    // ============================================================================
+    const RETURN_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Requested', 'requested', 'layer8d-status-pending'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['Received', 'received', 'layer8d-status-active'],
+        ['Inspected', 'inspected', 'layer8d-status-pending'],
+        ['Processed', 'processed', 'layer8d-status-active'],
+        ['Rejected', 'rejected', 'layer8d-status-terminated']
+    ]);
 
-    SalesOrders.enums.ORDER_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Confirmed',
-        3: 'In Progress',
-        4: 'Partially Shipped',
-        5: 'Shipped',
-        6: 'Delivered',
-        7: 'Cancelled'
-    };
-
-    SalesOrders.enums.ORDER_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-pending',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-active',
-        7: 'layer8d-status-terminated'
-    };
+    const ALLOCATION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Allocated', 'allocated', 'layer8d-status-active'],
+        ['Partially Allocated', 'partial', 'layer8d-status-pending'],
+        ['Released', 'released', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive']
+    ]);
 
     // ============================================================================
-    // RETURN STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    SalesOrders.enums.RETURN_STATUS = {
-        0: 'Unspecified',
-        1: 'Requested',
-        2: 'Approved',
-        3: 'Received',
-        4: 'Inspected',
-        5: 'Processed',
-        6: 'Rejected'
-    };
-
-    SalesOrders.enums.RETURN_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-pending',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-terminated'
-    };
-
-    // ============================================================================
-    // ALLOCATION STATUS
-    // ============================================================================
-
-    SalesOrders.enums.ALLOCATION_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'Allocated',
-        3: 'Partially Allocated',
-        4: 'Released',
-        5: 'Cancelled'
-    };
-
-    SalesOrders.enums.ALLOCATION_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-inactive'
+    SalesOrders.enums = {
+        QUOTATION_STATUS: QUOTATION_STATUS.enum,
+        QUOTATION_STATUS_CLASSES: QUOTATION_STATUS.classes,
+        ORDER_STATUS: ORDER_STATUS.enum,
+        ORDER_STATUS_CLASSES: ORDER_STATUS.classes,
+        RETURN_STATUS: RETURN_STATUS.enum,
+        RETURN_STATUS_CLASSES: RETURN_STATUS.classes,
+        ALLOCATION_STATUS: ALLOCATION_STATUS.enum,
+        ALLOCATION_STATUS_CLASSES: ALLOCATION_STATUS.classes
     };
 
     // ============================================================================
     // RENDERERS
     // ============================================================================
 
-    SalesOrders.render = {};
-
-    SalesOrders.render.quotationStatus = Layer8DRenderers.createStatusRenderer(
-        SalesOrders.enums.QUOTATION_STATUS,
-        SalesOrders.enums.QUOTATION_STATUS_CLASSES
-    );
-
-    SalesOrders.render.orderStatus = Layer8DRenderers.createStatusRenderer(
-        SalesOrders.enums.ORDER_STATUS,
-        SalesOrders.enums.ORDER_STATUS_CLASSES
-    );
-
-    SalesOrders.render.returnStatus = Layer8DRenderers.createStatusRenderer(
-        SalesOrders.enums.RETURN_STATUS,
-        SalesOrders.enums.RETURN_STATUS_CLASSES
-    );
-
-    SalesOrders.render.allocationStatus = Layer8DRenderers.createStatusRenderer(
-        SalesOrders.enums.ALLOCATION_STATUS,
-        SalesOrders.enums.ALLOCATION_STATUS_CLASSES
-    );
-
-    SalesOrders.render.date = Layer8DRenderers.renderDate;
-    SalesOrders.render.money = Layer8DRenderers.renderMoney;
+    SalesOrders.render = {
+        quotationStatus: createStatusRenderer(QUOTATION_STATUS.enum, QUOTATION_STATUS.classes),
+        orderStatus: createStatusRenderer(ORDER_STATUS.enum, ORDER_STATUS.classes),
+        returnStatus: createStatusRenderer(RETURN_STATUS.enum, RETURN_STATUS.classes),
+        allocationStatus: createStatusRenderer(ALLOCATION_STATUS.enum, ALLOCATION_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

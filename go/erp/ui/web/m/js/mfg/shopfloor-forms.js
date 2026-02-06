@@ -12,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// Uses Layer8FormFactory for reduced boilerplate
 /**
  * Mobile Manufacturing Shop Floor Module - Form Definitions
  * Desktop Equivalent: mfg/shopfloor/shopfloor-forms.js
@@ -20,82 +21,77 @@ limitations under the License.
     'use strict';
 
     window.MobileMfgShopFloor = window.MobileMfgShopFloor || {};
+    const f = window.Layer8FormFactory;
     const enums = MobileMfgShopFloor.enums;
 
     MobileMfgShopFloor.forms = {
-        MfgWorkCenter: {
-            title: 'Work Center',
-            sections: [{ title: 'Work Center Details', fields: [
-                { key: 'code', label: 'Code', type: 'text', required: true },
-                { key: 'name', label: 'Name', type: 'text', required: true },
-                { key: 'description', label: 'Description', type: 'textarea' },
-                { key: 'workCenterType', label: 'Type', type: 'select', options: enums.WORK_CENTER_TYPE },
-                { key: 'hourlyRate', label: 'Hourly Rate', type: 'number' },
-                { key: 'capacityUnits', label: 'Capacity Units', type: 'number' },
-                { key: 'efficiencyPercent', label: 'Efficiency %', type: 'number' },
-                { key: 'isActive', label: 'Active', type: 'checkbox' },
-                { key: 'notes', label: 'Notes', type: 'textarea' }
-            ]}]
-        },
-        MfgWorkCenterCap: {
-            title: 'Work Center Capacity',
-            sections: [{ title: 'Capacity Details', fields: [
-                { key: 'workCenterId', label: 'Work Center', type: 'reference', lookupModel: 'MfgWorkCenter', required: true },
-                { key: 'effectiveDate', label: 'Effective Date', type: 'date', required: true },
-                { key: 'expiryDate', label: 'Expiry Date', type: 'date' },
-                { key: 'availableHours', label: 'Available Hours', type: 'number' },
-                { key: 'maxCapacity', label: 'Max Capacity', type: 'number' }
-            ]}]
-        },
-        MfgLaborEntry: {
-            title: 'Labor Entry',
-            sections: [{ title: 'Entry Details', fields: [
-                { key: 'workOrderId', label: 'Work Order', type: 'reference', lookupModel: 'MfgWorkOrder', required: true },
-                { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
-                { key: 'workCenterId', label: 'Work Center', type: 'reference', lookupModel: 'MfgWorkCenter' },
-                { key: 'startTime', label: 'Start Time', type: 'datetime' },
-                { key: 'endTime', label: 'End Time', type: 'datetime' },
-                { key: 'hoursWorked', label: 'Hours Worked', type: 'number' },
-                { key: 'quantityProduced', label: 'Qty Produced', type: 'number' },
-                { key: 'notes', label: 'Notes', type: 'textarea' }
-            ]}]
-        },
-        MfgMachineEntry: {
-            title: 'Machine Entry',
-            sections: [{ title: 'Entry Details', fields: [
-                { key: 'workOrderId', label: 'Work Order', type: 'reference', lookupModel: 'MfgWorkOrder', required: true },
-                { key: 'workCenterId', label: 'Work Center', type: 'reference', lookupModel: 'MfgWorkCenter', required: true },
-                { key: 'startTime', label: 'Start Time', type: 'datetime' },
-                { key: 'endTime', label: 'End Time', type: 'datetime' },
-                { key: 'machineHours', label: 'Machine Hours', type: 'number' },
-                { key: 'quantityProduced', label: 'Qty Produced', type: 'number' },
-                { key: 'notes', label: 'Notes', type: 'textarea' }
-            ]}]
-        },
-        MfgShiftSchedule: {
-            title: 'Shift Schedule',
-            sections: [{ title: 'Schedule Details', fields: [
-                { key: 'name', label: 'Name', type: 'text', required: true },
-                { key: 'description', label: 'Description', type: 'textarea' },
-                { key: 'shiftType', label: 'Shift Type', type: 'select', options: enums.SHIFT_TYPE },
-                { key: 'startTime', label: 'Start Time', type: 'text', required: true },
-                { key: 'endTime', label: 'End Time', type: 'text', required: true },
-                { key: 'breakDurationMinutes', label: 'Break Duration (min)', type: 'number' },
-                { key: 'isActive', label: 'Active', type: 'checkbox' }
-            ]}]
-        },
-        MfgDowntimeEvent: {
-            title: 'Downtime Event',
-            sections: [{ title: 'Event Details', fields: [
-                { key: 'workCenterId', label: 'Work Center', type: 'reference', lookupModel: 'MfgWorkCenter', required: true },
-                { key: 'workOrderId', label: 'Work Order', type: 'reference', lookupModel: 'MfgWorkOrder' },
-                { key: 'startTime', label: 'Start Time', type: 'datetime', required: true },
-                { key: 'endTime', label: 'End Time', type: 'datetime' },
-                { key: 'durationMinutes', label: 'Duration (minutes)', type: 'number' },
-                { key: 'reason', label: 'Reason', type: 'select', options: enums.DOWNTIME_REASON },
-                { key: 'description', label: 'Description', type: 'textarea' }
-            ]}]
-        }
+        MfgWorkCenter: f.form('Work Center', [
+            f.section('Work Center Details', [
+                ...f.text('code', 'Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('workCenterType', 'Type', enums.WORK_CENTER_TYPE),
+                ...f.number('hourlyRate', 'Hourly Rate'),
+                ...f.number('capacityUnits', 'Capacity Units'),
+                ...f.number('efficiencyPercent', 'Efficiency %'),
+                ...f.checkbox('isActive', 'Active'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
+        MfgWorkCenterCap: f.form('Work Center Capacity', [
+            f.section('Capacity Details', [
+                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
+                ...f.date('effectiveDate', 'Effective Date', true),
+                ...f.date('expiryDate', 'Expiry Date'),
+                ...f.number('availableHours', 'Available Hours'),
+                ...f.number('maxCapacity', 'Max Capacity')
+            ])
+        ]),
+        MfgLaborEntry: f.form('Labor Entry', [
+            f.section('Entry Details', [
+                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
+                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter'),
+                ...f.datetime('startTime', 'Start Time'),
+                ...f.datetime('endTime', 'End Time'),
+                ...f.number('hoursWorked', 'Hours Worked'),
+                ...f.number('quantityProduced', 'Qty Produced'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
+        MfgMachineEntry: f.form('Machine Entry', [
+            f.section('Entry Details', [
+                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
+                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
+                ...f.datetime('startTime', 'Start Time'),
+                ...f.datetime('endTime', 'End Time'),
+                ...f.number('machineHours', 'Machine Hours'),
+                ...f.number('quantityProduced', 'Qty Produced'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
+        MfgShiftSchedule: f.form('Shift Schedule', [
+            f.section('Schedule Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('shiftType', 'Shift Type', enums.SHIFT_TYPE),
+                ...f.text('startTime', 'Start Time', true),
+                ...f.text('endTime', 'End Time', true),
+                ...f.number('breakDurationMinutes', 'Break Duration (min)'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
+        MfgDowntimeEvent: f.form('Downtime Event', [
+            f.section('Event Details', [
+                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
+                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder'),
+                ...f.datetime('startTime', 'Start Time', true),
+                ...f.datetime('endTime', 'End Time'),
+                ...f.number('durationMinutes', 'Duration (minutes)'),
+                ...f.select('reason', 'Reason', enums.DOWNTIME_REASON),
+                ...f.textarea('description', 'Description')
+            ])
+        ])
     };
 
     MobileMfgShopFloor.primaryKeys = {

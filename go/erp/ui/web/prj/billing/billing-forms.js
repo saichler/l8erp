@@ -100,7 +100,7 @@ limitations under the License.
                     title: 'Invoice Details',
                     fields: [
                         { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject', required: true },
-                        { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'FinCustomer' },
+                        { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'Customer' },
                         { key: 'invoiceNumber', label: 'Invoice Number', type: 'text', required: true },
                         { key: 'poNumber', label: 'PO Number', type: 'text' },
                         { key: 'invoiceDate', label: 'Invoice Date', type: 'date', required: true },

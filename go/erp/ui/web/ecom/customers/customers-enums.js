@@ -12,60 +12,56 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// E-Commerce Customers Module - Enum Definitions
+// E-Commerce Customers Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8DRenderers;
+
     window.EcomCustomers = window.EcomCustomers || {};
-    EcomCustomers.enums = {};
 
-    // CUSTOMER TYPE
-    EcomCustomers.enums.CUSTOMER_TYPE = {
-        0: 'Unspecified',
-        1: 'Guest',
-        2: 'Registered',
-        3: 'VIP',
-        4: 'Wholesale'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const CUSTOMER_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Guest', 'guest', 'layer8d-status-pending'],
+        ['Registered', 'registered', 'layer8d-status-active'],
+        ['VIP', 'vip', 'layer8d-status-active'],
+        ['Wholesale', 'wholesale', 'layer8d-status-active']
+    ]);
+
+    const CART_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Active', 'active', 'layer8d-status-active'],
+        ['Abandoned', 'abandoned', 'layer8d-status-pending'],
+        ['Converted', 'converted', 'layer8d-status-active'],
+        ['Expired', 'expired', 'layer8d-status-terminated']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    EcomCustomers.enums = {
+        CUSTOMER_TYPE: CUSTOMER_TYPE.enum,
+        CUSTOMER_TYPE_CLASSES: CUSTOMER_TYPE.classes,
+        CART_STATUS: CART_STATUS.enum,
+        CART_STATUS_CLASSES: CART_STATUS.classes
     };
 
-    EcomCustomers.enums.CUSTOMER_TYPE_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active'
-    };
-
-    // CART STATUS
-    EcomCustomers.enums.CART_STATUS = {
-        0: 'Unspecified',
-        1: 'Active',
-        2: 'Abandoned',
-        3: 'Converted',
-        4: 'Expired'
-    };
-
-    EcomCustomers.enums.CART_STATUS_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated'
-    };
-
+    // ============================================================================
     // RENDERERS
-    EcomCustomers.render = {};
+    // ============================================================================
 
-    EcomCustomers.render.customerType = Layer8DRenderers.createStatusRenderer(
-        EcomCustomers.enums.CUSTOMER_TYPE,
-        EcomCustomers.enums.CUSTOMER_TYPE_CLASSES
-    );
-
-    EcomCustomers.render.cartStatus = Layer8DRenderers.createStatusRenderer(
-        EcomCustomers.enums.CART_STATUS,
-        EcomCustomers.enums.CART_STATUS_CLASSES
-    );
-
-    EcomCustomers.render.date = Layer8DRenderers.renderDate;
-    EcomCustomers.render.money = Layer8DRenderers.renderMoney;
+    EcomCustomers.render = {
+        customerType: createStatusRenderer(CUSTOMER_TYPE.enum, CUSTOMER_TYPE.classes),
+        cartStatus: createStatusRenderer(CART_STATUS.enum, CART_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

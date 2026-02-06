@@ -2,128 +2,95 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Layer 8 Ecosystem - Apache 2.0
 */
+// Uses Layer8FormFactory for reduced boilerplate
 (function() {
     'use strict';
 
+    window.MobileCrmService = window.MobileCrmService || {};
+    const f = window.Layer8FormFactory;
     const enums = MobileCrmService.enums;
 
     MobileCrmService.forms = {
-        CrmCase: {
-            title: 'Case',
-            sections: [
-                {
-                    title: 'Case Details',
-                    fields: [
-                        { key: 'caseNumber', label: 'Case Number', type: 'text' },
-                        { key: 'subject', label: 'Subject', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'CrmAccount', required: true },
-                        { key: 'contactId', label: 'Contact', type: 'reference', lookupModel: 'CrmContact' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.CASE_STATUS },
-                        { key: 'priority', label: 'Priority', type: 'select', options: enums.CASE_PRIORITY },
-                        { key: 'caseType', label: 'Type', type: 'select', options: enums.CASE_TYPE },
-                        { key: 'slaId', label: 'SLA', type: 'reference', lookupModel: 'CrmSLA' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'resolution', label: 'Resolution', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        CrmCase: f.form('Case', [
+            f.section('Case Details', [
+                ...f.text('caseNumber', 'Case Number'),
+                ...f.text('subject', 'Subject', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('accountId', 'Account', 'CrmAccount', true),
+                ...f.reference('contactId', 'Contact', 'CrmContact'),
+                ...f.select('status', 'Status', enums.CASE_STATUS),
+                ...f.select('priority', 'Priority', enums.CASE_PRIORITY),
+                ...f.select('caseType', 'Type', enums.CASE_TYPE),
+                ...f.reference('slaId', 'SLA', 'CrmSLA'),
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.textarea('resolution', 'Resolution')
+            ])
+        ]),
 
-        CrmCaseComment: {
-            title: 'Case Comment',
-            sections: [
-                {
-                    title: 'Comment Details',
-                    fields: [
-                        { key: 'caseId', label: 'Case', type: 'reference', lookupModel: 'CrmCase', required: true },
-                        { key: 'body', label: 'Comment', type: 'textarea', required: true },
-                        { key: 'isPublic', label: 'Public', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CrmCaseComment: f.form('Case Comment', [
+            f.section('Comment Details', [
+                ...f.reference('caseId', 'Case', 'CrmCase', true),
+                ...f.textarea('body', 'Comment', true),
+                ...f.checkbox('isPublic', 'Public')
+            ])
+        ]),
 
-        CrmKBArticle: {
-            title: 'Knowledge Base Article',
-            sections: [
-                {
-                    title: 'Article Details',
-                    fields: [
-                        { key: 'articleNumber', label: 'Article Number', type: 'text' },
-                        { key: 'title', label: 'Title', type: 'text', required: true },
-                        { key: 'summary', label: 'Summary', type: 'textarea' },
-                        { key: 'body', label: 'Body', type: 'textarea', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.ARTICLE_STATUS },
-                        { key: 'category', label: 'Category', type: 'text' },
-                        { key: 'subcategory', label: 'Subcategory', type: 'text' },
-                        { key: 'authorId', label: 'Author', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'publishDate', label: 'Publish Date', type: 'date' },
-                        { key: 'isFeatured', label: 'Featured', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CrmKBArticle: f.form('Knowledge Base Article', [
+            f.section('Article Details', [
+                ...f.text('articleNumber', 'Article Number'),
+                ...f.text('title', 'Title', true),
+                ...f.textarea('summary', 'Summary'),
+                ...f.textarea('body', 'Body', true),
+                ...f.select('status', 'Status', enums.ARTICLE_STATUS),
+                ...f.text('category', 'Category'),
+                ...f.text('subcategory', 'Subcategory'),
+                ...f.reference('authorId', 'Author', 'Employee'),
+                ...f.date('publishDate', 'Publish Date'),
+                ...f.checkbox('isFeatured', 'Featured')
+            ])
+        ]),
 
-        CrmSLA: {
-            title: 'SLA',
-            sections: [
-                {
-                    title: 'SLA Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'firstResponseMinutes', label: 'First Response (min)', type: 'number', required: true },
-                        { key: 'resolutionMinutes', label: 'Resolution (min)', type: 'number', required: true },
-                        { key: 'businessHours', label: 'Business Hours', type: 'text' },
-                        { key: 'includeWeekends', label: 'Include Weekends', type: 'checkbox' },
-                        { key: 'appliesToPriority', label: 'Applies To Priority', type: 'select', options: enums.CASE_PRIORITY },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CrmSLA: f.form('SLA', [
+            f.section('SLA Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.number('firstResponseMinutes', 'First Response (min)', true),
+                ...f.number('resolutionMinutes', 'Resolution (min)', true),
+                ...f.text('businessHours', 'Business Hours'),
+                ...f.checkbox('includeWeekends', 'Include Weekends'),
+                ...f.select('appliesToPriority', 'Applies To Priority', enums.CASE_PRIORITY),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        CrmEscalation: {
-            title: 'Escalation',
-            sections: [
-                {
-                    title: 'Escalation Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'level', label: 'Level', type: 'select', options: enums.ESCALATION_LEVEL, required: true },
-                        { key: 'triggerMinutes', label: 'Trigger After (min)', type: 'number', required: true },
-                        { key: 'escalateToUserId', label: 'Escalate To', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'escalateToQueue', label: 'Escalate To Queue', type: 'text' },
-                        { key: 'notifyOwner', label: 'Notify Owner', type: 'checkbox' },
-                        { key: 'notifyManager', label: 'Notify Manager', type: 'checkbox' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CrmEscalation: f.form('Escalation', [
+            f.section('Escalation Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('level', 'Level', enums.ESCALATION_LEVEL, true),
+                ...f.number('triggerMinutes', 'Trigger After (min)', true),
+                ...f.reference('escalateToUserId', 'Escalate To', 'Employee'),
+                ...f.text('escalateToQueue', 'Escalate To Queue'),
+                ...f.checkbox('notifyOwner', 'Notify Owner'),
+                ...f.checkbox('notifyManager', 'Notify Manager'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        CrmSurvey: {
-            title: 'Survey',
-            sections: [
-                {
-                    title: 'Survey Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'CrmAccount', required: true },
-                        { key: 'contactId', label: 'Contact', type: 'reference', lookupModel: 'CrmContact' },
-                        { key: 'caseId', label: 'Case', type: 'reference', lookupModel: 'CrmCase' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.SURVEY_STATUS },
-                        { key: 'overallRating', label: 'Overall Rating', type: 'number' },
-                        { key: 'feedback', label: 'Feedback', type: 'textarea' },
-                        { key: 'wouldRecommend', label: 'Would Recommend', type: 'checkbox' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                }
-            ]
-        }
+        CrmSurvey: f.form('Survey', [
+            f.section('Survey Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('accountId', 'Account', 'CrmAccount', true),
+                ...f.reference('contactId', 'Contact', 'CrmContact'),
+                ...f.reference('caseId', 'Case', 'CrmCase'),
+                ...f.select('status', 'Status', enums.SURVEY_STATUS),
+                ...f.number('overallRating', 'Overall Rating'),
+                ...f.textarea('feedback', 'Feedback'),
+                ...f.checkbox('wouldRecommend', 'Would Recommend'),
+                ...f.reference('ownerId', 'Owner', 'Employee')
+            ])
+        ])
     };
 
 })();

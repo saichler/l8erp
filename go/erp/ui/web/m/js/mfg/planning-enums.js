@@ -13,49 +13,66 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Manufacturing Planning Module - Enum Definitions
+ * Mobile Manufacturing Planning Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: mfg/planning/planning-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate } = Layer8MRenderers;
+
     window.MobileMfgPlanning = window.MobileMfgPlanning || {};
-    MobileMfgPlanning.enums = {};
 
-    // MRP RUN STATUS
-    MobileMfgPlanning.enums.MRP_STATUS = {
-        0: 'Unspecified', 1: 'Pending', 2: 'Running', 3: 'Completed', 4: 'Failed', 5: 'Cancelled'
-    };
-    MobileMfgPlanning.enums.MRP_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-terminated', 5: 'status-inactive'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const MRP_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'status-pending'],
+        ['Running', 'running', 'status-active'],
+        ['Completed', 'completed', 'status-active'],
+        ['Failed', 'failed', 'status-terminated'],
+        ['Cancelled', 'cancelled', 'status-inactive']
+    ]);
+
+    const REQUIREMENT_TYPE = factory.simple([
+        'Unspecified', 'Planned Order', 'Purchase Requisition', 'Transfer Order',
+        'Reschedule In', 'Reschedule Out', 'Cancel'
+    ]);
+
+    const SCHEDULE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Published', 'published', 'status-active'],
+        ['Locked', 'locked', 'status-inactive'],
+        ['Archived', 'archived', 'status-inactive']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    MobileMfgPlanning.enums = {
+        MRP_STATUS: MRP_STATUS.enum,
+        MRP_STATUS_VALUES: MRP_STATUS.values,
+        MRP_STATUS_CLASSES: MRP_STATUS.classes,
+        REQUIREMENT_TYPE: REQUIREMENT_TYPE.enum,
+        SCHEDULE_STATUS: SCHEDULE_STATUS.enum,
+        SCHEDULE_STATUS_VALUES: SCHEDULE_STATUS.values,
+        SCHEDULE_STATUS_CLASSES: SCHEDULE_STATUS.classes
     };
 
-    // REQUIREMENT TYPE
-    MobileMfgPlanning.enums.REQUIREMENT_TYPE = {
-        0: 'Unspecified', 1: 'Planned Order', 2: 'Purchase Requisition', 3: 'Transfer Order',
-        4: 'Reschedule In', 5: 'Reschedule Out', 6: 'Cancel'
-    };
-
-    // SCHEDULE STATUS
-    MobileMfgPlanning.enums.SCHEDULE_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Published', 3: 'Locked', 4: 'Archived'
-    };
-    MobileMfgPlanning.enums.SCHEDULE_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-inactive', 4: 'status-inactive'
-    };
-
+    // ============================================================================
     // RENDER FUNCTIONS
+    // ============================================================================
+
     MobileMfgPlanning.render = {
-        mrpStatus: Layer8MRenderers.createStatusRenderer(
-            MobileMfgPlanning.enums.MRP_STATUS,
-            MobileMfgPlanning.enums.MRP_STATUS_CLASSES
-        ),
-        requirementType: function(type) { return MobileMfgPlanning.enums.REQUIREMENT_TYPE[type] || 'Unknown'; },
-        scheduleStatus: Layer8MRenderers.createStatusRenderer(
-            MobileMfgPlanning.enums.SCHEDULE_STATUS,
-            MobileMfgPlanning.enums.SCHEDULE_STATUS_CLASSES
-        ),
-        date: Layer8MRenderers.renderDate
+        mrpStatus: createStatusRenderer(MRP_STATUS.enum, MRP_STATUS.classes),
+        requirementType: (type) => renderEnum(type, REQUIREMENT_TYPE.enum),
+        scheduleStatus: createStatusRenderer(SCHEDULE_STATUS.enum, SCHEDULE_STATUS.classes),
+        date: renderDate
     };
 
 })();

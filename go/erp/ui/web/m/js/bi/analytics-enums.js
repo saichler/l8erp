@@ -13,69 +13,71 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile BI Analytics Module - Enum Definitions
+ * Mobile BI Analytics Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: bi/analytics/analytics-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate, renderPercent } = Layer8MRenderers;
+
     window.MobileBiAnalytics = window.MobileBiAnalytics || {};
-    MobileBiAnalytics.enums = {};
 
     // ============================================================================
-    // MODEL TYPE
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileBiAnalytics.enums.MODEL_TYPE = {
-        0: 'Unspecified', 1: 'Regression', 2: 'Classification', 3: 'Clustering', 4: 'Time Series', 5: 'Anomaly Detection'
-    };
-    MobileBiAnalytics.enums.MODEL_TYPE_VALUES = {
-        'regression': 1, 'classification': 2, 'clustering': 3, 'time series': 4, 'anomaly detection': 5
-    };
-    MobileBiAnalytics.enums.MODEL_TYPE_CLASSES = {
-        1: 'status-active', 2: 'status-active', 3: 'status-pending', 4: 'status-active', 5: 'status-inactive'
-    };
+    const MODEL_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Regression', 'regression', 'status-active'],
+        ['Classification', 'classification', 'status-active'],
+        ['Clustering', 'clustering', 'status-pending'],
+        ['Time Series', 'timeseries', 'status-active'],
+        ['Anomaly Detection', 'anomalydetection', 'status-inactive']
+    ]);
+
+    const MODEL_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Training', 'training', 'status-pending'],
+        ['Validated', 'validated', 'status-active'],
+        ['Deployed', 'deployed', 'status-active'],
+        ['Retired', 'retired', 'status-terminated']
+    ]);
+
+    const SCENARIO_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Baseline', 'baseline', 'status-active'],
+        ['Optimistic', 'optimistic', 'status-active'],
+        ['Pessimistic', 'pessimistic', 'status-inactive'],
+        ['Custom', 'custom', 'status-pending']
+    ]);
+
+    const TREND_DIRECTION = factory.create([
+        ['Unspecified', null, ''],
+        ['Up', 'up', 'status-active'],
+        ['Down', 'down', 'status-terminated'],
+        ['Flat', 'flat', 'status-pending']
+    ]);
 
     // ============================================================================
-    // MODEL STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileBiAnalytics.enums.MODEL_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Training', 3: 'Validated', 4: 'Deployed', 5: 'Retired'
-    };
-    MobileBiAnalytics.enums.MODEL_STATUS_VALUES = {
-        'draft': 1, 'training': 2, 'validated': 3, 'deployed': 4, 'retired': 5
-    };
-    MobileBiAnalytics.enums.MODEL_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-active', 4: 'status-active', 5: 'status-terminated'
-    };
-
-    // ============================================================================
-    // SCENARIO TYPE
-    // ============================================================================
-
-    MobileBiAnalytics.enums.SCENARIO_TYPE = {
-        0: 'Unspecified', 1: 'Baseline', 2: 'Optimistic', 3: 'Pessimistic', 4: 'Custom'
-    };
-    MobileBiAnalytics.enums.SCENARIO_TYPE_VALUES = {
-        'baseline': 1, 'optimistic': 2, 'pessimistic': 3, 'custom': 4
-    };
-    MobileBiAnalytics.enums.SCENARIO_TYPE_CLASSES = {
-        1: 'status-active', 2: 'status-active', 3: 'status-inactive', 4: 'status-pending'
-    };
-
-    // ============================================================================
-    // TREND DIRECTION
-    // ============================================================================
-
-    MobileBiAnalytics.enums.TREND_DIRECTION = {
-        0: 'Unspecified', 1: 'Up', 2: 'Down', 3: 'Flat'
-    };
-    MobileBiAnalytics.enums.TREND_DIRECTION_VALUES = {
-        'up': 1, 'down': 2, 'flat': 3
-    };
-    MobileBiAnalytics.enums.TREND_DIRECTION_CLASSES = {
-        1: 'status-active', 2: 'status-terminated', 3: 'status-pending'
+    MobileBiAnalytics.enums = {
+        MODEL_TYPE: MODEL_TYPE.enum,
+        MODEL_TYPE_VALUES: MODEL_TYPE.values,
+        MODEL_TYPE_CLASSES: MODEL_TYPE.classes,
+        MODEL_STATUS: MODEL_STATUS.enum,
+        MODEL_STATUS_VALUES: MODEL_STATUS.values,
+        MODEL_STATUS_CLASSES: MODEL_STATUS.classes,
+        SCENARIO_TYPE: SCENARIO_TYPE.enum,
+        SCENARIO_TYPE_VALUES: SCENARIO_TYPE.values,
+        SCENARIO_TYPE_CLASSES: SCENARIO_TYPE.classes,
+        TREND_DIRECTION: TREND_DIRECTION.enum,
+        TREND_DIRECTION_VALUES: TREND_DIRECTION.values,
+        TREND_DIRECTION_CLASSES: TREND_DIRECTION.classes
     };
 
     // ============================================================================
@@ -83,24 +85,12 @@ limitations under the License.
     // ============================================================================
 
     MobileBiAnalytics.render = {
-        modelType: Layer8MRenderers.createStatusRenderer(
-            MobileBiAnalytics.enums.MODEL_TYPE,
-            MobileBiAnalytics.enums.MODEL_TYPE_CLASSES
-        ),
-        modelStatus: Layer8MRenderers.createStatusRenderer(
-            MobileBiAnalytics.enums.MODEL_STATUS,
-            MobileBiAnalytics.enums.MODEL_STATUS_CLASSES
-        ),
-        scenarioType: Layer8MRenderers.createStatusRenderer(
-            MobileBiAnalytics.enums.SCENARIO_TYPE,
-            MobileBiAnalytics.enums.SCENARIO_TYPE_CLASSES
-        ),
-        trendDirection: Layer8MRenderers.createStatusRenderer(
-            MobileBiAnalytics.enums.TREND_DIRECTION,
-            MobileBiAnalytics.enums.TREND_DIRECTION_CLASSES
-        ),
-        date: Layer8MRenderers.renderDate,
-        percent: Layer8MRenderers.renderPercent
+        modelType: createStatusRenderer(MODEL_TYPE.enum, MODEL_TYPE.classes),
+        modelStatus: createStatusRenderer(MODEL_STATUS.enum, MODEL_STATUS.classes),
+        scenarioType: createStatusRenderer(SCENARIO_TYPE.enum, SCENARIO_TYPE.classes),
+        trendDirection: createStatusRenderer(TREND_DIRECTION.enum, TREND_DIRECTION.classes),
+        date: renderDate,
+        percent: renderPercent
     };
 
 })();

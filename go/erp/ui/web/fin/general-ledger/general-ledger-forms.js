@@ -2,168 +2,103 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // General Ledger Module - Form Definitions
-// Form field configurations for all General Ledger models
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
-    // Ensure GeneralLedger namespace exists
     window.GeneralLedger = window.GeneralLedger || {};
 
+    const f = window.Layer8FormFactory;
     const enums = GeneralLedger.enums;
 
-    // ============================================================================
-    // FORM FIELD DEFINITIONS
-    // ============================================================================
-
     GeneralLedger.forms = {
-        Account: {
-            title: 'Account',
-            sections: [
-                {
-                    title: 'Account Information',
-                    fields: [
-                        { key: 'accountNumber', label: 'Account Number', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'accountType', label: 'Account Type', type: 'select', options: enums.ACCOUNT_TYPE, required: true },
-                        { key: 'normalBalance', label: 'Normal Balance', type: 'select', options: enums.BALANCE_TYPE },
-                        { key: 'parentAccountId', label: 'Parent Account', type: 'reference', lookupModel: 'Account' },
-                        { key: 'currencyId', label: 'Currency', type: 'reference', lookupModel: 'Currency' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        Account: f.form('Account', [
+            f.section('Account Information', [
+                ...f.text('accountNumber', 'Account Number', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('accountType', 'Account Type', enums.ACCOUNT_TYPE, true),
+                ...f.select('normalBalance', 'Normal Balance', enums.BALANCE_TYPE),
+                ...f.reference('parentAccountId', 'Parent Account', 'Account'),
+                ...f.reference('currencyId', 'Currency', 'Currency'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        JournalEntry: {
-            title: 'Journal Entry',
-            sections: [
-                {
-                    title: 'Entry Details',
-                    fields: [
-                        { key: 'entryNumber', label: 'Entry Number', type: 'text', required: true },
-                        { key: 'entryDate', label: 'Entry Date', type: 'date', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.JOURNAL_ENTRY_STATUS },
-                        { key: 'fiscalPeriodId', label: 'Fiscal Period', type: 'reference', lookupModel: 'FiscalPeriod' },
-                        { key: 'reference', label: 'Reference', type: 'text' }
-                    ]
-                }
-            ]
-        },
+        JournalEntry: f.form('Journal Entry', [
+            f.section('Entry Details', [
+                ...f.text('entryNumber', 'Entry Number', true),
+                ...f.date('entryDate', 'Entry Date', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('status', 'Status', enums.JOURNAL_ENTRY_STATUS),
+                ...f.reference('fiscalPeriodId', 'Fiscal Period', 'FiscalPeriod'),
+                ...f.text('reference', 'Reference')
+            ])
+        ]),
 
-        JournalEntryLine: {
-            title: 'Journal Entry Line',
-            sections: [
-                {
-                    title: 'Line Details',
-                    fields: [
-                        { key: 'journalEntryId', label: 'Journal Entry', type: 'reference', lookupModel: 'JournalEntry', required: true },
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'Account', required: true },
-                        { key: 'debitAmount', label: 'Debit Amount', type: 'currency' },
-                        { key: 'creditAmount', label: 'Credit Amount', type: 'currency' },
-                        { key: 'description', label: 'Description', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        JournalEntryLine: f.form('Journal Entry Line', [
+            f.section('Line Details', [
+                ...f.reference('journalEntryId', 'Journal Entry', 'JournalEntry', true),
+                ...f.reference('accountId', 'Account', 'Account', true),
+                ...f.money('debitAmount', 'Debit Amount'),
+                ...f.money('creditAmount', 'Credit Amount'),
+                ...f.textarea('description', 'Description')
+            ])
+        ]),
 
-        FiscalYear: {
-            title: 'Fiscal Year',
-            sections: [
-                {
-                    title: 'Year Details',
-                    fields: [
-                        { key: 'yearName', label: 'Year Name', type: 'text', required: true },
-                        { key: 'startDate', label: 'Start Date', type: 'date', required: true },
-                        { key: 'endDate', label: 'End Date', type: 'date', required: true },
-                        { key: 'isClosed', label: 'Closed', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        FiscalYear: f.form('Fiscal Year', [
+            f.section('Year Details', [
+                ...f.text('yearName', 'Year Name', true),
+                ...f.date('startDate', 'Start Date', true),
+                ...f.date('endDate', 'End Date', true),
+                ...f.checkbox('isClosed', 'Closed')
+            ])
+        ]),
 
-        FiscalPeriod: {
-            title: 'Fiscal Period',
-            sections: [
-                {
-                    title: 'Period Details',
-                    fields: [
-                        { key: 'periodName', label: 'Period Name', type: 'text', required: true },
-                        { key: 'fiscalYearId', label: 'Fiscal Year', type: 'reference', lookupModel: 'FiscalYear', required: true },
-                        { key: 'periodNumber', label: 'Period Number', type: 'number', required: true },
-                        { key: 'startDate', label: 'Start Date', type: 'date', required: true },
-                        { key: 'endDate', label: 'End Date', type: 'date', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.FISCAL_PERIOD_STATUS }
-                    ]
-                }
-            ]
-        },
+        FiscalPeriod: f.form('Fiscal Period', [
+            f.section('Period Details', [
+                ...f.text('periodName', 'Period Name', true),
+                ...f.reference('fiscalYearId', 'Fiscal Year', 'FiscalYear', true),
+                ...f.number('periodNumber', 'Period Number', true),
+                ...f.date('startDate', 'Start Date', true),
+                ...f.date('endDate', 'End Date', true),
+                ...f.select('status', 'Status', enums.FISCAL_PERIOD_STATUS)
+            ])
+        ]),
 
-        Currency: {
-            title: 'Currency',
-            sections: [
-                {
-                    title: 'Currency Details',
-                    fields: [
-                        { key: 'code', label: 'Currency Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'symbol', label: 'Symbol', type: 'text' },
-                        { key: 'decimalPlaces', label: 'Decimal Places', type: 'number' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        Currency: f.form('Currency', [
+            f.section('Currency Details', [
+                ...f.text('code', 'Currency Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.text('symbol', 'Symbol'),
+                ...f.number('decimalPlaces', 'Decimal Places'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        ExchangeRate: {
-            title: 'Exchange Rate',
-            sections: [
-                {
-                    title: 'Rate Details',
-                    fields: [
-                        { key: 'sourceCurrencyId', label: 'Source Currency', type: 'reference', lookupModel: 'Currency', required: true },
-                        { key: 'targetCurrencyId', label: 'Target Currency', type: 'reference', lookupModel: 'Currency', required: true },
-                        { key: 'rate', label: 'Rate', type: 'number', required: true },
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date', required: true },
-                        { key: 'expirationDate', label: 'Expiration Date', type: 'date' }
-                    ]
-                }
-            ]
-        },
+        ExchangeRate: f.form('Exchange Rate', [
+            f.section('Rate Details', [
+                ...f.reference('sourceCurrencyId', 'Source Currency', 'Currency', true),
+                ...f.reference('targetCurrencyId', 'Target Currency', 'Currency', true),
+                ...f.number('rate', 'Rate', true),
+                ...f.date('effectiveDate', 'Effective Date', true),
+                ...f.date('expirationDate', 'Expiration Date')
+            ])
+        ]),
 
-        AccountBalance: {
-            title: 'Account Balance',
-            sections: [
-                {
-                    title: 'Balance Details',
-                    fields: [
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'Account', required: true },
-                        { key: 'fiscalPeriodId', label: 'Fiscal Period', type: 'reference', lookupModel: 'FiscalPeriod', required: true },
-                        { key: 'debitBalance', label: 'Debit Balance', type: 'currency' },
-                        { key: 'creditBalance', label: 'Credit Balance', type: 'currency' },
-                        { key: 'netBalance', label: 'Net Balance', type: 'currency' }
-                    ]
-                }
-            ]
-        }
+        AccountBalance: f.form('Account Balance', [
+            f.section('Balance Details', [
+                ...f.reference('accountId', 'Account', 'Account', true),
+                ...f.reference('fiscalPeriodId', 'Fiscal Period', 'FiscalPeriod', true),
+                ...f.money('debitBalance', 'Debit Balance'),
+                ...f.money('creditBalance', 'Credit Balance'),
+                ...f.money('netBalance', 'Net Balance')
+            ])
+        ])
     };
-
-    // ============================================================================
-    // PRIMARY KEY MAPPING
-    // ============================================================================
 
     GeneralLedger.primaryKeys = {
         Account: 'accountId',

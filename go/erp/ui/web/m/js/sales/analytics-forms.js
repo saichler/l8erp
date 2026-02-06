@@ -12,132 +12,100 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// Uses Layer8FormFactory for reduced boilerplate
 /**
  * Mobile Sales Analytics Module - Form Configurations
  * Desktop Equivalent: sales/analytics/analytics-forms.js
  */
+window.MobileSalesAnalytics = window.MobileSalesAnalytics || {};
+
 (function() {
     'use strict';
 
+    const f = window.Layer8FormFactory;
     const enums = MobileSalesAnalytics.enums;
 
     MobileSalesAnalytics.forms = {
-        SalesTarget: {
-            title: 'Sales Target',
-            sections: [
-                {
-                    title: 'Target Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'salespersonId', label: 'Salesperson', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'territoryId', label: 'Territory', type: 'reference', lookupModel: 'SalesTerritory' },
-                        { key: 'periodStart', label: 'Period Start', type: 'date', required: true },
-                        { key: 'periodEnd', label: 'Period End', type: 'date', required: true },
-                        { key: 'targetAmount', label: 'Target Amount', type: 'currency', required: true },
-                        { key: 'achievedAmount', label: 'Achieved Amount', type: 'currency' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TARGET_STATUS },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        SalesTarget: f.form('Sales Target', [
+            f.section('Target Details', [
+                ...f.text('name', 'Name', true),
+                ...f.reference('salespersonId', 'Salesperson', 'Employee'),
+                ...f.reference('territoryId', 'Territory', 'SalesTerritory'),
+                ...f.date('periodStart', 'Period Start', true),
+                ...f.date('periodEnd', 'Period End', true),
+                ...f.money('targetAmount', 'Target Amount', true),
+                ...f.money('achievedAmount', 'Achieved Amount'),
+                ...f.select('status', 'Status', enums.TARGET_STATUS),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        SalesTerritory: {
-            title: 'Sales Territory',
-            sections: [
-                {
-                    title: 'Territory Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'territoryType', label: 'Type', type: 'select', options: enums.TERRITORY_TYPE, required: true },
-                        { key: 'parentId', label: 'Parent Territory', type: 'reference', lookupModel: 'SalesTerritory' },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'region', label: 'Region', type: 'text' },
-                        { key: 'country', label: 'Country', type: 'text' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        SalesTerritory: f.form('Sales Territory', [
+            f.section('Territory Details', [
+                ...f.text('name', 'Name', true),
+                ...f.text('code', 'Code', true),
+                ...f.select('territoryType', 'Type', enums.TERRITORY_TYPE, true),
+                ...f.reference('parentId', 'Parent Territory', 'SalesTerritory'),
+                ...f.textarea('description', 'Description'),
+                ...f.text('region', 'Region'),
+                ...f.text('country', 'Country'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        TerritoryAssign: {
-            title: 'Territory Assignment',
-            sections: [
-                {
-                    title: 'Assignment Details',
-                    fields: [
-                        { key: 'territoryId', label: 'Territory', type: 'reference', lookupModel: 'SalesTerritory', required: true },
-                        { key: 'salespersonId', label: 'Salesperson', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'startDate', label: 'Start Date', type: 'date', required: true },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'isPrimary', label: 'Primary Assignment', type: 'checkbox' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        TerritoryAssign: f.form('Territory Assignment', [
+            f.section('Assignment Details', [
+                ...f.reference('territoryId', 'Territory', 'SalesTerritory', true),
+                ...f.reference('salespersonId', 'Salesperson', 'Employee', true),
+                ...f.date('startDate', 'Start Date', true),
+                ...f.date('endDate', 'End Date'),
+                ...f.checkbox('isPrimary', 'Primary Assignment'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        CommissionPlan: {
-            title: 'Commission Plan',
-            sections: [
-                {
-                    title: 'Plan Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'commissionType', label: 'Commission Type', type: 'select', options: enums.COMMISSION_TYPE, required: true },
-                        { key: 'rate', label: 'Rate/Percentage', type: 'number', required: true },
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date', required: true },
-                        { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
-                        { key: 'minSaleAmount', label: 'Min Sale Amount', type: 'currency' },
-                        { key: 'maxCommission', label: 'Max Commission', type: 'currency' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CommissionPlan: f.form('Commission Plan', [
+            f.section('Plan Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('commissionType', 'Commission Type', enums.COMMISSION_TYPE, true),
+                ...f.number('rate', 'Rate/Percentage', true),
+                ...f.date('effectiveDate', 'Effective Date', true),
+                ...f.date('expirationDate', 'Expiration Date'),
+                ...f.money('minSaleAmount', 'Min Sale Amount'),
+                ...f.money('maxCommission', 'Max Commission'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        SalesCommissionCalc: {
-            title: 'Commission Calculation',
-            sections: [
-                {
-                    title: 'Calculation Details',
-                    fields: [
-                        { key: 'salespersonId', label: 'Salesperson', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'planId', label: 'Commission Plan', type: 'reference', lookupModel: 'CommissionPlan', required: true },
-                        { key: 'salesOrderId', label: 'Sales Order', type: 'reference', lookupModel: 'SalesOrder' },
-                        { key: 'saleAmount', label: 'Sale Amount', type: 'currency', required: true },
-                        { key: 'commissionRate', label: 'Commission Rate', type: 'number' },
-                        { key: 'commissionAmount', label: 'Commission Amount', type: 'currency' },
-                        { key: 'calcDate', label: 'Calculation Date', type: 'date' },
-                        { key: 'isPaid', label: 'Paid', type: 'checkbox' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        SalesCommissionCalc: f.form('Commission Calculation', [
+            f.section('Calculation Details', [
+                ...f.reference('salespersonId', 'Salesperson', 'Employee', true),
+                ...f.reference('planId', 'Commission Plan', 'CommissionPlan', true),
+                ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder'),
+                ...f.money('saleAmount', 'Sale Amount', true),
+                ...f.number('commissionRate', 'Commission Rate'),
+                ...f.money('commissionAmount', 'Commission Amount'),
+                ...f.date('calcDate', 'Calculation Date'),
+                ...f.checkbox('isPaid', 'Paid'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        SalesForecast: {
-            title: 'Sales Forecast',
-            sections: [
-                {
-                    title: 'Forecast Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'salespersonId', label: 'Salesperson', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'territoryId', label: 'Territory', type: 'reference', lookupModel: 'SalesTerritory' },
-                        { key: 'category', label: 'Category', type: 'select', options: enums.FORECAST_CATEGORY, required: true },
-                        { key: 'forecastDate', label: 'Forecast Date', type: 'date', required: true },
-                        { key: 'periodStart', label: 'Period Start', type: 'date' },
-                        { key: 'periodEnd', label: 'Period End', type: 'date' },
-                        { key: 'forecastAmount', label: 'Forecast Amount', type: 'currency', required: true },
-                        { key: 'probability', label: 'Probability %', type: 'number' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
+        SalesForecast: f.form('Sales Forecast', [
+            f.section('Forecast Details', [
+                ...f.text('name', 'Name', true),
+                ...f.reference('salespersonId', 'Salesperson', 'Employee'),
+                ...f.reference('territoryId', 'Territory', 'SalesTerritory'),
+                ...f.select('category', 'Category', enums.FORECAST_CATEGORY, true),
+                ...f.date('forecastDate', 'Forecast Date', true),
+                ...f.date('periodStart', 'Period Start'),
+                ...f.date('periodEnd', 'Period End'),
+                ...f.money('forecastAmount', 'Forecast Amount', true),
+                ...f.number('probability', 'Probability %'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ])
     };
 
 })();

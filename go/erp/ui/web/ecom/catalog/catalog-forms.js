@@ -2,206 +2,136 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // ECOM Catalog Module - Form Definitions
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
     window.EcomCatalog = window.EcomCatalog || {};
 
+    const f = window.Layer8FormFactory;
     const enums = EcomCatalog.enums;
 
     EcomCatalog.forms = {
-        EcomProduct: {
-            title: 'Product',
-            sections: [
-                {
-                    title: 'Product Details',
-                    fields: [
-                        { key: 'sku', label: 'SKU', type: 'text', required: true },
-                        { key: 'name', label: 'Product Name', type: 'text', required: true },
-                        { key: 'shortDescription', label: 'Short Description', type: 'text' },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'productType', label: 'Product Type', type: 'select', options: enums.PRODUCT_TYPE },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.PRODUCT_STATUS },
-                        { key: 'categoryId', label: 'Category', type: 'reference', lookupModel: 'EcomCategory' },
-                        { key: 'brand', label: 'Brand', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Pricing',
-                    fields: [
-                        { key: 'price', label: 'Price', type: 'money', required: true },
-                        { key: 'compareAtPrice', label: 'Compare At Price', type: 'money' },
-                        { key: 'costPrice', label: 'Cost Price', type: 'money' },
-                        { key: 'isTaxable', label: 'Is Taxable', type: 'checkbox' },
-                        { key: 'taxClass', label: 'Tax Class', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Inventory',
-                    fields: [
-                        { key: 'stockQuantity', label: 'Stock Quantity', type: 'number' },
-                        { key: 'lowStockThreshold', label: 'Low Stock Threshold', type: 'number' },
-                        { key: 'trackInventory', label: 'Track Inventory', type: 'checkbox' },
-                        { key: 'allowBackorder', label: 'Allow Backorder', type: 'checkbox' },
-                        { key: 'itemId', label: 'SCM Item', type: 'reference', lookupModel: 'ScmItem' }
-                    ]
-                },
-                {
-                    title: 'Shipping',
-                    fields: [
-                        { key: 'weight', label: 'Weight', type: 'number' },
-                        { key: 'weightUnit', label: 'Weight Unit', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'SEO',
-                    fields: [
-                        { key: 'slug', label: 'URL Slug', type: 'text' },
-                        { key: 'metaTitle', label: 'Meta Title', type: 'text' },
-                        { key: 'metaDescription', label: 'Meta Description', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        EcomProduct: f.form('Product', [
+            f.section('Product Details', [
+                ...f.text('sku', 'SKU', true),
+                ...f.text('name', 'Product Name', true),
+                ...f.text('shortDescription', 'Short Description'),
+                ...f.textarea('description', 'Description'),
+                ...f.select('productType', 'Product Type', enums.PRODUCT_TYPE),
+                ...f.select('status', 'Status', enums.PRODUCT_STATUS),
+                ...f.reference('categoryId', 'Category', 'EcomCategory'),
+                ...f.text('brand', 'Brand')
+            ]),
+            f.section('Pricing', [
+                ...f.money('price', 'Price', true),
+                ...f.money('compareAtPrice', 'Compare At Price'),
+                ...f.money('costPrice', 'Cost Price'),
+                ...f.checkbox('isTaxable', 'Is Taxable'),
+                ...f.text('taxClass', 'Tax Class')
+            ]),
+            f.section('Inventory', [
+                ...f.number('stockQuantity', 'Stock Quantity'),
+                ...f.number('lowStockThreshold', 'Low Stock Threshold'),
+                ...f.checkbox('trackInventory', 'Track Inventory'),
+                ...f.checkbox('allowBackorder', 'Allow Backorder'),
+                ...f.reference('itemId', 'SCM Item', 'ScmItem')
+            ]),
+            f.section('Shipping', [
+                ...f.number('weight', 'Weight'),
+                ...f.text('weightUnit', 'Weight Unit')
+            ]),
+            f.section('SEO', [
+                ...f.text('slug', 'URL Slug'),
+                ...f.text('metaTitle', 'Meta Title'),
+                ...f.textarea('metaDescription', 'Meta Description')
+            ])
+        ]),
 
-        EcomCategory: {
-            title: 'Category',
-            sections: [
-                {
-                    title: 'Category Details',
-                    fields: [
-                        { key: 'name', label: 'Category Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'parentCategoryId', label: 'Parent Category', type: 'reference', lookupModel: 'EcomCategory' },
-                        { key: 'slug', label: 'URL Slug', type: 'text' },
-                        { key: 'imageUrl', label: 'Image URL', type: 'text' },
-                        { key: 'sortOrder', label: 'Sort Order', type: 'number' },
-                        { key: 'isActive', label: 'Is Active', type: 'checkbox' },
-                        { key: 'level', label: 'Level', type: 'number' },
-                        { key: 'path', label: 'Path', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'SEO',
-                    fields: [
-                        { key: 'metaTitle', label: 'Meta Title', type: 'text' },
-                        { key: 'metaDescription', label: 'Meta Description', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        EcomCategory: f.form('Category', [
+            f.section('Category Details', [
+                ...f.text('name', 'Category Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('parentCategoryId', 'Parent Category', 'EcomCategory'),
+                ...f.text('slug', 'URL Slug'),
+                ...f.text('imageUrl', 'Image URL'),
+                ...f.number('sortOrder', 'Sort Order'),
+                ...f.checkbox('isActive', 'Is Active'),
+                ...f.number('level', 'Level'),
+                ...f.text('path', 'Path')
+            ]),
+            f.section('SEO', [
+                ...f.text('metaTitle', 'Meta Title'),
+                ...f.textarea('metaDescription', 'Meta Description')
+            ])
+        ]),
 
-        EcomAttribute: {
-            title: 'Attribute',
-            sections: [
-                {
-                    title: 'Attribute Details',
-                    fields: [
-                        { key: 'name', label: 'Attribute Name', type: 'text', required: true },
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'attributeType', label: 'Attribute Type', type: 'select', options: enums.ATTRIBUTE_TYPE, required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'defaultValue', label: 'Default Value', type: 'text' },
-                        { key: 'sortOrder', label: 'Sort Order', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Settings',
-                    fields: [
-                        { key: 'isRequired', label: 'Is Required', type: 'checkbox' },
-                        { key: 'isFilterable', label: 'Is Filterable', type: 'checkbox' },
-                        { key: 'isVisible', label: 'Is Visible', type: 'checkbox' },
-                        { key: 'isSearchable', label: 'Is Searchable', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        EcomAttribute: f.form('Attribute', [
+            f.section('Attribute Details', [
+                ...f.text('name', 'Attribute Name', true),
+                ...f.text('code', 'Code', true),
+                ...f.select('attributeType', 'Attribute Type', enums.ATTRIBUTE_TYPE, true),
+                ...f.textarea('description', 'Description'),
+                ...f.text('defaultValue', 'Default Value'),
+                ...f.number('sortOrder', 'Sort Order')
+            ]),
+            f.section('Settings', [
+                ...f.checkbox('isRequired', 'Is Required'),
+                ...f.checkbox('isFilterable', 'Is Filterable'),
+                ...f.checkbox('isVisible', 'Is Visible'),
+                ...f.checkbox('isSearchable', 'Is Searchable')
+            ])
+        ]),
 
-        EcomImage: {
-            title: 'Image',
-            sections: [
-                {
-                    title: 'Image Details',
-                    fields: [
-                        { key: 'productId', label: 'Product', type: 'reference', lookupModel: 'EcomProduct', required: true },
-                        { key: 'variantId', label: 'Variant', type: 'reference', lookupModel: 'EcomVariant' },
-                        { key: 'fileName', label: 'File Name', type: 'text', required: true },
-                        { key: 'url', label: 'URL', type: 'text', required: true },
-                        { key: 'thumbnailUrl', label: 'Thumbnail URL', type: 'text' },
-                        { key: 'imageType', label: 'Image Type', type: 'select', options: enums.IMAGE_TYPE },
-                        { key: 'altText', label: 'Alt Text', type: 'text' },
-                        { key: 'title', label: 'Title', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Dimensions',
-                    fields: [
-                        { key: 'width', label: 'Width', type: 'number' },
-                        { key: 'height', label: 'Height', type: 'number' },
-                        { key: 'fileSize', label: 'File Size', type: 'number' },
-                        { key: 'mimeType', label: 'MIME Type', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Display',
-                    fields: [
-                        { key: 'sortOrder', label: 'Sort Order', type: 'number' },
-                        { key: 'isPrimary', label: 'Is Primary', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        EcomImage: f.form('Image', [
+            f.section('Image Details', [
+                ...f.reference('productId', 'Product', 'EcomProduct', true),
+                ...f.reference('variantId', 'Variant', 'EcomVariant'),
+                ...f.text('fileName', 'File Name', true),
+                ...f.text('url', 'URL', true),
+                ...f.text('thumbnailUrl', 'Thumbnail URL'),
+                ...f.select('imageType', 'Image Type', enums.IMAGE_TYPE),
+                ...f.text('altText', 'Alt Text'),
+                ...f.text('title', 'Title')
+            ]),
+            f.section('Dimensions', [
+                ...f.number('width', 'Width'),
+                ...f.number('height', 'Height'),
+                ...f.number('fileSize', 'File Size'),
+                ...f.text('mimeType', 'MIME Type')
+            ]),
+            f.section('Display', [
+                ...f.number('sortOrder', 'Sort Order'),
+                ...f.checkbox('isPrimary', 'Is Primary')
+            ])
+        ]),
 
-        EcomVariant: {
-            title: 'Variant',
-            sections: [
-                {
-                    title: 'Variant Details',
-                    fields: [
-                        { key: 'productId', label: 'Product', type: 'reference', lookupModel: 'EcomProduct', required: true },
-                        { key: 'sku', label: 'SKU', type: 'text', required: true },
-                        { key: 'name', label: 'Variant Name', type: 'text', required: true },
-                        { key: 'barcode', label: 'Barcode', type: 'text' },
-                        { key: 'imageId', label: 'Image', type: 'reference', lookupModel: 'EcomImage' }
-                    ]
-                },
-                {
-                    title: 'Pricing',
-                    fields: [
-                        { key: 'price', label: 'Price', type: 'money' },
-                        { key: 'compareAtPrice', label: 'Compare At Price', type: 'money' },
-                        { key: 'costPrice', label: 'Cost Price', type: 'money' }
-                    ]
-                },
-                {
-                    title: 'Inventory',
-                    fields: [
-                        { key: 'stockQuantity', label: 'Stock Quantity', type: 'number' },
-                        { key: 'weight', label: 'Weight', type: 'number' },
-                        { key: 'weightUnit', label: 'Weight Unit', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Display',
-                    fields: [
-                        { key: 'sortOrder', label: 'Sort Order', type: 'number' },
-                        { key: 'isActive', label: 'Is Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        }
+        EcomVariant: f.form('Variant', [
+            f.section('Variant Details', [
+                ...f.reference('productId', 'Product', 'EcomProduct', true),
+                ...f.text('sku', 'SKU', true),
+                ...f.text('name', 'Variant Name', true),
+                ...f.text('barcode', 'Barcode'),
+                ...f.reference('imageId', 'Image', 'EcomImage')
+            ]),
+            f.section('Pricing', [
+                ...f.money('price', 'Price'),
+                ...f.money('compareAtPrice', 'Compare At Price'),
+                ...f.money('costPrice', 'Cost Price')
+            ]),
+            f.section('Inventory', [
+                ...f.number('stockQuantity', 'Stock Quantity'),
+                ...f.number('weight', 'Weight'),
+                ...f.text('weightUnit', 'Weight Unit')
+            ]),
+            f.section('Display', [
+                ...f.number('sortOrder', 'Sort Order'),
+                ...f.checkbox('isActive', 'Is Active')
+            ])
+        ])
     };
 
     EcomCatalog.primaryKeys = {

@@ -12,147 +12,88 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// BI Data Management Module - Enum Definitions
+// BI Data Management Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate } = Layer8DRenderers;
+
     window.BiDataManagement = window.BiDataManagement || {};
-    BiDataManagement.enums = {};
 
-    // DATA SOURCE TYPE
-    BiDataManagement.enums.DATA_SOURCE_TYPE = {
-        0: 'Unspecified',
-        1: 'Database',
-        2: 'File',
-        3: 'API',
-        4: 'Stream',
-        5: 'Data Warehouse'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const DATA_SOURCE_TYPE = factory.simple([
+        'Unspecified', 'Database', 'File', 'API', 'Stream', 'Data Warehouse'
+    ]);
+
+    const CONNECTION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Connected', 'connected', 'layer8d-status-active'],
+        ['Disconnected', 'disconnected', 'layer8d-status-inactive'],
+        ['Error', 'error', 'layer8d-status-terminated']
+    ]);
+
+    const ETL_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Idle', 'idle', 'layer8d-status-inactive'],
+        ['Running', 'running', 'layer8d-status-pending'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Failed', 'failed', 'layer8d-status-terminated'],
+        ['Paused', 'paused', 'layer8d-status-inactive']
+    ]);
+
+    const DATA_QUALITY_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Passed', 'passed', 'layer8d-status-active'],
+        ['Warning', 'warning', 'layer8d-status-pending'],
+        ['Failed', 'failed', 'layer8d-status-terminated']
+    ]);
+
+    const GOVERNANCE_LEVEL = factory.create([
+        ['Unspecified', null, ''],
+        ['Public', 'public', 'layer8d-status-active'],
+        ['Internal', 'internal', 'layer8d-status-active'],
+        ['Confidential', 'confidential', 'layer8d-status-pending'],
+        ['Restricted', 'restricted', 'layer8d-status-terminated']
+    ]);
+
+    const SCHEDULE_FREQUENCY = factory.simple([
+        'Unspecified', 'Once', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    BiDataManagement.enums = {
+        DATA_SOURCE_TYPE: DATA_SOURCE_TYPE.enum,
+        CONNECTION_STATUS: CONNECTION_STATUS.enum,
+        CONNECTION_STATUS_CLASSES: CONNECTION_STATUS.classes,
+        ETL_STATUS: ETL_STATUS.enum,
+        ETL_STATUS_CLASSES: ETL_STATUS.classes,
+        DATA_QUALITY_STATUS: DATA_QUALITY_STATUS.enum,
+        DATA_QUALITY_STATUS_CLASSES: DATA_QUALITY_STATUS.classes,
+        GOVERNANCE_LEVEL: GOVERNANCE_LEVEL.enum,
+        GOVERNANCE_LEVEL_CLASSES: GOVERNANCE_LEVEL.classes,
+        SCHEDULE_FREQUENCY: SCHEDULE_FREQUENCY.enum
     };
 
-    BiDataManagement.enums.DATA_SOURCE_TYPE_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-pending',
-        5: 'layer8d-status-active'
-    };
-
-    // CONNECTION STATUS
-    BiDataManagement.enums.CONNECTION_STATUS = {
-        0: 'Unspecified',
-        1: 'Connected',
-        2: 'Disconnected',
-        3: 'Error'
-    };
-
-    BiDataManagement.enums.CONNECTION_STATUS_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-inactive',
-        3: 'layer8d-status-terminated'
-    };
-
-    // ETL STATUS
-    BiDataManagement.enums.ETL_STATUS = {
-        0: 'Unspecified',
-        1: 'Idle',
-        2: 'Running',
-        3: 'Completed',
-        4: 'Failed',
-        5: 'Paused'
-    };
-
-    BiDataManagement.enums.ETL_STATUS_CLASSES = {
-        1: 'layer8d-status-inactive',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated',
-        5: 'layer8d-status-inactive'
-    };
-
-    // DATA QUALITY STATUS
-    BiDataManagement.enums.DATA_QUALITY_STATUS = {
-        0: 'Unspecified',
-        1: 'Passed',
-        2: 'Warning',
-        3: 'Failed'
-    };
-
-    BiDataManagement.enums.DATA_QUALITY_STATUS_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-terminated'
-    };
-
-    // GOVERNANCE LEVEL
-    BiDataManagement.enums.GOVERNANCE_LEVEL = {
-        0: 'Unspecified',
-        1: 'Public',
-        2: 'Internal',
-        3: 'Confidential',
-        4: 'Restricted'
-    };
-
-    BiDataManagement.enums.GOVERNANCE_LEVEL_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-terminated'
-    };
-
-    // SCHEDULE FREQUENCY
-    BiDataManagement.enums.SCHEDULE_FREQUENCY = {
-        0: 'Unspecified',
-        1: 'Once',
-        2: 'Daily',
-        3: 'Weekly',
-        4: 'Monthly',
-        5: 'Quarterly',
-        6: 'Yearly'
-    };
-
-    BiDataManagement.enums.SCHEDULE_FREQUENCY_CLASSES = {
-        1: 'layer8d-status-inactive',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-pending',
-        6: 'layer8d-status-pending'
-    };
-
+    // ============================================================================
     // RENDERERS
-    BiDataManagement.render = {};
+    // ============================================================================
 
-    BiDataManagement.render.dataSourceType = Layer8DRenderers.createStatusRenderer(
-        BiDataManagement.enums.DATA_SOURCE_TYPE,
-        BiDataManagement.enums.DATA_SOURCE_TYPE_CLASSES
-    );
-
-    BiDataManagement.render.connectionStatus = Layer8DRenderers.createStatusRenderer(
-        BiDataManagement.enums.CONNECTION_STATUS,
-        BiDataManagement.enums.CONNECTION_STATUS_CLASSES
-    );
-
-    BiDataManagement.render.etlStatus = Layer8DRenderers.createStatusRenderer(
-        BiDataManagement.enums.ETL_STATUS,
-        BiDataManagement.enums.ETL_STATUS_CLASSES
-    );
-
-    BiDataManagement.render.dataQualityStatus = Layer8DRenderers.createStatusRenderer(
-        BiDataManagement.enums.DATA_QUALITY_STATUS,
-        BiDataManagement.enums.DATA_QUALITY_STATUS_CLASSES
-    );
-
-    BiDataManagement.render.governanceLevel = Layer8DRenderers.createStatusRenderer(
-        BiDataManagement.enums.GOVERNANCE_LEVEL,
-        BiDataManagement.enums.GOVERNANCE_LEVEL_CLASSES
-    );
-
-    BiDataManagement.render.scheduleFrequency = Layer8DRenderers.createStatusRenderer(
-        BiDataManagement.enums.SCHEDULE_FREQUENCY,
-        BiDataManagement.enums.SCHEDULE_FREQUENCY_CLASSES
-    );
-
-    BiDataManagement.render.date = Layer8DRenderers.renderDate;
+    BiDataManagement.render = {
+        dataSourceType: (v) => renderEnum(v, DATA_SOURCE_TYPE.enum),
+        connectionStatus: createStatusRenderer(CONNECTION_STATUS.enum, CONNECTION_STATUS.classes),
+        etlStatus: createStatusRenderer(ETL_STATUS.enum, ETL_STATUS.classes),
+        dataQualityStatus: createStatusRenderer(DATA_QUALITY_STATUS.enum, DATA_QUALITY_STATUS.classes),
+        governanceLevel: createStatusRenderer(GOVERNANCE_LEVEL.enum, GOVERNANCE_LEVEL.classes),
+        scheduleFrequency: (v) => renderEnum(v, SCHEDULE_FREQUENCY.enum),
+        date: renderDate
+    };
 
 })();

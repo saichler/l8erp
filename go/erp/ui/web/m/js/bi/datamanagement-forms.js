@@ -12,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// Uses Layer8FormFactory for reduced boilerplate
 /**
  * Mobile BI Data Management Module - Form Configurations
  * Desktop Equivalent: bi/datamanagement/datamanagement-forms.js
@@ -19,210 +20,143 @@ limitations under the License.
 (function() {
     'use strict';
 
+    window.MobileBiDataManagement = window.MobileBiDataManagement || {};
+    const f = window.Layer8FormFactory;
     const enums = MobileBiDataManagement.enums;
 
     MobileBiDataManagement.forms = {
-        BiDataSource: {
-            title: 'Data Source',
-            sections: [
-                {
-                    title: 'Source Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'sourceType', label: 'Source Type', type: 'select', options: enums.DATA_SOURCE_TYPE },
-                        { key: 'connectionStatus', label: 'Connection Status', type: 'select', options: enums.CONNECTION_STATUS }
-                    ]
-                },
-                {
-                    title: 'Connection',
-                    fields: [
-                        { key: 'connectionString', label: 'Connection String', type: 'text' },
-                        { key: 'host', label: 'Host', type: 'text' },
-                        { key: 'port', label: 'Port', type: 'number' },
-                        { key: 'database', label: 'Database', type: 'text' },
-                        { key: 'username', label: 'Username', type: 'text' },
-                        { key: 'schema', label: 'Schema', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Status',
-                    fields: [
-                        { key: 'lastConnected', label: 'Last Connected', type: 'date' },
-                        { key: 'lastSync', label: 'Last Sync', type: 'date' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        BiDataSource: f.form('Data Source', [
+            f.section('Source Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('sourceType', 'Source Type', enums.DATA_SOURCE_TYPE),
+                ...f.select('connectionStatus', 'Connection Status', enums.CONNECTION_STATUS)
+            ]),
+            f.section('Connection', [
+                ...f.text('connectionString', 'Connection String'),
+                ...f.text('host', 'Host'),
+                ...f.number('port', 'Port'),
+                ...f.text('database', 'Database'),
+                ...f.text('username', 'Username'),
+                ...f.text('schema', 'Schema')
+            ]),
+            f.section('Status', [
+                ...f.date('lastConnected', 'Last Connected'),
+                ...f.date('lastSync', 'Last Sync'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        BiETLJob: {
-            title: 'ETL Job',
-            sections: [
-                {
-                    title: 'Job Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'sourceId', label: 'Source', type: 'reference', lookupModel: 'BiDataSource', required: true },
-                        { key: 'targetId', label: 'Target', type: 'reference', lookupModel: 'BiDataSource' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.ETL_STATUS },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                },
-                {
-                    title: 'ETL Configuration',
-                    fields: [
-                        { key: 'extractQuery', label: 'Extract Query', type: 'textarea' },
-                        { key: 'transformConfig', label: 'Transform Config', type: 'textarea' },
-                        { key: 'loadTarget', label: 'Load Target', type: 'text' },
-                        { key: 'loadMode', label: 'Load Mode', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Execution Stats',
-                    fields: [
-                        { key: 'lastRun', label: 'Last Run', type: 'date' },
-                        { key: 'lastSuccess', label: 'Last Success', type: 'date' },
-                        { key: 'rowsProcessed', label: 'Rows Processed', type: 'number' },
-                        { key: 'rowsFailed', label: 'Rows Failed', type: 'number' },
-                        { key: 'errorMessage', label: 'Error Message', type: 'textarea' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        BiETLJob: f.form('ETL Job', [
+            f.section('Job Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('sourceId', 'Source', 'BiDataSource', true),
+                ...f.reference('targetId', 'Target', 'BiDataSource'),
+                ...f.select('status', 'Status', enums.ETL_STATUS),
+                ...f.reference('ownerId', 'Owner', 'Employee')
+            ]),
+            f.section('ETL Configuration', [
+                ...f.textarea('extractQuery', 'Extract Query'),
+                ...f.textarea('transformConfig', 'Transform Config'),
+                ...f.text('loadTarget', 'Load Target'),
+                ...f.text('loadMode', 'Load Mode')
+            ]),
+            f.section('Execution Stats', [
+                ...f.date('lastRun', 'Last Run'),
+                ...f.date('lastSuccess', 'Last Success'),
+                ...f.number('rowsProcessed', 'Rows Processed'),
+                ...f.number('rowsFailed', 'Rows Failed'),
+                ...f.textarea('errorMessage', 'Error Message'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        BiETLSchedule: {
-            title: 'ETL Schedule',
-            sections: [
-                {
-                    title: 'Schedule Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'jobId', label: 'ETL Job', type: 'reference', lookupModel: 'BiETLJob', required: true },
-                        { key: 'frequency', label: 'Frequency', type: 'select', options: enums.SCHEDULE_FREQUENCY }
-                    ]
-                },
-                {
-                    title: 'Timing',
-                    fields: [
-                        { key: 'startDate', label: 'Start Date', type: 'date' },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'runTime', label: 'Run Time (HH:MM)', type: 'text' },
-                        { key: 'dayOfWeek', label: 'Day of Week', type: 'number' },
-                        { key: 'dayOfMonth', label: 'Day of Month', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Status',
-                    fields: [
-                        { key: 'nextRun', label: 'Next Run', type: 'date' },
-                        { key: 'lastRun', label: 'Last Run', type: 'date' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        BiETLSchedule: f.form('ETL Schedule', [
+            f.section('Schedule Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('jobId', 'ETL Job', 'BiETLJob', true),
+                ...f.select('frequency', 'Frequency', enums.SCHEDULE_FREQUENCY)
+            ]),
+            f.section('Timing', [
+                ...f.date('startDate', 'Start Date'),
+                ...f.date('endDate', 'End Date'),
+                ...f.text('runTime', 'Run Time (HH:MM)'),
+                ...f.number('dayOfWeek', 'Day of Week'),
+                ...f.number('dayOfMonth', 'Day of Month')
+            ]),
+            f.section('Status', [
+                ...f.date('nextRun', 'Next Run'),
+                ...f.date('lastRun', 'Last Run'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        BiDataQualityRule: {
-            title: 'Data Quality Rule',
-            sections: [
-                {
-                    title: 'Rule Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'dataSourceId', label: 'Data Source', type: 'reference', lookupModel: 'BiDataSource', required: true },
-                        { key: 'tableName', label: 'Table Name', type: 'text', required: true },
-                        { key: 'columnName', label: 'Column Name', type: 'text' },
-                        { key: 'ruleType', label: 'Rule Type', type: 'text' },
-                        { key: 'ruleExpression', label: 'Rule Expression', type: 'textarea' },
-                        { key: 'threshold', label: 'Threshold', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Results',
-                    fields: [
-                        { key: 'lastStatus', label: 'Last Status', type: 'select', options: enums.DATA_QUALITY_STATUS },
-                        { key: 'lastScore', label: 'Last Score', type: 'number' },
-                        { key: 'lastCheck', label: 'Last Check', type: 'date' },
-                        { key: 'recordsChecked', label: 'Records Checked', type: 'number' },
-                        { key: 'recordsPassed', label: 'Records Passed', type: 'number' },
-                        { key: 'recordsFailed', label: 'Records Failed', type: 'number' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        BiDataQualityRule: f.form('Data Quality Rule', [
+            f.section('Rule Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('dataSourceId', 'Data Source', 'BiDataSource', true),
+                ...f.text('tableName', 'Table Name', true),
+                ...f.text('columnName', 'Column Name'),
+                ...f.text('ruleType', 'Rule Type'),
+                ...f.textarea('ruleExpression', 'Rule Expression'),
+                ...f.number('threshold', 'Threshold')
+            ]),
+            f.section('Results', [
+                ...f.select('lastStatus', 'Last Status', enums.DATA_QUALITY_STATUS),
+                ...f.number('lastScore', 'Last Score'),
+                ...f.date('lastCheck', 'Last Check'),
+                ...f.number('recordsChecked', 'Records Checked'),
+                ...f.number('recordsPassed', 'Records Passed'),
+                ...f.number('recordsFailed', 'Records Failed'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        BiMasterDataConfig: {
-            title: 'Master Data Config',
-            sections: [
-                {
-                    title: 'Configuration Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'entityType', label: 'Entity Type', type: 'text', required: true },
-                        { key: 'sourceSystemId', label: 'Source System', type: 'reference', lookupModel: 'BiDataSource' },
-                        { key: 'goldenRecordId', label: 'Golden Record ID', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Rules',
-                    fields: [
-                        { key: 'matchRules', label: 'Match Rules (JSON)', type: 'textarea' },
-                        { key: 'mergeRules', label: 'Merge Rules (JSON)', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Statistics',
-                    fields: [
-                        { key: 'lastSync', label: 'Last Sync', type: 'date' },
-                        { key: 'totalRecords', label: 'Total Records', type: 'number' },
-                        { key: 'matchedRecords', label: 'Matched Records', type: 'number' },
-                        { key: 'duplicateRecords', label: 'Duplicate Records', type: 'number' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        BiMasterDataConfig: f.form('Master Data Config', [
+            f.section('Configuration Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.text('entityType', 'Entity Type', true),
+                ...f.reference('sourceSystemId', 'Source System', 'BiDataSource'),
+                ...f.text('goldenRecordId', 'Golden Record ID')
+            ]),
+            f.section('Rules', [
+                ...f.textarea('matchRules', 'Match Rules (JSON)'),
+                ...f.textarea('mergeRules', 'Merge Rules (JSON)')
+            ]),
+            f.section('Statistics', [
+                ...f.date('lastSync', 'Last Sync'),
+                ...f.number('totalRecords', 'Total Records'),
+                ...f.number('matchedRecords', 'Matched Records'),
+                ...f.number('duplicateRecords', 'Duplicate Records'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        BiDataGovernance: {
-            title: 'Data Governance',
-            sections: [
-                {
-                    title: 'Governance Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'dataDomain', label: 'Data Domain', type: 'text', required: true },
-                        { key: 'classification', label: 'Classification', type: 'select', options: enums.GOVERNANCE_LEVEL },
-                        { key: 'dataOwnerId', label: 'Data Owner', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'dataStewardId', label: 'Data Steward', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                },
-                {
-                    title: 'Policies',
-                    fields: [
-                        { key: 'retentionPolicy', label: 'Retention Policy', type: 'text' },
-                        { key: 'retentionDays', label: 'Retention Days', type: 'number' },
-                        { key: 'accessPolicy', label: 'Access Policy', type: 'textarea' },
-                        { key: 'complianceRequirements', label: 'Compliance Requirements (JSON)', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Review',
-                    fields: [
-                        { key: 'lastReview', label: 'Last Review', type: 'date' },
-                        { key: 'nextReview', label: 'Next Review', type: 'date' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        }
+        BiDataGovernance: f.form('Data Governance', [
+            f.section('Governance Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.text('dataDomain', 'Data Domain', true),
+                ...f.select('classification', 'Classification', enums.GOVERNANCE_LEVEL),
+                ...f.reference('dataOwnerId', 'Data Owner', 'Employee'),
+                ...f.reference('dataStewardId', 'Data Steward', 'Employee')
+            ]),
+            f.section('Policies', [
+                ...f.text('retentionPolicy', 'Retention Policy'),
+                ...f.number('retentionDays', 'Retention Days'),
+                ...f.textarea('accessPolicy', 'Access Policy'),
+                ...f.textarea('complianceRequirements', 'Compliance Requirements (JSON)')
+            ]),
+            f.section('Review', [
+                ...f.date('lastReview', 'Last Review'),
+                ...f.date('nextReview', 'Next Review'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ])
     };
 
 })();

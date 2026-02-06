@@ -13,93 +13,90 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile COMP Risk Module - Enum Definitions
+ * Mobile COMP Risk Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: comp/risk/risk-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate } = Layer8MRenderers;
+
     window.MobileCompRisk = window.MobileCompRisk || {};
-    MobileCompRisk.enums = {};
 
     // ============================================================================
-    // RISK CATEGORY
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileCompRisk.enums.RISK_CATEGORY = {
-        0: 'Unspecified', 1: 'Strategic', 2: 'Operational', 3: 'Financial',
-        4: 'Compliance', 5: 'Reputational', 6: 'Technology', 7: 'Cyber Security', 8: 'Legal'
-    };
-    MobileCompRisk.enums.RISK_CATEGORY_VALUES = {
-        'strategic': 1, 'operational': 2, 'financial': 3, 'compliance': 4,
-        'reputational': 5, 'technology': 6, 'cybersecurity': 7, 'legal': 8
-    };
-    MobileCompRisk.enums.RISK_CATEGORY_CLASSES = {
-        1: 'status-active', 2: 'status-active', 3: 'status-pending', 4: 'status-pending',
-        5: 'status-pending', 6: 'status-active', 7: 'status-terminated', 8: 'status-inactive'
-    };
+    const RISK_CATEGORY = factory.create([
+        ['Unspecified', null, ''],
+        ['Strategic', 'strategic', 'status-active'],
+        ['Operational', 'operational', 'status-active'],
+        ['Financial', 'financial', 'status-pending'],
+        ['Compliance', 'compliance', 'status-pending'],
+        ['Reputational', 'reputational', 'status-pending'],
+        ['Technology', 'technology', 'status-active'],
+        ['Cyber Security', 'cybersecurity', 'status-terminated'],
+        ['Legal', 'legal', 'status-inactive']
+    ]);
+
+    const RISK_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Identified', 'identified', 'status-pending'],
+        ['Assessed', 'assessed', 'status-pending'],
+        ['Mitigating', 'mitigating', 'status-active'],
+        ['Accepted', 'accepted', 'status-inactive'],
+        ['Transferred', 'transferred', 'status-inactive'],
+        ['Closed', 'closed', 'status-active']
+    ]);
+
+    const INCIDENT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Reported', 'reported', 'status-terminated'],
+        ['Investigating', 'investigating', 'status-pending'],
+        ['Contained', 'contained', 'status-pending'],
+        ['Resolved', 'resolved', 'status-active'],
+        ['Closed', 'closed', 'status-active']
+    ]);
+
+    const SEVERITY_LEVEL = factory.create([
+        ['Unspecified', null, ''],
+        ['Critical', 'critical', 'status-terminated'],
+        ['High', 'high', 'status-terminated'],
+        ['Medium', 'medium', 'status-pending'],
+        ['Low', 'low', 'status-active'],
+        ['Informational', 'informational', 'status-inactive']
+    ]);
+
+    const REMEDIATION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Not Started', 'notstarted', 'status-inactive'],
+        ['In Progress', 'inprogress', 'status-pending'],
+        ['Completed', 'completed', 'status-active'],
+        ['Verified', 'verified', 'status-active'],
+        ['Overdue', 'overdue', 'status-terminated']
+    ]);
 
     // ============================================================================
-    // RISK STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileCompRisk.enums.RISK_STATUS = {
-        0: 'Unspecified', 1: 'Identified', 2: 'Assessed', 3: 'Mitigating',
-        4: 'Accepted', 5: 'Transferred', 6: 'Closed'
-    };
-    MobileCompRisk.enums.RISK_STATUS_VALUES = {
-        'identified': 1, 'assessed': 2, 'mitigating': 3, 'accepted': 4, 'transferred': 5, 'closed': 6
-    };
-    MobileCompRisk.enums.RISK_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-active',
-        4: 'status-inactive', 5: 'status-inactive', 6: 'status-active'
-    };
-
-    // ============================================================================
-    // INCIDENT STATUS
-    // ============================================================================
-
-    MobileCompRisk.enums.INCIDENT_STATUS = {
-        0: 'Unspecified', 1: 'Reported', 2: 'Investigating', 3: 'Contained',
-        4: 'Resolved', 5: 'Closed'
-    };
-    MobileCompRisk.enums.INCIDENT_STATUS_VALUES = {
-        'reported': 1, 'investigating': 2, 'contained': 3, 'resolved': 4, 'closed': 5
-    };
-    MobileCompRisk.enums.INCIDENT_STATUS_CLASSES = {
-        1: 'status-terminated', 2: 'status-pending', 3: 'status-pending',
-        4: 'status-active', 5: 'status-active'
-    };
-
-    // ============================================================================
-    // SEVERITY LEVEL
-    // ============================================================================
-
-    MobileCompRisk.enums.SEVERITY_LEVEL = {
-        0: 'Unspecified', 1: 'Critical', 2: 'High', 3: 'Medium', 4: 'Low', 5: 'Informational'
-    };
-    MobileCompRisk.enums.SEVERITY_LEVEL_VALUES = {
-        'critical': 1, 'high': 2, 'medium': 3, 'low': 4, 'informational': 5
-    };
-    MobileCompRisk.enums.SEVERITY_LEVEL_CLASSES = {
-        1: 'status-terminated', 2: 'status-terminated', 3: 'status-pending',
-        4: 'status-active', 5: 'status-inactive'
-    };
-
-    // ============================================================================
-    // REMEDIATION STATUS (for mitigation plans)
-    // ============================================================================
-
-    MobileCompRisk.enums.REMEDIATION_STATUS = {
-        0: 'Unspecified', 1: 'Not Started', 2: 'In Progress', 3: 'Completed',
-        4: 'Verified', 5: 'Overdue'
-    };
-    MobileCompRisk.enums.REMEDIATION_STATUS_VALUES = {
-        'notstarted': 1, 'inprogress': 2, 'completed': 3, 'verified': 4, 'overdue': 5
-    };
-    MobileCompRisk.enums.REMEDIATION_STATUS_CLASSES = {
-        1: 'status-inactive', 2: 'status-pending', 3: 'status-active',
-        4: 'status-active', 5: 'status-terminated'
+    MobileCompRisk.enums = {
+        RISK_CATEGORY: RISK_CATEGORY.enum,
+        RISK_CATEGORY_VALUES: RISK_CATEGORY.values,
+        RISK_CATEGORY_CLASSES: RISK_CATEGORY.classes,
+        RISK_STATUS: RISK_STATUS.enum,
+        RISK_STATUS_VALUES: RISK_STATUS.values,
+        RISK_STATUS_CLASSES: RISK_STATUS.classes,
+        INCIDENT_STATUS: INCIDENT_STATUS.enum,
+        INCIDENT_STATUS_VALUES: INCIDENT_STATUS.values,
+        INCIDENT_STATUS_CLASSES: INCIDENT_STATUS.classes,
+        SEVERITY_LEVEL: SEVERITY_LEVEL.enum,
+        SEVERITY_LEVEL_VALUES: SEVERITY_LEVEL.values,
+        SEVERITY_LEVEL_CLASSES: SEVERITY_LEVEL.classes,
+        REMEDIATION_STATUS: REMEDIATION_STATUS.enum,
+        REMEDIATION_STATUS_VALUES: REMEDIATION_STATUS.values,
+        REMEDIATION_STATUS_CLASSES: REMEDIATION_STATUS.classes
     };
 
     // ============================================================================
@@ -107,27 +104,12 @@ limitations under the License.
     // ============================================================================
 
     MobileCompRisk.render = {
-        riskCategory: Layer8MRenderers.createStatusRenderer(
-            MobileCompRisk.enums.RISK_CATEGORY,
-            MobileCompRisk.enums.RISK_CATEGORY_CLASSES
-        ),
-        riskStatus: Layer8MRenderers.createStatusRenderer(
-            MobileCompRisk.enums.RISK_STATUS,
-            MobileCompRisk.enums.RISK_STATUS_CLASSES
-        ),
-        incidentStatus: Layer8MRenderers.createStatusRenderer(
-            MobileCompRisk.enums.INCIDENT_STATUS,
-            MobileCompRisk.enums.INCIDENT_STATUS_CLASSES
-        ),
-        severityLevel: Layer8MRenderers.createStatusRenderer(
-            MobileCompRisk.enums.SEVERITY_LEVEL,
-            MobileCompRisk.enums.SEVERITY_LEVEL_CLASSES
-        ),
-        remediationStatus: Layer8MRenderers.createStatusRenderer(
-            MobileCompRisk.enums.REMEDIATION_STATUS,
-            MobileCompRisk.enums.REMEDIATION_STATUS_CLASSES
-        ),
-        date: Layer8MRenderers.renderDate
+        riskCategory: createStatusRenderer(RISK_CATEGORY.enum, RISK_CATEGORY.classes),
+        riskStatus: createStatusRenderer(RISK_STATUS.enum, RISK_STATUS.classes),
+        incidentStatus: createStatusRenderer(INCIDENT_STATUS.enum, INCIDENT_STATUS.classes),
+        severityLevel: createStatusRenderer(SEVERITY_LEVEL.enum, SEVERITY_LEVEL.classes),
+        remediationStatus: createStatusRenderer(REMEDIATION_STATUS.enum, REMEDIATION_STATUS.classes),
+        date: renderDate
     };
 
 })();

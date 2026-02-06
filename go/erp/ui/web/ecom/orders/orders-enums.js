@@ -12,93 +12,73 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// E-Commerce Orders Module - Enum Definitions
+// E-Commerce Orders Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8DRenderers;
+
     window.EcomOrders = window.EcomOrders || {};
-    EcomOrders.enums = {};
 
-    // ORDER STATUS
-    EcomOrders.enums.ORDER_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'Confirmed',
-        3: 'Processing',
-        4: 'Shipped',
-        5: 'Delivered',
-        6: 'Cancelled',
-        7: 'Refunded'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const ORDER_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Confirmed', 'confirmed', 'layer8d-status-active'],
+        ['Processing', 'processing', 'layer8d-status-active'],
+        ['Shipped', 'shipped', 'layer8d-status-active'],
+        ['Delivered', 'delivered', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-terminated'],
+        ['Refunded', 'refunded', 'layer8d-status-inactive']
+    ]);
+
+    const PAYMENT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Authorized', 'authorized', 'layer8d-status-active'],
+        ['Captured', 'captured', 'layer8d-status-active'],
+        ['Failed', 'failed', 'layer8d-status-terminated'],
+        ['Refunded', 'refunded', 'layer8d-status-inactive']
+    ]);
+
+    const RETURN_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Requested', 'requested', 'layer8d-status-pending'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['Received', 'received', 'layer8d-status-active'],
+        ['Inspected', 'inspected', 'layer8d-status-active'],
+        ['Refunded', 'refunded', 'layer8d-status-active'],
+        ['Rejected', 'rejected', 'layer8d-status-terminated']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    EcomOrders.enums = {
+        ORDER_STATUS: ORDER_STATUS.enum,
+        ORDER_STATUS_CLASSES: ORDER_STATUS.classes,
+        PAYMENT_STATUS: PAYMENT_STATUS.enum,
+        PAYMENT_STATUS_CLASSES: PAYMENT_STATUS.classes,
+        RETURN_STATUS: RETURN_STATUS.enum,
+        RETURN_STATUS_CLASSES: RETURN_STATUS.classes
     };
 
-    EcomOrders.enums.ORDER_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-terminated',
-        7: 'layer8d-status-inactive'
-    };
-
-    // PAYMENT STATUS
-    EcomOrders.enums.PAYMENT_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'Authorized',
-        3: 'Captured',
-        4: 'Failed',
-        5: 'Refunded'
-    };
-
-    EcomOrders.enums.PAYMENT_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated',
-        5: 'layer8d-status-inactive'
-    };
-
-    // RETURN STATUS
-    EcomOrders.enums.RETURN_STATUS = {
-        0: 'Unspecified',
-        1: 'Requested',
-        2: 'Approved',
-        3: 'Received',
-        4: 'Inspected',
-        5: 'Refunded',
-        6: 'Rejected'
-    };
-
-    EcomOrders.enums.RETURN_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-terminated'
-    };
-
+    // ============================================================================
     // RENDERERS
-    EcomOrders.render = {};
+    // ============================================================================
 
-    EcomOrders.render.orderStatus = Layer8DRenderers.createStatusRenderer(
-        EcomOrders.enums.ORDER_STATUS,
-        EcomOrders.enums.ORDER_STATUS_CLASSES
-    );
-
-    EcomOrders.render.paymentStatus = Layer8DRenderers.createStatusRenderer(
-        EcomOrders.enums.PAYMENT_STATUS,
-        EcomOrders.enums.PAYMENT_STATUS_CLASSES
-    );
-
-    EcomOrders.render.returnStatus = Layer8DRenderers.createStatusRenderer(
-        EcomOrders.enums.RETURN_STATUS,
-        EcomOrders.enums.RETURN_STATUS_CLASSES
-    );
-
-    EcomOrders.render.date = Layer8DRenderers.renderDate;
-    EcomOrders.render.money = Layer8DRenderers.renderMoney;
+    EcomOrders.render = {
+        orderStatus: createStatusRenderer(ORDER_STATUS.enum, ORDER_STATUS.classes),
+        paymentStatus: createStatusRenderer(PAYMENT_STATUS.enum, PAYMENT_STATUS.classes),
+        returnStatus: createStatusRenderer(RETURN_STATUS.enum, RETURN_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

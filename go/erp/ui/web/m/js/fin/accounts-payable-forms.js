@@ -1,173 +1,117 @@
 /*
 © 2025 Sharon Aicler (saichler@gmail.com)
-
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
-/**
- * Mobile Accounts Payable Module - Form Configurations
- * Desktop Equivalent: fin/accounts-payable/accounts-payable-forms.js
- */
+// Mobile Accounts Payable Module - Form Configurations
+// Uses Layer8FormFactory for reduced boilerplate
+
 (function() {
     'use strict';
 
+    window.MobileAccountsPayable = window.MobileAccountsPayable || {};
+
+    const f = window.Layer8FormFactory;
     const enums = MobileAccountsPayable.enums;
 
     MobileAccountsPayable.forms = {
-        Vendor: {
-            title: 'Vendor',
-            sections: [
-                {
-                    title: 'Vendor Information',
-                    fields: [
-                        { key: 'vendorNumber', label: 'Vendor Number', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'legalName', label: 'Legal Name', type: 'text' },
-                        { key: 'taxId', label: 'Tax ID', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.VENDOR_STATUS, required: true },
-                        { key: 'paymentTermDays', label: 'Payment Term Days', type: 'number' },
-                        { key: 'defaultPaymentMethod', label: 'Default Payment Method', type: 'select', options: enums.PAYMENT_METHOD },
-                        { key: 'defaultAccountId', label: 'Default GL Account', type: 'reference', lookupModel: 'Account' },
-                        { key: 'currencyId', label: 'Currency', type: 'reference', lookupModel: 'Currency' },
-                        { key: 'website', label: 'Website', type: 'url' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        Vendor: f.form('Vendor', [
+            f.section('Vendor Information', [
+                ...f.text('vendorNumber', 'Vendor Number', true),
+                ...f.text('name', 'Name', true),
+                ...f.text('legalName', 'Legal Name'),
+                ...f.text('taxId', 'Tax ID'),
+                ...f.select('status', 'Status', enums.VENDOR_STATUS, true),
+                ...f.number('paymentTermDays', 'Payment Term Days'),
+                ...f.select('defaultPaymentMethod', 'Default Payment Method', enums.PAYMENT_METHOD),
+                ...f.reference('defaultAccountId', 'Default GL Account', 'Account'),
+                ...f.reference('currencyId', 'Currency', 'Currency'),
+                ...f.url('website', 'Website'),
+                ...f.textarea('notes', 'Notes'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        VendorContact: {
-            title: 'Vendor Contact',
-            sections: [
-                {
-                    title: 'Contact Information',
-                    fields: [
-                        { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
-                        { key: 'contactName', label: 'Contact Name', type: 'text', required: true },
-                        { key: 'title', label: 'Title', type: 'text' },
-                        { key: 'email', label: 'Email', type: 'text' },
-                        { key: 'phone', label: 'Phone', type: 'text' },
-                        { key: 'isPrimary', label: 'Primary Contact', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        VendorContact: f.form('Vendor Contact', [
+            f.section('Contact Information', [
+                ...f.reference('vendorId', 'Vendor', 'Vendor', true),
+                ...f.text('contactName', 'Contact Name', true),
+                ...f.text('title', 'Title'),
+                ...f.text('email', 'Email'),
+                ...f.text('phone', 'Phone'),
+                ...f.checkbox('isPrimary', 'Primary Contact')
+            ])
+        ]),
 
-        PurchaseInvoice: {
-            title: 'Purchase Invoice',
-            sections: [
-                {
-                    title: 'Invoice Details',
-                    fields: [
-                        { key: 'invoiceNumber', label: 'Invoice Number', type: 'text', required: true },
-                        { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
-                        { key: 'invoiceDate', label: 'Invoice Date', type: 'date', required: true },
-                        { key: 'dueDate', label: 'Due Date', type: 'date', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'totalAmount', label: 'Total Amount', type: 'currency' },
-                        { key: 'taxAmount', label: 'Tax Amount', type: 'currency' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.INVOICE_STATUS },
-                        { key: 'currencyId', label: 'Currency', type: 'reference', lookupModel: 'Currency' },
-                        { key: 'reference', label: 'Reference', type: 'text' }
-                    ]
-                }
-            ]
-        },
+        PurchaseInvoice: f.form('Purchase Invoice', [
+            f.section('Invoice Details', [
+                ...f.text('invoiceNumber', 'Invoice Number', true),
+                ...f.reference('vendorId', 'Vendor', 'Vendor', true),
+                ...f.date('invoiceDate', 'Invoice Date', true),
+                ...f.date('dueDate', 'Due Date', true),
+                ...f.textarea('description', 'Description'),
+                ...f.money('totalAmount', 'Total Amount'),
+                ...f.money('taxAmount', 'Tax Amount'),
+                ...f.select('status', 'Status', enums.INVOICE_STATUS),
+                ...f.reference('currencyId', 'Currency', 'Currency'),
+                ...f.text('reference', 'Reference')
+            ])
+        ]),
 
-        PurchaseInvoiceLine: {
-            title: 'Purchase Invoice Line',
-            sections: [
-                {
-                    title: 'Line Details',
-                    fields: [
-                        { key: 'invoiceId', label: 'Invoice', type: 'reference', lookupModel: 'PurchaseInvoice', required: true },
-                        { key: 'accountId', label: 'GL Account', type: 'reference', lookupModel: 'Account', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea', required: true },
-                        { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                        { key: 'unitPrice', label: 'Unit Price', type: 'currency', required: true },
-                        { key: 'lineTotal', label: 'Line Total', type: 'currency' },
-                        { key: 'taxAmount', label: 'Tax Amount', type: 'currency' }
-                    ]
-                }
-            ]
-        },
+        PurchaseInvoiceLine: f.form('Purchase Invoice Line', [
+            f.section('Line Details', [
+                ...f.reference('invoiceId', 'Invoice', 'PurchaseInvoice', true),
+                ...f.reference('accountId', 'GL Account', 'Account', true),
+                ...f.textarea('description', 'Description', true),
+                ...f.number('quantity', 'Quantity', true),
+                ...f.money('unitPrice', 'Unit Price', true),
+                ...f.money('lineTotal', 'Line Total'),
+                ...f.money('taxAmount', 'Tax Amount')
+            ])
+        ]),
 
-        PaymentSchedule: {
-            title: 'Payment Schedule',
-            sections: [
-                {
-                    title: 'Schedule Details',
-                    fields: [
-                        { key: 'invoiceId', label: 'Invoice', type: 'reference', lookupModel: 'PurchaseInvoice', required: true },
-                        { key: 'dueDate', label: 'Due Date', type: 'date', required: true },
-                        { key: 'amount', label: 'Amount', type: 'currency', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.PAYMENT_STATUS },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        PaymentSchedule: f.form('Payment Schedule', [
+            f.section('Schedule Details', [
+                ...f.reference('invoiceId', 'Invoice', 'PurchaseInvoice', true),
+                ...f.date('dueDate', 'Due Date', true),
+                ...f.money('amount', 'Amount', true),
+                ...f.select('status', 'Status', enums.PAYMENT_STATUS),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        VendorPayment: {
-            title: 'Vendor Payment',
-            sections: [
-                {
-                    title: 'Payment Details',
-                    fields: [
-                        { key: 'paymentNumber', label: 'Payment Number', type: 'text', required: true },
-                        { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
-                        { key: 'paymentDate', label: 'Payment Date', type: 'date', required: true },
-                        { key: 'amount', label: 'Amount', type: 'currency', required: true },
-                        { key: 'paymentMethod', label: 'Payment Method', type: 'select', options: enums.PAYMENT_METHOD, required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.PAYMENT_STATUS },
-                        { key: 'bankAccountId', label: 'Bank Account', type: 'reference', lookupModel: 'Account' },
-                        { key: 'reference', label: 'Reference', type: 'text' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        VendorPayment: f.form('Vendor Payment', [
+            f.section('Payment Details', [
+                ...f.text('paymentNumber', 'Payment Number', true),
+                ...f.reference('vendorId', 'Vendor', 'Vendor', true),
+                ...f.date('paymentDate', 'Payment Date', true),
+                ...f.money('amount', 'Amount', true),
+                ...f.select('paymentMethod', 'Payment Method', enums.PAYMENT_METHOD, true),
+                ...f.select('status', 'Status', enums.PAYMENT_STATUS),
+                ...f.reference('bankAccountId', 'Bank Account', 'Account'),
+                ...f.text('reference', 'Reference'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        PaymentAllocation: {
-            title: 'Payment Allocation',
-            sections: [
-                {
-                    title: 'Allocation Details',
-                    fields: [
-                        { key: 'paymentId', label: 'Payment', type: 'reference', lookupModel: 'VendorPayment', required: true },
-                        { key: 'invoiceId', label: 'Invoice', type: 'reference', lookupModel: 'PurchaseInvoice', required: true },
-                        { key: 'allocatedAmount', label: 'Allocated Amount', type: 'currency', required: true }
-                    ]
-                }
-            ]
-        },
+        PaymentAllocation: f.form('Payment Allocation', [
+            f.section('Allocation Details', [
+                ...f.reference('paymentId', 'Payment', 'VendorPayment', true),
+                ...f.reference('invoiceId', 'Invoice', 'PurchaseInvoice', true),
+                ...f.money('allocatedAmount', 'Allocated Amount', true)
+            ])
+        ]),
 
-        VendorStatement: {
-            title: 'Vendor Statement',
-            sections: [
-                {
-                    title: 'Statement Details',
-                    fields: [
-                        { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
-                        { key: 'statementDate', label: 'Statement Date', type: 'date', required: true },
-                        { key: 'startDate', label: 'Period Start', type: 'date' },
-                        { key: 'endDate', label: 'Period End', type: 'date' },
-                        { key: 'openingBalance', label: 'Opening Balance', type: 'currency' },
-                        { key: 'totalBalance', label: 'Total Balance', type: 'currency' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
+        VendorStatement: f.form('Vendor Statement', [
+            f.section('Statement Details', [
+                ...f.reference('vendorId', 'Vendor', 'Vendor', true),
+                ...f.date('statementDate', 'Statement Date', true),
+                ...f.date('startDate', 'Period Start'),
+                ...f.date('endDate', 'Period End'),
+                ...f.money('openingBalance', 'Opening Balance'),
+                ...f.money('totalBalance', 'Total Balance'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ])
     };
 
 })();

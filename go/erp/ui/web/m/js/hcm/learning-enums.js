@@ -13,142 +13,118 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Learning Management Module - Enum Definitions
+ * Mobile Learning Management Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: hcm/learning/learning-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderMinutes, renderProgress, renderRating, renderBoolean, renderDate } = Layer8MRenderers;
+
     window.MobileLearning = window.MobileLearning || {};
-    MobileLearning.enums = {};
 
     // ============================================================================
-    // COURSE TYPE
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileLearning.enums.COURSE_TYPE = {
-        0: 'Unspecified', 1: 'Training', 2: 'Certification', 3: 'Compliance',
-        4: 'Onboarding', 5: 'Leadership', 6: 'Skills', 7: 'Safety'
-    };
-    MobileLearning.enums.COURSE_TYPE_VALUES = {
-        'training': 1, 'certification': 2, 'compliance': 3, 'onboarding': 4,
-        'leadership': 5, 'skills': 6, 'safety': 7
-    };
+    const COURSE_TYPE = factory.withValues([
+        ['Unspecified', null], ['Training', 'training'], ['Certification', 'certification'],
+        ['Compliance', 'compliance'], ['Onboarding', 'onboarding'], ['Leadership', 'leadership'],
+        ['Skills', 'skills'], ['Safety', 'safety']
+    ]);
+
+    const COURSE_DELIVERY_METHOD = factory.withValues([
+        ['Unspecified', null], ['Instructor Led', 'instructor'], ['Virtual ILT', 'virtual'],
+        ['E-Learning', 'elearning'], ['Blended', 'blended'], ['On the Job', 'otj'],
+        ['Self Study', 'self'], ['Webinar', 'webinar']
+    ]);
+
+    const COURSE_CATEGORY = factory.withValues([
+        ['Unspecified', null], ['Technical', 'technical'], ['Soft Skills', 'soft'],
+        ['Leadership', 'leadership'], ['Compliance', 'compliance'], ['Safety', 'safety'],
+        ['Product', 'product'], ['Process', 'process'], ['Tools', 'tools']
+    ]);
+
+    const COURSE_LEVEL = factory.withValues([
+        ['Unspecified', null], ['Beginner', 'beginner'], ['Intermediate', 'intermediate'],
+        ['Advanced', 'advanced'], ['Expert', 'expert']
+    ]);
+
+    const SESSION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Scheduled', 'scheduled', 'status-pending'],
+        ['Open', 'open', 'status-active'],
+        ['Full', 'full', 'status-pending'],
+        ['In Progress', 'progress', 'status-active'],
+        ['Completed', 'completed', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-terminated']
+    ]);
+
+    const COURSE_ENROLLMENT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'status-pending'],
+        ['Active', 'active', 'status-active'],
+        ['Completed', 'completed', 'status-active'],
+        ['Failed', 'failed', 'status-terminated'],
+        ['Cancelled', 'cancelled', 'status-terminated'],
+        ['Waitlisted', 'waitlisted', 'status-pending']
+    ]);
+
+    const CERTIFICATION_TYPE = factory.withValues([
+        ['Unspecified', null], ['Professional', 'professional'], ['Technical', 'technical'],
+        ['Industry', 'industry'], ['Vendor', 'vendor'], ['Government', 'government'], ['Internal', 'internal']
+    ]);
+
+    const CERTIFICATION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['In Progress', 'progress', 'status-pending'],
+        ['Active', 'active', 'status-active'],
+        ['Expired', 'expired', 'status-terminated'],
+        ['Revoked', 'revoked', 'status-terminated'],
+        ['Pending Renewal', 'pending', 'status-pending']
+    ]);
+
+    const SKILL_CATEGORY = factory.withValues([
+        ['Unspecified', null], ['Technical', 'technical'], ['Soft Skill', 'soft'],
+        ['Leadership', 'leadership'], ['Language', 'language'], ['Tool', 'tool'],
+        ['Domain', 'domain'], ['Certification', 'certification']
+    ]);
+
+    const TRAINING_TYPE = factory.withValues([
+        ['Unspecified', null], ['Compliance', 'compliance'], ['Safety', 'safety'],
+        ['Security', 'security'], ['Harassment', 'harassment'], ['Diversity', 'diversity'],
+        ['Ethics', 'ethics'], ['HIPAA', 'hipaa'], ['GDPR', 'gdpr'], ['SOX', 'sox']
+    ]);
 
     // ============================================================================
-    // COURSE DELIVERY METHOD
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileLearning.enums.COURSE_DELIVERY_METHOD = {
-        0: 'Unspecified', 1: 'Instructor Led', 2: 'Virtual ILT', 3: 'E-Learning',
-        4: 'Blended', 5: 'On the Job', 6: 'Self Study', 7: 'Webinar'
-    };
-    MobileLearning.enums.COURSE_DELIVERY_METHOD_VALUES = {
-        'instructor': 1, 'ilt': 1, 'virtual': 2, 'vilt': 2, 'elearning': 3,
-        'online': 3, 'blended': 4, 'otj': 5, 'job': 5, 'self': 6, 'study': 6, 'webinar': 7
-    };
-
-    // ============================================================================
-    // COURSE CATEGORY
-    // ============================================================================
-
-    MobileLearning.enums.COURSE_CATEGORY = {
-        0: 'Unspecified', 1: 'Technical', 2: 'Soft Skills', 3: 'Leadership',
-        4: 'Compliance', 5: 'Safety', 6: 'Product', 7: 'Process', 8: 'Tools'
-    };
-    MobileLearning.enums.COURSE_CATEGORY_VALUES = {
-        'technical': 1, 'soft': 2, 'skills': 2, 'leadership': 3, 'compliance': 4,
-        'safety': 5, 'product': 6, 'process': 7, 'tools': 8
-    };
-
-    // ============================================================================
-    // COURSE LEVEL
-    // ============================================================================
-
-    MobileLearning.enums.COURSE_LEVEL = {
-        0: 'Unspecified', 1: 'Beginner', 2: 'Intermediate', 3: 'Advanced', 4: 'Expert'
-    };
-    MobileLearning.enums.COURSE_LEVEL_VALUES = {
-        'beginner': 1, 'intermediate': 2, 'advanced': 3, 'expert': 4
-    };
-
-    // ============================================================================
-    // SESSION STATUS
-    // ============================================================================
-
-    MobileLearning.enums.SESSION_STATUS = {
-        0: 'Unspecified', 1: 'Scheduled', 2: 'Open', 3: 'Full', 4: 'In Progress', 5: 'Completed', 6: 'Cancelled'
-    };
-    MobileLearning.enums.SESSION_STATUS_VALUES = {
-        'scheduled': 1, 'open': 2, 'full': 3, 'progress': 4, 'completed': 5, 'cancelled': 6
-    };
-    MobileLearning.enums.SESSION_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-pending',
-        4: 'status-active', 5: 'status-active', 6: 'status-terminated'
-    };
-
-    // ============================================================================
-    // COURSE ENROLLMENT STATUS
-    // ============================================================================
-
-    MobileLearning.enums.COURSE_ENROLLMENT_STATUS = {
-        0: 'Unspecified', 1: 'Pending', 2: 'Active', 3: 'Completed', 4: 'Failed', 5: 'Cancelled', 6: 'Waitlisted'
-    };
-    MobileLearning.enums.COURSE_ENROLLMENT_STATUS_VALUES = {
-        'pending': 1, 'active': 2, 'completed': 3, 'failed': 4, 'cancelled': 5, 'waitlisted': 6, 'waitlist': 6
-    };
-    MobileLearning.enums.COURSE_ENROLLMENT_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active',
-        4: 'status-terminated', 5: 'status-terminated', 6: 'status-pending'
-    };
-
-    // ============================================================================
-    // CERTIFICATION TYPE
-    // ============================================================================
-
-    MobileLearning.enums.CERTIFICATION_TYPE = {
-        0: 'Unspecified', 1: 'Professional', 2: 'Technical', 3: 'Industry', 4: 'Vendor', 5: 'Government', 6: 'Internal'
-    };
-    MobileLearning.enums.CERTIFICATION_TYPE_VALUES = {
-        'professional': 1, 'technical': 2, 'industry': 3, 'vendor': 4, 'government': 5, 'internal': 6
-    };
-
-    // ============================================================================
-    // CERTIFICATION STATUS
-    // ============================================================================
-
-    MobileLearning.enums.CERTIFICATION_STATUS = {
-        0: 'Unspecified', 1: 'In Progress', 2: 'Active', 3: 'Expired', 4: 'Revoked', 5: 'Pending Renewal'
-    };
-    MobileLearning.enums.CERTIFICATION_STATUS_VALUES = {
-        'progress': 1, 'active': 2, 'expired': 3, 'revoked': 4, 'pending': 5, 'renewal': 5
-    };
-    MobileLearning.enums.CERTIFICATION_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-terminated', 4: 'status-terminated', 5: 'status-pending'
-    };
-
-    // ============================================================================
-    // SKILL CATEGORY
-    // ============================================================================
-
-    MobileLearning.enums.SKILL_CATEGORY = {
-        0: 'Unspecified', 1: 'Technical', 2: 'Soft Skill', 3: 'Leadership', 4: 'Language', 5: 'Tool', 6: 'Domain', 7: 'Certification'
-    };
-    MobileLearning.enums.SKILL_CATEGORY_VALUES = {
-        'technical': 1, 'soft': 2, 'leadership': 3, 'language': 4, 'tool': 5, 'domain': 6, 'certification': 7
-    };
-
-    // ============================================================================
-    // TRAINING TYPE
-    // ============================================================================
-
-    MobileLearning.enums.TRAINING_TYPE = {
-        0: 'Unspecified', 1: 'Compliance', 2: 'Safety', 3: 'Security', 4: 'Harassment',
-        5: 'Diversity', 6: 'Ethics', 7: 'HIPAA', 8: 'GDPR', 9: 'SOX'
-    };
-    MobileLearning.enums.TRAINING_TYPE_VALUES = {
-        'compliance': 1, 'safety': 2, 'security': 3, 'harassment': 4,
-        'diversity': 5, 'ethics': 6, 'hipaa': 7, 'gdpr': 8, 'sox': 9
+    MobileLearning.enums = {
+        COURSE_TYPE: COURSE_TYPE.enum,
+        COURSE_TYPE_VALUES: COURSE_TYPE.values,
+        COURSE_DELIVERY_METHOD: COURSE_DELIVERY_METHOD.enum,
+        COURSE_DELIVERY_METHOD_VALUES: COURSE_DELIVERY_METHOD.values,
+        COURSE_CATEGORY: COURSE_CATEGORY.enum,
+        COURSE_CATEGORY_VALUES: COURSE_CATEGORY.values,
+        COURSE_LEVEL: COURSE_LEVEL.enum,
+        COURSE_LEVEL_VALUES: COURSE_LEVEL.values,
+        SESSION_STATUS: SESSION_STATUS.enum,
+        SESSION_STATUS_VALUES: SESSION_STATUS.values,
+        SESSION_STATUS_CLASSES: SESSION_STATUS.classes,
+        COURSE_ENROLLMENT_STATUS: COURSE_ENROLLMENT_STATUS.enum,
+        COURSE_ENROLLMENT_STATUS_VALUES: COURSE_ENROLLMENT_STATUS.values,
+        COURSE_ENROLLMENT_STATUS_CLASSES: COURSE_ENROLLMENT_STATUS.classes,
+        CERTIFICATION_TYPE: CERTIFICATION_TYPE.enum,
+        CERTIFICATION_TYPE_VALUES: CERTIFICATION_TYPE.values,
+        CERTIFICATION_STATUS: CERTIFICATION_STATUS.enum,
+        CERTIFICATION_STATUS_VALUES: CERTIFICATION_STATUS.values,
+        CERTIFICATION_STATUS_CLASSES: CERTIFICATION_STATUS.classes,
+        SKILL_CATEGORY: SKILL_CATEGORY.enum,
+        SKILL_CATEGORY_VALUES: SKILL_CATEGORY.values,
+        TRAINING_TYPE: TRAINING_TYPE.enum,
+        TRAINING_TYPE_VALUES: TRAINING_TYPE.values
     };
 
     // ============================================================================
@@ -156,34 +132,34 @@ limitations under the License.
     // ============================================================================
 
     MobileLearning.render = {
-        courseType: (v) => Layer8MRenderers.renderEnum(v, MobileLearning.enums.COURSE_TYPE),
+        courseType: (v) => renderEnum(v, COURSE_TYPE.enum),
         courseDeliveryMethod: (method) => {
             const icons = { 1: '👨‍🏫', 2: '💻', 3: '🖥️', 4: '🔄', 5: '🏢', 6: '📖', 7: '🎥' };
-            const label = MobileLearning.enums.COURSE_DELIVERY_METHOD[method] || 'Unknown';
+            const label = COURSE_DELIVERY_METHOD.enum[method] || 'Unknown';
             return icons[method] ? `${icons[method]} ${Layer8MUtils.escapeHtml(label)}` : Layer8MUtils.escapeHtml(label);
         },
-        courseCategory: (v) => Layer8MRenderers.renderEnum(v, MobileLearning.enums.COURSE_CATEGORY),
+        courseCategory: (v) => renderEnum(v, COURSE_CATEGORY.enum),
         courseLevel: (level) => {
             const colors = { 1: '#10b981', 2: '#3b82f6', 3: '#f59e0b', 4: '#7c3aed' };
-            const label = MobileLearning.enums.COURSE_LEVEL[level] || 'Unknown';
+            const label = COURSE_LEVEL.enum[level] || 'Unknown';
             return `<span style="color: ${colors[level] || '#64748b'}; font-weight: 500;">${Layer8MUtils.escapeHtml(label)}</span>`;
         },
-        sessionStatus: Layer8MRenderers.createStatusRenderer(MobileLearning.enums.SESSION_STATUS, MobileLearning.enums.SESSION_STATUS_CLASSES),
-        courseEnrollmentStatus: Layer8MRenderers.createStatusRenderer(MobileLearning.enums.COURSE_ENROLLMENT_STATUS, MobileLearning.enums.COURSE_ENROLLMENT_STATUS_CLASSES),
-        certificationType: (v) => Layer8MRenderers.renderEnum(v, MobileLearning.enums.CERTIFICATION_TYPE),
-        certificationStatus: Layer8MRenderers.createStatusRenderer(MobileLearning.enums.CERTIFICATION_STATUS, MobileLearning.enums.CERTIFICATION_STATUS_CLASSES),
-        skillCategory: (v) => Layer8MRenderers.renderEnum(v, MobileLearning.enums.SKILL_CATEGORY),
-        trainingType: (v) => Layer8MRenderers.renderEnum(v, MobileLearning.enums.TRAINING_TYPE),
-        duration: Layer8MRenderers.renderMinutes,
-        percentage: Layer8MRenderers.renderProgress,
+        sessionStatus: createStatusRenderer(SESSION_STATUS.enum, SESSION_STATUS.classes),
+        courseEnrollmentStatus: createStatusRenderer(COURSE_ENROLLMENT_STATUS.enum, COURSE_ENROLLMENT_STATUS.classes),
+        certificationType: (v) => renderEnum(v, CERTIFICATION_TYPE.enum),
+        certificationStatus: createStatusRenderer(CERTIFICATION_STATUS.enum, CERTIFICATION_STATUS.classes),
+        skillCategory: (v) => renderEnum(v, SKILL_CATEGORY.enum),
+        trainingType: (v) => renderEnum(v, TRAINING_TYPE.enum),
+        duration: renderMinutes,
+        percentage: renderProgress,
         proficiency: (level) => {
             if (!level) return '-';
             const stars = '★'.repeat(level) + '☆'.repeat(5 - level);
             return `<span title="Level ${level}/5">${stars}</span>`;
         },
-        rating: Layer8MRenderers.renderRating,
-        boolean: Layer8MRenderers.renderBoolean,
-        date: Layer8MRenderers.renderDate
+        rating: renderRating,
+        boolean: renderBoolean,
+        date: renderDate
     };
 
 })();

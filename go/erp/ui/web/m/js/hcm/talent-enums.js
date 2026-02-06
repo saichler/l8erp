@@ -13,198 +13,246 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Talent Management Module - Enum Definitions
+ * Mobile Talent Management Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: hcm/talent/talent-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderPriority, renderRisk, renderProgress, renderRating, renderPeriod, renderBoolean, renderDate } = Layer8MRenderers;
+
     window.MobileTalent = window.MobileTalent || {};
-    MobileTalent.enums = {};
 
     // ============================================================================
     // REQUISITION
     // ============================================================================
 
-    MobileTalent.enums.REQUISITION_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Pending Approval', 3: 'Approved',
-        4: 'Open', 5: 'On Hold', 6: 'Filled', 7: 'Cancelled', 8: 'Closed'
-    };
-    MobileTalent.enums.REQUISITION_STATUS_VALUES = {
-        'draft': 1, 'pending': 2, 'approval': 2, 'approved': 3, 'open': 4,
-        'hold': 5, 'filled': 6, 'cancelled': 7, 'closed': 8
-    };
-    MobileTalent.enums.REQUISITION_STATUS_CLASSES = {
-        1: 'status-inactive', 2: 'status-pending', 3: 'status-active', 4: 'status-active',
-        5: 'status-pending', 6: 'status-active', 7: 'status-terminated', 8: 'status-inactive'
-    };
+    const REQUISITION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-inactive'],
+        ['Pending Approval', 'pending', 'status-pending'],
+        ['Approved', 'approved', 'status-active'],
+        ['Open', 'open', 'status-active'],
+        ['On Hold', 'hold', 'status-pending'],
+        ['Filled', 'filled', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-terminated'],
+        ['Closed', 'closed', 'status-inactive']
+    ]);
 
-    MobileTalent.enums.REQUISITION_TYPE = {
-        0: 'Unspecified', 1: 'New Position', 2: 'Replacement', 3: 'Expansion', 4: 'Temporary', 5: 'Intern'
-    };
-    MobileTalent.enums.REQUISITION_TYPE_VALUES = {
-        'new': 1, 'position': 1, 'replacement': 2, 'expansion': 3, 'temporary': 4, 'temp': 4, 'intern': 5
-    };
+    const REQUISITION_TYPE = factory.withValues([
+        ['Unspecified', null], ['New Position', 'new'], ['Replacement', 'replacement'],
+        ['Expansion', 'expansion'], ['Temporary', 'temporary'], ['Intern', 'intern']
+    ]);
 
     // ============================================================================
     // APPLICANT & APPLICATION
     // ============================================================================
 
-    MobileTalent.enums.APPLICANT_SOURCE = {
-        0: 'Unspecified', 1: 'Career Site', 2: 'LinkedIn', 3: 'Indeed', 4: 'Glassdoor',
-        5: 'Referral', 6: 'Agency', 7: 'University', 8: 'Job Fair', 9: 'Internal', 10: 'Other'
-    };
-    MobileTalent.enums.APPLICANT_SOURCE_VALUES = {
-        'career': 1, 'site': 1, 'linkedin': 2, 'indeed': 3, 'glassdoor': 4, 'referral': 5,
-        'agency': 6, 'university': 7, 'fair': 8, 'internal': 9, 'other': 10
-    };
+    const APPLICANT_SOURCE = factory.withValues([
+        ['Unspecified', null], ['Career Site', 'career'], ['LinkedIn', 'linkedin'],
+        ['Indeed', 'indeed'], ['Glassdoor', 'glassdoor'], ['Referral', 'referral'],
+        ['Agency', 'agency'], ['University', 'university'], ['Job Fair', 'fair'],
+        ['Internal', 'internal'], ['Other', 'other']
+    ]);
 
-    MobileTalent.enums.APPLICATION_STATUS = {
-        0: 'Unspecified', 1: 'New', 2: 'In Review', 3: 'Interviewing', 4: 'Offer Pending',
-        5: 'Offer Extended', 6: 'Hired', 7: 'Rejected', 8: 'Withdrawn'
-    };
-    MobileTalent.enums.APPLICATION_STATUS_VALUES = {
-        'new': 1, 'review': 2, 'interviewing': 3, 'offer': 4, 'pending': 4,
-        'extended': 5, 'hired': 6, 'rejected': 7, 'withdrawn': 8
-    };
-    MobileTalent.enums.APPLICATION_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-active', 4: 'status-pending',
-        5: 'status-active', 6: 'status-active', 7: 'status-terminated', 8: 'status-inactive'
-    };
+    const APPLICATION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['New', 'new', 'status-pending'],
+        ['In Review', 'review', 'status-pending'],
+        ['Interviewing', 'interviewing', 'status-active'],
+        ['Offer Pending', 'offer', 'status-pending'],
+        ['Offer Extended', 'extended', 'status-active'],
+        ['Hired', 'hired', 'status-active'],
+        ['Rejected', 'rejected', 'status-terminated'],
+        ['Withdrawn', 'withdrawn', 'status-inactive']
+    ]);
 
-    MobileTalent.enums.APPLICATION_STAGE = {
-        0: 'Unspecified', 1: 'Screening', 2: 'Phone Screen', 3: 'Interview 1', 4: 'Interview 2',
-        5: 'Final Interview', 6: 'Reference Check', 7: 'Background Check', 8: 'Offer', 9: 'Closed'
-    };
-    MobileTalent.enums.APPLICATION_STAGE_VALUES = {
-        'screening': 1, 'phone': 2, 'interview1': 3, 'interview2': 4, 'final': 5,
-        'reference': 6, 'background': 7, 'offer': 8, 'closed': 9
-    };
+    const APPLICATION_STAGE = factory.withValues([
+        ['Unspecified', null], ['Screening', 'screening'], ['Phone Screen', 'phone'],
+        ['Interview 1', 'interview1'], ['Interview 2', 'interview2'], ['Final Interview', 'final'],
+        ['Reference Check', 'reference'], ['Background Check', 'background'], ['Offer', 'offer'], ['Closed', 'closed']
+    ]);
 
-    MobileTalent.enums.DISPOSITION_REASON = {
-        0: 'Unspecified', 1: 'Under Qualified', 2: 'Over Qualified', 3: 'Better Candidate',
-        4: 'Compensation Mismatch', 5: 'Failed Interview', 6: 'Failed Background', 7: 'Withdrew',
-        8: 'Declined Offer', 9: 'Position Filled', 10: 'Position Cancelled', 11: 'No Show'
-    };
-    MobileTalent.enums.DISPOSITION_REASON_VALUES = {
-        'under': 1, 'qualified': 1, 'over': 2, 'better': 3, 'compensation': 4, 'failed': 5,
-        'interview': 5, 'background': 6, 'withdrew': 7, 'declined': 8, 'filled': 9, 'cancelled': 10, 'noshow': 11
-    };
+    const DISPOSITION_REASON = factory.withValues([
+        ['Unspecified', null], ['Under Qualified', 'under'], ['Over Qualified', 'over'],
+        ['Better Candidate', 'better'], ['Compensation Mismatch', 'compensation'],
+        ['Failed Interview', 'failed'], ['Failed Background', 'background'],
+        ['Withdrew', 'withdrew'], ['Declined Offer', 'declined'],
+        ['Position Filled', 'filled'], ['Position Cancelled', 'cancelled'], ['No Show', 'noshow']
+    ]);
 
     // ============================================================================
     // ONBOARDING TASK
     // ============================================================================
 
-    MobileTalent.enums.ONBOARDING_TASK_CATEGORY = {
-        0: 'Unspecified', 1: 'Paperwork', 2: 'IT Setup', 3: 'Equipment', 4: 'Training',
-        5: 'Benefits', 6: 'Compliance', 7: 'Introduction', 8: 'Orientation'
-    };
-    MobileTalent.enums.ONBOARDING_TASK_CATEGORY_VALUES = {
-        'paperwork': 1, 'it': 2, 'setup': 2, 'equipment': 3, 'training': 4,
-        'benefits': 5, 'compliance': 6, 'introduction': 7, 'orientation': 8
-    };
+    const ONBOARDING_TASK_CATEGORY = factory.withValues([
+        ['Unspecified', null], ['Paperwork', 'paperwork'], ['IT Setup', 'it'],
+        ['Equipment', 'equipment'], ['Training', 'training'], ['Benefits', 'benefits'],
+        ['Compliance', 'compliance'], ['Introduction', 'introduction'], ['Orientation', 'orientation']
+    ]);
 
-    MobileTalent.enums.TASK_OWNER = {
-        0: 'Unspecified', 1: 'Employee', 2: 'Manager', 3: 'HR', 4: 'IT', 5: 'Payroll', 6: 'Facilities'
-    };
-    MobileTalent.enums.TASK_OWNER_VALUES = {
-        'employee': 1, 'manager': 2, 'hr': 3, 'it': 4, 'payroll': 5, 'facilities': 6
-    };
+    const TASK_OWNER = factory.withValues([
+        ['Unspecified', null], ['Employee', 'employee'], ['Manager', 'manager'],
+        ['HR', 'hr'], ['IT', 'it'], ['Payroll', 'payroll'], ['Facilities', 'facilities']
+    ]);
 
-    MobileTalent.enums.ONBOARDING_TASK_STATUS = {
-        0: 'Unspecified', 1: 'Not Started', 2: 'In Progress', 3: 'Completed', 4: 'Skipped', 5: 'Blocked'
-    };
-    MobileTalent.enums.ONBOARDING_TASK_STATUS_VALUES = {
-        'not': 1, 'started': 1, 'progress': 2, 'completed': 3, 'skipped': 4, 'blocked': 5
-    };
-    MobileTalent.enums.ONBOARDING_TASK_STATUS_CLASSES = {
-        1: 'status-inactive', 2: 'status-pending', 3: 'status-active', 4: 'status-inactive', 5: 'status-terminated'
-    };
+    const ONBOARDING_TASK_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Not Started', 'not', 'status-inactive'],
+        ['In Progress', 'progress', 'status-pending'],
+        ['Completed', 'completed', 'status-active'],
+        ['Skipped', 'skipped', 'status-inactive'],
+        ['Blocked', 'blocked', 'status-terminated']
+    ]);
 
     // ============================================================================
     // PERFORMANCE REVIEW
     // ============================================================================
 
-    MobileTalent.enums.PERFORMANCE_REVIEW_STATUS = {
-        0: 'Unspecified', 1: 'Not Started', 2: 'Self Review', 3: 'Manager Review',
-        4: 'Calibration', 5: 'HR Review', 6: 'Acknowledgment', 7: 'Completed'
-    };
-    MobileTalent.enums.PERFORMANCE_REVIEW_STATUS_VALUES = {
-        'not': 1, 'started': 1, 'self': 2, 'manager': 3, 'calibration': 4,
-        'hr': 5, 'acknowledgment': 6, 'completed': 7
-    };
-    MobileTalent.enums.PERFORMANCE_REVIEW_STATUS_CLASSES = {
-        1: 'status-inactive', 2: 'status-pending', 3: 'status-pending', 4: 'status-pending',
-        5: 'status-pending', 6: 'status-pending', 7: 'status-active'
-    };
+    const PERFORMANCE_REVIEW_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Not Started', 'not', 'status-inactive'],
+        ['Self Review', 'self', 'status-pending'],
+        ['Manager Review', 'manager', 'status-pending'],
+        ['Calibration', 'calibration', 'status-pending'],
+        ['HR Review', 'hr', 'status-pending'],
+        ['Acknowledgment', 'acknowledgment', 'status-pending'],
+        ['Completed', 'completed', 'status-active']
+    ]);
 
-    MobileTalent.enums.REVIEW_TYPE = {
-        0: 'Unspecified', 1: 'Annual', 2: 'Semi-Annual', 3: 'Quarterly', 4: 'Probationary', 5: 'Project', 6: 'Ad Hoc'
-    };
-    MobileTalent.enums.REVIEW_TYPE_VALUES = {
-        'annual': 1, 'semi': 2, 'quarterly': 3, 'probationary': 4, 'probation': 4, 'project': 5, 'adhoc': 6
-    };
+    const REVIEW_TYPE = factory.withValues([
+        ['Unspecified', null], ['Annual', 'annual'], ['Semi-Annual', 'semi'],
+        ['Quarterly', 'quarterly'], ['Probationary', 'probationary'], ['Project', 'project'], ['Ad Hoc', 'adhoc']
+    ]);
 
     // ============================================================================
     // GOAL
     // ============================================================================
 
-    MobileTalent.enums.GOAL_TYPE = { 0: 'Unspecified', 1: 'Individual', 2: 'Team', 3: 'Department', 4: 'Company' };
-    MobileTalent.enums.GOAL_TYPE_VALUES = { 'individual': 1, 'team': 2, 'department': 3, 'dept': 3, 'company': 4 };
+    const GOAL_TYPE = factory.withValues([
+        ['Unspecified', null], ['Individual', 'individual'], ['Team', 'team'],
+        ['Department', 'department'], ['Company', 'company']
+    ]);
 
-    MobileTalent.enums.GOAL_CATEGORY = { 0: 'Unspecified', 1: 'Performance', 2: 'Development', 3: 'Career', 4: 'Project' };
-    MobileTalent.enums.GOAL_CATEGORY_VALUES = { 'performance': 1, 'development': 2, 'career': 3, 'project': 4 };
+    const GOAL_CATEGORY = factory.withValues([
+        ['Unspecified', null], ['Performance', 'performance'], ['Development', 'development'],
+        ['Career', 'career'], ['Project', 'project']
+    ]);
 
-    MobileTalent.enums.GOAL_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Active', 3: 'On Track', 4: 'At Risk', 5: 'Behind', 6: 'Completed', 7: 'Cancelled'
-    };
-    MobileTalent.enums.GOAL_STATUS_VALUES = {
-        'draft': 1, 'active': 2, 'track': 3, 'risk': 4, 'behind': 5, 'completed': 6, 'cancelled': 7
-    };
-    MobileTalent.enums.GOAL_STATUS_CLASSES = {
-        1: 'status-inactive', 2: 'status-active', 3: 'status-active', 4: 'status-pending',
-        5: 'status-terminated', 6: 'status-active', 7: 'status-inactive'
-    };
+    const GOAL_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-inactive'],
+        ['Active', 'active', 'status-active'],
+        ['On Track', 'track', 'status-active'],
+        ['At Risk', 'risk', 'status-pending'],
+        ['Behind', 'behind', 'status-terminated'],
+        ['Completed', 'completed', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-inactive']
+    ]);
 
-    MobileTalent.enums.GOAL_PRIORITY = { 0: 'Unspecified', 1: 'Low', 2: 'Medium', 3: 'High', 4: 'Critical' };
-    MobileTalent.enums.GOAL_PRIORITY_VALUES = { 'low': 1, 'medium': 2, 'med': 2, 'high': 3, 'critical': 4 };
+    const GOAL_PRIORITY = factory.withValues([
+        ['Unspecified', null], ['Low', 'low'], ['Medium', 'medium'], ['High', 'high'], ['Critical', 'critical']
+    ]);
 
     // ============================================================================
     // SUCCESSION & CAREER
     // ============================================================================
 
-    MobileTalent.enums.SUCCESSION_PLAN_STATUS = { 0: 'Unspecified', 1: 'Draft', 2: 'Active', 3: 'On Hold', 4: 'Closed' };
-    MobileTalent.enums.SUCCESSION_PLAN_STATUS_VALUES = { 'draft': 1, 'active': 2, 'hold': 3, 'closed': 4 };
-    MobileTalent.enums.SUCCESSION_PLAN_STATUS_CLASSES = {
-        1: 'status-inactive', 2: 'status-active', 3: 'status-pending', 4: 'status-inactive'
-    };
+    const SUCCESSION_PLAN_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-inactive'],
+        ['Active', 'active', 'status-active'],
+        ['On Hold', 'hold', 'status-pending'],
+        ['Closed', 'closed', 'status-inactive']
+    ]);
 
-    MobileTalent.enums.RISK_LEVEL = { 0: 'Unspecified', 1: 'Low', 2: 'Medium', 3: 'High', 4: 'Critical' };
-    MobileTalent.enums.RISK_LEVEL_VALUES = { 'low': 1, 'medium': 2, 'med': 2, 'high': 3, 'critical': 4 };
+    const RISK_LEVEL = factory.withValues([
+        ['Unspecified', null], ['Low', 'low'], ['Medium', 'medium'], ['High', 'high'], ['Critical', 'critical']
+    ]);
 
-    MobileTalent.enums.READINESS_LEVEL = {
-        0: 'Unspecified', 1: 'Ready Now', 2: 'Ready in 1 Year', 3: 'Ready in 2 Years', 4: 'Ready in 3+ Years'
-    };
-    MobileTalent.enums.READINESS_LEVEL_VALUES = { 'now': 1, 'ready': 1, '1': 2, '2': 3, '3': 4 };
+    const READINESS_LEVEL = factory.withValues([
+        ['Unspecified', null], ['Ready Now', 'now'], ['Ready in 1 Year', '1'],
+        ['Ready in 2 Years', '2'], ['Ready in 3+ Years', '3']
+    ]);
 
     // ============================================================================
     // FEEDBACK
     // ============================================================================
 
-    MobileTalent.enums.FEEDBACK_TYPE = { 0: 'Unspecified', 1: '360 Review', 2: 'Peer', 3: 'Upward', 4: 'Continuous', 5: 'Recognition' };
-    MobileTalent.enums.FEEDBACK_TYPE_VALUES = { '360': 1, 'review': 1, 'peer': 2, 'upward': 3, 'continuous': 4, 'recognition': 5 };
+    const FEEDBACK_TYPE = factory.withValues([
+        ['Unspecified', null], ['360 Review', '360'], ['Peer', 'peer'],
+        ['Upward', 'upward'], ['Continuous', 'continuous'], ['Recognition', 'recognition']
+    ]);
 
-    MobileTalent.enums.FEEDBACK_RELATIONSHIP = {
-        0: 'Unspecified', 1: 'Manager', 2: 'Peer', 3: 'Direct Report', 4: 'Skip Level', 5: 'Cross Functional', 6: 'External'
-    };
-    MobileTalent.enums.FEEDBACK_RELATIONSHIP_VALUES = {
-        'manager': 1, 'peer': 2, 'direct': 3, 'report': 3, 'skip': 4, 'cross': 5, 'functional': 5, 'external': 6
-    };
+    const FEEDBACK_RELATIONSHIP = factory.withValues([
+        ['Unspecified', null], ['Manager', 'manager'], ['Peer', 'peer'],
+        ['Direct Report', 'direct'], ['Skip Level', 'skip'],
+        ['Cross Functional', 'cross'], ['External', 'external']
+    ]);
 
-    MobileTalent.enums.FEEDBACK_STATUS = { 0: 'Unspecified', 1: 'Requested', 2: 'In Progress', 3: 'Submitted', 4: 'Declined' };
-    MobileTalent.enums.FEEDBACK_STATUS_VALUES = { 'requested': 1, 'progress': 2, 'submitted': 3, 'declined': 4 };
-    MobileTalent.enums.FEEDBACK_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-active', 4: 'status-terminated'
+    const FEEDBACK_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Requested', 'requested', 'status-pending'],
+        ['In Progress', 'progress', 'status-pending'],
+        ['Submitted', 'submitted', 'status-active'],
+        ['Declined', 'declined', 'status-terminated']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    MobileTalent.enums = {
+        REQUISITION_STATUS: REQUISITION_STATUS.enum,
+        REQUISITION_STATUS_VALUES: REQUISITION_STATUS.values,
+        REQUISITION_STATUS_CLASSES: REQUISITION_STATUS.classes,
+        REQUISITION_TYPE: REQUISITION_TYPE.enum,
+        REQUISITION_TYPE_VALUES: REQUISITION_TYPE.values,
+        APPLICANT_SOURCE: APPLICANT_SOURCE.enum,
+        APPLICANT_SOURCE_VALUES: APPLICANT_SOURCE.values,
+        APPLICATION_STATUS: APPLICATION_STATUS.enum,
+        APPLICATION_STATUS_VALUES: APPLICATION_STATUS.values,
+        APPLICATION_STATUS_CLASSES: APPLICATION_STATUS.classes,
+        APPLICATION_STAGE: APPLICATION_STAGE.enum,
+        APPLICATION_STAGE_VALUES: APPLICATION_STAGE.values,
+        DISPOSITION_REASON: DISPOSITION_REASON.enum,
+        DISPOSITION_REASON_VALUES: DISPOSITION_REASON.values,
+        ONBOARDING_TASK_CATEGORY: ONBOARDING_TASK_CATEGORY.enum,
+        ONBOARDING_TASK_CATEGORY_VALUES: ONBOARDING_TASK_CATEGORY.values,
+        TASK_OWNER: TASK_OWNER.enum,
+        TASK_OWNER_VALUES: TASK_OWNER.values,
+        ONBOARDING_TASK_STATUS: ONBOARDING_TASK_STATUS.enum,
+        ONBOARDING_TASK_STATUS_VALUES: ONBOARDING_TASK_STATUS.values,
+        ONBOARDING_TASK_STATUS_CLASSES: ONBOARDING_TASK_STATUS.classes,
+        PERFORMANCE_REVIEW_STATUS: PERFORMANCE_REVIEW_STATUS.enum,
+        PERFORMANCE_REVIEW_STATUS_VALUES: PERFORMANCE_REVIEW_STATUS.values,
+        PERFORMANCE_REVIEW_STATUS_CLASSES: PERFORMANCE_REVIEW_STATUS.classes,
+        REVIEW_TYPE: REVIEW_TYPE.enum,
+        REVIEW_TYPE_VALUES: REVIEW_TYPE.values,
+        GOAL_TYPE: GOAL_TYPE.enum,
+        GOAL_TYPE_VALUES: GOAL_TYPE.values,
+        GOAL_CATEGORY: GOAL_CATEGORY.enum,
+        GOAL_CATEGORY_VALUES: GOAL_CATEGORY.values,
+        GOAL_STATUS: GOAL_STATUS.enum,
+        GOAL_STATUS_VALUES: GOAL_STATUS.values,
+        GOAL_STATUS_CLASSES: GOAL_STATUS.classes,
+        GOAL_PRIORITY: GOAL_PRIORITY.enum,
+        GOAL_PRIORITY_VALUES: GOAL_PRIORITY.values,
+        SUCCESSION_PLAN_STATUS: SUCCESSION_PLAN_STATUS.enum,
+        SUCCESSION_PLAN_STATUS_VALUES: SUCCESSION_PLAN_STATUS.values,
+        SUCCESSION_PLAN_STATUS_CLASSES: SUCCESSION_PLAN_STATUS.classes,
+        RISK_LEVEL: RISK_LEVEL.enum,
+        RISK_LEVEL_VALUES: RISK_LEVEL.values,
+        READINESS_LEVEL: READINESS_LEVEL.enum,
+        READINESS_LEVEL_VALUES: READINESS_LEVEL.values,
+        FEEDBACK_TYPE: FEEDBACK_TYPE.enum,
+        FEEDBACK_TYPE_VALUES: FEEDBACK_TYPE.values,
+        FEEDBACK_RELATIONSHIP: FEEDBACK_RELATIONSHIP.enum,
+        FEEDBACK_RELATIONSHIP_VALUES: FEEDBACK_RELATIONSHIP.values,
+        FEEDBACK_STATUS: FEEDBACK_STATUS.enum,
+        FEEDBACK_STATUS_VALUES: FEEDBACK_STATUS.values,
+        FEEDBACK_STATUS_CLASSES: FEEDBACK_STATUS.classes
     };
 
     // ============================================================================
@@ -212,36 +260,36 @@ limitations under the License.
     // ============================================================================
 
     MobileTalent.render = {
-        requisitionStatus: Layer8MRenderers.createStatusRenderer(MobileTalent.enums.REQUISITION_STATUS, MobileTalent.enums.REQUISITION_STATUS_CLASSES),
-        requisitionType: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.REQUISITION_TYPE),
-        applicantSource: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.APPLICANT_SOURCE),
-        applicationStatus: Layer8MRenderers.createStatusRenderer(MobileTalent.enums.APPLICATION_STATUS, MobileTalent.enums.APPLICATION_STATUS_CLASSES),
-        applicationStage: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.APPLICATION_STAGE),
-        dispositionReason: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.DISPOSITION_REASON),
-        onboardingTaskCategory: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.ONBOARDING_TASK_CATEGORY),
-        taskOwner: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.TASK_OWNER),
-        onboardingTaskStatus: Layer8MRenderers.createStatusRenderer(MobileTalent.enums.ONBOARDING_TASK_STATUS, MobileTalent.enums.ONBOARDING_TASK_STATUS_CLASSES),
-        performanceReviewStatus: Layer8MRenderers.createStatusRenderer(MobileTalent.enums.PERFORMANCE_REVIEW_STATUS, MobileTalent.enums.PERFORMANCE_REVIEW_STATUS_CLASSES),
-        reviewType: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.REVIEW_TYPE),
-        goalType: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.GOAL_TYPE),
-        goalCategory: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.GOAL_CATEGORY),
-        goalStatus: Layer8MRenderers.createStatusRenderer(MobileTalent.enums.GOAL_STATUS, MobileTalent.enums.GOAL_STATUS_CLASSES),
-        goalPriority: (v) => Layer8MRenderers.renderPriority(v, MobileTalent.enums.GOAL_PRIORITY),
-        successionPlanStatus: Layer8MRenderers.createStatusRenderer(MobileTalent.enums.SUCCESSION_PLAN_STATUS, MobileTalent.enums.SUCCESSION_PLAN_STATUS_CLASSES),
-        riskLevel: (v) => Layer8MRenderers.renderRisk(v, MobileTalent.enums.RISK_LEVEL),
+        requisitionStatus: createStatusRenderer(REQUISITION_STATUS.enum, REQUISITION_STATUS.classes),
+        requisitionType: (v) => renderEnum(v, REQUISITION_TYPE.enum),
+        applicantSource: (v) => renderEnum(v, APPLICANT_SOURCE.enum),
+        applicationStatus: createStatusRenderer(APPLICATION_STATUS.enum, APPLICATION_STATUS.classes),
+        applicationStage: (v) => renderEnum(v, APPLICATION_STAGE.enum),
+        dispositionReason: (v) => renderEnum(v, DISPOSITION_REASON.enum),
+        onboardingTaskCategory: (v) => renderEnum(v, ONBOARDING_TASK_CATEGORY.enum),
+        taskOwner: (v) => renderEnum(v, TASK_OWNER.enum),
+        onboardingTaskStatus: createStatusRenderer(ONBOARDING_TASK_STATUS.enum, ONBOARDING_TASK_STATUS.classes),
+        performanceReviewStatus: createStatusRenderer(PERFORMANCE_REVIEW_STATUS.enum, PERFORMANCE_REVIEW_STATUS.classes),
+        reviewType: (v) => renderEnum(v, REVIEW_TYPE.enum),
+        goalType: (v) => renderEnum(v, GOAL_TYPE.enum),
+        goalCategory: (v) => renderEnum(v, GOAL_CATEGORY.enum),
+        goalStatus: createStatusRenderer(GOAL_STATUS.enum, GOAL_STATUS.classes),
+        goalPriority: (v) => renderPriority(v, GOAL_PRIORITY.enum),
+        successionPlanStatus: createStatusRenderer(SUCCESSION_PLAN_STATUS.enum, SUCCESSION_PLAN_STATUS.classes),
+        riskLevel: (v) => renderRisk(v, RISK_LEVEL.enum),
         readinessLevel: (v) => {
             const colors = { 1: '#10b981', 2: '#22c55e', 3: '#f59e0b', 4: '#ef4444' };
-            const label = MobileTalent.enums.READINESS_LEVEL[v] || 'Unknown';
+            const label = READINESS_LEVEL.enum[v] || 'Unknown';
             return `<span style="color: ${colors[v] || '#64748b'}; font-weight: 500;">${Layer8MUtils.escapeHtml(label)}</span>`;
         },
-        feedbackType: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.FEEDBACK_TYPE),
-        feedbackRelationship: (v) => Layer8MRenderers.renderEnum(v, MobileTalent.enums.FEEDBACK_RELATIONSHIP),
-        feedbackStatus: Layer8MRenderers.createStatusRenderer(MobileTalent.enums.FEEDBACK_STATUS, MobileTalent.enums.FEEDBACK_STATUS_CLASSES),
-        percentage: Layer8MRenderers.renderProgress,
-        rating: Layer8MRenderers.renderRating,
-        period: Layer8MRenderers.renderPeriod,
-        boolean: Layer8MRenderers.renderBoolean,
-        date: Layer8MRenderers.renderDate
+        feedbackType: (v) => renderEnum(v, FEEDBACK_TYPE.enum),
+        feedbackRelationship: (v) => renderEnum(v, FEEDBACK_RELATIONSHIP.enum),
+        feedbackStatus: createStatusRenderer(FEEDBACK_STATUS.enum, FEEDBACK_STATUS.classes),
+        percentage: renderProgress,
+        rating: renderRating,
+        period: renderPeriod,
+        boolean: renderBoolean,
+        date: renderDate
     };
 
 })();

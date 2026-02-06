@@ -12,85 +12,69 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Projects Billing Module - Enum Definitions
+// Projects Billing Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8DRenderers;
+
     window.PrjBilling = window.PrjBilling || {};
-    PrjBilling.enums = {};
 
-    // BILLING TYPE
-    PrjBilling.enums.BILLING_TYPE = {
-        0: 'Unspecified',
-        1: 'Time & Materials',
-        2: 'Fixed Price',
-        3: 'Milestone',
-        4: 'Retainer',
-        5: 'Not Billable'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const BILLING_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Time & Materials', 'tm', 'layer8d-status-active'],
+        ['Fixed Price', 'fixed', 'layer8d-status-active'],
+        ['Milestone', 'milestone', 'layer8d-status-pending'],
+        ['Retainer', 'retainer', 'layer8d-status-active'],
+        ['Not Billable', 'notbillable', 'layer8d-status-inactive']
+    ]);
+
+    const INVOICE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Sent', 'sent', 'layer8d-status-active'],
+        ['Paid', 'paid', 'layer8d-status-active'],
+        ['Overdue', 'overdue', 'layer8d-status-terminated'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive']
+    ]);
+
+    const REVENUE_RECOGNITION_METHOD = factory.create([
+        ['Unspecified', null, ''],
+        ['Completed Contract', 'completed', 'layer8d-status-active'],
+        ['Percentage of Completion', 'poc', 'layer8d-status-active'],
+        ['As Invoiced', 'invoiced', 'layer8d-status-active']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    PrjBilling.enums = {
+        BILLING_TYPE: BILLING_TYPE.enum,
+        BILLING_TYPE_CLASSES: BILLING_TYPE.classes,
+        INVOICE_STATUS: INVOICE_STATUS.enum,
+        INVOICE_STATUS_CLASSES: INVOICE_STATUS.classes,
+        REVENUE_RECOGNITION_METHOD: REVENUE_RECOGNITION_METHOD.enum,
+        REVENUE_RECOGNITION_METHOD_CLASSES: REVENUE_RECOGNITION_METHOD.classes
     };
 
-    PrjBilling.enums.BILLING_TYPE_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-inactive'
-    };
-
-    // INVOICE STATUS
-    PrjBilling.enums.INVOICE_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Pending',
-        3: 'Sent',
-        4: 'Paid',
-        5: 'Overdue',
-        6: 'Cancelled'
-    };
-
-    PrjBilling.enums.INVOICE_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-terminated',
-        6: 'layer8d-status-inactive'
-    };
-
-    // REVENUE RECOGNITION METHOD
-    PrjBilling.enums.REVENUE_RECOGNITION_METHOD = {
-        0: 'Unspecified',
-        1: 'Completed Contract',
-        2: 'Percentage of Completion',
-        3: 'As Invoiced'
-    };
-
-    PrjBilling.enums.REVENUE_RECOGNITION_METHOD_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active'
-    };
-
+    // ============================================================================
     // RENDERERS
-    PrjBilling.render = {};
+    // ============================================================================
 
-    PrjBilling.render.billingType = Layer8DRenderers.createStatusRenderer(
-        PrjBilling.enums.BILLING_TYPE,
-        PrjBilling.enums.BILLING_TYPE_CLASSES
-    );
-
-    PrjBilling.render.invoiceStatus = Layer8DRenderers.createStatusRenderer(
-        PrjBilling.enums.INVOICE_STATUS,
-        PrjBilling.enums.INVOICE_STATUS_CLASSES
-    );
-
-    PrjBilling.render.revenueRecognitionMethod = Layer8DRenderers.createStatusRenderer(
-        PrjBilling.enums.REVENUE_RECOGNITION_METHOD,
-        PrjBilling.enums.REVENUE_RECOGNITION_METHOD_CLASSES
-    );
-
-    PrjBilling.render.date = Layer8DRenderers.renderDate;
-    PrjBilling.render.money = Layer8DRenderers.renderMoney;
+    PrjBilling.render = {
+        billingType: createStatusRenderer(BILLING_TYPE.enum, BILLING_TYPE.classes),
+        invoiceStatus: createStatusRenderer(INVOICE_STATUS.enum, INVOICE_STATUS.classes),
+        revenueRecognitionMethod: createStatusRenderer(REVENUE_RECOGNITION_METHOD.enum, REVENUE_RECOGNITION_METHOD.classes),
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

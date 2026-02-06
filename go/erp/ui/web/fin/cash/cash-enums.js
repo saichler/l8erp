@@ -12,62 +12,83 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Cash Management Module - Enum Definitions
-// Part 1 of 4 - Load this file first
+// Cash Management Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Create CashManagement namespace
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+
     window.CashManagement = window.CashManagement || {};
-    CashManagement.enums = {};
 
     // ============================================================================
-    // BANK ACCOUNT TYPE
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    CashManagement.enums.BANK_ACCOUNT_TYPE = { 0: 'Unspecified', 1: 'Checking', 2: 'Savings', 3: 'Money Market', 4: 'Credit Line' };
+    const BANK_ACCOUNT_TYPE = factory.simple([
+        'Unspecified', 'Checking', 'Savings', 'Money Market', 'Credit Line'
+    ]);
+
+    const BANK_ACCOUNT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Active', 'active', 'layer8d-status-active'],
+        ['Inactive', 'inactive', 'layer8d-status-inactive'],
+        ['Closed', 'closed', 'layer8d-status-terminated'],
+        ['Frozen', 'frozen', 'layer8d-status-terminated']
+    ]);
+
+    const TRANSACTION_TYPE = factory.simple([
+        'Unspecified', 'Deposit', 'Withdrawal', 'Transfer', 'Fee', 'Interest', 'Adjustment'
+    ]);
+
+    const RECONCILIATION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['In Progress', 'progress', 'layer8d-status-pending'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Discrepancy', 'discrepancy', 'layer8d-status-terminated']
+    ]);
+
+    const TRANSFER_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive'],
+        ['Failed', 'failed', 'layer8d-status-terminated']
+    ]);
 
     // ============================================================================
-    // BANK ACCOUNT STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    CashManagement.enums.BANK_ACCOUNT_STATUS = { 0: 'Unspecified', 1: 'Active', 2: 'Inactive', 3: 'Closed', 4: 'Frozen' };
-    CashManagement.enums.BANK_ACCOUNT_STATUS_CLASSES = { 1: 'layer8d-status-active', 2: 'layer8d-status-inactive', 3: 'layer8d-status-terminated', 4: 'layer8d-status-terminated' };
-
-    // ============================================================================
-    // TRANSACTION TYPE
-    // ============================================================================
-
-    CashManagement.enums.TRANSACTION_TYPE = { 0: 'Unspecified', 1: 'Deposit', 2: 'Withdrawal', 3: 'Transfer', 4: 'Fee', 5: 'Interest', 6: 'Adjustment' };
-
-    // ============================================================================
-    // RECONCILIATION STATUS
-    // ============================================================================
-
-    CashManagement.enums.RECONCILIATION_STATUS = { 0: 'Unspecified', 1: 'In Progress', 2: 'Completed', 3: 'Discrepancy' };
-    CashManagement.enums.RECONCILIATION_STATUS_CLASSES = { 1: 'layer8d-status-pending', 2: 'layer8d-status-active', 3: 'layer8d-status-terminated' };
-
-    // ============================================================================
-    // TRANSFER STATUS
-    // ============================================================================
-
-    CashManagement.enums.TRANSFER_STATUS = { 0: 'Unspecified', 1: 'Pending', 2: 'Completed', 3: 'Cancelled', 4: 'Failed' };
-    CashManagement.enums.TRANSFER_STATUS_CLASSES = { 1: 'layer8d-status-pending', 2: 'layer8d-status-active', 3: 'layer8d-status-inactive', 4: 'layer8d-status-terminated' };
+    window.CashManagement.enums = {
+        BANK_ACCOUNT_TYPE: BANK_ACCOUNT_TYPE.enum,
+        BANK_ACCOUNT_STATUS: BANK_ACCOUNT_STATUS.enum,
+        BANK_ACCOUNT_STATUS_CLASSES: BANK_ACCOUNT_STATUS.classes,
+        TRANSACTION_TYPE: TRANSACTION_TYPE.enum,
+        RECONCILIATION_STATUS: RECONCILIATION_STATUS.enum,
+        RECONCILIATION_STATUS_CLASSES: RECONCILIATION_STATUS.classes,
+        TRANSFER_STATUS: TRANSFER_STATUS.enum,
+        TRANSFER_STATUS_CLASSES: TRANSFER_STATUS.classes
+    };
 
     // ============================================================================
     // RENDERERS
     // ============================================================================
 
-    CashManagement.render = {};
+    const renderBankAccountStatus = createStatusRenderer(BANK_ACCOUNT_STATUS.enum, BANK_ACCOUNT_STATUS.classes);
+    const renderReconciliationStatus = createStatusRenderer(RECONCILIATION_STATUS.enum, RECONCILIATION_STATUS.classes);
+    const renderTransferStatus = createStatusRenderer(TRANSFER_STATUS.enum, TRANSFER_STATUS.classes);
 
-    CashManagement.render.bankAccountType = (type) => Layer8DRenderers.renderEnum(type, CashManagement.enums.BANK_ACCOUNT_TYPE);
-    CashManagement.render.bankAccountStatus = Layer8DRenderers.createStatusRenderer(CashManagement.enums.BANK_ACCOUNT_STATUS, CashManagement.enums.BANK_ACCOUNT_STATUS_CLASSES);
-    CashManagement.render.transactionType = (type) => Layer8DRenderers.renderEnum(type, CashManagement.enums.TRANSACTION_TYPE);
-    CashManagement.render.reconciliationStatus = Layer8DRenderers.createStatusRenderer(CashManagement.enums.RECONCILIATION_STATUS, CashManagement.enums.RECONCILIATION_STATUS_CLASSES);
-    CashManagement.render.transferStatus = Layer8DRenderers.createStatusRenderer(CashManagement.enums.TRANSFER_STATUS, CashManagement.enums.TRANSFER_STATUS_CLASSES);
-    CashManagement.render.boolean = Layer8DRenderers.renderBoolean;
-    CashManagement.render.date = Layer8DRenderers.renderDate;
-    CashManagement.render.money = Layer8DRenderers.renderMoney;
+    window.CashManagement.render = {
+        bankAccountType: (v) => renderEnum(v, BANK_ACCOUNT_TYPE.enum),
+        bankAccountStatus: renderBankAccountStatus,
+        transactionType: (v) => renderEnum(v, TRANSACTION_TYPE.enum),
+        reconciliationStatus: renderReconciliationStatus,
+        transferStatus: renderTransferStatus,
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

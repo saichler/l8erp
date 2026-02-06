@@ -13,67 +13,64 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Fixed Assets Module - Enum Definitions
+ * Mobile Fixed Assets Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: fin/fixed-assets/fixed-assets-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileFixedAssets = window.MobileFixedAssets || {};
-    MobileFixedAssets.enums = {};
 
     // ============================================================================
-    // ASSET STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileFixedAssets.enums.ASSET_STATUS = {
-        0: 'Unspecified', 1: 'Active', 2: 'Disposed', 3: 'Under Maintenance',
-        4: 'Transferred', 5: 'Fully Depreciated'
-    };
-    MobileFixedAssets.enums.ASSET_STATUS_VALUES = {
-        'active': 1, 'disposed': 2, 'under maintenance': 3,
-        'transferred': 4, 'fully depreciated': 5
-    };
-    MobileFixedAssets.enums.ASSET_STATUS_CLASSES = {
-        1: 'status-active', 2: 'status-terminated', 3: 'status-pending',
-        4: 'status-inactive', 5: 'status-inactive'
-    };
+    const ASSET_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Active', 'active', 'status-active'],
+        ['Disposed', 'disposed', 'status-terminated'],
+        ['Under Maintenance', 'under maintenance', 'status-pending'],
+        ['Transferred', 'transferred', 'status-inactive'],
+        ['Fully Depreciated', 'fully depreciated', 'status-inactive']
+    ]);
+
+    const DEPRECIATION_METHOD = factory.simple([
+        'Unspecified', 'Straight Line', 'Declining Balance', 'Double Declining',
+        'Units of Production', 'Sum of Years'
+    ]);
+
+    const DISPOSAL_METHOD = factory.simple([
+        'Unspecified', 'Sale', 'Scrap', 'Donation', 'Write-Off', 'Trade-In'
+    ]);
+
+    const MAINTENANCE_TYPE = factory.simple([
+        'Unspecified', 'Preventive', 'Corrective', 'Upgrade', 'Inspection'
+    ]);
+
+    const MAINTENANCE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Scheduled', 'scheduled', 'status-pending'],
+        ['In Progress', 'in progress', 'status-pending'],
+        ['Completed', 'completed', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-inactive']
+    ]);
 
     // ============================================================================
-    // DEPRECIATION METHOD
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileFixedAssets.enums.DEPRECIATION_METHOD = {
-        0: 'Unspecified', 1: 'Straight Line', 2: 'Declining Balance',
-        3: 'Double Declining', 4: 'Units of Production', 5: 'Sum of Years'
-    };
-
-    // ============================================================================
-    // DISPOSAL METHOD
-    // ============================================================================
-
-    MobileFixedAssets.enums.DISPOSAL_METHOD = {
-        0: 'Unspecified', 1: 'Sale', 2: 'Scrap', 3: 'Donation',
-        4: 'Write-Off', 5: 'Trade-In'
-    };
-
-    // ============================================================================
-    // MAINTENANCE TYPE
-    // ============================================================================
-
-    MobileFixedAssets.enums.MAINTENANCE_TYPE = {
-        0: 'Unspecified', 1: 'Preventive', 2: 'Corrective', 3: 'Upgrade', 4: 'Inspection'
-    };
-
-    // ============================================================================
-    // MAINTENANCE STATUS
-    // ============================================================================
-
-    MobileFixedAssets.enums.MAINTENANCE_STATUS = {
-        0: 'Unspecified', 1: 'Scheduled', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled'
-    };
-    MobileFixedAssets.enums.MAINTENANCE_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-active', 4: 'status-inactive'
+    MobileFixedAssets.enums = {
+        ASSET_STATUS: ASSET_STATUS.enum,
+        ASSET_STATUS_VALUES: ASSET_STATUS.values,
+        ASSET_STATUS_CLASSES: ASSET_STATUS.classes,
+        DEPRECIATION_METHOD: DEPRECIATION_METHOD.enum,
+        DISPOSAL_METHOD: DISPOSAL_METHOD.enum,
+        MAINTENANCE_TYPE: MAINTENANCE_TYPE.enum,
+        MAINTENANCE_STATUS: MAINTENANCE_STATUS.enum,
+        MAINTENANCE_STATUS_CLASSES: MAINTENANCE_STATUS.classes
     };
 
     // ============================================================================
@@ -81,20 +78,14 @@ limitations under the License.
     // ============================================================================
 
     MobileFixedAssets.render = {
-        assetStatus: Layer8MRenderers.createStatusRenderer(
-            MobileFixedAssets.enums.ASSET_STATUS,
-            MobileFixedAssets.enums.ASSET_STATUS_CLASSES
-        ),
-        depreciationMethod: (type) => Layer8MRenderers.renderEnum(type, MobileFixedAssets.enums.DEPRECIATION_METHOD),
-        disposalMethod: (type) => Layer8MRenderers.renderEnum(type, MobileFixedAssets.enums.DISPOSAL_METHOD),
-        maintenanceType: (type) => Layer8MRenderers.renderEnum(type, MobileFixedAssets.enums.MAINTENANCE_TYPE),
-        maintenanceStatus: Layer8MRenderers.createStatusRenderer(
-            MobileFixedAssets.enums.MAINTENANCE_STATUS,
-            MobileFixedAssets.enums.MAINTENANCE_STATUS_CLASSES
-        ),
-        boolean: Layer8MRenderers.renderBoolean,
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        assetStatus: createStatusRenderer(ASSET_STATUS.enum, ASSET_STATUS.classes),
+        depreciationMethod: (type) => renderEnum(type, DEPRECIATION_METHOD.enum),
+        disposalMethod: (type) => renderEnum(type, DISPOSAL_METHOD.enum),
+        maintenanceType: (type) => renderEnum(type, MAINTENANCE_TYPE.enum),
+        maintenanceStatus: createStatusRenderer(MAINTENANCE_STATUS.enum, MAINTENANCE_STATUS.classes),
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

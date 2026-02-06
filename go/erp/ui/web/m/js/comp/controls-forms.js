@@ -12,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// Uses Layer8FormFactory for reduced boilerplate
 /**
  * Mobile COMP Controls Module - Form Configurations
  * Desktop Equivalent: comp/controls/controls-forms.js
@@ -19,169 +20,111 @@ limitations under the License.
 (function() {
     'use strict';
 
+    window.MobileCompControls = window.MobileCompControls || {};
+    const f = window.Layer8FormFactory;
     const enums = MobileCompControls.enums;
 
     MobileCompControls.forms = {
-        CompControl: {
-            title: 'Control',
-            sections: [
-                {
-                    title: 'Control Details',
-                    fields: [
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'controlType', label: 'Control Type', type: 'select', options: enums.CONTROL_TYPE },
-                        { key: 'processArea', label: 'Process Area', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Classification',
-                    fields: [
-                        { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'HcmDepartment' },
-                        { key: 'isKeyControl', label: 'Key Control', type: 'checkbox' },
-                        { key: 'isAutomated', label: 'Automated', type: 'checkbox' },
-                        { key: 'objective', label: 'Objective', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Testing & Ownership',
-                    fields: [
-                        { key: 'testFrequencyDays', label: 'Test Frequency (Days)', type: 'number' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CompControl: f.form('Control', [
+            f.section('Control Details', [
+                ...f.text('code', 'Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('controlType', 'Control Type', enums.CONTROL_TYPE),
+                ...f.text('processArea', 'Process Area')
+            ]),
+            f.section('Classification', [
+                ...f.reference('departmentId', 'Department', 'HcmDepartment'),
+                ...f.checkbox('isKeyControl', 'Key Control'),
+                ...f.checkbox('isAutomated', 'Automated'),
+                ...f.textarea('objective', 'Objective')
+            ]),
+            f.section('Testing & Ownership', [
+                ...f.number('testFrequencyDays', 'Test Frequency (Days)'),
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        CompControlAssessment: {
-            title: 'Control Assessment',
-            sections: [
-                {
-                    title: 'Assessment Details',
-                    fields: [
-                        { key: 'controlId', label: 'Control', type: 'reference', lookupModel: 'CompControl', required: true },
-                        { key: 'assessmentDate', label: 'Assessment Date', type: 'date', required: true },
-                        { key: 'assessorId', label: 'Assessor', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'effectiveness', label: 'Effectiveness', type: 'select', options: enums.CONTROL_EFFECTIVENESS }
-                    ]
-                },
-                {
-                    title: 'Testing',
-                    fields: [
-                        { key: 'testProcedure', label: 'Test Procedure', type: 'textarea' },
-                        { key: 'sampleSize', label: 'Sample Size', type: 'number' },
-                        { key: 'exceptionsFound', label: 'Exceptions Found', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Results & Next Steps',
-                    fields: [
-                        { key: 'findings', label: 'Findings', type: 'textarea' },
-                        { key: 'recommendations', label: 'Recommendations', type: 'textarea' },
-                        { key: 'nextAssessmentDate', label: 'Next Assessment Date', type: 'date' }
-                    ]
-                }
-            ]
-        },
+        CompControlAssessment: f.form('Control Assessment', [
+            f.section('Assessment Details', [
+                ...f.reference('controlId', 'Control', 'CompControl', true),
+                ...f.date('assessmentDate', 'Assessment Date', true),
+                ...f.reference('assessorId', 'Assessor', 'Employee', true),
+                ...f.select('effectiveness', 'Effectiveness', enums.CONTROL_EFFECTIVENESS)
+            ]),
+            f.section('Testing', [
+                ...f.textarea('testProcedure', 'Test Procedure'),
+                ...f.number('sampleSize', 'Sample Size'),
+                ...f.number('exceptionsFound', 'Exceptions Found')
+            ]),
+            f.section('Results & Next Steps', [
+                ...f.textarea('findings', 'Findings'),
+                ...f.textarea('recommendations', 'Recommendations'),
+                ...f.date('nextAssessmentDate', 'Next Assessment Date')
+            ])
+        ]),
 
-        CompPolicyDocument: {
-            title: 'Policy Document',
-            sections: [
-                {
-                    title: 'Document Details',
-                    fields: [
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'title', label: 'Title', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'policyType', label: 'Policy Type', type: 'text' },
-                        { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'HcmDepartment' }
-                    ]
-                },
-                {
-                    title: 'Version & Status',
-                    fields: [
-                        { key: 'version', label: 'Version', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'text' },
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
-                        { key: 'expiryDate', label: 'Expiry Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Approval & Review',
-                    fields: [
-                        { key: 'approvedBy', label: 'Approved By', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'approvalDate', label: 'Approval Date', type: 'date' },
-                        { key: 'nextReviewDate', label: 'Next Review Date', type: 'date' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                }
-            ]
-        },
+        CompPolicyDocument: f.form('Policy Document', [
+            f.section('Document Details', [
+                ...f.text('code', 'Code', true),
+                ...f.text('title', 'Title', true),
+                ...f.textarea('description', 'Description'),
+                ...f.text('policyType', 'Policy Type'),
+                ...f.reference('departmentId', 'Department', 'HcmDepartment')
+            ]),
+            f.section('Version & Status', [
+                ...f.text('version', 'Version'),
+                ...f.text('status', 'Status'),
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.date('expiryDate', 'Expiry Date')
+            ]),
+            f.section('Approval & Review', [
+                ...f.reference('approvedBy', 'Approved By', 'Employee'),
+                ...f.date('approvalDate', 'Approval Date'),
+                ...f.date('nextReviewDate', 'Next Review Date'),
+                ...f.reference('ownerId', 'Owner', 'Employee')
+            ])
+        ]),
 
-        CompApprovalMatrix: {
-            title: 'Approval Matrix',
-            sections: [
-                {
-                    title: 'Matrix Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'transactionType', label: 'Transaction Type', type: 'text', required: true },
-                        { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'HcmDepartment' }
-                    ]
-                },
-                {
-                    title: 'Approval Rules',
-                    fields: [
-                        { key: 'minAmount', label: 'Minimum Amount', type: 'number' },
-                        { key: 'maxAmount', label: 'Maximum Amount', type: 'number' },
-                        { key: 'requiredApprovals', label: 'Required Approvals', type: 'number' },
-                        { key: 'requiresSequential', label: 'Sequential Approval', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Escalation & Status',
-                    fields: [
-                        { key: 'escalationDays', label: 'Escalation Days', type: 'number' },
-                        { key: 'priority', label: 'Priority', type: 'number' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CompApprovalMatrix: f.form('Approval Matrix', [
+            f.section('Matrix Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.text('transactionType', 'Transaction Type', true),
+                ...f.reference('departmentId', 'Department', 'HcmDepartment')
+            ]),
+            f.section('Approval Rules', [
+                ...f.number('minAmount', 'Minimum Amount'),
+                ...f.number('maxAmount', 'Maximum Amount'),
+                ...f.number('requiredApprovals', 'Required Approvals'),
+                ...f.checkbox('requiresSequential', 'Sequential Approval')
+            ]),
+            f.section('Escalation & Status', [
+                ...f.number('escalationDays', 'Escalation Days'),
+                ...f.number('priority', 'Priority'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        CompSegregationRule: {
-            title: 'Segregation Rule',
-            sections: [
-                {
-                    title: 'Rule Details',
-                    fields: [
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Conflicting Functions',
-                    fields: [
-                        { key: 'conflictingFunctionA', label: 'Function A', type: 'text', required: true },
-                        { key: 'conflictingFunctionB', label: 'Function B', type: 'text', required: true },
-                        { key: 'riskLevel', label: 'Risk Level', type: 'select', options: enums.SEVERITY_LEVEL },
-                        { key: 'riskDescription', label: 'Risk Description', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Mitigation & Status',
-                    fields: [
-                        { key: 'controlId', label: 'Mitigating Control', type: 'reference', lookupModel: 'CompControl' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        }
+        CompSegregationRule: f.form('Segregation Rule', [
+            f.section('Rule Details', [
+                ...f.text('code', 'Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description')
+            ]),
+            f.section('Conflicting Functions', [
+                ...f.text('conflictingFunctionA', 'Function A', true),
+                ...f.text('conflictingFunctionB', 'Function B', true),
+                ...f.select('riskLevel', 'Risk Level', enums.SEVERITY_LEVEL),
+                ...f.textarea('riskDescription', 'Risk Description')
+            ]),
+            f.section('Mitigation & Status', [
+                ...f.reference('controlId', 'Mitigating Control', 'CompControl'),
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ])
     };
 
 })();

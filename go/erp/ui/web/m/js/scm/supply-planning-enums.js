@@ -13,39 +13,44 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Supply Planning Module - Enum Definitions
+ * Mobile Supply Planning Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: scm/supply-planning/supply-planning-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileScmSupplyPlanning = window.MobileScmSupplyPlanning || {};
-    MobileScmSupplyPlanning.enums = {};
 
     // ============================================================================
-    // PLANNING METHOD
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileScmSupplyPlanning.enums.PLANNING_METHOD = {
-        0: 'Unspecified', 1: 'MRP', 2: 'DRP', 3: 'Kanban',
-        4: 'Min-Max', 5: 'Reorder Point'
-    };
-    MobileScmSupplyPlanning.enums.PLANNING_METHOD_VALUES = {
-        'mrp': 1, 'drp': 2, 'kanban': 3, 'min': 4, 'max': 4, 'reorder': 5, 'point': 5
-    };
+    const PLANNING_METHOD = factory.withValues([
+        ['Unspecified', null], ['MRP', 'mrp'], ['DRP', 'drp'],
+        ['Kanban', 'kanban'], ['Min-Max', 'min'], ['Reorder Point', 'reorder']
+    ]);
+
+    const TASK_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'status-pending'],
+        ['In Progress', 'progress', 'status-active'],
+        ['Completed', 'completed', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-terminated']
+    ]);
 
     // ============================================================================
-    // TASK STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileScmSupplyPlanning.enums.TASK_STATUS = {
-        0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled'
-    };
-    MobileScmSupplyPlanning.enums.TASK_STATUS_VALUES = {
-        'pending': 1, 'progress': 2, 'in': 2, 'completed': 3, 'cancelled': 4
-    };
-    MobileScmSupplyPlanning.enums.TASK_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-terminated'
+    MobileScmSupplyPlanning.enums = {
+        PLANNING_METHOD: PLANNING_METHOD.enum,
+        PLANNING_METHOD_VALUES: PLANNING_METHOD.values,
+        TASK_STATUS: TASK_STATUS.enum,
+        TASK_STATUS_VALUES: TASK_STATUS.values,
+        TASK_STATUS_CLASSES: TASK_STATUS.classes
     };
 
     // ============================================================================
@@ -53,14 +58,11 @@ limitations under the License.
     // ============================================================================
 
     MobileScmSupplyPlanning.render = {
-        planningMethod: (v) => Layer8MRenderers.renderEnum(v, MobileScmSupplyPlanning.enums.PLANNING_METHOD),
-        taskStatus: Layer8MRenderers.createStatusRenderer(
-            MobileScmSupplyPlanning.enums.TASK_STATUS,
-            MobileScmSupplyPlanning.enums.TASK_STATUS_CLASSES
-        ),
-        boolean: Layer8MRenderers.renderBoolean,
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        planningMethod: (v) => renderEnum(v, PLANNING_METHOD.enum),
+        taskStatus: createStatusRenderer(TASK_STATUS.enum, TASK_STATUS.classes),
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

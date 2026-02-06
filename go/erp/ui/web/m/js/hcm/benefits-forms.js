@@ -12,202 +12,140 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// Uses Layer8FormFactory for reduced boilerplate
 /**
  * Mobile Benefits Module - Form Configurations
  * Desktop Equivalent: hcm/benefits/benefits-forms.js
  */
+window.MobileBenefits = window.MobileBenefits || {};
+
 (function() {
     'use strict';
 
+    const f = window.Layer8FormFactory;
     const enums = MobileBenefits.enums;
 
     MobileBenefits.forms = {
-        BenefitPlan: {
-            title: 'Benefit Plan',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
-                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'Carrier' },
-                        { key: 'planType', label: 'Plan Type', type: 'select', options: enums.BENEFIT_PLAN_TYPE, required: true },
-                        { key: 'category', label: 'Category', type: 'select', options: enums.BENEFIT_PLAN_CATEGORY, required: true },
-                        { key: 'planYear', label: 'Plan Year', type: 'number', required: true }
-                    ]
-                },
-                {
-                    title: 'Dates',
-                    fields: [
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date', required: true },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'openEnrollmentStart', label: 'Open Enrollment Start', type: 'date' },
-                        { key: 'openEnrollmentEnd', label: 'Open Enrollment End', type: 'date' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Documents',
-                    fields: [
-                        { key: 'planDocumentUrl', label: 'Plan Document URL', type: 'url' },
-                        { key: 'summaryDocumentUrl', label: 'Summary Document URL', type: 'url' }
-                    ]
-                }
-            ]
-        },
+        BenefitPlan: f.form('Benefit Plan', [
+            f.section('Basic Information', [
+                ...f.text('code', 'Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('organizationId', 'Organization', 'Organization'),
+                ...f.reference('carrierId', 'Carrier', 'Carrier'),
+                ...f.select('planType', 'Plan Type', enums.BENEFIT_PLAN_TYPE, true),
+                ...f.select('category', 'Category', enums.BENEFIT_PLAN_CATEGORY, true),
+                ...f.number('planYear', 'Plan Year', true)
+            ]),
+            f.section('Dates', [
+                ...f.date('effectiveDate', 'Effective Date', true),
+                ...f.date('endDate', 'End Date'),
+                ...f.date('openEnrollmentStart', 'Open Enrollment Start'),
+                ...f.date('openEnrollmentEnd', 'Open Enrollment End'),
+                ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Documents', [
+                ...f.url('planDocumentUrl', 'Plan Document URL'),
+                ...f.url('summaryDocumentUrl', 'Summary Document URL')
+            ])
+        ]),
 
-        BenefitEnrollment: {
-            title: 'Benefit Enrollment',
-            sections: [
-                {
-                    title: 'Enrollment Details',
-                    fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'planId', label: 'Benefit Plan', type: 'reference', lookupModel: 'BenefitPlan', required: true },
-                        { key: 'coverageOptionId', label: 'Coverage Option', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.ENROLLMENT_STATUS, required: true },
-                        { key: 'reason', label: 'Reason', type: 'select', options: enums.ENROLLMENT_REASON, required: true },
-                        { key: 'lifeEventId', label: 'Life Event', type: 'reference', lookupModel: 'LifeEvent' }
-                    ]
-                },
-                {
-                    title: 'Coverage Dates',
-                    fields: [
-                        { key: 'coverageStartDate', label: 'Coverage Start', type: 'date', required: true },
-                        { key: 'coverageEndDate', label: 'Coverage End', type: 'date' },
-                        { key: 'enrollmentDate', label: 'Enrollment Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Primary Care (Medical Plans)',
-                    fields: [
-                        { key: 'primaryCareProvider', label: 'Primary Care Provider', type: 'text' },
-                        { key: 'primaryCareProviderId', label: 'Provider ID', type: 'text' }
-                    ]
-                }
-            ]
-        },
+        BenefitEnrollment: f.form('Benefit Enrollment', [
+            f.section('Enrollment Details', [
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
+                ...f.reference('planId', 'Benefit Plan', 'BenefitPlan', true),
+                ...f.text('coverageOptionId', 'Coverage Option'),
+                ...f.select('status', 'Status', enums.ENROLLMENT_STATUS, true),
+                ...f.select('reason', 'Reason', enums.ENROLLMENT_REASON, true),
+                ...f.reference('lifeEventId', 'Life Event', 'LifeEvent')
+            ]),
+            f.section('Coverage Dates', [
+                ...f.date('coverageStartDate', 'Coverage Start', true),
+                ...f.date('coverageEndDate', 'Coverage End'),
+                ...f.date('enrollmentDate', 'Enrollment Date')
+            ]),
+            f.section('Primary Care (Medical Plans)', [
+                ...f.text('primaryCareProvider', 'Primary Care Provider'),
+                ...f.text('primaryCareProviderId', 'Provider ID')
+            ])
+        ]),
 
-        Carrier: {
-            title: 'Carrier',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'carrierType', label: 'Type', type: 'select', options: enums.CARRIER_TYPE, required: true },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Contact Information',
-                    fields: [
-                        { key: 'phone', label: 'Phone', type: 'phone' },
-                        { key: 'fax', label: 'Fax', type: 'phone' },
-                        { key: 'email', label: 'Email', type: 'email' },
-                        { key: 'website', label: 'Website', type: 'url' },
-                        { key: 'contactName', label: 'Contact Name', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Account Information',
-                    fields: [
-                        { key: 'employerGroupNumber', label: 'Employer Group Number', type: 'text' },
-                        { key: 'billingAccountNumber', label: 'Billing Account Number', type: 'text' },
-                        { key: 'ediPayerId', label: 'EDI Payer ID', type: 'text' }
-                    ]
-                }
-            ]
-        },
+        Carrier: f.form('Carrier', [
+            f.section('Basic Information', [
+                ...f.text('code', 'Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.select('carrierType', 'Type', enums.CARRIER_TYPE, true),
+                ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Contact Information', [
+                ...f.phone('phone', 'Phone'),
+                ...f.phone('fax', 'Fax'),
+                ...f.email('email', 'Email'),
+                ...f.url('website', 'Website'),
+                ...f.text('contactName', 'Contact Name')
+            ]),
+            f.section('Account Information', [
+                ...f.text('employerGroupNumber', 'Employer Group Number'),
+                ...f.text('billingAccountNumber', 'Billing Account Number'),
+                ...f.text('ediPayerId', 'EDI Payer ID')
+            ])
+        ]),
 
-        Dependent: {
-            title: 'Dependent',
-            sections: [
-                {
-                    title: 'Personal Information',
-                    fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'firstName', label: 'First Name', type: 'text', required: true },
-                        { key: 'middleName', label: 'Middle Name', type: 'text' },
-                        { key: 'lastName', label: 'Last Name', type: 'text', required: true },
-                        { key: 'relationship', label: 'Relationship', type: 'select', options: enums.DEPENDENT_RELATIONSHIP, required: true },
-                        { key: 'dateOfBirth', label: 'Date of Birth', type: 'date', required: true },
-                        { key: 'gender', label: 'Gender', type: 'select', options: { 0: 'Unspecified', 1: 'Male', 2: 'Female', 3: 'Non-Binary', 4: 'Other', 5: 'Prefer Not to Say' } }
-                    ]
-                },
-                {
-                    title: 'Additional Information',
-                    fields: [
-                        { key: 'isStudent', label: 'Student', type: 'checkbox' },
-                        { key: 'isDisabled', label: 'Disabled', type: 'checkbox' },
-                        { key: 'isTobaccoUser', label: 'Tobacco User', type: 'checkbox' },
-                        { key: 'coverageEndDate', label: 'Coverage End Date', type: 'date' },
-                        { key: 'verificationStatus', label: 'Verification Status', type: 'select', options: enums.VERIFICATION_STATUS }
-                    ]
-                }
-            ]
-        },
+        Dependent: f.form('Dependent', [
+            f.section('Personal Information', [
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
+                ...f.text('firstName', 'First Name', true),
+                ...f.text('middleName', 'Middle Name'),
+                ...f.text('lastName', 'Last Name', true),
+                ...f.select('relationship', 'Relationship', enums.DEPENDENT_RELATIONSHIP, true),
+                ...f.date('dateOfBirth', 'Date of Birth', true),
+                ...f.select('gender', 'Gender', { 0: 'Unspecified', 1: 'Male', 2: 'Female', 3: 'Non-Binary', 4: 'Other', 5: 'Prefer Not to Say' })
+            ]),
+            f.section('Additional Information', [
+                ...f.checkbox('isStudent', 'Student'),
+                ...f.checkbox('isDisabled', 'Disabled'),
+                ...f.checkbox('isTobaccoUser', 'Tobacco User'),
+                ...f.date('coverageEndDate', 'Coverage End Date'),
+                ...f.select('verificationStatus', 'Verification Status', enums.VERIFICATION_STATUS)
+            ])
+        ]),
 
-        LifeEvent: {
-            title: 'Life Event',
-            sections: [
-                {
-                    title: 'Event Details',
-                    fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'eventType', label: 'Event Type', type: 'select', options: enums.LIFE_EVENT_TYPE, required: true },
-                        { key: 'eventDate', label: 'Event Date', type: 'date', required: true },
-                        { key: 'reportedDate', label: 'Reported Date', type: 'date' },
-                        { key: 'enrollmentDeadline', label: 'Enrollment Deadline', type: 'date' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.LIFE_EVENT_STATUS, required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Approval',
-                    fields: [
-                        { key: 'approvedBy', label: 'Approved By', type: 'text' },
-                        { key: 'approvedDate', label: 'Approved Date', type: 'date' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        LifeEvent: f.form('Life Event', [
+            f.section('Event Details', [
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
+                ...f.select('eventType', 'Event Type', enums.LIFE_EVENT_TYPE, true),
+                ...f.date('eventDate', 'Event Date', true),
+                ...f.date('reportedDate', 'Reported Date'),
+                ...f.date('enrollmentDeadline', 'Enrollment Deadline'),
+                ...f.select('status', 'Status', enums.LIFE_EVENT_STATUS, true),
+                ...f.textarea('description', 'Description')
+            ]),
+            f.section('Approval', [
+                ...f.text('approvedBy', 'Approved By'),
+                ...f.date('approvedDate', 'Approved Date'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        COBRAEvent: {
-            title: 'COBRA Event',
-            sections: [
-                {
-                    title: 'Event Details',
-                    fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'eventType', label: 'Event Type', type: 'select', options: enums.COBRA_EVENT_TYPE, required: true },
-                        { key: 'qualifyingEventDate', label: 'Qualifying Event Date', type: 'date', required: true },
-                        { key: 'notificationDate', label: 'Notification Date', type: 'date' },
-                        { key: 'electionDeadline', label: 'Election Deadline', type: 'date' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.COBRA_STATUS, required: true }
-                    ]
-                },
-                {
-                    title: 'Coverage Period',
-                    fields: [
-                        { key: 'coverageStartDate', label: 'Coverage Start', type: 'date' },
-                        { key: 'coverageEndDate', label: 'Coverage End', type: 'date' },
-                        { key: 'coverageMonths', label: 'Coverage Months', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Premium Information',
-                    fields: [
-                        { key: 'adminFeePercentage', label: 'Admin Fee', type: 'percentage' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
+        COBRAEvent: f.form('COBRA Event', [
+            f.section('Event Details', [
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
+                ...f.select('eventType', 'Event Type', enums.COBRA_EVENT_TYPE, true),
+                ...f.date('qualifyingEventDate', 'Qualifying Event Date', true),
+                ...f.date('notificationDate', 'Notification Date'),
+                ...f.date('electionDeadline', 'Election Deadline'),
+                ...f.select('status', 'Status', enums.COBRA_STATUS, true)
+            ]),
+            f.section('Coverage Period', [
+                ...f.date('coverageStartDate', 'Coverage Start'),
+                ...f.date('coverageEndDate', 'Coverage End'),
+                ...f.number('coverageMonths', 'Coverage Months')
+            ]),
+            f.section('Premium Information', [
+                ...f.percentage('adminFeePercentage', 'Admin Fee'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ])
     };
 
 })();

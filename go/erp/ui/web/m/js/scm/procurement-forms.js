@@ -12,141 +12,97 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// Uses Layer8FormFactory for reduced boilerplate
 /**
  * Mobile Procurement Module - Form Configurations
  * Desktop Equivalent: scm/procurement/procurement-forms.js
  */
-(function() {
-    'use strict';
+window.MobileProcurement = window.MobileProcurement || {};
+const f = window.Layer8FormFactory;
+const enums = MobileProcurement.enums;
 
-    const enums = MobileProcurement.enums;
+MobileProcurement.forms = {
+    ScmPurchaseRequisition: f.form('Purchase Requisition', [
+        f.section('Requisition Details', [
+            ...f.text('requisitionNumber', 'Requisition #', true),
+            ...f.reference('requesterId', 'Requester', 'Employee'),
+            ...f.reference('departmentId', 'Department', 'Department'),
+            ...f.date('requestDate', 'Request Date', true),
+            ...f.select('status', 'Status', enums.REQUISITION_STATUS),
+            ...f.text('priority', 'Priority'),
+            ...f.textarea('description', 'Description')
+        ])
+    ]),
 
-    MobileProcurement.forms = {
-        ScmPurchaseRequisition: {
-            title: 'Purchase Requisition',
-            sections: [
-                {
-                    title: 'Requisition Details',
-                    fields: [
-                        { key: 'requisitionNumber', label: 'Requisition #', type: 'text', required: true },
-                        { key: 'requesterId', label: 'Requester', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'Department' },
-                        { key: 'requestDate', label: 'Request Date', type: 'date', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.REQUISITION_STATUS },
-                        { key: 'priority', label: 'Priority', type: 'text' },
-                        { key: 'description', label: 'Description', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+    ScmRequisitionLine: f.form('Requisition Line', [
+        f.section('Line Details', [
+            ...f.reference('requisitionId', 'Requisition', 'ScmPurchaseRequisition', true),
+            ...f.reference('itemId', 'Item', 'ScmItem'),
+            ...f.textarea('description', 'Description'),
+            ...f.number('quantity', 'Quantity', true),
+            ...f.text('unitOfMeasure', 'UOM'),
+            ...f.money('estimatedUnitPrice', 'Est. Unit Price'),
+            ...f.reference('vendorId', 'Vendor', 'Vendor'),
+            ...f.date('deliveryDate', 'Delivery Date')
+        ])
+    ]),
 
-        ScmRequisitionLine: {
-            title: 'Requisition Line',
-            sections: [
-                {
-                    title: 'Line Details',
-                    fields: [
-                        { key: 'requisitionId', label: 'Requisition', type: 'reference', lookupModel: 'ScmPurchaseRequisition', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem' },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                        { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
-                        { key: 'estimatedUnitPrice', label: 'Est. Unit Price', type: 'currency' },
-                        { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor' },
-                        { key: 'deliveryDate', label: 'Delivery Date', type: 'date' }
-                    ]
-                }
-            ]
-        },
+    ScmRequestForQuotation: f.form('Request for Quotation', [
+        f.section('RFQ Details', [
+            ...f.text('rfqNumber', 'RFQ #', true),
+            ...f.reference('requisitionId', 'Requisition', 'ScmPurchaseRequisition'),
+            ...f.date('issueDate', 'Issue Date', true),
+            ...f.date('responseDeadline', 'Response Deadline'),
+            ...f.select('status', 'Status', enums.REQUISITION_STATUS),
+            ...f.textarea('description', 'Description'),
+            ...f.textarea('notes', 'Notes')
+        ])
+    ]),
 
-        ScmRequestForQuotation: {
-            title: 'Request for Quotation',
-            sections: [
-                {
-                    title: 'RFQ Details',
-                    fields: [
-                        { key: 'rfqNumber', label: 'RFQ #', type: 'text', required: true },
-                        { key: 'requisitionId', label: 'Requisition', type: 'reference', lookupModel: 'ScmPurchaseRequisition' },
-                        { key: 'issueDate', label: 'Issue Date', type: 'date', required: true },
-                        { key: 'responseDeadline', label: 'Response Deadline', type: 'date' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.REQUISITION_STATUS },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+    ScmPurchaseOrder: f.form('Purchase Order', [
+        f.section('Order Details', [
+            ...f.text('orderNumber', 'PO #', true),
+            ...f.reference('vendorId', 'Vendor', 'Vendor', true),
+            ...f.date('orderDate', 'Order Date', true),
+            ...f.date('expectedDelivery', 'Expected Delivery'),
+            ...f.select('status', 'Status', enums.PO_STATUS),
+            ...f.text('paymentTerms', 'Payment Terms'),
+            ...f.textarea('notes', 'Notes')
+        ])
+    ]),
 
-        ScmPurchaseOrder: {
-            title: 'Purchase Order',
-            sections: [
-                {
-                    title: 'Order Details',
-                    fields: [
-                        { key: 'orderNumber', label: 'PO #', type: 'text', required: true },
-                        { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
-                        { key: 'orderDate', label: 'Order Date', type: 'date', required: true },
-                        { key: 'expectedDelivery', label: 'Expected Delivery', type: 'date' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.PO_STATUS },
-                        { key: 'paymentTerms', label: 'Payment Terms', type: 'text' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+    ScmPurchaseOrderLine: f.form('PO Line', [
+        f.section('Line Details', [
+            ...f.reference('purchaseOrderId', 'Purchase Order', 'ScmPurchaseOrder', true),
+            ...f.reference('itemId', 'Item', 'ScmItem', true),
+            ...f.textarea('description', 'Description'),
+            ...f.number('quantity', 'Quantity', true),
+            ...f.money('unitPrice', 'Unit Price', true),
+            ...f.text('unitOfMeasure', 'UOM')
+        ])
+    ]),
 
-        ScmPurchaseOrderLine: {
-            title: 'PO Line',
-            sections: [
-                {
-                    title: 'Line Details',
-                    fields: [
-                        { key: 'purchaseOrderId', label: 'Purchase Order', type: 'reference', lookupModel: 'ScmPurchaseOrder', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                        { key: 'unitPrice', label: 'Unit Price', type: 'currency', required: true },
-                        { key: 'unitOfMeasure', label: 'UOM', type: 'text' }
-                    ]
-                }
-            ]
-        },
+    ScmBlanketOrder: f.form('Blanket Order', [
+        f.section('Order Details', [
+            ...f.text('orderNumber', 'Order #', true),
+            ...f.reference('vendorId', 'Vendor', 'Vendor', true),
+            ...f.date('startDate', 'Start Date', true),
+            ...f.date('endDate', 'End Date', true),
+            ...f.money('maxAmount', 'Max Amount'),
+            ...f.select('status', 'Status', enums.PO_STATUS),
+            ...f.textarea('description', 'Description')
+        ])
+    ]),
 
-        ScmBlanketOrder: {
-            title: 'Blanket Order',
-            sections: [
-                {
-                    title: 'Order Details',
-                    fields: [
-                        { key: 'orderNumber', label: 'Order #', type: 'text', required: true },
-                        { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
-                        { key: 'startDate', label: 'Start Date', type: 'date', required: true },
-                        { key: 'endDate', label: 'End Date', type: 'date', required: true },
-                        { key: 'maxAmount', label: 'Max Amount', type: 'currency' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.PO_STATUS },
-                        { key: 'description', label: 'Description', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
-
-        ScmSupplierScorecard: {
-            title: 'Supplier Scorecard',
-            sections: [
-                {
-                    title: 'Scorecard Details',
-                    fields: [
-                        { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor', required: true },
-                        { key: 'qualityScore', label: 'Quality Score', type: 'number' },
-                        { key: 'deliveryScore', label: 'Delivery Score', type: 'number' },
-                        { key: 'priceScore', label: 'Price Score', type: 'number' },
-                        { key: 'serviceScore', label: 'Service Score', type: 'number' },
-                        { key: 'overallScore', label: 'Overall Score', type: 'number' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
-    };
-
-})();
+    ScmSupplierScorecard: f.form('Supplier Scorecard', [
+        f.section('Scorecard Details', [
+            ...f.reference('vendorId', 'Vendor', 'Vendor', true),
+            ...f.number('qualityScore', 'Quality Score'),
+            ...f.number('deliveryScore', 'Delivery Score'),
+            ...f.number('priceScore', 'Price Score'),
+            ...f.number('serviceScore', 'Service Score'),
+            ...f.number('overallScore', 'Overall Score'),
+            ...f.textarea('notes', 'Notes')
+        ])
+    ])
+};

@@ -12,78 +12,60 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Warehouse Management Module - Enum Definitions
-// All enum constants and value mappings for Warehouse Management models
+// Warehouse Management Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Create WarehouseManagement namespace
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+
     window.WarehouseManagement = window.WarehouseManagement || {};
-    WarehouseManagement.enums = {};
 
     // ============================================================================
-    // WAREHOUSE TYPE
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    WarehouseManagement.enums.WAREHOUSE_TYPE = {
-        0: 'Unspecified',
-        1: 'Distribution Center',
-        2: 'Manufacturing',
-        3: 'Cold Storage',
-        4: 'Cross-Dock',
-        5: 'Bonded'
-    };
+    const WAREHOUSE_TYPE = factory.simple([
+        'Unspecified', 'Distribution Center', 'Manufacturing', 'Cold Storage', 'Cross-Dock', 'Bonded'
+    ]);
+
+    const BIN_TYPE = factory.simple([
+        'Unspecified', 'Storage', 'Picking', 'Receiving', 'Shipping', 'Staging'
+    ]);
+
+    const TASK_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['In Progress', 'progress', 'layer8d-status-active'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-terminated']
+    ]);
 
     // ============================================================================
-    // BIN TYPE
+    // EXPORT ENUMS
     // ============================================================================
 
-    WarehouseManagement.enums.BIN_TYPE = {
-        0: 'Unspecified',
-        1: 'Storage',
-        2: 'Picking',
-        3: 'Receiving',
-        4: 'Shipping',
-        5: 'Staging'
-    };
-
-    // ============================================================================
-    // TASK STATUS
-    // ============================================================================
-
-    WarehouseManagement.enums.TASK_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'In Progress',
-        3: 'Completed',
-        4: 'Cancelled'
-    };
-
-    WarehouseManagement.enums.TASK_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated'
+    window.WarehouseManagement.enums = {
+        WAREHOUSE_TYPE: WAREHOUSE_TYPE.enum,
+        BIN_TYPE: BIN_TYPE.enum,
+        TASK_STATUS: TASK_STATUS.enum,
+        TASK_STATUS_CLASSES: TASK_STATUS.classes
     };
 
     // ============================================================================
     // RENDERERS
     // ============================================================================
 
-    // Create render functions using shared utilities
-    WarehouseManagement.render = {};
+    const renderTaskStatus = createStatusRenderer(TASK_STATUS.enum, TASK_STATUS.classes);
 
-    WarehouseManagement.render.warehouseType = (type) => Layer8DRenderers.renderEnum(type, WarehouseManagement.enums.WAREHOUSE_TYPE);
-    WarehouseManagement.render.binType = (type) => Layer8DRenderers.renderEnum(type, WarehouseManagement.enums.BIN_TYPE);
-
-    WarehouseManagement.render.taskStatus = Layer8DRenderers.createStatusRenderer(
-        WarehouseManagement.enums.TASK_STATUS,
-        WarehouseManagement.enums.TASK_STATUS_CLASSES
-    );
-
-    WarehouseManagement.render.boolean = Layer8DRenderers.renderBoolean;
-    WarehouseManagement.render.date = Layer8DRenderers.renderDate;
-    WarehouseManagement.render.money = Layer8DRenderers.renderMoney;
+    window.WarehouseManagement.render = {
+        warehouseType: (v) => renderEnum(v, WAREHOUSE_TYPE.enum),
+        binType: (v) => renderEnum(v, BIN_TYPE.enum),
+        taskStatus: renderTaskStatus,
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

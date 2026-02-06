@@ -2,130 +2,72 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
-// Documents Storage Module - Enum Definitions
+// Documents Storage Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate, renderFileSize } = Layer8DRenderers;
+
     window.DocStorage = window.DocStorage || {};
-    DocStorage.enums = {};
 
-    // DOCUMENT STATUS
-    DocStorage.enums.DOCUMENT_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Under Review',
-        3: 'Approved',
-        4: 'Published',
-        5: 'Archived',
-        6: 'Deleted'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const DOCUMENT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Under Review', 'review', 'layer8d-status-pending'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['Published', 'published', 'layer8d-status-active'],
+        ['Archived', 'archived', 'layer8d-status-inactive'],
+        ['Deleted', 'deleted', 'layer8d-status-terminated']
+    ]);
+
+    const DOCUMENT_TYPE = factory.simple([
+        'Unspecified', 'Contract', 'Invoice', 'Report', 'Policy',
+        'Procedure', 'Form', 'Image', 'Spreadsheet', 'Presentation', 'Other'
+    ]);
+
+    const FILE_FORMAT = factory.simple([
+        'Unspecified', 'PDF', 'Word', 'Excel', 'PowerPoint',
+        'Image', 'Text', 'HTML', 'XML', 'JSON', 'Other'
+    ]);
+
+    const ACCESS_LEVEL = factory.create([
+        ['Unspecified', null, ''],
+        ['Public', 'public', 'layer8d-status-active'],
+        ['Internal', 'internal', 'layer8d-status-active'],
+        ['Confidential', 'confidential', 'layer8d-status-pending'],
+        ['Restricted', 'restricted', 'layer8d-status-terminated']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    DocStorage.enums = {
+        DOCUMENT_STATUS: DOCUMENT_STATUS.enum,
+        DOCUMENT_STATUS_CLASSES: DOCUMENT_STATUS.classes,
+        DOCUMENT_TYPE: DOCUMENT_TYPE.enum,
+        FILE_FORMAT: FILE_FORMAT.enum,
+        ACCESS_LEVEL: ACCESS_LEVEL.enum,
+        ACCESS_LEVEL_CLASSES: ACCESS_LEVEL.classes
     };
 
-    DocStorage.enums.DOCUMENT_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-inactive',
-        6: 'layer8d-status-terminated'
-    };
-
-    // DOCUMENT TYPE
-    DocStorage.enums.DOCUMENT_TYPE = {
-        0: 'Unspecified',
-        1: 'Contract',
-        2: 'Invoice',
-        3: 'Report',
-        4: 'Policy',
-        5: 'Procedure',
-        6: 'Form',
-        7: 'Image',
-        8: 'Spreadsheet',
-        9: 'Presentation',
-        10: 'Other'
-    };
-
-    DocStorage.enums.DOCUMENT_TYPE_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-pending',
-        5: 'layer8d-status-pending',
-        6: 'layer8d-status-active',
-        7: 'layer8d-status-active',
-        8: 'layer8d-status-active',
-        9: 'layer8d-status-active',
-        10: 'layer8d-status-inactive'
-    };
-
-    // FILE FORMAT
-    DocStorage.enums.FILE_FORMAT = {
-        0: 'Unspecified',
-        1: 'PDF',
-        2: 'Word',
-        3: 'Excel',
-        4: 'PowerPoint',
-        5: 'Image',
-        6: 'Text',
-        7: 'HTML',
-        8: 'XML',
-        9: 'JSON',
-        10: 'Other'
-    };
-
-    DocStorage.enums.FILE_FORMAT_CLASSES = {
-        1: 'layer8d-status-terminated',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-pending',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-inactive',
-        7: 'layer8d-status-active',
-        8: 'layer8d-status-active',
-        9: 'layer8d-status-active',
-        10: 'layer8d-status-inactive'
-    };
-
-    // ACCESS LEVEL
-    DocStorage.enums.ACCESS_LEVEL = {
-        0: 'Unspecified',
-        1: 'Public',
-        2: 'Internal',
-        3: 'Confidential',
-        4: 'Restricted'
-    };
-
-    DocStorage.enums.ACCESS_LEVEL_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-terminated'
-    };
-
+    // ============================================================================
     // RENDERERS
-    DocStorage.render = {};
+    // ============================================================================
 
-    DocStorage.render.documentStatus = Layer8DRenderers.createStatusRenderer(
-        DocStorage.enums.DOCUMENT_STATUS,
-        DocStorage.enums.DOCUMENT_STATUS_CLASSES
-    );
-
-    DocStorage.render.documentType = Layer8DRenderers.createStatusRenderer(
-        DocStorage.enums.DOCUMENT_TYPE,
-        DocStorage.enums.DOCUMENT_TYPE_CLASSES
-    );
-
-    DocStorage.render.fileFormat = Layer8DRenderers.createStatusRenderer(
-        DocStorage.enums.FILE_FORMAT,
-        DocStorage.enums.FILE_FORMAT_CLASSES
-    );
-
-    DocStorage.render.accessLevel = Layer8DRenderers.createStatusRenderer(
-        DocStorage.enums.ACCESS_LEVEL,
-        DocStorage.enums.ACCESS_LEVEL_CLASSES
-    );
-
-    DocStorage.render.date = Layer8DRenderers.renderDate;
-    DocStorage.render.fileSize = Layer8DRenderers.renderFileSize;
+    DocStorage.render = {
+        documentStatus: createStatusRenderer(DOCUMENT_STATUS.enum, DOCUMENT_STATUS.classes),
+        documentType: (v) => renderEnum(v, DOCUMENT_TYPE.enum),
+        fileFormat: (v) => renderEnum(v, FILE_FORMAT.enum),
+        accessLevel: createStatusRenderer(ACCESS_LEVEL.enum, ACCESS_LEVEL.classes),
+        date: renderDate,
+        fileSize: renderFileSize
+    };
 
 })();

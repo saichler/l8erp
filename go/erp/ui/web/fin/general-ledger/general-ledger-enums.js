@@ -12,97 +12,67 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// General Ledger Module - Enum Definitions
-// All enum constants and value mappings for General Ledger models
+// General Ledger Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Create GeneralLedger namespace
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+
     window.GeneralLedger = window.GeneralLedger || {};
-    GeneralLedger.enums = {};
 
     // ============================================================================
-    // ACCOUNT TYPE
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    GeneralLedger.enums.ACCOUNT_TYPE = {
-        0: 'Unspecified',
-        1: 'Asset',
-        2: 'Liability',
-        3: 'Equity',
-        4: 'Revenue',
-        5: 'Expense'
-    };
+    const ACCOUNT_TYPE = factory.simple(['Unspecified', 'Asset', 'Liability', 'Equity', 'Revenue', 'Expense']);
+
+    const BALANCE_TYPE = factory.simple(['Unspecified', 'Debit', 'Credit']);
+
+    const JOURNAL_ENTRY_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Posted', 'posted', 'layer8d-status-active'],
+        ['Reversed', 'reversed', 'layer8d-status-inactive'],
+        ['Void', 'void', 'layer8d-status-terminated']
+    ]);
+
+    const FISCAL_PERIOD_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Open', 'open', 'layer8d-status-active'],
+        ['Closed', 'closed', 'layer8d-status-inactive'],
+        ['Locked', 'locked', 'layer8d-status-terminated']
+    ]);
 
     // ============================================================================
-    // BALANCE TYPE
+    // EXPORT ENUMS
     // ============================================================================
 
-    GeneralLedger.enums.BALANCE_TYPE = {
-        0: 'Unspecified',
-        1: 'Debit',
-        2: 'Credit'
-    };
-
-    // ============================================================================
-    // JOURNAL ENTRY STATUS
-    // ============================================================================
-
-    GeneralLedger.enums.JOURNAL_ENTRY_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Posted',
-        3: 'Reversed',
-        4: 'Void'
-    };
-
-    GeneralLedger.enums.JOURNAL_ENTRY_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-inactive',
-        4: 'layer8d-status-terminated'
-    };
-
-    // ============================================================================
-    // FISCAL PERIOD STATUS
-    // ============================================================================
-
-    GeneralLedger.enums.FISCAL_PERIOD_STATUS = {
-        0: 'Unspecified',
-        1: 'Open',
-        2: 'Closed',
-        3: 'Locked'
-    };
-
-    GeneralLedger.enums.FISCAL_PERIOD_STATUS_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-inactive',
-        3: 'layer8d-status-terminated'
+    window.GeneralLedger.enums = {
+        ACCOUNT_TYPE: ACCOUNT_TYPE.enum,
+        BALANCE_TYPE: BALANCE_TYPE.enum,
+        JOURNAL_ENTRY_STATUS: JOURNAL_ENTRY_STATUS.enum,
+        JOURNAL_ENTRY_STATUS_CLASSES: JOURNAL_ENTRY_STATUS.classes,
+        FISCAL_PERIOD_STATUS: FISCAL_PERIOD_STATUS.enum,
+        FISCAL_PERIOD_STATUS_CLASSES: FISCAL_PERIOD_STATUS.classes
     };
 
     // ============================================================================
     // RENDERERS
     // ============================================================================
 
-    // Create render functions using shared utilities
-    GeneralLedger.render = {};
+    const renderJournalEntryStatus = createStatusRenderer(JOURNAL_ENTRY_STATUS.enum, JOURNAL_ENTRY_STATUS.classes);
+    const renderFiscalPeriodStatus = createStatusRenderer(FISCAL_PERIOD_STATUS.enum, FISCAL_PERIOD_STATUS.classes);
 
-    GeneralLedger.render.accountType = (type) => Layer8DRenderers.renderEnum(type, GeneralLedger.enums.ACCOUNT_TYPE);
-    GeneralLedger.render.balanceType = (type) => Layer8DRenderers.renderEnum(type, GeneralLedger.enums.BALANCE_TYPE);
-
-    GeneralLedger.render.journalEntryStatus = Layer8DRenderers.createStatusRenderer(
-        GeneralLedger.enums.JOURNAL_ENTRY_STATUS,
-        GeneralLedger.enums.JOURNAL_ENTRY_STATUS_CLASSES
-    );
-
-    GeneralLedger.render.fiscalPeriodStatus = Layer8DRenderers.createStatusRenderer(
-        GeneralLedger.enums.FISCAL_PERIOD_STATUS,
-        GeneralLedger.enums.FISCAL_PERIOD_STATUS_CLASSES
-    );
-
-    GeneralLedger.render.boolean = Layer8DRenderers.renderBoolean;
-    GeneralLedger.render.date = Layer8DRenderers.renderDate;
-    GeneralLedger.render.money = Layer8DRenderers.renderMoney;
+    window.GeneralLedger.render = {
+        accountType: (v) => renderEnum(v, ACCOUNT_TYPE.enum),
+        balanceType: (v) => renderEnum(v, BALANCE_TYPE.enum),
+        journalEntryStatus: renderJournalEntryStatus,
+        fiscalPeriodStatus: renderFiscalPeriodStatus,
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

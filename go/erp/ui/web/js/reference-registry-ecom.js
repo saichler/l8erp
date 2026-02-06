@@ -14,8 +14,11 @@ limitations under the License.
 */
 /**
  * ERP Reference Registry - E-Commerce Models
- * Registers Products, Categories, Customers, Orders, Returns, and related models.
+ * Uses Layer8RefFactory for reduced boilerplate
+ * Note: E-commerce models have custom endpoints
  */
+const refEcom = window.Layer8RefFactory;
+
 Layer8DReferenceRegistry.register({
     // ========================================
     // E-Commerce - Product Management
@@ -35,9 +38,6 @@ Layer8DReferenceRegistry.register({
         idColumn: 'categoryId',
         displayColumn: 'name',
         selectColumns: ['categoryId', 'name', 'slug'],
-        displayFormat: function(item) {
-            return item.name;
-        },
         displayLabel: 'Category'
     },
 
@@ -87,9 +87,6 @@ Layer8DReferenceRegistry.register({
         idColumn: 'wishlistId',
         displayColumn: 'name',
         selectColumns: ['wishlistId', 'name', 'customerId'],
-        displayFormat: function(item) {
-            return item.name;
-        },
         displayLabel: 'Wishlist'
     },
 
@@ -101,9 +98,6 @@ Layer8DReferenceRegistry.register({
         idColumn: 'promotionId',
         displayColumn: 'name',
         selectColumns: ['promotionId', 'name'],
-        displayFormat: function(item) {
-            return item.name;
-        },
         displayLabel: 'Promotion'
     },
     EcomCoupon: {
@@ -111,9 +105,6 @@ Layer8DReferenceRegistry.register({
         idColumn: 'couponId',
         displayColumn: 'code',
         selectColumns: ['couponId', 'code', 'description'],
-        displayFormat: function(item) {
-            return item.code;
-        },
         displayLabel: 'Coupon'
     },
 
@@ -139,5 +130,46 @@ Layer8DReferenceRegistry.register({
             return item.provider + ' - ' + item.name;
         },
         displayLabel: 'Payment Method'
+    },
+
+    // ========================================
+    // E-Commerce - Catalog (Images & Variants)
+    // ========================================
+    EcomImage: {
+        endpoint: '/100/EcomImage',
+        idColumn: 'imageId',
+        displayColumn: 'fileName',
+        selectColumns: ['imageId', 'fileName', 'altText'],
+        displayLabel: 'Image'
+    },
+    EcomVariant: {
+        endpoint: '/100/EcomVar',
+        idColumn: 'variantId',
+        displayColumn: 'sku',
+        selectColumns: ['variantId', 'sku', 'name'],
+        displayFormat: function(item) {
+            return item.sku + (item.name ? ' - ' + item.name : '');
+        },
+        displayLabel: 'Variant'
+    },
+    EcomCustomerAddress: {
+        endpoint: '/100/EcomAddr',
+        idColumn: 'addressId',
+        displayColumn: 'addressType',
+        selectColumns: ['addressId', 'addressType', 'city', 'country'],
+        displayFormat: function(item) {
+            return item.addressType + ' - ' + item.city + ', ' + item.country;
+        },
+        displayLabel: 'Address'
+    },
+    EcomAddress: {  // Alias for EcomCustomerAddress
+        endpoint: '/100/EcomAddr',
+        idColumn: 'addressId',
+        displayColumn: 'addressType',
+        selectColumns: ['addressId', 'addressType', 'city', 'country'],
+        displayFormat: function(item) {
+            return item.addressType + ' - ' + item.city + ', ' + item.country;
+        },
+        displayLabel: 'Address'
     }
 });

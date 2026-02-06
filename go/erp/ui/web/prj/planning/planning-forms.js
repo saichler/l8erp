@@ -40,7 +40,7 @@ limitations under the License.
                 {
                     title: 'Associations',
                     fields: [
-                        { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'FinCustomer' },
+                        { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'Customer' },
                         { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'CrmAccount' },
                         { key: 'managerId', label: 'Manager', type: 'reference', lookupModel: 'Employee' },
                         { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'Department' },

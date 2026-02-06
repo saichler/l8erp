@@ -2,237 +2,158 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // CRM Field Service Module - Form Definitions
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
     window.CrmFieldService = window.CrmFieldService || {};
 
+    const f = window.Layer8FormFactory;
     const enums = CrmFieldService.enums;
 
     CrmFieldService.forms = {
-        CrmServiceOrder: {
-            title: 'Service Order',
-            sections: [
-                {
-                    title: 'Order Details',
-                    fields: [
-                        { key: 'orderNumber', label: 'Order Number', type: 'text', required: true },
-                        { key: 'subject', label: 'Subject', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'CrmAccount', required: true },
-                        { key: 'contactId', label: 'Contact', type: 'reference', lookupModel: 'CrmContact' },
-                        { key: 'orderType', label: 'Type', type: 'select', options: enums.SERVICE_ORDER_TYPE },
-                        { key: 'priority', label: 'Priority', type: 'select', options: enums.SERVICE_ORDER_PRIORITY },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.SERVICE_ORDER_STATUS }
-                    ]
-                },
-                {
-                    title: 'Scheduling',
-                    fields: [
-                        { key: 'scheduledDate', label: 'Scheduled Date', type: 'date' },
-                        { key: 'estimatedDuration', label: 'Estimated Duration (hours)', type: 'number' },
-                        { key: 'technicianId', label: 'Assigned Technician', type: 'reference', lookupModel: 'CrmTechnician' },
-                        { key: 'contractId', label: 'Service Contract', type: 'reference', lookupModel: 'CrmServiceContract' }
-                    ]
-                },
-                {
-                    title: 'Location',
-                    fields: [
-                        { key: 'serviceAddress', label: 'Service Address', type: 'textarea' },
-                        { key: 'latitude', label: 'Latitude', type: 'number' },
-                        { key: 'longitude', label: 'Longitude', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Completion',
-                    fields: [
-                        { key: 'completedDate', label: 'Completed Date', type: 'date' },
-                        { key: 'resolution', label: 'Resolution', type: 'textarea' },
-                        { key: 'productId', label: 'Product', type: 'reference', lookupModel: 'ScmItem' }
-                    ]
-                }
-            ]
-        },
+        CrmServiceOrder: f.form('Service Order', [
+            f.section('Order Details', [
+                ...f.text('orderNumber', 'Order Number', true),
+                ...f.text('subject', 'Subject', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('accountId', 'Account', 'CrmAccount', true),
+                ...f.reference('contactId', 'Contact', 'CrmContact'),
+                ...f.select('orderType', 'Type', enums.SERVICE_ORDER_TYPE),
+                ...f.select('priority', 'Priority', enums.SERVICE_ORDER_PRIORITY),
+                ...f.select('status', 'Status', enums.SERVICE_ORDER_STATUS)
+            ]),
+            f.section('Scheduling', [
+                ...f.date('scheduledDate', 'Scheduled Date'),
+                ...f.number('estimatedDuration', 'Estimated Duration (hours)'),
+                ...f.reference('technicianId', 'Assigned Technician', 'CrmTechnician'),
+                ...f.reference('contractId', 'Service Contract', 'CrmServiceContract')
+            ]),
+            f.section('Location', [
+                ...f.textarea('serviceAddress', 'Service Address'),
+                ...f.number('latitude', 'Latitude'),
+                ...f.number('longitude', 'Longitude')
+            ]),
+            f.section('Completion', [
+                ...f.date('completedDate', 'Completed Date'),
+                ...f.textarea('resolution', 'Resolution'),
+                ...f.reference('productId', 'Product', 'ScmItem')
+            ])
+        ]),
 
-        CrmTechnician: {
-            title: 'Technician',
-            sections: [
-                {
-                    title: 'Technician Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'HcmEmployee' },
-                        { key: 'email', label: 'Email', type: 'email' },
-                        { key: 'phone', label: 'Phone', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TECHNICIAN_STATUS }
-                    ]
-                },
-                {
-                    title: 'Skills & Qualifications',
-                    fields: [
-                        { key: 'specialization', label: 'Specialization', type: 'text' },
-                        { key: 'skillLevel', label: 'Skill Level', type: 'number' },
-                        { key: 'isCertified', label: 'Certified', type: 'checkbox' },
-                        { key: 'certifications', label: 'Certifications', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Assignment',
-                    fields: [
-                        { key: 'region', label: 'Region', type: 'text' },
-                        { key: 'territory', label: 'Territory', type: 'text' },
-                        { key: 'maxOrdersPerDay', label: 'Max Orders/Day', type: 'number' },
-                        { key: 'hourlyRate', label: 'Hourly Rate', type: 'money' }
-                    ]
-                }
-            ]
-        },
+        CrmTechnician: f.form('Technician', [
+            f.section('Technician Details', [
+                ...f.text('name', 'Name', true),
+                ...f.reference('employeeId', 'Employee', 'Employee'),
+                ...f.text('email', 'Email'),
+                ...f.text('phone', 'Phone'),
+                ...f.select('status', 'Status', enums.TECHNICIAN_STATUS)
+            ]),
+            f.section('Skills & Qualifications', [
+                ...f.text('specialization', 'Specialization'),
+                ...f.number('skillLevel', 'Skill Level'),
+                ...f.checkbox('isCertified', 'Certified'),
+                ...f.textarea('certifications', 'Certifications')
+            ]),
+            f.section('Assignment', [
+                ...f.text('region', 'Region'),
+                ...f.text('territory', 'Territory'),
+                ...f.number('maxOrdersPerDay', 'Max Orders/Day'),
+                ...f.money('hourlyRate', 'Hourly Rate')
+            ])
+        ]),
 
-        CrmServiceContract: {
-            title: 'Service Contract',
-            sections: [
-                {
-                    title: 'Contract Details',
-                    fields: [
-                        { key: 'contractNumber', label: 'Contract Number', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'CrmAccount', required: true },
-                        { key: 'contactId', label: 'Contact', type: 'reference', lookupModel: 'CrmContact' },
-                        { key: 'contractType', label: 'Type', type: 'select', options: enums.CONTRACT_TYPE },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.CONTRACT_STATUS }
-                    ]
-                },
-                {
-                    title: 'Term',
-                    fields: [
-                        { key: 'startDate', label: 'Start Date', type: 'date', required: true },
-                        { key: 'endDate', label: 'End Date', type: 'date', required: true },
-                        { key: 'renewalDate', label: 'Renewal Date', type: 'date' },
-                        { key: 'autoRenewal', label: 'Auto Renewal', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Coverage',
-                    fields: [
-                        { key: 'coverage', label: 'Coverage Details', type: 'textarea' },
-                        { key: 'visitsIncluded', label: 'Visits Included', type: 'number' },
-                        { key: 'visitsUsed', label: 'Visits Used', type: 'number' },
-                        { key: 'partsIncluded', label: 'Parts Included', type: 'checkbox' },
-                        { key: 'laborIncluded', label: 'Labor Included', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Value',
-                    fields: [
-                        { key: 'contractValue', label: 'Contract Value', type: 'money' },
-                        { key: 'billingFrequency', label: 'Billing Frequency', type: 'text' },
-                        { key: 'slaId', label: 'SLA', type: 'reference', lookupModel: 'CrmSLA' }
-                    ]
-                }
-            ]
-        },
+        CrmServiceContract: f.form('Service Contract', [
+            f.section('Contract Details', [
+                ...f.text('contractNumber', 'Contract Number', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('accountId', 'Account', 'CrmAccount', true),
+                ...f.reference('contactId', 'Contact', 'CrmContact'),
+                ...f.select('contractType', 'Type', enums.CONTRACT_TYPE),
+                ...f.select('status', 'Status', enums.CONTRACT_STATUS)
+            ]),
+            f.section('Term', [
+                ...f.date('startDate', 'Start Date', true),
+                ...f.date('endDate', 'End Date', true),
+                ...f.date('renewalDate', 'Renewal Date'),
+                ...f.checkbox('autoRenewal', 'Auto Renewal')
+            ]),
+            f.section('Coverage', [
+                ...f.textarea('coverage', 'Coverage Details'),
+                ...f.number('visitsIncluded', 'Visits Included'),
+                ...f.number('visitsUsed', 'Visits Used'),
+                ...f.checkbox('partsIncluded', 'Parts Included'),
+                ...f.checkbox('laborIncluded', 'Labor Included')
+            ]),
+            f.section('Value', [
+                ...f.money('contractValue', 'Contract Value'),
+                ...f.text('billingFrequency', 'Billing Frequency'),
+                ...f.reference('slaId', 'SLA', 'CrmSLA')
+            ])
+        ]),
 
-        CrmServiceSchedule: {
-            title: 'Service Schedule',
-            sections: [
-                {
-                    title: 'Schedule Details',
-                    fields: [
-                        { key: 'serviceOrderId', label: 'Service Order', type: 'reference', lookupModel: 'CrmServiceOrder', required: true },
-                        { key: 'technicianId', label: 'Technician', type: 'reference', lookupModel: 'CrmTechnician', required: true },
-                        { key: 'scheduledDate', label: 'Scheduled Date', type: 'date', required: true },
-                        { key: 'startTime', label: 'Start Time', type: 'text' },
-                        { key: 'endTime', label: 'End Time', type: 'text' },
-                        { key: 'estimatedDuration', label: 'Estimated Duration (hours)', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Confirmation',
-                    fields: [
-                        { key: 'isConfirmed', label: 'Confirmed', type: 'checkbox' },
-                        { key: 'confirmedDate', label: 'Confirmed Date', type: 'date' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        CrmServiceSchedule: f.form('Service Schedule', [
+            f.section('Schedule Details', [
+                ...f.reference('serviceOrderId', 'Service Order', 'CrmServiceOrder', true),
+                ...f.reference('technicianId', 'Technician', 'CrmTechnician', true),
+                ...f.date('scheduledDate', 'Scheduled Date', true),
+                ...f.text('startTime', 'Start Time'),
+                ...f.text('endTime', 'End Time'),
+                ...f.number('estimatedDuration', 'Estimated Duration (hours)')
+            ]),
+            f.section('Confirmation', [
+                ...f.checkbox('isConfirmed', 'Confirmed'),
+                ...f.date('confirmedDate', 'Confirmed Date'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        CrmServicePart: {
-            title: 'Service Part',
-            sections: [
-                {
-                    title: 'Part Details',
-                    fields: [
-                        { key: 'serviceOrderId', label: 'Service Order', type: 'reference', lookupModel: 'CrmServiceOrder', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                        { key: 'unitPrice', label: 'Unit Price', type: 'money' },
-                        { key: 'totalPrice', label: 'Total Price', type: 'money' }
-                    ]
-                },
-                {
-                    title: 'Installation',
-                    fields: [
-                        { key: 'isInstalled', label: 'Installed', type: 'checkbox' },
-                        { key: 'installedDate', label: 'Installed Date', type: 'date' },
-                        { key: 'serialNumber', label: 'Serial Number', type: 'text' },
-                        { key: 'warrantyEndDate', label: 'Warranty End Date', type: 'date' }
-                    ]
-                }
-            ]
-        },
+        CrmServicePart: f.form('Service Part', [
+            f.section('Part Details', [
+                ...f.reference('serviceOrderId', 'Service Order', 'CrmServiceOrder', true),
+                ...f.reference('itemId', 'Item', 'ScmItem', true),
+                ...f.textarea('description', 'Description'),
+                ...f.number('quantity', 'Quantity', true),
+                ...f.money('unitPrice', 'Unit Price'),
+                ...f.money('totalPrice', 'Total Price')
+            ]),
+            f.section('Installation', [
+                ...f.checkbox('isInstalled', 'Installed'),
+                ...f.date('installedDate', 'Installed Date'),
+                ...f.text('serialNumber', 'Serial Number'),
+                ...f.date('warrantyEndDate', 'Warranty End Date')
+            ])
+        ]),
 
-        CrmServiceVisit: {
-            title: 'Service Visit',
-            sections: [
-                {
-                    title: 'Visit Details',
-                    fields: [
-                        { key: 'serviceOrderId', label: 'Service Order', type: 'reference', lookupModel: 'CrmServiceOrder', required: true },
-                        { key: 'technicianId', label: 'Technician', type: 'reference', lookupModel: 'CrmTechnician', required: true },
-                        { key: 'visitDate', label: 'Visit Date', type: 'date', required: true },
-                        { key: 'arrivalTime', label: 'Arrival Time', type: 'text' },
-                        { key: 'departureTime', label: 'Departure Time', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.VISIT_STATUS }
-                    ]
-                },
-                {
-                    title: 'Work Performed',
-                    fields: [
-                        { key: 'workPerformed', label: 'Work Performed', type: 'textarea' },
-                        { key: 'laborHours', label: 'Labor Hours', type: 'number' },
-                        { key: 'laborCost', label: 'Labor Cost', type: 'money' },
-                        { key: 'partsUsed', label: 'Parts Used', type: 'textarea' },
-                        { key: 'findings', label: 'Findings', type: 'textarea' },
-                        { key: 'recommendations', label: 'Recommendations', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Sign-off',
-                    fields: [
-                        { key: 'customerSignature', label: 'Customer Signature', type: 'text' },
-                        { key: 'customerName', label: 'Customer Name', type: 'text' },
-                        { key: 'signatureDate', label: 'Signature Date', type: 'date' },
-                        { key: 'customerFeedback', label: 'Customer Feedback', type: 'textarea' },
-                        { key: 'rating', label: 'Rating', type: 'number' }
-                    ]
-                }
-            ]
-        }
+        CrmServiceVisit: f.form('Service Visit', [
+            f.section('Visit Details', [
+                ...f.reference('serviceOrderId', 'Service Order', 'CrmServiceOrder', true),
+                ...f.reference('technicianId', 'Technician', 'CrmTechnician', true),
+                ...f.date('visitDate', 'Visit Date', true),
+                ...f.text('arrivalTime', 'Arrival Time'),
+                ...f.text('departureTime', 'Departure Time'),
+                ...f.select('status', 'Status', enums.VISIT_STATUS)
+            ]),
+            f.section('Work Performed', [
+                ...f.textarea('workPerformed', 'Work Performed'),
+                ...f.number('laborHours', 'Labor Hours'),
+                ...f.money('laborCost', 'Labor Cost'),
+                ...f.textarea('partsUsed', 'Parts Used'),
+                ...f.textarea('findings', 'Findings'),
+                ...f.textarea('recommendations', 'Recommendations')
+            ]),
+            f.section('Sign-off', [
+                ...f.text('customerSignature', 'Customer Signature'),
+                ...f.text('customerName', 'Customer Name'),
+                ...f.date('signatureDate', 'Signature Date'),
+                ...f.textarea('customerFeedback', 'Customer Feedback'),
+                ...f.number('rating', 'Rating')
+            ])
+        ])
     };
 
     CrmFieldService.primaryKeys = {

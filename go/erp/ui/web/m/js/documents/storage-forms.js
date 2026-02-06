@@ -2,6 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
+// Uses Layer8FormFactory for reduced boilerplate
 /**
  * Mobile Documents Storage Module - Form Definitions
  * Desktop Equivalent: documents/storage/storage-forms.js
@@ -10,65 +11,55 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     'use strict';
 
     window.MobileDocStorage = window.MobileDocStorage || {};
+    const f = window.Layer8FormFactory;
     const enums = MobileDocStorage.enums;
 
     MobileDocStorage.forms = {
-        DocDocument: {
-            title: 'Document',
-            sections: [
-                { title: 'Document Details', fields: [
-                    { key: 'title', label: 'Title', type: 'text', required: true },
-                    { key: 'description', label: 'Description', type: 'textarea' },
-                    { key: 'documentType', label: 'Type', type: 'select', options: enums.DOCUMENT_TYPE },
-                    { key: 'status', label: 'Status', type: 'select', options: enums.DOCUMENT_STATUS },
-                    { key: 'accessLevel', label: 'Access Level', type: 'select', options: enums.ACCESS_LEVEL }
-                ]}
-            ]
-        },
-        DocFolder: {
-            title: 'Folder',
-            sections: [
-                { title: 'Folder Details', fields: [
-                    { key: 'name', label: 'Name', type: 'text', required: true },
-                    { key: 'description', label: 'Description', type: 'textarea' },
-                    { key: 'accessLevel', label: 'Access Level', type: 'select', options: enums.ACCESS_LEVEL },
-                    { key: 'isActive', label: 'Active', type: 'checkbox' }
-                ]}
-            ]
-        },
-        DocCategory: {
-            title: 'Category',
-            sections: [
-                { title: 'Category Details', fields: [
-                    { key: 'name', label: 'Name', type: 'text', required: true },
-                    { key: 'code', label: 'Code', type: 'text' },
-                    { key: 'description', label: 'Description', type: 'textarea' },
-                    { key: 'isActive', label: 'Active', type: 'checkbox' }
-                ]}
-            ]
-        },
-        DocTag: {
-            title: 'Tag',
-            sections: [
-                { title: 'Tag Details', fields: [
-                    { key: 'name', label: 'Name', type: 'text', required: true },
-                    { key: 'color', label: 'Color', type: 'text' },
-                    { key: 'description', label: 'Description', type: 'textarea' },
-                    { key: 'isActive', label: 'Active', type: 'checkbox' }
-                ]}
-            ]
-        },
-        DocDocumentVersion: {
-            title: 'Document Version',
-            sections: [
-                { title: 'Version Details', fields: [
-                    { key: 'documentId', label: 'Document', type: 'reference', lookupModel: 'DocDocument', required: true },
-                    { key: 'versionNumber', label: 'Version Number', type: 'number', required: true },
-                    { key: 'changeNotes', label: 'Change Notes', type: 'textarea' },
-                    { key: 'isCurrent', label: 'Current Version', type: 'checkbox' }
-                ]}
-            ]
-        }
+        DocDocument: f.form('Document', [
+            f.section('Document Details', [
+                ...f.text('title', 'Title', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('documentType', 'Type', enums.DOCUMENT_TYPE),
+                ...f.select('status', 'Status', enums.DOCUMENT_STATUS),
+                ...f.select('accessLevel', 'Access Level', enums.ACCESS_LEVEL)
+            ])
+        ]),
+
+        DocFolder: f.form('Folder', [
+            f.section('Folder Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('accessLevel', 'Access Level', enums.ACCESS_LEVEL),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
+
+        DocCategory: f.form('Category', [
+            f.section('Category Details', [
+                ...f.text('name', 'Name', true),
+                ...f.text('code', 'Code'),
+                ...f.textarea('description', 'Description'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
+
+        DocTag: f.form('Tag', [
+            f.section('Tag Details', [
+                ...f.text('name', 'Name', true),
+                ...f.text('color', 'Color'),
+                ...f.textarea('description', 'Description'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
+
+        DocDocumentVersion: f.form('Document Version', [
+            f.section('Version Details', [
+                ...f.reference('documentId', 'Document', 'DocDocument', true),
+                ...f.number('versionNumber', 'Version Number', true),
+                ...f.textarea('changeNotes', 'Change Notes'),
+                ...f.checkbox('isCurrent', 'Current Version')
+            ])
+        ])
     };
 
     MobileDocStorage.primaryKeys = {

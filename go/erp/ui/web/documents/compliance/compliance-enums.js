@@ -2,101 +2,70 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
-// Documents Compliance Module - Enum Definitions
+// Documents Compliance Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate } = Layer8DRenderers;
+
     window.DocCompliance = window.DocCompliance || {};
-    DocCompliance.enums = {};
 
-    // RETENTION ACTION
-    DocCompliance.enums.RETENTION_ACTION = {
-        0: 'Unspecified',
-        1: 'Archive',
-        2: 'Delete',
-        3: 'Review'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const RETENTION_ACTION = factory.create([
+        ['Unspecified', null, ''],
+        ['Archive', 'archive', 'layer8d-status-active'],
+        ['Delete', 'delete', 'layer8d-status-terminated'],
+        ['Review', 'review', 'layer8d-status-pending']
+    ]);
+
+    const LEGAL_HOLD_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Active', 'active', 'layer8d-status-terminated'],
+        ['Released', 'released', 'layer8d-status-active'],
+        ['Expired', 'expired', 'layer8d-status-inactive']
+    ]);
+
+    const ACCESS_ACTION = factory.simple([
+        'Unspecified', 'View', 'Download', 'Edit', 'Delete', 'Share', 'Print'
+    ]);
+
+    const ARCHIVE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['In Progress', 'progress', 'layer8d-status-active'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Failed', 'failed', 'layer8d-status-terminated']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    DocCompliance.enums = {
+        RETENTION_ACTION: RETENTION_ACTION.enum,
+        RETENTION_ACTION_CLASSES: RETENTION_ACTION.classes,
+        LEGAL_HOLD_STATUS: LEGAL_HOLD_STATUS.enum,
+        LEGAL_HOLD_STATUS_CLASSES: LEGAL_HOLD_STATUS.classes,
+        ACCESS_ACTION: ACCESS_ACTION.enum,
+        ARCHIVE_STATUS: ARCHIVE_STATUS.enum,
+        ARCHIVE_STATUS_CLASSES: ARCHIVE_STATUS.classes
     };
 
-    DocCompliance.enums.RETENTION_ACTION_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-terminated',
-        3: 'layer8d-status-pending'
-    };
-
-    // LEGAL HOLD STATUS
-    DocCompliance.enums.LEGAL_HOLD_STATUS = {
-        0: 'Unspecified',
-        1: 'Active',
-        2: 'Released',
-        3: 'Expired'
-    };
-
-    DocCompliance.enums.LEGAL_HOLD_STATUS_CLASSES = {
-        1: 'layer8d-status-terminated',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-inactive'
-    };
-
-    // ACCESS ACTION
-    DocCompliance.enums.ACCESS_ACTION = {
-        0: 'Unspecified',
-        1: 'View',
-        2: 'Download',
-        3: 'Edit',
-        4: 'Delete',
-        5: 'Share',
-        6: 'Print'
-    };
-
-    DocCompliance.enums.ACCESS_ACTION_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-terminated',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-active'
-    };
-
-    // ARCHIVE STATUS
-    DocCompliance.enums.ARCHIVE_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'In Progress',
-        3: 'Completed',
-        4: 'Failed'
-    };
-
-    DocCompliance.enums.ARCHIVE_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated'
-    };
-
+    // ============================================================================
     // RENDERERS
-    DocCompliance.render = {};
+    // ============================================================================
 
-    DocCompliance.render.retentionAction = Layer8DRenderers.createStatusRenderer(
-        DocCompliance.enums.RETENTION_ACTION,
-        DocCompliance.enums.RETENTION_ACTION_CLASSES
-    );
-
-    DocCompliance.render.legalHoldStatus = Layer8DRenderers.createStatusRenderer(
-        DocCompliance.enums.LEGAL_HOLD_STATUS,
-        DocCompliance.enums.LEGAL_HOLD_STATUS_CLASSES
-    );
-
-    DocCompliance.render.accessAction = Layer8DRenderers.createStatusRenderer(
-        DocCompliance.enums.ACCESS_ACTION,
-        DocCompliance.enums.ACCESS_ACTION_CLASSES
-    );
-
-    DocCompliance.render.archiveStatus = Layer8DRenderers.createStatusRenderer(
-        DocCompliance.enums.ARCHIVE_STATUS,
-        DocCompliance.enums.ARCHIVE_STATUS_CLASSES
-    );
-
-    DocCompliance.render.date = Layer8DRenderers.renderDate;
+    DocCompliance.render = {
+        retentionAction: createStatusRenderer(RETENTION_ACTION.enum, RETENTION_ACTION.classes),
+        legalHoldStatus: createStatusRenderer(LEGAL_HOLD_STATUS.enum, LEGAL_HOLD_STATUS.classes),
+        accessAction: (v) => renderEnum(v, ACCESS_ACTION.enum),
+        archiveStatus: createStatusRenderer(ARCHIVE_STATUS.enum, ARCHIVE_STATUS.classes),
+        date: renderDate
+    };
 
 })();

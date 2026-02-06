@@ -12,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// Uses Layer8FormFactory for reduced boilerplate
 /**
  * Mobile COMP Risk Module - Form Configurations
  * Desktop Equivalent: comp/risk/risk-forms.js
@@ -19,177 +20,119 @@ limitations under the License.
 (function() {
     'use strict';
 
+    window.MobileCompRisk = window.MobileCompRisk || {};
+    const f = window.Layer8FormFactory;
     const enums = MobileCompRisk.enums;
 
     MobileCompRisk.forms = {
-        CompRiskRegister: {
-            title: 'Risk Register',
-            sections: [
-                {
-                    title: 'Risk Details',
-                    fields: [
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'title', label: 'Title', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'category', label: 'Category', type: 'select', options: enums.RISK_CATEGORY },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.RISK_STATUS }
-                    ]
-                },
-                {
-                    title: 'Risk Scores',
-                    fields: [
-                        { key: 'inherentLikelihood', label: 'Inherent Likelihood', type: 'number' },
-                        { key: 'inherentImpact', label: 'Inherent Impact', type: 'number' },
-                        { key: 'inherentRiskScore', label: 'Inherent Risk Score', type: 'number' },
-                        { key: 'residualLikelihood', label: 'Residual Likelihood', type: 'number' },
-                        { key: 'residualImpact', label: 'Residual Impact', type: 'number' },
-                        { key: 'residualRiskScore', label: 'Residual Risk Score', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Response & Ownership',
-                    fields: [
-                        { key: 'riskResponse', label: 'Risk Response', type: 'text' },
-                        { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'HcmDepartment' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'nextReviewDate', label: 'Next Review Date', type: 'date' }
-                    ]
-                }
-            ]
-        },
+        CompRiskRegister: f.form('Risk Register', [
+            f.section('Risk Details', [
+                ...f.text('code', 'Code', true),
+                ...f.text('title', 'Title', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('category', 'Category', enums.RISK_CATEGORY),
+                ...f.select('status', 'Status', enums.RISK_STATUS)
+            ]),
+            f.section('Risk Scores', [
+                ...f.number('inherentLikelihood', 'Inherent Likelihood'),
+                ...f.number('inherentImpact', 'Inherent Impact'),
+                ...f.number('inherentRiskScore', 'Inherent Risk Score'),
+                ...f.number('residualLikelihood', 'Residual Likelihood'),
+                ...f.number('residualImpact', 'Residual Impact'),
+                ...f.number('residualRiskScore', 'Residual Risk Score')
+            ]),
+            f.section('Response & Ownership', [
+                ...f.text('riskResponse', 'Risk Response'),
+                ...f.reference('departmentId', 'Department', 'HcmDepartment'),
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.date('nextReviewDate', 'Next Review Date')
+            ])
+        ]),
 
-        CompRiskAssessment: {
-            title: 'Risk Assessment',
-            sections: [
-                {
-                    title: 'Assessment Details',
-                    fields: [
-                        { key: 'riskId', label: 'Risk', type: 'reference', lookupModel: 'CompRiskRegister', required: true },
-                        { key: 'assessmentDate', label: 'Assessment Date', type: 'date', required: true },
-                        { key: 'assessorId', label: 'Assessor', type: 'reference', lookupModel: 'Employee', required: true }
-                    ]
-                },
-                {
-                    title: 'Ratings',
-                    fields: [
-                        { key: 'likelihoodRating', label: 'Likelihood Rating', type: 'number' },
-                        { key: 'impactRating', label: 'Impact Rating', type: 'number' },
-                        { key: 'riskScore', label: 'Risk Score', type: 'number' },
-                        { key: 'controlEffectiveness', label: 'Control Effectiveness', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Findings',
-                    fields: [
-                        { key: 'findings', label: 'Findings', type: 'textarea' },
-                        { key: 'recommendations', label: 'Recommendations', type: 'textarea' },
-                        { key: 'requiresEscalation', label: 'Requires Escalation', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CompRiskAssessment: f.form('Risk Assessment', [
+            f.section('Assessment Details', [
+                ...f.reference('riskId', 'Risk', 'CompRiskRegister', true),
+                ...f.date('assessmentDate', 'Assessment Date', true),
+                ...f.reference('assessorId', 'Assessor', 'Employee', true)
+            ]),
+            f.section('Ratings', [
+                ...f.number('likelihoodRating', 'Likelihood Rating'),
+                ...f.number('impactRating', 'Impact Rating'),
+                ...f.number('riskScore', 'Risk Score'),
+                ...f.number('controlEffectiveness', 'Control Effectiveness')
+            ]),
+            f.section('Findings', [
+                ...f.textarea('findings', 'Findings'),
+                ...f.textarea('recommendations', 'Recommendations'),
+                ...f.checkbox('requiresEscalation', 'Requires Escalation')
+            ])
+        ]),
 
-        CompIncident: {
-            title: 'Incident',
-            sections: [
-                {
-                    title: 'Incident Details',
-                    fields: [
-                        { key: 'incidentNumber', label: 'Incident Number', type: 'text' },
-                        { key: 'title', label: 'Title', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'severity', label: 'Severity', type: 'select', options: enums.SEVERITY_LEVEL },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.INCIDENT_STATUS },
-                        { key: 'category', label: 'Category', type: 'select', options: enums.RISK_CATEGORY }
-                    ]
-                },
-                {
-                    title: 'Timeline',
-                    fields: [
-                        { key: 'occurredDate', label: 'Occurred Date', type: 'date' },
-                        { key: 'reportedDate', label: 'Reported Date', type: 'date' },
-                        { key: 'containedDate', label: 'Contained Date', type: 'date' },
-                        { key: 'resolvedDate', label: 'Resolved Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Impact & Response',
-                    fields: [
-                        { key: 'reportedById', label: 'Reported By', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'assignedToId', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'rootCause', label: 'Root Cause', type: 'textarea' },
-                        { key: 'correctiveActions', label: 'Corrective Actions', type: 'textarea' },
-                        { key: 'regulatoryReportable', label: 'Regulatory Reportable', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CompIncident: f.form('Incident', [
+            f.section('Incident Details', [
+                ...f.text('incidentNumber', 'Incident Number'),
+                ...f.text('title', 'Title', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('severity', 'Severity', enums.SEVERITY_LEVEL),
+                ...f.select('status', 'Status', enums.INCIDENT_STATUS),
+                ...f.select('category', 'Category', enums.RISK_CATEGORY)
+            ]),
+            f.section('Timeline', [
+                ...f.date('occurredDate', 'Occurred Date'),
+                ...f.date('reportedDate', 'Reported Date'),
+                ...f.date('containedDate', 'Contained Date'),
+                ...f.date('resolvedDate', 'Resolved Date')
+            ]),
+            f.section('Impact & Response', [
+                ...f.reference('reportedById', 'Reported By', 'Employee'),
+                ...f.reference('assignedToId', 'Assigned To', 'Employee'),
+                ...f.textarea('rootCause', 'Root Cause'),
+                ...f.textarea('correctiveActions', 'Corrective Actions'),
+                ...f.checkbox('regulatoryReportable', 'Regulatory Reportable')
+            ])
+        ]),
 
-        CompMitigationPlan: {
-            title: 'Mitigation Plan',
-            sections: [
-                {
-                    title: 'Plan Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'riskId', label: 'Risk', type: 'reference', lookupModel: 'CompRiskRegister', required: true },
-                        { key: 'strategy', label: 'Strategy', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.REMEDIATION_STATUS }
-                    ]
-                },
-                {
-                    title: 'Timeline',
-                    fields: [
-                        { key: 'startDate', label: 'Start Date', type: 'date' },
-                        { key: 'targetDate', label: 'Target Date', type: 'date' },
-                        { key: 'completedDate', label: 'Completed Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Risk Reduction',
-                    fields: [
-                        { key: 'targetRiskReduction', label: 'Target Risk Reduction', type: 'number' },
-                        { key: 'actualRiskReduction', label: 'Actual Risk Reduction', type: 'number' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                }
-            ]
-        },
+        CompMitigationPlan: f.form('Mitigation Plan', [
+            f.section('Plan Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('riskId', 'Risk', 'CompRiskRegister', true),
+                ...f.text('strategy', 'Strategy'),
+                ...f.select('status', 'Status', enums.REMEDIATION_STATUS)
+            ]),
+            f.section('Timeline', [
+                ...f.date('startDate', 'Start Date'),
+                ...f.date('targetDate', 'Target Date'),
+                ...f.date('completedDate', 'Completed Date')
+            ]),
+            f.section('Risk Reduction', [
+                ...f.number('targetRiskReduction', 'Target Risk Reduction'),
+                ...f.number('actualRiskReduction', 'Actual Risk Reduction'),
+                ...f.reference('ownerId', 'Owner', 'Employee')
+            ])
+        ]),
 
-        CompInsurancePolicy: {
-            title: 'Insurance Policy',
-            sections: [
-                {
-                    title: 'Policy Details',
-                    fields: [
-                        { key: 'policyNumber', label: 'Policy Number', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'policyType', label: 'Policy Type', type: 'text' },
-                        { key: 'provider', label: 'Provider', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Coverage',
-                    fields: [
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
-                        { key: 'expiryDate', label: 'Expiry Date', type: 'date' },
-                        { key: 'coverageAmount', label: 'Coverage Amount', type: 'number' },
-                        { key: 'deductible', label: 'Deductible', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Premiums & Ownership',
-                    fields: [
-                        { key: 'premiumAmount', label: 'Premium Amount', type: 'number' },
-                        { key: 'premiumFrequency', label: 'Premium Frequency', type: 'text' },
-                        { key: 'responsibleId', label: 'Responsible', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                }
-            ]
-        }
+        CompInsurancePolicy: f.form('Insurance Policy', [
+            f.section('Policy Details', [
+                ...f.text('policyNumber', 'Policy Number', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.text('policyType', 'Policy Type'),
+                ...f.text('provider', 'Provider'),
+                ...f.text('status', 'Status')
+            ]),
+            f.section('Coverage', [
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.date('expiryDate', 'Expiry Date'),
+                ...f.number('coverageAmount', 'Coverage Amount'),
+                ...f.number('deductible', 'Deductible')
+            ]),
+            f.section('Premiums & Ownership', [
+                ...f.number('premiumAmount', 'Premium Amount'),
+                ...f.text('premiumFrequency', 'Premium Frequency'),
+                ...f.reference('responsibleId', 'Responsible', 'Employee')
+            ])
+        ])
     };
 
 })();

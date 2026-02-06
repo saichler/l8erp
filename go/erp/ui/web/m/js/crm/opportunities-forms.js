@@ -1,121 +1,91 @@
 /*
 © 2025 Sharon Aicler (saichler@gmail.com)
-Layer 8 Ecosystem - Apache 2.0
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
+// Mobile CRM Opportunities Module - Form Configurations
+// Uses Layer8FormFactory for reduced boilerplate
+
 (function() {
     'use strict';
 
+    window.MobileCrmOpportunities = window.MobileCrmOpportunities || {};
+
+    const f = window.Layer8FormFactory;
     const enums = MobileCrmOpportunities.enums;
 
     MobileCrmOpportunities.forms = {
-        CrmOpportunity: {
-            title: 'Opportunity',
-            sections: [
-                {
-                    title: 'Opportunity Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'CrmAccount', required: true },
-                        { key: 'contactId', label: 'Contact', type: 'reference', lookupModel: 'CrmContact' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.OPPORTUNITY_STATUS },
-                        { key: 'stageId', label: 'Stage', type: 'reference', lookupModel: 'CrmOppStage' },
-                        { key: 'amount', label: 'Amount', type: 'currency' },
-                        { key: 'probability', label: 'Probability %', type: 'number' },
-                        { key: 'closeDate', label: 'Close Date', type: 'date' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'description', label: 'Description', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        CrmOpportunity: f.form('Opportunity', [
+            f.section('Opportunity Details', [
+                ...f.text('name', 'Name', true),
+                ...f.reference('accountId', 'Account', 'CrmAccount', true),
+                ...f.reference('contactId', 'Contact', 'CrmContact'),
+                ...f.select('status', 'Status', enums.OPPORTUNITY_STATUS),
+                ...f.reference('stageId', 'Stage', 'CrmOppStage'),
+                ...f.money('amount', 'Amount'),
+                ...f.number('probability', 'Probability %'),
+                ...f.date('closeDate', 'Close Date'),
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.textarea('description', 'Description')
+            ])
+        ]),
 
-        CrmOppStage: {
-            title: 'Sales Stage',
-            sections: [
-                {
-                    title: 'Stage Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'sequence', label: 'Sequence', type: 'number', required: true },
-                        { key: 'probability', label: 'Probability %', type: 'number' },
-                        { key: 'isClosed', label: 'Is Closed', type: 'checkbox' },
-                        { key: 'isWon', label: 'Is Won', type: 'checkbox' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CrmOppStage: f.form('Sales Stage', [
+            f.section('Stage Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.number('sequence', 'Sequence', true),
+                ...f.number('probability', 'Probability %'),
+                ...f.checkbox('isClosed', 'Is Closed'),
+                ...f.checkbox('isWon', 'Is Won'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        CrmOppCompetitor: {
-            title: 'Competitor',
-            sections: [
-                {
-                    title: 'Competitor Details',
-                    fields: [
-                        { key: 'opportunityId', label: 'Opportunity', type: 'reference', lookupModel: 'CrmOpportunity', required: true },
-                        { key: 'competitorName', label: 'Competitor Name', type: 'text', required: true },
-                        { key: 'strengths', label: 'Strengths', type: 'textarea' },
-                        { key: 'weaknesses', label: 'Weaknesses', type: 'textarea' },
-                        { key: 'threatLevel', label: 'Threat Level', type: 'select', options: enums.THREAT_LEVEL },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        CrmOppCompetitor: f.form('Competitor', [
+            f.section('Competitor Details', [
+                ...f.reference('opportunityId', 'Opportunity', 'CrmOpportunity', true),
+                ...f.text('competitorName', 'Competitor Name', true),
+                ...f.textarea('strengths', 'Strengths'),
+                ...f.textarea('weaknesses', 'Weaknesses'),
+                ...f.select('threatLevel', 'Threat Level', enums.THREAT_LEVEL),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        CrmOppProduct: {
-            title: 'Opportunity Product',
-            sections: [
-                {
-                    title: 'Product Details',
-                    fields: [
-                        { key: 'opportunityId', label: 'Opportunity', type: 'reference', lookupModel: 'CrmOpportunity', required: true },
-                        { key: 'productId', label: 'Product', type: 'reference', lookupModel: 'ScmItem', required: true },
-                        { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                        { key: 'unitPrice', label: 'Unit Price', type: 'currency' },
-                        { key: 'discount', label: 'Discount %', type: 'number' },
-                        { key: 'totalPrice', label: 'Total Price', type: 'currency' },
-                        { key: 'description', label: 'Description', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        CrmOppProduct: f.form('Opportunity Product', [
+            f.section('Product Details', [
+                ...f.reference('opportunityId', 'Opportunity', 'CrmOpportunity', true),
+                ...f.reference('productId', 'Product', 'ScmItem', true),
+                ...f.number('quantity', 'Quantity', true),
+                ...f.money('unitPrice', 'Unit Price'),
+                ...f.number('discount', 'Discount %'),
+                ...f.money('totalPrice', 'Total Price'),
+                ...f.textarea('description', 'Description')
+            ])
+        ]),
 
-        CrmOppTeam: {
-            title: 'Team Member',
-            sections: [
-                {
-                    title: 'Team Member Details',
-                    fields: [
-                        { key: 'opportunityId', label: 'Opportunity', type: 'reference', lookupModel: 'CrmOpportunity', required: true },
-                        { key: 'userId', label: 'User', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'role', label: 'Role', type: 'text' },
-                        { key: 'isPrimary', label: 'Primary', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CrmOppTeam: f.form('Team Member', [
+            f.section('Team Member Details', [
+                ...f.reference('opportunityId', 'Opportunity', 'CrmOpportunity', true),
+                ...f.reference('userId', 'User', 'Employee', true),
+                ...f.text('role', 'Role'),
+                ...f.checkbox('isPrimary', 'Primary')
+            ])
+        ]),
 
-        CrmOppActivity: {
-            title: 'Opportunity Activity',
-            sections: [
-                {
-                    title: 'Activity Details',
-                    fields: [
-                        { key: 'opportunityId', label: 'Opportunity', type: 'reference', lookupModel: 'CrmOpportunity', required: true },
-                        { key: 'activityType', label: 'Activity Type', type: 'select', options: enums.ACTIVITY_TYPE, required: true },
-                        { key: 'subject', label: 'Subject', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'activityDate', label: 'Activity Date', type: 'date' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.ACTIVITY_STATUS },
-                        { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'durationMinutes', label: 'Duration (min)', type: 'number' },
-                        { key: 'isCompleted', label: 'Completed', type: 'checkbox' }
-                    ]
-                }
-            ]
-        }
+        CrmOppActivity: f.form('Opportunity Activity', [
+            f.section('Activity Details', [
+                ...f.reference('opportunityId', 'Opportunity', 'CrmOpportunity', true),
+                ...f.select('activityType', 'Activity Type', enums.ACTIVITY_TYPE, true),
+                ...f.text('subject', 'Subject', true),
+                ...f.textarea('description', 'Description'),
+                ...f.date('activityDate', 'Activity Date'),
+                ...f.select('status', 'Status', enums.ACTIVITY_STATUS),
+                ...f.reference('assignedTo', 'Assigned To', 'Employee'),
+                ...f.number('durationMinutes', 'Duration (min)'),
+                ...f.checkbox('isCompleted', 'Completed')
+            ])
+        ])
     };
 
 })();

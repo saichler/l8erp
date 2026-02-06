@@ -2,183 +2,118 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // CRM Marketing Module - Form Definitions
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
     window.CrmMarketing = window.CrmMarketing || {};
 
+    const f = window.Layer8FormFactory;
     const enums = CrmMarketing.enums;
 
     CrmMarketing.forms = {
-        CrmCampaign: {
-            title: 'Campaign',
-            sections: [
-                {
-                    title: 'Campaign Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'campaignType', label: 'Type', type: 'select', options: enums.CAMPAIGN_TYPE },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.CAMPAIGN_STATUS },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'startDate', label: 'Start Date', type: 'date' },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'parentCampaignId', label: 'Parent Campaign', type: 'reference', lookupModel: 'CrmCampaign' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Budget & Metrics',
-                    fields: [
-                        { key: 'budgetedCost', label: 'Budgeted Cost', type: 'money' },
-                        { key: 'actualCost', label: 'Actual Cost', type: 'money' },
-                        { key: 'expectedRevenue', label: 'Expected Revenue', type: 'money' },
-                        { key: 'expectedResponseRate', label: 'Expected Response Rate (%)', type: 'number' },
-                        { key: 'numSent', label: 'Number Sent', type: 'number' },
-                        { key: 'numResponses', label: 'Number of Responses', type: 'number' }
-                    ]
-                }
-            ]
-        },
+        CrmCampaign: f.form('Campaign', [
+            f.section('Campaign Details', [
+                ...f.text('name', 'Name', true),
+                ...f.select('campaignType', 'Type', enums.CAMPAIGN_TYPE),
+                ...f.select('status', 'Status', enums.CAMPAIGN_STATUS),
+                ...f.textarea('description', 'Description'),
+                ...f.date('startDate', 'Start Date'),
+                ...f.date('endDate', 'End Date'),
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.reference('parentCampaignId', 'Parent Campaign', 'CrmCampaign'),
+                ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Budget & Metrics', [
+                ...f.money('budgetedCost', 'Budgeted Cost'),
+                ...f.money('actualCost', 'Actual Cost'),
+                ...f.money('expectedRevenue', 'Expected Revenue'),
+                ...f.number('expectedResponseRate', 'Expected Response Rate (%)'),
+                ...f.number('numSent', 'Number Sent'),
+                ...f.number('numResponses', 'Number of Responses')
+            ])
+        ]),
 
-        CrmCampaignMember: {
-            title: 'Campaign Member',
-            sections: [
-                {
-                    title: 'Member Details',
-                    fields: [
-                        { key: 'campaignId', label: 'Campaign', type: 'reference', lookupModel: 'CrmCampaign', required: true },
-                        { key: 'leadId', label: 'Lead', type: 'reference', lookupModel: 'CrmLead' },
-                        { key: 'contactId', label: 'Contact', type: 'reference', lookupModel: 'CrmContact' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.CAMPAIGN_MEMBER_STATUS },
-                        { key: 'sourceListId', label: 'Source List', type: 'reference', lookupModel: 'CrmMarketingList' },
-                        { key: 'firstRespondedDate', label: 'First Responded', type: 'date' },
-                        { key: 'hasResponded', label: 'Has Responded', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CrmCampaignMember: f.form('Campaign Member', [
+            f.section('Member Details', [
+                ...f.reference('campaignId', 'Campaign', 'CrmCampaign', true),
+                ...f.reference('leadId', 'Lead', 'CrmLead'),
+                ...f.reference('contactId', 'Contact', 'CrmContact'),
+                ...f.select('status', 'Status', enums.CAMPAIGN_MEMBER_STATUS),
+                ...f.reference('sourceListId', 'Source List', 'CrmMarketingList'),
+                ...f.date('firstRespondedDate', 'First Responded'),
+                ...f.checkbox('hasResponded', 'Has Responded')
+            ])
+        ]),
 
-        CrmEmailTemplate: {
-            title: 'Email Template',
-            sections: [
-                {
-                    title: 'Template Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'subject', label: 'Subject', type: 'text', required: true },
-                        { key: 'templateType', label: 'Template Type', type: 'text' },
-                        { key: 'folder', label: 'Folder', type: 'text' },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Content',
-                    fields: [
-                        { key: 'bodyHtml', label: 'HTML Body', type: 'textarea' },
-                        { key: 'bodyText', label: 'Text Body', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Usage Statistics',
-                    fields: [
-                        { key: 'timesUsed', label: 'Times Used', type: 'number', readonly: true },
-                        { key: 'lastUsedDate', label: 'Last Used', type: 'date', readonly: true }
-                    ]
-                }
-            ]
-        },
+        CrmEmailTemplate: f.form('Email Template', [
+            f.section('Template Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.text('subject', 'Subject', true),
+                ...f.text('templateType', 'Template Type'),
+                ...f.text('folder', 'Folder'),
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Content', [
+                ...f.textarea('bodyHtml', 'HTML Body'),
+                ...f.textarea('bodyText', 'Text Body')
+            ])
+        ]),
 
-        CrmMarketingList: {
-            title: 'Marketing List',
-            sections: [
-                {
-                    title: 'List Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'listType', label: 'List Type', type: 'text' },
-                        { key: 'memberCount', label: 'Member Count', type: 'number', readonly: true },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'isDynamic', label: 'Dynamic List', type: 'checkbox' },
-                        { key: 'criteria', label: 'Criteria', type: 'textarea' },
-                        { key: 'lastUsedDate', label: 'Last Used', type: 'date', readonly: true },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        CrmMarketingList: f.form('Marketing List', [
+            f.section('List Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.text('listType', 'List Type'),
+                ...f.number('memberCount', 'Member Count'),
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.checkbox('isDynamic', 'Dynamic List'),
+                ...f.textarea('criteria', 'Criteria'),
+                ...f.date('lastUsedDate', 'Last Used'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        CrmCampaignResponse: {
-            title: 'Campaign Response',
-            sections: [
-                {
-                    title: 'Response Details',
-                    fields: [
-                        { key: 'campaignId', label: 'Campaign', type: 'reference', lookupModel: 'CrmCampaign', required: true },
-                        { key: 'campaignMemberId', label: 'Campaign Member', type: 'reference', lookupModel: 'CrmCampaignMember' },
-                        { key: 'responseType', label: 'Response Type', type: 'select', options: enums.RESPONSE_TYPE },
-                        { key: 'responseDate', label: 'Response Date', type: 'date' },
-                        { key: 'details', label: 'Details', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Conversion Details',
-                    fields: [
-                        { key: 'leadId', label: 'Lead Created', type: 'reference', lookupModel: 'CrmLead' },
-                        { key: 'opportunityId', label: 'Opportunity Created', type: 'reference', lookupModel: 'CrmOpportunity' },
-                        { key: 'revenueValue', label: 'Revenue Value', type: 'money' }
-                    ]
-                }
-            ]
-        },
+        CrmCampaignResponse: f.form('Campaign Response', [
+            f.section('Response Details', [
+                ...f.reference('campaignId', 'Campaign', 'CrmCampaign', true),
+                ...f.reference('campaignMemberId', 'Campaign Member', 'CrmCampaignMember'),
+                ...f.select('responseType', 'Response Type', enums.RESPONSE_TYPE),
+                ...f.date('responseDate', 'Response Date'),
+                ...f.textarea('details', 'Details')
+            ]),
+            f.section('Conversion Details', [
+                ...f.reference('leadId', 'Lead Created', 'CrmLead'),
+                ...f.reference('opportunityId', 'Opportunity Created', 'CrmOpportunity'),
+                ...f.money('revenueValue', 'Revenue Value')
+            ])
+        ]),
 
-        CrmCampaignROI: {
-            title: 'Campaign ROI',
-            sections: [
-                {
-                    title: 'ROI Details',
-                    fields: [
-                        { key: 'campaignId', label: 'Campaign', type: 'reference', lookupModel: 'CrmCampaign', required: true },
-                        { key: 'calculationDate', label: 'Calculation Date', type: 'date' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Financial Metrics',
-                    fields: [
-                        { key: 'totalCost', label: 'Total Cost', type: 'money' },
-                        { key: 'totalRevenue', label: 'Total Revenue', type: 'money' },
-                        { key: 'roiPercentage', label: 'ROI Percentage', type: 'number' },
-                        { key: 'costPerLead', label: 'Cost per Lead', type: 'money' },
-                        { key: 'costPerOpportunity', label: 'Cost per Opportunity', type: 'money' }
-                    ]
-                },
-                {
-                    title: 'Conversion Metrics',
-                    fields: [
-                        { key: 'leadsGenerated', label: 'Leads Generated', type: 'number' },
-                        { key: 'opportunitiesCreated', label: 'Opportunities Created', type: 'number' },
-                        { key: 'dealsWon', label: 'Deals Won', type: 'number' },
-                        { key: 'conversionRate', label: 'Conversion Rate (%)', type: 'number' }
-                    ]
-                }
-            ]
-        }
+        CrmCampaignROI: f.form('Campaign ROI', [
+            f.section('ROI Details', [
+                ...f.reference('campaignId', 'Campaign', 'CrmCampaign', true),
+                ...f.date('calculationDate', 'Calculation Date'),
+                ...f.textarea('notes', 'Notes')
+            ]),
+            f.section('Financial Metrics', [
+                ...f.money('totalCost', 'Total Cost'),
+                ...f.money('totalRevenue', 'Total Revenue'),
+                ...f.number('roiPercentage', 'ROI Percentage'),
+                ...f.money('costPerLead', 'Cost per Lead'),
+                ...f.money('costPerOpportunity', 'Cost per Opportunity')
+            ]),
+            f.section('Conversion Metrics', [
+                ...f.number('leadsGenerated', 'Leads Generated'),
+                ...f.number('opportunitiesCreated', 'Opportunities Created'),
+                ...f.number('dealsWon', 'Deals Won'),
+                ...f.number('conversionRate', 'Conversion Rate (%)')
+            ])
+        ])
     };
 
     CrmMarketing.primaryKeys = {

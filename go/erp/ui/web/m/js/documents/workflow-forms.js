@@ -2,58 +2,59 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
+// Uses Layer8FormFactory for reduced boilerplate
 (function() {
     'use strict';
 
     window.MobileDocWorkflow = window.MobileDocWorkflow || {};
+    const f = window.Layer8FormFactory;
     const enums = MobileDocWorkflow.enums;
 
     MobileDocWorkflow.forms = {
-        DocCheckout: {
-            title: 'Checkout',
-            sections: [{ title: 'Checkout Details', fields: [
-                { key: 'documentId', label: 'Document', type: 'reference', lookupModel: 'DocDocument', required: true },
-                { key: 'userId', label: 'User', type: 'reference', lookupModel: 'Employee', required: true },
-                { key: 'status', label: 'Status', type: 'select', options: enums.CHECKOUT_STATUS },
-                { key: 'reason', label: 'Reason', type: 'textarea' }
-            ]}]
-        },
-        DocApprovalWorkflow: {
-            title: 'Approval Workflow',
-            sections: [{ title: 'Workflow Details', fields: [
-                { key: 'name', label: 'Name', type: 'text', required: true },
-                { key: 'description', label: 'Description', type: 'textarea' },
-                { key: 'status', label: 'Status', type: 'select', options: enums.WORKFLOW_STATUS },
-                { key: 'isActive', label: 'Active', type: 'checkbox' }
-            ]}]
-        },
-        DocWorkflowStep: {
-            title: 'Workflow Step',
-            sections: [{ title: 'Step Details', fields: [
-                { key: 'workflowId', label: 'Workflow', type: 'reference', lookupModel: 'DocApprovalWorkflow', required: true },
-                { key: 'name', label: 'Name', type: 'text', required: true },
-                { key: 'stepOrder', label: 'Step Order', type: 'number', required: true },
-                { key: 'status', label: 'Status', type: 'select', options: enums.STEP_STATUS }
-            ]}]
-        },
-        DocSignature: {
-            title: 'Signature',
-            sections: [{ title: 'Signature Details', fields: [
-                { key: 'documentId', label: 'Document', type: 'reference', lookupModel: 'DocDocument', required: true },
-                { key: 'signerId', label: 'Signer', type: 'reference', lookupModel: 'Employee', required: true },
-                { key: 'signatureType', label: 'Type', type: 'select', options: enums.SIGNATURE_TYPE },
-                { key: 'status', label: 'Status', type: 'select', options: enums.SIGNATURE_STATUS }
-            ]}]
-        },
-        DocReviewComment: {
-            title: 'Review Comment',
-            sections: [{ title: 'Comment Details', fields: [
-                { key: 'documentId', label: 'Document', type: 'reference', lookupModel: 'DocDocument', required: true },
-                { key: 'comment', label: 'Comment', type: 'textarea', required: true },
-                { key: 'pageNumber', label: 'Page Number', type: 'number' },
-                { key: 'isResolved', label: 'Resolved', type: 'checkbox' }
-            ]}]
-        }
+        DocCheckout: f.form('Checkout', [
+            f.section('Checkout Details', [
+                ...f.reference('documentId', 'Document', 'DocDocument', true),
+                ...f.reference('userId', 'User', 'Employee', true),
+                ...f.select('status', 'Status', enums.CHECKOUT_STATUS),
+                ...f.textarea('reason', 'Reason')
+            ])
+        ]),
+
+        DocApprovalWorkflow: f.form('Approval Workflow', [
+            f.section('Workflow Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('status', 'Status', enums.WORKFLOW_STATUS),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
+
+        DocWorkflowStep: f.form('Workflow Step', [
+            f.section('Step Details', [
+                ...f.reference('workflowId', 'Workflow', 'DocApprovalWorkflow', true),
+                ...f.text('name', 'Name', true),
+                ...f.number('stepOrder', 'Step Order', true),
+                ...f.select('status', 'Status', enums.STEP_STATUS)
+            ])
+        ]),
+
+        DocSignature: f.form('Signature', [
+            f.section('Signature Details', [
+                ...f.reference('documentId', 'Document', 'DocDocument', true),
+                ...f.reference('signerId', 'Signer', 'Employee', true),
+                ...f.select('signatureType', 'Type', enums.SIGNATURE_TYPE),
+                ...f.select('status', 'Status', enums.SIGNATURE_STATUS)
+            ])
+        ]),
+
+        DocReviewComment: f.form('Review Comment', [
+            f.section('Comment Details', [
+                ...f.reference('documentId', 'Document', 'DocDocument', true),
+                ...f.textarea('comment', 'Comment', true),
+                ...f.number('pageNumber', 'Page Number'),
+                ...f.checkbox('isResolved', 'Resolved')
+            ])
+        ])
     };
 
     MobileDocWorkflow.primaryKeys = {

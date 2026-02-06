@@ -12,117 +12,80 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Fixed Assets Module - Enum Definitions
-// All enum constants and value mappings for Fixed Assets models
+// Fixed Assets Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Create FixedAssets namespace
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+
     window.FixedAssets = window.FixedAssets || {};
-    FixedAssets.enums = {};
 
     // ============================================================================
-    // ASSET STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    FixedAssets.enums.ASSET_STATUS = {
-        0: 'Unspecified',
-        1: 'Active',
-        2: 'Disposed',
-        3: 'Under Maintenance',
-        4: 'Transferred',
-        5: 'Fully Depreciated'
-    };
+    const ASSET_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Active', 'active', 'layer8d-status-active'],
+        ['Disposed', 'disposed', 'layer8d-status-terminated'],
+        ['Under Maintenance', 'maintenance', 'layer8d-status-pending'],
+        ['Transferred', 'transferred', 'layer8d-status-inactive'],
+        ['Fully Depreciated', 'depreciated', 'layer8d-status-inactive']
+    ]);
 
-    FixedAssets.enums.ASSET_STATUS_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-terminated',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-inactive',
-        5: 'layer8d-status-inactive'
-    };
+    const DEPRECIATION_METHOD = factory.simple([
+        'Unspecified', 'Straight Line', 'Declining Balance', 'Double Declining',
+        'Units of Production', 'Sum of Years'
+    ]);
 
-    // ============================================================================
-    // DEPRECIATION METHOD
-    // ============================================================================
+    const DISPOSAL_METHOD = factory.simple([
+        'Unspecified', 'Sale', 'Scrap', 'Donation', 'Write-Off', 'Trade-In'
+    ]);
 
-    FixedAssets.enums.DEPRECIATION_METHOD = {
-        0: 'Unspecified',
-        1: 'Straight Line',
-        2: 'Declining Balance',
-        3: 'Double Declining',
-        4: 'Units of Production',
-        5: 'Sum of Years'
-    };
+    const MAINTENANCE_TYPE = factory.simple([
+        'Unspecified', 'Preventive', 'Corrective', 'Upgrade', 'Inspection'
+    ]);
 
-    // ============================================================================
-    // DISPOSAL METHOD
-    // ============================================================================
-
-    FixedAssets.enums.DISPOSAL_METHOD = {
-        0: 'Unspecified',
-        1: 'Sale',
-        2: 'Scrap',
-        3: 'Donation',
-        4: 'Write-Off',
-        5: 'Trade-In'
-    };
+    const MAINTENANCE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Scheduled', 'scheduled', 'layer8d-status-pending'],
+        ['In Progress', 'progress', 'layer8d-status-pending'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive']
+    ]);
 
     // ============================================================================
-    // MAINTENANCE TYPE
+    // EXPORT ENUMS
     // ============================================================================
 
-    FixedAssets.enums.MAINTENANCE_TYPE = {
-        0: 'Unspecified',
-        1: 'Preventive',
-        2: 'Corrective',
-        3: 'Upgrade',
-        4: 'Inspection'
-    };
-
-    // ============================================================================
-    // MAINTENANCE STATUS
-    // ============================================================================
-
-    FixedAssets.enums.MAINTENANCE_STATUS = {
-        0: 'Unspecified',
-        1: 'Scheduled',
-        2: 'In Progress',
-        3: 'Completed',
-        4: 'Cancelled'
-    };
-
-    FixedAssets.enums.MAINTENANCE_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-inactive'
+    window.FixedAssets.enums = {
+        ASSET_STATUS: ASSET_STATUS.enum,
+        ASSET_STATUS_CLASSES: ASSET_STATUS.classes,
+        DEPRECIATION_METHOD: DEPRECIATION_METHOD.enum,
+        DISPOSAL_METHOD: DISPOSAL_METHOD.enum,
+        MAINTENANCE_TYPE: MAINTENANCE_TYPE.enum,
+        MAINTENANCE_STATUS: MAINTENANCE_STATUS.enum,
+        MAINTENANCE_STATUS_CLASSES: MAINTENANCE_STATUS.classes
     };
 
     // ============================================================================
     // RENDERERS
     // ============================================================================
 
-    // Create render functions using shared utilities
-    FixedAssets.render = {};
+    const renderAssetStatus = createStatusRenderer(ASSET_STATUS.enum, ASSET_STATUS.classes);
+    const renderMaintenanceStatus = createStatusRenderer(MAINTENANCE_STATUS.enum, MAINTENANCE_STATUS.classes);
 
-    FixedAssets.render.assetStatus = Layer8DRenderers.createStatusRenderer(
-        FixedAssets.enums.ASSET_STATUS,
-        FixedAssets.enums.ASSET_STATUS_CLASSES
-    );
-
-    FixedAssets.render.depreciationMethod = (type) => Layer8DRenderers.renderEnum(type, FixedAssets.enums.DEPRECIATION_METHOD);
-    FixedAssets.render.disposalMethod = (type) => Layer8DRenderers.renderEnum(type, FixedAssets.enums.DISPOSAL_METHOD);
-    FixedAssets.render.maintenanceType = (type) => Layer8DRenderers.renderEnum(type, FixedAssets.enums.MAINTENANCE_TYPE);
-
-    FixedAssets.render.maintenanceStatus = Layer8DRenderers.createStatusRenderer(
-        FixedAssets.enums.MAINTENANCE_STATUS,
-        FixedAssets.enums.MAINTENANCE_STATUS_CLASSES
-    );
-
-    FixedAssets.render.boolean = Layer8DRenderers.renderBoolean;
-    FixedAssets.render.date = Layer8DRenderers.renderDate;
-    FixedAssets.render.money = Layer8DRenderers.renderMoney;
+    window.FixedAssets.render = {
+        assetStatus: renderAssetStatus,
+        depreciationMethod: (v) => renderEnum(v, DEPRECIATION_METHOD.enum),
+        disposalMethod: (v) => renderEnum(v, DISPOSAL_METHOD.enum),
+        maintenanceType: (v) => renderEnum(v, MAINTENANCE_TYPE.enum),
+        maintenanceStatus: renderMaintenanceStatus,
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

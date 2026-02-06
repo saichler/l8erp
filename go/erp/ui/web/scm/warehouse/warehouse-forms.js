@@ -2,191 +2,120 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // Warehouse Management Module - Form Definitions
-// Form field configurations for all Warehouse Management models
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
-    // Ensure WarehouseManagement namespace exists
     window.WarehouseManagement = window.WarehouseManagement || {};
 
+    const f = window.Layer8FormFactory;
     const enums = WarehouseManagement.enums;
 
-    // ============================================================================
-    // FORM FIELD DEFINITIONS
-    // ============================================================================
-
     WarehouseManagement.forms = {
-        ScmWarehouse: {
-            title: 'ScmWarehouse',
-            sections: [
-                {
-                    title: 'Warehouse Information',
-                    fields: [
-                        { key: 'code', label: 'Warehouse Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'warehouseType', label: 'Type', type: 'select', options: enums.WAREHOUSE_TYPE, required: true },
-                        { key: 'address', label: 'Address', type: 'textarea' },
-                        { key: 'managerId', label: 'Manager', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        ScmWarehouse: f.form('Warehouse', [
+            f.section('Warehouse Information', [
+                ...f.text('code', 'Warehouse Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.select('warehouseType', 'Type', enums.WAREHOUSE_TYPE, true),
+                ...f.textarea('address', 'Address'),
+                ...f.reference('managerId', 'Manager', 'Employee'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        ScmBin: {
-            title: 'ScmBin',
-            sections: [
-                {
-                    title: 'Bin Information',
-                    fields: [
-                        { key: 'binCode', label: 'Bin Code', type: 'text', required: true },
-                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
-                        { key: 'binType', label: 'Bin Type', type: 'select', options: enums.BIN_TYPE, required: true },
-                        { key: 'zone', label: 'Zone', type: 'text' },
-                        { key: 'aisle', label: 'Aisle', type: 'text' },
-                        { key: 'rack', label: 'Rack', type: 'text' },
-                        { key: 'level', label: 'Level', type: 'text' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        ScmBin: f.form('Bin', [
+            f.section('Bin Information', [
+                ...f.text('binCode', 'Bin Code', true),
+                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse', true),
+                ...f.select('binType', 'Bin Type', enums.BIN_TYPE, true),
+                ...f.text('zone', 'Zone'),
+                ...f.text('aisle', 'Aisle'),
+                ...f.text('rack', 'Rack'),
+                ...f.text('level', 'Level'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        ScmReceivingOrder: {
-            title: 'Receiving Order',
-            sections: [
-                {
-                    title: 'Receiving Details',
-                    fields: [
-                        { key: 'purchaseOrderId', label: 'Purchase Order', type: 'reference', lookupModel: 'ScmPurchaseOrder', required: true },
-                        { key: 'receivedBy', label: 'Received By', type: 'text' },
-                        { key: 'receivingDate', label: 'Receiving Date', type: 'date', required: true },
-                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        ScmReceivingOrder: f.form('Receiving Order', [
+            f.section('Receiving Details', [
+                ...f.reference('purchaseOrderId', 'Purchase Order', 'ScmPurchaseOrder', true),
+                ...f.text('receivedBy', 'Received By'),
+                ...f.date('receivingDate', 'Receiving Date', true),
+                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse', true),
+                ...f.select('status', 'Status', enums.TASK_STATUS),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        ScmPutawayTask: {
-            title: 'Putaway Task',
-            sections: [
-                {
-                    title: 'Task Details',
-                    fields: [
-                        { key: 'receivingOrderId', label: 'Receiving Order', type: 'reference', lookupModel: 'ScmReceivingOrder', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                        { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                        { key: 'fromBinId', label: 'From Bin', type: 'reference', lookupModel: 'ScmBin' },
-                        { key: 'toBinId', label: 'To Bin', type: 'reference', lookupModel: 'ScmBin', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
-                        { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                }
-            ]
-        },
+        ScmPutawayTask: f.form('Putaway Task', [
+            f.section('Task Details', [
+                ...f.reference('receivingOrderId', 'Receiving Order', 'ScmReceivingOrder', true),
+                ...f.reference('itemId', 'Item', 'ScmItem', true),
+                ...f.number('quantity', 'Quantity', true),
+                ...f.reference('fromBinId', 'From Bin', 'ScmBin'),
+                ...f.reference('toBinId', 'To Bin', 'ScmBin', true),
+                ...f.select('status', 'Status', enums.TASK_STATUS),
+                ...f.reference('assignedTo', 'Assigned To', 'Employee')
+            ])
+        ]),
 
-        ScmPickTask: {
-            title: 'Pick Task',
-            sections: [
-                {
-                    title: 'Task Details',
-                    fields: [
-                        { key: 'wavePlanId', label: 'Wave Plan', type: 'reference', lookupModel: 'ScmWavePlan', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                        { key: 'fromBinId', label: 'Bin', type: 'reference', lookupModel: 'ScmBin', required: true },
-                        { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
-                        { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                }
-            ]
-        },
+        ScmPickTask: f.form('Pick Task', [
+            f.section('Task Details', [
+                ...f.reference('wavePlanId', 'Wave Plan', 'ScmWavePlan', true),
+                ...f.reference('itemId', 'Item', 'ScmItem', true),
+                ...f.reference('fromBinId', 'Bin', 'ScmBin', true),
+                ...f.number('quantity', 'Quantity', true),
+                ...f.select('status', 'Status', enums.TASK_STATUS),
+                ...f.reference('assignedTo', 'Assigned To', 'Employee')
+            ])
+        ]),
 
-        ScmPackTask: {
-            title: 'Pack Task',
-            sections: [
-                {
-                    title: 'Task Details',
-                    fields: [
-                        { key: 'pickTaskId', label: 'Pick Task', type: 'reference', lookupModel: 'ScmPickTask', required: true },
-                        { key: 'packageId', label: 'Package', type: 'text' },
-                        { key: 'quantity', label: 'Quantity', type: 'number' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
-                        { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        ScmPackTask: f.form('Pack Task', [
+            f.section('Task Details', [
+                ...f.reference('pickTaskId', 'Pick Task', 'ScmPickTask', true),
+                ...f.text('packageId', 'Package'),
+                ...f.number('quantity', 'Quantity'),
+                ...f.select('status', 'Status', enums.TASK_STATUS),
+                ...f.reference('assignedTo', 'Assigned To', 'Employee'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        ScmShipTask: {
-            title: 'Ship Task',
-            sections: [
-                {
-                    title: 'Task Details',
-                    fields: [
-                        { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment', required: true },
-                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier' },
-                        { key: 'trackingNumber', label: 'Tracking Number', type: 'text' },
-                        { key: 'shippedAt', label: 'Shipped At', type: 'date' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS }
-                    ]
-                }
-            ]
-        },
+        ScmShipTask: f.form('Ship Task', [
+            f.section('Task Details', [
+                ...f.reference('shipmentId', 'Shipment', 'ScmShipment', true),
+                ...f.reference('carrierId', 'Carrier', 'ScmCarrier'),
+                ...f.text('trackingNumber', 'Tracking Number'),
+                ...f.date('shippedAt', 'Shipped At'),
+                ...f.select('status', 'Status', enums.TASK_STATUS)
+            ])
+        ]),
 
-        ScmWavePlan: {
-            title: 'Wave Plan',
-            sections: [
-                {
-                    title: 'Wave Details',
-                    fields: [
-                        { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
-                        { key: 'planDate', label: 'Plan Date', type: 'date', required: true },
-                        { key: 'totalOrders', label: 'Total Orders', type: 'number' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        ScmWavePlan: f.form('Wave Plan', [
+            f.section('Wave Details', [
+                ...f.reference('assignedTo', 'Assigned To', 'Employee'),
+                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse', true),
+                ...f.date('planDate', 'Plan Date', true),
+                ...f.number('totalOrders', 'Total Orders'),
+                ...f.select('status', 'Status', enums.TASK_STATUS),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        ScmDockSchedule: {
-            title: 'Dock Schedule',
-            sections: [
-                {
-                    title: 'Schedule Details',
-                    fields: [
-                        { key: 'dockNumber', label: 'Dock Number', type: 'text', required: true },
-                        { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier' },
-                        { key: 'scheduleDate', label: 'Schedule Date', type: 'date', required: true },
-                        { key: 'direction', label: 'Direction', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
+        ScmDockSchedule: f.form('Dock Schedule', [
+            f.section('Schedule Details', [
+                ...f.text('dockNumber', 'Dock Number', true),
+                ...f.reference('carrierId', 'Carrier', 'ScmCarrier'),
+                ...f.date('scheduleDate', 'Schedule Date', true),
+                ...f.text('direction', 'Direction'),
+                ...f.select('status', 'Status', enums.TASK_STATUS),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ])
     };
-
-    // ============================================================================
-    // PRIMARY KEY MAPPING
-    // ============================================================================
 
     WarehouseManagement.primaryKeys = {
         ScmWarehouse: 'warehouseId',

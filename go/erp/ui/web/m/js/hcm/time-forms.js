@@ -12,284 +12,189 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// Uses Layer8FormFactory for reduced boilerplate
 /**
  * Mobile Time & Attendance Module - Form Configurations
  * Desktop Equivalent: hcm/time/time-forms.js
  */
+window.MobileTime = window.MobileTime || {};
+
 (function() {
     'use strict';
 
+    const f = window.Layer8FormFactory;
     const enums = MobileTime.enums;
 
     MobileTime.forms = {
-        Timesheet: {
-            title: 'Timesheet',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TIMESHEET_STATUS, required: true }
-                    ]
-                },
-                {
-                    title: 'Period',
-                    fields: [
-                        { key: 'period.startDate', label: 'Start Date', type: 'date', required: true },
-                        { key: 'period.endDate', label: 'End Date', type: 'date', required: true }
-                    ]
-                },
-                {
-                    title: 'Hours Totals',
-                    fields: [
-                        { key: 'totalRegularHours', label: 'Regular Hours', type: 'number' },
-                        { key: 'totalOvertimeHours', label: 'Overtime Hours', type: 'number' },
-                        { key: 'totalDoubleTimeHours', label: 'Double Time Hours', type: 'number' },
-                        { key: 'totalPtoHours', label: 'PTO Hours', type: 'number' },
-                        { key: 'totalSickHours', label: 'Sick Hours', type: 'number' },
-                        { key: 'totalHolidayHours', label: 'Holiday Hours', type: 'number' },
-                        { key: 'totalHours', label: 'Total Hours', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Notes',
-                    fields: [
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        Timesheet: f.form('Timesheet', [
+            f.section('Basic Information', [
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
+                ...f.select('status', 'Status', enums.TIMESHEET_STATUS, true)
+            ]),
+            f.section('Period', [
+                ...f.date('period.startDate', 'Start Date', true),
+                ...f.date('period.endDate', 'End Date', true)
+            ]),
+            f.section('Hours Totals', [
+                ...f.number('totalRegularHours', 'Regular Hours'),
+                ...f.number('totalOvertimeHours', 'Overtime Hours'),
+                ...f.number('totalDoubleTimeHours', 'Double Time Hours'),
+                ...f.number('totalPtoHours', 'PTO Hours'),
+                ...f.number('totalSickHours', 'Sick Hours'),
+                ...f.number('totalHolidayHours', 'Holiday Hours'),
+                ...f.number('totalHours', 'Total Hours')
+            ]),
+            f.section('Notes', [
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        LeaveRequest: {
-            title: 'Leave Request',
-            sections: [
-                {
-                    title: 'Request Details',
-                    fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'leaveType', label: 'Leave Type', type: 'select', options: enums.LEAVE_TYPE, required: true },
-                        { key: 'leavePolicyId', label: 'Leave Policy', type: 'reference', lookupModel: 'LeavePolicy' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.LEAVE_REQUEST_STATUS, required: true }
-                    ]
-                },
-                {
-                    title: 'Dates & Duration',
-                    fields: [
-                        { key: 'startDate', label: 'Start Date', type: 'date', required: true },
-                        { key: 'endDate', label: 'End Date', type: 'date', required: true },
-                        { key: 'totalHours', label: 'Total Hours', type: 'number' },
-                        { key: 'totalDays', label: 'Total Days', type: 'number' },
-                        { key: 'isPartialDay', label: 'Partial Day', type: 'checkbox' },
-                        { key: 'partialDayType', label: 'Partial Day Type', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Details',
-                    fields: [
-                        { key: 'reason', label: 'Reason', type: 'textarea', required: true },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        LeaveRequest: f.form('Leave Request', [
+            f.section('Request Details', [
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
+                ...f.select('leaveType', 'Leave Type', enums.LEAVE_TYPE, true),
+                ...f.reference('leavePolicyId', 'Leave Policy', 'LeavePolicy'),
+                ...f.select('status', 'Status', enums.LEAVE_REQUEST_STATUS, true)
+            ]),
+            f.section('Dates & Duration', [
+                ...f.date('startDate', 'Start Date', true),
+                ...f.date('endDate', 'End Date', true),
+                ...f.number('totalHours', 'Total Hours'),
+                ...f.number('totalDays', 'Total Days'),
+                ...f.checkbox('isPartialDay', 'Partial Day'),
+                ...f.text('partialDayType', 'Partial Day Type')
+            ]),
+            f.section('Details', [
+                ...f.textarea('reason', 'Reason', true),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        LeaveBalance: {
-            title: 'Leave Balance',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'leavePolicyId', label: 'Leave Policy', type: 'reference', lookupModel: 'LeavePolicy' },
-                        { key: 'leaveType', label: 'Leave Type', type: 'select', options: enums.LEAVE_TYPE, required: true },
-                        { key: 'year', label: 'Year', type: 'number', required: true }
-                    ]
-                },
-                {
-                    title: 'Balances',
-                    fields: [
-                        { key: 'beginningBalance', label: 'Beginning Balance', type: 'number' },
-                        { key: 'accrued', label: 'Accrued', type: 'number' },
-                        { key: 'used', label: 'Used', type: 'number' },
-                        { key: 'pending', label: 'Pending', type: 'number' },
-                        { key: 'adjusted', label: 'Adjusted', type: 'number' },
-                        { key: 'forfeited', label: 'Forfeited', type: 'number' },
-                        { key: 'available', label: 'Available', type: 'number' },
-                        { key: 'carryover', label: 'Carryover', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Limits',
-                    fields: [
-                        { key: 'annualAllowance', label: 'Annual Allowance', type: 'number' },
-                        { key: 'maximumAccrual', label: 'Maximum Accrual', type: 'number' },
-                        { key: 'maximumCarryover', label: 'Maximum Carryover', type: 'number' }
-                    ]
-                }
-            ]
-        },
+        LeaveBalance: f.form('Leave Balance', [
+            f.section('Basic Information', [
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
+                ...f.reference('leavePolicyId', 'Leave Policy', 'LeavePolicy'),
+                ...f.select('leaveType', 'Leave Type', enums.LEAVE_TYPE, true),
+                ...f.number('year', 'Year', true)
+            ]),
+            f.section('Balances', [
+                ...f.number('beginningBalance', 'Beginning Balance'),
+                ...f.number('accrued', 'Accrued'),
+                ...f.number('used', 'Used'),
+                ...f.number('pending', 'Pending'),
+                ...f.number('adjusted', 'Adjusted'),
+                ...f.number('forfeited', 'Forfeited'),
+                ...f.number('available', 'Available'),
+                ...f.number('carryover', 'Carryover')
+            ]),
+            f.section('Limits', [
+                ...f.number('annualAllowance', 'Annual Allowance'),
+                ...f.number('maximumAccrual', 'Maximum Accrual'),
+                ...f.number('maximumCarryover', 'Maximum Carryover')
+            ])
+        ]),
 
-        LeavePolicy: {
-            title: 'Leave Policy',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'leaveType', label: 'Leave Type', type: 'select', options: enums.LEAVE_TYPE, required: true }
-                    ]
-                },
-                {
-                    title: 'Accrual Settings',
-                    fields: [
-                        { key: 'accrualMethod', label: 'Accrual Method', type: 'select', options: enums.ACCRUAL_METHOD, required: true },
-                        { key: 'accrualRate', label: 'Accrual Rate', type: 'number' },
-                        { key: 'accrualFrequency', label: 'Accrual Frequency', type: 'select', options: enums.ACCRUAL_FREQUENCY },
-                        { key: 'maximumAccrual', label: 'Maximum Accrual', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Carryover',
-                    fields: [
-                        { key: 'allowCarryover', label: 'Allow Carryover', type: 'checkbox' },
-                        { key: 'maximumCarryover', label: 'Maximum Carryover', type: 'number' },
-                        { key: 'carryoverExpirationDate', label: 'Carryover Expiration', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Usage Rules',
-                    fields: [
-                        { key: 'minimumIncrement', label: 'Minimum Increment (hours)', type: 'number' },
-                        { key: 'advanceNoticeDays', label: 'Advance Notice (days)', type: 'number' },
-                        { key: 'requireApproval', label: 'Require Approval', type: 'checkbox' },
-                        { key: 'allowNegativeBalance', label: 'Allow Negative Balance', type: 'checkbox' },
-                        { key: 'waitingPeriodDays', label: 'Waiting Period (days)', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Effective Dates',
-                    fields: [
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        LeavePolicy: f.form('Leave Policy', [
+            f.section('Basic Information', [
+                ...f.reference('organizationId', 'Organization', 'Organization'),
+                ...f.text('code', 'Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('leaveType', 'Leave Type', enums.LEAVE_TYPE, true)
+            ]),
+            f.section('Accrual Settings', [
+                ...f.select('accrualMethod', 'Accrual Method', enums.ACCRUAL_METHOD, true),
+                ...f.number('accrualRate', 'Accrual Rate'),
+                ...f.select('accrualFrequency', 'Accrual Frequency', enums.ACCRUAL_FREQUENCY),
+                ...f.number('maximumAccrual', 'Maximum Accrual')
+            ]),
+            f.section('Carryover', [
+                ...f.checkbox('allowCarryover', 'Allow Carryover'),
+                ...f.number('maximumCarryover', 'Maximum Carryover'),
+                ...f.date('carryoverExpirationDate', 'Carryover Expiration')
+            ]),
+            f.section('Usage Rules', [
+                ...f.number('minimumIncrement', 'Minimum Increment (hours)'),
+                ...f.number('advanceNoticeDays', 'Advance Notice (days)'),
+                ...f.checkbox('requireApproval', 'Require Approval'),
+                ...f.checkbox('allowNegativeBalance', 'Allow Negative Balance'),
+                ...f.number('waitingPeriodDays', 'Waiting Period (days)')
+            ]),
+            f.section('Effective Dates', [
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.date('endDate', 'End Date'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        Shift: {
-            title: 'Shift',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'shiftType', label: 'Shift Type', type: 'select', options: enums.SHIFT_TYPE, required: true },
-                        { key: 'colorCode', label: 'Color Code', type: 'colorCode' }
-                    ]
-                },
-                {
-                    title: 'Schedule',
-                    fields: [
-                        { key: 'startTime', label: 'Start Time', type: 'time' },
-                        { key: 'endTime', label: 'End Time', type: 'time' },
-                        { key: 'durationHours', label: 'Duration (hours)', type: 'number' },
-                        { key: 'breakDurationMinutes', label: 'Break Duration (minutes)', type: 'number' },
-                        { key: 'isOvernight', label: 'Overnight', type: 'checkbox' }
-                    ]
-                },
-                {
-                    title: 'Status',
-                    fields: [
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        Shift: f.form('Shift', [
+            f.section('Basic Information', [
+                ...f.reference('organizationId', 'Organization', 'Organization'),
+                ...f.text('code', 'Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('shiftType', 'Shift Type', enums.SHIFT_TYPE, true),
+                ...f.colorCode('colorCode', 'Color Code')
+            ]),
+            f.section('Schedule', [
+                ...f.time('startTime', 'Start Time'),
+                ...f.time('endTime', 'End Time'),
+                ...f.number('durationHours', 'Duration (hours)'),
+                ...f.number('breakDurationMinutes', 'Break Duration (minutes)'),
+                ...f.checkbox('isOvernight', 'Overnight')
+            ]),
+            f.section('Status', [
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        Schedule: {
-            title: 'Schedule',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.SCHEDULE_STATUS, required: true }
-                    ]
-                },
-                {
-                    title: 'Period',
-                    fields: [
-                        { key: 'period.startDate', label: 'Start Date', type: 'date', required: true },
-                        { key: 'period.endDate', label: 'End Date', type: 'date', required: true }
-                    ]
-                },
-                {
-                    title: 'Hours',
-                    fields: [
-                        { key: 'totalScheduledHours', label: 'Total Scheduled Hours', type: 'number' }
-                    ]
-                }
-            ]
-        },
+        Schedule: f.form('Schedule', [
+            f.section('Basic Information', [
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
+                ...f.select('status', 'Status', enums.SCHEDULE_STATUS, true)
+            ]),
+            f.section('Period', [
+                ...f.date('period.startDate', 'Start Date', true),
+                ...f.date('period.endDate', 'End Date', true)
+            ]),
+            f.section('Hours', [
+                ...f.number('totalScheduledHours', 'Total Scheduled Hours')
+            ])
+        ]),
 
-        Holiday: {
-            title: 'Holiday',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'date', label: 'Date', type: 'date', required: true },
-                        { key: 'year', label: 'Year', type: 'number', required: true },
-                        { key: 'holidayType', label: 'Holiday Type', type: 'select', options: enums.HOLIDAY_TYPE, required: true }
-                    ]
-                },
-                {
-                    title: 'Details',
-                    fields: [
-                        { key: 'isPaid', label: 'Paid Holiday', type: 'checkbox' },
-                        { key: 'hoursCredited', label: 'Hours Credited', type: 'number' },
-                        { key: 'isRecurring', label: 'Recurring', type: 'checkbox' },
-                        { key: 'recurrenceRule', label: 'Recurrence Rule', type: 'text' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        Holiday: f.form('Holiday', [
+            f.section('Basic Information', [
+                ...f.reference('organizationId', 'Organization', 'Organization'),
+                ...f.text('name', 'Name', true),
+                ...f.date('date', 'Date', true),
+                ...f.number('year', 'Year', true),
+                ...f.select('holidayType', 'Holiday Type', enums.HOLIDAY_TYPE, true)
+            ]),
+            f.section('Details', [
+                ...f.checkbox('isPaid', 'Paid Holiday'),
+                ...f.number('hoursCredited', 'Hours Credited'),
+                ...f.checkbox('isRecurring', 'Recurring'),
+                ...f.text('recurrenceRule', 'Recurrence Rule'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        Absence: {
-            title: 'Absence',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'leaveRequestId', label: 'Leave Request', type: 'reference', lookupModel: 'LeaveRequest' },
-                        { key: 'date', label: 'Date', type: 'date', required: true },
-                        { key: 'absenceType', label: 'Absence Type', type: 'select', options: enums.LEAVE_TYPE, required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.ABSENCE_STATUS, required: true }
-                    ]
-                },
-                {
-                    title: 'Details',
-                    fields: [
-                        { key: 'hours', label: 'Hours', type: 'number', required: true },
-                        { key: 'isPartialDay', label: 'Partial Day', type: 'checkbox' },
-                        { key: 'isPaid', label: 'Paid', type: 'checkbox' },
-                        { key: 'payComponentId', label: 'Pay Component', type: 'reference', lookupModel: 'PayComponent' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
+        Absence: f.form('Absence', [
+            f.section('Basic Information', [
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
+                ...f.reference('leaveRequestId', 'Leave Request', 'LeaveRequest'),
+                ...f.date('date', 'Date', true),
+                ...f.select('absenceType', 'Absence Type', enums.LEAVE_TYPE, true),
+                ...f.select('status', 'Status', enums.ABSENCE_STATUS, true)
+            ]),
+            f.section('Details', [
+                ...f.number('hours', 'Hours', true),
+                ...f.checkbox('isPartialDay', 'Partial Day'),
+                ...f.checkbox('isPaid', 'Paid'),
+                ...f.reference('payComponentId', 'Pay Component', 'PayComponent'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ])
     };
 
 })();

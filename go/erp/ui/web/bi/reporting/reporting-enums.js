@@ -12,153 +12,85 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// BI Reporting Module - Enum Definitions
+// BI Reporting Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate } = Layer8DRenderers;
+
     window.BiReporting = window.BiReporting || {};
-    BiReporting.enums = {};
 
-    // REPORT TYPE
-    BiReporting.enums.REPORT_TYPE = {
-        0: 'Unspecified',
-        1: 'Standard',
-        2: 'Ad Hoc',
-        3: 'Dashboard',
-        4: 'Scheduled',
-        5: 'Interactive'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const REPORT_TYPE = factory.simple([
+        'Unspecified', 'Standard', 'Ad Hoc', 'Dashboard', 'Scheduled', 'Interactive'
+    ]);
+
+    const REPORT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Published', 'published', 'layer8d-status-active'],
+        ['Archived', 'archived', 'layer8d-status-inactive'],
+        ['Deprecated', 'deprecated', 'layer8d-status-terminated']
+    ]);
+
+    const EXECUTION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Running', 'running', 'layer8d-status-active'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Failed', 'failed', 'layer8d-status-terminated'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive']
+    ]);
+
+    const EXPORT_FORMAT = factory.simple([
+        'Unspecified', 'PDF', 'Excel', 'CSV', 'HTML', 'JSON'
+    ]);
+
+    const SCHEDULE_FREQUENCY = factory.simple([
+        'Unspecified', 'Once', 'Daily', 'Weekly', 'Monthly', 'Quarterly', 'Yearly'
+    ]);
+
+    const ACCESS_LEVEL = factory.create([
+        ['Unspecified', null, ''],
+        ['View', 'view', 'layer8d-status-inactive'],
+        ['Execute', 'execute', 'layer8d-status-pending'],
+        ['Edit', 'edit', 'layer8d-status-active'],
+        ['Admin', 'admin', 'layer8d-status-active']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    BiReporting.enums = {
+        REPORT_TYPE: REPORT_TYPE.enum,
+        REPORT_STATUS: REPORT_STATUS.enum,
+        REPORT_STATUS_CLASSES: REPORT_STATUS.classes,
+        EXECUTION_STATUS: EXECUTION_STATUS.enum,
+        EXECUTION_STATUS_CLASSES: EXECUTION_STATUS.classes,
+        EXPORT_FORMAT: EXPORT_FORMAT.enum,
+        SCHEDULE_FREQUENCY: SCHEDULE_FREQUENCY.enum,
+        ACCESS_LEVEL: ACCESS_LEVEL.enum,
+        ACCESS_LEVEL_CLASSES: ACCESS_LEVEL.classes
     };
 
-    BiReporting.enums.REPORT_TYPE_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-active'
-    };
-
-    // REPORT STATUS
-    BiReporting.enums.REPORT_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Published',
-        3: 'Archived',
-        4: 'Deprecated'
-    };
-
-    BiReporting.enums.REPORT_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-inactive',
-        4: 'layer8d-status-terminated'
-    };
-
-    // EXECUTION STATUS
-    BiReporting.enums.EXECUTION_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'Running',
-        3: 'Completed',
-        4: 'Failed',
-        5: 'Cancelled'
-    };
-
-    BiReporting.enums.EXECUTION_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated',
-        5: 'layer8d-status-inactive'
-    };
-
-    // EXPORT FORMAT
-    BiReporting.enums.EXPORT_FORMAT = {
-        0: 'Unspecified',
-        1: 'PDF',
-        2: 'Excel',
-        3: 'CSV',
-        4: 'HTML',
-        5: 'JSON'
-    };
-
-    BiReporting.enums.EXPORT_FORMAT_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-active'
-    };
-
-    // SCHEDULE FREQUENCY
-    BiReporting.enums.SCHEDULE_FREQUENCY = {
-        0: 'Unspecified',
-        1: 'Once',
-        2: 'Daily',
-        3: 'Weekly',
-        4: 'Monthly',
-        5: 'Quarterly',
-        6: 'Yearly'
-    };
-
-    BiReporting.enums.SCHEDULE_FREQUENCY_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-active'
-    };
-
-    // ACCESS LEVEL
-    BiReporting.enums.ACCESS_LEVEL = {
-        0: 'Unspecified',
-        1: 'View',
-        2: 'Execute',
-        3: 'Edit',
-        4: 'Admin'
-    };
-
-    BiReporting.enums.ACCESS_LEVEL_CLASSES = {
-        1: 'layer8d-status-inactive',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active'
-    };
-
+    // ============================================================================
     // RENDERERS
-    BiReporting.render = {};
+    // ============================================================================
 
-    BiReporting.render.reportType = Layer8DRenderers.createStatusRenderer(
-        BiReporting.enums.REPORT_TYPE,
-        BiReporting.enums.REPORT_TYPE_CLASSES
-    );
-
-    BiReporting.render.reportStatus = Layer8DRenderers.createStatusRenderer(
-        BiReporting.enums.REPORT_STATUS,
-        BiReporting.enums.REPORT_STATUS_CLASSES
-    );
-
-    BiReporting.render.executionStatus = Layer8DRenderers.createStatusRenderer(
-        BiReporting.enums.EXECUTION_STATUS,
-        BiReporting.enums.EXECUTION_STATUS_CLASSES
-    );
-
-    BiReporting.render.exportFormat = Layer8DRenderers.createStatusRenderer(
-        BiReporting.enums.EXPORT_FORMAT,
-        BiReporting.enums.EXPORT_FORMAT_CLASSES
-    );
-
-    BiReporting.render.scheduleFrequency = Layer8DRenderers.createStatusRenderer(
-        BiReporting.enums.SCHEDULE_FREQUENCY,
-        BiReporting.enums.SCHEDULE_FREQUENCY_CLASSES
-    );
-
-    BiReporting.render.accessLevel = Layer8DRenderers.createStatusRenderer(
-        BiReporting.enums.ACCESS_LEVEL,
-        BiReporting.enums.ACCESS_LEVEL_CLASSES
-    );
-
-    BiReporting.render.date = Layer8DRenderers.renderDate;
+    BiReporting.render = {
+        reportType: (v) => renderEnum(v, REPORT_TYPE.enum),
+        reportStatus: createStatusRenderer(REPORT_STATUS.enum, REPORT_STATUS.classes),
+        executionStatus: createStatusRenderer(EXECUTION_STATUS.enum, EXECUTION_STATUS.classes),
+        exportFormat: (v) => renderEnum(v, EXPORT_FORMAT.enum),
+        scheduleFrequency: (v) => renderEnum(v, SCHEDULE_FREQUENCY.enum),
+        accessLevel: createStatusRenderer(ACCESS_LEVEL.enum, ACCESS_LEVEL.classes),
+        date: renderDate
+    };
 
 })();

@@ -12,329 +12,141 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Compensation Management Module - Enum Definitions and Render Functions
-// Part 1 of 4 - Load this file first
+// Compensation Management Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Initialize Compensation namespace
-    window.Compensation = window.Compensation || {};
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
 
-    // Import shared utilities
-    const { escapeHtml, formatDate, formatMoney, formatNumber } = Layer8DUtils;
-    const { renderEnum, createStatusRenderer, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+    window.Compensation = window.Compensation || {};
 
     // ============================================================================
     // ENUM DEFINITIONS
     // ============================================================================
 
-    const COMPENSATION_TYPE = {
-        0: 'Unspecified',
-        1: 'Salary',
-        2: 'Hourly',
-        3: 'Commission',
-        4: 'Piece Rate'
-    };
+    const COMPENSATION_TYPE = factory.withValues([
+        ['Unspecified', null], ['Salary', 'salary'], ['Hourly', 'hourly'],
+        ['Commission', 'commission'], ['Piece Rate', 'piece'], ['Piece Rate', 'rate']
+    ]);
 
-    const COMPENSATION_TYPE_VALUES = {
-        'salary': 1,
-        'hourly': 2,
-        'commission': 3,
-        'piece': 4,
-        'rate': 4
-    };
+    const MERIT_INCREASE_STATUS = factory.create([
+        ['Unspecified', null, ''], ['Draft', 'draft', 'layer8d-status-inactive'],
+        ['Submitted', 'submitted', 'layer8d-status-pending'],
+        ['Under Review', 'review', 'layer8d-status-pending'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['Rejected', 'rejected', 'layer8d-status-terminated'],
+        ['Processed', 'processed', 'layer8d-status-active']
+    ]);
 
-    const MERIT_INCREASE_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Submitted',
-        3: 'Under Review',
-        4: 'Approved',
-        5: 'Rejected',
-        6: 'Processed'
-    };
+    const MERIT_CYCLE_STATUS = factory.create([
+        ['Unspecified', null, ''], ['Planning', 'planning', 'layer8d-status-pending'],
+        ['Open', 'open', 'layer8d-status-active'],
+        ['Under Review', 'review', 'layer8d-status-pending'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['Closed', 'closed', 'layer8d-status-inactive']
+    ]);
 
-    const MERIT_INCREASE_STATUS_VALUES = {
-        'draft': 1,
-        'submitted': 2,
-        'review': 3,
-        'approved': 4,
-        'rejected': 5,
-        'processed': 6
-    };
+    const BONUS_PLAN_TYPE = factory.withValues([
+        ['Unspecified', null], ['Annual', 'annual'], ['Spot', 'spot'], ['Signing', 'signing'],
+        ['Retention', 'retention'], ['Referral', 'referral'], ['Performance', 'performance'],
+        ['Profit Sharing', 'profit'], ['Profit Sharing', 'sharing'],
+        ['Project', 'project'], ['Sales Commission', 'sales'], ['Sales Commission', 'commission']
+    ]);
 
-    const MERIT_INCREASE_STATUS_CLASSES = {
-        1: 'layer8d-status-inactive',    // Draft
-        2: 'layer8d-status-pending',     // Submitted
-        3: 'layer8d-status-pending',     // Under Review
-        4: 'layer8d-status-active',      // Approved
-        5: 'layer8d-status-terminated',  // Rejected
-        6: 'layer8d-status-active'       // Processed
-    };
+    const BONUS_FREQUENCY = factory.withValues([
+        ['Unspecified', null], ['Annual', 'annual'], ['Semi-Annual', 'semi'],
+        ['Quarterly', 'quarterly'], ['Monthly', 'monthly'],
+        ['One-Time', 'onetime'], ['One-Time', 'one']
+    ]);
 
-    const MERIT_CYCLE_STATUS = {
-        0: 'Unspecified',
-        1: 'Planning',
-        2: 'Open',
-        3: 'Under Review',
-        4: 'Approved',
-        5: 'Closed'
-    };
+    const BONUS_FUNDING_TYPE = factory.withValues([
+        ['Unspecified', null], ['Fixed', 'fixed'], ['% of Profits', 'profits'],
+        ['% of Revenue', 'revenue'], ['Discretionary', 'discretionary']
+    ]);
 
-    const MERIT_CYCLE_STATUS_VALUES = {
-        'planning': 1,
-        'open': 2,
-        'review': 3,
-        'approved': 4,
-        'closed': 5
-    };
+    const BONUS_PAYMENT_STATUS = factory.create([
+        ['Unspecified', null, ''], ['Draft', 'draft', 'layer8d-status-inactive'],
+        ['Pending Approval', 'pending', 'layer8d-status-pending'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['Scheduled', 'scheduled', 'layer8d-status-pending'],
+        ['Paid', 'paid', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-terminated']
+    ]);
 
-    const MERIT_CYCLE_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',     // Planning
-        2: 'layer8d-status-active',      // Open
-        3: 'layer8d-status-pending',     // Under Review
-        4: 'layer8d-status-active',      // Approved
-        5: 'layer8d-status-inactive'     // Closed
-    };
+    const EQUITY_GRANT_TYPE = factory.withValues([
+        ['Unspecified', null], ['ISO', 'iso'], ['NSO', 'nso'], ['RSU', 'rsu'],
+        ['RSA', 'rsa'], ['ESPP', 'espp'], ['Phantom', 'phantom'], ['SAR', 'sar']
+    ]);
 
-    const BONUS_PLAN_TYPE = {
-        0: 'Unspecified',
-        1: 'Annual',
-        2: 'Spot',
-        3: 'Signing',
-        4: 'Retention',
-        5: 'Referral',
-        6: 'Performance',
-        7: 'Profit Sharing',
-        8: 'Project',
-        9: 'Sales Commission'
-    };
+    const EQUITY_GRANT_STATUS = factory.create([
+        ['Unspecified', null, ''], ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Active', 'active', 'layer8d-status-active'],
+        ['Fully Vested', 'vested', 'layer8d-status-active'],
+        ['Fully Vested', 'fully', 'layer8d-status-active'],
+        ['Exercised', 'exercised', 'layer8d-status-active'],
+        ['Expired', 'expired', 'layer8d-status-inactive'],
+        ['Forfeited', 'forfeited', 'layer8d-status-terminated'],
+        ['Cancelled', 'cancelled', 'layer8d-status-terminated']
+    ]);
 
-    const BONUS_PLAN_TYPE_VALUES = {
-        'annual': 1,
-        'spot': 2,
-        'signing': 3,
-        'retention': 4,
-        'referral': 5,
-        'performance': 6,
-        'profit': 7,
-        'sharing': 7,
-        'project': 8,
-        'sales': 9,
-        'commission': 9
-    };
+    const VESTING_TYPE = factory.withValues([
+        ['Unspecified', null], ['Time-Based', 'time'], ['Performance-Based', 'performance'],
+        ['Hybrid', 'hybrid'], ['Immediate', 'immediate']
+    ]);
 
-    const BONUS_FREQUENCY = {
-        0: 'Unspecified',
-        1: 'Annual',
-        2: 'Semi-Annual',
-        3: 'Quarterly',
-        4: 'Monthly',
-        5: 'One-Time'
-    };
+    const VESTING_FREQUENCY = factory.withValues([
+        ['Unspecified', null], ['Monthly', 'monthly'], ['Quarterly', 'quarterly'],
+        ['Annually', 'annually'], ['Annually', 'annual']
+    ]);
 
-    const BONUS_FREQUENCY_VALUES = {
-        'annual': 1,
-        'semi': 2,
-        'quarterly': 3,
-        'monthly': 4,
-        'onetime': 5,
-        'one': 5
-    };
+    const PAY_FREQUENCY = factory.withValues([
+        ['Unspecified', null], ['Weekly', 'weekly'], ['Bi-Weekly', 'biweekly'],
+        ['Bi-Weekly', 'bi-weekly'], ['Semi-Monthly', 'semimonthly'],
+        ['Semi-Monthly', 'semi-monthly'], ['Monthly', 'monthly'],
+        ['Quarterly', 'quarterly'], ['Annually', 'annually'], ['Annually', 'annual']
+    ]);
 
-    const BONUS_FUNDING_TYPE = {
-        0: 'Unspecified',
-        1: 'Fixed',
-        2: '% of Profits',
-        3: '% of Revenue',
-        4: 'Discretionary'
-    };
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
 
-    const BONUS_FUNDING_TYPE_VALUES = {
-        'fixed': 1,
-        'profits': 2,
-        'revenue': 3,
-        'discretionary': 4
-    };
-
-    const BONUS_PAYMENT_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Pending Approval',
-        3: 'Approved',
-        4: 'Scheduled',
-        5: 'Paid',
-        6: 'Cancelled'
-    };
-
-    const BONUS_PAYMENT_STATUS_VALUES = {
-        'draft': 1,
-        'pending': 2,
-        'approved': 3,
-        'scheduled': 4,
-        'paid': 5,
-        'cancelled': 6
-    };
-
-    const BONUS_PAYMENT_STATUS_CLASSES = {
-        1: 'layer8d-status-inactive',    // Draft
-        2: 'layer8d-status-pending',     // Pending Approval
-        3: 'layer8d-status-active',      // Approved
-        4: 'layer8d-status-pending',     // Scheduled
-        5: 'layer8d-status-active',      // Paid
-        6: 'layer8d-status-terminated'   // Cancelled
-    };
-
-    const EQUITY_GRANT_TYPE = {
-        0: 'Unspecified',
-        1: 'ISO',
-        2: 'NSO',
-        3: 'RSU',
-        4: 'RSA',
-        5: 'ESPP',
-        6: 'Phantom',
-        7: 'SAR'
-    };
-
-    const EQUITY_GRANT_TYPE_VALUES = {
-        'iso': 1,
-        'nso': 2,
-        'rsu': 3,
-        'rsa': 4,
-        'espp': 5,
-        'phantom': 6,
-        'sar': 7
-    };
-
-    const EQUITY_GRANT_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'Active',
-        3: 'Fully Vested',
-        4: 'Exercised',
-        5: 'Expired',
-        6: 'Forfeited',
-        7: 'Cancelled'
-    };
-
-    const EQUITY_GRANT_STATUS_VALUES = {
-        'pending': 1,
-        'active': 2,
-        'vested': 3,
-        'fully': 3,
-        'exercised': 4,
-        'expired': 5,
-        'forfeited': 6,
-        'cancelled': 7
-    };
-
-    const EQUITY_GRANT_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',     // Pending
-        2: 'layer8d-status-active',      // Active
-        3: 'layer8d-status-active',      // Fully Vested
-        4: 'layer8d-status-active',      // Exercised
-        5: 'layer8d-status-inactive',    // Expired
-        6: 'layer8d-status-terminated',  // Forfeited
-        7: 'layer8d-status-terminated'   // Cancelled
-    };
-
-    const VESTING_TYPE = {
-        0: 'Unspecified',
-        1: 'Time-Based',
-        2: 'Performance-Based',
-        3: 'Hybrid',
-        4: 'Immediate'
-    };
-
-    const VESTING_TYPE_VALUES = {
-        'time': 1,
-        'performance': 2,
-        'hybrid': 3,
-        'immediate': 4
-    };
-
-    const VESTING_FREQUENCY = {
-        0: 'Unspecified',
-        1: 'Monthly',
-        2: 'Quarterly',
-        3: 'Annually'
-    };
-
-    const VESTING_FREQUENCY_VALUES = {
-        'monthly': 1,
-        'quarterly': 2,
-        'annually': 3,
-        'annual': 3
-    };
-
-    // PAY_FREQUENCY - duplicated from payroll.js for module independence
-    const PAY_FREQUENCY = {
-        0: 'Unspecified',
-        1: 'Weekly',
-        2: 'Bi-Weekly',
-        3: 'Semi-Monthly',
-        4: 'Monthly',
-        5: 'Quarterly',
-        6: 'Annually'
-    };
-
-    const PAY_FREQUENCY_VALUES = {
-        'weekly': 1,
-        'biweekly': 2,
-        'bi-weekly': 2,
-        'semimonthly': 3,
-        'semi-monthly': 3,
-        'monthly': 4,
-        'quarterly': 5,
-        'annually': 6,
-        'annual': 6
+    window.Compensation.enums = {
+        COMPENSATION_TYPE: COMPENSATION_TYPE.enum,
+        COMPENSATION_TYPE_VALUES: COMPENSATION_TYPE.values,
+        MERIT_INCREASE_STATUS: MERIT_INCREASE_STATUS.enum,
+        MERIT_INCREASE_STATUS_VALUES: MERIT_INCREASE_STATUS.values,
+        MERIT_CYCLE_STATUS: MERIT_CYCLE_STATUS.enum,
+        MERIT_CYCLE_STATUS_VALUES: MERIT_CYCLE_STATUS.values,
+        BONUS_PLAN_TYPE: BONUS_PLAN_TYPE.enum,
+        BONUS_PLAN_TYPE_VALUES: BONUS_PLAN_TYPE.values,
+        BONUS_FREQUENCY: BONUS_FREQUENCY.enum,
+        BONUS_FREQUENCY_VALUES: BONUS_FREQUENCY.values,
+        BONUS_FUNDING_TYPE: BONUS_FUNDING_TYPE.enum,
+        BONUS_FUNDING_TYPE_VALUES: BONUS_FUNDING_TYPE.values,
+        BONUS_PAYMENT_STATUS: BONUS_PAYMENT_STATUS.enum,
+        BONUS_PAYMENT_STATUS_VALUES: BONUS_PAYMENT_STATUS.values,
+        EQUITY_GRANT_TYPE: EQUITY_GRANT_TYPE.enum,
+        EQUITY_GRANT_TYPE_VALUES: EQUITY_GRANT_TYPE.values,
+        EQUITY_GRANT_STATUS: EQUITY_GRANT_STATUS.enum,
+        EQUITY_GRANT_STATUS_VALUES: EQUITY_GRANT_STATUS.values,
+        VESTING_TYPE: VESTING_TYPE.enum,
+        VESTING_TYPE_VALUES: VESTING_TYPE.values,
+        VESTING_FREQUENCY: VESTING_FREQUENCY.enum,
+        VESTING_FREQUENCY_VALUES: VESTING_FREQUENCY.values,
+        PAY_FREQUENCY: PAY_FREQUENCY.enum,
+        PAY_FREQUENCY_VALUES: PAY_FREQUENCY.values
     };
 
     // ============================================================================
-    // STATUS RENDERERS (using factory)
+    // RENDERERS
     // ============================================================================
 
-    const renderMeritIncreaseStatus = createStatusRenderer(MERIT_INCREASE_STATUS, MERIT_INCREASE_STATUS_CLASSES);
-    const renderMeritCycleStatus = createStatusRenderer(MERIT_CYCLE_STATUS, MERIT_CYCLE_STATUS_CLASSES);
-    const renderBonusPaymentStatus = createStatusRenderer(BONUS_PAYMENT_STATUS, BONUS_PAYMENT_STATUS_CLASSES);
-    const renderEquityGrantStatus = createStatusRenderer(EQUITY_GRANT_STATUS, EQUITY_GRANT_STATUS_CLASSES);
-
-    // ============================================================================
-    // MODULE-SPECIFIC RENDERERS
-    // ============================================================================
-
-    function renderCompensationType(type) {
-        return renderEnum(type, COMPENSATION_TYPE);
-    }
-
-    function renderBonusPlanType(type) {
-        return renderEnum(type, BONUS_PLAN_TYPE);
-    }
-
-    function renderBonusFrequency(freq) {
-        return renderEnum(freq, BONUS_FREQUENCY);
-    }
-
-    function renderBonusFundingType(type) {
-        return renderEnum(type, BONUS_FUNDING_TYPE);
-    }
-
-    function renderEquityGrantType(type) {
-        return renderEnum(type, EQUITY_GRANT_TYPE);
-    }
-
-    function renderVestingType(type) {
-        return renderEnum(type, VESTING_TYPE);
-    }
-
-    function renderVestingFrequency(freq) {
-        return renderEnum(freq, VESTING_FREQUENCY);
-    }
-
-    function renderPayFrequency(freq) {
-        return PAY_FREQUENCY[freq] || 'Unknown';
-    }
+    const renderMeritIncreaseStatus = createStatusRenderer(MERIT_INCREASE_STATUS.enum, MERIT_INCREASE_STATUS.classes);
+    const renderMeritCycleStatus = createStatusRenderer(MERIT_CYCLE_STATUS.enum, MERIT_CYCLE_STATUS.classes);
+    const renderBonusPaymentStatus = createStatusRenderer(BONUS_PAYMENT_STATUS.enum, BONUS_PAYMENT_STATUS.classes);
+    const renderEquityGrantStatus = createStatusRenderer(EQUITY_GRANT_STATUS.enum, EQUITY_GRANT_STATUS.classes);
 
     function renderPercentageComp(value) {
         if (value === null || value === undefined) return '-';
@@ -365,50 +177,19 @@ limitations under the License.
         return `${min} - ${max}`;
     }
 
-    // ============================================================================
-    // EXPORT ENUMS TO NAMESPACE
-    // ============================================================================
-
-    window.Compensation.enums = {
-        COMPENSATION_TYPE,
-        COMPENSATION_TYPE_VALUES,
-        MERIT_INCREASE_STATUS,
-        MERIT_INCREASE_STATUS_VALUES,
-        MERIT_CYCLE_STATUS,
-        MERIT_CYCLE_STATUS_VALUES,
-        BONUS_PLAN_TYPE,
-        BONUS_PLAN_TYPE_VALUES,
-        BONUS_FREQUENCY,
-        BONUS_FREQUENCY_VALUES,
-        BONUS_FUNDING_TYPE,
-        BONUS_FUNDING_TYPE_VALUES,
-        BONUS_PAYMENT_STATUS,
-        BONUS_PAYMENT_STATUS_VALUES,
-        EQUITY_GRANT_TYPE,
-        EQUITY_GRANT_TYPE_VALUES,
-        EQUITY_GRANT_STATUS,
-        EQUITY_GRANT_STATUS_VALUES,
-        VESTING_TYPE,
-        VESTING_TYPE_VALUES,
-        VESTING_FREQUENCY,
-        VESTING_FREQUENCY_VALUES,
-        PAY_FREQUENCY,
-        PAY_FREQUENCY_VALUES
-    };
-
     window.Compensation.render = {
-        compensationType: renderCompensationType,
+        compensationType: (v) => renderEnum(v, COMPENSATION_TYPE.enum),
         meritIncreaseStatus: renderMeritIncreaseStatus,
         meritCycleStatus: renderMeritCycleStatus,
-        bonusPlanType: renderBonusPlanType,
-        bonusFrequency: renderBonusFrequency,
-        bonusFundingType: renderBonusFundingType,
+        bonusPlanType: (v) => renderEnum(v, BONUS_PLAN_TYPE.enum),
+        bonusFrequency: (v) => renderEnum(v, BONUS_FREQUENCY.enum),
+        bonusFundingType: (v) => renderEnum(v, BONUS_FUNDING_TYPE.enum),
         bonusPaymentStatus: renderBonusPaymentStatus,
-        equityGrantType: renderEquityGrantType,
+        equityGrantType: (v) => renderEnum(v, EQUITY_GRANT_TYPE.enum),
         equityGrantStatus: renderEquityGrantStatus,
-        vestingType: renderVestingType,
-        vestingFrequency: renderVestingFrequency,
-        payFrequency: renderPayFrequency,
+        vestingType: (v) => renderEnum(v, VESTING_TYPE.enum),
+        vestingFrequency: (v) => renderEnum(v, VESTING_FREQUENCY.enum),
+        payFrequency: (v) => PAY_FREQUENCY.enum[v] || 'Unknown',
         money: renderMoney,
         boolean: renderBoolean,
         date: renderDate,
@@ -418,24 +199,10 @@ limitations under the License.
         salaryRange: renderSalaryRange
     };
 
-    // Export internal functions for use by other compensation files
     window.Compensation._internal = {
-        renderMeritIncreaseStatus,
-        renderMeritCycleStatus,
-        renderBonusPaymentStatus,
-        renderEquityGrantStatus,
-        renderCompensationType,
-        renderBonusPlanType,
-        renderBonusFrequency,
-        renderBonusFundingType,
-        renderEquityGrantType,
-        renderVestingType,
-        renderVestingFrequency,
-        renderPayFrequency,
-        renderPercentageComp,
-        renderCompaRatio,
-        renderShares,
-        renderSalaryRange
+        renderMeritIncreaseStatus, renderMeritCycleStatus, renderBonusPaymentStatus,
+        renderEquityGrantStatus, renderPercentageComp, renderCompaRatio,
+        renderShares, renderSalaryRange
     };
 
 })();

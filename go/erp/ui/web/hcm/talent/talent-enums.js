@@ -29,82 +29,37 @@ limitations under the License.
     const { escapeHtml, formatDate } = Layer8DUtils;
     const { renderEnum, createStatusRenderer, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
 
+    const factory = window.Layer8EnumFactory;
+
     // Import from split files
     const recruiting = window.TalentEnumsRecruiting;
     const performance = window.TalentEnumsPerformance;
 
     // ============================================================================
-    // ONBOARDING ENUMS (kept in main file)
+    // ONBOARDING ENUMS (using factory)
     // ============================================================================
 
-    const ONBOARDING_TASK_CATEGORY = {
-        0: 'Unspecified',
-        1: 'Paperwork',
-        2: 'IT Setup',
-        3: 'Equipment',
-        4: 'Training',
-        5: 'Benefits',
-        6: 'Compliance',
-        7: 'Introduction',
-        8: 'Orientation'
-    };
+    const ONBOARDING_TASK_CATEGORY = factory.withValues([
+        ['Unspecified', null], ['Paperwork', 'paperwork'], ['IT Setup', 'it'],
+        ['IT Setup', 'setup'], ['Equipment', 'equipment'], ['Training', 'training'],
+        ['Benefits', 'benefits'], ['Compliance', 'compliance'],
+        ['Introduction', 'introduction'], ['Orientation', 'orientation']
+    ]);
 
-    const ONBOARDING_TASK_CATEGORY_VALUES = {
-        'paperwork': 1,
-        'it': 2,
-        'setup': 2,
-        'equipment': 3,
-        'training': 4,
-        'benefits': 5,
-        'compliance': 6,
-        'introduction': 7,
-        'orientation': 8
-    };
+    const TASK_OWNER = factory.withValues([
+        ['Unspecified', null], ['Employee', 'employee'], ['Manager', 'manager'],
+        ['HR', 'hr'], ['IT', 'it'], ['Payroll', 'payroll'], ['Facilities', 'facilities']
+    ]);
 
-    const TASK_OWNER = {
-        0: 'Unspecified',
-        1: 'Employee',
-        2: 'Manager',
-        3: 'HR',
-        4: 'IT',
-        5: 'Payroll',
-        6: 'Facilities'
-    };
-
-    const TASK_OWNER_VALUES = {
-        'employee': 1,
-        'manager': 2,
-        'hr': 3,
-        'it': 4,
-        'payroll': 5,
-        'facilities': 6
-    };
-
-    const ONBOARDING_TASK_STATUS = {
-        0: 'Unspecified',
-        1: 'Not Started',
-        2: 'In Progress',
-        3: 'Completed',
-        4: 'Skipped',
-        5: 'Blocked'
-    };
-
-    const ONBOARDING_TASK_STATUS_VALUES = {
-        'not': 1,
-        'started': 1,
-        'progress': 2,
-        'completed': 3,
-        'skipped': 4,
-        'blocked': 5
-    };
-
-    const ONBOARDING_TASK_STATUS_CLASSES = {
-        1: 'layer8d-status-inactive',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-inactive',
-        5: 'layer8d-status-terminated'
-    };
+    const ONBOARDING_TASK_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Not Started', 'not', 'layer8d-status-inactive'],
+        ['Not Started', 'started', 'layer8d-status-inactive'],
+        ['In Progress', 'progress', 'layer8d-status-pending'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Skipped', 'skipped', 'layer8d-status-inactive'],
+        ['Blocked', 'blocked', 'layer8d-status-terminated']
+    ]);
 
     // ============================================================================
     // STATUS RENDERERS (using shared factory)
@@ -112,7 +67,7 @@ limitations under the License.
 
     const renderRequisitionStatus = createStatusRenderer(recruiting.REQUISITION_STATUS, recruiting.REQUISITION_STATUS_CLASSES);
     const renderApplicationStatus = createStatusRenderer(recruiting.APPLICATION_STATUS, recruiting.APPLICATION_STATUS_CLASSES);
-    const renderOnboardingTaskStatus = createStatusRenderer(ONBOARDING_TASK_STATUS, ONBOARDING_TASK_STATUS_CLASSES);
+    const renderOnboardingTaskStatus = createStatusRenderer(ONBOARDING_TASK_STATUS.enum, ONBOARDING_TASK_STATUS.classes);
     const renderPerformanceReviewStatus = createStatusRenderer(performance.PERFORMANCE_REVIEW_STATUS, performance.PERFORMANCE_REVIEW_STATUS_CLASSES);
     const renderGoalStatus = createStatusRenderer(performance.GOAL_STATUS, performance.GOAL_STATUS_CLASSES);
     const renderSuccessionPlanStatus = createStatusRenderer(performance.SUCCESSION_PLAN_STATUS, performance.SUCCESSION_PLAN_STATUS_CLASSES);
@@ -195,12 +150,12 @@ limitations under the License.
         DISPOSITION_REASON_VALUES: recruiting.DISPOSITION_REASON_VALUES,
 
         // Onboarding enums (local)
-        ONBOARDING_TASK_CATEGORY,
-        ONBOARDING_TASK_CATEGORY_VALUES,
-        TASK_OWNER,
-        TASK_OWNER_VALUES,
-        ONBOARDING_TASK_STATUS,
-        ONBOARDING_TASK_STATUS_VALUES,
+        ONBOARDING_TASK_CATEGORY: ONBOARDING_TASK_CATEGORY.enum,
+        ONBOARDING_TASK_CATEGORY_VALUES: ONBOARDING_TASK_CATEGORY.values,
+        TASK_OWNER: TASK_OWNER.enum,
+        TASK_OWNER_VALUES: TASK_OWNER.values,
+        ONBOARDING_TASK_STATUS: ONBOARDING_TASK_STATUS.enum,
+        ONBOARDING_TASK_STATUS_VALUES: ONBOARDING_TASK_STATUS.values,
 
         // Performance enums (from split file)
         PERFORMANCE_REVIEW_STATUS: performance.PERFORMANCE_REVIEW_STATUS,
@@ -236,8 +191,8 @@ limitations under the License.
         applicationStatus: renderApplicationStatus,
         applicationStage: (v) => renderEnum(v, recruiting.APPLICATION_STAGE),
         dispositionReason: (v) => renderEnum(v, recruiting.DISPOSITION_REASON),
-        onboardingTaskCategory: (v) => renderEnum(v, ONBOARDING_TASK_CATEGORY),
-        taskOwner: (v) => renderEnum(v, TASK_OWNER),
+        onboardingTaskCategory: (v) => renderEnum(v, ONBOARDING_TASK_CATEGORY.enum),
+        taskOwner: (v) => renderEnum(v, TASK_OWNER.enum),
         onboardingTaskStatus: renderOnboardingTaskStatus,
         performanceReviewStatus: renderPerformanceReviewStatus,
         reviewType: (v) => renderEnum(v, performance.REVIEW_TYPE),

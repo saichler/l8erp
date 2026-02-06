@@ -13,57 +13,57 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Logistics Module - Enum Definitions
+ * Mobile Logistics Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: scm/logistics/logistics-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileLogistics = window.MobileLogistics || {};
-    MobileLogistics.enums = {};
 
     // ============================================================================
-    // CARRIER TYPE
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileLogistics.enums.CARRIER_TYPE = {
-        0: 'Unspecified', 1: 'Trucking', 2: 'Rail', 3: 'Ocean',
-        4: 'Air', 5: 'Courier', 6: 'Intermodal'
-    };
-    MobileLogistics.enums.CARRIER_TYPE_VALUES = {
-        'trucking': 1, 'truck': 1, 'rail': 2, 'ocean': 3,
-        'air': 4, 'courier': 5, 'intermodal': 6
-    };
+    const CARRIER_TYPE = factory.withValues([
+        ['Unspecified', null], ['Trucking', 'trucking'], ['Rail', 'rail'],
+        ['Ocean', 'ocean'], ['Air', 'air'], ['Courier', 'courier'], ['Intermodal', 'intermodal']
+    ]);
+
+    const SHIPMENT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Planned', 'planned', 'status-pending'],
+        ['Picked Up', 'picked', 'status-active'],
+        ['In Transit', 'transit', 'status-active'],
+        ['Delivered', 'delivered', 'status-active'],
+        ['Returned', 'returned', 'status-terminated'],
+        ['Cancelled', 'cancelled', 'status-inactive']
+    ]);
+
+    const TASK_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'status-pending'],
+        ['In Progress', 'progress', 'status-active'],
+        ['Completed', 'completed', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-terminated']
+    ]);
 
     // ============================================================================
-    // SHIPMENT STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileLogistics.enums.SHIPMENT_STATUS = {
-        0: 'Unspecified', 1: 'Planned', 2: 'Picked Up', 3: 'In Transit',
-        4: 'Delivered', 5: 'Returned', 6: 'Cancelled'
-    };
-    MobileLogistics.enums.SHIPMENT_STATUS_VALUES = {
-        'planned': 1, 'picked': 2, 'transit': 3, 'in': 3,
-        'delivered': 4, 'returned': 5, 'cancelled': 6
-    };
-    MobileLogistics.enums.SHIPMENT_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active',
-        4: 'status-active', 5: 'status-terminated', 6: 'status-inactive'
-    };
-
-    // ============================================================================
-    // TASK STATUS
-    // ============================================================================
-
-    MobileLogistics.enums.TASK_STATUS = {
-        0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled'
-    };
-    MobileLogistics.enums.TASK_STATUS_VALUES = {
-        'pending': 1, 'progress': 2, 'in': 2, 'completed': 3, 'cancelled': 4
-    };
-    MobileLogistics.enums.TASK_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-terminated'
+    MobileLogistics.enums = {
+        CARRIER_TYPE: CARRIER_TYPE.enum,
+        CARRIER_TYPE_VALUES: CARRIER_TYPE.values,
+        SHIPMENT_STATUS: SHIPMENT_STATUS.enum,
+        SHIPMENT_STATUS_VALUES: SHIPMENT_STATUS.values,
+        SHIPMENT_STATUS_CLASSES: SHIPMENT_STATUS.classes,
+        TASK_STATUS: TASK_STATUS.enum,
+        TASK_STATUS_VALUES: TASK_STATUS.values,
+        TASK_STATUS_CLASSES: TASK_STATUS.classes
     };
 
     // ============================================================================
@@ -71,18 +71,12 @@ limitations under the License.
     // ============================================================================
 
     MobileLogistics.render = {
-        carrierType: (v) => Layer8MRenderers.renderEnum(v, MobileLogistics.enums.CARRIER_TYPE),
-        shipmentStatus: Layer8MRenderers.createStatusRenderer(
-            MobileLogistics.enums.SHIPMENT_STATUS,
-            MobileLogistics.enums.SHIPMENT_STATUS_CLASSES
-        ),
-        taskStatus: Layer8MRenderers.createStatusRenderer(
-            MobileLogistics.enums.TASK_STATUS,
-            MobileLogistics.enums.TASK_STATUS_CLASSES
-        ),
-        boolean: Layer8MRenderers.renderBoolean,
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        carrierType: (v) => renderEnum(v, CARRIER_TYPE.enum),
+        shipmentStatus: createStatusRenderer(SHIPMENT_STATUS.enum, SHIPMENT_STATUS.classes),
+        taskStatus: createStatusRenderer(TASK_STATUS.enum, TASK_STATUS.classes),
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

@@ -12,104 +12,74 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Budgeting Module - Enum Definitions
-// All enum constants and value mappings for Budgeting models
+// Budgeting Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Create Budgeting namespace
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+
     window.Budgeting = window.Budgeting || {};
-    Budgeting.enums = {};
 
     // ============================================================================
-    // BUDGET STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    Budgeting.enums.BUDGET_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Submitted',
-        3: 'Approved',
-        4: 'Active',
-        5: 'Closed'
-    };
+    const BUDGET_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Submitted', 'submitted', 'layer8d-status-pending'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['Active', 'active', 'layer8d-status-active'],
+        ['Closed', 'closed', 'layer8d-status-inactive']
+    ]);
 
-    Budgeting.enums.BUDGET_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-inactive'
-    };
+    const BUDGET_TYPE = factory.simple([
+        'Unspecified', 'Operating', 'Capital', 'Project', 'Departmental'
+    ]);
 
-    // ============================================================================
-    // BUDGET TYPE
-    // ============================================================================
+    const FORECAST_TYPE = factory.simple([
+        'Unspecified', 'Cash Flow', 'Revenue', 'Expense', 'Balance Sheet'
+    ]);
 
-    Budgeting.enums.BUDGET_TYPE = {
-        0: 'Unspecified',
-        1: 'Operating',
-        2: 'Capital',
-        3: 'Project',
-        4: 'Departmental'
-    };
+    const CAPEX_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Proposed', 'proposed', 'layer8d-status-pending'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['In Progress', 'progress', 'layer8d-status-pending'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive']
+    ]);
 
     // ============================================================================
-    // FORECAST TYPE
+    // EXPORT ENUMS
     // ============================================================================
 
-    Budgeting.enums.FORECAST_TYPE = {
-        0: 'Unspecified',
-        1: 'Cash Flow',
-        2: 'Revenue',
-        3: 'Expense',
-        4: 'Balance Sheet'
-    };
-
-    // ============================================================================
-    // CAPEX STATUS
-    // ============================================================================
-
-    Budgeting.enums.CAPEX_STATUS = {
-        0: 'Unspecified',
-        1: 'Proposed',
-        2: 'Approved',
-        3: 'In Progress',
-        4: 'Completed',
-        5: 'Cancelled'
-    };
-
-    Budgeting.enums.CAPEX_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-inactive'
+    window.Budgeting.enums = {
+        BUDGET_STATUS: BUDGET_STATUS.enum,
+        BUDGET_STATUS_CLASSES: BUDGET_STATUS.classes,
+        BUDGET_TYPE: BUDGET_TYPE.enum,
+        FORECAST_TYPE: FORECAST_TYPE.enum,
+        CAPEX_STATUS: CAPEX_STATUS.enum,
+        CAPEX_STATUS_CLASSES: CAPEX_STATUS.classes
     };
 
     // ============================================================================
     // RENDERERS
     // ============================================================================
 
-    // Create render functions using shared utilities
-    Budgeting.render = {};
+    const renderBudgetStatus = createStatusRenderer(BUDGET_STATUS.enum, BUDGET_STATUS.classes);
+    const renderCapexStatus = createStatusRenderer(CAPEX_STATUS.enum, CAPEX_STATUS.classes);
 
-    Budgeting.render.budgetStatus = Layer8DRenderers.createStatusRenderer(
-        Budgeting.enums.BUDGET_STATUS,
-        Budgeting.enums.BUDGET_STATUS_CLASSES
-    );
-
-    Budgeting.render.budgetType = (type) => Layer8DRenderers.renderEnum(type, Budgeting.enums.BUDGET_TYPE);
-    Budgeting.render.forecastType = (type) => Layer8DRenderers.renderEnum(type, Budgeting.enums.FORECAST_TYPE);
-
-    Budgeting.render.capexStatus = Layer8DRenderers.createStatusRenderer(
-        Budgeting.enums.CAPEX_STATUS,
-        Budgeting.enums.CAPEX_STATUS_CLASSES
-    );
-
-    Budgeting.render.boolean = Layer8DRenderers.renderBoolean;
-    Budgeting.render.date = Layer8DRenderers.renderDate;
-    Budgeting.render.money = Layer8DRenderers.renderMoney;
+    window.Budgeting.render = {
+        budgetStatus: renderBudgetStatus,
+        budgetType: (v) => renderEnum(v, BUDGET_TYPE.enum),
+        forecastType: (v) => renderEnum(v, FORECAST_TYPE.enum),
+        capexStatus: renderCapexStatus,
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

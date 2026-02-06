@@ -12,75 +12,61 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Manufacturing Shop Floor Module - Enum Definitions
+// Manufacturing Shop Floor Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate, renderMoney, renderBoolean } = Layer8DRenderers;
+
     window.MfgShopFloor = window.MfgShopFloor || {};
-    MfgShopFloor.enums = {};
 
-    // WORK CENTER TYPE
-    MfgShopFloor.enums.WORK_CENTER_TYPE = {
-        0: 'Unspecified',
-        1: 'Machine',
-        2: 'Labor',
-        3: 'Assembly',
-        4: 'Inspection',
-        5: 'Packaging'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const WORK_CENTER_TYPE = factory.simple([
+        'Unspecified', 'Machine', 'Labor', 'Assembly', 'Inspection', 'Packaging'
+    ]);
+
+    const SHIFT_TYPE = factory.simple([
+        'Unspecified', 'Day', 'Evening', 'Night', 'Rotating'
+    ]);
+
+    const DOWNTIME_REASON = factory.create([
+        ['Unspecified', null, ''],
+        ['Planned Maintenance', 'planned', 'layer8d-status-pending'],
+        ['Breakdown', 'breakdown', 'layer8d-status-terminated'],
+        ['Setup/Changeover', 'setup', 'layer8d-status-pending'],
+        ['Material Shortage', 'material', 'layer8d-status-inactive'],
+        ['Quality Issue', 'quality', 'layer8d-status-terminated'],
+        ['No Orders', 'noorders', 'layer8d-status-inactive'],
+        ['Other', 'other', 'layer8d-status-inactive']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    MfgShopFloor.enums = {
+        WORK_CENTER_TYPE: WORK_CENTER_TYPE.enum,
+        SHIFT_TYPE: SHIFT_TYPE.enum,
+        DOWNTIME_REASON: DOWNTIME_REASON.enum,
+        DOWNTIME_REASON_CLASSES: DOWNTIME_REASON.classes
     };
 
-    // SHIFT TYPE
-    MfgShopFloor.enums.SHIFT_TYPE = {
-        0: 'Unspecified',
-        1: 'Day',
-        2: 'Evening',
-        3: 'Night',
-        4: 'Rotating'
-    };
-
-    // DOWNTIME REASON
-    MfgShopFloor.enums.DOWNTIME_REASON = {
-        0: 'Unspecified',
-        1: 'Planned Maintenance',
-        2: 'Breakdown',
-        3: 'Setup/Changeover',
-        4: 'Material Shortage',
-        5: 'Quality Issue',
-        6: 'No Orders',
-        7: 'Other'
-    };
-
-    MfgShopFloor.enums.DOWNTIME_REASON_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-terminated',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-inactive',
-        5: 'layer8d-status-terminated',
-        6: 'layer8d-status-inactive',
-        7: 'layer8d-status-inactive'
-    };
-
+    // ============================================================================
     // RENDERERS
-    MfgShopFloor.render = {};
+    // ============================================================================
 
-    MfgShopFloor.render.workCenterType = function(type) {
-        return MfgShopFloor.enums.WORK_CENTER_TYPE[type] || 'Unknown';
-    };
-
-    MfgShopFloor.render.shiftType = function(type) {
-        return MfgShopFloor.enums.SHIFT_TYPE[type] || 'Unknown';
-    };
-
-    MfgShopFloor.render.downtimeReason = Layer8DRenderers.createStatusRenderer(
-        MfgShopFloor.enums.DOWNTIME_REASON,
-        MfgShopFloor.enums.DOWNTIME_REASON_CLASSES
-    );
-
-    MfgShopFloor.render.date = Layer8DRenderers.renderDate;
-    MfgShopFloor.render.money = Layer8DRenderers.renderMoney;
-    MfgShopFloor.render.boolean = function(val) {
-        return val ? '<span class="layer8d-status layer8d-status-active">Yes</span>' : '<span class="layer8d-status layer8d-status-inactive">No</span>';
+    MfgShopFloor.render = {
+        workCenterType: (v) => renderEnum(v, WORK_CENTER_TYPE.enum),
+        shiftType: (v) => renderEnum(v, SHIFT_TYPE.enum),
+        downtimeReason: createStatusRenderer(DOWNTIME_REASON.enum, DOWNTIME_REASON.classes),
+        date: renderDate,
+        money: renderMoney,
+        boolean: renderBoolean
     };
 
 })();

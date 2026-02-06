@@ -12,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// Uses Layer8FormFactory for reduced boilerplate
 /**
  * Mobile Manufacturing Production Module - Form Definitions
  * Desktop Equivalent: mfg/production/production-forms.js
@@ -20,76 +21,71 @@ limitations under the License.
     'use strict';
 
     window.MobileMfgProduction = window.MobileMfgProduction || {};
+    const f = window.Layer8FormFactory;
     const enums = MobileMfgProduction.enums;
 
     MobileMfgProduction.forms = {
-        MfgWorkOrder: {
-            title: 'Work Order',
-            sections: [{ title: 'Work Order Details', fields: [
-                { key: 'workOrderNumber', label: 'WO Number', type: 'text', required: true },
-                { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                { key: 'bomId', label: 'BOM', type: 'reference', lookupModel: 'MfgBom' },
-                { key: 'routingId', label: 'Routing', type: 'reference', lookupModel: 'MfgRouting' },
-                { key: 'quantityOrdered', label: 'Qty Ordered', type: 'number', required: true },
-                { key: 'plannedStartDate', label: 'Planned Start', type: 'date' },
-                { key: 'plannedEndDate', label: 'Planned End', type: 'date' },
-                { key: 'status', label: 'Status', type: 'select', options: enums.WORK_ORDER_STATUS },
-                { key: 'workCenterId', label: 'Work Center', type: 'reference', lookupModel: 'MfgWorkCenter' },
-                { key: 'priority', label: 'Priority', type: 'number' },
-                { key: 'notes', label: 'Notes', type: 'textarea' }
-            ]}]
-        },
-        MfgWorkOrderOp: {
-            title: 'Work Order Operation',
-            sections: [{ title: 'Operation Details', fields: [
-                { key: 'workOrderId', label: 'Work Order', type: 'reference', lookupModel: 'MfgWorkOrder', required: true },
-                { key: 'operationNumber', label: 'Operation #', type: 'number', required: true },
-                { key: 'workCenterId', label: 'Work Center', type: 'reference', lookupModel: 'MfgWorkCenter', required: true },
-                { key: 'description', label: 'Description', type: 'textarea' },
-                { key: 'setupTime', label: 'Setup Time (hrs)', type: 'number' },
-                { key: 'runTime', label: 'Run Time (hrs)', type: 'number' },
-                { key: 'status', label: 'Status', type: 'select', options: enums.OPERATION_STATUS }
-            ]}]
-        },
-        MfgProductionOrder: {
-            title: 'Production Order',
-            sections: [{ title: 'Order Details', fields: [
-                { key: 'orderNumber', label: 'Order Number', type: 'text', required: true },
-                { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                { key: 'scheduledDate', label: 'Scheduled Date', type: 'date' },
-                { key: 'status', label: 'Status', type: 'select', options: enums.WORK_ORDER_STATUS },
-                { key: 'notes', label: 'Notes', type: 'textarea' }
-            ]}]
-        },
-        MfgProdOrderLine: {
-            title: 'Production Order Line',
-            sections: [{ title: 'Line Details', fields: [
-                { key: 'prodOrderId', label: 'Prod Order', type: 'reference', lookupModel: 'MfgProductionOrder', required: true },
-                { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                { key: 'requiredQty', label: 'Required Qty', type: 'number', required: true }
-            ]}]
-        },
-        MfgProdBatch: {
-            title: 'Production Batch',
-            sections: [{ title: 'Batch Details', fields: [
-                { key: 'batchNumber', label: 'Batch Number', type: 'text', required: true },
-                { key: 'workOrderId', label: 'Work Order', type: 'reference', lookupModel: 'MfgWorkOrder', required: true },
-                { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                { key: 'startDate', label: 'Start Date', type: 'date' },
-                { key: 'endDate', label: 'End Date', type: 'date' },
-                { key: 'status', label: 'Status', type: 'select', options: enums.BATCH_STATUS }
-            ]}]
-        },
-        MfgProdConsumption: {
-            title: 'Production Consumption',
-            sections: [{ title: 'Consumption Details', fields: [
-                { key: 'workOrderId', label: 'Work Order', type: 'reference', lookupModel: 'MfgWorkOrder', required: true },
-                { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                { key: 'consumptionDate', label: 'Date', type: 'date' }
-            ]}]
-        }
+        MfgWorkOrder: f.form('Work Order', [
+            f.section('Work Order Details', [
+                ...f.text('workOrderNumber', 'WO Number', true),
+                ...f.reference('itemId', 'Item', 'ScmItem', true),
+                ...f.reference('bomId', 'BOM', 'MfgBom'),
+                ...f.reference('routingId', 'Routing', 'MfgRouting'),
+                ...f.number('quantityOrdered', 'Qty Ordered', true),
+                ...f.date('plannedStartDate', 'Planned Start'),
+                ...f.date('plannedEndDate', 'Planned End'),
+                ...f.select('status', 'Status', enums.WORK_ORDER_STATUS),
+                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter'),
+                ...f.number('priority', 'Priority'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
+        MfgWorkOrderOp: f.form('Work Order Operation', [
+            f.section('Operation Details', [
+                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
+                ...f.number('operationNumber', 'Operation #', true),
+                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
+                ...f.textarea('description', 'Description'),
+                ...f.number('setupTime', 'Setup Time (hrs)'),
+                ...f.number('runTime', 'Run Time (hrs)'),
+                ...f.select('status', 'Status', enums.OPERATION_STATUS)
+            ])
+        ]),
+        MfgProductionOrder: f.form('Production Order', [
+            f.section('Order Details', [
+                ...f.text('orderNumber', 'Order Number', true),
+                ...f.reference('itemId', 'Item', 'ScmItem', true),
+                ...f.number('quantity', 'Quantity', true),
+                ...f.date('scheduledDate', 'Scheduled Date'),
+                ...f.select('status', 'Status', enums.WORK_ORDER_STATUS),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
+        MfgProdOrderLine: f.form('Production Order Line', [
+            f.section('Line Details', [
+                ...f.reference('prodOrderId', 'Prod Order', 'MfgProductionOrder', true),
+                ...f.reference('itemId', 'Item', 'ScmItem', true),
+                ...f.number('requiredQty', 'Required Qty', true)
+            ])
+        ]),
+        MfgProdBatch: f.form('Production Batch', [
+            f.section('Batch Details', [
+                ...f.text('batchNumber', 'Batch Number', true),
+                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
+                ...f.number('quantity', 'Quantity', true),
+                ...f.date('startDate', 'Start Date'),
+                ...f.date('endDate', 'End Date'),
+                ...f.select('status', 'Status', enums.BATCH_STATUS)
+            ])
+        ]),
+        MfgProdConsumption: f.form('Production Consumption', [
+            f.section('Consumption Details', [
+                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
+                ...f.reference('itemId', 'Item', 'ScmItem', true),
+                ...f.number('quantity', 'Quantity', true),
+                ...f.date('consumptionDate', 'Date')
+            ])
+        ])
     };
 
     MobileMfgProduction.primaryKeys = {

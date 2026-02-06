@@ -23,6 +23,7 @@ limitations under the License.
  * - layer8m-reference-registry-crm.js
  * - layer8m-reference-registry-prj.js
  * - layer8m-reference-registry-mfg.js
+ * - layer8m-reference-registry-sales.js
  * - layer8m-reference-registry-ecom.js
  *
  * This must match the desktop Layer8DReferenceRegistry EXACTLY.
@@ -41,6 +42,7 @@ limitations under the License.
             window.Layer8MReferenceRegistryCRM,
             window.Layer8MReferenceRegistryPRJ,
             window.Layer8MReferenceRegistryMFG,
+            window.Layer8MReferenceRegistrySales,
             window.Layer8MReferenceRegistryECOM
         ];
 

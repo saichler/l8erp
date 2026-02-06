@@ -13,58 +13,61 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile COMP Controls Module - Enum Definitions
+ * Mobile COMP Controls Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: comp/controls/controls-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate } = Layer8MRenderers;
+
     window.MobileCompControls = window.MobileCompControls || {};
-    MobileCompControls.enums = {};
 
     // ============================================================================
-    // CONTROL TYPE
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileCompControls.enums.CONTROL_TYPE = {
-        0: 'Unspecified', 1: 'Preventive', 2: 'Detective', 3: 'Corrective',
-        4: 'Compensating', 5: 'Directive'
-    };
-    MobileCompControls.enums.CONTROL_TYPE_VALUES = {
-        'preventive': 1, 'detective': 2, 'corrective': 3, 'compensating': 4, 'directive': 5
-    };
-    MobileCompControls.enums.CONTROL_TYPE_CLASSES = {
-        1: 'status-active', 2: 'status-active', 3: 'status-pending',
-        4: 'status-pending', 5: 'status-inactive'
-    };
+    const CONTROL_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Preventive', 'preventive', 'status-active'],
+        ['Detective', 'detective', 'status-active'],
+        ['Corrective', 'corrective', 'status-pending'],
+        ['Compensating', 'compensating', 'status-pending'],
+        ['Directive', 'directive', 'status-inactive']
+    ]);
+
+    const CONTROL_EFFECTIVENESS = factory.create([
+        ['Unspecified', null, ''],
+        ['Effective', 'effective', 'status-active'],
+        ['Partially Effective', 'partiallyeffective', 'status-pending'],
+        ['Ineffective', 'ineffective', 'status-terminated'],
+        ['Not Tested', 'nottested', 'status-inactive']
+    ]);
+
+    const SEVERITY_LEVEL = factory.create([
+        ['Unspecified', null, ''],
+        ['Critical', 'critical', 'status-terminated'],
+        ['High', 'high', 'status-terminated'],
+        ['Medium', 'medium', 'status-pending'],
+        ['Low', 'low', 'status-active'],
+        ['Informational', 'informational', 'status-inactive']
+    ]);
 
     // ============================================================================
-    // CONTROL EFFECTIVENESS
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileCompControls.enums.CONTROL_EFFECTIVENESS = {
-        0: 'Unspecified', 1: 'Effective', 2: 'Partially Effective', 3: 'Ineffective', 4: 'Not Tested'
-    };
-    MobileCompControls.enums.CONTROL_EFFECTIVENESS_VALUES = {
-        'effective': 1, 'partiallyeffective': 2, 'ineffective': 3, 'nottested': 4
-    };
-    MobileCompControls.enums.CONTROL_EFFECTIVENESS_CLASSES = {
-        1: 'status-active', 2: 'status-pending', 3: 'status-terminated', 4: 'status-inactive'
-    };
-
-    // ============================================================================
-    // SEVERITY LEVEL (for segregation rules risk level)
-    // ============================================================================
-
-    MobileCompControls.enums.SEVERITY_LEVEL = {
-        0: 'Unspecified', 1: 'Critical', 2: 'High', 3: 'Medium', 4: 'Low', 5: 'Informational'
-    };
-    MobileCompControls.enums.SEVERITY_LEVEL_VALUES = {
-        'critical': 1, 'high': 2, 'medium': 3, 'low': 4, 'informational': 5
-    };
-    MobileCompControls.enums.SEVERITY_LEVEL_CLASSES = {
-        1: 'status-terminated', 2: 'status-terminated', 3: 'status-pending',
-        4: 'status-active', 5: 'status-inactive'
+    MobileCompControls.enums = {
+        CONTROL_TYPE: CONTROL_TYPE.enum,
+        CONTROL_TYPE_VALUES: CONTROL_TYPE.values,
+        CONTROL_TYPE_CLASSES: CONTROL_TYPE.classes,
+        CONTROL_EFFECTIVENESS: CONTROL_EFFECTIVENESS.enum,
+        CONTROL_EFFECTIVENESS_VALUES: CONTROL_EFFECTIVENESS.values,
+        CONTROL_EFFECTIVENESS_CLASSES: CONTROL_EFFECTIVENESS.classes,
+        SEVERITY_LEVEL: SEVERITY_LEVEL.enum,
+        SEVERITY_LEVEL_VALUES: SEVERITY_LEVEL.values,
+        SEVERITY_LEVEL_CLASSES: SEVERITY_LEVEL.classes
     };
 
     // ============================================================================
@@ -72,19 +75,10 @@ limitations under the License.
     // ============================================================================
 
     MobileCompControls.render = {
-        controlType: Layer8MRenderers.createStatusRenderer(
-            MobileCompControls.enums.CONTROL_TYPE,
-            MobileCompControls.enums.CONTROL_TYPE_CLASSES
-        ),
-        controlEffectiveness: Layer8MRenderers.createStatusRenderer(
-            MobileCompControls.enums.CONTROL_EFFECTIVENESS,
-            MobileCompControls.enums.CONTROL_EFFECTIVENESS_CLASSES
-        ),
-        severityLevel: Layer8MRenderers.createStatusRenderer(
-            MobileCompControls.enums.SEVERITY_LEVEL,
-            MobileCompControls.enums.SEVERITY_LEVEL_CLASSES
-        ),
-        date: Layer8MRenderers.renderDate
+        controlType: createStatusRenderer(CONTROL_TYPE.enum, CONTROL_TYPE.classes),
+        controlEffectiveness: createStatusRenderer(CONTROL_EFFECTIVENESS.enum, CONTROL_EFFECTIVENESS.classes),
+        severityLevel: createStatusRenderer(SEVERITY_LEVEL.enum, SEVERITY_LEVEL.classes),
+        date: renderDate
     };
 
 })();

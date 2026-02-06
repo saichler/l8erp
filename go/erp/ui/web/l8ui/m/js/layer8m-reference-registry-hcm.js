@@ -6,280 +6,94 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 /**
  * Mobile Reference Registry - HCM Module
  * Reference configurations for Human Capital Management models
+ * Uses Layer8RefFactory for reduced boilerplate
  */
-(function() {
-    'use strict';
+const refHcmM = window.Layer8RefFactory;
 
-    window.Layer8MReferenceRegistryHCM = {
-        // ========================================
-        // Core HR Models
-        // ========================================
-        Employee: {
-            idColumn: 'employeeId',
-            displayColumn: 'lastName',
-            selectColumns: ['employeeId', 'lastName', 'firstName'],
-            displayFormat: function(item) {
-                return item.lastName + ', ' + item.firstName;
-            },
-            displayLabel: 'Name'
-        },
-        Organization: {
-            idColumn: 'organizationId',
-            displayColumn: 'name'
-        },
-        Department: {
-            idColumn: 'departmentId',
-            displayColumn: 'name'
-        },
-        Position: {
-            idColumn: 'positionId',
-            displayColumn: 'title'
-        },
-        Job: {
-            idColumn: 'jobId',
-            displayColumn: 'title'
-        },
-        JobFamily: {
-            idColumn: 'jobFamilyId',
-            displayColumn: 'name'
-        },
-        EmployeeDocument: {
-            idColumn: 'documentId',
-            displayColumn: 'name'
-        },
-        ComplianceRecord: {
-            idColumn: 'recordId',
-            displayColumn: 'recordId'
-        },
+window.Layer8MReferenceRegistryHCM = {
+    // ========================================
+    // Core HR Models
+    // ========================================
+    ...refHcmM.person('Employee', 'employeeId', 'lastName', 'firstName'),
+    ...refHcmM.simple('Organization', 'organizationId', 'name'),
+    ...refHcmM.simple('Department', 'departmentId', 'name'),
+    ...refHcmM.simple('HcmDepartment', 'departmentId', 'name'),  // Alias
+    ...refHcmM.simple('Position', 'positionId', 'title'),
+    ...refHcmM.simple('Job', 'jobId', 'title'),
+    ...refHcmM.simple('JobFamily', 'jobFamilyId', 'name'),
+    ...refHcmM.simple('EmployeeDocument', 'documentId', 'name'),
+    ...refHcmM.idOnly('ComplianceRecord', 'recordId'),
 
-        // ========================================
-        // Time & Attendance Models
-        // ========================================
-        Timesheet: {
-            idColumn: 'timesheetId',
-            displayColumn: 'timesheetId'
-        },
-        LeaveRequest: {
-            idColumn: 'requestId',
-            displayColumn: 'requestId'
-        },
-        LeaveBalance: {
-            idColumn: 'balanceId',
-            displayColumn: 'balanceId'
-        },
-        LeavePolicy: {
-            idColumn: 'policyId',
-            displayColumn: 'name'
-        },
-        Shift: {
-            idColumn: 'shiftId',
-            displayColumn: 'name'
-        },
-        Schedule: {
-            idColumn: 'scheduleId',
-            displayColumn: 'scheduleId'
-        },
-        Holiday: {
-            idColumn: 'holidayId',
-            displayColumn: 'name'
-        },
-        Absence: {
-            idColumn: 'absenceId',
-            displayColumn: 'absenceId'
-        },
+    // ========================================
+    // Time & Attendance Models
+    // ========================================
+    ...refHcmM.idOnly('Timesheet', 'timesheetId'),
+    ...refHcmM.idOnly('LeaveRequest', 'requestId'),
+    ...refHcmM.idOnly('LeaveBalance', 'balanceId'),
+    ...refHcmM.simple('LeavePolicy', 'policyId', 'name'),
+    ...refHcmM.simple('Shift', 'shiftId', 'name'),
+    ...refHcmM.idOnly('Schedule', 'scheduleId'),
+    ...refHcmM.simple('Holiday', 'holidayId', 'name'),
+    ...refHcmM.idOnly('Absence', 'absenceId'),
 
-        // ========================================
-        // Benefits Models
-        // ========================================
-        BenefitPlan: {
-            idColumn: 'planId',
-            displayColumn: 'name'
-        },
-        BenefitEnrollment: {
-            idColumn: 'enrollmentId',
-            displayColumn: 'enrollmentId'
-        },
-        Carrier: {
-            idColumn: 'carrierId',
-            displayColumn: 'name'
-        },
-        Dependent: {
-            idColumn: 'dependentId',
-            displayColumn: 'firstName',
-            selectColumns: ['dependentId', 'firstName', 'lastName'],
-            displayFormat: function(item) {
-                return item.lastName + ', ' + item.firstName;
-            },
-            displayLabel: 'Name'
-        },
-        LifeEvent: {
-            idColumn: 'eventId',
-            displayColumn: 'eventType'
-        },
-        COBRAEvent: {
-            idColumn: 'cobraEventId',
-            displayColumn: 'cobraEventId'
-        },
+    // ========================================
+    // Benefits Models
+    // ========================================
+    ...refHcmM.simple('BenefitPlan', 'planId', 'name'),
+    ...refHcmM.idOnly('BenefitEnrollment', 'enrollmentId'),
+    ...refHcmM.simple('Carrier', 'carrierId', 'name'),
+    ...refHcmM.person('Dependent', 'dependentId', 'lastName', 'firstName'),
+    ...refHcmM.simple('LifeEvent', 'eventId', 'eventType'),
+    ...refHcmM.idOnly('COBRAEvent', 'cobraEventId'),
 
-        // ========================================
-        // Talent Management Models
-        // ========================================
-        PerformanceReview: {
-            idColumn: 'reviewId',
-            displayColumn: 'reviewId'
-        },
-        Goal: {
-            idColumn: 'goalId',
-            displayColumn: 'title'
-        },
-        Feedback: {
-            idColumn: 'feedbackId',
-            displayColumn: 'feedbackId'
-        },
-        CareerPath: {
-            idColumn: 'careerPathId',
-            displayColumn: 'name'
-        },
-        SuccessionPlan: {
-            idColumn: 'planId',
-            displayColumn: 'planId'
-        },
-        JobRequisition: {
-            idColumn: 'requisitionId',
-            displayColumn: 'title'
-        },
-        Applicant: {
-            idColumn: 'applicantId',
-            displayColumn: 'lastName',
-            selectColumns: ['applicantId', 'lastName', 'firstName'],
-            displayFormat: function(item) {
-                return item.lastName + ', ' + item.firstName;
-            },
-            displayLabel: 'Name'
-        },
-        Application: {
-            idColumn: 'applicationId',
-            displayColumn: 'applicationId'
-        },
-        OnboardingTask: {
-            idColumn: 'taskId',
-            displayColumn: 'name'
-        },
+    // ========================================
+    // Talent Management Models
+    // ========================================
+    ...refHcmM.idOnly('PerformanceReview', 'reviewId'),
+    ...refHcmM.simple('Goal', 'goalId', 'title'),
+    ...refHcmM.idOnly('Feedback', 'feedbackId'),
+    ...refHcmM.simple('CareerPath', 'careerPathId', 'name'),
+    ...refHcmM.idOnly('SuccessionPlan', 'planId'),
+    ...refHcmM.simple('JobRequisition', 'requisitionId', 'title'),
+    ...refHcmM.person('Applicant', 'applicantId', 'lastName', 'firstName'),
+    ...refHcmM.idOnly('Application', 'applicationId'),
+    ...refHcmM.simple('OnboardingTask', 'taskId', 'name'),
 
-        // ========================================
-        // Learning Models
-        // ========================================
-        Course: {
-            idColumn: 'courseId',
-            displayColumn: 'title'
-        },
-        CourseSession: {
-            idColumn: 'sessionId',
-            displayColumn: 'sessionId'
-        },
-        CourseEnrollment: {
-            idColumn: 'enrollmentId',
-            displayColumn: 'enrollmentId'
-        },
-        Certification: {
-            idColumn: 'certificationId',
-            displayColumn: 'name'
-        },
-        EmployeeCertification: {
-            idColumn: 'employeeCertificationId',
-            displayColumn: 'employeeCertificationId'
-        },
-        Skill: {
-            idColumn: 'skillId',
-            displayColumn: 'name'
-        },
-        EmployeeSkill: {
-            idColumn: 'employeeSkillId',
-            displayColumn: 'employeeSkillId'
-        },
-        TrainingRecord: {
-            idColumn: 'recordId',
-            displayColumn: 'trainingName'
-        },
+    // ========================================
+    // Learning Models
+    // ========================================
+    ...refHcmM.simple('Course', 'courseId', 'title'),
+    ...refHcmM.idOnly('CourseSession', 'sessionId'),
+    ...refHcmM.idOnly('CourseEnrollment', 'enrollmentId'),
+    ...refHcmM.simple('Certification', 'certificationId', 'name'),
+    ...refHcmM.idOnly('EmployeeCertification', 'employeeCertificationId'),
+    ...refHcmM.simple('Skill', 'skillId', 'name'),
+    ...refHcmM.idOnly('EmployeeSkill', 'employeeSkillId'),
+    ...refHcmM.simple('TrainingRecord', 'recordId', 'trainingName'),
 
-        // ========================================
-        // Compensation Models
-        // ========================================
-        SalaryStructure: {
-            idColumn: 'structureId',
-            displayColumn: 'name'
-        },
-        SalaryGrade: {
-            idColumn: 'gradeId',
-            displayColumn: 'name'
-        },
-        EmployeeCompensation: {
-            idColumn: 'compensationId',
-            displayColumn: 'compensationId'
-        },
-        MeritIncrease: {
-            idColumn: 'increaseId',
-            displayColumn: 'increaseId'
-        },
-        MeritCycle: {
-            idColumn: 'cycleId',
-            displayColumn: 'name'
-        },
-        BonusPlan: {
-            idColumn: 'planId',
-            displayColumn: 'name'
-        },
-        BonusPayment: {
-            idColumn: 'paymentId',
-            displayColumn: 'paymentId'
-        },
-        EquityGrant: {
-            idColumn: 'grantId',
-            displayColumn: 'grantNumber'
-        },
-        CompensationStatement: {
-            idColumn: 'statementId',
-            displayColumn: 'statementId'
-        },
-        MarketBenchmark: {
-            idColumn: 'benchmarkId',
-            displayColumn: 'jobTitle'
-        },
+    // ========================================
+    // Compensation Models
+    // ========================================
+    ...refHcmM.simple('SalaryStructure', 'structureId', 'name'),
+    ...refHcmM.simple('SalaryGrade', 'gradeId', 'name'),
+    ...refHcmM.idOnly('EmployeeCompensation', 'compensationId'),
+    ...refHcmM.idOnly('MeritIncrease', 'increaseId'),
+    ...refHcmM.simple('MeritCycle', 'cycleId', 'name'),
+    ...refHcmM.simple('BonusPlan', 'planId', 'name'),
+    ...refHcmM.idOnly('BonusPayment', 'paymentId'),
+    ...refHcmM.simple('EquityGrant', 'grantId', 'grantNumber'),
+    ...refHcmM.idOnly('CompensationStatement', 'statementId'),
+    ...refHcmM.simple('MarketBenchmark', 'benchmarkId', 'jobTitle'),
 
-        // ========================================
-        // Payroll Models
-        // ========================================
-        PayStructure: {
-            idColumn: 'structureId',
-            displayColumn: 'name'
-        },
-        PayComponent: {
-            idColumn: 'componentId',
-            displayColumn: 'name'
-        },
-        PayrollRun: {
-            idColumn: 'payrollRunId',
-            displayColumn: 'payrollRunId'
-        },
-        Payslip: {
-            idColumn: 'payslipId',
-            displayColumn: 'payslipId'
-        },
-        TaxWithholding: {
-            idColumn: 'withholdingId',
-            displayColumn: 'withholdingId'
-        },
-        DirectDeposit: {
-            idColumn: 'depositId',
-            displayColumn: 'depositId'
-        },
-        Garnishment: {
-            idColumn: 'garnishmentId',
-            displayColumn: 'garnishmentId'
-        },
-        YearEndDocument: {
-            idColumn: 'documentId',
-            displayColumn: 'documentType'
-        }
-    };
-})();
+    // ========================================
+    // Payroll Models
+    // ========================================
+    ...refHcmM.simple('PayStructure', 'structureId', 'name'),
+    ...refHcmM.simple('PayComponent', 'componentId', 'name'),
+    ...refHcmM.idOnly('PayrollRun', 'payrollRunId'),
+    ...refHcmM.idOnly('Payslip', 'payslipId'),
+    ...refHcmM.idOnly('TaxWithholding', 'withholdingId'),
+    ...refHcmM.idOnly('DirectDeposit', 'depositId'),
+    ...refHcmM.idOnly('Garnishment', 'garnishmentId'),
+    ...refHcmM.simple('YearEndDocument', 'documentId', 'documentType')
+};

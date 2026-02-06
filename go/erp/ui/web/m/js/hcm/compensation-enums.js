@@ -13,164 +13,135 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Compensation Management Module - Enum Definitions
+ * Mobile Compensation Management Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: hcm/compensation/compensation-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderMoney, renderBoolean, renderDate } = Layer8MRenderers;
+
     window.MobileCompensation = window.MobileCompensation || {};
-    MobileCompensation.enums = {};
 
     // ============================================================================
-    // COMPENSATION TYPE
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileCompensation.enums.COMPENSATION_TYPE = {
-        0: 'Unspecified', 1: 'Salary', 2: 'Hourly', 3: 'Commission', 4: 'Piece Rate'
-    };
-    MobileCompensation.enums.COMPENSATION_TYPE_VALUES = {
-        'salary': 1, 'hourly': 2, 'commission': 3, 'piece': 4, 'rate': 4
-    };
+    const COMPENSATION_TYPE = factory.withValues([
+        ['Unspecified', null], ['Salary', 'salary'], ['Hourly', 'hourly'],
+        ['Commission', 'commission'], ['Piece Rate', 'piece']
+    ]);
+
+    const MERIT_INCREASE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-inactive'],
+        ['Submitted', 'submitted', 'status-pending'],
+        ['Under Review', 'review', 'status-pending'],
+        ['Approved', 'approved', 'status-active'],
+        ['Rejected', 'rejected', 'status-terminated'],
+        ['Processed', 'processed', 'status-active']
+    ]);
+
+    const MERIT_CYCLE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Planning', 'planning', 'status-pending'],
+        ['Open', 'open', 'status-active'],
+        ['Under Review', 'review', 'status-pending'],
+        ['Approved', 'approved', 'status-active'],
+        ['Closed', 'closed', 'status-inactive']
+    ]);
+
+    const BONUS_PLAN_TYPE = factory.withValues([
+        ['Unspecified', null], ['Annual', 'annual'], ['Spot', 'spot'], ['Signing', 'signing'],
+        ['Retention', 'retention'], ['Referral', 'referral'], ['Performance', 'performance'],
+        ['Profit Sharing', 'profit'], ['Project', 'project'], ['Sales Commission', 'sales']
+    ]);
+
+    const BONUS_FREQUENCY = factory.withValues([
+        ['Unspecified', null], ['Annual', 'annual'], ['Semi-Annual', 'semi'],
+        ['Quarterly', 'quarterly'], ['Monthly', 'monthly'], ['One-Time', 'onetime']
+    ]);
+
+    const BONUS_FUNDING_TYPE = factory.withValues([
+        ['Unspecified', null], ['Fixed', 'fixed'], ['% of Profits', 'profits'],
+        ['% of Revenue', 'revenue'], ['Discretionary', 'discretionary']
+    ]);
+
+    const BONUS_PAYMENT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-inactive'],
+        ['Pending Approval', 'pending', 'status-pending'],
+        ['Approved', 'approved', 'status-active'],
+        ['Scheduled', 'scheduled', 'status-pending'],
+        ['Paid', 'paid', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-terminated']
+    ]);
+
+    const EQUITY_GRANT_TYPE = factory.withValues([
+        ['Unspecified', null], ['ISO', 'iso'], ['NSO', 'nso'], ['RSU', 'rsu'],
+        ['RSA', 'rsa'], ['ESPP', 'espp'], ['Phantom', 'phantom'], ['SAR', 'sar']
+    ]);
+
+    const EQUITY_GRANT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'status-pending'],
+        ['Active', 'active', 'status-active'],
+        ['Fully Vested', 'vested', 'status-active'],
+        ['Exercised', 'exercised', 'status-active'],
+        ['Expired', 'expired', 'status-inactive'],
+        ['Forfeited', 'forfeited', 'status-terminated'],
+        ['Cancelled', 'cancelled', 'status-terminated']
+    ]);
+
+    const VESTING_TYPE = factory.withValues([
+        ['Unspecified', null], ['Time-Based', 'time'], ['Performance-Based', 'performance'],
+        ['Hybrid', 'hybrid'], ['Immediate', 'immediate']
+    ]);
+
+    const VESTING_FREQUENCY = factory.withValues([
+        ['Unspecified', null], ['Monthly', 'monthly'], ['Quarterly', 'quarterly'], ['Annually', 'annually']
+    ]);
+
+    const PAY_FREQUENCY = factory.withValues([
+        ['Unspecified', null], ['Weekly', 'weekly'], ['Bi-Weekly', 'biweekly'],
+        ['Semi-Monthly', 'semimonthly'], ['Monthly', 'monthly'],
+        ['Quarterly', 'quarterly'], ['Annually', 'annually']
+    ]);
 
     // ============================================================================
-    // MERIT INCREASE STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileCompensation.enums.MERIT_INCREASE_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Submitted', 3: 'Under Review', 4: 'Approved', 5: 'Rejected', 6: 'Processed'
-    };
-    MobileCompensation.enums.MERIT_INCREASE_STATUS_VALUES = {
-        'draft': 1, 'submitted': 2, 'review': 3, 'approved': 4, 'rejected': 5, 'processed': 6
-    };
-    MobileCompensation.enums.MERIT_INCREASE_STATUS_CLASSES = {
-        1: 'status-inactive', 2: 'status-pending', 3: 'status-pending',
-        4: 'status-active', 5: 'status-terminated', 6: 'status-active'
-    };
-
-    // ============================================================================
-    // MERIT CYCLE STATUS
-    // ============================================================================
-
-    MobileCompensation.enums.MERIT_CYCLE_STATUS = {
-        0: 'Unspecified', 1: 'Planning', 2: 'Open', 3: 'Under Review', 4: 'Approved', 5: 'Closed'
-    };
-    MobileCompensation.enums.MERIT_CYCLE_STATUS_VALUES = {
-        'planning': 1, 'open': 2, 'review': 3, 'approved': 4, 'closed': 5
-    };
-    MobileCompensation.enums.MERIT_CYCLE_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-pending', 4: 'status-active', 5: 'status-inactive'
-    };
-
-    // ============================================================================
-    // BONUS PLAN TYPE
-    // ============================================================================
-
-    MobileCompensation.enums.BONUS_PLAN_TYPE = {
-        0: 'Unspecified', 1: 'Annual', 2: 'Spot', 3: 'Signing', 4: 'Retention',
-        5: 'Referral', 6: 'Performance', 7: 'Profit Sharing', 8: 'Project', 9: 'Sales Commission'
-    };
-    MobileCompensation.enums.BONUS_PLAN_TYPE_VALUES = {
-        'annual': 1, 'spot': 2, 'signing': 3, 'retention': 4, 'referral': 5,
-        'performance': 6, 'profit': 7, 'sharing': 7, 'project': 8, 'sales': 9, 'commission': 9
-    };
-
-    // ============================================================================
-    // BONUS FREQUENCY
-    // ============================================================================
-
-    MobileCompensation.enums.BONUS_FREQUENCY = {
-        0: 'Unspecified', 1: 'Annual', 2: 'Semi-Annual', 3: 'Quarterly', 4: 'Monthly', 5: 'One-Time'
-    };
-    MobileCompensation.enums.BONUS_FREQUENCY_VALUES = {
-        'annual': 1, 'semi': 2, 'quarterly': 3, 'monthly': 4, 'onetime': 5, 'one': 5
-    };
-
-    // ============================================================================
-    // BONUS FUNDING TYPE
-    // ============================================================================
-
-    MobileCompensation.enums.BONUS_FUNDING_TYPE = {
-        0: 'Unspecified', 1: 'Fixed', 2: '% of Profits', 3: '% of Revenue', 4: 'Discretionary'
-    };
-    MobileCompensation.enums.BONUS_FUNDING_TYPE_VALUES = {
-        'fixed': 1, 'profits': 2, 'revenue': 3, 'discretionary': 4
-    };
-
-    // ============================================================================
-    // BONUS PAYMENT STATUS
-    // ============================================================================
-
-    MobileCompensation.enums.BONUS_PAYMENT_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Pending Approval', 3: 'Approved', 4: 'Scheduled', 5: 'Paid', 6: 'Cancelled'
-    };
-    MobileCompensation.enums.BONUS_PAYMENT_STATUS_VALUES = {
-        'draft': 1, 'pending': 2, 'approved': 3, 'scheduled': 4, 'paid': 5, 'cancelled': 6
-    };
-    MobileCompensation.enums.BONUS_PAYMENT_STATUS_CLASSES = {
-        1: 'status-inactive', 2: 'status-pending', 3: 'status-active',
-        4: 'status-pending', 5: 'status-active', 6: 'status-terminated'
-    };
-
-    // ============================================================================
-    // EQUITY GRANT TYPE
-    // ============================================================================
-
-    MobileCompensation.enums.EQUITY_GRANT_TYPE = {
-        0: 'Unspecified', 1: 'ISO', 2: 'NSO', 3: 'RSU', 4: 'RSA', 5: 'ESPP', 6: 'Phantom', 7: 'SAR'
-    };
-    MobileCompensation.enums.EQUITY_GRANT_TYPE_VALUES = {
-        'iso': 1, 'nso': 2, 'rsu': 3, 'rsa': 4, 'espp': 5, 'phantom': 6, 'sar': 7
-    };
-
-    // ============================================================================
-    // EQUITY GRANT STATUS
-    // ============================================================================
-
-    MobileCompensation.enums.EQUITY_GRANT_STATUS = {
-        0: 'Unspecified', 1: 'Pending', 2: 'Active', 3: 'Fully Vested', 4: 'Exercised', 5: 'Expired', 6: 'Forfeited', 7: 'Cancelled'
-    };
-    MobileCompensation.enums.EQUITY_GRANT_STATUS_VALUES = {
-        'pending': 1, 'active': 2, 'vested': 3, 'fully': 3, 'exercised': 4,
-        'expired': 5, 'forfeited': 6, 'cancelled': 7
-    };
-    MobileCompensation.enums.EQUITY_GRANT_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-active',
-        5: 'status-inactive', 6: 'status-terminated', 7: 'status-terminated'
-    };
-
-    // ============================================================================
-    // VESTING TYPE
-    // ============================================================================
-
-    MobileCompensation.enums.VESTING_TYPE = {
-        0: 'Unspecified', 1: 'Time-Based', 2: 'Performance-Based', 3: 'Hybrid', 4: 'Immediate'
-    };
-    MobileCompensation.enums.VESTING_TYPE_VALUES = {
-        'time': 1, 'performance': 2, 'hybrid': 3, 'immediate': 4
-    };
-
-    // ============================================================================
-    // VESTING FREQUENCY
-    // ============================================================================
-
-    MobileCompensation.enums.VESTING_FREQUENCY = {
-        0: 'Unspecified', 1: 'Monthly', 2: 'Quarterly', 3: 'Annually'
-    };
-    MobileCompensation.enums.VESTING_FREQUENCY_VALUES = {
-        'monthly': 1, 'quarterly': 2, 'annually': 3, 'annual': 3
-    };
-
-    // ============================================================================
-    // PAY FREQUENCY (duplicated for module independence)
-    // ============================================================================
-
-    MobileCompensation.enums.PAY_FREQUENCY = {
-        0: 'Unspecified', 1: 'Weekly', 2: 'Bi-Weekly', 3: 'Semi-Monthly', 4: 'Monthly', 5: 'Quarterly', 6: 'Annually'
-    };
-    MobileCompensation.enums.PAY_FREQUENCY_VALUES = {
-        'weekly': 1, 'biweekly': 2, 'bi-weekly': 2, 'semimonthly': 3,
-        'semi-monthly': 3, 'monthly': 4, 'quarterly': 5, 'annually': 6, 'annual': 6
+    MobileCompensation.enums = {
+        COMPENSATION_TYPE: COMPENSATION_TYPE.enum,
+        COMPENSATION_TYPE_VALUES: COMPENSATION_TYPE.values,
+        MERIT_INCREASE_STATUS: MERIT_INCREASE_STATUS.enum,
+        MERIT_INCREASE_STATUS_VALUES: MERIT_INCREASE_STATUS.values,
+        MERIT_INCREASE_STATUS_CLASSES: MERIT_INCREASE_STATUS.classes,
+        MERIT_CYCLE_STATUS: MERIT_CYCLE_STATUS.enum,
+        MERIT_CYCLE_STATUS_VALUES: MERIT_CYCLE_STATUS.values,
+        MERIT_CYCLE_STATUS_CLASSES: MERIT_CYCLE_STATUS.classes,
+        BONUS_PLAN_TYPE: BONUS_PLAN_TYPE.enum,
+        BONUS_PLAN_TYPE_VALUES: BONUS_PLAN_TYPE.values,
+        BONUS_FREQUENCY: BONUS_FREQUENCY.enum,
+        BONUS_FREQUENCY_VALUES: BONUS_FREQUENCY.values,
+        BONUS_FUNDING_TYPE: BONUS_FUNDING_TYPE.enum,
+        BONUS_FUNDING_TYPE_VALUES: BONUS_FUNDING_TYPE.values,
+        BONUS_PAYMENT_STATUS: BONUS_PAYMENT_STATUS.enum,
+        BONUS_PAYMENT_STATUS_VALUES: BONUS_PAYMENT_STATUS.values,
+        BONUS_PAYMENT_STATUS_CLASSES: BONUS_PAYMENT_STATUS.classes,
+        EQUITY_GRANT_TYPE: EQUITY_GRANT_TYPE.enum,
+        EQUITY_GRANT_TYPE_VALUES: EQUITY_GRANT_TYPE.values,
+        EQUITY_GRANT_STATUS: EQUITY_GRANT_STATUS.enum,
+        EQUITY_GRANT_STATUS_VALUES: EQUITY_GRANT_STATUS.values,
+        EQUITY_GRANT_STATUS_CLASSES: EQUITY_GRANT_STATUS.classes,
+        VESTING_TYPE: VESTING_TYPE.enum,
+        VESTING_TYPE_VALUES: VESTING_TYPE.values,
+        VESTING_FREQUENCY: VESTING_FREQUENCY.enum,
+        VESTING_FREQUENCY_VALUES: VESTING_FREQUENCY.values,
+        PAY_FREQUENCY: PAY_FREQUENCY.enum,
+        PAY_FREQUENCY_VALUES: PAY_FREQUENCY.values
     };
 
     // ============================================================================
@@ -178,30 +149,18 @@ limitations under the License.
     // ============================================================================
 
     MobileCompensation.render = {
-        compensationType: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.COMPENSATION_TYPE),
-        meritIncreaseStatus: Layer8MRenderers.createStatusRenderer(
-            MobileCompensation.enums.MERIT_INCREASE_STATUS,
-            MobileCompensation.enums.MERIT_INCREASE_STATUS_CLASSES
-        ),
-        meritCycleStatus: Layer8MRenderers.createStatusRenderer(
-            MobileCompensation.enums.MERIT_CYCLE_STATUS,
-            MobileCompensation.enums.MERIT_CYCLE_STATUS_CLASSES
-        ),
-        bonusPlanType: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.BONUS_PLAN_TYPE),
-        bonusFrequency: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.BONUS_FREQUENCY),
-        bonusFundingType: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.BONUS_FUNDING_TYPE),
-        bonusPaymentStatus: Layer8MRenderers.createStatusRenderer(
-            MobileCompensation.enums.BONUS_PAYMENT_STATUS,
-            MobileCompensation.enums.BONUS_PAYMENT_STATUS_CLASSES
-        ),
-        equityGrantType: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.EQUITY_GRANT_TYPE),
-        equityGrantStatus: Layer8MRenderers.createStatusRenderer(
-            MobileCompensation.enums.EQUITY_GRANT_STATUS,
-            MobileCompensation.enums.EQUITY_GRANT_STATUS_CLASSES
-        ),
-        vestingType: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.VESTING_TYPE),
-        vestingFrequency: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.VESTING_FREQUENCY),
-        payFrequency: (v) => Layer8MRenderers.renderEnum(v, MobileCompensation.enums.PAY_FREQUENCY),
+        compensationType: (v) => renderEnum(v, COMPENSATION_TYPE.enum),
+        meritIncreaseStatus: createStatusRenderer(MERIT_INCREASE_STATUS.enum, MERIT_INCREASE_STATUS.classes),
+        meritCycleStatus: createStatusRenderer(MERIT_CYCLE_STATUS.enum, MERIT_CYCLE_STATUS.classes),
+        bonusPlanType: (v) => renderEnum(v, BONUS_PLAN_TYPE.enum),
+        bonusFrequency: (v) => renderEnum(v, BONUS_FREQUENCY.enum),
+        bonusFundingType: (v) => renderEnum(v, BONUS_FUNDING_TYPE.enum),
+        bonusPaymentStatus: createStatusRenderer(BONUS_PAYMENT_STATUS.enum, BONUS_PAYMENT_STATUS.classes),
+        equityGrantType: (v) => renderEnum(v, EQUITY_GRANT_TYPE.enum),
+        equityGrantStatus: createStatusRenderer(EQUITY_GRANT_STATUS.enum, EQUITY_GRANT_STATUS.classes),
+        vestingType: (v) => renderEnum(v, VESTING_TYPE.enum),
+        vestingFrequency: (v) => renderEnum(v, VESTING_FREQUENCY.enum),
+        payFrequency: (v) => renderEnum(v, PAY_FREQUENCY.enum),
         percentage: (value) => {
             if (value === null || value === undefined) return '-';
             return `${Number(value).toFixed(1)}%`;
@@ -219,14 +178,14 @@ limitations under the License.
             return new Intl.NumberFormat('en-US').format(shares);
         },
         salaryRange: (item) => {
-            const min = Layer8MRenderers.renderMoney(item.minimum);
-            const max = Layer8MRenderers.renderMoney(item.maximum);
+            const min = renderMoney(item.minimum);
+            const max = renderMoney(item.maximum);
             if (min === '-' && max === '-') return '-';
             return `${min} - ${max}`;
         },
-        money: Layer8MRenderers.renderMoney,
-        boolean: Layer8MRenderers.renderBoolean,
-        date: Layer8MRenderers.renderDate
+        money: renderMoney,
+        boolean: renderBoolean,
+        date: renderDate
     };
 
 })();

@@ -12,76 +12,63 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Manufacturing Planning Module - Enum Definitions
+// Manufacturing Planning Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate } = Layer8DRenderers;
+
     window.MfgPlanning = window.MfgPlanning || {};
-    MfgPlanning.enums = {};
 
-    // MRP RUN STATUS
-    MfgPlanning.enums.MRP_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'Running',
-        3: 'Completed',
-        4: 'Failed',
-        5: 'Cancelled'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const MRP_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Running', 'running', 'layer8d-status-active'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Failed', 'failed', 'layer8d-status-terminated'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive']
+    ]);
+
+    const REQUIREMENT_TYPE = factory.simple([
+        'Unspecified', 'Planned Order', 'Purchase Requisition', 'Transfer Order',
+        'Reschedule In', 'Reschedule Out', 'Cancel'
+    ]);
+
+    const SCHEDULE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Published', 'published', 'layer8d-status-active'],
+        ['Locked', 'locked', 'layer8d-status-inactive'],
+        ['Archived', 'archived', 'layer8d-status-inactive']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    MfgPlanning.enums = {
+        MRP_STATUS: MRP_STATUS.enum,
+        MRP_STATUS_CLASSES: MRP_STATUS.classes,
+        REQUIREMENT_TYPE: REQUIREMENT_TYPE.enum,
+        SCHEDULE_STATUS: SCHEDULE_STATUS.enum,
+        SCHEDULE_STATUS_CLASSES: SCHEDULE_STATUS.classes
     };
 
-    MfgPlanning.enums.MRP_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated',
-        5: 'layer8d-status-inactive'
-    };
-
-    // REQUIREMENT TYPE
-    MfgPlanning.enums.REQUIREMENT_TYPE = {
-        0: 'Unspecified',
-        1: 'Planned Order',
-        2: 'Purchase Requisition',
-        3: 'Transfer Order',
-        4: 'Reschedule In',
-        5: 'Reschedule Out',
-        6: 'Cancel'
-    };
-
-    // SCHEDULE STATUS
-    MfgPlanning.enums.SCHEDULE_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Published',
-        3: 'Locked',
-        4: 'Archived'
-    };
-
-    MfgPlanning.enums.SCHEDULE_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-inactive',
-        4: 'layer8d-status-inactive'
-    };
-
+    // ============================================================================
     // RENDERERS
-    MfgPlanning.render = {};
+    // ============================================================================
 
-    MfgPlanning.render.mrpStatus = Layer8DRenderers.createStatusRenderer(
-        MfgPlanning.enums.MRP_STATUS,
-        MfgPlanning.enums.MRP_STATUS_CLASSES
-    );
-
-    MfgPlanning.render.requirementType = function(type) {
-        return MfgPlanning.enums.REQUIREMENT_TYPE[type] || 'Unknown';
+    MfgPlanning.render = {
+        mrpStatus: createStatusRenderer(MRP_STATUS.enum, MRP_STATUS.classes),
+        requirementType: (v) => renderEnum(v, REQUIREMENT_TYPE.enum),
+        scheduleStatus: createStatusRenderer(SCHEDULE_STATUS.enum, SCHEDULE_STATUS.classes),
+        date: renderDate
     };
-
-    MfgPlanning.render.scheduleStatus = Layer8DRenderers.createStatusRenderer(
-        MfgPlanning.enums.SCHEDULE_STATUS,
-        MfgPlanning.enums.SCHEDULE_STATUS_CLASSES
-    );
-
-    MfgPlanning.render.date = Layer8DRenderers.renderDate;
 
 })();

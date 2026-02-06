@@ -13,46 +13,53 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Procurement Module - Enum Definitions
+ * Mobile Procurement Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: scm/procurement/procurement-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileProcurement = window.MobileProcurement || {};
-    MobileProcurement.enums = {};
 
     // ============================================================================
-    // REQUISITION STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileProcurement.enums.REQUISITION_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Submitted', 3: 'Approved',
-        4: 'Rejected', 5: 'Fulfilled', 6: 'Cancelled'
-    };
-    MobileProcurement.enums.REQUISITION_STATUS_VALUES = {
-        'draft': 1, 'submitted': 2, 'approved': 3, 'rejected': 4, 'fulfilled': 5, 'cancelled': 6
-    };
-    MobileProcurement.enums.REQUISITION_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-active',
-        4: 'status-terminated', 5: 'status-active', 6: 'status-inactive'
-    };
+    const REQUISITION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Submitted', 'submitted', 'status-pending'],
+        ['Approved', 'approved', 'status-active'],
+        ['Rejected', 'rejected', 'status-terminated'],
+        ['Fulfilled', 'fulfilled', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-inactive']
+    ]);
+
+    const PO_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Approved', 'approved', 'status-active'],
+        ['Sent', 'sent', 'status-active'],
+        ['Partially Received', 'partial', 'status-pending'],
+        ['Received', 'received', 'status-active'],
+        ['Closed', 'closed', 'status-inactive'],
+        ['Cancelled', 'cancelled', 'status-terminated']
+    ]);
 
     // ============================================================================
-    // PO STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileProcurement.enums.PO_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Approved', 3: 'Sent',
-        4: 'Partially Received', 5: 'Received', 6: 'Closed', 7: 'Cancelled'
-    };
-    MobileProcurement.enums.PO_STATUS_VALUES = {
-        'draft': 1, 'approved': 2, 'sent': 3, 'partial': 4, 'partially': 4,
-        'received': 5, 'closed': 6, 'cancelled': 7
-    };
-    MobileProcurement.enums.PO_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active',
-        4: 'status-pending', 5: 'status-active', 6: 'status-inactive', 7: 'status-terminated'
+    MobileProcurement.enums = {
+        REQUISITION_STATUS: REQUISITION_STATUS.enum,
+        REQUISITION_STATUS_VALUES: REQUISITION_STATUS.values,
+        REQUISITION_STATUS_CLASSES: REQUISITION_STATUS.classes,
+        PO_STATUS: PO_STATUS.enum,
+        PO_STATUS_VALUES: PO_STATUS.values,
+        PO_STATUS_CLASSES: PO_STATUS.classes
     };
 
     // ============================================================================
@@ -60,16 +67,10 @@ limitations under the License.
     // ============================================================================
 
     MobileProcurement.render = {
-        requisitionStatus: Layer8MRenderers.createStatusRenderer(
-            MobileProcurement.enums.REQUISITION_STATUS,
-            MobileProcurement.enums.REQUISITION_STATUS_CLASSES
-        ),
-        poStatus: Layer8MRenderers.createStatusRenderer(
-            MobileProcurement.enums.PO_STATUS,
-            MobileProcurement.enums.PO_STATUS_CLASSES
-        ),
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        requisitionStatus: createStatusRenderer(REQUISITION_STATUS.enum, REQUISITION_STATUS.classes),
+        poStatus: createStatusRenderer(PO_STATUS.enum, PO_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

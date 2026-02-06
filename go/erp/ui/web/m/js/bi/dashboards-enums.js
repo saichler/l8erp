@@ -1,5 +1,5 @@
 /*
-(c) 2025 Sharon Aicler (saichler@gmail.com)
+© 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 You may obtain a copy of the License at:
@@ -13,116 +13,108 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile BI Dashboards Module - Enum Definitions
+ * Mobile BI Dashboards Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: bi/dashboards/dashboards-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate } = Layer8MRenderers;
+
     window.MobileBiDashboards = window.MobileBiDashboards || {};
-    MobileBiDashboards.enums = {};
 
     // ============================================================================
-    // DASHBOARD STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileBiDashboards.enums.DASHBOARD_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Published', 3: 'Archived'
-    };
-    MobileBiDashboards.enums.DASHBOARD_STATUS_VALUES = {
-        'draft': 1, 'published': 2, 'archived': 3
-    };
-    MobileBiDashboards.enums.DASHBOARD_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-inactive'
-    };
+    const DASHBOARD_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Published', 'published', 'status-active'],
+        ['Archived', 'archived', 'status-inactive']
+    ]);
+
+    const WIDGET_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Chart', 'chart', 'status-active'],
+        ['Table', 'table', 'status-active'],
+        ['KPI', 'kpi', 'status-active'],
+        ['Map', 'map', 'status-active'],
+        ['Gauge', 'gauge', 'status-active'],
+        ['Text', 'text', 'status-pending'],
+        ['Filter', 'filter', 'status-pending']
+    ]);
+
+    const CHART_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Bar', 'bar', 'status-active'],
+        ['Line', 'line', 'status-active'],
+        ['Pie', 'pie', 'status-active'],
+        ['Area', 'area', 'status-active'],
+        ['Scatter', 'scatter', 'status-active'],
+        ['Donut', 'donut', 'status-active'],
+        ['Combo', 'combo', 'status-active']
+    ]);
+
+    const KPI_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['On Target', 'ontarget', 'status-active'],
+        ['At Risk', 'atrisk', 'status-pending'],
+        ['Off Target', 'offtarget', 'status-terminated']
+    ]);
+
+    const THRESHOLD_OPERATOR = factory.create([
+        ['Unspecified', null, ''],
+        ['Greater Than', 'greaterthan', 'status-active'],
+        ['Less Than', 'lessthan', 'status-active'],
+        ['Equal', 'equal', 'status-active'],
+        ['Greater or Equal', 'greaterorequal', 'status-active'],
+        ['Less or Equal', 'lessorequal', 'status-active'],
+        ['Between', 'between', 'status-active']
+    ]);
+
+    const TREND_DIRECTION = factory.create([
+        ['Unspecified', null, ''],
+        ['Up', 'up', 'status-active'],
+        ['Down', 'down', 'status-terminated'],
+        ['Flat', 'flat', 'status-pending']
+    ]);
+
+    const ACCESS_LEVEL = factory.create([
+        ['Unspecified', null, ''],
+        ['View', 'view', 'status-inactive'],
+        ['Execute', 'execute', 'status-pending'],
+        ['Edit', 'edit', 'status-active'],
+        ['Admin', 'admin', 'status-active']
+    ]);
 
     // ============================================================================
-    // WIDGET TYPE
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileBiDashboards.enums.WIDGET_TYPE = {
-        0: 'Unspecified', 1: 'Chart', 2: 'Table', 3: 'KPI', 4: 'Map', 5: 'Gauge', 6: 'Text', 7: 'Filter'
-    };
-    MobileBiDashboards.enums.WIDGET_TYPE_VALUES = {
-        'chart': 1, 'table': 2, 'kpi': 3, 'map': 4, 'gauge': 5, 'text': 6, 'filter': 7
-    };
-    MobileBiDashboards.enums.WIDGET_TYPE_CLASSES = {
-        1: 'status-active', 2: 'status-active', 3: 'status-active', 4: 'status-active',
-        5: 'status-active', 6: 'status-pending', 7: 'status-pending'
-    };
-
-    // ============================================================================
-    // CHART TYPE
-    // ============================================================================
-
-    MobileBiDashboards.enums.CHART_TYPE = {
-        0: 'Unspecified', 1: 'Bar', 2: 'Line', 3: 'Pie', 4: 'Area', 5: 'Scatter', 6: 'Donut', 7: 'Combo'
-    };
-    MobileBiDashboards.enums.CHART_TYPE_VALUES = {
-        'bar': 1, 'line': 2, 'pie': 3, 'area': 4, 'scatter': 5, 'donut': 6, 'combo': 7
-    };
-    MobileBiDashboards.enums.CHART_TYPE_CLASSES = {
-        1: 'status-active', 2: 'status-active', 3: 'status-active', 4: 'status-active',
-        5: 'status-active', 6: 'status-active', 7: 'status-active'
-    };
-
-    // ============================================================================
-    // KPI STATUS
-    // ============================================================================
-
-    MobileBiDashboards.enums.KPI_STATUS = {
-        0: 'Unspecified', 1: 'On Target', 2: 'At Risk', 3: 'Off Target'
-    };
-    MobileBiDashboards.enums.KPI_STATUS_VALUES = {
-        'on target': 1, 'at risk': 2, 'off target': 3
-    };
-    MobileBiDashboards.enums.KPI_STATUS_CLASSES = {
-        1: 'status-active', 2: 'status-pending', 3: 'status-terminated'
-    };
-
-    // ============================================================================
-    // THRESHOLD OPERATOR
-    // ============================================================================
-
-    MobileBiDashboards.enums.THRESHOLD_OPERATOR = {
-        0: 'Unspecified', 1: 'Greater Than', 2: 'Less Than', 3: 'Equal',
-        4: 'Greater or Equal', 5: 'Less or Equal', 6: 'Between'
-    };
-    MobileBiDashboards.enums.THRESHOLD_OPERATOR_VALUES = {
-        'greater than': 1, 'less than': 2, 'equal': 3,
-        'greater or equal': 4, 'less or equal': 5, 'between': 6
-    };
-    MobileBiDashboards.enums.THRESHOLD_OPERATOR_CLASSES = {
-        1: 'status-active', 2: 'status-active', 3: 'status-active',
-        4: 'status-active', 5: 'status-active', 6: 'status-active'
-    };
-
-    // ============================================================================
-    // TREND DIRECTION
-    // ============================================================================
-
-    MobileBiDashboards.enums.TREND_DIRECTION = {
-        0: 'Unspecified', 1: 'Up', 2: 'Down', 3: 'Flat'
-    };
-    MobileBiDashboards.enums.TREND_DIRECTION_VALUES = {
-        'up': 1, 'down': 2, 'flat': 3
-    };
-    MobileBiDashboards.enums.TREND_DIRECTION_CLASSES = {
-        1: 'status-active', 2: 'status-terminated', 3: 'status-pending'
-    };
-
-    // ============================================================================
-    // ACCESS LEVEL
-    // ============================================================================
-
-    MobileBiDashboards.enums.ACCESS_LEVEL = {
-        0: 'Unspecified', 1: 'View', 2: 'Execute', 3: 'Edit', 4: 'Admin'
-    };
-    MobileBiDashboards.enums.ACCESS_LEVEL_VALUES = {
-        'view': 1, 'execute': 2, 'edit': 3, 'admin': 4
-    };
-    MobileBiDashboards.enums.ACCESS_LEVEL_CLASSES = {
-        1: 'status-inactive', 2: 'status-pending', 3: 'status-active', 4: 'status-active'
+    MobileBiDashboards.enums = {
+        DASHBOARD_STATUS: DASHBOARD_STATUS.enum,
+        DASHBOARD_STATUS_VALUES: DASHBOARD_STATUS.values,
+        DASHBOARD_STATUS_CLASSES: DASHBOARD_STATUS.classes,
+        WIDGET_TYPE: WIDGET_TYPE.enum,
+        WIDGET_TYPE_VALUES: WIDGET_TYPE.values,
+        WIDGET_TYPE_CLASSES: WIDGET_TYPE.classes,
+        CHART_TYPE: CHART_TYPE.enum,
+        CHART_TYPE_VALUES: CHART_TYPE.values,
+        CHART_TYPE_CLASSES: CHART_TYPE.classes,
+        KPI_STATUS: KPI_STATUS.enum,
+        KPI_STATUS_VALUES: KPI_STATUS.values,
+        KPI_STATUS_CLASSES: KPI_STATUS.classes,
+        THRESHOLD_OPERATOR: THRESHOLD_OPERATOR.enum,
+        THRESHOLD_OPERATOR_VALUES: THRESHOLD_OPERATOR.values,
+        THRESHOLD_OPERATOR_CLASSES: THRESHOLD_OPERATOR.classes,
+        TREND_DIRECTION: TREND_DIRECTION.enum,
+        TREND_DIRECTION_VALUES: TREND_DIRECTION.values,
+        TREND_DIRECTION_CLASSES: TREND_DIRECTION.classes,
+        ACCESS_LEVEL: ACCESS_LEVEL.enum,
+        ACCESS_LEVEL_VALUES: ACCESS_LEVEL.values,
+        ACCESS_LEVEL_CLASSES: ACCESS_LEVEL.classes
     };
 
     // ============================================================================
@@ -130,35 +122,14 @@ limitations under the License.
     // ============================================================================
 
     MobileBiDashboards.render = {
-        dashboardStatus: Layer8MRenderers.createStatusRenderer(
-            MobileBiDashboards.enums.DASHBOARD_STATUS,
-            MobileBiDashboards.enums.DASHBOARD_STATUS_CLASSES
-        ),
-        widgetType: Layer8MRenderers.createStatusRenderer(
-            MobileBiDashboards.enums.WIDGET_TYPE,
-            MobileBiDashboards.enums.WIDGET_TYPE_CLASSES
-        ),
-        chartType: Layer8MRenderers.createStatusRenderer(
-            MobileBiDashboards.enums.CHART_TYPE,
-            MobileBiDashboards.enums.CHART_TYPE_CLASSES
-        ),
-        kpiStatus: Layer8MRenderers.createStatusRenderer(
-            MobileBiDashboards.enums.KPI_STATUS,
-            MobileBiDashboards.enums.KPI_STATUS_CLASSES
-        ),
-        thresholdOperator: Layer8MRenderers.createStatusRenderer(
-            MobileBiDashboards.enums.THRESHOLD_OPERATOR,
-            MobileBiDashboards.enums.THRESHOLD_OPERATOR_CLASSES
-        ),
-        trendDirection: Layer8MRenderers.createStatusRenderer(
-            MobileBiDashboards.enums.TREND_DIRECTION,
-            MobileBiDashboards.enums.TREND_DIRECTION_CLASSES
-        ),
-        accessLevel: Layer8MRenderers.createStatusRenderer(
-            MobileBiDashboards.enums.ACCESS_LEVEL,
-            MobileBiDashboards.enums.ACCESS_LEVEL_CLASSES
-        ),
-        date: Layer8MRenderers.renderDate
+        dashboardStatus: createStatusRenderer(DASHBOARD_STATUS.enum, DASHBOARD_STATUS.classes),
+        widgetType: createStatusRenderer(WIDGET_TYPE.enum, WIDGET_TYPE.classes),
+        chartType: createStatusRenderer(CHART_TYPE.enum, CHART_TYPE.classes),
+        kpiStatus: createStatusRenderer(KPI_STATUS.enum, KPI_STATUS.classes),
+        thresholdOperator: createStatusRenderer(THRESHOLD_OPERATOR.enum, THRESHOLD_OPERATOR.classes),
+        trendDirection: createStatusRenderer(TREND_DIRECTION.enum, TREND_DIRECTION.classes),
+        accessLevel: createStatusRenderer(ACCESS_LEVEL.enum, ACCESS_LEVEL.classes),
+        date: renderDate
     };
 
 })();

@@ -14,235 +14,90 @@ limitations under the License.
 */
 /**
  * ERP Reference Registry - SCM Models
- * Registers Procurement, Inventory, Warehouse, Logistics, Demand/Supply Planning models.
+ * Uses Layer8RefFactory for reduced boilerplate
  */
+const refScm = window.Layer8RefFactory;
+
 window.Layer8DReferenceRegistrySCM = {
     // ========================================
     // SCM - Procurement Models
     // ========================================
-    ScmPurchaseOrder: {
-        idColumn: 'purchaseOrderId',
-        displayColumn: 'orderNumber',
-        selectColumns: ['purchaseOrderId', 'orderNumber'],
-        displayLabel: 'Purchase Order'
-    },
-    ScmPurchaseOrderLine: {
-        idColumn: 'lineId',
-        displayColumn: 'lineId'
-    },
-    ScmPurchaseRequisition: {
-        idColumn: 'requisitionId',
-        displayColumn: 'requisitionNumber',
-        selectColumns: ['requisitionId', 'requisitionNumber'],
-        displayLabel: 'Requisition'
-    },
-    ScmRequisitionLine: {
-        idColumn: 'lineId',
-        displayColumn: 'lineId'
-    },
-    ScmSupplierContract: {
-        idColumn: 'contractId',
-        displayColumn: 'contractNumber',
-        selectColumns: ['contractId', 'contractNumber'],
-        displayLabel: 'Contract'
-    },
-    ScmContractTerm: {
-        idColumn: 'termId',
-        displayColumn: 'termId'
-    },
-    ScmRequestForQuote: {
-        idColumn: 'rfqId',
-        displayColumn: 'rfqNumber',
-        selectColumns: ['rfqId', 'rfqNumber'],
-        displayLabel: 'RFQ'
-    },
+    ...refScm.simple('ScmPurchaseOrder', 'purchaseOrderId', 'orderNumber', 'Purchase Order'),
+    ...refScm.idOnly('ScmPurchaseOrderLine', 'lineId'),
+    ...refScm.simple('ScmPurchaseRequisition', 'requisitionId', 'requisitionNumber', 'Requisition'),
+    ...refScm.idOnly('ScmRequisitionLine', 'lineId'),
+    ...refScm.simple('ScmSupplierContract', 'contractId', 'contractNumber', 'Contract'),
+    ...refScm.idOnly('ScmContractTerm', 'termId'),
+    ...refScm.simple('ScmRequestForQuote', 'rfqId', 'rfqNumber', 'RFQ'),
 
     // ========================================
     // SCM - Inventory Models
     // ========================================
-    ScmItem: {
-        idColumn: 'itemId',
-        displayColumn: 'name',
-        selectColumns: ['itemId', 'itemNumber', 'name'],
-        displayFormat: function(item) {
-            return item.itemNumber + ' - ' + item.name;
-        },
-        displayLabel: 'Item'
-    },
-    ScmItemCategory: {
-        idColumn: 'categoryId',
-        displayColumn: 'name'
-    },
-    ScmInventoryLocation: {
-        idColumn: 'locationId',
-        displayColumn: 'name'
-    },
-    ScmStockLevel: {
-        idColumn: 'stockLevelId',
-        displayColumn: 'stockLevelId'
-    },
-    ScmStockMovement: {
-        idColumn: 'movementId',
-        displayColumn: 'movementId'
-    },
-    ScmInventoryCount: {
-        idColumn: 'countId',
-        displayColumn: 'countId'
-    },
-    ScmLotSerial: {
-        idColumn: 'lotSerialId',
-        displayColumn: 'lotNumber'
-    },
-    ScmItemPricing: {
-        idColumn: 'pricingId',
-        displayColumn: 'pricingId'
-    },
+    ...refScm.coded('ScmItem', 'itemId', 'itemNumber', 'name'),
+    ...refScm.batch([
+        ['ScmItemCategory', 'categoryId', 'name'],
+        ['ScmInventoryLocation', 'locationId', 'name']
+    ]),
+    ...refScm.batchIdOnly([
+        ['ScmStockLevel', 'stockLevelId'],
+        ['ScmStockMovement', 'movementId'],
+        ['ScmInventoryCount', 'countId'],
+        ['ScmItemPricing', 'pricingId']
+    ]),
+    ...refScm.simple('ScmLotSerial', 'lotSerialId', 'lotNumber'),
 
     // ========================================
     // SCM - Warehouse Management Models
     // ========================================
-    ScmWarehouse: {
-        idColumn: 'warehouseId',
-        displayColumn: 'name',
-        selectColumns: ['warehouseId', 'code', 'name'],
-        displayFormat: function(item) {
-            return item.code + ' - ' + item.name;
-        },
-        displayLabel: 'Warehouse'
-    },
-    ScmZone: {
-        idColumn: 'zoneId',
-        displayColumn: 'name'
-    },
-    ScmBin: {
-        idColumn: 'binId',
-        displayColumn: 'binCode'
-    },
-    ScmReceivingOrder: {
-        idColumn: 'receivingOrderId',
-        displayColumn: 'orderNumber'
-    },
-    ScmReceivingLine: {
-        idColumn: 'lineId',
-        displayColumn: 'lineId'
-    },
-    ScmPickOrder: {
-        idColumn: 'pickOrderId',
-        displayColumn: 'orderNumber'
-    },
-    ScmPickLine: {
-        idColumn: 'lineId',
-        displayColumn: 'lineId'
-    },
-    ScmPackOrder: {
-        idColumn: 'packOrderId',
-        displayColumn: 'orderNumber'
-    },
-    ScmPackLine: {
-        idColumn: 'lineId',
-        displayColumn: 'lineId'
-    },
+    ...refScm.coded('ScmWarehouse', 'warehouseId', 'code', 'name'),
+    ...refScm.simple('ScmZone', 'zoneId', 'name'),
+    ...refScm.simple('ScmBin', 'binId', 'binCode'),
+    ...refScm.idOnly('ScmReceivingOrder', 'receivingOrderId'),
+    ...refScm.idOnly('ScmPickTask', 'taskId'),
+    ...refScm.idOnly('ScmPackTask', 'taskId'),
 
     // ========================================
     // SCM - Logistics & Transportation Models
     // ========================================
-    ScmShipmentCarrier: {
-        idColumn: 'carrierId',
-        displayColumn: 'name',
-        selectColumns: ['carrierId', 'code', 'name'],
-        displayFormat: function(item) {
-            return item.code + ' - ' + item.name;
-        },
-        displayLabel: 'Carrier'
-    },
-    ScmShipment: {
-        idColumn: 'shipmentId',
-        displayColumn: 'shipmentNumber',
-        selectColumns: ['shipmentId', 'shipmentNumber'],
-        displayLabel: 'Shipment'
-    },
-    ScmShipmentLine: {
-        idColumn: 'lineId',
-        displayColumn: 'lineId'
-    },
-    ScmFreightRate: {
-        idColumn: 'rateId',
-        displayColumn: 'rateId'
-    },
-    ScmDeliveryRoute: {
-        idColumn: 'routeId',
-        displayColumn: 'name'
-    },
-    ScmRouteStop: {
-        idColumn: 'stopId',
-        displayColumn: 'stopId'
-    },
-    ScmReturnOrder: {
-        idColumn: 'returnOrderId',
-        displayColumn: 'orderNumber'
-    },
-    ScmReturnLine: {
-        idColumn: 'lineId',
-        displayColumn: 'lineId'
-    },
+    ...refScm.coded('ScmShipmentCarrier', 'carrierId', 'code', 'name'),
+    ...refScm.simple('ScmShipment', 'shipmentId', 'shipmentNumber', 'Shipment'),
+    ...refScm.idOnly('ScmShipmentLine', 'lineId'),
+    ...refScm.idOnly('ScmFreightRate', 'rateId'),
+    ...refScm.simple('ScmDeliveryRoute', 'routeId', 'name'),
+    ...refScm.idOnly('ScmRouteStop', 'stopId'),
+    ...refScm.simple('ScmReturnAuthorization', 'rmaId', 'rmaNumber', 'RMA'),
 
     // ========================================
     // SCM - Demand Planning Models
     // ========================================
-    ScmDemandForecast: {
-        idColumn: 'forecastId',
-        displayColumn: 'forecastId',
-        selectColumns: ['forecastId', 'itemId'],
-        displayLabel: 'Forecast'
-    },
-    ScmForecastItem: {
-        idColumn: 'forecastItemId',
-        displayColumn: 'forecastItemId'
-    },
-    ScmDemandHistory: {
-        idColumn: 'historyId',
-        displayColumn: 'historyId'
-    },
-    ScmSeasonalProfile: {
-        idColumn: 'profileId',
-        displayColumn: 'name'
-    },
-    ScmPromotionImpact: {
-        idColumn: 'impactId',
-        displayColumn: 'impactId'
-    },
-    ScmConsensusAdjustment: {
-        idColumn: 'adjustmentId',
-        displayColumn: 'adjustmentId'
-    },
+    ...refScm.simple('ScmDemandForecast', 'forecastId', 'forecastId', 'Forecast'),
+    ...refScm.batchIdOnly([
+        ['ScmForecastItem', 'forecastItemId'],
+        ['ScmDemandHistory', 'historyId'],
+        ['ScmPromotionImpact', 'impactId'],
+        ['ScmConsensusAdjustment', 'adjustmentId']
+    ]),
+    ...refScm.simple('ScmSeasonalProfile', 'profileId', 'name'),
 
     // ========================================
     // SCM - Supply Planning Models
     // ========================================
-    ScmSupplyPlan: {
-        idColumn: 'planId',
-        displayColumn: 'name',
-        selectColumns: ['planId', 'name'],
-        displayLabel: 'Supply Plan'
-    },
-    ScmPlannedOrder: {
-        idColumn: 'plannedOrderId',
-        displayColumn: 'orderNumber'
-    },
-    ScmMRPRun: {
-        idColumn: 'mrpRunId',
-        displayColumn: 'mrpRunId'
-    },
-    ScmMRPException: {
-        idColumn: 'exceptionId',
-        displayColumn: 'exceptionId'
-    },
-    ScmSafetyStock: {
-        idColumn: 'safetyStockId',
-        displayColumn: 'safetyStockId'
-    },
-    ScmReorderRule: {
-        idColumn: 'ruleId',
-        displayColumn: 'ruleName'
-    }
+    ...refScm.simple('ScmSupplyPlan', 'planId', 'name', 'Supply Plan'),
+    ...refScm.batchIdOnly([
+        ['ScmMRPRun', 'mrpRunId'],
+        ['ScmMRPException', 'exceptionId'],
+        ['ScmSafetyStock', 'safetyStockId']
+    ]),
+    ...refScm.simple('ScmReorderRule', 'ruleId', 'ruleName'),
+
+    // ========================================
+    // SCM - Additional Inventory Models
+    // ========================================
+    ...refScm.simple('ScmLotNumber', 'lotId', 'lotNumber'),
+    ...refScm.simple('ScmCarrier', 'carrierId', 'name', 'Carrier'),
+
+    // ========================================
+    // SCM - Additional Warehouse Models
+    // ========================================
+    ...refScm.idOnly('ScmWavePlan', 'wavePlanId')
 };

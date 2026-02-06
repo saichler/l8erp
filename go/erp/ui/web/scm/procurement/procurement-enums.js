@@ -12,82 +12,64 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Procurement Module - Enum Definitions
-// All enum constants and value mappings for Procurement models
+// Procurement Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Create Procurement namespace
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8DRenderers;
+
     window.Procurement = window.Procurement || {};
-    Procurement.enums = {};
 
     // ============================================================================
-    // REQUISITION STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    Procurement.enums.REQUISITION_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Submitted',
-        3: 'Approved',
-        4: 'Rejected',
-        5: 'Fulfilled',
-        6: 'Cancelled'
-    };
+    const REQUISITION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Submitted', 'submitted', 'layer8d-status-pending'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['Rejected', 'rejected', 'layer8d-status-terminated'],
+        ['Fulfilled', 'fulfilled', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive']
+    ]);
 
-    Procurement.enums.REQUISITION_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-inactive'
-    };
+    const PO_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Approved', 'approved', 'layer8d-status-active'],
+        ['Sent', 'sent', 'layer8d-status-active'],
+        ['Partially Received', 'partial', 'layer8d-status-pending'],
+        ['Received', 'received', 'layer8d-status-active'],
+        ['Closed', 'closed', 'layer8d-status-inactive'],
+        ['Cancelled', 'cancelled', 'layer8d-status-terminated']
+    ]);
 
     // ============================================================================
-    // PO STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    Procurement.enums.PO_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Approved',
-        3: 'Sent',
-        4: 'Partially Received',
-        5: 'Received',
-        6: 'Closed',
-        7: 'Cancelled'
-    };
-
-    Procurement.enums.PO_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-pending',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-inactive',
-        7: 'layer8d-status-terminated'
+    window.Procurement.enums = {
+        REQUISITION_STATUS: REQUISITION_STATUS.enum,
+        REQUISITION_STATUS_CLASSES: REQUISITION_STATUS.classes,
+        PO_STATUS: PO_STATUS.enum,
+        PO_STATUS_CLASSES: PO_STATUS.classes
     };
 
     // ============================================================================
     // RENDERERS
     // ============================================================================
 
-    // Create render functions using shared utilities
-    Procurement.render = {};
+    const renderRequisitionStatus = createStatusRenderer(REQUISITION_STATUS.enum, REQUISITION_STATUS.classes);
+    const renderPoStatus = createStatusRenderer(PO_STATUS.enum, PO_STATUS.classes);
 
-    Procurement.render.requisitionStatus = Layer8DRenderers.createStatusRenderer(
-        Procurement.enums.REQUISITION_STATUS,
-        Procurement.enums.REQUISITION_STATUS_CLASSES
-    );
-
-    Procurement.render.poStatus = Layer8DRenderers.createStatusRenderer(
-        Procurement.enums.PO_STATUS,
-        Procurement.enums.PO_STATUS_CLASSES
-    );
-
-    Procurement.render.date = Layer8DRenderers.renderDate;
-    Procurement.render.money = Layer8DRenderers.renderMoney;
+    window.Procurement.render = {
+        requisitionStatus: renderRequisitionStatus,
+        poStatus: renderPoStatus,
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

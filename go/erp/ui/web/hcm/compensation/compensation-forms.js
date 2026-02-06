@@ -2,422 +2,261 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // Compensation Management Module - Form Definitions
-// Part 3 of 4 - Load after compensation-columns.js
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
-    // Get enums from compensation-enums.js
+    const f = window.Layer8FormFactory;
     const enums = window.Compensation.enums;
 
-    // ============================================================================
-    // FORM FIELD DEFINITIONS
-    // ============================================================================
+    window.Compensation.forms = {
+        SalaryGrade: f.form('Salary Grade', [
+            f.section('Basic Information', [
+                ...f.reference('organizationId', 'Organization', 'Organization'),
+                ...f.reference('salaryStructureId', 'Salary Structure', 'SalaryStructure'),
+                ...f.text('gradeCode', 'Grade Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.number('level', 'Level', true)
+            ]),
+            f.section('Salary Range', [
+                ...f.money('minimum.amount', 'Minimum', true),
+                ...f.money('midpoint.amount', 'Midpoint', true),
+                ...f.money('maximum.amount', 'Maximum', true),
+                ...f.number('spreadPercentage', 'Spread'),
+                ...f.text('currencyCode', 'Currency'),
+                ...f.select('payFrequency', 'Pay Frequency', enums.PAY_FREQUENCY)
+            ]),
+            f.section('Dates', [
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.date('endDate', 'End Date'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-    const COMPENSATION_FORMS = {
-        SalaryGrade: {
-            title: 'Salary Grade',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
-                        { key: 'salaryStructureId', label: 'Salary Structure', type: 'reference', lookupModel: 'SalaryStructure' },
-                        { key: 'gradeCode', label: 'Grade Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'level', label: 'Level', type: 'number', required: true }
-                    ]
-                },
-                {
-                    title: 'Salary Range',
-                    fields: [
-                        { key: 'minimum.amount', label: 'Minimum', type: 'currency', required: true },
-                        { key: 'midpoint.amount', label: 'Midpoint', type: 'currency', required: true },
-                        { key: 'maximum.amount', label: 'Maximum', type: 'currency', required: true },
-                        { key: 'spreadPercentage', label: 'Spread', type: 'percentage' },
-                        { key: 'currencyCode', label: 'Currency', type: 'text' },
-                        { key: 'payFrequency', label: 'Pay Frequency', type: 'select', options: enums.PAY_FREQUENCY }
-                    ]
-                },
-                {
-                    title: 'Dates',
-                    fields: [
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        SalaryStructure: f.form('Salary Structure', [
+            f.section('Basic Information', [
+                ...f.reference('organizationId', 'Organization', 'Organization'),
+                ...f.text('code', 'Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description')
+            ]),
+            f.section('Settings', [
+                ...f.text('currencyCode', 'Currency', true),
+                ...f.select('payFrequency', 'Pay Frequency', enums.PAY_FREQUENCY, true)
+            ]),
+            f.section('Dates', [
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.date('endDate', 'End Date'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        SalaryStructure: {
-            title: 'Salary Structure',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Settings',
-                    fields: [
-                        { key: 'currencyCode', label: 'Currency', type: 'text', required: true },
-                        { key: 'payFrequency', label: 'Pay Frequency', type: 'select', options: enums.PAY_FREQUENCY, required: true }
-                    ]
-                },
-                {
-                    title: 'Dates',
-                    fields: [
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        EmployeeCompensation: f.form('Employee Compensation', [
+            f.section('Employee', [
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
+                ...f.select('compensationType', 'Compensation Type', enums.COMPENSATION_TYPE, true),
+                ...f.reference('salaryGradeId', 'Salary Grade', 'SalaryGrade')
+            ]),
+            f.section('Compensation', [
+                ...f.money('baseSalary.amount', 'Base Salary', true),
+                ...f.money('hourlyRate.amount', 'Hourly Rate'),
+                ...f.select('payFrequency', 'Pay Frequency', enums.PAY_FREQUENCY, true),
+                ...f.text('currencyCode', 'Currency'),
+                ...f.number('compaRatio', 'Compa Ratio'),
+                ...f.number('fte', 'FTE')
+            ]),
+            f.section('Effective Dates', [
+                ...f.date('effectiveDate', 'Effective Date', true),
+                ...f.date('endDate', 'End Date'),
+                ...f.text('changeReason', 'Change Reason')
+            ])
+        ]),
 
-        EmployeeCompensation: {
-            title: 'Employee Compensation',
-            sections: [
-                {
-                    title: 'Employee',
-                    fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'compensationType', label: 'Compensation Type', type: 'select', options: enums.COMPENSATION_TYPE, required: true },
-                        { key: 'salaryGradeId', label: 'Salary Grade', type: 'reference', lookupModel: 'SalaryGrade' }
-                    ]
-                },
-                {
-                    title: 'Compensation',
-                    fields: [
-                        { key: 'baseSalary.amount', label: 'Base Salary', type: 'currency', required: true },
-                        { key: 'hourlyRate.amount', label: 'Hourly Rate', type: 'currency' },
-                        { key: 'payFrequency', label: 'Pay Frequency', type: 'select', options: enums.PAY_FREQUENCY, required: true },
-                        { key: 'currencyCode', label: 'Currency', type: 'text' },
-                        { key: 'compaRatio', label: 'Compa Ratio', type: 'percentage' },
-                        { key: 'fte', label: 'FTE', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Effective Dates',
-                    fields: [
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date', required: true },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'changeReason', label: 'Change Reason', type: 'text' }
-                    ]
-                }
-            ]
-        },
+        MeritIncrease: f.form('Merit Increase', [
+            f.section('Basic Information', [
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
+                ...f.reference('meritCycleId', 'Merit Cycle', 'MeritCycle', true),
+                ...f.reference('reviewId', 'Performance Review', 'PerformanceReview'),
+                ...f.select('status', 'Status', enums.MERIT_INCREASE_STATUS, true)
+            ]),
+            f.section('Salary', [
+                ...f.money('currentSalary.amount', 'Current Salary'),
+                ...f.money('proposedIncrease.amount', 'Proposed Increase'),
+                ...f.number('proposedPercentage', 'Proposed'),
+                ...f.money('newSalary.amount', 'New Salary')
+            ]),
+            f.section('Performance', [
+                ...f.number('performanceRating', 'Performance Rating'),
+                ...f.number('compaRatioBefore', 'Compa Ratio Before'),
+                ...f.number('compaRatioAfter', 'Compa Ratio After')
+            ]),
+            f.section('Effective Date', [
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        MeritIncrease: {
-            title: 'Merit Increase',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'meritCycleId', label: 'Merit Cycle', type: 'reference', lookupModel: 'MeritCycle', required: true },
-                        { key: 'reviewId', label: 'Performance Review', type: 'reference', lookupModel: 'PerformanceReview' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.MERIT_INCREASE_STATUS, required: true }
-                    ]
-                },
-                {
-                    title: 'Salary',
-                    fields: [
-                        { key: 'currentSalary.amount', label: 'Current Salary', type: 'currency' },
-                        { key: 'proposedIncrease.amount', label: 'Proposed Increase', type: 'currency' },
-                        { key: 'proposedPercentage', label: 'Proposed', type: 'percentage' },
-                        { key: 'newSalary.amount', label: 'New Salary', type: 'currency' }
-                    ]
-                },
-                {
-                    title: 'Performance',
-                    fields: [
-                        { key: 'performanceRating', label: 'Performance Rating', type: 'rating', min: 1, max: 5 },
-                        { key: 'compaRatioBefore', label: 'Compa Ratio Before', type: 'percentage' },
-                        { key: 'compaRatioAfter', label: 'Compa Ratio After', type: 'percentage' }
-                    ]
-                },
-                {
-                    title: 'Effective Date',
-                    fields: [
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        MeritCycle: f.form('Merit Cycle', [
+            f.section('Basic Information', [
+                ...f.reference('organizationId', 'Organization', 'Organization'),
+                ...f.text('name', 'Name', true),
+                ...f.number('year', 'Year', true),
+                ...f.select('status', 'Status', enums.MERIT_CYCLE_STATUS, true)
+            ]),
+            f.section('Dates', [
+                ...f.date('planningStartDate', 'Planning Start'),
+                ...f.date('planningEndDate', 'Planning End'),
+                ...f.date('effectiveDate', 'Effective Date')
+            ]),
+            f.section('Budget', [
+                ...f.money('totalBudget.amount', 'Total Budget'),
+                ...f.number('budgetPercentage', 'Budget'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        MeritCycle: {
-            title: 'Merit Cycle',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'year', label: 'Year', type: 'number', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.MERIT_CYCLE_STATUS, required: true }
-                    ]
-                },
-                {
-                    title: 'Dates',
-                    fields: [
-                        { key: 'planningStartDate', label: 'Planning Start', type: 'date' },
-                        { key: 'planningEndDate', label: 'Planning End', type: 'date' },
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Budget',
-                    fields: [
-                        { key: 'totalBudget.amount', label: 'Total Budget', type: 'currency' },
-                        { key: 'budgetPercentage', label: 'Budget', type: 'percentage' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        BonusPlan: f.form('Bonus Plan', [
+            f.section('Basic Information', [
+                ...f.reference('organizationId', 'Organization', 'Organization'),
+                ...f.text('code', 'Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('planType', 'Plan Type', enums.BONUS_PLAN_TYPE, true),
+                ...f.number('planYear', 'Plan Year', true),
+                ...f.select('frequency', 'Frequency', enums.BONUS_FREQUENCY)
+            ]),
+            f.section('Target', [
+                ...f.number('targetPercentage', 'Target'),
+                ...f.number('maximumPercentage', 'Maximum'),
+                ...f.money('targetAmount.amount', 'Target Amount'),
+                ...f.money('maximumAmount.amount', 'Maximum Amount')
+            ]),
+            f.section('Funding', [
+                ...f.select('fundingType', 'Funding Type', enums.BONUS_FUNDING_TYPE),
+                ...f.number('fundingPoolPercentage', 'Funding Pool')
+            ]),
+            f.section('Dates', [
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.date('endDate', 'End Date'),
+                ...f.date('payoutDate', 'Payout Date'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        BonusPlan: {
-            title: 'Bonus Plan',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'planType', label: 'Plan Type', type: 'select', options: enums.BONUS_PLAN_TYPE, required: true },
-                        { key: 'planYear', label: 'Plan Year', type: 'number', required: true },
-                        { key: 'frequency', label: 'Frequency', type: 'select', options: enums.BONUS_FREQUENCY }
-                    ]
-                },
-                {
-                    title: 'Target',
-                    fields: [
-                        { key: 'targetPercentage', label: 'Target', type: 'percentage' },
-                        { key: 'maximumPercentage', label: 'Maximum', type: 'percentage' },
-                        { key: 'targetAmount.amount', label: 'Target Amount', type: 'currency' },
-                        { key: 'maximumAmount.amount', label: 'Maximum Amount', type: 'currency' }
-                    ]
-                },
-                {
-                    title: 'Funding',
-                    fields: [
-                        { key: 'fundingType', label: 'Funding Type', type: 'select', options: enums.BONUS_FUNDING_TYPE },
-                        { key: 'fundingPoolPercentage', label: 'Funding Pool', type: 'percentage' }
-                    ]
-                },
-                {
-                    title: 'Dates',
-                    fields: [
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'payoutDate', label: 'Payout Date', type: 'date' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        BonusPayment: f.form('Bonus Payment', [
+            f.section('Payment Details', [
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
+                ...f.reference('bonusPlanId', 'Bonus Plan', 'BonusPlan'),
+                ...f.select('bonusType', 'Bonus Type', enums.BONUS_PLAN_TYPE, true),
+                ...f.text('reason', 'Reason'),
+                ...f.select('status', 'Status', enums.BONUS_PAYMENT_STATUS, true)
+            ]),
+            f.section('Amount', [
+                ...f.money('targetAmount.amount', 'Target Amount'),
+                ...f.money('actualAmount.amount', 'Actual Amount', true),
+                ...f.number('payoutPercentage', 'Payout')
+            ]),
+            f.section('Performance Factors', [
+                ...f.number('individualPerformanceFactor', 'Individual Factor'),
+                ...f.number('teamPerformanceFactor', 'Team Factor'),
+                ...f.number('companyPerformanceFactor', 'Company Factor')
+            ]),
+            f.section('Dates', [
+                ...f.date('awardDate', 'Award Date'),
+                ...f.date('paymentDate', 'Payment Date'),
+                ...f.checkbox('isTaxable', 'Taxable'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        BonusPayment: {
-            title: 'Bonus Payment',
-            sections: [
-                {
-                    title: 'Payment Details',
-                    fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'bonusPlanId', label: 'Bonus Plan', type: 'reference', lookupModel: 'BonusPlan' },
-                        { key: 'bonusType', label: 'Bonus Type', type: 'select', options: enums.BONUS_PLAN_TYPE, required: true },
-                        { key: 'reason', label: 'Reason', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.BONUS_PAYMENT_STATUS, required: true }
-                    ]
-                },
-                {
-                    title: 'Amount',
-                    fields: [
-                        { key: 'targetAmount.amount', label: 'Target Amount', type: 'currency' },
-                        { key: 'actualAmount.amount', label: 'Actual Amount', type: 'currency', required: true },
-                        { key: 'payoutPercentage', label: 'Payout', type: 'percentage' }
-                    ]
-                },
-                {
-                    title: 'Performance Factors',
-                    fields: [
-                        { key: 'individualPerformanceFactor', label: 'Individual Factor', type: 'number' },
-                        { key: 'teamPerformanceFactor', label: 'Team Factor', type: 'number' },
-                        { key: 'companyPerformanceFactor', label: 'Company Factor', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Dates',
-                    fields: [
-                        { key: 'awardDate', label: 'Award Date', type: 'date' },
-                        { key: 'paymentDate', label: 'Payment Date', type: 'date' },
-                        { key: 'isTaxable', label: 'Taxable', type: 'checkbox' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        EquityGrant: f.form('Equity Grant', [
+            f.section('Grant Details', [
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
+                ...f.select('grantType', 'Grant Type', enums.EQUITY_GRANT_TYPE, true),
+                ...f.text('grantNumber', 'Grant Number'),
+                ...f.select('status', 'Status', enums.EQUITY_GRANT_STATUS, true)
+            ]),
+            f.section('Shares & Value', [
+                ...f.number('sharesGranted', 'Shares Granted', true),
+                ...f.money('grantPrice.amount', 'Grant Price'),
+                ...f.money('fairMarketValue.amount', 'Fair Market Value'),
+                ...f.money('totalValue.amount', 'Total Value')
+            ]),
+            f.section('Vesting', [
+                ...f.number('sharesVested', 'Shares Vested'),
+                ...f.number('sharesUnvested', 'Shares Unvested'),
+                ...f.number('sharesExercised', 'Shares Exercised'),
+                ...f.number('sharesForfeited', 'Shares Forfeited')
+            ]),
+            f.section('Dates', [
+                ...f.date('grantDate', 'Grant Date', true),
+                ...f.date('vestStartDate', 'Vest Start Date'),
+                ...f.date('expirationDate', 'Expiration Date'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        EquityGrant: {
-            title: 'Equity Grant',
-            sections: [
-                {
-                    title: 'Grant Details',
-                    fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'grantType', label: 'Grant Type', type: 'select', options: enums.EQUITY_GRANT_TYPE, required: true },
-                        { key: 'grantNumber', label: 'Grant Number', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.EQUITY_GRANT_STATUS, required: true }
-                    ]
-                },
-                {
-                    title: 'Shares & Value',
-                    fields: [
-                        { key: 'sharesGranted', label: 'Shares Granted', type: 'number', required: true },
-                        { key: 'grantPrice.amount', label: 'Grant Price', type: 'currency' },
-                        { key: 'fairMarketValue.amount', label: 'Fair Market Value', type: 'currency' },
-                        { key: 'totalValue.amount', label: 'Total Value', type: 'currency' }
-                    ]
-                },
-                {
-                    title: 'Vesting',
-                    fields: [
-                        { key: 'sharesVested', label: 'Shares Vested', type: 'number' },
-                        { key: 'sharesUnvested', label: 'Shares Unvested', type: 'number' },
-                        { key: 'sharesExercised', label: 'Shares Exercised', type: 'number' },
-                        { key: 'sharesForfeited', label: 'Shares Forfeited', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Dates',
-                    fields: [
-                        { key: 'grantDate', label: 'Grant Date', type: 'date', required: true },
-                        { key: 'vestStartDate', label: 'Vest Start Date', type: 'date' },
-                        { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        CompensationStatement: f.form('Compensation Statement', [
+            f.section('Basic Information', [
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
+                ...f.number('statementYear', 'Year', true),
+                ...f.date('asOfDate', 'As Of Date')
+            ]),
+            f.section('Base Compensation', [
+                ...f.money('baseSalary.amount', 'Base Salary'),
+                ...f.money('hourlyEquivalent.amount', 'Hourly Equivalent')
+            ]),
+            f.section('Variable Pay', [
+                ...f.money('bonusTarget.amount', 'Bonus Target'),
+                ...f.money('bonusActual.amount', 'Bonus Actual'),
+                ...f.money('commissions.amount', 'Commissions')
+            ]),
+            f.section('Equity', [
+                ...f.money('equityValue.amount', 'Equity Value'),
+                ...f.number('equityShares', 'Equity Shares')
+            ]),
+            f.section('Output', [
+                ...f.url('pdfUrl', 'PDF URL')
+            ])
+        ]),
 
-        CompensationStatement: {
-            title: 'Compensation Statement',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
-                        { key: 'statementYear', label: 'Year', type: 'number', required: true },
-                        { key: 'asOfDate', label: 'As Of Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Base Compensation',
-                    fields: [
-                        { key: 'baseSalary.amount', label: 'Base Salary', type: 'currency' },
-                        { key: 'hourlyEquivalent.amount', label: 'Hourly Equivalent', type: 'currency' }
-                    ]
-                },
-                {
-                    title: 'Variable Pay',
-                    fields: [
-                        { key: 'bonusTarget.amount', label: 'Bonus Target', type: 'currency' },
-                        { key: 'bonusActual.amount', label: 'Bonus Actual', type: 'currency' },
-                        { key: 'commissions.amount', label: 'Commissions', type: 'currency' }
-                    ]
-                },
-                {
-                    title: 'Equity',
-                    fields: [
-                        { key: 'equityValue.amount', label: 'Equity Value', type: 'currency' },
-                        { key: 'equityShares', label: 'Equity Shares', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Output',
-                    fields: [
-                        { key: 'pdfUrl', label: 'PDF URL', type: 'url' }
-                    ]
-                }
-            ]
-        },
-
-        MarketBenchmark: {
-            title: 'Market Benchmark',
-            sections: [
-                {
-                    title: 'Basic Information',
-                    fields: [
-                        { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
-                        { key: 'jobId', label: 'Job', type: 'reference', lookupModel: 'Job' },
-                        { key: 'jobTitle', label: 'Job Title', type: 'text', required: true },
-                        { key: 'surveySource', label: 'Survey Source', type: 'text', required: true },
-                        { key: 'surveyYear', label: 'Survey Year', type: 'number', required: true },
-                        { key: 'marketDefinition', label: 'Market Definition', type: 'text' }
-                    ]
-                },
-                {
-                    title: 'Market Data (Base)',
-                    fields: [
-                        { key: 'market25th.amount', label: '25th Percentile', type: 'currency' },
-                        { key: 'market50th.amount', label: '50th Percentile', type: 'currency' },
-                        { key: 'market75th.amount', label: '75th Percentile', type: 'currency' },
-                        { key: 'market90th.amount', label: '90th Percentile', type: 'currency' },
-                        { key: 'marketAverage.amount', label: 'Market Average', type: 'currency' }
-                    ]
-                },
-                {
-                    title: 'Total Cash Data',
-                    fields: [
-                        { key: 'totalCash25th.amount', label: 'Total Cash 25th', type: 'currency' },
-                        { key: 'totalCash50th.amount', label: 'Total Cash 50th', type: 'currency' },
-                        { key: 'totalCash75th.amount', label: 'Total Cash 75th', type: 'currency' }
-                    ]
-                },
-                {
-                    title: 'Comparison',
-                    fields: [
-                        { key: 'internalAverage.amount', label: 'Internal Average', type: 'currency' },
-                        { key: 'marketIndex', label: 'Market Index', type: 'percentage' }
-                    ]
-                },
-                {
-                    title: 'Dates',
-                    fields: [
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
-                        { key: 'expirationDate', label: 'Expiration Date', type: 'date' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
+        MarketBenchmark: f.form('Market Benchmark', [
+            f.section('Basic Information', [
+                ...f.reference('organizationId', 'Organization', 'Organization'),
+                ...f.reference('jobId', 'Job', 'Job'),
+                ...f.text('jobTitle', 'Job Title', true),
+                ...f.text('surveySource', 'Survey Source', true),
+                ...f.number('surveyYear', 'Survey Year', true),
+                ...f.text('marketDefinition', 'Market Definition')
+            ]),
+            f.section('Market Data (Base)', [
+                ...f.money('market25th.amount', '25th Percentile'),
+                ...f.money('market50th.amount', '50th Percentile'),
+                ...f.money('market75th.amount', '75th Percentile'),
+                ...f.money('market90th.amount', '90th Percentile'),
+                ...f.money('marketAverage.amount', 'Market Average')
+            ]),
+            f.section('Total Cash Data', [
+                ...f.money('totalCash25th.amount', 'Total Cash 25th'),
+                ...f.money('totalCash50th.amount', 'Total Cash 50th'),
+                ...f.money('totalCash75th.amount', 'Total Cash 75th')
+            ]),
+            f.section('Comparison', [
+                ...f.money('internalAverage.amount', 'Internal Average'),
+                ...f.number('marketIndex', 'Market Index')
+            ]),
+            f.section('Dates', [
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.date('expirationDate', 'Expiration Date'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ])
     };
 
-    // ============================================================================
-    // PRIMARY KEY MAPPING
-    // ============================================================================
-
-    const COMPENSATION_PRIMARY_KEYS = {
+    window.Compensation.primaryKeys = {
         SalaryGrade: 'gradeId',
         SalaryStructure: 'structureId',
         EmployeeCompensation: 'compensationId',
@@ -429,12 +268,5 @@ limitations under the License.
         CompensationStatement: 'statementId',
         MarketBenchmark: 'benchmarkId'
     };
-
-    // ============================================================================
-    // EXPORT FORMS TO NAMESPACE
-    // ============================================================================
-
-    window.Compensation.forms = COMPENSATION_FORMS;
-    window.Compensation.primaryKeys = COMPENSATION_PRIMARY_KEYS;
 
 })();

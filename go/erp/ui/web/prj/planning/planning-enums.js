@@ -12,219 +12,139 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Projects Planning Module - Enum Definitions
+// Projects Planning Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8DRenderers;
+
     window.PrjPlanning = window.PrjPlanning || {};
-    PrjPlanning.enums = {};
 
-    // PROJECT STATUS
-    PrjPlanning.enums.PROJECT_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Planned',
-        3: 'In Progress',
-        4: 'On Hold',
-        5: 'Completed',
-        6: 'Cancelled'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const PROJECT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Planned', 'planned', 'layer8d-status-pending'],
+        ['In Progress', 'progress', 'layer8d-status-active'],
+        ['On Hold', 'hold', 'layer8d-status-inactive'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-terminated']
+    ]);
+
+    const PROJECT_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Internal', 'internal', 'layer8d-status-active'],
+        ['Client', 'client', 'layer8d-status-active'],
+        ['Fixed Price', 'fixed', 'layer8d-status-active'],
+        ['Time & Materials', 'tm', 'layer8d-status-active'],
+        ['Retainer', 'retainer', 'layer8d-status-pending'],
+        ['Capital', 'capital', 'layer8d-status-active']
+    ]);
+
+    const PROJECT_PRIORITY = factory.create([
+        ['Unspecified', null, ''],
+        ['Low', 'low', 'layer8d-status-inactive'],
+        ['Medium', 'medium', 'layer8d-status-pending'],
+        ['High', 'high', 'layer8d-status-active'],
+        ['Critical', 'critical', 'layer8d-status-terminated']
+    ]);
+
+    const TASK_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Not Started', 'notstarted', 'layer8d-status-pending'],
+        ['In Progress', 'progress', 'layer8d-status-active'],
+        ['On Hold', 'hold', 'layer8d-status-inactive'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-terminated']
+    ]);
+
+    const TASK_PRIORITY = factory.create([
+        ['Unspecified', null, ''],
+        ['Low', 'low', 'layer8d-status-inactive'],
+        ['Medium', 'medium', 'layer8d-status-pending'],
+        ['High', 'high', 'layer8d-status-active'],
+        ['Critical', 'critical', 'layer8d-status-terminated']
+    ]);
+
+    const MILESTONE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Achieved', 'achieved', 'layer8d-status-active'],
+        ['Missed', 'missed', 'layer8d-status-terminated'],
+        ['At Risk', 'atrisk', 'layer8d-status-inactive']
+    ]);
+
+    const RISK_SEVERITY = factory.create([
+        ['Unspecified', null, ''],
+        ['Low', 'low', 'layer8d-status-inactive'],
+        ['Medium', 'medium', 'layer8d-status-pending'],
+        ['High', 'high', 'layer8d-status-active'],
+        ['Critical', 'critical', 'layer8d-status-terminated']
+    ]);
+
+    const RISK_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Identified', 'identified', 'layer8d-status-pending'],
+        ['Assessed', 'assessed', 'layer8d-status-pending'],
+        ['Mitigated', 'mitigated', 'layer8d-status-active'],
+        ['Occurred', 'occurred', 'layer8d-status-terminated'],
+        ['Closed', 'closed', 'layer8d-status-inactive']
+    ]);
+
+    const DEPENDENCY_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Finish to Start', 'fs', 'layer8d-status-active'],
+        ['Start to Start', 'ss', 'layer8d-status-active'],
+        ['Finish to Finish', 'ff', 'layer8d-status-active'],
+        ['Start to Finish', 'sf', 'layer8d-status-active']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    PrjPlanning.enums = {
+        PROJECT_STATUS: PROJECT_STATUS.enum,
+        PROJECT_STATUS_CLASSES: PROJECT_STATUS.classes,
+        PROJECT_TYPE: PROJECT_TYPE.enum,
+        PROJECT_TYPE_CLASSES: PROJECT_TYPE.classes,
+        PROJECT_PRIORITY: PROJECT_PRIORITY.enum,
+        PROJECT_PRIORITY_CLASSES: PROJECT_PRIORITY.classes,
+        TASK_STATUS: TASK_STATUS.enum,
+        TASK_STATUS_CLASSES: TASK_STATUS.classes,
+        TASK_PRIORITY: TASK_PRIORITY.enum,
+        TASK_PRIORITY_CLASSES: TASK_PRIORITY.classes,
+        MILESTONE_STATUS: MILESTONE_STATUS.enum,
+        MILESTONE_STATUS_CLASSES: MILESTONE_STATUS.classes,
+        RISK_SEVERITY: RISK_SEVERITY.enum,
+        RISK_SEVERITY_CLASSES: RISK_SEVERITY.classes,
+        RISK_STATUS: RISK_STATUS.enum,
+        RISK_STATUS_CLASSES: RISK_STATUS.classes,
+        DEPENDENCY_TYPE: DEPENDENCY_TYPE.enum,
+        DEPENDENCY_TYPE_CLASSES: DEPENDENCY_TYPE.classes
     };
 
-    PrjPlanning.enums.PROJECT_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-inactive',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-terminated'
-    };
-
-    // PROJECT TYPE
-    PrjPlanning.enums.PROJECT_TYPE = {
-        0: 'Unspecified',
-        1: 'Internal',
-        2: 'Client',
-        3: 'Fixed Price',
-        4: 'Time & Materials',
-        5: 'Retainer',
-        6: 'Capital'
-    };
-
-    PrjPlanning.enums.PROJECT_TYPE_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-pending',
-        6: 'layer8d-status-active'
-    };
-
-    // PROJECT PRIORITY
-    PrjPlanning.enums.PROJECT_PRIORITY = {
-        0: 'Unspecified',
-        1: 'Low',
-        2: 'Medium',
-        3: 'High',
-        4: 'Critical'
-    };
-
-    PrjPlanning.enums.PROJECT_PRIORITY_CLASSES = {
-        1: 'layer8d-status-inactive',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated'
-    };
-
-    // TASK STATUS
-    PrjPlanning.enums.TASK_STATUS = {
-        0: 'Unspecified',
-        1: 'Not Started',
-        2: 'In Progress',
-        3: 'On Hold',
-        4: 'Completed',
-        5: 'Cancelled'
-    };
-
-    PrjPlanning.enums.TASK_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-inactive',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-terminated'
-    };
-
-    // TASK PRIORITY
-    PrjPlanning.enums.TASK_PRIORITY = {
-        0: 'Unspecified',
-        1: 'Low',
-        2: 'Medium',
-        3: 'High',
-        4: 'Critical'
-    };
-
-    PrjPlanning.enums.TASK_PRIORITY_CLASSES = {
-        1: 'layer8d-status-inactive',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated'
-    };
-
-    // MILESTONE STATUS
-    PrjPlanning.enums.MILESTONE_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'Achieved',
-        3: 'Missed',
-        4: 'At Risk'
-    };
-
-    PrjPlanning.enums.MILESTONE_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-terminated',
-        4: 'layer8d-status-inactive'
-    };
-
-    // RISK SEVERITY
-    PrjPlanning.enums.RISK_SEVERITY = {
-        0: 'Unspecified',
-        1: 'Low',
-        2: 'Medium',
-        3: 'High',
-        4: 'Critical'
-    };
-
-    PrjPlanning.enums.RISK_SEVERITY_CLASSES = {
-        1: 'layer8d-status-inactive',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated'
-    };
-
-    // RISK STATUS
-    PrjPlanning.enums.RISK_STATUS = {
-        0: 'Unspecified',
-        1: 'Identified',
-        2: 'Assessed',
-        3: 'Mitigated',
-        4: 'Occurred',
-        5: 'Closed'
-    };
-
-    PrjPlanning.enums.RISK_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated',
-        5: 'layer8d-status-inactive'
-    };
-
-    // DEPENDENCY TYPE
-    PrjPlanning.enums.DEPENDENCY_TYPE = {
-        0: 'Unspecified',
-        1: 'Finish to Start',
-        2: 'Start to Start',
-        3: 'Finish to Finish',
-        4: 'Start to Finish'
-    };
-
-    PrjPlanning.enums.DEPENDENCY_TYPE_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active'
-    };
-
+    // ============================================================================
     // RENDERERS
-    PrjPlanning.render = {};
+    // ============================================================================
 
-    PrjPlanning.render.projectStatus = Layer8DRenderers.createStatusRenderer(
-        PrjPlanning.enums.PROJECT_STATUS,
-        PrjPlanning.enums.PROJECT_STATUS_CLASSES
-    );
-
-    PrjPlanning.render.projectType = Layer8DRenderers.createStatusRenderer(
-        PrjPlanning.enums.PROJECT_TYPE,
-        PrjPlanning.enums.PROJECT_TYPE_CLASSES
-    );
-
-    PrjPlanning.render.projectPriority = Layer8DRenderers.createStatusRenderer(
-        PrjPlanning.enums.PROJECT_PRIORITY,
-        PrjPlanning.enums.PROJECT_PRIORITY_CLASSES
-    );
-
-    PrjPlanning.render.taskStatus = Layer8DRenderers.createStatusRenderer(
-        PrjPlanning.enums.TASK_STATUS,
-        PrjPlanning.enums.TASK_STATUS_CLASSES
-    );
-
-    PrjPlanning.render.taskPriority = Layer8DRenderers.createStatusRenderer(
-        PrjPlanning.enums.TASK_PRIORITY,
-        PrjPlanning.enums.TASK_PRIORITY_CLASSES
-    );
-
-    PrjPlanning.render.milestoneStatus = Layer8DRenderers.createStatusRenderer(
-        PrjPlanning.enums.MILESTONE_STATUS,
-        PrjPlanning.enums.MILESTONE_STATUS_CLASSES
-    );
-
-    PrjPlanning.render.riskSeverity = Layer8DRenderers.createStatusRenderer(
-        PrjPlanning.enums.RISK_SEVERITY,
-        PrjPlanning.enums.RISK_SEVERITY_CLASSES
-    );
-
-    PrjPlanning.render.riskStatus = Layer8DRenderers.createStatusRenderer(
-        PrjPlanning.enums.RISK_STATUS,
-        PrjPlanning.enums.RISK_STATUS_CLASSES
-    );
-
-    PrjPlanning.render.dependencyType = Layer8DRenderers.createStatusRenderer(
-        PrjPlanning.enums.DEPENDENCY_TYPE,
-        PrjPlanning.enums.DEPENDENCY_TYPE_CLASSES
-    );
-
-    PrjPlanning.render.date = Layer8DRenderers.renderDate;
-    PrjPlanning.render.money = Layer8DRenderers.renderMoney;
+    PrjPlanning.render = {
+        projectStatus: createStatusRenderer(PROJECT_STATUS.enum, PROJECT_STATUS.classes),
+        projectType: createStatusRenderer(PROJECT_TYPE.enum, PROJECT_TYPE.classes),
+        projectPriority: createStatusRenderer(PROJECT_PRIORITY.enum, PROJECT_PRIORITY.classes),
+        taskStatus: createStatusRenderer(TASK_STATUS.enum, TASK_STATUS.classes),
+        taskPriority: createStatusRenderer(TASK_PRIORITY.enum, TASK_PRIORITY.classes),
+        milestoneStatus: createStatusRenderer(MILESTONE_STATUS.enum, MILESTONE_STATUS.classes),
+        riskSeverity: createStatusRenderer(RISK_SEVERITY.enum, RISK_SEVERITY.classes),
+        riskStatus: createStatusRenderer(RISK_STATUS.enum, RISK_STATUS.classes),
+        dependencyType: createStatusRenderer(DEPENDENCY_TYPE.enum, DEPENDENCY_TYPE.classes),
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

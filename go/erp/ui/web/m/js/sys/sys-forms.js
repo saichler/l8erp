@@ -1,62 +1,38 @@
 /*
 © 2025 Sharon Aicler (saichler@gmail.com)
-
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
-/**
- * Mobile System Module - Form Configurations
- * Desktop Equivalent: l8ui/sys/security/
- */
+// Mobile System Module - Form Configurations
+// Uses Layer8FormFactory for reduced boilerplate
+
 (function() {
     'use strict';
 
-    // Form definitions - field names match desktop l8security-forms.js
+    window.MobileSysSecurity = window.MobileSysSecurity || {};
+
+    const f = window.Layer8FormFactory;
+
     MobileSysSecurity.forms = {
-        L8User: {
-            title: 'User',
-            sections: [
-                {
-                    title: 'User Information',
-                    fields: [
-                        { key: 'userId', label: 'User ID', type: 'text', required: true },
-                        { key: 'fullName', label: 'Full Name', type: 'text', required: true }
-                    ]
-                }
-            ]
-        },
-        L8Role: {
-            title: 'Role',
-            sections: [
-                {
-                    title: 'Role Information',
-                    fields: [
-                        { key: 'roleId', label: 'Role ID', type: 'text', required: true },
-                        { key: 'roleName', label: 'Role Name', type: 'text', required: true }
-                    ]
-                }
-            ]
-        },
-        L8Credentials: {
-            title: 'Credentials',
-            sections: [
-                {
-                    title: 'Credential Information',
-                    fields: [
-                        { key: 'id', label: 'ID', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true }
-                    ]
-                }
-            ]
-        }
+        L8User: f.form('User', [
+            f.section('User Information', [
+                ...f.text('userId', 'User ID', true),
+                ...f.text('fullName', 'Full Name', true)
+            ])
+        ]),
+
+        L8Role: f.form('Role', [
+            f.section('Role Information', [
+                ...f.text('roleId', 'Role ID', true),
+                ...f.text('roleName', 'Role Name', true)
+            ])
+        ]),
+
+        L8Credentials: f.form('Credentials', [
+            f.section('Credential Information', [
+                ...f.text('id', 'ID', true),
+                ...f.text('name', 'Name', true)
+            ])
+        ])
     };
 
 })();

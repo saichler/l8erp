@@ -1,177 +1,121 @@
 /*
 © 2025 Sharon Aicler (saichler@gmail.com)
-
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
-/**
- * Mobile Sales Orders Module - Form Configurations
- * Desktop Equivalent: sales/orders/orders-forms.js
- */
+// Mobile Sales Orders Module - Form Configurations
+// Uses Layer8FormFactory for reduced boilerplate
+
 (function() {
     'use strict';
 
+    window.MobileSalesOrders = window.MobileSalesOrders || {};
+
+    const f = window.Layer8FormFactory;
     const enums = MobileSalesOrders.enums;
 
     MobileSalesOrders.forms = {
-        SalesQuotation: {
-            title: 'Sales Quotation',
-            sections: [
-                {
-                    title: 'Quotation Details',
-                    fields: [
-                        { key: 'quotationNumber', label: 'Quotation #', type: 'text', required: true },
-                        { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'Customer', required: true },
-                        { key: 'salespersonId', label: 'Salesperson', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'quotationDate', label: 'Quotation Date', type: 'date', required: true },
-                        { key: 'validUntil', label: 'Valid Until', type: 'date' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.QUOTATION_STATUS },
-                        { key: 'paymentTerms', label: 'Payment Terms', type: 'text' },
-                        { key: 'currencyCode', label: 'Currency', type: 'text' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        SalesQuotation: f.form('Sales Quotation', [
+            f.section('Quotation Details', [
+                ...f.text('quotationNumber', 'Quotation #', true),
+                ...f.reference('customerId', 'Customer', 'Customer', true),
+                ...f.reference('salespersonId', 'Salesperson', 'Employee'),
+                ...f.date('quotationDate', 'Quotation Date', true),
+                ...f.date('validUntil', 'Valid Until'),
+                ...f.select('status', 'Status', enums.QUOTATION_STATUS),
+                ...f.text('paymentTerms', 'Payment Terms'),
+                ...f.text('currencyCode', 'Currency'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        QuotationLine: {
-            title: 'Quotation Line',
-            sections: [
-                {
-                    title: 'Line Details',
-                    fields: [
-                        { key: 'quotationId', label: 'Quotation', type: 'reference', lookupModel: 'SalesQuotation', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                        { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
-                        { key: 'unitPrice', label: 'Unit Price', type: 'currency', required: true },
-                        { key: 'discountPercent', label: 'Discount %', type: 'number' }
-                    ]
-                }
-            ]
-        },
+        QuotationLine: f.form('Quotation Line', [
+            f.section('Line Details', [
+                ...f.reference('quotationId', 'Quotation', 'SalesQuotation', true),
+                ...f.reference('itemId', 'Item', 'ScmItem', true),
+                ...f.textarea('description', 'Description'),
+                ...f.number('quantity', 'Quantity', true),
+                ...f.text('unitOfMeasure', 'UOM'),
+                ...f.money('unitPrice', 'Unit Price', true),
+                ...f.number('discountPercent', 'Discount %')
+            ])
+        ]),
 
-        SalesOrder: {
-            title: 'Sales Order',
-            sections: [
-                {
-                    title: 'Order Details',
-                    fields: [
-                        { key: 'orderNumber', label: 'Order #', type: 'text', required: true },
-                        { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'Customer', required: true },
-                        { key: 'salespersonId', label: 'Salesperson', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'orderDate', label: 'Order Date', type: 'date', required: true },
-                        { key: 'requestedDeliveryDate', label: 'Requested Delivery', type: 'date' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.ORDER_STATUS },
-                        { key: 'quotationId', label: 'Quotation', type: 'reference', lookupModel: 'SalesQuotation' },
-                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
-                        { key: 'paymentTerms', label: 'Payment Terms', type: 'text' },
-                        { key: 'currencyCode', label: 'Currency', type: 'text' },
-                        { key: 'priority', label: 'Priority', type: 'text' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        SalesOrder: f.form('Sales Order', [
+            f.section('Order Details', [
+                ...f.text('orderNumber', 'Order #', true),
+                ...f.reference('customerId', 'Customer', 'Customer', true),
+                ...f.reference('salespersonId', 'Salesperson', 'Employee'),
+                ...f.date('orderDate', 'Order Date', true),
+                ...f.date('requestedDeliveryDate', 'Requested Delivery'),
+                ...f.select('status', 'Status', enums.ORDER_STATUS),
+                ...f.reference('quotationId', 'Quotation', 'SalesQuotation'),
+                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
+                ...f.text('paymentTerms', 'Payment Terms'),
+                ...f.text('currencyCode', 'Currency'),
+                ...f.text('priority', 'Priority'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        SalesOrderLine: {
-            title: 'Sales Order Line',
-            sections: [
-                {
-                    title: 'Line Details',
-                    fields: [
-                        { key: 'salesOrderId', label: 'Sales Order', type: 'reference', lookupModel: 'SalesOrder', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                        { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
-                        { key: 'unitPrice', label: 'Unit Price', type: 'currency', required: true },
-                        { key: 'discountPercent', label: 'Discount %', type: 'number' },
-                        { key: 'requestedDate', label: 'Requested Date', type: 'date' }
-                    ]
-                }
-            ]
-        },
+        SalesOrderLine: f.form('Sales Order Line', [
+            f.section('Line Details', [
+                ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder', true),
+                ...f.reference('itemId', 'Item', 'ScmItem', true),
+                ...f.textarea('description', 'Description'),
+                ...f.number('quantity', 'Quantity', true),
+                ...f.text('unitOfMeasure', 'UOM'),
+                ...f.money('unitPrice', 'Unit Price', true),
+                ...f.number('discountPercent', 'Discount %'),
+                ...f.date('requestedDate', 'Requested Date')
+            ])
+        ]),
 
-        OrderAllocation: {
-            title: 'Order Allocation',
-            sections: [
-                {
-                    title: 'Allocation Details',
-                    fields: [
-                        { key: 'salesOrderId', label: 'Sales Order', type: 'reference', lookupModel: 'SalesOrder', required: true },
-                        { key: 'lineId', label: 'Order Line', type: 'reference', lookupModel: 'SalesOrderLine' },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                        { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse', required: true },
-                        { key: 'binId', label: 'Bin', type: 'reference', lookupModel: 'ScmBin' },
-                        { key: 'allocatedQty', label: 'Allocated Qty', type: 'number', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.ALLOCATION_STATUS }
-                    ]
-                }
-            ]
-        },
+        OrderAllocation: f.form('Order Allocation', [
+            f.section('Allocation Details', [
+                ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder', true),
+                ...f.reference('lineId', 'Order Line', 'SalesOrderLine'),
+                ...f.reference('itemId', 'Item', 'ScmItem', true),
+                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse', true),
+                ...f.reference('binId', 'Bin', 'ScmBin'),
+                ...f.number('allocatedQty', 'Allocated Qty', true),
+                ...f.select('status', 'Status', enums.ALLOCATION_STATUS)
+            ])
+        ]),
 
-        BackOrder: {
-            title: 'Back Order',
-            sections: [
-                {
-                    title: 'Back Order Details',
-                    fields: [
-                        { key: 'salesOrderId', label: 'Sales Order', type: 'reference', lookupModel: 'SalesOrder', required: true },
-                        { key: 'lineId', label: 'Order Line', type: 'reference', lookupModel: 'SalesOrderLine' },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                        { key: 'backOrderQty', label: 'Back Order Qty', type: 'number', required: true },
-                        { key: 'expectedDate', label: 'Expected Date', type: 'date' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        BackOrder: f.form('Back Order', [
+            f.section('Back Order Details', [
+                ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder', true),
+                ...f.reference('lineId', 'Order Line', 'SalesOrderLine'),
+                ...f.reference('itemId', 'Item', 'ScmItem', true),
+                ...f.number('backOrderQty', 'Back Order Qty', true),
+                ...f.date('expectedDate', 'Expected Date'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        ReturnOrder: {
-            title: 'Return Order',
-            sections: [
-                {
-                    title: 'Return Details',
-                    fields: [
-                        { key: 'returnNumber', label: 'Return #', type: 'text', required: true },
-                        { key: 'salesOrderId', label: 'Original Order', type: 'reference', lookupModel: 'SalesOrder', required: true },
-                        { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'Customer', required: true },
-                        { key: 'returnDate', label: 'Return Date', type: 'date', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.RETURN_STATUS },
-                        { key: 'returnReason', label: 'Reason', type: 'textarea' },
-                        { key: 'warehouseId', label: 'Return Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        ReturnOrder: f.form('Return Order', [
+            f.section('Return Details', [
+                ...f.text('returnNumber', 'Return #', true),
+                ...f.reference('salesOrderId', 'Original Order', 'SalesOrder', true),
+                ...f.reference('customerId', 'Customer', 'Customer', true),
+                ...f.date('returnDate', 'Return Date', true),
+                ...f.select('status', 'Status', enums.RETURN_STATUS),
+                ...f.textarea('returnReason', 'Reason'),
+                ...f.reference('warehouseId', 'Return Warehouse', 'ScmWarehouse'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        ReturnOrderLine: {
-            title: 'Return Order Line',
-            sections: [
-                {
-                    title: 'Line Details',
-                    fields: [
-                        { key: 'returnOrderId', label: 'Return Order', type: 'reference', lookupModel: 'ReturnOrder', required: true },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                        { key: 'returnQty', label: 'Return Qty', type: 'number', required: true },
-                        { key: 'reason', label: 'Reason', type: 'text' },
-                        { key: 'condition', label: 'Condition', type: 'text' },
-                        { key: 'disposition', label: 'Disposition', type: 'text' }
-                    ]
-                }
-            ]
-        }
+        ReturnOrderLine: f.form('Return Order Line', [
+            f.section('Line Details', [
+                ...f.reference('returnOrderId', 'Return Order', 'ReturnOrder', true),
+                ...f.reference('itemId', 'Item', 'ScmItem', true),
+                ...f.number('returnQty', 'Return Qty', true),
+                ...f.text('reason', 'Reason'),
+                ...f.text('condition', 'Condition'),
+                ...f.text('disposition', 'Disposition')
+            ])
+        ])
     };
 
 })();

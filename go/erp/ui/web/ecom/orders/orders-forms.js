@@ -2,127 +2,90 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // E-Commerce Orders Module - Form Definitions
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
     window.EcomOrders = window.EcomOrders || {};
 
+    const f = window.Layer8FormFactory;
     const enums = EcomOrders.enums;
 
     EcomOrders.forms = {
-        EcomOrder: {
-            title: 'Order',
-            sections: [
-                {
-                    title: 'Order Details',
-                    fields: [
-                        { key: 'orderNumber', label: 'Order Number', type: 'text', required: true },
-                        { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'EcomCustomer', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.ORDER_STATUS },
-                        { key: 'paymentStatus', label: 'Payment Status', type: 'select', options: enums.PAYMENT_STATUS },
-                        { key: 'orderDate', label: 'Order Date', type: 'date', required: true },
-                        { key: 'subtotal', label: 'Subtotal', type: 'money' },
-                        { key: 'taxAmount', label: 'Tax Amount', type: 'money' },
-                        { key: 'shippingAmount', label: 'Shipping Amount', type: 'money' },
-                        { key: 'discountAmount', label: 'Discount Amount', type: 'money' },
-                        { key: 'totalAmount', label: 'Total Amount', type: 'money' },
-                        { key: 'shippingAddressId', label: 'Shipping Address', type: 'reference', lookupModel: 'EcomAddress' },
-                        { key: 'billingAddressId', label: 'Billing Address', type: 'reference', lookupModel: 'EcomAddress' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        EcomOrder: f.form('Order', [
+            f.section('Order Details', [
+                ...f.text('orderNumber', 'Order Number', true),
+                ...f.reference('customerId', 'Customer', 'EcomCustomer', true),
+                ...f.select('status', 'Status', enums.ORDER_STATUS),
+                ...f.select('paymentStatus', 'Payment Status', enums.PAYMENT_STATUS),
+                ...f.date('orderDate', 'Order Date', true),
+                ...f.money('subtotal', 'Subtotal'),
+                ...f.money('taxAmount', 'Tax Amount'),
+                ...f.money('shippingAmount', 'Shipping Amount'),
+                ...f.money('discountAmount', 'Discount Amount'),
+                ...f.money('totalAmount', 'Total Amount'),
+                ...f.reference('shippingAddressId', 'Shipping Address', 'EcomAddress'),
+                ...f.reference('billingAddressId', 'Billing Address', 'EcomAddress'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        EcomOrderLine: {
-            title: 'Order Line',
-            sections: [
-                {
-                    title: 'Line Details',
-                    fields: [
-                        { key: 'orderId', label: 'Order', type: 'reference', lookupModel: 'EcomOrder', required: true },
-                        { key: 'productId', label: 'Product', type: 'reference', lookupModel: 'EcomProduct', required: true },
-                        { key: 'sku', label: 'SKU', type: 'text' },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                        { key: 'unitPrice', label: 'Unit Price', type: 'money' },
-                        { key: 'discountAmount', label: 'Discount Amount', type: 'money' },
-                        { key: 'taxAmount', label: 'Tax Amount', type: 'money' },
-                        { key: 'lineTotal', label: 'Line Total', type: 'money' }
-                    ]
-                }
-            ]
-        },
+        EcomOrderLine: f.form('Order Line', [
+            f.section('Line Details', [
+                ...f.reference('orderId', 'Order', 'EcomOrder', true),
+                ...f.reference('productId', 'Product', 'EcomProduct', true),
+                ...f.text('sku', 'SKU'),
+                ...f.text('name', 'Name', true),
+                ...f.number('quantity', 'Quantity', true),
+                ...f.money('unitPrice', 'Unit Price'),
+                ...f.money('discountAmount', 'Discount Amount'),
+                ...f.money('taxAmount', 'Tax Amount'),
+                ...f.money('lineTotal', 'Line Total')
+            ])
+        ]),
 
-        EcomOrderStatusHistory: {
-            title: 'Order Status History',
-            sections: [
-                {
-                    title: 'Status Change Details',
-                    fields: [
-                        { key: 'orderId', label: 'Order', type: 'reference', lookupModel: 'EcomOrder', required: true },
-                        { key: 'previousStatus', label: 'Previous Status', type: 'select', options: enums.ORDER_STATUS },
-                        { key: 'newStatus', label: 'New Status', type: 'select', options: enums.ORDER_STATUS, required: true },
-                        { key: 'changedAt', label: 'Changed At', type: 'date', required: true },
-                        { key: 'changedBy', label: 'Changed By', type: 'text' },
-                        { key: 'reason', label: 'Reason', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        EcomOrderStatusHistory: f.form('Order Status History', [
+            f.section('Status Change Details', [
+                ...f.reference('orderId', 'Order', 'EcomOrder', true),
+                ...f.select('previousStatus', 'Previous Status', enums.ORDER_STATUS),
+                ...f.select('newStatus', 'New Status', enums.ORDER_STATUS, true),
+                ...f.date('changedAt', 'Changed At', true),
+                ...f.text('changedBy', 'Changed By'),
+                ...f.textarea('reason', 'Reason')
+            ])
+        ]),
 
-        EcomReturn: {
-            title: 'Return',
-            sections: [
-                {
-                    title: 'Return Details',
-                    fields: [
-                        { key: 'returnNumber', label: 'Return Number', type: 'text', required: true },
-                        { key: 'orderId', label: 'Order', type: 'reference', lookupModel: 'EcomOrder', required: true },
-                        { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'EcomCustomer', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.RETURN_STATUS },
-                        { key: 'requestedDate', label: 'Requested Date', type: 'date', required: true },
-                        { key: 'approvedDate', label: 'Approved Date', type: 'date' },
-                        { key: 'receivedDate', label: 'Received Date', type: 'date' },
-                        { key: 'refundAmount', label: 'Refund Amount', type: 'money' },
-                        { key: 'reason', label: 'Reason', type: 'textarea' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        EcomReturn: f.form('Return', [
+            f.section('Return Details', [
+                ...f.text('returnNumber', 'Return Number', true),
+                ...f.reference('orderId', 'Order', 'EcomOrder', true),
+                ...f.reference('customerId', 'Customer', 'EcomCustomer', true),
+                ...f.select('status', 'Status', enums.RETURN_STATUS),
+                ...f.date('requestedDate', 'Requested Date', true),
+                ...f.date('approvedDate', 'Approved Date'),
+                ...f.date('receivedDate', 'Received Date'),
+                ...f.money('refundAmount', 'Refund Amount'),
+                ...f.textarea('reason', 'Reason'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        EcomReturnLine: {
-            title: 'Return Line',
-            sections: [
-                {
-                    title: 'Return Line Details',
-                    fields: [
-                        { key: 'returnId', label: 'Return', type: 'reference', lookupModel: 'EcomReturn', required: true },
-                        { key: 'productId', label: 'Product', type: 'reference', lookupModel: 'EcomProduct', required: true },
-                        { key: 'sku', label: 'SKU', type: 'text' },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                        { key: 'unitPrice', label: 'Unit Price', type: 'money' },
-                        { key: 'refundAmount', label: 'Refund Amount', type: 'money' },
-                        { key: 'reason', label: 'Reason', type: 'textarea' },
-                        { key: 'condition', label: 'Condition', type: 'text' }
-                    ]
-                }
-            ]
-        }
+        EcomReturnLine: f.form('Return Line', [
+            f.section('Return Line Details', [
+                ...f.reference('returnId', 'Return', 'EcomReturn', true),
+                ...f.reference('productId', 'Product', 'EcomProduct', true),
+                ...f.text('sku', 'SKU'),
+                ...f.text('name', 'Name', true),
+                ...f.number('quantity', 'Quantity', true),
+                ...f.money('unitPrice', 'Unit Price'),
+                ...f.money('refundAmount', 'Refund Amount'),
+                ...f.textarea('reason', 'Reason'),
+                ...f.text('condition', 'Condition')
+            ])
+        ])
     };
 
     EcomOrders.primaryKeys = {

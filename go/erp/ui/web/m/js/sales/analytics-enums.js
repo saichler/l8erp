@@ -13,69 +13,70 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Sales Analytics Module - Enum Definitions
+ * Mobile Sales Analytics Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: sales/analytics/analytics-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileSalesAnalytics = window.MobileSalesAnalytics || {};
-    MobileSalesAnalytics.enums = {};
 
     // ============================================================================
-    // TERRITORY TYPE
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileSalesAnalytics.enums.TERRITORY_TYPE = {
-        0: 'Unspecified', 1: 'Geographic', 2: 'Industry', 3: 'Account Based', 4: 'Product'
-    };
-    MobileSalesAnalytics.enums.TERRITORY_TYPE_VALUES = {
-        'geographic': 1, 'industry': 2, 'account': 3, 'product': 4
-    };
-    MobileSalesAnalytics.enums.TERRITORY_TYPE_CLASSES = {
-        1: 'status-active', 2: 'status-active', 3: 'status-pending', 4: 'status-pending'
-    };
+    const TERRITORY_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Geographic', 'geographic', 'status-active'],
+        ['Industry', 'industry', 'status-active'],
+        ['Account Based', 'account', 'status-pending'],
+        ['Product', 'product', 'status-pending']
+    ]);
+
+    const COMMISSION_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Percentage', 'percentage', 'status-active'],
+        ['Fixed', 'fixed', 'status-active'],
+        ['Tiered', 'tiered', 'status-pending']
+    ]);
+
+    const FORECAST_CATEGORY = factory.create([
+        ['Unspecified', null, ''],
+        ['Pipeline', 'pipeline', 'status-pending'],
+        ['Best Case', 'best case', 'status-pending'],
+        ['Committed', 'committed', 'status-active'],
+        ['Closed', 'closed', 'status-active']
+    ]);
+
+    const TARGET_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['On Track', 'on track', 'status-active'],
+        ['At Risk', 'at risk', 'status-pending'],
+        ['Behind', 'behind', 'status-terminated'],
+        ['Achieved', 'achieved', 'status-active'],
+        ['Missed', 'missed', 'status-inactive']
+    ]);
 
     // ============================================================================
-    // COMMISSION TYPE
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileSalesAnalytics.enums.COMMISSION_TYPE = {
-        0: 'Unspecified', 1: 'Percentage', 2: 'Fixed', 3: 'Tiered'
-    };
-    MobileSalesAnalytics.enums.COMMISSION_TYPE_VALUES = {
-        'percentage': 1, 'fixed': 2, 'tiered': 3
-    };
-    MobileSalesAnalytics.enums.COMMISSION_TYPE_CLASSES = {
-        1: 'status-active', 2: 'status-active', 3: 'status-pending'
-    };
-
-    // ============================================================================
-    // FORECAST CATEGORY
-    // ============================================================================
-
-    MobileSalesAnalytics.enums.FORECAST_CATEGORY = {
-        0: 'Unspecified', 1: 'Pipeline', 2: 'Best Case', 3: 'Committed', 4: 'Closed'
-    };
-    MobileSalesAnalytics.enums.FORECAST_CATEGORY_VALUES = {
-        'pipeline': 1, 'best case': 2, 'committed': 3, 'closed': 4
-    };
-    MobileSalesAnalytics.enums.FORECAST_CATEGORY_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-active', 4: 'status-active'
-    };
-
-    // ============================================================================
-    // TARGET STATUS
-    // ============================================================================
-
-    MobileSalesAnalytics.enums.TARGET_STATUS = {
-        0: 'Unspecified', 1: 'On Track', 2: 'At Risk', 3: 'Behind', 4: 'Achieved', 5: 'Missed'
-    };
-    MobileSalesAnalytics.enums.TARGET_STATUS_VALUES = {
-        'on track': 1, 'at risk': 2, 'behind': 3, 'achieved': 4, 'missed': 5
-    };
-    MobileSalesAnalytics.enums.TARGET_STATUS_CLASSES = {
-        1: 'status-active', 2: 'status-pending', 3: 'status-terminated', 4: 'status-active', 5: 'status-inactive'
+    MobileSalesAnalytics.enums = {
+        TERRITORY_TYPE: TERRITORY_TYPE.enum,
+        TERRITORY_TYPE_VALUES: TERRITORY_TYPE.values,
+        TERRITORY_TYPE_CLASSES: TERRITORY_TYPE.classes,
+        COMMISSION_TYPE: COMMISSION_TYPE.enum,
+        COMMISSION_TYPE_VALUES: COMMISSION_TYPE.values,
+        COMMISSION_TYPE_CLASSES: COMMISSION_TYPE.classes,
+        FORECAST_CATEGORY: FORECAST_CATEGORY.enum,
+        FORECAST_CATEGORY_VALUES: FORECAST_CATEGORY.values,
+        FORECAST_CATEGORY_CLASSES: FORECAST_CATEGORY.classes,
+        TARGET_STATUS: TARGET_STATUS.enum,
+        TARGET_STATUS_VALUES: TARGET_STATUS.values,
+        TARGET_STATUS_CLASSES: TARGET_STATUS.classes
     };
 
     // ============================================================================
@@ -83,24 +84,12 @@ limitations under the License.
     // ============================================================================
 
     MobileSalesAnalytics.render = {
-        territoryType: Layer8MRenderers.createStatusRenderer(
-            MobileSalesAnalytics.enums.TERRITORY_TYPE,
-            MobileSalesAnalytics.enums.TERRITORY_TYPE_CLASSES
-        ),
-        commissionType: Layer8MRenderers.createStatusRenderer(
-            MobileSalesAnalytics.enums.COMMISSION_TYPE,
-            MobileSalesAnalytics.enums.COMMISSION_TYPE_CLASSES
-        ),
-        forecastCategory: Layer8MRenderers.createStatusRenderer(
-            MobileSalesAnalytics.enums.FORECAST_CATEGORY,
-            MobileSalesAnalytics.enums.FORECAST_CATEGORY_CLASSES
-        ),
-        targetStatus: Layer8MRenderers.createStatusRenderer(
-            MobileSalesAnalytics.enums.TARGET_STATUS,
-            MobileSalesAnalytics.enums.TARGET_STATUS_CLASSES
-        ),
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        territoryType: createStatusRenderer(TERRITORY_TYPE.enum, TERRITORY_TYPE.classes),
+        commissionType: createStatusRenderer(COMMISSION_TYPE.enum, COMMISSION_TYPE.classes),
+        forecastCategory: createStatusRenderer(FORECAST_CATEGORY.enum, FORECAST_CATEGORY.classes),
+        targetStatus: createStatusRenderer(TARGET_STATUS.enum, TARGET_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

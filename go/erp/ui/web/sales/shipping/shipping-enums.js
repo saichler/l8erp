@@ -12,77 +12,59 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Sales Shipping Module - Enum Definitions
-// All enum constants and value mappings for Sales Shipping models
+// Sales Shipping Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Create SalesShipping namespace
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8DRenderers;
+
     window.SalesShipping = window.SalesShipping || {};
-    SalesShipping.enums = {};
 
     // ============================================================================
-    // DELIVERY STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    SalesShipping.enums.DELIVERY_STATUS = {
-        0: 'Unspecified',
-        1: 'Planned',
-        2: 'Picking',
-        3: 'Packed',
-        4: 'Shipped',
-        5: 'Delivered',
-        6: 'Failed'
-    };
+    const DELIVERY_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Planned', 'planned', 'layer8d-status-pending'],
+        ['Picking', 'picking', 'layer8d-status-pending'],
+        ['Packed', 'packed', 'layer8d-status-active'],
+        ['Shipped', 'shipped', 'layer8d-status-active'],
+        ['Delivered', 'delivered', 'layer8d-status-active'],
+        ['Failed', 'failed', 'layer8d-status-terminated']
+    ]);
 
-    SalesShipping.enums.DELIVERY_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-terminated'
-    };
+    const PICK_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Open', 'open', 'layer8d-status-pending'],
+        ['Released', 'released', 'layer8d-status-active'],
+        ['In Progress', 'progress', 'layer8d-status-pending'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive']
+    ]);
 
     // ============================================================================
-    // PICK STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    SalesShipping.enums.PICK_STATUS = {
-        0: 'Unspecified',
-        1: 'Open',
-        2: 'Released',
-        3: 'In Progress',
-        4: 'Completed',
-        5: 'Cancelled'
-    };
-
-    SalesShipping.enums.PICK_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-inactive'
+    SalesShipping.enums = {
+        DELIVERY_STATUS: DELIVERY_STATUS.enum,
+        DELIVERY_STATUS_CLASSES: DELIVERY_STATUS.classes,
+        PICK_STATUS: PICK_STATUS.enum,
+        PICK_STATUS_CLASSES: PICK_STATUS.classes
     };
 
     // ============================================================================
     // RENDERERS
     // ============================================================================
 
-    SalesShipping.render = {};
-
-    SalesShipping.render.deliveryStatus = Layer8DRenderers.createStatusRenderer(
-        SalesShipping.enums.DELIVERY_STATUS,
-        SalesShipping.enums.DELIVERY_STATUS_CLASSES
-    );
-
-    SalesShipping.render.pickStatus = Layer8DRenderers.createStatusRenderer(
-        SalesShipping.enums.PICK_STATUS,
-        SalesShipping.enums.PICK_STATUS_CLASSES
-    );
-
-    SalesShipping.render.date = Layer8DRenderers.renderDate;
-    SalesShipping.render.money = Layer8DRenderers.renderMoney;
+    SalesShipping.render = {
+        deliveryStatus: createStatusRenderer(DELIVERY_STATUS.enum, DELIVERY_STATUS.classes),
+        pickStatus: createStatusRenderer(PICK_STATUS.enum, PICK_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

@@ -2,136 +2,110 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
+// Compliance Regulatory Module - Form Definitions
+// Uses Layer8FormFactory for reduced boilerplate
+
 (function() {
     'use strict';
+
     window.CompRegulatory = window.CompRegulatory || {};
 
+    const f = window.Layer8FormFactory;
+    const enums = CompRegulatory.enums;
+
     CompRegulatory.forms = {
-        CompRegulation: {
-            sections: [
-                {
-                    title: 'Regulation Information',
-                    fields: [
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'type', label: 'Type', type: 'select', options: 'regulationType', required: true },
-                        { key: 'jurisdiction', label: 'Jurisdiction', type: 'select', options: 'jurisdictionLevel' },
-                        { key: 'issuingAuthority', label: 'Issuing Authority', type: 'text' },
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
-                        { key: 'status', label: 'Status', type: 'select', options: 'regulationStatus' }
-                    ]
-                },
-                {
-                    title: 'Details',
-                    fields: [
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'penaltyInfo', label: 'Penalty Information', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
-        CompRequirement: {
-            sections: [
-                {
-                    title: 'Requirement Information',
-                    fields: [
-                        { key: 'regulationId', label: 'Regulation', type: 'reference', lookupModel: 'CompRegulation', required: true },
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'priority', label: 'Priority', type: 'select', options: 'requirementPriority' },
-                        { key: 'status', label: 'Status', type: 'select', options: 'requirementStatus' },
-                        { key: 'dueDate', label: 'Due Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Details',
-                    fields: [
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'controlObjective', label: 'Control Objective', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
-        CompComplianceStatus: {
-            sections: [
-                {
-                    title: 'Compliance Status',
-                    fields: [
-                        { key: 'requirementId', label: 'Requirement', type: 'reference', lookupModel: 'CompRequirement', required: true },
-                        { key: 'entityType', label: 'Entity Type', type: 'text' },
-                        { key: 'entityId', label: 'Entity ID', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'select', options: 'complianceStatus', required: true },
-                        { key: 'assessmentDate', label: 'Assessment Date', type: 'date' },
-                        { key: 'nextReviewDate', label: 'Next Review Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Assessment Details',
-                    fields: [
-                        { key: 'assessorId', label: 'Assessor', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'evidence', label: 'Evidence', type: 'textarea' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
-        CompCertification: {
-            sections: [
-                {
-                    title: 'Certification Information',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'type', label: 'Type', type: 'select', options: 'certificationType', required: true },
-                        { key: 'issuingBody', label: 'Issuing Body', type: 'text' },
-                        { key: 'certificateNumber', label: 'Certificate Number', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'select', options: 'certificationStatus' }
-                    ]
-                },
-                {
-                    title: 'Dates',
-                    fields: [
-                        { key: 'issueDate', label: 'Issue Date', type: 'date' },
-                        { key: 'expiryDate', label: 'Expiry Date', type: 'date' },
-                        { key: 'renewalLeadDays', label: 'Renewal Lead Days', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Scope',
-                    fields: [
-                        { key: 'scope', label: 'Scope Description', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
-        CompViolationRecord: {
-            sections: [
-                {
-                    title: 'Violation Information',
-                    fields: [
-                        { key: 'violationNumber', label: 'Violation Number', type: 'text', required: true },
-                        { key: 'regulationId', label: 'Regulation', type: 'reference', lookupModel: 'CompRegulation', required: true },
-                        { key: 'requirementId', label: 'Requirement', type: 'reference', lookupModel: 'CompRequirement' },
-                        { key: 'severity', label: 'Severity', type: 'select', options: 'violationSeverity', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: 'violationStatus' }
-                    ]
-                },
-                {
-                    title: 'Dates',
-                    fields: [
-                        { key: 'discoveryDate', label: 'Discovery Date', type: 'date' },
-                        { key: 'reportedDate', label: 'Reported Date', type: 'date' },
-                        { key: 'resolutionDate', label: 'Resolution Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Details',
-                    fields: [
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'rootCause', label: 'Root Cause', type: 'textarea' },
-                        { key: 'correctiveAction', label: 'Corrective Action', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
+        CompRegulation: f.form('Regulation', [
+            f.section('Regulation Information', [
+                ...f.text('code', 'Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.select('type', 'Type', enums.regulationType, true),
+                ...f.select('jurisdiction', 'Jurisdiction', enums.jurisdictionLevel),
+                ...f.text('issuingAuthority', 'Issuing Authority'),
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.select('status', 'Status', enums.regulationStatus)
+            ]),
+            f.section('Details', [
+                ...f.textarea('description', 'Description'),
+                ...f.textarea('penaltyInfo', 'Penalty Information')
+            ])
+        ]),
+
+        CompRequirement: f.form('Requirement', [
+            f.section('Requirement Information', [
+                ...f.reference('regulationId', 'Regulation', 'CompRegulation', true),
+                ...f.text('code', 'Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.select('priority', 'Priority', enums.requirementPriority),
+                ...f.select('status', 'Status', enums.requirementStatus),
+                ...f.date('dueDate', 'Due Date')
+            ]),
+            f.section('Details', [
+                ...f.textarea('description', 'Description'),
+                ...f.textarea('controlObjective', 'Control Objective')
+            ])
+        ]),
+
+        CompComplianceStatus: f.form('Compliance Status', [
+            f.section('Compliance Status', [
+                ...f.reference('requirementId', 'Requirement', 'CompRequirement', true),
+                ...f.text('entityType', 'Entity Type'),
+                ...f.text('entityId', 'Entity ID'),
+                ...f.select('status', 'Status', enums.complianceStatus, true),
+                ...f.date('assessmentDate', 'Assessment Date'),
+                ...f.date('nextReviewDate', 'Next Review Date')
+            ]),
+            f.section('Assessment Details', [
+                ...f.reference('assessorId', 'Assessor', 'Employee'),
+                ...f.textarea('evidence', 'Evidence'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
+
+        CompCertification: f.form('Certification', [
+            f.section('Certification Information', [
+                ...f.text('name', 'Name', true),
+                ...f.select('type', 'Type', enums.certificationType, true),
+                ...f.text('issuingBody', 'Issuing Body'),
+                ...f.text('certificateNumber', 'Certificate Number'),
+                ...f.select('status', 'Status', enums.certificationStatus)
+            ]),
+            f.section('Dates', [
+                ...f.date('issueDate', 'Issue Date'),
+                ...f.date('expiryDate', 'Expiry Date'),
+                ...f.number('renewalLeadDays', 'Renewal Lead Days')
+            ]),
+            f.section('Scope', [
+                ...f.textarea('scope', 'Scope Description')
+            ])
+        ]),
+
+        CompViolationRecord: f.form('Violation Record', [
+            f.section('Violation Information', [
+                ...f.text('violationNumber', 'Violation Number', true),
+                ...f.reference('regulationId', 'Regulation', 'CompRegulation', true),
+                ...f.reference('requirementId', 'Requirement', 'CompRequirement'),
+                ...f.select('severity', 'Severity', enums.violationSeverity, true),
+                ...f.select('status', 'Status', enums.violationStatus)
+            ]),
+            f.section('Dates', [
+                ...f.date('discoveryDate', 'Discovery Date'),
+                ...f.date('reportedDate', 'Reported Date'),
+                ...f.date('resolutionDate', 'Resolution Date')
+            ]),
+            f.section('Details', [
+                ...f.textarea('description', 'Description'),
+                ...f.textarea('rootCause', 'Root Cause'),
+                ...f.textarea('correctiveAction', 'Corrective Action')
+            ])
+        ])
     };
+
+    CompRegulatory.primaryKeys = {
+        CompRegulation: 'regulationId',
+        CompRequirement: 'requirementId',
+        CompComplianceStatus: 'statusId',
+        CompCertification: 'certificationId',
+        CompViolationRecord: 'violationId'
+    };
+
 })();

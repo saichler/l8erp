@@ -13,205 +13,147 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Payroll Module - Enum Definitions
+ * Mobile Payroll Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: hcm/payroll/payroll.js (enums section)
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderMoney, renderBoolean, renderDate } = Layer8MRenderers;
+
     window.MobilePayroll = window.MobilePayroll || {};
-    MobilePayroll.enums = {};
 
     // ============================================================================
-    // PAY FREQUENCY
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobilePayroll.enums.PAY_FREQUENCY = {
-        0: 'Unspecified',
-        1: 'Weekly',
-        2: 'Bi-Weekly',
-        3: 'Semi-Monthly',
-        4: 'Monthly',
-        5: 'Annually'
-    };
+    const PAY_FREQUENCY = factory.withValues([
+        ['Unspecified', null], ['Weekly', 'weekly'], ['Bi-Weekly', 'biweekly'],
+        ['Semi-Monthly', 'semimonthly'], ['Monthly', 'monthly'], ['Annually', 'annually']
+    ]);
 
-    MobilePayroll.enums.PAY_FREQUENCY_VALUES = {
-        'weekly': 1,
-        'biweekly': 2,
-        'bi-weekly': 2,
-        'semimonthly': 3,
-        'semi-monthly': 3,
-        'monthly': 4,
-        'annually': 5,
-        'annual': 5
-    };
+    const PAY_COMPONENT_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Earning', 'earning', 'status-active'],
+        ['Deduction', 'deduction', 'status-terminated'],
+        ['Tax', 'tax', 'status-pending'],
+        ['Employer Contribution', 'employer', 'status-inactive']
+    ]);
 
-    // ============================================================================
-    // PAY COMPONENT TYPE
-    // ============================================================================
+    const PAY_COMPONENT_CATEGORY = factory.simple([
+        'Unspecified',
+        'Regular', 'Overtime', 'Bonus', 'Commission', 'PTO',
+        'Holiday', 'Sick', 'Shift Differential', 'Tips',
+        'Health Insurance', 'Dental Insurance', 'Vision Insurance',
+        'Life Insurance', '401(k)', 'HSA', 'FSA',
+        'Garnishment', 'Union Dues', 'Loan Repayment',
+        'Federal Tax', 'State Tax', 'Local Tax',
+        'Social Security', 'Medicare', 'FUTA', 'SUTA'
+    ]);
 
-    MobilePayroll.enums.PAY_COMPONENT_TYPE = {
-        0: 'Unspecified',
-        1: 'Earning',
-        2: 'Deduction',
-        3: 'Tax',
-        4: 'Employer Contribution'
-    };
+    const CALCULATION_TYPE = factory.withValues([
+        ['Unspecified', null], ['Fixed', 'fixed'], ['Percentage', 'percentage'],
+        ['Hourly', 'hourly'], ['Formula', 'formula']
+    ]);
 
-    MobilePayroll.enums.PAY_COMPONENT_TYPE_VALUES = {
-        'earning': 1,
-        'deduction': 2,
-        'tax': 3,
-        'employer': 4,
-        'contribution': 4
-    };
+    const PAYROLL_RUN_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-inactive'],
+        ['Pending Approval', 'pending', 'status-pending'],
+        ['Approved', 'approved', 'status-active'],
+        ['Processing', 'processing', 'status-pending'],
+        ['Completed', 'completed', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-terminated'],
+        ['Error', 'error', 'status-terminated']
+    ]);
 
-    MobilePayroll.enums.PAY_COMPONENT_TYPE_CLASSES = {
-        1: 'status-active',
-        2: 'status-terminated',
-        3: 'status-pending',
-        4: 'status-inactive'
-    };
+    const PAYROLL_RUN_TYPE = factory.withValues([
+        ['Unspecified', null], ['Regular', 'regular'], ['Supplemental', 'supplemental'],
+        ['Bonus', 'bonus'], ['Correction', 'correction'], ['Final', 'final']
+    ]);
 
-    // ============================================================================
-    // PAY COMPONENT CATEGORY
-    // ============================================================================
+    const TAX_TYPE = factory.withValues([
+        ['Unspecified', null], ['Federal Income', 'federal'], ['State Income', 'state'],
+        ['Local Income', 'local'], ['Social Security', 'social'], ['Medicare', 'medicare']
+    ]);
 
-    MobilePayroll.enums.PAY_COMPONENT_CATEGORY = {
-        0: 'Unspecified',
-        1: 'Regular', 2: 'Overtime', 3: 'Bonus', 4: 'Commission', 5: 'PTO',
-        6: 'Holiday', 7: 'Sick', 8: 'Shift Differential', 9: 'Tips',
-        20: 'Health Insurance', 21: 'Dental Insurance', 22: 'Vision Insurance',
-        23: 'Life Insurance', 24: '401(k)', 25: 'HSA', 26: 'FSA',
-        27: 'Garnishment', 28: 'Union Dues', 29: 'Loan Repayment',
-        40: 'Federal Tax', 41: 'State Tax', 42: 'Local Tax',
-        43: 'Social Security', 44: 'Medicare', 45: 'FUTA', 46: 'SUTA'
-    };
+    const FILING_STATUS = factory.withValues([
+        ['Unspecified', null], ['Single', 'single'], ['Married Filing Jointly', 'married'],
+        ['Married Filing Separately', 'separately'], ['Head of Household', 'head'],
+        ['Qualifying Widow(er)', 'widow']
+    ]);
 
-    // ============================================================================
-    // CALCULATION TYPE
-    // ============================================================================
+    const ACCOUNT_TYPE = factory.withValues([
+        ['Unspecified', null], ['Checking', 'checking'], ['Savings', 'savings']
+    ]);
 
-    MobilePayroll.enums.CALCULATION_TYPE = {
-        0: 'Unspecified', 1: 'Fixed', 2: 'Percentage', 3: 'Hourly', 4: 'Formula'
-    };
+    const DEPOSIT_TYPE = factory.withValues([
+        ['Unspecified', null], ['Full (Remainder)', 'full'], ['Fixed Amount', 'fixed'], ['Percentage', 'percentage']
+    ]);
 
-    MobilePayroll.enums.CALCULATION_TYPE_VALUES = {
-        'fixed': 1, 'percentage': 2, 'percent': 2, 'hourly': 3, 'formula': 4
-    };
+    const GARNISHMENT_TYPE = factory.withValues([
+        ['Unspecified', null], ['Child Support', 'child'], ['Spousal Support', 'spousal'],
+        ['Tax Levy', 'tax'], ['Creditor', 'creditor'], ['Student Loan', 'student'], ['Bankruptcy', 'bankruptcy']
+    ]);
 
-    // ============================================================================
-    // PAYROLL RUN STATUS
-    // ============================================================================
+    const GARNISHMENT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Active', 'active', 'status-active'],
+        ['Suspended', 'suspended', 'status-pending'],
+        ['Completed', 'completed', 'status-inactive'],
+        ['Cancelled', 'cancelled', 'status-terminated']
+    ]);
 
-    MobilePayroll.enums.PAYROLL_RUN_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Pending Approval', 3: 'Approved',
-        4: 'Processing', 5: 'Completed', 6: 'Cancelled', 7: 'Error'
-    };
+    const YEAR_END_DOC_TYPE = factory.withValues([
+        ['Unspecified', null], ['W-2', 'w2'], ['W-2C', 'w2c'], ['1099-MISC', '1099'],
+        ['1099-NEC', '1099-nec'], ['T4 (Canada)', 't4'], ['T4A (Canada)', 't4a']
+    ]);
 
-    MobilePayroll.enums.PAYROLL_RUN_STATUS_VALUES = {
-        'draft': 1, 'pending': 2, 'approved': 3, 'processing': 4,
-        'completed': 5, 'cancelled': 6, 'error': 7
-    };
-
-    MobilePayroll.enums.PAYROLL_RUN_STATUS_CLASSES = {
-        1: 'status-inactive', 2: 'status-pending', 3: 'status-active',
-        4: 'status-pending', 5: 'status-active', 6: 'status-terminated',
-        7: 'status-terminated'
-    };
+    const YEAR_END_DOC_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-inactive'],
+        ['Generated', 'generated', 'status-pending'],
+        ['Issued', 'issued', 'status-active'],
+        ['Filed', 'filed', 'status-active']
+    ]);
 
     // ============================================================================
-    // PAYROLL RUN TYPE
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobilePayroll.enums.PAYROLL_RUN_TYPE = {
-        0: 'Unspecified', 1: 'Regular', 2: 'Supplemental', 3: 'Bonus', 4: 'Correction', 5: 'Final'
-    };
-
-    MobilePayroll.enums.PAYROLL_RUN_TYPE_VALUES = {
-        'regular': 1, 'supplemental': 2, 'bonus': 3, 'correction': 4, 'final': 5
-    };
-
-    // ============================================================================
-    // TAX TYPE
-    // ============================================================================
-
-    MobilePayroll.enums.TAX_TYPE = {
-        0: 'Unspecified', 1: 'Federal Income', 2: 'State Income', 3: 'Local Income',
-        4: 'Social Security', 5: 'Medicare'
-    };
-
-    MobilePayroll.enums.TAX_TYPE_VALUES = {
-        'federal': 1, 'state': 2, 'local': 3, 'social': 4, 'ss': 4, 'medicare': 5
-    };
-
-    // ============================================================================
-    // FILING STATUS
-    // ============================================================================
-
-    MobilePayroll.enums.FILING_STATUS = {
-        0: 'Unspecified', 1: 'Single', 2: 'Married Filing Jointly',
-        3: 'Married Filing Separately', 4: 'Head of Household', 5: 'Qualifying Widow(er)'
-    };
-
-    MobilePayroll.enums.FILING_STATUS_VALUES = {
-        'single': 1, 'married': 2, 'jointly': 2, 'separately': 3, 'head': 4, 'household': 4, 'widow': 5
-    };
-
-    // ============================================================================
-    // ACCOUNT TYPE
-    // ============================================================================
-
-    MobilePayroll.enums.ACCOUNT_TYPE = { 0: 'Unspecified', 1: 'Checking', 2: 'Savings' };
-    MobilePayroll.enums.ACCOUNT_TYPE_VALUES = { 'checking': 1, 'savings': 2 };
-
-    // ============================================================================
-    // DEPOSIT TYPE
-    // ============================================================================
-
-    MobilePayroll.enums.DEPOSIT_TYPE = { 0: 'Unspecified', 1: 'Full (Remainder)', 2: 'Fixed Amount', 3: 'Percentage' };
-    MobilePayroll.enums.DEPOSIT_TYPE_VALUES = { 'full': 1, 'remainder': 1, 'fixed': 2, 'percentage': 3, 'percent': 3 };
-
-    // ============================================================================
-    // GARNISHMENT TYPE
-    // ============================================================================
-
-    MobilePayroll.enums.GARNISHMENT_TYPE = {
-        0: 'Unspecified', 1: 'Child Support', 2: 'Spousal Support', 3: 'Tax Levy',
-        4: 'Creditor', 5: 'Student Loan', 6: 'Bankruptcy'
-    };
-
-    MobilePayroll.enums.GARNISHMENT_TYPE_VALUES = {
-        'child': 1, 'spousal': 2, 'alimony': 2, 'tax': 3, 'levy': 3,
-        'creditor': 4, 'student': 5, 'loan': 5, 'bankruptcy': 6
-    };
-
-    // ============================================================================
-    // GARNISHMENT STATUS
-    // ============================================================================
-
-    MobilePayroll.enums.GARNISHMENT_STATUS = { 0: 'Unspecified', 1: 'Active', 2: 'Suspended', 3: 'Completed', 4: 'Cancelled' };
-    MobilePayroll.enums.GARNISHMENT_STATUS_VALUES = { 'active': 1, 'suspended': 2, 'completed': 3, 'cancelled': 4 };
-    MobilePayroll.enums.GARNISHMENT_STATUS_CLASSES = {
-        1: 'status-active', 2: 'status-pending', 3: 'status-inactive', 4: 'status-terminated'
-    };
-
-    // ============================================================================
-    // YEAR END DOCUMENT
-    // ============================================================================
-
-    MobilePayroll.enums.YEAR_END_DOC_TYPE = {
-        0: 'Unspecified', 1: 'W-2', 2: 'W-2C', 3: '1099-MISC', 4: '1099-NEC', 5: 'T4 (Canada)', 6: 'T4A (Canada)'
-    };
-
-    MobilePayroll.enums.YEAR_END_DOC_TYPE_VALUES = {
-        'w2': 1, 'w-2': 1, 'w2c': 2, 'w-2c': 2, '1099': 3, '1099-misc': 3, '1099-nec': 4, 't4': 5, 't4a': 6
-    };
-
-    MobilePayroll.enums.YEAR_END_DOC_STATUS = { 0: 'Unspecified', 1: 'Draft', 2: 'Generated', 3: 'Issued', 4: 'Filed' };
-    MobilePayroll.enums.YEAR_END_DOC_STATUS_VALUES = { 'draft': 1, 'generated': 2, 'issued': 3, 'filed': 4 };
-    MobilePayroll.enums.YEAR_END_DOC_STATUS_CLASSES = {
-        1: 'status-inactive', 2: 'status-pending', 3: 'status-active', 4: 'status-active'
+    MobilePayroll.enums = {
+        PAY_FREQUENCY: PAY_FREQUENCY.enum,
+        PAY_FREQUENCY_VALUES: PAY_FREQUENCY.values,
+        PAY_COMPONENT_TYPE: PAY_COMPONENT_TYPE.enum,
+        PAY_COMPONENT_TYPE_VALUES: PAY_COMPONENT_TYPE.values,
+        PAY_COMPONENT_TYPE_CLASSES: PAY_COMPONENT_TYPE.classes,
+        PAY_COMPONENT_CATEGORY: PAY_COMPONENT_CATEGORY.enum,
+        CALCULATION_TYPE: CALCULATION_TYPE.enum,
+        CALCULATION_TYPE_VALUES: CALCULATION_TYPE.values,
+        PAYROLL_RUN_STATUS: PAYROLL_RUN_STATUS.enum,
+        PAYROLL_RUN_STATUS_VALUES: PAYROLL_RUN_STATUS.values,
+        PAYROLL_RUN_STATUS_CLASSES: PAYROLL_RUN_STATUS.classes,
+        PAYROLL_RUN_TYPE: PAYROLL_RUN_TYPE.enum,
+        PAYROLL_RUN_TYPE_VALUES: PAYROLL_RUN_TYPE.values,
+        TAX_TYPE: TAX_TYPE.enum,
+        TAX_TYPE_VALUES: TAX_TYPE.values,
+        FILING_STATUS: FILING_STATUS.enum,
+        FILING_STATUS_VALUES: FILING_STATUS.values,
+        ACCOUNT_TYPE: ACCOUNT_TYPE.enum,
+        ACCOUNT_TYPE_VALUES: ACCOUNT_TYPE.values,
+        DEPOSIT_TYPE: DEPOSIT_TYPE.enum,
+        DEPOSIT_TYPE_VALUES: DEPOSIT_TYPE.values,
+        GARNISHMENT_TYPE: GARNISHMENT_TYPE.enum,
+        GARNISHMENT_TYPE_VALUES: GARNISHMENT_TYPE.values,
+        GARNISHMENT_STATUS: GARNISHMENT_STATUS.enum,
+        GARNISHMENT_STATUS_VALUES: GARNISHMENT_STATUS.values,
+        GARNISHMENT_STATUS_CLASSES: GARNISHMENT_STATUS.classes,
+        YEAR_END_DOC_TYPE: YEAR_END_DOC_TYPE.enum,
+        YEAR_END_DOC_TYPE_VALUES: YEAR_END_DOC_TYPE.values,
+        YEAR_END_DOC_STATUS: YEAR_END_DOC_STATUS.enum,
+        YEAR_END_DOC_STATUS_VALUES: YEAR_END_DOC_STATUS.values,
+        YEAR_END_DOC_STATUS_CLASSES: YEAR_END_DOC_STATUS.classes
     };
 
     // ============================================================================
@@ -219,35 +161,23 @@ limitations under the License.
     // ============================================================================
 
     MobilePayroll.render = {
-        payFrequency: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.PAY_FREQUENCY),
-        componentType: Layer8MRenderers.createStatusRenderer(
-            MobilePayroll.enums.PAY_COMPONENT_TYPE,
-            MobilePayroll.enums.PAY_COMPONENT_TYPE_CLASSES
-        ),
-        componentCategory: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.PAY_COMPONENT_CATEGORY),
-        calculationType: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.CALCULATION_TYPE),
-        payrollRunStatus: Layer8MRenderers.createStatusRenderer(
-            MobilePayroll.enums.PAYROLL_RUN_STATUS,
-            MobilePayroll.enums.PAYROLL_RUN_STATUS_CLASSES
-        ),
-        payrollRunType: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.PAYROLL_RUN_TYPE),
-        taxType: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.TAX_TYPE),
-        filingStatus: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.FILING_STATUS),
-        accountType: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.ACCOUNT_TYPE),
-        depositType: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.DEPOSIT_TYPE),
-        garnishmentType: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.GARNISHMENT_TYPE),
-        garnishmentStatus: Layer8MRenderers.createStatusRenderer(
-            MobilePayroll.enums.GARNISHMENT_STATUS,
-            MobilePayroll.enums.GARNISHMENT_STATUS_CLASSES
-        ),
-        yearEndDocType: (v) => Layer8MRenderers.renderEnum(v, MobilePayroll.enums.YEAR_END_DOC_TYPE),
-        yearEndDocStatus: Layer8MRenderers.createStatusRenderer(
-            MobilePayroll.enums.YEAR_END_DOC_STATUS,
-            MobilePayroll.enums.YEAR_END_DOC_STATUS_CLASSES
-        ),
-        money: Layer8MRenderers.renderMoney,
-        boolean: Layer8MRenderers.renderBoolean,
-        date: Layer8MRenderers.renderDate
+        payFrequency: (v) => renderEnum(v, PAY_FREQUENCY.enum),
+        componentType: createStatusRenderer(PAY_COMPONENT_TYPE.enum, PAY_COMPONENT_TYPE.classes),
+        componentCategory: (v) => renderEnum(v, PAY_COMPONENT_CATEGORY.enum),
+        calculationType: (v) => renderEnum(v, CALCULATION_TYPE.enum),
+        payrollRunStatus: createStatusRenderer(PAYROLL_RUN_STATUS.enum, PAYROLL_RUN_STATUS.classes),
+        payrollRunType: (v) => renderEnum(v, PAYROLL_RUN_TYPE.enum),
+        taxType: (v) => renderEnum(v, TAX_TYPE.enum),
+        filingStatus: (v) => renderEnum(v, FILING_STATUS.enum),
+        accountType: (v) => renderEnum(v, ACCOUNT_TYPE.enum),
+        depositType: (v) => renderEnum(v, DEPOSIT_TYPE.enum),
+        garnishmentType: (v) => renderEnum(v, GARNISHMENT_TYPE.enum),
+        garnishmentStatus: createStatusRenderer(GARNISHMENT_STATUS.enum, GARNISHMENT_STATUS.classes),
+        yearEndDocType: (v) => renderEnum(v, YEAR_END_DOC_TYPE.enum),
+        yearEndDocStatus: createStatusRenderer(YEAR_END_DOC_STATUS.enum, YEAR_END_DOC_STATUS.classes),
+        money: renderMoney,
+        boolean: renderBoolean,
+        date: renderDate
     };
 
 })();

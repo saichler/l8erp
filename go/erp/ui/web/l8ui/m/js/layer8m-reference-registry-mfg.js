@@ -6,213 +6,68 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 /**
  * Mobile Reference Registry - Manufacturing Module
  * Reference configurations for Manufacturing models
+ * Uses Layer8RefFactory for reduced boilerplate
  */
-(function() {
-    'use strict';
+const refMfgM = window.Layer8RefFactory;
 
-    window.Layer8MReferenceRegistryMFG = {
-        // ========================================
-        // Manufacturing - Engineering
-        // ========================================
-        MfgBom: {
-            idColumn: 'bomId',
-            displayColumn: 'name',
-            selectColumns: ['bomId', 'name'],
-            displayLabel: 'BOM'
-        },
-        MfgBomLine: {
-            idColumn: 'lineId',
-            displayColumn: 'lineId'
-        },
-        MfgRouting: {
-            idColumn: 'routingId',
-            displayColumn: 'name',
-            selectColumns: ['routingId', 'name'],
-            displayLabel: 'Routing'
-        },
-        MfgRoutingOperation: {
-            idColumn: 'operationId',
-            displayColumn: 'name'
-        },
-        MfgEngChangeOrder: {
-            idColumn: 'changeOrderId',
-            displayColumn: 'ecoNumber',
-            selectColumns: ['changeOrderId', 'ecoNumber', 'description'],
-            displayFormat: function(item) {
-                return item.ecoNumber + ' - ' + item.description;
-            },
-            displayLabel: 'ECO'
-        },
-        MfgEngChangeDetail: {
-            idColumn: 'detailId',
-            displayColumn: 'detailId'
-        },
+window.Layer8MReferenceRegistryMFG = {
+    // ========================================
+    // Manufacturing - Engineering
+    // ========================================
+    ...refMfgM.simple('MfgBom', 'bomId', 'bomNumber', 'BOM'),
+    ...refMfgM.idOnly('MfgBomLine', 'lineId'),
+    ...refMfgM.simple('MfgRouting', 'routingId', 'routingNumber', 'Routing'),
+    ...refMfgM.simple('MfgRoutingOperation', 'operationId', 'operationName'),
+    ...refMfgM.coded('MfgEngChangeOrder', 'changeOrderId', 'ecoNumber', 'description'),
+    ...refMfgM.idOnly('MfgEngChangeDetail', 'detailId'),
 
-        // ========================================
-        // Manufacturing - Production
-        // ========================================
-        MfgWorkOrder: {
-            idColumn: 'workOrderId',
-            displayColumn: 'orderNumber',
-            selectColumns: ['workOrderId', 'orderNumber'],
-            displayLabel: 'Work Order'
-        },
-        MfgWorkOrderOp: {
-            idColumn: 'operationId',
-            displayColumn: 'name'
-        },
-        MfgProductionOrder: {
-            idColumn: 'prodOrderId',
-            displayColumn: 'orderNumber',
-            selectColumns: ['prodOrderId', 'orderNumber'],
-            displayLabel: 'Production Order'
-        },
-        MfgProdOrderLine: {
-            idColumn: 'lineId',
-            displayColumn: 'lineId'
-        },
-        MfgProdBatch: {
-            idColumn: 'batchId',
-            displayColumn: 'batchNumber',
-            selectColumns: ['batchId', 'batchNumber'],
-            displayLabel: 'Batch'
-        },
-        MfgProdConsumption: {
-            idColumn: 'consumptionId',
-            displayColumn: 'consumptionId'
-        },
+    // ========================================
+    // Manufacturing - Production
+    // ========================================
+    ...refMfgM.simple('MfgWorkOrder', 'workOrderId', 'workOrderNumber', 'Work Order'),
+    ...refMfgM.simple('MfgWorkOrderOp', 'operationId', 'name'),
+    ...refMfgM.simple('MfgProductionOrder', 'prodOrderId', 'orderNumber', 'Production Order'),
+    ...refMfgM.idOnly('MfgProdOrderLine', 'lineId'),
+    ...refMfgM.simple('MfgProdBatch', 'batchId', 'batchNumber', 'Batch'),
+    ...refMfgM.idOnly('MfgProdConsumption', 'consumptionId'),
 
-        // ========================================
-        // Manufacturing - Shop Floor
-        // ========================================
-        MfgWorkCenter: {
-            idColumn: 'workCenterId',
-            displayColumn: 'name',
-            selectColumns: ['workCenterId', 'code', 'name'],
-            displayFormat: function(item) {
-                return item.code + ' - ' + item.name;
-            },
-            displayLabel: 'Work Center'
-        },
-        MfgWorkCenterCap: {
-            idColumn: 'capacityId',
-            displayColumn: 'capacityId'
-        },
-        MfgLaborEntry: {
-            idColumn: 'entryId',
-            displayColumn: 'entryId'
-        },
-        MfgMachineEntry: {
-            idColumn: 'entryId',
-            displayColumn: 'entryId'
-        },
-        MfgShiftSchedule: {
-            idColumn: 'scheduleId',
-            displayColumn: 'name',
-            selectColumns: ['scheduleId', 'name'],
-            displayLabel: 'Shift'
-        },
-        MfgDowntimeEvent: {
-            idColumn: 'eventId',
-            displayColumn: 'eventId'
-        },
+    // ========================================
+    // Manufacturing - Shop Floor
+    // ========================================
+    ...refMfgM.coded('MfgWorkCenter', 'workCenterId', 'code', 'name'),
+    ...refMfgM.idOnly('MfgWorkCenterCap', 'capacityId'),
+    ...refMfgM.idOnly('MfgLaborEntry', 'entryId'),
+    ...refMfgM.idOnly('MfgMachineEntry', 'entryId'),
+    ...refMfgM.simple('MfgShiftSchedule', 'scheduleId', 'name', 'Shift'),
+    ...refMfgM.idOnly('MfgDowntimeEvent', 'eventId'),
 
-        // ========================================
-        // Manufacturing - Quality
-        // ========================================
-        MfgQualityPlan: {
-            idColumn: 'planId',
-            displayColumn: 'name',
-            selectColumns: ['planId', 'name'],
-            displayLabel: 'Quality Plan'
-        },
-        MfgInspectionPoint: {
-            idColumn: 'pointId',
-            displayColumn: 'name'
-        },
-        MfgQualityInspection: {
-            idColumn: 'inspectionId',
-            displayColumn: 'inspectionNumber',
-            selectColumns: ['inspectionId', 'inspectionNumber'],
-            displayLabel: 'Inspection'
-        },
-        MfgTestResult: {
-            idColumn: 'resultId',
-            displayColumn: 'resultId'
-        },
-        MfgNCR: {
-            idColumn: 'ncrId',
-            displayColumn: 'ncrNumber',
-            selectColumns: ['ncrId', 'ncrNumber'],
-            displayLabel: 'NCR'
-        },
-        MfgNCRAction: {
-            idColumn: 'actionId',
-            displayColumn: 'actionId'
-        },
+    // ========================================
+    // Manufacturing - Quality
+    // ========================================
+    ...refMfgM.simple('MfgQualityPlan', 'planId', 'name', 'Quality Plan'),
+    ...refMfgM.simple('MfgInspectionPoint', 'pointId', 'name'),
+    ...refMfgM.simple('MfgQualityInspection', 'inspectionId', 'inspectionNumber', 'Inspection'),
+    ...refMfgM.idOnly('MfgTestResult', 'resultId'),
+    ...refMfgM.simple('MfgNCR', 'ncrId', 'ncrNumber', 'NCR'),
+    ...refMfgM.idOnly('MfgNCRAction', 'actionId'),
 
-        // ========================================
-        // Manufacturing - Planning
-        // ========================================
-        MfgMrpRun: {
-            idColumn: 'runId',
-            displayColumn: 'name',
-            selectColumns: ['runId', 'name'],
-            displayLabel: 'MRP Run'
-        },
-        MfgMrpRequirement: {
-            idColumn: 'requirementId',
-            displayColumn: 'requirementId'
-        },
-        MfgCapacityPlan: {
-            idColumn: 'planId',
-            displayColumn: 'name',
-            selectColumns: ['planId', 'name'],
-            displayLabel: 'Capacity Plan'
-        },
-        MfgCapacityLoad: {
-            idColumn: 'loadId',
-            displayColumn: 'loadId'
-        },
-        MfgProdSchedule: {
-            idColumn: 'scheduleId',
-            displayColumn: 'name',
-            selectColumns: ['scheduleId', 'name'],
-            displayLabel: 'Schedule'
-        },
-        MfgScheduleBlock: {
-            idColumn: 'blockId',
-            displayColumn: 'blockId'
-        },
+    // ========================================
+    // Manufacturing - Planning
+    // ========================================
+    ...refMfgM.simple('MfgMrpRun', 'runId', 'runNumber', 'MRP Run'),
+    ...refMfgM.idOnly('MfgMrpRequirement', 'requirementId'),
+    ...refMfgM.simple('MfgCapacityPlan', 'planId', 'planNumber', 'Capacity Plan'),
+    ...refMfgM.idOnly('MfgCapacityLoad', 'loadId'),
+    ...refMfgM.simple('MfgProdSchedule', 'scheduleId', 'scheduleNumber', 'Schedule'),
+    ...refMfgM.idOnly('MfgScheduleBlock', 'blockId'),
 
-        // ========================================
-        // Manufacturing - Costing
-        // ========================================
-        MfgStandardCost: {
-            idColumn: 'costId',
-            displayColumn: 'costId'
-        },
-        MfgCostRollup: {
-            idColumn: 'rollupId',
-            displayColumn: 'rollupId'
-        },
-        MfgActualCost: {
-            idColumn: 'actualCostId',
-            displayColumn: 'actualCostId'
-        },
-        MfgCostVariance: {
-            idColumn: 'varianceId',
-            displayColumn: 'varianceId'
-        },
-        MfgOverhead: {
-            idColumn: 'overheadId',
-            displayColumn: 'name',
-            selectColumns: ['overheadId', 'name'],
-            displayLabel: 'Overhead'
-        },
-        MfgOverheadAlloc: {
-            idColumn: 'allocationId',
-            displayColumn: 'allocationId'
-        }
-    };
-})();
+    // ========================================
+    // Manufacturing - Costing
+    // ========================================
+    ...refMfgM.idOnly('MfgStandardCost', 'costId'),
+    ...refMfgM.idOnly('MfgCostRollup', 'rollupId'),
+    ...refMfgM.idOnly('MfgActualCost', 'actualCostId'),
+    ...refMfgM.idOnly('MfgCostVariance', 'varianceId'),
+    ...refMfgM.simple('MfgOverhead', 'overheadId', 'name', 'Overhead'),
+    ...refMfgM.idOnly('MfgOverheadAlloc', 'allocationId')
+};

@@ -2,108 +2,68 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
-// Documents Integration Module - Enum Definitions
+// Documents Integration Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate, renderFileSize } = Layer8DRenderers;
+
     window.DocIntegration = window.DocIntegration || {};
-    DocIntegration.enums = {};
 
-    // TEMPLATE TYPE
-    DocIntegration.enums.TEMPLATE_TYPE = {
-        0: 'Unspecified',
-        1: 'Document',
-        2: 'Email',
-        3: 'Form',
-        4: 'Report',
-        5: 'Contract'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const TEMPLATE_TYPE = factory.simple([
+        'Unspecified', 'Document', 'Email', 'Form', 'Report', 'Contract'
+    ]);
+
+    const FIELD_TYPE = factory.simple([
+        'Unspecified', 'Text', 'Number', 'Date', 'Boolean', 'Select', 'Reference'
+    ]);
+
+    const SCAN_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Processing', 'processing', 'layer8d-status-active'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Failed', 'failed', 'layer8d-status-terminated']
+    ]);
+
+    const EMAIL_CAPTURE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Received', 'received', 'layer8d-status-active'],
+        ['Processed', 'processed', 'layer8d-status-pending'],
+        ['Filed', 'filed', 'layer8d-status-active'],
+        ['Failed', 'failed', 'layer8d-status-terminated']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    DocIntegration.enums = {
+        TEMPLATE_TYPE: TEMPLATE_TYPE.enum,
+        FIELD_TYPE: FIELD_TYPE.enum,
+        SCAN_STATUS: SCAN_STATUS.enum,
+        SCAN_STATUS_CLASSES: SCAN_STATUS.classes,
+        EMAIL_CAPTURE_STATUS: EMAIL_CAPTURE_STATUS.enum,
+        EMAIL_CAPTURE_STATUS_CLASSES: EMAIL_CAPTURE_STATUS.classes
     };
 
-    DocIntegration.enums.TEMPLATE_TYPE_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-pending'
-    };
-
-    // FIELD TYPE
-    DocIntegration.enums.FIELD_TYPE = {
-        0: 'Unspecified',
-        1: 'Text',
-        2: 'Number',
-        3: 'Date',
-        4: 'Boolean',
-        5: 'Select',
-        6: 'Reference'
-    };
-
-    DocIntegration.enums.FIELD_TYPE_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-pending'
-    };
-
-    // SCAN STATUS
-    DocIntegration.enums.SCAN_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'Processing',
-        3: 'Completed',
-        4: 'Failed'
-    };
-
-    DocIntegration.enums.SCAN_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated'
-    };
-
-    // EMAIL CAPTURE STATUS
-    DocIntegration.enums.EMAIL_CAPTURE_STATUS = {
-        0: 'Unspecified',
-        1: 'Received',
-        2: 'Processed',
-        3: 'Filed',
-        4: 'Failed'
-    };
-
-    DocIntegration.enums.EMAIL_CAPTURE_STATUS_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated'
-    };
-
+    // ============================================================================
     // RENDERERS
-    DocIntegration.render = {};
+    // ============================================================================
 
-    DocIntegration.render.templateType = Layer8DRenderers.createStatusRenderer(
-        DocIntegration.enums.TEMPLATE_TYPE,
-        DocIntegration.enums.TEMPLATE_TYPE_CLASSES
-    );
-
-    DocIntegration.render.fieldType = Layer8DRenderers.createStatusRenderer(
-        DocIntegration.enums.FIELD_TYPE,
-        DocIntegration.enums.FIELD_TYPE_CLASSES
-    );
-
-    DocIntegration.render.scanStatus = Layer8DRenderers.createStatusRenderer(
-        DocIntegration.enums.SCAN_STATUS,
-        DocIntegration.enums.SCAN_STATUS_CLASSES
-    );
-
-    DocIntegration.render.emailCaptureStatus = Layer8DRenderers.createStatusRenderer(
-        DocIntegration.enums.EMAIL_CAPTURE_STATUS,
-        DocIntegration.enums.EMAIL_CAPTURE_STATUS_CLASSES
-    );
-
-    DocIntegration.render.date = Layer8DRenderers.renderDate;
-    DocIntegration.render.fileSize = Layer8DRenderers.renderFileSize;
+    DocIntegration.render = {
+        templateType: (v) => renderEnum(v, TEMPLATE_TYPE.enum),
+        fieldType: (v) => renderEnum(v, FIELD_TYPE.enum),
+        scanStatus: createStatusRenderer(SCAN_STATUS.enum, SCAN_STATUS.classes),
+        emailCaptureStatus: createStatusRenderer(EMAIL_CAPTURE_STATUS.enum, EMAIL_CAPTURE_STATUS.classes),
+        date: renderDate,
+        fileSize: renderFileSize
+    };
 
 })();

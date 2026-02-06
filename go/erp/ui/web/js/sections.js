@@ -126,6 +126,18 @@ function loadSection(sectionName) {
             setTimeout(() => {
                 contentArea.innerHTML = html;
 
+                // Handle section generator placeholder pattern
+                // Scripts in innerHTML don't execute, so we need to call the generator directly
+                const placeholder = contentArea.querySelector('[id$="-section-placeholder"]');
+                if (placeholder && window.Layer8SectionGenerator) {
+                    const generatedHtml = Layer8SectionGenerator.generate(sectionName);
+                    // Use a more reliable DOM replacement method
+                    const temp = document.createElement('div');
+                    temp.innerHTML = generatedHtml;
+                    // Replace placeholder with generated elements (skip text nodes)
+                    placeholder.replaceWith(...temp.children);
+                }
+
                 // Add fade-in animation
                 setTimeout(() => {
                     contentArea.style.transition = 'opacity 0.5s ease, transform 0.5s ease';

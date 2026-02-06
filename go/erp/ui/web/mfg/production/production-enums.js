@@ -12,87 +12,70 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Manufacturing Production Module - Enum Definitions
+// Manufacturing Production Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8DRenderers;
+
     window.MfgProduction = window.MfgProduction || {};
-    MfgProduction.enums = {};
 
-    // WORK ORDER STATUS
-    MfgProduction.enums.WORK_ORDER_STATUS = {
-        0: 'Unspecified',
-        1: 'Planned',
-        2: 'Released',
-        3: 'In Progress',
-        4: 'On Hold',
-        5: 'Completed',
-        6: 'Closed',
-        7: 'Cancelled'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const WORK_ORDER_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Planned', 'planned', 'layer8d-status-pending'],
+        ['Released', 'released', 'layer8d-status-active'],
+        ['In Progress', 'progress', 'layer8d-status-active'],
+        ['On Hold', 'hold', 'layer8d-status-inactive'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Closed', 'closed', 'layer8d-status-inactive'],
+        ['Cancelled', 'cancelled', 'layer8d-status-terminated']
+    ]);
+
+    const OPERATION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['In Progress', 'progress', 'layer8d-status-active'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Skipped', 'skipped', 'layer8d-status-inactive']
+    ]);
+
+    const BATCH_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Created', 'created', 'layer8d-status-pending'],
+        ['In Process', 'process', 'layer8d-status-active'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Rejected', 'rejected', 'layer8d-status-terminated']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    MfgProduction.enums = {
+        WORK_ORDER_STATUS: WORK_ORDER_STATUS.enum,
+        WORK_ORDER_STATUS_CLASSES: WORK_ORDER_STATUS.classes,
+        OPERATION_STATUS: OPERATION_STATUS.enum,
+        OPERATION_STATUS_CLASSES: OPERATION_STATUS.classes,
+        BATCH_STATUS: BATCH_STATUS.enum,
+        BATCH_STATUS_CLASSES: BATCH_STATUS.classes
     };
 
-    MfgProduction.enums.WORK_ORDER_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-inactive',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-inactive',
-        7: 'layer8d-status-terminated'
-    };
-
-    // OPERATION STATUS
-    MfgProduction.enums.OPERATION_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'In Progress',
-        3: 'Completed',
-        4: 'Skipped'
-    };
-
-    MfgProduction.enums.OPERATION_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-inactive'
-    };
-
-    // BATCH STATUS
-    MfgProduction.enums.BATCH_STATUS = {
-        0: 'Unspecified',
-        1: 'Created',
-        2: 'In Process',
-        3: 'Completed',
-        4: 'Rejected'
-    };
-
-    MfgProduction.enums.BATCH_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated'
-    };
-
+    // ============================================================================
     // RENDERERS
-    MfgProduction.render = {};
+    // ============================================================================
 
-    MfgProduction.render.workOrderStatus = Layer8DRenderers.createStatusRenderer(
-        MfgProduction.enums.WORK_ORDER_STATUS,
-        MfgProduction.enums.WORK_ORDER_STATUS_CLASSES
-    );
-
-    MfgProduction.render.operationStatus = Layer8DRenderers.createStatusRenderer(
-        MfgProduction.enums.OPERATION_STATUS,
-        MfgProduction.enums.OPERATION_STATUS_CLASSES
-    );
-
-    MfgProduction.render.batchStatus = Layer8DRenderers.createStatusRenderer(
-        MfgProduction.enums.BATCH_STATUS,
-        MfgProduction.enums.BATCH_STATUS_CLASSES
-    );
-
-    MfgProduction.render.date = Layer8DRenderers.renderDate;
-    MfgProduction.render.money = Layer8DRenderers.renderMoney;
+    MfgProduction.render = {
+        workOrderStatus: createStatusRenderer(WORK_ORDER_STATUS.enum, WORK_ORDER_STATUS.classes),
+        operationStatus: createStatusRenderer(OPERATION_STATUS.enum, OPERATION_STATUS.classes),
+        batchStatus: createStatusRenderer(BATCH_STATUS.enum, BATCH_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

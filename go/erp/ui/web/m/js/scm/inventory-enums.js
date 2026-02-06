@@ -13,78 +13,70 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Inventory Module - Enum Definitions
+ * Mobile Inventory Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: scm/inventory/inventory-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileInventory = window.MobileInventory || {};
-    MobileInventory.enums = {};
 
     // ============================================================================
-    // ITEM TYPE
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileInventory.enums.ITEM_TYPE = {
-        0: 'Unspecified', 1: 'Raw Material', 2: 'Finished Good',
-        3: 'Semi-Finished', 4: 'Consumable', 5: 'Service'
-    };
-    MobileInventory.enums.ITEM_TYPE_VALUES = {
-        'raw': 1, 'material': 1, 'finished': 2, 'good': 2, 'semi': 3,
-        'consumable': 4, 'service': 5
-    };
+    const ITEM_TYPE = factory.withValues([
+        ['Unspecified', null], ['Raw Material', 'raw'], ['Finished Good', 'finished'],
+        ['Semi-Finished', 'semi'], ['Consumable', 'consumable'], ['Service', 'service']
+    ]);
+
+    const VALUATION_METHOD = factory.withValues([
+        ['Unspecified', null], ['FIFO', 'fifo'], ['LIFO', 'lifo'],
+        ['Weighted Average', 'weighted'], ['Standard Cost', 'standard']
+    ]);
+
+    const MOVEMENT_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Receipt', 'receipt', 'status-active'],
+        ['Issue', 'issue', 'status-pending'],
+        ['Transfer', 'transfer', 'status-pending'],
+        ['Adjustment', 'adjustment', 'status-inactive'],
+        ['Return', 'return', 'status-terminated']
+    ]);
+
+    const PLANNING_METHOD = factory.withValues([
+        ['Unspecified', null], ['Reorder Point', 'reorder'], ['MRP', 'mrp'],
+        ['Kanban', 'kanban'], ['Min-Max', 'min']
+    ]);
+
+    const TASK_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'status-pending'],
+        ['In Progress', 'progress', 'status-active'],
+        ['Completed', 'completed', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-terminated']
+    ]);
 
     // ============================================================================
-    // VALUATION METHOD
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileInventory.enums.VALUATION_METHOD = {
-        0: 'Unspecified', 1: 'FIFO', 2: 'LIFO', 3: 'Weighted Average', 4: 'Standard Cost'
-    };
-    MobileInventory.enums.VALUATION_METHOD_VALUES = {
-        'fifo': 1, 'lifo': 2, 'weighted': 3, 'average': 3, 'standard': 4
-    };
-
-    // ============================================================================
-    // MOVEMENT TYPE
-    // ============================================================================
-
-    MobileInventory.enums.MOVEMENT_TYPE = {
-        0: 'Unspecified', 1: 'Receipt', 2: 'Issue', 3: 'Transfer',
-        4: 'Adjustment', 5: 'Return'
-    };
-    MobileInventory.enums.MOVEMENT_TYPE_VALUES = {
-        'receipt': 1, 'issue': 2, 'transfer': 3, 'adjustment': 4, 'return': 5
-    };
-    MobileInventory.enums.MOVEMENT_TYPE_CLASSES = {
-        1: 'status-active', 2: 'status-pending', 3: 'status-pending',
-        4: 'status-inactive', 5: 'status-terminated'
-    };
-
-    // ============================================================================
-    // PLANNING METHOD
-    // ============================================================================
-
-    MobileInventory.enums.PLANNING_METHOD = {
-        0: 'Unspecified', 1: 'Reorder Point', 2: 'MRP', 3: 'Kanban', 4: 'Min-Max'
-    };
-    MobileInventory.enums.PLANNING_METHOD_VALUES = {
-        'reorder': 1, 'point': 1, 'mrp': 2, 'kanban': 3, 'min': 4, 'max': 4
-    };
-
-    // ============================================================================
-    // TASK STATUS
-    // ============================================================================
-
-    MobileInventory.enums.TASK_STATUS = {
-        0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Cancelled'
-    };
-    MobileInventory.enums.TASK_STATUS_VALUES = {
-        'pending': 1, 'progress': 2, 'in': 2, 'completed': 3, 'cancelled': 4
-    };
-    MobileInventory.enums.TASK_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-terminated'
+    MobileInventory.enums = {
+        ITEM_TYPE: ITEM_TYPE.enum,
+        ITEM_TYPE_VALUES: ITEM_TYPE.values,
+        VALUATION_METHOD: VALUATION_METHOD.enum,
+        VALUATION_METHOD_VALUES: VALUATION_METHOD.values,
+        MOVEMENT_TYPE: MOVEMENT_TYPE.enum,
+        MOVEMENT_TYPE_VALUES: MOVEMENT_TYPE.values,
+        MOVEMENT_TYPE_CLASSES: MOVEMENT_TYPE.classes,
+        PLANNING_METHOD: PLANNING_METHOD.enum,
+        PLANNING_METHOD_VALUES: PLANNING_METHOD.values,
+        TASK_STATUS: TASK_STATUS.enum,
+        TASK_STATUS_VALUES: TASK_STATUS.values,
+        TASK_STATUS_CLASSES: TASK_STATUS.classes
     };
 
     // ============================================================================
@@ -92,20 +84,14 @@ limitations under the License.
     // ============================================================================
 
     MobileInventory.render = {
-        itemType: (v) => Layer8MRenderers.renderEnum(v, MobileInventory.enums.ITEM_TYPE),
-        valuationMethod: (v) => Layer8MRenderers.renderEnum(v, MobileInventory.enums.VALUATION_METHOD),
-        planningMethod: (v) => Layer8MRenderers.renderEnum(v, MobileInventory.enums.PLANNING_METHOD),
-        movementType: Layer8MRenderers.createStatusRenderer(
-            MobileInventory.enums.MOVEMENT_TYPE,
-            MobileInventory.enums.MOVEMENT_TYPE_CLASSES
-        ),
-        taskStatus: Layer8MRenderers.createStatusRenderer(
-            MobileInventory.enums.TASK_STATUS,
-            MobileInventory.enums.TASK_STATUS_CLASSES
-        ),
-        boolean: Layer8MRenderers.renderBoolean,
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        itemType: (v) => renderEnum(v, ITEM_TYPE.enum),
+        valuationMethod: (v) => renderEnum(v, VALUATION_METHOD.enum),
+        planningMethod: (v) => renderEnum(v, PLANNING_METHOD.enum),
+        movementType: createStatusRenderer(MOVEMENT_TYPE.enum, MOVEMENT_TYPE.classes),
+        taskStatus: createStatusRenderer(TASK_STATUS.enum, TASK_STATUS.classes),
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

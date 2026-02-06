@@ -13,55 +13,74 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Manufacturing Production Module - Enum Definitions
+ * Mobile Manufacturing Production Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: mfg/production/production-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileMfgProduction = window.MobileMfgProduction || {};
-    MobileMfgProduction.enums = {};
 
-    // WORK ORDER STATUS
-    MobileMfgProduction.enums.WORK_ORDER_STATUS = {
-        0: 'Unspecified', 1: 'Planned', 2: 'Released', 3: 'In Progress', 4: 'On Hold', 5: 'Completed', 6: 'Closed', 7: 'Cancelled'
-    };
-    MobileMfgProduction.enums.WORK_ORDER_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-inactive', 5: 'status-active', 6: 'status-inactive', 7: 'status-terminated'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const WORK_ORDER_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Planned', 'planned', 'status-pending'],
+        ['Released', 'released', 'status-active'],
+        ['In Progress', 'progress', 'status-active'],
+        ['On Hold', 'hold', 'status-inactive'],
+        ['Completed', 'completed', 'status-active'],
+        ['Closed', 'closed', 'status-inactive'],
+        ['Cancelled', 'cancelled', 'status-terminated']
+    ]);
+
+    const OPERATION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'status-pending'],
+        ['In Progress', 'progress', 'status-active'],
+        ['Completed', 'completed', 'status-active'],
+        ['Skipped', 'skipped', 'status-inactive']
+    ]);
+
+    const BATCH_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Created', 'created', 'status-pending'],
+        ['In Process', 'process', 'status-active'],
+        ['Completed', 'completed', 'status-active'],
+        ['Rejected', 'rejected', 'status-terminated']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    MobileMfgProduction.enums = {
+        WORK_ORDER_STATUS: WORK_ORDER_STATUS.enum,
+        WORK_ORDER_STATUS_VALUES: WORK_ORDER_STATUS.values,
+        WORK_ORDER_STATUS_CLASSES: WORK_ORDER_STATUS.classes,
+        OPERATION_STATUS: OPERATION_STATUS.enum,
+        OPERATION_STATUS_VALUES: OPERATION_STATUS.values,
+        OPERATION_STATUS_CLASSES: OPERATION_STATUS.classes,
+        BATCH_STATUS: BATCH_STATUS.enum,
+        BATCH_STATUS_VALUES: BATCH_STATUS.values,
+        BATCH_STATUS_CLASSES: BATCH_STATUS.classes
     };
 
-    // OPERATION STATUS
-    MobileMfgProduction.enums.OPERATION_STATUS = {
-        0: 'Unspecified', 1: 'Pending', 2: 'In Progress', 3: 'Completed', 4: 'Skipped'
-    };
-    MobileMfgProduction.enums.OPERATION_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-inactive'
-    };
-
-    // BATCH STATUS
-    MobileMfgProduction.enums.BATCH_STATUS = {
-        0: 'Unspecified', 1: 'Created', 2: 'In Process', 3: 'Completed', 4: 'Rejected'
-    };
-    MobileMfgProduction.enums.BATCH_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-active', 4: 'status-terminated'
-    };
-
+    // ============================================================================
     // RENDER FUNCTIONS
+    // ============================================================================
+
     MobileMfgProduction.render = {
-        workOrderStatus: Layer8MRenderers.createStatusRenderer(
-            MobileMfgProduction.enums.WORK_ORDER_STATUS,
-            MobileMfgProduction.enums.WORK_ORDER_STATUS_CLASSES
-        ),
-        operationStatus: Layer8MRenderers.createStatusRenderer(
-            MobileMfgProduction.enums.OPERATION_STATUS,
-            MobileMfgProduction.enums.OPERATION_STATUS_CLASSES
-        ),
-        batchStatus: Layer8MRenderers.createStatusRenderer(
-            MobileMfgProduction.enums.BATCH_STATUS,
-            MobileMfgProduction.enums.BATCH_STATUS_CLASSES
-        ),
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        workOrderStatus: createStatusRenderer(WORK_ORDER_STATUS.enum, WORK_ORDER_STATUS.classes),
+        operationStatus: createStatusRenderer(OPERATION_STATUS.enum, OPERATION_STATUS.classes),
+        batchStatus: createStatusRenderer(BATCH_STATUS.enum, BATCH_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

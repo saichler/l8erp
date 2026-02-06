@@ -13,61 +13,53 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile General Ledger Module - Enum Definitions
+ * Mobile General Ledger Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: fin/general-ledger/general-ledger-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileGeneralLedger = window.MobileGeneralLedger || {};
-    MobileGeneralLedger.enums = {};
 
     // ============================================================================
-    // ACCOUNT TYPE
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileGeneralLedger.enums.ACCOUNT_TYPE = {
-        0: 'Unspecified', 1: 'Asset', 2: 'Liability', 3: 'Equity',
-        4: 'Revenue', 5: 'Expense'
-    };
-    MobileGeneralLedger.enums.ACCOUNT_TYPE_VALUES = {
-        'asset': 1, 'liability': 2, 'equity': 3, 'revenue': 4, 'expense': 5
-    };
+    const ACCOUNT_TYPE = factory.simple(['Unspecified', 'Asset', 'Liability', 'Equity', 'Revenue', 'Expense']);
+
+    const BALANCE_TYPE = factory.simple(['Unspecified', 'Debit', 'Credit']);
+
+    const JOURNAL_ENTRY_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Posted', 'posted', 'status-active'],
+        ['Reversed', 'reversed', 'status-inactive'],
+        ['Void', 'void', 'status-terminated']
+    ]);
+
+    const FISCAL_PERIOD_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Open', 'open', 'status-active'],
+        ['Closed', 'closed', 'status-inactive'],
+        ['Locked', 'locked', 'status-terminated']
+    ]);
 
     // ============================================================================
-    // BALANCE TYPE
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileGeneralLedger.enums.BALANCE_TYPE = {
-        0: 'Unspecified', 1: 'Debit', 2: 'Credit'
-    };
-
-    // ============================================================================
-    // JOURNAL ENTRY STATUS
-    // ============================================================================
-
-    MobileGeneralLedger.enums.JOURNAL_ENTRY_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Posted', 3: 'Reversed', 4: 'Void'
-    };
-    MobileGeneralLedger.enums.JOURNAL_ENTRY_STATUS_VALUES = {
-        'draft': 1, 'posted': 2, 'reversed': 3, 'void': 4
-    };
-    MobileGeneralLedger.enums.JOURNAL_ENTRY_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-inactive', 4: 'status-terminated'
-    };
-
-    // ============================================================================
-    // FISCAL PERIOD STATUS
-    // ============================================================================
-
-    MobileGeneralLedger.enums.FISCAL_PERIOD_STATUS = {
-        0: 'Unspecified', 1: 'Open', 2: 'Closed', 3: 'Locked'
-    };
-    MobileGeneralLedger.enums.FISCAL_PERIOD_STATUS_VALUES = {
-        'open': 1, 'closed': 2, 'locked': 3
-    };
-    MobileGeneralLedger.enums.FISCAL_PERIOD_STATUS_CLASSES = {
-        1: 'status-active', 2: 'status-inactive', 3: 'status-terminated'
+    MobileGeneralLedger.enums = {
+        ACCOUNT_TYPE: ACCOUNT_TYPE.enum,
+        BALANCE_TYPE: BALANCE_TYPE.enum,
+        JOURNAL_ENTRY_STATUS: JOURNAL_ENTRY_STATUS.enum,
+        JOURNAL_ENTRY_STATUS_VALUES: JOURNAL_ENTRY_STATUS.values,
+        JOURNAL_ENTRY_STATUS_CLASSES: JOURNAL_ENTRY_STATUS.classes,
+        FISCAL_PERIOD_STATUS: FISCAL_PERIOD_STATUS.enum,
+        FISCAL_PERIOD_STATUS_VALUES: FISCAL_PERIOD_STATUS.values,
+        FISCAL_PERIOD_STATUS_CLASSES: FISCAL_PERIOD_STATUS.classes
     };
 
     // ============================================================================
@@ -75,19 +67,13 @@ limitations under the License.
     // ============================================================================
 
     MobileGeneralLedger.render = {
-        accountType: (type) => Layer8MRenderers.renderEnum(type, MobileGeneralLedger.enums.ACCOUNT_TYPE),
-        balanceType: (type) => Layer8MRenderers.renderEnum(type, MobileGeneralLedger.enums.BALANCE_TYPE),
-        journalEntryStatus: Layer8MRenderers.createStatusRenderer(
-            MobileGeneralLedger.enums.JOURNAL_ENTRY_STATUS,
-            MobileGeneralLedger.enums.JOURNAL_ENTRY_STATUS_CLASSES
-        ),
-        fiscalPeriodStatus: Layer8MRenderers.createStatusRenderer(
-            MobileGeneralLedger.enums.FISCAL_PERIOD_STATUS,
-            MobileGeneralLedger.enums.FISCAL_PERIOD_STATUS_CLASSES
-        ),
-        boolean: Layer8MRenderers.renderBoolean,
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        accountType: (type) => renderEnum(type, ACCOUNT_TYPE.enum),
+        balanceType: (type) => renderEnum(type, BALANCE_TYPE.enum),
+        journalEntryStatus: createStatusRenderer(JOURNAL_ENTRY_STATUS.enum, JOURNAL_ENTRY_STATUS.classes),
+        fiscalPeriodStatus: createStatusRenderer(FISCAL_PERIOD_STATUS.enum, FISCAL_PERIOD_STATUS.classes),
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

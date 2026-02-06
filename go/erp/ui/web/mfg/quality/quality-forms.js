@@ -2,150 +2,107 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // Manufacturing Quality Module - Form Definitions
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
     window.MfgQuality = window.MfgQuality || {};
 
+    const f = window.Layer8FormFactory;
     const enums = MfgQuality.enums;
 
     MfgQuality.forms = {
-        MfgQualityPlan: {
-            title: 'Quality Plan',
-            sections: [
-                {
-                    title: 'Plan Details',
-                    fields: [
-                        { key: 'planNumber', label: 'Plan Number', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem' },
-                        { key: 'routingId', label: 'Routing', type: 'reference', lookupModel: 'MfgRouting' },
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
-                        { key: 'expiryDate', label: 'Expiry Date', type: 'date' },
-                        { key: 'revision', label: 'Revision', type: 'text' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        MfgQualityPlan: f.form('Quality Plan', [
+            f.section('Plan Details', [
+                ...f.text('planNumber', 'Plan Number', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('itemId', 'Item', 'ScmItem'),
+                ...f.reference('routingId', 'Routing', 'MfgRouting'),
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.date('expiryDate', 'Expiry Date'),
+                ...f.text('revision', 'Revision'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        MfgInspectionPoint: {
-            title: 'Inspection Point',
-            sections: [
-                {
-                    title: 'Point Details',
-                    fields: [
-                        { key: 'planId', label: 'Quality Plan', type: 'reference', lookupModel: 'MfgQualityPlan', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'inspectionType', label: 'Inspection Type', type: 'select', options: enums.INSPECTION_TYPE },
-                        { key: 'sequenceNumber', label: 'Sequence', type: 'number' },
-                        { key: 'characteristic', label: 'Characteristic', type: 'text' },
-                        { key: 'targetValue', label: 'Target Value', type: 'text' },
-                        { key: 'upperLimit', label: 'Upper Limit', type: 'number' },
-                        { key: 'lowerLimit', label: 'Lower Limit', type: 'number' },
-                        { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
-                        { key: 'isMandatory', label: 'Mandatory', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        MfgInspectionPoint: f.form('Inspection Point', [
+            f.section('Point Details', [
+                ...f.reference('planId', 'Quality Plan', 'MfgQualityPlan', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('inspectionType', 'Inspection Type', enums.INSPECTION_TYPE),
+                ...f.number('sequenceNumber', 'Sequence'),
+                ...f.text('characteristic', 'Characteristic'),
+                ...f.text('targetValue', 'Target Value'),
+                ...f.number('upperLimit', 'Upper Limit'),
+                ...f.number('lowerLimit', 'Lower Limit'),
+                ...f.text('unitOfMeasure', 'UOM'),
+                ...f.checkbox('isMandatory', 'Mandatory')
+            ])
+        ]),
 
-        MfgQualityInspection: {
-            title: 'Quality Inspection',
-            sections: [
-                {
-                    title: 'Inspection Details',
-                    fields: [
-                        { key: 'inspectionNumber', label: 'Inspection #', type: 'text', required: true },
-                        { key: 'planId', label: 'Quality Plan', type: 'reference', lookupModel: 'MfgQualityPlan' },
-                        { key: 'workOrderId', label: 'Work Order', type: 'reference', lookupModel: 'MfgWorkOrder' },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem' },
-                        { key: 'inspectionDate', label: 'Inspection Date', type: 'date', required: true },
-                        { key: 'inspectorId', label: 'Inspector', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'lotNumber', label: 'Lot Number', type: 'text' },
-                        { key: 'quantityInspected', label: 'Qty Inspected', type: 'number' },
-                        { key: 'quantityPassed', label: 'Qty Passed', type: 'number' },
-                        { key: 'quantityFailed', label: 'Qty Failed', type: 'number' },
-                        { key: 'result', label: 'Result', type: 'select', options: enums.INSPECTION_RESULT },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        MfgQualityInspection: f.form('Quality Inspection', [
+            f.section('Inspection Details', [
+                ...f.text('inspectionNumber', 'Inspection #', true),
+                ...f.reference('planId', 'Quality Plan', 'MfgQualityPlan'),
+                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder'),
+                ...f.reference('itemId', 'Item', 'ScmItem'),
+                ...f.date('inspectionDate', 'Inspection Date', true),
+                ...f.reference('inspectorId', 'Inspector', 'Employee'),
+                ...f.text('lotNumber', 'Lot Number'),
+                ...f.number('quantityInspected', 'Qty Inspected'),
+                ...f.number('quantityPassed', 'Qty Passed'),
+                ...f.number('quantityFailed', 'Qty Failed'),
+                ...f.select('result', 'Result', enums.INSPECTION_RESULT),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        MfgTestResult: {
-            title: 'Test Result',
-            sections: [
-                {
-                    title: 'Result Details',
-                    fields: [
-                        { key: 'inspectionId', label: 'Inspection', type: 'reference', lookupModel: 'MfgQualityInspection', required: true },
-                        { key: 'pointId', label: 'Inspection Point', type: 'reference', lookupModel: 'MfgInspectionPoint', required: true },
-                        { key: 'measuredValue', label: 'Measured Value', type: 'text' },
-                        { key: 'targetValue', label: 'Target Value', type: 'text' },
-                        { key: 'result', label: 'Result', type: 'select', options: enums.INSPECTION_RESULT },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        MfgTestResult: f.form('Test Result', [
+            f.section('Result Details', [
+                ...f.reference('inspectionId', 'Inspection', 'MfgQualityInspection', true),
+                ...f.reference('pointId', 'Inspection Point', 'MfgInspectionPoint', true),
+                ...f.text('measuredValue', 'Measured Value'),
+                ...f.text('targetValue', 'Target Value'),
+                ...f.select('result', 'Result', enums.INSPECTION_RESULT),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        MfgNCR: {
-            title: 'Non-Conformance Report',
-            sections: [
-                {
-                    title: 'NCR Details',
-                    fields: [
-                        { key: 'ncrNumber', label: 'NCR Number', type: 'text', required: true },
-                        { key: 'title', label: 'Title', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem' },
-                        { key: 'workOrderId', label: 'Work Order', type: 'reference', lookupModel: 'MfgWorkOrder' },
-                        { key: 'inspectionId', label: 'Inspection', type: 'reference', lookupModel: 'MfgQualityInspection' },
-                        { key: 'severity', label: 'Severity', type: 'select', options: enums.NCR_SEVERITY },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.NCR_STATUS },
-                        { key: 'reportDate', label: 'Report Date', type: 'date' },
-                        { key: 'reportedBy', label: 'Reported By', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'affectedQuantity', label: 'Affected Qty', type: 'number' },
-                        { key: 'disposition', label: 'Disposition', type: 'select', options: enums.NCR_DISPOSITION },
-                        { key: 'rootCause', label: 'Root Cause', type: 'textarea' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        MfgNCR: f.form('Non-Conformance Report', [
+            f.section('NCR Details', [
+                ...f.text('ncrNumber', 'NCR Number', true),
+                ...f.text('title', 'Title', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('itemId', 'Item', 'ScmItem'),
+                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder'),
+                ...f.reference('inspectionId', 'Inspection', 'MfgQualityInspection'),
+                ...f.select('severity', 'Severity', enums.NCR_SEVERITY),
+                ...f.select('status', 'Status', enums.NCR_STATUS),
+                ...f.date('reportDate', 'Report Date'),
+                ...f.reference('reportedBy', 'Reported By', 'Employee'),
+                ...f.number('affectedQuantity', 'Affected Qty'),
+                ...f.select('disposition', 'Disposition', enums.NCR_DISPOSITION),
+                ...f.textarea('rootCause', 'Root Cause'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        MfgNCRAction: {
-            title: 'NCR Action',
-            sections: [
-                {
-                    title: 'Action Details',
-                    fields: [
-                        { key: 'ncrId', label: 'NCR', type: 'reference', lookupModel: 'MfgNCR', required: true },
-                        { key: 'actionType', label: 'Action Type', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'assignedTo', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'dueDate', label: 'Due Date', type: 'date' },
-                        { key: 'completedDate', label: 'Completed Date', type: 'date' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
+        MfgNCRAction: f.form('NCR Action', [
+            f.section('Action Details', [
+                ...f.reference('ncrId', 'NCR', 'MfgNCR', true),
+                ...f.text('actionType', 'Action Type', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('assignedTo', 'Assigned To', 'Employee'),
+                ...f.date('dueDate', 'Due Date'),
+                ...f.date('completedDate', 'Completed Date'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ])
     };
 
     MfgQuality.primaryKeys = {

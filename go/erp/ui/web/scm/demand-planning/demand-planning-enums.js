@@ -12,64 +12,54 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Demand Planning Module - Enum Definitions
-// All enum constants and value mappings for Demand Planning models
+// Demand Planning Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Create ScmDemandPlanning namespace
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+
     window.ScmDemandPlanning = window.ScmDemandPlanning || {};
-    ScmDemandPlanning.enums = {};
 
     // ============================================================================
-    // FORECAST METHOD
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    ScmDemandPlanning.enums.FORECAST_METHOD = {
-        0: 'Unspecified',
-        1: 'Moving Average',
-        2: 'Exponential Smoothing',
-        3: 'Regression',
-        4: 'Seasonal',
-        5: 'Causal'
-    };
+    const FORECAST_METHOD = factory.simple([
+        'Unspecified', 'Moving Average', 'Exponential Smoothing', 'Regression', 'Seasonal', 'Causal'
+    ]);
+
+    const TASK_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['In Progress', 'progress', 'layer8d-status-active'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-terminated']
+    ]);
 
     // ============================================================================
-    // TASK STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    ScmDemandPlanning.enums.TASK_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'In Progress',
-        3: 'Completed',
-        4: 'Cancelled'
-    };
-
-    ScmDemandPlanning.enums.TASK_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated'
+    window.ScmDemandPlanning.enums = {
+        FORECAST_METHOD: FORECAST_METHOD.enum,
+        TASK_STATUS: TASK_STATUS.enum,
+        TASK_STATUS_CLASSES: TASK_STATUS.classes
     };
 
     // ============================================================================
     // RENDERERS
     // ============================================================================
 
-    // Create render functions using shared utilities
-    ScmDemandPlanning.render = {};
+    const renderTaskStatus = createStatusRenderer(TASK_STATUS.enum, TASK_STATUS.classes);
 
-    ScmDemandPlanning.render.forecastMethod = (type) => Layer8DRenderers.renderEnum(type, ScmDemandPlanning.enums.FORECAST_METHOD);
-
-    ScmDemandPlanning.render.taskStatus = Layer8DRenderers.createStatusRenderer(
-        ScmDemandPlanning.enums.TASK_STATUS,
-        ScmDemandPlanning.enums.TASK_STATUS_CLASSES
-    );
-
-    ScmDemandPlanning.render.boolean = Layer8DRenderers.renderBoolean;
-    ScmDemandPlanning.render.date = Layer8DRenderers.renderDate;
-    ScmDemandPlanning.render.money = Layer8DRenderers.renderMoney;
+    window.ScmDemandPlanning.render = {
+        forecastMethod: (v) => renderEnum(v, FORECAST_METHOD.enum),
+        taskStatus: renderTaskStatus,
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

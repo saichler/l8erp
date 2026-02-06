@@ -3,110 +3,76 @@
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
 // Documents Storage Module - Form Definitions
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
     window.DocStorage = window.DocStorage || {};
 
+    const f = window.Layer8FormFactory;
     const enums = DocStorage.enums;
 
     DocStorage.forms = {
-        DocDocument: {
-            title: 'Document',
-            sections: [
-                {
-                    title: 'Document Details',
-                    fields: [
-                        { key: 'title', label: 'Title', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'documentType', label: 'Document Type', type: 'select', options: enums.DOCUMENT_TYPE },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.DOCUMENT_STATUS },
-                        { key: 'fileFormat', label: 'File Format', type: 'select', options: enums.FILE_FORMAT }
-                    ]
-                },
-                {
-                    title: 'Location & Access',
-                    fields: [
-                        { key: 'folderId', label: 'Folder', type: 'reference', lookupModel: 'DocFolder' },
-                        { key: 'categoryId', label: 'Category', type: 'reference', lookupModel: 'DocCategory' },
-                        { key: 'accessLevel', label: 'Access Level', type: 'select', options: enums.ACCESS_LEVEL },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                },
-                {
-                    title: 'Compliance',
-                    fields: [
-                        { key: 'retentionPolicyId', label: 'Retention Policy', type: 'reference', lookupModel: 'DocRetentionPolicy' },
-                        { key: 'expirationDate', label: 'Expiration Date', type: 'date' }
-                    ]
-                }
-            ]
-        },
+        DocDocument: f.form('Document', [
+            f.section('Document Details', [
+                ...f.text('title', 'Title', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('documentType', 'Document Type', enums.DOCUMENT_TYPE),
+                ...f.select('status', 'Status', enums.DOCUMENT_STATUS),
+                ...f.select('fileFormat', 'File Format', enums.FILE_FORMAT)
+            ]),
+            f.section('Location & Access', [
+                ...f.reference('folderId', 'Folder', 'DocFolder'),
+                ...f.reference('categoryId', 'Category', 'DocCategory'),
+                ...f.select('accessLevel', 'Access Level', enums.ACCESS_LEVEL),
+                ...f.reference('ownerId', 'Owner', 'Employee')
+            ]),
+            f.section('Compliance', [
+                ...f.reference('retentionPolicyId', 'Retention Policy', 'DocRetentionPolicy'),
+                ...f.date('expirationDate', 'Expiration Date')
+            ])
+        ]),
 
-        DocFolder: {
-            title: 'Folder',
-            sections: [
-                {
-                    title: 'Folder Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'parentFolderId', label: 'Parent Folder', type: 'reference', lookupModel: 'DocFolder' },
-                        { key: 'accessLevel', label: 'Access Level', type: 'select', options: enums.ACCESS_LEVEL },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        DocFolder: f.form('Folder', [
+            f.section('Folder Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('parentFolderId', 'Parent Folder', 'DocFolder'),
+                ...f.select('accessLevel', 'Access Level', enums.ACCESS_LEVEL),
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        DocCategory: {
-            title: 'Category',
-            sections: [
-                {
-                    title: 'Category Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'code', label: 'Code', type: 'text' },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'parentCategoryId', label: 'Parent Category', type: 'reference', lookupModel: 'DocCategory' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        DocCategory: f.form('Category', [
+            f.section('Category Details', [
+                ...f.text('name', 'Name', true),
+                ...f.text('code', 'Code'),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('parentCategoryId', 'Parent Category', 'DocCategory'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        DocTag: {
-            title: 'Tag',
-            sections: [
-                {
-                    title: 'Tag Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'color', label: 'Color', type: 'text' },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        DocTag: f.form('Tag', [
+            f.section('Tag Details', [
+                ...f.text('name', 'Name', true),
+                ...f.text('color', 'Color'),
+                ...f.textarea('description', 'Description'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        DocDocumentVersion: {
-            title: 'Document Version',
-            sections: [
-                {
-                    title: 'Version Details',
-                    fields: [
-                        { key: 'documentId', label: 'Document', type: 'reference', lookupModel: 'DocDocument', required: true },
-                        { key: 'versionNumber', label: 'Version Number', type: 'number', required: true },
-                        { key: 'changeNotes', label: 'Change Notes', type: 'textarea' },
-                        { key: 'createdBy', label: 'Created By', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'isCurrent', label: 'Current Version', type: 'checkbox' }
-                    ]
-                }
-            ]
-        }
+        DocDocumentVersion: f.form('Document Version', [
+            f.section('Version Details', [
+                ...f.reference('documentId', 'Document', 'DocDocument', true),
+                ...f.number('versionNumber', 'Version Number', true),
+                ...f.textarea('changeNotes', 'Change Notes'),
+                ...f.reference('createdBy', 'Created By', 'Employee'),
+                ...f.checkbox('isCurrent', 'Current Version')
+            ])
+        ])
     };
 
     DocStorage.primaryKeys = {

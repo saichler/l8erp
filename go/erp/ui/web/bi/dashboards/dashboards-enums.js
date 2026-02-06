@@ -12,174 +12,93 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// BI Dashboards Module - Enum Definitions
+// BI Dashboards Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate } = Layer8DRenderers;
+
     window.BiDashboards = window.BiDashboards || {};
-    BiDashboards.enums = {};
 
-    // DASHBOARD STATUS
-    BiDashboards.enums.DASHBOARD_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Published',
-        3: 'Archived'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const DASHBOARD_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Published', 'published', 'layer8d-status-active'],
+        ['Archived', 'archived', 'layer8d-status-inactive']
+    ]);
+
+    const WIDGET_TYPE = factory.simple([
+        'Unspecified', 'Chart', 'Table', 'KPI', 'Map', 'Gauge', 'Text', 'Filter'
+    ]);
+
+    const CHART_TYPE = factory.simple([
+        'Unspecified', 'Bar', 'Line', 'Pie', 'Area', 'Scatter', 'Donut', 'Combo'
+    ]);
+
+    const KPI_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['On Target', 'target', 'layer8d-status-active'],
+        ['At Risk', 'risk', 'layer8d-status-pending'],
+        ['Off Target', 'off', 'layer8d-status-terminated']
+    ]);
+
+    const THRESHOLD_OPERATOR = factory.simple([
+        'Unspecified', 'Greater Than', 'Less Than', 'Equal',
+        'Greater or Equal', 'Less or Equal', 'Between'
+    ]);
+
+    const TREND_DIRECTION = factory.create([
+        ['Unspecified', null, ''],
+        ['Up', 'up', 'layer8d-status-active'],
+        ['Down', 'down', 'layer8d-status-terminated'],
+        ['Flat', 'flat', 'layer8d-status-pending']
+    ]);
+
+    const ACCESS_LEVEL = factory.create([
+        ['Unspecified', null, ''],
+        ['View', 'view', 'layer8d-status-inactive'],
+        ['Execute', 'execute', 'layer8d-status-pending'],
+        ['Edit', 'edit', 'layer8d-status-active'],
+        ['Admin', 'admin', 'layer8d-status-active']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    BiDashboards.enums = {
+        DASHBOARD_STATUS: DASHBOARD_STATUS.enum,
+        DASHBOARD_STATUS_CLASSES: DASHBOARD_STATUS.classes,
+        WIDGET_TYPE: WIDGET_TYPE.enum,
+        CHART_TYPE: CHART_TYPE.enum,
+        KPI_STATUS: KPI_STATUS.enum,
+        KPI_STATUS_CLASSES: KPI_STATUS.classes,
+        THRESHOLD_OPERATOR: THRESHOLD_OPERATOR.enum,
+        TREND_DIRECTION: TREND_DIRECTION.enum,
+        TREND_DIRECTION_CLASSES: TREND_DIRECTION.classes,
+        ACCESS_LEVEL: ACCESS_LEVEL.enum,
+        ACCESS_LEVEL_CLASSES: ACCESS_LEVEL.classes
     };
 
-    BiDashboards.enums.DASHBOARD_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-inactive'
-    };
-
-    // WIDGET TYPE
-    BiDashboards.enums.WIDGET_TYPE = {
-        0: 'Unspecified',
-        1: 'Chart',
-        2: 'Table',
-        3: 'KPI',
-        4: 'Map',
-        5: 'Gauge',
-        6: 'Text',
-        7: 'Filter'
-    };
-
-    BiDashboards.enums.WIDGET_TYPE_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-pending',
-        7: 'layer8d-status-pending'
-    };
-
-    // CHART TYPE
-    BiDashboards.enums.CHART_TYPE = {
-        0: 'Unspecified',
-        1: 'Bar',
-        2: 'Line',
-        3: 'Pie',
-        4: 'Area',
-        5: 'Scatter',
-        6: 'Donut',
-        7: 'Combo'
-    };
-
-    BiDashboards.enums.CHART_TYPE_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-active',
-        7: 'layer8d-status-active'
-    };
-
-    // KPI STATUS
-    BiDashboards.enums.KPI_STATUS = {
-        0: 'Unspecified',
-        1: 'On Target',
-        2: 'At Risk',
-        3: 'Off Target'
-    };
-
-    BiDashboards.enums.KPI_STATUS_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-terminated'
-    };
-
-    // THRESHOLD OPERATOR
-    BiDashboards.enums.THRESHOLD_OPERATOR = {
-        0: 'Unspecified',
-        1: 'Greater Than',
-        2: 'Less Than',
-        3: 'Equal',
-        4: 'Greater or Equal',
-        5: 'Less or Equal',
-        6: 'Between'
-    };
-
-    BiDashboards.enums.THRESHOLD_OPERATOR_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-active'
-    };
-
-    // TREND DIRECTION
-    BiDashboards.enums.TREND_DIRECTION = {
-        0: 'Unspecified',
-        1: 'Up',
-        2: 'Down',
-        3: 'Flat'
-    };
-
-    BiDashboards.enums.TREND_DIRECTION_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-terminated',
-        3: 'layer8d-status-pending'
-    };
-
-    // ACCESS LEVEL
-    BiDashboards.enums.ACCESS_LEVEL = {
-        0: 'Unspecified',
-        1: 'View',
-        2: 'Execute',
-        3: 'Edit',
-        4: 'Admin'
-    };
-
-    BiDashboards.enums.ACCESS_LEVEL_CLASSES = {
-        1: 'layer8d-status-inactive',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active'
-    };
-
+    // ============================================================================
     // RENDERERS
-    BiDashboards.render = {};
+    // ============================================================================
 
-    BiDashboards.render.dashboardStatus = Layer8DRenderers.createStatusRenderer(
-        BiDashboards.enums.DASHBOARD_STATUS,
-        BiDashboards.enums.DASHBOARD_STATUS_CLASSES
-    );
-
-    BiDashboards.render.widgetType = Layer8DRenderers.createStatusRenderer(
-        BiDashboards.enums.WIDGET_TYPE,
-        BiDashboards.enums.WIDGET_TYPE_CLASSES
-    );
-
-    BiDashboards.render.chartType = Layer8DRenderers.createStatusRenderer(
-        BiDashboards.enums.CHART_TYPE,
-        BiDashboards.enums.CHART_TYPE_CLASSES
-    );
-
-    BiDashboards.render.kpiStatus = Layer8DRenderers.createStatusRenderer(
-        BiDashboards.enums.KPI_STATUS,
-        BiDashboards.enums.KPI_STATUS_CLASSES
-    );
-
-    BiDashboards.render.thresholdOperator = Layer8DRenderers.createStatusRenderer(
-        BiDashboards.enums.THRESHOLD_OPERATOR,
-        BiDashboards.enums.THRESHOLD_OPERATOR_CLASSES
-    );
-
-    BiDashboards.render.trendDirection = Layer8DRenderers.createStatusRenderer(
-        BiDashboards.enums.TREND_DIRECTION,
-        BiDashboards.enums.TREND_DIRECTION_CLASSES
-    );
-
-    BiDashboards.render.accessLevel = Layer8DRenderers.createStatusRenderer(
-        BiDashboards.enums.ACCESS_LEVEL,
-        BiDashboards.enums.ACCESS_LEVEL_CLASSES
-    );
-
-    BiDashboards.render.date = Layer8DRenderers.renderDate;
+    BiDashboards.render = {
+        dashboardStatus: createStatusRenderer(DASHBOARD_STATUS.enum, DASHBOARD_STATUS.classes),
+        widgetType: (v) => renderEnum(v, WIDGET_TYPE.enum),
+        chartType: (v) => renderEnum(v, CHART_TYPE.enum),
+        kpiStatus: createStatusRenderer(KPI_STATUS.enum, KPI_STATUS.classes),
+        thresholdOperator: (v) => renderEnum(v, THRESHOLD_OPERATOR.enum),
+        trendDirection: createStatusRenderer(TREND_DIRECTION.enum, TREND_DIRECTION.classes),
+        accessLevel: createStatusRenderer(ACCESS_LEVEL.enum, ACCESS_LEVEL.classes),
+        date: renderDate
+    };
 
 })();

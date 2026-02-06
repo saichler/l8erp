@@ -13,55 +13,59 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Sales Pricing Module - Enum Definitions
+ * Mobile Sales Pricing Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: sales/pricing/pricing-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileSalesPricing = window.MobileSalesPricing || {};
-    MobileSalesPricing.enums = {};
 
     // ============================================================================
-    // PRICING METHOD
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileSalesPricing.enums.PRICING_METHOD = {
-        0: 'Unspecified', 1: 'Fixed', 2: 'Cost Plus', 3: 'Volume', 4: 'Contract'
-    };
-    MobileSalesPricing.enums.PRICING_METHOD_VALUES = {
-        'fixed': 1, 'cost plus': 2, 'volume': 3, 'contract': 4
-    };
-    MobileSalesPricing.enums.PRICING_METHOD_CLASSES = {
-        1: 'status-active', 2: 'status-active', 3: 'status-pending', 4: 'status-active'
-    };
+    const PRICING_METHOD = factory.create([
+        ['Unspecified', null, ''],
+        ['Fixed', 'fixed', 'status-active'],
+        ['Cost Plus', 'cost plus', 'status-active'],
+        ['Volume', 'volume', 'status-pending'],
+        ['Contract', 'contract', 'status-active']
+    ]);
+
+    const DISCOUNT_TYPE = factory.create([
+        ['Unspecified', null, ''],
+        ['Percentage', 'percentage', 'status-active'],
+        ['Fixed Amount', 'fixed', 'status-active'],
+        ['Buy X Get Y', 'bxgy', 'status-pending'],
+        ['Tiered', 'tiered', 'status-pending']
+    ]);
+
+    const PRICE_LIST_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Active', 'active', 'status-active'],
+        ['Inactive', 'inactive', 'status-inactive'],
+        ['Expired', 'expired', 'status-terminated']
+    ]);
 
     // ============================================================================
-    // DISCOUNT TYPE
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileSalesPricing.enums.DISCOUNT_TYPE = {
-        0: 'Unspecified', 1: 'Percentage', 2: 'Fixed Amount', 3: 'Buy X Get Y', 4: 'Tiered'
-    };
-    MobileSalesPricing.enums.DISCOUNT_TYPE_VALUES = {
-        'percentage': 1, 'fixed': 2, 'bxgy': 3, 'tiered': 4
-    };
-    MobileSalesPricing.enums.DISCOUNT_TYPE_CLASSES = {
-        1: 'status-active', 2: 'status-active', 3: 'status-pending', 4: 'status-pending'
-    };
-
-    // ============================================================================
-    // PRICE LIST STATUS
-    // ============================================================================
-
-    MobileSalesPricing.enums.PRICE_LIST_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Active', 3: 'Inactive', 4: 'Expired'
-    };
-    MobileSalesPricing.enums.PRICE_LIST_STATUS_VALUES = {
-        'draft': 1, 'active': 2, 'inactive': 3, 'expired': 4
-    };
-    MobileSalesPricing.enums.PRICE_LIST_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-inactive', 4: 'status-terminated'
+    MobileSalesPricing.enums = {
+        PRICING_METHOD: PRICING_METHOD.enum,
+        PRICING_METHOD_VALUES: PRICING_METHOD.values,
+        PRICING_METHOD_CLASSES: PRICING_METHOD.classes,
+        DISCOUNT_TYPE: DISCOUNT_TYPE.enum,
+        DISCOUNT_TYPE_VALUES: DISCOUNT_TYPE.values,
+        DISCOUNT_TYPE_CLASSES: DISCOUNT_TYPE.classes,
+        PRICE_LIST_STATUS: PRICE_LIST_STATUS.enum,
+        PRICE_LIST_STATUS_VALUES: PRICE_LIST_STATUS.values,
+        PRICE_LIST_STATUS_CLASSES: PRICE_LIST_STATUS.classes
     };
 
     // ============================================================================
@@ -69,20 +73,11 @@ limitations under the License.
     // ============================================================================
 
     MobileSalesPricing.render = {
-        pricingMethod: Layer8MRenderers.createStatusRenderer(
-            MobileSalesPricing.enums.PRICING_METHOD,
-            MobileSalesPricing.enums.PRICING_METHOD_CLASSES
-        ),
-        discountType: Layer8MRenderers.createStatusRenderer(
-            MobileSalesPricing.enums.DISCOUNT_TYPE,
-            MobileSalesPricing.enums.DISCOUNT_TYPE_CLASSES
-        ),
-        priceListStatus: Layer8MRenderers.createStatusRenderer(
-            MobileSalesPricing.enums.PRICE_LIST_STATUS,
-            MobileSalesPricing.enums.PRICE_LIST_STATUS_CLASSES
-        ),
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        pricingMethod: createStatusRenderer(PRICING_METHOD.enum, PRICING_METHOD.classes),
+        discountType: createStatusRenderer(DISCOUNT_TYPE.enum, DISCOUNT_TYPE.classes),
+        priceListStatus: createStatusRenderer(PRICE_LIST_STATUS.enum, PRICE_LIST_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

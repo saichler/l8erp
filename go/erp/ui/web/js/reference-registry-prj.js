@@ -14,185 +14,80 @@ limitations under the License.
 */
 /**
  * ERP Reference Registry - Projects Models
- * Registers Planning, Resources, Time & Expense, Billing, and Analytics models.
+ * Uses Layer8RefFactory for reduced boilerplate
  */
+const refPrj = window.Layer8RefFactory;
+
 Layer8DReferenceRegistry.register({
     // ========================================
     // Projects - Planning
     // ========================================
-    PrjProject: {
-        idColumn: 'projectId',
-        displayColumn: 'name',
-        selectColumns: ['projectId', 'code', 'name'],
-        displayFormat: function(item) {
-            return item.code + ' - ' + item.name;
-        },
-        displayLabel: 'Project'
-    },
-    PrjProjectTemplate: {
-        idColumn: 'templateId',
-        displayColumn: 'name'
-    },
-    PrjPhase: {
-        idColumn: 'phaseId',
-        displayColumn: 'name'
-    },
-    PrjTask: {
-        idColumn: 'taskId',
-        displayColumn: 'name',
-        selectColumns: ['taskId', 'name'],
-        displayLabel: 'Task'
-    },
-    PrjMilestone: {
-        idColumn: 'milestoneId',
-        displayColumn: 'name',
-        selectColumns: ['milestoneId', 'name'],
-        displayLabel: 'Milestone'
-    },
-    PrjDeliverable: {
-        idColumn: 'deliverableId',
-        displayColumn: 'name'
-    },
-    PrjDependency: {
-        idColumn: 'dependencyId',
-        displayColumn: 'dependencyId'
-    },
-    PrjRisk: {
-        idColumn: 'riskId',
-        displayColumn: 'name'
-    },
+    ...refPrj.coded('PrjProject', 'projectId', 'code', 'name'),
+    ...refPrj.batch([
+        ['PrjProjectTemplate', 'templateId', 'name'],
+        ['PrjPhase', 'phaseId', 'name']
+    ]),
+    ...refPrj.simple('PrjTask', 'taskId', 'name', 'Task'),
+    ...refPrj.simple('PrjMilestone', 'milestoneId', 'name', 'Milestone'),
+    ...refPrj.simple('PrjDeliverable', 'deliverableId', 'name'),
+    ...refPrj.idOnly('PrjDependency', 'dependencyId'),
+    ...refPrj.simple('PrjRisk', 'riskId', 'name'),
 
     // ========================================
     // Projects - Resources
     // ========================================
-    PrjResourcePool: {
-        idColumn: 'poolId',
-        displayColumn: 'name'
-    },
-    PrjResource: {
-        idColumn: 'resourceId',
-        displayColumn: 'name',
-        selectColumns: ['resourceId', 'name'],
-        displayLabel: 'Resource'
-    },
-    PrjResourceSkill: {
-        idColumn: 'skillId',
-        displayColumn: 'skillName'
-    },
-    PrjAllocation: {
-        idColumn: 'allocationId',
-        displayColumn: 'allocationId'
-    },
-    PrjBooking: {
-        idColumn: 'bookingId',
-        displayColumn: 'bookingId'
-    },
-    PrjCapacityPlan: {
-        idColumn: 'planId',
-        displayColumn: 'name'
-    },
-    PrjUtilization: {
-        idColumn: 'utilizationId',
-        displayColumn: 'utilizationId'
-    },
+    ...refPrj.batch([
+        ['PrjResourcePool', 'poolId', 'name'],
+        ['PrjCapacityPlan', 'planId', 'name']
+    ]),
+    ...refPrj.simple('PrjResource', 'resourceId', 'name', 'Resource'),
+    ...refPrj.simple('PrjResourceSkill', 'skillId', 'skillName'),
+    ...refPrj.batchIdOnly([
+        ['PrjAllocation', 'allocationId'],
+        ['PrjBooking', 'bookingId'],
+        ['PrjUtilization', 'utilizationId']
+    ]),
 
     // ========================================
     // Projects - Time & Expense
     // ========================================
-    PrjTimesheet: {
-        idColumn: 'timesheetId',
-        displayColumn: 'timesheetId'
-    },
-    PrjTimesheetEntry: {
-        idColumn: 'entryId',
-        displayColumn: 'entryId'
-    },
-    PrjExpenseReport: {
-        idColumn: 'reportId',
-        displayColumn: 'reportId'
-    },
-    PrjExpenseEntry: {
-        idColumn: 'entryId',
-        displayColumn: 'entryId'
-    },
-    PrjApprovalRule: {
-        idColumn: 'ruleId',
-        displayColumn: 'name'
-    },
-    PrjExpenseCategory: {
-        idColumn: 'categoryId',
-        displayColumn: 'name'
-    },
-    PrjExpensePolicy: {
-        idColumn: 'policyId',
-        displayColumn: 'name'
-    },
+    ...refPrj.batchIdOnly([
+        ['PrjTimesheet', 'timesheetId'],
+        ['PrjTimesheetEntry', 'entryId'],
+        ['PrjExpenseReport', 'reportId'],
+        ['PrjExpenseEntry', 'entryId']
+    ]),
+    ...refPrj.batch([
+        ['PrjApprovalRule', 'ruleId', 'name'],
+        ['PrjExpenseCategory', 'categoryId', 'name'],
+        ['PrjExpensePolicy', 'policyId', 'name']
+    ]),
 
     // ========================================
     // Projects - Billing
     // ========================================
-    PrjBillingRate: {
-        idColumn: 'rateId',
-        displayColumn: 'name'
-    },
-    PrjBillingSchedule: {
-        idColumn: 'scheduleId',
-        displayColumn: 'name'
-    },
-    PrjBillingMilestone: {
-        idColumn: 'milestoneId',
-        displayColumn: 'name'
-    },
-    PrjProjectInvoice: {
-        idColumn: 'invoiceId',
-        displayColumn: 'invoiceNumber',
-        selectColumns: ['invoiceId', 'invoiceNumber'],
-        displayLabel: 'Invoice'
-    },
-    PrjInvoiceLine: {
-        idColumn: 'lineId',
-        displayColumn: 'lineId'
-    },
-    PrjRevenueRecognition: {
-        idColumn: 'recognitionId',
-        displayColumn: 'recognitionId'
-    },
-    PrjProjectBudget: {
-        idColumn: 'budgetId',
-        displayColumn: 'name'
-    },
+    ...refPrj.batch([
+        ['PrjBillingRate', 'rateId', 'name'],
+        ['PrjBillingSchedule', 'scheduleId', 'name'],
+        ['PrjBillingMilestone', 'milestoneId', 'name'],
+        ['PrjProjectBudget', 'budgetId', 'name']
+    ]),
+    ...refPrj.simple('PrjProjectInvoice', 'invoiceId', 'invoiceNumber', 'Invoice'),
+    ...refPrj.batchIdOnly([
+        ['PrjInvoiceLine', 'lineId'],
+        ['PrjRevenueRecognition', 'recognitionId']
+    ]),
 
     // ========================================
     // Projects - Analytics
     // ========================================
-    PrjStatusReport: {
-        idColumn: 'statusId',
-        displayColumn: 'statusId'
-    },
-    PrjEarnedValue: {
-        idColumn: 'earnedValueId',
-        displayColumn: 'earnedValueId'
-    },
-    PrjBudgetVariance: {
-        idColumn: 'varianceId',
-        displayColumn: 'varianceId'
-    },
-    PrjResourceForecast: {
-        idColumn: 'forecastId',
-        displayColumn: 'forecastId'
-    },
-    PrjPortfolioView: {
-        idColumn: 'viewId',
-        displayColumn: 'name'
-    },
-    PrjProjectKPI: {
-        idColumn: 'kpiId',
-        displayColumn: 'kpiName'
-    },
-    PrjProjectIssue: {
-        idColumn: 'issueId',
-        displayColumn: 'title',
-        selectColumns: ['issueId', 'title'],
-        displayLabel: 'Issue'
-    }
+    ...refPrj.batchIdOnly([
+        ['PrjStatusReport', 'statusId'],
+        ['PrjEarnedValue', 'earnedValueId'],
+        ['PrjBudgetVariance', 'varianceId'],
+        ['PrjResourceForecast', 'forecastId']
+    ]),
+    ...refPrj.simple('PrjPortfolioView', 'viewId', 'name'),
+    ...refPrj.simple('PrjProjectKPI', 'kpiId', 'kpiName'),
+    ...refPrj.simple('PrjProjectIssue', 'issueId', 'title', 'Issue')
 });

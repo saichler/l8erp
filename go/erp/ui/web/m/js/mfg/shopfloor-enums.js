@@ -13,43 +13,62 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Manufacturing Shop Floor Module - Enum Definitions
+ * Mobile Manufacturing Shop Floor Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: mfg/shopfloor/shopfloor-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate, renderBoolean } = Layer8MRenderers;
+
     window.MobileMfgShopFloor = window.MobileMfgShopFloor || {};
-    MobileMfgShopFloor.enums = {};
 
-    // WORK CENTER TYPE
-    MobileMfgShopFloor.enums.WORK_CENTER_TYPE = {
-        0: 'Unspecified', 1: 'Machine', 2: 'Labor', 3: 'Assembly', 4: 'Inspection', 5: 'Packaging'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const WORK_CENTER_TYPE = factory.simple([
+        'Unspecified', 'Machine', 'Labor', 'Assembly', 'Inspection', 'Packaging'
+    ]);
+
+    const SHIFT_TYPE = factory.simple([
+        'Unspecified', 'Day', 'Evening', 'Night', 'Rotating'
+    ]);
+
+    const DOWNTIME_REASON = factory.create([
+        ['Unspecified', null, ''],
+        ['Planned Maintenance', 'planned', 'status-pending'],
+        ['Breakdown', 'breakdown', 'status-terminated'],
+        ['Setup/Changeover', 'setup', 'status-pending'],
+        ['Material Shortage', 'material', 'status-inactive'],
+        ['Quality Issue', 'quality', 'status-terminated'],
+        ['No Orders', 'no-orders', 'status-inactive'],
+        ['Other', 'other', 'status-inactive']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    MobileMfgShopFloor.enums = {
+        WORK_CENTER_TYPE: WORK_CENTER_TYPE.enum,
+        SHIFT_TYPE: SHIFT_TYPE.enum,
+        DOWNTIME_REASON: DOWNTIME_REASON.enum,
+        DOWNTIME_REASON_VALUES: DOWNTIME_REASON.values,
+        DOWNTIME_REASON_CLASSES: DOWNTIME_REASON.classes
     };
 
-    // SHIFT TYPE
-    MobileMfgShopFloor.enums.SHIFT_TYPE = {
-        0: 'Unspecified', 1: 'Day', 2: 'Evening', 3: 'Night', 4: 'Rotating'
-    };
-
-    // DOWNTIME REASON
-    MobileMfgShopFloor.enums.DOWNTIME_REASON = {
-        0: 'Unspecified', 1: 'Planned Maintenance', 2: 'Breakdown', 3: 'Setup/Changeover', 4: 'Material Shortage', 5: 'Quality Issue', 6: 'No Orders', 7: 'Other'
-    };
-    MobileMfgShopFloor.enums.DOWNTIME_REASON_CLASSES = {
-        1: 'status-pending', 2: 'status-terminated', 3: 'status-pending', 4: 'status-inactive', 5: 'status-terminated', 6: 'status-inactive', 7: 'status-inactive'
-    };
-
+    // ============================================================================
     // RENDER FUNCTIONS
+    // ============================================================================
+
     MobileMfgShopFloor.render = {
-        workCenterType: function(type) { return MobileMfgShopFloor.enums.WORK_CENTER_TYPE[type] || 'Unknown'; },
-        shiftType: function(type) { return MobileMfgShopFloor.enums.SHIFT_TYPE[type] || 'Unknown'; },
-        downtimeReason: Layer8MRenderers.createStatusRenderer(
-            MobileMfgShopFloor.enums.DOWNTIME_REASON,
-            MobileMfgShopFloor.enums.DOWNTIME_REASON_CLASSES
-        ),
-        date: Layer8MRenderers.renderDate,
-        boolean: function(val) { return val ? '<span class="status-badge status-active">Yes</span>' : '<span class="status-badge status-inactive">No</span>'; }
+        workCenterType: (type) => renderEnum(type, WORK_CENTER_TYPE.enum),
+        shiftType: (type) => renderEnum(type, SHIFT_TYPE.enum),
+        downtimeReason: createStatusRenderer(DOWNTIME_REASON.enum, DOWNTIME_REASON.classes),
+        date: renderDate,
+        boolean: renderBoolean
     };
 
 })();

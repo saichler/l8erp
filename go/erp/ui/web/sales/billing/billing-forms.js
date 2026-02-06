@@ -2,97 +2,63 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // Sales Billing Module - Form Definitions
-// Form field configurations for all Sales Billing models
+// Uses Layer8FormFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
     window.SalesBilling = window.SalesBilling || {};
 
+    const f = window.Layer8FormFactory;
     const enums = SalesBilling.enums;
 
-    // ============================================================================
-    // FORM FIELD DEFINITIONS
-    // ============================================================================
-
     SalesBilling.forms = {
-        SalesBillingSchedule: {
-            title: 'Billing Schedule',
-            sections: [
-                {
-                    title: 'Schedule Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'salesOrderId', label: 'Sales Order', type: 'reference', lookupModel: 'SalesOrder', required: true },
-                        { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'Customer', required: true },
-                        { key: 'frequency', label: 'Frequency', type: 'select', options: enums.BILLING_FREQUENCY, required: true },
-                        { key: 'startDate', label: 'Start Date', type: 'date', required: true },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'nextBillingDate', label: 'Next Billing Date', type: 'date' },
-                        { key: 'totalAmount', label: 'Total Amount', type: 'currency' },
-                        { key: 'billedAmount', label: 'Billed Amount', type: 'currency' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        SalesBillingSchedule: f.form('Billing Schedule', [
+            f.section('Schedule Details', [
+                ...f.text('name', 'Name', true),
+                ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder', true),
+                ...f.reference('customerId', 'Customer', 'Customer', true),
+                ...f.select('frequency', 'Frequency', enums.BILLING_FREQUENCY, true),
+                ...f.date('startDate', 'Start Date', true),
+                ...f.date('endDate', 'End Date'),
+                ...f.date('nextBillingDate', 'Next Billing Date'),
+                ...f.money('totalAmount', 'Total Amount'),
+                ...f.money('billedAmount', 'Billed Amount'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        SalesBillingMilestone: {
-            title: 'Billing Milestone',
-            sections: [
-                {
-                    title: 'Milestone Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'scheduleId', label: 'Billing Schedule', type: 'reference', lookupModel: 'SalesBillingSchedule', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'targetDate', label: 'Target Date', type: 'date', required: true },
-                        { key: 'achievedDate', label: 'Achieved Date', type: 'date' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.MILESTONE_STATUS },
-                        { key: 'amount', label: 'Amount', type: 'currency', required: true },
-                        { key: 'percentage', label: 'Percentage', type: 'number' },
-                        { key: 'invoiceId', label: 'Invoice', type: 'reference', lookupModel: 'SalesInvoice' }
-                    ]
-                }
-            ]
-        },
+        SalesBillingMilestone: f.form('Billing Milestone', [
+            f.section('Milestone Details', [
+                ...f.text('name', 'Name', true),
+                ...f.reference('scheduleId', 'Billing Schedule', 'SalesBillingSchedule', true),
+                ...f.textarea('description', 'Description'),
+                ...f.date('targetDate', 'Target Date', true),
+                ...f.date('achievedDate', 'Achieved Date'),
+                ...f.select('status', 'Status', enums.MILESTONE_STATUS),
+                ...f.money('amount', 'Amount', true),
+                ...f.number('percentage', 'Percentage'),
+                ...f.reference('invoiceId', 'Invoice', 'SalesInvoice')
+            ])
+        ]),
 
-        SalesRevenueSchedule: {
-            title: 'Revenue Schedule',
-            sections: [
-                {
-                    title: 'Revenue Details',
-                    fields: [
-                        { key: 'salesOrderId', label: 'Sales Order', type: 'reference', lookupModel: 'SalesOrder', required: true },
-                        { key: 'recognitionMethod', label: 'Recognition Method', type: 'text' },
-                        { key: 'startDate', label: 'Start Date', type: 'date', required: true },
-                        { key: 'endDate', label: 'End Date', type: 'date', required: true },
-                        { key: 'totalRevenue', label: 'Total Revenue', type: 'currency', required: true },
-                        { key: 'recognizedRevenue', label: 'Recognized Revenue', type: 'currency' },
-                        { key: 'deferredRevenue', label: 'Deferred Revenue', type: 'currency' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.REVENUE_STATUS },
-                        { key: 'accountId', label: 'Revenue Account', type: 'reference', lookupModel: 'Account' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
+        SalesRevenueSchedule: f.form('Revenue Schedule', [
+            f.section('Revenue Details', [
+                ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder', true),
+                ...f.text('recognitionMethod', 'Recognition Method'),
+                ...f.date('startDate', 'Start Date', true),
+                ...f.date('endDate', 'End Date', true),
+                ...f.money('totalRevenue', 'Total Revenue', true),
+                ...f.money('recognizedRevenue', 'Recognized Revenue'),
+                ...f.money('deferredRevenue', 'Deferred Revenue'),
+                ...f.select('status', 'Status', enums.REVENUE_STATUS),
+                ...f.reference('accountId', 'Revenue Account', 'Account'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ])
     };
-
-    // ============================================================================
-    // PRIMARY KEY MAPPING
-    // ============================================================================
 
     SalesBilling.primaryKeys = {
         SalesBillingSchedule: 'scheduleId',

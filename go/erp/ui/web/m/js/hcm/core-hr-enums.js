@@ -13,221 +13,122 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Core HR Module - Enum Definitions
+ * Mobile Core HR Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: hcm/core-hr/core-hr-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderPhone, renderSSN } = Layer8MRenderers;
+
     window.MobileCoreHR = window.MobileCoreHR || {};
-    MobileCoreHR.enums = {};
 
     // ============================================================================
-    // EMPLOYMENT STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileCoreHR.enums.EMPLOYMENT_STATUS = {
-        0: 'Unspecified',
-        1: 'Active',
-        2: 'Inactive',
-        3: 'On Leave',
-        4: 'Terminated',
-        5: 'Retired',
-        6: 'Suspended',
-        7: 'Pending'
-    };
+    const EMPLOYMENT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Active', 'active', 'status-active'],
+        ['Inactive', 'inactive', 'status-inactive'],
+        ['On Leave', 'leave', 'status-pending'],
+        ['Terminated', 'terminated', 'status-terminated'],
+        ['Retired', 'retired', 'status-inactive'],
+        ['Suspended', 'suspended', 'status-terminated'],
+        ['Pending', 'pending', 'status-pending']
+    ]);
 
-    MobileCoreHR.enums.EMPLOYMENT_STATUS_VALUES = {
-        'active': 1,
-        'inactive': 2,
-        'leave': 3,
-        'terminated': 4,
-        'retired': 5,
-        'suspended': 6,
-        'pending': 7
-    };
+    const EMPLOYMENT_TYPE = factory.withValues([
+        ['Unspecified', null],
+        ['Full-Time', 'full-time'],
+        ['Part-Time', 'part-time'],
+        ['Contract', 'contract'],
+        ['Temporary', 'temporary'],
+        ['Intern', 'intern'],
+        ['Seasonal', 'seasonal'],
+        ['Consultant', 'consultant']
+    ]);
 
-    MobileCoreHR.enums.EMPLOYMENT_STATUS_CLASSES = {
-        1: 'status-active',
-        2: 'status-inactive',
-        3: 'status-pending',
-        4: 'status-terminated',
-        5: 'status-inactive',
-        6: 'status-terminated',
-        7: 'status-pending'
-    };
+    const GENDER = factory.simple([
+        'Unspecified', 'Male', 'Female', 'Non-Binary', 'Other', 'Prefer Not to Say'
+    ]);
 
-    // ============================================================================
-    // EMPLOYMENT TYPE
-    // ============================================================================
+    const MARITAL_STATUS = factory.simple([
+        'Unspecified', 'Single', 'Married', 'Divorced', 'Widowed', 'Domestic Partnership', 'Separated'
+    ]);
 
-    MobileCoreHR.enums.EMPLOYMENT_TYPE = {
-        0: 'Unspecified',
-        1: 'Full-Time',
-        2: 'Part-Time',
-        3: 'Contract',
-        4: 'Temporary',
-        5: 'Intern',
-        6: 'Seasonal',
-        7: 'Consultant'
-    };
+    const ORGANIZATION_TYPE = factory.withValues([
+        ['Unspecified', null],
+        ['Company', 'company'],
+        ['Division', 'division'],
+        ['Business Unit', 'business'],
+        ['Region', 'region'],
+        ['Cost Center', 'cost'],
+        ['Legal Entity', 'legal']
+    ]);
 
-    MobileCoreHR.enums.EMPLOYMENT_TYPE_VALUES = {
-        'full-time': 1,
-        'fulltime': 1,
-        'part-time': 2,
-        'parttime': 2,
-        'contract': 3,
-        'temporary': 4,
-        'temp': 4,
-        'intern': 5,
-        'seasonal': 6,
-        'consultant': 7
-    };
+    const POSITION_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Open', 'open', 'status-pending'],
+        ['Filled', 'filled', 'status-active'],
+        ['Frozen', 'frozen', 'status-inactive'],
+        ['Eliminated', 'eliminated', 'status-terminated']
+    ]);
 
-    // ============================================================================
-    // PERSONAL ENUMS
-    // ============================================================================
+    const DOCUMENT_TYPE = factory.withValues([
+        ['Unspecified', null],
+        ['Resume', 'resume'],
+        ['ID Card', 'id'],
+        ['Passport', 'passport'],
+        ['Drivers License', 'license'],
+        ['Work Permit', 'permit'],
+        ['Visa', 'visa'],
+        ['I-9 Form', 'i-9'],
+        ['W-4 Form', 'w-4'],
+        ['Offer Letter', 'offer'],
+        ['Contract', 'contract'],
+        ['NDA', 'nda'],
+        ['Certification', 'certification'],
+        ['Degree', 'degree'],
+        ['Performance Review', 'review'],
+        ['Other', 'other']
+    ]);
 
-    MobileCoreHR.enums.GENDER = {
-        0: 'Unspecified',
-        1: 'Male',
-        2: 'Female',
-        3: 'Non-Binary',
-        4: 'Other',
-        5: 'Prefer Not to Say'
-    };
-
-    MobileCoreHR.enums.MARITAL_STATUS = {
-        0: 'Unspecified',
-        1: 'Single',
-        2: 'Married',
-        3: 'Divorced',
-        4: 'Widowed',
-        5: 'Domestic Partnership',
-        6: 'Separated'
-    };
+    const COMPLIANCE_TYPE = factory.withValues([
+        ['Unspecified', null],
+        ['I-9', 'i-9'],
+        ['EEO', 'eeo'],
+        ['VETS-4212', 'vets'],
+        ['ADA', 'ada'],
+        ['Background Check', 'background'],
+        ['Drug Test', 'drug'],
+        ['License Verification', 'license'],
+        ['Education Verification', 'education'],
+        ['Work Authorization', 'work']
+    ]);
 
     // ============================================================================
-    // ORGANIZATION TYPE
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileCoreHR.enums.ORGANIZATION_TYPE = {
-        0: 'Unspecified',
-        1: 'Company',
-        2: 'Division',
-        3: 'Business Unit',
-        4: 'Region',
-        5: 'Cost Center',
-        6: 'Legal Entity'
-    };
-
-    MobileCoreHR.enums.ORGANIZATION_TYPE_VALUES = {
-        'company': 1,
-        'division': 2,
-        'business': 3,
-        'unit': 3,
-        'region': 4,
-        'cost': 5,
-        'legal': 6
-    };
-
-    // ============================================================================
-    // POSITION STATUS
-    // ============================================================================
-
-    MobileCoreHR.enums.POSITION_STATUS = {
-        0: 'Unspecified',
-        1: 'Open',
-        2: 'Filled',
-        3: 'Frozen',
-        4: 'Eliminated'
-    };
-
-    MobileCoreHR.enums.POSITION_STATUS_VALUES = {
-        'open': 1,
-        'filled': 2,
-        'frozen': 3,
-        'eliminated': 4
-    };
-
-    MobileCoreHR.enums.POSITION_STATUS_CLASSES = {
-        1: 'status-pending',
-        2: 'status-active',
-        3: 'status-inactive',
-        4: 'status-terminated'
-    };
-
-    // ============================================================================
-    // DOCUMENT TYPE
-    // ============================================================================
-
-    MobileCoreHR.enums.DOCUMENT_TYPE = {
-        0: 'Unspecified',
-        1: 'Resume',
-        2: 'ID Card',
-        3: 'Passport',
-        4: 'Drivers License',
-        5: 'Work Permit',
-        6: 'Visa',
-        7: 'I-9 Form',
-        8: 'W-4 Form',
-        9: 'Offer Letter',
-        10: 'Contract',
-        11: 'NDA',
-        12: 'Certification',
-        13: 'Degree',
-        14: 'Performance Review',
-        99: 'Other'
-    };
-
-    MobileCoreHR.enums.DOCUMENT_TYPE_VALUES = {
-        'resume': 1,
-        'id': 2,
-        'passport': 3,
-        'license': 4,
-        'permit': 5,
-        'visa': 6,
-        'i-9': 7,
-        'w-4': 8,
-        'offer': 9,
-        'contract': 10,
-        'nda': 11,
-        'certification': 12,
-        'degree': 13,
-        'review': 14,
-        'other': 99
-    };
-
-    // ============================================================================
-    // COMPLIANCE TYPE
-    // ============================================================================
-
-    MobileCoreHR.enums.COMPLIANCE_TYPE = {
-        0: 'Unspecified',
-        1: 'I-9',
-        2: 'EEO',
-        3: 'VETS-4212',
-        4: 'ADA',
-        5: 'Background Check',
-        6: 'Drug Test',
-        7: 'License Verification',
-        8: 'Education Verification',
-        9: 'Work Authorization'
-    };
-
-    MobileCoreHR.enums.COMPLIANCE_TYPE_VALUES = {
-        'i-9': 1,
-        'i9': 1,
-        'eeo': 2,
-        'vets': 3,
-        'ada': 4,
-        'background': 5,
-        'drug': 6,
-        'license': 7,
-        'education': 8,
-        'work': 9,
-        'authorization': 9
+    MobileCoreHR.enums = {
+        EMPLOYMENT_STATUS: EMPLOYMENT_STATUS.enum,
+        EMPLOYMENT_STATUS_VALUES: EMPLOYMENT_STATUS.values,
+        EMPLOYMENT_STATUS_CLASSES: EMPLOYMENT_STATUS.classes,
+        EMPLOYMENT_TYPE: EMPLOYMENT_TYPE.enum,
+        EMPLOYMENT_TYPE_VALUES: EMPLOYMENT_TYPE.values,
+        GENDER: GENDER.enum,
+        MARITAL_STATUS: MARITAL_STATUS.enum,
+        ORGANIZATION_TYPE: ORGANIZATION_TYPE.enum,
+        ORGANIZATION_TYPE_VALUES: ORGANIZATION_TYPE.values,
+        POSITION_STATUS: POSITION_STATUS.enum,
+        POSITION_STATUS_VALUES: POSITION_STATUS.values,
+        POSITION_STATUS_CLASSES: POSITION_STATUS.classes,
+        DOCUMENT_TYPE: DOCUMENT_TYPE.enum,
+        DOCUMENT_TYPE_VALUES: DOCUMENT_TYPE.values,
+        COMPLIANCE_TYPE: COMPLIANCE_TYPE.enum,
+        COMPLIANCE_TYPE_VALUES: COMPLIANCE_TYPE.values
     };
 
     // ============================================================================
@@ -235,24 +136,18 @@ limitations under the License.
     // ============================================================================
 
     MobileCoreHR.render = {
-        employmentStatus: Layer8MRenderers.createStatusRenderer(
-            MobileCoreHR.enums.EMPLOYMENT_STATUS,
-            MobileCoreHR.enums.EMPLOYMENT_STATUS_CLASSES
-        ),
-        positionStatus: Layer8MRenderers.createStatusRenderer(
-            MobileCoreHR.enums.POSITION_STATUS,
-            MobileCoreHR.enums.POSITION_STATUS_CLASSES
-        ),
-        employmentType: (type) => Layer8MRenderers.renderEnum(type, MobileCoreHR.enums.EMPLOYMENT_TYPE),
-        gender: (gender) => Layer8MRenderers.renderEnum(gender, MobileCoreHR.enums.GENDER),
-        maritalStatus: (status) => Layer8MRenderers.renderEnum(status, MobileCoreHR.enums.MARITAL_STATUS),
-        orgType: (type) => Layer8MRenderers.renderEnum(type, MobileCoreHR.enums.ORGANIZATION_TYPE),
-        documentType: (type) => Layer8MRenderers.renderEnum(type, MobileCoreHR.enums.DOCUMENT_TYPE),
-        complianceType: (type) => Layer8MRenderers.renderEnum(type, MobileCoreHR.enums.COMPLIANCE_TYPE),
-        boolean: Layer8MRenderers.renderBoolean,
-        date: Layer8MRenderers.renderDate,
-        phone: Layer8MRenderers.renderPhone,
-        ssn: Layer8MRenderers.renderSSN
+        employmentStatus: createStatusRenderer(EMPLOYMENT_STATUS.enum, EMPLOYMENT_STATUS.classes),
+        positionStatus: createStatusRenderer(POSITION_STATUS.enum, POSITION_STATUS.classes),
+        employmentType: (type) => renderEnum(type, EMPLOYMENT_TYPE.enum),
+        gender: (gender) => renderEnum(gender, GENDER.enum),
+        maritalStatus: (status) => renderEnum(status, MARITAL_STATUS.enum),
+        orgType: (type) => renderEnum(type, ORGANIZATION_TYPE.enum),
+        documentType: (type) => renderEnum(type, DOCUMENT_TYPE.enum),
+        complianceType: (type) => renderEnum(type, COMPLIANCE_TYPE.enum),
+        boolean: renderBoolean,
+        date: renderDate,
+        phone: renderPhone,
+        ssn: renderSSN
     };
 
 })();

@@ -12,104 +12,69 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// BI Analytics Module - Enum Definitions
+// BI Analytics Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate, renderPercentage } = Layer8DRenderers;
+
     window.BiAnalytics = window.BiAnalytics || {};
-    BiAnalytics.enums = {};
 
-    // MODEL TYPE
-    BiAnalytics.enums.MODEL_TYPE = {
-        0: 'Unspecified',
-        1: 'Regression',
-        2: 'Classification',
-        3: 'Clustering',
-        4: 'Time Series',
-        5: 'Anomaly Detection'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const MODEL_TYPE = factory.simple([
+        'Unspecified', 'Regression', 'Classification', 'Clustering',
+        'Time Series', 'Anomaly Detection'
+    ]);
+
+    const MODEL_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'layer8d-status-pending'],
+        ['Training', 'training', 'layer8d-status-pending'],
+        ['Validated', 'validated', 'layer8d-status-active'],
+        ['Deployed', 'deployed', 'layer8d-status-active'],
+        ['Retired', 'retired', 'layer8d-status-terminated']
+    ]);
+
+    const SCENARIO_TYPE = factory.simple([
+        'Unspecified', 'Baseline', 'Optimistic', 'Pessimistic', 'Custom'
+    ]);
+
+    const TREND_DIRECTION = factory.create([
+        ['Unspecified', null, ''],
+        ['Up', 'up', 'layer8d-status-active'],
+        ['Down', 'down', 'layer8d-status-terminated'],
+        ['Flat', 'flat', 'layer8d-status-pending']
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    BiAnalytics.enums = {
+        MODEL_TYPE: MODEL_TYPE.enum,
+        MODEL_STATUS: MODEL_STATUS.enum,
+        MODEL_STATUS_CLASSES: MODEL_STATUS.classes,
+        SCENARIO_TYPE: SCENARIO_TYPE.enum,
+        TREND_DIRECTION: TREND_DIRECTION.enum,
+        TREND_DIRECTION_CLASSES: TREND_DIRECTION.classes
     };
 
-    BiAnalytics.enums.MODEL_TYPE_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-inactive'
-    };
-
-    // MODEL STATUS
-    BiAnalytics.enums.MODEL_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Training',
-        3: 'Validated',
-        4: 'Deployed',
-        5: 'Retired'
-    };
-
-    BiAnalytics.enums.MODEL_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-terminated'
-    };
-
-    // SCENARIO TYPE
-    BiAnalytics.enums.SCENARIO_TYPE = {
-        0: 'Unspecified',
-        1: 'Baseline',
-        2: 'Optimistic',
-        3: 'Pessimistic',
-        4: 'Custom'
-    };
-
-    BiAnalytics.enums.SCENARIO_TYPE_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-inactive',
-        4: 'layer8d-status-pending'
-    };
-
-    // TREND DIRECTION
-    BiAnalytics.enums.TREND_DIRECTION = {
-        0: 'Unspecified',
-        1: 'Up',
-        2: 'Down',
-        3: 'Flat'
-    };
-
-    BiAnalytics.enums.TREND_DIRECTION_CLASSES = {
-        1: 'layer8d-status-active',
-        2: 'layer8d-status-terminated',
-        3: 'layer8d-status-pending'
-    };
-
+    // ============================================================================
     // RENDERERS
-    BiAnalytics.render = {};
+    // ============================================================================
 
-    BiAnalytics.render.modelType = Layer8DRenderers.createStatusRenderer(
-        BiAnalytics.enums.MODEL_TYPE,
-        BiAnalytics.enums.MODEL_TYPE_CLASSES
-    );
-
-    BiAnalytics.render.modelStatus = Layer8DRenderers.createStatusRenderer(
-        BiAnalytics.enums.MODEL_STATUS,
-        BiAnalytics.enums.MODEL_STATUS_CLASSES
-    );
-
-    BiAnalytics.render.scenarioType = Layer8DRenderers.createStatusRenderer(
-        BiAnalytics.enums.SCENARIO_TYPE,
-        BiAnalytics.enums.SCENARIO_TYPE_CLASSES
-    );
-
-    BiAnalytics.render.trendDirection = Layer8DRenderers.createStatusRenderer(
-        BiAnalytics.enums.TREND_DIRECTION,
-        BiAnalytics.enums.TREND_DIRECTION_CLASSES
-    );
-
-    BiAnalytics.render.date = Layer8DRenderers.renderDate;
-    BiAnalytics.render.percent = Layer8DRenderers.renderPercentage;
+    BiAnalytics.render = {
+        modelType: (v) => renderEnum(v, MODEL_TYPE.enum),
+        modelStatus: createStatusRenderer(MODEL_STATUS.enum, MODEL_STATUS.classes),
+        scenarioType: (v) => renderEnum(v, SCENARIO_TYPE.enum),
+        trendDirection: createStatusRenderer(TREND_DIRECTION.enum, TREND_DIRECTION.classes),
+        date: renderDate,
+        percent: renderPercentage
+    };
 
 })();

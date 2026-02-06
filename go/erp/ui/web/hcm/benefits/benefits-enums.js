@@ -12,374 +12,156 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Benefits Module - Enum Definitions and Render Functions
-// Part 1 of 4 - Load this file first
+// Benefits Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Initialize Benefits namespace
-    window.Benefits = window.Benefits || {};
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
 
-    // Import shared utilities
-    const { escapeHtml, formatDate, formatMoney } = Layer8DUtils;
-    const { renderEnum, renderStatus, createStatusRenderer, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+    window.Benefits = window.Benefits || {};
 
     // ============================================================================
     // ENUM DEFINITIONS
     // ============================================================================
 
-    const BENEFIT_PLAN_TYPE = {
-        0: 'Unspecified',
-        1: 'Medical',
-        2: 'Dental',
-        3: 'Vision',
-        4: 'Life',
-        5: 'AD&D',
-        6: 'Short-Term Disability',
-        7: 'Long-Term Disability',
-        8: 'HSA',
-        9: 'FSA (Medical)',
-        10: 'FSA (Dependent Care)',
-        11: '401(k)',
-        12: '403(b)',
-        13: 'Pension',
-        14: 'EAP',
-        15: 'Legal',
-        16: 'Pet Insurance',
-        17: 'Commuter',
-        18: 'Supplemental'
-    };
+    const BENEFIT_PLAN_TYPE = factory.withValues([
+        ['Unspecified', null], ['Medical', 'medical'], ['Dental', 'dental'], ['Vision', 'vision'],
+        ['Life', 'life'], ['AD&D', 'ad&d'], ['Short-Term Disability', 'std'],
+        ['Long-Term Disability', 'ltd'], ['HSA', 'hsa'], ['FSA (Medical)', 'fsa'],
+        ['FSA (Dependent Care)', null], ['401(k)', '401k'], ['403(b)', '403b'],
+        ['Pension', 'pension'], ['EAP', 'eap'], ['Legal', 'legal'],
+        ['Pet Insurance', 'pet'], ['Commuter', 'commuter'], ['Supplemental', 'supplemental']
+    ]);
 
-    const BENEFIT_PLAN_TYPE_VALUES = {
-        'medical': 1,
-        'dental': 2,
-        'vision': 3,
-        'life': 4,
-        'ad&d': 5,
-        'std': 6,
-        'ltd': 7,
-        'hsa': 8,
-        'fsa': 9,
-        '401k': 11,
-        '403b': 12,
-        'pension': 13,
-        'eap': 14,
-        'legal': 15,
-        'pet': 16,
-        'commuter': 17,
-        'supplemental': 18
-    };
+    const BENEFIT_PLAN_CATEGORY = factory.withValues([
+        ['Unspecified', null], ['Health', 'health'], ['Insurance', 'insurance'],
+        ['Retirement', 'retirement'], ['Spending Account', 'spending'],
+        ['Wellness', 'wellness'], ['Other', 'other']
+    ]);
 
-    const BENEFIT_PLAN_CATEGORY = {
-        0: 'Unspecified',
-        1: 'Health',
-        2: 'Insurance',
-        3: 'Retirement',
-        4: 'Spending Account',
-        5: 'Wellness',
-        6: 'Other'
-    };
+    const COVERAGE_LEVEL = factory.withValues([
+        ['Unspecified', null], ['Employee Only', 'employee'], ['Employee Only', 'only'],
+        ['Employee + Spouse', 'spouse'], ['Employee + Children', 'children'],
+        ['Employee + Family', 'family'], ['Employee + One', 'one']
+    ]);
 
-    const BENEFIT_PLAN_CATEGORY_VALUES = {
-        'health': 1,
-        'insurance': 2,
-        'retirement': 3,
-        'spending': 4,
-        'wellness': 5,
-        'other': 6
-    };
+    const ENROLLMENT_STATUS = factory.create([
+        ['Unspecified', null, ''], ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Active', 'active', 'layer8d-status-active'], ['Waived', 'waived', 'layer8d-status-inactive'],
+        ['Terminated', 'terminated', 'layer8d-status-terminated'],
+        ['Cancelled', 'cancelled', 'layer8d-status-terminated'],
+        ['COBRA', 'cobra', 'layer8d-status-pending']
+    ]);
 
-    const COVERAGE_LEVEL = {
-        0: 'Unspecified',
-        1: 'Employee Only',
-        2: 'Employee + Spouse',
-        3: 'Employee + Children',
-        4: 'Employee + Family',
-        5: 'Employee + One'
-    };
+    const ENROLLMENT_REASON = factory.withValues([
+        ['Unspecified', null], ['New Hire', 'new'], ['New Hire', 'hire'],
+        ['Open Enrollment', 'open'], ['Qualifying Life Event', 'life'],
+        ['Qualifying Life Event', 'event'], ['Rehire', 'rehire'],
+        ['Status Change', 'status'], ['Status Change', 'change']
+    ]);
 
-    const COVERAGE_LEVEL_VALUES = {
-        'employee': 1,
-        'only': 1,
-        'spouse': 2,
-        'children': 3,
-        'family': 4,
-        'one': 5
-    };
+    const DEPENDENT_RELATIONSHIP = factory.withValues([
+        ['Unspecified', null], ['Spouse', 'spouse'], ['Domestic Partner', 'partner'],
+        ['Domestic Partner', 'domestic'], ['Child', 'child'], ['Stepchild', 'stepchild'],
+        ['Foster Child', 'foster'], ['Adopted Child', 'adopted'],
+        ['Legal Guardian', 'guardian'], ['Other', 'other']
+    ]);
 
-    const ENROLLMENT_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'Active',
-        3: 'Waived',
-        4: 'Terminated',
-        5: 'Cancelled',
-        6: 'COBRA'
-    };
+    const LIFE_EVENT_TYPE = factory.withValues([
+        ['Unspecified', null], ['Marriage', 'marriage'], ['Divorce', 'divorce'],
+        ['Birth', 'birth'], ['Adoption', 'adoption'], ['Death of Dependent', 'death'],
+        ['Loss of Coverage', 'loss'], ['Gain of Coverage', 'gain'],
+        ['Change in Work Status', 'work'], ['Change in Work Status', 'status'],
+        ['Move/Relocation', 'move'], ['Move/Relocation', 'relocation'],
+        ['Court Order', 'court'], ['Medicare Eligibility', 'medicare']
+    ]);
 
-    const ENROLLMENT_STATUS_VALUES = {
-        'pending': 1,
-        'active': 2,
-        'waived': 3,
-        'terminated': 4,
-        'cancelled': 5,
-        'cobra': 6
-    };
+    const LIFE_EVENT_STATUS = factory.status([
+        ['Unspecified', null, ''], ['Pending Review', 'pending', 'pending'],
+        ['Pending Review', 'review', 'pending'], ['Approved', 'approved', 'active'],
+        ['Denied', 'denied', 'terminated'], ['Expired', 'expired', 'inactive']
+    ]);
 
-    const ENROLLMENT_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-inactive',
-        4: 'layer8d-status-terminated',
-        5: 'layer8d-status-terminated',
-        6: 'layer8d-status-pending'
-    };
+    const CARRIER_TYPE = factory.withValues([
+        ['Unspecified', null], ['Medical', 'medical'], ['Dental', 'dental'],
+        ['Vision', 'vision'], ['Life', 'life'], ['Disability', 'disability'],
+        ['Retirement', 'retirement'], ['Other', 'other']
+    ]);
 
-    const ENROLLMENT_REASON = {
-        0: 'Unspecified',
-        1: 'New Hire',
-        2: 'Open Enrollment',
-        3: 'Qualifying Life Event',
-        4: 'Rehire',
-        5: 'Status Change'
-    };
+    const COBRA_EVENT_TYPE = factory.withValues([
+        ['Unspecified', null], ['Termination', 'termination'], ['Hours Reduction', 'hours'],
+        ['Hours Reduction', 'reduction'], ['Employee Death', 'death'],
+        ['Divorce', 'divorce'], ['Child Aging Out', 'aging'], ['Child Aging Out', 'child'],
+        ['Medicare Entitlement', 'medicare']
+    ]);
 
-    const ENROLLMENT_REASON_VALUES = {
-        'new': 1,
-        'hire': 1,
-        'open': 2,
-        'life': 3,
-        'event': 3,
-        'rehire': 4,
-        'status': 5,
-        'change': 5
-    };
+    const COBRA_STATUS = factory.create([
+        ['Unspecified', null, ''], ['Pending Notification', 'pending', 'layer8d-status-pending'],
+        ['Notified', 'notified', 'layer8d-status-pending'],
+        ['Elected', 'elected', 'layer8d-status-active'], ['Waived', 'waived', 'layer8d-status-inactive'],
+        ['Active', 'active', 'layer8d-status-active'], ['Terminated', 'terminated', 'layer8d-status-terminated'],
+        ['Expired', 'expired', 'layer8d-status-inactive']
+    ]);
 
-    const DEPENDENT_RELATIONSHIP = {
-        0: 'Unspecified',
-        1: 'Spouse',
-        2: 'Domestic Partner',
-        3: 'Child',
-        4: 'Stepchild',
-        5: 'Foster Child',
-        6: 'Adopted Child',
-        7: 'Legal Guardian',
-        8: 'Other'
-    };
-
-    const DEPENDENT_RELATIONSHIP_VALUES = {
-        'spouse': 1,
-        'partner': 2,
-        'domestic': 2,
-        'child': 3,
-        'stepchild': 4,
-        'foster': 5,
-        'adopted': 6,
-        'guardian': 7,
-        'other': 8
-    };
-
-    const LIFE_EVENT_TYPE = {
-        0: 'Unspecified',
-        1: 'Marriage',
-        2: 'Divorce',
-        3: 'Birth',
-        4: 'Adoption',
-        5: 'Death of Dependent',
-        6: 'Loss of Coverage',
-        7: 'Gain of Coverage',
-        8: 'Change in Work Status',
-        9: 'Move/Relocation',
-        10: 'Court Order',
-        11: 'Medicare Eligibility'
-    };
-
-    const LIFE_EVENT_TYPE_VALUES = {
-        'marriage': 1,
-        'divorce': 2,
-        'birth': 3,
-        'adoption': 4,
-        'death': 5,
-        'loss': 6,
-        'gain': 7,
-        'work': 8,
-        'status': 8,
-        'move': 9,
-        'relocation': 9,
-        'court': 10,
-        'medicare': 11
-    };
-
-    const LIFE_EVENT_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending Review',
-        2: 'Approved',
-        3: 'Denied',
-        4: 'Expired'
-    };
-
-    const LIFE_EVENT_STATUS_VALUES = {
-        'pending': 1,
-        'review': 1,
-        'approved': 2,
-        'denied': 3,
-        'expired': 4
-    };
-
-    const LIFE_EVENT_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-terminated',
-        4: 'layer8d-status-inactive'
-    };
-
-    const CARRIER_TYPE = {
-        0: 'Unspecified',
-        1: 'Medical',
-        2: 'Dental',
-        3: 'Vision',
-        4: 'Life',
-        5: 'Disability',
-        6: 'Retirement',
-        7: 'Other'
-    };
-
-    const CARRIER_TYPE_VALUES = {
-        'medical': 1,
-        'dental': 2,
-        'vision': 3,
-        'life': 4,
-        'disability': 5,
-        'retirement': 6,
-        'other': 7
-    };
-
-    const COBRA_EVENT_TYPE = {
-        0: 'Unspecified',
-        1: 'Termination',
-        2: 'Hours Reduction',
-        3: 'Employee Death',
-        4: 'Divorce',
-        5: 'Child Aging Out',
-        6: 'Medicare Entitlement'
-    };
-
-    const COBRA_EVENT_TYPE_VALUES = {
-        'termination': 1,
-        'hours': 2,
-        'reduction': 2,
-        'death': 3,
-        'divorce': 4,
-        'aging': 5,
-        'child': 5,
-        'medicare': 6
-    };
-
-    const COBRA_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending Notification',
-        2: 'Notified',
-        3: 'Elected',
-        4: 'Waived',
-        5: 'Active',
-        6: 'Terminated',
-        7: 'Expired'
-    };
-
-    const COBRA_STATUS_VALUES = {
-        'pending': 1,
-        'notified': 2,
-        'elected': 3,
-        'waived': 4,
-        'active': 5,
-        'terminated': 6,
-        'expired': 7
-    };
-
-    const COBRA_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-inactive',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-terminated',
-        7: 'layer8d-status-inactive'
-    };
-
-    const VERIFICATION_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'Verified',
-        3: 'Rejected',
-        4: 'Expired'
-    };
-
-    const VERIFICATION_STATUS_VALUES = {
-        'pending': 1,
-        'verified': 2,
-        'rejected': 3,
-        'expired': 4
-    };
-
-    const VERIFICATION_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-terminated',
-        4: 'layer8d-status-inactive'
-    };
+    const VERIFICATION_STATUS = factory.status([
+        ['Unspecified', null, ''], ['Pending', 'pending', 'pending'],
+        ['Verified', 'verified', 'active'], ['Rejected', 'rejected', 'terminated'],
+        ['Expired', 'expired', 'inactive']
+    ]);
 
     // ============================================================================
-    // STATUS RENDERERS (using shared factory)
-    // ============================================================================
-
-    const renderEnrollmentStatus = createStatusRenderer(ENROLLMENT_STATUS, ENROLLMENT_STATUS_CLASSES);
-    const renderLifeEventStatus = createStatusRenderer(LIFE_EVENT_STATUS, LIFE_EVENT_STATUS_CLASSES);
-    const renderCOBRAStatus = createStatusRenderer(COBRA_STATUS, COBRA_STATUS_CLASSES);
-    const renderVerificationStatus = createStatusRenderer(VERIFICATION_STATUS, VERIFICATION_STATUS_CLASSES);
-
-    // ============================================================================
-    // EXPORT ENUMS TO NAMESPACE
+    // EXPORT ENUMS
     // ============================================================================
 
     window.Benefits.enums = {
-        BENEFIT_PLAN_TYPE,
-        BENEFIT_PLAN_TYPE_VALUES,
-        BENEFIT_PLAN_CATEGORY,
-        BENEFIT_PLAN_CATEGORY_VALUES,
-        COVERAGE_LEVEL,
-        COVERAGE_LEVEL_VALUES,
-        ENROLLMENT_STATUS,
-        ENROLLMENT_STATUS_VALUES,
-        ENROLLMENT_REASON,
-        ENROLLMENT_REASON_VALUES,
-        DEPENDENT_RELATIONSHIP,
-        DEPENDENT_RELATIONSHIP_VALUES,
-        LIFE_EVENT_TYPE,
-        LIFE_EVENT_TYPE_VALUES,
-        LIFE_EVENT_STATUS,
-        LIFE_EVENT_STATUS_VALUES,
-        CARRIER_TYPE,
-        CARRIER_TYPE_VALUES,
-        COBRA_EVENT_TYPE,
-        COBRA_EVENT_TYPE_VALUES,
-        COBRA_STATUS,
-        COBRA_STATUS_VALUES,
-        VERIFICATION_STATUS,
-        VERIFICATION_STATUS_VALUES
+        BENEFIT_PLAN_TYPE: BENEFIT_PLAN_TYPE.enum,
+        BENEFIT_PLAN_TYPE_VALUES: BENEFIT_PLAN_TYPE.values,
+        BENEFIT_PLAN_CATEGORY: BENEFIT_PLAN_CATEGORY.enum,
+        BENEFIT_PLAN_CATEGORY_VALUES: BENEFIT_PLAN_CATEGORY.values,
+        COVERAGE_LEVEL: COVERAGE_LEVEL.enum,
+        COVERAGE_LEVEL_VALUES: COVERAGE_LEVEL.values,
+        ENROLLMENT_STATUS: ENROLLMENT_STATUS.enum,
+        ENROLLMENT_STATUS_VALUES: ENROLLMENT_STATUS.values,
+        ENROLLMENT_REASON: ENROLLMENT_REASON.enum,
+        ENROLLMENT_REASON_VALUES: ENROLLMENT_REASON.values,
+        DEPENDENT_RELATIONSHIP: DEPENDENT_RELATIONSHIP.enum,
+        DEPENDENT_RELATIONSHIP_VALUES: DEPENDENT_RELATIONSHIP.values,
+        LIFE_EVENT_TYPE: LIFE_EVENT_TYPE.enum,
+        LIFE_EVENT_TYPE_VALUES: LIFE_EVENT_TYPE.values,
+        LIFE_EVENT_STATUS: LIFE_EVENT_STATUS.enum,
+        LIFE_EVENT_STATUS_VALUES: LIFE_EVENT_STATUS.values,
+        CARRIER_TYPE: CARRIER_TYPE.enum,
+        CARRIER_TYPE_VALUES: CARRIER_TYPE.values,
+        COBRA_EVENT_TYPE: COBRA_EVENT_TYPE.enum,
+        COBRA_EVENT_TYPE_VALUES: COBRA_EVENT_TYPE.values,
+        COBRA_STATUS: COBRA_STATUS.enum,
+        COBRA_STATUS_VALUES: COBRA_STATUS.values,
+        VERIFICATION_STATUS: VERIFICATION_STATUS.enum,
+        VERIFICATION_STATUS_VALUES: VERIFICATION_STATUS.values
     };
 
+    // ============================================================================
+    // RENDERERS
+    // ============================================================================
+
+    const renderEnrollmentStatus = createStatusRenderer(ENROLLMENT_STATUS.enum, ENROLLMENT_STATUS.classes);
+    const renderLifeEventStatus = createStatusRenderer(LIFE_EVENT_STATUS.enum, LIFE_EVENT_STATUS.classes);
+    const renderCOBRAStatus = createStatusRenderer(COBRA_STATUS.enum, COBRA_STATUS.classes);
+    const renderVerificationStatus = createStatusRenderer(VERIFICATION_STATUS.enum, VERIFICATION_STATUS.classes);
+
     window.Benefits.render = {
-        benefitPlanType: (v) => renderEnum(v, BENEFIT_PLAN_TYPE),
-        benefitPlanCategory: (v) => renderEnum(v, BENEFIT_PLAN_CATEGORY),
-        coverageLevel: (v) => renderEnum(v, COVERAGE_LEVEL),
+        benefitPlanType: (v) => renderEnum(v, BENEFIT_PLAN_TYPE.enum),
+        benefitPlanCategory: (v) => renderEnum(v, BENEFIT_PLAN_CATEGORY.enum),
+        coverageLevel: (v) => renderEnum(v, COVERAGE_LEVEL.enum),
         enrollmentStatus: renderEnrollmentStatus,
-        enrollmentReason: (v) => renderEnum(v, ENROLLMENT_REASON),
-        dependentRelationship: (v) => renderEnum(v, DEPENDENT_RELATIONSHIP),
-        lifeEventType: (v) => renderEnum(v, LIFE_EVENT_TYPE),
+        enrollmentReason: (v) => renderEnum(v, ENROLLMENT_REASON.enum),
+        dependentRelationship: (v) => renderEnum(v, DEPENDENT_RELATIONSHIP.enum),
+        lifeEventType: (v) => renderEnum(v, LIFE_EVENT_TYPE.enum),
         lifeEventStatus: renderLifeEventStatus,
-        carrierType: (v) => renderEnum(v, CARRIER_TYPE),
-        cobraEventType: (v) => renderEnum(v, COBRA_EVENT_TYPE),
+        carrierType: (v) => renderEnum(v, CARRIER_TYPE.enum),
+        cobraEventType: (v) => renderEnum(v, COBRA_EVENT_TYPE.enum),
         cobraStatus: renderCOBRAStatus,
         verificationStatus: renderVerificationStatus,
         money: renderMoney,
@@ -387,12 +169,8 @@ limitations under the License.
         date: renderDate
     };
 
-    // Export internal functions for use by other benefits files
     window.Benefits._internal = {
-        renderEnrollmentStatus,
-        renderLifeEventStatus,
-        renderCOBRAStatus,
-        renderVerificationStatus
+        renderEnrollmentStatus, renderLifeEventStatus, renderCOBRAStatus, renderVerificationStatus
     };
 
 })();

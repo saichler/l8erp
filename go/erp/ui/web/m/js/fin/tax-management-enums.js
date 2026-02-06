@@ -13,46 +13,49 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Tax Management Module - Enum Definitions
+ * Mobile Tax Management Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: fin/tax/tax-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney, renderPercentage } = Layer8MRenderers;
+
     window.MobileTaxManagement = window.MobileTaxManagement || {};
-    MobileTaxManagement.enums = {};
 
     // ============================================================================
-    // TAX TYPE
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileTaxManagement.enums.TAX_TYPE = {
-        0: 'Unspecified', 1: 'Sales', 2: 'Purchase', 3: 'Income',
-        4: 'Withholding', 5: 'Excise', 6: 'Property', 7: 'Payroll', 8: 'Value Added'
-    };
+    const TAX_TYPE = factory.simple([
+        'Unspecified', 'Sales', 'Purchase', 'Income', 'Withholding',
+        'Excise', 'Property', 'Payroll', 'Value Added'
+    ]);
+
+    const JURISDICTION_LEVEL = factory.simple([
+        'Unspecified', 'Federal', 'State', 'Local', 'International'
+    ]);
+
+    const TAX_RETURN_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Filed', 'filed', 'status-pending'],
+        ['Accepted', 'accepted', 'status-active'],
+        ['Rejected', 'rejected', 'status-terminated'],
+        ['Amended', 'amended', 'status-pending']
+    ]);
 
     // ============================================================================
-    // JURISDICTION LEVEL
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileTaxManagement.enums.JURISDICTION_LEVEL = {
-        0: 'Unspecified', 1: 'Federal', 2: 'State', 3: 'Local', 4: 'International'
-    };
-
-    // ============================================================================
-    // TAX RETURN STATUS
-    // ============================================================================
-
-    MobileTaxManagement.enums.TAX_RETURN_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Filed', 3: 'Accepted',
-        4: 'Rejected', 5: 'Amended'
-    };
-    MobileTaxManagement.enums.TAX_RETURN_STATUS_VALUES = {
-        'draft': 1, 'filed': 2, 'accepted': 3, 'rejected': 4, 'amended': 5
-    };
-    MobileTaxManagement.enums.TAX_RETURN_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-active',
-        4: 'status-terminated', 5: 'status-pending'
+    MobileTaxManagement.enums = {
+        TAX_TYPE: TAX_TYPE.enum,
+        JURISDICTION_LEVEL: JURISDICTION_LEVEL.enum,
+        TAX_RETURN_STATUS: TAX_RETURN_STATUS.enum,
+        TAX_RETURN_STATUS_VALUES: TAX_RETURN_STATUS.values,
+        TAX_RETURN_STATUS_CLASSES: TAX_RETURN_STATUS.classes
     };
 
     // ============================================================================
@@ -60,16 +63,13 @@ limitations under the License.
     // ============================================================================
 
     MobileTaxManagement.render = {
-        taxType: (type) => Layer8MRenderers.renderEnum(type, MobileTaxManagement.enums.TAX_TYPE),
-        jurisdictionLevel: (level) => Layer8MRenderers.renderEnum(level, MobileTaxManagement.enums.JURISDICTION_LEVEL),
-        taxReturnStatus: Layer8MRenderers.createStatusRenderer(
-            MobileTaxManagement.enums.TAX_RETURN_STATUS,
-            MobileTaxManagement.enums.TAX_RETURN_STATUS_CLASSES
-        ),
-        boolean: Layer8MRenderers.renderBoolean,
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney,
-        percentage: Layer8MRenderers.renderPercentage
+        taxType: (type) => renderEnum(type, TAX_TYPE.enum),
+        jurisdictionLevel: (level) => renderEnum(level, JURISDICTION_LEVEL.enum),
+        taxReturnStatus: createStatusRenderer(TAX_RETURN_STATUS.enum, TAX_RETURN_STATUS.classes),
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney,
+        percentage: renderPercentage
     };
 
 })();

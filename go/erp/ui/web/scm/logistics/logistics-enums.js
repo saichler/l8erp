@@ -12,93 +12,68 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Logistics Module - Enum Definitions
-// All enum constants and value mappings for Logistics models
+// Logistics Module - Enum Definitions using Layer8EnumFactory
 
 (function() {
     'use strict';
 
-    // Create Logistics namespace
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+
     window.Logistics = window.Logistics || {};
-    Logistics.enums = {};
 
     // ============================================================================
-    // CARRIER TYPE
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    Logistics.enums.CARRIER_TYPE = {
-        0: 'Unspecified',
-        1: 'Trucking',
-        2: 'Rail',
-        3: 'Ocean',
-        4: 'Air',
-        5: 'Courier',
-        6: 'Intermodal'
-    };
+    const CARRIER_TYPE = factory.simple([
+        'Unspecified', 'Trucking', 'Rail', 'Ocean', 'Air', 'Courier', 'Intermodal'
+    ]);
+
+    const SHIPMENT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Planned', 'planned', 'layer8d-status-pending'],
+        ['Picked Up', 'pickedup', 'layer8d-status-active'],
+        ['In Transit', 'transit', 'layer8d-status-active'],
+        ['Delivered', 'delivered', 'layer8d-status-active'],
+        ['Returned', 'returned', 'layer8d-status-terminated'],
+        ['Cancelled', 'cancelled', 'layer8d-status-inactive']
+    ]);
+
+    const TASK_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['In Progress', 'progress', 'layer8d-status-active'],
+        ['Completed', 'completed', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-terminated']
+    ]);
 
     // ============================================================================
-    // SHIPMENT STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    Logistics.enums.SHIPMENT_STATUS = {
-        0: 'Unspecified',
-        1: 'Planned',
-        2: 'Picked Up',
-        3: 'In Transit',
-        4: 'Delivered',
-        5: 'Returned',
-        6: 'Cancelled'
-    };
-
-    Logistics.enums.SHIPMENT_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-terminated',
-        6: 'layer8d-status-inactive'
-    };
-
-    // ============================================================================
-    // TASK STATUS
-    // ============================================================================
-
-    Logistics.enums.TASK_STATUS = {
-        0: 'Unspecified',
-        1: 'Pending',
-        2: 'In Progress',
-        3: 'Completed',
-        4: 'Cancelled'
-    };
-
-    Logistics.enums.TASK_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated'
+    window.Logistics.enums = {
+        CARRIER_TYPE: CARRIER_TYPE.enum,
+        SHIPMENT_STATUS: SHIPMENT_STATUS.enum,
+        SHIPMENT_STATUS_CLASSES: SHIPMENT_STATUS.classes,
+        TASK_STATUS: TASK_STATUS.enum,
+        TASK_STATUS_CLASSES: TASK_STATUS.classes
     };
 
     // ============================================================================
     // RENDERERS
     // ============================================================================
 
-    // Create render functions using shared utilities
-    Logistics.render = {};
+    const renderShipmentStatus = createStatusRenderer(SHIPMENT_STATUS.enum, SHIPMENT_STATUS.classes);
+    const renderTaskStatus = createStatusRenderer(TASK_STATUS.enum, TASK_STATUS.classes);
 
-    Logistics.render.carrierType = (type) => Layer8DRenderers.renderEnum(type, Logistics.enums.CARRIER_TYPE);
-
-    Logistics.render.shipmentStatus = Layer8DRenderers.createStatusRenderer(
-        Logistics.enums.SHIPMENT_STATUS,
-        Logistics.enums.SHIPMENT_STATUS_CLASSES
-    );
-
-    Logistics.render.taskStatus = Layer8DRenderers.createStatusRenderer(
-        Logistics.enums.TASK_STATUS,
-        Logistics.enums.TASK_STATUS_CLASSES
-    );
-
-    Logistics.render.boolean = Layer8DRenderers.renderBoolean;
-    Logistics.render.date = Layer8DRenderers.renderDate;
-    Logistics.render.money = Layer8DRenderers.renderMoney;
+    window.Logistics.render = {
+        carrierType: (v) => renderEnum(v, CARRIER_TYPE.enum),
+        shipmentStatus: renderShipmentStatus,
+        taskStatus: renderTaskStatus,
+        boolean: renderBoolean,
+        date: renderDate,
+        money: renderMoney
+    };
 
 })();

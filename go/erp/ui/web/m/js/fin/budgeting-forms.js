@@ -1,125 +1,81 @@
 /*
 © 2025 Sharon Aicler (saichler@gmail.com)
-
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
-/**
- * Mobile Budgeting Module - Form Configurations
- * Desktop Equivalent: fin/budgeting/budgeting-forms.js
- */
+// Mobile Budgeting Module - Form Configurations
+// Uses Layer8FormFactory for reduced boilerplate
+
 (function() {
     'use strict';
 
+    window.MobileBudgeting = window.MobileBudgeting || {};
+
+    const f = window.Layer8FormFactory;
     const enums = MobileBudgeting.enums;
 
     MobileBudgeting.forms = {
-        Budget: {
-            title: 'Budget',
-            sections: [
-                {
-                    title: 'Budget Information',
-                    fields: [
-                        { key: 'budgetName', label: 'Budget Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'budgetType', label: 'Budget Type', type: 'select', options: enums.BUDGET_TYPE, required: true },
-                        { key: 'fiscalYearId', label: 'Fiscal Year', type: 'reference', lookupModel: 'FiscalYear', required: true },
-                        { key: 'totalAmount', label: 'Total Amount', type: 'currency', required: true },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.BUDGET_STATUS }
-                    ]
-                }
-            ]
-        },
+        Budget: f.form('Budget', [
+            f.section('Budget Information', [
+                ...f.text('budgetName', 'Budget Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('budgetType', 'Budget Type', enums.BUDGET_TYPE, true),
+                ...f.reference('fiscalYearId', 'Fiscal Year', 'FiscalYear', true),
+                ...f.money('totalAmount', 'Total Amount', true),
+                ...f.select('status', 'Status', enums.BUDGET_STATUS)
+            ])
+        ]),
 
-        BudgetLine: {
-            title: 'Budget Line',
-            sections: [
-                {
-                    title: 'Line Details',
-                    fields: [
-                        { key: 'budgetId', label: 'Budget', type: 'reference', lookupModel: 'Budget', required: true },
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'Account', required: true },
-                        { key: 'budgetedAmount', label: 'Budgeted Amount', type: 'currency', required: true },
-                        { key: 'actualAmount', label: 'Actual Amount', type: 'currency' },
-                        { key: 'variance', label: 'Variance', type: 'currency' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        BudgetLine: f.form('Budget Line', [
+            f.section('Line Details', [
+                ...f.reference('budgetId', 'Budget', 'Budget', true),
+                ...f.reference('accountId', 'Account', 'Account', true),
+                ...f.money('budgetedAmount', 'Budgeted Amount', true),
+                ...f.money('actualAmount', 'Actual Amount'),
+                ...f.money('variance', 'Variance'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
 
-        BudgetTransfer: {
-            title: 'Budget Transfer',
-            sections: [
-                {
-                    title: 'Transfer Details',
-                    fields: [
-                        { key: 'fromBudgetLineId', label: 'From Budget Line', type: 'reference', lookupModel: 'BudgetLine', required: true },
-                        { key: 'toBudgetLineId', label: 'To Budget Line', type: 'reference', lookupModel: 'BudgetLine', required: true },
-                        { key: 'amount', label: 'Amount', type: 'currency', required: true },
-                        { key: 'transferDate', label: 'Transfer Date', type: 'date', required: true },
-                        { key: 'reason', label: 'Reason', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        BudgetTransfer: f.form('Budget Transfer', [
+            f.section('Transfer Details', [
+                ...f.reference('fromBudgetLineId', 'From Budget Line', 'BudgetLine', true),
+                ...f.reference('toBudgetLineId', 'To Budget Line', 'BudgetLine', true),
+                ...f.money('amount', 'Amount', true),
+                ...f.date('transferDate', 'Transfer Date', true),
+                ...f.textarea('reason', 'Reason')
+            ])
+        ]),
 
-        BudgetScenario: {
-            title: 'Budget Scenario',
-            sections: [
-                {
-                    title: 'Scenario Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'budgetId', label: 'Budget', type: 'reference', lookupModel: 'Budget', required: true },
-                        { key: 'isBaseline', label: 'Baseline', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        BudgetScenario: f.form('Budget Scenario', [
+            f.section('Scenario Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('budgetId', 'Budget', 'Budget', true),
+                ...f.checkbox('isBaseline', 'Baseline')
+            ])
+        ]),
 
-        CapitalExpenditure: {
-            title: 'Capital Expenditure',
-            sections: [
-                {
-                    title: 'CapEx Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'requestedAmount', label: 'Requested Amount', type: 'currency', required: true },
-                        { key: 'approvedAmount', label: 'Approved Amount', type: 'currency' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.CAPEX_STATUS },
-                        { key: 'justification', label: 'Justification', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
+        CapitalExpenditure: f.form('Capital Expenditure', [
+            f.section('CapEx Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.money('requestedAmount', 'Requested Amount', true),
+                ...f.money('approvedAmount', 'Approved Amount'),
+                ...f.select('status', 'Status', enums.CAPEX_STATUS),
+                ...f.textarea('justification', 'Justification')
+            ])
+        ]),
 
-        Forecast: {
-            title: 'Forecast',
-            sections: [
-                {
-                    title: 'Forecast Details',
-                    fields: [
-                        { key: 'forecastType', label: 'Forecast Type', type: 'select', options: enums.FORECAST_TYPE, required: true },
-                        { key: 'periodStart', label: 'Period Start', type: 'date', required: true },
-                        { key: 'periodEnd', label: 'Period End', type: 'date', required: true },
-                        { key: 'forecastAmount', label: 'Forecast Amount', type: 'currency', required: true },
-                        { key: 'actualAmount', label: 'Actual Amount', type: 'currency' },
-                        { key: 'assumptions', label: 'Assumptions', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
+        Forecast: f.form('Forecast', [
+            f.section('Forecast Details', [
+                ...f.select('forecastType', 'Forecast Type', enums.FORECAST_TYPE, true),
+                ...f.date('periodStart', 'Period Start', true),
+                ...f.date('periodEnd', 'Period End', true),
+                ...f.money('forecastAmount', 'Forecast Amount', true),
+                ...f.money('actualAmount', 'Actual Amount'),
+                ...f.textarea('assumptions', 'Assumptions')
+            ])
+        ])
     };
 
 })();

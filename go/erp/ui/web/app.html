@@ -206,11 +206,20 @@ limitations under the License.
     <script src="l8ui/shared/layer8d-utils.js"></script>
     <script src="l8ui/shared/layer8d-renderers.js"></script>
     <script src="l8ui/shared/layer8d-reference-registry.js"></script>
+    <!-- Factory Components (load before module scripts) -->
+    <script src="l8ui/shared/layer8-enum-factory.js"></script>
+    <script src="l8ui/shared/layer8-ref-factory.js"></script>
+    <script src="l8ui/shared/layer8-column-factory.js"></script>
+    <script src="l8ui/shared/layer8-form-factory.js"></script>
+    <script src="l8ui/shared/layer8-section-generator.js"></script>
     <!-- ERP Reference Registry Data (project-specific) -->
     <script src="js/reference-registry-hcm.js"></script>
     <script src="js/reference-registry-fin.js"></script>
     <script src="js/reference-registry-scm.js"></script>
     <script src="js/reference-registry-fin-scm.js"></script>
+    <script src="js/reference-registry-mfg.js"></script>
+    <script src="js/reference-registry-sales.js"></script>
+    <script src="js/reference-registry-mfg-sales.js"></script>
     <script src="js/reference-registry-crm.js"></script>
     <script src="js/reference-registry-prj.js"></script>
     <script src="js/reference-registry-bi.js"></script>
@@ -263,6 +272,7 @@ limitations under the License.
     <script src="dashboard/dashboard-stats.js"></script>
     <script src="dashboard/dashboard-init.js"></script>
     <!-- HCM Module -->
+    <script src="hcm/hcm-section-config.js"></script>
     <script src="hcm/hcm-config.js"></script>
     <script src="hcm/core-hr/core-hr-enums.js"></script>
     <script src="hcm/core-hr/core-hr-columns.js"></script>
@@ -294,6 +304,7 @@ limitations under the License.
     <script src="hcm/compensation/compensation.js"></script>
     <script src="hcm/hcm-init.js"></script>
     <!-- FIN Module -->
+    <script src="fin/fin-section-config.js"></script>
     <script src="fin/fin-config.js"></script>
     <script src="fin/general-ledger/general-ledger-enums.js"></script>
     <script src="fin/general-ledger/general-ledger-columns.js"></script>
@@ -325,6 +336,7 @@ limitations under the License.
     <script src="fin/tax/tax.js"></script>
     <script src="fin/fin-init.js"></script>
     <!-- SCM Module -->
+    <script src="scm/scm-section-config.js"></script>
     <script src="scm/scm-config.js"></script>
     <script src="scm/procurement/procurement-enums.js"></script>
     <script src="scm/procurement/procurement-columns.js"></script>
@@ -352,6 +364,7 @@ limitations under the License.
     <script src="scm/supply-planning/supply-planning.js"></script>
     <script src="scm/scm-init.js"></script>
     <!-- Sales Module -->
+    <script src="sales/sales-section-config.js"></script>
     <script src="sales/sales-config.js"></script>
     <script src="sales/customers/customers-enums.js"></script>
     <script src="sales/customers/customers-columns.js"></script>
@@ -379,6 +392,7 @@ limitations under the License.
     <script src="sales/analytics/analytics.js"></script>
     <script src="sales/sales-init.js"></script>
     <!-- MFG Module -->
+    <script src="mfg/mfg-section-config.js"></script>
     <script src="mfg/mfg-config.js"></script>
     <script src="mfg/engineering/engineering-enums.js"></script>
     <script src="mfg/engineering/engineering-columns.js"></script>
@@ -406,6 +420,7 @@ limitations under the License.
     <script src="mfg/costing/costing.js"></script>
     <script src="mfg/mfg-init.js"></script>
     <!-- CRM Config -->
+    <script src="crm/crm-section-config.js"></script>
     <script src="crm/crm-config.js"></script>
 
     <!-- CRM Submodules -->
@@ -442,6 +457,7 @@ limitations under the License.
     <!-- CRM Init (LAST) -->
     <script src="crm/crm-init.js"></script>
     <!-- PRJ Module -->
+    <script src="prj/prj-section-config.js"></script>
     <script src="prj/prj-config.js"></script>
     <script src="prj/planning/planning-enums.js"></script>
     <script src="prj/planning/planning-columns.js"></script>
@@ -465,6 +481,7 @@ limitations under the License.
     <script src="prj/analytics/analytics.js"></script>
     <script src="prj/prj-init.js"></script>
     <!-- BI Module -->
+    <script src="bi/bi-section-config.js"></script>
     <script src="bi/bi-config.js"></script>
     <script src="bi/reporting/reporting-enums.js"></script>
     <script src="bi/reporting/reporting-columns.js"></script>
@@ -484,6 +501,7 @@ limitations under the License.
     <script src="bi/datamanagement/datamanagement.js"></script>
     <script src="bi/bi-init.js"></script>
     <!-- Documents Module -->
+    <script src="documents/documents-section-config.js"></script>
     <script src="documents/documents-config.js"></script>
     <script src="documents/storage/storage-enums.js"></script>
     <script src="documents/storage/storage-columns.js"></script>
@@ -499,6 +517,7 @@ limitations under the License.
     <script src="documents/compliance/compliance-forms.js"></script>
     <script src="documents/documents-init.js"></script>
     <!-- ECOM Module -->
+    <script src="ecom/ecom-section-config.js"></script>
     <script src="ecom/ecom-config.js"></script>
     <script src="ecom/catalog/catalog-enums.js"></script>
     <script src="ecom/catalog/catalog-columns.js"></script>
@@ -518,6 +537,7 @@ limitations under the License.
     <script src="ecom/promotions/promotions.js"></script>
     <script src="ecom/ecom-init.js"></script>
     <!-- COMP Module -->
+    <script src="comp/comp-section-config.js"></script>
     <script src="comp/comp-config.js"></script>
     <script src="comp/regulatory/regulatory-enums.js"></script>
     <script src="comp/regulatory/regulatory-columns.js"></script>

@@ -2,176 +2,87 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // Inventory Module - Column Configurations
-// Table column definitions for all Inventory models
+// Uses Layer8ColumnFactory for reduced boilerplate
 
 (function() {
     'use strict';
 
-    // Ensure Inventory namespace exists
     window.Inventory = window.Inventory || {};
 
-    const { renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = Inventory.render;
-
-    // ============================================================================
-    // COLUMN CONFIGURATIONS
-    // ============================================================================
 
     Inventory.columns = {
         ScmItem: [
-            { key: 'itemId', label: 'ID', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'itemNumber', label: 'Item #', sortKey: 'itemNumber', filterKey: 'itemNumber' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'itemType',
-                label: 'Type',
-                sortKey: 'itemType',
-                render: (item) => render.itemType(item.itemType)
-            },
-            { key: 'categoryId', label: 'Category', sortKey: 'categoryId', filterKey: 'categoryId' },
-            {
-                key: 'unitCost',
-                label: 'Unit Cost',
-                sortKey: 'unitCost',
-                render: (item) => renderMoney(item.unitCost)
-            },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
-            }
+            ...col.id('itemId'),
+            ...col.col('itemNumber', 'Item #'),
+            ...col.col('name', 'Name'),
+            ...col.enum('itemType', 'Type', null, render.itemType),
+            ...col.col('categoryId', 'Category'),
+            ...col.money('unitCost', 'Unit Cost'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         ScmItemCategory: [
-            { key: 'categoryId', label: 'ID', sortKey: 'categoryId', filterKey: 'categoryId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'parentCategoryId', label: 'Parent', sortKey: 'parentCategoryId', filterKey: 'parentCategoryId' },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
-            }
+            ...col.id('categoryId'),
+            ...col.col('name', 'Name'),
+            ...col.col('parentCategoryId', 'Parent'),
+            ...col.col('description', 'Description'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         ScmStockMovement: [
-            { key: 'movementId', label: 'ID', sortKey: 'movementId', filterKey: 'movementId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            {
-                key: 'movementType',
-                label: 'Type',
-                sortKey: 'movementType',
-                render: (item) => render.movementType(item.movementType)
-            },
-            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            {
-                key: 'movementDate',
-                label: 'Date',
-                sortKey: 'movementDate',
-                render: (item) => renderDate(item.movementDate)
-            },
-            { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' }
+            ...col.id('movementId'),
+            ...col.col('itemId', 'Item'),
+            ...col.enum('movementType', 'Type', null, render.movementType),
+            ...col.custom('quantity', 'Qty', (item) => item.quantity, { sortKey: 'quantity' }),
+            ...col.date('movementDate', 'Date'),
+            ...col.col('warehouseId', 'Warehouse')
         ],
 
         ScmLotNumber: [
-            { key: 'lotId', label: 'ID', sortKey: 'lotId', filterKey: 'lotId' },
-            { key: 'lotNumber', label: 'Lot #', sortKey: 'lotNumber', filterKey: 'lotNumber' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            {
-                key: 'manufactureDate',
-                label: 'Mfg Date',
-                sortKey: 'manufactureDate',
-                render: (item) => renderDate(item.manufactureDate)
-            },
-            {
-                key: 'expiryDate',
-                label: 'Expiry',
-                sortKey: 'expiryDate',
-                render: (item) => renderDate(item.expiryDate)
-            },
-            { key: 'quantity', label: 'Qty', sortKey: 'quantity' }
+            ...col.id('lotId'),
+            ...col.col('lotNumber', 'Lot #'),
+            ...col.col('itemId', 'Item'),
+            ...col.date('manufactureDate', 'Mfg Date'),
+            ...col.date('expiryDate', 'Expiry'),
+            ...col.custom('quantity', 'Qty', (item) => item.quantity, { sortKey: 'quantity' })
         ],
 
         ScmSerialNumber: [
-            { key: 'serialId', label: 'ID', sortKey: 'serialId', filterKey: 'serialId' },
-            { key: 'serialNumber', label: 'Serial #', sortKey: 'serialNumber', filterKey: 'serialNumber' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'lotId', label: 'Lot', sortKey: 'lotId', filterKey: 'lotId' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.taskStatus(item.status)
-            }
+            ...col.id('serialId'),
+            ...col.col('serialNumber', 'Serial #'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('lotId', 'Lot'),
+            ...col.enum('status', 'Status', null, render.taskStatus)
         ],
 
         ScmCycleCount: [
-            { key: 'cycleCountId', label: 'ID', sortKey: 'cycleCountId', filterKey: 'cycleCountId' },
-            { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
-            {
-                key: 'countDate',
-                label: 'Count Date',
-                sortKey: 'countDate',
-                render: (item) => renderDate(item.countDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.taskStatus(item.status)
-            },
-            { key: 'itemsCounted', label: 'Items Counted', sortKey: 'itemsCounted' },
-            { key: 'discrepancies', label: 'Discrepancies', sortKey: 'discrepancies' }
+            ...col.id('cycleCountId'),
+            ...col.col('warehouseId', 'Warehouse'),
+            ...col.date('countDate', 'Count Date'),
+            ...col.enum('status', 'Status', null, render.taskStatus),
+            ...col.custom('itemsCounted', 'Items Counted', (item) => item.itemsCounted, { sortKey: 'itemsCounted' }),
+            ...col.custom('discrepancies', 'Discrepancies', (item) => item.discrepancies, { sortKey: 'discrepancies' })
         ],
 
         ScmReorderPoint: [
-            { key: 'reorderPointId', label: 'ID', sortKey: 'reorderPointId', filterKey: 'reorderPointId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
-            { key: 'minimumQuantity', label: 'Min Qty', sortKey: 'minimumQuantity' },
-            { key: 'reorderQuantity', label: 'Reorder Qty', sortKey: 'reorderQuantity' },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
-            }
+            ...col.id('reorderPointId'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('warehouseId', 'Warehouse'),
+            ...col.custom('minimumQuantity', 'Min Qty', (item) => item.minimumQuantity, { sortKey: 'minimumQuantity' }),
+            ...col.custom('reorderQuantity', 'Reorder Qty', (item) => item.reorderQuantity, { sortKey: 'reorderQuantity' }),
+            ...col.boolean('isActive', 'Active')
         ],
 
         ScmInventoryValuation: [
-            { key: 'valuationId', label: 'ID', sortKey: 'valuationId', filterKey: 'valuationId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            {
-                key: 'valuationMethod',
-                label: 'Method',
-                sortKey: 'valuationMethod',
-                render: (item) => render.valuationMethod(item.valuationMethod)
-            },
-            {
-                key: 'valuationDate',
-                label: 'Date',
-                sortKey: 'valuationDate',
-                render: (item) => renderDate(item.valuationDate)
-            },
-            {
-                key: 'totalValue',
-                label: 'Total Value',
-                sortKey: 'totalValue',
-                render: (item) => renderMoney(item.totalValue)
-            }
+            ...col.id('valuationId'),
+            ...col.col('itemId', 'Item'),
+            ...col.enum('valuationMethod', 'Method', null, render.valuationMethod),
+            ...col.date('valuationDate', 'Date'),
+            ...col.money('totalValue', 'Total Value')
         ]
     };
 

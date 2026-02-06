@@ -12,6 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+// Uses Layer8FormFactory for reduced boilerplate
 /**
  * Mobile Manufacturing Engineering Module - Form Definitions
  * Desktop Equivalent: mfg/engineering/engineering-forms.js
@@ -20,81 +21,76 @@ limitations under the License.
     'use strict';
 
     window.MobileMfgEngineering = window.MobileMfgEngineering || {};
+    const f = window.Layer8FormFactory;
     const enums = MobileMfgEngineering.enums;
 
     MobileMfgEngineering.forms = {
-        MfgBom: {
-            title: 'Bill of Materials',
-            sections: [{ title: 'BOM Details', fields: [
-                { key: 'bomNumber', label: 'BOM Number', type: 'text', required: true },
-                { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                { key: 'description', label: 'Description', type: 'textarea' },
-                { key: 'bomType', label: 'BOM Type', type: 'select', options: enums.BOM_TYPE },
-                { key: 'status', label: 'Status', type: 'select', options: enums.BOM_STATUS },
-                { key: 'revision', label: 'Revision', type: 'text' },
-                { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
-                { key: 'baseQuantity', label: 'Base Quantity', type: 'number' },
-                { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
-                { key: 'notes', label: 'Notes', type: 'textarea' }
-            ]}]
-        },
-        MfgBomLine: {
-            title: 'BOM Line',
-            sections: [{ title: 'Line Details', fields: [
-                { key: 'bomId', label: 'BOM', type: 'reference', lookupModel: 'MfgBom', required: true },
-                { key: 'componentItemId', label: 'Component', type: 'reference', lookupModel: 'ScmItem', required: true },
-                { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
-                { key: 'sequenceNumber', label: 'Sequence', type: 'number' },
-                { key: 'scrapPercent', label: 'Scrap %', type: 'number' }
-            ]}]
-        },
-        MfgRouting: {
-            title: 'Routing',
-            sections: [{ title: 'Routing Details', fields: [
-                { key: 'routingNumber', label: 'Routing Number', type: 'text', required: true },
-                { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
-                { key: 'description', label: 'Description', type: 'textarea' },
-                { key: 'status', label: 'Status', type: 'select', options: enums.ROUTING_STATUS },
-                { key: 'revision', label: 'Revision', type: 'text' },
-                { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
-                { key: 'notes', label: 'Notes', type: 'textarea' }
-            ]}]
-        },
-        MfgRoutingOperation: {
-            title: 'Routing Operation',
-            sections: [{ title: 'Operation Details', fields: [
-                { key: 'routingId', label: 'Routing', type: 'reference', lookupModel: 'MfgRouting', required: true },
-                { key: 'operationNumber', label: 'Operation #', type: 'number', required: true },
-                { key: 'workCenterId', label: 'Work Center', type: 'reference', lookupModel: 'MfgWorkCenter', required: true },
-                { key: 'description', label: 'Description', type: 'textarea' },
-                { key: 'setupTime', label: 'Setup Time (hrs)', type: 'number' },
-                { key: 'runTime', label: 'Run Time (hrs)', type: 'number' }
-            ]}]
-        },
-        MfgEngChangeOrder: {
-            title: 'Engineering Change Order',
-            sections: [{ title: 'ECO Details', fields: [
-                { key: 'ecoNumber', label: 'ECO Number', type: 'text', required: true },
-                { key: 'title', label: 'Title', type: 'text', required: true },
-                { key: 'description', label: 'Description', type: 'textarea' },
-                { key: 'changeType', label: 'Change Type', type: 'select', options: enums.ECO_CHANGE_TYPE },
-                { key: 'status', label: 'Status', type: 'select', options: enums.ECO_STATUS },
-                { key: 'requestDate', label: 'Request Date', type: 'date' },
-                { key: 'targetDate', label: 'Target Date', type: 'date' },
-                { key: 'reason', label: 'Reason', type: 'textarea' }
-            ]}]
-        },
-        MfgEngChangeDetail: {
-            title: 'ECO Detail',
-            sections: [{ title: 'Change Details', fields: [
-                { key: 'changeOrderId', label: 'ECO', type: 'reference', lookupModel: 'MfgEngChangeOrder', required: true },
-                { key: 'affectedItemId', label: 'Affected Item', type: 'reference', lookupModel: 'ScmItem' },
-                { key: 'changeDescription', label: 'Change Description', type: 'textarea', required: true },
-                { key: 'oldValue', label: 'Old Value', type: 'text' },
-                { key: 'newValue', label: 'New Value', type: 'text' }
-            ]}]
-        }
+        MfgBom: f.form('Bill of Materials', [
+            f.section('BOM Details', [
+                ...f.text('bomNumber', 'BOM Number', true),
+                ...f.reference('itemId', 'Item', 'ScmItem', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('bomType', 'BOM Type', enums.BOM_TYPE),
+                ...f.select('status', 'Status', enums.BOM_STATUS),
+                ...f.text('revision', 'Revision'),
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.number('baseQuantity', 'Base Quantity'),
+                ...f.text('unitOfMeasure', 'UOM'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
+        MfgBomLine: f.form('BOM Line', [
+            f.section('Line Details', [
+                ...f.reference('bomId', 'BOM', 'MfgBom', true),
+                ...f.reference('componentItemId', 'Component', 'ScmItem', true),
+                ...f.number('quantity', 'Quantity', true),
+                ...f.text('unitOfMeasure', 'UOM'),
+                ...f.number('sequenceNumber', 'Sequence'),
+                ...f.number('scrapPercent', 'Scrap %')
+            ])
+        ]),
+        MfgRouting: f.form('Routing', [
+            f.section('Routing Details', [
+                ...f.text('routingNumber', 'Routing Number', true),
+                ...f.reference('itemId', 'Item', 'ScmItem', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('status', 'Status', enums.ROUTING_STATUS),
+                ...f.text('revision', 'Revision'),
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.textarea('notes', 'Notes')
+            ])
+        ]),
+        MfgRoutingOperation: f.form('Routing Operation', [
+            f.section('Operation Details', [
+                ...f.reference('routingId', 'Routing', 'MfgRouting', true),
+                ...f.number('operationNumber', 'Operation #', true),
+                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
+                ...f.textarea('description', 'Description'),
+                ...f.number('setupTime', 'Setup Time (hrs)'),
+                ...f.number('runTime', 'Run Time (hrs)')
+            ])
+        ]),
+        MfgEngChangeOrder: f.form('Engineering Change Order', [
+            f.section('ECO Details', [
+                ...f.text('ecoNumber', 'ECO Number', true),
+                ...f.text('title', 'Title', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('changeType', 'Change Type', enums.ECO_CHANGE_TYPE),
+                ...f.select('status', 'Status', enums.ECO_STATUS),
+                ...f.date('requestDate', 'Request Date'),
+                ...f.date('targetDate', 'Target Date'),
+                ...f.textarea('reason', 'Reason')
+            ])
+        ]),
+        MfgEngChangeDetail: f.form('ECO Detail', [
+            f.section('Change Details', [
+                ...f.reference('changeOrderId', 'ECO', 'MfgEngChangeOrder', true),
+                ...f.reference('affectedItemId', 'Affected Item', 'ScmItem'),
+                ...f.textarea('changeDescription', 'Change Description', true),
+                ...f.text('oldValue', 'Old Value'),
+                ...f.text('newValue', 'New Value')
+            ])
+        ])
     };
 
     MobileMfgEngineering.primaryKeys = {

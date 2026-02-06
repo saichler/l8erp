@@ -13,41 +13,49 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Sales Customers Module - Enum Definitions
+ * Mobile Sales Customers Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: sales/customers/customers-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderDate, renderMoney } = Layer8MRenderers;
+
     window.MobileSalesCustomers = window.MobileSalesCustomers || {};
-    MobileSalesCustomers.enums = {};
 
     // ============================================================================
-    // CONTRACT STATUS
+    // ENUM DEFINITIONS
     // ============================================================================
 
-    MobileSalesCustomers.enums.CONTRACT_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Active', 3: 'Expired', 4: 'Terminated', 5: 'Renewed'
-    };
-    MobileSalesCustomers.enums.CONTRACT_STATUS_VALUES = {
-        'draft': 1, 'active': 2, 'expired': 3, 'terminated': 4, 'renewed': 5
-    };
-    MobileSalesCustomers.enums.CONTRACT_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-active', 3: 'status-inactive', 4: 'status-terminated', 5: 'status-active'
-    };
+    const CONTRACT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Active', 'active', 'status-active'],
+        ['Expired', 'expired', 'status-inactive'],
+        ['Terminated', 'terminated', 'status-terminated'],
+        ['Renewed', 'renewed', 'status-active']
+    ]);
+
+    const PARTNER_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Active', 'active', 'status-active'],
+        ['Inactive', 'inactive', 'status-inactive'],
+        ['Pending', 'pending', 'status-pending'],
+        ['Suspended', 'suspended', 'status-terminated']
+    ]);
 
     // ============================================================================
-    // PARTNER STATUS
+    // EXPORT ENUMS
     // ============================================================================
 
-    MobileSalesCustomers.enums.PARTNER_STATUS = {
-        0: 'Unspecified', 1: 'Active', 2: 'Inactive', 3: 'Pending', 4: 'Suspended'
-    };
-    MobileSalesCustomers.enums.PARTNER_STATUS_VALUES = {
-        'active': 1, 'inactive': 2, 'pending': 3, 'suspended': 4
-    };
-    MobileSalesCustomers.enums.PARTNER_STATUS_CLASSES = {
-        1: 'status-active', 2: 'status-inactive', 3: 'status-pending', 4: 'status-terminated'
+    MobileSalesCustomers.enums = {
+        CONTRACT_STATUS: CONTRACT_STATUS.enum,
+        CONTRACT_STATUS_VALUES: CONTRACT_STATUS.values,
+        CONTRACT_STATUS_CLASSES: CONTRACT_STATUS.classes,
+        PARTNER_STATUS: PARTNER_STATUS.enum,
+        PARTNER_STATUS_VALUES: PARTNER_STATUS.values,
+        PARTNER_STATUS_CLASSES: PARTNER_STATUS.classes
     };
 
     // ============================================================================
@@ -55,16 +63,10 @@ limitations under the License.
     // ============================================================================
 
     MobileSalesCustomers.render = {
-        contractStatus: Layer8MRenderers.createStatusRenderer(
-            MobileSalesCustomers.enums.CONTRACT_STATUS,
-            MobileSalesCustomers.enums.CONTRACT_STATUS_CLASSES
-        ),
-        partnerStatus: Layer8MRenderers.createStatusRenderer(
-            MobileSalesCustomers.enums.PARTNER_STATUS,
-            MobileSalesCustomers.enums.PARTNER_STATUS_CLASSES
-        ),
-        date: Layer8MRenderers.renderDate,
-        money: Layer8MRenderers.renderMoney
+        contractStatus: createStatusRenderer(CONTRACT_STATUS.enum, CONTRACT_STATUS.classes),
+        partnerStatus: createStatusRenderer(PARTNER_STATUS.enum, PARTNER_STATUS.classes),
+        date: renderDate,
+        money: renderMoney
     };
 
 })();

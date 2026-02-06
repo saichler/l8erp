@@ -2,144 +2,112 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
+// Compliance Controls Module - Form Definitions
+// Uses Layer8FormFactory for reduced boilerplate
+
 (function() {
     'use strict';
+
     window.CompControls = window.CompControls || {};
 
+    const f = window.Layer8FormFactory;
+    const enums = CompControls.enums;
+
     CompControls.forms = {
-        CompControl: {
-            sections: [
-                {
-                    title: 'Control Information',
-                    fields: [
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'type', label: 'Type', type: 'select', options: 'controlType', required: true },
-                        { key: 'category', label: 'Category', type: 'select', options: 'controlCategory' },
-                        { key: 'nature', label: 'Nature', type: 'select', options: 'controlNature' },
-                        { key: 'frequency', label: 'Frequency', type: 'select', options: 'controlFrequency' },
-                        { key: 'status', label: 'Status', type: 'select', options: 'controlStatus' }
-                    ]
-                },
-                {
-                    title: 'Ownership',
-                    fields: [
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'Department' }
-                    ]
-                },
-                {
-                    title: 'Details',
-                    fields: [
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'objective', label: 'Control Objective', type: 'textarea' },
-                        { key: 'testingProcedure', label: 'Testing Procedure', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
-        CompControlAssessment: {
-            sections: [
-                {
-                    title: 'Assessment Information',
-                    fields: [
-                        { key: 'controlId', label: 'Control', type: 'reference', lookupModel: 'CompControl', required: true },
-                        { key: 'assessmentDate', label: 'Assessment Date', type: 'date', required: true },
-                        { key: 'assessorId', label: 'Assessor', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'result', label: 'Result', type: 'select', options: 'assessmentResult', required: true },
-                        { key: 'nextAssessmentDate', label: 'Next Assessment Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Assessment Details',
-                    fields: [
-                        { key: 'testingPerformed', label: 'Testing Performed', type: 'textarea' },
-                        { key: 'findings', label: 'Findings', type: 'textarea' },
-                        { key: 'recommendations', label: 'Recommendations', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
-        CompPolicyDocument: {
-            sections: [
-                {
-                    title: 'Policy Information',
-                    fields: [
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'title', label: 'Title', type: 'text', required: true },
-                        { key: 'category', label: 'Category', type: 'select', options: 'policyCategory' },
-                        { key: 'version', label: 'Version', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'select', options: 'policyStatus' }
-                    ]
-                },
-                {
-                    title: 'Dates',
-                    fields: [
-                        { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
-                        { key: 'reviewDate', label: 'Review Date', type: 'date' },
-                        { key: 'expiryDate', label: 'Expiry Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Ownership',
-                    fields: [
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'approverId', label: 'Approver', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                },
-                {
-                    title: 'Content',
-                    fields: [
-                        { key: 'summary', label: 'Summary', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
-        CompApprovalMatrix: {
-            sections: [
-                {
-                    title: 'Matrix Information',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'documentType', label: 'Document Type', type: 'text' },
-                        { key: 'status', label: 'Status', type: 'select', options: 'approvalStatus' }
-                    ]
-                },
-                {
-                    title: 'Amount Thresholds',
-                    fields: [
-                        { key: 'minAmount', label: 'Min Amount', type: 'money' },
-                        { key: 'maxAmount', label: 'Max Amount', type: 'money' }
-                    ]
-                },
-                {
-                    title: 'Details',
-                    fields: [
-                        { key: 'description', label: 'Description', type: 'textarea' }
-                    ]
-                }
-            ]
-        },
-        CompSegregationRule: {
-            sections: [
-                {
-                    title: 'Rule Information',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'conflictingRole1', label: 'Conflicting Role 1', type: 'text', required: true },
-                        { key: 'conflictingRole2', label: 'Conflicting Role 2', type: 'text', required: true },
-                        { key: 'riskLevel', label: 'Risk Level', type: 'select', options: ['Critical', 'High', 'Medium', 'Low'] },
-                        { key: 'status', label: 'Status', type: 'select', options: 'ruleStatus' }
-                    ]
-                },
-                {
-                    title: 'Details',
-                    fields: [
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'mitigatingControl', label: 'Mitigating Control', type: 'textarea' }
-                    ]
-                }
-            ]
-        }
+        CompControl: f.form('Control', [
+            f.section('Control Information', [
+                ...f.text('code', 'Code', true),
+                ...f.text('name', 'Name', true),
+                ...f.select('type', 'Type', enums.controlType, true),
+                ...f.select('category', 'Category', enums.controlCategory),
+                ...f.select('nature', 'Nature', enums.controlNature),
+                ...f.select('frequency', 'Frequency', enums.controlFrequency),
+                ...f.select('status', 'Status', enums.controlStatus)
+            ]),
+            f.section('Ownership', [
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.reference('departmentId', 'Department', 'Department')
+            ]),
+            f.section('Details', [
+                ...f.textarea('description', 'Description'),
+                ...f.textarea('objective', 'Control Objective'),
+                ...f.textarea('testingProcedure', 'Testing Procedure')
+            ])
+        ]),
+
+        CompControlAssessment: f.form('Control Assessment', [
+            f.section('Assessment Information', [
+                ...f.reference('controlId', 'Control', 'CompControl', true),
+                ...f.date('assessmentDate', 'Assessment Date', true),
+                ...f.reference('assessorId', 'Assessor', 'Employee'),
+                ...f.select('result', 'Result', enums.assessmentResult, true),
+                ...f.date('nextAssessmentDate', 'Next Assessment Date')
+            ]),
+            f.section('Assessment Details', [
+                ...f.textarea('testingPerformed', 'Testing Performed'),
+                ...f.textarea('findings', 'Findings'),
+                ...f.textarea('recommendations', 'Recommendations')
+            ])
+        ]),
+
+        CompPolicyDocument: f.form('Policy Document', [
+            f.section('Policy Information', [
+                ...f.text('code', 'Code', true),
+                ...f.text('title', 'Title', true),
+                ...f.select('category', 'Category', enums.policyCategory),
+                ...f.text('version', 'Version'),
+                ...f.select('status', 'Status', enums.policyStatus)
+            ]),
+            f.section('Dates', [
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.date('reviewDate', 'Review Date'),
+                ...f.date('expiryDate', 'Expiry Date')
+            ]),
+            f.section('Ownership', [
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.reference('approverId', 'Approver', 'Employee')
+            ]),
+            f.section('Content', [
+                ...f.textarea('summary', 'Summary')
+            ])
+        ]),
+
+        CompApprovalMatrix: f.form('Approval Matrix', [
+            f.section('Matrix Information', [
+                ...f.text('name', 'Name', true),
+                ...f.text('documentType', 'Document Type'),
+                ...f.select('status', 'Status', enums.approvalStatus)
+            ]),
+            f.section('Amount Thresholds', [
+                ...f.money('minAmount', 'Min Amount'),
+                ...f.money('maxAmount', 'Max Amount')
+            ]),
+            f.section('Details', [
+                ...f.textarea('description', 'Description')
+            ])
+        ]),
+
+        CompSegregationRule: f.form('Segregation Rule', [
+            f.section('Rule Information', [
+                ...f.text('name', 'Name', true),
+                ...f.text('conflictingRole1', 'Conflicting Role 1', true),
+                ...f.text('conflictingRole2', 'Conflicting Role 2', true),
+                ...f.select('riskLevel', 'Risk Level', ['Critical', 'High', 'Medium', 'Low']),
+                ...f.select('status', 'Status', enums.ruleStatus)
+            ]),
+            f.section('Details', [
+                ...f.textarea('description', 'Description'),
+                ...f.textarea('mitigatingControl', 'Mitigating Control')
+            ])
+        ])
     };
+
+    CompControls.primaryKeys = {
+        CompControl: 'controlId',
+        CompControlAssessment: 'assessmentId',
+        CompPolicyDocument: 'policyId',
+        CompApprovalMatrix: 'matrixId',
+        CompSegregationRule: 'ruleId'
+    };
+
 })();

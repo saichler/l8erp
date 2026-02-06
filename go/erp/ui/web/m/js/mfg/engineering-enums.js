@@ -13,66 +13,86 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * Mobile Manufacturing Engineering Module - Enum Definitions
+ * Mobile Manufacturing Engineering Module - Enum Definitions using Layer8EnumFactory
  * Desktop Equivalent: mfg/engineering/engineering-enums.js
  */
 (function() {
     'use strict';
 
+    const factory = window.Layer8EnumFactory;
+    const { createStatusRenderer, renderEnum, renderDate } = Layer8MRenderers;
+
     window.MobileMfgEngineering = window.MobileMfgEngineering || {};
-    MobileMfgEngineering.enums = {};
 
-    // BOM TYPE
-    MobileMfgEngineering.enums.BOM_TYPE = {
-        0: 'Unspecified', 1: 'Manufacturing', 2: 'Engineering', 3: 'Planning', 4: 'Costing'
+    // ============================================================================
+    // ENUM DEFINITIONS
+    // ============================================================================
+
+    const BOM_TYPE = factory.simple([
+        'Unspecified', 'Manufacturing', 'Engineering', 'Planning', 'Costing'
+    ]);
+
+    const BOM_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Pending Approval', 'pending', 'status-pending'],
+        ['Active', 'active', 'status-active'],
+        ['Obsolete', 'obsolete', 'status-inactive'],
+        ['Superseded', 'superseded', 'status-inactive']
+    ]);
+
+    const ROUTING_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Pending Approval', 'pending', 'status-pending'],
+        ['Active', 'active', 'status-active'],
+        ['Obsolete', 'obsolete', 'status-inactive']
+    ]);
+
+    const ECO_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Draft', 'draft', 'status-pending'],
+        ['Submitted', 'submitted', 'status-pending'],
+        ['Under Review', 'review', 'status-pending'],
+        ['Approved', 'approved', 'status-active'],
+        ['Rejected', 'rejected', 'status-terminated'],
+        ['Implemented', 'implemented', 'status-active'],
+        ['Cancelled', 'cancelled', 'status-inactive']
+    ]);
+
+    const ECO_CHANGE_TYPE = factory.simple([
+        'Unspecified', 'Design Change', 'Process Change', 'Material Change', 'Cost Reduction', 'Quality Improvement'
+    ]);
+
+    // ============================================================================
+    // EXPORT ENUMS
+    // ============================================================================
+
+    MobileMfgEngineering.enums = {
+        BOM_TYPE: BOM_TYPE.enum,
+        BOM_STATUS: BOM_STATUS.enum,
+        BOM_STATUS_VALUES: BOM_STATUS.values,
+        BOM_STATUS_CLASSES: BOM_STATUS.classes,
+        ROUTING_STATUS: ROUTING_STATUS.enum,
+        ROUTING_STATUS_VALUES: ROUTING_STATUS.values,
+        ROUTING_STATUS_CLASSES: ROUTING_STATUS.classes,
+        ECO_STATUS: ECO_STATUS.enum,
+        ECO_STATUS_VALUES: ECO_STATUS.values,
+        ECO_STATUS_CLASSES: ECO_STATUS.classes,
+        ECO_CHANGE_TYPE: ECO_CHANGE_TYPE.enum
     };
 
-    // BOM STATUS
-    MobileMfgEngineering.enums.BOM_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Pending Approval', 3: 'Active', 4: 'Obsolete', 5: 'Superseded'
-    };
-    MobileMfgEngineering.enums.BOM_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-active', 4: 'status-inactive', 5: 'status-inactive'
-    };
-
-    // ROUTING STATUS
-    MobileMfgEngineering.enums.ROUTING_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Pending Approval', 3: 'Active', 4: 'Obsolete'
-    };
-    MobileMfgEngineering.enums.ROUTING_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-active', 4: 'status-inactive'
-    };
-
-    // ECO STATUS
-    MobileMfgEngineering.enums.ECO_STATUS = {
-        0: 'Unspecified', 1: 'Draft', 2: 'Submitted', 3: 'Under Review', 4: 'Approved', 5: 'Rejected', 6: 'Implemented', 7: 'Cancelled'
-    };
-    MobileMfgEngineering.enums.ECO_STATUS_CLASSES = {
-        1: 'status-pending', 2: 'status-pending', 3: 'status-pending', 4: 'status-active', 5: 'status-terminated', 6: 'status-active', 7: 'status-inactive'
-    };
-
-    // ECO CHANGE TYPE
-    MobileMfgEngineering.enums.ECO_CHANGE_TYPE = {
-        0: 'Unspecified', 1: 'Design Change', 2: 'Process Change', 3: 'Material Change', 4: 'Cost Reduction', 5: 'Quality Improvement'
-    };
-
+    // ============================================================================
     // RENDER FUNCTIONS
+    // ============================================================================
+
     MobileMfgEngineering.render = {
-        bomType: function(type) { return MobileMfgEngineering.enums.BOM_TYPE[type] || 'Unknown'; },
-        bomStatus: Layer8MRenderers.createStatusRenderer(
-            MobileMfgEngineering.enums.BOM_STATUS,
-            MobileMfgEngineering.enums.BOM_STATUS_CLASSES
-        ),
-        routingStatus: Layer8MRenderers.createStatusRenderer(
-            MobileMfgEngineering.enums.ROUTING_STATUS,
-            MobileMfgEngineering.enums.ROUTING_STATUS_CLASSES
-        ),
-        ecoStatus: Layer8MRenderers.createStatusRenderer(
-            MobileMfgEngineering.enums.ECO_STATUS,
-            MobileMfgEngineering.enums.ECO_STATUS_CLASSES
-        ),
-        ecoChangeType: function(type) { return MobileMfgEngineering.enums.ECO_CHANGE_TYPE[type] || 'Unknown'; },
-        date: Layer8MRenderers.renderDate
+        bomType: (type) => renderEnum(type, BOM_TYPE.enum),
+        bomStatus: createStatusRenderer(BOM_STATUS.enum, BOM_STATUS.classes),
+        routingStatus: createStatusRenderer(ROUTING_STATUS.enum, ROUTING_STATUS.classes),
+        ecoStatus: createStatusRenderer(ECO_STATUS.enum, ECO_STATUS.classes),
+        ecoChangeType: (type) => renderEnum(type, ECO_CHANGE_TYPE.enum),
+        date: renderDate
     };
 
 })();
