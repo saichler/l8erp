@@ -128,6 +128,10 @@ CSS files first, then JS in strict dependency order:
 <link rel="stylesheet" href="l8ui/shared/layer8d-animations.css">
 <link rel="stylesheet" href="l8ui/shared/layer8d-scrollbar.css">
 
+<!-- CSS: Section Layout (l8-* classes) -->
+<link rel="stylesheet" href="l8ui/shared/layer8-section-layout.css">
+<link rel="stylesheet" href="l8ui/shared/layer8-section-responsive.css">
+
 <!-- CSS: Components -->
 <link rel="stylesheet" href="l8ui/edit_table/layer8d-table.css">
 <link rel="stylesheet" href="l8ui/popup/layer8d-popup.css">
@@ -146,9 +150,16 @@ CSS files first, then JS in strict dependency order:
 <script src="l8ui/shared/layer8d-utils.js"></script>
 <script src="l8ui/shared/layer8d-renderers.js"></script>
 <script src="l8ui/shared/layer8d-reference-registry.js"></script>
+<script src="l8ui/shared/layer8-svg-factory.js"></script>
+<script src="l8ui/shared/layer8-section-generator.js"></script>
+
+<!-- JS: Project-specific SVG templates (optional) -->
+<script src="erp-ui/erp-svg-templates.js"></script>
 
 <!-- JS: Reference Data (project-specific) -->
-<script src="reference-registry-data.js"></script>
+<script src="js/reference-registry-fin.js"></script>
+<script src="js/reference-registry-hcm.js"></script>
+<!-- ... more reference registries -->
 
 <!-- JS: Layer8 Components -->
 <script src="l8ui/notification/layer8d-notification.js"></script>
@@ -225,19 +236,30 @@ CSS files first, then JS in strict dependency order:
 <script src="../l8ui/m/js/layer8m-reference-picker.js"></script>
 <script src="../l8ui/m/js/layer8m-renderers.js"></script>
 
+<!-- JS: Project-specific Reference Registries (register with Layer8MReferenceRegistry) -->
+<script src="../erp-ui/m/reference-registries/layer8m-reference-registry-hcm.js"></script>
+<script src="../erp-ui/m/reference-registries/layer8m-reference-registry-scm.js"></script>
+<!-- ... more project-specific registries -->
+
 <!-- JS: Module Data (per module) -->
 <script src="js/mymodule/submodule-enums.js"></script>
 <script src="js/mymodule/submodule-columns.js"></script>
 <script src="js/mymodule/submodule-forms.js"></script>
 <script src="js/mymodule/mymodule-index.js"></script>
 
-<!-- JS: Navigation -->
-<script src="../l8ui/m/js/layer8m-nav-config.js"></script>
+<!-- JS: Navigation Config (project-specific, from erp-ui/) -->
+<script src="../erp-ui/m/nav-configs/layer8m-nav-config-base.js"></script>
+<script src="../erp-ui/m/nav-configs/layer8m-nav-config-icons.js"></script>
+<script src="../erp-ui/m/nav-configs/layer8m-nav-config.js"></script>
+
+<!-- JS: Navigation (generic) -->
 <script src="../l8ui/m/js/layer8m-nav.js"></script>
 
 <!-- JS: App -->
 <script src="js/app-core.js"></script>
 ```
+
+**Note:** Reference registries and nav configs are project-specific and live in `erp-ui/`. The core l8ui library loads first, then project-specific files register their data.
 
 ---
 
@@ -718,7 +740,7 @@ Layer8MNav.getCurrentState()                   // { level, module, subModule, se
 
 Layer8MNav looks up columns/forms/transforms from registered module objects (checked in order):
 ```js
-[window.MobileHCM, window.MobileFIN, window.MobileSCM, window.MobileSYS]
+[window.MobileHCM, window.MobileFIN, window.MobileSCM, window.MobileSYS, ...]
 ```
 
 Each must provide:
@@ -728,6 +750,51 @@ window.MobileXXX = {
     getFormDef(modelName),      // Form definition or null
     getTransformData(modelName) // Transform function or null (optional)
 }
+```
+
+### 6.14 Extensibility Patterns
+
+The l8ui library is designed for extensibility. Project-specific code lives in a separate directory (e.g., `erp-ui/`) and registers with the library components.
+
+#### Layer8MReferenceRegistry.register()
+
+Register project-specific model reference configurations:
+
+```js
+// In erp-ui/m/reference-registries/layer8m-reference-registry-mymodule.js
+const ref = window.Layer8RefFactory;
+
+window.Layer8MReferenceRegistryMyModule = {
+    ...ref.simple('Model', 'modelId', 'name', 'Label'),
+    ...ref.person('Person', 'personId', 'lastName', 'firstName'),
+    ...ref.coded('Entity', 'entityId', 'code', 'name'),
+    ...ref.idOnly('LineItem', 'lineId')
+};
+
+// Register with the central registry
+Layer8MReferenceRegistry.register(window.Layer8MReferenceRegistryMyModule);
+```
+
+#### Layer8SvgFactory.registerTemplate()
+
+Register project-specific SVG illustration templates:
+
+```js
+// In erp-ui/erp-svg-templates.js
+Layer8SvgFactory.registerTemplate('myModule', function(color) {
+    return `<svg viewBox="0 0 400 300">
+        <circle cx="200" cy="150" r="50" fill="${color}" opacity="0.2"/>
+        <!-- more SVG content -->
+    </svg>`;
+});
+```
+
+Use in section generator:
+```js
+Layer8SectionConfigs.register('mymodule', {
+    svgContent: Layer8SvgFactory.get('myModule', '#4CAF50'),
+    // ...
+});
 ```
 
 ---
@@ -922,27 +989,27 @@ Example: "Projects" module, service area 60.
 
 **File:** `sections/projects.html`
 
-**IMPORTANT:** Table container IDs follow the pattern `{moduleKey}-{serviceKey}-table-container`. CSS classes use the `hcm-` prefix for ALL modules (shared CSS).
+**IMPORTANT:** Table container IDs follow the pattern `{moduleKey}-{serviceKey}-table-container`. CSS classes use the `l8-` prefix for ALL modules (shared CSS from `layer8-section-layout.css`).
 
 ```html
-<div class="section-container projects-section">
+<div class="section-container l8-section">
     <div class="page-header"><h1>Projects</h1></div>
-    <div class="hcm-module-tabs">
-        <button class="hcm-module-tab active" data-module="planning">
+    <div class="l8-module-tabs">
+        <button class="l8-module-tab active" data-module="planning">
             <span class="tab-icon">icon</span>
             <span class="tab-label">Planning</span>
         </button>
     </div>
-    <div class="hcm-module-content active" data-module="planning">
-        <div class="hcm-subnav">
-            <a class="hcm-subnav-item active" data-service="projects">Projects</a>
-            <a class="hcm-subnav-item" data-service="tasks">Tasks</a>
+    <div class="l8-module-content active" data-module="planning">
+        <div class="l8-subnav">
+            <a class="l8-subnav-item active" data-service="projects">Projects</a>
+            <a class="l8-subnav-item" data-service="tasks">Tasks</a>
         </div>
-        <div class="hcm-service-view active" data-service="projects">
-            <div class="hcm-table-container" id="planning-projects-table-container"></div>
+        <div class="l8-service-view active" data-service="projects">
+            <div class="l8-table-container" id="planning-projects-table-container"></div>
         </div>
-        <div class="hcm-service-view" data-service="tasks">
-            <div class="hcm-table-container" id="planning-tasks-table-container"></div>
+        <div class="l8-service-view" data-service="tasks">
+            <div class="l8-table-container" id="planning-tasks-table-container"></div>
         </div>
     </div>
 </div>
@@ -1041,12 +1108,13 @@ Layer8DReferenceRegistry.register({
 
 ### Step 2: Update Nav Config
 
-In `l8ui/m/js/layer8m-nav-config.js`:
+Navigation configs are project-specific and live in `erp-ui/m/nav-configs/`. Add your module to the appropriate config file:
 
-1. Add to modules array: `{ key: 'projects', label: 'Projects', icon: 'projects', hasSubModules: true }`
-2. Add config block:
+1. Add to modules array in `layer8m-nav-config-base.js`:
+   `{ key: 'projects', label: 'Projects', icon: 'projects', hasSubModules: true }`
+2. Add config block to the appropriate category file (e.g., `layer8m-nav-config-prj-other.js`):
 ```js
-projects: {
+LAYER8M_NAV_CONFIG.projects = {
     subModules: [
         { key: 'planning', label: 'Planning', icon: 'projects' }
     ],
@@ -1058,10 +1126,10 @@ projects: {
               endpoint: '/60/Task', model: 'ProjectTask', idField: 'taskId' }
         ]
     }
-}
+};
 ```
 
-### Step 3: Update Nav.js Registry
+### Step 3: Register Module with Nav.js
 
 In `l8ui/m/js/layer8m-nav.js`, add `window.MobileProjects` to the registry arrays in `_getServiceColumns`, `_getServiceFormDef`, and `_getServiceTransformData`.
 
@@ -1082,7 +1150,22 @@ Add sidebar link (routes through card nav):
 
 ### Step 5: Register Reference Models
 
-In `l8ui/m/js/layer8m-reference-registry.js`, add model configs.
+Create a project-specific reference registry file in `erp-ui/m/reference-registries/`:
+
+```js
+// erp-ui/m/reference-registries/layer8m-reference-registry-projects.js
+const ref = window.Layer8RefFactory;
+
+window.Layer8MReferenceRegistryProjects = {
+    ...ref.simple('Project', 'projectId', 'name', 'Project'),
+    ...ref.simple('ProjectTask', 'taskId', 'name', 'Task')
+};
+
+// Register with the central registry
+Layer8MReferenceRegistry.register(window.Layer8MReferenceRegistryProjects);
+```
+
+Then include it in `m/app.html` after the main reference registry loads.
 
 ---
 
@@ -1150,6 +1233,6 @@ window.initializeMyModule = function() {
 ### Critical Rules
 - Field names MUST match actual API/protobuf field names (verify against `.pb.go` files)
 - Endpoint names max 10 characters
-- CSS classes use `hcm-` prefix for ALL desktop modules (shared CSS)
+- CSS classes use `l8-` prefix for ALL desktop modules (shared CSS from `layer8-section-layout.css`)
 - Desktop: `new Layer8DTable(options)` then `table.init()` -- single options object
 - Mobile: `new Layer8MEditTable(containerId, config)` -- two arguments, no init() call needed
