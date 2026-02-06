@@ -19,115 +19,50 @@ limitations under the License.
 
     window.MfgQuality = window.MfgQuality || {};
 
-    const { renderDate } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = MfgQuality.render;
-    const enums = MfgQuality.enums;
 
     MfgQuality.columns = {
         MfgQualityPlan: [
-            { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'planNumber', label: 'Plan #', sortKey: 'planNumber', filterKey: 'planNumber' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId' },
-            { key: 'revision', label: 'Rev', sortKey: 'revision' },
-            {
-                key: 'effectiveDate',
-                label: 'Effective',
-                sortKey: 'effectiveDate',
-                render: (item) => renderDate(item.effectiveDate)
-            }
+            ...col.id('planId'),
+            ...col.basic([['planNumber', 'Plan #'], 'name', ['itemId', 'Item'], 'revision']),
+            ...col.date('effectiveDate', 'Effective')
         ],
 
         MfgInspectionPoint: [
-            { key: 'pointId', label: 'ID', sortKey: 'pointId', filterKey: 'pointId' },
-            { key: 'planId', label: 'Plan', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'name', label: 'Name', sortKey: 'name' },
-            {
-                key: 'inspectionType',
-                label: 'Type',
-                sortKey: 'inspectionType',
-                render: (item) => render.inspectionType(item.inspectionType)
-            },
-            { key: 'sequenceNumber', label: 'Seq #', sortKey: 'sequenceNumber' },
-            { key: 'characteristic', label: 'Characteristic', sortKey: 'characteristic' }
+            ...col.id('pointId'),
+            ...col.basic([['planId', 'Plan'], 'name']),
+            ...col.custom('inspectionType', 'Type', (item) => render.inspectionType(item.inspectionType)),
+            ...col.basic([['sequenceNumber', 'Seq #'], 'characteristic'])
         ],
 
         MfgQualityInspection: [
-            { key: 'inspectionId', label: 'ID', sortKey: 'inspectionId', filterKey: 'inspectionId' },
-            { key: 'inspectionNumber', label: 'Insp #', sortKey: 'inspectionNumber', filterKey: 'inspectionNumber' },
-            { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
-            { key: 'planId', label: 'Plan', sortKey: 'planId' },
-            {
-                key: 'inspectionDate',
-                label: 'Date',
-                sortKey: 'inspectionDate',
-                render: (item) => renderDate(item.inspectionDate)
-            },
-            {
-                key: 'result',
-                label: 'Result',
-                sortKey: 'result',
-                render: (item) => render.inspectionResult(item.result)
-            }
+            ...col.id('inspectionId'),
+            ...col.basic([['inspectionNumber', 'Insp #'], ['workOrderId', 'Work Order'], ['planId', 'Plan']]),
+            ...col.date('inspectionDate', 'Date'),
+            ...col.custom('result', 'Result', (item) => render.inspectionResult(item.result))
         ],
 
         MfgTestResult: [
-            { key: 'resultId', label: 'ID', sortKey: 'resultId', filterKey: 'resultId' },
-            { key: 'inspectionId', label: 'Inspection', sortKey: 'inspectionId', filterKey: 'inspectionId' },
-            { key: 'pointId', label: 'Point', sortKey: 'pointId' },
-            { key: 'measuredValue', label: 'Measured', sortKey: 'measuredValue' },
-            { key: 'targetValue', label: 'Target', sortKey: 'targetValue' },
-            {
-                key: 'result',
-                label: 'Result',
-                sortKey: 'result',
-                render: (item) => render.inspectionResult(item.result)
-            }
+            ...col.id('resultId'),
+            ...col.basic([['inspectionId', 'Inspection'], ['pointId', 'Point']]),
+            ...col.basic([['measuredValue', 'Measured'], ['targetValue', 'Target']]),
+            ...col.custom('result', 'Result', (item) => render.inspectionResult(item.result))
         ],
 
         MfgNCR: [
-            { key: 'ncrId', label: 'ID', sortKey: 'ncrId', filterKey: 'ncrId' },
-            { key: 'ncrNumber', label: 'NCR #', sortKey: 'ncrNumber', filterKey: 'ncrNumber' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId' },
-            { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
-            {
-                key: 'severity',
-                label: 'Severity',
-                sortKey: 'severity',
-                render: (item) => render.ncrSeverity(item.severity)
-            },
-            {
-                key: 'reportDate',
-                label: 'Report Date',
-                sortKey: 'reportDate',
-                render: (item) => renderDate(item.reportDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.ncrStatus(item.status)
-            }
+            ...col.id('ncrId'),
+            ...col.basic([['ncrNumber', 'NCR #'], ['itemId', 'Item'], ['workOrderId', 'Work Order']]),
+            ...col.custom('severity', 'Severity', (item) => render.ncrSeverity(item.severity)),
+            ...col.date('reportDate', 'Report Date'),
+            ...col.custom('status', 'Status', (item) => render.ncrStatus(item.status))
         ],
 
         MfgNCRAction: [
-            { key: 'actionId', label: 'ID', sortKey: 'actionId', filterKey: 'actionId' },
-            { key: 'ncrId', label: 'NCR', sortKey: 'ncrId', filterKey: 'ncrId' },
-            { key: 'actionType', label: 'Type', sortKey: 'actionType' },
-            { key: 'assignedTo', label: 'Assigned To', sortKey: 'assignedTo' },
-            {
-                key: 'dueDate',
-                label: 'Due Date',
-                sortKey: 'dueDate',
-                render: (item) => renderDate(item.dueDate)
-            },
-            {
-                key: 'completedDate',
-                label: 'Completed',
-                sortKey: 'completedDate',
-                render: (item) => renderDate(item.completedDate)
-            }
+            ...col.id('actionId'),
+            ...col.basic([['ncrId', 'NCR'], ['actionType', 'Type'], ['assignedTo', 'Assigned To']]),
+            ...col.date('dueDate', 'Due Date'),
+            ...col.date('completedDate', 'Completed')
         ]
     };
-
 })();

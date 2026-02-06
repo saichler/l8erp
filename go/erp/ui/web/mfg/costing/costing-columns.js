@@ -19,147 +19,56 @@ limitations under the License.
 
     window.MfgCosting = window.MfgCosting || {};
 
-    const { renderDate, renderMoney } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = MfgCosting.render;
 
     MfgCosting.columns = {
         MfgStandardCost: [
-            { key: 'costId', label: 'ID', sortKey: 'costId', filterKey: 'costId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            {
-                key: 'effectiveDate',
-                label: 'Effective',
-                sortKey: 'effectiveDate',
-                render: (item) => renderDate(item.effectiveDate)
-            },
-            {
-                key: 'materialCost',
-                label: 'Material',
-                sortKey: 'materialCost',
-                render: (item) => renderMoney(item.materialCost)
-            },
-            {
-                key: 'laborCost',
-                label: 'Labor',
-                sortKey: 'laborCost',
-                render: (item) => renderMoney(item.laborCost)
-            },
-            {
-                key: 'overheadCost',
-                label: 'Overhead',
-                sortKey: 'overheadCost',
-                render: (item) => renderMoney(item.overheadCost)
-            },
-            {
-                key: 'totalCost',
-                label: 'Total',
-                sortKey: 'totalCost',
-                render: (item) => renderMoney(item.totalCost)
-            }
+            ...col.id('costId'),
+            ...col.col('itemId', 'Item'),
+            ...col.date('effectiveDate', 'Effective'),
+            ...col.money('materialCost', 'Material'),
+            ...col.money('laborCost', 'Labor'),
+            ...col.money('overheadCost', 'Overhead'),
+            ...col.money('totalCost', 'Total')
         ],
 
         MfgCostRollup: [
-            { key: 'rollupId', label: 'ID', sortKey: 'rollupId', filterKey: 'rollupId' },
-            { key: 'rollupNumber', label: 'Rollup #', sortKey: 'rollupNumber', filterKey: 'rollupNumber' },
-            { key: 'name', label: 'Name', sortKey: 'name' },
-            {
-                key: 'runDate',
-                label: 'Run Date',
-                sortKey: 'runDate',
-                render: (item) => renderDate(item.runDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.rollupStatus(item.status)
-            }
+            ...col.id('rollupId'),
+            ...col.basic([['rollupNumber', 'Rollup #'], 'name']),
+            ...col.date('runDate', 'Run Date'),
+            ...col.custom('status', 'Status', (item) => render.rollupStatus(item.status))
         ],
 
         MfgActualCost: [
-            { key: 'actualCostId', label: 'ID', sortKey: 'actualCostId', filterKey: 'actualCostId' },
-            { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId', filterKey: 'workOrderId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId' },
-            {
-                key: 'costElementType',
-                label: 'Type',
-                sortKey: 'costElementType',
-                render: (item) => render.costElementType(item.costElementType)
-            },
-            {
-                key: 'actualAmount',
-                label: 'Amount',
-                sortKey: 'actualAmount',
-                render: (item) => renderMoney(item.actualAmount)
-            },
-            {
-                key: 'postingDate',
-                label: 'Posting Date',
-                sortKey: 'postingDate',
-                render: (item) => renderDate(item.postingDate)
-            }
+            ...col.id('actualCostId'),
+            ...col.basic([['workOrderId', 'Work Order'], ['itemId', 'Item']]),
+            ...col.custom('costElementType', 'Type', (item) => render.costElementType(item.costElementType)),
+            ...col.money('actualAmount', 'Amount'),
+            ...col.date('postingDate', 'Posting Date')
         ],
 
         MfgCostVariance: [
-            { key: 'varianceId', label: 'ID', sortKey: 'varianceId', filterKey: 'varianceId' },
-            { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId', filterKey: 'workOrderId' },
-            {
-                key: 'varianceType',
-                label: 'Type',
-                sortKey: 'varianceType',
-                render: (item) => render.varianceType(item.varianceType)
-            },
-            {
-                key: 'standardAmount',
-                label: 'Standard',
-                sortKey: 'standardAmount',
-                render: (item) => renderMoney(item.standardAmount)
-            },
-            {
-                key: 'actualAmount',
-                label: 'Actual',
-                sortKey: 'actualAmount',
-                render: (item) => renderMoney(item.actualAmount)
-            },
-            {
-                key: 'varianceAmount',
-                label: 'Variance',
-                sortKey: 'varianceAmount',
-                render: (item) => renderMoney(item.varianceAmount)
-            }
+            ...col.id('varianceId'),
+            ...col.col('workOrderId', 'Work Order'),
+            ...col.custom('varianceType', 'Type', (item) => render.varianceType(item.varianceType)),
+            ...col.money('standardAmount', 'Standard'),
+            ...col.money('actualAmount', 'Actual'),
+            ...col.money('varianceAmount', 'Variance')
         ],
 
         MfgOverhead: [
-            { key: 'overheadId', label: 'ID', sortKey: 'overheadId', filterKey: 'overheadId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'allocationMethod',
-                label: 'Method',
-                sortKey: 'allocationMethod',
-                render: (item) => render.allocationMethod(item.allocationMethod)
-            },
-            { key: 'rate', label: 'Rate', sortKey: 'rate' }
+            ...col.id('overheadId'),
+            ...col.basic(['code', 'name']),
+            ...col.custom('allocationMethod', 'Method', (item) => render.allocationMethod(item.allocationMethod)),
+            ...col.col('rate', 'Rate')
         ],
 
         MfgOverheadAlloc: [
-            { key: 'allocationId', label: 'ID', sortKey: 'allocationId', filterKey: 'allocationId' },
-            { key: 'overheadId', label: 'Overhead', sortKey: 'overheadId', filterKey: 'overheadId' },
-            { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
-            { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            {
-                key: 'allocationDate',
-                label: 'Date',
-                sortKey: 'allocationDate',
-                render: (item) => renderDate(item.allocationDate)
-            },
-            {
-                key: 'allocatedAmount',
-                label: 'Amount',
-                sortKey: 'allocatedAmount',
-                render: (item) => renderMoney(item.allocatedAmount)
-            }
+            ...col.id('allocationId'),
+            ...col.basic([['overheadId', 'Overhead'], ['workOrderId', 'Work Order'], ['workCenterId', 'Work Center']]),
+            ...col.date('allocationDate', 'Date'),
+            ...col.money('allocatedAmount', 'Amount')
         ]
     };
-
 })();

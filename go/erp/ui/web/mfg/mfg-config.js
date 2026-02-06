@@ -1,33 +1,15 @@
 /*
 © 2025 Sharon Aicler (saichler@gmail.com)
-
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
-// Manufacturing Module - Configuration
-// Module definitions and service mappings
 
-(function() {
-    'use strict';
-
-    // Create Mfg namespace
-    window.Mfg = window.Mfg || {};
-
-    // Manufacturing Module Configuration
-    // IMPORTANT: All endpoints must match ServiceName from *Service.go files
-    // Verified with: grep "ServiceName = " go/erp/mfg/*/*.go
-    Mfg.modules = {
+// Manufacturing Module Configuration - Uses Layer8ModuleConfigFactory
+// IMPORTANT: All endpoints must match ServiceName from *Service.go files
+Layer8ModuleConfigFactory.create({
+    namespace: 'Mfg',
+    modules: {
         'engineering': {
-            label: 'Engineering',
-            icon: '📐',
+            label: 'Engineering', icon: '📐',
             services: [
                 { key: 'boms', label: 'BOMs', icon: '📋', endpoint: '/70/MfgBom', model: 'MfgBom' },
                 { key: 'bom-lines', label: 'BOM Lines', icon: '📝', endpoint: '/70/MfgBomLine', model: 'MfgBomLine' },
@@ -38,8 +20,7 @@ limitations under the License.
             ]
         },
         'production': {
-            label: 'Production',
-            icon: '🏭',
+            label: 'Production', icon: '🏭',
             services: [
                 { key: 'work-orders', label: 'Work Orders', icon: '📦', endpoint: '/70/MfgWorkOrd', model: 'MfgWorkOrder' },
                 { key: 'wo-operations', label: 'WO Operations', icon: '⚙️', endpoint: '/70/MfgWOOp', model: 'MfgWorkOrderOp' },
@@ -50,8 +31,7 @@ limitations under the License.
             ]
         },
         'shopfloor': {
-            label: 'Shop Floor',
-            icon: '🔧',
+            label: 'Shop Floor', icon: '🔧',
             services: [
                 { key: 'work-centers', label: 'Work Centers', icon: '🏭', endpoint: '/70/MfgWorkCtr', model: 'MfgWorkCenter' },
                 { key: 'wc-capacity', label: 'WC Capacity', icon: '📊', endpoint: '/70/MfgWCCap', model: 'MfgWorkCenterCap' },
@@ -62,8 +42,7 @@ limitations under the License.
             ]
         },
         'quality': {
-            label: 'Quality',
-            icon: '✅',
+            label: 'Quality', icon: '✅',
             services: [
                 { key: 'plans', label: 'Quality Plans', icon: '📋', endpoint: '/70/MfgQCPlan', model: 'MfgQualityPlan' },
                 { key: 'inspection-points', label: 'Insp Points', icon: '🎯', endpoint: '/70/MfgInspPt', model: 'MfgInspectionPoint' },
@@ -74,8 +53,7 @@ limitations under the License.
             ]
         },
         'planning': {
-            label: 'Planning',
-            icon: '📈',
+            label: 'Planning', icon: '📈',
             services: [
                 { key: 'mrp-runs', label: 'MRP Runs', icon: '🔄', endpoint: '/70/MfgMrpRun', model: 'MfgMrpRun' },
                 { key: 'mrp-requirements', label: 'MRP Reqs', icon: '📋', endpoint: '/70/MfgMrpReq', model: 'MfgMrpRequirement' },
@@ -86,8 +64,7 @@ limitations under the License.
             ]
         },
         'costing': {
-            label: 'Costing',
-            icon: '💰',
+            label: 'Costing', icon: '💰',
             services: [
                 { key: 'standard-costs', label: 'Standard Costs', icon: '💵', endpoint: '/70/MfgStdCost', model: 'MfgStandardCost' },
                 { key: 'cost-rollups', label: 'Cost Rollups', icon: '📊', endpoint: '/70/MfgRollup', model: 'MfgCostRollup' },
@@ -97,12 +74,6 @@ limitations under the License.
                 { key: 'overhead-allocs', label: 'OH Allocations', icon: '📋', endpoint: '/70/MfgOHAlloc', model: 'MfgOverheadAlloc' }
             ]
         }
-    };
-
-    // Sub-module namespaces for service registry
-    Mfg.submodules = ['MfgEngineering', 'MfgProduction', 'MfgShopFloor', 'MfgQuality', 'MfgPlanning', 'MfgCosting'];
-
-    // Render status badge (delegates to shared utility)
-    Mfg.renderStatus = Layer8DUtils.renderStatus;
-
-})();
+    },
+    submodules: ['MfgEngineering', 'MfgProduction', 'MfgShopFloor', 'MfgQuality', 'MfgPlanning', 'MfgCosting']
+});

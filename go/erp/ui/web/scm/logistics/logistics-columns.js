@@ -18,167 +18,72 @@ limitations under the License.
 (function() {
     'use strict';
 
-    // Ensure Logistics namespace exists
     window.Logistics = window.Logistics || {};
 
-    const { renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = Logistics.render;
-
-    // ============================================================================
-    // COLUMN CONFIGURATIONS
-    // ============================================================================
 
     Logistics.columns = {
         ScmCarrier: [
-            { key: 'carrierId', label: 'ID', sortKey: 'carrierId', filterKey: 'carrierId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'carrierType',
-                label: 'Type',
-                sortKey: 'carrierType',
-                render: (item) => render.carrierType(item.carrierType)
-            },
-            { key: 'contactInfo', label: 'Contact', sortKey: 'contactInfo', filterKey: 'contactInfo' },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
-            }
+            ...col.id('carrierId'),
+            ...col.basic(['code', 'name']),
+            ...col.custom('carrierType', 'Type', (item) => render.carrierType(item.carrierType)),
+            ...col.col('contactInfo', 'Contact'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         ScmFreightRate: [
-            { key: 'rateId', label: 'ID', sortKey: 'rateId', filterKey: 'rateId' },
-            { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
-            { key: 'origin', label: 'Origin', sortKey: 'origin', filterKey: 'origin' },
-            { key: 'destination', label: 'Destination', sortKey: 'destination', filterKey: 'destination' },
-            {
-                key: 'ratePerUnit',
-                label: 'Rate/Unit',
-                sortKey: 'ratePerUnit',
-                render: (item) => renderMoney(item.ratePerUnit)
-            },
-            {
-                key: 'effectiveDate',
-                label: 'Effective',
-                sortKey: 'effectiveDate',
-                render: (item) => renderDate(item.effectiveDate)
-            }
+            ...col.id('rateId'),
+            ...col.basic([['carrierId', 'Carrier'], 'origin', 'destination']),
+            ...col.money('ratePerUnit', 'Rate/Unit'),
+            ...col.date('effectiveDate', 'Effective')
         ],
 
         ScmShipment: [
-            { key: 'shipmentId', label: 'ID', sortKey: 'shipmentId', filterKey: 'shipmentId' },
-            { key: 'shipmentNumber', label: 'Shipment #', sortKey: 'shipmentNumber', filterKey: 'shipmentNumber' },
-            { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
-            {
-                key: 'shipDate',
-                label: 'Ship Date',
-                sortKey: 'shipDate',
-                render: (item) => renderDate(item.shipDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.shipmentStatus(item.status)
-            },
-            {
-                key: 'freightCost',
-                label: 'Cost',
-                sortKey: 'freightCost',
-                render: (item) => renderMoney(item.freightCost)
-            }
+            ...col.id('shipmentId'),
+            ...col.basic([['shipmentNumber', 'Shipment #'], ['carrierId', 'Carrier']]),
+            ...col.date('shipDate', 'Ship Date'),
+            ...col.custom('status', 'Status', (item) => render.shipmentStatus(item.status)),
+            ...col.money('freightCost', 'Cost')
         ],
 
         ScmRoute: [
-            { key: 'routeId', label: 'ID', sortKey: 'routeId', filterKey: 'routeId' },
-            { key: 'name', label: 'Route', sortKey: 'name', filterKey: 'name' },
-            { key: 'origin', label: 'Origin', sortKey: 'origin', filterKey: 'origin' },
-            { key: 'destination', label: 'Destination', sortKey: 'destination', filterKey: 'destination' },
-            { key: 'distance', label: 'Distance', sortKey: 'distance' },
-            { key: 'estimatedTime', label: 'Est. Time', sortKey: 'estimatedTime' }
+            ...col.id('routeId'),
+            ...col.basic([['name', 'Route'], 'origin', 'destination']),
+            ...col.col('distance', 'Distance'),
+            ...col.col('estimatedTime', 'Est. Time')
         ],
 
         ScmLoadPlan: [
-            { key: 'loadPlanId', label: 'ID', sortKey: 'loadPlanId', filterKey: 'loadPlanId' },
-            {
-                key: 'plannedDate',
-                label: 'Planned',
-                sortKey: 'plannedDate',
-                render: (item) => renderDate(item.plannedDate)
-            },
-            { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
-            { key: 'vehicleId', label: 'Vehicle', sortKey: 'vehicleId', filterKey: 'vehicleId' },
-            { key: 'totalWeight', label: 'Weight', sortKey: 'totalWeight' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.taskStatus(item.status)
-            }
+            ...col.id('loadPlanId'),
+            ...col.date('plannedDate', 'Planned'),
+            ...col.basic([['shipmentId', 'Shipment'], ['vehicleId', 'Vehicle']]),
+            ...col.col('totalWeight', 'Weight'),
+            ...col.custom('status', 'Status', (item) => render.taskStatus(item.status))
         ],
 
         ScmDeliveryProof: [
-            { key: 'proofId', label: 'ID', sortKey: 'proofId', filterKey: 'proofId' },
-            { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
-            {
-                key: 'deliveryDate',
-                label: 'Delivered',
-                sortKey: 'deliveryDate',
-                render: (item) => renderDate(item.deliveryDate)
-            },
-            { key: 'receivedBy', label: 'Received By', sortKey: 'receivedBy', filterKey: 'receivedBy' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.taskStatus(item.status)
-            }
+            ...col.id('proofId'),
+            ...col.col('shipmentId', 'Shipment'),
+            ...col.date('deliveryDate', 'Delivered'),
+            ...col.col('receivedBy', 'Received By'),
+            ...col.custom('status', 'Status', (item) => render.taskStatus(item.status))
         ],
 
         ScmFreightAudit: [
-            { key: 'auditId', label: 'ID', sortKey: 'auditId', filterKey: 'auditId' },
-            { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
-            { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
-            {
-                key: 'invoicedAmount',
-                label: 'Invoiced',
-                sortKey: 'invoicedAmount',
-                render: (item) => renderMoney(item.invoicedAmount)
-            },
-            {
-                key: 'actualAmount',
-                label: 'Actual',
-                sortKey: 'actualAmount',
-                render: (item) => renderMoney(item.actualAmount)
-            },
-            {
-                key: 'variance',
-                label: 'Variance',
-                sortKey: 'variance',
-                render: (item) => renderMoney(item.variance)
-            }
+            ...col.id('auditId'),
+            ...col.basic([['shipmentId', 'Shipment'], ['carrierId', 'Carrier']]),
+            ...col.money('invoicedAmount', 'Invoiced'),
+            ...col.money('actualAmount', 'Actual'),
+            ...col.money('variance', 'Variance')
         ],
 
         ScmReturnAuthorization: [
-            { key: 'rmaId', label: 'ID', sortKey: 'rmaId', filterKey: 'rmaId' },
-            { key: 'rmaNumber', label: 'RMA #', sortKey: 'rmaNumber', filterKey: 'rmaNumber' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            {
-                key: 'returnDate',
-                label: 'Return Date',
-                sortKey: 'returnDate',
-                render: (item) => renderDate(item.returnDate)
-            },
-            { key: 'reason', label: 'Reason', sortKey: 'reason', filterKey: 'reason' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.taskStatus(item.status)
-            }
+            ...col.id('rmaId'),
+            ...col.basic([['rmaNumber', 'RMA #'], ['customerId', 'Customer']]),
+            ...col.date('returnDate', 'Return Date'),
+            ...col.col('reason', 'Reason'),
+            ...col.custom('status', 'Status', (item) => render.taskStatus(item.status))
         ]
     };
-
 })();

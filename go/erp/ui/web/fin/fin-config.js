@@ -1,31 +1,14 @@
 /*
 © 2025 Sharon Aicler (saichler@gmail.com)
-
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
-// FIN Module - Configuration
-// Module definitions and service mappings
 
-(function() {
-    'use strict';
-
-    // Create FIN namespace
-    window.FIN = window.FIN || {};
-
-    // FIN Module Configuration
-    FIN.modules = {
+// FIN Module Configuration - Uses Layer8ModuleConfigFactory
+Layer8ModuleConfigFactory.create({
+    namespace: 'FIN',
+    modules: {
         'general-ledger': {
-            label: 'General Ledger',
-            icon: '📒',
+            label: 'General Ledger', icon: '📒',
             services: [
                 { key: 'accounts', label: 'Accounts', icon: '📒', endpoint: '/40/Account', model: 'Account' },
                 { key: 'journal-entries', label: 'Journal Entries', icon: '📝', endpoint: '/40/JrnlEntry', model: 'JournalEntry' },
@@ -38,8 +21,7 @@ limitations under the License.
             ]
         },
         'accounts-payable': {
-            label: 'Accounts Payable',
-            icon: '📤',
+            label: 'Accounts Payable', icon: '📤',
             services: [
                 { key: 'vendors', label: 'Vendors', icon: '🏢', endpoint: '/40/Vendor', model: 'Vendor' },
                 { key: 'vendor-contacts', label: 'Vendor Contacts', icon: '👤', endpoint: '/40/VndrCont', model: 'VendorContact' },
@@ -52,8 +34,7 @@ limitations under the License.
             ]
         },
         'accounts-receivable': {
-            label: 'Accounts Receivable',
-            icon: '📥',
+            label: 'Accounts Receivable', icon: '📥',
             services: [
                 { key: 'customers', label: 'Customers', icon: '👥', endpoint: '/40/Customer', model: 'Customer' },
                 { key: 'customer-contacts', label: 'Customer Contacts', icon: '👤', endpoint: '/40/CustCont', model: 'CustomerContact' },
@@ -66,8 +47,7 @@ limitations under the License.
             ]
         },
         'cash': {
-            label: 'Cash Management',
-            icon: '🏦',
+            label: 'Cash Management', icon: '🏦',
             services: [
                 { key: 'bank-accounts', label: 'Bank Accounts', icon: '🏦', endpoint: '/40/BankAcct', model: 'BankAccount' },
                 { key: 'bank-transactions', label: 'Transactions', icon: '💵', endpoint: '/40/BankTxn', model: 'BankTransaction' },
@@ -78,8 +58,7 @@ limitations under the License.
             ]
         },
         'fixed-assets': {
-            label: 'Fixed Assets',
-            icon: '🏗️',
+            label: 'Fixed Assets', icon: '🏗️',
             services: [
                 { key: 'assets', label: 'Assets', icon: '🏗️', endpoint: '/40/Asset', model: 'Asset' },
                 { key: 'asset-categories', label: 'Categories', icon: '📁', endpoint: '/40/AstCat', model: 'AssetCategory' },
@@ -91,8 +70,7 @@ limitations under the License.
             ]
         },
         'budgeting': {
-            label: 'Budgeting',
-            icon: '📊',
+            label: 'Budgeting', icon: '📊',
             services: [
                 { key: 'budgets', label: 'Budgets', icon: '📊', endpoint: '/40/Budget', model: 'Budget' },
                 { key: 'budget-lines', label: 'Budget Lines', icon: '📋', endpoint: '/40/BdgtLine', model: 'BudgetLine' },
@@ -103,8 +81,7 @@ limitations under the License.
             ]
         },
         'tax': {
-            label: 'Tax',
-            icon: '🏛️',
+            label: 'Tax', icon: '🏛️',
             services: [
                 { key: 'tax-codes', label: 'Tax Codes', icon: '🏷️', endpoint: '/40/TaxCode', model: 'TaxCode' },
                 { key: 'tax-jurisdictions', label: 'Jurisdictions', icon: '🌐', endpoint: '/40/TaxJuris', model: 'TaxJurisdiction' },
@@ -114,12 +91,6 @@ limitations under the License.
                 { key: 'withholding-tax-configs', label: 'Withholding Configs', icon: '⚙️', endpoint: '/40/WhtTxCfg', model: 'WithholdingTaxConfig' }
             ]
         }
-    };
-
-    // Sub-module namespaces for service registry
-    FIN.submodules = ['GeneralLedger', 'AccountsPayable', 'AccountsReceivable', 'CashManagement', 'FixedAssets', 'Budgeting', 'TaxManagement'];
-
-    // Render status badge (delegates to shared utility)
-    FIN.renderStatus = Layer8DUtils.renderStatus;
-
-})();
+    },
+    submodules: ['GeneralLedger', 'AccountsPayable', 'AccountsReceivable', 'CashManagement', 'FixedAssets', 'Budgeting', 'TaxManagement']
+});

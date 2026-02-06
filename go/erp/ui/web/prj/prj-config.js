@@ -2,14 +2,13 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
-(function() {
-    'use strict';
-    window.Prj = window.Prj || {};
 
-    Prj.modules = {
+// Projects Module Configuration - Uses Layer8ModuleConfigFactory
+Layer8ModuleConfigFactory.create({
+    namespace: 'Prj',
+    modules: {
         'planning': {
-            label: 'Planning',
-            icon: '📋',
+            label: 'Planning', icon: '📋',
             services: [
                 { key: 'projects', label: 'Projects', icon: '📁', endpoint: '/90/PrjProj', model: 'PrjProject' },
                 { key: 'templates', label: 'Templates', icon: '📄', endpoint: '/90/PrjProjTpl', model: 'PrjProjectTemplate' },
@@ -22,8 +21,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'resources': {
-            label: 'Resources',
-            icon: '👥',
+            label: 'Resources', icon: '👥',
             services: [
                 { key: 'resource-pools', label: 'Resource Pools', icon: '🏊', endpoint: '/90/PrjResPool', model: 'PrjResourcePool' },
                 { key: 'resources', label: 'Resources', icon: '👤', endpoint: '/90/PrjRes', model: 'PrjResource' },
@@ -35,8 +33,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'timeexpense': {
-            label: 'Time & Expense',
-            icon: '⏱️',
+            label: 'Time & Expense', icon: '⏱️',
             services: [
                 { key: 'timesheets', label: 'Timesheets', icon: '📝', endpoint: '/90/PrjTmSheet', model: 'PrjTimesheet' },
                 { key: 'timesheet-entries', label: 'Time Entries', icon: '⏰', endpoint: '/90/PrjTmEntry', model: 'PrjTimesheetEntry' },
@@ -48,8 +45,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'billing': {
-            label: 'Billing',
-            icon: '💵',
+            label: 'Billing', icon: '💵',
             services: [
                 { key: 'billing-rates', label: 'Billing Rates', icon: '💲', endpoint: '/90/PrjBillRt', model: 'PrjBillingRate' },
                 { key: 'billing-schedules', label: 'Schedules', icon: '📅', endpoint: '/90/PrjBillSch', model: 'PrjBillingSchedule' },
@@ -61,8 +57,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'analytics': {
-            label: 'Analytics',
-            icon: '📊',
+            label: 'Analytics', icon: '📊',
             services: [
                 { key: 'status-reports', label: 'Status Reports', icon: '📋', endpoint: '/90/PrjStatus', model: 'PrjStatusReport' },
                 { key: 'earned-values', label: 'Earned Value', icon: '📈', endpoint: '/90/PrjEV', model: 'PrjEarnedValue' },
@@ -73,7 +68,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 { key: 'issues', label: 'Issues', icon: '🐛', endpoint: '/90/PrjIssue', model: 'PrjProjectIssue' }
             ]
         }
-    };
-
-    Prj.submodules = ['PrjPlanning', 'PrjResources', 'PrjTimeExpense', 'PrjBilling', 'PrjAnalytics'];
-})();
+    },
+    submodules: ['PrjPlanning', 'PrjResources', 'PrjTimeExpense', 'PrjBilling', 'PrjAnalytics']
+});

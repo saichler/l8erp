@@ -1,31 +1,14 @@
 /*
 © 2025 Sharon Aicler (saichler@gmail.com)
-
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
-// Sales Module - Configuration
-// Module definitions and service mappings
 
-(function() {
-    'use strict';
-
-    // Create Sales namespace
-    window.Sales = window.Sales || {};
-
-    // Sales Module Configuration
-    Sales.modules = {
+// Sales Module Configuration - Uses Layer8ModuleConfigFactory
+Layer8ModuleConfigFactory.create({
+    namespace: 'Sales',
+    modules: {
         'customers': {
-            label: 'Customers',
-            icon: '👥',
+            label: 'Customers', icon: '👥',
             services: [
                 { key: 'hierarchies', label: 'Hierarchies', icon: '🏢', endpoint: '/60/CustHier', model: 'SalesCustomerHierarchy' },
                 { key: 'segments', label: 'Segments', icon: '📊', endpoint: '/60/CustSegmt', model: 'SalesCustomerSegment' },
@@ -34,8 +17,7 @@ limitations under the License.
             ]
         },
         'orders': {
-            label: 'Orders',
-            icon: '📋',
+            label: 'Orders', icon: '📋',
             services: [
                 { key: 'quotations', label: 'Quotations', icon: '📝', endpoint: '/60/SalesQuote', model: 'SalesQuotation' },
                 { key: 'quotation-lines', label: 'Quote Lines', icon: '📋', endpoint: '/60/QuoteLine', model: 'SalesQuotationLine' },
@@ -48,8 +30,7 @@ limitations under the License.
             ]
         },
         'pricing': {
-            label: 'Pricing',
-            icon: '💰',
+            label: 'Pricing', icon: '💰',
             services: [
                 { key: 'price-lists', label: 'Price Lists', icon: '📃', endpoint: '/60/PriceList', model: 'SalesPriceList' },
                 { key: 'price-entries', label: 'Price Entries', icon: '📋', endpoint: '/60/PriceEntry', model: 'SalesPriceListEntry' },
@@ -60,8 +41,7 @@ limitations under the License.
             ]
         },
         'shipping': {
-            label: 'Shipping',
-            icon: '🚚',
+            label: 'Shipping', icon: '🚚',
             services: [
                 { key: 'deliveries', label: 'Deliveries', icon: '📬', endpoint: '/60/DlvryOrder', model: 'SalesDeliveryOrder' },
                 { key: 'delivery-lines', label: 'Delivery Lines', icon: '📋', endpoint: '/60/DlvryLine', model: 'SalesDeliveryLine' },
@@ -72,8 +52,7 @@ limitations under the License.
             ]
         },
         'billing': {
-            label: 'Billing',
-            icon: '💳',
+            label: 'Billing', icon: '💳',
             services: [
                 { key: 'schedules', label: 'Billing Schedules', icon: '📅', endpoint: '/60/BillSched', model: 'SalesBillingSchedule' },
                 { key: 'milestones', label: 'Milestones', icon: '🏁', endpoint: '/60/BillMilstn', model: 'SalesBillingMilestone' },
@@ -81,8 +60,7 @@ limitations under the License.
             ]
         },
         'analytics': {
-            label: 'Analytics',
-            icon: '📊',
+            label: 'Analytics', icon: '📊',
             services: [
                 { key: 'targets', label: 'Sales Targets', icon: '🎯', endpoint: '/60/SalesTrgt', model: 'SalesTarget' },
                 { key: 'territories', label: 'Territories', icon: '🗺️', endpoint: '/60/Territory', model: 'SalesTerritory' },
@@ -92,12 +70,6 @@ limitations under the License.
                 { key: 'forecasts', label: 'Forecasts', icon: '🔮', endpoint: '/60/SalesFcast', model: 'SalesForecast' }
             ]
         }
-    };
-
-    // Sub-module namespaces for service registry
-    Sales.submodules = ['SalesCustomers', 'SalesOrders', 'SalesPricing', 'SalesShipping', 'SalesBilling', 'SalesAnalytics'];
-
-    // Render status badge (delegates to shared utility)
-    Sales.renderStatus = Layer8DUtils.renderStatus;
-
-})();
+    },
+    submodules: ['SalesCustomers', 'SalesOrders', 'SalesPricing', 'SalesShipping', 'SalesBilling', 'SalesAnalytics']
+});

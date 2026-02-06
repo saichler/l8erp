@@ -18,303 +18,88 @@ limitations under the License.
 (function() {
     'use strict';
 
-    // Import shared utilities
-    const { renderEnum, renderBoolean, renderDate } = Layer8DRenderers;
-
-    // Get enums and render functions from time-enums.js
+    const col = window.Layer8ColumnFactory;
+    const { renderEnum } = Layer8DRenderers;
     const enums = window.Time.enums;
     const internal = window.Time._internal;
 
-    // ============================================================================
-    // COLUMN CONFIGURATIONS
-    // ============================================================================
-
-    const TIME_COLUMNS = {
+    window.Time.columns = {
         Timesheet: [
-            { key: 'timesheetId', label: 'ID', sortKey: 'timesheetId', filterKey: 'timesheetId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            {
-                key: 'period',
-                label: 'Period',
-                render: (item) => internal.renderTimePeriod(item.period)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                filterKey: 'status',
-                enumValues: enums.TIMESHEET_STATUS_VALUES,
-                render: (item) => internal.renderTimesheetStatus(item.status)
-            },
-            {
-                key: 'totalRegularHours',
-                label: 'Regular',
-                sortKey: 'totalRegularHours',
-                render: (item) => internal.renderHoursTime(item.totalRegularHours)
-            },
-            {
-                key: 'totalOvertimeHours',
-                label: 'Overtime',
-                sortKey: 'totalOvertimeHours',
-                render: (item) => internal.renderHoursTime(item.totalOvertimeHours)
-            },
-            {
-                key: 'totalHours',
-                label: 'Total Hours',
-                sortKey: 'totalHours',
-                render: (item) => internal.renderHoursTime(item.totalHours)
-            }
+            ...col.id('timesheetId'),
+            ...col.col('employeeId', 'Employee'),
+            ...col.custom('period', 'Period', (item) => internal.renderTimePeriod(item.period), { sortKey: false }),
+            ...col.enum('status', 'Status', enums.TIMESHEET_STATUS_VALUES, internal.renderTimesheetStatus),
+            ...col.custom('totalRegularHours', 'Regular', (item) => internal.renderHoursTime(item.totalRegularHours)),
+            ...col.custom('totalOvertimeHours', 'Overtime', (item) => internal.renderHoursTime(item.totalOvertimeHours)),
+            ...col.custom('totalHours', 'Total Hours', (item) => internal.renderHoursTime(item.totalHours))
         ],
 
         LeaveRequest: [
-            { key: 'requestId', label: 'ID', sortKey: 'requestId', filterKey: 'requestId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            {
-                key: 'leaveType',
-                label: 'Leave Type',
-                sortKey: 'leaveType',
-                filterKey: 'leaveType',
-                enumValues: enums.LEAVE_TYPE_VALUES,
-                render: (item) => renderEnum(item.leaveType, enums.LEAVE_TYPE)
-            },
-            {
-                key: 'startDate',
-                label: 'Start Date',
-                sortKey: 'startDate',
-                render: (item) => renderDate(item.startDate)
-            },
-            {
-                key: 'endDate',
-                label: 'End Date',
-                sortKey: 'endDate',
-                render: (item) => renderDate(item.endDate)
-            },
-            {
-                key: 'totalHours',
-                label: 'Hours',
-                sortKey: 'totalHours',
-                render: (item) => internal.renderHoursTime(item.totalHours)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                filterKey: 'status',
-                enumValues: enums.LEAVE_REQUEST_STATUS_VALUES,
-                render: (item) => internal.renderLeaveRequestStatus(item.status)
-            }
+            ...col.id('requestId'),
+            ...col.col('employeeId', 'Employee'),
+            ...col.enum('leaveType', 'Leave Type', enums.LEAVE_TYPE_VALUES, (v) => renderEnum(v, enums.LEAVE_TYPE)),
+            ...col.date('startDate', 'Start Date'),
+            ...col.date('endDate', 'End Date'),
+            ...col.custom('totalHours', 'Hours', (item) => internal.renderHoursTime(item.totalHours)),
+            ...col.enum('status', 'Status', enums.LEAVE_REQUEST_STATUS_VALUES, internal.renderLeaveRequestStatus)
         ],
 
         LeaveBalance: [
-            { key: 'balanceId', label: 'ID', sortKey: 'balanceId', filterKey: 'balanceId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            {
-                key: 'leaveType',
-                label: 'Leave Type',
-                sortKey: 'leaveType',
-                filterKey: 'leaveType',
-                enumValues: enums.LEAVE_TYPE_VALUES,
-                render: (item) => renderEnum(item.leaveType, enums.LEAVE_TYPE)
-            },
-            { key: 'year', label: 'Year', sortKey: 'year', filterKey: 'year' },
-            {
-                key: 'accrued',
-                label: 'Accrued',
-                sortKey: 'accrued',
-                render: (item) => internal.renderHoursTime(item.accrued)
-            },
-            {
-                key: 'used',
-                label: 'Used',
-                sortKey: 'used',
-                render: (item) => internal.renderHoursTime(item.used)
-            },
-            {
-                key: 'available',
-                label: 'Available',
-                sortKey: 'available',
-                render: (item) => internal.renderHoursTime(item.available)
-            }
+            ...col.id('balanceId'),
+            ...col.col('employeeId', 'Employee'),
+            ...col.enum('leaveType', 'Leave Type', enums.LEAVE_TYPE_VALUES, (v) => renderEnum(v, enums.LEAVE_TYPE)),
+            ...col.col('year', 'Year'),
+            ...col.custom('accrued', 'Accrued', (item) => internal.renderHoursTime(item.accrued)),
+            ...col.custom('used', 'Used', (item) => internal.renderHoursTime(item.used)),
+            ...col.custom('available', 'Available', (item) => internal.renderHoursTime(item.available))
         ],
 
         LeavePolicy: [
-            { key: 'policyId', label: 'ID', sortKey: 'policyId', filterKey: 'policyId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'leaveType',
-                label: 'Leave Type',
-                sortKey: 'leaveType',
-                filterKey: 'leaveType',
-                enumValues: enums.LEAVE_TYPE_VALUES,
-                render: (item) => renderEnum(item.leaveType, enums.LEAVE_TYPE)
-            },
-            {
-                key: 'accrualMethod',
-                label: 'Accrual Method',
-                sortKey: 'accrualMethod',
-                filterKey: 'accrualMethod',
-                enumValues: enums.ACCRUAL_METHOD_VALUES,
-                render: (item) => renderEnum(item.accrualMethod, enums.ACCRUAL_METHOD)
-            },
-            {
-                key: 'accrualRate',
-                label: 'Accrual Rate',
-                sortKey: 'accrualRate',
-                render: (item) => internal.renderHoursTime(item.accrualRate)
-            },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
-            }
+            ...col.id('policyId'),
+            ...col.basic(['code', 'name']),
+            ...col.enum('leaveType', 'Leave Type', enums.LEAVE_TYPE_VALUES, (v) => renderEnum(v, enums.LEAVE_TYPE)),
+            ...col.enum('accrualMethod', 'Accrual Method', enums.ACCRUAL_METHOD_VALUES, (v) => renderEnum(v, enums.ACCRUAL_METHOD)),
+            ...col.custom('accrualRate', 'Accrual Rate', (item) => internal.renderHoursTime(item.accrualRate)),
+            ...col.boolean('isActive', 'Active')
         ],
 
         Shift: [
-            { key: 'shiftId', label: 'ID', sortKey: 'shiftId', filterKey: 'shiftId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'shiftType',
-                label: 'Type',
-                sortKey: 'shiftType',
-                filterKey: 'shiftType',
-                enumValues: enums.SHIFT_TYPE_VALUES,
-                render: (item) => internal.renderShiftType(item.shiftType)
-            },
-            {
-                key: 'durationHours',
-                label: 'Duration',
-                sortKey: 'durationHours',
-                render: (item) => internal.renderHoursTime(item.durationHours)
-            },
-            {
-                key: 'breakDurationMinutes',
-                label: 'Break',
-                sortKey: 'breakDurationMinutes',
-                render: (item) => item.breakDurationMinutes ? `${item.breakDurationMinutes} min` : '-'
-            },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
-            }
+            ...col.id('shiftId'),
+            ...col.basic(['code', 'name']),
+            ...col.enum('shiftType', 'Type', enums.SHIFT_TYPE_VALUES, internal.renderShiftType),
+            ...col.custom('durationHours', 'Duration', (item) => internal.renderHoursTime(item.durationHours)),
+            ...col.custom('breakDurationMinutes', 'Break', (item) => item.breakDurationMinutes ? `${item.breakDurationMinutes} min` : '-'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         Schedule: [
-            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            {
-                key: 'period',
-                label: 'Period',
-                render: (item) => internal.renderTimePeriod(item.period)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                filterKey: 'status',
-                enumValues: enums.SCHEDULE_STATUS_VALUES,
-                render: (item) => internal.renderScheduleStatus(item.status)
-            },
-            {
-                key: 'totalScheduledHours',
-                label: 'Scheduled Hours',
-                sortKey: 'totalScheduledHours',
-                render: (item) => internal.renderHoursTime(item.totalScheduledHours)
-            },
-            {
-                key: 'publishedDate',
-                label: 'Published',
-                sortKey: 'publishedDate',
-                render: (item) => renderDate(item.publishedDate)
-            }
+            ...col.id('scheduleId'),
+            ...col.col('employeeId', 'Employee'),
+            ...col.custom('period', 'Period', (item) => internal.renderTimePeriod(item.period), { sortKey: false }),
+            ...col.enum('status', 'Status', enums.SCHEDULE_STATUS_VALUES, internal.renderScheduleStatus),
+            ...col.custom('totalScheduledHours', 'Scheduled Hours', (item) => internal.renderHoursTime(item.totalScheduledHours)),
+            ...col.date('publishedDate', 'Published')
         ],
 
         Holiday: [
-            { key: 'holidayId', label: 'ID', sortKey: 'holidayId', filterKey: 'holidayId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'date',
-                label: 'Date',
-                sortKey: 'date',
-                render: (item) => renderDate(item.date)
-            },
-            { key: 'year', label: 'Year', sortKey: 'year', filterKey: 'year' },
-            {
-                key: 'holidayType',
-                label: 'Type',
-                sortKey: 'holidayType',
-                filterKey: 'holidayType',
-                enumValues: enums.HOLIDAY_TYPE_VALUES,
-                render: (item) => renderEnum(item.holidayType, enums.HOLIDAY_TYPE)
-            },
-            {
-                key: 'isPaid',
-                label: 'Paid',
-                sortKey: 'isPaid',
-                render: (item) => renderBoolean(item.isPaid)
-            },
-            {
-                key: 'hoursCredited',
-                label: 'Hours',
-                sortKey: 'hoursCredited',
-                render: (item) => internal.renderHoursTime(item.hoursCredited)
-            },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
-            }
+            ...col.id('holidayId'),
+            ...col.col('name', 'Name'),
+            ...col.date('date', 'Date'),
+            ...col.col('year', 'Year'),
+            ...col.enum('holidayType', 'Type', enums.HOLIDAY_TYPE_VALUES, (v) => renderEnum(v, enums.HOLIDAY_TYPE)),
+            ...col.boolean('isPaid', 'Paid'),
+            ...col.custom('hoursCredited', 'Hours', (item) => internal.renderHoursTime(item.hoursCredited)),
+            ...col.boolean('isActive', 'Active')
         ],
 
         Absence: [
-            { key: 'absenceId', label: 'ID', sortKey: 'absenceId', filterKey: 'absenceId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            {
-                key: 'date',
-                label: 'Date',
-                sortKey: 'date',
-                render: (item) => renderDate(item.date)
-            },
-            {
-                key: 'absenceType',
-                label: 'Type',
-                sortKey: 'absenceType',
-                filterKey: 'absenceType',
-                enumValues: enums.LEAVE_TYPE_VALUES,
-                render: (item) => renderEnum(item.absenceType, enums.LEAVE_TYPE)
-            },
-            {
-                key: 'hours',
-                label: 'Hours',
-                sortKey: 'hours',
-                render: (item) => internal.renderHoursTime(item.hours)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                filterKey: 'status',
-                enumValues: enums.ABSENCE_STATUS_VALUES,
-                render: (item) => internal.renderAbsenceStatus(item.status)
-            },
-            {
-                key: 'isPaid',
-                label: 'Paid',
-                sortKey: 'isPaid',
-                render: (item) => renderBoolean(item.isPaid)
-            }
+            ...col.id('absenceId'),
+            ...col.col('employeeId', 'Employee'),
+            ...col.date('date', 'Date'),
+            ...col.enum('absenceType', 'Type', enums.LEAVE_TYPE_VALUES, (v) => renderEnum(v, enums.LEAVE_TYPE)),
+            ...col.custom('hours', 'Hours', (item) => internal.renderHoursTime(item.hours)),
+            ...col.enum('status', 'Status', enums.ABSENCE_STATUS_VALUES, internal.renderAbsenceStatus),
+            ...col.boolean('isPaid', 'Paid')
         ]
     };
-
-    // ============================================================================
-    // EXPORT COLUMNS TO NAMESPACE
-    // ============================================================================
-
-    window.Time.columns = TIME_COLUMNS;
-
 })();

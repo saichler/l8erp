@@ -18,313 +18,91 @@ limitations under the License.
 (function() {
     'use strict';
 
-    // Import shared utilities
+    const col = window.Layer8ColumnFactory;
     const { escapeHtml } = Layer8DUtils;
-    const { renderEnum, renderBoolean, renderDate } = Layer8DRenderers;
-
-    // Get enums and render functions from talent-enums.js
+    const { renderEnum } = Layer8DRenderers;
     const enums = window.Talent.enums;
     const internal = window.Talent._internal;
 
-    // ============================================================================
-    // COLUMN CONFIGURATIONS
-    // ============================================================================
-
-    const TALENT_COLUMNS = {
+    window.Talent.columns = {
         PerformanceReview: [
-            { key: 'reviewId', label: 'ID', sortKey: 'reviewId', filterKey: 'reviewId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            { key: 'reviewerId', label: 'Reviewer', sortKey: 'reviewerId', filterKey: 'reviewerId' },
-            {
-                key: 'reviewType',
-                label: 'Type',
-                sortKey: 'reviewType',
-                filterKey: 'reviewType',
-                enumValues: enums.REVIEW_TYPE_VALUES,
-                render: (item) => renderEnum(item.reviewType, enums.REVIEW_TYPE)
-            },
-            {
-                key: 'reviewPeriod',
-                label: 'Period',
-                render: (item) => internal.renderReviewPeriod(item.reviewPeriod)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                filterKey: 'status',
-                enumValues: enums.PERFORMANCE_REVIEW_STATUS_VALUES,
-                render: (item) => internal.renderPerformanceReviewStatus(item.status)
-            },
-            {
-                key: 'overallRating',
-                label: 'Rating',
-                sortKey: 'overallRating',
-                render: (item) => internal.renderRating(item.overallRating)
-            }
+            ...col.id('reviewId'),
+            ...col.basic([['employeeId', 'Employee'], ['reviewerId', 'Reviewer']]),
+            ...col.enum('reviewType', 'Type', enums.REVIEW_TYPE_VALUES, (v) => renderEnum(v, enums.REVIEW_TYPE)),
+            ...col.custom('reviewPeriod', 'Period', (item) => internal.renderReviewPeriod(item.reviewPeriod), { sortKey: false }),
+            ...col.enum('status', 'Status', enums.PERFORMANCE_REVIEW_STATUS_VALUES, internal.renderPerformanceReviewStatus),
+            ...col.custom('overallRating', 'Rating', (item) => internal.renderRating(item.overallRating))
         ],
 
         Goal: [
-            { key: 'goalId', label: 'ID', sortKey: 'goalId', filterKey: 'goalId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            { key: 'title', label: 'Title', sortKey: 'title', filterKey: 'title' },
-            {
-                key: 'goalType',
-                label: 'Type',
-                sortKey: 'goalType',
-                filterKey: 'goalType',
-                enumValues: enums.GOAL_TYPE_VALUES,
-                render: (item) => renderEnum(item.goalType, enums.GOAL_TYPE)
-            },
-            {
-                key: 'priority',
-                label: 'Priority',
-                sortKey: 'priority',
-                filterKey: 'priority',
-                enumValues: enums.GOAL_PRIORITY_VALUES,
-                render: (item) => internal.renderGoalPriority(item.priority)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                filterKey: 'status',
-                enumValues: enums.GOAL_STATUS_VALUES,
-                render: (item) => internal.renderGoalStatus(item.status)
-            },
-            {
-                key: 'completionPercentage',
-                label: 'Progress',
-                sortKey: 'completionPercentage',
-                render: (item) => internal.renderPercentage(item.completionPercentage)
-            },
-            {
-                key: 'dueDate',
-                label: 'Due Date',
-                sortKey: 'dueDate',
-                render: (item) => renderDate(item.dueDate)
-            }
+            ...col.id('goalId'),
+            ...col.basic([['employeeId', 'Employee'], 'title']),
+            ...col.enum('goalType', 'Type', enums.GOAL_TYPE_VALUES, (v) => renderEnum(v, enums.GOAL_TYPE)),
+            ...col.enum('priority', 'Priority', enums.GOAL_PRIORITY_VALUES, internal.renderGoalPriority),
+            ...col.enum('status', 'Status', enums.GOAL_STATUS_VALUES, internal.renderGoalStatus),
+            ...col.custom('completionPercentage', 'Progress', (item) => internal.renderPercentage(item.completionPercentage)),
+            ...col.date('dueDate', 'Due Date')
         ],
 
         Feedback: [
-            { key: 'feedbackId', label: 'ID', sortKey: 'feedbackId', filterKey: 'feedbackId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            { key: 'providerId', label: 'Provider', sortKey: 'providerId', filterKey: 'providerId' },
-            {
-                key: 'feedbackType',
-                label: 'Type',
-                sortKey: 'feedbackType',
-                filterKey: 'feedbackType',
-                enumValues: enums.FEEDBACK_TYPE_VALUES,
-                render: (item) => renderEnum(item.feedbackType, enums.FEEDBACK_TYPE)
-            },
-            {
-                key: 'relationship',
-                label: 'Relationship',
-                sortKey: 'relationship',
-                filterKey: 'relationship',
-                enumValues: enums.FEEDBACK_RELATIONSHIP_VALUES,
-                render: (item) => renderEnum(item.relationship, enums.FEEDBACK_RELATIONSHIP)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                filterKey: 'status',
-                enumValues: enums.FEEDBACK_STATUS_VALUES,
-                render: (item) => internal.renderFeedbackStatus(item.status)
-            },
-            {
-                key: 'dueDate',
-                label: 'Due Date',
-                sortKey: 'dueDate',
-                render: (item) => renderDate(item.dueDate)
-            }
+            ...col.id('feedbackId'),
+            ...col.basic([['employeeId', 'Employee'], ['providerId', 'Provider']]),
+            ...col.enum('feedbackType', 'Type', enums.FEEDBACK_TYPE_VALUES, (v) => renderEnum(v, enums.FEEDBACK_TYPE)),
+            ...col.enum('relationship', 'Relationship', enums.FEEDBACK_RELATIONSHIP_VALUES, (v) => renderEnum(v, enums.FEEDBACK_RELATIONSHIP)),
+            ...col.enum('status', 'Status', enums.FEEDBACK_STATUS_VALUES, internal.renderFeedbackStatus),
+            ...col.date('dueDate', 'Due Date')
         ],
 
         CareerPath: [
-            { key: 'careerPathId', label: 'ID', sortKey: 'careerPathId', filterKey: 'careerPathId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'jobFamilyId', label: 'Job Family', sortKey: 'jobFamilyId', filterKey: 'jobFamilyId' },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            {
-                key: 'steps',
-                label: 'Steps',
-                render: (item) => item.steps ? item.steps.length : 0
-            },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
-            }
+            ...col.id('careerPathId'),
+            ...col.basic(['name', ['jobFamilyId', 'Job Family'], 'description']),
+            ...col.custom('steps', 'Steps', (item) => item.steps ? item.steps.length : 0, { sortKey: false }),
+            ...col.boolean('isActive', 'Active')
         ],
 
         SuccessionPlan: [
-            { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'positionId', label: 'Position', sortKey: 'positionId', filterKey: 'positionId' },
-            { key: 'incumbentId', label: 'Incumbent', sortKey: 'incumbentId', filterKey: 'incumbentId' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                filterKey: 'status',
-                enumValues: enums.SUCCESSION_PLAN_STATUS_VALUES,
-                render: (item) => internal.renderSuccessionPlanStatus(item.status)
-            },
-            {
-                key: 'vacancyRisk',
-                label: 'Vacancy Risk',
-                sortKey: 'vacancyRisk',
-                filterKey: 'vacancyRisk',
-                enumValues: enums.RISK_LEVEL_VALUES,
-                render: (item) => internal.renderRiskLevel(item.vacancyRisk)
-            },
-            {
-                key: 'candidates',
-                label: 'Candidates',
-                render: (item) => item.candidates ? item.candidates.length : 0
-            },
-            {
-                key: 'nextReviewDate',
-                label: 'Next Review',
-                sortKey: 'nextReviewDate',
-                render: (item) => renderDate(item.nextReviewDate)
-            }
+            ...col.id('planId'),
+            ...col.basic([['positionId', 'Position'], ['incumbentId', 'Incumbent']]),
+            ...col.enum('status', 'Status', enums.SUCCESSION_PLAN_STATUS_VALUES, internal.renderSuccessionPlanStatus),
+            ...col.enum('vacancyRisk', 'Vacancy Risk', enums.RISK_LEVEL_VALUES, internal.renderRiskLevel),
+            ...col.custom('candidates', 'Candidates', (item) => item.candidates ? item.candidates.length : 0, { sortKey: false }),
+            ...col.date('nextReviewDate', 'Next Review')
         ],
 
         JobRequisition: [
-            { key: 'requisitionId', label: 'ID', sortKey: 'requisitionId', filterKey: 'requisitionId' },
-            { key: 'requisitionNumber', label: 'Req #', sortKey: 'requisitionNumber', filterKey: 'requisitionNumber' },
-            { key: 'title', label: 'Title', sortKey: 'title', filterKey: 'title' },
-            {
-                key: 'requisitionType',
-                label: 'Type',
-                sortKey: 'requisitionType',
-                filterKey: 'requisitionType',
-                enumValues: enums.REQUISITION_TYPE_VALUES,
-                render: (item) => renderEnum(item.requisitionType, enums.REQUISITION_TYPE)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                filterKey: 'status',
-                enumValues: enums.REQUISITION_STATUS_VALUES,
-                render: (item) => internal.renderRequisitionStatus(item.status)
-            },
-            { key: 'openings', label: 'Openings', sortKey: 'openings' },
-            { key: 'applicantCount', label: 'Applicants', sortKey: 'applicantCount' },
-            {
-                key: 'targetStartDate',
-                label: 'Target Start',
-                sortKey: 'targetStartDate',
-                render: (item) => renderDate(item.targetStartDate)
-            }
+            ...col.id('requisitionId'),
+            ...col.basic([['requisitionNumber', 'Req #'], 'title']),
+            ...col.enum('requisitionType', 'Type', enums.REQUISITION_TYPE_VALUES, (v) => renderEnum(v, enums.REQUISITION_TYPE)),
+            ...col.enum('status', 'Status', enums.REQUISITION_STATUS_VALUES, internal.renderRequisitionStatus),
+            ...col.col('openings', 'Openings'),
+            ...col.col('applicantCount', 'Applicants'),
+            ...col.date('targetStartDate', 'Target Start')
         ],
 
         Applicant: [
-            { key: 'applicantId', label: 'ID', sortKey: 'applicantId', filterKey: 'applicantId' },
-            {
-                key: 'name',
-                label: 'Name',
-                sortKey: 'lastName',
-                filterKey: 'lastName',
-                render: (item) => `${escapeHtml(item.firstName || '')} ${escapeHtml(item.lastName || '')}`.trim()
-            },
-            { key: 'email', label: 'Email', sortKey: 'email', filterKey: 'email' },
-            { key: 'phone', label: 'Phone', sortKey: 'phone', filterKey: 'phone' },
-            {
-                key: 'source',
-                label: 'Source',
-                sortKey: 'source',
-                filterKey: 'source',
-                enumValues: enums.APPLICANT_SOURCE_VALUES,
-                render: (item) => renderEnum(item.source, enums.APPLICANT_SOURCE)
-            },
-            {
-                key: 'createdDate',
-                label: 'Applied',
-                sortKey: 'createdDate',
-                render: (item) => renderDate(item.createdDate)
-            }
+            ...col.id('applicantId'),
+            ...col.custom('name', 'Name', (item) => `${escapeHtml(item.firstName || '')} ${escapeHtml(item.lastName || '')}`.trim(), { sortKey: 'lastName', filterKey: 'lastName' }),
+            ...col.basic(['email', 'phone']),
+            ...col.enum('source', 'Source', enums.APPLICANT_SOURCE_VALUES, (v) => renderEnum(v, enums.APPLICANT_SOURCE)),
+            ...col.date('createdDate', 'Applied')
         ],
 
         Application: [
-            { key: 'applicationId', label: 'ID', sortKey: 'applicationId', filterKey: 'applicationId' },
-            { key: 'applicantId', label: 'Applicant', sortKey: 'applicantId', filterKey: 'applicantId' },
-            { key: 'requisitionId', label: 'Requisition', sortKey: 'requisitionId', filterKey: 'requisitionId' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                filterKey: 'status',
-                enumValues: enums.APPLICATION_STATUS_VALUES,
-                render: (item) => internal.renderApplicationStatus(item.status)
-            },
-            {
-                key: 'stage',
-                label: 'Stage',
-                sortKey: 'stage',
-                filterKey: 'stage',
-                enumValues: enums.APPLICATION_STAGE_VALUES,
-                render: (item) => renderEnum(item.stage, enums.APPLICATION_STAGE)
-            },
-            {
-                key: 'overallRating',
-                label: 'Rating',
-                sortKey: 'overallRating',
-                render: (item) => internal.renderRating(item.overallRating)
-            },
-            {
-                key: 'appliedDate',
-                label: 'Applied',
-                sortKey: 'appliedDate',
-                render: (item) => renderDate(item.appliedDate)
-            }
+            ...col.id('applicationId'),
+            ...col.basic([['applicantId', 'Applicant'], ['requisitionId', 'Requisition']]),
+            ...col.enum('status', 'Status', enums.APPLICATION_STATUS_VALUES, internal.renderApplicationStatus),
+            ...col.enum('stage', 'Stage', enums.APPLICATION_STAGE_VALUES, (v) => renderEnum(v, enums.APPLICATION_STAGE)),
+            ...col.custom('overallRating', 'Rating', (item) => internal.renderRating(item.overallRating)),
+            ...col.date('appliedDate', 'Applied')
         ],
 
         OnboardingTask: [
-            { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            { key: 'name', label: 'Task', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'category',
-                label: 'Category',
-                sortKey: 'category',
-                filterKey: 'category',
-                enumValues: enums.ONBOARDING_TASK_CATEGORY_VALUES,
-                render: (item) => renderEnum(item.category, enums.ONBOARDING_TASK_CATEGORY)
-            },
-            {
-                key: 'ownerType',
-                label: 'Owner',
-                sortKey: 'ownerType',
-                filterKey: 'ownerType',
-                enumValues: enums.TASK_OWNER_VALUES,
-                render: (item) => renderEnum(item.ownerType, enums.TASK_OWNER)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                filterKey: 'status',
-                enumValues: enums.ONBOARDING_TASK_STATUS_VALUES,
-                render: (item) => internal.renderOnboardingTaskStatus(item.status)
-            },
-            {
-                key: 'dueDate',
-                label: 'Due Date',
-                sortKey: 'dueDate',
-                render: (item) => renderDate(item.dueDate)
-            }
+            ...col.id('taskId'),
+            ...col.basic([['employeeId', 'Employee'], ['name', 'Task']]),
+            ...col.enum('category', 'Category', enums.ONBOARDING_TASK_CATEGORY_VALUES, (v) => renderEnum(v, enums.ONBOARDING_TASK_CATEGORY)),
+            ...col.enum('ownerType', 'Owner', enums.TASK_OWNER_VALUES, (v) => renderEnum(v, enums.TASK_OWNER)),
+            ...col.enum('status', 'Status', enums.ONBOARDING_TASK_STATUS_VALUES, internal.renderOnboardingTaskStatus),
+            ...col.date('dueDate', 'Due Date')
         ]
     };
-
-    // ============================================================================
-    // EXPORT COLUMNS TO NAMESPACE
-    // ============================================================================
-
-    window.Talent.columns = TALENT_COLUMNS;
-
 })();

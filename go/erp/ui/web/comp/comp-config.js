@@ -2,14 +2,13 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
-(function() {
-    'use strict';
-    window.Comp = window.Comp || {};
 
-    Comp.modules = {
+// Compliance Module Configuration - Uses Layer8ModuleConfigFactory
+Layer8ModuleConfigFactory.create({
+    namespace: 'Comp',
+    modules: {
         'regulatory': {
-            label: 'Regulatory',
-            icon: '📜',
+            label: 'Regulatory', icon: '📜',
             services: [
                 { key: 'regulations', label: 'Regulations', icon: '📋', endpoint: '/110/CompReg', model: 'CompRegulation' },
                 { key: 'requirements', label: 'Requirements', icon: '📝', endpoint: '/110/CompReq', model: 'CompRequirement' },
@@ -19,8 +18,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'controls': {
-            label: 'Internal Controls',
-            icon: '🔒',
+            label: 'Internal Controls', icon: '🔒',
             services: [
                 { key: 'controls', label: 'Controls', icon: '🎛️', endpoint: '/110/CompCtrl', model: 'CompControl' },
                 { key: 'assessments', label: 'Assessments', icon: '📊', endpoint: '/110/CompCtrlAs', model: 'CompControlAssessment' },
@@ -30,8 +28,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'risk': {
-            label: 'Risk Management',
-            icon: '⚡',
+            label: 'Risk Management', icon: '⚡',
             services: [
                 { key: 'risk-registers', label: 'Risk Registers', icon: '📚', endpoint: '/110/CompRisk', model: 'CompRiskRegister' },
                 { key: 'risk-assessments', label: 'Risk Assessments', icon: '📈', endpoint: '/110/CompRiskAs', model: 'CompRiskAssessment' },
@@ -41,8 +38,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'audit': {
-            label: 'Audit Management',
-            icon: '🔍',
+            label: 'Audit Management', icon: '🔍',
             services: [
                 { key: 'audit-schedules', label: 'Audit Schedules', icon: '📅', endpoint: '/110/CompAudSch', model: 'CompAuditSchedule' },
                 { key: 'audit-findings', label: 'Audit Findings', icon: '🔎', endpoint: '/110/CompAudFnd', model: 'CompAuditFinding' },
@@ -51,7 +47,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 { key: 'compliance-reports', label: 'Compliance Reports', icon: '📋', endpoint: '/110/CompCmpRpt', model: 'CompComplianceReport' }
             ]
         }
-    };
-
-    Comp.submodules = ['CompRegulatory', 'CompControls', 'CompRisk', 'CompAudit'];
-})();
+    },
+    submodules: ['CompRegulatory', 'CompControls', 'CompRisk', 'CompAudit']
+});

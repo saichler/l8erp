@@ -16,24 +16,43 @@ limitations under the License.
 /**
  * Layer8 Form Factory - Generates form field definitions from simple arrays.
  *
- * Usage:
+ * BASIC USAGE:
  *   const f = Layer8FormFactory;
  *   MyModule.forms = {
- *       Employee: {
- *           title: 'Employee',
- *           sections: [{
- *               title: 'Basic Information',
- *               fields: [
- *                   ...f.text('code', 'Code', true),
- *                   ...f.text('name', 'Name', true),
- *                   ...f.textarea('description'),
- *                   ...f.checkbox('isActive', 'Active'),
- *                   ...f.reference('managerId', 'Manager', 'Employee'),
- *                   ...f.basicEntity(),  // preset: code, name, description, isActive
- *               ]
- *           }]
- *       }
+ *       Employee: f.form('Employee', [
+ *           f.section('Basic Information', [
+ *               ...f.text('code', 'Code', true),
+ *               ...f.text('name', 'Name', true),
+ *               ...f.select('status', 'Status', enums.STATUS, true),
+ *               ...f.reference('managerId', 'Manager', 'Employee'),
+ *           ])
+ *       ])
  *   };
+ *
+ * AVAILABLE PRESETS (use these to reduce boilerplate!):
+ *   ...f.basicEntity()     - code, name, description, isActive (4 fields)
+ *   ...f.person()          - firstName, lastName (2 fields)
+ *   ...f.person(true)      - firstName, middleName, lastName (3 fields)
+ *   ...f.dateRange()       - effectiveDate, endDate (2 fields)
+ *   ...f.dateRange('start') - startDate, endDate (2 fields)
+ *   ...f.address()         - addressLine1, addressLine2, city, state, postalCode, country (6 fields)
+ *   ...f.contact()         - email, phone (2 fields)
+ *   ...f.audit()           - createdBy, createdAt, modifiedBy, modifiedAt (4 fields, read-only)
+ *
+ * FIELD TYPES:
+ *   ...f.text(key, label, required)
+ *   ...f.textarea(key, label, required)
+ *   ...f.number(key, label, required)
+ *   ...f.checkbox(key, label)
+ *   ...f.date(key, label, required)
+ *   ...f.select(key, label, options, required)
+ *   ...f.reference(key, label, lookupModel, required)
+ *   ...f.money(key, label, required)
+ *   ...f.email(key, label, required)
+ *   ...f.phone(key, label)
+ *   ...f.url(key, label)
+ *   ...f.ssn(key, label)
+ *   ...f.ein(key, label)
  */
 (function() {
     'use strict';
@@ -325,6 +344,22 @@ limitations under the License.
                 { key: 'modifiedBy', label: 'Modified By', type: 'text', readOnly: true },
                 { key: 'modifiedAt', label: 'Modified At', type: 'date', readOnly: true }
             ];
+        },
+
+        /**
+         * Person name fields: firstName, middleName (optional), lastName
+         * @param {boolean} [includeMiddle=false] - Include middle name field
+         * @returns {Array} - Array of field definitions
+         */
+        person: function(includeMiddle) {
+            const fields = [
+                { key: 'firstName', label: 'First Name', type: 'text', required: true }
+            ];
+            if (includeMiddle) {
+                fields.push({ key: 'middleName', label: 'Middle Name', type: 'text' });
+            }
+            fields.push({ key: 'lastName', label: 'Last Name', type: 'text', required: true });
+            return fields;
         },
 
         // ============================================================================

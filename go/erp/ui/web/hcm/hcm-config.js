@@ -1,31 +1,14 @@
 /*
 © 2025 Sharon Aicler (saichler@gmail.com)
-
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
-// HCM Module - Configuration
-// Module definitions and service mappings
 
-(function() {
-    'use strict';
-
-    // Create HCM namespace
-    window.HCM = window.HCM || {};
-
-    // HCM Module Configuration
-    HCM.modules = {
+// HCM Module Configuration - Uses Layer8ModuleConfigFactory
+Layer8ModuleConfigFactory.create({
+    namespace: 'HCM',
+    modules: {
         'core-hr': {
-            label: 'Core HR',
-            icon: '👤',
+            label: 'Core HR', icon: '👤',
             services: [
                 { key: 'employees', label: 'Employees', icon: '👤', endpoint: '/30/Employee', model: 'Employee' },
                 { key: 'positions', label: 'Positions', icon: '💼', endpoint: '/30/Position', model: 'Position' },
@@ -38,8 +21,7 @@ limitations under the License.
             ]
         },
         'payroll': {
-            label: 'Payroll',
-            icon: '💰',
+            label: 'Payroll', icon: '💰',
             services: [
                 { key: 'pay-structures', label: 'Pay Structures', icon: '💰', endpoint: '/30/PayStruct', model: 'PayStructure' },
                 { key: 'pay-components', label: 'Pay Components', icon: '📊', endpoint: '/30/PayComp', model: 'PayComponent' },
@@ -52,8 +34,7 @@ limitations under the License.
             ]
         },
         'benefits': {
-            label: 'Benefits',
-            icon: '🏥',
+            label: 'Benefits', icon: '🏥',
             services: [
                 { key: 'benefit-plans', label: 'Benefit Plans', icon: '📦', endpoint: '/30/BenPlan', model: 'BenefitPlan' },
                 { key: 'enrollments', label: 'Enrollments', icon: '✅', endpoint: '/30/BenEnrol', model: 'BenefitEnrollment' },
@@ -64,8 +45,7 @@ limitations under the License.
             ]
         },
         'time': {
-            label: 'Time',
-            icon: '⏱️',
+            label: 'Time', icon: '⏱️',
             services: [
                 { key: 'timesheets', label: 'Timesheets', icon: '⏱️', endpoint: '/30/Timesheet', model: 'Timesheet' },
                 { key: 'leave-requests', label: 'Leave Requests', icon: '🏖️', endpoint: '/30/LeaveReq', model: 'LeaveRequest' },
@@ -78,8 +58,7 @@ limitations under the License.
             ]
         },
         'talent': {
-            label: 'Talent',
-            icon: '⭐',
+            label: 'Talent', icon: '⭐',
             services: [
                 { key: 'reviews', label: 'Reviews', icon: '⭐', endpoint: '/30/PerfRevw', model: 'PerformanceReview' },
                 { key: 'goals', label: 'Goals', icon: '🎯', endpoint: '/30/Goal', model: 'Goal' },
@@ -93,8 +72,7 @@ limitations under the License.
             ]
         },
         'learning': {
-            label: 'Learning',
-            icon: '📚',
+            label: 'Learning', icon: '📚',
             services: [
                 { key: 'courses', label: 'Courses', icon: '📚', endpoint: '/30/Course', model: 'Course' },
                 { key: 'sessions', label: 'Sessions', icon: '📅', endpoint: '/30/CrsSess', model: 'CourseSession' },
@@ -107,8 +85,7 @@ limitations under the License.
             ]
         },
         'compensation': {
-            label: 'Compensation',
-            icon: '💵',
+            label: 'Compensation', icon: '💵',
             services: [
                 { key: 'salary-grades', label: 'Salary Grades', icon: '📊', endpoint: '/30/SalGrade', model: 'SalaryGrade' },
                 { key: 'salary-structures', label: 'Salary Structures', icon: '💰', endpoint: '/30/SalStrct', model: 'SalaryStructure' },
@@ -122,12 +99,6 @@ limitations under the License.
                 { key: 'market-benchmarks', label: 'Market Benchmarks', icon: '📊', endpoint: '/30/MktBench', model: 'MarketBenchmark' }
             ]
         }
-    };
-
-    // Sub-module namespaces for service registry
-    HCM.submodules = ['CoreHR', 'Payroll', 'Benefits', 'Time', 'Talent', 'Learning', 'Compensation'];
-
-    // Render status badge (delegates to shared utility)
-    HCM.renderStatus = Layer8DUtils.renderStatus;
-
-})();
+    },
+    submodules: ['CoreHR', 'Payroll', 'Benefits', 'Time', 'Talent', 'Learning', 'Compensation']
+});

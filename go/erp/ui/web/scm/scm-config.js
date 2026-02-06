@@ -1,31 +1,14 @@
 /*
 © 2025 Sharon Aicler (saichler@gmail.com)
-
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
-// SCM Module - Configuration
-// Module definitions and service mappings
 
-(function() {
-    'use strict';
-
-    // Create SCM namespace
-    window.SCM = window.SCM || {};
-
-    // SCM Module Configuration
-    SCM.modules = {
+// SCM Module Configuration - Uses Layer8ModuleConfigFactory
+Layer8ModuleConfigFactory.create({
+    namespace: 'SCM',
+    modules: {
         'procurement': {
-            label: 'Procurement',
-            icon: '📦',
+            label: 'Procurement', icon: '📦',
             services: [
                 { key: 'purchase-requisitions', label: 'Requisitions', icon: '📋', endpoint: '/50/PurchReq', model: 'ScmPurchaseRequisition' },
                 { key: 'requisition-lines', label: 'Requisition Lines', icon: '📝', endpoint: '/50/ReqLine', model: 'ScmRequisitionLine' },
@@ -37,8 +20,7 @@ limitations under the License.
             ]
         },
         'inventory': {
-            label: 'Inventory',
-            icon: '📦',
+            label: 'Inventory', icon: '📦',
             services: [
                 { key: 'items', label: 'Items', icon: '📦', endpoint: '/50/Item', model: 'ScmItem' },
                 { key: 'item-categories', label: 'Categories', icon: '📁', endpoint: '/50/ItemCat', model: 'ScmItemCategory' },
@@ -51,8 +33,7 @@ limitations under the License.
             ]
         },
         'warehouse': {
-            label: 'Warehouse',
-            icon: '🏭',
+            label: 'Warehouse', icon: '🏭',
             services: [
                 { key: 'warehouses', label: 'Warehouses', icon: '🏭', endpoint: '/50/Warehouse', model: 'ScmWarehouse' },
                 { key: 'bins', label: 'Bins', icon: '📍', endpoint: '/50/Bin', model: 'ScmBin' },
@@ -66,8 +47,7 @@ limitations under the License.
             ]
         },
         'logistics': {
-            label: 'Logistics',
-            icon: '🚚',
+            label: 'Logistics', icon: '🚚',
             services: [
                 { key: 'carriers', label: 'Carriers', icon: '🚚', endpoint: '/50/ScmCarrier', model: 'ScmCarrier' },
                 { key: 'freight-rates', label: 'Freight Rates', icon: '💲', endpoint: '/50/FreightRt', model: 'ScmFreightRate' },
@@ -80,8 +60,7 @@ limitations under the License.
             ]
         },
         'demand-planning': {
-            label: 'Demand Planning',
-            icon: '📈',
+            label: 'Demand Planning', icon: '📈',
             services: [
                 { key: 'demand-forecasts', label: 'Forecasts', icon: '📊', endpoint: '/50/DmndFcast', model: 'ScmDemandForecast' },
                 { key: 'forecast-models', label: 'Models', icon: '🧮', endpoint: '/50/FcastModel', model: 'ScmForecastModel' },
@@ -92,8 +71,7 @@ limitations under the License.
             ]
         },
         'supply-planning': {
-            label: 'Supply Planning',
-            icon: '🔗',
+            label: 'Supply Planning', icon: '🔗',
             services: [
                 { key: 'material-requirements', label: 'Material Reqs', icon: '📋', endpoint: '/50/MatReq', model: 'ScmMaterialRequirement' },
                 { key: 'distribution-requirements', label: 'Distribution Reqs', icon: '🔄', endpoint: '/50/DistReq', model: 'ScmDistributionRequirement' },
@@ -103,12 +81,6 @@ limitations under the License.
                 { key: 'lead-times', label: 'Lead Times', icon: '⏱️', endpoint: '/50/LeadTime', model: 'ScmLeadTime' }
             ]
         }
-    };
-
-    // Sub-module namespaces for service registry
-    SCM.submodules = ['Procurement', 'Inventory', 'WarehouseManagement', 'Logistics', 'ScmDemandPlanning', 'ScmSupplyPlanning'];
-
-    // Render status badge (delegates to shared utility)
-    SCM.renderStatus = Layer8DUtils.renderStatus;
-
-})();
+    },
+    submodules: ['Procurement', 'Inventory', 'WarehouseManagement', 'Logistics', 'ScmDemandPlanning', 'ScmSupplyPlanning']
+});

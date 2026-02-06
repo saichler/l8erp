@@ -19,96 +19,49 @@ limitations under the License.
 
     window.MfgEngineering = window.MfgEngineering || {};
 
-    const { renderDate } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = MfgEngineering.render;
     const enums = MfgEngineering.enums;
 
     MfgEngineering.columns = {
         MfgBom: [
-            { key: 'bomId', label: 'ID', sortKey: 'bomId', filterKey: 'bomId' },
-            { key: 'bomNumber', label: 'BOM #', sortKey: 'bomNumber', filterKey: 'bomNumber' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'revision', label: 'Rev', sortKey: 'revision' },
-            {
-                key: 'bomType',
-                label: 'Type',
-                sortKey: 'bomType',
-                render: (item) => enums.BOM_TYPE[item.bomType] || 'Unknown'
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.bomStatus(item.status)
-            }
+            ...col.id('bomId'),
+            ...col.basic([['bomNumber', 'BOM #'], ['itemId', 'Item'], 'description', 'revision']),
+            ...col.custom('bomType', 'Type', (item) => enums.BOM_TYPE[item.bomType] || 'Unknown'),
+            ...col.custom('status', 'Status', (item) => render.bomStatus(item.status))
         ],
 
         MfgBomLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'bomId', label: 'BOM', sortKey: 'bomId', filterKey: 'bomId' },
-            { key: 'componentItemId', label: 'Component', sortKey: 'componentItemId', filterKey: 'componentItemId' },
-            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            { key: 'unitOfMeasure', label: 'UOM', sortKey: 'unitOfMeasure' },
-            { key: 'sequenceNumber', label: 'Seq #', sortKey: 'sequenceNumber' }
+            ...col.id('lineId'),
+            ...col.basic([['bomId', 'BOM'], ['componentItemId', 'Component']]),
+            ...col.col('quantity', 'Qty'),
+            ...col.basic([['unitOfMeasure', 'UOM'], ['sequenceNumber', 'Seq #']])
         ],
 
         MfgRouting: [
-            { key: 'routingId', label: 'ID', sortKey: 'routingId', filterKey: 'routingId' },
-            { key: 'routingNumber', label: 'Routing #', sortKey: 'routingNumber', filterKey: 'routingNumber' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'revision', label: 'Rev', sortKey: 'revision' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.routingStatus(item.status)
-            }
+            ...col.id('routingId'),
+            ...col.basic([['routingNumber', 'Routing #'], ['itemId', 'Item'], 'description', 'revision']),
+            ...col.custom('status', 'Status', (item) => render.routingStatus(item.status))
         ],
 
         MfgRoutingOperation: [
-            { key: 'operationId', label: 'ID', sortKey: 'operationId', filterKey: 'operationId' },
-            { key: 'routingId', label: 'Routing', sortKey: 'routingId', filterKey: 'routingId' },
-            { key: 'operationNumber', label: 'Op #', sortKey: 'operationNumber' },
-            { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'setupTime', label: 'Setup (hrs)', sortKey: 'setupTime' },
-            { key: 'runTime', label: 'Run (hrs)', sortKey: 'runTime' }
+            ...col.id('operationId'),
+            ...col.basic([['routingId', 'Routing'], ['operationNumber', 'Op #'], ['workCenterId', 'Work Center'], 'description']),
+            ...col.basic([['setupTime', 'Setup (hrs)'], ['runTime', 'Run (hrs)']])
         ],
 
         MfgEngChangeOrder: [
-            { key: 'changeOrderId', label: 'ID', sortKey: 'changeOrderId', filterKey: 'changeOrderId' },
-            { key: 'ecoNumber', label: 'ECO #', sortKey: 'ecoNumber', filterKey: 'ecoNumber' },
-            { key: 'title', label: 'Title', sortKey: 'title' },
-            {
-                key: 'changeType',
-                label: 'Type',
-                sortKey: 'changeType',
-                render: (item) => enums.ECO_CHANGE_TYPE[item.changeType] || 'Unknown'
-            },
-            {
-                key: 'requestDate',
-                label: 'Request Date',
-                sortKey: 'requestDate',
-                render: (item) => renderDate(item.requestDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.ecoStatus(item.status)
-            }
+            ...col.id('changeOrderId'),
+            ...col.basic([['ecoNumber', 'ECO #'], 'title']),
+            ...col.custom('changeType', 'Type', (item) => enums.ECO_CHANGE_TYPE[item.changeType] || 'Unknown'),
+            ...col.date('requestDate', 'Request Date'),
+            ...col.custom('status', 'Status', (item) => render.ecoStatus(item.status))
         ],
 
         MfgEngChangeDetail: [
-            { key: 'detailId', label: 'ID', sortKey: 'detailId', filterKey: 'detailId' },
-            { key: 'changeOrderId', label: 'ECO', sortKey: 'changeOrderId', filterKey: 'changeOrderId' },
-            { key: 'affectedItemId', label: 'Item', sortKey: 'affectedItemId' },
-            { key: 'changeDescription', label: 'Change', sortKey: 'changeDescription' },
-            { key: 'oldValue', label: 'Old Value', sortKey: 'oldValue' },
-            { key: 'newValue', label: 'New Value', sortKey: 'newValue' }
+            ...col.id('detailId'),
+            ...col.basic([['changeOrderId', 'ECO'], ['affectedItemId', 'Item'], ['changeDescription', 'Change']]),
+            ...col.basic([['oldValue', 'Old Value'], ['newValue', 'New Value']])
         ]
     };
-
 })();

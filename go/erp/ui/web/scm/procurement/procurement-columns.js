@@ -18,163 +18,65 @@ limitations under the License.
 (function() {
     'use strict';
 
-    // Ensure Procurement namespace exists
     window.Procurement = window.Procurement || {};
 
-    const { renderDate, renderMoney } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = Procurement.render;
-
-    // ============================================================================
-    // COLUMN CONFIGURATIONS
-    // ============================================================================
 
     Procurement.columns = {
         ScmPurchaseRequisition: [
-            { key: 'requisitionId', label: 'ID', sortKey: 'requisitionId', filterKey: 'requisitionId' },
-            { key: 'requisitionNumber', label: 'Req #', sortKey: 'requisitionNumber', filterKey: 'requisitionNumber' },
-            { key: 'requesterId', label: 'Requester', sortKey: 'requesterId', filterKey: 'requesterId' },
-            {
-                key: 'requestDate',
-                label: 'Date',
-                sortKey: 'requestDate',
-                render: (item) => renderDate(item.requestDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.requisitionStatus(item.status)
-            },
-            {
-                key: 'estimatedTotal',
-                label: 'Est. Total',
-                sortKey: 'estimatedTotal',
-                render: (item) => renderMoney(item.estimatedTotal)
-            }
+            ...col.id('requisitionId'),
+            ...col.basic([['requisitionNumber', 'Req #'], ['requesterId', 'Requester']]),
+            ...col.date('requestDate', 'Date'),
+            ...col.custom('status', 'Status', (item) => render.requisitionStatus(item.status)),
+            ...col.money('estimatedTotal', 'Est. Total')
         ],
 
         ScmRequisitionLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'requisitionId', label: 'Requisition', sortKey: 'requisitionId', filterKey: 'requisitionId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            {
-                key: 'estimatedUnitPrice',
-                label: 'Unit Price',
-                sortKey: 'estimatedUnitPrice',
-                render: (item) => renderMoney(item.estimatedUnitPrice)
-            },
-            {
-                key: 'deliveryDate',
-                label: 'Delivery',
-                sortKey: 'deliveryDate',
-                render: (item) => renderDate(item.deliveryDate)
-            }
+            ...col.id('lineId'),
+            ...col.basic([['requisitionId', 'Requisition'], ['itemId', 'Item']]),
+            ...col.col('quantity', 'Qty'),
+            ...col.money('estimatedUnitPrice', 'Unit Price'),
+            ...col.date('deliveryDate', 'Delivery')
         ],
 
         ScmRequestForQuotation: [
-            { key: 'rfqId', label: 'ID', sortKey: 'rfqId', filterKey: 'rfqId' },
-            { key: 'rfqNumber', label: 'RFQ #', sortKey: 'rfqNumber', filterKey: 'rfqNumber' },
-            {
-                key: 'issueDate',
-                label: 'Issued',
-                sortKey: 'issueDate',
-                render: (item) => renderDate(item.issueDate)
-            },
-            {
-                key: 'responseDeadline',
-                label: 'Deadline',
-                sortKey: 'responseDeadline',
-                render: (item) => renderDate(item.responseDeadline)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.requisitionStatus(item.status)
-            }
+            ...col.id('rfqId'),
+            ...col.col('rfqNumber', 'RFQ #'),
+            ...col.date('issueDate', 'Issued'),
+            ...col.date('responseDeadline', 'Deadline'),
+            ...col.custom('status', 'Status', (item) => render.requisitionStatus(item.status))
         ],
 
         ScmPurchaseOrder: [
-            { key: 'purchaseOrderId', label: 'ID', sortKey: 'purchaseOrderId', filterKey: 'purchaseOrderId' },
-            { key: 'orderNumber', label: 'PO #', sortKey: 'orderNumber', filterKey: 'orderNumber' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            {
-                key: 'orderDate',
-                label: 'Order Date',
-                sortKey: 'orderDate',
-                render: (item) => renderDate(item.orderDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.poStatus(item.status)
-            },
-            {
-                key: 'totalAmount',
-                label: 'Total',
-                sortKey: 'totalAmount',
-                render: (item) => renderMoney(item.totalAmount)
-            }
+            ...col.id('purchaseOrderId'),
+            ...col.basic([['orderNumber', 'PO #'], ['vendorId', 'Vendor']]),
+            ...col.date('orderDate', 'Order Date'),
+            ...col.custom('status', 'Status', (item) => render.poStatus(item.status)),
+            ...col.money('totalAmount', 'Total')
         ],
 
         ScmPurchaseOrderLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'purchaseOrderId', label: 'PO', sortKey: 'purchaseOrderId', filterKey: 'purchaseOrderId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            {
-                key: 'unitPrice',
-                label: 'Unit Price',
-                sortKey: 'unitPrice',
-                render: (item) => renderMoney(item.unitPrice)
-            },
-            {
-                key: 'totalPrice',
-                label: 'Total',
-                sortKey: 'totalPrice',
-                render: (item) => renderMoney(item.totalPrice)
-            }
+            ...col.id('lineId'),
+            ...col.basic([['purchaseOrderId', 'PO'], ['itemId', 'Item']]),
+            ...col.col('quantity', 'Qty'),
+            ...col.money('unitPrice', 'Unit Price'),
+            ...col.money('totalPrice', 'Total')
         ],
 
         ScmBlanketOrder: [
-            { key: 'blanketOrderId', label: 'ID', sortKey: 'blanketOrderId', filterKey: 'blanketOrderId' },
-            { key: 'orderNumber', label: 'Order #', sortKey: 'orderNumber', filterKey: 'orderNumber' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            {
-                key: 'startDate',
-                label: 'Start',
-                sortKey: 'startDate',
-                render: (item) => renderDate(item.startDate)
-            },
-            {
-                key: 'endDate',
-                label: 'End',
-                sortKey: 'endDate',
-                render: (item) => renderDate(item.endDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.poStatus(item.status)
-            },
-            {
-                key: 'maxAmount',
-                label: 'Max Amount',
-                sortKey: 'maxAmount',
-                render: (item) => renderMoney(item.maxAmount)
-            }
+            ...col.id('blanketOrderId'),
+            ...col.basic([['orderNumber', 'Order #'], ['vendorId', 'Vendor']]),
+            ...col.date('startDate', 'Start'),
+            ...col.date('endDate', 'End'),
+            ...col.custom('status', 'Status', (item) => render.poStatus(item.status)),
+            ...col.money('maxAmount', 'Max Amount')
         ],
 
         ScmSupplierScorecard: [
-            { key: 'scorecardId', label: 'ID', sortKey: 'scorecardId', filterKey: 'scorecardId' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'qualityScore', label: 'Quality', sortKey: 'qualityScore' },
-            { key: 'deliveryScore', label: 'Delivery', sortKey: 'deliveryScore' },
-            { key: 'overallScore', label: 'Overall', sortKey: 'overallScore' }
+            ...col.id('scorecardId'),
+            ...col.col('vendorId', 'Vendor'),
+            ...col.basic([['qualityScore', 'Quality'], ['deliveryScore', 'Delivery'], ['overallScore', 'Overall']])
         ]
     };
-
 })();

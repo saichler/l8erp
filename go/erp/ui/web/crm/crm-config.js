@@ -2,14 +2,13 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
-(function() {
-    'use strict';
-    window.Crm = window.Crm || {};
 
-    Crm.modules = {
+// CRM Module Configuration - Uses Layer8ModuleConfigFactory
+Layer8ModuleConfigFactory.create({
+    namespace: 'Crm',
+    modules: {
         'leads': {
-            label: 'Leads',
-            icon: '🎯',
+            label: 'Leads', icon: '🎯',
             services: [
                 { key: 'leads', label: 'Leads', icon: '👤', endpoint: '/80/CrmLead', model: 'CrmLead' },
                 { key: 'lead-sources', label: 'Lead Sources', icon: '📥', endpoint: '/80/CrmLeadSrc', model: 'CrmLeadSource' },
@@ -20,8 +19,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'opportunities': {
-            label: 'Opportunities',
-            icon: '💼',
+            label: 'Opportunities', icon: '💼',
             services: [
                 { key: 'opportunities', label: 'Opportunities', icon: '💰', endpoint: '/80/CrmOpp', model: 'CrmOpportunity' },
                 { key: 'opp-stages', label: 'Sales Stages', icon: '📈', endpoint: '/80/CrmOppStg', model: 'CrmOppStage' },
@@ -32,8 +30,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'accounts': {
-            label: 'Accounts',
-            icon: '🏢',
+            label: 'Accounts', icon: '🏢',
             services: [
                 { key: 'accounts', label: 'Accounts', icon: '🏢', endpoint: '/80/CrmAcct', model: 'CrmAccount' },
                 { key: 'contacts', label: 'Contacts', icon: '👤', endpoint: '/80/CrmContact', model: 'CrmContact' },
@@ -44,8 +41,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'marketing': {
-            label: 'Marketing',
-            icon: '📣',
+            label: 'Marketing', icon: '📣',
             services: [
                 { key: 'campaigns', label: 'Campaigns', icon: '📢', endpoint: '/80/CrmCmpgn', model: 'CrmCampaign' },
                 { key: 'campaign-members', label: 'Members', icon: '👥', endpoint: '/80/CrmCmpgMbr', model: 'CrmCampaignMember' },
@@ -56,8 +52,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'service': {
-            label: 'Service',
-            icon: '🎧',
+            label: 'Service', icon: '🎧',
             services: [
                 { key: 'cases', label: 'Cases', icon: '📁', endpoint: '/80/CrmCase', model: 'CrmCase' },
                 { key: 'case-comments', label: 'Comments', icon: '💬', endpoint: '/80/CrmCaseCmt', model: 'CrmCaseComment' },
@@ -68,8 +63,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'fieldservice': {
-            label: 'Field Service',
-            icon: '🔧',
+            label: 'Field Service', icon: '🔧',
             services: [
                 { key: 'service-orders', label: 'Service Orders', icon: '📋', endpoint: '/80/CrmSvcOrd', model: 'CrmServiceOrder' },
                 { key: 'technicians', label: 'Technicians', icon: '👷', endpoint: '/80/CrmTech', model: 'CrmTechnician' },
@@ -79,7 +73,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 { key: 'service-visits', label: 'Visits', icon: '🚗', endpoint: '/80/CrmSvcVst', model: 'CrmServiceVisit' }
             ]
         }
-    };
-
-    Crm.submodules = ['CrmLeads', 'CrmOpportunities', 'CrmAccounts', 'CrmMarketing', 'CrmService', 'CrmFieldService'];
-})();
+    },
+    submodules: ['CrmLeads', 'CrmOpportunities', 'CrmAccounts', 'CrmMarketing', 'CrmService', 'CrmFieldService']
+});

@@ -2,14 +2,13 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
-(function() {
-    'use strict';
-    window.Bi = window.Bi || {};
 
-    Bi.modules = {
+// BI Module Configuration - Uses Layer8ModuleConfigFactory
+Layer8ModuleConfigFactory.create({
+    namespace: 'Bi',
+    modules: {
         'reporting': {
-            label: 'Reporting',
-            icon: '📊',
+            label: 'Reporting', icon: '📊',
             services: [
                 { key: 'reports', label: 'Reports', icon: '📋', endpoint: '/35/BiReport', model: 'BiReport' },
                 { key: 'report-templates', label: 'Report Templates', icon: '📄', endpoint: '/35/BiRptTpl', model: 'BiReportTemplate' },
@@ -20,8 +19,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'dashboards': {
-            label: 'Dashboards',
-            icon: '📈',
+            label: 'Dashboards', icon: '📈',
             services: [
                 { key: 'dashboards', label: 'Dashboards', icon: '🖥️', endpoint: '/35/BiDashbrd', model: 'BiDashboard' },
                 { key: 'dashboard-widgets', label: 'Widgets', icon: '🧩', endpoint: '/35/BiWidget', model: 'BiDashboardWidget' },
@@ -32,8 +30,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'analytics': {
-            label: 'Analytics',
-            icon: '📉',
+            label: 'Analytics', icon: '📉',
             services: [
                 { key: 'data-cubes', label: 'Data Cubes', icon: '🧊', endpoint: '/35/BiCube', model: 'BiDataCube' },
                 { key: 'analysis-models', label: 'Analysis Models', icon: '🔬', endpoint: '/35/BiAnaModel', model: 'BiAnalysisModel' },
@@ -44,8 +41,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'datamanagement': {
-            label: 'Data Management',
-            icon: '🗄️',
+            label: 'Data Management', icon: '🗄️',
             services: [
                 { key: 'data-sources', label: 'Data Sources', icon: '🔌', endpoint: '/35/BiDataSrc', model: 'BiDataSource' },
                 { key: 'etl-jobs', label: 'ETL Jobs', icon: '⚙️', endpoint: '/35/BiETLJob', model: 'BiETLJob' },
@@ -55,7 +51,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 { key: 'data-governances', label: 'Data Governance', icon: '📜', endpoint: '/35/BiDataGov', model: 'BiDataGovernance' }
             ]
         }
-    };
-
-    Bi.submodules = ['BiReporting', 'BiDashboards', 'BiAnalytics', 'BiDataManagement'];
-})();
+    },
+    submodules: ['BiReporting', 'BiDashboards', 'BiAnalytics', 'BiDataManagement']
+});

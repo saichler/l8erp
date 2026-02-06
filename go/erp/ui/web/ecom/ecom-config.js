@@ -2,14 +2,13 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
-(function() {
-    'use strict';
-    window.Ecom = window.Ecom || {};
 
-    Ecom.modules = {
+// E-Commerce Module Configuration - Uses Layer8ModuleConfigFactory
+Layer8ModuleConfigFactory.create({
+    namespace: 'Ecom',
+    modules: {
         'catalog': {
-            label: 'Catalog',
-            icon: '📦',
+            label: 'Catalog', icon: '📦',
             services: [
                 { key: 'products', label: 'Products', icon: '🏷️', endpoint: '/100/EcomProd', model: 'EcomProduct' },
                 { key: 'categories', label: 'Categories', icon: '📂', endpoint: '/100/EcomCat', model: 'EcomCategory' },
@@ -19,8 +18,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'orders': {
-            label: 'Orders',
-            icon: '🛒',
+            label: 'Orders', icon: '🛒',
             services: [
                 { key: 'orders', label: 'Orders', icon: '📋', endpoint: '/100/EcomOrder', model: 'EcomOrder' },
                 { key: 'order-lines', label: 'Order Lines', icon: '📝', endpoint: '/100/EcomOrdLn', model: 'EcomOrderLine' },
@@ -30,8 +28,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'customers': {
-            label: 'Customers',
-            icon: '👥',
+            label: 'Customers', icon: '👥',
             services: [
                 { key: 'customers', label: 'Customers', icon: '👤', endpoint: '/100/EcomCust', model: 'EcomCustomer' },
                 { key: 'addresses', label: 'Addresses', icon: '📍', endpoint: '/100/EcomAddr', model: 'EcomCustomerAddress' },
@@ -41,8 +38,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'promotions': {
-            label: 'Promotions',
-            icon: '🎉',
+            label: 'Promotions', icon: '🎉',
             services: [
                 { key: 'promotions', label: 'Promotions', icon: '📢', endpoint: '/100/EcomPromo', model: 'EcomPromotion' },
                 { key: 'coupons', label: 'Coupons', icon: '🎟️', endpoint: '/100/EcomCoupon', model: 'EcomCoupon' },
@@ -51,7 +47,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 { key: 'payment-methods', label: 'Payment Methods', icon: '💳', endpoint: '/100/EcomPay', model: 'EcomPaymentMethod' }
             ]
         }
-    };
-
-    Ecom.submodules = ['EcomCatalog', 'EcomOrders', 'EcomCustomers', 'EcomPromotions'];
-})();
+    },
+    submodules: ['EcomCatalog', 'EcomOrders', 'EcomCustomers', 'EcomPromotions']
+});

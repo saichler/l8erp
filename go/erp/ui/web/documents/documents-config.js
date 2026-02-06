@@ -2,14 +2,13 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
-(function() {
-    'use strict';
-    window.Doc = window.Doc || {};
 
-    Doc.modules = {
+// Documents Module Configuration - Uses Layer8ModuleConfigFactory
+Layer8ModuleConfigFactory.create({
+    namespace: 'Doc',
+    modules: {
         'storage': {
-            label: 'Storage',
-            icon: '📄',
+            label: 'Storage', icon: '📄',
             services: [
                 { key: 'documents', label: 'Documents', icon: '📄', endpoint: '/45/DocDoc', model: 'DocDocument' },
                 { key: 'folders', label: 'Folders', icon: '📁', endpoint: '/45/DocFolder', model: 'DocFolder' },
@@ -19,8 +18,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'workflow': {
-            label: 'Workflow',
-            icon: '🔄',
+            label: 'Workflow', icon: '🔄',
             services: [
                 { key: 'checkouts', label: 'Checkouts', icon: '🔓', endpoint: '/45/DocChkout', model: 'DocCheckout' },
                 { key: 'approval-workflows', label: 'Approvals', icon: '✅', endpoint: '/45/DocAprvWf', model: 'DocApprovalWorkflow' },
@@ -30,8 +28,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'integration': {
-            label: 'Integration',
-            icon: '🔗',
+            label: 'Integration', icon: '🔗',
             services: [
                 { key: 'attachments', label: 'Attachments', icon: '📎', endpoint: '/45/DocAttach', model: 'DocAttachment' },
                 { key: 'templates', label: 'Templates', icon: '📋', endpoint: '/45/DocTmpl', model: 'DocTemplate' },
@@ -41,8 +38,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]
         },
         'compliance': {
-            label: 'Compliance',
-            icon: '🛡️',
+            label: 'Compliance', icon: '🛡️',
             services: [
                 { key: 'retention-policies', label: 'Retention', icon: '📅', endpoint: '/45/DocRetPol', model: 'DocRetentionPolicy' },
                 { key: 'legal-holds', label: 'Legal Holds', icon: '⚖️', endpoint: '/45/DocLglHold', model: 'DocLegalHold' },
@@ -51,7 +47,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 { key: 'audit-trails', label: 'Audit Trails', icon: '🔍', endpoint: '/45/DocAudit', model: 'DocAuditTrail' }
             ]
         }
-    };
-
-    Doc.submodules = ['DocStorage', 'DocWorkflow', 'DocIntegration', 'DocCompliance'];
-})();
+    },
+    submodules: ['DocStorage', 'DocWorkflow', 'DocIntegration', 'DocCompliance']
+});
