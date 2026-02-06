@@ -8,7 +8,7 @@ echo "Building ERP"
 go build -o ../../demo/erp_demo
 cd ../ui
 echo "Building ui"
-go build -o ../../demo/ui_demo main.go shared.go
+go build -o ../../demo/ui_demo main.go shared.go shared_crm.go shared_fin.go shared_mfg.go shared_other.go shared_prj.go shared_sales.go shared_scm.go
 cp -r ./web ../../demo/.
 cd ../../demo
 ./vnet_demo &

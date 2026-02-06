@@ -1,0 +1,220 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+*/
+/**
+ * ERP Form Data Handling
+ * Handles form data collection, validation, and CRUD operations
+ */
+(function() {
+    'use strict';
+
+    const { parseDateToTimestamp } = Layer8DUtils;
+
+    // ========================================
+    // FORM DATA HANDLING
+    // ========================================
+
+    function collectFormData(formDef) {
+        const form = document.getElementById('layer8d-edit-form');
+        if (!form) return null;
+
+        const data = {};
+
+        formDef.sections.forEach(section => {
+            section.fields.forEach(field => {
+                const element = form.elements[field.key];
+                if (!element) return;
+
+                let value;
+                switch (field.type) {
+                    case 'checkbox':
+                        value = element.checked;
+                        break;
+                    case 'number':
+                        value = element.value ? parseFloat(element.value) : null;
+                        break;
+                    case 'date':
+                        const dateVal = (element.value || '').trim().toLowerCase();
+                        if (dateVal === 'current' || dateVal === 'n/a' || element.dataset.isZero === 'true') {
+                            value = 0;
+                        } else if (dateVal === '') {
+                            value = null;
+                        } else {
+                            value = parseDateToTimestamp(element.value);
+                        }
+                        break;
+                    case 'select':
+                        if (element.value) {
+                            const numVal = parseInt(element.value, 10);
+                            value = isNaN(numVal) ? element.value : numVal;
+                        } else {
+                            value = null;
+                        }
+                        break;
+                    case 'reference':
+                        const refId = element.dataset.refId;
+                        if (refId) {
+                            const numRefId = parseInt(refId, 10);
+                            value = isNaN(numRefId) ? refId : numRefId;
+                        } else {
+                            value = null;
+                        }
+                        break;
+
+                    // String formatted types
+                    case 'ssn':
+                    case 'phone':
+                    case 'routingNumber':
+                    case 'ein':
+                    case 'email':
+                    case 'url':
+                    case 'colorCode':
+                        if (typeof Layer8DInputFormatter !== 'undefined') {
+                            value = Layer8DInputFormatter.getValue(element);
+                        } else {
+                            value = element.dataset.rawValue || element.value || null;
+                        }
+                        break;
+
+                    case 'currency':
+                        if (typeof Layer8DInputFormatter !== 'undefined') {
+                            const cents = Layer8DInputFormatter.getValue(element);
+                            value = cents !== null && cents !== '' ? parseInt(cents, 10) : null;
+                        } else if (element.dataset.rawValue) {
+                            value = parseInt(element.dataset.rawValue, 10);
+                            if (isNaN(value)) value = null;
+                        } else {
+                            value = null;
+                        }
+                        break;
+
+                    case 'percentage':
+                        if (typeof Layer8DInputFormatter !== 'undefined') {
+                            const pct = Layer8DInputFormatter.getValue(element);
+                            value = pct !== null && pct !== '' ? parseFloat(pct) : null;
+                        } else if (element.dataset.rawValue) {
+                            value = parseFloat(element.dataset.rawValue);
+                            if (isNaN(value)) value = null;
+                        } else {
+                            value = null;
+                        }
+                        break;
+
+                    case 'rating':
+                        if (typeof Layer8DInputFormatter !== 'undefined') {
+                            const rating = Layer8DInputFormatter.getValue(element);
+                            value = rating !== null && rating !== '' ? parseInt(rating, 10) : null;
+                        } else {
+                            value = element.value ? parseInt(element.value, 10) : null;
+                            if (isNaN(value)) value = null;
+                        }
+                        break;
+
+                    case 'hours':
+                        if (typeof Layer8DInputFormatter !== 'undefined') {
+                            const minutes = Layer8DInputFormatter.getValue(element);
+                            value = minutes !== null && minutes !== '' ? parseInt(minutes, 10) : null;
+                        } else {
+                            value = element.value || null;
+                        }
+                        break;
+
+                    default:
+                        value = element.value || null;
+                }
+
+                if (value !== null && value !== '') {
+                    data[field.key] = value;
+                }
+            });
+        });
+
+        return data;
+    }
+
+    function validateFormData(formDef, data) {
+        const errors = [];
+
+        formDef.sections.forEach(section => {
+            section.fields.forEach(field => {
+                if (field.required) {
+                    const value = data[field.key];
+                    if (value === null || value === undefined || value === '') {
+                        errors.push({ field: field.key, message: `${field.label} is required` });
+                    }
+                }
+            });
+        });
+
+        return errors;
+    }
+
+    // ========================================
+    // CRUD OPERATIONS
+    // ========================================
+
+    async function fetchRecord(endpoint, primaryKey, id, modelName) {
+        const query = encodeURIComponent(JSON.stringify({
+            text: `select * from ${modelName} where ${primaryKey}=${id}`
+        }));
+
+        const response = await fetch(`${endpoint}?body=${query}`, {
+            method: 'GET',
+            headers: typeof getAuthHeaders === 'function' ? getAuthHeaders() : {}
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch record');
+
+        const result = await response.json();
+        return result.list && result.list.length > 0 ? result.list[0] : null;
+    }
+
+    async function saveRecord(endpoint, data, isEdit = false) {
+        const method = isEdit ? 'PUT' : 'POST';
+
+        const response = await fetch(endpoint, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                ...(typeof getAuthHeaders === 'function' ? getAuthHeaders() : {})
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText || 'Failed to save record');
+        }
+        return await response.json();
+    }
+
+    async function deleteRecord(endpoint, id, primaryKey, modelName) {
+        const query = {
+            text: `select * from ${modelName} where ${primaryKey}=${id}`
+        };
+
+        const response = await fetch(endpoint, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(typeof getAuthHeaders === 'function' ? getAuthHeaders() : {})
+            },
+            body: JSON.stringify(query)
+        });
+
+        if (!response.ok) throw new Error('Failed to delete record');
+        return true;
+    }
+
+    // Export
+    window.Layer8DFormsData = {
+        collectFormData,
+        validateFormData,
+        fetchRecord,
+        saveRecord,
+        deleteRecord
+    };
+
+})();

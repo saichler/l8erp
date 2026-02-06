@@ -126,6 +126,66 @@ limitations under the License.
                 <div class="nav-stat-label">WOs In Progress</div>
             </div>
         </div>
+
+        <!-- BI KPIs -->
+        <div class="nav-stat-card">
+            <div class="nav-stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+            </div>
+            <div class="nav-stat-content">
+                <div class="nav-stat-value" id="stat-dashboards">-</div>
+                <div class="nav-stat-label">Dashboards</div>
+            </div>
+        </div>
+
+        <!-- Documents KPIs -->
+        <div class="nav-stat-card">
+            <div class="nav-stat-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+            </div>
+            <div class="nav-stat-content">
+                <div class="nav-stat-value" id="stat-documents">-</div>
+                <div class="nav-stat-label">Documents</div>
+            </div>
+        </div>
+
+        <!-- E-Commerce KPIs -->
+        <div class="nav-stat-card">
+            <div class="nav-stat-icon success">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+            </div>
+            <div class="nav-stat-content">
+                <div class="nav-stat-value" id="stat-ecom-orders">-</div>
+                <div class="nav-stat-label">E-Com Orders</div>
+            </div>
+        </div>
+
+        <!-- Compliance KPIs -->
+        <div class="nav-stat-card">
+            <div class="nav-stat-icon warning">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <polyline points="9 12 11 14 15 10"></polyline>
+                </svg>
+            </div>
+            <div class="nav-stat-content">
+                <div class="nav-stat-value" id="stat-incidents">-</div>
+                <div class="nav-stat-label">Incidents</div>
+            </div>
+        </div>
     </div>
 
     <!-- Dynamic Navigation Content -->
@@ -157,7 +217,11 @@ async function loadDashboardStats() {
         { id: 'stat-projects', endpoint: '/90/PrjProj', query: 'select * from PrjProject where status=2 limit 1 page 0' },
         { id: 'stat-invoices', endpoint: '/40/SalesInv', query: 'select * from SalesInvoice where status=1 limit 1 page 0' },
         { id: 'stat-pos', endpoint: '/50/PurchOrder', query: 'select * from ScmPurchaseOrder where status=1 limit 1 page 0' },
-        { id: 'stat-wos', endpoint: '/70/MfgWorkOrd', query: 'select * from MfgWorkOrder where status=2 limit 1 page 0' }
+        { id: 'stat-wos', endpoint: '/70/MfgWorkOrd', query: 'select * from MfgWorkOrder where status=2 limit 1 page 0' },
+        { id: 'stat-dashboards', endpoint: '/35/BiDashbrd', query: 'select * from BiDashboard where status=2 limit 1 page 0' },
+        { id: 'stat-documents', endpoint: '/45/DocDoc', query: 'select * from DocDocument limit 1 page 0' },
+        { id: 'stat-ecom-orders', endpoint: '/100/EcomOrder', query: 'select * from EcomOrder where status=1 limit 1 page 0' },
+        { id: 'stat-incidents', endpoint: '/110/CompIncdnt', query: 'select * from CompIncident where status=1 limit 1 page 0' }
     ];
 
     // Load all KPIs in parallel

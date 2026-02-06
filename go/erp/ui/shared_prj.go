@@ -1,0 +1,90 @@
+package main
+
+import (
+	"github.com/saichler/l8erp/go/types/prj"
+	"github.com/saichler/l8types/go/ifs"
+)
+
+func registerPrjTypes(resources ifs.IResources) {
+	// Planning
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjProject{}, "ProjectId")
+	resources.Registry().Register(&prj.PrjProjectList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjProjectTemplate{}, "TemplateId")
+	resources.Registry().Register(&prj.PrjProjectTemplateList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjPhase{}, "PhaseId")
+	resources.Registry().Register(&prj.PrjPhaseList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjTask{}, "TaskId")
+	resources.Registry().Register(&prj.PrjTaskList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjMilestone{}, "MilestoneId")
+	resources.Registry().Register(&prj.PrjMilestoneList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjDeliverable{}, "DeliverableId")
+	resources.Registry().Register(&prj.PrjDeliverableList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjDependency{}, "DependencyId")
+	resources.Registry().Register(&prj.PrjDependencyList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjRisk{}, "RiskId")
+	resources.Registry().Register(&prj.PrjRiskList{})
+
+	// Resources
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjResourcePool{}, "PoolId")
+	resources.Registry().Register(&prj.PrjResourcePoolList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjResource{}, "ResourceId")
+	resources.Registry().Register(&prj.PrjResourceList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjResourceSkill{}, "SkillId")
+	resources.Registry().Register(&prj.PrjResourceSkillList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjAllocation{}, "AllocationId")
+	resources.Registry().Register(&prj.PrjAllocationList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjBooking{}, "BookingId")
+	resources.Registry().Register(&prj.PrjBookingList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjCapacityPlan{}, "PlanId")
+	resources.Registry().Register(&prj.PrjCapacityPlanList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjUtilization{}, "UtilizationId")
+	resources.Registry().Register(&prj.PrjUtilizationList{})
+
+	// Time & Expense
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjTimesheet{}, "TimesheetId")
+	resources.Registry().Register(&prj.PrjTimesheetList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjTimesheetEntry{}, "EntryId")
+	resources.Registry().Register(&prj.PrjTimesheetEntryList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjExpenseReport{}, "ReportId")
+	resources.Registry().Register(&prj.PrjExpenseReportList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjExpenseEntry{}, "EntryId")
+	resources.Registry().Register(&prj.PrjExpenseEntryList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjApprovalRule{}, "RuleId")
+	resources.Registry().Register(&prj.PrjApprovalRuleList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjExpenseCategory{}, "CategoryId")
+	resources.Registry().Register(&prj.PrjExpenseCategoryList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjExpensePolicy{}, "PolicyId")
+	resources.Registry().Register(&prj.PrjExpensePolicyList{})
+
+	// Billing
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjBillingRate{}, "RateId")
+	resources.Registry().Register(&prj.PrjBillingRateList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjBillingSchedule{}, "ScheduleId")
+	resources.Registry().Register(&prj.PrjBillingScheduleList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjBillingMilestone{}, "MilestoneId")
+	resources.Registry().Register(&prj.PrjBillingMilestoneList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjProjectInvoice{}, "InvoiceId")
+	resources.Registry().Register(&prj.PrjProjectInvoiceList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjInvoiceLine{}, "LineId")
+	resources.Registry().Register(&prj.PrjInvoiceLineList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjRevenueRecognition{}, "RecognitionId")
+	resources.Registry().Register(&prj.PrjRevenueRecognitionList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjProjectBudget{}, "BudgetId")
+	resources.Registry().Register(&prj.PrjProjectBudgetList{})
+
+	// Analytics
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjStatusReport{}, "StatusId")
+	resources.Registry().Register(&prj.PrjStatusReportList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjEarnedValue{}, "EarnedValueId")
+	resources.Registry().Register(&prj.PrjEarnedValueList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjBudgetVariance{}, "VarianceId")
+	resources.Registry().Register(&prj.PrjBudgetVarianceList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjResourceForecast{}, "ForecastId")
+	resources.Registry().Register(&prj.PrjResourceForecastList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjPortfolioView{}, "ViewId")
+	resources.Registry().Register(&prj.PrjPortfolioViewList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjProjectKPI{}, "KpiId")
+	resources.Registry().Register(&prj.PrjProjectKPIList{})
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&prj.PrjProjectIssue{}, "IssueId")
+	resources.Registry().Register(&prj.PrjProjectIssueList{})
+}

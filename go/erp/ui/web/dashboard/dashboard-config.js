@@ -96,6 +96,46 @@ window.DashboardConfig = {
             query: 'select * from MfgWorkOrder where status=2 limit 1 page 0',
             section: 'manufacturing',
             countField: 'Total'
+        },
+        {
+            id: 'active-dashboards',
+            label: 'Active Dashboards',
+            icon: 'bi',
+            endpoint: '/35/BiDashbrd',
+            model: 'BiDashboard',
+            query: 'select * from BiDashboard where status=2 limit 1 page 0',
+            section: 'bi',
+            countField: 'Total'
+        },
+        {
+            id: 'total-documents',
+            label: 'Total Documents',
+            icon: 'documents',
+            endpoint: '/45/DocDoc',
+            model: 'DocDocument',
+            query: 'select * from DocDocument limit 1 page 0',
+            section: 'documents',
+            countField: 'Total'
+        },
+        {
+            id: 'ecom-orders',
+            label: 'E-Commerce Orders',
+            icon: 'ecommerce',
+            endpoint: '/100/EcomOrder',
+            model: 'EcomOrder',
+            query: 'select * from EcomOrder where status=1 limit 1 page 0',
+            section: 'ecommerce',
+            countField: 'Total'
+        },
+        {
+            id: 'open-incidents',
+            label: 'Open Incidents',
+            icon: 'compliance',
+            endpoint: '/110/CompIncdnt',
+            model: 'CompIncident',
+            query: 'select * from CompIncident where status=1 limit 1 page 0',
+            section: 'compliance',
+            countField: 'Total'
         }
     ],
 
@@ -137,6 +177,26 @@ window.DashboardConfig = {
         success: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
             <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>`,
+        bi: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>`,
+        documents: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>`,
+        ecommerce: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>`,
+        compliance: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <polyline points="9 12 11 14 15 10"></polyline>
         </svg>`
     }
 };

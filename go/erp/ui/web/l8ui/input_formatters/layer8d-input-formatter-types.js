@@ -14,124 +14,24 @@ limitations under the License.
 */
 /**
  * ERP Input Formatter - Type Definitions
- * Defines formatting rules for each field type (ssn, phone, currency, etc.)
+ * Defines formatting rules for each field type
+ *
+ * Split files:
+ * - layer8d-input-formatter-types-validators.js: SSN, Phone, Routing, EIN, Email, URL, Color
  */
 (function() {
     'use strict';
 
-    const { utils, masks } = Layer8DInputFormatter;
+    const { utils } = Layer8DInputFormatter;
+
+    // Import validator types
+    const validatorTypes = window.Layer8DInputFormatterValidators || {};
 
     // ========================================
-    // TYPE DEFINITIONS
+    // NUMERIC TYPE DEFINITIONS
     // ========================================
 
-    const FORMATTER_TYPES = {
-
-        // ----------------------------------------
-        // SSN: XXX-XX-XXXX
-        // ----------------------------------------
-        ssn: {
-            mask: '###-##-####',
-            placeholder: '___-__-____',
-
-            format(raw) {
-                if (!raw) return '';
-                const digits = utils.extractDigits(raw);
-                return masks.applyMask(digits, this.mask);
-            },
-
-            parse(formatted) {
-                return utils.extractDigits(formatted);
-            },
-
-            validate(raw) {
-                const digits = utils.extractDigits(raw);
-                const errors = [];
-
-                if (digits.length === 0) {
-                    return { valid: true, errors: [] }; // Empty is valid (required is separate)
-                }
-
-                if (digits.length !== 9) {
-                    errors.push('SSN must be 9 digits');
-                }
-
-                // Check for invalid SSN patterns
-                if (digits.length === 9) {
-                    const area = digits.substring(0, 3);
-                    const group = digits.substring(3, 5);
-                    const serial = digits.substring(5, 9);
-
-                    // Area number cannot be 000, 666, or 900-999
-                    if (area === '000' || area === '666' || area.startsWith('9')) {
-                        errors.push('Invalid SSN area number');
-                    }
-                    // Group number cannot be 00
-                    if (group === '00') {
-                        errors.push('Invalid SSN group number');
-                    }
-                    // Serial number cannot be 0000
-                    if (serial === '0000') {
-                        errors.push('Invalid SSN serial number');
-                    }
-                }
-
-                return { valid: errors.length === 0, errors };
-            },
-
-            // For display in tables (masked for privacy)
-            formatDisplay(value, masked = true) {
-                const formatted = this.format(value);
-                if (!formatted || !masked) return formatted;
-                // Show only last 4 digits: XXX-XX-1234
-                return '***-**-' + formatted.slice(-4);
-            }
-        },
-
-        // ----------------------------------------
-        // Phone: (XXX) XXX-XXXX
-        // ----------------------------------------
-        phone: {
-            mask: '(###) ###-####',
-            placeholder: '(___) ___-____',
-
-            format(raw) {
-                if (!raw) return '';
-                const digits = utils.extractDigits(raw);
-                return masks.applyMask(digits, this.mask);
-            },
-
-            parse(formatted) {
-                return utils.extractDigits(formatted);
-            },
-
-            validate(raw) {
-                const digits = utils.extractDigits(raw);
-                const errors = [];
-
-                if (digits.length === 0) {
-                    return { valid: true, errors: [] };
-                }
-
-                if (digits.length !== 10) {
-                    errors.push('Phone number must be 10 digits');
-                }
-
-                // Check for invalid area codes (cannot start with 0 or 1)
-                if (digits.length >= 3) {
-                    const areaCode = digits.substring(0, 3);
-                    if (areaCode[0] === '0' || areaCode[0] === '1') {
-                        errors.push('Invalid area code');
-                    }
-                }
-
-                return { valid: errors.length === 0, errors };
-            },
-
-            formatDisplay(value) {
-                return this.format(value);
-            }
-        },
+    const NUMERIC_TYPES = {
 
         // ----------------------------------------
         // Currency: $X,XXX.XX (stored in cents)
@@ -144,22 +44,18 @@ limitations under the License.
                 if (cents === null || cents === undefined || cents === '') return '';
                 const { symbol = this.symbol, decimals = this.decimals } = options;
 
-                // Convert cents to dollars
                 const dollars = Number(cents) / Math.pow(10, decimals);
                 if (isNaN(dollars)) return '';
 
-                // Format with commas and decimals
                 const formatted = utils.formatWithCommas(dollars, decimals);
                 return symbol + formatted;
             },
 
             parse(formatted) {
                 if (!formatted) return null;
-                // Remove all non-numeric except decimal and minus
                 const cleaned = formatted.replace(/[^0-9.\-]/g, '');
                 const num = parseFloat(cleaned);
                 if (isNaN(num)) return null;
-                // Convert to cents
                 return Math.round(num * Math.pow(10, this.decimals));
             },
 
@@ -245,200 +141,6 @@ limitations under the License.
         },
 
         // ----------------------------------------
-        // Bank Routing Number: 9 digits with ABA checksum
-        // ----------------------------------------
-        routingNumber: {
-            mask: '#########',
-
-            format(raw) {
-                if (!raw) return '';
-                return utils.extractDigits(raw).substring(0, 9);
-            },
-
-            parse(formatted) {
-                return utils.extractDigits(formatted);
-            },
-
-            validate(raw) {
-                const digits = utils.extractDigits(raw);
-                const errors = [];
-
-                if (digits.length === 0) {
-                    return { valid: true, errors: [] };
-                }
-
-                if (digits.length !== 9) {
-                    errors.push('Routing number must be 9 digits');
-                    return { valid: false, errors };
-                }
-
-                // ABA checksum validation
-                // Formula: 3(d1 + d4 + d7) + 7(d2 + d5 + d8) + (d3 + d6 + d9) mod 10 = 0
-                const d = digits.split('').map(Number);
-                const checksum = (
-                    3 * (d[0] + d[3] + d[6]) +
-                    7 * (d[1] + d[4] + d[7]) +
-                    (d[2] + d[5] + d[8])
-                ) % 10;
-
-                if (checksum !== 0) {
-                    errors.push('Invalid routing number checksum');
-                }
-
-                return { valid: errors.length === 0, errors };
-            },
-
-            formatDisplay(value) {
-                return this.format(value);
-            }
-        },
-
-        // ----------------------------------------
-        // EIN (Tax ID): XX-XXXXXXX
-        // ----------------------------------------
-        ein: {
-            mask: '##-#######',
-            placeholder: '__-_______',
-
-            format(raw) {
-                if (!raw) return '';
-                const digits = utils.extractDigits(raw);
-                return masks.applyMask(digits, this.mask);
-            },
-
-            parse(formatted) {
-                return utils.extractDigits(formatted);
-            },
-
-            validate(raw) {
-                const digits = utils.extractDigits(raw);
-                const errors = [];
-
-                if (digits.length === 0) {
-                    return { valid: true, errors: [] };
-                }
-
-                if (digits.length !== 9) {
-                    errors.push('EIN must be 9 digits');
-                }
-
-                return { valid: errors.length === 0, errors };
-            },
-
-            formatDisplay(value) {
-                return this.format(value);
-            }
-        },
-
-        // ----------------------------------------
-        // Email
-        // ----------------------------------------
-        email: {
-            format(raw) {
-                if (!raw) return '';
-                // Lowercase email addresses
-                return String(raw).toLowerCase().trim();
-            },
-
-            parse(formatted) {
-                return formatted ? formatted.toLowerCase().trim() : '';
-            },
-
-            validate(value) {
-                const errors = [];
-
-                if (!value) {
-                    return { valid: true, errors: [] };
-                }
-
-                if (!utils.isValidEmail(value)) {
-                    errors.push('Invalid email format');
-                }
-
-                return { valid: errors.length === 0, errors };
-            },
-
-            formatDisplay(value) {
-                return this.format(value);
-            }
-        },
-
-        // ----------------------------------------
-        // URL
-        // ----------------------------------------
-        url: {
-            format(raw) {
-                if (!raw) return '';
-                let url = String(raw).trim();
-                // Auto-add https:// if no protocol
-                if (url && !url.match(/^https?:\/\//i)) {
-                    url = 'https://' + url;
-                }
-                return url;
-            },
-
-            parse(formatted) {
-                return formatted ? formatted.trim() : '';
-            },
-
-            validate(value) {
-                const errors = [];
-
-                if (!value) {
-                    return { valid: true, errors: [] };
-                }
-
-                if (!utils.isValidUrl(value)) {
-                    errors.push('Invalid URL format');
-                }
-
-                return { valid: errors.length === 0, errors };
-            },
-
-            formatDisplay(value) {
-                return this.format(value);
-            }
-        },
-
-        // ----------------------------------------
-        // Color Code (Hex)
-        // ----------------------------------------
-        colorCode: {
-            format(raw) {
-                if (!raw) return '';
-                let color = String(raw).trim().toUpperCase();
-                // Ensure # prefix
-                if (color && !color.startsWith('#')) {
-                    color = '#' + color;
-                }
-                return color;
-            },
-
-            parse(formatted) {
-                if (!formatted) return '';
-                return formatted.replace('#', '').toUpperCase();
-            },
-
-            validate(value) {
-                const errors = [];
-
-                if (!value) {
-                    return { valid: true, errors: [] };
-                }
-
-                if (!utils.isValidHexColor(value)) {
-                    errors.push('Invalid hex color code');
-                }
-
-                return { valid: errors.length === 0, errors };
-            },
-
-            formatDisplay(value) {
-                return this.format(value);
-            }
-        },
-
-        // ----------------------------------------
         // Rating (1-5)
         // ----------------------------------------
         rating: {
@@ -491,7 +193,6 @@ limitations under the License.
             format(raw) {
                 if (raw === null || raw === undefined || raw === '') return '';
 
-                // If raw is a number (minutes), convert to HH:MM
                 if (typeof raw === 'number' || !isNaN(raw)) {
                     const totalMinutes = parseInt(raw, 10);
                     const hours = Math.floor(totalMinutes / 60);
@@ -499,14 +200,12 @@ limitations under the License.
                     return `${hours}:${String(minutes).padStart(2, '0')}`;
                 }
 
-                // If raw is already HH:MM format
                 return raw;
             },
 
             parse(formatted) {
                 if (!formatted) return null;
 
-                // Parse HH:MM to minutes
                 const match = formatted.match(/^(\d+):(\d{2})$/);
                 if (match) {
                     const hours = parseInt(match[1], 10);
@@ -514,7 +213,6 @@ limitations under the License.
                     return hours * 60 + minutes;
                 }
 
-                // If just a number, treat as hours
                 const num = parseFloat(formatted);
                 return isNaN(num) ? null : Math.round(num * 60);
             },
@@ -526,7 +224,6 @@ limitations under the License.
                     return { valid: true, errors: [] };
                 }
 
-                // Check HH:MM format
                 if (typeof value === 'string' && value.includes(':')) {
                     const match = value.match(/^(\d+):(\d{2})$/);
                     if (!match) {
@@ -549,32 +246,26 @@ limitations under the License.
     };
 
     // ========================================
+    // MERGE ALL TYPES
+    // ========================================
+
+    const FORMATTER_TYPES = {
+        ...validatorTypes,
+        ...NUMERIC_TYPES
+    };
+
+    // ========================================
     // TYPE REGISTRY HELPERS
     // ========================================
 
-    /**
-     * Get a formatter type definition
-     * @param {string} typeName
-     * @returns {Object|null}
-     */
     function getType(typeName) {
         return FORMATTER_TYPES[typeName] || null;
     }
 
-    /**
-     * Check if a formatter type exists
-     * @param {string} typeName
-     * @returns {boolean}
-     */
     function hasType(typeName) {
         return typeName in FORMATTER_TYPES;
     }
 
-    /**
-     * Register a custom formatter type
-     * @param {string} typeName
-     * @param {Object} config
-     */
     function registerType(typeName, config) {
         if (FORMATTER_TYPES[typeName]) {
             console.warn(`Overwriting existing formatter type: ${typeName}`);
@@ -582,10 +273,6 @@ limitations under the License.
         FORMATTER_TYPES[typeName] = config;
     }
 
-    /**
-     * Get all available type names
-     * @returns {string[]}
-     */
     function getTypeNames() {
         return Object.keys(FORMATTER_TYPES);
     }

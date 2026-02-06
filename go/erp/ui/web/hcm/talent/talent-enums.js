@@ -12,9 +12,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-// Talent Management Module - Enum Definitions and Render Functions
-// Part 1 of 4 - Load this file first
-
+/**
+ * Talent Management Module - Enum Definitions and Render Functions
+ *
+ * Split files:
+ * - talent-enums-recruiting.js: Requisition, Applicant, Application enums
+ * - talent-enums-performance.js: Reviews, Goals, Feedback, Succession enums
+ */
 (function() {
     'use strict';
 
@@ -25,182 +29,13 @@ limitations under the License.
     const { escapeHtml, formatDate } = Layer8DUtils;
     const { renderEnum, createStatusRenderer, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
 
+    // Import from split files
+    const recruiting = window.TalentEnumsRecruiting;
+    const performance = window.TalentEnumsPerformance;
+
     // ============================================================================
-    // ENUM DEFINITIONS
+    // ONBOARDING ENUMS (kept in main file)
     // ============================================================================
-
-    const REQUISITION_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Pending Approval',
-        3: 'Approved',
-        4: 'Open',
-        5: 'On Hold',
-        6: 'Filled',
-        7: 'Cancelled',
-        8: 'Closed'
-    };
-
-    const REQUISITION_STATUS_VALUES = {
-        'draft': 1,
-        'pending': 2,
-        'approval': 2,
-        'approved': 3,
-        'open': 4,
-        'hold': 5,
-        'filled': 6,
-        'cancelled': 7,
-        'closed': 8
-    };
-
-    const REQUISITION_STATUS_CLASSES = {
-        1: 'layer8d-status-inactive',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-active',
-        5: 'layer8d-status-pending',
-        6: 'layer8d-status-active',
-        7: 'layer8d-status-terminated',
-        8: 'layer8d-status-inactive'
-    };
-
-    const REQUISITION_TYPE = {
-        0: 'Unspecified',
-        1: 'New Position',
-        2: 'Replacement',
-        3: 'Expansion',
-        4: 'Temporary',
-        5: 'Intern'
-    };
-
-    const REQUISITION_TYPE_VALUES = {
-        'new': 1,
-        'position': 1,
-        'replacement': 2,
-        'expansion': 3,
-        'temporary': 4,
-        'temp': 4,
-        'intern': 5
-    };
-
-    const APPLICANT_SOURCE = {
-        0: 'Unspecified',
-        1: 'Career Site',
-        2: 'LinkedIn',
-        3: 'Indeed',
-        4: 'Glassdoor',
-        5: 'Referral',
-        6: 'Agency',
-        7: 'University',
-        8: 'Job Fair',
-        9: 'Internal',
-        10: 'Other'
-    };
-
-    const APPLICANT_SOURCE_VALUES = {
-        'career': 1,
-        'site': 1,
-        'linkedin': 2,
-        'indeed': 3,
-        'glassdoor': 4,
-        'referral': 5,
-        'agency': 6,
-        'university': 7,
-        'fair': 8,
-        'internal': 9,
-        'other': 10
-    };
-
-    const APPLICATION_STATUS = {
-        0: 'Unspecified',
-        1: 'New',
-        2: 'In Review',
-        3: 'Interviewing',
-        4: 'Offer Pending',
-        5: 'Offer Extended',
-        6: 'Hired',
-        7: 'Rejected',
-        8: 'Withdrawn'
-    };
-
-    const APPLICATION_STATUS_VALUES = {
-        'new': 1,
-        'review': 2,
-        'interviewing': 3,
-        'offer': 4,
-        'pending': 4,
-        'extended': 5,
-        'hired': 6,
-        'rejected': 7,
-        'withdrawn': 8
-    };
-
-    const APPLICATION_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-pending',
-        5: 'layer8d-status-active',
-        6: 'layer8d-status-active',
-        7: 'layer8d-status-terminated',
-        8: 'layer8d-status-inactive'
-    };
-
-    const APPLICATION_STAGE = {
-        0: 'Unspecified',
-        1: 'Screening',
-        2: 'Phone Screen',
-        3: 'Interview 1',
-        4: 'Interview 2',
-        5: 'Final Interview',
-        6: 'Reference Check',
-        7: 'Background Check',
-        8: 'Offer',
-        9: 'Closed'
-    };
-
-    const APPLICATION_STAGE_VALUES = {
-        'screening': 1,
-        'phone': 2,
-        'interview1': 3,
-        'interview2': 4,
-        'final': 5,
-        'reference': 6,
-        'background': 7,
-        'offer': 8,
-        'closed': 9
-    };
-
-    const DISPOSITION_REASON = {
-        0: 'Unspecified',
-        1: 'Under Qualified',
-        2: 'Over Qualified',
-        3: 'Better Candidate',
-        4: 'Compensation Mismatch',
-        5: 'Failed Interview',
-        6: 'Failed Background',
-        7: 'Withdrew',
-        8: 'Declined Offer',
-        9: 'Position Filled',
-        10: 'Position Cancelled',
-        11: 'No Show'
-    };
-
-    const DISPOSITION_REASON_VALUES = {
-        'under': 1,
-        'qualified': 1,
-        'over': 2,
-        'better': 3,
-        'compensation': 4,
-        'failed': 5,
-        'interview': 5,
-        'background': 6,
-        'withdrew': 7,
-        'declined': 8,
-        'filled': 9,
-        'cancelled': 10,
-        'noshow': 11
-    };
 
     const ONBOARDING_TASK_CATEGORY = {
         0: 'Unspecified',
@@ -271,262 +106,17 @@ limitations under the License.
         5: 'layer8d-status-terminated'
     };
 
-    const PERFORMANCE_REVIEW_STATUS = {
-        0: 'Unspecified',
-        1: 'Not Started',
-        2: 'Self Review',
-        3: 'Manager Review',
-        4: 'Calibration',
-        5: 'HR Review',
-        6: 'Acknowledgment',
-        7: 'Completed'
-    };
-
-    const PERFORMANCE_REVIEW_STATUS_VALUES = {
-        'not': 1,
-        'started': 1,
-        'self': 2,
-        'manager': 3,
-        'calibration': 4,
-        'hr': 5,
-        'acknowledgment': 6,
-        'completed': 7
-    };
-
-    const PERFORMANCE_REVIEW_STATUS_CLASSES = {
-        1: 'layer8d-status-inactive',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-pending',
-        5: 'layer8d-status-pending',
-        6: 'layer8d-status-pending',
-        7: 'layer8d-status-active'
-    };
-
-    const REVIEW_TYPE = {
-        0: 'Unspecified',
-        1: 'Annual',
-        2: 'Semi-Annual',
-        3: 'Quarterly',
-        4: 'Probationary',
-        5: 'Project',
-        6: 'Ad Hoc'
-    };
-
-    const REVIEW_TYPE_VALUES = {
-        'annual': 1,
-        'semi': 2,
-        'quarterly': 3,
-        'probationary': 4,
-        'probation': 4,
-        'project': 5,
-        'adhoc': 6
-    };
-
-    const GOAL_TYPE = {
-        0: 'Unspecified',
-        1: 'Individual',
-        2: 'Team',
-        3: 'Department',
-        4: 'Company'
-    };
-
-    const GOAL_TYPE_VALUES = {
-        'individual': 1,
-        'team': 2,
-        'department': 3,
-        'dept': 3,
-        'company': 4
-    };
-
-    const GOAL_CATEGORY = {
-        0: 'Unspecified',
-        1: 'Performance',
-        2: 'Development',
-        3: 'Career',
-        4: 'Project'
-    };
-
-    const GOAL_CATEGORY_VALUES = {
-        'performance': 1,
-        'development': 2,
-        'career': 3,
-        'project': 4
-    };
-
-    const GOAL_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Active',
-        3: 'On Track',
-        4: 'At Risk',
-        5: 'Behind',
-        6: 'Completed',
-        7: 'Cancelled'
-    };
-
-    const GOAL_STATUS_VALUES = {
-        'draft': 1,
-        'active': 2,
-        'track': 3,
-        'risk': 4,
-        'behind': 5,
-        'completed': 6,
-        'cancelled': 7
-    };
-
-    const GOAL_STATUS_CLASSES = {
-        1: 'layer8d-status-inactive',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-pending',
-        5: 'layer8d-status-terminated',
-        6: 'layer8d-status-active',
-        7: 'layer8d-status-inactive'
-    };
-
-    const GOAL_PRIORITY = {
-        0: 'Unspecified',
-        1: 'Low',
-        2: 'Medium',
-        3: 'High',
-        4: 'Critical'
-    };
-
-    const GOAL_PRIORITY_VALUES = {
-        'low': 1,
-        'medium': 2,
-        'med': 2,
-        'high': 3,
-        'critical': 4
-    };
-
-    const SUCCESSION_PLAN_STATUS = {
-        0: 'Unspecified',
-        1: 'Draft',
-        2: 'Active',
-        3: 'On Hold',
-        4: 'Closed'
-    };
-
-    const SUCCESSION_PLAN_STATUS_VALUES = {
-        'draft': 1,
-        'active': 2,
-        'hold': 3,
-        'closed': 4
-    };
-
-    const SUCCESSION_PLAN_STATUS_CLASSES = {
-        1: 'layer8d-status-inactive',
-        2: 'layer8d-status-active',
-        3: 'layer8d-status-pending',
-        4: 'layer8d-status-inactive'
-    };
-
-    const RISK_LEVEL = {
-        0: 'Unspecified',
-        1: 'Low',
-        2: 'Medium',
-        3: 'High',
-        4: 'Critical'
-    };
-
-    const RISK_LEVEL_VALUES = {
-        'low': 1,
-        'medium': 2,
-        'med': 2,
-        'high': 3,
-        'critical': 4
-    };
-
-    const READINESS_LEVEL = {
-        0: 'Unspecified',
-        1: 'Ready Now',
-        2: 'Ready in 1 Year',
-        3: 'Ready in 2 Years',
-        4: 'Ready in 3+ Years'
-    };
-
-    const READINESS_LEVEL_VALUES = {
-        'now': 1,
-        'ready': 1,
-        '1': 2,
-        '2': 3,
-        '3': 4
-    };
-
-    const FEEDBACK_TYPE = {
-        0: 'Unspecified',
-        1: '360 Review',
-        2: 'Peer',
-        3: 'Upward',
-        4: 'Continuous',
-        5: 'Recognition'
-    };
-
-    const FEEDBACK_TYPE_VALUES = {
-        '360': 1,
-        'review': 1,
-        'peer': 2,
-        'upward': 3,
-        'continuous': 4,
-        'recognition': 5
-    };
-
-    const FEEDBACK_RELATIONSHIP = {
-        0: 'Unspecified',
-        1: 'Manager',
-        2: 'Peer',
-        3: 'Direct Report',
-        4: 'Skip Level',
-        5: 'Cross Functional',
-        6: 'External'
-    };
-
-    const FEEDBACK_RELATIONSHIP_VALUES = {
-        'manager': 1,
-        'peer': 2,
-        'direct': 3,
-        'report': 3,
-        'skip': 4,
-        'cross': 5,
-        'functional': 5,
-        'external': 6
-    };
-
-    const FEEDBACK_STATUS = {
-        0: 'Unspecified',
-        1: 'Requested',
-        2: 'In Progress',
-        3: 'Submitted',
-        4: 'Declined'
-    };
-
-    const FEEDBACK_STATUS_VALUES = {
-        'requested': 1,
-        'progress': 2,
-        'submitted': 3,
-        'declined': 4
-    };
-
-    const FEEDBACK_STATUS_CLASSES = {
-        1: 'layer8d-status-pending',
-        2: 'layer8d-status-pending',
-        3: 'layer8d-status-active',
-        4: 'layer8d-status-terminated'
-    };
-
     // ============================================================================
     // STATUS RENDERERS (using shared factory)
     // ============================================================================
 
-    const renderRequisitionStatus = createStatusRenderer(REQUISITION_STATUS, REQUISITION_STATUS_CLASSES);
-    const renderApplicationStatus = createStatusRenderer(APPLICATION_STATUS, APPLICATION_STATUS_CLASSES);
+    const renderRequisitionStatus = createStatusRenderer(recruiting.REQUISITION_STATUS, recruiting.REQUISITION_STATUS_CLASSES);
+    const renderApplicationStatus = createStatusRenderer(recruiting.APPLICATION_STATUS, recruiting.APPLICATION_STATUS_CLASSES);
     const renderOnboardingTaskStatus = createStatusRenderer(ONBOARDING_TASK_STATUS, ONBOARDING_TASK_STATUS_CLASSES);
-    const renderPerformanceReviewStatus = createStatusRenderer(PERFORMANCE_REVIEW_STATUS, PERFORMANCE_REVIEW_STATUS_CLASSES);
-    const renderGoalStatus = createStatusRenderer(GOAL_STATUS, GOAL_STATUS_CLASSES);
-    const renderSuccessionPlanStatus = createStatusRenderer(SUCCESSION_PLAN_STATUS, SUCCESSION_PLAN_STATUS_CLASSES);
-    const renderFeedbackStatus = createStatusRenderer(FEEDBACK_STATUS, FEEDBACK_STATUS_CLASSES);
+    const renderPerformanceReviewStatus = createStatusRenderer(performance.PERFORMANCE_REVIEW_STATUS, performance.PERFORMANCE_REVIEW_STATUS_CLASSES);
+    const renderGoalStatus = createStatusRenderer(performance.GOAL_STATUS, performance.GOAL_STATUS_CLASSES);
+    const renderSuccessionPlanStatus = createStatusRenderer(performance.SUCCESSION_PLAN_STATUS, performance.SUCCESSION_PLAN_STATUS_CLASSES);
+    const renderFeedbackStatus = createStatusRenderer(performance.FEEDBACK_STATUS, performance.FEEDBACK_STATUS_CLASSES);
 
     // ============================================================================
     // MODULE-SPECIFIC RENDER HELPERS
@@ -539,7 +129,7 @@ limitations under the License.
             3: '#ef4444',  // High - red
             4: '#7c3aed'   // Critical - purple
         };
-        const label = GOAL_PRIORITY[priority] || 'Unknown';
+        const label = performance.GOAL_PRIORITY[priority] || 'Unknown';
         const color = priorityColors[priority] || '#64748b';
         return `<span style="color: ${color}; font-weight: 500;">${escapeHtml(label)}</span>`;
     }
@@ -551,7 +141,7 @@ limitations under the License.
             3: '#ef4444',  // High - red
             4: '#7c3aed'   // Critical - purple
         };
-        const label = RISK_LEVEL[risk] || 'Unknown';
+        const label = performance.RISK_LEVEL[risk] || 'Unknown';
         const color = riskColors[risk] || '#64748b';
         return `<span style="color: ${color}; font-weight: 500;">${escapeHtml(label)}</span>`;
     }
@@ -563,7 +153,7 @@ limitations under the License.
             3: '#f59e0b',  // 2 Years - amber
             4: '#ef4444'   // 3+ Years - red
         };
-        const label = READINESS_LEVEL[readiness] || 'Unknown';
+        const label = performance.READINESS_LEVEL[readiness] || 'Unknown';
         const color = readinessColors[readiness] || '#64748b';
         return `<span style="color: ${color}; font-weight: 500;">${escapeHtml(label)}</span>`;
     }
@@ -586,75 +176,80 @@ limitations under the License.
     }
 
     // ============================================================================
-    // EXPORT ENUMS TO NAMESPACE
+    // EXPORT MERGED ENUMS TO NAMESPACE
     // ============================================================================
 
     window.Talent.enums = {
-        REQUISITION_STATUS,
-        REQUISITION_STATUS_VALUES,
-        REQUISITION_TYPE,
-        REQUISITION_TYPE_VALUES,
-        APPLICANT_SOURCE,
-        APPLICANT_SOURCE_VALUES,
-        APPLICATION_STATUS,
-        APPLICATION_STATUS_VALUES,
-        APPLICATION_STAGE,
-        APPLICATION_STAGE_VALUES,
-        DISPOSITION_REASON,
-        DISPOSITION_REASON_VALUES,
+        // Recruiting enums (from split file)
+        REQUISITION_STATUS: recruiting.REQUISITION_STATUS,
+        REQUISITION_STATUS_VALUES: recruiting.REQUISITION_STATUS_VALUES,
+        REQUISITION_TYPE: recruiting.REQUISITION_TYPE,
+        REQUISITION_TYPE_VALUES: recruiting.REQUISITION_TYPE_VALUES,
+        APPLICANT_SOURCE: recruiting.APPLICANT_SOURCE,
+        APPLICANT_SOURCE_VALUES: recruiting.APPLICANT_SOURCE_VALUES,
+        APPLICATION_STATUS: recruiting.APPLICATION_STATUS,
+        APPLICATION_STATUS_VALUES: recruiting.APPLICATION_STATUS_VALUES,
+        APPLICATION_STAGE: recruiting.APPLICATION_STAGE,
+        APPLICATION_STAGE_VALUES: recruiting.APPLICATION_STAGE_VALUES,
+        DISPOSITION_REASON: recruiting.DISPOSITION_REASON,
+        DISPOSITION_REASON_VALUES: recruiting.DISPOSITION_REASON_VALUES,
+
+        // Onboarding enums (local)
         ONBOARDING_TASK_CATEGORY,
         ONBOARDING_TASK_CATEGORY_VALUES,
         TASK_OWNER,
         TASK_OWNER_VALUES,
         ONBOARDING_TASK_STATUS,
         ONBOARDING_TASK_STATUS_VALUES,
-        PERFORMANCE_REVIEW_STATUS,
-        PERFORMANCE_REVIEW_STATUS_VALUES,
-        REVIEW_TYPE,
-        REVIEW_TYPE_VALUES,
-        GOAL_TYPE,
-        GOAL_TYPE_VALUES,
-        GOAL_CATEGORY,
-        GOAL_CATEGORY_VALUES,
-        GOAL_STATUS,
-        GOAL_STATUS_VALUES,
-        GOAL_PRIORITY,
-        GOAL_PRIORITY_VALUES,
-        SUCCESSION_PLAN_STATUS,
-        SUCCESSION_PLAN_STATUS_VALUES,
-        RISK_LEVEL,
-        RISK_LEVEL_VALUES,
-        READINESS_LEVEL,
-        READINESS_LEVEL_VALUES,
-        FEEDBACK_TYPE,
-        FEEDBACK_TYPE_VALUES,
-        FEEDBACK_RELATIONSHIP,
-        FEEDBACK_RELATIONSHIP_VALUES,
-        FEEDBACK_STATUS,
-        FEEDBACK_STATUS_VALUES
+
+        // Performance enums (from split file)
+        PERFORMANCE_REVIEW_STATUS: performance.PERFORMANCE_REVIEW_STATUS,
+        PERFORMANCE_REVIEW_STATUS_VALUES: performance.PERFORMANCE_REVIEW_STATUS_VALUES,
+        REVIEW_TYPE: performance.REVIEW_TYPE,
+        REVIEW_TYPE_VALUES: performance.REVIEW_TYPE_VALUES,
+        GOAL_TYPE: performance.GOAL_TYPE,
+        GOAL_TYPE_VALUES: performance.GOAL_TYPE_VALUES,
+        GOAL_CATEGORY: performance.GOAL_CATEGORY,
+        GOAL_CATEGORY_VALUES: performance.GOAL_CATEGORY_VALUES,
+        GOAL_STATUS: performance.GOAL_STATUS,
+        GOAL_STATUS_VALUES: performance.GOAL_STATUS_VALUES,
+        GOAL_PRIORITY: performance.GOAL_PRIORITY,
+        GOAL_PRIORITY_VALUES: performance.GOAL_PRIORITY_VALUES,
+        SUCCESSION_PLAN_STATUS: performance.SUCCESSION_PLAN_STATUS,
+        SUCCESSION_PLAN_STATUS_VALUES: performance.SUCCESSION_PLAN_STATUS_VALUES,
+        RISK_LEVEL: performance.RISK_LEVEL,
+        RISK_LEVEL_VALUES: performance.RISK_LEVEL_VALUES,
+        READINESS_LEVEL: performance.READINESS_LEVEL,
+        READINESS_LEVEL_VALUES: performance.READINESS_LEVEL_VALUES,
+        FEEDBACK_TYPE: performance.FEEDBACK_TYPE,
+        FEEDBACK_TYPE_VALUES: performance.FEEDBACK_TYPE_VALUES,
+        FEEDBACK_RELATIONSHIP: performance.FEEDBACK_RELATIONSHIP,
+        FEEDBACK_RELATIONSHIP_VALUES: performance.FEEDBACK_RELATIONSHIP_VALUES,
+        FEEDBACK_STATUS: performance.FEEDBACK_STATUS,
+        FEEDBACK_STATUS_VALUES: performance.FEEDBACK_STATUS_VALUES
     };
 
     window.Talent.render = {
         requisitionStatus: renderRequisitionStatus,
-        requisitionType: (v) => renderEnum(v, REQUISITION_TYPE),
-        applicantSource: (v) => renderEnum(v, APPLICANT_SOURCE),
+        requisitionType: (v) => renderEnum(v, recruiting.REQUISITION_TYPE),
+        applicantSource: (v) => renderEnum(v, recruiting.APPLICANT_SOURCE),
         applicationStatus: renderApplicationStatus,
-        applicationStage: (v) => renderEnum(v, APPLICATION_STAGE),
-        dispositionReason: (v) => renderEnum(v, DISPOSITION_REASON),
+        applicationStage: (v) => renderEnum(v, recruiting.APPLICATION_STAGE),
+        dispositionReason: (v) => renderEnum(v, recruiting.DISPOSITION_REASON),
         onboardingTaskCategory: (v) => renderEnum(v, ONBOARDING_TASK_CATEGORY),
         taskOwner: (v) => renderEnum(v, TASK_OWNER),
         onboardingTaskStatus: renderOnboardingTaskStatus,
         performanceReviewStatus: renderPerformanceReviewStatus,
-        reviewType: (v) => renderEnum(v, REVIEW_TYPE),
-        goalType: (v) => renderEnum(v, GOAL_TYPE),
-        goalCategory: (v) => renderEnum(v, GOAL_CATEGORY),
+        reviewType: (v) => renderEnum(v, performance.REVIEW_TYPE),
+        goalType: (v) => renderEnum(v, performance.GOAL_TYPE),
+        goalCategory: (v) => renderEnum(v, performance.GOAL_CATEGORY),
         goalStatus: renderGoalStatus,
         goalPriority: renderGoalPriority,
         successionPlanStatus: renderSuccessionPlanStatus,
         riskLevel: renderRiskLevel,
         readinessLevel: renderReadinessLevel,
-        feedbackType: (v) => renderEnum(v, FEEDBACK_TYPE),
-        feedbackRelationship: (v) => renderEnum(v, FEEDBACK_RELATIONSHIP),
+        feedbackType: (v) => renderEnum(v, performance.FEEDBACK_TYPE),
+        feedbackRelationship: (v) => renderEnum(v, performance.FEEDBACK_RELATIONSHIP),
         feedbackStatus: renderFeedbackStatus,
         money: renderMoney,
         boolean: renderBoolean,

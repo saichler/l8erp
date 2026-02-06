@@ -1,13 +1,20 @@
 FROM saichler/builder:latest AS build
 
-COPY main.go /home/src/github.com/saichler/build/main.go
-COPY main2.go /home/src/github.com/saichler/build/main2.go
-COPY shared.go /home/src/github.com/saichler/build/shared.go
+COPY main.go /home/src/github.com/saichler/build/
+COPY main2.go /home/src/github.com/saichler/build/
+COPY shared.go /home/src/github.com/saichler/build/
+COPY shared_crm.go /home/src/github.com/saichler/build/
+COPY shared_fin.go /home/src/github.com/saichler/build/
+COPY shared_mfg.go /home/src/github.com/saichler/build/
+COPY shared_other.go /home/src/github.com/saichler/build/
+COPY shared_prj.go /home/src/github.com/saichler/build/
+COPY shared_sales.go /home/src/github.com/saichler/build/
+COPY shared_scm.go /home/src/github.com/saichler/build/
 
 RUN go mod init
 RUN GOPROXY=direct GOPRIVATE=github.com go mod tidy
-RUN go build -o erpweb main.go shared.go
-RUN go build -o erpweb2 main2.go shared.go
+RUN go build -o erpweb main.go shared.go shared_crm.go shared_fin.go shared_mfg.go shared_other.go shared_prj.go shared_sales.go shared_scm.go
+RUN go build -o erpweb2 main2.go shared.go shared_crm.go shared_fin.go shared_mfg.go shared_other.go shared_prj.go shared_sales.go shared_scm.go
 
 FROM saichler/erp-security:latest AS final
 COPY --from=build /home/src/github.com/saichler/build/erpweb /home/run/erpweb
