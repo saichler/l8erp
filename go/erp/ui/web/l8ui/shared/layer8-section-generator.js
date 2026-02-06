@@ -75,7 +75,7 @@ limitations under the License.
             }
 
             return `
-<div class="section-container hcm-section">
+<div class="section-container l8-section">
     ${this._generateHeader(config)}
     ${this._generateModuleTabs(config)}
     <div class="section-content">
@@ -95,16 +95,16 @@ ${this._generateInitScript(config)}
             const svgContent = config.svgContent || this._generateDefaultSvg(gradientId);
 
             return `
-    <div class="hcm-header-frame parallax-container">
-        <div class="hcm-header-bg parallax-layer" data-speed="0.5">
+    <div class="l8-header-frame parallax-container">
+        <div class="l8-header-bg parallax-layer" data-speed="0.5">
             ${svgContent}
         </div>
-        <div class="hcm-header-content parallax-layer" data-speed="1">
-            <div class="hcm-header-title">
-                <div class="hcm-icon">${config.icon || '📊'}</div>
+        <div class="l8-header-content parallax-layer" data-speed="1">
+            <div class="l8-header-title">
+                <div class="l8-icon">${config.icon || '📊'}</div>
                 <div>
-                    <h1 class="hcm-title">${config.title}</h1>
-                    <p class="hcm-subtitle">${config.subtitle || ''}</p>
+                    <h1 class="l8-title">${config.title}</h1>
+                    <p class="l8-subtitle">${config.subtitle || ''}</p>
                 </div>
             </div>
         </div>
@@ -117,7 +117,7 @@ ${this._generateInitScript(config)}
          */
         _generateDefaultSvg: function(gradientId) {
             return `
-            <svg class="hcm-illustration" viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg">
+            <svg class="l8-illustration" viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <linearGradient id="${gradientId}" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:0.4" />
@@ -155,14 +155,14 @@ ${this._generateInitScript(config)}
             const tabs = config.modules.map(mod => {
                 const activeClass = mod.isDefault ? ' active' : '';
                 return `
-        <button class="hcm-module-tab${activeClass}" data-module="${mod.key}">
+        <button class="l8-module-tab${activeClass}" data-module="${mod.key}">
             <span class="tab-icon">${mod.icon || '📁'}</span>
             <span class="tab-label">${mod.label}</span>
         </button>`;
             }).join('');
 
             return `
-    <div class="hcm-module-tabs">
+    <div class="l8-module-tabs">
         ${tabs}
     </div>`;
         },
@@ -179,7 +179,7 @@ ${this._generateInitScript(config)}
             return config.modules.map(mod => {
                 const activeClass = mod.isDefault ? ' active' : '';
                 return `
-        <div class="hcm-module-content${activeClass}" data-module="${mod.key}">
+        <div class="l8-module-content${activeClass}" data-module="${mod.key}">
             ${this._generateSubnav(mod)}
             ${this._generateServiceViews(mod)}
         </div>`;
@@ -198,14 +198,14 @@ ${this._generateInitScript(config)}
             const items = mod.services.map(svc => {
                 const activeClass = svc.isDefault ? ' active' : '';
                 return `
-                <a class="hcm-subnav-item${activeClass}" data-service="${svc.key}">
+                <a class="l8-subnav-item${activeClass}" data-service="${svc.key}">
                     <span class="subnav-icon">${svc.icon || '📋'}</span>
                     <span class="subnav-label">${svc.label}</span>
                 </a>`;
             }).join('');
 
             return `
-            <nav class="hcm-subnav">
+            <nav class="l8-subnav">
                 ${items}
             </nav>`;
         },
@@ -223,13 +223,13 @@ ${this._generateInitScript(config)}
                 const activeClass = svc.isDefault ? ' active' : '';
                 const containerId = `${mod.key}-${svc.key}-table-container`;
                 return `
-                <div class="hcm-service-view${activeClass}" data-service="${svc.key}">
-                    <div class="hcm-table-container" id="${containerId}"></div>
+                <div class="l8-service-view${activeClass}" data-service="${svc.key}">
+                    <div class="l8-table-container" id="${containerId}"></div>
                 </div>`;
             }).join('');
 
             return `
-            <div class="hcm-service-content">
+            <div class="l8-service-content">
                 ${views}
             </div>`;
         },

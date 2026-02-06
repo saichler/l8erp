@@ -71,3 +71,6 @@ window.Layer8MReferenceRegistryMFG = {
     ...refMfgM.simple('MfgOverhead', 'overheadId', 'name', 'Overhead'),
     ...refMfgM.idOnly('MfgOverheadAlloc', 'allocationId')
 };
+
+// Register with the central registry
+Layer8MReferenceRegistry.register(window.Layer8MReferenceRegistryMFG);

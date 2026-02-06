@@ -18,7 +18,7 @@ limitations under the License.
 (function() {
     'use strict';
 
-    // Internal registry: { HCM: ['CoreHR', 'Payroll', ...], FIN: [...], SCM: [...] }
+    // Internal registry: { Module1: ['SubMod1', 'SubMod2', ...], Module2: [...] }
     const _registry = {};
 
     // Default columns when no sub-module provides a configuration
@@ -102,7 +102,7 @@ limitations under the License.
         moduleNS._state.serviceTables[tableId] = table;
     }
 
-    // Get list of registered parent module names (e.g., ['HCM', 'FIN', 'SCM', 'L8Sys'])
+    // Get list of registered parent module names
     function getRegisteredModules() {
         return Object.keys(_registry);
     }

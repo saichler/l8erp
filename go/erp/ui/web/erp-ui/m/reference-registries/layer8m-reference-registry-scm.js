@@ -79,3 +79,6 @@ window.Layer8MReferenceRegistrySCM = {
     ...refScmM.idOnly('ScmSafetyStock', 'safetyStockId'),
     ...refScmM.idOnly('ScmLeadTime', 'leadTimeId')
 };
+
+// Register with the central registry
+Layer8MReferenceRegistry.register(window.Layer8MReferenceRegistrySCM);

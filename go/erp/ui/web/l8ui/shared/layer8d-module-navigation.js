@@ -36,7 +36,7 @@ limitations under the License.
 
             // Get section container by finding first module content element
             moduleNS._state.sectionEl = document.querySelector(
-                `.hcm-module-content[data-module="${config.sectionSelector}"]`
+                `.l8-module-content[data-module="${config.sectionSelector}"]`
             );
             if (moduleNS._state.sectionEl) {
                 moduleNS._state.sectionEl = moduleNS._state.sectionEl.closest('.section-container');
@@ -53,7 +53,7 @@ limitations under the License.
 
         // Setup module tab click handlers
         moduleNS._setupModuleTabs = function() {
-            const tabs = moduleNS._state.sectionEl.querySelectorAll('.hcm-module-tab');
+            const tabs = moduleNS._state.sectionEl.querySelectorAll('.l8-module-tab');
             tabs.forEach(tab => {
                 tab.addEventListener('click', (e) => {
                     const moduleKey = tab.dataset.module;
@@ -68,11 +68,11 @@ limitations under the License.
 
             moduleNS._state.currentModule = moduleKey;
 
-            moduleNS._state.sectionEl.querySelectorAll('.hcm-module-tab').forEach(tab => {
+            moduleNS._state.sectionEl.querySelectorAll('.l8-module-tab').forEach(tab => {
                 tab.classList.toggle('active', tab.dataset.module === moduleKey);
             });
 
-            moduleNS._state.sectionEl.querySelectorAll('.hcm-module-content').forEach(content => {
+            moduleNS._state.sectionEl.querySelectorAll('.l8-module-content').forEach(content => {
                 content.classList.toggle('active', content.dataset.module === moduleKey);
             });
 
@@ -86,13 +86,13 @@ limitations under the License.
 
         // Setup sub-navigation click handlers
         moduleNS._setupSubNavigation = function() {
-            moduleNS._state.sectionEl.querySelectorAll('.hcm-subnav').forEach(subnav => {
+            moduleNS._state.sectionEl.querySelectorAll('.l8-subnav').forEach(subnav => {
                 subnav.addEventListener('click', (e) => {
-                    const item = e.target.closest('.hcm-subnav-item');
+                    const item = e.target.closest('.l8-subnav-item');
                     if (!item) return;
 
                     const serviceKey = item.dataset.service;
-                    const moduleKey = item.closest('.hcm-module-content').dataset.module;
+                    const moduleKey = item.closest('.l8-module-content').dataset.module;
 
                     moduleNS._state.currentService = serviceKey;
                     moduleNS._updateSubNavActive(serviceKey, moduleKey);
@@ -104,10 +104,10 @@ limitations under the License.
         // Update sub-navigation active state
         moduleNS._updateSubNavActive = function(serviceKey, moduleKey) {
             moduleKey = moduleKey || moduleNS._state.currentModule;
-            const moduleContent = moduleNS._state.sectionEl.querySelector(`.hcm-module-content[data-module="${moduleKey}"]`);
+            const moduleContent = moduleNS._state.sectionEl.querySelector(`.l8-module-content[data-module="${moduleKey}"]`);
             if (!moduleContent) return;
 
-            moduleContent.querySelectorAll('.hcm-subnav-item').forEach(item => {
+            moduleContent.querySelectorAll('.l8-subnav-item').forEach(item => {
                 item.classList.toggle('active', item.dataset.service === serviceKey);
             });
         };
@@ -120,10 +120,10 @@ limitations under the License.
             const service = module.services.find(s => s.key === serviceKey);
             if (!service) return;
 
-            const moduleContent = moduleNS._state.sectionEl.querySelector(`.hcm-module-content[data-module="${moduleKey}"]`);
+            const moduleContent = moduleNS._state.sectionEl.querySelector(`.l8-module-content[data-module="${moduleKey}"]`);
             if (!moduleContent) return;
 
-            moduleContent.querySelectorAll('.hcm-service-view').forEach(view => {
+            moduleContent.querySelectorAll('.l8-service-view').forEach(view => {
                 view.classList.toggle('active', view.dataset.service === serviceKey);
             });
 

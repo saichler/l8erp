@@ -15,48 +15,24 @@ limitations under the License.
 /**
  * Mobile Reference Registry
  * Central configuration for all reference/lookup fields.
- * Desktop Equivalent: shared/reference-registry.js
- *
- * This file combines module-specific registries from:
- * - layer8m-reference-registry-hcm.js
- * - layer8m-reference-registry-scm.js
- * - layer8m-reference-registry-crm.js
- * - layer8m-reference-registry-prj.js
- * - layer8m-reference-registry-mfg.js
- * - layer8m-reference-registry-sales.js
- * - layer8m-reference-registry-ecom.js
- *
- * This must match the desktop Layer8DReferenceRegistry EXACTLY.
+ * Generic container - projects register their model definitions via register().
  */
 (function() {
     'use strict';
 
-    // Create the combined registry
+    // Create the registry
     window.Layer8MReferenceRegistry = {};
 
-    // Merge all module registries when they're available
-    function mergeRegistries() {
-        var registries = [
-            window.Layer8MReferenceRegistryHCM,
-            window.Layer8MReferenceRegistrySCM,
-            window.Layer8MReferenceRegistryCRM,
-            window.Layer8MReferenceRegistryPRJ,
-            window.Layer8MReferenceRegistryMFG,
-            window.Layer8MReferenceRegistrySales,
-            window.Layer8MReferenceRegistryECOM
-        ];
-
-        registries.forEach(function(registry) {
-            if (registry) {
-                Object.keys(registry).forEach(function(key) {
-                    window.Layer8MReferenceRegistry[key] = registry[key];
-                });
-            }
+    /**
+     * Register model configurations from a module registry
+     * @param {Object} registry - Object containing model configurations
+     */
+    Layer8MReferenceRegistry.register = function(registry) {
+        if (!registry) return;
+        Object.keys(registry).forEach(function(key) {
+            window.Layer8MReferenceRegistry[key] = registry[key];
         });
-    }
-
-    // Merge immediately (module files should be loaded before this one)
-    mergeRegistries();
+    };
 
     /**
      * Get configuration for a model

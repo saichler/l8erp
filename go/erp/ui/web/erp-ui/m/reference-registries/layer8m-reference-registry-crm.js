@@ -98,3 +98,6 @@ window.Layer8MReferenceRegistryCRM = {
     ...refCrmM.simple('CrmServicePart', 'partId', 'itemName'),
     ...refCrmM.idOnly('CrmServiceVisit', 'visitId')
 };
+
+// Register with the central registry
+Layer8MReferenceRegistry.register(window.Layer8MReferenceRegistryCRM);

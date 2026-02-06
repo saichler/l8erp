@@ -83,3 +83,6 @@ window.Layer8MReferenceRegistrySales = {
     ...refSalesM.simple('DeliveryOrder', 'deliveryOrderId', 'deliveryNumber', 'Delivery Order'),
     ...refSalesM.simple('PriceList', 'priceListId', 'name', 'Price List')
 };
+
+// Register with the central registry
+Layer8MReferenceRegistry.register(window.Layer8MReferenceRegistrySales);

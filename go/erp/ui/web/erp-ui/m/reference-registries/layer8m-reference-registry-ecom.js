@@ -84,3 +84,6 @@ window.Layer8MReferenceRegistryECOM = {
         displayLabel: 'Payment'
     }
 };
+
+// Register with the central registry
+Layer8MReferenceRegistry.register(window.Layer8MReferenceRegistryECOM);

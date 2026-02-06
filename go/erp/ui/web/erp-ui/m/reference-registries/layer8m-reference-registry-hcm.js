@@ -97,3 +97,6 @@ window.Layer8MReferenceRegistryHCM = {
     ...refHcmM.idOnly('Garnishment', 'garnishmentId'),
     ...refHcmM.simple('YearEndDocument', 'documentId', 'documentType')
 };
+
+// Register with the central registry
+Layer8MReferenceRegistry.register(window.Layer8MReferenceRegistryHCM);

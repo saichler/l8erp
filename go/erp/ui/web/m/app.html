@@ -254,14 +254,16 @@ limitations under the License.
     <script src="../l8ui/m/js/layer8m-forms-fields.js"></script>
     <script src="../l8ui/m/js/layer8m-forms.js"></script>
     <script src="../l8ui/m/js/layer8m-datepicker.js"></script>
-    <script src="../l8ui/m/js/layer8m-reference-registry-hcm.js"></script>
-    <script src="../l8ui/m/js/layer8m-reference-registry-scm.js"></script>
-    <script src="../l8ui/m/js/layer8m-reference-registry-crm.js"></script>
-    <script src="../l8ui/m/js/layer8m-reference-registry-prj.js"></script>
-    <script src="../l8ui/m/js/layer8m-reference-registry-mfg.js"></script>
-    <script src="../l8ui/m/js/layer8m-reference-registry-sales.js"></script>
-    <script src="../l8ui/m/js/layer8m-reference-registry-ecom.js"></script>
+    <!-- Generic Reference Registry (load first) -->
     <script src="../l8ui/m/js/layer8m-reference-registry.js"></script>
+    <!-- ERP-Specific Reference Registries (register with the generic registry) -->
+    <script src="../erp-ui/m/reference-registries/layer8m-reference-registry-hcm.js"></script>
+    <script src="../erp-ui/m/reference-registries/layer8m-reference-registry-scm.js"></script>
+    <script src="../erp-ui/m/reference-registries/layer8m-reference-registry-crm.js"></script>
+    <script src="../erp-ui/m/reference-registries/layer8m-reference-registry-prj.js"></script>
+    <script src="../erp-ui/m/reference-registries/layer8m-reference-registry-mfg.js"></script>
+    <script src="../erp-ui/m/reference-registries/layer8m-reference-registry-sales.js"></script>
+    <script src="../erp-ui/m/reference-registries/layer8m-reference-registry-ecom.js"></script>
     <script src="../l8ui/m/js/layer8m-reference-picker.js"></script>
 
     <!-- Scripts - Shared Renderers -->
@@ -505,16 +507,17 @@ limitations under the License.
     <!-- Scripts - SYS Registry -->
     <script src="js/sys/sys-index.js"></script>
 
-    <!-- Scripts - Navigation & App -->
-    <script src="../l8ui/m/js/layer8m-nav-config-base.js"></script>
-    <script src="../l8ui/m/js/layer8m-nav-config-icons.js"></script>
-    <script src="../l8ui/m/js/layer8m-nav-config-fin-hcm.js"></script>
-    <script src="../l8ui/m/js/layer8m-nav-config-scm-sales.js"></script>
-    <script src="../l8ui/m/js/layer8m-nav-config-prj-other.js"></script>
-    <script src="../l8ui/m/js/layer8m-nav-config.js"></script>
+    <!-- Scripts - Navigation Core (generic) -->
     <script src="../l8ui/m/js/layer8m-nav-crud.js"></script>
     <script src="../l8ui/m/js/layer8m-nav-data.js"></script>
     <script src="../l8ui/m/js/layer8m-nav.js"></script>
+    <!-- Scripts - ERP Navigation Config (project-specific) -->
+    <script src="../erp-ui/m/nav-configs/layer8m-nav-config-base.js"></script>
+    <script src="../erp-ui/m/nav-configs/layer8m-nav-config-icons.js"></script>
+    <script src="../erp-ui/m/nav-configs/layer8m-nav-config-fin-hcm.js"></script>
+    <script src="../erp-ui/m/nav-configs/layer8m-nav-config-scm-sales.js"></script>
+    <script src="../erp-ui/m/nav-configs/layer8m-nav-config-prj-other.js"></script>
+    <script src="../erp-ui/m/nav-configs/layer8m-nav-config.js"></script>
     <script src="js/app-core.js"></script>
 </body>
 </html>

@@ -67,3 +67,6 @@ window.Layer8MReferenceRegistryPRJ = {
     ...refPrjM.simple('PrjProjectKPI', 'kpiId', 'kpiName'),
     ...refPrjM.simple('PrjProjectIssue', 'issueId', 'title', 'Issue')
 };
+
+// Register with the central registry
+Layer8MReferenceRegistry.register(window.Layer8MReferenceRegistryPRJ);
