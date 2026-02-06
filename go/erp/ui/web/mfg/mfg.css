@@ -18,52 +18,52 @@ limitations under the License.
 
 /* Work Order Status Colors */
 .mfg-wo-status-planned {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: var(--layer8d-yellow-bg);
+    color: var(--layer8d-yellow-text);
 }
 
 .mfg-wo-status-released {
-    background-color: #dbeafe;
-    color: #1e40af;
+    background-color: var(--layer8d-blue-bg);
+    color: var(--layer8d-blue-text);
 }
 
 .mfg-wo-status-in-progress {
-    background-color: #d1fae5;
-    color: #065f46;
+    background-color: var(--layer8d-green-bg);
+    color: var(--layer8d-green-text);
 }
 
 .mfg-wo-status-on-hold {
-    background-color: #fed7aa;
-    color: #9a3412;
+    background-color: var(--layer8d-orange-bg);
+    color: var(--layer8d-orange-text);
 }
 
 .mfg-wo-status-completed {
-    background-color: #bbf7d0;
-    color: #166534;
+    background-color: var(--layer8d-green-light-bg);
+    color: var(--layer8d-green-light-text);
 }
 
 .mfg-wo-status-closed {
-    background-color: #e5e7eb;
-    color: #374151;
+    background-color: var(--layer8d-gray-bg);
+    color: var(--layer8d-gray-text);
 }
 
 .mfg-wo-status-cancelled {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 /* Quality Status Colors */
 .mfg-quality-pass {
-    background-color: #d1fae5;
-    color: #065f46;
+    background-color: var(--layer8d-green-bg);
+    color: var(--layer8d-green-text);
 }
 
 .mfg-quality-fail {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 .mfg-quality-pending {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: var(--layer8d-yellow-bg);
+    color: var(--layer8d-yellow-text);
 }

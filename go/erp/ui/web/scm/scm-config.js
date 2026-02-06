@@ -108,17 +108,7 @@ limitations under the License.
     // Sub-module namespaces for service registry
     SCM.submodules = ['Procurement', 'Inventory', 'WarehouseManagement', 'Logistics', 'ScmDemandPlanning', 'ScmSupplyPlanning'];
 
-    // Render status badge (uses shared erp-status-* classes)
-    SCM.renderStatus = function(status) {
-        const statusMap = {
-            1: { label: 'Active', class: 'layer8d-status-active' },
-            0: { label: 'Inactive', class: 'layer8d-status-inactive' },
-            2: { label: 'Pending', class: 'layer8d-status-pending' },
-            3: { label: 'Closed', class: 'layer8d-status-terminated' }
-        };
-
-        const config = statusMap[status] || { label: status, class: '' };
-        return `<span class="layer8d-status ${config.class}">${Layer8DUtils.escapeHtml(config.label)}</span>`;
-    };
+    // Render status badge (delegates to shared utility)
+    SCM.renderStatus = Layer8DUtils.renderStatus;
 
 })();

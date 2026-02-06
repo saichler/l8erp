@@ -313,6 +313,42 @@ limitations under the License.
     }
 
     // ========================================
+    // STATUS RENDERING
+    // ========================================
+
+    // Default status map used across modules
+    const DEFAULT_STATUS_MAP = {
+        1: { label: 'Active', class: 'layer8d-status-active' },
+        0: { label: 'Inactive', class: 'layer8d-status-inactive' },
+        2: { label: 'Pending', class: 'layer8d-status-pending' },
+        3: { label: 'Closed', class: 'layer8d-status-terminated' }
+    };
+
+    /**
+     * Render a status badge with appropriate styling
+     * @param {number|string} status - Status value
+     * @param {Object} statusMap - Optional custom status mapping
+     * @returns {string} HTML string for status badge
+     */
+    function renderStatus(status, statusMap = DEFAULT_STATUS_MAP) {
+        const config = statusMap[status] || { label: status, class: '' };
+        return `<span class="layer8d-status ${config.class}">${escapeHtml(config.label)}</span>`;
+    }
+
+    /**
+     * Render a status badge from a string status (converts to CSS class)
+     * @param {string} status - Status string (e.g., 'ACTIVE', 'pending', 'IN_PROGRESS')
+     * @returns {string} HTML string for status badge
+     */
+    function renderStatusString(status) {
+        if (!status) return '';
+        const statusLower = String(status).toLowerCase().replace(/_/g, '-');
+        const statusClass = 'layer8d-status-' + statusLower;
+        const displayStatus = String(status).replace(/_/g, ' ');
+        return `<span class="layer8d-status ${statusClass}">${escapeHtml(displayStatus)}</span>`;
+    }
+
+    // ========================================
     // STRING FORMATTING
     // ========================================
 
@@ -354,6 +390,11 @@ limitations under the License.
         formatMoney,
         formatNumber,
         formatPercentage,
+
+        // Status
+        renderStatus,
+        renderStatusString,
+        DEFAULT_STATUS_MAP,
 
         // Strings
         formatLabel,

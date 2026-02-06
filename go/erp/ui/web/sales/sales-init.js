@@ -20,9 +20,9 @@ limitations under the License.
 
     Layer8DModuleFactory.create({
         namespace: 'Sales',
-        defaultModule: 'orders',
-        defaultService: 'sales-orders',
-        sectionSelector: 'orders',
+        defaultModule: 'customers',
+        defaultService: 'hierarchies',
+        sectionSelector: 'customers',
         initializerName: 'initializeSales',
         requiredNamespaces: ['SalesCustomers', 'SalesOrders', 'SalesPricing', 'SalesShipping', 'SalesBilling', 'SalesAnalytics']
     });

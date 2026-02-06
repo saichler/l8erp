@@ -18,133 +18,133 @@ limitations under the License.
 
 /* Order Status Colors */
 .ecom-order-status-pending {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: var(--layer8d-yellow-bg);
+    color: var(--layer8d-yellow-text);
 }
 
 .ecom-order-status-processing {
-    background-color: #dbeafe;
-    color: #1e40af;
+    background-color: var(--layer8d-blue-bg);
+    color: var(--layer8d-blue-text);
 }
 
 .ecom-order-status-shipped {
-    background-color: #e0e7ff;
-    color: #3730a3;
+    background-color: var(--layer8d-indigo-bg);
+    color: var(--layer8d-indigo-text);
 }
 
 .ecom-order-status-delivered {
-    background-color: #bbf7d0;
-    color: #166534;
+    background-color: var(--layer8d-green-light-bg);
+    color: var(--layer8d-green-light-text);
 }
 
 .ecom-order-status-cancelled {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 .ecom-order-status-refunded {
-    background-color: #e5e7eb;
-    color: #374151;
+    background-color: var(--layer8d-gray-bg);
+    color: var(--layer8d-gray-text);
 }
 
 /* Product Status Colors */
 .ecom-product-status-active {
-    background-color: #bbf7d0;
-    color: #166534;
+    background-color: var(--layer8d-green-light-bg);
+    color: var(--layer8d-green-light-text);
 }
 
 .ecom-product-status-inactive {
-    background-color: #e5e7eb;
-    color: #374151;
+    background-color: var(--layer8d-gray-bg);
+    color: var(--layer8d-gray-text);
 }
 
 .ecom-product-status-draft {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: var(--layer8d-yellow-bg);
+    color: var(--layer8d-yellow-text);
 }
 
 .ecom-product-status-out-of-stock {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 /* Return Status Colors */
 .ecom-return-status-requested {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: var(--layer8d-yellow-bg);
+    color: var(--layer8d-yellow-text);
 }
 
 .ecom-return-status-approved {
-    background-color: #dbeafe;
-    color: #1e40af;
+    background-color: var(--layer8d-blue-bg);
+    color: var(--layer8d-blue-text);
 }
 
 .ecom-return-status-received {
-    background-color: #e0e7ff;
-    color: #3730a3;
+    background-color: var(--layer8d-indigo-bg);
+    color: var(--layer8d-indigo-text);
 }
 
 .ecom-return-status-refunded {
-    background-color: #bbf7d0;
-    color: #166534;
+    background-color: var(--layer8d-green-light-bg);
+    color: var(--layer8d-green-light-text);
 }
 
 .ecom-return-status-rejected {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 /* Promotion Status Colors */
 .ecom-promo-status-active {
-    background-color: #bbf7d0;
-    color: #166534;
+    background-color: var(--layer8d-green-light-bg);
+    color: var(--layer8d-green-light-text);
 }
 
 .ecom-promo-status-scheduled {
-    background-color: #dbeafe;
-    color: #1e40af;
+    background-color: var(--layer8d-blue-bg);
+    color: var(--layer8d-blue-text);
 }
 
 .ecom-promo-status-expired {
-    background-color: #e5e7eb;
-    color: #374151;
+    background-color: var(--layer8d-gray-bg);
+    color: var(--layer8d-gray-text);
 }
 
 .ecom-promo-status-disabled {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 /* Coupon Status Colors */
 .ecom-coupon-valid {
-    background-color: #bbf7d0;
-    color: #166534;
+    background-color: var(--layer8d-green-light-bg);
+    color: var(--layer8d-green-light-text);
 }
 
 .ecom-coupon-used {
-    background-color: #e5e7eb;
-    color: #374151;
+    background-color: var(--layer8d-gray-bg);
+    color: var(--layer8d-gray-text);
 }
 
 .ecom-coupon-expired {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 /* Customer Status Colors */
 .ecom-customer-status-active {
-    background-color: #bbf7d0;
-    color: #166534;
+    background-color: var(--layer8d-green-light-bg);
+    color: var(--layer8d-green-light-text);
 }
 
 .ecom-customer-status-inactive {
-    background-color: #e5e7eb;
-    color: #374151;
+    background-color: var(--layer8d-gray-bg);
+    color: var(--layer8d-gray-text);
 }
 
 .ecom-customer-status-blocked {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 /* E-Commerce accent color (purple/magenta theme) */

@@ -14,195 +14,195 @@ limitations under the License.
 */
 
 /* Compliance & Risk Management Module Styles */
-/* Uses shared HCM layout classes - minimal overrides needed */
+/* Uses shared HCM layout classes and layer8d-theme.css variables */
 
 /* Compliance Status Colors */
 .comp-status-compliant {
-    background-color: #bbf7d0;
-    color: #166534;
+    background-color: var(--layer8d-green-light-bg);
+    color: var(--layer8d-green-light-text);
 }
 
 .comp-status-non-compliant {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 .comp-status-partial {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: var(--layer8d-yellow-bg);
+    color: var(--layer8d-yellow-text);
 }
 
 .comp-status-pending {
-    background-color: #dbeafe;
-    color: #1e40af;
+    background-color: var(--layer8d-blue-bg);
+    color: var(--layer8d-blue-text);
 }
 
 .comp-status-not-applicable {
-    background-color: #e5e7eb;
-    color: #374151;
+    background-color: var(--layer8d-gray-bg);
+    color: var(--layer8d-gray-text);
 }
 
 /* Risk Level Colors */
 .comp-risk-critical {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 .comp-risk-high {
-    background-color: #fed7aa;
-    color: #c2410c;
+    background-color: var(--layer8d-orange-bg);
+    color: var(--layer8d-orange-text);
 }
 
 .comp-risk-medium {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: var(--layer8d-yellow-bg);
+    color: var(--layer8d-yellow-text);
 }
 
 .comp-risk-low {
-    background-color: #bbf7d0;
-    color: #166534;
+    background-color: var(--layer8d-green-light-bg);
+    color: var(--layer8d-green-light-text);
 }
 
 /* Control Effectiveness Colors */
 .comp-control-effective {
-    background-color: #bbf7d0;
-    color: #166534;
+    background-color: var(--layer8d-green-light-bg);
+    color: var(--layer8d-green-light-text);
 }
 
 .comp-control-partially-effective {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: var(--layer8d-yellow-bg);
+    color: var(--layer8d-yellow-text);
 }
 
 .comp-control-ineffective {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 .comp-control-not-tested {
-    background-color: #e5e7eb;
-    color: #374151;
+    background-color: var(--layer8d-gray-bg);
+    color: var(--layer8d-gray-text);
 }
 
 /* Audit Status Colors */
 .comp-audit-scheduled {
-    background-color: #dbeafe;
-    color: #1e40af;
+    background-color: var(--layer8d-blue-bg);
+    color: var(--layer8d-blue-text);
 }
 
 .comp-audit-in-progress {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: var(--layer8d-yellow-bg);
+    color: var(--layer8d-yellow-text);
 }
 
 .comp-audit-completed {
-    background-color: #bbf7d0;
-    color: #166534;
+    background-color: var(--layer8d-green-light-bg);
+    color: var(--layer8d-green-light-text);
 }
 
 .comp-audit-cancelled {
-    background-color: #e5e7eb;
-    color: #374151;
+    background-color: var(--layer8d-gray-bg);
+    color: var(--layer8d-gray-text);
 }
 
 /* Finding Severity Colors */
 .comp-severity-critical {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 .comp-severity-major {
-    background-color: #fed7aa;
-    color: #c2410c;
+    background-color: var(--layer8d-orange-bg);
+    color: var(--layer8d-orange-text);
 }
 
 .comp-severity-minor {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: var(--layer8d-yellow-bg);
+    color: var(--layer8d-yellow-text);
 }
 
 .comp-severity-observation {
-    background-color: #dbeafe;
-    color: #1e40af;
+    background-color: var(--layer8d-blue-bg);
+    color: var(--layer8d-blue-text);
 }
 
 /* Incident Status Colors */
 .comp-incident-open {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 .comp-incident-investigating {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: var(--layer8d-yellow-bg);
+    color: var(--layer8d-yellow-text);
 }
 
 .comp-incident-resolved {
-    background-color: #bbf7d0;
-    color: #166534;
+    background-color: var(--layer8d-green-light-bg);
+    color: var(--layer8d-green-light-text);
 }
 
 .comp-incident-closed {
-    background-color: #e5e7eb;
-    color: #374151;
+    background-color: var(--layer8d-gray-bg);
+    color: var(--layer8d-gray-text);
 }
 
 /* Remediation Status Colors */
 .comp-remediation-open {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 .comp-remediation-in-progress {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: var(--layer8d-yellow-bg);
+    color: var(--layer8d-yellow-text);
 }
 
 .comp-remediation-completed {
-    background-color: #bbf7d0;
-    color: #166534;
+    background-color: var(--layer8d-green-light-bg);
+    color: var(--layer8d-green-light-text);
 }
 
 .comp-remediation-verified {
-    background-color: #dbeafe;
-    color: #1e40af;
+    background-color: var(--layer8d-blue-bg);
+    color: var(--layer8d-blue-text);
 }
 
 /* Certification Status Colors */
 .comp-cert-active {
-    background-color: #bbf7d0;
-    color: #166534;
+    background-color: var(--layer8d-green-light-bg);
+    color: var(--layer8d-green-light-text);
 }
 
 .comp-cert-expired {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 .comp-cert-pending {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: var(--layer8d-yellow-bg);
+    color: var(--layer8d-yellow-text);
 }
 
 .comp-cert-revoked {
-    background-color: #e5e7eb;
-    color: #374151;
+    background-color: var(--layer8d-gray-bg);
+    color: var(--layer8d-gray-text);
 }
 
 /* Insurance Policy Status Colors */
 .comp-insurance-active {
-    background-color: #bbf7d0;
-    color: #166534;
+    background-color: var(--layer8d-green-light-bg);
+    color: var(--layer8d-green-light-text);
 }
 
 .comp-insurance-expired {
-    background-color: #fecaca;
-    color: #991b1b;
+    background-color: var(--layer8d-red-bg);
+    color: var(--layer8d-red-text);
 }
 
 .comp-insurance-pending-renewal {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: var(--layer8d-yellow-bg);
+    color: var(--layer8d-yellow-text);
 }
 
 /* Compliance accent color (teal/cyan theme) */

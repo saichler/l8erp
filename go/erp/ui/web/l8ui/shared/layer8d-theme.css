@@ -70,7 +70,7 @@ limitations under the License.
     --layer8d-border: #e2e8f0;
     --layer8d-border-dark: #cbd5e0;
 
-    /* Status Colors */
+    /* Status Colors - Core */
     --layer8d-success: #22c55e;
     --layer8d-success-bg: rgba(34, 197, 94, 0.1);
     --layer8d-warning: #f59e0b;
@@ -79,6 +79,39 @@ limitations under the License.
     --layer8d-error-bg: rgba(239, 68, 68, 0.1);
     --layer8d-info: #3b82f6;
     --layer8d-info-bg: rgba(59, 130, 246, 0.1);
+
+    /* Semantic Status Colors - Tailwind Palette */
+    /* Green (Success/Active/Completed) */
+    --layer8d-green-light-bg: #bbf7d0;
+    --layer8d-green-light-text: #166534;
+    --layer8d-green-bg: #d1fae5;
+    --layer8d-green-text: #065f46;
+
+    /* Red (Error/Critical/Rejected) */
+    --layer8d-red-bg: #fecaca;
+    --layer8d-red-text: #991b1b;
+
+    /* Yellow (Warning/Pending) */
+    --layer8d-yellow-bg: #fef3c7;
+    --layer8d-yellow-text: #92400e;
+
+    /* Orange (High Priority/Urgent) */
+    --layer8d-orange-bg: #fed7aa;
+    --layer8d-orange-text: #9a3412;
+
+    /* Blue (Info/New/Open) */
+    --layer8d-blue-bg: #dbeafe;
+    --layer8d-blue-text: #1e40af;
+
+    /* Indigo (Prospecting/Pending) */
+    --layer8d-indigo-bg: #e0e7ff;
+    --layer8d-indigo-text: #3730a3;
+
+    /* Gray (Inactive/Closed/Low) */
+    --layer8d-gray-bg: #e5e7eb;
+    --layer8d-gray-text: #374151;
+    --layer8d-gray-light-bg: #f3f4f6;
+    --layer8d-gray-light-text: #6b7280;
 
     /* Typography */
     --layer8d-font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
