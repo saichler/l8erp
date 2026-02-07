@@ -51,15 +51,15 @@ limitations under the License.
 
         BudgetScenario: [
             { key: 'scenarioId', label: 'ID', sortKey: 'scenarioId', filterKey: 'scenarioId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
+            { key: 'scenarioName', label: 'Name', sortKey: 'scenarioName', filterKey: 'scenarioName' },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            { key: 'budgetId', label: 'Budget', sortKey: 'budgetId', filterKey: 'budgetId' },
-            { key: 'isBaseline', label: 'Baseline', sortKey: 'isBaseline', render: (item) => Layer8MRenderers.renderBoolean(item.isBaseline) }
+            { key: 'baseBudgetId', label: 'Base Budget', sortKey: 'baseBudgetId', filterKey: 'baseBudgetId' },
+            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
         CapitalExpenditure: [
             { key: 'capexId', label: 'ID', sortKey: 'capexId', filterKey: 'capexId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
+            { key: 'projectName', label: 'Project Name', sortKey: 'projectName', filterKey: 'projectName' },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
             { key: 'requestedAmount', label: 'Requested', sortKey: 'requestedAmount', render: (item) => Layer8MRenderers.renderMoney(item.requestedAmount) },
             { key: 'approvedAmount', label: 'Approved', sortKey: 'approvedAmount', render: (item) => Layer8MRenderers.renderMoney(item.approvedAmount) },
@@ -71,7 +71,7 @@ limitations under the License.
             { key: 'forecastType', label: 'Type', sortKey: 'forecastType', render: (item) => render.forecastType(item.forecastType) },
             { key: 'periodStart', label: 'Period Start', sortKey: 'periodStart', render: (item) => Layer8MRenderers.renderDate(item.periodStart) },
             { key: 'periodEnd', label: 'Period End', sortKey: 'periodEnd', render: (item) => Layer8MRenderers.renderDate(item.periodEnd) },
-            { key: 'forecastAmount', label: 'Forecast', sortKey: 'forecastAmount', render: (item) => Layer8MRenderers.renderMoney(item.forecastAmount) },
+            { key: 'projectedAmount', label: 'Projected', sortKey: 'projectedAmount', render: (item) => Layer8MRenderers.renderMoney(item.projectedAmount) },
             { key: 'actualAmount', label: 'Actual', sortKey: 'actualAmount', render: (item) => Layer8MRenderers.renderMoney(item.actualAmount) }
         ]
     };

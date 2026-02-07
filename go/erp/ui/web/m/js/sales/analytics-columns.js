@@ -30,15 +30,15 @@ limitations under the License.
             { key: 'territoryId', label: 'Territory', sortKey: 'territoryId', filterKey: 'territoryId' },
             { key: 'targetAmount', label: 'Target', sortKey: 'targetAmount', render: (item) => Layer8MRenderers.renderMoney(item.targetAmount) },
             { key: 'achievedAmount', label: 'Achieved', sortKey: 'achievedAmount', render: (item) => Layer8MRenderers.renderMoney(item.achievedAmount) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TARGET_STATUS_VALUES, render: (item) => render.targetStatus(item.status) }
+            { key: 'period', label: 'Period', sortKey: 'period' }
         ],
 
         SalesTerritory: [
             { key: 'territoryId', label: 'ID', sortKey: 'territoryId', filterKey: 'territoryId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
+            { key: 'description', label: 'Description', sortKey: 'description' },
             { key: 'territoryType', label: 'Type', sortKey: 'territoryType', filterKey: 'territoryType', enumValues: enums.TERRITORY_TYPE_VALUES, render: (item) => render.territoryType(item.territoryType) },
-            { key: 'parentId', label: 'Parent', sortKey: 'parentId' },
+            { key: 'parentTerritoryId', label: 'Parent', sortKey: 'parentTerritoryId' },
             { key: 'description', label: 'Description', sortKey: 'description' }
         ],
 
@@ -55,7 +55,7 @@ limitations under the License.
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'commissionType', label: 'Type', sortKey: 'commissionType', filterKey: 'commissionType', enumValues: enums.COMMISSION_TYPE_VALUES, render: (item) => render.commissionType(item.commissionType) },
-            { key: 'rate', label: 'Rate', sortKey: 'rate' },
+            { key: 'baseRate', label: 'Rate', sortKey: 'baseRate' },
             { key: 'effectiveDate', label: 'Effective', sortKey: 'effectiveDate', render: (item) => Layer8MRenderers.renderDate(item.effectiveDate) },
             { key: 'isActive', label: 'Active', sortKey: 'isActive' }
         ],
@@ -65,7 +65,7 @@ limitations under the License.
             { key: 'salespersonId', label: 'Salesperson', sortKey: 'salespersonId', filterKey: 'salespersonId' },
             { key: 'planId', label: 'Plan', sortKey: 'planId', filterKey: 'planId' },
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
-            { key: 'saleAmount', label: 'Sale Amount', sortKey: 'saleAmount', render: (item) => Layer8MRenderers.renderMoney(item.saleAmount) },
+            { key: 'salesAmount', label: 'Sale Amount', sortKey: 'salesAmount', render: (item) => Layer8MRenderers.renderMoney(item.salesAmount) },
             { key: 'commissionAmount', label: 'Commission', sortKey: 'commissionAmount', render: (item) => Layer8MRenderers.renderMoney(item.commissionAmount) }
         ],
 
@@ -75,7 +75,7 @@ limitations under the License.
             { key: 'salespersonId', label: 'Salesperson', sortKey: 'salespersonId', filterKey: 'salespersonId' },
             { key: 'category', label: 'Category', sortKey: 'category', filterKey: 'category', enumValues: enums.FORECAST_CATEGORY_VALUES, render: (item) => render.forecastCategory(item.category) },
             { key: 'forecastAmount', label: 'Forecast', sortKey: 'forecastAmount', render: (item) => Layer8MRenderers.renderMoney(item.forecastAmount) },
-            { key: 'forecastDate', label: 'Date', sortKey: 'forecastDate', render: (item) => Layer8MRenderers.renderDate(item.forecastDate) }
+            { key: 'expectedCloseDate', label: 'Date', sortKey: 'expectedCloseDate', render: (item) => Layer8MRenderers.renderDate(item.expectedCloseDate) }
         ]
     };
 

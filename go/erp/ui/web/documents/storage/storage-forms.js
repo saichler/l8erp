@@ -16,7 +16,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     DocStorage.forms = {
         DocDocument: f.form('Document', [
             f.section('Document Details', [
-                ...f.text('title', 'Title', true),
+                ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('documentType', 'Document Type', enums.DOCUMENT_TYPE),
                 ...f.select('status', 'Status', enums.DOCUMENT_STATUS),
@@ -29,8 +29,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('ownerId', 'Owner', 'Employee')
             ]),
             f.section('Compliance', [
-                ...f.reference('retentionPolicyId', 'Retention Policy', 'DocRetentionPolicy'),
-                ...f.date('expirationDate', 'Expiration Date')
+                ...f.date('expiryDate', 'Expiry Date')
             ])
         ]),
 
@@ -41,7 +40,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('parentFolderId', 'Parent Folder', 'DocFolder'),
                 ...f.select('accessLevel', 'Access Level', enums.ACCESS_LEVEL),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isSystem', 'System Folder')
             ])
         ]),
 
@@ -70,7 +69,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('versionNumber', 'Version Number', true),
                 ...f.textarea('changeNotes', 'Change Notes'),
                 ...f.reference('createdBy', 'Created By', 'Employee'),
-                ...f.checkbox('isCurrent', 'Current Version')
+                ...f.checkbox('isMajorVersion', 'Major Version')
             ])
         ])
     };

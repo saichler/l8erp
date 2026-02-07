@@ -37,38 +37,38 @@ limitations under the License.
             { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
             { key: 'operationNumber', label: 'Op #', sortKey: 'operationNumber' },
             { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            { key: 'setupTime', label: 'Setup (hrs)', sortKey: 'setupTime' },
-            { key: 'runTime', label: 'Run (hrs)', sortKey: 'runTime' },
+            { key: 'setupTimePlanned', label: 'Setup (hrs)', sortKey: 'setupTimePlanned' },
+            { key: 'runTimePlanned', label: 'Run (hrs)', sortKey: 'runTimePlanned' },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.operationStatus(item.status) }
         ],
         MfgProductionOrder: [
             { key: 'prodOrderId', label: 'ID', sortKey: 'prodOrderId' },
             { key: 'orderNumber', label: 'Order #', sortKey: 'orderNumber' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId' },
-            { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
-            { key: 'scheduledDate', label: 'Scheduled', sortKey: 'scheduledDate', render: (item) => render.date(item.scheduledDate) },
+            { key: 'customerId', label: 'Customer', sortKey: 'customerId' },
+            { key: 'orderDate', label: 'Order Date', sortKey: 'orderDate', render: (item) => render.date(item.orderDate) },
+            { key: 'requiredDate', label: 'Required', sortKey: 'requiredDate', render: (item) => render.date(item.requiredDate) },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.workOrderStatus(item.status) }
         ],
         MfgProdOrderLine: [
             { key: 'lineId', label: 'ID', sortKey: 'lineId' },
             { key: 'prodOrderId', label: 'Prod Order', sortKey: 'prodOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId' },
-            { key: 'requiredQty', label: 'Required Qty', sortKey: 'requiredQty' },
-            { key: 'issuedQty', label: 'Issued Qty', sortKey: 'issuedQty' }
+            { key: 'quantityOrdered', label: 'Qty Ordered', sortKey: 'quantityOrdered' },
+            { key: 'quantityCompleted', label: 'Qty Completed', sortKey: 'quantityCompleted' }
         ],
         MfgProdBatch: [
             { key: 'batchId', label: 'ID', sortKey: 'batchId' },
             { key: 'batchNumber', label: 'Batch #', sortKey: 'batchNumber' },
             { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
             { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
-            { key: 'startDate', label: 'Start Date', sortKey: 'startDate', render: (item) => render.date(item.startDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.batchStatus(item.status) }
+            { key: 'productionDate', label: 'Production Date', sortKey: 'productionDate', render: (item) => render.date(item.productionDate) },
+            { key: 'qualityStatus', label: 'Quality Status', sortKey: 'qualityStatus', render: (item) => render.batchStatus(item.qualityStatus) }
         ],
         MfgProdConsumption: [
             { key: 'consumptionId', label: 'ID', sortKey: 'consumptionId' },
             { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId' },
-            { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
+            { key: 'quantityConsumed', label: 'Qty Consumed', sortKey: 'quantityConsumed' },
             { key: 'consumptionDate', label: 'Date', sortKey: 'consumptionDate', render: (item) => render.date(item.consumptionDate) }
         ]
     };

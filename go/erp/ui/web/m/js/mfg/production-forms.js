@@ -44,20 +44,23 @@ limitations under the License.
             f.section('Operation Details', [
                 ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
                 ...f.number('operationNumber', 'Operation #', true),
+                ...f.text('operationName', 'Operation Name'),
                 ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
                 ...f.textarea('description', 'Description'),
-                ...f.number('setupTime', 'Setup Time (hrs)'),
-                ...f.number('runTime', 'Run Time (hrs)'),
+                ...f.number('setupTimePlanned', 'Setup Time Planned (hrs)'),
+                ...f.number('runTimePlanned', 'Run Time Planned (hrs)'),
                 ...f.select('status', 'Status', enums.OPERATION_STATUS)
             ])
         ]),
         MfgProductionOrder: f.form('Production Order', [
             f.section('Order Details', [
                 ...f.text('orderNumber', 'Order Number', true),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.date('scheduledDate', 'Scheduled Date'),
+                ...f.reference('customerId', 'Customer', 'Customer'),
+                ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder'),
+                ...f.date('orderDate', 'Order Date'),
+                ...f.date('requiredDate', 'Required Date'),
                 ...f.select('status', 'Status', enums.WORK_ORDER_STATUS),
+                ...f.select('priority', 'Priority', enums.PRIORITY),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -65,7 +68,7 @@ limitations under the License.
             f.section('Line Details', [
                 ...f.reference('prodOrderId', 'Prod Order', 'MfgProductionOrder', true),
                 ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('requiredQty', 'Required Qty', true)
+                ...f.number('quantityOrdered', 'Qty Ordered', true)
             ])
         ]),
         MfgProdBatch: f.form('Production Batch', [
@@ -73,16 +76,16 @@ limitations under the License.
                 ...f.text('batchNumber', 'Batch Number', true),
                 ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
                 ...f.number('quantity', 'Quantity', true),
-                ...f.date('startDate', 'Start Date'),
-                ...f.date('endDate', 'End Date'),
-                ...f.select('status', 'Status', enums.BATCH_STATUS)
+                ...f.date('productionDate', 'Production Date'),
+                ...f.date('expiryDate', 'Expiry Date'),
+                ...f.select('qualityStatus', 'Quality Status', enums.BATCH_STATUS)
             ])
         ]),
         MfgProdConsumption: f.form('Production Consumption', [
             f.section('Consumption Details', [
                 ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
                 ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('quantity', 'Quantity', true),
+                ...f.number('quantityConsumed', 'Qty Consumed', true),
                 ...f.date('consumptionDate', 'Date')
             ])
         ])

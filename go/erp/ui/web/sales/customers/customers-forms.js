@@ -18,7 +18,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         SalesCustomerHierarchy: f.form('Customer Hierarchy', [
             f.section('Hierarchy Details', [
                 ...f.text('name', 'Name', true),
-                ...f.reference('parentId', 'Parent Hierarchy', 'SalesCustomerHierarchy'),
+                ...f.reference('parentHierarchyId', 'Parent Hierarchy', 'SalesCustomerHierarchy'),
                 ...f.number('level', 'Level'),
                 ...f.textarea('description', 'Description')
             ])
@@ -27,7 +27,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         SalesCustomerSegment: f.form('Customer Segment', [
             f.section('Segment Details', [
                 ...f.text('name', 'Name', true),
-                ...f.text('code', 'Code', true),
+                ...f.select('segmentType', 'Type', enums.SEGMENT_TYPE),
                 ...f.textarea('description', 'Description'),
                 ...f.textarea('criteria', 'Criteria'),
                 ...f.checkbox('isActive', 'Active')
@@ -54,9 +54,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.text('partnerType', 'Partner Type', true),
                 ...f.text('contactName', 'Contact Name'),
-                ...f.text('contactEmail', 'Contact Email'),
-                ...f.text('contactPhone', 'Contact Phone'),
-                ...f.select('status', 'Status', enums.PARTNER_STATUS),
+                ...f.text('email', 'Email'),
+                ...f.text('phone', 'Phone'),
+                ...f.checkbox('isActive', 'Active'),
                 ...f.number('commissionRate', 'Commission Rate %'),
                 ...f.reference('territoryId', 'Territory', 'SalesTerritory'),
                 ...f.textarea('notes', 'Notes')

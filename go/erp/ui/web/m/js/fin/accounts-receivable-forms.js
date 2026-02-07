@@ -21,15 +21,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('status', 'Status', enums.CUSTOMER_STATUS, true)
             ]),
             f.section('Credit & Status', [
-                ...f.number('creditLimit', 'Credit Limit'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.number('creditLimit', 'Credit Limit')
             ])
         ]),
 
         CustomerContact: f.form('Customer Contact', [
             f.section('Contact Information', [
                 ...f.reference('customerId', 'Customer', 'Customer', true),
-                ...f.text('contactName', 'Contact Name', true),
+                ...f.text('firstName', 'First Name', true),
+                ...f.text('lastName', 'Last Name', true),
                 ...f.text('email', 'Email'),
                 ...f.text('phone', 'Phone'),
                 ...f.checkbox('isPrimary', 'Primary Contact')
@@ -55,13 +55,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('description', 'Description', true),
                 ...f.number('quantity', 'Quantity', true),
                 ...f.number('unitPrice', 'Unit Price', true),
-                ...f.number('lineTotal', 'Line Total')
+                ...f.number('lineAmount', 'Line Amount')
             ])
         ]),
 
         CustomerPayment: f.form('Customer Payment', [
             f.section('Payment Details', [
-                ...f.text('paymentNumber', 'Payment Number', true),
                 ...f.reference('customerId', 'Customer', 'Customer', true),
                 ...f.select('paymentMethod', 'Payment Method', enums.PAYMENT_METHOD, true),
                 ...f.select('status', 'Status', enums.PAYMENT_STATUS, true)
@@ -87,7 +86,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('status', 'Status', enums.CREDIT_MEMO_STATUS, true)
             ]),
             f.section('Amount & Date', [
-                ...f.date('issueDate', 'Issue Date', true),
+                ...f.date('memoDate', 'Memo Date', true),
                 ...f.number('amount', 'Amount', true)
             ])
         ]),

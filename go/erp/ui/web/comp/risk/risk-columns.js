@@ -8,20 +8,20 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
     CompRisk.columns = {
         CompRiskRegister: [
-            { key: 'riskNumber', label: 'Number', width: '100px' },
-            { key: 'name', label: 'Name', width: '200px' },
+            { key: 'code', label: 'Code', width: '100px' },
+            { key: 'title', label: 'Title', width: '200px' },
             { key: 'category', label: 'Category', width: '100px' },
-            { key: 'inherentRiskLevel', label: 'Inherent Risk', width: '100px' },
-            { key: 'residualRiskLevel', label: 'Residual Risk', width: '100px' },
+            { key: 'inherentRiskScore', label: 'Inherent Risk', width: '100px' },
+            { key: 'residualRiskScore', label: 'Residual Risk', width: '100px' },
             { key: 'ownerId', label: 'Owner', width: '150px', type: 'reference', referenceType: 'Employee' },
             { key: 'status', label: 'Status', width: '100px' }
         ],
         CompRiskAssessment: [
             { key: 'riskId', label: 'Risk', width: '150px', type: 'reference', referenceType: 'CompRiskRegister' },
-            { key: 'assessmentType', label: 'Type', width: '100px' },
             { key: 'assessmentDate', label: 'Date', width: '100px', type: 'date' },
-            { key: 'likelihood', label: 'Likelihood', width: '100px' },
-            { key: 'impact', label: 'Impact', width: '100px' },
+            { key: 'assessorId', label: 'Assessor', width: '100px', type: 'reference', referenceType: 'Employee' },
+            { key: 'likelihoodRating', label: 'Likelihood', width: '100px' },
+            { key: 'impactRating', label: 'Impact', width: '100px' },
             { key: 'riskScore', label: 'Score', width: '80px' }
         ],
         CompIncident: [

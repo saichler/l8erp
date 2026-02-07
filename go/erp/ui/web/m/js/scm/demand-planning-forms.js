@@ -73,7 +73,7 @@ MobileScmDemandPlanning.forms = {
             ...f.number('initialForecast', 'Initial Forecast'),
             ...f.text('rampUpPeriod', 'Ramp-Up Period'),
             ...f.select('status', 'Status', enums.TASK_STATUS),
-            ...f.textarea('description', 'Description')
+            ...f.textarea('notes', 'Notes')
         ])
     ]),
 

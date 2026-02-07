@@ -45,18 +45,13 @@ limitations under the License.
                 sortKey: 'creditLimit',
                 render: (item) => renderMoney(item.creditLimit)
             },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
-            }
         ],
 
         CustomerContact: [
             { key: 'contactId', label: 'ID', sortKey: 'contactId', filterKey: 'contactId' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'contactName', label: 'Contact Name', sortKey: 'contactName', filterKey: 'contactName' },
+            { key: 'firstName', label: 'First Name', sortKey: 'firstName', filterKey: 'firstName' },
+            { key: 'lastName', label: 'Last Name', sortKey: 'lastName', filterKey: 'lastName' },
             { key: 'email', label: 'Email', sortKey: 'email', filterKey: 'email' },
             { key: 'phone', label: 'Phone', sortKey: 'phone', filterKey: 'phone' },
             {
@@ -109,16 +104,15 @@ limitations under the License.
                 render: (item) => renderMoney(item.unitPrice)
             },
             {
-                key: 'lineTotal',
-                label: 'Line Total',
-                sortKey: 'lineTotal',
-                render: (item) => renderMoney(item.lineTotal)
+                key: 'lineAmount',
+                label: 'Line Amount',
+                sortKey: 'lineAmount',
+                render: (item) => renderMoney(item.lineAmount)
             }
         ],
 
         CustomerPayment: [
             { key: 'paymentId', label: 'ID', sortKey: 'paymentId', filterKey: 'paymentId' },
-            { key: 'paymentNumber', label: 'Payment #', sortKey: 'paymentNumber', filterKey: 'paymentNumber' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
             {
                 key: 'paymentDate',
@@ -163,10 +157,10 @@ limitations under the License.
             { key: 'memoNumber', label: 'Memo #', sortKey: 'memoNumber', filterKey: 'memoNumber' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
             {
-                key: 'issueDate',
-                label: 'Issue Date',
-                sortKey: 'issueDate',
-                render: (item) => renderDate(item.issueDate)
+                key: 'memoDate',
+                label: 'Memo Date',
+                sortKey: 'memoDate',
+                render: (item) => renderDate(item.memoDate)
             },
             {
                 key: 'amount',

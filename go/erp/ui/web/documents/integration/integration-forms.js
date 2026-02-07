@@ -16,12 +16,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     DocIntegration.forms = {
         DocAttachment: f.form('Attachment', [
             f.section('Attachment Details', [
-                ...f.text('fileName', 'File Name', true),
+                ...f.reference('documentId', 'Document', 'DocDocument', true),
                 ...f.text('entityType', 'Entity Type', true),
                 ...f.text('entityId', 'Entity ID', true),
-                ...f.text('mimeType', 'MIME Type'),
+                ...f.text('module', 'Module'),
+                ...f.text('relationshipType', 'Relationship Type'),
                 ...f.textarea('description', 'Description'),
-                ...f.reference('uploadedBy', 'Uploaded By', 'Employee')
+                ...f.reference('attachedBy', 'Attached By', 'Employee')
             ])
         ]),
 
@@ -30,7 +31,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('templateType', 'Template Type', enums.TEMPLATE_TYPE),
-                ...f.text('version', 'Version'),
+                ...f.text('category', 'Category'),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
                 ...f.checkbox('isActive', 'Active')
             ]),
@@ -43,10 +44,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Field Details', [
                 ...f.reference('templateId', 'Template', 'DocTemplate', true),
                 ...f.text('name', 'Name', true),
+                ...f.text('label', 'Label'),
                 ...f.select('fieldType', 'Field Type', enums.FIELD_TYPE),
                 ...f.text('defaultValue', 'Default Value'),
                 ...f.text('placeholder', 'Placeholder'),
-                ...f.number('displayOrder', 'Display Order'),
+                ...f.number('sortOrder', 'Sort Order'),
                 ...f.checkbox('isRequired', 'Required')
             ])
         ]),
@@ -63,12 +65,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
         DocScanJob: f.form('Scan Job', [
             f.section('Scan Details', [
-                ...f.text('sourceName', 'Source Name', true),
+                ...f.text('name', 'Name', true),
                 ...f.select('status', 'Status', enums.SCAN_STATUS),
                 ...f.number('pageCount', 'Page Count'),
-                ...f.reference('scannedBy', 'Scanned By', 'Employee'),
+                ...f.reference('initiatedBy', 'Initiated By', 'Employee'),
                 ...f.reference('folderId', 'Destination Folder', 'DocFolder'),
-                ...f.reference('documentId', 'Created Document', 'DocDocument')
+                ...f.reference('categoryId', 'Category', 'DocCategory'),
+                ...f.checkbox('ocrEnabled', 'OCR Enabled')
             ])
         ])
     };

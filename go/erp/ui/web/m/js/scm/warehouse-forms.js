@@ -86,8 +86,7 @@ MobileWarehouse.forms = {
             ...f.text('packageId', 'Package'),
             ...f.number('quantity', 'Quantity'),
             ...f.select('status', 'Status', enums.TASK_STATUS),
-            ...f.reference('assignedTo', 'Assigned To', 'Employee'),
-            ...f.textarea('notes', 'Notes')
+            ...f.reference('assignedTo', 'Assigned To', 'Employee')
         ])
     ]),
 

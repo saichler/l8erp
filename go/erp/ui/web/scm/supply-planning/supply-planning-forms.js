@@ -21,7 +21,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('requiredQuantity', 'Required Quantity', true),
                 ...f.date('requiredDate', 'Required Date', true),
                 ...f.select('planningMethod', 'Planning Method', enums.PLANNING_METHOD),
-                ...f.text('sourceOrderId', 'Source Order'),
+                ...f.text('source', 'Source'),
                 ...f.select('status', 'Status', enums.TASK_STATUS),
                 ...f.textarea('notes', 'Notes')
             ])
@@ -34,7 +34,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('destinationWarehouseId', 'Destination Warehouse', 'ScmWarehouse', true),
                 ...f.number('requiredQuantity', 'Required Quantity', true),
                 ...f.date('requiredDate', 'Required Date', true),
-                ...f.text('priority', 'Priority'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),

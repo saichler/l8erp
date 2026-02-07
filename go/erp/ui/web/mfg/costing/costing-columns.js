@@ -35,25 +35,26 @@ limitations under the License.
 
         MfgCostRollup: [
             ...col.id('rollupId'),
-            ...col.basic([['rollupNumber', 'Rollup #'], 'name']),
+            ...col.basic([['rollupNumber', 'Rollup #'], 'description']),
             ...col.date('runDate', 'Run Date'),
             ...col.custom('status', 'Status', (item) => render.rollupStatus(item.status))
         ],
 
         MfgActualCost: [
             ...col.id('actualCostId'),
-            ...col.basic([['workOrderId', 'Work Order'], ['itemId', 'Item']]),
-            ...col.custom('costElementType', 'Type', (item) => render.costElementType(item.costElementType)),
-            ...col.money('actualAmount', 'Amount'),
-            ...col.date('postingDate', 'Posting Date')
+            ...col.col('workOrderId', 'Work Order'),
+            ...col.custom('costType', 'Cost Type', (item) => render.costElementType(item.costType)),
+            ...col.col('costElement', 'Cost Element'),
+            ...col.money('amount', 'Amount'),
+            ...col.date('transactionDate', 'Transaction Date')
         ],
 
         MfgCostVariance: [
             ...col.id('varianceId'),
             ...col.col('workOrderId', 'Work Order'),
             ...col.custom('varianceType', 'Type', (item) => render.varianceType(item.varianceType)),
-            ...col.money('standardAmount', 'Standard'),
-            ...col.money('actualAmount', 'Actual'),
+            ...col.money('standardCost', 'Standard'),
+            ...col.money('actualCost', 'Actual'),
             ...col.money('varianceAmount', 'Variance')
         ],
 

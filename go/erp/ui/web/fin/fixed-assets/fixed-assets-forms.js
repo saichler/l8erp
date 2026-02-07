@@ -33,19 +33,18 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Category Information', [
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
-                ...f.select('depreciationMethod', 'Depreciation Method', enums.DEPRECIATION_METHOD, true),
-                ...f.number('usefulLife', 'Useful Life (Years)', true),
-                ...f.number('salvageValuePercent', 'Salvage Value %')
+                ...f.select('defaultDepreciationMethod', 'Depreciation Method', enums.DEPRECIATION_METHOD, true),
+                ...f.number('defaultUsefulLifeMonths', 'Useful Life (Months)', true)
             ])
         ]),
 
         DepreciationSchedule: f.form('Depreciation Schedule', [
             f.section('Schedule Details', [
                 ...f.reference('assetId', 'Asset', 'Asset', true),
-                ...f.date('periodDate', 'Period Date', true),
+                ...f.date('depreciationDate', 'Depreciation Date', true),
                 ...f.money('depreciationAmount', 'Depreciation Amount'),
-                ...f.money('accumulatedDepreciation', 'Accumulated Depreciation'),
-                ...f.money('bookValue', 'Book Value')
+                ...f.money('accumulatedAmount', 'Accumulated Amount'),
+                ...f.money('remainingValue', 'Remaining Value')
             ])
         ]),
 
@@ -54,8 +53,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('assetId', 'Asset', 'Asset', true),
                 ...f.date('disposalDate', 'Disposal Date', true),
                 ...f.select('disposalMethod', 'Disposal Method', enums.DISPOSAL_METHOD, true),
-                ...f.money('salePrice', 'Sale Price'),
-                ...f.money('bookValueAtDisposal', 'Book Value at Disposal'),
+                ...f.money('disposalProceeds', 'Disposal Proceeds'),
+                ...f.money('netBookValueAtDisposal', 'Net Book Value at Disposal'),
                 ...f.money('gainLoss', 'Gain/Loss'),
                 ...f.textarea('notes', 'Notes')
             ])
@@ -64,8 +63,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         AssetTransfer: f.form('Asset Transfer', [
             f.section('Transfer Details', [
                 ...f.reference('assetId', 'Asset', 'Asset', true),
-                ...f.text('fromDepartment', 'From Department', true),
-                ...f.text('toDepartment', 'To Department', true),
+                ...f.reference('fromDepartmentId', 'From Department', 'Department', true),
+                ...f.reference('toDepartmentId', 'To Department', 'Department', true),
                 ...f.date('transferDate', 'Transfer Date', true),
                 ...f.textarea('reason', 'Reason')
             ])
@@ -87,7 +86,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Revaluation Details', [
                 ...f.reference('assetId', 'Asset', 'Asset', true),
                 ...f.date('revaluationDate', 'Revaluation Date', true),
-                ...f.money('oldValue', 'Old Value'),
+                ...f.money('previousValue', 'Previous Value'),
                 ...f.money('newValue', 'New Value', true),
                 ...f.money('adjustmentAmount', 'Adjustment Amount'),
                 ...f.textarea('reason', 'Reason')

@@ -125,7 +125,7 @@ limitations under the License.
             { key: 'provider', label: 'Provider', sortKey: 'provider', filterKey: 'provider' },
             { key: 'isActive', label: 'Active', sortKey: 'isActive' },
             { key: 'isTestMode', label: 'Test Mode', sortKey: 'isTestMode' },
-            { key: 'transactionFeePercent', label: 'Fee %', sortKey: 'transactionFeePercent' }
+            { key: 'sortOrder', label: 'Sort Order', sortKey: 'sortOrder' }
         ]
     };
 

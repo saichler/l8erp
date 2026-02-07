@@ -64,8 +64,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.checkbox('isActive', 'Is Active'),
                 ...f.number('priority', 'Priority'),
                 ...f.text('customerGroup', 'Customer Group'),
-                ...f.money('minQuantity', 'Min Quantity'),
-                ...f.money('maxQuantity', 'Max Quantity'),
+                ...f.number('minQuantity', 'Min Quantity'),
+                ...f.number('maxQuantity', 'Max Quantity'),
                 ...f.checkbox('applyToAll', 'Apply to All')
             ])
         ]),
@@ -83,9 +83,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('minDeliveryDays', 'Min Delivery Days'),
                 ...f.number('maxDeliveryDays', 'Max Delivery Days'),
                 ...f.checkbox('isActive', 'Is Active'),
-                ...f.money('minOrderAmount', 'Min Order Amount'),
-                ...f.money('maxOrderAmount', 'Max Order Amount'),
-                ...f.number('maxWeight', 'Max Weight'),
                 ...f.number('sortOrder', 'Sort Order'),
                 ...f.checkbox('trackingAvailable', 'Tracking Available')
             ])
@@ -99,10 +96,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('providerConfig', 'Provider Config'),
                 ...f.checkbox('isActive', 'Is Active'),
                 ...f.checkbox('isTestMode', 'Is Test Mode'),
-                ...f.money('minAmount', 'Min Amount'),
-                ...f.money('maxAmount', 'Max Amount'),
-                ...f.number('transactionFeePercent', 'Transaction Fee %'),
-                ...f.money('transactionFeeFixed', 'Transaction Fee Fixed'),
                 ...f.number('sortOrder', 'Sort Order'),
                 ...f.text('iconUrl', 'Icon URL'),
                 ...f.textarea('instructions', 'Instructions'),

@@ -26,7 +26,7 @@ limitations under the License.
         CrmServiceOrder: [
             { key: 'orderId', label: 'ID', sortKey: 'orderId', filterKey: 'orderId' },
             { key: 'orderNumber', label: 'Order #', sortKey: 'orderNumber', filterKey: 'orderNumber' },
-            { key: 'subject', label: 'Subject', sortKey: 'subject', filterKey: 'subject' },
+            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
             { key: 'accountId', label: 'Account', sortKey: 'accountId', filterKey: 'accountId' },
             { key: 'contactId', label: 'Contact', sortKey: 'contactId' },
             {
@@ -42,10 +42,10 @@ limitations under the License.
                 render: (item) => render.serviceOrderPriority(item.priority)
             },
             {
-                key: 'scheduledDate',
+                key: 'scheduledStart',
                 label: 'Scheduled',
-                sortKey: 'scheduledDate',
-                render: (item) => renderDate(item.scheduledDate)
+                sortKey: 'scheduledStart',
+                render: (item) => renderDate(item.scheduledStart)
             },
             {
                 key: 'status',
@@ -59,14 +59,14 @@ limitations under the License.
             { key: 'technicianId', label: 'ID', sortKey: 'technicianId', filterKey: 'technicianId' },
             { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'specialization', label: 'Specialization', sortKey: 'specialization' },
-            { key: 'region', label: 'Region', sortKey: 'region', filterKey: 'region' },
-            { key: 'skillLevel', label: 'Skill Level', sortKey: 'skillLevel' },
+            { key: 'skills', label: 'Skills', sortKey: 'skills' },
+            { key: 'territory', label: 'Territory', sortKey: 'territory', filterKey: 'territory' },
+            { key: 'maxDailyOrders', label: 'Max Daily Orders', sortKey: 'maxDailyOrders' },
             {
-                key: 'isCertified',
-                label: 'Certified',
-                sortKey: 'isCertified',
-                render: (item) => renderBoolean(item.isCertified)
+                key: 'isActive',
+                label: 'Active',
+                sortKey: 'isActive',
+                render: (item) => renderBoolean(item.isActive)
             },
             {
                 key: 'status',
@@ -79,7 +79,7 @@ limitations under the License.
         CrmServiceContract: [
             { key: 'contractId', label: 'ID', sortKey: 'contractId', filterKey: 'contractId' },
             { key: 'contractNumber', label: 'Contract #', sortKey: 'contractNumber', filterKey: 'contractNumber' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
+            { key: 'terms', label: 'Terms', sortKey: 'terms', filterKey: 'terms' },
             { key: 'accountId', label: 'Account', sortKey: 'accountId', filterKey: 'accountId' },
             {
                 key: 'contractType',
@@ -112,19 +112,19 @@ limitations under the License.
             { key: 'serviceOrderId', label: 'Service Order', sortKey: 'serviceOrderId', filterKey: 'serviceOrderId' },
             { key: 'technicianId', label: 'Technician', sortKey: 'technicianId', filterKey: 'technicianId' },
             {
-                key: 'scheduledDate',
+                key: 'scheduleDate',
                 label: 'Date',
-                sortKey: 'scheduledDate',
-                render: (item) => renderDate(item.scheduledDate)
+                sortKey: 'scheduleDate',
+                render: (item) => renderDate(item.scheduleDate)
             },
             { key: 'startTime', label: 'Start Time', sortKey: 'startTime' },
             { key: 'endTime', label: 'End Time', sortKey: 'endTime' },
-            { key: 'estimatedDuration', label: 'Duration (hrs)', sortKey: 'estimatedDuration' },
+            { key: 'scheduleType', label: 'Type', sortKey: 'scheduleType' },
             {
-                key: 'isConfirmed',
-                label: 'Confirmed',
-                sortKey: 'isConfirmed',
-                render: (item) => renderBoolean(item.isConfirmed)
+                key: 'isAvailable',
+                label: 'Available',
+                sortKey: 'isAvailable',
+                render: (item) => renderBoolean(item.isAvailable)
             }
         ],
 
@@ -134,22 +134,22 @@ limitations under the License.
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
             {
-                key: 'unitPrice',
-                label: 'Unit Price',
-                sortKey: 'unitPrice',
-                render: (item) => renderMoney(item.unitPrice)
+                key: 'unitCost',
+                label: 'Unit Cost',
+                sortKey: 'unitCost',
+                render: (item) => renderMoney(item.unitCost)
             },
             {
-                key: 'totalPrice',
-                label: 'Total Price',
-                sortKey: 'totalPrice',
-                render: (item) => renderMoney(item.totalPrice)
+                key: 'totalCost',
+                label: 'Total Cost',
+                sortKey: 'totalCost',
+                render: (item) => renderMoney(item.totalCost)
             },
             {
-                key: 'isInstalled',
-                label: 'Installed',
-                sortKey: 'isInstalled',
-                render: (item) => renderBoolean(item.isInstalled)
+                key: 'isWarranty',
+                label: 'Warranty',
+                sortKey: 'isWarranty',
+                render: (item) => renderBoolean(item.isWarranty)
             }
         ],
 
@@ -158,12 +158,17 @@ limitations under the License.
             { key: 'serviceOrderId', label: 'Service Order', sortKey: 'serviceOrderId', filterKey: 'serviceOrderId' },
             { key: 'technicianId', label: 'Technician', sortKey: 'technicianId', filterKey: 'technicianId' },
             {
-                key: 'visitDate',
-                label: 'Visit Date',
-                sortKey: 'visitDate',
-                render: (item) => renderDate(item.visitDate)
+                key: 'scheduledArrival',
+                label: 'Scheduled',
+                sortKey: 'scheduledArrival',
+                render: (item) => renderDate(item.scheduledArrival)
             },
-            { key: 'arrivalTime', label: 'Arrival', sortKey: 'arrivalTime' },
+            {
+                key: 'actualArrival',
+                label: 'Actual Arrival',
+                sortKey: 'actualArrival',
+                render: (item) => renderDate(item.actualArrival)
+            },
             { key: 'departureTime', label: 'Departure', sortKey: 'departureTime' },
             { key: 'workPerformed', label: 'Work Performed', sortKey: 'workPerformed' },
             {

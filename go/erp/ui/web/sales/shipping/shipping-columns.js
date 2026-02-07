@@ -34,10 +34,10 @@ limitations under the License.
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
             {
-                key: 'plannedDate',
+                key: 'plannedShipDate',
                 label: 'Planned',
-                sortKey: 'plannedDate',
-                render: (item) => renderDate(item.plannedDate)
+                sortKey: 'plannedShipDate',
+                render: (item) => renderDate(item.plannedShipDate)
             },
             {
                 key: 'status',
@@ -52,8 +52,8 @@ limitations under the License.
             { key: 'deliveryOrderId', label: 'Delivery', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            { key: 'pickedQty', label: 'Picked', sortKey: 'pickedQty' },
-            { key: 'shippedQty', label: 'Shipped', sortKey: 'shippedQty' }
+            { key: 'unitOfMeasure', label: 'UOM', sortKey: 'unitOfMeasure' },
+            { key: 'description', label: 'Description', sortKey: 'description' }
         ],
 
         SalesPickRelease: [
@@ -93,8 +93,13 @@ limitations under the License.
             { key: 'docNumber', label: 'Doc #', sortKey: 'docNumber', filterKey: 'docNumber' },
             { key: 'docType', label: 'Type', sortKey: 'docType' },
             { key: 'deliveryOrderId', label: 'Delivery', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
-            { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId' },
-            { key: 'trackingNumber', label: 'Tracking', sortKey: 'trackingNumber' }
+            {
+                key: 'issueDate',
+                label: 'Issue Date',
+                sortKey: 'issueDate',
+                render: (item) => renderDate(item.issueDate)
+            },
+            { key: 'issuedBy', label: 'Issued By', sortKey: 'issuedBy' }
         ],
 
         SalesDeliveryConfirm: [
@@ -107,7 +112,7 @@ limitations under the License.
                 render: (item) => renderDate(item.confirmDate)
             },
             { key: 'receivedBy', label: 'Received By', sortKey: 'receivedBy' },
-            { key: 'signatureOnFile', label: 'Signature', sortKey: 'signatureOnFile' }
+            { key: 'signaturePath', label: 'Signature', sortKey: 'signaturePath' }
         ]
     };
 

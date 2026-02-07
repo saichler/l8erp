@@ -35,9 +35,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Line Details', [
                 ...f.reference('bomId', 'BOM', 'MfgBom', true),
                 ...f.reference('componentItemId', 'Component', 'ScmItem', true),
-                ...f.number('quantity', 'Quantity', true),
+                ...f.number('quantityPer', 'Quantity Per', true),
                 ...f.text('unitOfMeasure', 'UOM'),
-                ...f.number('sequenceNumber', 'Sequence'),
+                ...f.number('lineNumber', 'Line Number'),
                 ...f.number('scrapPercent', 'Scrap %'),
                 ...f.reference('operationId', 'Operation', 'MfgRoutingOperation'),
                 ...f.textarea('notes', 'Notes')
@@ -61,6 +61,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Operation Details', [
                 ...f.reference('routingId', 'Routing', 'MfgRouting', true),
                 ...f.number('operationNumber', 'Operation #', true),
+                ...f.text('operationName', 'Operation Name'),
                 ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
                 ...f.textarea('description', 'Description'),
                 ...f.number('setupTime', 'Setup Time (hrs)'),
@@ -75,12 +76,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('ecoNumber', 'ECO Number', true),
                 ...f.text('title', 'Title', true),
                 ...f.textarea('description', 'Description'),
-                ...f.select('changeType', 'Change Type', enums.ECO_CHANGE_TYPE),
                 ...f.select('status', 'Status', enums.ECO_STATUS),
                 ...f.reference('requestedBy', 'Requested By', 'Employee'),
                 ...f.date('requestDate', 'Request Date'),
-                ...f.date('targetDate', 'Target Date'),
-                ...f.text('priority', 'Priority'),
+                ...f.date('requiredDate', 'Required Date'),
+                ...f.number('priority', 'Priority'),
                 ...f.textarea('reason', 'Reason'),
                 ...f.textarea('notes', 'Notes')
             ])
@@ -89,12 +89,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         MfgEngChangeDetail: f.form('ECO Detail', [
             f.section('Change Details', [
                 ...f.reference('changeOrderId', 'ECO', 'MfgEngChangeOrder', true),
-                ...f.reference('affectedItemId', 'Affected Item', 'ScmItem'),
-                ...f.reference('affectedBomId', 'Affected BOM', 'MfgBom'),
-                ...f.reference('affectedRoutingId', 'Affected Routing', 'MfgRouting'),
-                ...f.textarea('changeDescription', 'Change Description', true),
+                ...f.text('changeType', 'Change Type'),
+                ...f.text('affectedId', 'Affected ID'),
+                ...f.textarea('description', 'Description', true),
                 ...f.text('oldValue', 'Old Value'),
-                ...f.text('newValue', 'New Value')
+                ...f.text('newValue', 'New Value'),
+                ...f.text('oldRevision', 'Old Revision'),
+                ...f.text('newRevision', 'New Revision'),
+                ...f.textarea('notes', 'Notes')
             ])
         ])
     };

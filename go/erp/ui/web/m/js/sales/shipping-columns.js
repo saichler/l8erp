@@ -28,7 +28,7 @@ limitations under the License.
             { key: 'deliveryNumber', label: 'Delivery #', sortKey: 'deliveryNumber', filterKey: 'deliveryNumber' },
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'plannedDate', label: 'Planned', sortKey: 'plannedDate', render: (item) => Layer8MRenderers.renderDate(item.plannedDate) },
+            { key: 'plannedShipDate', label: 'Planned', sortKey: 'plannedShipDate', render: (item) => Layer8MRenderers.renderDate(item.plannedShipDate) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.DELIVERY_STATUS_VALUES, render: (item) => render.deliveryStatus(item.status) }
         ],
 
@@ -37,8 +37,8 @@ limitations under the License.
             { key: 'deliveryOrderId', label: 'Delivery', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            { key: 'pickedQty', label: 'Picked', sortKey: 'pickedQty' },
-            { key: 'shippedQty', label: 'Shipped', sortKey: 'shippedQty' }
+            { key: 'unitOfMeasure', label: 'UOM', sortKey: 'unitOfMeasure' },
+            { key: 'lotNumber', label: 'Lot #', sortKey: 'lotNumber' }
         ],
 
         PickRelease: [
@@ -63,8 +63,8 @@ limitations under the License.
             { key: 'docNumber', label: 'Doc #', sortKey: 'docNumber', filterKey: 'docNumber' },
             { key: 'docType', label: 'Type', sortKey: 'docType' },
             { key: 'deliveryOrderId', label: 'Delivery', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
-            { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId' },
-            { key: 'trackingNumber', label: 'Tracking', sortKey: 'trackingNumber' }
+            { key: 'issueDate', label: 'Issued', sortKey: 'issueDate', render: (item) => Layer8MRenderers.renderDate(item.issueDate) },
+            { key: 'issuedBy', label: 'Issued By', sortKey: 'issuedBy' }
         ],
 
         DeliveryConfirm: [
@@ -72,7 +72,7 @@ limitations under the License.
             { key: 'deliveryOrderId', label: 'Delivery', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
             { key: 'confirmDate', label: 'Confirmed', sortKey: 'confirmDate', render: (item) => Layer8MRenderers.renderDate(item.confirmDate) },
             { key: 'receivedBy', label: 'Received By', sortKey: 'receivedBy' },
-            { key: 'signatureOnFile', label: 'Signature', sortKey: 'signatureOnFile' }
+            { key: 'signaturePath', label: 'Signature', sortKey: 'signaturePath' }
         ]
     };
 

@@ -6,16 +6,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     'use strict';
 
     window.MobileDocIntegration = window.MobileDocIntegration || {};
-    const { renderDate, renderFileSize } = Layer8MRenderers;
+    const { renderDate } = Layer8MRenderers;
     const render = MobileDocIntegration.render;
 
     MobileDocIntegration.columns = {
         DocAttachment: [
             { key: 'attachmentId', label: 'ID', sortKey: 'attachmentId' },
-            { key: 'fileName', label: 'File Name', sortKey: 'fileName' },
+            { key: 'documentId', label: 'Document', sortKey: 'documentId' },
             { key: 'entityType', label: 'Entity Type', sortKey: 'entityType' },
-            { key: 'fileSize', label: 'Size', sortKey: 'fileSize', render: (item) => renderFileSize(item.fileSize) },
-            { key: 'uploadedAt', label: 'Uploaded', sortKey: 'uploadedAt', render: (item) => renderDate(item.uploadedAt) }
+            { key: 'module', label: 'Module', sortKey: 'module' },
+            { key: 'attachedDate', label: 'Attached', sortKey: 'attachedDate', render: (item) => renderDate(item.attachedDate) }
         ],
         DocTemplate: [
             { key: 'templateId', label: 'ID', sortKey: 'templateId' },
@@ -36,14 +36,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'subject', label: 'Subject', sortKey: 'subject' },
             { key: 'fromAddress', label: 'From', sortKey: 'fromAddress' },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.emailCaptureStatus(item.status) },
-            { key: 'receivedAt', label: 'Received', sortKey: 'receivedAt', render: (item) => renderDate(item.receivedAt) }
+            { key: 'receivedDate', label: 'Received', sortKey: 'receivedDate', render: (item) => renderDate(item.receivedDate) }
         ],
         DocScanJob: [
             { key: 'scanJobId', label: 'ID', sortKey: 'scanJobId' },
-            { key: 'sourceName', label: 'Source', sortKey: 'sourceName' },
+            { key: 'name', label: 'Name', sortKey: 'name' },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.scanStatus(item.status) },
             { key: 'pageCount', label: 'Pages', sortKey: 'pageCount' },
-            { key: 'scannedAt', label: 'Scanned', sortKey: 'scannedAt', render: (item) => renderDate(item.scannedAt) }
+            { key: 'initiatedDate', label: 'Initiated', sortKey: 'initiatedDate', render: (item) => renderDate(item.initiatedDate) }
         ]
     };
 

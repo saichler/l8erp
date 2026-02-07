@@ -44,7 +44,7 @@ limitations under the License.
                 ...f.date('effectiveDate', 'Effective Date', true),
                 ...f.date('expiryDate', 'Expiry Date'),
                 ...f.number('availableHours', 'Available Hours'),
-                ...f.number('maxCapacity', 'Max Capacity')
+                ...f.number('capacityUnits', 'Capacity Units')
             ])
         ]),
         MfgLaborEntry: f.form('Labor Entry', [
@@ -55,7 +55,7 @@ limitations under the License.
                 ...f.datetime('startTime', 'Start Time'),
                 ...f.datetime('endTime', 'End Time'),
                 ...f.number('hoursWorked', 'Hours Worked'),
-                ...f.number('quantityProduced', 'Qty Produced'),
+                ...f.number('quantityCompleted', 'Qty Completed'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -66,7 +66,7 @@ limitations under the License.
                 ...f.datetime('startTime', 'Start Time'),
                 ...f.datetime('endTime', 'End Time'),
                 ...f.number('machineHours', 'Machine Hours'),
-                ...f.number('quantityProduced', 'Qty Produced'),
+                ...f.number('quantityCompleted', 'Qty Completed'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -77,7 +77,7 @@ limitations under the License.
                 ...f.select('shiftType', 'Shift Type', enums.SHIFT_TYPE),
                 ...f.text('startTime', 'Start Time', true),
                 ...f.text('endTime', 'End Time', true),
-                ...f.number('breakDurationMinutes', 'Break Duration (min)'),
+                ...f.number('breakDuration', 'Break Duration (min)'),
                 ...f.checkbox('isActive', 'Active')
             ])
         ]),
@@ -88,7 +88,7 @@ limitations under the License.
                 ...f.datetime('startTime', 'Start Time', true),
                 ...f.datetime('endTime', 'End Time'),
                 ...f.number('durationMinutes', 'Duration (minutes)'),
-                ...f.select('reason', 'Reason', enums.DOWNTIME_REASON),
+                ...f.select('reasonCode', 'Reason Code', enums.DOWNTIME_REASON),
                 ...f.textarea('description', 'Description')
             ])
         ])

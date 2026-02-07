@@ -37,9 +37,9 @@ limitations under the License.
             { key: 'lineId', label: 'ID', sortKey: 'lineId' },
             { key: 'bomId', label: 'BOM', sortKey: 'bomId' },
             { key: 'componentItemId', label: 'Component', sortKey: 'componentItemId' },
-            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
+            { key: 'quantityPer', label: 'Qty Per', sortKey: 'quantityPer' },
             { key: 'unitOfMeasure', label: 'UOM', sortKey: 'unitOfMeasure' },
-            { key: 'sequenceNumber', label: 'Seq #', sortKey: 'sequenceNumber' }
+            { key: 'lineNumber', label: 'Line #', sortKey: 'lineNumber' }
         ],
         MfgRouting: [
             { key: 'routingId', label: 'ID', sortKey: 'routingId' },
@@ -62,15 +62,15 @@ limitations under the License.
             { key: 'changeOrderId', label: 'ID', sortKey: 'changeOrderId' },
             { key: 'ecoNumber', label: 'ECO #', sortKey: 'ecoNumber' },
             { key: 'title', label: 'Title', sortKey: 'title' },
-            { key: 'changeType', label: 'Type', sortKey: 'changeType', render: (item) => enums.ECO_CHANGE_TYPE[item.changeType] || 'Unknown' },
+            { key: 'priority', label: 'Priority', sortKey: 'priority' },
             { key: 'requestDate', label: 'Request Date', sortKey: 'requestDate', render: (item) => render.date(item.requestDate) },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.ecoStatus(item.status) }
         ],
         MfgEngChangeDetail: [
             { key: 'detailId', label: 'ID', sortKey: 'detailId' },
             { key: 'changeOrderId', label: 'ECO', sortKey: 'changeOrderId' },
-            { key: 'affectedItemId', label: 'Item', sortKey: 'affectedItemId' },
-            { key: 'changeDescription', label: 'Change', sortKey: 'changeDescription' },
+            { key: 'affectedId', label: 'Affected', sortKey: 'affectedId' },
+            { key: 'description', label: 'Description', sortKey: 'description' },
             { key: 'oldValue', label: 'Old Value', sortKey: 'oldValue' },
             { key: 'newValue', label: 'New Value', sortKey: 'newValue' }
         ]

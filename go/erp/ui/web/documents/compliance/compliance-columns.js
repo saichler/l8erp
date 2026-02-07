@@ -18,7 +18,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'description', label: 'Description', sortKey: 'description' },
             { key: 'retentionDays', label: 'Retention (Days)', sortKey: 'retentionDays' },
-            { key: 'action', label: 'Action', sortKey: 'action', render: (item) => render.retentionAction(item.action) },
+            { key: 'actionOnExpiry', label: 'Action', sortKey: 'actionOnExpiry', render: (item) => render.retentionAction(item.actionOnExpiry) },
             { key: 'categoryId', label: 'Category', sortKey: 'categoryId' },
             { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
         ],
@@ -28,10 +28,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'description', label: 'Description', sortKey: 'description' },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.legalHoldStatus(item.status) },
-            { key: 'matterReference', label: 'Matter Ref', sortKey: 'matterReference' },
+            { key: 'matterId', label: 'Matter ID', sortKey: 'matterId' },
             { key: 'custodianId', label: 'Custodian', sortKey: 'custodianId' },
-            { key: 'startDate', label: 'Start Date', sortKey: 'startDate', render: (item) => renderDate(item.startDate) },
-            { key: 'endDate', label: 'End Date', sortKey: 'endDate', render: (item) => renderDate(item.endDate) }
+            { key: 'effectiveDate', label: 'Effective Date', sortKey: 'effectiveDate', render: (item) => renderDate(item.effectiveDate) },
+            { key: 'releaseDate', label: 'Release Date', sortKey: 'releaseDate', render: (item) => renderDate(item.releaseDate) }
         ],
 
         DocAccessLog: [
@@ -39,19 +39,20 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'documentId', label: 'Document', sortKey: 'documentId', filterKey: 'documentId' },
             { key: 'userId', label: 'User', sortKey: 'userId' },
             { key: 'action', label: 'Action', sortKey: 'action', render: (item) => render.accessAction(item.action) },
-            { key: 'accessedAt', label: 'Accessed', sortKey: 'accessedAt', render: (item) => renderDate(item.accessedAt) },
+            { key: 'accessDate', label: 'Accessed', sortKey: 'accessDate', render: (item) => renderDate(item.accessDate) },
             { key: 'ipAddress', label: 'IP Address', sortKey: 'ipAddress' },
             { key: 'userAgent', label: 'User Agent', sortKey: 'userAgent' }
         ],
 
         DocArchiveJob: [
             { key: 'jobId', label: 'ID', sortKey: 'jobId', filterKey: 'jobId' },
-            { key: 'policyId', label: 'Policy', sortKey: 'policyId', filterKey: 'policyId' },
+            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.archiveStatus(item.status) },
-            { key: 'startedAt', label: 'Started', sortKey: 'startedAt', render: (item) => renderDate(item.startedAt) },
-            { key: 'completedAt', label: 'Completed', sortKey: 'completedAt', render: (item) => renderDate(item.completedAt) },
+            { key: 'retentionPolicyId', label: 'Policy', sortKey: 'retentionPolicyId' },
+            { key: 'initiatedDate', label: 'Initiated', sortKey: 'initiatedDate', render: (item) => renderDate(item.initiatedDate) },
+            { key: 'completedDate', label: 'Completed', sortKey: 'completedDate', render: (item) => renderDate(item.completedDate) },
             { key: 'documentCount', label: 'Documents', sortKey: 'documentCount' },
-            { key: 'startedBy', label: 'Started By', sortKey: 'startedBy' },
+            { key: 'initiatedBy', label: 'Initiated By', sortKey: 'initiatedBy' },
             { key: 'errorMessage', label: 'Error', sortKey: 'errorMessage' }
         ],
 
@@ -61,9 +62,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'userId', label: 'User', sortKey: 'userId' },
             { key: 'action', label: 'Action', sortKey: 'action' },
             { key: 'timestamp', label: 'Timestamp', sortKey: 'timestamp', render: (item) => renderDate(item.timestamp) },
-            { key: 'oldValue', label: 'Old Value', sortKey: 'oldValue' },
-            { key: 'newValue', label: 'New Value', sortKey: 'newValue' },
-            { key: 'fieldName', label: 'Field', sortKey: 'fieldName' }
+            { key: 'oldValues', label: 'Old Values', sortKey: 'oldValues' },
+            { key: 'newValues', label: 'New Values', sortKey: 'newValues' },
+            { key: 'changeSummary', label: 'Summary', sortKey: 'changeSummary' }
         ]
     };
 

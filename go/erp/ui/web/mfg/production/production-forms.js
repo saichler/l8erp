@@ -37,10 +37,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Operation Details', [
                 ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
                 ...f.number('operationNumber', 'Operation #', true),
+                ...f.text('operationName', 'Operation Name'),
                 ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
-                ...f.textarea('description', 'Description'),
-                ...f.number('setupTime', 'Setup Time (hrs)'),
-                ...f.number('runTime', 'Run Time (hrs)'),
+                ...f.number('setupTimePlanned', 'Setup Time Planned (hrs)'),
+                ...f.number('runTimePlanned', 'Run Time Planned (hrs)'),
                 ...f.select('status', 'Status', enums.OPERATION_STATUS)
             ])
         ]),
@@ -48,11 +48,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         MfgProductionOrder: f.form('Production Order', [
             f.section('Order Details', [
                 ...f.text('orderNumber', 'Order Number', true),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.date('scheduledDate', 'Scheduled Date'),
+                ...f.reference('customerId', 'Customer', 'Customer'),
+                ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder'),
+                ...f.date('orderDate', 'Order Date'),
+                ...f.date('requiredDate', 'Required Date'),
                 ...f.select('status', 'Status', enums.WORK_ORDER_STATUS),
-                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
+                ...f.number('priority', 'Priority'),
+                ...f.reference('plannerId', 'Planner', 'Employee'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -61,7 +63,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Line Details', [
                 ...f.reference('prodOrderId', 'Prod Order', 'MfgProductionOrder', true),
                 ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('requiredQty', 'Required Qty', true),
+                ...f.number('quantityOrdered', 'Qty Ordered', true),
+                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder'),
                 ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse')
             ])
         ]),
@@ -71,9 +74,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('batchNumber', 'Batch Number', true),
                 ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
                 ...f.number('quantity', 'Quantity', true),
-                ...f.date('startDate', 'Start Date'),
-                ...f.date('endDate', 'End Date'),
-                ...f.select('status', 'Status', enums.BATCH_STATUS)
+                ...f.date('productionDate', 'Production Date'),
+                ...f.date('expiryDate', 'Expiry Date'),
+                ...f.select('qualityStatus', 'Quality Status', enums.BATCH_STATUS)
             ])
         ]),
 
@@ -81,7 +84,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Consumption Details', [
                 ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
                 ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('quantity', 'Quantity', true),
+                ...f.number('quantityConsumed', 'Qty Consumed', true),
                 ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
                 ...f.date('consumptionDate', 'Date')
             ])

@@ -27,8 +27,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('shippingAmount', 'Shipping Amount'),
                 ...f.money('discountAmount', 'Discount Amount'),
                 ...f.money('totalAmount', 'Total Amount'),
-                ...f.reference('shippingAddressId', 'Shipping Address', 'EcomAddress'),
-                ...f.reference('billingAddressId', 'Billing Address', 'EcomAddress'),
+                ...f.reference('shippingAddress', 'Shipping Address', 'EcomCustomerAddress'),
+                ...f.reference('billingAddress', 'Billing Address', 'EcomCustomerAddress'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -54,7 +54,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('newStatus', 'New Status', enums.ORDER_STATUS, true),
                 ...f.date('changedAt', 'Changed At', true),
                 ...f.text('changedBy', 'Changed By'),
-                ...f.textarea('reason', 'Reason')
+                ...f.textarea('notes', 'Notes'),
+                ...f.checkbox('notifyCustomer', 'Notify Customer')
             ])
         ]),
 
@@ -77,13 +78,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Return Line Details', [
                 ...f.reference('returnId', 'Return', 'EcomReturn', true),
                 ...f.reference('productId', 'Product', 'EcomProduct', true),
+                ...f.reference('orderLineId', 'Order Line', 'EcomOrderLine'),
                 ...f.text('sku', 'SKU'),
                 ...f.text('name', 'Name', true),
                 ...f.number('quantity', 'Quantity', true),
-                ...f.money('unitPrice', 'Unit Price'),
                 ...f.money('refundAmount', 'Refund Amount'),
                 ...f.textarea('reason', 'Reason'),
-                ...f.text('condition', 'Condition')
+                ...f.text('condition', 'Condition'),
+                ...f.checkbox('restock', 'Restock')
             ])
         ])
     };

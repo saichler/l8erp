@@ -20,11 +20,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.reference('salespersonId', 'Salesperson', 'Employee'),
                 ...f.reference('territoryId', 'Territory', 'SalesTerritory'),
-                ...f.date('periodStart', 'Period Start', true),
-                ...f.date('periodEnd', 'Period End', true),
+                ...f.select('period', 'Period', enums.TARGET_PERIOD, true),
+                ...f.number('year', 'Year', true),
                 ...f.money('targetAmount', 'Target Amount', true),
                 ...f.money('achievedAmount', 'Achieved Amount'),
-                ...f.select('status', 'Status', enums.TARGET_STATUS),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -32,12 +31,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         SalesTerritory: f.form('Sales Territory', [
             f.section('Territory Details', [
                 ...f.text('name', 'Name', true),
-                ...f.text('code', 'Code', true),
-                ...f.select('territoryType', 'Type', enums.TERRITORY_TYPE, true),
-                ...f.reference('parentId', 'Parent Territory', 'SalesTerritory'),
                 ...f.textarea('description', 'Description'),
+                ...f.select('territoryType', 'Type', enums.TERRITORY_TYPE, true),
+                ...f.reference('parentTerritoryId', 'Parent Territory', 'SalesTerritory'),
                 ...f.text('region', 'Region'),
-                ...f.text('country', 'Country'),
+                ...f.reference('managerId', 'Manager', 'Employee'),
                 ...f.checkbox('isActive', 'Active')
             ])
         ]),
@@ -58,11 +56,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('commissionType', 'Commission Type', enums.COMMISSION_TYPE, true),
-                ...f.number('rate', 'Rate/Percentage', true),
+                ...f.number('baseRate', 'Base Rate', true),
                 ...f.date('effectiveDate', 'Effective Date', true),
-                ...f.date('expirationDate', 'Expiration Date'),
-                ...f.money('minSaleAmount', 'Min Sale Amount'),
-                ...f.money('maxCommission', 'Max Commission'),
+                ...f.date('expiryDate', 'Expiry Date'),
                 ...f.checkbox('isActive', 'Active')
             ])
         ]),
@@ -72,11 +68,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('salespersonId', 'Salesperson', 'Employee', true),
                 ...f.reference('planId', 'Commission Plan', 'SalesCommissionPlan', true),
                 ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder'),
-                ...f.money('saleAmount', 'Sale Amount', true),
+                ...f.money('salesAmount', 'Sale Amount', true),
                 ...f.number('commissionRate', 'Commission Rate'),
                 ...f.money('commissionAmount', 'Commission Amount'),
-                ...f.date('calcDate', 'Calculation Date'),
-                ...f.checkbox('isPaid', 'Paid'),
+                ...f.date('calculationDate', 'Calculation Date'),
+                ...f.date('paidDate', 'Paid Date'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -87,9 +83,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('salespersonId', 'Salesperson', 'Employee'),
                 ...f.reference('territoryId', 'Territory', 'SalesTerritory'),
                 ...f.select('category', 'Category', enums.FORECAST_CATEGORY, true),
-                ...f.date('forecastDate', 'Forecast Date', true),
-                ...f.date('periodStart', 'Period Start'),
-                ...f.date('periodEnd', 'Period End'),
+                ...f.date('expectedCloseDate', 'Expected Close', true),
                 ...f.money('forecastAmount', 'Forecast Amount', true),
                 ...f.number('probability', 'Probability %'),
                 ...f.textarea('notes', 'Notes')

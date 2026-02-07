@@ -28,10 +28,10 @@ limitations under the License.
         MfgMrpRun: f.form('MRP Run', [
             f.section('Run Details', [
                 ...f.text('runNumber', 'Run Number', true),
-                ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.date('runDate', 'Run Date'),
-                ...f.number('planningHorizonDays', 'Planning Horizon (days)'),
+                ...f.date('planningHorizonStart', 'Horizon Start'),
+                ...f.date('planningHorizonEnd', 'Horizon End'),
                 ...f.select('status', 'Status', enums.MRP_STATUS),
                 ...f.textarea('notes', 'Notes')
             ])
@@ -43,18 +43,17 @@ limitations under the License.
                 ...f.select('requirementType', 'Type', enums.REQUIREMENT_TYPE),
                 ...f.number('quantity', 'Quantity', true),
                 ...f.date('requiredDate', 'Required Date'),
-                ...f.text('sourceOrderId', 'Source Order'),
-                ...f.text('sourceOrderType', 'Source Type'),
+                ...f.text('sourceId', 'Source ID'),
+                ...f.text('sourceType', 'Source Type'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
         MfgCapacityPlan: f.form('Capacity Plan', [
             f.section('Plan Details', [
                 ...f.text('planNumber', 'Plan Number', true),
-                ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
-                ...f.date('startDate', 'Start Date', true),
-                ...f.date('endDate', 'End Date', true),
+                ...f.date('planningStart', 'Planning Start', true),
+                ...f.date('planningEnd', 'Planning End', true),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -62,7 +61,7 @@ limitations under the License.
             f.section('Load Details', [
                 ...f.reference('planId', 'Capacity Plan', 'MfgCapacityPlan', true),
                 ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
-                ...f.date('periodDate', 'Period Date', true),
+                ...f.date('periodStart', 'Period Start', true),
                 ...f.number('requiredHours', 'Required Hours'),
                 ...f.number('availableHours', 'Available Hours'),
                 ...f.number('loadPercent', 'Load %')
@@ -70,10 +69,10 @@ limitations under the License.
         ]),
         MfgProdSchedule: f.form('Production Schedule', [
             f.section('Schedule Details', [
-                ...f.text('scheduleName', 'Schedule Name', true),
+                ...f.text('scheduleNumber', 'Schedule Number', true),
                 ...f.textarea('description', 'Description'),
-                ...f.date('startDate', 'Start Date', true),
-                ...f.date('endDate', 'End Date', true),
+                ...f.date('scheduleStart', 'Schedule Start', true),
+                ...f.date('scheduleEnd', 'Schedule End', true),
                 ...f.select('status', 'Status', enums.SCHEDULE_STATUS),
                 ...f.textarea('notes', 'Notes')
             ])
@@ -84,8 +83,8 @@ limitations under the License.
                 ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
                 ...f.reference('operationId', 'Operation', 'MfgWorkOrderOp'),
                 ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
-                ...f.datetime('startTime', 'Start Time', true),
-                ...f.datetime('endTime', 'End Time', true),
+                ...f.datetime('scheduledStart', 'Scheduled Start', true),
+                ...f.datetime('scheduledEnd', 'Scheduled End', true),
                 ...f.textarea('notes', 'Notes')
             ])
         ])

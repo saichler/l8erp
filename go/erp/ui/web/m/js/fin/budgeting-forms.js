@@ -48,16 +48,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
         BudgetScenario: f.form('Budget Scenario', [
             f.section('Scenario Details', [
-                ...f.text('name', 'Name', true),
+                ...f.text('scenarioName', 'Scenario Name', true),
                 ...f.textarea('description', 'Description'),
-                ...f.reference('budgetId', 'Budget', 'Budget', true),
-                ...f.checkbox('isBaseline', 'Baseline')
+                ...f.reference('baseBudgetId', 'Base Budget', 'Budget', true),
+                ...f.checkbox('isActive', 'Active')
             ])
         ]),
 
         CapitalExpenditure: f.form('Capital Expenditure', [
             f.section('CapEx Details', [
-                ...f.text('name', 'Name', true),
+                ...f.text('projectName', 'Project Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.money('requestedAmount', 'Requested Amount', true),
                 ...f.money('approvedAmount', 'Approved Amount'),
@@ -71,9 +71,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('forecastType', 'Forecast Type', enums.FORECAST_TYPE, true),
                 ...f.date('periodStart', 'Period Start', true),
                 ...f.date('periodEnd', 'Period End', true),
-                ...f.money('forecastAmount', 'Forecast Amount', true),
+                ...f.money('projectedAmount', 'Projected Amount', true),
                 ...f.money('actualAmount', 'Actual Amount'),
-                ...f.textarea('assumptions', 'Assumptions')
+                ...f.textarea('notes', 'Notes')
             ])
         ])
     };

@@ -15,8 +15,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Policy Details', [
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
-                ...f.number('retentionPeriod', 'Retention Period (Days)', true),
-                ...f.select('status', 'Status', enums.RETENTION_STATUS),
+                ...f.number('retentionDays', 'Retention Days', true),
+                ...f.select('actionOnExpiry', 'Action on Expiry', enums.RETENTION_ACTION),
                 ...f.checkbox('isActive', 'Active')
             ])
         ]),
@@ -24,9 +24,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         DocLegalHold: f.form('Legal Hold', [
             f.section('Hold Details', [
                 ...f.text('name', 'Name', true),
-                ...f.reference('documentId', 'Document', 'DocDocument', true),
-                ...f.textarea('reason', 'Reason'),
-                ...f.select('status', 'Status', enums.LEGAL_HOLD_STATUS)
+                ...f.textarea('description', 'Description'),
+                ...f.text('matterId', 'Matter ID'),
+                ...f.select('status', 'Status', enums.LEGAL_HOLD_STATUS),
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.textarea('notes', 'Notes')
             ])
         ]),
 
@@ -34,17 +36,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Log Details', [
                 ...f.reference('documentId', 'Document', 'DocDocument', true),
                 ...f.reference('userId', 'User', 'Employee', true),
-                ...f.select('accessType', 'Access Type', enums.ACCESS_TYPE),
+                ...f.select('action', 'Action', enums.ACCESS_ACTION),
                 ...f.text('ipAddress', 'IP Address')
             ])
         ]),
 
         DocArchiveJob: f.form('Archive Job', [
             f.section('Archive Details', [
-                ...f.reference('documentId', 'Document', 'DocDocument', true),
+                ...f.text('name', 'Name', true),
                 ...f.text('archiveLocation', 'Archive Location'),
                 ...f.select('status', 'Status', enums.ARCHIVE_STATUS),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('description', 'Description')
             ])
         ]),
 
@@ -52,8 +54,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Audit Details', [
                 ...f.text('entityType', 'Entity Type', true),
                 ...f.text('entityId', 'Entity ID', true),
-                ...f.select('action', 'Action', enums.AUDIT_ACTION),
-                ...f.textarea('details', 'Details')
+                ...f.text('action', 'Action'),
+                ...f.text('changeSummary', 'Change Summary')
             ])
         ])
     };
@@ -62,8 +64,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         DocRetentionPolicy: 'policyId',
         DocLegalHold: 'holdId',
         DocAccessLog: 'logId',
-        DocArchiveJob: 'archiveId',
-        DocAuditTrail: 'auditId'
+        DocArchiveJob: 'jobId',
+        DocAuditTrail: 'trailId'
     };
 
 })();

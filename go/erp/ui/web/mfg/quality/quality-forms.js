@@ -35,9 +35,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('inspectionType', 'Inspection Type', enums.INSPECTION_TYPE),
-                ...f.number('sequenceNumber', 'Sequence'),
+                ...f.number('sequence', 'Sequence'),
                 ...f.text('characteristic', 'Characteristic'),
-                ...f.text('targetValue', 'Target Value'),
+                ...f.text('specification', 'Specification'),
                 ...f.number('upperLimit', 'Upper Limit'),
                 ...f.number('lowerLimit', 'Lower Limit'),
                 ...f.text('unitOfMeasure', 'UOM'),
@@ -55,9 +55,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('inspectorId', 'Inspector', 'Employee'),
                 ...f.text('lotNumber', 'Lot Number'),
                 ...f.number('quantityInspected', 'Qty Inspected'),
-                ...f.number('quantityPassed', 'Qty Passed'),
-                ...f.number('quantityFailed', 'Qty Failed'),
-                ...f.select('result', 'Result', enums.INSPECTION_RESULT),
+                ...f.number('quantityAccepted', 'Qty Accepted'),
+                ...f.number('quantityRejected', 'Qty Rejected'),
+                ...f.select('overallResult', 'Result', enums.INSPECTION_RESULT),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -67,8 +67,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('inspectionId', 'Inspection', 'MfgQualityInspection', true),
                 ...f.reference('pointId', 'Inspection Point', 'MfgInspectionPoint', true),
                 ...f.text('measuredValue', 'Measured Value'),
-                ...f.text('targetValue', 'Target Value'),
+                ...f.text('textValue', 'Text Value'),
                 ...f.select('result', 'Result', enums.INSPECTION_RESULT),
+                ...f.checkbox('isInSpec', 'In Spec'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -83,9 +84,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('inspectionId', 'Inspection', 'MfgQualityInspection'),
                 ...f.select('severity', 'Severity', enums.NCR_SEVERITY),
                 ...f.select('status', 'Status', enums.NCR_STATUS),
-                ...f.date('reportDate', 'Report Date'),
+                ...f.date('reportedDate', 'Report Date'),
                 ...f.reference('reportedBy', 'Reported By', 'Employee'),
-                ...f.number('affectedQuantity', 'Affected Qty'),
+                ...f.number('quantityAffected', 'Affected Qty'),
                 ...f.select('disposition', 'Disposition', enums.NCR_DISPOSITION),
                 ...f.textarea('rootCause', 'Root Cause'),
                 ...f.textarea('notes', 'Notes')

@@ -32,7 +32,7 @@ window.MobileSalesShipping = window.MobileSalesShipping || {};
                 ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder', true),
                 ...f.reference('customerId', 'Customer', 'Customer', true),
                 ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse', true),
-                ...f.date('plannedDate', 'Planned Date', true),
+                ...f.date('plannedShipDate', 'Planned Date', true),
                 ...f.select('status', 'Status', enums.DELIVERY_STATUS),
                 ...f.reference('carrierId', 'Carrier', 'ScmCarrier'),
                 ...f.text('shippingMethod', 'Shipping Method'),
@@ -46,8 +46,7 @@ window.MobileSalesShipping = window.MobileSalesShipping || {};
                 ...f.reference('salesOrderLineId', 'Order Line', 'SalesOrderLine'),
                 ...f.reference('itemId', 'Item', 'ScmItem', true),
                 ...f.number('quantity', 'Quantity', true),
-                ...f.number('pickedQty', 'Picked Qty'),
-                ...f.number('shippedQty', 'Shipped Qty'),
+                ...f.text('unitOfMeasure', 'UOM'),
                 ...f.text('lotNumber', 'Lot #'),
                 ...f.text('serialNumber', 'Serial #')
             ])
@@ -83,11 +82,9 @@ window.MobileSalesShipping = window.MobileSalesShipping || {};
                 ...f.text('docNumber', 'Document #', true),
                 ...f.text('docType', 'Document Type', true),
                 ...f.reference('deliveryOrderId', 'Delivery Order', 'DeliveryOrder', true),
-                ...f.reference('carrierId', 'Carrier', 'ScmCarrier'),
-                ...f.text('trackingNumber', 'Tracking Number'),
-                ...f.date('shipDate', 'Ship Date'),
-                ...f.date('estimatedArrival', 'Est. Arrival'),
-                ...f.money('freightCost', 'Freight Cost'),
+                ...f.date('issueDate', 'Issue Date'),
+                ...f.text('issuedBy', 'Issued By'),
+                ...f.text('filePath', 'File Path'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -97,8 +94,8 @@ window.MobileSalesShipping = window.MobileSalesShipping || {};
                 ...f.reference('deliveryOrderId', 'Delivery Order', 'DeliveryOrder', true),
                 ...f.date('confirmDate', 'Confirm Date', true),
                 ...f.text('receivedBy', 'Received By'),
-                ...f.checkbox('signatureOnFile', 'Signature On File'),
-                ...f.text('condition', 'Condition'),
+                ...f.text('signaturePath', 'Signature Path'),
+                ...f.checkbox('isDamaged', 'Damaged'),
                 ...f.textarea('notes', 'Notes')
             ])
         ])

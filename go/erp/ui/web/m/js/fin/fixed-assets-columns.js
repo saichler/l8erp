@@ -37,17 +37,17 @@ limitations under the License.
             { key: 'categoryId', label: 'ID', sortKey: 'categoryId', filterKey: 'categoryId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            { key: 'depreciationMethod', label: 'Depreciation Method', sortKey: 'depreciationMethod', render: (item) => render.depreciationMethod(item.depreciationMethod) },
-            { key: 'usefulLife', label: 'Useful Life', sortKey: 'usefulLife' }
+            { key: 'defaultDepreciationMethod', label: 'Depreciation Method', sortKey: 'defaultDepreciationMethod', render: (item) => render.depreciationMethod(item.defaultDepreciationMethod) },
+            { key: 'defaultUsefulLifeMonths', label: 'Useful Life (Months)', sortKey: 'defaultUsefulLifeMonths' }
         ],
 
         DepreciationSchedule: [
             { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
             { key: 'assetId', label: 'Asset', sortKey: 'assetId', filterKey: 'assetId' },
-            { key: 'periodDate', label: 'Period Date', sortKey: 'periodDate', render: (item) => Layer8MRenderers.renderDate(item.periodDate) },
+            { key: 'depreciationDate', label: 'Depreciation Date', sortKey: 'depreciationDate', render: (item) => Layer8MRenderers.renderDate(item.depreciationDate) },
             { key: 'depreciationAmount', label: 'Depreciation', sortKey: 'depreciationAmount', render: (item) => Layer8MRenderers.renderMoney(item.depreciationAmount) },
-            { key: 'accumulatedDepreciation', label: 'Accumulated', sortKey: 'accumulatedDepreciation', render: (item) => Layer8MRenderers.renderMoney(item.accumulatedDepreciation) },
-            { key: 'bookValue', label: 'Book Value', sortKey: 'bookValue', render: (item) => Layer8MRenderers.renderMoney(item.bookValue) }
+            { key: 'accumulatedAmount', label: 'Accumulated', sortKey: 'accumulatedAmount', render: (item) => Layer8MRenderers.renderMoney(item.accumulatedAmount) },
+            { key: 'remainingValue', label: 'Remaining Value', sortKey: 'remainingValue', render: (item) => Layer8MRenderers.renderMoney(item.remainingValue) }
         ],
 
         AssetDisposal: [
@@ -55,15 +55,15 @@ limitations under the License.
             { key: 'assetId', label: 'Asset', sortKey: 'assetId', filterKey: 'assetId' },
             { key: 'disposalDate', label: 'Disposal Date', sortKey: 'disposalDate', render: (item) => Layer8MRenderers.renderDate(item.disposalDate) },
             { key: 'disposalMethod', label: 'Method', sortKey: 'disposalMethod', render: (item) => render.disposalMethod(item.disposalMethod) },
-            { key: 'salePrice', label: 'Sale Price', sortKey: 'salePrice', render: (item) => Layer8MRenderers.renderMoney(item.salePrice) },
+            { key: 'disposalProceeds', label: 'Disposal Proceeds', sortKey: 'disposalProceeds', render: (item) => Layer8MRenderers.renderMoney(item.disposalProceeds) },
             { key: 'gainLoss', label: 'Gain/Loss', sortKey: 'gainLoss', render: (item) => Layer8MRenderers.renderMoney(item.gainLoss) }
         ],
 
         AssetTransfer: [
             { key: 'transferId', label: 'ID', sortKey: 'transferId', filterKey: 'transferId' },
             { key: 'assetId', label: 'Asset', sortKey: 'assetId', filterKey: 'assetId' },
-            { key: 'fromDepartment', label: 'From Department', sortKey: 'fromDepartment', filterKey: 'fromDepartment' },
-            { key: 'toDepartment', label: 'To Department', sortKey: 'toDepartment', filterKey: 'toDepartment' },
+            { key: 'fromDepartmentId', label: 'From Department', sortKey: 'fromDepartmentId', filterKey: 'fromDepartmentId' },
+            { key: 'toDepartmentId', label: 'To Department', sortKey: 'toDepartmentId', filterKey: 'toDepartmentId' },
             { key: 'transferDate', label: 'Transfer Date', sortKey: 'transferDate', render: (item) => Layer8MRenderers.renderDate(item.transferDate) }
         ],
 
@@ -80,7 +80,7 @@ limitations under the License.
             { key: 'revaluationId', label: 'ID', sortKey: 'revaluationId', filterKey: 'revaluationId' },
             { key: 'assetId', label: 'Asset', sortKey: 'assetId', filterKey: 'assetId' },
             { key: 'revaluationDate', label: 'Revaluation Date', sortKey: 'revaluationDate', render: (item) => Layer8MRenderers.renderDate(item.revaluationDate) },
-            { key: 'oldValue', label: 'Old Value', sortKey: 'oldValue', render: (item) => Layer8MRenderers.renderMoney(item.oldValue) },
+            { key: 'previousValue', label: 'Previous Value', sortKey: 'previousValue', render: (item) => Layer8MRenderers.renderMoney(item.previousValue) },
             { key: 'newValue', label: 'New Value', sortKey: 'newValue', render: (item) => Layer8MRenderers.renderMoney(item.newValue) },
             { key: 'adjustmentAmount', label: 'Adjustment', sortKey: 'adjustmentAmount', render: (item) => Layer8MRenderers.renderMoney(item.adjustmentAmount) }
         ]

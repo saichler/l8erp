@@ -80,11 +80,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
         ExchangeRate: f.form('Exchange Rate', [
             f.section('Rate Details', [
-                ...f.reference('sourceCurrencyId', 'Source Currency', 'Currency', true),
-                ...f.reference('targetCurrencyId', 'Target Currency', 'Currency', true),
+                ...f.reference('fromCurrencyId', 'From Currency', 'Currency', true),
+                ...f.reference('toCurrencyId', 'To Currency', 'Currency', true),
                 ...f.number('rate', 'Rate', true),
                 ...f.date('effectiveDate', 'Effective Date', true),
-                ...f.date('expirationDate', 'Expiration Date')
+                ...f.date('endDate', 'End Date')
             ])
         ]),
 
@@ -92,9 +92,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Balance Details', [
                 ...f.reference('accountId', 'Account', 'Account', true),
                 ...f.reference('fiscalPeriodId', 'Fiscal Period', 'FiscalPeriod', true),
-                ...f.money('debitBalance', 'Debit Balance'),
-                ...f.money('creditBalance', 'Credit Balance'),
-                ...f.money('netBalance', 'Net Balance')
+                ...f.money('periodDebit', 'Period Debit'),
+                ...f.money('periodCredit', 'Period Credit')
             ])
         ])
     };

@@ -47,7 +47,7 @@ window.MobileSalesBilling = window.MobileSalesBilling || {};
                 ...f.reference('scheduleId', 'Billing Schedule', 'BillingSchedule', true),
                 ...f.textarea('description', 'Description'),
                 ...f.date('targetDate', 'Target Date', true),
-                ...f.date('achievedDate', 'Achieved Date'),
+                ...f.date('actualDate', 'Actual Date'),
                 ...f.select('status', 'Status', enums.MILESTONE_STATUS),
                 ...f.money('amount', 'Amount', true),
                 ...f.number('percentage', 'Percentage'),
@@ -64,8 +64,7 @@ window.MobileSalesBilling = window.MobileSalesBilling || {};
                 ...f.money('totalRevenue', 'Total Revenue', true),
                 ...f.money('recognizedRevenue', 'Recognized Revenue'),
                 ...f.money('deferredRevenue', 'Deferred Revenue'),
-                ...f.select('status', 'Status', enums.REVENUE_STATUS),
-                ...f.reference('accountId', 'Revenue Account', 'Account'),
+                ...f.reference('revenueAccountId', 'Revenue Account', 'Account'),
                 ...f.textarea('notes', 'Notes')
             ])
         ])

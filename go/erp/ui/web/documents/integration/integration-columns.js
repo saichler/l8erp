@@ -9,19 +9,19 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
     window.DocIntegration = window.DocIntegration || {};
 
-    const { renderDate, renderFileSize } = Layer8DRenderers;
+    const { renderDate } = Layer8DRenderers;
     const render = DocIntegration.render;
 
     DocIntegration.columns = {
         DocAttachment: [
             { key: 'attachmentId', label: 'ID', sortKey: 'attachmentId', filterKey: 'attachmentId' },
-            { key: 'fileName', label: 'File Name', sortKey: 'fileName', filterKey: 'fileName' },
+            { key: 'documentId', label: 'Document', sortKey: 'documentId', filterKey: 'documentId' },
             { key: 'entityType', label: 'Entity Type', sortKey: 'entityType' },
             { key: 'entityId', label: 'Entity ID', sortKey: 'entityId' },
-            { key: 'fileSize', label: 'Size', sortKey: 'fileSize', render: (item) => renderFileSize(item.fileSize) },
-            { key: 'mimeType', label: 'MIME Type', sortKey: 'mimeType' },
-            { key: 'uploadedBy', label: 'Uploaded By', sortKey: 'uploadedBy' },
-            { key: 'uploadedAt', label: 'Uploaded', sortKey: 'uploadedAt', render: (item) => renderDate(item.uploadedAt) }
+            { key: 'module', label: 'Module', sortKey: 'module' },
+            { key: 'relationshipType', label: 'Relationship', sortKey: 'relationshipType' },
+            { key: 'attachedBy', label: 'Attached By', sortKey: 'attachedBy' },
+            { key: 'attachedDate', label: 'Attached', sortKey: 'attachedDate', render: (item) => renderDate(item.attachedDate) }
         ],
 
         DocTemplate: [
@@ -41,7 +41,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'fieldType', label: 'Type', sortKey: 'fieldType', render: (item) => render.fieldType(item.fieldType) },
             { key: 'defaultValue', label: 'Default', sortKey: 'defaultValue' },
             { key: 'isRequired', label: 'Required', sortKey: 'isRequired', render: (item) => item.isRequired ? 'Yes' : 'No' },
-            { key: 'displayOrder', label: 'Order', sortKey: 'displayOrder' }
+            { key: 'sortOrder', label: 'Order', sortKey: 'sortOrder' }
         ],
 
         DocEmailCapture: [
@@ -49,20 +49,20 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'subject', label: 'Subject', sortKey: 'subject', filterKey: 'subject' },
             { key: 'fromAddress', label: 'From', sortKey: 'fromAddress' },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.emailCaptureStatus(item.status) },
-            { key: 'receivedAt', label: 'Received', sortKey: 'receivedAt', render: (item) => renderDate(item.receivedAt) },
+            { key: 'receivedDate', label: 'Received', sortKey: 'receivedDate', render: (item) => renderDate(item.receivedDate) },
             { key: 'documentId', label: 'Document', sortKey: 'documentId' },
             { key: 'folderId', label: 'Folder', sortKey: 'folderId' }
         ],
 
         DocScanJob: [
             { key: 'scanJobId', label: 'ID', sortKey: 'scanJobId', filterKey: 'scanJobId' },
-            { key: 'sourceName', label: 'Source', sortKey: 'sourceName', filterKey: 'sourceName' },
+            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.scanStatus(item.status) },
             { key: 'pageCount', label: 'Pages', sortKey: 'pageCount' },
-            { key: 'fileSize', label: 'Size', sortKey: 'fileSize', render: (item) => renderFileSize(item.fileSize) },
-            { key: 'scannedBy', label: 'Scanned By', sortKey: 'scannedBy' },
-            { key: 'scannedAt', label: 'Scanned', sortKey: 'scannedAt', render: (item) => renderDate(item.scannedAt) },
-            { key: 'documentId', label: 'Document', sortKey: 'documentId' }
+            { key: 'documentCount', label: 'Documents', sortKey: 'documentCount' },
+            { key: 'initiatedBy', label: 'Initiated By', sortKey: 'initiatedBy' },
+            { key: 'initiatedDate', label: 'Initiated', sortKey: 'initiatedDate', render: (item) => renderDate(item.initiatedDate) },
+            { key: 'ocrEnabled', label: 'OCR', sortKey: 'ocrEnabled', render: (item) => item.ocrEnabled ? 'Yes' : 'No' }
         ]
     };
 

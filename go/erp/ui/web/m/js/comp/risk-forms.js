@@ -43,9 +43,13 @@ limitations under the License.
             ]),
             f.section('Response & Ownership', [
                 ...f.text('riskResponse', 'Risk Response'),
+                ...f.money('potentialFinancialImpact', 'Potential Financial Impact'),
                 ...f.reference('departmentId', 'Department', 'HcmDepartment'),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
-                ...f.date('nextReviewDate', 'Next Review Date')
+                ...f.date('identifiedDate', 'Identified Date'),
+                ...f.date('lastReviewDate', 'Last Review Date'),
+                ...f.date('nextReviewDate', 'Next Review Date'),
+                ...f.textarea('triggerEvents', 'Trigger Events')
             ])
         ]),
 
@@ -62,9 +66,12 @@ limitations under the License.
                 ...f.number('controlEffectiveness', 'Control Effectiveness')
             ]),
             f.section('Findings', [
-                ...f.textarea('findings', 'Findings'),
+                ...f.textarea('likelihoodJustification', 'Likelihood Justification'),
+                ...f.textarea('impactJustification', 'Impact Justification'),
                 ...f.textarea('recommendations', 'Recommendations'),
-                ...f.checkbox('requiresEscalation', 'Requires Escalation')
+                ...f.textarea('statusChangeNotes', 'Status Change Notes'),
+                ...f.checkbox('requiresEscalation', 'Requires Escalation'),
+                ...f.reference('evidenceDocumentId', 'Evidence Document', 'DocDocument')
             ])
         ]),
 
@@ -79,16 +86,24 @@ limitations under the License.
             ]),
             f.section('Timeline', [
                 ...f.date('occurredDate', 'Occurred Date'),
+                ...f.date('discoveredDate', 'Discovered Date'),
                 ...f.date('reportedDate', 'Reported Date'),
-                ...f.date('containedDate', 'Contained Date'),
-                ...f.date('resolvedDate', 'Resolved Date')
+                ...f.date('closedDate', 'Closed Date')
             ]),
             f.section('Impact & Response', [
                 ...f.reference('reportedById', 'Reported By', 'Employee'),
                 ...f.reference('assignedToId', 'Assigned To', 'Employee'),
+                ...f.reference('departmentId', 'Department', 'HcmDepartment'),
+                ...f.reference('relatedRiskId', 'Related Risk', 'CompRiskRegister'),
+                ...f.money('financialImpact', 'Financial Impact'),
+                ...f.number('peopleAffected', 'People Affected'),
                 ...f.textarea('rootCause', 'Root Cause'),
-                ...f.textarea('correctiveActions', 'Corrective Actions'),
-                ...f.checkbox('regulatoryReportable', 'Regulatory Reportable')
+                ...f.textarea('immediateAction', 'Immediate Action'),
+                ...f.textarea('correctiveAction', 'Corrective Action'),
+                ...f.textarea('preventiveAction', 'Preventive Action'),
+                ...f.textarea('lessonsLearned', 'Lessons Learned'),
+                ...f.checkbox('regulatoryReportable', 'Regulatory Reportable'),
+                ...f.date('regulatoryReportDate', 'Regulatory Report Date')
             ])
         ]),
 
@@ -103,11 +118,15 @@ limitations under the License.
             f.section('Timeline', [
                 ...f.date('startDate', 'Start Date'),
                 ...f.date('targetDate', 'Target Date'),
-                ...f.date('completedDate', 'Completed Date')
+                ...f.date('completionDate', 'Completion Date')
             ]),
             f.section('Risk Reduction', [
+                ...f.money('estimatedCost', 'Estimated Cost'),
+                ...f.money('actualCost', 'Actual Cost'),
                 ...f.number('targetRiskReduction', 'Target Risk Reduction'),
                 ...f.number('actualRiskReduction', 'Actual Risk Reduction'),
+                ...f.textarea('successCriteria', 'Success Criteria'),
+                ...f.textarea('progressNotes', 'Progress Notes'),
                 ...f.reference('ownerId', 'Owner', 'Employee')
             ])
         ]),
@@ -124,12 +143,20 @@ limitations under the License.
             f.section('Coverage', [
                 ...f.date('effectiveDate', 'Effective Date'),
                 ...f.date('expiryDate', 'Expiry Date'),
-                ...f.number('coverageAmount', 'Coverage Amount'),
-                ...f.number('deductible', 'Deductible')
+                ...f.money('coverageAmount', 'Coverage Amount'),
+                ...f.money('deductible', 'Deductible'),
+                ...f.textarea('coveredRisks', 'Covered Risks'),
+                ...f.textarea('exclusions', 'Exclusions')
             ]),
             f.section('Premiums & Ownership', [
-                ...f.number('premiumAmount', 'Premium Amount'),
+                ...f.money('premium', 'Premium'),
                 ...f.text('premiumFrequency', 'Premium Frequency'),
+                ...f.text('broker', 'Broker'),
+                ...f.text('contactName', 'Contact Name'),
+                ...f.text('contactPhone', 'Contact Phone'),
+                ...f.text('contactEmail', 'Contact Email'),
+                ...f.number('renewalLeadDays', 'Renewal Lead Days'),
+                ...f.reference('policyDocumentId', 'Policy Document', 'DocDocument'),
                 ...f.reference('responsibleId', 'Responsible', 'Employee')
             ])
         ])

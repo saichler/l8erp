@@ -29,7 +29,7 @@ window.MobileSalesCustomers = window.MobileSalesCustomers || {};
         CustomerHierarchy: f.form('Customer Hierarchy', [
             f.section('Hierarchy Details', [
                 ...f.text('name', 'Name', true),
-                ...f.reference('parentId', 'Parent Hierarchy', 'CustomerHierarchy'),
+                ...f.reference('parentHierarchyId', 'Parent Hierarchy', 'SalesCustomerHierarchy'),
                 ...f.number('level', 'Level'),
                 ...f.textarea('description', 'Description')
             ])
@@ -38,7 +38,7 @@ window.MobileSalesCustomers = window.MobileSalesCustomers || {};
         CustomerSegment: f.form('Customer Segment', [
             f.section('Segment Details', [
                 ...f.text('name', 'Name', true),
-                ...f.text('code', 'Code', true),
+                ...f.text('segmentType', 'Segment Type', true),
                 ...f.textarea('description', 'Description'),
                 ...f.textarea('criteria', 'Criteria'),
                 ...f.checkbox('isActive', 'Active')
@@ -65,9 +65,9 @@ window.MobileSalesCustomers = window.MobileSalesCustomers || {};
                 ...f.text('name', 'Name', true),
                 ...f.text('partnerType', 'Partner Type', true),
                 ...f.text('contactName', 'Contact Name'),
-                ...f.text('contactEmail', 'Contact Email'),
-                ...f.text('contactPhone', 'Contact Phone'),
-                ...f.select('status', 'Status', enums.PARTNER_STATUS),
+                ...f.text('email', 'Email'),
+                ...f.text('phone', 'Phone'),
+                ...f.checkbox('isActive', 'Active'),
                 ...f.number('commissionRate', 'Commission Rate %'),
                 ...f.reference('territoryId', 'Territory', 'SalesTerritory'),
                 ...f.textarea('notes', 'Notes')

@@ -72,11 +72,22 @@ limitations under the License.
             return Layer8DServiceRegistry.getPrimaryKey(ns, modelName);
         };
 
-        // 6. Validate sub-module namespaces
+        // 6. Validate sub-module namespaces and clean up internals
+        var requiredProps = ['columns', 'forms', 'primaryKeys', 'enums'];
         if (options.requiredNamespaces) {
             for (const nsName of options.requiredNamespaces) {
-                if (!window[nsName]) {
-                    console.warn(`${ns} submodule ${nsName} not loaded. Some features may not work.`);
+                var subNS = window[nsName];
+                if (!subNS) {
+                    console.warn(ns + ' submodule ' + nsName + ' not loaded. Some features may not work.');
+                    continue;
+                }
+                for (var i = 0; i < requiredProps.length; i++) {
+                    if (!subNS[requiredProps[i]]) {
+                        console.warn(ns + ' submodule ' + nsName + '.' + requiredProps[i] + ' not found.');
+                    }
+                }
+                if (subNS._internal) {
+                    delete subNS._internal;
                 }
             }
         }

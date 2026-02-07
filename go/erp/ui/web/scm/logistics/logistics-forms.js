@@ -21,7 +21,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.select('carrierType', 'Carrier Type', enums.CARRIER_TYPE, true),
                 ...f.text('contactInfo', 'Contact Info'),
-                ...f.text('website', 'Website'),
                 ...f.checkbox('isActive', 'Active')
             ])
         ]),
@@ -32,9 +31,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('origin', 'Origin', true),
                 ...f.text('destination', 'Destination', true),
                 ...f.money('ratePerUnit', 'Rate per Unit', true),
-                ...f.text('unitOfMeasure', 'Unit of Measure'),
+                ...f.text('unitType', 'Unit Type'),
                 ...f.date('effectiveDate', 'Effective Date', true),
-                ...f.date('expirationDate', 'Expiration Date')
+                ...f.date('expiryDate', 'Expiry Date')
             ])
         ]),
 
@@ -42,8 +41,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Shipment Details', [
                 ...f.text('shipmentNumber', 'Shipment Number', true),
                 ...f.reference('carrierId', 'Carrier', 'ScmCarrier', true),
-                ...f.text('origin', 'Origin'),
-                ...f.text('destination', 'Destination'),
+                ...f.reference('originWarehouseId', 'Origin Warehouse', 'ScmWarehouse'),
+                ...f.text('destinationAddress', 'Destination Address'),
                 ...f.date('shipDate', 'Ship Date', true),
                 ...f.date('expectedDelivery', 'Expected Delivery'),
                 ...f.select('status', 'Status', enums.SHIPMENT_STATUS),
@@ -79,7 +78,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('shipmentId', 'Shipment', 'ScmShipment', true),
                 ...f.date('deliveryDate', 'Delivery Date', true),
                 ...f.text('receivedBy', 'Received By', true),
-                ...f.text('signatureRef', 'Signature Reference'),
+                ...f.text('signature', 'Signature'),
                 ...f.select('status', 'Status', enums.TASK_STATUS),
                 ...f.textarea('notes', 'Notes')
             ])

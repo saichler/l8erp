@@ -41,19 +41,14 @@ limitations under the License.
                 filterKey: 'status',
                 render: (item) => render.vendorStatus(item.status)
             },
-            { key: 'paymentTermDays', label: 'Payment Terms', sortKey: 'paymentTermDays', filterKey: 'paymentTermDays' },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
-            }
+            { key: 'paymentTermDays', label: 'Payment Terms', sortKey: 'paymentTermDays', filterKey: 'paymentTermDays' }
         ],
 
         VendorContact: [
             { key: 'contactId', label: 'ID', sortKey: 'contactId', filterKey: 'contactId' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'contactName', label: 'Contact Name', sortKey: 'contactName', filterKey: 'contactName' },
+            { key: 'firstName', label: 'First Name', sortKey: 'firstName', filterKey: 'firstName' },
+            { key: 'lastName', label: 'Last Name', sortKey: 'lastName', filterKey: 'lastName' },
             { key: 'email', label: 'Email', sortKey: 'email', filterKey: 'email' },
             { key: 'phone', label: 'Phone', sortKey: 'phone', filterKey: 'phone' },
             {
@@ -106,10 +101,10 @@ limitations under the License.
                 render: (item) => renderMoney(item.unitPrice)
             },
             {
-                key: 'lineTotal',
-                label: 'Line Total',
-                sortKey: 'lineTotal',
-                render: (item) => renderMoney(item.lineTotal)
+                key: 'lineAmount',
+                label: 'Line Amount',
+                sortKey: 'lineAmount',
+                render: (item) => renderMoney(item.lineAmount)
             }
         ],
 
@@ -117,10 +112,10 @@ limitations under the License.
             { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
             { key: 'invoiceId', label: 'Invoice', sortKey: 'invoiceId', filterKey: 'invoiceId' },
             {
-                key: 'dueDate',
-                label: 'Due Date',
-                sortKey: 'dueDate',
-                render: (item) => renderDate(item.dueDate)
+                key: 'scheduledDate',
+                label: 'Scheduled Date',
+                sortKey: 'scheduledDate',
+                render: (item) => renderDate(item.scheduledDate)
             },
             {
                 key: 'amount',
@@ -129,16 +124,15 @@ limitations under the License.
                 render: (item) => renderMoney(item.amount)
             },
             {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.paymentStatus(item.status)
+                key: 'isPaid',
+                label: 'Paid',
+                sortKey: 'isPaid',
+                render: (item) => renderBoolean(item.isPaid)
             }
         ],
 
         VendorPayment: [
             { key: 'paymentId', label: 'ID', sortKey: 'paymentId', filterKey: 'paymentId' },
-            { key: 'paymentNumber', label: 'Payment #', sortKey: 'paymentNumber', filterKey: 'paymentNumber' },
             { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
             {
                 key: 'paymentDate',
@@ -188,10 +182,10 @@ limitations under the License.
                 render: (item) => renderDate(item.statementDate)
             },
             {
-                key: 'totalBalance',
-                label: 'Total Balance',
-                sortKey: 'totalBalance',
-                render: (item) => renderMoney(item.totalBalance)
+                key: 'closingBalance',
+                label: 'Closing Balance',
+                sortKey: 'closingBalance',
+                render: (item) => renderMoney(item.closingBalance)
             }
         ]
     };

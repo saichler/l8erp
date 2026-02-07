@@ -48,7 +48,7 @@ limitations under the License.
             { key: 'totalRevenue', label: 'Total Revenue', sortKey: 'totalRevenue', render: (item) => Layer8MRenderers.renderMoney(item.totalRevenue) },
             { key: 'recognizedRevenue', label: 'Recognized', sortKey: 'recognizedRevenue', render: (item) => Layer8MRenderers.renderMoney(item.recognizedRevenue) },
             { key: 'deferredRevenue', label: 'Deferred', sortKey: 'deferredRevenue', render: (item) => Layer8MRenderers.renderMoney(item.deferredRevenue) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.REVENUE_STATUS_VALUES, render: (item) => render.revenueStatus(item.status) }
+            { key: 'recognitionMethod', label: 'Method', sortKey: 'recognitionMethod' }
         ]
     };
 

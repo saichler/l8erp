@@ -18,29 +18,32 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         CrmServiceOrder: f.form('Service Order', [
             f.section('Order Details', [
                 ...f.text('orderNumber', 'Order Number', true),
-                ...f.text('subject', 'Subject', true),
                 ...f.textarea('description', 'Description'),
                 ...f.reference('accountId', 'Account', 'CrmAccount', true),
                 ...f.reference('contactId', 'Contact', 'CrmContact'),
+                ...f.reference('caseId', 'Case', 'CrmCase'),
                 ...f.select('orderType', 'Type', enums.SERVICE_ORDER_TYPE),
                 ...f.select('priority', 'Priority', enums.SERVICE_ORDER_PRIORITY),
                 ...f.select('status', 'Status', enums.SERVICE_ORDER_STATUS)
             ]),
             f.section('Scheduling', [
-                ...f.date('scheduledDate', 'Scheduled Date'),
-                ...f.number('estimatedDuration', 'Estimated Duration (hours)'),
+                ...f.date('scheduledStart', 'Scheduled Start'),
+                ...f.date('scheduledEnd', 'Scheduled End'),
                 ...f.reference('technicianId', 'Assigned Technician', 'CrmTechnician'),
                 ...f.reference('contractId', 'Service Contract', 'CrmServiceContract')
             ]),
-            f.section('Location', [
+            f.section('Location & Product', [
                 ...f.textarea('serviceAddress', 'Service Address'),
-                ...f.number('latitude', 'Latitude'),
-                ...f.number('longitude', 'Longitude')
+                ...f.reference('productId', 'Product', 'ScmItem'),
+                ...f.text('serialNumber', 'Serial Number'),
+                ...f.money('estimatedCost', 'Estimated Cost'),
+                ...f.money('actualCost', 'Actual Cost')
             ]),
             f.section('Completion', [
-                ...f.date('completedDate', 'Completed Date'),
+                ...f.date('actualStart', 'Actual Start'),
+                ...f.date('actualEnd', 'Actual End'),
                 ...f.textarea('resolution', 'Resolution'),
-                ...f.reference('productId', 'Product', 'ScmItem')
+                ...f.reference('ownerId', 'Owner', 'Employee')
             ])
         ]),
 
@@ -52,47 +55,44 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('phone', 'Phone'),
                 ...f.select('status', 'Status', enums.TECHNICIAN_STATUS)
             ]),
-            f.section('Skills & Qualifications', [
-                ...f.text('specialization', 'Specialization'),
-                ...f.number('skillLevel', 'Skill Level'),
-                ...f.checkbox('isCertified', 'Certified'),
-                ...f.textarea('certifications', 'Certifications')
-            ]),
-            f.section('Assignment', [
-                ...f.text('region', 'Region'),
+            f.section('Skills & Assignment', [
+                ...f.text('skills', 'Skills'),
                 ...f.text('territory', 'Territory'),
-                ...f.number('maxOrdersPerDay', 'Max Orders/Day'),
-                ...f.money('hourlyRate', 'Hourly Rate')
+                ...f.text('homeLocation', 'Home Location'),
+                ...f.number('maxDailyOrders', 'Max Daily Orders'),
+                ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Rates', [
+                ...f.money('hourlyRate', 'Hourly Rate'),
+                ...f.money('overtimeRate', 'Overtime Rate')
             ])
         ]),
 
         CrmServiceContract: f.form('Service Contract', [
             f.section('Contract Details', [
                 ...f.text('contractNumber', 'Contract Number', true),
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description'),
                 ...f.reference('accountId', 'Account', 'CrmAccount', true),
-                ...f.reference('contactId', 'Contact', 'CrmContact'),
                 ...f.select('contractType', 'Type', enums.CONTRACT_TYPE),
-                ...f.select('status', 'Status', enums.CONTRACT_STATUS)
+                ...f.select('status', 'Status', enums.CONTRACT_STATUS),
+                ...f.textarea('terms', 'Terms')
             ]),
             f.section('Term', [
                 ...f.date('startDate', 'Start Date', true),
                 ...f.date('endDate', 'End Date', true),
-                ...f.date('renewalDate', 'Renewal Date'),
-                ...f.checkbox('autoRenewal', 'Auto Renewal')
+                ...f.checkbox('autoRenew', 'Auto Renew'),
+                ...f.number('renewalNoticeDays', 'Renewal Notice Days')
             ]),
             f.section('Coverage', [
-                ...f.textarea('coverage', 'Coverage Details'),
-                ...f.number('visitsIncluded', 'Visits Included'),
-                ...f.number('visitsUsed', 'Visits Used'),
-                ...f.checkbox('partsIncluded', 'Parts Included'),
-                ...f.checkbox('laborIncluded', 'Labor Included')
+                ...f.number('includedHours', 'Included Hours'),
+                ...f.number('usedHours', 'Used Hours'),
+                ...f.number('includedVisits', 'Included Visits'),
+                ...f.number('usedVisits', 'Used Visits')
             ]),
             f.section('Value', [
                 ...f.money('contractValue', 'Contract Value'),
                 ...f.text('billingFrequency', 'Billing Frequency'),
-                ...f.reference('slaId', 'SLA', 'CrmSLA')
+                ...f.reference('slaId', 'SLA', 'CrmSLA'),
+                ...f.reference('ownerId', 'Owner', 'Employee')
             ])
         ]),
 
@@ -100,14 +100,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Schedule Details', [
                 ...f.reference('serviceOrderId', 'Service Order', 'CrmServiceOrder', true),
                 ...f.reference('technicianId', 'Technician', 'CrmTechnician', true),
-                ...f.date('scheduledDate', 'Scheduled Date', true),
+                ...f.date('scheduleDate', 'Schedule Date', true),
                 ...f.text('startTime', 'Start Time'),
                 ...f.text('endTime', 'End Time'),
-                ...f.number('estimatedDuration', 'Estimated Duration (hours)')
+                ...f.text('scheduleType', 'Schedule Type')
             ]),
-            f.section('Confirmation', [
-                ...f.checkbox('isConfirmed', 'Confirmed'),
-                ...f.date('confirmedDate', 'Confirmed Date'),
+            f.section('Availability', [
+                ...f.checkbox('isAvailable', 'Available'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -116,16 +115,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Part Details', [
                 ...f.reference('serviceOrderId', 'Service Order', 'CrmServiceOrder', true),
                 ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.textarea('description', 'Description'),
+                ...f.text('itemName', 'Item Name'),
                 ...f.number('quantity', 'Quantity', true),
-                ...f.money('unitPrice', 'Unit Price'),
-                ...f.money('totalPrice', 'Total Price')
+                ...f.money('unitCost', 'Unit Cost'),
+                ...f.money('totalCost', 'Total Cost')
             ]),
-            f.section('Installation', [
-                ...f.checkbox('isInstalled', 'Installed'),
-                ...f.date('installedDate', 'Installed Date'),
+            f.section('Details', [
                 ...f.text('serialNumber', 'Serial Number'),
-                ...f.date('warrantyEndDate', 'Warranty End Date')
+                ...f.checkbox('isWarranty', 'Warranty'),
+                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
+                ...f.textarea('notes', 'Notes')
             ])
         ]),
 
@@ -133,8 +132,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Visit Details', [
                 ...f.reference('serviceOrderId', 'Service Order', 'CrmServiceOrder', true),
                 ...f.reference('technicianId', 'Technician', 'CrmTechnician', true),
-                ...f.date('visitDate', 'Visit Date', true),
-                ...f.text('arrivalTime', 'Arrival Time'),
+                ...f.date('scheduledArrival', 'Scheduled Arrival', true),
+                ...f.date('actualArrival', 'Actual Arrival'),
                 ...f.text('departureTime', 'Departure Time'),
                 ...f.select('status', 'Status', enums.VISIT_STATUS)
             ]),
@@ -142,16 +141,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('workPerformed', 'Work Performed'),
                 ...f.number('laborHours', 'Labor Hours'),
                 ...f.money('laborCost', 'Labor Cost'),
-                ...f.textarea('partsUsed', 'Parts Used'),
-                ...f.textarea('findings', 'Findings'),
-                ...f.textarea('recommendations', 'Recommendations')
+                ...f.number('travelHours', 'Travel Hours'),
+                ...f.number('travelDistance', 'Travel Distance'),
+                ...f.money('travelCost', 'Travel Cost')
             ]),
-            f.section('Sign-off', [
+            f.section('Customer Feedback', [
                 ...f.text('customerSignature', 'Customer Signature'),
-                ...f.text('customerName', 'Customer Name'),
-                ...f.date('signatureDate', 'Signature Date'),
                 ...f.textarea('customerFeedback', 'Customer Feedback'),
-                ...f.number('rating', 'Rating')
+                ...f.number('customerRating', 'Rating')
             ])
         ])
     };

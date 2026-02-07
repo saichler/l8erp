@@ -15,7 +15,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     DocStorage.columns = {
         DocDocument: [
             { key: 'documentId', label: 'ID', sortKey: 'documentId', filterKey: 'documentId' },
-            { key: 'title', label: 'Title', sortKey: 'title', filterKey: 'title' },
+            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'documentType', label: 'Type', sortKey: 'documentType', render: (item) => render.documentType(item.documentType) },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.documentStatus(item.status) },
             { key: 'fileFormat', label: 'Format', sortKey: 'fileFormat', render: (item) => render.fileFormat(item.fileFormat) },
@@ -34,7 +34,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'path', label: 'Path', sortKey: 'path' },
             { key: 'accessLevel', label: 'Access', sortKey: 'accessLevel', render: (item) => render.accessLevel(item.accessLevel) },
             { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            { key: 'isSystem', label: 'System', sortKey: 'isSystem', render: (item) => item.isSystem ? 'Yes' : 'No' }
         ],
 
         DocCategory: [
@@ -62,7 +62,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'checksum', label: 'Checksum', sortKey: 'checksum' },
             { key: 'createdBy', label: 'Created By', sortKey: 'createdBy' },
             { key: 'changeNotes', label: 'Notes', sortKey: 'changeNotes' },
-            { key: 'isCurrent', label: 'Current', sortKey: 'isCurrent', render: (item) => item.isCurrent ? 'Yes' : 'No' }
+            { key: 'isMajorVersion', label: 'Major', sortKey: 'isMajorVersion', render: (item) => item.isMajorVersion ? 'Yes' : 'No' }
         ]
     };
 

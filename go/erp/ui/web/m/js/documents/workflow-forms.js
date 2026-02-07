@@ -14,9 +14,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         DocCheckout: f.form('Checkout', [
             f.section('Checkout Details', [
                 ...f.reference('documentId', 'Document', 'DocDocument', true),
-                ...f.reference('userId', 'User', 'Employee', true),
+                ...f.reference('checkedOutBy', 'Checked Out By', 'Employee', true),
                 ...f.select('status', 'Status', enums.CHECKOUT_STATUS),
-                ...f.textarea('reason', 'Reason')
+                ...f.textarea('checkoutNotes', 'Checkout Notes')
             ])
         ]),
 
@@ -25,7 +25,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('status', 'Status', enums.WORKFLOW_STATUS),
-                ...f.checkbox('isActive', 'Active')
+                ...f.textarea('comments', 'Comments')
             ])
         ]),
 
@@ -33,7 +33,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Step Details', [
                 ...f.reference('workflowId', 'Workflow', 'DocApprovalWorkflow', true),
                 ...f.text('name', 'Name', true),
-                ...f.number('stepOrder', 'Step Order', true),
+                ...f.number('stepNumber', 'Step Number', true),
                 ...f.select('status', 'Status', enums.STEP_STATUS)
             ])
         ]),
@@ -50,7 +50,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         DocReviewComment: f.form('Review Comment', [
             f.section('Comment Details', [
                 ...f.reference('documentId', 'Document', 'DocDocument', true),
-                ...f.textarea('comment', 'Comment', true),
+                ...f.textarea('content', 'Content', true),
                 ...f.number('pageNumber', 'Page Number'),
                 ...f.checkbox('isResolved', 'Resolved')
             ])

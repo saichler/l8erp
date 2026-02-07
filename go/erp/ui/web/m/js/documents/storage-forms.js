@@ -17,7 +17,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     MobileDocStorage.forms = {
         DocDocument: f.form('Document', [
             f.section('Document Details', [
-                ...f.text('title', 'Title', true),
+                ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('documentType', 'Type', enums.DOCUMENT_TYPE),
                 ...f.select('status', 'Status', enums.DOCUMENT_STATUS),
@@ -30,7 +30,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('accessLevel', 'Access Level', enums.ACCESS_LEVEL),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isSystem', 'System Folder')
             ])
         ]),
 
@@ -57,7 +57,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('documentId', 'Document', 'DocDocument', true),
                 ...f.number('versionNumber', 'Version Number', true),
                 ...f.textarea('changeNotes', 'Change Notes'),
-                ...f.checkbox('isCurrent', 'Current Version')
+                ...f.checkbox('isMajorVersion', 'Major Version')
             ])
         ])
     };

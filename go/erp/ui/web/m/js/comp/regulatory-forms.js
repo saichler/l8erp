@@ -36,13 +36,13 @@ limitations under the License.
             ]),
             f.section('Dates & Status', [
                 ...f.date('effectiveDate', 'Effective Date'),
-                ...f.date('expiryDate', 'Expiry Date'),
+                ...f.date('sunsetDate', 'Sunset Date'),
                 ...f.text('version', 'Version'),
                 ...f.checkbox('isActive', 'Active')
             ]),
             f.section('Ownership', [
                 ...f.reference('ownerId', 'Owner', 'Employee'),
-                ...f.text('referenceUrl', 'Reference URL')
+                ...f.text('sourceUrl', 'Source URL')
             ])
         ]),
 
@@ -57,7 +57,7 @@ limitations under the License.
             f.section('Classification', [
                 ...f.select('priority', 'Priority', enums.SEVERITY_LEVEL),
                 ...f.checkbox('isMandatory', 'Mandatory'),
-                ...f.text('category', 'Category')
+                ...f.textarea('controlObjective', 'Control Objective')
             ]),
             f.section('Review & Ownership', [
                 ...f.number('reviewFrequencyDays', 'Review Frequency (Days)'),
@@ -96,7 +96,7 @@ limitations under the License.
             f.section('Dates', [
                 ...f.date('issueDate', 'Issue Date'),
                 ...f.date('expiryDate', 'Expiry Date'),
-                ...f.date('renewalDate', 'Renewal Date')
+                ...f.number('renewalLeadDays', 'Renewal Lead Days')
             ]),
             f.section('Scope & Ownership', [
                 ...f.textarea('scope', 'Scope'),
@@ -115,7 +115,7 @@ limitations under the License.
             ]),
             f.section('Timeline', [
                 ...f.date('discoveryDate', 'Discovery Date'),
-                ...f.date('reportedDate', 'Reported Date'),
+                ...f.reference('discoveredById', 'Discovered By', 'Employee'),
                 ...f.date('dueDate', 'Due Date'),
                 ...f.date('closedDate', 'Closed Date')
             ]),

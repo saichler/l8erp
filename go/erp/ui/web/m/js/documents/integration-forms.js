@@ -13,7 +13,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     MobileDocIntegration.forms = {
         DocAttachment: f.form('Attachment', [
             f.section('Attachment Details', [
-                ...f.text('fileName', 'File Name', true),
+                ...f.reference('documentId', 'Document', 'DocDocument', true),
                 ...f.text('entityType', 'Entity Type', true),
                 ...f.text('entityId', 'Entity ID', true),
                 ...f.textarea('description', 'Description')
@@ -50,7 +50,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
         DocScanJob: f.form('Scan Job', [
             f.section('Scan Details', [
-                ...f.text('sourceName', 'Source Name', true),
+                ...f.text('name', 'Name', true),
                 ...f.select('status', 'Status', enums.SCAN_STATUS),
                 ...f.number('pageCount', 'Page Count')
             ])

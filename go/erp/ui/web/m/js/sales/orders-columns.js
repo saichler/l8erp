@@ -65,7 +65,7 @@ limitations under the License.
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
-            { key: 'allocatedQty', label: 'Allocated', sortKey: 'allocatedQty' },
+            { key: 'allocatedQuantity', label: 'Allocated', sortKey: 'allocatedQuantity' },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.ALLOCATION_STATUS_VALUES, render: (item) => render.allocationStatus(item.status) }
         ],
 
@@ -73,7 +73,7 @@ limitations under the License.
             { key: 'backOrderId', label: 'ID', sortKey: 'backOrderId', filterKey: 'backOrderId' },
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'backOrderQty', label: 'Qty', sortKey: 'backOrderQty' },
+            { key: 'backOrderQuantity', label: 'Qty', sortKey: 'backOrderQuantity' },
             { key: 'expectedDate', label: 'Expected', sortKey: 'expectedDate', render: (item) => Layer8MRenderers.renderDate(item.expectedDate) }
         ],
 
@@ -90,8 +90,8 @@ limitations under the License.
             { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
             { key: 'returnOrderId', label: 'Return', sortKey: 'returnOrderId', filterKey: 'returnOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'returnQty', label: 'Qty', sortKey: 'returnQty' },
-            { key: 'reason', label: 'Reason', sortKey: 'reason' }
+            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
+            { key: 'description', label: 'Description', sortKey: 'description' }
         ]
     };
 

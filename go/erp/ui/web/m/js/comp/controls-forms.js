@@ -37,7 +37,7 @@ limitations under the License.
                 ...f.reference('departmentId', 'Department', 'HcmDepartment'),
                 ...f.checkbox('isKeyControl', 'Key Control'),
                 ...f.checkbox('isAutomated', 'Automated'),
-                ...f.textarea('objective', 'Objective')
+                ...f.textarea('controlObjective', 'Control Objective')
             ]),
             f.section('Testing & Ownership', [
                 ...f.number('testFrequencyDays', 'Test Frequency (Days)'),
@@ -54,12 +54,12 @@ limitations under the License.
                 ...f.select('effectiveness', 'Effectiveness', enums.CONTROL_EFFECTIVENESS)
             ]),
             f.section('Testing', [
-                ...f.textarea('testProcedure', 'Test Procedure'),
+                ...f.textarea('testPerformed', 'Test Performed'),
                 ...f.number('sampleSize', 'Sample Size'),
                 ...f.number('exceptionsFound', 'Exceptions Found')
             ]),
             f.section('Results & Next Steps', [
-                ...f.textarea('findings', 'Findings'),
+                ...f.textarea('testResults', 'Test Results'),
                 ...f.textarea('recommendations', 'Recommendations'),
                 ...f.date('nextAssessmentDate', 'Next Assessment Date')
             ])
@@ -77,11 +77,11 @@ limitations under the License.
                 ...f.text('version', 'Version'),
                 ...f.text('status', 'Status'),
                 ...f.date('effectiveDate', 'Effective Date'),
-                ...f.date('expiryDate', 'Expiry Date')
+                ...f.date('reviewDate', 'Review Date')
             ]),
             f.section('Approval & Review', [
-                ...f.reference('approvedBy', 'Approved By', 'Employee'),
-                ...f.date('approvalDate', 'Approval Date'),
+                ...f.reference('approverId', 'Approver', 'Employee'),
+                ...f.number('reviewFrequencyDays', 'Review Frequency (Days)'),
                 ...f.date('nextReviewDate', 'Next Review Date'),
                 ...f.reference('ownerId', 'Owner', 'Employee')
             ])
@@ -95,8 +95,8 @@ limitations under the License.
                 ...f.reference('departmentId', 'Department', 'HcmDepartment')
             ]),
             f.section('Approval Rules', [
-                ...f.number('minAmount', 'Minimum Amount'),
-                ...f.number('maxAmount', 'Maximum Amount'),
+                ...f.number('thresholdMin', 'Threshold Minimum'),
+                ...f.number('thresholdMax', 'Threshold Maximum'),
                 ...f.number('requiredApprovals', 'Required Approvals'),
                 ...f.checkbox('requiresSequential', 'Sequential Approval')
             ]),
@@ -117,7 +117,7 @@ limitations under the License.
                 ...f.text('conflictingFunctionA', 'Function A', true),
                 ...f.text('conflictingFunctionB', 'Function B', true),
                 ...f.select('riskLevel', 'Risk Level', enums.SEVERITY_LEVEL),
-                ...f.textarea('riskDescription', 'Risk Description')
+                ...f.textarea('businessJustification', 'Business Justification')
             ]),
             f.section('Mitigation & Status', [
                 ...f.reference('controlId', 'Mitigating Control', 'CompControl'),

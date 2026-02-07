@@ -51,7 +51,7 @@ MobileInventory.forms = {
             ...f.number('quantity', 'Quantity', true),
             ...f.date('movementDate', 'Movement Date', true),
             ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
-            ...f.text('reference', 'Reference'),
+            ...f.text('referenceId', 'Reference ID'),
             ...f.textarea('notes', 'Notes')
         ])
     ]),

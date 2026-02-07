@@ -63,8 +63,8 @@ limitations under the License.
                 sortKey: 'level',
                 render: (item) => render.jurisdictionLevel(item.level)
             },
-            { key: 'country', label: 'Country', sortKey: 'country', filterKey: 'country' },
-            { key: 'stateProvince', label: 'State/Province', sortKey: 'stateProvince', filterKey: 'stateProvince' },
+            { key: 'countryCode', label: 'Country', sortKey: 'countryCode', filterKey: 'countryCode' },
+            { key: 'stateCode', label: 'State/Province', sortKey: 'stateCode', filterKey: 'stateCode' },
             {
                 key: 'isActive',
                 label: 'Active',
@@ -85,10 +85,10 @@ limitations under the License.
                 render: (item) => renderDate(item.effectiveDate)
             },
             {
-                key: 'expirationDate',
-                label: 'Expiration Date',
-                sortKey: 'expirationDate',
-                render: (item) => renderDate(item.expirationDate)
+                key: 'endDate',
+                label: 'End Date',
+                sortKey: 'endDate',
+                render: (item) => renderDate(item.endDate)
             }
         ],
 
@@ -100,7 +100,7 @@ limitations under the License.
                 sortKey: 'taxType',
                 render: (item) => render.taxType(item.taxType)
             },
-            { key: 'filingPeriod', label: 'Filing Period', sortKey: 'filingPeriod', filterKey: 'filingPeriod' },
+            { key: 'fiscalPeriodId', label: 'Fiscal Period', sortKey: 'fiscalPeriodId', filterKey: 'fiscalPeriodId' },
             {
                 key: 'dueDate',
                 label: 'Due Date',
@@ -114,46 +114,41 @@ limitations under the License.
                 render: (item) => render.taxReturnStatus(item.status)
             },
             {
-                key: 'taxLiability',
-                label: 'Tax Liability',
-                sortKey: 'taxLiability',
-                render: (item) => renderMoney(item.taxLiability)
+                key: 'taxAmount',
+                label: 'Tax Amount',
+                sortKey: 'taxAmount',
+                render: (item) => renderMoney(item.taxAmount)
             }
         ],
 
         TaxExemption: [
             { key: 'exemptionId', label: 'ID', sortKey: 'exemptionId', filterKey: 'exemptionId' },
-            { key: 'entityName', label: 'Entity Name', sortKey: 'entityName', filterKey: 'entityName' },
+            { key: 'exemptionNumber', label: 'Exemption #', sortKey: 'exemptionNumber', filterKey: 'exemptionNumber' },
             { key: 'taxCodeId', label: 'Tax Code', sortKey: 'taxCodeId', filterKey: 'taxCodeId' },
-            { key: 'exemptionReason', label: 'Reason', sortKey: 'exemptionReason', filterKey: 'exemptionReason' },
+            { key: 'reason', label: 'Reason', sortKey: 'reason', filterKey: 'reason' },
             {
-                key: 'startDate',
-                label: 'Start Date',
-                sortKey: 'startDate',
-                render: (item) => renderDate(item.startDate)
+                key: 'effectiveDate',
+                label: 'Effective Date',
+                sortKey: 'effectiveDate',
+                render: (item) => renderDate(item.effectiveDate)
             },
             {
-                key: 'endDate',
-                label: 'End Date',
-                sortKey: 'endDate',
-                render: (item) => renderDate(item.endDate)
+                key: 'expirationDate',
+                label: 'Expiration Date',
+                sortKey: 'expirationDate',
+                render: (item) => renderDate(item.expirationDate)
             }
         ],
 
         WithholdingTaxConfig: [
             { key: 'configId', label: 'ID', sortKey: 'configId', filterKey: 'configId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
+            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
+            { key: 'taxCodeId', label: 'Tax Code', sortKey: 'taxCodeId', filterKey: 'taxCodeId' },
             {
-                key: 'taxType',
-                label: 'Tax Type',
-                sortKey: 'taxType',
-                render: (item) => render.taxType(item.taxType)
-            },
-            {
-                key: 'rate',
+                key: 'withholdingRate',
                 label: 'Rate',
-                sortKey: 'rate',
-                render: (item) => renderPercentage(item.rate)
+                sortKey: 'withholdingRate',
+                render: (item) => renderPercentage(item.withholdingRate)
             },
             {
                 key: 'thresholdAmount',

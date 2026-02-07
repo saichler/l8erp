@@ -66,7 +66,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('initialForecast', 'Initial Forecast'),
                 ...f.text('rampUpPeriod', 'Ramp-Up Period'),
                 ...f.select('status', 'Status', enums.TASK_STATUS),
-                ...f.textarea('description', 'Description')
+                ...f.textarea('notes', 'Notes')
             ])
         ]),
 

@@ -18,10 +18,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         MfgMrpRun: f.form('MRP Run', [
             f.section('Run Details', [
                 ...f.text('runNumber', 'Run Number', true),
-                ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.date('runDate', 'Run Date'),
-                ...f.number('planningHorizonDays', 'Planning Horizon (days)'),
+                ...f.date('planningHorizonStart', 'Planning Horizon Start'),
+                ...f.date('planningHorizonEnd', 'Planning Horizon End'),
                 ...f.select('status', 'Status', enums.MRP_STATUS),
                 ...f.textarea('notes', 'Notes')
             ])
@@ -34,8 +34,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('requirementType', 'Type', enums.REQUIREMENT_TYPE),
                 ...f.number('quantity', 'Quantity', true),
                 ...f.date('requiredDate', 'Required Date'),
-                ...f.text('sourceOrderId', 'Source Order'),
-                ...f.text('sourceOrderType', 'Source Type'),
+                ...f.text('sourceId', 'Source ID'),
+                ...f.text('sourceType', 'Source Type'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -43,10 +43,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         MfgCapacityPlan: f.form('Capacity Plan', [
             f.section('Plan Details', [
                 ...f.text('planNumber', 'Plan Number', true),
-                ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
-                ...f.date('startDate', 'Start Date', true),
-                ...f.date('endDate', 'End Date', true),
+                ...f.date('planningStart', 'Planning Start', true),
+                ...f.date('planningEnd', 'Planning End', true),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -55,7 +54,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Load Details', [
                 ...f.reference('planId', 'Capacity Plan', 'MfgCapacityPlan', true),
                 ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
-                ...f.date('periodDate', 'Period Date', true),
+                ...f.date('periodStart', 'Period Start', true),
+                ...f.date('periodEnd', 'Period End'),
                 ...f.number('requiredHours', 'Required Hours'),
                 ...f.number('availableHours', 'Available Hours'),
                 ...f.number('loadPercent', 'Load %')
@@ -64,10 +64,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
         MfgProdSchedule: f.form('Production Schedule', [
             f.section('Schedule Details', [
-                ...f.text('scheduleName', 'Schedule Name', true),
+                ...f.text('scheduleNumber', 'Schedule Number', true),
                 ...f.textarea('description', 'Description'),
-                ...f.date('startDate', 'Start Date', true),
-                ...f.date('endDate', 'End Date', true),
+                ...f.date('scheduleStart', 'Schedule Start', true),
+                ...f.date('scheduleEnd', 'Schedule End', true),
                 ...f.select('status', 'Status', enums.SCHEDULE_STATUS),
                 ...f.textarea('notes', 'Notes')
             ])
@@ -79,8 +79,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
                 ...f.reference('operationId', 'Operation', 'MfgWorkOrderOp'),
                 ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
-                ...f.text('startTime', 'Start Time', true),
-                ...f.text('endTime', 'End Time', true),
+                ...f.text('scheduledStart', 'Scheduled Start', true),
+                ...f.text('scheduledEnd', 'Scheduled End', true),
                 ...f.textarea('notes', 'Notes')
             ])
         ])

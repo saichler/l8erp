@@ -98,12 +98,7 @@ limitations under the License.
                 sortKey: 'deferredRevenue',
                 render: (item) => renderMoney(item.deferredRevenue)
             },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.revenueStatus(item.status)
-            }
+            { key: 'recognitionMethod', label: 'Method', sortKey: 'recognitionMethod' }
         ]
     };
 

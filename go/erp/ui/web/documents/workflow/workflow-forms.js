@@ -17,9 +17,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         DocCheckout: f.form('Checkout', [
             f.section('Checkout Details', [
                 ...f.reference('documentId', 'Document', 'DocDocument', true),
-                ...f.reference('userId', 'User', 'Employee', true),
+                ...f.reference('checkedOutBy', 'Checked Out By', 'Employee', true),
                 ...f.select('status', 'Status', enums.CHECKOUT_STATUS),
-                ...f.textarea('reason', 'Reason')
+                ...f.textarea('checkoutNotes', 'Checkout Notes')
             ])
         ]),
 
@@ -30,7 +30,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('documentId', 'Document', 'DocDocument'),
                 ...f.select('status', 'Status', enums.WORKFLOW_STATUS),
                 ...f.reference('initiatedBy', 'Initiated By', 'Employee'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.textarea('comments', 'Comments')
             ])
         ]),
 
@@ -39,7 +39,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('workflowId', 'Workflow', 'DocApprovalWorkflow', true),
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
-                ...f.number('stepOrder', 'Step Order', true),
+                ...f.number('stepNumber', 'Step Number', true),
                 ...f.select('status', 'Status', enums.STEP_STATUS),
                 ...f.reference('assigneeId', 'Assignee', 'Employee'),
                 ...f.date('dueDate', 'Due Date')
@@ -52,7 +52,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('signerId', 'Signer', 'Employee', true),
                 ...f.select('signatureType', 'Signature Type', enums.SIGNATURE_TYPE),
                 ...f.select('status', 'Status', enums.SIGNATURE_STATUS),
-                ...f.date('expiresAt', 'Expires At'),
+                ...f.date('expiryDate', 'Expiry Date'),
                 ...f.textarea('reason', 'Reason')
             ])
         ]),
@@ -60,8 +60,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         DocReviewComment: f.form('Review Comment', [
             f.section('Comment Details', [
                 ...f.reference('documentId', 'Document', 'DocDocument', true),
-                ...f.reference('userId', 'User', 'Employee', true),
-                ...f.textarea('comment', 'Comment', true),
+                ...f.reference('authorId', 'Author', 'Employee', true),
+                ...f.textarea('content', 'Content', true),
                 ...f.number('pageNumber', 'Page Number'),
                 ...f.reference('parentCommentId', 'Reply To', 'DocReviewComment'),
                 ...f.checkbox('isResolved', 'Resolved')

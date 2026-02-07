@@ -30,17 +30,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.col('workOrderId', 'Work Order'),
             ...col.custom('operationNumber', 'Op #', (item) => item.operationNumber, { sortKey: 'operationNumber' }),
             ...col.col('workCenterId', 'Work Center'),
-            ...col.custom('setupTime', 'Setup (hrs)', (item) => item.setupTime, { sortKey: 'setupTime' }),
-            ...col.custom('runTime', 'Run (hrs)', (item) => item.runTime, { sortKey: 'runTime' }),
+            ...col.custom('setupTimePlanned', 'Setup (hrs)', (item) => item.setupTimePlanned, { sortKey: 'setupTimePlanned' }),
+            ...col.custom('runTimePlanned', 'Run (hrs)', (item) => item.runTimePlanned, { sortKey: 'runTimePlanned' }),
             ...col.enum('status', 'Status', null, render.operationStatus)
         ],
 
         MfgProductionOrder: [
             ...col.id('prodOrderId'),
             ...col.col('orderNumber', 'Order #'),
-            ...col.col('itemId', 'Item'),
-            ...col.custom('quantity', 'Quantity', (item) => item.quantity, { sortKey: 'quantity' }),
-            ...col.date('scheduledDate', 'Scheduled'),
+            ...col.col('customerId', 'Customer'),
+            ...col.date('orderDate', 'Order Date'),
+            ...col.date('requiredDate', 'Required Date'),
             ...col.enum('status', 'Status', null, render.workOrderStatus)
         ],
 
@@ -48,8 +48,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.id('lineId'),
             ...col.col('prodOrderId', 'Prod Order'),
             ...col.col('itemId', 'Item'),
-            ...col.custom('requiredQty', 'Required Qty', (item) => item.requiredQty, { sortKey: 'requiredQty' }),
-            ...col.custom('issuedQty', 'Issued Qty', (item) => item.issuedQty, { sortKey: 'issuedQty' })
+            ...col.custom('quantityOrdered', 'Qty Ordered', (item) => item.quantityOrdered, { sortKey: 'quantityOrdered' }),
+            ...col.custom('quantityCompleted', 'Qty Completed', (item) => item.quantityCompleted, { sortKey: 'quantityCompleted' })
         ],
 
         MfgProdBatch: [
@@ -57,15 +57,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.col('batchNumber', 'Batch #'),
             ...col.col('workOrderId', 'Work Order'),
             ...col.custom('quantity', 'Quantity', (item) => item.quantity, { sortKey: 'quantity' }),
-            ...col.date('startDate', 'Start Date'),
-            ...col.enum('status', 'Status', null, render.batchStatus)
+            ...col.date('productionDate', 'Production Date'),
+            ...col.custom('qualityStatus', 'Quality Status', (item) => render.batchStatus(item.qualityStatus))
         ],
 
         MfgProdConsumption: [
             ...col.id('consumptionId'),
             ...col.col('workOrderId', 'Work Order'),
             ...col.col('itemId', 'Item'),
-            ...col.custom('quantity', 'Quantity', (item) => item.quantity, { sortKey: 'quantity' }),
+            ...col.custom('quantityConsumed', 'Qty Consumed', (item) => item.quantityConsumed, { sortKey: 'quantityConsumed' }),
             ...col.date('consumptionDate', 'Date')
         ]
     };

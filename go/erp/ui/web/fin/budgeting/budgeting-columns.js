@@ -98,20 +98,20 @@ limitations under the License.
 
         BudgetScenario: [
             { key: 'scenarioId', label: 'ID', sortKey: 'scenarioId', filterKey: 'scenarioId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
+            { key: 'scenarioName', label: 'Name', sortKey: 'scenarioName', filterKey: 'scenarioName' },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            { key: 'budgetId', label: 'Budget', sortKey: 'budgetId', filterKey: 'budgetId' },
+            { key: 'baseBudgetId', label: 'Base Budget', sortKey: 'baseBudgetId', filterKey: 'baseBudgetId' },
             {
-                key: 'isBaseline',
-                label: 'Baseline',
-                sortKey: 'isBaseline',
-                render: (item) => renderBoolean(item.isBaseline)
+                key: 'isActive',
+                label: 'Active',
+                sortKey: 'isActive',
+                render: (item) => renderBoolean(item.isActive)
             }
         ],
 
         CapitalExpenditure: [
             { key: 'capexId', label: 'ID', sortKey: 'capexId', filterKey: 'capexId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
+            { key: 'projectName', label: 'Project Name', sortKey: 'projectName', filterKey: 'projectName' },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
             {
                 key: 'requestedAmount',
@@ -154,10 +154,10 @@ limitations under the License.
                 render: (item) => renderDate(item.periodEnd)
             },
             {
-                key: 'forecastAmount',
-                label: 'Forecast',
-                sortKey: 'forecastAmount',
-                render: (item) => renderMoney(item.forecastAmount)
+                key: 'projectedAmount',
+                label: 'Projected',
+                sortKey: 'projectedAmount',
+                render: (item) => renderMoney(item.projectedAmount)
             },
             {
                 key: 'actualAmount',

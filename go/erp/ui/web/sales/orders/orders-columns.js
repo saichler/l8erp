@@ -57,7 +57,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.col('salesOrderId', 'Order'),
             ...col.col('itemId', 'Item'),
             ...col.col('warehouseId', 'Warehouse'),
-            ...col.custom('allocatedQty', 'Allocated', (item) => item.allocatedQty, { sortKey: 'allocatedQty' }),
+            ...col.custom('allocatedQuantity', 'Allocated', (item) => item.allocatedQuantity, { sortKey: 'allocatedQuantity' }),
             ...col.enum('status', 'Status', null, render.allocationStatus)
         ],
 
@@ -65,7 +65,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.id('backOrderId'),
             ...col.col('salesOrderId', 'Order'),
             ...col.col('itemId', 'Item'),
-            ...col.custom('backOrderQty', 'Qty', (item) => item.backOrderQty, { sortKey: 'backOrderQty' }),
+            ...col.custom('backOrderQuantity', 'Qty', (item) => item.backOrderQuantity, { sortKey: 'backOrderQuantity' }),
             ...col.date('expectedDate', 'Expected')
         ],
 
@@ -82,8 +82,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.id('lineId'),
             ...col.col('returnOrderId', 'Return'),
             ...col.col('itemId', 'Item'),
-            ...col.custom('returnQty', 'Qty', (item) => item.returnQty, { sortKey: 'returnQty' }),
-            ...col.col('reason', 'Reason')
+            ...col.custom('quantity', 'Qty', (item) => item.quantity, { sortKey: 'quantity' }),
+            ...col.col('description', 'Description')
         ]
     };
 

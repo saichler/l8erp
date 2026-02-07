@@ -44,7 +44,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('quantity', 'Quantity', true),
                 ...f.date('movementDate', 'Movement Date', true),
                 ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
-                ...f.text('reference', 'Reference'),
+                ...f.text('referenceId', 'Reference'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),

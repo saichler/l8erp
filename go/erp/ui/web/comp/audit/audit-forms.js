@@ -18,7 +18,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Audit Information', [
                 ...f.text('name', 'Name', true),
                 ...f.select('auditType', 'Audit Type', enums.auditType, true),
-                ...f.select('frequency', 'Frequency', enums.auditFrequency),
+                ...f.text('fiscalYear', 'Fiscal Year'),
                 ...f.select('status', 'Status', enums.auditStatus)
             ]),
             f.section('Timeline', [
@@ -29,10 +29,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]),
             f.section('Team', [
                 ...f.reference('leadAuditorId', 'Lead Auditor', 'Employee'),
-                ...f.reference('departmentId', 'Audited Department', 'Department')
+                ...f.text('auditFirm', 'Audit Firm')
             ]),
             f.section('Scope', [
-                ...f.textarea('scope', 'Audit Scope'),
+                ...f.textarea('auditScope', 'Audit Scope'),
                 ...f.textarea('objectives', 'Objectives')
             ])
         ]),
@@ -46,13 +46,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('status', 'Status', enums.findingStatus)
             ]),
             f.section('Ownership', [
-                ...f.reference('ownerId', 'Finding Owner', 'Employee'),
-                ...f.reference('controlId', 'Related Control', 'CompControl')
+                ...f.reference('responsibleId', 'Responsible', 'Employee')
             ]),
             f.section('Dates', [
-                ...f.date('identifiedDate', 'Identified Date'),
-                ...f.date('targetRemediationDate', 'Target Remediation'),
-                ...f.date('actualRemediationDate', 'Actual Remediation')
+                ...f.date('discoveryDate', 'Discovery Date'),
+                ...f.date('dueDate', 'Due Date'),
+                ...f.date('closedDate', 'Closed Date')
             ]),
             f.section('Details', [
                 ...f.textarea('description', 'Description'),
@@ -66,7 +65,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Action Information', [
                 ...f.reference('findingId', 'Finding', 'CompAuditFinding', true),
                 ...f.text('description', 'Description', true),
-                ...f.select('priority', 'Priority', enums.remediationPriority),
+                ...f.text('actionNumber', 'Action Number'),
                 ...f.select('status', 'Status', enums.remediationStatus)
             ]),
             f.section('Ownership', [
@@ -78,8 +77,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('verificationDate', 'Verification Date')
             ]),
             f.section('Details', [
-                ...f.textarea('actionPlan', 'Action Plan'),
-                ...f.textarea('evidence', 'Evidence of Completion')
+                ...f.textarea('progressNotes', 'Progress Notes'),
+                ...f.number('percentComplete', 'Percent Complete')
             ])
         ]),
 
@@ -87,17 +86,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Report Information', [
                 ...f.text('title', 'Title', true),
                 ...f.reference('auditScheduleId', 'Audit', 'CompAuditSchedule'),
-                ...f.select('reportType', 'Report Type', enums.reportType),
+                ...f.text('reportNumber', 'Report Number'),
                 ...f.select('status', 'Status', enums.reportStatus)
             ]),
             f.section('Dates', [
-                ...f.date('issueDate', 'Issue Date'),
-                ...f.date('responseDate', 'Response Due Date')
+                ...f.date('draftDate', 'Draft Date'),
+                ...f.date('finalDate', 'Final Date')
             ]),
             f.section('Content', [
                 ...f.textarea('executiveSummary', 'Executive Summary'),
-                ...f.textarea('scope', 'Scope'),
-                ...f.textarea('conclusion', 'Conclusion')
+                ...f.textarea('scopeDescription', 'Scope'),
+                ...f.textarea('overallOpinion', 'Overall Opinion')
             ])
         ]),
 
@@ -108,9 +107,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('status', 'Status', enums.reportStatus)
             ]),
             f.section('Period', [
-                ...f.date('periodStartDate', 'Period Start Date'),
-                ...f.date('periodEndDate', 'Period End Date'),
-                ...f.date('generatedDate', 'Generated Date')
+                ...f.date('periodStart', 'Period Start'),
+                ...f.date('periodEnd', 'Period End'),
+                ...f.date('reportDate', 'Report Date')
             ]),
             f.section('Ownership', [
                 ...f.reference('preparedById', 'Prepared By', 'Employee'),
@@ -118,14 +117,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]),
             f.section('Content', [
                 ...f.textarea('executiveSummary', 'Executive Summary'),
-                ...f.textarea('findings', 'Key Findings'),
+                ...f.textarea('areasOfConcern', 'Areas of Concern'),
                 ...f.textarea('recommendations', 'Recommendations')
             ])
         ])
     };
 
     CompAudit.primaryKeys = {
-        CompAuditSchedule: 'auditId',
+        CompAuditSchedule: 'scheduleId',
         CompAuditFinding: 'findingId',
         CompRemediationAction: 'actionId',
         CompAuditReport: 'reportId',

@@ -36,8 +36,8 @@ limitations under the License.
             { key: 'jurisdictionId', label: 'ID', sortKey: 'jurisdictionId', filterKey: 'jurisdictionId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'level', label: 'Level', sortKey: 'level', render: (item) => render.jurisdictionLevel(item.level) },
-            { key: 'country', label: 'Country', sortKey: 'country', filterKey: 'country' },
-            { key: 'stateProvince', label: 'State/Province', sortKey: 'stateProvince', filterKey: 'stateProvince' },
+            { key: 'countryCode', label: 'Country', sortKey: 'countryCode', filterKey: 'countryCode' },
+            { key: 'stateCode', label: 'State/Province', sortKey: 'stateCode', filterKey: 'stateCode' },
             { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],
 
@@ -47,32 +47,32 @@ limitations under the License.
             { key: 'taxCodeId', label: 'Tax Code', sortKey: 'taxCodeId', filterKey: 'taxCodeId' },
             { key: 'jurisdictionId', label: 'Jurisdiction', sortKey: 'jurisdictionId', filterKey: 'jurisdictionId' },
             { key: 'effectiveDate', label: 'Effective Date', sortKey: 'effectiveDate', render: (item) => Layer8MRenderers.renderDate(item.effectiveDate) },
-            { key: 'expirationDate', label: 'Expiration Date', sortKey: 'expirationDate', render: (item) => Layer8MRenderers.renderDate(item.expirationDate) }
+            { key: 'endDate', label: 'End Date', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) }
         ],
 
         TaxReturn: [
             { key: 'returnId', label: 'ID', sortKey: 'returnId', filterKey: 'returnId' },
             { key: 'taxType', label: 'Tax Type', sortKey: 'taxType', render: (item) => render.taxType(item.taxType) },
-            { key: 'filingPeriod', label: 'Filing Period', sortKey: 'filingPeriod', filterKey: 'filingPeriod' },
+            { key: 'fiscalPeriodId', label: 'Fiscal Period', sortKey: 'fiscalPeriodId', filterKey: 'fiscalPeriodId' },
             { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => Layer8MRenderers.renderDate(item.dueDate) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TAX_RETURN_STATUS_VALUES, render: (item) => render.taxReturnStatus(item.status) },
-            { key: 'taxLiability', label: 'Tax Liability', sortKey: 'taxLiability', render: (item) => Layer8MRenderers.renderMoney(item.taxLiability) }
+            { key: 'taxAmount', label: 'Tax Amount', sortKey: 'taxAmount', render: (item) => Layer8MRenderers.renderMoney(item.taxAmount) }
         ],
 
         TaxExemption: [
             { key: 'exemptionId', label: 'ID', sortKey: 'exemptionId', filterKey: 'exemptionId' },
-            { key: 'entityName', label: 'Entity Name', sortKey: 'entityName', filterKey: 'entityName' },
+            { key: 'exemptionNumber', label: 'Exemption #', sortKey: 'exemptionNumber', filterKey: 'exemptionNumber' },
             { key: 'taxCodeId', label: 'Tax Code', sortKey: 'taxCodeId', filterKey: 'taxCodeId' },
-            { key: 'exemptionReason', label: 'Reason', sortKey: 'exemptionReason', filterKey: 'exemptionReason' },
-            { key: 'startDate', label: 'Start Date', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End Date', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) }
+            { key: 'reason', label: 'Reason', sortKey: 'reason', filterKey: 'reason' },
+            { key: 'effectiveDate', label: 'Effective Date', sortKey: 'effectiveDate', render: (item) => Layer8MRenderers.renderDate(item.effectiveDate) },
+            { key: 'expirationDate', label: 'Expiration Date', sortKey: 'expirationDate', render: (item) => Layer8MRenderers.renderDate(item.expirationDate) }
         ],
 
         WithholdingTaxConfig: [
             { key: 'configId', label: 'ID', sortKey: 'configId', filterKey: 'configId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'taxType', label: 'Tax Type', sortKey: 'taxType', render: (item) => render.taxType(item.taxType) },
-            { key: 'rate', label: 'Rate', sortKey: 'rate', render: (item) => Layer8MRenderers.renderPercentage(item.rate) },
+            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
+            { key: 'taxCodeId', label: 'Tax Code', sortKey: 'taxCodeId', filterKey: 'taxCodeId' },
+            { key: 'withholdingRate', label: 'Rate', sortKey: 'withholdingRate', render: (item) => Layer8MRenderers.renderPercentage(item.withholdingRate) },
             { key: 'thresholdAmount', label: 'Threshold', sortKey: 'thresholdAmount', render: (item) => Layer8MRenderers.renderMoney(item.thresholdAmount) },
             { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ]

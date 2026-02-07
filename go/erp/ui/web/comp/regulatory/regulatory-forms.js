@@ -18,15 +18,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Regulation Information', [
                 ...f.text('code', 'Code', true),
                 ...f.text('name', 'Name', true),
-                ...f.select('type', 'Type', enums.regulationType, true),
+                ...f.select('regulationType', 'Type', enums.regulationType, true),
                 ...f.select('jurisdiction', 'Jurisdiction', enums.jurisdictionLevel),
-                ...f.text('issuingAuthority', 'Issuing Authority'),
+                ...f.text('issuingBody', 'Issuing Body'),
                 ...f.date('effectiveDate', 'Effective Date'),
-                ...f.select('status', 'Status', enums.regulationStatus)
+                ...f.date('sunsetDate', 'Sunset Date'),
+                ...f.checkbox('isActive', 'Active')
             ]),
             f.section('Details', [
                 ...f.textarea('description', 'Description'),
-                ...f.textarea('penaltyInfo', 'Penalty Information')
+                ...f.text('sourceUrl', 'Source URL')
             ])
         ]),
 
@@ -34,10 +35,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Requirement Information', [
                 ...f.reference('regulationId', 'Regulation', 'CompRegulation', true),
                 ...f.text('code', 'Code', true),
-                ...f.text('name', 'Name', true),
+                ...f.text('title', 'Title', true),
                 ...f.select('priority', 'Priority', enums.requirementPriority),
-                ...f.select('status', 'Status', enums.requirementStatus),
-                ...f.date('dueDate', 'Due Date')
+                ...f.checkbox('isMandatory', 'Mandatory'),
+                ...f.checkbox('isActive', 'Active')
             ]),
             f.section('Details', [
                 ...f.textarea('description', 'Description'),
@@ -56,7 +57,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]),
             f.section('Assessment Details', [
                 ...f.reference('assessorId', 'Assessor', 'Employee'),
-                ...f.textarea('evidence', 'Evidence'),
+                ...f.number('complianceScore', 'Compliance Score'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -64,7 +65,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         CompCertification: f.form('Certification', [
             f.section('Certification Information', [
                 ...f.text('name', 'Name', true),
-                ...f.select('type', 'Type', enums.certificationType, true),
+                ...f.textarea('description', 'Description'),
                 ...f.text('issuingBody', 'Issuing Body'),
                 ...f.text('certificateNumber', 'Certificate Number'),
                 ...f.select('status', 'Status', enums.certificationStatus)
@@ -82,15 +83,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         CompViolationRecord: f.form('Violation Record', [
             f.section('Violation Information', [
                 ...f.text('violationNumber', 'Violation Number', true),
-                ...f.reference('regulationId', 'Regulation', 'CompRegulation', true),
-                ...f.reference('requirementId', 'Requirement', 'CompRequirement'),
+                ...f.reference('requirementId', 'Requirement', 'CompRequirement', true),
+                ...f.text('title', 'Title'),
                 ...f.select('severity', 'Severity', enums.violationSeverity, true),
                 ...f.select('status', 'Status', enums.violationStatus)
             ]),
             f.section('Dates', [
                 ...f.date('discoveryDate', 'Discovery Date'),
-                ...f.date('reportedDate', 'Reported Date'),
-                ...f.date('resolutionDate', 'Resolution Date')
+                ...f.date('dueDate', 'Due Date'),
+                ...f.date('closedDate', 'Closed Date')
             ]),
             f.section('Details', [
                 ...f.textarea('description', 'Description'),

@@ -28,14 +28,14 @@ limitations under the License.
             { key: 'customerNumber', label: 'Customer #', sortKey: 'customerNumber', filterKey: 'customerNumber' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.CUSTOMER_STATUS_VALUES, render: (item) => render.customerStatus(item.status) },
-            { key: 'creditLimit', label: 'Credit Limit', sortKey: 'creditLimit', render: (item) => Layer8MRenderers.renderMoney(item.creditLimit) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
+            { key: 'creditLimit', label: 'Credit Limit', sortKey: 'creditLimit', render: (item) => Layer8MRenderers.renderMoney(item.creditLimit) }
         ],
 
         CustomerContact: [
             { key: 'contactId', label: 'ID', sortKey: 'contactId', filterKey: 'contactId' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'contactName', label: 'Contact Name', sortKey: 'contactName', filterKey: 'contactName' },
+            { key: 'firstName', label: 'First Name', sortKey: 'firstName', filterKey: 'firstName' },
+            { key: 'lastName', label: 'Last Name', sortKey: 'lastName', filterKey: 'lastName' },
             { key: 'email', label: 'Email', sortKey: 'email', filterKey: 'email' },
             { key: 'phone', label: 'Phone', sortKey: 'phone', filterKey: 'phone' },
             { key: 'isPrimary', label: 'Primary', sortKey: 'isPrimary', render: (item) => Layer8MRenderers.renderBoolean(item.isPrimary) }
@@ -57,12 +57,11 @@ limitations under the License.
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
             { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
             { key: 'unitPrice', label: 'Unit Price', sortKey: 'unitPrice', render: (item) => Layer8MRenderers.renderMoney(item.unitPrice) },
-            { key: 'lineTotal', label: 'Line Total', sortKey: 'lineTotal', render: (item) => Layer8MRenderers.renderMoney(item.lineTotal) }
+            { key: 'lineAmount', label: 'Line Amount', sortKey: 'lineAmount', render: (item) => Layer8MRenderers.renderMoney(item.lineAmount) }
         ],
 
         CustomerPayment: [
             { key: 'paymentId', label: 'ID', sortKey: 'paymentId', filterKey: 'paymentId' },
-            { key: 'paymentNumber', label: 'Payment #', sortKey: 'paymentNumber', filterKey: 'paymentNumber' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
             { key: 'paymentDate', label: 'Payment Date', sortKey: 'paymentDate', render: (item) => Layer8MRenderers.renderDate(item.paymentDate) },
             { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => Layer8MRenderers.renderMoney(item.amount) },
@@ -81,7 +80,7 @@ limitations under the License.
             { key: 'creditMemoId', label: 'ID', sortKey: 'creditMemoId', filterKey: 'creditMemoId' },
             { key: 'memoNumber', label: 'Memo #', sortKey: 'memoNumber', filterKey: 'memoNumber' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'issueDate', label: 'Issue Date', sortKey: 'issueDate', render: (item) => Layer8MRenderers.renderDate(item.issueDate) },
+            { key: 'memoDate', label: 'Memo Date', sortKey: 'memoDate', render: (item) => Layer8MRenderers.renderDate(item.memoDate) },
             { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => Layer8MRenderers.renderMoney(item.amount) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.CREDIT_MEMO_STATUS_VALUES, render: (item) => render.creditMemoStatus(item.status) }
         ],

@@ -35,24 +35,24 @@ limitations under the License.
         MfgCostRollup: [
             { key: 'rollupId', label: 'ID', sortKey: 'rollupId' },
             { key: 'rollupNumber', label: 'Rollup #', sortKey: 'rollupNumber' },
-            { key: 'name', label: 'Name', sortKey: 'name' },
+            { key: 'description', label: 'Description', sortKey: 'description' },
             { key: 'runDate', label: 'Run Date', sortKey: 'runDate', render: (item) => render.date(item.runDate) },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.rollupStatus(item.status) }
         ],
         MfgActualCost: [
             { key: 'actualCostId', label: 'ID', sortKey: 'actualCostId' },
             { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId' },
-            { key: 'costElementType', label: 'Type', sortKey: 'costElementType', render: (item) => render.costElementType(item.costElementType) },
-            { key: 'actualAmount', label: 'Amount', sortKey: 'actualAmount', render: (item) => render.money(item.actualAmount) },
-            { key: 'postingDate', label: 'Posting Date', sortKey: 'postingDate', render: (item) => render.date(item.postingDate) }
+            { key: 'costType', label: 'Cost Type', sortKey: 'costType' },
+            { key: 'costElement', label: 'Cost Element', sortKey: 'costElement', render: (item) => render.costElementType(item.costElement) },
+            { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => render.money(item.amount) },
+            { key: 'transactionDate', label: 'Transaction Date', sortKey: 'transactionDate', render: (item) => render.date(item.transactionDate) }
         ],
         MfgCostVariance: [
             { key: 'varianceId', label: 'ID', sortKey: 'varianceId' },
             { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
             { key: 'varianceType', label: 'Type', sortKey: 'varianceType', render: (item) => render.varianceType(item.varianceType) },
-            { key: 'standardAmount', label: 'Standard', sortKey: 'standardAmount', render: (item) => render.money(item.standardAmount) },
-            { key: 'actualAmount', label: 'Actual', sortKey: 'actualAmount', render: (item) => render.money(item.actualAmount) },
+            { key: 'standardCost', label: 'Standard', sortKey: 'standardCost', render: (item) => render.money(item.standardCost) },
+            { key: 'actualCost', label: 'Actual', sortKey: 'actualCost', render: (item) => render.money(item.actualCost) },
             { key: 'varianceAmount', label: 'Variance', sortKey: 'varianceAmount', render: (item) => render.money(item.varianceAmount) }
         ],
         MfgOverhead: [

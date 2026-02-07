@@ -39,7 +39,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('effectiveDate', 'Effective Date', true),
                 ...f.date('expiryDate', 'Expiry Date'),
                 ...f.number('availableHours', 'Available Hours'),
-                ...f.number('maxCapacity', 'Max Capacity'),
+                ...f.number('capacityUnits', 'Capacity Units'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -53,7 +53,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('startTime', 'Start Time'),
                 ...f.text('endTime', 'End Time'),
                 ...f.number('hoursWorked', 'Hours Worked'),
-                ...f.number('quantityProduced', 'Qty Produced'),
+                ...f.number('quantityCompleted', 'Qty Completed'),
                 ...f.number('quantityScrapped', 'Qty Scrapped'),
                 ...f.textarea('notes', 'Notes')
             ])
@@ -67,7 +67,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('startTime', 'Start Time'),
                 ...f.text('endTime', 'End Time'),
                 ...f.number('machineHours', 'Machine Hours'),
-                ...f.number('quantityProduced', 'Qty Produced'),
+                ...f.number('quantityCompleted', 'Qty Completed'),
                 ...f.number('quantityScrapped', 'Qty Scrapped'),
                 ...f.textarea('notes', 'Notes')
             ])
@@ -80,8 +80,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('shiftType', 'Shift Type', enums.SHIFT_TYPE),
                 ...f.text('startTime', 'Start Time', true),
                 ...f.text('endTime', 'End Time', true),
-                ...f.number('breakDurationMinutes', 'Break Duration (min)'),
-                ...f.text('workingDays', 'Working Days'),
+                ...f.number('breakDuration', 'Break Duration (min)'),
+                ...f.checkbox('isOvernight', 'Overnight'),
                 ...f.checkbox('isActive', 'Active')
             ])
         ]),
@@ -93,7 +93,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('startTime', 'Start Time', true),
                 ...f.text('endTime', 'End Time'),
                 ...f.number('durationMinutes', 'Duration (minutes)'),
-                ...f.select('reason', 'Reason', enums.DOWNTIME_REASON),
+                ...f.select('reasonCode', 'Reason Code', enums.DOWNTIME_REASON),
                 ...f.textarea('description', 'Description'),
                 ...f.reference('reportedBy', 'Reported By', 'Employee')
             ])

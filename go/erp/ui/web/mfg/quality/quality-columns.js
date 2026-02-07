@@ -33,20 +33,20 @@ limitations under the License.
             ...col.id('pointId'),
             ...col.basic([['planId', 'Plan'], 'name']),
             ...col.custom('inspectionType', 'Type', (item) => render.inspectionType(item.inspectionType)),
-            ...col.basic([['sequenceNumber', 'Seq #'], 'characteristic'])
+            ...col.basic([['sequence', 'Seq #'], 'characteristic'])
         ],
 
         MfgQualityInspection: [
             ...col.id('inspectionId'),
             ...col.basic([['inspectionNumber', 'Insp #'], ['workOrderId', 'Work Order'], ['planId', 'Plan']]),
             ...col.date('inspectionDate', 'Date'),
-            ...col.custom('result', 'Result', (item) => render.inspectionResult(item.result))
+            ...col.custom('overallResult', 'Result', (item) => render.inspectionResult(item.overallResult))
         ],
 
         MfgTestResult: [
             ...col.id('resultId'),
             ...col.basic([['inspectionId', 'Inspection'], ['pointId', 'Point']]),
-            ...col.basic([['measuredValue', 'Measured'], ['targetValue', 'Target']]),
+            ...col.basic([['measuredValue', 'Measured'], ['textValue', 'Text Value']]),
             ...col.custom('result', 'Result', (item) => render.inspectionResult(item.result))
         ],
 
@@ -54,7 +54,7 @@ limitations under the License.
             ...col.id('ncrId'),
             ...col.basic([['ncrNumber', 'NCR #'], ['itemId', 'Item'], ['workOrderId', 'Work Order']]),
             ...col.custom('severity', 'Severity', (item) => render.ncrSeverity(item.severity)),
-            ...col.date('reportDate', 'Report Date'),
+            ...col.date('reportedDate', 'Report Date'),
             ...col.custom('status', 'Status', (item) => render.ncrStatus(item.status))
         ],
 

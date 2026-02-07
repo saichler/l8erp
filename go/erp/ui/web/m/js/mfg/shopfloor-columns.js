@@ -37,7 +37,7 @@ limitations under the License.
             { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
             { key: 'effectiveDate', label: 'Effective Date', sortKey: 'effectiveDate', render: (item) => render.date(item.effectiveDate) },
             { key: 'availableHours', label: 'Available Hrs', sortKey: 'availableHours' },
-            { key: 'maxCapacity', label: 'Max Capacity', sortKey: 'maxCapacity' }
+            { key: 'capacityUnits', label: 'Capacity Units', sortKey: 'capacityUnits' }
         ],
         MfgLaborEntry: [
             { key: 'entryId', label: 'ID', sortKey: 'entryId' },
@@ -46,7 +46,7 @@ limitations under the License.
             { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
             { key: 'startTime', label: 'Start Time', sortKey: 'startTime', render: (item) => render.date(item.startTime) },
             { key: 'hoursWorked', label: 'Hours', sortKey: 'hoursWorked' },
-            { key: 'quantityProduced', label: 'Qty Produced', sortKey: 'quantityProduced' }
+            { key: 'quantityCompleted', label: 'Qty Completed', sortKey: 'quantityCompleted' }
         ],
         MfgMachineEntry: [
             { key: 'entryId', label: 'ID', sortKey: 'entryId' },
@@ -54,7 +54,7 @@ limitations under the License.
             { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
             { key: 'startTime', label: 'Start Time', sortKey: 'startTime', render: (item) => render.date(item.startTime) },
             { key: 'machineHours', label: 'Machine Hrs', sortKey: 'machineHours' },
-            { key: 'quantityProduced', label: 'Qty Produced', sortKey: 'quantityProduced' }
+            { key: 'quantityCompleted', label: 'Qty Completed', sortKey: 'quantityCompleted' }
         ],
         MfgShiftSchedule: [
             { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId' },
@@ -70,7 +70,7 @@ limitations under the License.
             { key: 'startTime', label: 'Start Time', sortKey: 'startTime', render: (item) => render.date(item.startTime) },
             { key: 'endTime', label: 'End Time', sortKey: 'endTime', render: (item) => render.date(item.endTime) },
             { key: 'durationMinutes', label: 'Duration (min)', sortKey: 'durationMinutes' },
-            { key: 'reason', label: 'Reason', sortKey: 'reason', render: (item) => render.downtimeReason(item.reason) }
+            { key: 'reasonCode', label: 'Reason Code', sortKey: 'reasonCode', render: (item) => render.downtimeReason(item.reasonCode) }
         ]
     };
 

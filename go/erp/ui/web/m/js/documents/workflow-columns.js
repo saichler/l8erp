@@ -13,22 +13,22 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         DocCheckout: [
             { key: 'checkoutId', label: 'ID', sortKey: 'checkoutId' },
             { key: 'documentId', label: 'Document', sortKey: 'documentId' },
-            { key: 'userId', label: 'User', sortKey: 'userId' },
+            { key: 'checkedOutBy', label: 'Checked Out By', sortKey: 'checkedOutBy' },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.checkoutStatus(item.status) },
-            { key: 'checkedOutAt', label: 'Checked Out', sortKey: 'checkedOutAt', render: (item) => renderDate(item.checkedOutAt) }
+            { key: 'checkoutDate', label: 'Checked Out', sortKey: 'checkoutDate', render: (item) => renderDate(item.checkoutDate) }
         ],
         DocApprovalWorkflow: [
             { key: 'workflowId', label: 'ID', sortKey: 'workflowId' },
             { key: 'name', label: 'Name', sortKey: 'name' },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.workflowStatus(item.status) },
             { key: 'currentStep', label: 'Current Step', sortKey: 'currentStep' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            { key: 'totalSteps', label: 'Total Steps', sortKey: 'totalSteps' }
         ],
         DocWorkflowStep: [
             { key: 'stepId', label: 'ID', sortKey: 'stepId' },
             { key: 'workflowId', label: 'Workflow', sortKey: 'workflowId' },
             { key: 'name', label: 'Name', sortKey: 'name' },
-            { key: 'stepOrder', label: 'Order', sortKey: 'stepOrder' },
+            { key: 'stepNumber', label: 'Order', sortKey: 'stepNumber' },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.stepStatus(item.status) }
         ],
         DocSignature: [
@@ -41,8 +41,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         DocReviewComment: [
             { key: 'commentId', label: 'ID', sortKey: 'commentId' },
             { key: 'documentId', label: 'Document', sortKey: 'documentId' },
-            { key: 'userId', label: 'User', sortKey: 'userId' },
-            { key: 'comment', label: 'Comment', sortKey: 'comment' },
+            { key: 'authorId', label: 'Author', sortKey: 'authorId' },
+            { key: 'content', label: 'Comment', sortKey: 'content' },
             { key: 'isResolved', label: 'Resolved', sortKey: 'isResolved', render: (item) => item.isResolved ? 'Yes' : 'No' }
         ]
     };

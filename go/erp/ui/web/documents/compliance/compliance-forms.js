@@ -17,11 +17,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         DocRetentionPolicy: f.form('Retention Policy', [
             f.section('Policy Details', [
                 ...f.text('name', 'Name', true),
+                ...f.text('code', 'Code'),
                 ...f.textarea('description', 'Description'),
                 ...f.number('retentionDays', 'Retention Days', true),
-                ...f.select('action', 'Action', enums.RETENTION_ACTION),
+                ...f.select('actionOnExpiry', 'Action on Expiry', enums.RETENTION_ACTION),
                 ...f.reference('categoryId', 'Category', 'DocCategory'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.text('legalBasis', 'Legal Basis'),
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.checkbox('isActive', 'Active'),
+                ...f.checkbox('isMandatory', 'Mandatory')
             ])
         ]),
 
@@ -30,11 +34,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('status', 'Status', enums.LEGAL_HOLD_STATUS),
-                ...f.text('matterReference', 'Matter Reference'),
+                ...f.text('matterId', 'Matter ID'),
+                ...f.text('matterName', 'Matter Name'),
                 ...f.reference('custodianId', 'Custodian', 'Employee'),
-                ...f.date('startDate', 'Start Date'),
-                ...f.date('endDate', 'End Date'),
-                ...f.textarea('reason', 'Reason')
+                ...f.text('legalCounsel', 'Legal Counsel'),
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.date('releaseDate', 'Release Date'),
+                ...f.textarea('notes', 'Notes')
             ])
         ]),
 
@@ -50,9 +56,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
         DocArchiveJob: f.form('Archive Job', [
             f.section('Job Details', [
-                ...f.reference('policyId', 'Policy', 'DocRetentionPolicy', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('retentionPolicyId', 'Policy', 'DocRetentionPolicy'),
                 ...f.select('status', 'Status', enums.ARCHIVE_STATUS),
-                ...f.reference('startedBy', 'Started By', 'Employee'),
+                ...f.reference('initiatedBy', 'Initiated By', 'Employee'),
                 ...f.text('archiveLocation', 'Archive Location')
             ])
         ]),
@@ -62,9 +70,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('documentId', 'Document', 'DocDocument', true),
                 ...f.reference('userId', 'User', 'Employee', true),
                 ...f.text('action', 'Action', true),
-                ...f.text('fieldName', 'Field Name'),
-                ...f.textarea('oldValue', 'Old Value'),
-                ...f.textarea('newValue', 'New Value')
+                ...f.text('entityType', 'Entity Type'),
+                ...f.text('entityId', 'Entity ID'),
+                ...f.text('changeSummary', 'Change Summary'),
+                ...f.textarea('oldValues', 'Old Values'),
+                ...f.textarea('newValues', 'New Values')
             ])
         ])
     };

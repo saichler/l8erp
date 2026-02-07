@@ -28,7 +28,7 @@ limitations under the License.
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'currencyCode', label: 'Currency', sortKey: 'currencyCode' },
             { key: 'effectiveDate', label: 'Effective', sortKey: 'effectiveDate', render: (item) => Layer8MRenderers.renderDate(item.effectiveDate) },
-            { key: 'expirationDate', label: 'Expires', sortKey: 'expirationDate', render: (item) => Layer8MRenderers.renderDate(item.expirationDate) },
+            { key: 'expiryDate', label: 'Expires', sortKey: 'expiryDate', render: (item) => Layer8MRenderers.renderDate(item.expiryDate) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.PRICE_LIST_STATUS_VALUES, render: (item) => render.priceListStatus(item.status) }
         ],
 
@@ -38,16 +38,16 @@ limitations under the License.
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             { key: 'unitPrice', label: 'Unit Price', sortKey: 'unitPrice', render: (item) => Layer8MRenderers.renderMoney(item.unitPrice) },
             { key: 'unitOfMeasure', label: 'UOM', sortKey: 'unitOfMeasure' },
-            { key: 'minQuantity', label: 'Min Qty', sortKey: 'minQuantity' }
+            { key: 'minimumQuantity', label: 'Min Qty', sortKey: 'minimumQuantity' }
         ],
 
         CustomerPrice: [
             { key: 'customerPriceId', label: 'ID', sortKey: 'customerPriceId', filterKey: 'customerPriceId' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'specialPrice', label: 'Price', sortKey: 'specialPrice', render: (item) => Layer8MRenderers.renderMoney(item.specialPrice) },
+            { key: 'unitPrice', label: 'Price', sortKey: 'unitPrice', render: (item) => Layer8MRenderers.renderMoney(item.unitPrice) },
             { key: 'effectiveDate', label: 'Effective', sortKey: 'effectiveDate', render: (item) => Layer8MRenderers.renderDate(item.effectiveDate) },
-            { key: 'expirationDate', label: 'Expires', sortKey: 'expirationDate', render: (item) => Layer8MRenderers.renderDate(item.expirationDate) }
+            { key: 'expiryDate', label: 'Expires', sortKey: 'expiryDate', render: (item) => Layer8MRenderers.renderDate(item.expiryDate) }
         ],
 
         DiscountRule: [
@@ -55,7 +55,7 @@ limitations under the License.
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'discountType', label: 'Type', sortKey: 'discountType', filterKey: 'discountType', enumValues: enums.DISCOUNT_TYPE_VALUES, render: (item) => render.discountType(item.discountType) },
             { key: 'discountValue', label: 'Value', sortKey: 'discountValue' },
-            { key: 'minOrderAmount', label: 'Min Order', sortKey: 'minOrderAmount' },
+            { key: 'minimumAmount', label: 'Min Order', sortKey: 'minimumAmount' },
             { key: 'isActive', label: 'Active', sortKey: 'isActive' }
         ],
 
@@ -63,7 +63,7 @@ limitations under the License.
             { key: 'promoId', label: 'ID', sortKey: 'promoId', filterKey: 'promoId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'promoPrice', label: 'Promo Price', sortKey: 'promoPrice', render: (item) => Layer8MRenderers.renderMoney(item.promoPrice) },
+            { key: 'promotionalPrice', label: 'Promo Price', sortKey: 'promotionalPrice', render: (item) => Layer8MRenderers.renderMoney(item.promotionalPrice) },
             { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
             { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) }
         ],
@@ -72,9 +72,9 @@ limitations under the License.
             { key: 'breakId', label: 'ID', sortKey: 'breakId', filterKey: 'breakId' },
             { key: 'priceListId', label: 'Price List', sortKey: 'priceListId', filterKey: 'priceListId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'minQuantity', label: 'Min Qty', sortKey: 'minQuantity' },
-            { key: 'maxQuantity', label: 'Max Qty', sortKey: 'maxQuantity' },
-            { key: 'breakPrice', label: 'Price', sortKey: 'breakPrice', render: (item) => Layer8MRenderers.renderMoney(item.breakPrice) }
+            { key: 'fromQuantity', label: 'Min Qty', sortKey: 'fromQuantity' },
+            { key: 'toQuantity', label: 'Max Qty', sortKey: 'toQuantity' },
+            { key: 'unitPrice', label: 'Price', sortKey: 'unitPrice', render: (item) => Layer8MRenderers.renderMoney(item.unitPrice) }
         ]
     };
 

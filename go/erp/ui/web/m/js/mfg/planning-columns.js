@@ -26,7 +26,7 @@ limitations under the License.
         MfgMrpRun: [
             { key: 'runId', label: 'ID', sortKey: 'runId' },
             { key: 'runNumber', label: 'Run #', sortKey: 'runNumber' },
-            { key: 'name', label: 'Name', sortKey: 'name' },
+            { key: 'description', label: 'Description', sortKey: 'description' },
             { key: 'runDate', label: 'Run Date', sortKey: 'runDate', render: (item) => render.date(item.runDate) },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.mrpStatus(item.status) }
         ],
@@ -41,24 +41,24 @@ limitations under the License.
         MfgCapacityPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId' },
             { key: 'planNumber', label: 'Plan #', sortKey: 'planNumber' },
-            { key: 'name', label: 'Name', sortKey: 'name' },
-            { key: 'startDate', label: 'Start Date', sortKey: 'startDate', render: (item) => render.date(item.startDate) },
-            { key: 'endDate', label: 'End Date', sortKey: 'endDate', render: (item) => render.date(item.endDate) }
+            { key: 'description', label: 'Description', sortKey: 'description' },
+            { key: 'planningStart', label: 'Planning Start', sortKey: 'planningStart', render: (item) => render.date(item.planningStart) },
+            { key: 'planningEnd', label: 'Planning End', sortKey: 'planningEnd', render: (item) => render.date(item.planningEnd) }
         ],
         MfgCapacityLoad: [
             { key: 'loadId', label: 'ID', sortKey: 'loadId' },
             { key: 'planId', label: 'Capacity Plan', sortKey: 'planId' },
             { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            { key: 'periodDate', label: 'Period', sortKey: 'periodDate', render: (item) => render.date(item.periodDate) },
+            { key: 'periodStart', label: 'Period Start', sortKey: 'periodStart', render: (item) => render.date(item.periodStart) },
             { key: 'requiredHours', label: 'Required Hrs', sortKey: 'requiredHours' },
             { key: 'availableHours', label: 'Available Hrs', sortKey: 'availableHours' },
             { key: 'loadPercent', label: 'Load %', sortKey: 'loadPercent' }
         ],
         MfgProdSchedule: [
             { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId' },
-            { key: 'scheduleName', label: 'Name', sortKey: 'scheduleName' },
-            { key: 'startDate', label: 'Start Date', sortKey: 'startDate', render: (item) => render.date(item.startDate) },
-            { key: 'endDate', label: 'End Date', sortKey: 'endDate', render: (item) => render.date(item.endDate) },
+            { key: 'scheduleNumber', label: 'Schedule #', sortKey: 'scheduleNumber' },
+            { key: 'scheduleStart', label: 'Start Date', sortKey: 'scheduleStart', render: (item) => render.date(item.scheduleStart) },
+            { key: 'scheduleEnd', label: 'End Date', sortKey: 'scheduleEnd', render: (item) => render.date(item.scheduleEnd) },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.scheduleStatus(item.status) }
         ],
         MfgScheduleBlock: [
@@ -66,8 +66,8 @@ limitations under the License.
             { key: 'scheduleId', label: 'Schedule', sortKey: 'scheduleId' },
             { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
             { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            { key: 'startTime', label: 'Start', sortKey: 'startTime', render: (item) => render.date(item.startTime) },
-            { key: 'endTime', label: 'End', sortKey: 'endTime', render: (item) => render.date(item.endTime) }
+            { key: 'scheduledStart', label: 'Start', sortKey: 'scheduledStart', render: (item) => render.date(item.scheduledStart) },
+            { key: 'scheduledEnd', label: 'End', sortKey: 'scheduledEnd', render: (item) => render.date(item.scheduledEnd) }
         ]
     };
 

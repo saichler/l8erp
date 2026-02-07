@@ -67,7 +67,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('unitOfMeasure', 'UOM'),
                 ...f.money('unitPrice', 'Unit Price', true),
                 ...f.number('discountPercent', 'Discount %'),
-                ...f.date('requestedDate', 'Requested Date')
             ])
         ]),
 
@@ -78,7 +77,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('itemId', 'Item', 'ScmItem', true),
                 ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse', true),
                 ...f.reference('binId', 'Bin', 'ScmBin'),
-                ...f.number('allocatedQty', 'Allocated Qty', true),
+                ...f.number('allocatedQuantity', 'Allocated Qty', true),
                 ...f.select('status', 'Status', enums.ALLOCATION_STATUS)
             ])
         ]),
@@ -88,7 +87,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder', true),
                 ...f.reference('lineId', 'Order Line', 'SalesOrderLine'),
                 ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('backOrderQty', 'Back Order Qty', true),
+                ...f.number('backOrderQuantity', 'Back Order Qty', true),
                 ...f.date('expectedDate', 'Expected Date'),
                 ...f.textarea('notes', 'Notes')
             ])
@@ -101,7 +100,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('customerId', 'Customer', 'Customer', true),
                 ...f.date('returnDate', 'Return Date', true),
                 ...f.select('status', 'Status', enums.RETURN_STATUS),
-                ...f.textarea('returnReason', 'Reason'),
+                ...f.textarea('reasonDescription', 'Reason'),
                 ...f.reference('warehouseId', 'Return Warehouse', 'ScmWarehouse'),
                 ...f.textarea('notes', 'Notes')
             ])
@@ -111,8 +110,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Line Details', [
                 ...f.reference('returnOrderId', 'Return Order', 'SalesReturnOrder', true),
                 ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('returnQty', 'Return Qty', true),
-                ...f.text('reason', 'Reason'),
+                ...f.number('quantity', 'Return Qty', true),
+                ...f.textarea('description', 'Description'),
                 ...f.text('condition', 'Condition'),
                 ...f.text('disposition', 'Disposition')
             ])

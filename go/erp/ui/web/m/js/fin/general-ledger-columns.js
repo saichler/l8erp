@@ -38,7 +38,7 @@ limitations under the License.
             { key: 'entryDate', label: 'Date', sortKey: 'entryDate', render: (item) => Layer8MRenderers.renderDate(item.entryDate) },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.JOURNAL_ENTRY_STATUS_VALUES, render: (item) => render.journalEntryStatus(item.status) },
-            { key: 'totalDebit', label: 'Total Debit', sortKey: 'totalDebit', render: (item) => Layer8MRenderers.renderMoney(item.totalDebit) }
+            { key: 'totalAmount', label: 'Total Amount', sortKey: 'totalAmount', render: (item) => Layer8MRenderers.renderMoney(item.totalAmount) }
         ],
 
         JournalEntryLine: [
@@ -77,8 +77,8 @@ limitations under the License.
 
         ExchangeRate: [
             { key: 'exchangeRateId', label: 'ID', sortKey: 'exchangeRateId', filterKey: 'exchangeRateId' },
-            { key: 'sourceCurrencyId', label: 'From', sortKey: 'sourceCurrencyId', filterKey: 'sourceCurrencyId' },
-            { key: 'targetCurrencyId', label: 'To', sortKey: 'targetCurrencyId', filterKey: 'targetCurrencyId' },
+            { key: 'fromCurrencyId', label: 'From', sortKey: 'fromCurrencyId', filterKey: 'fromCurrencyId' },
+            { key: 'toCurrencyId', label: 'To', sortKey: 'toCurrencyId', filterKey: 'toCurrencyId' },
             { key: 'rate', label: 'Rate', sortKey: 'rate' },
             { key: 'effectiveDate', label: 'Effective', sortKey: 'effectiveDate', render: (item) => Layer8MRenderers.renderDate(item.effectiveDate) }
         ],
@@ -87,8 +87,8 @@ limitations under the License.
             { key: 'balanceId', label: 'ID', sortKey: 'balanceId', filterKey: 'balanceId' },
             { key: 'accountId', label: 'Account', sortKey: 'accountId', filterKey: 'accountId' },
             { key: 'fiscalPeriodId', label: 'Period', sortKey: 'fiscalPeriodId', filterKey: 'fiscalPeriodId' },
-            { key: 'debitBalance', label: 'Debit', sortKey: 'debitBalance', render: (item) => Layer8MRenderers.renderMoney(item.debitBalance) },
-            { key: 'creditBalance', label: 'Credit', sortKey: 'creditBalance', render: (item) => Layer8MRenderers.renderMoney(item.creditBalance) }
+            { key: 'periodDebit', label: 'Period Debit', sortKey: 'periodDebit', render: (item) => Layer8MRenderers.renderMoney(item.periodDebit) },
+            { key: 'periodCredit', label: 'Period Credit', sortKey: 'periodCredit', render: (item) => Layer8MRenderers.renderMoney(item.periodCredit) }
         ]
     };
 

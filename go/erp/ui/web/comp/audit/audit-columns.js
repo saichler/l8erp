@@ -10,7 +10,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         CompAuditSchedule: [
             { key: 'name', label: 'Name', width: '200px' },
             { key: 'auditType', label: 'Type', width: '100px' },
-            { key: 'frequency', label: 'Frequency', width: '100px' },
+            { key: 'fiscalYear', label: 'Fiscal Year', width: '100px' },
             { key: 'plannedStartDate', label: 'Start Date', width: '100px', type: 'date' },
             { key: 'plannedEndDate', label: 'End Date', width: '100px', type: 'date' },
             { key: 'leadAuditorId', label: 'Lead Auditor', width: '150px', type: 'reference', referenceType: 'Employee' },
@@ -21,29 +21,29 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'title', label: 'Title', width: '200px' },
             { key: 'auditScheduleId', label: 'Audit', width: '150px', type: 'reference', referenceType: 'CompAuditSchedule' },
             { key: 'severity', label: 'Severity', width: '100px' },
-            { key: 'ownerId', label: 'Owner', width: '150px', type: 'reference', referenceType: 'Employee' },
+            { key: 'responsibleId', label: 'Responsible', width: '150px', type: 'reference', referenceType: 'Employee' },
             { key: 'status', label: 'Status', width: '100px' }
         ],
         CompRemediationAction: [
             { key: 'findingId', label: 'Finding', width: '150px', type: 'reference', referenceType: 'CompAuditFinding' },
-            { key: 'description', label: 'Description', width: '250px' },
+            { key: 'title', label: 'Title', width: '250px' },
             { key: 'ownerId', label: 'Owner', width: '150px', type: 'reference', referenceType: 'Employee' },
             { key: 'dueDate', label: 'Due Date', width: '100px', type: 'date' },
-            { key: 'priority', label: 'Priority', width: '80px' },
+            { key: 'percentComplete', label: '% Complete', width: '80px' },
             { key: 'status', label: 'Status', width: '100px' }
         ],
         CompAuditReport: [
             { key: 'title', label: 'Title', width: '250px' },
             { key: 'auditScheduleId', label: 'Audit', width: '150px', type: 'reference', referenceType: 'CompAuditSchedule' },
-            { key: 'reportType', label: 'Type', width: '120px' },
-            { key: 'issueDate', label: 'Issue Date', width: '100px', type: 'date' },
+            { key: 'overallOpinion', label: 'Opinion', width: '120px' },
+            { key: 'finalDate', label: 'Final Date', width: '100px', type: 'date' },
             { key: 'status', label: 'Status', width: '100px' }
         ],
         CompComplianceReport: [
             { key: 'title', label: 'Title', width: '250px' },
             { key: 'reportType', label: 'Type', width: '120px' },
-            { key: 'periodStartDate', label: 'Period Start', width: '100px', type: 'date' },
-            { key: 'periodEndDate', label: 'Period End', width: '100px', type: 'date' },
+            { key: 'periodStart', label: 'Period Start', width: '100px', type: 'date' },
+            { key: 'periodEnd', label: 'Period End', width: '100px', type: 'date' },
             { key: 'status', label: 'Status', width: '100px' }
         ]
     };

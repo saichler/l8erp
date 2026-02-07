@@ -32,9 +32,9 @@ limitations under the License.
                 ...f.date('expiryDate', 'Expiry Date'),
                 ...f.money('materialCost', 'Material Cost'),
                 ...f.money('laborCost', 'Labor Cost'),
-                ...f.money('machineCost', 'Machine Cost'),
                 ...f.money('overheadCost', 'Overhead Cost'),
-                ...f.money('subcontractingCost', 'Subcontracting Cost'),
+                ...f.money('outsideProcessingCost', 'Outside Processing Cost'),
+                ...f.money('totalCost', 'Total Cost'),
                 ...f.text('currencyCode', 'Currency'),
                 ...f.textarea('notes', 'Notes')
             ])
@@ -42,7 +42,6 @@ limitations under the License.
         MfgCostRollup: f.form('Cost Rollup', [
             f.section('Rollup Details', [
                 ...f.text('rollupNumber', 'Rollup Number', true),
-                ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.date('runDate', 'Run Date'),
                 ...f.select('status', 'Status', enums.ROLLUP_STATUS),
@@ -52,12 +51,12 @@ limitations under the License.
         MfgActualCost: f.form('Actual Cost', [
             f.section('Cost Details', [
                 ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
-                ...f.reference('itemId', 'Item', 'ScmItem'),
-                ...f.select('costElementType', 'Cost Element', enums.COST_ELEMENT_TYPE),
-                ...f.money('actualAmount', 'Actual Amount', true),
-                ...f.number('actualQuantity', 'Quantity'),
-                ...f.date('postingDate', 'Posting Date'),
-                ...f.text('sourceDocument', 'Source Document'),
+                ...f.text('costType', 'Cost Type'),
+                ...f.select('costElement', 'Cost Element', enums.COST_ELEMENT_TYPE),
+                ...f.money('amount', 'Amount', true),
+                ...f.number('quantity', 'Quantity'),
+                ...f.date('transactionDate', 'Transaction Date'),
+                ...f.text('sourceId', 'Source ID'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -65,11 +64,11 @@ limitations under the License.
             f.section('Variance Details', [
                 ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
                 ...f.select('varianceType', 'Variance Type', enums.VARIANCE_TYPE),
-                ...f.money('standardAmount', 'Standard Amount'),
-                ...f.money('actualAmount', 'Actual Amount'),
+                ...f.money('standardCost', 'Standard Cost'),
+                ...f.money('actualCost', 'Actual Cost'),
                 ...f.money('varianceAmount', 'Variance Amount'),
                 ...f.number('variancePercent', 'Variance %'),
-                ...f.date('calculationDate', 'Calculation Date'),
+                ...f.date('analysisDate', 'Analysis Date'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -80,7 +79,7 @@ limitations under the License.
                 ...f.textarea('description', 'Description'),
                 ...f.select('allocationMethod', 'Allocation Method', enums.ALLOCATION_METHOD),
                 ...f.number('rate', 'Rate'),
-                ...f.reference('accountId', 'GL Account', 'FinAccount'),
+                ...f.text('costCenter', 'Cost Center'),
                 ...f.checkbox('isActive', 'Active'),
                 ...f.textarea('notes', 'Notes')
             ])

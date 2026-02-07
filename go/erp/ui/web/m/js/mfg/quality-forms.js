@@ -42,9 +42,9 @@ limitations under the License.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('inspectionType', 'Inspection Type', enums.INSPECTION_TYPE),
-                ...f.number('sequenceNumber', 'Sequence'),
+                ...f.number('sequence', 'Sequence'),
                 ...f.text('characteristic', 'Characteristic'),
-                ...f.text('targetValue', 'Target Value'),
+                ...f.text('specification', 'Specification'),
                 ...f.checkbox('isMandatory', 'Mandatory')
             ])
         ]),
@@ -55,7 +55,7 @@ limitations under the License.
                 ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder'),
                 ...f.date('inspectionDate', 'Inspection Date', true),
                 ...f.number('quantityInspected', 'Qty Inspected'),
-                ...f.select('result', 'Result', enums.INSPECTION_RESULT),
+                ...f.select('overallResult', 'Result', enums.INSPECTION_RESULT),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -64,7 +64,7 @@ limitations under the License.
                 ...f.reference('inspectionId', 'Inspection', 'MfgQualityInspection', true),
                 ...f.reference('pointId', 'Inspection Point', 'MfgInspectionPoint', true),
                 ...f.text('measuredValue', 'Measured Value'),
-                ...f.text('targetValue', 'Target Value'),
+                ...f.text('textValue', 'Text Value'),
                 ...f.select('result', 'Result', enums.INSPECTION_RESULT),
                 ...f.textarea('notes', 'Notes')
             ])
@@ -78,8 +78,8 @@ limitations under the License.
                 ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder'),
                 ...f.select('severity', 'Severity', enums.NCR_SEVERITY),
                 ...f.select('status', 'Status', enums.NCR_STATUS),
-                ...f.date('reportDate', 'Report Date'),
-                ...f.number('affectedQuantity', 'Affected Qty'),
+                ...f.date('reportedDate', 'Reported Date'),
+                ...f.number('quantityAffected', 'Qty Affected'),
                 ...f.select('disposition', 'Disposition', enums.NCR_DISPOSITION),
                 ...f.textarea('rootCause', 'Root Cause')
             ])

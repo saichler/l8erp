@@ -43,9 +43,9 @@ limitations under the License.
             f.section('Line Details', [
                 ...f.reference('bomId', 'BOM', 'MfgBom', true),
                 ...f.reference('componentItemId', 'Component', 'ScmItem', true),
-                ...f.number('quantity', 'Quantity', true),
+                ...f.number('quantityPer', 'Qty Per', true),
                 ...f.text('unitOfMeasure', 'UOM'),
-                ...f.number('sequenceNumber', 'Sequence'),
+                ...f.number('lineNumber', 'Line Number'),
                 ...f.number('scrapPercent', 'Scrap %')
             ])
         ]),
@@ -64,6 +64,7 @@ limitations under the License.
             f.section('Operation Details', [
                 ...f.reference('routingId', 'Routing', 'MfgRouting', true),
                 ...f.number('operationNumber', 'Operation #', true),
+                ...f.text('operationName', 'Operation Name'),
                 ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
                 ...f.textarea('description', 'Description'),
                 ...f.number('setupTime', 'Setup Time (hrs)'),
@@ -75,18 +76,18 @@ limitations under the License.
                 ...f.text('ecoNumber', 'ECO Number', true),
                 ...f.text('title', 'Title', true),
                 ...f.textarea('description', 'Description'),
-                ...f.select('changeType', 'Change Type', enums.ECO_CHANGE_TYPE),
                 ...f.select('status', 'Status', enums.ECO_STATUS),
+                ...f.select('priority', 'Priority', enums.ECO_PRIORITY),
                 ...f.date('requestDate', 'Request Date'),
-                ...f.date('targetDate', 'Target Date'),
+                ...f.date('requiredDate', 'Required Date'),
                 ...f.textarea('reason', 'Reason')
             ])
         ]),
         MfgEngChangeDetail: f.form('ECO Detail', [
             f.section('Change Details', [
                 ...f.reference('changeOrderId', 'ECO', 'MfgEngChangeOrder', true),
-                ...f.reference('affectedItemId', 'Affected Item', 'ScmItem'),
-                ...f.textarea('changeDescription', 'Change Description', true),
+                ...f.text('affectedId', 'Affected ID'),
+                ...f.textarea('description', 'Description', true),
                 ...f.text('oldValue', 'Old Value'),
                 ...f.text('newValue', 'New Value')
             ])

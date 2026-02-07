@@ -39,10 +39,10 @@ limitations under the License.
                 render: (item) => renderDate(item.effectiveDate)
             },
             {
-                key: 'expirationDate',
+                key: 'expiryDate',
                 label: 'Expires',
-                sortKey: 'expirationDate',
-                render: (item) => renderDate(item.expirationDate)
+                sortKey: 'expiryDate',
+                render: (item) => renderDate(item.expiryDate)
             },
             {
                 key: 'status',
@@ -63,7 +63,7 @@ limitations under the License.
                 render: (item) => renderMoney(item.unitPrice)
             },
             { key: 'unitOfMeasure', label: 'UOM', sortKey: 'unitOfMeasure' },
-            { key: 'minQuantity', label: 'Min Qty', sortKey: 'minQuantity' }
+            { key: 'minimumQuantity', label: 'Min Qty', sortKey: 'minimumQuantity' }
         ],
 
         SalesCustomerPrice: [
@@ -71,10 +71,10 @@ limitations under the License.
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             {
-                key: 'specialPrice',
+                key: 'unitPrice',
                 label: 'Price',
-                sortKey: 'specialPrice',
-                render: (item) => renderMoney(item.specialPrice)
+                sortKey: 'unitPrice',
+                render: (item) => renderMoney(item.unitPrice)
             },
             {
                 key: 'effectiveDate',
@@ -83,10 +83,10 @@ limitations under the License.
                 render: (item) => renderDate(item.effectiveDate)
             },
             {
-                key: 'expirationDate',
+                key: 'expiryDate',
                 label: 'Expires',
-                sortKey: 'expirationDate',
-                render: (item) => renderDate(item.expirationDate)
+                sortKey: 'expiryDate',
+                render: (item) => renderDate(item.expiryDate)
             }
         ],
 
@@ -100,7 +100,7 @@ limitations under the License.
                 render: (item) => render.discountType(item.discountType)
             },
             { key: 'discountValue', label: 'Value', sortKey: 'discountValue' },
-            { key: 'minOrderAmount', label: 'Min Order', sortKey: 'minOrderAmount' },
+            { key: 'minimumAmount', label: 'Min Order', sortKey: 'minimumAmount' },
             { key: 'isActive', label: 'Active', sortKey: 'isActive' }
         ],
 
@@ -109,10 +109,10 @@ limitations under the License.
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
             {
-                key: 'promoPrice',
+                key: 'promotionalPrice',
                 label: 'Promo Price',
-                sortKey: 'promoPrice',
-                render: (item) => renderMoney(item.promoPrice)
+                sortKey: 'promotionalPrice',
+                render: (item) => renderMoney(item.promotionalPrice)
             },
             {
                 key: 'startDate',
@@ -132,13 +132,13 @@ limitations under the License.
             { key: 'breakId', label: 'ID', sortKey: 'breakId', filterKey: 'breakId' },
             { key: 'priceListId', label: 'Price List', sortKey: 'priceListId', filterKey: 'priceListId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'minQuantity', label: 'Min Qty', sortKey: 'minQuantity' },
-            { key: 'maxQuantity', label: 'Max Qty', sortKey: 'maxQuantity' },
+            { key: 'fromQuantity', label: 'From Qty', sortKey: 'fromQuantity' },
+            { key: 'toQuantity', label: 'To Qty', sortKey: 'toQuantity' },
             {
-                key: 'breakPrice',
+                key: 'unitPrice',
                 label: 'Price',
-                sortKey: 'breakPrice',
-                render: (item) => renderMoney(item.breakPrice)
+                sortKey: 'unitPrice',
+                render: (item) => renderMoney(item.unitPrice)
             }
         ]
     };

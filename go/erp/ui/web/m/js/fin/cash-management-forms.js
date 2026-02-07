@@ -39,7 +39,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         BankReconciliation: f.form('Bank Reconciliation', [
             f.section('Reconciliation Details', [
                 ...f.reference('bankAccountId', 'Bank Account', 'BankAccount', true),
-                ...f.date('reconciliationDate', 'Reconciliation Date', true),
+                ...f.date('statementDate', 'Statement Date', true),
                 ...f.select('status', 'Status', enums.RECONCILIATION_STATUS, true)
             ]),
             f.section('Balances', [
@@ -51,16 +51,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         CashForecast: f.form('Cash Forecast', [
             f.section('Forecast Details', [
                 ...f.date('forecastDate', 'Forecast Date', true),
-                ...f.number('projectedInflow', 'Projected Inflow', true),
-                ...f.number('projectedOutflow', 'Projected Outflow', true),
+                ...f.number('projectedInflows', 'Projected Inflow', true),
+                ...f.number('projectedOutflows', 'Projected Outflow', true),
                 ...f.number('netCashFlow', 'Net Cash Flow')
             ])
         ]),
 
         FundTransfer: f.form('Fund Transfer', [
             f.section('Transfer Details', [
-                ...f.reference('fromAccountId', 'From Account', 'BankAccount', true),
-                ...f.reference('toAccountId', 'To Account', 'BankAccount', true),
+                ...f.reference('fromBankAccountId', 'From Account', 'BankAccount', true),
+                ...f.reference('toBankAccountId', 'To Account', 'BankAccount', true),
                 ...f.number('amount', 'Amount', true),
                 ...f.date('transferDate', 'Transfer Date', true),
                 ...f.select('status', 'Status', enums.TRANSFER_STATUS, true)
@@ -69,8 +69,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
         PettyCash: f.form('Petty Cash', [
             f.section('Fund Details', [
-                ...f.text('custodianName', 'Custodian Name', true),
-                ...f.number('fundAmount', 'Fund Amount', true),
+                ...f.text('fundName', 'Fund Name', true),
+                ...f.money('fundLimit', 'Fund Limit', true),
                 ...f.number('currentBalance', 'Current Balance'),
                 ...f.checkbox('isActive', 'Active')
             ])

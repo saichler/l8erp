@@ -81,10 +81,10 @@ limitations under the License.
             { key: 'reconciliationId', label: 'ID', sortKey: 'reconciliationId', filterKey: 'reconciliationId' },
             { key: 'bankAccountId', label: 'Account', sortKey: 'bankAccountId', filterKey: 'bankAccountId' },
             {
-                key: 'reconciliationDate',
-                label: 'Date',
-                sortKey: 'reconciliationDate',
-                render: (item) => renderDate(item.reconciliationDate)
+                key: 'statementDate',
+                label: 'Statement Date',
+                sortKey: 'statementDate',
+                render: (item) => renderDate(item.statementDate)
             },
             {
                 key: 'status',
@@ -115,16 +115,16 @@ limitations under the License.
                 render: (item) => renderDate(item.forecastDate)
             },
             {
-                key: 'projectedInflow',
+                key: 'projectedInflows',
                 label: 'Projected Inflow',
-                sortKey: 'projectedInflow',
-                render: (item) => renderMoney(item.projectedInflow)
+                sortKey: 'projectedInflows',
+                render: (item) => renderMoney(item.projectedInflows)
             },
             {
-                key: 'projectedOutflow',
+                key: 'projectedOutflows',
                 label: 'Projected Outflow',
-                sortKey: 'projectedOutflow',
-                render: (item) => renderMoney(item.projectedOutflow)
+                sortKey: 'projectedOutflows',
+                render: (item) => renderMoney(item.projectedOutflows)
             },
             {
                 key: 'netCashFlow',
@@ -136,8 +136,8 @@ limitations under the License.
 
         FundTransfer: [
             { key: 'transferId', label: 'ID', sortKey: 'transferId', filterKey: 'transferId' },
-            { key: 'fromAccountId', label: 'From Account', sortKey: 'fromAccountId', filterKey: 'fromAccountId' },
-            { key: 'toAccountId', label: 'To Account', sortKey: 'toAccountId', filterKey: 'toAccountId' },
+            { key: 'fromBankAccountId', label: 'From Account', sortKey: 'fromBankAccountId', filterKey: 'fromBankAccountId' },
+            { key: 'toBankAccountId', label: 'To Account', sortKey: 'toBankAccountId', filterKey: 'toBankAccountId' },
             {
                 key: 'amount',
                 label: 'Amount',
@@ -160,12 +160,12 @@ limitations under the License.
 
         PettyCash: [
             { key: 'pettyCashId', label: 'ID', sortKey: 'pettyCashId', filterKey: 'pettyCashId' },
-            { key: 'custodianName', label: 'Custodian', sortKey: 'custodianName', filterKey: 'custodianName' },
+            { key: 'fundName', label: 'Fund Name', sortKey: 'fundName', filterKey: 'fundName' },
             {
-                key: 'fundAmount',
-                label: 'Fund Amount',
-                sortKey: 'fundAmount',
-                render: (item) => renderMoney(item.fundAmount)
+                key: 'fundLimit',
+                label: 'Fund Limit',
+                sortKey: 'fundLimit',
+                render: (item) => renderMoney(item.fundLimit)
             },
             {
                 key: 'currentBalance',

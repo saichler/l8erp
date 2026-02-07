@@ -22,9 +22,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('expiryDate', 'Expiry Date'),
                 ...f.money('materialCost', 'Material Cost'),
                 ...f.money('laborCost', 'Labor Cost'),
-                ...f.money('machineCost', 'Machine Cost'),
                 ...f.money('overheadCost', 'Overhead Cost'),
-                ...f.money('subcontractingCost', 'Subcontracting Cost'),
+                ...f.money('outsideProcessingCost', 'Outside Processing Cost'),
+                ...f.money('totalCost', 'Total Cost'),
                 ...f.text('currencyCode', 'Currency'),
                 ...f.textarea('notes', 'Notes')
             ])
@@ -33,7 +33,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         MfgCostRollup: f.form('Cost Rollup', [
             f.section('Rollup Details', [
                 ...f.text('rollupNumber', 'Rollup Number', true),
-                ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.date('runDate', 'Run Date'),
                 ...f.select('status', 'Status', enums.ROLLUP_STATUS),
@@ -44,12 +43,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         MfgActualCost: f.form('Actual Cost', [
             f.section('Cost Details', [
                 ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
-                ...f.reference('itemId', 'Item', 'ScmItem'),
-                ...f.select('costElementType', 'Cost Element', enums.COST_ELEMENT_TYPE),
-                ...f.money('actualAmount', 'Actual Amount', true),
-                ...f.number('actualQuantity', 'Quantity'),
-                ...f.date('postingDate', 'Posting Date'),
-                ...f.text('sourceDocument', 'Source Document'),
+                ...f.text('costType', 'Cost Type'),
+                ...f.text('costElement', 'Cost Element'),
+                ...f.money('amount', 'Amount', true),
+                ...f.number('quantity', 'Quantity'),
+                ...f.date('transactionDate', 'Transaction Date'),
+                ...f.text('sourceType', 'Source Type'),
+                ...f.text('sourceId', 'Source ID'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -58,11 +58,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Variance Details', [
                 ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
                 ...f.select('varianceType', 'Variance Type', enums.VARIANCE_TYPE),
-                ...f.money('standardAmount', 'Standard Amount'),
-                ...f.money('actualAmount', 'Actual Amount'),
+                ...f.text('costType', 'Cost Type'),
+                ...f.money('standardCost', 'Standard Cost'),
+                ...f.money('actualCost', 'Actual Cost'),
                 ...f.money('varianceAmount', 'Variance Amount'),
                 ...f.number('variancePercent', 'Variance %'),
-                ...f.date('calculationDate', 'Calculation Date'),
+                ...f.date('analysisDate', 'Analysis Date'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -74,7 +75,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('description', 'Description'),
                 ...f.select('allocationMethod', 'Allocation Method', enums.ALLOCATION_METHOD),
                 ...f.number('rate', 'Rate'),
-                ...f.reference('accountId', 'GL Account', 'FinAccount'),
+                ...f.text('costCenter', 'Cost Center'),
                 ...f.checkbox('isActive', 'Active'),
                 ...f.textarea('notes', 'Notes')
             ])

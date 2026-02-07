@@ -60,22 +60,22 @@ limitations under the License.
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
             {
-                key: 'depreciationMethod',
+                key: 'defaultDepreciationMethod',
                 label: 'Depreciation Method',
-                sortKey: 'depreciationMethod',
-                render: (item) => render.depreciationMethod(item.depreciationMethod)
+                sortKey: 'defaultDepreciationMethod',
+                render: (item) => render.depreciationMethod(item.defaultDepreciationMethod)
             },
-            { key: 'usefulLife', label: 'Useful Life', sortKey: 'usefulLife' }
+            { key: 'defaultUsefulLifeMonths', label: 'Useful Life (Months)', sortKey: 'defaultUsefulLifeMonths' }
         ],
 
         DepreciationSchedule: [
             { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
             { key: 'assetId', label: 'Asset', sortKey: 'assetId', filterKey: 'assetId' },
             {
-                key: 'periodDate',
-                label: 'Period Date',
-                sortKey: 'periodDate',
-                render: (item) => renderDate(item.periodDate)
+                key: 'depreciationDate',
+                label: 'Date',
+                sortKey: 'depreciationDate',
+                render: (item) => renderDate(item.depreciationDate)
             },
             {
                 key: 'depreciationAmount',
@@ -84,16 +84,16 @@ limitations under the License.
                 render: (item) => renderMoney(item.depreciationAmount)
             },
             {
-                key: 'accumulatedDepreciation',
+                key: 'accumulatedAmount',
                 label: 'Accumulated',
-                sortKey: 'accumulatedDepreciation',
-                render: (item) => renderMoney(item.accumulatedDepreciation)
+                sortKey: 'accumulatedAmount',
+                render: (item) => renderMoney(item.accumulatedAmount)
             },
             {
-                key: 'bookValue',
-                label: 'Book Value',
-                sortKey: 'bookValue',
-                render: (item) => renderMoney(item.bookValue)
+                key: 'remainingValue',
+                label: 'Remaining Value',
+                sortKey: 'remainingValue',
+                render: (item) => renderMoney(item.remainingValue)
             }
         ],
 
@@ -113,10 +113,10 @@ limitations under the License.
                 render: (item) => render.disposalMethod(item.disposalMethod)
             },
             {
-                key: 'salePrice',
-                label: 'Sale Price',
-                sortKey: 'salePrice',
-                render: (item) => renderMoney(item.salePrice)
+                key: 'disposalProceeds',
+                label: 'Proceeds',
+                sortKey: 'disposalProceeds',
+                render: (item) => renderMoney(item.disposalProceeds)
             },
             {
                 key: 'gainLoss',
@@ -129,8 +129,8 @@ limitations under the License.
         AssetTransfer: [
             { key: 'transferId', label: 'ID', sortKey: 'transferId', filterKey: 'transferId' },
             { key: 'assetId', label: 'Asset', sortKey: 'assetId', filterKey: 'assetId' },
-            { key: 'fromDepartment', label: 'From Department', sortKey: 'fromDepartment', filterKey: 'fromDepartment' },
-            { key: 'toDepartment', label: 'To Department', sortKey: 'toDepartment', filterKey: 'toDepartment' },
+            { key: 'fromDepartmentId', label: 'From Department', sortKey: 'fromDepartmentId', filterKey: 'fromDepartmentId' },
+            { key: 'toDepartmentId', label: 'To Department', sortKey: 'toDepartmentId', filterKey: 'toDepartmentId' },
             {
                 key: 'transferDate',
                 label: 'Transfer Date',
@@ -178,10 +178,10 @@ limitations under the License.
                 render: (item) => renderDate(item.revaluationDate)
             },
             {
-                key: 'oldValue',
-                label: 'Old Value',
-                sortKey: 'oldValue',
-                render: (item) => renderMoney(item.oldValue)
+                key: 'previousValue',
+                label: 'Previous Value',
+                sortKey: 'previousValue',
+                render: (item) => renderMoney(item.previousValue)
             },
             {
                 key: 'newValue',

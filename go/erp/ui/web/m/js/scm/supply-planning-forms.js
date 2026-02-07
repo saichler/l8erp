@@ -28,7 +28,7 @@ MobileScmSupplyPlanning.forms = {
             ...f.number('requiredQuantity', 'Required Quantity', true),
             ...f.date('requiredDate', 'Required Date', true),
             ...f.select('planningMethod', 'Planning Method', enums.PLANNING_METHOD),
-            ...f.text('sourceOrderId', 'Source Order'),
+            ...f.text('source', 'Source'),
             ...f.select('status', 'Status', enums.TASK_STATUS),
             ...f.textarea('notes', 'Notes')
         ])
@@ -41,7 +41,7 @@ MobileScmSupplyPlanning.forms = {
             ...f.reference('destinationWarehouseId', 'Destination Warehouse', 'ScmWarehouse', true),
             ...f.number('requiredQuantity', 'Required Quantity', true),
             ...f.date('requiredDate', 'Required Date', true),
-            ...f.text('priority', 'Priority'),
+            ...f.number('transferQuantity', 'Transfer Quantity'),
             ...f.textarea('notes', 'Notes')
         ])
     ]),

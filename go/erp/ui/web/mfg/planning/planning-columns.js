@@ -26,7 +26,7 @@ limitations under the License.
         MfgMrpRun: [
             { key: 'runId', label: 'ID', sortKey: 'runId', filterKey: 'runId' },
             { key: 'runNumber', label: 'Run #', sortKey: 'runNumber', filterKey: 'runNumber' },
-            { key: 'name', label: 'Name', sortKey: 'name' },
+            { key: 'description', label: 'Description', sortKey: 'description' },
             {
                 key: 'runDate',
                 label: 'Run Date',
@@ -63,18 +63,18 @@ limitations under the License.
         MfgCapacityPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'planNumber', label: 'Plan #', sortKey: 'planNumber', filterKey: 'planNumber' },
-            { key: 'name', label: 'Name', sortKey: 'name' },
+            { key: 'description', label: 'Description', sortKey: 'description' },
             {
-                key: 'startDate',
+                key: 'planningStart',
                 label: 'Start Date',
-                sortKey: 'startDate',
-                render: (item) => renderDate(item.startDate)
+                sortKey: 'planningStart',
+                render: (item) => renderDate(item.planningStart)
             },
             {
-                key: 'endDate',
+                key: 'planningEnd',
                 label: 'End Date',
-                sortKey: 'endDate',
-                render: (item) => renderDate(item.endDate)
+                sortKey: 'planningEnd',
+                render: (item) => renderDate(item.planningEnd)
             }
         ],
 
@@ -83,10 +83,10 @@ limitations under the License.
             { key: 'planId', label: 'Capacity Plan', sortKey: 'planId', filterKey: 'planId' },
             { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
             {
-                key: 'periodDate',
-                label: 'Period',
-                sortKey: 'periodDate',
-                render: (item) => renderDate(item.periodDate)
+                key: 'periodStart',
+                label: 'Period Start',
+                sortKey: 'periodStart',
+                render: (item) => renderDate(item.periodStart)
             },
             { key: 'requiredHours', label: 'Required Hrs', sortKey: 'requiredHours' },
             { key: 'availableHours', label: 'Available Hrs', sortKey: 'availableHours' },
@@ -95,18 +95,18 @@ limitations under the License.
 
         MfgProdSchedule: [
             { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'scheduleName', label: 'Name', sortKey: 'scheduleName', filterKey: 'scheduleName' },
+            { key: 'scheduleNumber', label: 'Schedule #', sortKey: 'scheduleNumber', filterKey: 'scheduleNumber' },
             {
-                key: 'startDate',
+                key: 'scheduleStart',
                 label: 'Start Date',
-                sortKey: 'startDate',
-                render: (item) => renderDate(item.startDate)
+                sortKey: 'scheduleStart',
+                render: (item) => renderDate(item.scheduleStart)
             },
             {
-                key: 'endDate',
+                key: 'scheduleEnd',
                 label: 'End Date',
-                sortKey: 'endDate',
-                render: (item) => renderDate(item.endDate)
+                sortKey: 'scheduleEnd',
+                render: (item) => renderDate(item.scheduleEnd)
             },
             {
                 key: 'status',
@@ -122,16 +122,16 @@ limitations under the License.
             { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
             { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
             {
-                key: 'startTime',
+                key: 'scheduledStart',
                 label: 'Start',
-                sortKey: 'startTime',
-                render: (item) => renderDate(item.startTime)
+                sortKey: 'scheduledStart',
+                render: (item) => renderDate(item.scheduledStart)
             },
             {
-                key: 'endTime',
+                key: 'scheduledEnd',
                 label: 'End',
-                sortKey: 'endTime',
-                render: (item) => renderDate(item.endTime)
+                sortKey: 'scheduledEnd',
+                render: (item) => renderDate(item.scheduledEnd)
             }
         ]
     };

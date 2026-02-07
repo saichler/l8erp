@@ -30,7 +30,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.date('entryDate', 'Date'),
             ...col.col('description', 'Description'),
             ...col.enum('status', 'Status', null, render.journalEntryStatus),
-            ...col.money('totalDebit', 'Total Debit')
+            ...col.money('totalAmount', 'Total Amount')
         ],
 
         JournalEntryLine: [
@@ -68,8 +68,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
         ExchangeRate: [
             ...col.id('exchangeRateId'),
-            ...col.col('sourceCurrencyId', 'From'),
-            ...col.col('targetCurrencyId', 'To'),
+            ...col.col('fromCurrencyId', 'From'),
+            ...col.col('toCurrencyId', 'To'),
             ...col.custom('rate', 'Rate', (item) => item.rate, { sortKey: 'rate' }),
             ...col.date('effectiveDate', 'Effective')
         ],
@@ -78,8 +78,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.id('balanceId'),
             ...col.col('accountId', 'Account'),
             ...col.col('fiscalPeriodId', 'Period'),
-            ...col.money('debitBalance', 'Debit'),
-            ...col.money('creditBalance', 'Credit')
+            ...col.money('periodDebit', 'Debit'),
+            ...col.money('periodCredit', 'Credit')
         ]
     };
 

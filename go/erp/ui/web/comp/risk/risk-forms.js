@@ -16,15 +16,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     CompRisk.forms = {
         CompRiskRegister: f.form('Risk Register', [
             f.section('Risk Information', [
-                ...f.text('riskNumber', 'Risk Number', true),
-                ...f.text('name', 'Name', true),
+                ...f.text('code', 'Code', true),
+                ...f.text('title', 'Title', true),
                 ...f.select('category', 'Category', enums.riskCategory, true),
                 ...f.select('status', 'Status', enums.riskStatus)
             ]),
             f.section('Risk Assessment', [
-                ...f.select('inherentRiskLevel', 'Inherent Risk Level', enums.riskLevel),
-                ...f.select('residualRiskLevel', 'Residual Risk Level', enums.riskLevel),
-                ...f.select('riskAppetite', 'Risk Appetite', enums.riskLevel)
+                ...f.number('inherentRiskScore', 'Inherent Risk Score'),
+                ...f.number('residualRiskScore', 'Residual Risk Score'),
+                ...f.select('riskResponse', 'Risk Response', enums.riskLevel)
             ]),
             f.section('Ownership', [
                 ...f.reference('ownerId', 'Risk Owner', 'Employee'),
@@ -32,27 +32,27 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]),
             f.section('Details', [
                 ...f.textarea('description', 'Description'),
-                ...f.textarea('causes', 'Root Causes'),
-                ...f.textarea('consequences', 'Potential Consequences')
+                ...f.date('identifiedDate', 'Identified Date'),
+                ...f.date('nextReviewDate', 'Next Review Date')
             ])
         ]),
 
         CompRiskAssessment: f.form('Risk Assessment', [
             f.section('Assessment Information', [
                 ...f.reference('riskId', 'Risk', 'CompRiskRegister', true),
-                ...f.select('assessmentType', 'Assessment Type', enums.assessmentType, true),
+                ...f.select('controlEffectiveness', 'Control Effectiveness', enums.assessmentType),
                 ...f.date('assessmentDate', 'Assessment Date', true),
                 ...f.reference('assessorId', 'Assessor', 'Employee')
             ]),
             f.section('Risk Evaluation', [
-                ...f.select('likelihood', 'Likelihood', enums.riskLikelihood),
-                ...f.select('impact', 'Impact', enums.riskImpact),
+                ...f.select('likelihoodRating', 'Likelihood', enums.riskLikelihood),
+                ...f.select('impactRating', 'Impact', enums.riskImpact),
                 ...f.number('riskScore', 'Risk Score'),
-                ...f.select('riskLevel', 'Risk Level', enums.riskLevel)
+                ...f.checkbox('requiresEscalation', 'Requires Escalation')
             ]),
             f.section('Details', [
-                ...f.textarea('methodology', 'Methodology'),
-                ...f.textarea('findings', 'Findings'),
+                ...f.textarea('likelihoodJustification', 'Likelihood Justification'),
+                ...f.textarea('impactJustification', 'Impact Justification'),
                 ...f.textarea('recommendations', 'Recommendations')
             ])
         ]),
@@ -63,17 +63,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('title', 'Title', true),
                 ...f.select('severity', 'Severity', enums.incidentSeverity, true),
                 ...f.select('status', 'Status', enums.incidentStatus),
-                ...f.reference('riskId', 'Related Risk', 'CompRiskRegister')
+                ...f.reference('relatedRiskId', 'Related Risk', 'CompRiskRegister')
             ]),
             f.section('Timeline', [
                 ...f.date('occurredDate', 'Occurred Date'),
                 ...f.date('reportedDate', 'Reported Date'),
-                ...f.date('resolvedDate', 'Resolved Date')
+                ...f.date('closedDate', 'Closed Date')
             ]),
             f.section('Details', [
                 ...f.textarea('description', 'Description'),
                 ...f.textarea('rootCause', 'Root Cause'),
-                ...f.textarea('impact', 'Impact Assessment'),
+                ...f.textarea('immediateAction', 'Immediate Action'),
                 ...f.textarea('lessonsLearned', 'Lessons Learned')
             ])
         ]),
@@ -95,7 +95,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]),
             f.section('Details', [
                 ...f.textarea('description', 'Description'),
-                ...f.textarea('expectedOutcome', 'Expected Outcome')
+                ...f.textarea('successCriteria', 'Success Criteria')
             ])
         ]),
 
@@ -132,7 +132,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         CompRiskAssessment: 'assessmentId',
         CompIncident: 'incidentId',
         CompMitigationPlan: 'planId',
-        CompInsurancePolicy: 'policyId'
+        CompInsurancePolicy: 'insuranceId'
     };
 
 })();

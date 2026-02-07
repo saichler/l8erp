@@ -26,7 +26,7 @@ limitations under the License.
         CustomerHierarchy: [
             { key: 'hierarchyId', label: 'ID', sortKey: 'hierarchyId', filterKey: 'hierarchyId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'parentId', label: 'Parent', sortKey: 'parentId', filterKey: 'parentId' },
+            { key: 'parentHierarchyId', label: 'Parent', sortKey: 'parentHierarchyId', filterKey: 'parentHierarchyId' },
             { key: 'level', label: 'Level', sortKey: 'level' },
             { key: 'description', label: 'Description', sortKey: 'description' }
         ],
@@ -34,7 +34,7 @@ limitations under the License.
         CustomerSegment: [
             { key: 'segmentId', label: 'ID', sortKey: 'segmentId', filterKey: 'segmentId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
+            { key: 'segmentType', label: 'Type', sortKey: 'segmentType', filterKey: 'segmentType' },
             { key: 'description', label: 'Description', sortKey: 'description' },
             { key: 'isActive', label: 'Active', sortKey: 'isActive' }
         ],
@@ -54,7 +54,7 @@ limitations under the License.
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
             { key: 'partnerType', label: 'Type', sortKey: 'partnerType', filterKey: 'partnerType' },
             { key: 'contactName', label: 'Contact', sortKey: 'contactName' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.PARTNER_STATUS_VALUES, render: (item) => render.partnerStatus(item.status) },
+            { key: 'isActive', label: 'Active', sortKey: 'isActive' },
             { key: 'commissionRate', label: 'Commission %', sortKey: 'commissionRate' }
         ]
     };

@@ -18,11 +18,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Control Information', [
                 ...f.text('code', 'Code', true),
                 ...f.text('name', 'Name', true),
-                ...f.select('type', 'Type', enums.controlType, true),
-                ...f.select('category', 'Category', enums.controlCategory),
-                ...f.select('nature', 'Nature', enums.controlNature),
-                ...f.select('frequency', 'Frequency', enums.controlFrequency),
-                ...f.select('status', 'Status', enums.controlStatus)
+                ...f.select('controlType', 'Type', enums.controlType, true),
+                ...f.text('processArea', 'Process Area'),
+                ...f.checkbox('isKeyControl', 'Key Control'),
+                ...f.checkbox('isAutomated', 'Automated'),
+                ...f.number('testFrequencyDays', 'Test Frequency (Days)'),
+                ...f.checkbox('isActive', 'Active')
             ]),
             f.section('Ownership', [
                 ...f.reference('ownerId', 'Owner', 'Employee'),
@@ -30,8 +31,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]),
             f.section('Details', [
                 ...f.textarea('description', 'Description'),
-                ...f.textarea('objective', 'Control Objective'),
-                ...f.textarea('testingProcedure', 'Testing Procedure')
+                ...f.textarea('controlObjective', 'Control Objective'),
+                ...f.textarea('testProcedure', 'Test Procedure')
             ])
         ]),
 
@@ -40,12 +41,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('controlId', 'Control', 'CompControl', true),
                 ...f.date('assessmentDate', 'Assessment Date', true),
                 ...f.reference('assessorId', 'Assessor', 'Employee'),
-                ...f.select('result', 'Result', enums.assessmentResult, true),
+                ...f.select('effectiveness', 'Effectiveness', enums.assessmentResult, true),
                 ...f.date('nextAssessmentDate', 'Next Assessment Date')
             ]),
             f.section('Assessment Details', [
-                ...f.textarea('testingPerformed', 'Testing Performed'),
-                ...f.textarea('findings', 'Findings'),
+                ...f.textarea('testPerformed', 'Testing Performed'),
+                ...f.textarea('testResults', 'Test Results'),
                 ...f.textarea('recommendations', 'Recommendations')
             ])
         ]),
@@ -54,33 +55,33 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Policy Information', [
                 ...f.text('code', 'Code', true),
                 ...f.text('title', 'Title', true),
-                ...f.select('category', 'Category', enums.policyCategory),
+                ...f.select('policyType', 'Type', enums.policyCategory),
                 ...f.text('version', 'Version'),
                 ...f.select('status', 'Status', enums.policyStatus)
             ]),
             f.section('Dates', [
                 ...f.date('effectiveDate', 'Effective Date'),
                 ...f.date('reviewDate', 'Review Date'),
-                ...f.date('expiryDate', 'Expiry Date')
+                ...f.date('nextReviewDate', 'Next Review Date')
             ]),
             f.section('Ownership', [
                 ...f.reference('ownerId', 'Owner', 'Employee'),
                 ...f.reference('approverId', 'Approver', 'Employee')
             ]),
             f.section('Content', [
-                ...f.textarea('summary', 'Summary')
+                ...f.textarea('description', 'Description')
             ])
         ]),
 
         CompApprovalMatrix: f.form('Approval Matrix', [
             f.section('Matrix Information', [
                 ...f.text('name', 'Name', true),
-                ...f.text('documentType', 'Document Type'),
-                ...f.select('status', 'Status', enums.approvalStatus)
+                ...f.text('transactionType', 'Transaction Type'),
+                ...f.checkbox('isActive', 'Active')
             ]),
             f.section('Amount Thresholds', [
-                ...f.money('minAmount', 'Min Amount'),
-                ...f.money('maxAmount', 'Max Amount')
+                ...f.money('thresholdMin', 'Min Amount'),
+                ...f.money('thresholdMax', 'Max Amount')
             ]),
             f.section('Details', [
                 ...f.textarea('description', 'Description')
@@ -90,14 +91,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         CompSegregationRule: f.form('Segregation Rule', [
             f.section('Rule Information', [
                 ...f.text('name', 'Name', true),
-                ...f.text('conflictingRole1', 'Conflicting Role 1', true),
-                ...f.text('conflictingRole2', 'Conflicting Role 2', true),
+                ...f.text('conflictingFunctionA', 'Conflicting Function A', true),
+                ...f.text('conflictingFunctionB', 'Conflicting Function B', true),
                 ...f.select('riskLevel', 'Risk Level', ['Critical', 'High', 'Medium', 'Low']),
-                ...f.select('status', 'Status', enums.ruleStatus)
+                ...f.checkbox('isActive', 'Active')
             ]),
             f.section('Details', [
                 ...f.textarea('description', 'Description'),
-                ...f.textarea('mitigatingControl', 'Mitigating Control')
+                ...f.textarea('mitigationControl', 'Mitigation Control')
             ])
         ])
     };

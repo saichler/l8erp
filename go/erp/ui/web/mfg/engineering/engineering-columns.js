@@ -34,8 +34,8 @@ limitations under the License.
         MfgBomLine: [
             ...col.id('lineId'),
             ...col.basic([['bomId', 'BOM'], ['componentItemId', 'Component']]),
-            ...col.col('quantity', 'Qty'),
-            ...col.basic([['unitOfMeasure', 'UOM'], ['sequenceNumber', 'Seq #']])
+            ...col.col('quantityPer', 'Qty Per'),
+            ...col.basic([['unitOfMeasure', 'UOM'], ['lineNumber', 'Line #']])
         ],
 
         MfgRouting: [
@@ -53,14 +53,14 @@ limitations under the License.
         MfgEngChangeOrder: [
             ...col.id('changeOrderId'),
             ...col.basic([['ecoNumber', 'ECO #'], 'title']),
-            ...col.custom('changeType', 'Type', (item) => enums.ECO_CHANGE_TYPE[item.changeType] || 'Unknown'),
+            ...col.custom('priority', 'Priority', (item) => item.priority || 'Unknown'),
             ...col.date('requestDate', 'Request Date'),
             ...col.custom('status', 'Status', (item) => render.ecoStatus(item.status))
         ],
 
         MfgEngChangeDetail: [
             ...col.id('detailId'),
-            ...col.basic([['changeOrderId', 'ECO'], ['affectedItemId', 'Item'], ['changeDescription', 'Change']]),
+            ...col.basic([['changeOrderId', 'ECO'], ['affectedId', 'Affected'], ['description', 'Description']]),
             ...col.basic([['oldValue', 'Old Value'], ['newValue', 'New Value']])
         ]
     };

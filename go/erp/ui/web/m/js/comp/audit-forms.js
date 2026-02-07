@@ -42,8 +42,7 @@ limitations under the License.
             f.section('Audit Team', [
                 ...f.reference('leadAuditorId', 'Lead Auditor', 'Employee'),
                 ...f.text('auditFirm', 'Audit Firm'),
-                ...f.textarea('scope', 'Scope'),
-                ...f.textarea('objectives', 'Objectives')
+                ...f.textarea('auditScope', 'Audit Scope')
             ])
         ]),
 
@@ -63,7 +62,7 @@ limitations under the License.
             ]),
             f.section('Details & Assignment', [
                 ...f.reference('responsibleId', 'Responsible', 'Employee'),
-                ...f.textarea('rootCause', 'Root Cause'),
+                ...f.textarea('cause', 'Root Cause'),
                 ...f.textarea('recommendation', 'Recommendation'),
                 ...f.textarea('managementResponse', 'Management Response'),
                 ...f.checkbox('repeatFinding', 'Repeat Finding')
@@ -80,14 +79,14 @@ limitations under the License.
             ]),
             f.section('Timeline', [
                 ...f.date('dueDate', 'Due Date'),
-                ...f.date('completedDate', 'Completed Date'),
-                ...f.date('verifiedDate', 'Verified Date')
+                ...f.date('completionDate', 'Completion Date'),
+                ...f.date('verificationDate', 'Verification Date')
             ]),
             f.section('Progress & Ownership', [
                 ...f.reference('ownerId', 'Owner', 'Employee'),
                 ...f.number('percentComplete', 'Percent Complete'),
                 ...f.checkbox('isOverdue', 'Overdue'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('progressNotes', 'Progress Notes')
             ])
         ]),
 
@@ -116,8 +115,8 @@ limitations under the License.
             f.section('Report Details', [
                 ...f.text('reportNumber', 'Report Number'),
                 ...f.text('title', 'Title', true),
-                ...f.textarea('description', 'Description'),
                 ...f.text('reportType', 'Report Type'),
+                ...f.reference('regulationId', 'Regulation', 'CompRegulation'),
                 ...f.text('status', 'Status')
             ]),
             f.section('Period & Metrics', [
@@ -125,7 +124,7 @@ limitations under the License.
                 ...f.date('periodEnd', 'Period End'),
                 ...f.number('overallComplianceRate', 'Overall Compliance Rate (%)'),
                 ...f.number('openFindings', 'Open Findings'),
-                ...f.number('closedFindings', 'Closed Findings')
+                ...f.number('overdueRemediations', 'Overdue Remediations')
             ]),
             f.section('Report Information', [
                 ...f.date('reportDate', 'Report Date'),

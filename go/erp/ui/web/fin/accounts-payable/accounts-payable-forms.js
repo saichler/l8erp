@@ -23,19 +23,19 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('taxId', 'Tax ID'),
                 ...f.select('status', 'Status', enums.VENDOR_STATUS, true),
                 ...f.number('paymentTermDays', 'Payment Term Days'),
-                ...f.select('defaultPaymentMethod', 'Default Payment Method', enums.PAYMENT_METHOD),
+                ...f.select('preferredPaymentMethod', 'Preferred Payment Method', enums.PAYMENT_METHOD),
                 ...f.reference('defaultAccountId', 'Default GL Account', 'Account'),
                 ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.url('website', 'Website'),
-                ...f.textarea('notes', 'Notes'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.textarea('notes', 'Notes')
             ])
         ]),
 
         VendorContact: f.form('Vendor Contact', [
             f.section('Contact Information', [
                 ...f.reference('vendorId', 'Vendor', 'Vendor', true),
-                ...f.text('contactName', 'Contact Name', true),
+                ...f.text('firstName', 'First Name', true),
+                ...f.text('lastName', 'Last Name', true),
                 ...f.text('title', 'Title'),
                 ...f.text('email', 'Email'),
                 ...f.text('phone', 'Phone'),
@@ -54,7 +54,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('taxAmount', 'Tax Amount'),
                 ...f.select('status', 'Status', enums.INVOICE_STATUS),
                 ...f.reference('currencyId', 'Currency', 'Currency'),
-                ...f.text('reference', 'Reference')
             ])
         ]),
 
@@ -65,7 +64,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('description', 'Description', true),
                 ...f.number('quantity', 'Quantity', true),
                 ...f.money('unitPrice', 'Unit Price', true),
-                ...f.money('lineTotal', 'Line Total'),
+                ...f.money('lineAmount', 'Line Amount'),
                 ...f.money('taxAmount', 'Tax Amount')
             ])
         ]),
@@ -73,16 +72,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         PaymentSchedule: f.form('Payment Schedule', [
             f.section('Schedule Details', [
                 ...f.reference('invoiceId', 'Invoice', 'PurchaseInvoice', true),
-                ...f.date('dueDate', 'Due Date', true),
+                ...f.date('scheduledDate', 'Scheduled Date', true),
                 ...f.money('amount', 'Amount', true),
-                ...f.select('status', 'Status', enums.PAYMENT_STATUS),
+                ...f.checkbox('isPaid', 'Paid'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
 
         VendorPayment: f.form('Vendor Payment', [
             f.section('Payment Details', [
-                ...f.text('paymentNumber', 'Payment Number', true),
                 ...f.reference('vendorId', 'Vendor', 'Vendor', true),
                 ...f.date('paymentDate', 'Payment Date', true),
                 ...f.money('amount', 'Amount', true),
@@ -106,10 +104,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Statement Details', [
                 ...f.reference('vendorId', 'Vendor', 'Vendor', true),
                 ...f.date('statementDate', 'Statement Date', true),
-                ...f.date('startDate', 'Period Start'),
-                ...f.date('endDate', 'Period End'),
+                ...f.date('periodStart', 'Period Start'),
+                ...f.date('periodEnd', 'Period End'),
                 ...f.money('openingBalance', 'Opening Balance'),
-                ...f.money('totalBalance', 'Total Balance'),
+                ...f.money('closingBalance', 'Closing Balance'),
                 ...f.textarea('notes', 'Notes')
             ])
         ])

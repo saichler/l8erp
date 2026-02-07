@@ -45,25 +45,20 @@ limitations under the License.
                 sortKey: 'achievedAmount',
                 render: (item) => renderMoney(item.achievedAmount)
             },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.targetStatus(item.status)
-            }
+            { key: 'period', label: 'Period', sortKey: 'period' }
         ],
 
         SalesTerritory: [
             { key: 'territoryId', label: 'ID', sortKey: 'territoryId', filterKey: 'territoryId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
+            { key: 'description', label: 'Description', sortKey: 'description' },
             {
                 key: 'territoryType',
                 label: 'Type',
                 sortKey: 'territoryType',
                 render: (item) => render.territoryType(item.territoryType)
             },
-            { key: 'parentId', label: 'Parent', sortKey: 'parentId' },
+            { key: 'parentTerritoryId', label: 'Parent', sortKey: 'parentTerritoryId' },
             { key: 'description', label: 'Description', sortKey: 'description' }
         ],
 
@@ -95,7 +90,7 @@ limitations under the License.
                 sortKey: 'commissionType',
                 render: (item) => render.commissionType(item.commissionType)
             },
-            { key: 'rate', label: 'Rate', sortKey: 'rate' },
+            { key: 'baseRate', label: 'Rate', sortKey: 'baseRate' },
             {
                 key: 'effectiveDate',
                 label: 'Effective',
@@ -111,10 +106,10 @@ limitations under the License.
             { key: 'planId', label: 'Plan', sortKey: 'planId', filterKey: 'planId' },
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
             {
-                key: 'saleAmount',
+                key: 'salesAmount',
                 label: 'Sale Amount',
-                sortKey: 'saleAmount',
-                render: (item) => renderMoney(item.saleAmount)
+                sortKey: 'salesAmount',
+                render: (item) => renderMoney(item.salesAmount)
             },
             {
                 key: 'commissionAmount',
@@ -141,10 +136,10 @@ limitations under the License.
                 render: (item) => renderMoney(item.forecastAmount)
             },
             {
-                key: 'forecastDate',
+                key: 'expectedCloseDate',
                 label: 'Date',
-                sortKey: 'forecastDate',
-                render: (item) => renderDate(item.forecastDate)
+                sortKey: 'expectedCloseDate',
+                render: (item) => renderDate(item.expectedCloseDate)
             }
         ]
     };

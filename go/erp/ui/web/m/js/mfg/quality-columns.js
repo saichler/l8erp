@@ -36,7 +36,7 @@ limitations under the License.
             { key: 'planId', label: 'Plan', sortKey: 'planId' },
             { key: 'name', label: 'Name', sortKey: 'name' },
             { key: 'inspectionType', label: 'Type', sortKey: 'inspectionType', render: (item) => render.inspectionType(item.inspectionType) },
-            { key: 'sequenceNumber', label: 'Seq #', sortKey: 'sequenceNumber' },
+            { key: 'sequence', label: 'Seq #', sortKey: 'sequence' },
             { key: 'characteristic', label: 'Characteristic', sortKey: 'characteristic' }
         ],
         MfgQualityInspection: [
@@ -45,14 +45,14 @@ limitations under the License.
             { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
             { key: 'planId', label: 'Plan', sortKey: 'planId' },
             { key: 'inspectionDate', label: 'Date', sortKey: 'inspectionDate', render: (item) => render.date(item.inspectionDate) },
-            { key: 'result', label: 'Result', sortKey: 'result', render: (item) => render.inspectionResult(item.result) }
+            { key: 'overallResult', label: 'Result', sortKey: 'overallResult', render: (item) => render.inspectionResult(item.overallResult) }
         ],
         MfgTestResult: [
             { key: 'resultId', label: 'ID', sortKey: 'resultId' },
             { key: 'inspectionId', label: 'Inspection', sortKey: 'inspectionId' },
             { key: 'pointId', label: 'Point', sortKey: 'pointId' },
             { key: 'measuredValue', label: 'Measured', sortKey: 'measuredValue' },
-            { key: 'targetValue', label: 'Target', sortKey: 'targetValue' },
+            { key: 'textValue', label: 'Text Value', sortKey: 'textValue' },
             { key: 'result', label: 'Result', sortKey: 'result', render: (item) => render.inspectionResult(item.result) }
         ],
         MfgNCR: [
@@ -61,7 +61,7 @@ limitations under the License.
             { key: 'itemId', label: 'Item', sortKey: 'itemId' },
             { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
             { key: 'severity', label: 'Severity', sortKey: 'severity', render: (item) => render.ncrSeverity(item.severity) },
-            { key: 'reportDate', label: 'Report Date', sortKey: 'reportDate', render: (item) => render.date(item.reportDate) },
+            { key: 'reportedDate', label: 'Reported Date', sortKey: 'reportedDate', render: (item) => render.date(item.reportedDate) },
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.ncrStatus(item.status) }
         ],
         MfgNCRAction: [
