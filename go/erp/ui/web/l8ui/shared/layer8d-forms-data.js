@@ -12,6 +12,22 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
     const { parseDateToTimestamp } = Layer8DUtils;
 
+    function setNestedValue(obj, key, value) {
+        if (!key.includes('.')) { obj[key] = value; return; }
+        const parts = key.split('.');
+        let current = obj;
+        for (let i = 0; i < parts.length - 1; i++) {
+            if (!current[parts[i]]) current[parts[i]] = {};
+            current = current[parts[i]];
+        }
+        current[parts[parts.length - 1]] = value;
+    }
+
+    function getNestedValue(obj, key) {
+        if (!key.includes('.')) return obj[key];
+        return key.split('.').reduce((o, k) => o && o[k], obj);
+    }
+
     // ========================================
     // FORM DATA HANDLING
     // ========================================
@@ -90,6 +106,18 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                         }
                         break;
 
+                    case 'money':
+                        if (typeof Layer8DInputFormatter !== 'undefined') {
+                            const moneyCents = Layer8DInputFormatter.getValue(element);
+                            value = moneyCents !== null && moneyCents !== '' ? { amount: parseInt(moneyCents, 10), currencyCode: 'USD' } : null;
+                        } else if (element.dataset.rawValue) {
+                            const rawMoney = parseInt(element.dataset.rawValue, 10);
+                            value = isNaN(rawMoney) ? null : { amount: rawMoney, currencyCode: 'USD' };
+                        } else {
+                            value = null;
+                        }
+                        break;
+
                     case 'percentage':
                         if (typeof Layer8DInputFormatter !== 'undefined') {
                             const pct = Layer8DInputFormatter.getValue(element);
@@ -126,7 +154,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 }
 
                 if (value !== null && value !== '') {
-                    data[field.key] = value;
+                    setNestedValue(data, field.key, value);
                 }
             });
         });
@@ -140,7 +168,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         formDef.sections.forEach(section => {
             section.fields.forEach(field => {
                 if (field.required) {
-                    const value = data[field.key];
+                    const value = getNestedValue(data, field.key);
                     if (value === null || value === undefined || value === '') {
                         errors.push({ field: field.key, message: `${field.label} is required` });
                     }

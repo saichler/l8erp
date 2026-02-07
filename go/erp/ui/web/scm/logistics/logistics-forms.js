@@ -20,7 +20,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('code', 'Carrier Code', true),
                 ...f.text('name', 'Name', true),
                 ...f.select('carrierType', 'Carrier Type', enums.CARRIER_TYPE, true),
-                ...f.text('contactInfo', 'Contact Info'),
+                ...f.contact('contactInfo'),
                 ...f.checkbox('isActive', 'Active')
             ])
         ]),
@@ -42,7 +42,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('shipmentNumber', 'Shipment Number', true),
                 ...f.reference('carrierId', 'Carrier', 'ScmCarrier', true),
                 ...f.reference('originWarehouseId', 'Origin Warehouse', 'ScmWarehouse'),
-                ...f.text('destinationAddress', 'Destination Address'),
+                ...f.address('destinationAddress'),
                 ...f.date('shipDate', 'Ship Date', true),
                 ...f.date('expectedDelivery', 'Expected Delivery'),
                 ...f.select('status', 'Status', enums.SHIPMENT_STATUS),

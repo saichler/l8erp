@@ -35,8 +35,8 @@ limitations under the License.
  *   ...f.person(true)      - firstName, middleName, lastName (3 fields)
  *   ...f.dateRange()       - effectiveDate, endDate (2 fields)
  *   ...f.dateRange('start') - startDate, endDate (2 fields)
- *   ...f.address()         - addressLine1, addressLine2, city, state, postalCode, country (6 fields)
- *   ...f.contact()         - email, phone (2 fields)
+ *   ...f.address('key')    - key.line1, key.line2, key.city, key.stateProvince, key.postalCode, key.countryCode (6 fields)
+ *   ...f.contact('key')    - key.value, key.contactType (2 fields)
  *   ...f.audit()           - createdBy, createdAt, modifiedBy, modifiedAt (4 fields, read-only)
  *
  * FIELD TYPES:
@@ -304,32 +304,32 @@ limitations under the License.
         },
 
         /**
-         * Address fields
-         * @param {string} [prefix] - Optional prefix for field names
-         * @returns {Array} - Array of field definitions
+         * Address fields (maps to *erp.Address protobuf type)
+         * @param {string} parentKey - Parent field name (e.g. 'address', 'serviceAddress')
+         * @returns {Array} - Array of field definitions with dot-notation keys
          */
-        address: function(prefix) {
-            const p = prefix ? prefix : '';
+        address: function(parentKey) {
+            const p = parentKey ? parentKey + '.' : '';
             return [
-                { key: p + 'addressLine1', label: 'Address Line 1', type: 'text' },
-                { key: p + 'addressLine2', label: 'Address Line 2', type: 'text' },
+                { key: p + 'line1', label: 'Address Line 1', type: 'text' },
+                { key: p + 'line2', label: 'Address Line 2', type: 'text' },
                 { key: p + 'city', label: 'City', type: 'text' },
-                { key: p + 'state', label: 'State', type: 'text' },
+                { key: p + 'stateProvince', label: 'State/Province', type: 'text' },
                 { key: p + 'postalCode', label: 'Postal Code', type: 'text' },
-                { key: p + 'country', label: 'Country', type: 'text' }
+                { key: p + 'countryCode', label: 'Country', type: 'text' }
             ];
         },
 
         /**
-         * Contact fields: email, phone
-         * @param {string} [prefix] - Optional prefix
-         * @returns {Array} - Array of field definitions
+         * Contact info fields (maps to *erp.ContactInfo protobuf type)
+         * @param {string} parentKey - Parent field name (e.g. 'contactInfo')
+         * @returns {Array} - Array of field definitions with dot-notation keys
          */
-        contact: function(prefix) {
-            const p = prefix ? prefix : '';
+        contact: function(parentKey) {
+            const p = parentKey ? parentKey + '.' : '';
             return [
-                { key: p + 'email', label: 'Email', type: 'email' },
-                { key: p + 'phone', label: 'Phone', type: 'phone' }
+                { key: p + 'value', label: 'Contact Value', type: 'text' },
+                { key: p + 'contactType', label: 'Contact Type', type: 'text' }
             ];
         },
 

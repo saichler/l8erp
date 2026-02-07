@@ -23,6 +23,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         return 'Current';
     }
 
+    function getNestedValue(obj, key) {
+        if (!key.includes('.')) return obj[key];
+        return key.split('.').reduce((o, k) => o && o[k], obj);
+    }
+
     // Formatted field types that use Layer8DInputFormatter
     const FORMATTED_TYPES = ['ssn', 'phone', 'currency', 'percentage', 'routingNumber', 'ein', 'email', 'url', 'colorCode', 'rating', 'hours'];
 
@@ -52,11 +57,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
                 if (field2) {
                     html += '<div class="form-row">';
-                    html += generateFieldHtml(field1, data[field1.key]);
-                    html += generateFieldHtml(field2, data[field2.key]);
+                    html += generateFieldHtml(field1, getNestedValue(data, field1.key));
+                    html += generateFieldHtml(field2, getNestedValue(data, field2.key));
                     html += '</div>';
                 } else {
-                    html += generateFieldHtml(field1, data[field1.key]);
+                    html += generateFieldHtml(field1, getNestedValue(data, field1.key));
                 }
             }
 
@@ -81,6 +86,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             case 'number':
                 inputHtml = `<input type="number" id="field-${field.key}" name="${field.key}" value="${escapeAttr(value || '')}" ${required}>`;
                 break;
+
+            case 'money': {
+                const moneyValue = (typeof value === 'object' && value !== null) ? value.amount : value;
+                const currencyField = { ...field, type: 'currency' };
+                inputHtml = generateFormattedInput(currencyField, moneyValue);
+                break;
+            }
 
             // Formatted input types
             case 'ssn':

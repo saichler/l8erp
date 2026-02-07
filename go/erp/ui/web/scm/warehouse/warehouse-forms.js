@@ -20,7 +20,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('code', 'Warehouse Code', true),
                 ...f.text('name', 'Name', true),
                 ...f.select('warehouseType', 'Type', enums.WAREHOUSE_TYPE, true),
-                ...f.textarea('address', 'Address'),
+                ...f.address('address'),
                 ...f.reference('managerId', 'Manager', 'Employee'),
                 ...f.checkbox('isActive', 'Active')
             ])

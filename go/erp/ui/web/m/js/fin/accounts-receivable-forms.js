@@ -21,7 +21,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('status', 'Status', enums.CUSTOMER_STATUS, true)
             ]),
             f.section('Credit & Status', [
-                ...f.number('creditLimit', 'Credit Limit')
+                ...f.money('creditLimit', 'Credit Limit')
             ])
         ]),
 
@@ -45,7 +45,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Dates & Amount', [
                 ...f.date('invoiceDate', 'Invoice Date', true),
                 ...f.date('dueDate', 'Due Date', true),
-                ...f.number('totalAmount', 'Total Amount')
+                ...f.money('totalAmount', 'Total Amount')
             ])
         ]),
 
@@ -54,8 +54,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('invoiceId', 'Invoice', 'SalesInvoice', true),
                 ...f.text('description', 'Description', true),
                 ...f.number('quantity', 'Quantity', true),
-                ...f.number('unitPrice', 'Unit Price', true),
-                ...f.number('lineAmount', 'Line Amount')
+                ...f.money('unitPrice', 'Unit Price', true),
+                ...f.money('lineAmount', 'Line Amount')
             ])
         ]),
 
@@ -67,7 +67,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]),
             f.section('Amount & Date', [
                 ...f.date('paymentDate', 'Payment Date', true),
-                ...f.number('amount', 'Amount', true)
+                ...f.money('amount', 'Amount', true)
             ])
         ]),
 
@@ -75,7 +75,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Application Details', [
                 ...f.reference('paymentId', 'Payment', 'CustomerPayment', true),
                 ...f.reference('invoiceId', 'Invoice', 'SalesInvoice', true),
-                ...f.number('appliedAmount', 'Applied Amount', true)
+                ...f.money('appliedAmount', 'Applied Amount', true)
             ])
         ]),
 
@@ -87,7 +87,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]),
             f.section('Amount & Date', [
                 ...f.date('memoDate', 'Memo Date', true),
-                ...f.number('amount', 'Amount', true)
+                ...f.money('amount', 'Amount', true)
             ])
         ]),
 
@@ -96,7 +96,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('customerId', 'Customer', 'Customer', true),
                 ...f.date('letterDate', 'Letter Date', true),
                 ...f.select('dunningLevel', 'Dunning Level', enums.DUNNING_LEVEL, true),
-                ...f.number('totalOverdue', 'Total Overdue')
+                ...f.money('totalOverdue', 'Total Overdue')
             ])
         ])
     };

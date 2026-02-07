@@ -33,7 +33,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('contractId', 'Service Contract', 'CrmServiceContract')
             ]),
             f.section('Location & Product', [
-                ...f.textarea('serviceAddress', 'Service Address'),
+                ...f.address('serviceAddress'),
                 ...f.reference('productId', 'Product', 'ScmItem'),
                 ...f.text('serialNumber', 'Serial Number'),
                 ...f.money('estimatedCost', 'Estimated Cost'),
@@ -58,13 +58,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Skills & Assignment', [
                 ...f.text('skills', 'Skills'),
                 ...f.text('territory', 'Territory'),
-                ...f.text('homeLocation', 'Home Location'),
+                ...f.address('homeLocation'),
                 ...f.number('maxDailyOrders', 'Max Daily Orders'),
                 ...f.checkbox('isActive', 'Active')
             ]),
             f.section('Rates', [
-                ...f.money('hourlyRate', 'Hourly Rate'),
-                ...f.money('overtimeRate', 'Overtime Rate')
+                ...f.number('hourlyRate', 'Hourly Rate'),
+                ...f.number('overtimeRate', 'Overtime Rate')
             ])
         ]),
 
