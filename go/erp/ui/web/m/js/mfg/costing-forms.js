@@ -35,7 +35,7 @@ limitations under the License.
                 ...f.money('overheadCost', 'Overhead Cost'),
                 ...f.money('outsideProcessingCost', 'Outside Processing Cost'),
                 ...f.money('totalCost', 'Total Cost'),
-                ...f.text('currencyCode', 'Currency'),
+                ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),

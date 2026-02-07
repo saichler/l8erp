@@ -25,7 +25,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('overheadCost', 'Overhead Cost'),
                 ...f.money('outsideProcessingCost', 'Outside Processing Cost'),
                 ...f.money('totalCost', 'Total Cost'),
-                ...f.text('currencyCode', 'Currency'),
+                ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),

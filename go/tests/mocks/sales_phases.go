@@ -28,7 +28,7 @@ func generateSalesPhase1(client *HCMClient, store *MockDataStore) error {
 	}
 
 	// Generate Sales Price Lists
-	priceLists := generateSalesPriceLists()
+	priceLists := generateSalesPriceLists(store)
 	if err := runOp(client, "Sales Price Lists", "/erp/60/PriceList", &sales.SalesPriceListList{List: priceLists}, extractIDs(priceLists, func(e *sales.SalesPriceList) string { return e.PriceListId }), &store.SalesPriceListIDs); err != nil {
 		return err
 	}

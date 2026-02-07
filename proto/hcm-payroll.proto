@@ -35,7 +35,7 @@ message PayStructure {
   string name = 3;
   string code = 4;
   string description = 5;
-  string currency_code = 6;
+  string currency_id = 6;
   PayFrequency pay_frequency = 7;
   repeated PayGradeDefinition grades = 8;
   int64 effective_date = 9;

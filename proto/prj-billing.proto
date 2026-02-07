@@ -42,7 +42,7 @@ message PrjBillingRate {
   int64 effective_from = 11;
   int64 effective_until = 12;
   bool is_active = 13;
-  string currency_code = 14;
+  string currency_id = 14;
   map<string, string> custom_fields = 15;
   erp.AuditInfo audit_info = 16;
 }
@@ -125,7 +125,7 @@ message PrjProjectInvoice {
   string notes = 17;
   int64 sent_date = 18;
   int64 paid_date = 19;
-  string currency_code = 20;
+  string currency_id = 20;
   map<string, string> custom_fields = 21;
   erp.AuditInfo audit_info = 22;
 }

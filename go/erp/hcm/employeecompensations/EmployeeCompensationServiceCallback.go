@@ -54,6 +54,9 @@ func validateEmpCompRequiredFields(entity *hcm.EmployeeCompensation) error {
 	if err := common.ValidateRequired(entity.EmployeeId, "EmployeeId"); err != nil {
 		return err
 	}
+	if err := common.ValidateRequired(entity.CurrencyId, "CurrencyId"); err != nil {
+		return err
+	}
 	return nil
 }
 

@@ -67,7 +67,7 @@ const COMPENSATION_SERVICES = {
             { key: 'midpoint.amount', label: 'Midpoint Salary', type: 'currency', required: true },
             { key: 'maximum.amount', label: 'Maximum Salary', type: 'currency', required: true },
             { key: 'spreadPercentage', label: 'Spread Percentage', type: 'percentage' },
-            { key: 'currencyCode', label: 'Currency', type: 'text' },
+            { key: 'currencyId', label: 'Currency', type: 'reference', lookupModel: 'Currency' },
             { key: 'payFrequency', label: 'Pay Frequency', type: 'select', options: { 1: 'Annual', 2: 'Monthly', 3: 'Bi-Weekly', 4: 'Weekly', 5: 'Hourly' } },
             { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
             { key: 'endDate', label: 'End Date', type: 'date' },
@@ -82,7 +82,7 @@ const COMPENSATION_SERVICES = {
         columns: [
             { key: 'structureId', label: 'Structure ID', primary: true },
             { key: 'name', label: 'Name', secondary: true, filterKey: 'name' },
-            { key: 'currencyCode', label: 'Currency' },
+            { key: 'currencyId', label: 'Currency' },
             { key: 'payFrequency', label: 'Frequency', formatter: (v) => ({ 1: 'Annual', 2: 'Monthly', 3: 'Bi-Weekly', 4: 'Weekly', 5: 'Hourly' }[v] || '-') },
             { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
         ],
@@ -90,7 +90,7 @@ const COMPENSATION_SERVICES = {
         formFields: [
             { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
             { key: 'name', label: 'Structure Name', type: 'text', required: true },
-            { key: 'currencyCode', label: 'Currency Code', type: 'text', required: true },
+            { key: 'currencyId', label: 'Currency', type: 'reference', lookupModel: 'Currency', required: true },
             { key: 'payFrequency', label: 'Pay Frequency', type: 'select', required: true, options: { 1: 'Annual', 2: 'Monthly', 3: 'Bi-Weekly', 4: 'Weekly', 5: 'Hourly' } },
             { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
             { key: 'endDate', label: 'End Date', type: 'date' },
@@ -187,7 +187,7 @@ const COMPENSATION_SERVICES = {
             { key: 'baseSalary.amount', label: 'Base Salary', type: 'currency', required: true },
             { key: 'hourlyRate.amount', label: 'Hourly Rate', type: 'currency' },
             { key: 'payFrequency', label: 'Pay Frequency', type: 'select', required: true, options: { 1: 'Annual', 2: 'Monthly', 3: 'Bi-Weekly', 4: 'Weekly', 5: 'Hourly' } },
-            { key: 'currencyCode', label: 'Currency', type: 'text' },
+            { key: 'currencyId', label: 'Currency', type: 'reference', lookupModel: 'Currency' },
             { key: 'compaRatio', label: 'Compa Ratio', type: 'percentage' },
             { key: 'fte', label: 'FTE', type: 'number' },
             { key: 'effectiveDate', label: 'Effective Date', type: 'date', required: true },

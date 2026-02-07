@@ -23,7 +23,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('validUntil', 'Valid Until'),
                 ...f.select('status', 'Status', enums.QUOTATION_STATUS),
                 ...f.text('paymentTerms', 'Payment Terms'),
-                ...f.text('currencyCode', 'Currency'),
+                ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -51,7 +51,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('quotationId', 'Quotation', 'SalesQuotation'),
                 ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
                 ...f.text('paymentTerms', 'Payment Terms'),
-                ...f.text('currencyCode', 'Currency'),
+                ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.text('priority', 'Priority'),
                 ...f.textarea('notes', 'Notes')
             ])

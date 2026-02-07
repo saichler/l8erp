@@ -59,8 +59,8 @@ func generateEngChangeOrders(store *MockDataStore) []*mfg.MfgEngChangeOrder {
 			RequiredDate:  requiredDate.Unix(),
 			Priority:      int32(rand.Intn(5) + 1),
 			Reason:        fmt.Sprintf("Improve quality and reduce costs for product line %d", i+1),
-			EstimatedCost: money(estCost),
-			ActualCost:    money(actCost),
+			EstimatedCost: money(store, estCost),
+			ActualCost:    money(store, actCost),
 			Notes:         fmt.Sprintf("ECO notes for change order %d", i+1),
 			AuditInfo:     createAuditInfo(),
 		}
@@ -182,8 +182,8 @@ func generateWorkOrders(store *MockDataStore) []*mfg.MfgWorkOrder {
 			WorkCenterId:      wcID,
 			SalesOrderId:      salesOrderID,
 			Priority:          int32(rand.Intn(5) + 1),
-			EstimatedCost:     money(estCost),
-			ActualCost:        money(actCost),
+			EstimatedCost:     money(store, estCost),
+			ActualCost:        money(store, actCost),
 			Notes:             fmt.Sprintf("Work order for manufacturing batch %d", i+1),
 			AuditInfo:         createAuditInfo(),
 		}
@@ -291,8 +291,8 @@ func generateProductionOrders(store *MockDataStore) []*mfg.MfgProductionOrder {
 			Status:             status,
 			Priority:           int32(rand.Intn(5) + 1),
 			PlannerId:          plannerID,
-			TotalEstimatedCost: money(estCost),
-			TotalActualCost:    money(actCost),
+			TotalEstimatedCost: money(store, estCost),
+			TotalActualCost:    money(store, actCost),
 			Notes:              fmt.Sprintf("Production order for batch manufacturing %d", i+1),
 			AuditInfo:          createAuditInfo(),
 		}

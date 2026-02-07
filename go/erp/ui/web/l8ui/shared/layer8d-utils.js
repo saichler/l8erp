@@ -249,25 +249,41 @@ limitations under the License.
     // NUMBER FORMATTING
     // ========================================
 
+    // Currency cache: maps currencyId → ISO code (e.g., "USD")
+    const _currencyCache = {};
+
+    function setCurrencyCache(currencies) {
+        for (const c of currencies) {
+            if (c.currencyId && c.code) _currencyCache[c.currencyId] = c.code;
+        }
+    }
+
     function formatMoney(value, currency = 'USD') {
         if (value === null || value === undefined) return '-';
 
         let amount;
         let currencyCode = currency;
 
-        // Handle Money object { amount: cents, currencyCode: 'USD' }
+        // Handle Money object { amount: cents, currencyId: 'xxx' }
         if (typeof value === 'object') {
             amount = value.amount !== undefined ? value.amount / 100 : 0;
-            currencyCode = value.currencyCode || currency;
+            if (value.currencyId && _currencyCache[value.currencyId]) {
+                currencyCode = _currencyCache[value.currencyId];
+            } else if (value.currencyCode) {
+                currencyCode = value.currencyCode;
+            }
         } else {
-            // Assume value is in cents
             amount = value / 100;
         }
 
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: currencyCode
-        }).format(amount);
+        try {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: currencyCode
+            }).format(amount);
+        } catch (e) {
+            return '$' + amount.toFixed(2);
+        }
     }
 
     function formatNumber(value, decimals = 0) {
@@ -390,6 +406,7 @@ limitations under the License.
         formatMoney,
         formatNumber,
         formatPercentage,
+        setCurrencyCache,
 
         // Status
         renderStatus,

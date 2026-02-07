@@ -30,5 +30,8 @@ func validate(item *prj.PrjBillingRate, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.RateId, "RateId"); err != nil {
 		return err
 	}
+	if err := common.ValidateRequired(item.CurrencyId, "CurrencyId"); err != nil {
+		return err
+	}
 	return nil
 }

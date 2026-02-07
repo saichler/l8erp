@@ -285,3 +285,21 @@ limitations under the License.
 .mobile-form-actions .btn {
     flex: 1;
 }
+
+/* Money input group - currency picker + amount */
+.mobile-money-input-group {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.mobile-money-input-group .reference-input {
+    width: 100px;
+    min-width: 100px;
+    flex-shrink: 0;
+    font-size: 0.85em;
+}
+
+.mobile-money-input-group .mobile-money-amount {
+    flex: 1;
+}

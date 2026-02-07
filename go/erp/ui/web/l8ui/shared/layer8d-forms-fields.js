@@ -88,9 +88,24 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 break;
 
             case 'money': {
-                const moneyValue = (typeof value === 'object' && value !== null) ? value.amount : value;
-                const currencyField = { ...field, type: 'currency' };
-                inputHtml = generateFormattedInput(currencyField, moneyValue);
+                const moneyObj = (typeof value === 'object' && value !== null) ? value : {};
+                const amountValue = moneyObj.amount !== undefined ? moneyObj.amount : value;
+                const currencyId = moneyObj.currencyId || '';
+
+                // Currency reference picker
+                const currencyField = {
+                    key: field.key + '.__currencyId',
+                    label: 'Currency',
+                    type: 'reference',
+                    lookupModel: 'Currency'
+                };
+                const currencyHtml = generateReferenceInput(currencyField, currencyId);
+
+                // Amount formatted input
+                const amountField = { ...field, key: field.key + '.__amount', type: 'currency' };
+                const amountHtml = generateFormattedInput(amountField, amountValue);
+
+                inputHtml = `<div class="money-input-group">${currencyHtml}${amountHtml}</div>`;
                 break;
             }
 

@@ -101,7 +101,7 @@ func generateSalesCustomerContracts(store *MockDataStore) []*sales.SalesCustomer
 			EndDate:        endDate.Unix(),
 			ContractValue: &erp.Money{
 				Amount:       int64(rand.Intn(50000000) + 1000000), // $10k - $500k
-				CurrencyCode: "USD",
+				CurrencyId: pickRef(store.CurrencyIDs, i),
 			},
 			PriceListId:       priceListID,
 			PaymentTerms:      "Net 30",

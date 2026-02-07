@@ -86,7 +86,7 @@ func generateSalesPhase7(client *HCMClient, store *MockDataStore) error {
 // Sales Phase 8: Analytics
 func generateSalesPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate Commission Plans
-	plans := generateSalesCommissionPlans()
+	plans := generateSalesCommissionPlans(store)
 	if err := runOp(client, "Commission Plans", "/erp/60/CommPlan", &sales.SalesCommissionPlanList{List: plans}, extractIDs(plans, func(e *sales.SalesCommissionPlan) string { return e.PlanId }), &store.SalesCommissionPlanIDs); err != nil {
 		return err
 	}

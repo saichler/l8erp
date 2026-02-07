@@ -26,7 +26,7 @@ option go_package = "./types/erp";
 // Money represents a monetary amount with currency
 message Money {
   int64 amount = 1;          // Amount in smallest currency unit (e.g., cents)
-  string currency_code = 2;  // ISO 4217 currency code (e.g., "USD", "EUR")
+  string currency_id = 2;  // Foreign key to Currency service
 }
 
 // AuditInfo tracks creation and modification metadata

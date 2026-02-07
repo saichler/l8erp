@@ -31,7 +31,7 @@ limitations under the License.
         SalesPriceList: [
             { key: 'priceListId', label: 'ID', sortKey: 'priceListId', filterKey: 'priceListId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'currencyCode', label: 'Currency', sortKey: 'currencyCode' },
+            { key: 'currencyId', label: 'Currency', sortKey: 'currencyId' },
             {
                 key: 'effectiveDate',
                 label: 'Effective',

@@ -106,17 +106,23 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                         }
                         break;
 
-                    case 'money':
-                        if (typeof Layer8DInputFormatter !== 'undefined') {
-                            const moneyCents = Layer8DInputFormatter.getValue(element);
-                            value = moneyCents !== null && moneyCents !== '' ? { amount: parseInt(moneyCents, 10), currencyCode: 'USD' } : null;
-                        } else if (element.dataset.rawValue) {
-                            const rawMoney = parseInt(element.dataset.rawValue, 10);
-                            value = isNaN(rawMoney) ? null : { amount: rawMoney, currencyCode: 'USD' };
-                        } else {
-                            value = null;
+                    case 'money': {
+                        const amountEl = form.elements[field.key + '.__amount'];
+                        const currencyEl = form.elements[field.key + '.__currencyId'];
+                        let cents = null;
+                        if (amountEl) {
+                            if (typeof Layer8DInputFormatter !== 'undefined') {
+                                const raw = Layer8DInputFormatter.getValue(amountEl);
+                                cents = raw !== null && raw !== '' ? parseInt(raw, 10) : null;
+                            } else if (amountEl.dataset.rawValue) {
+                                cents = parseInt(amountEl.dataset.rawValue, 10);
+                                if (isNaN(cents)) cents = null;
+                            }
                         }
+                        const currId = currencyEl ? (currencyEl.dataset.refId || '') : '';
+                        value = cents != null ? { amount: cents, currencyId: currId } : null;
                         break;
+                    }
 
                     case 'percentage':
                         if (typeof Layer8DInputFormatter !== 'undefined') {

@@ -76,7 +76,7 @@ func generateAllocations(store *MockDataStore) []*prj.PrjAllocation {
 			AllocatedHours:   allocatedHours,
 			AllocatedPercent: allocatedPercent,
 			Status:           status,
-			BillingRate:      money(billingRate),
+			BillingRate:      money(store, billingRate),
 			IsBillable:       i%5 != 0, // 80% billable
 			Role:             roles[i%len(roles)],
 			Notes:            fmt.Sprintf("Resource allocation for project work - %s", roles[i%len(roles)]),
@@ -188,8 +188,8 @@ func generateUtilizations(store *MockDataStore) []*prj.PrjUtilization {
 			TotalHours:                 totalHours,
 			UtilizationPercent:         utilizationPercent,
 			BillableUtilizationPercent: billableUtilizationPercent,
-			Revenue:                    money(revenue),
-			Cost:                       money(cost),
+			Revenue:                    money(store, revenue),
+			Cost:                       money(store, cost),
 			AuditInfo:                  createAuditInfo(),
 		}
 	}

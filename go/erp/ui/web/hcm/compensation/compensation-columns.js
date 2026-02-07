@@ -34,7 +34,7 @@ limitations under the License.
 
         SalaryStructure: [
             ...col.id('structureId'),
-            ...col.basic(['code', 'name', ['currencyCode', 'Currency']]),
+            ...col.basic(['code', 'name', ['currencyId', 'Currency']]),
             ...col.enum('payFrequency', 'Frequency', enums.PAY_FREQUENCY_VALUES, internal.renderPayFrequency),
             ...col.custom('grades', 'Grades', (item) => item.grades ? item.grades.length : 0, { sortKey: false }),
             ...col.date('effectiveDate', 'Effective'),

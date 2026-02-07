@@ -281,9 +281,9 @@ func generateEmployeeCompensation(store *MockDataStore) []*hcm.EmployeeCompensat
 			SalaryGradeId:  store.SalaryGradeIDs[gradeIdx],
 			BaseSalary: &erp.Money{
 				Amount:       int64(baseSalary * 100), // Convert to cents
-				CurrencyCode: "USD",
+				CurrencyId: pickRef(store.CurrencyIDs, compIdx),
 			},
-			CurrencyCode:  "USD",
+			CurrencyId: pickRef(store.CurrencyIDs, compIdx),
 			CompensationType: hcm.CompensationType_COMPENSATION_TYPE_SALARY,
 			PayFrequency:     hcm.PayFrequency_PAY_FREQUENCY_BI_WEEKLY,
 			EffectiveDate: time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),

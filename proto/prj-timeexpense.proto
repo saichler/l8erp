@@ -117,7 +117,7 @@ message PrjExpenseEntry {
   string description = 7;
   string vendor = 8;
   erp.Money amount = 9;
-  string currency_code = 10;
+  string currency_id = 10;
   erp.Money converted_amount = 11;
   double exchange_rate = 12;
   bool is_billable = 13;

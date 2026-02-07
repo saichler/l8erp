@@ -62,7 +62,7 @@ func generateEcomPhase2(client *HCMClient, store *MockDataStore) error {
 // ECOM Phase 3: Customers
 func generateEcomPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate Customers
-	customers := generateEcomCustomers()
+	customers := generateEcomCustomers(store)
 	if err := runOp(client, "E-Commerce Customers", "/erp/100/EcomCust", &ecom.EcomCustomerList{List: customers}, extractIDs(customers, func(e *ecom.EcomCustomer) string { return e.CustomerId }), &store.EcomCustomerIDs); err != nil {
 		return err
 	}
@@ -97,7 +97,7 @@ func generateEcomPhase3(client *HCMClient, store *MockDataStore) error {
 // ECOM Phase 4: Promotions & Methods
 func generateEcomPhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate Promotions
-	promotions := generateEcomPromotions()
+	promotions := generateEcomPromotions(store)
 	if err := runOp(client, "E-Commerce Promotions", "/erp/100/EcomPromo", &ecom.EcomPromotionList{List: promotions}, extractIDs(promotions, func(e *ecom.EcomPromotion) string { return e.PromotionId }), &store.EcomPromotionIDs); err != nil {
 		return err
 	}
@@ -115,13 +115,13 @@ func generateEcomPhase4(client *HCMClient, store *MockDataStore) error {
 	}
 
 	// Generate Shipping Methods
-	shippingMethods := generateEcomShippingMethods()
+	shippingMethods := generateEcomShippingMethods(store)
 	if err := runOp(client, "E-Commerce Shipping Methods", "/erp/100/EcomShip", &ecom.EcomShippingMethodList{List: shippingMethods}, extractIDs(shippingMethods, func(e *ecom.EcomShippingMethod) string { return e.MethodId }), &store.EcomShippingIDs); err != nil {
 		return err
 	}
 
 	// Generate Payment Methods
-	paymentMethods := generateEcomPaymentMethods()
+	paymentMethods := generateEcomPaymentMethods(store)
 	if err := runOp(client, "E-Commerce Payment Methods", "/erp/100/EcomPay", &ecom.EcomPaymentMethodList{List: paymentMethods}, extractIDs(paymentMethods, func(e *ecom.EcomPaymentMethod) string { return e.MethodId }), &store.EcomPaymentIDs); err != nil {
 		return err
 	}

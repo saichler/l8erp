@@ -24,7 +24,7 @@ import (
 )
 
 // generateEcomCustomers creates e-commerce customer records
-func generateEcomCustomers() []*ecom.EcomCustomer {
+func generateEcomCustomers(store *MockDataStore) []*ecom.EcomCustomer {
 	customerTypes := []ecom.EcomCustomerType{
 		ecom.EcomCustomerType_ECOM_CUSTOMER_TYPE_REGISTERED,
 		ecom.EcomCustomerType_ECOM_CUSTOMER_TYPE_REGISTERED,
@@ -68,11 +68,11 @@ func generateEcomCustomers() []*ecom.EcomCustomer {
 			CreatedDate:      createdDate.Unix(),
 			LastLoginDate:    lastLoginDate.Unix(),
 			TotalOrders:      totalOrders,
-			TotalSpent:       money(totalSpent),
+			TotalSpent:       money(store, totalSpent),
 			CustomerGroup:    customerGroups[i%len(customerGroups)],
 			AcceptsMarketing: rand.Intn(2) == 1,
 			Locale:           locales[i%len(locales)],
-			CurrencyCode:     "USD",
+			CurrencyId: pickRef(store.CurrencyIDs, i),
 			AuditInfo:        createAuditInfo(),
 		}
 	}
@@ -201,7 +201,7 @@ func generateEcomWishlistItems(store *MockDataStore) []*ecom.EcomWishlistItem {
 			AddedDate:  addedDate.Unix(),
 			PriceWhenAdded: &erp.Money{
 				Amount:       int64(rand.Intn(20000) + 1000), // $10-$210
-				CurrencyCode: "USD",
+				CurrencyId: pickRef(store.CurrencyIDs, i),
 			},
 			Priority:  int32(rand.Intn(5) + 1), // 1-5 priority
 			AuditInfo: createAuditInfo(),
@@ -271,12 +271,12 @@ func generateEcomCarts(store *MockDataStore) []*ecom.EcomCart {
 			CreatedDate:    createdDate.Unix(),
 			UpdatedDate:    updatedDate.Unix(),
 			ExpiresAt:      expiresAt.Unix(),
-			Subtotal:       money(subtotal),
-			DiscountAmount: money(discountAmount),
-			TaxAmount:      money(taxAmount),
-			Total:          money(total),
+			Subtotal:       money(store, subtotal),
+			DiscountAmount: money(store, discountAmount),
+			TaxAmount:      money(store, taxAmount),
+			Total:          money(store, total),
 			CouponCode:     "",
-			CurrencyCode:   "USD",
+			CurrencyId: pickRef(store.CurrencyIDs, i),
 			ItemCount:      itemCount,
 			IpAddress:      fmt.Sprintf("192.168.%d.%d", rand.Intn(256), rand.Intn(256)),
 			UserAgent:      userAgents[rand.Intn(len(userAgents))],

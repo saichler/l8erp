@@ -32,7 +32,7 @@ message SalesPriceList {
   string price_list_id = 1;
   string name = 2;
   string description = 3;
-  string currency_code = 4;
+  string currency_id = 4;
   SalesPriceListStatus status = 5;
   int64 effective_date = 6;
   int64 expiry_date = 7;
@@ -73,7 +73,7 @@ message SalesCustomerPrice {
   string customer_id = 2;               // Cross-ref: FIN Customer
   string item_id = 3;                   // Cross-ref: SCM Item
   erp.Money unit_price = 4;
-  string currency_code = 5;
+  string currency_id = 5;
   SalesPricingMethod pricing_method = 6;
   double minimum_quantity = 7;
   int64 effective_date = 8;

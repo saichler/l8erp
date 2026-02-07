@@ -18,7 +18,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.reference('organizationId', 'Organization', 'Organization'),
-                ...f.text('currencyCode', 'Currency Code', true),
+                ...f.reference('currencyId', 'Currency', 'Currency', true),
                 ...f.select('payFrequency', 'Pay Frequency', enums.PAY_FREQUENCY, true),
                 ...f.checkbox('isActive', 'Active')
             ]),

@@ -53,7 +53,7 @@ func generateLaborEntries(store *MockDataStore) []*mfg.MfgLaborEntry {
 				QuantityScrapped:  float64(rand.Intn(3)),
 				LaborType:         laborTypes[(woIdx*2+j)%len(laborTypes)],
 				HourlyRate:        hourlyRate,
-				LaborCost:         money(laborCost),
+				LaborCost:         money(store, laborCost),
 				Notes:             fmt.Sprintf("Labor entry for work order operation %d", idx),
 				AuditInfo:         createAuditInfo(),
 			})
@@ -93,7 +93,7 @@ func generateMachineEntries(store *MockDataStore) []*mfg.MfgMachineEntry {
 				QuantityScrapped:  float64(rand.Intn(5)),
 				MachineStatus:     machineStatuses[(woIdx*2+j)%len(machineStatuses)],
 				HourlyRate:        hourlyRate,
-				MachineCost:       money(machineCost),
+				MachineCost:       money(store, machineCost),
 				OperatorId:        operatorID,
 				Notes:             fmt.Sprintf("Machine entry for work order %d", idx),
 				AuditInfo:         createAuditInfo(),
@@ -138,7 +138,7 @@ func generateDowntimeEvents(store *MockDataStore) []*mfg.MfgDowntimeEvent {
 			DurationMinutes: durationMinutes,
 			ReportedBy:      reportedBy,
 			ResolvedBy:      resolvedBy,
-			EstimatedLoss:   money(estimatedLoss),
+			EstimatedLoss:   money(store, estimatedLoss),
 			Notes:           fmt.Sprintf("Downtime notes for event %d", i+1),
 			AuditInfo:       createAuditInfo(),
 		}
@@ -175,8 +175,8 @@ func generateProdConsumptions(store *MockDataStore) []*mfg.MfgProdConsumption {
 				WarehouseId:      warehouseID,
 				BinId:            binID,
 				ConsumptionDate:  consumptionDate.Unix(),
-				UnitCost:         money(unitCost),
-				TotalCost:        money(totalCost),
+				UnitCost:         money(store, unitCost),
+				TotalCost:        money(store, totalCost),
 				Notes:            fmt.Sprintf("Material consumption for WO operation %d", idx),
 				AuditInfo:        createAuditInfo(),
 			})

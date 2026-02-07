@@ -23,7 +23,7 @@ import (
 )
 
 // generateProjectTemplates creates project template records
-func generateProjectTemplates() []*prj.PrjProjectTemplate {
+func generateProjectTemplates(store *MockDataStore) []*prj.PrjProjectTemplate {
 	projectTypes := []prj.PrjProjectType{
 		prj.PrjProjectType_PRJ_PROJECT_TYPE_INTERNAL,
 		prj.PrjProjectType_PRJ_PROJECT_TYPE_CLIENT,
@@ -61,7 +61,7 @@ func generateProjectTemplates() []*prj.PrjProjectTemplate {
 			Description:           fmt.Sprintf("Project template for %s engagements", name),
 			ProjectType:           projectTypes[i%len(projectTypes)],
 			DefaultEstimatedHours: estimatedHours,
-			DefaultBudget: money(budgetAmount),
+			DefaultBudget: money(store, budgetAmount),
 			DefaultBillingType: billingTypes[i%len(billingTypes)],
 			IsActive:           true,
 			AuditInfo:          createAuditInfo(),
@@ -71,7 +71,7 @@ func generateProjectTemplates() []*prj.PrjProjectTemplate {
 }
 
 // generateExpenseCategories creates expense category records
-func generateExpenseCategories() []*prj.PrjExpenseCategory {
+func generateExpenseCategories(store *MockDataStore) []*prj.PrjExpenseCategory {
 	expenseTypes := []prj.PrjExpenseType{
 		prj.PrjExpenseType_PRJ_EXPENSE_TYPE_TRAVEL,
 		prj.PrjExpenseType_PRJ_EXPENSE_TYPE_LODGING,
@@ -109,7 +109,7 @@ func generateExpenseCategories() []*prj.PrjExpenseCategory {
 			Description:           fmt.Sprintf("Expense category for %s related costs", name),
 			GlAccount:             fmt.Sprintf("5%03d", 70+i),
 			ExpenseType:           expenseTypes[i%len(expenseTypes)],
-			DefaultLimit: money(defaultLimits[i%len(defaultLimits)]),
+			DefaultLimit: money(store, defaultLimits[i%len(defaultLimits)]),
 			RequiresReceipt:       requiresReceipt[i%len(requiresReceipt)],
 			IsBillableDefault:     i < 7, // First 7 categories billable by default
 			IsReimbursableDefault: true,
@@ -122,7 +122,7 @@ func generateExpenseCategories() []*prj.PrjExpenseCategory {
 }
 
 // generateExpensePolicies creates expense policy records
-func generateExpensePolicies() []*prj.PrjExpensePolicy {
+func generateExpensePolicies(store *MockDataStore) []*prj.PrjExpensePolicy {
 	// Daily meal limits in cents
 	dailyMealLimits := []int64{7500, 15000, 10000, 5000, 10000, 0}
 	// Daily lodging limits in cents
@@ -145,14 +145,14 @@ func generateExpensePolicies() []*prj.PrjExpensePolicy {
 			PolicyId:    genID("pexpol", i),
 			Name:        name,
 			Description: fmt.Sprintf("Expense reimbursement policy: %s", name),
-			DailyMealLimit: money(dailyMealLimits[i%len(dailyMealLimits)]),
-			DailyLodgingLimit: money(dailyLodgingLimits[i%len(dailyLodgingLimits)]),
-			MileageRate: money(mileageRates[i%len(mileageRates)]),
-			MaxSingleExpense: money(maxSingleExpenses[i%len(maxSingleExpenses)]),
+			DailyMealLimit: money(store, dailyMealLimits[i%len(dailyMealLimits)]),
+			DailyLodgingLimit: money(store, dailyLodgingLimits[i%len(dailyLodgingLimits)]),
+			MileageRate: money(store, mileageRates[i%len(mileageRates)]),
+			MaxSingleExpense: money(store, maxSingleExpenses[i%len(maxSingleExpenses)]),
 			ReceiptRequiredAbove: true,
-			ReceiptThreshold: money(receiptThresholds[i%len(receiptThresholds)]),
+			ReceiptThreshold: money(store, receiptThresholds[i%len(receiptThresholds)]),
 			AdvanceApprovalRequired: i > 0, // First policy doesn't require advance approval
-			AdvanceApprovalThreshold: money(advanceThresholds[i%len(advanceThresholds)]),
+			AdvanceApprovalThreshold: money(store, advanceThresholds[i%len(advanceThresholds)]),
 			SubmissionDeadlineDays: int32(30 + rand.Intn(31)),
 			IsActive:               true,
 			EffectiveDate:          effectiveDate.Unix(),
@@ -220,7 +220,7 @@ func generateApprovalRules(store *MockDataStore) []*prj.PrjApprovalRule {
 			Name:         ruleNames[i],
 			Description:  ruleDescriptions[i],
 			ApprovalType: approvalTypes[i],
-			ThresholdAmount: money(thresholdAmounts[i]),
+			ThresholdAmount: money(store, thresholdAmounts[i]),
 			ThresholdHours:                 thresholdHours[i],
 			ApproverId:                     approverId,
 			ApproverRole:                   approverRoles[i],

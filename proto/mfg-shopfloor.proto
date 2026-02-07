@@ -37,7 +37,7 @@ message MfgWorkCenter {
   string department_id = 6;              // cross-ref: HCM Department
   string warehouse_id = 7;               // cross-ref: SCM Warehouse
   double hourly_rate = 8;
-  string currency_code = 9;
+  string currency_id = 9;
   int32 capacity_units = 10;
   double efficiency_percent = 11;
   double utilization_percent = 12;

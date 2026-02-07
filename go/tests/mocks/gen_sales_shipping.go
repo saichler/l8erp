@@ -76,7 +76,7 @@ func generateSalesDeliveryOrders(store *MockDataStore) []*sales.SalesDeliveryOrd
 			CarrierId:           carrierID,
 			TrackingNumber:      fmt.Sprintf("1Z%s%08d", "9999", rand.Intn(99999999)),
 			ShippingMethod:      shippingMethodNames[i%len(shippingMethodNames)],
-			ShippingCost: money(int64(rand.Intn(50000) + 5000)),
+			ShippingCost: money(store, int64(rand.Intn(50000) + 5000)),
 			Notes:     fmt.Sprintf("Delivery for order %d", i+1),
 			AuditInfo: createAuditInfo(),
 		}

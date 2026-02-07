@@ -26,7 +26,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('midpoint.amount', 'Midpoint', true),
                 ...f.money('maximum.amount', 'Maximum', true),
                 ...f.number('spreadPercentage', 'Spread'),
-                ...f.text('currencyCode', 'Currency'),
+                ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.select('payFrequency', 'Pay Frequency', enums.PAY_FREQUENCY)
             ]),
             f.section('Dates', [
@@ -44,7 +44,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('description', 'Description')
             ]),
             f.section('Settings', [
-                ...f.text('currencyCode', 'Currency', true),
+                ...f.reference('currencyId', 'Currency', 'Currency', true),
                 ...f.select('payFrequency', 'Pay Frequency', enums.PAY_FREQUENCY, true)
             ]),
             f.section('Dates', [
@@ -64,7 +64,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('baseSalary.amount', 'Base Salary', true),
                 ...f.money('hourlyRate.amount', 'Hourly Rate'),
                 ...f.select('payFrequency', 'Pay Frequency', enums.PAY_FREQUENCY, true),
-                ...f.text('currencyCode', 'Currency'),
+                ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.number('compaRatio', 'Compa Ratio'),
                 ...f.number('fte', 'FTE')
             ]),

@@ -43,6 +43,9 @@ func validateSalStructRequiredFields(entity *hcm.SalaryStructure) error {
 	if err := common.ValidateRequired(entity.Name, "Name"); err != nil {
 		return err
 	}
+	if err := common.ValidateRequired(entity.CurrencyId, "CurrencyId"); err != nil {
+		return err
+	}
 	return nil
 }
 

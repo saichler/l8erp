@@ -51,9 +51,9 @@ func generateCompApprovalMatrices(store *MockDataStore) []*comp.CompApprovalMatr
 			DepartmentId:    departmentID,
 			ThresholdMin: &erp.Money{
 				Amount:       thresholdMin * 100, // Convert to cents
-				CurrencyCode: "USD",
+				CurrencyId: pickRef(store.CurrencyIDs, i),
 			},
-			ThresholdMax: money(thresholdMax * 100),
+			ThresholdMax: money(store, thresholdMax * 100),
 			ApproverRoleIds:    []string{fmt.Sprintf("role-%03d", (i%5)+1), fmt.Sprintf("role-%03d", (i%5)+6)},
 			RequiredApprovals:  requiredApprovals,
 			RequiresSequential: i%3 == 0,

@@ -97,7 +97,7 @@ const PAYROLL_SERVICES = {
             { key: 'payStructureId', label: 'ID', filterKey: 'payStructureId' },
             { key: 'name', label: 'Name', primary: true, filterKey: 'name' },
             { key: 'code', label: 'Code', secondary: true, filterKey: 'code' },
-            { key: 'currencyCode', label: 'Currency' },
+            { key: 'currencyId', label: 'Currency' },
             { key: 'payFrequency', label: 'Frequency', formatter: (v) => ({ 1: 'Weekly', 2: 'Bi-Weekly', 3: 'Semi-Monthly', 4: 'Monthly', 5: 'Annually' }[v] || '-') },
             { key: 'isActive', label: 'Active', formatter: (v) => v ? 'Yes' : 'No' }
         ],
@@ -107,7 +107,7 @@ const PAYROLL_SERVICES = {
             { key: 'name', label: 'Name', type: 'text', required: true },
             { key: 'description', label: 'Description', type: 'textarea' },
             { key: 'organizationId', label: 'Organization', type: 'reference', lookupModel: 'Organization' },
-            { key: 'currencyCode', label: 'Currency Code', type: 'text', required: true },
+            { key: 'currencyId', label: 'Currency', type: 'reference', lookupModel: 'Currency', required: true },
             { key: 'payFrequency', label: 'Pay Frequency', type: 'select', options: { 1: 'Weekly', 2: 'Bi-Weekly', 3: 'Semi-Monthly', 4: 'Monthly', 5: 'Annually' }, required: true },
             { key: 'isActive', label: 'Active', type: 'checkbox' },
             { key: 'effectiveDate', label: 'Effective Date', type: 'date' },

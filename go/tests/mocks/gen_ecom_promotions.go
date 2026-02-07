@@ -23,7 +23,7 @@ import (
 )
 
 // generateEcomPromotions creates promotional campaign records
-func generateEcomPromotions() []*ecom.EcomPromotion {
+func generateEcomPromotions(store *MockDataStore) []*ecom.EcomPromotion {
 	promotionTypes := []ecom.EcomPromotionType{
 		ecom.EcomPromotionType_ECOM_PROMOTION_TYPE_PERCENTAGE,
 		ecom.EcomPromotionType_ECOM_PROMOTION_TYPE_FIXED_AMOUNT,
@@ -57,8 +57,8 @@ func generateEcomPromotions() []*ecom.EcomPromotion {
 			Description:      fmt.Sprintf("Promotional campaign: %s", name),
 			PromotionType:    promotionType,
 			DiscountValue:    discountValue,
-			MaxDiscount:      randomMoney(1000, 10000),
-			MinPurchase:      randomMoney(2500, 5000),
+			MaxDiscount:      randomMoney(store, 1000, 10000),
+			MinPurchase:      randomMoney(store, 2500, 5000),
 			StartDate:        startDate.Unix(),
 			EndDate:          endDate.Unix(),
 			IsActive:         isActive,
@@ -114,8 +114,8 @@ func generateEcomCoupons(store *MockDataStore) []*ecom.EcomCoupon {
 			Description:           fmt.Sprintf("Coupon: %s - Use code at checkout", code),
 			DiscountType:          discountType,
 			DiscountValue:         discountValue,
-			MaxDiscount:           randomMoney(1000, 5000),
-			MinPurchase:           randomMoney(1500, 5000),
+			MaxDiscount:           randomMoney(store, 1000, 5000),
+			MinPurchase:           randomMoney(store, 1500, 5000),
 			StartDate:             startDate.Unix(),
 			EndDate:               endDate.Unix(),
 			IsActive:              isActive,
@@ -188,8 +188,8 @@ func generateEcomPriceRules(store *MockDataStore) []*ecom.EcomPriceRule {
 			IsActive:              isActive,
 			Priority:              int32(i + 1),
 			CustomerGroup:         customerGroups[i%len(customerGroups)],
-			MinQuantity:           randomMoney(1, 10),
-			MaxQuantity:           randomMoney(50, 100),
+			MinQuantity:           randomMoney(store, 1, 10),
+			MaxQuantity:           randomMoney(store, 50, 100),
 			ApplicableCategoryIds: categoryIds,
 			ApplyToAll:            applyToAll,
 			AuditInfo:             createAuditInfo(),
@@ -199,7 +199,7 @@ func generateEcomPriceRules(store *MockDataStore) []*ecom.EcomPriceRule {
 }
 
 // generateEcomShippingMethods creates shipping method records
-func generateEcomShippingMethods() []*ecom.EcomShippingMethod {
+func generateEcomShippingMethods(store *MockDataStore) []*ecom.EcomShippingMethod {
 	methodNames := []string{
 		"Standard Ground",
 		"Express 2-Day",
@@ -234,16 +234,16 @@ func generateEcomShippingMethods() []*ecom.EcomShippingMethod {
 			Description:           fmt.Sprintf("%s shipping via %s", methodNames[i%len(methodNames)], carrier),
 			Carrier:               carrier,
 			CarrierService:        fmt.Sprintf("%s-%s", carrier, methodNames[i%len(methodNames)]),
-			BaseRate:              money(baseRate),
-			PerItemRate:           randomMoney(50, 200),
-			PerWeightRate:         randomMoney(25, 100),
-			FreeShippingThreshold: randomMoney(4900, 5000),
+			BaseRate:              money(store, baseRate),
+			PerItemRate:           randomMoney(store, 50, 200),
+			PerWeightRate:         randomMoney(store, 25, 100),
+			FreeShippingThreshold: randomMoney(store, 4900, 5000),
 			MinDeliveryDays:       int32(minDays),
 			MaxDeliveryDays:       int32(maxDays),
 			IsActive:              true,
 			ApplicableZones:       shippingZones[i%len(shippingZones)],
-			MinOrderAmount:        money(0),
-			MaxOrderAmount:        randomMoney(50000, 100000),
+			MinOrderAmount:        money(store, 0),
+			MaxOrderAmount:        randomMoney(store, 50000, 100000),
 			MaxWeight:             float64(rand.Intn(100) + 50),
 			SortOrder:             int32(i + 1),
 			TrackingAvailable:     true,
@@ -254,7 +254,7 @@ func generateEcomShippingMethods() []*ecom.EcomShippingMethod {
 }
 
 // generateEcomPaymentMethods creates payment method records
-func generateEcomPaymentMethods() []*ecom.EcomPaymentMethod {
+func generateEcomPaymentMethods(store *MockDataStore) []*ecom.EcomPaymentMethod {
 	methodNames := []string{
 		"Credit Card",
 		"PayPal",
@@ -294,10 +294,10 @@ func generateEcomPaymentMethods() []*ecom.EcomPaymentMethod {
 			IsTestMode:             false,
 			SupportedCurrencies:    currencies[i%len(currencies)],
 			SupportedCountries:     countries[i%len(countries)],
-			MinAmount:              money(100),
-			MaxAmount:              randomMoney(10000000, 100000000),
+			MinAmount:              money(store, 100),
+			MaxAmount:              randomMoney(store, 10000000, 100000000),
 			TransactionFeePercent:  feePercents[i%len(feePercents)],
-			TransactionFeeFixed:    money(feeFixed[i%len(feeFixed)]),
+			TransactionFeeFixed:    money(store, feeFixed[i%len(feeFixed)]),
 			SortOrder:              int32(i + 1),
 			IconUrl:                fmt.Sprintf("/assets/payment/%s.svg", provider),
 			Instructions:           fmt.Sprintf("Complete your payment using %s", methodNames[i%len(methodNames)]),

@@ -31,13 +31,13 @@ func pickRef(ids []string, index int) string {
 }
 
 // randomMoney generates a Money with random amount in [min, min+rangeSize) cents
-func randomMoney(min, rangeSize int) *erp.Money {
-	return &erp.Money{Amount: int64(rand.Intn(rangeSize) + min), CurrencyCode: "USD"}
+func randomMoney(store *MockDataStore, min, rangeSize int) *erp.Money {
+	return &erp.Money{Amount: int64(rand.Intn(rangeSize) + min), CurrencyId: pickRef(store.CurrencyIDs, rand.Intn(100))}
 }
 
 // money creates a Money with exact amount in cents
-func money(amount int64) *erp.Money {
-	return &erp.Money{Amount: amount, CurrencyCode: "USD"}
+func money(store *MockDataStore, amount int64) *erp.Money {
+	return &erp.Money{Amount: amount, CurrencyId: pickRef(store.CurrencyIDs, 0)}
 }
 
 // randomPastDate returns Unix timestamp randomly in the past

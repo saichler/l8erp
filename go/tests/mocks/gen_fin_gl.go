@@ -76,7 +76,7 @@ func generateJournalEntries(store *MockDataStore) []*fin.JournalEntry {
 			Source:         sources[i%len(sources)],
 			Reference:      fmt.Sprintf("REF-%06d", i+1),
 			Status:         status,
-			TotalAmount:    money(totalAmount),
+			TotalAmount:    money(store, totalAmount),
 			AuditInfo:      createAuditInfo(),
 		}
 
@@ -122,8 +122,8 @@ func generateJournalEntryLines(store *MockDataStore) []*fin.JournalEntryLine {
 			LineNumber:     1,
 			AccountId:      store.AccountIDs[acctIdx1],
 			Description:    lineDescriptions[0],
-			DebitAmount:    money(debit1),
-			CreditAmount:   money(0),
+			DebitAmount:    money(store, debit1),
+			CreditAmount:   money(store, 0),
 			AuditInfo:      createAuditInfo(),
 		})
 		lineIdx++
@@ -136,8 +136,8 @@ func generateJournalEntryLines(store *MockDataStore) []*fin.JournalEntryLine {
 			LineNumber:     2,
 			AccountId:      store.AccountIDs[acctIdx2],
 			Description:    lineDescriptions[1],
-			DebitAmount:    money(debit2),
-			CreditAmount:   money(0),
+			DebitAmount:    money(store, debit2),
+			CreditAmount:   money(store, 0),
 			AuditInfo:      createAuditInfo(),
 		})
 		lineIdx++
@@ -150,8 +150,8 @@ func generateJournalEntryLines(store *MockDataStore) []*fin.JournalEntryLine {
 			LineNumber:     3,
 			AccountId:      store.AccountIDs[acctIdx3],
 			Description:    lineDescriptions[2],
-			DebitAmount:    money(0),
-			CreditAmount:   money(credit3),
+			DebitAmount:    money(store, 0),
+			CreditAmount:   money(store, credit3),
 			AuditInfo:      createAuditInfo(),
 		})
 		lineIdx++
@@ -194,12 +194,12 @@ func generateAccountBalances(store *MockDataStore) []*fin.AccountBalance {
 				BalanceId:        fmt.Sprintf("abal-%03d", balIdx),
 				AccountId:        accountID,
 				FiscalPeriodId:   store.FiscalPeriodIDs[periodIdx],
-				BeginningBalance: money(beginningBalance),
-				PeriodDebit:      money(periodDebit),
-				PeriodCredit:     money(periodCredit),
-				EndingBalance:    money(endingBalance),
-				YtdDebit:         money(ytdDebit),
-				YtdCredit:        money(ytdCredit),
+				BeginningBalance: money(store, beginningBalance),
+				PeriodDebit:      money(store, periodDebit),
+				PeriodCredit:     money(store, periodCredit),
+				EndingBalance:    money(store, endingBalance),
+				YtdDebit:         money(store, ytdDebit),
+				YtdCredit:        money(store, ytdCredit),
 				AuditInfo:        createAuditInfo(),
 			})
 			balIdx++
@@ -264,10 +264,10 @@ func generateTaxReturns(store *MockDataStore) []*fin.TaxReturn {
 			TaxType:        fin.TaxType_TAX_TYPE_INCOME,
 			Status:         status,
 			DueDate:        dueDate.Unix(),
-			TaxableAmount:  money(taxableAmount),
-			TaxAmount:      money(taxAmount),
-			AmountPaid:     money(amountPaid),
-			AmountDue:      money(amountDue),
+			TaxableAmount:  money(store, taxableAmount),
+			TaxAmount:      money(store, taxAmount),
+			AmountPaid:     money(store, amountPaid),
+			AmountDue:      money(store, amountDue),
 			Notes:          fmt.Sprintf("Q%d 2025 Federal Income Tax Return", i+1),
 			AuditInfo:      createAuditInfo(),
 		}

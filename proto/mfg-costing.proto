@@ -39,7 +39,7 @@ message MfgStandardCost {
   erp.Money overhead_cost = 8;
   erp.Money outside_processing_cost = 9;
   erp.Money total_cost = 10;
-  string currency_code = 11;
+  string currency_id = 11;
   string cost_method = 12;               // STANDARD, ACTUAL, AVERAGE
   bool is_current = 13;
   string notes = 14;
@@ -138,7 +138,7 @@ message MfgOverhead {
   MfgOverheadMethod allocation_method = 5;
   double rate = 6;
   string rate_unit = 7;                  // PER_HOUR, PER_UNIT, PERCENT
-  string currency_code = 8;
+  string currency_id = 8;
   string cost_center = 9;
   bool is_active = 10;
   int64 effective_date = 11;

@@ -30,5 +30,8 @@ func validateEcomCustomer(item *ecom.EcomCustomer, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.CustomerId, "CustomerId"); err != nil {
 		return err
 	}
+	if err := common.ValidateRequired(item.CurrencyId, "CurrencyId"); err != nil {
+		return err
+	}
 	return nil
 }

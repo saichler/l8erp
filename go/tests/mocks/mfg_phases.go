@@ -22,7 +22,7 @@ import (
 // MFG Phase 1: Foundation (Shop Floor & Engineering)
 func generateMfgPhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate Work Centers
-	workCenters := generateWorkCenters()
+	workCenters := generateWorkCenters(store)
 	if err := runOp(client, "Work Centers", "/erp/70/MfgWorkCtr", &mfg.MfgWorkCenterList{List: workCenters}, extractIDs(workCenters, func(e *mfg.MfgWorkCenter) string { return e.WorkCenterId }), &store.MfgWorkCenterIDs); err != nil {
 		return err
 	}

@@ -27,7 +27,7 @@ limitations under the License.
             { key: 'payStructureId', label: 'ID', sortKey: 'payStructureId', filterKey: 'payStructureId' },
             { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'currencyCode', label: 'Currency', sortKey: 'currencyCode', filterKey: 'currencyCode' },
+            { key: 'currencyId', label: 'Currency', sortKey: 'currencyId', filterKey: 'currencyId' },
             { key: 'payFrequency', label: 'Frequency', sortKey: 'payFrequency', filterKey: 'payFrequency', enumValues: enums.PAY_FREQUENCY_VALUES, render: (item) => render.payFrequency(item.payFrequency) },
             { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
         ],

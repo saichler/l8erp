@@ -21,17 +21,17 @@ import (
 
 // generatePrjPhase1 creates foundation data: templates, expense categories, policies, approval rules
 func generatePrjPhase1(client *HCMClient, store *MockDataStore) error {
-	templates := generateProjectTemplates()
+	templates := generateProjectTemplates(store)
 	if err := runOp(client, "Project Templates", "/erp/90/PrjProjTpl", &prj.PrjProjectTemplateList{List: templates}, extractIDs(templates, func(e *prj.PrjProjectTemplate) string { return e.TemplateId }), &store.PrjProjectTemplateIDs); err != nil {
 		return err
 	}
 
-	categories := generateExpenseCategories()
+	categories := generateExpenseCategories(store)
 	if err := runOp(client, "Expense Categories", "/erp/90/PrjExpCat", &prj.PrjExpenseCategoryList{List: categories}, extractIDs(categories, func(e *prj.PrjExpenseCategory) string { return e.CategoryId }), &store.PrjExpenseCategoryIDs); err != nil {
 		return err
 	}
 
-	policies := generateExpensePolicies()
+	policies := generateExpensePolicies(store)
 	if err := runOp(client, "Expense Policies", "/erp/90/PrjExpPol", &prj.PrjExpensePolicyList{List: policies}, extractIDs(policies, func(e *prj.PrjExpensePolicy) string { return e.PolicyId }), &store.PrjExpensePolicyIDs); err != nil {
 		return err
 	}

@@ -24,7 +24,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('departmentId', 'Department', 'Department'),
                 ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
                 ...f.number('hourlyRate', 'Hourly Rate'),
-                ...f.text('currencyCode', 'Currency'),
+                ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.number('capacityUnits', 'Capacity Units'),
                 ...f.number('efficiencyPercent', 'Efficiency %'),
                 ...f.number('utilizationPercent', 'Utilization %'),

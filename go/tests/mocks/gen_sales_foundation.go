@@ -69,7 +69,7 @@ func generateSalesTerritories(store *MockDataStore) []*sales.SalesTerritory {
 }
 
 // generateSalesPriceLists creates sales price list records
-func generateSalesPriceLists() []*sales.SalesPriceList {
+func generateSalesPriceLists(store *MockDataStore) []*sales.SalesPriceList {
 	statuses := []sales.SalesPriceListStatus{
 		sales.SalesPriceListStatus_PRICE_LIST_STATUS_ACTIVE,
 		sales.SalesPriceListStatus_PRICE_LIST_STATUS_ACTIVE,
@@ -90,7 +90,7 @@ func generateSalesPriceLists() []*sales.SalesPriceList {
 			PriceListId:   genID("spl", i),
 			Name:          name,
 			Description:   fmt.Sprintf("Price list: %s", name),
-			CurrencyCode:  "USD",
+			CurrencyId: pickRef(store.CurrencyIDs, i),
 			Status:        statuses[i%len(statuses)],
 			EffectiveDate: effectiveDate.Unix(),
 			ExpiryDate:    expiryDate.Unix(),

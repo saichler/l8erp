@@ -30,7 +30,7 @@ window.MobileSalesPricing = window.MobileSalesPricing || {};
             f.section('Price List Details', [
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
-                ...f.text('currencyCode', 'Currency', true),
+                ...f.reference('currencyId', 'Currency', 'Currency', true),
                 ...f.date('effectiveDate', 'Effective Date', true),
                 ...f.date('expiryDate', 'Expiry Date'),
                 ...f.select('status', 'Status', enums.PRICE_LIST_STATUS),

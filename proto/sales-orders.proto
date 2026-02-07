@@ -39,7 +39,7 @@ message SalesQuotation {
   string ship_to_address_id = 8;
   string bill_to_address_id = 9;
   string payment_terms = 10;
-  string currency_code = 11;
+  string currency_id = 11;
   erp.Money subtotal = 12;
   erp.Money discount_total = 13;
   erp.Money tax_total = 14;
@@ -91,7 +91,7 @@ message SalesOrder {
   string ship_to_address_id = 9;
   string bill_to_address_id = 10;
   string payment_terms = 11;
-  string currency_code = 12;
+  string currency_id = 12;
   erp.Money subtotal = 13;
   erp.Money discount_total = 14;
   erp.Money tax_total = 15;

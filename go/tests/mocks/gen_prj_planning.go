@@ -125,8 +125,8 @@ func generateProjects(store *MockDataStore) []*prj.PrjProject {
 			EndDate:         endDate.Unix(),
 			EstimatedHours:  estimatedHours,
 			ActualHours:     actualHours,
-			Budget:          money(budgetAmount),
-			ActualCost:      money(actualCost),
+			Budget:          money(store, budgetAmount),
+			ActualCost:      money(store, actualCost),
 			PercentComplete: percentComplete,
 			BillingType:     billingTypes[i%len(billingTypes)],
 			AuditInfo:       createAuditInfo(),
@@ -307,7 +307,7 @@ func generateMilestones(store *MockDataStore) []*prj.PrjMilestone {
 		isBillable := i%3 == 0
 		var billingAmount *erp.Money
 		if isBillable {
-			billingAmount = randomMoney(5000, 50000)
+			billingAmount = randomMoney(store, 5000, 50000)
 		}
 
 		milestones[i] = &prj.PrjMilestone{

@@ -95,13 +95,13 @@ func generateBillingRates(store *MockDataStore) []*prj.PrjBillingRate {
 			ResourceId:     resourceID,
 			Role:           billingRateNames[i%len(billingRateNames)],
 			SkillCategory:  skillCategories[i%len(skillCategories)],
-			Rate:           money(baseRate),
+			Rate:           money(store, baseRate),
 			RateUnit:       rateUnits[i%len(rateUnits)],
-			OvertimeRate:   money(overtimeRate),
+			OvertimeRate:   money(store, overtimeRate),
 			EffectiveFrom:  effectiveFrom.Unix(),
 			EffectiveUntil: effectiveUntil.Unix(),
 			IsActive:       isActive,
-			CurrencyCode:   "USD",
+			CurrencyId: pickRef(store.CurrencyIDs, i),
 			AuditInfo:      createAuditInfo(),
 		}
 	}
@@ -134,9 +134,9 @@ func generateBillingSchedules(store *MockDataStore) []*prj.PrjBillingSchedule {
 		var fixedAmount *erp.Money
 		var retainerAmount *erp.Money
 		if billingType == prj.PrjBillingType_PRJ_BILLING_TYPE_FIXED_PRICE {
-			fixedAmount = money(int64(rand.Intn(500000)+50000) * 100)
+			fixedAmount = money(store, int64(rand.Intn(500000)+50000) * 100)
 		} else if billingType == prj.PrjBillingType_PRJ_BILLING_TYPE_RETAINER {
-			retainerAmount = money(int64(rand.Intn(50000)+10000) * 100)
+			retainerAmount = money(store, int64(rand.Intn(50000)+10000) * 100)
 		}
 
 		// 80% active, 20% inactive
@@ -203,7 +203,7 @@ func generateBillingMilestones(store *MockDataStore) []*prj.PrjBillingMilestone 
 			ProjectMilestoneId: projectMilestoneID,
 			Name:               billingMilestoneNames[i%len(billingMilestoneNames)],
 			Description:        fmt.Sprintf("Billing milestone: %s", billingMilestoneNames[i%len(billingMilestoneNames)]),
-			Amount:             money(amount),
+			Amount:             money(store, amount),
 			Percentage:         percentage,
 			DueDate:            dueDate.Unix(),
 			BilledDate:         billedDate,
@@ -282,17 +282,17 @@ func generateProjectInvoices(store *MockDataStore) []*prj.PrjProjectInvoice {
 			DueDate:       dueDate.Unix(),
 			PeriodStart:   periodStart.Unix(),
 			PeriodEnd:     periodEnd.Unix(),
-			Subtotal:      money(subtotal),
-			TaxAmount:     money(taxAmount),
-			TotalAmount:   money(totalAmount),
-			PaidAmount:    money(paidAmount),
-			BalanceDue:    money(balanceDue),
+			Subtotal:      money(store, subtotal),
+			TaxAmount:     money(store, taxAmount),
+			TotalAmount:   money(store, totalAmount),
+			PaidAmount:    money(store, paidAmount),
+			BalanceDue:    money(store, balanceDue),
 			Status:        status,
 			PaymentTerms:  paymentTerms[i%len(paymentTerms)],
 			Notes:         fmt.Sprintf("Invoice for project services - Period %d", i+1),
 			SentDate:      sentDate,
 			PaidDate:      paidDate,
-			CurrencyCode:  "USD",
+			CurrencyId: pickRef(store.CurrencyIDs, i),
 			AuditInfo:     createAuditInfo(),
 		}
 	}

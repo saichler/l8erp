@@ -50,6 +50,8 @@ limitations under the License.
                     return F.renderSelectField(fieldConfig, value, readonly);
                 case 'checkbox':
                     return F.renderCheckboxField(fieldConfig, value, readonly);
+                case 'money':
+                    return F.renderMoneyField(fieldConfig, value, readonly);
                 case 'currency':
                     return F.renderCurrencyField(fieldConfig, value, readonly);
                 case 'percentage':
@@ -158,6 +160,19 @@ limitations under the License.
                     formData[input.name] = input.value;
                 }
             });
+
+            // Post-process money compound fields (__currencyId + __amount → Money object)
+            const moneyKeys = new Set();
+            for (const key of Object.keys(formData)) {
+                if (key.endsWith('.__amount')) moneyKeys.add(key.replace('.__amount', ''));
+            }
+            for (const baseKey of moneyKeys) {
+                const cents = formData[baseKey + '.__amount'];
+                const currId = formData[baseKey + '.__currencyId'];
+                formData[baseKey] = cents != null ? { amount: parseInt(cents, 10) || 0, currencyId: currId || '' } : null;
+                delete formData[baseKey + '.__amount'];
+                delete formData[baseKey + '.__currencyId'];
+            }
 
             return formData;
         },

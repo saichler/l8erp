@@ -165,7 +165,7 @@ func generateRisks(store *MockDataStore) []*prj.PrjRisk {
 		probability := int32(rand.Intn(80) + 10)
 
 		// Potential impact
-		potentialImpact := randomMoney(5000, 100000)
+		potentialImpact := randomMoney(store, 5000, 100000)
 
 		// Identified date
 		identifiedDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(30))

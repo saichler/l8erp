@@ -40,7 +40,7 @@ message SalaryGrade {
   erp.Money midpoint = 8;
   erp.Money maximum = 9;
   double spread_percentage = 10;     // Range width
-  string currency_code = 11;
+  string currency_id = 11;
   PayFrequency pay_frequency = 12;
   int64 effective_date = 13;
   int64 end_date = 14;
@@ -61,7 +61,7 @@ message SalaryStructure {
   string name = 3;
   string code = 4;
   string description = 5;
-  string currency_code = 6;
+  string currency_id = 6;
   PayFrequency pay_frequency = 7;
   repeated SalaryGrade grades = 8;
   int64 effective_date = 9;
@@ -83,7 +83,7 @@ message EmployeeCompensation {
   CompensationType compensation_type = 3;
   erp.Money base_salary = 4;
   PayFrequency pay_frequency = 5;
-  string currency_code = 6;
+  string currency_id = 6;
   string salary_grade_id = 7;
   double compa_ratio = 8;            // Position in range
   erp.Money hourly_rate = 9;

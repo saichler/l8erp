@@ -30,5 +30,8 @@ func validateEcomCart(item *ecom.EcomCart, vnic ifs.IVNic) error {
 	if err := common.ValidateRequired(item.CartId, "CartId"); err != nil {
 		return err
 	}
+	if err := common.ValidateRequired(item.CurrencyId, "CurrencyId"); err != nil {
+		return err
+	}
 	return nil
 }

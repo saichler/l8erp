@@ -126,8 +126,8 @@ func generateCompAuditSchedules(store *MockDataStore) []*comp.CompAuditSchedule 
 			LeadAuditorId:        leadAuditorID,
 			AuditorIds:           auditorIDs,
 			AuditFirm:            auditFirm,
-			Budget: money(budget),
-			ActualCost: money(actualCost),
+			Budget: money(store, budget),
+			ActualCost: money(store, actualCost),
 			RelatedRegulationIds: relatedRegulationIDs,
 			AuditInfo:            createAuditInfo(),
 		}

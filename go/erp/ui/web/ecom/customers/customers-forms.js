@@ -27,7 +27,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.checkbox('acceptsMarketing', 'Accepts Marketing'),
                 ...f.text('customerGroup', 'Customer Group'),
                 ...f.text('locale', 'Locale'),
-                ...f.text('currencyCode', 'Currency Code'),
+                ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.reference('salesCustomerId', 'Sales Customer', 'SalesCustomer'),
                 ...f.reference('defaultBillingAddressId', 'Default Billing Address', 'EcomCustomerAddress'),
                 ...f.reference('defaultShippingAddressId', 'Default Shipping Address', 'EcomCustomerAddress')
@@ -80,7 +80,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('sessionId', 'Session ID'),
                 ...f.select('status', 'Status', enums.CART_STATUS),
                 ...f.text('couponCode', 'Coupon Code'),
-                ...f.text('currencyCode', 'Currency Code'),
+                ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.money('subtotal', 'Subtotal'),
                 ...f.money('discountAmount', 'Discount Amount'),
                 ...f.money('taxAmount', 'Tax Amount'),

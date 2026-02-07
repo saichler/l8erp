@@ -39,7 +39,7 @@ limitations under the License.
                         { key: 'overtimeRate', label: 'Overtime Rate', type: 'money' },
                         { key: 'effectiveFrom', label: 'Effective From', type: 'date' },
                         { key: 'effectiveUntil', label: 'Effective Until', type: 'date' },
-                        { key: 'currencyCode', label: 'Currency Code', type: 'text' },
+                        { key: 'currencyId', label: 'Currency', type: 'reference', lookupModel: 'Currency' },
                         { key: 'isActive', label: 'Active', type: 'checkbox' }
                     ]
                 }
@@ -109,7 +109,7 @@ limitations under the License.
                         { key: 'periodEnd', label: 'Period End', type: 'date' },
                         { key: 'status', label: 'Status', type: 'select', options: enums.INVOICE_STATUS },
                         { key: 'paymentTerms', label: 'Payment Terms', type: 'text' },
-                        { key: 'currencyCode', label: 'Currency Code', type: 'text' }
+                        { key: 'currencyId', label: 'Currency', type: 'reference', lookupModel: 'Currency' }
                     ]
                 },
                 {

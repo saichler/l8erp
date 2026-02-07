@@ -263,8 +263,8 @@ func generateNCRs(store *MockDataStore) []*mfg.MfgNCR {
 			AssignedTo:       assignedTo,
 			DueDate:          dueDate.Unix(),
 			ClosedDate:       closedDate,
-			EstimatedCost:    money(estCost),
-			ActualCost:       money(actCost),
+			EstimatedCost:    money(store, estCost),
+			ActualCost:       money(store, actCost),
 			Notes:            fmt.Sprintf("NCR notes %d", i+1),
 			AuditInfo:        createAuditInfo(),
 		}

@@ -83,13 +83,26 @@ limitations under the License.
         /**
          * Format money (stored in cents)
          */
-        formatMoney(cents, currency = 'USD') {
+        formatMoney(value, currency = 'USD') {
+            if (value == null) return '';
+            let cents = value;
+            let currCode = currency;
+            // Handle Money object {amount, currencyId}
+            if (typeof value === 'object' && value !== null) {
+                cents = value.amount;
+                if (value.currencyId && window.Layer8DUtils && window.Layer8DUtils._currencyCache) {
+                    currCode = window.Layer8DUtils._currencyCache[value.currencyId] || currency;
+                } else if (value.currencyCode) {
+                    currCode = value.currencyCode;
+                }
+            }
             if (cents == null) return '';
             const dollars = cents / 100;
-            return new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: currency
-            }).format(dollars);
+            try {
+                return new Intl.NumberFormat('en-US', { style: 'currency', currency: currCode }).format(dollars);
+            } catch (e) {
+                return '$' + dollars.toFixed(2);
+            }
         },
 
         /**

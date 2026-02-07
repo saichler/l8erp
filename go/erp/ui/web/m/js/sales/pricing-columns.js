@@ -26,7 +26,7 @@ limitations under the License.
         PriceList: [
             { key: 'priceListId', label: 'ID', sortKey: 'priceListId', filterKey: 'priceListId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'currencyCode', label: 'Currency', sortKey: 'currencyCode' },
+            { key: 'currencyId', label: 'Currency', sortKey: 'currencyId' },
             { key: 'effectiveDate', label: 'Effective', sortKey: 'effectiveDate', render: (item) => Layer8MRenderers.renderDate(item.effectiveDate) },
             { key: 'expiryDate', label: 'Expires', sortKey: 'expiryDate', render: (item) => Layer8MRenderers.renderDate(item.expiryDate) },
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.PRICE_LIST_STATUS_VALUES, render: (item) => render.priceListStatus(item.status) }

@@ -115,7 +115,7 @@ func generateCustomers(store *MockDataStore) []*fin.Customer {
 			DefaultAccountId: defaultAccountId,
 			CurrencyId:       store.CurrencyIDs[0],
 			PaymentTermDays:  30,
-			CreditLimit:      money(creditAmount),
+			CreditLimit:      money(store, creditAmount),
 			Addresses:        []*erp.Address{createAddress()},
 			Contacts:         []*erp.ContactInfo{createContact()},
 			Website:          fmt.Sprintf("www.%s.com", sanitized),
@@ -191,7 +191,7 @@ func generateBankAccounts(store *MockDataStore) []*fin.BankAccount {
 			Status:              fin.BankAccountStatus_BANK_ACCOUNT_STATUS_ACTIVE,
 			CurrencyId:          store.CurrencyIDs[0],
 			GlAccountId:         glAccountId,
-			CurrentBalance:      money(balance),
+			CurrentBalance:      money(store, balance),
 			AuditInfo:           createAuditInfo(),
 		}
 	}

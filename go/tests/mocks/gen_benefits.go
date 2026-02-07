@@ -118,9 +118,9 @@ func generateCOBRAEvents(store *MockDataStore) []*hcm.COBRAEvent {
 			CoverageEndDate:     qualifyingDate.AddDate(0, 18, 0).Unix(),
 			CoverageMonths:      18,
 			Status:              hcm.COBRAStatus_COBRA_STATUS_NOTIFIED,
-			MonthlyPremium:      money(monthlyPremium),
+			MonthlyPremium:      money(store, monthlyPremium),
 			AdminFeePercentage:  2.0,
-			TotalMonthlyCost:    money(int64(float64(monthlyPremium) * 1.02)),
+			TotalMonthlyCost:    money(store, int64(float64(monthlyPremium) * 1.02)),
 			AuditInfo:           createAuditInfo(),
 		})
 		idx++

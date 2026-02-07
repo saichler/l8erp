@@ -15,7 +15,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     window.Payroll.columns = {
         PayStructure: [
             ...col.id('payStructureId'),
-            ...col.basic(['code', 'name', ['currencyCode', 'Currency']]),
+            ...col.basic(['code', 'name', ['currencyId', 'Currency']]),
             ...col.enum('payFrequency', 'Frequency', enums.PAY_FREQUENCY_VALUES, render.payFrequency),
             ...col.boolean('isActive', 'Active')
         ],

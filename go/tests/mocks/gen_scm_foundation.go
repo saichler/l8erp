@@ -166,7 +166,7 @@ func generateFreightRates(store *MockDataStore) []*scm.ScmFreightRate {
 				CarrierId: carrierID,
 				Origin:    cities[originIdx],
 				Destination: cities[destIdx],
-				RatePerUnit: money(int64(rand.Intn(4501) + 500)),
+				RatePerUnit: money(store, int64(rand.Intn(4501) + 500)),
 				UnitType:      unitTypes[j%len(unitTypes)],
 				EffectiveDate: effectiveDate.Unix(),
 				ExpiryDate:    expiryDate.Unix(),

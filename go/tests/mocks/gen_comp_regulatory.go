@@ -222,7 +222,7 @@ func generateCompCertifications(store *MockDataStore) []*comp.CompCertification 
 			CoveredProcesses:  processes[:rand.Intn(4)+1],
 			RegulationId:      regulationID,
 			ResponsibleId:     responsibleID,
-			CertificationCost: money(certCost),
+			CertificationCost: money(store, certCost),
 			RenewalLeadDays: int32(90),
 			AuditInfo:       createAuditInfo(),
 		}
@@ -318,8 +318,8 @@ func generateCompViolationRecords(store *MockDataStore) []*comp.CompViolationRec
 			RootCause:       rootCauses[i%len(rootCauses)],
 			CorrectiveAction: fmt.Sprintf("Implement corrective measures to address %s", violationTitles[i]),
 			DueDate:         dueDate.Unix(),
-			PotentialPenalty: money(potentialPenalty),
-			ActualPenalty: money(actualPenalty),
+			PotentialPenalty: money(store, potentialPenalty),
+			ActualPenalty: money(store, actualPenalty),
 			AuditInfo: createAuditInfo(),
 		}
 

@@ -32,7 +32,7 @@ window.MobilePayroll = window.MobilePayroll || {};
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.reference('organizationId', 'Organization', 'Organization'),
-                ...f.text('currencyCode', 'Currency Code', true),
+                ...f.reference('currencyId', 'Currency', 'Currency', true),
                 ...f.select('payFrequency', 'Pay Frequency', enums.PAY_FREQUENCY, true),
                 ...f.checkbox('isActive', 'Active'),
                 ...f.date('effectiveDate', 'Effective Date'),

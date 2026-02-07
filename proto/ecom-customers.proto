@@ -49,7 +49,7 @@ message EcomCustomer {
     string customer_group = 17;
     bool accepts_marketing = 18;
     string locale = 19;
-    string currency_code = 20;
+    string currency_id = 20;
     map<string, string> custom_fields = 21;
     erp.AuditInfo audit_info = 22;
 }
@@ -159,7 +159,7 @@ message EcomCart {
     erp.Money tax_amount = 10;
     erp.Money total = 11;
     string coupon_code = 12;
-    string currency_code = 13;
+    string currency_id = 13;
     int32 item_count = 14;
     string ip_address = 15;
     string user_agent = 16;

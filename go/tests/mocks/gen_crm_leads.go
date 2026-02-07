@@ -150,7 +150,7 @@ func generateLeads(store *MockDataStore) []*crm.CrmLead {
 			Description:      fmt.Sprintf("Lead #%d from %s", i+1, crmLeadSourceNames[i%len(crmLeadSourceNames)]),
 			Website:          fmt.Sprintf("https://www.company%d.com", i+1),
 			EmployeeCount:    int32(rand.Intn(1000) + 10),
-			AnnualRevenue:    randomMoney(100000, 10000000),
+			AnnualRevenue:    randomMoney(store, 100000, 10000000),
 			LastActivityDate: time.Now().AddDate(0, 0, -rand.Intn(30)).Unix(),
 			Score:            int32(rand.Intn(100)),
 			CampaignId:       campaignID,

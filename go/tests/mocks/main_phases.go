@@ -16,11 +16,11 @@ package main
 
 // runAllPhases executes all module phases in dependency order
 func runAllPhases(client *HCMClient, store *MockDataStore) {
+	// FIN Module Phases (must run before HCM — HCM needs CurrencyIDs)
+	runFINPhases(client, store)
+
 	// HCM Module Phases
 	runHCMPhases(client, store)
-
-	// FIN Module Phases
-	runFINPhases(client, store)
 
 	// SCM Module Phases
 	runSCMPhases(client, store)

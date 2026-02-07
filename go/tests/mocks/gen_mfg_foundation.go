@@ -23,7 +23,7 @@ import (
 )
 
 // generateWorkCenters creates work center records
-func generateWorkCenters() []*mfg.MfgWorkCenter {
+func generateWorkCenters(store *MockDataStore) []*mfg.MfgWorkCenter {
 	workCenterTypes := []mfg.MfgWorkCenterType{
 		mfg.MfgWorkCenterType_MFG_WORK_CENTER_TYPE_MACHINE,
 		mfg.MfgWorkCenterType_MFG_WORK_CENTER_TYPE_LABOR,
@@ -48,7 +48,7 @@ func generateWorkCenters() []*mfg.MfgWorkCenter {
 			Description:        fmt.Sprintf("Manufacturing %s", name),
 			WorkCenterType:     workCenterTypes[i%len(workCenterTypes)],
 			HourlyRate:         float64(rand.Intn(100) + 50),
-			CurrencyCode:       "USD",
+			CurrencyId: pickRef(store.CurrencyIDs, i),
 			CapacityUnits:      int32(rand.Intn(10) + 1),
 			EfficiencyPercent:  float64(rand.Intn(20) + 80),
 			UtilizationPercent: float64(rand.Intn(30) + 60),

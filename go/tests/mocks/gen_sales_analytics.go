@@ -23,7 +23,7 @@ import (
 )
 
 // generateSalesCommissionPlans creates commission plan records
-func generateSalesCommissionPlans() []*sales.SalesCommissionPlan {
+func generateSalesCommissionPlans(store *MockDataStore) []*sales.SalesCommissionPlan {
 	commissionTypes := []sales.SalesCommissionType{
 		sales.SalesCommissionType_COMMISSION_TYPE_PERCENTAGE,
 		sales.SalesCommissionType_COMMISSION_TYPE_FIXED,
@@ -50,7 +50,7 @@ func generateSalesCommissionPlans() []*sales.SalesCommissionPlan {
 		if commissionTypes[i%len(commissionTypes)] == sales.SalesCommissionType_COMMISSION_TYPE_PERCENTAGE {
 			plan.BaseRate = float64(rand.Intn(10)+5) / 100 // 5-15%
 		} else if commissionTypes[i%len(commissionTypes)] == sales.SalesCommissionType_COMMISSION_TYPE_FIXED {
-			plan.BaseAmount = money(int64(rand.Intn(50000) + 5000))
+			plan.BaseAmount = money(store, int64(rand.Intn(50000) + 5000))
 		}
 
 		plans[i] = plan
@@ -89,9 +89,9 @@ func generateSalesCommissionCalcs(store *MockDataStore) []*sales.SalesCommission
 			SalespersonId:    salespersonID,
 			SalesOrderId:     orderID,
 			CalculationDate:  calcDate.Unix(),
-			SalesAmount:      money(salesAmount),
+			SalesAmount:      money(store, salesAmount),
 			CommissionRate:   commissionRate,
-			CommissionAmount: money(commissionAmount),
+			CommissionAmount: money(store, commissionAmount),
 			Status:           status,
 			PaidDate:         paidDate,
 			Notes:            fmt.Sprintf("Commission calculation for order %d", i+1),
@@ -170,8 +170,8 @@ func generateSalesTargets(store *MockDataStore) []*sales.SalesTarget {
 			Year:               int32(year),
 			Quarter:            quarter,
 			Month:              month,
-			TargetAmount:       money(targetAmount),
-			AchievedAmount:     money(achievedAmount),
+			TargetAmount:       money(store, targetAmount),
+			AchievedAmount:     money(store, achievedAmount),
 			AchievementPercent: achievementPercent,
 			Notes:              fmt.Sprintf("Target for period %d", i+1),
 			AuditInfo:          createAuditInfo(),
@@ -229,8 +229,8 @@ func generateSalesForecasts(store *MockDataStore) []*sales.SalesForecast {
 			Year:              int32(year),
 			Quarter:           quarter,
 			Month:             month,
-			ForecastAmount:    money(forecastAmount),
-			WeightedAmount:    money(weightedAmount),
+			ForecastAmount:    money(store, forecastAmount),
+			WeightedAmount:    money(store, weightedAmount),
 			Probability:       probability,
 			ExpectedCloseDate: expectedCloseDate.Unix(),
 			Notes:             fmt.Sprintf("Forecast for period %d", i+1),
