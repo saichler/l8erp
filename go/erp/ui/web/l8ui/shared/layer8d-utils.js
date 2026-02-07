@@ -266,6 +266,36 @@ limitations under the License.
     function getCurrencyList() { return _currencyList; }
     function getCurrencyCode(currencyId) { return _currencyCache[currencyId] || ''; }
 
+    // Exchange rate cache: maps "fromId→toId" → rate (float64)
+    const _exchangeRateCache = {};
+
+    function setExchangeRateCache(rates) {
+        for (const key in _exchangeRateCache) delete _exchangeRateCache[key];
+        const now = Math.floor(Date.now() / 1000);
+        for (const r of rates) {
+            if (!r.fromCurrencyId || !r.toCurrencyId || !r.rate) continue;
+            if (r.effectiveDate && r.effectiveDate > now) continue;
+            if (r.endDate && r.endDate !== 0 && r.endDate < now) continue;
+            _exchangeRateCache[r.fromCurrencyId + '\u2192' + r.toCurrencyId] = r.rate;
+        }
+    }
+
+    function getExchangeRate(fromCurrencyId, toCurrencyId) {
+        if (fromCurrencyId === toCurrencyId) return 1.0;
+        const direct = _exchangeRateCache[fromCurrencyId + '\u2192' + toCurrencyId];
+        if (direct) return direct;
+        const reverse = _exchangeRateCache[toCurrencyId + '\u2192' + fromCurrencyId];
+        if (reverse) return 1.0 / reverse;
+        return null;
+    }
+
+    function convertAmount(amountCents, fromCurrencyId, toCurrencyId) {
+        if (fromCurrencyId === toCurrencyId) return amountCents;
+        const rate = getExchangeRate(fromCurrencyId, toCurrencyId);
+        if (rate === null) return null;
+        return Math.round(amountCents * rate);
+    }
+
     function formatMoney(value, currency = 'USD') {
         if (value === null || value === undefined) return '-';
 
@@ -417,6 +447,9 @@ limitations under the License.
         setCurrencyCache,
         getCurrencyList,
         getCurrencyCode,
+        setExchangeRateCache,
+        getExchangeRate,
+        convertAmount,
 
         // Status
         renderStatus,

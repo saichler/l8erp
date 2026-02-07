@@ -94,6 +94,18 @@ limitations under the License.
                 }
             } catch (e) { console.warn('Failed to load currencies:', e); }
 
+            // Load exchange rate cache for currency conversion
+            try {
+                const xrQuery = encodeURIComponent(JSON.stringify({ text: 'select * from ExchangeRate' }));
+                const xrResp = await fetch(`/erp/40/XchgRate?body=${xrQuery}`, {
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                });
+                if (xrResp.ok) {
+                    const xrData = await xrResp.json();
+                    if (xrData.list && window.Layer8DUtils) Layer8DUtils.setExchangeRateCache(xrData.list);
+                }
+            } catch (e) { console.warn('Failed to load exchange rates:', e); }
+
             // Setup navigation
             this.initSidebar();
 

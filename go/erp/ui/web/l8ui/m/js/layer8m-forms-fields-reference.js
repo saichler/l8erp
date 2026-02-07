@@ -111,7 +111,7 @@ limitations under the License.
         // Currency <select> dropdown
         const currencies = (window.Layer8DUtils && Layer8DUtils.getCurrencyList)
             ? Layer8DUtils.getCurrencyList() : [];
-        let selectHtml = `<select name="${config.key}.__currencyId" class="mobile-money-currency-select"${readonly ? ' disabled' : ''}>`;
+        let selectHtml = `<select name="${config.key}.__currencyId" class="mobile-money-currency-select" data-previous-currency-id="${Layer8MUtils.escapeAttr(currencyId)}" onchange="Layer8MFormFields.onMoneyCurrencyChange(this)"${readonly ? ' disabled' : ''}>`;
         selectHtml += '<option value="">--</option>';
         for (const c of currencies) {
             const sel = c.currencyId === currencyId ? ' selected' : '';
@@ -139,6 +139,33 @@ limitations under the License.
                 </div>
             </div>
         `;
+    };
+
+    /**
+     * Handle currency dropdown change on mobile — convert amount using exchange rate
+     */
+    F.onMoneyCurrencyChange = function(selectEl) {
+        const selectedOption = selectEl.options[selectEl.selectedIndex];
+        const newCurrencyId = selectedOption ? selectedOption.value : '';
+        const oldCurrencyId = selectEl.dataset.previousCurrencyId || '';
+
+        const group = selectEl.closest('.mobile-money-input-group');
+        if (!group) return;
+        const amountInput = group.querySelector('.mobile-money-amount');
+        if (!amountInput) return;
+
+        if (oldCurrencyId && newCurrencyId && oldCurrencyId !== newCurrencyId) {
+            const displayAmount = parseFloat(amountInput.value);
+            if (!isNaN(displayAmount) && displayAmount !== 0) {
+                const cents = Math.round(displayAmount * 100);
+                const converted = Layer8DUtils.convertAmount(cents, oldCurrencyId, newCurrencyId);
+                if (converted !== null) {
+                    amountInput.value = (converted / 100).toFixed(2);
+                }
+            }
+        }
+
+        selectEl.dataset.previousCurrencyId = newCurrencyId;
     };
 
 })();
