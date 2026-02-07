@@ -18,13 +18,17 @@ func runHCMPhases(client *HCMClient, store *MockDataStore) {
 	runPhase("Phase 6: Talent Acquisition", func() error { return generatePhase6(client, store) })
 }
 
-func runFINPhases(client *HCMClient, store *MockDataStore) {
+// runFINFoundation runs FIN Phases 1-3 (no HCM dependency — provides CurrencyIDs for all modules)
+func runFINFoundation(client *HCMClient, store *MockDataStore) {
 	runPhase("FIN Phase 1: Foundation", func() error { return generateFinPhase1(client, store) })
 
 	runPhase("FIN Phase 2: Core Financial", func() error { return generateFinPhase2(client, store) })
 
 	runPhase("FIN Phase 3: Entity Master", func() error { return generateFinPhase3(client, store) })
+}
 
+// runFINRemaining runs FIN Phases 4-9 (needs HCM DepartmentIDs, EmployeeIDs)
+func runFINRemaining(client *HCMClient, store *MockDataStore) {
 	runPhase("FIN Phase 4: Configuration", func() error { return generateFinPhase4(client, store) })
 
 	runPhase("FIN Phase 5: AP Transactions", func() error { return generateFinPhase5(client, store) })

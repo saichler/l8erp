@@ -175,6 +175,10 @@ limitations under the License.
                 return escapeHtml(formatDate(value));
             }
 
+            if (field.type === 'money') {
+                return escapeHtml(formatMoney(value));
+            }
+
             if (field.type === 'currency' && typeof value === 'number') {
                 return escapeHtml(formatMoney(value));
             }
@@ -220,6 +224,10 @@ limitations under the License.
             }
 
             if (typeof value === 'object') {
+                // Handle Money objects { amount, currencyId }
+                if ('amount' in value && 'currencyId' in value) {
+                    return escapeHtml(formatMoney(value));
+                }
                 return '<span class="detail-empty">[Object]</span>';
             }
 

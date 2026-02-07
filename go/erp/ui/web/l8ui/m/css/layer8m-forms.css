@@ -286,18 +286,17 @@ limitations under the License.
     flex: 1;
 }
 
-/* Money input group - currency picker + amount */
+/* Money input group - currency dropdown + amount */
 .mobile-money-input-group {
     display: flex;
     gap: 8px;
     align-items: stretch;
 }
 
-.mobile-money-input-group .reference-input {
-    width: 100px;
-    min-width: 100px;
+.mobile-money-input-group .mobile-money-currency-select {
+    width: 80px;
+    min-width: 80px;
     flex-shrink: 0;
-    font-size: 0.85em;
 }
 
 .mobile-money-input-group .mobile-money-amount {

@@ -75,7 +75,7 @@ limitations under the License.
 
         // Format initial value
         if (input.value) {
-            formatInputValue(input, typeConfig);
+            formatInputValue(input, typeConfig, options);
         }
 
         return true;
@@ -194,10 +194,10 @@ limitations under the License.
      * @param {HTMLInputElement} input
      * @param {Object} typeConfig
      */
-    function formatInputValue(input, typeConfig) {
+    function formatInputValue(input, typeConfig, options = {}) {
         const raw = typeConfig.parse ? typeConfig.parse(input.value) : input.value;
         if (raw !== null && raw !== '') {
-            const formatted = typeConfig.format(raw);
+            const formatted = typeConfig.format(raw, options);
             input.value = formatted;
             input.dataset.rawValue = raw;
         }

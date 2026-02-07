@@ -439,7 +439,7 @@ limitations under the License.
     }
 }
 
-/* Money input group: currency reference picker + amount */
+/* Money input group: currency dropdown + amount */
 .money-input-group { display: flex; gap: 8px; align-items: stretch; }
-.money-input-group .reference-input { width: 120px; min-width: 120px; flex-shrink: 0; font-size: 0.85em; }
+.money-input-group .money-currency-select { width: 80px; min-width: 80px; flex-shrink: 0; }
 .money-input-group .formatted-input-wrapper { flex: 1; }

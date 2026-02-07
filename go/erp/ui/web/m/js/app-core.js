@@ -81,6 +81,19 @@ limitations under the License.
             // Set user info
             this.updateUserInfo();
 
+            // Load currency cache for Money form fields
+            try {
+                const token = Layer8MAuth.getBearerToken();
+                const query = encodeURIComponent(JSON.stringify({ text: 'select * from Currency where isActive=true' }));
+                const resp = await fetch(`/erp/40/Currency?body=${query}`, {
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                });
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (data.list && window.Layer8DUtils) Layer8DUtils.setCurrencyCache(data.list);
+                }
+            } catch (e) { console.warn('Failed to load currencies:', e); }
+
             // Setup navigation
             this.initSidebar();
 

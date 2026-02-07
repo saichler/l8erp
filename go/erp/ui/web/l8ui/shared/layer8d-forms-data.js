@@ -40,8 +40,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
         formDef.sections.forEach(section => {
             section.fields.forEach(field => {
+                // Money fields use compound sub-elements (fieldKey.__amount, fieldKey.__currencyId)
+                // so form.elements[field.key] won't find a match — skip the guard for them
                 const element = form.elements[field.key];
-                if (!element) return;
+                if (!element && field.type !== 'money') return;
 
                 let value;
                 switch (field.type) {
@@ -108,7 +110,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
                     case 'money': {
                         const amountEl = form.elements[field.key + '.__amount'];
-                        const currencyEl = form.elements[field.key + '.__currencyId'];
+                        const currencyEl = form.querySelector(`select[name="${field.key}.__currencyId"]`);
                         let cents = null;
                         if (amountEl) {
                             if (typeof Layer8DInputFormatter !== 'undefined') {
@@ -119,7 +121,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                                 if (isNaN(cents)) cents = null;
                             }
                         }
-                        const currId = currencyEl ? (currencyEl.dataset.refId || '') : '';
+                        const currId = currencyEl ? currencyEl.value : '';
                         value = cents != null ? { amount: cents, currencyId: currId } : null;
                         break;
                     }

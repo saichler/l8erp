@@ -95,6 +95,18 @@ document.addEventListener('DOMContentLoaded', async function() {
     const username = sessionStorage.getItem('currentUser') || 'Admin';
     document.querySelector('.username').textContent = username;
 
+    // Load currency cache for Money form fields
+    try {
+        const query = encodeURIComponent(JSON.stringify({ text: 'select * from Currency where isActive=true' }));
+        const resp = await fetch(`/erp/40/Currency?body=${query}`, {
+            headers: { 'Authorization': `Bearer ${bearerToken}`, 'Content-Type': 'application/json' }
+        });
+        if (resp.ok) {
+            const data = await resp.json();
+            if (data.list) Layer8DUtils.setCurrencyCache(data.list);
+        }
+    } catch (e) { console.warn('Failed to load currencies:', e); }
+
     // Load default section (dashboard)
     loadSection('dashboard');
 

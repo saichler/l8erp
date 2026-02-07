@@ -100,7 +100,7 @@ limitations under the License.
     };
 
     /**
-     * Render money field - Currency reference picker + amount input
+     * Render money field - Currency <select> dropdown + amount input
      * Matches desktop layer8d-forms-fields.js money case
      */
     F.renderMoneyField = function(config, value, readonly) {
@@ -108,12 +108,16 @@ limitations under the License.
         const amountValue = moneyObj.amount !== undefined ? moneyObj.amount : value;
         const currencyId = moneyObj.currencyId || '';
 
-        const currencyConfig = {
-            key: config.key + '.__currencyId',
-            label: 'Currency',
-            lookupModel: 'Currency'
-        };
-        const currencyHtml = buildReferenceInput(currencyConfig, currencyId, '', readonly);
+        // Currency <select> dropdown
+        const currencies = (window.Layer8DUtils && Layer8DUtils.getCurrencyList)
+            ? Layer8DUtils.getCurrencyList() : [];
+        let selectHtml = `<select name="${config.key}.__currencyId" class="mobile-money-currency-select"${readonly ? ' disabled' : ''}>`;
+        selectHtml += '<option value="">--</option>';
+        for (const c of currencies) {
+            const sel = c.currencyId === currencyId ? ' selected' : '';
+            selectHtml += `<option value="${Layer8MUtils.escapeAttr(c.currencyId)}"${sel}>${Layer8MUtils.escapeHtml(c.code)}</option>`;
+        }
+        selectHtml += '</select>';
 
         const displayAmount = amountValue ? (amountValue / 100).toFixed(2) : '';
         const requiredAttr = config.required ? 'required' : '';
@@ -124,14 +128,13 @@ limitations under the License.
                    value="${displayAmount}"
                    step="0.01" min="0"
                    class="mobile-form-input mobile-money-amount"
-                   data-format="currency"
                    ${requiredAttr} ${readonlyAttr}>`;
 
         return `
             <div class="mobile-form-field">
                 <label class="mobile-form-label">${Layer8MUtils.escapeHtml(config.label)}${config.required ? ' *' : ''}</label>
                 <div class="mobile-money-input-group">
-                    ${currencyHtml}
+                    ${selectHtml}
                     ${amountHtml}
                 </div>
             </div>

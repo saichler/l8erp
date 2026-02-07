@@ -90,8 +90,8 @@ limitations under the License.
             // Handle Money object {amount, currencyId}
             if (typeof value === 'object' && value !== null) {
                 cents = value.amount;
-                if (value.currencyId && window.Layer8DUtils && window.Layer8DUtils._currencyCache) {
-                    currCode = window.Layer8DUtils._currencyCache[value.currencyId] || currency;
+                if (value.currencyId && window.Layer8DUtils && window.Layer8DUtils.getCurrencyCode) {
+                    currCode = window.Layer8DUtils.getCurrencyCode(value.currencyId) || currency;
                 } else if (value.currencyCode) {
                     currCode = value.currencyCode;
                 }

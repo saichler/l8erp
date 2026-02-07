@@ -92,20 +92,24 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 const amountValue = moneyObj.amount !== undefined ? moneyObj.amount : value;
                 const currencyId = moneyObj.currencyId || '';
 
-                // Currency reference picker
-                const currencyField = {
-                    key: field.key + '.__currencyId',
-                    label: 'Currency',
-                    type: 'reference',
-                    lookupModel: 'Currency'
-                };
-                const currencyHtml = generateReferenceInput(currencyField, currencyId);
+                // Currency <select> dropdown — on change, re-attach formatter with new symbol
+                const currencies = Layer8DUtils.getCurrencyList();
+                const selectedCurrency = currencies.find(c => c.currencyId === currencyId);
+                const currSymbol = selectedCurrency ? selectedCurrency.symbol : '$';
 
-                // Amount formatted input
-                const amountField = { ...field, key: field.key + '.__amount', type: 'currency' };
+                let selectHtml = `<select name="${field.key}.__currencyId" class="money-currency-select" onchange="Layer8DFormsFields.onCurrencyChange(this)">`;
+                selectHtml += '<option value="">--</option>';
+                for (const c of currencies) {
+                    const sel = c.currencyId === currencyId ? ' selected' : '';
+                    selectHtml += `<option value="${escapeAttr(c.currencyId)}" data-symbol="${escapeAttr(c.symbol || '$')}"${sel}>${escapeHtml(c.code)}</option>`;
+                }
+                selectHtml += '</select>';
+
+                // Amount formatted input with correct initial symbol
+                const amountField = { ...field, key: field.key + '.__amount', type: 'currency', symbol: currSymbol };
                 const amountHtml = generateFormattedInput(amountField, amountValue);
 
-                inputHtml = `<div class="money-input-group">${currencyHtml}${amountHtml}</div>`;
+                inputHtml = `<div class="money-input-group">${selectHtml}${amountHtml}</div>`;
                 break;
             }
 
@@ -288,6 +292,34 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             placeholder="Click to select...">`;
     }
 
+    /**
+     * Handle currency dropdown change — re-attach formatter with new symbol
+     */
+    function onCurrencyChange(selectEl) {
+        const selectedOption = selectEl.options[selectEl.selectedIndex];
+        const symbol = (selectedOption && selectedOption.dataset.symbol) || '$';
+        const group = selectEl.closest('.money-input-group');
+        if (!group) return;
+        const amountInput = group.querySelector('.formatted-input');
+        if (!amountInput) return;
+
+        // Get current raw value before detaching
+        const rawValue = typeof Layer8DInputFormatter !== 'undefined'
+            ? Layer8DInputFormatter.getValue(amountInput)
+            : amountInput.dataset.rawValue;
+
+        // Detach old formatter and re-attach with new symbol
+        if (typeof Layer8DInputFormatter !== 'undefined') {
+            Layer8DInputFormatter.detach(amountInput);
+            amountInput.dataset.format = 'currency';
+            amountInput.dataset.formatSymbol = symbol;
+            Layer8DInputFormatter.attach(amountInput, 'currency', { symbol });
+            if (rawValue !== null && rawValue !== undefined && rawValue !== '') {
+                Layer8DInputFormatter.setValue(amountInput, rawValue);
+            }
+        }
+    }
+
     // Export
     window.Layer8DFormsFields = {
         generateFormHtml,
@@ -297,6 +329,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         generateReferenceInput,
         generateDateInput,
         getDateZeroLabel,
+        onCurrencyChange,
         FORMATTED_TYPES
     };
 

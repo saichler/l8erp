@@ -251,12 +251,20 @@ limitations under the License.
 
     // Currency cache: maps currencyId → ISO code (e.g., "USD")
     const _currencyCache = {};
+    const _currencyList = [];
 
     function setCurrencyCache(currencies) {
+        _currencyList.length = 0;
         for (const c of currencies) {
-            if (c.currencyId && c.code) _currencyCache[c.currencyId] = c.code;
+            if (c.currencyId && c.code) {
+                _currencyCache[c.currencyId] = c.code;
+                _currencyList.push({ currencyId: c.currencyId, code: c.code, name: c.name || c.code, symbol: c.symbol || '' });
+            }
         }
     }
+
+    function getCurrencyList() { return _currencyList; }
+    function getCurrencyCode(currencyId) { return _currencyCache[currencyId] || ''; }
 
     function formatMoney(value, currency = 'USD') {
         if (value === null || value === undefined) return '-';
@@ -407,6 +415,8 @@ limitations under the License.
         formatNumber,
         formatPercentage,
         setCurrencyCache,
+        getCurrencyList,
+        getCurrencyCode,
 
         // Status
         renderStatus,
