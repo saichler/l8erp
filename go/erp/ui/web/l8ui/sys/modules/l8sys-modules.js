@@ -189,6 +189,12 @@
             cancelBtn.textContent = 'Cancel';
             cancelBtn.onclick = function() { self._cancel(); };
 
+            var enableAllBtn = document.createElement('button');
+            enableAllBtn.className = 'l8sys-modules-cancel-btn';
+            enableAllBtn.textContent = 'Enable All';
+            enableAllBtn.onclick = function() { self._enableAll(); };
+
+            bar.appendChild(enableAllBtn);
             bar.appendChild(cancelBtn);
             bar.appendChild(saveBtn);
             container.appendChild(bar);
@@ -211,6 +217,18 @@
                 if (confirm(msg + '\n\nReload now?')) {
                     window.location.reload();
                 }
+            }
+        },
+
+        _enableAll: function() {
+            if (!this._treeInstance) return;
+            this._treeInstance._disabled.clear();
+            this._treeInstance._refreshStates();
+            this._dirty = true;
+            this._updateSaveBtn();
+            var container = document.getElementById('modules-settings-container');
+            if (container && window.L8SysModulesMap) {
+                L8SysModulesMap.refresh(container, this._treeInstance._disabled);
             }
         },
 

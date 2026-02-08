@@ -108,6 +108,33 @@
                     return labels;
                 },
 
+                _getCascadeDisablePaths: function(path) {
+                    var self = this;
+                    var result = [];
+                    var visited = new Set();
+                    var queue = [path];
+                    while (queue.length > 0) {
+                        var current = queue.shift();
+                        Object.keys(self._deps).forEach(function(p) {
+                            if (visited.has(p) || p === path || !self._isEnabled(p)) return;
+                            var directDeps = self._deps[p] || [];
+                            if (directDeps.indexOf(current) !== -1) {
+                                visited.add(p);
+                                result.push(p);
+                                queue.push(p);
+                            }
+                        });
+                    }
+                    // Also include children (sub-paths) that are enabled
+                    var prefix = path + '.';
+                    Object.keys(self._nodeMap).forEach(function(p) {
+                        if (p.indexOf(prefix) === 0 && self._isEnabled(p) && !visited.has(p)) {
+                            result.push(p);
+                        }
+                    });
+                    return result;
+                },
+
                 _handleToggle: function(path, newEnabled) {
                     if (newEnabled) {
                         // Enable: auto-enable dependencies
@@ -132,11 +159,21 @@
                         });
                         toRemove.forEach(function(d) { this._disabled.delete(d); }.bind(this));
                     } else {
-                        // Disable: check if anything depends on this
-                        if (!this._canDisable(path)) {
-                            var dependents = this._getDependentLabels(path);
-                            alert('Cannot disable: ' + dependents.join(', ') + ' depend on this.');
-                            return;
+                        // Disable: collect cascade targets
+                        var that = this;
+                        var cascadePaths = this._getCascadeDisablePaths(path);
+                        if (cascadePaths.length > 0) {
+                            var cascadeLabels = cascadePaths.map(function(p) {
+                                var node = that._nodeMap[p];
+                                return node ? (node.icon ? node.icon + ' ' : '') + node.label : p;
+                            });
+                            var msg = 'Disabling this will also disable the following dependent items:\n\n' +
+                                cascadeLabels.map(function(l) { return '  ' + l; }).join('\n') +
+                                '\n\nDisable all?';
+                            if (!confirm(msg)) return;
+                            for (var ci = 0; ci < cascadePaths.length; ci++) {
+                                this._disabled.add(cascadePaths[ci]);
+                            }
                         }
                         this._disabled.add(path);
                         // Remove any child paths (parent covers them implicitly)
@@ -178,7 +215,7 @@
 
                         row.classList.toggle('l8-toggle-locked', !canDisable && enabled);
                         row.classList.toggle('l8-toggle-implicit', parentDisabled);
-                        toggle.disabled = parentDisabled || (isFoundation && enabled && !canDisable);
+                        toggle.disabled = parentDisabled;
 
                         // Update tooltip
                         var tooltip = row.querySelector('.l8-toggle-tooltip');
