@@ -5,7 +5,7 @@ go 1.25.4
 require (
 	github.com/lib/pq v1.11.1
 	github.com/saichler/l8bus v0.0.0-20251229161115-ef9b4833c63e
-	github.com/saichler/l8orm v0.0.0-20260207070036-984cbc081146
+	github.com/saichler/l8orm v0.0.0-20260208014638-2181816e7e6e
 	github.com/saichler/l8reflect v0.0.0-20260207071228-7e15048436c7
 	github.com/saichler/l8services v0.0.0-20260116142809-b257a28b21ee
 	github.com/saichler/l8srlz v0.0.0-20251226163123-de32dc54dd4b

@@ -22,7 +22,7 @@
 
 ERP by Layer 8 is a comprehensive Enterprise Resource Planning system designed for modern businesses. Built from the ground up with Go, it provides a unified platform for managing all aspects of your organization - from financial operations and human capital to supply chain, manufacturing, sales, and more.
 
-With **10 fully implemented modules** and **244+ business services**, this ERP covers the complete enterprise lifecycle including:
+With **12 fully implemented modules** and **371+ business services**, this ERP covers the complete enterprise lifecycle including:
 - **Financial Management** - GL, AP, AR, Cash, Assets, Budgeting, Tax
 - **Human Capital** - Core HR, Payroll, Benefits, Talent, Learning, Compensation
 - **Supply Chain** - Procurement, Inventory, Warehouse, Logistics, Planning
@@ -32,19 +32,23 @@ With **10 fully implemented modules** and **244+ business services**, this ERP c
 - **Projects** - Planning, Resources, Time Tracking, Budgets
 - **Business Intelligence** - Dashboards, Reports, Analytics, KPIs
 - **Documents** - Storage, Workflows, Signatures, Compliance
+- **E-Commerce** - Catalog, Orders, Customers, Promotions
+- **Compliance & Risk** - Regulatory, Controls, Risk, Audit
 
 Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared components, consistent patterns, and a unified approach to enterprise software development.
 
 ## Features
 
-- **10+ Integrated Modules** - HCM, Finance, SCM, Manufacturing, Sales, CRM, Projects, BI, Documents
-- **244+ Business Services** - Comprehensive coverage of enterprise operations
+- **12 Integrated Modules** - HCM, Finance, SCM, Manufacturing, Sales, CRM, Projects, BI, Documents, E-Commerce, Compliance
+- **371+ Business Services** - Comprehensive coverage of enterprise operations
 - **Unified Data Model** - Single source of truth across all modules with cross-references
 - **Real-time Analytics** - Live dashboards, KPIs, and instant reporting via BI module
 - **Document Management** - Storage, workflows, approvals, signatures, and compliance
+- **Module Selection** - Enable/disable modules with dependency-aware configuration
+- **System Dependency Map** - Visual module dependency graph for configuration management
 - **Workflow Automation** - Automated business processes, approvals, and notifications
 - **Role-based Access** - Granular security and permissions
-- **Multi-currency Support** - Global financial operations
+- **Multi-currency Support** - Global financial operations with real-time exchange rate conversion
 - **API-first Design** - RESTful APIs for easy integrations
 - **Mobile App** - Full-featured mobile application with all modules
 - **Full Audit Trail** - Complete transaction history across all modules
@@ -66,13 +70,17 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared componen
 | **Project Management** | Projects, Resources, Time Tracking, Budgets | ✅ Active |
 | **Business Intelligence** | Dashboards, Reports, Analytics, KPIs, Data Sources | ✅ Active |
 | **Document Management** | Storage, Workflows, Signatures, Compliance, Integration | ✅ Active |
-| **E-Commerce** | Online Store, Order Integration | 🔜 Planned |
-| **Compliance & Risk** | Regulatory, Audit, Risk Management | 🔜 Planned |
+| **E-Commerce** | Catalog, Orders, Customers, Promotions | ✅ Active |
+| **Compliance & Risk** | Regulatory, Controls, Risk, Audit | ✅ Active |
 | **System Administration** | Users, Settings, Security, Integrations | ✅ Active |
 
 ## Recent Updates
 
-- **Document Management Module** - Complete document lifecycle: storage, workflows, approvals, signatures, compliance, email capture, and scanning
+- **Module Selection & Dependencies** - Enable/disable modules at runtime with automatic dependency management and visual dependency map
+- **Multi-Currency Exchange** - Real-time currency conversion when switching currencies on money fields
+- **E-Commerce Module** - Complete online commerce: catalog management, orders, customers, and promotions
+- **Compliance & Risk Module** - Regulatory tracking, controls management, risk assessment, and audit trails
+- **Document Management Module** - Complete document lifecycle: storage, workflows, approvals, signatures, compliance
 - **Business Intelligence Module** - Dashboards, reports, KPIs, analytics, and data source management
 - **Project Management Module** - Projects, resources, time tracking, budgets, and milestones
 - **CRM Module** - Customer accounts, contacts, opportunities, campaigns, and support tickets
@@ -80,8 +88,8 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared componen
 - **Manufacturing Module** - Engineering, production, planning, quality control, and costing
 - **Supply Chain Module** - Procurement, inventory, warehouse, logistics, and demand/supply planning
 - **Financial Module** - GL, AP, AR, cash management, fixed assets, budgeting, and tax
-- **Mobile App** - Full mobile application with all modules, responsive design, and floating headers
-- **Component Library** - Reusable UI components (date picker, reference picker, edit tables)
+- **Mobile App** - Full mobile application with all 12 modules, responsive design, and floating headers
+- **UI Factory Framework** - Shared factories for forms, columns, enums, references, and sections
 
 ## Quick Start
 
@@ -145,15 +153,17 @@ l8erp/
 ├── go/
 │   ├── erp/
 │   │   ├── common/           # Shared utilities (defaults, validation)
-│   │   ├── hcm/              # Human Capital Management (59 services)
-│   │   ├── fin/              # Financial Management (28 services)
-│   │   ├── scm/              # Supply Chain Management (24 services)
-│   │   ├── mfg/              # Manufacturing (24 services)
+│   │   ├── hcm/              # Human Capital Management (57 services)
+│   │   ├── fin/              # Financial Management (49 services)
+│   │   ├── scm/              # Supply Chain Management (44 services)
+│   │   ├── mfg/              # Manufacturing (36 services)
 │   │   ├── sales/            # Sales & Distribution (33 services)
-│   │   ├── crm/              # Customer Relationship Management (20 services)
-│   │   ├── prj/              # Project Management (16 services)
-│   │   ├── bi/               # Business Intelligence (20 services)
+│   │   ├── crm/              # Customer Relationship Management (36 services)
+│   │   ├── prj/              # Project Management (36 services)
+│   │   ├── bi/               # Business Intelligence (24 services)
 │   │   ├── doc/              # Document Management (20 services)
+│   │   ├── ecom/             # E-Commerce (20 services)
+│   │   ├── comp/             # Compliance & Risk (20 services)
 │   │   ├── sys/              # System Administration
 │   │   ├── ui/
 │   │   │   ├── main.go       # Web server entry point
@@ -161,6 +171,7 @@ l8erp/
 │   │   │       ├── marketing/    # Marketing landing page
 │   │   │       ├── login/        # Login page
 │   │   │       ├── l8ui/         # Shared UI framework
+│   │   │       ├── erp-ui/      # ERP-specific UI (SVG templates, section configs)
 │   │   │       ├── hcm/          # HCM module UI
 │   │   │       ├── fin/          # Financial module UI
 │   │   │       ├── scm/          # SCM module UI
@@ -170,6 +181,8 @@ l8erp/
 │   │   │       ├── prj/          # Project module UI
 │   │   │       ├── bi/           # BI module UI
 │   │   │       ├── documents/    # Documents module UI
+│   │   │       ├── ecom/         # E-Commerce module UI
+│   │   │       ├── comp/         # Compliance module UI
 │   │   │       ├── m/            # Mobile app version
 │   │   │       └── app.html      # Main application
 │   │   └── vnet/             # Virtual network layer
@@ -182,7 +195,9 @@ l8erp/
 │   │   ├── crm/              # CRM types
 │   │   ├── prj/              # Project types
 │   │   ├── bi/               # BI types
-│   │   └── doc/              # Document types
+│   │   ├── doc/              # Document types
+│   │   ├── ecom/             # E-Commerce types
+│   │   └── comp/             # Compliance types
 │   ├── tests/                # Test files and mock data generators
 │   └── vendor/               # Go dependencies
 ├── k8s/                      # Kubernetes deployment manifests
