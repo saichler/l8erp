@@ -126,6 +126,7 @@ limitations under the License.
         const amountHtml = `<input type="number"
                    name="${config.key}.__amount"
                    value="${displayAmount}"
+                   data-format="currency"
                    step="0.01" min="0"
                    class="mobile-form-input mobile-money-amount"
                    ${requiredAttr} ${readonlyAttr}>`;

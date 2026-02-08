@@ -84,7 +84,7 @@ limitations under the License.
          * Format money (stored in cents)
          */
         formatMoney(value, currency = 'USD') {
-            if (value == null) return '';
+            if (value == null) return '-';
             let cents = value;
             let currCode = currency;
             // Handle Money object {amount, currencyId}
@@ -96,7 +96,7 @@ limitations under the License.
                     currCode = value.currencyCode;
                 }
             }
-            if (cents == null) return '';
+            if (cents == null) return '-';
             const dollars = cents / 100;
             try {
                 return new Intl.NumberFormat('en-US', { style: 'currency', currency: currCode }).format(dollars);

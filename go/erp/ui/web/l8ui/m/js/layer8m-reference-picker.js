@@ -285,12 +285,14 @@ limitations under the License.
         }
 
         static getEndpointForModel(modelName) {
-            if (typeof LAYER8M_NAV_CONFIG === 'undefined' || !LAYER8M_NAV_CONFIG.hcm) return null;
-            const services = LAYER8M_NAV_CONFIG.hcm.services;
-            if (!services) return null;
-            for (const subModuleKey in services) {
-                for (const service of services[subModuleKey]) {
-                    if (service.model === modelName) return Layer8MConfig.resolveEndpoint(service.endpoint);
+            if (typeof LAYER8M_NAV_CONFIG === 'undefined') return null;
+            for (const moduleKey in LAYER8M_NAV_CONFIG) {
+                const mod = LAYER8M_NAV_CONFIG[moduleKey];
+                if (!mod || !mod.services) continue;
+                for (const subModuleKey in mod.services) {
+                    for (const service of mod.services[subModuleKey]) {
+                        if (service.model === modelName) return Layer8MConfig.resolveEndpoint(service.endpoint);
+                    }
                 }
             }
             return null;

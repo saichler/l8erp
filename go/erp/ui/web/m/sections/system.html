@@ -51,6 +51,7 @@ var systemHealthTable = null;
 var systemSecurityTable = null;
 var currentSystemModule = 'health';
 var currentSecurityService = 'users';
+var healthRawDataMap = new Map();
 
 // Health column definitions
 var HEALTH_COLUMNS = [
@@ -194,7 +195,16 @@ function loadSystemHealth() {
         columns: HEALTH_COLUMNS,
         rowsPerPage: 15,
         transformData: transformHealthItem,
-        getItemId: function(item) { return item.service; }
+        getItemId: function(item) { return item.service; },
+        onDataLoaded: function(response) {
+            healthRawDataMap.clear();
+            if (response && response.list) {
+                response.list.forEach(function(item) {
+                    if (item.stats) healthRawDataMap.set(item.alias || 'Unknown', item);
+                });
+            }
+        },
+        onRowClick: function(item) { showHealthDetail(item); }
     });
 }
 
@@ -210,4 +220,144 @@ function loadSecurityService(serviceName) {
         getItemId: function(item) { return item[config.idField]; }
     });
 }
+
+function esc(v) { return Layer8MUtils.escapeHtml(v == null ? '' : String(v)); }
+
+function detailRow(label, value) {
+    return '<div class="health-detail-row"><span class="health-detail-label">' + esc(label) +
+        '</span><span class="health-detail-value">' + esc(value) + '</span></div>';
+}
+
+function detailSection(title, rows, fullWidth) {
+    return '<div class="health-detail-section' + (fullWidth ? ' health-detail-full' : '') + '">' +
+        '<div class="health-detail-section-title">' + esc(title) + '</div>' + rows + '</div>';
+}
+
+function showHealthDetail(rowData) {
+    var raw = healthRawDataMap.get(rowData.service);
+    if (!raw) return;
+    var stats = raw.stats || {};
+    var services = raw.services ? raw.services.serviceToAreas || {} : {};
+
+    // Overview tab
+    var overview = '<div class="health-detail-grid">' +
+        detailSection('Service Information',
+            detailRow('Service Name', rowData.service) +
+            detailRow('Alias', raw.alias || 'N/A') +
+            detailRow('Start Time', raw.startTime ? new Date(parseInt(raw.startTime)).toLocaleString() : 'N/A') +
+            detailRow('Up Time', rowData.upTime)
+        ) +
+        detailSection('Quick Stats',
+            detailRow('Memory Usage', rowData.memory) +
+            detailRow('CPU Usage', rowData.cpuPercent) +
+            detailRow('Last Pulse', rowData.lastPulse)
+        ) +
+        '</div>';
+
+    // Network tab
+    var network = '<div class="health-detail-grid">' +
+        detailSection('Receive Statistics',
+            detailRow('RX Messages', (stats.rxMsgCount || 0).toLocaleString()) +
+            detailRow('RX Data', formatHealthBytes(stats.rxDataCont || 0)) +
+            detailRow('RX Data (bytes)', (stats.rxDataCont || 0).toLocaleString())
+        ) +
+        detailSection('Transmit Statistics',
+            detailRow('TX Messages', (stats.txMsgCount || 0).toLocaleString()) +
+            detailRow('TX Data', formatHealthBytes(stats.txDataCount || 0)) +
+            detailRow('TX Data (bytes)', (stats.txDataCount || 0).toLocaleString())
+        ) +
+        detailSection('Message Timing',
+            detailRow('Last Message', stats.lastMsgTime ? new Date(parseInt(stats.lastMsgTime)).toLocaleString() : 'N/A') +
+            detailRow('Time Since Last Msg', rowData.lastPulse),
+            true
+        ) +
+        '</div>';
+
+    // Resources tab
+    var resources = '<div class="health-detail-grid">' +
+        detailSection('Memory Usage',
+            detailRow('Formatted', rowData.memory) +
+            detailRow('Raw (bytes)', (stats.memoryUsage || 0).toLocaleString())
+        ) +
+        detailSection('CPU Usage',
+            detailRow('Percentage', rowData.cpuPercent) +
+            detailRow('Raw Value', stats.cpuUsage || 0)
+        ) +
+        '</div>';
+
+    // Services tab
+    var svcRows = '';
+    var svcKeys = Object.keys(services);
+    if (svcKeys.length > 0) {
+        svcKeys.forEach(function(name) {
+            var areas = services[name].areas || {};
+            var areaList = Object.keys(areas).filter(function(a) { return areas[a]; }).join(', ');
+            svcRows += detailRow(name, 'Areas: ' + (areaList || 'None'));
+        });
+    } else {
+        svcRows = '<div class="health-detail-row"><span class="health-detail-label">No services registered</span></div>';
+    }
+    var svcTab = '<div class="health-detail-grid">' +
+        detailSection('Registered Services', svcRows, true) +
+        '</div>';
+
+    Layer8MPopup.show({
+        id: 'health-detail',
+        title: 'Service Health - ' + rowData.service,
+        showFooter: false,
+        tabs: [
+            { id: 'overview', label: 'Overview', content: overview },
+            { id: 'network', label: 'Network', content: network },
+            { id: 'resources', label: 'Resources', content: resources },
+            { id: 'services', label: 'Services', content: svcTab }
+        ]
+    });
+}
 </script>
+
+<style>
+    .health-detail-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 8px 0;
+    }
+    .health-detail-section {
+        background: var(--bg-secondary, #f7fafc);
+        border-radius: var(--radius-md, 10px);
+        padding: 12px;
+        border: 1px solid var(--border-color, #e2e8f0);
+    }
+    .health-detail-section-title {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--layer8d-primary, #0ea5e9);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+        padding-bottom: 6px;
+        border-bottom: 1px solid var(--border-color, #e2e8f0);
+    }
+    .health-detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 0;
+        border-bottom: 1px solid var(--border-color, #e2e8f0);
+    }
+    .health-detail-row:last-child { border-bottom: none; }
+    .health-detail-label {
+        font-size: 11px;
+        color: var(--text-secondary, #718096);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .health-detail-value {
+        font-size: 12px;
+        color: var(--text-primary, #2d3748);
+        font-family: 'Roboto Mono', monospace;
+        font-weight: 500;
+        text-align: right;
+    }
+</style>

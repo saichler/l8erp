@@ -21,7 +21,7 @@ limitations under the License.
  * - layer8m-nav-config-icons.js (SVG icons)
  * - layer8m-nav-config-fin-hcm.js (Financial and HCM)
  * - layer8m-nav-config-scm-sales.js (SCM, Manufacturing, Sales, CRM)
- * - layer8m-nav-config-prj-other.js (Projects, BI, Documents, Ecommerce, System)
+ * - layer8m-nav-config-prj-other.js (Projects, BI, Documents, Ecommerce, Compliance, System)
  */
 (function() {
     'use strict';
@@ -46,6 +46,7 @@ limitations under the License.
         bi: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.bi,
         documents: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.documents,
         ecommerce: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.ecommerce,
+        compliance: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.compliance,
         system: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.system,
 
         // Icons from icons config

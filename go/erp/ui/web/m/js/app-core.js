@@ -61,7 +61,10 @@ limitations under the License.
         'ecommerce': 'sections/ecommerce.html',
 
         // Compliance & Risk Management
-        'compliance': 'sections/compliance.html'
+        'compliance': 'sections/compliance.html',
+
+        // System Administration
+        'system': 'sections/system.html'
     };
 
     let currentSection = 'dashboard';
@@ -197,6 +200,13 @@ limitations under the License.
          * Load a section
          */
         async loadSection(section, forceReload = false) {
+            // Modules with nav config use the dashboard + Layer8MNav instead of static HTML
+            // System has custom content (health detail popup, modules settings) so skip redirect
+            if (section !== 'dashboard' && section !== 'system' && window.LAYER8M_NAV_CONFIG && LAYER8M_NAV_CONFIG[section]) {
+                await this._loadDashboardForModule(section, forceReload);
+                return;
+            }
+
             const sectionUrl = SECTIONS[section];
             if (!sectionUrl) {
                 console.error('Unknown section:', section);
@@ -252,6 +262,45 @@ limitations under the License.
         },
 
         /**
+         * Load dashboard and navigate to a module via Layer8MNav
+         */
+        async _loadDashboardForModule(moduleKey, forceReload) {
+            this.updateNavState(moduleKey);
+
+            const contentArea = document.getElementById('content-area');
+            if (!contentArea) return;
+
+            contentArea.style.opacity = '0.5';
+
+            try {
+                // Load dashboard HTML if not cached
+                if (!forceReload && sectionCache['dashboard']) {
+                    contentArea.innerHTML = sectionCache['dashboard'];
+                } else {
+                    const response = await fetch(SECTIONS['dashboard'] + '?t=' + Date.now());
+                    if (!response.ok) throw new Error('Failed to load dashboard');
+                    const html = await response.text();
+                    sectionCache['dashboard'] = html;
+                    contentArea.innerHTML = html;
+                }
+
+                this.executeScripts(contentArea);
+                this.initSection('dashboard');
+
+                // Navigate directly to the module
+                Layer8MNav.navigateToModule(moduleKey);
+
+                currentSection = moduleKey;
+                window.location.hash = moduleKey;
+                contentArea.scrollTop = 0;
+            } catch (error) {
+                console.error('Error loading module:', error);
+            }
+
+            contentArea.style.opacity = '1';
+        },
+
+        /**
          * Update navigation active state
          */
         updateNavState(section) {
@@ -293,7 +342,8 @@ limitations under the License.
                 'hcm-time': 'initMobileTime',
                 'hcm-talent': 'initMobileTalent',
                 'hcm-learning': 'initMobileLearning',
-                'hcm-compensation': 'initMobileCompensation'
+                'hcm-compensation': 'initMobileCompensation',
+                'system': 'initMobileSystem'
             };
 
             const initFn = initFunctions[section];
