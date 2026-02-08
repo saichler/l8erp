@@ -17,11 +17,14 @@ limitations under the License.
  * Mobile Procurement Module - Form Configurations
  * Desktop Equivalent: scm/procurement/procurement-forms.js
  */
-window.MobileProcurement = window.MobileProcurement || {};
-const f = window.Layer8FormFactory;
-const enums = MobileProcurement.enums;
+(function() {
+    'use strict';
 
-MobileProcurement.forms = {
+    window.MobileProcurement = window.MobileProcurement || {};
+    const f = window.Layer8FormFactory;
+    const enums = MobileProcurement.enums;
+
+    MobileProcurement.forms = {
     ScmPurchaseRequisition: f.form('Purchase Requisition', [
         f.section('Requisition Details', [
             ...f.text('requisitionNumber', 'Requisition #', true),
@@ -106,3 +109,5 @@ MobileProcurement.forms = {
         ])
     ])
 };
+
+})();

@@ -268,6 +268,95 @@ limitations under the License.
             return [field];
         },
 
+        /**
+         * Create a percentage field (renders as number).
+         */
+        percentage: function(key, label, required) {
+            const field = {
+                key: key,
+                label: label || this._toTitleCase(key),
+                type: 'number'
+            };
+            if (required) field.required = true;
+            return [field];
+        },
+
+        /**
+         * Create a rating field (renders as number).
+         */
+        rating: function(key, label, required) {
+            const field = {
+                key: key,
+                label: label || this._toTitleCase(key),
+                type: 'number'
+            };
+            if (required) field.required = true;
+            return [field];
+        },
+
+        /**
+         * Create a routing number field (renders as text).
+         */
+        routingNumber: function(key, label, required) {
+            const field = {
+                key: key,
+                label: label || 'Routing Number',
+                type: 'text'
+            };
+            if (required) field.required = true;
+            return [field];
+        },
+
+        /**
+         * Create a color code field (renders as text).
+         */
+        colorCode: function(key, label) {
+            return [{
+                key: key,
+                label: label || 'Color Code',
+                type: 'text'
+            }];
+        },
+
+        /**
+         * Create a datetime field (renders as text input for datetime values).
+         */
+        datetime: function(key, label, required) {
+            const field = {
+                key: key,
+                label: label || this._toTitleCase(key),
+                type: 'text'
+            };
+            if (required) field.required = true;
+            return [field];
+        },
+
+        /**
+         * Create a time field (renders as text).
+         */
+        time: function(key, label, required) {
+            const field = {
+                key: key,
+                label: label || this._toTitleCase(key),
+                type: 'text'
+            };
+            if (required) field.required = true;
+            return [field];
+        },
+
+        /**
+         * Create an hours field (renders as number).
+         */
+        hours: function(key, label, required) {
+            const field = {
+                key: key,
+                label: label || this._toTitleCase(key),
+                type: 'number'
+            };
+            if (required) field.required = true;
+            return [field];
+        },
+
         // ============================================================================
         // PRESET FIELD GROUPS
         // ============================================================================

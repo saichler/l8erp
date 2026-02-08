@@ -17,11 +17,14 @@ limitations under the License.
  * Mobile Warehouse Management Module - Form Configurations
  * Desktop Equivalent: scm/warehouse/warehouse-forms.js
  */
-window.MobileWarehouse = window.MobileWarehouse || {};
-const f = window.Layer8FormFactory;
-const enums = MobileWarehouse.enums;
+(function() {
+    'use strict';
 
-MobileWarehouse.forms = {
+    window.MobileWarehouse = window.MobileWarehouse || {};
+    const f = window.Layer8FormFactory;
+    const enums = MobileWarehouse.enums;
+
+    MobileWarehouse.forms = {
     ScmWarehouse: f.form('ScmWarehouse', [
         f.section('Warehouse Information', [
             ...f.text('code', 'Warehouse Code', true),
@@ -122,3 +125,5 @@ MobileWarehouse.forms = {
         ])
     ])
 };
+
+})();

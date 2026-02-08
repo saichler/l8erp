@@ -17,11 +17,14 @@ limitations under the License.
  * Mobile Demand Planning Module - Form Configurations
  * Desktop Equivalent: scm/demand-planning/demand-planning-forms.js
  */
-window.MobileScmDemandPlanning = window.MobileScmDemandPlanning || {};
-const f = window.Layer8FormFactory;
-const enums = MobileScmDemandPlanning.enums;
+(function() {
+    'use strict';
 
-MobileScmDemandPlanning.forms = {
+    window.MobileScmDemandPlanning = window.MobileScmDemandPlanning || {};
+    const f = window.Layer8FormFactory;
+    const enums = MobileScmDemandPlanning.enums;
+
+    MobileScmDemandPlanning.forms = {
     ScmDemandForecast: f.form('Demand Forecast', [
         f.section('Forecast Details', [
             ...f.select('forecastMethod', 'Forecast Method', enums.FORECAST_METHOD, true),
@@ -88,3 +91,5 @@ MobileScmDemandPlanning.forms = {
         ])
     ])
 };
+
+})();

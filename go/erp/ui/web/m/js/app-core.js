@@ -81,9 +81,11 @@ limitations under the License.
             // Set user info
             this.updateUserInfo();
 
+            // Get auth token for API calls
+            const token = Layer8MAuth.getBearerToken();
+
             // Load currency cache for Money form fields
             try {
-                const token = Layer8MAuth.getBearerToken();
                 const query = encodeURIComponent(JSON.stringify({ text: 'select * from Currency where isActive=true' }));
                 const resp = await fetch(`/erp/40/Currency?body=${query}`, {
                     headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }

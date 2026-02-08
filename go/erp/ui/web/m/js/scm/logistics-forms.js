@@ -17,11 +17,14 @@ limitations under the License.
  * Mobile Logistics Module - Form Configurations
  * Desktop Equivalent: scm/logistics/logistics-forms.js
  */
-window.MobileLogistics = window.MobileLogistics || {};
-const f = window.Layer8FormFactory;
-const enums = MobileLogistics.enums;
+(function() {
+    'use strict';
 
-MobileLogistics.forms = {
+    window.MobileLogistics = window.MobileLogistics || {};
+    const f = window.Layer8FormFactory;
+    const enums = MobileLogistics.enums;
+
+    MobileLogistics.forms = {
     ScmCarrier: f.form('ScmCarrier', [
         f.section('Carrier Information', [
             ...f.text('code', 'Carrier Code', true),
@@ -113,3 +116,5 @@ MobileLogistics.forms = {
         ])
     ])
 };
+
+})();

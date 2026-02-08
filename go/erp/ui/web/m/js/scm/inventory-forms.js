@@ -17,11 +17,14 @@ limitations under the License.
  * Mobile Inventory Module - Form Configurations
  * Desktop Equivalent: scm/inventory/inventory-forms.js
  */
-window.MobileInventory = window.MobileInventory || {};
-const f = window.Layer8FormFactory;
-const enums = MobileInventory.enums;
+(function() {
+    'use strict';
 
-MobileInventory.forms = {
+    window.MobileInventory = window.MobileInventory || {};
+    const f = window.Layer8FormFactory;
+    const enums = MobileInventory.enums;
+
+    MobileInventory.forms = {
     ScmItem: f.form('ScmItem', [
         f.section('Item Information', [
             ...f.text('itemNumber', 'Item Number', true),
@@ -110,3 +113,5 @@ MobileInventory.forms = {
         ])
     ])
 };
+
+})();

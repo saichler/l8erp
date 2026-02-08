@@ -12,6 +12,7 @@ COPY erp_mfg.go /home/src/github.com/saichler/build/
 COPY erp_prj.go /home/src/github.com/saichler/build/
 COPY erp_sales.go /home/src/github.com/saichler/build/
 COPY erp_scm.go /home/src/github.com/saichler/build/
+COPY erp_sys.go /home/src/github.com/saichler/build/
 RUN go mod init
 RUN GOPROXY=direct GOPRIVATE=github.com go mod tidy
 RUN go build -o erp

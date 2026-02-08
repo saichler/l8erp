@@ -17,11 +17,14 @@ limitations under the License.
  * Mobile Supply Planning Module - Form Configurations
  * Desktop Equivalent: scm/supply-planning/supply-planning-forms.js
  */
-window.MobileScmSupplyPlanning = window.MobileScmSupplyPlanning || {};
-const f = window.Layer8FormFactory;
-const enums = MobileScmSupplyPlanning.enums;
+(function() {
+    'use strict';
 
-MobileScmSupplyPlanning.forms = {
+    window.MobileScmSupplyPlanning = window.MobileScmSupplyPlanning || {};
+    const f = window.Layer8FormFactory;
+    const enums = MobileScmSupplyPlanning.enums;
+
+    MobileScmSupplyPlanning.forms = {
     ScmMaterialRequirement: f.form('Material Requirement', [
         f.section('Requirement Details', [
             ...f.reference('itemId', 'Item', 'ScmItem', true),
@@ -90,3 +93,5 @@ MobileScmSupplyPlanning.forms = {
         ])
     ])
 };
+
+})();
