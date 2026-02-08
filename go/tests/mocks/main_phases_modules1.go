@@ -2,7 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Mock data phase runners for HCM, FIN, SCM modules
 */
-package main
+package mocks
 
 func runHCMPhases(client *HCMClient, store *MockDataStore) {
 	runPhase("Phase 1: Foundation Objects", func() error { return generatePhase1(client, store) })

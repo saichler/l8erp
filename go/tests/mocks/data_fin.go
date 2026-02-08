@@ -2,7 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 FIN module data arrays for mock data generation
 */
-package main
+package mocks
 
 var (
 	vendorNames = []string{

@@ -12,10 +12,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package main
+package mocks
 
 // runAllPhases executes all module phases in dependency order
-func runAllPhases(client *HCMClient, store *MockDataStore) {
+func RunAllPhases(client *HCMClient, store *MockDataStore) {
 	// FIN Foundation (Phases 1-3) — provides CurrencyIDs needed by all modules
 	runFINFoundation(client, store)
 

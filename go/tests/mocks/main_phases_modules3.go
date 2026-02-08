@@ -2,7 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Mock data phase runners for PRJ, BI, DOC, ECOM, COMP modules
 */
-package main
+package mocks
 
 func runPRJPhases(client *HCMClient, store *MockDataStore) {
 	runPhase("PRJ Phase 1: Foundation", func() error { return generatePrjPhase1(client, store) })

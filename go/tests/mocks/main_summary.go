@@ -12,12 +12,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package main
+package mocks
 
 import "fmt"
 
 // printSummary prints the final summary of all generated mock data
-func printSummary(store *MockDataStore) {
+func PrintSummary(store *MockDataStore) {
 	fmt.Printf("\n=======================\n")
 	fmt.Printf("Mock data generation complete!\n")
 

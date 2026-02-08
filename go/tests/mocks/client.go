@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package main
+package mocks
 
 import (
 	"bytes"
@@ -29,7 +29,12 @@ type HCMClient struct {
 	client  *http.Client
 }
 
-func (c *HCMClient) authenticate(user, password string) error {
+// NewHCMClient creates a new HCMClient with the given base URL and HTTP client
+func NewHCMClient(baseURL string, httpClient *http.Client) *HCMClient {
+	return &HCMClient{baseURL: baseURL, client: httpClient}
+}
+
+func (c *HCMClient) Authenticate(user, password string) error {
 	authData := map[string]string{
 		"user": user,
 		"pass": password,
@@ -60,15 +65,15 @@ func (c *HCMClient) authenticate(user, password string) error {
 	return nil
 }
 
-func (c *HCMClient) post(endpoint string, data interface{}) error {
+func (c *HCMClient) Post(endpoint string, data interface{}) (string, error) {
 	body, err := json.Marshal(data)
 	if err != nil {
-		return fmt.Errorf("failed to marshal data: %w", err)
+		return "", fmt.Errorf("failed to marshal data: %w", err)
 	}
 
 	req, err := http.NewRequest("POST", c.baseURL+endpoint, bytes.NewReader(body))
 	if err != nil {
-		return fmt.Errorf("failed to create request: %w", err)
+		return "", fmt.Errorf("failed to create request: %w", err)
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -76,14 +81,15 @@ func (c *HCMClient) post(endpoint string, data interface{}) error {
 
 	resp, err := c.client.Do(req)
 	if err != nil {
-		return fmt.Errorf("request failed: %w", err)
+		return "", fmt.Errorf("request failed: %w", err)
 	}
 	defer resp.Body.Close()
 
+	respBody, _ := io.ReadAll(resp.Body)
+
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
-		respBody, _ := io.ReadAll(resp.Body)
-		return fmt.Errorf("request failed with status %d: %s", resp.StatusCode, string(respBody))
+		return string(respBody), fmt.Errorf("request failed with status %d: %s", resp.StatusCode, string(respBody))
 	}
 
-	return nil
+	return string(respBody), nil
 }

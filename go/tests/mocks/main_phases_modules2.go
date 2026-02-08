@@ -2,7 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Mock data phase runners for Sales, MFG, CRM modules
 */
-package main
+package mocks
 
 func runSalesPhases(client *HCMClient, store *MockDataStore) {
 	runPhase("Sales Phase 1: Foundation", func() error { return generateSalesPhase1(client, store) })

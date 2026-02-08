@@ -2,7 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 FIN and SCM module ID stores for mock data generation
 */
-package main
+package mocks
 
 // FINStore holds generated IDs for FIN module
 type FINStore struct {

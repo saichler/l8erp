@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package main
+package mocks
 
 import (
 	"fmt"
@@ -23,7 +23,13 @@ import (
 // runOp executes a single phase operation: post + store IDs
 func runOp(client *HCMClient, label, endpoint string, list interface{}, ids []string, storeIDs *[]string) error {
 	fmt.Printf("  Creating %s...", label)
-	if err := client.post(endpoint, list); err != nil {
+	resp, err := client.Post(endpoint, list)
+	if err != nil {
+		fmt.Printf(" FAILED\n")
+		fmt.Printf("    Error: %v\n", err)
+		if resp != "" {
+			fmt.Printf("    Response: %s\n", resp)
+		}
 		return fmt.Errorf("%s: %w", label, err)
 	}
 	if storeIDs != nil && ids != nil {

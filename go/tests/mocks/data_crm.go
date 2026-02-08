@@ -2,7 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 CRM module data arrays for mock data generation
 */
-package main
+package mocks
 
 var (
 	crmLeadSourceNames = []string{

@@ -3,7 +3,7 @@
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
-package main
+package mocks
 
 // Generates:
 // - DocAttachment

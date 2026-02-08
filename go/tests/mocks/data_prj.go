@@ -2,7 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 PRJ module data arrays for mock data generation
 */
-package main
+package mocks
 
 var (
 	prjProjectNames = []string{

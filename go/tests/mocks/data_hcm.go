@@ -2,7 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 HCM module data arrays for mock data generation
 */
-package main
+package mocks
 
 var (
 	jobFamilyNames = []string{

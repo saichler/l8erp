@@ -2,7 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 CRM and PRJ module ID stores for mock data generation
 */
-package main
+package mocks
 
 // CRMStore holds generated IDs for CRM module
 type CRMStore struct {

@@ -2,7 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 SCM module data arrays for mock data generation
 */
-package main
+package mocks
 
 var (
 	itemCategoryNames = []string{

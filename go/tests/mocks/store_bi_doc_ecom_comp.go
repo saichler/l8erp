@@ -2,7 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 BI, DOC, ECOM, COMP module ID stores for mock data generation
 */
-package main
+package mocks
 
 // BIStore holds generated IDs for BI module
 type BIStore struct {

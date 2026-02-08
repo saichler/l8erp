@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package main
+package mocks
 
 // comp_phases.go
 // COMP Module ServiceArea = 110
@@ -32,7 +32,7 @@ import (
 func generateCompPhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate CompRegulations (no store dependencies)
 	regulations := generateCompRegulations()
-	err := client.post("/erp/110/CompReg", &comp.CompRegulationList{List: regulations})
+	_, err := client.Post("/erp/110/CompReg", &comp.CompRegulationList{List: regulations})
 	if err != nil {
 		return fmt.Errorf("failed to create CompRegulations: %w", err)
 	}
@@ -43,7 +43,7 @@ func generateCompPhase1(client *HCMClient, store *MockDataStore) error {
 
 	// Generate CompControls
 	controls := generateCompControls(store)
-	err = client.post("/erp/110/CompCtrl", &comp.CompControlList{List: controls})
+	_, err = client.Post("/erp/110/CompCtrl", &comp.CompControlList{List: controls})
 	if err != nil {
 		return fmt.Errorf("failed to create CompControls: %w", err)
 	}
@@ -54,7 +54,7 @@ func generateCompPhase1(client *HCMClient, store *MockDataStore) error {
 
 	// Generate CompPolicyDocuments
 	policies := generateCompPolicyDocuments(store)
-	err = client.post("/erp/110/CompPolicy", &comp.CompPolicyDocumentList{List: policies})
+	_, err = client.Post("/erp/110/CompPolicy", &comp.CompPolicyDocumentList{List: policies})
 	if err != nil {
 		return fmt.Errorf("failed to create CompPolicyDocuments: %w", err)
 	}
@@ -65,7 +65,7 @@ func generateCompPhase1(client *HCMClient, store *MockDataStore) error {
 
 	// Generate CompInsurancePolicies
 	insurances := generateCompInsurancePolicies(store)
-	err = client.post("/erp/110/CompInsur", &comp.CompInsurancePolicyList{List: insurances})
+	_, err = client.Post("/erp/110/CompInsur", &comp.CompInsurancePolicyList{List: insurances})
 	if err != nil {
 		return fmt.Errorf("failed to create CompInsurancePolicies: %w", err)
 	}
@@ -86,7 +86,7 @@ func generateCompPhase1(client *HCMClient, store *MockDataStore) error {
 func generateCompPhase2(client *HCMClient, store *MockDataStore) error {
 	// Generate CompRequirements
 	requirements := generateCompRequirements(store)
-	err := client.post("/erp/110/CompReq", &comp.CompRequirementList{List: requirements})
+	_, err := client.Post("/erp/110/CompReq", &comp.CompRequirementList{List: requirements})
 	if err != nil {
 		return fmt.Errorf("failed to create CompRequirements: %w", err)
 	}
@@ -97,7 +97,7 @@ func generateCompPhase2(client *HCMClient, store *MockDataStore) error {
 
 	// Generate CompApprovalMatrices
 	matrices := generateCompApprovalMatrices(store)
-	err = client.post("/erp/110/CompAprvMx", &comp.CompApprovalMatrixList{List: matrices})
+	_, err = client.Post("/erp/110/CompAprvMx", &comp.CompApprovalMatrixList{List: matrices})
 	if err != nil {
 		return fmt.Errorf("failed to create CompApprovalMatrices: %w", err)
 	}
@@ -108,7 +108,7 @@ func generateCompPhase2(client *HCMClient, store *MockDataStore) error {
 
 	// Generate CompSegregationRules
 	rules := generateCompSegregationRules(store)
-	err = client.post("/erp/110/CompSegrul", &comp.CompSegregationRuleList{List: rules})
+	_, err = client.Post("/erp/110/CompSegrul", &comp.CompSegregationRuleList{List: rules})
 	if err != nil {
 		return fmt.Errorf("failed to create CompSegregationRules: %w", err)
 	}
@@ -119,7 +119,7 @@ func generateCompPhase2(client *HCMClient, store *MockDataStore) error {
 
 	// Generate CompRiskRegisters
 	risks := generateCompRiskRegisters(store)
-	err = client.post("/erp/110/CompRisk", &comp.CompRiskRegisterList{List: risks})
+	_, err = client.Post("/erp/110/CompRisk", &comp.CompRiskRegisterList{List: risks})
 	if err != nil {
 		return fmt.Errorf("failed to create CompRiskRegisters: %w", err)
 	}
@@ -130,7 +130,7 @@ func generateCompPhase2(client *HCMClient, store *MockDataStore) error {
 
 	// Generate CompAuditSchedules
 	schedules := generateCompAuditSchedules(store)
-	err = client.post("/erp/110/CompAudSch", &comp.CompAuditScheduleList{List: schedules})
+	_, err = client.Post("/erp/110/CompAudSch", &comp.CompAuditScheduleList{List: schedules})
 	if err != nil {
 		return fmt.Errorf("failed to create CompAuditSchedules: %w", err)
 	}
@@ -151,7 +151,7 @@ func generateCompPhase2(client *HCMClient, store *MockDataStore) error {
 func generateCompPhase3(client *HCMClient, store *MockDataStore) error {
 	// Generate CompComplianceStatuses
 	statuses := generateCompComplianceStatuses(store)
-	err := client.post("/erp/110/CompStatus", &comp.CompComplianceStatusList{List: statuses})
+	_, err := client.Post("/erp/110/CompStatus", &comp.CompComplianceStatusList{List: statuses})
 	if err != nil {
 		return fmt.Errorf("failed to create CompComplianceStatuses: %w", err)
 	}
@@ -162,7 +162,7 @@ func generateCompPhase3(client *HCMClient, store *MockDataStore) error {
 
 	// Generate CompControlAssessments
 	assessments := generateCompControlAssessments(store)
-	err = client.post("/erp/110/CompCtrlAs", &comp.CompControlAssessmentList{List: assessments})
+	_, err = client.Post("/erp/110/CompCtrlAs", &comp.CompControlAssessmentList{List: assessments})
 	if err != nil {
 		return fmt.Errorf("failed to create CompControlAssessments: %w", err)
 	}
@@ -173,7 +173,7 @@ func generateCompPhase3(client *HCMClient, store *MockDataStore) error {
 
 	// Generate CompCertifications
 	certifications := generateCompCertifications(store)
-	err = client.post("/erp/110/CompCert", &comp.CompCertificationList{List: certifications})
+	_, err = client.Post("/erp/110/CompCert", &comp.CompCertificationList{List: certifications})
 	if err != nil {
 		return fmt.Errorf("failed to create CompCertifications: %w", err)
 	}
@@ -184,7 +184,7 @@ func generateCompPhase3(client *HCMClient, store *MockDataStore) error {
 
 	// Generate CompRiskAssessments
 	riskAssessments := generateCompRiskAssessments(store)
-	err = client.post("/erp/110/CompRiskAs", &comp.CompRiskAssessmentList{List: riskAssessments})
+	_, err = client.Post("/erp/110/CompRiskAs", &comp.CompRiskAssessmentList{List: riskAssessments})
 	if err != nil {
 		return fmt.Errorf("failed to create CompRiskAssessments: %w", err)
 	}
@@ -195,7 +195,7 @@ func generateCompPhase3(client *HCMClient, store *MockDataStore) error {
 
 	// Generate CompMitigationPlans
 	plans := generateCompMitigationPlans(store)
-	err = client.post("/erp/110/CompMitig", &comp.CompMitigationPlanList{List: plans})
+	_, err = client.Post("/erp/110/CompMitig", &comp.CompMitigationPlanList{List: plans})
 	if err != nil {
 		return fmt.Errorf("failed to create CompMitigationPlans: %w", err)
 	}
@@ -214,7 +214,7 @@ func generateCompPhase3(client *HCMClient, store *MockDataStore) error {
 func generateCompPhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate CompViolationRecords
 	violations := generateCompViolationRecords(store)
-	err := client.post("/erp/110/CompVioltn", &comp.CompViolationRecordList{List: violations})
+	_, err := client.Post("/erp/110/CompVioltn", &comp.CompViolationRecordList{List: violations})
 	if err != nil {
 		return fmt.Errorf("failed to create CompViolationRecords: %w", err)
 	}
@@ -225,7 +225,7 @@ func generateCompPhase4(client *HCMClient, store *MockDataStore) error {
 
 	// Generate CompIncidents
 	incidents := generateCompIncidents(store)
-	err = client.post("/erp/110/CompIncdnt", &comp.CompIncidentList{List: incidents})
+	_, err = client.Post("/erp/110/CompIncdnt", &comp.CompIncidentList{List: incidents})
 	if err != nil {
 		return fmt.Errorf("failed to create CompIncidents: %w", err)
 	}
@@ -236,7 +236,7 @@ func generateCompPhase4(client *HCMClient, store *MockDataStore) error {
 
 	// Generate CompAuditFindings
 	findings := generateCompAuditFindings(store)
-	err = client.post("/erp/110/CompAudFnd", &comp.CompAuditFindingList{List: findings})
+	_, err = client.Post("/erp/110/CompAudFnd", &comp.CompAuditFindingList{List: findings})
 	if err != nil {
 		return fmt.Errorf("failed to create CompAuditFindings: %w", err)
 	}
@@ -255,7 +255,7 @@ func generateCompPhase4(client *HCMClient, store *MockDataStore) error {
 func generateCompPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate CompRemediationActions
 	actions := generateCompRemediationActions(store)
-	err := client.post("/erp/110/CompRemed", &comp.CompRemediationActionList{List: actions})
+	_, err := client.Post("/erp/110/CompRemed", &comp.CompRemediationActionList{List: actions})
 	if err != nil {
 		return fmt.Errorf("failed to create CompRemediationActions: %w", err)
 	}
@@ -266,7 +266,7 @@ func generateCompPhase5(client *HCMClient, store *MockDataStore) error {
 
 	// Generate CompAuditReports
 	auditReports := generateCompAuditReports(store)
-	err = client.post("/erp/110/CompAudRpt", &comp.CompAuditReportList{List: auditReports})
+	_, err = client.Post("/erp/110/CompAudRpt", &comp.CompAuditReportList{List: auditReports})
 	if err != nil {
 		return fmt.Errorf("failed to create CompAuditReports: %w", err)
 	}
@@ -277,7 +277,7 @@ func generateCompPhase5(client *HCMClient, store *MockDataStore) error {
 
 	// Generate CompComplianceReports
 	complianceReports := generateCompComplianceReports(store)
-	err = client.post("/erp/110/CompCmpRpt", &comp.CompComplianceReportList{List: complianceReports})
+	_, err = client.Post("/erp/110/CompCmpRpt", &comp.CompComplianceReportList{List: complianceReports})
 	if err != nil {
 		return fmt.Errorf("failed to create CompComplianceReports: %w", err)
 	}

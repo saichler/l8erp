@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package main
+package mocks
 
 import (
 	"fmt"
@@ -168,31 +168,31 @@ func generatePhase3(client *HCMClient, store *MockDataStore) error {
 func generatePhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate Employee Documents
 	documents := generateEmployeeDocuments(store)
-	if err := runOp(client, "Employee Documents", "/erp/30/EmpDoc", &hcm.EmployeeDocumentList{List: documents}, nil, nil); err != nil {
+	if err := runOp(client, "Employee Documents", "/erp/30/EmpDoc", &hcm.EmployeeDocumentList{List: documents}, extractIDs(documents, func(e *hcm.EmployeeDocument) string { return e.DocumentId }), nil); err != nil {
 		return err
 	}
 
 	// Generate Timesheets
 	timesheets := generateTimesheets(store)
-	if err := runOp(client, "Timesheets", "/erp/30/Timesheet", &hcm.TimesheetList{List: timesheets}, nil, nil); err != nil {
+	if err := runOp(client, "Timesheets", "/erp/30/Timesheet", &hcm.TimesheetList{List: timesheets}, extractIDs(timesheets, func(e *hcm.Timesheet) string { return e.TimesheetId }), nil); err != nil {
 		return err
 	}
 
 	// Generate Leave Balances
 	leaveBalances := generateLeaveBalances(store)
-	if err := runOp(client, "Leave Balances", "/erp/30/LeaveBal", &hcm.LeaveBalanceList{List: leaveBalances}, nil, nil); err != nil {
+	if err := runOp(client, "Leave Balances", "/erp/30/LeaveBal", &hcm.LeaveBalanceList{List: leaveBalances}, extractIDs(leaveBalances, func(e *hcm.LeaveBalance) string { return e.BalanceId }), nil); err != nil {
 		return err
 	}
 
 	// Generate Benefit Enrollments
 	enrollments := generateBenefitEnrollments(store)
-	if err := runOp(client, "Benefit Enrollments", "/erp/30/BenEnrol", &hcm.BenefitEnrollmentList{List: enrollments}, nil, nil); err != nil {
+	if err := runOp(client, "Benefit Enrollments", "/erp/30/BenEnrol", &hcm.BenefitEnrollmentList{List: enrollments}, extractIDs(enrollments, func(e *hcm.BenefitEnrollment) string { return e.EnrollmentId }), nil); err != nil {
 		return err
 	}
 
 	// Generate Employee Skills
 	empSkills := generateEmployeeSkills(store)
-	if err := runOp(client, "Employee Skills", "/erp/30/EmpSkill", &hcm.EmployeeSkillList{List: empSkills}, nil, nil); err != nil {
+	if err := runOp(client, "Employee Skills", "/erp/30/EmpSkill", &hcm.EmployeeSkillList{List: empSkills}, extractIDs(empSkills, func(e *hcm.EmployeeSkill) string { return e.EmployeeSkillId }), nil); err != nil {
 		return err
 	}
 
@@ -204,13 +204,13 @@ func generatePhase4(client *HCMClient, store *MockDataStore) error {
 
 	// Generate Goals
 	goals := generateGoals(store)
-	if err := runOp(client, "Goals", "/erp/30/Goal", &hcm.GoalList{List: goals}, nil, nil); err != nil {
+	if err := runOp(client, "Goals", "/erp/30/Goal", &hcm.GoalList{List: goals}, extractIDs(goals, func(e *hcm.Goal) string { return e.GoalId }), nil); err != nil {
 		return err
 	}
 
 	// Generate Employee Compensation
 	empComp := generateEmployeeCompensation(store)
-	if err := runOp(client, "Employee Compensation", "/erp/30/EmpComp", &hcm.EmployeeCompensationList{List: empComp}, nil, nil); err != nil {
+	if err := runOp(client, "Employee Compensation", "/erp/30/EmpComp", &hcm.EmployeeCompensationList{List: empComp}, extractIDs(empComp, func(e *hcm.EmployeeCompensation) string { return e.CompensationId }), nil); err != nil {
 		return err
 	}
 

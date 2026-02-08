@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package main
+package mocks
 
 // MockDataStore holds generated IDs for all modules
 // Uses struct embedding to keep each module's IDs in separate files

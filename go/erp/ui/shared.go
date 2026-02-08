@@ -12,7 +12,7 @@ func CreateVnic(vnet uint32) ifs.IVNic {
 	resources := common.CreateResources("web-" + strconv.Itoa(int(vnet)))
 	resources.SysConfig().VnetPort = vnet
 
-	registerTypes(resources)
+	RegisterTypes(resources)
 
 	nic := vnic.NewVirtualNetworkInterface(resources, nil)
 	nic.Resources().SysConfig().KeepAliveIntervalSeconds = 60
@@ -22,7 +22,7 @@ func CreateVnic(vnet uint32) ifs.IVNic {
 	return nic
 }
 
-func registerTypes(resources ifs.IResources) {
+func RegisterTypes(resources ifs.IResources) {
 	registerHcmTypes(resources)
 	registerFinTypes(resources)
 	registerScmTypes(resources)

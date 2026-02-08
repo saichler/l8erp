@@ -2,7 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 PRJ Time & Expense generators - Part 2 (Timesheet Entries and Expense)
 */
-package main
+package mocks
 
 import (
 	"fmt"

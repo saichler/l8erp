@@ -2,7 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 HCM module ID store for mock data generation
 */
-package main
+package mocks
 
 // HCMStore holds generated IDs for HCM module
 type HCMStore struct {

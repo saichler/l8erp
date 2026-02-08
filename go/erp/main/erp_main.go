@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"github.com/saichler/l8bus/go/overlay/vnic"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8erp/go/erp/services"
 	"github.com/saichler/l8types/go/ifs"
 	"os/exec"
 	"time"
@@ -34,18 +35,7 @@ func main() {
 	//Start postgres
 	startDb(nic)
 
-	activateHCMServices(nic)
-	activateFinServices(nic)
-	activateSCMServices(nic)
-	activateSalesServices(nic)
-	activateMfgServices(nic)
-	activateCrmServices(nic)
-	activatePrjServices(nic)
-	activateBiServices(nic)
-	activateDocServices(nic)
-	activateEcomServices(nic)
-	activateCompServices(nic)
-	activateSysServices(nic)
+	services.ActivateAllServices(common.DB_CREDS, common.DB_NAME, nic)
 
 	common.WaitForSignal(res)
 }

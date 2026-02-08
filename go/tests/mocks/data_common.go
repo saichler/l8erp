@@ -2,7 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Common data arrays for mock data generation
 */
-package main
+package mocks
 
 var (
 	firstNames = []string{

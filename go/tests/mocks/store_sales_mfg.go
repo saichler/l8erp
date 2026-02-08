@@ -2,7 +2,7 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 Sales and MFG module ID stores for mock data generation
 */
-package main
+package mocks
 
 // SalesStore holds generated IDs for Sales module
 type SalesStore struct {
