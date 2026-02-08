@@ -152,7 +152,9 @@ limitations under the License.
             let html = '<div class="nav-section-title">ERP Modules</div>';
             html += '<div class="nav-card-grid">';
 
+            const filter = window.Layer8DModuleFilter;
             LAYER8M_NAV_CONFIG.modules.forEach(module => {
+                if (filter && !filter.isEnabled(module.key)) return;
                 const isImplemented = !!LAYER8M_NAV_CONFIG[module.key];
                 const cardClass = isImplemented ? 'nav-card' : 'nav-card coming-soon';
 
@@ -188,8 +190,13 @@ limitations under the License.
             const moduleInfo = LAYER8M_NAV_CONFIG.modules.find(m => m.key === moduleKey);
             const moduleLabel = moduleInfo ? moduleInfo.label : moduleKey;
 
+            const filter = window.Layer8DModuleFilter;
+            const visibleSubModules = filter
+                ? moduleConfig.subModules.filter(sm => filter.isEnabled(moduleKey + '.' + sm.key))
+                : moduleConfig.subModules;
+
             let html = renderBackHeader(moduleLabel, 'Select a sub-module');
-            html += renderCardGrid(moduleConfig.subModules,
+            html += renderCardGrid(visibleSubModules,
                 (sm) => `Layer8MNav.navigateToSubModule('${moduleKey}', '${sm.key}')`);
 
             content.innerHTML = html;
@@ -212,8 +219,14 @@ limitations under the License.
             const subModuleLabel = subModuleInfo ? subModuleInfo.label : subModuleKey;
             const services = moduleConfig.services[subModuleKey];
 
+            const filter = window.Layer8DModuleFilter;
+            const basePath = moduleKey + '.' + subModuleKey;
+            const visibleServices = filter
+                ? services.filter(svc => filter.isEnabled(basePath + '.' + svc.key))
+                : services;
+
             let html = renderBackHeader(subModuleLabel, 'Select a service');
-            html += renderCardGrid(services,
+            html += renderCardGrid(visibleServices,
                 (svc) => `Layer8MNav.navigateToService('${moduleKey}', '${subModuleKey}', '${svc.key}')`);
 
             content.innerHTML = html;
@@ -237,6 +250,16 @@ limitations under the License.
 
             if (!serviceConfig) {
                 this.showComingSoon(serviceKey);
+                return;
+            }
+
+            // Custom (non-table) service view
+            if (serviceConfig.customInit) {
+                let html = renderDataListHeader(serviceConfig.label, serviceConfig.subtitle || '');
+                html += `<div id="${serviceConfig.customContainer || 'custom-service-container'}"></div>`;
+                content.innerHTML = html;
+                const obj = window[serviceConfig.customInit];
+                if (obj && typeof obj.initialize === 'function') obj.initialize();
                 return;
             }
 

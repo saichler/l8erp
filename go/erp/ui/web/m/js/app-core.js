@@ -201,8 +201,7 @@ limitations under the License.
          */
         async loadSection(section, forceReload = false) {
             // Modules with nav config use the dashboard + Layer8MNav instead of static HTML
-            // System has custom content (health detail popup, modules settings) so skip redirect
-            if (section !== 'dashboard' && section !== 'system' && window.LAYER8M_NAV_CONFIG && LAYER8M_NAV_CONFIG[section]) {
+            if (section !== 'dashboard' && window.LAYER8M_NAV_CONFIG && LAYER8M_NAV_CONFIG[section]) {
                 await this._loadDashboardForModule(section, forceReload);
                 return;
             }

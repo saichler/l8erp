@@ -111,11 +111,14 @@ limitations under the License.
         // Currency <select> dropdown
         const currencies = (window.Layer8DUtils && Layer8DUtils.getCurrencyList)
             ? Layer8DUtils.getCurrencyList() : [];
+        const selectedCurrency = currencies.find(c => c.currencyId === currencyId);
+        const currSymbol = selectedCurrency ? (selectedCurrency.symbol || '$') : '$';
+
         let selectHtml = `<select name="${config.key}.__currencyId" class="mobile-money-currency-select" data-previous-currency-id="${Layer8MUtils.escapeAttr(currencyId)}" onchange="Layer8MFormFields.onMoneyCurrencyChange(this)"${readonly ? ' disabled' : ''}>`;
         selectHtml += '<option value="">--</option>';
         for (const c of currencies) {
             const sel = c.currencyId === currencyId ? ' selected' : '';
-            selectHtml += `<option value="${Layer8MUtils.escapeAttr(c.currencyId)}"${sel}>${Layer8MUtils.escapeHtml(c.code)}</option>`;
+            selectHtml += `<option value="${Layer8MUtils.escapeAttr(c.currencyId)}" data-symbol="${Layer8MUtils.escapeAttr(c.symbol || '$')}"${sel}>${Layer8MUtils.escapeHtml(c.code)}</option>`;
         }
         selectHtml += '</select>';
 
@@ -123,13 +126,16 @@ limitations under the License.
         const requiredAttr = config.required ? 'required' : '';
         const readonlyAttr = readonly ? 'readonly' : '';
 
-        const amountHtml = `<input type="number"
-                   name="${config.key}.__amount"
-                   value="${displayAmount}"
-                   data-format="currency"
-                   step="0.01" min="0"
-                   class="mobile-form-input mobile-money-amount"
-                   ${requiredAttr} ${readonlyAttr}>`;
+        const amountHtml = `<div class="mobile-form-input-group">
+                    <span class="mobile-form-input-prefix mobile-money-symbol">${Layer8MUtils.escapeHtml(currSymbol)}</span>
+                    <input type="number"
+                           name="${config.key}.__amount"
+                           value="${displayAmount}"
+                           data-format="currency"
+                           step="0.01" min="0"
+                           class="mobile-form-input with-prefix mobile-money-amount"
+                           ${requiredAttr} ${readonlyAttr}>
+                </div>`;
 
         return `
             <div class="mobile-form-field">
@@ -154,6 +160,13 @@ limitations under the License.
         if (!group) return;
         const amountInput = group.querySelector('.mobile-money-amount');
         if (!amountInput) return;
+
+        // Update currency symbol
+        const symbolEl = group.querySelector('.mobile-money-symbol');
+        if (symbolEl) {
+            const newSymbol = selectedOption ? (selectedOption.dataset.symbol || '$') : '$';
+            symbolEl.textContent = newSymbol;
+        }
 
         if (oldCurrencyId && newCurrencyId && oldCurrencyId !== newCurrencyId) {
             const displayAmount = parseFloat(amountInput.value);

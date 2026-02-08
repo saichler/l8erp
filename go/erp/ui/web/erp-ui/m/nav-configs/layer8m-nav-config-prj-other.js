@@ -242,7 +242,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         system: {
             subModules: [
                 { key: 'health', label: 'Health', icon: 'health' },
-                { key: 'security', label: 'Security', icon: 'security' }
+                { key: 'security', label: 'Security', icon: 'security' },
+                { key: 'modules', label: 'Modules', icon: 'modules' }
             ],
 
             services: {
@@ -253,6 +254,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'users', label: 'Users', icon: 'users', endpoint: '/73/users', model: 'L8User', idField: 'userId' },
                     { key: 'roles', label: 'Roles', icon: 'roles', endpoint: '/74/roles', model: 'L8Role', idField: 'roleId' },
                     { key: 'credentials', label: 'Credentials', icon: 'credentials', endpoint: '/75/Creds', model: 'L8Credentials', idField: 'id' }
+                ],
+                'modules': [
+                    { key: 'module-settings', label: 'Module Settings', icon: 'modules', customInit: 'L8SysModules', customContainer: 'modules-settings-container', subtitle: 'Enable or disable ERP modules' }
                 ]
             }
         }
