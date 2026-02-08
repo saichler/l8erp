@@ -119,6 +119,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     } catch (e) { console.warn('Failed to load exchange rates:', e); }
 
+    // Load module configuration — blocks app if server not ready
+    if (typeof Layer8DModuleFilter !== 'undefined') {
+        const configLoaded = await Layer8DModuleFilter.load(bearerToken);
+        if (!configLoaded) return; // logout already triggered
+        Layer8DModuleFilter.applyToSidebar();
+    }
+
     // Load default section (dashboard)
     loadSection('dashboard');
 

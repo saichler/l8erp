@@ -155,6 +155,11 @@ function loadSection(sectionName) {
                 if (sectionInitializers[sectionName]) {
                     sectionInitializers[sectionName]();
                 }
+
+                // Apply module filter to hide disabled sub-modules/services
+                if (window.Layer8DModuleFilter) {
+                    Layer8DModuleFilter.applyToSection(sectionName);
+                }
             }, 200);
         })
         .catch(error => {

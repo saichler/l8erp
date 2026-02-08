@@ -101,6 +101,9 @@ docker run --user "$(id -u):$(id -g)" -e PROTO=comp-controls.proto --mount type=
 docker run --user "$(id -u):$(id -g)" -e PROTO=comp-risk.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=comp-audit.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
 
+# System
+docker run --user "$(id -u):$(id -g)" -e PROTO=sys-moduleconfig.proto --mount type=bind,source="$PWD",target=/home/proto/ -it saichler/protoc:latest
+
 rm api.proto
 
 # Now move the generated bindings to the models directory and clean up
@@ -124,3 +127,4 @@ find . -name "*.go" -type f -exec sed -i 's|"./types/bi"|"github.com/saichler/l8
 find . -name "*.go" -type f -exec sed -i 's|"./types/doc"|"github.com/saichler/l8erp/go/types/doc"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/ecom"|"github.com/saichler/l8erp/go/types/ecom"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/comp"|"github.com/saichler/l8erp/go/types/comp"|g' {} +
+find . -name "*.go" -type f -exec sed -i 's|"./types/sys"|"github.com/saichler/l8erp/go/types/sys"|g' {} +

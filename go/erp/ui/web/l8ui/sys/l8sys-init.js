@@ -29,11 +29,12 @@ limitations under the License.
         requiredNamespaces: ['L8Security']
     });
 
-    // 2. Initialize Health Monitor when System section loads
+    // 2. Initialize Health Monitor and Modules Settings when System section loads
     var origInit = window.initializeL8Sys;
     window.initializeL8Sys = function() {
         if (origInit) origInit();
         if (window.L8Health) L8Health.initialize();
+        if (window.L8SysModules) L8SysModules.initialize();
     };
 
     // 3. Override CRUD methods to route to custom handlers per model

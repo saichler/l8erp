@@ -106,6 +106,13 @@ limitations under the License.
                 }
             } catch (e) { console.warn('Failed to load exchange rates:', e); }
 
+            // Load module configuration — blocks app if server not ready
+            if (typeof Layer8DModuleFilter !== 'undefined') {
+                const configLoaded = await Layer8DModuleFilter.load(token);
+                if (!configLoaded) return; // logout already triggered
+                this.applyModuleFilter();
+            }
+
             // Setup navigation
             this.initSidebar();
 
@@ -305,6 +312,23 @@ limitations under the License.
          */
         logout() {
             Layer8MAuth.logout();
+        },
+
+        /**
+         * Apply module filter to sidebar - hide disabled modules
+         */
+        applyModuleFilter() {
+            if (!window.Layer8DModuleFilter) return;
+            document.querySelectorAll('.sidebar-item[data-section]').forEach(item => {
+                const section = item.dataset.section;
+                // dashboard and system are never filtered
+                if (section === 'dashboard' || item.dataset.module === 'system') return;
+                // Map sidebar section to module key
+                const moduleKey = item.dataset.module || section;
+                if (!Layer8DModuleFilter.isEnabled(moduleKey)) {
+                    item.style.display = 'none';
+                }
+            });
         },
 
         /**

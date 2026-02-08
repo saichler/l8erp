@@ -36,6 +36,11 @@ limitations under the License.
                 { key: 'roles', label: 'Roles', icon: '🛡️', endpoint: '/74/roles', model: 'L8Role' },
                 { key: 'credentials', label: 'Credentials', icon: '🔑', endpoint: '/75/Creds', model: 'L8Credentials' }
             ]
+        },
+        'modules': {
+            label: 'Modules',
+            icon: '🧩',
+            services: []
         }
     };
 

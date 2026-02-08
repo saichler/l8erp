@@ -6,6 +6,7 @@ import (
 	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8erp/go/types/ecom"
+	"github.com/saichler/l8erp/go/types/sys"
 	"github.com/saichler/l8types/go/ifs"
 )
 
@@ -131,4 +132,8 @@ func registerCompTypes(resources ifs.IResources) {
 	common.RegisterType[comp.CompRemediationAction, comp.CompRemediationActionList](resources, "ActionId")
 	common.RegisterType[comp.CompAuditReport, comp.CompAuditReportList](resources, "ReportId")
 	common.RegisterType[comp.CompComplianceReport, comp.CompComplianceReportList](resources, "ReportId")
+}
+
+func registerSysTypes(resources ifs.IResources) {
+	common.RegisterType[sys.SysModuleConfig, sys.SysModuleConfigList](resources, "ConfigId")
 }

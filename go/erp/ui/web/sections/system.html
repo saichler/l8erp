@@ -12,12 +12,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<div class="section-container hcm-section">
+<div class="section-container l8-section">
     <!-- Header with Parallax Effect -->
-    <div class="hcm-header-frame parallax-container">
+    <div class="l8-header-frame parallax-container">
         <!-- Background Illustration Layer -->
-        <div class="hcm-header-bg parallax-layer" data-speed="0.5">
-            <svg class="hcm-illustration" viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg">
+        <div class="l8-header-bg parallax-layer" data-speed="0.5">
+            <svg class="l8-illustration" viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <linearGradient id="sysGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:0.4" />
@@ -81,52 +81,63 @@ limitations under the License.
         </div>
 
         <!-- Header Content Layer -->
-        <div class="hcm-header-content parallax-layer" data-speed="1">
-            <div class="hcm-header-title">
-                <div class="hcm-icon">⚙️</div>
+        <div class="l8-header-content parallax-layer" data-speed="1">
+            <div class="l8-header-title">
+                <div class="l8-icon">⚙️</div>
                 <div>
-                    <h1 class="hcm-title">System Administration</h1>
-                    <p class="hcm-subtitle">Users, Roles & Credentials Management</p>
+                    <h1 class="l8-title">System Administration</h1>
+                    <p class="l8-subtitle">Users, Roles & Credentials Management</p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Module Tabs -->
-    <div class="hcm-module-tabs">
-        <button class="hcm-module-tab active" data-module="health">
+    <div class="l8-module-tabs">
+        <button class="l8-module-tab active" data-module="health">
             <span class="tab-icon">💚</span>
             <span class="tab-label">Health</span>
         </button>
-        <button class="hcm-module-tab" data-module="security">
+        <button class="l8-module-tab" data-module="security">
             <span class="tab-icon">🔒</span>
             <span class="tab-label">Security</span>
+        </button>
+        <button class="l8-module-tab" data-module="modules">
+            <span class="tab-icon">🧩</span>
+            <span class="tab-label">Modules</span>
         </button>
     </div>
 
     <div class="section-content">
         <!-- Health Module -->
-        <div class="hcm-module-content active" data-module="health">
-            <div class="hcm-table-container" id="health-table-container"></div>
+        <div class="l8-module-content active" data-module="health">
+            <div class="l8-table-container" id="health-table-container"></div>
         </div>
 
         <!-- Security Module -->
-        <div class="hcm-module-content" data-module="security">
-            <nav class="hcm-subnav">
-                <a class="hcm-subnav-item active" data-service="users"><span class="subnav-icon">👤</span><span class="subnav-label">Users</span></a>
-                <a class="hcm-subnav-item" data-service="roles"><span class="subnav-icon">🛡️</span><span class="subnav-label">Roles</span></a>
-                <a class="hcm-subnav-item" data-service="credentials"><span class="subnav-icon">🔑</span><span class="subnav-label">Credentials</span></a>
+        <div class="l8-module-content" data-module="security">
+            <nav class="l8-subnav">
+                <a class="l8-subnav-item active" data-service="users"><span class="subnav-icon">👤</span><span class="subnav-label">Users</span></a>
+                <a class="l8-subnav-item" data-service="roles"><span class="subnav-icon">🛡️</span><span class="subnav-label">Roles</span></a>
+                <a class="l8-subnav-item" data-service="credentials"><span class="subnav-icon">🔑</span><span class="subnav-label">Credentials</span></a>
             </nav>
-            <div class="hcm-service-content">
-                <div class="hcm-service-view active" data-service="users">
-                    <div class="hcm-table-container" id="security-users-table-container"></div>
+            <div class="l8-service-content">
+                <div class="l8-service-view active" data-service="users">
+                    <div class="l8-table-container" id="security-users-table-container"></div>
                 </div>
-                <div class="hcm-service-view" data-service="roles">
-                    <div class="hcm-table-container" id="security-roles-table-container"></div>
+                <div class="l8-service-view" data-service="roles">
+                    <div class="l8-table-container" id="security-roles-table-container"></div>
                 </div>
-                <div class="hcm-service-view" data-service="credentials">
-                    <div class="hcm-table-container" id="security-credentials-table-container"></div>
+                <div class="l8-service-view" data-service="credentials">
+                    <div class="l8-table-container" id="security-credentials-table-container"></div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Modules Module -->
+        <div class="l8-module-content" data-module="modules">
+            <div class="l8-service-content" style="overflow-y:auto;">
+                <div id="modules-settings-container"></div>
             </div>
         </div>
     </div>

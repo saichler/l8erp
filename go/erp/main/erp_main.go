@@ -45,6 +45,7 @@ func main() {
 	activateDocServices(nic)
 	activateEcomServices(nic)
 	activateCompServices(nic)
+	activateSysServices(nic)
 
 	common.WaitForSignal(res)
 }

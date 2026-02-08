@@ -34,6 +34,7 @@ func registerTypes(resources ifs.IResources) {
 	registerDocTypes(resources)
 	registerEcomTypes(resources)
 	registerCompTypes(resources)
+	registerSysTypes(resources)
 }
 
 func registerHcmTypes(resources ifs.IResources) {

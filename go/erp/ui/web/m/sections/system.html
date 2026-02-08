@@ -15,18 +15,24 @@ limitations under the License.
 <div class="section-container" id="system-section">
     <div class="page-header">
         <h1 class="page-title">System Administration</h1>
-        <p class="page-subtitle">Health Monitoring & Security Management</p>
+        <p class="page-subtitle">Health, Security & Module Settings</p>
     </div>
 
     <!-- Module Tabs -->
     <div class="section-tabs">
         <button class="section-tab active" data-module="health">Health</button>
         <button class="section-tab" data-module="security">Security</button>
+        <button class="section-tab" data-module="modules">Modules</button>
     </div>
 
     <!-- Health Content -->
     <div id="system-health-content">
         <div id="system-health-table"></div>
+    </div>
+
+    <!-- Modules Content (hidden by default) -->
+    <div id="system-modules-content" style="display:none;">
+        <div id="modules-settings-container"></div>
     </div>
 
     <!-- Security Content (hidden by default) -->
@@ -160,15 +166,21 @@ function switchSystemModule(moduleKey) {
     currentSystemModule = moduleKey;
     var healthContent = document.getElementById('system-health-content');
     var securityContent = document.getElementById('system-security-content');
+    var modulesContent = document.getElementById('system-modules-content');
+
+    healthContent.style.display = 'none';
+    securityContent.style.display = 'none';
+    modulesContent.style.display = 'none';
 
     if (moduleKey === 'health') {
         healthContent.style.display = '';
-        securityContent.style.display = 'none';
         loadSystemHealth();
-    } else {
-        healthContent.style.display = 'none';
+    } else if (moduleKey === 'security') {
         securityContent.style.display = '';
         loadSecurityService(currentSecurityService);
+    } else if (moduleKey === 'modules') {
+        modulesContent.style.display = '';
+        if (window.L8SysModules) L8SysModules.initialize();
     }
 }
 
