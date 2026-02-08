@@ -19,70 +19,71 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileFixedAssets.enums;
     const render = MobileFixedAssets.render;
 
     MobileFixedAssets.columns = {
         Asset: [
-            { key: 'assetId', label: 'ID', sortKey: 'assetId', filterKey: 'assetId' },
-            { key: 'assetNumber', label: 'Asset #', sortKey: 'assetNumber', filterKey: 'assetNumber' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'categoryId', label: 'Category', sortKey: 'categoryId', filterKey: 'categoryId' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.ASSET_STATUS_VALUES, render: (item) => render.assetStatus(item.status) },
-            { key: 'acquisitionCost', label: 'Acquisition Cost', sortKey: 'acquisitionCost', render: (item) => Layer8MRenderers.renderMoney(item.acquisitionCost) },
-            { key: 'acquisitionDate', label: 'Acquisition Date', sortKey: 'acquisitionDate', render: (item) => Layer8MRenderers.renderDate(item.acquisitionDate) }
+            ...col.id('assetId'),
+            ...col.col('assetNumber', 'Asset #'),
+            ...col.col('name', 'Name'),
+            ...col.col('categoryId', 'Category'),
+            ...col.status('status', 'Status', enums.ASSET_STATUS_VALUES, render.assetStatus),
+            ...col.money('acquisitionCost', 'Acquisition Cost'),
+            ...col.date('acquisitionDate', 'Acquisition Date')
         ],
 
         AssetCategory: [
-            { key: 'categoryId', label: 'ID', sortKey: 'categoryId', filterKey: 'categoryId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            { key: 'defaultDepreciationMethod', label: 'Depreciation Method', sortKey: 'defaultDepreciationMethod', render: (item) => render.depreciationMethod(item.defaultDepreciationMethod) },
-            { key: 'defaultUsefulLifeMonths', label: 'Useful Life (Months)', sortKey: 'defaultUsefulLifeMonths' }
+            ...col.id('categoryId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.enum('defaultDepreciationMethod', 'Depreciation Method', null, render.depreciationMethod),
+            ...col.col('defaultUsefulLifeMonths', 'Useful Life (Months)')
         ],
 
         DepreciationSchedule: [
-            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'assetId', label: 'Asset', sortKey: 'assetId', filterKey: 'assetId' },
-            { key: 'depreciationDate', label: 'Depreciation Date', sortKey: 'depreciationDate', render: (item) => Layer8MRenderers.renderDate(item.depreciationDate) },
-            { key: 'depreciationAmount', label: 'Depreciation', sortKey: 'depreciationAmount', render: (item) => Layer8MRenderers.renderMoney(item.depreciationAmount) },
-            { key: 'accumulatedAmount', label: 'Accumulated', sortKey: 'accumulatedAmount', render: (item) => Layer8MRenderers.renderMoney(item.accumulatedAmount) },
-            { key: 'remainingValue', label: 'Remaining Value', sortKey: 'remainingValue', render: (item) => Layer8MRenderers.renderMoney(item.remainingValue) }
+            ...col.id('scheduleId'),
+            ...col.col('assetId', 'Asset'),
+            ...col.date('depreciationDate', 'Depreciation Date'),
+            ...col.money('depreciationAmount', 'Depreciation'),
+            ...col.money('accumulatedAmount', 'Accumulated'),
+            ...col.money('remainingValue', 'Remaining Value')
         ],
 
         AssetDisposal: [
-            { key: 'disposalId', label: 'ID', sortKey: 'disposalId', filterKey: 'disposalId' },
-            { key: 'assetId', label: 'Asset', sortKey: 'assetId', filterKey: 'assetId' },
-            { key: 'disposalDate', label: 'Disposal Date', sortKey: 'disposalDate', render: (item) => Layer8MRenderers.renderDate(item.disposalDate) },
-            { key: 'disposalMethod', label: 'Method', sortKey: 'disposalMethod', render: (item) => render.disposalMethod(item.disposalMethod) },
-            { key: 'disposalProceeds', label: 'Disposal Proceeds', sortKey: 'disposalProceeds', render: (item) => Layer8MRenderers.renderMoney(item.disposalProceeds) },
-            { key: 'gainLoss', label: 'Gain/Loss', sortKey: 'gainLoss', render: (item) => Layer8MRenderers.renderMoney(item.gainLoss) }
+            ...col.id('disposalId'),
+            ...col.col('assetId', 'Asset'),
+            ...col.date('disposalDate', 'Disposal Date'),
+            ...col.enum('disposalMethod', 'Method', null, render.disposalMethod),
+            ...col.money('disposalProceeds', 'Disposal Proceeds'),
+            ...col.money('gainLoss', 'Gain/Loss')
         ],
 
         AssetTransfer: [
-            { key: 'transferId', label: 'ID', sortKey: 'transferId', filterKey: 'transferId' },
-            { key: 'assetId', label: 'Asset', sortKey: 'assetId', filterKey: 'assetId' },
-            { key: 'fromDepartmentId', label: 'From Department', sortKey: 'fromDepartmentId', filterKey: 'fromDepartmentId' },
-            { key: 'toDepartmentId', label: 'To Department', sortKey: 'toDepartmentId', filterKey: 'toDepartmentId' },
-            { key: 'transferDate', label: 'Transfer Date', sortKey: 'transferDate', render: (item) => Layer8MRenderers.renderDate(item.transferDate) }
+            ...col.id('transferId'),
+            ...col.col('assetId', 'Asset'),
+            ...col.col('fromDepartmentId', 'From Department'),
+            ...col.col('toDepartmentId', 'To Department'),
+            ...col.date('transferDate', 'Transfer Date')
         ],
 
         AssetMaintenance: [
-            { key: 'maintenanceId', label: 'ID', sortKey: 'maintenanceId', filterKey: 'maintenanceId' },
-            { key: 'assetId', label: 'Asset', sortKey: 'assetId', filterKey: 'assetId' },
-            { key: 'maintenanceType', label: 'Type', sortKey: 'maintenanceType', render: (item) => render.maintenanceType(item.maintenanceType) },
-            { key: 'scheduledDate', label: 'Scheduled Date', sortKey: 'scheduledDate', render: (item) => Layer8MRenderers.renderDate(item.scheduledDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.maintenanceStatus(item.status) },
-            { key: 'cost', label: 'Cost', sortKey: 'cost', render: (item) => Layer8MRenderers.renderMoney(item.cost) }
+            ...col.id('maintenanceId'),
+            ...col.col('assetId', 'Asset'),
+            ...col.enum('maintenanceType', 'Type', null, render.maintenanceType),
+            ...col.date('scheduledDate', 'Scheduled Date'),
+            ...col.enum('status', 'Status', null, render.maintenanceStatus),
+            ...col.money('cost', 'Cost')
         ],
 
         AssetRevaluation: [
-            { key: 'revaluationId', label: 'ID', sortKey: 'revaluationId', filterKey: 'revaluationId' },
-            { key: 'assetId', label: 'Asset', sortKey: 'assetId', filterKey: 'assetId' },
-            { key: 'revaluationDate', label: 'Revaluation Date', sortKey: 'revaluationDate', render: (item) => Layer8MRenderers.renderDate(item.revaluationDate) },
-            { key: 'previousValue', label: 'Previous Value', sortKey: 'previousValue', render: (item) => Layer8MRenderers.renderMoney(item.previousValue) },
-            { key: 'newValue', label: 'New Value', sortKey: 'newValue', render: (item) => Layer8MRenderers.renderMoney(item.newValue) },
-            { key: 'adjustmentAmount', label: 'Adjustment', sortKey: 'adjustmentAmount', render: (item) => Layer8MRenderers.renderMoney(item.adjustmentAmount) }
+            ...col.id('revaluationId'),
+            ...col.col('assetId', 'Asset'),
+            ...col.date('revaluationDate', 'Revaluation Date'),
+            ...col.money('previousValue', 'Previous Value'),
+            ...col.money('newValue', 'New Value'),
+            ...col.money('adjustmentAmount', 'Adjustment')
         ]
     };
 

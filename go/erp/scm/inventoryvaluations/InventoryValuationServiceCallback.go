@@ -21,14 +21,8 @@ import (
 )
 
 func newInventoryValuationServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmInventoryValuation",
-		func(e *scm.ScmInventoryValuation) { common.GenerateID(&e.ValuationId) },
-		validate)
-}
-
-func validate(item *scm.ScmInventoryValuation, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ValuationId, "ValuationId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmInventoryValuation]("ScmInventoryValuation",
+		func(e *scm.ScmInventoryValuation) { common.GenerateID(&e.ValuationId) }).
+		Require(func(e *scm.ScmInventoryValuation) string { return e.ValuationId }, "ValuationId").
+		Build()
 }

@@ -19,73 +19,74 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileBiAnalytics.enums;
     const render = MobileBiAnalytics.render;
 
     MobileBiAnalytics.columns = {
         BiDataCube: [
-            { key: 'cubeId', label: 'ID', sortKey: 'cubeId', filterKey: 'cubeId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'dataSourceId', label: 'Data Source', sortKey: 'dataSourceId' },
-            { key: 'refreshSchedule', label: 'Refresh Schedule', sortKey: 'refreshSchedule' },
-            { key: 'lastRefresh', label: 'Last Refresh', sortKey: 'lastRefresh', render: (item) => Layer8MRenderers.renderDate(item.lastRefresh) },
-            { key: 'rowCount', label: 'Row Count', sortKey: 'rowCount' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('cubeId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.col('dataSourceId', 'Data Source'),
+            ...col.col('refreshSchedule', 'Refresh Schedule'),
+            ...col.date('lastRefresh', 'Last Refresh'),
+            ...col.col('rowCount', 'Row Count'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BiAnalysisModel: [
-            { key: 'modelId', label: 'ID', sortKey: 'modelId', filterKey: 'modelId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'modelType', label: 'Type', sortKey: 'modelType', filterKey: 'modelType', enumValues: enums.MODEL_TYPE_VALUES, render: (item) => render.modelType(item.modelType) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.MODEL_STATUS_VALUES, render: (item) => render.modelStatus(item.status) },
-            { key: 'algorithm', label: 'Algorithm', sortKey: 'algorithm' },
-            { key: 'accuracy', label: 'Accuracy', sortKey: 'accuracy', render: (item) => Layer8MRenderers.renderPercentage(item.accuracy) },
-            { key: 'trainingDate', label: 'Training Date', sortKey: 'trainingDate', render: (item) => Layer8MRenderers.renderDate(item.trainingDate) },
-            { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' }
+            ...col.id('modelId'),
+            ...col.col('name', 'Name'),
+            ...col.status('modelType', 'Type', enums.MODEL_TYPE_VALUES, render.modelType),
+            ...col.status('status', 'Status', enums.MODEL_STATUS_VALUES, render.modelStatus),
+            ...col.col('algorithm', 'Algorithm'),
+            ...col.custom('accuracy', 'Accuracy', (item) => Layer8DRenderers.renderPercentage(item.accuracy)),
+            ...col.date('trainingDate', 'Training Date'),
+            ...col.col('ownerId', 'Owner')
         ],
 
         BiPrediction: [
-            { key: 'predictionId', label: 'ID', sortKey: 'predictionId', filterKey: 'predictionId' },
-            { key: 'modelId', label: 'Model', sortKey: 'modelId', filterKey: 'modelId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'predictionDate', label: 'Prediction Date', sortKey: 'predictionDate', render: (item) => Layer8MRenderers.renderDate(item.predictionDate) },
-            { key: 'confidence', label: 'Confidence', sortKey: 'confidence', render: (item) => Layer8MRenderers.renderPercentage(item.confidence) },
-            { key: 'predictedBy', label: 'Predicted By', sortKey: 'predictedBy' },
-            { key: 'notes', label: 'Notes', sortKey: 'notes' }
+            ...col.id('predictionId'),
+            ...col.col('modelId', 'Model'),
+            ...col.col('name', 'Name'),
+            ...col.date('predictionDate', 'Prediction Date'),
+            ...col.custom('confidence', 'Confidence', (item) => Layer8DRenderers.renderPercentage(item.confidence)),
+            ...col.col('predictedBy', 'Predicted By'),
+            ...col.col('notes', 'Notes')
         ],
 
         BiTrendAnalysis: [
-            { key: 'analysisId', label: 'ID', sortKey: 'analysisId', filterKey: 'analysisId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'metric', label: 'Metric', sortKey: 'metric' },
-            { key: 'timePeriod', label: 'Time Period', sortKey: 'timePeriod' },
-            { key: 'direction', label: 'Direction', sortKey: 'direction', filterKey: 'direction', enumValues: enums.TREND_DIRECTION_VALUES, render: (item) => render.trendDirection(item.direction) },
-            { key: 'changePercent', label: 'Change %', sortKey: 'changePercent', render: (item) => Layer8MRenderers.renderPercentage(item.changePercent) },
-            { key: 'startDate', label: 'Start Date', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End Date', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) }
+            ...col.id('analysisId'),
+            ...col.col('name', 'Name'),
+            ...col.col('metric', 'Metric'),
+            ...col.col('timePeriod', 'Time Period'),
+            ...col.status('direction', 'Direction', enums.TREND_DIRECTION_VALUES, render.trendDirection),
+            ...col.custom('changePercent', 'Change %', (item) => Layer8DRenderers.renderPercentage(item.changePercent)),
+            ...col.date('startDate', 'Start Date'),
+            ...col.date('endDate', 'End Date')
         ],
 
         BiScenario: [
-            { key: 'scenarioId', label: 'ID', sortKey: 'scenarioId', filterKey: 'scenarioId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'scenarioType', label: 'Type', sortKey: 'scenarioType', filterKey: 'scenarioType', enumValues: enums.SCENARIO_TYPE_VALUES, render: (item) => render.scenarioType(item.scenarioType) },
-            { key: 'dataSourceId', label: 'Data Source', sortKey: 'dataSourceId' },
-            { key: 'createdDate', label: 'Created', sortKey: 'createdDate', render: (item) => Layer8MRenderers.renderDate(item.createdDate) },
-            { key: 'createdBy', label: 'Created By', sortKey: 'createdBy' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('scenarioId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.status('scenarioType', 'Type', enums.SCENARIO_TYPE_VALUES, render.scenarioType),
+            ...col.col('dataSourceId', 'Data Source'),
+            ...col.date('createdDate', 'Created'),
+            ...col.col('createdBy', 'Created By'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BiBenchmark: [
-            { key: 'benchmarkId', label: 'ID', sortKey: 'benchmarkId', filterKey: 'benchmarkId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'category', label: 'Category', sortKey: 'category' },
-            { key: 'metric', label: 'Metric', sortKey: 'metric' },
-            { key: 'internalValue', label: 'Internal Value', sortKey: 'internalValue' },
-            { key: 'benchmarkValue', label: 'Benchmark Value', sortKey: 'benchmarkValue' },
-            { key: 'variancePercent', label: 'Variance %', sortKey: 'variancePercent', render: (item) => Layer8MRenderers.renderPercentage(item.variancePercent) },
-            { key: 'industry', label: 'Industry', sortKey: 'industry' }
+            ...col.id('benchmarkId'),
+            ...col.col('name', 'Name'),
+            ...col.col('category', 'Category'),
+            ...col.col('metric', 'Metric'),
+            ...col.col('internalValue', 'Internal Value'),
+            ...col.col('benchmarkValue', 'Benchmark Value'),
+            ...col.custom('variancePercent', 'Variance %', (item) => Layer8DRenderers.renderPercentage(item.variancePercent)),
+            ...col.col('industry', 'Industry')
         ]
     };
 

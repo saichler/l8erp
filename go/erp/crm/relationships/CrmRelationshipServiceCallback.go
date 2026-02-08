@@ -21,14 +21,8 @@ import (
 )
 
 func newCrmRelationshipServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmRelationship",
-		func(e *crm.CrmRelationship) { common.GenerateID(&e.RelationshipId) },
-		validate)
-}
-
-func validate(item *crm.CrmRelationship, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RelationshipId, "RelationshipId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmRelationship]("CrmRelationship",
+		func(e *crm.CrmRelationship) { common.GenerateID(&e.RelationshipId) }).
+		Require(func(e *crm.CrmRelationship) string { return e.RelationshipId }, "RelationshipId").
+		Build()
 }

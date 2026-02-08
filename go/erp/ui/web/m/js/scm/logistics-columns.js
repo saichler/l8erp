@@ -19,79 +19,80 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileLogistics.enums;
     const render = MobileLogistics.render;
 
     MobileLogistics.columns = {
         ScmCarrier: [
-            { key: 'carrierId', label: 'ID', sortKey: 'carrierId', filterKey: 'carrierId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'carrierType', label: 'Type', sortKey: 'carrierType', filterKey: 'carrierType', enumValues: enums.CARRIER_TYPE_VALUES, render: (item) => render.carrierType(item.carrierType) },
-            { key: 'contactInfo', label: 'Contact', sortKey: 'contactInfo', filterKey: 'contactInfo' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
+            ...col.id('carrierId'),
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
+            ...col.status('carrierType', 'Type', enums.CARRIER_TYPE_VALUES, render.carrierType),
+            ...col.col('contactInfo', 'Contact'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         ScmFreightRate: [
-            { key: 'rateId', label: 'ID', sortKey: 'rateId', filterKey: 'rateId' },
-            { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
-            { key: 'origin', label: 'Origin', sortKey: 'origin', filterKey: 'origin' },
-            { key: 'destination', label: 'Destination', sortKey: 'destination', filterKey: 'destination' },
-            { key: 'ratePerUnit', label: 'Rate/Unit', sortKey: 'ratePerUnit', render: (item) => Layer8MRenderers.renderMoney(item.ratePerUnit) },
-            { key: 'effectiveDate', label: 'Effective', sortKey: 'effectiveDate', render: (item) => Layer8MRenderers.renderDate(item.effectiveDate) }
+            ...col.id('rateId'),
+            ...col.col('carrierId', 'Carrier'),
+            ...col.col('origin', 'Origin'),
+            ...col.col('destination', 'Destination'),
+            ...col.money('ratePerUnit', 'Rate/Unit'),
+            ...col.date('effectiveDate', 'Effective')
         ],
 
         ScmShipment: [
-            { key: 'shipmentId', label: 'ID', sortKey: 'shipmentId', filterKey: 'shipmentId' },
-            { key: 'shipmentNumber', label: 'Shipment #', sortKey: 'shipmentNumber', filterKey: 'shipmentNumber' },
-            { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
-            { key: 'shipDate', label: 'Ship Date', sortKey: 'shipDate', render: (item) => Layer8MRenderers.renderDate(item.shipDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.SHIPMENT_STATUS_VALUES, render: (item) => render.shipmentStatus(item.status) },
-            { key: 'freightCost', label: 'Cost', sortKey: 'freightCost', render: (item) => Layer8MRenderers.renderMoney(item.freightCost) }
+            ...col.id('shipmentId'),
+            ...col.col('shipmentNumber', 'Shipment #'),
+            ...col.col('carrierId', 'Carrier'),
+            ...col.date('shipDate', 'Ship Date'),
+            ...col.status('status', 'Status', enums.SHIPMENT_STATUS_VALUES, render.shipmentStatus),
+            ...col.money('freightCost', 'Cost')
         ],
 
         ScmRoute: [
-            { key: 'routeId', label: 'ID', sortKey: 'routeId', filterKey: 'routeId' },
-            { key: 'name', label: 'Route', sortKey: 'name', filterKey: 'name' },
-            { key: 'origin', label: 'Origin', sortKey: 'origin', filterKey: 'origin' },
-            { key: 'destination', label: 'Destination', sortKey: 'destination', filterKey: 'destination' },
-            { key: 'distance', label: 'Distance', sortKey: 'distance' },
-            { key: 'estimatedTime', label: 'Est. Time', sortKey: 'estimatedTime' }
+            ...col.id('routeId'),
+            ...col.col('name', 'Route'),
+            ...col.col('origin', 'Origin'),
+            ...col.col('destination', 'Destination'),
+            ...col.col('distance', 'Distance'),
+            ...col.col('estimatedTime', 'Est. Time')
         ],
 
         ScmLoadPlan: [
-            { key: 'loadPlanId', label: 'ID', sortKey: 'loadPlanId', filterKey: 'loadPlanId' },
-            { key: 'plannedDate', label: 'Planned', sortKey: 'plannedDate', render: (item) => Layer8MRenderers.renderDate(item.plannedDate) },
-            { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
-            { key: 'vehicleId', label: 'Vehicle', sortKey: 'vehicleId', filterKey: 'vehicleId' },
-            { key: 'totalWeight', label: 'Weight', sortKey: 'totalWeight' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+            ...col.id('loadPlanId'),
+            ...col.date('plannedDate', 'Planned'),
+            ...col.col('shipmentId', 'Shipment'),
+            ...col.col('vehicleId', 'Vehicle'),
+            ...col.col('totalWeight', 'Weight'),
+            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
         ],
 
         ScmDeliveryProof: [
-            { key: 'proofId', label: 'ID', sortKey: 'proofId', filterKey: 'proofId' },
-            { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
-            { key: 'deliveryDate', label: 'Delivered', sortKey: 'deliveryDate', render: (item) => Layer8MRenderers.renderDate(item.deliveryDate) },
-            { key: 'receivedBy', label: 'Received By', sortKey: 'receivedBy', filterKey: 'receivedBy' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+            ...col.id('proofId'),
+            ...col.col('shipmentId', 'Shipment'),
+            ...col.date('deliveryDate', 'Delivered'),
+            ...col.col('receivedBy', 'Received By'),
+            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
         ],
 
         ScmFreightAudit: [
-            { key: 'auditId', label: 'ID', sortKey: 'auditId', filterKey: 'auditId' },
-            { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
-            { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
-            { key: 'invoicedAmount', label: 'Invoiced', sortKey: 'invoicedAmount', render: (item) => Layer8MRenderers.renderMoney(item.invoicedAmount) },
-            { key: 'actualAmount', label: 'Actual', sortKey: 'actualAmount', render: (item) => Layer8MRenderers.renderMoney(item.actualAmount) },
-            { key: 'variance', label: 'Variance', sortKey: 'variance', render: (item) => Layer8MRenderers.renderMoney(item.variance) }
+            ...col.id('auditId'),
+            ...col.col('shipmentId', 'Shipment'),
+            ...col.col('carrierId', 'Carrier'),
+            ...col.money('invoicedAmount', 'Invoiced'),
+            ...col.money('actualAmount', 'Actual'),
+            ...col.money('variance', 'Variance')
         ],
 
         ScmReturnAuthorization: [
-            { key: 'rmaId', label: 'ID', sortKey: 'rmaId', filterKey: 'rmaId' },
-            { key: 'rmaNumber', label: 'RMA #', sortKey: 'rmaNumber', filterKey: 'rmaNumber' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'returnDate', label: 'Return Date', sortKey: 'returnDate', render: (item) => Layer8MRenderers.renderDate(item.returnDate) },
-            { key: 'reason', label: 'Reason', sortKey: 'reason', filterKey: 'reason' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+            ...col.id('rmaId'),
+            ...col.col('rmaNumber', 'RMA #'),
+            ...col.col('customerId', 'Customer'),
+            ...col.date('returnDate', 'Return Date'),
+            ...col.col('reason', 'Reason'),
+            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
         ]
     };
 

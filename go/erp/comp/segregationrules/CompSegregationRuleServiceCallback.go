@@ -21,14 +21,8 @@ import (
 )
 
 func newCompSegregationRuleServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CompSegregationRule",
-		func(e *comp.CompSegregationRule) { common.GenerateID(&e.RuleId) },
-		validateCompSegregationRule)
-}
-
-func validateCompSegregationRule(item *comp.CompSegregationRule, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RuleId, "RuleId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[comp.CompSegregationRule]("CompSegregationRule",
+		func(e *comp.CompSegregationRule) { common.GenerateID(&e.RuleId) }).
+		Require(func(e *comp.CompSegregationRule) string { return e.RuleId }, "RuleId").
+		Build()
 }

@@ -21,14 +21,8 @@ import (
 )
 
 func newBiReportSubscriptionServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiReportSubscription",
-		func(e *bi.BiReportSubscription) { common.GenerateID(&e.SubscriptionId) },
-		validateBiReportSubscription)
-}
-
-func validateBiReportSubscription(item *bi.BiReportSubscription, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.SubscriptionId, "SubscriptionId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiReportSubscription]("BiReportSubscription",
+		func(e *bi.BiReportSubscription) { common.GenerateID(&e.SubscriptionId) }).
+		Require(func(e *bi.BiReportSubscription) string { return e.SubscriptionId }, "SubscriptionId").
+		Build()
 }

@@ -21,14 +21,8 @@ import (
 )
 
 func newWavePlanServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmWavePlan",
-		func(e *scm.ScmWavePlan) { common.GenerateID(&e.WavePlanId) },
-		validate)
-}
-
-func validate(item *scm.ScmWavePlan, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.WavePlanId, "WavePlanId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmWavePlan]("ScmWavePlan",
+		func(e *scm.ScmWavePlan) { common.GenerateID(&e.WavePlanId) }).
+		Require(func(e *scm.ScmWavePlan) string { return e.WavePlanId }, "WavePlanId").
+		Build()
 }

@@ -21,20 +21,10 @@ import (
 )
 
 func newWithholdingTaxConfigServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("WithholdingTaxConfig",
-		func(e *fin.WithholdingTaxConfig) { common.GenerateID(&e.ConfigId) },
-		validate)
-}
-
-func validate(withholdingTaxConfig *fin.WithholdingTaxConfig, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(withholdingTaxConfig.ConfigId, "ConfigId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(withholdingTaxConfig.VendorId, "VendorId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(withholdingTaxConfig.TaxCodeId, "TaxCodeId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.WithholdingTaxConfig]("WithholdingTaxConfig",
+		func(e *fin.WithholdingTaxConfig) { common.GenerateID(&e.ConfigId) }).
+		Require(func(e *fin.WithholdingTaxConfig) string { return e.ConfigId }, "ConfigId").
+		Require(func(e *fin.WithholdingTaxConfig) string { return e.VendorId }, "VendorId").
+		Require(func(e *fin.WithholdingTaxConfig) string { return e.TaxCodeId }, "TaxCodeId").
+		Build()
 }

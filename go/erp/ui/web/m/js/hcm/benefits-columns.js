@@ -19,66 +19,67 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileBenefits.enums;
     const render = MobileBenefits.render;
 
     MobileBenefits.columns = {
         BenefitPlan: [
-            { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'planType', label: 'Type', sortKey: 'planType', filterKey: 'planType', enumValues: enums.BENEFIT_PLAN_TYPE_VALUES, render: (item) => render.benefitPlanType(item.planType) },
-            { key: 'category', label: 'Category', sortKey: 'category', filterKey: 'category', enumValues: enums.BENEFIT_PLAN_CATEGORY_VALUES, render: (item) => render.benefitPlanCategory(item.category) },
-            { key: 'planYear', label: 'Year', sortKey: 'planYear', filterKey: 'planYear' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
+            ...col.id('planId'),
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
+            ...col.status('planType', 'Type', enums.BENEFIT_PLAN_TYPE_VALUES, render.benefitPlanType),
+            ...col.status('category', 'Category', enums.BENEFIT_PLAN_CATEGORY_VALUES, render.benefitPlanCategory),
+            ...col.col('planYear', 'Year'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BenefitEnrollment: [
-            { key: 'enrollmentId', label: 'ID', sortKey: 'enrollmentId', filterKey: 'enrollmentId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            { key: 'planId', label: 'Plan', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.ENROLLMENT_STATUS_VALUES, render: (item) => render.enrollmentStatus(item.status) },
-            { key: 'reason', label: 'Reason', sortKey: 'reason', filterKey: 'reason', enumValues: enums.ENROLLMENT_REASON_VALUES, render: (item) => render.enrollmentReason(item.reason) },
-            { key: 'coverageStartDate', label: 'Coverage Start', sortKey: 'coverageStartDate', render: (item) => Layer8MRenderers.renderDate(item.coverageStartDate) },
-            { key: 'employeeCostPerPeriod', label: 'Employee Cost', sortKey: 'employeeCostPerPeriod', render: (item) => Layer8MRenderers.renderMoney(item.employeeCostPerPeriod) }
+            ...col.id('enrollmentId'),
+            ...col.col('employeeId', 'Employee'),
+            ...col.col('planId', 'Plan'),
+            ...col.status('status', 'Status', enums.ENROLLMENT_STATUS_VALUES, render.enrollmentStatus),
+            ...col.status('reason', 'Reason', enums.ENROLLMENT_REASON_VALUES, render.enrollmentReason),
+            ...col.date('coverageStartDate', 'Coverage Start'),
+            ...col.money('employeeCostPerPeriod', 'Employee Cost')
         ],
 
         Carrier: [
-            { key: 'carrierId', label: 'ID', sortKey: 'carrierId', filterKey: 'carrierId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'carrierType', label: 'Type', sortKey: 'carrierType', filterKey: 'carrierType', enumValues: enums.CARRIER_TYPE_VALUES, render: (item) => render.carrierType(item.carrierType) },
-            { key: 'phone', label: 'Phone', sortKey: 'phone', filterKey: 'phone' },
-            { key: 'website', label: 'Website', sortKey: 'website', filterKey: 'website' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
+            ...col.id('carrierId'),
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
+            ...col.status('carrierType', 'Type', enums.CARRIER_TYPE_VALUES, render.carrierType),
+            ...col.col('phone', 'Phone'),
+            ...col.col('website', 'Website'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         Dependent: [
-            { key: 'dependentId', label: 'ID', sortKey: 'dependentId', filterKey: 'dependentId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            { key: 'name', label: 'Name', sortKey: 'lastName', filterKey: 'lastName', render: (item) => `${Layer8MUtils.escapeHtml(item.firstName || '')} ${Layer8MUtils.escapeHtml(item.lastName || '')}`.trim() },
-            { key: 'relationship', label: 'Relationship', sortKey: 'relationship', filterKey: 'relationship', enumValues: enums.DEPENDENT_RELATIONSHIP_VALUES, render: (item) => render.dependentRelationship(item.relationship) },
-            { key: 'dateOfBirth', label: 'Date of Birth', sortKey: 'dateOfBirth', render: (item) => Layer8MRenderers.renderDate(item.dateOfBirth) },
-            { key: 'verificationStatus', label: 'Verified', sortKey: 'verificationStatus', filterKey: 'verificationStatus', enumValues: enums.VERIFICATION_STATUS_VALUES, render: (item) => render.verificationStatus(item.verificationStatus) }
+            ...col.id('dependentId'),
+            ...col.col('employeeId', 'Employee'),
+            ...col.custom('name', 'Name', (item) => `${Layer8MUtils.escapeHtml(item.firstName || '')} ${Layer8MUtils.escapeHtml(item.lastName || '')}`.trim(), { sortKey: 'lastName', filterKey: 'lastName' }),
+            ...col.status('relationship', 'Relationship', enums.DEPENDENT_RELATIONSHIP_VALUES, render.dependentRelationship),
+            ...col.date('dateOfBirth', 'Date of Birth'),
+            ...col.status('verificationStatus', 'Verified', enums.VERIFICATION_STATUS_VALUES, render.verificationStatus)
         ],
 
         LifeEvent: [
-            { key: 'lifeEventId', label: 'ID', sortKey: 'lifeEventId', filterKey: 'lifeEventId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            { key: 'eventType', label: 'Event Type', sortKey: 'eventType', filterKey: 'eventType', enumValues: enums.LIFE_EVENT_TYPE_VALUES, render: (item) => render.lifeEventType(item.eventType) },
-            { key: 'eventDate', label: 'Event Date', sortKey: 'eventDate', render: (item) => Layer8MRenderers.renderDate(item.eventDate) },
-            { key: 'enrollmentDeadline', label: 'Deadline', sortKey: 'enrollmentDeadline', render: (item) => Layer8MRenderers.renderDate(item.enrollmentDeadline) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.LIFE_EVENT_STATUS_VALUES, render: (item) => render.lifeEventStatus(item.status) }
+            ...col.id('lifeEventId'),
+            ...col.col('employeeId', 'Employee'),
+            ...col.status('eventType', 'Event Type', enums.LIFE_EVENT_TYPE_VALUES, render.lifeEventType),
+            ...col.date('eventDate', 'Event Date'),
+            ...col.date('enrollmentDeadline', 'Deadline'),
+            ...col.status('status', 'Status', enums.LIFE_EVENT_STATUS_VALUES, render.lifeEventStatus)
         ],
 
         COBRAEvent: [
-            { key: 'cobraEventId', label: 'ID', sortKey: 'cobraEventId', filterKey: 'cobraEventId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            { key: 'eventType', label: 'Event Type', sortKey: 'eventType', filterKey: 'eventType', enumValues: enums.COBRA_EVENT_TYPE_VALUES, render: (item) => render.cobraEventType(item.eventType) },
-            { key: 'qualifyingEventDate', label: 'Event Date', sortKey: 'qualifyingEventDate', render: (item) => Layer8MRenderers.renderDate(item.qualifyingEventDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.COBRA_STATUS_VALUES, render: (item) => render.cobraStatus(item.status) },
-            { key: 'coverageMonths', label: 'Months', sortKey: 'coverageMonths' },
-            { key: 'totalMonthlyCost', label: 'Monthly Cost', sortKey: 'totalMonthlyCost', render: (item) => Layer8MRenderers.renderMoney(item.totalMonthlyCost) }
+            ...col.id('cobraEventId'),
+            ...col.col('employeeId', 'Employee'),
+            ...col.status('eventType', 'Event Type', enums.COBRA_EVENT_TYPE_VALUES, render.cobraEventType),
+            ...col.date('qualifyingEventDate', 'Event Date'),
+            ...col.status('status', 'Status', enums.COBRA_STATUS_VALUES, render.cobraStatus),
+            ...col.col('coverageMonths', 'Months'),
+            ...col.money('totalMonthlyCost', 'Monthly Cost')
         ]
     };
 

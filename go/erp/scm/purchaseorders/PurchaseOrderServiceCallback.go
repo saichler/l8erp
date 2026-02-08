@@ -21,14 +21,8 @@ import (
 )
 
 func newPurchaseOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmPurchaseOrder",
-		func(e *scm.ScmPurchaseOrder) { common.GenerateID(&e.PurchaseOrderId) },
-		validate)
-}
-
-func validate(item *scm.ScmPurchaseOrder, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.PurchaseOrderId, "PurchaseOrderId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmPurchaseOrder]("ScmPurchaseOrder",
+		func(e *scm.ScmPurchaseOrder) { common.GenerateID(&e.PurchaseOrderId) }).
+		Require(func(e *scm.ScmPurchaseOrder) string { return e.PurchaseOrderId }, "PurchaseOrderId").
+		Build()
 }

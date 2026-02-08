@@ -21,17 +21,9 @@ import (
 )
 
 func newCommissionCalcServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesCommissionCalc",
-		func(e *sales.SalesCommissionCalc) { common.GenerateID(&e.CalcId) },
-		validate)
-}
-
-func validate(item *sales.SalesCommissionCalc, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CalcId, "CalcId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.SalespersonId, "SalespersonId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesCommissionCalc]("SalesCommissionCalc",
+		func(e *sales.SalesCommissionCalc) { common.GenerateID(&e.CalcId) }).
+		Require(func(e *sales.SalesCommissionCalc) string { return e.CalcId }, "CalcId").
+		Require(func(e *sales.SalesCommissionCalc) string { return e.SalespersonId }, "SalespersonId").
+		Build()
 }

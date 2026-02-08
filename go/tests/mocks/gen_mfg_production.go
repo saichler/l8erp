@@ -302,37 +302,31 @@ func generateProductionOrders(store *MockDataStore) []*mfg.MfgProductionOrder {
 
 // generateProdOrderLines creates production order line records (2 lines per order)
 func generateProdOrderLines(store *MockDataStore) []*mfg.MfgProdOrderLine {
-	lines := make([]*mfg.MfgProdOrderLine, 0, len(store.MfgProductionOrderIDs)*2)
-	idx := 1
-	for ordIdx, ordID := range store.MfgProductionOrderIDs {
-		for j := 0; j < 2; j++ {
-			itemID := pickRef(store.ItemIDs, (ordIdx*2+j))
-			warehouseID := pickRef(store.SCMWarehouseIDs, (ordIdx+j))
-			woID := pickRef(store.MfgWorkOrderIDs, (ordIdx*2+j))
+	return genLines(store.MfgProductionOrderIDs, 2, func(idx, ordIdx, j int, ordID string) *mfg.MfgProdOrderLine {
+		itemID := pickRef(store.ItemIDs, (ordIdx*2+j))
+		warehouseID := pickRef(store.SCMWarehouseIDs, (ordIdx+j))
+		woID := pickRef(store.MfgWorkOrderIDs, (ordIdx*2+j))
 
-			qtyOrdered := float64(rand.Intn(100) + 10)
-			qtyCompleted := qtyOrdered * float64(rand.Intn(80)) / 100.0
-			requiredDate := time.Now().AddDate(0, 0, rand.Intn(30)+7)
-			promisedDate := requiredDate.AddDate(0, 0, rand.Intn(5))
+		qtyOrdered := float64(rand.Intn(100) + 10)
+		qtyCompleted := qtyOrdered * float64(rand.Intn(80)) / 100.0
+		requiredDate := time.Now().AddDate(0, 0, rand.Intn(30)+7)
+		promisedDate := requiredDate.AddDate(0, 0, rand.Intn(5))
 
-			lines = append(lines, &mfg.MfgProdOrderLine{
-				LineId:            fmt.Sprintf("poln-%03d", idx),
-				ProdOrderId:       ordID,
-				LineNumber:        int32((j + 1) * 10),
-				ItemId:            itemID,
-				WorkOrderId:       woID,
-				QuantityOrdered:   qtyOrdered,
-				QuantityCompleted: qtyCompleted,
-				RequiredDate:      requiredDate.Unix(),
-				PromisedDate:      promisedDate.Unix(),
-				WarehouseId:       warehouseID,
-				Notes:             fmt.Sprintf("Production order line %d", idx),
-				AuditInfo:         createAuditInfo(),
-			})
-			idx++
+		return &mfg.MfgProdOrderLine{
+			LineId:            fmt.Sprintf("poln-%03d", idx),
+			ProdOrderId:       ordID,
+			LineNumber:        int32((j + 1) * 10),
+			ItemId:            itemID,
+			WorkOrderId:       woID,
+			QuantityOrdered:   qtyOrdered,
+			QuantityCompleted: qtyCompleted,
+			RequiredDate:      requiredDate.Unix(),
+			PromisedDate:      promisedDate.Unix(),
+			WarehouseId:       warehouseID,
+			Notes:             fmt.Sprintf("Production order line %d", idx),
+			AuditInfo:         createAuditInfo(),
 		}
-	}
-	return lines
+	})
 }
 
 // generateProdBatches creates production batch records

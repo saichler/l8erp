@@ -21,14 +21,8 @@ import (
 )
 
 func newEcomReturnLineServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("EcomReturnLine",
-		func(e *ecom.EcomReturnLine) { common.GenerateID(&e.LineId) },
-		validateEcomReturnLine)
-}
-
-func validateEcomReturnLine(item *ecom.EcomReturnLine, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.LineId, "LineId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[ecom.EcomReturnLine]("EcomReturnLine",
+		func(e *ecom.EcomReturnLine) { common.GenerateID(&e.LineId) }).
+		Require(func(e *ecom.EcomReturnLine) string { return e.LineId }, "LineId").
+		Build()
 }

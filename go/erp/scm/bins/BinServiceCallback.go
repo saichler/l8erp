@@ -21,14 +21,8 @@ import (
 )
 
 func newBinServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmBin",
-		func(e *scm.ScmBin) { common.GenerateID(&e.BinId) },
-		validate)
-}
-
-func validate(item *scm.ScmBin, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.BinId, "BinId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmBin]("ScmBin",
+		func(e *scm.ScmBin) { common.GenerateID(&e.BinId) }).
+		Require(func(e *scm.ScmBin) string { return e.BinId }, "BinId").
+		Build()
 }

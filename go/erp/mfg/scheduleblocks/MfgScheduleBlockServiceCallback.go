@@ -21,17 +21,9 @@ import (
 )
 
 func newMfgScheduleBlockServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgScheduleBlock",
-		func(e *mfg.MfgScheduleBlock) { common.GenerateID(&e.BlockId) },
-		validate)
-}
-
-func validate(item *mfg.MfgScheduleBlock, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.BlockId, "BlockId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.ScheduleId, "ScheduleId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgScheduleBlock]("MfgScheduleBlock",
+		func(e *mfg.MfgScheduleBlock) { common.GenerateID(&e.BlockId) }).
+		Require(func(e *mfg.MfgScheduleBlock) string { return e.BlockId }, "BlockId").
+		Require(func(e *mfg.MfgScheduleBlock) string { return e.ScheduleId }, "ScheduleId").
+		Build()
 }

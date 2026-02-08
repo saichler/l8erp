@@ -21,14 +21,8 @@ import (
 )
 
 func newEcomOrderStatusHistoryServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("EcomOrderStatusHistory",
-		func(e *ecom.EcomOrderStatusHistory) { common.GenerateID(&e.StatusId) },
-		validateEcomOrderStatusHistory)
-}
-
-func validateEcomOrderStatusHistory(item *ecom.EcomOrderStatusHistory, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.StatusId, "StatusId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[ecom.EcomOrderStatusHistory]("EcomOrderStatusHistory",
+		func(e *ecom.EcomOrderStatusHistory) { common.GenerateID(&e.StatusId) }).
+		Require(func(e *ecom.EcomOrderStatusHistory) string { return e.StatusId }, "StatusId").
+		Build()
 }

@@ -21,14 +21,8 @@ import (
 )
 
 func newPrjBudgetVarianceServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjBudgetVariance",
-		func(e *prj.PrjBudgetVariance) { common.GenerateID(&e.VarianceId) },
-		validate)
-}
-
-func validate(item *prj.PrjBudgetVariance, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.VarianceId, "VarianceId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjBudgetVariance]("PrjBudgetVariance",
+		func(e *prj.PrjBudgetVariance) { common.GenerateID(&e.VarianceId) }).
+		Require(func(e *prj.PrjBudgetVariance) string { return e.VarianceId }, "VarianceId").
+		Build()
 }

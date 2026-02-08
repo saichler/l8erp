@@ -21,14 +21,8 @@ import (
 )
 
 func newDocCheckoutServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("DocCheckout",
-		func(e *doc.DocCheckout) { common.GenerateID(&e.CheckoutId) },
-		validateDocCheckout)
-}
-
-func validateDocCheckout(item *doc.DocCheckout, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CheckoutId, "CheckoutId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[doc.DocCheckout]("DocCheckout",
+		func(e *doc.DocCheckout) { common.GenerateID(&e.CheckoutId) }).
+		Require(func(e *doc.DocCheckout) string { return e.CheckoutId }, "CheckoutId").
+		Build()
 }

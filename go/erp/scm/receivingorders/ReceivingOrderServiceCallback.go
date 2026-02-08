@@ -21,14 +21,8 @@ import (
 )
 
 func newReceivingOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmReceivingOrder",
-		func(e *scm.ScmReceivingOrder) { common.GenerateID(&e.ReceivingOrderId) },
-		validate)
-}
-
-func validate(item *scm.ScmReceivingOrder, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ReceivingOrderId, "ReceivingOrderId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmReceivingOrder]("ScmReceivingOrder",
+		func(e *scm.ScmReceivingOrder) { common.GenerateID(&e.ReceivingOrderId) }).
+		Require(func(e *scm.ScmReceivingOrder) string { return e.ReceivingOrderId }, "ReceivingOrderId").
+		Build()
 }

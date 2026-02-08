@@ -21,14 +21,8 @@ import (
 )
 
 func newEcomWishlistItemServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("EcomWishlistItem",
-		func(e *ecom.EcomWishlistItem) { common.GenerateID(&e.ItemId) },
-		validateEcomWishlistItem)
-}
-
-func validateEcomWishlistItem(item *ecom.EcomWishlistItem, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ItemId, "ItemId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[ecom.EcomWishlistItem]("EcomWishlistItem",
+		func(e *ecom.EcomWishlistItem) { common.GenerateID(&e.ItemId) }).
+		Require(func(e *ecom.EcomWishlistItem) string { return e.ItemId }, "ItemId").
+		Build()
 }

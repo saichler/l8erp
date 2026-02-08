@@ -19,53 +19,54 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const render = MobileEcomCatalog.render;
 
     MobileEcomCatalog.columns = {
         EcomProduct: [
-            { key: 'productId', label: 'ID', sortKey: 'productId', filterKey: 'productId' },
-            { key: 'sku', label: 'SKU', sortKey: 'sku', filterKey: 'sku' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'productType', label: 'Type', sortKey: 'productType', render: (item) => render.productType(item.productType) },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.productStatus(item.status) },
-            { key: 'price', label: 'Price', sortKey: 'price', render: (item) => Layer8MRenderers.renderMoney(item.price) },
-            { key: 'stockQuantity', label: 'Stock Qty', sortKey: 'stockQuantity' }
+            ...col.id('productId'),
+            ...col.col('sku', 'SKU'),
+            ...col.col('name', 'Name'),
+            ...col.enum('productType', 'Type', null, render.productType),
+            ...col.enum('status', 'Status', null, render.productStatus),
+            ...col.money('price', 'Price'),
+            ...col.col('stockQuantity', 'Stock Qty')
         ],
 
         EcomCategory: [
-            { key: 'categoryId', label: 'ID', sortKey: 'categoryId', filterKey: 'categoryId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'slug', label: 'Slug', sortKey: 'slug', filterKey: 'slug' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' },
-            { key: 'sortOrder', label: 'Sort Order', sortKey: 'sortOrder' }
+            ...col.id('categoryId'),
+            ...col.col('name', 'Name'),
+            ...col.col('slug', 'Slug'),
+            ...col.boolean('isActive', 'Active'),
+            ...col.col('sortOrder', 'Sort Order')
         ],
 
         EcomAttribute: [
-            { key: 'attributeId', label: 'ID', sortKey: 'attributeId', filterKey: 'attributeId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'attributeType', label: 'Type', sortKey: 'attributeType', render: (item) => render.attributeType(item.attributeType) },
-            { key: 'isRequired', label: 'Required', sortKey: 'isRequired', render: (item) => item.isRequired ? 'Yes' : 'No' },
-            { key: 'isFilterable', label: 'Filterable', sortKey: 'isFilterable', render: (item) => item.isFilterable ? 'Yes' : 'No' }
+            ...col.id('attributeId'),
+            ...col.col('name', 'Name'),
+            ...col.col('code', 'Code'),
+            ...col.enum('attributeType', 'Type', null, render.attributeType),
+            ...col.boolean('isRequired', 'Required'),
+            ...col.boolean('isFilterable', 'Filterable')
         ],
 
         EcomImage: [
-            { key: 'imageId', label: 'ID', sortKey: 'imageId', filterKey: 'imageId' },
-            { key: 'productId', label: 'Product', sortKey: 'productId', filterKey: 'productId' },
-            { key: 'fileName', label: 'File Name', sortKey: 'fileName', filterKey: 'fileName' },
-            { key: 'imageType', label: 'Type', sortKey: 'imageType', render: (item) => render.imageType(item.imageType) },
-            { key: 'isPrimary', label: 'Primary', sortKey: 'isPrimary', render: (item) => item.isPrimary ? 'Yes' : 'No' },
-            { key: 'sortOrder', label: 'Sort Order', sortKey: 'sortOrder' }
+            ...col.id('imageId'),
+            ...col.col('productId', 'Product'),
+            ...col.col('fileName', 'File Name'),
+            ...col.enum('imageType', 'Type', null, render.imageType),
+            ...col.boolean('isPrimary', 'Primary'),
+            ...col.col('sortOrder', 'Sort Order')
         ],
 
         EcomVariant: [
-            { key: 'variantId', label: 'ID', sortKey: 'variantId', filterKey: 'variantId' },
-            { key: 'productId', label: 'Product', sortKey: 'productId', filterKey: 'productId' },
-            { key: 'sku', label: 'SKU', sortKey: 'sku', filterKey: 'sku' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'price', label: 'Price', sortKey: 'price', render: (item) => Layer8MRenderers.renderMoney(item.price) },
-            { key: 'stockQuantity', label: 'Stock Qty', sortKey: 'stockQuantity' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('variantId'),
+            ...col.col('productId', 'Product'),
+            ...col.col('sku', 'SKU'),
+            ...col.col('name', 'Name'),
+            ...col.money('price', 'Price'),
+            ...col.col('stockQuantity', 'Stock Qty'),
+            ...col.boolean('isActive', 'Active')
         ]
     };
 

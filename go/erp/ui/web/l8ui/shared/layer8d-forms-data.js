@@ -12,6 +12,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
     const { parseDateToTimestamp } = Layer8DUtils;
 
+    function sanitizeServerError(text) {
+        if (!text) return 'Unknown error';
+        const match = text.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\s+(.+)$/i);
+        return match ? match[1] : text;
+    }
+
     function setNestedValue(obj, key, value) {
         if (!key.includes('.')) { obj[key] = value; return; }
         const parts = key.split('.');
@@ -221,7 +227,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
         if (!response.ok) {
             const errorText = await response.text();
-            throw new Error(errorText || 'Failed to save record');
+            throw new Error(sanitizeServerError(errorText) || 'Failed to save record');
         }
         return await response.json();
     }
@@ -240,7 +246,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             body: JSON.stringify(query)
         });
 
-        if (!response.ok) throw new Error('Failed to delete record');
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(sanitizeServerError(errorText) || 'Failed to delete record');
+        }
         return true;
     }
 

@@ -19,62 +19,63 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileSalesPricing.enums;
     const render = MobileSalesPricing.render;
 
     MobileSalesPricing.columns = {
         PriceList: [
-            { key: 'priceListId', label: 'ID', sortKey: 'priceListId', filterKey: 'priceListId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'currencyId', label: 'Currency', sortKey: 'currencyId' },
-            { key: 'effectiveDate', label: 'Effective', sortKey: 'effectiveDate', render: (item) => Layer8MRenderers.renderDate(item.effectiveDate) },
-            { key: 'expiryDate', label: 'Expires', sortKey: 'expiryDate', render: (item) => Layer8MRenderers.renderDate(item.expiryDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.PRICE_LIST_STATUS_VALUES, render: (item) => render.priceListStatus(item.status) }
+            ...col.id('priceListId'),
+            ...col.col('name', 'Name'),
+            ...col.col('currencyId', 'Currency'),
+            ...col.date('effectiveDate', 'Effective'),
+            ...col.date('expiryDate', 'Expires'),
+            ...col.status('status', 'Status', enums.PRICE_LIST_STATUS_VALUES, render.priceListStatus)
         ],
 
         PriceListEntry: [
-            { key: 'entryId', label: 'ID', sortKey: 'entryId', filterKey: 'entryId' },
-            { key: 'priceListId', label: 'Price List', sortKey: 'priceListId', filterKey: 'priceListId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'unitPrice', label: 'Unit Price', sortKey: 'unitPrice', render: (item) => Layer8MRenderers.renderMoney(item.unitPrice) },
-            { key: 'unitOfMeasure', label: 'UOM', sortKey: 'unitOfMeasure' },
-            { key: 'minimumQuantity', label: 'Min Qty', sortKey: 'minimumQuantity' }
+            ...col.id('entryId'),
+            ...col.col('priceListId', 'Price List'),
+            ...col.col('itemId', 'Item'),
+            ...col.money('unitPrice', 'Unit Price'),
+            ...col.col('unitOfMeasure', 'UOM'),
+            ...col.col('minimumQuantity', 'Min Qty')
         ],
 
         CustomerPrice: [
-            { key: 'customerPriceId', label: 'ID', sortKey: 'customerPriceId', filterKey: 'customerPriceId' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'unitPrice', label: 'Price', sortKey: 'unitPrice', render: (item) => Layer8MRenderers.renderMoney(item.unitPrice) },
-            { key: 'effectiveDate', label: 'Effective', sortKey: 'effectiveDate', render: (item) => Layer8MRenderers.renderDate(item.effectiveDate) },
-            { key: 'expiryDate', label: 'Expires', sortKey: 'expiryDate', render: (item) => Layer8MRenderers.renderDate(item.expiryDate) }
+            ...col.id('customerPriceId'),
+            ...col.col('customerId', 'Customer'),
+            ...col.col('itemId', 'Item'),
+            ...col.money('unitPrice', 'Price'),
+            ...col.date('effectiveDate', 'Effective'),
+            ...col.date('expiryDate', 'Expires')
         ],
 
         DiscountRule: [
-            { key: 'ruleId', label: 'ID', sortKey: 'ruleId', filterKey: 'ruleId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'discountType', label: 'Type', sortKey: 'discountType', filterKey: 'discountType', enumValues: enums.DISCOUNT_TYPE_VALUES, render: (item) => render.discountType(item.discountType) },
-            { key: 'discountValue', label: 'Value', sortKey: 'discountValue' },
-            { key: 'minimumAmount', label: 'Min Order', sortKey: 'minimumAmount' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive' }
+            ...col.id('ruleId'),
+            ...col.col('name', 'Name'),
+            ...col.status('discountType', 'Type', enums.DISCOUNT_TYPE_VALUES, render.discountType),
+            ...col.col('discountValue', 'Value'),
+            ...col.col('minimumAmount', 'Min Order'),
+            ...col.col('isActive', 'Active')
         ],
 
         PromotionalPrice: [
-            { key: 'promoId', label: 'ID', sortKey: 'promoId', filterKey: 'promoId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'promotionalPrice', label: 'Promo Price', sortKey: 'promotionalPrice', render: (item) => Layer8MRenderers.renderMoney(item.promotionalPrice) },
-            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) }
+            ...col.id('promoId'),
+            ...col.col('name', 'Name'),
+            ...col.col('itemId', 'Item'),
+            ...col.money('promotionalPrice', 'Promo Price'),
+            ...col.date('startDate', 'Start'),
+            ...col.date('endDate', 'End')
         ],
 
         QuantityBreak: [
-            { key: 'breakId', label: 'ID', sortKey: 'breakId', filterKey: 'breakId' },
-            { key: 'priceListId', label: 'Price List', sortKey: 'priceListId', filterKey: 'priceListId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'fromQuantity', label: 'Min Qty', sortKey: 'fromQuantity' },
-            { key: 'toQuantity', label: 'Max Qty', sortKey: 'toQuantity' },
-            { key: 'unitPrice', label: 'Price', sortKey: 'unitPrice', render: (item) => Layer8MRenderers.renderMoney(item.unitPrice) }
+            ...col.id('breakId'),
+            ...col.col('priceListId', 'Price List'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('fromQuantity', 'Min Qty'),
+            ...col.col('toQuantity', 'Max Qty'),
+            ...col.money('unitPrice', 'Price')
         ]
     };
 

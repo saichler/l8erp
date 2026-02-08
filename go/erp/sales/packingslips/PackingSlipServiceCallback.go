@@ -21,17 +21,9 @@ import (
 )
 
 func newPackingSlipServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesPackingSlip",
-		func(e *sales.SalesPackingSlip) { common.GenerateID(&e.PackingSlipId) },
-		validate)
-}
-
-func validate(item *sales.SalesPackingSlip, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.PackingSlipId, "PackingSlipId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.DeliveryOrderId, "DeliveryOrderId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesPackingSlip]("SalesPackingSlip",
+		func(e *sales.SalesPackingSlip) { common.GenerateID(&e.PackingSlipId) }).
+		Require(func(e *sales.SalesPackingSlip) string { return e.PackingSlipId }, "PackingSlipId").
+		Require(func(e *sales.SalesPackingSlip) string { return e.DeliveryOrderId }, "DeliveryOrderId").
+		Build()
 }

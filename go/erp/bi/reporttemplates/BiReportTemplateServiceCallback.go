@@ -21,14 +21,8 @@ import (
 )
 
 func newBiReportTemplateServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiReportTemplate",
-		func(e *bi.BiReportTemplate) { common.GenerateID(&e.TemplateId) },
-		validateBiReportTemplate)
-}
-
-func validateBiReportTemplate(item *bi.BiReportTemplate, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.TemplateId, "TemplateId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiReportTemplate]("BiReportTemplate",
+		func(e *bi.BiReportTemplate) { common.GenerateID(&e.TemplateId) }).
+		Require(func(e *bi.BiReportTemplate) string { return e.TemplateId }, "TemplateId").
+		Build()
 }

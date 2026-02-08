@@ -21,14 +21,8 @@ import (
 )
 
 func newEcomCouponServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("EcomCoupon",
-		func(e *ecom.EcomCoupon) { common.GenerateID(&e.CouponId) },
-		validateEcomCoupon)
-}
-
-func validateEcomCoupon(item *ecom.EcomCoupon, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CouponId, "CouponId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[ecom.EcomCoupon]("EcomCoupon",
+		func(e *ecom.EcomCoupon) { common.GenerateID(&e.CouponId) }).
+		Require(func(e *ecom.EcomCoupon) string { return e.CouponId }, "CouponId").
+		Build()
 }

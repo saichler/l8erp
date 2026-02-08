@@ -21,14 +21,8 @@ import (
 )
 
 func newDocWorkflowStepServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("DocWorkflowStep",
-		func(e *doc.DocWorkflowStep) { common.GenerateID(&e.StepId) },
-		validateDocWorkflowStep)
-}
-
-func validateDocWorkflowStep(item *doc.DocWorkflowStep, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.StepId, "StepId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[doc.DocWorkflowStep]("DocWorkflowStep",
+		func(e *doc.DocWorkflowStep) { common.GenerateID(&e.StepId) }).
+		Require(func(e *doc.DocWorkflowStep) string { return e.StepId }, "StepId").
+		Build()
 }

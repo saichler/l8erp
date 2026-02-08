@@ -21,14 +21,8 @@ import (
 )
 
 func newBiAnalysisModelServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiAnalysisModel",
-		func(e *bi.BiAnalysisModel) { common.GenerateID(&e.ModelId) },
-		validate)
-}
-
-func validate(item *bi.BiAnalysisModel, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ModelId, "ModelId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiAnalysisModel]("BiAnalysisModel",
+		func(e *bi.BiAnalysisModel) { common.GenerateID(&e.ModelId) }).
+		Require(func(e *bi.BiAnalysisModel) string { return e.ModelId }, "ModelId").
+		Build()
 }

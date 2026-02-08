@@ -21,14 +21,8 @@ import (
 )
 
 func newCrmAccountPlanServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmAccountPlan",
-		func(e *crm.CrmAccountPlan) { common.GenerateID(&e.PlanId) },
-		validate)
-}
-
-func validate(item *crm.CrmAccountPlan, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.PlanId, "PlanId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmAccountPlan]("CrmAccountPlan",
+		func(e *crm.CrmAccountPlan) { common.GenerateID(&e.PlanId) }).
+		Require(func(e *crm.CrmAccountPlan) string { return e.PlanId }, "PlanId").
+		Build()
 }

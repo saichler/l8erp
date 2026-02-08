@@ -21,17 +21,9 @@ import (
 )
 
 func newMfgBomLineServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgBomLine",
-		func(e *mfg.MfgBomLine) { common.GenerateID(&e.LineId) },
-		validate)
-}
-
-func validate(item *mfg.MfgBomLine, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.LineId, "LineId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.BomId, "BomId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgBomLine]("MfgBomLine",
+		func(e *mfg.MfgBomLine) { common.GenerateID(&e.LineId) }).
+		Require(func(e *mfg.MfgBomLine) string { return e.LineId }, "LineId").
+		Require(func(e *mfg.MfgBomLine) string { return e.BomId }, "BomId").
+		Build()
 }

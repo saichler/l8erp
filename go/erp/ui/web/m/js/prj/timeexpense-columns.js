@@ -5,81 +5,82 @@ Layer 8 Ecosystem - Apache 2.0
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobilePrjTimeExpense.enums;
     const render = MobilePrjTimeExpense.render;
 
     MobilePrjTimeExpense.columns = {
         PrjTimesheet: [
-            { key: 'timesheetId', label: 'ID', sortKey: 'timesheetId', filterKey: 'timesheetId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            { key: 'weekStartDate', label: 'Period Start', sortKey: 'weekStartDate', render: (item) => Layer8MRenderers.renderDate(item.weekStartDate) },
-            { key: 'weekEndDate', label: 'Period End', sortKey: 'weekEndDate', render: (item) => Layer8MRenderers.renderDate(item.weekEndDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', enumValues: enums.TIMESHEET_STATUS_VALUES, render: (item) => render.timesheetStatus(item.status) },
-            { key: 'totalHours', label: 'Total Hours', sortKey: 'totalHours' },
-            { key: 'billableHours', label: 'Billable Hours', sortKey: 'billableHours' },
-            { key: 'submittedDate', label: 'Submitted Date', sortKey: 'submittedDate', render: (item) => Layer8MRenderers.renderDate(item.submittedDate) }
+            ...col.id('timesheetId'),
+            ...col.col('employeeId', 'Employee'),
+            ...col.date('weekStartDate', 'Period Start'),
+            ...col.date('weekEndDate', 'Period End'),
+            ...col.status('status', 'Status', enums.TIMESHEET_STATUS_VALUES, render.timesheetStatus),
+            ...col.col('totalHours', 'Total Hours'),
+            ...col.col('billableHours', 'Billable Hours'),
+            ...col.date('submittedDate', 'Submitted Date')
         ],
 
         PrjTimesheetEntry: [
-            { key: 'entryId', label: 'ID', sortKey: 'entryId', filterKey: 'entryId' },
-            { key: 'timesheetId', label: 'Timesheet', sortKey: 'timesheetId', filterKey: 'timesheetId' },
-            { key: 'projectId', label: 'Project', sortKey: 'projectId', filterKey: 'projectId' },
-            { key: 'taskId', label: 'Task', sortKey: 'taskId', filterKey: 'taskId' },
-            { key: 'workDate', label: 'Work Date', sortKey: 'workDate', render: (item) => Layer8MRenderers.renderDate(item.workDate) },
-            { key: 'hours', label: 'Hours', sortKey: 'hours' },
-            { key: 'isBillable', label: 'Billable', sortKey: 'isBillable', render: (item) => item.isBillable ? 'Yes' : 'No' },
-            { key: 'description', label: 'Description', sortKey: 'description' }
+            ...col.id('entryId'),
+            ...col.col('timesheetId', 'Timesheet'),
+            ...col.col('projectId', 'Project'),
+            ...col.col('taskId', 'Task'),
+            ...col.date('workDate', 'Work Date'),
+            ...col.col('hours', 'Hours'),
+            ...col.boolean('isBillable', 'Billable'),
+            ...col.col('description', 'Description')
         ],
 
         PrjExpenseReport: [
-            { key: 'reportId', label: 'ID', sortKey: 'reportId', filterKey: 'reportId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
-            { key: 'projectId', label: 'Project', sortKey: 'projectId', filterKey: 'projectId' },
-            { key: 'title', label: 'Title', sortKey: 'title', filterKey: 'title' },
-            { key: 'status', label: 'Status', sortKey: 'status', enumValues: enums.EXPENSE_STATUS_VALUES, render: (item) => render.expenseStatus(item.status) },
-            { key: 'totalAmount', label: 'Total Amount', sortKey: 'totalAmount', render: (item) => Layer8MRenderers.renderMoney(item.totalAmount) },
-            { key: 'submitDate', label: 'Submitted Date', sortKey: 'submitDate', render: (item) => Layer8MRenderers.renderDate(item.submitDate) },
-            { key: 'approvedDate', label: 'Approved Date', sortKey: 'approvedDate', render: (item) => Layer8MRenderers.renderDate(item.approvedDate) }
+            ...col.id('reportId'),
+            ...col.col('employeeId', 'Employee'),
+            ...col.col('projectId', 'Project'),
+            ...col.col('title', 'Title'),
+            ...col.status('status', 'Status', enums.EXPENSE_STATUS_VALUES, render.expenseStatus),
+            ...col.money('totalAmount', 'Total Amount'),
+            ...col.date('submitDate', 'Submitted Date'),
+            ...col.date('approvedDate', 'Approved Date')
         ],
 
         PrjExpenseEntry: [
-            { key: 'entryId', label: 'ID', sortKey: 'entryId', filterKey: 'entryId' },
-            { key: 'reportId', label: 'Report', sortKey: 'reportId', filterKey: 'reportId' },
-            { key: 'expenseType', label: 'Type', sortKey: 'expenseType', enumValues: enums.EXPENSE_TYPE_VALUES, render: (item) => render.expenseType(item.expenseType) },
-            { key: 'expenseDate', label: 'Date', sortKey: 'expenseDate', render: (item) => Layer8MRenderers.renderDate(item.expenseDate) },
-            { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => Layer8MRenderers.renderMoney(item.amount) },
-            { key: 'categoryId', label: 'Category', sortKey: 'categoryId' },
-            { key: 'isBillable', label: 'Billable', sortKey: 'isBillable', render: (item) => item.isBillable ? 'Yes' : 'No' },
-            { key: 'description', label: 'Description', sortKey: 'description' }
+            ...col.id('entryId'),
+            ...col.col('reportId', 'Report'),
+            ...col.status('expenseType', 'Type', enums.EXPENSE_TYPE_VALUES, render.expenseType),
+            ...col.date('expenseDate', 'Date'),
+            ...col.money('amount', 'Amount'),
+            ...col.col('categoryId', 'Category'),
+            ...col.boolean('isBillable', 'Billable'),
+            ...col.col('description', 'Description')
         ],
 
         PrjApprovalRule: [
-            { key: 'ruleId', label: 'ID', sortKey: 'ruleId', filterKey: 'ruleId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'approvalType', label: 'Type', sortKey: 'approvalType', enumValues: enums.APPROVAL_TYPE_VALUES, render: (item) => render.approvalType(item.approvalType) },
-            { key: 'thresholdAmount', label: 'Min Amount', sortKey: 'thresholdAmount', render: (item) => Layer8MRenderers.renderMoney(item.thresholdAmount) },
-            { key: 'thresholdHours', label: 'Max Hours', sortKey: 'thresholdHours' },
-            { key: 'approverId', label: 'Approver', sortKey: 'approverId' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('ruleId'),
+            ...col.col('name', 'Name'),
+            ...col.status('approvalType', 'Type', enums.APPROVAL_TYPE_VALUES, render.approvalType),
+            ...col.money('thresholdAmount', 'Min Amount'),
+            ...col.col('thresholdHours', 'Max Hours'),
+            ...col.col('approverId', 'Approver'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         PrjExpenseCategory: [
-            { key: 'categoryId', label: 'ID', sortKey: 'categoryId', filterKey: 'categoryId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'glAccount', label: 'GL Account', sortKey: 'glAccount' },
-            { key: 'requiresReceipt', label: 'Requires Receipt', sortKey: 'requiresReceipt', render: (item) => item.requiresReceipt ? 'Yes' : 'No' },
-            { key: 'defaultLimit', label: 'Max Amount', sortKey: 'defaultLimit', render: (item) => Layer8MRenderers.renderMoney(item.defaultLimit) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('categoryId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.col('glAccount', 'GL Account'),
+            ...col.boolean('requiresReceipt', 'Requires Receipt'),
+            ...col.money('defaultLimit', 'Max Amount'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         PrjExpensePolicy: [
-            { key: 'policyId', label: 'ID', sortKey: 'policyId', filterKey: 'policyId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'effectiveDate', label: 'Effective Date', sortKey: 'effectiveDate', render: (item) => Layer8MRenderers.renderDate(item.effectiveDate) },
-            { key: 'expiryDate', label: 'Expiry Date', sortKey: 'expiryDate', render: (item) => Layer8MRenderers.renderDate(item.expiryDate) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('policyId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.date('effectiveDate', 'Effective Date'),
+            ...col.date('expiryDate', 'Expiry Date'),
+            ...col.boolean('isActive', 'Active')
         ]
     };
 

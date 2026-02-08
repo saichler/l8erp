@@ -21,14 +21,8 @@ import (
 )
 
 func newBiETLJobServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiETLJob",
-		func(e *bi.BiETLJob) { common.GenerateID(&e.JobId) },
-		validate)
-}
-
-func validate(item *bi.BiETLJob, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.JobId, "JobId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiETLJob]("BiETLJob",
+		func(e *bi.BiETLJob) { common.GenerateID(&e.JobId) }).
+		Require(func(e *bi.BiETLJob) string { return e.JobId }, "JobId").
+		Build()
 }

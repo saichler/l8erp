@@ -21,14 +21,8 @@ import (
 )
 
 func newDocArchiveJobServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("DocArchiveJob",
-		func(e *doc.DocArchiveJob) { common.GenerateID(&e.JobId) },
-		validateDocArchiveJob)
-}
-
-func validateDocArchiveJob(item *doc.DocArchiveJob, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.JobId, "JobId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[doc.DocArchiveJob]("DocArchiveJob",
+		func(e *doc.DocArchiveJob) { common.GenerateID(&e.JobId) }).
+		Require(func(e *doc.DocArchiveJob) string { return e.JobId }, "JobId").
+		Build()
 }

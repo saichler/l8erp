@@ -21,14 +21,8 @@ import (
 )
 
 func newCompApprovalMatrixServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CompApprovalMatrix",
-		func(e *comp.CompApprovalMatrix) { common.GenerateID(&e.MatrixId) },
-		validateCompApprovalMatrix)
-}
-
-func validateCompApprovalMatrix(item *comp.CompApprovalMatrix, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.MatrixId, "MatrixId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[comp.CompApprovalMatrix]("CompApprovalMatrix",
+		func(e *comp.CompApprovalMatrix) { common.GenerateID(&e.MatrixId) }).
+		Require(func(e *comp.CompApprovalMatrix) string { return e.MatrixId }, "MatrixId").
+		Build()
 }

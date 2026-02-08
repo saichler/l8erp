@@ -21,17 +21,9 @@ import (
 )
 
 func newReturnOrderLineServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesReturnOrderLine",
-		func(e *sales.SalesReturnOrderLine) { common.GenerateID(&e.LineId) },
-		validate)
-}
-
-func validate(item *sales.SalesReturnOrderLine, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.LineId, "LineId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.ReturnOrderId, "ReturnOrderId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesReturnOrderLine]("SalesReturnOrderLine",
+		func(e *sales.SalesReturnOrderLine) { common.GenerateID(&e.LineId) }).
+		Require(func(e *sales.SalesReturnOrderLine) string { return e.LineId }, "LineId").
+		Require(func(e *sales.SalesReturnOrderLine) string { return e.ReturnOrderId }, "ReturnOrderId").
+		Build()
 }

@@ -21,20 +21,10 @@ import (
 )
 
 func newBudgetServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("Budget",
-		func(e *fin.Budget) { common.GenerateID(&e.BudgetId) },
-		validate)
-}
-
-func validate(budget *fin.Budget, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(budget.BudgetId, "BudgetId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(budget.BudgetName, "BudgetName"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(budget.FiscalYearId, "FiscalYearId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.Budget]("Budget",
+		func(e *fin.Budget) { common.GenerateID(&e.BudgetId) }).
+		Require(func(e *fin.Budget) string { return e.BudgetId }, "BudgetId").
+		Require(func(e *fin.Budget) string { return e.BudgetName }, "BudgetName").
+		Require(func(e *fin.Budget) string { return e.FiscalYearId }, "FiscalYearId").
+		Build()
 }

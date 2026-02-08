@@ -21,17 +21,9 @@ import (
 )
 
 func newMfgRoutingServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgRouting",
-		func(e *mfg.MfgRouting) { common.GenerateID(&e.RoutingId) },
-		validate)
-}
-
-func validate(item *mfg.MfgRouting, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RoutingId, "RoutingId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.ItemId, "ItemId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgRouting]("MfgRouting",
+		func(e *mfg.MfgRouting) { common.GenerateID(&e.RoutingId) }).
+		Require(func(e *mfg.MfgRouting) string { return e.RoutingId }, "RoutingId").
+		Require(func(e *mfg.MfgRouting) string { return e.ItemId }, "ItemId").
+		Build()
 }

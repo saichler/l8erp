@@ -5,88 +5,89 @@ Layer 8 Ecosystem - Apache 2.0
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobilePrjAnalytics.enums;
     const render = MobilePrjAnalytics.render;
 
     MobilePrjAnalytics.columns = {
         PrjStatusReport: [
-            { key: 'statusId', label: 'ID', sortKey: 'statusId', filterKey: 'statusId' },
-            { key: 'projectId', label: 'Project', sortKey: 'projectId', filterKey: 'projectId' },
-            { key: 'reportDate', label: 'Report Date', sortKey: 'reportDate', render: (item) => Layer8MRenderers.renderDate(item.reportDate) },
-            { key: 'overallHealth', label: 'Overall Health', sortKey: 'overallHealth', enumValues: enums.HEALTH_INDICATOR_VALUES, render: (item) => render.healthIndicator(item.overallHealth) },
-            { key: 'scheduleHealth', label: 'Schedule Health', sortKey: 'scheduleHealth', enumValues: enums.HEALTH_INDICATOR_VALUES, render: (item) => render.healthIndicator(item.scheduleHealth) },
-            { key: 'budgetHealth', label: 'Budget Health', sortKey: 'budgetHealth', enumValues: enums.HEALTH_INDICATOR_VALUES, render: (item) => render.healthIndicator(item.budgetHealth) },
-            { key: 'resourceHealth', label: 'Resource Health', sortKey: 'resourceHealth', enumValues: enums.HEALTH_INDICATOR_VALUES, render: (item) => render.healthIndicator(item.resourceHealth) },
-            { key: 'percentComplete', label: '% Complete', sortKey: 'percentComplete' }
+            ...col.id('statusId'),
+            ...col.col('projectId', 'Project'),
+            ...col.date('reportDate', 'Report Date'),
+            ...col.status('overallHealth', 'Overall Health', enums.HEALTH_INDICATOR_VALUES, render.healthIndicator),
+            ...col.status('scheduleHealth', 'Schedule Health', enums.HEALTH_INDICATOR_VALUES, render.healthIndicator),
+            ...col.status('budgetHealth', 'Budget Health', enums.HEALTH_INDICATOR_VALUES, render.healthIndicator),
+            ...col.status('resourceHealth', 'Resource Health', enums.HEALTH_INDICATOR_VALUES, render.healthIndicator),
+            ...col.col('percentComplete', '% Complete')
         ],
 
         PrjEarnedValue: [
-            { key: 'earnedValueId', label: 'ID', sortKey: 'earnedValueId', filterKey: 'earnedValueId' },
-            { key: 'projectId', label: 'Project', sortKey: 'projectId', filterKey: 'projectId' },
-            { key: 'asOfDate', label: 'As Of Date', sortKey: 'asOfDate', render: (item) => Layer8MRenderers.renderDate(item.asOfDate) },
-            { key: 'plannedValue', label: 'Planned Value', sortKey: 'plannedValue', render: (item) => Layer8MRenderers.renderMoney(item.plannedValue) },
-            { key: 'earnedValue', label: 'Earned Value', sortKey: 'earnedValue', render: (item) => Layer8MRenderers.renderMoney(item.earnedValue) },
-            { key: 'actualCost', label: 'Actual Cost', sortKey: 'actualCost', render: (item) => Layer8MRenderers.renderMoney(item.actualCost) },
-            { key: 'scheduleVariance', label: 'Schedule Variance', sortKey: 'scheduleVariance', render: (item) => Layer8MRenderers.renderMoney(item.scheduleVariance) },
-            { key: 'costVariance', label: 'Cost Variance', sortKey: 'costVariance', render: (item) => Layer8MRenderers.renderMoney(item.costVariance) },
-            { key: 'schedulePerformanceIndex', label: 'SPI', sortKey: 'schedulePerformanceIndex' },
-            { key: 'costPerformanceIndex', label: 'CPI', sortKey: 'costPerformanceIndex' }
+            ...col.id('earnedValueId'),
+            ...col.col('projectId', 'Project'),
+            ...col.date('asOfDate', 'As Of Date'),
+            ...col.money('plannedValue', 'Planned Value'),
+            ...col.money('earnedValue', 'Earned Value'),
+            ...col.money('actualCost', 'Actual Cost'),
+            ...col.money('scheduleVariance', 'Schedule Variance'),
+            ...col.money('costVariance', 'Cost Variance'),
+            ...col.col('schedulePerformanceIndex', 'SPI'),
+            ...col.col('costPerformanceIndex', 'CPI')
         ],
 
         PrjBudgetVariance: [
-            { key: 'varianceId', label: 'ID', sortKey: 'varianceId', filterKey: 'varianceId' },
-            { key: 'projectId', label: 'Project', sortKey: 'projectId', filterKey: 'projectId' },
-            { key: 'asOfDate', label: 'As Of Date', sortKey: 'asOfDate', render: (item) => Layer8MRenderers.renderDate(item.asOfDate) },
-            { key: 'budgetedAmount', label: 'Budgeted Amount', sortKey: 'budgetedAmount', render: (item) => Layer8MRenderers.renderMoney(item.budgetedAmount) },
-            { key: 'actualAmount', label: 'Actual Amount', sortKey: 'actualAmount', render: (item) => Layer8MRenderers.renderMoney(item.actualAmount) },
-            { key: 'varianceAmount', label: 'Variance', sortKey: 'varianceAmount', render: (item) => Layer8MRenderers.renderMoney(item.varianceAmount) },
-            { key: 'variancePercent', label: 'Variance %', sortKey: 'variancePercent' },
-            { key: 'category', label: 'Category', sortKey: 'category', filterKey: 'category' }
+            ...col.id('varianceId'),
+            ...col.col('projectId', 'Project'),
+            ...col.date('asOfDate', 'As Of Date'),
+            ...col.money('budgetedAmount', 'Budgeted Amount'),
+            ...col.money('actualAmount', 'Actual Amount'),
+            ...col.money('varianceAmount', 'Variance'),
+            ...col.col('variancePercent', 'Variance %'),
+            ...col.col('category', 'Category')
         ],
 
         PrjResourceForecast: [
-            { key: 'forecastId', label: 'ID', sortKey: 'forecastId', filterKey: 'forecastId' },
-            { key: 'projectId', label: 'Project', sortKey: 'projectId', filterKey: 'projectId' },
-            { key: 'resourceId', label: 'Resource', sortKey: 'resourceId', filterKey: 'resourceId' },
-            { key: 'periodStart', label: 'Period Start', sortKey: 'periodStart', render: (item) => Layer8MRenderers.renderDate(item.periodStart) },
-            { key: 'periodEnd', label: 'Period End', sortKey: 'periodEnd', render: (item) => Layer8MRenderers.renderDate(item.periodEnd) },
-            { key: 'forecastedHours', label: 'Forecasted Hours', sortKey: 'forecastedHours' },
-            { key: 'confirmedHours', label: 'Confirmed Hours', sortKey: 'confirmedHours' },
-            { key: 'gapHours', label: 'Gap Hours', sortKey: 'gapHours' }
+            ...col.id('forecastId'),
+            ...col.col('projectId', 'Project'),
+            ...col.col('resourceId', 'Resource'),
+            ...col.date('periodStart', 'Period Start'),
+            ...col.date('periodEnd', 'Period End'),
+            ...col.col('forecastedHours', 'Forecasted Hours'),
+            ...col.col('confirmedHours', 'Confirmed Hours'),
+            ...col.col('gapHours', 'Gap Hours')
         ],
 
         PrjPortfolioView: [
-            { key: 'viewId', label: 'ID', sortKey: 'viewId', filterKey: 'viewId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' },
-            { key: 'totalProjects', label: 'Total Projects', sortKey: 'totalProjects' },
-            { key: 'onTrackCount', label: 'On Track', sortKey: 'onTrackCount' },
-            { key: 'atRiskCount', label: 'At Risk', sortKey: 'atRiskCount' },
-            { key: 'offTrackCount', label: 'Off Track', sortKey: 'offTrackCount' }
+            ...col.id('viewId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.col('ownerId', 'Owner'),
+            ...col.col('totalProjects', 'Total Projects'),
+            ...col.col('onTrackCount', 'On Track'),
+            ...col.col('atRiskCount', 'At Risk'),
+            ...col.col('offTrackCount', 'Off Track')
         ],
 
         PrjProjectKPI: [
-            { key: 'kpiId', label: 'ID', sortKey: 'kpiId', filterKey: 'kpiId' },
-            { key: 'projectId', label: 'Project', sortKey: 'projectId', filterKey: 'projectId' },
-            { key: 'kpiName', label: 'KPI Name', sortKey: 'kpiName', filterKey: 'kpiName' },
-            { key: 'targetValue', label: 'Target', sortKey: 'targetValue' },
-            { key: 'actualValue', label: 'Actual', sortKey: 'actualValue' },
-            { key: 'unitOfMeasure', label: 'Unit', sortKey: 'unitOfMeasure' },
-            { key: 'measurementDate', label: 'Measurement Date', sortKey: 'measurementDate', render: (item) => Layer8MRenderers.renderDate(item.measurementDate) },
-            { key: 'trend', label: 'Trend', sortKey: 'trend' }
+            ...col.id('kpiId'),
+            ...col.col('projectId', 'Project'),
+            ...col.col('kpiName', 'KPI Name'),
+            ...col.col('targetValue', 'Target'),
+            ...col.col('actualValue', 'Actual'),
+            ...col.col('unitOfMeasure', 'Unit'),
+            ...col.date('measurementDate', 'Measurement Date'),
+            ...col.col('trend', 'Trend')
         ],
 
         PrjProjectIssue: [
-            { key: 'issueId', label: 'ID', sortKey: 'issueId', filterKey: 'issueId' },
-            { key: 'projectId', label: 'Project', sortKey: 'projectId', filterKey: 'projectId' },
-            { key: 'title', label: 'Title', sortKey: 'title', filterKey: 'title' },
-            { key: 'status', label: 'Status', sortKey: 'status', enumValues: enums.ISSUE_STATUS_VALUES, render: (item) => render.issueStatus(item.status) },
-            { key: 'priority', label: 'Priority', sortKey: 'priority', enumValues: enums.ISSUE_PRIORITY_VALUES, render: (item) => render.issuePriority(item.priority) },
-            { key: 'assignedTo', label: 'Assigned To', sortKey: 'assignedTo' },
-            { key: 'reportedDate', label: 'Reported Date', sortKey: 'reportedDate', render: (item) => Layer8MRenderers.renderDate(item.reportedDate) },
-            { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => Layer8MRenderers.renderDate(item.dueDate) },
-            { key: 'resolvedDate', label: 'Resolved Date', sortKey: 'resolvedDate', render: (item) => Layer8MRenderers.renderDate(item.resolvedDate) }
+            ...col.id('issueId'),
+            ...col.col('projectId', 'Project'),
+            ...col.col('title', 'Title'),
+            ...col.status('status', 'Status', enums.ISSUE_STATUS_VALUES, render.issueStatus),
+            ...col.status('priority', 'Priority', enums.ISSUE_PRIORITY_VALUES, render.issuePriority),
+            ...col.col('assignedTo', 'Assigned To'),
+            ...col.date('reportedDate', 'Reported Date'),
+            ...col.date('dueDate', 'Due Date'),
+            ...col.date('resolvedDate', 'Resolved Date')
         ]
     };
 

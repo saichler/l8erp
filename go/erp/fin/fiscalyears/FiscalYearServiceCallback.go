@@ -21,17 +21,9 @@ import (
 )
 
 func newFiscalYearServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("FiscalYear",
-		func(e *fin.FiscalYear) { common.GenerateID(&e.FiscalYearId) },
-		validate)
-}
-
-func validate(fiscalYear *fin.FiscalYear, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(fiscalYear.FiscalYearId, "FiscalYearId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(fiscalYear.YearName, "YearName"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.FiscalYear]("FiscalYear",
+		func(e *fin.FiscalYear) { common.GenerateID(&e.FiscalYearId) }).
+		Require(func(e *fin.FiscalYear) string { return e.FiscalYearId }, "FiscalYearId").
+		Require(func(e *fin.FiscalYear) string { return e.YearName }, "YearName").
+		Build()
 }

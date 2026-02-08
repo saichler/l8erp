@@ -21,14 +21,8 @@ import (
 )
 
 func newCompMitigationPlanServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CompMitigationPlan",
-		func(e *comp.CompMitigationPlan) { common.GenerateID(&e.PlanId) },
-		validateCompMitigationPlan)
-}
-
-func validateCompMitigationPlan(item *comp.CompMitigationPlan, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.PlanId, "PlanId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[comp.CompMitigationPlan]("CompMitigationPlan",
+		func(e *comp.CompMitigationPlan) { common.GenerateID(&e.PlanId) }).
+		Require(func(e *comp.CompMitigationPlan) string { return e.PlanId }, "PlanId").
+		Build()
 }

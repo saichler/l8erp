@@ -21,23 +21,11 @@ import (
 )
 
 func newCustomerContactServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CustomerContact",
-		func(e *fin.CustomerContact) { common.GenerateID(&e.ContactId) },
-		validate)
-}
-
-func validate(customerContact *fin.CustomerContact, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(customerContact.ContactId, "ContactId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(customerContact.CustomerId, "CustomerId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(customerContact.FirstName, "FirstName"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(customerContact.LastName, "LastName"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.CustomerContact]("CustomerContact",
+		func(e *fin.CustomerContact) { common.GenerateID(&e.ContactId) }).
+		Require(func(e *fin.CustomerContact) string { return e.ContactId }, "ContactId").
+		Require(func(e *fin.CustomerContact) string { return e.CustomerId }, "CustomerId").
+		Require(func(e *fin.CustomerContact) string { return e.FirstName }, "FirstName").
+		Require(func(e *fin.CustomerContact) string { return e.LastName }, "LastName").
+		Build()
 }

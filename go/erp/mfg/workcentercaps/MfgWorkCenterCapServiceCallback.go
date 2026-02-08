@@ -21,17 +21,9 @@ import (
 )
 
 func newMfgWorkCenterCapServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgWorkCenterCap",
-		func(e *mfg.MfgWorkCenterCap) { common.GenerateID(&e.CapacityId) },
-		validate)
-}
-
-func validate(item *mfg.MfgWorkCenterCap, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CapacityId, "CapacityId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.WorkCenterId, "WorkCenterId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgWorkCenterCap]("MfgWorkCenterCap",
+		func(e *mfg.MfgWorkCenterCap) { common.GenerateID(&e.CapacityId) }).
+		Require(func(e *mfg.MfgWorkCenterCap) string { return e.CapacityId }, "CapacityId").
+		Require(func(e *mfg.MfgWorkCenterCap) string { return e.WorkCenterId }, "WorkCenterId").
+		Build()
 }

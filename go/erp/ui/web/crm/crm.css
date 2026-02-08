@@ -12,136 +12,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+/* ============================================ */
+/* CRM STYLES - Entry Point */
+/* ============================================ */
+/*
+ * The CRM module reuses the shared layout classes
+ * and layer8d-theme.css variables for status colors.
+ * Status rendering uses generic layer8d-status-* classes.
+ *
+ * Any CRM-specific style overrides can be added here.
+ */
 
-/* CRM Module Styles */
-/* Uses shared HCM layout classes and layer8d-theme.css variables */
-
-/* Lead Status Colors */
-.crm-lead-status-new {
-    background-color: var(--layer8d-blue-bg);
-    color: var(--layer8d-blue-text);
-}
-
-.crm-lead-status-contacted {
-    background-color: var(--layer8d-yellow-bg);
-    color: var(--layer8d-yellow-text);
-}
-
-.crm-lead-status-qualified {
-    background-color: var(--layer8d-green-bg);
-    color: var(--layer8d-green-text);
-}
-
-.crm-lead-status-unqualified {
-    background-color: var(--layer8d-red-bg);
-    color: var(--layer8d-red-text);
-}
-
-.crm-lead-status-converted {
-    background-color: var(--layer8d-green-light-bg);
-    color: var(--layer8d-green-light-text);
-}
-
-/* Opportunity Stage Colors */
-.crm-opp-stage-prospecting {
-    background-color: var(--layer8d-indigo-bg);
-    color: var(--layer8d-indigo-text);
-}
-
-.crm-opp-stage-qualification {
-    background-color: var(--layer8d-blue-bg);
-    color: var(--layer8d-blue-text);
-}
-
-.crm-opp-stage-proposal {
-    background-color: var(--layer8d-yellow-bg);
-    color: var(--layer8d-yellow-text);
-}
-
-.crm-opp-stage-negotiation {
-    background-color: var(--layer8d-orange-bg);
-    color: var(--layer8d-orange-text);
-}
-
-.crm-opp-stage-closed-won {
-    background-color: var(--layer8d-green-light-bg);
-    color: var(--layer8d-green-light-text);
-}
-
-.crm-opp-stage-closed-lost {
-    background-color: var(--layer8d-red-bg);
-    color: var(--layer8d-red-text);
-}
-
-/* Case Priority Colors */
-.crm-case-priority-low {
-    background-color: var(--layer8d-gray-bg);
-    color: var(--layer8d-gray-text);
-}
-
-.crm-case-priority-medium {
-    background-color: var(--layer8d-yellow-bg);
-    color: var(--layer8d-yellow-text);
-}
-
-.crm-case-priority-high {
-    background-color: var(--layer8d-orange-bg);
-    color: var(--layer8d-orange-text);
-}
-
-.crm-case-priority-critical {
-    background-color: var(--layer8d-red-bg);
-    color: var(--layer8d-red-text);
-}
-
-/* Case Status Colors */
-.crm-case-status-open {
-    background-color: var(--layer8d-blue-bg);
-    color: var(--layer8d-blue-text);
-}
-
-.crm-case-status-in-progress {
-    background-color: var(--layer8d-yellow-bg);
-    color: var(--layer8d-yellow-text);
-}
-
-.crm-case-status-pending {
-    background-color: var(--layer8d-indigo-bg);
-    color: var(--layer8d-indigo-text);
-}
-
-.crm-case-status-resolved {
-    background-color: var(--layer8d-green-bg);
-    color: var(--layer8d-green-text);
-}
-
-.crm-case-status-closed {
-    background-color: var(--layer8d-gray-bg);
-    color: var(--layer8d-gray-text);
-}
-
-/* Health Score Colors */
-.crm-health-excellent {
-    background-color: var(--layer8d-green-light-bg);
-    color: var(--layer8d-green-light-text);
-}
-
-.crm-health-good {
-    background-color: var(--layer8d-green-bg);
-    color: var(--layer8d-green-text);
-}
-
-.crm-health-fair {
-    background-color: var(--layer8d-yellow-bg);
-    color: var(--layer8d-yellow-text);
-}
-
-.crm-health-at-risk {
-    background-color: var(--layer8d-orange-bg);
-    color: var(--layer8d-orange-text);
-}
-
-.crm-health-critical {
-    background-color: var(--layer8d-red-bg);
-    color: var(--layer8d-red-text);
-}
+/* Any additional CRM-specific styles can be added here */

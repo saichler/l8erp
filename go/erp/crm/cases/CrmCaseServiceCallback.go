@@ -21,17 +21,9 @@ import (
 )
 
 func newCrmCaseServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmCase",
-		func(e *crm.CrmCase) { common.GenerateID(&e.CaseId) },
-		validate)
-}
-
-func validate(item *crm.CrmCase, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CaseId, "CaseId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.Subject, "Subject"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmCase]("CrmCase",
+		func(e *crm.CrmCase) { common.GenerateID(&e.CaseId) }).
+		Require(func(e *crm.CrmCase) string { return e.CaseId }, "CaseId").
+		Require(func(e *crm.CrmCase) string { return e.Subject }, "Subject").
+		Build()
 }

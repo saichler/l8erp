@@ -21,14 +21,8 @@ import (
 )
 
 func newShipTaskServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmShipTask",
-		func(e *scm.ScmShipTask) { common.GenerateID(&e.TaskId) },
-		validate)
-}
-
-func validate(item *scm.ScmShipTask, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.TaskId, "TaskId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmShipTask]("ScmShipTask",
+		func(e *scm.ScmShipTask) { common.GenerateID(&e.TaskId) }).
+		Require(func(e *scm.ScmShipTask) string { return e.TaskId }, "TaskId").
+		Build()
 }

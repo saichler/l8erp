@@ -21,14 +21,8 @@ import (
 )
 
 func newPrjProjectTemplateServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjProjectTemplate",
-		func(e *prj.PrjProjectTemplate) { common.GenerateID(&e.TemplateId) },
-		validate)
-}
-
-func validate(item *prj.PrjProjectTemplate, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.TemplateId, "TemplateId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjProjectTemplate]("PrjProjectTemplate",
+		func(e *prj.PrjProjectTemplate) { common.GenerateID(&e.TemplateId) }).
+		Require(func(e *prj.PrjProjectTemplate) string { return e.TemplateId }, "TemplateId").
+		Build()
 }

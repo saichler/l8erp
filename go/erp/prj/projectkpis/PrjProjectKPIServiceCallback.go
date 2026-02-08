@@ -21,14 +21,8 @@ import (
 )
 
 func newPrjProjectKPIServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjProjectKPI",
-		func(e *prj.PrjProjectKPI) { common.GenerateID(&e.KpiId) },
-		validate)
-}
-
-func validate(item *prj.PrjProjectKPI, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.KpiId, "KpiId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjProjectKPI]("PrjProjectKPI",
+		func(e *prj.PrjProjectKPI) { common.GenerateID(&e.KpiId) }).
+		Require(func(e *prj.PrjProjectKPI) string { return e.KpiId }, "KpiId").
+		Build()
 }

@@ -21,14 +21,8 @@ import (
 )
 
 func newBiDataSourceServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiDataSource",
-		func(e *bi.BiDataSource) { common.GenerateID(&e.SourceId) },
-		validate)
-}
-
-func validate(item *bi.BiDataSource, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.SourceId, "SourceId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiDataSource]("BiDataSource",
+		func(e *bi.BiDataSource) { common.GenerateID(&e.SourceId) }).
+		Require(func(e *bi.BiDataSource) string { return e.SourceId }, "SourceId").
+		Build()
 }

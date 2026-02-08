@@ -21,14 +21,8 @@ import (
 )
 
 func newDocCategoryServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("DocCategory",
-		func(e *doc.DocCategory) { common.GenerateID(&e.CategoryId) },
-		validateDocCategory)
-}
-
-func validateDocCategory(item *doc.DocCategory, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CategoryId, "CategoryId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[doc.DocCategory]("DocCategory",
+		func(e *doc.DocCategory) { common.GenerateID(&e.CategoryId) }).
+		Require(func(e *doc.DocCategory) string { return e.CategoryId }, "CategoryId").
+		Build()
 }

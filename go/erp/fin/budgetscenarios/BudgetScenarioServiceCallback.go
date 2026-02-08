@@ -21,20 +21,10 @@ import (
 )
 
 func newBudgetScenarioServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BudgetScenario",
-		func(e *fin.BudgetScenario) { common.GenerateID(&e.ScenarioId) },
-		validate)
-}
-
-func validate(budgetScenario *fin.BudgetScenario, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(budgetScenario.ScenarioId, "ScenarioId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(budgetScenario.ScenarioName, "ScenarioName"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(budgetScenario.BaseBudgetId, "BaseBudgetId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.BudgetScenario]("BudgetScenario",
+		func(e *fin.BudgetScenario) { common.GenerateID(&e.ScenarioId) }).
+		Require(func(e *fin.BudgetScenario) string { return e.ScenarioId }, "ScenarioId").
+		Require(func(e *fin.BudgetScenario) string { return e.ScenarioName }, "ScenarioName").
+		Require(func(e *fin.BudgetScenario) string { return e.BaseBudgetId }, "BaseBudgetId").
+		Build()
 }

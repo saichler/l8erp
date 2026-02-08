@@ -21,14 +21,8 @@ import (
 )
 
 func newMaterialRequirementServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmMaterialRequirement",
-		func(e *scm.ScmMaterialRequirement) { common.GenerateID(&e.RequirementId) },
-		validate)
-}
-
-func validate(item *scm.ScmMaterialRequirement, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RequirementId, "RequirementId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmMaterialRequirement]("ScmMaterialRequirement",
+		func(e *scm.ScmMaterialRequirement) { common.GenerateID(&e.RequirementId) }).
+		Require(func(e *scm.ScmMaterialRequirement) string { return e.RequirementId }, "RequirementId").
+		Build()
 }

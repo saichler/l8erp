@@ -21,20 +21,10 @@ import (
 )
 
 func newFundTransferServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("FundTransfer",
-		func(e *fin.FundTransfer) { common.GenerateID(&e.TransferId) },
-		validate)
-}
-
-func validate(fundTransfer *fin.FundTransfer, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(fundTransfer.TransferId, "TransferId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(fundTransfer.FromBankAccountId, "FromBankAccountId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(fundTransfer.ToBankAccountId, "ToBankAccountId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.FundTransfer]("FundTransfer",
+		func(e *fin.FundTransfer) { common.GenerateID(&e.TransferId) }).
+		Require(func(e *fin.FundTransfer) string { return e.TransferId }, "TransferId").
+		Require(func(e *fin.FundTransfer) string { return e.FromBankAccountId }, "FromBankAccountId").
+		Require(func(e *fin.FundTransfer) string { return e.ToBankAccountId }, "ToBankAccountId").
+		Build()
 }

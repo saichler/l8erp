@@ -21,14 +21,8 @@ import (
 )
 
 func newCompIncidentServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CompIncident",
-		func(e *comp.CompIncident) { common.GenerateID(&e.IncidentId) },
-		validateCompIncident)
-}
-
-func validateCompIncident(item *comp.CompIncident, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.IncidentId, "IncidentId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[comp.CompIncident]("CompIncident",
+		func(e *comp.CompIncident) { common.GenerateID(&e.IncidentId) }).
+		Require(func(e *comp.CompIncident) string { return e.IncidentId }, "IncidentId").
+		Build()
 }

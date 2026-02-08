@@ -21,17 +21,9 @@ import (
 )
 
 func newVendorStatementServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("VendorStatement",
-		func(e *fin.VendorStatement) { common.GenerateID(&e.StatementId) },
-		validate)
-}
-
-func validate(vendorStatement *fin.VendorStatement, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(vendorStatement.StatementId, "StatementId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(vendorStatement.VendorId, "VendorId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.VendorStatement]("VendorStatement",
+		func(e *fin.VendorStatement) { common.GenerateID(&e.StatementId) }).
+		Require(func(e *fin.VendorStatement) string { return e.StatementId }, "StatementId").
+		Require(func(e *fin.VendorStatement) string { return e.VendorId }, "VendorId").
+		Build()
 }

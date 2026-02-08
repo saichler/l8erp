@@ -21,14 +21,8 @@ import (
 )
 
 func newCrmLeadScoreServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmLeadScore",
-		func(e *crm.CrmLeadScore) { common.GenerateID(&e.ScoreId) },
-		validate)
-}
-
-func validate(item *crm.CrmLeadScore, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ScoreId, "ScoreId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmLeadScore]("CrmLeadScore",
+		func(e *crm.CrmLeadScore) { common.GenerateID(&e.ScoreId) }).
+		Require(func(e *crm.CrmLeadScore) string { return e.ScoreId }, "ScoreId").
+		Build()
 }

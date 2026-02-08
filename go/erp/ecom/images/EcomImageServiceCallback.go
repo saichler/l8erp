@@ -21,14 +21,8 @@ import (
 )
 
 func newEcomImageServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("EcomImage",
-		func(e *ecom.EcomImage) { common.GenerateID(&e.ImageId) },
-		validateEcomImage)
-}
-
-func validateEcomImage(item *ecom.EcomImage, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ImageId, "ImageId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[ecom.EcomImage]("EcomImage",
+		func(e *ecom.EcomImage) { common.GenerateID(&e.ImageId) }).
+		Require(func(e *ecom.EcomImage) string { return e.ImageId }, "ImageId").
+		Build()
 }

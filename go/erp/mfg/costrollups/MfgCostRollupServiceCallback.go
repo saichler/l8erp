@@ -21,14 +21,8 @@ import (
 )
 
 func newMfgCostRollupServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgCostRollup",
-		func(e *mfg.MfgCostRollup) { common.GenerateID(&e.RollupId) },
-		validate)
-}
-
-func validate(item *mfg.MfgCostRollup, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RollupId, "RollupId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgCostRollup]("MfgCostRollup",
+		func(e *mfg.MfgCostRollup) { common.GenerateID(&e.RollupId) }).
+		Require(func(e *mfg.MfgCostRollup) string { return e.RollupId }, "RollupId").
+		Build()
 }

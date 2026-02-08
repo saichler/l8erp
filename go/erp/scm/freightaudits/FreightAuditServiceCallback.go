@@ -21,14 +21,8 @@ import (
 )
 
 func newFreightAuditServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmFreightAudit",
-		func(e *scm.ScmFreightAudit) { common.GenerateID(&e.AuditId) },
-		validate)
-}
-
-func validate(item *scm.ScmFreightAudit, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.AuditId, "AuditId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmFreightAudit]("ScmFreightAudit",
+		func(e *scm.ScmFreightAudit) { common.GenerateID(&e.AuditId) }).
+		Require(func(e *scm.ScmFreightAudit) string { return e.AuditId }, "AuditId").
+		Build()
 }

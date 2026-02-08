@@ -21,14 +21,8 @@ import (
 )
 
 func newCrmServicePartServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmServicePart",
-		func(e *crm.CrmServicePart) { common.GenerateID(&e.PartId) },
-		validate)
-}
-
-func validate(item *crm.CrmServicePart, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.PartId, "PartId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmServicePart]("CrmServicePart",
+		func(e *crm.CrmServicePart) { common.GenerateID(&e.PartId) }).
+		Require(func(e *crm.CrmServicePart) string { return e.PartId }, "PartId").
+		Build()
 }

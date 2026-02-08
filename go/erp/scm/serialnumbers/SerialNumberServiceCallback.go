@@ -21,14 +21,8 @@ import (
 )
 
 func newSerialNumberServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmSerialNumber",
-		func(e *scm.ScmSerialNumber) { common.GenerateID(&e.SerialId) },
-		validate)
-}
-
-func validate(item *scm.ScmSerialNumber, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.SerialId, "SerialId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmSerialNumber]("ScmSerialNumber",
+		func(e *scm.ScmSerialNumber) { common.GenerateID(&e.SerialId) }).
+		Require(func(e *scm.ScmSerialNumber) string { return e.SerialId }, "SerialId").
+		Build()
 }

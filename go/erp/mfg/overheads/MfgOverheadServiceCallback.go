@@ -21,20 +21,10 @@ import (
 )
 
 func newMfgOverheadServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgOverhead",
-		func(e *mfg.MfgOverhead) { common.GenerateID(&e.OverheadId) },
-		validate)
-}
-
-func validate(item *mfg.MfgOverhead, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.OverheadId, "OverheadId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.Name, "Name"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.CurrencyId, "CurrencyId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgOverhead]("MfgOverhead",
+		func(e *mfg.MfgOverhead) { common.GenerateID(&e.OverheadId) }).
+		Require(func(e *mfg.MfgOverhead) string { return e.OverheadId }, "OverheadId").
+		Require(func(e *mfg.MfgOverhead) string { return e.Name }, "Name").
+		Require(func(e *mfg.MfgOverhead) string { return e.CurrencyId }, "CurrencyId").
+		Build()
 }

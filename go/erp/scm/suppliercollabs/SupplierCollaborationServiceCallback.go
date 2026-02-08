@@ -21,14 +21,8 @@ import (
 )
 
 func newSupplierCollaborationServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmSupplierCollaboration",
-		func(e *scm.ScmSupplierCollaboration) { common.GenerateID(&e.CollaborationId) },
-		validate)
-}
-
-func validate(item *scm.ScmSupplierCollaboration, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CollaborationId, "CollaborationId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmSupplierCollaboration]("ScmSupplierCollaboration",
+		func(e *scm.ScmSupplierCollaboration) { common.GenerateID(&e.CollaborationId) }).
+		Require(func(e *scm.ScmSupplierCollaboration) string { return e.CollaborationId }, "CollaborationId").
+		Build()
 }

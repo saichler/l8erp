@@ -21,14 +21,8 @@ import (
 )
 
 func newCompRemediationActionServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CompRemediationAction",
-		func(e *comp.CompRemediationAction) { common.GenerateID(&e.ActionId) },
-		validateCompRemediationAction)
-}
-
-func validateCompRemediationAction(item *comp.CompRemediationAction, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ActionId, "ActionId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[comp.CompRemediationAction]("CompRemediationAction",
+		func(e *comp.CompRemediationAction) { common.GenerateID(&e.ActionId) }).
+		Require(func(e *comp.CompRemediationAction) string { return e.ActionId }, "ActionId").
+		Build()
 }

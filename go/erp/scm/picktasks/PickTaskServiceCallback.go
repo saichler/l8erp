@@ -21,14 +21,8 @@ import (
 )
 
 func newPickTaskServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmPickTask",
-		func(e *scm.ScmPickTask) { common.GenerateID(&e.TaskId) },
-		validate)
-}
-
-func validate(item *scm.ScmPickTask, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.TaskId, "TaskId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmPickTask]("ScmPickTask",
+		func(e *scm.ScmPickTask) { common.GenerateID(&e.TaskId) }).
+		Require(func(e *scm.ScmPickTask) string { return e.TaskId }, "TaskId").
+		Build()
 }

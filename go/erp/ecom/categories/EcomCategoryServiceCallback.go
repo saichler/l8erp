@@ -21,14 +21,8 @@ import (
 )
 
 func newEcomCategoryServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("EcomCategory",
-		func(e *ecom.EcomCategory) { common.GenerateID(&e.CategoryId) },
-		validateEcomCategory)
-}
-
-func validateEcomCategory(item *ecom.EcomCategory, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CategoryId, "CategoryId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[ecom.EcomCategory]("EcomCategory",
+		func(e *ecom.EcomCategory) { common.GenerateID(&e.CategoryId) }).
+		Require(func(e *ecom.EcomCategory) string { return e.CategoryId }, "CategoryId").
+		Build()
 }

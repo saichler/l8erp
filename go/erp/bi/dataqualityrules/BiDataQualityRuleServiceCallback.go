@@ -21,14 +21,8 @@ import (
 )
 
 func newBiDataQualityRuleServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiDataQualityRule",
-		func(e *bi.BiDataQualityRule) { common.GenerateID(&e.RuleId) },
-		validate)
-}
-
-func validate(item *bi.BiDataQualityRule, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RuleId, "RuleId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiDataQualityRule]("BiDataQualityRule",
+		func(e *bi.BiDataQualityRule) { common.GenerateID(&e.RuleId) }).
+		Require(func(e *bi.BiDataQualityRule) string { return e.RuleId }, "RuleId").
+		Build()
 }

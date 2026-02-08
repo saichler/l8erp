@@ -21,17 +21,9 @@ import (
 )
 
 func newMfgOverheadAllocServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgOverheadAlloc",
-		func(e *mfg.MfgOverheadAlloc) { common.GenerateID(&e.AllocationId) },
-		validate)
-}
-
-func validate(item *mfg.MfgOverheadAlloc, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.AllocationId, "AllocationId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.OverheadId, "OverheadId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgOverheadAlloc]("MfgOverheadAlloc",
+		func(e *mfg.MfgOverheadAlloc) { common.GenerateID(&e.AllocationId) }).
+		Require(func(e *mfg.MfgOverheadAlloc) string { return e.AllocationId }, "AllocationId").
+		Require(func(e *mfg.MfgOverheadAlloc) string { return e.OverheadId }, "OverheadId").
+		Build()
 }

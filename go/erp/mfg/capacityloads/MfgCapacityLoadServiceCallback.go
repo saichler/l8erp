@@ -21,17 +21,9 @@ import (
 )
 
 func newMfgCapacityLoadServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgCapacityLoad",
-		func(e *mfg.MfgCapacityLoad) { common.GenerateID(&e.LoadId) },
-		validate)
-}
-
-func validate(item *mfg.MfgCapacityLoad, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.LoadId, "LoadId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.PlanId, "PlanId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgCapacityLoad]("MfgCapacityLoad",
+		func(e *mfg.MfgCapacityLoad) { common.GenerateID(&e.LoadId) }).
+		Require(func(e *mfg.MfgCapacityLoad) string { return e.LoadId }, "LoadId").
+		Require(func(e *mfg.MfgCapacityLoad) string { return e.PlanId }, "PlanId").
+		Build()
 }

@@ -21,14 +21,8 @@ import (
 )
 
 func newBiReportScheduleServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiReportSchedule",
-		func(e *bi.BiReportSchedule) { common.GenerateID(&e.ScheduleId) },
-		validateBiReportSchedule)
-}
-
-func validateBiReportSchedule(item *bi.BiReportSchedule, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ScheduleId, "ScheduleId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiReportSchedule]("BiReportSchedule",
+		func(e *bi.BiReportSchedule) { common.GenerateID(&e.ScheduleId) }).
+		Require(func(e *bi.BiReportSchedule) string { return e.ScheduleId }, "ScheduleId").
+		Build()
 }

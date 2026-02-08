@@ -21,17 +21,9 @@ import (
 )
 
 func newSalesTerritoryServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesTerritory",
-		func(e *sales.SalesTerritory) { common.GenerateID(&e.TerritoryId) },
-		validate)
-}
-
-func validate(item *sales.SalesTerritory, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.TerritoryId, "TerritoryId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.Name, "Name"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesTerritory]("SalesTerritory",
+		func(e *sales.SalesTerritory) { common.GenerateID(&e.TerritoryId) }).
+		Require(func(e *sales.SalesTerritory) string { return e.TerritoryId }, "TerritoryId").
+		Require(func(e *sales.SalesTerritory) string { return e.Name }, "Name").
+		Build()
 }

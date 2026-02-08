@@ -21,20 +21,10 @@ import (
 )
 
 func newExchangeRateServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ExchangeRate",
-		func(e *fin.ExchangeRate) { common.GenerateID(&e.ExchangeRateId) },
-		validate)
-}
-
-func validate(exchangeRate *fin.ExchangeRate, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(exchangeRate.ExchangeRateId, "ExchangeRateId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(exchangeRate.FromCurrencyId, "FromCurrencyId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(exchangeRate.ToCurrencyId, "ToCurrencyId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.ExchangeRate]("ExchangeRate",
+		func(e *fin.ExchangeRate) { common.GenerateID(&e.ExchangeRateId) }).
+		Require(func(e *fin.ExchangeRate) string { return e.ExchangeRateId }, "ExchangeRateId").
+		Require(func(e *fin.ExchangeRate) string { return e.FromCurrencyId }, "FromCurrencyId").
+		Require(func(e *fin.ExchangeRate) string { return e.ToCurrencyId }, "ToCurrencyId").
+		Build()
 }

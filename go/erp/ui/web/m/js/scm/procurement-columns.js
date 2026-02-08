@@ -19,70 +19,65 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileProcurement.enums;
     const render = MobileProcurement.render;
 
     MobileProcurement.columns = {
         ScmPurchaseRequisition: [
-            { key: 'requisitionId', label: 'ID', sortKey: 'requisitionId', filterKey: 'requisitionId' },
-            { key: 'requisitionNumber', label: 'Req #', sortKey: 'requisitionNumber', filterKey: 'requisitionNumber' },
-            { key: 'requesterId', label: 'Requester', sortKey: 'requesterId', filterKey: 'requesterId' },
-            { key: 'requestDate', label: 'Date', sortKey: 'requestDate', render: (item) => Layer8MRenderers.renderDate(item.requestDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.REQUISITION_STATUS_VALUES, render: (item) => render.requisitionStatus(item.status) },
-            { key: 'estimatedTotal', label: 'Est. Total', sortKey: 'estimatedTotal', render: (item) => Layer8MRenderers.renderMoney(item.estimatedTotal) }
+            ...col.id('requisitionId'),
+            ...col.col('requisitionNumber', 'Req #'),
+            ...col.col('requesterId', 'Requester'),
+            ...col.date('requestDate', 'Date'),
+            ...col.status('status', 'Status', enums.REQUISITION_STATUS_VALUES, render.requisitionStatus),
+            ...col.money('estimatedTotal', 'Est. Total')
         ],
-
         ScmRequisitionLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'requisitionId', label: 'Requisition', sortKey: 'requisitionId', filterKey: 'requisitionId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            { key: 'estimatedUnitPrice', label: 'Unit Price', sortKey: 'estimatedUnitPrice', render: (item) => Layer8MRenderers.renderMoney(item.estimatedUnitPrice) },
-            { key: 'deliveryDate', label: 'Delivery', sortKey: 'deliveryDate', render: (item) => Layer8MRenderers.renderDate(item.deliveryDate) }
+            ...col.id('lineId'),
+            ...col.col('requisitionId', 'Requisition'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('quantity', 'Qty'),
+            ...col.money('estimatedUnitPrice', 'Unit Price'),
+            ...col.date('deliveryDate', 'Delivery')
         ],
-
         ScmRequestForQuotation: [
-            { key: 'rfqId', label: 'ID', sortKey: 'rfqId', filterKey: 'rfqId' },
-            { key: 'rfqNumber', label: 'RFQ #', sortKey: 'rfqNumber', filterKey: 'rfqNumber' },
-            { key: 'issueDate', label: 'Issued', sortKey: 'issueDate', render: (item) => Layer8MRenderers.renderDate(item.issueDate) },
-            { key: 'responseDeadline', label: 'Deadline', sortKey: 'responseDeadline', render: (item) => Layer8MRenderers.renderDate(item.responseDeadline) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.REQUISITION_STATUS_VALUES, render: (item) => render.requisitionStatus(item.status) }
+            ...col.id('rfqId'),
+            ...col.col('rfqNumber', 'RFQ #'),
+            ...col.date('issueDate', 'Issued'),
+            ...col.date('responseDeadline', 'Deadline'),
+            ...col.status('status', 'Status', enums.REQUISITION_STATUS_VALUES, render.requisitionStatus)
         ],
-
         ScmPurchaseOrder: [
-            { key: 'purchaseOrderId', label: 'ID', sortKey: 'purchaseOrderId', filterKey: 'purchaseOrderId' },
-            { key: 'orderNumber', label: 'PO #', sortKey: 'orderNumber', filterKey: 'orderNumber' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'orderDate', label: 'Order Date', sortKey: 'orderDate', render: (item) => Layer8MRenderers.renderDate(item.orderDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.PO_STATUS_VALUES, render: (item) => render.poStatus(item.status) },
-            { key: 'totalAmount', label: 'Total', sortKey: 'totalAmount', render: (item) => Layer8MRenderers.renderMoney(item.totalAmount) }
+            ...col.id('purchaseOrderId'),
+            ...col.col('orderNumber', 'PO #'),
+            ...col.col('vendorId', 'Vendor'),
+            ...col.date('orderDate', 'Order Date'),
+            ...col.status('status', 'Status', enums.PO_STATUS_VALUES, render.poStatus),
+            ...col.money('totalAmount', 'Total')
         ],
-
         ScmPurchaseOrderLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'purchaseOrderId', label: 'PO', sortKey: 'purchaseOrderId', filterKey: 'purchaseOrderId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            { key: 'unitPrice', label: 'Unit Price', sortKey: 'unitPrice', render: (item) => Layer8MRenderers.renderMoney(item.unitPrice) },
-            { key: 'totalPrice', label: 'Total', sortKey: 'totalPrice', render: (item) => Layer8MRenderers.renderMoney(item.totalPrice) }
+            ...col.id('lineId'),
+            ...col.col('purchaseOrderId', 'PO'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('quantity', 'Qty'),
+            ...col.money('unitPrice', 'Unit Price'),
+            ...col.money('totalPrice', 'Total')
         ],
-
         ScmBlanketOrder: [
-            { key: 'blanketOrderId', label: 'ID', sortKey: 'blanketOrderId', filterKey: 'blanketOrderId' },
-            { key: 'orderNumber', label: 'Order #', sortKey: 'orderNumber', filterKey: 'orderNumber' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.PO_STATUS_VALUES, render: (item) => render.poStatus(item.status) },
-            { key: 'maxAmount', label: 'Max Amount', sortKey: 'maxAmount', render: (item) => Layer8MRenderers.renderMoney(item.maxAmount) }
+            ...col.id('blanketOrderId'),
+            ...col.col('orderNumber', 'Order #'),
+            ...col.col('vendorId', 'Vendor'),
+            ...col.date('startDate', 'Start'),
+            ...col.date('endDate', 'End'),
+            ...col.status('status', 'Status', enums.PO_STATUS_VALUES, render.poStatus),
+            ...col.money('maxAmount', 'Max Amount')
         ],
-
         ScmSupplierScorecard: [
-            { key: 'scorecardId', label: 'ID', sortKey: 'scorecardId', filterKey: 'scorecardId' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'qualityScore', label: 'Quality', sortKey: 'qualityScore' },
-            { key: 'deliveryScore', label: 'Delivery', sortKey: 'deliveryScore' },
-            { key: 'overallScore', label: 'Overall', sortKey: 'overallScore' }
+            ...col.id('scorecardId'),
+            ...col.col('vendorId', 'Vendor'),
+            ...col.col('qualityScore', 'Quality'),
+            ...col.col('deliveryScore', 'Delivery'),
+            ...col.col('overallScore', 'Overall')
         ]
     };
 

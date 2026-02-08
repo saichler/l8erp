@@ -21,14 +21,8 @@ import (
 )
 
 func newBiDrilldownServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiDrilldown",
-		func(e *bi.BiDrilldown) { common.GenerateID(&e.DrilldownId) },
-		validate)
-}
-
-func validate(item *bi.BiDrilldown, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.DrilldownId, "DrilldownId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiDrilldown]("BiDrilldown",
+		func(e *bi.BiDrilldown) { common.GenerateID(&e.DrilldownId) }).
+		Require(func(e *bi.BiDrilldown) string { return e.DrilldownId }, "DrilldownId").
+		Build()
 }

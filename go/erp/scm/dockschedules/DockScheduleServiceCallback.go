@@ -21,14 +21,8 @@ import (
 )
 
 func newDockScheduleServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmDockSchedule",
-		func(e *scm.ScmDockSchedule) { common.GenerateID(&e.ScheduleId) },
-		validate)
-}
-
-func validate(item *scm.ScmDockSchedule, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ScheduleId, "ScheduleId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmDockSchedule]("ScmDockSchedule",
+		func(e *scm.ScmDockSchedule) { common.GenerateID(&e.ScheduleId) }).
+		Require(func(e *scm.ScmDockSchedule) string { return e.ScheduleId }, "ScheduleId").
+		Build()
 }

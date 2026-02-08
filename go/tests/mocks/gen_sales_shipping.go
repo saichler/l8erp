@@ -86,41 +86,30 @@ func generateSalesDeliveryOrders(store *MockDataStore) []*sales.SalesDeliveryOrd
 
 // generateSalesDeliveryLines creates delivery line records (3 per delivery)
 func generateSalesDeliveryLines(store *MockDataStore) []*sales.SalesDeliveryLine {
-	count := len(store.SalesDeliveryOrderIDs) * 3
-	if count == 0 {
-		count = 75
-	}
-
-	lines := make([]*sales.SalesDeliveryLine, 0, count)
-	idx := 1
-	for dIdx, deliveryID := range store.SalesDeliveryOrderIDs {
-		for j := 0; j < 3; j++ {
-			itemID := ""
-			description := fmt.Sprintf("Delivery line item %d", idx)
-			if len(store.ItemIDs) > 0 {
-				itemID = store.ItemIDs[(dIdx*3+j)%len(store.ItemIDs)]
-				description = itemNames[(dIdx*3+j)%len(itemNames)]
-			}
-
-			orderLineID := pickRef(store.SalesOrderLineIDs, (dIdx*3+j))
-
-			lines = append(lines, &sales.SalesDeliveryLine{
-				LineId:           fmt.Sprintf("sdl-%03d", idx),
-				DeliveryOrderId:  deliveryID,
-				LineNumber:       int32(j + 1),
-				SalesOrderLineId: orderLineID,
-				ItemId:           itemID,
-				Description:      description,
-				Quantity:         float64(rand.Intn(10) + 1),
-				UnitOfMeasure:    "EA",
-				LotNumber:        fmt.Sprintf("LOT-%06d", rand.Intn(999999)),
-				SerialNumber:     fmt.Sprintf("SN-%08d", rand.Intn(99999999)),
-				AuditInfo:        createAuditInfo(),
-			})
-			idx++
+	return genLines(store.SalesDeliveryOrderIDs, 3, func(idx, dIdx, j int, deliveryID string) *sales.SalesDeliveryLine {
+		itemID := ""
+		description := fmt.Sprintf("Delivery line item %d", idx)
+		if len(store.ItemIDs) > 0 {
+			itemID = store.ItemIDs[(dIdx*3+j)%len(store.ItemIDs)]
+			description = itemNames[(dIdx*3+j)%len(itemNames)]
 		}
-	}
-	return lines
+
+		orderLineID := pickRef(store.SalesOrderLineIDs, (dIdx*3+j))
+
+		return &sales.SalesDeliveryLine{
+			LineId:           fmt.Sprintf("sdl-%03d", idx),
+			DeliveryOrderId:  deliveryID,
+			LineNumber:       int32(j + 1),
+			SalesOrderLineId: orderLineID,
+			ItemId:           itemID,
+			Description:      description,
+			Quantity:         float64(rand.Intn(10) + 1),
+			UnitOfMeasure:    "EA",
+			LotNumber:        fmt.Sprintf("LOT-%06d", rand.Intn(999999)),
+			SerialNumber:     fmt.Sprintf("SN-%08d", rand.Intn(99999999)),
+			AuditInfo:        createAuditInfo(),
+		}
+	})
 }
 
 // generateSalesPickReleases creates pick release records

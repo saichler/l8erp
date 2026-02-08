@@ -21,20 +21,10 @@ import (
 )
 
 func newSalesQuotationServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesQuotation",
-		func(e *sales.SalesQuotation) { common.GenerateID(&e.QuotationId) },
-		validate)
-}
-
-func validate(item *sales.SalesQuotation, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.QuotationId, "QuotationId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.CustomerId, "CustomerId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.CurrencyId, "CurrencyId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesQuotation]("SalesQuotation",
+		func(e *sales.SalesQuotation) { common.GenerateID(&e.QuotationId) }).
+		Require(func(e *sales.SalesQuotation) string { return e.QuotationId }, "QuotationId").
+		Require(func(e *sales.SalesQuotation) string { return e.CustomerId }, "CustomerId").
+		Require(func(e *sales.SalesQuotation) string { return e.CurrencyId }, "CurrencyId").
+		Build()
 }

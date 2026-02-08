@@ -21,14 +21,8 @@ import (
 )
 
 func newCrmLeadServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmLead",
-		func(e *crm.CrmLead) { common.GenerateID(&e.LeadId) },
-		validate)
-}
-
-func validate(item *crm.CrmLead, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.LeadId, "LeadId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmLead]("CrmLead",
+		func(e *crm.CrmLead) { common.GenerateID(&e.LeadId) }).
+		Require(func(e *crm.CrmLead) string { return e.LeadId }, "LeadId").
+		Build()
 }

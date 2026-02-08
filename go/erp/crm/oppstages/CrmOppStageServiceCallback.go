@@ -21,14 +21,8 @@ import (
 )
 
 func newCrmOppStageServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmOppStage",
-		func(e *crm.CrmOppStage) { common.GenerateID(&e.StageId) },
-		validate)
-}
-
-func validate(item *crm.CrmOppStage, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.StageId, "StageId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmOppStage]("CrmOppStage",
+		func(e *crm.CrmOppStage) { common.GenerateID(&e.StageId) }).
+		Require(func(e *crm.CrmOppStage) string { return e.StageId }, "StageId").
+		Build()
 }

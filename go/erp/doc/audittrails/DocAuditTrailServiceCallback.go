@@ -21,14 +21,8 @@ import (
 )
 
 func newDocAuditTrailServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("DocAuditTrail",
-		func(e *doc.DocAuditTrail) { common.GenerateID(&e.TrailId) },
-		validateDocAuditTrail)
-}
-
-func validateDocAuditTrail(item *doc.DocAuditTrail, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.TrailId, "TrailId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[doc.DocAuditTrail]("DocAuditTrail",
+		func(e *doc.DocAuditTrail) { common.GenerateID(&e.TrailId) }).
+		Require(func(e *doc.DocAuditTrail) string { return e.TrailId }, "TrailId").
+		Build()
 }

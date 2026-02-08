@@ -21,14 +21,8 @@ import (
 )
 
 func newDemandPlanServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmDemandPlan",
-		func(e *scm.ScmDemandPlan) { common.GenerateID(&e.PlanId) },
-		validate)
-}
-
-func validate(item *scm.ScmDemandPlan, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.PlanId, "PlanId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmDemandPlan]("ScmDemandPlan",
+		func(e *scm.ScmDemandPlan) { common.GenerateID(&e.PlanId) }).
+		Require(func(e *scm.ScmDemandPlan) string { return e.PlanId }, "PlanId").
+		Build()
 }

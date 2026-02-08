@@ -21,14 +21,8 @@ import (
 )
 
 func newEcomCustomerAddressServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("EcomCustomerAddress",
-		func(e *ecom.EcomCustomerAddress) { common.GenerateID(&e.AddressId) },
-		validateEcomCustomerAddress)
-}
-
-func validateEcomCustomerAddress(item *ecom.EcomCustomerAddress, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.AddressId, "AddressId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[ecom.EcomCustomerAddress]("EcomCustomerAddress",
+		func(e *ecom.EcomCustomerAddress) { common.GenerateID(&e.AddressId) }).
+		Require(func(e *ecom.EcomCustomerAddress) string { return e.AddressId }, "AddressId").
+		Build()
 }

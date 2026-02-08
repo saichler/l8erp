@@ -21,17 +21,9 @@ import (
 )
 
 func newQuantityBreakServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesQuantityBreak",
-		func(e *sales.SalesQuantityBreak) { common.GenerateID(&e.BreakId) },
-		validate)
-}
-
-func validate(item *sales.SalesQuantityBreak, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.BreakId, "BreakId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.PriceListId, "PriceListId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesQuantityBreak]("SalesQuantityBreak",
+		func(e *sales.SalesQuantityBreak) { common.GenerateID(&e.BreakId) }).
+		Require(func(e *sales.SalesQuantityBreak) string { return e.BreakId }, "BreakId").
+		Require(func(e *sales.SalesQuantityBreak) string { return e.PriceListId }, "PriceListId").
+		Build()
 }

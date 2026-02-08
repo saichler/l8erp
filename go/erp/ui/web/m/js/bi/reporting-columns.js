@@ -19,77 +19,78 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileBiReporting.enums;
     const render = MobileBiReporting.render;
 
     MobileBiReporting.columns = {
         BiReport: [
-            { key: 'reportId', label: 'ID', sortKey: 'reportId', filterKey: 'reportId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'reportType', label: 'Type', sortKey: 'reportType', filterKey: 'reportType', enumValues: enums.REPORT_TYPE_VALUES, render: (item) => render.reportType(item.reportType) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.REPORT_STATUS_VALUES, render: (item) => render.reportStatus(item.status) },
-            { key: 'category', label: 'Category', sortKey: 'category' },
-            { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' },
-            { key: 'defaultFormat', label: 'Format', sortKey: 'defaultFormat', render: (item) => render.exportFormat(item.defaultFormat) },
-            { key: 'isPublic', label: 'Public', sortKey: 'isPublic', render: (item) => item.isPublic ? 'Yes' : 'No' },
-            { key: 'lastExecuted', label: 'Last Executed', sortKey: 'lastExecuted', render: (item) => Layer8MRenderers.renderDate(item.lastExecuted) },
-            { key: 'executionCount', label: 'Executions', sortKey: 'executionCount' }
+            ...col.id('reportId'),
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
+            ...col.status('reportType', 'Type', enums.REPORT_TYPE_VALUES, render.reportType),
+            ...col.status('status', 'Status', enums.REPORT_STATUS_VALUES, render.reportStatus),
+            ...col.col('category', 'Category'),
+            ...col.col('ownerId', 'Owner'),
+            ...col.enum('defaultFormat', 'Format', null, render.exportFormat),
+            ...col.boolean('isPublic', 'Public'),
+            ...col.date('lastExecuted', 'Last Executed'),
+            ...col.col('executionCount', 'Executions')
         ],
 
         BiReportTemplate: [
-            { key: 'templateId', label: 'ID', sortKey: 'templateId', filterKey: 'templateId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'reportType', label: 'Type', sortKey: 'reportType', filterKey: 'reportType', enumValues: enums.REPORT_TYPE_VALUES, render: (item) => render.reportType(item.reportType) },
-            { key: 'category', label: 'Category', sortKey: 'category' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('templateId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.status('reportType', 'Type', enums.REPORT_TYPE_VALUES, render.reportType),
+            ...col.col('category', 'Category'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BiReportSchedule: [
-            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'reportId', label: 'Report', sortKey: 'reportId', filterKey: 'reportId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'frequency', label: 'Frequency', sortKey: 'frequency', filterKey: 'frequency', enumValues: enums.SCHEDULE_FREQUENCY_VALUES, render: (item) => render.scheduleFrequency(item.frequency) },
-            { key: 'runTime', label: 'Run Time', sortKey: 'runTime' },
-            { key: 'nextRun', label: 'Next Run', sortKey: 'nextRun', render: (item) => Layer8MRenderers.renderDate(item.nextRun) },
-            { key: 'lastRun', label: 'Last Run', sortKey: 'lastRun', render: (item) => Layer8MRenderers.renderDate(item.lastRun) },
-            { key: 'outputFormat', label: 'Format', sortKey: 'outputFormat', render: (item) => render.exportFormat(item.outputFormat) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('scheduleId'),
+            ...col.col('reportId', 'Report'),
+            ...col.col('name', 'Name'),
+            ...col.status('frequency', 'Frequency', enums.SCHEDULE_FREQUENCY_VALUES, render.scheduleFrequency),
+            ...col.col('runTime', 'Run Time'),
+            ...col.date('nextRun', 'Next Run'),
+            ...col.date('lastRun', 'Last Run'),
+            ...col.enum('outputFormat', 'Format', null, render.exportFormat),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BiReportExecution: [
-            { key: 'executionId', label: 'ID', sortKey: 'executionId', filterKey: 'executionId' },
-            { key: 'reportId', label: 'Report', sortKey: 'reportId', filterKey: 'reportId' },
-            { key: 'scheduleId', label: 'Schedule', sortKey: 'scheduleId' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.EXECUTION_STATUS_VALUES, render: (item) => render.executionStatus(item.status) },
-            { key: 'startTime', label: 'Start Time', sortKey: 'startTime', render: (item) => Layer8MRenderers.renderDate(item.startTime) },
-            { key: 'endTime', label: 'End Time', sortKey: 'endTime', render: (item) => Layer8MRenderers.renderDate(item.endTime) },
-            { key: 'executedBy', label: 'Executed By', sortKey: 'executedBy' },
-            { key: 'rowCount', label: 'Rows', sortKey: 'rowCount' },
-            { key: 'outputFormat', label: 'Format', sortKey: 'outputFormat', render: (item) => render.exportFormat(item.outputFormat) }
+            ...col.id('executionId'),
+            ...col.col('reportId', 'Report'),
+            ...col.col('scheduleId', 'Schedule'),
+            ...col.status('status', 'Status', enums.EXECUTION_STATUS_VALUES, render.executionStatus),
+            ...col.date('startTime', 'Start Time'),
+            ...col.date('endTime', 'End Time'),
+            ...col.col('executedBy', 'Executed By'),
+            ...col.col('rowCount', 'Rows'),
+            ...col.enum('outputFormat', 'Format', null, render.exportFormat)
         ],
 
         BiReportAccess: [
-            { key: 'accessId', label: 'ID', sortKey: 'accessId', filterKey: 'accessId' },
-            { key: 'reportId', label: 'Report', sortKey: 'reportId', filterKey: 'reportId' },
-            { key: 'principalId', label: 'Principal', sortKey: 'principalId' },
-            { key: 'principalType', label: 'Type', sortKey: 'principalType' },
-            { key: 'accessLevel', label: 'Access Level', sortKey: 'accessLevel', filterKey: 'accessLevel', enumValues: enums.ACCESS_LEVEL_VALUES, render: (item) => render.accessLevel(item.accessLevel) },
-            { key: 'grantedDate', label: 'Granted', sortKey: 'grantedDate', render: (item) => Layer8MRenderers.renderDate(item.grantedDate) },
-            { key: 'grantedBy', label: 'Granted By', sortKey: 'grantedBy' },
-            { key: 'expiryDate', label: 'Expires', sortKey: 'expiryDate', render: (item) => Layer8MRenderers.renderDate(item.expiryDate) }
+            ...col.id('accessId'),
+            ...col.col('reportId', 'Report'),
+            ...col.col('principalId', 'Principal'),
+            ...col.col('principalType', 'Type'),
+            ...col.status('accessLevel', 'Access Level', enums.ACCESS_LEVEL_VALUES, render.accessLevel),
+            ...col.date('grantedDate', 'Granted'),
+            ...col.col('grantedBy', 'Granted By'),
+            ...col.date('expiryDate', 'Expires')
         ],
 
         BiReportSubscription: [
-            { key: 'subscriptionId', label: 'ID', sortKey: 'subscriptionId', filterKey: 'subscriptionId' },
-            { key: 'reportId', label: 'Report', sortKey: 'reportId', filterKey: 'reportId' },
-            { key: 'scheduleId', label: 'Schedule', sortKey: 'scheduleId' },
-            { key: 'subscriberId', label: 'Subscriber', sortKey: 'subscriberId' },
-            { key: 'format', label: 'Format', sortKey: 'format', render: (item) => render.exportFormat(item.format) },
-            { key: 'deliveryEmail', label: 'Email', sortKey: 'deliveryEmail' },
-            { key: 'includeEmpty', label: 'Include Empty', sortKey: 'includeEmpty', render: (item) => item.includeEmpty ? 'Yes' : 'No' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('subscriptionId'),
+            ...col.col('reportId', 'Report'),
+            ...col.col('scheduleId', 'Schedule'),
+            ...col.col('subscriberId', 'Subscriber'),
+            ...col.enum('format', 'Format', null, render.exportFormat),
+            ...col.col('deliveryEmail', 'Email'),
+            ...col.boolean('includeEmpty', 'Include Empty'),
+            ...col.boolean('isActive', 'Active')
         ]
     };
 

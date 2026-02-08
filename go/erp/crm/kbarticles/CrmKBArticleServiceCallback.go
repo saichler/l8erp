@@ -21,17 +21,9 @@ import (
 )
 
 func newCrmKBArticleServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmKBArticle",
-		func(e *crm.CrmKBArticle) { common.GenerateID(&e.ArticleId) },
-		validate)
-}
-
-func validate(item *crm.CrmKBArticle, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ArticleId, "ArticleId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.Title, "Title"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmKBArticle]("CrmKBArticle",
+		func(e *crm.CrmKBArticle) { common.GenerateID(&e.ArticleId) }).
+		Require(func(e *crm.CrmKBArticle) string { return e.ArticleId }, "ArticleId").
+		Require(func(e *crm.CrmKBArticle) string { return e.Title }, "Title").
+		Build()
 }

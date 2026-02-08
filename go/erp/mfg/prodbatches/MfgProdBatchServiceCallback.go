@@ -21,17 +21,9 @@ import (
 )
 
 func newMfgProdBatchServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgProdBatch",
-		func(e *mfg.MfgProdBatch) { common.GenerateID(&e.BatchId) },
-		validate)
-}
-
-func validate(item *mfg.MfgProdBatch, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.BatchId, "BatchId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.WorkOrderId, "WorkOrderId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgProdBatch]("MfgProdBatch",
+		func(e *mfg.MfgProdBatch) { common.GenerateID(&e.BatchId) }).
+		Require(func(e *mfg.MfgProdBatch) string { return e.BatchId }, "BatchId").
+		Require(func(e *mfg.MfgProdBatch) string { return e.WorkOrderId }, "WorkOrderId").
+		Build()
 }

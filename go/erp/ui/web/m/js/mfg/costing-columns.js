@@ -19,56 +19,57 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     window.MobileMfgCosting = window.MobileMfgCosting || {};
     const render = MobileMfgCosting.render;
 
     MobileMfgCosting.columns = {
         MfgStandardCost: [
-            { key: 'costId', label: 'ID', sortKey: 'costId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId' },
-            { key: 'effectiveDate', label: 'Effective', sortKey: 'effectiveDate', render: (item) => render.date(item.effectiveDate) },
-            { key: 'materialCost', label: 'Material', sortKey: 'materialCost', render: (item) => render.money(item.materialCost) },
-            { key: 'laborCost', label: 'Labor', sortKey: 'laborCost', render: (item) => render.money(item.laborCost) },
-            { key: 'overheadCost', label: 'Overhead', sortKey: 'overheadCost', render: (item) => render.money(item.overheadCost) },
-            { key: 'totalCost', label: 'Total', sortKey: 'totalCost', render: (item) => render.money(item.totalCost) }
+            ...col.id('costId'),
+            ...col.col('itemId', 'Item'),
+            ...col.date('effectiveDate', 'Effective'),
+            ...col.money('materialCost', 'Material'),
+            ...col.money('laborCost', 'Labor'),
+            ...col.money('overheadCost', 'Overhead'),
+            ...col.money('totalCost', 'Total')
         ],
         MfgCostRollup: [
-            { key: 'rollupId', label: 'ID', sortKey: 'rollupId' },
-            { key: 'rollupNumber', label: 'Rollup #', sortKey: 'rollupNumber' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'runDate', label: 'Run Date', sortKey: 'runDate', render: (item) => render.date(item.runDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.rollupStatus(item.status) }
+            ...col.id('rollupId'),
+            ...col.col('rollupNumber', 'Rollup #'),
+            ...col.col('description', 'Description'),
+            ...col.date('runDate', 'Run Date'),
+            ...col.enum('status', 'Status', null, render.rollupStatus)
         ],
         MfgActualCost: [
-            { key: 'actualCostId', label: 'ID', sortKey: 'actualCostId' },
-            { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
-            { key: 'costType', label: 'Cost Type', sortKey: 'costType' },
-            { key: 'costElement', label: 'Cost Element', sortKey: 'costElement', render: (item) => render.costElementType(item.costElement) },
-            { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => render.money(item.amount) },
-            { key: 'transactionDate', label: 'Transaction Date', sortKey: 'transactionDate', render: (item) => render.date(item.transactionDate) }
+            ...col.id('actualCostId'),
+            ...col.col('workOrderId', 'Work Order'),
+            ...col.col('costType', 'Cost Type'),
+            ...col.enum('costElement', 'Cost Element', null, render.costElementType),
+            ...col.money('amount', 'Amount'),
+            ...col.date('transactionDate', 'Transaction Date')
         ],
         MfgCostVariance: [
-            { key: 'varianceId', label: 'ID', sortKey: 'varianceId' },
-            { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
-            { key: 'varianceType', label: 'Type', sortKey: 'varianceType', render: (item) => render.varianceType(item.varianceType) },
-            { key: 'standardCost', label: 'Standard', sortKey: 'standardCost', render: (item) => render.money(item.standardCost) },
-            { key: 'actualCost', label: 'Actual', sortKey: 'actualCost', render: (item) => render.money(item.actualCost) },
-            { key: 'varianceAmount', label: 'Variance', sortKey: 'varianceAmount', render: (item) => render.money(item.varianceAmount) }
+            ...col.id('varianceId'),
+            ...col.col('workOrderId', 'Work Order'),
+            ...col.enum('varianceType', 'Type', null, render.varianceType),
+            ...col.money('standardCost', 'Standard'),
+            ...col.money('actualCost', 'Actual'),
+            ...col.money('varianceAmount', 'Variance')
         ],
         MfgOverhead: [
-            { key: 'overheadId', label: 'ID', sortKey: 'overheadId' },
-            { key: 'code', label: 'Code', sortKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name' },
-            { key: 'allocationMethod', label: 'Method', sortKey: 'allocationMethod', render: (item) => render.allocationMethod(item.allocationMethod) },
-            { key: 'rate', label: 'Rate', sortKey: 'rate' }
+            ...col.id('overheadId'),
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
+            ...col.enum('allocationMethod', 'Method', null, render.allocationMethod),
+            ...col.col('rate', 'Rate')
         ],
         MfgOverheadAlloc: [
-            { key: 'allocationId', label: 'ID', sortKey: 'allocationId' },
-            { key: 'overheadId', label: 'Overhead', sortKey: 'overheadId' },
-            { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
-            { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            { key: 'allocationDate', label: 'Date', sortKey: 'allocationDate', render: (item) => render.date(item.allocationDate) },
-            { key: 'allocatedAmount', label: 'Amount', sortKey: 'allocatedAmount', render: (item) => render.money(item.allocatedAmount) }
+            ...col.id('allocationId'),
+            ...col.col('overheadId', 'Overhead'),
+            ...col.col('workOrderId', 'Work Order'),
+            ...col.col('workCenterId', 'Work Center'),
+            ...col.date('allocationDate', 'Date'),
+            ...col.money('allocatedAmount', 'Amount')
         ]
     };
 

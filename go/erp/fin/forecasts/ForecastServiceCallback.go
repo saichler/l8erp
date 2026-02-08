@@ -21,17 +21,9 @@ import (
 )
 
 func newForecastServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("Forecast",
-		func(e *fin.Forecast) { common.GenerateID(&e.ForecastId) },
-		validate)
-}
-
-func validate(forecast *fin.Forecast, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(forecast.ForecastId, "ForecastId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(forecast.ForecastName, "ForecastName"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.Forecast]("Forecast",
+		func(e *fin.Forecast) { common.GenerateID(&e.ForecastId) }).
+		Require(func(e *fin.Forecast) string { return e.ForecastId }, "ForecastId").
+		Require(func(e *fin.Forecast) string { return e.ForecastName }, "ForecastName").
+		Build()
 }

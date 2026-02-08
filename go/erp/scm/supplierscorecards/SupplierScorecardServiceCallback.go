@@ -21,14 +21,8 @@ import (
 )
 
 func newSupplierScorecardServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmSupplierScorecard",
-		func(e *scm.ScmSupplierScorecard) { common.GenerateID(&e.ScorecardId) },
-		validate)
-}
-
-func validate(item *scm.ScmSupplierScorecard, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ScorecardId, "ScorecardId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmSupplierScorecard]("ScmSupplierScorecard",
+		func(e *scm.ScmSupplierScorecard) { common.GenerateID(&e.ScorecardId) }).
+		Require(func(e *scm.ScmSupplierScorecard) string { return e.ScorecardId }, "ScorecardId").
+		Build()
 }

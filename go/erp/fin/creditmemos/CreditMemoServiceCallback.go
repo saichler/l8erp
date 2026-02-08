@@ -21,17 +21,9 @@ import (
 )
 
 func newCreditMemoServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CreditMemo",
-		func(e *fin.CreditMemo) { common.GenerateID(&e.CreditMemoId) },
-		validate)
-}
-
-func validate(creditMemo *fin.CreditMemo, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(creditMemo.CreditMemoId, "CreditMemoId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(creditMemo.CustomerId, "CustomerId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.CreditMemo]("CreditMemo",
+		func(e *fin.CreditMemo) { common.GenerateID(&e.CreditMemoId) }).
+		Require(func(e *fin.CreditMemo) string { return e.CreditMemoId }, "CreditMemoId").
+		Require(func(e *fin.CreditMemo) string { return e.CustomerId }, "CustomerId").
+		Build()
 }

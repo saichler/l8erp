@@ -21,17 +21,9 @@ import (
 )
 
 func newPettyCashServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PettyCash",
-		func(e *fin.PettyCash) { common.GenerateID(&e.PettyCashId) },
-		validate)
-}
-
-func validate(pettyCash *fin.PettyCash, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(pettyCash.PettyCashId, "PettyCashId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(pettyCash.FundName, "FundName"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.PettyCash]("PettyCash",
+		func(e *fin.PettyCash) { common.GenerateID(&e.PettyCashId) }).
+		Require(func(e *fin.PettyCash) string { return e.PettyCashId }, "PettyCashId").
+		Require(func(e *fin.PettyCash) string { return e.FundName }, "FundName").
+		Build()
 }

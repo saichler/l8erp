@@ -21,14 +21,8 @@ import (
 )
 
 func newCompControlServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CompControl",
-		func(e *comp.CompControl) { common.GenerateID(&e.ControlId) },
-		validateCompControl)
-}
-
-func validateCompControl(item *comp.CompControl, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ControlId, "ControlId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[comp.CompControl]("CompControl",
+		func(e *comp.CompControl) { common.GenerateID(&e.ControlId) }).
+		Require(func(e *comp.CompControl) string { return e.ControlId }, "ControlId").
+		Build()
 }

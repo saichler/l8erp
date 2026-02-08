@@ -21,14 +21,8 @@ import (
 )
 
 func newSafetyStockServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmSafetyStock",
-		func(e *scm.ScmSafetyStock) { common.GenerateID(&e.SafetyStockId) },
-		validate)
-}
-
-func validate(item *scm.ScmSafetyStock, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.SafetyStockId, "SafetyStockId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmSafetyStock]("ScmSafetyStock",
+		func(e *scm.ScmSafetyStock) { common.GenerateID(&e.SafetyStockId) }).
+		Require(func(e *scm.ScmSafetyStock) string { return e.SafetyStockId }, "SafetyStockId").
+		Build()
 }

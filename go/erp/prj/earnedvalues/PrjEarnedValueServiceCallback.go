@@ -21,14 +21,8 @@ import (
 )
 
 func newPrjEarnedValueServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjEarnedValue",
-		func(e *prj.PrjEarnedValue) { common.GenerateID(&e.EarnedValueId) },
-		validate)
-}
-
-func validate(item *prj.PrjEarnedValue, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.EarnedValueId, "EarnedValueId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjEarnedValue]("PrjEarnedValue",
+		func(e *prj.PrjEarnedValue) { common.GenerateID(&e.EarnedValueId) }).
+		Require(func(e *prj.PrjEarnedValue) string { return e.EarnedValueId }, "EarnedValueId").
+		Build()
 }

@@ -21,17 +21,9 @@ import (
 )
 
 func newMfgEngChangeDetailServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgEngChangeDetail",
-		func(e *mfg.MfgEngChangeDetail) { common.GenerateID(&e.DetailId) },
-		validate)
-}
-
-func validate(item *mfg.MfgEngChangeDetail, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.DetailId, "DetailId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.ChangeOrderId, "ChangeOrderId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgEngChangeDetail]("MfgEngChangeDetail",
+		func(e *mfg.MfgEngChangeDetail) { common.GenerateID(&e.DetailId) }).
+		Require(func(e *mfg.MfgEngChangeDetail) string { return e.DetailId }, "DetailId").
+		Require(func(e *mfg.MfgEngChangeDetail) string { return e.ChangeOrderId }, "ChangeOrderId").
+		Build()
 }

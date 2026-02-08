@@ -21,14 +21,8 @@ import (
 )
 
 func newCompInsurancePolicyServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CompInsurancePolicy",
-		func(e *comp.CompInsurancePolicy) { common.GenerateID(&e.InsuranceId) },
-		validateCompInsurancePolicy)
-}
-
-func validateCompInsurancePolicy(item *comp.CompInsurancePolicy, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.InsuranceId, "InsuranceId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[comp.CompInsurancePolicy]("CompInsurancePolicy",
+		func(e *comp.CompInsurancePolicy) { common.GenerateID(&e.InsuranceId) }).
+		Require(func(e *comp.CompInsurancePolicy) string { return e.InsuranceId }, "InsuranceId").
+		Build()
 }

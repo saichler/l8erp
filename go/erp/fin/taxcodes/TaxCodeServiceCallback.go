@@ -21,20 +21,10 @@ import (
 )
 
 func newTaxCodeServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("TaxCode",
-		func(e *fin.TaxCode) { common.GenerateID(&e.TaxCodeId) },
-		validate)
-}
-
-func validate(taxCode *fin.TaxCode, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(taxCode.TaxCodeId, "TaxCodeId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(taxCode.Code, "Code"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(taxCode.Name, "Name"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.TaxCode]("TaxCode",
+		func(e *fin.TaxCode) { common.GenerateID(&e.TaxCodeId) }).
+		Require(func(e *fin.TaxCode) string { return e.TaxCodeId }, "TaxCodeId").
+		Require(func(e *fin.TaxCode) string { return e.Code }, "Code").
+		Require(func(e *fin.TaxCode) string { return e.Name }, "Name").
+		Build()
 }

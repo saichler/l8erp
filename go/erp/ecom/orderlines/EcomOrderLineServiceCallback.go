@@ -21,14 +21,8 @@ import (
 )
 
 func newEcomOrderLineServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("EcomOrderLine",
-		func(e *ecom.EcomOrderLine) { common.GenerateID(&e.LineId) },
-		validateEcomOrderLine)
-}
-
-func validateEcomOrderLine(item *ecom.EcomOrderLine, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.LineId, "LineId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[ecom.EcomOrderLine]("EcomOrderLine",
+		func(e *ecom.EcomOrderLine) { common.GenerateID(&e.LineId) }).
+		Require(func(e *ecom.EcomOrderLine) string { return e.LineId }, "LineId").
+		Build()
 }

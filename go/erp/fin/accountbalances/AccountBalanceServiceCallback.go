@@ -21,20 +21,10 @@ import (
 )
 
 func newAccountBalanceServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("AccountBalance",
-		func(e *fin.AccountBalance) { common.GenerateID(&e.BalanceId) },
-		validate)
-}
-
-func validate(accountBalance *fin.AccountBalance, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(accountBalance.BalanceId, "BalanceId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(accountBalance.AccountId, "AccountId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(accountBalance.FiscalPeriodId, "FiscalPeriodId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.AccountBalance]("AccountBalance",
+		func(e *fin.AccountBalance) { common.GenerateID(&e.BalanceId) }).
+		Require(func(e *fin.AccountBalance) string { return e.BalanceId }, "BalanceId").
+		Require(func(e *fin.AccountBalance) string { return e.AccountId }, "AccountId").
+		Require(func(e *fin.AccountBalance) string { return e.FiscalPeriodId }, "FiscalPeriodId").
+		Build()
 }

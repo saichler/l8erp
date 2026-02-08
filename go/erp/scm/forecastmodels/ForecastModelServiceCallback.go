@@ -21,14 +21,8 @@ import (
 )
 
 func newForecastModelServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmForecastModel",
-		func(e *scm.ScmForecastModel) { common.GenerateID(&e.ModelId) },
-		validate)
-}
-
-func validate(item *scm.ScmForecastModel, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ModelId, "ModelId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmForecastModel]("ScmForecastModel",
+		func(e *scm.ScmForecastModel) { common.GenerateID(&e.ModelId) }).
+		Require(func(e *scm.ScmForecastModel) string { return e.ModelId }, "ModelId").
+		Build()
 }

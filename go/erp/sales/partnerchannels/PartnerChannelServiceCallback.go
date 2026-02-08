@@ -21,17 +21,9 @@ import (
 )
 
 func newPartnerChannelServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesPartnerChannel",
-		func(e *sales.SalesPartnerChannel) { common.GenerateID(&e.PartnerId) },
-		validate)
-}
-
-func validate(item *sales.SalesPartnerChannel, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.PartnerId, "PartnerId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.Name, "Name"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesPartnerChannel]("SalesPartnerChannel",
+		func(e *sales.SalesPartnerChannel) { common.GenerateID(&e.PartnerId) }).
+		Require(func(e *sales.SalesPartnerChannel) string { return e.PartnerId }, "PartnerId").
+		Require(func(e *sales.SalesPartnerChannel) string { return e.Name }, "Name").
+		Build()
 }

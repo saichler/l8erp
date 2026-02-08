@@ -21,17 +21,9 @@ import (
 )
 
 func newCustomerContractServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesCustomerContract",
-		func(e *sales.SalesCustomerContract) { common.GenerateID(&e.ContractId) },
-		validate)
-}
-
-func validate(item *sales.SalesCustomerContract, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ContractId, "ContractId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.CustomerId, "CustomerId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesCustomerContract]("SalesCustomerContract",
+		func(e *sales.SalesCustomerContract) { common.GenerateID(&e.ContractId) }).
+		Require(func(e *sales.SalesCustomerContract) string { return e.ContractId }, "ContractId").
+		Require(func(e *sales.SalesCustomerContract) string { return e.CustomerId }, "CustomerId").
+		Build()
 }

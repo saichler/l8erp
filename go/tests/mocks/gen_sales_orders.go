@@ -72,48 +72,37 @@ func generateSalesQuotations(store *MockDataStore) []*sales.SalesQuotation {
 
 // generateSalesQuotationLines creates quotation line records (3 per quotation)
 func generateSalesQuotationLines(store *MockDataStore) []*sales.SalesQuotationLine {
-	count := len(store.SalesQuotationIDs) * 3
-	if count == 0 {
-		count = 75
-	}
-
-	lines := make([]*sales.SalesQuotationLine, 0, count)
-	idx := 1
-	for qIdx, quotationID := range store.SalesQuotationIDs {
-		for j := 0; j < 3; j++ {
-			itemID := ""
-			description := fmt.Sprintf("Line item %d", idx)
-			if len(store.ItemIDs) > 0 {
-				itemID = store.ItemIDs[(qIdx*3+j)%len(store.ItemIDs)]
-				description = itemNames[(qIdx*3+j)%len(itemNames)]
-			}
-
-			quantity := float64(rand.Intn(10) + 1)
-			unitPrice := int64(rand.Intn(100000) + 5000)
-			discountPercent := float64(rand.Intn(15))
-			discountAmount := int64(float64(unitPrice) * quantity * discountPercent / 100)
-			taxAmount := int64((float64(unitPrice)*quantity - float64(discountAmount)) * 0.08)
-			lineTotal := int64(float64(unitPrice)*quantity) - discountAmount + taxAmount
-
-			lines = append(lines, &sales.SalesQuotationLine{
-				LineId:          fmt.Sprintf("sql-%03d", idx),
-				QuotationId:     quotationID,
-				LineNumber:      int32(j + 1),
-				ItemId:          itemID,
-				Description:     description,
-				Quantity:        quantity,
-				UnitOfMeasure:   "EA",
-				UnitPrice:       money(store, unitPrice),
-				DiscountPercent: discountPercent,
-				DiscountAmount:  money(store, discountAmount),
-				TaxAmount:       money(store, taxAmount),
-				LineTotal:       money(store, lineTotal),
-				AuditInfo:       createAuditInfo(),
-			})
-			idx++
+	return genLines(store.SalesQuotationIDs, 3, func(idx, qIdx, j int, quotationID string) *sales.SalesQuotationLine {
+		itemID := ""
+		description := fmt.Sprintf("Line item %d", idx)
+		if len(store.ItemIDs) > 0 {
+			itemID = store.ItemIDs[(qIdx*3+j)%len(store.ItemIDs)]
+			description = itemNames[(qIdx*3+j)%len(itemNames)]
 		}
-	}
-	return lines
+
+		quantity := float64(rand.Intn(10) + 1)
+		unitPrice := int64(rand.Intn(100000) + 5000)
+		discountPercent := float64(rand.Intn(15))
+		discountAmount := int64(float64(unitPrice) * quantity * discountPercent / 100)
+		taxAmount := int64((float64(unitPrice)*quantity - float64(discountAmount)) * 0.08)
+		lineTotal := int64(float64(unitPrice)*quantity) - discountAmount + taxAmount
+
+		return &sales.SalesQuotationLine{
+			LineId:          fmt.Sprintf("sql-%03d", idx),
+			QuotationId:     quotationID,
+			LineNumber:      int32(j + 1),
+			ItemId:          itemID,
+			Description:     description,
+			Quantity:        quantity,
+			UnitOfMeasure:   "EA",
+			UnitPrice:       money(store, unitPrice),
+			DiscountPercent: discountPercent,
+			DiscountAmount:  money(store, discountAmount),
+			TaxAmount:       money(store, taxAmount),
+			LineTotal:       money(store, lineTotal),
+			AuditInfo:       createAuditInfo(),
+		}
+	})
 }
 
 // generateSalesOrders creates sales order records
@@ -179,56 +168,45 @@ func generateSalesOrders(store *MockDataStore) []*sales.SalesOrder {
 
 // generateSalesOrderLines creates sales order line records (3 per order)
 func generateSalesOrderLines(store *MockDataStore) []*sales.SalesOrderLine {
-	count := len(store.SalesOrderIDs) * 3
-	if count == 0 {
-		count = 90
-	}
-
-	lines := make([]*sales.SalesOrderLine, 0, count)
-	idx := 1
-	for oIdx, orderID := range store.SalesOrderIDs {
-		for j := 0; j < 3; j++ {
-			itemID := ""
-			description := fmt.Sprintf("Order line item %d", idx)
-			if len(store.ItemIDs) > 0 {
-				itemID = store.ItemIDs[(oIdx*3+j)%len(store.ItemIDs)]
-				description = itemNames[(oIdx*3+j)%len(itemNames)]
-			}
-
-			quantity := float64(rand.Intn(20) + 1)
-			shippedQty := 0.0
-			if oIdx%3 == 0 { // Some orders are fully shipped
-				shippedQty = quantity
-			} else if oIdx%3 == 1 { // Some are partially shipped
-				shippedQty = float64(int(quantity) / 2)
-			}
-
-			unitPrice := int64(rand.Intn(100000) + 5000)
-			discountPercent := float64(rand.Intn(15))
-			discountAmount := int64(float64(unitPrice) * quantity * discountPercent / 100)
-			taxAmount := int64((float64(unitPrice)*quantity - float64(discountAmount)) * 0.08)
-			lineTotal := int64(float64(unitPrice)*quantity) - discountAmount + taxAmount
-
-			lines = append(lines, &sales.SalesOrderLine{
-				LineId:          fmt.Sprintf("sol-%03d", idx),
-				SalesOrderId:    orderID,
-				LineNumber:      int32(j + 1),
-				ItemId:          itemID,
-				Description:     description,
-				Quantity:        quantity,
-				ShippedQuantity: shippedQty,
-				UnitOfMeasure:   "EA",
-				UnitPrice:       money(store, unitPrice),
-				DiscountPercent: discountPercent,
-				DiscountAmount:  money(store, discountAmount),
-				TaxAmount:       money(store, taxAmount),
-				LineTotal:       money(store, lineTotal),
-				AuditInfo:       createAuditInfo(),
-			})
-			idx++
+	return genLines(store.SalesOrderIDs, 3, func(idx, oIdx, j int, orderID string) *sales.SalesOrderLine {
+		itemID := ""
+		description := fmt.Sprintf("Order line item %d", idx)
+		if len(store.ItemIDs) > 0 {
+			itemID = store.ItemIDs[(oIdx*3+j)%len(store.ItemIDs)]
+			description = itemNames[(oIdx*3+j)%len(itemNames)]
 		}
-	}
-	return lines
+
+		quantity := float64(rand.Intn(20) + 1)
+		shippedQty := 0.0
+		if oIdx%3 == 0 { // Some orders are fully shipped
+			shippedQty = quantity
+		} else if oIdx%3 == 1 { // Some are partially shipped
+			shippedQty = float64(int(quantity) / 2)
+		}
+
+		unitPrice := int64(rand.Intn(100000) + 5000)
+		discountPercent := float64(rand.Intn(15))
+		discountAmount := int64(float64(unitPrice) * quantity * discountPercent / 100)
+		taxAmount := int64((float64(unitPrice)*quantity - float64(discountAmount)) * 0.08)
+		lineTotal := int64(float64(unitPrice)*quantity) - discountAmount + taxAmount
+
+		return &sales.SalesOrderLine{
+			LineId:          fmt.Sprintf("sol-%03d", idx),
+			SalesOrderId:    orderID,
+			LineNumber:      int32(j + 1),
+			ItemId:          itemID,
+			Description:     description,
+			Quantity:        quantity,
+			ShippedQuantity: shippedQty,
+			UnitOfMeasure:   "EA",
+			UnitPrice:       money(store, unitPrice),
+			DiscountPercent: discountPercent,
+			DiscountAmount:  money(store, discountAmount),
+			TaxAmount:       money(store, taxAmount),
+			LineTotal:       money(store, lineTotal),
+			AuditInfo:       createAuditInfo(),
+		}
+	})
 }
 
 // generateSalesReturnOrders creates sales return order records
@@ -364,37 +342,26 @@ func generateSalesReturnOrderLines(store *MockDataStore) []*sales.SalesReturnOrd
 	conditions := []string{"NEW", "USED", "DAMAGED", "DEFECTIVE"}
 	dispositions := []string{"RESTOCK", "REPAIR", "SCRAP", "RETURN_TO_VENDOR"}
 
-	count := len(store.SalesReturnOrderIDs) * 2
-	if count == 0 {
-		count = 30
-	}
+	return genLines(store.SalesReturnOrderIDs, 2, func(idx, rIdx, j int, returnOrderID string) *sales.SalesReturnOrderLine {
+		itemID := pickRef(store.ItemIDs, (rIdx*2+j))
 
-	lines := make([]*sales.SalesReturnOrderLine, 0, count)
-	idx := 1
-	for rIdx, returnOrderID := range store.SalesReturnOrderIDs {
-		for j := 0; j < 2; j++ {
-			itemID := pickRef(store.ItemIDs, (rIdx*2+j))
+		qty := float64(rand.Intn(5) + 1)
+		unitPrice := int64(rand.Intn(100000) + 5000)
+		lineTotal := int64(float64(unitPrice) * qty)
 
-			qty := float64(rand.Intn(5) + 1)
-			unitPrice := int64(rand.Intn(100000) + 5000)
-			lineTotal := int64(float64(unitPrice) * qty)
-
-			lines = append(lines, &sales.SalesReturnOrderLine{
-				LineId:        fmt.Sprintf("srol-%03d", idx),
-				ReturnOrderId: returnOrderID,
-				LineNumber:    int32(j + 1),
-				ItemId:        itemID,
-				Description:   fmt.Sprintf("Return line item %d", idx),
-				Quantity:      qty,
-				UnitOfMeasure: "EA",
-				UnitPrice:     money(store, unitPrice),
-				LineTotal:     money(store, lineTotal),
-				Condition:     conditions[(rIdx*2+j)%len(conditions)],
-				Disposition:   dispositions[(rIdx*2+j)%len(dispositions)],
-				AuditInfo:     createAuditInfo(),
-			})
-			idx++
+		return &sales.SalesReturnOrderLine{
+			LineId:        fmt.Sprintf("srol-%03d", idx),
+			ReturnOrderId: returnOrderID,
+			LineNumber:    int32(j + 1),
+			ItemId:        itemID,
+			Description:   fmt.Sprintf("Return line item %d", idx),
+			Quantity:      qty,
+			UnitOfMeasure: "EA",
+			UnitPrice:     money(store, unitPrice),
+			LineTotal:     money(store, lineTotal),
+			Condition:     conditions[(rIdx*2+j)%len(conditions)],
+			Disposition:   dispositions[(rIdx*2+j)%len(dispositions)],
+			AuditInfo:     createAuditInfo(),
 		}
-	}
-	return lines
+	})
 }

@@ -21,14 +21,8 @@ import (
 )
 
 func newBiDataGovernanceServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiDataGovernance",
-		func(e *bi.BiDataGovernance) { common.GenerateID(&e.GovernanceId) },
-		validate)
-}
-
-func validate(item *bi.BiDataGovernance, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.GovernanceId, "GovernanceId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiDataGovernance]("BiDataGovernance",
+		func(e *bi.BiDataGovernance) { common.GenerateID(&e.GovernanceId) }).
+		Require(func(e *bi.BiDataGovernance) string { return e.GovernanceId }, "GovernanceId").
+		Build()
 }

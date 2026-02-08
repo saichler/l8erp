@@ -21,20 +21,10 @@ import (
 )
 
 func newFiscalPeriodServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("FiscalPeriod",
-		func(e *fin.FiscalPeriod) { common.GenerateID(&e.FiscalPeriodId) },
-		validate)
-}
-
-func validate(fiscalPeriod *fin.FiscalPeriod, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(fiscalPeriod.FiscalPeriodId, "FiscalPeriodId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(fiscalPeriod.FiscalYearId, "FiscalYearId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(fiscalPeriod.PeriodName, "PeriodName"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.FiscalPeriod]("FiscalPeriod",
+		func(e *fin.FiscalPeriod) { common.GenerateID(&e.FiscalPeriodId) }).
+		Require(func(e *fin.FiscalPeriod) string { return e.FiscalPeriodId }, "FiscalPeriodId").
+		Require(func(e *fin.FiscalPeriod) string { return e.FiscalYearId }, "FiscalYearId").
+		Require(func(e *fin.FiscalPeriod) string { return e.PeriodName }, "PeriodName").
+		Build()
 }

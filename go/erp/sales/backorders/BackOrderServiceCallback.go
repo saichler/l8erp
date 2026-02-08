@@ -21,17 +21,9 @@ import (
 )
 
 func newBackOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesBackOrder",
-		func(e *sales.SalesBackOrder) { common.GenerateID(&e.BackOrderId) },
-		validate)
-}
-
-func validate(item *sales.SalesBackOrder, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.BackOrderId, "BackOrderId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.SalesOrderId, "SalesOrderId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesBackOrder]("SalesBackOrder",
+		func(e *sales.SalesBackOrder) { common.GenerateID(&e.BackOrderId) }).
+		Require(func(e *sales.SalesBackOrder) string { return e.BackOrderId }, "BackOrderId").
+		Require(func(e *sales.SalesBackOrder) string { return e.SalesOrderId }, "SalesOrderId").
+		Build()
 }

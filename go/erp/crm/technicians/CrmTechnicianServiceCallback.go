@@ -21,14 +21,8 @@ import (
 )
 
 func newCrmTechnicianServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmTechnician",
-		func(e *crm.CrmTechnician) { common.GenerateID(&e.TechnicianId) },
-		validate)
-}
-
-func validate(item *crm.CrmTechnician, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.TechnicianId, "TechnicianId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmTechnician]("CrmTechnician",
+		func(e *crm.CrmTechnician) { common.GenerateID(&e.TechnicianId) }).
+		Require(func(e *crm.CrmTechnician) string { return e.TechnicianId }, "TechnicianId").
+		Build()
 }

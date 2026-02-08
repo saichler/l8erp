@@ -21,14 +21,8 @@ import (
 )
 
 func newCompRiskRegisterServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CompRiskRegister",
-		func(e *comp.CompRiskRegister) { common.GenerateID(&e.RiskId) },
-		validateCompRiskRegister)
-}
-
-func validateCompRiskRegister(item *comp.CompRiskRegister, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RiskId, "RiskId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[comp.CompRiskRegister]("CompRiskRegister",
+		func(e *comp.CompRiskRegister) { common.GenerateID(&e.RiskId) }).
+		Require(func(e *comp.CompRiskRegister) string { return e.RiskId }, "RiskId").
+		Build()
 }

@@ -21,17 +21,9 @@ import (
 )
 
 func newAssetMaintenanceServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("AssetMaintenance",
-		func(e *fin.AssetMaintenance) { common.GenerateID(&e.MaintenanceId) },
-		validate)
-}
-
-func validate(assetMaintenance *fin.AssetMaintenance, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(assetMaintenance.MaintenanceId, "MaintenanceId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(assetMaintenance.AssetId, "AssetId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.AssetMaintenance]("AssetMaintenance",
+		func(e *fin.AssetMaintenance) { common.GenerateID(&e.MaintenanceId) }).
+		Require(func(e *fin.AssetMaintenance) string { return e.MaintenanceId }, "MaintenanceId").
+		Require(func(e *fin.AssetMaintenance) string { return e.AssetId }, "AssetId").
+		Build()
 }

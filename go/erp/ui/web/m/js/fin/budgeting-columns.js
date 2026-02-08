@@ -19,60 +19,61 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileBudgeting.enums;
     const render = MobileBudgeting.render;
 
     MobileBudgeting.columns = {
         Budget: [
-            { key: 'budgetId', label: 'ID', sortKey: 'budgetId', filterKey: 'budgetId' },
-            { key: 'budgetName', label: 'Budget Name', sortKey: 'budgetName', filterKey: 'budgetName' },
-            { key: 'budgetType', label: 'Type', sortKey: 'budgetType', render: (item) => render.budgetType(item.budgetType) },
-            { key: 'fiscalYearId', label: 'Fiscal Year', sortKey: 'fiscalYearId', filterKey: 'fiscalYearId' },
-            { key: 'totalAmount', label: 'Total Amount', sortKey: 'totalAmount', render: (item) => Layer8MRenderers.renderMoney(item.totalAmount) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.BUDGET_STATUS_VALUES, render: (item) => render.budgetStatus(item.status) }
+            ...col.id('budgetId'),
+            ...col.col('budgetName', 'Budget Name'),
+            ...col.enum('budgetType', 'Type', null, render.budgetType),
+            ...col.col('fiscalYearId', 'Fiscal Year'),
+            ...col.money('totalAmount', 'Total Amount'),
+            ...col.status('status', 'Status', enums.BUDGET_STATUS_VALUES, render.budgetStatus)
         ],
 
         BudgetLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'budgetId', label: 'Budget', sortKey: 'budgetId', filterKey: 'budgetId' },
-            { key: 'accountId', label: 'Account', sortKey: 'accountId', filterKey: 'accountId' },
-            { key: 'budgetedAmount', label: 'Budgeted', sortKey: 'budgetedAmount', render: (item) => Layer8MRenderers.renderMoney(item.budgetedAmount) },
-            { key: 'actualAmount', label: 'Actual', sortKey: 'actualAmount', render: (item) => Layer8MRenderers.renderMoney(item.actualAmount) },
-            { key: 'variance', label: 'Variance', sortKey: 'variance', render: (item) => Layer8MRenderers.renderMoney(item.variance) }
+            ...col.id('lineId'),
+            ...col.col('budgetId', 'Budget'),
+            ...col.col('accountId', 'Account'),
+            ...col.money('budgetedAmount', 'Budgeted'),
+            ...col.money('actualAmount', 'Actual'),
+            ...col.money('variance', 'Variance')
         ],
 
         BudgetTransfer: [
-            { key: 'transferId', label: 'ID', sortKey: 'transferId', filterKey: 'transferId' },
-            { key: 'fromBudgetLineId', label: 'From Line', sortKey: 'fromBudgetLineId', filterKey: 'fromBudgetLineId' },
-            { key: 'toBudgetLineId', label: 'To Line', sortKey: 'toBudgetLineId', filterKey: 'toBudgetLineId' },
-            { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => Layer8MRenderers.renderMoney(item.amount) },
-            { key: 'transferDate', label: 'Transfer Date', sortKey: 'transferDate', render: (item) => Layer8MRenderers.renderDate(item.transferDate) }
+            ...col.id('transferId'),
+            ...col.col('fromBudgetLineId', 'From Line'),
+            ...col.col('toBudgetLineId', 'To Line'),
+            ...col.money('amount', 'Amount'),
+            ...col.date('transferDate', 'Transfer Date')
         ],
 
         BudgetScenario: [
-            { key: 'scenarioId', label: 'ID', sortKey: 'scenarioId', filterKey: 'scenarioId' },
-            { key: 'scenarioName', label: 'Name', sortKey: 'scenarioName', filterKey: 'scenarioName' },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            { key: 'baseBudgetId', label: 'Base Budget', sortKey: 'baseBudgetId', filterKey: 'baseBudgetId' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
+            ...col.id('scenarioId'),
+            ...col.col('scenarioName', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.col('baseBudgetId', 'Base Budget'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         CapitalExpenditure: [
-            { key: 'capexId', label: 'ID', sortKey: 'capexId', filterKey: 'capexId' },
-            { key: 'projectName', label: 'Project Name', sortKey: 'projectName', filterKey: 'projectName' },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            { key: 'requestedAmount', label: 'Requested', sortKey: 'requestedAmount', render: (item) => Layer8MRenderers.renderMoney(item.requestedAmount) },
-            { key: 'approvedAmount', label: 'Approved', sortKey: 'approvedAmount', render: (item) => Layer8MRenderers.renderMoney(item.approvedAmount) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.CAPEX_STATUS_VALUES, render: (item) => render.capexStatus(item.status) }
+            ...col.id('capexId'),
+            ...col.col('projectName', 'Project Name'),
+            ...col.col('description', 'Description'),
+            ...col.money('requestedAmount', 'Requested'),
+            ...col.money('approvedAmount', 'Approved'),
+            ...col.status('status', 'Status', enums.CAPEX_STATUS_VALUES, render.capexStatus)
         ],
 
         Forecast: [
-            { key: 'forecastId', label: 'ID', sortKey: 'forecastId', filterKey: 'forecastId' },
-            { key: 'forecastType', label: 'Type', sortKey: 'forecastType', render: (item) => render.forecastType(item.forecastType) },
-            { key: 'periodStart', label: 'Period Start', sortKey: 'periodStart', render: (item) => Layer8MRenderers.renderDate(item.periodStart) },
-            { key: 'periodEnd', label: 'Period End', sortKey: 'periodEnd', render: (item) => Layer8MRenderers.renderDate(item.periodEnd) },
-            { key: 'projectedAmount', label: 'Projected', sortKey: 'projectedAmount', render: (item) => Layer8MRenderers.renderMoney(item.projectedAmount) },
-            { key: 'actualAmount', label: 'Actual', sortKey: 'actualAmount', render: (item) => Layer8MRenderers.renderMoney(item.actualAmount) }
+            ...col.id('forecastId'),
+            ...col.enum('forecastType', 'Type', null, render.forecastType),
+            ...col.date('periodStart', 'Period Start'),
+            ...col.date('periodEnd', 'Period End'),
+            ...col.money('projectedAmount', 'Projected'),
+            ...col.money('actualAmount', 'Actual')
         ]
     };
 

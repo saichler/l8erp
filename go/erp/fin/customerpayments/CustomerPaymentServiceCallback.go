@@ -21,17 +21,9 @@ import (
 )
 
 func newCustomerPaymentServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CustomerPayment",
-		func(e *fin.CustomerPayment) { common.GenerateID(&e.PaymentId) },
-		validate)
-}
-
-func validate(customerPayment *fin.CustomerPayment, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(customerPayment.PaymentId, "PaymentId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(customerPayment.CustomerId, "CustomerId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.CustomerPayment]("CustomerPayment",
+		func(e *fin.CustomerPayment) { common.GenerateID(&e.PaymentId) }).
+		Require(func(e *fin.CustomerPayment) string { return e.PaymentId }, "PaymentId").
+		Require(func(e *fin.CustomerPayment) string { return e.CustomerId }, "CustomerId").
+		Build()
 }

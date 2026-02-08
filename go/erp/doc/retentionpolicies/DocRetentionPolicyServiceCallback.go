@@ -21,14 +21,8 @@ import (
 )
 
 func newDocRetentionPolicyServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("DocRetentionPolicy",
-		func(e *doc.DocRetentionPolicy) { common.GenerateID(&e.PolicyId) },
-		validateDocRetentionPolicy)
-}
-
-func validateDocRetentionPolicy(item *doc.DocRetentionPolicy, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.PolicyId, "PolicyId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[doc.DocRetentionPolicy]("DocRetentionPolicy",
+		func(e *doc.DocRetentionPolicy) { common.GenerateID(&e.PolicyId) }).
+		Require(func(e *doc.DocRetentionPolicy) string { return e.PolicyId }, "PolicyId").
+		Build()
 }

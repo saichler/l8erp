@@ -21,17 +21,9 @@ import (
 )
 
 func newTaxJurisdictionServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("TaxJurisdiction",
-		func(e *fin.TaxJurisdiction) { common.GenerateID(&e.JurisdictionId) },
-		validate)
-}
-
-func validate(taxJurisdiction *fin.TaxJurisdiction, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(taxJurisdiction.JurisdictionId, "JurisdictionId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(taxJurisdiction.Name, "Name"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.TaxJurisdiction]("TaxJurisdiction",
+		func(e *fin.TaxJurisdiction) { common.GenerateID(&e.JurisdictionId) }).
+		Require(func(e *fin.TaxJurisdiction) string { return e.JurisdictionId }, "JurisdictionId").
+		Require(func(e *fin.TaxJurisdiction) string { return e.Name }, "Name").
+		Build()
 }

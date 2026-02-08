@@ -19,57 +19,58 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     window.MobileMfgProduction = window.MobileMfgProduction || {};
     const render = MobileMfgProduction.render;
 
     MobileMfgProduction.columns = {
         MfgWorkOrder: [
-            { key: 'workOrderId', label: 'ID', sortKey: 'workOrderId' },
-            { key: 'workOrderNumber', label: 'WO #', sortKey: 'workOrderNumber' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId' },
-            { key: 'quantityOrdered', label: 'Qty Ordered', sortKey: 'quantityOrdered' },
-            { key: 'quantityCompleted', label: 'Qty Completed', sortKey: 'quantityCompleted' },
-            { key: 'plannedStartDate', label: 'Planned Start', sortKey: 'plannedStartDate', render: (item) => render.date(item.plannedStartDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.workOrderStatus(item.status) }
+            ...col.id('workOrderId'),
+            ...col.col('workOrderNumber', 'WO #'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('quantityOrdered', 'Qty Ordered'),
+            ...col.col('quantityCompleted', 'Qty Completed'),
+            ...col.date('plannedStartDate', 'Planned Start'),
+            ...col.enum('status', 'Status', null, render.workOrderStatus)
         ],
         MfgWorkOrderOp: [
-            { key: 'operationId', label: 'ID', sortKey: 'operationId' },
-            { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
-            { key: 'operationNumber', label: 'Op #', sortKey: 'operationNumber' },
-            { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            { key: 'setupTimePlanned', label: 'Setup (hrs)', sortKey: 'setupTimePlanned' },
-            { key: 'runTimePlanned', label: 'Run (hrs)', sortKey: 'runTimePlanned' },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.operationStatus(item.status) }
+            ...col.id('operationId'),
+            ...col.col('workOrderId', 'Work Order'),
+            ...col.col('operationNumber', 'Op #'),
+            ...col.col('workCenterId', 'Work Center'),
+            ...col.col('setupTimePlanned', 'Setup (hrs)'),
+            ...col.col('runTimePlanned', 'Run (hrs)'),
+            ...col.enum('status', 'Status', null, render.operationStatus)
         ],
         MfgProductionOrder: [
-            { key: 'prodOrderId', label: 'ID', sortKey: 'prodOrderId' },
-            { key: 'orderNumber', label: 'Order #', sortKey: 'orderNumber' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId' },
-            { key: 'orderDate', label: 'Order Date', sortKey: 'orderDate', render: (item) => render.date(item.orderDate) },
-            { key: 'requiredDate', label: 'Required', sortKey: 'requiredDate', render: (item) => render.date(item.requiredDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.workOrderStatus(item.status) }
+            ...col.id('prodOrderId'),
+            ...col.col('orderNumber', 'Order #'),
+            ...col.col('customerId', 'Customer'),
+            ...col.date('orderDate', 'Order Date'),
+            ...col.date('requiredDate', 'Required'),
+            ...col.enum('status', 'Status', null, render.workOrderStatus)
         ],
         MfgProdOrderLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId' },
-            { key: 'prodOrderId', label: 'Prod Order', sortKey: 'prodOrderId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId' },
-            { key: 'quantityOrdered', label: 'Qty Ordered', sortKey: 'quantityOrdered' },
-            { key: 'quantityCompleted', label: 'Qty Completed', sortKey: 'quantityCompleted' }
+            ...col.id('lineId'),
+            ...col.col('prodOrderId', 'Prod Order'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('quantityOrdered', 'Qty Ordered'),
+            ...col.col('quantityCompleted', 'Qty Completed')
         ],
         MfgProdBatch: [
-            { key: 'batchId', label: 'ID', sortKey: 'batchId' },
-            { key: 'batchNumber', label: 'Batch #', sortKey: 'batchNumber' },
-            { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
-            { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
-            { key: 'productionDate', label: 'Production Date', sortKey: 'productionDate', render: (item) => render.date(item.productionDate) },
-            { key: 'qualityStatus', label: 'Quality Status', sortKey: 'qualityStatus', render: (item) => render.batchStatus(item.qualityStatus) }
+            ...col.id('batchId'),
+            ...col.col('batchNumber', 'Batch #'),
+            ...col.col('workOrderId', 'Work Order'),
+            ...col.col('quantity', 'Quantity'),
+            ...col.date('productionDate', 'Production Date'),
+            ...col.enum('qualityStatus', 'Quality Status', null, render.batchStatus)
         ],
         MfgProdConsumption: [
-            { key: 'consumptionId', label: 'ID', sortKey: 'consumptionId' },
-            { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId' },
-            { key: 'quantityConsumed', label: 'Qty Consumed', sortKey: 'quantityConsumed' },
-            { key: 'consumptionDate', label: 'Date', sortKey: 'consumptionDate', render: (item) => render.date(item.consumptionDate) }
+            ...col.id('consumptionId'),
+            ...col.col('workOrderId', 'Work Order'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('quantityConsumed', 'Qty Consumed'),
+            ...col.date('consumptionDate', 'Date')
         ]
     };
 

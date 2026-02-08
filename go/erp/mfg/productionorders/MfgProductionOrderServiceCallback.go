@@ -21,14 +21,8 @@ import (
 )
 
 func newMfgProductionOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgProductionOrder",
-		func(e *mfg.MfgProductionOrder) { common.GenerateID(&e.ProdOrderId) },
-		validate)
-}
-
-func validate(item *mfg.MfgProductionOrder, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ProdOrderId, "ProdOrderId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgProductionOrder]("MfgProductionOrder",
+		func(e *mfg.MfgProductionOrder) { common.GenerateID(&e.ProdOrderId) }).
+		Require(func(e *mfg.MfgProductionOrder) string { return e.ProdOrderId }, "ProdOrderId").
+		Build()
 }

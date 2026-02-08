@@ -21,14 +21,8 @@ import (
 )
 
 func newDocAccessLogServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("DocAccessLog",
-		func(e *doc.DocAccessLog) { common.GenerateID(&e.LogId) },
-		validateDocAccessLog)
-}
-
-func validateDocAccessLog(item *doc.DocAccessLog, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.LogId, "LogId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[doc.DocAccessLog]("DocAccessLog",
+		func(e *doc.DocAccessLog) { common.GenerateID(&e.LogId) }).
+		Require(func(e *doc.DocAccessLog) string { return e.LogId }, "LogId").
+		Build()
 }

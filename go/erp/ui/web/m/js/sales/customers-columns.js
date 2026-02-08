@@ -19,43 +19,44 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileSalesCustomers.enums;
     const render = MobileSalesCustomers.render;
 
     MobileSalesCustomers.columns = {
         CustomerHierarchy: [
-            { key: 'hierarchyId', label: 'ID', sortKey: 'hierarchyId', filterKey: 'hierarchyId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'parentHierarchyId', label: 'Parent', sortKey: 'parentHierarchyId', filterKey: 'parentHierarchyId' },
-            { key: 'level', label: 'Level', sortKey: 'level' },
-            { key: 'description', label: 'Description', sortKey: 'description' }
+            ...col.id('hierarchyId'),
+            ...col.col('name', 'Name'),
+            ...col.col('parentHierarchyId', 'Parent'),
+            ...col.col('level', 'Level'),
+            ...col.col('description', 'Description')
         ],
 
         CustomerSegment: [
-            { key: 'segmentId', label: 'ID', sortKey: 'segmentId', filterKey: 'segmentId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'segmentType', label: 'Type', sortKey: 'segmentType', filterKey: 'segmentType' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive' }
+            ...col.id('segmentId'),
+            ...col.col('name', 'Name'),
+            ...col.col('segmentType', 'Type'),
+            ...col.col('description', 'Description'),
+            ...col.col('isActive', 'Active')
         ],
 
         CustomerContract: [
-            { key: 'contractId', label: 'ID', sortKey: 'contractId', filterKey: 'contractId' },
-            { key: 'contractNumber', label: 'Contract #', sortKey: 'contractNumber', filterKey: 'contractNumber' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.CONTRACT_STATUS_VALUES, render: (item) => render.contractStatus(item.status) },
-            { key: 'contractValue', label: 'Value', sortKey: 'contractValue', render: (item) => Layer8MRenderers.renderMoney(item.contractValue) }
+            ...col.id('contractId'),
+            ...col.col('contractNumber', 'Contract #'),
+            ...col.col('customerId', 'Customer'),
+            ...col.date('startDate', 'Start'),
+            ...col.date('endDate', 'End'),
+            ...col.status('status', 'Status', enums.CONTRACT_STATUS_VALUES, render.contractStatus),
+            ...col.money('contractValue', 'Value')
         ],
 
         PartnerChannel: [
-            { key: 'partnerId', label: 'ID', sortKey: 'partnerId', filterKey: 'partnerId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'partnerType', label: 'Type', sortKey: 'partnerType', filterKey: 'partnerType' },
-            { key: 'contactName', label: 'Contact', sortKey: 'contactName' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive' },
-            { key: 'commissionRate', label: 'Commission %', sortKey: 'commissionRate' }
+            ...col.id('partnerId'),
+            ...col.col('name', 'Name'),
+            ...col.col('partnerType', 'Type'),
+            ...col.col('contactName', 'Contact'),
+            ...col.col('isActive', 'Active'),
+            ...col.col('commissionRate', 'Commission %')
         ]
     };
 

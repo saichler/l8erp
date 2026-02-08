@@ -21,14 +21,8 @@ import (
 )
 
 func newPrjApprovalRuleServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjApprovalRule",
-		func(e *prj.PrjApprovalRule) { common.GenerateID(&e.RuleId) },
-		validate)
-}
-
-func validate(item *prj.PrjApprovalRule, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RuleId, "RuleId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjApprovalRule]("PrjApprovalRule",
+		func(e *prj.PrjApprovalRule) { common.GenerateID(&e.RuleId) }).
+		Require(func(e *prj.PrjApprovalRule) string { return e.RuleId }, "RuleId").
+		Build()
 }

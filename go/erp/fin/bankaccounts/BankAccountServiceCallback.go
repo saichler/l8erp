@@ -21,23 +21,11 @@ import (
 )
 
 func newBankAccountServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BankAccount",
-		func(e *fin.BankAccount) { common.GenerateID(&e.BankAccountId) },
-		validate)
-}
-
-func validate(bankAccount *fin.BankAccount, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(bankAccount.BankAccountId, "BankAccountId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(bankAccount.AccountName, "AccountName"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(bankAccount.BankName, "BankName"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(bankAccount.GlAccountId, "GlAccountId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.BankAccount]("BankAccount",
+		func(e *fin.BankAccount) { common.GenerateID(&e.BankAccountId) }).
+		Require(func(e *fin.BankAccount) string { return e.BankAccountId }, "BankAccountId").
+		Require(func(e *fin.BankAccount) string { return e.AccountName }, "AccountName").
+		Require(func(e *fin.BankAccount) string { return e.BankName }, "BankName").
+		Require(func(e *fin.BankAccount) string { return e.GlAccountId }, "GlAccountId").
+		Build()
 }

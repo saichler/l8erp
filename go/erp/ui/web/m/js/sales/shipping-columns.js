@@ -19,60 +19,61 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileSalesShipping.enums;
     const render = MobileSalesShipping.render;
 
     MobileSalesShipping.columns = {
         DeliveryOrder: [
-            { key: 'deliveryOrderId', label: 'ID', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
-            { key: 'deliveryNumber', label: 'Delivery #', sortKey: 'deliveryNumber', filterKey: 'deliveryNumber' },
-            { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'plannedShipDate', label: 'Planned', sortKey: 'plannedShipDate', render: (item) => Layer8MRenderers.renderDate(item.plannedShipDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.DELIVERY_STATUS_VALUES, render: (item) => render.deliveryStatus(item.status) }
+            ...col.id('deliveryOrderId'),
+            ...col.col('deliveryNumber', 'Delivery #'),
+            ...col.col('salesOrderId', 'Order'),
+            ...col.col('customerId', 'Customer'),
+            ...col.date('plannedShipDate', 'Planned'),
+            ...col.status('status', 'Status', enums.DELIVERY_STATUS_VALUES, render.deliveryStatus)
         ],
 
         DeliveryLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'deliveryOrderId', label: 'Delivery', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            { key: 'unitOfMeasure', label: 'UOM', sortKey: 'unitOfMeasure' },
-            { key: 'lotNumber', label: 'Lot #', sortKey: 'lotNumber' }
+            ...col.id('lineId'),
+            ...col.col('deliveryOrderId', 'Delivery'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('quantity', 'Qty'),
+            ...col.col('unitOfMeasure', 'UOM'),
+            ...col.col('lotNumber', 'Lot #')
         ],
 
         PickRelease: [
-            { key: 'pickReleaseId', label: 'ID', sortKey: 'pickReleaseId', filterKey: 'pickReleaseId' },
-            { key: 'deliveryOrderId', label: 'Delivery', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
-            { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
-            { key: 'releaseDate', label: 'Released', sortKey: 'releaseDate', render: (item) => Layer8MRenderers.renderDate(item.releaseDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.PICK_STATUS_VALUES, render: (item) => render.pickStatus(item.status) }
+            ...col.id('pickReleaseId'),
+            ...col.col('deliveryOrderId', 'Delivery'),
+            ...col.col('warehouseId', 'Warehouse'),
+            ...col.date('releaseDate', 'Released'),
+            ...col.status('status', 'Status', enums.PICK_STATUS_VALUES, render.pickStatus)
         ],
 
         PackingSlip: [
-            { key: 'packingSlipId', label: 'ID', sortKey: 'packingSlipId', filterKey: 'packingSlipId' },
-            { key: 'slipNumber', label: 'Slip #', sortKey: 'slipNumber', filterKey: 'slipNumber' },
-            { key: 'deliveryOrderId', label: 'Delivery', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
-            { key: 'packDate', label: 'Pack Date', sortKey: 'packDate', render: (item) => Layer8MRenderers.renderDate(item.packDate) },
-            { key: 'totalPackages', label: 'Packages', sortKey: 'totalPackages' },
-            { key: 'totalWeight', label: 'Weight', sortKey: 'totalWeight' }
+            ...col.id('packingSlipId'),
+            ...col.col('slipNumber', 'Slip #'),
+            ...col.col('deliveryOrderId', 'Delivery'),
+            ...col.date('packDate', 'Pack Date'),
+            ...col.col('totalPackages', 'Packages'),
+            ...col.col('totalWeight', 'Weight')
         ],
 
         ShippingDoc: [
-            { key: 'docId', label: 'ID', sortKey: 'docId', filterKey: 'docId' },
-            { key: 'docNumber', label: 'Doc #', sortKey: 'docNumber', filterKey: 'docNumber' },
-            { key: 'docType', label: 'Type', sortKey: 'docType' },
-            { key: 'deliveryOrderId', label: 'Delivery', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
-            { key: 'issueDate', label: 'Issued', sortKey: 'issueDate', render: (item) => Layer8MRenderers.renderDate(item.issueDate) },
-            { key: 'issuedBy', label: 'Issued By', sortKey: 'issuedBy' }
+            ...col.id('docId'),
+            ...col.col('docNumber', 'Doc #'),
+            ...col.col('docType', 'Type'),
+            ...col.col('deliveryOrderId', 'Delivery'),
+            ...col.date('issueDate', 'Issued'),
+            ...col.col('issuedBy', 'Issued By')
         ],
 
         DeliveryConfirm: [
-            { key: 'confirmId', label: 'ID', sortKey: 'confirmId', filterKey: 'confirmId' },
-            { key: 'deliveryOrderId', label: 'Delivery', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
-            { key: 'confirmDate', label: 'Confirmed', sortKey: 'confirmDate', render: (item) => Layer8MRenderers.renderDate(item.confirmDate) },
-            { key: 'receivedBy', label: 'Received By', sortKey: 'receivedBy' },
-            { key: 'signaturePath', label: 'Signature', sortKey: 'signaturePath' }
+            ...col.id('confirmId'),
+            ...col.col('deliveryOrderId', 'Delivery'),
+            ...col.date('confirmDate', 'Confirmed'),
+            ...col.col('receivedBy', 'Received By'),
+            ...col.col('signaturePath', 'Signature')
         ]
     };
 

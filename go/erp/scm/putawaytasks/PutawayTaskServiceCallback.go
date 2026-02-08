@@ -21,14 +21,8 @@ import (
 )
 
 func newPutawayTaskServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmPutawayTask",
-		func(e *scm.ScmPutawayTask) { common.GenerateID(&e.TaskId) },
-		validate)
-}
-
-func validate(item *scm.ScmPutawayTask, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.TaskId, "TaskId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmPutawayTask]("ScmPutawayTask",
+		func(e *scm.ScmPutawayTask) { common.GenerateID(&e.TaskId) }).
+		Require(func(e *scm.ScmPutawayTask) string { return e.TaskId }, "TaskId").
+		Build()
 }

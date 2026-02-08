@@ -19,62 +19,63 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileScmSupplyPlanning.enums;
     const render = MobileScmSupplyPlanning.render;
 
     MobileScmSupplyPlanning.columns = {
         ScmMaterialRequirement: [
-            { key: 'requirementId', label: 'ID', sortKey: 'requirementId', filterKey: 'requirementId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'requiredQuantity', label: 'Required Qty', sortKey: 'requiredQuantity' },
-            { key: 'requiredDate', label: 'Required Date', sortKey: 'requiredDate', render: (item) => Layer8MRenderers.renderDate(item.requiredDate) },
-            { key: 'planningMethod', label: 'Method', sortKey: 'planningMethod', filterKey: 'planningMethod', enumValues: enums.PLANNING_METHOD_VALUES, render: (item) => render.planningMethod(item.planningMethod) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+            ...col.id('requirementId'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('requiredQuantity', 'Required Qty'),
+            ...col.date('requiredDate', 'Required Date'),
+            ...col.status('planningMethod', 'Method', enums.PLANNING_METHOD_VALUES, render.planningMethod),
+            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
         ],
 
         ScmDistributionRequirement: [
-            { key: 'requirementId', label: 'ID', sortKey: 'requirementId', filterKey: 'requirementId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'sourceWarehouseId', label: 'Source', sortKey: 'sourceWarehouseId', filterKey: 'sourceWarehouseId' },
-            { key: 'destinationWarehouseId', label: 'Destination', sortKey: 'destinationWarehouseId', filterKey: 'destinationWarehouseId' },
-            { key: 'requiredQuantity', label: 'Required Qty', sortKey: 'requiredQuantity' },
-            { key: 'requiredDate', label: 'Required Date', sortKey: 'requiredDate', render: (item) => Layer8MRenderers.renderDate(item.requiredDate) }
+            ...col.id('requirementId'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('sourceWarehouseId', 'Source'),
+            ...col.col('destinationWarehouseId', 'Destination'),
+            ...col.col('requiredQuantity', 'Required Qty'),
+            ...col.date('requiredDate', 'Required Date')
         ],
 
         ScmSupplyPlan: [
-            { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'name', label: 'Plan', sortKey: 'name', filterKey: 'name' },
-            { key: 'planPeriod', label: 'Start', sortKey: 'planPeriod.startDate', render: (item) => Layer8MRenderers.renderDate(item.planPeriod?.startDate) },
-            { key: 'planPeriod', label: 'End', sortKey: 'planPeriod.endDate', render: (item) => Layer8MRenderers.renderDate(item.planPeriod?.endDate) },
-            { key: 'createdBy', label: 'Created By', sortKey: 'createdBy', filterKey: 'createdBy' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+            ...col.id('planId'),
+            ...col.col('name', 'Plan'),
+            ...col.custom('planPeriod', 'Start', (item) => Layer8MRenderers.renderDate(item.planPeriod?.startDate), { sortKey: 'planPeriod.startDate' }),
+            ...col.custom('planPeriod', 'End', (item) => Layer8MRenderers.renderDate(item.planPeriod?.endDate), { sortKey: 'planPeriod.endDate' }),
+            ...col.col('createdBy', 'Created By'),
+            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
         ],
 
         ScmSupplierCollaboration: [
-            { key: 'collaborationId', label: 'ID', sortKey: 'collaborationId', filterKey: 'collaborationId' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'minOrderQuantity', label: 'Min Order Qty', sortKey: 'minOrderQuantity' },
-            { key: 'leadTimeAgreed', label: 'Lead Time Agreed', sortKey: 'leadTimeAgreed', render: (item) => Layer8MRenderers.renderBoolean(item.leadTimeAgreed) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+            ...col.id('collaborationId'),
+            ...col.col('vendorId', 'Vendor'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('minOrderQuantity', 'Min Order Qty'),
+            ...col.boolean('leadTimeAgreed', 'Lead Time Agreed'),
+            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
         ],
 
         ScmSafetyStock: [
-            { key: 'safetyStockId', label: 'ID', sortKey: 'safetyStockId', filterKey: 'safetyStockId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
-            { key: 'safetyStockQuantity', label: 'Safety Qty', sortKey: 'safetyStockQuantity' },
-            { key: 'calculationMethod', label: 'Method', sortKey: 'calculationMethod' },
-            { key: 'serviceLevel', label: 'Service %', sortKey: 'serviceLevel' }
+            ...col.id('safetyStockId'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('warehouseId', 'Warehouse'),
+            ...col.col('safetyStockQuantity', 'Safety Qty'),
+            ...col.col('calculationMethod', 'Method'),
+            ...col.col('serviceLevel', 'Service %')
         ],
 
         ScmLeadTime: [
-            { key: 'leadTimeId', label: 'ID', sortKey: 'leadTimeId', filterKey: 'leadTimeId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'leadTimeDays', label: 'Lead Time (days)', sortKey: 'leadTimeDays' },
-            { key: 'transitDays', label: 'Transit (days)', sortKey: 'transitDays' },
-            { key: 'totalDays', label: 'Total (days)', sortKey: 'totalDays' }
+            ...col.id('leadTimeId'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('vendorId', 'Vendor'),
+            ...col.col('leadTimeDays', 'Lead Time (days)'),
+            ...col.col('transitDays', 'Transit (days)'),
+            ...col.col('totalDays', 'Total (days)')
         ]
     };
 

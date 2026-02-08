@@ -19,69 +19,70 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileCompRegulatory.enums;
     const render = MobileCompRegulatory.render;
 
     MobileCompRegulatory.columns = {
         CompRegulation: [
-            { key: 'regulationId', label: 'ID', sortKey: 'regulationId', filterKey: 'regulationId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'regulationType', label: 'Type', sortKey: 'regulationType', filterKey: 'regulationType', enumValues: enums.REGULATION_TYPE_VALUES, render: (item) => render.regulationType(item.regulationType) },
-            { key: 'jurisdiction', label: 'Jurisdiction', sortKey: 'jurisdiction' },
-            { key: 'issuingBody', label: 'Issuing Body', sortKey: 'issuingBody' },
-            { key: 'effectiveDate', label: 'Effective Date', sortKey: 'effectiveDate', render: (item) => render.date(item.effectiveDate) },
-            { key: 'version', label: 'Version', sortKey: 'version' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' },
-            { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' }
+            ...col.id('regulationId'),
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
+            ...col.status('regulationType', 'Type', enums.REGULATION_TYPE_VALUES, render.regulationType),
+            ...col.col('jurisdiction', 'Jurisdiction'),
+            ...col.col('issuingBody', 'Issuing Body'),
+            ...col.date('effectiveDate', 'Effective Date'),
+            ...col.col('version', 'Version'),
+            ...col.boolean('isActive', 'Active'),
+            ...col.col('ownerId', 'Owner')
         ],
 
         CompRequirement: [
-            { key: 'requirementId', label: 'ID', sortKey: 'requirementId', filterKey: 'requirementId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'title', label: 'Title', sortKey: 'title', filterKey: 'title' },
-            { key: 'regulationId', label: 'Regulation', sortKey: 'regulationId', filterKey: 'regulationId' },
-            { key: 'priority', label: 'Priority', sortKey: 'priority', filterKey: 'priority', enumValues: enums.SEVERITY_LEVEL_VALUES, render: (item) => render.severityLevel(item.priority) },
-            { key: 'isMandatory', label: 'Mandatory', sortKey: 'isMandatory', render: (item) => item.isMandatory ? 'Yes' : 'No' },
-            { key: 'reviewFrequencyDays', label: 'Review Frequency', sortKey: 'reviewFrequencyDays', render: (item) => item.reviewFrequencyDays ? item.reviewFrequencyDays + ' days' : '-' },
-            { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('requirementId'),
+            ...col.col('code', 'Code'),
+            ...col.col('title', 'Title'),
+            ...col.col('regulationId', 'Regulation'),
+            ...col.status('priority', 'Priority', enums.SEVERITY_LEVEL_VALUES, render.severityLevel),
+            ...col.boolean('isMandatory', 'Mandatory'),
+            ...col.custom('reviewFrequencyDays', 'Review Frequency', (item) => item.reviewFrequencyDays ? item.reviewFrequencyDays + ' days' : '-'),
+            ...col.col('ownerId', 'Owner'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         CompComplianceStatus: [
-            { key: 'statusId', label: 'ID', sortKey: 'statusId', filterKey: 'statusId' },
-            { key: 'requirementId', label: 'Requirement', sortKey: 'requirementId', filterKey: 'requirementId' },
-            { key: 'entityType', label: 'Entity Type', sortKey: 'entityType' },
-            { key: 'entityId', label: 'Entity ID', sortKey: 'entityId' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.COMPLIANCE_STATUS_TYPE_VALUES, render: (item) => render.complianceStatusType(item.status) },
-            { key: 'assessmentDate', label: 'Assessment Date', sortKey: 'assessmentDate', render: (item) => render.date(item.assessmentDate) },
-            { key: 'nextReviewDate', label: 'Next Review', sortKey: 'nextReviewDate', render: (item) => render.date(item.nextReviewDate) },
-            { key: 'complianceScore', label: 'Score', sortKey: 'complianceScore', render: (item) => item.complianceScore ? item.complianceScore.toFixed(1) + '%' : '-' },
-            { key: 'assessorId', label: 'Assessor', sortKey: 'assessorId' }
+            ...col.id('statusId'),
+            ...col.col('requirementId', 'Requirement'),
+            ...col.col('entityType', 'Entity Type'),
+            ...col.col('entityId', 'Entity ID'),
+            ...col.status('status', 'Status', enums.COMPLIANCE_STATUS_TYPE_VALUES, render.complianceStatusType),
+            ...col.date('assessmentDate', 'Assessment Date'),
+            ...col.date('nextReviewDate', 'Next Review'),
+            ...col.custom('complianceScore', 'Score', (item) => item.complianceScore ? item.complianceScore.toFixed(1) + '%' : '-'),
+            ...col.col('assessorId', 'Assessor')
         ],
 
         CompCertification: [
-            { key: 'certificationId', label: 'ID', sortKey: 'certificationId', filterKey: 'certificationId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'issuingBody', label: 'Issuing Body', sortKey: 'issuingBody' },
-            { key: 'certificateNumber', label: 'Certificate #', sortKey: 'certificateNumber' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.CERTIFICATION_STATUS_VALUES, render: (item) => render.certificationStatus(item.status) },
-            { key: 'issueDate', label: 'Issue Date', sortKey: 'issueDate', render: (item) => render.date(item.issueDate) },
-            { key: 'expiryDate', label: 'Expiry Date', sortKey: 'expiryDate', render: (item) => render.date(item.expiryDate) },
-            { key: 'scope', label: 'Scope', sortKey: 'scope' },
-            { key: 'responsibleId', label: 'Responsible', sortKey: 'responsibleId' }
+            ...col.id('certificationId'),
+            ...col.col('name', 'Name'),
+            ...col.col('issuingBody', 'Issuing Body'),
+            ...col.col('certificateNumber', 'Certificate #'),
+            ...col.status('status', 'Status', enums.CERTIFICATION_STATUS_VALUES, render.certificationStatus),
+            ...col.date('issueDate', 'Issue Date'),
+            ...col.date('expiryDate', 'Expiry Date'),
+            ...col.col('scope', 'Scope'),
+            ...col.col('responsibleId', 'Responsible')
         ],
 
         CompViolationRecord: [
-            { key: 'violationId', label: 'ID', sortKey: 'violationId', filterKey: 'violationId' },
-            { key: 'violationNumber', label: 'Number', sortKey: 'violationNumber', filterKey: 'violationNumber' },
-            { key: 'title', label: 'Title', sortKey: 'title', filterKey: 'title' },
-            { key: 'requirementId', label: 'Requirement', sortKey: 'requirementId' },
-            { key: 'severity', label: 'Severity', sortKey: 'severity', filterKey: 'severity', enumValues: enums.SEVERITY_LEVEL_VALUES, render: (item) => render.severityLevel(item.severity) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.FINDING_STATUS_VALUES, render: (item) => render.findingStatus(item.status) },
-            { key: 'discoveryDate', label: 'Discovery Date', sortKey: 'discoveryDate', render: (item) => render.date(item.discoveryDate) },
-            { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => render.date(item.dueDate) },
-            { key: 'assignedToId', label: 'Assigned To', sortKey: 'assignedToId' }
+            ...col.id('violationId'),
+            ...col.col('violationNumber', 'Number'),
+            ...col.col('title', 'Title'),
+            ...col.col('requirementId', 'Requirement'),
+            ...col.status('severity', 'Severity', enums.SEVERITY_LEVEL_VALUES, render.severityLevel),
+            ...col.status('status', 'Status', enums.FINDING_STATUS_VALUES, render.findingStatus),
+            ...col.date('discoveryDate', 'Discovery Date'),
+            ...col.date('dueDate', 'Due Date'),
+            ...col.col('assignedToId', 'Assigned To')
         ]
     };
 

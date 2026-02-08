@@ -21,14 +21,8 @@ import (
 )
 
 func newCompAuditFindingServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CompAuditFinding",
-		func(e *comp.CompAuditFinding) { common.GenerateID(&e.FindingId) },
-		validateCompAuditFinding)
-}
-
-func validateCompAuditFinding(item *comp.CompAuditFinding, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.FindingId, "FindingId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[comp.CompAuditFinding]("CompAuditFinding",
+		func(e *comp.CompAuditFinding) { common.GenerateID(&e.FindingId) }).
+		Require(func(e *comp.CompAuditFinding) string { return e.FindingId }, "FindingId").
+		Build()
 }

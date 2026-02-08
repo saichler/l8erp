@@ -21,14 +21,8 @@ import (
 )
 
 func newCompCertificationServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CompCertification",
-		func(e *comp.CompCertification) { common.GenerateID(&e.CertificationId) },
-		validateCompCertification)
-}
-
-func validateCompCertification(item *comp.CompCertification, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CertificationId, "CertificationId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[comp.CompCertification]("CompCertification",
+		func(e *comp.CompCertification) { common.GenerateID(&e.CertificationId) }).
+		Require(func(e *comp.CompCertification) string { return e.CertificationId }, "CertificationId").
+		Build()
 }

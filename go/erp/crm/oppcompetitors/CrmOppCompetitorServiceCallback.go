@@ -21,14 +21,8 @@ import (
 )
 
 func newCrmOppCompetitorServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmOppCompetitor",
-		func(e *crm.CrmOppCompetitor) { common.GenerateID(&e.CompetitorId) },
-		validate)
-}
-
-func validate(item *crm.CrmOppCompetitor, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CompetitorId, "CompetitorId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmOppCompetitor]("CrmOppCompetitor",
+		func(e *crm.CrmOppCompetitor) { common.GenerateID(&e.CompetitorId) }).
+		Require(func(e *crm.CrmOppCompetitor) string { return e.CompetitorId }, "CompetitorId").
+		Build()
 }

@@ -19,62 +19,63 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const render = MobileEcomPromotions.render;
 
     MobileEcomPromotions.columns = {
         EcomPromotion: [
-            { key: 'promotionId', label: 'ID', sortKey: 'promotionId', filterKey: 'promotionId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'promotionType', label: 'Type', sortKey: 'promotionType', render: (item) => render.promotionType(item.promotionType) },
-            { key: 'discountValue', label: 'Discount Value', sortKey: 'discountValue' },
-            { key: 'startDate', label: 'Start Date', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End Date', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' },
-            { key: 'usageCount', label: 'Usage Count', sortKey: 'usageCount' },
-            { key: 'usageLimit', label: 'Usage Limit', sortKey: 'usageLimit' }
+            ...col.id('promotionId'),
+            ...col.col('name', 'Name'),
+            ...col.enum('promotionType', 'Type', null, render.promotionType),
+            ...col.col('discountValue', 'Discount Value'),
+            ...col.date('startDate', 'Start Date'),
+            ...col.date('endDate', 'End Date'),
+            ...col.boolean('isActive', 'Active'),
+            ...col.col('usageCount', 'Usage Count'),
+            ...col.col('usageLimit', 'Usage Limit')
         ],
 
         EcomCoupon: [
-            { key: 'couponId', label: 'ID', sortKey: 'couponId', filterKey: 'couponId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'discountType', label: 'Discount Type', sortKey: 'discountType', render: (item) => render.discountType(item.discountType) },
-            { key: 'discountValue', label: 'Discount Value', sortKey: 'discountValue' },
-            { key: 'startDate', label: 'Start Date', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End Date', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' },
-            { key: 'usageCount', label: 'Usage Count', sortKey: 'usageCount' },
-            { key: 'usageLimit', label: 'Usage Limit', sortKey: 'usageLimit' }
+            ...col.id('couponId'),
+            ...col.col('code', 'Code'),
+            ...col.enum('discountType', 'Discount Type', null, render.discountType),
+            ...col.col('discountValue', 'Discount Value'),
+            ...col.date('startDate', 'Start Date'),
+            ...col.date('endDate', 'End Date'),
+            ...col.boolean('isActive', 'Active'),
+            ...col.col('usageCount', 'Usage Count'),
+            ...col.col('usageLimit', 'Usage Limit')
         ],
 
         EcomPriceRule: [
-            { key: 'ruleId', label: 'ID', sortKey: 'ruleId', filterKey: 'ruleId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'discountType', label: 'Discount Type', sortKey: 'discountType', render: (item) => render.discountType(item.discountType) },
-            { key: 'discountValue', label: 'Discount Value', sortKey: 'discountValue' },
-            { key: 'startDate', label: 'Start Date', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End Date', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' },
-            { key: 'priority', label: 'Priority', sortKey: 'priority' }
+            ...col.id('ruleId'),
+            ...col.col('name', 'Name'),
+            ...col.enum('discountType', 'Discount Type', null, render.discountType),
+            ...col.col('discountValue', 'Discount Value'),
+            ...col.date('startDate', 'Start Date'),
+            ...col.date('endDate', 'End Date'),
+            ...col.boolean('isActive', 'Active'),
+            ...col.col('priority', 'Priority')
         ],
 
         EcomShippingMethod: [
-            { key: 'methodId', label: 'ID', sortKey: 'methodId', filterKey: 'methodId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'carrier', label: 'Carrier', sortKey: 'carrier', filterKey: 'carrier' },
-            { key: 'baseRate', label: 'Base Rate', sortKey: 'baseRate', render: (item) => Layer8MRenderers.renderMoney(item.baseRate) },
-            { key: 'minDeliveryDays', label: 'Min Days', sortKey: 'minDeliveryDays' },
-            { key: 'maxDeliveryDays', label: 'Max Days', sortKey: 'maxDeliveryDays' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' },
-            { key: 'trackingAvailable', label: 'Tracking', sortKey: 'trackingAvailable', render: (item) => item.trackingAvailable ? 'Yes' : 'No' }
+            ...col.id('methodId'),
+            ...col.col('name', 'Name'),
+            ...col.col('carrier', 'Carrier'),
+            ...col.money('baseRate', 'Base Rate'),
+            ...col.col('minDeliveryDays', 'Min Days'),
+            ...col.col('maxDeliveryDays', 'Max Days'),
+            ...col.boolean('isActive', 'Active'),
+            ...col.boolean('trackingAvailable', 'Tracking')
         ],
 
         EcomPaymentMethod: [
-            { key: 'methodId', label: 'ID', sortKey: 'methodId', filterKey: 'methodId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'provider', label: 'Provider', sortKey: 'provider', filterKey: 'provider' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' },
-            { key: 'isTestMode', label: 'Test Mode', sortKey: 'isTestMode', render: (item) => item.isTestMode ? 'Yes' : 'No' },
-            { key: 'sortOrder', label: 'Sort Order', sortKey: 'sortOrder' }
+            ...col.id('methodId'),
+            ...col.col('name', 'Name'),
+            ...col.col('provider', 'Provider'),
+            ...col.boolean('isActive', 'Active'),
+            ...col.boolean('isTestMode', 'Test Mode'),
+            ...col.col('sortOrder', 'Sort Order')
         ]
     };
 

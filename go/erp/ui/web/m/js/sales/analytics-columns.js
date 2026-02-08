@@ -19,63 +19,63 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileSalesAnalytics.enums;
     const render = MobileSalesAnalytics.render;
 
     MobileSalesAnalytics.columns = {
         SalesTarget: [
-            { key: 'targetId', label: 'ID', sortKey: 'targetId', filterKey: 'targetId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'salespersonId', label: 'Salesperson', sortKey: 'salespersonId', filterKey: 'salespersonId' },
-            { key: 'territoryId', label: 'Territory', sortKey: 'territoryId', filterKey: 'territoryId' },
-            { key: 'targetAmount', label: 'Target', sortKey: 'targetAmount', render: (item) => Layer8MRenderers.renderMoney(item.targetAmount) },
-            { key: 'achievedAmount', label: 'Achieved', sortKey: 'achievedAmount', render: (item) => Layer8MRenderers.renderMoney(item.achievedAmount) },
-            { key: 'period', label: 'Period', sortKey: 'period' }
+            ...col.id('targetId'),
+            ...col.col('name', 'Name'),
+            ...col.col('salespersonId', 'Salesperson'),
+            ...col.col('territoryId', 'Territory'),
+            ...col.money('targetAmount', 'Target'),
+            ...col.money('achievedAmount', 'Achieved'),
+            ...col.col('period', 'Period')
         ],
 
         SalesTerritory: [
-            { key: 'territoryId', label: 'ID', sortKey: 'territoryId', filterKey: 'territoryId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'territoryType', label: 'Type', sortKey: 'territoryType', filterKey: 'territoryType', enumValues: enums.TERRITORY_TYPE_VALUES, render: (item) => render.territoryType(item.territoryType) },
-            { key: 'parentTerritoryId', label: 'Parent', sortKey: 'parentTerritoryId' },
-            { key: 'description', label: 'Description', sortKey: 'description' }
+            ...col.id('territoryId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.status('territoryType', 'Type', enums.TERRITORY_TYPE_VALUES, render.territoryType),
+            ...col.col('parentTerritoryId', 'Parent')
         ],
 
         TerritoryAssign: [
-            { key: 'assignmentId', label: 'ID', sortKey: 'assignmentId', filterKey: 'assignmentId' },
-            { key: 'territoryId', label: 'Territory', sortKey: 'territoryId', filterKey: 'territoryId' },
-            { key: 'salespersonId', label: 'Salesperson', sortKey: 'salespersonId', filterKey: 'salespersonId' },
-            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
-            { key: 'isPrimary', label: 'Primary', sortKey: 'isPrimary' }
+            ...col.id('assignmentId'),
+            ...col.col('territoryId', 'Territory'),
+            ...col.col('salespersonId', 'Salesperson'),
+            ...col.date('startDate', 'Start'),
+            ...col.date('endDate', 'End'),
+            ...col.col('isPrimary', 'Primary')
         ],
 
         CommissionPlan: [
-            { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'commissionType', label: 'Type', sortKey: 'commissionType', filterKey: 'commissionType', enumValues: enums.COMMISSION_TYPE_VALUES, render: (item) => render.commissionType(item.commissionType) },
-            { key: 'baseRate', label: 'Rate', sortKey: 'baseRate' },
-            { key: 'effectiveDate', label: 'Effective', sortKey: 'effectiveDate', render: (item) => Layer8MRenderers.renderDate(item.effectiveDate) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive' }
+            ...col.id('planId'),
+            ...col.col('name', 'Name'),
+            ...col.status('commissionType', 'Type', enums.COMMISSION_TYPE_VALUES, render.commissionType),
+            ...col.col('baseRate', 'Rate'),
+            ...col.date('effectiveDate', 'Effective'),
+            ...col.col('isActive', 'Active')
         ],
 
         SalesCommissionCalc: [
-            { key: 'calcId', label: 'ID', sortKey: 'calcId', filterKey: 'calcId' },
-            { key: 'salespersonId', label: 'Salesperson', sortKey: 'salespersonId', filterKey: 'salespersonId' },
-            { key: 'planId', label: 'Plan', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
-            { key: 'salesAmount', label: 'Sale Amount', sortKey: 'salesAmount', render: (item) => Layer8MRenderers.renderMoney(item.salesAmount) },
-            { key: 'commissionAmount', label: 'Commission', sortKey: 'commissionAmount', render: (item) => Layer8MRenderers.renderMoney(item.commissionAmount) }
+            ...col.id('calcId'),
+            ...col.col('salespersonId', 'Salesperson'),
+            ...col.col('planId', 'Plan'),
+            ...col.col('salesOrderId', 'Order'),
+            ...col.money('salesAmount', 'Sale Amount'),
+            ...col.money('commissionAmount', 'Commission')
         ],
 
         SalesForecast: [
-            { key: 'forecastId', label: 'ID', sortKey: 'forecastId', filterKey: 'forecastId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'salespersonId', label: 'Salesperson', sortKey: 'salespersonId', filterKey: 'salespersonId' },
-            { key: 'category', label: 'Category', sortKey: 'category', filterKey: 'category', enumValues: enums.FORECAST_CATEGORY_VALUES, render: (item) => render.forecastCategory(item.category) },
-            { key: 'forecastAmount', label: 'Forecast', sortKey: 'forecastAmount', render: (item) => Layer8MRenderers.renderMoney(item.forecastAmount) },
-            { key: 'expectedCloseDate', label: 'Date', sortKey: 'expectedCloseDate', render: (item) => Layer8MRenderers.renderDate(item.expectedCloseDate) }
+            ...col.id('forecastId'),
+            ...col.col('name', 'Name'),
+            ...col.col('salespersonId', 'Salesperson'),
+            ...col.status('category', 'Category', enums.FORECAST_CATEGORY_VALUES, render.forecastCategory),
+            ...col.money('forecastAmount', 'Forecast'),
+            ...col.date('expectedCloseDate', 'Date')
         ]
     };
 

@@ -21,17 +21,9 @@ import (
 )
 
 func newDunningLetterServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("DunningLetter",
-		func(e *fin.DunningLetter) { common.GenerateID(&e.LetterId) },
-		validate)
-}
-
-func validate(dunningLetter *fin.DunningLetter, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(dunningLetter.LetterId, "LetterId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(dunningLetter.CustomerId, "CustomerId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.DunningLetter]("DunningLetter",
+		func(e *fin.DunningLetter) { common.GenerateID(&e.LetterId) }).
+		Require(func(e *fin.DunningLetter) string { return e.LetterId }, "LetterId").
+		Require(func(e *fin.DunningLetter) string { return e.CustomerId }, "CustomerId").
+		Build()
 }

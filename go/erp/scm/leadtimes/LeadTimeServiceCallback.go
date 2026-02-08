@@ -21,14 +21,8 @@ import (
 )
 
 func newLeadTimeServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmLeadTime",
-		func(e *scm.ScmLeadTime) { common.GenerateID(&e.LeadTimeId) },
-		validate)
-}
-
-func validate(item *scm.ScmLeadTime, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.LeadTimeId, "LeadTimeId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmLeadTime]("ScmLeadTime",
+		func(e *scm.ScmLeadTime) { common.GenerateID(&e.LeadTimeId) }).
+		Require(func(e *scm.ScmLeadTime) string { return e.LeadTimeId }, "LeadTimeId").
+		Build()
 }

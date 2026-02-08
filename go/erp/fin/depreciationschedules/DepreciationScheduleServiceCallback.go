@@ -21,20 +21,10 @@ import (
 )
 
 func newDepreciationScheduleServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("DepreciationSchedule",
-		func(e *fin.DepreciationSchedule) { common.GenerateID(&e.ScheduleId) },
-		validate)
-}
-
-func validate(depreciationSchedule *fin.DepreciationSchedule, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(depreciationSchedule.ScheduleId, "ScheduleId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(depreciationSchedule.AssetId, "AssetId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(depreciationSchedule.FiscalPeriodId, "FiscalPeriodId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.DepreciationSchedule]("DepreciationSchedule",
+		func(e *fin.DepreciationSchedule) { common.GenerateID(&e.ScheduleId) }).
+		Require(func(e *fin.DepreciationSchedule) string { return e.ScheduleId }, "ScheduleId").
+		Require(func(e *fin.DepreciationSchedule) string { return e.AssetId }, "AssetId").
+		Require(func(e *fin.DepreciationSchedule) string { return e.FiscalPeriodId }, "FiscalPeriodId").
+		Build()
 }

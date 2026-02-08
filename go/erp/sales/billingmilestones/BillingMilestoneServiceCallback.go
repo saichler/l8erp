@@ -21,17 +21,9 @@ import (
 )
 
 func newBillingMilestoneServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesBillingMilestone",
-		func(e *sales.SalesBillingMilestone) { common.GenerateID(&e.MilestoneId) },
-		validate)
-}
-
-func validate(item *sales.SalesBillingMilestone, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.MilestoneId, "MilestoneId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.ScheduleId, "ScheduleId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesBillingMilestone]("SalesBillingMilestone",
+		func(e *sales.SalesBillingMilestone) { common.GenerateID(&e.MilestoneId) }).
+		Require(func(e *sales.SalesBillingMilestone) string { return e.MilestoneId }, "MilestoneId").
+		Require(func(e *sales.SalesBillingMilestone) string { return e.ScheduleId }, "ScheduleId").
+		Build()
 }

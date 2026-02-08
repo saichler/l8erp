@@ -21,14 +21,8 @@ import (
 )
 
 func newPrjInvoiceLineServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjInvoiceLine",
-		func(e *prj.PrjInvoiceLine) { common.GenerateID(&e.LineId) },
-		validate)
-}
-
-func validate(item *prj.PrjInvoiceLine, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.LineId, "LineId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjInvoiceLine]("PrjInvoiceLine",
+		func(e *prj.PrjInvoiceLine) { common.GenerateID(&e.LineId) }).
+		Require(func(e *prj.PrjInvoiceLine) string { return e.LineId }, "LineId").
+		Build()
 }

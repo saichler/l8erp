@@ -21,14 +21,8 @@ import (
 )
 
 func newBiKPIServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiKPI",
-		func(e *bi.BiKPI) { common.GenerateID(&e.KpiId) },
-		validate)
-}
-
-func validate(item *bi.BiKPI, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.KpiId, "KpiId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiKPI]("BiKPI",
+		func(e *bi.BiKPI) { common.GenerateID(&e.KpiId) }).
+		Require(func(e *bi.BiKPI) string { return e.KpiId }, "KpiId").
+		Build()
 }

@@ -21,17 +21,9 @@ import (
 )
 
 func newAssetRevaluationServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("AssetRevaluation",
-		func(e *fin.AssetRevaluation) { common.GenerateID(&e.RevaluationId) },
-		validate)
-}
-
-func validate(assetRevaluation *fin.AssetRevaluation, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(assetRevaluation.RevaluationId, "RevaluationId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(assetRevaluation.AssetId, "AssetId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.AssetRevaluation]("AssetRevaluation",
+		func(e *fin.AssetRevaluation) { common.GenerateID(&e.RevaluationId) }).
+		Require(func(e *fin.AssetRevaluation) string { return e.RevaluationId }, "RevaluationId").
+		Require(func(e *fin.AssetRevaluation) string { return e.AssetId }, "AssetId").
+		Build()
 }

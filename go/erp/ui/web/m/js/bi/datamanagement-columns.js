@@ -19,78 +19,79 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileBiDataManagement.enums;
     const render = MobileBiDataManagement.render;
 
     MobileBiDataManagement.columns = {
         BiDataSource: [
-            { key: 'sourceId', label: 'ID', sortKey: 'sourceId', filterKey: 'sourceId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'sourceType', label: 'Type', sortKey: 'sourceType', filterKey: 'sourceType', enumValues: enums.DATA_SOURCE_TYPE_VALUES, render: (item) => render.dataSourceType(item.sourceType) },
-            { key: 'host', label: 'Host', sortKey: 'host', filterKey: 'host' },
-            { key: 'database', label: 'Database', sortKey: 'database', filterKey: 'database' },
-            { key: 'connectionStatus', label: 'Status', sortKey: 'connectionStatus', filterKey: 'connectionStatus', enumValues: enums.CONNECTION_STATUS_VALUES, render: (item) => render.connectionStatus(item.connectionStatus) },
-            { key: 'lastConnected', label: 'Last Connected', sortKey: 'lastConnected', render: (item) => Layer8MRenderers.renderDate(item.lastConnected) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('sourceId'),
+            ...col.col('name', 'Name'),
+            ...col.status('sourceType', 'Type', enums.DATA_SOURCE_TYPE_VALUES, render.dataSourceType),
+            ...col.col('host', 'Host'),
+            ...col.col('database', 'Database'),
+            ...col.status('connectionStatus', 'Status', enums.CONNECTION_STATUS_VALUES, render.connectionStatus),
+            ...col.date('lastConnected', 'Last Connected'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BiETLJob: [
-            { key: 'jobId', label: 'ID', sortKey: 'jobId', filterKey: 'jobId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'sourceId', label: 'Source', sortKey: 'sourceId', filterKey: 'sourceId' },
-            { key: 'targetId', label: 'Target', sortKey: 'targetId', filterKey: 'targetId' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.ETL_STATUS_VALUES, render: (item) => render.etlStatus(item.status) },
-            { key: 'loadMode', label: 'Load Mode', sortKey: 'loadMode' },
-            { key: 'lastRun', label: 'Last Run', sortKey: 'lastRun', render: (item) => Layer8MRenderers.renderDate(item.lastRun) },
-            { key: 'rowsProcessed', label: 'Rows Processed', sortKey: 'rowsProcessed' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('jobId'),
+            ...col.col('name', 'Name'),
+            ...col.col('sourceId', 'Source'),
+            ...col.col('targetId', 'Target'),
+            ...col.status('status', 'Status', enums.ETL_STATUS_VALUES, render.etlStatus),
+            ...col.col('loadMode', 'Load Mode'),
+            ...col.date('lastRun', 'Last Run'),
+            ...col.col('rowsProcessed', 'Rows Processed'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BiETLSchedule: [
-            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'jobId', label: 'Job', sortKey: 'jobId', filterKey: 'jobId' },
-            { key: 'frequency', label: 'Frequency', sortKey: 'frequency', filterKey: 'frequency', enumValues: enums.SCHEDULE_FREQUENCY_VALUES, render: (item) => render.scheduleFrequency(item.frequency) },
-            { key: 'runTime', label: 'Run Time', sortKey: 'runTime' },
-            { key: 'nextRun', label: 'Next Run', sortKey: 'nextRun', render: (item) => Layer8MRenderers.renderDate(item.nextRun) },
-            { key: 'lastRun', label: 'Last Run', sortKey: 'lastRun', render: (item) => Layer8MRenderers.renderDate(item.lastRun) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('scheduleId'),
+            ...col.col('name', 'Name'),
+            ...col.col('jobId', 'Job'),
+            ...col.status('frequency', 'Frequency', enums.SCHEDULE_FREQUENCY_VALUES, render.scheduleFrequency),
+            ...col.col('runTime', 'Run Time'),
+            ...col.date('nextRun', 'Next Run'),
+            ...col.date('lastRun', 'Last Run'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BiDataQualityRule: [
-            { key: 'ruleId', label: 'ID', sortKey: 'ruleId', filterKey: 'ruleId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'dataSourceId', label: 'Data Source', sortKey: 'dataSourceId' },
-            { key: 'tableName', label: 'Table', sortKey: 'tableName', filterKey: 'tableName' },
-            { key: 'columnName', label: 'Column', sortKey: 'columnName' },
-            { key: 'ruleType', label: 'Rule Type', sortKey: 'ruleType' },
-            { key: 'lastStatus', label: 'Status', sortKey: 'lastStatus', filterKey: 'lastStatus', enumValues: enums.DATA_QUALITY_STATUS_VALUES, render: (item) => render.dataQualityStatus(item.lastStatus) },
-            { key: 'lastScore', label: 'Score', sortKey: 'lastScore' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('ruleId'),
+            ...col.col('name', 'Name'),
+            ...col.col('dataSourceId', 'Data Source'),
+            ...col.col('tableName', 'Table'),
+            ...col.col('columnName', 'Column'),
+            ...col.col('ruleType', 'Rule Type'),
+            ...col.status('lastStatus', 'Status', enums.DATA_QUALITY_STATUS_VALUES, render.dataQualityStatus),
+            ...col.col('lastScore', 'Score'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BiMasterDataConfig: [
-            { key: 'configId', label: 'ID', sortKey: 'configId', filterKey: 'configId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'entityType', label: 'Entity Type', sortKey: 'entityType', filterKey: 'entityType' },
-            { key: 'sourceSystemId', label: 'Source System', sortKey: 'sourceSystemId' },
-            { key: 'totalRecords', label: 'Total Records', sortKey: 'totalRecords' },
-            { key: 'matchedRecords', label: 'Matched', sortKey: 'matchedRecords' },
-            { key: 'duplicateRecords', label: 'Duplicates', sortKey: 'duplicateRecords' },
-            { key: 'lastSync', label: 'Last Sync', sortKey: 'lastSync', render: (item) => Layer8MRenderers.renderDate(item.lastSync) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('configId'),
+            ...col.col('name', 'Name'),
+            ...col.col('entityType', 'Entity Type'),
+            ...col.col('sourceSystemId', 'Source System'),
+            ...col.col('totalRecords', 'Total Records'),
+            ...col.col('matchedRecords', 'Matched'),
+            ...col.col('duplicateRecords', 'Duplicates'),
+            ...col.date('lastSync', 'Last Sync'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BiDataGovernance: [
-            { key: 'governanceId', label: 'ID', sortKey: 'governanceId', filterKey: 'governanceId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'dataDomain', label: 'Data Domain', sortKey: 'dataDomain', filterKey: 'dataDomain' },
-            { key: 'classification', label: 'Classification', sortKey: 'classification', filterKey: 'classification', enumValues: enums.GOVERNANCE_LEVEL_VALUES, render: (item) => render.governanceLevel(item.classification) },
-            { key: 'dataOwnerId', label: 'Owner', sortKey: 'dataOwnerId' },
-            { key: 'dataStewardId', label: 'Steward', sortKey: 'dataStewardId' },
-            { key: 'retentionDays', label: 'Retention Days', sortKey: 'retentionDays' },
-            { key: 'nextReview', label: 'Next Review', sortKey: 'nextReview', render: (item) => Layer8MRenderers.renderDate(item.nextReview) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('governanceId'),
+            ...col.col('name', 'Name'),
+            ...col.col('dataDomain', 'Data Domain'),
+            ...col.status('classification', 'Classification', enums.GOVERNANCE_LEVEL_VALUES, render.governanceLevel),
+            ...col.col('dataOwnerId', 'Owner'),
+            ...col.col('dataStewardId', 'Steward'),
+            ...col.col('retentionDays', 'Retention Days'),
+            ...col.date('nextReview', 'Next Review'),
+            ...col.boolean('isActive', 'Active')
         ]
     };
 

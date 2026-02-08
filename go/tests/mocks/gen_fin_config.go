@@ -123,34 +123,27 @@ func generateBudgets(store *MockDataStore) []*fin.Budget {
 
 // generateBudgetLines creates budget line records, 5 per budget
 func generateBudgetLines(store *MockDataStore) []*fin.BudgetLine {
-	lines := make([]*fin.BudgetLine, 0, len(store.BudgetIDs)*5)
-	lineIdx := 1
-
-	for _, budgetID := range store.BudgetIDs {
-		for j := 0; j < 5; j++ {
-			budgeted := int64(rand.Intn(50000_00) + 10000_00) // $10k-$60k in cents
-			actual := int64(float64(budgeted) * (0.5 + rand.Float64()*0.6))
-			variance := budgeted - actual
-			// Use 2025 fiscal periods (indices 12-23)
-			periodIdx := 12 + (j*2)%12
-			if periodIdx >= len(store.FiscalPeriodIDs) {
-				periodIdx = len(store.FiscalPeriodIDs) - 1
-			}
-			lines = append(lines, &fin.BudgetLine{
-				LineId:         fmt.Sprintf("bln-%03d", lineIdx),
-				BudgetId:       budgetID,
-				AccountId:      store.AccountIDs[(lineIdx-1)%len(store.AccountIDs)],
-				FiscalPeriodId: store.FiscalPeriodIDs[periodIdx],
-				BudgetedAmount: money(store, budgeted),
-				ActualAmount:   money(store, actual),
-				Variance:       money(store, variance),
-				Description:    fmt.Sprintf("Budget line %d", lineIdx),
-				AuditInfo:      createAuditInfo(),
-			})
-			lineIdx++
+	return genLines(store.BudgetIDs, 5, func(idx, _, j int, budgetID string) *fin.BudgetLine {
+		budgeted := int64(rand.Intn(50000_00) + 10000_00) // $10k-$60k in cents
+		actual := int64(float64(budgeted) * (0.5 + rand.Float64()*0.6))
+		variance := budgeted - actual
+		// Use 2025 fiscal periods (indices 12-23)
+		periodIdx := 12 + (j*2)%12
+		if periodIdx >= len(store.FiscalPeriodIDs) {
+			periodIdx = len(store.FiscalPeriodIDs) - 1
 		}
-	}
-	return lines
+		return &fin.BudgetLine{
+			LineId:         fmt.Sprintf("bln-%03d", idx),
+			BudgetId:       budgetID,
+			AccountId:      store.AccountIDs[(idx-1)%len(store.AccountIDs)],
+			FiscalPeriodId: store.FiscalPeriodIDs[periodIdx],
+			BudgetedAmount: money(store, budgeted),
+			ActualAmount:   money(store, actual),
+			Variance:       money(store, variance),
+			Description:    fmt.Sprintf("Budget line %d", idx),
+			AuditInfo:      createAuditInfo(),
+		}
+	})
 }
 
 // generateBudgetTransfers creates budget transfer records

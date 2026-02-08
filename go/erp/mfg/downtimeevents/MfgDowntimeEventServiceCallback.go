@@ -21,17 +21,9 @@ import (
 )
 
 func newMfgDowntimeEventServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgDowntimeEvent",
-		func(e *mfg.MfgDowntimeEvent) { common.GenerateID(&e.EventId) },
-		validate)
-}
-
-func validate(item *mfg.MfgDowntimeEvent, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.EventId, "EventId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.WorkCenterId, "WorkCenterId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgDowntimeEvent]("MfgDowntimeEvent",
+		func(e *mfg.MfgDowntimeEvent) { common.GenerateID(&e.EventId) }).
+		Require(func(e *mfg.MfgDowntimeEvent) string { return e.EventId }, "EventId").
+		Require(func(e *mfg.MfgDowntimeEvent) string { return e.WorkCenterId }, "WorkCenterId").
+		Build()
 }

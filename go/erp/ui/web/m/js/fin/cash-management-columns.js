@@ -19,59 +19,60 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const render = MobileCashManagement.render;
 
     MobileCashManagement.columns = {
         BankAccount: [
-            { key: 'bankAccountId', label: 'ID', sortKey: 'bankAccountId', filterKey: 'bankAccountId' },
-            { key: 'accountName', label: 'Account Name', sortKey: 'accountName', filterKey: 'accountName' },
-            { key: 'bankName', label: 'Bank Name', sortKey: 'bankName', filterKey: 'bankName' },
-            { key: 'accountType', label: 'Type', sortKey: 'accountType', render: (item) => render.bankAccountType(item.accountType) },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.bankAccountStatus(item.status) },
-            { key: 'currentBalance', label: 'Current Balance', sortKey: 'currentBalance', render: (item) => Layer8MRenderers.renderMoney(item.currentBalance) }
+            ...col.id('bankAccountId'),
+            ...col.col('accountName', 'Account Name'),
+            ...col.col('bankName', 'Bank Name'),
+            ...col.enum('accountType', 'Type', null, render.bankAccountType),
+            ...col.enum('status', 'Status', null, render.bankAccountStatus),
+            ...col.money('currentBalance', 'Current Balance')
         ],
 
         BankTransaction: [
-            { key: 'transactionId', label: 'ID', sortKey: 'transactionId', filterKey: 'transactionId' },
-            { key: 'bankAccountId', label: 'Account', sortKey: 'bankAccountId', filterKey: 'bankAccountId' },
-            { key: 'transactionDate', label: 'Date', sortKey: 'transactionDate', render: (item) => Layer8MRenderers.renderDate(item.transactionDate) },
-            { key: 'transactionType', label: 'Type', sortKey: 'transactionType', render: (item) => render.transactionType(item.transactionType) },
-            { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => Layer8MRenderers.renderMoney(item.amount) },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' }
+            ...col.id('transactionId'),
+            ...col.col('bankAccountId', 'Account'),
+            ...col.date('transactionDate', 'Date'),
+            ...col.enum('transactionType', 'Type', null, render.transactionType),
+            ...col.money('amount', 'Amount'),
+            ...col.col('description', 'Description')
         ],
 
         BankReconciliation: [
-            { key: 'reconciliationId', label: 'ID', sortKey: 'reconciliationId', filterKey: 'reconciliationId' },
-            { key: 'bankAccountId', label: 'Account', sortKey: 'bankAccountId', filterKey: 'bankAccountId' },
-            { key: 'statementDate', label: 'Statement Date', sortKey: 'statementDate', render: (item) => Layer8MRenderers.renderDate(item.statementDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.reconciliationStatus(item.status) },
-            { key: 'statementBalance', label: 'Statement Balance', sortKey: 'statementBalance', render: (item) => Layer8MRenderers.renderMoney(item.statementBalance) },
-            { key: 'bookBalance', label: 'Book Balance', sortKey: 'bookBalance', render: (item) => Layer8MRenderers.renderMoney(item.bookBalance) }
+            ...col.id('reconciliationId'),
+            ...col.col('bankAccountId', 'Account'),
+            ...col.date('statementDate', 'Statement Date'),
+            ...col.enum('status', 'Status', null, render.reconciliationStatus),
+            ...col.money('statementBalance', 'Statement Balance'),
+            ...col.money('bookBalance', 'Book Balance')
         ],
 
         CashForecast: [
-            { key: 'forecastId', label: 'ID', sortKey: 'forecastId', filterKey: 'forecastId' },
-            { key: 'forecastDate', label: 'Forecast Date', sortKey: 'forecastDate', render: (item) => Layer8MRenderers.renderDate(item.forecastDate) },
-            { key: 'projectedInflows', label: 'Projected Inflow', sortKey: 'projectedInflows', render: (item) => Layer8MRenderers.renderMoney(item.projectedInflows) },
-            { key: 'projectedOutflows', label: 'Projected Outflow', sortKey: 'projectedOutflows', render: (item) => Layer8MRenderers.renderMoney(item.projectedOutflows) },
-            { key: 'netCashFlow', label: 'Net Cash Flow', sortKey: 'netCashFlow', render: (item) => Layer8MRenderers.renderMoney(item.netCashFlow) }
+            ...col.id('forecastId'),
+            ...col.date('forecastDate', 'Forecast Date'),
+            ...col.money('projectedInflows', 'Projected Inflow'),
+            ...col.money('projectedOutflows', 'Projected Outflow'),
+            ...col.money('netCashFlow', 'Net Cash Flow')
         ],
 
         FundTransfer: [
-            { key: 'transferId', label: 'ID', sortKey: 'transferId', filterKey: 'transferId' },
-            { key: 'fromBankAccountId', label: 'From Account', sortKey: 'fromBankAccountId', filterKey: 'fromBankAccountId' },
-            { key: 'toBankAccountId', label: 'To Account', sortKey: 'toBankAccountId', filterKey: 'toBankAccountId' },
-            { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => Layer8MRenderers.renderMoney(item.amount) },
-            { key: 'transferDate', label: 'Transfer Date', sortKey: 'transferDate', render: (item) => Layer8MRenderers.renderDate(item.transferDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.transferStatus(item.status) }
+            ...col.id('transferId'),
+            ...col.col('fromBankAccountId', 'From Account'),
+            ...col.col('toBankAccountId', 'To Account'),
+            ...col.money('amount', 'Amount'),
+            ...col.date('transferDate', 'Transfer Date'),
+            ...col.enum('status', 'Status', null, render.transferStatus)
         ],
 
         PettyCash: [
-            { key: 'pettyCashId', label: 'ID', sortKey: 'pettyCashId', filterKey: 'pettyCashId' },
-            { key: 'fundName', label: 'Fund Name', sortKey: 'fundName', filterKey: 'fundName' },
-            { key: 'fundLimit', label: 'Fund Limit', sortKey: 'fundLimit', render: (item) => Layer8MRenderers.renderMoney(item.fundLimit) },
-            { key: 'currentBalance', label: 'Current Balance', sortKey: 'currentBalance', render: (item) => Layer8MRenderers.renderMoney(item.currentBalance) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
+            ...col.id('pettyCashId'),
+            ...col.col('fundName', 'Fund Name'),
+            ...col.money('fundLimit', 'Fund Limit'),
+            ...col.money('currentBalance', 'Current Balance'),
+            ...col.boolean('isActive', 'Active')
         ]
     };
 

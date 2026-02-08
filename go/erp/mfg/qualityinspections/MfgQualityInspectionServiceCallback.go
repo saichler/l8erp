@@ -21,17 +21,9 @@ import (
 )
 
 func newMfgQualityInspectionServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgQualityInspection",
-		func(e *mfg.MfgQualityInspection) { common.GenerateID(&e.InspectionId) },
-		validate)
-}
-
-func validate(item *mfg.MfgQualityInspection, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.InspectionId, "InspectionId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.ItemId, "ItemId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgQualityInspection]("MfgQualityInspection",
+		func(e *mfg.MfgQualityInspection) { common.GenerateID(&e.InspectionId) }).
+		Require(func(e *mfg.MfgQualityInspection) string { return e.InspectionId }, "InspectionId").
+		Require(func(e *mfg.MfgQualityInspection) string { return e.ItemId }, "ItemId").
+		Build()
 }

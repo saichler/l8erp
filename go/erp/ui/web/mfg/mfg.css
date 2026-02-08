@@ -12,58 +12,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+/* ============================================ */
+/* MFG STYLES - Entry Point */
+/* ============================================ */
+/*
+ * The Manufacturing module reuses the shared layout classes
+ * and layer8d-theme.css variables for status colors.
+ * Status rendering uses generic layer8d-status-* classes.
+ *
+ * Any MFG-specific style overrides can be added here.
+ */
 
-/* Manufacturing Module Styles */
-/* Uses shared HCM layout classes - minimal overrides needed */
-
-/* Work Order Status Colors */
-.mfg-wo-status-planned {
-    background-color: var(--layer8d-yellow-bg);
-    color: var(--layer8d-yellow-text);
-}
-
-.mfg-wo-status-released {
-    background-color: var(--layer8d-blue-bg);
-    color: var(--layer8d-blue-text);
-}
-
-.mfg-wo-status-in-progress {
-    background-color: var(--layer8d-green-bg);
-    color: var(--layer8d-green-text);
-}
-
-.mfg-wo-status-on-hold {
-    background-color: var(--layer8d-orange-bg);
-    color: var(--layer8d-orange-text);
-}
-
-.mfg-wo-status-completed {
-    background-color: var(--layer8d-green-light-bg);
-    color: var(--layer8d-green-light-text);
-}
-
-.mfg-wo-status-closed {
-    background-color: var(--layer8d-gray-bg);
-    color: var(--layer8d-gray-text);
-}
-
-.mfg-wo-status-cancelled {
-    background-color: var(--layer8d-red-bg);
-    color: var(--layer8d-red-text);
-}
-
-/* Quality Status Colors */
-.mfg-quality-pass {
-    background-color: var(--layer8d-green-bg);
-    color: var(--layer8d-green-text);
-}
-
-.mfg-quality-fail {
-    background-color: var(--layer8d-red-bg);
-    color: var(--layer8d-red-text);
-}
-
-.mfg-quality-pending {
-    background-color: var(--layer8d-yellow-bg);
-    color: var(--layer8d-yellow-text);
-}
+/* Any additional MFG-specific styles can be added here */

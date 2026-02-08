@@ -21,14 +21,8 @@ import (
 )
 
 func newBiBenchmarkServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiBenchmark",
-		func(e *bi.BiBenchmark) { common.GenerateID(&e.BenchmarkId) },
-		validate)
-}
-
-func validate(item *bi.BiBenchmark, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.BenchmarkId, "BenchmarkId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiBenchmark]("BiBenchmark",
+		func(e *bi.BiBenchmark) { common.GenerateID(&e.BenchmarkId) }).
+		Require(func(e *bi.BiBenchmark) string { return e.BenchmarkId }, "BenchmarkId").
+		Build()
 }

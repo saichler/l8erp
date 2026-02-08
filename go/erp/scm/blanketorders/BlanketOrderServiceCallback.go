@@ -21,14 +21,8 @@ import (
 )
 
 func newBlanketOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmBlanketOrder",
-		func(e *scm.ScmBlanketOrder) { common.GenerateID(&e.BlanketOrderId) },
-		validate)
-}
-
-func validate(item *scm.ScmBlanketOrder, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.BlanketOrderId, "BlanketOrderId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmBlanketOrder]("ScmBlanketOrder",
+		func(e *scm.ScmBlanketOrder) { common.GenerateID(&e.BlanketOrderId) }).
+		Require(func(e *scm.ScmBlanketOrder) string { return e.BlanketOrderId }, "BlanketOrderId").
+		Build()
 }

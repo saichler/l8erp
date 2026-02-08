@@ -21,17 +21,9 @@ import (
 )
 
 func newMfgActualCostServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgActualCost",
-		func(e *mfg.MfgActualCost) { common.GenerateID(&e.ActualCostId) },
-		validate)
-}
-
-func validate(item *mfg.MfgActualCost, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ActualCostId, "ActualCostId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.WorkOrderId, "WorkOrderId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgActualCost]("MfgActualCost",
+		func(e *mfg.MfgActualCost) { common.GenerateID(&e.ActualCostId) }).
+		Require(func(e *mfg.MfgActualCost) string { return e.ActualCostId }, "ActualCostId").
+		Require(func(e *mfg.MfgActualCost) string { return e.WorkOrderId }, "WorkOrderId").
+		Build()
 }

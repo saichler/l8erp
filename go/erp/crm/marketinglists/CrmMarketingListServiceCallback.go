@@ -21,14 +21,8 @@ import (
 )
 
 func newCrmMarketingListServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmMarketingList",
-		func(e *crm.CrmMarketingList) { common.GenerateID(&e.ListId) },
-		validate)
-}
-
-func validate(item *crm.CrmMarketingList, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ListId, "ListId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmMarketingList]("CrmMarketingList",
+		func(e *crm.CrmMarketingList) { common.GenerateID(&e.ListId) }).
+		Require(func(e *crm.CrmMarketingList) string { return e.ListId }, "ListId").
+		Build()
 }

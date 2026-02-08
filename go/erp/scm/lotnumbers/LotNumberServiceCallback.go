@@ -21,14 +21,8 @@ import (
 )
 
 func newLotNumberServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmLotNumber",
-		func(e *scm.ScmLotNumber) { common.GenerateID(&e.LotId) },
-		validate)
-}
-
-func validate(item *scm.ScmLotNumber, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.LotId, "LotId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmLotNumber]("ScmLotNumber",
+		func(e *scm.ScmLotNumber) { common.GenerateID(&e.LotId) }).
+		Require(func(e *scm.ScmLotNumber) string { return e.LotId }, "LotId").
+		Build()
 }

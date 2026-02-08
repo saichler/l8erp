@@ -21,14 +21,8 @@ import (
 )
 
 func newPrjResourceServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjResource",
-		func(e *prj.PrjResource) { common.GenerateID(&e.ResourceId) },
-		validate)
-}
-
-func validate(item *prj.PrjResource, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ResourceId, "ResourceId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjResource]("PrjResource",
+		func(e *prj.PrjResource) { common.GenerateID(&e.ResourceId) }).
+		Require(func(e *prj.PrjResource) string { return e.ResourceId }, "ResourceId").
+		Build()
 }

@@ -21,14 +21,8 @@ import (
 )
 
 func newDocSignatureServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("DocSignature",
-		func(e *doc.DocSignature) { common.GenerateID(&e.SignatureId) },
-		validateDocSignature)
-}
-
-func validateDocSignature(item *doc.DocSignature, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.SignatureId, "SignatureId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[doc.DocSignature]("DocSignature",
+		func(e *doc.DocSignature) { common.GenerateID(&e.SignatureId) }).
+		Require(func(e *doc.DocSignature) string { return e.SignatureId }, "SignatureId").
+		Build()
 }

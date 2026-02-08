@@ -21,14 +21,8 @@ import (
 )
 
 func newCycleCountServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmCycleCount",
-		func(e *scm.ScmCycleCount) { common.GenerateID(&e.CycleCountId) },
-		validate)
-}
-
-func validate(item *scm.ScmCycleCount, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CycleCountId, "CycleCountId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmCycleCount]("ScmCycleCount",
+		func(e *scm.ScmCycleCount) { common.GenerateID(&e.CycleCountId) }).
+		Require(func(e *scm.ScmCycleCount) string { return e.CycleCountId }, "CycleCountId").
+		Build()
 }

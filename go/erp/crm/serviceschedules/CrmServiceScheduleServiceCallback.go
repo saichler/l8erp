@@ -21,14 +21,8 @@ import (
 )
 
 func newCrmServiceScheduleServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmServiceSchedule",
-		func(e *crm.CrmServiceSchedule) { common.GenerateID(&e.ScheduleId) },
-		validate)
-}
-
-func validate(item *crm.CrmServiceSchedule, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ScheduleId, "ScheduleId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmServiceSchedule]("CrmServiceSchedule",
+		func(e *crm.CrmServiceSchedule) { common.GenerateID(&e.ScheduleId) }).
+		Require(func(e *crm.CrmServiceSchedule) string { return e.ScheduleId }, "ScheduleId").
+		Build()
 }

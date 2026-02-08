@@ -21,14 +21,8 @@ import (
 )
 
 func newReorderPointServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmReorderPoint",
-		func(e *scm.ScmReorderPoint) { common.GenerateID(&e.ReorderPointId) },
-		validate)
-}
-
-func validate(item *scm.ScmReorderPoint, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ReorderPointId, "ReorderPointId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmReorderPoint]("ScmReorderPoint",
+		func(e *scm.ScmReorderPoint) { common.GenerateID(&e.ReorderPointId) }).
+		Require(func(e *scm.ScmReorderPoint) string { return e.ReorderPointId }, "ReorderPointId").
+		Build()
 }

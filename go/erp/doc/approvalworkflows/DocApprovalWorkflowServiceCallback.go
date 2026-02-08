@@ -21,14 +21,8 @@ import (
 )
 
 func newDocApprovalWorkflowServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("DocApprovalWorkflow",
-		func(e *doc.DocApprovalWorkflow) { common.GenerateID(&e.WorkflowId) },
-		validateDocApprovalWorkflow)
-}
-
-func validateDocApprovalWorkflow(item *doc.DocApprovalWorkflow, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.WorkflowId, "WorkflowId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[doc.DocApprovalWorkflow]("DocApprovalWorkflow",
+		func(e *doc.DocApprovalWorkflow) { common.GenerateID(&e.WorkflowId) }).
+		Require(func(e *doc.DocApprovalWorkflow) string { return e.WorkflowId }, "WorkflowId").
+		Build()
 }

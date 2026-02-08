@@ -21,14 +21,8 @@ import (
 )
 
 func newBiScenarioServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiScenario",
-		func(e *bi.BiScenario) { common.GenerateID(&e.ScenarioId) },
-		validate)
-}
-
-func validate(item *bi.BiScenario, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ScenarioId, "ScenarioId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiScenario]("BiScenario",
+		func(e *bi.BiScenario) { common.GenerateID(&e.ScenarioId) }).
+		Require(func(e *bi.BiScenario) string { return e.ScenarioId }, "ScenarioId").
+		Build()
 }

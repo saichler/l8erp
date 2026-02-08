@@ -21,20 +21,10 @@ import (
 )
 
 func newAssetServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("Asset",
-		func(e *fin.Asset) { common.GenerateID(&e.AssetId) },
-		validate)
-}
-
-func validate(asset *fin.Asset, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(asset.AssetId, "AssetId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(asset.Name, "Name"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(asset.CategoryId, "CategoryId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.Asset]("Asset",
+		func(e *fin.Asset) { common.GenerateID(&e.AssetId) }).
+		Require(func(e *fin.Asset) string { return e.AssetId }, "AssetId").
+		Require(func(e *fin.Asset) string { return e.Name }, "Name").
+		Require(func(e *fin.Asset) string { return e.CategoryId }, "CategoryId").
+		Build()
 }

@@ -5,45 +5,45 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     window.MobileDocIntegration = window.MobileDocIntegration || {};
-    const { renderDate } = Layer8MRenderers;
     const render = MobileDocIntegration.render;
 
     MobileDocIntegration.columns = {
         DocAttachment: [
-            { key: 'attachmentId', label: 'ID', sortKey: 'attachmentId' },
-            { key: 'documentId', label: 'Document', sortKey: 'documentId' },
-            { key: 'entityType', label: 'Entity Type', sortKey: 'entityType' },
-            { key: 'module', label: 'Module', sortKey: 'module' },
-            { key: 'attachedDate', label: 'Attached', sortKey: 'attachedDate', render: (item) => renderDate(item.attachedDate) }
+            ...col.id('attachmentId'),
+            ...col.col('documentId', 'Document'),
+            ...col.col('entityType', 'Entity Type'),
+            ...col.col('module', 'Module'),
+            ...col.date('attachedDate', 'Attached')
         ],
         DocTemplate: [
-            { key: 'templateId', label: 'ID', sortKey: 'templateId' },
-            { key: 'name', label: 'Name', sortKey: 'name' },
-            { key: 'templateType', label: 'Type', sortKey: 'templateType', render: (item) => render.templateType(item.templateType) },
-            { key: 'version', label: 'Version', sortKey: 'version' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('templateId'),
+            ...col.col('name', 'Name'),
+            ...col.enum('templateType', 'Type', null, render.templateType),
+            ...col.col('version', 'Version'),
+            ...col.boolean('isActive', 'Active')
         ],
         DocTemplateField: [
-            { key: 'fieldId', label: 'ID', sortKey: 'fieldId' },
-            { key: 'templateId', label: 'Template', sortKey: 'templateId' },
-            { key: 'name', label: 'Name', sortKey: 'name' },
-            { key: 'fieldType', label: 'Type', sortKey: 'fieldType', render: (item) => render.fieldType(item.fieldType) },
-            { key: 'isRequired', label: 'Required', sortKey: 'isRequired', render: (item) => item.isRequired ? 'Yes' : 'No' }
+            ...col.id('fieldId'),
+            ...col.col('templateId', 'Template'),
+            ...col.col('name', 'Name'),
+            ...col.enum('fieldType', 'Type', null, render.fieldType),
+            ...col.boolean('isRequired', 'Required')
         ],
         DocEmailCapture: [
-            { key: 'captureId', label: 'ID', sortKey: 'captureId' },
-            { key: 'subject', label: 'Subject', sortKey: 'subject' },
-            { key: 'fromAddress', label: 'From', sortKey: 'fromAddress' },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.emailCaptureStatus(item.status) },
-            { key: 'receivedDate', label: 'Received', sortKey: 'receivedDate', render: (item) => renderDate(item.receivedDate) }
+            ...col.id('captureId'),
+            ...col.col('subject', 'Subject'),
+            ...col.col('fromAddress', 'From'),
+            ...col.enum('status', 'Status', null, render.emailCaptureStatus),
+            ...col.date('receivedDate', 'Received')
         ],
         DocScanJob: [
-            { key: 'scanJobId', label: 'ID', sortKey: 'scanJobId' },
-            { key: 'name', label: 'Name', sortKey: 'name' },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.scanStatus(item.status) },
-            { key: 'pageCount', label: 'Pages', sortKey: 'pageCount' },
-            { key: 'initiatedDate', label: 'Initiated', sortKey: 'initiatedDate', render: (item) => renderDate(item.initiatedDate) }
+            ...col.id('scanJobId'),
+            ...col.col('name', 'Name'),
+            ...col.enum('status', 'Status', null, render.scanStatus),
+            ...col.col('pageCount', 'Pages'),
+            ...col.date('initiatedDate', 'Initiated')
         ]
     };
 

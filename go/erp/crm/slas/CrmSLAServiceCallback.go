@@ -21,17 +21,9 @@ import (
 )
 
 func newCrmSLAServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmSLA",
-		func(e *crm.CrmSLA) { common.GenerateID(&e.SlaId) },
-		validate)
-}
-
-func validate(item *crm.CrmSLA, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.SlaId, "SlaId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.Name, "Name"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmSLA]("CrmSLA",
+		func(e *crm.CrmSLA) { common.GenerateID(&e.SlaId) }).
+		Require(func(e *crm.CrmSLA) string { return e.SlaId }, "SlaId").
+		Require(func(e *crm.CrmSLA) string { return e.Name }, "Name").
+		Build()
 }

@@ -21,14 +21,8 @@ import (
 )
 
 func newPrjExpenseReportServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjExpenseReport",
-		func(e *prj.PrjExpenseReport) { common.GenerateID(&e.ReportId) },
-		validate)
-}
-
-func validate(item *prj.PrjExpenseReport, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ReportId, "ReportId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjExpenseReport]("PrjExpenseReport",
+		func(e *prj.PrjExpenseReport) { common.GenerateID(&e.ReportId) }).
+		Require(func(e *prj.PrjExpenseReport) string { return e.ReportId }, "ReportId").
+		Build()
 }

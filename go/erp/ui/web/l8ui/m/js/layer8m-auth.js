@@ -21,6 +21,12 @@ limitations under the License.
 
     let _onSessionExpired = null;
 
+    function sanitizeServerError(text) {
+        if (!text) return 'Unknown error';
+        const match = text.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\s+(.+)$/i);
+        return match ? match[1] : text;
+    }
+
     window.Layer8MAuth = {
         /**
          * Get bearer token from storage
@@ -121,7 +127,10 @@ limitations under the License.
         async get(url) {
             const response = await this.makeAuthenticatedRequest(url, { method: 'GET' });
             if (!response) return null;
-            if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(sanitizeServerError(errorText) || `Request failed: ${response.status}`);
+            }
             return response.json();
         },
 
@@ -134,7 +143,10 @@ limitations under the License.
                 body: JSON.stringify(data)
             });
             if (!response) return null;
-            if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(sanitizeServerError(errorText) || `Request failed: ${response.status}`);
+            }
             return response.json();
         },
 
@@ -147,7 +159,10 @@ limitations under the License.
                 body: JSON.stringify(data)
             });
             if (!response) return null;
-            if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(sanitizeServerError(errorText) || `Request failed: ${response.status}`);
+            }
             return response.json();
         },
 
@@ -161,7 +176,10 @@ limitations under the License.
             }
             const response = await this.makeAuthenticatedRequest(url, options);
             if (!response) return null;
-            if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(sanitizeServerError(errorText) || `Request failed: ${response.status}`);
+            }
             return response.json();
         },
 

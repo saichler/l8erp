@@ -19,58 +19,59 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     window.MobileMfgShopFloor = window.MobileMfgShopFloor || {};
     const render = MobileMfgShopFloor.render;
 
     MobileMfgShopFloor.columns = {
         MfgWorkCenter: [
-            { key: 'workCenterId', label: 'ID', sortKey: 'workCenterId' },
-            { key: 'code', label: 'Code', sortKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name' },
-            { key: 'workCenterType', label: 'Type', sortKey: 'workCenterType', render: (item) => render.workCenterType(item.workCenterType) },
-            { key: 'hourlyRate', label: 'Hourly Rate', sortKey: 'hourlyRate' },
-            { key: 'efficiencyPercent', label: 'Efficiency %', sortKey: 'efficiencyPercent' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => render.boolean(item.isActive) }
+            ...col.id('workCenterId'),
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
+            ...col.enum('workCenterType', 'Type', null, render.workCenterType),
+            ...col.col('hourlyRate', 'Hourly Rate'),
+            ...col.col('efficiencyPercent', 'Efficiency %'),
+            ...col.boolean('isActive', 'Active')
         ],
         MfgWorkCenterCap: [
-            { key: 'capacityId', label: 'ID', sortKey: 'capacityId' },
-            { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            { key: 'effectiveDate', label: 'Effective Date', sortKey: 'effectiveDate', render: (item) => render.date(item.effectiveDate) },
-            { key: 'availableHours', label: 'Available Hrs', sortKey: 'availableHours' },
-            { key: 'capacityUnits', label: 'Capacity Units', sortKey: 'capacityUnits' }
+            ...col.id('capacityId'),
+            ...col.col('workCenterId', 'Work Center'),
+            ...col.date('effectiveDate', 'Effective Date'),
+            ...col.col('availableHours', 'Available Hrs'),
+            ...col.col('capacityUnits', 'Capacity Units')
         ],
         MfgLaborEntry: [
-            { key: 'entryId', label: 'ID', sortKey: 'entryId' },
-            { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
-            { key: 'employeeId', label: 'Employee', sortKey: 'employeeId' },
-            { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            { key: 'startTime', label: 'Start Time', sortKey: 'startTime', render: (item) => render.date(item.startTime) },
-            { key: 'hoursWorked', label: 'Hours', sortKey: 'hoursWorked' },
-            { key: 'quantityCompleted', label: 'Qty Completed', sortKey: 'quantityCompleted' }
+            ...col.id('entryId'),
+            ...col.col('workOrderId', 'Work Order'),
+            ...col.col('employeeId', 'Employee'),
+            ...col.col('workCenterId', 'Work Center'),
+            ...col.date('startTime', 'Start Time'),
+            ...col.col('hoursWorked', 'Hours'),
+            ...col.col('quantityCompleted', 'Qty Completed')
         ],
         MfgMachineEntry: [
-            { key: 'entryId', label: 'ID', sortKey: 'entryId' },
-            { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
-            { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            { key: 'startTime', label: 'Start Time', sortKey: 'startTime', render: (item) => render.date(item.startTime) },
-            { key: 'machineHours', label: 'Machine Hrs', sortKey: 'machineHours' },
-            { key: 'quantityCompleted', label: 'Qty Completed', sortKey: 'quantityCompleted' }
+            ...col.id('entryId'),
+            ...col.col('workOrderId', 'Work Order'),
+            ...col.col('workCenterId', 'Work Center'),
+            ...col.date('startTime', 'Start Time'),
+            ...col.col('machineHours', 'Machine Hrs'),
+            ...col.col('quantityCompleted', 'Qty Completed')
         ],
         MfgShiftSchedule: [
-            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId' },
-            { key: 'name', label: 'Name', sortKey: 'name' },
-            { key: 'shiftType', label: 'Type', sortKey: 'shiftType', render: (item) => render.shiftType(item.shiftType) },
-            { key: 'startTime', label: 'Start Time', sortKey: 'startTime' },
-            { key: 'endTime', label: 'End Time', sortKey: 'endTime' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => render.boolean(item.isActive) }
+            ...col.id('scheduleId'),
+            ...col.col('name', 'Name'),
+            ...col.enum('shiftType', 'Type', null, render.shiftType),
+            ...col.col('startTime', 'Start Time'),
+            ...col.col('endTime', 'End Time'),
+            ...col.boolean('isActive', 'Active')
         ],
         MfgDowntimeEvent: [
-            { key: 'eventId', label: 'ID', sortKey: 'eventId' },
-            { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            { key: 'startTime', label: 'Start Time', sortKey: 'startTime', render: (item) => render.date(item.startTime) },
-            { key: 'endTime', label: 'End Time', sortKey: 'endTime', render: (item) => render.date(item.endTime) },
-            { key: 'durationMinutes', label: 'Duration (min)', sortKey: 'durationMinutes' },
-            { key: 'reasonCode', label: 'Reason Code', sortKey: 'reasonCode', render: (item) => render.downtimeReason(item.reasonCode) }
+            ...col.id('eventId'),
+            ...col.col('workCenterId', 'Work Center'),
+            ...col.date('startTime', 'Start Time'),
+            ...col.date('endTime', 'End Time'),
+            ...col.col('durationMinutes', 'Duration (min)'),
+            ...col.enum('reasonCode', 'Reason Code', null, render.downtimeReason)
         ]
     };
 

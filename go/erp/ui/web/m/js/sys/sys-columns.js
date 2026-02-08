@@ -19,6 +19,8 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
+
     window.MobileSysHealth = window.MobileSysHealth || {};
     window.MobileSysSecurity = window.MobileSysSecurity || {};
 
@@ -65,32 +67,32 @@ limitations under the License.
         };
     };
 
-    // Health columns
+    // Health columns - use custom() for columns with non-standard sortKey/filterKey
     MobileSysHealth.columns = {
         L8Health: [
-            { key: 'service', label: 'Service', primary: true, filterKey: 'alias', sortKey: 'alias' },
-            { key: 'cpuPercent', label: 'CPU %', secondary: true, filterKey: 'stats.cpuUsage', sortKey: 'stats.cpuUsage' },
-            { key: 'memory', label: 'Memory', filterKey: 'stats.memoryUsage', sortKey: 'stats.memoryUsage' },
-            { key: 'rx', label: 'RX', filterKey: 'stats.rxMsgCount', sortKey: 'stats.rxMsgCount' },
-            { key: 'tx', label: 'TX', filterKey: 'stats.txMsgCount', sortKey: 'stats.txMsgCount' },
-            { key: 'upTime', label: 'Up Time', filterKey: 'startTime', sortKey: 'startTime' },
-            { key: 'lastPulse', label: 'Last Pulse', filterKey: 'stats.lastMsgTime', sortKey: 'stats.lastMsgTime' }
+            ...col.custom('service', 'Service', null, { sortKey: 'alias', filterKey: 'alias' }),
+            ...col.custom('cpuPercent', 'CPU %', null, { sortKey: 'stats.cpuUsage', filterKey: 'stats.cpuUsage' }),
+            ...col.custom('memory', 'Memory', null, { sortKey: 'stats.memoryUsage', filterKey: 'stats.memoryUsage' }),
+            ...col.custom('rx', 'RX', null, { sortKey: 'stats.rxMsgCount', filterKey: 'stats.rxMsgCount' }),
+            ...col.custom('tx', 'TX', null, { sortKey: 'stats.txMsgCount', filterKey: 'stats.txMsgCount' }),
+            ...col.custom('upTime', 'Up Time', null, { sortKey: 'startTime', filterKey: 'startTime' }),
+            ...col.custom('lastPulse', 'Last Pulse', null, { sortKey: 'stats.lastMsgTime', filterKey: 'stats.lastMsgTime' })
         ]
     };
 
-    // Security columns - field names match desktop l8security-columns.js
+    // Security columns
     MobileSysSecurity.columns = {
         L8User: [
-            { key: 'userId', label: 'User ID', primary: true, sortKey: 'userId', filterKey: 'userId' },
-            { key: 'fullName', label: 'Full Name', secondary: true, sortKey: 'fullName', filterKey: 'fullName' }
+            ...col.col('userId', 'User ID'),
+            ...col.col('fullName', 'Full Name')
         ],
         L8Role: [
-            { key: 'roleId', label: 'Role ID', primary: true, sortKey: 'roleId', filterKey: 'roleId' },
-            { key: 'roleName', label: 'Role Name', secondary: true, sortKey: 'roleName', filterKey: 'roleName' }
+            ...col.col('roleId', 'Role ID'),
+            ...col.col('roleName', 'Role Name')
         ],
         L8Credentials: [
-            { key: 'id', label: 'ID', primary: true, sortKey: 'id', filterKey: 'id' },
-            { key: 'name', label: 'Name', secondary: true, sortKey: 'name', filterKey: 'name' }
+            ...col.col('id', 'ID'),
+            ...col.col('name', 'Name')
         ]
     };
 

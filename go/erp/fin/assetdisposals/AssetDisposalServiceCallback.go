@@ -21,17 +21,9 @@ import (
 )
 
 func newAssetDisposalServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("AssetDisposal",
-		func(e *fin.AssetDisposal) { common.GenerateID(&e.DisposalId) },
-		validate)
-}
-
-func validate(assetDisposal *fin.AssetDisposal, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(assetDisposal.DisposalId, "DisposalId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(assetDisposal.AssetId, "AssetId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.AssetDisposal]("AssetDisposal",
+		func(e *fin.AssetDisposal) { common.GenerateID(&e.DisposalId) }).
+		Require(func(e *fin.AssetDisposal) string { return e.DisposalId }, "DisposalId").
+		Require(func(e *fin.AssetDisposal) string { return e.AssetId }, "AssetId").
+		Build()
 }

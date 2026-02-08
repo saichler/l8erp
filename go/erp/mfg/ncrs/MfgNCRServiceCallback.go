@@ -21,17 +21,9 @@ import (
 )
 
 func newMfgNCRServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgNCR",
-		func(e *mfg.MfgNCR) { common.GenerateID(&e.NcrId) },
-		validate)
-}
-
-func validate(item *mfg.MfgNCR, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.NcrId, "NcrId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.Title, "Title"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgNCR]("MfgNCR",
+		func(e *mfg.MfgNCR) { common.GenerateID(&e.NcrId) }).
+		Require(func(e *mfg.MfgNCR) string { return e.NcrId }, "NcrId").
+		Require(func(e *mfg.MfgNCR) string { return e.Title }, "Title").
+		Build()
 }

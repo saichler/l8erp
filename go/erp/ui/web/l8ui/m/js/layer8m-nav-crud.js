@@ -140,7 +140,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                         const activeTable = getActiveTable();
                         if (activeTable) activeTable.refresh();
                     } catch (error) {
-                        Layer8MUtils.showError(`Failed to save ${serviceConfig.label.replace(/s$/, '').toLowerCase()}`);
+                        Layer8MUtils.showError(error.message || `Failed to save ${serviceConfig.label.replace(/s$/, '').toLowerCase()}`);
                     }
                 }
             });
@@ -166,7 +166,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     const activeTable = getActiveTable();
                     if (activeTable) activeTable.refresh();
                 } catch (error) {
-                    Layer8MUtils.showError(`Failed to delete ${serviceConfig.label.replace(/s$/, '').toLowerCase()}`);
+                    Layer8MUtils.showError(error.message || `Failed to delete ${serviceConfig.label.replace(/s$/, '').toLowerCase()}`);
                 }
             }
         },

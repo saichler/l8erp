@@ -21,20 +21,10 @@ import (
 )
 
 func newPriceListServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesPriceList",
-		func(e *sales.SalesPriceList) { common.GenerateID(&e.PriceListId) },
-		validate)
-}
-
-func validate(item *sales.SalesPriceList, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.PriceListId, "PriceListId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.Name, "Name"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.CurrencyId, "CurrencyId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesPriceList]("SalesPriceList",
+		func(e *sales.SalesPriceList) { common.GenerateID(&e.PriceListId) }).
+		Require(func(e *sales.SalesPriceList) string { return e.PriceListId }, "PriceListId").
+		Require(func(e *sales.SalesPriceList) string { return e.Name }, "Name").
+		Require(func(e *sales.SalesPriceList) string { return e.CurrencyId }, "CurrencyId").
+		Build()
 }

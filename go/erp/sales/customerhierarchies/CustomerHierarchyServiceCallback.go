@@ -21,17 +21,9 @@ import (
 )
 
 func newCustomerHierarchyServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesCustomerHierarchy",
-		func(e *sales.SalesCustomerHierarchy) { common.GenerateID(&e.HierarchyId) },
-		validate)
-}
-
-func validate(item *sales.SalesCustomerHierarchy, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.HierarchyId, "HierarchyId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.Name, "Name"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesCustomerHierarchy]("SalesCustomerHierarchy",
+		func(e *sales.SalesCustomerHierarchy) { common.GenerateID(&e.HierarchyId) }).
+		Require(func(e *sales.SalesCustomerHierarchy) string { return e.HierarchyId }, "HierarchyId").
+		Require(func(e *sales.SalesCustomerHierarchy) string { return e.Name }, "Name").
+		Build()
 }

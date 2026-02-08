@@ -21,14 +21,8 @@ import (
 )
 
 func newPrjAllocationServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjAllocation",
-		func(e *prj.PrjAllocation) { common.GenerateID(&e.AllocationId) },
-		validate)
-}
-
-func validate(item *prj.PrjAllocation, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.AllocationId, "AllocationId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjAllocation]("PrjAllocation",
+		func(e *prj.PrjAllocation) { common.GenerateID(&e.AllocationId) }).
+		Require(func(e *prj.PrjAllocation) string { return e.AllocationId }, "AllocationId").
+		Build()
 }

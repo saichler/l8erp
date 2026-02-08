@@ -5,62 +5,63 @@ Layer 8 Ecosystem - Apache 2.0
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileCrmMarketing.enums;
     const render = MobileCrmMarketing.render;
 
     MobileCrmMarketing.columns = {
         CrmCampaign: [
-            { key: 'campaignId', label: 'ID', sortKey: 'campaignId', filterKey: 'campaignId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'campaignType', label: 'Type', sortKey: 'campaignType', filterKey: 'campaignType', enumValues: enums.CAMPAIGN_TYPE_VALUES, render: (item) => render.campaignType(item.campaignType) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.CAMPAIGN_STATUS_VALUES, render: (item) => render.campaignStatus(item.status) },
-            { key: 'startDate', label: 'Start Date', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End Date', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
-            { key: 'budgetedCost', label: 'Budget', sortKey: 'budgetedCost', render: (item) => Layer8MRenderers.renderMoney(item.budgetedCost) }
+            ...col.id('campaignId'),
+            ...col.col('name', 'Name'),
+            ...col.status('campaignType', 'Type', enums.CAMPAIGN_TYPE_VALUES, render.campaignType),
+            ...col.status('status', 'Status', enums.CAMPAIGN_STATUS_VALUES, render.campaignStatus),
+            ...col.date('startDate', 'Start Date'),
+            ...col.date('endDate', 'End Date'),
+            ...col.money('budgetedCost', 'Budget')
         ],
 
         CrmCampaignMember: [
-            { key: 'memberId', label: 'ID', sortKey: 'memberId', filterKey: 'memberId' },
-            { key: 'campaignId', label: 'Campaign', sortKey: 'campaignId', filterKey: 'campaignId' },
-            { key: 'leadId', label: 'Lead', sortKey: 'leadId' },
-            { key: 'contactId', label: 'Contact', sortKey: 'contactId' },
-            { key: 'status', label: 'Status', sortKey: 'status', enumValues: enums.MEMBER_STATUS_VALUES, render: (item) => render.memberStatus(item.status) },
-            { key: 'respondedDate', label: 'Responded', sortKey: 'respondedDate', render: (item) => Layer8MRenderers.renderDate(item.respondedDate) }
+            ...col.id('memberId'),
+            ...col.col('campaignId', 'Campaign'),
+            ...col.col('leadId', 'Lead'),
+            ...col.col('contactId', 'Contact'),
+            ...col.status('status', 'Status', enums.MEMBER_STATUS_VALUES, render.memberStatus),
+            ...col.date('respondedDate', 'Responded')
         ],
 
         CrmEmailTemplate: [
-            { key: 'templateId', label: 'ID', sortKey: 'templateId', filterKey: 'templateId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'subject', label: 'Subject', sortKey: 'subject', filterKey: 'subject' },
-            { key: 'category', label: 'Category', sortKey: 'category' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('templateId'),
+            ...col.col('name', 'Name'),
+            ...col.col('subject', 'Subject'),
+            ...col.col('category', 'Category'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         CrmMarketingList: [
-            { key: 'listId', label: 'ID', sortKey: 'listId', filterKey: 'listId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'listType', label: 'Type', sortKey: 'listType' },
-            { key: 'memberCount', label: 'Members', sortKey: 'memberCount' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('listId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.col('listType', 'Type'),
+            ...col.col('memberCount', 'Members'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         CrmCampaignResponse: [
-            { key: 'responseId', label: 'ID', sortKey: 'responseId', filterKey: 'responseId' },
-            { key: 'campaignId', label: 'Campaign', sortKey: 'campaignId', filterKey: 'campaignId' },
-            { key: 'memberId', label: 'Member', sortKey: 'memberId' },
-            { key: 'responseType', label: 'Type', sortKey: 'responseType', enumValues: enums.RESPONSE_TYPE_VALUES, render: (item) => render.responseType(item.responseType) },
-            { key: 'responseDate', label: 'Date', sortKey: 'responseDate', render: (item) => Layer8MRenderers.renderDate(item.responseDate) }
+            ...col.id('responseId'),
+            ...col.col('campaignId', 'Campaign'),
+            ...col.col('memberId', 'Member'),
+            ...col.status('responseType', 'Type', enums.RESPONSE_TYPE_VALUES, render.responseType),
+            ...col.date('responseDate', 'Date')
         ],
 
         CrmCampaignROI: [
-            { key: 'roiId', label: 'ID', sortKey: 'roiId', filterKey: 'roiId' },
-            { key: 'campaignId', label: 'Campaign', sortKey: 'campaignId', filterKey: 'campaignId' },
-            { key: 'totalCost', label: 'Total Cost', sortKey: 'totalCost', render: (item) => Layer8MRenderers.renderMoney(item.totalCost) },
-            { key: 'totalRevenue', label: 'Revenue', sortKey: 'totalRevenue', render: (item) => Layer8MRenderers.renderMoney(item.totalRevenue) },
-            { key: 'roi', label: 'ROI %', sortKey: 'roi' },
-            { key: 'leadsGenerated', label: 'Leads', sortKey: 'leadsGenerated' },
-            { key: 'opportunitiesCreated', label: 'Opportunities', sortKey: 'opportunitiesCreated' }
+            ...col.id('roiId'),
+            ...col.col('campaignId', 'Campaign'),
+            ...col.money('totalCost', 'Total Cost'),
+            ...col.money('totalRevenue', 'Revenue'),
+            ...col.col('roi', 'ROI %'),
+            ...col.col('leadsGenerated', 'Leads'),
+            ...col.col('opportunitiesCreated', 'Opportunities')
         ]
     };
 

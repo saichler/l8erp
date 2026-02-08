@@ -21,14 +21,8 @@ import (
 )
 
 func newDocEmailCaptureServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("DocEmailCapture",
-		func(e *doc.DocEmailCapture) { common.GenerateID(&e.CaptureId) },
-		validateDocEmailCapture)
-}
-
-func validateDocEmailCapture(item *doc.DocEmailCapture, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CaptureId, "CaptureId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[doc.DocEmailCapture]("DocEmailCapture",
+		func(e *doc.DocEmailCapture) { common.GenerateID(&e.CaptureId) }).
+		Require(func(e *doc.DocEmailCapture) string { return e.CaptureId }, "CaptureId").
+		Build()
 }

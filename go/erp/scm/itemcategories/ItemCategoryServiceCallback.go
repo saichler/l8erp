@@ -21,14 +21,8 @@ import (
 )
 
 func newItemCategoryServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmItemCategory",
-		func(e *scm.ScmItemCategory) { common.GenerateID(&e.CategoryId) },
-		validate)
-}
-
-func validate(item *scm.ScmItemCategory, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CategoryId, "CategoryId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmItemCategory]("ScmItemCategory",
+		func(e *scm.ScmItemCategory) { common.GenerateID(&e.CategoryId) }).
+		Require(func(e *scm.ScmItemCategory) string { return e.CategoryId }, "CategoryId").
+		Build()
 }

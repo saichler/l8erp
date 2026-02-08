@@ -21,14 +21,8 @@ import (
 )
 
 func newBiKPIThresholdServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiKPIThreshold",
-		func(e *bi.BiKPIThreshold) { common.GenerateID(&e.ThresholdId) },
-		validate)
-}
-
-func validate(item *bi.BiKPIThreshold, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ThresholdId, "ThresholdId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiKPIThreshold]("BiKPIThreshold",
+		func(e *bi.BiKPIThreshold) { common.GenerateID(&e.ThresholdId) }).
+		Require(func(e *bi.BiKPIThreshold) string { return e.ThresholdId }, "ThresholdId").
+		Build()
 }

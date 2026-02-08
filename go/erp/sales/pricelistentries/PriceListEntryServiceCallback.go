@@ -21,17 +21,9 @@ import (
 )
 
 func newPriceListEntryServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesPriceListEntry",
-		func(e *sales.SalesPriceListEntry) { common.GenerateID(&e.EntryId) },
-		validate)
-}
-
-func validate(item *sales.SalesPriceListEntry, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.EntryId, "EntryId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.PriceListId, "PriceListId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesPriceListEntry]("SalesPriceListEntry",
+		func(e *sales.SalesPriceListEntry) { common.GenerateID(&e.EntryId) }).
+		Require(func(e *sales.SalesPriceListEntry) string { return e.EntryId }, "EntryId").
+		Require(func(e *sales.SalesPriceListEntry) string { return e.PriceListId }, "PriceListId").
+		Build()
 }

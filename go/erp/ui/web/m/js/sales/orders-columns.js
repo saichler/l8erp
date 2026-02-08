@@ -19,79 +19,80 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileSalesOrders.enums;
     const render = MobileSalesOrders.render;
 
     MobileSalesOrders.columns = {
         SalesQuotation: [
-            { key: 'quotationId', label: 'ID', sortKey: 'quotationId', filterKey: 'quotationId' },
-            { key: 'quotationNumber', label: 'Quote #', sortKey: 'quotationNumber', filterKey: 'quotationNumber' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'quotationDate', label: 'Date', sortKey: 'quotationDate', render: (item) => Layer8MRenderers.renderDate(item.quotationDate) },
-            { key: 'validUntil', label: 'Valid Until', sortKey: 'validUntil', render: (item) => Layer8MRenderers.renderDate(item.validUntil) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.QUOTATION_STATUS_VALUES, render: (item) => render.quotationStatus(item.status) },
-            { key: 'totalAmount', label: 'Total', sortKey: 'totalAmount', render: (item) => Layer8MRenderers.renderMoney(item.totalAmount) }
+            ...col.id('quotationId'),
+            ...col.col('quotationNumber', 'Quote #'),
+            ...col.col('customerId', 'Customer'),
+            ...col.date('quotationDate', 'Date'),
+            ...col.date('validUntil', 'Valid Until'),
+            ...col.status('status', 'Status', enums.QUOTATION_STATUS_VALUES, render.quotationStatus),
+            ...col.money('totalAmount', 'Total')
         ],
 
         SalesQuotationLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'quotationId', label: 'Quotation', sortKey: 'quotationId', filterKey: 'quotationId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            { key: 'unitPrice', label: 'Unit Price', sortKey: 'unitPrice', render: (item) => Layer8MRenderers.renderMoney(item.unitPrice) },
-            { key: 'lineTotal', label: 'Total', sortKey: 'lineTotal', render: (item) => Layer8MRenderers.renderMoney(item.lineTotal) }
+            ...col.id('lineId'),
+            ...col.col('quotationId', 'Quotation'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('quantity', 'Qty'),
+            ...col.money('unitPrice', 'Unit Price'),
+            ...col.money('lineTotal', 'Total')
         ],
 
         SalesOrder: [
-            { key: 'salesOrderId', label: 'ID', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
-            { key: 'orderNumber', label: 'Order #', sortKey: 'orderNumber', filterKey: 'orderNumber' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'orderDate', label: 'Order Date', sortKey: 'orderDate', render: (item) => Layer8MRenderers.renderDate(item.orderDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.ORDER_STATUS_VALUES, render: (item) => render.orderStatus(item.status) },
-            { key: 'totalAmount', label: 'Total', sortKey: 'totalAmount', render: (item) => Layer8MRenderers.renderMoney(item.totalAmount) }
+            ...col.id('salesOrderId'),
+            ...col.col('orderNumber', 'Order #'),
+            ...col.col('customerId', 'Customer'),
+            ...col.date('orderDate', 'Order Date'),
+            ...col.status('status', 'Status', enums.ORDER_STATUS_VALUES, render.orderStatus),
+            ...col.money('totalAmount', 'Total')
         ],
 
         SalesOrderLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            { key: 'unitPrice', label: 'Unit Price', sortKey: 'unitPrice', render: (item) => Layer8MRenderers.renderMoney(item.unitPrice) },
-            { key: 'lineTotal', label: 'Total', sortKey: 'lineTotal', render: (item) => Layer8MRenderers.renderMoney(item.lineTotal) }
+            ...col.id('lineId'),
+            ...col.col('salesOrderId', 'Order'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('quantity', 'Qty'),
+            ...col.money('unitPrice', 'Unit Price'),
+            ...col.money('lineTotal', 'Total')
         ],
 
         SalesOrderAllocation: [
-            { key: 'allocationId', label: 'ID', sortKey: 'allocationId', filterKey: 'allocationId' },
-            { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
-            { key: 'allocatedQuantity', label: 'Allocated', sortKey: 'allocatedQuantity' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.ALLOCATION_STATUS_VALUES, render: (item) => render.allocationStatus(item.status) }
+            ...col.id('allocationId'),
+            ...col.col('salesOrderId', 'Order'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('warehouseId', 'Warehouse'),
+            ...col.col('allocatedQuantity', 'Allocated'),
+            ...col.status('status', 'Status', enums.ALLOCATION_STATUS_VALUES, render.allocationStatus)
         ],
 
         SalesBackOrder: [
-            { key: 'backOrderId', label: 'ID', sortKey: 'backOrderId', filterKey: 'backOrderId' },
-            { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'backOrderQuantity', label: 'Qty', sortKey: 'backOrderQuantity' },
-            { key: 'expectedDate', label: 'Expected', sortKey: 'expectedDate', render: (item) => Layer8MRenderers.renderDate(item.expectedDate) }
+            ...col.id('backOrderId'),
+            ...col.col('salesOrderId', 'Order'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('backOrderQuantity', 'Qty'),
+            ...col.date('expectedDate', 'Expected')
         ],
 
         SalesReturnOrder: [
-            { key: 'returnOrderId', label: 'ID', sortKey: 'returnOrderId', filterKey: 'returnOrderId' },
-            { key: 'returnNumber', label: 'Return #', sortKey: 'returnNumber', filterKey: 'returnNumber' },
-            { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'returnDate', label: 'Date', sortKey: 'returnDate', render: (item) => Layer8MRenderers.renderDate(item.returnDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.RETURN_STATUS_VALUES, render: (item) => render.returnStatus(item.status) }
+            ...col.id('returnOrderId'),
+            ...col.col('returnNumber', 'Return #'),
+            ...col.col('salesOrderId', 'Order'),
+            ...col.col('customerId', 'Customer'),
+            ...col.date('returnDate', 'Date'),
+            ...col.status('status', 'Status', enums.RETURN_STATUS_VALUES, render.returnStatus)
         ],
 
         SalesReturnOrderLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'returnOrderId', label: 'Return', sortKey: 'returnOrderId', filterKey: 'returnOrderId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            { key: 'description', label: 'Description', sortKey: 'description' }
+            ...col.id('lineId'),
+            ...col.col('returnOrderId', 'Return'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('quantity', 'Qty'),
+            ...col.col('description', 'Description')
         ]
     };
 

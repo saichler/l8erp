@@ -21,14 +21,8 @@ import (
 )
 
 func newEcomShippingMethodServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("EcomShippingMethod",
-		func(e *ecom.EcomShippingMethod) { common.GenerateID(&e.MethodId) },
-		validateEcomShippingMethod)
-}
-
-func validateEcomShippingMethod(item *ecom.EcomShippingMethod, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.MethodId, "MethodId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[ecom.EcomShippingMethod]("EcomShippingMethod",
+		func(e *ecom.EcomShippingMethod) { common.GenerateID(&e.MethodId) }).
+		Require(func(e *ecom.EcomShippingMethod) string { return e.MethodId }, "MethodId").
+		Build()
 }

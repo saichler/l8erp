@@ -21,20 +21,10 @@ import (
 )
 
 func newPaymentApplicationServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PaymentApplication",
-		func(e *fin.PaymentApplication) { common.GenerateID(&e.ApplicationId) },
-		validate)
-}
-
-func validate(paymentApplication *fin.PaymentApplication, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(paymentApplication.ApplicationId, "ApplicationId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(paymentApplication.PaymentId, "PaymentId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(paymentApplication.InvoiceId, "InvoiceId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.PaymentApplication]("PaymentApplication",
+		func(e *fin.PaymentApplication) { common.GenerateID(&e.ApplicationId) }).
+		Require(func(e *fin.PaymentApplication) string { return e.ApplicationId }, "ApplicationId").
+		Require(func(e *fin.PaymentApplication) string { return e.PaymentId }, "PaymentId").
+		Require(func(e *fin.PaymentApplication) string { return e.InvoiceId }, "InvoiceId").
+		Build()
 }

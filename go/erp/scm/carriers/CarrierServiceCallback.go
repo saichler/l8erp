@@ -21,14 +21,8 @@ import (
 )
 
 func newCarrierServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmCarrier",
-		func(e *scm.ScmCarrier) { common.GenerateID(&e.CarrierId) },
-		validate)
-}
-
-func validate(item *scm.ScmCarrier, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CarrierId, "CarrierId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmCarrier]("ScmCarrier",
+		func(e *scm.ScmCarrier) { common.GenerateID(&e.CarrierId) }).
+		Require(func(e *scm.ScmCarrier) string { return e.CarrierId }, "CarrierId").
+		Build()
 }

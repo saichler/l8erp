@@ -20,14 +20,8 @@ import (
 )
 
 func newSysModuleConfigServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SysModuleConfig",
-		func(e *sys.SysModuleConfig) { common.GenerateID(&e.ConfigId) },
-		validate)
-}
-
-func validate(item *sys.SysModuleConfig, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ConfigId, "ConfigId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sys.SysModuleConfig]("SysModuleConfig",
+		func(e *sys.SysModuleConfig) { common.GenerateID(&e.ConfigId) }).
+		Require(func(e *sys.SysModuleConfig) string { return e.ConfigId }, "ConfigId").
+		Build()
 }

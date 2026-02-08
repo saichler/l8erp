@@ -21,14 +21,8 @@ import (
 )
 
 func newDeliveryProofServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmDeliveryProof",
-		func(e *scm.ScmDeliveryProof) { common.GenerateID(&e.ProofId) },
-		validate)
-}
-
-func validate(item *scm.ScmDeliveryProof, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ProofId, "ProofId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmDeliveryProof]("ScmDeliveryProof",
+		func(e *scm.ScmDeliveryProof) { common.GenerateID(&e.ProofId) }).
+		Require(func(e *scm.ScmDeliveryProof) string { return e.ProofId }, "ProofId").
+		Build()
 }

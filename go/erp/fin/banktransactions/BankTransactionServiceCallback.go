@@ -21,17 +21,9 @@ import (
 )
 
 func newBankTransactionServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BankTransaction",
-		func(e *fin.BankTransaction) { common.GenerateID(&e.TransactionId) },
-		validate)
-}
-
-func validate(bankTransaction *fin.BankTransaction, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(bankTransaction.TransactionId, "TransactionId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(bankTransaction.BankAccountId, "BankAccountId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.BankTransaction]("BankTransaction",
+		func(e *fin.BankTransaction) { common.GenerateID(&e.TransactionId) }).
+		Require(func(e *fin.BankTransaction) string { return e.TransactionId }, "TransactionId").
+		Require(func(e *fin.BankTransaction) string { return e.BankAccountId }, "BankAccountId").
+		Build()
 }

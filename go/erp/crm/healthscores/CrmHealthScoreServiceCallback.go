@@ -21,14 +21,8 @@ import (
 )
 
 func newCrmHealthScoreServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmHealthScore",
-		func(e *crm.CrmHealthScore) { common.GenerateID(&e.ScoreId) },
-		validate)
-}
-
-func validate(item *crm.CrmHealthScore, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ScoreId, "ScoreId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmHealthScore]("CrmHealthScore",
+		func(e *crm.CrmHealthScore) { common.GenerateID(&e.ScoreId) }).
+		Require(func(e *crm.CrmHealthScore) string { return e.ScoreId }, "ScoreId").
+		Build()
 }

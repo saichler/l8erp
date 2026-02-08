@@ -21,17 +21,9 @@ import (
 )
 
 func newMfgCostVarianceServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgCostVariance",
-		func(e *mfg.MfgCostVariance) { common.GenerateID(&e.VarianceId) },
-		validate)
-}
-
-func validate(item *mfg.MfgCostVariance, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.VarianceId, "VarianceId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.WorkOrderId, "WorkOrderId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgCostVariance]("MfgCostVariance",
+		func(e *mfg.MfgCostVariance) { common.GenerateID(&e.VarianceId) }).
+		Require(func(e *mfg.MfgCostVariance) string { return e.VarianceId }, "VarianceId").
+		Require(func(e *mfg.MfgCostVariance) string { return e.WorkOrderId }, "WorkOrderId").
+		Build()
 }

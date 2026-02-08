@@ -21,14 +21,8 @@ import (
 )
 
 func newReturnAuthorizationServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmReturnAuthorization",
-		func(e *scm.ScmReturnAuthorization) { common.GenerateID(&e.RmaId) },
-		validate)
-}
-
-func validate(item *scm.ScmReturnAuthorization, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RmaId, "RmaId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmReturnAuthorization]("ScmReturnAuthorization",
+		func(e *scm.ScmReturnAuthorization) { common.GenerateID(&e.RmaId) }).
+		Require(func(e *scm.ScmReturnAuthorization) string { return e.RmaId }, "RmaId").
+		Build()
 }

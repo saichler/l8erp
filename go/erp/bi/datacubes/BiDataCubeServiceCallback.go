@@ -21,14 +21,8 @@ import (
 )
 
 func newBiDataCubeServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiDataCube",
-		func(e *bi.BiDataCube) { common.GenerateID(&e.CubeId) },
-		validate)
-}
-
-func validate(item *bi.BiDataCube, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CubeId, "CubeId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiDataCube]("BiDataCube",
+		func(e *bi.BiDataCube) { common.GenerateID(&e.CubeId) }).
+		Require(func(e *bi.BiDataCube) string { return e.CubeId }, "CubeId").
+		Build()
 }

@@ -21,17 +21,9 @@ import (
 )
 
 func newCrmEscalationServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmEscalation",
-		func(e *crm.CrmEscalation) { common.GenerateID(&e.EscalationId) },
-		validate)
-}
-
-func validate(item *crm.CrmEscalation, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.EscalationId, "EscalationId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.Name, "Name"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmEscalation]("CrmEscalation",
+		func(e *crm.CrmEscalation) { common.GenerateID(&e.EscalationId) }).
+		Require(func(e *crm.CrmEscalation) string { return e.EscalationId }, "EscalationId").
+		Require(func(e *crm.CrmEscalation) string { return e.Name }, "Name").
+		Build()
 }

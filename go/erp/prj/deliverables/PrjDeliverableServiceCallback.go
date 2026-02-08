@@ -21,14 +21,8 @@ import (
 )
 
 func newPrjDeliverableServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjDeliverable",
-		func(e *prj.PrjDeliverable) { common.GenerateID(&e.DeliverableId) },
-		validate)
-}
-
-func validate(item *prj.PrjDeliverable, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.DeliverableId, "DeliverableId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjDeliverable]("PrjDeliverable",
+		func(e *prj.PrjDeliverable) { common.GenerateID(&e.DeliverableId) }).
+		Require(func(e *prj.PrjDeliverable) string { return e.DeliverableId }, "DeliverableId").
+		Build()
 }

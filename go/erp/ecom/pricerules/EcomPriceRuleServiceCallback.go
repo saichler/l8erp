@@ -21,14 +21,8 @@ import (
 )
 
 func newEcomPriceRuleServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("EcomPriceRule",
-		func(e *ecom.EcomPriceRule) { common.GenerateID(&e.RuleId) },
-		validateEcomPriceRule)
-}
-
-func validateEcomPriceRule(item *ecom.EcomPriceRule, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RuleId, "RuleId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[ecom.EcomPriceRule]("EcomPriceRule",
+		func(e *ecom.EcomPriceRule) { common.GenerateID(&e.RuleId) }).
+		Require(func(e *ecom.EcomPriceRule) string { return e.RuleId }, "RuleId").
+		Build()
 }

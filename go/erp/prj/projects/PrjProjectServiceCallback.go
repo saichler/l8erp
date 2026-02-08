@@ -21,14 +21,8 @@ import (
 )
 
 func newPrjProjectServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjProject",
-		func(e *prj.PrjProject) { common.GenerateID(&e.ProjectId) },
-		validate)
-}
-
-func validate(item *prj.PrjProject, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ProjectId, "ProjectId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjProject]("PrjProject",
+		func(e *prj.PrjProject) { common.GenerateID(&e.ProjectId) }).
+		Require(func(e *prj.PrjProject) string { return e.ProjectId }, "ProjectId").
+		Build()
 }

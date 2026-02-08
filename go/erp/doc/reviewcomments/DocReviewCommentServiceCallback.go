@@ -21,14 +21,8 @@ import (
 )
 
 func newDocReviewCommentServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("DocReviewComment",
-		func(e *doc.DocReviewComment) { common.GenerateID(&e.CommentId) },
-		validateDocReviewComment)
-}
-
-func validateDocReviewComment(item *doc.DocReviewComment, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.CommentId, "CommentId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[doc.DocReviewComment]("DocReviewComment",
+		func(e *doc.DocReviewComment) { common.GenerateID(&e.CommentId) }).
+		Require(func(e *doc.DocReviewComment) string { return e.CommentId }, "CommentId").
+		Build()
 }

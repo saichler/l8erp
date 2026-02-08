@@ -2,102 +2,25 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
+/* ============================================ */
+/* DOCUMENTS STYLES - Entry Point */
+/* ============================================ */
+/*
+ * The Documents module reuses the shared layout classes
+ * and layer8d-theme.css variables for status colors.
+ * Status rendering uses generic layer8d-status-* classes.
+ *
+ * Any Documents-specific style overrides can be added here.
+ */
 
-/* Documents Module Styles */
-/* Uses shared HCM layout classes - minimal overrides needed */
-
-/* Document Status Colors */
-.doc-status-draft { background-color: var(--layer8d-gray-bg); color: var(--layer8d-gray-text); }
-.doc-status-under-review { background-color: var(--layer8d-yellow-bg); color: var(--layer8d-yellow-text); }
-.doc-status-approved { background-color: var(--layer8d-green-light-bg); color: var(--layer8d-green-light-text); }
-.doc-status-published { background-color: var(--layer8d-green-bg); color: var(--layer8d-green-text); }
-.doc-status-archived { background-color: var(--layer8d-gray-light-bg); color: var(--layer8d-gray-light-text); }
-.doc-status-deleted { background-color: var(--layer8d-red-bg); color: var(--layer8d-red-text); }
-
-/* Document Type Colors */
-.doc-type-contract { background-color: var(--layer8d-blue-bg); color: var(--layer8d-blue-text); }
-.doc-type-invoice { background-color: var(--layer8d-green-bg); color: var(--layer8d-green-text); }
-.doc-type-report { background-color: var(--layer8d-indigo-bg); color: var(--layer8d-indigo-text); }
-.doc-type-policy { background-color: var(--layer8d-yellow-bg); color: var(--layer8d-yellow-text); }
-.doc-type-procedure { background-color: #cffafe; color: #0e7490; }
-.doc-type-form { background-color: #f3e8ff; color: #7c3aed; }
-
-/* File Format Colors */
-.doc-format-pdf { background-color: var(--layer8d-red-bg); color: var(--layer8d-red-text); }
-.doc-format-word { background-color: var(--layer8d-blue-bg); color: var(--layer8d-blue-text); }
-.doc-format-excel { background-color: var(--layer8d-green-light-bg); color: var(--layer8d-green-light-text); }
-.doc-format-powerpoint { background-color: var(--layer8d-orange-bg); color: var(--layer8d-orange-text); }
-.doc-format-image { background-color: #f3e8ff; color: #7c3aed; }
-
-/* Access Level Colors */
-.doc-access-public { background-color: var(--layer8d-green-light-bg); color: var(--layer8d-green-light-text); }
-.doc-access-internal { background-color: var(--layer8d-blue-bg); color: var(--layer8d-blue-text); }
-.doc-access-confidential { background-color: var(--layer8d-yellow-bg); color: var(--layer8d-yellow-text); }
-.doc-access-restricted { background-color: var(--layer8d-red-bg); color: var(--layer8d-red-text); }
-
-/* Checkout Status Colors */
-.doc-checkout-checked-out { background-color: var(--layer8d-yellow-bg); color: var(--layer8d-yellow-text); }
-.doc-checkout-checked-in { background-color: var(--layer8d-green-light-bg); color: var(--layer8d-green-light-text); }
-.doc-checkout-cancelled { background-color: var(--layer8d-gray-bg); color: var(--layer8d-gray-text); }
-
-/* Workflow Status Colors */
-.doc-workflow-draft { background-color: var(--layer8d-gray-bg); color: var(--layer8d-gray-text); }
-.doc-workflow-active { background-color: var(--layer8d-blue-bg); color: var(--layer8d-blue-text); }
-.doc-workflow-completed { background-color: var(--layer8d-green-light-bg); color: var(--layer8d-green-light-text); }
-.doc-workflow-cancelled { background-color: var(--layer8d-gray-light-bg); color: var(--layer8d-gray-light-text); }
-.doc-workflow-rejected { background-color: var(--layer8d-red-bg); color: var(--layer8d-red-text); }
-
-/* Step Status Colors */
-.doc-step-pending { background-color: var(--layer8d-gray-bg); color: var(--layer8d-gray-text); }
-.doc-step-in-progress { background-color: var(--layer8d-blue-bg); color: var(--layer8d-blue-text); }
-.doc-step-approved { background-color: var(--layer8d-green-light-bg); color: var(--layer8d-green-light-text); }
-.doc-step-rejected { background-color: var(--layer8d-red-bg); color: var(--layer8d-red-text); }
-.doc-step-skipped { background-color: var(--layer8d-gray-light-bg); color: var(--layer8d-gray-light-text); }
-
-/* Signature Status Colors */
-.doc-signature-pending { background-color: var(--layer8d-gray-bg); color: var(--layer8d-gray-text); }
-.doc-signature-signed { background-color: var(--layer8d-green-light-bg); color: var(--layer8d-green-light-text); }
-.doc-signature-declined { background-color: var(--layer8d-red-bg); color: var(--layer8d-red-text); }
-.doc-signature-expired { background-color: var(--layer8d-orange-bg); color: var(--layer8d-orange-text); }
-
-/* Signature Type Colors */
-.doc-signature-electronic { background-color: var(--layer8d-blue-bg); color: var(--layer8d-blue-text); }
-.doc-signature-digital { background-color: var(--layer8d-green-bg); color: var(--layer8d-green-text); }
-.doc-signature-handwritten { background-color: var(--layer8d-yellow-bg); color: var(--layer8d-yellow-text); }
-
-/* Scan Status Colors */
-.doc-scan-pending { background-color: var(--layer8d-gray-bg); color: var(--layer8d-gray-text); }
-.doc-scan-processing { background-color: var(--layer8d-blue-bg); color: var(--layer8d-blue-text); }
-.doc-scan-completed { background-color: var(--layer8d-green-light-bg); color: var(--layer8d-green-light-text); }
-.doc-scan-failed { background-color: var(--layer8d-red-bg); color: var(--layer8d-red-text); }
-
-/* Email Capture Status Colors */
-.doc-email-received { background-color: var(--layer8d-blue-bg); color: var(--layer8d-blue-text); }
-.doc-email-processed { background-color: var(--layer8d-yellow-bg); color: var(--layer8d-yellow-text); }
-.doc-email-filed { background-color: var(--layer8d-green-light-bg); color: var(--layer8d-green-light-text); }
-.doc-email-failed { background-color: var(--layer8d-red-bg); color: var(--layer8d-red-text); }
-
-/* Legal Hold Status Colors */
-.doc-hold-active { background-color: var(--layer8d-red-bg); color: var(--layer8d-red-text); }
-.doc-hold-released { background-color: var(--layer8d-green-light-bg); color: var(--layer8d-green-light-text); }
-.doc-hold-expired { background-color: var(--layer8d-gray-light-bg); color: var(--layer8d-gray-light-text); }
-
-/* Archive Status Colors */
-.doc-archive-pending { background-color: var(--layer8d-gray-bg); color: var(--layer8d-gray-text); }
-.doc-archive-in-progress { background-color: var(--layer8d-blue-bg); color: var(--layer8d-blue-text); }
-.doc-archive-completed { background-color: var(--layer8d-green-light-bg); color: var(--layer8d-green-light-text); }
-.doc-archive-failed { background-color: var(--layer8d-red-bg); color: var(--layer8d-red-text); }
-
-/* Retention Action Colors */
-.doc-retention-archive { background-color: var(--layer8d-blue-bg); color: var(--layer8d-blue-text); }
-.doc-retention-delete { background-color: var(--layer8d-red-bg); color: var(--layer8d-red-text); }
-.doc-retention-review { background-color: var(--layer8d-yellow-bg); color: var(--layer8d-yellow-text); }
-
-/* Access Action Colors */
-.doc-action-view { background-color: var(--layer8d-blue-bg); color: var(--layer8d-blue-text); }
-.doc-action-download { background-color: var(--layer8d-green-bg); color: var(--layer8d-green-text); }
-.doc-action-edit { background-color: var(--layer8d-yellow-bg); color: var(--layer8d-yellow-text); }
-.doc-action-delete { background-color: var(--layer8d-red-bg); color: var(--layer8d-red-text); }
-.doc-action-share { background-color: var(--layer8d-indigo-bg); color: var(--layer8d-indigo-text); }
-.doc-action-print { background-color: #f3e8ff; color: #7c3aed; }
+/* Any additional Documents-specific styles can be added here */

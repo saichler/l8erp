@@ -21,17 +21,9 @@ import (
 )
 
 func newMfgLaborEntryServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgLaborEntry",
-		func(e *mfg.MfgLaborEntry) { common.GenerateID(&e.EntryId) },
-		validate)
-}
-
-func validate(item *mfg.MfgLaborEntry, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.EntryId, "EntryId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.WorkOrderId, "WorkOrderId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgLaborEntry]("MfgLaborEntry",
+		func(e *mfg.MfgLaborEntry) { common.GenerateID(&e.EntryId) }).
+		Require(func(e *mfg.MfgLaborEntry) string { return e.EntryId }, "EntryId").
+		Require(func(e *mfg.MfgLaborEntry) string { return e.WorkOrderId }, "WorkOrderId").
+		Build()
 }

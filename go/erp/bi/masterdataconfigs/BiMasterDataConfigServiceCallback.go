@@ -21,14 +21,8 @@ import (
 )
 
 func newBiMasterDataConfigServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiMasterDataConfig",
-		func(e *bi.BiMasterDataConfig) { common.GenerateID(&e.ConfigId) },
-		validate)
-}
-
-func validate(item *bi.BiMasterDataConfig, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ConfigId, "ConfigId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiMasterDataConfig]("BiMasterDataConfig",
+		func(e *bi.BiMasterDataConfig) { common.GenerateID(&e.ConfigId) }).
+		Require(func(e *bi.BiMasterDataConfig) string { return e.ConfigId }, "ConfigId").
+		Build()
 }

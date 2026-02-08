@@ -21,14 +21,8 @@ import (
 )
 
 func newPrjPortfolioViewServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjPortfolioView",
-		func(e *prj.PrjPortfolioView) { common.GenerateID(&e.ViewId) },
-		validate)
-}
-
-func validate(item *prj.PrjPortfolioView, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ViewId, "ViewId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjPortfolioView]("PrjPortfolioView",
+		func(e *prj.PrjPortfolioView) { common.GenerateID(&e.ViewId) }).
+		Require(func(e *prj.PrjPortfolioView) string { return e.ViewId }, "ViewId").
+		Build()
 }

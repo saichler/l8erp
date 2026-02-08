@@ -19,76 +19,77 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileGeneralLedger.enums;
     const render = MobileGeneralLedger.render;
 
     MobileGeneralLedger.columns = {
         Account: [
-            { key: 'accountId', label: 'ID', sortKey: 'accountId', filterKey: 'accountId' },
-            { key: 'accountNumber', label: 'Account #', sortKey: 'accountNumber', filterKey: 'accountNumber' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'accountType', label: 'Type', sortKey: 'accountType', filterKey: 'accountType', enumValues: enums.ACCOUNT_TYPE_VALUES, render: (item) => render.accountType(item.accountType) },
-            { key: 'normalBalance', label: 'Normal Balance', sortKey: 'normalBalance', render: (item) => render.balanceType(item.normalBalance) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
+            ...col.id('accountId'),
+            ...col.col('accountNumber', 'Account #'),
+            ...col.col('name', 'Name'),
+            ...col.status('accountType', 'Type', enums.ACCOUNT_TYPE_VALUES, render.accountType),
+            ...col.enum('normalBalance', 'Normal Balance', null, render.balanceType),
+            ...col.boolean('isActive', 'Active')
         ],
 
         JournalEntry: [
-            { key: 'journalEntryId', label: 'ID', sortKey: 'journalEntryId', filterKey: 'journalEntryId' },
-            { key: 'entryNumber', label: 'Entry #', sortKey: 'entryNumber', filterKey: 'entryNumber' },
-            { key: 'entryDate', label: 'Date', sortKey: 'entryDate', render: (item) => Layer8MRenderers.renderDate(item.entryDate) },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.JOURNAL_ENTRY_STATUS_VALUES, render: (item) => render.journalEntryStatus(item.status) },
-            { key: 'totalAmount', label: 'Total Amount', sortKey: 'totalAmount', render: (item) => Layer8MRenderers.renderMoney(item.totalAmount) }
+            ...col.id('journalEntryId'),
+            ...col.col('entryNumber', 'Entry #'),
+            ...col.date('entryDate', 'Date'),
+            ...col.col('description', 'Description'),
+            ...col.status('status', 'Status', enums.JOURNAL_ENTRY_STATUS_VALUES, render.journalEntryStatus),
+            ...col.money('totalAmount', 'Total Amount')
         ],
 
         JournalEntryLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'journalEntryId', label: 'Entry ID', sortKey: 'journalEntryId', filterKey: 'journalEntryId' },
-            { key: 'accountId', label: 'Account', sortKey: 'accountId', filterKey: 'accountId' },
-            { key: 'debitAmount', label: 'Debit', sortKey: 'debitAmount', render: (item) => Layer8MRenderers.renderMoney(item.debitAmount) },
-            { key: 'creditAmount', label: 'Credit', sortKey: 'creditAmount', render: (item) => Layer8MRenderers.renderMoney(item.creditAmount) },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' }
+            ...col.id('lineId'),
+            ...col.col('journalEntryId', 'Entry ID'),
+            ...col.col('accountId', 'Account'),
+            ...col.money('debitAmount', 'Debit'),
+            ...col.money('creditAmount', 'Credit'),
+            ...col.col('description', 'Description')
         ],
 
         FiscalYear: [
-            { key: 'fiscalYearId', label: 'ID', sortKey: 'fiscalYearId', filterKey: 'fiscalYearId' },
-            { key: 'yearName', label: 'Year', sortKey: 'yearName', filterKey: 'yearName' },
-            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
-            { key: 'isClosed', label: 'Closed', sortKey: 'isClosed', render: (item) => Layer8MRenderers.renderBoolean(item.isClosed) }
+            ...col.id('fiscalYearId'),
+            ...col.col('yearName', 'Year'),
+            ...col.date('startDate', 'Start'),
+            ...col.date('endDate', 'End'),
+            ...col.boolean('isClosed', 'Closed')
         ],
 
         FiscalPeriod: [
-            { key: 'fiscalPeriodId', label: 'ID', sortKey: 'fiscalPeriodId', filterKey: 'fiscalPeriodId' },
-            { key: 'periodName', label: 'Period', sortKey: 'periodName', filterKey: 'periodName' },
-            { key: 'fiscalYearId', label: 'Year', sortKey: 'fiscalYearId', filterKey: 'fiscalYearId' },
-            { key: 'startDate', label: 'Start', sortKey: 'startDate', render: (item) => Layer8MRenderers.renderDate(item.startDate) },
-            { key: 'endDate', label: 'End', sortKey: 'endDate', render: (item) => Layer8MRenderers.renderDate(item.endDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.FISCAL_PERIOD_STATUS_VALUES, render: (item) => render.fiscalPeriodStatus(item.status) }
+            ...col.id('fiscalPeriodId'),
+            ...col.col('periodName', 'Period'),
+            ...col.col('fiscalYearId', 'Year'),
+            ...col.date('startDate', 'Start'),
+            ...col.date('endDate', 'End'),
+            ...col.status('status', 'Status', enums.FISCAL_PERIOD_STATUS_VALUES, render.fiscalPeriodStatus)
         ],
 
         Currency: [
-            { key: 'currencyId', label: 'ID', sortKey: 'currencyId', filterKey: 'currencyId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'symbol', label: 'Symbol', sortKey: 'symbol' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
+            ...col.id('currencyId'),
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
+            ...col.col('symbol', 'Symbol'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         ExchangeRate: [
-            { key: 'exchangeRateId', label: 'ID', sortKey: 'exchangeRateId', filterKey: 'exchangeRateId' },
-            { key: 'fromCurrencyId', label: 'From', sortKey: 'fromCurrencyId', filterKey: 'fromCurrencyId' },
-            { key: 'toCurrencyId', label: 'To', sortKey: 'toCurrencyId', filterKey: 'toCurrencyId' },
-            { key: 'rate', label: 'Rate', sortKey: 'rate' },
-            { key: 'effectiveDate', label: 'Effective', sortKey: 'effectiveDate', render: (item) => Layer8MRenderers.renderDate(item.effectiveDate) }
+            ...col.id('exchangeRateId'),
+            ...col.col('fromCurrencyId', 'From'),
+            ...col.col('toCurrencyId', 'To'),
+            ...col.col('rate', 'Rate'),
+            ...col.date('effectiveDate', 'Effective')
         ],
 
         AccountBalance: [
-            { key: 'balanceId', label: 'ID', sortKey: 'balanceId', filterKey: 'balanceId' },
-            { key: 'accountId', label: 'Account', sortKey: 'accountId', filterKey: 'accountId' },
-            { key: 'fiscalPeriodId', label: 'Period', sortKey: 'fiscalPeriodId', filterKey: 'fiscalPeriodId' },
-            { key: 'periodDebit', label: 'Period Debit', sortKey: 'periodDebit', render: (item) => Layer8MRenderers.renderMoney(item.periodDebit) },
-            { key: 'periodCredit', label: 'Period Credit', sortKey: 'periodCredit', render: (item) => Layer8MRenderers.renderMoney(item.periodCredit) }
+            ...col.id('balanceId'),
+            ...col.col('accountId', 'Account'),
+            ...col.col('fiscalPeriodId', 'Period'),
+            ...col.money('periodDebit', 'Period Debit'),
+            ...col.money('periodCredit', 'Period Credit')
         ]
     };
 

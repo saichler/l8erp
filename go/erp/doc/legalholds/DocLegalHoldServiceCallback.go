@@ -21,14 +21,8 @@ import (
 )
 
 func newDocLegalHoldServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("DocLegalHold",
-		func(e *doc.DocLegalHold) { common.GenerateID(&e.HoldId) },
-		validateDocLegalHold)
-}
-
-func validateDocLegalHold(item *doc.DocLegalHold, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.HoldId, "HoldId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[doc.DocLegalHold]("DocLegalHold",
+		func(e *doc.DocLegalHold) { common.GenerateID(&e.HoldId) }).
+		Require(func(e *doc.DocLegalHold) string { return e.HoldId }, "HoldId").
+		Build()
 }

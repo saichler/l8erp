@@ -19,76 +19,77 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileAccountsPayable.enums;
     const render = MobileAccountsPayable.render;
 
     MobileAccountsPayable.columns = {
         Vendor: [
-            { key: 'vendorId', label: 'ID', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'vendorNumber', label: 'Vendor #', sortKey: 'vendorNumber', filterKey: 'vendorNumber' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.VENDOR_STATUS_VALUES, render: (item) => render.vendorStatus(item.status) },
-            { key: 'paymentTermDays', label: 'Payment Terms', sortKey: 'paymentTermDays', filterKey: 'paymentTermDays' }
+            ...col.id('vendorId'),
+            ...col.col('vendorNumber', 'Vendor #'),
+            ...col.col('name', 'Name'),
+            ...col.status('status', 'Status', enums.VENDOR_STATUS_VALUES, render.vendorStatus),
+            ...col.col('paymentTermDays', 'Payment Terms')
         ],
 
         VendorContact: [
-            { key: 'contactId', label: 'ID', sortKey: 'contactId', filterKey: 'contactId' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'firstName', label: 'First Name', sortKey: 'firstName', filterKey: 'firstName' },
-            { key: 'lastName', label: 'Last Name', sortKey: 'lastName', filterKey: 'lastName' },
-            { key: 'email', label: 'Email', sortKey: 'email', filterKey: 'email' },
-            { key: 'phone', label: 'Phone', sortKey: 'phone', filterKey: 'phone' },
-            { key: 'isPrimary', label: 'Primary', sortKey: 'isPrimary', render: (item) => Layer8MRenderers.renderBoolean(item.isPrimary) }
+            ...col.id('contactId'),
+            ...col.col('vendorId', 'Vendor'),
+            ...col.col('firstName', 'First Name'),
+            ...col.col('lastName', 'Last Name'),
+            ...col.col('email', 'Email'),
+            ...col.col('phone', 'Phone'),
+            ...col.boolean('isPrimary', 'Primary')
         ],
 
         PurchaseInvoice: [
-            { key: 'invoiceId', label: 'ID', sortKey: 'invoiceId', filterKey: 'invoiceId' },
-            { key: 'invoiceNumber', label: 'Invoice #', sortKey: 'invoiceNumber', filterKey: 'invoiceNumber' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'invoiceDate', label: 'Invoice Date', sortKey: 'invoiceDate', render: (item) => Layer8MRenderers.renderDate(item.invoiceDate) },
-            { key: 'dueDate', label: 'Due Date', sortKey: 'dueDate', render: (item) => Layer8MRenderers.renderDate(item.dueDate) },
-            { key: 'totalAmount', label: 'Total', sortKey: 'totalAmount', render: (item) => Layer8MRenderers.renderMoney(item.totalAmount) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.INVOICE_STATUS_VALUES, render: (item) => render.invoiceStatus(item.status) }
+            ...col.id('invoiceId'),
+            ...col.col('invoiceNumber', 'Invoice #'),
+            ...col.col('vendorId', 'Vendor'),
+            ...col.date('invoiceDate', 'Invoice Date'),
+            ...col.date('dueDate', 'Due Date'),
+            ...col.money('totalAmount', 'Total'),
+            ...col.status('status', 'Status', enums.INVOICE_STATUS_VALUES, render.invoiceStatus)
         ],
 
         PurchaseInvoiceLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'invoiceId', label: 'Invoice', sortKey: 'invoiceId', filterKey: 'invoiceId' },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
-            { key: 'unitPrice', label: 'Unit Price', sortKey: 'unitPrice', render: (item) => Layer8MRenderers.renderMoney(item.unitPrice) },
-            { key: 'lineAmount', label: 'Line Amount', sortKey: 'lineAmount', render: (item) => Layer8MRenderers.renderMoney(item.lineAmount) }
+            ...col.id('lineId'),
+            ...col.col('invoiceId', 'Invoice'),
+            ...col.col('description', 'Description'),
+            ...col.col('quantity', 'Quantity'),
+            ...col.money('unitPrice', 'Unit Price'),
+            ...col.money('lineAmount', 'Line Amount')
         ],
 
         PaymentSchedule: [
-            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'invoiceId', label: 'Invoice', sortKey: 'invoiceId', filterKey: 'invoiceId' },
-            { key: 'scheduledDate', label: 'Scheduled Date', sortKey: 'scheduledDate', render: (item) => Layer8MRenderers.renderDate(item.scheduledDate) },
-            { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => Layer8MRenderers.renderMoney(item.amount) },
-            { key: 'isPaid', label: 'Paid', sortKey: 'isPaid', render: (item) => Layer8MRenderers.renderBoolean(item.isPaid) }
+            ...col.id('scheduleId'),
+            ...col.col('invoiceId', 'Invoice'),
+            ...col.date('scheduledDate', 'Scheduled Date'),
+            ...col.money('amount', 'Amount'),
+            ...col.boolean('isPaid', 'Paid')
         ],
 
         VendorPayment: [
-            { key: 'paymentId', label: 'ID', sortKey: 'paymentId', filterKey: 'paymentId' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'paymentDate', label: 'Payment Date', sortKey: 'paymentDate', render: (item) => Layer8MRenderers.renderDate(item.paymentDate) },
-            { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => Layer8MRenderers.renderMoney(item.amount) },
-            { key: 'paymentMethod', label: 'Method', sortKey: 'paymentMethod', render: (item) => render.paymentMethod(item.paymentMethod) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.PAYMENT_STATUS_VALUES, render: (item) => render.paymentStatus(item.status) }
+            ...col.id('paymentId'),
+            ...col.col('vendorId', 'Vendor'),
+            ...col.date('paymentDate', 'Payment Date'),
+            ...col.money('amount', 'Amount'),
+            ...col.enum('paymentMethod', 'Method', null, render.paymentMethod),
+            ...col.status('status', 'Status', enums.PAYMENT_STATUS_VALUES, render.paymentStatus)
         ],
 
         PaymentAllocation: [
-            { key: 'allocationId', label: 'ID', sortKey: 'allocationId', filterKey: 'allocationId' },
-            { key: 'paymentId', label: 'Payment', sortKey: 'paymentId', filterKey: 'paymentId' },
-            { key: 'invoiceId', label: 'Invoice', sortKey: 'invoiceId', filterKey: 'invoiceId' },
-            { key: 'allocatedAmount', label: 'Allocated', sortKey: 'allocatedAmount', render: (item) => Layer8MRenderers.renderMoney(item.allocatedAmount) }
+            ...col.id('allocationId'),
+            ...col.col('paymentId', 'Payment'),
+            ...col.col('invoiceId', 'Invoice'),
+            ...col.money('allocatedAmount', 'Allocated')
         ],
 
         VendorStatement: [
-            { key: 'statementId', label: 'ID', sortKey: 'statementId', filterKey: 'statementId' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'statementDate', label: 'Statement Date', sortKey: 'statementDate', render: (item) => Layer8MRenderers.renderDate(item.statementDate) },
-            { key: 'closingBalance', label: 'Closing Balance', sortKey: 'closingBalance', render: (item) => Layer8MRenderers.renderMoney(item.closingBalance) }
+            ...col.id('statementId'),
+            ...col.col('vendorId', 'Vendor'),
+            ...col.date('statementDate', 'Statement Date'),
+            ...col.money('closingBalance', 'Closing Balance')
         ]
     };
 

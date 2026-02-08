@@ -21,14 +21,8 @@ import (
 )
 
 func newPrjPhaseServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjPhase",
-		func(e *prj.PrjPhase) { common.GenerateID(&e.PhaseId) },
-		validate)
-}
-
-func validate(item *prj.PrjPhase, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.PhaseId, "PhaseId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjPhase]("PrjPhase",
+		func(e *prj.PrjPhase) { common.GenerateID(&e.PhaseId) }).
+		Require(func(e *prj.PrjPhase) string { return e.PhaseId }, "PhaseId").
+		Build()
 }

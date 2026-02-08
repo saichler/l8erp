@@ -21,17 +21,9 @@ import (
 )
 
 func newBankReconciliationServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BankReconciliation",
-		func(e *fin.BankReconciliation) { common.GenerateID(&e.ReconciliationId) },
-		validate)
-}
-
-func validate(bankReconciliation *fin.BankReconciliation, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(bankReconciliation.ReconciliationId, "ReconciliationId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(bankReconciliation.BankAccountId, "BankAccountId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.BankReconciliation]("BankReconciliation",
+		func(e *fin.BankReconciliation) { common.GenerateID(&e.ReconciliationId) }).
+		Require(func(e *fin.BankReconciliation) string { return e.ReconciliationId }, "ReconciliationId").
+		Require(func(e *fin.BankReconciliation) string { return e.BankAccountId }, "BankAccountId").
+		Build()
 }

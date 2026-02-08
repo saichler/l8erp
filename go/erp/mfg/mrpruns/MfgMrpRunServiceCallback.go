@@ -21,14 +21,8 @@ import (
 )
 
 func newMfgMrpRunServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MfgMrpRun",
-		func(e *mfg.MfgMrpRun) { common.GenerateID(&e.RunId) },
-		validate)
-}
-
-func validate(item *mfg.MfgMrpRun, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RunId, "RunId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[mfg.MfgMrpRun]("MfgMrpRun",
+		func(e *mfg.MfgMrpRun) { common.GenerateID(&e.RunId) }).
+		Require(func(e *mfg.MfgMrpRun) string { return e.RunId }, "RunId").
+		Build()
 }

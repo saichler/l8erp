@@ -21,17 +21,9 @@ import (
 )
 
 func newPickReleaseServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesPickRelease",
-		func(e *sales.SalesPickRelease) { common.GenerateID(&e.PickReleaseId) },
-		validate)
-}
-
-func validate(item *sales.SalesPickRelease, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.PickReleaseId, "PickReleaseId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.DeliveryOrderId, "DeliveryOrderId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesPickRelease]("SalesPickRelease",
+		func(e *sales.SalesPickRelease) { common.GenerateID(&e.PickReleaseId) }).
+		Require(func(e *sales.SalesPickRelease) string { return e.PickReleaseId }, "PickReleaseId").
+		Require(func(e *sales.SalesPickRelease) string { return e.DeliveryOrderId }, "DeliveryOrderId").
+		Build()
 }

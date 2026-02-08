@@ -19,72 +19,73 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileCompRisk.enums;
     const render = MobileCompRisk.render;
 
     MobileCompRisk.columns = {
         CompRiskRegister: [
-            { key: 'riskId', label: 'ID', sortKey: 'riskId', filterKey: 'riskId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'title', label: 'Title', sortKey: 'title', filterKey: 'title' },
-            { key: 'category', label: 'Category', sortKey: 'category', filterKey: 'category', enumValues: enums.RISK_CATEGORY_VALUES, render: (item) => render.riskCategory(item.category) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.RISK_STATUS_VALUES, render: (item) => render.riskStatus(item.status) },
-            { key: 'departmentId', label: 'Department', sortKey: 'departmentId' },
-            { key: 'inherentRiskScore', label: 'Inherent Score', sortKey: 'inherentRiskScore' },
-            { key: 'residualRiskScore', label: 'Residual Score', sortKey: 'residualRiskScore' },
-            { key: 'riskResponse', label: 'Response', sortKey: 'riskResponse' },
-            { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' },
-            { key: 'nextReviewDate', label: 'Next Review', sortKey: 'nextReviewDate', render: (item) => render.date(item.nextReviewDate) }
+            ...col.id('riskId'),
+            ...col.col('code', 'Code'),
+            ...col.col('title', 'Title'),
+            ...col.status('category', 'Category', enums.RISK_CATEGORY_VALUES, render.riskCategory),
+            ...col.status('status', 'Status', enums.RISK_STATUS_VALUES, render.riskStatus),
+            ...col.col('departmentId', 'Department'),
+            ...col.col('inherentRiskScore', 'Inherent Score'),
+            ...col.col('residualRiskScore', 'Residual Score'),
+            ...col.col('riskResponse', 'Response'),
+            ...col.col('ownerId', 'Owner'),
+            ...col.date('nextReviewDate', 'Next Review')
         ],
 
         CompRiskAssessment: [
-            { key: 'assessmentId', label: 'ID', sortKey: 'assessmentId', filterKey: 'assessmentId' },
-            { key: 'riskId', label: 'Risk', sortKey: 'riskId', filterKey: 'riskId' },
-            { key: 'assessmentDate', label: 'Assessment Date', sortKey: 'assessmentDate', render: (item) => render.date(item.assessmentDate) },
-            { key: 'assessorId', label: 'Assessor', sortKey: 'assessorId' },
-            { key: 'likelihoodRating', label: 'Likelihood', sortKey: 'likelihoodRating' },
-            { key: 'impactRating', label: 'Impact', sortKey: 'impactRating' },
-            { key: 'riskScore', label: 'Risk Score', sortKey: 'riskScore' },
-            { key: 'controlEffectiveness', label: 'Control Effectiveness', sortKey: 'controlEffectiveness' },
-            { key: 'requiresEscalation', label: 'Escalation', sortKey: 'requiresEscalation', render: (item) => item.requiresEscalation ? 'Yes' : 'No' }
+            ...col.id('assessmentId'),
+            ...col.col('riskId', 'Risk'),
+            ...col.date('assessmentDate', 'Assessment Date'),
+            ...col.col('assessorId', 'Assessor'),
+            ...col.col('likelihoodRating', 'Likelihood'),
+            ...col.col('impactRating', 'Impact'),
+            ...col.col('riskScore', 'Risk Score'),
+            ...col.col('controlEffectiveness', 'Control Effectiveness'),
+            ...col.boolean('requiresEscalation', 'Escalation')
         ],
 
         CompIncident: [
-            { key: 'incidentId', label: 'ID', sortKey: 'incidentId', filterKey: 'incidentId' },
-            { key: 'incidentNumber', label: 'Number', sortKey: 'incidentNumber', filterKey: 'incidentNumber' },
-            { key: 'title', label: 'Title', sortKey: 'title', filterKey: 'title' },
-            { key: 'severity', label: 'Severity', sortKey: 'severity', filterKey: 'severity', enumValues: enums.SEVERITY_LEVEL_VALUES, render: (item) => render.severityLevel(item.severity) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.INCIDENT_STATUS_VALUES, render: (item) => render.incidentStatus(item.status) },
-            { key: 'category', label: 'Category', sortKey: 'category', enumValues: enums.RISK_CATEGORY_VALUES, render: (item) => render.riskCategory(item.category) },
-            { key: 'occurredDate', label: 'Occurred', sortKey: 'occurredDate', render: (item) => render.date(item.occurredDate) },
-            { key: 'reportedDate', label: 'Reported', sortKey: 'reportedDate', render: (item) => render.date(item.reportedDate) },
-            { key: 'assignedToId', label: 'Assigned To', sortKey: 'assignedToId' },
-            { key: 'regulatoryReportable', label: 'Reportable', sortKey: 'regulatoryReportable', render: (item) => item.regulatoryReportable ? 'Yes' : 'No' }
+            ...col.id('incidentId'),
+            ...col.col('incidentNumber', 'Number'),
+            ...col.col('title', 'Title'),
+            ...col.status('severity', 'Severity', enums.SEVERITY_LEVEL_VALUES, render.severityLevel),
+            ...col.status('status', 'Status', enums.INCIDENT_STATUS_VALUES, render.incidentStatus),
+            ...col.status('category', 'Category', enums.RISK_CATEGORY_VALUES, render.riskCategory),
+            ...col.date('occurredDate', 'Occurred'),
+            ...col.date('reportedDate', 'Reported'),
+            ...col.col('assignedToId', 'Assigned To'),
+            ...col.boolean('regulatoryReportable', 'Reportable')
         ],
 
         CompMitigationPlan: [
-            { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'riskId', label: 'Risk', sortKey: 'riskId', filterKey: 'riskId' },
-            { key: 'strategy', label: 'Strategy', sortKey: 'strategy' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.REMEDIATION_STATUS_VALUES, render: (item) => render.remediationStatus(item.status) },
-            { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' },
-            { key: 'startDate', label: 'Start Date', sortKey: 'startDate', render: (item) => render.date(item.startDate) },
-            { key: 'targetDate', label: 'Target Date', sortKey: 'targetDate', render: (item) => render.date(item.targetDate) },
-            { key: 'targetRiskReduction', label: 'Target Reduction', sortKey: 'targetRiskReduction' },
-            { key: 'actualRiskReduction', label: 'Actual Reduction', sortKey: 'actualRiskReduction' }
+            ...col.id('planId'),
+            ...col.col('name', 'Name'),
+            ...col.col('riskId', 'Risk'),
+            ...col.col('strategy', 'Strategy'),
+            ...col.status('status', 'Status', enums.REMEDIATION_STATUS_VALUES, render.remediationStatus),
+            ...col.col('ownerId', 'Owner'),
+            ...col.date('startDate', 'Start Date'),
+            ...col.date('targetDate', 'Target Date'),
+            ...col.col('targetRiskReduction', 'Target Reduction'),
+            ...col.col('actualRiskReduction', 'Actual Reduction')
         ],
 
         CompInsurancePolicy: [
-            { key: 'insuranceId', label: 'ID', sortKey: 'insuranceId', filterKey: 'insuranceId' },
-            { key: 'policyNumber', label: 'Policy #', sortKey: 'policyNumber', filterKey: 'policyNumber' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'policyType', label: 'Type', sortKey: 'policyType' },
-            { key: 'provider', label: 'Provider', sortKey: 'provider' },
-            { key: 'status', label: 'Status', sortKey: 'status' },
-            { key: 'effectiveDate', label: 'Effective Date', sortKey: 'effectiveDate', render: (item) => render.date(item.effectiveDate) },
-            { key: 'expiryDate', label: 'Expiry Date', sortKey: 'expiryDate', render: (item) => render.date(item.expiryDate) },
-            { key: 'responsibleId', label: 'Responsible', sortKey: 'responsibleId' }
+            ...col.id('insuranceId'),
+            ...col.col('policyNumber', 'Policy #'),
+            ...col.col('name', 'Name'),
+            ...col.col('policyType', 'Type'),
+            ...col.col('provider', 'Provider'),
+            ...col.col('status', 'Status'),
+            ...col.date('effectiveDate', 'Effective Date'),
+            ...col.date('expiryDate', 'Expiry Date'),
+            ...col.col('responsibleId', 'Responsible')
         ]
     };
 

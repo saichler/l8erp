@@ -21,17 +21,9 @@ import (
 )
 
 func newAssetCategoryServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("AssetCategory",
-		func(e *fin.AssetCategory) { common.GenerateID(&e.CategoryId) },
-		validate)
-}
-
-func validate(assetCategory *fin.AssetCategory, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(assetCategory.CategoryId, "CategoryId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(assetCategory.Name, "Name"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.AssetCategory]("AssetCategory",
+		func(e *fin.AssetCategory) { common.GenerateID(&e.CategoryId) }).
+		Require(func(e *fin.AssetCategory) string { return e.CategoryId }, "CategoryId").
+		Require(func(e *fin.AssetCategory) string { return e.Name }, "Name").
+		Build()
 }

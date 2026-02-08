@@ -19,36 +19,37 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileSalesBilling.enums;
     const render = MobileSalesBilling.render;
 
     MobileSalesBilling.columns = {
         BillingSchedule: [
-            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'frequency', label: 'Frequency', sortKey: 'frequency', filterKey: 'frequency', enumValues: enums.BILLING_FREQUENCY_VALUES, render: (item) => render.billingFrequency(item.frequency) },
-            { key: 'nextBillingDate', label: 'Next Billing', sortKey: 'nextBillingDate', render: (item) => Layer8MRenderers.renderDate(item.nextBillingDate) },
-            { key: 'totalAmount', label: 'Total', sortKey: 'totalAmount', render: (item) => Layer8MRenderers.renderMoney(item.totalAmount) }
+            ...col.id('scheduleId'),
+            ...col.col('name', 'Name'),
+            ...col.col('salesOrderId', 'Order'),
+            ...col.col('customerId', 'Customer'),
+            ...col.status('frequency', 'Frequency', enums.BILLING_FREQUENCY_VALUES, render.billingFrequency),
+            ...col.date('nextBillingDate', 'Next Billing'),
+            ...col.money('totalAmount', 'Total')
         ],
 
         BillingMilestone: [
-            { key: 'milestoneId', label: 'ID', sortKey: 'milestoneId', filterKey: 'milestoneId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'scheduleId', label: 'Schedule', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'targetDate', label: 'Target', sortKey: 'targetDate', render: (item) => Layer8MRenderers.renderDate(item.targetDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.MILESTONE_STATUS_VALUES, render: (item) => render.milestoneStatus(item.status) },
-            { key: 'amount', label: 'Amount', sortKey: 'amount', render: (item) => Layer8MRenderers.renderMoney(item.amount) }
+            ...col.id('milestoneId'),
+            ...col.col('name', 'Name'),
+            ...col.col('scheduleId', 'Schedule'),
+            ...col.date('targetDate', 'Target'),
+            ...col.status('status', 'Status', enums.MILESTONE_STATUS_VALUES, render.milestoneStatus),
+            ...col.money('amount', 'Amount')
         ],
 
         RevenueSchedule: [
-            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
-            { key: 'totalRevenue', label: 'Total Revenue', sortKey: 'totalRevenue', render: (item) => Layer8MRenderers.renderMoney(item.totalRevenue) },
-            { key: 'recognizedRevenue', label: 'Recognized', sortKey: 'recognizedRevenue', render: (item) => Layer8MRenderers.renderMoney(item.recognizedRevenue) },
-            { key: 'deferredRevenue', label: 'Deferred', sortKey: 'deferredRevenue', render: (item) => Layer8MRenderers.renderMoney(item.deferredRevenue) },
-            { key: 'recognitionMethod', label: 'Method', sortKey: 'recognitionMethod' }
+            ...col.id('scheduleId'),
+            ...col.col('salesOrderId', 'Order'),
+            ...col.money('totalRevenue', 'Total Revenue'),
+            ...col.money('recognizedRevenue', 'Recognized'),
+            ...col.money('deferredRevenue', 'Deferred'),
+            ...col.col('recognitionMethod', 'Method')
         ]
     };
 

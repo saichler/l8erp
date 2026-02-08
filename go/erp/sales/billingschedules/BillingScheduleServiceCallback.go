@@ -21,17 +21,9 @@ import (
 )
 
 func newBillingScheduleServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesBillingSchedule",
-		func(e *sales.SalesBillingSchedule) { common.GenerateID(&e.ScheduleId) },
-		validate)
-}
-
-func validate(item *sales.SalesBillingSchedule, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ScheduleId, "ScheduleId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.Name, "Name"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesBillingSchedule]("SalesBillingSchedule",
+		func(e *sales.SalesBillingSchedule) { common.GenerateID(&e.ScheduleId) }).
+		Require(func(e *sales.SalesBillingSchedule) string { return e.ScheduleId }, "ScheduleId").
+		Require(func(e *sales.SalesBillingSchedule) string { return e.Name }, "Name").
+		Build()
 }

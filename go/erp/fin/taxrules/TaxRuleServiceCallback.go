@@ -21,20 +21,10 @@ import (
 )
 
 func newTaxRuleServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("TaxRule",
-		func(e *fin.TaxRule) { common.GenerateID(&e.RuleId) },
-		validate)
-}
-
-func validate(taxRule *fin.TaxRule, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(taxRule.RuleId, "RuleId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(taxRule.TaxCodeId, "TaxCodeId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(taxRule.JurisdictionId, "JurisdictionId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.TaxRule]("TaxRule",
+		func(e *fin.TaxRule) { common.GenerateID(&e.RuleId) }).
+		Require(func(e *fin.TaxRule) string { return e.RuleId }, "RuleId").
+		Require(func(e *fin.TaxRule) string { return e.TaxCodeId }, "TaxCodeId").
+		Require(func(e *fin.TaxRule) string { return e.JurisdictionId }, "JurisdictionId").
+		Build()
 }

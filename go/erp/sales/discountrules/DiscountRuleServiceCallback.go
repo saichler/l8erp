@@ -21,17 +21,9 @@ import (
 )
 
 func newDiscountRuleServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesDiscountRule",
-		func(e *sales.SalesDiscountRule) { common.GenerateID(&e.RuleId) },
-		validate)
-}
-
-func validate(item *sales.SalesDiscountRule, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RuleId, "RuleId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.Name, "Name"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesDiscountRule]("SalesDiscountRule",
+		func(e *sales.SalesDiscountRule) { common.GenerateID(&e.RuleId) }).
+		Require(func(e *sales.SalesDiscountRule) string { return e.RuleId }, "RuleId").
+		Require(func(e *sales.SalesDiscountRule) string { return e.Name }, "Name").
+		Build()
 }

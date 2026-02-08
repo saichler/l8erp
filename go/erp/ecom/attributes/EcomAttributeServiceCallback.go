@@ -21,14 +21,8 @@ import (
 )
 
 func newEcomAttributeServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("EcomAttribute",
-		func(e *ecom.EcomAttribute) { common.GenerateID(&e.AttributeId) },
-		validateEcomAttribute)
-}
-
-func validateEcomAttribute(item *ecom.EcomAttribute, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.AttributeId, "AttributeId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[ecom.EcomAttribute]("EcomAttribute",
+		func(e *ecom.EcomAttribute) { common.GenerateID(&e.AttributeId) }).
+		Require(func(e *ecom.EcomAttribute) string { return e.AttributeId }, "AttributeId").
+		Build()
 }

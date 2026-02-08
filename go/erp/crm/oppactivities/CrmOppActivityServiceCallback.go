@@ -21,14 +21,8 @@ import (
 )
 
 func newCrmOppActivityServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmOppActivity",
-		func(e *crm.CrmOppActivity) { common.GenerateID(&e.ActivityId) },
-		validate)
-}
-
-func validate(item *crm.CrmOppActivity, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ActivityId, "ActivityId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmOppActivity]("CrmOppActivity",
+		func(e *crm.CrmOppActivity) { common.GenerateID(&e.ActivityId) }).
+		Require(func(e *crm.CrmOppActivity) string { return e.ActivityId }, "ActivityId").
+		Build()
 }

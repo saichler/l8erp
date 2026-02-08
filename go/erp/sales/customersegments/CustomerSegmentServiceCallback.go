@@ -21,17 +21,9 @@ import (
 )
 
 func newCustomerSegmentServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesCustomerSegment",
-		func(e *sales.SalesCustomerSegment) { common.GenerateID(&e.SegmentId) },
-		validate)
-}
-
-func validate(item *sales.SalesCustomerSegment, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.SegmentId, "SegmentId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.Name, "Name"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesCustomerSegment]("SalesCustomerSegment",
+		func(e *sales.SalesCustomerSegment) { common.GenerateID(&e.SegmentId) }).
+		Require(func(e *sales.SalesCustomerSegment) string { return e.SegmentId }, "SegmentId").
+		Require(func(e *sales.SalesCustomerSegment) string { return e.Name }, "Name").
+		Build()
 }

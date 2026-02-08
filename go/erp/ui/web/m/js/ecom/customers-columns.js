@@ -19,59 +19,60 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const render = MobileEcomCustomers.render;
 
     MobileEcomCustomers.columns = {
         EcomCustomer: [
-            { key: 'customerId', label: 'ID', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'email', label: 'Email', sortKey: 'email', filterKey: 'email' },
-            { key: 'firstName', label: 'First Name', sortKey: 'firstName', filterKey: 'firstName' },
-            { key: 'lastName', label: 'Last Name', sortKey: 'lastName', filterKey: 'lastName' },
-            { key: 'phone', label: 'Phone', sortKey: 'phone' },
-            { key: 'customerType', label: 'Type', sortKey: 'customerType', render: (item) => render.customerType(item.customerType) },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' },
-            { key: 'totalOrders', label: 'Total Orders', sortKey: 'totalOrders' },
-            { key: 'totalSpent', label: 'Total Spent', sortKey: 'totalSpent', render: (item) => Layer8MRenderers.renderMoney(item.totalSpent) }
+            ...col.id('customerId'),
+            ...col.col('email', 'Email'),
+            ...col.col('firstName', 'First Name'),
+            ...col.col('lastName', 'Last Name'),
+            ...col.col('phone', 'Phone'),
+            ...col.enum('customerType', 'Type', null, render.customerType),
+            ...col.boolean('isActive', 'Active'),
+            ...col.col('totalOrders', 'Total Orders'),
+            ...col.money('totalSpent', 'Total Spent')
         ],
 
         EcomCustomerAddress: [
-            { key: 'addressId', label: 'ID', sortKey: 'addressId', filterKey: 'addressId' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'label', label: 'Label', sortKey: 'label', filterKey: 'label' },
-            { key: 'firstName', label: 'First Name', sortKey: 'firstName' },
-            { key: 'lastName', label: 'Last Name', sortKey: 'lastName' },
-            { key: 'city', label: 'City', sortKey: 'city', filterKey: 'city' },
-            { key: 'country', label: 'Country', sortKey: 'country', filterKey: 'country' },
-            { key: 'isDefaultBilling', label: 'Default Billing', sortKey: 'isDefaultBilling', render: (item) => item.isDefaultBilling ? 'Yes' : 'No' },
-            { key: 'isDefaultShipping', label: 'Default Shipping', sortKey: 'isDefaultShipping', render: (item) => item.isDefaultShipping ? 'Yes' : 'No' }
+            ...col.id('addressId'),
+            ...col.col('customerId', 'Customer'),
+            ...col.col('label', 'Label'),
+            ...col.col('firstName', 'First Name'),
+            ...col.col('lastName', 'Last Name'),
+            ...col.col('city', 'City'),
+            ...col.col('country', 'Country'),
+            ...col.boolean('isDefaultBilling', 'Default Billing'),
+            ...col.boolean('isDefaultShipping', 'Default Shipping')
         ],
 
         EcomWishlist: [
-            { key: 'wishlistId', label: 'ID', sortKey: 'wishlistId', filterKey: 'wishlistId' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'isPublic', label: 'Public', sortKey: 'isPublic', render: (item) => item.isPublic ? 'Yes' : 'No' },
-            { key: 'itemCount', label: 'Items', sortKey: 'itemCount' },
-            { key: 'createdDate', label: 'Created', sortKey: 'createdDate', render: (item) => Layer8MRenderers.renderDate(item.createdDate) }
+            ...col.id('wishlistId'),
+            ...col.col('customerId', 'Customer'),
+            ...col.col('name', 'Name'),
+            ...col.boolean('isPublic', 'Public'),
+            ...col.col('itemCount', 'Items'),
+            ...col.date('createdDate', 'Created')
         ],
 
         EcomWishlistItem: [
-            { key: 'itemId', label: 'ID', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'wishlistId', label: 'Wishlist', sortKey: 'wishlistId', filterKey: 'wishlistId' },
-            { key: 'productId', label: 'Product', sortKey: 'productId', filterKey: 'productId' },
-            { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
-            { key: 'addedDate', label: 'Added', sortKey: 'addedDate', render: (item) => Layer8MRenderers.renderDate(item.addedDate) },
-            { key: 'priority', label: 'Priority', sortKey: 'priority' }
+            ...col.id('itemId'),
+            ...col.col('wishlistId', 'Wishlist'),
+            ...col.col('productId', 'Product'),
+            ...col.col('quantity', 'Quantity'),
+            ...col.date('addedDate', 'Added'),
+            ...col.col('priority', 'Priority')
         ],
 
         EcomCart: [
-            { key: 'cartId', label: 'ID', sortKey: 'cartId', filterKey: 'cartId' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.cartStatus(item.status) },
-            { key: 'itemCount', label: 'Items', sortKey: 'itemCount' },
-            { key: 'subtotal', label: 'Subtotal', sortKey: 'subtotal', render: (item) => Layer8MRenderers.renderMoney(item.subtotal) },
-            { key: 'total', label: 'Total', sortKey: 'total', render: (item) => Layer8MRenderers.renderMoney(item.total) },
-            { key: 'createdDate', label: 'Created', sortKey: 'createdDate', render: (item) => Layer8MRenderers.renderDate(item.createdDate) }
+            ...col.id('cartId'),
+            ...col.col('customerId', 'Customer'),
+            ...col.enum('status', 'Status', null, render.cartStatus),
+            ...col.col('itemCount', 'Items'),
+            ...col.money('subtotal', 'Subtotal'),
+            ...col.money('total', 'Total'),
+            ...col.date('createdDate', 'Created')
         ]
     };
 

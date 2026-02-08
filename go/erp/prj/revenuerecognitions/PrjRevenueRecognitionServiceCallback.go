@@ -21,14 +21,8 @@ import (
 )
 
 func newPrjRevenueRecognitionServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjRevenueRecognition",
-		func(e *prj.PrjRevenueRecognition) { common.GenerateID(&e.RecognitionId) },
-		validate)
-}
-
-func validate(item *prj.PrjRevenueRecognition, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RecognitionId, "RecognitionId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjRevenueRecognition]("PrjRevenueRecognition",
+		func(e *prj.PrjRevenueRecognition) { common.GenerateID(&e.RecognitionId) }).
+		Require(func(e *prj.PrjRevenueRecognition) string { return e.RecognitionId }, "RecognitionId").
+		Build()
 }

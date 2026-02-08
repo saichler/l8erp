@@ -21,14 +21,8 @@ import (
 )
 
 func newCrmCampaignROIServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmCampaignROI",
-		func(e *crm.CrmCampaignROI) { common.GenerateID(&e.RoiId) },
-		validate)
-}
-
-func validate(item *crm.CrmCampaignROI, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RoiId, "RoiId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmCampaignROI]("CrmCampaignROI",
+		func(e *crm.CrmCampaignROI) { common.GenerateID(&e.RoiId) }).
+		Require(func(e *crm.CrmCampaignROI) string { return e.RoiId }, "RoiId").
+		Build()
 }

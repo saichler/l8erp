@@ -21,17 +21,9 @@ import (
 )
 
 func newPrjBillingRateServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjBillingRate",
-		func(e *prj.PrjBillingRate) { common.GenerateID(&e.RateId) },
-		validate)
-}
-
-func validate(item *prj.PrjBillingRate, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RateId, "RateId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.CurrencyId, "CurrencyId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjBillingRate]("PrjBillingRate",
+		func(e *prj.PrjBillingRate) { common.GenerateID(&e.RateId) }).
+		Require(func(e *prj.PrjBillingRate) string { return e.RateId }, "RateId").
+		Require(func(e *prj.PrjBillingRate) string { return e.CurrencyId }, "CurrencyId").
+		Build()
 }

@@ -19,60 +19,61 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     window.MobileMfgEngineering = window.MobileMfgEngineering || {};
     const render = MobileMfgEngineering.render;
     const enums = MobileMfgEngineering.enums;
 
     MobileMfgEngineering.columns = {
         MfgBom: [
-            { key: 'bomId', label: 'ID', sortKey: 'bomId' },
-            { key: 'bomNumber', label: 'BOM #', sortKey: 'bomNumber' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'revision', label: 'Rev', sortKey: 'revision' },
-            { key: 'bomType', label: 'Type', sortKey: 'bomType', render: (item) => enums.BOM_TYPE[item.bomType] || 'Unknown' },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.bomStatus(item.status) }
+            ...col.id('bomId'),
+            ...col.col('bomNumber', 'BOM #'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('description', 'Description'),
+            ...col.col('revision', 'Rev'),
+            ...col.enum('bomType', 'Type', null, (v) => enums.BOM_TYPE[v] || 'Unknown'),
+            ...col.enum('status', 'Status', null, render.bomStatus)
         ],
         MfgBomLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId' },
-            { key: 'bomId', label: 'BOM', sortKey: 'bomId' },
-            { key: 'componentItemId', label: 'Component', sortKey: 'componentItemId' },
-            { key: 'quantityPer', label: 'Qty Per', sortKey: 'quantityPer' },
-            { key: 'unitOfMeasure', label: 'UOM', sortKey: 'unitOfMeasure' },
-            { key: 'lineNumber', label: 'Line #', sortKey: 'lineNumber' }
+            ...col.id('lineId'),
+            ...col.col('bomId', 'BOM'),
+            ...col.col('componentItemId', 'Component'),
+            ...col.col('quantityPer', 'Qty Per'),
+            ...col.col('unitOfMeasure', 'UOM'),
+            ...col.col('lineNumber', 'Line #')
         ],
         MfgRouting: [
-            { key: 'routingId', label: 'ID', sortKey: 'routingId' },
-            { key: 'routingNumber', label: 'Routing #', sortKey: 'routingNumber' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'revision', label: 'Rev', sortKey: 'revision' },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.routingStatus(item.status) }
+            ...col.id('routingId'),
+            ...col.col('routingNumber', 'Routing #'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('description', 'Description'),
+            ...col.col('revision', 'Rev'),
+            ...col.enum('status', 'Status', null, render.routingStatus)
         ],
         MfgRoutingOperation: [
-            { key: 'operationId', label: 'ID', sortKey: 'operationId' },
-            { key: 'routingId', label: 'Routing', sortKey: 'routingId' },
-            { key: 'operationNumber', label: 'Op #', sortKey: 'operationNumber' },
-            { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'setupTime', label: 'Setup (hrs)', sortKey: 'setupTime' },
-            { key: 'runTime', label: 'Run (hrs)', sortKey: 'runTime' }
+            ...col.id('operationId'),
+            ...col.col('routingId', 'Routing'),
+            ...col.col('operationNumber', 'Op #'),
+            ...col.col('workCenterId', 'Work Center'),
+            ...col.col('description', 'Description'),
+            ...col.col('setupTime', 'Setup (hrs)'),
+            ...col.col('runTime', 'Run (hrs)')
         ],
         MfgEngChangeOrder: [
-            { key: 'changeOrderId', label: 'ID', sortKey: 'changeOrderId' },
-            { key: 'ecoNumber', label: 'ECO #', sortKey: 'ecoNumber' },
-            { key: 'title', label: 'Title', sortKey: 'title' },
-            { key: 'priority', label: 'Priority', sortKey: 'priority' },
-            { key: 'requestDate', label: 'Request Date', sortKey: 'requestDate', render: (item) => render.date(item.requestDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.ecoStatus(item.status) }
+            ...col.id('changeOrderId'),
+            ...col.col('ecoNumber', 'ECO #'),
+            ...col.col('title', 'Title'),
+            ...col.col('priority', 'Priority'),
+            ...col.date('requestDate', 'Request Date'),
+            ...col.enum('status', 'Status', null, render.ecoStatus)
         ],
         MfgEngChangeDetail: [
-            { key: 'detailId', label: 'ID', sortKey: 'detailId' },
-            { key: 'changeOrderId', label: 'ECO', sortKey: 'changeOrderId' },
-            { key: 'affectedId', label: 'Affected', sortKey: 'affectedId' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'oldValue', label: 'Old Value', sortKey: 'oldValue' },
-            { key: 'newValue', label: 'New Value', sortKey: 'newValue' }
+            ...col.id('detailId'),
+            ...col.col('changeOrderId', 'ECO'),
+            ...col.col('affectedId', 'Affected'),
+            ...col.col('description', 'Description'),
+            ...col.col('oldValue', 'Old Value'),
+            ...col.col('newValue', 'New Value')
         ]
     };
 

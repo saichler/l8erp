@@ -21,17 +21,9 @@ import (
 )
 
 func newCapitalExpenditureServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CapitalExpenditure",
-		func(e *fin.CapitalExpenditure) { common.GenerateID(&e.CapexId) },
-		validate)
-}
-
-func validate(capitalExpenditure *fin.CapitalExpenditure, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(capitalExpenditure.CapexId, "CapexId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(capitalExpenditure.ProjectName, "ProjectName"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.CapitalExpenditure]("CapitalExpenditure",
+		func(e *fin.CapitalExpenditure) { common.GenerateID(&e.CapexId) }).
+		Require(func(e *fin.CapitalExpenditure) string { return e.CapexId }, "CapexId").
+		Require(func(e *fin.CapitalExpenditure) string { return e.ProjectName }, "ProjectName").
+		Build()
 }

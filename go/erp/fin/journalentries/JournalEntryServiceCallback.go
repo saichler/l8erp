@@ -21,17 +21,9 @@ import (
 )
 
 func newJournalEntryServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("JournalEntry",
-		func(e *fin.JournalEntry) { common.GenerateID(&e.JournalEntryId) },
-		validate)
-}
-
-func validate(journalEntry *fin.JournalEntry, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(journalEntry.JournalEntryId, "JournalEntryId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(journalEntry.FiscalPeriodId, "FiscalPeriodId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.JournalEntry]("JournalEntry",
+		func(e *fin.JournalEntry) { common.GenerateID(&e.JournalEntryId) }).
+		Require(func(e *fin.JournalEntry) string { return e.JournalEntryId }, "JournalEntryId").
+		Require(func(e *fin.JournalEntry) string { return e.FiscalPeriodId }, "FiscalPeriodId").
+		Build()
 }

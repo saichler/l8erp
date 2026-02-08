@@ -19,88 +19,89 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     const enums = MobileWarehouse.enums;
     const render = MobileWarehouse.render;
 
     MobileWarehouse.columns = {
         ScmWarehouse: [
-            { key: 'warehouseId', label: 'ID', sortKey: 'warehouseId', filterKey: 'warehouseId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'warehouseType', label: 'Type', sortKey: 'warehouseType', filterKey: 'warehouseType', enumValues: enums.WAREHOUSE_TYPE_VALUES, render: (item) => render.warehouseType(item.warehouseType) },
-            { key: 'address', label: 'Location', sortKey: 'address', render: (item) => item.address?.city || '' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
+            ...col.id('warehouseId'),
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
+            ...col.status('warehouseType', 'Type', enums.WAREHOUSE_TYPE_VALUES, render.warehouseType),
+            ...col.custom('address', 'Location', (item) => item.address?.city || ''),
+            ...col.boolean('isActive', 'Active')
         ],
 
         ScmBin: [
-            { key: 'binId', label: 'ID', sortKey: 'binId', filterKey: 'binId' },
-            { key: 'binCode', label: 'Bin Code', sortKey: 'binCode', filterKey: 'binCode' },
-            { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
-            { key: 'binType', label: 'Type', sortKey: 'binType', filterKey: 'binType', enumValues: enums.BIN_TYPE_VALUES, render: (item) => render.binType(item.binType) },
-            { key: 'zone', label: 'Zone', sortKey: 'zone', filterKey: 'zone' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => Layer8MRenderers.renderBoolean(item.isActive) }
+            ...col.id('binId'),
+            ...col.col('binCode', 'Bin Code'),
+            ...col.col('warehouseId', 'Warehouse'),
+            ...col.status('binType', 'Type', enums.BIN_TYPE_VALUES, render.binType),
+            ...col.col('zone', 'Zone'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         ScmReceivingOrder: [
-            { key: 'receivingOrderId', label: 'ID', sortKey: 'receivingOrderId', filterKey: 'receivingOrderId' },
-            { key: 'purchaseOrderId', label: 'PO #', sortKey: 'purchaseOrderId', filterKey: 'purchaseOrderId' },
-            { key: 'receivedBy', label: 'Received By', sortKey: 'receivedBy', filterKey: 'receivedBy' },
-            { key: 'receivingDate', label: 'Receiving Date', sortKey: 'receivingDate', render: (item) => Layer8MRenderers.renderDate(item.receivingDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) },
-            { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' }
+            ...col.id('receivingOrderId'),
+            ...col.col('purchaseOrderId', 'PO #'),
+            ...col.col('receivedBy', 'Received By'),
+            ...col.date('receivingDate', 'Receiving Date'),
+            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus),
+            ...col.col('warehouseId', 'Warehouse')
         ],
 
         ScmPutawayTask: [
-            { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
-            { key: 'receivingOrderId', label: 'Receiving Order', sortKey: 'receivingOrderId', filterKey: 'receivingOrderId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'fromBinId', label: 'From Bin', sortKey: 'fromBinId', filterKey: 'fromBinId' },
-            { key: 'toBinId', label: 'To Bin', sortKey: 'toBinId', filterKey: 'toBinId' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+            ...col.id('taskId'),
+            ...col.col('receivingOrderId', 'Receiving Order'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('fromBinId', 'From Bin'),
+            ...col.col('toBinId', 'To Bin'),
+            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
         ],
 
         ScmPickTask: [
-            { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
-            { key: 'wavePlanId', label: 'Wave Plan', sortKey: 'wavePlanId', filterKey: 'wavePlanId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'fromBinId', label: 'Bin', sortKey: 'fromBinId', filterKey: 'fromBinId' },
-            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+            ...col.id('taskId'),
+            ...col.col('wavePlanId', 'Wave Plan'),
+            ...col.col('itemId', 'Item'),
+            ...col.col('fromBinId', 'Bin'),
+            ...col.col('quantity', 'Qty'),
+            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
         ],
 
         ScmPackTask: [
-            { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
-            { key: 'pickTaskId', label: 'Pick Task', sortKey: 'pickTaskId', filterKey: 'pickTaskId' },
-            { key: 'packageId', label: 'Package', sortKey: 'packageId', filterKey: 'packageId' },
-            { key: 'quantity', label: 'Qty', sortKey: 'quantity' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+            ...col.id('taskId'),
+            ...col.col('pickTaskId', 'Pick Task'),
+            ...col.col('packageId', 'Package'),
+            ...col.col('quantity', 'Qty'),
+            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
         ],
 
         ScmShipTask: [
-            { key: 'taskId', label: 'ID', sortKey: 'taskId', filterKey: 'taskId' },
-            { key: 'shipmentId', label: 'Shipment', sortKey: 'shipmentId', filterKey: 'shipmentId' },
-            { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
-            { key: 'trackingNumber', label: 'Tracking #', sortKey: 'trackingNumber', filterKey: 'trackingNumber' },
-            { key: 'shippedAt', label: 'Shipped', sortKey: 'shippedAt', render: (item) => Layer8MRenderers.renderDate(item.shippedAt) },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+            ...col.id('taskId'),
+            ...col.col('shipmentId', 'Shipment'),
+            ...col.col('carrierId', 'Carrier'),
+            ...col.col('trackingNumber', 'Tracking #'),
+            ...col.date('shippedAt', 'Shipped'),
+            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
         ],
 
         ScmWavePlan: [
-            { key: 'wavePlanId', label: 'ID', sortKey: 'wavePlanId', filterKey: 'wavePlanId' },
-            { key: 'assignedTo', label: 'Assigned To', sortKey: 'assignedTo', filterKey: 'assignedTo' },
-            { key: 'warehouseId', label: 'Warehouse', sortKey: 'warehouseId', filterKey: 'warehouseId' },
-            { key: 'planDate', label: 'Planned', sortKey: 'planDate', render: (item) => Layer8MRenderers.renderDate(item.planDate) },
-            { key: 'totalOrders', label: 'Orders', sortKey: 'totalOrders' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+            ...col.id('wavePlanId'),
+            ...col.col('assignedTo', 'Assigned To'),
+            ...col.col('warehouseId', 'Warehouse'),
+            ...col.date('planDate', 'Planned'),
+            ...col.col('totalOrders', 'Orders'),
+            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
         ],
 
         ScmDockSchedule: [
-            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'dockNumber', label: 'Dock', sortKey: 'dockNumber', filterKey: 'dockNumber' },
-            { key: 'carrierId', label: 'Carrier', sortKey: 'carrierId', filterKey: 'carrierId' },
-            { key: 'scheduleDate', label: 'Date', sortKey: 'scheduleDate', render: (item) => Layer8MRenderers.renderDate(item.scheduleDate) },
-            { key: 'direction', label: 'Direction', sortKey: 'direction', filterKey: 'direction' },
-            { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.TASK_STATUS_VALUES, render: (item) => render.taskStatus(item.status) }
+            ...col.id('scheduleId'),
+            ...col.col('dockNumber', 'Dock'),
+            ...col.col('carrierId', 'Carrier'),
+            ...col.date('scheduleDate', 'Date'),
+            ...col.col('direction', 'Direction'),
+            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
         ]
     };
 

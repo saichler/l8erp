@@ -21,14 +21,8 @@ import (
 )
 
 func newRouteServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmRoute",
-		func(e *scm.ScmRoute) { common.GenerateID(&e.RouteId) },
-		validate)
-}
-
-func validate(item *scm.ScmRoute, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RouteId, "RouteId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmRoute]("ScmRoute",
+		func(e *scm.ScmRoute) { common.GenerateID(&e.RouteId) }).
+		Require(func(e *scm.ScmRoute) string { return e.RouteId }, "RouteId").
+		Build()
 }

@@ -19,55 +19,56 @@ limitations under the License.
 (function() {
     'use strict';
 
+    const col = window.Layer8ColumnFactory;
     window.MobileMfgPlanning = window.MobileMfgPlanning || {};
     const render = MobileMfgPlanning.render;
 
     MobileMfgPlanning.columns = {
         MfgMrpRun: [
-            { key: 'runId', label: 'ID', sortKey: 'runId' },
-            { key: 'runNumber', label: 'Run #', sortKey: 'runNumber' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'runDate', label: 'Run Date', sortKey: 'runDate', render: (item) => render.date(item.runDate) },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.mrpStatus(item.status) }
+            ...col.id('runId'),
+            ...col.col('runNumber', 'Run #'),
+            ...col.col('description', 'Description'),
+            ...col.date('runDate', 'Run Date'),
+            ...col.enum('status', 'Status', null, render.mrpStatus)
         ],
         MfgMrpRequirement: [
-            { key: 'requirementId', label: 'ID', sortKey: 'requirementId' },
-            { key: 'runId', label: 'MRP Run', sortKey: 'runId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId' },
-            { key: 'requirementType', label: 'Type', sortKey: 'requirementType', render: (item) => render.requirementType(item.requirementType) },
-            { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
-            { key: 'requiredDate', label: 'Required Date', sortKey: 'requiredDate', render: (item) => render.date(item.requiredDate) }
+            ...col.id('requirementId'),
+            ...col.col('runId', 'MRP Run'),
+            ...col.col('itemId', 'Item'),
+            ...col.enum('requirementType', 'Type', null, render.requirementType),
+            ...col.col('quantity', 'Quantity'),
+            ...col.date('requiredDate', 'Required Date')
         ],
         MfgCapacityPlan: [
-            { key: 'planId', label: 'ID', sortKey: 'planId' },
-            { key: 'planNumber', label: 'Plan #', sortKey: 'planNumber' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'planningStart', label: 'Planning Start', sortKey: 'planningStart', render: (item) => render.date(item.planningStart) },
-            { key: 'planningEnd', label: 'Planning End', sortKey: 'planningEnd', render: (item) => render.date(item.planningEnd) }
+            ...col.id('planId'),
+            ...col.col('planNumber', 'Plan #'),
+            ...col.col('description', 'Description'),
+            ...col.date('planningStart', 'Planning Start'),
+            ...col.date('planningEnd', 'Planning End')
         ],
         MfgCapacityLoad: [
-            { key: 'loadId', label: 'ID', sortKey: 'loadId' },
-            { key: 'planId', label: 'Capacity Plan', sortKey: 'planId' },
-            { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            { key: 'periodStart', label: 'Period Start', sortKey: 'periodStart', render: (item) => render.date(item.periodStart) },
-            { key: 'requiredHours', label: 'Required Hrs', sortKey: 'requiredHours' },
-            { key: 'availableHours', label: 'Available Hrs', sortKey: 'availableHours' },
-            { key: 'loadPercent', label: 'Load %', sortKey: 'loadPercent' }
+            ...col.id('loadId'),
+            ...col.col('planId', 'Capacity Plan'),
+            ...col.col('workCenterId', 'Work Center'),
+            ...col.date('periodStart', 'Period Start'),
+            ...col.col('requiredHours', 'Required Hrs'),
+            ...col.col('availableHours', 'Available Hrs'),
+            ...col.col('loadPercent', 'Load %')
         ],
         MfgProdSchedule: [
-            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId' },
-            { key: 'scheduleNumber', label: 'Schedule #', sortKey: 'scheduleNumber' },
-            { key: 'scheduleStart', label: 'Start Date', sortKey: 'scheduleStart', render: (item) => render.date(item.scheduleStart) },
-            { key: 'scheduleEnd', label: 'End Date', sortKey: 'scheduleEnd', render: (item) => render.date(item.scheduleEnd) },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.scheduleStatus(item.status) }
+            ...col.id('scheduleId'),
+            ...col.col('scheduleNumber', 'Schedule #'),
+            ...col.date('scheduleStart', 'Start Date'),
+            ...col.date('scheduleEnd', 'End Date'),
+            ...col.enum('status', 'Status', null, render.scheduleStatus)
         ],
         MfgScheduleBlock: [
-            { key: 'blockId', label: 'ID', sortKey: 'blockId' },
-            { key: 'scheduleId', label: 'Schedule', sortKey: 'scheduleId' },
-            { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
-            { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            { key: 'scheduledStart', label: 'Start', sortKey: 'scheduledStart', render: (item) => render.date(item.scheduledStart) },
-            { key: 'scheduledEnd', label: 'End', sortKey: 'scheduledEnd', render: (item) => render.date(item.scheduledEnd) }
+            ...col.id('blockId'),
+            ...col.col('scheduleId', 'Schedule'),
+            ...col.col('workOrderId', 'Work Order'),
+            ...col.col('workCenterId', 'Work Center'),
+            ...col.date('scheduledStart', 'Start'),
+            ...col.date('scheduledEnd', 'End')
         ]
     };
 

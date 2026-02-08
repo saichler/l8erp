@@ -21,14 +21,8 @@ import (
 )
 
 func newDocDocumentVersionServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("DocDocumentVersion",
-		func(e *doc.DocDocumentVersion) { common.GenerateID(&e.VersionId) },
-		validateDocDocumentVersion)
-}
-
-func validateDocDocumentVersion(item *doc.DocDocumentVersion, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.VersionId, "VersionId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[doc.DocDocumentVersion]("DocDocumentVersion",
+		func(e *doc.DocDocumentVersion) { common.GenerateID(&e.VersionId) }).
+		Require(func(e *doc.DocDocumentVersion) string { return e.VersionId }, "VersionId").
+		Build()
 }

@@ -21,14 +21,8 @@ import (
 )
 
 func newCrmEmailTemplateServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("CrmEmailTemplate",
-		func(e *crm.CrmEmailTemplate) { common.GenerateID(&e.TemplateId) },
-		validate)
-}
-
-func validate(item *crm.CrmEmailTemplate, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.TemplateId, "TemplateId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[crm.CrmEmailTemplate]("CrmEmailTemplate",
+		func(e *crm.CrmEmailTemplate) { common.GenerateID(&e.TemplateId) }).
+		Require(func(e *crm.CrmEmailTemplate) string { return e.TemplateId }, "TemplateId").
+		Build()
 }

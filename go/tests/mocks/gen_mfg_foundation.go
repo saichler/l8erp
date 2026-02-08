@@ -179,32 +179,26 @@ func generateBoms(store *MockDataStore) []*mfg.MfgBom {
 
 // generateBomLines creates BOM line records (3 lines per BOM)
 func generateBomLines(store *MockDataStore) []*mfg.MfgBomLine {
-	lines := make([]*mfg.MfgBomLine, 0, len(store.MfgBomIDs)*3)
-	idx := 1
-	for bomIdx, bomID := range store.MfgBomIDs {
-		for j := 0; j < 3; j++ {
-			compItemID := pickRef(store.ItemIDs, (bomIdx*3+j))
-			opID := pickRef(store.MfgRoutingOpIDs, (bomIdx+j))
+	return genLines(store.MfgBomIDs, 3, func(idx, bomIdx, j int, bomID string) *mfg.MfgBomLine {
+		compItemID := pickRef(store.ItemIDs, (bomIdx*3+j))
+		opID := pickRef(store.MfgRoutingOpIDs, (bomIdx+j))
 
-			lines = append(lines, &mfg.MfgBomLine{
-				LineId:          fmt.Sprintf("bomln-%03d", idx),
-				BomId:           bomID,
-				LineNumber:      int32((j + 1) * 10),
-				ComponentItemId: compItemID,
-				Description:     fmt.Sprintf("Component line %d", j+1),
-				QuantityPer:     float64(rand.Intn(5) + 1),
-				UnitOfMeasure:   "EA",
-				ScrapPercent:    float64(rand.Intn(5)),
-				OperationId:     opID,
-				IsCritical:      j == 0,
-				EffectiveDate:   time.Now().AddDate(0, -3, 0).Unix(),
-				Notes:           fmt.Sprintf("BOM line component %d", idx),
-				AuditInfo:       createAuditInfo(),
-			})
-			idx++
+		return &mfg.MfgBomLine{
+			LineId:          fmt.Sprintf("bomln-%03d", idx),
+			BomId:           bomID,
+			LineNumber:      int32((j + 1) * 10),
+			ComponentItemId: compItemID,
+			Description:     fmt.Sprintf("Component line %d", j+1),
+			QuantityPer:     float64(rand.Intn(5) + 1),
+			UnitOfMeasure:   "EA",
+			ScrapPercent:    float64(rand.Intn(5)),
+			OperationId:     opID,
+			IsCritical:      j == 0,
+			EffectiveDate:   time.Now().AddDate(0, -3, 0).Unix(),
+			Notes:           fmt.Sprintf("BOM line component %d", idx),
+			AuditInfo:       createAuditInfo(),
 		}
-	}
-	return lines
+	})
 }
 
 // generateRoutings creates routing records (one per BOM)

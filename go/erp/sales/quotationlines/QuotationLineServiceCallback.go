@@ -21,17 +21,9 @@ import (
 )
 
 func newQuotationLineServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalesQuotationLine",
-		func(e *sales.SalesQuotationLine) { common.GenerateID(&e.LineId) },
-		validate)
-}
-
-func validate(item *sales.SalesQuotationLine, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.LineId, "LineId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(item.QuotationId, "QuotationId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[sales.SalesQuotationLine]("SalesQuotationLine",
+		func(e *sales.SalesQuotationLine) { common.GenerateID(&e.LineId) }).
+		Require(func(e *sales.SalesQuotationLine) string { return e.LineId }, "LineId").
+		Require(func(e *sales.SalesQuotationLine) string { return e.QuotationId }, "QuotationId").
+		Build()
 }

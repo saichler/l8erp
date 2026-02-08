@@ -21,14 +21,8 @@ import (
 )
 
 func newPrjResourcePoolServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PrjResourcePool",
-		func(e *prj.PrjResourcePool) { common.GenerateID(&e.PoolId) },
-		validate)
-}
-
-func validate(item *prj.PrjResourcePool, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.PoolId, "PoolId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[prj.PrjResourcePool]("PrjResourcePool",
+		func(e *prj.PrjResourcePool) { common.GenerateID(&e.PoolId) }).
+		Require(func(e *prj.PrjResourcePool) string { return e.PoolId }, "PoolId").
+		Build()
 }

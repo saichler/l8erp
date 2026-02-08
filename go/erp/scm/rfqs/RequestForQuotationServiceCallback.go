@@ -21,14 +21,8 @@ import (
 )
 
 func newRequestForQuotationServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("ScmRequestForQuotation",
-		func(e *scm.ScmRequestForQuotation) { common.GenerateID(&e.RfqId) },
-		validate)
-}
-
-func validate(item *scm.ScmRequestForQuotation, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.RfqId, "RfqId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[scm.ScmRequestForQuotation]("ScmRequestForQuotation",
+		func(e *scm.ScmRequestForQuotation) { common.GenerateID(&e.RfqId) }).
+		Require(func(e *scm.ScmRequestForQuotation) string { return e.RfqId }, "RfqId").
+		Build()
 }

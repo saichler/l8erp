@@ -145,6 +145,19 @@ func getIssuingOrg(certName string) string {
 	return "Professional Certification Body"
 }
 
+// genLines generates N child items per parent, calling create(idx, parentIdx, childIdx, parentID)
+func genLines[L any](parentIDs []string, n int, create func(idx, pIdx, j int, parentID string) *L) []*L {
+	lines := make([]*L, 0, len(parentIDs)*n)
+	idx := 1
+	for pIdx, parentID := range parentIDs {
+		for j := 0; j < n; j++ {
+			lines = append(lines, create(idx, pIdx, j, parentID))
+			idx++
+		}
+	}
+	return lines
+}
+
 func minInt(a, b int) int {
 	if a < b {
 		return a

@@ -21,14 +21,8 @@ import (
 )
 
 func newBiDashboardShareServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BiDashboardShare",
-		func(e *bi.BiDashboardShare) { common.GenerateID(&e.ShareId) },
-		validate)
-}
-
-func validate(item *bi.BiDashboardShare, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(item.ShareId, "ShareId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[bi.BiDashboardShare]("BiDashboardShare",
+		func(e *bi.BiDashboardShare) { common.GenerateID(&e.ShareId) }).
+		Require(func(e *bi.BiDashboardShare) string { return e.ShareId }, "ShareId").
+		Build()
 }

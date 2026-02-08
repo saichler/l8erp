@@ -21,20 +21,10 @@ import (
 )
 
 func newJournalEntryLineServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("JournalEntryLine",
-		func(e *fin.JournalEntryLine) { common.GenerateID(&e.LineId) },
-		validate)
-}
-
-func validate(line *fin.JournalEntryLine, vnic ifs.IVNic) error {
-	if err := common.ValidateRequired(line.LineId, "LineId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(line.JournalEntryId, "JournalEntryId"); err != nil {
-		return err
-	}
-	if err := common.ValidateRequired(line.AccountId, "AccountId"); err != nil {
-		return err
-	}
-	return nil
+	return common.NewValidation[fin.JournalEntryLine]("JournalEntryLine",
+		func(e *fin.JournalEntryLine) { common.GenerateID(&e.LineId) }).
+		Require(func(e *fin.JournalEntryLine) string { return e.LineId }, "LineId").
+		Require(func(e *fin.JournalEntryLine) string { return e.JournalEntryId }, "JournalEntryId").
+		Require(func(e *fin.JournalEntryLine) string { return e.AccountId }, "AccountId").
+		Build()
 }
