@@ -18,6 +18,7 @@ package main
 import (
 	"github.com/saichler/l8bus/go/overlay/health"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8erp/go/erp/ui"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8utils/go/utils/ipsegment"
 	"github.com/saichler/l8web/go/web/server"
@@ -40,7 +41,7 @@ func startWebServer(port int, cert string) {
 		panic(err)
 	}
 
-	nic1 := createVnic(common.ERP_VNET)
+	nic1 := ui.CreateVnic(common.ERP_VNET)
 	//nic2 := createVnic(common.LOGS_VNET)
 
 	hs, ok := nic1.Resources().Services().ServiceHandler(health.ServiceName, 0)

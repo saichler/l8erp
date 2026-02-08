@@ -1,4 +1,4 @@
-package main
+package ui
 
 import (
 	"github.com/saichler/l8bus/go/overlay/vnic"
@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func createVnic(vnet uint32) ifs.IVNic {
+func CreateVnic(vnet uint32) ifs.IVNic {
 	resources := common.CreateResources("web-" + strconv.Itoa(int(vnet)))
 	resources.SysConfig().VnetPort = vnet
 
