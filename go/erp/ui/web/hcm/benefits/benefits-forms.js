@@ -51,6 +51,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('coverageEndDate', 'Coverage End'),
                 ...f.date('enrollmentDate', 'Enrollment Date')
             ]),
+            f.section('Covered Dependents', [
+                ...f.text('coveredDependentIds', 'Covered Dependent IDs')
+            ]),
             f.section('Primary Care (Medical Plans)', [
                 ...f.text('primaryCareProvider', 'Primary Care Provider'),
                 ...f.text('primaryCareProviderId', 'Provider ID')

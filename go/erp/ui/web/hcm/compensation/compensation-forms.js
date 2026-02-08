@@ -47,6 +47,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('currencyId', 'Currency', 'Currency', true),
                 ...f.select('payFrequency', 'Pay Frequency', enums.PAY_FREQUENCY, true)
             ]),
+            f.section('Grades', [
+                ...f.text('salaryGradeIds', 'Salary Grade IDs')
+            ]),
             f.section('Dates', [
                 ...f.date('effectiveDate', 'Effective Date'),
                 ...f.date('endDate', 'End Date'),

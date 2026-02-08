@@ -927,7 +927,7 @@ type SalaryStructure struct {
 	Description    string         `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
 	CurrencyId     string         `protobuf:"bytes,6,opt,name=currency_id,json=currencyId,proto3" json:"currency_id,omitempty"`
 	PayFrequency   PayFrequency   `protobuf:"varint,7,opt,name=pay_frequency,json=payFrequency,proto3,enum=hcm.PayFrequency" json:"pay_frequency,omitempty"`
-	Grades         []*SalaryGrade `protobuf:"bytes,8,rep,name=grades,proto3" json:"grades,omitempty"`
+	SalaryGradeIds []string       `protobuf:"bytes,8,rep,name=salary_grade_ids,json=salaryGradeIds,proto3" json:"salary_grade_ids,omitempty"`
 	EffectiveDate  int64          `protobuf:"varint,9,opt,name=effective_date,json=effectiveDate,proto3" json:"effective_date,omitempty"`
 	EndDate        int64          `protobuf:"varint,10,opt,name=end_date,json=endDate,proto3" json:"end_date,omitempty"`
 	IsActive       bool           `protobuf:"varint,11,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
@@ -1015,9 +1015,9 @@ func (x *SalaryStructure) GetPayFrequency() PayFrequency {
 	return PayFrequency_PAY_FREQUENCY_UNSPECIFIED
 }
 
-func (x *SalaryStructure) GetGrades() []*SalaryGrade {
+func (x *SalaryStructure) GetSalaryGradeIds() []string {
 	if x != nil {
-		return x.Grades
+		return x.SalaryGradeIds
 	}
 	return nil
 }
@@ -3436,10 +3436,10 @@ var file_hcm_compensation_proto_rawDesc = []byte{
 	0x63, 0x79, 0x49, 0x64, 0x12, 0x36, 0x0a, 0x0d, 0x70, 0x61, 0x79, 0x5f, 0x66, 0x72, 0x65, 0x71,
 	0x75, 0x65, 0x6e, 0x63, 0x79, 0x18, 0x07, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x11, 0x2e, 0x68, 0x63,
 	0x6d, 0x2e, 0x50, 0x61, 0x79, 0x46, 0x72, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x79, 0x52, 0x0c,
-	0x70, 0x61, 0x79, 0x46, 0x72, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x79, 0x12, 0x28, 0x0a, 0x06,
-	0x67, 0x72, 0x61, 0x64, 0x65, 0x73, 0x18, 0x08, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x10, 0x2e, 0x68,
-	0x63, 0x6d, 0x2e, 0x53, 0x61, 0x6c, 0x61, 0x72, 0x79, 0x47, 0x72, 0x61, 0x64, 0x65, 0x52, 0x06,
-	0x67, 0x72, 0x61, 0x64, 0x65, 0x73, 0x12, 0x25, 0x0a, 0x0e, 0x65, 0x66, 0x66, 0x65, 0x63, 0x74,
+	0x70, 0x61, 0x79, 0x46, 0x72, 0x65, 0x71, 0x75, 0x65, 0x6e, 0x63, 0x79, 0x12, 0x28, 0x0a, 0x10,
+	0x73, 0x61, 0x6c, 0x61, 0x72, 0x79, 0x5f, 0x67, 0x72, 0x61, 0x64, 0x65, 0x5f, 0x69, 0x64, 0x73,
+	0x18, 0x08, 0x20, 0x03, 0x28, 0x09, 0x52, 0x0e, 0x73, 0x61, 0x6c, 0x61, 0x72, 0x79, 0x47, 0x72,
+	0x61, 0x64, 0x65, 0x49, 0x64, 0x73, 0x12, 0x25, 0x0a, 0x0e, 0x65, 0x66, 0x66, 0x65, 0x63, 0x74,
 	0x69, 0x76, 0x65, 0x5f, 0x64, 0x61, 0x74, 0x65, 0x18, 0x09, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0d,
 	0x65, 0x66, 0x66, 0x65, 0x63, 0x74, 0x69, 0x76, 0x65, 0x44, 0x61, 0x74, 0x65, 0x12, 0x19, 0x0a,
 	0x08, 0x65, 0x6e, 0x64, 0x5f, 0x64, 0x61, 0x74, 0x65, 0x18, 0x0a, 0x20, 0x01, 0x28, 0x03, 0x52,
@@ -4218,100 +4218,99 @@ var file_hcm_compensation_proto_depIdxs = []int32{
 	11, // 5: hcm.SalaryGradeList.list:type_name -> hcm.SalaryGrade
 	36, // 6: hcm.SalaryGradeList.metadata:type_name -> l8api.L8MetaData
 	34, // 7: hcm.SalaryStructure.pay_frequency:type_name -> hcm.PayFrequency
-	11, // 8: hcm.SalaryStructure.grades:type_name -> hcm.SalaryGrade
-	35, // 9: hcm.SalaryStructure.audit_info:type_name -> erp.AuditInfo
-	13, // 10: hcm.SalaryStructureList.list:type_name -> hcm.SalaryStructure
-	36, // 11: hcm.SalaryStructureList.metadata:type_name -> l8api.L8MetaData
-	0,  // 12: hcm.EmployeeCompensation.compensation_type:type_name -> hcm.CompensationType
-	33, // 13: hcm.EmployeeCompensation.base_salary:type_name -> erp.Money
-	34, // 14: hcm.EmployeeCompensation.pay_frequency:type_name -> hcm.PayFrequency
-	33, // 15: hcm.EmployeeCompensation.hourly_rate:type_name -> erp.Money
-	35, // 16: hcm.EmployeeCompensation.audit_info:type_name -> erp.AuditInfo
-	15, // 17: hcm.EmployeeCompensationList.list:type_name -> hcm.EmployeeCompensation
-	36, // 18: hcm.EmployeeCompensationList.metadata:type_name -> l8api.L8MetaData
-	33, // 19: hcm.MeritIncrease.current_salary:type_name -> erp.Money
-	33, // 20: hcm.MeritIncrease.proposed_increase:type_name -> erp.Money
-	33, // 21: hcm.MeritIncrease.new_salary:type_name -> erp.Money
-	33, // 22: hcm.MeritIncrease.budget_amount:type_name -> erp.Money
-	1,  // 23: hcm.MeritIncrease.status:type_name -> hcm.MeritIncreaseStatus
-	33, // 24: hcm.MeritIncrease.manager_recommended:type_name -> erp.Money
-	33, // 25: hcm.MeritIncrease.hr_approved:type_name -> erp.Money
-	35, // 26: hcm.MeritIncrease.audit_info:type_name -> erp.AuditInfo
-	17, // 27: hcm.MeritIncreaseList.list:type_name -> hcm.MeritIncrease
-	36, // 28: hcm.MeritIncreaseList.metadata:type_name -> l8api.L8MetaData
-	2,  // 29: hcm.MeritCycle.status:type_name -> hcm.MeritCycleStatus
-	33, // 30: hcm.MeritCycle.total_budget:type_name -> erp.Money
-	35, // 31: hcm.MeritCycle.audit_info:type_name -> erp.AuditInfo
-	19, // 32: hcm.MeritCycleList.list:type_name -> hcm.MeritCycle
-	36, // 33: hcm.MeritCycleList.metadata:type_name -> l8api.L8MetaData
-	3,  // 34: hcm.BonusPlan.plan_type:type_name -> hcm.BonusPlanType
-	4,  // 35: hcm.BonusPlan.frequency:type_name -> hcm.BonusFrequency
-	33, // 36: hcm.BonusPlan.target_amount:type_name -> erp.Money
-	33, // 37: hcm.BonusPlan.maximum_amount:type_name -> erp.Money
-	5,  // 38: hcm.BonusPlan.funding_type:type_name -> hcm.BonusFundingType
-	37, // 39: hcm.BonusPlan.eligibility:type_name -> hcm.EligibilityRules
-	35, // 40: hcm.BonusPlan.audit_info:type_name -> erp.AuditInfo
-	21, // 41: hcm.BonusPlanList.list:type_name -> hcm.BonusPlan
-	36, // 42: hcm.BonusPlanList.metadata:type_name -> l8api.L8MetaData
-	3,  // 43: hcm.BonusPayment.bonus_type:type_name -> hcm.BonusPlanType
-	33, // 44: hcm.BonusPayment.target_amount:type_name -> erp.Money
-	33, // 45: hcm.BonusPayment.actual_amount:type_name -> erp.Money
-	38, // 46: hcm.BonusPayment.performance_period:type_name -> erp.DateRange
-	6,  // 47: hcm.BonusPayment.status:type_name -> hcm.BonusPaymentStatus
-	35, // 48: hcm.BonusPayment.audit_info:type_name -> erp.AuditInfo
-	23, // 49: hcm.BonusPaymentList.list:type_name -> hcm.BonusPayment
-	36, // 50: hcm.BonusPaymentList.metadata:type_name -> l8api.L8MetaData
-	7,  // 51: hcm.EquityGrant.grant_type:type_name -> hcm.EquityGrantType
-	33, // 52: hcm.EquityGrant.grant_price:type_name -> erp.Money
-	33, // 53: hcm.EquityGrant.fair_market_value:type_name -> erp.Money
-	33, // 54: hcm.EquityGrant.total_value:type_name -> erp.Money
-	27, // 55: hcm.EquityGrant.vesting_schedule:type_name -> hcm.VestingSchedule
-	8,  // 56: hcm.EquityGrant.status:type_name -> hcm.EquityGrantStatus
-	35, // 57: hcm.EquityGrant.audit_info:type_name -> erp.AuditInfo
-	25, // 58: hcm.EquityGrantList.list:type_name -> hcm.EquityGrant
-	36, // 59: hcm.EquityGrantList.metadata:type_name -> l8api.L8MetaData
-	9,  // 60: hcm.VestingSchedule.vesting_type:type_name -> hcm.VestingType
-	10, // 61: hcm.VestingSchedule.frequency:type_name -> hcm.VestingFrequency
-	28, // 62: hcm.VestingSchedule.milestones:type_name -> hcm.VestingMilestone
-	33, // 63: hcm.CompensationStatement.base_salary:type_name -> erp.Money
-	33, // 64: hcm.CompensationStatement.hourly_equivalent:type_name -> erp.Money
-	33, // 65: hcm.CompensationStatement.bonus_target:type_name -> erp.Money
-	33, // 66: hcm.CompensationStatement.bonus_actual:type_name -> erp.Money
-	33, // 67: hcm.CompensationStatement.commissions:type_name -> erp.Money
-	33, // 68: hcm.CompensationStatement.equity_value:type_name -> erp.Money
-	33, // 69: hcm.CompensationStatement.employer_health_contribution:type_name -> erp.Money
-	33, // 70: hcm.CompensationStatement.employer_dental_contribution:type_name -> erp.Money
-	33, // 71: hcm.CompensationStatement.employer_vision_contribution:type_name -> erp.Money
-	33, // 72: hcm.CompensationStatement.employer_life_contribution:type_name -> erp.Money
-	33, // 73: hcm.CompensationStatement.employer_disability_contribution:type_name -> erp.Money
-	33, // 74: hcm.CompensationStatement.employer_retirement_contribution:type_name -> erp.Money
-	33, // 75: hcm.CompensationStatement.employer_hsa_contribution:type_name -> erp.Money
-	33, // 76: hcm.CompensationStatement.employer_payroll_taxes:type_name -> erp.Money
-	33, // 77: hcm.CompensationStatement.other_benefits_value:type_name -> erp.Money
-	33, // 78: hcm.CompensationStatement.perks_value:type_name -> erp.Money
-	33, // 79: hcm.CompensationStatement.total_cash_compensation:type_name -> erp.Money
-	33, // 80: hcm.CompensationStatement.total_benefits_value:type_name -> erp.Money
-	33, // 81: hcm.CompensationStatement.total_compensation:type_name -> erp.Money
-	35, // 82: hcm.CompensationStatement.audit_info:type_name -> erp.AuditInfo
-	29, // 83: hcm.CompensationStatementList.list:type_name -> hcm.CompensationStatement
-	36, // 84: hcm.CompensationStatementList.metadata:type_name -> l8api.L8MetaData
-	33, // 85: hcm.MarketBenchmark.market_25th:type_name -> erp.Money
-	33, // 86: hcm.MarketBenchmark.market_50th:type_name -> erp.Money
-	33, // 87: hcm.MarketBenchmark.market_75th:type_name -> erp.Money
-	33, // 88: hcm.MarketBenchmark.market_90th:type_name -> erp.Money
-	33, // 89: hcm.MarketBenchmark.market_average:type_name -> erp.Money
-	33, // 90: hcm.MarketBenchmark.total_cash_25th:type_name -> erp.Money
-	33, // 91: hcm.MarketBenchmark.total_cash_50th:type_name -> erp.Money
-	33, // 92: hcm.MarketBenchmark.total_cash_75th:type_name -> erp.Money
-	33, // 93: hcm.MarketBenchmark.internal_average:type_name -> erp.Money
-	35, // 94: hcm.MarketBenchmark.audit_info:type_name -> erp.AuditInfo
-	31, // 95: hcm.MarketBenchmarkList.list:type_name -> hcm.MarketBenchmark
-	36, // 96: hcm.MarketBenchmarkList.metadata:type_name -> l8api.L8MetaData
-	97, // [97:97] is the sub-list for method output_type
-	97, // [97:97] is the sub-list for method input_type
-	97, // [97:97] is the sub-list for extension type_name
-	97, // [97:97] is the sub-list for extension extendee
-	0,  // [0:97] is the sub-list for field type_name
+	35, // 8: hcm.SalaryStructure.audit_info:type_name -> erp.AuditInfo
+	13, // 9: hcm.SalaryStructureList.list:type_name -> hcm.SalaryStructure
+	36, // 10: hcm.SalaryStructureList.metadata:type_name -> l8api.L8MetaData
+	0,  // 11: hcm.EmployeeCompensation.compensation_type:type_name -> hcm.CompensationType
+	33, // 12: hcm.EmployeeCompensation.base_salary:type_name -> erp.Money
+	34, // 13: hcm.EmployeeCompensation.pay_frequency:type_name -> hcm.PayFrequency
+	33, // 14: hcm.EmployeeCompensation.hourly_rate:type_name -> erp.Money
+	35, // 15: hcm.EmployeeCompensation.audit_info:type_name -> erp.AuditInfo
+	15, // 16: hcm.EmployeeCompensationList.list:type_name -> hcm.EmployeeCompensation
+	36, // 17: hcm.EmployeeCompensationList.metadata:type_name -> l8api.L8MetaData
+	33, // 18: hcm.MeritIncrease.current_salary:type_name -> erp.Money
+	33, // 19: hcm.MeritIncrease.proposed_increase:type_name -> erp.Money
+	33, // 20: hcm.MeritIncrease.new_salary:type_name -> erp.Money
+	33, // 21: hcm.MeritIncrease.budget_amount:type_name -> erp.Money
+	1,  // 22: hcm.MeritIncrease.status:type_name -> hcm.MeritIncreaseStatus
+	33, // 23: hcm.MeritIncrease.manager_recommended:type_name -> erp.Money
+	33, // 24: hcm.MeritIncrease.hr_approved:type_name -> erp.Money
+	35, // 25: hcm.MeritIncrease.audit_info:type_name -> erp.AuditInfo
+	17, // 26: hcm.MeritIncreaseList.list:type_name -> hcm.MeritIncrease
+	36, // 27: hcm.MeritIncreaseList.metadata:type_name -> l8api.L8MetaData
+	2,  // 28: hcm.MeritCycle.status:type_name -> hcm.MeritCycleStatus
+	33, // 29: hcm.MeritCycle.total_budget:type_name -> erp.Money
+	35, // 30: hcm.MeritCycle.audit_info:type_name -> erp.AuditInfo
+	19, // 31: hcm.MeritCycleList.list:type_name -> hcm.MeritCycle
+	36, // 32: hcm.MeritCycleList.metadata:type_name -> l8api.L8MetaData
+	3,  // 33: hcm.BonusPlan.plan_type:type_name -> hcm.BonusPlanType
+	4,  // 34: hcm.BonusPlan.frequency:type_name -> hcm.BonusFrequency
+	33, // 35: hcm.BonusPlan.target_amount:type_name -> erp.Money
+	33, // 36: hcm.BonusPlan.maximum_amount:type_name -> erp.Money
+	5,  // 37: hcm.BonusPlan.funding_type:type_name -> hcm.BonusFundingType
+	37, // 38: hcm.BonusPlan.eligibility:type_name -> hcm.EligibilityRules
+	35, // 39: hcm.BonusPlan.audit_info:type_name -> erp.AuditInfo
+	21, // 40: hcm.BonusPlanList.list:type_name -> hcm.BonusPlan
+	36, // 41: hcm.BonusPlanList.metadata:type_name -> l8api.L8MetaData
+	3,  // 42: hcm.BonusPayment.bonus_type:type_name -> hcm.BonusPlanType
+	33, // 43: hcm.BonusPayment.target_amount:type_name -> erp.Money
+	33, // 44: hcm.BonusPayment.actual_amount:type_name -> erp.Money
+	38, // 45: hcm.BonusPayment.performance_period:type_name -> erp.DateRange
+	6,  // 46: hcm.BonusPayment.status:type_name -> hcm.BonusPaymentStatus
+	35, // 47: hcm.BonusPayment.audit_info:type_name -> erp.AuditInfo
+	23, // 48: hcm.BonusPaymentList.list:type_name -> hcm.BonusPayment
+	36, // 49: hcm.BonusPaymentList.metadata:type_name -> l8api.L8MetaData
+	7,  // 50: hcm.EquityGrant.grant_type:type_name -> hcm.EquityGrantType
+	33, // 51: hcm.EquityGrant.grant_price:type_name -> erp.Money
+	33, // 52: hcm.EquityGrant.fair_market_value:type_name -> erp.Money
+	33, // 53: hcm.EquityGrant.total_value:type_name -> erp.Money
+	27, // 54: hcm.EquityGrant.vesting_schedule:type_name -> hcm.VestingSchedule
+	8,  // 55: hcm.EquityGrant.status:type_name -> hcm.EquityGrantStatus
+	35, // 56: hcm.EquityGrant.audit_info:type_name -> erp.AuditInfo
+	25, // 57: hcm.EquityGrantList.list:type_name -> hcm.EquityGrant
+	36, // 58: hcm.EquityGrantList.metadata:type_name -> l8api.L8MetaData
+	9,  // 59: hcm.VestingSchedule.vesting_type:type_name -> hcm.VestingType
+	10, // 60: hcm.VestingSchedule.frequency:type_name -> hcm.VestingFrequency
+	28, // 61: hcm.VestingSchedule.milestones:type_name -> hcm.VestingMilestone
+	33, // 62: hcm.CompensationStatement.base_salary:type_name -> erp.Money
+	33, // 63: hcm.CompensationStatement.hourly_equivalent:type_name -> erp.Money
+	33, // 64: hcm.CompensationStatement.bonus_target:type_name -> erp.Money
+	33, // 65: hcm.CompensationStatement.bonus_actual:type_name -> erp.Money
+	33, // 66: hcm.CompensationStatement.commissions:type_name -> erp.Money
+	33, // 67: hcm.CompensationStatement.equity_value:type_name -> erp.Money
+	33, // 68: hcm.CompensationStatement.employer_health_contribution:type_name -> erp.Money
+	33, // 69: hcm.CompensationStatement.employer_dental_contribution:type_name -> erp.Money
+	33, // 70: hcm.CompensationStatement.employer_vision_contribution:type_name -> erp.Money
+	33, // 71: hcm.CompensationStatement.employer_life_contribution:type_name -> erp.Money
+	33, // 72: hcm.CompensationStatement.employer_disability_contribution:type_name -> erp.Money
+	33, // 73: hcm.CompensationStatement.employer_retirement_contribution:type_name -> erp.Money
+	33, // 74: hcm.CompensationStatement.employer_hsa_contribution:type_name -> erp.Money
+	33, // 75: hcm.CompensationStatement.employer_payroll_taxes:type_name -> erp.Money
+	33, // 76: hcm.CompensationStatement.other_benefits_value:type_name -> erp.Money
+	33, // 77: hcm.CompensationStatement.perks_value:type_name -> erp.Money
+	33, // 78: hcm.CompensationStatement.total_cash_compensation:type_name -> erp.Money
+	33, // 79: hcm.CompensationStatement.total_benefits_value:type_name -> erp.Money
+	33, // 80: hcm.CompensationStatement.total_compensation:type_name -> erp.Money
+	35, // 81: hcm.CompensationStatement.audit_info:type_name -> erp.AuditInfo
+	29, // 82: hcm.CompensationStatementList.list:type_name -> hcm.CompensationStatement
+	36, // 83: hcm.CompensationStatementList.metadata:type_name -> l8api.L8MetaData
+	33, // 84: hcm.MarketBenchmark.market_25th:type_name -> erp.Money
+	33, // 85: hcm.MarketBenchmark.market_50th:type_name -> erp.Money
+	33, // 86: hcm.MarketBenchmark.market_75th:type_name -> erp.Money
+	33, // 87: hcm.MarketBenchmark.market_90th:type_name -> erp.Money
+	33, // 88: hcm.MarketBenchmark.market_average:type_name -> erp.Money
+	33, // 89: hcm.MarketBenchmark.total_cash_25th:type_name -> erp.Money
+	33, // 90: hcm.MarketBenchmark.total_cash_50th:type_name -> erp.Money
+	33, // 91: hcm.MarketBenchmark.total_cash_75th:type_name -> erp.Money
+	33, // 92: hcm.MarketBenchmark.internal_average:type_name -> erp.Money
+	35, // 93: hcm.MarketBenchmark.audit_info:type_name -> erp.AuditInfo
+	31, // 94: hcm.MarketBenchmarkList.list:type_name -> hcm.MarketBenchmark
+	36, // 95: hcm.MarketBenchmarkList.metadata:type_name -> l8api.L8MetaData
+	96, // [96:96] is the sub-list for method output_type
+	96, // [96:96] is the sub-list for method input_type
+	96, // [96:96] is the sub-list for extension type_name
+	96, // [96:96] is the sub-list for extension extendee
+	0,  // [0:96] is the sub-list for field type_name
 }
 
 func init() { file_hcm_compensation_proto_init() }

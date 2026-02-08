@@ -64,6 +64,9 @@ window.MobileBenefits = window.MobileBenefits || {};
                 ...f.date('coverageEndDate', 'Coverage End'),
                 ...f.date('enrollmentDate', 'Enrollment Date')
             ]),
+            f.section('Covered Dependents', [
+                ...f.text('coveredDependentIds', 'Covered Dependent IDs')
+            ]),
             f.section('Primary Care (Medical Plans)', [
                 ...f.text('primaryCareProvider', 'Primary Care Provider'),
                 ...f.text('primaryCareProviderId', 'Provider ID')

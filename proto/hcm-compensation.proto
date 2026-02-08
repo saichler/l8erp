@@ -63,7 +63,7 @@ message SalaryStructure {
   string description = 5;
   string currency_id = 6;
   PayFrequency pay_frequency = 7;
-  repeated SalaryGrade grades = 8;
+  repeated string salary_grade_ids = 8;
   int64 effective_date = 9;
   int64 end_date = 10;
   bool is_active = 11;

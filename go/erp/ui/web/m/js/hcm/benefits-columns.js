@@ -41,7 +41,8 @@ limitations under the License.
             ...col.status('status', 'Status', enums.ENROLLMENT_STATUS_VALUES, render.enrollmentStatus),
             ...col.status('reason', 'Reason', enums.ENROLLMENT_REASON_VALUES, render.enrollmentReason),
             ...col.date('coverageStartDate', 'Coverage Start'),
-            ...col.money('employeeCostPerPeriod', 'Employee Cost')
+            ...col.money('employeeCostPerPeriod', 'Employee Cost'),
+            ...col.custom('coveredDependentIds', 'Dependents', (item) => item.coveredDependentIds ? item.coveredDependentIds.length : 0)
         ],
 
         Carrier: [

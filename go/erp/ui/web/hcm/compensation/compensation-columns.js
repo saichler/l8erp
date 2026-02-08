@@ -36,7 +36,7 @@ limitations under the License.
             ...col.id('structureId'),
             ...col.basic(['code', 'name', ['currencyId', 'Currency']]),
             ...col.enum('payFrequency', 'Frequency', enums.PAY_FREQUENCY_VALUES, internal.renderPayFrequency),
-            ...col.custom('grades', 'Grades', (item) => item.grades ? item.grades.length : 0, { sortKey: false }),
+            ...col.custom('salaryGradeIds', 'Grades', (item) => item.salaryGradeIds ? item.salaryGradeIds.length : 0, { sortKey: false }),
             ...col.date('effectiveDate', 'Effective'),
             ...col.boolean('isActive', 'Active')
         ],

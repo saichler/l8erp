@@ -41,7 +41,7 @@ limitations under the License.
             ...col.col('name', 'Name'),
             ...col.col('currencyId', 'Currency'),
             ...col.status('payFrequency', 'Frequency', enums.PAY_FREQUENCY_VALUES, render.payFrequency),
-            ...col.custom('grades', 'Grades', (item) => item.grades ? item.grades.length : 0),
+            ...col.custom('salaryGradeIds', 'Grades', (item) => item.salaryGradeIds ? item.salaryGradeIds.length : 0),
             ...col.date('effectiveDate', 'Effective'),
             ...col.boolean('isActive', 'Active')
         ],

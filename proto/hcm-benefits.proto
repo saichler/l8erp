@@ -148,7 +148,7 @@ message BenefitEnrollment {
   // Elections
   repeated BenefitElection elections = 13;
   repeated Beneficiary beneficiaries = 14;
-  repeated Dependent covered_dependents = 15;
+  repeated string covered_dependent_ids = 15;
 
   // Primary care (for medical)
   string primary_care_provider = 16;

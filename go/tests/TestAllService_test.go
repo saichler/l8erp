@@ -73,16 +73,44 @@ func TestAllServices(t *testing.T) {
 	}
 
 	// 4. Run all mock data phases
-	store := &mocks.MockDataStore{}
-	mocks.RunAllPhases(client, store)
+	testStore = &mocks.MockDataStore{}
+	mocks.RunAllPhases(client, testStore)
 
 	// 5. Verify key entity counts
-	if len(store.EmployeeIDs) == 0 {
+	if len(testStore.EmployeeIDs) == 0 {
 		log.Fail(t, "No employees generated")
 	}
-	if len(store.CurrencyIDs) == 0 {
+	if len(testStore.CurrencyIDs) == 0 {
 		log.Fail(t, "No currencies generated")
 	}
 
-	mocks.PrintSummary(store)
+	mocks.PrintSummary(testStore)
+
+	// 6. Test service handlers (all 376 services)
+	testServiceHandlersHCM(t, erpServicesVnic)
+	testServiceHandlersFIN(t, erpServicesVnic)
+	testServiceHandlersSCM(t, erpServicesVnic)
+	testServiceHandlersSALES(t, erpServicesVnic)
+	testServiceHandlersMFG(t, erpServicesVnic)
+	testServiceHandlersCRM(t, erpServicesVnic)
+	testServiceHandlersPRJ(t, erpServicesVnic)
+	testServiceHandlersBI(t, erpServicesVnic)
+	testServiceHandlersDOC(t, erpServicesVnic)
+	testServiceHandlersECOM(t, erpServicesVnic)
+	testServiceHandlersCOMP(t, erpServicesVnic)
+	testServiceHandlersSYS(t, erpServicesVnic)
+
+	// 7. Test service getters (all 376 services)
+	testServiceGettersHCM(t, erpServicesVnic)
+	testServiceGettersFIN(t, erpServicesVnic)
+	testServiceGettersSCM(t, erpServicesVnic)
+	testServiceGettersSALES(t, erpServicesVnic)
+	testServiceGettersMFG(t, erpServicesVnic)
+	testServiceGettersCRM(t, erpServicesVnic)
+	testServiceGettersPRJ(t, erpServicesVnic)
+	testServiceGettersBI(t, erpServicesVnic)
+	testServiceGettersDOC(t, erpServicesVnic)
+	testServiceGettersECOM(t, erpServicesVnic)
+	testServiceGettersCOMP(t, erpServicesVnic)
+	testServiceGettersSYS(t, erpServicesVnic)
 }

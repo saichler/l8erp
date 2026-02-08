@@ -17,6 +17,7 @@ package tests
 
 import (
 	"github.com/saichler/l8bus/go/overlay/protocol"
+	"github.com/saichler/l8erp/go/tests/mocks"
 	. "github.com/saichler/l8test/go/infra/t_resources"
 	. "github.com/saichler/l8test/go/infra/t_topology"
 	. "github.com/saichler/l8types/go/ifs"
@@ -25,6 +26,7 @@ import (
 
 var topo *TestTopology
 var FLog = logger.NewLoggerDirectImpl(logger.NewFileLogMethod("test.log"))
+var testStore *mocks.MockDataStore
 
 func init() {
 	Log.SetLogLevel(Trace_Level)
