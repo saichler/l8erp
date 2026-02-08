@@ -60,7 +60,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         getServiceColumns(serviceConfig) {
             if (serviceConfig.model) {
                 // Try all registered mobile module registries
-                const registries = [window.MobileHCM, window.MobileFIN, window.MobileSCM, window.MobileSYS];
+                const registries = [
+                    window.MobileHCM, window.MobileFIN, window.MobileSCM,
+                    window.MobileSales, window.MobileMfg, window.MobileCrm,
+                    window.MobileBi, window.MobileDoc, window.MobileComp,
+                    window.MobilePrj, window.MobileEcom, window.MobileSYS
+                ];
                 for (const reg of registries) {
                     if (reg && reg.getColumns) {
                         const columns = reg.getColumns(serviceConfig.model);
@@ -82,7 +87,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
          */
         getServiceTransformData(serviceConfig) {
             if (serviceConfig.model) {
-                const registries = [window.MobileHCM, window.MobileFIN, window.MobileSCM, window.MobileSYS];
+                const registries = [
+                    window.MobileHCM, window.MobileFIN, window.MobileSCM,
+                    window.MobileSales, window.MobileMfg, window.MobileCrm,
+                    window.MobileBi, window.MobileDoc, window.MobileComp,
+                    window.MobilePrj, window.MobileEcom, window.MobileSYS
+                ];
                 for (const reg of registries) {
                     if (reg && reg.getTransformData) {
                         const transform = reg.getTransformData(serviceConfig.model);
@@ -99,7 +109,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         getServiceFormDef(serviceConfig) {
             if (serviceConfig.model) {
                 // Try all registered mobile module registries
-                const registries = [window.MobileHCM, window.MobileFIN, window.MobileSCM, window.MobileSYS];
+                const registries = [
+                    window.MobileHCM, window.MobileFIN, window.MobileSCM,
+                    window.MobileSales, window.MobileMfg, window.MobileCrm,
+                    window.MobileBi, window.MobileDoc, window.MobileComp,
+                    window.MobilePrj, window.MobileEcom, window.MobileSYS
+                ];
                 for (const reg of registries) {
                     if (reg && reg.getFormDef) {
                         const formDef = reg.getFormDef(serviceConfig.model);

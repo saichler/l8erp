@@ -18,9 +18,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Opportunity Details', [
                 ...f.text('name', 'Name', true),
                 ...f.reference('accountId', 'Account', 'CrmAccount', true),
-                ...f.reference('contactId', 'Contact', 'CrmContact'),
+                ...f.reference('primaryContactId', 'Primary Contact', 'CrmContact'),
                 ...f.select('status', 'Status', enums.OPPORTUNITY_STATUS),
-                ...f.reference('stageId', 'Stage', 'CrmOppStage'),
+                ...f.select('stage', 'Stage', enums.SALES_STAGE),
                 ...f.money('amount', 'Amount'),
                 ...f.number('probability', 'Probability %'),
                 ...f.date('closeDate', 'Close Date'),
@@ -44,7 +44,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         CrmOppCompetitor: f.form('Competitor', [
             f.section('Competitor Details', [
                 ...f.reference('opportunityId', 'Opportunity', 'CrmOpportunity', true),
-                ...f.text('competitorName', 'Competitor Name', true),
+                ...f.text('name', 'Competitor Name', true),
                 ...f.textarea('strengths', 'Strengths'),
                 ...f.textarea('weaknesses', 'Weaknesses'),
                 ...f.select('threatLevel', 'Threat Level', enums.THREAT_LEVEL),
@@ -58,7 +58,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('productId', 'Product', 'ScmItem', true),
                 ...f.number('quantity', 'Quantity', true),
                 ...f.money('unitPrice', 'Unit Price'),
-                ...f.number('discount', 'Discount %'),
+                ...f.number('discountPercent', 'Discount %'),
                 ...f.money('totalPrice', 'Total Price'),
                 ...f.textarea('description', 'Description')
             ])
@@ -67,7 +67,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         CrmOppTeam: f.form('Team Member', [
             f.section('Team Member Details', [
                 ...f.reference('opportunityId', 'Opportunity', 'CrmOpportunity', true),
-                ...f.reference('userId', 'User', 'Employee', true),
+                ...f.reference('employeeId', 'Employee', 'Employee', true),
                 ...f.text('role', 'Role'),
                 ...f.checkbox('isPrimary', 'Primary')
             ])

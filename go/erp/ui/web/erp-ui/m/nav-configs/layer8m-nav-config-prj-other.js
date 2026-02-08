@@ -197,6 +197,47 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             }
         },
 
+        // Compliance Sub-Modules (Level 2)
+        compliance: {
+            subModules: [
+                { key: 'regulatory', label: 'Regulatory', icon: 'compliance' },
+                { key: 'controls', label: 'Internal Controls', icon: 'compliance' },
+                { key: 'risk', label: 'Risk Management', icon: 'compliance' },
+                { key: 'audit', label: 'Audit Management', icon: 'compliance' }
+            ],
+
+            services: {
+                'regulatory': [
+                    { key: 'regulations', label: 'Regulations', icon: 'documents', endpoint: '/110/CompReg', model: 'CompRegulation', idField: 'regulationId' },
+                    { key: 'requirements', label: 'Requirements', icon: 'documents', endpoint: '/110/CompReq', model: 'CompRequirement', idField: 'requirementId' },
+                    { key: 'compliance-statuses', label: 'Compliance Status', icon: 'compliance', endpoint: '/110/CompStatus', model: 'CompComplianceStatus', idField: 'statusId' },
+                    { key: 'certifications', label: 'Certifications', icon: 'talent', endpoint: '/110/CompCert', model: 'CompCertification', idField: 'certificationId' },
+                    { key: 'violations', label: 'Violations', icon: 'compliance', endpoint: '/110/CompVioltn', model: 'CompViolationRecord', idField: 'violationId' }
+                ],
+                'controls': [
+                    { key: 'controls', label: 'Controls', icon: 'compliance', endpoint: '/110/CompCtrl', model: 'CompControl', idField: 'controlId' },
+                    { key: 'assessments', label: 'Assessments', icon: 'bi', endpoint: '/110/CompCtrlAs', model: 'CompControlAssessment', idField: 'assessmentId' },
+                    { key: 'policies', label: 'Policies', icon: 'documents', endpoint: '/110/CompPolicy', model: 'CompPolicyDocument', idField: 'documentId' },
+                    { key: 'approval-matrices', label: 'Approval Matrices', icon: 'projects', endpoint: '/110/CompAprvMx', model: 'CompApprovalMatrix', idField: 'matrixId' },
+                    { key: 'segregation-rules', label: 'Segregation Rules', icon: 'scm', endpoint: '/110/CompSegrul', model: 'CompSegregationRule', idField: 'ruleId' }
+                ],
+                'risk': [
+                    { key: 'risk-registers', label: 'Risk Registers', icon: 'documents', endpoint: '/110/CompRisk', model: 'CompRiskRegister', idField: 'riskId' },
+                    { key: 'risk-assessments', label: 'Risk Assessments', icon: 'bi', endpoint: '/110/CompRiskAs', model: 'CompRiskAssessment', idField: 'assessmentId' },
+                    { key: 'incidents', label: 'Incidents', icon: 'compliance', endpoint: '/110/CompIncdnt', model: 'CompIncident', idField: 'incidentId' },
+                    { key: 'mitigation-plans', label: 'Mitigation Plans', icon: 'projects', endpoint: '/110/CompMitig', model: 'CompMitigationPlan', idField: 'planId' },
+                    { key: 'insurance-policies', label: 'Insurance Policies', icon: 'documents', endpoint: '/110/CompInsur', model: 'CompInsurancePolicy', idField: 'insuranceId' }
+                ],
+                'audit': [
+                    { key: 'audit-schedules', label: 'Audit Schedules', icon: 'time', endpoint: '/110/CompAudSch', model: 'CompAuditSchedule', idField: 'scheduleId' },
+                    { key: 'audit-findings', label: 'Audit Findings', icon: 'compliance', endpoint: '/110/CompAudFnd', model: 'CompAuditFinding', idField: 'findingId' },
+                    { key: 'remediation-actions', label: 'Remediation Actions', icon: 'projects', endpoint: '/110/CompRemed', model: 'CompRemediationAction', idField: 'actionId' },
+                    { key: 'audit-reports', label: 'Audit Reports', icon: 'documents', endpoint: '/110/CompAudRpt', model: 'CompAuditReport', idField: 'reportId' },
+                    { key: 'compliance-reports', label: 'Compliance Reports', icon: 'documents', endpoint: '/110/CompCmpRpt', model: 'CompComplianceReport', idField: 'reportId' }
+                ]
+            }
+        },
+
         // System Sub-Modules (Level 2)
         system: {
             subModules: [

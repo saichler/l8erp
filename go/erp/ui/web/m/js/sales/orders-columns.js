@@ -33,7 +33,7 @@ limitations under the License.
             { key: 'totalAmount', label: 'Total', sortKey: 'totalAmount', render: (item) => Layer8MRenderers.renderMoney(item.totalAmount) }
         ],
 
-        QuotationLine: [
+        SalesQuotationLine: [
             { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
             { key: 'quotationId', label: 'Quotation', sortKey: 'quotationId', filterKey: 'quotationId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -60,7 +60,7 @@ limitations under the License.
             { key: 'lineTotal', label: 'Total', sortKey: 'lineTotal', render: (item) => Layer8MRenderers.renderMoney(item.lineTotal) }
         ],
 
-        OrderAllocation: [
+        SalesOrderAllocation: [
             { key: 'allocationId', label: 'ID', sortKey: 'allocationId', filterKey: 'allocationId' },
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -69,7 +69,7 @@ limitations under the License.
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.ALLOCATION_STATUS_VALUES, render: (item) => render.allocationStatus(item.status) }
         ],
 
-        BackOrder: [
+        SalesBackOrder: [
             { key: 'backOrderId', label: 'ID', sortKey: 'backOrderId', filterKey: 'backOrderId' },
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -77,7 +77,7 @@ limitations under the License.
             { key: 'expectedDate', label: 'Expected', sortKey: 'expectedDate', render: (item) => Layer8MRenderers.renderDate(item.expectedDate) }
         ],
 
-        ReturnOrder: [
+        SalesReturnOrder: [
             { key: 'returnOrderId', label: 'ID', sortKey: 'returnOrderId', filterKey: 'returnOrderId' },
             { key: 'returnNumber', label: 'Return #', sortKey: 'returnNumber', filterKey: 'returnNumber' },
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
@@ -86,7 +86,7 @@ limitations under the License.
             { key: 'status', label: 'Status', sortKey: 'status', filterKey: 'status', enumValues: enums.RETURN_STATUS_VALUES, render: (item) => render.returnStatus(item.status) }
         ],
 
-        ReturnOrderLine: [
+        SalesReturnOrderLine: [
             { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
             { key: 'returnOrderId', label: 'Return', sortKey: 'returnOrderId', filterKey: 'returnOrderId' },
             { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
@@ -96,10 +96,10 @@ limitations under the License.
     };
 
     MobileSalesOrders.primaryKeys = {
-        SalesQuotation: 'quotationId', QuotationLine: 'lineId',
+        SalesQuotation: 'quotationId', SalesQuotationLine: 'lineId',
         SalesOrder: 'salesOrderId', SalesOrderLine: 'lineId',
-        OrderAllocation: 'allocationId', BackOrder: 'backOrderId',
-        ReturnOrder: 'returnOrderId', ReturnOrderLine: 'lineId'
+        SalesOrderAllocation: 'allocationId', SalesBackOrder: 'backOrderId',
+        SalesReturnOrder: 'returnOrderId', SalesReturnOrderLine: 'lineId'
     };
 
 })();

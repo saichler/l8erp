@@ -28,7 +28,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        QuotationLine: f.form('Quotation Line', [
+        SalesQuotationLine: f.form('Quotation Line', [
             f.section('Line Details', [
                 ...f.reference('quotationId', 'Quotation', 'SalesQuotation', true),
                 ...f.reference('itemId', 'Item', 'ScmItem', true),
@@ -65,12 +65,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('quantity', 'Quantity', true),
                 ...f.text('unitOfMeasure', 'UOM'),
                 ...f.money('unitPrice', 'Unit Price', true),
-                ...f.number('discountPercent', 'Discount %'),
                 ...f.number('discountPercent', 'Discount %')
             ])
         ]),
 
-        OrderAllocation: f.form('Order Allocation', [
+        SalesOrderAllocation: f.form('Order Allocation', [
             f.section('Allocation Details', [
                 ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder', true),
                 ...f.reference('lineId', 'Order Line', 'SalesOrderLine'),
@@ -82,7 +81,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        BackOrder: f.form('Back Order', [
+        SalesBackOrder: f.form('Back Order', [
             f.section('Back Order Details', [
                 ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder', true),
                 ...f.reference('lineId', 'Order Line', 'SalesOrderLine'),
@@ -93,7 +92,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        ReturnOrder: f.form('Return Order', [
+        SalesReturnOrder: f.form('Return Order', [
             f.section('Return Details', [
                 ...f.text('returnNumber', 'Return #', true),
                 ...f.reference('salesOrderId', 'Original Order', 'SalesOrder', true),
@@ -106,12 +105,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        ReturnOrderLine: f.form('Return Order Line', [
+        SalesReturnOrderLine: f.form('Return Order Line', [
             f.section('Line Details', [
-                ...f.reference('returnOrderId', 'Return Order', 'ReturnOrder', true),
+                ...f.reference('returnOrderId', 'Return Order', 'SalesReturnOrder', true),
                 ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.text('description', 'Description'),
+                ...f.number('quantity', 'Return Qty', true),
+                ...f.textarea('description', 'Description'),
                 ...f.text('condition', 'Condition'),
                 ...f.text('disposition', 'Disposition')
             ])

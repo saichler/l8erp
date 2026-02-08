@@ -23,7 +23,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'bi', label: 'Business Intelligence', icon: 'bi', hasSubModules: true },
             { key: 'documents', label: 'Documents', icon: 'documents', hasSubModules: true },
             { key: 'ecommerce', label: 'E-Commerce', icon: 'ecommerce', hasSubModules: true },
-            { key: 'compliance', label: 'Compliance', icon: 'compliance', hasSubModules: false },
+            { key: 'compliance', label: 'Compliance', icon: 'compliance', hasSubModules: true },
             { key: 'system', label: 'System', icon: 'system', hasSubModules: true }
         ]
     };

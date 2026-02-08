@@ -36,6 +36,8 @@ limitations under the License.
                 ...f.date('plannedEndDate', 'Planned End'),
                 ...f.select('status', 'Status', enums.WORK_ORDER_STATUS),
                 ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter'),
+                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
+                ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder'),
                 ...f.number('priority', 'Priority'),
                 ...f.textarea('notes', 'Notes')
             ])
@@ -46,7 +48,6 @@ limitations under the License.
                 ...f.number('operationNumber', 'Operation #', true),
                 ...f.text('operationName', 'Operation Name'),
                 ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
-                ...f.textarea('description', 'Description'),
                 ...f.number('setupTimePlanned', 'Setup Time Planned (hrs)'),
                 ...f.number('runTimePlanned', 'Run Time Planned (hrs)'),
                 ...f.select('status', 'Status', enums.OPERATION_STATUS)
@@ -60,7 +61,8 @@ limitations under the License.
                 ...f.date('orderDate', 'Order Date'),
                 ...f.date('requiredDate', 'Required Date'),
                 ...f.select('status', 'Status', enums.WORK_ORDER_STATUS),
-                ...f.select('priority', 'Priority', enums.PRIORITY),
+                ...f.number('priority', 'Priority'),
+                ...f.reference('plannerId', 'Planner', 'Employee'),
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
@@ -68,7 +70,9 @@ limitations under the License.
             f.section('Line Details', [
                 ...f.reference('prodOrderId', 'Prod Order', 'MfgProductionOrder', true),
                 ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('quantityOrdered', 'Qty Ordered', true)
+                ...f.number('quantityOrdered', 'Qty Ordered', true),
+                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder'),
+                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse')
             ])
         ]),
         MfgProdBatch: f.form('Production Batch', [
@@ -86,6 +90,7 @@ limitations under the License.
                 ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
                 ...f.reference('itemId', 'Item', 'ScmItem', true),
                 ...f.number('quantityConsumed', 'Qty Consumed', true),
+                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
                 ...f.date('consumptionDate', 'Date')
             ])
         ])
