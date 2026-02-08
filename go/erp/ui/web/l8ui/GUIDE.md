@@ -39,17 +39,32 @@ Layer8DConfig
     |
 Layer8DUtils  <--- Layer8DRenderers
     |
+    +--- Factory Components
+    |       Layer8EnumFactory
+    |       Layer8RefFactory
+    |       Layer8ColumnFactory
+    |       Layer8FormFactory
+    |       Layer8SvgFactory
+    |       Layer8SectionGenerator / Layer8SectionConfigs
+    |       Layer8ModuleConfigFactory
+    |
     +--- Layer8DTable (class)
     +--- Layer8DDatePicker
     +--- Layer8DInputFormatter
     +--- Layer8DReferencePicker
     +--- Layer8DNotification
     +--- Layer8DPopup
-    +--- Layer8DForms (uses all above)
     +--- Layer8DReferenceRegistry
+    +--- Layer8DForms (facade)
+    |       Layer8DFormsFields
+    |       Layer8DFormsData
+    |       Layer8DFormsPickers
+    |       Layer8DFormsModal
     +--- Layer8DServiceRegistry
     +--- Layer8DModuleNavigation
     +--- Layer8DModuleCRUD
+    +--- Layer8DToggleTree
+    +--- Layer8DModuleFilter
     +--- Layer8DModuleFactory (orchestrates all)
 ```
 
@@ -61,17 +76,26 @@ Layer8MConfig
 Layer8MAuth
 Layer8MUtils
     |
+    +--- Desktop Shared (loaded in mobile too)
+    |       Layer8DConfig, Layer8DUtils, Layer8DRenderers
+    |       Layer8DReferenceRegistry
+    |       Layer8EnumFactory, Layer8RefFactory
+    |       Layer8ColumnFactory, Layer8FormFactory
+    |
     +--- Layer8MPopup
     +--- Layer8MConfirm
     +--- Layer8MTable (class)
     +--- Layer8MEditTable (extends Table)
-    +--- Layer8MFormFields
+    +--- Layer8MFormFields / Layer8MFormFieldsReference
     +--- Layer8MForms
     +--- Layer8MDatePicker
     +--- Layer8MReferenceRegistry
     +--- Layer8MReferencePicker
     +--- Layer8MRenderers
+    +--- Layer8MModuleRegistry
+    +--- Layer8DToggleTree, Layer8DModuleFilter
     +--- LAYER8M_NAV_CONFIG (data)
+    +--- Layer8MNavCrud, Layer8MNavData
     +--- Layer8MNav (uses all above)
 ```
 
@@ -134,52 +158,87 @@ CSS files first, then JS in strict dependency order:
 
 <!-- CSS: Components -->
 <link rel="stylesheet" href="l8ui/edit_table/layer8d-table.css">
+<link rel="stylesheet" href="l8ui/shared/layer8d-toggle-tree.css">
 <link rel="stylesheet" href="l8ui/popup/layer8d-popup.css">
-<link rel="stylesheet" href="l8ui/popup/layer8d-popup-content.css">
 <link rel="stylesheet" href="l8ui/popup/layer8d-popup-forms.css">
+<link rel="stylesheet" href="l8ui/popup/layer8d-popup-content.css">
 <link rel="stylesheet" href="l8ui/datepicker/layer8d-datepicker.css">
 <link rel="stylesheet" href="l8ui/reference_picker/layer8d-reference-picker.css">
 <link rel="stylesheet" href="l8ui/input_formatters/layer8d-input-formatter.css">
 <link rel="stylesheet" href="l8ui/notification/layer8d-notification.css">
 
-<!-- CSS: Module-specific (optional) -->
-<link rel="stylesheet" href="l8ui/mymodule/mymodule.css">
+<!-- CSS: SYS Module -->
+<link rel="stylesheet" href="l8ui/sys/l8sys.css">
+<link rel="stylesheet" href="l8ui/sys/health/l8health.css">
+<link rel="stylesheet" href="l8ui/sys/modules/l8sys-modules.css">
+
+<!-- CSS: Module-specific (optional, per project) -->
+<link rel="stylesheet" href="mymodule/mymodule.css">
+
+<!-- JS: App Shell (sections mapping, app bootstrap) -->
+<script src="js/sections.js"></script>
+<script src="js/app.js"></script>
 
 <!-- JS: Layer8 Core -->
 <script src="l8ui/shared/layer8d-config.js"></script>
 <script src="l8ui/shared/layer8d-utils.js"></script>
 <script src="l8ui/shared/layer8d-renderers.js"></script>
 <script src="l8ui/shared/layer8d-reference-registry.js"></script>
+
+<!-- JS: Factory Components (load before module scripts) -->
+<script src="l8ui/shared/layer8-enum-factory.js"></script>
+<script src="l8ui/shared/layer8-ref-factory.js"></script>
+<script src="l8ui/shared/layer8-column-factory.js"></script>
+<script src="l8ui/shared/layer8-form-factory.js"></script>
 <script src="l8ui/shared/layer8-svg-factory.js"></script>
-<script src="l8ui/shared/layer8-section-generator.js"></script>
 
 <!-- JS: Project-specific SVG templates (optional) -->
 <script src="erp-ui/erp-svg-templates.js"></script>
+
+<script src="l8ui/shared/layer8d-module-config-factory.js"></script>
+<script src="l8ui/shared/layer8-section-generator.js"></script>
 
 <!-- JS: Reference Data (project-specific) -->
 <script src="js/reference-registry-fin.js"></script>
 <script src="js/reference-registry-hcm.js"></script>
 <!-- ... more reference registries -->
 
-<!-- JS: Layer8 Components -->
+<!-- JS: Notification Component (load before forms) -->
 <script src="l8ui/notification/layer8d-notification.js"></script>
+
+<!-- JS: Input Formatter Component (load in order, before forms) -->
 <script src="l8ui/input_formatters/layer8d-input-formatter-utils.js"></script>
 <script src="l8ui/input_formatters/layer8d-input-formatter-masks.js"></script>
+<script src="l8ui/input_formatters/layer8d-input-formatter-types-validators.js"></script>
 <script src="l8ui/input_formatters/layer8d-input-formatter-types.js"></script>
 <script src="l8ui/input_formatters/layer8d-input-formatter-core.js"></script>
 <script src="l8ui/input_formatters/layer8d-input-formatter.js"></script>
+
+<!-- JS: Forms Component (load sub-modules then facade) -->
+<script src="l8ui/shared/layer8d-forms-fields.js"></script>
+<script src="l8ui/shared/layer8d-forms-data.js"></script>
+<script src="l8ui/shared/layer8d-forms-pickers.js"></script>
+<script src="l8ui/shared/layer8d-forms-modal.js"></script>
 <script src="l8ui/shared/layer8d-forms.js"></script>
+
+<!-- JS: Popup Component -->
 <script src="l8ui/popup/layer8d-popup.js"></script>
+
+<!-- JS: Date Picker Component (load in order) -->
 <script src="l8ui/datepicker/layer8d-datepicker-utils.js"></script>
 <script src="l8ui/datepicker/layer8d-datepicker-calendar.js"></script>
 <script src="l8ui/datepicker/layer8d-datepicker-core.js"></script>
 <script src="l8ui/datepicker/layer8d-datepicker.js"></script>
+
+<!-- JS: Reference Picker Component (load in order) -->
 <script src="l8ui/reference_picker/layer8d-reference-picker-utils.js"></script>
 <script src="l8ui/reference_picker/layer8d-reference-picker-data.js"></script>
 <script src="l8ui/reference_picker/layer8d-reference-picker-render.js"></script>
 <script src="l8ui/reference_picker/layer8d-reference-picker-events.js"></script>
 <script src="l8ui/reference_picker/layer8d-reference-picker-core.js"></script>
 <script src="l8ui/reference_picker/layer8d-reference-picker.js"></script>
+
+<!-- JS: Table Component (load in order) -->
 <script src="l8ui/edit_table/layer8d-table-core.js"></script>
 <script src="l8ui/edit_table/layer8d-table-data.js"></script>
 <script src="l8ui/edit_table/layer8d-table-render.js"></script>
@@ -191,16 +250,33 @@ CSS files first, then JS in strict dependency order:
 <script src="l8ui/shared/layer8d-service-registry.js"></script>
 <script src="l8ui/shared/layer8d-module-crud.js"></script>
 <script src="l8ui/shared/layer8d-module-navigation.js"></script>
+<script src="l8ui/shared/layer8d-toggle-tree.js"></script>
+<script src="l8ui/shared/layer8d-module-filter.js"></script>
 <script src="l8ui/shared/layer8d-module-factory.js"></script>
 
 <!-- JS: Module Data (per module, per sub-module) -->
-<script src="l8ui/mymodule/mymodule-config.js"></script>
-<script src="l8ui/mymodule/submodule/submodule-enums.js"></script>
-<script src="l8ui/mymodule/submodule/submodule-columns.js"></script>
-<script src="l8ui/mymodule/submodule/submodule-forms.js"></script>
-<script src="l8ui/mymodule/submodule/submodule.js"></script>
+<script src="mymodule/mymodule-section-config.js"></script>
+<script src="mymodule/mymodule-config.js"></script>
+<script src="mymodule/submodule/submodule-enums.js"></script>
+<script src="mymodule/submodule/submodule-columns.js"></script>
+<script src="mymodule/submodule/submodule-forms.js"></script>
 <!-- repeat for each sub-module -->
-<script src="l8ui/mymodule/mymodule-init.js"></script>
+<script src="mymodule/mymodule-init.js"></script>
+
+<!-- JS: SYS Module (built-in) -->
+<script src="l8ui/sys/l8sys-config.js"></script>
+<script src="l8ui/sys/health/l8health.js"></script>
+<script src="l8ui/sys/security/l8security-enums.js"></script>
+<script src="l8ui/sys/security/l8security-columns.js"></script>
+<script src="l8ui/sys/security/l8security-forms.js"></script>
+<script src="l8ui/sys/security/l8security.js"></script>
+<script src="l8ui/sys/security/l8security-users-crud.js"></script>
+<script src="l8ui/sys/security/l8security-roles-crud.js"></script>
+<script src="l8ui/sys/security/l8security-credentials-crud.js"></script>
+<script src="l8ui/sys/modules/l8sys-dependency-graph.js"></script>
+<script src="l8ui/sys/modules/l8sys-modules-map.js"></script>
+<script src="l8ui/sys/modules/l8sys-modules.js"></script>
+<script src="l8ui/sys/l8sys-init.js"></script>
 ```
 
 ---
@@ -218,28 +294,47 @@ CSS files first, then JS in strict dependency order:
 <link rel="stylesheet" href="../l8ui/m/css/layer8m-reference-picker.css">
 <link rel="stylesheet" href="../l8ui/m/css/layer8m-nav-cards.css">
 
-<!-- JS: Layer8 Core -->
+<!-- JS: Layer8 Mobile Core -->
 <script src="../l8ui/m/js/layer8m-config.js"></script>
 <!-- JS: Project-specific config registration (optional) -->
-<script src="js/mobile-config.js"></script>
-<!-- JS: Layer8 Components -->
+<script src="js/mobile-config-hcm.js"></script>
+<!-- JS: Layer8 Mobile Auth & Utils -->
 <script src="../l8ui/m/js/layer8m-auth.js"></script>
 <script src="../l8ui/m/js/layer8m-utils.js"></script>
+
+<!-- JS: Shared Desktop Utilities (needed for currency cache, renderers) -->
+<script src="../l8ui/shared/layer8d-config.js"></script>
+<script src="../l8ui/shared/layer8d-utils.js"></script>
+<script src="../l8ui/shared/layer8d-renderers.js"></script>
+<script src="../l8ui/shared/layer8d-reference-registry.js"></script>
+
+<!-- JS: Factory Components (shared with desktop) -->
+<script src="../l8ui/shared/layer8-enum-factory.js"></script>
+<script src="../l8ui/shared/layer8-ref-factory.js"></script>
+<script src="../l8ui/shared/layer8-column-factory.js"></script>
+<script src="../l8ui/shared/layer8-form-factory.js"></script>
+
+<!-- JS: Mobile Module Registry Factory -->
+<script src="../l8ui/m/js/layer8m-module-registry.js"></script>
+
+<!-- JS: Layer8 Mobile Components -->
 <script src="../l8ui/m/js/layer8m-popup.js"></script>
 <script src="../l8ui/m/js/layer8m-confirm.js"></script>
 <script src="../l8ui/m/js/layer8m-table.js"></script>
 <script src="../l8ui/m/js/layer8m-edit-table.js"></script>
 <script src="../l8ui/m/js/layer8m-forms-fields.js"></script>
+<script src="../l8ui/m/js/layer8m-forms-fields-reference.js"></script>
 <script src="../l8ui/m/js/layer8m-forms.js"></script>
 <script src="../l8ui/m/js/layer8m-datepicker.js"></script>
 <script src="../l8ui/m/js/layer8m-reference-registry.js"></script>
-<script src="../l8ui/m/js/layer8m-reference-picker.js"></script>
-<script src="../l8ui/m/js/layer8m-renderers.js"></script>
 
 <!-- JS: Project-specific Reference Registries (register with Layer8MReferenceRegistry) -->
 <script src="../erp-ui/m/reference-registries/layer8m-reference-registry-hcm.js"></script>
 <script src="../erp-ui/m/reference-registries/layer8m-reference-registry-scm.js"></script>
 <!-- ... more project-specific registries -->
+
+<script src="../l8ui/m/js/layer8m-reference-picker.js"></script>
+<script src="../l8ui/m/js/layer8m-renderers.js"></script>
 
 <!-- JS: Module Data (per module) -->
 <script src="js/mymodule/submodule-enums.js"></script>
@@ -247,19 +342,31 @@ CSS files first, then JS in strict dependency order:
 <script src="js/mymodule/submodule-forms.js"></script>
 <script src="js/mymodule/mymodule-index.js"></script>
 
-<!-- JS: Navigation Config (project-specific, from erp-ui/) -->
+<!-- JS: Shared Toggle Tree + Module Filter -->
+<script src="../l8ui/shared/layer8d-toggle-tree.js"></script>
+<script src="../l8ui/shared/layer8d-module-filter.js"></script>
+<script src="../l8ui/sys/modules/l8sys-dependency-graph.js"></script>
+<script src="../l8ui/sys/modules/l8sys-modules-map.js"></script>
+<script src="../l8ui/sys/modules/l8sys-modules.js"></script>
+
+<!-- JS: Navigation Core (generic, load BEFORE nav configs) -->
+<script src="../l8ui/m/js/layer8m-nav-crud.js"></script>
+<script src="../l8ui/m/js/layer8m-nav-data.js"></script>
+<script src="../l8ui/m/js/layer8m-nav.js"></script>
+
+<!-- JS: Navigation Config (project-specific, load AFTER nav core) -->
 <script src="../erp-ui/m/nav-configs/layer8m-nav-config-base.js"></script>
 <script src="../erp-ui/m/nav-configs/layer8m-nav-config-icons.js"></script>
+<script src="../erp-ui/m/nav-configs/layer8m-nav-config-fin-hcm.js"></script>
+<script src="../erp-ui/m/nav-configs/layer8m-nav-config-scm-sales.js"></script>
+<script src="../erp-ui/m/nav-configs/layer8m-nav-config-prj-other.js"></script>
 <script src="../erp-ui/m/nav-configs/layer8m-nav-config.js"></script>
-
-<!-- JS: Navigation (generic) -->
-<script src="../l8ui/m/js/layer8m-nav.js"></script>
 
 <!-- JS: App -->
 <script src="js/app-core.js"></script>
 ```
 
-**Note:** Reference registries and nav configs are project-specific and live in `erp-ui/`. The core l8ui library loads first, then project-specific files register their data.
+**Note:** Mobile loads several desktop shared utilities (`Layer8DConfig`, `Layer8DUtils`, `Layer8DRenderers`, `Layer8DReferenceRegistry`) and all four factory components. Reference registries, nav configs, and SYS module components are project-specific and live in `erp-ui/`. The core l8ui library loads first, then project-specific files register their data. Navigation core scripts load BEFORE nav config scripts.
 
 ---
 
@@ -392,37 +499,35 @@ Durations: error=0 (manual close), warning=5000ms, success=3000ms, info=4000ms.
 
 ### 5.6 Layer8DForms
 
+Unified facade for form sub-modules (`Layer8DFormsFields`, `Layer8DFormsData`, `Layer8DFormsPickers`, `Layer8DFormsModal`).
+
 ```js
 // Open add form in popup
-Layer8DForms.openAddForm({
-    title: 'Add Employee',
-    formDefinition: { sections: [...] },
-    endpoint: '/erp/30/Employee',
-    onSuccess: () => { table.fetchData(); }
-});
+Layer8DForms.openAddForm(serviceConfig, formDef, onSuccess)
 
 // Open edit form (fetches record first)
-Layer8DForms.openEditForm({
-    title: 'Edit Employee',
-    formDefinition: {...},
-    endpoint: '/erp/30/Employee',
-    primaryKey: 'employeeId',
-    recordId: 'EMP-001',
-    onSuccess: () => { table.fetchData(); }
-});
+Layer8DForms.openEditForm(serviceConfig, formDef, recordId, onSuccess)
 
-// Read-only details
-Layer8DForms.showDetailsPopup({
-    title: 'Employee Details',
-    formDefinition: {...},
-    record: item
-});
+// Read-only details view
+Layer8DForms.openViewForm(serviceConfig, formDef, data)
 
-// Low-level
-Layer8DForms.renderForm(formDef, data, readonly)   // Returns HTML string
-Layer8DForms.getFormValues(container)                // Collect form data
-Layer8DForms.validateForm(container)                 // { valid, errors[] }
-Layer8DForms.initFormFields(container)               // Init pickers, formatters
+// Delete with confirmation
+Layer8DForms.confirmDelete(serviceConfig, recordId, onSuccess)
+
+// Low-level (from sub-modules)
+Layer8DForms.generateFormHtml(formDef, data)         // Returns HTML string
+Layer8DForms.collectFormData(formDef)                 // Collect form data from DOM
+Layer8DForms.validateFormData(formDef, data)          // Returns errors[]
+Layer8DForms.fetchRecord(endpoint, primaryKey, id, modelName) // Fetch single record
+Layer8DForms.saveRecord(endpoint, data, isEdit)       // POST or PUT
+Layer8DForms.deleteRecord(endpoint, id, primaryKey, modelName) // DELETE
+Layer8DForms.attachDatePickers(container)             // Init date pickers
+Layer8DForms.attachReferencePickers(container)        // Init reference pickers
+```
+
+Where `serviceConfig` is:
+```js
+{ endpoint: '/erp/30/Employee', primaryKey: 'employeeId', modelName: 'Employee' }
 ```
 
 ### 5.7 Layer8DDatePicker
@@ -527,6 +632,142 @@ Layer8DModuleFactory.create({
 ```
 
 This call: registers sub-modules, creates forms facade, attaches tab/subnav navigation, attaches CRUD operations, and exposes the global initializer function.
+
+### 5.13 Layer8ModuleConfigFactory
+
+Factory for creating module configurations with minimal boilerplate. Use instead of manually setting `modules`, `submodules`, and `renderStatus` on namespace objects.
+
+```js
+// Helper: create a service entry
+const svc = Layer8ModuleConfigFactory.service;
+
+// Helper: create a module entry
+const mod = Layer8ModuleConfigFactory.module;
+
+// Create a full module config
+Layer8ModuleConfigFactory.create({
+    namespace: 'Bi',
+    modules: {
+        'reporting': mod('Reporting', '📊', [
+            svc('reports', 'Reports', '📋', '/35/BiReport', 'BiReport'),
+            svc('schedules', 'Schedules', '📅', '/35/BiSchedule', 'BiReportSchedule')
+        ]),
+        'dashboards': mod('Dashboards', '📈', [
+            svc('dashboards', 'Dashboards', '📊', '/35/BiDashbrd', 'BiDashboard')
+        ])
+    },
+    submodules: ['BiReporting', 'BiDashboards']
+});
+```
+
+This creates `window.Bi` with `.modules`, `.submodules`, and `.renderStatus` properties.
+
+### 5.14 Layer8DModuleFilter
+
+Runtime module filter that hides disabled modules/sub-modules/services based on server-stored config.
+
+```js
+await Layer8DModuleFilter.load(bearerToken)        // Load config on app startup
+Layer8DModuleFilter.isEnabled('hcm')               // Check module
+Layer8DModuleFilter.isEnabled('hcm.payroll')       // Check sub-module
+Layer8DModuleFilter.isEnabled('hcm.core-hr.employees') // Check service
+Layer8DModuleFilter.applyToSidebar()               // Hide disabled sidebar items
+Layer8DModuleFilter.applyToSection('hcm')          // Hide disabled tabs/services
+await Layer8DModuleFilter.save(disabledPaths, bearerToken) // Save config
+```
+
+Uses dot-notation paths. A disabled parent disables all children. Dashboard and System are never filtered.
+
+### 5.15 Layer8DToggleTree
+
+Generic collapsible toggle tree with dependency enforcement. Used by SYS module selection UI.
+
+```js
+const tree = Layer8DToggleTree.create({
+    container: document.getElementById('tree-container'),
+    data: treeData,                    // Hierarchical data array
+    onToggle: (path, enabled) => {},   // Called when a node is toggled
+    dependencies: dependencyMap        // Optional dependency enforcement
+});
+tree.getDisabledPaths()                // Returns Set of disabled paths
+```
+
+### 5.16 Factory Components
+
+Four factories reduce boilerplate in module data files. All are loaded before module scripts.
+
+#### Layer8EnumFactory
+
+```js
+const factory = window.Layer8EnumFactory;
+
+// Full enum (label, value alias, CSS class)
+const STATUS = factory.create([
+    ['Unspecified', null, ''],
+    ['Active', 'active', 'layer8d-status-active'],
+    ['Inactive', 'inactive', 'layer8d-status-inactive'],
+]);
+// STATUS.enum = { 0: 'Unspecified', 1: 'Active', 2: 'Inactive' }
+// STATUS.values = { 'active': 1, 'inactive': 2 }
+// STATUS.classes = { 1: 'layer8d-status-active', 2: 'layer8d-status-inactive' }
+
+// Simple enum (labels only, no values/classes)
+const TYPE = factory.simple(['Unspecified', 'Type A', 'Type B']);
+
+// Enum with value aliases (no classes)
+const EMPLOYMENT = factory.withValues([['Full-Time', 'full-time'], ['Part-Time', 'part-time']]);
+```
+
+#### Layer8RefFactory
+
+```js
+const ref = window.Layer8RefFactory;
+window.MyRegistry = {
+    ...ref.simple('Model', 'modelId', 'name', 'Label'),
+    ...ref.person('Person', 'personId', 'lastName', 'firstName'),
+    ...ref.coded('Entity', 'entityId', 'code', 'name'),
+    ...ref.idOnly('LineItem', 'lineId')
+};
+```
+
+#### Layer8ColumnFactory
+
+```js
+const col = window.Layer8ColumnFactory;
+Module.columns = {
+    Model: [
+        ...col.id('modelId'),
+        ...col.col('field', 'Label'),
+        ...col.boolean('isActive', 'Active'),
+        ...col.date('createdDate', 'Created'),
+        ...col.money('amount', 'Amount'),
+        ...col.status('status', 'Status', enums.STATUS_VALUES, render.status),
+        ...col.enum('type', 'Type', null, render.type),
+        ...col.custom('key', 'Label', (item) => item.x, { sortKey: 'key' })
+    ]
+};
+```
+
+#### Layer8FormFactory
+
+```js
+const f = window.Layer8FormFactory;
+Module.forms = {
+    Model: f.form('Model', [
+        f.section('Info', [
+            ...f.text('code', 'Code', true),
+            ...f.text('name', 'Name', true),
+            ...f.textarea('description', 'Description'),
+            ...f.select('status', 'Status', enums.STATUS, true),
+            ...f.reference('managerId', 'Manager', 'Employee'),
+            ...f.date('startDate', 'Start Date'),
+            ...f.money('amount', 'Amount'),
+            ...f.checkbox('isActive', 'Active'),
+            ...f.number('quantity', 'Quantity')
+        ])
+    ])
+};
+```
 
 ---
 
@@ -797,6 +1038,31 @@ Layer8SectionConfigs.register('mymodule', {
 });
 ```
 
+### 6.15 Layer8MModuleRegistry
+
+Factory that creates mobile module registries, replacing manual `findModule()` boilerplate.
+
+```js
+// Creates window.MobileHCM with getColumns, getFormDef, etc.
+window.MobileHCM = Layer8MModuleRegistry.create('MobileHCM', {
+    'Core HR': MobileCoreHR,
+    'Payroll': MobilePayroll,
+    'Benefits': MobileBenefits
+});
+```
+
+The created registry provides:
+```js
+registry.getColumns(modelName)      // Column array or null
+registry.getFormDef(modelName)      // Form definition or null
+registry.getEnums(modelName)        // Enums object or null
+registry.getPrimaryKey(modelName)   // Primary key field name or null
+registry.getRender(modelName)       // Render object or null
+registry.hasModel(modelName)        // Boolean
+registry.getAllModels()             // Array of all model names
+registry.getModuleName(modelName)   // Sub-module name or null
+```
+
 ---
 
 ## 7. Shared Schemas
@@ -882,20 +1148,19 @@ Example: "Projects" module, service area 60.
 ```js
 (function() {
     'use strict';
-    window.Projects = window.Projects || {};
+    const svc = Layer8ModuleConfigFactory.service;
+    const mod = Layer8ModuleConfigFactory.module;
 
-    Projects.modules = {
-        'planning': {
-            label: 'Planning',
-            icon: 'icon-emoji',
-            services: [
-                { key: 'projects', label: 'Projects', icon: 'icon', endpoint: '/60/Project', model: 'Project' },
-                { key: 'tasks', label: 'Tasks', icon: 'icon', endpoint: '/60/Task', model: 'ProjectTask' }
-            ]
-        }
-    };
-
-    Projects.submodules = ['ProjectPlanning'];
+    Layer8ModuleConfigFactory.create({
+        namespace: 'Projects',
+        modules: {
+            'planning': mod('Planning', 'icon-emoji', [
+                svc('projects', 'Projects', 'icon', '/60/Project', 'Project'),
+                svc('tasks', 'Tasks', 'icon', '/60/Task', 'ProjectTask')
+            ])
+        },
+        submodules: ['ProjectPlanning']
+    });
 })();
 ```
 
@@ -958,16 +1223,6 @@ Example: "Projects" module, service area 60.
 })();
 ```
 
-**Entry point:** `l8ui/projects/planning/planning.js`
-```js
-(function() {
-    'use strict';
-    ['columns', 'forms', 'primaryKeys', 'enums', 'render'].forEach(function(prop) {
-        if (!ProjectPlanning[prop]) console.error('ProjectPlanning.' + prop + ' not loaded');
-    });
-})();
-```
-
 ### Step 3: Module Init
 
 **File:** `l8ui/projects/projects-init.js`
@@ -1017,13 +1272,12 @@ Example: "Projects" module, service area 60.
 
 ### Step 5: Wire into app.html
 
-Add script tags (order: config, enums, columns, forms, entry point per sub-module, then init):
+Add script tags (order: config, enums, columns, forms per sub-module, then init):
 ```html
 <script src="l8ui/projects/projects-config.js"></script>
 <script src="l8ui/projects/planning/planning-enums.js"></script>
 <script src="l8ui/projects/planning/planning-columns.js"></script>
 <script src="l8ui/projects/planning/planning-forms.js"></script>
-<script src="l8ui/projects/planning/planning.js"></script>
 <script src="l8ui/projects/projects-init.js"></script>
 ```
 
@@ -1088,21 +1342,12 @@ Layer8DReferenceRegistry.register({
 
 **Registry:** `m/js/projects/projects-index.js`
 ```js
+// m/js/projects/projects-index.js
 (function() {
     'use strict';
-    const modules = [MobileProjectPlanning];
-    function findModule(modelName) {
-        for (const mod of modules) {
-            if (mod.columns && mod.columns[modelName]) return mod;
-        }
-        return null;
-    }
-    window.MobileProjects = {
-        getFormDef(modelName) { const m = findModule(modelName); return m && m.forms && m.forms[modelName] || null; },
-        getColumns(modelName) { const m = findModule(modelName); return m && m.columns && m.columns[modelName] || null; },
-        getTransformData(modelName) { const m = findModule(modelName); return m && m.transformData || null; },
-        hasModel(modelName) { return findModule(modelName) !== null; }
-    };
+    Layer8MModuleRegistry.create('MobileProjects', {
+        'Planning': MobileProjectPlanning
+    });
 })();
 ```
 
@@ -1131,7 +1376,7 @@ LAYER8M_NAV_CONFIG.projects = {
 
 ### Step 3: Register Module with Nav.js
 
-In `l8ui/m/js/layer8m-nav.js`, add `window.MobileProjects` to the registry arrays in `_getServiceColumns`, `_getServiceFormDef`, and `_getServiceTransformData`.
+In `l8ui/m/js/layer8m-nav-data.js`, add `window.MobileProjects` to the registry arrays in `_getServiceColumns`, `_getServiceFormDef`, and `_getServiceTransformData`. **Note:** This requires modifying a library file; future versions may support dynamic registration.
 
 ### Step 4: Update m/app.html
 
