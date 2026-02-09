@@ -1,3 +1,4 @@
+set -e
 cd ./erp/vnet/
 ./build.sh
 cd ../main

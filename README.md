@@ -1,7 +1,7 @@
 # ERP by Layer 8
 
 <p align="center">
-  <img src="go/erp/ui/web/images/logo.gif" alt="ERP by Layer 8 Logo" width="120">
+  <img src="go/erp/ui/web/l8ui/images/logo.gif" alt="ERP by Layer 8 Logo" width="120">
 </p>
 
 <p align="center">
@@ -10,9 +10,11 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Backend-Go-00ADD8?style=flat-square&logo=go" alt="Go">
+  <img src="https://img.shields.io/badge/Backend-Go%201.25-00ADD8?style=flat-square&logo=go" alt="Go">
   <img src="https://img.shields.io/badge/Database-PostgreSQL-4169E1?style=flat-square&logo=postgresql" alt="PostgreSQL">
   <img src="https://img.shields.io/badge/Frontend-Vanilla%20JS-F7DF1E?style=flat-square&logo=javascript" alt="JavaScript">
+  <img src="https://img.shields.io/badge/Serialization-Protobuf-4285F4?style=flat-square&logo=google" alt="Protobuf">
+  <img src="https://img.shields.io/badge/Deploy-Kubernetes-326CE5?style=flat-square&logo=kubernetes" alt="Kubernetes">
   <img src="https://img.shields.io/badge/License-Apache%202.0-blue?style=flat-square" alt="License">
 </p>
 
@@ -20,76 +22,59 @@
 
 ## Overview
 
-ERP by Layer 8 is a comprehensive Enterprise Resource Planning system designed for modern businesses. Built from the ground up with Go, it provides a unified platform for managing all aspects of your organization - from financial operations and human capital to supply chain, manufacturing, sales, and more.
+ERP by Layer 8 is a comprehensive Enterprise Resource Planning system built from the ground up with Go. It provides a unified platform for managing all aspects of an organization — from financial operations and human capital to supply chain, manufacturing, sales, and beyond.
 
-With **12 fully implemented modules** and **371+ business services**, this ERP covers the complete enterprise lifecycle including:
-- **Financial Management** - GL, AP, AR, Cash, Assets, Budgeting, Tax
-- **Human Capital** - Core HR, Payroll, Benefits, Talent, Learning, Compensation
-- **Supply Chain** - Procurement, Inventory, Warehouse, Logistics, Planning
-- **Manufacturing** - Engineering, Production, Quality, Costing
-- **Sales** - Customers, Orders, Pricing, Shipping, Billing
-- **CRM** - Accounts, Contacts, Opportunities, Campaigns, Support
-- **Projects** - Planning, Resources, Time Tracking, Budgets
-- **Business Intelligence** - Dashboards, Reports, Analytics, KPIs
-- **Documents** - Storage, Workflows, Signatures, Compliance
-- **E-Commerce** - Catalog, Orders, Customers, Promotions
-- **Compliance & Risk** - Regulatory, Controls, Risk, Audit
+With **12 fully implemented modules**, **376 business services**, and **72 protobuf schemas**, the system covers the complete enterprise lifecycle:
 
-Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared components, consistent patterns, and a unified approach to enterprise software development.
+- **Financial Management** — GL, AP, AR, Cash, Fixed Assets, Budgeting, Tax
+- **Human Capital** — Core HR, Payroll, Benefits, Talent, Learning, Compensation, Time & Attendance
+- **Supply Chain** — Procurement, Inventory, Warehouse, Logistics, Planning
+- **Manufacturing** — Engineering, Production, Planning, Quality, Costing, Shopfloor
+- **Sales & Distribution** — Customers, Orders, Pricing, Shipping, Billing, Analytics
+- **CRM** — Accounts, Leads, Opportunities, Campaigns, Field Service
+- **Project Management** — Planning, Resources, Time & Expense, Billing, Analytics
+- **Business Intelligence** — Dashboards, Reports, Analytics, KPIs, Data Management
+- **Document Management** — Storage, Workflows, Signatures, Compliance, Integration
+- **E-Commerce** — Catalog, Orders, Customers, Promotions
+- **Compliance & Risk** — Regulatory, Controls, Risk, Audit
+- **System Administration** — Module Selection, Dependencies, Configuration
+
+Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared infrastructure components including ORM, serialization, service framework, virtual networking, and web server.
 
 ## Features
 
-- **12 Integrated Modules** - HCM, Finance, SCM, Manufacturing, Sales, CRM, Projects, BI, Documents, E-Commerce, Compliance
-- **371+ Business Services** - Comprehensive coverage of enterprise operations
-- **Unified Data Model** - Single source of truth across all modules with cross-references
-- **Real-time Analytics** - Live dashboards, KPIs, and instant reporting via BI module
-- **Document Management** - Storage, workflows, approvals, signatures, and compliance
-- **Module Selection** - Enable/disable modules with dependency-aware configuration
-- **System Dependency Map** - Visual module dependency graph for configuration management
-- **Workflow Automation** - Automated business processes, approvals, and notifications
-- **Role-based Access** - Granular security and permissions
-- **Multi-currency Support** - Global financial operations with real-time exchange rate conversion
-- **API-first Design** - RESTful APIs for easy integrations
-- **Mobile App** - Full-featured mobile application with all modules
-- **Full Audit Trail** - Complete transaction history across all modules
-- **Mock Data Generation** - Realistic test data generators for all modules
-- **Kubernetes Native** - Deploy on any K8s cluster with included manifests
-- **Zero Frontend Dependencies** - Pure vanilla JavaScript for maximum performance
+- **376 Business Services** across 12 integrated modules
+- **Desktop + Mobile Apps** — full-featured web and mobile interfaces with complete parity
+- **Module Selection** — enable/disable modules at runtime with automatic dependency management
+- **System Dependency Map** — visual module dependency graph for configuration
+- **Multi-Currency Support** — real-time exchange rate conversion across all financial fields
+- **Protobuf Data Model** — 72 schema files with cross-module references and a unified type system
+- **Mock Data Generation** — realistic test data generators for all 376 services with phased dependency ordering
+- **Validation Framework** — declarative validation builder with required fields, enums, and reference checks
+- **Factory-Driven UI** — shared factories for forms, columns, enums, references, sections, and SVG
+- **Full Audit Trail** — complete transaction history across all modules
+- **API-First Design** — RESTful APIs for all services
+- **Kubernetes Native** — deploy on any K8s cluster with included manifests
+- **Zero Frontend Dependencies** — pure vanilla JavaScript, no build step required
+- **Comprehensive Tests** — service getter and handler tests for every module
 
 ## Modules
 
-| Module | Description | Status |
-|--------|-------------|--------|
-| **Dashboard** | Real-time business insights and KPIs | ✅ Active |
-| **Human Capital (HCM)** | Core HR, Payroll, Benefits, Talent, Learning, Compensation | ✅ Active |
-| **Financial Management** | GL, AP, AR, Cash, Fixed Assets, Budgeting, Tax | ✅ Active |
-| **Supply Chain (SCM)** | Procurement, Inventory, Warehouse, Logistics, Planning | ✅ Active |
-| **Manufacturing (MFG)** | Engineering, Production, Planning, Quality, Costing | ✅ Active |
-| **Sales & Distribution** | Customers, Orders, Pricing, Shipping, Billing, Analytics | ✅ Active |
-| **CRM** | Accounts, Contacts, Opportunities, Campaigns, Support | ✅ Active |
-| **Project Management** | Projects, Resources, Time Tracking, Budgets | ✅ Active |
-| **Business Intelligence** | Dashboards, Reports, Analytics, KPIs, Data Sources | ✅ Active |
-| **Document Management** | Storage, Workflows, Signatures, Compliance, Integration | ✅ Active |
-| **E-Commerce** | Catalog, Orders, Customers, Promotions | ✅ Active |
-| **Compliance & Risk** | Regulatory, Controls, Risk, Audit | ✅ Active |
-| **System Administration** | Users, Settings, Security, Integrations | ✅ Active |
-
-## Recent Updates
-
-- **Module Selection & Dependencies** - Enable/disable modules at runtime with automatic dependency management and visual dependency map
-- **Multi-Currency Exchange** - Real-time currency conversion when switching currencies on money fields
-- **E-Commerce Module** - Complete online commerce: catalog management, orders, customers, and promotions
-- **Compliance & Risk Module** - Regulatory tracking, controls management, risk assessment, and audit trails
-- **Document Management Module** - Complete document lifecycle: storage, workflows, approvals, signatures, compliance
-- **Business Intelligence Module** - Dashboards, reports, KPIs, analytics, and data source management
-- **Project Management Module** - Projects, resources, time tracking, budgets, and milestones
-- **CRM Module** - Customer accounts, contacts, opportunities, campaigns, and support tickets
-- **Sales Module** - Complete order-to-cash: customers, orders, pricing, shipping, billing, and analytics
-- **Manufacturing Module** - Engineering, production, planning, quality control, and costing
-- **Supply Chain Module** - Procurement, inventory, warehouse, logistics, and demand/supply planning
-- **Financial Module** - GL, AP, AR, cash management, fixed assets, budgeting, and tax
-- **Mobile App** - Full mobile application with all 12 modules, responsive design, and floating headers
-- **UI Factory Framework** - Shared factories for forms, columns, enums, references, and sections
+| Module | Services | Description |
+|--------|----------|-------------|
+| **Human Capital (HCM)** | 57 | Core HR, Payroll, Benefits, Talent, Learning, Compensation, Time & Attendance |
+| **Financial Management** | 49 | GL, AP, AR, Cash, Fixed Assets, Budgeting, Tax |
+| **Supply Chain (SCM)** | 44 | Procurement, Inventory, Warehouse, Logistics, Planning |
+| **Manufacturing (MFG)** | 36 | Engineering, Production, Planning, Quality, Costing, Shopfloor |
+| **CRM** | 36 | Accounts, Leads, Opportunities, Campaigns, Marketing, Field Service |
+| **Project Management** | 36 | Planning, Resources, Time & Expense, Billing, Analytics |
+| **Sales & Distribution** | 33 | Customers, Orders, Pricing, Shipping, Billing, Analytics |
+| **Business Intelligence** | 24 | Dashboards, Reports, Analytics, KPIs, Data Sources |
+| **Document Management** | 20 | Storage, Workflows, Signatures, Compliance, Integration |
+| **E-Commerce** | 20 | Catalog, Orders, Customers, Promotions |
+| **Compliance & Risk** | 20 | Regulatory, Controls, Risk, Audit |
+| **System Administration** | 1 | Module Configuration & Dependencies |
+| **Total** | **376** | |
 
 ## Quick Start
 
@@ -98,7 +83,7 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared componen
 - Go 1.25 or later
 - PostgreSQL 14 or later
 
-### Installation
+### Run Locally
 
 ```bash
 # Clone the repository
@@ -106,16 +91,20 @@ git clone https://github.com/saichler/l8erp.git
 cd l8erp
 
 # Run the web server
-go run ./go/erp/ui/main.go
+go run ./go/erp/ui/main1/
+
+# Generate mock data (optional, in a separate terminal)
+go run ./go/tests/mocks/
 ```
 
 ### Access the Application
 
-Open your browser and navigate to:
-- **Marketing Page**: http://localhost:2773/
-- **Login**: http://localhost:2773/login/
-- **Application**: http://localhost:2773/app.html (after login)
-- **Mobile App**: http://localhost:2773/m/ (mobile-optimized)
+| Page | URL |
+|------|-----|
+| Marketing Site | http://localhost:2773/ |
+| Login | http://localhost:2773/login/ |
+| Desktop App | http://localhost:2773/app.html |
+| Mobile App | http://localhost:2773/m/ |
 
 ### Demo Credentials
 
@@ -127,175 +116,221 @@ Open your browser and navigate to:
 ### Docker Deployment
 
 ```bash
-# Build HCM service
-docker build -t erp-hcm ./go/erp/hcm/
+# Build all images
+./go/build-all-images.sh
 
-# Build web UI
-docker build -t erp-web ./go/erp/ui/
+# Or build individually
+docker build -t erp-main -f go/erp/main/Dockerfile go/
+docker build -t erp-web -f go/erp/ui/Dockerfile go/
 ```
 
 ### Kubernetes Deployment
 
 ```bash
-# Apply all manifests
+# Deploy all components
 kubectl apply -f k8s/
 
-# Components deployed:
-# - erp-web (DaemonSet) - Web UI on all nodes
-# - erp-hcm (StatefulSet) - HCM service with persistent storage
-# - vnet (DaemonSet) - Virtual network overlay
+# Components:
+#   erp-web  (DaemonSet)    — Web UI on all nodes
+#   erp-main (StatefulSet)  — ERP services with persistent storage
+#   vnet     (DaemonSet)    — Virtual network overlay
 ```
 
 ## Project Structure
 
 ```
 l8erp/
+├── proto/                       # 72 Protocol Buffer definitions (~14,900 lines)
+│   ├── erp-common.proto         #   Shared types (Money, Address, AuditInfo, DateRange)
+│   ├── hcm-*.proto              #   HCM module (8 schemas)
+│   ├── fin-*.proto              #   Financial module (8 schemas)
+│   ├── scm-*.proto              #   SCM module (7 schemas)
+│   ├── mfg-*.proto              #   Manufacturing module (7 schemas)
+│   ├── sales-*.proto            #   Sales module (7 schemas)
+│   ├── crm-*.proto              #   CRM module (7 schemas)
+│   ├── prj-*.proto              #   Projects module (6 schemas)
+│   ├── bi-*.proto               #   BI module (5 schemas)
+│   ├── doc-*.proto              #   Documents module (5 schemas)
+│   ├── ecom-*.proto             #   E-Commerce module (5 schemas)
+│   ├── comp-*.proto             #   Compliance module (5 schemas)
+│   └── make-bindings.sh         #   Generates Go types from proto files
 ├── go/
 │   ├── erp/
-│   │   ├── common/           # Shared utilities (defaults, validation)
-│   │   ├── hcm/              # Human Capital Management (57 services)
-│   │   ├── fin/              # Financial Management (49 services)
-│   │   ├── scm/              # Supply Chain Management (44 services)
-│   │   ├── mfg/              # Manufacturing (36 services)
-│   │   ├── sales/            # Sales & Distribution (33 services)
-│   │   ├── crm/              # Customer Relationship Management (36 services)
-│   │   ├── prj/              # Project Management (36 services)
-│   │   ├── bi/               # Business Intelligence (24 services)
-│   │   ├── doc/              # Document Management (20 services)
-│   │   ├── ecom/             # E-Commerce (20 services)
-│   │   ├── comp/             # Compliance & Risk (20 services)
-│   │   ├── sys/              # System Administration
-│   │   ├── ui/
-│   │   │   ├── main.go       # Web server entry point
-│   │   │   └── web/          # Web application
-│   │   │       ├── marketing/    # Marketing landing page
-│   │   │       ├── login/        # Login page
-│   │   │       ├── l8ui/         # Shared UI framework
-│   │   │       ├── erp-ui/      # ERP-specific UI (SVG templates, section configs)
-│   │   │       ├── hcm/          # HCM module UI
-│   │   │       ├── fin/          # Financial module UI
-│   │   │       ├── scm/          # SCM module UI
-│   │   │       ├── mfg/          # Manufacturing module UI
-│   │   │       ├── sales/        # Sales module UI
-│   │   │       ├── crm/          # CRM module UI
-│   │   │       ├── prj/          # Project module UI
-│   │   │       ├── bi/           # BI module UI
-│   │   │       ├── documents/    # Documents module UI
-│   │   │       ├── ecom/         # E-Commerce module UI
-│   │   │       ├── comp/         # Compliance module UI
-│   │   │       ├── m/            # Mobile app version
-│   │   │       └── app.html      # Main application
-│   │   └── vnet/             # Virtual network layer
-│   ├── types/                # Protocol Buffer generated types
-│   │   ├── hcm/              # HCM types
-│   │   ├── fin/              # Financial types
-│   │   ├── scm/              # SCM types
-│   │   ├── mfg/              # Manufacturing types
-│   │   ├── sales/            # Sales types
-│   │   ├── crm/              # CRM types
-│   │   ├── prj/              # Project types
-│   │   ├── bi/               # BI types
-│   │   ├── doc/              # Document types
-│   │   ├── ecom/             # E-Commerce types
-│   │   └── comp/             # Compliance types
-│   ├── tests/                # Test files and mock data generators
-│   └── vendor/               # Go dependencies
-├── k8s/                      # Kubernetes deployment manifests
-├── proto/                    # Protocol buffer definitions
-├── ERP_MODULES.md           # Detailed module documentation
-└── README.md                # This file
+│   │   ├── common/              # Shared: validation builder, service factory, defaults
+│   │   ├── services/            # Module activation (activate_hcm.go, activate_fin.go, ...)
+│   │   ├── hcm/                 # Human Capital Management (57 services)
+│   │   ├── fin/                 # Financial Management (49 services)
+│   │   ├── scm/                 # Supply Chain Management (44 services)
+│   │   ├── mfg/                 # Manufacturing (36 services)
+│   │   ├── sales/               # Sales & Distribution (33 services)
+│   │   ├── crm/                 # CRM (36 services)
+│   │   ├── prj/                 # Project Management (36 services)
+│   │   ├── bi/                  # Business Intelligence (24 services)
+│   │   ├── doc/                 # Document Management (20 services)
+│   │   ├── ecom/                # E-Commerce (20 services)
+│   │   ├── comp/                # Compliance & Risk (20 services)
+│   │   ├── sys/                 # System Administration (1 service)
+│   │   ├── main/                # ERP service entry point + Dockerfile
+│   │   ├── ui/                  # Web server + UI assets
+│   │   │   ├── main1/           #   Web server entry point
+│   │   │   └── web/             #   Web application root
+│   │   │       ├── app.html     #     Desktop application shell
+│   │   │       ├── l8ui/        #     Shared UI framework (factories, navigation, CRUD, forms)
+│   │   │       ├── erp-ui/      #     ERP-specific UI (SVG templates, section configs)
+│   │   │       ├── sections/    #     Section HTML files (13 sections)
+│   │   │       ├── hcm/         #     HCM UI (config, enums, columns, forms per submodule)
+│   │   │       ├── fin/         #     Financial UI
+│   │   │       ├── scm/         #     SCM UI
+│   │   │       ├── mfg/         #     Manufacturing UI
+│   │   │       ├── sales/       #     Sales UI
+│   │   │       ├── crm/         #     CRM UI
+│   │   │       ├── prj/         #     Projects UI
+│   │   │       ├── bi/          #     BI UI
+│   │   │       ├── documents/   #     Documents UI
+│   │   │       ├── ecom/        #     E-Commerce UI
+│   │   │       ├── comp/        #     Compliance UI
+│   │   │       ├── js/          #     Shared JS (reference registries, sections, utils)
+│   │   │       ├── marketing/   #     Marketing landing page
+│   │   │       ├── m/           #     Mobile app (full parity with desktop)
+│   │   │       └── login/       #     Login page
+│   │   └── vnet/                # Virtual network layer + Dockerfile
+│   ├── types/                   # Generated Go types (from protobuf)
+│   ├── tests/                   # Test suite
+│   │   ├── *_test.go            #   25 test files (getters + handlers per module)
+│   │   └── mocks/               #   Mock data generators (116 files)
+│   │       ├── data_*.go        #     Curated name/data arrays per module
+│   │       ├── gen_*.go         #     Entity generators (~90 files)
+│   │       ├── *_phases*.go     #     Phase orchestration
+│   │       ├── store*.go        #     Shared mock data store
+│   │       └── utils.go         #     Helpers (pickRef, randomMoney, genID, genLines, ...)
+│   └── vendor/                  # Vendored Go dependencies
+├── k8s/                         # Kubernetes manifests (erp, web, vnet)
+└── tools/                       # Dev tools (REST client, migration scripts)
 ```
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    Presentation Layer                        │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
-│  │ Web App     │  │ Mobile App  │  │ API Clients │         │
-│  └─────────────┘  └─────────────┘  └─────────────┘         │
-├─────────────────────────────────────────────────────────────┤
-│                    Application Layer                         │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
-│  │ Auth        │  │ Business    │  │ Workflow    │         │
-│  │ Service     │  │ Logic       │  │ Engine      │         │
-│  └─────────────┘  └─────────────┘  └─────────────┘         │
-├─────────────────────────────────────────────────────────────┤
-│                      Data Layer                              │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
-│  │ PostgreSQL  │  │ Cache       │  │ File        │         │
-│  │             │  │ Layer       │  │ Storage     │         │
-│  └─────────────┘  └─────────────┘  └─────────────┘         │
-├─────────────────────────────────────────────────────────────┤
-│                  Infrastructure Layer                        │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
-│  │ Kubernetes  │  │ Docker      │  │ L8 Virtual  │         │
-│  │             │  │             │  │ Network     │         │
-│  └─────────────┘  └─────────────┘  └─────────────┘         │
-└─────────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────┐
+│                     Presentation Layer                         │
+│   ┌─────────────┐  ┌─────────────┐  ┌─────────────┐          │
+│   │ Desktop App │  │ Mobile App  │  │ REST API    │          │
+│   │ (Vanilla JS)│  │ (Vanilla JS)│  │ Clients     │          │
+│   └─────────────┘  └─────────────┘  └─────────────┘          │
+├───────────────────────────────────────────────────────────────┤
+│                     Application Layer                          │
+│   ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐        │
+│   │ Service  │ │ Validate │ │ Business │ │ Type     │        │
+│   │ Framework│ │ Builder  │ │ Logic    │ │ Registry │        │
+│   └──────────┘ └──────────┘ └──────────┘ └──────────┘        │
+├───────────────────────────────────────────────────────────────┤
+│                       Data Layer                               │
+│   ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐        │
+│   │ L8 ORM   │ │ Protobuf │ │ L8 Query │ │PostgreSQL│        │
+│   │          │ │ Srlz     │ │ Language │ │          │        │
+│   └──────────┘ └──────────┘ └──────────┘ └──────────┘        │
+├───────────────────────────────────────────────────────────────┤
+│                   Infrastructure Layer                         │
+│   ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐        │
+│   │Kubernetes│ │ Docker   │ │ L8 Bus   │ │ L8 Web   │        │
+│   │          │ │          │ │ (VNet)   │ │ Server   │        │
+│   └──────────┘ └──────────┘ └──────────┘ └──────────┘        │
+└───────────────────────────────────────────────────────────────┘
 ```
 
 ## Technology Stack
 
 | Layer | Technology |
 |-------|------------|
-| Backend | Go 1.25+ |
+| Backend | Go 1.25 |
 | Database | PostgreSQL 14+ |
-| Frontend | Vanilla JavaScript, CSS |
+| Frontend | Vanilla JavaScript (zero dependencies, no build step) |
 | API | REST |
 | Serialization | Protocol Buffers |
 | Container | Docker |
 | Orchestration | Kubernetes |
 | Networking | Layer 8 Bus (Virtual Network Overlay) |
+| ORM | Layer 8 ORM with L8 Query Language |
+
+## Layer 8 Ecosystem
+
+This ERP is built on top of the Layer 8 open-source infrastructure:
+
+| Component | Purpose |
+|-----------|---------|
+| [l8bus](https://github.com/saichler/l8bus) | Message bus and virtual network overlay |
+| [l8orm](https://github.com/saichler/l8orm) | Object-relational mapping |
+| [l8services](https://github.com/saichler/l8services) | Service framework (activation, callbacks, routing) |
+| [l8web](https://github.com/saichler/l8web) | Web server framework |
+| [l8reflect](https://github.com/saichler/l8reflect) | Reflection and introspection utilities |
+| [l8srlz](https://github.com/saichler/l8srlz) | Serialization (protobuf-based) |
+| [l8types](https://github.com/saichler/l8types) | Common types and interfaces |
+| [l8utils](https://github.com/saichler/l8utils) | Shared utilities |
+| [l8test](https://github.com/saichler/l8test) | Testing framework |
 
 ## Development
 
 ### Running Tests
 
 ```bash
+# Run all service tests
 go test ./go/tests/...
+
+# Generate mock data
+go run ./go/tests/mocks/
 ```
 
 ### Building
 
 ```bash
 # Build web server
-go build -o erp-web ./go/erp/ui/main.go
+go build -o erp-web ./go/erp/ui/main1/
 
-# Build HCM service
-go build -o erp-hcm ./go/erp/hcm/main.go
+# Build ERP service
+go build -o erp-main ./go/erp/main/
 
 # Build virtual network
-go build -o erp-vnet ./go/erp/vnet/main.go
+go build -o erp-vnet ./go/erp/vnet/
+
+# Regenerate protobuf types (after modifying .proto files)
+cd proto && ./make-bindings.sh
 ```
 
-### Code Style
+### UI Development
 
-- Go code follows standard Go formatting (`go fmt`)
-- JavaScript uses vanilla JS (no frameworks)
-- CSS follows BEM-like naming conventions
+The frontend uses no build tools. Edit files in `go/erp/ui/web/` and refresh the browser.
 
-## Documentation
+Each module's UI follows a consistent pattern:
+- `<module>-config.js` — service definitions and endpoints
+- `<submodule>-enums.js` — status/type/priority enums
+- `<submodule>-columns.js` — table column definitions
+- `<submodule>-forms.js` — form field definitions
+- `<module>-init.js` — module initialization via `Layer8DModuleFactory.create()`
 
-- [Module Specifications](ERP_MODULES.md) - Detailed breakdown of all ERP modules
-- [Marketing Site README](go/erp/ui/web/marketing/README.md) - Marketing website documentation
+### Codebase Statistics
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+| Category | Count |
+|----------|-------|
+| Go source files | ~1,000 |
+| Go source lines | ~204,000 |
+| JavaScript files | 529 |
+| JavaScript lines | ~64,700 |
+| CSS files | 70 |
+| CSS lines | ~16,500 |
+| HTML files | 51 |
+| Proto files | 72 |
+| Proto lines | ~14,900 |
+| Mock generator files | 116 |
+| Test files | 25 |
 
 ## License
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the Apache License 2.0 — see the [LICENSE](LICENSE) file for details.
 
 ## Powered By
 
 <p align="center">
-  <img src="go/erp/ui/web/images/Layer8Logo.gif" alt="Layer 8 Ecosystem" width="80">
+  <img src="go/erp/ui/web/l8ui/images/Layer8Logo.gif" alt="Layer 8 Ecosystem" width="80">
   <br>
   <strong>Layer 8 Ecosystem</strong>
 </p>
@@ -303,5 +338,5 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 ---
 
 <p align="center">
-  <sub>Built with ❤️ by Layer 8</sub>
+  <sub>Built with care by Layer 8</sub>
 </p>
