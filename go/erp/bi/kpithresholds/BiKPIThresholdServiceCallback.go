@@ -24,5 +24,6 @@ func newBiKPIThresholdServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[bi.BiKPIThreshold]("BiKPIThreshold",
 		func(e *bi.BiKPIThreshold) { common.GenerateID(&e.ThresholdId) }).
 		Require(func(e *bi.BiKPIThreshold) string { return e.ThresholdId }, "ThresholdId").
+		Enum(func(e *bi.BiKPIThreshold) int32 { return int32(e.Operator) }, bi.BiThresholdOperator_name, "Operator").
 		Build()
 }

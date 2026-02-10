@@ -24,5 +24,8 @@ func newBiReportServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[bi.BiReport]("BiReport",
 		func(e *bi.BiReport) { common.GenerateID(&e.ReportId) }).
 		Require(func(e *bi.BiReport) string { return e.ReportId }, "ReportId").
+		Enum(func(e *bi.BiReport) int32 { return int32(e.DefaultFormat) }, bi.BiExportFormat_name, "DefaultFormat").
+		Enum(func(e *bi.BiReport) int32 { return int32(e.ReportType) }, bi.BiReportType_name, "ReportType").
+		Enum(func(e *bi.BiReport) int32 { return int32(e.Status) }, bi.BiReportStatus_name, "Status").
 		Build()
 }

@@ -24,5 +24,6 @@ func newCrmCampaignMemberServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmCampaignMember]("CrmCampaignMember",
 		func(e *crm.CrmCampaignMember) { common.GenerateID(&e.MemberId) }).
 		Require(func(e *crm.CrmCampaignMember) string { return e.MemberId }, "MemberId").
+		Enum(func(e *crm.CrmCampaignMember) int32 { return int32(e.Status) }, crm.CrmCampaignMemberStatus_name, "Status").
 		Build()
 }

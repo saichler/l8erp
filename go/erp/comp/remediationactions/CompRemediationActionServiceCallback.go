@@ -24,5 +24,6 @@ func newCompRemediationActionServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompRemediationAction]("CompRemediationAction",
 		func(e *comp.CompRemediationAction) { common.GenerateID(&e.ActionId) }).
 		Require(func(e *comp.CompRemediationAction) string { return e.ActionId }, "ActionId").
+		Enum(func(e *comp.CompRemediationAction) int32 { return int32(e.Status) }, comp.CompRemediationStatus_name, "Status").
 		Build()
 }

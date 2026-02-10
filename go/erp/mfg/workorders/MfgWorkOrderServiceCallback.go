@@ -25,5 +25,6 @@ func newMfgWorkOrderServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgWorkOrder) { common.GenerateID(&e.WorkOrderId) }).
 		Require(func(e *mfg.MfgWorkOrder) string { return e.WorkOrderId }, "WorkOrderId").
 		Require(func(e *mfg.MfgWorkOrder) string { return e.ItemId }, "ItemId").
+		Enum(func(e *mfg.MfgWorkOrder) int32 { return int32(e.Status) }, mfg.MfgWorkOrderStatus_name, "Status").
 		Build()
 }

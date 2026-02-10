@@ -24,5 +24,6 @@ func newRequestForQuotationServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmRequestForQuotation]("ScmRequestForQuotation",
 		func(e *scm.ScmRequestForQuotation) { common.GenerateID(&e.RfqId) }).
 		Require(func(e *scm.ScmRequestForQuotation) string { return e.RfqId }, "RfqId").
+		Enum(func(e *scm.ScmRequestForQuotation) int32 { return int32(e.Status) }, scm.ScmRequisitionStatus_name, "Status").
 		Build()
 }

@@ -31,12 +31,19 @@ func generateQualityPlans(store *MockDataStore) []*mfg.MfgQualityPlan {
 		itemID := pickRef(store.ItemIDs, i)
 		effectiveDate := time.Now().AddDate(0, -rand.Intn(6), 0)
 
+		statuses := []mfg.MfgBomStatus{
+			mfg.MfgBomStatus_MFG_BOM_STATUS_ACTIVE,
+			mfg.MfgBomStatus_MFG_BOM_STATUS_DRAFT,
+			mfg.MfgBomStatus_MFG_BOM_STATUS_PENDING_APPROVAL,
+			mfg.MfgBomStatus_MFG_BOM_STATUS_OBSOLETE,
+		}
 		plans[i] = &mfg.MfgQualityPlan{
 			PlanId:        genID("qplan", i),
 			PlanNumber:    fmt.Sprintf("QP-%05d", 40000+i+1),
 			Name:          fmt.Sprintf("Quality Plan %d", i+1),
 			Description:   fmt.Sprintf("Quality control plan for product line %d", i+1),
 			ItemId:        itemID,
+			Status:        statuses[i%len(statuses)],
 			EffectiveDate: effectiveDate.Unix(),
 			Revision:      fmt.Sprintf("R%d", rand.Intn(3)+1),
 			Notes:         fmt.Sprintf("Quality assurance plan notes %d", i+1),

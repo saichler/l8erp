@@ -24,5 +24,6 @@ func newDocCheckoutServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[doc.DocCheckout]("DocCheckout",
 		func(e *doc.DocCheckout) { common.GenerateID(&e.CheckoutId) }).
 		Require(func(e *doc.DocCheckout) string { return e.CheckoutId }, "CheckoutId").
+		Enum(func(e *doc.DocCheckout) int32 { return int32(e.Status) }, doc.DocCheckoutStatus_name, "Status").
 		Build()
 }

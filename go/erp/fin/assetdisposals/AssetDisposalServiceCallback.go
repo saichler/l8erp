@@ -25,5 +25,6 @@ func newAssetDisposalServiceCallback() ifs.IServiceCallback {
 		func(e *fin.AssetDisposal) { common.GenerateID(&e.DisposalId) }).
 		Require(func(e *fin.AssetDisposal) string { return e.DisposalId }, "DisposalId").
 		Require(func(e *fin.AssetDisposal) string { return e.AssetId }, "AssetId").
+		Enum(func(e *fin.AssetDisposal) int32 { return int32(e.DisposalMethod) }, fin.DisposalMethod_name, "DisposalMethod").
 		Build()
 }

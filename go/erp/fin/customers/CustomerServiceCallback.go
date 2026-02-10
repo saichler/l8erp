@@ -25,5 +25,6 @@ func newCustomerServiceCallback() ifs.IServiceCallback {
 		func(e *fin.Customer) { common.GenerateID(&e.CustomerId) }).
 		Require(func(e *fin.Customer) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *fin.Customer) string { return e.Name }, "Name").
+		Enum(func(e *fin.Customer) int32 { return int32(e.Status) }, fin.CustomerStatus_name, "Status").
 		Build()
 }

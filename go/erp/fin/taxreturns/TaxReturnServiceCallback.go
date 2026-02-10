@@ -26,5 +26,7 @@ func newTaxReturnServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.TaxReturn) string { return e.ReturnId }, "ReturnId").
 		Require(func(e *fin.TaxReturn) string { return e.JurisdictionId }, "JurisdictionId").
 		Require(func(e *fin.TaxReturn) string { return e.FiscalPeriodId }, "FiscalPeriodId").
+		Enum(func(e *fin.TaxReturn) int32 { return int32(e.Status) }, fin.TaxReturnStatus_name, "Status").
+		Enum(func(e *fin.TaxReturn) int32 { return int32(e.TaxType) }, fin.TaxType_name, "TaxType").
 		Build()
 }

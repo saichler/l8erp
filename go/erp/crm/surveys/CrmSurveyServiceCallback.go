@@ -25,5 +25,7 @@ func newCrmSurveyServiceCallback() ifs.IServiceCallback {
 		func(e *crm.CrmSurvey) { common.GenerateID(&e.SurveyId) }).
 		Require(func(e *crm.CrmSurvey) string { return e.SurveyId }, "SurveyId").
 		Require(func(e *crm.CrmSurvey) string { return e.Name }, "Name").
+		Require(func(e *crm.CrmSurvey) string { return e.AccountId }, "AccountId").
+		Enum(func(e *crm.CrmSurvey) int32 { return int32(e.Status) }, crm.CrmSurveyStatus_name, "Status").
 		Build()
 }

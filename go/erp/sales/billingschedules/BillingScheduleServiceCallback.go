@@ -25,5 +25,8 @@ func newBillingScheduleServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesBillingSchedule) { common.GenerateID(&e.ScheduleId) }).
 		Require(func(e *sales.SalesBillingSchedule) string { return e.ScheduleId }, "ScheduleId").
 		Require(func(e *sales.SalesBillingSchedule) string { return e.Name }, "Name").
+		Require(func(e *sales.SalesBillingSchedule) string { return e.CustomerId }, "CustomerId").
+		Enum(func(e *sales.SalesBillingSchedule) int32 { return int32(e.Frequency) }, sales.SalesBillingFrequency_name, "Frequency").
+		Enum(func(e *sales.SalesBillingSchedule) int32 { return int32(e.Status) }, sales.SalesBillingStatus_name, "Status").
 		Build()
 }

@@ -25,5 +25,6 @@ func newCommissionPlanServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesCommissionPlan) { common.GenerateID(&e.PlanId) }).
 		Require(func(e *sales.SalesCommissionPlan) string { return e.PlanId }, "PlanId").
 		Require(func(e *sales.SalesCommissionPlan) string { return e.Name }, "Name").
+		Enum(func(e *sales.SalesCommissionPlan) int32 { return int32(e.CommissionType) }, sales.SalesCommissionType_name, "CommissionType").
 		Build()
 }

@@ -25,5 +25,6 @@ func newSalesTargetServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesTarget) { common.GenerateID(&e.TargetId) }).
 		Require(func(e *sales.SalesTarget) string { return e.TargetId }, "TargetId").
 		Require(func(e *sales.SalesTarget) string { return e.Name }, "Name").
+		Enum(func(e *sales.SalesTarget) int32 { return int32(e.Period) }, sales.SalesTargetPeriod_name, "Period").
 		Build()
 }

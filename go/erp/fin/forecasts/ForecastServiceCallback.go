@@ -25,5 +25,6 @@ func newForecastServiceCallback() ifs.IServiceCallback {
 		func(e *fin.Forecast) { common.GenerateID(&e.ForecastId) }).
 		Require(func(e *fin.Forecast) string { return e.ForecastId }, "ForecastId").
 		Require(func(e *fin.Forecast) string { return e.ForecastName }, "ForecastName").
+		Enum(func(e *fin.Forecast) int32 { return int32(e.ForecastType) }, fin.ForecastType_name, "ForecastType").
 		Build()
 }

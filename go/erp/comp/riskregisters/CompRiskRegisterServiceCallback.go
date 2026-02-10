@@ -24,5 +24,7 @@ func newCompRiskRegisterServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompRiskRegister]("CompRiskRegister",
 		func(e *comp.CompRiskRegister) { common.GenerateID(&e.RiskId) }).
 		Require(func(e *comp.CompRiskRegister) string { return e.RiskId }, "RiskId").
+		Enum(func(e *comp.CompRiskRegister) int32 { return int32(e.Category) }, comp.CompRiskCategory_name, "Category").
+		Enum(func(e *comp.CompRiskRegister) int32 { return int32(e.Status) }, comp.CompRiskStatus_name, "Status").
 		Build()
 }

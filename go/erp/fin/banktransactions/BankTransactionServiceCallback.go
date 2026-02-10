@@ -25,5 +25,6 @@ func newBankTransactionServiceCallback() ifs.IServiceCallback {
 		func(e *fin.BankTransaction) { common.GenerateID(&e.TransactionId) }).
 		Require(func(e *fin.BankTransaction) string { return e.TransactionId }, "TransactionId").
 		Require(func(e *fin.BankTransaction) string { return e.BankAccountId }, "BankAccountId").
+		Enum(func(e *fin.BankTransaction) int32 { return int32(e.TransactionType) }, fin.TransactionType_name, "TransactionType").
 		Build()
 }

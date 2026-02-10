@@ -24,5 +24,7 @@ func newPurchaseOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmPurchaseOrder]("ScmPurchaseOrder",
 		func(e *scm.ScmPurchaseOrder) { common.GenerateID(&e.PurchaseOrderId) }).
 		Require(func(e *scm.ScmPurchaseOrder) string { return e.PurchaseOrderId }, "PurchaseOrderId").
+		Require(func(e *scm.ScmPurchaseOrder) string { return e.VendorId }, "VendorId").
+		Enum(func(e *scm.ScmPurchaseOrder) int32 { return int32(e.Status) }, scm.ScmPurchaseOrderStatus_name, "Status").
 		Build()
 }

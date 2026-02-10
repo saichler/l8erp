@@ -25,5 +25,6 @@ func newCrmKBArticleServiceCallback() ifs.IServiceCallback {
 		func(e *crm.CrmKBArticle) { common.GenerateID(&e.ArticleId) }).
 		Require(func(e *crm.CrmKBArticle) string { return e.ArticleId }, "ArticleId").
 		Require(func(e *crm.CrmKBArticle) string { return e.Title }, "Title").
+		Enum(func(e *crm.CrmKBArticle) int32 { return int32(e.Status) }, crm.CrmArticleStatus_name, "Status").
 		Build()
 }

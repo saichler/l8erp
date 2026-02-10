@@ -24,5 +24,7 @@ func newDocWorkflowStepServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[doc.DocWorkflowStep]("DocWorkflowStep",
 		func(e *doc.DocWorkflowStep) { common.GenerateID(&e.StepId) }).
 		Require(func(e *doc.DocWorkflowStep) string { return e.StepId }, "StepId").
+		Require(func(e *doc.DocWorkflowStep) string { return e.WorkflowId }, "WorkflowId").
+		Enum(func(e *doc.DocWorkflowStep) int32 { return int32(e.Status) }, doc.DocStepStatus_name, "Status").
 		Build()
 }

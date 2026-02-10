@@ -24,5 +24,6 @@ func newBiDataQualityRuleServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[bi.BiDataQualityRule]("BiDataQualityRule",
 		func(e *bi.BiDataQualityRule) { common.GenerateID(&e.RuleId) }).
 		Require(func(e *bi.BiDataQualityRule) string { return e.RuleId }, "RuleId").
+		Enum(func(e *bi.BiDataQualityRule) int32 { return int32(e.LastStatus) }, bi.BiDataQualityStatus_name, "LastStatus").
 		Build()
 }

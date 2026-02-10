@@ -25,5 +25,7 @@ func newMfgCostVarianceServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgCostVariance) { common.GenerateID(&e.VarianceId) }).
 		Require(func(e *mfg.MfgCostVariance) string { return e.VarianceId }, "VarianceId").
 		Require(func(e *mfg.MfgCostVariance) string { return e.WorkOrderId }, "WorkOrderId").
+		Enum(func(e *mfg.MfgCostVariance) int32 { return int32(e.CostType) }, mfg.MfgCostType_name, "CostType").
+		Enum(func(e *mfg.MfgCostVariance) int32 { return int32(e.VarianceType) }, mfg.MfgVarianceType_name, "VarianceType").
 		Build()
 }

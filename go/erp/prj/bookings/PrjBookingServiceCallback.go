@@ -24,5 +24,6 @@ func newPrjBookingServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjBooking]("PrjBooking",
 		func(e *prj.PrjBooking) { common.GenerateID(&e.BookingId) }).
 		Require(func(e *prj.PrjBooking) string { return e.BookingId }, "BookingId").
+		Enum(func(e *prj.PrjBooking) int32 { return int32(e.Status) }, prj.PrjBookingStatus_name, "Status").
 		Build()
 }

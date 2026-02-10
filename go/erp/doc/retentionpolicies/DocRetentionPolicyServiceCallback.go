@@ -24,5 +24,7 @@ func newDocRetentionPolicyServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[doc.DocRetentionPolicy]("DocRetentionPolicy",
 		func(e *doc.DocRetentionPolicy) { common.GenerateID(&e.PolicyId) }).
 		Require(func(e *doc.DocRetentionPolicy) string { return e.PolicyId }, "PolicyId").
+		Enum(func(e *doc.DocRetentionPolicy) int32 { return int32(e.ActionOnExpiry) }, doc.DocRetentionAction_name, "ActionOnExpiry").
+		Enum(func(e *doc.DocRetentionPolicy) int32 { return int32(e.DocumentType) }, doc.DocDocumentType_name, "DocumentType").
 		Build()
 }

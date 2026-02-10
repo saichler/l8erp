@@ -25,5 +25,7 @@ func newReturnOrderServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesReturnOrder) { common.GenerateID(&e.ReturnOrderId) }).
 		Require(func(e *sales.SalesReturnOrder) string { return e.ReturnOrderId }, "ReturnOrderId").
 		Require(func(e *sales.SalesReturnOrder) string { return e.SalesOrderId }, "SalesOrderId").
+		Require(func(e *sales.SalesReturnOrder) string { return e.CustomerId }, "CustomerId").
+		Enum(func(e *sales.SalesReturnOrder) int32 { return int32(e.Status) }, sales.SalesReturnStatus_name, "Status").
 		Build()
 }

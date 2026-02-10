@@ -24,5 +24,6 @@ func newPackTaskServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmPackTask]("ScmPackTask",
 		func(e *scm.ScmPackTask) { common.GenerateID(&e.TaskId) }).
 		Require(func(e *scm.ScmPackTask) string { return e.TaskId }, "TaskId").
+		Enum(func(e *scm.ScmPackTask) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }

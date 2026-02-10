@@ -24,5 +24,6 @@ func newStockMovementServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmStockMovement]("ScmStockMovement",
 		func(e *scm.ScmStockMovement) { common.GenerateID(&e.MovementId) }).
 		Require(func(e *scm.ScmStockMovement) string { return e.MovementId }, "MovementId").
+		Enum(func(e *scm.ScmStockMovement) int32 { return int32(e.MovementType) }, scm.ScmMovementType_name, "MovementType").
 		Build()
 }

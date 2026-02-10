@@ -25,5 +25,7 @@ func newMfgBomServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgBom) { common.GenerateID(&e.BomId) }).
 		Require(func(e *mfg.MfgBom) string { return e.BomId }, "BomId").
 		Require(func(e *mfg.MfgBom) string { return e.ItemId }, "ItemId").
+		Enum(func(e *mfg.MfgBom) int32 { return int32(e.BomType) }, mfg.MfgBomType_name, "BomType").
+		Enum(func(e *mfg.MfgBom) int32 { return int32(e.Status) }, mfg.MfgBomStatus_name, "Status").
 		Build()
 }

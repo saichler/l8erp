@@ -25,5 +25,6 @@ func newCapitalExpenditureServiceCallback() ifs.IServiceCallback {
 		func(e *fin.CapitalExpenditure) { common.GenerateID(&e.CapexId) }).
 		Require(func(e *fin.CapitalExpenditure) string { return e.CapexId }, "CapexId").
 		Require(func(e *fin.CapitalExpenditure) string { return e.ProjectName }, "ProjectName").
+		Enum(func(e *fin.CapitalExpenditure) int32 { return int32(e.Status) }, fin.CapexStatus_name, "Status").
 		Build()
 }

@@ -24,5 +24,6 @@ func newEcomPromotionServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[ecom.EcomPromotion]("EcomPromotion",
 		func(e *ecom.EcomPromotion) { common.GenerateID(&e.PromotionId) }).
 		Require(func(e *ecom.EcomPromotion) string { return e.PromotionId }, "PromotionId").
+		Enum(func(e *ecom.EcomPromotion) int32 { return int32(e.PromotionType) }, ecom.EcomPromotionType_name, "PromotionType").
 		Build()
 }

@@ -24,5 +24,8 @@ func newCompIncidentServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompIncident]("CompIncident",
 		func(e *comp.CompIncident) { common.GenerateID(&e.IncidentId) }).
 		Require(func(e *comp.CompIncident) string { return e.IncidentId }, "IncidentId").
+		Enum(func(e *comp.CompIncident) int32 { return int32(e.Category) }, comp.CompRiskCategory_name, "Category").
+		Enum(func(e *comp.CompIncident) int32 { return int32(e.Severity) }, comp.CompSeverityLevel_name, "Severity").
+		Enum(func(e *comp.CompIncident) int32 { return int32(e.Status) }, comp.CompIncidentStatus_name, "Status").
 		Build()
 }

@@ -25,5 +25,6 @@ func newCustomerContractServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesCustomerContract) { common.GenerateID(&e.ContractId) }).
 		Require(func(e *sales.SalesCustomerContract) string { return e.ContractId }, "ContractId").
 		Require(func(e *sales.SalesCustomerContract) string { return e.CustomerId }, "CustomerId").
+		Enum(func(e *sales.SalesCustomerContract) int32 { return int32(e.Status) }, sales.SalesContractStatus_name, "Status").
 		Build()
 }

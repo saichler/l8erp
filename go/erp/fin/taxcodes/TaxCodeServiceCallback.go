@@ -26,5 +26,6 @@ func newTaxCodeServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.TaxCode) string { return e.TaxCodeId }, "TaxCodeId").
 		Require(func(e *fin.TaxCode) string { return e.Code }, "Code").
 		Require(func(e *fin.TaxCode) string { return e.Name }, "Name").
+		Enum(func(e *fin.TaxCode) int32 { return int32(e.TaxType) }, fin.TaxType_name, "TaxType").
 		Build()
 }

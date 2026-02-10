@@ -24,5 +24,6 @@ func newShipTaskServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmShipTask]("ScmShipTask",
 		func(e *scm.ScmShipTask) { common.GenerateID(&e.TaskId) }).
 		Require(func(e *scm.ScmShipTask) string { return e.TaskId }, "TaskId").
+		Enum(func(e *scm.ScmShipTask) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }

@@ -24,5 +24,6 @@ func newDocApprovalWorkflowServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[doc.DocApprovalWorkflow]("DocApprovalWorkflow",
 		func(e *doc.DocApprovalWorkflow) { common.GenerateID(&e.WorkflowId) }).
 		Require(func(e *doc.DocApprovalWorkflow) string { return e.WorkflowId }, "WorkflowId").
+		Enum(func(e *doc.DocApprovalWorkflow) int32 { return int32(e.Status) }, doc.DocWorkflowStatus_name, "Status").
 		Build()
 }

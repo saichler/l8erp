@@ -24,5 +24,6 @@ func newEcomReturnLineServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[ecom.EcomReturnLine]("EcomReturnLine",
 		func(e *ecom.EcomReturnLine) { common.GenerateID(&e.LineId) }).
 		Require(func(e *ecom.EcomReturnLine) string { return e.LineId }, "LineId").
+		Require(func(e *ecom.EcomReturnLine) string { return e.ReturnId }, "ReturnId").
 		Build()
 }

@@ -25,5 +25,6 @@ func newSalesTerritoryServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesTerritory) { common.GenerateID(&e.TerritoryId) }).
 		Require(func(e *sales.SalesTerritory) string { return e.TerritoryId }, "TerritoryId").
 		Require(func(e *sales.SalesTerritory) string { return e.Name }, "Name").
+		Enum(func(e *sales.SalesTerritory) int32 { return int32(e.TerritoryType) }, sales.SalesTerritoryType_name, "TerritoryType").
 		Build()
 }

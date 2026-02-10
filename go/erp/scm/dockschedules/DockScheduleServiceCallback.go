@@ -24,5 +24,6 @@ func newDockScheduleServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmDockSchedule]("ScmDockSchedule",
 		func(e *scm.ScmDockSchedule) { common.GenerateID(&e.ScheduleId) }).
 		Require(func(e *scm.ScmDockSchedule) string { return e.ScheduleId }, "ScheduleId").
+		Enum(func(e *scm.ScmDockSchedule) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }

@@ -24,5 +24,7 @@ func newRequisitionLineServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmRequisitionLine]("ScmRequisitionLine",
 		func(e *scm.ScmRequisitionLine) { common.GenerateID(&e.LineId) }).
 		Require(func(e *scm.ScmRequisitionLine) string { return e.LineId }, "LineId").
+		Require(func(e *scm.ScmRequisitionLine) string { return e.ItemId }, "ItemId").
+		Require(func(e *scm.ScmRequisitionLine) string { return e.RequisitionId }, "RequisitionId").
 		Build()
 }

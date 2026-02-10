@@ -24,5 +24,10 @@ func newPrjStatusReportServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjStatusReport]("PrjStatusReport",
 		func(e *prj.PrjStatusReport) { common.GenerateID(&e.StatusId) }).
 		Require(func(e *prj.PrjStatusReport) string { return e.StatusId }, "StatusId").
+		Enum(func(e *prj.PrjStatusReport) int32 { return int32(e.BudgetHealth) }, prj.PrjHealthIndicator_name, "BudgetHealth").
+		Enum(func(e *prj.PrjStatusReport) int32 { return int32(e.OverallHealth) }, prj.PrjHealthIndicator_name, "OverallHealth").
+		Enum(func(e *prj.PrjStatusReport) int32 { return int32(e.ResourceHealth) }, prj.PrjHealthIndicator_name, "ResourceHealth").
+		Enum(func(e *prj.PrjStatusReport) int32 { return int32(e.ScheduleHealth) }, prj.PrjHealthIndicator_name, "ScheduleHealth").
+		Enum(func(e *prj.PrjStatusReport) int32 { return int32(e.ScopeHealth) }, prj.PrjHealthIndicator_name, "ScopeHealth").
 		Build()
 }

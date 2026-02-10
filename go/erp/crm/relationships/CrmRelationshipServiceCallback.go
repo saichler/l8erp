@@ -24,5 +24,7 @@ func newCrmRelationshipServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmRelationship]("CrmRelationship",
 		func(e *crm.CrmRelationship) { common.GenerateID(&e.RelationshipId) }).
 		Require(func(e *crm.CrmRelationship) string { return e.RelationshipId }, "RelationshipId").
+		Require(func(e *crm.CrmRelationship) string { return e.AccountId }, "AccountId").
+		Enum(func(e *crm.CrmRelationship) int32 { return int32(e.RelationshipType) }, crm.CrmRelationshipType_name, "RelationshipType").
 		Build()
 }

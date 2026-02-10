@@ -24,5 +24,7 @@ func newPurchaseOrderLineServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmPurchaseOrderLine]("ScmPurchaseOrderLine",
 		func(e *scm.ScmPurchaseOrderLine) { common.GenerateID(&e.LineId) }).
 		Require(func(e *scm.ScmPurchaseOrderLine) string { return e.LineId }, "LineId").
+		Require(func(e *scm.ScmPurchaseOrderLine) string { return e.ItemId }, "ItemId").
+		Require(func(e *scm.ScmPurchaseOrderLine) string { return e.PurchaseOrderId }, "PurchaseOrderId").
 		Build()
 }

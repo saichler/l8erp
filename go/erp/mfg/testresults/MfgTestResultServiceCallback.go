@@ -25,5 +25,6 @@ func newMfgTestResultServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgTestResult) { common.GenerateID(&e.ResultId) }).
 		Require(func(e *mfg.MfgTestResult) string { return e.ResultId }, "ResultId").
 		Require(func(e *mfg.MfgTestResult) string { return e.InspectionId }, "InspectionId").
+		Enum(func(e *mfg.MfgTestResult) int32 { return int32(e.Result) }, mfg.MfgInspectionResult_name, "Result").
 		Build()
 }

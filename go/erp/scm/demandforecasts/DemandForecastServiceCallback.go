@@ -24,5 +24,6 @@ func newDemandForecastServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmDemandForecast]("ScmDemandForecast",
 		func(e *scm.ScmDemandForecast) { common.GenerateID(&e.ForecastId) }).
 		Require(func(e *scm.ScmDemandForecast) string { return e.ForecastId }, "ForecastId").
+		Enum(func(e *scm.ScmDemandForecast) int32 { return int32(e.ForecastMethod) }, scm.ScmForecastMethod_name, "ForecastMethod").
 		Build()
 }

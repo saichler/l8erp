@@ -24,5 +24,6 @@ func newCarrierServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmCarrier]("ScmCarrier",
 		func(e *scm.ScmCarrier) { common.GenerateID(&e.CarrierId) }).
 		Require(func(e *scm.ScmCarrier) string { return e.CarrierId }, "CarrierId").
+		Enum(func(e *scm.ScmCarrier) int32 { return int32(e.CarrierType) }, scm.ScmCarrierType_name, "CarrierType").
 		Build()
 }

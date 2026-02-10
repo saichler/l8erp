@@ -25,5 +25,6 @@ func newMfgActualCostServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgActualCost) { common.GenerateID(&e.ActualCostId) }).
 		Require(func(e *mfg.MfgActualCost) string { return e.ActualCostId }, "ActualCostId").
 		Require(func(e *mfg.MfgActualCost) string { return e.WorkOrderId }, "WorkOrderId").
+		Enum(func(e *mfg.MfgActualCost) int32 { return int32(e.CostType) }, mfg.MfgCostType_name, "CostType").
 		Build()
 }

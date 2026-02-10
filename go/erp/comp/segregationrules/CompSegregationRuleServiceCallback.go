@@ -24,5 +24,6 @@ func newCompSegregationRuleServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompSegregationRule]("CompSegregationRule",
 		func(e *comp.CompSegregationRule) { common.GenerateID(&e.RuleId) }).
 		Require(func(e *comp.CompSegregationRule) string { return e.RuleId }, "RuleId").
+		Enum(func(e *comp.CompSegregationRule) int32 { return int32(e.RiskLevel) }, comp.CompSeverityLevel_name, "RiskLevel").
 		Build()
 }

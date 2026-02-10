@@ -24,5 +24,6 @@ func newPrjExpenseReportServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjExpenseReport]("PrjExpenseReport",
 		func(e *prj.PrjExpenseReport) { common.GenerateID(&e.ReportId) }).
 		Require(func(e *prj.PrjExpenseReport) string { return e.ReportId }, "ReportId").
+		Enum(func(e *prj.PrjExpenseReport) int32 { return int32(e.Status) }, prj.PrjExpenseStatus_name, "Status").
 		Build()
 }

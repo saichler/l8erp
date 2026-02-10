@@ -24,5 +24,7 @@ func newCompAuditScheduleServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompAuditSchedule]("CompAuditSchedule",
 		func(e *comp.CompAuditSchedule) { common.GenerateID(&e.ScheduleId) }).
 		Require(func(e *comp.CompAuditSchedule) string { return e.ScheduleId }, "ScheduleId").
+		Enum(func(e *comp.CompAuditSchedule) int32 { return int32(e.AuditType) }, comp.CompAuditType_name, "AuditType").
+		Enum(func(e *comp.CompAuditSchedule) int32 { return int32(e.Status) }, comp.CompAuditStatus_name, "Status").
 		Build()
 }

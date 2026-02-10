@@ -24,5 +24,6 @@ func newDocFolderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[doc.DocFolder]("DocFolder",
 		func(e *doc.DocFolder) { common.GenerateID(&e.FolderId) }).
 		Require(func(e *doc.DocFolder) string { return e.FolderId }, "FolderId").
+		Enum(func(e *doc.DocFolder) int32 { return int32(e.AccessLevel) }, doc.DocAccessLevel_name, "AccessLevel").
 		Build()
 }

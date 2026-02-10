@@ -26,5 +26,6 @@ func newFundTransferServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.FundTransfer) string { return e.TransferId }, "TransferId").
 		Require(func(e *fin.FundTransfer) string { return e.FromBankAccountId }, "FromBankAccountId").
 		Require(func(e *fin.FundTransfer) string { return e.ToBankAccountId }, "ToBankAccountId").
+		Enum(func(e *fin.FundTransfer) int32 { return int32(e.Status) }, fin.TransferStatus_name, "Status").
 		Build()
 }

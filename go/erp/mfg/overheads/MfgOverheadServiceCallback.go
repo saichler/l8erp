@@ -26,5 +26,6 @@ func newMfgOverheadServiceCallback() ifs.IServiceCallback {
 		Require(func(e *mfg.MfgOverhead) string { return e.OverheadId }, "OverheadId").
 		Require(func(e *mfg.MfgOverhead) string { return e.Name }, "Name").
 		Require(func(e *mfg.MfgOverhead) string { return e.CurrencyId }, "CurrencyId").
+		Enum(func(e *mfg.MfgOverhead) int32 { return int32(e.AllocationMethod) }, mfg.MfgOverheadMethod_name, "AllocationMethod").
 		Build()
 }

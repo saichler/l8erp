@@ -25,5 +25,6 @@ func newBillingMilestoneServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesBillingMilestone) { common.GenerateID(&e.MilestoneId) }).
 		Require(func(e *sales.SalesBillingMilestone) string { return e.MilestoneId }, "MilestoneId").
 		Require(func(e *sales.SalesBillingMilestone) string { return e.ScheduleId }, "ScheduleId").
+		Enum(func(e *sales.SalesBillingMilestone) int32 { return int32(e.Status) }, sales.SalesBillingStatus_name, "Status").
 		Build()
 }

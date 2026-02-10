@@ -45,6 +45,15 @@ func (b *VB[T]) RequireInt64(getter func(*T) int64, name string) *VB[T] {
 	return b
 }
 
+// Enum adds an enum field validation using the protobuf _name map.
+// Value 0 (UNSPECIFIED) is rejected; unknown values are rejected.
+func (b *VB[T]) Enum(getter func(*T) int32, nameMap map[int32]string, name string) *VB[T] {
+	b.validators = append(b.validators, func(e *T, _ ifs.IVNic) error {
+		return ValidateEnum(getter(e), nameMap, name)
+	})
+	return b
+}
+
 // Custom adds a custom validation function.
 func (b *VB[T]) Custom(fn func(*T, ifs.IVNic) error) *VB[T] {
 	b.validators = append(b.validators, fn)

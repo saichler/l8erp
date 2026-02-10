@@ -24,5 +24,6 @@ func newPrjInvoiceLineServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjInvoiceLine]("PrjInvoiceLine",
 		func(e *prj.PrjInvoiceLine) { common.GenerateID(&e.LineId) }).
 		Require(func(e *prj.PrjInvoiceLine) string { return e.LineId }, "LineId").
+		Require(func(e *prj.PrjInvoiceLine) string { return e.InvoiceId }, "InvoiceId").
 		Build()
 }

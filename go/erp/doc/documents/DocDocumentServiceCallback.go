@@ -24,5 +24,9 @@ func newDocDocumentServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[doc.DocDocument]("DocDocument",
 		func(e *doc.DocDocument) { common.GenerateID(&e.DocumentId) }).
 		Require(func(e *doc.DocDocument) string { return e.DocumentId }, "DocumentId").
+		Enum(func(e *doc.DocDocument) int32 { return int32(e.AccessLevel) }, doc.DocAccessLevel_name, "AccessLevel").
+		Enum(func(e *doc.DocDocument) int32 { return int32(e.DocumentType) }, doc.DocDocumentType_name, "DocumentType").
+		Enum(func(e *doc.DocDocument) int32 { return int32(e.FileFormat) }, doc.DocFileFormat_name, "FileFormat").
+		Enum(func(e *doc.DocDocument) int32 { return int32(e.Status) }, doc.DocDocumentStatus_name, "Status").
 		Build()
 }

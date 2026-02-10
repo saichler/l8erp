@@ -24,5 +24,6 @@ func newPrjExpenseCategoryServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjExpenseCategory]("PrjExpenseCategory",
 		func(e *prj.PrjExpenseCategory) { common.GenerateID(&e.CategoryId) }).
 		Require(func(e *prj.PrjExpenseCategory) string { return e.CategoryId }, "CategoryId").
+		Enum(func(e *prj.PrjExpenseCategory) int32 { return int32(e.ExpenseType) }, prj.PrjExpenseType_name, "ExpenseType").
 		Build()
 }

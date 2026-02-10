@@ -24,5 +24,6 @@ func newRevenueScheduleServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[sales.SalesRevenueSchedule]("SalesRevenueSchedule",
 		func(e *sales.SalesRevenueSchedule) { common.GenerateID(&e.ScheduleId) }).
 		Require(func(e *sales.SalesRevenueSchedule) string { return e.ScheduleId }, "ScheduleId").
+		Enum(func(e *sales.SalesRevenueSchedule) int32 { return int32(e.RecognitionMethod) }, sales.SalesRevenueRecognition_name, "RecognitionMethod").
 		Build()
 }

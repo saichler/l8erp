@@ -24,5 +24,6 @@ func newBinServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmBin]("ScmBin",
 		func(e *scm.ScmBin) { common.GenerateID(&e.BinId) }).
 		Require(func(e *scm.ScmBin) string { return e.BinId }, "BinId").
+		Enum(func(e *scm.ScmBin) int32 { return int32(e.BinType) }, scm.ScmBinType_name, "BinType").
 		Build()
 }

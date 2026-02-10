@@ -26,5 +26,6 @@ func newSalesQuotationServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesQuotation) string { return e.QuotationId }, "QuotationId").
 		Require(func(e *sales.SalesQuotation) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *sales.SalesQuotation) string { return e.CurrencyId }, "CurrencyId").
+		Enum(func(e *sales.SalesQuotation) int32 { return int32(e.Status) }, sales.SalesQuotationStatus_name, "Status").
 		Build()
 }

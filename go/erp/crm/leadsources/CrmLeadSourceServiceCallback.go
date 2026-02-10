@@ -24,5 +24,6 @@ func newCrmLeadSourceServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmLeadSource]("CrmLeadSource",
 		func(e *crm.CrmLeadSource) { common.GenerateID(&e.SourceId) }).
 		Require(func(e *crm.CrmLeadSource) string { return e.SourceId }, "SourceId").
+		Enum(func(e *crm.CrmLeadSource) int32 { return int32(e.SourceType) }, crm.CrmLeadSourceType_name, "SourceType").
 		Build()
 }

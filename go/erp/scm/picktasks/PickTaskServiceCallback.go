@@ -24,5 +24,6 @@ func newPickTaskServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmPickTask]("ScmPickTask",
 		func(e *scm.ScmPickTask) { common.GenerateID(&e.TaskId) }).
 		Require(func(e *scm.ScmPickTask) string { return e.TaskId }, "TaskId").
+		Enum(func(e *scm.ScmPickTask) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }

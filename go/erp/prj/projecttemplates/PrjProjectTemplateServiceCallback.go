@@ -24,5 +24,7 @@ func newPrjProjectTemplateServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjProjectTemplate]("PrjProjectTemplate",
 		func(e *prj.PrjProjectTemplate) { common.GenerateID(&e.TemplateId) }).
 		Require(func(e *prj.PrjProjectTemplate) string { return e.TemplateId }, "TemplateId").
+		Enum(func(e *prj.PrjProjectTemplate) int32 { return int32(e.DefaultBillingType) }, prj.PrjBillingType_name, "DefaultBillingType").
+		Enum(func(e *prj.PrjProjectTemplate) int32 { return int32(e.ProjectType) }, prj.PrjProjectType_name, "ProjectType").
 		Build()
 }

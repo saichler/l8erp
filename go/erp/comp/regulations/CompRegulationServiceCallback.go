@@ -24,5 +24,6 @@ func newCompRegulationServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompRegulation]("CompRegulation",
 		func(e *comp.CompRegulation) { common.GenerateID(&e.RegulationId) }).
 		Require(func(e *comp.CompRegulation) string { return e.RegulationId }, "RegulationId").
+		Enum(func(e *comp.CompRegulation) int32 { return int32(e.RegulationType) }, comp.CompRegulationType_name, "RegulationType").
 		Build()
 }

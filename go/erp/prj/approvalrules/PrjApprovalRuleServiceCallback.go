@@ -24,5 +24,6 @@ func newPrjApprovalRuleServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjApprovalRule]("PrjApprovalRule",
 		func(e *prj.PrjApprovalRule) { common.GenerateID(&e.RuleId) }).
 		Require(func(e *prj.PrjApprovalRule) string { return e.RuleId }, "RuleId").
+		Enum(func(e *prj.PrjApprovalRule) int32 { return int32(e.ApprovalType) }, prj.PrjApprovalType_name, "ApprovalType").
 		Build()
 }

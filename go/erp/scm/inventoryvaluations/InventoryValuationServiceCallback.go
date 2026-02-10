@@ -24,5 +24,6 @@ func newInventoryValuationServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmInventoryValuation]("ScmInventoryValuation",
 		func(e *scm.ScmInventoryValuation) { common.GenerateID(&e.ValuationId) }).
 		Require(func(e *scm.ScmInventoryValuation) string { return e.ValuationId }, "ValuationId").
+		Enum(func(e *scm.ScmInventoryValuation) int32 { return int32(e.ValuationMethod) }, scm.ScmValuationMethod_name, "ValuationMethod").
 		Build()
 }

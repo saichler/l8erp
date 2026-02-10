@@ -25,5 +25,7 @@ func newAccountServiceCallback() ifs.IServiceCallback {
 		func(e *fin.Account) { common.GenerateID(&e.AccountId) }).
 		Require(func(e *fin.Account) string { return e.AccountId }, "AccountId").
 		Require(func(e *fin.Account) string { return e.Name }, "Name").
+		Enum(func(e *fin.Account) int32 { return int32(e.AccountType) }, fin.AccountType_name, "AccountType").
+		Enum(func(e *fin.Account) int32 { return int32(e.NormalBalance) }, fin.BalanceType_name, "NormalBalance").
 		Build()
 }

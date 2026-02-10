@@ -24,5 +24,6 @@ func newPrjTimesheetEntryServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjTimesheetEntry]("PrjTimesheetEntry",
 		func(e *prj.PrjTimesheetEntry) { common.GenerateID(&e.EntryId) }).
 		Require(func(e *prj.PrjTimesheetEntry) string { return e.EntryId }, "EntryId").
+		Require(func(e *prj.PrjTimesheetEntry) string { return e.TimesheetId }, "TimesheetId").
 		Build()
 }

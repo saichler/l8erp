@@ -25,5 +25,6 @@ func newMfgMrpRequirementServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgMrpRequirement) { common.GenerateID(&e.RequirementId) }).
 		Require(func(e *mfg.MfgMrpRequirement) string { return e.RequirementId }, "RequirementId").
 		Require(func(e *mfg.MfgMrpRequirement) string { return e.RunId }, "RunId").
+		Enum(func(e *mfg.MfgMrpRequirement) int32 { return int32(e.RequirementType) }, mfg.MfgRequirementType_name, "RequirementType").
 		Build()
 }

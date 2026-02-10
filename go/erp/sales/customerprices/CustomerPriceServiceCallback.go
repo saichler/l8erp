@@ -26,5 +26,6 @@ func newCustomerPriceServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesCustomerPrice) string { return e.CustomerPriceId }, "CustomerPriceId").
 		Require(func(e *sales.SalesCustomerPrice) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *sales.SalesCustomerPrice) string { return e.CurrencyId }, "CurrencyId").
+		Enum(func(e *sales.SalesCustomerPrice) int32 { return int32(e.PricingMethod) }, sales.SalesPricingMethod_name, "PricingMethod").
 		Build()
 }

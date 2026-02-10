@@ -24,5 +24,6 @@ func newCrmServiceVisitServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmServiceVisit]("CrmServiceVisit",
 		func(e *crm.CrmServiceVisit) { common.GenerateID(&e.VisitId) }).
 		Require(func(e *crm.CrmServiceVisit) string { return e.VisitId }, "VisitId").
+		Enum(func(e *crm.CrmServiceVisit) int32 { return int32(e.Status) }, crm.CrmVisitStatus_name, "Status").
 		Build()
 }

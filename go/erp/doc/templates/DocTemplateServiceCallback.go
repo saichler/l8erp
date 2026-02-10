@@ -24,5 +24,7 @@ func newDocTemplateServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[doc.DocTemplate]("DocTemplate",
 		func(e *doc.DocTemplate) { common.GenerateID(&e.TemplateId) }).
 		Require(func(e *doc.DocTemplate) string { return e.TemplateId }, "TemplateId").
+		Enum(func(e *doc.DocTemplate) int32 { return int32(e.OutputFormat) }, doc.DocFileFormat_name, "OutputFormat").
+		Enum(func(e *doc.DocTemplate) int32 { return int32(e.TemplateType) }, doc.DocTemplateType_name, "TemplateType").
 		Build()
 }

@@ -25,5 +25,6 @@ func newPrjProjectInvoiceServiceCallback() ifs.IServiceCallback {
 		func(e *prj.PrjProjectInvoice) { common.GenerateID(&e.InvoiceId) }).
 		Require(func(e *prj.PrjProjectInvoice) string { return e.InvoiceId }, "InvoiceId").
 		Require(func(e *prj.PrjProjectInvoice) string { return e.CurrencyId }, "CurrencyId").
+		Enum(func(e *prj.PrjProjectInvoice) int32 { return int32(e.Status) }, prj.PrjInvoiceStatus_name, "Status").
 		Build()
 }

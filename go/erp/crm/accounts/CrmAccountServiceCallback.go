@@ -24,5 +24,7 @@ func newCrmAccountServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmAccount]("CrmAccount",
 		func(e *crm.CrmAccount) { common.GenerateID(&e.AccountId) }).
 		Require(func(e *crm.CrmAccount) string { return e.AccountId }, "AccountId").
+		Enum(func(e *crm.CrmAccount) int32 { return int32(e.AccountType) }, crm.CrmAccountType_name, "AccountType").
+		Enum(func(e *crm.CrmAccount) int32 { return int32(e.Status) }, crm.CrmAccountStatus_name, "Status").
 		Build()
 }

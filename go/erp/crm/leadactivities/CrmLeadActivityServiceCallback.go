@@ -24,5 +24,7 @@ func newCrmLeadActivityServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmLeadActivity]("CrmLeadActivity",
 		func(e *crm.CrmLeadActivity) { common.GenerateID(&e.ActivityId) }).
 		Require(func(e *crm.CrmLeadActivity) string { return e.ActivityId }, "ActivityId").
+		Enum(func(e *crm.CrmLeadActivity) int32 { return int32(e.ActivityType) }, crm.CrmActivityType_name, "ActivityType").
+		Enum(func(e *crm.CrmLeadActivity) int32 { return int32(e.Status) }, crm.CrmActivityStatus_name, "Status").
 		Build()
 }

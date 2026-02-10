@@ -24,5 +24,6 @@ func newPrjDependencyServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjDependency]("PrjDependency",
 		func(e *prj.PrjDependency) { common.GenerateID(&e.DependencyId) }).
 		Require(func(e *prj.PrjDependency) string { return e.DependencyId }, "DependencyId").
+		Enum(func(e *prj.PrjDependency) int32 { return int32(e.DependencyType) }, prj.PrjDependencyType_name, "DependencyType").
 		Build()
 }

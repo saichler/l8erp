@@ -24,5 +24,7 @@ func newBiAnalysisModelServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[bi.BiAnalysisModel]("BiAnalysisModel",
 		func(e *bi.BiAnalysisModel) { common.GenerateID(&e.ModelId) }).
 		Require(func(e *bi.BiAnalysisModel) string { return e.ModelId }, "ModelId").
+		Enum(func(e *bi.BiAnalysisModel) int32 { return int32(e.ModelType) }, bi.BiModelType_name, "ModelType").
+		Enum(func(e *bi.BiAnalysisModel) int32 { return int32(e.Status) }, bi.BiModelStatus_name, "Status").
 		Build()
 }

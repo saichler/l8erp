@@ -25,5 +25,6 @@ func newMfgRoutingServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgRouting) { common.GenerateID(&e.RoutingId) }).
 		Require(func(e *mfg.MfgRouting) string { return e.RoutingId }, "RoutingId").
 		Require(func(e *mfg.MfgRouting) string { return e.ItemId }, "ItemId").
+		Enum(func(e *mfg.MfgRouting) int32 { return int32(e.Status) }, mfg.MfgBomStatus_name, "Status").
 		Build()
 }

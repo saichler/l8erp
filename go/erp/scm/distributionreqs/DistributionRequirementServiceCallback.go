@@ -24,5 +24,6 @@ func newDistributionRequirementServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmDistributionRequirement]("ScmDistributionRequirement",
 		func(e *scm.ScmDistributionRequirement) { common.GenerateID(&e.RequirementId) }).
 		Require(func(e *scm.ScmDistributionRequirement) string { return e.RequirementId }, "RequirementId").
+		Enum(func(e *scm.ScmDistributionRequirement) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }

@@ -24,5 +24,6 @@ func newCompControlAssessmentServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompControlAssessment]("CompControlAssessment",
 		func(e *comp.CompControlAssessment) { common.GenerateID(&e.AssessmentId) }).
 		Require(func(e *comp.CompControlAssessment) string { return e.AssessmentId }, "AssessmentId").
+		Enum(func(e *comp.CompControlAssessment) int32 { return int32(e.Effectiveness) }, comp.CompControlEffectiveness_name, "Effectiveness").
 		Build()
 }

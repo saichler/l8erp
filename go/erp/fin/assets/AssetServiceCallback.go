@@ -26,5 +26,7 @@ func newAssetServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.Asset) string { return e.AssetId }, "AssetId").
 		Require(func(e *fin.Asset) string { return e.Name }, "Name").
 		Require(func(e *fin.Asset) string { return e.CategoryId }, "CategoryId").
+		Enum(func(e *fin.Asset) int32 { return int32(e.DepreciationMethod) }, fin.DepreciationMethod_name, "DepreciationMethod").
+		Enum(func(e *fin.Asset) int32 { return int32(e.Status) }, fin.AssetStatus_name, "Status").
 		Build()
 }

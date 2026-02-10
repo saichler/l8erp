@@ -24,5 +24,9 @@ func newCrmServiceOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmServiceOrder]("CrmServiceOrder",
 		func(e *crm.CrmServiceOrder) { common.GenerateID(&e.OrderId) }).
 		Require(func(e *crm.CrmServiceOrder) string { return e.OrderId }, "OrderId").
+		Require(func(e *crm.CrmServiceOrder) string { return e.AccountId }, "AccountId").
+		Enum(func(e *crm.CrmServiceOrder) int32 { return int32(e.OrderType) }, crm.CrmServiceOrderType_name, "OrderType").
+		Enum(func(e *crm.CrmServiceOrder) int32 { return int32(e.Priority) }, crm.CrmServiceOrderPriority_name, "Priority").
+		Enum(func(e *crm.CrmServiceOrder) int32 { return int32(e.Status) }, crm.CrmServiceOrderStatus_name, "Status").
 		Build()
 }

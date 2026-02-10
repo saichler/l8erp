@@ -24,5 +24,7 @@ func newMfgProdScheduleServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[mfg.MfgProdSchedule]("MfgProdSchedule",
 		func(e *mfg.MfgProdSchedule) { common.GenerateID(&e.ScheduleId) }).
 		Require(func(e *mfg.MfgProdSchedule) string { return e.ScheduleId }, "ScheduleId").
+		Enum(func(e *mfg.MfgProdSchedule) int32 { return int32(e.ScheduleType) }, mfg.MfgScheduleType_name, "ScheduleType").
+		Enum(func(e *mfg.MfgProdSchedule) int32 { return int32(e.Status) }, mfg.MfgScheduleStatus_name, "Status").
 		Build()
 }

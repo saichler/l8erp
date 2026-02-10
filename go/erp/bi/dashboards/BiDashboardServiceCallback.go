@@ -24,5 +24,6 @@ func newBiDashboardServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[bi.BiDashboard]("BiDashboard",
 		func(e *bi.BiDashboard) { common.GenerateID(&e.DashboardId) }).
 		Require(func(e *bi.BiDashboard) string { return e.DashboardId }, "DashboardId").
+		Enum(func(e *bi.BiDashboard) int32 { return int32(e.Status) }, bi.BiDashboardStatus_name, "Status").
 		Build()
 }

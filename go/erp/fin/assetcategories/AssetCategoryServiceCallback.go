@@ -25,5 +25,6 @@ func newAssetCategoryServiceCallback() ifs.IServiceCallback {
 		func(e *fin.AssetCategory) { common.GenerateID(&e.CategoryId) }).
 		Require(func(e *fin.AssetCategory) string { return e.CategoryId }, "CategoryId").
 		Require(func(e *fin.AssetCategory) string { return e.Name }, "Name").
+		Enum(func(e *fin.AssetCategory) int32 { return int32(e.DefaultDepreciationMethod) }, fin.DepreciationMethod_name, "DefaultDepreciationMethod").
 		Build()
 }

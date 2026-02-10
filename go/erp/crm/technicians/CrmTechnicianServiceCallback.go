@@ -24,5 +24,6 @@ func newCrmTechnicianServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmTechnician]("CrmTechnician",
 		func(e *crm.CrmTechnician) { common.GenerateID(&e.TechnicianId) }).
 		Require(func(e *crm.CrmTechnician) string { return e.TechnicianId }, "TechnicianId").
+		Enum(func(e *crm.CrmTechnician) int32 { return int32(e.Status) }, crm.CrmTechnicianStatus_name, "Status").
 		Build()
 }

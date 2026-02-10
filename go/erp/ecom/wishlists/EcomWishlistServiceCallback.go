@@ -24,5 +24,6 @@ func newEcomWishlistServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[ecom.EcomWishlist]("EcomWishlist",
 		func(e *ecom.EcomWishlist) { common.GenerateID(&e.WishlistId) }).
 		Require(func(e *ecom.EcomWishlist) string { return e.WishlistId }, "WishlistId").
+		Require(func(e *ecom.EcomWishlist) string { return e.CustomerId }, "CustomerId").
 		Build()
 }

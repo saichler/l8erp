@@ -24,5 +24,6 @@ func newWarehouseServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmWarehouse]("ScmWarehouse",
 		func(e *scm.ScmWarehouse) { common.GenerateID(&e.WarehouseId) }).
 		Require(func(e *scm.ScmWarehouse) string { return e.WarehouseId }, "WarehouseId").
+		Enum(func(e *scm.ScmWarehouse) int32 { return int32(e.WarehouseType) }, scm.ScmWarehouseType_name, "WarehouseType").
 		Build()
 }

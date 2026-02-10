@@ -24,5 +24,6 @@ func newCrmOppCompetitorServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmOppCompetitor]("CrmOppCompetitor",
 		func(e *crm.CrmOppCompetitor) { common.GenerateID(&e.CompetitorId) }).
 		Require(func(e *crm.CrmOppCompetitor) string { return e.CompetitorId }, "CompetitorId").
+		Enum(func(e *crm.CrmOppCompetitor) int32 { return int32(e.ThreatLevel) }, crm.CrmThreatLevel_name, "ThreatLevel").
 		Build()
 }

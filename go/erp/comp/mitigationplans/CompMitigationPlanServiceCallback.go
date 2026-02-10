@@ -24,5 +24,6 @@ func newCompMitigationPlanServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompMitigationPlan]("CompMitigationPlan",
 		func(e *comp.CompMitigationPlan) { common.GenerateID(&e.PlanId) }).
 		Require(func(e *comp.CompMitigationPlan) string { return e.PlanId }, "PlanId").
+		Enum(func(e *comp.CompMitigationPlan) int32 { return int32(e.Status) }, comp.CompRemediationStatus_name, "Status").
 		Build()
 }

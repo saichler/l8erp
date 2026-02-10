@@ -25,5 +25,6 @@ func newPrjExpenseEntryServiceCallback() ifs.IServiceCallback {
 		func(e *prj.PrjExpenseEntry) { common.GenerateID(&e.EntryId) }).
 		Require(func(e *prj.PrjExpenseEntry) string { return e.EntryId }, "EntryId").
 		Require(func(e *prj.PrjExpenseEntry) string { return e.CurrencyId }, "CurrencyId").
+		Enum(func(e *prj.PrjExpenseEntry) int32 { return int32(e.ExpenseType) }, prj.PrjExpenseType_name, "ExpenseType").
 		Build()
 }

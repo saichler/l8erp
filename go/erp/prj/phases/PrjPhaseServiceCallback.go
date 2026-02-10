@@ -24,5 +24,6 @@ func newPrjPhaseServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjPhase]("PrjPhase",
 		func(e *prj.PrjPhase) { common.GenerateID(&e.PhaseId) }).
 		Require(func(e *prj.PrjPhase) string { return e.PhaseId }, "PhaseId").
+		Enum(func(e *prj.PrjPhase) int32 { return int32(e.Status) }, prj.PrjProjectStatus_name, "Status").
 		Build()
 }

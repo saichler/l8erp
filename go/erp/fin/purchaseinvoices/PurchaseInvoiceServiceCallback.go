@@ -26,5 +26,6 @@ func newPurchaseInvoiceServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.PurchaseInvoice) string { return e.InvoiceId }, "InvoiceId").
 		Require(func(e *fin.PurchaseInvoice) string { return e.VendorId }, "VendorId").
 		Require(func(e *fin.PurchaseInvoice) string { return e.InvoiceNumber }, "InvoiceNumber").
+		Enum(func(e *fin.PurchaseInvoice) int32 { return int32(e.Status) }, fin.InvoiceStatus_name, "Status").
 		Build()
 }

@@ -24,5 +24,6 @@ func newMfgProductionOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[mfg.MfgProductionOrder]("MfgProductionOrder",
 		func(e *mfg.MfgProductionOrder) { common.GenerateID(&e.ProdOrderId) }).
 		Require(func(e *mfg.MfgProductionOrder) string { return e.ProdOrderId }, "ProdOrderId").
+		Enum(func(e *mfg.MfgProductionOrder) int32 { return int32(e.Status) }, mfg.MfgProductionOrderStatus_name, "Status").
 		Build()
 }

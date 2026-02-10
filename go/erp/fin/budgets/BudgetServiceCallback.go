@@ -26,5 +26,7 @@ func newBudgetServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.Budget) string { return e.BudgetId }, "BudgetId").
 		Require(func(e *fin.Budget) string { return e.BudgetName }, "BudgetName").
 		Require(func(e *fin.Budget) string { return e.FiscalYearId }, "FiscalYearId").
+		Enum(func(e *fin.Budget) int32 { return int32(e.BudgetType) }, fin.BudgetType_name, "BudgetType").
+		Enum(func(e *fin.Budget) int32 { return int32(e.Status) }, fin.BudgetStatus_name, "Status").
 		Build()
 }

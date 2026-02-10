@@ -24,5 +24,7 @@ func newCrmHealthScoreServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmHealthScore]("CrmHealthScore",
 		func(e *crm.CrmHealthScore) { common.GenerateID(&e.ScoreId) }).
 		Require(func(e *crm.CrmHealthScore) string { return e.ScoreId }, "ScoreId").
+		Require(func(e *crm.CrmHealthScore) string { return e.AccountId }, "AccountId").
+		Enum(func(e *crm.CrmHealthScore) int32 { return int32(e.HealthStatus) }, crm.CrmHealthStatus_name, "HealthStatus").
 		Build()
 }

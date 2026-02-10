@@ -24,5 +24,6 @@ func newPrjMilestoneServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjMilestone]("PrjMilestone",
 		func(e *prj.PrjMilestone) { common.GenerateID(&e.MilestoneId) }).
 		Require(func(e *prj.PrjMilestone) string { return e.MilestoneId }, "MilestoneId").
+		Enum(func(e *prj.PrjMilestone) int32 { return int32(e.Status) }, prj.PrjMilestoneStatus_name, "Status").
 		Build()
 }

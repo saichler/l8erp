@@ -26,5 +26,6 @@ func newMfgWorkCenterServiceCallback() ifs.IServiceCallback {
 		Require(func(e *mfg.MfgWorkCenter) string { return e.WorkCenterId }, "WorkCenterId").
 		Require(func(e *mfg.MfgWorkCenter) string { return e.Name }, "Name").
 		Require(func(e *mfg.MfgWorkCenter) string { return e.CurrencyId }, "CurrencyId").
+		Enum(func(e *mfg.MfgWorkCenter) int32 { return int32(e.WorkCenterType) }, mfg.MfgWorkCenterType_name, "WorkCenterType").
 		Build()
 }

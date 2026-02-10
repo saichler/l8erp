@@ -24,5 +24,6 @@ func newReceivingOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmReceivingOrder]("ScmReceivingOrder",
 		func(e *scm.ScmReceivingOrder) { common.GenerateID(&e.ReceivingOrderId) }).
 		Require(func(e *scm.ScmReceivingOrder) string { return e.ReceivingOrderId }, "ReceivingOrderId").
+		Enum(func(e *scm.ScmReceivingOrder) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }

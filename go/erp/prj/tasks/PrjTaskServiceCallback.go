@@ -24,5 +24,7 @@ func newPrjTaskServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjTask]("PrjTask",
 		func(e *prj.PrjTask) { common.GenerateID(&e.TaskId) }).
 		Require(func(e *prj.PrjTask) string { return e.TaskId }, "TaskId").
+		Enum(func(e *prj.PrjTask) int32 { return int32(e.Priority) }, prj.PrjTaskPriority_name, "Priority").
+		Enum(func(e *prj.PrjTask) int32 { return int32(e.Status) }, prj.PrjTaskStatus_name, "Status").
 		Build()
 }

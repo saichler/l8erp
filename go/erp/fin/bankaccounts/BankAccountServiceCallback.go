@@ -27,5 +27,7 @@ func newBankAccountServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.BankAccount) string { return e.AccountName }, "AccountName").
 		Require(func(e *fin.BankAccount) string { return e.BankName }, "BankName").
 		Require(func(e *fin.BankAccount) string { return e.GlAccountId }, "GlAccountId").
+		Enum(func(e *fin.BankAccount) int32 { return int32(e.AccountType) }, fin.BankAccountType_name, "AccountType").
+		Enum(func(e *fin.BankAccount) int32 { return int32(e.Status) }, fin.BankAccountStatus_name, "Status").
 		Build()
 }

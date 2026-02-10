@@ -24,5 +24,6 @@ func newBiTrendAnalysisServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[bi.BiTrendAnalysis]("BiTrendAnalysis",
 		func(e *bi.BiTrendAnalysis) { common.GenerateID(&e.AnalysisId) }).
 		Require(func(e *bi.BiTrendAnalysis) string { return e.AnalysisId }, "AnalysisId").
+		Enum(func(e *bi.BiTrendAnalysis) int32 { return int32(e.Direction) }, bi.BiTrendDirection_name, "Direction").
 		Build()
 }

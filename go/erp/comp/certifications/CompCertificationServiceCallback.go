@@ -24,5 +24,6 @@ func newCompCertificationServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompCertification]("CompCertification",
 		func(e *comp.CompCertification) { common.GenerateID(&e.CertificationId) }).
 		Require(func(e *comp.CompCertification) string { return e.CertificationId }, "CertificationId").
+		Enum(func(e *comp.CompCertification) int32 { return int32(e.Status) }, comp.CompCertificationStatus_name, "Status").
 		Build()
 }

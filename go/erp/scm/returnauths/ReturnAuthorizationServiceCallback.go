@@ -24,5 +24,7 @@ func newReturnAuthorizationServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmReturnAuthorization]("ScmReturnAuthorization",
 		func(e *scm.ScmReturnAuthorization) { common.GenerateID(&e.RmaId) }).
 		Require(func(e *scm.ScmReturnAuthorization) string { return e.RmaId }, "RmaId").
+		Require(func(e *scm.ScmReturnAuthorization) string { return e.CustomerId }, "CustomerId").
+		Enum(func(e *scm.ScmReturnAuthorization) int32 { return int32(e.Status) }, scm.ScmRequisitionStatus_name, "Status").
 		Build()
 }

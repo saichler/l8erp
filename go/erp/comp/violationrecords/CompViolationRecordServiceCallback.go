@@ -24,5 +24,7 @@ func newCompViolationRecordServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompViolationRecord]("CompViolationRecord",
 		func(e *comp.CompViolationRecord) { common.GenerateID(&e.ViolationId) }).
 		Require(func(e *comp.CompViolationRecord) string { return e.ViolationId }, "ViolationId").
+		Enum(func(e *comp.CompViolationRecord) int32 { return int32(e.Severity) }, comp.CompSeverityLevel_name, "Severity").
+		Enum(func(e *comp.CompViolationRecord) int32 { return int32(e.Status) }, comp.CompFindingStatus_name, "Status").
 		Build()
 }

@@ -25,5 +25,6 @@ func newMfgShiftScheduleServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgShiftSchedule) { common.GenerateID(&e.ScheduleId) }).
 		Require(func(e *mfg.MfgShiftSchedule) string { return e.ScheduleId }, "ScheduleId").
 		Require(func(e *mfg.MfgShiftSchedule) string { return e.Name }, "Name").
+		Enum(func(e *mfg.MfgShiftSchedule) int32 { return int32(e.ShiftType) }, mfg.MfgShiftType_name, "ShiftType").
 		Build()
 }

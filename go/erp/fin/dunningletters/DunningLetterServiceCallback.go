@@ -25,5 +25,6 @@ func newDunningLetterServiceCallback() ifs.IServiceCallback {
 		func(e *fin.DunningLetter) { common.GenerateID(&e.LetterId) }).
 		Require(func(e *fin.DunningLetter) string { return e.LetterId }, "LetterId").
 		Require(func(e *fin.DunningLetter) string { return e.CustomerId }, "CustomerId").
+		Enum(func(e *fin.DunningLetter) int32 { return int32(e.DunningLevel) }, fin.DunningLevel_name, "DunningLevel").
 		Build()
 }

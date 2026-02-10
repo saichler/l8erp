@@ -24,5 +24,8 @@ func newCrmInteractionServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmInteraction]("CrmInteraction",
 		func(e *crm.CrmInteraction) { common.GenerateID(&e.InteractionId) }).
 		Require(func(e *crm.CrmInteraction) string { return e.InteractionId }, "InteractionId").
+		Require(func(e *crm.CrmInteraction) string { return e.AccountId }, "AccountId").
+		Enum(func(e *crm.CrmInteraction) int32 { return int32(e.Direction) }, crm.CrmInteractionDirection_name, "Direction").
+		Enum(func(e *crm.CrmInteraction) int32 { return int32(e.InteractionType) }, crm.CrmInteractionType_name, "InteractionType").
 		Build()
 }

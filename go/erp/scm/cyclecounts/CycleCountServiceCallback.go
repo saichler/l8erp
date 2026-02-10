@@ -24,5 +24,6 @@ func newCycleCountServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmCycleCount]("ScmCycleCount",
 		func(e *scm.ScmCycleCount) { common.GenerateID(&e.CycleCountId) }).
 		Require(func(e *scm.ScmCycleCount) string { return e.CycleCountId }, "CycleCountId").
+		Enum(func(e *scm.ScmCycleCount) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }

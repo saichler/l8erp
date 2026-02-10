@@ -25,5 +25,6 @@ func newShippingDocServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesShippingDoc) { common.GenerateID(&e.DocId) }).
 		Require(func(e *sales.SalesShippingDoc) string { return e.DocId }, "DocId").
 		Require(func(e *sales.SalesShippingDoc) string { return e.DeliveryOrderId }, "DeliveryOrderId").
+		Enum(func(e *sales.SalesShippingDoc) int32 { return int32(e.DocType) }, sales.SalesShipDocType_name, "DocType").
 		Build()
 }

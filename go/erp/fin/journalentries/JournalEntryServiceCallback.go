@@ -25,5 +25,6 @@ func newJournalEntryServiceCallback() ifs.IServiceCallback {
 		func(e *fin.JournalEntry) { common.GenerateID(&e.JournalEntryId) }).
 		Require(func(e *fin.JournalEntry) string { return e.JournalEntryId }, "JournalEntryId").
 		Require(func(e *fin.JournalEntry) string { return e.FiscalPeriodId }, "FiscalPeriodId").
+		Enum(func(e *fin.JournalEntry) int32 { return int32(e.Status) }, fin.JournalEntryStatus_name, "Status").
 		Build()
 }

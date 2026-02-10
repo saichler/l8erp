@@ -25,5 +25,6 @@ func newDiscountRuleServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesDiscountRule) { common.GenerateID(&e.RuleId) }).
 		Require(func(e *sales.SalesDiscountRule) string { return e.RuleId }, "RuleId").
 		Require(func(e *sales.SalesDiscountRule) string { return e.Name }, "Name").
+		Enum(func(e *sales.SalesDiscountRule) int32 { return int32(e.DiscountType) }, sales.SalesDiscountType_name, "DiscountType").
 		Build()
 }

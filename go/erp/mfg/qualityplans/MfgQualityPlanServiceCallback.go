@@ -25,5 +25,6 @@ func newMfgQualityPlanServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgQualityPlan) { common.GenerateID(&e.PlanId) }).
 		Require(func(e *mfg.MfgQualityPlan) string { return e.PlanId }, "PlanId").
 		Require(func(e *mfg.MfgQualityPlan) string { return e.Name }, "Name").
+		Enum(func(e *mfg.MfgQualityPlan) int32 { return int32(e.Status) }, mfg.MfgBomStatus_name, "Status").
 		Build()
 }

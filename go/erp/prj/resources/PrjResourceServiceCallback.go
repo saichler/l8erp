@@ -24,5 +24,6 @@ func newPrjResourceServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjResource]("PrjResource",
 		func(e *prj.PrjResource) { common.GenerateID(&e.ResourceId) }).
 		Require(func(e *prj.PrjResource) string { return e.ResourceId }, "ResourceId").
+		Enum(func(e *prj.PrjResource) int32 { return int32(e.ResourceType) }, prj.PrjResourceType_name, "ResourceType").
 		Build()
 }

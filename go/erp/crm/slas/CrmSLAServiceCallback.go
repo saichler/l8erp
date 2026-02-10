@@ -25,5 +25,6 @@ func newCrmSLAServiceCallback() ifs.IServiceCallback {
 		func(e *crm.CrmSLA) { common.GenerateID(&e.SlaId) }).
 		Require(func(e *crm.CrmSLA) string { return e.SlaId }, "SlaId").
 		Require(func(e *crm.CrmSLA) string { return e.Name }, "Name").
+		Enum(func(e *crm.CrmSLA) int32 { return int32(e.AppliesToPriority) }, crm.CrmCasePriority_name, "AppliesToPriority").
 		Build()
 }

@@ -25,5 +25,7 @@ func newVendorServiceCallback() ifs.IServiceCallback {
 		func(e *fin.Vendor) { common.GenerateID(&e.VendorId) }).
 		Require(func(e *fin.Vendor) string { return e.VendorId }, "VendorId").
 		Require(func(e *fin.Vendor) string { return e.Name }, "Name").
+		Enum(func(e *fin.Vendor) int32 { return int32(e.PreferredPaymentMethod) }, fin.PaymentMethod_name, "PreferredPaymentMethod").
+		Enum(func(e *fin.Vendor) int32 { return int32(e.Status) }, fin.VendorStatus_name, "Status").
 		Build()
 }

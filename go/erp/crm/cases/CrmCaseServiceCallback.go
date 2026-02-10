@@ -25,5 +25,9 @@ func newCrmCaseServiceCallback() ifs.IServiceCallback {
 		func(e *crm.CrmCase) { common.GenerateID(&e.CaseId) }).
 		Require(func(e *crm.CrmCase) string { return e.CaseId }, "CaseId").
 		Require(func(e *crm.CrmCase) string { return e.Subject }, "Subject").
+		Require(func(e *crm.CrmCase) string { return e.AccountId }, "AccountId").
+		Enum(func(e *crm.CrmCase) int32 { return int32(e.CaseType) }, crm.CrmCaseType_name, "CaseType").
+		Enum(func(e *crm.CrmCase) int32 { return int32(e.Priority) }, crm.CrmCasePriority_name, "Priority").
+		Enum(func(e *crm.CrmCase) int32 { return int32(e.Status) }, crm.CrmCaseStatus_name, "Status").
 		Build()
 }

@@ -25,5 +25,6 @@ func newMfgInspectionPointServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgInspectionPoint) { common.GenerateID(&e.PointId) }).
 		Require(func(e *mfg.MfgInspectionPoint) string { return e.PointId }, "PointId").
 		Require(func(e *mfg.MfgInspectionPoint) string { return e.PlanId }, "PlanId").
+		Enum(func(e *mfg.MfgInspectionPoint) int32 { return int32(e.InspectionType) }, mfg.MfgInspectionType_name, "InspectionType").
 		Build()
 }

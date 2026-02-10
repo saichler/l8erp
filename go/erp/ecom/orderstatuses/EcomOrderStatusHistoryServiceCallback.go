@@ -24,5 +24,7 @@ func newEcomOrderStatusHistoryServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[ecom.EcomOrderStatusHistory]("EcomOrderStatusHistory",
 		func(e *ecom.EcomOrderStatusHistory) { common.GenerateID(&e.StatusId) }).
 		Require(func(e *ecom.EcomOrderStatusHistory) string { return e.StatusId }, "StatusId").
+		Enum(func(e *ecom.EcomOrderStatusHistory) int32 { return int32(e.NewStatus) }, ecom.EcomOrderStatus_name, "NewStatus").
+		Enum(func(e *ecom.EcomOrderStatusHistory) int32 { return int32(e.PreviousStatus) }, ecom.EcomOrderStatus_name, "PreviousStatus").
 		Build()
 }

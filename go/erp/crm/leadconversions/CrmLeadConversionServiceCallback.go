@@ -24,5 +24,6 @@ func newCrmLeadConversionServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmLeadConversion]("CrmLeadConversion",
 		func(e *crm.CrmLeadConversion) { common.GenerateID(&e.ConversionId) }).
 		Require(func(e *crm.CrmLeadConversion) string { return e.ConversionId }, "ConversionId").
+		Require(func(e *crm.CrmLeadConversion) string { return e.AccountId }, "AccountId").
 		Build()
 }

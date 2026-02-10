@@ -24,5 +24,6 @@ func newCompAuditReportServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompAuditReport]("CompAuditReport",
 		func(e *comp.CompAuditReport) { common.GenerateID(&e.ReportId) }).
 		Require(func(e *comp.CompAuditReport) string { return e.ReportId }, "ReportId").
+		Enum(func(e *comp.CompAuditReport) int32 { return int32(e.Status) }, comp.CompAuditStatus_name, "Status").
 		Build()
 }

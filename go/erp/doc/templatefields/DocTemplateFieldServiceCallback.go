@@ -24,5 +24,6 @@ func newDocTemplateFieldServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[doc.DocTemplateField]("DocTemplateField",
 		func(e *doc.DocTemplateField) { common.GenerateID(&e.FieldId) }).
 		Require(func(e *doc.DocTemplateField) string { return e.FieldId }, "FieldId").
+		Enum(func(e *doc.DocTemplateField) int32 { return int32(e.FieldType) }, doc.DocFieldType_name, "FieldType").
 		Build()
 }

@@ -24,5 +24,6 @@ func newPrjRevenueRecognitionServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjRevenueRecognition]("PrjRevenueRecognition",
 		func(e *prj.PrjRevenueRecognition) { common.GenerateID(&e.RecognitionId) }).
 		Require(func(e *prj.PrjRevenueRecognition) string { return e.RecognitionId }, "RecognitionId").
+		Enum(func(e *prj.PrjRevenueRecognition) int32 { return int32(e.Method) }, prj.PrjRevenueRecognitionMethod_name, "Method").
 		Build()
 }

@@ -24,5 +24,7 @@ func newBiDataSourceServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[bi.BiDataSource]("BiDataSource",
 		func(e *bi.BiDataSource) { common.GenerateID(&e.SourceId) }).
 		Require(func(e *bi.BiDataSource) string { return e.SourceId }, "SourceId").
+		Enum(func(e *bi.BiDataSource) int32 { return int32(e.ConnectionStatus) }, bi.BiConnectionStatus_name, "ConnectionStatus").
+		Enum(func(e *bi.BiDataSource) int32 { return int32(e.SourceType) }, bi.BiDataSourceType_name, "SourceType").
 		Build()
 }

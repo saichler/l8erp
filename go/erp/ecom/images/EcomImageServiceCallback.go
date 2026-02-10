@@ -24,5 +24,6 @@ func newEcomImageServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[ecom.EcomImage]("EcomImage",
 		func(e *ecom.EcomImage) { common.GenerateID(&e.ImageId) }).
 		Require(func(e *ecom.EcomImage) string { return e.ImageId }, "ImageId").
+		Enum(func(e *ecom.EcomImage) int32 { return int32(e.ImageType) }, ecom.EcomImageType_name, "ImageType").
 		Build()
 }

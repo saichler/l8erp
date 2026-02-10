@@ -25,5 +25,6 @@ func newCustomerSegmentServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesCustomerSegment) { common.GenerateID(&e.SegmentId) }).
 		Require(func(e *sales.SalesCustomerSegment) string { return e.SegmentId }, "SegmentId").
 		Require(func(e *sales.SalesCustomerSegment) string { return e.Name }, "Name").
+		Enum(func(e *sales.SalesCustomerSegment) int32 { return int32(e.SegmentType) }, sales.SalesSegmentType_name, "SegmentType").
 		Build()
 }

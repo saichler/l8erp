@@ -24,5 +24,6 @@ func newEcomCouponServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[ecom.EcomCoupon]("EcomCoupon",
 		func(e *ecom.EcomCoupon) { common.GenerateID(&e.CouponId) }).
 		Require(func(e *ecom.EcomCoupon) string { return e.CouponId }, "CouponId").
+		Enum(func(e *ecom.EcomCoupon) int32 { return int32(e.DiscountType) }, ecom.EcomDiscountType_name, "DiscountType").
 		Build()
 }

@@ -24,5 +24,7 @@ func newPrjRiskServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjRisk]("PrjRisk",
 		func(e *prj.PrjRisk) { common.GenerateID(&e.RiskId) }).
 		Require(func(e *prj.PrjRisk) string { return e.RiskId }, "RiskId").
+		Enum(func(e *prj.PrjRisk) int32 { return int32(e.Severity) }, prj.PrjRiskSeverity_name, "Severity").
+		Enum(func(e *prj.PrjRisk) int32 { return int32(e.Status) }, prj.PrjRiskStatus_name, "Status").
 		Build()
 }

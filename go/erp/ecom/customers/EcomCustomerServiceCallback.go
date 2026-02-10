@@ -25,5 +25,6 @@ func newEcomCustomerServiceCallback() ifs.IServiceCallback {
 		func(e *ecom.EcomCustomer) { common.GenerateID(&e.CustomerId) }).
 		Require(func(e *ecom.EcomCustomer) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *ecom.EcomCustomer) string { return e.CurrencyId }, "CurrencyId").
+		Enum(func(e *ecom.EcomCustomer) int32 { return int32(e.CustomerType) }, ecom.EcomCustomerType_name, "CustomerType").
 		Build()
 }

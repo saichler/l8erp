@@ -24,5 +24,6 @@ func newDocArchiveJobServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[doc.DocArchiveJob]("DocArchiveJob",
 		func(e *doc.DocArchiveJob) { common.GenerateID(&e.JobId) }).
 		Require(func(e *doc.DocArchiveJob) string { return e.JobId }, "JobId").
+		Enum(func(e *doc.DocArchiveJob) int32 { return int32(e.Status) }, doc.DocArchiveStatus_name, "Status").
 		Build()
 }

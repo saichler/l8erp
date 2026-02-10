@@ -25,5 +25,6 @@ func newQuotationLineServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesQuotationLine) { common.GenerateID(&e.LineId) }).
 		Require(func(e *sales.SalesQuotationLine) string { return e.LineId }, "LineId").
 		Require(func(e *sales.SalesQuotationLine) string { return e.QuotationId }, "QuotationId").
+		Require(func(e *sales.SalesQuotationLine) string { return e.ItemId }, "ItemId").
 		Build()
 }

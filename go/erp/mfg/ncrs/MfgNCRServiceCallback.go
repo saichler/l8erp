@@ -25,5 +25,8 @@ func newMfgNCRServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgNCR) { common.GenerateID(&e.NcrId) }).
 		Require(func(e *mfg.MfgNCR) string { return e.NcrId }, "NcrId").
 		Require(func(e *mfg.MfgNCR) string { return e.Title }, "Title").
+		Enum(func(e *mfg.MfgNCR) int32 { return int32(e.Disposition) }, mfg.MfgNCRDisposition_name, "Disposition").
+		Enum(func(e *mfg.MfgNCR) int32 { return int32(e.Severity) }, mfg.MfgNCRSeverity_name, "Severity").
+		Enum(func(e *mfg.MfgNCR) int32 { return int32(e.Status) }, mfg.MfgNCRStatus_name, "Status").
 		Build()
 }

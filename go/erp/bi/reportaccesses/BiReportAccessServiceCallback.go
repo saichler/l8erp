@@ -24,5 +24,6 @@ func newBiReportAccessServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[bi.BiReportAccess]("BiReportAccess",
 		func(e *bi.BiReportAccess) { common.GenerateID(&e.AccessId) }).
 		Require(func(e *bi.BiReportAccess) string { return e.AccessId }, "AccessId").
+		Enum(func(e *bi.BiReportAccess) int32 { return int32(e.AccessLevel) }, bi.BiAccessLevel_name, "AccessLevel").
 		Build()
 }

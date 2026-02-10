@@ -24,5 +24,6 @@ func newBiScenarioServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[bi.BiScenario]("BiScenario",
 		func(e *bi.BiScenario) { common.GenerateID(&e.ScenarioId) }).
 		Require(func(e *bi.BiScenario) string { return e.ScenarioId }, "ScenarioId").
+		Enum(func(e *bi.BiScenario) int32 { return int32(e.ScenarioType) }, bi.BiScenarioType_name, "ScenarioType").
 		Build()
 }

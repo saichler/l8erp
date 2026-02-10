@@ -25,5 +25,6 @@ func newOrderAllocationServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesOrderAllocation) { common.GenerateID(&e.AllocationId) }).
 		Require(func(e *sales.SalesOrderAllocation) string { return e.AllocationId }, "AllocationId").
 		Require(func(e *sales.SalesOrderAllocation) string { return e.SalesOrderId }, "SalesOrderId").
+		Enum(func(e *sales.SalesOrderAllocation) int32 { return int32(e.Status) }, sales.SalesAllocationStatus_name, "Status").
 		Build()
 }

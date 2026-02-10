@@ -25,5 +25,6 @@ func newMfgEngChangeOrderServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgEngChangeOrder) { common.GenerateID(&e.ChangeOrderId) }).
 		Require(func(e *mfg.MfgEngChangeOrder) string { return e.ChangeOrderId }, "ChangeOrderId").
 		Require(func(e *mfg.MfgEngChangeOrder) string { return e.Title }, "Title").
+		Enum(func(e *mfg.MfgEngChangeOrder) int32 { return int32(e.Status) }, mfg.MfgChangeOrderStatus_name, "Status").
 		Build()
 }

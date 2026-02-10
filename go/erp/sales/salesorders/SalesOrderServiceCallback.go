@@ -26,5 +26,6 @@ func newSalesOrderServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesOrder) string { return e.SalesOrderId }, "SalesOrderId").
 		Require(func(e *sales.SalesOrder) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *sales.SalesOrder) string { return e.CurrencyId }, "CurrencyId").
+		Enum(func(e *sales.SalesOrder) int32 { return int32(e.Status) }, sales.SalesOrderStatus_name, "Status").
 		Build()
 }

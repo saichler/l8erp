@@ -24,5 +24,6 @@ func newBiDataGovernanceServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[bi.BiDataGovernance]("BiDataGovernance",
 		func(e *bi.BiDataGovernance) { common.GenerateID(&e.GovernanceId) }).
 		Require(func(e *bi.BiDataGovernance) string { return e.GovernanceId }, "GovernanceId").
+		Enum(func(e *bi.BiDataGovernance) int32 { return int32(e.Classification) }, bi.BiGovernanceLevel_name, "Classification").
 		Build()
 }

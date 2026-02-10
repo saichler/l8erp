@@ -24,5 +24,6 @@ func newMfgMrpRunServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[mfg.MfgMrpRun]("MfgMrpRun",
 		func(e *mfg.MfgMrpRun) { common.GenerateID(&e.RunId) }).
 		Require(func(e *mfg.MfgMrpRun) string { return e.RunId }, "RunId").
+		Enum(func(e *mfg.MfgMrpRun) int32 { return int32(e.Status) }, mfg.MfgMrpStatus_name, "Status").
 		Build()
 }

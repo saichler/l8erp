@@ -25,5 +25,6 @@ func newPartnerChannelServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesPartnerChannel) { common.GenerateID(&e.PartnerId) }).
 		Require(func(e *sales.SalesPartnerChannel) string { return e.PartnerId }, "PartnerId").
 		Require(func(e *sales.SalesPartnerChannel) string { return e.Name }, "Name").
+		Enum(func(e *sales.SalesPartnerChannel) int32 { return int32(e.PartnerType) }, sales.SalesPartnerType_name, "PartnerType").
 		Build()
 }

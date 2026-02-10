@@ -24,5 +24,6 @@ func newPromotionalPlanServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmPromotionalPlan]("ScmPromotionalPlan",
 		func(e *scm.ScmPromotionalPlan) { common.GenerateID(&e.PlanId) }).
 		Require(func(e *scm.ScmPromotionalPlan) string { return e.PlanId }, "PlanId").
+		Enum(func(e *scm.ScmPromotionalPlan) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }

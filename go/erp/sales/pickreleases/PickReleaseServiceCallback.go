@@ -25,5 +25,6 @@ func newPickReleaseServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesPickRelease) { common.GenerateID(&e.PickReleaseId) }).
 		Require(func(e *sales.SalesPickRelease) string { return e.PickReleaseId }, "PickReleaseId").
 		Require(func(e *sales.SalesPickRelease) string { return e.DeliveryOrderId }, "DeliveryOrderId").
+		Enum(func(e *sales.SalesPickRelease) int32 { return int32(e.Status) }, sales.SalesPickStatus_name, "Status").
 		Build()
 }

@@ -24,5 +24,6 @@ func newPrjAllocationServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjAllocation]("PrjAllocation",
 		func(e *prj.PrjAllocation) { common.GenerateID(&e.AllocationId) }).
 		Require(func(e *prj.PrjAllocation) string { return e.AllocationId }, "AllocationId").
+		Enum(func(e *prj.PrjAllocation) int32 { return int32(e.Status) }, prj.PrjAllocationStatus_name, "Status").
 		Build()
 }

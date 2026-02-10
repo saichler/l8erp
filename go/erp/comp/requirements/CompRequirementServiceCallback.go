@@ -24,5 +24,6 @@ func newCompRequirementServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompRequirement]("CompRequirement",
 		func(e *comp.CompRequirement) { common.GenerateID(&e.RequirementId) }).
 		Require(func(e *comp.CompRequirement) string { return e.RequirementId }, "RequirementId").
+		Enum(func(e *comp.CompRequirement) int32 { return int32(e.Priority) }, comp.CompSeverityLevel_name, "Priority").
 		Build()
 }

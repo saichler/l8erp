@@ -24,5 +24,6 @@ func newDocLegalHoldServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[doc.DocLegalHold]("DocLegalHold",
 		func(e *doc.DocLegalHold) { common.GenerateID(&e.HoldId) }).
 		Require(func(e *doc.DocLegalHold) string { return e.HoldId }, "HoldId").
+		Enum(func(e *doc.DocLegalHold) int32 { return int32(e.Status) }, doc.DocLegalHoldStatus_name, "Status").
 		Build()
 }

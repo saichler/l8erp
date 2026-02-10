@@ -24,5 +24,6 @@ func newEcomPriceRuleServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[ecom.EcomPriceRule]("EcomPriceRule",
 		func(e *ecom.EcomPriceRule) { common.GenerateID(&e.RuleId) }).
 		Require(func(e *ecom.EcomPriceRule) string { return e.RuleId }, "RuleId").
+		Enum(func(e *ecom.EcomPriceRule) int32 { return int32(e.DiscountType) }, ecom.EcomDiscountType_name, "DiscountType").
 		Build()
 }

@@ -24,5 +24,6 @@ func newCrmContactServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmContact]("CrmContact",
 		func(e *crm.CrmContact) { common.GenerateID(&e.ContactId) }).
 		Require(func(e *crm.CrmContact) string { return e.ContactId }, "ContactId").
+		Require(func(e *crm.CrmContact) string { return e.AccountId }, "AccountId").
 		Build()
 }

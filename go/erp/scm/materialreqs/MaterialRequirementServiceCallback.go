@@ -24,5 +24,7 @@ func newMaterialRequirementServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmMaterialRequirement]("ScmMaterialRequirement",
 		func(e *scm.ScmMaterialRequirement) { common.GenerateID(&e.RequirementId) }).
 		Require(func(e *scm.ScmMaterialRequirement) string { return e.RequirementId }, "RequirementId").
+		Enum(func(e *scm.ScmMaterialRequirement) int32 { return int32(e.PlanningMethod) }, scm.ScmPlanningMethod_name, "PlanningMethod").
+		Enum(func(e *scm.ScmMaterialRequirement) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }

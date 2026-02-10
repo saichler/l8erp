@@ -25,5 +25,6 @@ func newMfgDowntimeEventServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgDowntimeEvent) { common.GenerateID(&e.EventId) }).
 		Require(func(e *mfg.MfgDowntimeEvent) string { return e.EventId }, "EventId").
 		Require(func(e *mfg.MfgDowntimeEvent) string { return e.WorkCenterId }, "WorkCenterId").
+		Enum(func(e *mfg.MfgDowntimeEvent) int32 { return int32(e.DowntimeType) }, mfg.MfgDowntimeType_name, "DowntimeType").
 		Build()
 }

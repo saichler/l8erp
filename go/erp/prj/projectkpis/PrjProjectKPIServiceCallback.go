@@ -24,5 +24,6 @@ func newPrjProjectKPIServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjProjectKPI]("PrjProjectKPI",
 		func(e *prj.PrjProjectKPI) { common.GenerateID(&e.KpiId) }).
 		Require(func(e *prj.PrjProjectKPI) string { return e.KpiId }, "KpiId").
+		Enum(func(e *prj.PrjProjectKPI) int32 { return int32(e.Status) }, prj.PrjHealthIndicator_name, "Status").
 		Build()
 }

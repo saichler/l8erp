@@ -25,5 +25,7 @@ func newMfgQualityInspectionServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgQualityInspection) { common.GenerateID(&e.InspectionId) }).
 		Require(func(e *mfg.MfgQualityInspection) string { return e.InspectionId }, "InspectionId").
 		Require(func(e *mfg.MfgQualityInspection) string { return e.ItemId }, "ItemId").
+		Enum(func(e *mfg.MfgQualityInspection) int32 { return int32(e.InspectionType) }, mfg.MfgInspectionType_name, "InspectionType").
+		Enum(func(e *mfg.MfgQualityInspection) int32 { return int32(e.OverallResult) }, mfg.MfgInspectionResult_name, "OverallResult").
 		Build()
 }

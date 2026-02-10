@@ -24,5 +24,6 @@ func newPrjBillingScheduleServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjBillingSchedule]("PrjBillingSchedule",
 		func(e *prj.PrjBillingSchedule) { common.GenerateID(&e.ScheduleId) }).
 		Require(func(e *prj.PrjBillingSchedule) string { return e.ScheduleId }, "ScheduleId").
+		Enum(func(e *prj.PrjBillingSchedule) int32 { return int32(e.BillingType) }, prj.PrjBillingType_name, "BillingType").
 		Build()
 }

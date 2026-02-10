@@ -24,5 +24,6 @@ func newEcomAttributeServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[ecom.EcomAttribute]("EcomAttribute",
 		func(e *ecom.EcomAttribute) { common.GenerateID(&e.AttributeId) }).
 		Require(func(e *ecom.EcomAttribute) string { return e.AttributeId }, "AttributeId").
+		Enum(func(e *ecom.EcomAttribute) int32 { return int32(e.AttributeType) }, ecom.EcomAttributeType_name, "AttributeType").
 		Build()
 }

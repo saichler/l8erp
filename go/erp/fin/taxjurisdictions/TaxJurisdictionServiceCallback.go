@@ -25,5 +25,6 @@ func newTaxJurisdictionServiceCallback() ifs.IServiceCallback {
 		func(e *fin.TaxJurisdiction) { common.GenerateID(&e.JurisdictionId) }).
 		Require(func(e *fin.TaxJurisdiction) string { return e.JurisdictionId }, "JurisdictionId").
 		Require(func(e *fin.TaxJurisdiction) string { return e.Name }, "Name").
+		Enum(func(e *fin.TaxJurisdiction) int32 { return int32(e.Level) }, fin.JurisdictionLevel_name, "Level").
 		Build()
 }

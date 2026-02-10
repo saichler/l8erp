@@ -24,5 +24,6 @@ func newDocEmailCaptureServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[doc.DocEmailCapture]("DocEmailCapture",
 		func(e *doc.DocEmailCapture) { common.GenerateID(&e.CaptureId) }).
 		Require(func(e *doc.DocEmailCapture) string { return e.CaptureId }, "CaptureId").
+		Enum(func(e *doc.DocEmailCapture) int32 { return int32(e.Status) }, doc.DocEmailCaptureStatus_name, "Status").
 		Build()
 }

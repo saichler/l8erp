@@ -26,5 +26,6 @@ func newFiscalPeriodServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.FiscalPeriod) string { return e.FiscalPeriodId }, "FiscalPeriodId").
 		Require(func(e *fin.FiscalPeriod) string { return e.FiscalYearId }, "FiscalYearId").
 		Require(func(e *fin.FiscalPeriod) string { return e.PeriodName }, "PeriodName").
+		Enum(func(e *fin.FiscalPeriod) int32 { return int32(e.Status) }, fin.FiscalPeriodStatus_name, "Status").
 		Build()
 }

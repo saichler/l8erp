@@ -24,5 +24,7 @@ func newBlanketOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmBlanketOrder]("ScmBlanketOrder",
 		func(e *scm.ScmBlanketOrder) { common.GenerateID(&e.BlanketOrderId) }).
 		Require(func(e *scm.ScmBlanketOrder) string { return e.BlanketOrderId }, "BlanketOrderId").
+		Require(func(e *scm.ScmBlanketOrder) string { return e.VendorId }, "VendorId").
+		Enum(func(e *scm.ScmBlanketOrder) int32 { return int32(e.Status) }, scm.ScmPurchaseOrderStatus_name, "Status").
 		Build()
 }

@@ -25,5 +25,6 @@ func newCrmEscalationServiceCallback() ifs.IServiceCallback {
 		func(e *crm.CrmEscalation) { common.GenerateID(&e.EscalationId) }).
 		Require(func(e *crm.CrmEscalation) string { return e.EscalationId }, "EscalationId").
 		Require(func(e *crm.CrmEscalation) string { return e.Name }, "Name").
+		Enum(func(e *crm.CrmEscalation) int32 { return int32(e.Level) }, crm.CrmEscalationLevel_name, "Level").
 		Build()
 }

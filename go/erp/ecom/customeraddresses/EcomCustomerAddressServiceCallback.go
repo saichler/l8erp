@@ -24,5 +24,6 @@ func newEcomCustomerAddressServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[ecom.EcomCustomerAddress]("EcomCustomerAddress",
 		func(e *ecom.EcomCustomerAddress) { common.GenerateID(&e.AddressId) }).
 		Require(func(e *ecom.EcomCustomerAddress) string { return e.AddressId }, "AddressId").
+		Require(func(e *ecom.EcomCustomerAddress) string { return e.CustomerId }, "CustomerId").
 		Build()
 }

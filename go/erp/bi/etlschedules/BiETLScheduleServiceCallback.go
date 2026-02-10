@@ -24,5 +24,6 @@ func newBiETLScheduleServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[bi.BiETLSchedule]("BiETLSchedule",
 		func(e *bi.BiETLSchedule) { common.GenerateID(&e.ScheduleId) }).
 		Require(func(e *bi.BiETLSchedule) string { return e.ScheduleId }, "ScheduleId").
+		Enum(func(e *bi.BiETLSchedule) int32 { return int32(e.Frequency) }, bi.BiScheduleFrequency_name, "Frequency").
 		Build()
 }

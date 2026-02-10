@@ -25,5 +25,6 @@ func newEcomCartServiceCallback() ifs.IServiceCallback {
 		func(e *ecom.EcomCart) { common.GenerateID(&e.CartId) }).
 		Require(func(e *ecom.EcomCart) string { return e.CartId }, "CartId").
 		Require(func(e *ecom.EcomCart) string { return e.CurrencyId }, "CurrencyId").
+		Enum(func(e *ecom.EcomCart) int32 { return int32(e.Status) }, ecom.EcomCartStatus_name, "Status").
 		Build()
 }

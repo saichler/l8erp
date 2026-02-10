@@ -24,5 +24,6 @@ func newPutawayTaskServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmPutawayTask]("ScmPutawayTask",
 		func(e *scm.ScmPutawayTask) { common.GenerateID(&e.TaskId) }).
 		Require(func(e *scm.ScmPutawayTask) string { return e.TaskId }, "TaskId").
+		Enum(func(e *scm.ScmPutawayTask) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }

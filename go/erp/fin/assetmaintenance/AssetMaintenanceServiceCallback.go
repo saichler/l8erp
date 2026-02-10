@@ -25,5 +25,7 @@ func newAssetMaintenanceServiceCallback() ifs.IServiceCallback {
 		func(e *fin.AssetMaintenance) { common.GenerateID(&e.MaintenanceId) }).
 		Require(func(e *fin.AssetMaintenance) string { return e.MaintenanceId }, "MaintenanceId").
 		Require(func(e *fin.AssetMaintenance) string { return e.AssetId }, "AssetId").
+		Enum(func(e *fin.AssetMaintenance) int32 { return int32(e.MaintenanceType) }, fin.MaintenanceType_name, "MaintenanceType").
+		Enum(func(e *fin.AssetMaintenance) int32 { return int32(e.Status) }, fin.MaintenanceStatus_name, "Status").
 		Build()
 }

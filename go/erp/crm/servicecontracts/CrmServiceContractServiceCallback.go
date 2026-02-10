@@ -24,5 +24,8 @@ func newCrmServiceContractServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmServiceContract]("CrmServiceContract",
 		func(e *crm.CrmServiceContract) { common.GenerateID(&e.ContractId) }).
 		Require(func(e *crm.CrmServiceContract) string { return e.ContractId }, "ContractId").
+		Require(func(e *crm.CrmServiceContract) string { return e.AccountId }, "AccountId").
+		Enum(func(e *crm.CrmServiceContract) int32 { return int32(e.ContractType) }, crm.CrmContractType_name, "ContractType").
+		Enum(func(e *crm.CrmServiceContract) int32 { return int32(e.Status) }, crm.CrmContractStatus_name, "Status").
 		Build()
 }

@@ -24,5 +24,6 @@ func newCrmAccountPlanServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmAccountPlan]("CrmAccountPlan",
 		func(e *crm.CrmAccountPlan) { common.GenerateID(&e.PlanId) }).
 		Require(func(e *crm.CrmAccountPlan) string { return e.PlanId }, "PlanId").
+		Require(func(e *crm.CrmAccountPlan) string { return e.AccountId }, "AccountId").
 		Build()
 }

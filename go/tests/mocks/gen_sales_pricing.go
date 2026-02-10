@@ -66,6 +66,13 @@ func generateSalesCustomerPrices(store *MockDataStore) []*sales.SalesCustomerPri
 		count = 20
 	}
 
+	pricingMethods := []sales.SalesPricingMethod{
+		sales.SalesPricingMethod_PRICING_METHOD_FIXED,
+		sales.SalesPricingMethod_PRICING_METHOD_COST_PLUS,
+		sales.SalesPricingMethod_PRICING_METHOD_VOLUME,
+		sales.SalesPricingMethod_PRICING_METHOD_CONTRACT,
+	}
+
 	prices := make([]*sales.SalesCustomerPrice, count)
 	for i := 0; i < count; i++ {
 		customerID := pickRef(store.CustomerIDs, i)
@@ -79,6 +86,7 @@ func generateSalesCustomerPrices(store *MockDataStore) []*sales.SalesCustomerPri
 			CustomerPriceId: genID("scpr", i),
 			CustomerId:      customerID,
 			ItemId:          itemID,
+			PricingMethod:   pricingMethods[i%len(pricingMethods)],
 			UnitPrice: &erp.Money{
 				Amount:       int64(rand.Intn(400000) + 4000), // Discounted price
 				CurrencyId: pickRef(store.CurrencyIDs, i),

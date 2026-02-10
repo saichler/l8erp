@@ -24,5 +24,6 @@ func newBiDashboardShareServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[bi.BiDashboardShare]("BiDashboardShare",
 		func(e *bi.BiDashboardShare) { common.GenerateID(&e.ShareId) }).
 		Require(func(e *bi.BiDashboardShare) string { return e.ShareId }, "ShareId").
+		Enum(func(e *bi.BiDashboardShare) int32 { return int32(e.AccessLevel) }, bi.BiAccessLevel_name, "AccessLevel").
 		Build()
 }

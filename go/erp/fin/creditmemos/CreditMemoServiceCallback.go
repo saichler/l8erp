@@ -25,5 +25,6 @@ func newCreditMemoServiceCallback() ifs.IServiceCallback {
 		func(e *fin.CreditMemo) { common.GenerateID(&e.CreditMemoId) }).
 		Require(func(e *fin.CreditMemo) string { return e.CreditMemoId }, "CreditMemoId").
 		Require(func(e *fin.CreditMemo) string { return e.CustomerId }, "CustomerId").
+		Enum(func(e *fin.CreditMemo) int32 { return int32(e.Status) }, fin.CreditMemoStatus_name, "Status").
 		Build()
 }

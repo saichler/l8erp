@@ -25,5 +25,6 @@ func newReturnOrderLineServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesReturnOrderLine) { common.GenerateID(&e.LineId) }).
 		Require(func(e *sales.SalesReturnOrderLine) string { return e.LineId }, "LineId").
 		Require(func(e *sales.SalesReturnOrderLine) string { return e.ReturnOrderId }, "ReturnOrderId").
+		Require(func(e *sales.SalesReturnOrderLine) string { return e.ItemId }, "ItemId").
 		Build()
 }

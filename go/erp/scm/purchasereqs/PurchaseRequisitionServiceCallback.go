@@ -24,5 +24,6 @@ func newPurchaseRequisitionServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmPurchaseRequisition]("ScmPurchaseRequisition",
 		func(e *scm.ScmPurchaseRequisition) { common.GenerateID(&e.RequisitionId) }).
 		Require(func(e *scm.ScmPurchaseRequisition) string { return e.RequisitionId }, "RequisitionId").
+		Enum(func(e *scm.ScmPurchaseRequisition) int32 { return int32(e.Status) }, scm.ScmRequisitionStatus_name, "Status").
 		Build()
 }

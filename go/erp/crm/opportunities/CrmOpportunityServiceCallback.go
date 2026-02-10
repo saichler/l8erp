@@ -24,5 +24,8 @@ func newCrmOpportunityServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmOpportunity]("CrmOpportunity",
 		func(e *crm.CrmOpportunity) { common.GenerateID(&e.OpportunityId) }).
 		Require(func(e *crm.CrmOpportunity) string { return e.OpportunityId }, "OpportunityId").
+		Require(func(e *crm.CrmOpportunity) string { return e.AccountId }, "AccountId").
+		Enum(func(e *crm.CrmOpportunity) int32 { return int32(e.Stage) }, crm.CrmSalesStage_name, "Stage").
+		Enum(func(e *crm.CrmOpportunity) int32 { return int32(e.Status) }, crm.CrmOpportunityStatus_name, "Status").
 		Build()
 }

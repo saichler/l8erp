@@ -24,5 +24,7 @@ func newCrmCampaignResponseServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmCampaignResponse]("CrmCampaignResponse",
 		func(e *crm.CrmCampaignResponse) { common.GenerateID(&e.ResponseId) }).
 		Require(func(e *crm.CrmCampaignResponse) string { return e.ResponseId }, "ResponseId").
+		Require(func(e *crm.CrmCampaignResponse) string { return e.CampaignId }, "CampaignId").
+		Enum(func(e *crm.CrmCampaignResponse) int32 { return int32(e.ResponseType) }, crm.CrmResponseType_name, "ResponseType").
 		Build()
 }

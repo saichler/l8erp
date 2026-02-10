@@ -24,5 +24,6 @@ func newDocAccessLogServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[doc.DocAccessLog]("DocAccessLog",
 		func(e *doc.DocAccessLog) { common.GenerateID(&e.LogId) }).
 		Require(func(e *doc.DocAccessLog) string { return e.LogId }, "LogId").
+		Enum(func(e *doc.DocAccessLog) int32 { return int32(e.Action) }, doc.DocAccessAction_name, "Action").
 		Build()
 }

@@ -24,5 +24,6 @@ func newBiETLJobServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[bi.BiETLJob]("BiETLJob",
 		func(e *bi.BiETLJob) { common.GenerateID(&e.JobId) }).
 		Require(func(e *bi.BiETLJob) string { return e.JobId }, "JobId").
+		Enum(func(e *bi.BiETLJob) int32 { return int32(e.Status) }, bi.BiETLStatus_name, "Status").
 		Build()
 }

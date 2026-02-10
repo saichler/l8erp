@@ -24,5 +24,7 @@ func newDocSignatureServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[doc.DocSignature]("DocSignature",
 		func(e *doc.DocSignature) { common.GenerateID(&e.SignatureId) }).
 		Require(func(e *doc.DocSignature) string { return e.SignatureId }, "SignatureId").
+		Enum(func(e *doc.DocSignature) int32 { return int32(e.SignatureType) }, doc.DocSignatureType_name, "SignatureType").
+		Enum(func(e *doc.DocSignature) int32 { return int32(e.Status) }, doc.DocSignatureStatus_name, "Status").
 		Build()
 }

@@ -25,5 +25,6 @@ func newBankReconciliationServiceCallback() ifs.IServiceCallback {
 		func(e *fin.BankReconciliation) { common.GenerateID(&e.ReconciliationId) }).
 		Require(func(e *fin.BankReconciliation) string { return e.ReconciliationId }, "ReconciliationId").
 		Require(func(e *fin.BankReconciliation) string { return e.BankAccountId }, "BankAccountId").
+		Enum(func(e *fin.BankReconciliation) int32 { return int32(e.Status) }, fin.ReconciliationStatus_name, "Status").
 		Build()
 }

@@ -24,5 +24,7 @@ func newBiKPIServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[bi.BiKPI]("BiKPI",
 		func(e *bi.BiKPI) { common.GenerateID(&e.KpiId) }).
 		Require(func(e *bi.BiKPI) string { return e.KpiId }, "KpiId").
+		Enum(func(e *bi.BiKPI) int32 { return int32(e.Status) }, bi.BiKPIStatus_name, "Status").
+		Enum(func(e *bi.BiKPI) int32 { return int32(e.Trend) }, bi.BiTrendDirection_name, "Trend").
 		Build()
 }
