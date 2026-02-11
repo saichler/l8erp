@@ -66,20 +66,12 @@ limitations under the License.
             ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
         ],
 
-        ScmForecastAccuracy: [
-            ...col.id('accuracyId'),
-            ...col.col('forecastId', 'Forecast'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('forecastQuantity', 'Forecasted'),
-            ...col.col('actualQuantity', 'Actual'),
-            ...col.col('mape', 'MAPE %')
-        ]
     };
 
     MobileScmDemandPlanning.primaryKeys = {
         ScmDemandForecast: 'forecastId', ScmForecastModel: 'modelId',
         ScmDemandPlan: 'planId', ScmPromotionalPlan: 'planId',
-        ScmNewProductPlan: 'planId', ScmForecastAccuracy: 'accuracyId'
+        ScmNewProductPlan: 'planId'
     };
 
 })();

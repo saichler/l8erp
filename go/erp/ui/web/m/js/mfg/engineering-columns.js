@@ -34,14 +34,6 @@ limitations under the License.
             ...col.enum('bomType', 'Type', null, (v) => enums.BOM_TYPE[v] || 'Unknown'),
             ...col.enum('status', 'Status', null, render.bomStatus)
         ],
-        MfgBomLine: [
-            ...col.id('lineId'),
-            ...col.col('bomId', 'BOM'),
-            ...col.col('componentItemId', 'Component'),
-            ...col.col('quantityPer', 'Qty Per'),
-            ...col.col('unitOfMeasure', 'UOM'),
-            ...col.col('lineNumber', 'Line #')
-        ],
         MfgRouting: [
             ...col.id('routingId'),
             ...col.col('routingNumber', 'Routing #'),
@@ -49,15 +41,6 @@ limitations under the License.
             ...col.col('description', 'Description'),
             ...col.col('revision', 'Rev'),
             ...col.enum('status', 'Status', null, render.routingStatus)
-        ],
-        MfgRoutingOperation: [
-            ...col.id('operationId'),
-            ...col.col('routingId', 'Routing'),
-            ...col.col('operationNumber', 'Op #'),
-            ...col.col('workCenterId', 'Work Center'),
-            ...col.col('description', 'Description'),
-            ...col.col('setupTime', 'Setup (hrs)'),
-            ...col.col('runTime', 'Run (hrs)')
         ],
         MfgEngChangeOrder: [
             ...col.id('changeOrderId'),
@@ -67,14 +50,6 @@ limitations under the License.
             ...col.date('requestDate', 'Request Date'),
             ...col.enum('status', 'Status', null, render.ecoStatus)
         ],
-        MfgEngChangeDetail: [
-            ...col.id('detailId'),
-            ...col.col('changeOrderId', 'ECO'),
-            ...col.col('affectedId', 'Affected'),
-            ...col.col('description', 'Description'),
-            ...col.col('oldValue', 'Old Value'),
-            ...col.col('newValue', 'New Value')
-        ]
     };
 
 })();

@@ -40,22 +40,6 @@ limitations under the License.
             ...col.date('runDate', 'Run Date'),
             ...col.enum('status', 'Status', null, render.rollupStatus)
         ],
-        MfgActualCost: [
-            ...col.id('actualCostId'),
-            ...col.col('workOrderId', 'Work Order'),
-            ...col.col('costType', 'Cost Type'),
-            ...col.enum('costElement', 'Cost Element', null, render.costElementType),
-            ...col.money('amount', 'Amount'),
-            ...col.date('transactionDate', 'Transaction Date')
-        ],
-        MfgCostVariance: [
-            ...col.id('varianceId'),
-            ...col.col('workOrderId', 'Work Order'),
-            ...col.enum('varianceType', 'Type', null, render.varianceType),
-            ...col.money('standardCost', 'Standard'),
-            ...col.money('actualCost', 'Actual'),
-            ...col.money('varianceAmount', 'Variance')
-        ],
         MfgOverhead: [
             ...col.id('overheadId'),
             ...col.col('code', 'Code'),
@@ -63,14 +47,6 @@ limitations under the License.
             ...col.enum('allocationMethod', 'Method', null, render.allocationMethod),
             ...col.col('rate', 'Rate')
         ],
-        MfgOverheadAlloc: [
-            ...col.id('allocationId'),
-            ...col.col('overheadId', 'Overhead'),
-            ...col.col('workOrderId', 'Work Order'),
-            ...col.col('workCenterId', 'Work Center'),
-            ...col.date('allocationDate', 'Date'),
-            ...col.money('allocatedAmount', 'Amount')
-        ]
     };
 
 })();

@@ -24,16 +24,64 @@ import (
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-// generateVendors creates vendor records from vendorNames
+// generateVendors creates vendor records with embedded contacts and withholding tax configs
 func generateVendors(store *MockDataStore) []*fin.Vendor {
 	vendors := make([]*fin.Vendor, len(vendorNames))
+	contactIdx := 1
+	titles := []string{"Sales Rep", "Account Manager"}
+
 	for i, name := range vendorNames {
 		sanitized := strings.ToLower(sanitizeEmail(name))
 
-		// Default to AP account (index 6: "2000 Accounts Payable")
 		defaultAccountId := ""
 		if len(store.AccountIDs) > 6 {
 			defaultAccountId = store.AccountIDs[6]
+		}
+
+		// Generate embedded vendor contacts (2 per vendor)
+		vendorContacts := make([]*fin.VendorContact, 2)
+		for j := 0; j < 2; j++ {
+			cname := randomName()
+			parts := strings.SplitN(cname, " ", 2)
+			firstName := parts[0]
+			lastName := ""
+			if len(parts) > 1 {
+				lastName = parts[1]
+			}
+			cSanitized := strings.ToLower(sanitizeEmail(firstName))
+
+			vendorContacts[j] = &fin.VendorContact{
+				ContactId: fmt.Sprintf("vcnt-%03d", contactIdx),
+				VendorId:  genID("vnd", i),
+				FirstName: firstName,
+				LastName:  lastName,
+				Title:     titles[j%len(titles)],
+				Email:     fmt.Sprintf("%s@vendor.com", cSanitized),
+				Phone:     randomPhone(),
+				IsPrimary: j == 0,
+				IsActive:  true,
+				AuditInfo: createAuditInfo(),
+			}
+			contactIdx++
+		}
+
+		// Generate embedded withholding tax config (1 for first 4 vendors)
+		var whConfigs []*fin.WithholdingTaxConfig
+		if i < 4 {
+			whRates := []float64{30.0, 15.0, 10.0, 25.0}
+			thresholds := []int64{500000, 1000000, 250000, 750000}
+			whConfigs = []*fin.WithholdingTaxConfig{
+				{
+					ConfigId:        genID("whtc", i),
+					VendorId:        genID("vnd", i),
+					TaxCodeId:       store.TaxCodeIDs[i%len(store.TaxCodeIDs)],
+					WithholdingRate: whRates[i],
+					ThresholdAmount: money(store, thresholds[i]),
+					EffectiveDate:   time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),
+					IsActive:        true,
+					AuditInfo:       createAuditInfo(),
+				},
+			}
 		}
 
 		vendors[i] = &fin.Vendor{
@@ -51,59 +99,55 @@ func generateVendors(store *MockDataStore) []*fin.Vendor {
 			Contacts:               []*erp.ContactInfo{createContact()},
 			Website:                fmt.Sprintf("www.%s.com", sanitized),
 			AuditInfo:              createAuditInfo(),
+			VendorContacts:         vendorContacts,
+			WithholdingTaxConfigs:  whConfigs,
 		}
 	}
 	return vendors
 }
 
-// generateVendorContacts creates 2 contact persons per vendor
-func generateVendorContacts(store *MockDataStore) []*fin.VendorContact {
-	contacts := make([]*fin.VendorContact, 0, len(store.VendorIDs)*2)
-	idx := 1
-	titles := []string{"Sales Rep", "Account Manager"}
-
-	for _, vendorID := range store.VendorIDs {
-		for j := 0; j < 2; j++ {
-			name := randomName()
-			parts := strings.SplitN(name, " ", 2)
-			firstName := parts[0]
-			lastName := ""
-			if len(parts) > 1 {
-				lastName = parts[1]
-			}
-			sanitized := strings.ToLower(sanitizeEmail(firstName))
-
-			contacts = append(contacts, &fin.VendorContact{
-				ContactId: fmt.Sprintf("vcnt-%03d", idx),
-				VendorId:  vendorID,
-				FirstName: firstName,
-				LastName:  lastName,
-				Title:     titles[j%len(titles)],
-				Email:     fmt.Sprintf("%s@vendor.com", sanitized),
-				Phone:     randomPhone(),
-				IsPrimary: j == 0,
-				IsActive:  true,
-				AuditInfo: createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return contacts
-}
-
-// generateCustomers creates customer records from customerNames
+// generateCustomers creates customer records with embedded contacts
 func generateCustomers(store *MockDataStore) []*fin.Customer {
 	customers := make([]*fin.Customer, len(customerNames))
+	contactIdx := 1
+	titles := []string{"Sales Rep", "Account Manager"}
+
 	for i, name := range customerNames {
 		sanitized := strings.ToLower(sanitizeEmail(name))
 
-		// Default to AR account (index 1: "1010 Accounts Receivable")
 		defaultAccountId := ""
 		if len(store.AccountIDs) > 1 {
 			defaultAccountId = store.AccountIDs[1]
 		}
 
-		creditAmount := int64(rand.Intn(450001)+50000) * 100 // 50000_00 to 500000_00 cents
+		creditAmount := int64(rand.Intn(450001)+50000) * 100
+
+		// Generate embedded customer contacts (2 per customer)
+		customerContacts := make([]*fin.CustomerContact, 2)
+		for j := 0; j < 2; j++ {
+			cname := randomName()
+			parts := strings.SplitN(cname, " ", 2)
+			firstName := parts[0]
+			lastName := ""
+			if len(parts) > 1 {
+				lastName = parts[1]
+			}
+			cSanitized := strings.ToLower(sanitizeEmail(firstName))
+
+			customerContacts[j] = &fin.CustomerContact{
+				ContactId:  fmt.Sprintf("ccnt-%03d", contactIdx),
+				CustomerId: genID("cust", i),
+				FirstName:  firstName,
+				LastName:   lastName,
+				Title:      titles[j%len(titles)],
+				Email:      fmt.Sprintf("%s@customer.com", cSanitized),
+				Phone:      randomPhone(),
+				IsPrimary:  j == 0,
+				IsActive:   true,
+				AuditInfo:  createAuditInfo(),
+			}
+			contactIdx++
+		}
 
 		customers[i] = &fin.Customer{
 			CustomerId:       genID("cust", i),
@@ -120,47 +164,13 @@ func generateCustomers(store *MockDataStore) []*fin.Customer {
 			Contacts:         []*erp.ContactInfo{createContact()},
 			Website:          fmt.Sprintf("www.%s.com", sanitized),
 			AuditInfo:        createAuditInfo(),
+			CustomerContacts: customerContacts,
 		}
 	}
 	return customers
 }
 
-// generateCustomerContacts creates 2 contact persons per customer
-func generateCustomerContacts(store *MockDataStore) []*fin.CustomerContact {
-	contacts := make([]*fin.CustomerContact, 0, len(store.CustomerIDs)*2)
-	idx := 1
-	titles := []string{"Sales Rep", "Account Manager"}
-
-	for _, customerID := range store.CustomerIDs {
-		for j := 0; j < 2; j++ {
-			name := randomName()
-			parts := strings.SplitN(name, " ", 2)
-			firstName := parts[0]
-			lastName := ""
-			if len(parts) > 1 {
-				lastName = parts[1]
-			}
-			sanitized := strings.ToLower(sanitizeEmail(firstName))
-
-			contacts = append(contacts, &fin.CustomerContact{
-				ContactId:  fmt.Sprintf("ccnt-%03d", idx),
-				CustomerId: customerID,
-				FirstName:  firstName,
-				LastName:   lastName,
-				Title:      titles[j%len(titles)],
-				Email:      fmt.Sprintf("%s@customer.com", sanitized),
-				Phone:      randomPhone(),
-				IsPrimary:  j == 0,
-				IsActive:   true,
-				AuditInfo:  createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return contacts
-}
-
-// generateBankAccounts creates bank account records from bankNames
+// generateBankAccounts creates bank account records with embedded transactions and reconciliations
 func generateBankAccounts(store *MockDataStore) []*fin.BankAccount {
 	accounts := make([]*fin.BankAccount, len(bankNames))
 
@@ -173,16 +183,22 @@ func generateBankAccounts(store *MockDataStore) []*fin.BankAccount {
 	}
 
 	for i, bankName := range bankNames {
-		// GL account for cash (index 0: "1000 Cash")
 		glAccountId := ""
 		if len(store.AccountIDs) > 0 {
 			glAccountId = store.AccountIDs[0]
 		}
 
-		balance := int64(rand.Intn(5000000)+500000) * 100 // large amount in cents
+		balance := int64(rand.Intn(5000000)+500000) * 100
+		bankAccountID := genID("bank", i)
+
+		// Generate embedded transactions (12 per bank account)
+		transactions := generateBankTransactionsForAccount(store, bankAccountID, i)
+
+		// Generate embedded reconciliation (1 per bank account)
+		reconciliation := generateBankReconciliationForAccount(store, bankAccountID)
 
 		accounts[i] = &fin.BankAccount{
-			BankAccountId:       genID("bank", i),
+			BankAccountId:       bankAccountID,
 			AccountName:         fmt.Sprintf("Operating - %s", bankName),
 			BankName:            bankName,
 			AccountNumberMasked: fmt.Sprintf("****%04d", rand.Intn(10000)),
@@ -193,21 +209,20 @@ func generateBankAccounts(store *MockDataStore) []*fin.BankAccount {
 			GlAccountId:         glAccountId,
 			CurrentBalance:      money(store, balance),
 			AuditInfo:           createAuditInfo(),
+			Transactions:        transactions,
+			Reconciliations:     []*fin.BankReconciliation{reconciliation},
 		}
 	}
 	return accounts
 }
 
-// generateExchangeRates creates exchange rate records for USD to EUR, GBP, JPY, CAD
+// generateExchangeRates creates exchange rate records
 func generateExchangeRates(store *MockDataStore) []*fin.ExchangeRate {
 	rates := make([]*fin.ExchangeRate, 8)
 
-	// Target currency IDs (EUR, GBP, JPY, CAD) from store
-	// store.CurrencyIDs[0] = USD, [1] = EUR, [2] = GBP, [3] = JPY, [4] = CAD
 	toCurrencyIndices := []int{1, 2, 3, 4}
 	rateValues := []float64{0.85, 0.73, 110.0, 1.25}
 
-	// Two effective dates
 	date1 := time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC).Unix()
 	date2 := time.Date(2025, 7, 1, 0, 0, 0, 0, time.UTC).Unix()
 	effectiveDates := []int64{date1, date2}
@@ -215,10 +230,9 @@ func generateExchangeRates(store *MockDataStore) []*fin.ExchangeRate {
 	idx := 0
 	for d, effectiveDate := range effectiveDates {
 		for c, toIdx := range toCurrencyIndices {
-			// Slightly vary rates for the second date
 			rate := rateValues[c]
 			if d == 1 {
-				rate *= 1.0 + (rand.Float64()*0.04 - 0.02) // +/- 2% variation
+				rate *= 1.0 + (rand.Float64()*0.04 - 0.02)
 			}
 
 			toCurrencyId := ""

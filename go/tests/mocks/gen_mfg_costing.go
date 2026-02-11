@@ -1,5 +1,5 @@
 /*
-© 2025 Sharon Aicler (saichler@gmail.com)
+(c) 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 You may obtain a copy of the License at:
@@ -53,7 +53,7 @@ func generateStandardCosts(store *MockDataStore) []*mfg.MfgStandardCost {
 			OverheadCost:          money(store, overheadCost),
 			OutsideProcessingCost: money(store, outsideCost),
 			TotalCost:             money(store, totalCost),
-			CurrencyId: pickRef(store.CurrencyIDs, i),
+			CurrencyId:            pickRef(store.CurrencyIDs, i),
 			CostMethod:            []string{"STANDARD", "ACTUAL", "AVERAGE"}[i%3],
 			IsCurrent:             i < count*7/10,
 			Notes:                 fmt.Sprintf("Standard cost record %d", i+1),
@@ -92,93 +92,7 @@ func generateCostRollups() []*mfg.MfgCostRollup {
 	return rollups
 }
 
-// generateActualCosts creates actual cost records (2 per work order)
-func generateActualCosts(store *MockDataStore) []*mfg.MfgActualCost {
-	costTypes := []mfg.MfgCostType{
-		mfg.MfgCostType_MFG_COST_TYPE_MATERIAL,
-		mfg.MfgCostType_MFG_COST_TYPE_LABOR,
-		mfg.MfgCostType_MFG_COST_TYPE_OVERHEAD,
-		mfg.MfgCostType_MFG_COST_TYPE_OUTSIDE_PROCESSING,
-	}
-	sourceTypes := []string{"LABOR", "MACHINE", "MATERIAL", "PO"}
-
-	costs := make([]*mfg.MfgActualCost, 0, len(store.MfgWorkOrderIDs)*2)
-	idx := 1
-	for woIdx, woID := range store.MfgWorkOrderIDs {
-		for j := 0; j < 2; j++ {
-			transDate := time.Now().AddDate(0, 0, -rand.Intn(14))
-			quantity := float64(rand.Intn(50) + 5)
-			unitCost := int64(rand.Intn(100) + 10)
-			amount := int64(quantity) * unitCost
-
-			costs = append(costs, &mfg.MfgActualCost{
-				ActualCostId:    fmt.Sprintf("actcost-%03d", idx),
-				WorkOrderId:     woID,
-				CostType:        costTypes[(woIdx*2+j)%len(costTypes)],
-				CostElement:     fmt.Sprintf("CE-%03d", idx),
-				Amount:          money(store, amount),
-				Quantity:        quantity,
-				UnitOfMeasure:   "EA",
-				UnitCost:        money(store, unitCost),
-				SourceType:      sourceTypes[(woIdx*2+j)%len(sourceTypes)],
-				SourceId:        fmt.Sprintf("SRC-%06d", 100000+idx),
-				TransactionDate: transDate.Unix(),
-				Notes:           fmt.Sprintf("Actual cost entry %d", idx),
-				AuditInfo:       createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return costs
-}
-
-// generateCostVariances creates cost variance records (1 per work order)
-func generateCostVariances(store *MockDataStore) []*mfg.MfgCostVariance {
-	varianceTypes := []mfg.MfgVarianceType{
-		mfg.MfgVarianceType_MFG_VARIANCE_TYPE_MATERIAL,
-		mfg.MfgVarianceType_MFG_VARIANCE_TYPE_LABOR,
-		mfg.MfgVarianceType_MFG_VARIANCE_TYPE_OVERHEAD,
-		mfg.MfgVarianceType_MFG_VARIANCE_TYPE_EFFICIENCY,
-		mfg.MfgVarianceType_MFG_VARIANCE_TYPE_VOLUME,
-	}
-	costTypes := []mfg.MfgCostType{
-		mfg.MfgCostType_MFG_COST_TYPE_MATERIAL,
-		mfg.MfgCostType_MFG_COST_TYPE_LABOR,
-		mfg.MfgCostType_MFG_COST_TYPE_OVERHEAD,
-		mfg.MfgCostType_MFG_COST_TYPE_OUTSIDE_PROCESSING,
-	}
-
-	variances := make([]*mfg.MfgCostVariance, len(store.MfgWorkOrderIDs))
-	for i, woID := range store.MfgWorkOrderIDs {
-		analysisDate := time.Now().AddDate(0, 0, -rand.Intn(7))
-
-		standardCost := int64(rand.Intn(10000) + 2000)
-		actualCost := int64(float64(standardCost) * (0.85 + rand.Float64()*0.3))
-		varianceAmount := actualCost - standardCost
-		variancePercent := float64(varianceAmount) / float64(standardCost) * 100
-
-		analyzedBy := pickRef(store.EmployeeIDs, i)
-
-		variances[i] = &mfg.MfgCostVariance{
-			VarianceId:      genID("costvar", i),
-			WorkOrderId:     woID,
-			VarianceType:    varianceTypes[i%len(varianceTypes)],
-			CostType:        costTypes[i%len(costTypes)],
-			StandardCost:    money(store, standardCost),
-			ActualCost:      money(store, actualCost),
-			VarianceAmount:  money(store, varianceAmount),
-			VariancePercent: variancePercent,
-			VarianceReason:  fmt.Sprintf("Variance reason for WO %s", woID),
-			AnalysisDate:    analysisDate.Unix(),
-			AnalyzedBy:      analyzedBy,
-			Notes:           fmt.Sprintf("Cost variance analysis %d", i+1),
-			AuditInfo:       createAuditInfo(),
-		}
-	}
-	return variances
-}
-
-// generateOverheads creates overhead records
+// generateOverheads creates overhead records with embedded allocations
 func generateOverheads(store *MockDataStore) []*mfg.MfgOverhead {
 	allocMethods := []mfg.MfgOverheadMethod{
 		mfg.MfgOverheadMethod_MFG_OVERHEAD_METHOD_DIRECT_LABOR_HOURS,
@@ -188,47 +102,27 @@ func generateOverheads(store *MockDataStore) []*mfg.MfgOverhead {
 	}
 	rateUnits := []string{"PER_HOUR", "PER_UNIT", "PERCENT"}
 
+	allocIdx := 1
 	overheads := make([]*mfg.MfgOverhead, len(mfgOverheadNames))
 	for i, name := range mfgOverheadNames {
 		effectiveDate := time.Now().AddDate(0, -rand.Intn(6), 0)
 		expiryDate := effectiveDate.AddDate(1, 0, 0)
 
-		overheads[i] = &mfg.MfgOverhead{
-			OverheadId:       genID("overhead", i),
-			Code:             genCode("OH", i),
-			Name:             name,
-			Description:      fmt.Sprintf("Manufacturing overhead: %s", name),
-			AllocationMethod: allocMethods[i%len(allocMethods)],
-			Rate:             float64(rand.Intn(50)+10) / 10.0, // 1.0 - 6.0
-			RateUnit:         rateUnits[i%len(rateUnits)],
-			CurrencyId: pickRef(store.CurrencyIDs, i),
-			CostCenter:       fmt.Sprintf("CC-%03d", rand.Intn(10)+1),
-			IsActive:         true,
-			EffectiveDate:    effectiveDate.Unix(),
-			ExpiryDate:       expiryDate.Unix(),
-			Notes:            fmt.Sprintf("Overhead notes for %s", name),
-			AuditInfo:        createAuditInfo(),
-		}
-	}
-	return overheads
-}
+		ohID := genID("overhead", i)
 
-// generateOverheadAllocs creates overhead allocation records (2 per overhead)
-func generateOverheadAllocs(store *MockDataStore) []*mfg.MfgOverheadAlloc {
-	allocs := make([]*mfg.MfgOverheadAlloc, 0, len(store.MfgOverheadIDs)*2)
-	idx := 1
-	for ohIdx, ohID := range store.MfgOverheadIDs {
+		// Generate 2 embedded allocations per overhead
+		allocs := make([]*mfg.MfgOverheadAlloc, 2)
 		for j := 0; j < 2; j++ {
-			woID := pickRef(store.MfgWorkOrderIDs, (ohIdx*2+j))
-			wcID := pickRef(store.MfgWorkCenterIDs, (ohIdx+j))
+			woID := pickRef(store.MfgWorkOrderIDs, (i*2 + j))
+			wcID := pickRef(store.MfgWorkCenterIDs, (i + j))
 
 			allocDate := time.Now().AddDate(0, 0, -rand.Intn(14))
 			allocBase := float64(rand.Intn(100) + 20)
 			rate := float64(rand.Intn(50)+10) / 10.0
 			allocAmount := int64(allocBase * rate * 100)
 
-			allocs = append(allocs, &mfg.MfgOverheadAlloc{
-				AllocationId:    fmt.Sprintf("ohalloc-%03d", idx),
+			allocs[j] = &mfg.MfgOverheadAlloc{
+				AllocationId:    fmt.Sprintf("ohalloc-%03d", allocIdx),
 				OverheadId:      ohID,
 				WorkOrderId:     woID,
 				WorkCenterId:    wcID,
@@ -237,11 +131,29 @@ func generateOverheadAllocs(store *MockDataStore) []*mfg.MfgOverheadAlloc {
 				AllocatedAmount: money(store, allocAmount),
 				AllocationDate:  allocDate.Unix(),
 				Period:          allocDate.Format("2006-01"),
-				Notes:           fmt.Sprintf("Overhead allocation %d", idx),
+				Notes:           fmt.Sprintf("Overhead allocation %d", allocIdx),
 				AuditInfo:       createAuditInfo(),
-			})
-			idx++
+			}
+			allocIdx++
+		}
+
+		overheads[i] = &mfg.MfgOverhead{
+			OverheadId:       ohID,
+			Code:             genCode("OH", i),
+			Name:             name,
+			Description:      fmt.Sprintf("Manufacturing overhead: %s", name),
+			AllocationMethod: allocMethods[i%len(allocMethods)],
+			Rate:             float64(rand.Intn(50)+10) / 10.0,
+			RateUnit:         rateUnits[i%len(rateUnits)],
+			CurrencyId:       pickRef(store.CurrencyIDs, i),
+			CostCenter:       fmt.Sprintf("CC-%03d", rand.Intn(10)+1),
+			IsActive:         true,
+			EffectiveDate:    effectiveDate.Unix(),
+			ExpiryDate:       expiryDate.Unix(),
+			Notes:            fmt.Sprintf("Overhead notes for %s", name),
+			AuditInfo:        createAuditInfo(),
+			Allocations:      allocs,
 		}
 	}
-	return allocs
+	return overheads
 }

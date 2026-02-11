@@ -34,6 +34,17 @@ limitations under the License.
             ...f.number('forecastQuantity', 'Forecast Quantity', true),
             ...f.number('confidenceLevel', 'Confidence Level'),
             ...f.textarea('notes', 'Notes')
+        ]),
+        f.section('Accuracy Records', [
+            ...f.inlineTable('accuracies', 'Forecast Accuracy', [
+                { key: 'accuracyId', label: 'ID', hidden: true },
+                { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem' },
+                { key: 'forecastQuantity', label: 'Forecast Qty', type: 'number' },
+                { key: 'actualQuantity', label: 'Actual Qty', type: 'number' },
+                { key: 'mape', label: 'MAPE %', type: 'number' },
+                { key: 'bias', label: 'Bias', type: 'number' },
+                { key: 'notes', label: 'Notes', type: 'text' }
+            ])
         ])
     ]),
 
@@ -80,16 +91,6 @@ limitations under the License.
         ])
     ]),
 
-    ScmForecastAccuracy: f.form('Forecast Accuracy', [
-        f.section('Accuracy Details', [
-            ...f.reference('forecastId', 'Forecast', 'ScmDemandForecast', true),
-            ...f.reference('itemId', 'Item', 'ScmItem', true),
-            ...f.number('forecastQuantity', 'Forecasted Quantity'),
-            ...f.number('actualQuantity', 'Actual Quantity'),
-            ...f.number('mape', 'MAPE %'),
-            ...f.textarea('notes', 'Notes')
-        ])
-    ])
 };
 
 })();

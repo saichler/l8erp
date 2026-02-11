@@ -48,30 +48,6 @@ limitations under the License.
                 ...f.textarea('notes', 'Notes')
             ])
         ]),
-        MfgActualCost: f.form('Actual Cost', [
-            f.section('Cost Details', [
-                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
-                ...f.text('costType', 'Cost Type'),
-                ...f.select('costElement', 'Cost Element', enums.COST_ELEMENT_TYPE),
-                ...f.money('amount', 'Amount', true),
-                ...f.number('quantity', 'Quantity'),
-                ...f.date('transactionDate', 'Transaction Date'),
-                ...f.text('sourceId', 'Source ID'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-        MfgCostVariance: f.form('Cost Variance', [
-            f.section('Variance Details', [
-                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
-                ...f.select('varianceType', 'Variance Type', enums.VARIANCE_TYPE),
-                ...f.money('standardCost', 'Standard Cost'),
-                ...f.money('actualCost', 'Actual Cost'),
-                ...f.money('varianceAmount', 'Variance Amount'),
-                ...f.number('variancePercent', 'Variance %'),
-                ...f.date('analysisDate', 'Analysis Date'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
         MfgOverhead: f.form('Overhead', [
             f.section('Overhead Details', [
                 ...f.text('code', 'Code', true),
@@ -82,24 +58,22 @@ limitations under the License.
                 ...f.text('costCenter', 'Cost Center'),
                 ...f.checkbox('isActive', 'Active'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-        MfgOverheadAlloc: f.form('Overhead Allocation', [
-            f.section('Allocation Details', [
-                ...f.reference('overheadId', 'Overhead', 'MfgOverhead', true),
-                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder'),
-                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter'),
-                ...f.date('allocationDate', 'Allocation Date', true),
-                ...f.number('allocationBase', 'Allocation Base'),
-                ...f.money('allocatedAmount', 'Allocated Amount', true),
-                ...f.textarea('notes', 'Notes')
+            ]),
+            f.section('Allocations', [
+                ...f.inlineTable('allocations', 'Overhead Allocations', [
+                    { key: 'allocationId', label: 'ID', hidden: true },
+                    { key: 'workOrderId', label: 'Work Order', type: 'text' },
+                    { key: 'workCenterId', label: 'Work Center', type: 'text' },
+                    { key: 'allocationBase', label: 'Base', type: 'number' },
+                    { key: 'rate', label: 'Rate', type: 'number' },
+                    { key: 'allocatedAmount', label: 'Amount', type: 'money' }
+                ])
             ])
         ])
     };
 
     MobileMfgCosting.primaryKeys = {
-        MfgStandardCost: 'costId', MfgCostRollup: 'rollupId', MfgActualCost: 'actualCostId',
-        MfgCostVariance: 'varianceId', MfgOverhead: 'overheadId', MfgOverheadAlloc: 'allocationId'
+        MfgStandardCost: 'costId', MfgCostRollup: 'rollupId', MfgOverhead: 'overheadId'
     };
 
 })();

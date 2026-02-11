@@ -22,17 +22,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]),
             f.section('Credit & Status', [
                 ...f.money('creditLimit', 'Credit Limit')
-            ])
-        ]),
-
-        CustomerContact: f.form('Customer Contact', [
-            f.section('Contact Information', [
-                ...f.reference('customerId', 'Customer', 'Customer', true),
-                ...f.text('firstName', 'First Name', true),
-                ...f.text('lastName', 'Last Name', true),
-                ...f.text('email', 'Email'),
-                ...f.text('phone', 'Phone'),
-                ...f.checkbox('isPrimary', 'Primary Contact')
+            ]),
+            f.section('Contacts', [
+                ...f.inlineTable('customerContacts', 'Customer Contacts', [
+                    { key: 'contactId', label: 'Contact ID', hidden: true },
+                    { key: 'firstName', label: 'First Name', type: 'text' },
+                    { key: 'lastName', label: 'Last Name', type: 'text' },
+                    { key: 'email', label: 'Email', type: 'text' },
+                    { key: 'phone', label: 'Phone', type: 'text' },
+                    { key: 'isPrimary', label: 'Primary', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -46,16 +45,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('invoiceDate', 'Invoice Date', true),
                 ...f.date('dueDate', 'Due Date', true),
                 ...f.money('totalAmount', 'Total Amount')
-            ])
-        ]),
-
-        SalesInvoiceLine: f.form('Sales Invoice Line', [
-            f.section('Line Details', [
-                ...f.reference('invoiceId', 'Invoice', 'SalesInvoice', true),
-                ...f.text('description', 'Description', true),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.money('unitPrice', 'Unit Price', true),
-                ...f.money('lineAmount', 'Line Amount')
+            ]),
+            f.section('Lines', [
+                ...f.inlineTable('lines', 'Invoice Lines', [
+                    { key: 'lineId', label: 'Line ID', hidden: true },
+                    { key: 'description', label: 'Description', type: 'text' },
+                    { key: 'quantity', label: 'Quantity', type: 'number' },
+                    { key: 'unitPrice', label: 'Unit Price', type: 'money' },
+                    { key: 'lineAmount', label: 'Line Amount', type: 'money' }
+                ])
             ])
         ]),
 
@@ -68,14 +66,20 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Amount & Date', [
                 ...f.date('paymentDate', 'Payment Date', true),
                 ...f.money('amount', 'Amount', true)
-            ])
-        ]),
-
-        PaymentApplication: f.form('Payment Application', [
-            f.section('Application Details', [
-                ...f.reference('paymentId', 'Payment', 'CustomerPayment', true),
-                ...f.reference('invoiceId', 'Invoice', 'SalesInvoice', true),
-                ...f.money('appliedAmount', 'Applied Amount', true)
+            ]),
+            f.section('Allocations', [
+                ...f.inlineTable('allocations', 'Payment Allocations', [
+                    { key: 'allocationId', label: 'Allocation ID', hidden: true },
+                    { key: 'invoiceId', label: 'Invoice', type: 'text' },
+                    { key: 'allocatedAmount', label: 'Allocated Amount', type: 'money' }
+                ])
+            ]),
+            f.section('Applications', [
+                ...f.inlineTable('applications', 'Payment Applications', [
+                    { key: 'applicationId', label: 'Application ID', hidden: true },
+                    { key: 'invoiceId', label: 'Invoice', type: 'text' },
+                    { key: 'appliedAmount', label: 'Applied Amount', type: 'money' }
+                ])
             ])
         ]),
 

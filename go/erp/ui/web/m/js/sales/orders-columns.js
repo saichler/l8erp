@@ -34,15 +34,6 @@ limitations under the License.
             ...col.money('totalAmount', 'Total')
         ],
 
-        SalesQuotationLine: [
-            ...col.id('lineId'),
-            ...col.col('quotationId', 'Quotation'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('quantity', 'Qty'),
-            ...col.money('unitPrice', 'Unit Price'),
-            ...col.money('lineTotal', 'Total')
-        ],
-
         SalesOrder: [
             ...col.id('salesOrderId'),
             ...col.col('orderNumber', 'Order #'),
@@ -52,32 +43,6 @@ limitations under the License.
             ...col.money('totalAmount', 'Total')
         ],
 
-        SalesOrderLine: [
-            ...col.id('lineId'),
-            ...col.col('salesOrderId', 'Order'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('quantity', 'Qty'),
-            ...col.money('unitPrice', 'Unit Price'),
-            ...col.money('lineTotal', 'Total')
-        ],
-
-        SalesOrderAllocation: [
-            ...col.id('allocationId'),
-            ...col.col('salesOrderId', 'Order'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('warehouseId', 'Warehouse'),
-            ...col.col('allocatedQuantity', 'Allocated'),
-            ...col.status('status', 'Status', enums.ALLOCATION_STATUS_VALUES, render.allocationStatus)
-        ],
-
-        SalesBackOrder: [
-            ...col.id('backOrderId'),
-            ...col.col('salesOrderId', 'Order'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('backOrderQuantity', 'Qty'),
-            ...col.date('expectedDate', 'Expected')
-        ],
-
         SalesReturnOrder: [
             ...col.id('returnOrderId'),
             ...col.col('returnNumber', 'Return #'),
@@ -85,22 +50,13 @@ limitations under the License.
             ...col.col('customerId', 'Customer'),
             ...col.date('returnDate', 'Date'),
             ...col.status('status', 'Status', enums.RETURN_STATUS_VALUES, render.returnStatus)
-        ],
-
-        SalesReturnOrderLine: [
-            ...col.id('lineId'),
-            ...col.col('returnOrderId', 'Return'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('quantity', 'Qty'),
-            ...col.col('description', 'Description')
         ]
     };
 
     MobileSalesOrders.primaryKeys = {
-        SalesQuotation: 'quotationId', SalesQuotationLine: 'lineId',
-        SalesOrder: 'salesOrderId', SalesOrderLine: 'lineId',
-        SalesOrderAllocation: 'allocationId', SalesBackOrder: 'backOrderId',
-        SalesReturnOrder: 'returnOrderId', SalesReturnOrderLine: 'lineId'
+        SalesQuotation: 'quotationId',
+        SalesOrder: 'salesOrderId',
+        SalesReturnOrder: 'returnOrderId'
     };
 
 })();

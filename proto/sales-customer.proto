@@ -19,6 +19,7 @@ package sales;
 option go_package = "./types/sales";
 
 import "sales-common.proto";
+import "sales-pricing.proto";
 import "erp-common.proto";
 import "api.proto";
 
@@ -83,6 +84,7 @@ message SalesCustomerContract {
   int32 renewal_notice_days = 14;
   map<string, string> custom_fields = 15;
   erp.AuditInfo audit_info = 16;
+  repeated SalesCustomerPrice prices = 17;
 }
 
 message SalesCustomerContractList {

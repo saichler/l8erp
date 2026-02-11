@@ -126,14 +126,6 @@ limitations under the License.
             }
         ],
 
-        ScmForecastAccuracy: [
-            { key: 'accuracyId', label: 'ID', sortKey: 'accuracyId', filterKey: 'accuracyId' },
-            { key: 'forecastId', label: 'Forecast', sortKey: 'forecastId', filterKey: 'forecastId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'forecastQuantity', label: 'Forecasted', sortKey: 'forecastQuantity' },
-            { key: 'actualQuantity', label: 'Actual', sortKey: 'actualQuantity' },
-            { key: 'mape', label: 'MAPE %', sortKey: 'mape' }
-        ]
     };
 
 })();

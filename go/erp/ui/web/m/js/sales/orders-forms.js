@@ -25,18 +25,18 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('paymentTerms', 'Payment Terms'),
                 ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        SalesQuotationLine: f.form('Quotation Line', [
-            f.section('Line Details', [
-                ...f.reference('quotationId', 'Quotation', 'SalesQuotation', true),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.textarea('description', 'Description'),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.text('unitOfMeasure', 'UOM'),
-                ...f.money('unitPrice', 'Unit Price', true),
-                ...f.number('discountPercent', 'Discount %')
+            ]),
+            f.section('Lines', [
+                ...f.inlineTable('lines', 'Quotation Lines', [
+                    { key: 'lineId', label: 'Line ID', hidden: true },
+                    { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                    { key: 'description', label: 'Description', type: 'text' },
+                    { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                    { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
+                    { key: 'unitPrice', label: 'Unit Price', type: 'money' },
+                    { key: 'discountPercent', label: 'Discount %', type: 'number' },
+                    { key: 'lineTotal', label: 'Total', type: 'money' }
+                ])
             ])
         ]),
 
@@ -54,41 +54,38 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.text('priority', 'Priority'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        SalesOrderLine: f.form('Sales Order Line', [
-            f.section('Line Details', [
-                ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder', true),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.textarea('description', 'Description'),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.text('unitOfMeasure', 'UOM'),
-                ...f.money('unitPrice', 'Unit Price', true),
-                ...f.number('discountPercent', 'Discount %')
-            ])
-        ]),
-
-        SalesOrderAllocation: f.form('Order Allocation', [
-            f.section('Allocation Details', [
-                ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder', true),
-                ...f.reference('lineId', 'Order Line', 'SalesOrderLine'),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse', true),
-                ...f.reference('binId', 'Bin', 'ScmBin'),
-                ...f.number('allocatedQuantity', 'Allocated Qty', true),
-                ...f.select('status', 'Status', enums.ALLOCATION_STATUS)
-            ])
-        ]),
-
-        SalesBackOrder: f.form('Back Order', [
-            f.section('Back Order Details', [
-                ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder', true),
-                ...f.reference('lineId', 'Order Line', 'SalesOrderLine'),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('backOrderQuantity', 'Back Order Qty', true),
-                ...f.date('expectedDate', 'Expected Date'),
-                ...f.textarea('notes', 'Notes')
+            ]),
+            f.section('Order Lines', [
+                ...f.inlineTable('lines', 'Order Lines', [
+                    { key: 'lineId', label: 'Line ID', hidden: true },
+                    { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                    { key: 'description', label: 'Description', type: 'text' },
+                    { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                    { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
+                    { key: 'unitPrice', label: 'Unit Price', type: 'money' },
+                    { key: 'discountPercent', label: 'Discount %', type: 'number' },
+                    { key: 'lineTotal', label: 'Total', type: 'money' }
+                ])
+            ]),
+            f.section('Allocations', [
+                ...f.inlineTable('allocations', 'Order Allocations', [
+                    { key: 'allocationId', label: 'ID', hidden: true },
+                    { key: 'lineId', label: 'Line ID', type: 'text' },
+                    { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem' },
+                    { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
+                    { key: 'allocatedQuantity', label: 'Allocated Qty', type: 'number' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.ALLOCATION_STATUS }
+                ])
+            ]),
+            f.section('Back Orders', [
+                ...f.inlineTable('backOrders', 'Back Orders', [
+                    { key: 'backOrderId', label: 'ID', hidden: true },
+                    { key: 'lineId', label: 'Line ID', type: 'text' },
+                    { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem' },
+                    { key: 'backOrderQuantity', label: 'Qty', type: 'number' },
+                    { key: 'expectedDate', label: 'Expected', type: 'date' },
+                    { key: 'notes', label: 'Notes', type: 'text' }
+                ])
             ])
         ]),
 
@@ -102,17 +99,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('reasonDescription', 'Reason'),
                 ...f.reference('warehouseId', 'Return Warehouse', 'ScmWarehouse'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        SalesReturnOrderLine: f.form('Return Order Line', [
-            f.section('Line Details', [
-                ...f.reference('returnOrderId', 'Return Order', 'SalesReturnOrder', true),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('quantity', 'Return Qty', true),
-                ...f.textarea('description', 'Description'),
-                ...f.text('condition', 'Condition'),
-                ...f.text('disposition', 'Disposition')
+            ]),
+            f.section('Return Lines', [
+                ...f.inlineTable('lines', 'Return Lines', [
+                    { key: 'lineId', label: 'Line ID', hidden: true },
+                    { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                    { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                    { key: 'description', label: 'Description', type: 'text' },
+                    { key: 'condition', label: 'Condition', type: 'text' },
+                    { key: 'disposition', label: 'Disposition', type: 'text' }
+                ])
             ])
         ])
     };

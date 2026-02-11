@@ -24,28 +24,30 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]),
             f.section('Balance', [
                 ...f.money('currentBalance', 'Current Balance')
-            ])
-        ]),
-
-        BankTransaction: f.form('Bank Transaction', [
-            f.section('Transaction Details', [
-                ...f.reference('bankAccountId', 'Bank Account', 'BankAccount', true),
-                ...f.date('transactionDate', 'Transaction Date', true),
-                ...f.select('transactionType', 'Transaction Type', enums.TRANSACTION_TYPE, true),
-                ...f.money('amount', 'Amount', true),
-                ...f.text('description', 'Description')
-            ])
-        ]),
-
-        BankReconciliation: f.form('Bank Reconciliation', [
-            f.section('Reconciliation Details', [
-                ...f.reference('bankAccountId', 'Bank Account', 'BankAccount', true),
-                ...f.date('statementDate', 'Statement Date', true),
-                ...f.select('status', 'Status', enums.RECONCILIATION_STATUS, true)
             ]),
-            f.section('Balances', [
-                ...f.money('statementBalance', 'Statement Balance', true),
-                ...f.money('bookBalance', 'Book Balance', true)
+            f.section('Transactions', [
+                ...f.inlineTable('transactions', 'Bank Transactions', [
+                    { key: 'transactionId', label: 'Transaction ID', hidden: true },
+                    { key: 'transactionDate', label: 'Date', type: 'date', required: true },
+                    { key: 'transactionType', label: 'Type', type: 'select', options: enums.TRANSACTION_TYPE },
+                    { key: 'amount', label: 'Amount', type: 'money', required: true },
+                    { key: 'description', label: 'Description', type: 'text' },
+                    { key: 'reference', label: 'Reference', type: 'text' },
+                    { key: 'checkNumber', label: 'Check #', type: 'text' },
+                    { key: 'isReconciled', label: 'Reconciled', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Reconciliations', [
+                ...f.inlineTable('reconciliations', 'Bank Reconciliations', [
+                    { key: 'reconciliationId', label: 'Reconciliation ID', hidden: true },
+                    { key: 'statementDate', label: 'Statement Date', type: 'date', required: true },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.RECONCILIATION_STATUS },
+                    { key: 'statementBalance', label: 'Statement Bal', type: 'money' },
+                    { key: 'bookBalance', label: 'Book Bal', type: 'money' },
+                    { key: 'difference', label: 'Difference', type: 'money' },
+                    { key: 'matchedCount', label: 'Matched', type: 'number' },
+                    { key: 'unmatchedCount', label: 'Unmatched', type: 'number' }
+                ])
             ])
         ]),
 
@@ -80,8 +82,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
     CashManagement.primaryKeys = {
         BankAccount: 'bankAccountId',
-        BankTransaction: 'transactionId',
-        BankReconciliation: 'reconciliationId',
         CashForecast: 'forecastId',
         FundTransfer: 'transferId',
         PettyCash: 'pettyCashId'

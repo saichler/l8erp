@@ -22,7 +22,7 @@ import (
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
-// generateSalesBillingSchedules creates billing schedule records
+// generateSalesBillingSchedules creates billing schedule records with embedded milestones
 func generateSalesBillingSchedules(store *MockDataStore) []*sales.SalesBillingSchedule {
 	frequencies := []sales.SalesBillingFrequency{
 		sales.SalesBillingFrequency_BILLING_FREQUENCY_ONE_TIME,
@@ -33,12 +33,20 @@ func generateSalesBillingSchedules(store *MockDataStore) []*sales.SalesBillingSc
 		sales.SalesBillingFrequency_BILLING_FREQUENCY_MILESTONE,
 	}
 
-	statuses := []sales.SalesBillingStatus{
+	billingStatuses := []sales.SalesBillingStatus{
 		sales.SalesBillingStatus_BILLING_STATUS_PENDING,
 		sales.SalesBillingStatus_BILLING_STATUS_PENDING,
 		sales.SalesBillingStatus_BILLING_STATUS_INVOICED,
 		sales.SalesBillingStatus_BILLING_STATUS_PAID,
 		sales.SalesBillingStatus_BILLING_STATUS_PAID,
+	}
+
+	milestoneStatuses := []sales.SalesBillingStatus{
+		sales.SalesBillingStatus_BILLING_STATUS_PAID,
+		sales.SalesBillingStatus_BILLING_STATUS_PAID,
+		sales.SalesBillingStatus_BILLING_STATUS_INVOICED,
+		sales.SalesBillingStatus_BILLING_STATUS_PENDING,
+		sales.SalesBillingStatus_BILLING_STATUS_PENDING,
 	}
 
 	count := minInt(20, len(store.SalesOrderIDs))
@@ -49,9 +57,7 @@ func generateSalesBillingSchedules(store *MockDataStore) []*sales.SalesBillingSc
 	schedules := make([]*sales.SalesBillingSchedule, count)
 	for i := 0; i < count; i++ {
 		orderID := pickRef(store.SalesOrderIDs, i)
-
 		contractID := pickRef(store.SalesCustomerContractIDs, i)
-
 		customerID := pickRef(store.CustomerIDs, i)
 
 		startDate := time.Now().AddDate(0, -rand.Intn(6), 0)
@@ -61,6 +67,36 @@ func generateSalesBillingSchedules(store *MockDataStore) []*sales.SalesBillingSc
 		totalAmount := int64(rand.Intn(50000000) + 1000000)
 		billedAmount := totalAmount * int64(rand.Intn(80)+10) / 100
 		remainingAmount := totalAmount - billedAmount
+
+		// Embed billing milestones (3 per schedule)
+		milestones := make([]*sales.SalesBillingMilestone, 3)
+		for j := 0; j < 3; j++ {
+			targetDate := time.Now().AddDate(0, (j-1)*2, 0)
+			mStatus := milestoneStatuses[(i*3+j)%len(milestoneStatuses)]
+			var actualDate int64
+			if mStatus == sales.SalesBillingStatus_BILLING_STATUS_PAID {
+				actualDate = targetDate.Unix()
+			}
+
+			invoiceID := ""
+			if len(store.SalesInvoiceIDs) > 0 && mStatus == sales.SalesBillingStatus_BILLING_STATUS_PAID {
+				invoiceID = store.SalesInvoiceIDs[(i*3+j)%len(store.SalesInvoiceIDs)]
+			}
+
+			milestones[j] = &sales.SalesBillingMilestone{
+				MilestoneId: fmt.Sprintf("sbm-%03d", i*3+j+1),
+				Name:        fmt.Sprintf("%s Milestone", milestonePrefixes[j%len(milestonePrefixes)]),
+				Description: fmt.Sprintf("Billing milestone %d for schedule", j+1),
+				Sequence:    int32(j + 1),
+				Amount:      money(store, int64(rand.Intn(5000000)+500000)),
+				Percentage:  float64((j + 1) * 25),
+				TargetDate:  targetDate.Unix(),
+				ActualDate:  actualDate,
+				Status:      mStatus,
+				InvoiceId:   invoiceID,
+				Notes:       fmt.Sprintf("Milestone %d completion criteria", j+1),
+			}
+		}
 
 		schedules[i] = &sales.SalesBillingSchedule{
 			ScheduleId:      genID("sbs", i),
@@ -75,67 +111,13 @@ func generateSalesBillingSchedules(store *MockDataStore) []*sales.SalesBillingSc
 			TotalAmount:     money(store, totalAmount),
 			BilledAmount:    money(store, billedAmount),
 			RemainingAmount: money(store, remainingAmount),
-			Status:          statuses[i%len(statuses)],
+			Status:          billingStatuses[i%len(billingStatuses)],
 			Notes:           fmt.Sprintf("Billing schedule for order/contract %d", i+1),
 			AuditInfo:       createAuditInfo(),
+			Milestones:      milestones,
 		}
 	}
 	return schedules
-}
-
-// generateSalesBillingMilestones creates billing milestone records (3 per schedule)
-func generateSalesBillingMilestones(store *MockDataStore) []*sales.SalesBillingMilestone {
-	statuses := []sales.SalesBillingStatus{
-		sales.SalesBillingStatus_BILLING_STATUS_PAID,
-		sales.SalesBillingStatus_BILLING_STATUS_PAID,
-		sales.SalesBillingStatus_BILLING_STATUS_INVOICED,
-		sales.SalesBillingStatus_BILLING_STATUS_PENDING,
-		sales.SalesBillingStatus_BILLING_STATUS_PENDING,
-	}
-
-	count := len(store.SalesBillingScheduleIDs) * 3
-	if count == 0 {
-		count = 60
-	}
-
-	milestones := make([]*sales.SalesBillingMilestone, 0, count)
-	idx := 1
-	for sIdx, scheduleID := range store.SalesBillingScheduleIDs {
-		for j := 0; j < 3; j++ {
-			targetDate := time.Now().AddDate(0, (j-1)*2, 0)
-			status := statuses[(sIdx*3+j)%len(statuses)]
-			var actualDate int64
-			if status == sales.SalesBillingStatus_BILLING_STATUS_PAID {
-				actualDate = targetDate.Unix()
-			}
-
-			invoiceID := ""
-			if len(store.SalesInvoiceIDs) > 0 && status == sales.SalesBillingStatus_BILLING_STATUS_PAID {
-				invoiceID = store.SalesInvoiceIDs[(sIdx*3+j)%len(store.SalesInvoiceIDs)]
-			}
-
-			percentage := float64((j + 1) * 25)
-			amount := int64(rand.Intn(5000000) + 500000)
-
-			milestones = append(milestones, &sales.SalesBillingMilestone{
-				MilestoneId: fmt.Sprintf("sbm-%03d", idx),
-				ScheduleId:  scheduleID,
-				Name:        fmt.Sprintf("%s Milestone", milestonePrefixes[j%len(milestonePrefixes)]),
-				Description: fmt.Sprintf("Billing milestone %d for schedule", j+1),
-				Sequence:    int32(j + 1),
-				Amount:      money(store, amount),
-				Percentage:  percentage,
-				TargetDate:  targetDate.Unix(),
-				ActualDate:  actualDate,
-				Status:      status,
-				InvoiceId:   invoiceID,
-				Notes:       fmt.Sprintf("Milestone %d completion criteria", j+1),
-				AuditInfo:   createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return milestones
 }
 
 // generateSalesRevenueSchedules creates revenue schedule records
@@ -154,9 +136,7 @@ func generateSalesRevenueSchedules(store *MockDataStore) []*sales.SalesRevenueSc
 	schedules := make([]*sales.SalesRevenueSchedule, count)
 	for i := 0; i < count; i++ {
 		orderID := pickRef(store.SalesOrderIDs, i)
-
 		contractID := pickRef(store.SalesCustomerContractIDs, i)
-
 		accountID := pickRef(store.AccountIDs, i)
 
 		startDate := time.Now().AddDate(0, -rand.Intn(6), 0)

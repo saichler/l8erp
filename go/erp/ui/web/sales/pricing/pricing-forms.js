@@ -25,28 +25,25 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('status', 'Status', enums.PRICE_LIST_STATUS),
                 ...f.checkbox('isDefault', 'Default'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        SalesPriceListEntry: f.form('Price List Entry', [
-            f.section('Entry Details', [
-                ...f.reference('priceListId', 'Price List', 'SalesPriceList', true),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.money('unitPrice', 'Unit Price', true),
-                ...f.text('unitOfMeasure', 'UOM'),
-                ...f.number('minimumQuantity', 'Min Quantity')
-            ])
-        ]),
-
-        SalesCustomerPrice: f.form('Customer Price', [
-            f.section('Price Details', [
-                ...f.reference('customerId', 'Customer', 'Customer', true),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.money('unitPrice', 'Special Price', true),
-                ...f.date('effectiveDate', 'Effective Date', true),
-                ...f.date('expiryDate', 'Expiration Date'),
-                ...f.reference('contractId', 'Contract', 'SalesCustomerContract'),
-                ...f.textarea('notes', 'Notes')
+            ]),
+            f.section('Price Entries', [
+                ...f.inlineTable('entries', 'Price List Entries', [
+                    { key: 'entryId', label: 'Entry ID', hidden: true },
+                    { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                    { key: 'unitPrice', label: 'Unit Price', type: 'money', required: true },
+                    { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
+                    { key: 'minimumQuantity', label: 'Min Qty', type: 'number' }
+                ])
+            ]),
+            f.section('Quantity Breaks', [
+                ...f.inlineTable('quantityBreaks', 'Quantity Breaks', [
+                    { key: 'breakId', label: 'Break ID', hidden: true },
+                    { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem' },
+                    { key: 'fromQuantity', label: 'From Qty', type: 'number', required: true },
+                    { key: 'toQuantity', label: 'To Qty', type: 'number' },
+                    { key: 'unitPrice', label: 'Price', type: 'money' },
+                    { key: 'discountPercent', label: 'Discount %', type: 'number' }
+                ])
             ])
         ]),
 
@@ -77,27 +74,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('maxQuantity', 'Max Quantity'),
                 ...f.text('promoCode', 'Promo Code')
             ])
-        ]),
-
-        SalesQuantityBreak: f.form('Quantity Break', [
-            f.section('Break Details', [
-                ...f.reference('priceListId', 'Price List', 'SalesPriceList', true),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('fromQuantity', 'From Quantity', true),
-                ...f.number('toQuantity', 'To Quantity'),
-                ...f.money('unitPrice', 'Unit Price', true),
-                ...f.number('discountPercent', 'Discount %')
-            ])
         ])
     };
 
     SalesPricing.primaryKeys = {
         SalesPriceList: 'priceListId',
-        SalesPriceListEntry: 'entryId',
-        SalesCustomerPrice: 'customerPriceId',
         SalesDiscountRule: 'ruleId',
-        SalesPromotionalPrice: 'promoId',
-        SalesQuantityBreak: 'breakId'
+        SalesPromotionalPrice: 'promoId'
     };
 
 })();

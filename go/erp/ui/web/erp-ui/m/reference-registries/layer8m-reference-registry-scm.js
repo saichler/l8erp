@@ -15,10 +15,8 @@ window.Layer8MReferenceRegistrySCM = {
     // SCM - Procurement Models
     // ========================================
     ...refScmM.simple('ScmPurchaseRequisition', 'requisitionId', 'requisitionNumber', 'Requisition'),
-    ...refScmM.idOnly('ScmRequisitionLine', 'lineId'),
     ...refScmM.simple('ScmRequestForQuotation', 'rfqId', 'rfqNumber', 'RFQ'),
     ...refScmM.simple('ScmPurchaseOrder', 'purchaseOrderId', 'orderNumber', 'Purchase Order'),
-    ...refScmM.idOnly('ScmPurchaseOrderLine', 'lineId'),
     ...refScmM.simple('ScmBlanketOrder', 'blanketOrderId', 'orderNumber', 'Blanket Order'),
     ...refScmM.idOnly('ScmSupplierScorecard', 'scorecardId'),
 
@@ -27,23 +25,13 @@ window.Layer8MReferenceRegistrySCM = {
     // ========================================
     ...refScmM.coded('ScmItem', 'itemId', 'itemNumber', 'name'),
     ...refScmM.simple('ScmItemCategory', 'categoryId', 'categoryName'),
-    ...refScmM.idOnly('ScmStockMovement', 'movementId'),
-    ...refScmM.simple('ScmLotNumber', 'lotId', 'lotNumber'),
-    ...refScmM.simple('ScmSerialNumber', 'serialId', 'serialNumber'),
     ...refScmM.idOnly('ScmCycleCount', 'cycleCountId'),
-    ...refScmM.idOnly('ScmReorderPoint', 'reorderPointId'),
-    ...refScmM.idOnly('ScmInventoryValuation', 'valuationId'),
 
     // ========================================
     // SCM - Warehouse Management Models
     // ========================================
     ...refScmM.coded('ScmWarehouse', 'warehouseId', 'code', 'name'),
-    ...refScmM.simple('ScmBin', 'binId', 'binCode'),
     ...refScmM.idOnly('ScmReceivingOrder', 'receivingOrderId'),
-    ...refScmM.idOnly('ScmPutawayTask', 'taskId'),
-    ...refScmM.idOnly('ScmPickTask', 'taskId'),
-    ...refScmM.idOnly('ScmPackTask', 'taskId'),
-    ...refScmM.idOnly('ScmShipTask', 'taskId'),
     ...refScmM.simple('ScmWavePlan', 'wavePlanId', 'waveName'),
     ...refScmM.idOnly('ScmDockSchedule', 'scheduleId'),
 
@@ -55,8 +43,6 @@ window.Layer8MReferenceRegistrySCM = {
     ...refScmM.simple('ScmShipment', 'shipmentId', 'shipmentNumber', 'Shipment'),
     ...refScmM.simple('ScmRoute', 'routeId', 'name'),
     ...refScmM.idOnly('ScmLoadPlan', 'loadPlanId'),
-    ...refScmM.idOnly('ScmDeliveryProof', 'proofId'),
-    ...refScmM.idOnly('ScmFreightAudit', 'auditId'),
     ...refScmM.simple('ScmReturnAuthorization', 'rmaId', 'rmaNumber', 'RMA'),
 
     // ========================================
@@ -67,7 +53,6 @@ window.Layer8MReferenceRegistrySCM = {
     ...refScmM.simple('ScmDemandPlan', 'planId', 'name'),
     ...refScmM.simple('ScmPromotionalPlan', 'planId', 'planName'),
     ...refScmM.simple('ScmNewProductPlan', 'planId', 'productName'),
-    ...refScmM.idOnly('ScmForecastAccuracy', 'accuracyId'),
 
     // ========================================
     // SCM - Supply Planning Models

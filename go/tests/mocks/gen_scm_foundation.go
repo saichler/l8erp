@@ -42,7 +42,7 @@ func generateItemCategories() []*scm.ScmItemCategory {
 	return categories
 }
 
-// generateWarehouses creates warehouse records
+// generateWarehouses creates warehouse records with embedded bins
 func generateWarehouses(store *MockDataStore) []*scm.ScmWarehouse {
 	warehouseTypes := []scm.ScmWarehouseType{
 		scm.ScmWarehouseType_WAREHOUSE_TYPE_STANDARD,
@@ -53,6 +53,15 @@ func generateWarehouses(store *MockDataStore) []*scm.ScmWarehouse {
 		scm.ScmWarehouseType_WAREHOUSE_TYPE_HAZMAT,
 	}
 
+	binTypes := []scm.ScmBinType{
+		scm.ScmBinType_BIN_TYPE_STORAGE,
+		scm.ScmBinType_BIN_TYPE_PICKING,
+		scm.ScmBinType_BIN_TYPE_RECEIVING,
+		scm.ScmBinType_BIN_TYPE_SHIPPING,
+		scm.ScmBinType_BIN_TYPE_STAGING,
+	}
+
+	binIdx := 1
 	warehouses := make([]*scm.ScmWarehouse, len(warehouseNames))
 	for i, name := range warehouseNames {
 		managerID := ""
@@ -60,6 +69,33 @@ func generateWarehouses(store *MockDataStore) []*scm.ScmWarehouse {
 			managerID = store.ManagerIDs[i%len(store.ManagerIDs)]
 		} else if len(store.EmployeeIDs) > 0 {
 			managerID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
+		}
+
+		// Generate 5 embedded bins per warehouse
+		bins := make([]*scm.ScmBin, 5)
+		for j := 0; j < 5; j++ {
+			zone := i + 1
+			aisle := j + 1
+			rack := rand.Intn(10) + 1
+			level := rand.Intn(5) + 1
+			maxCap := float64(rand.Intn(901) + 100)
+			currentQty := float64(rand.Intn(int(maxCap*0.8) + 1))
+
+			bins[j] = &scm.ScmBin{
+				BinId:           fmt.Sprintf("bin-%03d", binIdx),
+				BinCode:         fmt.Sprintf("Z%d-A%d-R%d-L%d", zone, aisle, rack, level),
+				BinType:         binTypes[j%len(binTypes)],
+				Zone:            fmt.Sprintf("Z%d", zone),
+				Aisle:           fmt.Sprintf("A%d", aisle),
+				Rack:            fmt.Sprintf("R%d", rack),
+				Level:           fmt.Sprintf("L%d", level),
+				IsActive:        true,
+				MaxCapacity:     maxCap,
+				CurrentQuantity: currentQty,
+				AuditInfo:       createAuditInfo(),
+			}
+			store.BinIDs = append(store.BinIDs, bins[j].BinId)
+			binIdx++
 		}
 
 		warehouses[i] = &scm.ScmWarehouse{
@@ -72,51 +108,11 @@ func generateWarehouses(store *MockDataStore) []*scm.ScmWarehouse {
 			IsActive:      true,
 			Capacity:      float64(rand.Intn(40001) + 10000),
 			Notes:         fmt.Sprintf("Warehouse facility: %s", name),
+			Bins:          bins,
 			AuditInfo:     createAuditInfo(),
 		}
 	}
 	return warehouses
-}
-
-// generateBins creates bin records (5 per warehouse = 30 total)
-func generateBins(store *MockDataStore) []*scm.ScmBin {
-	binTypes := []scm.ScmBinType{
-		scm.ScmBinType_BIN_TYPE_STORAGE,
-		scm.ScmBinType_BIN_TYPE_PICKING,
-		scm.ScmBinType_BIN_TYPE_RECEIVING,
-		scm.ScmBinType_BIN_TYPE_SHIPPING,
-		scm.ScmBinType_BIN_TYPE_STAGING,
-	}
-
-	bins := make([]*scm.ScmBin, 0, len(store.SCMWarehouseIDs)*5)
-	idx := 1
-	for whIdx, warehouseID := range store.SCMWarehouseIDs {
-		for j := 0; j < 5; j++ {
-			zone := whIdx + 1
-			aisle := j + 1
-			rack := rand.Intn(10) + 1
-			level := rand.Intn(5) + 1
-			maxCap := float64(rand.Intn(901) + 100)
-			currentQty := float64(rand.Intn(int(maxCap*0.8) + 1))
-
-			bins = append(bins, &scm.ScmBin{
-				BinId:           fmt.Sprintf("bin-%03d", idx),
-				WarehouseId:     warehouseID,
-				BinCode:         fmt.Sprintf("Z%d-A%d-R%d-L%d", zone, aisle, rack, level),
-				BinType:         binTypes[j%len(binTypes)],
-				Zone:            fmt.Sprintf("Z%d", zone),
-				Aisle:           fmt.Sprintf("A%d", aisle),
-				Rack:            fmt.Sprintf("R%d", rack),
-				Level:           fmt.Sprintf("L%d", level),
-				IsActive:        true,
-				MaxCapacity:     maxCap,
-				CurrentQuantity: currentQty,
-				AuditInfo:       createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return bins
 }
 
 // generateSCMCarriers creates SCM carrier records

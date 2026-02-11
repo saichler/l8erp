@@ -2,15 +2,6 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // Uses Layer8FormFactory for reduced boilerplate
 /**
@@ -36,28 +27,25 @@ window.MobileSalesPricing = window.MobileSalesPricing || {};
                 ...f.select('status', 'Status', enums.PRICE_LIST_STATUS),
                 ...f.checkbox('isDefault', 'Default'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        PriceListEntry: f.form('Price List Entry', [
-            f.section('Entry Details', [
-                ...f.reference('priceListId', 'Price List', 'PriceList', true),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.money('unitPrice', 'Unit Price', true),
-                ...f.text('unitOfMeasure', 'UOM'),
-                ...f.number('minimumQuantity', 'Min Quantity')
-            ])
-        ]),
-
-        CustomerPrice: f.form('Customer Price', [
-            f.section('Price Details', [
-                ...f.reference('customerId', 'Customer', 'Customer', true),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.money('unitPrice', 'Unit Price', true),
-                ...f.date('effectiveDate', 'Effective Date', true),
-                ...f.date('expiryDate', 'Expiry Date'),
-                ...f.reference('contractId', 'Contract', 'CustomerContract'),
-                ...f.textarea('notes', 'Notes')
+            ]),
+            f.section('Price Entries', [
+                ...f.inlineTable('entries', 'Price List Entries', [
+                    { key: 'entryId', label: 'Entry ID', hidden: true },
+                    { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                    { key: 'unitPrice', label: 'Unit Price', type: 'money', required: true },
+                    { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
+                    { key: 'minimumQuantity', label: 'Min Qty', type: 'number' }
+                ])
+            ]),
+            f.section('Quantity Breaks', [
+                ...f.inlineTable('quantityBreaks', 'Quantity Breaks', [
+                    { key: 'breakId', label: 'Break ID', hidden: true },
+                    { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem' },
+                    { key: 'fromQuantity', label: 'From Qty', type: 'number', required: true },
+                    { key: 'toQuantity', label: 'To Qty', type: 'number' },
+                    { key: 'unitPrice', label: 'Price', type: 'money' },
+                    { key: 'discountPercent', label: 'Discount %', type: 'number' }
+                ])
             ])
         ]),
 
@@ -87,17 +75,6 @@ window.MobileSalesPricing = window.MobileSalesPricing || {};
                 ...f.date('endDate', 'End Date', true),
                 ...f.number('maxQuantity', 'Max Quantity'),
                 ...f.text('promoCode', 'Promo Code')
-            ])
-        ]),
-
-        QuantityBreak: f.form('Quantity Break', [
-            f.section('Break Details', [
-                ...f.reference('priceListId', 'Price List', 'PriceList', true),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('fromQuantity', 'From Quantity', true),
-                ...f.number('toQuantity', 'To Quantity'),
-                ...f.money('unitPrice', 'Unit Price', true),
-                ...f.number('discountPercent', 'Discount %')
             ])
         ])
     };

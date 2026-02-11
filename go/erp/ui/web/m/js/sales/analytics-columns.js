@@ -42,15 +42,6 @@ limitations under the License.
             ...col.col('parentTerritoryId', 'Parent')
         ],
 
-        TerritoryAssign: [
-            ...col.id('assignmentId'),
-            ...col.col('territoryId', 'Territory'),
-            ...col.col('salespersonId', 'Salesperson'),
-            ...col.date('startDate', 'Start'),
-            ...col.date('endDate', 'End'),
-            ...col.col('isPrimary', 'Primary')
-        ],
-
         CommissionPlan: [
             ...col.id('planId'),
             ...col.col('name', 'Name'),
@@ -58,15 +49,6 @@ limitations under the License.
             ...col.col('baseRate', 'Rate'),
             ...col.date('effectiveDate', 'Effective'),
             ...col.col('isActive', 'Active')
-        ],
-
-        SalesCommissionCalc: [
-            ...col.id('calcId'),
-            ...col.col('salespersonId', 'Salesperson'),
-            ...col.col('planId', 'Plan'),
-            ...col.col('salesOrderId', 'Order'),
-            ...col.money('salesAmount', 'Sale Amount'),
-            ...col.money('commissionAmount', 'Commission')
         ],
 
         SalesForecast: [
@@ -80,9 +62,10 @@ limitations under the License.
     };
 
     MobileSalesAnalytics.primaryKeys = {
-        SalesTarget: 'targetId', SalesTerritory: 'territoryId',
-        TerritoryAssign: 'assignmentId', CommissionPlan: 'planId',
-        SalesCommissionCalc: 'calcId', SalesForecast: 'forecastId'
+        SalesTarget: 'targetId',
+        SalesTerritory: 'territoryId',
+        CommissionPlan: 'planId',
+        SalesForecast: 'forecastId'
     };
 
 })();

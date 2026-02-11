@@ -22,13 +22,15 @@ import (
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
-// generateSalesCommissionPlans creates commission plan records
+// generateSalesCommissionPlans creates commission plan records with embedded calculations
 func generateSalesCommissionPlans(store *MockDataStore) []*sales.SalesCommissionPlan {
 	commissionTypes := []sales.SalesCommissionType{
 		sales.SalesCommissionType_COMMISSION_TYPE_PERCENTAGE,
 		sales.SalesCommissionType_COMMISSION_TYPE_FIXED,
 		sales.SalesCommissionType_COMMISSION_TYPE_TIERED,
 	}
+
+	calcStatuses := []string{"PENDING", "APPROVED", "PAID", "CANCELLED"}
 
 	plans := make([]*sales.SalesCommissionPlan, len(salesCommissionPlanNames))
 	for i, name := range salesCommissionPlanNames {
@@ -42,97 +44,52 @@ func generateSalesCommissionPlans(store *MockDataStore) []*sales.SalesCommission
 			CommissionType: commissionTypes[i%len(commissionTypes)],
 			EffectiveDate:  effectiveDate.Unix(),
 			ExpiryDate:     expiryDate.Unix(),
-			IsActive:       i < 6, // First 6 are active
+			IsActive:       i < 6,
 			AppliesTo:      "ALL",
 			AuditInfo:      createAuditInfo(),
 		}
 
 		if commissionTypes[i%len(commissionTypes)] == sales.SalesCommissionType_COMMISSION_TYPE_PERCENTAGE {
-			plan.BaseRate = float64(rand.Intn(10)+5) / 100 // 5-15%
+			plan.BaseRate = float64(rand.Intn(10)+5) / 100
 		} else if commissionTypes[i%len(commissionTypes)] == sales.SalesCommissionType_COMMISSION_TYPE_FIXED {
-			plan.BaseAmount = money(store, int64(rand.Intn(50000) + 5000))
+			plan.BaseAmount = money(store, int64(rand.Intn(50000)+5000))
 		}
+
+		// Embed commission calculations (3 per plan)
+		calcs := make([]*sales.SalesCommissionCalc, 3)
+		for j := 0; j < 3; j++ {
+			salespersonID := pickRef(store.EmployeeIDs, (i*3 + j))
+			orderID := pickRef(store.SalesOrderIDs, (i*3 + j))
+			calcDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
+
+			salesAmount := int64(rand.Intn(50000000) + 500000)
+			commissionRate := float64(rand.Intn(10)+5) / 100
+			commissionAmount := int64(float64(salesAmount) * commissionRate)
+
+			cStatus := calcStatuses[(i*3+j)%len(calcStatuses)]
+			var paidDate int64
+			if cStatus == "PAID" {
+				paidDate = calcDate.AddDate(0, 0, rand.Intn(30)+15).Unix()
+			}
+
+			calcs[j] = &sales.SalesCommissionCalc{
+				CalcId:           fmt.Sprintf("scc-%03d", i*3+j+1),
+				SalespersonId:    salespersonID,
+				SalesOrderId:     orderID,
+				CalculationDate:  calcDate.Unix(),
+				SalesAmount:      money(store, salesAmount),
+				CommissionRate:   commissionRate,
+				CommissionAmount: money(store, commissionAmount),
+				Status:           cStatus,
+				PaidDate:         paidDate,
+				Notes:            fmt.Sprintf("Commission calculation %d", i*3+j+1),
+			}
+		}
+		plan.Calculations = calcs
 
 		plans[i] = plan
 	}
 	return plans
-}
-
-// generateSalesCommissionCalcs creates commission calculation records
-func generateSalesCommissionCalcs(store *MockDataStore) []*sales.SalesCommissionCalc {
-	statuses := []string{"PENDING", "APPROVED", "PAID", "CANCELLED"}
-
-	count := 25
-	calcs := make([]*sales.SalesCommissionCalc, count)
-	for i := 0; i < count; i++ {
-		planID := pickRef(store.SalesCommissionPlanIDs, i)
-
-		salespersonID := pickRef(store.EmployeeIDs, i)
-
-		orderID := pickRef(store.SalesOrderIDs, i)
-
-		calcDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
-
-		salesAmount := int64(rand.Intn(50000000) + 500000)
-		commissionRate := float64(rand.Intn(10)+5) / 100
-		commissionAmount := int64(float64(salesAmount) * commissionRate)
-
-		status := statuses[i%len(statuses)]
-		var paidDate int64
-		if status == "PAID" {
-			paidDate = calcDate.AddDate(0, 0, rand.Intn(30)+15).Unix()
-		}
-
-		calcs[i] = &sales.SalesCommissionCalc{
-			CalcId:           genID("scc", i),
-			PlanId:           planID,
-			SalespersonId:    salespersonID,
-			SalesOrderId:     orderID,
-			CalculationDate:  calcDate.Unix(),
-			SalesAmount:      money(store, salesAmount),
-			CommissionRate:   commissionRate,
-			CommissionAmount: money(store, commissionAmount),
-			Status:           status,
-			PaidDate:         paidDate,
-			Notes:            fmt.Sprintf("Commission calculation for order %d", i+1),
-			AuditInfo:        createAuditInfo(),
-		}
-	}
-	return calcs
-}
-
-// generateSalesTerritoryAssigns creates territory assignment records
-func generateSalesTerritoryAssigns(store *MockDataStore) []*sales.SalesTerritoryAssign {
-	count := minInt(20, len(store.SalesTerritoryIDs)*2)
-	if count == 0 {
-		count = 20
-	}
-
-	assigns := make([]*sales.SalesTerritoryAssign, count)
-	for i := 0; i < count; i++ {
-		territoryID := pickRef(store.SalesTerritoryIDs, i)
-
-		salespersonID := pickRef(store.EmployeeIDs, i)
-
-		startDate := time.Now().AddDate(0, -rand.Intn(12), 0)
-		var endDate int64
-		if i%4 == 0 { // 25% have end dates
-			endDate = startDate.AddDate(1, 0, 0).Unix()
-		}
-
-		assigns[i] = &sales.SalesTerritoryAssign{
-			AssignmentId:      genID("sta", i),
-			TerritoryId:       territoryID,
-			SalespersonId:     salespersonID,
-			StartDate:         startDate.Unix(),
-			EndDate:           endDate,
-			IsPrimary:         i%2 == 0, // Alternate primary
-			AllocationPercent: float64(rand.Intn(50)+50) / 100, // 50-100%
-			Notes:             fmt.Sprintf("Territory assignment %d", i+1),
-			AuditInfo:         createAuditInfo(),
-		}
-	}
-	return assigns
 }
 
 // generateSalesTargets creates sales target records
@@ -149,7 +106,6 @@ func generateSalesTargets(store *MockDataStore) []*sales.SalesTarget {
 	targets := make([]*sales.SalesTarget, count)
 	for i := 0; i < count; i++ {
 		salespersonID := pickRef(store.EmployeeIDs, i)
-
 		territoryID := pickRef(store.SalesTerritoryIDs, i)
 
 		period := periods[i%len(periods)]
@@ -157,7 +113,7 @@ func generateSalesTargets(store *MockDataStore) []*sales.SalesTarget {
 		quarter := int32((i % 4) + 1)
 		month := int32((i % 12) + 1)
 
-		targetAmount := int64(rand.Intn(100000000) + 10000000) // $100k - $1M
+		targetAmount := int64(rand.Intn(100000000) + 10000000)
 		achievedAmount := targetAmount * int64(rand.Intn(120)+50) / 100
 		achievementPercent := float64(achievedAmount) / float64(targetAmount) * 100
 
@@ -194,9 +150,7 @@ func generateSalesForecasts(store *MockDataStore) []*sales.SalesForecast {
 	forecasts := make([]*sales.SalesForecast, count)
 	for i := 0; i < count; i++ {
 		salespersonID := pickRef(store.EmployeeIDs, i)
-
 		territoryID := pickRef(store.SalesTerritoryIDs, i)
-
 		customerID := pickRef(store.CustomerIDs, i)
 
 		year := 2025

@@ -47,6 +47,7 @@ message SalesQuotation {
   string notes = 16;
   map<string, string> custom_fields = 17;
   erp.AuditInfo audit_info = 18;
+  repeated SalesQuotationLine lines = 19;
 }
 
 message SalesQuotationList {
@@ -54,27 +55,19 @@ message SalesQuotationList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// SalesQuotationLine represents a line item on a sales quotation
+// SalesQuotationLine represents a line item on a sales quotation (child of SalesQuotation)
 message SalesQuotationLine {
   string line_id = 1;
-  string quotation_id = 2;
-  int32 line_number = 3;
-  string item_id = 4;                   // Cross-ref: SCM Item
-  string description = 5;
-  double quantity = 6;
-  string unit_of_measure = 7;
-  erp.Money unit_price = 8;
-  double discount_percent = 9;
-  erp.Money discount_amount = 10;
-  erp.Money tax_amount = 11;
-  erp.Money line_total = 12;
-  erp.AuditInfo audit_info = 13;
-}
-
-message SalesQuotationLineList {
-  repeated SalesQuotationLine list = 1;
-  l8api.L8MetaData metadata = 2;
+  int32 line_number = 2;
+  string item_id = 3;                   // Cross-ref: SCM Item
+  string description = 4;
+  double quantity = 5;
+  string unit_of_measure = 6;
+  erp.Money unit_price = 7;
+  double discount_percent = 8;
+  erp.Money discount_amount = 9;
+  erp.Money tax_amount = 10;
+  erp.Money line_total = 11;
 }
 
 // @PrimeObject
@@ -101,6 +94,9 @@ message SalesOrder {
   string priority = 19;
   map<string, string> custom_fields = 20;
   erp.AuditInfo audit_info = 21;
+  repeated SalesOrderLine lines = 22;
+  repeated SalesOrderAllocation allocations = 23;
+  repeated SalesBackOrder back_orders = 24;
 }
 
 message SalesOrderList {
@@ -108,69 +104,45 @@ message SalesOrderList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// SalesOrderLine represents a line item on a sales order
+// SalesOrderLine represents a line item on a sales order (child of SalesOrder)
 message SalesOrderLine {
   string line_id = 1;
-  string sales_order_id = 2;
-  int32 line_number = 3;
-  string item_id = 4;                   // Cross-ref: SCM Item
-  string description = 5;
-  double quantity = 6;
-  string unit_of_measure = 7;
-  erp.Money unit_price = 8;
-  double discount_percent = 9;
-  erp.Money discount_amount = 10;
-  erp.Money tax_amount = 11;
-  erp.Money line_total = 12;
-  double allocated_quantity = 13;
-  double shipped_quantity = 14;
-  erp.AuditInfo audit_info = 15;
+  int32 line_number = 2;
+  string item_id = 3;                   // Cross-ref: SCM Item
+  string description = 4;
+  double quantity = 5;
+  string unit_of_measure = 6;
+  erp.Money unit_price = 7;
+  double discount_percent = 8;
+  erp.Money discount_amount = 9;
+  erp.Money tax_amount = 10;
+  erp.Money line_total = 11;
+  double allocated_quantity = 12;
+  double shipped_quantity = 13;
 }
 
-message SalesOrderLineList {
-  repeated SalesOrderLine list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
-// SalesOrderAllocation represents inventory allocation for an order line
+// SalesOrderAllocation represents inventory allocation for an order line (child of SalesOrder)
 message SalesOrderAllocation {
   string allocation_id = 1;
-  string sales_order_id = 2;
-  string line_id = 3;
-  string item_id = 4;                   // Cross-ref: SCM Item
-  string warehouse_id = 5;              // Cross-ref: SCM Warehouse
-  string bin_id = 6;
-  double allocated_quantity = 7;
-  SalesAllocationStatus status = 8;
-  int64 allocation_date = 9;
-  int64 expiry_date = 10;
-  erp.AuditInfo audit_info = 11;
+  string line_id = 2;
+  string item_id = 3;                   // Cross-ref: SCM Item
+  string warehouse_id = 4;              // Cross-ref: SCM Warehouse
+  string bin_id = 5;
+  double allocated_quantity = 6;
+  SalesAllocationStatus status = 7;
+  int64 allocation_date = 8;
+  int64 expiry_date = 9;
 }
 
-message SalesOrderAllocationList {
-  repeated SalesOrderAllocation list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
-// SalesBackOrder represents an order that cannot be fulfilled due to stock shortage
+// SalesBackOrder represents a back order due to stock shortage (child of SalesOrder)
 message SalesBackOrder {
   string back_order_id = 1;
-  string sales_order_id = 2;
-  string line_id = 3;
-  string item_id = 4;                   // Cross-ref: SCM Item
-  double back_order_quantity = 5;
-  int64 expected_date = 6;
-  string status = 7;
-  string notes = 8;
-  erp.AuditInfo audit_info = 9;
-}
-
-message SalesBackOrderList {
-  repeated SalesBackOrder list = 1;
-  l8api.L8MetaData metadata = 2;
+  string line_id = 2;
+  string item_id = 3;                   // Cross-ref: SCM Item
+  double back_order_quantity = 4;
+  int64 expected_date = 5;
+  string status = 6;
+  string notes = 7;
 }
 
 // @PrimeObject
@@ -189,6 +161,7 @@ message SalesReturnOrder {
   string notes = 11;
   map<string, string> custom_fields = 12;
   erp.AuditInfo audit_info = 13;
+  repeated SalesReturnOrderLine lines = 14;
 }
 
 message SalesReturnOrderList {
@@ -196,24 +169,16 @@ message SalesReturnOrderList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// SalesReturnOrderLine represents a line item on a return order
+// SalesReturnOrderLine represents a line item on a return order (child of SalesReturnOrder)
 message SalesReturnOrderLine {
   string line_id = 1;
-  string return_order_id = 2;
-  int32 line_number = 3;
-  string item_id = 4;                   // Cross-ref: SCM Item
-  string description = 5;
-  double quantity = 6;
-  string unit_of_measure = 7;
-  erp.Money unit_price = 8;
-  erp.Money line_total = 9;
-  string condition = 10;
-  string disposition = 11;
-  erp.AuditInfo audit_info = 12;
-}
-
-message SalesReturnOrderLineList {
-  repeated SalesReturnOrderLine list = 1;
-  l8api.L8MetaData metadata = 2;
+  int32 line_number = 2;
+  string item_id = 3;                   // Cross-ref: SCM Item
+  string description = 4;
+  double quantity = 5;
+  string unit_of_measure = 6;
+  erp.Money unit_price = 7;
+  erp.Money line_total = 8;
+  string condition = 9;
+  string disposition = 10;
 }

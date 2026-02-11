@@ -67,18 +67,6 @@ func generateSalesPhase2(client *HCMClient, store *MockDataStore) error {
 
 // Sales Phase 3: Pricing Setup
 func generateSalesPhase3(client *HCMClient, store *MockDataStore) error {
-	// Generate Price List Entries
-	entries := generateSalesPriceListEntries(store)
-	if err := runOp(client, "Price List Entries", "/erp/60/PriceEntry", &sales.SalesPriceListEntryList{List: entries}, extractIDs(entries, func(e *sales.SalesPriceListEntry) string { return e.EntryId }), &store.SalesPriceListEntryIDs); err != nil {
-		return err
-	}
-
-	// Generate Customer Prices
-	customerPrices := generateSalesCustomerPrices(store)
-	if err := runOp(client, "Customer Prices", "/erp/60/CustPrice", &sales.SalesCustomerPriceList{List: customerPrices}, extractIDs(customerPrices, func(e *sales.SalesCustomerPrice) string { return e.CustomerPriceId }), &store.SalesCustomerPriceIDs); err != nil {
-		return err
-	}
-
 	// Generate Discount Rules
 	discountRules := generateSalesDiscountRules(store)
 	if err := runOp(client, "Discount Rules", "/erp/60/DiscntRule", &sales.SalesDiscountRuleList{List: discountRules}, extractIDs(discountRules, func(e *sales.SalesDiscountRule) string { return e.RuleId }), &store.SalesDiscountRuleIDs); err != nil {
@@ -91,26 +79,13 @@ func generateSalesPhase3(client *HCMClient, store *MockDataStore) error {
 		return err
 	}
 
-	// Generate Quantity Breaks
-	qtyBreaks := generateSalesQuantityBreaks(store)
-	if err := runOp(client, "Quantity Breaks", "/erp/60/QtyBreak", &sales.SalesQuantityBreakList{List: qtyBreaks}, extractIDs(qtyBreaks, func(e *sales.SalesQuantityBreak) string { return e.BreakId }), &store.SalesQuantityBreakIDs); err != nil {
-		return err
-	}
-
 	return nil
 }
 
 // Sales Phase 4: Quotations
 func generateSalesPhase4(client *HCMClient, store *MockDataStore) error {
-	// Generate Quotations
 	quotations := generateSalesQuotations(store)
 	if err := runOp(client, "Quotations", "/erp/60/SalesQuote", &sales.SalesQuotationList{List: quotations}, extractIDs(quotations, func(e *sales.SalesQuotation) string { return e.QuotationId }), &store.SalesQuotationIDs); err != nil {
-		return err
-	}
-
-	// Generate Quotation Lines
-	quotationLines := generateSalesQuotationLines(store)
-	if err := runOp(client, "Quotation Lines", "/erp/60/QuoteLine", &sales.SalesQuotationLineList{List: quotationLines}, extractIDs(quotationLines, func(e *sales.SalesQuotationLine) string { return e.LineId }), &store.SalesQuotationLineIDs); err != nil {
 		return err
 	}
 
@@ -119,39 +94,13 @@ func generateSalesPhase4(client *HCMClient, store *MockDataStore) error {
 
 // Sales Phase 5: Orders
 func generateSalesPhase5(client *HCMClient, store *MockDataStore) error {
-	// Generate Sales Orders
 	orders := generateSalesOrders(store)
 	if err := runOp(client, "Sales Orders", "/erp/60/SalesOrder", &sales.SalesOrderList{List: orders}, extractIDs(orders, func(e *sales.SalesOrder) string { return e.SalesOrderId }), &store.SalesOrderIDs); err != nil {
 		return err
 	}
 
-	// Generate Sales Order Lines
-	orderLines := generateSalesOrderLines(store)
-	if err := runOp(client, "Sales Order Lines", "/erp/60/OrderLine", &sales.SalesOrderLineList{List: orderLines}, extractIDs(orderLines, func(e *sales.SalesOrderLine) string { return e.LineId }), &store.SalesOrderLineIDs); err != nil {
-		return err
-	}
-
-	// Generate Sales Order Allocations
-	allocations := generateSalesOrderAllocations(store)
-	if err := runOp(client, "Order Allocations", "/erp/60/OrderAlloc", &sales.SalesOrderAllocationList{List: allocations}, extractIDs(allocations, func(e *sales.SalesOrderAllocation) string { return e.AllocationId }), &store.SalesOrderAllocationIDs); err != nil {
-		return err
-	}
-
-	// Generate Sales Back Orders
-	backOrders := generateSalesBackOrders(store)
-	if err := runOp(client, "Back Orders", "/erp/60/BackOrder", &sales.SalesBackOrderList{List: backOrders}, extractIDs(backOrders, func(e *sales.SalesBackOrder) string { return e.BackOrderId }), &store.SalesBackOrderIDs); err != nil {
-		return err
-	}
-
-	// Generate Sales Return Orders
 	returns := generateSalesReturnOrders(store)
 	if err := runOp(client, "Sales Return Orders", "/erp/60/ReturnOrd", &sales.SalesReturnOrderList{List: returns}, extractIDs(returns, func(e *sales.SalesReturnOrder) string { return e.ReturnOrderId }), &store.SalesReturnOrderIDs); err != nil {
-		return err
-	}
-
-	// Generate Sales Return Order Lines
-	returnLines := generateSalesReturnOrderLines(store)
-	if err := runOp(client, "Return Order Lines", "/erp/60/ReturnLine", &sales.SalesReturnOrderLineList{List: returnLines}, extractIDs(returnLines, func(e *sales.SalesReturnOrderLine) string { return e.LineId }), &store.SalesReturnOrderLineIDs); err != nil {
 		return err
 	}
 

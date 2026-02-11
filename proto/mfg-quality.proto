@@ -42,6 +42,7 @@ message MfgQualityPlan {
   string notes = 11;
   map<string, string> custom_fields = 12;
   erp.AuditInfo audit_info = 13;
+  repeated MfgInspectionPoint inspection_points = 14;
 }
 
 message MfgQualityPlanList {
@@ -49,7 +50,6 @@ message MfgQualityPlanList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // MfgInspectionPoint represents an inspection point in a quality plan
 message MfgInspectionPoint {
   string point_id = 1;
@@ -69,11 +69,6 @@ message MfgInspectionPoint {
   bool is_mandatory = 15;
   string notes = 16;
   erp.AuditInfo audit_info = 17;
-}
-
-message MfgInspectionPointList {
-  repeated MfgInspectionPoint list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // ============================================================================
@@ -101,6 +96,7 @@ message MfgQualityInspection {
   string notes = 16;
   map<string, string> custom_fields = 17;
   erp.AuditInfo audit_info = 18;
+  repeated MfgTestResult test_results = 19;
 }
 
 message MfgQualityInspectionList {
@@ -108,7 +104,6 @@ message MfgQualityInspectionList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // MfgTestResult represents a test result for an inspection point
 message MfgTestResult {
   string result_id = 1;
@@ -124,11 +119,6 @@ message MfgTestResult {
   string equipment_id = 11;
   string notes = 12;
   erp.AuditInfo audit_info = 13;
-}
-
-message MfgTestResultList {
-  repeated MfgTestResult list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // ============================================================================
@@ -163,6 +153,7 @@ message MfgNCR {
   string notes = 23;
   map<string, string> custom_fields = 24;
   erp.AuditInfo audit_info = 25;
+  repeated MfgNCRAction actions = 26;
 }
 
 message MfgNCRList {
@@ -170,7 +161,6 @@ message MfgNCRList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // MfgNCRAction represents an action item for an NCR
 message MfgNCRAction {
   string action_id = 1;
@@ -187,9 +177,4 @@ message MfgNCRAction {
   int64 verified_date = 12;
   string notes = 13;
   erp.AuditInfo audit_info = 14;
-}
-
-message MfgNCRActionList {
-  repeated MfgNCRAction list = 1;
-  l8api.L8MetaData metadata = 2;
 }

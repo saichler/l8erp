@@ -61,7 +61,6 @@ func printFINSummary(store *MockDataStore) {
 	fmt.Printf("  - Sales Invoices: %d\n", len(store.SalesInvoiceIDs))
 	fmt.Printf("  - Journal Entries: %d\n", len(store.JournalEntryIDs))
 	fmt.Printf("  - Assets: %d\n", len(store.AssetIDs))
-	fmt.Printf("  - Tax Returns: %d\n", len(store.TaxReturnIDs))
 }
 
 func printSCMSummary(store *MockDataStore) {
@@ -72,7 +71,6 @@ func printSCMSummary(store *MockDataStore) {
 	fmt.Printf("  - Purchase Requisitions: %d\n", len(store.PurchaseRequisitionIDs))
 	fmt.Printf("  - Purchase Orders: %d\n", len(store.SCMPurchaseOrderIDs))
 	fmt.Printf("  - Receiving Orders: %d\n", len(store.ReceivingOrderIDs))
-	fmt.Printf("  - Stock Movements: %d\n", len(store.StockMovementIDs))
 	fmt.Printf("  - Shipments: %d\n", len(store.ShipmentIDs))
 	fmt.Printf("  - Demand Forecasts: %d\n", len(store.DemandForecastIDs))
 	fmt.Printf("  - Supply Plans: %d\n", len(store.SupplyPlanIDs))
@@ -104,7 +102,6 @@ func printMFGSummary(store *MockDataStore) {
 	fmt.Printf("  - Engineering Change Orders: %d\n", len(store.MfgEngChangeOrderIDs))
 	fmt.Printf("  - Work Orders: %d\n", len(store.MfgWorkOrderIDs))
 	fmt.Printf("  - Production Orders: %d\n", len(store.MfgProductionOrderIDs))
-	fmt.Printf("  - Production Batches: %d\n", len(store.MfgProdBatchIDs))
 	fmt.Printf("  - Quality Plans: %d\n", len(store.MfgQualityPlanIDs))
 	fmt.Printf("  - Quality Inspections: %d\n", len(store.MfgQualityInspectionIDs))
 	fmt.Printf("  - NCRs: %d\n", len(store.MfgNCRIDs))

@@ -31,29 +31,12 @@ limitations under the License.
             ...col.date('runDate', 'Run Date'),
             ...col.enum('status', 'Status', null, render.mrpStatus)
         ],
-        MfgMrpRequirement: [
-            ...col.id('requirementId'),
-            ...col.col('runId', 'MRP Run'),
-            ...col.col('itemId', 'Item'),
-            ...col.enum('requirementType', 'Type', null, render.requirementType),
-            ...col.col('quantity', 'Quantity'),
-            ...col.date('requiredDate', 'Required Date')
-        ],
         MfgCapacityPlan: [
             ...col.id('planId'),
             ...col.col('planNumber', 'Plan #'),
             ...col.col('description', 'Description'),
             ...col.date('planningStart', 'Planning Start'),
             ...col.date('planningEnd', 'Planning End')
-        ],
-        MfgCapacityLoad: [
-            ...col.id('loadId'),
-            ...col.col('planId', 'Capacity Plan'),
-            ...col.col('workCenterId', 'Work Center'),
-            ...col.date('periodStart', 'Period Start'),
-            ...col.col('requiredHours', 'Required Hrs'),
-            ...col.col('availableHours', 'Available Hrs'),
-            ...col.col('loadPercent', 'Load %')
         ],
         MfgProdSchedule: [
             ...col.id('scheduleId'),
@@ -62,14 +45,6 @@ limitations under the License.
             ...col.date('scheduleEnd', 'End Date'),
             ...col.enum('status', 'Status', null, render.scheduleStatus)
         ],
-        MfgScheduleBlock: [
-            ...col.id('blockId'),
-            ...col.col('scheduleId', 'Schedule'),
-            ...col.col('workOrderId', 'Work Order'),
-            ...col.col('workCenterId', 'Work Center'),
-            ...col.date('scheduledStart', 'Start'),
-            ...col.date('scheduledEnd', 'End')
-        ]
     };
 
 })();

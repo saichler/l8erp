@@ -23,10 +23,7 @@ window.Layer8DReferenceRegistryMFG = {
     // MFG - Engineering Models
     // ========================================
     ...refMfg.simple('MfgBom', 'bomId', 'bomNumber', 'BOM'),
-    ...refMfg.idOnly('MfgBomLine', 'lineId'),
     ...refMfg.simple('MfgRouting', 'routingId', 'routingNumber', 'Routing'),
-    ...refMfg.idOnly('MfgRoutingOperation', 'operationId'),
-    ...refMfg.idOnly('MfgEco', 'ecoId'),
 
     // ========================================
     // MFG - Shop Floor Models
@@ -40,32 +37,23 @@ window.Layer8DReferenceRegistryMFG = {
     // MFG - Production Models
     // ========================================
     ...refMfg.simple('MfgWorkOrder', 'workOrderId', 'workOrderNumber', 'Work Order'),
-    ...refMfg.idOnly('MfgWorkOrderOperation', 'operationId'),
-    ...refMfg.simple('MfgBatch', 'batchId', 'batchNumber', 'Batch'),
 
     // ========================================
     // MFG - Quality Models
     // ========================================
     ...refMfg.simple('MfgQualityPlan', 'planId', 'planNumber', 'Quality Plan'),
-    ...refMfg.idOnly('MfgQualityPlanItem', 'itemId'),
-    ...refMfg.simple('MfgInspection', 'inspectionId', 'inspectionNumber', 'Inspection'),
-    ...refMfg.idOnly('MfgInspectionResult', 'resultId'),
-    ...refMfg.simple('MfgNcr', 'ncrId', 'ncrNumber', 'NCR'),
+    ...refMfg.simple('MfgQualityInspection', 'inspectionId', 'inspectionNumber', 'Inspection'),
+    ...refMfg.simple('MfgNCR', 'ncrId', 'ncrNumber', 'NCR'),
 
     // ========================================
     // MFG - Planning Models
     // ========================================
     ...refMfg.idOnly('MfgMrpRun', 'runId'),
-    ...refMfg.idOnly('MfgMrpRequirement', 'requirementId'),
-    ...refMfg.idOnly('MfgScheduleLine', 'lineId'),
 
     // ========================================
     // MFG - Costing Models
     // ========================================
-    ...refMfg.simple('MfgCostElement', 'elementId', 'name', 'Cost Element'),
     ...refMfg.idOnly('MfgCostRollup', 'rollupId'),
-    ...refMfg.idOnly('MfgCostVariance', 'varianceId'),
-    ...refMfg.idOnly('MfgOverheadAllocation', 'allocationId'),
 
     // ========================================
     // MFG - Additional Engineering Models
@@ -83,10 +71,4 @@ window.Layer8DReferenceRegistryMFG = {
     // ========================================
     ...refMfg.simple('MfgProductionOrder', 'prodOrderId', 'orderNumber', 'Production Order'),
 
-    // ========================================
-    // MFG - Additional Quality Models
-    // ========================================
-    ...refMfg.idOnly('MfgInspectionPoint', 'pointId'),
-    ...refMfg.simple('MfgNCR', 'ncrId', 'ncrNumber', 'NCR'),
-    ...refMfg.simple('MfgQualityInspection', 'inspectionId', 'inspectionNumber', 'Quality Inspection')
 };

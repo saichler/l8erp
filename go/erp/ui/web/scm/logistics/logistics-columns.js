@@ -62,22 +62,6 @@ limitations under the License.
             ...col.custom('status', 'Status', (item) => render.taskStatus(item.status))
         ],
 
-        ScmDeliveryProof: [
-            ...col.id('proofId'),
-            ...col.col('shipmentId', 'Shipment'),
-            ...col.date('deliveryDate', 'Delivered'),
-            ...col.col('receivedBy', 'Received By'),
-            ...col.custom('status', 'Status', (item) => render.taskStatus(item.status))
-        ],
-
-        ScmFreightAudit: [
-            ...col.id('auditId'),
-            ...col.basic([['shipmentId', 'Shipment'], ['carrierId', 'Carrier']]),
-            ...col.money('invoicedAmount', 'Invoiced'),
-            ...col.money('actualAmount', 'Actual'),
-            ...col.money('variance', 'Variance')
-        ],
-
         ScmReturnAuthorization: [
             ...col.id('rmaId'),
             ...col.basic([['rmaNumber', 'RMA #'], ['customerId', 'Customer']]),

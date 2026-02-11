@@ -32,14 +32,6 @@ limitations under the License.
             ...col.col('revision', 'Rev'),
             ...col.date('effectiveDate', 'Effective')
         ],
-        MfgInspectionPoint: [
-            ...col.id('pointId'),
-            ...col.col('planId', 'Plan'),
-            ...col.col('name', 'Name'),
-            ...col.enum('inspectionType', 'Type', null, render.inspectionType),
-            ...col.col('sequence', 'Seq #'),
-            ...col.col('characteristic', 'Characteristic')
-        ],
         MfgQualityInspection: [
             ...col.id('inspectionId'),
             ...col.col('inspectionNumber', 'Insp #'),
@@ -47,14 +39,6 @@ limitations under the License.
             ...col.col('planId', 'Plan'),
             ...col.date('inspectionDate', 'Date'),
             ...col.enum('overallResult', 'Result', null, render.inspectionResult)
-        ],
-        MfgTestResult: [
-            ...col.id('resultId'),
-            ...col.col('inspectionId', 'Inspection'),
-            ...col.col('pointId', 'Point'),
-            ...col.col('measuredValue', 'Measured'),
-            ...col.col('textValue', 'Text Value'),
-            ...col.enum('result', 'Result', null, render.inspectionResult)
         ],
         MfgNCR: [
             ...col.id('ncrId'),
@@ -65,14 +49,6 @@ limitations under the License.
             ...col.date('reportedDate', 'Reported Date'),
             ...col.enum('status', 'Status', null, render.ncrStatus)
         ],
-        MfgNCRAction: [
-            ...col.id('actionId'),
-            ...col.col('ncrId', 'NCR'),
-            ...col.col('actionType', 'Type'),
-            ...col.col('assignedTo', 'Assigned To'),
-            ...col.date('dueDate', 'Due Date'),
-            ...col.date('completedDate', 'Completed')
-        ]
     };
 
 })();

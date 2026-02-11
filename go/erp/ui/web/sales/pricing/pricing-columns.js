@@ -52,44 +52,6 @@ limitations under the License.
             }
         ],
 
-        SalesPriceListEntry: [
-            { key: 'entryId', label: 'ID', sortKey: 'entryId', filterKey: 'entryId' },
-            { key: 'priceListId', label: 'Price List', sortKey: 'priceListId', filterKey: 'priceListId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            {
-                key: 'unitPrice',
-                label: 'Unit Price',
-                sortKey: 'unitPrice',
-                render: (item) => renderMoney(item.unitPrice)
-            },
-            { key: 'unitOfMeasure', label: 'UOM', sortKey: 'unitOfMeasure' },
-            { key: 'minimumQuantity', label: 'Min Qty', sortKey: 'minimumQuantity' }
-        ],
-
-        SalesCustomerPrice: [
-            { key: 'customerPriceId', label: 'ID', sortKey: 'customerPriceId', filterKey: 'customerPriceId' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            {
-                key: 'unitPrice',
-                label: 'Price',
-                sortKey: 'unitPrice',
-                render: (item) => renderMoney(item.unitPrice)
-            },
-            {
-                key: 'effectiveDate',
-                label: 'Effective',
-                sortKey: 'effectiveDate',
-                render: (item) => renderDate(item.effectiveDate)
-            },
-            {
-                key: 'expiryDate',
-                label: 'Expires',
-                sortKey: 'expiryDate',
-                render: (item) => renderDate(item.expiryDate)
-            }
-        ],
-
         SalesDiscountRule: [
             { key: 'ruleId', label: 'ID', sortKey: 'ruleId', filterKey: 'ruleId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
@@ -125,20 +87,6 @@ limitations under the License.
                 label: 'End',
                 sortKey: 'endDate',
                 render: (item) => renderDate(item.endDate)
-            }
-        ],
-
-        SalesQuantityBreak: [
-            { key: 'breakId', label: 'ID', sortKey: 'breakId', filterKey: 'breakId' },
-            { key: 'priceListId', label: 'Price List', sortKey: 'priceListId', filterKey: 'priceListId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'fromQuantity', label: 'From Qty', sortKey: 'fromQuantity' },
-            { key: 'toQuantity', label: 'To Qty', sortKey: 'toQuantity' },
-            {
-                key: 'unitPrice',
-                label: 'Price',
-                sortKey: 'unitPrice',
-                render: (item) => renderMoney(item.unitPrice)
             }
         ]
     };

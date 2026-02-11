@@ -32,16 +32,6 @@ limitations under the License.
             ...col.money('creditLimit', 'Credit Limit')
         ],
 
-        CustomerContact: [
-            ...col.id('contactId'),
-            ...col.col('customerId', 'Customer'),
-            ...col.col('firstName', 'First Name'),
-            ...col.col('lastName', 'Last Name'),
-            ...col.col('email', 'Email'),
-            ...col.col('phone', 'Phone'),
-            ...col.boolean('isPrimary', 'Primary')
-        ],
-
         SalesInvoice: [
             ...col.id('invoiceId'),
             ...col.col('invoiceNumber', 'Invoice #'),
@@ -52,15 +42,6 @@ limitations under the License.
             ...col.status('status', 'Status', enums.INVOICE_STATUS_VALUES, render.invoiceStatus)
         ],
 
-        SalesInvoiceLine: [
-            ...col.id('lineId'),
-            ...col.col('invoiceId', 'Invoice'),
-            ...col.col('description', 'Description'),
-            ...col.col('quantity', 'Quantity'),
-            ...col.money('unitPrice', 'Unit Price'),
-            ...col.money('lineAmount', 'Line Amount')
-        ],
-
         CustomerPayment: [
             ...col.id('paymentId'),
             ...col.col('customerId', 'Customer'),
@@ -68,13 +49,6 @@ limitations under the License.
             ...col.money('amount', 'Amount'),
             ...col.enum('paymentMethod', 'Method', null, render.paymentMethod),
             ...col.status('status', 'Status', enums.PAYMENT_STATUS_VALUES, render.paymentStatus)
-        ],
-
-        PaymentApplication: [
-            ...col.id('applicationId'),
-            ...col.col('paymentId', 'Payment'),
-            ...col.col('invoiceId', 'Invoice'),
-            ...col.money('appliedAmount', 'Applied Amount')
         ],
 
         CreditMemo: [
@@ -96,8 +70,8 @@ limitations under the License.
     };
 
     MobileAccountsReceivable.primaryKeys = {
-        Customer: 'customerId', CustomerContact: 'contactId', SalesInvoice: 'invoiceId',
-        SalesInvoiceLine: 'lineId', CustomerPayment: 'paymentId', PaymentApplication: 'applicationId',
+        Customer: 'customerId', SalesInvoice: 'invoiceId',
+        CustomerPayment: 'paymentId',
         CreditMemo: 'creditMemoId', DunningLetter: 'letterId'
     };
 

@@ -27,20 +27,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('totalAmount', 'Total Amount'),
                 ...f.money('billedAmount', 'Billed Amount'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        SalesBillingMilestone: f.form('Billing Milestone', [
-            f.section('Milestone Details', [
-                ...f.text('name', 'Name', true),
-                ...f.reference('scheduleId', 'Billing Schedule', 'SalesBillingSchedule', true),
-                ...f.textarea('description', 'Description'),
-                ...f.date('targetDate', 'Target Date', true),
-                ...f.date('actualDate', 'Actual Date'),
-                ...f.select('status', 'Status', enums.MILESTONE_STATUS),
-                ...f.money('amount', 'Amount', true),
-                ...f.number('percentage', 'Percentage'),
-                ...f.reference('invoiceId', 'Invoice', 'SalesInvoice')
+            ]),
+            f.section('Milestones', [
+                ...f.inlineTable('milestones', 'Billing Milestones', [
+                    { key: 'milestoneId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'targetDate', label: 'Target Date', type: 'date' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.MILESTONE_STATUS },
+                    { key: 'amount', label: 'Amount', type: 'money' },
+                    { key: 'percentage', label: '%', type: 'number' }
+                ])
             ])
         ]),
 
@@ -61,7 +57,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
     SalesBilling.primaryKeys = {
         SalesBillingSchedule: 'scheduleId',
-        SalesBillingMilestone: 'milestoneId',
         SalesRevenueSchedule: 'scheduleId'
     };
 

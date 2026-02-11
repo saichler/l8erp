@@ -33,15 +33,6 @@ limitations under the License.
             ...col.date('plannedStartDate', 'Planned Start'),
             ...col.enum('status', 'Status', null, render.workOrderStatus)
         ],
-        MfgWorkOrderOp: [
-            ...col.id('operationId'),
-            ...col.col('workOrderId', 'Work Order'),
-            ...col.col('operationNumber', 'Op #'),
-            ...col.col('workCenterId', 'Work Center'),
-            ...col.col('setupTimePlanned', 'Setup (hrs)'),
-            ...col.col('runTimePlanned', 'Run (hrs)'),
-            ...col.enum('status', 'Status', null, render.operationStatus)
-        ],
         MfgProductionOrder: [
             ...col.id('prodOrderId'),
             ...col.col('orderNumber', 'Order #'),
@@ -50,28 +41,6 @@ limitations under the License.
             ...col.date('requiredDate', 'Required'),
             ...col.enum('status', 'Status', null, render.workOrderStatus)
         ],
-        MfgProdOrderLine: [
-            ...col.id('lineId'),
-            ...col.col('prodOrderId', 'Prod Order'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('quantityOrdered', 'Qty Ordered'),
-            ...col.col('quantityCompleted', 'Qty Completed')
-        ],
-        MfgProdBatch: [
-            ...col.id('batchId'),
-            ...col.col('batchNumber', 'Batch #'),
-            ...col.col('workOrderId', 'Work Order'),
-            ...col.col('quantity', 'Quantity'),
-            ...col.date('productionDate', 'Production Date'),
-            ...col.enum('qualityStatus', 'Quality Status', null, render.batchStatus)
-        ],
-        MfgProdConsumption: [
-            ...col.id('consumptionId'),
-            ...col.col('workOrderId', 'Work Order'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('quantityConsumed', 'Qty Consumed'),
-            ...col.date('consumptionDate', 'Date')
-        ]
     };
 
 })();

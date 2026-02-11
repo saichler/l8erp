@@ -42,32 +42,6 @@ limitations under the License.
             ...col.boolean('isActive', 'Active')
         ],
 
-        ScmStockMovement: [
-            ...col.id('movementId'),
-            ...col.col('itemId', 'Item'),
-            ...col.status('movementType', 'Type', enums.MOVEMENT_TYPE_VALUES, render.movementType),
-            ...col.col('quantity', 'Qty'),
-            ...col.date('movementDate', 'Date'),
-            ...col.col('warehouseId', 'Warehouse')
-        ],
-
-        ScmLotNumber: [
-            ...col.id('lotId'),
-            ...col.col('lotNumber', 'Lot #'),
-            ...col.col('itemId', 'Item'),
-            ...col.date('manufactureDate', 'Mfg Date'),
-            ...col.date('expiryDate', 'Expiry'),
-            ...col.col('quantity', 'Qty')
-        ],
-
-        ScmSerialNumber: [
-            ...col.id('serialId'),
-            ...col.col('serialNumber', 'Serial #'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('lotId', 'Lot'),
-            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
-        ],
-
         ScmCycleCount: [
             ...col.id('cycleCountId'),
             ...col.col('warehouseId', 'Warehouse'),
@@ -77,28 +51,10 @@ limitations under the License.
             ...col.col('discrepancies', 'Discrepancies')
         ],
 
-        ScmReorderPoint: [
-            ...col.id('reorderPointId'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('warehouseId', 'Warehouse'),
-            ...col.col('minimumQuantity', 'Min Qty'),
-            ...col.col('reorderQuantity', 'Reorder Qty'),
-            ...col.boolean('isActive', 'Active')
-        ],
-
-        ScmInventoryValuation: [
-            ...col.id('valuationId'),
-            ...col.col('itemId', 'Item'),
-            ...col.status('valuationMethod', 'Method', enums.VALUATION_METHOD_VALUES, render.valuationMethod),
-            ...col.date('valuationDate', 'Date'),
-            ...col.money('totalValue', 'Total Value')
-        ]
     };
 
     MobileInventory.primaryKeys = {
-        ScmItem: 'itemId', ScmItemCategory: 'categoryId', ScmStockMovement: 'movementId',
-        ScmLotNumber: 'lotId', ScmSerialNumber: 'serialId', ScmCycleCount: 'cycleCountId',
-        ScmReorderPoint: 'reorderPointId', ScmInventoryValuation: 'valuationId'
+        ScmItem: 'itemId', ScmItemCategory: 'categoryId', ScmCycleCount: 'cycleCountId'
     };
 
 })();

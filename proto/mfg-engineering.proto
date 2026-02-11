@@ -43,6 +43,7 @@ message MfgBom {
   string notes = 12;
   map<string, string> custom_fields = 13;
   erp.AuditInfo audit_info = 14;
+  repeated MfgBomLine lines = 15;
 }
 
 message MfgBomList {
@@ -50,7 +51,6 @@ message MfgBomList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // MfgBomLine represents a component line in a BOM
 message MfgBomLine {
   string line_id = 1;
@@ -68,11 +68,6 @@ message MfgBomLine {
   int64 expiry_date = 13;
   string notes = 14;
   erp.AuditInfo audit_info = 15;
-}
-
-message MfgBomLineList {
-  repeated MfgBomLine list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // ============================================================================
@@ -95,6 +90,7 @@ message MfgRouting {
   string notes = 11;
   map<string, string> custom_fields = 12;
   erp.AuditInfo audit_info = 13;
+  repeated MfgRoutingOperation operations = 14;
 }
 
 message MfgRoutingList {
@@ -102,7 +98,6 @@ message MfgRoutingList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // MfgRoutingOperation represents an operation step in a routing
 message MfgRoutingOperation {
   string operation_id = 1;
@@ -122,11 +117,6 @@ message MfgRoutingOperation {
   string quality_plan_id = 15;           // cross-ref: MfgQualityPlan
   string notes = 16;
   erp.AuditInfo audit_info = 17;
-}
-
-message MfgRoutingOperationList {
-  repeated MfgRoutingOperation list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // ============================================================================
@@ -154,6 +144,7 @@ message MfgEngChangeOrder {
   string notes = 16;
   map<string, string> custom_fields = 17;
   erp.AuditInfo audit_info = 18;
+  repeated MfgEngChangeDetail details = 19;
 }
 
 message MfgEngChangeOrderList {
@@ -161,7 +152,6 @@ message MfgEngChangeOrderList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // MfgEngChangeDetail represents a detail line of an engineering change
 message MfgEngChangeDetail {
   string detail_id = 1;
@@ -175,9 +165,4 @@ message MfgEngChangeDetail {
   string new_revision = 9;
   string notes = 10;
   erp.AuditInfo audit_info = 11;
-}
-
-message MfgEngChangeDetailList {
-  repeated MfgEngChangeDetail list = 1;
-  l8api.L8MetaData metadata = 2;
 }

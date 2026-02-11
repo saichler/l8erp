@@ -92,35 +92,6 @@ limitations under the License.
             }
         ],
 
-        TaxReturn: [
-            { key: 'returnId', label: 'ID', sortKey: 'returnId', filterKey: 'returnId' },
-            {
-                key: 'taxType',
-                label: 'Tax Type',
-                sortKey: 'taxType',
-                render: (item) => render.taxType(item.taxType)
-            },
-            { key: 'fiscalPeriodId', label: 'Fiscal Period', sortKey: 'fiscalPeriodId', filterKey: 'fiscalPeriodId' },
-            {
-                key: 'dueDate',
-                label: 'Due Date',
-                sortKey: 'dueDate',
-                render: (item) => renderDate(item.dueDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.taxReturnStatus(item.status)
-            },
-            {
-                key: 'taxAmount',
-                label: 'Tax Amount',
-                sortKey: 'taxAmount',
-                render: (item) => renderMoney(item.taxAmount)
-            }
-        ],
-
         TaxExemption: [
             { key: 'exemptionId', label: 'ID', sortKey: 'exemptionId', filterKey: 'exemptionId' },
             { key: 'exemptionNumber', label: 'Exemption #', sortKey: 'exemptionNumber', filterKey: 'exemptionNumber' },
@@ -137,30 +108,6 @@ limitations under the License.
                 label: 'Expiration Date',
                 sortKey: 'expirationDate',
                 render: (item) => renderDate(item.expirationDate)
-            }
-        ],
-
-        WithholdingTaxConfig: [
-            { key: 'configId', label: 'ID', sortKey: 'configId', filterKey: 'configId' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'taxCodeId', label: 'Tax Code', sortKey: 'taxCodeId', filterKey: 'taxCodeId' },
-            {
-                key: 'withholdingRate',
-                label: 'Rate',
-                sortKey: 'withholdingRate',
-                render: (item) => renderPercentage(item.withholdingRate)
-            },
-            {
-                key: 'thresholdAmount',
-                label: 'Threshold',
-                sortKey: 'thresholdAmount',
-                render: (item) => renderMoney(item.thresholdAmount)
-            },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
             }
         ]
     };

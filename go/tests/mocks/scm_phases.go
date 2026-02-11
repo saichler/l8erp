@@ -56,11 +56,7 @@ func generateScmPhase2(client *HCMClient, store *MockDataStore) error {
 		return err
 	}
 
-	// Generate Bins
-	bins := generateBins(store)
-	if err := runOp(client, "Bins", "/erp/50/Bin", &scm.ScmBinList{List: bins}, extractIDs(bins, func(e *scm.ScmBin) string { return e.BinId }), &store.BinIDs); err != nil {
-		return err
-	}
+	// Bins are embedded in Warehouses (Phase 1), BinIDs already populated
 
 	// Generate Freight Rates
 	freightRates := generateFreightRates(store)
@@ -79,11 +75,7 @@ func generateScmPhase3(client *HCMClient, store *MockDataStore) error {
 		return err
 	}
 
-	// Generate Requisition Lines
-	reqLines := generateRequisitionLines(store)
-	if err := runOp(client, "Requisition Lines", "/erp/50/ReqLine", &scm.ScmRequisitionLineList{List: reqLines}, extractIDs(reqLines, func(e *scm.ScmRequisitionLine) string { return e.LineId }), &store.RequisitionLineIDs); err != nil {
-		return err
-	}
+	// Requisition Lines are embedded in PurchaseRequisitions above
 
 	// Generate RFQs
 	rfqs := generateRFQs(store)
@@ -106,57 +98,57 @@ func generateScmPhase3(client *HCMClient, store *MockDataStore) error {
 	return nil
 }
 
-// SCM Phase 4: Purchase Orders
+// SCM Phase 4: Purchase Orders (with embedded PO Lines)
 func generateScmPhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate Purchase Orders
 	purchaseOrders := generateSCMPurchaseOrders(store)
-	if err := runOp(client, "Purchase Orders", "/erp/50/PurchOrder", &scm.ScmPurchaseOrderList{List: purchaseOrders}, extractIDs(purchaseOrders, func(e *scm.ScmPurchaseOrder) string { return e.PurchaseOrderId }), &store.SCMPurchaseOrderIDs); err != nil {
-		return err
+
+	// Generate PO Lines and embed in POs (3 lines per PO)
+	poLines := generatePOLines(store)
+	for i, line := range poLines {
+		poIdx := i / 3 // 3 lines per PO
+		if poIdx < len(purchaseOrders) {
+			purchaseOrders[poIdx].Lines = append(purchaseOrders[poIdx].Lines, line)
+		}
 	}
 
-	// Generate PO Lines
-	poLines := generatePOLines(store)
-	if err := runOp(client, "PO Lines", "/erp/50/POLine", &scm.ScmPurchaseOrderLineList{List: poLines}, extractIDs(poLines, func(e *scm.ScmPurchaseOrderLine) string { return e.LineId }), &store.POLineIDs); err != nil {
+	if err := runOp(client, "Purchase Orders", "/erp/50/PurchOrder", &scm.ScmPurchaseOrderList{List: purchaseOrders}, extractIDs(purchaseOrders, func(e *scm.ScmPurchaseOrder) string { return e.PurchaseOrderId }), &store.SCMPurchaseOrderIDs); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-// SCM Phase 5: Warehouse Operations
+// SCM Phase 5: Warehouse Operations (with embedded tasks)
 func generateScmPhase5(client *HCMClient, store *MockDataStore) error {
-	// Generate Receiving Orders
+	// Generate Receiving Orders with embedded putaway tasks
 	receivingOrders := generateReceivingOrders(store)
+	putawayTasks := generatePutawayTasks(store)
+	for i, task := range putawayTasks {
+		roIdx := i % len(receivingOrders)
+		receivingOrders[roIdx].PutawayTasks = append(receivingOrders[roIdx].PutawayTasks, task)
+	}
 	if err := runOp(client, "Receiving Orders", "/erp/50/RecvOrder", &scm.ScmReceivingOrderList{List: receivingOrders}, extractIDs(receivingOrders, func(e *scm.ScmReceivingOrder) string { return e.ReceivingOrderId }), &store.ReceivingOrderIDs); err != nil {
 		return err
 	}
 
-	// Generate Putaway Tasks
-	putawayTasks := generatePutawayTasks(store)
-	if err := runOp(client, "Putaway Tasks", "/erp/50/PutAway", &scm.ScmPutawayTaskList{List: putawayTasks}, extractIDs(putawayTasks, func(e *scm.ScmPutawayTask) string { return e.TaskId }), &store.PutawayTaskIDs); err != nil {
-		return err
-	}
-
-	// Generate Pick Tasks
-	pickTasks := generatePickTasks(store)
-	if err := runOp(client, "Pick Tasks", "/erp/50/PickTask", &scm.ScmPickTaskList{List: pickTasks}, extractIDs(pickTasks, func(e *scm.ScmPickTask) string { return e.TaskId }), &store.PickTaskIDs); err != nil {
-		return err
-	}
-
-	// Generate Pack Tasks
-	packTasks := generatePackTasks(store)
-	if err := runOp(client, "Pack Tasks", "/erp/50/PackTask", &scm.ScmPackTaskList{List: packTasks}, extractIDs(packTasks, func(e *scm.ScmPackTask) string { return e.TaskId }), &store.PackTaskIDs); err != nil {
-		return err
-	}
-
-	// Generate Ship Tasks
-	shipTasks := generateShipTasks(store)
-	if err := runOp(client, "Ship Tasks", "/erp/50/ShipTask", &scm.ScmShipTaskList{List: shipTasks}, extractIDs(shipTasks, func(e *scm.ScmShipTask) string { return e.TaskId }), &store.ShipTaskIDs); err != nil {
-		return err
-	}
-
-	// Generate Wave Plans
+	// Generate Wave Plans with embedded pick/pack/ship tasks
 	wavePlans := generateWavePlans(store)
+	pickTasks := generatePickTasks(store)
+	for i, task := range pickTasks {
+		wpIdx := i % len(wavePlans)
+		wavePlans[wpIdx].PickTasks = append(wavePlans[wpIdx].PickTasks, task)
+	}
+	packTasks := generatePackTasks(store)
+	for i, task := range packTasks {
+		wpIdx := i % len(wavePlans)
+		wavePlans[wpIdx].PackTasks = append(wavePlans[wpIdx].PackTasks, task)
+	}
+	shipTasks := generateShipTasks(store)
+	for i, task := range shipTasks {
+		wpIdx := i % len(wavePlans)
+		wavePlans[wpIdx].ShipTasks = append(wavePlans[wpIdx].ShipTasks, task)
+	}
 	if err := runOp(client, "Wave Plans", "/erp/50/WavePlan", &scm.ScmWavePlanList{List: wavePlans}, extractIDs(wavePlans, func(e *scm.ScmWavePlan) string { return e.WavePlanId }), &store.WavePlanIDs); err != nil {
 		return err
 	}

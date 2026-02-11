@@ -62,25 +62,6 @@ limitations under the License.
             { key: 'description', label: 'Description', sortKey: 'description' }
         ],
 
-        SalesTerritoryAssign: [
-            { key: 'assignmentId', label: 'ID', sortKey: 'assignmentId', filterKey: 'assignmentId' },
-            { key: 'territoryId', label: 'Territory', sortKey: 'territoryId', filterKey: 'territoryId' },
-            { key: 'salespersonId', label: 'Salesperson', sortKey: 'salespersonId', filterKey: 'salespersonId' },
-            {
-                key: 'startDate',
-                label: 'Start',
-                sortKey: 'startDate',
-                render: (item) => renderDate(item.startDate)
-            },
-            {
-                key: 'endDate',
-                label: 'End',
-                sortKey: 'endDate',
-                render: (item) => renderDate(item.endDate)
-            },
-            { key: 'isPrimary', label: 'Primary', sortKey: 'isPrimary' }
-        ],
-
         SalesCommissionPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
@@ -98,25 +79,6 @@ limitations under the License.
                 render: (item) => renderDate(item.effectiveDate)
             },
             { key: 'isActive', label: 'Active', sortKey: 'isActive' }
-        ],
-
-        SalesCommissionCalc: [
-            { key: 'calcId', label: 'ID', sortKey: 'calcId', filterKey: 'calcId' },
-            { key: 'salespersonId', label: 'Salesperson', sortKey: 'salespersonId', filterKey: 'salespersonId' },
-            { key: 'planId', label: 'Plan', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
-            {
-                key: 'salesAmount',
-                label: 'Sale Amount',
-                sortKey: 'salesAmount',
-                render: (item) => renderMoney(item.salesAmount)
-            },
-            {
-                key: 'commissionAmount',
-                label: 'Commission',
-                sortKey: 'commissionAmount',
-                render: (item) => renderMoney(item.commissionAmount)
-            }
         ],
 
         SalesForecast: [

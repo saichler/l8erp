@@ -78,7 +78,6 @@ message MfgCostRollupList {
 // ACTUAL COST MESSAGES
 // ============================================================================
 
-// @PrimeObject
 // MfgActualCost represents actual costs for a work order
 message MfgActualCost {
   string actual_cost_id = 1;
@@ -96,12 +95,6 @@ message MfgActualCost {
   erp.AuditInfo audit_info = 13;
 }
 
-message MfgActualCostList {
-  repeated MfgActualCost list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // MfgCostVariance represents cost variance analysis
 message MfgCostVariance {
   string variance_id = 1;
@@ -117,11 +110,6 @@ message MfgCostVariance {
   string analyzed_by = 11;               // cross-ref: HCM Employee
   string notes = 12;
   erp.AuditInfo audit_info = 13;
-}
-
-message MfgCostVarianceList {
-  repeated MfgCostVariance list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // ============================================================================
@@ -145,6 +133,7 @@ message MfgOverhead {
   int64 expiry_date = 12;
   string notes = 13;
   erp.AuditInfo audit_info = 14;
+  repeated MfgOverheadAlloc allocations = 15;
 }
 
 message MfgOverheadList {
@@ -152,7 +141,6 @@ message MfgOverheadList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // MfgOverheadAlloc represents overhead allocation to a work order
 message MfgOverheadAlloc {
   string allocation_id = 1;
@@ -166,9 +154,4 @@ message MfgOverheadAlloc {
   string period = 9;                     // YYYY-MM format
   string notes = 10;
   erp.AuditInfo audit_info = 11;
-}
-
-message MfgOverheadAllocList {
-  repeated MfgOverheadAlloc list = 1;
-  l8api.L8MetaData metadata = 2;
 }

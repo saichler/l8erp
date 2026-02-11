@@ -32,14 +32,6 @@ limitations under the License.
             ...col.money('estimatedTotal', 'Est. Total')
         ],
 
-        ScmRequisitionLine: [
-            ...col.id('lineId'),
-            ...col.basic([['requisitionId', 'Requisition'], ['itemId', 'Item']]),
-            ...col.col('quantity', 'Qty'),
-            ...col.money('estimatedUnitPrice', 'Unit Price'),
-            ...col.date('deliveryDate', 'Delivery')
-        ],
-
         ScmRequestForQuotation: [
             ...col.id('rfqId'),
             ...col.col('rfqNumber', 'RFQ #'),
@@ -54,14 +46,6 @@ limitations under the License.
             ...col.date('orderDate', 'Order Date'),
             ...col.custom('status', 'Status', (item) => render.poStatus(item.status)),
             ...col.money('totalAmount', 'Total')
-        ],
-
-        ScmPurchaseOrderLine: [
-            ...col.id('lineId'),
-            ...col.basic([['purchaseOrderId', 'PO'], ['itemId', 'Item']]),
-            ...col.col('quantity', 'Qty'),
-            ...col.money('unitPrice', 'Unit Price'),
-            ...col.money('totalPrice', 'Total')
         ],
 
         ScmBlanketOrder: [

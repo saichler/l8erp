@@ -26,77 +26,59 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('carrierId', 'Carrier', 'ScmCarrier'),
                 ...f.text('shippingMethod', 'Shipping Method'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        SalesDeliveryLine: f.form('Delivery Line', [
-            f.section('Line Details', [
-                ...f.reference('deliveryOrderId', 'Delivery Order', 'SalesDeliveryOrder', true),
-                ...f.reference('salesOrderLineId', 'Order Line', 'SalesOrderLine'),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.text('unitOfMeasure', 'UOM'),
-                ...f.text('lotNumber', 'Lot #'),
-                ...f.text('serialNumber', 'Serial #')
-            ])
-        ]),
-
-        SalesPickRelease: f.form('Pick Release', [
-            f.section('Release Details', [
-                ...f.reference('deliveryOrderId', 'Delivery Order', 'SalesDeliveryOrder', true),
-                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse', true),
-                ...f.date('releaseDate', 'Release Date', true),
-                ...f.select('status', 'Status', enums.PICK_STATUS),
-                ...f.number('priority', 'Priority'),
-                ...f.reference('assignedTo', 'Assigned To', 'Employee'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        SalesPackingSlip: f.form('Packing Slip', [
-            f.section('Slip Details', [
-                ...f.text('slipNumber', 'Slip #', true),
-                ...f.reference('deliveryOrderId', 'Delivery Order', 'SalesDeliveryOrder', true),
-                ...f.date('packDate', 'Pack Date', true),
-                ...f.reference('packedBy', 'Packed By', 'Employee'),
-                ...f.number('totalPackages', 'Total Packages'),
-                ...f.number('totalWeight', 'Total Weight'),
-                ...f.text('weightUnit', 'Weight Unit'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        SalesShippingDoc: f.form('Shipping Document', [
-            f.section('Document Details', [
-                ...f.text('docNumber', 'Document #', true),
-                ...f.text('docType', 'Document Type', true),
-                ...f.reference('deliveryOrderId', 'Delivery Order', 'SalesDeliveryOrder', true),
-                ...f.date('issueDate', 'Issue Date'),
-                ...f.text('issuedBy', 'Issued By'),
-                ...f.text('filePath', 'File Path'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        SalesDeliveryConfirm: f.form('Delivery Confirmation', [
-            f.section('Confirmation Details', [
-                ...f.reference('deliveryOrderId', 'Delivery Order', 'SalesDeliveryOrder', true),
-                ...f.date('confirmDate', 'Confirm Date', true),
-                ...f.text('receivedBy', 'Received By'),
-                ...f.text('signaturePath', 'Signature Path'),
-                ...f.checkbox('isDamaged', 'Damaged'),
-                ...f.textarea('notes', 'Notes')
+            ]),
+            f.section('Delivery Lines', [
+                ...f.inlineTable('lines', 'Delivery Lines', [
+                    { key: 'lineId', label: 'Line ID', hidden: true },
+                    { key: 'salesOrderLineId', label: 'Order Line', type: 'text' },
+                    { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                    { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                    { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
+                    { key: 'lotNumber', label: 'Lot #', type: 'text' },
+                    { key: 'serialNumber', label: 'Serial #', type: 'text' }
+                ])
+            ]),
+            f.section('Pick Releases', [
+                ...f.inlineTable('pickReleases', 'Pick Releases', [
+                    { key: 'pickReleaseId', label: 'ID', hidden: true },
+                    { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
+                    { key: 'releaseDate', label: 'Released', type: 'date' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.PICK_STATUS },
+                    { key: 'notes', label: 'Notes', type: 'text' }
+                ])
+            ]),
+            f.section('Packing Slips', [
+                ...f.inlineTable('packingSlips', 'Packing Slips', [
+                    { key: 'packingSlipId', label: 'ID', hidden: true },
+                    { key: 'slipNumber', label: 'Slip #', type: 'text' },
+                    { key: 'packDate', label: 'Pack Date', type: 'date' },
+                    { key: 'totalPackages', label: 'Packages', type: 'number' },
+                    { key: 'totalWeight', label: 'Weight', type: 'number' }
+                ])
+            ]),
+            f.section('Shipping Documents', [
+                ...f.inlineTable('shippingDocs', 'Shipping Documents', [
+                    { key: 'docId', label: 'ID', hidden: true },
+                    { key: 'docNumber', label: 'Doc #', type: 'text' },
+                    { key: 'docType', label: 'Type', type: 'text' },
+                    { key: 'issueDate', label: 'Issue Date', type: 'date' },
+                    { key: 'issuedBy', label: 'Issued By', type: 'text' }
+                ])
+            ]),
+            f.section('Confirmations', [
+                ...f.inlineTable('confirms', 'Delivery Confirmations', [
+                    { key: 'confirmId', label: 'ID', hidden: true },
+                    { key: 'confirmDate', label: 'Confirm Date', type: 'date' },
+                    { key: 'receivedBy', label: 'Received By', type: 'text' },
+                    { key: 'isDamaged', label: 'Damaged', type: 'checkbox' },
+                    { key: 'notes', label: 'Notes', type: 'text' }
+                ])
             ])
         ])
     };
 
     SalesShipping.primaryKeys = {
-        SalesDeliveryOrder: 'deliveryOrderId',
-        SalesDeliveryLine: 'lineId',
-        SalesPickRelease: 'pickReleaseId',
-        SalesPackingSlip: 'packingSlipId',
-        SalesShippingDoc: 'docId',
-        SalesDeliveryConfirm: 'confirmId'
+        SalesDeliveryOrder: 'deliveryOrderId'
     };
 
 })();

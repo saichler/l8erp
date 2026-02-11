@@ -24,6 +24,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('parentAccountId', 'Parent Account', 'Account'),
                 ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Balances', [
+                ...f.inlineTable('balances', 'Account Balances', [
+                    { key: 'balanceId', label: 'Balance ID', hidden: true },
+                    { key: 'fiscalPeriodId', label: 'Fiscal Period', type: 'text' },
+                    { key: 'periodDebit', label: 'Period Debit', type: 'money' },
+                    { key: 'periodCredit', label: 'Period Credit', type: 'money' }
+                ])
             ])
         ]),
 
@@ -33,18 +41,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('entryDate', 'Entry Date', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('status', 'Status', enums.JOURNAL_ENTRY_STATUS),
-                ...f.reference('fiscalPeriodId', 'Fiscal Period', 'FiscalPeriod'),
+                ...f.reference('fiscalPeriodId', 'Fiscal Period', 'FiscalYear'),
                 ...f.text('reference', 'Reference')
-            ])
-        ]),
-
-        JournalEntryLine: f.form('Journal Entry Line', [
-            f.section('Line Details', [
-                ...f.reference('journalEntryId', 'Journal Entry', 'JournalEntry', true),
-                ...f.reference('accountId', 'Account', 'Account', true),
-                ...f.money('debitAmount', 'Debit Amount'),
-                ...f.money('creditAmount', 'Credit Amount'),
-                ...f.textarea('description', 'Description')
+            ]),
+            f.section('Lines', [
+                ...f.inlineTable('lines', 'Journal Entry Lines', [
+                    { key: 'lineId', label: 'Line ID', hidden: true },
+                    { key: 'accountId', label: 'Account', type: 'text' },
+                    { key: 'description', label: 'Description', type: 'text' },
+                    { key: 'debitAmount', label: 'Debit', type: 'money' },
+                    { key: 'creditAmount', label: 'Credit', type: 'money' }
+                ])
             ])
         ]),
 
@@ -54,17 +61,25 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('startDate', 'Start Date', true),
                 ...f.date('endDate', 'End Date', true),
                 ...f.checkbox('isClosed', 'Closed')
-            ])
-        ]),
-
-        FiscalPeriod: f.form('Fiscal Period', [
-            f.section('Period Details', [
-                ...f.text('periodName', 'Period Name', true),
-                ...f.reference('fiscalYearId', 'Fiscal Year', 'FiscalYear', true),
-                ...f.number('periodNumber', 'Period Number', true),
-                ...f.date('startDate', 'Start Date', true),
-                ...f.date('endDate', 'End Date', true),
-                ...f.select('status', 'Status', enums.FISCAL_PERIOD_STATUS)
+            ]),
+            f.section('Periods', [
+                ...f.inlineTable('periods', 'Fiscal Periods', [
+                    { key: 'fiscalPeriodId', label: 'Period ID', hidden: true },
+                    { key: 'periodName', label: 'Period Name', type: 'text' },
+                    { key: 'periodNumber', label: 'Period #', type: 'number' },
+                    { key: 'startDate', label: 'Start Date', type: 'date' },
+                    { key: 'endDate', label: 'End Date', type: 'date' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.FISCAL_PERIOD_STATUS }
+                ])
+            ]),
+            f.section('Tax Returns', [
+                ...f.inlineTable('returns', 'Tax Returns', [
+                    { key: 'returnId', label: 'Return ID', hidden: true },
+                    { key: 'taxType', label: 'Tax Type', type: 'text' },
+                    { key: 'dueDate', label: 'Due Date', type: 'date' },
+                    { key: 'taxAmount', label: 'Tax Amount', type: 'money' },
+                    { key: 'status', label: 'Status', type: 'text' }
+                ])
             ])
         ]),
 
@@ -85,15 +100,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('rate', 'Rate', true),
                 ...f.date('effectiveDate', 'Effective Date', true),
                 ...f.date('endDate', 'End Date')
-            ])
-        ]),
-
-        AccountBalance: f.form('Account Balance', [
-            f.section('Balance Details', [
-                ...f.reference('accountId', 'Account', 'Account', true),
-                ...f.reference('fiscalPeriodId', 'Fiscal Period', 'FiscalPeriod', true),
-                ...f.money('periodDebit', 'Period Debit'),
-                ...f.money('periodCredit', 'Period Credit')
             ])
         ])
     };

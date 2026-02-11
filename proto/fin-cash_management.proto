@@ -45,6 +45,8 @@ message BankAccount {
   string notes = 14;
   map<string, string> custom_fields = 15;
   erp.AuditInfo audit_info = 16;
+  repeated BankTransaction transactions = 17;
+  repeated BankReconciliation reconciliations = 18;
 }
 
 message BankAccountList {
@@ -52,7 +54,6 @@ message BankAccountList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // BankTransaction represents a bank transaction
 message BankTransaction {
   string transaction_id = 1;
@@ -71,12 +72,6 @@ message BankTransaction {
   erp.AuditInfo audit_info = 14;
 }
 
-message BankTransactionList {
-  repeated BankTransaction list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // BankReconciliation represents a bank reconciliation
 message BankReconciliation {
   string reconciliation_id = 1;
@@ -95,11 +90,6 @@ message BankReconciliation {
   int64 reconciled_date = 14;
   string notes = 15;
   erp.AuditInfo audit_info = 16;
-}
-
-message BankReconciliationList {
-  repeated BankReconciliation list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject

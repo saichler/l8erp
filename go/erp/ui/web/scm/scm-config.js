@@ -11,10 +11,8 @@ Layer8ModuleConfigFactory.create({
             label: 'Procurement', icon: '📦',
             services: [
                 { key: 'purchase-requisitions', label: 'Requisitions', icon: '📋', endpoint: '/50/PurchReq', model: 'ScmPurchaseRequisition' },
-                { key: 'requisition-lines', label: 'Requisition Lines', icon: '📝', endpoint: '/50/ReqLine', model: 'ScmRequisitionLine' },
                 { key: 'rfqs', label: 'RFQs', icon: '📨', endpoint: '/50/RFQ', model: 'ScmRequestForQuotation' },
                 { key: 'purchase-orders', label: 'Purchase Orders', icon: '📄', endpoint: '/50/PurchOrder', model: 'ScmPurchaseOrder' },
-                { key: 'po-lines', label: 'PO Lines', icon: '📋', endpoint: '/50/POLine', model: 'ScmPurchaseOrderLine' },
                 { key: 'blanket-orders', label: 'Blanket Orders', icon: '📑', endpoint: '/50/BlnktOrder', model: 'ScmBlanketOrder' },
                 { key: 'supplier-scorecards', label: 'Scorecards', icon: '⭐', endpoint: '/50/SupplrCard', model: 'ScmSupplierScorecard' }
             ]
@@ -24,24 +22,14 @@ Layer8ModuleConfigFactory.create({
             services: [
                 { key: 'items', label: 'Items', icon: '📦', endpoint: '/50/Item', model: 'ScmItem' },
                 { key: 'item-categories', label: 'Categories', icon: '📁', endpoint: '/50/ItemCat', model: 'ScmItemCategory' },
-                { key: 'stock-movements', label: 'Stock Movements', icon: '🔄', endpoint: '/50/StockMove', model: 'ScmStockMovement' },
-                { key: 'lot-numbers', label: 'Lot Numbers', icon: '🏷️', endpoint: '/50/LotNumber', model: 'ScmLotNumber' },
-                { key: 'serial-numbers', label: 'Serial Numbers', icon: '🔢', endpoint: '/50/SerialNum', model: 'ScmSerialNumber' },
-                { key: 'cycle-counts', label: 'Cycle Counts', icon: '🔄', endpoint: '/50/CycleCount', model: 'ScmCycleCount' },
-                { key: 'reorder-points', label: 'Reorder Points', icon: '📊', endpoint: '/50/ReorderPt', model: 'ScmReorderPoint' },
-                { key: 'inventory-valuations', label: 'Valuations', icon: '💰', endpoint: '/50/InvValue', model: 'ScmInventoryValuation' }
+                { key: 'cycle-counts', label: 'Cycle Counts', icon: '🔄', endpoint: '/50/CycleCount', model: 'ScmCycleCount' }
             ]
         },
         'warehouse': {
             label: 'Warehouse', icon: '🏭',
             services: [
                 { key: 'warehouses', label: 'Warehouses', icon: '🏭', endpoint: '/50/Warehouse', model: 'ScmWarehouse' },
-                { key: 'bins', label: 'Bins', icon: '📍', endpoint: '/50/Bin', model: 'ScmBin' },
                 { key: 'receiving-orders', label: 'Receiving', icon: '📥', endpoint: '/50/RecvOrder', model: 'ScmReceivingOrder' },
-                { key: 'putaway-tasks', label: 'Put Away', icon: '📤', endpoint: '/50/PutAway', model: 'ScmPutawayTask' },
-                { key: 'pick-tasks', label: 'Pick Tasks', icon: '🔍', endpoint: '/50/PickTask', model: 'ScmPickTask' },
-                { key: 'pack-tasks', label: 'Pack Tasks', icon: '📦', endpoint: '/50/PackTask', model: 'ScmPackTask' },
-                { key: 'ship-tasks', label: 'Ship Tasks', icon: '🚚', endpoint: '/50/ShipTask', model: 'ScmShipTask' },
                 { key: 'wave-plans', label: 'Wave Plans', icon: '🌊', endpoint: '/50/WavePlan', model: 'ScmWavePlan' },
                 { key: 'dock-schedules', label: 'Dock Schedules', icon: '🚢', endpoint: '/50/DockSched', model: 'ScmDockSchedule' }
             ]
@@ -54,8 +42,6 @@ Layer8ModuleConfigFactory.create({
                 { key: 'shipments', label: 'Shipments', icon: '📦', endpoint: '/50/Shipment', model: 'ScmShipment' },
                 { key: 'routes', label: 'Routes', icon: '🗺️', endpoint: '/50/Route', model: 'ScmRoute' },
                 { key: 'load-plans', label: 'Load Plans', icon: '📋', endpoint: '/50/LoadPlan', model: 'ScmLoadPlan' },
-                { key: 'delivery-proofs', label: 'Delivery Proofs', icon: '✅', endpoint: '/50/DlvryProof', model: 'ScmDeliveryProof' },
-                { key: 'freight-audits', label: 'Freight Audits', icon: '🔍', endpoint: '/50/FrtAudit', model: 'ScmFreightAudit' },
                 { key: 'return-authorizations', label: 'Returns', icon: '↩️', endpoint: '/50/ReturnAuth', model: 'ScmReturnAuthorization' }
             ]
         },
@@ -66,8 +52,7 @@ Layer8ModuleConfigFactory.create({
                 { key: 'forecast-models', label: 'Models', icon: '🧮', endpoint: '/50/FcastModel', model: 'ScmForecastModel' },
                 { key: 'demand-plans', label: 'Demand Plans', icon: '📋', endpoint: '/50/DemandPlan', model: 'ScmDemandPlan' },
                 { key: 'promo-plans', label: 'Promotions', icon: '🎯', endpoint: '/50/PromoPlan', model: 'ScmPromotionalPlan' },
-                { key: 'new-product-plans', label: 'New Products', icon: '🆕', endpoint: '/50/NewProdPln', model: 'ScmNewProductPlan' },
-                { key: 'forecast-accuracies', label: 'Accuracy', icon: '🎯', endpoint: '/50/FcastAccur', model: 'ScmForecastAccuracy' }
+                { key: 'new-product-plans', label: 'New Products', icon: '🆕', endpoint: '/50/NewProdPln', model: 'ScmNewProductPlan' }
             ]
         },
         'supply-planning': {

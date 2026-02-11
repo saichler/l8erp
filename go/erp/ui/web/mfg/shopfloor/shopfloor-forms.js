@@ -44,35 +44,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        MfgLaborEntry: f.form('Labor Entry', [
-            f.section('Entry Details', [
-                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
-                ...f.reference('operationId', 'Operation', 'MfgWorkOrderOp'),
-                ...f.reference('employeeId', 'Employee', 'Employee', true),
-                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter'),
-                ...f.text('startTime', 'Start Time'),
-                ...f.text('endTime', 'End Time'),
-                ...f.number('hoursWorked', 'Hours Worked'),
-                ...f.number('quantityCompleted', 'Qty Completed'),
-                ...f.number('quantityScrapped', 'Qty Scrapped'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        MfgMachineEntry: f.form('Machine Entry', [
-            f.section('Entry Details', [
-                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
-                ...f.reference('operationId', 'Operation', 'MfgWorkOrderOp'),
-                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
-                ...f.text('startTime', 'Start Time'),
-                ...f.text('endTime', 'End Time'),
-                ...f.number('machineHours', 'Machine Hours'),
-                ...f.number('quantityCompleted', 'Qty Completed'),
-                ...f.number('quantityScrapped', 'Qty Scrapped'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
         MfgShiftSchedule: f.form('Shift Schedule', [
             f.section('Schedule Details', [
                 ...f.text('name', 'Name', true),
@@ -103,8 +74,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     MfgShopFloor.primaryKeys = {
         MfgWorkCenter: 'workCenterId',
         MfgWorkCenterCap: 'capacityId',
-        MfgLaborEntry: 'entryId',
-        MfgMachineEntry: 'entryId',
         MfgShiftSchedule: 'scheduleId',
         MfgDowntimeEvent: 'eventId'
     };

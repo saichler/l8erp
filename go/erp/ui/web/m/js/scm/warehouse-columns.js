@@ -33,15 +33,6 @@ limitations under the License.
             ...col.boolean('isActive', 'Active')
         ],
 
-        ScmBin: [
-            ...col.id('binId'),
-            ...col.col('binCode', 'Bin Code'),
-            ...col.col('warehouseId', 'Warehouse'),
-            ...col.status('binType', 'Type', enums.BIN_TYPE_VALUES, render.binType),
-            ...col.col('zone', 'Zone'),
-            ...col.boolean('isActive', 'Active')
-        ],
-
         ScmReceivingOrder: [
             ...col.id('receivingOrderId'),
             ...col.col('purchaseOrderId', 'PO #'),
@@ -49,41 +40,6 @@ limitations under the License.
             ...col.date('receivingDate', 'Receiving Date'),
             ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus),
             ...col.col('warehouseId', 'Warehouse')
-        ],
-
-        ScmPutawayTask: [
-            ...col.id('taskId'),
-            ...col.col('receivingOrderId', 'Receiving Order'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('fromBinId', 'From Bin'),
-            ...col.col('toBinId', 'To Bin'),
-            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
-        ],
-
-        ScmPickTask: [
-            ...col.id('taskId'),
-            ...col.col('wavePlanId', 'Wave Plan'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('fromBinId', 'Bin'),
-            ...col.col('quantity', 'Qty'),
-            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
-        ],
-
-        ScmPackTask: [
-            ...col.id('taskId'),
-            ...col.col('pickTaskId', 'Pick Task'),
-            ...col.col('packageId', 'Package'),
-            ...col.col('quantity', 'Qty'),
-            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
-        ],
-
-        ScmShipTask: [
-            ...col.id('taskId'),
-            ...col.col('shipmentId', 'Shipment'),
-            ...col.col('carrierId', 'Carrier'),
-            ...col.col('trackingNumber', 'Tracking #'),
-            ...col.date('shippedAt', 'Shipped'),
-            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
         ],
 
         ScmWavePlan: [
@@ -106,9 +62,8 @@ limitations under the License.
     };
 
     MobileWarehouse.primaryKeys = {
-        ScmWarehouse: 'warehouseId', ScmBin: 'binId', ScmReceivingOrder: 'receivingOrderId',
-        ScmPutawayTask: 'taskId', ScmPickTask: 'taskId', ScmPackTask: 'taskId',
-        ScmShipTask: 'taskId', ScmWavePlan: 'wavePlanId', ScmDockSchedule: 'scheduleId'
+        ScmWarehouse: 'warehouseId', ScmReceivingOrder: 'receivingOrderId',
+        ScmWavePlan: 'wavePlanId', ScmDockSchedule: 'scheduleId'
     };
 
 })();

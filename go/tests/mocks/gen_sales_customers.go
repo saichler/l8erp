@@ -80,16 +80,39 @@ func generateSalesCustomerContracts(store *MockDataStore) []*sales.SalesCustomer
 		count = 15
 	}
 
+	pricingMethods := []sales.SalesPricingMethod{
+		sales.SalesPricingMethod_PRICING_METHOD_FIXED,
+		sales.SalesPricingMethod_PRICING_METHOD_COST_PLUS,
+		sales.SalesPricingMethod_PRICING_METHOD_VOLUME,
+		sales.SalesPricingMethod_PRICING_METHOD_CONTRACT,
+	}
+
 	contracts := make([]*sales.SalesCustomerContract, count)
 	for i := 0; i < count; i++ {
 		customerID := pickRef(store.CustomerIDs, i)
-
 		salespersonID := pickRef(store.EmployeeIDs, i)
-
 		priceListID := pickRef(store.SalesPriceListIDs, i)
 
 		startDate := time.Now().AddDate(0, -rand.Intn(12), 0)
 		endDate := startDate.AddDate(1, 0, 0)
+
+		// Embed customer prices (3 per contract)
+		prices := make([]*sales.SalesCustomerPrice, 3)
+		for j := 0; j < 3; j++ {
+			effDate := time.Now().AddDate(0, -rand.Intn(3), 0)
+			expDate := effDate.AddDate(0, 6, 0)
+			prices[j] = &sales.SalesCustomerPrice{
+				CustomerPriceId: fmt.Sprintf("scp-%03d", i*3+j+1),
+				CustomerId:      customerID,
+				ItemId:          pickRef(store.ItemIDs, (i*3 + j)),
+				UnitPrice:       money(store, int64(rand.Intn(500000)+5000)),
+				CurrencyId:      pickRef(store.CurrencyIDs, j),
+				PricingMethod:   pricingMethods[(i*3+j)%len(pricingMethods)],
+				MinimumQuantity: float64(rand.Intn(10) + 1),
+				EffectiveDate:   effDate.Unix(),
+				ExpiryDate:      expDate.Unix(),
+			}
+		}
 
 		contracts[i] = &sales.SalesCustomerContract{
 			ContractId:     genID("scc", i),
@@ -100,7 +123,7 @@ func generateSalesCustomerContracts(store *MockDataStore) []*sales.SalesCustomer
 			StartDate:      startDate.Unix(),
 			EndDate:        endDate.Unix(),
 			ContractValue: &erp.Money{
-				Amount:       int64(rand.Intn(50000000) + 1000000), // $10k - $500k
+				Amount:     int64(rand.Intn(50000000) + 1000000),
 				CurrencyId: pickRef(store.CurrencyIDs, i),
 			},
 			PriceListId:       priceListID,
@@ -109,6 +132,7 @@ func generateSalesCustomerContracts(store *MockDataStore) []*sales.SalesCustomer
 			AutoRenew:         rand.Intn(2) == 1,
 			RenewalNoticeDays: int32(rand.Intn(60) + 30),
 			AuditInfo:         createAuditInfo(),
+			Prices:            prices,
 		}
 	}
 	return contracts

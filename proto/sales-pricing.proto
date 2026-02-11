@@ -40,6 +40,8 @@ message SalesPriceList {
   string notes = 9;
   map<string, string> custom_fields = 10;
   erp.AuditInfo audit_info = 11;
+  repeated SalesPriceListEntry entries = 12;
+  repeated SalesQuantityBreak quantity_breaks = 13;
 }
 
 message SalesPriceListList {
@@ -47,44 +49,15 @@ message SalesPriceListList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// SalesPriceListEntry represents a single price entry in a price list
+// SalesPriceListEntry represents a single price entry in a price list (child of SalesPriceList)
 message SalesPriceListEntry {
   string entry_id = 1;
-  string price_list_id = 2;
-  string item_id = 3;                   // Cross-ref: SCM Item
-  erp.Money unit_price = 4;
-  string unit_of_measure = 5;
-  double minimum_quantity = 6;
-  int64 effective_date = 7;
-  int64 expiry_date = 8;
-  erp.AuditInfo audit_info = 9;
-}
-
-message SalesPriceListEntryList {
-  repeated SalesPriceListEntry list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
-// SalesCustomerPrice represents customer-specific pricing
-message SalesCustomerPrice {
-  string customer_price_id = 1;
-  string customer_id = 2;               // Cross-ref: FIN Customer
-  string item_id = 3;                   // Cross-ref: SCM Item
-  erp.Money unit_price = 4;
-  string currency_id = 5;
-  SalesPricingMethod pricing_method = 6;
-  double minimum_quantity = 7;
-  int64 effective_date = 8;
-  int64 expiry_date = 9;
-  string contract_id = 10;
-  erp.AuditInfo audit_info = 11;
-}
-
-message SalesCustomerPriceList {
-  repeated SalesCustomerPrice list = 1;
-  l8api.L8MetaData metadata = 2;
+  string item_id = 2;                   // Cross-ref: SCM Item
+  erp.Money unit_price = 3;
+  string unit_of_measure = 4;
+  double minimum_quantity = 5;
+  int64 effective_date = 6;
+  int64 expiry_date = 7;
 }
 
 // @PrimeObject
@@ -136,20 +109,25 @@ message SalesPromotionalPriceList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// SalesQuantityBreak represents volume-based pricing tiers
+// SalesQuantityBreak represents volume-based pricing tiers (child of SalesPriceList)
 message SalesQuantityBreak {
   string break_id = 1;
-  string price_list_id = 2;
-  string item_id = 3;                   // Cross-ref: SCM Item
-  double from_quantity = 4;
-  double to_quantity = 5;
-  erp.Money unit_price = 6;
-  double discount_percent = 7;
-  erp.AuditInfo audit_info = 8;
+  string item_id = 2;                   // Cross-ref: SCM Item
+  double from_quantity = 3;
+  double to_quantity = 4;
+  erp.Money unit_price = 5;
+  double discount_percent = 6;
 }
 
-message SalesQuantityBreakList {
-  repeated SalesQuantityBreak list = 1;
-  l8api.L8MetaData metadata = 2;
+// SalesCustomerPrice represents customer-specific pricing (child of SalesCustomerContract)
+message SalesCustomerPrice {
+  string customer_price_id = 1;
+  string customer_id = 2;               // Cross-ref: FIN Customer
+  string item_id = 3;                   // Cross-ref: SCM Item
+  erp.Money unit_price = 4;
+  string currency_id = 5;
+  SalesPricingMethod pricing_method = 6;
+  double minimum_quantity = 7;
+  int64 effective_date = 8;
+  int64 expiry_date = 9;
 }

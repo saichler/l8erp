@@ -47,6 +47,11 @@ message SalesDeliveryOrder {
   string notes = 16;
   map<string, string> custom_fields = 17;
   erp.AuditInfo audit_info = 18;
+  repeated SalesDeliveryLine lines = 19;
+  repeated SalesPickRelease pick_releases = 20;
+  repeated SalesPackingSlip packing_slips = 21;
+  repeated SalesShippingDoc shipping_docs = 22;
+  repeated SalesDeliveryConfirm confirms = 23;
 }
 
 message SalesDeliveryOrderList {
@@ -54,104 +59,64 @@ message SalesDeliveryOrderList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// SalesDeliveryLine represents a line item on a delivery order
+// SalesDeliveryLine represents a line item on a delivery order (child of SalesDeliveryOrder)
 message SalesDeliveryLine {
   string line_id = 1;
-  string delivery_order_id = 2;
-  int32 line_number = 3;
-  string sales_order_line_id = 4;
-  string item_id = 5;                   // Cross-ref: SCM Item
-  string description = 6;
-  double quantity = 7;
-  string unit_of_measure = 8;
-  string lot_number = 9;
-  string serial_number = 10;
-  erp.AuditInfo audit_info = 11;
+  int32 line_number = 2;
+  string sales_order_line_id = 3;
+  string item_id = 4;                   // Cross-ref: SCM Item
+  string description = 5;
+  double quantity = 6;
+  string unit_of_measure = 7;
+  string lot_number = 8;
+  string serial_number = 9;
 }
 
-message SalesDeliveryLineList {
-  repeated SalesDeliveryLine list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
-// SalesPickRelease represents a pick release for warehouse picking
+// SalesPickRelease represents a pick release for warehouse picking (child of SalesDeliveryOrder)
 message SalesPickRelease {
   string pick_release_id = 1;
   string pick_number = 2;
-  string delivery_order_id = 3;
-  string warehouse_id = 4;              // Cross-ref: SCM Warehouse
-  int64 release_date = 5;
-  int64 pick_date = 6;
-  SalesPickStatus status = 7;
-  string assigned_to = 8;               // Cross-ref: HCM Employee
-  string pick_zone = 9;
-  int32 priority = 10;
-  string notes = 11;
-  erp.AuditInfo audit_info = 12;
+  string warehouse_id = 3;              // Cross-ref: SCM Warehouse
+  int64 release_date = 4;
+  int64 pick_date = 5;
+  SalesPickStatus status = 6;
+  string assigned_to = 7;               // Cross-ref: HCM Employee
+  string pick_zone = 8;
+  int32 priority = 9;
+  string notes = 10;
 }
 
-message SalesPickReleaseList {
-  repeated SalesPickRelease list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
-// SalesPackingSlip represents a packing slip for a shipment
+// SalesPackingSlip represents a packing slip for a shipment (child of SalesDeliveryOrder)
 message SalesPackingSlip {
   string packing_slip_id = 1;
   string slip_number = 2;
-  string delivery_order_id = 3;
-  int64 pack_date = 4;
-  string packed_by = 5;                 // Cross-ref: HCM Employee
-  int32 total_packages = 6;
-  double total_weight = 7;
-  string weight_unit = 8;
-  string notes = 9;
-  erp.AuditInfo audit_info = 10;
+  int64 pack_date = 3;
+  string packed_by = 4;                 // Cross-ref: HCM Employee
+  int32 total_packages = 5;
+  double total_weight = 6;
+  string weight_unit = 7;
+  string notes = 8;
 }
 
-message SalesPackingSlipList {
-  repeated SalesPackingSlip list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
-// SalesShippingDoc represents shipping documentation (BOL, customs, etc.)
+// SalesShippingDoc represents shipping documentation (child of SalesDeliveryOrder)
 message SalesShippingDoc {
   string doc_id = 1;
   string doc_number = 2;
-  string delivery_order_id = 3;
-  SalesShipDocType doc_type = 4;
-  int64 issue_date = 5;
-  string issued_by = 6;
-  string file_path = 7;
-  string notes = 8;
-  erp.AuditInfo audit_info = 9;
+  SalesShipDocType doc_type = 3;
+  int64 issue_date = 4;
+  string issued_by = 5;
+  string file_path = 6;
+  string notes = 7;
 }
 
-message SalesShippingDocList {
-  repeated SalesShippingDoc list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
-// SalesDeliveryConfirm represents delivery confirmation/POD
+// SalesDeliveryConfirm represents delivery confirmation/POD (child of SalesDeliveryOrder)
 message SalesDeliveryConfirm {
   string confirm_id = 1;
-  string delivery_order_id = 2;
-  int64 confirm_date = 3;
-  string received_by = 4;
-  string signature_path = 5;
-  string notes = 6;
-  bool is_damaged = 7;
-  string damage_description = 8;
-  repeated string photo_paths = 9;
-  erp.AuditInfo audit_info = 10;
-}
-
-message SalesDeliveryConfirmList {
-  repeated SalesDeliveryConfirm list = 1;
-  l8api.L8MetaData metadata = 2;
+  int64 confirm_date = 2;
+  string received_by = 3;
+  string signature_path = 4;
+  string notes = 5;
+  bool is_damaged = 6;
+  string damage_description = 7;
+  repeated string photo_paths = 8;
 }

@@ -22,7 +22,7 @@ import (
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
-// generateSalesTerritories creates sales territory records
+// generateSalesTerritories creates sales territory records with embedded assignments
 func generateSalesTerritories(store *MockDataStore) []*sales.SalesTerritory {
 	territoryTypes := []sales.SalesTerritoryType{
 		sales.SalesTerritoryType_TERRITORY_TYPE_GEOGRAPHIC,
@@ -63,12 +63,33 @@ func generateSalesTerritories(store *MockDataStore) []*sales.SalesTerritory {
 			territory.StateCodes = states[:3]
 		}
 
+		// Embed territory assignments (2 per territory)
+		assigns := make([]*sales.SalesTerritoryAssign, 2)
+		for j := 0; j < 2; j++ {
+			salespersonID := pickRef(store.EmployeeIDs, (i*2 + j))
+			startDate := time.Now().AddDate(0, -rand.Intn(12), 0)
+			var endDate int64
+			if j == 1 && i%4 == 0 { // Some secondary assignments have end dates
+				endDate = startDate.AddDate(1, 0, 0).Unix()
+			}
+			assigns[j] = &sales.SalesTerritoryAssign{
+				AssignmentId:      fmt.Sprintf("sta-%03d", i*2+j+1),
+				SalespersonId:     salespersonID,
+				StartDate:         startDate.Unix(),
+				EndDate:           endDate,
+				IsPrimary:         j == 0, // First assignment is primary
+				AllocationPercent: float64(rand.Intn(50)+50) / 100,
+				Notes:             fmt.Sprintf("Territory assignment %d", i*2+j+1),
+			}
+		}
+		territory.Assignments = assigns
+
 		territories[i] = territory
 	}
 	return territories
 }
 
-// generateSalesPriceLists creates sales price list records
+// generateSalesPriceLists creates sales price list records with embedded entries and quantity breaks
 func generateSalesPriceLists(store *MockDataStore) []*sales.SalesPriceList {
 	statuses := []sales.SalesPriceListStatus{
 		sales.SalesPriceListStatus_PRICE_LIST_STATUS_ACTIVE,
@@ -86,17 +107,66 @@ func generateSalesPriceLists(store *MockDataStore) []*sales.SalesPriceList {
 		effectiveDate := time.Now().AddDate(0, -rand.Intn(6), 0)
 		expiryDate := effectiveDate.AddDate(1, 0, 0)
 
+		// Embed price list entries (3 per price list)
+		entries := make([]*sales.SalesPriceListEntry, 3)
+		for j := 0; j < 3; j++ {
+			itemID := pickRef(store.ItemIDs, (i*3 + j))
+			entryEffective := time.Now().AddDate(0, -rand.Intn(3), 0)
+			entryExpiry := entryEffective.AddDate(0, 6, 0)
+			entries[j] = &sales.SalesPriceListEntry{
+				EntryId:         fmt.Sprintf("sple-%03d", i*3+j+1),
+				ItemId:          itemID,
+				UnitPrice:       money(store, int64(rand.Intn(500000)+5000)),
+				UnitOfMeasure:   "EA",
+				MinimumQuantity: float64(rand.Intn(10) + 1),
+				EffectiveDate:   entryEffective.Unix(),
+				ExpiryDate:      entryExpiry.Unix(),
+			}
+		}
+
+		// Embed quantity breaks (3 tiers per price list)
+		basePrice := int64(rand.Intn(100000) + 10000)
+		itemID := pickRef(store.ItemIDs, i)
+		quantityBreaks := []*sales.SalesQuantityBreak{
+			{
+				BreakId:         fmt.Sprintf("sqb-%03d", i*3+1),
+				ItemId:          itemID,
+				FromQuantity:    1,
+				ToQuantity:      10,
+				UnitPrice:       money(store, basePrice),
+				DiscountPercent: 0,
+			},
+			{
+				BreakId:         fmt.Sprintf("sqb-%03d", i*3+2),
+				ItemId:          itemID,
+				FromQuantity:    11,
+				ToQuantity:      50,
+				UnitPrice:       money(store, basePrice*90/100),
+				DiscountPercent: 10,
+			},
+			{
+				BreakId:         fmt.Sprintf("sqb-%03d", i*3+3),
+				ItemId:          itemID,
+				FromQuantity:    51,
+				ToQuantity:      9999,
+				UnitPrice:       money(store, basePrice*80/100),
+				DiscountPercent: 20,
+			},
+		}
+
 		priceLists[i] = &sales.SalesPriceList{
-			PriceListId:   genID("spl", i),
-			Name:          name,
-			Description:   fmt.Sprintf("Price list: %s", name),
-			CurrencyId: pickRef(store.CurrencyIDs, i),
-			Status:        statuses[i%len(statuses)],
-			EffectiveDate: effectiveDate.Unix(),
-			ExpiryDate:    expiryDate.Unix(),
-			IsDefault:     i == 0, // First one is default
-			Notes:         fmt.Sprintf("Pricing configuration for %s", name),
-			AuditInfo:     createAuditInfo(),
+			PriceListId:    genID("spl", i),
+			Name:           name,
+			Description:    fmt.Sprintf("Price list: %s", name),
+			CurrencyId:     pickRef(store.CurrencyIDs, i),
+			Status:         statuses[i%len(statuses)],
+			EffectiveDate:  effectiveDate.Unix(),
+			ExpiryDate:     expiryDate.Unix(),
+			IsDefault:      i == 0,
+			Notes:          fmt.Sprintf("Pricing configuration for %s", name),
+			AuditInfo:      createAuditInfo(),
+			Entries:        entries,
+			QuantityBreaks: quantityBreaks,
 		}
 	}
 	return priceLists

@@ -19,6 +19,8 @@ package mfg;
 option go_package = "./types/mfg";
 
 import "mfg-common.proto";
+import "mfg-shopfloor.proto";
+import "mfg-costing.proto";
 import "erp-common.proto";
 import "api.proto";
 
@@ -51,6 +53,13 @@ message MfgWorkOrder {
   string notes = 20;
   map<string, string> custom_fields = 21;
   erp.AuditInfo audit_info = 22;
+  repeated MfgWorkOrderOp operations = 23;
+  repeated MfgLaborEntry labor_entries = 24;
+  repeated MfgMachineEntry machine_entries = 25;
+  repeated MfgProdConsumption consumptions = 26;
+  repeated MfgProdBatch batches = 27;
+  repeated MfgActualCost actual_costs = 28;
+  repeated MfgCostVariance cost_variances = 29;
 }
 
 message MfgWorkOrderList {
@@ -58,7 +67,6 @@ message MfgWorkOrderList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // MfgWorkOrderOp represents an operation on a work order
 message MfgWorkOrderOp {
   string operation_id = 1;
@@ -83,11 +91,6 @@ message MfgWorkOrderOp {
   erp.AuditInfo audit_info = 20;
 }
 
-message MfgWorkOrderOpList {
-  repeated MfgWorkOrderOp list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
 // ============================================================================
 // PRODUCTION ORDER MESSAGES
 // ============================================================================
@@ -109,6 +112,7 @@ message MfgProductionOrder {
   string notes = 12;
   map<string, string> custom_fields = 13;
   erp.AuditInfo audit_info = 14;
+  repeated MfgProdOrderLine lines = 15;
 }
 
 message MfgProductionOrderList {
@@ -116,7 +120,6 @@ message MfgProductionOrderList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // MfgProdOrderLine represents a line item in a production order
 message MfgProdOrderLine {
   string line_id = 1;
@@ -133,16 +136,10 @@ message MfgProdOrderLine {
   erp.AuditInfo audit_info = 12;
 }
 
-message MfgProdOrderLineList {
-  repeated MfgProdOrderLine list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
 // ============================================================================
 // BATCH AND CONSUMPTION MESSAGES
 // ============================================================================
 
-// @PrimeObject
 // MfgProdBatch represents a production batch/lot
 message MfgProdBatch {
   string batch_id = 1;
@@ -161,12 +158,6 @@ message MfgProdBatch {
   erp.AuditInfo audit_info = 14;
 }
 
-message MfgProdBatchList {
-  repeated MfgProdBatch list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // MfgProdConsumption represents material consumption for production
 message MfgProdConsumption {
   string consumption_id = 1;
@@ -184,9 +175,4 @@ message MfgProdConsumption {
   erp.Money total_cost = 13;
   string notes = 14;
   erp.AuditInfo audit_info = 15;
-}
-
-message MfgProdConsumptionList {
-  repeated MfgProdConsumption list = 1;
-  l8api.L8MetaData metadata = 2;
 }

@@ -32,16 +32,6 @@ limitations under the License.
             ...col.col('paymentTermDays', 'Payment Terms')
         ],
 
-        VendorContact: [
-            ...col.id('contactId'),
-            ...col.col('vendorId', 'Vendor'),
-            ...col.col('firstName', 'First Name'),
-            ...col.col('lastName', 'Last Name'),
-            ...col.col('email', 'Email'),
-            ...col.col('phone', 'Phone'),
-            ...col.boolean('isPrimary', 'Primary')
-        ],
-
         PurchaseInvoice: [
             ...col.id('invoiceId'),
             ...col.col('invoiceNumber', 'Invoice #'),
@@ -50,15 +40,6 @@ limitations under the License.
             ...col.date('dueDate', 'Due Date'),
             ...col.money('totalAmount', 'Total'),
             ...col.status('status', 'Status', enums.INVOICE_STATUS_VALUES, render.invoiceStatus)
-        ],
-
-        PurchaseInvoiceLine: [
-            ...col.id('lineId'),
-            ...col.col('invoiceId', 'Invoice'),
-            ...col.col('description', 'Description'),
-            ...col.col('quantity', 'Quantity'),
-            ...col.money('unitPrice', 'Unit Price'),
-            ...col.money('lineAmount', 'Line Amount')
         ],
 
         PaymentSchedule: [
@@ -78,13 +59,6 @@ limitations under the License.
             ...col.status('status', 'Status', enums.PAYMENT_STATUS_VALUES, render.paymentStatus)
         ],
 
-        PaymentAllocation: [
-            ...col.id('allocationId'),
-            ...col.col('paymentId', 'Payment'),
-            ...col.col('invoiceId', 'Invoice'),
-            ...col.money('allocatedAmount', 'Allocated')
-        ],
-
         VendorStatement: [
             ...col.id('statementId'),
             ...col.col('vendorId', 'Vendor'),
@@ -94,9 +68,9 @@ limitations under the License.
     };
 
     MobileAccountsPayable.primaryKeys = {
-        Vendor: 'vendorId', VendorContact: 'contactId', PurchaseInvoice: 'invoiceId',
-        PurchaseInvoiceLine: 'lineId', PaymentSchedule: 'scheduleId', VendorPayment: 'paymentId',
-        PaymentAllocation: 'allocationId', VendorStatement: 'statementId'
+        Vendor: 'vendorId', PurchaseInvoice: 'invoiceId',
+        PaymentSchedule: 'scheduleId', VendorPayment: 'paymentId',
+        VendorStatement: 'statementId'
     };
 
 })();

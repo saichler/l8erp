@@ -34,15 +34,6 @@ limitations under the License.
             ...col.money('totalAmount', 'Total')
         ],
 
-        BillingMilestone: [
-            ...col.id('milestoneId'),
-            ...col.col('name', 'Name'),
-            ...col.col('scheduleId', 'Schedule'),
-            ...col.date('targetDate', 'Target'),
-            ...col.status('status', 'Status', enums.MILESTONE_STATUS_VALUES, render.milestoneStatus),
-            ...col.money('amount', 'Amount')
-        ],
-
         RevenueSchedule: [
             ...col.id('scheduleId'),
             ...col.col('salesOrderId', 'Order'),
@@ -54,7 +45,7 @@ limitations under the License.
     };
 
     MobileSalesBilling.primaryKeys = {
-        BillingSchedule: 'scheduleId', BillingMilestone: 'milestoneId',
+        BillingSchedule: 'scheduleId',
         RevenueSchedule: 'scheduleId'
     };
 

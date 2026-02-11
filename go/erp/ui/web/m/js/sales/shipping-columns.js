@@ -31,56 +31,11 @@ limitations under the License.
             ...col.col('customerId', 'Customer'),
             ...col.date('plannedShipDate', 'Planned'),
             ...col.status('status', 'Status', enums.DELIVERY_STATUS_VALUES, render.deliveryStatus)
-        ],
-
-        DeliveryLine: [
-            ...col.id('lineId'),
-            ...col.col('deliveryOrderId', 'Delivery'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('quantity', 'Qty'),
-            ...col.col('unitOfMeasure', 'UOM'),
-            ...col.col('lotNumber', 'Lot #')
-        ],
-
-        PickRelease: [
-            ...col.id('pickReleaseId'),
-            ...col.col('deliveryOrderId', 'Delivery'),
-            ...col.col('warehouseId', 'Warehouse'),
-            ...col.date('releaseDate', 'Released'),
-            ...col.status('status', 'Status', enums.PICK_STATUS_VALUES, render.pickStatus)
-        ],
-
-        PackingSlip: [
-            ...col.id('packingSlipId'),
-            ...col.col('slipNumber', 'Slip #'),
-            ...col.col('deliveryOrderId', 'Delivery'),
-            ...col.date('packDate', 'Pack Date'),
-            ...col.col('totalPackages', 'Packages'),
-            ...col.col('totalWeight', 'Weight')
-        ],
-
-        ShippingDoc: [
-            ...col.id('docId'),
-            ...col.col('docNumber', 'Doc #'),
-            ...col.col('docType', 'Type'),
-            ...col.col('deliveryOrderId', 'Delivery'),
-            ...col.date('issueDate', 'Issued'),
-            ...col.col('issuedBy', 'Issued By')
-        ],
-
-        DeliveryConfirm: [
-            ...col.id('confirmId'),
-            ...col.col('deliveryOrderId', 'Delivery'),
-            ...col.date('confirmDate', 'Confirmed'),
-            ...col.col('receivedBy', 'Received By'),
-            ...col.col('signaturePath', 'Signature')
         ]
     };
 
     MobileSalesShipping.primaryKeys = {
-        DeliveryOrder: 'deliveryOrderId', DeliveryLine: 'lineId',
-        PickRelease: 'pickReleaseId', PackingSlip: 'packingSlipId',
-        ShippingDoc: 'docId', DeliveryConfirm: 'confirmId'
+        DeliveryOrder: 'deliveryOrderId'
     };
 
 })();

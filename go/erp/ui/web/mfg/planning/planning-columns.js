@@ -41,25 +41,6 @@ limitations under the License.
             }
         ],
 
-        MfgMrpRequirement: [
-            { key: 'requirementId', label: 'ID', sortKey: 'requirementId', filterKey: 'requirementId' },
-            { key: 'runId', label: 'MRP Run', sortKey: 'runId', filterKey: 'runId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId' },
-            {
-                key: 'requirementType',
-                label: 'Type',
-                sortKey: 'requirementType',
-                render: (item) => render.requirementType(item.requirementType)
-            },
-            { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
-            {
-                key: 'requiredDate',
-                label: 'Required Date',
-                sortKey: 'requiredDate',
-                render: (item) => renderDate(item.requiredDate)
-            }
-        ],
-
         MfgCapacityPlan: [
             { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
             { key: 'planNumber', label: 'Plan #', sortKey: 'planNumber', filterKey: 'planNumber' },
@@ -76,21 +57,6 @@ limitations under the License.
                 sortKey: 'planningEnd',
                 render: (item) => renderDate(item.planningEnd)
             }
-        ],
-
-        MfgCapacityLoad: [
-            { key: 'loadId', label: 'ID', sortKey: 'loadId', filterKey: 'loadId' },
-            { key: 'planId', label: 'Capacity Plan', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            {
-                key: 'periodStart',
-                label: 'Period Start',
-                sortKey: 'periodStart',
-                render: (item) => renderDate(item.periodStart)
-            },
-            { key: 'requiredHours', label: 'Required Hrs', sortKey: 'requiredHours' },
-            { key: 'availableHours', label: 'Available Hrs', sortKey: 'availableHours' },
-            { key: 'loadPercent', label: 'Load %', sortKey: 'loadPercent' }
         ],
 
         MfgProdSchedule: [
@@ -116,24 +82,6 @@ limitations under the License.
             }
         ],
 
-        MfgScheduleBlock: [
-            { key: 'blockId', label: 'ID', sortKey: 'blockId', filterKey: 'blockId' },
-            { key: 'scheduleId', label: 'Schedule', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'workOrderId', label: 'Work Order', sortKey: 'workOrderId' },
-            { key: 'workCenterId', label: 'Work Center', sortKey: 'workCenterId' },
-            {
-                key: 'scheduledStart',
-                label: 'Start',
-                sortKey: 'scheduledStart',
-                render: (item) => renderDate(item.scheduledStart)
-            },
-            {
-                key: 'scheduledEnd',
-                label: 'End',
-                sortKey: 'scheduledEnd',
-                render: (item) => renderDate(item.scheduledEnd)
-            }
-        ]
     };
 
 })();

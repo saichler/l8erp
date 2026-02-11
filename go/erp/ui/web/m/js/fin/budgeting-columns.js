@@ -33,31 +33,6 @@ limitations under the License.
             ...col.status('status', 'Status', enums.BUDGET_STATUS_VALUES, render.budgetStatus)
         ],
 
-        BudgetLine: [
-            ...col.id('lineId'),
-            ...col.col('budgetId', 'Budget'),
-            ...col.col('accountId', 'Account'),
-            ...col.money('budgetedAmount', 'Budgeted'),
-            ...col.money('actualAmount', 'Actual'),
-            ...col.money('variance', 'Variance')
-        ],
-
-        BudgetTransfer: [
-            ...col.id('transferId'),
-            ...col.col('fromBudgetLineId', 'From Line'),
-            ...col.col('toBudgetLineId', 'To Line'),
-            ...col.money('amount', 'Amount'),
-            ...col.date('transferDate', 'Transfer Date')
-        ],
-
-        BudgetScenario: [
-            ...col.id('scenarioId'),
-            ...col.col('scenarioName', 'Name'),
-            ...col.col('description', 'Description'),
-            ...col.col('baseBudgetId', 'Base Budget'),
-            ...col.boolean('isActive', 'Active')
-        ],
-
         CapitalExpenditure: [
             ...col.id('capexId'),
             ...col.col('projectName', 'Project Name'),
@@ -78,8 +53,7 @@ limitations under the License.
     };
 
     MobileBudgeting.primaryKeys = {
-        Budget: 'budgetId', BudgetLine: 'lineId', BudgetTransfer: 'transferId',
-        BudgetScenario: 'scenarioId', CapitalExpenditure: 'capexId', Forecast: 'forecastId'
+        Budget: 'budgetId', CapitalExpenditure: 'capexId', Forecast: 'forecastId'
     };
 
 })();

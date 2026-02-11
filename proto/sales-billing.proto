@@ -45,6 +45,7 @@ message SalesBillingSchedule {
   string notes = 14;
   map<string, string> custom_fields = 15;
   erp.AuditInfo audit_info = 16;
+  repeated SalesBillingMilestone milestones = 17;
 }
 
 message SalesBillingScheduleList {
@@ -52,27 +53,19 @@ message SalesBillingScheduleList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// SalesBillingMilestone represents a billing milestone for milestone-based billing
+// SalesBillingMilestone represents a billing milestone (child of SalesBillingSchedule)
 message SalesBillingMilestone {
   string milestone_id = 1;
-  string schedule_id = 2;
-  string name = 3;
-  string description = 4;
-  int32 sequence = 5;
-  erp.Money amount = 6;
-  double percentage = 7;
-  int64 target_date = 8;
-  int64 actual_date = 9;
-  SalesBillingStatus status = 10;
-  string invoice_id = 11;               // Cross-ref: FIN SalesInvoice
-  string notes = 12;
-  erp.AuditInfo audit_info = 13;
-}
-
-message SalesBillingMilestoneList {
-  repeated SalesBillingMilestone list = 1;
-  l8api.L8MetaData metadata = 2;
+  string name = 2;
+  string description = 3;
+  int32 sequence = 4;
+  erp.Money amount = 5;
+  double percentage = 6;
+  int64 target_date = 7;
+  int64 actual_date = 8;
+  SalesBillingStatus status = 9;
+  string invoice_id = 10;               // Cross-ref: FIN SalesInvoice
+  string notes = 11;
 }
 
 // @PrimeObject

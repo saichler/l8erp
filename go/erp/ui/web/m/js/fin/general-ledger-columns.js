@@ -42,30 +42,12 @@ limitations under the License.
             ...col.money('totalAmount', 'Total Amount')
         ],
 
-        JournalEntryLine: [
-            ...col.id('lineId'),
-            ...col.col('journalEntryId', 'Entry ID'),
-            ...col.col('accountId', 'Account'),
-            ...col.money('debitAmount', 'Debit'),
-            ...col.money('creditAmount', 'Credit'),
-            ...col.col('description', 'Description')
-        ],
-
         FiscalYear: [
             ...col.id('fiscalYearId'),
             ...col.col('yearName', 'Year'),
             ...col.date('startDate', 'Start'),
             ...col.date('endDate', 'End'),
             ...col.boolean('isClosed', 'Closed')
-        ],
-
-        FiscalPeriod: [
-            ...col.id('fiscalPeriodId'),
-            ...col.col('periodName', 'Period'),
-            ...col.col('fiscalYearId', 'Year'),
-            ...col.date('startDate', 'Start'),
-            ...col.date('endDate', 'End'),
-            ...col.status('status', 'Status', enums.FISCAL_PERIOD_STATUS_VALUES, render.fiscalPeriodStatus)
         ],
 
         Currency: [
@@ -82,21 +64,13 @@ limitations under the License.
             ...col.col('toCurrencyId', 'To'),
             ...col.col('rate', 'Rate'),
             ...col.date('effectiveDate', 'Effective')
-        ],
-
-        AccountBalance: [
-            ...col.id('balanceId'),
-            ...col.col('accountId', 'Account'),
-            ...col.col('fiscalPeriodId', 'Period'),
-            ...col.money('periodDebit', 'Period Debit'),
-            ...col.money('periodCredit', 'Period Credit')
         ]
     };
 
     MobileGeneralLedger.primaryKeys = {
-        Account: 'accountId', JournalEntry: 'journalEntryId', JournalEntryLine: 'lineId',
-        FiscalYear: 'fiscalYearId', FiscalPeriod: 'fiscalPeriodId', Currency: 'currencyId',
-        ExchangeRate: 'exchangeRateId', AccountBalance: 'balanceId'
+        Account: 'accountId', JournalEntry: 'journalEntryId',
+        FiscalYear: 'fiscalYearId', Currency: 'currencyId',
+        ExchangeRate: 'exchangeRateId'
     };
 
 })();

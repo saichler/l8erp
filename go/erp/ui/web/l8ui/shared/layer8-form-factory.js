@@ -14,45 +14,10 @@ limitations under the License.
 */
 
 /**
- * Layer8 Form Factory - Generates form field definitions from simple arrays.
- *
- * BASIC USAGE:
- *   const f = Layer8FormFactory;
- *   MyModule.forms = {
- *       Employee: f.form('Employee', [
- *           f.section('Basic Information', [
- *               ...f.text('code', 'Code', true),
- *               ...f.text('name', 'Name', true),
- *               ...f.select('status', 'Status', enums.STATUS, true),
- *               ...f.reference('managerId', 'Manager', 'Employee'),
- *           ])
- *       ])
- *   };
- *
- * AVAILABLE PRESETS (use these to reduce boilerplate!):
- *   ...f.basicEntity()     - code, name, description, isActive (4 fields)
- *   ...f.person()          - firstName, lastName (2 fields)
- *   ...f.person(true)      - firstName, middleName, lastName (3 fields)
- *   ...f.dateRange()       - effectiveDate, endDate (2 fields)
- *   ...f.dateRange('start') - startDate, endDate (2 fields)
- *   ...f.address('key')    - key.line1, key.line2, key.city, key.stateProvince, key.postalCode, key.countryCode (6 fields)
- *   ...f.contact('key')    - key.value, key.contactType (2 fields)
- *   ...f.audit()           - createdBy, createdAt, modifiedBy, modifiedAt (4 fields, read-only)
- *
- * FIELD TYPES:
- *   ...f.text(key, label, required)
- *   ...f.textarea(key, label, required)
- *   ...f.number(key, label, required)
- *   ...f.checkbox(key, label)
- *   ...f.date(key, label, required)
- *   ...f.select(key, label, options, required)
- *   ...f.reference(key, label, lookupModel, required)
- *   ...f.money(key, label, required)
- *   ...f.email(key, label, required)
- *   ...f.phone(key, label)
- *   ...f.url(key, label)
- *   ...f.ssn(key, label)
- *   ...f.ein(key, label)
+ * Layer8 Form Factory - Generates form field definitions.
+ * Fields: text, textarea, number, checkbox, date, select, reference, money,
+ *         email, phone, url, ssn, ein, percentage, color, inlineTable
+ * Presets: basicEntity, person, dateRange, address, contact, audit
  */
 (function() {
     'use strict';
@@ -352,6 +317,26 @@ limitations under the License.
                 key: key,
                 label: label || this._toTitleCase(key),
                 type: 'number'
+            };
+            if (required) field.required = true;
+            return [field];
+        },
+
+        /**
+         * Create an inline table field for embedded child records.
+         * Each column follows the same field definition shape as regular form fields.
+         * @param {string} key - The field key (matches the repeated field name in protobuf)
+         * @param {string} label - The table label
+         * @param {Array} columns - Array of column definitions ({key, label, type, ...})
+         * @param {boolean} [required] - Whether at least one row is required
+         * @returns {Array} - Single field in array format
+         */
+        inlineTable: function(key, label, columns, required) {
+            const field = {
+                key: key,
+                label: label || this._toTitleCase(key),
+                type: 'inlineTable',
+                columns: columns
             };
             if (required) field.required = true;
             return [field];

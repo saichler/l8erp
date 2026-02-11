@@ -2,15 +2,6 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // Uses Layer8FormFactory for reduced boilerplate
 /**
@@ -37,66 +28,53 @@ window.MobileSalesShipping = window.MobileSalesShipping || {};
                 ...f.reference('carrierId', 'Carrier', 'ScmCarrier'),
                 ...f.text('shippingMethod', 'Shipping Method'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        DeliveryLine: f.form('Delivery Line', [
-            f.section('Line Details', [
-                ...f.reference('deliveryOrderId', 'Delivery Order', 'DeliveryOrder', true),
-                ...f.reference('salesOrderLineId', 'Order Line', 'SalesOrderLine'),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.text('unitOfMeasure', 'UOM'),
-                ...f.text('lotNumber', 'Lot #'),
-                ...f.text('serialNumber', 'Serial #')
-            ])
-        ]),
-
-        PickRelease: f.form('Pick Release', [
-            f.section('Release Details', [
-                ...f.reference('deliveryOrderId', 'Delivery Order', 'DeliveryOrder', true),
-                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse', true),
-                ...f.date('releaseDate', 'Release Date', true),
-                ...f.select('status', 'Status', enums.PICK_STATUS),
-                ...f.number('priority', 'Priority'),
-                ...f.reference('assignedTo', 'Assigned To', 'Employee'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        PackingSlip: f.form('Packing Slip', [
-            f.section('Slip Details', [
-                ...f.text('slipNumber', 'Slip #', true),
-                ...f.reference('deliveryOrderId', 'Delivery Order', 'DeliveryOrder', true),
-                ...f.date('packDate', 'Pack Date', true),
-                ...f.reference('packedBy', 'Packed By', 'Employee'),
-                ...f.number('totalPackages', 'Total Packages'),
-                ...f.number('totalWeight', 'Total Weight'),
-                ...f.text('weightUnit', 'Weight Unit'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        ShippingDoc: f.form('Shipping Document', [
-            f.section('Document Details', [
-                ...f.text('docNumber', 'Document #', true),
-                ...f.text('docType', 'Document Type', true),
-                ...f.reference('deliveryOrderId', 'Delivery Order', 'DeliveryOrder', true),
-                ...f.date('issueDate', 'Issue Date'),
-                ...f.text('issuedBy', 'Issued By'),
-                ...f.text('filePath', 'File Path'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        DeliveryConfirm: f.form('Delivery Confirmation', [
-            f.section('Confirmation Details', [
-                ...f.reference('deliveryOrderId', 'Delivery Order', 'DeliveryOrder', true),
-                ...f.date('confirmDate', 'Confirm Date', true),
-                ...f.text('receivedBy', 'Received By'),
-                ...f.text('signaturePath', 'Signature Path'),
-                ...f.checkbox('isDamaged', 'Damaged'),
-                ...f.textarea('notes', 'Notes')
+            ]),
+            f.section('Delivery Lines', [
+                ...f.inlineTable('lines', 'Delivery Lines', [
+                    { key: 'lineId', label: 'Line ID', hidden: true },
+                    { key: 'salesOrderLineId', label: 'Order Line', type: 'text' },
+                    { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                    { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                    { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
+                    { key: 'lotNumber', label: 'Lot #', type: 'text' },
+                    { key: 'serialNumber', label: 'Serial #', type: 'text' }
+                ])
+            ]),
+            f.section('Pick Releases', [
+                ...f.inlineTable('pickReleases', 'Pick Releases', [
+                    { key: 'pickReleaseId', label: 'ID', hidden: true },
+                    { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
+                    { key: 'releaseDate', label: 'Released', type: 'date' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.PICK_STATUS },
+                    { key: 'notes', label: 'Notes', type: 'text' }
+                ])
+            ]),
+            f.section('Packing Slips', [
+                ...f.inlineTable('packingSlips', 'Packing Slips', [
+                    { key: 'packingSlipId', label: 'ID', hidden: true },
+                    { key: 'slipNumber', label: 'Slip #', type: 'text' },
+                    { key: 'packDate', label: 'Pack Date', type: 'date' },
+                    { key: 'totalPackages', label: 'Packages', type: 'number' },
+                    { key: 'totalWeight', label: 'Weight', type: 'number' }
+                ])
+            ]),
+            f.section('Shipping Documents', [
+                ...f.inlineTable('shippingDocs', 'Shipping Documents', [
+                    { key: 'docId', label: 'ID', hidden: true },
+                    { key: 'docNumber', label: 'Doc #', type: 'text' },
+                    { key: 'docType', label: 'Type', type: 'text' },
+                    { key: 'issueDate', label: 'Issue Date', type: 'date' },
+                    { key: 'issuedBy', label: 'Issued By', type: 'text' }
+                ])
+            ]),
+            f.section('Confirmations', [
+                ...f.inlineTable('confirms', 'Delivery Confirmations', [
+                    { key: 'confirmId', label: 'ID', hidden: true },
+                    { key: 'confirmDate', label: 'Confirm Date', type: 'date' },
+                    { key: 'receivedBy', label: 'Received By', type: 'text' },
+                    { key: 'isDamaged', label: 'Damaged', type: 'checkbox' },
+                    { key: 'notes', label: 'Notes', type: 'text' }
+                ])
             ])
         ])
     };

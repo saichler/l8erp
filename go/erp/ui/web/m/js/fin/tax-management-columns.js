@@ -51,15 +51,6 @@ limitations under the License.
             ...col.date('endDate', 'End Date')
         ],
 
-        TaxReturn: [
-            ...col.id('returnId'),
-            ...col.enum('taxType', 'Tax Type', null, render.taxType),
-            ...col.col('fiscalPeriodId', 'Fiscal Period'),
-            ...col.date('dueDate', 'Due Date'),
-            ...col.status('status', 'Status', enums.TAX_RETURN_STATUS_VALUES, render.taxReturnStatus),
-            ...col.money('taxAmount', 'Tax Amount')
-        ],
-
         TaxExemption: [
             ...col.id('exemptionId'),
             ...col.col('exemptionNumber', 'Exemption #'),
@@ -67,21 +58,12 @@ limitations under the License.
             ...col.col('reason', 'Reason'),
             ...col.date('effectiveDate', 'Effective Date'),
             ...col.date('expirationDate', 'Expiration Date')
-        ],
-
-        WithholdingTaxConfig: [
-            ...col.id('configId'),
-            ...col.col('vendorId', 'Vendor'),
-            ...col.col('taxCodeId', 'Tax Code'),
-            ...col.custom('withholdingRate', 'Rate', (item) => Layer8MRenderers.renderPercentage(item.withholdingRate)),
-            ...col.money('thresholdAmount', 'Threshold'),
-            ...col.boolean('isActive', 'Active')
         ]
     };
 
     MobileTaxManagement.primaryKeys = {
         TaxCode: 'taxCodeId', TaxJurisdiction: 'jurisdictionId', TaxRule: 'ruleId',
-        TaxReturn: 'returnId', TaxExemption: 'exemptionId', WithholdingTaxConfig: 'configId'
+        TaxExemption: 'exemptionId'
     };
 
 })();

@@ -69,23 +69,6 @@ limitations under the License.
             ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
         ],
 
-        ScmDeliveryProof: [
-            ...col.id('proofId'),
-            ...col.col('shipmentId', 'Shipment'),
-            ...col.date('deliveryDate', 'Delivered'),
-            ...col.col('receivedBy', 'Received By'),
-            ...col.status('status', 'Status', enums.TASK_STATUS_VALUES, render.taskStatus)
-        ],
-
-        ScmFreightAudit: [
-            ...col.id('auditId'),
-            ...col.col('shipmentId', 'Shipment'),
-            ...col.col('carrierId', 'Carrier'),
-            ...col.money('invoicedAmount', 'Invoiced'),
-            ...col.money('actualAmount', 'Actual'),
-            ...col.money('variance', 'Variance')
-        ],
-
         ScmReturnAuthorization: [
             ...col.id('rmaId'),
             ...col.col('rmaNumber', 'RMA #'),
@@ -98,8 +81,7 @@ limitations under the License.
 
     MobileLogistics.primaryKeys = {
         ScmCarrier: 'carrierId', ScmFreightRate: 'rateId', ScmShipment: 'shipmentId',
-        ScmRoute: 'routeId', ScmLoadPlan: 'loadPlanId', ScmDeliveryProof: 'proofId',
-        ScmFreightAudit: 'auditId', ScmReturnAuthorization: 'rmaId'
+        ScmRoute: 'routeId', ScmLoadPlan: 'loadPlanId', ScmReturnAuthorization: 'rmaId'
     };
 
 })();

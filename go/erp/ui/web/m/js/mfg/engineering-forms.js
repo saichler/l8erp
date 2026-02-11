@@ -37,16 +37,18 @@ limitations under the License.
                 ...f.number('baseQuantity', 'Base Quantity'),
                 ...f.text('unitOfMeasure', 'UOM'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-        MfgBomLine: f.form('BOM Line', [
-            f.section('Line Details', [
-                ...f.reference('bomId', 'BOM', 'MfgBom', true),
-                ...f.reference('componentItemId', 'Component', 'ScmItem', true),
-                ...f.number('quantityPer', 'Qty Per', true),
-                ...f.text('unitOfMeasure', 'UOM'),
-                ...f.number('lineNumber', 'Line Number'),
-                ...f.number('scrapPercent', 'Scrap %')
+            ]),
+            f.section('BOM Lines', [
+                ...f.inlineTable('lines', 'BOM Lines', [
+                    { key: 'lineId', label: 'ID', hidden: true },
+                    { key: 'lineNumber', label: 'Line #', type: 'number' },
+                    { key: 'componentItemId', label: 'Component', type: 'text' },
+                    { key: 'description', label: 'Description', type: 'text' },
+                    { key: 'quantityPer', label: 'Qty Per', type: 'number' },
+                    { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
+                    { key: 'scrapPercent', label: 'Scrap %', type: 'number' },
+                    { key: 'isCritical', label: 'Critical', type: 'checkbox' }
+                ])
             ])
         ]),
         MfgRouting: f.form('Routing', [
@@ -58,17 +60,16 @@ limitations under the License.
                 ...f.text('revision', 'Revision'),
                 ...f.date('effectiveDate', 'Effective Date'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-        MfgRoutingOperation: f.form('Routing Operation', [
-            f.section('Operation Details', [
-                ...f.reference('routingId', 'Routing', 'MfgRouting', true),
-                ...f.number('operationNumber', 'Operation #', true),
-                ...f.text('operationName', 'Operation Name'),
-                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
-                ...f.textarea('description', 'Description'),
-                ...f.number('setupTime', 'Setup Time (hrs)'),
-                ...f.number('runTime', 'Run Time (hrs)')
+            ]),
+            f.section('Operations', [
+                ...f.inlineTable('operations', 'Routing Operations', [
+                    { key: 'operationId', label: 'ID', hidden: true },
+                    { key: 'operationNumber', label: 'Op #', type: 'number' },
+                    { key: 'operationName', label: 'Name', type: 'text' },
+                    { key: 'workCenterId', label: 'Work Center', type: 'text' },
+                    { key: 'setupTime', label: 'Setup Time', type: 'number' },
+                    { key: 'runTime', label: 'Run Time', type: 'number' }
+                ])
             ])
         ]),
         MfgEngChangeOrder: f.form('Engineering Change Order', [
@@ -81,22 +82,22 @@ limitations under the License.
                 ...f.date('requestDate', 'Request Date'),
                 ...f.date('requiredDate', 'Required Date'),
                 ...f.textarea('reason', 'Reason')
-            ])
-        ]),
-        MfgEngChangeDetail: f.form('ECO Detail', [
+            ]),
             f.section('Change Details', [
-                ...f.reference('changeOrderId', 'ECO', 'MfgEngChangeOrder', true),
-                ...f.text('affectedId', 'Affected ID'),
-                ...f.textarea('description', 'Description', true),
-                ...f.text('oldValue', 'Old Value'),
-                ...f.text('newValue', 'New Value')
+                ...f.inlineTable('details', 'ECO Details', [
+                    { key: 'detailId', label: 'ID', hidden: true },
+                    { key: 'changeType', label: 'Change Type', type: 'text' },
+                    { key: 'affectedId', label: 'Affected ID', type: 'text' },
+                    { key: 'description', label: 'Description', type: 'text' },
+                    { key: 'oldValue', label: 'Old Value', type: 'text' },
+                    { key: 'newValue', label: 'New Value', type: 'text' }
+                ])
             ])
         ])
     };
 
     MobileMfgEngineering.primaryKeys = {
-        MfgBom: 'bomId', MfgBomLine: 'lineId', MfgRouting: 'routingId',
-        MfgRoutingOperation: 'operationId', MfgEngChangeOrder: 'changeOrderId', MfgEngChangeDetail: 'detailId'
+        MfgBom: 'bomId', MfgRouting: 'routingId', MfgEngChangeOrder: 'changeOrderId'
     };
 
 })();

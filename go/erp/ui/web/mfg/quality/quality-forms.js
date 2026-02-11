@@ -26,22 +26,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('expiryDate', 'Expiry Date'),
                 ...f.text('revision', 'Revision'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        MfgInspectionPoint: f.form('Inspection Point', [
-            f.section('Point Details', [
-                ...f.reference('planId', 'Quality Plan', 'MfgQualityPlan', true),
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description'),
-                ...f.select('inspectionType', 'Inspection Type', enums.INSPECTION_TYPE),
-                ...f.number('sequence', 'Sequence'),
-                ...f.text('characteristic', 'Characteristic'),
-                ...f.text('specification', 'Specification'),
-                ...f.number('upperLimit', 'Upper Limit'),
-                ...f.number('lowerLimit', 'Lower Limit'),
-                ...f.text('unitOfMeasure', 'UOM'),
-                ...f.checkbox('isMandatory', 'Mandatory')
+            ]),
+            f.section('Inspection Points', [
+                ...f.inlineTable('inspectionPoints', 'Inspection Points', [
+                    { key: 'pointId', label: 'ID', hidden: true },
+                    { key: 'sequence', label: 'Seq #', type: 'number' },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'inspectionType', label: 'Type', type: 'text' },
+                    { key: 'characteristic', label: 'Characteristic', type: 'text' },
+                    { key: 'lowerLimit', label: 'Lower', type: 'number' },
+                    { key: 'upperLimit', label: 'Upper', type: 'number' }
+                ])
             ])
         ]),
 
@@ -59,18 +54,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('quantityRejected', 'Qty Rejected'),
                 ...f.select('overallResult', 'Result', enums.INSPECTION_RESULT),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        MfgTestResult: f.form('Test Result', [
-            f.section('Result Details', [
-                ...f.reference('inspectionId', 'Inspection', 'MfgQualityInspection', true),
-                ...f.reference('pointId', 'Inspection Point', 'MfgInspectionPoint', true),
-                ...f.text('measuredValue', 'Measured Value'),
-                ...f.text('textValue', 'Text Value'),
-                ...f.select('result', 'Result', enums.INSPECTION_RESULT),
-                ...f.checkbox('isInSpec', 'In Spec'),
-                ...f.textarea('notes', 'Notes')
+            ]),
+            f.section('Test Results', [
+                ...f.inlineTable('testResults', 'Test Results', [
+                    { key: 'resultId', label: 'ID', hidden: true },
+                    { key: 'pointId', label: 'Point', type: 'text' },
+                    { key: 'sampleNumber', label: 'Sample #', type: 'number' },
+                    { key: 'measuredValue', label: 'Measured', type: 'text' },
+                    { key: 'result', label: 'Result', type: 'text' },
+                    { key: 'isInSpec', label: 'In Spec', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -90,29 +83,24 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('disposition', 'Disposition', enums.NCR_DISPOSITION),
                 ...f.textarea('rootCause', 'Root Cause'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        MfgNCRAction: f.form('NCR Action', [
-            f.section('Action Details', [
-                ...f.reference('ncrId', 'NCR', 'MfgNCR', true),
-                ...f.text('actionType', 'Action Type', true),
-                ...f.textarea('description', 'Description'),
-                ...f.reference('assignedTo', 'Assigned To', 'Employee'),
-                ...f.date('dueDate', 'Due Date'),
-                ...f.date('completedDate', 'Completed Date'),
-                ...f.textarea('notes', 'Notes')
+            ]),
+            f.section('NCR Actions', [
+                ...f.inlineTable('actions', 'NCR Actions', [
+                    { key: 'actionId', label: 'ID', hidden: true },
+                    { key: 'actionNumber', label: 'Action #', type: 'number' },
+                    { key: 'actionType', label: 'Type', type: 'text' },
+                    { key: 'description', label: 'Description', type: 'text' },
+                    { key: 'assignedTo', label: 'Assigned To', type: 'text' },
+                    { key: 'status', label: 'Status', type: 'text' }
+                ])
             ])
         ])
     };
 
     MfgQuality.primaryKeys = {
         MfgQualityPlan: 'planId',
-        MfgInspectionPoint: 'pointId',
         MfgQualityInspection: 'inspectionId',
-        MfgTestResult: 'resultId',
-        MfgNCR: 'ncrId',
-        MfgNCRAction: 'actionId'
+        MfgNCR: 'ncrId'
     };
 
 })();

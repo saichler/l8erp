@@ -22,9 +22,18 @@ import (
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-// generateMrpRuns creates MRP run records
-func generateMrpRuns() []*mfg.MfgMrpRun {
+// generateMrpRuns creates MRP run records with embedded requirements
+func generateMrpRuns(store *MockDataStore) []*mfg.MfgMrpRun {
+	reqTypes := []mfg.MfgRequirementType{
+		mfg.MfgRequirementType_MFG_REQUIREMENT_TYPE_DEMAND,
+		mfg.MfgRequirementType_MFG_REQUIREMENT_TYPE_SUPPLY,
+		mfg.MfgRequirementType_MFG_REQUIREMENT_TYPE_PLANNED_ORDER,
+		mfg.MfgRequirementType_MFG_REQUIREMENT_TYPE_TRANSFER,
+	}
+	sourceTypes := []string{"SALES_ORDER", "FORECAST", "SAFETY_STOCK"}
+
 	count := 8
+	reqIdx := 1
 	runs := make([]*mfg.MfgMrpRun, count)
 
 	for i := 0; i < count; i++ {
@@ -46,8 +55,38 @@ func generateMrpRuns() []*mfg.MfgMrpRun {
 			status = mfg.MfgMrpStatus_MFG_MRP_STATUS_FAILED
 		}
 
+		runID := genID("mrprun", i)
+
+		// Generate 3 embedded requirements per run
+		reqs := make([]*mfg.MfgMrpRequirement, 3)
+		for j := 0; j < 3; j++ {
+			itemID := pickRef(store.ItemIDs, (i*3 + j))
+			warehouseID := pickRef(store.SCMWarehouseIDs, (i + j))
+			requiredDate := time.Now().AddDate(0, 0, rand.Intn(60)+7)
+			dueDate := requiredDate.AddDate(0, 0, rand.Intn(7)+1)
+
+			reqs[j] = &mfg.MfgMrpRequirement{
+				RequirementId:   fmt.Sprintf("mrpreq-%03d", reqIdx),
+				RunId:           runID,
+				ItemId:          itemID,
+				RequirementType: reqTypes[(i*3+j)%len(reqTypes)],
+				Quantity:        float64(rand.Intn(200) + 20),
+				UnitOfMeasure:   "EA",
+				RequiredDate:    requiredDate.Unix(),
+				DueDate:         dueDate.Unix(),
+				SourceType:      sourceTypes[(i+j)%len(sourceTypes)],
+				SourceId:        fmt.Sprintf("SRC-%06d", 100000+reqIdx),
+				WarehouseId:     warehouseID,
+				ActionMessage:   fmt.Sprintf("Action required for requirement %d", reqIdx),
+				IsFirmed:        j == 0,
+				Notes:           fmt.Sprintf("MRP requirement %d", reqIdx),
+				AuditInfo:       createAuditInfo(),
+			}
+			reqIdx++
+		}
+
 		runs[i] = &mfg.MfgMrpRun{
-			RunId:                genID("mrprun", i),
+			RunId:                runID,
 			RunNumber:            fmt.Sprintf("MRP-%06d", 700000+i+1),
 			Description:          fmt.Sprintf("Material requirements planning run %d", i+1),
 			Status:               status,
@@ -64,60 +103,18 @@ func generateMrpRuns() []*mfg.MfgMrpRun {
 			ExceptionsGenerated:  int32(rand.Intn(20)),
 			Notes:                fmt.Sprintf("MRP run notes %d", i+1),
 			AuditInfo:            createAuditInfo(),
+			Requirements:         reqs,
 		}
 	}
 	return runs
 }
 
-// generateMrpRequirements creates MRP requirement records (3 per run)
-func generateMrpRequirements(store *MockDataStore) []*mfg.MfgMrpRequirement {
-	reqTypes := []mfg.MfgRequirementType{
-		mfg.MfgRequirementType_MFG_REQUIREMENT_TYPE_DEMAND,
-		mfg.MfgRequirementType_MFG_REQUIREMENT_TYPE_SUPPLY,
-		mfg.MfgRequirementType_MFG_REQUIREMENT_TYPE_PLANNED_ORDER,
-		mfg.MfgRequirementType_MFG_REQUIREMENT_TYPE_TRANSFER,
-	}
-	sourceTypes := []string{"SALES_ORDER", "FORECAST", "SAFETY_STOCK"}
-
-	reqs := make([]*mfg.MfgMrpRequirement, 0, len(store.MfgMrpRunIDs)*3)
-	idx := 1
-	for runIdx, runID := range store.MfgMrpRunIDs {
-		for j := 0; j < 3; j++ {
-			itemID := pickRef(store.ItemIDs, (runIdx*3+j))
-			warehouseID := pickRef(store.SCMWarehouseIDs, (runIdx+j))
-
-			requiredDate := time.Now().AddDate(0, 0, rand.Intn(60)+7)
-			dueDate := requiredDate.AddDate(0, 0, rand.Intn(7)+1)
-
-			reqs = append(reqs, &mfg.MfgMrpRequirement{
-				RequirementId:   fmt.Sprintf("mrpreq-%03d", idx),
-				RunId:           runID,
-				ItemId:          itemID,
-				RequirementType: reqTypes[(runIdx*3+j)%len(reqTypes)],
-				Quantity:        float64(rand.Intn(200) + 20),
-				UnitOfMeasure:   "EA",
-				RequiredDate:    requiredDate.Unix(),
-				DueDate:         dueDate.Unix(),
-				SourceType:      sourceTypes[(runIdx+j)%len(sourceTypes)],
-				SourceId:        fmt.Sprintf("SRC-%06d", 100000+idx),
-				WarehouseId:     warehouseID,
-				ActionMessage:   fmt.Sprintf("Action required for requirement %d", idx),
-				IsFirmed:        j == 0,
-				Notes:           fmt.Sprintf("MRP requirement %d", idx),
-				AuditInfo:       createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return reqs
-}
-
-// generateCapacityPlans creates capacity plan records
-func generateCapacityPlans() []*mfg.MfgCapacityPlan {
+// generateCapacityPlans creates capacity plan records with embedded loads
+func generateCapacityPlans(store *MockDataStore) []*mfg.MfgCapacityPlan {
 	count := 6
-	plans := make([]*mfg.MfgCapacityPlan, count)
-
 	timeBuckets := []string{"DAY", "WEEK", "MONTH"}
+	loadIdx := 1
+	plans := make([]*mfg.MfgCapacityPlan, count)
 
 	for i := 0; i < count; i++ {
 		planningStart := time.Now().AddDate(0, -rand.Intn(3), 0)
@@ -134,8 +131,40 @@ func generateCapacityPlans() []*mfg.MfgCapacityPlan {
 			status = mfg.MfgScheduleStatus_MFG_SCHEDULE_STATUS_FROZEN
 		}
 
+		planID := genID("capplan", i)
+
+		// Generate loads for up to 4 work centers per plan
+		wcLimit := 4
+		if len(store.MfgWorkCenterIDs) < wcLimit {
+			wcLimit = len(store.MfgWorkCenterIDs)
+		}
+		loads := make([]*mfg.MfgCapacityLoad, wcLimit)
+		for wcIdx := 0; wcIdx < wcLimit; wcIdx++ {
+			wcID := store.MfgWorkCenterIDs[wcIdx]
+			periodStart := time.Now().AddDate(0, 0, wcIdx*7)
+			periodEnd := periodStart.AddDate(0, 0, 7)
+			availableHours := float64(rand.Intn(40) + 120)
+			requiredHours := availableHours * (0.5 + rand.Float64()*0.6)
+
+			loads[wcIdx] = &mfg.MfgCapacityLoad{
+				LoadId:          fmt.Sprintf("capload-%03d", loadIdx),
+				PlanId:          planID,
+				WorkCenterId:    wcID,
+				PeriodStart:     periodStart.Unix(),
+				PeriodEnd:       periodEnd.Unix(),
+				AvailableHours:  availableHours,
+				RequiredHours:   requiredHours,
+				LoadPercent:     (requiredHours / availableHours) * 100,
+				WorkOrdersCount: int32(rand.Intn(20) + 5),
+				IsOverloaded:    requiredHours > availableHours,
+				Notes:           fmt.Sprintf("Capacity load %d", loadIdx),
+				AuditInfo:       createAuditInfo(),
+			}
+			loadIdx++
+		}
+
 		plans[i] = &mfg.MfgCapacityPlan{
-			PlanId:        genID("capplan", i),
+			PlanId:        planID,
 			PlanNumber:    fmt.Sprintf("CP-%05d", 80000+i+1),
 			Description:   fmt.Sprintf("Quarterly capacity planning %d", i+1),
 			Status:        status,
@@ -146,56 +175,22 @@ func generateCapacityPlans() []*mfg.MfgCapacityPlan {
 			RunDate:       runDate.Unix(),
 			Notes:         fmt.Sprintf("Capacity plan notes %d", i+1),
 			AuditInfo:     createAuditInfo(),
+			Loads:         loads,
 		}
 	}
 	return plans
 }
 
-// generateCapacityLoads creates capacity load records (2 per plan per work center)
-func generateCapacityLoads(store *MockDataStore) []*mfg.MfgCapacityLoad {
-	loads := make([]*mfg.MfgCapacityLoad, 0, len(store.MfgCapacityPlanIDs)*len(store.MfgWorkCenterIDs))
-	idx := 1
-	for _, planID := range store.MfgCapacityPlanIDs {
-		for wcIdx, wcID := range store.MfgWorkCenterIDs {
-			if wcIdx >= 4 { // Limit to 4 work centers per plan
-				break
-			}
-
-			periodStart := time.Now().AddDate(0, 0, wcIdx*7)
-			periodEnd := periodStart.AddDate(0, 0, 7)
-			availableHours := float64(rand.Intn(40) + 120)
-			requiredHours := availableHours * (0.5 + rand.Float64()*0.6)
-
-			loads = append(loads, &mfg.MfgCapacityLoad{
-				LoadId:          fmt.Sprintf("capload-%03d", idx),
-				PlanId:          planID,
-				WorkCenterId:    wcID,
-				PeriodStart:     periodStart.Unix(),
-				PeriodEnd:       periodEnd.Unix(),
-				AvailableHours:  availableHours,
-				RequiredHours:   requiredHours,
-				LoadPercent:     (requiredHours / availableHours) * 100,
-				WorkOrdersCount: int32(rand.Intn(20) + 5),
-				IsOverloaded:    requiredHours > availableHours,
-				Notes:           fmt.Sprintf("Capacity load %d", idx),
-				AuditInfo:       createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return loads
-}
-
-// generateProdSchedules creates production schedule records
-func generateProdSchedules() []*mfg.MfgProdSchedule {
+// generateProdSchedules creates production schedule records with embedded blocks
+func generateProdSchedules(store *MockDataStore) []*mfg.MfgProdSchedule {
 	count := 8
-	schedules := make([]*mfg.MfgProdSchedule, count)
-
 	scheduleTypes := []mfg.MfgScheduleType{
 		mfg.MfgScheduleType_MFG_SCHEDULE_TYPE_FORWARD,
 		mfg.MfgScheduleType_MFG_SCHEDULE_TYPE_BACKWARD,
 		mfg.MfgScheduleType_MFG_SCHEDULE_TYPE_CONSTRAINT_BASED,
 	}
+	blockIdx := 1
+	schedules := make([]*mfg.MfgProdSchedule, count)
 
 	for i := 0; i < count; i++ {
 		scheduleStart := time.Now().AddDate(0, 0, -rand.Intn(14))
@@ -219,8 +214,35 @@ func generateProdSchedules() []*mfg.MfgProdSchedule {
 			publishedBy = fmt.Sprintf("emp-%03d", rand.Intn(20)+1)
 		}
 
+		schedID := genID("prodsched", i)
+
+		// Generate 3 embedded blocks per schedule
+		blocks := make([]*mfg.MfgScheduleBlock, 3)
+		for j := 0; j < 3; j++ {
+			woID := pickRef(store.MfgWorkOrderIDs, (i*3 + j))
+			wcID := pickRef(store.MfgWorkCenterIDs, (i + j))
+			scheduledStart := time.Now().AddDate(0, 0, i).Add(time.Duration(j*4+6) * time.Hour)
+			scheduledEnd := scheduledStart.Add(time.Duration(rand.Intn(4)+2) * time.Hour)
+
+			blocks[j] = &mfg.MfgScheduleBlock{
+				BlockId:        fmt.Sprintf("schblk-%03d", blockIdx),
+				ScheduleId:     schedID,
+				WorkOrderId:    woID,
+				WorkCenterId:   wcID,
+				ScheduledStart: scheduledStart.Unix(),
+				ScheduledEnd:   scheduledEnd.Unix(),
+				SetupHours:     float64(rand.Intn(2)) + rand.Float64(),
+				RunHours:       float64(rand.Intn(4)+1) + rand.Float64(),
+				Sequence:       int32(j + 1),
+				IsLocked:       j == 0,
+				Notes:          fmt.Sprintf("Schedule block %d", blockIdx),
+				AuditInfo:      createAuditInfo(),
+			}
+			blockIdx++
+		}
+
 		schedules[i] = &mfg.MfgProdSchedule{
-			ScheduleId:          genID("prodsched", i),
+			ScheduleId:          schedID,
 			ScheduleNumber:      fmt.Sprintf("PS-%05d", 60000+i+1),
 			Description:         fmt.Sprintf("Weekly production schedule %d", i+1),
 			ScheduleType:        scheduleTypes[i%len(scheduleTypes)],
@@ -234,41 +256,8 @@ func generateProdSchedules() []*mfg.MfgProdSchedule {
 			WorkOrdersScheduled: int32(rand.Intn(50) + 10),
 			Notes:               fmt.Sprintf("Production schedule notes %d", i+1),
 			AuditInfo:           createAuditInfo(),
+			Blocks:              blocks,
 		}
 	}
 	return schedules
-}
-
-// generateScheduleBlocks creates schedule block records (3 per schedule)
-func generateScheduleBlocks(store *MockDataStore) []*mfg.MfgScheduleBlock {
-	blocks := make([]*mfg.MfgScheduleBlock, 0, len(store.MfgProdScheduleIDs)*3)
-	idx := 1
-	for schedIdx, schedID := range store.MfgProdScheduleIDs {
-		for j := 0; j < 3; j++ {
-			woID := pickRef(store.MfgWorkOrderIDs, (schedIdx*3+j))
-			opID := pickRef(store.MfgWorkOrderOpIDs, (schedIdx*3+j))
-			wcID := pickRef(store.MfgWorkCenterIDs, (schedIdx+j))
-
-			scheduledStart := time.Now().AddDate(0, 0, schedIdx).Add(time.Duration(j*4+6) * time.Hour)
-			scheduledEnd := scheduledStart.Add(time.Duration(rand.Intn(4)+2) * time.Hour)
-
-			blocks = append(blocks, &mfg.MfgScheduleBlock{
-				BlockId:        fmt.Sprintf("schblk-%03d", idx),
-				ScheduleId:     schedID,
-				WorkOrderId:    woID,
-				OperationId:    opID,
-				WorkCenterId:   wcID,
-				ScheduledStart: scheduledStart.Unix(),
-				ScheduledEnd:   scheduledEnd.Unix(),
-				SetupHours:     float64(rand.Intn(2)) + rand.Float64(),
-				RunHours:       float64(rand.Intn(4)+1) + rand.Float64(),
-				Sequence:       int32(j + 1),
-				IsLocked:       j == 0,
-				Notes:          fmt.Sprintf("Schedule block %d", idx),
-				AuditInfo:      createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return blocks
 }

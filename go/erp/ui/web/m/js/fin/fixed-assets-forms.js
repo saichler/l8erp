@@ -25,6 +25,51 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('acquisitionDate', 'Acquisition Date', true),
                 ...f.text('location', 'Location'),
                 ...f.text('serialNumber', 'Serial Number')
+            ]),
+            f.section('Depreciation Schedules', [
+                ...f.inlineTable('depreciationSchedules', 'Depreciation Schedules', [
+                    { key: 'scheduleId', label: 'Schedule ID', hidden: true },
+                    { key: 'depreciationDate', label: 'Date', type: 'date' },
+                    { key: 'depreciationAmount', label: 'Depreciation', type: 'money' },
+                    { key: 'accumulatedAmount', label: 'Accumulated', type: 'money' },
+                    { key: 'remainingValue', label: 'Remaining', type: 'money' }
+                ])
+            ]),
+            f.section('Disposals', [
+                ...f.inlineTable('disposals', 'Asset Disposals', [
+                    { key: 'disposalId', label: 'Disposal ID', hidden: true },
+                    { key: 'disposalDate', label: 'Date', type: 'date' },
+                    { key: 'disposalMethod', label: 'Method', type: 'select', options: enums.DISPOSAL_METHOD },
+                    { key: 'disposalProceeds', label: 'Proceeds', type: 'money' },
+                    { key: 'gainLoss', label: 'Gain/Loss', type: 'money' }
+                ])
+            ]),
+            f.section('Transfers', [
+                ...f.inlineTable('transfers', 'Asset Transfers', [
+                    { key: 'transferId', label: 'Transfer ID', hidden: true },
+                    { key: 'fromDepartmentId', label: 'From Dept', type: 'text' },
+                    { key: 'toDepartmentId', label: 'To Dept', type: 'text' },
+                    { key: 'transferDate', label: 'Date', type: 'date' },
+                    { key: 'reason', label: 'Reason', type: 'text' }
+                ])
+            ]),
+            f.section('Maintenance', [
+                ...f.inlineTable('maintenance', 'Asset Maintenance', [
+                    { key: 'maintenanceId', label: 'Maintenance ID', hidden: true },
+                    { key: 'maintenanceType', label: 'Type', type: 'select', options: enums.MAINTENANCE_TYPE },
+                    { key: 'scheduledDate', label: 'Scheduled', type: 'date' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.MAINTENANCE_STATUS },
+                    { key: 'cost', label: 'Cost', type: 'money' }
+                ])
+            ]),
+            f.section('Revaluations', [
+                ...f.inlineTable('revaluations', 'Asset Revaluations', [
+                    { key: 'revaluationId', label: 'Revaluation ID', hidden: true },
+                    { key: 'revaluationDate', label: 'Date', type: 'date' },
+                    { key: 'previousValue', label: 'Previous Value', type: 'money' },
+                    { key: 'newValue', label: 'New Value', type: 'money' },
+                    { key: 'adjustmentAmount', label: 'Adjustment', type: 'money' }
+                ])
             ])
         ]),
 
@@ -34,61 +79,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('description', 'Description'),
                 ...f.select('defaultDepreciationMethod', 'Depreciation Method', enums.DEPRECIATION_METHOD, true),
                 ...f.number('defaultUsefulLifeMonths', 'Useful Life (Months)', true)
-            ])
-        ]),
-
-        DepreciationSchedule: f.form('Depreciation Schedule', [
-            f.section('Schedule Details', [
-                ...f.reference('assetId', 'Asset', 'Asset', true),
-                ...f.date('depreciationDate', 'Depreciation Date', true),
-                ...f.money('depreciationAmount', 'Depreciation Amount'),
-                ...f.money('accumulatedAmount', 'Accumulated Amount'),
-                ...f.money('remainingValue', 'Remaining Value')
-            ])
-        ]),
-
-        AssetDisposal: f.form('Asset Disposal', [
-            f.section('Disposal Details', [
-                ...f.reference('assetId', 'Asset', 'Asset', true),
-                ...f.date('disposalDate', 'Disposal Date', true),
-                ...f.select('disposalMethod', 'Disposal Method', enums.DISPOSAL_METHOD, true),
-                ...f.money('disposalProceeds', 'Disposal Proceeds'),
-                ...f.money('netBookValueAtDisposal', 'Net Book Value at Disposal'),
-                ...f.money('gainLoss', 'Gain/Loss'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        AssetTransfer: f.form('Asset Transfer', [
-            f.section('Transfer Details', [
-                ...f.reference('assetId', 'Asset', 'Asset', true),
-                ...f.reference('fromDepartmentId', 'From Department', 'Department', true),
-                ...f.reference('toDepartmentId', 'To Department', 'Department', true),
-                ...f.date('transferDate', 'Transfer Date', true),
-                ...f.textarea('reason', 'Reason')
-            ])
-        ]),
-
-        AssetMaintenance: f.form('Asset Maintenance', [
-            f.section('Maintenance Details', [
-                ...f.reference('assetId', 'Asset', 'Asset', true),
-                ...f.select('maintenanceType', 'Maintenance Type', enums.MAINTENANCE_TYPE, true),
-                ...f.date('scheduledDate', 'Scheduled Date', true),
-                ...f.date('completedDate', 'Completed Date'),
-                ...f.select('status', 'Status', enums.MAINTENANCE_STATUS),
-                ...f.money('cost', 'Cost'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        AssetRevaluation: f.form('Asset Revaluation', [
-            f.section('Revaluation Details', [
-                ...f.reference('assetId', 'Asset', 'Asset', true),
-                ...f.date('revaluationDate', 'Revaluation Date', true),
-                ...f.money('previousValue', 'Previous Value'),
-                ...f.money('newValue', 'New Value', true),
-                ...f.money('adjustmentAmount', 'Adjustment Amount'),
-                ...f.textarea('reason', 'Reason')
             ])
         ])
     };

@@ -47,6 +47,7 @@ message MfgMrpRun {
   string notes = 16;
   map<string, string> custom_fields = 17;
   erp.AuditInfo audit_info = 18;
+  repeated MfgMrpRequirement requirements = 19;
 }
 
 message MfgMrpRunList {
@@ -54,7 +55,6 @@ message MfgMrpRunList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // MfgMrpRequirement represents an MRP requirement/recommendation
 message MfgMrpRequirement {
   string requirement_id = 1;
@@ -72,11 +72,6 @@ message MfgMrpRequirement {
   bool is_firmed = 13;
   string notes = 14;
   erp.AuditInfo audit_info = 15;
-}
-
-message MfgMrpRequirementList {
-  repeated MfgMrpRequirement list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // ============================================================================
@@ -98,6 +93,7 @@ message MfgCapacityPlan {
   string notes = 10;
   map<string, string> custom_fields = 11;
   erp.AuditInfo audit_info = 12;
+  repeated MfgCapacityLoad loads = 13;
 }
 
 message MfgCapacityPlanList {
@@ -105,7 +101,6 @@ message MfgCapacityPlanList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // MfgCapacityLoad represents capacity load for a work center
 message MfgCapacityLoad {
   string load_id = 1;
@@ -120,11 +115,6 @@ message MfgCapacityLoad {
   bool is_overloaded = 10;
   string notes = 11;
   erp.AuditInfo audit_info = 12;
-}
-
-message MfgCapacityLoadList {
-  repeated MfgCapacityLoad list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // ============================================================================
@@ -149,6 +139,7 @@ message MfgProdSchedule {
   string notes = 13;
   map<string, string> custom_fields = 14;
   erp.AuditInfo audit_info = 15;
+  repeated MfgScheduleBlock blocks = 16;
 }
 
 message MfgProdScheduleList {
@@ -156,7 +147,6 @@ message MfgProdScheduleList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // MfgScheduleBlock represents a scheduled time block for a work order operation
 message MfgScheduleBlock {
   string block_id = 1;
@@ -172,9 +162,4 @@ message MfgScheduleBlock {
   bool is_locked = 11;
   string notes = 12;
   erp.AuditInfo audit_info = 13;
-}
-
-message MfgScheduleBlockList {
-  repeated MfgScheduleBlock list = 1;
-  l8api.L8MetaData metadata = 2;
 }

@@ -28,19 +28,18 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('baseQuantity', 'Base Quantity'),
                 ...f.text('unitOfMeasure', 'UOM'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        MfgBomLine: f.form('BOM Line', [
-            f.section('Line Details', [
-                ...f.reference('bomId', 'BOM', 'MfgBom', true),
-                ...f.reference('componentItemId', 'Component', 'ScmItem', true),
-                ...f.number('quantityPer', 'Quantity Per', true),
-                ...f.text('unitOfMeasure', 'UOM'),
-                ...f.number('lineNumber', 'Line Number'),
-                ...f.number('scrapPercent', 'Scrap %'),
-                ...f.reference('operationId', 'Operation', 'MfgRoutingOperation'),
-                ...f.textarea('notes', 'Notes')
+            ]),
+            f.section('BOM Lines', [
+                ...f.inlineTable('lines', 'BOM Lines', [
+                    { key: 'lineId', label: 'ID', hidden: true },
+                    { key: 'lineNumber', label: 'Line #', type: 'number' },
+                    { key: 'componentItemId', label: 'Component', type: 'text' },
+                    { key: 'description', label: 'Description', type: 'text' },
+                    { key: 'quantityPer', label: 'Qty Per', type: 'number' },
+                    { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
+                    { key: 'scrapPercent', label: 'Scrap %', type: 'number' },
+                    { key: 'isCritical', label: 'Critical', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -54,20 +53,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('effectiveDate', 'Effective Date'),
                 ...f.date('expiryDate', 'Expiry Date'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        MfgRoutingOperation: f.form('Routing Operation', [
-            f.section('Operation Details', [
-                ...f.reference('routingId', 'Routing', 'MfgRouting', true),
-                ...f.number('operationNumber', 'Operation #', true),
-                ...f.text('operationName', 'Operation Name'),
-                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
-                ...f.textarea('description', 'Description'),
-                ...f.number('setupTime', 'Setup Time (hrs)'),
-                ...f.number('runTime', 'Run Time (hrs)'),
-                ...f.number('moveTime', 'Move Time (hrs)'),
-                ...f.number('queueTime', 'Queue Time (hrs)')
+            ]),
+            f.section('Operations', [
+                ...f.inlineTable('operations', 'Routing Operations', [
+                    { key: 'operationId', label: 'ID', hidden: true },
+                    { key: 'operationNumber', label: 'Op #', type: 'number' },
+                    { key: 'operationName', label: 'Name', type: 'text' },
+                    { key: 'workCenterId', label: 'Work Center', type: 'text' },
+                    { key: 'setupTime', label: 'Setup Time', type: 'number' },
+                    { key: 'runTime', label: 'Run Time', type: 'number' }
+                ])
             ])
         ]),
 
@@ -83,31 +78,24 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('priority', 'Priority'),
                 ...f.textarea('reason', 'Reason'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        MfgEngChangeDetail: f.form('ECO Detail', [
+            ]),
             f.section('Change Details', [
-                ...f.reference('changeOrderId', 'ECO', 'MfgEngChangeOrder', true),
-                ...f.text('changeType', 'Change Type'),
-                ...f.text('affectedId', 'Affected ID'),
-                ...f.textarea('description', 'Description', true),
-                ...f.text('oldValue', 'Old Value'),
-                ...f.text('newValue', 'New Value'),
-                ...f.text('oldRevision', 'Old Revision'),
-                ...f.text('newRevision', 'New Revision'),
-                ...f.textarea('notes', 'Notes')
+                ...f.inlineTable('details', 'ECO Details', [
+                    { key: 'detailId', label: 'ID', hidden: true },
+                    { key: 'changeType', label: 'Change Type', type: 'text' },
+                    { key: 'affectedId', label: 'Affected ID', type: 'text' },
+                    { key: 'description', label: 'Description', type: 'text' },
+                    { key: 'oldValue', label: 'Old Value', type: 'text' },
+                    { key: 'newValue', label: 'New Value', type: 'text' }
+                ])
             ])
         ])
     };
 
     MfgEngineering.primaryKeys = {
         MfgBom: 'bomId',
-        MfgBomLine: 'lineId',
         MfgRouting: 'routingId',
-        MfgRoutingOperation: 'operationId',
-        MfgEngChangeOrder: 'changeOrderId',
-        MfgEngChangeDetail: 'detailId'
+        MfgEngChangeOrder: 'changeOrderId'
     };
 
 })();

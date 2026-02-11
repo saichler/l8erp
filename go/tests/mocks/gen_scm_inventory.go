@@ -118,7 +118,6 @@ func generateStockMovements(store *MockDataStore) []*scm.ScmStockMovement {
 
 		movements[i] = &scm.ScmStockMovement{
 			MovementId:    genID("smov", i),
-			ItemId:        store.ItemIDs[i%len(store.ItemIDs)],
 			WarehouseId:   store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)],
 			BinId:         store.BinIDs[i%len(store.BinIDs)],
 			MovementType:  movementType,
@@ -154,7 +153,6 @@ func generateLotNumbers(store *MockDataStore) []*scm.ScmLotNumber {
 
 		lots[i] = &scm.ScmLotNumber{
 			LotId:           genID("lot", i),
-			ItemId:          lotTrackedItemIDs[i%len(lotTrackedItemIDs)],
 			LotNumber:       fmt.Sprintf("LOT-%06d", i+1),
 			WarehouseId:     store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)],
 			ManufactureDate: manufactureDate.Unix(),
@@ -185,7 +183,6 @@ func generateSerialNumbers(store *MockDataStore) []*scm.ScmSerialNumber {
 	for i := 0; i < 25; i++ {
 		serials[i] = &scm.ScmSerialNumber{
 			SerialId:     genID("ser", i),
-			ItemId:       serialTrackedItemIDs[i%len(serialTrackedItemIDs)],
 			SerialNumber: fmt.Sprintf("SN-%08d", i+1),
 			WarehouseId:  store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)],
 			BinId:        store.BinIDs[i%len(store.BinIDs)],
@@ -236,7 +233,6 @@ func generateReorderPoints(store *MockDataStore) []*scm.ScmReorderPoint {
 
 		points[i] = &scm.ScmReorderPoint{
 			ReorderPointId:  genID("rop", i),
-			ItemId:          store.ItemIDs[i%len(store.ItemIDs)],
 			WarehouseId:     store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)],
 			MinimumQuantity: minQty,
 			MaximumQuantity: maxQty,
@@ -268,7 +264,6 @@ func generateInventoryValuations(store *MockDataStore) []*scm.ScmInventoryValuat
 
 		valuations[i] = &scm.ScmInventoryValuation{
 			ValuationId:     genID("ival", i),
-			ItemId:          store.ItemIDs[i%len(store.ItemIDs)],
 			WarehouseId:     store.SCMWarehouseIDs[i%len(store.SCMWarehouseIDs)],
 			QuantityOnHand:  qtyOnHand,
 			UnitCost:        money(store, unitCost),

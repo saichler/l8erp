@@ -17,41 +17,26 @@ window.Layer8MReferenceRegistryFIN = {
     ...refFinM.coded('Account', 'accountId', 'accountNumber', 'name'),
     ...refFinM.coded('FinAccount', 'accountId', 'accountNumber', 'name'),
     ...refFinM.simple('JournalEntry', 'journalEntryId', 'entryNumber'),
-    ...refFinM.idOnly('JournalEntryLine', 'lineId'),
-    ...refFinM.batch([
-        ['FiscalYear', 'fiscalYearId', 'yearName'],
-        ['FiscalPeriod', 'fiscalPeriodId', 'periodName']
-    ]),
+    ...refFinM.simple('FiscalYear', 'fiscalYearId', 'yearName'),
     ...refFinM.coded('Currency', 'currencyId', 'code', 'name'),
-    ...refFinM.batchIdOnly([
-        ['ExchangeRate', 'exchangeRateId'],
-        ['AccountBalance', 'balanceId']
-    ]),
+    ...refFinM.idOnly('ExchangeRate', 'exchangeRateId'),
 
     // ========================================
     // Accounts Payable
     // ========================================
     ...refFinM.coded('Vendor', 'vendorId', 'vendorNumber', 'name'),
-    ...refFinM.simple('VendorContact', 'contactId', 'contactName'),
     ...refFinM.simple('PurchaseInvoice', 'invoiceId', 'invoiceNumber'),
-    ...refFinM.idOnly('PurchaseInvoiceLine', 'lineId'),
     ...refFinM.idOnly('PaymentSchedule', 'scheduleId'),
     ...refFinM.simple('VendorPayment', 'paymentId', 'paymentNumber'),
-    ...refFinM.batchIdOnly([
-        ['PaymentAllocation', 'allocationId'],
-        ['VendorStatement', 'statementId']
-    ]),
+    ...refFinM.idOnly('VendorStatement', 'statementId'),
 
     // ========================================
     // Accounts Receivable
     // ========================================
     ...refFinM.coded('Customer', 'customerId', 'customerNumber', 'name'),
     ...refFinM.coded('SalesCustomer', 'customerId', 'customerNumber', 'name'),
-    ...refFinM.simple('CustomerContact', 'contactId', 'contactName'),
     ...refFinM.simple('SalesInvoice', 'invoiceId', 'invoiceNumber'),
-    ...refFinM.idOnly('SalesInvoiceLine', 'lineId'),
     ...refFinM.simple('CustomerPayment', 'paymentId', 'paymentNumber'),
-    ...refFinM.idOnly('PaymentApplication', 'applicationId'),
     ...refFinM.simple('CreditMemo', 'creditMemoId', 'memoNumber'),
     ...refFinM.idOnly('DunningLetter', 'letterId'),
 
@@ -60,8 +45,6 @@ window.Layer8MReferenceRegistryFIN = {
     // ========================================
     ...refFinM.simple('BankAccount', 'bankAccountId', 'accountName'),
     ...refFinM.batchIdOnly([
-        ['BankTransaction', 'transactionId'],
-        ['BankReconciliation', 'reconciliationId'],
         ['CashForecast', 'forecastId'],
         ['FundTransfer', 'transferId'],
         ['PettyCash', 'pettyCashId']
@@ -72,24 +55,12 @@ window.Layer8MReferenceRegistryFIN = {
     // ========================================
     ...refFinM.coded('Asset', 'assetId', 'assetNumber', 'name'),
     ...refFinM.simple('AssetCategory', 'categoryId', 'name', 'Category'),
-    ...refFinM.batchIdOnly([
-        ['DepreciationSchedule', 'scheduleId'],
-        ['AssetDisposal', 'disposalId'],
-        ['AssetTransfer', 'transferId'],
-        ['AssetMaintenance', 'maintenanceId'],
-        ['AssetRevaluation', 'revaluationId']
-    ]),
 
     // ========================================
     // Budgeting
     // ========================================
     ...refFinM.simple('Budget', 'budgetId', 'budgetName', 'Budget'),
-    ...refFinM.idOnly('BudgetLine', 'lineId'),
-    ...refFinM.idOnly('BudgetTransfer', 'transferId'),
-    ...refFinM.batch([
-        ['BudgetScenario', 'scenarioId', 'name'],
-        ['CapitalExpenditure', 'capexId', 'name']
-    ]),
+    ...refFinM.simple('CapitalExpenditure', 'capexId', 'name'),
     ...refFinM.idOnly('Forecast', 'forecastId'),
 
     // ========================================
@@ -98,13 +69,9 @@ window.Layer8MReferenceRegistryFIN = {
     ...refFinM.coded('TaxCode', 'taxCodeId', 'code', 'name'),
     ...refFinM.batch([
         ['TaxJurisdiction', 'jurisdictionId', 'name'],
-        ['TaxRule', 'ruleId', 'name'],
-        ['WithholdingTaxConfig', 'configId', 'name']
+        ['TaxRule', 'ruleId', 'name']
     ]),
-    ...refFinM.batchIdOnly([
-        ['TaxReturn', 'returnId'],
-        ['TaxExemption', 'exemptionId']
-    ])
+    ...refFinM.idOnly('TaxExemption', 'exemptionId')
 };
 
 // Register with the central registry

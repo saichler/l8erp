@@ -47,29 +47,6 @@ limitations under the License.
                 ...f.number('capacityUnits', 'Capacity Units')
             ])
         ]),
-        MfgLaborEntry: f.form('Labor Entry', [
-            f.section('Entry Details', [
-                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
-                ...f.reference('employeeId', 'Employee', 'Employee', true),
-                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter'),
-                ...f.datetime('startTime', 'Start Time'),
-                ...f.datetime('endTime', 'End Time'),
-                ...f.number('hoursWorked', 'Hours Worked'),
-                ...f.number('quantityCompleted', 'Qty Completed'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-        MfgMachineEntry: f.form('Machine Entry', [
-            f.section('Entry Details', [
-                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
-                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
-                ...f.datetime('startTime', 'Start Time'),
-                ...f.datetime('endTime', 'End Time'),
-                ...f.number('machineHours', 'Machine Hours'),
-                ...f.number('quantityCompleted', 'Qty Completed'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
         MfgShiftSchedule: f.form('Shift Schedule', [
             f.section('Schedule Details', [
                 ...f.text('name', 'Name', true),
@@ -95,8 +72,8 @@ limitations under the License.
     };
 
     MobileMfgShopFloor.primaryKeys = {
-        MfgWorkCenter: 'workCenterId', MfgWorkCenterCap: 'capacityId', MfgLaborEntry: 'entryId',
-        MfgMachineEntry: 'entryId', MfgShiftSchedule: 'scheduleId', MfgDowntimeEvent: 'eventId'
+        MfgWorkCenter: 'workCenterId', MfgWorkCenterCap: 'capacityId',
+        MfgShiftSchedule: 'scheduleId', MfgDowntimeEvent: 'eventId'
     };
 
 })();

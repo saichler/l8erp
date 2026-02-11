@@ -44,6 +44,14 @@ window.MobileBenefits = window.MobileBenefits || {};
                 ...f.date('openEnrollmentEnd', 'Open Enrollment End'),
                 ...f.checkbox('isActive', 'Active')
             ]),
+            f.section('Coverage Options', [
+                ...f.inlineTable('coverageOptions', 'Coverage Options', [
+                    { key: 'optionId', label: 'Option ID', hidden: true },
+                    { key: 'coverageLevel', label: 'Coverage Level', type: 'select', options: enums.COVERAGE_LEVEL },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'description', label: 'Description', type: 'text' }
+                ])
+            ]),
             f.section('Documents', [
                 ...f.url('planDocumentUrl', 'Plan Document URL'),
                 ...f.url('summaryDocumentUrl', 'Summary Document URL')

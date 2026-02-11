@@ -33,24 +33,6 @@ limitations under the License.
             ...col.status('status', 'Status', enums.PRICE_LIST_STATUS_VALUES, render.priceListStatus)
         ],
 
-        PriceListEntry: [
-            ...col.id('entryId'),
-            ...col.col('priceListId', 'Price List'),
-            ...col.col('itemId', 'Item'),
-            ...col.money('unitPrice', 'Unit Price'),
-            ...col.col('unitOfMeasure', 'UOM'),
-            ...col.col('minimumQuantity', 'Min Qty')
-        ],
-
-        CustomerPrice: [
-            ...col.id('customerPriceId'),
-            ...col.col('customerId', 'Customer'),
-            ...col.col('itemId', 'Item'),
-            ...col.money('unitPrice', 'Price'),
-            ...col.date('effectiveDate', 'Effective'),
-            ...col.date('expiryDate', 'Expires')
-        ],
-
         DiscountRule: [
             ...col.id('ruleId'),
             ...col.col('name', 'Name'),
@@ -67,22 +49,13 @@ limitations under the License.
             ...col.money('promotionalPrice', 'Promo Price'),
             ...col.date('startDate', 'Start'),
             ...col.date('endDate', 'End')
-        ],
-
-        QuantityBreak: [
-            ...col.id('breakId'),
-            ...col.col('priceListId', 'Price List'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('fromQuantity', 'Min Qty'),
-            ...col.col('toQuantity', 'Max Qty'),
-            ...col.money('unitPrice', 'Price')
         ]
     };
 
     MobileSalesPricing.primaryKeys = {
-        PriceList: 'priceListId', PriceListEntry: 'entryId',
-        CustomerPrice: 'customerPriceId', DiscountRule: 'ruleId',
-        PromotionalPrice: 'promoId', QuantityBreak: 'breakId'
+        PriceList: 'priceListId',
+        DiscountRule: 'ruleId',
+        PromotionalPrice: 'promoId'
     };
 
 })();

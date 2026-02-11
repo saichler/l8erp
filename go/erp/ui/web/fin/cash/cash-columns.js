@@ -53,59 +53,6 @@ limitations under the License.
             }
         ],
 
-        BankTransaction: [
-            { key: 'transactionId', label: 'ID', sortKey: 'transactionId', filterKey: 'transactionId' },
-            { key: 'bankAccountId', label: 'Account', sortKey: 'bankAccountId', filterKey: 'bankAccountId' },
-            {
-                key: 'transactionDate',
-                label: 'Date',
-                sortKey: 'transactionDate',
-                render: (item) => renderDate(item.transactionDate)
-            },
-            {
-                key: 'transactionType',
-                label: 'Type',
-                sortKey: 'transactionType',
-                render: (item) => render.transactionType(item.transactionType)
-            },
-            {
-                key: 'amount',
-                label: 'Amount',
-                sortKey: 'amount',
-                render: (item) => renderMoney(item.amount)
-            },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' }
-        ],
-
-        BankReconciliation: [
-            { key: 'reconciliationId', label: 'ID', sortKey: 'reconciliationId', filterKey: 'reconciliationId' },
-            { key: 'bankAccountId', label: 'Account', sortKey: 'bankAccountId', filterKey: 'bankAccountId' },
-            {
-                key: 'statementDate',
-                label: 'Statement Date',
-                sortKey: 'statementDate',
-                render: (item) => renderDate(item.statementDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.reconciliationStatus(item.status)
-            },
-            {
-                key: 'statementBalance',
-                label: 'Statement Balance',
-                sortKey: 'statementBalance',
-                render: (item) => renderMoney(item.statementBalance)
-            },
-            {
-                key: 'bookBalance',
-                label: 'Book Balance',
-                sortKey: 'bookBalance',
-                render: (item) => renderMoney(item.bookBalance)
-            }
-        ],
-
         CashForecast: [
             { key: 'forecastId', label: 'ID', sortKey: 'forecastId', filterKey: 'forecastId' },
             {

@@ -25,15 +25,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.money('totalAmount', 'Total')
         ],
 
-        SalesQuotationLine: [
-            ...col.id('lineId'),
-            ...col.col('quotationId', 'Quotation'),
-            ...col.col('itemId', 'Item'),
-            ...col.custom('quantity', 'Qty', (item) => item.quantity, { sortKey: 'quantity' }),
-            ...col.money('unitPrice', 'Unit Price'),
-            ...col.money('lineTotal', 'Total')
-        ],
-
         SalesOrder: [
             ...col.id('salesOrderId'),
             ...col.col('orderNumber', 'Order #'),
@@ -43,32 +34,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.money('totalAmount', 'Total')
         ],
 
-        SalesOrderLine: [
-            ...col.id('lineId'),
-            ...col.col('salesOrderId', 'Order'),
-            ...col.col('itemId', 'Item'),
-            ...col.custom('quantity', 'Qty', (item) => item.quantity, { sortKey: 'quantity' }),
-            ...col.money('unitPrice', 'Unit Price'),
-            ...col.money('lineTotal', 'Total')
-        ],
-
-        SalesOrderAllocation: [
-            ...col.id('allocationId'),
-            ...col.col('salesOrderId', 'Order'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('warehouseId', 'Warehouse'),
-            ...col.custom('allocatedQuantity', 'Allocated', (item) => item.allocatedQuantity, { sortKey: 'allocatedQuantity' }),
-            ...col.enum('status', 'Status', null, render.allocationStatus)
-        ],
-
-        SalesBackOrder: [
-            ...col.id('backOrderId'),
-            ...col.col('salesOrderId', 'Order'),
-            ...col.col('itemId', 'Item'),
-            ...col.custom('backOrderQuantity', 'Qty', (item) => item.backOrderQuantity, { sortKey: 'backOrderQuantity' }),
-            ...col.date('expectedDate', 'Expected')
-        ],
-
         SalesReturnOrder: [
             ...col.id('returnOrderId'),
             ...col.col('returnNumber', 'Return #'),
@@ -76,14 +41,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.col('customerId', 'Customer'),
             ...col.date('returnDate', 'Date'),
             ...col.enum('status', 'Status', null, render.returnStatus)
-        ],
-
-        SalesReturnOrderLine: [
-            ...col.id('lineId'),
-            ...col.col('returnOrderId', 'Return'),
-            ...col.col('itemId', 'Item'),
-            ...col.custom('quantity', 'Qty', (item) => item.quantity, { sortKey: 'quantity' }),
-            ...col.col('description', 'Description')
         ]
     };
 

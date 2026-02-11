@@ -42,6 +42,9 @@ message Budget {
   string notes = 11;
   map<string, string> custom_fields = 12;
   erp.AuditInfo audit_info = 13;
+  repeated BudgetLine lines = 14;
+  repeated BudgetScenario scenarios = 15;
+  repeated BudgetTransfer transfers = 16;
 }
 
 message BudgetList {
@@ -49,7 +52,6 @@ message BudgetList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // BudgetLine represents a line item in a budget
 message BudgetLine {
   string line_id = 1;
@@ -65,12 +67,6 @@ message BudgetLine {
   erp.AuditInfo audit_info = 11;
 }
 
-message BudgetLineList {
-  repeated BudgetLine list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // BudgetTransfer represents a transfer of budget between lines
 message BudgetTransfer {
   string transfer_id = 1;
@@ -85,12 +81,6 @@ message BudgetTransfer {
   erp.AuditInfo audit_info = 10;
 }
 
-message BudgetTransferList {
-  repeated BudgetTransfer list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // BudgetScenario represents a what-if budget scenario
 message BudgetScenario {
   string scenario_id = 1;
@@ -102,11 +92,6 @@ message BudgetScenario {
   bool is_active = 7;
   string notes = 8;
   erp.AuditInfo audit_info = 9;
-}
-
-message BudgetScenarioList {
-  repeated BudgetScenario list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject

@@ -31,23 +31,10 @@ limitations under the License.
             ...col.custom('status', 'Status', (item) => render.bomStatus(item.status))
         ],
 
-        MfgBomLine: [
-            ...col.id('lineId'),
-            ...col.basic([['bomId', 'BOM'], ['componentItemId', 'Component']]),
-            ...col.col('quantityPer', 'Qty Per'),
-            ...col.basic([['unitOfMeasure', 'UOM'], ['lineNumber', 'Line #']])
-        ],
-
         MfgRouting: [
             ...col.id('routingId'),
             ...col.basic([['routingNumber', 'Routing #'], ['itemId', 'Item'], 'description', 'revision']),
             ...col.custom('status', 'Status', (item) => render.routingStatus(item.status))
-        ],
-
-        MfgRoutingOperation: [
-            ...col.id('operationId'),
-            ...col.basic([['routingId', 'Routing'], ['operationNumber', 'Op #'], ['workCenterId', 'Work Center'], 'description']),
-            ...col.basic([['setupTime', 'Setup (hrs)'], ['runTime', 'Run (hrs)']])
         ],
 
         MfgEngChangeOrder: [
@@ -58,10 +45,5 @@ limitations under the License.
             ...col.custom('status', 'Status', (item) => render.ecoStatus(item.status))
         ],
 
-        MfgEngChangeDetail: [
-            ...col.id('detailId'),
-            ...col.basic([['changeOrderId', 'ECO'], ['affectedId', 'Affected'], ['description', 'Description']]),
-            ...col.basic([['oldValue', 'Old Value'], ['newValue', 'New Value']])
-        ]
     };
 })();

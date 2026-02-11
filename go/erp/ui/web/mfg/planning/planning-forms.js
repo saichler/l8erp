@@ -24,19 +24,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('planningHorizonEnd', 'Planning Horizon End'),
                 ...f.select('status', 'Status', enums.MRP_STATUS),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        MfgMrpRequirement: f.form('MRP Requirement', [
-            f.section('Requirement Details', [
-                ...f.reference('runId', 'MRP Run', 'MfgMrpRun', true),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.select('requirementType', 'Type', enums.REQUIREMENT_TYPE),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.date('requiredDate', 'Required Date'),
-                ...f.text('sourceId', 'Source ID'),
-                ...f.text('sourceType', 'Source Type'),
-                ...f.textarea('notes', 'Notes')
+            ]),
+            f.section('Requirements', [
+                ...f.inlineTable('requirements', 'MRP Requirements', [
+                    { key: 'requirementId', label: 'ID', hidden: true },
+                    { key: 'itemId', label: 'Item', type: 'text' },
+                    { key: 'requirementType', label: 'Type', type: 'text' },
+                    { key: 'quantity', label: 'Quantity', type: 'number' },
+                    { key: 'requiredDate', label: 'Required Date', type: 'date' }
+                ])
             ])
         ]),
 
@@ -47,18 +43,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('planningStart', 'Planning Start', true),
                 ...f.date('planningEnd', 'Planning End', true),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        MfgCapacityLoad: f.form('Capacity Load', [
-            f.section('Load Details', [
-                ...f.reference('planId', 'Capacity Plan', 'MfgCapacityPlan', true),
-                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
-                ...f.date('periodStart', 'Period Start', true),
-                ...f.date('periodEnd', 'Period End'),
-                ...f.number('requiredHours', 'Required Hours'),
-                ...f.number('availableHours', 'Available Hours'),
-                ...f.number('loadPercent', 'Load %')
+            ]),
+            f.section('Capacity Loads', [
+                ...f.inlineTable('loads', 'Capacity Loads', [
+                    { key: 'loadId', label: 'ID', hidden: true },
+                    { key: 'workCenterId', label: 'Work Center', type: 'text' },
+                    { key: 'periodStart', label: 'Period Start', type: 'date' },
+                    { key: 'periodEnd', label: 'Period End', type: 'date' },
+                    { key: 'availableHours', label: 'Available Hrs', type: 'number' },
+                    { key: 'requiredHours', label: 'Required Hrs', type: 'number' },
+                    { key: 'loadPercent', label: 'Load %', type: 'number' }
+                ])
             ])
         ]),
 
@@ -70,29 +65,24 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('scheduleEnd', 'Schedule End', true),
                 ...f.select('status', 'Status', enums.SCHEDULE_STATUS),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        MfgScheduleBlock: f.form('Schedule Block', [
-            f.section('Block Details', [
-                ...f.reference('scheduleId', 'Schedule', 'MfgProdSchedule', true),
-                ...f.reference('workOrderId', 'Work Order', 'MfgWorkOrder', true),
-                ...f.reference('operationId', 'Operation', 'MfgWorkOrderOp'),
-                ...f.reference('workCenterId', 'Work Center', 'MfgWorkCenter', true),
-                ...f.text('scheduledStart', 'Scheduled Start', true),
-                ...f.text('scheduledEnd', 'Scheduled End', true),
-                ...f.textarea('notes', 'Notes')
+            ]),
+            f.section('Schedule Blocks', [
+                ...f.inlineTable('blocks', 'Schedule Blocks', [
+                    { key: 'blockId', label: 'ID', hidden: true },
+                    { key: 'workOrderId', label: 'Work Order', type: 'text' },
+                    { key: 'operationId', label: 'Operation', type: 'text' },
+                    { key: 'workCenterId', label: 'Work Center', type: 'text' },
+                    { key: 'scheduledStart', label: 'Start', type: 'date' },
+                    { key: 'scheduledEnd', label: 'End', type: 'date' }
+                ])
             ])
         ])
     };
 
     MfgPlanning.primaryKeys = {
         MfgMrpRun: 'runId',
-        MfgMrpRequirement: 'requirementId',
         MfgCapacityPlan: 'planId',
-        MfgCapacityLoad: 'loadId',
-        MfgProdSchedule: 'scheduleId',
-        MfgScheduleBlock: 'blockId'
+        MfgProdSchedule: 'scheduleId'
     };
 
 })();

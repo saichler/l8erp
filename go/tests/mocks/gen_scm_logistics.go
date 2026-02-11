@@ -147,19 +147,15 @@ func generateDeliveryProofs(store *MockDataStore) []*scm.ScmDeliveryProof {
 	proofs := make([]*scm.ScmDeliveryProof, 10)
 
 	for i := 0; i < 10; i++ {
-		// Link to delivered shipments (first 10 shipments are delivered)
-		shipmentIdx := i % len(store.ShipmentIDs)
-		shipmentID := store.ShipmentIDs[shipmentIdx]
 		deliveryDate := time.Date(2025, time.Month((i%12)+1), (i%28)+1, 14, 30, 0, 0, time.UTC)
 
 		proofs[i] = &scm.ScmDeliveryProof{
 			ProofId:      genID("dprf", i),
-			ShipmentId:   shipmentID,
 			DeliveryDate: deliveryDate.Unix(),
 			ReceivedBy:   randomName(),
-			Signature:    fmt.Sprintf("sig-%s-%03d", shipmentID, i+1),
-			PhotoUrl:     fmt.Sprintf("https://storage.example.com/proofs/%s.jpg", shipmentID),
-			Notes:        fmt.Sprintf("Delivery confirmed for shipment %s", shipmentID),
+			Signature:    fmt.Sprintf("sig-dprf-%03d", i+1),
+			PhotoUrl:     fmt.Sprintf("https://storage.example.com/proofs/dprf-%03d.jpg", i+1),
+			Notes:        fmt.Sprintf("Delivery confirmed for proof %d", i+1),
 			Status:       "Confirmed",
 			AuditInfo:    createAuditInfo(),
 		}
@@ -175,7 +171,6 @@ func generateFreightAudits(store *MockDataStore) []*scm.ScmFreightAudit {
 	auditStatuses := []string{"Pending", "In Review", "Completed", "Disputed"}
 
 	for i := 0; i < 12; i++ {
-		shipmentID := store.ShipmentIDs[i%len(store.ShipmentIDs)]
 		carrierID := store.SCMCarrierIDs[i%len(store.SCMCarrierIDs)]
 		auditDate := time.Date(2025, time.Month((i%12)+1), (i%28)+1, 0, 0, 0, 0, time.UTC)
 
@@ -187,14 +182,13 @@ func generateFreightAudits(store *MockDataStore) []*scm.ScmFreightAudit {
 
 		audits[i] = &scm.ScmFreightAudit{
 			AuditId:        genID("faud", i),
-			ShipmentId:     shipmentID,
 			CarrierId:      carrierID,
 			InvoicedAmount: money(store, invoicedAmount),
 			ActualAmount:   money(store, actualAmount),
 			Variance:       money(store, varianceAmount),
 			AuditDate:      auditDate.Unix(),
 			Status:         auditStatuses[i%len(auditStatuses)],
-			Notes:          fmt.Sprintf("Freight audit for shipment %s", shipmentID),
+			Notes:          fmt.Sprintf("Freight audit %d for carrier %s", i+1, carrierID),
 			AuditInfo:      createAuditInfo(),
 		}
 	}

@@ -16,8 +16,10 @@ package mocks
 
 import (
 	"fmt"
+	"math/rand"
 	"time"
 
+	"github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -52,31 +54,151 @@ func generateCurrencies() []*fin.Currency {
 	return currencies
 }
 
-// generateFiscalYears creates fiscal year records
-func generateFiscalYears() []*fin.FiscalYear {
-	years := make([]*fin.FiscalYear, 2)
+// generateFiscalYears creates fiscal year records with embedded periods and tax returns.
+// Populates store.FiscalPeriodIDs for cross-reference by other generators.
+func generateFiscalYears(store *MockDataStore) []*fin.FiscalYear {
+	now := time.Now()
+	periodIdx := 1
 
-	years[0] = &fin.FiscalYear{
-		FiscalYearId: "fy-001",
-		YearName:     "FY2024",
-		StartDate:    time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),
-		EndDate:      time.Date(2024, 12, 31, 23, 59, 59, 0, time.UTC).Unix(),
-		IsClosed:     true,
-		IsActive:     false,
-		AuditInfo:    createAuditInfo(),
+	yearConfigs := []struct {
+		id       string
+		name     string
+		year     int
+		isClosed bool
+		isActive bool
+	}{
+		{"fy-001", "FY2024", 2024, true, false},
+		{"fy-002", "FY2025", 2025, false, true},
 	}
 
-	years[1] = &fin.FiscalYear{
-		FiscalYearId: "fy-002",
-		YearName:     "FY2025",
-		StartDate:    time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),
-		EndDate:      time.Date(2025, 12, 31, 23, 59, 59, 0, time.UTC).Unix(),
-		IsClosed:     false,
-		IsActive:     true,
-		AuditInfo:    createAuditInfo(),
+	years := make([]*fin.FiscalYear, len(yearConfigs))
+	for yi, yc := range yearConfigs {
+		// Generate embedded fiscal periods (12 per year)
+		periods := make([]*fin.FiscalPeriod, 12)
+		for month := 1; month <= 12; month++ {
+			startDate := time.Date(yc.year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
+			endDate := startDate.AddDate(0, 1, -1)
+			endDate = time.Date(endDate.Year(), endDate.Month(), endDate.Day(), 23, 59, 59, 0, time.UTC)
+
+			var status fin.FiscalPeriodStatus
+			if yc.year == 2024 {
+				status = fin.FiscalPeriodStatus_FISCAL_PERIOD_STATUS_CLOSED
+			} else {
+				periodEnd := time.Date(yc.year, time.Month(month), endDate.Day(), 23, 59, 59, 0, time.UTC)
+				if periodEnd.Before(now) {
+					status = fin.FiscalPeriodStatus_FISCAL_PERIOD_STATUS_CLOSED
+				} else {
+					status = fin.FiscalPeriodStatus_FISCAL_PERIOD_STATUS_OPEN
+				}
+			}
+
+			fpID := fmt.Sprintf("fp-%03d", periodIdx)
+			periods[month-1] = &fin.FiscalPeriod{
+				FiscalPeriodId: fpID,
+				FiscalYearId:   yc.id,
+				PeriodName:     fmt.Sprintf("%s-M%02d", yc.name, month),
+				PeriodNumber:   int32(month),
+				StartDate:      startDate.Unix(),
+				EndDate:        endDate.Unix(),
+				Status:         status,
+				AuditInfo:      createAuditInfo(),
+			}
+			store.FiscalPeriodIDs = append(store.FiscalPeriodIDs, fpID)
+			periodIdx++
+		}
+
+		// Generate embedded tax returns (quarterly, only for FY2025)
+		var returns []*fin.TaxReturn
+		if yc.year == 2025 {
+			returns = generateTaxReturnsForYear(store)
+		}
+
+		years[yi] = &fin.FiscalYear{
+			FiscalYearId: yc.id,
+			YearName:     yc.name,
+			StartDate:    time.Date(yc.year, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),
+			EndDate:      time.Date(yc.year, 12, 31, 23, 59, 59, 0, time.UTC).Unix(),
+			IsClosed:     yc.isClosed,
+			IsActive:     yc.isActive,
+			AuditInfo:    createAuditInfo(),
+			Periods:      periods,
+			Returns:      returns,
+		}
 	}
 
 	return years
+}
+
+// generateTaxReturnsForYear creates quarterly tax return records embedded in FiscalYear
+func generateTaxReturnsForYear(store *MockDataStore) []*fin.TaxReturn {
+	returns := make([]*fin.TaxReturn, 4)
+
+	quarterEndMonths := []time.Month{time.March, time.June, time.September, time.December}
+	dueDateMonths := []time.Month{time.April, time.July, time.October, time.January}
+	dueDateYears := []int{2025, 2025, 2025, 2026}
+
+	// FiscalPeriodIDs indices 12-23 are 2025 monthly periods
+	// Quarter end periods: March=14, June=17, September=20, December=23
+	quarterPeriodIndices := []int{14, 17, 20, 23}
+
+	for i := 0; i < 4; i++ {
+		periodIdx := quarterPeriodIndices[i]
+		if periodIdx >= len(store.FiscalPeriodIDs) {
+			periodIdx = len(store.FiscalPeriodIDs) - 1
+		}
+
+		status := fin.TaxReturnStatus_TAX_RETURN_STATUS_FILED
+		if i == 3 {
+			status = fin.TaxReturnStatus_TAX_RETURN_STATUS_DRAFT
+		}
+
+		taxableAmount := int64(rand.Intn(5000000)+1000000) * 100
+		taxRate := 21
+		taxAmount := taxableAmount * int64(taxRate) / 100
+
+		var amountPaid, amountDue int64
+		if status == fin.TaxReturnStatus_TAX_RETURN_STATUS_FILED {
+			amountPaid = taxAmount
+			amountDue = 0
+		} else {
+			amountPaid = 0
+			amountDue = taxAmount
+		}
+
+		quarterEnd := time.Date(2025, quarterEndMonths[i], 1, 0, 0, 0, 0, time.UTC)
+		quarterEnd = quarterEnd.AddDate(0, 1, -1)
+		dueDate := time.Date(dueDateYears[i], dueDateMonths[i], 15, 0, 0, 0, 0, time.UTC)
+
+		jurisdictionID := ""
+		if len(store.TaxJurisdictionIDs) > 0 {
+			jurisdictionID = store.TaxJurisdictionIDs[0]
+		}
+
+		ret := &fin.TaxReturn{
+			ReturnId:       genID("txrtn", i),
+			JurisdictionId: jurisdictionID,
+			FiscalPeriodId: store.FiscalPeriodIDs[periodIdx],
+			TaxType:        fin.TaxType_TAX_TYPE_INCOME,
+			Status:         status,
+			DueDate:        dueDate.Unix(),
+			TaxableAmount:  &erp.Money{Amount: taxableAmount, CurrencyId: pickRef(store.CurrencyIDs, 0)},
+			TaxAmount:      &erp.Money{Amount: taxAmount, CurrencyId: pickRef(store.CurrencyIDs, 0)},
+			AmountPaid:     &erp.Money{Amount: amountPaid, CurrencyId: pickRef(store.CurrencyIDs, 0)},
+			AmountDue:      &erp.Money{Amount: amountDue, CurrencyId: pickRef(store.CurrencyIDs, 0)},
+			Notes:          fmt.Sprintf("Q%d 2025 Federal Income Tax Return", i+1),
+			AuditInfo:      createAuditInfo(),
+		}
+
+		if status == fin.TaxReturnStatus_TAX_RETURN_STATUS_FILED {
+			ret.FilingDate = quarterEnd.AddDate(0, 0, 30).Unix()
+			ret.FiledBy = "mock-generator"
+			ret.ConfirmationNumber = fmt.Sprintf("FED-2025-Q%d-%06d", i+1, rand.Intn(1000000))
+		}
+
+		returns[i] = ret
+	}
+
+	return returns
 }
 
 // generateAssetCategories creates asset category records
@@ -127,56 +249,7 @@ func generateTaxJurisdictions() []*fin.TaxJurisdiction {
 	return jurisdictions
 }
 
-// generateFiscalPeriods creates fiscal period records (12 per fiscal year)
-func generateFiscalPeriods(store *MockDataStore) []*fin.FiscalPeriod {
-	now := time.Now()
-	periods := make([]*fin.FiscalPeriod, 0, 24)
-	idx := 1
-
-	yearConfigs := []struct {
-		fiscalYearID string
-		yearName     string
-		year         int
-	}{
-		{store.FiscalYearIDs[0], "FY2024", 2024},
-		{store.FiscalYearIDs[1], "FY2025", 2025},
-	}
-
-	for _, yc := range yearConfigs {
-		for month := 1; month <= 12; month++ {
-			startDate := time.Date(yc.year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
-			endDate := startDate.AddDate(0, 1, -1)
-			endDate = time.Date(endDate.Year(), endDate.Month(), endDate.Day(), 23, 59, 59, 0, time.UTC)
-
-			var status fin.FiscalPeriodStatus
-			if yc.year == 2024 {
-				status = fin.FiscalPeriodStatus_FISCAL_PERIOD_STATUS_CLOSED
-			} else {
-				periodEnd := time.Date(yc.year, time.Month(month), endDate.Day(), 23, 59, 59, 0, time.UTC)
-				if periodEnd.Before(now) {
-					status = fin.FiscalPeriodStatus_FISCAL_PERIOD_STATUS_CLOSED
-				} else {
-					status = fin.FiscalPeriodStatus_FISCAL_PERIOD_STATUS_OPEN
-				}
-			}
-
-			periods = append(periods, &fin.FiscalPeriod{
-				FiscalPeriodId: fmt.Sprintf("fp-%03d", idx),
-				FiscalYearId:   yc.fiscalYearID,
-				PeriodName:     fmt.Sprintf("%s-M%02d", yc.yearName, month),
-				PeriodNumber:   int32(month),
-				StartDate:      startDate.Unix(),
-				EndDate:        endDate.Unix(),
-				Status:         status,
-				AuditInfo:      createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return periods
-}
-
-// generateAccounts creates the chart of accounts
+// generateAccounts creates the chart of accounts with embedded balances
 func generateAccounts(store *MockDataStore) []*fin.Account {
 	type accountDef struct {
 		number      string
@@ -220,10 +293,48 @@ func generateAccounts(store *MockDataStore) []*fin.Account {
 	}
 
 	usdCurrencyID := store.CurrencyIDs[0]
+	numPeriods := 6
+	balIdx := 1
+
 	accounts := make([]*fin.Account, len(defs))
 	for i, d := range defs {
+		accountID := genID("acct", i)
+
+		// Generate embedded balances for first 10 accounts
+		var balances []*fin.AccountBalance
+		if i < 10 {
+			balances = make([]*fin.AccountBalance, numPeriods)
+			var ytdDebit, ytdCredit int64
+			for p := 0; p < numPeriods; p++ {
+				periodIdx := 12 + p // 2025 periods
+				if periodIdx >= len(store.FiscalPeriodIDs) {
+					periodIdx = len(store.FiscalPeriodIDs) - 1
+				}
+				beginningBalance := int64(rand.Intn(500000)+10000) * 100
+				periodDebit := int64(rand.Intn(100000)+5000) * 100
+				periodCredit := int64(rand.Intn(80000)+3000) * 100
+				endingBalance := beginningBalance + periodDebit - periodCredit
+				ytdDebit += periodDebit
+				ytdCredit += periodCredit
+
+				balances[p] = &fin.AccountBalance{
+					BalanceId:        fmt.Sprintf("abal-%03d", balIdx),
+					AccountId:        accountID,
+					FiscalPeriodId:   store.FiscalPeriodIDs[periodIdx],
+					BeginningBalance: money(store, beginningBalance),
+					PeriodDebit:      money(store, periodDebit),
+					PeriodCredit:     money(store, periodCredit),
+					EndingBalance:    money(store, endingBalance),
+					YtdDebit:         money(store, ytdDebit),
+					YtdCredit:        money(store, ytdCredit),
+					AuditInfo:        createAuditInfo(),
+				}
+				balIdx++
+			}
+		}
+
 		accounts[i] = &fin.Account{
-			AccountId:     genID("acct", i),
+			AccountId:     accountID,
 			AccountNumber: d.number,
 			Name:          d.name,
 			Description:   fmt.Sprintf("GL account for %s", d.name),
@@ -233,6 +344,7 @@ func generateAccounts(store *MockDataStore) []*fin.Account {
 			IsActive:      true,
 			IsHeader:      false,
 			AuditInfo:     createAuditInfo(),
+			Balances:      balances,
 		}
 	}
 	return accounts

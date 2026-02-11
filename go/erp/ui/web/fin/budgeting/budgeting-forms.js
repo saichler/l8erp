@@ -23,36 +23,37 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('fiscalYearId', 'Fiscal Year', 'FiscalYear', true),
                 ...f.money('totalAmount', 'Total Amount', true),
                 ...f.select('status', 'Status', enums.BUDGET_STATUS)
-            ])
-        ]),
-
-        BudgetLine: f.form('Budget Line', [
-            f.section('Line Details', [
-                ...f.reference('budgetId', 'Budget', 'Budget', true),
-                ...f.reference('accountId', 'Account', 'Account', true),
-                ...f.money('budgetedAmount', 'Budgeted Amount', true),
-                ...f.money('actualAmount', 'Actual Amount'),
-                ...f.money('variance', 'Variance'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        BudgetTransfer: f.form('Budget Transfer', [
-            f.section('Transfer Details', [
-                ...f.reference('fromBudgetLineId', 'From Budget Line', 'BudgetLine', true),
-                ...f.reference('toBudgetLineId', 'To Budget Line', 'BudgetLine', true),
-                ...f.money('amount', 'Amount', true),
-                ...f.date('transferDate', 'Transfer Date', true),
-                ...f.textarea('reason', 'Reason')
-            ])
-        ]),
-
-        BudgetScenario: f.form('Budget Scenario', [
-            f.section('Scenario Details', [
-                ...f.text('scenarioName', 'Scenario Name', true),
-                ...f.textarea('description', 'Description'),
-                ...f.reference('baseBudgetId', 'Base Budget', 'Budget', true),
-                ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Budget Lines', [
+                ...f.inlineTable('lines', 'Budget Lines', [
+                    { key: 'lineId', label: 'Line ID', hidden: true },
+                    { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'Account', required: true },
+                    { key: 'fiscalPeriodId', label: 'Period', type: 'text' },
+                    { key: 'budgetedAmount', label: 'Budgeted', type: 'money', required: true },
+                    { key: 'actualAmount', label: 'Actual', type: 'money' },
+                    { key: 'variance', label: 'Variance', type: 'money' },
+                    { key: 'description', label: 'Description', type: 'text' }
+                ])
+            ]),
+            f.section('Scenarios', [
+                ...f.inlineTable('scenarios', 'Budget Scenarios', [
+                    { key: 'scenarioId', label: 'Scenario ID', hidden: true },
+                    { key: 'scenarioName', label: 'Name', type: 'text', required: true },
+                    { key: 'description', label: 'Description', type: 'text' },
+                    { key: 'adjustmentFactor', label: 'Adjustment Factor', type: 'number' },
+                    { key: 'projectedTotal', label: 'Projected Total', type: 'money' },
+                    { key: 'isActive', label: 'Active', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Transfers', [
+                ...f.inlineTable('transfers', 'Budget Transfers', [
+                    { key: 'transferId', label: 'Transfer ID', hidden: true },
+                    { key: 'fromBudgetLineId', label: 'From Line', type: 'text', required: true },
+                    { key: 'toBudgetLineId', label: 'To Line', type: 'text', required: true },
+                    { key: 'amount', label: 'Amount', type: 'money', required: true },
+                    { key: 'transferDate', label: 'Date', type: 'date', required: true },
+                    { key: 'reason', label: 'Reason', type: 'text' }
+                ])
             ])
         ]),
 
@@ -81,9 +82,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
     Budgeting.primaryKeys = {
         Budget: 'budgetId',
-        BudgetLine: 'lineId',
-        BudgetTransfer: 'transferId',
-        BudgetScenario: 'scenarioId',
         CapitalExpenditure: 'capexId',
         Forecast: 'forecastId'
     };

@@ -39,6 +39,7 @@ message ScmDemandForecast {
   double confidence_level = 8;
   string notes = 9;
   erp.AuditInfo audit_info = 10;
+  repeated ScmForecastAccuracy accuracies = 11;
 }
 
 message ScmDemandForecastList {
@@ -124,11 +125,9 @@ message ScmNewProductPlanList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // ScmForecastAccuracy represents forecast accuracy metrics for a period
 message ScmForecastAccuracy {
   string accuracy_id = 1;
-  string forecast_id = 2;
   string item_id = 3;
   erp.DateRange period = 4;
   double forecast_quantity = 5;
@@ -139,7 +138,3 @@ message ScmForecastAccuracy {
   erp.AuditInfo audit_info = 10;
 }
 
-message ScmForecastAccuracyList {
-  repeated ScmForecastAccuracy list = 1;
-  l8api.L8MetaData metadata = 2;
-}

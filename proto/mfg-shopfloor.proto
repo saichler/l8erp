@@ -76,7 +76,6 @@ message MfgWorkCenterCapList {
 // LABOR AND MACHINE ENTRY MESSAGES
 // ============================================================================
 
-// @PrimeObject
 // MfgLaborEntry represents labor time recording
 message MfgLaborEntry {
   string entry_id = 1;
@@ -96,12 +95,6 @@ message MfgLaborEntry {
   erp.AuditInfo audit_info = 15;
 }
 
-message MfgLaborEntryList {
-  repeated MfgLaborEntry list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // MfgMachineEntry represents machine time recording
 message MfgMachineEntry {
   string entry_id = 1;
@@ -119,11 +112,6 @@ message MfgMachineEntry {
   string operator_id = 13;               // cross-ref: HCM Employee
   string notes = 14;
   erp.AuditInfo audit_info = 15;
-}
-
-message MfgMachineEntryList {
-  repeated MfgMachineEntry list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // ============================================================================

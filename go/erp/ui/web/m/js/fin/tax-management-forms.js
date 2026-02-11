@@ -46,18 +46,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        TaxReturn: f.form('Tax Return', [
-            f.section('Return Details', [
-                ...f.select('taxType', 'Tax Type', enums.TAX_TYPE, true),
-                ...f.reference('fiscalPeriodId', 'Fiscal Period', 'FiscalPeriod', true),
-                ...f.date('dueDate', 'Due Date', true),
-                ...f.date('filingDate', 'Filing Date'),
-                ...f.select('status', 'Status', enums.TAX_RETURN_STATUS),
-                ...f.money('taxAmount', 'Tax Amount'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
         TaxExemption: f.form('Tax Exemption', [
             f.section('Exemption Details', [
                 ...f.text('exemptionNumber', 'Exemption Number', true),
@@ -66,16 +54,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('effectiveDate', 'Effective Date', true),
                 ...f.date('expirationDate', 'Expiration Date'),
                 ...f.url('documentUrl', 'Document URL')
-            ])
-        ]),
-
-        WithholdingTaxConfig: f.form('Withholding Tax Config', [
-            f.section('Configuration Details', [
-                ...f.reference('vendorId', 'Vendor', 'Vendor', true),
-                ...f.reference('taxCodeId', 'Tax Code', 'TaxCode', true),
-                ...f.number('withholdingRate', 'Withholding Rate (%)', true),
-                ...f.money('thresholdAmount', 'Threshold Amount'),
-                ...f.checkbox('isActive', 'Active')
             ])
         ])
     };

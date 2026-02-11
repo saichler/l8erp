@@ -31,48 +31,32 @@ window.Layer8DReferenceRegistrySales = {
     // Sales - Pricing Models
     // ========================================
     ...refSales.simple('SalesPriceList', 'priceListId', 'name', 'Price List'),
-    ...refSales.idOnly('SalesPriceListEntry', 'entryId'),
-    ...refSales.idOnly('SalesCustomerPrice', 'customerPriceId'),
     ...refSales.simple('SalesDiscountRule', 'ruleId', 'name', 'Discount Rule'),
-    ...refSales.idOnly('SalesPromotionalPrice', 'promotionalPriceId'),
-    ...refSales.idOnly('SalesQuantityBreak', 'breakId'),
+    ...refSales.simple('SalesPromotionalPrice', 'promoId', 'name', 'Promotion'),
 
     // ========================================
     // Sales - Order Models
     // ========================================
     ...refSales.simple('SalesQuotation', 'quotationId', 'quotationNumber', 'Quotation'),
-    ...refSales.idOnly('SalesQuotationLine', 'lineId'),
     ...refSales.simple('SalesOrder', 'salesOrderId', 'orderNumber', 'Sales Order'),
-    ...refSales.idOnly('SalesOrderLine', 'lineId'),
-    ...refSales.idOnly('SalesOrderAllocation', 'allocationId'),
-    ...refSales.idOnly('SalesBackOrder', 'backOrderId'),
     ...refSales.simple('SalesReturnOrder', 'returnOrderId', 'returnNumber', 'Return Order'),
-    ...refSales.idOnly('SalesReturnOrderLine', 'lineId'),
 
     // ========================================
     // Sales - Shipping Models
     // ========================================
     ...refSales.simple('SalesDeliveryOrder', 'deliveryOrderId', 'deliveryNumber', 'Delivery Order'),
-    ...refSales.idOnly('SalesDeliveryLine', 'lineId'),
-    ...refSales.idOnly('SalesPickRelease', 'pickReleaseId'),
-    ...refSales.idOnly('SalesPackingSlip', 'packingSlipId'),
-    ...refSales.idOnly('SalesShippingDoc', 'shippingDocId'),
-    ...refSales.idOnly('SalesDeliveryConfirm', 'confirmId'),
 
     // ========================================
     // Sales - Billing Models
     // ========================================
     ...refSales.simple('SalesBillingSchedule', 'scheduleId', 'name', 'Billing Schedule'),
-    ...refSales.idOnly('SalesBillingMilestone', 'milestoneId'),
     ...refSales.idOnly('SalesRevenueSchedule', 'scheduleId'),
 
     // ========================================
     // Sales - Territory & Commission Models
     // ========================================
     ...refSales.simple('SalesTerritory', 'territoryId', 'name', 'Territory'),
-    ...refSales.idOnly('SalesTerritoryAssign', 'assignmentId'),
     ...refSales.simple('SalesCommissionPlan', 'planId', 'name', 'Commission Plan'),
-    ...refSales.idOnly('SalesCommissionCalc', 'calcId'),
 
     // ========================================
     // Sales - Analytics Models

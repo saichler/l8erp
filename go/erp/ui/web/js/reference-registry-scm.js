@@ -23,9 +23,7 @@ window.Layer8DReferenceRegistrySCM = {
     // SCM - Procurement Models
     // ========================================
     ...refScm.simple('ScmPurchaseOrder', 'purchaseOrderId', 'orderNumber', 'Purchase Order'),
-    ...refScm.idOnly('ScmPurchaseOrderLine', 'lineId'),
     ...refScm.simple('ScmPurchaseRequisition', 'requisitionId', 'requisitionNumber', 'Requisition'),
-    ...refScm.idOnly('ScmRequisitionLine', 'lineId'),
     ...refScm.simple('ScmSupplierContract', 'contractId', 'contractNumber', 'Contract'),
     ...refScm.idOnly('ScmContractTerm', 'termId'),
     ...refScm.simple('ScmRequestForQuote', 'rfqId', 'rfqNumber', 'RFQ'),
@@ -40,21 +38,16 @@ window.Layer8DReferenceRegistrySCM = {
     ]),
     ...refScm.batchIdOnly([
         ['ScmStockLevel', 'stockLevelId'],
-        ['ScmStockMovement', 'movementId'],
         ['ScmInventoryCount', 'countId'],
         ['ScmItemPricing', 'pricingId']
     ]),
-    ...refScm.simple('ScmLotSerial', 'lotSerialId', 'lotNumber'),
 
     // ========================================
     // SCM - Warehouse Management Models
     // ========================================
     ...refScm.coded('ScmWarehouse', 'warehouseId', 'code', 'name'),
     ...refScm.simple('ScmZone', 'zoneId', 'name'),
-    ...refScm.simple('ScmBin', 'binId', 'binCode'),
     ...refScm.idOnly('ScmReceivingOrder', 'receivingOrderId'),
-    ...refScm.idOnly('ScmPickTask', 'taskId'),
-    ...refScm.idOnly('ScmPackTask', 'taskId'),
 
     // ========================================
     // SCM - Logistics & Transportation Models
@@ -91,13 +84,8 @@ window.Layer8DReferenceRegistrySCM = {
     ...refScm.simple('ScmReorderRule', 'ruleId', 'ruleName'),
 
     // ========================================
-    // SCM - Additional Inventory Models
+    // SCM - Additional Models
     // ========================================
-    ...refScm.simple('ScmLotNumber', 'lotId', 'lotNumber'),
     ...refScm.simple('ScmCarrier', 'carrierId', 'name', 'Carrier'),
-
-    // ========================================
-    // SCM - Additional Warehouse Models
-    // ========================================
     ...refScm.idOnly('ScmWavePlan', 'wavePlanId')
 };

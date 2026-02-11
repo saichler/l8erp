@@ -19,6 +19,7 @@ package fin;
 option go_package = "./types/fin";
 
 import "fin-common.proto";
+import "fin-accounts_payable.proto";
 import "erp-common.proto";
 import "api.proto";
 
@@ -45,6 +46,7 @@ message Customer {
   string notes = 14;
   map<string, string> custom_fields = 15;
   erp.AuditInfo audit_info = 16;
+  repeated CustomerContact customer_contacts = 17;
 }
 
 message CustomerList {
@@ -52,7 +54,6 @@ message CustomerList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // CustomerContact represents a contact person at a customer
 message CustomerContact {
   string contact_id = 1;
@@ -67,11 +68,6 @@ message CustomerContact {
   bool is_active = 10;
   string notes = 11;
   erp.AuditInfo audit_info = 12;
-}
-
-message CustomerContactList {
-  repeated CustomerContact list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
@@ -97,6 +93,7 @@ message SalesInvoice {
   string notes = 18;
   map<string, string> custom_fields = 19;
   erp.AuditInfo audit_info = 20;
+  repeated SalesInvoiceLine lines = 21;
 }
 
 message SalesInvoiceList {
@@ -104,7 +101,6 @@ message SalesInvoiceList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // SalesInvoiceLine represents a line item on a sales invoice
 message SalesInvoiceLine {
   string line_id = 1;
@@ -122,11 +118,6 @@ message SalesInvoiceLine {
   erp.AuditInfo audit_info = 13;
 }
 
-message SalesInvoiceLineList {
-  repeated SalesInvoiceLine list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
 // @PrimeObject
 // CustomerPayment represents a payment received from a customer
 message CustomerPayment {
@@ -142,6 +133,8 @@ message CustomerPayment {
   string notes = 10;
   map<string, string> custom_fields = 11;
   erp.AuditInfo audit_info = 12;
+  repeated PaymentAllocation allocations = 13;
+  repeated PaymentApplication applications = 14;
 }
 
 message CustomerPaymentList {
@@ -149,7 +142,6 @@ message CustomerPaymentList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // PaymentApplication links a customer payment to specific invoices
 message PaymentApplication {
   string application_id = 1;
@@ -158,11 +150,6 @@ message PaymentApplication {
   erp.Money applied_amount = 4;
   erp.Money discount_taken = 5;
   erp.AuditInfo audit_info = 6;
-}
-
-message PaymentApplicationList {
-  repeated PaymentApplication list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject

@@ -38,20 +38,6 @@ limitations under the License.
             ...col.basic([['availableHours', 'Available Hrs'], ['capacityUnits', 'Capacity Units']])
         ],
 
-        MfgLaborEntry: [
-            ...col.id('entryId'),
-            ...col.basic([['workOrderId', 'Work Order'], ['employeeId', 'Employee'], ['workCenterId', 'Work Center']]),
-            ...col.date('startTime', 'Start Time'),
-            ...col.basic([['hoursWorked', 'Hours'], ['quantityCompleted', 'Qty Completed']])
-        ],
-
-        MfgMachineEntry: [
-            ...col.id('entryId'),
-            ...col.basic([['workOrderId', 'Work Order'], ['workCenterId', 'Work Center']]),
-            ...col.date('startTime', 'Start Time'),
-            ...col.basic([['machineHours', 'Machine Hrs'], ['quantityCompleted', 'Qty Completed']])
-        ],
-
         MfgShiftSchedule: [
             ...col.id('scheduleId'),
             ...col.col('name', 'Name'),

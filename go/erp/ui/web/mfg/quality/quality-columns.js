@@ -29,25 +29,11 @@ limitations under the License.
             ...col.date('effectiveDate', 'Effective')
         ],
 
-        MfgInspectionPoint: [
-            ...col.id('pointId'),
-            ...col.basic([['planId', 'Plan'], 'name']),
-            ...col.custom('inspectionType', 'Type', (item) => render.inspectionType(item.inspectionType)),
-            ...col.basic([['sequence', 'Seq #'], 'characteristic'])
-        ],
-
         MfgQualityInspection: [
             ...col.id('inspectionId'),
             ...col.basic([['inspectionNumber', 'Insp #'], ['workOrderId', 'Work Order'], ['planId', 'Plan']]),
             ...col.date('inspectionDate', 'Date'),
             ...col.custom('overallResult', 'Result', (item) => render.inspectionResult(item.overallResult))
-        ],
-
-        MfgTestResult: [
-            ...col.id('resultId'),
-            ...col.basic([['inspectionId', 'Inspection'], ['pointId', 'Point']]),
-            ...col.basic([['measuredValue', 'Measured'], ['textValue', 'Text Value']]),
-            ...col.custom('result', 'Result', (item) => render.inspectionResult(item.result))
         ],
 
         MfgNCR: [
@@ -58,11 +44,5 @@ limitations under the License.
             ...col.custom('status', 'Status', (item) => render.ncrStatus(item.status))
         ],
 
-        MfgNCRAction: [
-            ...col.id('actionId'),
-            ...col.basic([['ncrId', 'NCR'], ['actionType', 'Type'], ['assignedTo', 'Assigned To']]),
-            ...col.date('dueDate', 'Due Date'),
-            ...col.date('completedDate', 'Completed')
-        ]
     };
 })();

@@ -40,6 +40,7 @@ message ScmWarehouse {
   string notes = 9;
   map<string, string> custom_fields = 10;
   erp.AuditInfo audit_info = 11;
+  repeated ScmBin bins = 12;
 }
 
 message ScmWarehouseList {
@@ -47,11 +48,9 @@ message ScmWarehouseList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // ScmBin represents a storage bin or location within a warehouse
 message ScmBin {
   string bin_id = 1;
-  string warehouse_id = 2;
   string bin_code = 3;
   ScmBinType bin_type = 4;
   string zone = 5;
@@ -62,11 +61,6 @@ message ScmBin {
   double max_capacity = 10;
   double current_quantity = 11;
   erp.AuditInfo audit_info = 12;
-}
-
-message ScmBinList {
-  repeated ScmBin list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
@@ -81,6 +75,7 @@ message ScmReceivingOrder {
   string notes = 7;
   map<string, string> custom_fields = 8;
   erp.AuditInfo audit_info = 9;
+  repeated ScmPutawayTask putaway_tasks = 10;
 }
 
 message ScmReceivingOrderList {
@@ -88,11 +83,9 @@ message ScmReceivingOrderList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // ScmPutawayTask represents a task to move received goods to storage bins
 message ScmPutawayTask {
   string task_id = 1;
-  string receiving_order_id = 2;
   string item_id = 3;
   string from_bin_id = 4;
   string to_bin_id = 5;
@@ -103,16 +96,9 @@ message ScmPutawayTask {
   erp.AuditInfo audit_info = 10;
 }
 
-message ScmPutawayTaskList {
-  repeated ScmPutawayTask list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // ScmPickTask represents a task to pick items from storage bins
 message ScmPickTask {
   string task_id = 1;
-  string wave_plan_id = 2;
   string item_id = 3;
   string from_bin_id = 4;
   double quantity = 5;
@@ -123,16 +109,9 @@ message ScmPickTask {
   erp.AuditInfo audit_info = 10;
 }
 
-message ScmPickTaskList {
-  repeated ScmPickTask list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // ScmPackTask represents a task to pack picked items for shipment
 message ScmPackTask {
   string task_id = 1;
-  string pick_task_id = 2;
   string item_id = 3;
   double quantity = 4;
   string package_id = 5;
@@ -142,27 +121,15 @@ message ScmPackTask {
   erp.AuditInfo audit_info = 9;
 }
 
-message ScmPackTaskList {
-  repeated ScmPackTask list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // ScmShipTask represents a task to ship packed items
 message ScmShipTask {
   string task_id = 1;
-  string pack_task_id = 2;
   string shipment_id = 3;
   string carrier_id = 4;
   string tracking_number = 5;
   ScmTaskStatus status = 6;
   int64 shipped_at = 7;
   erp.AuditInfo audit_info = 8;
-}
-
-message ScmShipTaskList {
-  repeated ScmShipTask list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
@@ -177,6 +144,9 @@ message ScmWavePlan {
   string assigned_to = 7;
   string notes = 8;
   erp.AuditInfo audit_info = 9;
+  repeated ScmPickTask pick_tasks = 10;
+  repeated ScmPackTask pack_tasks = 11;
+  repeated ScmShipTask ship_tasks = 12;
 }
 
 message ScmWavePlanList {

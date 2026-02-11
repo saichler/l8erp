@@ -22,9 +22,10 @@ import (
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-// generateSalesInvoices creates 40 sales invoice records
+// generateSalesInvoices creates 40 sales invoice records with embedded lines
 func generateSalesInvoices(store *MockDataStore) []*fin.SalesInvoice {
 	invoices := make([]*fin.SalesInvoice, 40)
+	descriptions := []string{"Software License", "Consulting Services", "Support Contract"}
 	statuses := []fin.InvoiceStatus{
 		fin.InvoiceStatus_INVOICE_STATUS_APPROVED,
 		fin.InvoiceStatus_INVOICE_STATUS_PARTIALLY_PAID,
@@ -32,9 +33,10 @@ func generateSalesInvoices(store *MockDataStore) []*fin.SalesInvoice {
 		fin.InvoiceStatus_INVOICE_STATUS_OVERDUE,
 	}
 
+	lineIdx := 1
 	for i := 0; i < 40; i++ {
 		custIdx := i % len(store.CustomerIDs)
-		periodIdx := 12 + (i % 12) // indices 12-23 for 2025 fiscal periods
+		periodIdx := 12 + (i % 12)
 		if periodIdx >= len(store.FiscalPeriodIDs) {
 			periodIdx = i % len(store.FiscalPeriodIDs)
 		}
@@ -43,7 +45,7 @@ func generateSalesInvoices(store *MockDataStore) []*fin.SalesInvoice {
 		invoiceDate := time.Date(2025, time.Month(i%12+1), (i%28)+1, 0, 0, 0, 0, time.UTC)
 		dueDate := invoiceDate.AddDate(0, 0, 30)
 
-		subtotal := int64(rand.Intn(98001)+2000) * 100 // 2000_00 to 100000_00 cents
+		subtotal := int64(rand.Intn(98001)+2000) * 100
 		taxAmount := subtotal * 7 / 100
 		totalAmount := subtotal + taxAmount
 
@@ -53,10 +55,6 @@ func generateSalesInvoices(store *MockDataStore) []*fin.SalesInvoice {
 			amountPaid = totalAmount
 		case fin.InvoiceStatus_INVOICE_STATUS_PARTIALLY_PAID:
 			amountPaid = totalAmount * int64(rand.Intn(70)+10) / 100
-		case fin.InvoiceStatus_INVOICE_STATUS_OVERDUE:
-			amountPaid = 0
-		default: // APPROVED
-			amountPaid = 0
 		}
 		balanceDue := totalAmount - amountPaid
 
@@ -65,67 +63,58 @@ func generateSalesInvoices(store *MockDataStore) []*fin.SalesInvoice {
 			arAccountIdx = 0
 		}
 
+		invoiceID := fmt.Sprintf("sinv-%04d", i+1)
+
+		// Generate embedded lines (3 per invoice)
+		lines := make([]*fin.SalesInvoiceLine, 3)
+		for lineNum := 1; lineNum <= 3; lineNum++ {
+			quantity := float64(rand.Intn(50) + 1)
+			unitPrice := int64(rand.Intn(9901)+100) * 100
+			lineAmount := int64(quantity) * unitPrice
+			lineTax := lineAmount * 7 / 100
+
+			lines[lineNum-1] = &fin.SalesInvoiceLine{
+				LineId:      fmt.Sprintf("siln-%04d", lineIdx),
+				InvoiceId:   invoiceID,
+				LineNumber:  int32(lineNum),
+				AccountId:   store.AccountIDs[rand.Intn(len(store.AccountIDs))],
+				Description: descriptions[lineNum-1],
+				Quantity:    quantity,
+				UnitPrice:   money(store, unitPrice),
+				LineAmount:  money(store, lineAmount),
+				TaxCodeId:   store.TaxCodeIDs[rand.Intn(len(store.TaxCodeIDs))],
+				TaxAmount:   money(store, lineTax),
+				AuditInfo:   createAuditInfo(),
+			}
+			lineIdx++
+		}
+
 		invoices[i] = &fin.SalesInvoice{
-			InvoiceId:      fmt.Sprintf("sinv-%04d", i+1),
-			InvoiceNumber:  fmt.Sprintf("SI-%06d", i+1),
-			CustomerId:     store.CustomerIDs[custIdx],
-			InvoiceDate:    invoiceDate.Unix(),
-			DueDate:        dueDate.Unix(),
-			CurrencyId:     store.CurrencyIDs[0],
-			FiscalPeriodId: store.FiscalPeriodIDs[periodIdx],
-			Status:         status,
-			Subtotal:       money(store, subtotal),
-			TaxAmount:      money(store, taxAmount),
-			TotalAmount:    money(store, totalAmount),
-			AmountPaid:     money(store, amountPaid),
-			BalanceDue:     money(store, balanceDue),
+			InvoiceId:       invoiceID,
+			InvoiceNumber:   fmt.Sprintf("SI-%06d", i+1),
+			CustomerId:      store.CustomerIDs[custIdx],
+			InvoiceDate:     invoiceDate.Unix(),
+			DueDate:         dueDate.Unix(),
+			CurrencyId:      store.CurrencyIDs[0],
+			FiscalPeriodId:  store.FiscalPeriodIDs[periodIdx],
+			Status:          status,
+			Subtotal:        money(store, subtotal),
+			TaxAmount:       money(store, taxAmount),
+			TotalAmount:     money(store, totalAmount),
+			AmountPaid:      money(store, amountPaid),
+			BalanceDue:      money(store, balanceDue),
 			PaymentTermDays: 30,
-			ArAccountId:    store.AccountIDs[arAccountIdx],
-			Description:    fmt.Sprintf("Sales Invoice for Customer %s", store.CustomerIDs[custIdx]),
-			AuditInfo:      createAuditInfo(),
+			ArAccountId:     store.AccountIDs[arAccountIdx],
+			Description:     fmt.Sprintf("Sales Invoice for Customer %s", store.CustomerIDs[custIdx]),
+			AuditInfo:       createAuditInfo(),
+			Lines:           lines,
 		}
 	}
 
 	return invoices
 }
 
-// generateSalesInvoiceLines creates 3 lines per invoice (120 total)
-func generateSalesInvoiceLines(store *MockDataStore) []*fin.SalesInvoiceLine {
-	lines := make([]*fin.SalesInvoiceLine, 0, 120)
-	descriptions := []string{"Software License", "Consulting Services", "Support Contract"}
-	idx := 1
-
-	for i := 0; i < len(store.SalesInvoiceIDs); i++ {
-		for lineNum := 1; lineNum <= 3; lineNum++ {
-			quantity := float64(rand.Intn(50) + 1)
-			unitPrice := int64(rand.Intn(9901)+100) * 100 // 100_00 to 10000_00 cents
-			lineAmount := int64(quantity) * unitPrice
-			taxAmount := lineAmount * 7 / 100
-
-			accountIdx := rand.Intn(len(store.AccountIDs))
-			taxCodeIdx := rand.Intn(len(store.TaxCodeIDs))
-
-			lines = append(lines, &fin.SalesInvoiceLine{
-				LineId:      fmt.Sprintf("siln-%04d", idx),
-				InvoiceId:   store.SalesInvoiceIDs[i],
-				LineNumber:  int32(lineNum),
-				AccountId:   store.AccountIDs[accountIdx],
-				Description: descriptions[lineNum-1],
-				Quantity:    quantity,
-				UnitPrice:   money(store, unitPrice),
-				LineAmount:  money(store, lineAmount),
-				TaxCodeId:   store.TaxCodeIDs[taxCodeIdx],
-				TaxAmount:   money(store, taxAmount),
-				AuditInfo:   createAuditInfo(),
-			})
-			idx++
-		}
-	}
-
-	return lines
-}
-
-// generateCustomerPayments creates 30 customer payment records
+// generateCustomerPayments creates 30 customer payment records with embedded applications
 func generateCustomerPayments(store *MockDataStore) []*fin.CustomerPayment {
 	payments := make([]*fin.CustomerPayment, 30)
 	methods := []fin.PaymentMethod{
@@ -143,7 +132,7 @@ func generateCustomerPayments(store *MockDataStore) []*fin.CustomerPayment {
 	for i := 0; i < 30; i++ {
 		custIdx := i % len(store.CustomerIDs)
 		paymentDate := time.Now().AddDate(0, 0, -rand.Intn(90))
-		amount := int64(rand.Intn(98001)+2000) * 100 // 2000_00 to 100000_00 cents
+		amount := int64(rand.Intn(98001)+2000) * 100
 		method := methods[i%len(methods)]
 
 		checkNum := ""
@@ -151,8 +140,29 @@ func generateCustomerPayments(store *MockDataStore) []*fin.CustomerPayment {
 			checkNum = fmt.Sprintf("%06d", rand.Intn(999999)+1)
 		}
 
+		paymentID := fmt.Sprintf("cpmt-%04d", i+1)
+		invoiceIdx := i % len(store.SalesInvoiceIDs)
+
+		// Generate embedded payment application (1 per payment)
+		appliedAmount := int64(rand.Intn(98001)+2000) * 100
+		discountTaken := int64(0)
+		if rand.Intn(4) == 0 {
+			discountTaken = appliedAmount * int64(rand.Intn(3)+1) / 100
+		}
+
+		applications := []*fin.PaymentApplication{
+			{
+				ApplicationId: fmt.Sprintf("papp-%04d", i+1),
+				PaymentId:     paymentID,
+				InvoiceId:     store.SalesInvoiceIDs[invoiceIdx],
+				AppliedAmount: money(store, appliedAmount),
+				DiscountTaken: money(store, discountTaken),
+				AuditInfo:     createAuditInfo(),
+			},
+		}
+
 		payments[i] = &fin.CustomerPayment{
-			PaymentId:     fmt.Sprintf("cpmt-%04d", i+1),
+			PaymentId:     paymentID,
 			CustomerId:    store.CustomerIDs[custIdx],
 			PaymentDate:   paymentDate.Unix(),
 			Amount:        money(store, amount),
@@ -162,55 +172,25 @@ func generateCustomerPayments(store *MockDataStore) []*fin.CustomerPayment {
 			CheckNumber:   checkNum,
 			Reference:     fmt.Sprintf("PAY-REF-%04d", i+1),
 			AuditInfo:     createAuditInfo(),
+			Applications:  applications,
 		}
 	}
 
 	return payments
 }
 
-// generatePaymentApplications creates 30 payment application records (1 per payment)
-func generatePaymentApplications(store *MockDataStore) []*fin.PaymentApplication {
-	applications := make([]*fin.PaymentApplication, 30)
-
-	for i := 0; i < 30; i++ {
-		paymentIdx := i % len(store.CustomerPaymentIDs)
-		invoiceIdx := i % len(store.SalesInvoiceIDs)
-
-		// Applied amount matches a reasonable portion of the payment
-		appliedAmount := int64(rand.Intn(98001)+2000) * 100
-		discountTaken := int64(0)
-		if rand.Intn(4) == 0 { // 25% chance of a small discount
-			discountTaken = appliedAmount * int64(rand.Intn(3)+1) / 100
-		}
-
-		applications[i] = &fin.PaymentApplication{
-			ApplicationId: fmt.Sprintf("papp-%04d", i+1),
-			PaymentId:     store.CustomerPaymentIDs[paymentIdx],
-			InvoiceId:     store.SalesInvoiceIDs[invoiceIdx],
-			AppliedAmount: money(store, appliedAmount),
-			DiscountTaken: money(store, discountTaken),
-			AuditInfo:     createAuditInfo(),
-		}
-	}
-
-	return applications
-}
-
 // generateCreditMemos creates 5 credit memo records
 func generateCreditMemos(store *MockDataStore) []*fin.CreditMemo {
 	memos := make([]*fin.CreditMemo, 5)
 	reasons := []string{
-		"Product return",
-		"Service credit",
-		"Billing error",
-		"Loyalty discount",
-		"Volume adjustment",
+		"Product return", "Service credit", "Billing error",
+		"Loyalty discount", "Volume adjustment",
 	}
 
 	for i := 0; i < 5; i++ {
 		custIdx := i % len(store.CustomerIDs)
 		invoiceIdx := i % len(store.SalesInvoiceIDs)
-		amount := int64(rand.Intn(4501)+500) * 100 // 500_00 to 5000_00 cents
+		amount := int64(rand.Intn(4501)+500) * 100
 
 		memos[i] = &fin.CreditMemo{
 			CreditMemoId:      genID("cmemo", i),
@@ -242,13 +222,12 @@ func generateDunningLetters(store *MockDataStore) []*fin.DunningLetter {
 
 	for i := 0; i < 5; i++ {
 		custIdx := i % len(store.CustomerIDs)
-		daysOverdue := int32(30 + rand.Intn(91)) // 30-120 days
+		daysOverdue := int32(30 + rand.Intn(91))
 
 		letterDate := time.Now().AddDate(0, 0, -rand.Intn(30))
 		dueDate := time.Now().AddDate(0, 0, -int(daysOverdue))
 		totalOverdue := int64(rand.Intn(98001)+2000) * 100
 
-		// Collect 1-3 invoice IDs for this dunning letter
 		numInvoices := rand.Intn(3) + 1
 		invoiceIDs := make([]string, numInvoices)
 		for j := 0; j < numInvoices; j++ {
@@ -256,7 +235,7 @@ func generateDunningLetters(store *MockDataStore) []*fin.DunningLetter {
 			invoiceIDs[j] = store.SalesInvoiceIDs[invIdx]
 		}
 
-		isSent := i < 3 // first 3 sent, last 2 not sent
+		isSent := i < 3
 		var sentDate int64
 		if isSent {
 			sentDate = letterDate.Unix()

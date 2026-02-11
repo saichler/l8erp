@@ -51,6 +51,11 @@ message Asset {
   string notes = 20;
   map<string, string> custom_fields = 21;
   erp.AuditInfo audit_info = 22;
+  repeated DepreciationSchedule depreciation_schedules = 23;
+  repeated AssetDisposal disposals = 24;
+  repeated AssetTransfer transfers = 25;
+  repeated AssetMaintenance maintenance = 26;
+  repeated AssetRevaluation revaluations = 27;
 }
 
 message AssetList {
@@ -79,7 +84,6 @@ message AssetCategoryList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // DepreciationSchedule represents a depreciation entry for an asset
 message DepreciationSchedule {
   string schedule_id = 1;
@@ -94,12 +98,6 @@ message DepreciationSchedule {
   erp.AuditInfo audit_info = 10;
 }
 
-message DepreciationScheduleList {
-  repeated DepreciationSchedule list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // AssetDisposal represents the disposal of a fixed asset
 message AssetDisposal {
   string disposal_id = 1;
@@ -116,12 +114,6 @@ message AssetDisposal {
   erp.AuditInfo audit_info = 12;
 }
 
-message AssetDisposalList {
-  repeated AssetDisposal list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // AssetTransfer represents a transfer of an asset between departments
 message AssetTransfer {
   string transfer_id = 1;
@@ -138,12 +130,6 @@ message AssetTransfer {
   erp.AuditInfo audit_info = 12;
 }
 
-message AssetTransferList {
-  repeated AssetTransfer list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // AssetMaintenance represents maintenance performed on an asset
 message AssetMaintenance {
   string maintenance_id = 1;
@@ -160,12 +146,6 @@ message AssetMaintenance {
   erp.AuditInfo audit_info = 12;
 }
 
-message AssetMaintenanceList {
-  repeated AssetMaintenance list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // AssetRevaluation represents a revaluation of an asset's value
 message AssetRevaluation {
   string revaluation_id = 1;
@@ -179,9 +159,4 @@ message AssetRevaluation {
   string journal_entry_id = 9;
   string notes = 10;
   erp.AuditInfo audit_info = 11;
-}
-
-message AssetRevaluationList {
-  repeated AssetRevaluation list = 1;
-  l8api.L8MetaData metadata = 2;
 }

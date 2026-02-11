@@ -33,19 +33,18 @@ limitations under the License.
             ...f.address('address'),
             ...f.reference('managerId', 'Manager', 'Employee'),
             ...f.checkbox('isActive', 'Active')
-        ])
-    ]),
-
-    ScmBin: f.form('ScmBin', [
-        f.section('Bin Information', [
-            ...f.text('binCode', 'Bin Code', true),
-            ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse', true),
-            ...f.select('binType', 'Bin Type', enums.BIN_TYPE, true),
-            ...f.text('zone', 'Zone'),
-            ...f.text('aisle', 'Aisle'),
-            ...f.text('rack', 'Rack'),
-            ...f.text('level', 'Level'),
-            ...f.checkbox('isActive', 'Active')
+        ]),
+        f.section('Bins', [
+            ...f.inlineTable('bins', 'Warehouse Bins', [
+                { key: 'binId', label: 'Bin ID', hidden: true },
+                { key: 'binCode', label: 'Bin Code', type: 'text', required: true },
+                { key: 'binType', label: 'Type', type: 'select', options: enums.BIN_TYPE },
+                { key: 'zone', label: 'Zone', type: 'text' },
+                { key: 'aisle', label: 'Aisle', type: 'text' },
+                { key: 'rack', label: 'Rack', type: 'text' },
+                { key: 'level', label: 'Level', type: 'text' },
+                { key: 'isActive', label: 'Active', type: 'checkbox' }
+            ])
         ])
     ]),
 
@@ -57,49 +56,17 @@ limitations under the License.
             ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse', true),
             ...f.select('status', 'Status', enums.TASK_STATUS),
             ...f.textarea('notes', 'Notes')
-        ])
-    ]),
-
-    ScmPutawayTask: f.form('Putaway Task', [
-        f.section('Task Details', [
-            ...f.reference('receivingOrderId', 'Receiving Order', 'ScmReceivingOrder', true),
-            ...f.reference('itemId', 'Item', 'ScmItem', true),
-            ...f.number('quantity', 'Quantity', true),
-            ...f.reference('fromBinId', 'From Bin', 'ScmBin'),
-            ...f.reference('toBinId', 'To Bin', 'ScmBin', true),
-            ...f.select('status', 'Status', enums.TASK_STATUS),
-            ...f.reference('assignedTo', 'Assigned To', 'Employee')
-        ])
-    ]),
-
-    ScmPickTask: f.form('Pick Task', [
-        f.section('Task Details', [
-            ...f.reference('wavePlanId', 'Wave Plan', 'ScmWavePlan', true),
-            ...f.reference('itemId', 'Item', 'ScmItem', true),
-            ...f.reference('fromBinId', 'Bin', 'ScmBin', true),
-            ...f.number('quantity', 'Quantity', true),
-            ...f.select('status', 'Status', enums.TASK_STATUS),
-            ...f.reference('assignedTo', 'Assigned To', 'Employee')
-        ])
-    ]),
-
-    ScmPackTask: f.form('Pack Task', [
-        f.section('Task Details', [
-            ...f.reference('pickTaskId', 'Pick Task', 'ScmPickTask', true),
-            ...f.text('packageId', 'Package'),
-            ...f.number('quantity', 'Quantity'),
-            ...f.select('status', 'Status', enums.TASK_STATUS),
-            ...f.reference('assignedTo', 'Assigned To', 'Employee')
-        ])
-    ]),
-
-    ScmShipTask: f.form('Ship Task', [
-        f.section('Task Details', [
-            ...f.reference('shipmentId', 'Shipment', 'ScmShipment', true),
-            ...f.reference('carrierId', 'Carrier', 'ScmCarrier'),
-            ...f.text('trackingNumber', 'Tracking Number'),
-            ...f.date('shippedAt', 'Shipped At'),
-            ...f.select('status', 'Status', enums.TASK_STATUS)
+        ]),
+        f.section('Putaway Tasks', [
+            ...f.inlineTable('putawayTasks', 'Putaway Tasks', [
+                { key: 'taskId', label: 'Task ID', hidden: true },
+                { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                { key: 'fromBinId', label: 'From Bin', type: 'text' },
+                { key: 'toBinId', label: 'To Bin', type: 'text', required: true },
+                { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
+                { key: 'assignedTo', label: 'Assigned To', type: 'text' }
+            ])
         ])
     ]),
 
@@ -111,6 +78,37 @@ limitations under the License.
             ...f.number('totalOrders', 'Total Orders'),
             ...f.select('status', 'Status', enums.TASK_STATUS),
             ...f.textarea('notes', 'Notes')
+        ]),
+        f.section('Pick Tasks', [
+            ...f.inlineTable('pickTasks', 'Pick Tasks', [
+                { key: 'taskId', label: 'Task ID', hidden: true },
+                { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                { key: 'fromBinId', label: 'Bin', type: 'text', required: true },
+                { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
+                { key: 'assignedTo', label: 'Assigned To', type: 'text' },
+                { key: 'orderReference', label: 'Order Ref', type: 'text' }
+            ])
+        ]),
+        f.section('Pack Tasks', [
+            ...f.inlineTable('packTasks', 'Pack Tasks', [
+                { key: 'taskId', label: 'Task ID', hidden: true },
+                { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem' },
+                { key: 'quantity', label: 'Qty', type: 'number' },
+                { key: 'packageId', label: 'Package', type: 'text' },
+                { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
+                { key: 'assignedTo', label: 'Assigned To', type: 'text' }
+            ])
+        ]),
+        f.section('Ship Tasks', [
+            ...f.inlineTable('shipTasks', 'Ship Tasks', [
+                { key: 'taskId', label: 'Task ID', hidden: true },
+                { key: 'shipmentId', label: 'Shipment', type: 'reference', lookupModel: 'ScmShipment' },
+                { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier' },
+                { key: 'trackingNumber', label: 'Tracking #', type: 'text' },
+                { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
+                { key: 'shippedAt', label: 'Shipped', type: 'date' }
+            ])
         ])
     ]),
 

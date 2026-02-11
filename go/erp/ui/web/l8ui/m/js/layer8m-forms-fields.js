@@ -416,6 +416,79 @@ limitations under the License.
         },
 
         // renderReferenceField and renderMoneyField are in layer8m-forms-fields-reference.js
+
+        renderInlineTableField(config, value, readonly) {
+            const rows = Array.isArray(value) ? value : [];
+            const visibleCols = (config.columns || []).filter(c => !c.hidden);
+            const esc = Layer8MUtils.escapeHtml;
+            const escA = Layer8MUtils.escapeAttr;
+
+            let html = `<div class="mobile-form-field">`;
+            html += `<label class="mobile-form-label">${esc(config.label)}</label>`;
+            html += `<div class="mobile-form-inline-table" data-inline-table="${escA(config.key)}">`;
+
+            if (rows.length > 0) {
+                rows.forEach((row, idx) => {
+                    const titleCol = visibleCols[0];
+                    const titleValue = titleCol ? this._formatMobileCell(titleCol, row[titleCol.key]) : '-';
+                    const clickAttr = readonly ? ' onclick="Layer8MFormFields._onInlineRowClick(this)"' : '';
+
+                    html += `<div class="mobile-form-inline-card${readonly ? ' l8-clickable-row' : ''}" data-row-index="${idx}"${clickAttr}>`;
+                    html += `<div class="mobile-form-inline-card-header">`;
+                    html += `<span class="mobile-form-inline-card-title">${titleValue}</span>`;
+                    if (!readonly) {
+                        html += `<div class="mobile-form-inline-card-actions">`;
+                        html += `<button type="button" data-action="edit-row" data-row-index="${idx}">Edit</button>`;
+                        html += `<button type="button" data-action="delete-row" data-row-index="${idx}">Delete</button>`;
+                        html += `</div>`;
+                    }
+                    html += `</div>`;
+
+                    // Body — remaining visible columns as key-value pairs
+                    if (visibleCols.length > 1) {
+                        html += `<div class="mobile-form-inline-card-body">`;
+                        visibleCols.slice(1).forEach(col => {
+                            html += `<div class="mobile-form-inline-card-row">`;
+                            html += `<span class="mobile-form-inline-card-label">${esc(col.label)}</span>`;
+                            html += `<span class="mobile-form-inline-card-value">${this._formatMobileCell(col, row[col.key])}</span>`;
+                            html += `</div>`;
+                        });
+                        html += `</div>`;
+                    }
+                    html += `</div>`;
+                });
+            } else {
+                html += `<div class="mobile-form-inline-empty">No records</div>`;
+            }
+
+            if (!readonly) {
+                html += `<button type="button" class="mobile-form-inline-add" data-action="add-row">+ Add</button>`;
+            }
+
+            const jsonValue = escA(JSON.stringify(rows));
+            html += `<input type="hidden" name="${escA(config.key)}" data-inline-table-data="${escA(config.key)}" value="${jsonValue}">`;
+            html += `</div></div>`;
+            return html;
+        },
+
+        _formatMobileCell(col, value) {
+            if (value === null || value === undefined || value === '') return '-';
+            if (col.type === 'money' && typeof value === 'object') {
+                return Layer8MUtils.formatMoney ? Layer8MUtils.formatMoney(value) : JSON.stringify(value);
+            }
+            if (col.type === 'date' && typeof value === 'number') {
+                return Layer8MUtils.formatDate ? Layer8MUtils.formatDate(value) : String(value);
+            }
+            if (col.type === 'select' && col.options) {
+                return col.options[value] || String(value);
+            }
+            if (col.type === 'checkbox') return value ? 'Yes' : 'No';
+            return Layer8MUtils.escapeHtml(String(value));
+        },
+
+        _onInlineRowClick(cardEl) {
+            // Handled by event delegation in Layer8MForms.initInlineTableHandlers
+        }
     };
 
 })();

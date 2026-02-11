@@ -34,19 +34,19 @@ limitations under the License.
             ...f.select('status', 'Status', enums.REQUISITION_STATUS),
             ...f.text('priority', 'Priority'),
             ...f.textarea('description', 'Description')
-        ])
-    ]),
-
-    ScmRequisitionLine: f.form('Requisition Line', [
-        f.section('Line Details', [
-            ...f.reference('requisitionId', 'Requisition', 'ScmPurchaseRequisition', true),
-            ...f.reference('itemId', 'Item', 'ScmItem'),
-            ...f.textarea('description', 'Description'),
-            ...f.number('quantity', 'Quantity', true),
-            ...f.text('unitOfMeasure', 'UOM'),
-            ...f.money('estimatedUnitPrice', 'Est. Unit Price'),
-            ...f.reference('vendorId', 'Vendor', 'Vendor'),
-            ...f.date('deliveryDate', 'Delivery Date')
+        ]),
+        f.section('Lines', [
+            ...f.inlineTable('lines', 'Requisition Lines', [
+                { key: 'lineId', label: 'Line ID', hidden: true },
+                { key: 'lineNumber', label: '#', type: 'number' },
+                { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem' },
+                { key: 'description', label: 'Description', type: 'text' },
+                { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
+                { key: 'estimatedUnitPrice', label: 'Est. Unit Price', type: 'money' },
+                { key: 'vendorId', label: 'Vendor', type: 'reference', lookupModel: 'Vendor' },
+                { key: 'deliveryDate', label: 'Delivery Date', type: 'date' }
+            ])
         ])
     ]),
 
@@ -71,17 +71,18 @@ limitations under the License.
             ...f.select('status', 'Status', enums.PO_STATUS),
             ...f.text('paymentTerms', 'Payment Terms'),
             ...f.textarea('notes', 'Notes')
-        ])
-    ]),
-
-    ScmPurchaseOrderLine: f.form('PO Line', [
-        f.section('Line Details', [
-            ...f.reference('purchaseOrderId', 'Purchase Order', 'ScmPurchaseOrder', true),
-            ...f.reference('itemId', 'Item', 'ScmItem', true),
-            ...f.textarea('description', 'Description'),
-            ...f.number('quantity', 'Quantity', true),
-            ...f.money('unitPrice', 'Unit Price', true),
-            ...f.text('unitOfMeasure', 'UOM')
+        ]),
+        f.section('Order Lines', [
+            ...f.inlineTable('lines', 'PO Lines', [
+                { key: 'lineId', label: 'Line ID', hidden: true },
+                { key: 'lineNumber', label: '#', type: 'number' },
+                { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                { key: 'description', label: 'Description', type: 'text' },
+                { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                { key: 'unitPrice', label: 'Unit Price', type: 'money' },
+                { key: 'unitOfMeasure', label: 'UOM', type: 'text' },
+                { key: 'receivedQuantity', label: 'Received Qty', type: 'number' }
+            ])
         ])
     ]),
 

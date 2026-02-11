@@ -48,7 +48,7 @@ func generateWorkCenters(store *MockDataStore) []*mfg.MfgWorkCenter {
 			Description:        fmt.Sprintf("Manufacturing %s", name),
 			WorkCenterType:     workCenterTypes[i%len(workCenterTypes)],
 			HourlyRate:         float64(rand.Intn(100) + 50),
-			CurrencyId: pickRef(store.CurrencyIDs, i),
+			CurrencyId:         pickRef(store.CurrencyIDs, i),
 			CapacityUnits:      int32(rand.Intn(10) + 1),
 			EfficiencyPercent:  float64(rand.Intn(20) + 80),
 			UtilizationPercent: float64(rand.Intn(30) + 60),
@@ -68,14 +68,14 @@ func generateWorkCenterCaps(store *MockDataStore) []*mfg.MfgWorkCenterCap {
 		for j := 0; j < 2; j++ {
 			effectiveDate := time.Now().AddDate(0, -j*3, 0)
 			expiryDate := effectiveDate.AddDate(0, 6, 0)
-			shiftID := pickRef(store.MfgShiftScheduleIDs, (idx-1))
+			shiftID := pickRef(store.MfgShiftScheduleIDs, (idx - 1))
 
 			caps = append(caps, &mfg.MfgWorkCenterCap{
 				CapacityId:     fmt.Sprintf("wccap-%03d", idx),
 				WorkCenterId:   wcID,
 				EffectiveDate:  effectiveDate.Unix(),
 				ExpiryDate:     expiryDate.Unix(),
-				AvailableHours: float64(rand.Intn(4) + 6) * 8, // 48-80 hours per week
+				AvailableHours: float64(rand.Intn(4)+6) * 8, // 48-80 hours per week
 				CapacityUnits:  float64(rand.Intn(50) + 50),
 				ShiftId:        shiftID,
 				DayOfWeek:      int32(j + 1),
@@ -126,7 +126,7 @@ func generateShiftSchedules() []*mfg.MfgShiftSchedule {
 	return shifts
 }
 
-// generateBoms creates BOM records (one per item, up to 15)
+// generateBoms creates BOM records with embedded lines (3 lines per BOM)
 func generateBoms(store *MockDataStore) []*mfg.MfgBom {
 	bomTypes := []mfg.MfgBomType{
 		mfg.MfgBomType_MFG_BOM_TYPE_STANDARD,
@@ -144,6 +144,7 @@ func generateBoms(store *MockDataStore) []*mfg.MfgBom {
 		count = 15
 	}
 
+	lineIdx := 1
 	boms := make([]*mfg.MfgBom, count)
 	for i := 0; i < count; i++ {
 		itemID := pickRef(store.ItemIDs, i)
@@ -159,8 +160,31 @@ func generateBoms(store *MockDataStore) []*mfg.MfgBom {
 			status = mfg.MfgBomStatus_MFG_BOM_STATUS_OBSOLETE
 		}
 
+		bomID := genID("bom", i)
+
+		// Generate 3 embedded lines per BOM
+		lines := make([]*mfg.MfgBomLine, 3)
+		for j := 0; j < 3; j++ {
+			compItemID := pickRef(store.ItemIDs, (i*3 + j))
+			lines[j] = &mfg.MfgBomLine{
+				LineId:          fmt.Sprintf("bomln-%03d", lineIdx),
+				BomId:           bomID,
+				LineNumber:      int32((j + 1) * 10),
+				ComponentItemId: compItemID,
+				Description:     fmt.Sprintf("Component line %d", j+1),
+				QuantityPer:     float64(rand.Intn(5) + 1),
+				UnitOfMeasure:   "EA",
+				ScrapPercent:    float64(rand.Intn(5)),
+				IsCritical:      j == 0,
+				EffectiveDate:   time.Now().AddDate(0, -3, 0).Unix(),
+				Notes:           fmt.Sprintf("BOM line component %d", lineIdx),
+				AuditInfo:       createAuditInfo(),
+			}
+			lineIdx++
+		}
+
 		boms[i] = &mfg.MfgBom{
-			BomId:         genID("bom", i),
+			BomId:         bomID,
 			BomNumber:     fmt.Sprintf("BOM-%05d", 10000+i+1),
 			ItemId:        itemID,
 			Description:   fmt.Sprintf("Bill of Materials #%d", i+1),
@@ -172,42 +196,20 @@ func generateBoms(store *MockDataStore) []*mfg.MfgBom {
 			UnitOfMeasure: "EA",
 			Notes:         fmt.Sprintf("BOM for manufacturing item %d", i+1),
 			AuditInfo:     createAuditInfo(),
+			Lines:         lines,
 		}
 	}
 	return boms
 }
 
-// generateBomLines creates BOM line records (3 lines per BOM)
-func generateBomLines(store *MockDataStore) []*mfg.MfgBomLine {
-	return genLines(store.MfgBomIDs, 3, func(idx, bomIdx, j int, bomID string) *mfg.MfgBomLine {
-		compItemID := pickRef(store.ItemIDs, (bomIdx*3+j))
-		opID := pickRef(store.MfgRoutingOpIDs, (bomIdx+j))
-
-		return &mfg.MfgBomLine{
-			LineId:          fmt.Sprintf("bomln-%03d", idx),
-			BomId:           bomID,
-			LineNumber:      int32((j + 1) * 10),
-			ComponentItemId: compItemID,
-			Description:     fmt.Sprintf("Component line %d", j+1),
-			QuantityPer:     float64(rand.Intn(5) + 1),
-			UnitOfMeasure:   "EA",
-			ScrapPercent:    float64(rand.Intn(5)),
-			OperationId:     opID,
-			IsCritical:      j == 0,
-			EffectiveDate:   time.Now().AddDate(0, -3, 0).Unix(),
-			Notes:           fmt.Sprintf("BOM line component %d", idx),
-			AuditInfo:       createAuditInfo(),
-		}
-	})
-}
-
-// generateRoutings creates routing records (one per BOM)
+// generateRoutings creates routing records with embedded operations (4 ops per routing)
 func generateRoutings(store *MockDataStore) []*mfg.MfgRouting {
 	count := len(store.MfgBomIDs)
 	if count == 0 {
 		count = 15
 	}
 
+	opIdx := 1
 	routings := make([]*mfg.MfgRouting, count)
 	for i := 0; i < count; i++ {
 		itemID := pickRef(store.ItemIDs, i)
@@ -224,8 +226,36 @@ func generateRoutings(store *MockDataStore) []*mfg.MfgRouting {
 			status = mfg.MfgBomStatus_MFG_BOM_STATUS_OBSOLETE
 		}
 
+		routingID := genID("rtng", i)
+
+		// Generate 4 embedded operations per routing
+		ops := make([]*mfg.MfgRoutingOperation, 4)
+		for j := 0; j < 4; j++ {
+			wcID := pickRef(store.MfgWorkCenterIDs, (i + j))
+			opName := mfgOperationNames[(i*4+j)%len(mfgOperationNames)]
+
+			ops[j] = &mfg.MfgRoutingOperation{
+				OperationId:     fmt.Sprintf("rtngop-%03d", opIdx),
+				RoutingId:       routingID,
+				OperationNumber: int32((j + 1) * 10),
+				OperationName:   opName,
+				WorkCenterId:    wcID,
+				Description:     fmt.Sprintf("%s operation", opName),
+				SetupTime:       float64(rand.Intn(30) + 10),
+				RunTime:         float64(rand.Intn(60) + 20),
+				MoveTime:        float64(rand.Intn(15) + 5),
+				QueueTime:       float64(rand.Intn(30)),
+				TimeUnit:        "MINUTES",
+				OverlapPercent:  int32(rand.Intn(20)),
+				IsSubcontract:   j == 3,
+				Notes:           fmt.Sprintf("Operation step %d: %s", j+1, opName),
+				AuditInfo:       createAuditInfo(),
+			}
+			opIdx++
+		}
+
 		routings[i] = &mfg.MfgRouting{
-			RoutingId:     genID("rtng", i),
+			RoutingId:     routingID,
 			RoutingNumber: fmt.Sprintf("RTG-%05d", 10000+i+1),
 			ItemId:        itemID,
 			Description:   fmt.Sprintf("Manufacturing routing #%d", i+1),
@@ -237,39 +267,8 @@ func generateRoutings(store *MockDataStore) []*mfg.MfgRouting {
 			UnitOfMeasure: "EA",
 			Notes:         fmt.Sprintf("Routing for item %d", i+1),
 			AuditInfo:     createAuditInfo(),
+			Operations:    ops,
 		}
 	}
 	return routings
-}
-
-// generateRoutingOperations creates routing operation records (4 ops per routing)
-func generateRoutingOperations(store *MockDataStore) []*mfg.MfgRoutingOperation {
-	ops := make([]*mfg.MfgRoutingOperation, 0, len(store.MfgRoutingIDs)*4)
-	idx := 1
-	for rtngIdx, routingID := range store.MfgRoutingIDs {
-		for j := 0; j < 4; j++ {
-			wcID := pickRef(store.MfgWorkCenterIDs, (rtngIdx+j))
-			opName := mfgOperationNames[(rtngIdx*4+j)%len(mfgOperationNames)]
-
-			ops = append(ops, &mfg.MfgRoutingOperation{
-				OperationId:     fmt.Sprintf("rtngop-%03d", idx),
-				RoutingId:       routingID,
-				OperationNumber: int32((j + 1) * 10),
-				OperationName:   opName,
-				WorkCenterId:    wcID,
-				Description:     fmt.Sprintf("%s operation", opName),
-				SetupTime:       float64(rand.Intn(30) + 10),        // 10-40 minutes
-				RunTime:         float64(rand.Intn(60) + 20),        // 20-80 minutes per unit
-				MoveTime:        float64(rand.Intn(15) + 5),         // 5-20 minutes
-				QueueTime:       float64(rand.Intn(30)),             // 0-30 minutes
-				TimeUnit:        "MINUTES",
-				OverlapPercent:  int32(rand.Intn(20)),
-				IsSubcontract:   j == 3,
-				Notes:           fmt.Sprintf("Operation step %d: %s", j+1, opName),
-				AuditInfo:       createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return ops
 }

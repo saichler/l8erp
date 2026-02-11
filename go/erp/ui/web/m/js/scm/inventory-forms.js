@@ -35,6 +35,56 @@ limitations under the License.
             ...f.text('unitOfMeasure', 'Unit of Measure'),
             ...f.money('unitCost', 'Unit Cost'),
             ...f.checkbox('isActive', 'Active')
+        ]),
+        f.section('Lot Numbers', [
+            ...f.inlineTable('lots', 'Lot Numbers', [
+                { key: 'lotId', label: 'Lot ID', hidden: true },
+                { key: 'lotNumber', label: 'Lot #', type: 'text', required: true },
+                { key: 'manufactureDate', label: 'Mfg Date', type: 'date' },
+                { key: 'expiryDate', label: 'Expiry', type: 'date' },
+                { key: 'quantity', label: 'Qty', type: 'number' },
+                { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
+                { key: 'status', label: 'Status', type: 'text' }
+            ])
+        ]),
+        f.section('Serial Numbers', [
+            ...f.inlineTable('serials', 'Serial Numbers', [
+                { key: 'serialId', label: 'Serial ID', hidden: true },
+                { key: 'serialNumber', label: 'Serial #', type: 'text', required: true },
+                { key: 'lotId', label: 'Lot', type: 'text' },
+                { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
+                { key: 'status', label: 'Status', type: 'text' }
+            ])
+        ]),
+        f.section('Reorder Points', [
+            ...f.inlineTable('reorderPoints', 'Reorder Points', [
+                { key: 'reorderPointId', label: 'ID', hidden: true },
+                { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
+                { key: 'minimumQuantity', label: 'Min Qty', type: 'number', required: true },
+                { key: 'reorderQuantity', label: 'Reorder Qty', type: 'number', required: true },
+                { key: 'maximumQuantity', label: 'Max Qty', type: 'number' },
+                { key: 'isActive', label: 'Active', type: 'checkbox' }
+            ])
+        ]),
+        f.section('Valuations', [
+            ...f.inlineTable('valuations', 'Inventory Valuations', [
+                { key: 'valuationId', label: 'ID', hidden: true },
+                { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
+                { key: 'valuationDate', label: 'Date', type: 'date' },
+                { key: 'quantityOnHand', label: 'Qty on Hand', type: 'number' },
+                { key: 'unitCost', label: 'Unit Cost', type: 'money' },
+                { key: 'totalValue', label: 'Total Value', type: 'money' }
+            ])
+        ]),
+        f.section('Stock Movements', [
+            ...f.inlineTable('movements', 'Stock Movements', [
+                { key: 'movementId', label: 'ID', hidden: true },
+                { key: 'warehouseId', label: 'Warehouse', type: 'reference', lookupModel: 'ScmWarehouse' },
+                { key: 'movementType', label: 'Type', type: 'select', options: enums.MOVEMENT_TYPE },
+                { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                { key: 'movementDate', label: 'Date', type: 'date', required: true },
+                { key: 'referenceId', label: 'Reference', type: 'text' }
+            ])
         ])
     ]),
 
@@ -47,39 +97,6 @@ limitations under the License.
         ])
     ]),
 
-    ScmStockMovement: f.form('Stock Movement', [
-        f.section('Movement Details', [
-            ...f.reference('itemId', 'Item', 'ScmItem', true),
-            ...f.select('movementType', 'Movement Type', enums.MOVEMENT_TYPE, true),
-            ...f.number('quantity', 'Quantity', true),
-            ...f.date('movementDate', 'Movement Date', true),
-            ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
-            ...f.text('referenceId', 'Reference ID'),
-            ...f.textarea('notes', 'Notes')
-        ])
-    ]),
-
-    ScmLotNumber: f.form('Lot Number', [
-        f.section('Lot Details', [
-            ...f.text('lotNumber', 'Lot Number', true),
-            ...f.reference('itemId', 'Item', 'ScmItem', true),
-            ...f.date('manufactureDate', 'Manufacture Date'),
-            ...f.date('expiryDate', 'Expiry Date'),
-            ...f.number('quantity', 'Quantity'),
-            ...f.textarea('notes', 'Notes')
-        ])
-    ]),
-
-    ScmSerialNumber: f.form('Serial Number', [
-        f.section('Serial Details', [
-            ...f.text('serialNumber', 'Serial Number', true),
-            ...f.reference('itemId', 'Item', 'ScmItem', true),
-            ...f.reference('lotId', 'Lot', 'ScmLotNumber'),
-            ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
-            ...f.select('status', 'Status', enums.TASK_STATUS)
-        ])
-    ]),
-
     ScmCycleCount: f.form('Cycle Count', [
         f.section('Count Details', [
             ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse', true),
@@ -88,28 +105,6 @@ limitations under the License.
             ...f.number('itemsCounted', 'Items Counted'),
             ...f.number('discrepancies', 'Discrepancies'),
             ...f.textarea('notes', 'Notes')
-        ])
-    ]),
-
-    ScmReorderPoint: f.form('Reorder Point', [
-        f.section('Reorder Details', [
-            ...f.reference('itemId', 'Item', 'ScmItem', true),
-            ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
-            ...f.number('minimumQuantity', 'Minimum Quantity', true),
-            ...f.number('reorderQuantity', 'Reorder Quantity', true),
-            ...f.number('maximumQuantity', 'Maximum Quantity'),
-            ...f.checkbox('isActive', 'Active')
-        ])
-    ]),
-
-    ScmInventoryValuation: f.form('Inventory Valuation', [
-        f.section('Valuation Details', [
-            ...f.reference('itemId', 'Item', 'ScmItem', true),
-            ...f.select('valuationMethod', 'Valuation Method', enums.VALUATION_METHOD, true),
-            ...f.date('valuationDate', 'Valuation Date', true),
-            ...f.number('quantityOnHand', 'Quantity on Hand'),
-            ...f.money('unitCost', 'Unit Cost'),
-            ...f.money('totalValue', 'Total Value')
         ])
     ])
 };

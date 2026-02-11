@@ -53,30 +53,6 @@ limitations under the License.
             }
         ],
 
-        SalesBillingMilestone: [
-            { key: 'milestoneId', label: 'ID', sortKey: 'milestoneId', filterKey: 'milestoneId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'scheduleId', label: 'Schedule', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            {
-                key: 'targetDate',
-                label: 'Target',
-                sortKey: 'targetDate',
-                render: (item) => renderDate(item.targetDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.milestoneStatus(item.status)
-            },
-            {
-                key: 'amount',
-                label: 'Amount',
-                sortKey: 'amount',
-                render: (item) => renderMoney(item.amount)
-            }
-        ],
-
         SalesRevenueSchedule: [
             { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
             { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },

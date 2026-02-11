@@ -91,31 +91,6 @@ message TaxRuleList {
 }
 
 // @PrimeObject
-// TaxReturn represents a tax return filing
-message TaxReturn {
-  string return_id = 1;
-  string jurisdiction_id = 2;
-  string fiscal_period_id = 3;
-  TaxType tax_type = 4;
-  TaxReturnStatus status = 5;
-  int64 filing_date = 6;
-  int64 due_date = 7;
-  erp.Money taxable_amount = 8;
-  erp.Money tax_amount = 9;
-  erp.Money amount_paid = 10;
-  erp.Money amount_due = 11;
-  string filed_by = 12;
-  string confirmation_number = 13;
-  string notes = 14;
-  erp.AuditInfo audit_info = 15;
-}
-
-message TaxReturnList {
-  repeated TaxReturn list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // TaxExemption represents a tax exemption for a customer or vendor
 message TaxExemption {
   string exemption_id = 1;
@@ -137,7 +112,25 @@ message TaxExemptionList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
+// TaxReturn represents a tax return filing
+message TaxReturn {
+  string return_id = 1;
+  string jurisdiction_id = 2;
+  string fiscal_period_id = 3;
+  TaxType tax_type = 4;
+  TaxReturnStatus status = 5;
+  int64 filing_date = 6;
+  int64 due_date = 7;
+  erp.Money taxable_amount = 8;
+  erp.Money tax_amount = 9;
+  erp.Money amount_paid = 10;
+  erp.Money amount_due = 11;
+  string filed_by = 12;
+  string confirmation_number = 13;
+  string notes = 14;
+  erp.AuditInfo audit_info = 15;
+}
+
 // WithholdingTaxConfig represents withholding tax configuration for a vendor
 message WithholdingTaxConfig {
   string config_id = 1;
@@ -150,9 +143,4 @@ message WithholdingTaxConfig {
   bool is_active = 8;
   string notes = 9;
   erp.AuditInfo audit_info = 10;
-}
-
-message WithholdingTaxConfigList {
-  repeated WithholdingTaxConfig list = 1;
-  l8api.L8MetaData metadata = 2;
 }

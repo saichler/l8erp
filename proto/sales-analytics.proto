@@ -66,6 +66,7 @@ message SalesTerritory {
   bool is_active = 11;
   map<string, string> custom_fields = 12;
   erp.AuditInfo audit_info = 13;
+  repeated SalesTerritoryAssign assignments = 14;
 }
 
 message SalesTerritoryList {
@@ -73,23 +74,15 @@ message SalesTerritoryList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// SalesTerritoryAssign represents assignment of a salesperson to a territory
+// SalesTerritoryAssign represents assignment of a salesperson to a territory (child of SalesTerritory)
 message SalesTerritoryAssign {
   string assignment_id = 1;
-  string territory_id = 2;
-  string salesperson_id = 3;            // Cross-ref: HCM Employee
-  int64 start_date = 4;
-  int64 end_date = 5;
-  bool is_primary = 6;
-  double allocation_percent = 7;
-  string notes = 8;
-  erp.AuditInfo audit_info = 9;
-}
-
-message SalesTerritoryAssignList {
-  repeated SalesTerritoryAssign list = 1;
-  l8api.L8MetaData metadata = 2;
+  string salesperson_id = 2;            // Cross-ref: HCM Employee
+  int64 start_date = 3;
+  int64 end_date = 4;
+  bool is_primary = 5;
+  double allocation_percent = 6;
+  string notes = 7;
 }
 
 // @PrimeObject
@@ -108,6 +101,7 @@ message SalesCommissionPlan {
   string notes = 11;
   map<string, string> custom_fields = 12;
   erp.AuditInfo audit_info = 13;
+  repeated SalesCommissionCalc calculations = 14;
 }
 
 message SalesCommissionPlanList {
@@ -115,26 +109,18 @@ message SalesCommissionPlanList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// SalesCommissionCalc represents a calculated commission for a salesperson
+// SalesCommissionCalc represents a calculated commission (child of SalesCommissionPlan)
 message SalesCommissionCalc {
   string calc_id = 1;
   string salesperson_id = 2;            // Cross-ref: HCM Employee
-  string plan_id = 3;
-  string sales_order_id = 4;
-  int64 calculation_date = 5;
-  erp.Money sales_amount = 6;
-  double commission_rate = 7;
-  erp.Money commission_amount = 8;
-  string status = 9;
-  int64 paid_date = 10;
-  string notes = 11;
-  erp.AuditInfo audit_info = 12;
-}
-
-message SalesCommissionCalcList {
-  repeated SalesCommissionCalc list = 1;
-  l8api.L8MetaData metadata = 2;
+  string sales_order_id = 3;
+  int64 calculation_date = 4;
+  erp.Money sales_amount = 5;
+  double commission_rate = 6;
+  erp.Money commission_amount = 7;
+  string status = 8;
+  int64 paid_date = 9;
+  string notes = 10;
 }
 
 // @PrimeObject

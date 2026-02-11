@@ -54,61 +54,6 @@ limitations under the License.
             }
         ],
 
-        BudgetLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'budgetId', label: 'Budget', sortKey: 'budgetId', filterKey: 'budgetId' },
-            { key: 'accountId', label: 'Account', sortKey: 'accountId', filterKey: 'accountId' },
-            {
-                key: 'budgetedAmount',
-                label: 'Budgeted',
-                sortKey: 'budgetedAmount',
-                render: (item) => renderMoney(item.budgetedAmount)
-            },
-            {
-                key: 'actualAmount',
-                label: 'Actual',
-                sortKey: 'actualAmount',
-                render: (item) => renderMoney(item.actualAmount)
-            },
-            {
-                key: 'variance',
-                label: 'Variance',
-                sortKey: 'variance',
-                render: (item) => renderMoney(item.variance)
-            }
-        ],
-
-        BudgetTransfer: [
-            { key: 'transferId', label: 'ID', sortKey: 'transferId', filterKey: 'transferId' },
-            { key: 'fromBudgetLineId', label: 'From Line', sortKey: 'fromBudgetLineId', filterKey: 'fromBudgetLineId' },
-            { key: 'toBudgetLineId', label: 'To Line', sortKey: 'toBudgetLineId', filterKey: 'toBudgetLineId' },
-            {
-                key: 'amount',
-                label: 'Amount',
-                sortKey: 'amount',
-                render: (item) => renderMoney(item.amount)
-            },
-            {
-                key: 'transferDate',
-                label: 'Transfer Date',
-                sortKey: 'transferDate',
-                render: (item) => renderDate(item.transferDate)
-            }
-        ],
-
-        BudgetScenario: [
-            { key: 'scenarioId', label: 'ID', sortKey: 'scenarioId', filterKey: 'scenarioId' },
-            { key: 'scenarioName', label: 'Name', sortKey: 'scenarioName', filterKey: 'scenarioName' },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            { key: 'baseBudgetId', label: 'Base Budget', sortKey: 'baseBudgetId', filterKey: 'baseBudgetId' },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
-            }
-        ],
-
         CapitalExpenditure: [
             { key: 'capexId', label: 'ID', sortKey: 'capexId', filterKey: 'capexId' },
             { key: 'projectName', label: 'Project Name', sortKey: 'projectName', filterKey: 'projectName' },

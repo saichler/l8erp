@@ -12,22 +12,15 @@ Layer8ModuleConfigFactory.create({
             label: 'Engineering', icon: '📐',
             services: [
                 { key: 'boms', label: 'BOMs', icon: '📋', endpoint: '/70/MfgBom', model: 'MfgBom' },
-                { key: 'bom-lines', label: 'BOM Lines', icon: '📝', endpoint: '/70/MfgBomLine', model: 'MfgBomLine' },
                 { key: 'routings', label: 'Routings', icon: '🔄', endpoint: '/70/MfgRouting', model: 'MfgRouting' },
-                { key: 'routing-ops', label: 'Routing Ops', icon: '⚙️', endpoint: '/70/MfgRtngOp', model: 'MfgRoutingOperation' },
-                { key: 'change-orders', label: 'Change Orders', icon: '📑', endpoint: '/70/MfgECO', model: 'MfgEngChangeOrder' },
-                { key: 'change-details', label: 'ECO Details', icon: '📄', endpoint: '/70/MfgECODtl', model: 'MfgEngChangeDetail' }
+                { key: 'change-orders', label: 'Change Orders', icon: '📑', endpoint: '/70/MfgECO', model: 'MfgEngChangeOrder' }
             ]
         },
         'production': {
             label: 'Production', icon: '🏭',
             services: [
                 { key: 'work-orders', label: 'Work Orders', icon: '📦', endpoint: '/70/MfgWorkOrd', model: 'MfgWorkOrder' },
-                { key: 'wo-operations', label: 'WO Operations', icon: '⚙️', endpoint: '/70/MfgWOOp', model: 'MfgWorkOrderOp' },
-                { key: 'prod-orders', label: 'Prod Orders', icon: '📋', endpoint: '/70/MfgProdOrd', model: 'MfgProductionOrder' },
-                { key: 'prod-lines', label: 'Prod Lines', icon: '📝', endpoint: '/70/MfgPOLine', model: 'MfgProdOrderLine' },
-                { key: 'batches', label: 'Batches', icon: '📦', endpoint: '/70/MfgBatch', model: 'MfgProdBatch' },
-                { key: 'consumptions', label: 'Consumptions', icon: '📉', endpoint: '/70/MfgConsump', model: 'MfgProdConsumption' }
+                { key: 'prod-orders', label: 'Prod Orders', icon: '📋', endpoint: '/70/MfgProdOrd', model: 'MfgProductionOrder' }
             ]
         },
         'shopfloor': {
@@ -35,8 +28,6 @@ Layer8ModuleConfigFactory.create({
             services: [
                 { key: 'work-centers', label: 'Work Centers', icon: '🏭', endpoint: '/70/MfgWorkCtr', model: 'MfgWorkCenter' },
                 { key: 'wc-capacity', label: 'WC Capacity', icon: '📊', endpoint: '/70/MfgWCCap', model: 'MfgWorkCenterCap' },
-                { key: 'labor', label: 'Labor Entries', icon: '👷', endpoint: '/70/MfgLabor', model: 'MfgLaborEntry' },
-                { key: 'machine', label: 'Machine Entries', icon: '⚙️', endpoint: '/70/MfgMachine', model: 'MfgMachineEntry' },
                 { key: 'shifts', label: 'Shift Schedules', icon: '📅', endpoint: '/70/MfgShift', model: 'MfgShiftSchedule' },
                 { key: 'downtime', label: 'Downtime', icon: '⏸️', endpoint: '/70/MfgDowntm', model: 'MfgDowntimeEvent' }
             ]
@@ -45,22 +36,16 @@ Layer8ModuleConfigFactory.create({
             label: 'Quality', icon: '✅',
             services: [
                 { key: 'plans', label: 'Quality Plans', icon: '📋', endpoint: '/70/MfgQCPlan', model: 'MfgQualityPlan' },
-                { key: 'inspection-points', label: 'Insp Points', icon: '🎯', endpoint: '/70/MfgInspPt', model: 'MfgInspectionPoint' },
                 { key: 'inspections', label: 'Inspections', icon: '🔍', endpoint: '/70/MfgQCInsp', model: 'MfgQualityInspection' },
-                { key: 'test-results', label: 'Test Results', icon: '📊', endpoint: '/70/MfgTestRes', model: 'MfgTestResult' },
-                { key: 'ncrs', label: 'NCRs', icon: '⚠️', endpoint: '/70/MfgNCR', model: 'MfgNCR' },
-                { key: 'ncr-actions', label: 'NCR Actions', icon: '📝', endpoint: '/70/MfgNCRAct', model: 'MfgNCRAction' }
+                { key: 'ncrs', label: 'NCRs', icon: '⚠️', endpoint: '/70/MfgNCR', model: 'MfgNCR' }
             ]
         },
         'planning': {
             label: 'Planning', icon: '📈',
             services: [
                 { key: 'mrp-runs', label: 'MRP Runs', icon: '🔄', endpoint: '/70/MfgMrpRun', model: 'MfgMrpRun' },
-                { key: 'mrp-requirements', label: 'MRP Reqs', icon: '📋', endpoint: '/70/MfgMrpReq', model: 'MfgMrpRequirement' },
                 { key: 'capacity-plans', label: 'Capacity Plans', icon: '📊', endpoint: '/70/MfgCapPlan', model: 'MfgCapacityPlan' },
-                { key: 'capacity-loads', label: 'Capacity Loads', icon: '📈', endpoint: '/70/MfgCapLoad', model: 'MfgCapacityLoad' },
-                { key: 'schedules', label: 'Prod Schedules', icon: '📅', endpoint: '/70/MfgProdSch', model: 'MfgProdSchedule' },
-                { key: 'schedule-blocks', label: 'Sched Blocks', icon: '🗓️', endpoint: '/70/MfgSchBlk', model: 'MfgScheduleBlock' }
+                { key: 'schedules', label: 'Prod Schedules', icon: '📅', endpoint: '/70/MfgProdSch', model: 'MfgProdSchedule' }
             ]
         },
         'costing': {
@@ -68,10 +53,7 @@ Layer8ModuleConfigFactory.create({
             services: [
                 { key: 'standard-costs', label: 'Standard Costs', icon: '💵', endpoint: '/70/MfgStdCost', model: 'MfgStandardCost' },
                 { key: 'cost-rollups', label: 'Cost Rollups', icon: '📊', endpoint: '/70/MfgRollup', model: 'MfgCostRollup' },
-                { key: 'actual-costs', label: 'Actual Costs', icon: '💰', endpoint: '/70/MfgActCost', model: 'MfgActualCost' },
-                { key: 'variances', label: 'Variances', icon: '📉', endpoint: '/70/MfgCostVar', model: 'MfgCostVariance' },
-                { key: 'overheads', label: 'Overheads', icon: '🏢', endpoint: '/70/MfgOverhd', model: 'MfgOverhead' },
-                { key: 'overhead-allocs', label: 'OH Allocations', icon: '📋', endpoint: '/70/MfgOHAlloc', model: 'MfgOverheadAlloc' }
+                { key: 'overheads', label: 'Overheads', icon: '🏢', endpoint: '/70/MfgOverhd', model: 'MfgOverhead' }
             ]
         }
     },

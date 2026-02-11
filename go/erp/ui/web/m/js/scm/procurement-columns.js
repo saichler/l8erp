@@ -32,14 +32,6 @@ limitations under the License.
             ...col.status('status', 'Status', enums.REQUISITION_STATUS_VALUES, render.requisitionStatus),
             ...col.money('estimatedTotal', 'Est. Total')
         ],
-        ScmRequisitionLine: [
-            ...col.id('lineId'),
-            ...col.col('requisitionId', 'Requisition'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('quantity', 'Qty'),
-            ...col.money('estimatedUnitPrice', 'Unit Price'),
-            ...col.date('deliveryDate', 'Delivery')
-        ],
         ScmRequestForQuotation: [
             ...col.id('rfqId'),
             ...col.col('rfqNumber', 'RFQ #'),
@@ -54,14 +46,6 @@ limitations under the License.
             ...col.date('orderDate', 'Order Date'),
             ...col.status('status', 'Status', enums.PO_STATUS_VALUES, render.poStatus),
             ...col.money('totalAmount', 'Total')
-        ],
-        ScmPurchaseOrderLine: [
-            ...col.id('lineId'),
-            ...col.col('purchaseOrderId', 'PO'),
-            ...col.col('itemId', 'Item'),
-            ...col.col('quantity', 'Qty'),
-            ...col.money('unitPrice', 'Unit Price'),
-            ...col.money('totalPrice', 'Total')
         ],
         ScmBlanketOrder: [
             ...col.id('blanketOrderId'),
@@ -82,10 +66,9 @@ limitations under the License.
     };
 
     MobileProcurement.primaryKeys = {
-        ScmPurchaseRequisition: 'requisitionId', ScmRequisitionLine: 'lineId',
+        ScmPurchaseRequisition: 'requisitionId',
         ScmRequestForQuotation: 'rfqId', ScmPurchaseOrder: 'purchaseOrderId',
-        ScmPurchaseOrderLine: 'lineId', ScmBlanketOrder: 'blanketOrderId',
-        ScmSupplierScorecard: 'scorecardId'
+        ScmBlanketOrder: 'blanketOrderId', ScmSupplierScorecard: 'scorecardId'
     };
 
 })();

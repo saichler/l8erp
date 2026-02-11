@@ -19,6 +19,7 @@ package fin;
 option go_package = "./types/fin";
 
 import "fin-common.proto";
+import "fin-tax.proto";
 import "erp-common.proto";
 import "api.proto";
 
@@ -42,6 +43,7 @@ message Account {
   int32 level = 11;             // Hierarchy level
   map<string, string> custom_fields = 12;
   erp.AuditInfo audit_info = 13;
+  repeated AccountBalance balances = 14;
 }
 
 message AccountList {
@@ -69,6 +71,7 @@ message JournalEntry {
   string notes = 15;
   map<string, string> custom_fields = 16;
   erp.AuditInfo audit_info = 17;
+  repeated JournalEntryLine lines = 18;
 }
 
 message JournalEntryList {
@@ -76,7 +79,6 @@ message JournalEntryList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // JournalEntryLine represents a single line in a journal entry
 message JournalEntryLine {
   string line_id = 1;
@@ -93,11 +95,6 @@ message JournalEntryLine {
   erp.AuditInfo audit_info = 12;
 }
 
-message JournalEntryLineList {
-  repeated JournalEntryLine list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
 // @PrimeObject
 // FiscalYear represents an accounting fiscal year
 message FiscalYear {
@@ -109,6 +106,8 @@ message FiscalYear {
   bool is_active = 6;
   string notes = 7;
   erp.AuditInfo audit_info = 8;
+  repeated FiscalPeriod periods = 9;
+  repeated TaxReturn returns = 10;
 }
 
 message FiscalYearList {
@@ -116,7 +115,6 @@ message FiscalYearList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // FiscalPeriod represents a period within a fiscal year (typically monthly)
 message FiscalPeriod {
   string fiscal_period_id = 1;
@@ -127,11 +125,6 @@ message FiscalPeriod {
   int64 end_date = 6;
   FiscalPeriodStatus status = 7;
   erp.AuditInfo audit_info = 8;
-}
-
-message FiscalPeriodList {
-  repeated FiscalPeriod list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
@@ -169,7 +162,6 @@ message ExchangeRateList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // AccountBalance represents the balance of an account for a fiscal period
 message AccountBalance {
   string balance_id = 1;
@@ -182,9 +174,4 @@ message AccountBalance {
   erp.Money ytd_debit = 8;
   erp.Money ytd_credit = 9;
   erp.AuditInfo audit_info = 10;
-}
-
-message AccountBalanceList {
-  repeated AccountBalance list = 1;
-  l8api.L8MetaData metadata = 2;
 }

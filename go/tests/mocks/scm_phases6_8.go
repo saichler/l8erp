@@ -15,55 +15,64 @@ limitations under the License.
 package mocks
 
 import (
+	"fmt"
 
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-// SCM Phase 6: Inventory Transactions
+// SCM Phase 6: Inventory Transactions (children embedded in Items via Phase 2 re-post)
 func generateScmPhase6(client *HCMClient, store *MockDataStore) error {
-	// Generate Stock Movements
-	stockMovements := generateStockMovements(store)
-	if err := runOp(client, "Stock Movements", "/erp/50/StockMove", &scm.ScmStockMovementList{List: stockMovements}, extractIDs(stockMovements, func(e *scm.ScmStockMovement) string { return e.MovementId }), &store.StockMovementIDs); err != nil {
-		return err
+	// Stock Movements, Lot Numbers, Serial Numbers, Reorder Points, and Inventory Valuations
+	// are now embedded in ScmItem (posted in Phase 2). Generate and re-post items with children.
+	items := generateItems(store)
+	movements := generateStockMovements(store)
+	for i, m := range movements {
+		items[i%len(items)].Movements = append(items[i%len(items)].Movements, m)
 	}
-
-	// Generate Lot Numbers
-	lotNumbers := generateLotNumbers(store)
-	if err := runOp(client, "Lot Numbers", "/erp/50/LotNumber", &scm.ScmLotNumberList{List: lotNumbers}, extractIDs(lotNumbers, func(e *scm.ScmLotNumber) string { return e.LotId }), &store.LotNumberIDs); err != nil {
-		return err
+	lots := generateLotNumbers(store)
+	for i, l := range lots {
+		items[i%len(items)].Lots = append(items[i%len(items)].Lots, l)
 	}
-
-	// Generate Serial Numbers
-	serialNumbers := generateSerialNumbers(store)
-	if err := runOp(client, "Serial Numbers", "/erp/50/SerialNum", &scm.ScmSerialNumberList{List: serialNumbers}, extractIDs(serialNumbers, func(e *scm.ScmSerialNumber) string { return e.SerialId }), &store.SerialNumberIDs); err != nil {
-		return err
+	serials := generateSerialNumbers(store)
+	for i, s := range serials {
+		items[i%len(items)].Serials = append(items[i%len(items)].Serials, s)
 	}
+	reorderPoints := generateReorderPoints(store)
+	for i, r := range reorderPoints {
+		items[i%len(items)].ReorderPoints = append(items[i%len(items)].ReorderPoints, r)
+	}
+	valuations := generateInventoryValuations(store)
+	for i, v := range valuations {
+		items[i%len(items)].Valuations = append(items[i%len(items)].Valuations, v)
+	}
+	// Re-post items with embedded children (PUT to update)
+	if _, err := client.Post("/erp/50/Item", &scm.ScmItemList{List: items}); err != nil {
+		return fmt.Errorf("failed to update Items with children: %v", err)
+	}
+	fmt.Printf("  Updated %d Items with embedded children (movements: %d, lots: %d, serials: %d, reorder points: %d, valuations: %d)\n",
+		len(items), len(movements), len(lots), len(serials), len(reorderPoints), len(valuations))
 
-	// Generate Cycle Counts
+	// Generate Cycle Counts (standalone Prime Object)
 	cycleCounts := generateCycleCounts(store)
 	if err := runOp(client, "Cycle Counts", "/erp/50/CycleCount", &scm.ScmCycleCountList{List: cycleCounts}, extractIDs(cycleCounts, func(e *scm.ScmCycleCount) string { return e.CycleCountId }), &store.CycleCountIDs); err != nil {
-		return err
-	}
-
-	// Generate Reorder Points
-	reorderPoints := generateReorderPoints(store)
-	if err := runOp(client, "Reorder Points", "/erp/50/ReorderPt", &scm.ScmReorderPointList{List: reorderPoints}, extractIDs(reorderPoints, func(e *scm.ScmReorderPoint) string { return e.ReorderPointId }), &store.ReorderPointIDs); err != nil {
-		return err
-	}
-
-	// Generate Inventory Valuations
-	inventoryValuations := generateInventoryValuations(store)
-	if err := runOp(client, "Inventory Valuations", "/erp/50/InvValue", &scm.ScmInventoryValuationList{List: inventoryValuations}, extractIDs(inventoryValuations, func(e *scm.ScmInventoryValuation) string { return e.ValuationId }), &store.InventoryValuationIDs); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-// SCM Phase 7: Logistics
+// SCM Phase 7: Logistics (with embedded delivery proofs and freight audits)
 func generateScmPhase7(client *HCMClient, store *MockDataStore) error {
-	// Generate Shipments
+	// Generate Shipments with embedded delivery proofs and freight audits
 	shipments := generateShipments(store)
+	deliveryProofs := generateDeliveryProofs(store)
+	for i, proof := range deliveryProofs {
+		shipments[i%len(shipments)].DeliveryProofs = append(shipments[i%len(shipments)].DeliveryProofs, proof)
+	}
+	freightAudits := generateFreightAudits(store)
+	for i, audit := range freightAudits {
+		shipments[i%len(shipments)].FreightAudits = append(shipments[i%len(shipments)].FreightAudits, audit)
+	}
 	if err := runOp(client, "Shipments", "/erp/50/Shipment", &scm.ScmShipmentList{List: shipments}, extractIDs(shipments, func(e *scm.ScmShipment) string { return e.ShipmentId }), &store.ShipmentIDs); err != nil {
 		return err
 	}
@@ -80,18 +89,6 @@ func generateScmPhase7(client *HCMClient, store *MockDataStore) error {
 		return err
 	}
 
-	// Generate Delivery Proofs
-	deliveryProofs := generateDeliveryProofs(store)
-	if err := runOp(client, "Delivery Proofs", "/erp/50/DlvryProof", &scm.ScmDeliveryProofList{List: deliveryProofs}, extractIDs(deliveryProofs, func(e *scm.ScmDeliveryProof) string { return e.ProofId }), &store.DeliveryProofIDs); err != nil {
-		return err
-	}
-
-	// Generate Freight Audits
-	freightAudits := generateFreightAudits(store)
-	if err := runOp(client, "Freight Audits", "/erp/50/FrtAudit", &scm.ScmFreightAuditList{List: freightAudits}, extractIDs(freightAudits, func(e *scm.ScmFreightAudit) string { return e.AuditId }), &store.FreightAuditIDs); err != nil {
-		return err
-	}
-
 	// Generate Return Authorizations
 	returnAuths := generateReturnAuthorizations(store)
 	if err := runOp(client, "Return Authorizations", "/erp/50/ReturnAuth", &scm.ScmReturnAuthorizationList{List: returnAuths}, extractIDs(returnAuths, func(e *scm.ScmReturnAuthorization) string { return e.RmaId }), &store.ReturnAuthorizationIDs); err != nil {
@@ -103,8 +100,12 @@ func generateScmPhase7(client *HCMClient, store *MockDataStore) error {
 
 // SCM Phase 8: Planning
 func generateScmPhase8(client *HCMClient, store *MockDataStore) error {
-	// Generate Demand Forecasts
+	// Generate Demand Forecasts with embedded accuracy records
 	demandForecasts := generateDemandForecasts(store)
+	forecastAccuracy := generateForecastAccuracy(store)
+	for i, acc := range forecastAccuracy {
+		demandForecasts[i%len(demandForecasts)].Accuracies = append(demandForecasts[i%len(demandForecasts)].Accuracies, acc)
+	}
 	if err := runOp(client, "Demand Forecasts", "/erp/50/DmndFcast", &scm.ScmDemandForecastList{List: demandForecasts}, extractIDs(demandForecasts, func(e *scm.ScmDemandForecast) string { return e.ForecastId }), &store.DemandForecastIDs); err != nil {
 		return err
 	}
@@ -127,11 +128,7 @@ func generateScmPhase8(client *HCMClient, store *MockDataStore) error {
 		return err
 	}
 
-	// Generate Forecast Accuracy
-	forecastAccuracy := generateForecastAccuracy(store)
-	if err := runOp(client, "Forecast Accuracy", "/erp/50/FcastAccur", &scm.ScmForecastAccuracyList{List: forecastAccuracy}, extractIDs(forecastAccuracy, func(e *scm.ScmForecastAccuracy) string { return e.AccuracyId }), &store.ForecastAccuracyIDs); err != nil {
-		return err
-	}
+	// Forecast Accuracy records are embedded in Demand Forecasts above
 
 	// Generate Material Requirements
 	materialReqs := generateMaterialRequirements(store)

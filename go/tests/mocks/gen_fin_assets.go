@@ -22,9 +22,8 @@ import (
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-// generateBankTransactions creates bank transaction records across bank accounts
-func generateBankTransactions(store *MockDataStore) []*fin.BankTransaction {
-	txns := make([]*fin.BankTransaction, 60)
+// generateBankTransactionsForAccount creates bank transactions for a single bank account
+func generateBankTransactionsForAccount(store *MockDataStore, bankAccountID string, acctIndex int) []*fin.BankTransaction {
 	txnTypes := []fin.TransactionType{
 		fin.TransactionType_TRANSACTION_TYPE_DEPOSIT,
 		fin.TransactionType_TRANSACTION_TYPE_WITHDRAWAL,
@@ -38,11 +37,14 @@ func generateBankTransactions(store *MockDataStore) []*fin.BankTransaction {
 		fin.TransactionType_TRANSACTION_TYPE_INTEREST:   {"Monthly interest earned", "Savings interest", "Money market interest"},
 	}
 
-	runningBalance := int64(500000_00) // Start with $500,000.00
-	for i := 0; i < 60; i++ {
-		acctIdx := i % len(store.BankAccountIDs)
+	count := 12
+	txns := make([]*fin.BankTransaction, count)
+	runningBalance := int64(500000_00)
+
+	for i := 0; i < count; i++ {
+		globalIdx := acctIndex*count + i
 		txnType := txnTypes[i%len(txnTypes)]
-		txnDate := time.Date(2025, time.Month((i/5)%12+1), (i%28)+1, 0, 0, 0, 0, time.UTC)
+		txnDate := time.Date(2025, time.Month((i)%12+1), (i%28)+1, 0, 0, 0, 0, time.UTC)
 		descs := descriptions[txnType]
 		desc := descs[rand.Intn(len(descs))]
 
@@ -63,8 +65,8 @@ func generateBankTransactions(store *MockDataStore) []*fin.BankTransaction {
 		}
 
 		txns[i] = &fin.BankTransaction{
-			TransactionId:   fmt.Sprintf("btxn-%04d", i+1),
-			BankAccountId:   store.BankAccountIDs[acctIdx],
+			TransactionId:   fmt.Sprintf("btxn-%04d", globalIdx+1),
+			BankAccountId:   bankAccountID,
 			TransactionDate: txnDate.Unix(),
 			ValueDate:       txnDate.Unix(),
 			TransactionType: txnType,
@@ -72,52 +74,46 @@ func generateBankTransactions(store *MockDataStore) []*fin.BankTransaction {
 			RunningBalance:  money(store, runningBalance),
 			Description:     desc,
 			Reference:       fmt.Sprintf("REF-%06d", rand.Intn(999999)+1),
-			IsReconciled:    i < 48, // older ones reconciled
+			IsReconciled:    i < 10,
 			AuditInfo:       createAuditInfo(),
 		}
 	}
 	return txns
 }
 
-// generateBankReconciliations creates bank reconciliation records (1 per bank account)
-func generateBankReconciliations(store *MockDataStore) []*fin.BankReconciliation {
-	count := minInt(5, len(store.BankAccountIDs))
-	recs := make([]*fin.BankReconciliation, count)
+// generateBankReconciliationForAccount creates a reconciliation for a single bank account
+func generateBankReconciliationForAccount(store *MockDataStore, bankAccountID string) *fin.BankReconciliation {
+	periodStart := time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)
+	periodEnd := time.Date(2025, 1, 31, 23, 59, 59, 0, time.UTC)
+	stmtBalance := int64(rand.Intn(500000)+100000) * 100
+	bookBalance := stmtBalance + int64(rand.Intn(500)-250)*100
+	adjustedBalance := stmtBalance
+	difference := adjustedBalance - bookBalance
 
-	for i := 0; i < count; i++ {
-		periodStart := time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC)
-		periodEnd := time.Date(2025, 1, 31, 23, 59, 59, 0, time.UTC)
-		stmtBalance := int64(rand.Intn(500000)+100000) * 100
-		bookBalance := stmtBalance + int64(rand.Intn(500)-250)*100
-		adjustedBalance := stmtBalance
-		difference := adjustedBalance - bookBalance
-
-		recs[i] = &fin.BankReconciliation{
-			ReconciliationId: genID("brec", i),
-			BankAccountId:    store.BankAccountIDs[i],
-			StatementDate:    periodEnd.Unix(),
-			PeriodStart:      periodStart.Unix(),
-			PeriodEnd:        periodEnd.Unix(),
-			StatementBalance: money(store, stmtBalance),
-			BookBalance:      money(store, bookBalance),
-			AdjustedBalance:  money(store, adjustedBalance),
-			Difference:       money(store, difference),
-			Status:           fin.ReconciliationStatus_RECONCILIATION_STATUS_COMPLETED,
-			MatchedCount:     int32(rand.Intn(20) + 10),
-			UnmatchedCount:   int32(rand.Intn(3)),
-			ReconciledBy:     "mock-generator",
-			ReconciledDate:   time.Date(2025, 2, 5, 0, 0, 0, 0, time.UTC).Unix(),
-			AuditInfo:        createAuditInfo(),
-		}
+	return &fin.BankReconciliation{
+		ReconciliationId: genID("brec", rand.Intn(100)),
+		BankAccountId:    bankAccountID,
+		StatementDate:    periodEnd.Unix(),
+		PeriodStart:      periodStart.Unix(),
+		PeriodEnd:        periodEnd.Unix(),
+		StatementBalance: money(store, stmtBalance),
+		BookBalance:      money(store, bookBalance),
+		AdjustedBalance:  money(store, adjustedBalance),
+		Difference:       money(store, difference),
+		Status:           fin.ReconciliationStatus_RECONCILIATION_STATUS_COMPLETED,
+		MatchedCount:     int32(rand.Intn(20) + 10),
+		UnmatchedCount:   int32(rand.Intn(3)),
+		ReconciledBy:     "mock-generator",
+		ReconciledDate:   time.Date(2025, 2, 5, 0, 0, 0, 0, time.UTC).Unix(),
+		AuditInfo:        createAuditInfo(),
 	}
-	return recs
 }
 
 // generateCashForecasts creates quarterly cash forecast records
 func generateCashForecasts(store *MockDataStore) []*fin.CashForecast {
 	forecasts := make([]*fin.CashForecast, 4)
 	quarterNames := []string{"Q1 2025 Cash Forecast", "Q2 2025 Cash Forecast", "Q3 2025 Cash Forecast", "Q4 2025 Cash Forecast"}
-	openingBalance := int64(1000000_00) // $1,000,000.00
+	openingBalance := int64(1000000_00)
 
 	for i := 0; i < 4; i++ {
 		qStart := time.Date(2025, time.Month(i*3+1), 1, 0, 0, 0, 0, time.UTC)
@@ -162,7 +158,7 @@ func generateFundTransfers(store *MockDataStore) []*fin.FundTransfer {
 			TransferId:        genID("fxfr", i),
 			FromBankAccountId: store.BankAccountIDs[fromIdx],
 			ToBankAccountId:   store.BankAccountIDs[toIdx],
-			Amount:            money(store, int64(rand.Intn(100000)+10000) * 100),
+			Amount:            money(store, int64(rand.Intn(100000)+10000)*100),
 			TransferDate:      transferDate.Unix(),
 			ValueDate:         transferDate.Unix(),
 			Status:            status,
@@ -180,7 +176,7 @@ func generatePettyCash(store *MockDataStore) []*fin.PettyCash {
 
 	for i := 0; i < 3; i++ {
 		empIdx := i % len(store.EmployeeIDs)
-		currentBalance := int64(rand.Intn(40000) + 10000) // random fraction of limit
+		currentBalance := int64(rand.Intn(40000) + 10000)
 
 		funds[i] = &fin.PettyCash{
 			PettyCashId:         genID("pcash", i),
@@ -208,19 +204,18 @@ var assetNames = []string{
 	"Forklift - Electric",
 }
 
-// generateAssets creates fixed asset records
+// generateAssets creates fixed asset records with embedded child entities
 func generateAssets(store *MockDataStore) []*fin.Asset {
 	assets := make([]*fin.Asset, 25)
-	// Fixed Assets account is acct-005 (account number 1100)
 	fixedAssetsAccountID := store.AccountIDs[4]
 
 	for i := 0; i < 25; i++ {
 		catIdx := i % len(store.AssetCategoryIDs)
 		deptIdx := i % len(store.DepartmentIDs)
 		vendorIdx := i % len(store.VendorIDs)
-		acqCost := int64(rand.Intn(4950000)+50000) // 500_00 to ~50000_00
+		acqCost := int64(rand.Intn(4950000) + 50000)
 		salvageValue := acqCost / 10
-		usefulLife := int32(rand.Intn(85) + 36) // 36-120
+		usefulLife := int32(rand.Intn(85) + 36)
 		acqDate := time.Now().AddDate(-(rand.Intn(5) + 1), -rand.Intn(12), 0)
 
 		status := fin.AssetStatus_ASSET_STATUS_ACTIVE
@@ -237,8 +232,163 @@ func generateAssets(store *MockDataStore) []*fin.Asset {
 		accumulated := monthlyDepr * monthsElapsed
 		netBookValue := acqCost - accumulated
 
+		assetID := genID("ast", i)
+
+		// Embedded depreciation schedules (1 per asset)
+		periodIdx := minInt(12, len(store.FiscalPeriodIDs)-1)
+		deprAmount := int64(rand.Intn(500)+100) * 100
+		deprAccum := deprAmount * int64(i+1)
+		deprRemaining := int64(rand.Intn(30000)+5000) * 100
+
+		deprSchedules := []*fin.DepreciationSchedule{
+			{
+				ScheduleId:         genID("depr", i),
+				AssetId:            assetID,
+				FiscalPeriodId:     store.FiscalPeriodIDs[periodIdx],
+				DepreciationDate:   time.Date(2025, 1, 31, 0, 0, 0, 0, time.UTC).Unix(),
+				DepreciationAmount: money(store, deprAmount),
+				AccumulatedAmount:  money(store, deprAccum),
+				RemainingValue:     money(store, deprRemaining),
+				IsPosted:           true,
+				AuditInfo:          createAuditInfo(),
+			},
+		}
+
+		// Embedded disposals (for last 3 assets)
+		var disposals []*fin.AssetDisposal
+		if i >= 22 {
+			dispIdx := i - 22
+			methods := []fin.DisposalMethod{
+				fin.DisposalMethod_DISPOSAL_METHOD_SALE,
+				fin.DisposalMethod_DISPOSAL_METHOD_SCRAP,
+				fin.DisposalMethod_DISPOSAL_METHOD_WRITE_OFF,
+			}
+			buyerNames := []string{"Used Equipment Corp", "", ""}
+			dispDate := time.Date(2025, time.Month(dispIdx+1), 15, 0, 0, 0, 0, time.UTC)
+			nbv := int64(rand.Intn(5000)+1000) * 100
+			var proceeds int64
+			if methods[dispIdx] == fin.DisposalMethod_DISPOSAL_METHOD_SALE {
+				proceeds = nbv + int64(rand.Intn(2000)-1000)*100
+			}
+			gainLoss := proceeds - nbv
+			gainLossAcctIdx := minInt(25, len(store.AccountIDs)-1)
+
+			disposals = []*fin.AssetDisposal{
+				{
+					DisposalId:             genID("adisp", dispIdx),
+					AssetId:                assetID,
+					DisposalDate:           dispDate.Unix(),
+					DisposalMethod:         methods[dispIdx],
+					DisposalProceeds:       money(store, proceeds),
+					NetBookValueAtDisposal: money(store, nbv),
+					GainLoss:               money(store, gainLoss),
+					GainLossAccountId:      store.AccountIDs[gainLossAcctIdx],
+					BuyerName:              buyerNames[dispIdx],
+					AuditInfo:              createAuditInfo(),
+				},
+			}
+		}
+
+		// Embedded transfers (for first 5 assets)
+		var transfers []*fin.AssetTransfer
+		if i < 5 {
+			reasons := []string{
+				"Office relocation", "Department reorganization",
+				"New project assignment", "Space optimization", "Team expansion",
+			}
+			fromDeptIdx := i % len(store.DepartmentIDs)
+			toDeptIdx := (i + 1) % len(store.DepartmentIDs)
+			xfrDate := time.Date(2025, time.Month(i+1), 10, 0, 0, 0, 0, time.UTC)
+
+			transfers = []*fin.AssetTransfer{
+				{
+					TransferId:       genID("axfr", i),
+					AssetId:          assetID,
+					TransferDate:     xfrDate.Unix(),
+					FromDepartmentId: store.DepartmentIDs[fromDeptIdx],
+					ToDepartmentId:   store.DepartmentIDs[toDeptIdx],
+					FromLocation:     fmt.Sprintf("Building %d", fromDeptIdx+1),
+					ToLocation:       fmt.Sprintf("Building %d", toDeptIdx+1),
+					Reason:           reasons[i],
+					ApprovedBy:       "mock-generator",
+					ApprovedDate:     xfrDate.AddDate(0, 0, -2).Unix(),
+					AuditInfo:        createAuditInfo(),
+				},
+			}
+		}
+
+		// Embedded maintenance (for first 10 assets)
+		var maintenance []*fin.AssetMaintenance
+		if i < 10 {
+			mTypes := []fin.MaintenanceType{
+				fin.MaintenanceType_MAINTENANCE_TYPE_PREVENTIVE,
+				fin.MaintenanceType_MAINTENANCE_TYPE_CORRECTIVE,
+				fin.MaintenanceType_MAINTENANCE_TYPE_INSPECTION,
+			}
+			mDescriptions := []string{
+				"Scheduled preventive maintenance",
+				"Repair of malfunctioning component",
+				"Annual safety inspection",
+				"Firmware update and calibration",
+				"Replacement of worn parts",
+			}
+			mType := mTypes[i%len(mTypes)]
+			schedDate := time.Date(2025, time.Month((i%6)+1), (i%28)+1, 0, 0, 0, 0, time.UTC)
+			mStatus := fin.MaintenanceStatus_MAINTENANCE_STATUS_COMPLETED
+			var completedDate int64
+			if i >= 8 {
+				mStatus = fin.MaintenanceStatus_MAINTENANCE_STATUS_SCHEDULED
+			} else {
+				completedDate = schedDate.AddDate(0, 0, rand.Intn(3)+1).Unix()
+			}
+
+			maintenance = []*fin.AssetMaintenance{
+				{
+					MaintenanceId:   genID("amnt", i),
+					AssetId:         assetID,
+					MaintenanceType: mType,
+					Status:          mStatus,
+					ScheduledDate:   schedDate.Unix(),
+					CompletedDate:   completedDate,
+					VendorId:        store.VendorIDs[vendorIdx],
+					Cost:            money(store, int64(rand.Intn(5000)+200)*100),
+					Description:     mDescriptions[i%len(mDescriptions)],
+					WorkOrderNumber: fmt.Sprintf("WO-%06d", rand.Intn(999999)+1),
+					AuditInfo:       createAuditInfo(),
+				},
+			}
+		}
+
+		// Embedded revaluations (for first 5 assets)
+		var revaluations []*fin.AssetRevaluation
+		if i < 5 {
+			reasons := []string{
+				"Market value update", "Impairment review",
+				"Annual fair value assessment", "Insurance appraisal adjustment",
+				"Technology obsolescence review",
+			}
+			revalDate := time.Date(2025, time.Month(i+1), 20, 0, 0, 0, 0, time.UTC)
+			previousValue := int64(rand.Intn(30000)+10000) * 100
+			adjustment := int64(rand.Intn(10000)-5000) * 100
+			newValue := previousValue + adjustment
+
+			revaluations = []*fin.AssetRevaluation{
+				{
+					RevaluationId:    genID("arval", i),
+					AssetId:          assetID,
+					RevaluationDate:  revalDate.Unix(),
+					PreviousValue:    money(store, previousValue),
+					NewValue:         money(store, newValue),
+					AdjustmentAmount: money(store, adjustment),
+					Reason:           reasons[i],
+					Appraiser:        "Independent Appraiser LLC",
+					AuditInfo:        createAuditInfo(),
+				},
+			}
+		}
+
 		assets[i] = &fin.Asset{
-			AssetId:                 genID("ast", i),
+			AssetId:                 assetID,
 			AssetNumber:             fmt.Sprintf("FA-%05d", i+1),
 			Name:                    assetNames[i],
 			Description:             fmt.Sprintf("Fixed asset: %s", assetNames[i]),
@@ -254,195 +404,16 @@ func generateAssets(store *MockDataStore) []*fin.Asset {
 			NetBookValue:            money(store, netBookValue),
 			DepartmentId:            store.DepartmentIDs[deptIdx],
 			Location:                fmt.Sprintf("Building %d, Floor %d", (i/5)+1, (i%5)+1),
-			GlAccountId:            fixedAssetsAccountID,
-			VendorId:               store.VendorIDs[vendorIdx],
+			GlAccountId:             fixedAssetsAccountID,
+			VendorId:                store.VendorIDs[vendorIdx],
 			PurchaseOrderNumber:     fmt.Sprintf("PO-%06d", i+1),
-			AuditInfo:              createAuditInfo(),
+			AuditInfo:               createAuditInfo(),
+			DepreciationSchedules:   deprSchedules,
+			Disposals:               disposals,
+			Transfers:               transfers,
+			Maintenance:             maintenance,
+			Revaluations:            revaluations,
 		}
 	}
 	return assets
-}
-
-// generateDepreciationSchedules creates depreciation schedule records (1 per asset)
-func generateDepreciationSchedules(store *MockDataStore) []*fin.DepreciationSchedule {
-	schedules := make([]*fin.DepreciationSchedule, 25)
-	// Use first 2025 fiscal period (fp-013 = FY2025-M01)
-	periodIdx := minInt(12, len(store.FiscalPeriodIDs)-1) // index 12 = fp-013
-
-	for i := 0; i < 25; i++ {
-		assetIdx := i % len(store.AssetIDs)
-		// Estimate monthly depreciation from typical asset cost
-		depreciationAmount := int64(rand.Intn(500)+100) * 100
-		accumulated := depreciationAmount * int64(i+1)
-		remaining := int64(rand.Intn(30000)+5000) * 100
-		deprDate := time.Date(2025, 1, 31, 0, 0, 0, 0, time.UTC)
-
-		schedules[i] = &fin.DepreciationSchedule{
-			ScheduleId:         genID("depr", i),
-			AssetId:            store.AssetIDs[assetIdx],
-			FiscalPeriodId:     store.FiscalPeriodIDs[periodIdx],
-			DepreciationDate:   deprDate.Unix(),
-			DepreciationAmount: money(store, depreciationAmount),
-			AccumulatedAmount:  money(store, accumulated),
-			RemainingValue:     money(store, remaining),
-			IsPosted:           true,
-			AuditInfo:          createAuditInfo(),
-		}
-	}
-	return schedules
-}
-
-// generateAssetDisposals creates asset disposal records
-func generateAssetDisposals(store *MockDataStore) []*fin.AssetDisposal {
-	disposals := make([]*fin.AssetDisposal, 3)
-	methods := []fin.DisposalMethod{
-		fin.DisposalMethod_DISPOSAL_METHOD_SALE,
-		fin.DisposalMethod_DISPOSAL_METHOD_SCRAP,
-		fin.DisposalMethod_DISPOSAL_METHOD_WRITE_OFF,
-	}
-	buyerNames := []string{"Used Equipment Corp", "", ""}
-
-	for i := 0; i < 3; i++ {
-		assetIdx := len(store.AssetIDs) - 3 + i
-		if assetIdx < 0 {
-			assetIdx = i
-		}
-		disposalDate := time.Date(2025, time.Month(i+1), 15, 0, 0, 0, 0, time.UTC)
-		netBookValue := int64(rand.Intn(5000)+1000) * 100
-		var proceeds int64
-		if methods[i] == fin.DisposalMethod_DISPOSAL_METHOD_SALE {
-			proceeds = netBookValue + int64(rand.Intn(2000)-1000)*100
-		}
-		gainLoss := proceeds - netBookValue
-		// Use Miscellaneous Expense account (acct-026, index 25)
-		gainLossAcctIdx := minInt(25, len(store.AccountIDs)-1)
-
-		disposals[i] = &fin.AssetDisposal{
-			DisposalId:             genID("adisp", i),
-			AssetId:                store.AssetIDs[assetIdx],
-			DisposalDate:           disposalDate.Unix(),
-			DisposalMethod:         methods[i],
-			DisposalProceeds:       money(store, proceeds),
-			NetBookValueAtDisposal: money(store, netBookValue),
-			GainLoss:               money(store, gainLoss),
-			GainLossAccountId:      store.AccountIDs[gainLossAcctIdx],
-			BuyerName:              buyerNames[i],
-			AuditInfo:              createAuditInfo(),
-		}
-	}
-	return disposals
-}
-
-// generateAssetTransfers creates asset transfer records between departments
-func generateAssetTransfers(store *MockDataStore) []*fin.AssetTransfer {
-	transfers := make([]*fin.AssetTransfer, 5)
-	reasons := []string{
-		"Office relocation",
-		"Department reorganization",
-		"New project assignment",
-		"Space optimization",
-		"Team expansion",
-	}
-
-	for i := 0; i < 5; i++ {
-		assetIdx := i % len(store.AssetIDs)
-		fromDeptIdx := i % len(store.DepartmentIDs)
-		toDeptIdx := (i + 1) % len(store.DepartmentIDs)
-		transferDate := time.Date(2025, time.Month(i+1), 10, 0, 0, 0, 0, time.UTC)
-
-		transfers[i] = &fin.AssetTransfer{
-			TransferId:       genID("axfr", i),
-			AssetId:          store.AssetIDs[assetIdx],
-			TransferDate:     transferDate.Unix(),
-			FromDepartmentId: store.DepartmentIDs[fromDeptIdx],
-			ToDepartmentId:   store.DepartmentIDs[toDeptIdx],
-			FromLocation:     fmt.Sprintf("Building %d", fromDeptIdx+1),
-			ToLocation:       fmt.Sprintf("Building %d", toDeptIdx+1),
-			Reason:           reasons[i],
-			ApprovedBy:       "mock-generator",
-			ApprovedDate:     transferDate.AddDate(0, 0, -2).Unix(),
-			AuditInfo:        createAuditInfo(),
-		}
-	}
-	return transfers
-}
-
-// generateAssetMaintenance creates asset maintenance records
-func generateAssetMaintenance(store *MockDataStore) []*fin.AssetMaintenance {
-	records := make([]*fin.AssetMaintenance, 10)
-	mTypes := []fin.MaintenanceType{
-		fin.MaintenanceType_MAINTENANCE_TYPE_PREVENTIVE,
-		fin.MaintenanceType_MAINTENANCE_TYPE_CORRECTIVE,
-		fin.MaintenanceType_MAINTENANCE_TYPE_INSPECTION,
-	}
-	descriptions := []string{
-		"Scheduled preventive maintenance",
-		"Repair of malfunctioning component",
-		"Annual safety inspection",
-		"Firmware update and calibration",
-		"Replacement of worn parts",
-	}
-
-	for i := 0; i < 10; i++ {
-		assetIdx := i % len(store.AssetIDs)
-		vendorIdx := i % len(store.VendorIDs)
-		mType := mTypes[i%len(mTypes)]
-		scheduledDate := time.Date(2025, time.Month((i%6)+1), (i%28)+1, 0, 0, 0, 0, time.UTC)
-
-		status := fin.MaintenanceStatus_MAINTENANCE_STATUS_COMPLETED
-		var completedDate int64
-		if i >= 8 {
-			status = fin.MaintenanceStatus_MAINTENANCE_STATUS_SCHEDULED
-		} else {
-			completedDate = scheduledDate.AddDate(0, 0, rand.Intn(3)+1).Unix()
-		}
-
-		records[i] = &fin.AssetMaintenance{
-			MaintenanceId:   genID("amnt", i),
-			AssetId:         store.AssetIDs[assetIdx],
-			MaintenanceType: mType,
-			Status:          status,
-			ScheduledDate:   scheduledDate.Unix(),
-			CompletedDate:   completedDate,
-			VendorId:        store.VendorIDs[vendorIdx],
-			Cost:            money(store, int64(rand.Intn(5000)+200) * 100),
-			Description:     descriptions[i%len(descriptions)],
-			WorkOrderNumber: fmt.Sprintf("WO-%06d", rand.Intn(999999)+1),
-			AuditInfo:       createAuditInfo(),
-		}
-	}
-	return records
-}
-
-// generateAssetRevaluations creates asset revaluation records
-func generateAssetRevaluations(store *MockDataStore) []*fin.AssetRevaluation {
-	revals := make([]*fin.AssetRevaluation, 5)
-	reasons := []string{
-		"Market value update",
-		"Impairment review",
-		"Annual fair value assessment",
-		"Insurance appraisal adjustment",
-		"Technology obsolescence review",
-	}
-
-	for i := 0; i < 5; i++ {
-		assetIdx := i % len(store.AssetIDs)
-		revalDate := time.Date(2025, time.Month(i+1), 20, 0, 0, 0, 0, time.UTC)
-		previousValue := int64(rand.Intn(30000)+10000) * 100
-		adjustment := int64(rand.Intn(10000)-5000) * 100
-		newValue := previousValue + adjustment
-
-		revals[i] = &fin.AssetRevaluation{
-			RevaluationId:    genID("arval", i),
-			AssetId:          store.AssetIDs[assetIdx],
-			RevaluationDate:  revalDate.Unix(),
-			PreviousValue:    money(store, previousValue),
-			NewValue:         money(store, newValue),
-			AdjustmentAmount: money(store, adjustment),
-			Reason:           reasons[i],
-			Appraiser:        "Independent Appraiser LLC",
-			AuditInfo:        createAuditInfo(),
-		}
-	}
-	return revals
 }

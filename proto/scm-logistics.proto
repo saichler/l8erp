@@ -87,6 +87,8 @@ message ScmShipment {
   string notes = 14;
   map<string, string> custom_fields = 15;
   erp.AuditInfo audit_info = 16;
+  repeated ScmDeliveryProof delivery_proofs = 17;
+  repeated ScmFreightAudit freight_audits = 18;
 }
 
 message ScmShipmentList {
@@ -136,11 +138,9 @@ message ScmLoadPlanList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // ScmDeliveryProof represents proof of delivery for a shipment
 message ScmDeliveryProof {
   string proof_id = 1;
-  string shipment_id = 2;
   int64 delivery_date = 3;
   string received_by = 4;
   string signature = 5;
@@ -150,16 +150,9 @@ message ScmDeliveryProof {
   erp.AuditInfo audit_info = 9;
 }
 
-message ScmDeliveryProofList {
-  repeated ScmDeliveryProof list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // ScmFreightAudit represents an audit of freight charges
 message ScmFreightAudit {
   string audit_id = 1;
-  string shipment_id = 2;
   string carrier_id = 3;
   erp.Money invoiced_amount = 4;
   erp.Money actual_amount = 5;
@@ -168,11 +161,6 @@ message ScmFreightAudit {
   string status = 8;
   string notes = 9;
   erp.AuditInfo audit_info = 10;
-}
-
-message ScmFreightAuditList {
-  repeated ScmFreightAudit list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject

@@ -27,7 +27,7 @@ func runFINFoundation(client *HCMClient, store *MockDataStore) {
 	runPhase("FIN Phase 3: Entity Master", func() error { return generateFinPhase3(client, store) })
 }
 
-// runFINRemaining runs FIN Phases 4-9 (needs HCM DepartmentIDs, EmployeeIDs)
+// runFINRemaining runs FIN Phases 4-8 (needs HCM DepartmentIDs, EmployeeIDs)
 func runFINRemaining(client *HCMClient, store *MockDataStore) {
 	runPhase("FIN Phase 4: Configuration", func() error { return generateFinPhase4(client, store) })
 
@@ -38,8 +38,6 @@ func runFINRemaining(client *HCMClient, store *MockDataStore) {
 	runPhase("FIN Phase 7: GL Transactions", func() error { return generateFinPhase7(client, store) })
 
 	runPhase("FIN Phase 8: Cash & Assets", func() error { return generateFinPhase8(client, store) })
-
-	runPhase("FIN Phase 9: Tax Filing", func() error { return generateFinPhase9(client, store) })
 }
 
 func runSCMPhases(client *HCMClient, store *MockDataStore) {

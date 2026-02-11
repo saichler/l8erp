@@ -22,39 +22,8 @@ import (
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-// generateQualityPlans creates quality plan records
+// generateQualityPlans creates quality plan records with embedded inspection points
 func generateQualityPlans(store *MockDataStore) []*mfg.MfgQualityPlan {
-	count := 10
-	plans := make([]*mfg.MfgQualityPlan, count)
-
-	for i := 0; i < count; i++ {
-		itemID := pickRef(store.ItemIDs, i)
-		effectiveDate := time.Now().AddDate(0, -rand.Intn(6), 0)
-
-		statuses := []mfg.MfgBomStatus{
-			mfg.MfgBomStatus_MFG_BOM_STATUS_ACTIVE,
-			mfg.MfgBomStatus_MFG_BOM_STATUS_DRAFT,
-			mfg.MfgBomStatus_MFG_BOM_STATUS_PENDING_APPROVAL,
-			mfg.MfgBomStatus_MFG_BOM_STATUS_OBSOLETE,
-		}
-		plans[i] = &mfg.MfgQualityPlan{
-			PlanId:        genID("qplan", i),
-			PlanNumber:    fmt.Sprintf("QP-%05d", 40000+i+1),
-			Name:          fmt.Sprintf("Quality Plan %d", i+1),
-			Description:   fmt.Sprintf("Quality control plan for product line %d", i+1),
-			ItemId:        itemID,
-			Status:        statuses[i%len(statuses)],
-			EffectiveDate: effectiveDate.Unix(),
-			Revision:      fmt.Sprintf("R%d", rand.Intn(3)+1),
-			Notes:         fmt.Sprintf("Quality assurance plan notes %d", i+1),
-			AuditInfo:     createAuditInfo(),
-		}
-	}
-	return plans
-}
-
-// generateInspectionPoints creates inspection point records (3 per quality plan)
-func generateInspectionPoints(store *MockDataStore) []*mfg.MfgInspectionPoint {
 	inspTypes := []mfg.MfgInspectionType{
 		mfg.MfgInspectionType_MFG_INSPECTION_TYPE_INCOMING,
 		mfg.MfgInspectionType_MFG_INSPECTION_TYPE_IN_PROCESS,
@@ -62,44 +31,70 @@ func generateInspectionPoints(store *MockDataStore) []*mfg.MfgInspectionPoint {
 		mfg.MfgInspectionType_MFG_INSPECTION_TYPE_RANDOM,
 	}
 	samplingMethods := []string{"100%", "SAMPLE", "RANDOM", "AQL"}
+	statuses := []mfg.MfgBomStatus{
+		mfg.MfgBomStatus_MFG_BOM_STATUS_ACTIVE,
+		mfg.MfgBomStatus_MFG_BOM_STATUS_DRAFT,
+		mfg.MfgBomStatus_MFG_BOM_STATUS_PENDING_APPROVAL,
+		mfg.MfgBomStatus_MFG_BOM_STATUS_OBSOLETE,
+	}
 
-	points := make([]*mfg.MfgInspectionPoint, 0, len(store.MfgQualityPlanIDs)*3)
-	idx := 1
-	for planIdx, planID := range store.MfgQualityPlanIDs {
+	count := 10
+	pointIdx := 1
+	plans := make([]*mfg.MfgQualityPlan, count)
+
+	for i := 0; i < count; i++ {
+		itemID := pickRef(store.ItemIDs, i)
+		effectiveDate := time.Now().AddDate(0, -rand.Intn(6), 0)
+		planID := genID("qplan", i)
+
+		// Generate 3 embedded inspection points per plan
+		points := make([]*mfg.MfgInspectionPoint, 3)
 		for j := 0; j < 3; j++ {
-			opID := pickRef(store.MfgRoutingOpIDs, (planIdx*3+j))
-
 			lowerLimit := float64(rand.Intn(40)+30) / 10.0
 			upperLimit := float64(rand.Intn(40)+70) / 10.0
 
-			points = append(points, &mfg.MfgInspectionPoint{
-				PointId:        fmt.Sprintf("inspt-%03d", idx),
+			points[j] = &mfg.MfgInspectionPoint{
+				PointId:        fmt.Sprintf("inspt-%03d", pointIdx),
 				PlanId:         planID,
 				Sequence:       int32((j + 1) * 10),
-				Name:           fmt.Sprintf("Inspection Point %d-%d", planIdx+1, j+1),
-				Description:    fmt.Sprintf("Inspection checkpoint %d for quality plan", idx),
-				InspectionType: inspTypes[(planIdx*3+j)%len(inspTypes)],
-				OperationId:    opID,
+				Name:           fmt.Sprintf("Inspection Point %d-%d", i+1, j+1),
+				Description:    fmt.Sprintf("Inspection checkpoint %d for quality plan", pointIdx),
+				InspectionType: inspTypes[(i*3+j)%len(inspTypes)],
 				Characteristic: fmt.Sprintf("Characteristic %d", j+1),
-				Specification:  fmt.Sprintf("SPEC-%03d", idx),
+				Specification:  fmt.Sprintf("SPEC-%03d", pointIdx),
 				LowerLimit:     lowerLimit,
 				UpperLimit:     upperLimit,
 				UnitOfMeasure:  "mm",
 				SamplingMethod: samplingMethods[j%len(samplingMethods)],
 				SampleSize:     int32(rand.Intn(10) + 5),
 				IsMandatory:    j < 2,
-				Notes:          fmt.Sprintf("Inspection point notes %d", idx),
+				Notes:          fmt.Sprintf("Inspection point notes %d", pointIdx),
 				AuditInfo:      createAuditInfo(),
-			})
-			idx++
+			}
+			pointIdx++
+		}
+
+		plans[i] = &mfg.MfgQualityPlan{
+			PlanId:           planID,
+			PlanNumber:       fmt.Sprintf("QP-%05d", 40000+i+1),
+			Name:             fmt.Sprintf("Quality Plan %d", i+1),
+			Description:      fmt.Sprintf("Quality control plan for product line %d", i+1),
+			ItemId:           itemID,
+			Status:           statuses[i%len(statuses)],
+			EffectiveDate:    effectiveDate.Unix(),
+			Revision:         fmt.Sprintf("R%d", rand.Intn(3)+1),
+			Notes:            fmt.Sprintf("Quality assurance plan notes %d", i+1),
+			AuditInfo:        createAuditInfo(),
+			InspectionPoints: points,
 		}
 	}
-	return points
+	return plans
 }
 
-// generateQualityInspections creates quality inspection records
+// generateQualityInspections creates quality inspection records with embedded test results
 func generateQualityInspections(store *MockDataStore) []*mfg.MfgQualityInspection {
 	count := 20
+	resultIdx := 1
 	inspections := make([]*mfg.MfgQualityInspection, count)
 
 	inspTypes := []mfg.MfgInspectionType{
@@ -135,8 +130,43 @@ func generateQualityInspections(store *MockDataStore) []*mfg.MfgQualityInspectio
 			result = mfg.MfgInspectionResult_MFG_INSPECTION_RESULT_PENDING
 		}
 
+		inspID := genID("qinsp", i)
+
+		// Generate 2 embedded test results per inspection
+		testResults := make([]*mfg.MfgTestResult, 2)
+		for j := 0; j < 2; j++ {
+			testerID := pickRef(store.EmployeeIDs, (i + j))
+			testDate := time.Now().AddDate(0, 0, -rand.Intn(14))
+			measuredValue := float64(rand.Intn(100)+40) / 10.0
+
+			var trResult mfg.MfgInspectionResult
+			isInSpec := true
+			if (i*2+j)%5 < 4 {
+				trResult = mfg.MfgInspectionResult_MFG_INSPECTION_RESULT_PASS
+			} else {
+				trResult = mfg.MfgInspectionResult_MFG_INSPECTION_RESULT_FAIL
+				isInSpec = false
+			}
+
+			testResults[j] = &mfg.MfgTestResult{
+				ResultId:      fmt.Sprintf("testres-%03d", resultIdx),
+				InspectionId:  inspID,
+				SampleNumber:  int32(j + 1),
+				MeasuredValue: measuredValue,
+				TextValue:     fmt.Sprintf("%.2f mm", measuredValue),
+				Result:        trResult,
+				IsInSpec:      isInSpec,
+				TesterId:      testerID,
+				TestDate:      testDate.Unix(),
+				EquipmentId:   fmt.Sprintf("equip-%03d", rand.Intn(10)+1),
+				Notes:         fmt.Sprintf("Test result notes %d", resultIdx),
+				AuditInfo:     createAuditInfo(),
+			}
+			resultIdx++
+		}
+
 		inspections[i] = &mfg.MfgQualityInspection{
-			InspectionId:      genID("qinsp", i),
+			InspectionId:      inspID,
 			InspectionNumber:  fmt.Sprintf("QI-%06d", 500000+i+1),
 			PlanId:            planID,
 			WorkOrderId:       woID,
@@ -153,55 +183,13 @@ func generateQualityInspections(store *MockDataStore) []*mfg.MfgQualityInspectio
 			WarehouseId:       warehouseID,
 			Notes:             fmt.Sprintf("Quality inspection notes %d", i+1),
 			AuditInfo:         createAuditInfo(),
+			TestResults:       testResults,
 		}
 	}
 	return inspections
 }
 
-// generateTestResults creates test result records (2 per inspection)
-func generateTestResults(store *MockDataStore) []*mfg.MfgTestResult {
-	results := make([]*mfg.MfgTestResult, 0, len(store.MfgQualityInspectionIDs)*2)
-	idx := 1
-	for inspIdx, inspID := range store.MfgQualityInspectionIDs {
-		for j := 0; j < 2; j++ {
-			pointID := pickRef(store.MfgInspectionPointIDs, (inspIdx*2+j))
-			testerID := pickRef(store.EmployeeIDs, (inspIdx+j))
-
-			testDate := time.Now().AddDate(0, 0, -rand.Intn(14))
-			measuredValue := float64(rand.Intn(100)+40) / 10.0
-
-			// Result distribution: 80% Pass, 20% Fail
-			var result mfg.MfgInspectionResult
-			isInSpec := true
-			if (inspIdx*2+j)%5 < 4 {
-				result = mfg.MfgInspectionResult_MFG_INSPECTION_RESULT_PASS
-			} else {
-				result = mfg.MfgInspectionResult_MFG_INSPECTION_RESULT_FAIL
-				isInSpec = false
-			}
-
-			results = append(results, &mfg.MfgTestResult{
-				ResultId:      fmt.Sprintf("testres-%03d", idx),
-				InspectionId:  inspID,
-				PointId:       pointID,
-				SampleNumber:  int32(j + 1),
-				MeasuredValue: measuredValue,
-				TextValue:     fmt.Sprintf("%.2f mm", measuredValue),
-				Result:        result,
-				IsInSpec:      isInSpec,
-				TesterId:      testerID,
-				TestDate:      testDate.Unix(),
-				EquipmentId:   fmt.Sprintf("equip-%03d", rand.Intn(10)+1),
-				Notes:         fmt.Sprintf("Test result notes %d", idx),
-				AuditInfo:     createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return results
-}
-
-// generateNCRs creates non-conformance report records
+// generateNCRs creates non-conformance report records with embedded actions
 func generateNCRs(store *MockDataStore) []*mfg.MfgNCR {
 	severities := []mfg.MfgNCRSeverity{
 		mfg.MfgNCRSeverity_MFG_NCR_SEVERITY_MINOR,
@@ -215,8 +203,10 @@ func generateNCRs(store *MockDataStore) []*mfg.MfgNCR {
 		mfg.MfgNCRDisposition_MFG_NCR_DISPOSITION_RETURN_TO_VENDOR,
 		mfg.MfgNCRDisposition_MFG_NCR_DISPOSITION_PENDING,
 	}
+	actionTypes := []string{"Corrective Action", "Preventive Action", "Containment Action", "Root Cause Analysis"}
 
 	count := 10
+	actionIdx := 1
 	ncrs := make([]*mfg.MfgNCR, count)
 
 	for i := 0; i < count; i++ {
@@ -224,7 +214,7 @@ func generateNCRs(store *MockDataStore) []*mfg.MfgNCR {
 		woID := pickRef(store.MfgWorkOrderIDs, i)
 		inspID := pickRef(store.MfgQualityInspectionIDs, i)
 		reportedBy := pickRef(store.EmployeeIDs, i)
-		assignedTo := pickRef(store.EmployeeIDs, (i+1))
+		assignedTo := pickRef(store.EmployeeIDs, (i + 1))
 
 		reportedDate := time.Now().AddDate(0, 0, -rand.Intn(30))
 		dueDate := reportedDate.AddDate(0, 0, rand.Intn(14)+7)
@@ -249,8 +239,34 @@ func generateNCRs(store *MockDataStore) []*mfg.MfgNCR {
 			actCost = int64(float64(estCost) * (0.9 + rand.Float64()*0.2))
 		}
 
+		ncrID := genID("ncr", i)
+
+		// Generate 2 embedded actions per NCR
+		actions := make([]*mfg.MfgNCRAction, 2)
+		for j := 0; j < 2; j++ {
+			actAssignedTo := pickRef(store.EmployeeIDs, (i*2 + j))
+			actDueDate := time.Now().AddDate(0, 0, rand.Intn(30)+7)
+			var completedDate int64
+			if j == 0 {
+				completedDate = time.Now().AddDate(0, 0, -rand.Intn(7)).Unix()
+			}
+
+			actions[j] = &mfg.MfgNCRAction{
+				ActionId:      fmt.Sprintf("ncract-%03d", actionIdx),
+				NcrId:         ncrID,
+				ActionType:    actionTypes[(i*2+j)%len(actionTypes)],
+				Description:   fmt.Sprintf("Action item %d for NCR resolution", actionIdx),
+				AssignedTo:    actAssignedTo,
+				DueDate:       actDueDate.Unix(),
+				CompletedDate: completedDate,
+				Notes:         fmt.Sprintf("NCR action notes %d", actionIdx),
+				AuditInfo:     createAuditInfo(),
+			}
+			actionIdx++
+		}
+
 		ncrs[i] = &mfg.MfgNCR{
-			NcrId:            genID("ncr", i),
+			NcrId:            ncrID,
 			NcrNumber:        fmt.Sprintf("NCR-%06d", 600000+i+1),
 			Title:            fmt.Sprintf("NCR: %s", mfgNCRReasons[i%len(mfgNCRReasons)]),
 			Description:      fmt.Sprintf("Non-conformance report for issue %d", i+1),
@@ -274,41 +290,8 @@ func generateNCRs(store *MockDataStore) []*mfg.MfgNCR {
 			ActualCost:       money(store, actCost),
 			Notes:            fmt.Sprintf("NCR notes %d", i+1),
 			AuditInfo:        createAuditInfo(),
+			Actions:          actions,
 		}
 	}
 	return ncrs
-}
-
-// generateNCRActions creates NCR action records (2 per NCR)
-func generateNCRActions(store *MockDataStore) []*mfg.MfgNCRAction {
-	actionTypes := []string{"Corrective Action", "Preventive Action", "Containment Action", "Root Cause Analysis"}
-
-	actions := make([]*mfg.MfgNCRAction, 0, len(store.MfgNCRIDs)*2)
-	idx := 1
-	for ncrIdx, ncrID := range store.MfgNCRIDs {
-		for j := 0; j < 2; j++ {
-			assignedTo := pickRef(store.EmployeeIDs, (ncrIdx*2+j))
-
-			dueDate := time.Now().AddDate(0, 0, rand.Intn(30)+7)
-			var completedDate int64
-			// 50% completed
-			if j == 0 {
-				completedDate = time.Now().AddDate(0, 0, -rand.Intn(7)).Unix()
-			}
-
-			actions = append(actions, &mfg.MfgNCRAction{
-				ActionId:      fmt.Sprintf("ncract-%03d", idx),
-				NcrId:         ncrID,
-				ActionType:    actionTypes[(ncrIdx*2+j)%len(actionTypes)],
-				Description:   fmt.Sprintf("Action item %d for NCR resolution", idx),
-				AssignedTo:    assignedTo,
-				DueDate:       dueDate.Unix(),
-				CompletedDate: completedDate,
-				Notes:         fmt.Sprintf("NCR action notes %d", idx),
-				AuditInfo:     createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return actions
 }

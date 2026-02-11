@@ -57,6 +57,16 @@ window.MobileSalesCustomers = window.MobileSalesCustomers || {};
                 ...f.text('paymentTerms', 'Payment Terms'),
                 ...f.textarea('terms', 'Terms & Conditions'),
                 ...f.textarea('notes', 'Notes')
+            ]),
+            f.section('Customer Prices', [
+                ...f.inlineTable('prices', 'Customer Prices', [
+                    { key: 'customerPriceId', label: 'ID', hidden: true },
+                    { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'Customer' },
+                    { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem', required: true },
+                    { key: 'unitPrice', label: 'Price', type: 'money' },
+                    { key: 'pricingMethod', label: 'Method', type: 'text' },
+                    { key: 'minimumQuantity', label: 'Min Qty', type: 'number' }
+                ])
             ])
         ]),
 

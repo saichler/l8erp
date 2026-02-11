@@ -220,7 +220,6 @@ func generateForecastAccuracy(store *MockDataStore) []*scm.ScmForecastAccuracy {
 	records := make([]*scm.ScmForecastAccuracy, 15)
 
 	for i := 0; i < 15; i++ {
-		forecastIdx := i % len(store.DemandForecastIDs)
 		itemIdx := i % len(store.ItemIDs)
 
 		forecastQty := float64(rand.Intn(4001) + 500)
@@ -239,7 +238,6 @@ func generateForecastAccuracy(store *MockDataStore) []*scm.ScmForecastAccuracy {
 
 		records[i] = &scm.ScmForecastAccuracy{
 			AccuracyId:       genID("facc", i),
-			ForecastId:       store.DemandForecastIDs[forecastIdx],
 			ItemId:           store.ItemIDs[itemIdx],
 			Period: &erp.DateRange{
 				StartDate: periodStart.Unix(),

@@ -28,18 +28,26 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.url('website', 'Website'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        VendorContact: f.form('Vendor Contact', [
-            f.section('Contact Information', [
-                ...f.reference('vendorId', 'Vendor', 'Vendor', true),
-                ...f.text('firstName', 'First Name', true),
-                ...f.text('lastName', 'Last Name', true),
-                ...f.text('title', 'Title'),
-                ...f.text('email', 'Email'),
-                ...f.text('phone', 'Phone'),
-                ...f.checkbox('isPrimary', 'Primary Contact')
+            ]),
+            f.section('Vendor Contacts', [
+                ...f.inlineTable('vendorContacts', 'Vendor Contacts', [
+                    { key: 'contactId', label: 'Contact ID', hidden: true },
+                    { key: 'firstName', label: 'First Name', type: 'text', required: true },
+                    { key: 'lastName', label: 'Last Name', type: 'text', required: true },
+                    { key: 'title', label: 'Title', type: 'text' },
+                    { key: 'email', label: 'Email', type: 'text' },
+                    { key: 'phone', label: 'Phone', type: 'text' },
+                    { key: 'isPrimary', label: 'Primary', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Withholding Tax Configs', [
+                ...f.inlineTable('withholdingTaxConfigs', 'Withholding Tax', [
+                    { key: 'configId', label: 'Config ID', hidden: true },
+                    { key: 'taxCodeId', label: 'Tax Code', type: 'reference', lookupModel: 'TaxCode' },
+                    { key: 'withholdingRate', label: 'Rate (%)', type: 'number' },
+                    { key: 'thresholdAmount', label: 'Threshold', type: 'money' },
+                    { key: 'isActive', label: 'Active', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -54,18 +62,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('taxAmount', 'Tax Amount'),
                 ...f.select('status', 'Status', enums.INVOICE_STATUS),
                 ...f.reference('currencyId', 'Currency', 'Currency'),
-            ])
-        ]),
-
-        PurchaseInvoiceLine: f.form('Purchase Invoice Line', [
-            f.section('Line Details', [
-                ...f.reference('invoiceId', 'Invoice', 'PurchaseInvoice', true),
-                ...f.reference('accountId', 'GL Account', 'Account', true),
-                ...f.textarea('description', 'Description', true),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.money('unitPrice', 'Unit Price', true),
-                ...f.money('lineAmount', 'Line Amount'),
-                ...f.money('taxAmount', 'Tax Amount')
+            ]),
+            f.section('Invoice Lines', [
+                ...f.inlineTable('lines', 'Invoice Lines', [
+                    { key: 'lineId', label: 'Line ID', hidden: true },
+                    { key: 'accountId', label: 'GL Account', type: 'reference', lookupModel: 'Account', required: true },
+                    { key: 'description', label: 'Description', type: 'text' },
+                    { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                    { key: 'unitPrice', label: 'Unit Price', type: 'money' },
+                    { key: 'lineAmount', label: 'Amount', type: 'money' },
+                    { key: 'taxAmount', label: 'Tax', type: 'money' }
+                ])
             ])
         ]),
 
@@ -89,14 +96,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('bankAccountId', 'Bank Account', 'Account'),
                 ...f.text('reference', 'Reference'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        PaymentAllocation: f.form('Payment Allocation', [
-            f.section('Allocation Details', [
-                ...f.reference('paymentId', 'Payment', 'VendorPayment', true),
-                ...f.reference('invoiceId', 'Invoice', 'PurchaseInvoice', true),
-                ...f.money('allocatedAmount', 'Allocated Amount', true)
+            ]),
+            f.section('Allocations', [
+                ...f.inlineTable('allocations', 'Payment Allocations', [
+                    { key: 'allocationId', label: 'Allocation ID', hidden: true },
+                    { key: 'invoiceId', label: 'Invoice', type: 'reference', lookupModel: 'PurchaseInvoice', required: true },
+                    { key: 'allocatedAmount', label: 'Allocated', type: 'money', required: true },
+                    { key: 'discountTaken', label: 'Discount', type: 'money' }
+                ])
             ])
         ]),
 
@@ -115,12 +122,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
     AccountsPayable.primaryKeys = {
         Vendor: 'vendorId',
-        VendorContact: 'contactId',
         PurchaseInvoice: 'invoiceId',
-        PurchaseInvoiceLine: 'lineId',
         PaymentSchedule: 'scheduleId',
         VendorPayment: 'paymentId',
-        PaymentAllocation: 'allocationId',
         VendorStatement: 'statementId'
     };
 

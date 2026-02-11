@@ -73,8 +73,6 @@ func generatePutawayTasks(store *MockDataStore) []*scm.ScmPutawayTask {
 	tasks := make([]*scm.ScmPutawayTask, count)
 
 	for i := 0; i < count; i++ {
-		receivingOrderID := pickRef(store.ReceivingOrderIDs, i)
-
 		fromBinID := ""
 		toBinID := ""
 		if len(store.BinIDs) > 0 {
@@ -97,7 +95,6 @@ func generatePutawayTasks(store *MockDataStore) []*scm.ScmPutawayTask {
 
 		task := &scm.ScmPutawayTask{
 			TaskId:           genID("put", i),
-			ReceivingOrderId: receivingOrderID,
 			ItemId:           itemID,
 			FromBinId:        fromBinID,
 			ToBinId:          toBinID,
@@ -124,8 +121,6 @@ func generatePickTasks(store *MockDataStore) []*scm.ScmPickTask {
 	priorities := []string{"High", "Medium", "Low"}
 
 	for i := 0; i < 20; i++ {
-		wavePlanID := pickRef(store.WavePlanIDs, i)
-
 		fromBinID := pickRef(store.BinIDs, i)
 
 		itemID := pickRef(store.ItemIDs, i)
@@ -148,7 +143,6 @@ func generatePickTasks(store *MockDataStore) []*scm.ScmPickTask {
 
 		task := &scm.ScmPickTask{
 			TaskId:         genID("pick", i),
-			WavePlanId:     wavePlanID,
 			ItemId:         itemID,
 			FromBinId:      fromBinID,
 			Quantity:       float64(rand.Intn(50) + 1),
@@ -174,8 +168,6 @@ func generatePackTasks(store *MockDataStore) []*scm.ScmPackTask {
 	tasks := make([]*scm.ScmPackTask, 15)
 
 	for i := 0; i < 15; i++ {
-		pickTaskID := pickRef(store.PickTaskIDs, i)
-
 		itemID := pickRef(store.ItemIDs, i)
 
 		assignedTo := "mock-generator"
@@ -196,7 +188,6 @@ func generatePackTasks(store *MockDataStore) []*scm.ScmPackTask {
 
 		task := &scm.ScmPackTask{
 			TaskId:     genID("pack", i),
-			PickTaskId: pickTaskID,
 			ItemId:     itemID,
 			Quantity:   float64(rand.Intn(50) + 1),
 			PackageId:  fmt.Sprintf("PKG-%06d", i+1),
@@ -221,8 +212,6 @@ func generateShipTasks(store *MockDataStore) []*scm.ScmShipTask {
 	tasks := make([]*scm.ScmShipTask, 12)
 
 	for i := 0; i < 12; i++ {
-		packTaskID := pickRef(store.PackTaskIDs, i)
-
 		carrierID := pickRef(store.SCMCarrierIDs, i)
 
 		// Status: COMPLETED (60%), IN_PROGRESS (25%), PENDING (15%)
@@ -238,7 +227,6 @@ func generateShipTasks(store *MockDataStore) []*scm.ScmShipTask {
 
 		task := &scm.ScmShipTask{
 			TaskId:         genID("ship", i),
-			PackTaskId:     packTaskID,
 			ShipmentId:     genID("shp", i),
 			CarrierId:      carrierID,
 			TrackingNumber: fmt.Sprintf("TRK-%010d", rand.Intn(9000000000)+1000000000),

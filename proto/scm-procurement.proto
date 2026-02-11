@@ -41,6 +41,7 @@ message ScmPurchaseRequisition {
   string approval_workflow_id = 10;
   map<string, string> custom_fields = 11;
   erp.AuditInfo audit_info = 12;
+  repeated ScmRequisitionLine lines = 13;
 }
 
 message ScmPurchaseRequisitionList {
@@ -48,11 +49,9 @@ message ScmPurchaseRequisitionList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // ScmRequisitionLine represents a line item on a purchase requisition
 message ScmRequisitionLine {
   string line_id = 1;
-  string requisition_id = 2;
   int32 line_number = 3;
   string item_id = 4;
   string description = 5;
@@ -63,11 +62,6 @@ message ScmRequisitionLine {
   string vendor_id = 10;            // Cross-ref: FIN Vendor
   int64 delivery_date = 11;
   erp.AuditInfo audit_info = 12;
-}
-
-message ScmRequisitionLineList {
-  repeated ScmRequisitionLine list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
@@ -108,6 +102,7 @@ message ScmPurchaseOrder {
   string rfq_id = 12;
   map<string, string> custom_fields = 13;
   erp.AuditInfo audit_info = 14;
+  repeated ScmPurchaseOrderLine lines = 15;
 }
 
 message ScmPurchaseOrderList {
@@ -115,11 +110,9 @@ message ScmPurchaseOrderList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // ScmPurchaseOrderLine represents a line item on a purchase order
 message ScmPurchaseOrderLine {
   string line_id = 1;
-  string purchase_order_id = 2;
   int32 line_number = 3;
   string item_id = 4;
   string description = 5;
@@ -129,11 +122,6 @@ message ScmPurchaseOrderLine {
   string unit_of_measure = 9;
   double received_quantity = 10;
   erp.AuditInfo audit_info = 11;
-}
-
-message ScmPurchaseOrderLineList {
-  repeated ScmPurchaseOrderLine list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject

@@ -40,24 +40,6 @@ limitations under the License.
             ...col.custom('status', 'Status', (item) => render.rollupStatus(item.status))
         ],
 
-        MfgActualCost: [
-            ...col.id('actualCostId'),
-            ...col.col('workOrderId', 'Work Order'),
-            ...col.custom('costType', 'Cost Type', (item) => render.costElementType(item.costType)),
-            ...col.col('costElement', 'Cost Element'),
-            ...col.money('amount', 'Amount'),
-            ...col.date('transactionDate', 'Transaction Date')
-        ],
-
-        MfgCostVariance: [
-            ...col.id('varianceId'),
-            ...col.col('workOrderId', 'Work Order'),
-            ...col.custom('varianceType', 'Type', (item) => render.varianceType(item.varianceType)),
-            ...col.money('standardCost', 'Standard'),
-            ...col.money('actualCost', 'Actual'),
-            ...col.money('varianceAmount', 'Variance')
-        ],
-
         MfgOverhead: [
             ...col.id('overheadId'),
             ...col.basic(['code', 'name']),
@@ -65,11 +47,5 @@ limitations under the License.
             ...col.col('rate', 'Rate')
         ],
 
-        MfgOverheadAlloc: [
-            ...col.id('allocationId'),
-            ...col.basic([['overheadId', 'Overhead'], ['workOrderId', 'Work Order'], ['workCenterId', 'Work Center']]),
-            ...col.date('allocationDate', 'Date'),
-            ...col.money('allocatedAmount', 'Amount')
-        ]
     };
 })();

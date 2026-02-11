@@ -31,8 +31,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     // Formatted field types that use Layer8DInputFormatter
     const FORMATTED_TYPES = ['ssn', 'phone', 'currency', 'percentage', 'routingNumber', 'ein', 'email', 'url', 'colorCode', 'rating', 'hours'];
 
-    function generateFormHtml(formDef, data = {}) {
+    function generateFormHtml(formDef, data = {}, options = {}) {
         const sections = formDef.sections;
+        const readOnly = options.readOnly || false;
         let html = '<form id="layer8d-edit-form">';
 
         // Tabs header
@@ -51,15 +52,22 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             html += '<div class="detail-grid"><div class="detail-section detail-full-width">';
 
             const fields = section.fields;
-            for (let i = 0; i < fields.length; i += 2) {
+            for (let i = 0; i < fields.length; i++) {
                 const field1 = fields[i];
-                const field2 = fields[i + 1];
 
-                if (field2) {
+                // Inline tables always span full width
+                if (field1.type === 'inlineTable') {
+                    html += generateInlineTableHtml(field1, data[field1.key] || [], readOnly);
+                    continue;
+                }
+
+                const field2 = fields[i + 1];
+                if (field2 && field2.type !== 'inlineTable') {
                     html += '<div class="form-row">';
                     html += generateFieldHtml(field1, getNestedValue(data, field1.key));
                     html += generateFieldHtml(field2, getNestedValue(data, field2.key));
                     html += '</div>';
+                    i++; // skip field2 since we consumed it
                 } else {
                     html += generateFieldHtml(field1, getNestedValue(data, field1.key));
                 }
@@ -337,6 +345,83 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         }
     }
 
+    // ========================================
+    // INLINE TABLE (embedded child records)
+    // ========================================
+
+    function formatInlineTableCell(col, value) {
+        if (value === null || value === undefined || value === '') return '-';
+        if (col.type === 'money' && typeof value === 'object') {
+            return Layer8DUtils.formatMoney(value);
+        }
+        if (col.type === 'date' && typeof value === 'number') {
+            return Layer8DUtils.formatDate(value);
+        }
+        if (col.type === 'select' && col.options) {
+            return col.options[value] || String(value);
+        }
+        if (col.type === 'checkbox') {
+            return value ? 'Yes' : 'No';
+        }
+        return escapeHtml(String(value));
+    }
+
+    function generateInlineTableHtml(field, rows, readOnly) {
+        const visibleCols = field.columns.filter(c => !c.hidden);
+        const colCount = visibleCols.length + (readOnly ? 0 : 1); // +1 for actions column
+        const gridCols = readOnly
+            ? visibleCols.map(() => '1fr').join(' ')
+            : visibleCols.map(() => '1fr').join(' ') + ' 100px';
+
+        let html = `<div class="form-group form-group-full-width">`;
+        html += `<label>${escapeHtml(field.label)}</label>`;
+        html += `<div class="form-inline-table${readOnly ? ' form-inline-table-readonly' : ''}" data-inline-table="${escapeAttr(field.key)}">`;
+
+        // Header
+        html += `<div class="form-inline-table-header" style="grid-template-columns: ${gridCols}">`;
+        visibleCols.forEach(col => {
+            html += `<span>${escapeHtml(col.label)}</span>`;
+        });
+        if (!readOnly) html += '<span></span>';
+        html += '</div>';
+
+        // Body
+        html += '<div class="form-inline-table-body">';
+        if (rows && rows.length > 0) {
+            rows.forEach((row, idx) => {
+                const clickClass = readOnly ? ' l8-clickable-row' : '';
+                html += `<div class="form-inline-table-row${clickClass}" data-row-index="${idx}" style="grid-template-columns: ${gridCols}">`;
+                visibleCols.forEach(col => {
+                    html += `<span class="form-inline-table-cell">${formatInlineTableCell(col, row[col.key])}</span>`;
+                });
+                if (!readOnly) {
+                    html += `<span class="form-inline-table-actions">`;
+                    html += `<button type="button" class="form-inline-table-btn edit" data-action="edit-row" data-row-index="${idx}">Edit</button>`;
+                    html += `<button type="button" class="form-inline-table-btn delete" data-action="delete-row" data-row-index="${idx}">Delete</button>`;
+                    html += `</span>`;
+                }
+                html += '</div>';
+            });
+        } else {
+            html += `<div class="form-inline-table-empty">No records</div>`;
+        }
+        html += '</div>';
+
+        // Footer (add button) — only in edit mode
+        if (!readOnly) {
+            html += `<div class="form-inline-table-footer">`;
+            html += `<button type="button" class="form-inline-table-btn add" data-action="add-row">+ Add</button>`;
+            html += `</div>`;
+        }
+
+        // Hidden JSON storage for data collection
+        const jsonValue = escapeAttr(JSON.stringify(rows || []));
+        html += `<input type="hidden" name="${escapeAttr(field.key)}" data-inline-table-data="${escapeAttr(field.key)}" value="${jsonValue}">`;
+        html += '</div></div>';
+
+        return html;
+    }
+
     // Export
     window.Layer8DFormsFields = {
         generateFormHtml,
@@ -345,6 +430,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         generateFormattedInput,
         generateReferenceInput,
         generateDateInput,
+        generateInlineTableHtml,
+        formatInlineTableCell,
         getDateZeroLabel,
         onCurrencyChange,
         FORMATTED_TYPES

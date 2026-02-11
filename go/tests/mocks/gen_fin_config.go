@@ -67,7 +67,6 @@ func generateTaxExemptions(store *MockDataStore) []*fin.TaxExemption {
 			IsActive:        true,
 			AuditInfo:       createAuditInfo(),
 		}
-		// First two have CustomerId, last two have VendorId
 		if i < 2 {
 			ex.CustomerId = store.CustomerIDs[i%len(store.CustomerIDs)]
 		} else {
@@ -78,135 +77,118 @@ func generateTaxExemptions(store *MockDataStore) []*fin.TaxExemption {
 	return exemptions
 }
 
-// generateWithholdingTaxConfigs creates withholding tax configuration records
-func generateWithholdingTaxConfigs(store *MockDataStore) []*fin.WithholdingTaxConfig {
-	whRates := []float64{30.0, 15.0, 10.0, 25.0}
-	thresholds := []int64{500000, 1000000, 250000, 750000} // in cents
-
-	configs := make([]*fin.WithholdingTaxConfig, 4)
-	for i := 0; i < 4; i++ {
-		configs[i] = &fin.WithholdingTaxConfig{
-			ConfigId:        genID("whtc", i),
-			VendorId:        store.VendorIDs[i%len(store.VendorIDs)],
-			TaxCodeId:       store.TaxCodeIDs[i%len(store.TaxCodeIDs)],
-			WithholdingRate: whRates[i],
-			ThresholdAmount: money(store, thresholds[i]),
-			EffectiveDate:   time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),
-			IsActive:        true,
-			AuditInfo:       createAuditInfo(),
-		}
-	}
-	return configs
-}
-
-// generateBudgets creates budget records, one per HCM department
+// generateBudgets creates budget records with embedded lines, scenarios, and transfers
 func generateBudgets(store *MockDataStore) []*fin.Budget {
 	budgets := make([]*fin.Budget, len(departmentNames))
+	lineIdx := 1
+
 	for i, name := range departmentNames {
-		totalAmount := int64(rand.Intn(400000_00)+100000_00) // $100k-$500k in cents
+		totalAmount := int64(rand.Intn(400000_00)+100000_00)
+
+		// Generate embedded budget lines (5 per budget)
+		lines := make([]*fin.BudgetLine, 5)
+		lineIDs := make([]string, 5)
+		for j := 0; j < 5; j++ {
+			budgeted := int64(rand.Intn(50000_00) + 10000_00)
+			actual := int64(float64(budgeted) * (0.5 + rand.Float64()*0.6))
+			variance := budgeted - actual
+			periodIdx := 12 + (j*2)%12
+			if periodIdx >= len(store.FiscalPeriodIDs) {
+				periodIdx = len(store.FiscalPeriodIDs) - 1
+			}
+			lineID := fmt.Sprintf("bln-%03d", lineIdx)
+			lineIDs[j] = lineID
+			lines[j] = &fin.BudgetLine{
+				LineId:         lineID,
+				BudgetId:       genID("bdgt", i),
+				AccountId:      store.AccountIDs[(lineIdx-1)%len(store.AccountIDs)],
+				FiscalPeriodId: store.FiscalPeriodIDs[periodIdx],
+				BudgetedAmount: money(store, budgeted),
+				ActualAmount:   money(store, actual),
+				Variance:       money(store, variance),
+				Description:    fmt.Sprintf("Budget line %d", lineIdx),
+				AuditInfo:      createAuditInfo(),
+			}
+			lineIdx++
+		}
+
+		// Generate embedded budget scenarios (3 per first budget only)
+		var scenarios []*fin.BudgetScenario
+		if i == 0 {
+			scenarios = []*fin.BudgetScenario{
+				{
+					ScenarioId:       "bscn-001",
+					ScenarioName:     "Conservative",
+					Description:      "Conservative budget scenario with 10% reduction",
+					BaseBudgetId:     genID("bdgt", i),
+					AdjustmentFactor: 90,
+					IsActive:         false,
+					AuditInfo:        createAuditInfo(),
+				},
+				{
+					ScenarioId:       "bscn-002",
+					ScenarioName:     "Moderate",
+					Description:      "Moderate budget scenario matching base budget",
+					BaseBudgetId:     genID("bdgt", i),
+					AdjustmentFactor: 100,
+					IsActive:         true,
+					AuditInfo:        createAuditInfo(),
+				},
+				{
+					ScenarioId:       "bscn-003",
+					ScenarioName:     "Aggressive",
+					Description:      "Aggressive growth scenario with 15% increase",
+					BaseBudgetId:     genID("bdgt", i),
+					AdjustmentFactor: 115,
+					IsActive:         false,
+					AuditInfo:        createAuditInfo(),
+				},
+			}
+		}
+
+		// Generate embedded budget transfers (1 per budget for first 5)
+		var transfers []*fin.BudgetTransfer
+		if i < 5 && len(lineIDs) >= 2 {
+			reasons := []string{
+				"Reallocation for Q2 priorities",
+				"Department restructuring",
+				"Emergency fund transfer",
+				"Seasonal adjustment",
+				"Project budget reallocation",
+			}
+			transfers = []*fin.BudgetTransfer{
+				{
+					TransferId:       genID("bxfr", i),
+					FromBudgetLineId: lineIDs[0],
+					ToBudgetLineId:   lineIDs[1],
+					Amount:           money(store, int64(rand.Intn(10000_00)+1000_00)),
+					TransferDate:     time.Now().Unix(),
+					Reason:           reasons[i],
+					ApprovedBy:       "mock-generator",
+					ApprovedDate:     time.Now().Unix(),
+					AuditInfo:        createAuditInfo(),
+				},
+			}
+		}
+
 		budgets[i] = &fin.Budget{
 			BudgetId:     genID("bdgt", i),
 			BudgetName:   fmt.Sprintf("Operating Budget - %s", name),
 			Description:  fmt.Sprintf("FY2025 operating budget for %s department", name),
 			BudgetType:   fin.BudgetType_BUDGET_TYPE_DEPARTMENTAL,
 			Status:       fin.BudgetStatus_BUDGET_STATUS_ACTIVE,
-			FiscalYearId: store.FiscalYearIDs[1], // 2025
+			FiscalYearId: store.FiscalYearIDs[1],
 			DepartmentId: store.DepartmentIDs[i],
 			TotalAmount:  money(store, totalAmount),
 			ApprovedBy:   "mock-generator",
 			ApprovedDate: time.Date(2025, 1, 15, 0, 0, 0, 0, time.UTC).Unix(),
 			AuditInfo:    createAuditInfo(),
+			Lines:        lines,
+			Scenarios:    scenarios,
+			Transfers:    transfers,
 		}
 	}
 	return budgets
-}
-
-// generateBudgetLines creates budget line records, 5 per budget
-func generateBudgetLines(store *MockDataStore) []*fin.BudgetLine {
-	return genLines(store.BudgetIDs, 5, func(idx, _, j int, budgetID string) *fin.BudgetLine {
-		budgeted := int64(rand.Intn(50000_00) + 10000_00) // $10k-$60k in cents
-		actual := int64(float64(budgeted) * (0.5 + rand.Float64()*0.6))
-		variance := budgeted - actual
-		// Use 2025 fiscal periods (indices 12-23)
-		periodIdx := 12 + (j*2)%12
-		if periodIdx >= len(store.FiscalPeriodIDs) {
-			periodIdx = len(store.FiscalPeriodIDs) - 1
-		}
-		return &fin.BudgetLine{
-			LineId:         fmt.Sprintf("bln-%03d", idx),
-			BudgetId:       budgetID,
-			AccountId:      store.AccountIDs[(idx-1)%len(store.AccountIDs)],
-			FiscalPeriodId: store.FiscalPeriodIDs[periodIdx],
-			BudgetedAmount: money(store, budgeted),
-			ActualAmount:   money(store, actual),
-			Variance:       money(store, variance),
-			Description:    fmt.Sprintf("Budget line %d", idx),
-			AuditInfo:      createAuditInfo(),
-		}
-	})
-}
-
-// generateBudgetTransfers creates budget transfer records
-func generateBudgetTransfers(store *MockDataStore) []*fin.BudgetTransfer {
-	transfers := make([]*fin.BudgetTransfer, 5)
-	reasons := []string{
-		"Reallocation for Q2 priorities",
-		"Department restructuring",
-		"Emergency fund transfer",
-		"Seasonal adjustment",
-		"Project budget reallocation",
-	}
-
-	for i := 0; i < 5; i++ {
-		fromIdx := (i * 2) % len(store.BudgetLineIDs)
-		toIdx := (i*2 + 1) % len(store.BudgetLineIDs)
-		transfers[i] = &fin.BudgetTransfer{
-			TransferId:       genID("bxfr", i),
-			FromBudgetLineId: store.BudgetLineIDs[fromIdx],
-			ToBudgetLineId:   store.BudgetLineIDs[toIdx],
-			Amount:           money(store, int64(rand.Intn(10000_00) + 1000_00)),
-			TransferDate:     time.Now().Unix(),
-			Reason:           reasons[i],
-			ApprovedBy:       "mock-generator",
-			ApprovedDate:     time.Now().Unix(),
-			AuditInfo:        createAuditInfo(),
-		}
-	}
-	return transfers
-}
-
-// generateBudgetScenarios creates budget scenario records
-func generateBudgetScenarios(store *MockDataStore) []*fin.BudgetScenario {
-	scenarios := []*fin.BudgetScenario{
-		{
-			ScenarioId:       "bscn-001",
-			ScenarioName:     "Conservative",
-			Description:      "Conservative budget scenario with 10% reduction",
-			BaseBudgetId:     store.BudgetIDs[0],
-			AdjustmentFactor: 90,
-			IsActive:         false,
-			AuditInfo:        createAuditInfo(),
-		},
-		{
-			ScenarioId:       "bscn-002",
-			ScenarioName:     "Moderate",
-			Description:      "Moderate budget scenario matching base budget",
-			BaseBudgetId:     store.BudgetIDs[0],
-			AdjustmentFactor: 100,
-			IsActive:         true,
-			AuditInfo:        createAuditInfo(),
-		},
-		{
-			ScenarioId:       "bscn-003",
-			ScenarioName:     "Aggressive",
-			Description:      "Aggressive growth scenario with 15% increase",
-			BaseBudgetId:     store.BudgetIDs[0],
-			AdjustmentFactor: 115,
-			IsActive:         false,
-			AuditInfo:        createAuditInfo(),
-		},
-	}
-	return scenarios
 }
 
 // generateCapitalExpenditures creates capital expenditure records
@@ -233,7 +215,7 @@ func generateCapitalExpenditures(store *MockDataStore) []*fin.CapitalExpenditure
 			ProjectName:            p.name,
 			Description:            p.description,
 			DepartmentId:           store.DepartmentIDs[i%len(store.DepartmentIDs)],
-			FiscalYearId:           store.FiscalYearIDs[1], // 2025
+			FiscalYearId:           store.FiscalYearIDs[1],
 			Status:                 p.status,
 			RequestedAmount:        money(store, p.requested),
 			ApprovedAmount:         money(store, p.approved),
@@ -281,7 +263,7 @@ func generateForecasts(store *MockDataStore) []*fin.Forecast {
 			ForecastName:    f.name,
 			Description:     fmt.Sprintf("FY2025 %s", f.name),
 			ForecastType:    f.ftype,
-			FiscalYearId:    store.FiscalYearIDs[1], // 2025
+			FiscalYearId:    store.FiscalYearIDs[1],
 			ForecastDate:    time.Now().Unix(),
 			PeriodStart:     periodStart.Unix(),
 			PeriodEnd:       periodEnd.Unix(),

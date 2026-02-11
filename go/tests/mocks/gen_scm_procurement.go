@@ -23,7 +23,7 @@ import (
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-// generatePurchaseRequisitions creates 20 purchase requisition records
+// generatePurchaseRequisitions creates 20 purchase requisition records with embedded lines
 func generatePurchaseRequisitions(store *MockDataStore) []*scm.ScmPurchaseRequisition {
 	requisitions := make([]*scm.ScmPurchaseRequisition, 20)
 
@@ -36,6 +36,13 @@ func generatePurchaseRequisitions(store *MockDataStore) []*scm.ScmPurchaseRequis
 	}
 
 	priorities := []string{"High", "Medium", "Low"}
+	lineDescriptions := []string{
+		"Raw Materials", "Office Supplies", "IT Equipment", "Packaging Materials",
+		"Safety Equipment", "Cleaning Supplies", "Machine Parts",
+		"Electronic Components", "Furniture", "Tools and Hardware",
+	}
+	uoms := []string{"EA", "BOX", "KG", "LB", "PCS", "SET"}
+	lineIdx := 1
 
 	for i := 0; i < 20; i++ {
 		requesterId := store.EmployeeIDs[i%len(store.EmployeeIDs)]
@@ -50,7 +57,33 @@ func generatePurchaseRequisitions(store *MockDataStore) []*scm.ScmPurchaseRequis
 			status = statuses[i%len(statuses)]
 		}
 
-		estimatedTotal := int64(rand.Intn(495001)+5000) // 5000 to 500000 cents
+		estimatedTotal := int64(rand.Intn(495001) + 5000) // 5000 to 500000 cents
+
+		// Generate 3 embedded lines per requisition
+		lines := make([]*scm.ScmRequisitionLine, 3)
+		for lineNum := int32(0); lineNum < 3; lineNum++ {
+			itemId := store.ItemIDs[lineIdx%len(store.ItemIDs)]
+			vendorId := store.VendorIDs[lineIdx%len(store.VendorIDs)]
+			quantity := float64(rand.Intn(100) + 1)
+			unitPrice := int64(rand.Intn(499000) + 1000)
+			lineTotal := int64(quantity) * unitPrice
+			deliveryDate := time.Now().AddDate(0, 0, rand.Intn(60)+14)
+
+			lines[lineNum] = &scm.ScmRequisitionLine{
+				LineId:             fmt.Sprintf("rqln-%04d", lineIdx),
+				LineNumber:         lineNum + 1,
+				ItemId:             itemId,
+				Description:        lineDescriptions[rand.Intn(len(lineDescriptions))],
+				Quantity:           quantity,
+				UnitOfMeasure:      uoms[rand.Intn(len(uoms))],
+				EstimatedUnitPrice: money(store, unitPrice),
+				EstimatedTotal:     money(store, lineTotal),
+				VendorId:           vendorId,
+				DeliveryDate:       deliveryDate.Unix(),
+				AuditInfo:          createAuditInfo(),
+			}
+			lineIdx++
+		}
 
 		requisitions[i] = &scm.ScmPurchaseRequisition{
 			RequisitionId:      genID("preq", i),
@@ -63,62 +96,12 @@ func generatePurchaseRequisitions(store *MockDataStore) []*scm.ScmPurchaseRequis
 			Priority:           priorities[i%len(priorities)],
 			EstimatedTotal:     money(store, estimatedTotal),
 			ApprovalWorkflowId: genID("wf", i),
+			Lines:              lines,
 			AuditInfo:          createAuditInfo(),
 		}
 	}
 
 	return requisitions
-}
-
-// generateRequisitionLines creates 3 lines per requisition = 60 total
-func generateRequisitionLines(store *MockDataStore) []*scm.ScmRequisitionLine {
-	lines := make([]*scm.ScmRequisitionLine, 0, 60)
-
-	descriptions := []string{
-		"Raw Materials",
-		"Office Supplies",
-		"IT Equipment",
-		"Packaging Materials",
-		"Safety Equipment",
-		"Cleaning Supplies",
-		"Machine Parts",
-		"Electronic Components",
-		"Furniture",
-		"Tools and Hardware",
-	}
-
-	uoms := []string{"EA", "BOX", "KG", "LB", "PCS", "SET"}
-
-	idx := 1
-	for i := 0; i < len(store.PurchaseRequisitionIDs); i++ {
-		requisitionId := store.PurchaseRequisitionIDs[i]
-		for lineNum := int32(1); lineNum <= 3; lineNum++ {
-			itemId := store.ItemIDs[idx%len(store.ItemIDs)]
-			vendorId := store.VendorIDs[idx%len(store.VendorIDs)]
-			quantity := float64(rand.Intn(100) + 1)
-			unitPrice := int64(rand.Intn(499000) + 1000) // 10_00 to 5000_00 cents
-			lineTotal := int64(quantity) * unitPrice
-			deliveryDate := time.Now().AddDate(0, 0, rand.Intn(60)+14)
-
-			lines = append(lines, &scm.ScmRequisitionLine{
-				LineId:             fmt.Sprintf("rqln-%04d", idx),
-				RequisitionId:      requisitionId,
-				LineNumber:         lineNum,
-				ItemId:             itemId,
-				Description:        descriptions[rand.Intn(len(descriptions))],
-				Quantity:           quantity,
-				UnitOfMeasure:      uoms[rand.Intn(len(uoms))],
-				EstimatedUnitPrice: money(store, unitPrice),
-				EstimatedTotal:     money(store, lineTotal),
-				VendorId:           vendorId,
-				DeliveryDate:       deliveryDate.Unix(),
-				AuditInfo:          createAuditInfo(),
-			})
-			idx++
-		}
-	}
-
-	return lines
 }
 
 // generateRFQs creates 10 RFQ records linked to the first 10 requisitions
@@ -256,7 +239,6 @@ func generatePOLines(store *MockDataStore) []*scm.ScmPurchaseOrderLine {
 	idx := 1
 
 	for i := 0; i < len(store.SCMPurchaseOrderIDs); i++ {
-		poID := store.SCMPurchaseOrderIDs[i]
 		for lineNum := int32(1); lineNum <= 3; lineNum++ {
 			itemID := store.ItemIDs[idx%len(store.ItemIDs)]
 			quantity := float64(rand.Intn(100) + 1)
@@ -273,7 +255,6 @@ func generatePOLines(store *MockDataStore) []*scm.ScmPurchaseOrderLine {
 
 			lines = append(lines, &scm.ScmPurchaseOrderLine{
 				LineId:           fmt.Sprintf("poln-%04d", idx),
-				PurchaseOrderId:  poID,
 				LineNumber:       lineNum,
 				ItemId:           itemID,
 				Description:      fmt.Sprintf("PO line for %s", itemID),

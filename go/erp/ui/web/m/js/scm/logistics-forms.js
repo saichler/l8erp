@@ -57,6 +57,27 @@ limitations under the License.
             ...f.date('expectedDelivery', 'Expected Delivery'),
             ...f.select('status', 'Status', enums.SHIPMENT_STATUS),
             ...f.money('freightCost', 'Freight Cost')
+        ]),
+        f.section('Delivery Proofs', [
+            ...f.inlineTable('deliveryProofs', 'Delivery Proofs', [
+                { key: 'proofId', label: 'Proof ID', hidden: true },
+                { key: 'deliveryDate', label: 'Delivery Date', type: 'date', required: true },
+                { key: 'receivedBy', label: 'Received By', type: 'text', required: true },
+                { key: 'signature', label: 'Signature', type: 'text' },
+                { key: 'status', label: 'Status', type: 'text' },
+                { key: 'notes', label: 'Notes', type: 'text' }
+            ])
+        ]),
+        f.section('Freight Audits', [
+            ...f.inlineTable('freightAudits', 'Freight Audits', [
+                { key: 'auditId', label: 'Audit ID', hidden: true },
+                { key: 'carrierId', label: 'Carrier', type: 'reference', lookupModel: 'ScmCarrier' },
+                { key: 'invoicedAmount', label: 'Invoiced', type: 'money' },
+                { key: 'actualAmount', label: 'Actual', type: 'money' },
+                { key: 'variance', label: 'Variance', type: 'money' },
+                { key: 'status', label: 'Status', type: 'text' },
+                { key: 'notes', label: 'Notes', type: 'text' }
+            ])
         ])
     ]),
 
@@ -79,28 +100,6 @@ limitations under the License.
             ...f.number('totalWeight', 'Total Weight'),
             ...f.number('totalVolume', 'Total Volume'),
             ...f.select('status', 'Status', enums.TASK_STATUS),
-            ...f.textarea('notes', 'Notes')
-        ])
-    ]),
-
-    ScmDeliveryProof: f.form('Delivery Proof', [
-        f.section('Proof Details', [
-            ...f.reference('shipmentId', 'Shipment', 'ScmShipment', true),
-            ...f.date('deliveryDate', 'Delivery Date', true),
-            ...f.text('receivedBy', 'Received By', true),
-            ...f.text('signature', 'Signature'),
-            ...f.select('status', 'Status', enums.TASK_STATUS),
-            ...f.textarea('notes', 'Notes')
-        ])
-    ]),
-
-    ScmFreightAudit: f.form('Freight Audit', [
-        f.section('Audit Details', [
-            ...f.reference('shipmentId', 'Shipment', 'ScmShipment', true),
-            ...f.reference('carrierId', 'Carrier', 'ScmCarrier', true),
-            ...f.money('invoicedAmount', 'Invoiced Amount', true),
-            ...f.money('actualAmount', 'Actual Amount'),
-            ...f.money('variance', 'Variance'),
             ...f.textarea('notes', 'Notes')
         ])
     ]),

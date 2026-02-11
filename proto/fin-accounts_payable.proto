@@ -19,6 +19,7 @@ package fin;
 option go_package = "./types/fin";
 
 import "fin-common.proto";
+import "fin-tax.proto";
 import "erp-common.proto";
 import "api.proto";
 
@@ -45,6 +46,8 @@ message Vendor {
   string notes = 14;
   map<string, string> custom_fields = 15;
   erp.AuditInfo audit_info = 16;
+  repeated VendorContact vendor_contacts = 17;
+  repeated WithholdingTaxConfig withholding_tax_configs = 18;
 }
 
 message VendorList {
@@ -52,7 +55,6 @@ message VendorList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // VendorContact represents a contact person at a vendor
 message VendorContact {
   string contact_id = 1;
@@ -67,11 +69,6 @@ message VendorContact {
   bool is_active = 10;
   string notes = 11;
   erp.AuditInfo audit_info = 12;
-}
-
-message VendorContactList {
-  repeated VendorContact list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
@@ -99,6 +96,7 @@ message PurchaseInvoice {
   string notes = 20;
   map<string, string> custom_fields = 21;
   erp.AuditInfo audit_info = 22;
+  repeated PurchaseInvoiceLine lines = 23;
 }
 
 message PurchaseInvoiceList {
@@ -106,7 +104,6 @@ message PurchaseInvoiceList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // PurchaseInvoiceLine represents a line item on a purchase invoice
 message PurchaseInvoiceLine {
   string line_id = 1;
@@ -122,11 +119,6 @@ message PurchaseInvoiceLine {
   string cost_center_id = 11;
   string project_id = 12;
   erp.AuditInfo audit_info = 13;
-}
-
-message PurchaseInvoiceLineList {
-  repeated PurchaseInvoiceLine list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
@@ -163,6 +155,7 @@ message VendorPayment {
   string notes = 10;
   map<string, string> custom_fields = 11;
   erp.AuditInfo audit_info = 12;
+  repeated PaymentAllocation allocations = 13;
 }
 
 message VendorPaymentList {
@@ -170,7 +163,6 @@ message VendorPaymentList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // PaymentAllocation links a vendor payment to specific invoices
 message PaymentAllocation {
   string allocation_id = 1;
@@ -179,11 +171,6 @@ message PaymentAllocation {
   erp.Money allocated_amount = 4;
   erp.Money discount_taken = 5;
   erp.AuditInfo audit_info = 6;
-}
-
-message PaymentAllocationList {
-  repeated PaymentAllocation list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject

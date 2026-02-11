@@ -2,15 +2,6 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // Uses Layer8FormFactory for reduced boilerplate
 /**
@@ -38,20 +29,16 @@ window.MobileSalesBilling = window.MobileSalesBilling || {};
                 ...f.money('totalAmount', 'Total Amount'),
                 ...f.money('billedAmount', 'Billed Amount'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        BillingMilestone: f.form('Billing Milestone', [
-            f.section('Milestone Details', [
-                ...f.text('name', 'Name', true),
-                ...f.reference('scheduleId', 'Billing Schedule', 'BillingSchedule', true),
-                ...f.textarea('description', 'Description'),
-                ...f.date('targetDate', 'Target Date', true),
-                ...f.date('actualDate', 'Actual Date'),
-                ...f.select('status', 'Status', enums.MILESTONE_STATUS),
-                ...f.money('amount', 'Amount', true),
-                ...f.number('percentage', 'Percentage'),
-                ...f.reference('invoiceId', 'Invoice', 'SalesInvoice')
+            ]),
+            f.section('Milestones', [
+                ...f.inlineTable('milestones', 'Billing Milestones', [
+                    { key: 'milestoneId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'targetDate', label: 'Target Date', type: 'date' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.MILESTONE_STATUS },
+                    { key: 'amount', label: 'Amount', type: 'money' },
+                    { key: 'percentage', label: '%', type: 'number' }
+                ])
             ])
         ]),
 

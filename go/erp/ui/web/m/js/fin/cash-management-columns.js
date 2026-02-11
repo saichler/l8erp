@@ -32,24 +32,6 @@ limitations under the License.
             ...col.money('currentBalance', 'Current Balance')
         ],
 
-        BankTransaction: [
-            ...col.id('transactionId'),
-            ...col.col('bankAccountId', 'Account'),
-            ...col.date('transactionDate', 'Date'),
-            ...col.enum('transactionType', 'Type', null, render.transactionType),
-            ...col.money('amount', 'Amount'),
-            ...col.col('description', 'Description')
-        ],
-
-        BankReconciliation: [
-            ...col.id('reconciliationId'),
-            ...col.col('bankAccountId', 'Account'),
-            ...col.date('statementDate', 'Statement Date'),
-            ...col.enum('status', 'Status', null, render.reconciliationStatus),
-            ...col.money('statementBalance', 'Statement Balance'),
-            ...col.money('bookBalance', 'Book Balance')
-        ],
-
         CashForecast: [
             ...col.id('forecastId'),
             ...col.date('forecastDate', 'Forecast Date'),
@@ -77,8 +59,7 @@ limitations under the License.
     };
 
     MobileCashManagement.primaryKeys = {
-        BankAccount: 'bankAccountId', BankTransaction: 'transactionId',
-        BankReconciliation: 'reconciliationId', CashForecast: 'forecastId',
+        BankAccount: 'bankAccountId', CashForecast: 'forecastId',
         FundTransfer: 'transferId', PettyCash: 'pettyCashId'
     };
 

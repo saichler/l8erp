@@ -2,15 +2,6 @@
 © 2025 Sharon Aicler (saichler@gmail.com)
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 */
 // Uses Layer8FormFactory for reduced boilerplate
 /**
@@ -48,17 +39,16 @@ window.MobileSalesAnalytics = window.MobileSalesAnalytics || {};
                 ...f.text('region', 'Region'),
                 ...f.reference('managerId', 'Manager', 'Employee'),
                 ...f.checkbox('isActive', 'Active')
-            ])
-        ]),
-
-        TerritoryAssign: f.form('Territory Assignment', [
-            f.section('Assignment Details', [
-                ...f.reference('territoryId', 'Territory', 'SalesTerritory', true),
-                ...f.reference('salespersonId', 'Salesperson', 'Employee', true),
-                ...f.date('startDate', 'Start Date', true),
-                ...f.date('endDate', 'End Date'),
-                ...f.checkbox('isPrimary', 'Primary Assignment'),
-                ...f.textarea('notes', 'Notes')
+            ]),
+            f.section('Assignments', [
+                ...f.inlineTable('assignments', 'Territory Assignments', [
+                    { key: 'assignmentId', label: 'ID', hidden: true },
+                    { key: 'salespersonId', label: 'Salesperson', type: 'reference', lookupModel: 'Employee', required: true },
+                    { key: 'startDate', label: 'Start', type: 'date' },
+                    { key: 'endDate', label: 'End', type: 'date' },
+                    { key: 'isPrimary', label: 'Primary', type: 'checkbox' },
+                    { key: 'notes', label: 'Notes', type: 'text' }
+                ])
             ])
         ]),
 
@@ -71,20 +61,17 @@ window.MobileSalesAnalytics = window.MobileSalesAnalytics || {};
                 ...f.date('effectiveDate', 'Effective Date', true),
                 ...f.date('expiryDate', 'Expiry Date'),
                 ...f.checkbox('isActive', 'Active')
-            ])
-        ]),
-
-        SalesCommissionCalc: f.form('Commission Calculation', [
-            f.section('Calculation Details', [
-                ...f.reference('salespersonId', 'Salesperson', 'Employee', true),
-                ...f.reference('planId', 'Commission Plan', 'CommissionPlan', true),
-                ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder'),
-                ...f.money('salesAmount', 'Sale Amount', true),
-                ...f.number('commissionRate', 'Commission Rate'),
-                ...f.money('commissionAmount', 'Commission Amount'),
-                ...f.date('calculationDate', 'Calculation Date'),
-                ...f.date('paidDate', 'Paid Date'),
-                ...f.textarea('notes', 'Notes')
+            ]),
+            f.section('Calculations', [
+                ...f.inlineTable('calculations', 'Commission Calculations', [
+                    { key: 'calcId', label: 'ID', hidden: true },
+                    { key: 'salespersonId', label: 'Salesperson', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'salesOrderId', label: 'Order', type: 'reference', lookupModel: 'SalesOrder' },
+                    { key: 'salesAmount', label: 'Sale Amount', type: 'money' },
+                    { key: 'commissionRate', label: 'Rate', type: 'number' },
+                    { key: 'commissionAmount', label: 'Commission', type: 'money' },
+                    { key: 'status', label: 'Status', type: 'text' }
+                ])
             ])
         ]),
 

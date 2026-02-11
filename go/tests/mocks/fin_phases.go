@@ -27,21 +27,21 @@ func generateFinPhase1(client *HCMClient, store *MockDataStore) error {
 		return err
 	}
 
-	// Generate Fiscal Years
-	fiscalYears := generateFiscalYears()
-	if err := runOp(client, "Fiscal Years", "/erp/40/FiscalYr", &fin.FiscalYearList{List: fiscalYears}, extractIDs(fiscalYears, func(e *fin.FiscalYear) string { return e.FiscalYearId }), &store.FiscalYearIDs); err != nil {
-		return err
-	}
-
 	// Generate Asset Categories
 	assetCategories := generateAssetCategories()
 	if err := runOp(client, "Asset Categories", "/erp/40/AstCat", &fin.AssetCategoryList{List: assetCategories}, extractIDs(assetCategories, func(e *fin.AssetCategory) string { return e.CategoryId }), &store.AssetCategoryIDs); err != nil {
 		return err
 	}
 
-	// Generate Tax Jurisdictions
+	// Generate Tax Jurisdictions (must be before FiscalYears since TaxReturns are now embedded)
 	taxJurisdictions := generateTaxJurisdictions()
 	if err := runOp(client, "Tax Jurisdictions", "/erp/40/TaxJuris", &fin.TaxJurisdictionList{List: taxJurisdictions}, extractIDs(taxJurisdictions, func(e *fin.TaxJurisdiction) string { return e.JurisdictionId }), &store.TaxJurisdictionIDs); err != nil {
+		return err
+	}
+
+	// Generate Fiscal Years (with embedded Periods and TaxReturns; populates store.FiscalPeriodIDs)
+	fiscalYears := generateFiscalYears(store)
+	if err := runOp(client, "Fiscal Years", "/erp/40/FiscalYr", &fin.FiscalYearList{List: fiscalYears}, extractIDs(fiscalYears, func(e *fin.FiscalYear) string { return e.FiscalYearId }), &store.FiscalYearIDs); err != nil {
 		return err
 	}
 
@@ -50,13 +50,7 @@ func generateFinPhase1(client *HCMClient, store *MockDataStore) error {
 
 // FIN Phase 2: Core Financial
 func generateFinPhase2(client *HCMClient, store *MockDataStore) error {
-	// Generate Fiscal Periods
-	fiscalPeriods := generateFiscalPeriods(store)
-	if err := runOp(client, "Fiscal Periods", "/erp/40/FiscalPd", &fin.FiscalPeriodList{List: fiscalPeriods}, extractIDs(fiscalPeriods, func(e *fin.FiscalPeriod) string { return e.FiscalPeriodId }), &store.FiscalPeriodIDs); err != nil {
-		return err
-	}
-
-	// Generate Accounts
+	// Generate Accounts (with embedded AccountBalances)
 	accounts := generateAccounts(store)
 	if err := runOp(client, "Accounts", "/erp/40/Account", &fin.AccountList{List: accounts}, extractIDs(accounts, func(e *fin.Account) string { return e.AccountId }), &store.AccountIDs); err != nil {
 		return err
@@ -73,31 +67,19 @@ func generateFinPhase2(client *HCMClient, store *MockDataStore) error {
 
 // FIN Phase 3: Entity Master
 func generateFinPhase3(client *HCMClient, store *MockDataStore) error {
-	// Generate Vendors
+	// Generate Vendors (with embedded VendorContacts and WithholdingTaxConfigs)
 	vendors := generateVendors(store)
 	if err := runOp(client, "Vendors", "/erp/40/Vendor", &fin.VendorList{List: vendors}, extractIDs(vendors, func(e *fin.Vendor) string { return e.VendorId }), &store.VendorIDs); err != nil {
 		return err
 	}
 
-	// Generate Vendor Contacts
-	vendorContacts := generateVendorContacts(store)
-	if err := runOp(client, "Vendor Contacts", "/erp/40/VndrCont", &fin.VendorContactList{List: vendorContacts}, extractIDs(vendorContacts, func(e *fin.VendorContact) string { return e.ContactId }), &store.VendorContactIDs); err != nil {
-		return err
-	}
-
-	// Generate Customers
+	// Generate Customers (with embedded CustomerContacts)
 	customers := generateCustomers(store)
 	if err := runOp(client, "Customers", "/erp/40/Customer", &fin.CustomerList{List: customers}, extractIDs(customers, func(e *fin.Customer) string { return e.CustomerId }), &store.CustomerIDs); err != nil {
 		return err
 	}
 
-	// Generate Customer Contacts
-	customerContacts := generateCustomerContacts(store)
-	if err := runOp(client, "Customer Contacts", "/erp/40/CustCont", &fin.CustomerContactList{List: customerContacts}, extractIDs(customerContacts, func(e *fin.CustomerContact) string { return e.ContactId }), &store.CustomerContactIDs); err != nil {
-		return err
-	}
-
-	// Generate Bank Accounts
+	// Generate Bank Accounts (with embedded Transactions and Reconciliations)
 	bankAccounts := generateBankAccounts(store)
 	if err := runOp(client, "Bank Accounts", "/erp/40/BankAcct", &fin.BankAccountList{List: bankAccounts}, extractIDs(bankAccounts, func(e *fin.BankAccount) string { return e.BankAccountId }), &store.BankAccountIDs); err != nil {
 		return err
@@ -126,33 +108,9 @@ func generateFinPhase4(client *HCMClient, store *MockDataStore) error {
 		return err
 	}
 
-	// Generate Withholding Tax Configs
-	whTaxConfigs := generateWithholdingTaxConfigs(store)
-	if err := runOp(client, "Withholding Tax Configs", "/erp/40/WhtTxCfg", &fin.WithholdingTaxConfigList{List: whTaxConfigs}, extractIDs(whTaxConfigs, func(e *fin.WithholdingTaxConfig) string { return e.ConfigId }), &store.WHTaxConfigIDs); err != nil {
-		return err
-	}
-
-	// Generate Budgets
+	// Generate Budgets (with embedded Lines, Scenarios, and Transfers)
 	budgets := generateBudgets(store)
 	if err := runOp(client, "Budgets", "/erp/40/Budget", &fin.BudgetList{List: budgets}, extractIDs(budgets, func(e *fin.Budget) string { return e.BudgetId }), &store.BudgetIDs); err != nil {
-		return err
-	}
-
-	// Generate Budget Lines
-	budgetLines := generateBudgetLines(store)
-	if err := runOp(client, "Budget Lines", "/erp/40/BdgtLine", &fin.BudgetLineList{List: budgetLines}, extractIDs(budgetLines, func(e *fin.BudgetLine) string { return e.LineId }), &store.BudgetLineIDs); err != nil {
-		return err
-	}
-
-	// Generate Budget Transfers
-	budgetTransfers := generateBudgetTransfers(store)
-	if err := runOp(client, "Budget Transfers", "/erp/40/BdgtXfer", &fin.BudgetTransferList{List: budgetTransfers}, extractIDs(budgetTransfers, func(e *fin.BudgetTransfer) string { return e.TransferId }), &store.BudgetTransferIDs); err != nil {
-		return err
-	}
-
-	// Generate Budget Scenarios
-	budgetScenarios := generateBudgetScenarios(store)
-	if err := runOp(client, "Budget Scenarios", "/erp/40/BdgtScen", &fin.BudgetScenarioList{List: budgetScenarios}, extractIDs(budgetScenarios, func(e *fin.BudgetScenario) string { return e.ScenarioId }), &store.BudgetScenarioIDs); err != nil {
 		return err
 	}
 
@@ -173,15 +131,9 @@ func generateFinPhase4(client *HCMClient, store *MockDataStore) error {
 
 // FIN Phase 5: AP Transactions
 func generateFinPhase5(client *HCMClient, store *MockDataStore) error {
-	// Generate Purchase Invoices
+	// Generate Purchase Invoices (with embedded Lines)
 	purchaseInvoices := generatePurchaseInvoices(store)
 	if err := runOp(client, "Purchase Invoices", "/erp/40/PurchInv", &fin.PurchaseInvoiceList{List: purchaseInvoices}, extractIDs(purchaseInvoices, func(e *fin.PurchaseInvoice) string { return e.InvoiceId }), &store.PurchaseInvoiceIDs); err != nil {
-		return err
-	}
-
-	// Generate Purchase Invoice Lines
-	purchaseInvoiceLines := generatePurchaseInvoiceLines(store)
-	if err := runOp(client, "Purchase Invoice Lines", "/erp/40/PurchLine", &fin.PurchaseInvoiceLineList{List: purchaseInvoiceLines}, extractIDs(purchaseInvoiceLines, func(e *fin.PurchaseInvoiceLine) string { return e.LineId }), &store.PurchaseInvoiceLineIDs); err != nil {
 		return err
 	}
 
@@ -191,15 +143,9 @@ func generateFinPhase5(client *HCMClient, store *MockDataStore) error {
 		return err
 	}
 
-	// Generate Vendor Payments
+	// Generate Vendor Payments (with embedded Allocations)
 	vendorPayments := generateVendorPayments(store)
 	if err := runOp(client, "Vendor Payments", "/erp/40/VndrPmt", &fin.VendorPaymentList{List: vendorPayments}, extractIDs(vendorPayments, func(e *fin.VendorPayment) string { return e.PaymentId }), &store.VendorPaymentIDs); err != nil {
-		return err
-	}
-
-	// Generate Payment Allocations
-	paymentAllocations := generatePaymentAllocations(store)
-	if err := runOp(client, "Payment Allocations", "/erp/40/PmtAlloc", &fin.PaymentAllocationList{List: paymentAllocations}, extractIDs(paymentAllocations, func(e *fin.PaymentAllocation) string { return e.AllocationId }), &store.PaymentAllocationIDs); err != nil {
 		return err
 	}
 

@@ -47,21 +47,6 @@ limitations under the License.
             },
         ],
 
-        CustomerContact: [
-            { key: 'contactId', label: 'ID', sortKey: 'contactId', filterKey: 'contactId' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'firstName', label: 'First Name', sortKey: 'firstName', filterKey: 'firstName' },
-            { key: 'lastName', label: 'Last Name', sortKey: 'lastName', filterKey: 'lastName' },
-            { key: 'email', label: 'Email', sortKey: 'email', filterKey: 'email' },
-            { key: 'phone', label: 'Phone', sortKey: 'phone', filterKey: 'phone' },
-            {
-                key: 'isPrimary',
-                label: 'Primary',
-                sortKey: 'isPrimary',
-                render: (item) => renderBoolean(item.isPrimary)
-            }
-        ],
-
         SalesInvoice: [
             { key: 'invoiceId', label: 'ID', sortKey: 'invoiceId', filterKey: 'invoiceId' },
             { key: 'invoiceNumber', label: 'Invoice #', sortKey: 'invoiceNumber', filterKey: 'invoiceNumber' },
@@ -92,25 +77,6 @@ limitations under the License.
             }
         ],
 
-        SalesInvoiceLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'invoiceId', label: 'Invoice', sortKey: 'invoiceId', filterKey: 'invoiceId' },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
-            {
-                key: 'unitPrice',
-                label: 'Unit Price',
-                sortKey: 'unitPrice',
-                render: (item) => renderMoney(item.unitPrice)
-            },
-            {
-                key: 'lineAmount',
-                label: 'Line Amount',
-                sortKey: 'lineAmount',
-                render: (item) => renderMoney(item.lineAmount)
-            }
-        ],
-
         CustomerPayment: [
             { key: 'paymentId', label: 'ID', sortKey: 'paymentId', filterKey: 'paymentId' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
@@ -137,18 +103,6 @@ limitations under the License.
                 label: 'Status',
                 sortKey: 'status',
                 render: (item) => render.paymentStatus(item.status)
-            }
-        ],
-
-        PaymentApplication: [
-            { key: 'applicationId', label: 'ID', sortKey: 'applicationId', filterKey: 'applicationId' },
-            { key: 'paymentId', label: 'Payment', sortKey: 'paymentId', filterKey: 'paymentId' },
-            { key: 'invoiceId', label: 'Invoice', sortKey: 'invoiceId', filterKey: 'invoiceId' },
-            {
-                key: 'appliedAmount',
-                label: 'Applied Amount',
-                sortKey: 'appliedAmount',
-                render: (item) => renderMoney(item.appliedAmount)
             }
         ],
 
