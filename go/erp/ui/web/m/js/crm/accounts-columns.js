@@ -48,28 +48,11 @@ Layer 8 Ecosystem - Apache 2.0
             ...col.boolean('isActive', 'Active')
         ],
 
-        CrmHealthScore: [
-            ...col.id('healthScoreId'),
-            ...col.col('accountId', 'Account'),
-            ...col.col('overallScore', 'Score'),
-            ...col.status('healthStatus', 'Status', enums.HEALTH_STATUS_VALUES, render.healthStatus),
-            ...col.col('engagementScore', 'Engagement'),
-            ...col.date('assessmentDate', 'Assessment Date')
-        ],
-
-        CrmAccountPlan: [
-            ...col.id('planId'),
-            ...col.col('accountId', 'Account'),
-            ...col.col('name', 'Name'),
-            ...col.col('planYear', 'Year'),
-            ...col.money('revenueTarget', 'Revenue Target'),
-            ...col.date('startDate', 'Start Date')
-        ]
     };
 
     MobileCrmAccounts.primaryKeys = {
         CrmAccount: 'accountId', CrmContact: 'contactId', CrmInteraction: 'interactionId',
-        CrmRelationship: 'relationshipId', CrmHealthScore: 'healthScoreId', CrmAccountPlan: 'planId'
+        CrmRelationship: 'relationshipId'
     };
 
 })();

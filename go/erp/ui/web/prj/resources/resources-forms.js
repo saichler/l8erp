@@ -42,19 +42,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('location', 'Location'),
                 ...f.text('timeZone', 'Time Zone'),
                 ...f.checkbox('isActive', 'Active')
-            ])
-        ]),
-
-        PrjResourceSkill: f.form('Resource Skill', [
-            f.section('Skill Details', [
-                ...f.reference('resourceId', 'Resource', 'PrjResource', true),
-                ...f.text('skillName', 'Skill Name', true),
-                ...f.text('skillCategory', 'Skill Category'),
-                ...f.number('proficiencyLevel', 'Proficiency Level (1-5)', true),
-                ...f.number('yearsExperience', 'Years Experience'),
-                ...f.checkbox('isPrimary', 'Primary Skill'),
-                ...f.date('certifiedDate', 'Certified Date'),
-                ...f.date('certificationExpiry', 'Certification Expiry')
+            ]),
+            f.section('Skills', [
+                ...f.inlineTable('skills', 'Resource Skills', [
+                    { key: 'skillId', label: 'Skill ID', hidden: true },
+                    { key: 'skillName', label: 'Skill Name', type: 'text', required: true },
+                    { key: 'skillCategory', label: 'Category', type: 'text' },
+                    { key: 'proficiencyLevel', label: 'Proficiency (1-5)', type: 'number', required: true },
+                    { key: 'yearsExperience', label: 'Years Exp', type: 'number' },
+                    { key: 'isPrimary', label: 'Primary', type: 'checkbox' },
+                    { key: 'certifiedDate', label: 'Certified', type: 'date' }
+                ])
             ])
         ]),
 
@@ -62,8 +60,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Allocation Details', [
                 ...f.reference('projectId', 'Project', 'PrjProject', true),
                 ...f.reference('resourceId', 'Resource', 'PrjResource', true),
-                ...f.reference('taskId', 'Task', 'PrjTask'),
-                ...f.reference('phaseId', 'Phase', 'PrjPhase'),
+                ...f.text('taskId', 'Task ID'),
+                ...f.text('phaseId', 'Phase ID'),
                 ...f.select('status', 'Status', enums.ALLOCATION_STATUS),
                 ...f.date('startDate', 'Start Date', true),
                 ...f.date('endDate', 'End Date', true),
@@ -131,7 +129,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     PrjResources.primaryKeys = {
         PrjResourcePool: 'poolId',
         PrjResource: 'resourceId',
-        PrjResourceSkill: 'skillId',
         PrjAllocation: 'allocationId',
         PrjBooking: 'bookingId',
         PrjCapacityPlan: 'planId',

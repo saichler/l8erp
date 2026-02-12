@@ -56,25 +56,6 @@ limitations under the License.
             }
         ],
 
-        CrmCaseComment: [
-            { key: 'commentId', label: 'ID', sortKey: 'commentId', filterKey: 'commentId' },
-            { key: 'caseId', label: 'Case', sortKey: 'caseId', filterKey: 'caseId' },
-            { key: 'body', label: 'Comment', sortKey: 'body' },
-            { key: 'createdById', label: 'Created By', sortKey: 'createdById' },
-            {
-                key: 'isPublic',
-                label: 'Public',
-                sortKey: 'isPublic',
-                render: (item) => renderBoolean(item.isPublic)
-            },
-            {
-                key: 'commentDate',
-                label: 'Date',
-                sortKey: 'commentDate',
-                render: (item) => renderDate(item.commentDate)
-            }
-        ],
-
         CrmKBArticle: [
             { key: 'articleId', label: 'ID', sortKey: 'articleId', filterKey: 'articleId' },
             { key: 'articleNumber', label: 'Article #', sortKey: 'articleNumber', filterKey: 'articleNumber' },

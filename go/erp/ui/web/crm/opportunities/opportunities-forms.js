@@ -30,9 +30,49 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('campaignId', 'Campaign', 'CrmCampaign'),
                 ...f.text('nextStep', 'Next Step'),
                 ...f.text('lossReason', 'Loss Reason'),
-                ...f.reference('competitorId', 'Primary Competitor', 'CrmOppCompetitor'),
                 ...f.money('expectedRevenue', 'Expected Revenue'),
                 ...f.textarea('description', 'Description')
+            ]),
+            f.section('Activities', [
+                ...f.inlineTable('activities', 'Activities', [
+                    { key: 'activityId', label: 'ID', hidden: true },
+                    { key: 'activityType', label: 'Type', type: 'select', options: enums.ACTIVITY_TYPE },
+                    { key: 'subject', label: 'Subject', type: 'text', required: true },
+                    { key: 'activityDate', label: 'Date', type: 'date' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.ACTIVITY_STATUS },
+                    { key: 'durationMinutes', label: 'Duration (min)', type: 'number' },
+                    { key: 'isCompleted', label: 'Completed', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Products', [
+                ...f.inlineTable('products', 'Opportunity Products', [
+                    { key: 'lineId', label: 'ID', hidden: true },
+                    { key: 'productId', label: 'Product', type: 'reference', lookupModel: 'ScmItem' },
+                    { key: 'productName', label: 'Name', type: 'text', required: true },
+                    { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                    { key: 'unitPrice', label: 'Unit Price', type: 'money' },
+                    { key: 'discountPercent', label: 'Discount %', type: 'number' },
+                    { key: 'totalPrice', label: 'Total', type: 'money' }
+                ])
+            ]),
+            f.section('Team Members', [
+                ...f.inlineTable('teamMembers', 'Team Members', [
+                    { key: 'memberId', label: 'ID', hidden: true },
+                    { key: 'employeeId', label: 'Employee', type: 'reference', lookupModel: 'Employee', required: true },
+                    { key: 'role', label: 'Role', type: 'text', required: true },
+                    { key: 'splitPercent', label: 'Split %', type: 'number' },
+                    { key: 'isPrimary', label: 'Primary', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Competitors', [
+                ...f.inlineTable('competitors', 'Competitors', [
+                    { key: 'competitorId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'website', label: 'Website', type: 'text' },
+                    { key: 'threatLevel', label: 'Threat', type: 'select', options: enums.THREAT_LEVEL },
+                    { key: 'competitorPrice', label: 'Price', type: 'money' },
+                    { key: 'isPrimary', label: 'Primary', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -49,68 +89,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        CrmOppCompetitor: f.form('Opportunity Competitor', [
-            f.section('Competitor Details', [
-                ...f.reference('opportunityId', 'Opportunity', 'CrmOpportunity', true),
-                ...f.text('name', 'Competitor Name', true),
-                ...f.text('website', 'Website'),
-                ...f.select('threatLevel', 'Threat Level', enums.THREAT_LEVEL),
-                ...f.money('competitorPrice', 'Competitor Price'),
-                ...f.checkbox('isPrimary', 'Is Primary'),
-                ...f.textarea('strengths', 'Strengths'),
-                ...f.textarea('weaknesses', 'Weaknesses'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        CrmOppProduct: f.form('Opportunity Product', [
-            f.section('Product Details', [
-                ...f.reference('opportunityId', 'Opportunity', 'CrmOpportunity', true),
-                ...f.reference('productId', 'Product', 'ScmItem'),
-                ...f.text('productName', 'Product Name', true),
-                ...f.number('lineNumber', 'Line Number'),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.money('unitPrice', 'Unit Price'),
-                ...f.number('discountPercent', 'Discount %'),
-                ...f.money('totalPrice', 'Total Price'),
-                ...f.textarea('description', 'Description')
-            ])
-        ]),
-
-        CrmOppTeam: f.form('Opportunity Team Member', [
-            f.section('Team Member Details', [
-                ...f.reference('opportunityId', 'Opportunity', 'CrmOpportunity', true),
-                ...f.reference('employeeId', 'Employee', 'Employee', true),
-                ...f.text('role', 'Role', true),
-                ...f.number('splitPercent', 'Split %'),
-                ...f.checkbox('isPrimary', 'Is Primary'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        CrmOppActivity: f.form('Opportunity Activity', [
-            f.section('Activity Details', [
-                ...f.reference('opportunityId', 'Opportunity', 'CrmOpportunity', true),
-                ...f.select('activityType', 'Activity Type', enums.ACTIVITY_TYPE, true),
-                ...f.text('subject', 'Subject', true),
-                ...f.textarea('description', 'Description'),
-                ...f.date('activityDate', 'Activity Date', true),
-                ...f.select('status', 'Status', enums.ACTIVITY_STATUS),
-                ...f.reference('assignedTo', 'Assigned To', 'Employee'),
-                ...f.number('durationMinutes', 'Duration (minutes)'),
-                ...f.text('outcome', 'Outcome'),
-                ...f.checkbox('isCompleted', 'Completed')
-            ])
-        ])
     };
 
     CrmOpportunities.primaryKeys = {
         CrmOpportunity: 'opportunityId',
-        CrmOppStage: 'stageId',
-        CrmOppCompetitor: 'competitorId',
-        CrmOppProduct: 'lineId',
-        CrmOppTeam: 'memberId',
-        CrmOppActivity: 'activityId'
+        CrmOppStage: 'stageId'
     };
 
 })();

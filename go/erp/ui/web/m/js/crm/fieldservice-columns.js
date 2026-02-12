@@ -49,30 +49,11 @@ Layer 8 Ecosystem - Apache 2.0
             ...col.col('serviceOrderId', 'Service Order')
         ],
 
-        CrmServicePart: [
-            ...col.id('partId'),
-            ...col.col('serviceOrderId', 'Service Order'),
-            ...col.col('itemName', 'Item'),
-            ...col.col('quantity', 'Qty'),
-            ...col.money('unitCost', 'Unit Cost'),
-            ...col.money('totalCost', 'Total'),
-            ...col.boolean('isWarranty', 'Warranty')
-        ],
-
-        CrmServiceVisit: [
-            ...col.id('visitId'),
-            ...col.col('serviceOrderId', 'Service Order'),
-            ...col.col('technicianId', 'Technician'),
-            ...col.status('status', 'Status', enums.VISIT_STATUS_VALUES, render.visitStatus),
-            ...col.date('scheduledArrival', 'Scheduled'),
-            ...col.col('laborHours', 'Labor Hrs'),
-            ...col.col('customerRating', 'Rating')
-        ]
     };
 
     MobileCrmFieldService.primaryKeys = {
         CrmServiceOrder: 'orderId', CrmTechnician: 'technicianId', CrmServiceContract: 'contractId',
-        CrmServiceSchedule: 'scheduleId', CrmServicePart: 'partId', CrmServiceVisit: 'visitId'
+        CrmServiceSchedule: 'scheduleId'
     };
 
 })();

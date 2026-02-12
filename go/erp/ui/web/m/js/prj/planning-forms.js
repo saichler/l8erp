@@ -44,6 +44,112 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('budget', 'Budget'),
                 ...f.money('actualCost', 'Actual Cost'),
                 ...f.select('billingType', 'Billing Type', enums.PROJECT_TYPE)
+            ]),
+            f.section('Phases', [
+                ...f.inlineTable('phases', 'Phases', [
+                    { key: 'phaseId', label: 'Phase ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'sequence', label: 'Sequence', type: 'number' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.PROJECT_STATUS },
+                    { key: 'startDate', label: 'Start', type: 'date' },
+                    { key: 'endDate', label: 'End', type: 'date' },
+                    { key: 'percentComplete', label: '% Complete', type: 'number' }
+                ])
+            ]),
+            f.section('Tasks', [
+                ...f.inlineTable('tasks', 'Tasks', [
+                    { key: 'taskId', label: 'Task ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
+                    { key: 'priority', label: 'Priority', type: 'select', options: enums.TASK_PRIORITY },
+                    { key: 'assigneeId', label: 'Assignee', type: 'text' },
+                    { key: 'startDate', label: 'Start', type: 'date' },
+                    { key: 'dueDate', label: 'Due', type: 'date' },
+                    { key: 'percentComplete', label: '% Complete', type: 'number' }
+                ])
+            ]),
+            f.section('Milestones', [
+                ...f.inlineTable('milestones', 'Milestones', [
+                    { key: 'milestoneId', label: 'Milestone ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.MILESTONE_STATUS },
+                    { key: 'targetDate', label: 'Target Date', type: 'date', required: true },
+                    { key: 'actualDate', label: 'Achieved', type: 'date' },
+                    { key: 'isBillable', label: 'Billable', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Deliverables', [
+                ...f.inlineTable('deliverables', 'Deliverables', [
+                    { key: 'deliverableId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'dueDate', label: 'Due Date', type: 'date' },
+                    { key: 'isDelivered', label: 'Delivered', type: 'checkbox' },
+                    { key: 'deliveredDate', label: 'Delivered Date', type: 'date' },
+                    { key: 'acceptedBy', label: 'Accepted By', type: 'text' }
+                ])
+            ]),
+            f.section('Dependencies', [
+                ...f.inlineTable('dependencies', 'Dependencies', [
+                    { key: 'dependencyId', label: 'ID', hidden: true },
+                    { key: 'predecessorTaskId', label: 'Predecessor', type: 'text', required: true },
+                    { key: 'successorTaskId', label: 'Successor', type: 'text', required: true },
+                    { key: 'dependencyType', label: 'Type', type: 'select', options: enums.DEPENDENCY_TYPE },
+                    { key: 'lagDays', label: 'Lag Days', type: 'number' }
+                ])
+            ]),
+            f.section('Risks', [
+                ...f.inlineTable('risks', 'Risks', [
+                    { key: 'riskId', label: 'Risk ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'severity', label: 'Severity', type: 'select', options: enums.RISK_SEVERITY },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.RISK_STATUS },
+                    { key: 'probability', label: 'Probability %', type: 'number' },
+                    { key: 'potentialImpact', label: 'Impact', type: 'money' }
+                ])
+            ]),
+            f.section('Issues', [
+                ...f.inlineTable('issues', 'Issues', [
+                    { key: 'issueId', label: 'Issue ID', hidden: true },
+                    { key: 'title', label: 'Title', type: 'text', required: true },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.ISSUE_STATUS },
+                    { key: 'priority', label: 'Priority', type: 'select', options: enums.ISSUE_PRIORITY },
+                    { key: 'assignedTo', label: 'Assigned To', type: 'text' },
+                    { key: 'reportedDate', label: 'Reported', type: 'date' },
+                    { key: 'dueDate', label: 'Due', type: 'date' }
+                ])
+            ]),
+            f.section('Earned Values', [
+                ...f.inlineTable('earnedValues', 'Earned Values', [
+                    { key: 'earnedValueId', label: 'ID', hidden: true },
+                    { key: 'asOfDate', label: 'As Of Date', type: 'date', required: true },
+                    { key: 'plannedValue', label: 'Planned Value', type: 'money' },
+                    { key: 'earnedValue', label: 'Earned Value', type: 'money' },
+                    { key: 'actualCost', label: 'Actual Cost', type: 'money' },
+                    { key: 'schedulePerformanceIndex', label: 'SPI', type: 'number' },
+                    { key: 'costPerformanceIndex', label: 'CPI', type: 'number' }
+                ])
+            ]),
+            f.section('Budget Variances', [
+                ...f.inlineTable('budgetVariances', 'Budget Variances', [
+                    { key: 'varianceId', label: 'ID', hidden: true },
+                    { key: 'asOfDate', label: 'As Of Date', type: 'date', required: true },
+                    { key: 'category', label: 'Category', type: 'text' },
+                    { key: 'budgetedAmount', label: 'Budgeted', type: 'money' },
+                    { key: 'actualAmount', label: 'Actual', type: 'money' },
+                    { key: 'varianceAmount', label: 'Variance', type: 'money' },
+                    { key: 'variancePercent', label: 'Variance %', type: 'number' }
+                ])
+            ]),
+            f.section('Resource Forecasts', [
+                ...f.inlineTable('resourceForecasts', 'Resource Forecasts', [
+                    { key: 'forecastId', label: 'ID', hidden: true },
+                    { key: 'resourceId', label: 'Resource', type: 'text' },
+                    { key: 'periodStart', label: 'Period Start', type: 'date', required: true },
+                    { key: 'periodEnd', label: 'Period End', type: 'date', required: true },
+                    { key: 'forecastedHours', label: 'Forecasted Hours', type: 'number' },
+                    { key: 'confirmedHours', label: 'Confirmed Hours', type: 'number' },
+                    { key: 'gapHours', label: 'Gap Hours', type: 'number' }
+                ])
             ])
         ]),
 
@@ -56,125 +162,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('defaultBudget', 'Default Budget'),
                 ...f.select('defaultBillingType', 'Default Billing Type', enums.PROJECT_TYPE),
                 ...f.checkbox('isActive', 'Active')
-            ])
-        ]),
-
-        PrjPhase: f.form('Phase', [
-            f.section('Phase Details', [
-                ...f.reference('projectId', 'Project', 'PrjProject', true),
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description'),
-                ...f.number('sequence', 'Sequence'),
-                ...f.select('status', 'Status', enums.PROJECT_STATUS)
-            ]),
-            f.section('Schedule', [
-                ...f.date('startDate', 'Start Date'),
-                ...f.date('endDate', 'End Date'),
-                ...f.date('actualStartDate', 'Actual Start'),
-                ...f.date('actualEndDate', 'Actual End'),
-                ...f.number('estimatedHours', 'Estimated Hours'),
-                ...f.number('actualHours', 'Actual Hours'),
-                ...f.number('percentComplete', '% Complete')
-            ])
-        ]),
-
-        PrjTask: f.form('Task', [
-            f.section('Task Details', [
-                ...f.reference('projectId', 'Project', 'PrjProject', true),
-                ...f.reference('phaseId', 'Phase', 'PrjPhase'),
-                ...f.reference('parentTaskId', 'Parent Task', 'PrjTask'),
-                ...f.text('wbsCode', 'WBS Code'),
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description'),
-                ...f.select('status', 'Status', enums.TASK_STATUS),
-                ...f.select('priority', 'Priority', enums.TASK_PRIORITY),
-                ...f.reference('assigneeId', 'Assigned To', 'Employee')
-            ]),
-            f.section('Schedule', [
-                ...f.date('startDate', 'Start Date'),
-                ...f.date('dueDate', 'Due Date'),
-                ...f.date('actualStartDate', 'Actual Start'),
-                ...f.date('actualEndDate', 'Actual End'),
-                ...f.number('estimatedHours', 'Estimated Hours'),
-                ...f.number('actualHours', 'Actual Hours'),
-                ...f.number('remainingHours', 'Remaining Hours'),
-                ...f.number('percentComplete', '% Complete')
-            ]),
-            f.section('Options', [
-                ...f.checkbox('isBillable', 'Billable'),
-                ...f.checkbox('isMilestone', 'Milestone Task')
-            ])
-        ]),
-
-        PrjMilestone: f.form('Milestone', [
-            f.section('Milestone Details', [
-                ...f.reference('projectId', 'Project', 'PrjProject', true),
-                ...f.reference('phaseId', 'Phase', 'PrjPhase'),
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description'),
-                ...f.select('status', 'Status', enums.MILESTONE_STATUS),
-                ...f.reference('ownerId', 'Owner', 'Employee')
-            ]),
-            f.section('Dates', [
-                ...f.date('targetDate', 'Target Date', true),
-                ...f.date('actualDate', 'Achieved Date')
-            ]),
-            f.section('Billing', [
-                ...f.checkbox('isBillable', 'Billable'),
-                ...f.money('billingAmount', 'Billing Amount')
-            ])
-        ]),
-
-        PrjDeliverable: f.form('Deliverable', [
-            f.section('Deliverable Details', [
-                ...f.reference('projectId', 'Project', 'PrjProject', true),
-                ...f.reference('milestoneId', 'Milestone', 'PrjMilestone'),
-                ...f.reference('taskId', 'Task', 'PrjTask'),
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description'),
-                ...f.date('dueDate', 'Due Date'),
-                ...f.textarea('notes', 'Notes')
-            ]),
-            f.section('Delivery Status', [
-                ...f.checkbox('isDelivered', 'Delivered'),
-                ...f.date('deliveredDate', 'Delivered Date'),
-                ...f.text('acceptedBy', 'Accepted By'),
-                ...f.date('acceptanceDate', 'Acceptance Date')
-            ])
-        ]),
-
-        PrjDependency: f.form('Dependency', [
-            f.section('Dependency Details', [
-                ...f.reference('projectId', 'Project', 'PrjProject', true),
-                ...f.reference('predecessorTaskId', 'Predecessor Task', 'PrjTask', true),
-                ...f.reference('successorTaskId', 'Successor Task', 'PrjTask', true),
-                ...f.select('dependencyType', 'Dependency Type', enums.DEPENDENCY_TYPE),
-                ...f.number('lagDays', 'Lag Days')
-            ])
-        ]),
-
-        PrjRisk: f.form('Risk', [
-            f.section('Risk Details', [
-                ...f.reference('projectId', 'Project', 'PrjProject', true),
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description'),
-                ...f.text('category', 'Category'),
-                ...f.select('severity', 'Severity', enums.RISK_SEVERITY),
-                ...f.select('status', 'Status', enums.RISK_STATUS),
-                ...f.reference('ownerId', 'Owner', 'Employee')
-            ]),
-            f.section('Assessment', [
-                ...f.number('probability', 'Probability (%)'),
-                ...f.money('potentialImpact', 'Potential Impact'),
-                ...f.textarea('impactDescription', 'Impact Description')
-            ]),
-            f.section('Mitigation', [
-                ...f.textarea('mitigationPlan', 'Mitigation Plan'),
-                ...f.textarea('contingencyPlan', 'Contingency Plan')
-            ]),
-            f.section('Dates', [
-                ...f.date('identifiedDate', 'Identified Date'),
-                ...f.date('dueDate', 'Due Date')
             ])
         ])
     };

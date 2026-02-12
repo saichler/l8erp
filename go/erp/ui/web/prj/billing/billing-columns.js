@@ -86,37 +86,6 @@ limitations under the License.
             }
         ],
 
-        PrjBillingMilestone: [
-            { key: 'milestoneId', label: 'ID', sortKey: 'milestoneId', filterKey: 'milestoneId' },
-            { key: 'scheduleId', label: 'Schedule', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'amount',
-                label: 'Amount',
-                sortKey: 'amount',
-                render: (item) => renderMoney(item.amount)
-            },
-            { key: 'percentage', label: 'Percentage', sortKey: 'percentage' },
-            {
-                key: 'dueDate',
-                label: 'Due Date',
-                sortKey: 'dueDate',
-                render: (item) => renderDate(item.dueDate)
-            },
-            {
-                key: 'billedDate',
-                label: 'Billed Date',
-                sortKey: 'billedDate',
-                render: (item) => renderDate(item.billedDate)
-            },
-            {
-                key: 'isBilled',
-                label: 'Billed',
-                sortKey: 'isBilled',
-                render: (item) => item.isBilled ? 'Yes' : 'No'
-            }
-        ],
-
         PrjProjectInvoice: [
             { key: 'invoiceId', label: 'ID', sortKey: 'invoiceId', filterKey: 'invoiceId' },
             { key: 'projectId', label: 'Project', sortKey: 'projectId', filterKey: 'projectId' },
@@ -150,32 +119,6 @@ limitations under the License.
                 label: 'Paid Amount',
                 sortKey: 'paidAmount',
                 render: (item) => renderMoney(item.paidAmount)
-            }
-        ],
-
-        PrjInvoiceLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'invoiceId', label: 'Invoice', sortKey: 'invoiceId', filterKey: 'invoiceId' },
-            { key: 'lineNumber', label: 'Line #', sortKey: 'lineNumber' },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
-            {
-                key: 'unitPrice',
-                label: 'Unit Price',
-                sortKey: 'unitPrice',
-                render: (item) => renderMoney(item.unitPrice)
-            },
-            {
-                key: 'amount',
-                label: 'Amount',
-                sortKey: 'amount',
-                render: (item) => renderMoney(item.amount)
-            },
-            {
-                key: 'isTaxable',
-                label: 'Taxable',
-                sortKey: 'isTaxable',
-                render: (item) => item.isTaxable ? 'Yes' : 'No'
             }
         ],
 

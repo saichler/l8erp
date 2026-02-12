@@ -21,41 +21,6 @@ Layer 8 Ecosystem - Apache 2.0
             ...col.col('percentComplete', '% Complete')
         ],
 
-        PrjEarnedValue: [
-            ...col.id('earnedValueId'),
-            ...col.col('projectId', 'Project'),
-            ...col.date('asOfDate', 'As Of Date'),
-            ...col.money('plannedValue', 'Planned Value'),
-            ...col.money('earnedValue', 'Earned Value'),
-            ...col.money('actualCost', 'Actual Cost'),
-            ...col.money('scheduleVariance', 'Schedule Variance'),
-            ...col.money('costVariance', 'Cost Variance'),
-            ...col.col('schedulePerformanceIndex', 'SPI'),
-            ...col.col('costPerformanceIndex', 'CPI')
-        ],
-
-        PrjBudgetVariance: [
-            ...col.id('varianceId'),
-            ...col.col('projectId', 'Project'),
-            ...col.date('asOfDate', 'As Of Date'),
-            ...col.money('budgetedAmount', 'Budgeted Amount'),
-            ...col.money('actualAmount', 'Actual Amount'),
-            ...col.money('varianceAmount', 'Variance'),
-            ...col.col('variancePercent', 'Variance %'),
-            ...col.col('category', 'Category')
-        ],
-
-        PrjResourceForecast: [
-            ...col.id('forecastId'),
-            ...col.col('projectId', 'Project'),
-            ...col.col('resourceId', 'Resource'),
-            ...col.date('periodStart', 'Period Start'),
-            ...col.date('periodEnd', 'Period End'),
-            ...col.col('forecastedHours', 'Forecasted Hours'),
-            ...col.col('confirmedHours', 'Confirmed Hours'),
-            ...col.col('gapHours', 'Gap Hours')
-        ],
-
         PrjPortfolioView: [
             ...col.id('viewId'),
             ...col.col('name', 'Name'),
@@ -78,24 +43,11 @@ Layer 8 Ecosystem - Apache 2.0
             ...col.col('trend', 'Trend')
         ],
 
-        PrjProjectIssue: [
-            ...col.id('issueId'),
-            ...col.col('projectId', 'Project'),
-            ...col.col('title', 'Title'),
-            ...col.status('status', 'Status', enums.ISSUE_STATUS_VALUES, render.issueStatus),
-            ...col.status('priority', 'Priority', enums.ISSUE_PRIORITY_VALUES, render.issuePriority),
-            ...col.col('assignedTo', 'Assigned To'),
-            ...col.date('reportedDate', 'Reported Date'),
-            ...col.date('dueDate', 'Due Date'),
-            ...col.date('resolvedDate', 'Resolved Date')
-        ]
     };
 
     MobilePrjAnalytics.primaryKeys = {
-        PrjStatusReport: 'statusId', PrjEarnedValue: 'earnedValueId',
-        PrjBudgetVariance: 'varianceId', PrjResourceForecast: 'forecastId',
-        PrjPortfolioView: 'viewId', PrjProjectKPI: 'kpiId',
-        PrjProjectIssue: 'issueId'
+        PrjStatusReport: 'statusId',
+        PrjPortfolioView: 'viewId', PrjProjectKPI: 'kpiId'
     };
 
 })();

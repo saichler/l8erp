@@ -21,17 +21,6 @@ Layer 8 Ecosystem - Apache 2.0
             ...col.date('submittedDate', 'Submitted Date')
         ],
 
-        PrjTimesheetEntry: [
-            ...col.id('entryId'),
-            ...col.col('timesheetId', 'Timesheet'),
-            ...col.col('projectId', 'Project'),
-            ...col.col('taskId', 'Task'),
-            ...col.date('workDate', 'Work Date'),
-            ...col.col('hours', 'Hours'),
-            ...col.boolean('isBillable', 'Billable'),
-            ...col.col('description', 'Description')
-        ],
-
         PrjExpenseReport: [
             ...col.id('reportId'),
             ...col.col('employeeId', 'Employee'),
@@ -41,17 +30,6 @@ Layer 8 Ecosystem - Apache 2.0
             ...col.money('totalAmount', 'Total Amount'),
             ...col.date('submitDate', 'Submitted Date'),
             ...col.date('approvedDate', 'Approved Date')
-        ],
-
-        PrjExpenseEntry: [
-            ...col.id('entryId'),
-            ...col.col('reportId', 'Report'),
-            ...col.status('expenseType', 'Type', enums.EXPENSE_TYPE_VALUES, render.expenseType),
-            ...col.date('expenseDate', 'Date'),
-            ...col.money('amount', 'Amount'),
-            ...col.col('categoryId', 'Category'),
-            ...col.boolean('isBillable', 'Billable'),
-            ...col.col('description', 'Description')
         ],
 
         PrjApprovalRule: [
@@ -85,8 +63,8 @@ Layer 8 Ecosystem - Apache 2.0
     };
 
     MobilePrjTimeExpense.primaryKeys = {
-        PrjTimesheet: 'timesheetId', PrjTimesheetEntry: 'entryId',
-        PrjExpenseReport: 'reportId', PrjExpenseEntry: 'entryId',
+        PrjTimesheet: 'timesheetId',
+        PrjExpenseReport: 'reportId',
         PrjApprovalRule: 'ruleId', PrjExpenseCategory: 'categoryId',
         PrjExpensePolicy: 'policyId'
     };

@@ -21,14 +21,6 @@ Layer 8 Ecosystem - Apache 2.0
             ...col.date('openedDate', 'Opened')
         ],
 
-        CrmCaseComment: [
-            ...col.id('commentId'),
-            ...col.col('caseId', 'Case'),
-            ...col.col('body', 'Comment'),
-            ...col.boolean('isPublic', 'Public'),
-            ...col.date('commentDate', 'Date')
-        ],
-
         CrmKBArticle: [
             ...col.id('articleId'),
             ...col.col('articleNumber', 'Article #'),
@@ -65,7 +57,7 @@ Layer 8 Ecosystem - Apache 2.0
     };
 
     MobileCrmService.primaryKeys = {
-        CrmCase: 'caseId', CrmCaseComment: 'commentId', CrmKBArticle: 'articleId',
+        CrmCase: 'caseId', CrmKBArticle: 'articleId',
         CrmSLA: 'slaId', CrmEscalation: 'escalationId', CrmSurvey: 'surveyId'
     };
 

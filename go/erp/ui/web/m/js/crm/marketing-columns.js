@@ -20,15 +20,6 @@ Layer 8 Ecosystem - Apache 2.0
             ...col.money('budgetedCost', 'Budget')
         ],
 
-        CrmCampaignMember: [
-            ...col.id('memberId'),
-            ...col.col('campaignId', 'Campaign'),
-            ...col.col('leadId', 'Lead'),
-            ...col.col('contactId', 'Contact'),
-            ...col.status('status', 'Status', enums.MEMBER_STATUS_VALUES, render.memberStatus),
-            ...col.date('respondedDate', 'Responded')
-        ],
-
         CrmEmailTemplate: [
             ...col.id('templateId'),
             ...col.col('name', 'Name'),
@@ -46,28 +37,11 @@ Layer 8 Ecosystem - Apache 2.0
             ...col.boolean('isActive', 'Active')
         ],
 
-        CrmCampaignResponse: [
-            ...col.id('responseId'),
-            ...col.col('campaignId', 'Campaign'),
-            ...col.col('memberId', 'Member'),
-            ...col.status('responseType', 'Type', enums.RESPONSE_TYPE_VALUES, render.responseType),
-            ...col.date('responseDate', 'Date')
-        ],
-
-        CrmCampaignROI: [
-            ...col.id('roiId'),
-            ...col.col('campaignId', 'Campaign'),
-            ...col.money('totalCost', 'Total Cost'),
-            ...col.money('totalRevenue', 'Revenue'),
-            ...col.col('roi', 'ROI %'),
-            ...col.col('leadsGenerated', 'Leads'),
-            ...col.col('opportunitiesCreated', 'Opportunities')
-        ]
     };
 
     MobileCrmMarketing.primaryKeys = {
-        CrmCampaign: 'campaignId', CrmCampaignMember: 'memberId', CrmEmailTemplate: 'templateId',
-        CrmMarketingList: 'listId', CrmCampaignResponse: 'responseId', CrmCampaignROI: 'roiId'
+        CrmCampaign: 'campaignId', CrmEmailTemplate: 'templateId',
+        CrmMarketingList: 'listId'
     };
 
 })();

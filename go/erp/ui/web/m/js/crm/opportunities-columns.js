@@ -30,44 +30,10 @@ Layer 8 Ecosystem - Apache 2.0
             ...col.boolean('isWon', 'Won')
         ],
 
-        CrmOppCompetitor: [
-            ...col.id('competitorId'),
-            ...col.col('opportunityId', 'Opportunity'),
-            ...col.col('competitorName', 'Competitor'),
-            ...col.col('strengths', 'Strengths'),
-            ...col.status('threatLevel', 'Threat Level', enums.THREAT_LEVEL_VALUES, render.threatLevel)
-        ],
-
-        CrmOppProduct: [
-            ...col.id('oppProductId'),
-            ...col.col('opportunityId', 'Opportunity'),
-            ...col.col('productId', 'Product'),
-            ...col.col('quantity', 'Quantity'),
-            ...col.money('unitPrice', 'Unit Price'),
-            ...col.money('totalPrice', 'Total')
-        ],
-
-        CrmOppTeam: [
-            ...col.id('teamMemberId'),
-            ...col.col('opportunityId', 'Opportunity'),
-            ...col.col('userId', 'User'),
-            ...col.col('role', 'Role'),
-            ...col.boolean('isPrimary', 'Primary')
-        ],
-
-        CrmOppActivity: [
-            ...col.id('activityId'),
-            ...col.col('opportunityId', 'Opportunity'),
-            ...col.status('activityType', 'Type', enums.ACTIVITY_TYPE_VALUES, render.activityType),
-            ...col.col('subject', 'Subject'),
-            ...col.status('status', 'Status', enums.ACTIVITY_STATUS_VALUES, render.activityStatus),
-            ...col.date('activityDate', 'Date')
-        ]
     };
 
     MobileCrmOpportunities.primaryKeys = {
-        CrmOpportunity: 'opportunityId', CrmOppStage: 'stageId', CrmOppCompetitor: 'competitorId',
-        CrmOppProduct: 'oppProductId', CrmOppTeam: 'teamMemberId', CrmOppActivity: 'activityId'
+        CrmOpportunity: 'opportunityId', CrmOppStage: 'stageId'
     };
 
 })();

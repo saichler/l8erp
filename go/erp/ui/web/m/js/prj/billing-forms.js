@@ -47,23 +47,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('startDate', 'Start Date'),
                 ...f.date('endDate', 'End Date'),
                 ...f.checkbox('isActive', 'Active')
-            ])
-        ]),
-
-        PrjBillingMilestone: f.form('Billing Milestone', [
-            f.section('Milestone Details', [
-                ...f.reference('scheduleId', 'Billing Schedule', 'PrjBillingSchedule', true),
-                ...f.reference('projectId', 'Project', 'PrjProject', true),
-                ...f.reference('projectMilestoneId', 'Project Milestone', 'PrjMilestone'),
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description'),
-                ...f.money('amount', 'Amount', true),
-                ...f.number('percentage', 'Percentage'),
-                ...f.date('dueDate', 'Due Date'),
-                ...f.date('billedDate', 'Billed Date'),
-                ...f.reference('invoiceId', 'Invoice', 'PrjProjectInvoice'),
-                ...f.textarea('deliverables', 'Deliverables'),
-                ...f.checkbox('isBilled', 'Billed')
+            ]),
+            f.section('Billing Milestones', [
+                ...f.inlineTable('milestones', 'Billing Milestones', [
+                    { key: 'milestoneId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'amount', label: 'Amount', type: 'money', required: true },
+                    { key: 'percentage', label: 'Percentage', type: 'number' },
+                    { key: 'dueDate', label: 'Due Date', type: 'date' },
+                    { key: 'billedDate', label: 'Billed Date', type: 'date' },
+                    { key: 'isBilled', label: 'Billed', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -88,31 +82,22 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('paidAmount', 'Paid Amount'),
                 ...f.money('balanceDue', 'Balance Due')
             ]),
+            f.section('Invoice Lines', [
+                ...f.inlineTable('lines', 'Invoice Lines', [
+                    { key: 'lineId', label: 'Line ID', hidden: true },
+                    { key: 'lineNumber', label: 'Line #', type: 'number' },
+                    { key: 'description', label: 'Description', type: 'text', required: true },
+                    { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                    { key: 'unit', label: 'Unit', type: 'text' },
+                    { key: 'unitPrice', label: 'Unit Price', type: 'money', required: true },
+                    { key: 'amount', label: 'Amount', type: 'money' },
+                    { key: 'isTaxable', label: 'Taxable', type: 'checkbox' }
+                ])
+            ]),
             f.section('Additional Information', [
                 ...f.textarea('notes', 'Notes'),
                 ...f.date('sentDate', 'Sent Date'),
                 ...f.date('paidDate', 'Paid Date')
-            ])
-        ]),
-
-        PrjInvoiceLine: f.form('Invoice Line', [
-            f.section('Line Details', [
-                ...f.reference('invoiceId', 'Invoice', 'PrjProjectInvoice', true),
-                ...f.reference('projectId', 'Project', 'PrjProject'),
-                ...f.reference('taskId', 'Task', 'PrjTask'),
-                ...f.reference('timesheetEntryId', 'Timesheet Entry', 'PrjTimesheetEntry'),
-                ...f.reference('expenseEntryId', 'Expense Entry', 'PrjExpenseEntry'),
-                ...f.reference('billingMilestoneId', 'Billing Milestone', 'PrjBillingMilestone'),
-                ...f.number('lineNumber', 'Line Number'),
-                ...f.textarea('description', 'Description', true),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.text('unit', 'Unit'),
-                ...f.money('unitPrice', 'Unit Price', true),
-                ...f.money('amount', 'Amount'),
-                ...f.money('taxAmount', 'Tax Amount'),
-                ...f.money('totalAmount', 'Total Amount'),
-                ...f.text('lineType', 'Line Type'),
-                ...f.checkbox('isTaxable', 'Taxable')
             ])
         ]),
 
@@ -146,7 +131,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.text('budgetType', 'Budget Type'),
-                ...f.reference('phaseId', 'Phase', 'PrjPhase'),
+                ...f.text('phaseId', 'Phase ID'),
                 ...f.date('periodStart', 'Period Start'),
                 ...f.date('periodEnd', 'Period End'),
                 ...f.number('version', 'Version')

@@ -19,234 +19,155 @@ limitations under the License.
 
     window.PrjBilling = window.PrjBilling || {};
 
+    const f = window.Layer8FormFactory;
     const enums = PrjBilling.enums;
 
     PrjBilling.forms = {
-        PrjBillingRate: {
-            title: 'Billing Rate',
-            sections: [
-                {
-                    title: 'Rate Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject' },
-                        { key: 'resourceId', label: 'Resource', type: 'reference', lookupModel: 'PrjResource' },
-                        { key: 'role', label: 'Role', type: 'text' },
-                        { key: 'skillCategory', label: 'Skill Category', type: 'text' },
-                        { key: 'rate', label: 'Rate', type: 'money', required: true },
-                        { key: 'rateUnit', label: 'Rate Unit', type: 'text' },
-                        { key: 'overtimeRate', label: 'Overtime Rate', type: 'money' },
-                        { key: 'effectiveFrom', label: 'Effective From', type: 'date' },
-                        { key: 'effectiveUntil', label: 'Effective Until', type: 'date' },
-                        { key: 'currencyId', label: 'Currency', type: 'reference', lookupModel: 'Currency' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        PrjBillingRate: f.form('Billing Rate', [
+            f.section('Rate Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.reference('projectId', 'Project', 'PrjProject'),
+                ...f.reference('resourceId', 'Resource', 'PrjResource'),
+                ...f.text('role', 'Role'),
+                ...f.text('skillCategory', 'Skill Category'),
+                ...f.money('rate', 'Rate', true),
+                ...f.text('rateUnit', 'Rate Unit'),
+                ...f.money('overtimeRate', 'Overtime Rate'),
+                ...f.date('effectiveFrom', 'Effective From'),
+                ...f.date('effectiveUntil', 'Effective Until'),
+                ...f.reference('currencyId', 'Currency', 'Currency'),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ]),
 
-        PrjBillingSchedule: {
-            title: 'Billing Schedule',
-            sections: [
-                {
-                    title: 'Schedule Details',
-                    fields: [
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'billingType', label: 'Billing Type', type: 'select', options: enums.BILLING_TYPE },
-                        { key: 'billingFrequency', label: 'Billing Frequency', type: 'text' },
-                        { key: 'billingDay', label: 'Billing Day', type: 'number' },
-                        { key: 'fixedAmount', label: 'Fixed Amount', type: 'money' },
-                        { key: 'retainerAmount', label: 'Retainer Amount', type: 'money' },
-                        { key: 'includeExpenses', label: 'Include Expenses', type: 'checkbox' },
-                        { key: 'expenseMarkupPercent', label: 'Expense Markup %', type: 'number' },
-                        { key: 'startDate', label: 'Start Date', type: 'date' },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        PrjBillingSchedule: f.form('Billing Schedule', [
+            f.section('Schedule Details', [
+                ...f.reference('projectId', 'Project', 'PrjProject', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('billingType', 'Billing Type', enums.BILLING_TYPE),
+                ...f.text('billingFrequency', 'Billing Frequency'),
+                ...f.number('billingDay', 'Billing Day'),
+                ...f.money('fixedAmount', 'Fixed Amount'),
+                ...f.money('retainerAmount', 'Retainer Amount'),
+                ...f.checkbox('includeExpenses', 'Include Expenses'),
+                ...f.number('expenseMarkupPercent', 'Expense Markup %'),
+                ...f.date('startDate', 'Start Date'),
+                ...f.date('endDate', 'End Date'),
+                ...f.checkbox('isActive', 'Active')
+            ]),
+            f.section('Billing Milestones', [
+                ...f.inlineTable('milestones', 'Billing Milestones', [
+                    { key: 'milestoneId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'amount', label: 'Amount', type: 'money', required: true },
+                    { key: 'percentage', label: 'Percentage', type: 'number' },
+                    { key: 'dueDate', label: 'Due Date', type: 'date' },
+                    { key: 'billedDate', label: 'Billed Date', type: 'date' },
+                    { key: 'isBilled', label: 'Billed', type: 'checkbox' }
+                ])
+            ])
+        ]),
 
-        PrjBillingMilestone: {
-            title: 'Billing Milestone',
-            sections: [
-                {
-                    title: 'Milestone Details',
-                    fields: [
-                        { key: 'scheduleId', label: 'Billing Schedule', type: 'reference', lookupModel: 'PrjBillingSchedule', required: true },
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject', required: true },
-                        { key: 'projectMilestoneId', label: 'Project Milestone', type: 'reference', lookupModel: 'PrjMilestone' },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'amount', label: 'Amount', type: 'money', required: true },
-                        { key: 'percentage', label: 'Percentage', type: 'number' },
-                        { key: 'dueDate', label: 'Due Date', type: 'date' },
-                        { key: 'billedDate', label: 'Billed Date', type: 'date' },
-                        { key: 'invoiceId', label: 'Invoice', type: 'reference', lookupModel: 'PrjProjectInvoice' },
-                        { key: 'deliverables', label: 'Deliverables', type: 'textarea' },
-                        { key: 'isBilled', label: 'Billed', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
+        PrjProjectInvoice: f.form('Project Invoice', [
+            f.section('Invoice Details', [
+                ...f.reference('projectId', 'Project', 'PrjProject', true),
+                ...f.reference('customerId', 'Customer', 'Customer'),
+                ...f.text('invoiceNumber', 'Invoice Number', true),
+                ...f.text('poNumber', 'PO Number'),
+                ...f.date('invoiceDate', 'Invoice Date', true),
+                ...f.date('dueDate', 'Due Date'),
+                ...f.date('periodStart', 'Period Start'),
+                ...f.date('periodEnd', 'Period End'),
+                ...f.select('status', 'Status', enums.INVOICE_STATUS),
+                ...f.text('paymentTerms', 'Payment Terms'),
+                ...f.reference('currencyId', 'Currency', 'Currency')
+            ]),
+            f.section('Amounts', [
+                ...f.money('subtotal', 'Subtotal'),
+                ...f.money('taxAmount', 'Tax Amount'),
+                ...f.money('totalAmount', 'Total Amount'),
+                ...f.money('paidAmount', 'Paid Amount'),
+                ...f.money('balanceDue', 'Balance Due')
+            ]),
+            f.section('Invoice Lines', [
+                ...f.inlineTable('lines', 'Invoice Lines', [
+                    { key: 'lineId', label: 'Line ID', hidden: true },
+                    { key: 'lineNumber', label: 'Line #', type: 'number' },
+                    { key: 'description', label: 'Description', type: 'text', required: true },
+                    { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                    { key: 'unit', label: 'Unit', type: 'text' },
+                    { key: 'unitPrice', label: 'Unit Price', type: 'money', required: true },
+                    { key: 'amount', label: 'Amount', type: 'money' },
+                    { key: 'isTaxable', label: 'Taxable', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Additional Information', [
+                ...f.textarea('notes', 'Notes'),
+                ...f.date('sentDate', 'Sent Date'),
+                ...f.date('paidDate', 'Paid Date')
+            ])
+        ]),
 
-        PrjProjectInvoice: {
-            title: 'Project Invoice',
-            sections: [
-                {
-                    title: 'Invoice Details',
-                    fields: [
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject', required: true },
-                        { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'Customer' },
-                        { key: 'invoiceNumber', label: 'Invoice Number', type: 'text', required: true },
-                        { key: 'poNumber', label: 'PO Number', type: 'text' },
-                        { key: 'invoiceDate', label: 'Invoice Date', type: 'date', required: true },
-                        { key: 'dueDate', label: 'Due Date', type: 'date' },
-                        { key: 'periodStart', label: 'Period Start', type: 'date' },
-                        { key: 'periodEnd', label: 'Period End', type: 'date' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.INVOICE_STATUS },
-                        { key: 'paymentTerms', label: 'Payment Terms', type: 'text' },
-                        { key: 'currencyId', label: 'Currency', type: 'reference', lookupModel: 'Currency' }
-                    ]
-                },
-                {
-                    title: 'Amounts',
-                    fields: [
-                        { key: 'subtotal', label: 'Subtotal', type: 'money' },
-                        { key: 'taxAmount', label: 'Tax Amount', type: 'money' },
-                        { key: 'totalAmount', label: 'Total Amount', type: 'money' },
-                        { key: 'paidAmount', label: 'Paid Amount', type: 'money' },
-                        { key: 'balanceDue', label: 'Balance Due', type: 'money' }
-                    ]
-                },
-                {
-                    title: 'Additional Information',
-                    fields: [
-                        { key: 'notes', label: 'Notes', type: 'textarea' },
-                        { key: 'sentDate', label: 'Sent Date', type: 'date' },
-                        { key: 'paidDate', label: 'Paid Date', type: 'date' }
-                    ]
-                }
-            ]
-        },
+        PrjRevenueRecognition: f.form('Revenue Recognition', [
+            f.section('Recognition Details', [
+                ...f.reference('projectId', 'Project', 'PrjProject', true),
+                ...f.reference('invoiceId', 'Invoice', 'PrjProjectInvoice'),
+                ...f.select('method', 'Recognition Method', enums.REVENUE_RECOGNITION_METHOD),
+                ...f.date('recognitionDate', 'Recognition Date', true),
+                ...f.date('periodStart', 'Period Start'),
+                ...f.date('periodEnd', 'Period End'),
+                ...f.number('percentComplete', 'Percent Complete')
+            ]),
+            f.section('Amounts', [
+                ...f.money('recognizedAmount', 'Recognized Amount'),
+                ...f.money('deferredAmount', 'Deferred Amount'),
+                ...f.money('cumulativeRecognized', 'Cumulative Recognized')
+            ]),
+            f.section('GL Information', [
+                ...f.text('glAccount', 'GL Account'),
+                ...f.text('deferredGlAccount', 'Deferred GL Account'),
+                ...f.textarea('notes', 'Notes'),
+                ...f.checkbox('isPosted', 'Posted'),
+                ...f.date('postedDate', 'Posted Date')
+            ])
+        ]),
 
-        PrjInvoiceLine: {
-            title: 'Invoice Line',
-            sections: [
-                {
-                    title: 'Line Details',
-                    fields: [
-                        { key: 'invoiceId', label: 'Invoice', type: 'reference', lookupModel: 'PrjProjectInvoice', required: true },
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject' },
-                        { key: 'taskId', label: 'Task', type: 'reference', lookupModel: 'PrjTask' },
-                        { key: 'timesheetEntryId', label: 'Timesheet Entry', type: 'reference', lookupModel: 'PrjTimesheetEntry' },
-                        { key: 'expenseEntryId', label: 'Expense Entry', type: 'reference', lookupModel: 'PrjExpenseEntry' },
-                        { key: 'billingMilestoneId', label: 'Billing Milestone', type: 'reference', lookupModel: 'PrjBillingMilestone' },
-                        { key: 'lineNumber', label: 'Line Number', type: 'number' },
-                        { key: 'description', label: 'Description', type: 'textarea', required: true },
-                        { key: 'quantity', label: 'Quantity', type: 'number', required: true },
-                        { key: 'unit', label: 'Unit', type: 'text' },
-                        { key: 'unitPrice', label: 'Unit Price', type: 'money', required: true },
-                        { key: 'amount', label: 'Amount', type: 'money' },
-                        { key: 'taxAmount', label: 'Tax Amount', type: 'money' },
-                        { key: 'totalAmount', label: 'Total Amount', type: 'money' },
-                        { key: 'lineType', label: 'Line Type', type: 'text' },
-                        { key: 'isTaxable', label: 'Taxable', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
-
-        PrjRevenueRecognition: {
-            title: 'Revenue Recognition',
-            sections: [
-                {
-                    title: 'Recognition Details',
-                    fields: [
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject', required: true },
-                        { key: 'invoiceId', label: 'Invoice', type: 'reference', lookupModel: 'PrjProjectInvoice' },
-                        { key: 'method', label: 'Recognition Method', type: 'select', options: enums.REVENUE_RECOGNITION_METHOD },
-                        { key: 'recognitionDate', label: 'Recognition Date', type: 'date', required: true },
-                        { key: 'periodStart', label: 'Period Start', type: 'date' },
-                        { key: 'periodEnd', label: 'Period End', type: 'date' },
-                        { key: 'percentComplete', label: 'Percent Complete', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Amounts',
-                    fields: [
-                        { key: 'recognizedAmount', label: 'Recognized Amount', type: 'money' },
-                        { key: 'deferredAmount', label: 'Deferred Amount', type: 'money' },
-                        { key: 'cumulativeRecognized', label: 'Cumulative Recognized', type: 'money' }
-                    ]
-                },
-                {
-                    title: 'GL Information',
-                    fields: [
-                        { key: 'glAccount', label: 'GL Account', type: 'text' },
-                        { key: 'deferredGlAccount', label: 'Deferred GL Account', type: 'text' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' },
-                        { key: 'isPosted', label: 'Posted', type: 'checkbox' },
-                        { key: 'postedDate', label: 'Posted Date', type: 'date' }
-                    ]
-                }
-            ]
-        },
-
-        PrjProjectBudget: {
-            title: 'Project Budget',
-            sections: [
-                {
-                    title: 'Budget Details',
-                    fields: [
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'budgetType', label: 'Budget Type', type: 'text' },
-                        { key: 'phaseId', label: 'Phase', type: 'reference', lookupModel: 'PrjPhase' },
-                        { key: 'periodStart', label: 'Period Start', type: 'date' },
-                        { key: 'periodEnd', label: 'Period End', type: 'date' },
-                        { key: 'version', label: 'Version', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Budget Amounts',
-                    fields: [
-                        { key: 'budgetedAmount', label: 'Budgeted Amount', type: 'money', required: true },
-                        { key: 'committedAmount', label: 'Committed Amount', type: 'money' },
-                        { key: 'actualAmount', label: 'Actual Amount', type: 'money' },
-                        { key: 'remainingAmount', label: 'Remaining Amount', type: 'money' }
-                    ]
-                },
-                {
-                    title: 'Hours',
-                    fields: [
-                        { key: 'budgetedHours', label: 'Budgeted Hours', type: 'number' },
-                        { key: 'actualHours', label: 'Actual Hours', type: 'number' },
-                        { key: 'remainingHours', label: 'Remaining Hours', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Approval',
-                    fields: [
-                        { key: 'isApproved', label: 'Approved', type: 'checkbox' },
-                        { key: 'approvedBy', label: 'Approved By', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'approvedDate', label: 'Approved Date', type: 'date' }
-                    ]
-                }
-            ]
-        }
+        PrjProjectBudget: f.form('Project Budget', [
+            f.section('Budget Details', [
+                ...f.reference('projectId', 'Project', 'PrjProject', true),
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.text('budgetType', 'Budget Type'),
+                ...f.text('phaseId', 'Phase ID'),
+                ...f.date('periodStart', 'Period Start'),
+                ...f.date('periodEnd', 'Period End'),
+                ...f.number('version', 'Version')
+            ]),
+            f.section('Budget Amounts', [
+                ...f.money('budgetedAmount', 'Budgeted Amount', true),
+                ...f.money('committedAmount', 'Committed Amount'),
+                ...f.money('actualAmount', 'Actual Amount'),
+                ...f.money('remainingAmount', 'Remaining Amount')
+            ]),
+            f.section('Hours', [
+                ...f.number('budgetedHours', 'Budgeted Hours'),
+                ...f.number('actualHours', 'Actual Hours'),
+                ...f.number('remainingHours', 'Remaining Hours')
+            ]),
+            f.section('Approval', [
+                ...f.checkbox('isApproved', 'Approved'),
+                ...f.reference('approvedBy', 'Approved By', 'Employee'),
+                ...f.date('approvedDate', 'Approved Date')
+            ])
+        ])
     };
 
     PrjBilling.primaryKeys = {
         PrjBillingRate: 'rateId',
         PrjBillingSchedule: 'scheduleId',
-        PrjBillingMilestone: 'milestoneId',
         PrjProjectInvoice: 'invoiceId',
-        PrjInvoiceLine: 'lineId',
         PrjRevenueRecognition: 'recognitionId',
         PrjProjectBudget: 'budgetId'
     };

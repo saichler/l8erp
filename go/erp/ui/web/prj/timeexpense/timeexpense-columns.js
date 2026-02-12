@@ -54,27 +54,6 @@ limitations under the License.
             }
         ],
 
-        PrjTimesheetEntry: [
-            { key: 'entryId', label: 'ID', sortKey: 'entryId', filterKey: 'entryId' },
-            { key: 'timesheetId', label: 'Timesheet', sortKey: 'timesheetId', filterKey: 'timesheetId' },
-            { key: 'projectId', label: 'Project', sortKey: 'projectId', filterKey: 'projectId' },
-            { key: 'taskId', label: 'Task', sortKey: 'taskId', filterKey: 'taskId' },
-            {
-                key: 'workDate',
-                label: 'Work Date',
-                sortKey: 'workDate',
-                render: (item) => renderDate(item.workDate)
-            },
-            { key: 'hours', label: 'Hours', sortKey: 'hours' },
-            {
-                key: 'isBillable',
-                label: 'Billable',
-                sortKey: 'isBillable',
-                render: (item) => item.isBillable ? 'Yes' : 'No'
-            },
-            { key: 'description', label: 'Description', sortKey: 'description' }
-        ],
-
         PrjExpenseReport: [
             { key: 'reportId', label: 'ID', sortKey: 'reportId', filterKey: 'reportId' },
             { key: 'employeeId', label: 'Employee', sortKey: 'employeeId', filterKey: 'employeeId' },
@@ -104,37 +83,6 @@ limitations under the License.
                 sortKey: 'approvedDate',
                 render: (item) => renderDate(item.approvedDate)
             }
-        ],
-
-        PrjExpenseEntry: [
-            { key: 'entryId', label: 'ID', sortKey: 'entryId', filterKey: 'entryId' },
-            { key: 'reportId', label: 'Report', sortKey: 'reportId', filterKey: 'reportId' },
-            {
-                key: 'expenseType',
-                label: 'Type',
-                sortKey: 'expenseType',
-                render: (item) => render.expenseType(item.expenseType)
-            },
-            {
-                key: 'expenseDate',
-                label: 'Date',
-                sortKey: 'expenseDate',
-                render: (item) => renderDate(item.expenseDate)
-            },
-            {
-                key: 'amount',
-                label: 'Amount',
-                sortKey: 'amount',
-                render: (item) => renderMoney(item.amount)
-            },
-            { key: 'categoryId', label: 'Category', sortKey: 'categoryId' },
-            {
-                key: 'isBillable',
-                label: 'Billable',
-                sortKey: 'isBillable',
-                render: (item) => item.isBillable ? 'Yes' : 'No'
-            },
-            { key: 'description', label: 'Description', sortKey: 'description' }
         ],
 
         PrjApprovalRule: [

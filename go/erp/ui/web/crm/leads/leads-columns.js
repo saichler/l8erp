@@ -86,37 +86,6 @@ limitations under the License.
             }
         ],
 
-        CrmLeadActivity: [
-            { key: 'activityId', label: 'ID', sortKey: 'activityId', filterKey: 'activityId' },
-            { key: 'leadId', label: 'Lead', sortKey: 'leadId', filterKey: 'leadId' },
-            {
-                key: 'activityType',
-                label: 'Type',
-                sortKey: 'activityType',
-                render: (item) => render.activityType(item.activityType)
-            },
-            { key: 'subject', label: 'Subject', sortKey: 'subject', filterKey: 'subject' },
-            {
-                key: 'activityDate',
-                label: 'Date',
-                sortKey: 'activityDate',
-                render: (item) => renderDate(item.activityDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.activityStatus(item.status)
-            },
-            { key: 'durationMinutes', label: 'Duration (min)', sortKey: 'durationMinutes' },
-            {
-                key: 'isCompleted',
-                label: 'Completed',
-                sortKey: 'isCompleted',
-                render: (item) => item.isCompleted ? 'Yes' : 'No'
-            }
-        ],
-
         CrmLeadAssign: [
             { key: 'assignmentId', label: 'ID', sortKey: 'assignmentId', filterKey: 'assignmentId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
@@ -138,26 +107,6 @@ limitations under the License.
             }
         ],
 
-        CrmLeadConversion: [
-            { key: 'conversionId', label: 'ID', sortKey: 'conversionId', filterKey: 'conversionId' },
-            { key: 'leadId', label: 'Lead', sortKey: 'leadId', filterKey: 'leadId' },
-            { key: 'accountId', label: 'Account', sortKey: 'accountId' },
-            { key: 'contactId', label: 'Contact', sortKey: 'contactId' },
-            { key: 'opportunityId', label: 'Opportunity', sortKey: 'opportunityId' },
-            {
-                key: 'conversionDate',
-                label: 'Conversion Date',
-                sortKey: 'conversionDate',
-                render: (item) => renderDate(item.conversionDate)
-            },
-            { key: 'convertedBy', label: 'Converted By', sortKey: 'convertedBy' },
-            {
-                key: 'createOpportunity',
-                label: 'Created Opportunity',
-                sortKey: 'createOpportunity',
-                render: (item) => item.createOpportunity ? 'Yes' : 'No'
-            }
-        ]
     };
 
 })();

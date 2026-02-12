@@ -65,27 +65,6 @@ limitations under the License.
             }
         ],
 
-        PrjResourceSkill: [
-            { key: 'skillId', label: 'ID', sortKey: 'skillId', filterKey: 'skillId' },
-            { key: 'resourceId', label: 'Resource', sortKey: 'resourceId', filterKey: 'resourceId' },
-            { key: 'skillName', label: 'Skill Name', sortKey: 'skillName', filterKey: 'skillName' },
-            { key: 'skillCategory', label: 'Category', sortKey: 'skillCategory' },
-            { key: 'proficiencyLevel', label: 'Proficiency', sortKey: 'proficiencyLevel' },
-            { key: 'yearsExperience', label: 'Years Exp', sortKey: 'yearsExperience' },
-            {
-                key: 'isPrimary',
-                label: 'Primary',
-                sortKey: 'isPrimary',
-                render: (item) => item.isPrimary ? 'Yes' : 'No'
-            },
-            {
-                key: 'certifiedDate',
-                label: 'Certified',
-                sortKey: 'certifiedDate',
-                render: (item) => renderDate(item.certifiedDate)
-            }
-        ],
-
         PrjAllocation: [
             { key: 'allocationId', label: 'ID', sortKey: 'allocationId', filterKey: 'allocationId' },
             { key: 'projectId', label: 'Project', sortKey: 'projectId', filterKey: 'projectId' },

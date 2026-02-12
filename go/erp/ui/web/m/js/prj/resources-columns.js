@@ -32,17 +32,6 @@ Layer 8 Ecosystem - Apache 2.0
             ...col.boolean('isActive', 'Active')
         ],
 
-        PrjResourceSkill: [
-            ...col.id('skillId'),
-            ...col.col('resourceId', 'Resource'),
-            ...col.col('skillName', 'Skill Name'),
-            ...col.col('skillCategory', 'Category'),
-            ...col.col('proficiencyLevel', 'Proficiency'),
-            ...col.col('yearsExperience', 'Years Exp'),
-            ...col.boolean('isPrimary', 'Primary'),
-            ...col.date('certifiedDate', 'Certified')
-        ],
-
         PrjAllocation: [
             ...col.id('allocationId'),
             ...col.col('projectId', 'Project'),
@@ -97,7 +86,7 @@ Layer 8 Ecosystem - Apache 2.0
     };
 
     MobilePrjResources.primaryKeys = {
-        PrjResourcePool: 'poolId', PrjResource: 'resourceId', PrjResourceSkill: 'skillId',
+        PrjResourcePool: 'poolId', PrjResource: 'resourceId',
         PrjAllocation: 'allocationId', PrjBooking: 'bookingId',
         PrjCapacityPlan: 'planId', PrjUtilization: 'utilizationId'
     };

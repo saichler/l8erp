@@ -26,19 +26,13 @@ window.Layer8MReferenceRegistryCRM = {
     },
     ...refCrmM.simple('CrmLeadSource', 'sourceId', 'name'),
     ...refCrmM.simple('CrmLeadScore', 'scoreId', 'name'),
-    ...refCrmM.simple('CrmLeadActivity', 'activityId', 'subject'),
     ...refCrmM.simple('CrmLeadAssign', 'assignmentId', 'name'),
-    ...refCrmM.idOnly('CrmLeadConversion', 'conversionId'),
 
     // ========================================
     // CRM - Opportunities Management
     // ========================================
     ...refCrmM.simple('CrmOpportunity', 'opportunityId', 'name', 'Opportunity'),
     ...refCrmM.simple('CrmOppStage', 'stageId', 'name'),
-    ...refCrmM.simple('CrmOppCompetitor', 'competitorId', 'competitorName'),
-    ...refCrmM.idOnly('CrmOppProduct', 'oppProductId'),
-    ...refCrmM.idOnly('CrmOppTeam', 'teamMemberId'),
-    ...refCrmM.simple('CrmOppActivity', 'activityId', 'subject'),
 
     // ========================================
     // CRM - Accounts Management
@@ -47,18 +41,13 @@ window.Layer8MReferenceRegistryCRM = {
     ...refCrmM.person('CrmContact', 'contactId', 'lastName', 'firstName'),
     ...refCrmM.simple('CrmInteraction', 'interactionId', 'subject'),
     ...refCrmM.idOnly('CrmRelationship', 'relationshipId'),
-    ...refCrmM.idOnly('CrmHealthScore', 'healthScoreId'),
-    ...refCrmM.simple('CrmAccountPlan', 'planId', 'name'),
 
     // ========================================
     // CRM - Marketing Management
     // ========================================
     ...refCrmM.simple('CrmCampaign', 'campaignId', 'name', 'Campaign'),
-    ...refCrmM.idOnly('CrmCampaignMember', 'memberId'),
     ...refCrmM.simple('CrmEmailTemplate', 'templateId', 'name'),
     ...refCrmM.simple('CrmMarketingList', 'listId', 'name'),
-    ...refCrmM.idOnly('CrmCampaignResponse', 'responseId'),
-    ...refCrmM.idOnly('CrmCampaignROI', 'roiId'),
 
     // ========================================
     // CRM - Customer Service
@@ -73,7 +62,6 @@ window.Layer8MReferenceRegistryCRM = {
         },
         displayLabel: 'Case'
     },
-    ...refCrmM.idOnly('CrmCaseComment', 'commentId'),
     // Custom displayFormat for KB article (articleNumber - title)
     CrmKBArticle: {
         idColumn: 'articleId',
@@ -94,9 +82,7 @@ window.Layer8MReferenceRegistryCRM = {
     ...refCrmM.simple('CrmServiceOrder', 'orderId', 'orderNumber', 'Service Order'),
     ...refCrmM.simple('CrmTechnician', 'technicianId', 'name', 'Technician'),
     ...refCrmM.simple('CrmServiceContract', 'contractId', 'contractNumber', 'Service Contract'),
-    ...refCrmM.idOnly('CrmServiceSchedule', 'scheduleId'),
-    ...refCrmM.simple('CrmServicePart', 'partId', 'itemName'),
-    ...refCrmM.idOnly('CrmServiceVisit', 'visitId')
+    ...refCrmM.idOnly('CrmServiceSchedule', 'scheduleId')
 };
 
 // Register with the central registry

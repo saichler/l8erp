@@ -23,6 +23,30 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.number('employeeCount', 'Employees'),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
                 ...f.textarea('description', 'Description')
+            ]),
+            f.section('Health Scores', [
+                ...f.inlineTable('healthScores', 'Health Scores', [
+                    { key: 'scoreId', label: 'ID', hidden: true },
+                    { key: 'healthStatus', label: 'Status', type: 'select', options: enums.HEALTH_STATUS },
+                    { key: 'overallScore', label: 'Overall', type: 'number' },
+                    { key: 'engagementScore', label: 'Engagement', type: 'number' },
+                    { key: 'usageScore', label: 'Usage', type: 'number' },
+                    { key: 'satisfactionScore', label: 'Satisfaction', type: 'number' },
+                    { key: 'financialScore', label: 'Financial', type: 'number' },
+                    { key: 'scoreDate', label: 'Date', type: 'date' }
+                ])
+            ]),
+            f.section('Account Plans', [
+                ...f.inlineTable('accountPlans', 'Account Plans', [
+                    { key: 'planId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'fiscalYear', label: 'Fiscal Year', type: 'text' },
+                    { key: 'revenueTarget', label: 'Revenue Target', type: 'money' },
+                    { key: 'currentRevenue', label: 'Current Revenue', type: 'money' },
+                    { key: 'status', label: 'Status', type: 'text' },
+                    { key: 'startDate', label: 'Start', type: 'date' },
+                    { key: 'endDate', label: 'End', type: 'date' }
+                ])
             ])
         ]),
 
@@ -66,33 +90,6 @@ Layer 8 Ecosystem - Apache 2.0
             ])
         ]),
 
-        CrmHealthScore: f.form('Health Score', [
-            f.section('Health Score Details', [
-                ...f.reference('accountId', 'Account', 'CrmAccount', true),
-                ...f.number('overallScore', 'Overall Score'),
-                ...f.select('healthStatus', 'Status', enums.HEALTH_STATUS),
-                ...f.number('engagementScore', 'Engagement Score'),
-                ...f.number('productUsageScore', 'Product Usage Score'),
-                ...f.number('supportScore', 'Support Score'),
-                ...f.number('financialScore', 'Financial Score'),
-                ...f.date('assessmentDate', 'Assessment Date'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        CrmAccountPlan: f.form('Account Plan', [
-            f.section('Plan Details', [
-                ...f.reference('accountId', 'Account', 'CrmAccount', true),
-                ...f.text('name', 'Name', true),
-                ...f.number('planYear', 'Plan Year', true),
-                ...f.money('revenueTarget', 'Revenue Target'),
-                ...f.date('startDate', 'Start Date'),
-                ...f.date('endDate', 'End Date'),
-                ...f.textarea('objectives', 'Objectives'),
-                ...f.textarea('strategies', 'Strategies'),
-                ...f.reference('ownerId', 'Owner', 'Employee')
-            ])
-        ])
     };
 
 })();

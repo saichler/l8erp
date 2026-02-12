@@ -34,22 +34,14 @@ Layer8DReferenceRegistry.register({
     ...refCrm.batch([
         ['CrmLeadSource', 'sourceId', 'name'],
         ['CrmLeadScore', 'scoreId', 'name'],
-        ['CrmLeadActivity', 'activityId', 'subject'],
         ['CrmLeadAssign', 'assignmentId', 'name']
     ]),
-    ...refCrm.idOnly('CrmLeadConversion', 'conversionId'),
 
     // ========================================
     // CRM - Opportunities Management
     // ========================================
     ...refCrm.simple('CrmOpportunity', 'opportunityId', 'name', 'Opportunity'),
     ...refCrm.simple('CrmOppStage', 'stageId', 'name'),
-    ...refCrm.simple('CrmOppCompetitor', 'competitorId', 'competitorName'),
-    ...refCrm.batchIdOnly([
-        ['CrmOppProduct', 'oppProductId'],
-        ['CrmOppTeam', 'teamMemberId']
-    ]),
-    ...refCrm.simple('CrmOppActivity', 'activityId', 'subject'),
 
     // ========================================
     // CRM - Accounts Management
@@ -57,31 +49,21 @@ Layer8DReferenceRegistry.register({
     ...refCrm.simple('CrmAccount', 'accountId', 'name', 'Account'),
     ...refCrm.person('CrmContact', 'contactId'),
     ...refCrm.simple('CrmInteraction', 'interactionId', 'subject'),
-    ...refCrm.batchIdOnly([
-        ['CrmRelationship', 'relationshipId'],
-        ['CrmHealthScore', 'healthScoreId']
-    ]),
-    ...refCrm.simple('CrmAccountPlan', 'planId', 'name'),
+    ...refCrm.idOnly('CrmRelationship', 'relationshipId'),
 
     // ========================================
     // CRM - Marketing Management
     // ========================================
     ...refCrm.simple('CrmCampaign', 'campaignId', 'name', 'Campaign'),
-    ...refCrm.idOnly('CrmCampaignMember', 'memberId'),
     ...refCrm.batch([
         ['CrmEmailTemplate', 'templateId', 'name'],
         ['CrmMarketingList', 'listId', 'name']
-    ]),
-    ...refCrm.batchIdOnly([
-        ['CrmCampaignResponse', 'responseId'],
-        ['CrmCampaignROI', 'roiId']
     ]),
 
     // ========================================
     // CRM - Customer Service
     // ========================================
     ...refCrm.coded('CrmCase', 'caseId', 'caseNumber', 'subject'),
-    ...refCrm.idOnly('CrmCaseComment', 'commentId'),
     ...refCrm.coded('CrmKBArticle', 'articleId', 'articleNumber', 'title'),
     ...refCrm.batch([
         ['CrmSLA', 'slaId', 'name'],
@@ -95,7 +77,5 @@ Layer8DReferenceRegistry.register({
     ...refCrm.simple('CrmServiceOrder', 'orderId', 'orderNumber', 'Service Order'),
     ...refCrm.simple('CrmTechnician', 'technicianId', 'name', 'Technician'),
     ...refCrm.simple('CrmServiceContract', 'contractId', 'contractNumber', 'Service Contract'),
-    ...refCrm.idOnly('CrmServiceSchedule', 'scheduleId'),
-    ...refCrm.simple('CrmServicePart', 'partId', 'itemName'),
-    ...refCrm.idOnly('CrmServiceVisit', 'visitId')
+    ...refCrm.idOnly('CrmServiceSchedule', 'scheduleId')
 });

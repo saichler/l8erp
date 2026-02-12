@@ -33,17 +33,6 @@ Layer 8 Ecosystem - Apache 2.0
             ...col.boolean('isActive', 'Active')
         ],
 
-        PrjBillingMilestone: [
-            ...col.id('milestoneId'),
-            ...col.col('scheduleId', 'Schedule'),
-            ...col.col('name', 'Name'),
-            ...col.money('amount', 'Amount'),
-            ...col.col('percentage', 'Percentage'),
-            ...col.date('dueDate', 'Due Date'),
-            ...col.date('billedDate', 'Billed Date'),
-            ...col.boolean('isBilled', 'Billed')
-        ],
-
         PrjProjectInvoice: [
             ...col.id('invoiceId'),
             ...col.col('projectId', 'Project'),
@@ -53,17 +42,6 @@ Layer 8 Ecosystem - Apache 2.0
             ...col.date('dueDate', 'Due Date'),
             ...col.money('totalAmount', 'Total Amount'),
             ...col.money('paidAmount', 'Paid Amount')
-        ],
-
-        PrjInvoiceLine: [
-            ...col.id('lineId'),
-            ...col.col('invoiceId', 'Invoice'),
-            ...col.col('lineNumber', 'Line #'),
-            ...col.col('description', 'Description'),
-            ...col.col('quantity', 'Quantity'),
-            ...col.money('unitPrice', 'Unit Price'),
-            ...col.money('amount', 'Amount'),
-            ...col.boolean('isTaxable', 'Taxable')
         ],
 
         PrjRevenueRecognition: [
@@ -92,8 +70,8 @@ Layer 8 Ecosystem - Apache 2.0
 
     MobilePrjBilling.primaryKeys = {
         PrjBillingRate: 'rateId', PrjBillingSchedule: 'scheduleId',
-        PrjBillingMilestone: 'milestoneId', PrjProjectInvoice: 'invoiceId',
-        PrjInvoiceLine: 'lineId', PrjRevenueRecognition: 'recognitionId',
+        PrjProjectInvoice: 'invoiceId',
+        PrjRevenueRecognition: 'recognitionId',
         PrjProjectBudget: 'budgetId'
     };
 

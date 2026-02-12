@@ -24,14 +24,15 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.reference('slaId', 'SLA', 'CrmSLA'),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
                 ...f.textarea('resolution', 'Resolution')
-            ])
-        ]),
-
-        CrmCaseComment: f.form('Case Comment', [
-            f.section('Comment Details', [
-                ...f.reference('caseId', 'Case', 'CrmCase', true),
-                ...f.textarea('body', 'Comment', true),
-                ...f.checkbox('isPublic', 'Public')
+            ]),
+            f.section('Comments', [
+                ...f.inlineTable('comments', 'Case Comments', [
+                    { key: 'commentId', label: 'ID', hidden: true },
+                    { key: 'body', label: 'Comment', type: 'text', required: true },
+                    { key: 'isPublic', label: 'Public', type: 'checkbox' },
+                    { key: 'createdById', label: 'Created By', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'commentDate', label: 'Date', type: 'date' }
+                ])
             ])
         ]),
 

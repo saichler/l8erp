@@ -30,23 +30,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('approvedBy', 'Approved By', 'Employee'),
                 ...f.textarea('rejectionReason', 'Rejection Reason'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        PrjTimesheetEntry: f.form('Timesheet Entry', [
-            f.section('Entry Details', [
-                ...f.reference('timesheetId', 'Timesheet', 'PrjTimesheet', true),
-                ...f.reference('projectId', 'Project', 'PrjProject', true),
-                ...f.reference('taskId', 'Task', 'PrjTask'),
-                ...f.reference('phaseId', 'Phase', 'PrjPhase'),
-                ...f.date('workDate', 'Work Date', true),
-                ...f.number('hours', 'Hours', true),
-                ...f.checkbox('isBillable', 'Billable'),
-                ...f.money('billingRate', 'Billing Rate'),
-                ...f.money('billingAmount', 'Billing Amount'),
-                ...f.text('activityType', 'Activity Type'),
-                ...f.checkbox('isOvertime', 'Overtime'),
-                ...f.textarea('description', 'Description')
+            ]),
+            f.section('Time Entries', [
+                ...f.inlineTable('entries', 'Time Entries', [
+                    { key: 'entryId', label: 'Entry ID', hidden: true },
+                    { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject', required: true },
+                    { key: 'taskId', label: 'Task', type: 'text' },
+                    { key: 'workDate', label: 'Work Date', type: 'date', required: true },
+                    { key: 'hours', label: 'Hours', type: 'number', required: true },
+                    { key: 'isBillable', label: 'Billable', type: 'checkbox' },
+                    { key: 'description', label: 'Description', type: 'text' }
+                ])
             ])
         ]),
 
@@ -67,28 +61,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('paidDate', 'Paid Date'),
                 ...f.textarea('rejectionReason', 'Rejection Reason'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        PrjExpenseEntry: f.form('Expense Entry', [
-            f.section('Entry Details', [
-                ...f.reference('reportId', 'Expense Report', 'PrjExpenseReport', true),
-                ...f.reference('projectId', 'Project', 'PrjProject'),
-                ...f.reference('taskId', 'Task', 'PrjTask'),
-                ...f.reference('categoryId', 'Category', 'PrjExpenseCategory'),
-                ...f.select('expenseType', 'Expense Type', enums.EXPENSE_TYPE, true),
-                ...f.date('expenseDate', 'Expense Date', true),
-                ...f.textarea('description', 'Description'),
-                ...f.text('vendor', 'Vendor'),
-                ...f.money('amount', 'Amount', true),
-                ...f.reference('currencyId', 'Currency', 'Currency'),
-                ...f.money('convertedAmount', 'Converted Amount'),
-                ...f.number('exchangeRate', 'Exchange Rate'),
-                ...f.checkbox('isBillable', 'Billable'),
-                ...f.checkbox('isReimbursable', 'Reimbursable'),
-                ...f.text('receiptUrl', 'Receipt URL'),
-                ...f.checkbox('receiptAttached', 'Receipt Attached'),
-                ...f.text('paymentMethod', 'Payment Method')
+            ]),
+            f.section('Expense Entries', [
+                ...f.inlineTable('entries', 'Expense Entries', [
+                    { key: 'entryId', label: 'Entry ID', hidden: true },
+                    { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject' },
+                    { key: 'expenseType', label: 'Type', type: 'select', options: enums.EXPENSE_TYPE, required: true },
+                    { key: 'expenseDate', label: 'Date', type: 'date', required: true },
+                    { key: 'amount', label: 'Amount', type: 'money', required: true },
+                    { key: 'isBillable', label: 'Billable', type: 'checkbox' },
+                    { key: 'description', label: 'Description', type: 'text' }
+                ])
             ])
         ]),
 
@@ -147,9 +130,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
     PrjTimeExpense.primaryKeys = {
         PrjTimesheet: 'timesheetId',
-        PrjTimesheetEntry: 'entryId',
         PrjExpenseReport: 'reportId',
-        PrjExpenseEntry: 'entryId',
         PrjApprovalRule: 'ruleId',
         PrjExpenseCategory: 'categoryId',
         PrjExpensePolicy: 'policyId'

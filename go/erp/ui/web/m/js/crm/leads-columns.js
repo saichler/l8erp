@@ -37,15 +37,6 @@ Layer 8 Ecosystem - Apache 2.0
             ...col.boolean('isActive', 'Active')
         ],
 
-        CrmLeadActivity: [
-            ...col.id('activityId'),
-            ...col.col('leadId', 'Lead'),
-            ...col.status('activityType', 'Type', enums.ACTIVITY_TYPE_VALUES, render.activityType),
-            ...col.col('subject', 'Subject'),
-            ...col.status('status', 'Status', enums.ACTIVITY_STATUS_VALUES, render.activityStatus),
-            ...col.date('activityDate', 'Date')
-        ],
-
         CrmLeadAssign: [
             ...col.id('assignmentId'),
             ...col.col('name', 'Name'),
@@ -55,19 +46,11 @@ Layer 8 Ecosystem - Apache 2.0
             ...col.boolean('isActive', 'Active')
         ],
 
-        CrmLeadConversion: [
-            ...col.id('conversionId'),
-            ...col.col('leadId', 'Lead'),
-            ...col.col('accountId', 'Account'),
-            ...col.col('contactId', 'Contact'),
-            ...col.date('conversionDate', 'Date'),
-            ...col.boolean('createOpportunity', 'Created Opp')
-        ]
     };
 
     MobileCrmLeads.primaryKeys = {
         CrmLead: 'leadId', CrmLeadSource: 'sourceId', CrmLeadScore: 'scoreId',
-        CrmLeadActivity: 'activityId', CrmLeadAssign: 'assignmentId', CrmLeadConversion: 'conversionId'
+        CrmLeadAssign: 'assignmentId'
     };
 
 })();

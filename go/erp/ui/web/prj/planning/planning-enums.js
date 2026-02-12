@@ -104,6 +104,22 @@ limitations under the License.
         ['Start to Finish', 'sf', 'layer8d-status-active']
     ]);
 
+    const ISSUE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Open', 'open', 'layer8d-status-pending'],
+        ['In Progress', 'progress', 'layer8d-status-active'],
+        ['Resolved', 'resolved', 'layer8d-status-active'],
+        ['Closed', 'closed', 'layer8d-status-inactive']
+    ]);
+
+    const ISSUE_PRIORITY = factory.create([
+        ['Unspecified', null, ''],
+        ['Low', 'low', 'layer8d-status-inactive'],
+        ['Medium', 'medium', 'layer8d-status-pending'],
+        ['High', 'high', 'layer8d-status-active'],
+        ['Critical', 'critical', 'layer8d-status-terminated']
+    ]);
+
     // ============================================================================
     // EXPORT ENUMS
     // ============================================================================
@@ -126,7 +142,11 @@ limitations under the License.
         RISK_STATUS: RISK_STATUS.enum,
         RISK_STATUS_CLASSES: RISK_STATUS.classes,
         DEPENDENCY_TYPE: DEPENDENCY_TYPE.enum,
-        DEPENDENCY_TYPE_CLASSES: DEPENDENCY_TYPE.classes
+        DEPENDENCY_TYPE_CLASSES: DEPENDENCY_TYPE.classes,
+        ISSUE_STATUS: ISSUE_STATUS.enum,
+        ISSUE_STATUS_CLASSES: ISSUE_STATUS.classes,
+        ISSUE_PRIORITY: ISSUE_PRIORITY.enum,
+        ISSUE_PRIORITY_CLASSES: ISSUE_PRIORITY.classes
     };
 
     // ============================================================================

@@ -40,16 +40,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('origin', 'Origin'),
                 ...f.textarea('resolution', 'Resolution'),
                 ...f.reference('productId', 'Product', 'ScmItem')
-            ])
-        ]),
-
-        CrmCaseComment: f.form('Case Comment', [
-            f.section('Comment Details', [
-                ...f.reference('caseId', 'Case', 'CrmCase', true),
-                ...f.textarea('body', 'Comment', true),
-                ...f.checkbox('isPublic', 'Public'),
-                ...f.reference('createdById', 'Created By', 'Employee'),
-                ...f.date('commentDate', 'Date')
+            ]),
+            f.section('Comments', [
+                ...f.inlineTable('comments', 'Case Comments', [
+                    { key: 'commentId', label: 'ID', hidden: true },
+                    { key: 'body', label: 'Comment', type: 'text', required: true },
+                    { key: 'isPublic', label: 'Public', type: 'checkbox' },
+                    { key: 'createdById', label: 'Created By', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'commentDate', label: 'Date', type: 'date' }
+                ])
             ])
         ]),
 
@@ -139,7 +138,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
     CrmService.primaryKeys = {
         CrmCase: 'caseId',
-        CrmCaseComment: 'commentId',
         CrmKBArticle: 'articleId',
         CrmSLA: 'slaId',
         CrmEscalation: 'escalationId',

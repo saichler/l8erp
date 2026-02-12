@@ -97,45 +97,6 @@ limitations under the License.
             { key: 'isActive', label: 'Active', sortKey: 'isActive' }
         ],
 
-        CrmHealthScore: [
-            { key: 'scoreId', label: 'ID', sortKey: 'scoreId', filterKey: 'scoreId' },
-            { key: 'accountId', label: 'Account', sortKey: 'accountId', filterKey: 'accountId' },
-            {
-                key: 'healthStatus',
-                label: 'Health Status',
-                sortKey: 'healthStatus',
-                render: (item) => render.healthStatus(item.healthStatus)
-            },
-            { key: 'overallScore', label: 'Overall', sortKey: 'overallScore' },
-            { key: 'engagementScore', label: 'Engagement', sortKey: 'engagementScore' },
-            { key: 'usageScore', label: 'Usage', sortKey: 'usageScore' },
-            {
-                key: 'scoreDate',
-                label: 'Score Date',
-                sortKey: 'scoreDate',
-                render: (item) => renderDate(item.scoreDate)
-            }
-        ],
-
-        CrmAccountPlan: [
-            { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'accountId', label: 'Account', sortKey: 'accountId', filterKey: 'accountId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'fiscalYear', label: 'Fiscal Year', sortKey: 'fiscalYear' },
-            {
-                key: 'revenueTarget',
-                label: 'Revenue Target',
-                sortKey: 'revenueTarget',
-                render: (item) => renderMoney(item.revenueTarget)
-            },
-            {
-                key: 'startDate',
-                label: 'Start Date',
-                sortKey: 'startDate',
-                render: (item) => renderDate(item.startDate)
-            },
-            { key: 'status', label: 'Status', sortKey: 'status' }
-        ]
     };
 
 })();

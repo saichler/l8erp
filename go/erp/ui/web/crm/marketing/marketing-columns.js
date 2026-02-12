@@ -60,26 +60,6 @@ limitations under the License.
             { key: 'numResponses', label: 'Responses', sortKey: 'numResponses' }
         ],
 
-        CrmCampaignMember: [
-            { key: 'memberId', label: 'ID', sortKey: 'memberId', filterKey: 'memberId' },
-            { key: 'campaignId', label: 'Campaign', sortKey: 'campaignId', filterKey: 'campaignId' },
-            { key: 'leadId', label: 'Lead', sortKey: 'leadId' },
-            { key: 'contactId', label: 'Contact', sortKey: 'contactId' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.campaignMemberStatus(item.status)
-            },
-            {
-                key: 'firstRespondedDate',
-                label: 'Responded Date',
-                sortKey: 'firstRespondedDate',
-                render: (item) => renderDate(item.firstRespondedDate)
-            },
-            { key: 'hasResponded', label: 'Responded', sortKey: 'hasResponded' }
-        ],
-
         CrmEmailTemplate: [
             { key: 'templateId', label: 'ID', sortKey: 'templateId', filterKey: 'templateId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
@@ -111,59 +91,6 @@ limitations under the License.
             { key: 'isActive', label: 'Active', sortKey: 'isActive' }
         ],
 
-        CrmCampaignResponse: [
-            { key: 'responseId', label: 'ID', sortKey: 'responseId', filterKey: 'responseId' },
-            { key: 'campaignId', label: 'Campaign', sortKey: 'campaignId', filterKey: 'campaignId' },
-            { key: 'campaignMemberId', label: 'Member', sortKey: 'campaignMemberId' },
-            {
-                key: 'responseType',
-                label: 'Type',
-                sortKey: 'responseType',
-                render: (item) => render.responseType(item.responseType)
-            },
-            {
-                key: 'responseDate',
-                label: 'Date',
-                sortKey: 'responseDate',
-                render: (item) => renderDate(item.responseDate)
-            },
-            { key: 'leadId', label: 'Lead', sortKey: 'leadId' },
-            { key: 'opportunityId', label: 'Opportunity', sortKey: 'opportunityId' },
-            {
-                key: 'revenueValue',
-                label: 'Revenue',
-                sortKey: 'revenueValue',
-                render: (item) => renderMoney(item.revenueValue)
-            }
-        ],
-
-        CrmCampaignROI: [
-            { key: 'roiId', label: 'ID', sortKey: 'roiId', filterKey: 'roiId' },
-            { key: 'campaignId', label: 'Campaign', sortKey: 'campaignId', filterKey: 'campaignId' },
-            {
-                key: 'calculationDate',
-                label: 'Calc Date',
-                sortKey: 'calculationDate',
-                render: (item) => renderDate(item.calculationDate)
-            },
-            {
-                key: 'totalCost',
-                label: 'Total Cost',
-                sortKey: 'totalCost',
-                render: (item) => renderMoney(item.totalCost)
-            },
-            {
-                key: 'totalRevenue',
-                label: 'Total Revenue',
-                sortKey: 'totalRevenue',
-                render: (item) => renderMoney(item.totalRevenue)
-            },
-            { key: 'roiPercentage', label: 'ROI %', sortKey: 'roiPercentage' },
-            { key: 'leadsGenerated', label: 'Leads', sortKey: 'leadsGenerated' },
-            { key: 'opportunitiesCreated', label: 'Opportunities', sortKey: 'opportunitiesCreated' },
-            { key: 'dealsWon', label: 'Deals Won', sortKey: 'dealsWon' },
-            { key: 'conversionRate', label: 'Conversion %', sortKey: 'conversionRate' }
-        ]
     };
 
 })();

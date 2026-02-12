@@ -128,62 +128,6 @@ limitations under the License.
             }
         ],
 
-        CrmServicePart: [
-            { key: 'partId', label: 'ID', sortKey: 'partId', filterKey: 'partId' },
-            { key: 'serviceOrderId', label: 'Service Order', sortKey: 'serviceOrderId', filterKey: 'serviceOrderId' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
-            {
-                key: 'unitCost',
-                label: 'Unit Cost',
-                sortKey: 'unitCost',
-                render: (item) => renderMoney(item.unitCost)
-            },
-            {
-                key: 'totalCost',
-                label: 'Total Cost',
-                sortKey: 'totalCost',
-                render: (item) => renderMoney(item.totalCost)
-            },
-            {
-                key: 'isWarranty',
-                label: 'Warranty',
-                sortKey: 'isWarranty',
-                render: (item) => renderBoolean(item.isWarranty)
-            }
-        ],
-
-        CrmServiceVisit: [
-            { key: 'visitId', label: 'ID', sortKey: 'visitId', filterKey: 'visitId' },
-            { key: 'serviceOrderId', label: 'Service Order', sortKey: 'serviceOrderId', filterKey: 'serviceOrderId' },
-            { key: 'technicianId', label: 'Technician', sortKey: 'technicianId', filterKey: 'technicianId' },
-            {
-                key: 'scheduledArrival',
-                label: 'Scheduled',
-                sortKey: 'scheduledArrival',
-                render: (item) => renderDate(item.scheduledArrival)
-            },
-            {
-                key: 'actualArrival',
-                label: 'Actual Arrival',
-                sortKey: 'actualArrival',
-                render: (item) => renderDate(item.actualArrival)
-            },
-            { key: 'departureTime', label: 'Departure', sortKey: 'departureTime' },
-            { key: 'workPerformed', label: 'Work Performed', sortKey: 'workPerformed' },
-            {
-                key: 'customerSignature',
-                label: 'Signed',
-                sortKey: 'customerSignature',
-                render: (item) => renderBoolean(item.customerSignature ? true : false)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.visitStatus(item.status)
-            }
-        ]
     };
 
 })();

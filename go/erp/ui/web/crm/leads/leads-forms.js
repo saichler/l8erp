@@ -33,6 +33,27 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('ownerId', 'Owner', 'Employee'),
                 ...f.reference('campaignId', 'Campaign', 'CrmCampaign'),
                 ...f.textarea('description', 'Description')
+            ]),
+            f.section('Activities', [
+                ...f.inlineTable('activities', 'Lead Activities', [
+                    { key: 'activityId', label: 'ID', hidden: true },
+                    { key: 'activityType', label: 'Type', type: 'select', options: enums.ACTIVITY_TYPE },
+                    { key: 'subject', label: 'Subject', type: 'text', required: true },
+                    { key: 'activityDate', label: 'Date', type: 'date' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.ACTIVITY_STATUS },
+                    { key: 'durationMinutes', label: 'Duration (min)', type: 'number' },
+                    { key: 'isCompleted', label: 'Completed', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Conversions', [
+                ...f.inlineTable('conversions', 'Lead Conversions', [
+                    { key: 'conversionId', label: 'ID', hidden: true },
+                    { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'CrmAccount' },
+                    { key: 'contactId', label: 'Contact', type: 'reference', lookupModel: 'CrmContact' },
+                    { key: 'opportunityId', label: 'Opportunity', type: 'reference', lookupModel: 'CrmOpportunity' },
+                    { key: 'conversionDate', label: 'Date', type: 'date' },
+                    { key: 'createOpportunity', label: 'Created Opp', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -58,21 +79,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        CrmLeadActivity: f.form('Lead Activity', [
-            f.section('Activity Details', [
-                ...f.reference('leadId', 'Lead', 'CrmLead', true),
-                ...f.select('activityType', 'Activity Type', enums.ACTIVITY_TYPE, true),
-                ...f.text('subject', 'Subject', true),
-                ...f.textarea('description', 'Description'),
-                ...f.date('activityDate', 'Activity Date'),
-                ...f.select('status', 'Status', enums.ACTIVITY_STATUS),
-                ...f.reference('assignedTo', 'Assigned To', 'Employee'),
-                ...f.number('durationMinutes', 'Duration (minutes)'),
-                ...f.text('outcome', 'Outcome'),
-                ...f.checkbox('isCompleted', 'Completed')
-            ])
-        ]),
-
         CrmLeadAssign: f.form('Lead Assignment Rule', [
             f.section('Assignment Rule Details', [
                 ...f.text('name', 'Name', true),
@@ -87,27 +93,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        CrmLeadConversion: f.form('Lead Conversion', [
-            f.section('Conversion Details', [
-                ...f.reference('leadId', 'Lead', 'CrmLead', true),
-                ...f.reference('accountId', 'Account', 'CrmAccount', true),
-                ...f.reference('contactId', 'Contact', 'CrmContact', true),
-                ...f.reference('opportunityId', 'Opportunity', 'CrmOpportunity'),
-                ...f.date('conversionDate', 'Conversion Date', true),
-                ...f.reference('convertedBy', 'Converted By', 'Employee'),
-                ...f.checkbox('createOpportunity', 'Create Opportunity'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ])
     };
 
     CrmLeads.primaryKeys = {
         CrmLead: 'leadId',
         CrmLeadSource: 'sourceId',
         CrmLeadScore: 'scoreId',
-        CrmLeadActivity: 'activityId',
-        CrmLeadAssign: 'assignmentId',
-        CrmLeadConversion: 'conversionId'
+        CrmLeadAssign: 'assignmentId'
     };
 
 })();

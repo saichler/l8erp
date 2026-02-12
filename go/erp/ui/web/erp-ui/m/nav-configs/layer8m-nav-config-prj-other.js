@@ -23,18 +23,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             services: {
                 'planning': [
                     { key: 'projects', label: 'Projects', icon: 'projects', endpoint: '/90/PrjProj', model: 'PrjProject', idField: 'projectId' },
-                    { key: 'templates', label: 'Templates', icon: 'documents', endpoint: '/90/PrjProjTpl', model: 'PrjProjectTemplate', idField: 'templateId' },
-                    { key: 'phases', label: 'Phases', icon: 'demand-planning', endpoint: '/90/PrjPhase', model: 'PrjPhase', idField: 'phaseId' },
-                    { key: 'tasks', label: 'Tasks', icon: 'jobs', endpoint: '/90/PrjTask', model: 'PrjTask', idField: 'taskId' },
-                    { key: 'milestones', label: 'Milestones', icon: 'talent', endpoint: '/90/PrjMilstn', model: 'PrjMilestone', idField: 'milestoneId' },
-                    { key: 'deliverables', label: 'Deliverables', icon: 'inventory', endpoint: '/90/PrjDeliv', model: 'PrjDeliverable', idField: 'deliverableId' },
-                    { key: 'dependencies', label: 'Dependencies', icon: 'scm', endpoint: '/90/PrjDepend', model: 'PrjDependency', idField: 'dependencyId' },
-                    { key: 'risks', label: 'Risks', icon: 'compliance', endpoint: '/90/PrjRisk', model: 'PrjRisk', idField: 'riskId' }
+                    { key: 'templates', label: 'Templates', icon: 'documents', endpoint: '/90/PrjProjTpl', model: 'PrjProjectTemplate', idField: 'templateId' }
                 ],
                 'resources': [
                     { key: 'resource-pools', label: 'Resource Pools', icon: 'organizations', endpoint: '/90/PrjResPool', model: 'PrjResourcePool', idField: 'poolId' },
                     { key: 'resources', label: 'Resources', icon: 'hcm', endpoint: '/90/PrjRes', model: 'PrjResource', idField: 'resourceId' },
-                    { key: 'resource-skills', label: 'Skills', icon: 'learning', endpoint: '/90/PrjResSkl', model: 'PrjResourceSkill', idField: 'skillId' },
                     { key: 'allocations', label: 'Allocations', icon: 'demand-planning', endpoint: '/90/PrjAlloc', model: 'PrjAllocation', idField: 'allocationId' },
                     { key: 'bookings', label: 'Bookings', icon: 'time', endpoint: '/90/PrjBooking', model: 'PrjBooking', idField: 'bookingId' },
                     { key: 'capacity-plans', label: 'Capacity Plans', icon: 'demand-planning', endpoint: '/90/PrjCapPlan', model: 'PrjCapacityPlan', idField: 'planId' },
@@ -42,9 +35,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ],
                 'timeexpense': [
                     { key: 'timesheets', label: 'Timesheets', icon: 'time', endpoint: '/90/PrjTmSheet', model: 'PrjTimesheet', idField: 'timesheetId' },
-                    { key: 'timesheet-entries', label: 'Time Entries', icon: 'time', endpoint: '/90/PrjTmEntry', model: 'PrjTimesheetEntry', idField: 'entryId' },
                     { key: 'expense-reports', label: 'Expense Reports', icon: 'financial', endpoint: '/90/PrjExpRpt', model: 'PrjExpenseReport', idField: 'reportId' },
-                    { key: 'expense-entries', label: 'Expenses', icon: 'financial', endpoint: '/90/PrjExpEnt', model: 'PrjExpenseEntry', idField: 'entryId' },
                     { key: 'approval-rules', label: 'Approval Rules', icon: 'jobs', endpoint: '/90/PrjApprRl', model: 'PrjApprovalRule', idField: 'ruleId' },
                     { key: 'expense-categories', label: 'Categories', icon: 'inventory', endpoint: '/90/PrjExpCat', model: 'PrjExpenseCategory', idField: 'categoryId' },
                     { key: 'expense-policies', label: 'Policies', icon: 'documents', endpoint: '/90/PrjExpPol', model: 'PrjExpensePolicy', idField: 'policyId' }
@@ -52,20 +43,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 'billing': [
                     { key: 'billing-rates', label: 'Billing Rates', icon: 'financial', endpoint: '/90/PrjBillRt', model: 'PrjBillingRate', idField: 'rateId' },
                     { key: 'billing-schedules', label: 'Schedules', icon: 'time', endpoint: '/90/PrjBillSch', model: 'PrjBillingSchedule', idField: 'scheduleId' },
-                    { key: 'billing-milestones', label: 'Milestones', icon: 'talent', endpoint: '/90/PrjBillMls', model: 'PrjBillingMilestone', idField: 'milestoneId' },
                     { key: 'invoices', label: 'Invoices', icon: 'documents', endpoint: '/90/PrjInvoice', model: 'PrjProjectInvoice', idField: 'invoiceId' },
-                    { key: 'invoice-lines', label: 'Invoice Lines', icon: 'documents', endpoint: '/90/PrjInvLine', model: 'PrjInvoiceLine', idField: 'lineId' },
                     { key: 'revenue-recognition', label: 'Revenue', icon: 'demand-planning', endpoint: '/90/PrjRevRec', model: 'PrjRevenueRecognition', idField: 'recognitionId' },
                     { key: 'budgets', label: 'Budgets', icon: 'financial', endpoint: '/90/PrjBudget', model: 'PrjProjectBudget', idField: 'budgetId' }
                 ],
                 'analytics': [
                     { key: 'status-reports', label: 'Status Reports', icon: 'documents', endpoint: '/90/PrjStatus', model: 'PrjStatusReport', idField: 'statusId' },
-                    { key: 'earned-values', label: 'Earned Value', icon: 'demand-planning', endpoint: '/90/PrjEV', model: 'PrjEarnedValue', idField: 'earnedValueId' },
-                    { key: 'budget-variances', label: 'Variances', icon: 'bi', endpoint: '/90/PrjBudVar', model: 'PrjBudgetVariance', idField: 'varianceId' },
-                    { key: 'resource-forecasts', label: 'Forecasts', icon: 'demand-planning', endpoint: '/90/PrjResFcst', model: 'PrjResourceForecast', idField: 'forecastId' },
                     { key: 'portfolio-views', label: 'Portfolio', icon: 'projects', endpoint: '/90/PrjPortflo', model: 'PrjPortfolioView', idField: 'viewId' },
-                    { key: 'kpis', label: 'KPIs', icon: 'talent', endpoint: '/90/PrjKPI', model: 'PrjProjectKPI', idField: 'kpiId' },
-                    { key: 'issues', label: 'Issues', icon: 'compliance', endpoint: '/90/PrjIssue', model: 'PrjProjectIssue', idField: 'issueId' }
+                    { key: 'kpis', label: 'KPIs', icon: 'talent', endpoint: '/90/PrjKPI', model: 'PrjProjectKPI', idField: 'kpiId' }
                 ]
             }
         },

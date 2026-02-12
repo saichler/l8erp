@@ -19,267 +19,165 @@ limitations under the License.
 
     window.PrjPlanning = window.PrjPlanning || {};
 
+    const f = window.Layer8FormFactory;
     const enums = PrjPlanning.enums;
 
     PrjPlanning.forms = {
-        PrjProject: {
-            title: 'Project',
-            sections: [
-                {
-                    title: 'Project Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'code', label: 'Code', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'projectType', label: 'Project Type', type: 'select', options: enums.PROJECT_TYPE },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.PROJECT_STATUS },
-                        { key: 'priority', label: 'Priority', type: 'select', options: enums.PROJECT_PRIORITY },
-                        { key: 'templateId', label: 'Template', type: 'reference', lookupModel: 'PrjProjectTemplate' }
-                    ]
-                },
-                {
-                    title: 'Associations',
-                    fields: [
-                        { key: 'customerId', label: 'Customer', type: 'reference', lookupModel: 'Customer' },
-                        { key: 'accountId', label: 'Account', type: 'reference', lookupModel: 'CrmAccount' },
-                        { key: 'managerId', label: 'Manager', type: 'reference', lookupModel: 'Employee' },
-                        { key: 'departmentId', label: 'Department', type: 'reference', lookupModel: 'Department' },
-                        { key: 'opportunityId', label: 'Opportunity', type: 'reference', lookupModel: 'CrmOpportunity' }
-                    ]
-                },
-                {
-                    title: 'Schedule',
-                    fields: [
-                        { key: 'startDate', label: 'Start Date', type: 'date' },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'actualStartDate', label: 'Actual Start', type: 'date' },
-                        { key: 'actualEndDate', label: 'Actual End', type: 'date' },
-                        { key: 'estimatedHours', label: 'Estimated Hours', type: 'number' },
-                        { key: 'actualHours', label: 'Actual Hours', type: 'number' },
-                        { key: 'percentComplete', label: '% Complete', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Financials',
-                    fields: [
-                        { key: 'budget', label: 'Budget', type: 'money' },
-                        { key: 'actualCost', label: 'Actual Cost', type: 'money' },
-                        { key: 'billingType', label: 'Billing Type', type: 'select', options: enums.PROJECT_TYPE }
-                    ]
-                }
-            ]
-        },
+        PrjProject: f.form('Project', [
+            f.section('Project Details', [
+                ...f.text('name', 'Name', true),
+                ...f.text('code', 'Code', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('projectType', 'Project Type', enums.PROJECT_TYPE),
+                ...f.select('status', 'Status', enums.PROJECT_STATUS),
+                ...f.select('priority', 'Priority', enums.PROJECT_PRIORITY),
+                ...f.reference('templateId', 'Template', 'PrjProjectTemplate')
+            ]),
+            f.section('Associations', [
+                ...f.reference('customerId', 'Customer', 'Customer'),
+                ...f.reference('accountId', 'Account', 'CrmAccount'),
+                ...f.reference('managerId', 'Manager', 'Employee'),
+                ...f.reference('departmentId', 'Department', 'Department'),
+                ...f.reference('opportunityId', 'Opportunity', 'CrmOpportunity')
+            ]),
+            f.section('Schedule', [
+                ...f.date('startDate', 'Start Date'),
+                ...f.date('endDate', 'End Date'),
+                ...f.date('actualStartDate', 'Actual Start'),
+                ...f.date('actualEndDate', 'Actual End'),
+                ...f.number('estimatedHours', 'Estimated Hours'),
+                ...f.number('actualHours', 'Actual Hours'),
+                ...f.number('percentComplete', '% Complete')
+            ]),
+            f.section('Financials', [
+                ...f.money('budget', 'Budget'),
+                ...f.money('actualCost', 'Actual Cost'),
+                ...f.select('billingType', 'Billing Type', enums.PROJECT_TYPE)
+            ]),
+            f.section('Phases', [
+                ...f.inlineTable('phases', 'Phases', [
+                    { key: 'phaseId', label: 'Phase ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'sequence', label: 'Sequence', type: 'number' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.PROJECT_STATUS },
+                    { key: 'startDate', label: 'Start', type: 'date' },
+                    { key: 'endDate', label: 'End', type: 'date' },
+                    { key: 'percentComplete', label: '% Complete', type: 'number' }
+                ])
+            ]),
+            f.section('Tasks', [
+                ...f.inlineTable('tasks', 'Tasks', [
+                    { key: 'taskId', label: 'Task ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
+                    { key: 'priority', label: 'Priority', type: 'select', options: enums.TASK_PRIORITY },
+                    { key: 'assigneeId', label: 'Assignee', type: 'text' },
+                    { key: 'startDate', label: 'Start', type: 'date' },
+                    { key: 'dueDate', label: 'Due', type: 'date' },
+                    { key: 'percentComplete', label: '% Complete', type: 'number' }
+                ])
+            ]),
+            f.section('Milestones', [
+                ...f.inlineTable('milestones', 'Milestones', [
+                    { key: 'milestoneId', label: 'Milestone ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.MILESTONE_STATUS },
+                    { key: 'targetDate', label: 'Target Date', type: 'date', required: true },
+                    { key: 'actualDate', label: 'Achieved', type: 'date' },
+                    { key: 'isBillable', label: 'Billable', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Deliverables', [
+                ...f.inlineTable('deliverables', 'Deliverables', [
+                    { key: 'deliverableId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'dueDate', label: 'Due Date', type: 'date' },
+                    { key: 'isDelivered', label: 'Delivered', type: 'checkbox' },
+                    { key: 'deliveredDate', label: 'Delivered Date', type: 'date' },
+                    { key: 'acceptedBy', label: 'Accepted By', type: 'text' }
+                ])
+            ]),
+            f.section('Dependencies', [
+                ...f.inlineTable('dependencies', 'Dependencies', [
+                    { key: 'dependencyId', label: 'ID', hidden: true },
+                    { key: 'predecessorTaskId', label: 'Predecessor', type: 'text', required: true },
+                    { key: 'successorTaskId', label: 'Successor', type: 'text', required: true },
+                    { key: 'dependencyType', label: 'Type', type: 'select', options: enums.DEPENDENCY_TYPE },
+                    { key: 'lagDays', label: 'Lag Days', type: 'number' }
+                ])
+            ]),
+            f.section('Risks', [
+                ...f.inlineTable('risks', 'Risks', [
+                    { key: 'riskId', label: 'Risk ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'severity', label: 'Severity', type: 'select', options: enums.RISK_SEVERITY },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.RISK_STATUS },
+                    { key: 'probability', label: 'Probability %', type: 'number' },
+                    { key: 'potentialImpact', label: 'Impact', type: 'money' }
+                ])
+            ]),
+            f.section('Issues', [
+                ...f.inlineTable('issues', 'Issues', [
+                    { key: 'issueId', label: 'Issue ID', hidden: true },
+                    { key: 'title', label: 'Title', type: 'text', required: true },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.ISSUE_STATUS },
+                    { key: 'priority', label: 'Priority', type: 'select', options: enums.ISSUE_PRIORITY },
+                    { key: 'assignedTo', label: 'Assigned To', type: 'text' },
+                    { key: 'reportedDate', label: 'Reported', type: 'date' },
+                    { key: 'dueDate', label: 'Due', type: 'date' }
+                ])
+            ]),
+            f.section('Earned Values', [
+                ...f.inlineTable('earnedValues', 'Earned Values', [
+                    { key: 'earnedValueId', label: 'ID', hidden: true },
+                    { key: 'asOfDate', label: 'As Of Date', type: 'date', required: true },
+                    { key: 'plannedValue', label: 'Planned Value', type: 'money' },
+                    { key: 'earnedValue', label: 'Earned Value', type: 'money' },
+                    { key: 'actualCost', label: 'Actual Cost', type: 'money' },
+                    { key: 'schedulePerformanceIndex', label: 'SPI', type: 'number' },
+                    { key: 'costPerformanceIndex', label: 'CPI', type: 'number' }
+                ])
+            ]),
+            f.section('Budget Variances', [
+                ...f.inlineTable('budgetVariances', 'Budget Variances', [
+                    { key: 'varianceId', label: 'ID', hidden: true },
+                    { key: 'asOfDate', label: 'As Of Date', type: 'date', required: true },
+                    { key: 'category', label: 'Category', type: 'text' },
+                    { key: 'budgetedAmount', label: 'Budgeted', type: 'money' },
+                    { key: 'actualAmount', label: 'Actual', type: 'money' },
+                    { key: 'varianceAmount', label: 'Variance', type: 'money' },
+                    { key: 'variancePercent', label: 'Variance %', type: 'number' }
+                ])
+            ]),
+            f.section('Resource Forecasts', [
+                ...f.inlineTable('resourceForecasts', 'Resource Forecasts', [
+                    { key: 'forecastId', label: 'ID', hidden: true },
+                    { key: 'resourceId', label: 'Resource', type: 'text' },
+                    { key: 'periodStart', label: 'Period Start', type: 'date', required: true },
+                    { key: 'periodEnd', label: 'Period End', type: 'date', required: true },
+                    { key: 'forecastedHours', label: 'Forecasted Hours', type: 'number' },
+                    { key: 'confirmedHours', label: 'Confirmed Hours', type: 'number' },
+                    { key: 'gapHours', label: 'Gap Hours', type: 'number' }
+                ])
+            ])
+        ]),
 
-        PrjProjectTemplate: {
-            title: 'Project Template',
-            sections: [
-                {
-                    title: 'Template Details',
-                    fields: [
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'projectType', label: 'Project Type', type: 'select', options: enums.PROJECT_TYPE },
-                        { key: 'defaultEstimatedHours', label: 'Default Hours', type: 'number' },
-                        { key: 'defaultBudget', label: 'Default Budget', type: 'money' },
-                        { key: 'defaultBillingType', label: 'Default Billing Type', type: 'select', options: enums.PROJECT_TYPE },
-                        { key: 'isActive', label: 'Active', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
-
-        PrjPhase: {
-            title: 'Phase',
-            sections: [
-                {
-                    title: 'Phase Details',
-                    fields: [
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'sequence', label: 'Sequence', type: 'number' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.PROJECT_STATUS }
-                    ]
-                },
-                {
-                    title: 'Schedule',
-                    fields: [
-                        { key: 'startDate', label: 'Start Date', type: 'date' },
-                        { key: 'endDate', label: 'End Date', type: 'date' },
-                        { key: 'actualStartDate', label: 'Actual Start', type: 'date' },
-                        { key: 'actualEndDate', label: 'Actual End', type: 'date' },
-                        { key: 'estimatedHours', label: 'Estimated Hours', type: 'number' },
-                        { key: 'actualHours', label: 'Actual Hours', type: 'number' },
-                        { key: 'percentComplete', label: '% Complete', type: 'number' }
-                    ]
-                }
-            ]
-        },
-
-        PrjTask: {
-            title: 'Task',
-            sections: [
-                {
-                    title: 'Task Details',
-                    fields: [
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject', required: true },
-                        { key: 'phaseId', label: 'Phase', type: 'reference', lookupModel: 'PrjPhase' },
-                        { key: 'parentTaskId', label: 'Parent Task', type: 'reference', lookupModel: 'PrjTask' },
-                        { key: 'wbsCode', label: 'WBS Code', type: 'text' },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.TASK_STATUS },
-                        { key: 'priority', label: 'Priority', type: 'select', options: enums.TASK_PRIORITY },
-                        { key: 'assigneeId', label: 'Assigned To', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                },
-                {
-                    title: 'Schedule',
-                    fields: [
-                        { key: 'startDate', label: 'Start Date', type: 'date' },
-                        { key: 'dueDate', label: 'Due Date', type: 'date' },
-                        { key: 'actualStartDate', label: 'Actual Start', type: 'date' },
-                        { key: 'actualEndDate', label: 'Actual End', type: 'date' },
-                        { key: 'estimatedHours', label: 'Estimated Hours', type: 'number' },
-                        { key: 'actualHours', label: 'Actual Hours', type: 'number' },
-                        { key: 'remainingHours', label: 'Remaining Hours', type: 'number' },
-                        { key: 'percentComplete', label: '% Complete', type: 'number' }
-                    ]
-                },
-                {
-                    title: 'Options',
-                    fields: [
-                        { key: 'isBillable', label: 'Billable', type: 'checkbox' },
-                        { key: 'isMilestone', label: 'Milestone Task', type: 'checkbox' }
-                    ]
-                }
-            ]
-        },
-
-        PrjMilestone: {
-            title: 'Milestone',
-            sections: [
-                {
-                    title: 'Milestone Details',
-                    fields: [
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject', required: true },
-                        { key: 'phaseId', label: 'Phase', type: 'reference', lookupModel: 'PrjPhase' },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.MILESTONE_STATUS },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                },
-                {
-                    title: 'Dates',
-                    fields: [
-                        { key: 'targetDate', label: 'Target Date', type: 'date', required: true },
-                        { key: 'actualDate', label: 'Achieved Date', type: 'date' }
-                    ]
-                },
-                {
-                    title: 'Billing',
-                    fields: [
-                        { key: 'isBillable', label: 'Billable', type: 'checkbox' },
-                        { key: 'billingAmount', label: 'Billing Amount', type: 'money' }
-                    ]
-                }
-            ]
-        },
-
-        PrjDeliverable: {
-            title: 'Deliverable',
-            sections: [
-                {
-                    title: 'Deliverable Details',
-                    fields: [
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject', required: true },
-                        { key: 'milestoneId', label: 'Milestone', type: 'reference', lookupModel: 'PrjMilestone' },
-                        { key: 'taskId', label: 'Task', type: 'reference', lookupModel: 'PrjTask' },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'dueDate', label: 'Due Date', type: 'date' },
-                        { key: 'notes', label: 'Notes', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Delivery Status',
-                    fields: [
-                        { key: 'isDelivered', label: 'Delivered', type: 'checkbox' },
-                        { key: 'deliveredDate', label: 'Delivered Date', type: 'date' },
-                        { key: 'acceptedBy', label: 'Accepted By', type: 'text' },
-                        { key: 'acceptanceDate', label: 'Acceptance Date', type: 'date' }
-                    ]
-                }
-            ]
-        },
-
-        PrjDependency: {
-            title: 'Dependency',
-            sections: [
-                {
-                    title: 'Dependency Details',
-                    fields: [
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject', required: true },
-                        { key: 'predecessorTaskId', label: 'Predecessor Task', type: 'reference', lookupModel: 'PrjTask', required: true },
-                        { key: 'successorTaskId', label: 'Successor Task', type: 'reference', lookupModel: 'PrjTask', required: true },
-                        { key: 'dependencyType', label: 'Dependency Type', type: 'select', options: enums.DEPENDENCY_TYPE },
-                        { key: 'lagDays', label: 'Lag Days', type: 'number' }
-                    ]
-                }
-            ]
-        },
-
-        PrjRisk: {
-            title: 'Risk',
-            sections: [
-                {
-                    title: 'Risk Details',
-                    fields: [
-                        { key: 'projectId', label: 'Project', type: 'reference', lookupModel: 'PrjProject', required: true },
-                        { key: 'name', label: 'Name', type: 'text', required: true },
-                        { key: 'description', label: 'Description', type: 'textarea' },
-                        { key: 'category', label: 'Category', type: 'text' },
-                        { key: 'severity', label: 'Severity', type: 'select', options: enums.RISK_SEVERITY },
-                        { key: 'status', label: 'Status', type: 'select', options: enums.RISK_STATUS },
-                        { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' }
-                    ]
-                },
-                {
-                    title: 'Assessment',
-                    fields: [
-                        { key: 'probability', label: 'Probability (%)', type: 'number' },
-                        { key: 'potentialImpact', label: 'Potential Impact', type: 'money' },
-                        { key: 'impactDescription', label: 'Impact Description', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Mitigation',
-                    fields: [
-                        { key: 'mitigationPlan', label: 'Mitigation Plan', type: 'textarea' },
-                        { key: 'contingencyPlan', label: 'Contingency Plan', type: 'textarea' }
-                    ]
-                },
-                {
-                    title: 'Dates',
-                    fields: [
-                        { key: 'identifiedDate', label: 'Identified Date', type: 'date' },
-                        { key: 'dueDate', label: 'Due Date', type: 'date' }
-                    ]
-                }
-            ]
-        }
+        PrjProjectTemplate: f.form('Project Template', [
+            f.section('Template Details', [
+                ...f.text('name', 'Name', true),
+                ...f.textarea('description', 'Description'),
+                ...f.select('projectType', 'Project Type', enums.PROJECT_TYPE),
+                ...f.number('defaultEstimatedHours', 'Default Hours'),
+                ...f.money('defaultBudget', 'Default Budget'),
+                ...f.select('defaultBillingType', 'Default Billing Type', enums.PROJECT_TYPE),
+                ...f.checkbox('isActive', 'Active')
+            ])
+        ])
     };
 
     PrjPlanning.primaryKeys = {
         PrjProject: 'projectId',
-        PrjProjectTemplate: 'templateId',
-        PrjPhase: 'phaseId',
-        PrjTask: 'taskId',
-        PrjMilestone: 'milestoneId',
-        PrjDeliverable: 'deliverableId',
-        PrjDependency: 'dependencyId',
-        PrjRisk: 'riskId'
+        PrjProjectTemplate: 'templateId'
     };
 
 })();

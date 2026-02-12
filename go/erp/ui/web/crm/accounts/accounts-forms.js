@@ -32,6 +32,30 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('tickerSymbol', 'Ticker Symbol'),
                 ...f.reference('customerId', 'Customer', 'Customer'),
                 ...f.textarea('description', 'Description')
+            ]),
+            f.section('Health Scores', [
+                ...f.inlineTable('healthScores', 'Health Scores', [
+                    { key: 'scoreId', label: 'ID', hidden: true },
+                    { key: 'healthStatus', label: 'Status', type: 'select', options: enums.HEALTH_STATUS },
+                    { key: 'overallScore', label: 'Overall', type: 'number' },
+                    { key: 'engagementScore', label: 'Engagement', type: 'number' },
+                    { key: 'usageScore', label: 'Usage', type: 'number' },
+                    { key: 'satisfactionScore', label: 'Satisfaction', type: 'number' },
+                    { key: 'financialScore', label: 'Financial', type: 'number' },
+                    { key: 'scoreDate', label: 'Date', type: 'date' }
+                ])
+            ]),
+            f.section('Account Plans', [
+                ...f.inlineTable('accountPlans', 'Account Plans', [
+                    { key: 'planId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text', required: true },
+                    { key: 'fiscalYear', label: 'Fiscal Year', type: 'text' },
+                    { key: 'revenueTarget', label: 'Revenue Target', type: 'money' },
+                    { key: 'currentRevenue', label: 'Current Revenue', type: 'money' },
+                    { key: 'status', label: 'Status', type: 'text' },
+                    { key: 'startDate', label: 'Start', type: 'date' },
+                    { key: 'endDate', label: 'End', type: 'date' }
+                ])
             ])
         ]),
 
@@ -86,47 +110,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        CrmHealthScore: f.form('Health Score', [
-            f.section('Health Score Details', [
-                ...f.reference('accountId', 'Account', 'CrmAccount', true),
-                ...f.select('healthStatus', 'Health Status', enums.HEALTH_STATUS),
-                ...f.number('overallScore', 'Overall Score'),
-                ...f.number('engagementScore', 'Engagement Score'),
-                ...f.number('usageScore', 'Usage Score'),
-                ...f.number('satisfactionScore', 'Satisfaction Score'),
-                ...f.number('financialScore', 'Financial Score'),
-                ...f.date('scoreDate', 'Score Date'),
-                ...f.text('calculatedBy', 'Calculated By'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        CrmAccountPlan: f.form('Account Plan', [
-            f.section('Plan Details', [
-                ...f.reference('accountId', 'Account', 'CrmAccount', true),
-                ...f.text('name', 'Name', true),
-                ...f.text('fiscalYear', 'Fiscal Year'),
-                ...f.money('revenueTarget', 'Revenue Target'),
-                ...f.money('currentRevenue', 'Current Revenue'),
-                ...f.textarea('objectives', 'Objectives'),
-                ...f.textarea('strategies', 'Strategies'),
-                ...f.textarea('actionItems', 'Action Items'),
-                ...f.textarea('risks', 'Risks'),
-                ...f.reference('ownerId', 'Owner', 'Employee'),
-                ...f.date('startDate', 'Start Date'),
-                ...f.date('endDate', 'End Date'),
-                ...f.text('status', 'Status')
-            ])
-        ])
     };
 
     CrmAccounts.primaryKeys = {
         CrmAccount: 'accountId',
         CrmContact: 'contactId',
         CrmInteraction: 'interactionId',
-        CrmRelationship: 'relationshipId',
-        CrmHealthScore: 'scoreId',
-        CrmAccountPlan: 'planId'
+        CrmRelationship: 'relationshipId'
     };
 
 })();

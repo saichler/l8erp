@@ -27,6 +27,30 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.date('scheduledEnd', 'Scheduled End'),
                 ...f.money('estimatedCost', 'Estimated Cost'),
                 ...f.reference('ownerId', 'Owner', 'Employee')
+            ]),
+            f.section('Parts', [
+                ...f.inlineTable('parts', 'Service Parts', [
+                    { key: 'partId', label: 'ID', hidden: true },
+                    { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem' },
+                    { key: 'itemName', label: 'Name', type: 'text' },
+                    { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                    { key: 'unitCost', label: 'Unit Cost', type: 'money' },
+                    { key: 'totalCost', label: 'Total', type: 'money' },
+                    { key: 'serialNumber', label: 'Serial #', type: 'text' },
+                    { key: 'isWarranty', label: 'Warranty', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Visits', [
+                ...f.inlineTable('visits', 'Service Visits', [
+                    { key: 'visitId', label: 'ID', hidden: true },
+                    { key: 'technicianId', label: 'Technician', type: 'reference', lookupModel: 'CrmTechnician' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.VISIT_STATUS },
+                    { key: 'scheduledArrival', label: 'Scheduled', type: 'date' },
+                    { key: 'laborHours', label: 'Labor Hrs', type: 'number' },
+                    { key: 'laborCost', label: 'Labor Cost', type: 'money' },
+                    { key: 'travelDistance', label: 'Travel Dist', type: 'number' },
+                    { key: 'travelCost', label: 'Travel Cost', type: 'money' }
+                ])
             ])
         ]),
 
@@ -76,36 +100,6 @@ Layer 8 Ecosystem - Apache 2.0
             ])
         ]),
 
-        CrmServicePart: f.form('Service Part', [
-            f.section('Part Details', [
-                ...f.reference('serviceOrderId', 'Service Order', 'CrmServiceOrder', true),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.text('itemName', 'Item Name'),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.money('unitCost', 'Unit Cost'),
-                ...f.money('totalCost', 'Total Cost'),
-                ...f.text('serialNumber', 'Serial Number'),
-                ...f.checkbox('isWarranty', 'Warranty'),
-                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        CrmServiceVisit: f.form('Service Visit', [
-            f.section('Visit Details', [
-                ...f.reference('serviceOrderId', 'Service Order', 'CrmServiceOrder', true),
-                ...f.reference('technicianId', 'Technician', 'CrmTechnician', true),
-                ...f.select('status', 'Status', enums.VISIT_STATUS),
-                ...f.date('scheduledArrival', 'Scheduled Arrival'),
-                ...f.date('actualArrival', 'Actual Arrival'),
-                ...f.date('departureTime', 'Departure Time'),
-                ...f.number('laborHours', 'Labor Hours'),
-                ...f.number('travelHours', 'Travel Hours'),
-                ...f.textarea('workPerformed', 'Work Performed'),
-                ...f.number('customerRating', 'Customer Rating'),
-                ...f.textarea('customerFeedback', 'Customer Feedback')
-            ])
-        ])
     };
 
 })();

@@ -23,15 +23,7 @@ Layer8DReferenceRegistry.register({
     // Projects - Planning
     // ========================================
     ...refPrj.coded('PrjProject', 'projectId', 'code', 'name'),
-    ...refPrj.batch([
-        ['PrjProjectTemplate', 'templateId', 'name'],
-        ['PrjPhase', 'phaseId', 'name']
-    ]),
-    ...refPrj.simple('PrjTask', 'taskId', 'name', 'Task'),
-    ...refPrj.simple('PrjMilestone', 'milestoneId', 'name', 'Milestone'),
-    ...refPrj.simple('PrjDeliverable', 'deliverableId', 'name'),
-    ...refPrj.idOnly('PrjDependency', 'dependencyId'),
-    ...refPrj.simple('PrjRisk', 'riskId', 'name'),
+    ...refPrj.simple('PrjProjectTemplate', 'templateId', 'name', 'Template'),
 
     // ========================================
     // Projects - Resources
@@ -41,7 +33,6 @@ Layer8DReferenceRegistry.register({
         ['PrjCapacityPlan', 'planId', 'name']
     ]),
     ...refPrj.simple('PrjResource', 'resourceId', 'name', 'Resource'),
-    ...refPrj.simple('PrjResourceSkill', 'skillId', 'skillName'),
     ...refPrj.batchIdOnly([
         ['PrjAllocation', 'allocationId'],
         ['PrjBooking', 'bookingId'],
@@ -53,9 +44,7 @@ Layer8DReferenceRegistry.register({
     // ========================================
     ...refPrj.batchIdOnly([
         ['PrjTimesheet', 'timesheetId'],
-        ['PrjTimesheetEntry', 'entryId'],
-        ['PrjExpenseReport', 'reportId'],
-        ['PrjExpenseEntry', 'entryId']
+        ['PrjExpenseReport', 'reportId']
     ]),
     ...refPrj.batch([
         ['PrjApprovalRule', 'ruleId', 'name'],
@@ -69,25 +58,15 @@ Layer8DReferenceRegistry.register({
     ...refPrj.batch([
         ['PrjBillingRate', 'rateId', 'name'],
         ['PrjBillingSchedule', 'scheduleId', 'name'],
-        ['PrjBillingMilestone', 'milestoneId', 'name'],
         ['PrjProjectBudget', 'budgetId', 'name']
     ]),
     ...refPrj.simple('PrjProjectInvoice', 'invoiceId', 'invoiceNumber', 'Invoice'),
-    ...refPrj.batchIdOnly([
-        ['PrjInvoiceLine', 'lineId'],
-        ['PrjRevenueRecognition', 'recognitionId']
-    ]),
+    ...refPrj.idOnly('PrjRevenueRecognition', 'recognitionId'),
 
     // ========================================
     // Projects - Analytics
     // ========================================
-    ...refPrj.batchIdOnly([
-        ['PrjStatusReport', 'statusId'],
-        ['PrjEarnedValue', 'earnedValueId'],
-        ['PrjBudgetVariance', 'varianceId'],
-        ['PrjResourceForecast', 'forecastId']
-    ]),
+    ...refPrj.idOnly('PrjStatusReport', 'statusId'),
     ...refPrj.simple('PrjPortfolioView', 'viewId', 'name'),
-    ...refPrj.simple('PrjProjectKPI', 'kpiId', 'kpiName'),
-    ...refPrj.simple('PrjProjectIssue', 'issueId', 'title', 'Issue')
+    ...refPrj.simple('PrjProjectKPI', 'kpiId', 'kpiName')
 });

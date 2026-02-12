@@ -44,6 +44,30 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('actualEnd', 'Actual End'),
                 ...f.textarea('resolution', 'Resolution'),
                 ...f.reference('ownerId', 'Owner', 'Employee')
+            ]),
+            f.section('Parts', [
+                ...f.inlineTable('parts', 'Service Parts', [
+                    { key: 'partId', label: 'ID', hidden: true },
+                    { key: 'itemId', label: 'Item', type: 'reference', lookupModel: 'ScmItem' },
+                    { key: 'itemName', label: 'Name', type: 'text' },
+                    { key: 'quantity', label: 'Qty', type: 'number', required: true },
+                    { key: 'unitCost', label: 'Unit Cost', type: 'money' },
+                    { key: 'totalCost', label: 'Total', type: 'money' },
+                    { key: 'serialNumber', label: 'Serial #', type: 'text' },
+                    { key: 'isWarranty', label: 'Warranty', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Visits', [
+                ...f.inlineTable('visits', 'Service Visits', [
+                    { key: 'visitId', label: 'ID', hidden: true },
+                    { key: 'technicianId', label: 'Technician', type: 'reference', lookupModel: 'CrmTechnician' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.VISIT_STATUS },
+                    { key: 'scheduledArrival', label: 'Scheduled', type: 'date' },
+                    { key: 'laborHours', label: 'Labor Hrs', type: 'number' },
+                    { key: 'laborCost', label: 'Labor Cost', type: 'money' },
+                    { key: 'travelDistance', label: 'Travel Dist', type: 'number' },
+                    { key: 'travelCost', label: 'Travel Cost', type: 'money' }
+                ])
             ])
         ]),
 
@@ -111,55 +135,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        CrmServicePart: f.form('Service Part', [
-            f.section('Part Details', [
-                ...f.reference('serviceOrderId', 'Service Order', 'CrmServiceOrder', true),
-                ...f.reference('itemId', 'Item', 'ScmItem', true),
-                ...f.text('itemName', 'Item Name'),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.money('unitCost', 'Unit Cost'),
-                ...f.money('totalCost', 'Total Cost')
-            ]),
-            f.section('Details', [
-                ...f.text('serialNumber', 'Serial Number'),
-                ...f.checkbox('isWarranty', 'Warranty'),
-                ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
-                ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        CrmServiceVisit: f.form('Service Visit', [
-            f.section('Visit Details', [
-                ...f.reference('serviceOrderId', 'Service Order', 'CrmServiceOrder', true),
-                ...f.reference('technicianId', 'Technician', 'CrmTechnician', true),
-                ...f.date('scheduledArrival', 'Scheduled Arrival', true),
-                ...f.date('actualArrival', 'Actual Arrival'),
-                ...f.text('departureTime', 'Departure Time'),
-                ...f.select('status', 'Status', enums.VISIT_STATUS)
-            ]),
-            f.section('Work Performed', [
-                ...f.textarea('workPerformed', 'Work Performed'),
-                ...f.number('laborHours', 'Labor Hours'),
-                ...f.money('laborCost', 'Labor Cost'),
-                ...f.number('travelHours', 'Travel Hours'),
-                ...f.number('travelDistance', 'Travel Distance'),
-                ...f.money('travelCost', 'Travel Cost')
-            ]),
-            f.section('Customer Feedback', [
-                ...f.text('customerSignature', 'Customer Signature'),
-                ...f.textarea('customerFeedback', 'Customer Feedback'),
-                ...f.number('customerRating', 'Rating')
-            ])
-        ])
     };
 
     CrmFieldService.primaryKeys = {
         CrmServiceOrder: 'orderId',
         CrmTechnician: 'technicianId',
         CrmServiceContract: 'contractId',
-        CrmServiceSchedule: 'scheduleId',
-        CrmServicePart: 'partId',
-        CrmServiceVisit: 'visitId'
+        CrmServiceSchedule: 'scheduleId'
     };
 
 })();

@@ -16,19 +16,12 @@ window.Layer8MReferenceRegistryPRJ = {
     // ========================================
     ...refPrjM.coded('PrjProject', 'projectId', 'code', 'name'),
     ...refPrjM.simple('PrjProjectTemplate', 'templateId', 'name'),
-    ...refPrjM.simple('PrjPhase', 'phaseId', 'name'),
-    ...refPrjM.simple('PrjTask', 'taskId', 'name', 'Task'),
-    ...refPrjM.simple('PrjMilestone', 'milestoneId', 'name', 'Milestone'),
-    ...refPrjM.simple('PrjDeliverable', 'deliverableId', 'name'),
-    ...refPrjM.idOnly('PrjDependency', 'dependencyId'),
-    ...refPrjM.simple('PrjRisk', 'riskId', 'name'),
 
     // ========================================
     // Projects - Resources
     // ========================================
     ...refPrjM.simple('PrjResourcePool', 'poolId', 'name'),
     ...refPrjM.simple('PrjResource', 'resourceId', 'name', 'Resource'),
-    ...refPrjM.simple('PrjResourceSkill', 'skillId', 'skillName'),
     ...refPrjM.idOnly('PrjAllocation', 'allocationId'),
     ...refPrjM.idOnly('PrjBooking', 'bookingId'),
     ...refPrjM.simple('PrjCapacityPlan', 'planId', 'name'),
@@ -38,9 +31,7 @@ window.Layer8MReferenceRegistryPRJ = {
     // Projects - Time & Expense
     // ========================================
     ...refPrjM.idOnly('PrjTimesheet', 'timesheetId'),
-    ...refPrjM.idOnly('PrjTimesheetEntry', 'entryId'),
     ...refPrjM.idOnly('PrjExpenseReport', 'reportId'),
-    ...refPrjM.idOnly('PrjExpenseEntry', 'entryId'),
     ...refPrjM.simple('PrjApprovalRule', 'ruleId', 'name'),
     ...refPrjM.simple('PrjExpenseCategory', 'categoryId', 'name'),
     ...refPrjM.simple('PrjExpensePolicy', 'policyId', 'name'),
@@ -50,9 +41,7 @@ window.Layer8MReferenceRegistryPRJ = {
     // ========================================
     ...refPrjM.simple('PrjBillingRate', 'rateId', 'name'),
     ...refPrjM.simple('PrjBillingSchedule', 'scheduleId', 'name'),
-    ...refPrjM.simple('PrjBillingMilestone', 'milestoneId', 'name'),
     ...refPrjM.simple('PrjProjectInvoice', 'invoiceId', 'invoiceNumber', 'Invoice'),
-    ...refPrjM.idOnly('PrjInvoiceLine', 'lineId'),
     ...refPrjM.idOnly('PrjRevenueRecognition', 'recognitionId'),
     ...refPrjM.simple('PrjProjectBudget', 'budgetId', 'name'),
 
@@ -60,12 +49,8 @@ window.Layer8MReferenceRegistryPRJ = {
     // Projects - Analytics
     // ========================================
     ...refPrjM.idOnly('PrjStatusReport', 'statusId'),
-    ...refPrjM.idOnly('PrjEarnedValue', 'earnedValueId'),
-    ...refPrjM.idOnly('PrjBudgetVariance', 'varianceId'),
-    ...refPrjM.idOnly('PrjResourceForecast', 'forecastId'),
     ...refPrjM.simple('PrjPortfolioView', 'viewId', 'name'),
-    ...refPrjM.simple('PrjProjectKPI', 'kpiId', 'kpiName'),
-    ...refPrjM.simple('PrjProjectIssue', 'issueId', 'title', 'Issue')
+    ...refPrjM.simple('PrjProjectKPI', 'kpiId', 'kpiName')
 };
 
 // Register with the central registry

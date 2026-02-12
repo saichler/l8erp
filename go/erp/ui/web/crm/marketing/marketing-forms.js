@@ -34,18 +34,36 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('expectedResponseRate', 'Expected Response Rate (%)'),
                 ...f.number('numSent', 'Number Sent'),
                 ...f.number('numResponses', 'Number of Responses')
-            ])
-        ]),
-
-        CrmCampaignMember: f.form('Campaign Member', [
-            f.section('Member Details', [
-                ...f.reference('campaignId', 'Campaign', 'CrmCampaign', true),
-                ...f.reference('leadId', 'Lead', 'CrmLead'),
-                ...f.reference('contactId', 'Contact', 'CrmContact'),
-                ...f.select('status', 'Status', enums.CAMPAIGN_MEMBER_STATUS),
-                ...f.reference('sourceListId', 'Source List', 'CrmMarketingList'),
-                ...f.date('firstRespondedDate', 'First Responded'),
-                ...f.checkbox('hasResponded', 'Has Responded')
+            ]),
+            f.section('Members', [
+                ...f.inlineTable('members', 'Campaign Members', [
+                    { key: 'memberId', label: 'ID', hidden: true },
+                    { key: 'contactId', label: 'Contact', type: 'reference', lookupModel: 'CrmContact' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.CAMPAIGN_MEMBER_STATUS },
+                    { key: 'hasResponded', label: 'Responded', type: 'checkbox' },
+                    { key: 'firstRespondedDate', label: 'Responded Date', type: 'date' }
+                ])
+            ]),
+            f.section('Responses', [
+                ...f.inlineTable('responses', 'Campaign Responses', [
+                    { key: 'responseId', label: 'ID', hidden: true },
+                    { key: 'campaignMemberId', label: 'Member ID', type: 'text' },
+                    { key: 'responseType', label: 'Type', type: 'select', options: enums.RESPONSE_TYPE },
+                    { key: 'responseDate', label: 'Date', type: 'date' },
+                    { key: 'revenueValue', label: 'Revenue', type: 'money' },
+                    { key: 'details', label: 'Details', type: 'text' }
+                ])
+            ]),
+            f.section('ROI', [
+                ...f.inlineTable('roiRecords', 'Campaign ROI', [
+                    { key: 'roiId', label: 'ID', hidden: true },
+                    { key: 'calculationDate', label: 'Date', type: 'date' },
+                    { key: 'totalCost', label: 'Total Cost', type: 'money' },
+                    { key: 'totalRevenue', label: 'Revenue', type: 'money' },
+                    { key: 'roiPercentage', label: 'ROI %', type: 'number' },
+                    { key: 'leadsGenerated', label: 'Leads', type: 'number' },
+                    { key: 'dealsWon', label: 'Deals Won', type: 'number' }
+                ])
             ])
         ]),
 
@@ -79,50 +97,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        CrmCampaignResponse: f.form('Campaign Response', [
-            f.section('Response Details', [
-                ...f.reference('campaignId', 'Campaign', 'CrmCampaign', true),
-                ...f.reference('campaignMemberId', 'Campaign Member', 'CrmCampaignMember'),
-                ...f.select('responseType', 'Response Type', enums.RESPONSE_TYPE),
-                ...f.date('responseDate', 'Response Date'),
-                ...f.textarea('details', 'Details')
-            ]),
-            f.section('Conversion Details', [
-                ...f.reference('leadId', 'Lead Created', 'CrmLead'),
-                ...f.reference('opportunityId', 'Opportunity Created', 'CrmOpportunity'),
-                ...f.money('revenueValue', 'Revenue Value')
-            ])
-        ]),
-
-        CrmCampaignROI: f.form('Campaign ROI', [
-            f.section('ROI Details', [
-                ...f.reference('campaignId', 'Campaign', 'CrmCampaign', true),
-                ...f.date('calculationDate', 'Calculation Date'),
-                ...f.textarea('notes', 'Notes')
-            ]),
-            f.section('Financial Metrics', [
-                ...f.money('totalCost', 'Total Cost'),
-                ...f.money('totalRevenue', 'Total Revenue'),
-                ...f.number('roiPercentage', 'ROI Percentage'),
-                ...f.money('costPerLead', 'Cost per Lead'),
-                ...f.money('costPerOpportunity', 'Cost per Opportunity')
-            ]),
-            f.section('Conversion Metrics', [
-                ...f.number('leadsGenerated', 'Leads Generated'),
-                ...f.number('opportunitiesCreated', 'Opportunities Created'),
-                ...f.number('dealsWon', 'Deals Won'),
-                ...f.number('conversionRate', 'Conversion Rate (%)')
-            ])
-        ])
     };
 
     CrmMarketing.primaryKeys = {
         CrmCampaign: 'campaignId',
-        CrmCampaignMember: 'memberId',
         CrmEmailTemplate: 'templateId',
-        CrmMarketingList: 'listId',
-        CrmCampaignResponse: 'responseId',
-        CrmCampaignROI: 'roiId'
+        CrmMarketingList: 'listId'
     };
 
 })();
