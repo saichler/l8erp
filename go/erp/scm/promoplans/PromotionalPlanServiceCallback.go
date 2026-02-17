@@ -25,5 +25,6 @@ func newPromotionalPlanServiceCallback() ifs.IServiceCallback {
 		func(e *scm.ScmPromotionalPlan) { common.GenerateID(&e.PlanId) }).
 		Require(func(e *scm.ScmPromotionalPlan) string { return e.PlanId }, "PlanId").
 		Enum(func(e *scm.ScmPromotionalPlan) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
+		DateAfter(func(e *scm.ScmPromotionalPlan) int64 { return e.EndDate }, func(e *scm.ScmPromotionalPlan) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }

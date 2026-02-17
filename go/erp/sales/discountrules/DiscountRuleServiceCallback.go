@@ -26,5 +26,6 @@ func newDiscountRuleServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesDiscountRule) string { return e.RuleId }, "RuleId").
 		Require(func(e *sales.SalesDiscountRule) string { return e.Name }, "Name").
 		Enum(func(e *sales.SalesDiscountRule) int32 { return int32(e.DiscountType) }, sales.SalesDiscountType_name, "DiscountType").
+		DateAfter(func(e *sales.SalesDiscountRule) int64 { return e.ExpiryDate }, func(e *sales.SalesDiscountRule) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

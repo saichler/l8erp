@@ -16,6 +16,7 @@ package revenuerecognitions
 
 import (
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8erp/go/erp/common"
 )
@@ -25,5 +26,8 @@ func newPrjRevenueRecognitionServiceCallback() ifs.IServiceCallback {
 		func(e *prj.PrjRevenueRecognition) { common.GenerateID(&e.RecognitionId) }).
 		Require(func(e *prj.PrjRevenueRecognition) string { return e.RecognitionId }, "RecognitionId").
 		Enum(func(e *prj.PrjRevenueRecognition) int32 { return int32(e.Method) }, prj.PrjRevenueRecognitionMethod_name, "Method").
+		OptionalMoney(func(e *prj.PrjRevenueRecognition) *erp.Money { return e.RecognizedAmount }, "RecognizedAmount").
+		OptionalMoney(func(e *prj.PrjRevenueRecognition) *erp.Money { return e.DeferredAmount }, "DeferredAmount").
+		OptionalMoney(func(e *prj.PrjRevenueRecognition) *erp.Money { return e.CumulativeRecognized }, "CumulativeRecognized").
 		Build()
 }

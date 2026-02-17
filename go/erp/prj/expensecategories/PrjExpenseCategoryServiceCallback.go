@@ -17,6 +17,7 @@ package expensecategories
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -25,5 +26,6 @@ func newPrjExpenseCategoryServiceCallback() ifs.IServiceCallback {
 		func(e *prj.PrjExpenseCategory) { common.GenerateID(&e.CategoryId) }).
 		Require(func(e *prj.PrjExpenseCategory) string { return e.CategoryId }, "CategoryId").
 		Enum(func(e *prj.PrjExpenseCategory) int32 { return int32(e.ExpenseType) }, prj.PrjExpenseType_name, "ExpenseType").
+		OptionalMoney(func(e *prj.PrjExpenseCategory) *erp.Money { return e.DefaultLimit }, "DefaultLimit").
 		Build()
 }

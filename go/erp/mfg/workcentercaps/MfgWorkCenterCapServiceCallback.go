@@ -25,5 +25,6 @@ func newMfgWorkCenterCapServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgWorkCenterCap) { common.GenerateID(&e.CapacityId) }).
 		Require(func(e *mfg.MfgWorkCenterCap) string { return e.CapacityId }, "CapacityId").
 		Require(func(e *mfg.MfgWorkCenterCap) string { return e.WorkCenterId }, "WorkCenterId").
+		DateAfter(func(e *mfg.MfgWorkCenterCap) int64 { return e.ExpiryDate }, func(e *mfg.MfgWorkCenterCap) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

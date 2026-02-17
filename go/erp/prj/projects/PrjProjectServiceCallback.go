@@ -16,6 +16,7 @@ package projects
 
 import (
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8erp/go/erp/common"
 )
@@ -28,5 +29,9 @@ func newPrjProjectServiceCallback() ifs.IServiceCallback {
 		Enum(func(e *prj.PrjProject) int32 { return int32(e.Priority) }, prj.PrjProjectPriority_name, "Priority").
 		Enum(func(e *prj.PrjProject) int32 { return int32(e.ProjectType) }, prj.PrjProjectType_name, "ProjectType").
 		Enum(func(e *prj.PrjProject) int32 { return int32(e.Status) }, prj.PrjProjectStatus_name, "Status").
+		OptionalMoney(func(e *prj.PrjProject) *erp.Money { return e.Budget }, "Budget").
+		OptionalMoney(func(e *prj.PrjProject) *erp.Money { return e.ActualCost }, "ActualCost").
+		DateAfter(func(e *prj.PrjProject) int64 { return e.EndDate }, func(e *prj.PrjProject) int64 { return e.StartDate }, "EndDate", "StartDate").
+		DateAfter(func(e *prj.PrjProject) int64 { return e.ActualEndDate }, func(e *prj.PrjProject) int64 { return e.ActualStartDate }, "ActualEndDate", "ActualStartDate").
 		Build()
 }

@@ -17,6 +17,7 @@ package purchaseorders
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
@@ -26,5 +27,6 @@ func newPurchaseOrderServiceCallback() ifs.IServiceCallback {
 		Require(func(e *scm.ScmPurchaseOrder) string { return e.PurchaseOrderId }, "PurchaseOrderId").
 		Require(func(e *scm.ScmPurchaseOrder) string { return e.VendorId }, "VendorId").
 		Enum(func(e *scm.ScmPurchaseOrder) int32 { return int32(e.Status) }, scm.ScmPurchaseOrderStatus_name, "Status").
+		OptionalMoney(func(e *scm.ScmPurchaseOrder) *erp.Money { return e.TotalAmount }, "TotalAmount").
 		Build()
 }

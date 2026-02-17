@@ -17,6 +17,7 @@ package incidents
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/comp"
 )
 
@@ -27,5 +28,6 @@ func newCompIncidentServiceCallback() ifs.IServiceCallback {
 		Enum(func(e *comp.CompIncident) int32 { return int32(e.Category) }, comp.CompRiskCategory_name, "Category").
 		Enum(func(e *comp.CompIncident) int32 { return int32(e.Severity) }, comp.CompSeverityLevel_name, "Severity").
 		Enum(func(e *comp.CompIncident) int32 { return int32(e.Status) }, comp.CompIncidentStatus_name, "Status").
+		OptionalMoney(func(e *comp.CompIncident) *erp.Money { return e.FinancialImpact }, "FinancialImpact").
 		Build()
 }

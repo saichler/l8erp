@@ -17,6 +17,7 @@ package purchasereqs
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
@@ -25,5 +26,6 @@ func newPurchaseRequisitionServiceCallback() ifs.IServiceCallback {
 		func(e *scm.ScmPurchaseRequisition) { common.GenerateID(&e.RequisitionId) }).
 		Require(func(e *scm.ScmPurchaseRequisition) string { return e.RequisitionId }, "RequisitionId").
 		Enum(func(e *scm.ScmPurchaseRequisition) int32 { return int32(e.Status) }, scm.ScmRequisitionStatus_name, "Status").
+		OptionalMoney(func(e *scm.ScmPurchaseRequisition) *erp.Money { return e.EstimatedTotal }, "EstimatedTotal").
 		Build()
 }

@@ -17,6 +17,7 @@ package capitalexpenditures
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -26,5 +27,8 @@ func newCapitalExpenditureServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.CapitalExpenditure) string { return e.CapexId }, "CapexId").
 		Require(func(e *fin.CapitalExpenditure) string { return e.ProjectName }, "ProjectName").
 		Enum(func(e *fin.CapitalExpenditure) int32 { return int32(e.Status) }, fin.CapexStatus_name, "Status").
+		OptionalMoney(func(e *fin.CapitalExpenditure) *erp.Money { return e.RequestedAmount }, "RequestedAmount").
+		OptionalMoney(func(e *fin.CapitalExpenditure) *erp.Money { return e.ApprovedAmount }, "ApprovedAmount").
+		OptionalMoney(func(e *fin.CapitalExpenditure) *erp.Money { return e.SpentAmount }, "SpentAmount").
 		Build()
 }

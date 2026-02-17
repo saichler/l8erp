@@ -17,6 +17,7 @@ package opportunities
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
@@ -27,5 +28,7 @@ func newCrmOpportunityServiceCallback() ifs.IServiceCallback {
 		Require(func(e *crm.CrmOpportunity) string { return e.AccountId }, "AccountId").
 		Enum(func(e *crm.CrmOpportunity) int32 { return int32(e.Stage) }, crm.CrmSalesStage_name, "Stage").
 		Enum(func(e *crm.CrmOpportunity) int32 { return int32(e.Status) }, crm.CrmOpportunityStatus_name, "Status").
+		OptionalMoney(func(e *crm.CrmOpportunity) *erp.Money { return e.Amount }, "Amount").
+		OptionalMoney(func(e *crm.CrmOpportunity) *erp.Money { return e.ExpectedRevenue }, "ExpectedRevenue").
 		Build()
 }

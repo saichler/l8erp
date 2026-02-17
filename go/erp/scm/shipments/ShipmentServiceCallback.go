@@ -16,6 +16,7 @@ package shipments
 
 import (
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8erp/go/erp/common"
 )
@@ -25,5 +26,6 @@ func newShipmentServiceCallback() ifs.IServiceCallback {
 		func(e *scm.ScmShipment) { common.GenerateID(&e.ShipmentId) }).
 		Require(func(e *scm.ScmShipment) string { return e.ShipmentId }, "ShipmentId").
 		Enum(func(e *scm.ScmShipment) int32 { return int32(e.Status) }, scm.ScmShipmentStatus_name, "Status").
+		OptionalMoney(func(e *scm.ScmShipment) *erp.Money { return e.FreightCost }, "FreightCost").
 		Build()
 }

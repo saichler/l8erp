@@ -17,6 +17,7 @@ package deliveryorders
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -27,5 +28,6 @@ func newDeliveryOrderServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesDeliveryOrder) string { return e.SalesOrderId }, "SalesOrderId").
 		Require(func(e *sales.SalesDeliveryOrder) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *sales.SalesDeliveryOrder) int32 { return int32(e.Status) }, sales.SalesDeliveryStatus_name, "Status").
+		OptionalMoney(func(e *sales.SalesDeliveryOrder) *erp.Money { return e.ShippingCost }, "ShippingCost").
 		Build()
 }

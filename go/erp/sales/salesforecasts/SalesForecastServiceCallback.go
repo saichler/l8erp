@@ -17,6 +17,7 @@ package salesforecasts
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -27,5 +28,7 @@ func newSalesForecastServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesForecast) string { return e.Name }, "Name").
 		Require(func(e *sales.SalesForecast) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *sales.SalesForecast) int32 { return int32(e.Category) }, sales.SalesForecastCategory_name, "Category").
+		OptionalMoney(func(e *sales.SalesForecast) *erp.Money { return e.ForecastAmount }, "ForecastAmount").
+		OptionalMoney(func(e *sales.SalesForecast) *erp.Money { return e.WeightedAmount }, "WeightedAmount").
 		Build()
 }

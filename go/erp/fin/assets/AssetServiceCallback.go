@@ -17,6 +17,7 @@ package assets
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -28,5 +29,9 @@ func newAssetServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.Asset) string { return e.CategoryId }, "CategoryId").
 		Enum(func(e *fin.Asset) int32 { return int32(e.DepreciationMethod) }, fin.DepreciationMethod_name, "DepreciationMethod").
 		Enum(func(e *fin.Asset) int32 { return int32(e.Status) }, fin.AssetStatus_name, "Status").
+		OptionalMoney(func(e *fin.Asset) *erp.Money { return e.AcquisitionCost }, "AcquisitionCost").
+		OptionalMoney(func(e *fin.Asset) *erp.Money { return e.SalvageValue }, "SalvageValue").
+		OptionalMoney(func(e *fin.Asset) *erp.Money { return e.AccumulatedDepreciation }, "AccumulatedDepreciation").
+		OptionalMoney(func(e *fin.Asset) *erp.Money { return e.NetBookValue }, "NetBookValue").
 		Build()
 }

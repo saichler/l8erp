@@ -17,6 +17,7 @@ package servicecontracts
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
@@ -27,5 +28,7 @@ func newCrmServiceContractServiceCallback() ifs.IServiceCallback {
 		Require(func(e *crm.CrmServiceContract) string { return e.AccountId }, "AccountId").
 		Enum(func(e *crm.CrmServiceContract) int32 { return int32(e.ContractType) }, crm.CrmContractType_name, "ContractType").
 		Enum(func(e *crm.CrmServiceContract) int32 { return int32(e.Status) }, crm.CrmContractStatus_name, "Status").
+		OptionalMoney(func(e *crm.CrmServiceContract) *erp.Money { return e.ContractValue }, "ContractValue").
+		DateAfter(func(e *crm.CrmServiceContract) int64 { return e.EndDate }, func(e *crm.CrmServiceContract) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }

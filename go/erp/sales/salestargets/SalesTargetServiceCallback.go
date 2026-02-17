@@ -15,6 +15,7 @@ limitations under the License.
 package salestargets
 
 import (
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
@@ -26,5 +27,7 @@ func newSalesTargetServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesTarget) string { return e.TargetId }, "TargetId").
 		Require(func(e *sales.SalesTarget) string { return e.Name }, "Name").
 		Enum(func(e *sales.SalesTarget) int32 { return int32(e.Period) }, sales.SalesTargetPeriod_name, "Period").
+		OptionalMoney(func(e *sales.SalesTarget) *erp.Money { return e.TargetAmount }, "TargetAmount").
+		OptionalMoney(func(e *sales.SalesTarget) *erp.Money { return e.AchievedAmount }, "AchievedAmount").
 		Build()
 }

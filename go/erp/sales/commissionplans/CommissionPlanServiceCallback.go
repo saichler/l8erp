@@ -17,6 +17,7 @@ package commissionplans
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -26,5 +27,7 @@ func newCommissionPlanServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesCommissionPlan) string { return e.PlanId }, "PlanId").
 		Require(func(e *sales.SalesCommissionPlan) string { return e.Name }, "Name").
 		Enum(func(e *sales.SalesCommissionPlan) int32 { return int32(e.CommissionType) }, sales.SalesCommissionType_name, "CommissionType").
+		OptionalMoney(func(e *sales.SalesCommissionPlan) *erp.Money { return e.BaseAmount }, "BaseAmount").
+		DateAfter(func(e *sales.SalesCommissionPlan) int64 { return e.ExpiryDate }, func(e *sales.SalesCommissionPlan) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

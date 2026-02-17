@@ -17,6 +17,7 @@ package paymentschedules
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -26,5 +27,6 @@ func newPaymentScheduleServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.PaymentSchedule) string { return e.ScheduleId }, "ScheduleId").
 		Require(func(e *fin.PaymentSchedule) string { return e.VendorId }, "VendorId").
 		Require(func(e *fin.PaymentSchedule) string { return e.InvoiceId }, "InvoiceId").
+		OptionalMoney(func(e *fin.PaymentSchedule) *erp.Money { return e.Amount }, "Amount").
 		Build()
 }

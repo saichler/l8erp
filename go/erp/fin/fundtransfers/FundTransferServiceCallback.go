@@ -17,6 +17,7 @@ package fundtransfers
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -27,5 +28,6 @@ func newFundTransferServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.FundTransfer) string { return e.FromBankAccountId }, "FromBankAccountId").
 		Require(func(e *fin.FundTransfer) string { return e.ToBankAccountId }, "ToBankAccountId").
 		Enum(func(e *fin.FundTransfer) int32 { return int32(e.Status) }, fin.TransferStatus_name, "Status").
+		OptionalMoney(func(e *fin.FundTransfer) *erp.Money { return e.Amount }, "Amount").
 		Build()
 }

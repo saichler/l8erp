@@ -25,5 +25,6 @@ func newFiscalYearServiceCallback() ifs.IServiceCallback {
 		func(e *fin.FiscalYear) { common.GenerateID(&e.FiscalYearId) }).
 		Require(func(e *fin.FiscalYear) string { return e.FiscalYearId }, "FiscalYearId").
 		Require(func(e *fin.FiscalYear) string { return e.YearName }, "YearName").
+		DateAfter(func(e *fin.FiscalYear) int64 { return e.EndDate }, func(e *fin.FiscalYear) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }

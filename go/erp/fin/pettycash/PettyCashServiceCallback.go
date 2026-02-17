@@ -17,6 +17,7 @@ package pettycash
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -25,5 +26,7 @@ func newPettyCashServiceCallback() ifs.IServiceCallback {
 		func(e *fin.PettyCash) { common.GenerateID(&e.PettyCashId) }).
 		Require(func(e *fin.PettyCash) string { return e.PettyCashId }, "PettyCashId").
 		Require(func(e *fin.PettyCash) string { return e.FundName }, "FundName").
+		OptionalMoney(func(e *fin.PettyCash) *erp.Money { return e.FundLimit }, "FundLimit").
+		OptionalMoney(func(e *fin.PettyCash) *erp.Money { return e.CurrentBalance }, "CurrentBalance").
 		Build()
 }

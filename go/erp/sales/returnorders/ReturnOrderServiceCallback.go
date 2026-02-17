@@ -17,6 +17,7 @@ package returnorders
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -27,5 +28,6 @@ func newReturnOrderServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesReturnOrder) string { return e.SalesOrderId }, "SalesOrderId").
 		Require(func(e *sales.SalesReturnOrder) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *sales.SalesReturnOrder) int32 { return int32(e.Status) }, sales.SalesReturnStatus_name, "Status").
+		OptionalMoney(func(e *sales.SalesReturnOrder) *erp.Money { return e.RefundAmount }, "RefundAmount").
 		Build()
 }

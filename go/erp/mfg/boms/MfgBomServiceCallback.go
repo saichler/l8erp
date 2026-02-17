@@ -27,5 +27,6 @@ func newMfgBomServiceCallback() ifs.IServiceCallback {
 		Require(func(e *mfg.MfgBom) string { return e.ItemId }, "ItemId").
 		Enum(func(e *mfg.MfgBom) int32 { return int32(e.BomType) }, mfg.MfgBomType_name, "BomType").
 		Enum(func(e *mfg.MfgBom) int32 { return int32(e.Status) }, mfg.MfgBomStatus_name, "Status").
+		DateAfter(func(e *mfg.MfgBom) int64 { return e.ExpiryDate }, func(e *mfg.MfgBom) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

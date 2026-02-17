@@ -17,6 +17,7 @@ package items
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
@@ -27,5 +28,7 @@ func newItemServiceCallback() ifs.IServiceCallback {
 		Enum(func(e *scm.ScmItem) int32 { return int32(e.ItemType) }, scm.ScmItemType_name, "ItemType").
 		Enum(func(e *scm.ScmItem) int32 { return int32(e.PlanningMethod) }, scm.ScmPlanningMethod_name, "PlanningMethod").
 		Enum(func(e *scm.ScmItem) int32 { return int32(e.ValuationMethod) }, scm.ScmValuationMethod_name, "ValuationMethod").
+		OptionalMoney(func(e *scm.ScmItem) *erp.Money { return e.UnitCost }, "UnitCost").
+		OptionalMoney(func(e *scm.ScmItem) *erp.Money { return e.UnitPrice }, "UnitPrice").
 		Build()
 }

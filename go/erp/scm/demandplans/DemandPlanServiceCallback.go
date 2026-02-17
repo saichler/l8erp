@@ -17,6 +17,7 @@ package demandplans
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
@@ -25,5 +26,6 @@ func newDemandPlanServiceCallback() ifs.IServiceCallback {
 		func(e *scm.ScmDemandPlan) { common.GenerateID(&e.PlanId) }).
 		Require(func(e *scm.ScmDemandPlan) string { return e.PlanId }, "PlanId").
 		Enum(func(e *scm.ScmDemandPlan) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
+		DateRange(func(e *scm.ScmDemandPlan) *erp.DateRange { return e.PlanPeriod }, "PlanPeriod").
 		Build()
 }

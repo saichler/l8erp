@@ -17,6 +17,7 @@ package engchangeorders
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
@@ -26,5 +27,7 @@ func newMfgEngChangeOrderServiceCallback() ifs.IServiceCallback {
 		Require(func(e *mfg.MfgEngChangeOrder) string { return e.ChangeOrderId }, "ChangeOrderId").
 		Require(func(e *mfg.MfgEngChangeOrder) string { return e.Title }, "Title").
 		Enum(func(e *mfg.MfgEngChangeOrder) int32 { return int32(e.Status) }, mfg.MfgChangeOrderStatus_name, "Status").
+		OptionalMoney(func(e *mfg.MfgEngChangeOrder) *erp.Money { return e.EstimatedCost }, "EstimatedCost").
+		OptionalMoney(func(e *mfg.MfgEngChangeOrder) *erp.Money { return e.ActualCost }, "ActualCost").
 		Build()
 }

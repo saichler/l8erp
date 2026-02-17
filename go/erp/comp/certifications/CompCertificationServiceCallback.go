@@ -17,6 +17,7 @@ package certifications
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/comp"
 )
 
@@ -25,5 +26,6 @@ func newCompCertificationServiceCallback() ifs.IServiceCallback {
 		func(e *comp.CompCertification) { common.GenerateID(&e.CertificationId) }).
 		Require(func(e *comp.CompCertification) string { return e.CertificationId }, "CertificationId").
 		Enum(func(e *comp.CompCertification) int32 { return int32(e.Status) }, comp.CompCertificationStatus_name, "Status").
+		OptionalMoney(func(e *comp.CompCertification) *erp.Money { return e.CertificationCost }, "CertificationCost").
 		Build()
 }

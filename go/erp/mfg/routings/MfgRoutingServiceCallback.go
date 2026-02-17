@@ -26,5 +26,6 @@ func newMfgRoutingServiceCallback() ifs.IServiceCallback {
 		Require(func(e *mfg.MfgRouting) string { return e.RoutingId }, "RoutingId").
 		Require(func(e *mfg.MfgRouting) string { return e.ItemId }, "ItemId").
 		Enum(func(e *mfg.MfgRouting) int32 { return int32(e.Status) }, mfg.MfgBomStatus_name, "Status").
+		DateAfter(func(e *mfg.MfgRouting) int64 { return e.ExpiryDate }, func(e *mfg.MfgRouting) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

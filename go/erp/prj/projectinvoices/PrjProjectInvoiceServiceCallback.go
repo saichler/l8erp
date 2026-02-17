@@ -17,6 +17,7 @@ package projectinvoices
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -26,5 +27,11 @@ func newPrjProjectInvoiceServiceCallback() ifs.IServiceCallback {
 		Require(func(e *prj.PrjProjectInvoice) string { return e.InvoiceId }, "InvoiceId").
 		Require(func(e *prj.PrjProjectInvoice) string { return e.CurrencyId }, "CurrencyId").
 		Enum(func(e *prj.PrjProjectInvoice) int32 { return int32(e.Status) }, prj.PrjInvoiceStatus_name, "Status").
+		OptionalMoney(func(e *prj.PrjProjectInvoice) *erp.Money { return e.Subtotal }, "Subtotal").
+		OptionalMoney(func(e *prj.PrjProjectInvoice) *erp.Money { return e.TaxAmount }, "TaxAmount").
+		OptionalMoney(func(e *prj.PrjProjectInvoice) *erp.Money { return e.TotalAmount }, "TotalAmount").
+		OptionalMoney(func(e *prj.PrjProjectInvoice) *erp.Money { return e.PaidAmount }, "PaidAmount").
+		OptionalMoney(func(e *prj.PrjProjectInvoice) *erp.Money { return e.BalanceDue }, "BalanceDue").
+		DateAfter(func(e *prj.PrjProjectInvoice) int64 { return e.DueDate }, func(e *prj.PrjProjectInvoice) int64 { return e.InvoiceDate }, "DueDate", "InvoiceDate").
 		Build()
 }

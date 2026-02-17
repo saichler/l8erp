@@ -15,6 +15,7 @@ limitations under the License.
 package serviceorders
 
 import (
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
@@ -28,5 +29,7 @@ func newCrmServiceOrderServiceCallback() ifs.IServiceCallback {
 		Enum(func(e *crm.CrmServiceOrder) int32 { return int32(e.OrderType) }, crm.CrmServiceOrderType_name, "OrderType").
 		Enum(func(e *crm.CrmServiceOrder) int32 { return int32(e.Priority) }, crm.CrmServiceOrderPriority_name, "Priority").
 		Enum(func(e *crm.CrmServiceOrder) int32 { return int32(e.Status) }, crm.CrmServiceOrderStatus_name, "Status").
+		OptionalMoney(func(e *crm.CrmServiceOrder) *erp.Money { return e.EstimatedCost }, "EstimatedCost").
+		OptionalMoney(func(e *crm.CrmServiceOrder) *erp.Money { return e.ActualCost }, "ActualCost").
 		Build()
 }

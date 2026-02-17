@@ -15,6 +15,7 @@ limitations under the License.
 package budgets
 
 import (
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
@@ -28,5 +29,6 @@ func newBudgetServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.Budget) string { return e.FiscalYearId }, "FiscalYearId").
 		Enum(func(e *fin.Budget) int32 { return int32(e.BudgetType) }, fin.BudgetType_name, "BudgetType").
 		Enum(func(e *fin.Budget) int32 { return int32(e.Status) }, fin.BudgetStatus_name, "Status").
+		OptionalMoney(func(e *fin.Budget) *erp.Money { return e.TotalAmount }, "TotalAmount").
 		Build()
 }

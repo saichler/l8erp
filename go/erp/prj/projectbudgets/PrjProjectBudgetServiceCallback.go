@@ -17,6 +17,7 @@ package projectbudgets
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -24,5 +25,9 @@ func newPrjProjectBudgetServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjProjectBudget]("PrjProjectBudget",
 		func(e *prj.PrjProjectBudget) { common.GenerateID(&e.BudgetId) }).
 		Require(func(e *prj.PrjProjectBudget) string { return e.BudgetId }, "BudgetId").
+		OptionalMoney(func(e *prj.PrjProjectBudget) *erp.Money { return e.BudgetedAmount }, "BudgetedAmount").
+		OptionalMoney(func(e *prj.PrjProjectBudget) *erp.Money { return e.CommittedAmount }, "CommittedAmount").
+		OptionalMoney(func(e *prj.PrjProjectBudget) *erp.Money { return e.ActualAmount }, "ActualAmount").
+		OptionalMoney(func(e *prj.PrjProjectBudget) *erp.Money { return e.RemainingAmount }, "RemainingAmount").
 		Build()
 }

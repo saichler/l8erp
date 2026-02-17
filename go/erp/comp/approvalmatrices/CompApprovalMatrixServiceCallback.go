@@ -17,6 +17,7 @@ package approvalmatrices
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/comp"
 )
 
@@ -24,5 +25,7 @@ func newCompApprovalMatrixServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompApprovalMatrix]("CompApprovalMatrix",
 		func(e *comp.CompApprovalMatrix) { common.GenerateID(&e.MatrixId) }).
 		Require(func(e *comp.CompApprovalMatrix) string { return e.MatrixId }, "MatrixId").
+		OptionalMoney(func(e *comp.CompApprovalMatrix) *erp.Money { return e.ThresholdMin }, "ThresholdMin").
+		OptionalMoney(func(e *comp.CompApprovalMatrix) *erp.Money { return e.ThresholdMax }, "ThresholdMax").
 		Build()
 }

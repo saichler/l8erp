@@ -17,6 +17,7 @@ package promotions
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
@@ -25,5 +26,8 @@ func newEcomPromotionServiceCallback() ifs.IServiceCallback {
 		func(e *ecom.EcomPromotion) { common.GenerateID(&e.PromotionId) }).
 		Require(func(e *ecom.EcomPromotion) string { return e.PromotionId }, "PromotionId").
 		Enum(func(e *ecom.EcomPromotion) int32 { return int32(e.PromotionType) }, ecom.EcomPromotionType_name, "PromotionType").
+		OptionalMoney(func(e *ecom.EcomPromotion) *erp.Money { return e.MaxDiscount }, "MaxDiscount").
+		OptionalMoney(func(e *ecom.EcomPromotion) *erp.Money { return e.MinPurchase }, "MinPurchase").
+		DateAfter(func(e *ecom.EcomPromotion) int64 { return e.EndDate }, func(e *ecom.EcomPromotion) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }

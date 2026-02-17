@@ -17,6 +17,7 @@ package products
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
@@ -26,5 +27,8 @@ func newEcomProductServiceCallback() ifs.IServiceCallback {
 		Require(func(e *ecom.EcomProduct) string { return e.ProductId }, "ProductId").
 		Enum(func(e *ecom.EcomProduct) int32 { return int32(e.ProductType) }, ecom.EcomProductType_name, "ProductType").
 		Enum(func(e *ecom.EcomProduct) int32 { return int32(e.Status) }, ecom.EcomProductStatus_name, "Status").
+		OptionalMoney(func(e *ecom.EcomProduct) *erp.Money { return e.Price }, "Price").
+		OptionalMoney(func(e *ecom.EcomProduct) *erp.Money { return e.CompareAtPrice }, "CompareAtPrice").
+		OptionalMoney(func(e *ecom.EcomProduct) *erp.Money { return e.CostPrice }, "CostPrice").
 		Build()
 }

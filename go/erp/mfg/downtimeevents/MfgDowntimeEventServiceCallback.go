@@ -16,6 +16,7 @@ package downtimeevents
 
 import (
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8erp/go/erp/common"
 )
@@ -26,5 +27,6 @@ func newMfgDowntimeEventServiceCallback() ifs.IServiceCallback {
 		Require(func(e *mfg.MfgDowntimeEvent) string { return e.EventId }, "EventId").
 		Require(func(e *mfg.MfgDowntimeEvent) string { return e.WorkCenterId }, "WorkCenterId").
 		Enum(func(e *mfg.MfgDowntimeEvent) int32 { return int32(e.DowntimeType) }, mfg.MfgDowntimeType_name, "DowntimeType").
+		OptionalMoney(func(e *mfg.MfgDowntimeEvent) *erp.Money { return e.EstimatedLoss }, "EstimatedLoss").
 		Build()
 }

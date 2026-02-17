@@ -26,5 +26,6 @@ func newDocRetentionPolicyServiceCallback() ifs.IServiceCallback {
 		Require(func(e *doc.DocRetentionPolicy) string { return e.PolicyId }, "PolicyId").
 		Enum(func(e *doc.DocRetentionPolicy) int32 { return int32(e.ActionOnExpiry) }, doc.DocRetentionAction_name, "ActionOnExpiry").
 		Enum(func(e *doc.DocRetentionPolicy) int32 { return int32(e.DocumentType) }, doc.DocDocumentType_name, "DocumentType").
+		DateAfter(func(e *doc.DocRetentionPolicy) int64 { return e.ExpiryDate }, func(e *doc.DocRetentionPolicy) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

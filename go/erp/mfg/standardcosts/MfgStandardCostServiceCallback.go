@@ -17,6 +17,7 @@ package standardcosts
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
@@ -26,5 +27,11 @@ func newMfgStandardCostServiceCallback() ifs.IServiceCallback {
 		Require(func(e *mfg.MfgStandardCost) string { return e.CostId }, "CostId").
 		Require(func(e *mfg.MfgStandardCost) string { return e.ItemId }, "ItemId").
 		Require(func(e *mfg.MfgStandardCost) string { return e.CurrencyId }, "CurrencyId").
+		OptionalMoney(func(e *mfg.MfgStandardCost) *erp.Money { return e.MaterialCost }, "MaterialCost").
+		OptionalMoney(func(e *mfg.MfgStandardCost) *erp.Money { return e.LaborCost }, "LaborCost").
+		OptionalMoney(func(e *mfg.MfgStandardCost) *erp.Money { return e.OverheadCost }, "OverheadCost").
+		OptionalMoney(func(e *mfg.MfgStandardCost) *erp.Money { return e.OutsideProcessingCost }, "OutsideProcessingCost").
+		OptionalMoney(func(e *mfg.MfgStandardCost) *erp.Money { return e.TotalCost }, "TotalCost").
+		DateAfter(func(e *mfg.MfgStandardCost) int64 { return e.ExpiryDate }, func(e *mfg.MfgStandardCost) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

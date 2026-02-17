@@ -17,6 +17,7 @@ package allocations
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -25,5 +26,7 @@ func newPrjAllocationServiceCallback() ifs.IServiceCallback {
 		func(e *prj.PrjAllocation) { common.GenerateID(&e.AllocationId) }).
 		Require(func(e *prj.PrjAllocation) string { return e.AllocationId }, "AllocationId").
 		Enum(func(e *prj.PrjAllocation) int32 { return int32(e.Status) }, prj.PrjAllocationStatus_name, "Status").
+		OptionalMoney(func(e *prj.PrjAllocation) *erp.Money { return e.BillingRate }, "BillingRate").
+		DateAfter(func(e *prj.PrjAllocation) int64 { return e.EndDate }, func(e *prj.PrjAllocation) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }

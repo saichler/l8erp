@@ -17,6 +17,7 @@ package purchaseinvoices
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -27,5 +28,11 @@ func newPurchaseInvoiceServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.PurchaseInvoice) string { return e.VendorId }, "VendorId").
 		Require(func(e *fin.PurchaseInvoice) string { return e.InvoiceNumber }, "InvoiceNumber").
 		Enum(func(e *fin.PurchaseInvoice) int32 { return int32(e.Status) }, fin.InvoiceStatus_name, "Status").
+		OptionalMoney(func(e *fin.PurchaseInvoice) *erp.Money { return e.Subtotal }, "Subtotal").
+		OptionalMoney(func(e *fin.PurchaseInvoice) *erp.Money { return e.TaxAmount }, "TaxAmount").
+		OptionalMoney(func(e *fin.PurchaseInvoice) *erp.Money { return e.TotalAmount }, "TotalAmount").
+		OptionalMoney(func(e *fin.PurchaseInvoice) *erp.Money { return e.AmountPaid }, "AmountPaid").
+		OptionalMoney(func(e *fin.PurchaseInvoice) *erp.Money { return e.BalanceDue }, "BalanceDue").
+		DateAfter(func(e *fin.PurchaseInvoice) int64 { return e.DueDate }, func(e *fin.PurchaseInvoice) int64 { return e.InvoiceDate }, "DueDate", "InvoiceDate").
 		Build()
 }

@@ -17,6 +17,7 @@ package resources
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -25,5 +26,7 @@ func newPrjResourceServiceCallback() ifs.IServiceCallback {
 		func(e *prj.PrjResource) { common.GenerateID(&e.ResourceId) }).
 		Require(func(e *prj.PrjResource) string { return e.ResourceId }, "ResourceId").
 		Enum(func(e *prj.PrjResource) int32 { return int32(e.ResourceType) }, prj.PrjResourceType_name, "ResourceType").
+		OptionalMoney(func(e *prj.PrjResource) *erp.Money { return e.HourlyCost }, "HourlyCost").
+		OptionalMoney(func(e *prj.PrjResource) *erp.Money { return e.BillingRate }, "BillingRate").
 		Build()
 }

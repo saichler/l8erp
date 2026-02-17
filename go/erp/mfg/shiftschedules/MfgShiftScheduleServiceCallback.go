@@ -26,5 +26,6 @@ func newMfgShiftScheduleServiceCallback() ifs.IServiceCallback {
 		Require(func(e *mfg.MfgShiftSchedule) string { return e.ScheduleId }, "ScheduleId").
 		Require(func(e *mfg.MfgShiftSchedule) string { return e.Name }, "Name").
 		Enum(func(e *mfg.MfgShiftSchedule) int32 { return int32(e.ShiftType) }, mfg.MfgShiftType_name, "ShiftType").
+		DateAfter(func(e *mfg.MfgShiftSchedule) int64 { return e.ExpiryDate }, func(e *mfg.MfgShiftSchedule) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

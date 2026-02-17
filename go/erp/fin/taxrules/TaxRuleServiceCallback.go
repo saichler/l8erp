@@ -17,6 +17,7 @@ package taxrules
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -26,5 +27,7 @@ func newTaxRuleServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.TaxRule) string { return e.RuleId }, "RuleId").
 		Require(func(e *fin.TaxRule) string { return e.TaxCodeId }, "TaxCodeId").
 		Require(func(e *fin.TaxRule) string { return e.JurisdictionId }, "JurisdictionId").
+		OptionalMoney(func(e *fin.TaxRule) *erp.Money { return e.MinimumThreshold }, "MinimumThreshold").
+		OptionalMoney(func(e *fin.TaxRule) *erp.Money { return e.MaximumThreshold }, "MaximumThreshold").
 		Build()
 }

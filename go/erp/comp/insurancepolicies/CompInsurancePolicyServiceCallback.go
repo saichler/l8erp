@@ -15,6 +15,7 @@ limitations under the License.
 package insurancepolicies
 
 import (
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
@@ -24,5 +25,9 @@ func newCompInsurancePolicyServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompInsurancePolicy]("CompInsurancePolicy",
 		func(e *comp.CompInsurancePolicy) { common.GenerateID(&e.InsuranceId) }).
 		Require(func(e *comp.CompInsurancePolicy) string { return e.InsuranceId }, "InsuranceId").
+		OptionalMoney(func(e *comp.CompInsurancePolicy) *erp.Money { return e.CoverageAmount }, "CoverageAmount").
+		OptionalMoney(func(e *comp.CompInsurancePolicy) *erp.Money { return e.Deductible }, "Deductible").
+		OptionalMoney(func(e *comp.CompInsurancePolicy) *erp.Money { return e.Premium }, "Premium").
+		DateAfter(func(e *comp.CompInsurancePolicy) int64 { return e.ExpiryDate }, func(e *comp.CompInsurancePolicy) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

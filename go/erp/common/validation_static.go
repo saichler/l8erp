@@ -15,6 +15,7 @@ package common
 
 import (
 	"errors"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8types/go/ifs"
 	"time"
 )
@@ -112,6 +113,47 @@ func ValidateConditionalRequired(condition bool, value, conditionDesc, fieldName
 func ValidateConditionalRequiredInt64(condition bool, value int64, conditionDesc, fieldName string) error {
 	if condition && value == 0 {
 		return errors.New(fieldName + " is required when " + conditionDesc)
+	}
+	return nil
+}
+
+// ValidateMoney validates a required money field (nil check + CurrencyId required).
+// Amount is NOT checked — it can be zero or negative for balances/adjustments.
+func ValidateMoney(money *erp.Money, fieldName string) error {
+	if money == nil {
+		return errors.New(fieldName + " is required")
+	}
+	if money.CurrencyId == "" {
+		return errors.New(fieldName + ".CurrencyId is required")
+	}
+	return nil
+}
+
+// ValidateMoneyPositive validates a required money field with positive amount.
+// Use for prices, costs, and totals that must be greater than zero.
+func ValidateMoneyPositive(money *erp.Money, fieldName string) error {
+	if err := ValidateMoney(money, fieldName); err != nil {
+		return err
+	}
+	if money.Amount <= 0 {
+		return errors.New(fieldName + ".Amount must be positive")
+	}
+	return nil
+}
+
+// ValidateDateRange validates a required DateRange (nil check + StartDate < EndDate).
+func ValidateDateRange(dateRange *erp.DateRange, fieldName string) error {
+	if dateRange == nil {
+		return errors.New(fieldName + " is required")
+	}
+	if dateRange.StartDate == 0 {
+		return errors.New(fieldName + ".StartDate is required")
+	}
+	if dateRange.EndDate == 0 {
+		return errors.New(fieldName + ".EndDate is required")
+	}
+	if dateRange.StartDate >= dateRange.EndDate {
+		return errors.New(fieldName + ".StartDate must be before EndDate")
 	}
 	return nil
 }

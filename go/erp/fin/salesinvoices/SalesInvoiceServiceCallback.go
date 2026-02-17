@@ -17,6 +17,7 @@ package salesinvoices
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -27,5 +28,11 @@ func newSalesInvoiceServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.SalesInvoice) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *fin.SalesInvoice) string { return e.InvoiceNumber }, "InvoiceNumber").
 		Enum(func(e *fin.SalesInvoice) int32 { return int32(e.Status) }, fin.InvoiceStatus_name, "Status").
+		OptionalMoney(func(e *fin.SalesInvoice) *erp.Money { return e.Subtotal }, "Subtotal").
+		OptionalMoney(func(e *fin.SalesInvoice) *erp.Money { return e.TaxAmount }, "TaxAmount").
+		OptionalMoney(func(e *fin.SalesInvoice) *erp.Money { return e.TotalAmount }, "TotalAmount").
+		OptionalMoney(func(e *fin.SalesInvoice) *erp.Money { return e.AmountPaid }, "AmountPaid").
+		OptionalMoney(func(e *fin.SalesInvoice) *erp.Money { return e.BalanceDue }, "BalanceDue").
+		DateAfter(func(e *fin.SalesInvoice) int64 { return e.DueDate }, func(e *fin.SalesInvoice) int64 { return e.InvoiceDate }, "DueDate", "InvoiceDate").
 		Build()
 }

@@ -17,6 +17,7 @@ package customerpayments
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -27,5 +28,6 @@ func newCustomerPaymentServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.CustomerPayment) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *fin.CustomerPayment) int32 { return int32(e.PaymentMethod) }, fin.PaymentMethod_name, "PaymentMethod").
 		Enum(func(e *fin.CustomerPayment) int32 { return int32(e.Status) }, fin.PaymentStatus_name, "Status").
+		OptionalMoney(func(e *fin.CustomerPayment) *erp.Money { return e.Amount }, "Amount").
 		Build()
 }

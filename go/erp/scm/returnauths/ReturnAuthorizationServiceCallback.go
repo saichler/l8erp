@@ -17,6 +17,7 @@ package returnauths
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
@@ -26,5 +27,6 @@ func newReturnAuthorizationServiceCallback() ifs.IServiceCallback {
 		Require(func(e *scm.ScmReturnAuthorization) string { return e.RmaId }, "RmaId").
 		Require(func(e *scm.ScmReturnAuthorization) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *scm.ScmReturnAuthorization) int32 { return int32(e.Status) }, scm.ScmRequisitionStatus_name, "Status").
+		OptionalMoney(func(e *scm.ScmReturnAuthorization) *erp.Money { return e.RefundAmount }, "RefundAmount").
 		Build()
 }

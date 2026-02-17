@@ -26,5 +26,6 @@ func newPriceListServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesPriceList) string { return e.PriceListId }, "PriceListId").
 		Require(func(e *sales.SalesPriceList) string { return e.Name }, "Name").
 		Require(func(e *sales.SalesPriceList) string { return e.CurrencyId }, "CurrencyId").
+		DateAfter(func(e *sales.SalesPriceList) int64 { return e.ExpiryDate }, func(e *sales.SalesPriceList) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

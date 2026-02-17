@@ -25,5 +25,6 @@ func newBiTrendAnalysisServiceCallback() ifs.IServiceCallback {
 		func(e *bi.BiTrendAnalysis) { common.GenerateID(&e.AnalysisId) }).
 		Require(func(e *bi.BiTrendAnalysis) string { return e.AnalysisId }, "AnalysisId").
 		Enum(func(e *bi.BiTrendAnalysis) int32 { return int32(e.Direction) }, bi.BiTrendDirection_name, "Direction").
+		DateAfter(func(e *bi.BiTrendAnalysis) int64 { return e.EndDate }, func(e *bi.BiTrendAnalysis) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }

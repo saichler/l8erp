@@ -14,7 +14,10 @@ limitations under the License.
 */
 package common
 
-import "github.com/saichler/l8types/go/ifs"
+import (
+	erp "github.com/saichler/l8erp/go/types/erp"
+	"github.com/saichler/l8types/go/ifs"
+)
 
 // VB (Validation Builder) chains validators for a ServiceCallback.
 // Use NewValidation to start building, chain .Require() calls, then .Build().
@@ -50,6 +53,62 @@ func (b *VB[T]) RequireInt64(getter func(*T) int64, name string) *VB[T] {
 func (b *VB[T]) Enum(getter func(*T) int32, nameMap map[int32]string, name string) *VB[T] {
 	b.validators = append(b.validators, func(e *T, _ ifs.IVNic) error {
 		return ValidateEnum(getter(e), nameMap, name)
+	})
+	return b
+}
+
+// Money adds a required money field validation (nil + CurrencyId check).
+func (b *VB[T]) Money(getter func(*T) *erp.Money, name string) *VB[T] {
+	b.validators = append(b.validators, func(e *T, _ ifs.IVNic) error {
+		return ValidateMoney(getter(e), name)
+	})
+	return b
+}
+
+// MoneyPositive adds a required money field validation with positive amount.
+func (b *VB[T]) MoneyPositive(getter func(*T) *erp.Money, name string) *VB[T] {
+	b.validators = append(b.validators, func(e *T, _ ifs.IVNic) error {
+		return ValidateMoneyPositive(getter(e), name)
+	})
+	return b
+}
+
+// OptionalMoney validates a money field only when non-nil (skips nil).
+func (b *VB[T]) OptionalMoney(getter func(*T) *erp.Money, name string) *VB[T] {
+	b.validators = append(b.validators, func(e *T, _ ifs.IVNic) error {
+		m := getter(e)
+		if m == nil {
+			return nil
+		}
+		return ValidateMoney(m, name)
+	})
+	return b
+}
+
+// DateNotZero adds a required date (non-zero timestamp) validation.
+func (b *VB[T]) DateNotZero(getter func(*T) int64, name string) *VB[T] {
+	b.validators = append(b.validators, func(e *T, _ ifs.IVNic) error {
+		return ValidateDateNotZero(getter(e), name)
+	})
+	return b
+}
+
+// DateAfter validates that date1 > date2 (skips if either is zero).
+func (b *VB[T]) DateAfter(getter1, getter2 func(*T) int64, name1, name2 string) *VB[T] {
+	b.validators = append(b.validators, func(e *T, _ ifs.IVNic) error {
+		d1, d2 := getter1(e), getter2(e)
+		if d1 == 0 || d2 == 0 {
+			return nil
+		}
+		return ValidateDateAfter(d1, d2, name1, name2)
+	})
+	return b
+}
+
+// DateRange validates a required *erp.DateRange field (nil + StartDate < EndDate).
+func (b *VB[T]) DateRange(getter func(*T) *erp.DateRange, name string) *VB[T] {
+	b.validators = append(b.validators, func(e *T, _ ifs.IVNic) error {
+		return ValidateDateRange(getter(e), name)
 	})
 	return b
 }

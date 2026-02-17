@@ -8,15 +8,15 @@ metadata:
 ---
 
 apiVersion: apps/v1
-kind: DaemonSet
+kind: StatefulSet
 metadata:
   namespace: erp
   name: erp
   labels:
     app: erp
 spec:
-  #serviceName: erp
-  #replicas: 1
+  serviceName: erp
+  replicas: 1
   selector:
     matchLabels:
       app: erp

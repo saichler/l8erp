@@ -17,6 +17,7 @@ package vendorpayments
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -27,5 +28,6 @@ func newVendorPaymentServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.VendorPayment) string { return e.VendorId }, "VendorId").
 		Enum(func(e *fin.VendorPayment) int32 { return int32(e.PaymentMethod) }, fin.PaymentMethod_name, "PaymentMethod").
 		Enum(func(e *fin.VendorPayment) int32 { return int32(e.Status) }, fin.PaymentStatus_name, "Status").
+		OptionalMoney(func(e *fin.VendorPayment) *erp.Money { return e.Amount }, "Amount").
 		Build()
 }

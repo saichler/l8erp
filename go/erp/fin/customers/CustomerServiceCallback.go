@@ -17,6 +17,7 @@ package customers
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -26,5 +27,6 @@ func newCustomerServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.Customer) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *fin.Customer) string { return e.Name }, "Name").
 		Enum(func(e *fin.Customer) int32 { return int32(e.Status) }, fin.CustomerStatus_name, "Status").
+		OptionalMoney(func(e *fin.Customer) *erp.Money { return e.CreditLimit }, "CreditLimit").
 		Build()
 }

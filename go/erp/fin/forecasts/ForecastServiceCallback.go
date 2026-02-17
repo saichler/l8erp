@@ -17,6 +17,7 @@ package forecasts
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -26,5 +27,8 @@ func newForecastServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.Forecast) string { return e.ForecastId }, "ForecastId").
 		Require(func(e *fin.Forecast) string { return e.ForecastName }, "ForecastName").
 		Enum(func(e *fin.Forecast) int32 { return int32(e.ForecastType) }, fin.ForecastType_name, "ForecastType").
+		OptionalMoney(func(e *fin.Forecast) *erp.Money { return e.ProjectedAmount }, "ProjectedAmount").
+		OptionalMoney(func(e *fin.Forecast) *erp.Money { return e.ActualAmount }, "ActualAmount").
+		OptionalMoney(func(e *fin.Forecast) *erp.Money { return e.Variance }, "Variance").
 		Build()
 }

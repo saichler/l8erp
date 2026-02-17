@@ -15,6 +15,7 @@ limitations under the License.
 package coupons
 
 import (
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
@@ -25,5 +26,8 @@ func newEcomCouponServiceCallback() ifs.IServiceCallback {
 		func(e *ecom.EcomCoupon) { common.GenerateID(&e.CouponId) }).
 		Require(func(e *ecom.EcomCoupon) string { return e.CouponId }, "CouponId").
 		Enum(func(e *ecom.EcomCoupon) int32 { return int32(e.DiscountType) }, ecom.EcomDiscountType_name, "DiscountType").
+		OptionalMoney(func(e *ecom.EcomCoupon) *erp.Money { return e.MaxDiscount }, "MaxDiscount").
+		OptionalMoney(func(e *ecom.EcomCoupon) *erp.Money { return e.MinPurchase }, "MinPurchase").
+		DateAfter(func(e *ecom.EcomCoupon) int64 { return e.EndDate }, func(e *ecom.EcomCoupon) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }

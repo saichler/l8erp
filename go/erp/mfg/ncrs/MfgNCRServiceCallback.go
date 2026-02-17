@@ -16,6 +16,7 @@ package ncrs
 
 import (
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8erp/go/erp/common"
 )
@@ -28,5 +29,7 @@ func newMfgNCRServiceCallback() ifs.IServiceCallback {
 		Enum(func(e *mfg.MfgNCR) int32 { return int32(e.Disposition) }, mfg.MfgNCRDisposition_name, "Disposition").
 		Enum(func(e *mfg.MfgNCR) int32 { return int32(e.Severity) }, mfg.MfgNCRSeverity_name, "Severity").
 		Enum(func(e *mfg.MfgNCR) int32 { return int32(e.Status) }, mfg.MfgNCRStatus_name, "Status").
+		OptionalMoney(func(e *mfg.MfgNCR) *erp.Money { return e.EstimatedCost }, "EstimatedCost").
+		OptionalMoney(func(e *mfg.MfgNCR) *erp.Money { return e.ActualCost }, "ActualCost").
 		Build()
 }

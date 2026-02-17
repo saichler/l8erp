@@ -15,6 +15,7 @@ limitations under the License.
 package auditschedules
 
 import (
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
@@ -26,5 +27,9 @@ func newCompAuditScheduleServiceCallback() ifs.IServiceCallback {
 		Require(func(e *comp.CompAuditSchedule) string { return e.ScheduleId }, "ScheduleId").
 		Enum(func(e *comp.CompAuditSchedule) int32 { return int32(e.AuditType) }, comp.CompAuditType_name, "AuditType").
 		Enum(func(e *comp.CompAuditSchedule) int32 { return int32(e.Status) }, comp.CompAuditStatus_name, "Status").
+		OptionalMoney(func(e *comp.CompAuditSchedule) *erp.Money { return e.Budget }, "Budget").
+		OptionalMoney(func(e *comp.CompAuditSchedule) *erp.Money { return e.ActualCost }, "ActualCost").
+		DateAfter(func(e *comp.CompAuditSchedule) int64 { return e.PlannedEndDate }, func(e *comp.CompAuditSchedule) int64 { return e.PlannedStartDate }, "PlannedEndDate", "PlannedStartDate").
+		DateAfter(func(e *comp.CompAuditSchedule) int64 { return e.ActualEndDate }, func(e *comp.CompAuditSchedule) int64 { return e.ActualStartDate }, "ActualEndDate", "ActualStartDate").
 		Build()
 }

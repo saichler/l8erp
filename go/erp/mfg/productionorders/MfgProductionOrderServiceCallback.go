@@ -15,6 +15,7 @@ limitations under the License.
 package productionorders
 
 import (
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
@@ -25,5 +26,7 @@ func newMfgProductionOrderServiceCallback() ifs.IServiceCallback {
 		func(e *mfg.MfgProductionOrder) { common.GenerateID(&e.ProdOrderId) }).
 		Require(func(e *mfg.MfgProductionOrder) string { return e.ProdOrderId }, "ProdOrderId").
 		Enum(func(e *mfg.MfgProductionOrder) int32 { return int32(e.Status) }, mfg.MfgProductionOrderStatus_name, "Status").
+		OptionalMoney(func(e *mfg.MfgProductionOrder) *erp.Money { return e.TotalEstimatedCost }, "TotalEstimatedCost").
+		OptionalMoney(func(e *mfg.MfgProductionOrder) *erp.Money { return e.TotalActualCost }, "TotalActualCost").
 		Build()
 }

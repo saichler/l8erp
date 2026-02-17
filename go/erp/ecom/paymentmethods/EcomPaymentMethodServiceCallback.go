@@ -17,6 +17,7 @@ package paymentmethods
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
@@ -24,5 +25,8 @@ func newEcomPaymentMethodServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[ecom.EcomPaymentMethod]("EcomPaymentMethod",
 		func(e *ecom.EcomPaymentMethod) { common.GenerateID(&e.MethodId) }).
 		Require(func(e *ecom.EcomPaymentMethod) string { return e.MethodId }, "MethodId").
+		OptionalMoney(func(e *ecom.EcomPaymentMethod) *erp.Money { return e.MinAmount }, "MinAmount").
+		OptionalMoney(func(e *ecom.EcomPaymentMethod) *erp.Money { return e.MaxAmount }, "MaxAmount").
+		OptionalMoney(func(e *ecom.EcomPaymentMethod) *erp.Money { return e.TransactionFeeFixed }, "TransactionFeeFixed").
 		Build()
 }

@@ -17,6 +17,7 @@ package utilizations
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -24,5 +25,7 @@ func newPrjUtilizationServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjUtilization]("PrjUtilization",
 		func(e *prj.PrjUtilization) { common.GenerateID(&e.UtilizationId) }).
 		Require(func(e *prj.PrjUtilization) string { return e.UtilizationId }, "UtilizationId").
+		OptionalMoney(func(e *prj.PrjUtilization) *erp.Money { return e.Revenue }, "Revenue").
+		OptionalMoney(func(e *prj.PrjUtilization) *erp.Money { return e.Cost }, "Cost").
 		Build()
 }

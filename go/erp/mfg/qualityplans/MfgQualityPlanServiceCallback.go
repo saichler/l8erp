@@ -26,5 +26,6 @@ func newMfgQualityPlanServiceCallback() ifs.IServiceCallback {
 		Require(func(e *mfg.MfgQualityPlan) string { return e.PlanId }, "PlanId").
 		Require(func(e *mfg.MfgQualityPlan) string { return e.Name }, "Name").
 		Enum(func(e *mfg.MfgQualityPlan) int32 { return int32(e.Status) }, mfg.MfgBomStatus_name, "Status").
+		DateAfter(func(e *mfg.MfgQualityPlan) int64 { return e.ExpiryDate }, func(e *mfg.MfgQualityPlan) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

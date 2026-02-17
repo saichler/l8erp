@@ -17,6 +17,7 @@ package salesorders
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -27,5 +28,10 @@ func newSalesOrderServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesOrder) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *sales.SalesOrder) string { return e.CurrencyId }, "CurrencyId").
 		Enum(func(e *sales.SalesOrder) int32 { return int32(e.Status) }, sales.SalesOrderStatus_name, "Status").
+		OptionalMoney(func(e *sales.SalesOrder) *erp.Money { return e.Subtotal }, "Subtotal").
+		OptionalMoney(func(e *sales.SalesOrder) *erp.Money { return e.DiscountTotal }, "DiscountTotal").
+		OptionalMoney(func(e *sales.SalesOrder) *erp.Money { return e.TaxTotal }, "TaxTotal").
+		OptionalMoney(func(e *sales.SalesOrder) *erp.Money { return e.TotalAmount }, "TotalAmount").
+		DateAfter(func(e *sales.SalesOrder) int64 { return e.RequestedDeliveryDate }, func(e *sales.SalesOrder) int64 { return e.OrderDate }, "RequestedDeliveryDate", "OrderDate").
 		Build()
 }

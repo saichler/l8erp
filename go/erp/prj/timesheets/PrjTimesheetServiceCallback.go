@@ -25,5 +25,6 @@ func newPrjTimesheetServiceCallback() ifs.IServiceCallback {
 		func(e *prj.PrjTimesheet) { common.GenerateID(&e.TimesheetId) }).
 		Require(func(e *prj.PrjTimesheet) string { return e.TimesheetId }, "TimesheetId").
 		Enum(func(e *prj.PrjTimesheet) int32 { return int32(e.Status) }, prj.PrjTimesheetStatus_name, "Status").
+		DateAfter(func(e *prj.PrjTimesheet) int64 { return e.WeekEndDate }, func(e *prj.PrjTimesheet) int64 { return e.WeekStartDate }, "WeekEndDate", "WeekStartDate").
 		Build()
 }

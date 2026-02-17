@@ -26,5 +26,6 @@ func newCrmRelationshipServiceCallback() ifs.IServiceCallback {
 		Require(func(e *crm.CrmRelationship) string { return e.RelationshipId }, "RelationshipId").
 		Require(func(e *crm.CrmRelationship) string { return e.AccountId }, "AccountId").
 		Enum(func(e *crm.CrmRelationship) int32 { return int32(e.RelationshipType) }, crm.CrmRelationshipType_name, "RelationshipType").
+		DateAfter(func(e *crm.CrmRelationship) int64 { return e.EndDate }, func(e *crm.CrmRelationship) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }

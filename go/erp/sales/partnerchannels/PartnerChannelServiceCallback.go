@@ -26,5 +26,6 @@ func newPartnerChannelServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesPartnerChannel) string { return e.PartnerId }, "PartnerId").
 		Require(func(e *sales.SalesPartnerChannel) string { return e.Name }, "Name").
 		Enum(func(e *sales.SalesPartnerChannel) int32 { return int32(e.PartnerType) }, sales.SalesPartnerType_name, "PartnerType").
+		DateAfter(func(e *sales.SalesPartnerChannel) int64 { return e.EndDate }, func(e *sales.SalesPartnerChannel) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }
