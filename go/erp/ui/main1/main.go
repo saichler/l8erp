@@ -42,7 +42,7 @@ func startWebServer(port int, cert string) {
 	}
 
 	nic1 := ui.CreateVnic(common.ERP_VNET)
-	//nic2 := createVnic(common.LOGS_VNET)
+	nic2 := ui.CreateVnic(common.ERP_LOGS_VNET)
 
 	hs, ok := nic1.Resources().Services().ServiceHandler(health.ServiceName, 0)
 	if ok {
@@ -52,7 +52,7 @@ func startWebServer(port int, cert string) {
 
 	//Activate the webpoints service
 	sla := ifs.NewServiceLevelAgreement(&server.WebService{}, ifs.WebService, 0, false, nil)
-	sla.SetArgs(svr)
+	sla.SetArgs(svr, nic2)
 	nic1.Resources().Services().Activate(sla, nic1)
 
 	nic1.Resources().Logger().Info("Web Server Started!")

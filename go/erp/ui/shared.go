@@ -4,6 +4,7 @@ import (
 	"github.com/saichler/l8bus/go/overlay/vnic"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
+	"github.com/saichler/l8logfusion/go/types/l8logf"
 	"github.com/saichler/l8types/go/ifs"
 	"strconv"
 )
@@ -11,6 +12,8 @@ import (
 func CreateVnic(vnet uint32) ifs.IVNic {
 	resources := common.CreateResources("web-" + strconv.Itoa(int(vnet)))
 	resources.SysConfig().VnetPort = vnet
+
+	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&l8logf.L8File{}, "Path", "Name")
 
 	RegisterTypes(resources)
 
