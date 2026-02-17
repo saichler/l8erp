@@ -1,39 +1,42 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: erp
+  name: erp-log-agent
   labels:
-    name: erp
+    name: erp-log-agent
 
 ---
 
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  namespace: erp
-  name: erp
+  namespace: erp-log-agent
+  name: erp-log-agent
   labels:
-    app: erp
+    app: erp-log-agent
 spec:
-  #serviceName: erp
-  #replicas: 1
   selector:
     matchLabels:
-      app: erp
+      app: erp-log-agent
   template:
     metadata:
       labels:
-        app: erp
+        app: erp-log-agent
     spec:
       containers:
-        - name: erp
-          image: saichler/erp:latest
+        - name: erp-log-agent
+          image: saichler/erp-log-agent:latest
           imagePullPolicy: Always
           env:
+            - name: LOGPATH
+              value: /data/logs/erp
+            - name: LOGFILE
+              value: "*"
             - name: NODE_IP
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
+
           volumeMounts:
             - name: hdata
               mountPath: /data

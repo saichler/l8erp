@@ -47,7 +47,7 @@ func main() {
 		logfile = "*"
 	}
 
-	r := shared.ResourcesOf("logs", common.ERP_LOGS_VNET, 30, logpath)
+	r := shared.ResourcesOf("logs", common.ERP_LOGS_VNET, 30, "")
 	r.SysConfig().RemoteVnet = ip
 
 	nic := vnic.NewVirtualNetworkInterface(r, nil)

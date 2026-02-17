@@ -5,11 +5,13 @@
 | Metric | Count |
 |--------|-------|
 | Modules | 12 (HCM, FIN, SCM, Sales, MFG, CRM, PRJ, BI, DOC, ECOM, COMP, SYS) |
-| Services | 376 |
-| Protobuf Types | 788 messages, 289 enums |
+| Services | 242 (reduced from 376 after child entity consolidation) |
+| Protobuf Types | 654 messages, 289 enums (reduced from 788 messages — 134 child List types removed) |
+| Type Registrations | 244 (across shared*.go files) |
 | Mock Data Generators | All modules covered (service-level completeness verified) |
 | Desktop UI | All modules with config, columns, forms, enums, init |
 | Mobile UI | All modules with columns, forms, enums, nav config |
+| Inline Table (Child Editing) | Implemented — `f.inlineTable()` in form factory, desktop + mobile rendering |
 
 ---
 
@@ -17,7 +19,7 @@
 
 ### 1.1 Service Callbacks Are Validation-Only
 
-**319 of 376 services** (85%) use the simple `ValidationBuilder` pattern which only validates required fields and enum ranges. They have **no real business logic**.
+**185 of 242 services** (76%) use the simple `ValidationBuilder` pattern which only validates required fields and enum ranges. They have **no real business logic**.
 
 Only HCM's 57 services have custom `NewServiceCallback` implementations with actual validation logic (ValidateEnum, ValidateReference, etc.).
 
@@ -25,16 +27,16 @@ Only HCM's 57 services have custom `NewServiceCallback` implementations with act
 
 | Module | Services | Business Logic Status |
 |--------|----------|----------------------|
-| FIN (49) | All ValidationBuilder | No GL posting, no journal balancing, no period close, no intercompany |
-| SCM (44) | All ValidationBuilder | No inventory tracking, no reorder points, no lot/serial logic |
-| Sales (33) | All ValidationBuilder | No pricing engine, no order-to-delivery flow, no credit check |
-| MFG (36) | All ValidationBuilder | No BOM explosion, no MRP, no shop floor scheduling |
-| CRM (36) | All ValidationBuilder | No lead scoring, no pipeline stages, no SLA enforcement |
-| PRJ (36) | All ValidationBuilder | No project scheduling, no earned value, no resource leveling |
-| BI (24) | All ValidationBuilder | No data aggregation, no report execution, no scheduling |
-| DOC (20) | All ValidationBuilder | No version control, no check-in/check-out, no workflow |
-| ECOM (20) | All ValidationBuilder | No cart logic, no checkout, no payment processing |
-| COMP (20) | All ValidationBuilder | No compliance checks, no risk scoring, no audit trails |
+| FIN (28) | All ValidationBuilder | No GL posting, no journal balancing, no period close, no intercompany |
+| SCM (29) | All ValidationBuilder | No inventory tracking, no reorder points, no lot/serial logic |
+| Sales (17) | All ValidationBuilder | No pricing engine, no order-to-delivery flow, no credit check |
+| MFG (18) | All ValidationBuilder | No BOM explosion, no MRP, no shop floor scheduling |
+| CRM (22) | All ValidationBuilder | No lead scoring, no pipeline stages, no SLA enforcement |
+| PRJ (21) | All ValidationBuilder | No project scheduling, no earned value, no resource leveling |
+| BI (14) | All ValidationBuilder | No data aggregation, no report execution, no scheduling |
+| DOC (11) | All ValidationBuilder | No version control, no check-in/check-out, no workflow |
+| ECOM (13) | All ValidationBuilder | No cart logic, no checkout, no payment processing |
+| COMP (11) | All ValidationBuilder | No compliance checks, no risk scoring, no audit trails |
 
 ### 1.2 Missing Cross-Service Business Logic
 
@@ -70,17 +72,17 @@ Currently any status value can be set at any time.
 
 ### 1.5 Missing Cascading Operations
 
-- Deleting a parent doesn't affect children (e.g., deleting a Sales Order leaves orphan lines)
-- Closing a parent doesn't close/cancel children
-- Status changes don't propagate (approving a PO doesn't update PO lines)
+- ~~Deleting a parent doesn't affect children (e.g., deleting a Sales Order leaves orphan lines)~~ — **RESOLVED**: Child entities are now embedded `repeated` fields inside their parents. Deleting a parent automatically removes its children.
+- Closing a parent doesn't close/cancel children (for remaining independent related entities)
+- Status changes don't propagate (approving a PO doesn't update related entities)
 
 ### 1.6 ServiceCallback Auto-Generate ID — AUDITED (PASS)
 
-All 376 services include auto-generate ID on POST. The 319 ValidationBuilder callbacks pass `GenerateID` via the `setID` parameter, and all 57 custom `NewServiceCallback` callbacks also include it. The framework auto-calls `setID` on POST in `Before()`.
+All 242 services include auto-generate ID on POST. The 185 ValidationBuilder callbacks pass `GenerateID` via the `setID` parameter, and all 57 custom HCM `NewServiceCallback` callbacks also include it. The framework auto-calls `setID` on POST in `Before()`.
 
 ### 1.7 Prime Object Reference Violations — AUDITED (PASS)
 
-All 379 Prime Objects reference each other via string ID fields only. No direct `*PrimeType` or `[]*PrimeType` embeddings found across 788 protobuf messages. Allowed shared types (`*erp.Money`, `*erp.AuditInfo`, `*erp.Address`, etc.) are used correctly.
+All 242 Prime Objects reference each other via string ID fields only. No direct `*PrimeType` or `[]*PrimeType` embeddings found across 654 protobuf messages. Allowed shared types (`*erp.Money`, `*erp.AuditInfo`, `*erp.Address`, etc.) and embedded child types (`repeated ChildType`) are used correctly.
 
 ---
 
@@ -110,7 +112,7 @@ All 379 Prime Objects reference each other via string ID fields only. No direct 
 | Calendar View | Missing | HCM (leave, schedules), PRJ (milestones) |
 | Timeline/History | Missing | All modules (audit trail view) |
 | Tree/Hierarchy Grid | Missing | FIN (chart of accounts), HCM (org chart), SCM (BOM) |
-| Master-Detail Split | Missing | Sales (order + lines), SCM (PO + lines), MFG (BOM + components) |
+| Master-Detail Split | **Done** (inline table) | Sales (order + lines), SCM (PO + lines), MFG (BOM + components) — implemented via `f.inlineTable()` in parent forms |
 | Wizard/Stepper | Missing | ECOM (checkout), HCM (onboarding), FIN (period close) |
 | Dashboard Widgets | Partial | Dashboard has KPI counts only - no charts, no trends |
 
@@ -282,7 +284,7 @@ The mobile-parity rule requires that the same action produces the same result on
 
 ## 8. Module-Specific Feature Gaps
 
-### 8.1 HCM (57 services - most mature)
+### 8.1 HCM (57 services — most mature, no consolidation needed)
 
 - Payroll calculation engine (only stores payslips, doesn't compute them)
 - Benefits enrollment workflow (open enrollment periods, eligibility rules)
@@ -292,7 +294,7 @@ The mobile-parity rule requires that the same action produces the same result on
 - Org chart visualization
 - Employee self-service portal
 
-### 8.2 FIN (49 services)
+### 8.2 FIN (28 services, was 49 — 21 children consolidated)
 
 - Double-entry journal enforcement (debit = credit)
 - Period open/close management
@@ -303,7 +305,7 @@ The mobile-parity rule requires that the same action produces the same result on
 - Tax calculation engine
 - Financial statement generation
 
-### 8.3 SCM (44 services)
+### 8.3 SCM (29 services, was 44 — 15 children consolidated)
 
 - Inventory quantity tracking (on-hand, committed, available)
 - Lot/serial number tracking
@@ -313,7 +315,7 @@ The mobile-parity rule requires that the same action produces the same result on
 - Goods receipt/issue processing
 - Quality inspection workflow
 
-### 8.4 Sales (33 services)
+### 8.4 Sales (17 services, was 33 — 16 children consolidated)
 
 - Pricing engine (price lists, quantity breaks, discounts, promotions)
 - Available-to-promise (ATP) checking
@@ -323,7 +325,7 @@ The mobile-parity rule requires that the same action produces the same result on
 - Sales tax calculation
 - Revenue recognition
 
-### 8.5 MFG (36 services)
+### 8.5 MFG (18 services, was 36 — 18 children consolidated)
 
 - BOM explosion (multi-level)
 - MRP (Material Requirements Planning) engine
@@ -333,7 +335,7 @@ The mobile-parity rule requires that the same action produces the same result on
 - Cost rollup
 - Quality control integration
 
-### 8.6 CRM (36 services)
+### 8.6 CRM (22 services, was 36 — 14 children consolidated)
 
 - Lead scoring engine
 - Lead-to-opportunity conversion
@@ -343,7 +345,7 @@ The mobile-parity rule requires that the same action produces the same result on
 - Customer 360 view
 - Campaign ROI tracking
 
-### 8.7 PRJ (36 services)
+### 8.7 PRJ (21 services, was 36 — 15 children consolidated)
 
 - Critical path calculation
 - Resource leveling
@@ -353,7 +355,7 @@ The mobile-parity rule requires that the same action produces the same result on
 - Milestone billing triggers
 - Project template cloning
 
-### 8.8 BI (24 services)
+### 8.8 BI (14 services, was 24 — 10 children consolidated)
 
 - Data aggregation/ETL engine
 - Dashboard builder (drag-and-drop)
@@ -363,7 +365,7 @@ The mobile-parity rule requires that the same action produces the same result on
 - KPI alerting
 - Ad-hoc query builder
 
-### 8.9 DOC (20 services)
+### 8.9 DOC (11 services, was 20 — 9 children consolidated)
 
 - File storage backend
 - Version history
@@ -373,7 +375,7 @@ The mobile-parity rule requires that the same action produces the same result on
 - Retention policies
 - Digital signatures
 
-### 8.10 ECOM (20 services)
+### 8.10 ECOM (13 services, was 20 — 7 children consolidated)
 
 - Shopping cart logic
 - Checkout flow
@@ -383,7 +385,7 @@ The mobile-parity rule requires that the same action produces the same result on
 - Order tracking
 - Product catalog (images, variants, categories)
 
-### 8.11 COMP (20 services)
+### 8.11 COMP (11 services, was 20 — 9 children consolidated)
 
 - Risk scoring engine
 - Compliance check automation
@@ -407,11 +409,11 @@ Spot-checked 41 fields across 6 modules (Sales, SCM, CRM, MFG, DOC, FIN). Zero m
 
 ### 9.3 UI Type Registration — AUDITED (PASS)
 
-All 376 service types registered via `common.RegisterType` in `go/erp/ui/main.go` with primary key decorators. No missing registrations.
+All 242 service types registered via `RegisterType` across `shared*.go` files (244 total registrations including SYS types) with primary key decorators. No missing registrations.
 
 ### 9.4 Mock Data Service-Level Completeness — AUDITED (PASS)
 
-Generator counts match service counts for all 11 modules: HCM 57/57, FIN 49/49, SCM 44/44, Sales 33/33, MFG 36/36, CRM 36/36, PRJ 36/36, BI 24/24, DOC 20/20, ECOM 20/20, COMP 20/20. Note: HCM files use sub-module names (`gen_employees.go`, `gen_payroll.go`, etc.) rather than the `gen_hcm_` prefix.
+Generator counts match service counts for all 11 modules (post-consolidation): HCM 57/57, FIN 28/28, SCM 29/29, Sales 17/17, MFG 18/18, CRM 22/22, PRJ 21/21, BI 14/14, DOC 11/11, ECOM 13/13, COMP 11/11. Child entity mock data is now generated inline within parent generators. Note: HCM files use sub-module names (`gen_employees.go`, `gen_payroll.go`, etc.) rather than the `gen_hcm_` prefix.
 
 ---
 
@@ -419,12 +421,21 @@ Generator counts match service counts for all 11 modules: HCM 57/57, FIN 49/49, 
 
 ### Phase A: Structural Integrity Audit — COMPLETE ✓
 All 6 audit items passed with no issues found:
-1. ~~Audit all 376 services for auto-generate ID in ServiceCallback `Before()` methods~~ — **PASS (376/376)**
-2. ~~Audit all 788 protobuf messages for Prime Object reference violations~~ — **PASS (0 violations)**
+1. ~~Audit all services for auto-generate ID in ServiceCallback `Before()` methods~~ — **PASS (242/242)**
+2. ~~Audit all protobuf messages for Prime Object reference violations~~ — **PASS (0 violations)**
 3. ~~Verify all `lookupModel` references have matching reference registry entries~~ — **PASS (all registered)**
 4. ~~Re-audit JS column/form field names against protobuf JSON names~~ — **PASS (41/41 spot-checked)**
-5. ~~Verify all service types are registered in `go/erp/ui/main.go`~~ — **PASS (376/376)**
+5. ~~Verify all service types are registered in shared*.go~~ — **PASS (244 registrations)**
 6. ~~Verify mock data generator coverage at the service level (not just module level)~~ — **PASS (all 11 modules)**
+
+### Phase A.5: Child Entity Consolidation — COMPLETE ✓
+134 child entities consolidated into their parent types as embedded `repeated` fields:
+- **Services reduced**: 376 → 242 (134 child service directories removed)
+- **Proto messages reduced**: 788 → 654 (134 child List types removed)
+- **Inline table UI**: `f.inlineTable()` form factory method + desktop/mobile rendering implemented
+- **All 10 non-HCM modules** consolidated (Sales 16, FIN 21, SCM 15, MFG 18, CRM 14, PRJ 15, ECOM 7, BI 10, DOC 9, COMP 9)
+- **HCM**: Already correct — no changes needed
+- See `plans/PLAN-CHILD-ENTITY-CONSOLIDATION.md` for full details
 
 ### Phase B: Core Business Logic Foundation
 1. Status transition enforcement framework (reusable across all modules)
@@ -435,7 +446,7 @@ All 6 audit items passed with no issues found:
 
 ### Phase C: Essential UI Components
 1. Charts/visualization library integration (for BI and Dashboard)
-2. Master-detail view component (for orders + lines pattern)
+2. ~~Master-detail view component (for orders + lines pattern)~~ — **DONE**: Implemented as `f.inlineTable()` during child entity consolidation
 3. Data export (CSV at minimum)
 4. File upload component (for DOC module)
 5. Tree/hierarchy view (for FIN chart of accounts, HCM org chart)
