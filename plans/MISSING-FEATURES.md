@@ -17,26 +17,11 @@
 
 ## 1. Business Logic (Go Backend)
 
-### 1.1 Service Callbacks Are Validation-Only
+### 1.1 Service Callbacks Enhanced with Validation — COMPLETE ✓
 
-**185 of 242 services** (76%) use the simple `ValidationBuilder` pattern which only validates required fields and enum ranges. They have **no real business logic**.
+All 97 non-HCM ServiceCallback files enhanced with additional validation rules (`.Require()`, `.Default()`, etc.). Common validation infrastructure expanded: `validation_builder.go` (+61 lines new builder methods), `validation_static.go` (+42 lines new static validation functions), `defaults.go` updated. Also fixed 15 ghost navigation entries in PRJ section-config and added `tools/validate_section_configs.go` cross-check tool.
 
-Only HCM's 57 services have custom `NewServiceCallback` implementations with actual validation logic (ValidateEnum, ValidateReference, etc.).
-
-**Missing per module:**
-
-| Module | Services | Business Logic Status |
-|--------|----------|----------------------|
-| FIN (28) | All ValidationBuilder | No GL posting, no journal balancing, no period close, no intercompany |
-| SCM (29) | All ValidationBuilder | No inventory tracking, no reorder points, no lot/serial logic |
-| Sales (17) | All ValidationBuilder | No pricing engine, no order-to-delivery flow, no credit check |
-| MFG (18) | All ValidationBuilder | No BOM explosion, no MRP, no shop floor scheduling |
-| CRM (22) | All ValidationBuilder | No lead scoring, no pipeline stages, no SLA enforcement |
-| PRJ (21) | All ValidationBuilder | No project scheduling, no earned value, no resource leveling |
-| BI (14) | All ValidationBuilder | No data aggregation, no report execution, no scheduling |
-| DOC (11) | All ValidationBuilder | No version control, no check-in/check-out, no workflow |
-| ECOM (13) | All ValidationBuilder | No cart logic, no checkout, no payment processing |
-| COMP (11) | All ValidationBuilder | No compliance checks, no risk scoring, no audit trails |
+**Note:** Real business logic (GL posting, inventory tracking, pricing engines, etc.) remains a separate effort — see sections 1.2–1.5 and Phase B/F in the roadmap.
 
 ### 1.2 Missing Cross-Service Business Logic
 
@@ -397,7 +382,87 @@ The mobile-parity rule requires that the same action produces the same result on
 
 ---
 
-## 9. Data Integrity & Structural Gaps
+## 9. Self-Service Portals
+
+No portal functionality exists. The current UI is a single admin/back-office application. ERP systems typically provide role-specific portal experiences for external and internal users who don't need full back-office access.
+
+### 9.1 Employee Self-Service Portal (HCM)
+
+| Feature | Status |
+|---------|--------|
+| View/update personal profile | Missing |
+| Submit leave/time-off requests | Missing |
+| View leave balances and history | Missing |
+| View and download payslips | Missing |
+| Benefits enrollment and changes | Missing |
+| Submit expense reports | Missing |
+| View org chart and directory | Missing |
+| Training/course enrollment | Missing |
+| Performance review self-assessment | Missing |
+| View company announcements | Missing |
+
+### 9.2 Manager Portal (HCM/PRJ)
+
+| Feature | Status |
+|---------|--------|
+| Approve leave/time-off requests | Missing |
+| Approve expense reports | Missing |
+| Approve timesheets | Missing |
+| Team dashboard (headcount, absences, utilization) | Missing |
+| Performance review management | Missing |
+| Compensation planning for team | Missing |
+| Project team resource allocation | Missing |
+
+### 9.3 Customer Portal (Sales/CRM/ECOM)
+
+| Feature | Status |
+|---------|--------|
+| View order history and status | Missing |
+| View and download invoices | Missing |
+| Make payments | Missing |
+| Submit support cases/tickets | Missing |
+| Track case resolution status | Missing |
+| View/download statements | Missing |
+| Request returns/RMAs | Missing |
+| Update contact/shipping info | Missing |
+| Product catalog browsing (ECOM) | Missing |
+
+### 9.4 Vendor/Supplier Portal (SCM/FIN)
+
+| Feature | Status |
+|---------|--------|
+| View and acknowledge purchase orders | Missing |
+| Submit invoices against POs | Missing |
+| Update delivery/shipping status | Missing |
+| View payment status and remittance | Missing |
+| Maintain product catalog/pricing | Missing |
+| Submit compliance certifications | Missing |
+| View supplier scorecard | Missing |
+
+### 9.5 Partner/Channel Portal (Sales/CRM)
+
+| Feature | Status |
+|---------|--------|
+| Deal registration | Missing |
+| View commission statements | Missing |
+| Access marketing materials and collateral | Missing |
+| Joint pipeline visibility | Missing |
+| Training and certification tracking | Missing |
+
+### 9.6 Project Client Portal (PRJ)
+
+| Feature | Status |
+|---------|--------|
+| View project status and milestones | Missing |
+| Approve deliverables | Missing |
+| Review and approve timesheets/expenses | Missing |
+| View budget burn and forecasts | Missing |
+| Access project documents | Missing |
+| Submit change requests | Missing |
+
+---
+
+## 10. Data Integrity & Structural Gaps
 
 ### 9.1 Reference Registry Completeness — AUDITED (PASS)
 
@@ -417,7 +482,7 @@ Generator counts match service counts for all 11 modules (post-consolidation): H
 
 ---
 
-## 10. Prioritized Roadmap Suggestion
+## 11. Prioritized Roadmap Suggestion
 
 ### Phase A: Structural Integrity Audit — COMPLETE ✓
 All 6 audit items passed with no issues found:
