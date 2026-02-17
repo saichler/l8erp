@@ -45,7 +45,7 @@ var dbInstance *sql.DB
 var dbMtx = &sync.Mutex{}
 
 func CreateResources(alias string) ifs.IResources {
-	//logger.SetLogToFile(alias)
+	logger.SetLogToFile("/data/logs/erp", alias)
 	log := logger.NewLoggerImpl(&logger.FmtLogMethod{})
 	log.SetLogLevel(ifs.Info_Level)
 	res := resources.NewResources(log)
@@ -60,6 +60,7 @@ func CreateResources(alias string) ifs.IResources {
 		TxQueueSize:              resources.DEFAULT_QUEUE_SIZE,
 		LocalAlias:               alias,
 		VnetPort:                 uint32(ERP_VNET),
+		LogsDirectory:            "/data/logs/erp",
 		KeepAliveIntervalSeconds: 30}
 	res.Set(conf)
 
