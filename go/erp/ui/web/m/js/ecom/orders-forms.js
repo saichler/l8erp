@@ -28,35 +28,28 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('shippingAmount', 'Shipping Amount'),
                 ...f.money('discountAmount', 'Discount Amount'),
                 ...f.money('totalAmount', 'Total Amount'),
-                ...f.reference('shippingAddress', 'Shipping Address', 'EcomCustomerAddress'),
-                ...f.reference('billingAddress', 'Billing Address', 'EcomCustomerAddress'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        EcomOrderLine: f.form('Order Line', [
-            f.section('Line Details', [
-                ...f.reference('orderId', 'Order', 'EcomOrder', true),
-                ...f.reference('productId', 'Product', 'EcomProduct', true),
-                ...f.text('sku', 'SKU'),
-                ...f.text('name', 'Name', true),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.money('unitPrice', 'Unit Price'),
-                ...f.money('discountAmount', 'Discount Amount'),
-                ...f.money('taxAmount', 'Tax Amount'),
-                ...f.money('lineTotal', 'Line Total')
-            ])
-        ]),
-
-        EcomOrderStatusHistory: f.form('Order Status History', [
-            f.section('Status Change Details', [
-                ...f.reference('orderId', 'Order', 'EcomOrder', true),
-                ...f.select('previousStatus', 'Previous Status', enums.ORDER_STATUS),
-                ...f.select('newStatus', 'New Status', enums.ORDER_STATUS, true),
-                ...f.date('changedAt', 'Changed At', true),
-                ...f.text('changedBy', 'Changed By'),
-                ...f.textarea('notes', 'Notes'),
-                ...f.checkbox('notifyCustomer', 'Notify Customer')
+            ]),
+            f.section('Order Lines', [
+                ...f.inlineTable('lines', 'Order Lines', [
+                    { key: 'lineId', label: 'ID', hidden: true },
+                    { key: 'productId', label: 'Product', type: 'text' },
+                    { key: 'sku', label: 'SKU', type: 'text' },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'quantity', label: 'Qty', type: 'number' },
+                    { key: 'weight', label: 'Weight', type: 'number' },
+                    { key: 'isGift', label: 'Gift', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Status History', [
+                ...f.inlineTable('statusHistory', 'Status History', [
+                    { key: 'statusId', label: 'ID', hidden: true },
+                    { key: 'previousStatus', label: 'Previous Status', type: 'text' },
+                    { key: 'newStatus', label: 'New Status', type: 'text' },
+                    { key: 'changedBy', label: 'Changed By', type: 'text' },
+                    { key: 'notes', label: 'Notes', type: 'text' },
+                    { key: 'notifyCustomer', label: 'Notify', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -72,21 +65,18 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('refundAmount', 'Refund Amount'),
                 ...f.textarea('reason', 'Reason'),
                 ...f.textarea('notes', 'Notes')
-            ])
-        ]),
-
-        EcomReturnLine: f.form('Return Line', [
-            f.section('Return Line Details', [
-                ...f.reference('returnId', 'Return', 'EcomReturn', true),
-                ...f.reference('productId', 'Product', 'EcomProduct', true),
-                ...f.reference('orderLineId', 'Order Line', 'EcomOrderLine'),
-                ...f.text('sku', 'SKU'),
-                ...f.text('name', 'Name', true),
-                ...f.number('quantity', 'Quantity', true),
-                ...f.money('refundAmount', 'Refund Amount'),
-                ...f.textarea('reason', 'Reason'),
-                ...f.text('condition', 'Condition'),
-                ...f.checkbox('restock', 'Restock')
+            ]),
+            f.section('Return Lines', [
+                ...f.inlineTable('lines', 'Return Lines', [
+                    { key: 'lineId', label: 'ID', hidden: true },
+                    { key: 'productId', label: 'Product', type: 'text' },
+                    { key: 'sku', label: 'SKU', type: 'text' },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'quantity', label: 'Qty', type: 'number' },
+                    { key: 'reason', label: 'Reason', type: 'text' },
+                    { key: 'condition', label: 'Condition', type: 'text' },
+                    { key: 'restock', label: 'Restock', type: 'checkbox' }
+                ])
             ])
         ])
     };

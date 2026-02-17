@@ -47,57 +47,10 @@ limitations under the License.
             ...col.boolean('isActive', 'Active')
         ],
 
-        BiReportSchedule: [
-            ...col.id('scheduleId'),
-            ...col.col('reportId', 'Report'),
-            ...col.col('name', 'Name'),
-            ...col.status('frequency', 'Frequency', enums.SCHEDULE_FREQUENCY_VALUES, render.scheduleFrequency),
-            ...col.col('runTime', 'Run Time'),
-            ...col.date('nextRun', 'Next Run'),
-            ...col.date('lastRun', 'Last Run'),
-            ...col.enum('outputFormat', 'Format', null, render.exportFormat),
-            ...col.boolean('isActive', 'Active')
-        ],
-
-        BiReportExecution: [
-            ...col.id('executionId'),
-            ...col.col('reportId', 'Report'),
-            ...col.col('scheduleId', 'Schedule'),
-            ...col.status('status', 'Status', enums.EXECUTION_STATUS_VALUES, render.executionStatus),
-            ...col.date('startTime', 'Start Time'),
-            ...col.date('endTime', 'End Time'),
-            ...col.col('executedBy', 'Executed By'),
-            ...col.col('rowCount', 'Rows'),
-            ...col.enum('outputFormat', 'Format', null, render.exportFormat)
-        ],
-
-        BiReportAccess: [
-            ...col.id('accessId'),
-            ...col.col('reportId', 'Report'),
-            ...col.col('principalId', 'Principal'),
-            ...col.col('principalType', 'Type'),
-            ...col.status('accessLevel', 'Access Level', enums.ACCESS_LEVEL_VALUES, render.accessLevel),
-            ...col.date('grantedDate', 'Granted'),
-            ...col.col('grantedBy', 'Granted By'),
-            ...col.date('expiryDate', 'Expires')
-        ],
-
-        BiReportSubscription: [
-            ...col.id('subscriptionId'),
-            ...col.col('reportId', 'Report'),
-            ...col.col('scheduleId', 'Schedule'),
-            ...col.col('subscriberId', 'Subscriber'),
-            ...col.enum('format', 'Format', null, render.exportFormat),
-            ...col.col('deliveryEmail', 'Email'),
-            ...col.boolean('includeEmpty', 'Include Empty'),
-            ...col.boolean('isActive', 'Active')
-        ]
     };
 
     MobileBiReporting.primaryKeys = {
-        BiReport: 'reportId', BiReportTemplate: 'templateId',
-        BiReportSchedule: 'scheduleId', BiReportExecution: 'executionId',
-        BiReportAccess: 'accessId', BiReportSubscription: 'subscriptionId'
+        BiReport: 'reportId', BiReportTemplate: 'templateId'
     };
 
 })();

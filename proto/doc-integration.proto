@@ -27,11 +27,9 @@ import "api.proto";
 // ATTACHMENT
 // =====================
 
-// @PrimeObject
 // DocAttachment links a document to any entity in any module
 message DocAttachment {
   string attachment_id = 1;
-  string document_id = 2;                   // cross-ref: DocDocument
   string entity_type = 3;                   // e.g., "SalesOrder", "Employee", "Invoice"
   string entity_id = 4;                     // ID of the entity
   string module = 5;                        // e.g., "sales", "hcm", "fin"
@@ -44,10 +42,6 @@ message DocAttachment {
   erp.AuditInfo audit_info = 12;
 }
 
-message DocAttachmentList {
-  repeated DocAttachment list = 1;
-  l8api.L8MetaData metadata = 2;
-}
 
 // =====================
 // TEMPLATE
@@ -73,6 +67,7 @@ message DocTemplate {
   map<string, string> default_values = 15;
   map<string, string> custom_fields = 16;
   erp.AuditInfo audit_info = 17;
+  repeated DocTemplateField fields = 18;
 }
 
 message DocTemplateList {
@@ -84,11 +79,9 @@ message DocTemplateList {
 // TEMPLATE FIELD
 // =====================
 
-// @PrimeObject
 // DocTemplateField represents a field in a document template
 message DocTemplateField {
   string field_id = 1;
-  string template_id = 2;                   // cross-ref: DocTemplate
   string name = 3;
   string label = 4;
   string description = 5;
@@ -105,10 +98,6 @@ message DocTemplateField {
   erp.AuditInfo audit_info = 16;
 }
 
-message DocTemplateFieldList {
-  repeated DocTemplateField list = 1;
-  l8api.L8MetaData metadata = 2;
-}
 
 // =====================
 // EMAIL CAPTURE

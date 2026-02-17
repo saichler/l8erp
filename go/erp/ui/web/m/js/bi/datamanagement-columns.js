@@ -47,17 +47,6 @@ limitations under the License.
             ...col.boolean('isActive', 'Active')
         ],
 
-        BiETLSchedule: [
-            ...col.id('scheduleId'),
-            ...col.col('name', 'Name'),
-            ...col.col('jobId', 'Job'),
-            ...col.status('frequency', 'Frequency', enums.SCHEDULE_FREQUENCY_VALUES, render.scheduleFrequency),
-            ...col.col('runTime', 'Run Time'),
-            ...col.date('nextRun', 'Next Run'),
-            ...col.date('lastRun', 'Last Run'),
-            ...col.boolean('isActive', 'Active')
-        ],
-
         BiDataQualityRule: [
             ...col.id('ruleId'),
             ...col.col('name', 'Name'),
@@ -97,7 +86,7 @@ limitations under the License.
 
     MobileBiDataManagement.primaryKeys = {
         BiDataSource: 'sourceId', BiETLJob: 'jobId',
-        BiETLSchedule: 'scheduleId', BiDataQualityRule: 'ruleId',
+        BiDataQualityRule: 'ruleId',
         BiMasterDataConfig: 'configId', BiDataGovernance: 'governanceId'
     };
 

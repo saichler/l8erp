@@ -167,9 +167,6 @@ func generateResourceSkills(store *MockDataStore) []*prj.PrjResourceSkill {
 	}
 
 	for i := 0; i < 50; i++ {
-		// Resource assignment
-		resourceID := pickRef(store.PrjResourceIDs, i)
-
 		// Skill name from data array
 		skillName := prjSkillNames[i%len(prjSkillNames)]
 
@@ -202,7 +199,6 @@ func generateResourceSkills(store *MockDataStore) []*prj.PrjResourceSkill {
 
 		skills[i] = &prj.PrjResourceSkill{
 			SkillId:             genID("rskill", i),
-			ResourceId:          resourceID,
 			SkillName:           skillName,
 			SkillCategory:       skillCategories[i%len(skillCategories)],
 			ProficiencyLevel:    proficiencyLevel,

@@ -4,24 +4,14 @@ import (
 	"github.com/saichler/l8erp/go/erp/bi/analysismodels"
 	"github.com/saichler/l8erp/go/erp/bi/benchmarks"
 	"github.com/saichler/l8erp/go/erp/bi/dashboards"
-	"github.com/saichler/l8erp/go/erp/bi/dashboardshares"
-	"github.com/saichler/l8erp/go/erp/bi/dashboardwidgets"
 	"github.com/saichler/l8erp/go/erp/bi/datacubes"
 	"github.com/saichler/l8erp/go/erp/bi/datagovernances"
 	"github.com/saichler/l8erp/go/erp/bi/dataqualityrules"
 	"github.com/saichler/l8erp/go/erp/bi/datasources"
-	"github.com/saichler/l8erp/go/erp/bi/drilldowns"
 	"github.com/saichler/l8erp/go/erp/bi/etljobs"
-	"github.com/saichler/l8erp/go/erp/bi/etlschedules"
 	"github.com/saichler/l8erp/go/erp/bi/kpis"
-	"github.com/saichler/l8erp/go/erp/bi/kpithresholds"
 	"github.com/saichler/l8erp/go/erp/bi/masterdataconfigs"
-	"github.com/saichler/l8erp/go/erp/bi/predictions"
-	"github.com/saichler/l8erp/go/erp/bi/reportaccesses"
-	"github.com/saichler/l8erp/go/erp/bi/reportexecutions"
 	"github.com/saichler/l8erp/go/erp/bi/reports"
-	"github.com/saichler/l8erp/go/erp/bi/reportschedules"
-	"github.com/saichler/l8erp/go/erp/bi/reportsubscriptions"
 	"github.com/saichler/l8erp/go/erp/bi/reporttemplates"
 	"github.com/saichler/l8erp/go/erp/bi/scenarios"
 	"github.com/saichler/l8erp/go/erp/bi/trendanalyses"
@@ -41,12 +31,6 @@ func testServiceHandlersBI(t *testing.T, vnic ifs.IVNic) {
 	if h, ok := dashboards.BiDashboards(vnic); !ok || h == nil {
 		log.Fail(t, "BiDashboard service handler not found")
 	}
-	if h, ok := dashboardshares.BiDashboardShares(vnic); !ok || h == nil {
-		log.Fail(t, "BiDashboardShare service handler not found")
-	}
-	if h, ok := dashboardwidgets.BiDashboardWidgets(vnic); !ok || h == nil {
-		log.Fail(t, "BiDashboardWidget service handler not found")
-	}
 	if h, ok := datacubes.BiDataCubes(vnic); !ok || h == nil {
 		log.Fail(t, "BiDataCube service handler not found")
 	}
@@ -59,41 +43,17 @@ func testServiceHandlersBI(t *testing.T, vnic ifs.IVNic) {
 	if h, ok := datasources.BiDataSources(vnic); !ok || h == nil {
 		log.Fail(t, "BiDataSource service handler not found")
 	}
-	if h, ok := drilldowns.BiDrilldowns(vnic); !ok || h == nil {
-		log.Fail(t, "BiDrilldown service handler not found")
-	}
 	if h, ok := etljobs.BiETLJobs(vnic); !ok || h == nil {
 		log.Fail(t, "BiETLJob service handler not found")
-	}
-	if h, ok := etlschedules.BiETLSchedules(vnic); !ok || h == nil {
-		log.Fail(t, "BiETLSchedule service handler not found")
 	}
 	if h, ok := kpis.BiKPIs(vnic); !ok || h == nil {
 		log.Fail(t, "BiKPI service handler not found")
 	}
-	if h, ok := kpithresholds.BiKPIThresholds(vnic); !ok || h == nil {
-		log.Fail(t, "BiKPIThreshold service handler not found")
-	}
 	if h, ok := masterdataconfigs.BiMasterDataConfigs(vnic); !ok || h == nil {
 		log.Fail(t, "BiMasterDataConfig service handler not found")
 	}
-	if h, ok := predictions.BiPredictions(vnic); !ok || h == nil {
-		log.Fail(t, "BiPrediction service handler not found")
-	}
-	if h, ok := reportaccesses.BiReportAccesses(vnic); !ok || h == nil {
-		log.Fail(t, "BiReportAccess service handler not found")
-	}
-	if h, ok := reportexecutions.BiReportExecutions(vnic); !ok || h == nil {
-		log.Fail(t, "BiReportExecution service handler not found")
-	}
 	if h, ok := reports.BiReports(vnic); !ok || h == nil {
 		log.Fail(t, "BiReport service handler not found")
-	}
-	if h, ok := reportschedules.BiReportSchedules(vnic); !ok || h == nil {
-		log.Fail(t, "BiReportSchedule service handler not found")
-	}
-	if h, ok := reportsubscriptions.BiReportSubscriptions(vnic); !ok || h == nil {
-		log.Fail(t, "BiReportSubscription service handler not found")
 	}
 	if h, ok := reporttemplates.BiReportTemplates(vnic); !ok || h == nil {
 		log.Fail(t, "BiReportTemplate service handler not found")

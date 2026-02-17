@@ -49,32 +49,6 @@ limitations under the License.
             ...col.boolean('repeatFinding', 'Repeat')
         ],
 
-        CompRemediationAction: [
-            ...col.id('actionId'),
-            ...col.col('actionNumber', 'Number'),
-            ...col.col('title', 'Title'),
-            ...col.col('findingId', 'Finding'),
-            ...col.status('status', 'Status', enums.REMEDIATION_STATUS_VALUES, render.remediationStatus),
-            ...col.col('ownerId', 'Owner'),
-            ...col.date('dueDate', 'Due Date'),
-            ...col.custom('percentComplete', 'Progress', (item) => item.percentComplete ? item.percentComplete + '%' : '0%'),
-            ...col.boolean('isOverdue', 'Overdue')
-        ],
-
-        CompAuditReport: [
-            ...col.id('reportId'),
-            ...col.col('reportNumber', 'Number'),
-            ...col.col('title', 'Title'),
-            ...col.col('auditScheduleId', 'Audit'),
-            ...col.status('status', 'Status', enums.AUDIT_STATUS_VALUES, render.auditStatus),
-            ...col.col('overallOpinion', 'Opinion'),
-            ...col.col('findingsCritical', 'Critical'),
-            ...col.col('findingsHigh', 'High'),
-            ...col.col('findingsMedium', 'Medium'),
-            ...col.col('findingsLow', 'Low'),
-            ...col.date('finalDate', 'Final Date')
-        ],
-
         CompComplianceReport: [
             ...col.id('reportId'),
             ...col.col('reportNumber', 'Number'),
@@ -92,8 +66,6 @@ limitations under the License.
     MobileCompAudit.primaryKeys = {
         CompAuditSchedule: 'scheduleId',
         CompAuditFinding: 'findingId',
-        CompRemediationAction: 'actionId',
-        CompAuditReport: 'reportId',
         CompComplianceReport: 'reportId'
     };
 

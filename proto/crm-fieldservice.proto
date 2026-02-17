@@ -53,6 +53,8 @@ message CrmServiceOrder {
   string owner_id = 22;                    // cross-ref: HCM Employee
   map<string, string> custom_fields = 23;
   erp.AuditInfo audit_info = 24;
+  repeated CrmServicePart parts = 25;
+  repeated CrmServiceVisit visits = 26;
 }
 
 message CrmServiceOrderList {
@@ -136,11 +138,9 @@ message CrmServiceScheduleList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// CrmServicePart represents a part used in a service order
+// CrmServicePart represents a part used in a service order (child of CrmServiceOrder)
 message CrmServicePart {
   string part_id = 1;
-  string service_order_id = 2;             // cross-ref: CrmServiceOrder
   string item_id = 3;                      // cross-ref: SCM Item
   string item_name = 4;
   double quantity = 5;
@@ -154,16 +154,10 @@ message CrmServicePart {
   erp.AuditInfo audit_info = 13;
 }
 
-message CrmServicePartList {
-  repeated CrmServicePart list = 1;
-  l8api.L8MetaData metadata = 2;
-}
 
-// @PrimeObject
-// CrmServiceVisit represents a field service visit
+// CrmServiceVisit represents a field service visit (child of CrmServiceOrder)
 message CrmServiceVisit {
   string visit_id = 1;
-  string service_order_id = 2;             // cross-ref: CrmServiceOrder
   string technician_id = 3;                // cross-ref: CrmTechnician
   CrmVisitStatus status = 4;
   int64 scheduled_arrival = 5;
@@ -182,7 +176,3 @@ message CrmServiceVisit {
   erp.AuditInfo audit_info = 18;
 }
 
-message CrmServiceVisitList {
-  repeated CrmServiceVisit list = 1;
-  l8api.L8MetaData metadata = 2;
-}

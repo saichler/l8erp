@@ -68,6 +68,7 @@ message BiAnalysisModel {
   int64 last_prediction = 15;
   string owner_id = 16;                     // cross-ref: HCM Employee
   map<string, string> custom_fields = 17;
+  repeated BiPrediction predictions = 19;
   erp.AuditInfo audit_info = 18;
 }
 
@@ -76,11 +77,9 @@ message BiAnalysisModelList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // BiPrediction represents a prediction result
 message BiPrediction {
   string prediction_id = 1;
-  string model_id = 2;                      // cross-ref: BiAnalysisModel
   string name = 3;
   string description = 4;
   int64 prediction_date = 5;
@@ -91,11 +90,6 @@ message BiPrediction {
   string notes = 10;
   map<string, string> custom_fields = 11;
   erp.AuditInfo audit_info = 12;
-}
-
-message BiPredictionList {
-  repeated BiPrediction list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject

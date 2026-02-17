@@ -22,7 +22,7 @@ import (
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-// generateCampaigns creates marketing campaign records
+// generateCampaigns creates marketing campaign records with embedded members, responses, and ROIs
 func generateCampaigns(store *MockDataStore) []*crm.CrmCampaign {
 	types := []crm.CrmCampaignType{
 		crm.CrmCampaignType_CRM_CAMPAIGN_TYPE_EMAIL,
@@ -36,7 +36,20 @@ func generateCampaigns(store *MockDataStore) []*crm.CrmCampaign {
 		crm.CrmCampaignStatus_CRM_CAMPAIGN_STATUS_ACTIVE,
 		crm.CrmCampaignStatus_CRM_CAMPAIGN_STATUS_COMPLETED,
 	}
+	memberStatuses := []crm.CrmCampaignMemberStatus{
+		crm.CrmCampaignMemberStatus_CRM_CAMPAIGN_MEMBER_STATUS_SENT,
+		crm.CrmCampaignMemberStatus_CRM_CAMPAIGN_MEMBER_STATUS_RESPONDED,
+		crm.CrmCampaignMemberStatus_CRM_CAMPAIGN_MEMBER_STATUS_CONVERTED,
+	}
+	responseTypes := []crm.CrmResponseType{
+		crm.CrmResponseType_CRM_RESPONSE_TYPE_OPENED,
+		crm.CrmResponseType_CRM_RESPONSE_TYPE_CLICKED,
+		crm.CrmResponseType_CRM_RESPONSE_TYPE_RESPONDED,
+		crm.CrmResponseType_CRM_RESPONSE_TYPE_CONVERTED,
+	}
 
+	memberIdx := 1
+	respIdx := 1
 	campaigns := make([]*crm.CrmCampaign, len(crmCampaignNames))
 	for i, name := range crmCampaignNames {
 		ownerID := pickRef(store.EmployeeIDs, i)
@@ -59,6 +72,68 @@ func generateCampaigns(store *MockDataStore) []*crm.CrmCampaign {
 			status = statuses[2]
 		}
 
+		// Embedded members (3-7 per campaign)
+		numMembers := rand.Intn(5) + 3
+		members := make([]*crm.CrmCampaignMember, numMembers)
+		for j := 0; j < numMembers; j++ {
+			contactID := pickRef(store.CrmContactIDs, memberIdx-1)
+			listID := pickRef(store.CrmMarketingListIDs, memberIdx-1)
+			mStatus := memberStatuses[(memberIdx-1)%len(memberStatuses)]
+			hasResponded := mStatus != crm.CrmCampaignMemberStatus_CRM_CAMPAIGN_MEMBER_STATUS_SENT
+
+			members[j] = &crm.CrmCampaignMember{
+				MemberId:           fmt.Sprintf("cmpgmbr-%03d", memberIdx),
+				ContactId:          contactID,
+				Status:             mStatus,
+				FirstRespondedDate: time.Now().AddDate(0, 0, -rand.Intn(14)).Unix(),
+				HasResponded:       hasResponded,
+				SourceListId:       listID,
+				AuditInfo:          createAuditInfo(),
+			}
+			memberIdx++
+		}
+
+		// Embedded responses (~half of members)
+		responses := make([]*crm.CrmCampaignResponse, 0, numMembers/2)
+		for j, member := range members {
+			if j%2 == 0 {
+				responses = append(responses, &crm.CrmCampaignResponse{
+					ResponseId:       fmt.Sprintf("cmpgrsp-%03d", respIdx),
+					CampaignMemberId: member.MemberId,
+					ResponseType:     responseTypes[(respIdx-1)%len(responseTypes)],
+					ResponseDate:     time.Now().AddDate(0, 0, -rand.Intn(14)).Unix(),
+					Details:          fmt.Sprintf("Response %d details", respIdx),
+					RevenueValue:     randomMoney(store, 100, 10000),
+					AuditInfo:        createAuditInfo(),
+				})
+				respIdx++
+			}
+		}
+
+		// Embedded ROI (1 per campaign)
+		totalCost := int64(rand.Intn(50000) + 5000)
+		totalRevenue := int64(float64(totalCost) * (float64(rand.Intn(300)+100) / 100))
+		roiPercent := float64(totalRevenue-totalCost) / float64(totalCost) * 100
+		leadsGen := int32(rand.Intn(100) + 10)
+		oppsCreated := int32(float64(leadsGen) * 0.3)
+		dealsWon := int32(float64(oppsCreated) * 0.25)
+
+		roiRecords := []*crm.CrmCampaignROI{{
+			RoiId:                genID("roi", i),
+			CalculationDate:      time.Now().Unix(),
+			TotalCost:            money(store, totalCost),
+			TotalRevenue:         money(store, totalRevenue),
+			RoiPercentage:        roiPercent,
+			LeadsGenerated:       leadsGen,
+			OpportunitiesCreated: oppsCreated,
+			DealsWon:             dealsWon,
+			CostPerLead:          money(store, totalCost/int64(leadsGen)),
+			CostPerOpportunity:   money(store, totalCost/int64(oppsCreated+1)),
+			ConversionRate:       float64(dealsWon) / float64(leadsGen+1) * 100,
+			Notes:                fmt.Sprintf("ROI calculation for campaign %d", i+1),
+			AuditInfo:            createAuditInfo(),
+		}}
+
 		campaigns[i] = &crm.CrmCampaign{
 			CampaignId:           genID("cmpgn", i),
 			Name:                 name,
@@ -77,51 +152,12 @@ func generateCampaigns(store *MockDataStore) []*crm.CrmCampaign {
 			ParentCampaignId:     parentID,
 			IsActive:             status == crm.CrmCampaignStatus_CRM_CAMPAIGN_STATUS_ACTIVE,
 			AuditInfo:            createAuditInfo(),
+			Members:              members,
+			Responses:            responses,
+			RoiRecords:           roiRecords,
 		}
 	}
 	return campaigns
-}
-
-// generateCampaignMembers creates campaign member records
-func generateCampaignMembers(store *MockDataStore) []*crm.CrmCampaignMember {
-	statuses := []crm.CrmCampaignMemberStatus{
-		crm.CrmCampaignMemberStatus_CRM_CAMPAIGN_MEMBER_STATUS_SENT,
-		crm.CrmCampaignMemberStatus_CRM_CAMPAIGN_MEMBER_STATUS_RESPONDED,
-		crm.CrmCampaignMemberStatus_CRM_CAMPAIGN_MEMBER_STATUS_CONVERTED,
-	}
-
-	members := make([]*crm.CrmCampaignMember, 0, len(store.CrmCampaignIDs)*5)
-	idx := 1
-	for _, campaignID := range store.CrmCampaignIDs {
-		numMembers := rand.Intn(5) + 3
-		for j := 0; j < numMembers; j++ {
-			leadID := ""
-			contactID := ""
-			if j%2 == 0 && len(store.CrmLeadIDs) > 0 {
-				leadID = store.CrmLeadIDs[(idx-1)%len(store.CrmLeadIDs)]
-			} else if len(store.CrmContactIDs) > 0 {
-				contactID = store.CrmContactIDs[(idx-1)%len(store.CrmContactIDs)]
-			}
-			listID := pickRef(store.CrmMarketingListIDs, (idx-1))
-
-			status := statuses[(idx-1)%len(statuses)]
-			hasResponded := status != crm.CrmCampaignMemberStatus_CRM_CAMPAIGN_MEMBER_STATUS_SENT
-
-			members = append(members, &crm.CrmCampaignMember{
-				MemberId:           fmt.Sprintf("cmpgmbr-%03d", idx),
-				CampaignId:         campaignID,
-				LeadId:             leadID,
-				ContactId:          contactID,
-				Status:             status,
-				FirstRespondedDate: time.Now().AddDate(0, 0, -rand.Intn(14)).Unix(),
-				HasResponded:       hasResponded,
-				SourceListId:       listID,
-				AuditInfo:          createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return members
 }
 
 // generateEmailTemplates creates email template records
@@ -176,66 +212,4 @@ func generateMarketingLists(store *MockDataStore) []*crm.CrmMarketingList {
 		}
 	}
 	return lists
-}
-
-// generateCampaignResponses creates campaign response records
-func generateCampaignResponses(store *MockDataStore) []*crm.CrmCampaignResponse {
-	types := []crm.CrmResponseType{
-		crm.CrmResponseType_CRM_RESPONSE_TYPE_OPENED,
-		crm.CrmResponseType_CRM_RESPONSE_TYPE_CLICKED,
-		crm.CrmResponseType_CRM_RESPONSE_TYPE_RESPONDED,
-		crm.CrmResponseType_CRM_RESPONSE_TYPE_CONVERTED,
-	}
-
-	responses := make([]*crm.CrmCampaignResponse, 0, len(store.CrmCampaignMemberIDs)/2)
-	idx := 1
-	for i, memberID := range store.CrmCampaignMemberIDs {
-		if i%2 == 0 {
-			campaignID := pickRef(store.CrmCampaignIDs, i)
-
-			responses = append(responses, &crm.CrmCampaignResponse{
-				ResponseId:       fmt.Sprintf("cmpgrsp-%03d", idx),
-				CampaignId:       campaignID,
-				CampaignMemberId: memberID,
-				ResponseType:     types[(idx-1)%len(types)],
-				ResponseDate:     time.Now().AddDate(0, 0, -rand.Intn(14)).Unix(),
-				Details:          fmt.Sprintf("Response %d details", idx),
-				RevenueValue:     randomMoney(store, 100, 10000),
-				AuditInfo:        createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return responses
-}
-
-// generateCampaignROIs creates campaign ROI records
-func generateCampaignROIs(store *MockDataStore) []*crm.CrmCampaignROI {
-	rois := make([]*crm.CrmCampaignROI, len(store.CrmCampaignIDs))
-	for i, campaignID := range store.CrmCampaignIDs {
-		totalCost := int64(rand.Intn(50000) + 5000)
-		totalRevenue := int64(float64(totalCost) * (float64(rand.Intn(300)+100) / 100))
-		roiPercent := float64(totalRevenue-totalCost) / float64(totalCost) * 100
-		leadsGen := int32(rand.Intn(100) + 10)
-		oppsCreated := int32(float64(leadsGen) * 0.3)
-		dealsWon := int32(float64(oppsCreated) * 0.25)
-
-		rois[i] = &crm.CrmCampaignROI{
-			RoiId:                 genID("roi", i),
-			CampaignId:            campaignID,
-			CalculationDate:       time.Now().Unix(),
-			TotalCost:             money(store, totalCost),
-			TotalRevenue:          money(store, totalRevenue),
-			RoiPercentage:         roiPercent,
-			LeadsGenerated:        leadsGen,
-			OpportunitiesCreated:  oppsCreated,
-			DealsWon:              dealsWon,
-			CostPerLead:           money(store, totalCost / int64(leadsGen)),
-			CostPerOpportunity:    money(store, totalCost / int64(oppsCreated+1)),
-			ConversionRate:        float64(dealsWon) / float64(leadsGen+1) * 100,
-			Notes:                 fmt.Sprintf("ROI calculation for campaign %d", i+1),
-			AuditInfo:             createAuditInfo(),
-		}
-	}
-	return rois
 }

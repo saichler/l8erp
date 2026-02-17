@@ -22,6 +22,71 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('documentType', 'Type', enums.DOCUMENT_TYPE),
                 ...f.select('status', 'Status', enums.DOCUMENT_STATUS),
                 ...f.select('accessLevel', 'Access Level', enums.ACCESS_LEVEL)
+            ]),
+            f.section('Versions', [
+                ...f.inlineTable('versions', 'Document Versions', [
+                    { key: 'versionId', label: 'ID', hidden: true },
+                    { key: 'versionNumber', label: 'Version', type: 'number' },
+                    { key: 'changeNotes', label: 'Change Notes', type: 'text' },
+                    { key: 'fileName', label: 'File Name', type: 'text' },
+                    { key: 'isMajorVersion', label: 'Major', type: 'checkbox' },
+                    { key: 'createdDate', label: 'Created', type: 'date' }
+                ])
+            ]),
+            f.section('Checkouts', [
+                ...f.inlineTable('checkouts', 'Checkouts', [
+                    { key: 'checkoutId', label: 'ID', hidden: true },
+                    { key: 'status', label: 'Status', type: 'text' },
+                    { key: 'checkedOutBy', label: 'Checked Out By', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'checkoutDate', label: 'Checkout Date', type: 'date' },
+                    { key: 'checkinDate', label: 'Checkin Date', type: 'date' }
+                ])
+            ]),
+            f.section('Review Comments', [
+                ...f.inlineTable('comments', 'Review Comments', [
+                    { key: 'commentId', label: 'ID', hidden: true },
+                    { key: 'authorId', label: 'Author', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'content', label: 'Content', type: 'text' },
+                    { key: 'pageNumber', label: 'Page', type: 'number' },
+                    { key: 'isResolved', label: 'Resolved', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Signatures', [
+                ...f.inlineTable('signatures', 'Signatures', [
+                    { key: 'signatureId', label: 'ID', hidden: true },
+                    { key: 'signatureType', label: 'Type', type: 'text' },
+                    { key: 'status', label: 'Status', type: 'text' },
+                    { key: 'signerId', label: 'Signer', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'signedDate', label: 'Signed Date', type: 'date' }
+                ])
+            ]),
+            f.section('Attachments', [
+                ...f.inlineTable('attachments', 'Attachments', [
+                    { key: 'attachmentId', label: 'ID', hidden: true },
+                    { key: 'entityType', label: 'Entity Type', type: 'text' },
+                    { key: 'entityId', label: 'Entity ID', type: 'text' },
+                    { key: 'module', label: 'Module', type: 'text' },
+                    { key: 'description', label: 'Description', type: 'text' }
+                ])
+            ]),
+            f.section('Access Logs', [
+                ...f.inlineTable('accessLogs', 'Access Logs', [
+                    { key: 'logId', label: 'ID', hidden: true },
+                    { key: 'action', label: 'Action', type: 'text' },
+                    { key: 'userId', label: 'User', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'accessDate', label: 'Date', type: 'date' },
+                    { key: 'ipAddress', label: 'IP Address', type: 'text' },
+                    { key: 'success', label: 'Success', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Audit Trail', [
+                ...f.inlineTable('auditTrails', 'Audit Trail', [
+                    { key: 'trailId', label: 'ID', hidden: true },
+                    { key: 'action', label: 'Action', type: 'text' },
+                    { key: 'userId', label: 'User', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'timestamp', label: 'Timestamp', type: 'date' },
+                    { key: 'changeSummary', label: 'Change Summary', type: 'text' }
+                ])
             ])
         ]),
 
@@ -52,22 +117,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        DocDocumentVersion: f.form('Document Version', [
-            f.section('Version Details', [
-                ...f.reference('documentId', 'Document', 'DocDocument', true),
-                ...f.number('versionNumber', 'Version Number', true),
-                ...f.textarea('changeNotes', 'Change Notes'),
-                ...f.checkbox('isMajorVersion', 'Major Version')
-            ])
-        ])
     };
 
     MobileDocStorage.primaryKeys = {
         DocDocument: 'documentId',
         DocFolder: 'folderId',
         DocCategory: 'categoryId',
-        DocTag: 'tagId',
-        DocDocumentVersion: 'versionId'
+        DocTag: 'tagId'
     };
 
 })();

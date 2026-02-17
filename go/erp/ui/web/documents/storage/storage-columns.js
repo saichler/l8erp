@@ -52,17 +52,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'color', label: 'Color', sortKey: 'color' },
             { key: 'description', label: 'Description', sortKey: 'description' },
             { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
-        ],
-
-        DocDocumentVersion: [
-            { key: 'versionId', label: 'ID', sortKey: 'versionId', filterKey: 'versionId' },
-            { key: 'documentId', label: 'Document', sortKey: 'documentId', filterKey: 'documentId' },
-            { key: 'versionNumber', label: 'Version', sortKey: 'versionNumber' },
-            { key: 'fileSize', label: 'Size', sortKey: 'fileSize', render: (item) => renderFileSize(item.fileSize) },
-            { key: 'checksum', label: 'Checksum', sortKey: 'checksum' },
-            { key: 'createdBy', label: 'Created By', sortKey: 'createdBy' },
-            { key: 'changeNotes', label: 'Notes', sortKey: 'changeNotes' },
-            { key: 'isMajorVersion', label: 'Major', sortKey: 'isMajorVersion', render: (item) => item.isMajorVersion ? 'Yes' : 'No' }
         ]
     };
 

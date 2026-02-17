@@ -81,37 +81,6 @@ limitations under the License.
             }
         ],
 
-        BiETLSchedule: [
-            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'jobId', label: 'Job', sortKey: 'jobId', filterKey: 'jobId' },
-            {
-                key: 'frequency',
-                label: 'Frequency',
-                sortKey: 'frequency',
-                render: (item) => render.scheduleFrequency(item.frequency)
-            },
-            { key: 'runTime', label: 'Run Time', sortKey: 'runTime' },
-            {
-                key: 'nextRun',
-                label: 'Next Run',
-                sortKey: 'nextRun',
-                render: (item) => renderDate(item.nextRun)
-            },
-            {
-                key: 'lastRun',
-                label: 'Last Run',
-                sortKey: 'lastRun',
-                render: (item) => renderDate(item.lastRun)
-            },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => item.isActive ? 'Yes' : 'No'
-            }
-        ],
-
         BiDataQualityRule: [
             { key: 'ruleId', label: 'ID', sortKey: 'ruleId', filterKey: 'ruleId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },

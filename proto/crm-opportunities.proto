@@ -49,6 +49,10 @@ message CrmOpportunity {
   int64 last_activity_date = 18;
   map<string, string> custom_fields = 19;
   erp.AuditInfo audit_info = 20;
+  repeated CrmOppActivity activities = 21;
+  repeated CrmOppProduct products = 22;
+  repeated CrmOppTeam team_members = 23;
+  repeated CrmOppCompetitor competitors = 24;
 }
 
 message CrmOpportunityList {
@@ -77,11 +81,9 @@ message CrmOppStageList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// CrmOppCompetitor represents a competitor on an opportunity
+// CrmOppCompetitor represents a competitor on an opportunity (child of CrmOpportunity)
 message CrmOppCompetitor {
   string competitor_id = 1;
-  string opportunity_id = 2;               // cross-ref: CrmOpportunity
   string name = 3;
   string website = 4;
   string strengths = 5;
@@ -94,16 +96,9 @@ message CrmOppCompetitor {
   erp.AuditInfo audit_info = 12;
 }
 
-message CrmOppCompetitorList {
-  repeated CrmOppCompetitor list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
-// CrmOppProduct represents a product line on an opportunity
+// CrmOppProduct represents a product line on an opportunity (child of CrmOpportunity)
 message CrmOppProduct {
   string line_id = 1;
-  string opportunity_id = 2;               // cross-ref: CrmOpportunity
   string product_id = 3;                   // cross-ref: SCM Item
   string product_name = 4;
   double quantity = 5;
@@ -116,16 +111,9 @@ message CrmOppProduct {
   erp.AuditInfo audit_info = 12;
 }
 
-message CrmOppProductList {
-  repeated CrmOppProduct list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
-// CrmOppTeam represents a team member on an opportunity
+// CrmOppTeam represents a team member on an opportunity (child of CrmOpportunity)
 message CrmOppTeam {
   string member_id = 1;
-  string opportunity_id = 2;               // cross-ref: CrmOpportunity
   string employee_id = 3;                  // cross-ref: HCM Employee
   string role = 4;
   bool is_primary = 5;
@@ -135,16 +123,9 @@ message CrmOppTeam {
   erp.AuditInfo audit_info = 9;
 }
 
-message CrmOppTeamList {
-  repeated CrmOppTeam list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
-// CrmOppActivity represents an activity on an opportunity
+// CrmOppActivity represents an activity on an opportunity (child of CrmOpportunity)
 message CrmOppActivity {
   string activity_id = 1;
-  string opportunity_id = 2;               // cross-ref: CrmOpportunity
   CrmActivityType activity_type = 3;
   string subject = 4;
   string description = 5;
@@ -158,7 +139,3 @@ message CrmOppActivity {
   erp.AuditInfo audit_info = 13;
 }
 
-message CrmOppActivityList {
-  repeated CrmOppActivity list = 1;
-  l8api.L8MetaData metadata = 2;
-}

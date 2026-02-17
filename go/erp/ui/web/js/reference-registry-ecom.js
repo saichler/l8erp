@@ -132,44 +132,5 @@ Layer8DReferenceRegistry.register({
         displayLabel: 'Payment Method'
     },
 
-    // ========================================
-    // E-Commerce - Catalog (Images & Variants)
-    // ========================================
-    EcomImage: {
-        endpoint: '/100/EcomImage',
-        idColumn: 'imageId',
-        displayColumn: 'fileName',
-        selectColumns: ['imageId', 'fileName', 'altText'],
-        displayLabel: 'Image'
-    },
-    EcomVariant: {
-        endpoint: '/100/EcomVar',
-        idColumn: 'variantId',
-        displayColumn: 'sku',
-        selectColumns: ['variantId', 'sku', 'name'],
-        displayFormat: function(item) {
-            return item.sku + (item.name ? ' - ' + item.name : '');
-        },
-        displayLabel: 'Variant'
-    },
-    EcomCustomerAddress: {
-        endpoint: '/100/EcomAddr',
-        idColumn: 'addressId',
-        displayColumn: 'addressType',
-        selectColumns: ['addressId', 'addressType', 'city', 'country'],
-        displayFormat: function(item) {
-            return item.addressType + ' - ' + item.city + ', ' + item.country;
-        },
-        displayLabel: 'Address'
-    },
-    EcomAddress: {  // Alias for EcomCustomerAddress
-        endpoint: '/100/EcomAddr',
-        idColumn: 'addressId',
-        displayColumn: 'addressType',
-        selectColumns: ['addressId', 'addressType', 'city', 'country'],
-        displayFormat: function(item) {
-            return item.addressType + ' - ' + item.city + ', ' + item.country;
-        },
-        displayLabel: 'Address'
-    }
+    // EcomImage, EcomVariant, EcomCustomerAddress - now embedded children (no standalone services)
 });

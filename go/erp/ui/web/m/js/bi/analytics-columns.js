@@ -46,16 +46,6 @@ limitations under the License.
             ...col.col('ownerId', 'Owner')
         ],
 
-        BiPrediction: [
-            ...col.id('predictionId'),
-            ...col.col('modelId', 'Model'),
-            ...col.col('name', 'Name'),
-            ...col.date('predictionDate', 'Prediction Date'),
-            ...col.custom('confidence', 'Confidence', (item) => Layer8DRenderers.renderPercentage(item.confidence)),
-            ...col.col('predictedBy', 'Predicted By'),
-            ...col.col('notes', 'Notes')
-        ],
-
         BiTrendAnalysis: [
             ...col.id('analysisId'),
             ...col.col('name', 'Name'),
@@ -92,7 +82,7 @@ limitations under the License.
 
     MobileBiAnalytics.primaryKeys = {
         BiDataCube: 'cubeId', BiAnalysisModel: 'modelId',
-        BiPrediction: 'predictionId', BiTrendAnalysis: 'analysisId',
+        BiTrendAnalysis: 'analysisId',
         BiScenario: 'scenarioId', BiBenchmark: 'benchmarkId'
     };
 

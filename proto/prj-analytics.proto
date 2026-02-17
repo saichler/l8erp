@@ -55,11 +55,9 @@ message PrjStatusReportList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // PrjEarnedValue represents earned value metrics for a project
 message PrjEarnedValue {
   string earned_value_id = 1;
-  string project_id = 2;                   // cross-ref: PrjProject
   int64 as_of_date = 3;
   erp.Money budget_at_completion = 4;      // BAC
   erp.Money planned_value = 5;             // PV (BCWS)
@@ -79,16 +77,9 @@ message PrjEarnedValue {
   erp.AuditInfo audit_info = 19;
 }
 
-message PrjEarnedValueList {
-  repeated PrjEarnedValue list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // PrjBudgetVariance represents budget variance analysis
 message PrjBudgetVariance {
   string variance_id = 1;
-  string project_id = 2;                   // cross-ref: PrjProject
   string budget_id = 3;                    // cross-ref: PrjProjectBudget
   string phase_id = 4;                     // cross-ref: PrjPhase
   int64 as_of_date = 5;
@@ -106,16 +97,9 @@ message PrjBudgetVariance {
   erp.AuditInfo audit_info = 17;
 }
 
-message PrjBudgetVarianceList {
-  repeated PrjBudgetVariance list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // PrjResourceForecast represents resource demand forecasting
 message PrjResourceForecast {
   string forecast_id = 1;
-  string project_id = 2;                   // cross-ref: PrjProject
   string resource_id = 3;                  // cross-ref: PrjResource
   string pool_id = 4;                      // cross-ref: PrjResourcePool
   string skill_category = 5;
@@ -131,11 +115,6 @@ message PrjResourceForecast {
   string notes = 15;
   map<string, string> custom_fields = 16;
   erp.AuditInfo audit_info = 17;
-}
-
-message PrjResourceForecastList {
-  repeated PrjResourceForecast list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
@@ -194,11 +173,9 @@ message PrjProjectKPIList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // PrjProjectIssue represents a project issue
 message PrjProjectIssue {
   string issue_id = 1;
-  string project_id = 2;                   // cross-ref: PrjProject
   string task_id = 3;                      // cross-ref: PrjTask
   string issue_number = 4;
   string title = 5;
@@ -220,7 +197,3 @@ message PrjProjectIssue {
   erp.AuditInfo audit_info = 21;
 }
 
-message PrjProjectIssueList {
-  repeated PrjProjectIssue list = 1;
-  l8api.L8MetaData metadata = 2;
-}

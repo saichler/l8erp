@@ -15,21 +15,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'effectiveDate', label: 'Effective Date', width: '120px', type: 'date' },
             { key: 'isActive', label: 'Active', width: '100px' }
         ],
-        CompRequirement: [
-            { key: 'code', label: 'Code', width: '100px' },
-            { key: 'title', label: 'Title', width: '200px' },
-            { key: 'regulationId', label: 'Regulation', width: '150px', type: 'reference', referenceType: 'CompRegulation' },
-            { key: 'priority', label: 'Priority', width: '100px' },
-            { key: 'ownerId', label: 'Owner', width: '120px', type: 'reference', referenceType: 'Employee' },
-            { key: 'isActive', label: 'Active', width: '100px' }
-        ],
-        CompComplianceStatus: [
-            { key: 'requirementId', label: 'Requirement', width: '150px', type: 'reference', referenceType: 'CompRequirement' },
-            { key: 'entityType', label: 'Entity Type', width: '120px' },
-            { key: 'status', label: 'Status', width: '120px' },
-            { key: 'assessmentDate', label: 'Assessment Date', width: '120px', type: 'date' },
-            { key: 'nextReviewDate', label: 'Next Review', width: '120px', type: 'date' }
-        ],
         CompCertification: [
             { key: 'name', label: 'Name', width: '200px' },
             { key: 'certificateNumber', label: 'Certificate #', width: '120px' },
@@ -38,20 +23,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'expiryDate', label: 'Expiry Date', width: '120px', type: 'date' },
             { key: 'status', label: 'Status', width: '100px' }
         ],
-        CompViolationRecord: [
-            { key: 'violationNumber', label: 'Number', width: '120px' },
-            { key: 'requirementId', label: 'Requirement', width: '150px', type: 'reference', referenceType: 'CompRequirement' },
-            { key: 'severity', label: 'Severity', width: '100px' },
-            { key: 'discoveryDate', label: 'Discovery Date', width: '120px', type: 'date' },
-            { key: 'status', label: 'Status', width: '100px' }
-        ]
     };
 
     CompRegulatory.primaryKeys = {
         CompRegulation: 'regulationId',
-        CompRequirement: 'requirementId',
-        CompComplianceStatus: 'statusId',
-        CompCertification: 'certificationId',
-        CompViolationRecord: 'violationId'
+        CompCertification: 'certificationId'
     };
 })();

@@ -38,18 +38,6 @@ limitations under the License.
             ...col.date('nextReviewDate', 'Next Review')
         ],
 
-        CompRiskAssessment: [
-            ...col.id('assessmentId'),
-            ...col.col('riskId', 'Risk'),
-            ...col.date('assessmentDate', 'Assessment Date'),
-            ...col.col('assessorId', 'Assessor'),
-            ...col.col('likelihoodRating', 'Likelihood'),
-            ...col.col('impactRating', 'Impact'),
-            ...col.col('riskScore', 'Risk Score'),
-            ...col.col('controlEffectiveness', 'Control Effectiveness'),
-            ...col.boolean('requiresEscalation', 'Escalation')
-        ],
-
         CompIncident: [
             ...col.id('incidentId'),
             ...col.col('incidentNumber', 'Number'),
@@ -61,19 +49,6 @@ limitations under the License.
             ...col.date('reportedDate', 'Reported'),
             ...col.col('assignedToId', 'Assigned To'),
             ...col.boolean('regulatoryReportable', 'Reportable')
-        ],
-
-        CompMitigationPlan: [
-            ...col.id('planId'),
-            ...col.col('name', 'Name'),
-            ...col.col('riskId', 'Risk'),
-            ...col.col('strategy', 'Strategy'),
-            ...col.status('status', 'Status', enums.REMEDIATION_STATUS_VALUES, render.remediationStatus),
-            ...col.col('ownerId', 'Owner'),
-            ...col.date('startDate', 'Start Date'),
-            ...col.date('targetDate', 'Target Date'),
-            ...col.col('targetRiskReduction', 'Target Reduction'),
-            ...col.col('actualRiskReduction', 'Actual Reduction')
         ],
 
         CompInsurancePolicy: [
@@ -91,9 +66,7 @@ limitations under the License.
 
     MobileCompRisk.primaryKeys = {
         CompRiskRegister: 'riskId',
-        CompRiskAssessment: 'assessmentId',
         CompIncident: 'incidentId',
-        CompMitigationPlan: 'planId',
         CompInsurancePolicy: 'insuranceId'
     };
 

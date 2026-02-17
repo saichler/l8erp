@@ -43,6 +43,45 @@ limitations under the License.
             f.section('Output Settings', [
                 ...f.select('defaultFormat', 'Default Format', enums.EXPORT_FORMAT),
                 ...f.checkbox('isPublic', 'Public')
+            ]),
+            f.section('Schedules', [
+                ...f.inlineTable('schedules', 'Report Schedules', [
+                    { key: 'scheduleId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'frequency', label: 'Frequency', type: 'text' },
+                    { key: 'runTime', label: 'Run Time', type: 'text' },
+                    { key: 'outputFormat', label: 'Format', type: 'text' },
+                    { key: 'isActive', label: 'Active', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Executions', [
+                ...f.inlineTable('executions', 'Report Executions', [
+                    { key: 'executionId', label: 'ID', hidden: true },
+                    { key: 'status', label: 'Status', type: 'text' },
+                    { key: 'executedBy', label: 'Executed By', type: 'text' },
+                    { key: 'rowCount', label: 'Rows', type: 'number' },
+                    { key: 'outputFormat', label: 'Format', type: 'text' },
+                    { key: 'errorMessage', label: 'Error', type: 'text' }
+                ])
+            ]),
+            f.section('Access Controls', [
+                ...f.inlineTable('accessControls', 'Report Access', [
+                    { key: 'accessId', label: 'ID', hidden: true },
+                    { key: 'principalId', label: 'Principal ID', type: 'text' },
+                    { key: 'principalType', label: 'Type', type: 'text' },
+                    { key: 'accessLevel', label: 'Access Level', type: 'text' },
+                    { key: 'grantedBy', label: 'Granted By', type: 'text' }
+                ])
+            ]),
+            f.section('Subscriptions', [
+                ...f.inlineTable('subscriptions', 'Report Subscriptions', [
+                    { key: 'subscriptionId', label: 'ID', hidden: true },
+                    { key: 'subscriberId', label: 'Subscriber', type: 'text' },
+                    { key: 'format', label: 'Format', type: 'text' },
+                    { key: 'deliveryEmail', label: 'Email', type: 'text' },
+                    { key: 'includeEmpty', label: 'Include Empty', type: 'checkbox' },
+                    { key: 'isActive', label: 'Active', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -60,74 +99,6 @@ limitations under the License.
             ])
         ]),
 
-        BiReportSchedule: f.form('Report Schedule', [
-            f.section('Schedule Details', [
-                ...f.reference('reportId', 'Report', 'BiReport', true),
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description'),
-                ...f.select('frequency', 'Frequency', enums.SCHEDULE_FREQUENCY),
-                ...f.checkbox('isActive', 'Active')
-            ]),
-            f.section('Timing', [
-                ...f.date('startDate', 'Start Date'),
-                ...f.date('endDate', 'End Date'),
-                ...f.text('runTime', 'Run Time (HH:MM)'),
-                ...f.number('dayOfWeek', 'Day of Week (0-6)'),
-                ...f.number('dayOfMonth', 'Day of Month (1-31)')
-            ]),
-            f.section('Output & Delivery', [
-                ...f.select('outputFormat', 'Output Format', enums.EXPORT_FORMAT),
-                ...f.text('deliveryEmail', 'Delivery Email')
-            ])
-        ]),
-
-        BiReportExecution: f.form('Report Execution', [
-            f.section('Execution Details', [
-                ...f.reference('reportId', 'Report', 'BiReport', true),
-                ...f.reference('scheduleId', 'Schedule', 'BiReportSchedule'),
-                ...f.select('status', 'Status', enums.EXECUTION_STATUS),
-                ...f.reference('executedBy', 'Executed By', 'Employee')
-            ]),
-            f.section('Timing', [
-                ...f.date('startTime', 'Start Time'),
-                ...f.date('endTime', 'End Time')
-            ]),
-            f.section('Results', [
-                ...f.number('rowCount', 'Row Count'),
-                ...f.number('fileSize', 'File Size (bytes)'),
-                ...f.text('outputPath', 'Output Path'),
-                ...f.select('outputFormat', 'Output Format', enums.EXPORT_FORMAT),
-                ...f.textarea('errorMessage', 'Error Message')
-            ])
-        ]),
-
-        BiReportAccess: f.form('Report Access', [
-            f.section('Access Details', [
-                ...f.reference('reportId', 'Report', 'BiReport', true),
-                ...f.text('principalId', 'Principal ID', true),
-                ...f.text('principalType', 'Principal Type'),
-                ...f.select('accessLevel', 'Access Level', enums.ACCESS_LEVEL)
-            ]),
-            f.section('Grant Information', [
-                ...f.date('grantedDate', 'Granted Date'),
-                ...f.reference('grantedBy', 'Granted By', 'Employee'),
-                ...f.date('expiryDate', 'Expiry Date')
-            ])
-        ]),
-
-        BiReportSubscription: f.form('Report Subscription', [
-            f.section('Subscription Details', [
-                ...f.reference('reportId', 'Report', 'BiReport', true),
-                ...f.reference('scheduleId', 'Schedule', 'BiReportSchedule', true),
-                ...f.reference('subscriberId', 'Subscriber', 'Employee', true),
-                ...f.checkbox('isActive', 'Active')
-            ]),
-            f.section('Delivery Settings', [
-                ...f.select('format', 'Format', enums.EXPORT_FORMAT),
-                ...f.text('deliveryEmail', 'Delivery Email'),
-                ...f.checkbox('includeEmpty', 'Include Empty Reports')
-            ])
-        ])
     };
 
 })();

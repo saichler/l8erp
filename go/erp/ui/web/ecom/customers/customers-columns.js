@@ -45,18 +45,6 @@ limitations under the License.
             }
         ],
 
-        EcomCustomerAddress: [
-            { key: 'addressId', label: 'ID', sortKey: 'addressId', filterKey: 'addressId' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'label', label: 'Label', sortKey: 'label', filterKey: 'label' },
-            { key: 'firstName', label: 'First Name', sortKey: 'firstName' },
-            { key: 'lastName', label: 'Last Name', sortKey: 'lastName' },
-            { key: 'city', label: 'City', sortKey: 'city', filterKey: 'city' },
-            { key: 'country', label: 'Country', sortKey: 'country', filterKey: 'country' },
-            { key: 'isDefaultBilling', label: 'Default Billing', sortKey: 'isDefaultBilling' },
-            { key: 'isDefaultShipping', label: 'Default Shipping', sortKey: 'isDefaultShipping' }
-        ],
-
         EcomWishlist: [
             { key: 'wishlistId', label: 'ID', sortKey: 'wishlistId', filterKey: 'wishlistId' },
             { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
@@ -71,19 +59,7 @@ limitations under the License.
             }
         ],
 
-        EcomWishlistItem: [
-            { key: 'itemId', label: 'ID', sortKey: 'itemId', filterKey: 'itemId' },
-            { key: 'wishlistId', label: 'Wishlist', sortKey: 'wishlistId', filterKey: 'wishlistId' },
-            { key: 'productId', label: 'Product', sortKey: 'productId', filterKey: 'productId' },
-            { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
-            {
-                key: 'addedDate',
-                label: 'Added',
-                sortKey: 'addedDate',
-                render: (item) => renderDate(item.addedDate)
-            },
-            { key: 'priority', label: 'Priority', sortKey: 'priority' }
-        ],
+        // EcomCustomerAddress, EcomWishlistItem - now inline tables in parents
 
         EcomCart: [
             { key: 'cartId', label: 'ID', sortKey: 'cartId', filterKey: 'cartId' },

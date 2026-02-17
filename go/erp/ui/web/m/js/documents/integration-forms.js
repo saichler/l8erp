@@ -11,15 +11,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     const enums = MobileDocIntegration.enums;
 
     MobileDocIntegration.forms = {
-        DocAttachment: f.form('Attachment', [
-            f.section('Attachment Details', [
-                ...f.reference('documentId', 'Document', 'DocDocument', true),
-                ...f.text('entityType', 'Entity Type', true),
-                ...f.text('entityId', 'Entity ID', true),
-                ...f.textarea('description', 'Description')
-            ])
-        ]),
-
         DocTemplate: f.form('Template', [
             f.section('Template Details', [
                 ...f.text('name', 'Name', true),
@@ -27,16 +18,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('templateType', 'Type', enums.TEMPLATE_TYPE),
                 ...f.text('version', 'Version'),
                 ...f.checkbox('isActive', 'Active')
-            ])
-        ]),
-
-        DocTemplateField: f.form('Template Field', [
-            f.section('Field Details', [
-                ...f.reference('templateId', 'Template', 'DocTemplate', true),
-                ...f.text('name', 'Name', true),
-                ...f.select('fieldType', 'Type', enums.FIELD_TYPE),
-                ...f.text('defaultValue', 'Default Value'),
-                ...f.checkbox('isRequired', 'Required')
+            ]),
+            f.section('Template Fields', [
+                ...f.inlineTable('fields', 'Template Fields', [
+                    { key: 'fieldId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'label', label: 'Label', type: 'text' },
+                    { key: 'fieldType', label: 'Type', type: 'select', options: enums.FIELD_TYPE },
+                    { key: 'isRequired', label: 'Required', type: 'checkbox' },
+                    { key: 'defaultValue', label: 'Default', type: 'text' },
+                    { key: 'sortOrder', label: 'Order', type: 'number' }
+                ])
             ])
         ]),
 
@@ -58,9 +50,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     };
 
     MobileDocIntegration.primaryKeys = {
-        DocAttachment: 'attachmentId',
         DocTemplate: 'templateId',
-        DocTemplateField: 'fieldId',
         DocEmailCapture: 'captureId',
         DocScanJob: 'scanJobId'
     };

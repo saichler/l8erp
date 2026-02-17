@@ -43,6 +43,17 @@ limitations under the License.
                 ...f.reference('leadAuditorId', 'Lead Auditor', 'Employee'),
                 ...f.text('auditFirm', 'Audit Firm'),
                 ...f.textarea('auditScope', 'Audit Scope')
+            ]),
+            f.section('Audit Reports', [
+                ...f.inlineTable('reports', 'Audit Reports', [
+                    { key: 'reportId', label: 'ID', hidden: true },
+                    { key: 'reportNumber', label: 'Number', type: 'text' },
+                    { key: 'title', label: 'Title', type: 'text' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.AUDIT_STATUS },
+                    { key: 'overallOpinion', label: 'Opinion', type: 'text' },
+                    { key: 'draftDate', label: 'Draft Date', type: 'date' },
+                    { key: 'finalDate', label: 'Final Date', type: 'date' }
+                ])
             ])
         ]),
 
@@ -66,48 +77,17 @@ limitations under the License.
                 ...f.textarea('recommendation', 'Recommendation'),
                 ...f.textarea('managementResponse', 'Management Response'),
                 ...f.checkbox('repeatFinding', 'Repeat Finding')
-            ])
-        ]),
-
-        CompRemediationAction: f.form('Remediation Action', [
-            f.section('Action Details', [
-                ...f.text('actionNumber', 'Action Number'),
-                ...f.text('title', 'Title', true),
-                ...f.textarea('description', 'Description'),
-                ...f.reference('findingId', 'Finding', 'CompAuditFinding', true),
-                ...f.select('status', 'Status', enums.REMEDIATION_STATUS)
             ]),
-            f.section('Timeline', [
-                ...f.date('dueDate', 'Due Date'),
-                ...f.date('completionDate', 'Completion Date'),
-                ...f.date('verificationDate', 'Verification Date')
-            ]),
-            f.section('Progress & Ownership', [
-                ...f.reference('ownerId', 'Owner', 'Employee'),
-                ...f.number('percentComplete', 'Percent Complete'),
-                ...f.checkbox('isOverdue', 'Overdue'),
-                ...f.textarea('progressNotes', 'Progress Notes')
-            ])
-        ]),
-
-        CompAuditReport: f.form('Audit Report', [
-            f.section('Report Details', [
-                ...f.text('reportNumber', 'Report Number'),
-                ...f.text('title', 'Title', true),
-                ...f.reference('auditScheduleId', 'Audit', 'CompAuditSchedule', true),
-                ...f.select('status', 'Status', enums.AUDIT_STATUS),
-                ...f.text('overallOpinion', 'Overall Opinion')
-            ]),
-            f.section('Findings Summary', [
-                ...f.number('findingsCritical', 'Critical Findings'),
-                ...f.number('findingsHigh', 'High Findings'),
-                ...f.number('findingsMedium', 'Medium Findings'),
-                ...f.number('findingsLow', 'Low Findings')
-            ]),
-            f.section('Dates & Content', [
-                ...f.date('draftDate', 'Draft Date'),
-                ...f.date('finalDate', 'Final Date'),
-                ...f.textarea('executiveSummary', 'Executive Summary')
+            f.section('Remediation Actions', [
+                ...f.inlineTable('actions', 'Remediation Actions', [
+                    { key: 'actionId', label: 'ID', hidden: true },
+                    { key: 'actionNumber', label: 'Number', type: 'text' },
+                    { key: 'title', label: 'Title', type: 'text' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.REMEDIATION_STATUS },
+                    { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'dueDate', label: 'Due Date', type: 'date' },
+                    { key: 'percentComplete', label: '% Complete', type: 'number' }
+                ])
             ])
         ]),
 

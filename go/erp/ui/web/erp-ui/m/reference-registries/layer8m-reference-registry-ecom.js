@@ -17,17 +17,14 @@ window.Layer8MReferenceRegistryECOM = {
     ...refEcomM.coded('EcomProduct', 'productId', 'sku', 'name'),
     ...refEcomM.simple('EcomCategory', 'categoryId', 'name'),
     ...refEcomM.simple('EcomAttribute', 'attributeId', 'name'),
-    ...refEcomM.simple('EcomImage', 'imageId', 'fileName'),
-    ...refEcomM.coded('EcomVariant', 'variantId', 'sku', 'name'),
+    // EcomImage, EcomVariant - now embedded children in EcomProduct
 
     // ========================================
     // E-Commerce - Orders
     // ========================================
     ...refEcomM.simple('EcomOrder', 'orderId', 'orderNumber', 'Order'),
-    ...refEcomM.idOnly('EcomOrderLine', 'lineId'),
-    ...refEcomM.idOnly('EcomOrderStatusHistory', 'statusId'),
+    // EcomOrderLine, EcomOrderStatusHistory, EcomReturnLine - now embedded children
     ...refEcomM.simple('EcomReturn', 'returnId', 'returnNumber', 'Return'),
-    ...refEcomM.idOnly('EcomReturnLine', 'lineId'),
 
     // ========================================
     // E-Commerce - Customers
@@ -42,10 +39,8 @@ window.Layer8MReferenceRegistryECOM = {
         },
         displayLabel: 'Customer'
     },
-    ...refEcomM.simple('EcomCustomerAddress', 'addressId', 'label'),
-    ...refEcomM.simple('EcomAddress', 'addressId', 'label'),  // Alias
+    // EcomCustomerAddress, EcomWishlistItem - now embedded children
     ...refEcomM.simple('EcomWishlist', 'wishlistId', 'name'),
-    ...refEcomM.idOnly('EcomWishlistItem', 'itemId'),
     ...refEcomM.idOnly('EcomCart', 'cartId'),
 
     // ========================================

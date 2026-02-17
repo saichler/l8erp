@@ -47,6 +47,7 @@ message CompRegulation {
     string owner_id = 15;                      // cross-ref: Employee
     map<string, string> custom_fields = 16;
     erp.AuditInfo audit_info = 17;
+    repeated CompRequirement requirements = 18;
 }
 
 message CompRegulationList {
@@ -58,11 +59,9 @@ message CompRegulationList {
 // REQUIREMENT
 // =====================
 
-// @PrimeObject
 // CompRequirement represents a specific compliance requirement within a regulation
 message CompRequirement {
     string requirement_id = 1;
-    string regulation_id = 2;                  // cross-ref: CompRegulation
     string parent_requirement_id = 3;          // cross-ref: CompRequirement (for hierarchy)
     string code = 4;
     string title = 5;
@@ -77,22 +76,17 @@ message CompRequirement {
     bool is_active = 14;
     map<string, string> custom_fields = 15;
     erp.AuditInfo audit_info = 16;
-}
-
-message CompRequirementList {
-    repeated CompRequirement list = 1;
-    l8api.L8MetaData metadata = 2;
+    repeated CompViolationRecord violations = 17;
+    repeated CompComplianceStatus statuses = 18;
 }
 
 // =====================
 // COMPLIANCE STATUS
 // =====================
 
-// @PrimeObject
 // CompComplianceStatus tracks compliance status for an entity against a requirement
 message CompComplianceStatus {
     string status_id = 1;
-    string requirement_id = 2;                 // cross-ref: CompRequirement
     string entity_type = 3;                    // e.g., "Department", "Process", "System"
     string entity_id = 4;
     CompComplianceStatusType status = 5;
@@ -105,11 +99,6 @@ message CompComplianceStatus {
     repeated string gap_descriptions = 12;
     map<string, string> custom_fields = 13;
     erp.AuditInfo audit_info = 14;
-}
-
-message CompComplianceStatusList {
-    repeated CompComplianceStatus list = 1;
-    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -148,11 +137,9 @@ message CompCertificationList {
 // VIOLATION RECORD
 // =====================
 
-// @PrimeObject
 // CompViolationRecord documents a compliance violation or non-conformance
 message CompViolationRecord {
     string violation_id = 1;
-    string requirement_id = 2;                 // cross-ref: CompRequirement
     string violation_number = 3;
     string title = 4;
     string description = 5;
@@ -174,7 +161,3 @@ message CompViolationRecord {
     erp.AuditInfo audit_info = 21;
 }
 
-message CompViolationRecordList {
-    repeated CompViolationRecord list = 1;
-    l8api.L8MetaData metadata = 2;
-}

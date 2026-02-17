@@ -52,6 +52,7 @@ message CompAuditSchedule {
     repeated string related_regulation_ids = 20;   // cross-ref: CompRegulation
     map<string, string> custom_fields = 21;
     erp.AuditInfo audit_info = 22;
+    repeated CompAuditReport reports = 23;
 }
 
 message CompAuditScheduleList {
@@ -90,6 +91,7 @@ message CompAuditFinding {
     string prior_finding_id = 22;              // cross-ref: CompAuditFinding
     map<string, string> custom_fields = 23;
     erp.AuditInfo audit_info = 24;
+    repeated CompRemediationAction actions = 25;
 }
 
 message CompAuditFindingList {
@@ -101,11 +103,9 @@ message CompAuditFindingList {
 // REMEDIATION ACTION
 // =====================
 
-// @PrimeObject
 // CompRemediationAction tracks corrective actions for findings
 message CompRemediationAction {
     string action_id = 1;
-    string finding_id = 2;                     // cross-ref: CompAuditFinding
     string action_number = 3;
     string title = 4;
     string description = 5;
@@ -128,20 +128,14 @@ message CompRemediationAction {
     erp.AuditInfo audit_info = 22;
 }
 
-message CompRemediationActionList {
-    repeated CompRemediationAction list = 1;
-    l8api.L8MetaData metadata = 2;
-}
 
 // =====================
 // AUDIT REPORT
 // =====================
 
-// @PrimeObject
 // CompAuditReport summarizes audit engagement results
 message CompAuditReport {
     string report_id = 1;
-    string audit_schedule_id = 2;              // cross-ref: CompAuditSchedule
     string report_number = 3;
     string title = 4;
     CompAuditStatus status = 5;
@@ -162,11 +156,6 @@ message CompAuditReport {
     string management_letter_id = 20;          // cross-ref: DocDocument
     map<string, string> custom_fields = 21;
     erp.AuditInfo audit_info = 22;
-}
-
-message CompAuditReportList {
-    repeated CompAuditReport list = 1;
-    l8api.L8MetaData metadata = 2;
 }
 
 // =====================

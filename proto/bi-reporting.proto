@@ -46,6 +46,10 @@ message BiReport {
   int32 execution_count = 15;
   map<string, string> parameters = 16;
   map<string, string> custom_fields = 17;
+  repeated BiReportExecution executions = 19;
+  repeated BiReportAccess access_controls = 20;
+  repeated BiReportSubscription subscriptions = 21;
+  repeated BiReportSchedule schedules = 22;
   erp.AuditInfo audit_info = 18;
 }
 
@@ -74,11 +78,9 @@ message BiReportTemplateList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // BiReportSchedule represents a report schedule
 message BiReportSchedule {
   string schedule_id = 1;
-  string report_id = 2;                     // cross-ref: BiReport
   string name = 3;
   string description = 4;
   BiScheduleFrequency frequency = 5;
@@ -97,16 +99,9 @@ message BiReportSchedule {
   erp.AuditInfo audit_info = 18;
 }
 
-message BiReportScheduleList {
-  repeated BiReportSchedule list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // BiReportExecution represents a report execution record
 message BiReportExecution {
   string execution_id = 1;
-  string report_id = 2;                     // cross-ref: BiReport
   string schedule_id = 3;                   // cross-ref: BiReportSchedule (optional)
   BiExecutionStatus status = 4;
   int64 start_time = 5;
@@ -122,16 +117,9 @@ message BiReportExecution {
   erp.AuditInfo audit_info = 15;
 }
 
-message BiReportExecutionList {
-  repeated BiReportExecution list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // BiReportAccess represents report access control
 message BiReportAccess {
   string access_id = 1;
-  string report_id = 2;                     // cross-ref: BiReport
   string principal_id = 3;                  // User or Role ID
   string principal_type = 4;                // "USER" or "ROLE"
   BiAccessLevel access_level = 5;
@@ -142,16 +130,9 @@ message BiReportAccess {
   erp.AuditInfo audit_info = 10;
 }
 
-message BiReportAccessList {
-  repeated BiReportAccess list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // BiReportSubscription represents a report subscription
 message BiReportSubscription {
   string subscription_id = 1;
-  string report_id = 2;                     // cross-ref: BiReport
   string schedule_id = 3;                   // cross-ref: BiReportSchedule
   string subscriber_id = 4;                 // cross-ref: HCM Employee
   BiExportFormat format = 5;
@@ -160,9 +141,4 @@ message BiReportSubscription {
   bool is_active = 8;
   map<string, string> custom_fields = 9;
   erp.AuditInfo audit_info = 10;
-}
-
-message BiReportSubscriptionList {
-  repeated BiReportSubscription list = 1;
-  l8api.L8MetaData metadata = 2;
 }

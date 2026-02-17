@@ -57,6 +57,8 @@ message EcomProduct {
     string tax_class = 25;
     map<string, string> custom_fields = 26;
     erp.AuditInfo audit_info = 27;
+    repeated EcomImage images = 28;
+    repeated EcomVariant variants = 29;
 }
 
 message EcomProductList {
@@ -121,15 +123,13 @@ message EcomAttributeList {
 }
 
 // =====================
-// IMAGE
+// IMAGE (child of EcomProduct)
 // =====================
 
-// @PrimeObject
 // EcomImage represents product images and media
 message EcomImage {
     string image_id = 1;
-    string product_id = 2;                  // cross-ref: EcomProduct
-    string variant_id = 3;                  // cross-ref: EcomVariant (optional)
+    string variant_id = 3;
     string file_name = 4;
     string url = 5;
     string thumbnail_url = 6;
@@ -146,20 +146,13 @@ message EcomImage {
     erp.AuditInfo audit_info = 17;
 }
 
-message EcomImageList {
-    repeated EcomImage list = 1;
-    l8api.L8MetaData metadata = 2;
-}
-
 // =====================
-// VARIANT
+// VARIANT (child of EcomProduct)
 // =====================
 
-// @PrimeObject
 // EcomVariant represents product variants (size, color, etc.)
 message EcomVariant {
     string variant_id = 1;
-    string product_id = 2;                  // cross-ref: EcomProduct
     string sku = 3;
     string name = 4;
     erp.Money price = 5;
@@ -172,12 +165,7 @@ message EcomVariant {
     map<string, string> attributes = 12;   // attribute_code -> value
     bool is_active = 13;
     int32 sort_order = 14;
-    string image_id = 15;                   // cross-ref: EcomImage
+    string image_id = 15;
     map<string, string> custom_fields = 16;
     erp.AuditInfo audit_info = 17;
-}
-
-message EcomVariantList {
-    repeated EcomVariant list = 1;
-    l8api.L8MetaData metadata = 2;
 }

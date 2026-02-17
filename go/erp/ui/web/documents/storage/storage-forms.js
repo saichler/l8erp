@@ -30,6 +30,67 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]),
             f.section('Compliance', [
                 ...f.date('expiryDate', 'Expiry Date')
+            ]),
+            f.section('Versions', [
+                ...f.inlineTable('versions', 'Document Versions', [
+                    { key: 'versionId', label: 'ID', hidden: true },
+                    { key: 'versionNumber', label: 'Version', type: 'number' },
+                    { key: 'changeNotes', label: 'Change Notes', type: 'text' },
+                    { key: 'fileName', label: 'File Name', type: 'text' },
+                    { key: 'isMajorVersion', label: 'Major', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Checkouts', [
+                ...f.inlineTable('checkouts', 'Checkouts', [
+                    { key: 'checkoutId', label: 'ID', hidden: true },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.CHECKOUT_STATUS },
+                    { key: 'checkedOutBy', label: 'Checked Out By', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'checkoutNotes', label: 'Notes', type: 'text' }
+                ])
+            ]),
+            f.section('Comments', [
+                ...f.inlineTable('comments', 'Review Comments', [
+                    { key: 'commentId', label: 'ID', hidden: true },
+                    { key: 'authorId', label: 'Author', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'content', label: 'Content', type: 'text' },
+                    { key: 'pageNumber', label: 'Page', type: 'number' },
+                    { key: 'isResolved', label: 'Resolved', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Signatures', [
+                ...f.inlineTable('signatures', 'Signatures', [
+                    { key: 'signatureId', label: 'ID', hidden: true },
+                    { key: 'signerId', label: 'Signer', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'signatureType', label: 'Type', type: 'select', options: enums.SIGNATURE_TYPE },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.SIGNATURE_STATUS },
+                    { key: 'reason', label: 'Reason', type: 'text' }
+                ])
+            ]),
+            f.section('Attachments', [
+                ...f.inlineTable('attachments', 'Attachments', [
+                    { key: 'attachmentId', label: 'ID', hidden: true },
+                    { key: 'entityType', label: 'Entity Type', type: 'text' },
+                    { key: 'entityId', label: 'Entity ID', type: 'text' },
+                    { key: 'module', label: 'Module', type: 'text' },
+                    { key: 'description', label: 'Description', type: 'text' }
+                ])
+            ]),
+            f.section('Access Logs', [
+                ...f.inlineTable('accessLogs', 'Access Logs', [
+                    { key: 'logId', label: 'ID', hidden: true },
+                    { key: 'userId', label: 'User', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'action', label: 'Action', type: 'select', options: enums.ACCESS_ACTION },
+                    { key: 'ipAddress', label: 'IP Address', type: 'text' }
+                ])
+            ]),
+            f.section('Audit Trails', [
+                ...f.inlineTable('auditTrails', 'Audit Trails', [
+                    { key: 'trailId', label: 'ID', hidden: true },
+                    { key: 'action', label: 'Action', type: 'text' },
+                    { key: 'entityType', label: 'Entity Type', type: 'text' },
+                    { key: 'userName', label: 'User', type: 'text' },
+                    { key: 'changeSummary', label: 'Summary', type: 'text' }
+                ])
             ])
         ]),
 
@@ -63,23 +124,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        DocDocumentVersion: f.form('Document Version', [
-            f.section('Version Details', [
-                ...f.reference('documentId', 'Document', 'DocDocument', true),
-                ...f.number('versionNumber', 'Version Number', true),
-                ...f.textarea('changeNotes', 'Change Notes'),
-                ...f.reference('createdBy', 'Created By', 'Employee'),
-                ...f.checkbox('isMajorVersion', 'Major Version')
-            ])
-        ])
     };
 
     DocStorage.primaryKeys = {
         DocDocument: 'documentId',
         DocFolder: 'folderId',
         DocCategory: 'categoryId',
-        DocTag: 'tagId',
-        DocDocumentVersion: 'versionId'
+        DocTag: 'tagId'
     };
 
 })();

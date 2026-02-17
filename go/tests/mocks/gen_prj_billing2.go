@@ -63,8 +63,6 @@ func generateInvoiceLines(store *MockDataStore) []*prj.PrjInvoiceLine {
 	lines := make([]*prj.PrjInvoiceLine, count)
 
 	for i := 0; i < count; i++ {
-		invoiceID := pickRef(store.PrjProjectInvoiceIDs, i)
-
 		projectID := pickRef(store.PrjProjectIDs, i)
 
 		taskID := pickRef(store.PrjTaskIDs, i)
@@ -116,7 +114,6 @@ func generateInvoiceLines(store *MockDataStore) []*prj.PrjInvoiceLine {
 
 		lines[i] = &prj.PrjInvoiceLine{
 			LineId:             genID("pil", i),
-			InvoiceId:          invoiceID,
 			ProjectId:          projectID,
 			TaskId:             taskID,
 			TimesheetEntryId:   timesheetEntryID,

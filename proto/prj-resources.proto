@@ -65,6 +65,7 @@ message PrjResource {
   string time_zone = 15;
   map<string, string> custom_fields = 16;
   erp.AuditInfo audit_info = 17;
+  repeated PrjResourceSkill skills = 18;
 }
 
 message PrjResourceList {
@@ -72,11 +73,9 @@ message PrjResourceList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // PrjResourceSkill represents a skill for a resource
 message PrjResourceSkill {
   string skill_id = 1;
-  string resource_id = 2;                  // cross-ref: PrjResource
   string skill_name = 3;
   string skill_category = 4;
   int32 proficiency_level = 5;             // 1-5 scale
@@ -86,11 +85,6 @@ message PrjResourceSkill {
   int64 certification_expiry = 9;
   map<string, string> custom_fields = 10;
   erp.AuditInfo audit_info = 11;
-}
-
-message PrjResourceSkillList {
-  repeated PrjResourceSkill list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject

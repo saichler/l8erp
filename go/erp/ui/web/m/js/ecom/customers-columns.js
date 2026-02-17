@@ -35,18 +35,6 @@ limitations under the License.
             ...col.money('totalSpent', 'Total Spent')
         ],
 
-        EcomCustomerAddress: [
-            ...col.id('addressId'),
-            ...col.col('customerId', 'Customer'),
-            ...col.col('label', 'Label'),
-            ...col.col('firstName', 'First Name'),
-            ...col.col('lastName', 'Last Name'),
-            ...col.col('city', 'City'),
-            ...col.col('country', 'Country'),
-            ...col.boolean('isDefaultBilling', 'Default Billing'),
-            ...col.boolean('isDefaultShipping', 'Default Shipping')
-        ],
-
         EcomWishlist: [
             ...col.id('wishlistId'),
             ...col.col('customerId', 'Customer'),
@@ -56,14 +44,7 @@ limitations under the License.
             ...col.date('createdDate', 'Created')
         ],
 
-        EcomWishlistItem: [
-            ...col.id('itemId'),
-            ...col.col('wishlistId', 'Wishlist'),
-            ...col.col('productId', 'Product'),
-            ...col.col('quantity', 'Quantity'),
-            ...col.date('addedDate', 'Added'),
-            ...col.col('priority', 'Priority')
-        ],
+        // EcomCustomerAddress, EcomWishlistItem - now inline tables in parents
 
         EcomCart: [
             ...col.id('cartId'),
@@ -78,9 +59,7 @@ limitations under the License.
 
     MobileEcomCustomers.primaryKeys = {
         EcomCustomer: 'customerId',
-        EcomCustomerAddress: 'addressId',
         EcomWishlist: 'wishlistId',
-        EcomWishlistItem: 'itemId',
         EcomCart: 'cartId'
     };
 

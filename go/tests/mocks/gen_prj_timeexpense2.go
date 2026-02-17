@@ -18,7 +18,6 @@ func generateTimesheetEntries(store *MockDataStore) []*prj.PrjTimesheetEntry {
 	activityTypes := []string{"Development", "Testing", "Meeting", "Documentation", "Review", "Support"}
 
 	for i := 0; i < count; i++ {
-		timesheetIdx := i % len(store.PrjTimesheetIDs)
 		projectIdx := i % len(store.PrjProjectIDs)
 		taskIdx := i % len(store.PrjTaskIDs)
 		phaseIdx := i % len(store.PrjPhaseIDs)
@@ -28,7 +27,6 @@ func generateTimesheetEntries(store *MockDataStore) []*prj.PrjTimesheetEntry {
 
 		entry := &prj.PrjTimesheetEntry{
 			EntryId:      fmt.Sprintf("PRJ-TSENTRY-%03d", i+1),
-			TimesheetId:  store.PrjTimesheetIDs[timesheetIdx],
 			ProjectId:    store.PrjProjectIDs[projectIdx],
 			TaskId:       store.PrjTaskIDs[taskIdx],
 			PhaseId:      store.PrjPhaseIDs[phaseIdx],
@@ -114,7 +112,6 @@ func generateExpenseEntries(store *MockDataStore) []*prj.PrjExpenseEntry {
 	paymentMethods := []string{"Corporate Card", "Personal Card", "Cash", "Invoice"}
 
 	for i := 0; i < count; i++ {
-		reportIdx := i % len(store.PrjExpenseReportIDs)
 		projectIdx := i % len(store.PrjProjectIDs)
 		taskIdx := i % len(store.PrjTaskIDs)
 		categoryIdx := i % len(store.PrjExpenseCategoryIDs)
@@ -139,7 +136,6 @@ func generateExpenseEntries(store *MockDataStore) []*prj.PrjExpenseEntry {
 
 		entry := &prj.PrjExpenseEntry{
 			EntryId:         fmt.Sprintf("PRJ-EXPENT-%03d", i+1),
-			ReportId:        store.PrjExpenseReportIDs[reportIdx],
 			ProjectId:       store.PrjProjectIDs[projectIdx],
 			TaskId:          store.PrjTaskIDs[taskIdx],
 			CategoryId:      store.PrjExpenseCategoryIDs[categoryIdx],

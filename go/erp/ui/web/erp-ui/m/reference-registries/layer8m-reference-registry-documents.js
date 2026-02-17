@@ -20,29 +20,16 @@ window.Layer8MReferenceRegistryDocuments = {
         ['DocCategory', 'categoryId', 'name'],
         ['DocTag', 'tagId', 'name']
     ]),
-    ...refDocM.simple('DocDocumentVersion', 'versionId', 'versionNumber', 'Version'),
 
     // ========================================
     // Workflow
     // ========================================
-    ...refDocM.idOnly('DocCheckout', 'checkoutId'),
-    ...refDocM.batch([
-        ['DocApprovalWorkflow', 'workflowId', 'name'],
-        ['DocWorkflowStep', 'stepId', 'name']
-    ]),
-    ...refDocM.batchIdOnly([
-        ['DocSignature', 'signatureId'],
-        ['DocReviewComment', 'commentId']
-    ]),
+    ...refDocM.simple('DocApprovalWorkflow', 'workflowId', 'name', 'Approval Workflow'),
 
     // ========================================
     // Integration
     // ========================================
-    ...refDocM.simple('DocAttachment', 'attachmentId', 'fileName', 'Attachment'),
-    ...refDocM.batch([
-        ['DocTemplate', 'templateId', 'name'],
-        ['DocTemplateField', 'fieldId', 'name']
-    ]),
+    ...refDocM.simple('DocTemplate', 'templateId', 'name', 'Template'),
     ...refDocM.simple('DocEmailCapture', 'captureId', 'subject', 'Email Capture'),
     ...refDocM.idOnly('DocScanJob', 'scanJobId'),
 
@@ -53,11 +40,7 @@ window.Layer8MReferenceRegistryDocuments = {
         ['DocRetentionPolicy', 'policyId', 'name'],
         ['DocLegalHold', 'holdId', 'name']
     ]),
-    ...refDocM.batchIdOnly([
-        ['DocAccessLog', 'logId'],
-        ['DocArchiveJob', 'jobId'],
-        ['DocAuditTrail', 'trailId']
-    ])
+    ...refDocM.idOnly('DocArchiveJob', 'jobId')
 };
 
 // Register with the central registry

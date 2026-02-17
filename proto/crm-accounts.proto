@@ -50,6 +50,8 @@ message CrmAccount {
   int64 last_activity_date = 19;
   map<string, string> custom_fields = 20;
   erp.AuditInfo audit_info = 21;
+  repeated CrmHealthScore health_scores = 22;
+  repeated CrmAccountPlan account_plans = 23;
 }
 
 message CrmAccountList {
@@ -134,11 +136,9 @@ message CrmRelationshipList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// CrmHealthScore represents a customer health score record
+// CrmHealthScore represents a customer health score record (child of CrmAccount)
 message CrmHealthScore {
   string score_id = 1;
-  string account_id = 2;                   // cross-ref: CrmAccount
   CrmHealthStatus health_status = 3;
   int32 overall_score = 4;
   int32 engagement_score = 5;
@@ -152,16 +152,10 @@ message CrmHealthScore {
   erp.AuditInfo audit_info = 13;
 }
 
-message CrmHealthScoreList {
-  repeated CrmHealthScore list = 1;
-  l8api.L8MetaData metadata = 2;
-}
 
-// @PrimeObject
-// CrmAccountPlan represents an account planning record
+// CrmAccountPlan represents an account planning record (child of CrmAccount)
 message CrmAccountPlan {
   string plan_id = 1;
-  string account_id = 2;                   // cross-ref: CrmAccount
   string name = 3;
   string fiscal_year = 4;
   erp.Money revenue_target = 5;
@@ -178,7 +172,3 @@ message CrmAccountPlan {
   erp.AuditInfo audit_info = 16;
 }
 
-message CrmAccountPlanList {
-  repeated CrmAccountPlan list = 1;
-  l8api.L8MetaData metadata = 2;
-}

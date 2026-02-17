@@ -34,26 +34,27 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('description', 'Description'),
                 ...f.date('identifiedDate', 'Identified Date'),
                 ...f.date('nextReviewDate', 'Next Review Date')
-            ])
-        ]),
-
-        CompRiskAssessment: f.form('Risk Assessment', [
-            f.section('Assessment Information', [
-                ...f.reference('riskId', 'Risk', 'CompRiskRegister', true),
-                ...f.select('controlEffectiveness', 'Control Effectiveness', enums.assessmentType),
-                ...f.date('assessmentDate', 'Assessment Date', true),
-                ...f.reference('assessorId', 'Assessor', 'Employee')
             ]),
-            f.section('Risk Evaluation', [
-                ...f.select('likelihoodRating', 'Likelihood', enums.riskLikelihood),
-                ...f.select('impactRating', 'Impact', enums.riskImpact),
-                ...f.number('riskScore', 'Risk Score'),
-                ...f.checkbox('requiresEscalation', 'Requires Escalation')
+            f.section('Risk Assessments', [
+                ...f.inlineTable('assessments', 'Risk Assessments', [
+                    { key: 'assessmentId', label: 'ID', hidden: true },
+                    { key: 'assessmentDate', label: 'Date', type: 'date' },
+                    { key: 'assessorId', label: 'Assessor', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'likelihoodRating', label: 'Likelihood', type: 'number' },
+                    { key: 'impactRating', label: 'Impact', type: 'number' },
+                    { key: 'riskScore', label: 'Score', type: 'number' },
+                    { key: 'requiresEscalation', label: 'Escalation', type: 'checkbox' }
+                ])
             ]),
-            f.section('Details', [
-                ...f.textarea('likelihoodJustification', 'Likelihood Justification'),
-                ...f.textarea('impactJustification', 'Impact Justification'),
-                ...f.textarea('recommendations', 'Recommendations')
+            f.section('Mitigation Plans', [
+                ...f.inlineTable('mitigationPlans', 'Mitigation Plans', [
+                    { key: 'planId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'strategy', label: 'Strategy', type: 'text' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.mitigationStatus },
+                    { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'targetDate', label: 'Target Date', type: 'date' }
+                ])
             ])
         ]),
 
@@ -75,27 +76,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('rootCause', 'Root Cause'),
                 ...f.textarea('immediateAction', 'Immediate Action'),
                 ...f.textarea('lessonsLearned', 'Lessons Learned')
-            ])
-        ]),
-
-        CompMitigationPlan: f.form('Mitigation Plan', [
-            f.section('Plan Information', [
-                ...f.text('name', 'Name', true),
-                ...f.reference('riskId', 'Risk', 'CompRiskRegister', true),
-                ...f.select('strategy', 'Strategy', enums.mitigationStrategy, true),
-                ...f.select('status', 'Status', enums.mitigationStatus)
-            ]),
-            f.section('Timeline', [
-                ...f.date('startDate', 'Start Date'),
-                ...f.date('targetDate', 'Target Date'),
-                ...f.date('completionDate', 'Completion Date')
-            ]),
-            f.section('Ownership', [
-                ...f.reference('ownerId', 'Owner', 'Employee')
-            ]),
-            f.section('Details', [
-                ...f.textarea('description', 'Description'),
-                ...f.textarea('successCriteria', 'Success Criteria')
             ])
         ]),
 
@@ -129,9 +109,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
     CompRisk.primaryKeys = {
         CompRiskRegister: 'riskId',
-        CompRiskAssessment: 'assessmentId',
         CompIncident: 'incidentId',
-        CompMitigationPlan: 'planId',
         CompInsurancePolicy: 'insuranceId'
     };
 

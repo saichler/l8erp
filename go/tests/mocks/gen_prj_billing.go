@@ -173,8 +173,6 @@ func generateBillingMilestones(store *MockDataStore) []*prj.PrjBillingMilestone 
 	milestones := make([]*prj.PrjBillingMilestone, count)
 
 	for i := 0; i < count; i++ {
-		scheduleID := pickRef(store.PrjBillingScheduleIDs, i)
-
 		projectID := pickRef(store.PrjProjectIDs, i)
 
 		// Reference project milestone if available
@@ -198,7 +196,6 @@ func generateBillingMilestones(store *MockDataStore) []*prj.PrjBillingMilestone 
 
 		milestones[i] = &prj.PrjBillingMilestone{
 			MilestoneId:        genID("pbm", i),
-			ScheduleId:         scheduleID,
 			ProjectId:          projectID,
 			ProjectMilestoneId: projectMilestoneID,
 			Name:               billingMilestoneNames[i%len(billingMilestoneNames)],

@@ -8,9 +8,7 @@ package mocks
 // Generates:
 // - DocRetentionPolicy
 // - DocLegalHold
-// - DocAccessLog
 // - DocArchiveJob
-// - DocAuditTrail
 
 import (
 	"fmt"
@@ -120,66 +118,6 @@ func generateDocLegalHolds(store *MockDataStore) []*doc.DocLegalHold {
 	return holds
 }
 
-// generateDocAccessLogs creates access log records
-func generateDocAccessLogs(store *MockDataStore) []*doc.DocAccessLog {
-	count := 50
-
-	accessActions := []doc.DocAccessAction{
-		doc.DocAccessAction_DOC_ACCESS_ACTION_VIEW,
-		doc.DocAccessAction_DOC_ACCESS_ACTION_VIEW,
-		doc.DocAccessAction_DOC_ACCESS_ACTION_VIEW,
-		doc.DocAccessAction_DOC_ACCESS_ACTION_EDIT,
-		doc.DocAccessAction_DOC_ACCESS_ACTION_EDIT,
-		doc.DocAccessAction_DOC_ACCESS_ACTION_DOWNLOAD,
-		doc.DocAccessAction_DOC_ACCESS_ACTION_SHARE,
-		doc.DocAccessAction_DOC_ACCESS_ACTION_DELETE,
-	}
-
-	userAgents := []string{
-		"Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-		"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
-		"Mozilla/5.0 (iPhone; CPU iPhone OS 16_0)",
-		"Mozilla/5.0 (Linux; Android 13)",
-	}
-
-	logs := make([]*doc.DocAccessLog, count)
-	for i := 0; i < count; i++ {
-		documentID := pickRef(store.DocDocumentIDs, i)
-
-		versionID := pickRef(store.DocVersionIDs, i)
-
-		userID := ""
-		userName := fmt.Sprintf("User %d", i+1)
-		if len(store.EmployeeIDs) > 0 {
-			userID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
-
-		success := i%10 != 0
-		failureReason := ""
-		if !success {
-			failureReason = "Access denied"
-		}
-
-		logs[i] = &doc.DocAccessLog{
-			LogId:         genID("log", i),
-			DocumentId:    documentID,
-			VersionId:     versionID,
-			Action:        accessActions[i%len(accessActions)],
-			UserId:        userID,
-			UserName:      userName,
-			AccessDate:    time.Now().AddDate(0, 0, -rand.Intn(90)).Add(time.Duration(-rand.Intn(24)) * time.Hour).Unix(),
-			IpAddress:     fmt.Sprintf("192.168.%d.%d", rand.Intn(255), rand.Intn(255)),
-			UserAgent:     userAgents[i%len(userAgents)],
-			SessionId:     fmt.Sprintf("sess-%08x", rand.Int31()),
-			Success:       success,
-			FailureReason: failureReason,
-			Details:       fmt.Sprintf("Access log entry %d", i+1),
-			AuditInfo:     createAuditInfo(),
-		}
-	}
-	return logs
-}
-
 // generateDocArchiveJobs creates archive job records
 func generateDocArchiveJobs(store *MockDataStore) []*doc.DocArchiveJob {
 	count := 15
@@ -203,9 +141,7 @@ func generateDocArchiveJobs(store *MockDataStore) []*doc.DocArchiveJob {
 	jobs := make([]*doc.DocArchiveJob, count)
 	for i := 0; i < count; i++ {
 		folderID := pickRef(store.DocFolderIDs, i)
-
 		policyID := pickRef(store.DocRetentionPolicyIDs, i)
-
 		initiatedBy := pickRef(store.EmployeeIDs, i)
 
 		status := archiveStatuses[i%len(archiveStatuses)]
@@ -236,76 +172,4 @@ func generateDocArchiveJobs(store *MockDataStore) []*doc.DocArchiveJob {
 		}
 	}
 	return jobs
-}
-
-// generateDocAuditTrails creates audit trail records
-func generateDocAuditTrails(store *MockDataStore) []*doc.DocAuditTrail {
-	count := 60
-
-	auditActions := []string{
-		"created", "modified", "modified", "viewed", "viewed", "viewed",
-		"approved", "deleted", "rejected", "shared", "downloaded",
-	}
-
-	entityTypes := []string{"document", "folder", "template", "workflow", "signature"}
-
-	trails := make([]*doc.DocAuditTrail, count)
-	for i := 0; i < count; i++ {
-		documentID := pickRef(store.DocDocumentIDs, i)
-
-		versionID := pickRef(store.DocVersionIDs, i)
-
-		userID := ""
-		userName := fmt.Sprintf("User %d", i+1)
-		if len(store.EmployeeIDs) > 0 {
-			userID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		}
-
-		entityType := entityTypes[i%len(entityTypes)]
-		var entityID string
-		switch entityType {
-		case "document":
-			if len(store.DocDocumentIDs) > 0 {
-				entityID = store.DocDocumentIDs[i%len(store.DocDocumentIDs)]
-			}
-		case "folder":
-			if len(store.DocFolderIDs) > 0 {
-				entityID = store.DocFolderIDs[i%len(store.DocFolderIDs)]
-			}
-		case "template":
-			if len(store.DocTemplateIDs) > 0 {
-				entityID = store.DocTemplateIDs[i%len(store.DocTemplateIDs)]
-			}
-		case "workflow":
-			if len(store.DocApprovalWorkflowIDs) > 0 {
-				entityID = store.DocApprovalWorkflowIDs[i%len(store.DocApprovalWorkflowIDs)]
-			}
-		case "signature":
-			if len(store.DocSignatureIDs) > 0 {
-				entityID = store.DocSignatureIDs[i%len(store.DocSignatureIDs)]
-			}
-		}
-		if entityID == "" {
-			entityID = genID("ent", i)
-		}
-
-		trails[i] = &doc.DocAuditTrail{
-			TrailId:       genID("aud", i),
-			DocumentId:    documentID,
-			VersionId:     versionID,
-			Action:        auditActions[i%len(auditActions)],
-			EntityType:    entityType,
-			EntityId:      entityID,
-			UserId:        userID,
-			UserName:      userName,
-			Timestamp:     time.Now().AddDate(0, 0, -rand.Intn(180)).Add(time.Duration(-rand.Intn(24)) * time.Hour).Unix(),
-			OldValues:     fmt.Sprintf(`{"status": "old_%d"}`, i),
-			NewValues:     fmt.Sprintf(`{"status": "new_%d"}`, i),
-			ChangeSummary: fmt.Sprintf("Audit trail entry %d", i+1),
-			IpAddress:     fmt.Sprintf("192.168.%d.%d", rand.Intn(255), rand.Intn(255)),
-			SessionId:     fmt.Sprintf("sess-%08x", rand.Int31()),
-			AuditInfo:     createAuditInfo(),
-		}
-	}
-	return trails
 }

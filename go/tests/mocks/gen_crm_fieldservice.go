@@ -142,7 +142,7 @@ func generateServiceContracts(store *MockDataStore) []*crm.CrmServiceContract {
 	return contracts
 }
 
-// generateServiceOrders creates field service order records
+// generateServiceOrders creates field service order records with embedded parts and visits
 func generateServiceOrders(store *MockDataStore) []*crm.CrmServiceOrder {
 	types := []crm.CrmServiceOrderType{
 		crm.CrmServiceOrderType_CRM_SERVICE_ORDER_TYPE_REPAIR,
@@ -162,8 +162,15 @@ func generateServiceOrders(store *MockDataStore) []*crm.CrmServiceOrder {
 		crm.CrmServiceOrderPriority_CRM_SERVICE_ORDER_PRIORITY_HIGH,
 		crm.CrmServiceOrderPriority_CRM_SERVICE_ORDER_PRIORITY_EMERGENCY,
 	}
+	visitStatuses := []crm.CrmVisitStatus{
+		crm.CrmVisitStatus_CRM_VISIT_STATUS_SCHEDULED,
+		crm.CrmVisitStatus_CRM_VISIT_STATUS_EN_ROUTE,
+		crm.CrmVisitStatus_CRM_VISIT_STATUS_ON_SITE,
+		crm.CrmVisitStatus_CRM_VISIT_STATUS_COMPLETED,
+	}
 
 	count := 40
+	partIdx := 1
 	orders := make([]*crm.CrmServiceOrder, count)
 	for i := 0; i < count; i++ {
 		accountID := pickRef(store.CrmAccountIDs, i)
@@ -204,6 +211,82 @@ func generateServiceOrders(store *MockDataStore) []*crm.CrmServiceOrder {
 			actualCost = int64(float64(estimatedCost) * (float64(rand.Intn(40)+80) / 100))
 		}
 
+		// Embedded parts (1-3 per order)
+		numParts := rand.Intn(3) + 1
+		parts := make([]*crm.CrmServicePart, numParts)
+		for j := 0; j < numParts; j++ {
+			itemID := ""
+			itemName := itemNames[(partIdx-1)%len(itemNames)]
+			if len(store.ItemIDs) > 0 {
+				itemID = store.ItemIDs[(partIdx-1)%len(store.ItemIDs)]
+			}
+			warehouseID := pickRef(store.SCMWarehouseIDs, partIdx-1)
+			quantity := float64(rand.Intn(5) + 1)
+			unitCost := int64(rand.Intn(500) + 50)
+			totalCost := int64(float64(unitCost) * quantity)
+
+			parts[j] = &crm.CrmServicePart{
+				PartId:       fmt.Sprintf("svcpart-%03d", partIdx),
+				ItemId:       itemID,
+				ItemName:     itemName,
+				Quantity:     quantity,
+				UnitCost:     money(store, unitCost),
+				TotalCost:    money(store, totalCost),
+				SerialNumber: fmt.Sprintf("PN-%08d", rand.Intn(100000000)),
+				IsWarranty:   partIdx%5 == 0,
+				WarehouseId:  warehouseID,
+				Notes:        fmt.Sprintf("Part %d for service order", j+1),
+				AuditInfo:    createAuditInfo(),
+			}
+			partIdx++
+		}
+
+		// Embedded visit (1 per order)
+		var vStatus crm.CrmVisitStatus
+		if i < count*1/10 {
+			vStatus = visitStatuses[0]
+		} else if i < count*2/10 {
+			vStatus = visitStatuses[1]
+		} else if i < count*4/10 {
+			vStatus = visitStatuses[2]
+		} else {
+			vStatus = visitStatuses[3]
+		}
+
+		scheduledArrival := time.Now().AddDate(0, 0, -rand.Intn(7))
+		var actualArrival, departureTime int64
+		if vStatus != crm.CrmVisitStatus_CRM_VISIT_STATUS_SCHEDULED {
+			actualArrival = scheduledArrival.Add(time.Duration(rand.Intn(30)) * time.Minute).Unix()
+		}
+		if vStatus == crm.CrmVisitStatus_CRM_VISIT_STATUS_COMPLETED {
+			departureTime = scheduledArrival.Add(time.Duration(rand.Intn(3)+1) * time.Hour).Unix()
+		}
+
+		laborHours := float64(rand.Intn(4) + 1)
+		travelHours := float64(rand.Intn(2)) + 0.5
+		travelDistance := float64(rand.Intn(50) + 5)
+		laborCost := int64(laborHours * float64(rand.Intn(50)+50))
+		travelCost := int64(travelDistance * 0.58)
+
+		visits := []*crm.CrmServiceVisit{{
+			VisitId:           fmt.Sprintf("svcvist-%03d", i+1),
+			TechnicianId:      technicianID,
+			Status:            vStatus,
+			ScheduledArrival:  scheduledArrival.Unix(),
+			ActualArrival:     actualArrival,
+			DepartureTime:     departureTime,
+			LaborHours:        laborHours,
+			TravelHours:       travelHours,
+			TravelDistance:    travelDistance,
+			WorkPerformed:     "Completed scheduled maintenance and inspections",
+			CustomerSignature: "J. Smith",
+			CustomerRating:    int32(rand.Intn(5) + 1),
+			CustomerFeedback:  "Excellent service!",
+			LaborCost:         money(store, laborCost),
+			TravelCost:        money(store, travelCost),
+			AuditInfo:         createAuditInfo(),
+		}}
+
 		orders[i] = &crm.CrmServiceOrder{
 			OrderId:     genID("svcord", i),
 			OrderNumber: fmt.Sprintf("SO-%05d", 10000+i+1),
@@ -233,6 +316,8 @@ func generateServiceOrders(store *MockDataStore) []*crm.CrmServiceOrder {
 			Resolution:     "Service completed successfully",
 			OwnerId:        ownerID,
 			AuditInfo:      createAuditInfo(),
+			Parts:          parts,
+			Visits:         visits,
 		}
 	}
 	return orders
@@ -271,107 +356,4 @@ func generateServiceSchedules(store *MockDataStore) []*crm.CrmServiceSchedule {
 		}
 	}
 	return schedules
-}
-
-// generateServiceParts creates service part records
-func generateServiceParts(store *MockDataStore) []*crm.CrmServicePart {
-	parts := make([]*crm.CrmServicePart, 0, len(store.CrmServiceOrderIDs)*2)
-	idx := 1
-	for _, orderID := range store.CrmServiceOrderIDs {
-		numParts := rand.Intn(3) + 1
-		for j := 0; j < numParts; j++ {
-			itemID := ""
-			itemName := itemNames[(idx-1)%len(itemNames)]
-			if len(store.ItemIDs) > 0 {
-				itemID = store.ItemIDs[(idx-1)%len(store.ItemIDs)]
-			}
-			warehouseID := pickRef(store.SCMWarehouseIDs, (idx-1))
-
-			quantity := float64(rand.Intn(5) + 1)
-			unitCost := int64(rand.Intn(500) + 50)
-			totalCost := int64(float64(unitCost) * quantity)
-
-			parts = append(parts, &crm.CrmServicePart{
-				PartId:         fmt.Sprintf("svcpart-%03d", idx),
-				ServiceOrderId: orderID,
-				ItemId:         itemID,
-				ItemName:       itemName,
-				Quantity:       quantity,
-				UnitCost:       money(store, unitCost),
-				TotalCost:      money(store, totalCost),
-				SerialNumber:   fmt.Sprintf("PN-%08d", rand.Intn(100000000)),
-				IsWarranty:     idx%5 == 0,
-				WarehouseId:    warehouseID,
-				Notes:          fmt.Sprintf("Part %d for service order", j+1),
-				AuditInfo:      createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return parts
-}
-
-// generateServiceVisits creates field service visit records
-func generateServiceVisits(store *MockDataStore) []*crm.CrmServiceVisit {
-	statuses := []crm.CrmVisitStatus{
-		crm.CrmVisitStatus_CRM_VISIT_STATUS_SCHEDULED,
-		crm.CrmVisitStatus_CRM_VISIT_STATUS_EN_ROUTE,
-		crm.CrmVisitStatus_CRM_VISIT_STATUS_ON_SITE,
-		crm.CrmVisitStatus_CRM_VISIT_STATUS_COMPLETED,
-	}
-
-	visits := make([]*crm.CrmServiceVisit, 0, len(store.CrmServiceOrderIDs))
-	idx := 1
-	for _, orderID := range store.CrmServiceOrderIDs {
-		technicianID := pickRef(store.CrmTechnicianIDs, (idx-1))
-
-		// Status distribution: 10% scheduled, 10% en route, 20% on site, 60% completed
-		var status crm.CrmVisitStatus
-		if idx <= len(store.CrmServiceOrderIDs)*1/10 {
-			status = statuses[0]
-		} else if idx <= len(store.CrmServiceOrderIDs)*2/10 {
-			status = statuses[1]
-		} else if idx <= len(store.CrmServiceOrderIDs)*4/10 {
-			status = statuses[2]
-		} else {
-			status = statuses[3]
-		}
-
-		scheduledArrival := time.Now().AddDate(0, 0, -rand.Intn(7))
-		var actualArrival, departureTime int64
-		if status != crm.CrmVisitStatus_CRM_VISIT_STATUS_SCHEDULED {
-			actualArrival = scheduledArrival.Add(time.Duration(rand.Intn(30)) * time.Minute).Unix()
-		}
-		if status == crm.CrmVisitStatus_CRM_VISIT_STATUS_COMPLETED {
-			departureTime = scheduledArrival.Add(time.Duration(rand.Intn(3)+1) * time.Hour).Unix()
-		}
-
-		laborHours := float64(rand.Intn(4) + 1)
-		travelHours := float64(rand.Intn(2)) + 0.5
-		travelDistance := float64(rand.Intn(50) + 5)
-		laborCost := int64(laborHours * float64(rand.Intn(50)+50))
-		travelCost := int64(travelDistance * 0.58)
-
-		visits = append(visits, &crm.CrmServiceVisit{
-			VisitId:           fmt.Sprintf("svcvist-%03d", idx),
-			ServiceOrderId:    orderID,
-			TechnicianId:      technicianID,
-			Status:            status,
-			ScheduledArrival:  scheduledArrival.Unix(),
-			ActualArrival:     actualArrival,
-			DepartureTime:     departureTime,
-			LaborHours:        laborHours,
-			TravelHours:       travelHours,
-			TravelDistance:    travelDistance,
-			WorkPerformed:     "Completed scheduled maintenance and inspections",
-			CustomerSignature: "J. Smith",
-			CustomerRating:    int32(rand.Intn(5) + 1),
-			CustomerFeedback:  "Excellent service!",
-			LaborCost:         money(store, laborCost),
-			TravelCost:        money(store, travelCost),
-			AuditInfo:         createAuditInfo(),
-		})
-		idx++
-	}
-	return visits
 }

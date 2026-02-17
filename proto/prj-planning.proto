@@ -19,6 +19,7 @@ package prj;
 option go_package = "./types/prj";
 
 import "prj-common.proto";
+import "prj-analytics.proto";
 import "erp-common.proto";
 import "api.proto";
 
@@ -54,6 +55,16 @@ message PrjProject {
   string opportunity_id = 23;              // cross-ref: CRM Opportunity
   map<string, string> custom_fields = 24;
   erp.AuditInfo audit_info = 25;
+  repeated PrjPhase phases = 26;
+  repeated PrjTask tasks = 27;
+  repeated PrjMilestone milestones = 28;
+  repeated PrjDeliverable deliverables = 29;
+  repeated PrjDependency dependencies = 30;
+  repeated PrjRisk risks = 31;
+  repeated PrjProjectIssue issues = 32;
+  repeated PrjBudgetVariance budget_variances = 33;
+  repeated PrjEarnedValue earned_values = 34;
+  repeated PrjResourceForecast resource_forecasts = 35;
 }
 
 message PrjProjectList {
@@ -81,11 +92,9 @@ message PrjProjectTemplateList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // PrjPhase represents a project phase
 message PrjPhase {
   string phase_id = 1;
-  string project_id = 2;                   // cross-ref: PrjProject
   string name = 3;
   string description = 4;
   int32 sequence = 5;
@@ -101,16 +110,9 @@ message PrjPhase {
   erp.AuditInfo audit_info = 15;
 }
 
-message PrjPhaseList {
-  repeated PrjPhase list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // PrjTask represents a project task
 message PrjTask {
   string task_id = 1;
-  string project_id = 2;                   // cross-ref: PrjProject
   string phase_id = 3;                     // cross-ref: PrjPhase
   string parent_task_id = 4;               // cross-ref: PrjTask (self-reference for subtasks)
   string wbs_code = 5;                     // Work Breakdown Structure code
@@ -133,16 +135,9 @@ message PrjTask {
   erp.AuditInfo audit_info = 22;
 }
 
-message PrjTaskList {
-  repeated PrjTask list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // PrjMilestone represents a project milestone
 message PrjMilestone {
   string milestone_id = 1;
-  string project_id = 2;                   // cross-ref: PrjProject
   string phase_id = 3;                     // cross-ref: PrjPhase
   string name = 4;
   string description = 5;
@@ -156,16 +151,9 @@ message PrjMilestone {
   erp.AuditInfo audit_info = 13;
 }
 
-message PrjMilestoneList {
-  repeated PrjMilestone list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // PrjDeliverable represents a project deliverable
 message PrjDeliverable {
   string deliverable_id = 1;
-  string project_id = 2;                   // cross-ref: PrjProject
   string milestone_id = 3;                 // cross-ref: PrjMilestone
   string task_id = 4;                      // cross-ref: PrjTask
   string name = 5;
@@ -180,16 +168,9 @@ message PrjDeliverable {
   erp.AuditInfo audit_info = 14;
 }
 
-message PrjDeliverableList {
-  repeated PrjDeliverable list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // PrjDependency represents a task dependency
 message PrjDependency {
   string dependency_id = 1;
-  string project_id = 2;                   // cross-ref: PrjProject
   string predecessor_task_id = 3;          // cross-ref: PrjTask
   string successor_task_id = 4;            // cross-ref: PrjTask
   PrjDependencyType dependency_type = 5;
@@ -198,16 +179,9 @@ message PrjDependency {
   erp.AuditInfo audit_info = 8;
 }
 
-message PrjDependencyList {
-  repeated PrjDependency list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // PrjRisk represents a project risk
 message PrjRisk {
   string risk_id = 1;
-  string project_id = 2;                   // cross-ref: PrjProject
   string name = 3;
   string description = 4;
   string category = 5;
@@ -225,7 +199,3 @@ message PrjRisk {
   erp.AuditInfo audit_info = 17;
 }
 
-message PrjRiskList {
-  repeated PrjRisk list = 1;
-  l8api.L8MetaData metadata = 2;
-}

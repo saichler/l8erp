@@ -20,6 +20,9 @@ package doc;
 option go_package = "./types/doc";
 
 import "doc-common.proto";
+import "doc-workflow.proto";
+import "doc-integration.proto";
+import "doc-compliance.proto";
 import "erp-common.proto";
 import "api.proto";
 
@@ -54,6 +57,13 @@ message DocDocument {
   map<string, string> metadata = 22;
   map<string, string> custom_fields = 23;
   erp.AuditInfo audit_info = 24;
+  repeated DocDocumentVersion versions = 25;
+  repeated DocCheckout checkouts = 26;
+  repeated DocReviewComment comments = 27;
+  repeated DocSignature signatures = 28;
+  repeated DocAttachment attachments = 29;
+  repeated DocAccessLog access_logs = 30;
+  repeated DocAuditTrail audit_trails = 31;
 }
 
 message DocDocumentList {
@@ -138,11 +148,9 @@ message DocTagList {
 // DOCUMENT VERSION
 // =====================
 
-// @PrimeObject
 // DocDocumentVersion represents a version of a document
 message DocDocumentVersion {
   string version_id = 1;
-  string document_id = 2;                   // cross-ref: DocDocument
   int32 version_number = 3;
   string change_notes = 4;
   string file_name = 5;
@@ -156,7 +164,3 @@ message DocDocumentVersion {
   erp.AuditInfo audit_info = 13;
 }
 
-message DocDocumentVersionList {
-  repeated DocDocumentVersion list = 1;
-  l8api.L8MetaData metadata = 2;
-}

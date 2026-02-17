@@ -16,8 +16,7 @@ package mocks
 
 // Generates:
 // - BiDataSource
-// - BiETLJob
-// - BiETLSchedule
+// - BiETLJob (with embedded: schedules)
 
 import (
 	"fmt"
@@ -223,68 +222,44 @@ func generateETLJobs(store *MockDataStore) []*bi.BiETLJob {
 			ErrorMessage:    errorMessage,
 			OwnerId:         ownerID,
 			IsActive:        i < 10, // ~83% active
+			Schedules:       generateETLSchedulesInline(i),
 			AuditInfo:       createAuditInfo(),
 		}
 	}
 	return jobs
 }
 
-// generateETLSchedules creates ETL schedule records
-func generateETLSchedules(store *MockDataStore) []*bi.BiETLSchedule {
-	count := 10
-
-	// Flavorable frequency distributions: 40% DAILY, 30% WEEKLY, 20% MONTHLY, 10% OTHER
+// generateETLSchedulesInline creates 2 embedded ETL schedules per ETL job
+func generateETLSchedulesInline(parentIdx int) []*bi.BiETLSchedule {
 	frequencies := []bi.BiScheduleFrequency{
 		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_DAILY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_DAILY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_DAILY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_DAILY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_WEEKLY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_WEEKLY,
 		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_WEEKLY,
 		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_MONTHLY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_MONTHLY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_QUARTERLY,
 	}
-
-	scheduleNames := []string{
-		"Daily Sales Sync Schedule",
-		"Weekly Customer Update",
-		"Monthly Financial Close",
-		"Daily Inventory Refresh",
-		"Weekly HR Data Sync",
-		"Daily Order Processing",
-		"Weekly Vendor Update",
-		"Monthly Analytics Refresh",
-		"Quarterly Report Generation",
-		"Daily Marketing Sync",
-	}
-
+	scheduleNames := []string{"Primary Schedule", "Backup Schedule", "Maintenance Window"}
 	runTimes := []string{"02:00", "03:00", "04:00", "05:00", "06:00", "22:00", "23:00"}
 
-	schedules := make([]*bi.BiETLSchedule, count)
-	for i := 0; i < count; i++ {
-		jobID := pickRef(store.BiETLJobIDs, i)
-
+	schedules := make([]*bi.BiETLSchedule, 2)
+	for j := 0; j < 2; j++ {
+		idx := parentIdx*2 + j
 		startDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 		endDate := time.Now().AddDate(1, 0, 0)
 		lastRun := time.Now().AddDate(0, 0, -rand.Intn(7))
 		nextRun := time.Now().AddDate(0, 0, rand.Intn(7)+1)
 
-		schedules[i] = &bi.BiETLSchedule{
-			ScheduleId:  genID("bsch", i),
-			JobId:       jobID,
-			Name:        scheduleNames[i%len(scheduleNames)],
-			Description: fmt.Sprintf("Schedule configuration for %s", scheduleNames[i%len(scheduleNames)]),
-			Frequency:   frequencies[i%len(frequencies)],
+		schedules[j] = &bi.BiETLSchedule{
+			ScheduleId:  genID("bsch", idx),
+			Name:        fmt.Sprintf("%s %d", scheduleNames[j%len(scheduleNames)], parentIdx+1),
+			Description: fmt.Sprintf("Schedule for ETL job %d", parentIdx+1),
+			Frequency:   frequencies[idx%len(frequencies)],
 			StartDate:   startDate.Unix(),
 			EndDate:     endDate.Unix(),
-			RunTime:     runTimes[i%len(runTimes)],
-			DayOfWeek:   int32(i%7 + 1),  // 1-7 for Sunday-Saturday
-			DayOfMonth:  int32(i%28 + 1), // 1-28
+			RunTime:     runTimes[idx%len(runTimes)],
+			DayOfWeek:   int32(idx%7 + 1),
+			DayOfMonth:  int32(idx%28 + 1),
 			NextRun:     nextRun.Unix(),
 			LastRun:     lastRun.Unix(),
-			IsActive:    i < 8, // 80% active
+			IsActive:    j == 0,
 			AuditInfo:   createAuditInfo(),
 		}
 	}

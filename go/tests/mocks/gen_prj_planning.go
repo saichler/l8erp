@@ -141,9 +141,6 @@ func generatePhases(store *MockDataStore) []*prj.PrjPhase {
 	phases := make([]*prj.PrjPhase, count)
 
 	for i := 0; i < count; i++ {
-		// Reference to project (distribute phases across projects)
-		projectID := pickRef(store.PrjProjectIDs, i)
-
 		// Sequence within project (roughly 3-4 phases per project)
 		sequence := int32((i % 4) + 1)
 
@@ -174,7 +171,6 @@ func generatePhases(store *MockDataStore) []*prj.PrjPhase {
 
 		phases[i] = &prj.PrjPhase{
 			PhaseId:         genID("phase", i),
-			ProjectId:       projectID,
 			Name:            prjPhaseNames[i%len(prjPhaseNames)],
 			Description:     fmt.Sprintf("Phase: %s", prjPhaseNames[i%len(prjPhaseNames)]),
 			Sequence:        sequence,
@@ -203,8 +199,7 @@ func generateTasks(store *MockDataStore) []*prj.PrjTask {
 	}
 
 	for i := 0; i < count; i++ {
-		// References
-		projectID := pickRef(store.PrjProjectIDs, i)
+		// References (cross-refs to other children and Prime Objects)
 		phaseID := pickRef(store.PrjPhaseIDs, i)
 		assigneeID := pickRef(store.EmployeeIDs, i)
 
@@ -252,7 +247,6 @@ func generateTasks(store *MockDataStore) []*prj.PrjTask {
 
 		tasks[i] = &prj.PrjTask{
 			TaskId:          genID("task", i),
-			ProjectId:       projectID,
 			PhaseId:         phaseID,
 			WbsCode:         wbsCode,
 			Name:            prjTaskNames[i%len(prjTaskNames)],
@@ -280,8 +274,7 @@ func generateMilestones(store *MockDataStore) []*prj.PrjMilestone {
 	milestones := make([]*prj.PrjMilestone, count)
 
 	for i := 0; i < count; i++ {
-		// References
-		projectID := pickRef(store.PrjProjectIDs, i)
+		// References (cross-refs to other children and Prime Objects)
 		phaseID := pickRef(store.PrjPhaseIDs, i)
 		ownerID := pickRef(store.EmployeeIDs, i)
 
@@ -312,7 +305,6 @@ func generateMilestones(store *MockDataStore) []*prj.PrjMilestone {
 
 		milestones[i] = &prj.PrjMilestone{
 			MilestoneId:   genID("mlstn", i),
-			ProjectId:     projectID,
 			PhaseId:       phaseID,
 			Name:          prjMilestoneNames[i%len(prjMilestoneNames)],
 			Description:   fmt.Sprintf("Milestone: %s", prjMilestoneNames[i%len(prjMilestoneNames)]),

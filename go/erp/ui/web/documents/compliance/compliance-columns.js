@@ -34,16 +34,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'releaseDate', label: 'Release Date', sortKey: 'releaseDate', render: (item) => renderDate(item.releaseDate) }
         ],
 
-        DocAccessLog: [
-            { key: 'logId', label: 'ID', sortKey: 'logId', filterKey: 'logId' },
-            { key: 'documentId', label: 'Document', sortKey: 'documentId', filterKey: 'documentId' },
-            { key: 'userId', label: 'User', sortKey: 'userId' },
-            { key: 'action', label: 'Action', sortKey: 'action', render: (item) => render.accessAction(item.action) },
-            { key: 'accessDate', label: 'Accessed', sortKey: 'accessDate', render: (item) => renderDate(item.accessDate) },
-            { key: 'ipAddress', label: 'IP Address', sortKey: 'ipAddress' },
-            { key: 'userAgent', label: 'User Agent', sortKey: 'userAgent' }
-        ],
-
         DocArchiveJob: [
             { key: 'jobId', label: 'ID', sortKey: 'jobId', filterKey: 'jobId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
@@ -56,16 +46,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'errorMessage', label: 'Error', sortKey: 'errorMessage' }
         ],
 
-        DocAuditTrail: [
-            { key: 'trailId', label: 'ID', sortKey: 'trailId', filterKey: 'trailId' },
-            { key: 'documentId', label: 'Document', sortKey: 'documentId', filterKey: 'documentId' },
-            { key: 'userId', label: 'User', sortKey: 'userId' },
-            { key: 'action', label: 'Action', sortKey: 'action' },
-            { key: 'timestamp', label: 'Timestamp', sortKey: 'timestamp', render: (item) => renderDate(item.timestamp) },
-            { key: 'oldValues', label: 'Old Values', sortKey: 'oldValues' },
-            { key: 'newValues', label: 'New Values', sortKey: 'newValues' },
-            { key: 'changeSummary', label: 'Summary', sortKey: 'changeSummary' }
-        ]
     };
 
 })();

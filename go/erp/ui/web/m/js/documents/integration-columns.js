@@ -10,26 +10,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     const render = MobileDocIntegration.render;
 
     MobileDocIntegration.columns = {
-        DocAttachment: [
-            ...col.id('attachmentId'),
-            ...col.col('documentId', 'Document'),
-            ...col.col('entityType', 'Entity Type'),
-            ...col.col('module', 'Module'),
-            ...col.date('attachedDate', 'Attached')
-        ],
         DocTemplate: [
             ...col.id('templateId'),
             ...col.col('name', 'Name'),
             ...col.enum('templateType', 'Type', null, render.templateType),
             ...col.col('version', 'Version'),
             ...col.boolean('isActive', 'Active')
-        ],
-        DocTemplateField: [
-            ...col.id('fieldId'),
-            ...col.col('templateId', 'Template'),
-            ...col.col('name', 'Name'),
-            ...col.enum('fieldType', 'Type', null, render.fieldType),
-            ...col.boolean('isRequired', 'Required')
         ],
         DocEmailCapture: [
             ...col.id('captureId'),

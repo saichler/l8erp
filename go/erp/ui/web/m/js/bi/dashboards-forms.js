@@ -37,26 +37,35 @@ limitations under the License.
                 ...f.checkbox('isPublic', 'Public'),
                 ...f.number('refreshInterval', 'Refresh Interval (seconds)'),
                 ...f.textarea('layoutConfig', 'Layout Config (JSON)')
-            ])
-        ]),
-
-        BiDashboardWidget: f.form('Dashboard Widget', [
-            f.section('Widget Details', [
-                ...f.reference('dashboardId', 'Dashboard', 'BiDashboard', true),
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description'),
-                ...f.select('widgetType', 'Widget Type', enums.WIDGET_TYPE),
-                ...f.select('chartType', 'Chart Type', enums.CHART_TYPE),
-                ...f.reference('dataSourceId', 'Data Source', 'BiDataSource'),
-                ...f.reference('reportId', 'Report', 'BiReport'),
-                ...f.reference('kpiId', 'KPI', 'BiKPI'),
-                ...f.textarea('query', 'Query'),
-                ...f.number('positionX', 'Position X'),
-                ...f.number('positionY', 'Position Y'),
-                ...f.number('width', 'Width'),
-                ...f.number('height', 'Height'),
-                ...f.number('refreshInterval', 'Refresh Interval (seconds)'),
-                ...f.textarea('config', 'Config (JSON)')
+            ]),
+            f.section('Widgets', [
+                ...f.inlineTable('widgets', 'Dashboard Widgets', [
+                    { key: 'widgetId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'widgetType', label: 'Widget Type', type: 'text' },
+                    { key: 'chartType', label: 'Chart Type', type: 'text' },
+                    { key: 'positionX', label: 'X', type: 'number' },
+                    { key: 'positionY', label: 'Y', type: 'number' },
+                    { key: 'width', label: 'Width', type: 'number' },
+                    { key: 'height', label: 'Height', type: 'number' }
+                ])
+            ]),
+            f.section('Shares', [
+                ...f.inlineTable('shares', 'Dashboard Shares', [
+                    { key: 'shareId', label: 'ID', hidden: true },
+                    { key: 'sharedWithId', label: 'Shared With', type: 'text' },
+                    { key: 'sharedWithType', label: 'Type', type: 'text' },
+                    { key: 'accessLevel', label: 'Access Level', type: 'text' }
+                ])
+            ]),
+            f.section('Drilldowns', [
+                ...f.inlineTable('drilldowns', 'Drilldowns', [
+                    { key: 'drilldownId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'sourceField', label: 'Source Field', type: 'text' },
+                    { key: 'targetParameter', label: 'Target Param', type: 'text' },
+                    { key: 'isActive', label: 'Active', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -77,46 +86,17 @@ limitations under the License.
                 ...f.select('trend', 'Trend', enums.TREND_DIRECTION),
                 ...f.checkbox('isActive', 'Active'),
                 ...f.number('refreshInterval', 'Refresh Interval (seconds)')
-            ])
-        ]),
-
-        BiKPIThreshold: f.form('KPI Threshold', [
-            f.section('Threshold Details', [
-                ...f.reference('kpiId', 'KPI', 'BiKPI', true),
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description'),
-                ...f.select('operator', 'Operator', enums.THRESHOLD_OPERATOR),
-                ...f.number('value', 'Value'),
-                ...f.number('valueUpper', 'Upper Value (for Between)'),
-                ...f.text('severity', 'Severity'),
-                ...f.text('notificationEmail', 'Notification Email'),
-                ...f.checkbox('isActive', 'Active')
-            ])
-        ]),
-
-        BiDrilldown: f.form('Drilldown', [
-            f.section('Drilldown Details', [
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description'),
-                ...f.reference('sourceReportId', 'Source Report', 'BiReport'),
-                ...f.reference('sourceWidgetId', 'Source Widget', 'BiDashboardWidget'),
-                ...f.text('sourceField', 'Source Field'),
-                ...f.reference('targetReportId', 'Target Report', 'BiReport'),
-                ...f.reference('targetDashboardId', 'Target Dashboard', 'BiDashboard'),
-                ...f.text('targetParameter', 'Target Parameter'),
-                ...f.checkbox('isActive', 'Active')
-            ])
-        ]),
-
-        BiDashboardShare: f.form('Dashboard Share', [
-            f.section('Share Details', [
-                ...f.reference('dashboardId', 'Dashboard', 'BiDashboard', true),
-                ...f.text('sharedWithId', 'Shared With ID', true),
-                ...f.text('sharedWithType', 'Shared With Type'),
-                ...f.select('accessLevel', 'Access Level', enums.ACCESS_LEVEL),
-                ...f.date('sharedDate', 'Shared Date'),
-                ...f.reference('sharedBy', 'Shared By', 'Employee'),
-                ...f.date('expiryDate', 'Expiry Date')
+            ]),
+            f.section('Thresholds', [
+                ...f.inlineTable('thresholds', 'KPI Thresholds', [
+                    { key: 'thresholdId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'operator', label: 'Operator', type: 'text' },
+                    { key: 'value', label: 'Value', type: 'number' },
+                    { key: 'valueUpper', label: 'Upper Value', type: 'number' },
+                    { key: 'severity', label: 'Severity', type: 'text' },
+                    { key: 'isActive', label: 'Active', type: 'checkbox' }
+                ])
             ])
         ])
     };

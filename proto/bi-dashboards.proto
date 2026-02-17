@@ -42,6 +42,9 @@ message BiDashboard {
   string layout_config = 11;                // JSON layout configuration
   map<string, string> filters = 12;
   map<string, string> custom_fields = 13;
+  repeated BiDashboardWidget widgets = 15;
+  repeated BiDashboardShare shares = 16;
+  repeated BiDrilldown drilldowns = 17;
   erp.AuditInfo audit_info = 14;
 }
 
@@ -50,11 +53,9 @@ message BiDashboardList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // BiDashboardWidget represents a dashboard widget
 message BiDashboardWidget {
   string widget_id = 1;
-  string dashboard_id = 2;                  // cross-ref: BiDashboard
   string name = 3;
   string description = 4;
   BiWidgetType widget_type = 5;
@@ -71,11 +72,6 @@ message BiDashboardWidget {
   int32 refresh_interval = 16;              // in seconds (overrides dashboard)
   map<string, string> custom_fields = 17;
   erp.AuditInfo audit_info = 18;
-}
-
-message BiDashboardWidgetList {
-  repeated BiDashboardWidget list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
@@ -99,6 +95,7 @@ message BiKPI {
   int64 last_updated = 16;
   bool is_active = 17;
   map<string, string> custom_fields = 18;
+  repeated BiKPIThreshold thresholds = 20;
   erp.AuditInfo audit_info = 19;
 }
 
@@ -107,11 +104,9 @@ message BiKPIList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // BiKPIThreshold represents a KPI threshold/alert
 message BiKPIThreshold {
   string threshold_id = 1;
-  string kpi_id = 2;                        // cross-ref: BiKPI
   string name = 3;
   string description = 4;
   BiThresholdOperator operator = 5;
@@ -125,12 +120,6 @@ message BiKPIThreshold {
   erp.AuditInfo audit_info = 13;
 }
 
-message BiKPIThresholdList {
-  repeated BiKPIThreshold list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // BiDrilldown represents a drilldown configuration
 message BiDrilldown {
   string drilldown_id = 1;
@@ -147,16 +136,9 @@ message BiDrilldown {
   erp.AuditInfo audit_info = 12;
 }
 
-message BiDrilldownList {
-  repeated BiDrilldown list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
 // BiDashboardShare represents dashboard sharing
 message BiDashboardShare {
   string share_id = 1;
-  string dashboard_id = 2;                  // cross-ref: BiDashboard
   string shared_with_id = 3;                // User or Role ID
   string shared_with_type = 4;              // "USER" or "ROLE"
   BiAccessLevel access_level = 5;
@@ -165,9 +147,4 @@ message BiDashboardShare {
   int64 expiry_date = 8;
   map<string, string> custom_fields = 9;
   erp.AuditInfo audit_info = 10;
-}
-
-message BiDashboardShareList {
-  repeated BiDashboardShare list = 1;
-  l8api.L8MetaData metadata = 2;
 }

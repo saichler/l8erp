@@ -98,9 +98,9 @@ func generateLeadAssignRules(store *MockDataStore) []*crm.CrmLeadAssign {
 	return rules
 }
 
-// generateLeads creates lead records
+// generateLeads creates lead records with embedded activities and conversions
 func generateLeads(store *MockDataStore) []*crm.CrmLead {
-	statuses := []crm.CrmLeadStatus{
+	leadStatuses := []crm.CrmLeadStatus{
 		crm.CrmLeadStatus_CRM_LEAD_STATUS_NEW,
 		crm.CrmLeadStatus_CRM_LEAD_STATUS_CONTACTED,
 		crm.CrmLeadStatus_CRM_LEAD_STATUS_QUALIFIED,
@@ -112,8 +112,23 @@ func generateLeads(store *MockDataStore) []*crm.CrmLead {
 		crm.CrmLeadRating_CRM_LEAD_RATING_WARM,
 		crm.CrmLeadRating_CRM_LEAD_RATING_COLD,
 	}
+	activityTypes := []crm.CrmActivityType{
+		crm.CrmActivityType_CRM_ACTIVITY_TYPE_CALL,
+		crm.CrmActivityType_CRM_ACTIVITY_TYPE_EMAIL,
+		crm.CrmActivityType_CRM_ACTIVITY_TYPE_MEETING,
+		crm.CrmActivityType_CRM_ACTIVITY_TYPE_DEMO,
+		crm.CrmActivityType_CRM_ACTIVITY_TYPE_FOLLOW_UP,
+	}
+	actStatuses := []crm.CrmActivityStatus{
+		crm.CrmActivityStatus_CRM_ACTIVITY_STATUS_PLANNED,
+		crm.CrmActivityStatus_CRM_ACTIVITY_STATUS_IN_PROGRESS,
+		crm.CrmActivityStatus_CRM_ACTIVITY_STATUS_COMPLETED,
+	}
+	actSubjects := []string{"Initial Call", "Follow-up Email", "Product Demo", "Proposal Review", "Qualification Call"}
 
 	count := 50
+	actIdx := 1
+	convIdx := 1
 	leads := make([]*crm.CrmLead, count)
 	for i := 0; i < count; i++ {
 		sourceID := pickRef(store.CrmLeadSourceIDs, i)
@@ -123,15 +138,61 @@ func generateLeads(store *MockDataStore) []*crm.CrmLead {
 		// Status distribution: 30% new, 25% contacted, 25% qualified, 10% unqualified, 10% converted
 		var status crm.CrmLeadStatus
 		if i < count*3/10 {
-			status = statuses[0]
+			status = leadStatuses[0]
 		} else if i < count*55/100 {
-			status = statuses[1]
+			status = leadStatuses[1]
 		} else if i < count*8/10 {
-			status = statuses[2]
+			status = leadStatuses[2]
 		} else if i < count*9/10 {
-			status = statuses[3]
+			status = leadStatuses[3]
 		} else {
-			status = statuses[4]
+			status = leadStatuses[4]
+		}
+
+		// Embedded activities (2 per lead)
+		activities := make([]*crm.CrmLeadActivity, 2)
+		for j := 0; j < 2; j++ {
+			assignedTo := pickRef(store.EmployeeIDs, actIdx-1)
+			isCompleted := actStatuses[(actIdx-1)%len(actStatuses)] == crm.CrmActivityStatus_CRM_ACTIVITY_STATUS_COMPLETED
+			activities[j] = &crm.CrmLeadActivity{
+				ActivityId:      fmt.Sprintf("ldact-%03d", actIdx),
+				ActivityType:    activityTypes[(actIdx-1)%len(activityTypes)],
+				Subject:         actSubjects[(actIdx-1)%len(actSubjects)],
+				Description:     fmt.Sprintf("Activity %d for lead", actIdx),
+				ActivityDate:    time.Now().AddDate(0, 0, -rand.Intn(14)).Unix(),
+				Status:          actStatuses[(actIdx-1)%len(actStatuses)],
+				AssignedTo:      assignedTo,
+				DurationMinutes: int32(rand.Intn(60) + 15),
+				Outcome:         "Positive response",
+				IsCompleted:     isCompleted,
+				AuditInfo:       createAuditInfo(),
+			}
+			actIdx++
+		}
+
+		// Embedded conversion (~20% of leads, those with "converted" status)
+		var conversions []*crm.CrmLeadConversion
+		if i%5 == 0 {
+			accountID := pickRef(store.CrmAccountIDs, convIdx-1)
+			contactID := pickRef(store.CrmContactIDs, convIdx-1)
+			opportunityID := ""
+			if len(store.CrmOpportunityIDs) > 0 && convIdx%2 == 0 {
+				opportunityID = store.CrmOpportunityIDs[(convIdx-1)%len(store.CrmOpportunityIDs)]
+			}
+			convertedBy := pickRef(store.EmployeeIDs, convIdx-1)
+
+			conversions = []*crm.CrmLeadConversion{{
+				ConversionId:      genID("ldconv", convIdx-1),
+				AccountId:         accountID,
+				ContactId:         contactID,
+				OpportunityId:     opportunityID,
+				ConversionDate:    time.Now().AddDate(0, 0, -rand.Intn(60)).Unix(),
+				ConvertedBy:       convertedBy,
+				Notes:             fmt.Sprintf("Lead converted to account and contact on day %d", convIdx),
+				CreateOpportunity: opportunityID != "",
+				AuditInfo:         createAuditInfo(),
+			}}
+			convIdx++
 		}
 
 		leads[i] = &crm.CrmLead{
@@ -155,86 +216,9 @@ func generateLeads(store *MockDataStore) []*crm.CrmLead {
 			Score:            int32(rand.Intn(100)),
 			CampaignId:       campaignID,
 			AuditInfo:        createAuditInfo(),
+			Activities:       activities,
+			Conversions:      conversions,
 		}
 	}
 	return leads
-}
-
-// generateLeadActivities creates lead activity records
-func generateLeadActivities(store *MockDataStore) []*crm.CrmLeadActivity {
-	activityTypes := []crm.CrmActivityType{
-		crm.CrmActivityType_CRM_ACTIVITY_TYPE_CALL,
-		crm.CrmActivityType_CRM_ACTIVITY_TYPE_EMAIL,
-		crm.CrmActivityType_CRM_ACTIVITY_TYPE_MEETING,
-		crm.CrmActivityType_CRM_ACTIVITY_TYPE_DEMO,
-		crm.CrmActivityType_CRM_ACTIVITY_TYPE_FOLLOW_UP,
-	}
-	statuses := []crm.CrmActivityStatus{
-		crm.CrmActivityStatus_CRM_ACTIVITY_STATUS_PLANNED,
-		crm.CrmActivityStatus_CRM_ACTIVITY_STATUS_IN_PROGRESS,
-		crm.CrmActivityStatus_CRM_ACTIVITY_STATUS_COMPLETED,
-	}
-	subjects := []string{"Initial Call", "Follow-up Email", "Product Demo", "Proposal Review", "Qualification Call"}
-
-	activities := make([]*crm.CrmLeadActivity, 0, len(store.CrmLeadIDs)*2)
-	idx := 1
-	for _, leadID := range store.CrmLeadIDs {
-		for j := 0; j < 2; j++ {
-			assignedTo := pickRef(store.EmployeeIDs, (idx-1))
-
-			isCompleted := statuses[(idx-1)%len(statuses)] == crm.CrmActivityStatus_CRM_ACTIVITY_STATUS_COMPLETED
-
-			activities = append(activities, &crm.CrmLeadActivity{
-				ActivityId:      fmt.Sprintf("ldact-%03d", idx),
-				LeadId:          leadID,
-				ActivityType:    activityTypes[(idx-1)%len(activityTypes)],
-				Subject:         subjects[(idx-1)%len(subjects)],
-				Description:     fmt.Sprintf("Activity %d for lead", idx),
-				ActivityDate:    time.Now().AddDate(0, 0, -rand.Intn(14)).Unix(),
-				Status:          statuses[(idx-1)%len(statuses)],
-				AssignedTo:      assignedTo,
-				DurationMinutes: int32(rand.Intn(60) + 15),
-				Outcome:         "Positive response",
-				IsCompleted:     isCompleted,
-				AuditInfo:       createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return activities
-}
-
-// generateLeadConversions creates lead conversion records
-func generateLeadConversions(store *MockDataStore) []*crm.CrmLeadConversion {
-	// Only convert a portion of leads
-	count := len(store.CrmLeadIDs) / 5
-	if count < 5 {
-		count = 5
-	}
-
-	conversions := make([]*crm.CrmLeadConversion, count)
-	for i := 0; i < count; i++ {
-		leadID := pickRef(store.CrmLeadIDs, i)
-		accountID := pickRef(store.CrmAccountIDs, i)
-		contactID := pickRef(store.CrmContactIDs, i)
-		opportunityID := ""
-		if len(store.CrmOpportunityIDs) > 0 && i%2 == 0 {
-			opportunityID = store.CrmOpportunityIDs[i%len(store.CrmOpportunityIDs)]
-		}
-		convertedBy := pickRef(store.EmployeeIDs, i)
-
-		conversions[i] = &crm.CrmLeadConversion{
-			ConversionId:      genID("ldconv", i),
-			LeadId:            leadID,
-			AccountId:         accountID,
-			ContactId:         contactID,
-			OpportunityId:     opportunityID,
-			ConversionDate:    time.Now().AddDate(0, 0, -rand.Intn(60)).Unix(),
-			ConvertedBy:       convertedBy,
-			Notes:             fmt.Sprintf("Lead converted to account and contact on day %d", i+1),
-			CreateOpportunity: opportunityID != "",
-			AuditInfo:         createAuditInfo(),
-		}
-	}
-	return conversions
 }

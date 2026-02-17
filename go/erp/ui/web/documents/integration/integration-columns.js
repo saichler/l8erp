@@ -13,17 +13,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     const render = DocIntegration.render;
 
     DocIntegration.columns = {
-        DocAttachment: [
-            { key: 'attachmentId', label: 'ID', sortKey: 'attachmentId', filterKey: 'attachmentId' },
-            { key: 'documentId', label: 'Document', sortKey: 'documentId', filterKey: 'documentId' },
-            { key: 'entityType', label: 'Entity Type', sortKey: 'entityType' },
-            { key: 'entityId', label: 'Entity ID', sortKey: 'entityId' },
-            { key: 'module', label: 'Module', sortKey: 'module' },
-            { key: 'relationshipType', label: 'Relationship', sortKey: 'relationshipType' },
-            { key: 'attachedBy', label: 'Attached By', sortKey: 'attachedBy' },
-            { key: 'attachedDate', label: 'Attached', sortKey: 'attachedDate', render: (item) => renderDate(item.attachedDate) }
-        ],
-
         DocTemplate: [
             { key: 'templateId', label: 'ID', sortKey: 'templateId', filterKey: 'templateId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
@@ -32,16 +21,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'version', label: 'Version', sortKey: 'version' },
             { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' },
             { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
-        ],
-
-        DocTemplateField: [
-            { key: 'fieldId', label: 'ID', sortKey: 'fieldId', filterKey: 'fieldId' },
-            { key: 'templateId', label: 'Template', sortKey: 'templateId', filterKey: 'templateId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'fieldType', label: 'Type', sortKey: 'fieldType', render: (item) => render.fieldType(item.fieldType) },
-            { key: 'defaultValue', label: 'Default', sortKey: 'defaultValue' },
-            { key: 'isRequired', label: 'Required', sortKey: 'isRequired', render: (item) => item.isRequired ? 'Yes' : 'No' },
-            { key: 'sortOrder', label: 'Order', sortKey: 'sortOrder' }
         ],
 
         DocEmailCapture: [

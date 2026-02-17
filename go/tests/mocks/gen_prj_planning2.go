@@ -34,8 +34,7 @@ func generateDeliverables(store *MockDataStore) []*prj.PrjDeliverable {
 	deliverables := make([]*prj.PrjDeliverable, count)
 
 	for i := 0; i < count; i++ {
-		// References
-		projectID := pickRef(store.PrjProjectIDs, i)
+		// References (cross-refs to other children and Prime Objects)
 		milestoneID := pickRef(store.PrjMilestoneIDs, i)
 		taskID := pickRef(store.PrjTaskIDs, i)
 		acceptedBy := pickRef(store.EmployeeIDs, i)
@@ -59,7 +58,6 @@ func generateDeliverables(store *MockDataStore) []*prj.PrjDeliverable {
 
 		deliverables[i] = &prj.PrjDeliverable{
 			DeliverableId:  genID("dlvrbl", i),
-			ProjectId:      projectID,
 			MilestoneId:    milestoneID,
 			TaskId:         taskID,
 			Name:           prjDeliverableNames[i%len(prjDeliverableNames)],
@@ -89,9 +87,6 @@ func generateDependencies(store *MockDataStore) []*prj.PrjDependency {
 	}
 
 	for i := 0; i < count; i++ {
-		// Reference to project
-		projectID := pickRef(store.PrjProjectIDs, i)
-
 		// Task references (ensure different tasks)
 		predecessorTaskID := ""
 		successorTaskID := ""
@@ -122,7 +117,6 @@ func generateDependencies(store *MockDataStore) []*prj.PrjDependency {
 
 		dependencies[i] = &prj.PrjDependency{
 			DependencyId:      genID("dep", i),
-			ProjectId:         projectID,
 			PredecessorTaskId: predecessorTaskID,
 			SuccessorTaskId:   successorTaskID,
 			DependencyType:    depType,
@@ -157,8 +151,6 @@ func generateRisks(store *MockDataStore) []*prj.PrjRisk {
 	}
 
 	for i := 0; i < count; i++ {
-		// Reference to project
-		projectID := pickRef(store.PrjProjectIDs, i)
 		ownerID := pickRef(store.EmployeeIDs, i)
 
 		// Probability (1-100)
@@ -198,7 +190,6 @@ func generateRisks(store *MockDataStore) []*prj.PrjRisk {
 
 		risks[i] = &prj.PrjRisk{
 			RiskId:            genID("risk", i),
-			ProjectId:         projectID,
 			Name:              prjRiskNames[i%len(prjRiskNames)],
 			Description:       fmt.Sprintf("Risk description: %s", prjRiskNames[i%len(prjRiskNames)]),
 			Category:          riskCategories[i%len(riskCategories)],

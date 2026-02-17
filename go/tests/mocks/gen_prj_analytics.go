@@ -109,8 +109,6 @@ func generateEarnedValues(store *MockDataStore) []*prj.PrjEarnedValue {
 
 	earnedValues := make([]*prj.PrjEarnedValue, count)
 	for i := 0; i < count; i++ {
-		projectID := pickRef(store.PrjProjectIDs, i)
-
 		asOfDate := time.Now().AddDate(0, -rand.Intn(3), -rand.Intn(28))
 
 		// Generate realistic EVM data
@@ -150,7 +148,6 @@ func generateEarnedValues(store *MockDataStore) []*prj.PrjEarnedValue {
 
 		earnedValues[i] = &prj.PrjEarnedValue{
 			EarnedValueId:              genID("pev", i),
-			ProjectId:                  projectID,
 			AsOfDate:                   asOfDate.Unix(),
 			BudgetAtCompletion:         money(store, bac),
 			PlannedValue:               money(store, pv),
@@ -196,8 +193,6 @@ func generateBudgetVariances(store *MockDataStore) []*prj.PrjBudgetVariance {
 
 	variances := make([]*prj.PrjBudgetVariance, count)
 	for i := 0; i < count; i++ {
-		projectID := pickRef(store.PrjProjectIDs, i)
-
 		budgetID := pickRef(store.PrjProjectBudgetIDs, i)
 
 		phaseID := pickRef(store.PrjPhaseIDs, i)
@@ -215,7 +210,6 @@ func generateBudgetVariances(store *MockDataStore) []*prj.PrjBudgetVariance {
 
 		variances[i] = &prj.PrjBudgetVariance{
 			VarianceId:          genID("pbv", i),
-			ProjectId:           projectID,
 			BudgetId:            budgetID,
 			PhaseId:             phaseID,
 			AsOfDate:            asOfDate.Unix(),
@@ -244,8 +238,6 @@ func generateResourceForecasts(store *MockDataStore) []*prj.PrjResourceForecast 
 
 	forecasts := make([]*prj.PrjResourceForecast, count)
 	for i := 0; i < count; i++ {
-		projectID := pickRef(store.PrjProjectIDs, i)
-
 		resourceID := pickRef(store.PrjResourceIDs, i)
 
 		poolID := pickRef(store.PrjResourcePoolIDs, i)
@@ -262,7 +254,6 @@ func generateResourceForecasts(store *MockDataStore) []*prj.PrjResourceForecast 
 
 		forecasts[i] = &prj.PrjResourceForecast{
 			ForecastId:         genID("prf", i),
-			ProjectId:          projectID,
 			ResourceId:         resourceID,
 			PoolId:             poolID,
 			SkillCategory:      skillCategories[i%len(skillCategories)],

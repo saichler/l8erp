@@ -75,26 +75,6 @@ limitations under the License.
             { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' }
         ],
 
-        BiPrediction: [
-            { key: 'predictionId', label: 'ID', sortKey: 'predictionId', filterKey: 'predictionId' },
-            { key: 'modelId', label: 'Model', sortKey: 'modelId', filterKey: 'modelId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'predictionDate',
-                label: 'Prediction Date',
-                sortKey: 'predictionDate',
-                render: (item) => renderDate(item.predictionDate)
-            },
-            {
-                key: 'confidence',
-                label: 'Confidence',
-                sortKey: 'confidence',
-                render: (item) => renderPercentage(item.confidence)
-            },
-            { key: 'predictedBy', label: 'Predicted By', sortKey: 'predictedBy' },
-            { key: 'notes', label: 'Notes', sortKey: 'notes' }
-        ],
-
         BiTrendAnalysis: [
             { key: 'analysisId', label: 'ID', sortKey: 'analysisId', filterKey: 'analysisId' },
             { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },

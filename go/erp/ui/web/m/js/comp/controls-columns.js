@@ -38,17 +38,6 @@ limitations under the License.
             ...col.boolean('isActive', 'Active')
         ],
 
-        CompControlAssessment: [
-            ...col.id('assessmentId'),
-            ...col.col('controlId', 'Control'),
-            ...col.date('assessmentDate', 'Assessment Date'),
-            ...col.col('assessorId', 'Assessor'),
-            ...col.status('effectiveness', 'Effectiveness', enums.CONTROL_EFFECTIVENESS_VALUES, render.controlEffectiveness),
-            ...col.col('sampleSize', 'Sample Size'),
-            ...col.col('exceptionsFound', 'Exceptions'),
-            ...col.date('nextAssessmentDate', 'Next Assessment')
-        ],
-
         CompPolicyDocument: [
             ...col.id('policyId'),
             ...col.col('code', 'Code'),
@@ -74,25 +63,12 @@ limitations under the License.
             ...col.boolean('isActive', 'Active')
         ],
 
-        CompSegregationRule: [
-            ...col.id('ruleId'),
-            ...col.col('code', 'Code'),
-            ...col.col('name', 'Name'),
-            ...col.col('conflictingFunctionA', 'Function A'),
-            ...col.col('conflictingFunctionB', 'Function B'),
-            ...col.status('riskLevel', 'Risk Level', enums.SEVERITY_LEVEL_VALUES, render.severityLevel),
-            ...col.col('controlId', 'Control'),
-            ...col.col('ownerId', 'Owner'),
-            ...col.boolean('isActive', 'Active')
-        ]
     };
 
     MobileCompControls.primaryKeys = {
         CompControl: 'controlId',
-        CompControlAssessment: 'assessmentId',
         CompPolicyDocument: 'policyId',
-        CompApprovalMatrix: 'matrixId',
-        CompSegregationRule: 'ruleId'
+        CompApprovalMatrix: 'matrixId'
     };
 
 })();

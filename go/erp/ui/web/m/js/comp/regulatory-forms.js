@@ -43,45 +43,17 @@ limitations under the License.
             f.section('Ownership', [
                 ...f.reference('ownerId', 'Owner', 'Employee'),
                 ...f.text('sourceUrl', 'Source URL')
-            ])
-        ]),
-
-        CompRequirement: f.form('Requirement', [
-            f.section('Requirement Details', [
-                ...f.text('code', 'Code', true),
-                ...f.text('title', 'Title', true),
-                ...f.textarea('description', 'Description'),
-                ...f.reference('regulationId', 'Regulation', 'CompRegulation', true),
-                ...f.reference('parentRequirementId', 'Parent Requirement', 'CompRequirement')
             ]),
-            f.section('Classification', [
-                ...f.select('priority', 'Priority', enums.SEVERITY_LEVEL),
-                ...f.checkbox('isMandatory', 'Mandatory'),
-                ...f.textarea('controlObjective', 'Control Objective')
-            ]),
-            f.section('Review & Ownership', [
-                ...f.number('reviewFrequencyDays', 'Review Frequency (Days)'),
-                ...f.reference('ownerId', 'Owner', 'Employee'),
-                ...f.checkbox('isActive', 'Active')
-            ])
-        ]),
-
-        CompComplianceStatus: f.form('Compliance Status', [
-            f.section('Status Details', [
-                ...f.reference('requirementId', 'Requirement', 'CompRequirement', true),
-                ...f.text('entityType', 'Entity Type', true),
-                ...f.text('entityId', 'Entity ID', true),
-                ...f.select('status', 'Status', enums.COMPLIANCE_STATUS_TYPE)
-            ]),
-            f.section('Assessment', [
-                ...f.date('assessmentDate', 'Assessment Date'),
-                ...f.reference('assessorId', 'Assessor', 'Employee'),
-                ...f.number('complianceScore', 'Compliance Score (%)'),
-                ...f.text('evidenceDocumentId', 'Evidence Document')
-            ]),
-            f.section('Review', [
-                ...f.date('nextReviewDate', 'Next Review Date'),
-                ...f.textarea('notes', 'Notes')
+            f.section('Requirements', [
+                ...f.inlineTable('requirements', 'Requirements', [
+                    { key: 'requirementId', label: 'ID', hidden: true },
+                    { key: 'code', label: 'Code', type: 'text' },
+                    { key: 'title', label: 'Title', type: 'text' },
+                    { key: 'priority', label: 'Priority', type: 'select', options: enums.SEVERITY_LEVEL },
+                    { key: 'isMandatory', label: 'Mandatory', type: 'checkbox' },
+                    { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'isActive', label: 'Active', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -104,27 +76,6 @@ limitations under the License.
             ])
         ]),
 
-        CompViolationRecord: f.form('Violation Record', [
-            f.section('Violation Details', [
-                ...f.text('violationNumber', 'Violation Number'),
-                ...f.text('title', 'Title', true),
-                ...f.textarea('description', 'Description'),
-                ...f.reference('requirementId', 'Requirement', 'CompRequirement', true),
-                ...f.select('severity', 'Severity', enums.SEVERITY_LEVEL),
-                ...f.select('status', 'Status', enums.FINDING_STATUS)
-            ]),
-            f.section('Timeline', [
-                ...f.date('discoveryDate', 'Discovery Date'),
-                ...f.reference('discoveredById', 'Discovered By', 'Employee'),
-                ...f.date('dueDate', 'Due Date'),
-                ...f.date('closedDate', 'Closed Date')
-            ]),
-            f.section('Assignment & Resolution', [
-                ...f.reference('assignedToId', 'Assigned To', 'Employee'),
-                ...f.textarea('rootCause', 'Root Cause'),
-                ...f.textarea('correctiveAction', 'Corrective Action')
-            ])
-        ])
     };
 
 })();

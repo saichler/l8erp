@@ -68,35 +68,6 @@ limitations under the License.
             },
             { key: 'isRequired', label: 'Required', sortKey: 'isRequired' },
             { key: 'isFilterable', label: 'Filterable', sortKey: 'isFilterable' }
-        ],
-
-        EcomImage: [
-            { key: 'imageId', label: 'ID', sortKey: 'imageId', filterKey: 'imageId' },
-            { key: 'productId', label: 'Product', sortKey: 'productId', filterKey: 'productId' },
-            { key: 'fileName', label: 'File Name', sortKey: 'fileName', filterKey: 'fileName' },
-            {
-                key: 'imageType',
-                label: 'Type',
-                sortKey: 'imageType',
-                render: (item) => render.imageType(item.imageType)
-            },
-            { key: 'isPrimary', label: 'Primary', sortKey: 'isPrimary' },
-            { key: 'sortOrder', label: 'Sort Order', sortKey: 'sortOrder' }
-        ],
-
-        EcomVariant: [
-            { key: 'variantId', label: 'ID', sortKey: 'variantId', filterKey: 'variantId' },
-            { key: 'productId', label: 'Product', sortKey: 'productId', filterKey: 'productId' },
-            { key: 'sku', label: 'SKU', sortKey: 'sku', filterKey: 'sku' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'price',
-                label: 'Price',
-                sortKey: 'price',
-                render: (item) => renderMoney(item.price)
-            },
-            { key: 'stockQuantity', label: 'Stock Qty', sortKey: 'stockQuantity' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive' }
         ]
     };
 

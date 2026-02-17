@@ -24,21 +24,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'responsibleId', label: 'Responsible', width: '150px', type: 'reference', referenceType: 'Employee' },
             { key: 'status', label: 'Status', width: '100px' }
         ],
-        CompRemediationAction: [
-            { key: 'findingId', label: 'Finding', width: '150px', type: 'reference', referenceType: 'CompAuditFinding' },
-            { key: 'title', label: 'Title', width: '250px' },
-            { key: 'ownerId', label: 'Owner', width: '150px', type: 'reference', referenceType: 'Employee' },
-            { key: 'dueDate', label: 'Due Date', width: '100px', type: 'date' },
-            { key: 'percentComplete', label: '% Complete', width: '80px' },
-            { key: 'status', label: 'Status', width: '100px' }
-        ],
-        CompAuditReport: [
-            { key: 'title', label: 'Title', width: '250px' },
-            { key: 'auditScheduleId', label: 'Audit', width: '150px', type: 'reference', referenceType: 'CompAuditSchedule' },
-            { key: 'overallOpinion', label: 'Opinion', width: '120px' },
-            { key: 'finalDate', label: 'Final Date', width: '100px', type: 'date' },
-            { key: 'status', label: 'Status', width: '100px' }
-        ],
         CompComplianceReport: [
             { key: 'title', label: 'Title', width: '250px' },
             { key: 'reportType', label: 'Type', width: '120px' },
@@ -51,8 +36,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     CompAudit.primaryKeys = {
         CompAuditSchedule: 'scheduleId',
         CompAuditFinding: 'findingId',
-        CompRemediationAction: 'actionId',
-        CompAuditReport: 'reportId',
         CompComplianceReport: 'reportId'
     };
 })();

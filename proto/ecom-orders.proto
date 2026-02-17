@@ -57,6 +57,8 @@ message EcomOrder {
     string tracking_number = 25;
     map<string, string> custom_fields = 26;
     erp.AuditInfo audit_info = 27;
+    repeated EcomOrderLine lines = 28;
+    repeated EcomOrderStatusHistory status_history = 29;
 }
 
 message EcomOrderList {
@@ -65,16 +67,14 @@ message EcomOrderList {
 }
 
 // =====================
-// ORDER LINE
+// ORDER LINE (child of EcomOrder)
 // =====================
 
-// @PrimeObject
 // EcomOrderLine represents a line item in an order
 message EcomOrderLine {
     string line_id = 1;
-    string order_id = 2;                    // cross-ref: EcomOrder
     string product_id = 3;                  // cross-ref: EcomProduct
-    string variant_id = 4;                  // cross-ref: EcomVariant
+    string variant_id = 4;
     string sku = 5;
     string name = 6;
     int32 quantity = 7;
@@ -90,20 +90,13 @@ message EcomOrderLine {
     erp.AuditInfo audit_info = 17;
 }
 
-message EcomOrderLineList {
-    repeated EcomOrderLine list = 1;
-    l8api.L8MetaData metadata = 2;
-}
-
 // =====================
-// ORDER STATUS HISTORY
+// ORDER STATUS HISTORY (child of EcomOrder)
 // =====================
 
-// @PrimeObject
 // EcomOrderStatusHistory tracks order status changes
 message EcomOrderStatusHistory {
     string status_id = 1;
-    string order_id = 2;                    // cross-ref: EcomOrder
     EcomOrderStatus previous_status = 3;
     EcomOrderStatus new_status = 4;
     int64 changed_at = 5;
@@ -112,11 +105,6 @@ message EcomOrderStatusHistory {
     bool notify_customer = 8;
     map<string, string> custom_fields = 9;
     erp.AuditInfo audit_info = 10;
-}
-
-message EcomOrderStatusHistoryList {
-    repeated EcomOrderStatusHistory list = 1;
-    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -144,6 +132,7 @@ message EcomReturn {
     string shipping_carrier = 16;
     map<string, string> custom_fields = 17;
     erp.AuditInfo audit_info = 18;
+    repeated EcomReturnLine lines = 19;
 }
 
 message EcomReturnList {
@@ -152,17 +141,15 @@ message EcomReturnList {
 }
 
 // =====================
-// RETURN LINE
+// RETURN LINE (child of EcomReturn)
 // =====================
 
-// @PrimeObject
 // EcomReturnLine represents a line item being returned
 message EcomReturnLine {
     string line_id = 1;
-    string return_id = 2;                   // cross-ref: EcomReturn
-    string order_line_id = 3;               // cross-ref: EcomOrderLine
+    string order_line_id = 3;
     string product_id = 4;                  // cross-ref: EcomProduct
-    string variant_id = 5;                  // cross-ref: EcomVariant
+    string variant_id = 5;
     string sku = 6;
     string name = 7;
     int32 quantity = 8;
@@ -172,9 +159,4 @@ message EcomReturnLine {
     bool restock = 12;
     map<string, string> custom_fields = 13;
     erp.AuditInfo audit_info = 14;
-}
-
-message EcomReturnLineList {
-    repeated EcomReturnLine list = 1;
-    l8api.L8MetaData metadata = 2;
 }

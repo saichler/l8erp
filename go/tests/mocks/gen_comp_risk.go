@@ -16,10 +16,11 @@ package mocks
 
 // gen_comp_risk.go
 // Generates:
-// - CompRiskRegister (15 records) - references Department, Employee, CompControl, CompRequirement
-// - CompRiskAssessment (20 records) - references CompRiskRegister
+// - CompRiskRegister (15 records, with embedded assessments and mitigation_plans)
 // - CompIncident (12 records) - references CompRiskRegister
-// - CompMitigationPlan (10 records) - references CompRiskRegister, CompControl
+//
+// Note: CompRiskAssessment and CompMitigationPlan are now
+// embedded in CompRiskRegister
 
 import (
 	"fmt"
@@ -29,7 +30,7 @@ import (
 	"github.com/saichler/l8erp/go/types/comp"
 )
 
-// generateCompRiskRegisters creates risk register entries
+// generateCompRiskRegisters creates risk register entries with embedded assessments and mitigation plans
 func generateCompRiskRegisters(store *MockDataStore) []*comp.CompRiskRegister {
 	riskCategories := []comp.CompRiskCategory{
 		comp.CompRiskCategory_COMP_RISK_CATEGORY_OPERATIONAL,
@@ -55,18 +56,11 @@ func generateCompRiskRegisters(store *MockDataStore) []*comp.CompRiskRegister {
 
 	for i := 0; i < count; i++ {
 		departmentID := pickRef(store.DepartmentIDs, i)
-
 		ownerID := pickRef(store.EmployeeIDs, i)
 
-		// Get related controls and requirements
 		relatedControlIDs := []string{}
 		if len(store.CompControlIDs) > 0 {
 			relatedControlIDs = []string{store.CompControlIDs[i%len(store.CompControlIDs)]}
-		}
-
-		relatedRequirementIDs := []string{}
-		if len(store.CompRequirementIDs) > 0 {
-			relatedRequirementIDs = []string{store.CompRequirementIDs[i%len(store.CompRequirementIDs)]}
 		}
 
 		identifiedDate := time.Now().AddDate(-rand.Intn(2), -rand.Intn(6), 0)
@@ -83,7 +77,7 @@ func generateCompRiskRegisters(store *MockDataStore) []*comp.CompRiskRegister {
 		residualImpact := int32(maxInt(1, int(inherentImpact)-rand.Intn(2)))
 		residualRiskScore := residualLikelihood * residualImpact
 
-		// Status distribution: 20% Identified, 30% Assessed, 25% Mitigating, 15% Accepted, 10% Closed
+		// Status distribution
 		var status comp.CompRiskStatus
 		if i < 3 {
 			status = comp.CompRiskStatus_COMP_RISK_STATUS_IDENTIFIED
@@ -100,77 +94,134 @@ func generateCompRiskRegisters(store *MockDataStore) []*comp.CompRiskRegister {
 		potentialImpact := int64((rand.Intn(100) + 10) * 10000) // $100K to $1.1M
 
 		risks[i] = &comp.CompRiskRegister{
-			RiskId:             genID("crsk", i),
-			Code:               fmt.Sprintf("RISK-%04d", 6000+i+1),
-			Title:              compRiskTitles[i],
-			Description:        fmt.Sprintf("Risk assessment for %s including potential business impact", compRiskTitles[i]),
-			Category:           riskCategories[i%len(riskCategories)],
-			Status:             status,
-			DepartmentId:       departmentID,
-			OwnerId:            ownerID,
-			InherentLikelihood: inherentLikelihood,
-			InherentImpact:     inherentImpact,
-			InherentRiskScore:  inherentRiskScore,
-			ResidualLikelihood: residualLikelihood,
-			ResidualImpact:     residualImpact,
-			ResidualRiskScore:  residualRiskScore,
-			RiskResponse:       compRiskResponses[i%len(compRiskResponses)],
+			RiskId:                   genID("crsk", i),
+			Code:                     fmt.Sprintf("RISK-%04d", 6000+i+1),
+			Title:                    compRiskTitles[i],
+			Description:              fmt.Sprintf("Risk assessment for %s including potential business impact", compRiskTitles[i]),
+			Category:                 riskCategories[i%len(riskCategories)],
+			Status:                   status,
+			DepartmentId:             departmentID,
+			OwnerId:                  ownerID,
+			InherentLikelihood:       inherentLikelihood,
+			InherentImpact:           inherentImpact,
+			InherentRiskScore:        inherentRiskScore,
+			ResidualLikelihood:       residualLikelihood,
+			ResidualImpact:           residualImpact,
+			ResidualRiskScore:        residualRiskScore,
+			RiskResponse:             compRiskResponses[i%len(compRiskResponses)],
 			PotentialFinancialImpact: money(store, potentialImpact),
-			IdentifiedDate:        identifiedDate.Unix(),
-			LastReviewDate:        lastReviewDate.Unix(),
-			NextReviewDate:        nextReviewDate.Unix(),
-			RelatedControlIds:     relatedControlIDs,
-			RelatedRequirementIds: relatedRequirementIDs,
-			TriggerEvents:         compTriggerEvents[i%len(compTriggerEvents)],
-			AuditInfo:             createAuditInfo(),
+			IdentifiedDate:           identifiedDate.Unix(),
+			LastReviewDate:           lastReviewDate.Unix(),
+			NextReviewDate:           nextReviewDate.Unix(),
+			RelatedControlIds:        relatedControlIDs,
+			TriggerEvents:            compTriggerEvents[i%len(compTriggerEvents)],
+			AuditInfo:                createAuditInfo(),
+			Assessments:              genCompRiskAssessments(store, i),
+			MitigationPlans:          genCompMitigationPlans(store, i),
 		}
 	}
 	return risks
 }
 
-// generateCompRiskAssessments creates risk assessment records
-func generateCompRiskAssessments(store *MockDataStore) []*comp.CompRiskAssessment {
+// genCompRiskAssessments generates embedded risk assessment records for a risk register
+func genCompRiskAssessments(store *MockDataStore, riskIdx int) []*comp.CompRiskAssessment {
+	count := 1 + riskIdx%2 // 1-2 assessments per risk
+
 	controlEffectiveness := []string{
 		"Controls operating effectively",
 		"Controls partially effective - some gaps identified",
 		"Controls need significant improvement",
-		"Controls not operating as designed",
 	}
 
-	count := 20
 	assessments := make([]*comp.CompRiskAssessment, count)
-
-	for i := 0; i < count; i++ {
-		riskID := pickRef(store.CompRiskRegisterIDs, i)
-
-		assessorID := pickRef(store.EmployeeIDs, i)
-
+	for j := 0; j < count; j++ {
+		idx := riskIdx*10 + j
+		assessorID := pickRef(store.EmployeeIDs, idx)
 		assessmentDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 
 		likelihoodRating := int32(rand.Intn(4) + 1) // 1-5
 		impactRating := int32(rand.Intn(4) + 1)     // 1-5
 		riskScore := likelihoodRating * impactRating
+		requiresEscalation := riskScore >= 16
 
-		requiresEscalation := riskScore >= 16 // High risk threshold
-
-		assessments[i] = &comp.CompRiskAssessment{
-			AssessmentId:            genID("cras", i),
-			RiskId:                  riskID,
+		assessments[j] = &comp.CompRiskAssessment{
+			AssessmentId:            genID("cras", idx),
 			AssessmentDate:          assessmentDate.Unix(),
 			AssessorId:              assessorID,
 			LikelihoodRating:        likelihoodRating,
 			ImpactRating:            impactRating,
 			RiskScore:               riskScore,
-			LikelihoodJustification: fmt.Sprintf("Based on historical data and current control environment, likelihood rated as %d/5", likelihoodRating),
-			ImpactJustification:     fmt.Sprintf("Potential financial and operational impact supports rating of %d/5", impactRating),
+			LikelihoodJustification: fmt.Sprintf("Based on historical data, likelihood rated as %d/5", likelihoodRating),
+			ImpactJustification:     fmt.Sprintf("Potential financial and operational impact rated as %d/5", impactRating),
 			ControlEffectiveness:    controlEffectiveness[int(likelihoodRating)%len(controlEffectiveness)],
-			Recommendations:         fmt.Sprintf("Continue monitoring and strengthen controls as needed"),
+			Recommendations:         "Continue monitoring and strengthen controls as needed",
 			StatusChangeNotes:       fmt.Sprintf("Assessment completed on %s", assessmentDate.Format("2006-01-02")),
 			RequiresEscalation:      requiresEscalation,
 			AuditInfo:               createAuditInfo(),
 		}
 	}
 	return assessments
+}
+
+// genCompMitigationPlans generates embedded mitigation plan records for a risk register
+func genCompMitigationPlans(store *MockDataStore, riskIdx int) []*comp.CompMitigationPlan {
+	if riskIdx%3 != 0 { // Only some risks have mitigation plans
+		return nil
+	}
+	count := 1
+
+	remediationStatuses := []comp.CompRemediationStatus{
+		comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_IN_PROGRESS,
+		comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_COMPLETED,
+		comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_NOT_STARTED,
+	}
+
+	plans := make([]*comp.CompMitigationPlan, count)
+	for j := 0; j < count; j++ {
+		idx := riskIdx*10 + j
+		ownerID := pickRef(store.EmployeeIDs, idx)
+
+		relatedControlIDs := []string{}
+		if len(store.CompControlIDs) > 0 {
+			relatedControlIDs = []string{store.CompControlIDs[idx%len(store.CompControlIDs)]}
+		}
+
+		startDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
+		targetDate := startDate.AddDate(0, rand.Intn(6)+3, 0)
+		status := remediationStatuses[riskIdx%len(remediationStatuses)]
+
+		estimatedCost := int64((rand.Intn(50) + 10) * 1000) // $10K to $60K
+		actualCost := int64(0)
+		completionDate := int64(0)
+
+		if status == comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_COMPLETED {
+			completionDate = time.Now().AddDate(0, -rand.Intn(2), -rand.Intn(28)).Unix()
+			actualCost = estimatedCost + int64((rand.Intn(20)-10)*1000)
+		}
+
+		targetRiskReduction := int32(rand.Intn(10) + 5)
+
+		plans[j] = &comp.CompMitigationPlan{
+			PlanId:              genID("cmit", idx),
+			Name:                fmt.Sprintf("Mitigation Plan: %s", compMitigationStrategies[riskIdx%len(compMitigationStrategies)]),
+			Description:         fmt.Sprintf("Risk mitigation plan through %s strategy", compMitigationStrategies[riskIdx%len(compMitigationStrategies)]),
+			Strategy:            compMitigationStrategies[riskIdx%len(compMitigationStrategies)],
+			Status:              status,
+			OwnerId:             ownerID,
+			StartDate:           startDate.Unix(),
+			TargetDate:          targetDate.Unix(),
+			CompletionDate:      completionDate,
+			EstimatedCost:       money(store, estimatedCost),
+			ActualCost:          money(store, actualCost),
+			TargetRiskReduction: targetRiskReduction,
+			SuccessCriteria:     fmt.Sprintf("Risk score reduced by at least %d points", targetRiskReduction),
+			ProgressNotes:       "Implementation progress tracked against milestones",
+			ActionItems:         []string{"Assess current state", "Design solution", "Implement controls", "Test effectiveness"},
+			RelatedControlIds:   relatedControlIDs,
+			AuditInfo:           createAuditInfo(),
+		}
+	}
+	return plans
 }
 
 // generateCompIncidents creates incident records
@@ -214,18 +265,15 @@ func generateCompIncidents(store *MockDataStore) []*comp.CompIncident {
 
 	for i := 0; i < count; i++ {
 		reportedByID := pickRef(store.EmployeeIDs, i)
-
 		assignedToID := pickRef(store.ManagerIDs, i)
-
 		departmentID := pickRef(store.DepartmentIDs, i)
-
 		relatedRiskID := pickRef(store.CompRiskRegisterIDs, i)
 
 		occurredDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 		discoveredDate := occurredDate.Add(time.Duration(rand.Intn(24)) * time.Hour)
 		reportedDate := discoveredDate.Add(time.Duration(rand.Intn(4)) * time.Hour)
 
-		// Severity distribution: 10% Critical, 25% High, 40% Medium, 25% Low
+		// Severity distribution
 		var severity comp.CompSeverityLevel
 		if i < 1 {
 			severity = comp.CompSeverityLevel_COMP_SEVERITY_CRITICAL
@@ -237,7 +285,7 @@ func generateCompIncidents(store *MockDataStore) []*comp.CompIncident {
 			severity = severityLevels[i%len(severityLevels)]
 		}
 
-		// Status distribution: 15% Reported, 25% Investigating, 20% Contained, 25% Resolved, 15% Closed
+		// Status distribution
 		var status comp.CompIncidentStatus
 		if i < 2 {
 			status = comp.CompIncidentStatus_COMP_INCIDENT_STATUS_REPORTED
@@ -251,7 +299,7 @@ func generateCompIncidents(store *MockDataStore) []*comp.CompIncident {
 			status = incidentStatuses[i%len(incidentStatuses)]
 		}
 
-		financialImpact := int64((rand.Intn(50) + 5) * 1000) // $5K to $55K
+		financialImpact := int64((rand.Intn(50) + 5) * 1000)
 		peopleAffected := int32(rand.Intn(100) + 1)
 
 		incidents[i] = &comp.CompIncident{
@@ -270,103 +318,21 @@ func generateCompIncidents(store *MockDataStore) []*comp.CompIncident {
 			DepartmentId:         departmentID,
 			RootCause:            rootCauses[i%len(rootCauses)],
 			ImmediateAction:      fmt.Sprintf("Containment measures implemented for %s", incidentTitles[i]),
-			CorrectiveAction:     fmt.Sprintf("Implement corrective measures to address root cause"),
-			PreventiveAction:     fmt.Sprintf("Strengthen controls to prevent recurrence"),
-			FinancialImpact: money(store, financialImpact),
+			CorrectiveAction:     "Implement corrective measures to address root cause",
+			PreventiveAction:     "Strengthen controls to prevent recurrence",
+			FinancialImpact:      money(store, financialImpact),
 			PeopleAffected:       peopleAffected,
-			RegulatoryReportable: i < 3, // First 3 require regulatory reporting
+			RegulatoryReportable: i < 3,
 			RelatedRiskId:        relatedRiskID,
-			LessonsLearned:       fmt.Sprintf("Review and update incident response procedures"),
+			LessonsLearned:       "Review and update incident response procedures",
 			AuditInfo:            createAuditInfo(),
 		}
 
-		// Set closed date for closed incidents
 		if status == comp.CompIncidentStatus_COMP_INCIDENT_STATUS_CLOSED {
 			incidents[i].ClosedDate = time.Now().AddDate(0, -rand.Intn(2), -rand.Intn(28)).Unix()
 		}
 	}
 	return incidents
-}
-
-// generateCompMitigationPlans creates mitigation plan records
-func generateCompMitigationPlans(store *MockDataStore) []*comp.CompMitigationPlan {
-	remediationStatuses := []comp.CompRemediationStatus{
-		comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_NOT_STARTED,
-		comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_IN_PROGRESS,
-		comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_COMPLETED,
-		comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_VERIFIED,
-		comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_OVERDUE,
-	}
-
-	count := minInt(len(compMitigationStrategies)*2, 10)
-	plans := make([]*comp.CompMitigationPlan, count)
-
-	for i := 0; i < count; i++ {
-		riskID := pickRef(store.CompRiskRegisterIDs, i)
-
-		ownerID := pickRef(store.EmployeeIDs, i)
-
-		relatedControlIDs := []string{}
-		if len(store.CompControlIDs) > 0 {
-			relatedControlIDs = []string{store.CompControlIDs[i%len(store.CompControlIDs)]}
-		}
-
-		startDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
-		targetDate := startDate.AddDate(0, rand.Intn(6)+3, 0)
-
-		// Status distribution: 10% Not Started, 40% In Progress, 30% Completed, 15% Verified, 5% On Hold
-		var status comp.CompRemediationStatus
-		if i < 1 {
-			status = comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_NOT_STARTED
-		} else if i < 5 {
-			status = comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_IN_PROGRESS
-		} else if i < 8 {
-			status = comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_COMPLETED
-		} else if i < 9 {
-			status = comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_VERIFIED
-		} else {
-			status = remediationStatuses[i%len(remediationStatuses)]
-		}
-
-		estimatedCost := int64((rand.Intn(50) + 10) * 1000) // $10K to $60K
-		actualCost := int64(0)
-		completionDate := int64(0)
-
-		if status == comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_COMPLETED ||
-			status == comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_VERIFIED {
-			completionDate = time.Now().AddDate(0, -rand.Intn(2), -rand.Intn(28)).Unix()
-			actualCost = estimatedCost + int64((rand.Intn(20)-10)*1000) // +/- $10K variance
-		}
-
-		targetRiskReduction := int32(rand.Intn(10) + 5) // 5-15 point reduction
-		actualRiskReduction := int32(0)
-		if status == comp.CompRemediationStatus_COMP_REMEDIATION_STATUS_VERIFIED {
-			actualRiskReduction = targetRiskReduction - int32(rand.Intn(3))
-		}
-
-		plans[i] = &comp.CompMitigationPlan{
-			PlanId:              genID("cmit", i),
-			RiskId:              riskID,
-			Name:                fmt.Sprintf("Mitigation Plan: %s", compMitigationStrategies[i%len(compMitigationStrategies)]),
-			Description:         fmt.Sprintf("Risk mitigation plan to address identified risks through %s strategy", compMitigationStrategies[i%len(compMitigationStrategies)]),
-			Strategy:            compMitigationStrategies[i%len(compMitigationStrategies)],
-			Status:              status,
-			OwnerId:             ownerID,
-			StartDate:           startDate.Unix(),
-			TargetDate:          targetDate.Unix(),
-			CompletionDate:      completionDate,
-			EstimatedCost: money(store, estimatedCost),
-			ActualCost: money(store, actualCost),
-			TargetRiskReduction: targetRiskReduction,
-			ActualRiskReduction: actualRiskReduction,
-			SuccessCriteria:     fmt.Sprintf("Risk score reduced by at least %d points", targetRiskReduction),
-			ProgressNotes:       fmt.Sprintf("Implementation progress tracked against milestones"),
-			ActionItems:         []string{"Assess current state", "Design solution", "Implement controls", "Test effectiveness", "Monitor results"},
-			RelatedControlIds:   relatedControlIDs,
-			AuditInfo:           createAuditInfo(),
-		}
-	}
-	return plans
 }
 
 // maxInt returns the maximum of two integers

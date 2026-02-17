@@ -53,50 +53,6 @@ limitations under the License.
             }
         ],
 
-        EcomOrderLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'orderId', label: 'Order', sortKey: 'orderId', filterKey: 'orderId' },
-            { key: 'productId', label: 'Product', sortKey: 'productId', filterKey: 'productId' },
-            { key: 'sku', label: 'SKU', sortKey: 'sku', filterKey: 'sku' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
-            {
-                key: 'unitPrice',
-                label: 'Unit Price',
-                sortKey: 'unitPrice',
-                render: (item) => renderMoney(item.unitPrice)
-            },
-            {
-                key: 'lineTotal',
-                label: 'Line Total',
-                sortKey: 'lineTotal',
-                render: (item) => renderMoney(item.lineTotal)
-            }
-        ],
-
-        EcomOrderStatusHistory: [
-            { key: 'statusId', label: 'ID', sortKey: 'statusId', filterKey: 'statusId' },
-            { key: 'orderId', label: 'Order', sortKey: 'orderId', filterKey: 'orderId' },
-            {
-                key: 'previousStatus',
-                label: 'Previous Status',
-                sortKey: 'previousStatus',
-                render: (item) => render.orderStatus(item.previousStatus)
-            },
-            {
-                key: 'newStatus',
-                label: 'New Status',
-                sortKey: 'newStatus',
-                render: (item) => render.orderStatus(item.newStatus)
-            },
-            {
-                key: 'changedAt',
-                label: 'Changed At',
-                sortKey: 'changedAt',
-                render: (item) => renderDate(item.changedAt)
-            }
-        ],
-
         EcomReturn: [
             { key: 'returnId', label: 'ID', sortKey: 'returnId', filterKey: 'returnId' },
             { key: 'returnNumber', label: 'Return Number', sortKey: 'returnNumber', filterKey: 'returnNumber' },
@@ -122,20 +78,7 @@ limitations under the License.
             }
         ],
 
-        EcomReturnLine: [
-            { key: 'lineId', label: 'ID', sortKey: 'lineId', filterKey: 'lineId' },
-            { key: 'returnId', label: 'Return', sortKey: 'returnId', filterKey: 'returnId' },
-            { key: 'productId', label: 'Product', sortKey: 'productId', filterKey: 'productId' },
-            { key: 'sku', label: 'SKU', sortKey: 'sku', filterKey: 'sku' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'quantity', label: 'Quantity', sortKey: 'quantity' },
-            {
-                key: 'refundAmount',
-                label: 'Refund Amount',
-                sortKey: 'refundAmount',
-                render: (item) => renderMoney(item.refundAmount)
-            }
-        ]
+        // EcomOrderLine, EcomOrderStatusHistory, EcomReturnLine - now inline tables in parents
     };
 
 })();

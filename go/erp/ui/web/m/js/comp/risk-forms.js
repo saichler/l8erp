@@ -50,28 +50,27 @@ limitations under the License.
                 ...f.date('lastReviewDate', 'Last Review Date'),
                 ...f.date('nextReviewDate', 'Next Review Date'),
                 ...f.textarea('triggerEvents', 'Trigger Events')
-            ])
-        ]),
-
-        CompRiskAssessment: f.form('Risk Assessment', [
-            f.section('Assessment Details', [
-                ...f.reference('riskId', 'Risk', 'CompRiskRegister', true),
-                ...f.date('assessmentDate', 'Assessment Date', true),
-                ...f.reference('assessorId', 'Assessor', 'Employee', true)
             ]),
-            f.section('Ratings', [
-                ...f.number('likelihoodRating', 'Likelihood Rating'),
-                ...f.number('impactRating', 'Impact Rating'),
-                ...f.number('riskScore', 'Risk Score'),
-                ...f.number('controlEffectiveness', 'Control Effectiveness')
+            f.section('Risk Assessments', [
+                ...f.inlineTable('assessments', 'Risk Assessments', [
+                    { key: 'assessmentId', label: 'ID', hidden: true },
+                    { key: 'assessmentDate', label: 'Date', type: 'date' },
+                    { key: 'assessorId', label: 'Assessor', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'likelihoodRating', label: 'Likelihood', type: 'number' },
+                    { key: 'impactRating', label: 'Impact', type: 'number' },
+                    { key: 'riskScore', label: 'Score', type: 'number' },
+                    { key: 'requiresEscalation', label: 'Escalation', type: 'checkbox' }
+                ])
             ]),
-            f.section('Findings', [
-                ...f.textarea('likelihoodJustification', 'Likelihood Justification'),
-                ...f.textarea('impactJustification', 'Impact Justification'),
-                ...f.textarea('recommendations', 'Recommendations'),
-                ...f.textarea('statusChangeNotes', 'Status Change Notes'),
-                ...f.checkbox('requiresEscalation', 'Requires Escalation'),
-                ...f.reference('evidenceDocumentId', 'Evidence Document', 'DocDocument')
+            f.section('Mitigation Plans', [
+                ...f.inlineTable('mitigationPlans', 'Mitigation Plans', [
+                    { key: 'planId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'strategy', label: 'Strategy', type: 'text' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.REMEDIATION_STATUS },
+                    { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'targetDate', label: 'Target Date', type: 'date' }
+                ])
             ])
         ]),
 
@@ -104,30 +103,6 @@ limitations under the License.
                 ...f.textarea('lessonsLearned', 'Lessons Learned'),
                 ...f.checkbox('regulatoryReportable', 'Regulatory Reportable'),
                 ...f.date('regulatoryReportDate', 'Regulatory Report Date')
-            ])
-        ]),
-
-        CompMitigationPlan: f.form('Mitigation Plan', [
-            f.section('Plan Details', [
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description'),
-                ...f.reference('riskId', 'Risk', 'CompRiskRegister', true),
-                ...f.text('strategy', 'Strategy'),
-                ...f.select('status', 'Status', enums.REMEDIATION_STATUS)
-            ]),
-            f.section('Timeline', [
-                ...f.date('startDate', 'Start Date'),
-                ...f.date('targetDate', 'Target Date'),
-                ...f.date('completionDate', 'Completion Date')
-            ]),
-            f.section('Risk Reduction', [
-                ...f.money('estimatedCost', 'Estimated Cost'),
-                ...f.money('actualCost', 'Actual Cost'),
-                ...f.number('targetRiskReduction', 'Target Risk Reduction'),
-                ...f.number('actualRiskReduction', 'Actual Risk Reduction'),
-                ...f.textarea('successCriteria', 'Success Criteria'),
-                ...f.textarea('progressNotes', 'Progress Notes'),
-                ...f.reference('ownerId', 'Owner', 'Employee')
             ])
         ]),
 

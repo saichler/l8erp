@@ -41,65 +41,30 @@ func generateDocPhase2(client *HCMClient, store *MockDataStore) error {
 	return nil
 }
 
-// generateDocPhase3 creates documents and versions
+// generateDocPhase3 creates documents (with embedded versions, checkouts, comments, signatures, attachments, access logs, audit trails)
 func generateDocPhase3(client *HCMClient, store *MockDataStore) error {
 	documents := generateDocDocuments(store)
-	if err := runOp(client, "Documents", "/erp/45/DocDoc", &doc.DocDocumentList{List: documents}, extractIDs(documents, func(e *doc.DocDocument) string { return e.DocumentId }), &store.DocDocumentIDs); err != nil {
-		return err
-	}
-
-	versions := generateDocDocumentVersions(store)
-	if err := runOp(client, "Document Versions", "/erp/45/DocVersion", &doc.DocDocumentVersionList{List: versions}, extractIDs(versions, func(e *doc.DocDocumentVersion) string { return e.VersionId }), &store.DocVersionIDs); err != nil {
+	if err := runOp(client, "Documents (with embedded children)", "/erp/45/DocDoc", &doc.DocDocumentList{List: documents}, extractIDs(documents, func(e *doc.DocDocument) string { return e.DocumentId }), &store.DocDocumentIDs); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-// generateDocPhase4 creates workflow: checkouts, workflows, steps, signatures, comments
+// generateDocPhase4 creates workflows (with embedded steps)
 func generateDocPhase4(client *HCMClient, store *MockDataStore) error {
-	checkouts := generateDocCheckouts(store)
-	if err := runOp(client, "Checkouts", "/erp/45/DocChkout", &doc.DocCheckoutList{List: checkouts}, extractIDs(checkouts, func(e *doc.DocCheckout) string { return e.CheckoutId }), &store.DocCheckoutIDs); err != nil {
-		return err
-	}
-
 	workflows := generateDocApprovalWorkflows(store)
-	if err := runOp(client, "Approval Workflows", "/erp/45/DocAprvWf", &doc.DocApprovalWorkflowList{List: workflows}, extractIDs(workflows, func(e *doc.DocApprovalWorkflow) string { return e.WorkflowId }), &store.DocApprovalWorkflowIDs); err != nil {
-		return err
-	}
-
-	steps := generateDocWorkflowSteps(store)
-	if err := runOp(client, "Workflow Steps", "/erp/45/DocWfStep", &doc.DocWorkflowStepList{List: steps}, extractIDs(steps, func(e *doc.DocWorkflowStep) string { return e.StepId }), &store.DocWorkflowStepIDs); err != nil {
-		return err
-	}
-
-	signatures := generateDocSignatures(store)
-	if err := runOp(client, "Signatures", "/erp/45/DocSign", &doc.DocSignatureList{List: signatures}, extractIDs(signatures, func(e *doc.DocSignature) string { return e.SignatureId }), &store.DocSignatureIDs); err != nil {
-		return err
-	}
-
-	comments := generateDocReviewComments(store)
-	if err := runOp(client, "Review Comments", "/erp/45/DocReview", &doc.DocReviewCommentList{List: comments}, extractIDs(comments, func(e *doc.DocReviewComment) string { return e.CommentId }), &store.DocReviewCommentIDs); err != nil {
+	if err := runOp(client, "Approval Workflows (with embedded steps)", "/erp/45/DocAprvWf", &doc.DocApprovalWorkflowList{List: workflows}, extractIDs(workflows, func(e *doc.DocApprovalWorkflow) string { return e.WorkflowId }), &store.DocApprovalWorkflowIDs); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-// generateDocPhase5 creates integration: attachments, templates, fields, emails, scans
+// generateDocPhase5 creates integration: templates (with embedded fields), emails, scans
 func generateDocPhase5(client *HCMClient, store *MockDataStore) error {
-	attachments := generateDocAttachments(store)
-	if err := runOp(client, "Attachments", "/erp/45/DocAttach", &doc.DocAttachmentList{List: attachments}, extractIDs(attachments, func(e *doc.DocAttachment) string { return e.AttachmentId }), &store.DocAttachmentIDs); err != nil {
-		return err
-	}
-
 	templates := generateDocTemplates(store)
-	if err := runOp(client, "Templates", "/erp/45/DocTmpl", &doc.DocTemplateList{List: templates}, extractIDs(templates, func(e *doc.DocTemplate) string { return e.TemplateId }), &store.DocTemplateIDs); err != nil {
-		return err
-	}
-
-	fields := generateDocTemplateFields(store)
-	if err := runOp(client, "Template Fields", "/erp/45/DocTmplFld", &doc.DocTemplateFieldList{List: fields}, extractIDs(fields, func(e *doc.DocTemplateField) string { return e.FieldId }), &store.DocTemplateFieldIDs); err != nil {
+	if err := runOp(client, "Templates (with embedded fields)", "/erp/45/DocTmpl", &doc.DocTemplateList{List: templates}, extractIDs(templates, func(e *doc.DocTemplate) string { return e.TemplateId }), &store.DocTemplateIDs); err != nil {
 		return err
 	}
 
@@ -116,25 +81,15 @@ func generateDocPhase5(client *HCMClient, store *MockDataStore) error {
 	return nil
 }
 
-// generateDocPhase6 creates remaining compliance: legal holds, access logs, archives, audits
+// generateDocPhase6 creates remaining compliance: legal holds, archives
 func generateDocPhase6(client *HCMClient, store *MockDataStore) error {
 	holds := generateDocLegalHolds(store)
 	if err := runOp(client, "Legal Holds", "/erp/45/DocLglHold", &doc.DocLegalHoldList{List: holds}, extractIDs(holds, func(e *doc.DocLegalHold) string { return e.HoldId }), &store.DocLegalHoldIDs); err != nil {
 		return err
 	}
 
-	logs := generateDocAccessLogs(store)
-	if err := runOp(client, "Access Logs", "/erp/45/DocAccLog", &doc.DocAccessLogList{List: logs}, extractIDs(logs, func(e *doc.DocAccessLog) string { return e.LogId }), &store.DocAccessLogIDs); err != nil {
-		return err
-	}
-
 	archives := generateDocArchiveJobs(store)
 	if err := runOp(client, "Archive Jobs", "/erp/45/DocArchive", &doc.DocArchiveJobList{List: archives}, extractIDs(archives, func(e *doc.DocArchiveJob) string { return e.JobId }), &store.DocArchiveJobIDs); err != nil {
-		return err
-	}
-
-	trails := generateDocAuditTrails(store)
-	if err := runOp(client, "Audit Trails", "/erp/45/DocAudit", &doc.DocAuditTrailList{List: trails}, extractIDs(trails, func(e *doc.DocAuditTrail) string { return e.TrailId }), &store.DocAuditTrailIDs); err != nil {
 		return err
 	}
 

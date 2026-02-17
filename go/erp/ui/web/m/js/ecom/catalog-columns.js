@@ -50,32 +50,13 @@ limitations under the License.
             ...col.boolean('isFilterable', 'Filterable')
         ],
 
-        EcomImage: [
-            ...col.id('imageId'),
-            ...col.col('productId', 'Product'),
-            ...col.col('fileName', 'File Name'),
-            ...col.enum('imageType', 'Type', null, render.imageType),
-            ...col.boolean('isPrimary', 'Primary'),
-            ...col.col('sortOrder', 'Sort Order')
-        ],
-
-        EcomVariant: [
-            ...col.id('variantId'),
-            ...col.col('productId', 'Product'),
-            ...col.col('sku', 'SKU'),
-            ...col.col('name', 'Name'),
-            ...col.money('price', 'Price'),
-            ...col.col('stockQuantity', 'Stock Qty'),
-            ...col.boolean('isActive', 'Active')
-        ]
+        // EcomImage, EcomVariant - now inline tables in EcomProduct
     };
 
     MobileEcomCatalog.primaryKeys = {
         EcomProduct: 'productId',
         EcomCategory: 'categoryId',
-        EcomAttribute: 'attributeId',
-        EcomImage: 'imageId',
-        EcomVariant: 'variantId'
+        EcomAttribute: 'attributeId'
     };
 
 })();

@@ -34,6 +34,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Scope', [
                 ...f.textarea('auditScope', 'Audit Scope'),
                 ...f.textarea('objectives', 'Objectives')
+            ]),
+            f.section('Audit Reports', [
+                ...f.inlineTable('reports', 'Audit Reports', [
+                    { key: 'reportId', label: 'ID', hidden: true },
+                    { key: 'reportNumber', label: 'Number', type: 'text' },
+                    { key: 'title', label: 'Title', type: 'text' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.auditStatus },
+                    { key: 'overallOpinion', label: 'Opinion', type: 'text' },
+                    { key: 'draftDate', label: 'Draft Date', type: 'date' },
+                    { key: 'finalDate', label: 'Final Date', type: 'date' }
+                ])
             ])
         ]),
 
@@ -58,45 +69,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('rootCause', 'Root Cause'),
                 ...f.textarea('recommendation', 'Recommendation'),
                 ...f.textarea('managementResponse', 'Management Response')
-            ])
-        ]),
-
-        CompRemediationAction: f.form('Remediation Action', [
-            f.section('Action Information', [
-                ...f.reference('findingId', 'Finding', 'CompAuditFinding', true),
-                ...f.text('description', 'Description', true),
-                ...f.text('actionNumber', 'Action Number'),
-                ...f.select('status', 'Status', enums.remediationStatus)
             ]),
-            f.section('Ownership', [
-                ...f.reference('ownerId', 'Owner', 'Employee')
-            ]),
-            f.section('Timeline', [
-                ...f.date('dueDate', 'Due Date'),
-                ...f.date('completionDate', 'Completion Date'),
-                ...f.date('verificationDate', 'Verification Date')
-            ]),
-            f.section('Details', [
-                ...f.textarea('progressNotes', 'Progress Notes'),
-                ...f.number('percentComplete', 'Percent Complete')
-            ])
-        ]),
-
-        CompAuditReport: f.form('Audit Report', [
-            f.section('Report Information', [
-                ...f.text('title', 'Title', true),
-                ...f.reference('auditScheduleId', 'Audit', 'CompAuditSchedule'),
-                ...f.text('reportNumber', 'Report Number'),
-                ...f.select('status', 'Status', enums.reportStatus)
-            ]),
-            f.section('Dates', [
-                ...f.date('draftDate', 'Draft Date'),
-                ...f.date('finalDate', 'Final Date')
-            ]),
-            f.section('Content', [
-                ...f.textarea('executiveSummary', 'Executive Summary'),
-                ...f.textarea('scopeDescription', 'Scope'),
-                ...f.textarea('overallOpinion', 'Overall Opinion')
+            f.section('Remediation Actions', [
+                ...f.inlineTable('actions', 'Remediation Actions', [
+                    { key: 'actionId', label: 'ID', hidden: true },
+                    { key: 'actionNumber', label: 'Number', type: 'text' },
+                    { key: 'title', label: 'Title', type: 'text' },
+                    { key: 'status', label: 'Status', type: 'select', options: enums.remediationStatus },
+                    { key: 'ownerId', label: 'Owner', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'dueDate', label: 'Due Date', type: 'date' },
+                    { key: 'percentComplete', label: '% Complete', type: 'number' }
+                ])
             ])
         ]),
 
@@ -126,8 +109,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     CompAudit.primaryKeys = {
         CompAuditSchedule: 'scheduleId',
         CompAuditFinding: 'findingId',
-        CompRemediationAction: 'actionId',
-        CompAuditReport: 'reportId',
         CompComplianceReport: 'reportId'
     };
 

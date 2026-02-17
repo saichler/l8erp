@@ -43,25 +43,27 @@ limitations under the License.
                 ...f.number('testFrequencyDays', 'Test Frequency (Days)'),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
                 ...f.checkbox('isActive', 'Active')
-            ])
-        ]),
-
-        CompControlAssessment: f.form('Control Assessment', [
-            f.section('Assessment Details', [
-                ...f.reference('controlId', 'Control', 'CompControl', true),
-                ...f.date('assessmentDate', 'Assessment Date', true),
-                ...f.reference('assessorId', 'Assessor', 'Employee', true),
-                ...f.select('effectiveness', 'Effectiveness', enums.CONTROL_EFFECTIVENESS)
             ]),
-            f.section('Testing', [
-                ...f.textarea('testPerformed', 'Test Performed'),
-                ...f.number('sampleSize', 'Sample Size'),
-                ...f.number('exceptionsFound', 'Exceptions Found')
+            f.section('Assessments', [
+                ...f.inlineTable('assessments', 'Control Assessments', [
+                    { key: 'assessmentId', label: 'ID', hidden: true },
+                    { key: 'assessmentDate', label: 'Date', type: 'date' },
+                    { key: 'assessorId', label: 'Assessor', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'effectiveness', label: 'Effectiveness', type: 'select', options: enums.CONTROL_EFFECTIVENESS },
+                    { key: 'testPerformed', label: 'Test', type: 'text' },
+                    { key: 'recommendations', label: 'Recommendations', type: 'text' }
+                ])
             ]),
-            f.section('Results & Next Steps', [
-                ...f.textarea('testResults', 'Test Results'),
-                ...f.textarea('recommendations', 'Recommendations'),
-                ...f.date('nextAssessmentDate', 'Next Assessment Date')
+            f.section('Segregation Rules', [
+                ...f.inlineTable('segregationRules', 'Segregation Rules', [
+                    { key: 'ruleId', label: 'ID', hidden: true },
+                    { key: 'code', label: 'Code', type: 'text' },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'conflictingFunctionA', label: 'Function A', type: 'text' },
+                    { key: 'conflictingFunctionB', label: 'Function B', type: 'text' },
+                    { key: 'riskLevel', label: 'Risk Level', type: 'text' },
+                    { key: 'isActive', label: 'Active', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -107,24 +109,6 @@ limitations under the License.
             ])
         ]),
 
-        CompSegregationRule: f.form('Segregation Rule', [
-            f.section('Rule Details', [
-                ...f.text('code', 'Code', true),
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description')
-            ]),
-            f.section('Conflicting Functions', [
-                ...f.text('conflictingFunctionA', 'Function A', true),
-                ...f.text('conflictingFunctionB', 'Function B', true),
-                ...f.select('riskLevel', 'Risk Level', enums.SEVERITY_LEVEL),
-                ...f.textarea('businessJustification', 'Business Justification')
-            ]),
-            f.section('Mitigation & Status', [
-                ...f.reference('controlId', 'Mitigating Control', 'CompControl'),
-                ...f.reference('ownerId', 'Owner', 'Employee'),
-                ...f.checkbox('isActive', 'Active')
-            ])
-        ])
     };
 
 })();

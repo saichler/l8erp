@@ -48,6 +48,8 @@ message CompControl {
     bool is_active = 16;
     map<string, string> custom_fields = 17;
     erp.AuditInfo audit_info = 18;
+    repeated CompControlAssessment assessments = 19;
+    repeated CompSegregationRule segregation_rules = 20;
 }
 
 message CompControlList {
@@ -59,11 +61,9 @@ message CompControlList {
 // CONTROL ASSESSMENT
 // =====================
 
-// @PrimeObject
 // CompControlAssessment records the evaluation of a control's effectiveness
 message CompControlAssessment {
     string assessment_id = 1;
-    string control_id = 2;                     // cross-ref: CompControl
     int64 assessment_date = 3;
     string assessor_id = 4;                    // cross-ref: Employee
     CompControlEffectiveness effectiveness = 5;
@@ -81,10 +81,6 @@ message CompControlAssessment {
     erp.AuditInfo audit_info = 17;
 }
 
-message CompControlAssessmentList {
-    repeated CompControlAssessment list = 1;
-    l8api.L8MetaData metadata = 2;
-}
 
 // =====================
 // POLICY DOCUMENT
@@ -154,7 +150,6 @@ message CompApprovalMatrixList {
 // SEGREGATION RULE
 // =====================
 
-// @PrimeObject
 // CompSegregationRule defines segregation of duties requirements
 message CompSegregationRule {
     string rule_id = 1;
@@ -165,7 +160,6 @@ message CompSegregationRule {
     string conflicting_function_b = 6;
     CompSeverityLevel risk_level = 7;
     string mitigation_control = 8;
-    string control_id = 9;                     // cross-ref: CompControl
     bool is_active = 10;
     string owner_id = 11;                      // cross-ref: Employee
     repeated string applicable_role_ids = 12;
@@ -174,7 +168,3 @@ message CompSegregationRule {
     erp.AuditInfo audit_info = 15;
 }
 
-message CompSegregationRuleList {
-    repeated CompSegregationRule list = 1;
-    l8api.L8MetaData metadata = 2;
-}

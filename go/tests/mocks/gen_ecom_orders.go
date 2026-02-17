@@ -86,6 +86,63 @@ func generateEcomOrders(store *MockDataStore) []*ecom.EcomOrder {
 			trackingNumber = fmt.Sprintf("TRK%09d", rand.Intn(999999999))
 		}
 
+		// Generate 2-3 embedded order lines
+		linesPerOrder := rand.Intn(2) + 2
+		lines := make([]*ecom.EcomOrderLine, linesPerOrder)
+		for j := 0; j < linesPerOrder; j++ {
+			productID := pickRef(store.EcomProductIDs, (i*3 + j))
+			productName := ecomProductNames[(i*3+j)%len(ecomProductNames)]
+			qty := int32(rand.Intn(5) + 1)
+			unitPr := int64(rand.Intn(50000) + 1000)
+			disc := int64(float64(unitPr) * float64(qty) * float64(rand.Intn(15)) / 100)
+			tax := int64((float64(unitPr)*float64(qty) - float64(disc)) * 0.08)
+			lineTotal := int64(unitPr)*int64(qty) - disc + tax
+			lines[j] = &ecom.EcomOrderLine{
+				LineId:         fmt.Sprintf("eol-%03d", i*3+j+1),
+				ProductId:      productID,
+				VariantId:      "",
+				Sku:            fmt.Sprintf("SKU-%05d", (i*3+j)%99999+1),
+				Name:           productName,
+				Quantity:       qty,
+				UnitPrice:      money(store, unitPr),
+				DiscountAmount: money(store, disc),
+				TaxAmount:      money(store, tax),
+				LineTotal:      money(store, lineTotal),
+				Weight:         float64(rand.Intn(500)+100) / 100.0,
+				IsGift:         (i*3+j+1)%10 == 0,
+				AuditInfo:      createAuditInfo(),
+			}
+		}
+
+		// Generate 2 embedded status history entries
+		statusProgression := []ecom.EcomOrderStatus{
+			ecom.EcomOrderStatus_ECOM_ORDER_STATUS_PENDING,
+			ecom.EcomOrderStatus_ECOM_ORDER_STATUS_CONFIRMED,
+			ecom.EcomOrderStatus_ECOM_ORDER_STATUS_PROCESSING,
+			ecom.EcomOrderStatus_ECOM_ORDER_STATUS_SHIPPED,
+			ecom.EcomOrderStatus_ECOM_ORDER_STATUS_DELIVERED,
+		}
+		statusHistory := make([]*ecom.EcomOrderStatusHistory, 2)
+		for j := 0; j < 2; j++ {
+			prevIdx := j
+			newIdx := j + 1
+			if newIdx >= len(statusProgression) {
+				newIdx = len(statusProgression) - 1
+			}
+			changedBy := pickRef(store.EmployeeIDs, (i*2 + j))
+			changedAt := orderDate.Add(time.Duration(j*24+rand.Intn(24)) * time.Hour)
+			statusHistory[j] = &ecom.EcomOrderStatusHistory{
+				StatusId:       fmt.Sprintf("eosh-%03d", i*2+j+1),
+				PreviousStatus: statusProgression[prevIdx],
+				NewStatus:      statusProgression[newIdx],
+				ChangedAt:      changedAt.Unix(),
+				ChangedBy:      changedBy,
+				Notes:          fmt.Sprintf("Status updated to %s", statusProgression[newIdx].String()),
+				NotifyCustomer: j == 0,
+				AuditInfo:      createAuditInfo(),
+			}
+		}
+
 		orders[i] = &ecom.EcomOrder{
 			OrderId:          genID("eco", i),
 			OrderNumber:      fmt.Sprintf("ORD-%06d", i+1),
@@ -112,109 +169,14 @@ func generateEcomOrders(store *MockDataStore) []*ecom.EcomOrder {
 			DeliveredDate:    deliveredDate,
 			TrackingNumber:   trackingNumber,
 			AuditInfo:        createAuditInfo(),
+			Lines:            lines,
+			StatusHistory:    statusHistory,
 		}
 	}
 	return orders
 }
 
-// generateEcomOrderLines creates order line item records (2-3 lines per order)
-func generateEcomOrderLines(store *MockDataStore) []*ecom.EcomOrderLine {
-	count := len(store.EcomOrderIDs) * 3
-	if count == 0 {
-		count = 120
-	}
-
-	lines := make([]*ecom.EcomOrderLine, 0, count)
-	idx := 1
-
-	for oIdx, orderID := range store.EcomOrderIDs {
-		linesPerOrder := rand.Intn(2) + 2 // 2-3 lines per order
-		for j := 0; j < linesPerOrder; j++ {
-			productID := pickRef(store.EcomProductIDs, (oIdx*3+j))
-
-			variantID := pickRef(store.EcomVariantIDs, (oIdx*3+j))
-
-			productName := ecomProductNames[(oIdx*3+j)%len(ecomProductNames)]
-			quantity := int32(rand.Intn(5) + 1)
-			unitPrice := int64(rand.Intn(50000) + 1000) // $10 - $500
-			discountAmount := int64(float64(unitPrice) * float64(quantity) * float64(rand.Intn(15)) / 100)
-			taxAmount := int64((float64(unitPrice)*float64(quantity) - float64(discountAmount)) * 0.08)
-			lineTotal := int64(unitPrice)*int64(quantity) - discountAmount + taxAmount
-
-			lines = append(lines, &ecom.EcomOrderLine{
-				LineId:         fmt.Sprintf("eol-%03d", idx),
-				OrderId:        orderID,
-				ProductId:      productID,
-				VariantId:      variantID,
-				Sku:            fmt.Sprintf("SKU-%05d", (oIdx*3+j)%99999+1),
-				Name:           productName,
-				Quantity:       quantity,
-				UnitPrice:      money(store, unitPrice),
-				DiscountAmount: money(store, discountAmount),
-				TaxAmount:      money(store, taxAmount),
-				LineTotal:      money(store, lineTotal),
-				Weight:         float64(rand.Intn(500)+100) / 100.0, // 1.0 - 6.0 lbs
-				IsGift:         idx%10 == 0,
-				GiftMessage:    "",
-				AuditInfo:      createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return lines
-}
-
-// generateEcomOrderStatuses creates order status history records (2 entries per order)
-func generateEcomOrderStatuses(store *MockDataStore) []*ecom.EcomOrderStatusHistory {
-	statusProgression := []ecom.EcomOrderStatus{
-		ecom.EcomOrderStatus_ECOM_ORDER_STATUS_PENDING,
-		ecom.EcomOrderStatus_ECOM_ORDER_STATUS_CONFIRMED,
-		ecom.EcomOrderStatus_ECOM_ORDER_STATUS_PROCESSING,
-		ecom.EcomOrderStatus_ECOM_ORDER_STATUS_SHIPPED,
-		ecom.EcomOrderStatus_ECOM_ORDER_STATUS_DELIVERED,
-	}
-
-	count := len(store.EcomOrderIDs) * 2
-	if count == 0 {
-		count = 80
-	}
-
-	histories := make([]*ecom.EcomOrderStatusHistory, 0, count)
-	idx := 1
-
-	for oIdx, orderID := range store.EcomOrderIDs {
-		orderDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
-
-		// Create 2 status transitions per order
-		for j := 0; j < 2; j++ {
-			prevStatusIdx := j
-			newStatusIdx := j + 1
-			if newStatusIdx >= len(statusProgression) {
-				newStatusIdx = len(statusProgression) - 1
-			}
-
-			changedBy := pickRef(store.EmployeeIDs, (oIdx*2+j))
-
-			changedAt := orderDate.Add(time.Duration(j*24+rand.Intn(24)) * time.Hour)
-
-			histories = append(histories, &ecom.EcomOrderStatusHistory{
-				StatusId:       fmt.Sprintf("eosh-%03d", idx),
-				OrderId:        orderID,
-				PreviousStatus: statusProgression[prevStatusIdx],
-				NewStatus:      statusProgression[newStatusIdx],
-				ChangedAt:      changedAt.Unix(),
-				ChangedBy:      changedBy,
-				Notes:          fmt.Sprintf("Status updated to %s", statusProgression[newStatusIdx].String()),
-				NotifyCustomer: j == 0, // Notify on first status change
-				AuditInfo:      createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return histories
-}
-
-// generateEcomReturns creates return/RMA request records (20% of orders)
+// generateEcomReturns creates return/RMA request records with embedded lines (20% of orders)
 func generateEcomReturns(store *MockDataStore) []*ecom.EcomReturn {
 	returnStatuses := []ecom.EcomReturnStatus{
 		ecom.EcomReturnStatus_ECOM_RETURN_STATUS_REQUESTED,
@@ -278,6 +240,30 @@ func generateEcomReturns(store *MockDataStore) []*ecom.EcomReturn {
 			trackingNumber = fmt.Sprintf("RET%09d", rand.Intn(999999999))
 		}
 
+		// Generate 1-2 embedded return lines
+		rlReasons := []string{"Defective product", "Wrong item received", "Not as described", "Changed mind"}
+		rlConditions := []string{"New", "Used", "Damaged", "Defective"}
+		linesPerReturn := rand.Intn(2) + 1
+		retLines := make([]*ecom.EcomReturnLine, linesPerReturn)
+		for j := 0; j < linesPerReturn; j++ {
+			productID := pickRef(store.EcomProductIDs, (i*2 + j))
+			productName := ecomProductNames[(i*2+j)%len(ecomProductNames)]
+			retLines[j] = &ecom.EcomReturnLine{
+				LineId:       fmt.Sprintf("erl-%03d", i*2+j+1),
+				OrderLineId:  "",
+				ProductId:    productID,
+				VariantId:    "",
+				Sku:          fmt.Sprintf("SKU-%05d", (i*2+j)%99999+1),
+				Name:         productName,
+				Quantity:     int32(rand.Intn(3) + 1),
+				RefundAmount: money(store, int64(rand.Intn(10000000)+50000)),
+				Reason:       rlReasons[(i*2+j)%len(rlReasons)],
+				Condition:    rlConditions[(i*2+j)%len(rlConditions)],
+				Restock:      (i*2+j)%3 != 0,
+				AuditInfo:    createAuditInfo(),
+			}
+		}
+
 		returns[i] = &ecom.EcomReturn{
 			ReturnId:        genID("ert", i),
 			ReturnNumber:    fmt.Sprintf("RMA-%06d", i+1),
@@ -296,62 +282,8 @@ func generateEcomReturns(store *MockDataStore) []*ecom.EcomReturn {
 			TrackingNumber:  trackingNumber,
 			ShippingCarrier: ecomShippingCarriers[i%len(ecomShippingCarriers)],
 			AuditInfo:       createAuditInfo(),
+			Lines:           retLines,
 		}
 	}
 	return returns
-}
-
-// generateEcomReturnLines creates return line item records (1-2 lines per return)
-func generateEcomReturnLines(store *MockDataStore) []*ecom.EcomReturnLine {
-	returnReasons := []string{
-		"Defective product",
-		"Wrong item received",
-		"Not as described",
-		"Changed mind",
-	}
-
-	conditions := []string{
-		"New", "Used", "Damaged", "Defective",
-	}
-
-	count := len(store.EcomReturnIDs) * 2
-	if count == 0 {
-		count = 16
-	}
-
-	lines := make([]*ecom.EcomReturnLine, 0, count)
-	idx := 1
-
-	for rIdx, returnID := range store.EcomReturnIDs {
-		linesPerReturn := rand.Intn(2) + 1 // 1-2 lines per return
-		for j := 0; j < linesPerReturn; j++ {
-			orderLineID := pickRef(store.EcomOrderLineIDs, (rIdx*2+j))
-
-			productID := pickRef(store.EcomProductIDs, (rIdx*2+j))
-
-			variantID := pickRef(store.EcomVariantIDs, (rIdx*2+j))
-
-			productName := ecomProductNames[(rIdx*2+j)%len(ecomProductNames)]
-			quantity := int32(rand.Intn(3) + 1)
-			refundAmount := int64(rand.Intn(10000000) + 50000) // $500 - $100k
-
-			lines = append(lines, &ecom.EcomReturnLine{
-				LineId:       fmt.Sprintf("erl-%03d", idx),
-				ReturnId:     returnID,
-				OrderLineId:  orderLineID,
-				ProductId:    productID,
-				VariantId:    variantID,
-				Sku:          fmt.Sprintf("SKU-%05d", (rIdx*2+j)%99999+1),
-				Name:         productName,
-				Quantity:     quantity,
-				RefundAmount: money(store, refundAmount),
-				Reason:       returnReasons[(rIdx*2+j)%len(returnReasons)],
-				Condition:    conditions[(rIdx*2+j)%len(conditions)],
-				Restock:      (rIdx*2+j)%3 != 0, // 2/3 get restocked
-				AuditInfo:    createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return lines
 }

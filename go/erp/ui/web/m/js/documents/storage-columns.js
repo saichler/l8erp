@@ -40,13 +40,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.col('name', 'Name'),
             ...col.col('color', 'Color'),
             ...col.boolean('isActive', 'Active')
-        ],
-        DocDocumentVersion: [
-            ...col.id('versionId'),
-            ...col.col('documentId', 'Document'),
-            ...col.col('versionNumber', 'Version'),
-            ...col.custom('fileSize', 'Size', (item) => Layer8DRenderers.renderFileSize(item.fileSize)),
-            ...col.boolean('isMajorVersion', 'Major')
         ]
     };
 

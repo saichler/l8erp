@@ -33,25 +33,6 @@ limitations under the License.
             ...col.money('totalAmount', 'Total Amount')
         ],
 
-        EcomOrderLine: [
-            ...col.id('lineId'),
-            ...col.col('orderId', 'Order'),
-            ...col.col('productId', 'Product'),
-            ...col.col('sku', 'SKU'),
-            ...col.col('name', 'Name'),
-            ...col.col('quantity', 'Quantity'),
-            ...col.money('unitPrice', 'Unit Price'),
-            ...col.money('lineTotal', 'Line Total')
-        ],
-
-        EcomOrderStatusHistory: [
-            ...col.id('statusId'),
-            ...col.col('orderId', 'Order'),
-            ...col.enum('previousStatus', 'Previous Status', null, render.orderStatus),
-            ...col.enum('newStatus', 'New Status', null, render.orderStatus),
-            ...col.date('changedAt', 'Changed At')
-        ],
-
         EcomReturn: [
             ...col.id('returnId'),
             ...col.col('returnNumber', 'Return Number'),
@@ -62,23 +43,12 @@ limitations under the License.
             ...col.money('refundAmount', 'Refund Amount')
         ],
 
-        EcomReturnLine: [
-            ...col.id('lineId'),
-            ...col.col('returnId', 'Return'),
-            ...col.col('productId', 'Product'),
-            ...col.col('sku', 'SKU'),
-            ...col.col('name', 'Name'),
-            ...col.col('quantity', 'Quantity'),
-            ...col.money('refundAmount', 'Refund Amount')
-        ]
+        // EcomOrderLine, EcomOrderStatusHistory, EcomReturnLine - now inline tables in parents
     };
 
     MobileEcomOrders.primaryKeys = {
         EcomOrder: 'orderId',
-        EcomOrderLine: 'lineId',
-        EcomOrderStatusHistory: 'statusId',
-        EcomReturn: 'returnId',
-        EcomReturnLine: 'lineId'
+        EcomReturn: 'returnId'
     };
 
 })();

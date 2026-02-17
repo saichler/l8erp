@@ -27,11 +27,9 @@ import "api.proto";
 // CHECKOUT
 // =====================
 
-// @PrimeObject
 // DocCheckout represents a document checkout record
 message DocCheckout {
   string checkout_id = 1;
-  string document_id = 2;                   // cross-ref: DocDocument
   string version_id = 3;                    // cross-ref: DocDocumentVersion
   DocCheckoutStatus status = 4;
   string checked_out_by = 5;                // cross-ref: HCM Employee
@@ -43,10 +41,6 @@ message DocCheckout {
   erp.AuditInfo audit_info = 11;
 }
 
-message DocCheckoutList {
-  repeated DocCheckout list = 1;
-  l8api.L8MetaData metadata = 2;
-}
 
 // =====================
 // APPROVAL WORKFLOW
@@ -68,6 +62,7 @@ message DocApprovalWorkflow {
   string comments = 11;
   map<string, string> custom_fields = 12;
   erp.AuditInfo audit_info = 13;
+  repeated DocWorkflowStep steps = 14;
 }
 
 message DocApprovalWorkflowList {
@@ -79,11 +74,9 @@ message DocApprovalWorkflowList {
 // WORKFLOW STEP
 // =====================
 
-// @PrimeObject
 // DocWorkflowStep represents a step in an approval workflow
 message DocWorkflowStep {
   string step_id = 1;
-  string workflow_id = 2;                   // cross-ref: DocApprovalWorkflow
   int32 step_number = 3;
   string name = 4;
   string description = 5;
@@ -99,20 +92,14 @@ message DocWorkflowStep {
   erp.AuditInfo audit_info = 15;
 }
 
-message DocWorkflowStepList {
-  repeated DocWorkflowStep list = 1;
-  l8api.L8MetaData metadata = 2;
-}
 
 // =====================
 // SIGNATURE
 // =====================
 
-// @PrimeObject
 // DocSignature represents a digital signature on a document
 message DocSignature {
   string signature_id = 1;
-  string document_id = 2;                   // cross-ref: DocDocument
   string version_id = 3;                    // cross-ref: DocDocumentVersion
   DocSignatureType signature_type = 4;
   DocSignatureStatus status = 5;
@@ -130,20 +117,14 @@ message DocSignature {
   erp.AuditInfo audit_info = 17;
 }
 
-message DocSignatureList {
-  repeated DocSignature list = 1;
-  l8api.L8MetaData metadata = 2;
-}
 
 // =====================
 // REVIEW COMMENT
 // =====================
 
-// @PrimeObject
 // DocReviewComment represents a review comment on a document
 message DocReviewComment {
   string comment_id = 1;
-  string document_id = 2;                   // cross-ref: DocDocument
   string version_id = 3;                    // cross-ref: DocDocumentVersion
   string workflow_id = 4;                   // cross-ref: DocApprovalWorkflow
   string parent_comment_id = 5;             // cross-ref: DocReviewComment (self)
@@ -159,7 +140,3 @@ message DocReviewComment {
   erp.AuditInfo audit_info = 15;
 }
 
-message DocReviewCommentList {
-  repeated DocReviewComment list = 1;
-  l8api.L8MetaData metadata = 2;
-}

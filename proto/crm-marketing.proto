@@ -47,6 +47,9 @@ message CrmCampaign {
   bool is_active = 16;
   map<string, string> custom_fields = 17;
   erp.AuditInfo audit_info = 18;
+  repeated CrmCampaignMember members = 19;
+  repeated CrmCampaignResponse responses = 20;
+  repeated CrmCampaignROI roi_records = 21;
 }
 
 message CrmCampaignList {
@@ -54,11 +57,9 @@ message CrmCampaignList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// CrmCampaignMember represents a member/target of a campaign
+// CrmCampaignMember represents a member/target of a campaign (child of CrmCampaign)
 message CrmCampaignMember {
   string member_id = 1;
-  string campaign_id = 2;                  // cross-ref: CrmCampaign
   string lead_id = 3;                      // cross-ref: CrmLead (optional)
   string contact_id = 4;                   // cross-ref: CrmContact (optional)
   CrmCampaignMemberStatus status = 5;
@@ -67,11 +68,6 @@ message CrmCampaignMember {
   string source_list_id = 8;               // cross-ref: CrmMarketingList
   map<string, string> custom_fields = 9;
   erp.AuditInfo audit_info = 10;
-}
-
-message CrmCampaignMemberList {
-  repeated CrmCampaignMember list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
@@ -120,11 +116,9 @@ message CrmMarketingListList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// CrmCampaignResponse represents a response to a campaign
+// CrmCampaignResponse represents a response to a campaign (child of CrmCampaign)
 message CrmCampaignResponse {
   string response_id = 1;
-  string campaign_id = 2;                  // cross-ref: CrmCampaign
   string campaign_member_id = 3;           // cross-ref: CrmCampaignMember
   CrmResponseType response_type = 4;
   int64 response_date = 5;
@@ -136,16 +130,9 @@ message CrmCampaignResponse {
   erp.AuditInfo audit_info = 11;
 }
 
-message CrmCampaignResponseList {
-  repeated CrmCampaignResponse list = 1;
-  l8api.L8MetaData metadata = 2;
-}
-
-// @PrimeObject
-// CrmCampaignROI represents campaign ROI tracking
+// CrmCampaignROI represents campaign ROI tracking (child of CrmCampaign)
 message CrmCampaignROI {
   string roi_id = 1;
-  string campaign_id = 2;                  // cross-ref: CrmCampaign
   int64 calculation_date = 3;
   erp.Money total_cost = 4;
   erp.Money total_revenue = 5;
@@ -159,9 +146,4 @@ message CrmCampaignROI {
   string notes = 13;
   map<string, string> custom_fields = 14;
   erp.AuditInfo audit_info = 15;
-}
-
-message CrmCampaignROIList {
-  repeated CrmCampaignROI list = 1;
-  l8api.L8MetaData metadata = 2;
 }

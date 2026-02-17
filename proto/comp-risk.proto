@@ -54,6 +54,8 @@ message CompRiskRegister {
     string trigger_events = 22;
     map<string, string> custom_fields = 23;
     erp.AuditInfo audit_info = 24;
+    repeated CompRiskAssessment assessments = 25;
+    repeated CompMitigationPlan mitigation_plans = 26;
 }
 
 message CompRiskRegisterList {
@@ -65,11 +67,9 @@ message CompRiskRegisterList {
 // RISK ASSESSMENT
 // =====================
 
-// @PrimeObject
 // CompRiskAssessment records periodic risk evaluation
 message CompRiskAssessment {
     string assessment_id = 1;
-    string risk_id = 2;                        // cross-ref: CompRiskRegister
     int64 assessment_date = 3;
     string assessor_id = 4;                    // cross-ref: Employee
     int32 likelihood_rating = 5;
@@ -86,10 +86,6 @@ message CompRiskAssessment {
     erp.AuditInfo audit_info = 16;
 }
 
-message CompRiskAssessmentList {
-    repeated CompRiskAssessment list = 1;
-    l8api.L8MetaData metadata = 2;
-}
 
 // =====================
 // INCIDENT
@@ -135,11 +131,9 @@ message CompIncidentList {
 // MITIGATION PLAN
 // =====================
 
-// @PrimeObject
 // CompMitigationPlan defines actions to reduce risk
 message CompMitigationPlan {
     string plan_id = 1;
-    string risk_id = 2;                        // cross-ref: CompRiskRegister
     string name = 3;
     string description = 4;
     string strategy = 5;                       // Reduce, Transfer, Accept, Avoid
@@ -160,10 +154,6 @@ message CompMitigationPlan {
     erp.AuditInfo audit_info = 20;
 }
 
-message CompMitigationPlanList {
-    repeated CompMitigationPlan list = 1;
-    l8api.L8MetaData metadata = 2;
-}
 
 // =====================
 // INSURANCE POLICY

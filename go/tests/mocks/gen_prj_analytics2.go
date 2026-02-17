@@ -225,8 +225,6 @@ func generateProjectIssues(store *MockDataStore) []*prj.PrjProjectIssue {
 
 	issues := make([]*prj.PrjProjectIssue, count)
 	for i := 0; i < count; i++ {
-		projectID := pickRef(store.PrjProjectIDs, i)
-
 		taskID := pickRef(store.PrjTaskIDs, i)
 
 		reportedBy := pickRef(store.EmployeeIDs, i)
@@ -252,7 +250,6 @@ func generateProjectIssues(store *MockDataStore) []*prj.PrjProjectIssue {
 
 		issues[i] = &prj.PrjProjectIssue{
 			IssueId:       genID("pis", i),
-			ProjectId:     projectID,
 			TaskId:        taskID,
 			IssueNumber:   fmt.Sprintf("ISS-%04d", i+1),
 			Title:         issueTitles[i%len(issueTitles)],

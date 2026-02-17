@@ -55,6 +55,29 @@ func generateEcomCustomers(store *MockDataStore) []*ecom.EcomCustomer {
 		totalOrders := int32(rand.Intn(50))
 		totalSpent := int64(totalOrders) * int64(rand.Intn(10000)+5000) // $50-$150 avg per order
 
+		// Generate 2 embedded addresses per customer
+		addressLabels := []string{"Home", "Work", "Main Office", "Warehouse", "Summer Home"}
+		addrList := make([]*ecom.EcomCustomerAddress, 2)
+		for j := 0; j < 2; j++ {
+			aFirst := firstNames[rand.Intn(len(firstNames))]
+			aLast := lastNames[rand.Intn(len(lastNames))]
+			addrList[j] = &ecom.EcomCustomerAddress{
+				AddressId:         genID("eaddr", i*2+j),
+				Label:             addressLabels[(i*2+j)%len(addressLabels)],
+				FirstName:         aFirst,
+				LastName:          aLast,
+				AddressLine1:      fmt.Sprintf("%d %s", rand.Intn(9000)+100, streetNames[rand.Intn(len(streetNames))]),
+				City:              cities[rand.Intn(len(cities))],
+				State:             states[rand.Intn(len(states))],
+				PostalCode:        fmt.Sprintf("%05d", rand.Intn(90000)+10000),
+				Country:           "US",
+				Phone:             randomPhone(),
+				IsDefaultBilling:  j == 0,
+				IsDefaultShipping: j == 0,
+				AuditInfo:         createAuditInfo(),
+			}
+		}
+
 		customers[i] = &ecom.EcomCustomer{
 			CustomerId:       genID("ecust", i),
 			Email:            email,
@@ -63,8 +86,8 @@ func generateEcomCustomers(store *MockDataStore) []*ecom.EcomCustomer {
 			Phone:            randomPhone(),
 			CustomerType:     customerTypes[i%len(customerTypes)],
 			PasswordHash:     fmt.Sprintf("$2a$10$hash%d", rand.Intn(100000)),
-			IsActive:         i%10 != 0, // 90% active
-			EmailVerified:    i%5 != 0,  // 80% verified
+			IsActive:         i%10 != 0,
+			EmailVerified:    i%5 != 0,
 			CreatedDate:      createdDate.Unix(),
 			LastLoginDate:    lastLoginDate.Unix(),
 			TotalOrders:      totalOrders,
@@ -72,64 +95,15 @@ func generateEcomCustomers(store *MockDataStore) []*ecom.EcomCustomer {
 			CustomerGroup:    customerGroups[i%len(customerGroups)],
 			AcceptsMarketing: rand.Intn(2) == 1,
 			Locale:           locales[i%len(locales)],
-			CurrencyId: pickRef(store.CurrencyIDs, i),
+			CurrencyId:       pickRef(store.CurrencyIDs, i),
 			AuditInfo:        createAuditInfo(),
+			Addresses:        addrList,
 		}
 	}
 	return customers
 }
 
-// generateEcomAddresses creates customer address records (2 per customer)
-func generateEcomAddresses(store *MockDataStore) []*ecom.EcomCustomerAddress {
-	addressLabels := []string{"Home", "Work", "Main Office", "Warehouse", "Summer Home"}
-
-	count := len(store.EcomCustomerIDs) * 2
-	if count == 0 {
-		count = 60 // fallback
-	}
-
-	addresses := make([]*ecom.EcomCustomerAddress, count)
-	for i := 0; i < count; i++ {
-		customerIdx := i / 2
-		customerID := pickRef(store.EcomCustomerIDs, customerIdx)
-
-		firstName := firstNames[rand.Intn(len(firstNames))]
-		lastName := lastNames[rand.Intn(len(lastNames))]
-		isFirst := i%2 == 0
-
-		addresses[i] = &ecom.EcomCustomerAddress{
-			AddressId:         genID("eaddr", i),
-			CustomerId:        customerID,
-			Label:             addressLabels[i%len(addressLabels)],
-			FirstName:         firstName,
-			LastName:          lastName,
-			Company:           "",
-			AddressLine1:      fmt.Sprintf("%d %s", rand.Intn(9000)+100, streetNames[rand.Intn(len(streetNames))]),
-			AddressLine2:      "",
-			City:              cities[rand.Intn(len(cities))],
-			State:             states[rand.Intn(len(states))],
-			PostalCode:        fmt.Sprintf("%05d", rand.Intn(90000)+10000),
-			Country:           "US",
-			Phone:             randomPhone(),
-			IsDefaultBilling:  isFirst,
-			IsDefaultShipping: isFirst,
-			AuditInfo:         createAuditInfo(),
-		}
-
-		// Add company for some addresses
-		if rand.Intn(3) == 0 {
-			addresses[i].Company = customerNames[rand.Intn(len(customerNames))]
-		}
-
-		// Add apartment/suite for some addresses
-		if rand.Intn(4) == 0 {
-			addresses[i].AddressLine2 = fmt.Sprintf("Suite %d", rand.Intn(500)+100)
-		}
-	}
-	return addresses
-}
-
-// generateEcomWishlists creates wishlist records (1 per 3 customers)
+// generateEcomWishlists creates wishlist records with embedded items (1 per 3 customers)
 func generateEcomWishlists(store *MockDataStore) []*ecom.EcomWishlist {
 	wishlistNames := []string{
 		"My Wishlist", "Gift Ideas", "Birthday List", "Holiday Shopping",
@@ -151,75 +125,40 @@ func generateEcomWishlists(store *MockDataStore) []*ecom.EcomWishlist {
 			updatedDate = time.Now()
 		}
 
+		// Generate 3 embedded wishlist items
+		wishItems := make([]*ecom.EcomWishlistItem, 3)
+		for j := 0; j < 3; j++ {
+			productID := pickRef(store.EcomProductIDs, (i*3 + j))
+			addedDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
+			wishItems[j] = &ecom.EcomWishlistItem{
+				ItemId:    genID("ewitem", i*3+j),
+				ProductId: productID,
+				Quantity:  int32(rand.Intn(3) + 1),
+				AddedDate: addedDate.Unix(),
+				PriceWhenAdded: &erp.Money{
+					Amount:     int64(rand.Intn(20000) + 1000),
+					CurrencyId: pickRef(store.CurrencyIDs, i*3+j),
+				},
+				Priority:  int32(rand.Intn(5) + 1),
+				AuditInfo: createAuditInfo(),
+			}
+		}
+
 		wishlists[i] = &ecom.EcomWishlist{
 			WishlistId:  genID("ewish", i),
 			CustomerId:  customerID,
 			Name:        wishlistNames[i%len(wishlistNames)],
 			Description: fmt.Sprintf("A curated list of desired items - %s", wishlistNames[i%len(wishlistNames)]),
-			IsPublic:    rand.Intn(3) == 0, // 33% public
+			IsPublic:    rand.Intn(3) == 0,
 			ShareToken:  fmt.Sprintf("share-%s-%d", randomToken(8), i+1),
 			CreatedDate: createdDate.Unix(),
 			UpdatedDate: updatedDate.Unix(),
-			ItemCount:   3, // Will be populated with items
+			ItemCount:   3,
 			AuditInfo:   createAuditInfo(),
+			Items:       wishItems,
 		}
 	}
 	return wishlists
-}
-
-// generateEcomWishlistItems creates wishlist item records (3 items per wishlist)
-func generateEcomWishlistItems(store *MockDataStore) []*ecom.EcomWishlistItem {
-	count := len(store.EcomWishlistIDs) * 3
-	if count == 0 {
-		count = 30 // fallback
-	}
-
-	items := make([]*ecom.EcomWishlistItem, count)
-	for i := 0; i < count; i++ {
-		wishlistIdx := i / 3
-		wishlistID := pickRef(store.EcomWishlistIDs, wishlistIdx)
-
-		productID := ""
-		if len(store.EcomProductIDs) > 0 {
-			productID = store.EcomProductIDs[rand.Intn(len(store.EcomProductIDs))]
-		}
-
-		variantID := ""
-		if len(store.EcomVariantIDs) > 0 {
-			variantID = store.EcomVariantIDs[rand.Intn(len(store.EcomVariantIDs))]
-		}
-
-		addedDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
-
-		items[i] = &ecom.EcomWishlistItem{
-			ItemId:     genID("ewitem", i),
-			WishlistId: wishlistID,
-			ProductId:  productID,
-			VariantId:  variantID,
-			Quantity:   int32(rand.Intn(3) + 1),
-			Notes:      "",
-			AddedDate:  addedDate.Unix(),
-			PriceWhenAdded: &erp.Money{
-				Amount:       int64(rand.Intn(20000) + 1000), // $10-$210
-				CurrencyId: pickRef(store.CurrencyIDs, i),
-			},
-			Priority:  int32(rand.Intn(5) + 1), // 1-5 priority
-			AuditInfo: createAuditInfo(),
-		}
-
-		// Add notes for some items
-		if rand.Intn(3) == 0 {
-			notes := []string{
-				"Want this in blue",
-				"Check for sales",
-				"Gift for mom",
-				"Need before holiday",
-				"Compare with similar items",
-			}
-			items[i].Notes = notes[rand.Intn(len(notes))]
-		}
-	}
-	return items
 }
 
 // generateEcomCarts creates shopping cart records

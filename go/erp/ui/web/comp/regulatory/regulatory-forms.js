@@ -28,37 +28,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Details', [
                 ...f.textarea('description', 'Description'),
                 ...f.text('sourceUrl', 'Source URL')
-            ])
-        ]),
-
-        CompRequirement: f.form('Requirement', [
-            f.section('Requirement Information', [
-                ...f.reference('regulationId', 'Regulation', 'CompRegulation', true),
-                ...f.text('code', 'Code', true),
-                ...f.text('title', 'Title', true),
-                ...f.select('priority', 'Priority', enums.requirementPriority),
-                ...f.checkbox('isMandatory', 'Mandatory'),
-                ...f.checkbox('isActive', 'Active')
             ]),
-            f.section('Details', [
-                ...f.textarea('description', 'Description'),
-                ...f.textarea('controlObjective', 'Control Objective')
-            ])
-        ]),
-
-        CompComplianceStatus: f.form('Compliance Status', [
-            f.section('Compliance Status', [
-                ...f.reference('requirementId', 'Requirement', 'CompRequirement', true),
-                ...f.text('entityType', 'Entity Type'),
-                ...f.text('entityId', 'Entity ID'),
-                ...f.select('status', 'Status', enums.complianceStatus, true),
-                ...f.date('assessmentDate', 'Assessment Date'),
-                ...f.date('nextReviewDate', 'Next Review Date')
-            ]),
-            f.section('Assessment Details', [
-                ...f.reference('assessorId', 'Assessor', 'Employee'),
-                ...f.number('complianceScore', 'Compliance Score'),
-                ...f.textarea('notes', 'Notes')
+            f.section('Requirements', [
+                ...f.inlineTable('requirements', 'Requirements', [
+                    { key: 'requirementId', label: 'ID', hidden: true },
+                    { key: 'code', label: 'Code', type: 'text' },
+                    { key: 'title', label: 'Title', type: 'text' },
+                    { key: 'priority', label: 'Priority', type: 'select', options: enums.requirementPriority },
+                    { key: 'isMandatory', label: 'Mandatory', type: 'checkbox' },
+                    { key: 'isActive', label: 'Active', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -80,33 +59,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        CompViolationRecord: f.form('Violation Record', [
-            f.section('Violation Information', [
-                ...f.text('violationNumber', 'Violation Number', true),
-                ...f.reference('requirementId', 'Requirement', 'CompRequirement', true),
-                ...f.text('title', 'Title'),
-                ...f.select('severity', 'Severity', enums.violationSeverity, true),
-                ...f.select('status', 'Status', enums.violationStatus)
-            ]),
-            f.section('Dates', [
-                ...f.date('discoveryDate', 'Discovery Date'),
-                ...f.date('dueDate', 'Due Date'),
-                ...f.date('closedDate', 'Closed Date')
-            ]),
-            f.section('Details', [
-                ...f.textarea('description', 'Description'),
-                ...f.textarea('rootCause', 'Root Cause'),
-                ...f.textarea('correctiveAction', 'Corrective Action')
-            ])
-        ])
     };
 
     CompRegulatory.primaryKeys = {
         CompRegulation: 'regulationId',
-        CompRequirement: 'requirementId',
-        CompComplianceStatus: 'statusId',
-        CompCertification: 'certificationId',
-        CompViolationRecord: 'violationId'
+        CompCertification: 'certificationId'
     };
 
 })();

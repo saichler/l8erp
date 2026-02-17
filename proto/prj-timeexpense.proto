@@ -45,6 +45,7 @@ message PrjTimesheet {
   string notes = 14;
   map<string, string> custom_fields = 15;
   erp.AuditInfo audit_info = 16;
+  repeated PrjTimesheetEntry entries = 17;
 }
 
 message PrjTimesheetList {
@@ -52,11 +53,9 @@ message PrjTimesheetList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // PrjTimesheetEntry represents a timesheet line entry
 message PrjTimesheetEntry {
   string entry_id = 1;
-  string timesheet_id = 2;                 // cross-ref: PrjTimesheet
   string project_id = 3;                   // cross-ref: PrjProject
   string task_id = 4;                      // cross-ref: PrjTask
   string phase_id = 5;                     // cross-ref: PrjPhase
@@ -70,11 +69,6 @@ message PrjTimesheetEntry {
   bool is_overtime = 13;
   map<string, string> custom_fields = 14;
   erp.AuditInfo audit_info = 15;
-}
-
-message PrjTimesheetEntryList {
-  repeated PrjTimesheetEntry list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
@@ -98,6 +92,7 @@ message PrjExpenseReport {
   string notes = 16;
   map<string, string> custom_fields = 17;
   erp.AuditInfo audit_info = 18;
+  repeated PrjExpenseEntry entries = 19;
 }
 
 message PrjExpenseReportList {
@@ -105,11 +100,9 @@ message PrjExpenseReportList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // PrjExpenseEntry represents an expense line item
 message PrjExpenseEntry {
   string entry_id = 1;
-  string report_id = 2;                    // cross-ref: PrjExpenseReport
   string project_id = 3;                   // cross-ref: PrjProject
   string task_id = 4;                      // cross-ref: PrjTask
   string category_id = 5;                  // cross-ref: PrjExpenseCategory
@@ -128,11 +121,6 @@ message PrjExpenseEntry {
   string payment_method = 18;
   map<string, string> custom_fields = 19;
   erp.AuditInfo audit_info = 20;
-}
-
-message PrjExpenseEntryList {
-  repeated PrjExpenseEntry list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject

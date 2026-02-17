@@ -48,6 +48,27 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('slug', 'URL Slug'),
                 ...f.text('metaTitle', 'Meta Title'),
                 ...f.textarea('metaDescription', 'Meta Description')
+            ]),
+            f.section('Images', [
+                ...f.inlineTable('images', 'Product Images', [
+                    { key: 'imageId', label: 'ID', hidden: true },
+                    { key: 'fileName', label: 'File Name', type: 'text' },
+                    { key: 'url', label: 'URL', type: 'text' },
+                    { key: 'altText', label: 'Alt Text', type: 'text' },
+                    { key: 'sortOrder', label: 'Sort Order', type: 'number' },
+                    { key: 'isPrimary', label: 'Primary', type: 'checkbox' }
+                ])
+            ]),
+            f.section('Variants', [
+                ...f.inlineTable('variants', 'Product Variants', [
+                    { key: 'variantId', label: 'ID', hidden: true },
+                    { key: 'sku', label: 'SKU', type: 'text' },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'stockQuantity', label: 'Stock Qty', type: 'number' },
+                    { key: 'weight', label: 'Weight', type: 'number' },
+                    { key: 'barcode', label: 'Barcode', type: 'text' },
+                    { key: 'isActive', label: 'Active', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -86,60 +107,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        EcomImage: f.form('Image', [
-            f.section('Image Details', [
-                ...f.reference('productId', 'Product', 'EcomProduct', true),
-                ...f.reference('variantId', 'Variant', 'EcomVariant'),
-                ...f.text('fileName', 'File Name', true),
-                ...f.text('url', 'URL', true),
-                ...f.text('thumbnailUrl', 'Thumbnail URL'),
-                ...f.select('imageType', 'Image Type', enums.IMAGE_TYPE),
-                ...f.text('altText', 'Alt Text'),
-                ...f.text('title', 'Title')
-            ]),
-            f.section('Dimensions', [
-                ...f.number('width', 'Width'),
-                ...f.number('height', 'Height'),
-                ...f.number('fileSize', 'File Size'),
-                ...f.text('mimeType', 'MIME Type')
-            ]),
-            f.section('Display', [
-                ...f.number('sortOrder', 'Sort Order'),
-                ...f.checkbox('isPrimary', 'Is Primary')
-            ])
-        ]),
-
-        EcomVariant: f.form('Variant', [
-            f.section('Variant Details', [
-                ...f.reference('productId', 'Product', 'EcomProduct', true),
-                ...f.text('sku', 'SKU', true),
-                ...f.text('name', 'Variant Name', true),
-                ...f.text('barcode', 'Barcode'),
-                ...f.reference('imageId', 'Image', 'EcomImage')
-            ]),
-            f.section('Pricing', [
-                ...f.money('price', 'Price'),
-                ...f.money('compareAtPrice', 'Compare At Price'),
-                ...f.money('costPrice', 'Cost Price')
-            ]),
-            f.section('Inventory', [
-                ...f.number('stockQuantity', 'Stock Quantity'),
-                ...f.number('weight', 'Weight'),
-                ...f.text('weightUnit', 'Weight Unit')
-            ]),
-            f.section('Display', [
-                ...f.number('sortOrder', 'Sort Order'),
-                ...f.checkbox('isActive', 'Is Active')
-            ])
-        ])
+        // EcomImage, EcomVariant - now inline tables in EcomProduct
     };
 
     EcomCatalog.primaryKeys = {
         EcomProduct: 'productId',
         EcomCategory: 'categoryId',
-        EcomAttribute: 'attributeId',
-        EcomImage: 'imageId',
-        EcomVariant: 'variantId'
+        EcomAttribute: 'attributeId'
     };
 
 })();

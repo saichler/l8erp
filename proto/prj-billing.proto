@@ -71,6 +71,7 @@ message PrjBillingSchedule {
   int64 end_date = 14;
   map<string, string> custom_fields = 15;
   erp.AuditInfo audit_info = 16;
+  repeated PrjBillingMilestone milestones = 17;
 }
 
 message PrjBillingScheduleList {
@@ -78,11 +79,9 @@ message PrjBillingScheduleList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // PrjBillingMilestone represents a billing milestone
 message PrjBillingMilestone {
   string milestone_id = 1;
-  string schedule_id = 2;                  // cross-ref: PrjBillingSchedule
   string project_id = 3;                   // cross-ref: PrjProject
   string project_milestone_id = 4;         // cross-ref: PrjMilestone
   string name = 5;
@@ -96,11 +95,6 @@ message PrjBillingMilestone {
   string deliverables = 13;
   map<string, string> custom_fields = 14;
   erp.AuditInfo audit_info = 15;
-}
-
-message PrjBillingMilestoneList {
-  repeated PrjBillingMilestone list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject
@@ -128,6 +122,7 @@ message PrjProjectInvoice {
   string currency_id = 20;
   map<string, string> custom_fields = 21;
   erp.AuditInfo audit_info = 22;
+  repeated PrjInvoiceLine lines = 23;
 }
 
 message PrjProjectInvoiceList {
@@ -135,11 +130,9 @@ message PrjProjectInvoiceList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // PrjInvoiceLine represents an invoice line item
 message PrjInvoiceLine {
   string line_id = 1;
-  string invoice_id = 2;                   // cross-ref: PrjProjectInvoice
   string project_id = 3;                   // cross-ref: PrjProject
   string task_id = 4;                      // cross-ref: PrjTask
   string timesheet_entry_id = 5;           // cross-ref: PrjTimesheetEntry
@@ -157,11 +150,6 @@ message PrjInvoiceLine {
   bool is_taxable = 17;
   map<string, string> custom_fields = 18;
   erp.AuditInfo audit_info = 19;
-}
-
-message PrjInvoiceLineList {
-  repeated PrjInvoiceLine list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject

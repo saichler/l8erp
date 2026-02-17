@@ -24,14 +24,14 @@ import (
 	"github.com/saichler/l8erp/go/types/comp"
 )
 
-// generateCompPhase1 generates foundation objects (no dependencies except HCM)
-// - CompRegulation (10 records)
-// - CompControl (15 records)
-// - CompPolicyDocument (10 records)
-// - CompInsurancePolicy (8 records)
+// generateCompPhase1 generates foundation objects
+// - CompRegulation (with embedded requirements, which embed violations and statuses)
+// - CompControl (with embedded assessments and segregation_rules)
+// - CompPolicyDocument
+// - CompInsurancePolicy
 func generateCompPhase1(client *HCMClient, store *MockDataStore) error {
-	// Generate CompRegulations (no store dependencies)
-	regulations := generateCompRegulations()
+	// Generate CompRegulations (with embedded requirements/violations/statuses)
+	regulations := generateCompRegulations(store)
 	_, err := client.Post("/erp/110/CompReg", &comp.CompRegulationList{List: regulations})
 	if err != nil {
 		return fmt.Errorf("failed to create CompRegulations: %w", err)
@@ -39,18 +39,7 @@ func generateCompPhase1(client *HCMClient, store *MockDataStore) error {
 	for _, r := range regulations {
 		store.CompRegulationIDs = append(store.CompRegulationIDs, r.RegulationId)
 	}
-	fmt.Printf("  Created %d CompRegulations\n", len(regulations))
-
-	// Generate CompControls
-	controls := generateCompControls(store)
-	_, err = client.Post("/erp/110/CompCtrl", &comp.CompControlList{List: controls})
-	if err != nil {
-		return fmt.Errorf("failed to create CompControls: %w", err)
-	}
-	for _, c := range controls {
-		store.CompControlIDs = append(store.CompControlIDs, c.ControlId)
-	}
-	fmt.Printf("  Created %d CompControls\n", len(controls))
+	fmt.Printf("  Created %d CompRegulations (with embedded requirements, violations, statuses)\n", len(regulations))
 
 	// Generate CompPolicyDocuments
 	policies := generateCompPolicyDocuments(store)
@@ -78,26 +67,14 @@ func generateCompPhase1(client *HCMClient, store *MockDataStore) error {
 }
 
 // generateCompPhase2 generates core objects (depend on Phase 1)
-// - CompRequirement (20 records) - references CompRegulation
-// - CompApprovalMatrix (12 records) - references Department, Employee
-// - CompSegregationRule (10 records) - references CompControl
-// - CompRiskRegister (15 records) - references Department, Employee, CompControl, CompRequirement
-// - CompAuditSchedule (10 records) - references Department, Employee, CompRegulation
+// - CompApprovalMatrix
+// - CompRiskRegister (with embedded assessments and mitigation_plans)
+// - CompAuditSchedule (with embedded reports)
+// Note: CompControl needs CompAuditScheduleIDs for embedded assessments, so it runs in this phase
 func generateCompPhase2(client *HCMClient, store *MockDataStore) error {
-	// Generate CompRequirements
-	requirements := generateCompRequirements(store)
-	_, err := client.Post("/erp/110/CompReq", &comp.CompRequirementList{List: requirements})
-	if err != nil {
-		return fmt.Errorf("failed to create CompRequirements: %w", err)
-	}
-	for _, r := range requirements {
-		store.CompRequirementIDs = append(store.CompRequirementIDs, r.RequirementId)
-	}
-	fmt.Printf("  Created %d CompRequirements\n", len(requirements))
-
 	// Generate CompApprovalMatrices
 	matrices := generateCompApprovalMatrices(store)
-	_, err = client.Post("/erp/110/CompAprvMx", &comp.CompApprovalMatrixList{List: matrices})
+	_, err := client.Post("/erp/110/CompAprvMx", &comp.CompApprovalMatrixList{List: matrices})
 	if err != nil {
 		return fmt.Errorf("failed to create CompApprovalMatrices: %w", err)
 	}
@@ -106,18 +83,7 @@ func generateCompPhase2(client *HCMClient, store *MockDataStore) error {
 	}
 	fmt.Printf("  Created %d CompApprovalMatrices\n", len(matrices))
 
-	// Generate CompSegregationRules
-	rules := generateCompSegregationRules(store)
-	_, err = client.Post("/erp/110/CompSegrul", &comp.CompSegregationRuleList{List: rules})
-	if err != nil {
-		return fmt.Errorf("failed to create CompSegregationRules: %w", err)
-	}
-	for _, r := range rules {
-		store.CompSegregationRuleIDs = append(store.CompSegregationRuleIDs, r.RuleId)
-	}
-	fmt.Printf("  Created %d CompSegregationRules\n", len(rules))
-
-	// Generate CompRiskRegisters
+	// Generate CompRiskRegisters (with embedded assessments and mitigation_plans)
 	risks := generateCompRiskRegisters(store)
 	_, err = client.Post("/erp/110/CompRisk", &comp.CompRiskRegisterList{List: risks})
 	if err != nil {
@@ -126,9 +92,9 @@ func generateCompPhase2(client *HCMClient, store *MockDataStore) error {
 	for _, r := range risks {
 		store.CompRiskRegisterIDs = append(store.CompRiskRegisterIDs, r.RiskId)
 	}
-	fmt.Printf("  Created %d CompRiskRegisters\n", len(risks))
+	fmt.Printf("  Created %d CompRiskRegisters (with embedded assessments, mitigation plans)\n", len(risks))
 
-	// Generate CompAuditSchedules
+	// Generate CompAuditSchedules (with embedded reports)
 	schedules := generateCompAuditSchedules(store)
 	_, err = client.Post("/erp/110/CompAudSch", &comp.CompAuditScheduleList{List: schedules})
 	if err != nil {
@@ -137,43 +103,31 @@ func generateCompPhase2(client *HCMClient, store *MockDataStore) error {
 	for _, s := range schedules {
 		store.CompAuditScheduleIDs = append(store.CompAuditScheduleIDs, s.ScheduleId)
 	}
-	fmt.Printf("  Created %d CompAuditSchedules\n", len(schedules))
+	fmt.Printf("  Created %d CompAuditSchedules (with embedded reports)\n", len(schedules))
+
+	// Generate CompControls (with embedded assessments and segregation_rules)
+	// Controls reference CompAuditScheduleIDs via embedded assessments, so must run after schedules
+	controls := generateCompControls(store)
+	_, err = client.Post("/erp/110/CompCtrl", &comp.CompControlList{List: controls})
+	if err != nil {
+		return fmt.Errorf("failed to create CompControls: %w", err)
+	}
+	for _, c := range controls {
+		store.CompControlIDs = append(store.CompControlIDs, c.ControlId)
+	}
+	fmt.Printf("  Created %d CompControls (with embedded assessments, segregation rules)\n", len(controls))
 
 	return nil
 }
 
-// generateCompPhase3 generates assessments (depend on Phase 2)
-// - CompComplianceStatus (25 records) - references CompRequirement
-// - CompControlAssessment (20 records) - references CompControl, CompAuditSchedule
-// - CompCertification (8 records) - references CompRegulation
-// - CompRiskAssessment (20 records) - references CompRiskRegister
-// - CompMitigationPlan (10 records) - references CompRiskRegister, CompControl
+// generateCompPhase3 generates events (depend on Phase 2)
+// - CompCertification
+// - CompIncident
+// - CompAuditFinding (with embedded remediation actions)
 func generateCompPhase3(client *HCMClient, store *MockDataStore) error {
-	// Generate CompComplianceStatuses
-	statuses := generateCompComplianceStatuses(store)
-	_, err := client.Post("/erp/110/CompStatus", &comp.CompComplianceStatusList{List: statuses})
-	if err != nil {
-		return fmt.Errorf("failed to create CompComplianceStatuses: %w", err)
-	}
-	for _, s := range statuses {
-		store.CompComplianceStatusIDs = append(store.CompComplianceStatusIDs, s.StatusId)
-	}
-	fmt.Printf("  Created %d CompComplianceStatuses\n", len(statuses))
-
-	// Generate CompControlAssessments
-	assessments := generateCompControlAssessments(store)
-	_, err = client.Post("/erp/110/CompCtrlAs", &comp.CompControlAssessmentList{List: assessments})
-	if err != nil {
-		return fmt.Errorf("failed to create CompControlAssessments: %w", err)
-	}
-	for _, a := range assessments {
-		store.CompControlAssessmentIDs = append(store.CompControlAssessmentIDs, a.AssessmentId)
-	}
-	fmt.Printf("  Created %d CompControlAssessments\n", len(assessments))
-
 	// Generate CompCertifications
 	certifications := generateCompCertifications(store)
-	_, err = client.Post("/erp/110/CompCert", &comp.CompCertificationList{List: certifications})
+	_, err := client.Post("/erp/110/CompCert", &comp.CompCertificationList{List: certifications})
 	if err != nil {
 		return fmt.Errorf("failed to create CompCertifications: %w", err)
 	}
@@ -181,47 +135,6 @@ func generateCompPhase3(client *HCMClient, store *MockDataStore) error {
 		store.CompCertificationIDs = append(store.CompCertificationIDs, c.CertificationId)
 	}
 	fmt.Printf("  Created %d CompCertifications\n", len(certifications))
-
-	// Generate CompRiskAssessments
-	riskAssessments := generateCompRiskAssessments(store)
-	_, err = client.Post("/erp/110/CompRiskAs", &comp.CompRiskAssessmentList{List: riskAssessments})
-	if err != nil {
-		return fmt.Errorf("failed to create CompRiskAssessments: %w", err)
-	}
-	for _, r := range riskAssessments {
-		store.CompRiskAssessmentIDs = append(store.CompRiskAssessmentIDs, r.AssessmentId)
-	}
-	fmt.Printf("  Created %d CompRiskAssessments\n", len(riskAssessments))
-
-	// Generate CompMitigationPlans
-	plans := generateCompMitigationPlans(store)
-	_, err = client.Post("/erp/110/CompMitig", &comp.CompMitigationPlanList{List: plans})
-	if err != nil {
-		return fmt.Errorf("failed to create CompMitigationPlans: %w", err)
-	}
-	for _, p := range plans {
-		store.CompMitigationPlanIDs = append(store.CompMitigationPlanIDs, p.PlanId)
-	}
-	fmt.Printf("  Created %d CompMitigationPlans\n", len(plans))
-
-	return nil
-}
-
-// generateCompPhase4 generates events (depend on Phase 2 and 3)
-// - CompViolationRecord (10 records) - references CompRequirement
-// - CompIncident (12 records) - references CompRiskRegister
-// - CompAuditFinding (15 records) - references CompAuditSchedule, CompControl, CompRequirement
-func generateCompPhase4(client *HCMClient, store *MockDataStore) error {
-	// Generate CompViolationRecords
-	violations := generateCompViolationRecords(store)
-	_, err := client.Post("/erp/110/CompVioltn", &comp.CompViolationRecordList{List: violations})
-	if err != nil {
-		return fmt.Errorf("failed to create CompViolationRecords: %w", err)
-	}
-	for _, v := range violations {
-		store.CompViolationRecordIDs = append(store.CompViolationRecordIDs, v.ViolationId)
-	}
-	fmt.Printf("  Created %d CompViolationRecords\n", len(violations))
 
 	// Generate CompIncidents
 	incidents := generateCompIncidents(store)
@@ -234,7 +147,7 @@ func generateCompPhase4(client *HCMClient, store *MockDataStore) error {
 	}
 	fmt.Printf("  Created %d CompIncidents\n", len(incidents))
 
-	// Generate CompAuditFindings
+	// Generate CompAuditFindings (with embedded remediation actions)
 	findings := generateCompAuditFindings(store)
 	_, err = client.Post("/erp/110/CompAudFnd", &comp.CompAuditFindingList{List: findings})
 	if err != nil {
@@ -243,41 +156,17 @@ func generateCompPhase4(client *HCMClient, store *MockDataStore) error {
 	for _, f := range findings {
 		store.CompAuditFindingIDs = append(store.CompAuditFindingIDs, f.FindingId)
 	}
-	fmt.Printf("  Created %d CompAuditFindings\n", len(findings))
+	fmt.Printf("  Created %d CompAuditFindings (with embedded remediation actions)\n", len(findings))
 
 	return nil
 }
 
-// generateCompPhase5 generates reports (depend on Phase 4)
-// - CompRemediationAction (12 records) - references CompAuditFinding
-// - CompAuditReport (8 records) - references CompAuditSchedule
-// - CompComplianceReport (6 records) - references CompRegulation
-func generateCompPhase5(client *HCMClient, store *MockDataStore) error {
-	// Generate CompRemediationActions
-	actions := generateCompRemediationActions(store)
-	_, err := client.Post("/erp/110/CompRemed", &comp.CompRemediationActionList{List: actions})
-	if err != nil {
-		return fmt.Errorf("failed to create CompRemediationActions: %w", err)
-	}
-	for _, a := range actions {
-		store.CompRemediationActionIDs = append(store.CompRemediationActionIDs, a.ActionId)
-	}
-	fmt.Printf("  Created %d CompRemediationActions\n", len(actions))
-
-	// Generate CompAuditReports
-	auditReports := generateCompAuditReports(store)
-	_, err = client.Post("/erp/110/CompAudRpt", &comp.CompAuditReportList{List: auditReports})
-	if err != nil {
-		return fmt.Errorf("failed to create CompAuditReports: %w", err)
-	}
-	for _, r := range auditReports {
-		store.CompAuditReportIDs = append(store.CompAuditReportIDs, r.ReportId)
-	}
-	fmt.Printf("  Created %d CompAuditReports\n", len(auditReports))
-
+// generateCompPhase4 generates reports (depend on Phase 3)
+// - CompComplianceReport
+func generateCompPhase4(client *HCMClient, store *MockDataStore) error {
 	// Generate CompComplianceReports
 	complianceReports := generateCompComplianceReports(store)
-	_, err = client.Post("/erp/110/CompCmpRpt", &comp.CompComplianceReportList{List: complianceReports})
+	_, err := client.Post("/erp/110/CompCmpRpt", &comp.CompComplianceReportList{List: complianceReports})
 	if err != nil {
 		return fmt.Errorf("failed to create CompComplianceReports: %w", err)
 	}

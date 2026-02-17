@@ -52,6 +52,7 @@ message EcomCustomer {
     string currency_id = 20;
     map<string, string> custom_fields = 21;
     erp.AuditInfo audit_info = 22;
+    repeated EcomCustomerAddress addresses = 23;
 }
 
 message EcomCustomerList {
@@ -60,14 +61,12 @@ message EcomCustomerList {
 }
 
 // =====================
-// CUSTOMER ADDRESS
+// CUSTOMER ADDRESS (child of EcomCustomer)
 // =====================
 
-// @PrimeObject
 // EcomCustomerAddress represents a customer's saved address
 message EcomCustomerAddress {
     string address_id = 1;
-    string customer_id = 2;                 // cross-ref: EcomCustomer
     string label = 3;
     string first_name = 4;
     string last_name = 5;
@@ -83,11 +82,6 @@ message EcomCustomerAddress {
     bool is_default_shipping = 15;
     map<string, string> custom_fields = 16;
     erp.AuditInfo audit_info = 17;
-}
-
-message EcomCustomerAddressList {
-    repeated EcomCustomerAddress list = 1;
-    l8api.L8MetaData metadata = 2;
 }
 
 // =====================
@@ -108,6 +102,7 @@ message EcomWishlist {
     int32 item_count = 9;
     map<string, string> custom_fields = 10;
     erp.AuditInfo audit_info = 11;
+    repeated EcomWishlistItem items = 12;
 }
 
 message EcomWishlistList {
@@ -116,16 +111,14 @@ message EcomWishlistList {
 }
 
 // =====================
-// WISHLIST ITEM
+// WISHLIST ITEM (child of EcomWishlist)
 // =====================
 
-// @PrimeObject
 // EcomWishlistItem represents an item in a wishlist
 message EcomWishlistItem {
     string item_id = 1;
-    string wishlist_id = 2;                 // cross-ref: EcomWishlist
     string product_id = 3;                  // cross-ref: EcomProduct
-    string variant_id = 4;                  // cross-ref: EcomVariant
+    string variant_id = 4;
     int32 quantity = 5;
     string notes = 6;
     int64 added_date = 7;
@@ -133,11 +126,6 @@ message EcomWishlistItem {
     int32 priority = 9;
     map<string, string> custom_fields = 10;
     erp.AuditInfo audit_info = 11;
-}
-
-message EcomWishlistItemList {
-    repeated EcomWishlistItem list = 1;
-    l8api.L8MetaData metadata = 2;
 }
 
 // =====================

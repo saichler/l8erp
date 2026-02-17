@@ -86,7 +86,7 @@ func generateEscalations(store *MockDataStore) []*crm.CrmEscalation {
 	return escalations
 }
 
-// generateCases creates support case records
+// generateCases creates support case records with embedded comments
 func generateCases(store *MockDataStore) []*crm.CrmCase {
 	statuses := []crm.CrmCaseStatus{
 		crm.CrmCaseStatus_CRM_CASE_STATUS_NEW,
@@ -111,6 +111,7 @@ func generateCases(store *MockDataStore) []*crm.CrmCase {
 	subjects := []string{"Cannot login", "Feature not working", "Performance issue", "Billing question", "Integration help"}
 
 	count := 60
+	cmtIdx := 1
 	cases := make([]*crm.CrmCase, count)
 	for i := 0; i < count; i++ {
 		accountID := pickRef(store.CrmAccountIDs, i)
@@ -138,6 +139,22 @@ func generateCases(store *MockDataStore) []*crm.CrmCase {
 			closedDate = openedDate.AddDate(0, 0, rand.Intn(7)+1).Unix()
 		}
 
+		// Embedded comments (1-3 per case)
+		numComments := rand.Intn(3) + 1
+		comments := make([]*crm.CrmCaseComment, numComments)
+		for j := 0; j < numComments; j++ {
+			createdBy := pickRef(store.EmployeeIDs, cmtIdx-1)
+			comments[j] = &crm.CrmCaseComment{
+				CommentId:   fmt.Sprintf("casecmt-%03d", cmtIdx),
+				Body:        fmt.Sprintf("Comment %d: Working on this issue. Will update shortly.", cmtIdx),
+				IsPublic:    j%2 == 0,
+				CreatedById: createdBy,
+				CommentDate: time.Now().AddDate(0, 0, -rand.Intn(7)).Unix(),
+				AuditInfo:   createAuditInfo(),
+			}
+			cmtIdx++
+		}
+
 		cases[i] = &crm.CrmCase{
 			CaseId:          genID("case", i),
 			CaseNumber:      fmt.Sprintf("CS-%05d", 10000+i+1),
@@ -158,33 +175,10 @@ func generateCases(store *MockDataStore) []*crm.CrmCase {
 			EscalationLevel: int32(i % 3),
 			IsEscalated:     i%5 == 0,
 			AuditInfo:       createAuditInfo(),
+			Comments:        comments,
 		}
 	}
 	return cases
-}
-
-// generateCaseComments creates case comment records
-func generateCaseComments(store *MockDataStore) []*crm.CrmCaseComment {
-	comments := make([]*crm.CrmCaseComment, 0, len(store.CrmCaseIDs)*3)
-	idx := 1
-	for _, caseID := range store.CrmCaseIDs {
-		numComments := rand.Intn(3) + 1
-		for j := 0; j < numComments; j++ {
-			createdBy := pickRef(store.EmployeeIDs, (idx-1))
-
-			comments = append(comments, &crm.CrmCaseComment{
-				CommentId:   fmt.Sprintf("casecmt-%03d", idx),
-				CaseId:      caseID,
-				Body:        fmt.Sprintf("Comment %d: Working on this issue. Will update shortly.", idx),
-				IsPublic:    j%2 == 0,
-				CreatedById: createdBy,
-				CommentDate: time.Now().AddDate(0, 0, -rand.Intn(7)).Unix(),
-				AuditInfo:   createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return comments
 }
 
 // generateKBArticles creates knowledge base article records

@@ -47,9 +47,9 @@ func runCRMPhases(client *HCMClient, store *MockDataStore) {
 
 	runPhase("CRM Phase 4: Marketing", func() error { return generateCrmPhase4(client, store) })
 
-	runPhase("CRM Phase 5: Leads", func() error { return generateCrmPhase5(client, store) })
+	runPhase("CRM Phase 5: Opportunities", func() error { return generateCrmPhase5(client, store) })
 
-	runPhase("CRM Phase 6: Opportunities", func() error { return generateCrmPhase6(client, store) })
+	runPhase("CRM Phase 6: Leads", func() error { return generateCrmPhase6(client, store) })
 
 	runPhase("CRM Phase 7: Account Management", func() error { return generateCrmPhase7(client, store) })
 

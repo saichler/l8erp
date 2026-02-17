@@ -17,8 +17,7 @@ package mocks
 // gen_bi_analytics.go
 // Generates:
 // - BiDataCube
-// - BiAnalysisModel
-// - BiPrediction
+// - BiAnalysisModel (with embedded: predictions)
 
 import (
 	"fmt"
@@ -127,11 +126,11 @@ func generateDataCubes(store *MockDataStore) []*bi.BiDataCube {
 	return cubes
 }
 
-// generateAnalysisModels creates ML/analysis model records
+// generateAnalysisModels creates ML/analysis model records with embedded predictions
 func generateAnalysisModels(store *MockDataStore) []*bi.BiAnalysisModel {
 	count := 10
 
-	// Flavorable model type distribution: 40% REGRESSION, 25% CLASSIFICATION, 15% TIME_SERIES, 10% CLUSTERING, 10% ANOMALY
+	// Flavorable model type distribution
 	modelTypes := []bi.BiModelType{
 		bi.BiModelType_BI_MODEL_TYPE_REGRESSION,
 		bi.BiModelType_BI_MODEL_TYPE_REGRESSION,
@@ -145,7 +144,7 @@ func generateAnalysisModels(store *MockDataStore) []*bi.BiAnalysisModel {
 		bi.BiModelType_BI_MODEL_TYPE_ANOMALY_DETECTION,
 	}
 
-	// Flavorable status distribution: 50% DEPLOYED, 20% VALIDATED, 15% TRAINING, 10% DRAFT, 5% RETIRED
+	// Flavorable status distribution
 	modelStatuses := []bi.BiModelStatus{
 		bi.BiModelStatus_BI_MODEL_STATUS_DEPLOYED,
 		bi.BiModelStatus_BI_MODEL_STATUS_DEPLOYED,
@@ -175,13 +174,11 @@ func generateAnalysisModels(store *MockDataStore) []*bi.BiAnalysisModel {
 	models := make([]*bi.BiAnalysisModel, count)
 	for i := 0; i < count; i++ {
 		dataSourceID := pickRef(store.BiDataSourceIDs, i)
-
 		ownerID := pickRef(store.EmployeeIDs, i)
 
 		trainingDate := time.Now().AddDate(0, -rand.Intn(6), -rand.Intn(28))
 		lastPrediction := trainingDate.Add(time.Duration(rand.Intn(30*24)) * time.Hour)
 
-		// Generate realistic accuracy metrics (70-98%)
 		accuracy := 0.70 + rand.Float64()*0.28
 		precision := 0.65 + rand.Float64()*0.30
 		recall := 0.60 + rand.Float64()*0.35
@@ -203,16 +200,15 @@ func generateAnalysisModels(store *MockDataStore) []*bi.BiAnalysisModel {
 			TrainingDate:     trainingDate.Unix(),
 			LastPrediction:   lastPrediction.Unix(),
 			OwnerId:          ownerID,
+			Predictions:      generatePredictionsInline(i, store),
 			AuditInfo:        createAuditInfo(),
 		}
 	}
 	return models
 }
 
-// generatePredictions creates prediction result records
-func generatePredictions(store *MockDataStore) []*bi.BiPrediction {
-	count := 20
-
+// generatePredictionsInline creates 2 embedded predictions per analysis model
+func generatePredictionsInline(parentIdx int, store *MockDataStore) []*bi.BiPrediction {
 	inputDataSamples := []string{
 		`{"customer_id": "C001", "tenure": 24, "monthly_spend": 150}`,
 		`{"product_id": "P100", "region": "WEST", "season": "Q4"}`,
@@ -229,28 +225,23 @@ func generatePredictions(store *MockDataStore) []*bi.BiPrediction {
 		`{"conversion_probability": 0.65, "next_action": "follow_up"}`,
 	}
 
-	predictions := make([]*bi.BiPrediction, count)
-	for i := 0; i < count; i++ {
-		modelID := pickRef(store.BiAnalysisModelIDs, i)
-
-		predictedBy := pickRef(store.EmployeeIDs, i)
-
+	predictions := make([]*bi.BiPrediction, 2)
+	for j := 0; j < 2; j++ {
+		idx := parentIdx*2 + j
+		predictedBy := pickRef(store.EmployeeIDs, idx)
 		predictionDate := time.Now().AddDate(0, 0, -rand.Intn(30))
-
-		// Confidence ranges from 0.65 to 0.98
 		confidence := 0.65 + rand.Float64()*0.33
 
-		predictions[i] = &bi.BiPrediction{
-			PredictionId:   genID("pred", i),
-			ModelId:        modelID,
-			Name:           predictionNames[i%len(predictionNames)],
-			Description:    fmt.Sprintf("Prediction run for %s", predictionNames[i%len(predictionNames)]),
+		predictions[j] = &bi.BiPrediction{
+			PredictionId:   genID("pred", idx),
+			Name:           predictionNames[idx%len(predictionNames)],
+			Description:    fmt.Sprintf("Prediction run for %s", predictionNames[idx%len(predictionNames)]),
 			PredictionDate: predictionDate.Unix(),
-			InputData:      inputDataSamples[i%len(inputDataSamples)],
-			OutputData:     outputDataSamples[i%len(outputDataSamples)],
+			InputData:      inputDataSamples[idx%len(inputDataSamples)],
+			OutputData:     outputDataSamples[idx%len(outputDataSamples)],
 			Confidence:     confidence,
 			PredictedBy:    predictedBy,
-			Notes:          fmt.Sprintf("Batch prediction run #%d", i+1),
+			Notes:          fmt.Sprintf("Batch prediction run #%d", idx+1),
 			AuditInfo:      createAuditInfo(),
 		}
 	}

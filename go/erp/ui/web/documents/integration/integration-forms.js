@@ -14,18 +14,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     const enums = DocIntegration.enums;
 
     DocIntegration.forms = {
-        DocAttachment: f.form('Attachment', [
-            f.section('Attachment Details', [
-                ...f.reference('documentId', 'Document', 'DocDocument', true),
-                ...f.text('entityType', 'Entity Type', true),
-                ...f.text('entityId', 'Entity ID', true),
-                ...f.text('module', 'Module'),
-                ...f.text('relationshipType', 'Relationship Type'),
-                ...f.textarea('description', 'Description'),
-                ...f.reference('attachedBy', 'Attached By', 'Employee')
-            ])
-        ]),
-
         DocTemplate: f.form('Template', [
             f.section('Template Details', [
                 ...f.text('name', 'Name', true),
@@ -37,19 +25,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ]),
             f.section('Template Content', [
                 ...f.textarea('content', 'Content')
-            ])
-        ]),
-
-        DocTemplateField: f.form('Template Field', [
-            f.section('Field Details', [
-                ...f.reference('templateId', 'Template', 'DocTemplate', true),
-                ...f.text('name', 'Name', true),
-                ...f.text('label', 'Label'),
-                ...f.select('fieldType', 'Field Type', enums.FIELD_TYPE),
-                ...f.text('defaultValue', 'Default Value'),
-                ...f.text('placeholder', 'Placeholder'),
-                ...f.number('sortOrder', 'Sort Order'),
-                ...f.checkbox('isRequired', 'Required')
+            ]),
+            f.section('Template Fields', [
+                ...f.inlineTable('fields', 'Template Fields', [
+                    { key: 'fieldId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'label', label: 'Label', type: 'text' },
+                    { key: 'fieldType', label: 'Type', type: 'select', options: enums.FIELD_TYPE },
+                    { key: 'defaultValue', label: 'Default', type: 'text' },
+                    { key: 'sortOrder', label: 'Order', type: 'number' },
+                    { key: 'isRequired', label: 'Required', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -77,9 +63,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     };
 
     DocIntegration.primaryKeys = {
-        DocAttachment: 'attachmentId',
         DocTemplate: 'templateId',
-        DocTemplateField: 'fieldId',
         DocEmailCapture: 'captureId',
         DocScanJob: 'scanJobId'
     };

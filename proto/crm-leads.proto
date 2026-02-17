@@ -51,6 +51,8 @@ message CrmLead {
   string campaign_id = 20;                 // cross-ref: CrmCampaign (optional)
   map<string, string> custom_fields = 21;
   erp.AuditInfo audit_info = 22;
+  repeated CrmLeadActivity activities = 23;
+  repeated CrmLeadConversion conversions = 24;
 }
 
 message CrmLeadList {
@@ -96,11 +98,9 @@ message CrmLeadScoreList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// CrmLeadActivity represents an activity on a lead
+// CrmLeadActivity represents an activity on a lead (child of CrmLead)
 message CrmLeadActivity {
   string activity_id = 1;
-  string lead_id = 2;                      // cross-ref: CrmLead
   CrmActivityType activity_type = 3;
   string subject = 4;
   string description = 5;
@@ -114,10 +114,6 @@ message CrmLeadActivity {
   erp.AuditInfo audit_info = 13;
 }
 
-message CrmLeadActivityList {
-  repeated CrmLeadActivity list = 1;
-  l8api.L8MetaData metadata = 2;
-}
 
 // @PrimeObject
 // CrmLeadAssign represents lead assignment rules
@@ -141,11 +137,9 @@ message CrmLeadAssignList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// CrmLeadConversion represents a lead conversion record
+// CrmLeadConversion represents a lead conversion record (child of CrmLead)
 message CrmLeadConversion {
   string conversion_id = 1;
-  string lead_id = 2;                      // cross-ref: CrmLead
   string account_id = 3;                   // cross-ref: CrmAccount
   string contact_id = 4;                   // cross-ref: CrmContact
   string opportunity_id = 5;               // cross-ref: CrmOpportunity (optional)
@@ -157,7 +151,3 @@ message CrmLeadConversion {
   erp.AuditInfo audit_info = 11;
 }
 
-message CrmLeadConversionList {
-  repeated CrmLeadConversion list = 1;
-  l8api.L8MetaData metadata = 2;
-}

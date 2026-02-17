@@ -33,21 +33,27 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('description', 'Description'),
                 ...f.textarea('controlObjective', 'Control Objective'),
                 ...f.textarea('testProcedure', 'Test Procedure')
-            ])
-        ]),
-
-        CompControlAssessment: f.form('Control Assessment', [
-            f.section('Assessment Information', [
-                ...f.reference('controlId', 'Control', 'CompControl', true),
-                ...f.date('assessmentDate', 'Assessment Date', true),
-                ...f.reference('assessorId', 'Assessor', 'Employee'),
-                ...f.select('effectiveness', 'Effectiveness', enums.assessmentResult, true),
-                ...f.date('nextAssessmentDate', 'Next Assessment Date')
             ]),
-            f.section('Assessment Details', [
-                ...f.textarea('testPerformed', 'Testing Performed'),
-                ...f.textarea('testResults', 'Test Results'),
-                ...f.textarea('recommendations', 'Recommendations')
+            f.section('Assessments', [
+                ...f.inlineTable('assessments', 'Control Assessments', [
+                    { key: 'assessmentId', label: 'ID', hidden: true },
+                    { key: 'assessmentDate', label: 'Date', type: 'date' },
+                    { key: 'assessorId', label: 'Assessor', type: 'reference', lookupModel: 'Employee' },
+                    { key: 'effectiveness', label: 'Effectiveness', type: 'select', options: enums.assessmentResult },
+                    { key: 'testPerformed', label: 'Test', type: 'text' },
+                    { key: 'recommendations', label: 'Recommendations', type: 'text' }
+                ])
+            ]),
+            f.section('Segregation Rules', [
+                ...f.inlineTable('segregationRules', 'Segregation Rules', [
+                    { key: 'ruleId', label: 'ID', hidden: true },
+                    { key: 'code', label: 'Code', type: 'text' },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'conflictingFunctionA', label: 'Function A', type: 'text' },
+                    { key: 'conflictingFunctionB', label: 'Function B', type: 'text' },
+                    { key: 'riskLevel', label: 'Risk Level', type: 'text' },
+                    { key: 'isActive', label: 'Active', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -88,27 +94,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        CompSegregationRule: f.form('Segregation Rule', [
-            f.section('Rule Information', [
-                ...f.text('name', 'Name', true),
-                ...f.text('conflictingFunctionA', 'Conflicting Function A', true),
-                ...f.text('conflictingFunctionB', 'Conflicting Function B', true),
-                ...f.select('riskLevel', 'Risk Level', ['Critical', 'High', 'Medium', 'Low']),
-                ...f.checkbox('isActive', 'Active')
-            ]),
-            f.section('Details', [
-                ...f.textarea('description', 'Description'),
-                ...f.textarea('mitigationControl', 'Mitigation Control')
-            ])
-        ])
     };
 
     CompControls.primaryKeys = {
         CompControl: 'controlId',
-        CompControlAssessment: 'assessmentId',
         CompPolicyDocument: 'policyId',
-        CompApprovalMatrix: 'matrixId',
-        CompSegregationRule: 'ruleId'
+        CompApprovalMatrix: 'matrixId'
     };
 
 })();

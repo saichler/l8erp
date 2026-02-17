@@ -51,6 +51,7 @@ message CrmCase {
   bool is_escalated = 20;
   map<string, string> custom_fields = 21;
   erp.AuditInfo audit_info = 22;
+  repeated CrmCaseComment comments = 23;
 }
 
 message CrmCaseList {
@@ -58,22 +59,15 @@ message CrmCaseList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
-// CrmCaseComment represents a comment on a case
+// CrmCaseComment represents a comment on a case (child of CrmCase)
 message CrmCaseComment {
   string comment_id = 1;
-  string case_id = 2;                      // cross-ref: CrmCase
   string body = 3;
   bool is_public = 4;
   string created_by_id = 5;                // cross-ref: HCM Employee
   int64 comment_date = 6;
   map<string, string> custom_fields = 7;
   erp.AuditInfo audit_info = 8;
-}
-
-message CrmCaseCommentList {
-  repeated CrmCaseComment list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject

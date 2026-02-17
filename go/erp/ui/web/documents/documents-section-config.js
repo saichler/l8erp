@@ -21,26 +21,19 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'documents', label: 'Documents', icon: '📄', isDefault: true },
                     { key: 'folders', label: 'Folders', icon: '📁' },
                     { key: 'categories', label: 'Categories', icon: '🏷️' },
-                    { key: 'tags', label: 'Tags', icon: '🔖' },
-                    { key: 'versions', label: 'Versions', icon: '📚' }
+                    { key: 'tags', label: 'Tags', icon: '🔖' }
                 ]
             },
             {
                 key: 'workflow', label: 'Workflow', icon: '🔄',
                 services: [
-                    { key: 'checkouts', label: 'Checkouts', icon: '🔓', isDefault: true },
-                    { key: 'approval-workflows', label: 'Approvals', icon: '✅' },
-                    { key: 'workflow-steps', label: 'Steps', icon: '🔢' },
-                    { key: 'signatures', label: 'Signatures', icon: '✍️' },
-                    { key: 'review-comments', label: 'Comments', icon: '💬' }
+                    { key: 'approval-workflows', label: 'Approvals', icon: '✅', isDefault: true }
                 ]
             },
             {
                 key: 'integration', label: 'Integration', icon: '🔗',
                 services: [
-                    { key: 'attachments', label: 'Attachments', icon: '📎', isDefault: true },
-                    { key: 'templates', label: 'Templates', icon: '📋' },
-                    { key: 'template-fields', label: 'Fields', icon: '🔤' },
+                    { key: 'templates', label: 'Templates', icon: '📋', isDefault: true },
                     { key: 'email-captures', label: 'Email Capture', icon: '📧' },
                     { key: 'scan-jobs', label: 'Scan Jobs', icon: '🖨️' }
                 ]
@@ -50,9 +43,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 services: [
                     { key: 'retention-policies', label: 'Retention', icon: '📅', isDefault: true },
                     { key: 'legal-holds', label: 'Legal Holds', icon: '⚖️' },
-                    { key: 'access-logs', label: 'Access Logs', icon: '📊' },
-                    { key: 'archive-jobs', label: 'Archives', icon: '🗄️' },
-                    { key: 'audit-trails', label: 'Audit Trails', icon: '🔍' }
+                    { key: 'archive-jobs', label: 'Archives', icon: '🗄️' }
                 ]
             }
         ]

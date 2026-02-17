@@ -23,7 +23,7 @@ import (
 	"github.com/saichler/l8erp/go/types/erp"
 )
 
-// generateCrmAccounts creates CRM account records
+// generateCrmAccounts creates CRM account records with embedded health scores and account plans
 func generateCrmAccounts(store *MockDataStore) []*crm.CrmAccount {
 	accountTypes := []crm.CrmAccountType{
 		crm.CrmAccountType_CRM_ACCOUNT_TYPE_CUSTOMER,
@@ -35,6 +35,12 @@ func generateCrmAccounts(store *MockDataStore) []*crm.CrmAccount {
 		crm.CrmAccountStatus_CRM_ACCOUNT_STATUS_PENDING,
 		crm.CrmAccountStatus_CRM_ACCOUNT_STATUS_INACTIVE,
 	}
+	healthStatuses := []crm.CrmHealthStatus{
+		crm.CrmHealthStatus_CRM_HEALTH_STATUS_HEALTHY,
+		crm.CrmHealthStatus_CRM_HEALTH_STATUS_AT_RISK,
+		crm.CrmHealthStatus_CRM_HEALTH_STATUS_CRITICAL,
+	}
+	planStatuses := []string{"Draft", "Active", "Completed", "On Hold"}
 
 	count := 30
 	accounts := make([]*crm.CrmAccount, count)
@@ -64,6 +70,58 @@ func generateCrmAccounts(store *MockDataStore) []*crm.CrmAccount {
 			status = statuses[1]
 		} else {
 			status = statuses[2]
+		}
+
+		// Embedded health score
+		var hStatus crm.CrmHealthStatus
+		if i < count*7/10 {
+			hStatus = healthStatuses[0]
+		} else if i < count*9/10 {
+			hStatus = healthStatuses[1]
+		} else {
+			hStatus = healthStatuses[2]
+		}
+		overallScore := int32(rand.Intn(40) + 60)
+		if hStatus == crm.CrmHealthStatus_CRM_HEALTH_STATUS_AT_RISK {
+			overallScore = int32(rand.Intn(20) + 40)
+		} else if hStatus == crm.CrmHealthStatus_CRM_HEALTH_STATUS_CRITICAL {
+			overallScore = int32(rand.Intn(30) + 10)
+		}
+		healthScores := []*crm.CrmHealthScore{{
+			ScoreId:           fmt.Sprintf("health-%03d", i+1),
+			HealthStatus:      hStatus,
+			OverallScore:      overallScore,
+			EngagementScore:   int32(rand.Intn(100)),
+			UsageScore:        int32(rand.Intn(100)),
+			SatisfactionScore: int32(rand.Intn(100)),
+			FinancialScore:    int32(rand.Intn(100)),
+			ScoreDate:         time.Now().Unix(),
+			Notes:             "Health score for account",
+			CalculatedBy:      "System",
+			AuditInfo:         createAuditInfo(),
+		}}
+
+		// Embedded account plan (~50% of accounts)
+		var accountPlans []*crm.CrmAccountPlan
+		if i%2 == 0 {
+			revenueTarget := int64(rand.Intn(1000000) + 100000)
+			currentRevenue := int64(float64(revenueTarget) * (float64(rand.Intn(80)+10) / 100))
+			accountPlans = []*crm.CrmAccountPlan{{
+				PlanId:         fmt.Sprintf("acctpln-%03d", i/2+1),
+				Name:           fmt.Sprintf("Account Plan %d - FY2025", i/2+1),
+				FiscalYear:     "2025",
+				RevenueTarget:  money(store, revenueTarget),
+				CurrentRevenue: money(store, currentRevenue),
+				Objectives:     "Increase revenue and customer satisfaction",
+				Strategies:     "Upsell existing products, cross-sell new solutions",
+				ActionItems:    "Quarterly business reviews, executive engagement",
+				Risks:          "Competitive pressure, budget constraints",
+				OwnerId:        ownerID,
+				StartDate:      time.Now().AddDate(0, -6, 0).Unix(),
+				EndDate:        time.Now().AddDate(0, 6, 0).Unix(),
+				Status:         planStatuses[i%len(planStatuses)],
+				AuditInfo:      createAuditInfo(),
+			}}
 		}
 
 		accounts[i] = &crm.CrmAccount{
@@ -96,6 +154,8 @@ func generateCrmAccounts(store *MockDataStore) []*crm.CrmAccount {
 			CustomerId:       customerID,
 			LastActivityDate: time.Now().AddDate(0, 0, -rand.Intn(30)).Unix(),
 			AuditInfo:        createAuditInfo(),
+			HealthScores:     healthScores,
+			AccountPlans:     accountPlans,
 		}
 	}
 	return accounts
@@ -111,8 +171,8 @@ func generateCrmContacts(store *MockDataStore) []*crm.CrmContact {
 	for _, accountID := range store.CrmAccountIDs {
 		numContacts := rand.Intn(3) + 2
 		for j := 0; j < numContacts; j++ {
-			ownerID := pickRef(store.EmployeeIDs, (idx-1))
-			sourceID := pickRef(store.CrmLeadSourceIDs, (idx-1))
+			ownerID := pickRef(store.EmployeeIDs, (idx - 1))
+			sourceID := pickRef(store.CrmLeadSourceIDs, (idx - 1))
 
 			firstName := firstNames[(idx-1)%len(firstNames)]
 			lastName := lastNames[(idx-1)%len(lastNames)]
@@ -136,7 +196,7 @@ func generateCrmContacts(store *MockDataStore) []*crm.CrmContact {
 				},
 				OwnerId:          ownerID,
 				IsPrimary:        j == 0,
-				Description:      fmt.Sprintf("Contact at account"),
+				Description:      "Contact at account",
 				DoNotCall:        idx%10 == 0,
 				DoNotEmail:       idx%15 == 0,
 				LeadSourceId:     sourceID,
@@ -225,89 +285,4 @@ func generateCrmRelationships(store *MockDataStore) []*crm.CrmRelationship {
 		}
 	}
 	return relationships
-}
-
-// generateCrmHealthScores creates CRM health score records
-func generateCrmHealthScores(store *MockDataStore) []*crm.CrmHealthScore {
-	statuses := []crm.CrmHealthStatus{
-		crm.CrmHealthStatus_CRM_HEALTH_STATUS_HEALTHY,
-		crm.CrmHealthStatus_CRM_HEALTH_STATUS_AT_RISK,
-		crm.CrmHealthStatus_CRM_HEALTH_STATUS_CRITICAL,
-	}
-
-	scores := make([]*crm.CrmHealthScore, 0, len(store.CrmAccountIDs))
-	idx := 1
-	for _, accountID := range store.CrmAccountIDs {
-		// Status distribution: 70% healthy, 20% at risk, 10% critical
-		var status crm.CrmHealthStatus
-		if idx <= len(store.CrmAccountIDs)*7/10 {
-			status = statuses[0]
-		} else if idx <= len(store.CrmAccountIDs)*9/10 {
-			status = statuses[1]
-		} else {
-			status = statuses[2]
-		}
-
-		overallScore := int32(rand.Intn(40) + 60)
-		if status == crm.CrmHealthStatus_CRM_HEALTH_STATUS_AT_RISK {
-			overallScore = int32(rand.Intn(20) + 40)
-		} else if status == crm.CrmHealthStatus_CRM_HEALTH_STATUS_CRITICAL {
-			overallScore = int32(rand.Intn(30) + 10)
-		}
-
-		scores = append(scores, &crm.CrmHealthScore{
-			ScoreId:           fmt.Sprintf("health-%03d", idx),
-			AccountId:         accountID,
-			HealthStatus:      status,
-			OverallScore:      overallScore,
-			EngagementScore:   int32(rand.Intn(100)),
-			UsageScore:        int32(rand.Intn(100)),
-			SatisfactionScore: int32(rand.Intn(100)),
-			FinancialScore:    int32(rand.Intn(100)),
-			ScoreDate:         time.Now().Unix(),
-			Notes:             fmt.Sprintf("Health score for account"),
-			CalculatedBy:      "System",
-			AuditInfo:         createAuditInfo(),
-		})
-		idx++
-	}
-	return scores
-}
-
-// generateCrmAccountPlans creates CRM account plan records
-func generateCrmAccountPlans(store *MockDataStore) []*crm.CrmAccountPlan {
-	planStatuses := []string{"Draft", "Active", "Completed", "On Hold"}
-
-	count := len(store.CrmAccountIDs) / 2
-	if count < 10 {
-		count = 10
-	}
-
-	plans := make([]*crm.CrmAccountPlan, count)
-	for i := 0; i < count; i++ {
-		accountID := pickRef(store.CrmAccountIDs, i)
-		ownerID := pickRef(store.EmployeeIDs, i)
-
-		revenueTarget := int64(rand.Intn(1000000) + 100000)
-		currentRevenue := int64(float64(revenueTarget) * (float64(rand.Intn(80)+10) / 100))
-
-		plans[i] = &crm.CrmAccountPlan{
-			PlanId:         genID("acctpln", i),
-			AccountId:      accountID,
-			Name:           fmt.Sprintf("Account Plan %d - FY2025", i+1),
-			FiscalYear:     "2025",
-			RevenueTarget:  money(store, revenueTarget),
-			CurrentRevenue: money(store, currentRevenue),
-			Objectives:     "Increase revenue and customer satisfaction",
-			Strategies:     "Upsell existing products, cross-sell new solutions",
-			ActionItems:    "Quarterly business reviews, executive engagement",
-			Risks:          "Competitive pressure, budget constraints",
-			OwnerId:        ownerID,
-			StartDate:      time.Now().AddDate(0, -6, 0).Unix(),
-			EndDate:        time.Now().AddDate(0, 6, 0).Unix(),
-			Status:         planStatuses[i%len(planStatuses)],
-			AuditInfo:      createAuditInfo(),
-		}
-	}
-	return plans
 }

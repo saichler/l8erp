@@ -44,16 +44,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        DocAccessLog: f.form('Access Log', [
-            f.section('Log Details', [
-                ...f.reference('documentId', 'Document', 'DocDocument', true),
-                ...f.reference('userId', 'User', 'Employee', true),
-                ...f.select('action', 'Action', enums.ACCESS_ACTION),
-                ...f.text('ipAddress', 'IP Address'),
-                ...f.text('userAgent', 'User Agent')
-            ])
-        ]),
-
         DocArchiveJob: f.form('Archive Job', [
             f.section('Job Details', [
                 ...f.text('name', 'Name', true),
@@ -65,26 +55,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ])
         ]),
 
-        DocAuditTrail: f.form('Audit Trail', [
-            f.section('Audit Details', [
-                ...f.reference('documentId', 'Document', 'DocDocument', true),
-                ...f.reference('userId', 'User', 'Employee', true),
-                ...f.text('action', 'Action', true),
-                ...f.text('entityType', 'Entity Type'),
-                ...f.text('entityId', 'Entity ID'),
-                ...f.text('changeSummary', 'Change Summary'),
-                ...f.textarea('oldValues', 'Old Values'),
-                ...f.textarea('newValues', 'New Values')
-            ])
-        ])
     };
 
     DocCompliance.primaryKeys = {
         DocRetentionPolicy: 'policyId',
         DocLegalHold: 'holdId',
-        DocAccessLog: 'logId',
-        DocArchiveJob: 'jobId',
-        DocAuditTrail: 'trailId'
+        DocArchiveJob: 'jobId'
     };
 
 })();

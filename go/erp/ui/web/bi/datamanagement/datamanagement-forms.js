@@ -59,27 +59,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('rowsFailed', 'Rows Failed'),
                 ...f.textarea('errorMessage', 'Error Message'),
                 ...f.checkbox('isActive', 'Active')
-            ])
-        ]),
-
-        BiETLSchedule: f.form('ETL Schedule', [
-            f.section('Schedule Details', [
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description'),
-                ...f.reference('jobId', 'ETL Job', 'BiETLJob', true),
-                ...f.select('frequency', 'Frequency', enums.SCHEDULE_FREQUENCY)
             ]),
-            f.section('Timing', [
-                ...f.date('startDate', 'Start Date'),
-                ...f.date('endDate', 'End Date'),
-                ...f.text('runTime', 'Run Time (HH:MM)'),
-                ...f.number('dayOfWeek', 'Day of Week'),
-                ...f.number('dayOfMonth', 'Day of Month')
-            ]),
-            f.section('Status', [
-                ...f.date('nextRun', 'Next Run'),
-                ...f.date('lastRun', 'Last Run'),
-                ...f.checkbox('isActive', 'Active')
+            f.section('Schedules', [
+                ...f.inlineTable('schedules', 'ETL Schedules', [
+                    { key: 'scheduleId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'frequency', label: 'Frequency', type: 'text' },
+                    { key: 'runTime', label: 'Run Time', type: 'text' },
+                    { key: 'isActive', label: 'Active', type: 'checkbox' }
+                ])
             ])
         ]),
 
@@ -152,7 +140,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     BiDataManagement.primaryKeys = {
         BiDataSource: 'sourceId',
         BiETLJob: 'jobId',
-        BiETLSchedule: 'scheduleId',
         BiDataQualityRule: 'ruleId',
         BiMasterDataConfig: 'configId',
         BiDataGovernance: 'governanceId'

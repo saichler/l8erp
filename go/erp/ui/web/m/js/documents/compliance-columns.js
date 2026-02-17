@@ -24,13 +24,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.enum('status', 'Status', null, render.legalHoldStatus),
             ...col.date('effectiveDate', 'Effective')
         ],
-        DocAccessLog: [
-            ...col.id('logId'),
-            ...col.col('documentId', 'Document'),
-            ...col.col('userId', 'User'),
-            ...col.enum('action', 'Action', null, render.accessAction),
-            ...col.date('accessDate', 'Accessed')
-        ],
         DocArchiveJob: [
             ...col.id('jobId'),
             ...col.col('name', 'Name'),
@@ -38,13 +31,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.date('initiatedDate', 'Initiated'),
             ...col.col('archiveLocation', 'Location')
         ],
-        DocAuditTrail: [
-            ...col.id('trailId'),
-            ...col.col('entityType', 'Entity Type'),
-            ...col.col('entityId', 'Entity ID'),
-            ...col.col('action', 'Action'),
-            ...col.date('timestamp', 'Timestamp')
-        ]
     };
 
 })();

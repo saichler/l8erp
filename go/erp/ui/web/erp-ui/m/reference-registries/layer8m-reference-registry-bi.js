@@ -16,13 +16,7 @@ window.Layer8MReferenceRegistryBI = {
     // ========================================
     ...refBiM.batch([
         ['BiReport', 'reportId', 'name'],
-        ['BiReportTemplate', 'templateId', 'name'],
-        ['BiReportSchedule', 'scheduleId', 'name']
-    ]),
-    ...refBiM.batchIdOnly([
-        ['BiReportExecution', 'executionId'],
-        ['BiReportAccess', 'accessId'],
-        ['BiReportSubscription', 'subscriptionId']
+        ['BiReportTemplate', 'templateId', 'name']
     ]),
 
     // ========================================
@@ -30,12 +24,8 @@ window.Layer8MReferenceRegistryBI = {
     // ========================================
     ...refBiM.batch([
         ['BiDashboard', 'dashboardId', 'name'],
-        ['BiDashboardWidget', 'widgetId', 'name'],
-        ['BiKPI', 'kpiId', 'name'],
-        ['BiKPIThreshold', 'thresholdId', 'name'],
-        ['BiDrilldown', 'drilldownId', 'name']
+        ['BiKPI', 'kpiId', 'name']
     ]),
-    ...refBiM.idOnly('BiDashboardShare', 'shareId'),
 
     // ========================================
     // Analytics
@@ -43,7 +33,6 @@ window.Layer8MReferenceRegistryBI = {
     ...refBiM.batch([
         ['BiDataCube', 'cubeId', 'name'],
         ['BiAnalysisModel', 'modelId', 'name'],
-        ['BiPrediction', 'predictionId', 'name'],
         ['BiTrendAnalysis', 'analysisId', 'name'],
         ['BiScenario', 'scenarioId', 'name'],
         ['BiBenchmark', 'benchmarkId', 'name']
@@ -55,7 +44,6 @@ window.Layer8MReferenceRegistryBI = {
     ...refBiM.batch([
         ['BiDataSource', 'sourceId', 'name'],
         ['BiETLJob', 'jobId', 'name'],
-        ['BiETLSchedule', 'scheduleId', 'name'],
         ['BiDataQualityRule', 'ruleId', 'name'],
         ['BiMasterDataConfig', 'configId', 'name'],
         ['BiDataGovernance', 'governanceId', 'name']

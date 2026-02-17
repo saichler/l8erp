@@ -6,9 +6,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 package mocks
 
 // Generates:
-// - DocAttachment
-// - DocTemplate
-// - DocTemplateField
+// - DocTemplate (with embedded fields)
 // - DocEmailCapture
 // - DocScanJob
 
@@ -20,38 +18,7 @@ import (
 	"github.com/saichler/l8erp/go/types/doc"
 )
 
-// generateDocAttachments creates attachment records
-func generateDocAttachments(store *MockDataStore) []*doc.DocAttachment {
-	count := 25
-
-	entityTypes := []string{"SalesOrder", "Invoice", "Project", "Customer", "Vendor", "Employee"}
-	modules := []string{"sales", "fin", "prj", "crm", "hcm"}
-	relationshipTypes := []string{"primary", "supporting", "reference"}
-
-	attachments := make([]*doc.DocAttachment, count)
-	for i := 0; i < count; i++ {
-		documentID := pickRef(store.DocDocumentIDs, i)
-
-		attachedBy := pickRef(store.EmployeeIDs, i)
-
-		attachments[i] = &doc.DocAttachment{
-			AttachmentId:     genID("att", i),
-			DocumentId:       documentID,
-			EntityType:       entityTypes[i%len(entityTypes)],
-			EntityId:         genID("ent", i),
-			Module:           modules[i%len(modules)],
-			RelationshipType: relationshipTypes[i%len(relationshipTypes)],
-			Description:      fmt.Sprintf("Attachment for %s entity", entityTypes[i%len(entityTypes)]),
-			SortOrder:        int32(i + 1),
-			AttachedBy:       attachedBy,
-			AttachedDate:     time.Now().AddDate(0, 0, -rand.Intn(90)).Unix(),
-			AuditInfo:        createAuditInfo(),
-		}
-	}
-	return attachments
-}
-
-// generateDocTemplates creates template records
+// generateDocTemplates creates template records with embedded fields
 func generateDocTemplates(store *MockDataStore) []*doc.DocTemplate {
 	count := 10
 
@@ -92,14 +59,15 @@ func generateDocTemplates(store *MockDataStore) []*doc.DocTemplate {
 			LastUsedDate: time.Now().AddDate(0, 0, -rand.Intn(30)).Unix(),
 			UsageCount:   int32(rand.Intn(500) + 10),
 			AuditInfo:    createAuditInfo(),
+			Fields:       genDocTemplateFields(i),
 		}
 	}
 	return templates
 }
 
-// generateDocTemplateFields creates template field records
-func generateDocTemplateFields(store *MockDataStore) []*doc.DocTemplateField {
-	count := 30
+// genDocTemplateFields generates embedded template field records
+func genDocTemplateFields(tplIdx int) []*doc.DocTemplateField {
+	count := 2 + tplIdx%4 // 2-5 fields per template
 
 	fieldTypes := []doc.DocFieldType{
 		doc.DocFieldType_DOC_FIELD_TYPE_TEXT,
@@ -108,7 +76,6 @@ func generateDocTemplateFields(store *MockDataStore) []*doc.DocTemplateField {
 		doc.DocFieldType_DOC_FIELD_TYPE_DATE,
 		doc.DocFieldType_DOC_FIELD_TYPE_BOOLEAN,
 		doc.DocFieldType_DOC_FIELD_TYPE_SELECT,
-		doc.DocFieldType_DOC_FIELD_TYPE_REFERENCE,
 	}
 
 	fieldNames := []string{
@@ -117,10 +84,8 @@ func generateDocTemplateFields(store *MockDataStore) []*doc.DocTemplateField {
 	}
 
 	fields := make([]*doc.DocTemplateField, count)
-	for i := 0; i < count; i++ {
-		templateID := pickRef(store.DocTemplateIDs, i)
-
-		fieldType := fieldTypes[i%len(fieldTypes)]
+	for j := 0; j < count; j++ {
+		fieldType := fieldTypes[(tplIdx+j)%len(fieldTypes)]
 		var defaultValue string
 		switch fieldType {
 		case doc.DocFieldType_DOC_FIELD_TYPE_TEXT:
@@ -131,17 +96,16 @@ func generateDocTemplateFields(store *MockDataStore) []*doc.DocTemplateField {
 			defaultValue = "false"
 		}
 
-		fields[i] = &doc.DocTemplateField{
-			FieldId:      genID("fld", i),
-			TemplateId:   templateID,
-			Name:         fieldNames[i%len(fieldNames)],
-			Label:        fieldNames[i%len(fieldNames)],
-			Description:  fmt.Sprintf("Field for %s", fieldNames[i%len(fieldNames)]),
+		fields[j] = &doc.DocTemplateField{
+			FieldId:      genID("fld", tplIdx*10+j),
+			Name:         fieldNames[(tplIdx+j)%len(fieldNames)],
+			Label:        fieldNames[(tplIdx+j)%len(fieldNames)],
+			Description:  fmt.Sprintf("Field for %s", fieldNames[(tplIdx+j)%len(fieldNames)]),
 			FieldType:    fieldType,
-			IsRequired:   i%3 == 0,
+			IsRequired:   j%3 == 0,
 			DefaultValue: defaultValue,
-			Placeholder:  fmt.Sprintf("Enter %s", fieldNames[i%len(fieldNames)]),
-			SortOrder:    int32(i%10 + 1),
+			Placeholder:  fmt.Sprintf("Enter %s", fieldNames[(tplIdx+j)%len(fieldNames)]),
+			SortOrder:    int32(j + 1),
 			AuditInfo:    createAuditInfo(),
 		}
 	}
@@ -170,7 +134,6 @@ func generateDocEmailCaptures(store *MockDataStore) []*doc.DocEmailCapture {
 	emails := make([]*doc.DocEmailCapture, count)
 	for i := 0; i < count; i++ {
 		documentID := pickRef(store.DocDocumentIDs, i)
-
 		folderID := pickRef(store.DocFolderIDs, i)
 
 		processedBy := ""
@@ -222,9 +185,7 @@ func generateDocScanJobs(store *MockDataStore) []*doc.DocScanJob {
 	scanJobs := make([]*doc.DocScanJob, count)
 	for i := 0; i < count; i++ {
 		folderID := pickRef(store.DocFolderIDs, i)
-
 		categoryID := pickRef(store.DocCategoryIDs, i)
-
 		initiatedBy := pickRef(store.EmployeeIDs, i)
 
 		status := scanStatuses[i%len(scanStatuses)]

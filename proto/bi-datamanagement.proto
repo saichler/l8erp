@@ -74,6 +74,7 @@ message BiETLJob {
   string owner_id = 16;                     // cross-ref: HCM Employee
   bool is_active = 17;
   map<string, string> custom_fields = 18;
+  repeated BiETLSchedule schedules = 20;
   erp.AuditInfo audit_info = 19;
 }
 
@@ -82,11 +83,9 @@ message BiETLJobList {
   l8api.L8MetaData metadata = 2;
 }
 
-// @PrimeObject
 // BiETLSchedule represents an ETL schedule
 message BiETLSchedule {
   string schedule_id = 1;
-  string job_id = 2;                        // cross-ref: BiETLJob
   string name = 3;
   string description = 4;
   BiScheduleFrequency frequency = 5;
@@ -100,11 +99,6 @@ message BiETLSchedule {
   bool is_active = 13;
   map<string, string> custom_fields = 14;
   erp.AuditInfo audit_info = 15;
-}
-
-message BiETLScheduleList {
-  repeated BiETLSchedule list = 1;
-  l8api.L8MetaData metadata = 2;
 }
 
 // @PrimeObject

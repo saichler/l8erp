@@ -64,22 +64,15 @@ limitations under the License.
                 ...f.number('recallScore', 'Recall Score'),
                 ...f.date('trainingDate', 'Training Date'),
                 ...f.date('lastPrediction', 'Last Prediction')
-            ])
-        ]),
-
-        BiPrediction: f.form('Prediction', [
-            f.section('Prediction Details', [
-                ...f.reference('modelId', 'Model', 'BiAnalysisModel', true),
-                ...f.text('name', 'Name', true),
-                ...f.textarea('description', 'Description'),
-                ...f.date('predictionDate', 'Prediction Date'),
-                ...f.reference('predictedBy', 'Predicted By', 'Employee')
             ]),
-            f.section('Data', [
-                ...f.textarea('inputData', 'Input Data (JSON)'),
-                ...f.textarea('outputData', 'Output Data (JSON)'),
-                ...f.number('confidence', 'Confidence'),
-                ...f.textarea('notes', 'Notes')
+            f.section('Predictions', [
+                ...f.inlineTable('predictions', 'Predictions', [
+                    { key: 'predictionId', label: 'ID', hidden: true },
+                    { key: 'name', label: 'Name', type: 'text' },
+                    { key: 'confidence', label: 'Confidence', type: 'number' },
+                    { key: 'predictedBy', label: 'Predicted By', type: 'text' },
+                    { key: 'notes', label: 'Notes', type: 'text' }
+                ])
             ])
         ]),
 

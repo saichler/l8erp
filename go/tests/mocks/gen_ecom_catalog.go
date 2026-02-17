@@ -18,7 +18,6 @@ import (
 	"fmt"
 	"math/rand"
 	"strings"
-	"time"
 
 	"github.com/saichler/l8erp/go/types/ecom"
 )
@@ -115,7 +114,7 @@ func generateEcomAttributes() []*ecom.EcomAttribute {
 	return attributes
 }
 
-// generateEcomProducts creates e-commerce product records
+// generateEcomProducts creates e-commerce product records with embedded images and variants
 func generateEcomProducts(store *MockDataStore) []*ecom.EcomProduct {
 	productTypes := []ecom.EcomProductType{
 		ecom.EcomProductType_ECOM_PRODUCT_TYPE_PHYSICAL,
@@ -149,8 +148,59 @@ func generateEcomProducts(store *MockDataStore) []*ecom.EcomProduct {
 
 		categoryID := pickRef(store.EcomCategoryIDs, i)
 
+		productID := genID("eprod", i)
+
+		// Generate 2 embedded images per product
+		imageTypes := []ecom.EcomImageType{ecom.EcomImageType_ECOM_IMAGE_TYPE_MAIN, ecom.EcomImageType_ECOM_IMAGE_TYPE_GALLERY}
+		mimeTypes := []string{"image/jpeg", "image/png", "image/webp"}
+		images := make([]*ecom.EcomImage, 2)
+		for j := 0; j < 2; j++ {
+			images[j] = &ecom.EcomImage{
+				ImageId:      fmt.Sprintf("eimg-%03d", i*2+j+1),
+				FileName:     fmt.Sprintf("product-%03d-img-%d.jpg", i+1, j+1),
+				Url:          fmt.Sprintf("https://cdn.example.com/products/product-%03d-img-%d.jpg", i+1, j+1),
+				ThumbnailUrl: fmt.Sprintf("https://cdn.example.com/products/thumb/product-%03d-img-%d.jpg", i+1, j+1),
+				ImageType:    imageTypes[j],
+				AltText:      fmt.Sprintf("Product image %d for %s", j+1, name),
+				Title:        fmt.Sprintf("%s - Image %d", name, j+1),
+				Width:        int32(rand.Intn(800) + 800),
+				Height:       int32(rand.Intn(600) + 600),
+				FileSize:     int64(rand.Intn(500000) + 50000),
+				MimeType:     mimeTypes[rand.Intn(len(mimeTypes))],
+				SortOrder:    int32(j + 1),
+				IsPrimary:    j == 0,
+				AuditInfo:    createAuditInfo(),
+			}
+		}
+
+		// Generate 2 embedded variants per product
+		colors := []string{"Black", "White", "Blue", "Red", "Gray"}
+		sizes := []string{"S", "M", "L", "XL"}
+		variants := make([]*ecom.EcomVariant, 2)
+		for j := 0; j < 2; j++ {
+			color := colors[(i+j)%len(colors)]
+			size := sizes[(i+j)%len(sizes)]
+			vPrice := int64(rand.Intn(28000) + 1999)
+			variants[j] = &ecom.EcomVariant{
+				VariantId:      fmt.Sprintf("evar-%03d", i*2+j+1),
+				Sku:            fmt.Sprintf("SKU-%05d-%s-%s", 10000+i+1, strings.ToUpper(color[:1]), size),
+				Name:           fmt.Sprintf("%s - %s", color, size),
+				Price:          money(store, vPrice),
+				CompareAtPrice: money(store, vPrice+int64(float64(vPrice)*0.15)),
+				CostPrice:      money(store, int64(float64(vPrice)*0.5)),
+				StockQuantity:  int32(rand.Intn(100) + 5),
+				Weight:         float64(rand.Intn(3000)+200) / 1000.0,
+				WeightUnit:     "kg",
+				Barcode:        fmt.Sprintf("012345%06d", i*2+j+1),
+				Attributes:     map[string]string{"color": color, "size": size},
+				IsActive:       true,
+				SortOrder:      int32(j + 1),
+				AuditInfo:      createAuditInfo(),
+			}
+		}
+
 		products[i] = &ecom.EcomProduct{
-			ProductId:        genID("eprod", i),
+			ProductId:        productID,
 			Sku:              fmt.Sprintf("SKU-%05d", 10000+i+1),
 			Name:             name,
 			Description:      fmt.Sprintf("High-quality %s with premium features and excellent durability.", name),
@@ -158,118 +208,26 @@ func generateEcomProducts(store *MockDataStore) []*ecom.EcomProduct {
 			ProductType:      productTypes[i%len(productTypes)],
 			Status:           productStatuses[i%len(productStatuses)],
 			CategoryId:       categoryID,
-			Price: money(store, basePrice),
-			CompareAtPrice: money(store, compareAtPrice),
-			CostPrice: money(store, costPrice),
+			Price:             money(store, basePrice),
+			CompareAtPrice:    money(store, compareAtPrice),
+			CostPrice:         money(store, costPrice),
 			StockQuantity:     int32(rand.Intn(500) + 10),
 			LowStockThreshold: int32(rand.Intn(20) + 5),
 			TrackInventory:    true,
-			AllowBackorder:    i%3 == 0, // Every 3rd product allows backorder
+			AllowBackorder:    i%3 == 0,
 			Slug:              slug,
 			MetaTitle:         fmt.Sprintf("%s | Buy Online", name),
 			MetaDescription:   fmt.Sprintf("Shop %s at great prices. Free shipping available.", name),
 			Brand:             brands[i%len(brands)],
-			Weight:            float64(rand.Intn(5000)+100) / 1000.0, // 0.1 to 5.1 kg
+			Weight:            float64(rand.Intn(5000)+100) / 1000.0,
 			WeightUnit:        "kg",
 			IsTaxable:         true,
 			TaxClass:          taxClasses[i%len(taxClasses)],
 			AuditInfo:         createAuditInfo(),
+			Images:            images,
+			Variants:          variants,
 		}
 	}
 	return products
 }
 
-// generateEcomImages creates e-commerce image records (2 per product)
-func generateEcomImages(store *MockDataStore) []*ecom.EcomImage {
-	imageTypes := []ecom.EcomImageType{
-		ecom.EcomImageType_ECOM_IMAGE_TYPE_MAIN,
-		ecom.EcomImageType_ECOM_IMAGE_TYPE_GALLERY,
-	}
-
-	mimeTypes := []string{"image/jpeg", "image/png", "image/webp"}
-
-	images := make([]*ecom.EcomImage, 0, len(store.EcomProductIDs)*2)
-	idx := 1
-	for prodIdx, productID := range store.EcomProductIDs {
-		for j := 0; j < 2; j++ {
-			imageType := imageTypes[j]
-			width := int32(rand.Intn(800) + 800)   // 800-1600
-			height := int32(rand.Intn(600) + 600)  // 600-1200
-			fileSize := int64(rand.Intn(500000) + 50000) // 50KB to 550KB
-
-			images = append(images, &ecom.EcomImage{
-				ImageId:      fmt.Sprintf("eimg-%03d", idx),
-				ProductId:    productID,
-				FileName:     fmt.Sprintf("product-%03d-img-%d.jpg", prodIdx+1, j+1),
-				Url:          fmt.Sprintf("https://cdn.example.com/products/product-%03d-img-%d.jpg", prodIdx+1, j+1),
-				ThumbnailUrl: fmt.Sprintf("https://cdn.example.com/products/thumb/product-%03d-img-%d.jpg", prodIdx+1, j+1),
-				ImageType:    imageType,
-				AltText:      fmt.Sprintf("Product image %d for %s", j+1, ecomProductNames[prodIdx%len(ecomProductNames)]),
-				Title:        fmt.Sprintf("%s - Image %d", ecomProductNames[prodIdx%len(ecomProductNames)], j+1),
-				Width:        width,
-				Height:       height,
-				FileSize:     fileSize,
-				MimeType:     mimeTypes[rand.Intn(len(mimeTypes))],
-				SortOrder:    int32(j + 1),
-				IsPrimary:    j == 0, // First image is primary
-				AuditInfo:    createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return images
-}
-
-// generateEcomVariants creates e-commerce variant records (2 per product)
-func generateEcomVariants(store *MockDataStore) []*ecom.EcomVariant {
-	colors := []string{"Black", "White", "Blue", "Red", "Gray"}
-	sizes := []string{"S", "M", "L", "XL"}
-
-	variants := make([]*ecom.EcomVariant, 0, len(store.EcomProductIDs)*2)
-	idx := 1
-	for prodIdx, productID := range store.EcomProductIDs {
-		for j := 0; j < 2; j++ {
-			color := colors[(prodIdx+j)%len(colors)]
-			size := sizes[(prodIdx+j)%len(sizes)]
-
-			// Variant price varies slightly from base
-			basePrice := int64(rand.Intn(28000) + 1999)
-			priceAdjustment := int64(rand.Intn(2000) - 1000) // -$10 to +$10
-			variantPrice := basePrice + priceAdjustment
-			if variantPrice < 999 {
-				variantPrice = 999
-			}
-			compareAtPrice := variantPrice + int64(float64(variantPrice)*0.15)
-			costPrice := int64(float64(variantPrice) * 0.5)
-
-			variants = append(variants, &ecom.EcomVariant{
-				VariantId: fmt.Sprintf("evar-%03d", idx),
-				ProductId: productID,
-				Sku:       fmt.Sprintf("SKU-%05d-%s-%s", 10000+prodIdx+1, strings.ToUpper(color[:1]), size),
-				Name:      fmt.Sprintf("%s - %s", color, size),
-				Price: money(store, variantPrice),
-				CompareAtPrice: money(store, compareAtPrice),
-				CostPrice: money(store, costPrice),
-				StockQuantity: int32(rand.Intn(100) + 5),
-				Weight:        float64(rand.Intn(3000)+200) / 1000.0, // 0.2 to 3.2 kg
-				WeightUnit:    "kg",
-				Barcode:       fmt.Sprintf("012345%06d", idx),
-				Attributes: map[string]string{
-					"color": color,
-					"size":  size,
-				},
-				IsActive:  true,
-				SortOrder: int32(j + 1),
-				AuditInfo: createAuditInfo(),
-			})
-			idx++
-		}
-	}
-	return variants
-}
-
-// createEcomTimestamp creates a timestamp within the last year
-func createEcomTimestamp() int64 {
-	daysAgo := rand.Intn(365)
-	return time.Now().AddDate(0, 0, -daysAgo).Unix()
-}

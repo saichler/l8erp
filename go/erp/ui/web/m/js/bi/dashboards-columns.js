@@ -36,18 +36,6 @@ limitations under the License.
             ...col.col('refreshInterval', 'Refresh (sec)')
         ],
 
-        BiDashboardWidget: [
-            ...col.id('widgetId'),
-            ...col.col('dashboardId', 'Dashboard'),
-            ...col.col('name', 'Name'),
-            ...col.status('widgetType', 'Widget Type', enums.WIDGET_TYPE_VALUES, render.widgetType),
-            ...col.status('chartType', 'Chart Type', enums.CHART_TYPE_VALUES, render.chartType),
-            ...col.col('positionX', 'X'),
-            ...col.col('positionY', 'Y'),
-            ...col.col('width', 'Width'),
-            ...col.col('height', 'Height')
-        ],
-
         BiKPI: [
             ...col.id('kpiId'),
             ...col.col('code', 'Code'),
@@ -61,46 +49,10 @@ limitations under the License.
             ...col.boolean('isActive', 'Active')
         ],
 
-        BiKPIThreshold: [
-            ...col.id('thresholdId'),
-            ...col.col('kpiId', 'KPI'),
-            ...col.col('name', 'Name'),
-            ...col.status('operator', 'Operator', enums.THRESHOLD_OPERATOR_VALUES, render.thresholdOperator),
-            ...col.col('value', 'Value'),
-            ...col.col('valueUpper', 'Upper Value'),
-            ...col.col('severity', 'Severity'),
-            ...col.boolean('isActive', 'Active'),
-            ...col.date('lastTriggered', 'Last Triggered')
-        ],
-
-        BiDrilldown: [
-            ...col.id('drilldownId'),
-            ...col.col('name', 'Name'),
-            ...col.col('sourceReportId', 'Source Report'),
-            ...col.col('sourceWidgetId', 'Source Widget'),
-            ...col.col('targetReportId', 'Target Report'),
-            ...col.col('targetDashboardId', 'Target Dashboard'),
-            ...col.col('sourceField', 'Source Field'),
-            ...col.col('targetParameter', 'Target Param'),
-            ...col.boolean('isActive', 'Active')
-        ],
-
-        BiDashboardShare: [
-            ...col.id('shareId'),
-            ...col.col('dashboardId', 'Dashboard'),
-            ...col.col('sharedWithId', 'Shared With'),
-            ...col.col('sharedWithType', 'Type'),
-            ...col.status('accessLevel', 'Access Level', enums.ACCESS_LEVEL_VALUES, render.accessLevel),
-            ...col.date('sharedDate', 'Shared Date'),
-            ...col.col('sharedBy', 'Shared By'),
-            ...col.date('expiryDate', 'Expiry Date')
-        ]
     };
 
     MobileBiDashboards.primaryKeys = {
-        BiDashboard: 'dashboardId', BiDashboardWidget: 'widgetId',
-        BiKPI: 'kpiId', BiKPIThreshold: 'thresholdId',
-        BiDrilldown: 'drilldownId', BiDashboardShare: 'shareId'
+        BiDashboard: 'dashboardId', BiKPI: 'kpiId'
     };
 
 })();

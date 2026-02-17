@@ -15,12 +15,8 @@ limitations under the License.
 package mocks
 
 // Generates:
-// - BiReport
+// - BiReport (with embedded: executions, access_controls, subscriptions, schedules)
 // - BiReportTemplate
-// - BiReportSchedule
-// - BiReportExecution
-// - BiReportAccess
-// - BiReportSubscription
 
 import (
 	"fmt"
@@ -30,7 +26,7 @@ import (
 	"github.com/saichler/l8erp/go/types/bi"
 )
 
-// generateBiReports creates report definition records
+// generateBiReports creates report definition records with embedded children
 func generateBiReports(store *MockDataStore) []*bi.BiReport {
 	count := 15
 
@@ -83,11 +79,8 @@ func generateBiReports(store *MockDataStore) []*bi.BiReport {
 	reports := make([]*bi.BiReport, count)
 	for i := 0; i < count; i++ {
 		ownerID := pickRef(store.EmployeeIDs, i)
-
 		dataSourceID := pickRef(store.BiDataSourceIDs, i)
-
 		templateID := pickRef(store.BiReportTemplateIDs, i)
-
 		lastExecuted := time.Now().AddDate(0, 0, -rand.Intn(30))
 
 		reports[i] = &bi.BiReport{
@@ -110,10 +103,177 @@ func generateBiReports(store *MockDataStore) []*bi.BiReport {
 				"period": "current_month",
 				"format": "detailed",
 			},
-			AuditInfo: createAuditInfo(),
+			Executions:     generateReportExecutionsInline(i, store),
+			AccessControls: generateReportAccessInline(i, store),
+			Subscriptions:  generateReportSubscriptionsInline(i, store),
+			Schedules:      generateReportSchedulesInline(i, exportFormats),
+			AuditInfo:      createAuditInfo(),
 		}
 	}
 	return reports
+}
+
+// generateReportSchedulesInline creates 2 embedded report schedules per report
+func generateReportSchedulesInline(parentIdx int, exportFormats []bi.BiExportFormat) []*bi.BiReportSchedule {
+	frequencies := []bi.BiScheduleFrequency{
+		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_DAILY,
+		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_WEEKLY,
+		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_MONTHLY,
+	}
+	runTimes := []string{"06:00", "08:00", "12:00", "18:00", "22:00"}
+	scheduleNames := []string{"Morning Report", "Evening Report", "Weekly Summary"}
+
+	schedules := make([]*bi.BiReportSchedule, 2)
+	for j := 0; j < 2; j++ {
+		idx := parentIdx*2 + j
+		startDate := time.Now().AddDate(0, -rand.Intn(6), 0)
+		endDate := startDate.AddDate(1, 0, 0)
+		lastRun := time.Now().AddDate(0, 0, -rand.Intn(7))
+		nextRun := time.Now().AddDate(0, 0, rand.Intn(7)+1)
+
+		schedules[j] = &bi.BiReportSchedule{
+			ScheduleId:    genID("sch", idx),
+			Name:          fmt.Sprintf("%s %d", scheduleNames[j%len(scheduleNames)], parentIdx+1),
+			Description:   fmt.Sprintf("Automated schedule for report %d", parentIdx+1),
+			Frequency:     frequencies[idx%len(frequencies)],
+			StartDate:     startDate.Unix(),
+			EndDate:       endDate.Unix(),
+			RunTime:       runTimes[idx%len(runTimes)],
+			DayOfWeek:     int32(idx % 7),
+			DayOfMonth:    int32((idx % 28) + 1),
+			NextRun:       nextRun.Unix(),
+			LastRun:       lastRun.Unix(),
+			OutputFormat:  exportFormats[idx%len(exportFormats)],
+			DeliveryEmail: fmt.Sprintf("reports+schedule%d@company.com", idx+1),
+			IsActive:      j == 0, // First schedule active
+			Parameters: map[string]string{
+				"include_charts": "true",
+				"detail_level":   "summary",
+			},
+			AuditInfo: createAuditInfo(),
+		}
+	}
+	return schedules
+}
+
+// generateReportExecutionsInline creates 2 embedded executions per report
+func generateReportExecutionsInline(parentIdx int, store *MockDataStore) []*bi.BiReportExecution {
+	executionStatuses := []bi.BiExecutionStatus{
+		bi.BiExecutionStatus_BI_EXECUTION_STATUS_COMPLETED,
+		bi.BiExecutionStatus_BI_EXECUTION_STATUS_COMPLETED,
+		bi.BiExecutionStatus_BI_EXECUTION_STATUS_RUNNING,
+		bi.BiExecutionStatus_BI_EXECUTION_STATUS_FAILED,
+	}
+	exportFormats := []bi.BiExportFormat{
+		bi.BiExportFormat_BI_EXPORT_FORMAT_PDF,
+		bi.BiExportFormat_BI_EXPORT_FORMAT_EXCEL,
+		bi.BiExportFormat_BI_EXPORT_FORMAT_CSV,
+	}
+
+	executions := make([]*bi.BiReportExecution, 2)
+	for j := 0; j < 2; j++ {
+		idx := parentIdx*2 + j
+		executedBy := pickRef(store.EmployeeIDs, idx)
+		startTime := time.Now().AddDate(0, 0, -rand.Intn(30)).Add(time.Duration(-rand.Intn(24)) * time.Hour)
+		endTime := startTime.Add(time.Duration(rand.Intn(300)+10) * time.Second)
+		status := executionStatuses[idx%len(executionStatuses)]
+		var errorMessage string
+		if status == bi.BiExecutionStatus_BI_EXECUTION_STATUS_FAILED {
+			errorMessage = "Connection timeout to data source"
+		}
+		rowCount := int32(rand.Intn(10000) + 100)
+
+		executions[j] = &bi.BiReportExecution{
+			ExecutionId:  genID("exe", idx),
+			ScheduleId:   fmt.Sprintf("sch-%03d", idx+1),
+			Status:       status,
+			StartTime:    startTime.Unix(),
+			EndTime:      endTime.Unix(),
+			ExecutedBy:   executedBy,
+			RowCount:     rowCount,
+			FileSize:     int64(rowCount) * int64(rand.Intn(100)+50),
+			OutputPath:   fmt.Sprintf("/reports/output/%s/report-%03d.pdf", time.Now().Format("2006-01"), idx+1),
+			OutputFormat: exportFormats[idx%len(exportFormats)],
+			ErrorMessage: errorMessage,
+			Parameters: map[string]string{
+				"start_date": time.Now().AddDate(0, -1, 0).Format("2006-01-02"),
+				"end_date":   time.Now().Format("2006-01-02"),
+			},
+			AuditInfo: createAuditInfo(),
+		}
+	}
+	return executions
+}
+
+// generateReportAccessInline creates 2 embedded access control records per report
+func generateReportAccessInline(parentIdx int, store *MockDataStore) []*bi.BiReportAccess {
+	accessLevels := []bi.BiAccessLevel{
+		bi.BiAccessLevel_BI_ACCESS_LEVEL_VIEW,
+		bi.BiAccessLevel_BI_ACCESS_LEVEL_EXECUTE,
+		bi.BiAccessLevel_BI_ACCESS_LEVEL_EDIT,
+		bi.BiAccessLevel_BI_ACCESS_LEVEL_ADMIN,
+	}
+	roleNames := []string{"report-viewers", "report-analysts", "report-admins", "finance-team"}
+
+	accesses := make([]*bi.BiReportAccess, 2)
+	for j := 0; j < 2; j++ {
+		idx := parentIdx*2 + j
+		grantedBy := pickRef(store.EmployeeIDs, idx+5)
+		grantedDate := time.Now().AddDate(0, -rand.Intn(12), -rand.Intn(28))
+
+		var principalID string
+		principalType := "USER"
+		if j%2 == 0 {
+			principalID = pickRef(store.EmployeeIDs, idx)
+		} else {
+			principalType = "ROLE"
+			principalID = roleNames[idx%len(roleNames)]
+		}
+
+		var expiryDate int64
+		if j == 0 {
+			expiryDate = grantedDate.AddDate(1, 0, 0).Unix()
+		}
+
+		accesses[j] = &bi.BiReportAccess{
+			AccessId:      genID("acc", idx),
+			PrincipalId:   principalID,
+			PrincipalType: principalType,
+			AccessLevel:   accessLevels[idx%len(accessLevels)],
+			GrantedDate:   grantedDate.Unix(),
+			GrantedBy:     grantedBy,
+			ExpiryDate:    expiryDate,
+			AuditInfo:     createAuditInfo(),
+		}
+	}
+	return accesses
+}
+
+// generateReportSubscriptionsInline creates 2 embedded subscriptions per report
+func generateReportSubscriptionsInline(parentIdx int, store *MockDataStore) []*bi.BiReportSubscription {
+	exportFormats := []bi.BiExportFormat{
+		bi.BiExportFormat_BI_EXPORT_FORMAT_PDF,
+		bi.BiExportFormat_BI_EXPORT_FORMAT_EXCEL,
+		bi.BiExportFormat_BI_EXPORT_FORMAT_CSV,
+	}
+
+	subs := make([]*bi.BiReportSubscription, 2)
+	for j := 0; j < 2; j++ {
+		idx := parentIdx*2 + j
+		subscriberID := pickRef(store.EmployeeIDs, idx)
+
+		subs[j] = &bi.BiReportSubscription{
+			SubscriptionId: genID("sub", idx),
+			ScheduleId:     fmt.Sprintf("sch-%03d", idx+1),
+			SubscriberId:   subscriberID,
+			Format:         exportFormats[idx%len(exportFormats)],
+			DeliveryEmail:  fmt.Sprintf("user%d@company.com", idx+1),
+			IncludeEmpty:   j == 0,
+			IsActive:       true,
+			AuditInfo:      createAuditInfo(),
+		}
+	}
+	return subs
 }
 
 // generateBiReportTemplates creates report template records
@@ -167,251 +327,4 @@ func generateBiReportTemplates(store *MockDataStore) []*bi.BiReportTemplate {
 		}
 	}
 	return templates
-}
-
-// generateBiReportSchedules creates report schedule records
-func generateBiReportSchedules(store *MockDataStore) []*bi.BiReportSchedule {
-	count := 12
-
-	// Flavorable frequency distributions: 35% DAILY, 30% WEEKLY, 25% MONTHLY, 10% QUARTERLY
-	frequencies := []bi.BiScheduleFrequency{
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_DAILY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_DAILY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_DAILY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_DAILY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_WEEKLY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_WEEKLY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_WEEKLY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_MONTHLY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_MONTHLY,
-		bi.BiScheduleFrequency_BI_SCHEDULE_FREQUENCY_QUARTERLY,
-	}
-
-	exportFormats := []bi.BiExportFormat{
-		bi.BiExportFormat_BI_EXPORT_FORMAT_PDF,
-		bi.BiExportFormat_BI_EXPORT_FORMAT_EXCEL,
-		bi.BiExportFormat_BI_EXPORT_FORMAT_CSV,
-	}
-
-	runTimes := []string{"06:00", "08:00", "12:00", "18:00", "22:00"}
-
-	scheduleNames := []string{
-		"Daily Sales Report Schedule", "Weekly Finance Summary", "Monthly Executive Report",
-		"Daily Inventory Update", "Weekly HR Metrics", "Monthly Operations Review",
-		"Quarterly Business Review", "Daily Customer Activity", "Weekly Production Summary",
-		"Monthly Compliance Report", "Daily Transaction Log", "Weekly Marketing Report",
-	}
-
-	schedules := make([]*bi.BiReportSchedule, count)
-	for i := 0; i < count; i++ {
-		reportID := pickRef(store.BiReportIDs, i)
-
-		startDate := time.Now().AddDate(0, -rand.Intn(6), 0)
-		endDate := startDate.AddDate(1, 0, 0)
-		lastRun := time.Now().AddDate(0, 0, -rand.Intn(7))
-		nextRun := time.Now().AddDate(0, 0, rand.Intn(7)+1)
-
-		schedules[i] = &bi.BiReportSchedule{
-			ScheduleId:    genID("sch", i),
-			ReportId:      reportID,
-			Name:          scheduleNames[i%len(scheduleNames)],
-			Description:   fmt.Sprintf("Automated schedule for %s", scheduleNames[i%len(scheduleNames)]),
-			Frequency:     frequencies[i%len(frequencies)],
-			StartDate:     startDate.Unix(),
-			EndDate:       endDate.Unix(),
-			RunTime:       runTimes[i%len(runTimes)],
-			DayOfWeek:     int32(i % 7),
-			DayOfMonth:    int32((i % 28) + 1),
-			NextRun:       nextRun.Unix(),
-			LastRun:       lastRun.Unix(),
-			OutputFormat:  exportFormats[i%len(exportFormats)],
-			DeliveryEmail: fmt.Sprintf("reports+schedule%d@company.com", i+1),
-			IsActive:      i < 10, // 83% active
-			Parameters: map[string]string{
-				"include_charts": "true",
-				"detail_level":   "summary",
-			},
-			AuditInfo: createAuditInfo(),
-		}
-	}
-	return schedules
-}
-
-// generateBiReportExecutions creates report execution records
-func generateBiReportExecutions(store *MockDataStore) []*bi.BiReportExecution {
-	count := 30
-
-	// Flavorable status distributions: 70% COMPLETED, 15% RUNNING, 10% FAILED, 5% CANCELLED
-	executionStatuses := []bi.BiExecutionStatus{
-		bi.BiExecutionStatus_BI_EXECUTION_STATUS_COMPLETED,
-		bi.BiExecutionStatus_BI_EXECUTION_STATUS_COMPLETED,
-		bi.BiExecutionStatus_BI_EXECUTION_STATUS_COMPLETED,
-		bi.BiExecutionStatus_BI_EXECUTION_STATUS_COMPLETED,
-		bi.BiExecutionStatus_BI_EXECUTION_STATUS_COMPLETED,
-		bi.BiExecutionStatus_BI_EXECUTION_STATUS_COMPLETED,
-		bi.BiExecutionStatus_BI_EXECUTION_STATUS_COMPLETED,
-		bi.BiExecutionStatus_BI_EXECUTION_STATUS_RUNNING,
-		bi.BiExecutionStatus_BI_EXECUTION_STATUS_FAILED,
-		bi.BiExecutionStatus_BI_EXECUTION_STATUS_CANCELLED,
-	}
-
-	exportFormats := []bi.BiExportFormat{
-		bi.BiExportFormat_BI_EXPORT_FORMAT_PDF,
-		bi.BiExportFormat_BI_EXPORT_FORMAT_EXCEL,
-		bi.BiExportFormat_BI_EXPORT_FORMAT_CSV,
-		bi.BiExportFormat_BI_EXPORT_FORMAT_HTML,
-	}
-
-	errorMessages := []string{
-		"",
-		"",
-		"",
-		"Connection timeout to data source",
-		"Insufficient permissions for query",
-		"Data source unavailable",
-	}
-
-	executions := make([]*bi.BiReportExecution, count)
-	for i := 0; i < count; i++ {
-		reportID := pickRef(store.BiReportIDs, i)
-
-		scheduleID := ""
-		if len(store.BiReportScheduleIDs) > 0 && i%2 == 0 { // 50% scheduled executions
-			scheduleID = store.BiReportScheduleIDs[i%len(store.BiReportScheduleIDs)]
-		}
-
-		executedBy := pickRef(store.EmployeeIDs, i)
-
-		startTime := time.Now().AddDate(0, 0, -rand.Intn(30)).Add(time.Duration(-rand.Intn(24)) * time.Hour)
-		executionDuration := time.Duration(rand.Intn(300)+10) * time.Second
-		endTime := startTime.Add(executionDuration)
-
-		status := executionStatuses[i%len(executionStatuses)]
-		var errorMessage string
-		if status == bi.BiExecutionStatus_BI_EXECUTION_STATUS_FAILED {
-			errorMessage = errorMessages[rand.Intn(len(errorMessages)-3)+3]
-		}
-
-		rowCount := int32(rand.Intn(10000) + 100)
-		fileSize := int64(rowCount) * int64(rand.Intn(100)+50) // Approximate bytes per row
-
-		executions[i] = &bi.BiReportExecution{
-			ExecutionId:  genID("exe", i),
-			ReportId:     reportID,
-			ScheduleId:   scheduleID,
-			Status:       status,
-			StartTime:    startTime.Unix(),
-			EndTime:      endTime.Unix(),
-			ExecutedBy:   executedBy,
-			RowCount:     rowCount,
-			FileSize:     fileSize,
-			OutputPath:   fmt.Sprintf("/reports/output/%s/report-%03d.%s", time.Now().Format("2006-01"), i+1, "pdf"),
-			OutputFormat: exportFormats[i%len(exportFormats)],
-			ErrorMessage: errorMessage,
-			Parameters: map[string]string{
-				"start_date": time.Now().AddDate(0, -1, 0).Format("2006-01-02"),
-				"end_date":   time.Now().Format("2006-01-02"),
-			},
-			AuditInfo: createAuditInfo(),
-		}
-	}
-	return executions
-}
-
-// generateBiReportAccess creates report access control records
-func generateBiReportAccess(store *MockDataStore) []*bi.BiReportAccess {
-	count := 20
-
-	// Flavorable access level distributions: 50% VIEW, 25% EXECUTE, 15% EDIT, 10% ADMIN
-	accessLevels := []bi.BiAccessLevel{
-		bi.BiAccessLevel_BI_ACCESS_LEVEL_VIEW,
-		bi.BiAccessLevel_BI_ACCESS_LEVEL_VIEW,
-		bi.BiAccessLevel_BI_ACCESS_LEVEL_VIEW,
-		bi.BiAccessLevel_BI_ACCESS_LEVEL_VIEW,
-		bi.BiAccessLevel_BI_ACCESS_LEVEL_VIEW,
-		bi.BiAccessLevel_BI_ACCESS_LEVEL_EXECUTE,
-		bi.BiAccessLevel_BI_ACCESS_LEVEL_EXECUTE,
-		bi.BiAccessLevel_BI_ACCESS_LEVEL_EDIT,
-		bi.BiAccessLevel_BI_ACCESS_LEVEL_EDIT,
-		bi.BiAccessLevel_BI_ACCESS_LEVEL_ADMIN,
-	}
-
-	principalTypes := []string{"USER", "ROLE"}
-
-	roleNames := []string{"report-viewers", "report-analysts", "report-admins", "finance-team", "sales-managers"}
-
-	accessRecords := make([]*bi.BiReportAccess, count)
-	for i := 0; i < count; i++ {
-		reportID := pickRef(store.BiReportIDs, i)
-
-		principalType := principalTypes[i%len(principalTypes)]
-		var principalID string
-		if principalType == "USER" && len(store.EmployeeIDs) > 0 {
-			principalID = store.EmployeeIDs[i%len(store.EmployeeIDs)]
-		} else {
-			principalID = roleNames[i%len(roleNames)]
-		}
-
-		grantedBy := pickRef(store.EmployeeIDs, (i+5))
-
-		grantedDate := time.Now().AddDate(0, -rand.Intn(12), -rand.Intn(28))
-		var expiryDate int64
-		if i%4 == 0 { // 25% have expiry dates
-			expiryDate = grantedDate.AddDate(1, 0, 0).Unix()
-		}
-
-		accessRecords[i] = &bi.BiReportAccess{
-			AccessId:      genID("acc", i),
-			ReportId:      reportID,
-			PrincipalId:   principalID,
-			PrincipalType: principalType,
-			AccessLevel:   accessLevels[i%len(accessLevels)],
-			GrantedDate:   grantedDate.Unix(),
-			GrantedBy:     grantedBy,
-			ExpiryDate:    expiryDate,
-			AuditInfo:     createAuditInfo(),
-		}
-	}
-	return accessRecords
-}
-
-// generateBiReportSubscriptions creates report subscription records
-func generateBiReportSubscriptions(store *MockDataStore) []*bi.BiReportSubscription {
-	count := 15
-
-	// Flavorable format distributions: 40% PDF, 35% EXCEL, 25% CSV
-	exportFormats := []bi.BiExportFormat{
-		bi.BiExportFormat_BI_EXPORT_FORMAT_PDF,
-		bi.BiExportFormat_BI_EXPORT_FORMAT_PDF,
-		bi.BiExportFormat_BI_EXPORT_FORMAT_PDF,
-		bi.BiExportFormat_BI_EXPORT_FORMAT_PDF,
-		bi.BiExportFormat_BI_EXPORT_FORMAT_EXCEL,
-		bi.BiExportFormat_BI_EXPORT_FORMAT_EXCEL,
-		bi.BiExportFormat_BI_EXPORT_FORMAT_EXCEL,
-		bi.BiExportFormat_BI_EXPORT_FORMAT_CSV,
-		bi.BiExportFormat_BI_EXPORT_FORMAT_CSV,
-		bi.BiExportFormat_BI_EXPORT_FORMAT_CSV,
-	}
-
-	subscriptions := make([]*bi.BiReportSubscription, count)
-	for i := 0; i < count; i++ {
-		reportID := pickRef(store.BiReportIDs, i)
-
-		scheduleID := pickRef(store.BiReportScheduleIDs, i)
-
-		subscriberID := pickRef(store.EmployeeIDs, i)
-
-		subscriptions[i] = &bi.BiReportSubscription{
-			SubscriptionId: genID("sub", i),
-			ReportId:       reportID,
-			ScheduleId:     scheduleID,
-			SubscriberId:   subscriberID,
-			Format:         exportFormats[i%len(exportFormats)],
-			DeliveryEmail:  fmt.Sprintf("user%d@company.com", i+1),
-			IncludeEmpty:   i%5 == 0, // 20% include empty reports
-			IsActive:       i < 12,   // 80% active
-			AuditInfo:      createAuditInfo(),
-		}
-	}
-	return subscriptions
 }

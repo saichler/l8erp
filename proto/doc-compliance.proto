@@ -90,11 +90,9 @@ message DocLegalHoldList {
 // ACCESS LOG
 // =====================
 
-// @PrimeObject
 // DocAccessLog records document access events
 message DocAccessLog {
   string log_id = 1;
-  string document_id = 2;                   // cross-ref: DocDocument
   string version_id = 3;                    // cross-ref: DocDocumentVersion
   DocAccessAction action = 4;
   string user_id = 5;                       // cross-ref: HCM Employee
@@ -110,10 +108,6 @@ message DocAccessLog {
   erp.AuditInfo audit_info = 15;
 }
 
-message DocAccessLogList {
-  repeated DocAccessLog list = 1;
-  l8api.L8MetaData metadata = 2;
-}
 
 // =====================
 // ARCHIVE JOB
@@ -150,11 +144,9 @@ message DocArchiveJobList {
 // AUDIT TRAIL
 // =====================
 
-// @PrimeObject
 // DocAuditTrail records all changes to documents
 message DocAuditTrail {
   string trail_id = 1;
-  string document_id = 2;                   // cross-ref: DocDocument
   string version_id = 3;                    // cross-ref: DocDocumentVersion
   string action = 4;                        // e.g., "created", "modified", "deleted"
   string entity_type = 5;                   // e.g., "document", "folder", "workflow"
@@ -171,7 +163,3 @@ message DocAuditTrail {
   erp.AuditInfo audit_info = 16;
 }
 
-message DocAuditTrailList {
-  repeated DocAuditTrail list = 1;
-  l8api.L8MetaData metadata = 2;
-}

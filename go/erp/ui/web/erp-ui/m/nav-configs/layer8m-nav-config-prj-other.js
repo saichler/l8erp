@@ -67,24 +67,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             services: {
                 'reporting': [
                     { key: 'reports', label: 'Reports', icon: 'documents', endpoint: '/35/BiReport', model: 'BiReport', idField: 'reportId' },
-                    { key: 'report-templates', label: 'Templates', icon: 'documents', endpoint: '/35/BiRptTpl', model: 'BiReportTemplate', idField: 'templateId' },
-                    { key: 'report-schedules', label: 'Schedules', icon: 'time', endpoint: '/35/BiRptSched', model: 'BiReportSchedule', idField: 'scheduleId' },
-                    { key: 'report-executions', label: 'Executions', icon: 'jobs', endpoint: '/35/BiRptExec', model: 'BiReportExecution', idField: 'executionId' },
-                    { key: 'report-accesses', label: 'Access', icon: 'security', endpoint: '/35/BiRptAccs', model: 'BiReportAccess', idField: 'accessId' },
-                    { key: 'report-subscriptions', label: 'Subscriptions', icon: 'hcm', endpoint: '/35/BiRptSub', model: 'BiReportSubscription', idField: 'subscriptionId' }
+                    { key: 'report-templates', label: 'Templates', icon: 'documents', endpoint: '/35/BiRptTpl', model: 'BiReportTemplate', idField: 'templateId' }
                 ],
                 'dashboards': [
                     { key: 'dashboards', label: 'Dashboards', icon: 'bi', endpoint: '/35/BiDashbrd', model: 'BiDashboard', idField: 'dashboardId' },
-                    { key: 'widgets', label: 'Widgets', icon: 'inventory', endpoint: '/35/BiWidget', model: 'BiDashboardWidget', idField: 'widgetId' },
-                    { key: 'kpis', label: 'KPIs', icon: 'talent', endpoint: '/35/BiKPI', model: 'BiKPI', idField: 'kpiId' },
-                    { key: 'kpi-thresholds', label: 'Thresholds', icon: 'compliance', endpoint: '/35/BiKPIThrs', model: 'BiKPIThreshold', idField: 'thresholdId' },
-                    { key: 'drilldowns', label: 'Drilldowns', icon: 'demand-planning', endpoint: '/35/BiDrill', model: 'BiDrilldown', idField: 'drilldownId' },
-                    { key: 'dashboard-shares', label: 'Shares', icon: 'scm', endpoint: '/35/BiDashShr', model: 'BiDashboardShare', idField: 'shareId' }
+                    { key: 'kpis', label: 'KPIs', icon: 'talent', endpoint: '/35/BiKPI', model: 'BiKPI', idField: 'kpiId' }
                 ],
                 'analytics': [
                     { key: 'data-cubes', label: 'Data Cubes', icon: 'inventory', endpoint: '/35/BiCube', model: 'BiDataCube', idField: 'cubeId' },
                     { key: 'analysis-models', label: 'Models', icon: 'learning', endpoint: '/35/BiAnaModel', model: 'BiAnalysisModel', idField: 'modelId' },
-                    { key: 'predictions', label: 'Predictions', icon: 'talent', endpoint: '/35/BiPredict', model: 'BiPrediction', idField: 'predictionId' },
                     { key: 'trend-analyses', label: 'Trends', icon: 'demand-planning', endpoint: '/35/BiTrend', model: 'BiTrendAnalysis', idField: 'analysisId' },
                     { key: 'scenarios', label: 'Scenarios', icon: 'documents', endpoint: '/35/BiScenario', model: 'BiScenario', idField: 'scenarioId' },
                     { key: 'benchmarks', label: 'Benchmarks', icon: 'financial', endpoint: '/35/BiBenchmrk', model: 'BiBenchmark', idField: 'benchmarkId' }
@@ -92,7 +83,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 'datamanagement': [
                     { key: 'data-sources', label: 'Data Sources', icon: 'scm', endpoint: '/35/BiDataSrc', model: 'BiDataSource', idField: 'sourceId' },
                     { key: 'etl-jobs', label: 'ETL Jobs', icon: 'jobs', endpoint: '/35/BiETLJob', model: 'BiETLJob', idField: 'jobId' },
-                    { key: 'etl-schedules', label: 'ETL Schedules', icon: 'time', endpoint: '/35/BiETLSched', model: 'BiETLSchedule', idField: 'scheduleId' },
                     { key: 'data-quality-rules', label: 'Quality Rules', icon: 'compliance', endpoint: '/35/BiDQRule', model: 'BiDataQualityRule', idField: 'ruleId' },
                     { key: 'master-data-configs', label: 'Master Data', icon: 'organizations', endpoint: '/35/BiMDConfig', model: 'BiMasterDataConfig', idField: 'configId' },
                     { key: 'data-governances', label: 'Governance', icon: 'security', endpoint: '/35/BiDataGov', model: 'BiDataGovernance', idField: 'governanceId' }
@@ -114,29 +104,20 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'documents', label: 'Documents', icon: 'documents', endpoint: '/45/DocDoc', model: 'DocDocument', idField: 'documentId' },
                     { key: 'folders', label: 'Folders', icon: 'job-families', endpoint: '/45/DocFolder', model: 'DocFolder', idField: 'folderId' },
                     { key: 'categories', label: 'Categories', icon: 'inventory', endpoint: '/45/DocCategry', model: 'DocCategory', idField: 'categoryId' },
-                    { key: 'tags', label: 'Tags', icon: 'benefits', endpoint: '/45/DocTag', model: 'DocTag', idField: 'tagId' },
-                    { key: 'versions', label: 'Versions', icon: 'time', endpoint: '/45/DocVersion', model: 'DocDocumentVersion', idField: 'versionId' }
+                    { key: 'tags', label: 'Tags', icon: 'benefits', endpoint: '/45/DocTag', model: 'DocTag', idField: 'tagId' }
                 ],
                 'workflow': [
-                    { key: 'checkouts', label: 'Checkouts', icon: 'procurement', endpoint: '/45/DocChkout', model: 'DocCheckout', idField: 'checkoutId' },
-                    { key: 'approval-workflows', label: 'Approvals', icon: 'projects', endpoint: '/45/DocAprvWf', model: 'DocApprovalWorkflow', idField: 'workflowId' },
-                    { key: 'workflow-steps', label: 'Steps', icon: 'jobs', endpoint: '/45/DocWfStep', model: 'DocWorkflowStep', idField: 'stepId' },
-                    { key: 'signatures', label: 'Signatures', icon: 'hcm', endpoint: '/45/DocSign', model: 'DocSignature', idField: 'signatureId' },
-                    { key: 'review-comments', label: 'Comments', icon: 'crm', endpoint: '/45/DocReview', model: 'DocReviewComment', idField: 'commentId' }
+                    { key: 'approval-workflows', label: 'Approvals', icon: 'projects', endpoint: '/45/DocAprvWf', model: 'DocApprovalWorkflow', idField: 'workflowId' }
                 ],
                 'integration': [
-                    { key: 'attachments', label: 'Attachments', icon: 'documents', endpoint: '/45/DocAttach', model: 'DocAttachment', idField: 'attachmentId' },
                     { key: 'templates', label: 'Templates', icon: 'learning', endpoint: '/45/DocTmpl', model: 'DocTemplate', idField: 'templateId' },
-                    { key: 'template-fields', label: 'Fields', icon: 'positions', endpoint: '/45/DocTmplFld', model: 'DocTemplateField', idField: 'fieldId' },
                     { key: 'email-captures', label: 'Email Capture', icon: 'crm', endpoint: '/45/DocEmail', model: 'DocEmailCapture', idField: 'captureId' },
                     { key: 'scan-jobs', label: 'Scan Jobs', icon: 'jobs', endpoint: '/45/DocScan', model: 'DocScanJob', idField: 'scanJobId' }
                 ],
                 'compliance': [
                     { key: 'retention-policies', label: 'Retention', icon: 'time', endpoint: '/45/DocRetPol', model: 'DocRetentionPolicy', idField: 'policyId' },
                     { key: 'legal-holds', label: 'Legal Holds', icon: 'compliance', endpoint: '/45/DocLglHold', model: 'DocLegalHold', idField: 'holdId' },
-                    { key: 'access-logs', label: 'Access Logs', icon: 'bi', endpoint: '/45/DocAccLog', model: 'DocAccessLog', idField: 'logId' },
-                    { key: 'archive-jobs', label: 'Archives', icon: 'warehouse', endpoint: '/45/DocArchive', model: 'DocArchiveJob', idField: 'jobId' },
-                    { key: 'audit-trails', label: 'Audit Trails', icon: 'security', endpoint: '/45/DocAudit', model: 'DocAuditTrail', idField: 'trailId' }
+                    { key: 'archive-jobs', label: 'Archives', icon: 'warehouse', endpoint: '/45/DocArchive', model: 'DocArchiveJob', idField: 'jobId' }
                 ]
             }
         },
@@ -154,22 +135,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 'catalog': [
                     { key: 'products', label: 'Products', icon: 'inventory', endpoint: '/100/EcomProd', model: 'EcomProduct', idField: 'productId' },
                     { key: 'categories', label: 'Categories', icon: 'job-families', endpoint: '/100/EcomCat', model: 'EcomCategory', idField: 'categoryId' },
-                    { key: 'attributes', label: 'Attributes', icon: 'positions', endpoint: '/100/EcomAttr', model: 'EcomAttribute', idField: 'attributeId' },
-                    { key: 'images', label: 'Images', icon: 'documents', endpoint: '/100/EcomImage', model: 'EcomImage', idField: 'imageId' },
-                    { key: 'variants', label: 'Variants', icon: 'inventory', endpoint: '/100/EcomVar', model: 'EcomVariant', idField: 'variantId' }
+                    { key: 'attributes', label: 'Attributes', icon: 'positions', endpoint: '/100/EcomAttr', model: 'EcomAttribute', idField: 'attributeId' }
                 ],
                 'orders': [
                     { key: 'orders', label: 'Orders', icon: 'procurement', endpoint: '/100/EcomOrder', model: 'EcomOrder', idField: 'orderId' },
-                    { key: 'order-lines', label: 'Order Lines', icon: 'positions', endpoint: '/100/EcomOrdLn', model: 'EcomOrderLine', idField: 'lineId' },
-                    { key: 'order-statuses', label: 'Status History', icon: 'time', endpoint: '/100/EcomOrdSts', model: 'EcomOrderStatusHistory', idField: 'statusId' },
-                    { key: 'returns', label: 'Returns', icon: 'logistics', endpoint: '/100/EcomReturn', model: 'EcomReturn', idField: 'returnId' },
-                    { key: 'return-lines', label: 'Return Lines', icon: 'positions', endpoint: '/100/EcomRetLn', model: 'EcomReturnLine', idField: 'lineId' }
+                    { key: 'returns', label: 'Returns', icon: 'logistics', endpoint: '/100/EcomReturn', model: 'EcomReturn', idField: 'returnId' }
                 ],
                 'customers': [
                     { key: 'customers', label: 'Customers', icon: 'hcm', endpoint: '/100/EcomCust', model: 'EcomCustomer', idField: 'customerId' },
-                    { key: 'addresses', label: 'Addresses', icon: 'warehouse', endpoint: '/100/EcomAddr', model: 'EcomCustomerAddress', idField: 'addressId' },
                     { key: 'wishlists', label: 'Wishlists', icon: 'benefits', endpoint: '/100/EcomWish', model: 'EcomWishlist', idField: 'wishlistId' },
-                    { key: 'wishlist-items', label: 'Wishlist Items', icon: 'inventory', endpoint: '/100/EcomWishIt', model: 'EcomWishlistItem', idField: 'itemId' },
                     { key: 'carts', label: 'Carts', icon: 'ecommerce', endpoint: '/100/EcomCart', model: 'EcomCart', idField: 'cartId' }
                 ],
                 'promotions': [
@@ -194,30 +168,21 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             services: {
                 'regulatory': [
                     { key: 'regulations', label: 'Regulations', icon: 'documents', endpoint: '/110/CompReg', model: 'CompRegulation', idField: 'regulationId' },
-                    { key: 'requirements', label: 'Requirements', icon: 'documents', endpoint: '/110/CompReq', model: 'CompRequirement', idField: 'requirementId' },
-                    { key: 'compliance-statuses', label: 'Compliance Status', icon: 'compliance', endpoint: '/110/CompStatus', model: 'CompComplianceStatus', idField: 'statusId' },
-                    { key: 'certifications', label: 'Certifications', icon: 'talent', endpoint: '/110/CompCert', model: 'CompCertification', idField: 'certificationId' },
-                    { key: 'violations', label: 'Violations', icon: 'compliance', endpoint: '/110/CompVioltn', model: 'CompViolationRecord', idField: 'violationId' }
+                    { key: 'certifications', label: 'Certifications', icon: 'talent', endpoint: '/110/CompCert', model: 'CompCertification', idField: 'certificationId' }
                 ],
                 'controls': [
                     { key: 'controls', label: 'Controls', icon: 'compliance', endpoint: '/110/CompCtrl', model: 'CompControl', idField: 'controlId' },
-                    { key: 'assessments', label: 'Assessments', icon: 'bi', endpoint: '/110/CompCtrlAs', model: 'CompControlAssessment', idField: 'assessmentId' },
                     { key: 'policies', label: 'Policies', icon: 'documents', endpoint: '/110/CompPolicy', model: 'CompPolicyDocument', idField: 'documentId' },
-                    { key: 'approval-matrices', label: 'Approval Matrices', icon: 'projects', endpoint: '/110/CompAprvMx', model: 'CompApprovalMatrix', idField: 'matrixId' },
-                    { key: 'segregation-rules', label: 'Segregation Rules', icon: 'scm', endpoint: '/110/CompSegrul', model: 'CompSegregationRule', idField: 'ruleId' }
+                    { key: 'approval-matrices', label: 'Approval Matrices', icon: 'projects', endpoint: '/110/CompAprvMx', model: 'CompApprovalMatrix', idField: 'matrixId' }
                 ],
                 'risk': [
                     { key: 'risk-registers', label: 'Risk Registers', icon: 'documents', endpoint: '/110/CompRisk', model: 'CompRiskRegister', idField: 'riskId' },
-                    { key: 'risk-assessments', label: 'Risk Assessments', icon: 'bi', endpoint: '/110/CompRiskAs', model: 'CompRiskAssessment', idField: 'assessmentId' },
                     { key: 'incidents', label: 'Incidents', icon: 'compliance', endpoint: '/110/CompIncdnt', model: 'CompIncident', idField: 'incidentId' },
-                    { key: 'mitigation-plans', label: 'Mitigation Plans', icon: 'projects', endpoint: '/110/CompMitig', model: 'CompMitigationPlan', idField: 'planId' },
                     { key: 'insurance-policies', label: 'Insurance Policies', icon: 'documents', endpoint: '/110/CompInsur', model: 'CompInsurancePolicy', idField: 'insuranceId' }
                 ],
                 'audit': [
                     { key: 'audit-schedules', label: 'Audit Schedules', icon: 'time', endpoint: '/110/CompAudSch', model: 'CompAuditSchedule', idField: 'scheduleId' },
                     { key: 'audit-findings', label: 'Audit Findings', icon: 'compliance', endpoint: '/110/CompAudFnd', model: 'CompAuditFinding', idField: 'findingId' },
-                    { key: 'remediation-actions', label: 'Remediation Actions', icon: 'projects', endpoint: '/110/CompRemed', model: 'CompRemediationAction', idField: 'actionId' },
-                    { key: 'audit-reports', label: 'Audit Reports', icon: 'documents', endpoint: '/110/CompAudRpt', model: 'CompAuditReport', idField: 'reportId' },
                     { key: 'compliance-reports', label: 'Compliance Reports', icon: 'documents', endpoint: '/110/CompCmpRpt', model: 'CompComplianceReport', idField: 'reportId' }
                 ]
             }
