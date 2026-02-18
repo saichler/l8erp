@@ -43,7 +43,7 @@ window.DashboardConfig = {
             icon: 'sales',
             endpoint: '/60/SalesOrder',
             model: 'SalesOrder',
-            query: 'select * from SalesOrder where status in [2,3,4] limit 1 page 0',
+            query: 'select * from SalesOrder where status=2 limit 1 page 0',
             section: 'sales',
             countField: 'Total'
         },
@@ -53,7 +53,7 @@ window.DashboardConfig = {
             icon: 'crm',
             endpoint: '/80/CrmCase',
             model: 'CrmCase',
-            query: 'select * from CrmCase where status in [1,2,3,4] limit 1 page 0',
+            query: 'select * from CrmCase where status=2 limit 1 page 0',
             section: 'crm',
             countField: 'Total'
         },
@@ -63,7 +63,7 @@ window.DashboardConfig = {
             icon: 'projects',
             endpoint: '/90/PrjProj',
             model: 'PrjProject',
-            query: 'select * from PrjProject where status in [2,3] limit 1 page 0',
+            query: 'select * from PrjProject where status=3 limit 1 page 0',
             section: 'projects',
             countField: 'Total'
         },
@@ -73,7 +73,7 @@ window.DashboardConfig = {
             icon: 'fin',
             endpoint: '/40/SalesInv',
             model: 'SalesInvoice',
-            query: 'select * from SalesInvoice where status in [3,4,6] limit 1 page 0',
+            query: 'select * from SalesInvoice where status=3 limit 1 page 0',
             section: 'financial',
             countField: 'Total'
         },
@@ -83,7 +83,7 @@ window.DashboardConfig = {
             icon: 'scm',
             endpoint: '/50/PurchOrder',
             model: 'ScmPurchaseOrder',
-            query: 'select * from ScmPurchaseOrder where status in [2,3,4] limit 1 page 0',
+            query: 'select * from ScmPurchaseOrder where status=2 limit 1 page 0',
             section: 'scm',
             countField: 'Total'
         },
@@ -123,7 +123,7 @@ window.DashboardConfig = {
             icon: 'ecommerce',
             endpoint: '/100/EcomOrder',
             model: 'EcomOrder',
-            query: 'select * from EcomOrder where status in [1,2,3,4] limit 1 page 0',
+            query: 'select * from EcomOrder where status=2 limit 1 page 0',
             section: 'ecommerce',
             countField: 'Total'
         },
@@ -133,7 +133,7 @@ window.DashboardConfig = {
             icon: 'compliance',
             endpoint: '/110/CompIncdnt',
             model: 'CompIncident',
-            query: 'select * from CompIncident where status in [1,2,3] limit 1 page 0',
+            query: 'select * from CompIncident where status=2 limit 1 page 0',
             section: 'compliance',
             countField: 'Total'
         }
