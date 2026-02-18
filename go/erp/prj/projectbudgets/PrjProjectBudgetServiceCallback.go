@@ -21,9 +21,16 @@ import (
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
+func computeProjectBudget(pb *prj.PrjProjectBudget) error {
+	pb.RemainingAmount = common.MoneySubtract(pb.BudgetedAmount, pb.ActualAmount)
+	pb.RemainingHours = pb.BudgetedHours - pb.ActualHours
+	return nil
+}
+
 func newPrjProjectBudgetServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjProjectBudget]("PrjProjectBudget",
 		func(e *prj.PrjProjectBudget) { common.GenerateID(&e.BudgetId) }).
+		Compute(computeProjectBudget).
 		Require(func(e *prj.PrjProjectBudget) string { return e.BudgetId }, "BudgetId").
 		OptionalMoney(func(e *prj.PrjProjectBudget) *erp.Money { return e.BudgetedAmount }, "BudgetedAmount").
 		OptionalMoney(func(e *prj.PrjProjectBudget) *erp.Money { return e.CommittedAmount }, "CommittedAmount").

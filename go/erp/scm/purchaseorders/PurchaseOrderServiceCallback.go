@@ -25,11 +25,25 @@ func newPurchaseOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmPurchaseOrder]("ScmPurchaseOrder",
 		func(e *scm.ScmPurchaseOrder) { common.GenerateID(&e.PurchaseOrderId) }).
 		StatusTransition(purchaseOrderTransitions()).
+		Compute(computePurchaseOrderTotals).
 		Require(func(e *scm.ScmPurchaseOrder) string { return e.PurchaseOrderId }, "PurchaseOrderId").
 		Require(func(e *scm.ScmPurchaseOrder) string { return e.VendorId }, "VendorId").
 		Enum(func(e *scm.ScmPurchaseOrder) int32 { return int32(e.Status) }, scm.ScmPurchaseOrderStatus_name, "Status").
 		OptionalMoney(func(e *scm.ScmPurchaseOrder) *erp.Money { return e.TotalAmount }, "TotalAmount").
 		Build()
+}
+
+func computePurchaseOrderTotals(po *scm.ScmPurchaseOrder) error {
+	for _, line := range po.Lines {
+		if line.UnitPrice != nil {
+			line.TotalPrice = &erp.Money{
+				Amount:     int64(line.Quantity * float64(line.UnitPrice.Amount)),
+				CurrencyId: line.UnitPrice.CurrencyId,
+			}
+		}
+	}
+	po.TotalAmount = common.SumLineMoney(po.Lines, func(l *scm.ScmPurchaseOrderLine) *erp.Money { return l.TotalPrice })
+	return nil
 }
 
 func purchaseOrderTransitions() *common.StatusTransitionConfig[scm.ScmPurchaseOrder] {

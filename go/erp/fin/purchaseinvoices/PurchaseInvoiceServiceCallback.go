@@ -25,6 +25,7 @@ func newPurchaseInvoiceServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[fin.PurchaseInvoice]("PurchaseInvoice",
 		func(e *fin.PurchaseInvoice) { common.GenerateID(&e.InvoiceId) }).
 		StatusTransition(purchaseInvoiceTransitions()).
+		Compute(computePurchaseInvoiceTotals).
 		Require(func(e *fin.PurchaseInvoice) string { return e.InvoiceId }, "InvoiceId").
 		Require(func(e *fin.PurchaseInvoice) string { return e.VendorId }, "VendorId").
 		Require(func(e *fin.PurchaseInvoice) string { return e.InvoiceNumber }, "InvoiceNumber").
@@ -36,6 +37,22 @@ func newPurchaseInvoiceServiceCallback() ifs.IServiceCallback {
 		OptionalMoney(func(e *fin.PurchaseInvoice) *erp.Money { return e.BalanceDue }, "BalanceDue").
 		DateAfter(func(e *fin.PurchaseInvoice) int64 { return e.DueDate }, func(e *fin.PurchaseInvoice) int64 { return e.InvoiceDate }, "DueDate", "InvoiceDate").
 		Build()
+}
+
+func computePurchaseInvoiceTotals(inv *fin.PurchaseInvoice) error {
+	for _, line := range inv.Lines {
+		if line.UnitPrice != nil && line.Quantity > 0 {
+			line.LineAmount = &erp.Money{
+				Amount:     int64(line.Quantity * float64(line.UnitPrice.Amount)),
+				CurrencyId: line.UnitPrice.CurrencyId,
+			}
+		}
+	}
+	inv.Subtotal = common.SumLineMoney(inv.Lines, func(l *fin.PurchaseInvoiceLine) *erp.Money { return l.LineAmount })
+	inv.TaxAmount = common.SumLineMoney(inv.Lines, func(l *fin.PurchaseInvoiceLine) *erp.Money { return l.TaxAmount })
+	inv.TotalAmount = common.MoneyAdd(inv.Subtotal, inv.TaxAmount)
+	inv.BalanceDue = common.MoneySubtract(inv.TotalAmount, inv.AmountPaid)
+	return nil
 }
 
 func purchaseInvoiceTransitions() *common.StatusTransitionConfig[fin.PurchaseInvoice] {

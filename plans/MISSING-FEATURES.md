@@ -47,16 +47,31 @@ Status transition enforcement implemented for all 6 flows (27 entities across 5 
 
 **Remaining:** Record-to-Report flow deferred to 1.3 (calculated fields — GL balances, trial balance generation, financial statements are computed aggregations, not document cascades).
 
-### 1.3 Missing Calculated Fields
+### 1.3 Calculated Fields — COMPLETE ✓
 
-No services compute derived values:
+Framework: Added `Compute()` method to `VB[T]` (validation_builder.go) — semantic wrapper around `Custom()` that runs before validation. Created `compute.go` with generic helpers: `SumLineMoney[L]`, `MoneyAdd`, `MoneySubtract`, `SumLineFloat64[L]`, `SumLineInt64[L]`.
 
-- **Financial**: Running balances, period totals, aging buckets, depreciation schedules
-- **SCM**: Available-to-promise, safety stock, reorder quantities
-- **Sales**: Line totals, order totals, tax calculations, discount applications
-- **MFG**: BOM cost rollup, production cost variance, yield calculations
-- **PRJ**: Percent complete, earned value metrics, budget burn rate
-- **HCM**: Leave balances, payroll calculations, benefit costs
+**Tier 1 — Line-to-Header Totals (7 entities):**
+- SalesOrder: line discounts (from percent), line totals, header subtotal/discountTotal/taxTotal/totalAmount
+- SalesQuotation: same pattern as SalesOrder
+- SalesReturnOrder: refundAmount = sum of line totals
+- SalesInvoice: line lineAmount (qty * unitPrice), subtotal/taxAmount/totalAmount/balanceDue
+- PurchaseInvoice: same pattern as SalesInvoice
+- ScmPurchaseOrder: line totalPrice (qty * unitPrice), header totalAmount
+- JournalEntry: totalAmount = sum of debit amounts
+
+**Tier 2 — Derived Fields (7 entities):**
+- Payslip: totalHours (5 hour categories), grossPay/totalDeductions/totalTaxes (from PayslipLine amounts), netPay
+- Timesheet (HCM): totalHours (6 hour categories)
+- LeaveBalance: available = beginningBalance + accrued + carryover - used - pending - forfeited + adjusted
+- Asset: accumulatedDepreciation (from depreciation schedules), netBookValue = acquisitionCost - accumulated
+- Budget: totalAmount (from lines), per-line variance and variancePercent
+- PrjProjectBudget: remainingAmount = budgeted - actual, remainingHours = budgeted - actual
+- PrjTimesheet: totalHours/billableHours/nonBillableHours (from entries with isBillable flag)
+
+**Skipped:** MfgProductionOrder — lines have no cost fields; cost rollup requires cross-entity work order queries (analytics layer, not compute-on-save).
+
+**Remaining (out of scope — analytics layer):** Period-based aggregations, cross-entity metrics, time-based calculations, complex engines (MRP, pricing, depreciation schedule generation).
 
 ### 1.4 Status Transition Enforcement — COMPLETE ✓
 

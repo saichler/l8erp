@@ -25,6 +25,7 @@ func newSalesQuotationServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[sales.SalesQuotation]("SalesQuotation",
 		func(e *sales.SalesQuotation) { common.GenerateID(&e.QuotationId) }).
 		StatusTransition(salesQuotationTransitions()).
+		Compute(computeSalesQuotationTotals).
 		Require(func(e *sales.SalesQuotation) string { return e.QuotationId }, "QuotationId").
 		Require(func(e *sales.SalesQuotation) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *sales.SalesQuotation) string { return e.CurrencyId }, "CurrencyId").
@@ -34,6 +35,44 @@ func newSalesQuotationServiceCallback() ifs.IServiceCallback {
 		OptionalMoney(func(e *sales.SalesQuotation) *erp.Money { return e.TaxTotal }, "TaxTotal").
 		OptionalMoney(func(e *sales.SalesQuotation) *erp.Money { return e.TotalAmount }, "TotalAmount").
 		Build()
+}
+
+func computeSalesQuotationTotals(q *sales.SalesQuotation) error {
+	subtotal := int64(0)
+	currencyId := ""
+	for _, line := range q.Lines {
+		if line.UnitPrice == nil {
+			continue
+		}
+		if currencyId == "" {
+			currencyId = line.UnitPrice.CurrencyId
+		}
+		gross := int64(line.Quantity * float64(line.UnitPrice.Amount))
+		subtotal += gross
+		if line.DiscountPercent > 0 && line.DiscountAmount == nil {
+			line.DiscountAmount = &erp.Money{
+				Amount:     int64(float64(gross) * line.DiscountPercent / 100),
+				CurrencyId: currencyId,
+			}
+		}
+		disc := int64(0)
+		if line.DiscountAmount != nil {
+			disc = line.DiscountAmount.Amount
+		}
+		tax := int64(0)
+		if line.TaxAmount != nil {
+			tax = line.TaxAmount.Amount
+		}
+		line.LineTotal = &erp.Money{Amount: gross - disc + tax, CurrencyId: currencyId}
+	}
+	if currencyId == "" {
+		return nil
+	}
+	q.Subtotal = &erp.Money{Amount: subtotal, CurrencyId: currencyId}
+	q.DiscountTotal = common.SumLineMoney(q.Lines, func(l *sales.SalesQuotationLine) *erp.Money { return l.DiscountAmount })
+	q.TaxTotal = common.SumLineMoney(q.Lines, func(l *sales.SalesQuotationLine) *erp.Money { return l.TaxAmount })
+	q.TotalAmount = common.MoneyAdd(common.MoneySubtract(q.Subtotal, q.DiscountTotal), q.TaxTotal)
+	return nil
 }
 
 func salesQuotationTransitions() *common.StatusTransitionConfig[sales.SalesQuotation] {

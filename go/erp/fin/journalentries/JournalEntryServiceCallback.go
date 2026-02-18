@@ -25,11 +25,17 @@ func newJournalEntryServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[fin.JournalEntry]("JournalEntry",
 		func(e *fin.JournalEntry) { common.GenerateID(&e.JournalEntryId) }).
 		StatusTransition(journalEntryTransitions()).
+		Compute(computeJournalEntryTotals).
 		Require(func(e *fin.JournalEntry) string { return e.JournalEntryId }, "JournalEntryId").
 		Require(func(e *fin.JournalEntry) string { return e.FiscalPeriodId }, "FiscalPeriodId").
 		Enum(func(e *fin.JournalEntry) int32 { return int32(e.Status) }, fin.JournalEntryStatus_name, "Status").
 		OptionalMoney(func(e *fin.JournalEntry) *erp.Money { return e.TotalAmount }, "TotalAmount").
 		Build()
+}
+
+func computeJournalEntryTotals(je *fin.JournalEntry) error {
+	je.TotalAmount = common.SumLineMoney(je.Lines, func(l *fin.JournalEntryLine) *erp.Money { return l.DebitAmount })
+	return nil
 }
 
 func journalEntryTransitions() *common.StatusTransitionConfig[fin.JournalEntry] {

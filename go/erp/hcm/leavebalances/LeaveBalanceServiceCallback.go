@@ -28,7 +28,12 @@ func newLeaveBalanceServiceCallback() ifs.IServiceCallback {
 		validateLeaveBal)
 }
 
+func computeLeaveBalance(lb *hcm.LeaveBalance) {
+	lb.Available = lb.BeginningBalance + lb.Accrued + lb.Carryover - lb.Used - lb.Pending - lb.Forfeited + lb.Adjusted
+}
+
 func validateLeaveBal(entity *hcm.LeaveBalance, vnic ifs.IVNic) error {
+	computeLeaveBalance(entity)
 	if err := validateLeaveBalRequiredFields(entity); err != nil {
 		return err
 	}

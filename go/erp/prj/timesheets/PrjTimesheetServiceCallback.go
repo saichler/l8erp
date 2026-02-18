@@ -20,9 +20,23 @@ import (
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
+func computePrjTimesheetHours(ts *prj.PrjTimesheet) error {
+	ts.TotalHours = 0
+	ts.BillableHours = 0
+	for _, e := range ts.Entries {
+		ts.TotalHours += e.Hours
+		if e.IsBillable {
+			ts.BillableHours += e.Hours
+		}
+	}
+	ts.NonBillableHours = ts.TotalHours - ts.BillableHours
+	return nil
+}
+
 func newPrjTimesheetServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjTimesheet]("PrjTimesheet",
 		func(e *prj.PrjTimesheet) { common.GenerateID(&e.TimesheetId) }).
+		Compute(computePrjTimesheetHours).
 		Require(func(e *prj.PrjTimesheet) string { return e.TimesheetId }, "TimesheetId").
 		Enum(func(e *prj.PrjTimesheet) int32 { return int32(e.Status) }, prj.PrjTimesheetStatus_name, "Status").
 		DateAfter(func(e *prj.PrjTimesheet) int64 { return e.WeekEndDate }, func(e *prj.PrjTimesheet) int64 { return e.WeekStartDate }, "WeekEndDate", "WeekStartDate").

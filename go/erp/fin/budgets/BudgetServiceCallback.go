@@ -25,6 +25,7 @@ func newBudgetServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[fin.Budget]("Budget",
 		func(e *fin.Budget) { common.GenerateID(&e.BudgetId) }).
 		StatusTransition(budgetTransitions()).
+		Compute(computeBudgetTotals).
 		Require(func(e *fin.Budget) string { return e.BudgetId }, "BudgetId").
 		Require(func(e *fin.Budget) string { return e.BudgetName }, "BudgetName").
 		Require(func(e *fin.Budget) string { return e.FiscalYearId }, "FiscalYearId").
@@ -32,6 +33,17 @@ func newBudgetServiceCallback() ifs.IServiceCallback {
 		Enum(func(e *fin.Budget) int32 { return int32(e.Status) }, fin.BudgetStatus_name, "Status").
 		OptionalMoney(func(e *fin.Budget) *erp.Money { return e.TotalAmount }, "TotalAmount").
 		Build()
+}
+
+func computeBudgetTotals(b *fin.Budget) error {
+	b.TotalAmount = common.SumLineMoney(b.Lines, func(l *fin.BudgetLine) *erp.Money { return l.BudgetedAmount })
+	for _, line := range b.Lines {
+		line.Variance = common.MoneySubtract(line.BudgetedAmount, line.ActualAmount)
+		if line.BudgetedAmount != nil && line.BudgetedAmount.Amount != 0 && line.Variance != nil {
+			line.VariancePercent = float64(line.Variance.Amount) / float64(line.BudgetedAmount.Amount) * 100
+		}
+	}
+	return nil
 }
 
 func budgetTransitions() *common.StatusTransitionConfig[fin.Budget] {

@@ -25,12 +25,18 @@ func newReturnOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[sales.SalesReturnOrder]("SalesReturnOrder",
 		func(e *sales.SalesReturnOrder) { common.GenerateID(&e.ReturnOrderId) }).
 		StatusTransition(returnOrderTransitions()).
+		Compute(computeReturnOrderTotals).
 		Require(func(e *sales.SalesReturnOrder) string { return e.ReturnOrderId }, "ReturnOrderId").
 		Require(func(e *sales.SalesReturnOrder) string { return e.SalesOrderId }, "SalesOrderId").
 		Require(func(e *sales.SalesReturnOrder) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *sales.SalesReturnOrder) int32 { return int32(e.Status) }, sales.SalesReturnStatus_name, "Status").
 		OptionalMoney(func(e *sales.SalesReturnOrder) *erp.Money { return e.RefundAmount }, "RefundAmount").
 		Build()
+}
+
+func computeReturnOrderTotals(o *sales.SalesReturnOrder) error {
+	o.RefundAmount = common.SumLineMoney(o.Lines, func(l *sales.SalesReturnOrderLine) *erp.Money { return l.LineTotal })
+	return nil
 }
 
 func returnOrderTransitions() *common.StatusTransitionConfig[sales.SalesReturnOrder] {

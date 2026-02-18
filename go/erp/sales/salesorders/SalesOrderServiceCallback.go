@@ -27,6 +27,7 @@ func newSalesOrderServiceCallback() ifs.IServiceCallback {
 		StatusTransition(salesOrderTransitions()).
 		After(cascadeCancelDeliveryOrders).
 		After(cascadeCreateDeliveryOrder).
+		Compute(computeSalesOrderTotals).
 		Require(func(e *sales.SalesOrder) string { return e.SalesOrderId }, "SalesOrderId").
 		Require(func(e *sales.SalesOrder) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *sales.SalesOrder) string { return e.CurrencyId }, "CurrencyId").
@@ -94,6 +95,44 @@ func cascadeCreateDeliveryOrder(order *sales.SalesOrder, action ifs.Action, vnic
 		AuditInfo:           &erp.AuditInfo{},
 	}, vnic)
 	return err
+}
+
+func computeSalesOrderTotals(o *sales.SalesOrder) error {
+	subtotal := int64(0)
+	currencyId := ""
+	for _, line := range o.Lines {
+		if line.UnitPrice == nil {
+			continue
+		}
+		if currencyId == "" {
+			currencyId = line.UnitPrice.CurrencyId
+		}
+		gross := int64(line.Quantity * float64(line.UnitPrice.Amount))
+		subtotal += gross
+		if line.DiscountPercent > 0 && line.DiscountAmount == nil {
+			line.DiscountAmount = &erp.Money{
+				Amount:     int64(float64(gross) * line.DiscountPercent / 100),
+				CurrencyId: currencyId,
+			}
+		}
+		disc := int64(0)
+		if line.DiscountAmount != nil {
+			disc = line.DiscountAmount.Amount
+		}
+		tax := int64(0)
+		if line.TaxAmount != nil {
+			tax = line.TaxAmount.Amount
+		}
+		line.LineTotal = &erp.Money{Amount: gross - disc + tax, CurrencyId: currencyId}
+	}
+	if currencyId == "" {
+		return nil
+	}
+	o.Subtotal = &erp.Money{Amount: subtotal, CurrencyId: currencyId}
+	o.DiscountTotal = common.SumLineMoney(o.Lines, func(l *sales.SalesOrderLine) *erp.Money { return l.DiscountAmount })
+	o.TaxTotal = common.SumLineMoney(o.Lines, func(l *sales.SalesOrderLine) *erp.Money { return l.TaxAmount })
+	o.TotalAmount = common.MoneyAdd(common.MoneySubtract(o.Subtotal, o.DiscountTotal), o.TaxTotal)
+	return nil
 }
 
 func salesOrderTransitions() *common.StatusTransitionConfig[sales.SalesOrder] {

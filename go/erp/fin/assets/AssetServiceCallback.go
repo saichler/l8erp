@@ -25,6 +25,7 @@ func newAssetServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[fin.Asset]("Asset",
 		func(e *fin.Asset) { common.GenerateID(&e.AssetId) }).
 		StatusTransition(assetTransitions()).
+		Compute(computeAssetValues).
 		Require(func(e *fin.Asset) string { return e.AssetId }, "AssetId").
 		Require(func(e *fin.Asset) string { return e.Name }, "Name").
 		Require(func(e *fin.Asset) string { return e.CategoryId }, "CategoryId").
@@ -35,6 +36,13 @@ func newAssetServiceCallback() ifs.IServiceCallback {
 		OptionalMoney(func(e *fin.Asset) *erp.Money { return e.AccumulatedDepreciation }, "AccumulatedDepreciation").
 		OptionalMoney(func(e *fin.Asset) *erp.Money { return e.NetBookValue }, "NetBookValue").
 		Build()
+}
+
+func computeAssetValues(a *fin.Asset) error {
+	a.AccumulatedDepreciation = common.SumLineMoney(a.DepreciationSchedules,
+		func(s *fin.DepreciationSchedule) *erp.Money { return s.DepreciationAmount })
+	a.NetBookValue = common.MoneySubtract(a.AcquisitionCost, a.AccumulatedDepreciation)
+	return nil
 }
 
 func assetTransitions() *common.StatusTransitionConfig[fin.Asset] {

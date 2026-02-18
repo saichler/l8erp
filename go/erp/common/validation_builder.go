@@ -115,6 +115,14 @@ func (b *VB[T]) DateRange(getter func(*T) *erp.DateRange, name string) *VB[T] {
 	return b
 }
 
+// Compute adds a function that derives/computes entity fields before validation.
+// Chain Compute() before Require() so computed fields can be validated.
+func (b *VB[T]) Compute(fn func(*T) error) *VB[T] {
+	return b.Custom(func(e *T, _ ifs.IVNic) error {
+		return fn(e)
+	})
+}
+
 // Custom adds a custom validation function.
 func (b *VB[T]) Custom(fn func(*T, ifs.IVNic) error) *VB[T] {
 	b.validators = append(b.validators, fn)

@@ -26,6 +26,7 @@ func newSalesInvoiceServiceCallback() ifs.IServiceCallback {
 		func(e *fin.SalesInvoice) { common.GenerateID(&e.InvoiceId) }).
 		StatusTransition(salesInvoiceTransitions()).
 		After(cascadeVoidCreditMemos).
+		Compute(computeSalesInvoiceTotals).
 		Require(func(e *fin.SalesInvoice) string { return e.InvoiceId }, "InvoiceId").
 		Require(func(e *fin.SalesInvoice) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *fin.SalesInvoice) string { return e.InvoiceNumber }, "InvoiceNumber").
@@ -37,6 +38,22 @@ func newSalesInvoiceServiceCallback() ifs.IServiceCallback {
 		OptionalMoney(func(e *fin.SalesInvoice) *erp.Money { return e.BalanceDue }, "BalanceDue").
 		DateAfter(func(e *fin.SalesInvoice) int64 { return e.DueDate }, func(e *fin.SalesInvoice) int64 { return e.InvoiceDate }, "DueDate", "InvoiceDate").
 		Build()
+}
+
+func computeSalesInvoiceTotals(inv *fin.SalesInvoice) error {
+	for _, line := range inv.Lines {
+		if line.UnitPrice != nil && line.Quantity > 0 {
+			line.LineAmount = &erp.Money{
+				Amount:     int64(line.Quantity * float64(line.UnitPrice.Amount)),
+				CurrencyId: line.UnitPrice.CurrencyId,
+			}
+		}
+	}
+	inv.Subtotal = common.SumLineMoney(inv.Lines, func(l *fin.SalesInvoiceLine) *erp.Money { return l.LineAmount })
+	inv.TaxAmount = common.SumLineMoney(inv.Lines, func(l *fin.SalesInvoiceLine) *erp.Money { return l.TaxAmount })
+	inv.TotalAmount = common.MoneyAdd(inv.Subtotal, inv.TaxAmount)
+	inv.BalanceDue = common.MoneySubtract(inv.TotalAmount, inv.AmountPaid)
+	return nil
 }
 
 // cascadeVoidCreditMemos marks related credit memos as VOID

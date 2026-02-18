@@ -27,7 +27,13 @@ func newTimesheetServiceCallback() ifs.IServiceCallback {
 		validateTimesheet)
 }
 
+func computeTimesheetHours(t *hcm.Timesheet) {
+	t.TotalHours = t.TotalRegularHours + t.TotalOvertimeHours + t.TotalDoubleTimeHours +
+		t.TotalPtoHours + t.TotalSickHours + t.TotalHolidayHours
+}
+
 func validateTimesheet(entity *hcm.Timesheet, vnic ifs.IVNic) error {
+	computeTimesheetHours(entity)
 	if err := validateTimesheetRequiredFields(entity); err != nil {
 		return err
 	}
