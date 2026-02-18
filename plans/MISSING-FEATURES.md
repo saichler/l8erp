@@ -23,9 +23,11 @@ All 97 non-HCM ServiceCallback files enhanced with additional validation rules (
 
 **Note:** Real business logic (GL posting, inventory tracking, pricing engines, etc.) remains a separate effort — see sections 1.2–1.5 and Phase B/F in the roadmap.
 
-### 1.2 Missing Cross-Service Business Logic
+### 1.2 Missing Cross-Service Business Logic — STATUS TRANSITIONS DONE ✓
 
-These are operations that span multiple services and don't exist anywhere:
+Status transition enforcement implemented for all 6 flows (27 entities across 5 modules). Each entity has a `StatusTransitionConfig` defining valid state machine transitions enforced on PUT/PATCH. POST skips enforcement (`InitialStatus: 0`) for mock data compatibility. HCM (Flow 5) deferred — uses manual `NewServiceCallback` pattern.
+
+**Remaining** (auto-creation of downstream documents, not yet implemented):
 
 - **Order-to-Cash**: Sales Order -> Delivery -> Invoice -> Payment
 - **Procure-to-Pay**: Purchase Req -> PO -> Receiving -> AP Invoice -> Payment
@@ -45,15 +47,11 @@ No services compute derived values:
 - **PRJ**: Percent complete, earned value metrics, budget burn rate
 - **HCM**: Leave balances, payroll calculations, benefit costs
 
-### 1.4 Missing Status Transition Enforcement
+### 1.4 Status Transition Enforcement — COMPLETE ✓
 
-No service enforces valid state transitions. For example:
+Status transition enforcement implemented via `StatusTransitionConfig[T]` + `ActionValidateFunc[T]` in the `ValidationBuilder` framework. Framework files: `status_machine.go` (new), `service_callback.go` (+variadic `actionValidators`), `validation_builder.go` (`.StatusTransition()` method).
 
-- Sales Order: `Draft -> Confirmed -> In Progress -> Shipped -> Completed -> Closed`
-- Purchase Order: `Draft -> Submitted -> Approved -> Ordered -> Received -> Closed`
-- Work Order: `Planned -> Released -> In Progress -> Completed -> Closed`
-
-Currently any status value can be set at any time.
+27 entity callbacks updated across 5 modules (Sales 4, FIN 7, SCM 3, MFG 6, CRM 5). HCM deferred (57 manual callbacks). All tests pass.
 
 ### 1.5 Missing Cascading Operations
 
@@ -503,7 +501,7 @@ All 6 audit items passed with no issues found:
 - See `plans/PLAN-CHILD-ENTITY-CONSOLIDATION.md` for full details
 
 ### Phase B: Core Business Logic Foundation
-1. Status transition enforcement framework (reusable across all modules)
+1. ~~Status transition enforcement framework (reusable across all modules)~~ — **DONE**: `StatusTransitionConfig[T]` + `ActionValidateFunc[T]` in ValidationBuilder. 27 entities enforced, HCM deferred.
 2. Cross-service operations framework (parent-child cascading)
 3. Calculated fields framework (server-side computed values)
 4. FIN double-entry enforcement and period management
