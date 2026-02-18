@@ -19,6 +19,7 @@ import (
 	"github.com/saichler/l8types/go/ifs"
 	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8erp/go/types/scm"
+	"time"
 )
 
 func newPurchaseRequisitionServiceCallback() ifs.IServiceCallback {
@@ -26,6 +27,7 @@ func newPurchaseRequisitionServiceCallback() ifs.IServiceCallback {
 		func(e *scm.ScmPurchaseRequisition) { common.GenerateID(&e.RequisitionId) }).
 		StatusTransition(purchaseRequisitionTransitions()).
 		After(cascadeCancelPurchaseOrders).
+		After(cascadeCreatePurchaseOrder).
 		Require(func(e *scm.ScmPurchaseRequisition) string { return e.RequisitionId }, "RequisitionId").
 		Enum(func(e *scm.ScmPurchaseRequisition) int32 { return int32(e.Status) }, scm.ScmRequisitionStatus_name, "Status").
 		OptionalMoney(func(e *scm.ScmPurchaseRequisition) *erp.Money { return e.EstimatedTotal }, "EstimatedTotal").
@@ -53,6 +55,46 @@ func cascadeCancelPurchaseOrders(req *scm.ScmPurchaseRequisition, action ifs.Act
 		}
 	}
 	return nil
+}
+
+// cascadeCreatePurchaseOrder auto-creates a purchase order when a requisition is approved.
+func cascadeCreatePurchaseOrder(req *scm.ScmPurchaseRequisition, action ifs.Action, vnic ifs.IVNic) error {
+	if req.Status != scm.ScmRequisitionStatus_REQUISITION_STATUS_APPROVED {
+		return nil
+	}
+	exists, err := common.EntityExists("PurchOrder", 50,
+		&scm.ScmPurchaseOrder{RequisitionId: req.RequisitionId}, vnic)
+	if err != nil || exists {
+		return err
+	}
+	// Use vendor from first requisition line if available
+	vendorId := ""
+	if len(req.Lines) > 0 && req.Lines[0].VendorId != "" {
+		vendorId = req.Lines[0].VendorId
+	}
+	lines := make([]*scm.ScmPurchaseOrderLine, len(req.Lines))
+	for i, rl := range req.Lines {
+		lines[i] = &scm.ScmPurchaseOrderLine{
+			LineNumber:    rl.LineNumber,
+			ItemId:        rl.ItemId,
+			Description:   rl.Description,
+			Quantity:      rl.Quantity,
+			UnitOfMeasure: rl.UnitOfMeasure,
+			UnitPrice:     rl.EstimatedUnitPrice,
+			TotalPrice:    rl.EstimatedTotal,
+			AuditInfo:     &erp.AuditInfo{},
+		}
+	}
+	_, err = common.PostEntity("PurchOrder", 50, &scm.ScmPurchaseOrder{
+		RequisitionId: req.RequisitionId,
+		VendorId:      vendorId,
+		OrderDate:     time.Now().Unix(),
+		Status:        scm.ScmPurchaseOrderStatus_PO_STATUS_DRAFT,
+		TotalAmount:   req.EstimatedTotal,
+		Lines:         lines,
+		AuditInfo:     &erp.AuditInfo{},
+	}, vnic)
+	return err
 }
 
 func purchaseRequisitionTransitions() *common.StatusTransitionConfig[scm.ScmPurchaseRequisition] {

@@ -25,12 +25,51 @@ func newVendorPaymentServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[fin.VendorPayment]("VendorPayment",
 		func(e *fin.VendorPayment) { common.GenerateID(&e.PaymentId) }).
 		StatusTransition(vendorPaymentTransitions()).
+		After(cascadeUpdatePurchaseInvoicePaymentStatus).
 		Require(func(e *fin.VendorPayment) string { return e.PaymentId }, "PaymentId").
 		Require(func(e *fin.VendorPayment) string { return e.VendorId }, "VendorId").
 		Enum(func(e *fin.VendorPayment) int32 { return int32(e.PaymentMethod) }, fin.PaymentMethod_name, "PaymentMethod").
 		Enum(func(e *fin.VendorPayment) int32 { return int32(e.Status) }, fin.PaymentStatus_name, "Status").
 		OptionalMoney(func(e *fin.VendorPayment) *erp.Money { return e.Amount }, "Amount").
 		Build()
+}
+
+// cascadeUpdatePurchaseInvoicePaymentStatus updates purchase invoice payment status
+// when a vendor payment is completed.
+func cascadeUpdatePurchaseInvoicePaymentStatus(payment *fin.VendorPayment, action ifs.Action, vnic ifs.IVNic) error {
+	if payment.Status != fin.PaymentStatus_PAYMENT_STATUS_COMPLETED {
+		return nil
+	}
+	for _, alloc := range payment.Allocations {
+		if alloc.InvoiceId == "" || alloc.AllocatedAmount == nil {
+			continue
+		}
+		invoice, err := common.GetEntity("PurchInv", 40,
+			&fin.PurchaseInvoice{InvoiceId: alloc.InvoiceId}, vnic)
+		if err != nil || invoice == nil {
+			continue
+		}
+		paid := int64(0)
+		if invoice.AmountPaid != nil {
+			paid = invoice.AmountPaid.Amount
+		}
+		paid += alloc.AllocatedAmount.Amount
+		invoice.AmountPaid = &erp.Money{Amount: paid, CurrencyId: alloc.AllocatedAmount.CurrencyId}
+		total := int64(0)
+		if invoice.TotalAmount != nil {
+			total = invoice.TotalAmount.Amount
+		}
+		invoice.BalanceDue = &erp.Money{Amount: total - paid, CurrencyId: alloc.AllocatedAmount.CurrencyId}
+		if total-paid <= 0 {
+			invoice.Status = fin.InvoiceStatus_INVOICE_STATUS_PAID
+		} else if paid > 0 {
+			invoice.Status = fin.InvoiceStatus_INVOICE_STATUS_PARTIALLY_PAID
+		}
+		if err := common.PutEntity("PurchInv", 40, invoice, vnic); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func vendorPaymentTransitions() *common.StatusTransitionConfig[fin.VendorPayment] {

@@ -54,6 +54,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Invoice Details', [
                 ...f.text('invoiceNumber', 'Invoice Number', true),
                 ...f.reference('vendorId', 'Vendor', 'Vendor', true),
+                ...f.reference('purchaseOrderId', 'Purchase Order', 'ScmPurchaseOrder'),
+                ...f.reference('receivingOrderId', 'Receiving Order', 'ScmReceivingOrder'),
                 ...f.date('invoiceDate', 'Invoice Date', true),
                 ...f.date('dueDate', 'Due Date', true),
                 ...f.textarea('description', 'Description'),

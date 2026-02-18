@@ -78,6 +78,9 @@ message Employee {
 
   erp.AuditInfo audit_info = 34;
 
+  // Recruitment linkage
+  string application_id = 51;
+
   // Reserved for future use
   reserved 35 to 50;
 }

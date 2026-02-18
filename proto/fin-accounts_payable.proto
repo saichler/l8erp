@@ -97,6 +97,8 @@ message PurchaseInvoice {
   map<string, string> custom_fields = 21;
   erp.AuditInfo audit_info = 22;
   repeated PurchaseInvoiceLine lines = 23;
+  string purchase_order_id = 24;
+  string receiving_order_id = 25;
 }
 
 message PurchaseInvoiceList {

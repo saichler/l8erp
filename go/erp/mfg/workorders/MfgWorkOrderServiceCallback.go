@@ -25,6 +25,7 @@ func newMfgWorkOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[mfg.MfgWorkOrder]("MfgWorkOrder",
 		func(e *mfg.MfgWorkOrder) { common.GenerateID(&e.WorkOrderId) }).
 		StatusTransition(workOrderTransitions()).
+		After(cascadeRollUpProductionOrderStatus).
 		Require(func(e *mfg.MfgWorkOrder) string { return e.WorkOrderId }, "WorkOrderId").
 		Require(func(e *mfg.MfgWorkOrder) string { return e.ItemId }, "ItemId").
 		Enum(func(e *mfg.MfgWorkOrder) int32 { return int32(e.Status) }, mfg.MfgWorkOrderStatus_name, "Status").
@@ -33,6 +34,44 @@ func newMfgWorkOrderServiceCallback() ifs.IServiceCallback {
 		DateAfter(func(e *mfg.MfgWorkOrder) int64 { return e.PlannedEndDate }, func(e *mfg.MfgWorkOrder) int64 { return e.PlannedStartDate }, "PlannedEndDate", "PlannedStartDate").
 		DateAfter(func(e *mfg.MfgWorkOrder) int64 { return e.ActualEndDate }, func(e *mfg.MfgWorkOrder) int64 { return e.ActualStartDate }, "ActualEndDate", "ActualStartDate").
 		Build()
+}
+
+// cascadeRollUpProductionOrderStatus checks if all work orders for a production
+// order are completed and updates the production order status accordingly.
+func cascadeRollUpProductionOrderStatus(wo *mfg.MfgWorkOrder, action ifs.Action, vnic ifs.IVNic) error {
+	if wo.Status != mfg.MfgWorkOrderStatus_MFG_WORK_ORDER_STATUS_COMPLETED {
+		return nil
+	}
+	// Find production orders that are IN_PROGRESS and reference this work order
+	orders, err := common.GetEntities("MfgProdOrd", 70,
+		&mfg.MfgProductionOrder{Status: mfg.MfgProductionOrderStatus_MFG_PROD_ORDER_STATUS_IN_PROGRESS}, vnic)
+	if err != nil {
+		return err
+	}
+	for _, order := range orders {
+		ownsThisWO := false
+		allCompleted := true
+		for _, line := range order.Lines {
+			if line.WorkOrderId == wo.WorkOrderId {
+				ownsThisWO = true
+			}
+			if line.WorkOrderId != "" && line.WorkOrderId != wo.WorkOrderId {
+				// Check if the other work order is completed
+				otherWO, _ := common.GetEntity("MfgWorkOrd", 70,
+					&mfg.MfgWorkOrder{WorkOrderId: line.WorkOrderId}, vnic)
+				if otherWO == nil || otherWO.Status != mfg.MfgWorkOrderStatus_MFG_WORK_ORDER_STATUS_COMPLETED {
+					allCompleted = false
+				}
+			}
+		}
+		if ownsThisWO && allCompleted {
+			order.Status = mfg.MfgProductionOrderStatus_MFG_PROD_ORDER_STATUS_COMPLETED
+			if err := common.PutEntity("MfgProdOrd", 70, order, vnic); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
 
 func workOrderTransitions() *common.StatusTransitionConfig[mfg.MfgWorkOrder] {

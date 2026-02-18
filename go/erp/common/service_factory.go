@@ -145,3 +145,35 @@ func PutEntity[T any](serviceName string, serviceArea byte, entity *T, vnic ifs.
 	}
 	return nil
 }
+
+// PostEntity creates a new entity via its service handler.
+func PostEntity[T any](serviceName string, serviceArea byte, entity *T, vnic ifs.IVNic) (*T, error) {
+	handler, ok := ServiceHandler(serviceName, serviceArea, vnic)
+	if ok {
+		resp := handler.Post(object.New(nil, entity), vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		if resp.Element() != nil {
+			return resp.Element().(*T), nil
+		}
+		return entity, nil
+	}
+	resp := vnic.Request("", serviceName, serviceArea, ifs.POST, entity, 30)
+	if resp.Error() != nil {
+		return nil, resp.Error()
+	}
+	if resp.Element() != nil {
+		return resp.Element().(*T), nil
+	}
+	return entity, nil
+}
+
+// EntityExists checks if any entity matching the filter already exists.
+func EntityExists[T any](serviceName string, serviceArea byte, filter *T, vnic ifs.IVNic) (bool, error) {
+	existing, err := GetEntities[T](serviceName, serviceArea, filter, vnic)
+	if err != nil {
+		return false, err
+	}
+	return len(existing) > 0, nil
+}

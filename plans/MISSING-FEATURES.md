@@ -23,18 +23,29 @@ All 97 non-HCM ServiceCallback files enhanced with additional validation rules (
 
 **Note:** Real business logic (GL posting, inventory tracking, pricing engines, etc.) remains a separate effort — see sections 1.2–1.5 and Phase B/F in the roadmap.
 
-### 1.2 Missing Cross-Service Business Logic — STATUS TRANSITIONS DONE ✓
+### 1.2 Cross-Service Business Logic — COMPLETE ✓
 
 Status transition enforcement implemented for all 6 flows (27 entities across 5 modules). Each entity has a `StatusTransitionConfig` defining valid state machine transitions enforced on PUT/PATCH. POST skips enforcement (`InitialStatus: 0`) for mock data compatibility. HCM (Flow 5) deferred — uses manual `NewServiceCallback` pattern.
 
-**Remaining** (auto-creation of downstream documents, not yet implemented):
+**Cross-service cascading document flows implemented** via `After()` hooks on ValidationBuilder/ServiceCallback:
 
-- **Order-to-Cash**: Sales Order -> Delivery -> Invoice -> Payment
-- **Procure-to-Pay**: Purchase Req -> PO -> Receiving -> AP Invoice -> Payment
-- **Record-to-Report**: Journal Entry -> Trial Balance -> Financial Statements
-- **Plan-to-Produce**: Production Order -> Material Issue -> Shop Floor -> Receipt
-- **Hire-to-Retire**: Recruitment -> Onboarding -> Employment -> Termination
-- **Issue-to-Resolution**: Support Case -> Assignment -> Resolution -> Feedback
+**Tier 1 — Order-to-Cash + Procure-to-Pay:**
+- SalesOrder CONFIRMED → auto-create SalesDeliveryOrder (PLANNED)
+- SalesDeliveryOrder DELIVERED → auto-create SalesInvoice (DRAFT, cross-module FIN)
+- CustomerPayment COMPLETED → update SalesInvoice payment status (PAID/PARTIALLY_PAID)
+- PurchaseRequisition APPROVED → auto-create ScmPurchaseOrder (DRAFT)
+- ReceivingOrder COMPLETED → auto-create PurchaseInvoice (DRAFT, cross-module FIN)
+- VendorPayment COMPLETED → update PurchaseInvoice payment status (PAID/PARTIALLY_PAID)
+
+**Tier 2 — Plan-to-Produce + Issue-to-Resolution + Hire-to-Retire:**
+- MfgProductionOrder CONFIRMED → auto-create MfgWorkOrders (with BOM/Routing operations)
+- MfgWorkOrder COMPLETED → roll up MfgProductionOrder status (all WOs complete → order complete)
+- CrmCase RESOLVED → auto-create CrmSurvey (DRAFT, case resolution survey)
+- Application HIRED → auto-create Employee (ACTIVE) + 7 default OnboardingTasks
+
+**Infrastructure added:** `PostEntity[T]` (create via service handler, returns auto-generated ID), `EntityExists[T]` (idempotency guard). Proto linking fields: `salesOrderId`/`deliveryOrderId` on SalesInvoice, `purchaseOrderId`/`receivingOrderId` on PurchaseInvoice, `applicationId` on Employee. JS forms updated (desktop + mobile) for all linking fields.
+
+**Remaining:** Record-to-Report flow deferred to 1.3 (calculated fields — GL balances, trial balance generation, financial statements are computed aggregations, not document cascades).
 
 ### 1.3 Missing Calculated Fields
 
@@ -506,7 +517,7 @@ All 6 audit items passed with no issues found:
 
 ### Phase B: Core Business Logic Foundation
 1. ~~Status transition enforcement framework (reusable across all modules)~~ — **DONE**: `StatusTransitionConfig[T]` + `ActionValidateFunc[T]` in ValidationBuilder. 27 entities enforced, HCM deferred.
-2. Cross-service operations framework (parent-child cascading)
+2. ~~Cross-service operations framework (parent-child cascading)~~ — **DONE**: 10 cascading document flows across 5 modules via `After()` hooks. `PostEntity[T]` + `EntityExists[T]` helpers. See §1.2.
 3. Calculated fields framework (server-side computed values)
 4. FIN double-entry enforcement and period management
 5. SCM inventory quantity tracking

@@ -94,6 +94,8 @@ message SalesInvoice {
   map<string, string> custom_fields = 19;
   erp.AuditInfo audit_info = 20;
   repeated SalesInvoiceLine lines = 21;
+  string sales_order_id = 22;
+  string delivery_order_id = 23;
 }
 
 message SalesInvoiceList {

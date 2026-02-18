@@ -18,19 +18,82 @@ import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	erp "github.com/saichler/l8erp/go/types/erp"
+	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/sales"
+	"time"
 )
 
 func newDeliveryOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[sales.SalesDeliveryOrder]("SalesDeliveryOrder",
 		func(e *sales.SalesDeliveryOrder) { common.GenerateID(&e.DeliveryOrderId) }).
 		StatusTransition(deliveryOrderTransitions()).
+		After(cascadeCreateSalesInvoice).
 		Require(func(e *sales.SalesDeliveryOrder) string { return e.DeliveryOrderId }, "DeliveryOrderId").
 		Require(func(e *sales.SalesDeliveryOrder) string { return e.SalesOrderId }, "SalesOrderId").
 		Require(func(e *sales.SalesDeliveryOrder) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *sales.SalesDeliveryOrder) int32 { return int32(e.Status) }, sales.SalesDeliveryStatus_name, "Status").
 		OptionalMoney(func(e *sales.SalesDeliveryOrder) *erp.Money { return e.ShippingCost }, "ShippingCost").
 		Build()
+}
+
+// cascadeCreateSalesInvoice auto-creates a sales invoice when a delivery is completed.
+func cascadeCreateSalesInvoice(delivery *sales.SalesDeliveryOrder, action ifs.Action, vnic ifs.IVNic) error {
+	if delivery.Status != sales.SalesDeliveryStatus_DELIVERY_STATUS_DELIVERED {
+		return nil
+	}
+	exists, err := common.EntityExists("SalesInv", 40,
+		&fin.SalesInvoice{DeliveryOrderId: delivery.DeliveryOrderId}, vnic)
+	if err != nil || exists {
+		return err
+	}
+	// Look up the sales order for pricing info
+	var order *sales.SalesOrder
+	if delivery.SalesOrderId != "" {
+		order, _ = common.GetEntity("SalesOrder", 60,
+			&sales.SalesOrder{SalesOrderId: delivery.SalesOrderId}, vnic)
+	}
+	lines := make([]*fin.SalesInvoiceLine, len(delivery.Lines))
+	for i, dl := range delivery.Lines {
+		line := &fin.SalesInvoiceLine{
+			LineNumber:  dl.LineNumber,
+			Description: dl.Description,
+			Quantity:    dl.Quantity,
+		}
+		// Copy pricing from order lines if available
+		if order != nil {
+			for _, ol := range order.Lines {
+				if ol.LineId == dl.SalesOrderLineId {
+					line.UnitPrice = ol.UnitPrice
+					line.LineAmount = ol.LineTotal
+					line.TaxAmount = ol.TaxAmount
+					break
+				}
+			}
+		}
+		lines[i] = line
+	}
+	now := time.Now().Unix()
+	invoice := &fin.SalesInvoice{
+		CustomerId:      delivery.CustomerId,
+		SalesOrderId:    delivery.SalesOrderId,
+		DeliveryOrderId: delivery.DeliveryOrderId,
+		InvoiceDate:     now,
+		DueDate:         now + 30*24*3600, // 30-day terms
+		Status:          fin.InvoiceStatus_INVOICE_STATUS_DRAFT,
+		PaymentTermDays: 30,
+		Lines:           lines,
+		AuditInfo:       &erp.AuditInfo{},
+	}
+	// Copy totals from order if available
+	if order != nil {
+		invoice.Subtotal = order.Subtotal
+		invoice.TaxAmount = order.TaxTotal
+		invoice.TotalAmount = order.TotalAmount
+		invoice.BalanceDue = order.TotalAmount
+		invoice.CurrencyId = order.CurrencyId
+	}
+	_, err = common.PostEntity("SalesInv", 40, invoice, vnic)
+	return err
 }
 
 func deliveryOrderTransitions() *common.StatusTransitionConfig[sales.SalesDeliveryOrder] {

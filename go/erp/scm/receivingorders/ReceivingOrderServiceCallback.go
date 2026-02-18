@@ -17,13 +17,63 @@ package receivingorders
 import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
+	erp "github.com/saichler/l8erp/go/types/erp"
+	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/scm"
+	"time"
 )
 
 func newReceivingOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmReceivingOrder]("ScmReceivingOrder",
 		func(e *scm.ScmReceivingOrder) { common.GenerateID(&e.ReceivingOrderId) }).
+		After(cascadeCreatePurchaseInvoice).
 		Require(func(e *scm.ScmReceivingOrder) string { return e.ReceivingOrderId }, "ReceivingOrderId").
 		Enum(func(e *scm.ScmReceivingOrder) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
+}
+
+// cascadeCreatePurchaseInvoice auto-creates a purchase invoice when receiving is completed.
+func cascadeCreatePurchaseInvoice(recv *scm.ScmReceivingOrder, action ifs.Action, vnic ifs.IVNic) error {
+	if recv.Status != scm.ScmTaskStatus_TASK_STATUS_COMPLETED {
+		return nil
+	}
+	if recv.PurchaseOrderId == "" {
+		return nil
+	}
+	exists, err := common.EntityExists("PurchInv", 40,
+		&fin.PurchaseInvoice{ReceivingOrderId: recv.ReceivingOrderId}, vnic)
+	if err != nil || exists {
+		return err
+	}
+	po, err := common.GetEntity("PurchOrder", 50,
+		&scm.ScmPurchaseOrder{PurchaseOrderId: recv.PurchaseOrderId}, vnic)
+	if err != nil || po == nil {
+		return err
+	}
+	lines := make([]*fin.PurchaseInvoiceLine, len(po.Lines))
+	for i, pl := range po.Lines {
+		lines[i] = &fin.PurchaseInvoiceLine{
+			LineNumber:  pl.LineNumber,
+			Description: pl.Description,
+			Quantity:    pl.Quantity,
+			UnitPrice:   pl.UnitPrice,
+			LineAmount:  pl.TotalPrice,
+			AuditInfo:   &erp.AuditInfo{},
+		}
+	}
+	now := time.Now().Unix()
+	_, err = common.PostEntity("PurchInv", 40, &fin.PurchaseInvoice{
+		VendorId:         po.VendorId,
+		PurchaseOrderId:  recv.PurchaseOrderId,
+		ReceivingOrderId: recv.ReceivingOrderId,
+		InvoiceDate:      now,
+		DueDate:          now + 30*24*3600,
+		Status:           fin.InvoiceStatus_INVOICE_STATUS_DRAFT,
+		TotalAmount:      po.TotalAmount,
+		BalanceDue:       po.TotalAmount,
+		PaymentTermDays:  30,
+		Lines:            lines,
+		AuditInfo:        &erp.AuditInfo{},
+	}, vnic)
+	return err
 }

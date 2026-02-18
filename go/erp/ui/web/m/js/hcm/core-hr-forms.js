@@ -35,7 +35,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('originalHireDate', 'Original Hire Date'),
                 ...f.date('terminationDate', 'Termination Date'),
                 ...f.text('terminationReason', 'Termination Reason'),
-                ...f.checkbox('isRehire', 'Is Rehire')
+                ...f.checkbox('isRehire', 'Is Rehire'),
+                ...f.reference('applicationId', 'Application', 'Application')
             ]),
             f.section('Organizational Placement', [
                 ...f.reference('organizationId', 'Organization', 'Organization'),

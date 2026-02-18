@@ -89,6 +89,7 @@ func generateEmployees(store *MockDataStore) []*hcm.Employee {
 			PositionId:       store.PositionIDs[posIdx],
 			JobId:            store.JobIDs[rand.Intn(len(store.JobIDs))],
 			ManagerId:        managerID,
+			ApplicationId:    pickRef(store.ApplicationIDs, i),
 			AuditInfo:        createAuditInfo(),
 		}
 	}

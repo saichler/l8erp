@@ -25,12 +25,51 @@ func newCustomerPaymentServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[fin.CustomerPayment]("CustomerPayment",
 		func(e *fin.CustomerPayment) { common.GenerateID(&e.PaymentId) }).
 		StatusTransition(customerPaymentTransitions()).
+		After(cascadeUpdateInvoicePaymentStatus).
 		Require(func(e *fin.CustomerPayment) string { return e.PaymentId }, "PaymentId").
 		Require(func(e *fin.CustomerPayment) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *fin.CustomerPayment) int32 { return int32(e.PaymentMethod) }, fin.PaymentMethod_name, "PaymentMethod").
 		Enum(func(e *fin.CustomerPayment) int32 { return int32(e.Status) }, fin.PaymentStatus_name, "Status").
 		OptionalMoney(func(e *fin.CustomerPayment) *erp.Money { return e.Amount }, "Amount").
 		Build()
+}
+
+// cascadeUpdateInvoicePaymentStatus updates sales invoice payment status
+// when a customer payment is completed.
+func cascadeUpdateInvoicePaymentStatus(payment *fin.CustomerPayment, action ifs.Action, vnic ifs.IVNic) error {
+	if payment.Status != fin.PaymentStatus_PAYMENT_STATUS_COMPLETED {
+		return nil
+	}
+	for _, app := range payment.Applications {
+		if app.InvoiceId == "" || app.AppliedAmount == nil {
+			continue
+		}
+		invoice, err := common.GetEntity("SalesInv", 40,
+			&fin.SalesInvoice{InvoiceId: app.InvoiceId}, vnic)
+		if err != nil || invoice == nil {
+			continue
+		}
+		paid := int64(0)
+		if invoice.AmountPaid != nil {
+			paid = invoice.AmountPaid.Amount
+		}
+		paid += app.AppliedAmount.Amount
+		invoice.AmountPaid = &erp.Money{Amount: paid, CurrencyId: app.AppliedAmount.CurrencyId}
+		total := int64(0)
+		if invoice.TotalAmount != nil {
+			total = invoice.TotalAmount.Amount
+		}
+		invoice.BalanceDue = &erp.Money{Amount: total - paid, CurrencyId: app.AppliedAmount.CurrencyId}
+		if total-paid <= 0 {
+			invoice.Status = fin.InvoiceStatus_INVOICE_STATUS_PAID
+		} else if paid > 0 {
+			invoice.Status = fin.InvoiceStatus_INVOICE_STATUS_PARTIALLY_PAID
+		}
+		if err := common.PutEntity("SalesInv", 40, invoice, vnic); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func customerPaymentTransitions() *common.StatusTransitionConfig[fin.CustomerPayment] {

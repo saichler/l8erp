@@ -105,6 +105,8 @@ func generateSalesInvoices(store *MockDataStore) []*fin.SalesInvoice {
 			BalanceDue:      money(store, balanceDue),
 			PaymentTermDays: 30,
 			ArAccountId:     store.AccountIDs[arAccountIdx],
+			SalesOrderId:    pickRef(store.SalesOrderIDs, i),
+			DeliveryOrderId: pickRef(store.SalesDeliveryOrderIDs, i),
 			Description:     fmt.Sprintf("Sales Invoice for Customer %s", store.CustomerIDs[custIdx]),
 			AuditInfo:       createAuditInfo(),
 			Lines:           lines,
