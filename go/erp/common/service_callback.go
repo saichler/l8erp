@@ -16,6 +16,7 @@ package common
 
 import (
 	"errors"
+	"fmt"
 	"github.com/saichler/l8types/go/ifs"
 )
 
@@ -33,6 +34,7 @@ type genericCallback[T any] struct {
 	setID            SetIDFunc[T]
 	validate         ValidateFunc[T]
 	actionValidators []ActionValidateFunc[T]
+	afterActions     []ActionValidateFunc[T]
 }
 
 // NewServiceCallback creates a standard IServiceCallback that handles type assertion,
@@ -43,6 +45,18 @@ func NewServiceCallback[T any](typeName string, setID SetIDFunc[T], validate Val
 		setID:            setID,
 		validate:         validate,
 		actionValidators: actionValidators,
+	}
+}
+
+// NewServiceCallbackWithAfter creates a ServiceCallback with both action validators
+// and after-actions that run after successful PUT/PATCH persistence.
+func NewServiceCallbackWithAfter[T any](typeName string, setID SetIDFunc[T], validate ValidateFunc[T], actionValidators []ActionValidateFunc[T], afterActions []ActionValidateFunc[T]) ifs.IServiceCallback {
+	return &genericCallback[T]{
+		typeName:         typeName,
+		setID:            setID,
+		validate:         validate,
+		actionValidators: actionValidators,
+		afterActions:     afterActions,
 	}
 }
 
@@ -68,5 +82,17 @@ func (cb *genericCallback[T]) Before(any interface{}, action ifs.Action, cont bo
 }
 
 func (cb *genericCallback[T]) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
+	if (action != ifs.PUT && action != ifs.PATCH) || len(cb.afterActions) == 0 {
+		return nil, true, nil
+	}
+	entity, ok := any.(*T)
+	if !ok {
+		return nil, true, nil
+	}
+	for _, aa := range cb.afterActions {
+		if err := aa(entity, action, vnic); err != nil {
+			fmt.Println("[cascade] warning:", err.Error())
+		}
+	}
 	return nil, true, nil
 }

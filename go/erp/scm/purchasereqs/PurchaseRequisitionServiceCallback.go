@@ -25,10 +25,34 @@ func newPurchaseRequisitionServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmPurchaseRequisition]("ScmPurchaseRequisition",
 		func(e *scm.ScmPurchaseRequisition) { common.GenerateID(&e.RequisitionId) }).
 		StatusTransition(purchaseRequisitionTransitions()).
+		After(cascadeCancelPurchaseOrders).
 		Require(func(e *scm.ScmPurchaseRequisition) string { return e.RequisitionId }, "RequisitionId").
 		Enum(func(e *scm.ScmPurchaseRequisition) int32 { return int32(e.Status) }, scm.ScmRequisitionStatus_name, "Status").
 		OptionalMoney(func(e *scm.ScmPurchaseRequisition) *erp.Money { return e.EstimatedTotal }, "EstimatedTotal").
 		Build()
+}
+
+// cascadeCancelPurchaseOrders cancels DRAFT purchase orders
+// when a purchase requisition is cancelled.
+func cascadeCancelPurchaseOrders(req *scm.ScmPurchaseRequisition, action ifs.Action, vnic ifs.IVNic) error {
+	if req.Status != scm.ScmRequisitionStatus_REQUISITION_STATUS_CANCELLED {
+		return nil
+	}
+	children, err := common.GetEntities("PurchOrder", 50,
+		&scm.ScmPurchaseOrder{RequisitionId: req.RequisitionId}, vnic)
+	if err != nil {
+		return err
+	}
+	for _, child := range children {
+		if int32(child.Status) != 1 { // Only cancel DRAFT POs
+			continue
+		}
+		child.Status = scm.ScmPurchaseOrderStatus_PO_STATUS_CANCELLED
+		if err := common.PutEntity("PurchOrder", 50, child, vnic); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func purchaseRequisitionTransitions() *common.StatusTransitionConfig[scm.ScmPurchaseRequisition] {

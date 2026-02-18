@@ -25,6 +25,7 @@ func newSalesOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[sales.SalesOrder]("SalesOrder",
 		func(e *sales.SalesOrder) { common.GenerateID(&e.SalesOrderId) }).
 		StatusTransition(salesOrderTransitions()).
+		After(cascadeCancelDeliveryOrders).
 		Require(func(e *sales.SalesOrder) string { return e.SalesOrderId }, "SalesOrderId").
 		Require(func(e *sales.SalesOrder) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *sales.SalesOrder) string { return e.CurrencyId }, "CurrencyId").
@@ -35,6 +36,30 @@ func newSalesOrderServiceCallback() ifs.IServiceCallback {
 		OptionalMoney(func(e *sales.SalesOrder) *erp.Money { return e.TotalAmount }, "TotalAmount").
 		DateAfter(func(e *sales.SalesOrder) int64 { return e.RequestedDeliveryDate }, func(e *sales.SalesOrder) int64 { return e.OrderDate }, "RequestedDeliveryDate", "OrderDate").
 		Build()
+}
+
+// cascadeCancelDeliveryOrders marks related delivery orders as FAILED
+// when a sales order is cancelled.
+func cascadeCancelDeliveryOrders(order *sales.SalesOrder, action ifs.Action, vnic ifs.IVNic) error {
+	if order.Status != sales.SalesOrderStatus_SALES_ORDER_STATUS_CANCELLED {
+		return nil
+	}
+	children, err := common.GetEntities("DlvryOrder", 60,
+		&sales.SalesDeliveryOrder{SalesOrderId: order.SalesOrderId}, vnic)
+	if err != nil {
+		return err
+	}
+	for _, child := range children {
+		s := int32(child.Status)
+		if s == 5 || s == 6 { // DELIVERED or FAILED — skip terminal
+			continue
+		}
+		child.Status = sales.SalesDeliveryStatus_DELIVERY_STATUS_FAILED
+		if err := common.PutEntity("DlvryOrder", 60, child, vnic); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func salesOrderTransitions() *common.StatusTransitionConfig[sales.SalesOrder] {

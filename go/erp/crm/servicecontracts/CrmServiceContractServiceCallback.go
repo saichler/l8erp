@@ -25,6 +25,7 @@ func newCrmServiceContractServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmServiceContract]("CrmServiceContract",
 		func(e *crm.CrmServiceContract) { common.GenerateID(&e.ContractId) }).
 		StatusTransition(crmServiceContractTransitions()).
+		After(cascadeCancelServiceOrders).
 		Require(func(e *crm.CrmServiceContract) string { return e.ContractId }, "ContractId").
 		Require(func(e *crm.CrmServiceContract) string { return e.AccountId }, "AccountId").
 		Enum(func(e *crm.CrmServiceContract) int32 { return int32(e.ContractType) }, crm.CrmContractType_name, "ContractType").
@@ -32,6 +33,31 @@ func newCrmServiceContractServiceCallback() ifs.IServiceCallback {
 		OptionalMoney(func(e *crm.CrmServiceContract) *erp.Money { return e.ContractValue }, "ContractValue").
 		DateAfter(func(e *crm.CrmServiceContract) int64 { return e.EndDate }, func(e *crm.CrmServiceContract) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
+}
+
+// cascadeCancelServiceOrders marks related service orders as CANCELLED
+// when a service contract is expired or cancelled.
+func cascadeCancelServiceOrders(contract *crm.CrmServiceContract, action ifs.Action, vnic ifs.IVNic) error {
+	s := int32(contract.Status)
+	if s != 3 && s != 4 { // Only trigger on EXPIRED(3) or CANCELLED(4)
+		return nil
+	}
+	children, err := common.GetEntities("CrmSvcOrd", 80,
+		&crm.CrmServiceOrder{ContractId: contract.ContractId}, vnic)
+	if err != nil {
+		return err
+	}
+	for _, child := range children {
+		cs := int32(child.Status)
+		if cs == 4 || cs == 5 { // COMPLETED or CANCELLED — skip terminal
+			continue
+		}
+		child.Status = crm.CrmServiceOrderStatus_CRM_SERVICE_ORDER_STATUS_CANCELLED
+		if err := common.PutEntity("CrmSvcOrd", 80, child, vnic); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func crmServiceContractTransitions() *common.StatusTransitionConfig[crm.CrmServiceContract] {

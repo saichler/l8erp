@@ -25,6 +25,7 @@ func newSalesInvoiceServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[fin.SalesInvoice]("SalesInvoice",
 		func(e *fin.SalesInvoice) { common.GenerateID(&e.InvoiceId) }).
 		StatusTransition(salesInvoiceTransitions()).
+		After(cascadeVoidCreditMemos).
 		Require(func(e *fin.SalesInvoice) string { return e.InvoiceId }, "InvoiceId").
 		Require(func(e *fin.SalesInvoice) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *fin.SalesInvoice) string { return e.InvoiceNumber }, "InvoiceNumber").
@@ -36,6 +37,30 @@ func newSalesInvoiceServiceCallback() ifs.IServiceCallback {
 		OptionalMoney(func(e *fin.SalesInvoice) *erp.Money { return e.BalanceDue }, "BalanceDue").
 		DateAfter(func(e *fin.SalesInvoice) int64 { return e.DueDate }, func(e *fin.SalesInvoice) int64 { return e.InvoiceDate }, "DueDate", "InvoiceDate").
 		Build()
+}
+
+// cascadeVoidCreditMemos marks related credit memos as VOID
+// when a sales invoice is voided.
+func cascadeVoidCreditMemos(invoice *fin.SalesInvoice, action ifs.Action, vnic ifs.IVNic) error {
+	if invoice.Status != fin.InvoiceStatus_INVOICE_STATUS_VOID {
+		return nil
+	}
+	children, err := common.GetEntities("CrdtMemo", 40,
+		&fin.CreditMemo{OriginalInvoiceId: invoice.InvoiceId}, vnic)
+	if err != nil {
+		return err
+	}
+	for _, child := range children {
+		s := int32(child.Status)
+		if s == 3 || s == 4 { // APPLIED or VOID — skip terminal
+			continue
+		}
+		child.Status = fin.CreditMemoStatus_CREDIT_MEMO_STATUS_VOID
+		if err := common.PutEntity("CrdtMemo", 40, child, vnic); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func salesInvoiceTransitions() *common.StatusTransitionConfig[fin.SalesInvoice] {

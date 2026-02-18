@@ -53,11 +53,15 @@ Status transition enforcement implemented via `StatusTransitionConfig[T]` + `Act
 
 27 entity callbacks updated across 5 modules (Sales 4, FIN 7, SCM 3, MFG 6, CRM 5). HCM deferred (57 manual callbacks). All tests pass.
 
-### 1.5 Missing Cascading Operations
+### 1.5 Cascading Status Operations — COMPLETE ✓
 
 - ~~Deleting a parent doesn't affect children (e.g., deleting a Sales Order leaves orphan lines)~~ — **RESOLVED**: Child entities are now embedded `repeated` fields inside their parents. Deleting a parent automatically removes its children.
-- Closing a parent doesn't close/cancel children (for remaining independent related entities)
-- Status changes don't propagate (approving a PO doesn't update related entities)
+- ~~Closing a parent doesn't close/cancel children (for remaining independent related entities)~~ — **RESOLVED**: After() hook framework added to `genericCallback[T]` + VB `.After()` chain method. 4 cascades implemented:
+  - SalesOrder CANCELLED → DeliveryOrder FAILED (skip DELIVERED/FAILED)
+  - SalesInvoice VOID → CreditMemo VOID (skip APPLIED/VOID)
+  - CrmServiceContract EXPIRED/CANCELLED → CrmServiceOrder CANCELLED (skip COMPLETED/CANCELLED)
+  - ScmPurchaseRequisition CANCELLED → PurchaseOrder CANCELLED (DRAFT only)
+- ~~Status changes don't propagate~~ — **RESOLVED** via the same After() cascade mechanism above. Framework helpers `GetEntities[T]` and `PutEntity[T]` added to `service_factory.go`.
 
 ### 1.6 ServiceCallback Auto-Generate ID — AUDITED (PASS)
 

@@ -26,6 +26,7 @@ type VB[T any] struct {
 	setID            SetIDFunc[T]
 	validators       []func(*T, ifs.IVNic) error
 	actionValidators []ActionValidateFunc[T]
+	afterActions     []ActionValidateFunc[T]
 }
 
 // NewValidation creates a validation builder for a ServiceCallback.
@@ -126,14 +127,25 @@ func (b *VB[T]) StatusTransition(cfg *StatusTransitionConfig[T]) *VB[T] {
 	return b
 }
 
+// After adds a function to run after successful persistence (PUT/PATCH only).
+func (b *VB[T]) After(fn ActionValidateFunc[T]) *VB[T] {
+	b.afterActions = append(b.afterActions, fn)
+	return b
+}
+
 // Build creates the IServiceCallback from the chained validators.
 func (b *VB[T]) Build() ifs.IServiceCallback {
-	return NewServiceCallback(b.typeName, b.setID, func(item *T, vnic ifs.IVNic) error {
+	validate := func(item *T, vnic ifs.IVNic) error {
 		for _, v := range b.validators {
 			if err := v(item, vnic); err != nil {
 				return err
 			}
 		}
 		return nil
-	}, b.actionValidators...)
+	}
+	if len(b.afterActions) > 0 {
+		return NewServiceCallbackWithAfter(b.typeName, b.setID, validate,
+			b.actionValidators, b.afterActions)
+	}
+	return NewServiceCallback(b.typeName, b.setID, validate, b.actionValidators...)
 }
