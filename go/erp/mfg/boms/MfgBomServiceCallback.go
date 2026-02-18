@@ -23,10 +23,30 @@ import (
 func newMfgBomServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[mfg.MfgBom]("MfgBom",
 		func(e *mfg.MfgBom) { common.GenerateID(&e.BomId) }).
+		StatusTransition(mfgBomTransitions()).
 		Require(func(e *mfg.MfgBom) string { return e.BomId }, "BomId").
 		Require(func(e *mfg.MfgBom) string { return e.ItemId }, "ItemId").
 		Enum(func(e *mfg.MfgBom) int32 { return int32(e.BomType) }, mfg.MfgBomType_name, "BomType").
 		Enum(func(e *mfg.MfgBom) int32 { return int32(e.Status) }, mfg.MfgBomStatus_name, "Status").
 		DateAfter(func(e *mfg.MfgBom) int64 { return e.ExpiryDate }, func(e *mfg.MfgBom) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
+}
+
+func mfgBomTransitions() *common.StatusTransitionConfig[mfg.MfgBom] {
+	return &common.StatusTransitionConfig[mfg.MfgBom]{
+		StatusGetter:  func(e *mfg.MfgBom) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *mfg.MfgBom, s int32) { e.Status = mfg.MfgBomStatus(s) },
+		FilterBuilder: func(e *mfg.MfgBom) *mfg.MfgBom {
+			return &mfg.MfgBom{BomId: e.BomId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {4},       // DRAFT → PENDING_APPROVAL
+			4: {2, 1},    // PENDING_APPROVAL → ACTIVE, DRAFT
+			2: {3},       // ACTIVE → OBSOLETE
+		},
+		StatusNames: mfg.MfgBomStatus_name,
+	}
 }

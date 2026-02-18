@@ -24,9 +24,29 @@ import (
 func newCrmLeadServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmLead]("CrmLead",
 		func(e *crm.CrmLead) { common.GenerateID(&e.LeadId) }).
+		StatusTransition(crmLeadTransitions()).
 		Require(func(e *crm.CrmLead) string { return e.LeadId }, "LeadId").
 		Enum(func(e *crm.CrmLead) int32 { return int32(e.Rating) }, crm.CrmLeadRating_name, "Rating").
 		Enum(func(e *crm.CrmLead) int32 { return int32(e.Status) }, crm.CrmLeadStatus_name, "Status").
 		OptionalMoney(func(e *crm.CrmLead) *erp.Money { return e.AnnualRevenue }, "AnnualRevenue").
 		Build()
+}
+
+func crmLeadTransitions() *common.StatusTransitionConfig[crm.CrmLead] {
+	return &common.StatusTransitionConfig[crm.CrmLead]{
+		StatusGetter:  func(e *crm.CrmLead) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *crm.CrmLead, s int32) { e.Status = crm.CrmLeadStatus(s) },
+		FilterBuilder: func(e *crm.CrmLead) *crm.CrmLead {
+			return &crm.CrmLead{LeadId: e.LeadId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {2, 4},    // NEW → CONTACTED, UNQUALIFIED
+			2: {3, 4},    // CONTACTED → QUALIFIED, UNQUALIFIED
+			3: {5, 6},    // QUALIFIED → CONVERTED, LOST
+		},
+		StatusNames: crm.CrmLeadStatus_name,
+	}
 }

@@ -24,6 +24,7 @@ import (
 func newAssetServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[fin.Asset]("Asset",
 		func(e *fin.Asset) { common.GenerateID(&e.AssetId) }).
+		StatusTransition(assetTransitions()).
 		Require(func(e *fin.Asset) string { return e.AssetId }, "AssetId").
 		Require(func(e *fin.Asset) string { return e.Name }, "Name").
 		Require(func(e *fin.Asset) string { return e.CategoryId }, "CategoryId").
@@ -34,4 +35,22 @@ func newAssetServiceCallback() ifs.IServiceCallback {
 		OptionalMoney(func(e *fin.Asset) *erp.Money { return e.AccumulatedDepreciation }, "AccumulatedDepreciation").
 		OptionalMoney(func(e *fin.Asset) *erp.Money { return e.NetBookValue }, "NetBookValue").
 		Build()
+}
+
+func assetTransitions() *common.StatusTransitionConfig[fin.Asset] {
+	return &common.StatusTransitionConfig[fin.Asset]{
+		StatusGetter:  func(e *fin.Asset) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *fin.Asset, s int32) { e.Status = fin.AssetStatus(s) },
+		FilterBuilder: func(e *fin.Asset) *fin.Asset {
+			return &fin.Asset{AssetId: e.AssetId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {2, 3, 4, 5}, // ACTIVE → DISPOSED, UNDER_MAINTENANCE, TRANSFERRED, FULLY_DEPRECIATED
+			3: {1},           // UNDER_MAINTENANCE → ACTIVE
+		},
+		StatusNames: fin.AssetStatus_name,
+	}
 }

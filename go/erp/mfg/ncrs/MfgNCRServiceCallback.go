@@ -24,6 +24,7 @@ import (
 func newMfgNCRServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[mfg.MfgNCR]("MfgNCR",
 		func(e *mfg.MfgNCR) { common.GenerateID(&e.NcrId) }).
+		StatusTransition(ncrTransitions()).
 		Require(func(e *mfg.MfgNCR) string { return e.NcrId }, "NcrId").
 		Require(func(e *mfg.MfgNCR) string { return e.Title }, "Title").
 		Enum(func(e *mfg.MfgNCR) int32 { return int32(e.Disposition) }, mfg.MfgNCRDisposition_name, "Disposition").
@@ -32,4 +33,23 @@ func newMfgNCRServiceCallback() ifs.IServiceCallback {
 		OptionalMoney(func(e *mfg.MfgNCR) *erp.Money { return e.EstimatedCost }, "EstimatedCost").
 		OptionalMoney(func(e *mfg.MfgNCR) *erp.Money { return e.ActualCost }, "ActualCost").
 		Build()
+}
+
+func ncrTransitions() *common.StatusTransitionConfig[mfg.MfgNCR] {
+	return &common.StatusTransitionConfig[mfg.MfgNCR]{
+		StatusGetter:  func(e *mfg.MfgNCR) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *mfg.MfgNCR, s int32) { e.Status = mfg.MfgNCRStatus(s) },
+		FilterBuilder: func(e *mfg.MfgNCR) *mfg.MfgNCR {
+			return &mfg.MfgNCR{NcrId: e.NcrId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {2},       // OPEN → UNDER_REVIEW
+			2: {3},       // UNDER_REVIEW → DISPOSITIONED
+			3: {4},       // DISPOSITIONED → CLOSED
+		},
+		StatusNames: mfg.MfgNCRStatus_name,
+	}
 }

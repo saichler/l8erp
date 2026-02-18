@@ -22,22 +22,27 @@ import (
 // ValidateFunc is a function that validates an entity.
 type ValidateFunc[T any] func(*T, ifs.IVNic) error
 
+// ActionValidateFunc is a function that validates an entity with access to the CRUD action.
+type ActionValidateFunc[T any] func(*T, ifs.Action, ifs.IVNic) error
+
 // SetIDFunc is a function that generates/sets the primary key on an entity.
 type SetIDFunc[T any] func(*T)
 
 type genericCallback[T any] struct {
-	typeName string
-	setID    SetIDFunc[T]
-	validate ValidateFunc[T]
+	typeName         string
+	setID            SetIDFunc[T]
+	validate         ValidateFunc[T]
+	actionValidators []ActionValidateFunc[T]
 }
 
 // NewServiceCallback creates a standard IServiceCallback that handles type assertion,
 // ID generation on POST, and validation.
-func NewServiceCallback[T any](typeName string, setID SetIDFunc[T], validate ValidateFunc[T]) ifs.IServiceCallback {
+func NewServiceCallback[T any](typeName string, setID SetIDFunc[T], validate ValidateFunc[T], actionValidators ...ActionValidateFunc[T]) ifs.IServiceCallback {
 	return &genericCallback[T]{
-		typeName: typeName,
-		setID:    setID,
-		validate: validate,
+		typeName:         typeName,
+		setID:            setID,
+		validate:         validate,
+		actionValidators: actionValidators,
 	}
 }
 
@@ -48,6 +53,11 @@ func (cb *genericCallback[T]) Before(any interface{}, action ifs.Action, cont bo
 	}
 	if action == ifs.POST {
 		cb.setID(entity)
+	}
+	for _, av := range cb.actionValidators {
+		if err := av(entity, action, vnic); err != nil {
+			return nil, false, err
+		}
 	}
 	if cb.validate != nil {
 		if err := cb.validate(entity, vnic); err != nil {

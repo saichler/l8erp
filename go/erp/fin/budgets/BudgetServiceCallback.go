@@ -24,6 +24,7 @@ import (
 func newBudgetServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[fin.Budget]("Budget",
 		func(e *fin.Budget) { common.GenerateID(&e.BudgetId) }).
+		StatusTransition(budgetTransitions()).
 		Require(func(e *fin.Budget) string { return e.BudgetId }, "BudgetId").
 		Require(func(e *fin.Budget) string { return e.BudgetName }, "BudgetName").
 		Require(func(e *fin.Budget) string { return e.FiscalYearId }, "FiscalYearId").
@@ -31,4 +32,24 @@ func newBudgetServiceCallback() ifs.IServiceCallback {
 		Enum(func(e *fin.Budget) int32 { return int32(e.Status) }, fin.BudgetStatus_name, "Status").
 		OptionalMoney(func(e *fin.Budget) *erp.Money { return e.TotalAmount }, "TotalAmount").
 		Build()
+}
+
+func budgetTransitions() *common.StatusTransitionConfig[fin.Budget] {
+	return &common.StatusTransitionConfig[fin.Budget]{
+		StatusGetter:  func(e *fin.Budget) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *fin.Budget, s int32) { e.Status = fin.BudgetStatus(s) },
+		FilterBuilder: func(e *fin.Budget) *fin.Budget {
+			return &fin.Budget{BudgetId: e.BudgetId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {2},       // DRAFT → SUBMITTED
+			2: {3},       // SUBMITTED → APPROVED
+			3: {4},       // APPROVED → ACTIVE
+			4: {5},       // ACTIVE → CLOSED
+		},
+		StatusNames: fin.BudgetStatus_name,
+	}
 }

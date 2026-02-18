@@ -24,6 +24,7 @@ import (
 func newCrmCampaignServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmCampaign]("CrmCampaign",
 		func(e *crm.CrmCampaign) { common.GenerateID(&e.CampaignId) }).
+		StatusTransition(crmCampaignTransitions()).
 		Require(func(e *crm.CrmCampaign) string { return e.CampaignId }, "CampaignId").
 		Enum(func(e *crm.CrmCampaign) int32 { return int32(e.CampaignType) }, crm.CrmCampaignType_name, "CampaignType").
 		Enum(func(e *crm.CrmCampaign) int32 { return int32(e.Status) }, crm.CrmCampaignStatus_name, "Status").
@@ -32,4 +33,22 @@ func newCrmCampaignServiceCallback() ifs.IServiceCallback {
 		OptionalMoney(func(e *crm.CrmCampaign) *erp.Money { return e.ExpectedRevenue }, "ExpectedRevenue").
 		DateAfter(func(e *crm.CrmCampaign) int64 { return e.EndDate }, func(e *crm.CrmCampaign) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
+}
+
+func crmCampaignTransitions() *common.StatusTransitionConfig[crm.CrmCampaign] {
+	return &common.StatusTransitionConfig[crm.CrmCampaign]{
+		StatusGetter:  func(e *crm.CrmCampaign) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *crm.CrmCampaign, s int32) { e.Status = crm.CrmCampaignStatus(s) },
+		FilterBuilder: func(e *crm.CrmCampaign) *crm.CrmCampaign {
+			return &crm.CrmCampaign{CampaignId: e.CampaignId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {2, 4},    // PLANNED → ACTIVE, ABORTED
+			2: {3, 4},    // ACTIVE → COMPLETED, ABORTED
+		},
+		StatusNames: crm.CrmCampaignStatus_name,
+	}
 }

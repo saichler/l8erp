@@ -24,6 +24,7 @@ import (
 func newSalesOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[sales.SalesOrder]("SalesOrder",
 		func(e *sales.SalesOrder) { common.GenerateID(&e.SalesOrderId) }).
+		StatusTransition(salesOrderTransitions()).
 		Require(func(e *sales.SalesOrder) string { return e.SalesOrderId }, "SalesOrderId").
 		Require(func(e *sales.SalesOrder) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *sales.SalesOrder) string { return e.CurrencyId }, "CurrencyId").
@@ -34,4 +35,25 @@ func newSalesOrderServiceCallback() ifs.IServiceCallback {
 		OptionalMoney(func(e *sales.SalesOrder) *erp.Money { return e.TotalAmount }, "TotalAmount").
 		DateAfter(func(e *sales.SalesOrder) int64 { return e.RequestedDeliveryDate }, func(e *sales.SalesOrder) int64 { return e.OrderDate }, "RequestedDeliveryDate", "OrderDate").
 		Build()
+}
+
+func salesOrderTransitions() *common.StatusTransitionConfig[sales.SalesOrder] {
+	return &common.StatusTransitionConfig[sales.SalesOrder]{
+		StatusGetter:  func(e *sales.SalesOrder) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *sales.SalesOrder, s int32) { e.Status = sales.SalesOrderStatus(s) },
+		FilterBuilder: func(e *sales.SalesOrder) *sales.SalesOrder {
+			return &sales.SalesOrder{SalesOrderId: e.SalesOrderId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {2, 7},    // DRAFT → CONFIRMED, CANCELLED
+			2: {3, 7},    // CONFIRMED → IN_PROGRESS, CANCELLED
+			3: {4, 5, 7}, // IN_PROGRESS → PARTIALLY_SHIPPED, SHIPPED, CANCELLED
+			4: {5, 7},    // PARTIALLY_SHIPPED → SHIPPED, CANCELLED
+			5: {6},       // SHIPPED → DELIVERED
+		},
+		StatusNames: sales.SalesOrderStatus_name,
+	}
 }

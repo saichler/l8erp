@@ -24,9 +24,28 @@ import (
 func newJournalEntryServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[fin.JournalEntry]("JournalEntry",
 		func(e *fin.JournalEntry) { common.GenerateID(&e.JournalEntryId) }).
+		StatusTransition(journalEntryTransitions()).
 		Require(func(e *fin.JournalEntry) string { return e.JournalEntryId }, "JournalEntryId").
 		Require(func(e *fin.JournalEntry) string { return e.FiscalPeriodId }, "FiscalPeriodId").
 		Enum(func(e *fin.JournalEntry) int32 { return int32(e.Status) }, fin.JournalEntryStatus_name, "Status").
 		OptionalMoney(func(e *fin.JournalEntry) *erp.Money { return e.TotalAmount }, "TotalAmount").
 		Build()
+}
+
+func journalEntryTransitions() *common.StatusTransitionConfig[fin.JournalEntry] {
+	return &common.StatusTransitionConfig[fin.JournalEntry]{
+		StatusGetter:  func(e *fin.JournalEntry) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *fin.JournalEntry, s int32) { e.Status = fin.JournalEntryStatus(s) },
+		FilterBuilder: func(e *fin.JournalEntry) *fin.JournalEntry {
+			return &fin.JournalEntry{JournalEntryId: e.JournalEntryId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {2},       // DRAFT → POSTED
+			2: {3, 4},    // POSTED → REVERSED, VOID
+		},
+		StatusNames: fin.JournalEntryStatus_name,
+	}
 }

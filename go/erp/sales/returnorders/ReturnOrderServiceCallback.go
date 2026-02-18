@@ -24,10 +24,31 @@ import (
 func newReturnOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[sales.SalesReturnOrder]("SalesReturnOrder",
 		func(e *sales.SalesReturnOrder) { common.GenerateID(&e.ReturnOrderId) }).
+		StatusTransition(returnOrderTransitions()).
 		Require(func(e *sales.SalesReturnOrder) string { return e.ReturnOrderId }, "ReturnOrderId").
 		Require(func(e *sales.SalesReturnOrder) string { return e.SalesOrderId }, "SalesOrderId").
 		Require(func(e *sales.SalesReturnOrder) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *sales.SalesReturnOrder) int32 { return int32(e.Status) }, sales.SalesReturnStatus_name, "Status").
 		OptionalMoney(func(e *sales.SalesReturnOrder) *erp.Money { return e.RefundAmount }, "RefundAmount").
 		Build()
+}
+
+func returnOrderTransitions() *common.StatusTransitionConfig[sales.SalesReturnOrder] {
+	return &common.StatusTransitionConfig[sales.SalesReturnOrder]{
+		StatusGetter:  func(e *sales.SalesReturnOrder) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *sales.SalesReturnOrder, s int32) { e.Status = sales.SalesReturnStatus(s) },
+		FilterBuilder: func(e *sales.SalesReturnOrder) *sales.SalesReturnOrder {
+			return &sales.SalesReturnOrder{ReturnOrderId: e.ReturnOrderId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {2, 6},    // REQUESTED → APPROVED, REJECTED
+			2: {3, 6},    // APPROVED → RECEIVED, REJECTED
+			3: {4},       // RECEIVED → INSPECTED
+			4: {5, 6},    // INSPECTED → PROCESSED, REJECTED
+		},
+		StatusNames: sales.SalesReturnStatus_name,
+	}
 }

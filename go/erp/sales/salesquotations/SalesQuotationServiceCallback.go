@@ -24,6 +24,7 @@ import (
 func newSalesQuotationServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[sales.SalesQuotation]("SalesQuotation",
 		func(e *sales.SalesQuotation) { common.GenerateID(&e.QuotationId) }).
+		StatusTransition(salesQuotationTransitions()).
 		Require(func(e *sales.SalesQuotation) string { return e.QuotationId }, "QuotationId").
 		Require(func(e *sales.SalesQuotation) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *sales.SalesQuotation) string { return e.CurrencyId }, "CurrencyId").
@@ -33,4 +34,22 @@ func newSalesQuotationServiceCallback() ifs.IServiceCallback {
 		OptionalMoney(func(e *sales.SalesQuotation) *erp.Money { return e.TaxTotal }, "TaxTotal").
 		OptionalMoney(func(e *sales.SalesQuotation) *erp.Money { return e.TotalAmount }, "TotalAmount").
 		Build()
+}
+
+func salesQuotationTransitions() *common.StatusTransitionConfig[sales.SalesQuotation] {
+	return &common.StatusTransitionConfig[sales.SalesQuotation]{
+		StatusGetter:  func(e *sales.SalesQuotation) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *sales.SalesQuotation, s int32) { e.Status = sales.SalesQuotationStatus(s) },
+		FilterBuilder: func(e *sales.SalesQuotation) *sales.SalesQuotation {
+			return &sales.SalesQuotation{QuotationId: e.QuotationId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {2, 6},       // DRAFT → SENT, CANCELLED
+			2: {3, 4, 5, 6}, // SENT → ACCEPTED, REJECTED, EXPIRED, CANCELLED
+		},
+		StatusNames: sales.SalesQuotationStatus_name,
+	}
 }

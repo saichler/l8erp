@@ -22,9 +22,10 @@ import (
 // VB (Validation Builder) chains validators for a ServiceCallback.
 // Use NewValidation to start building, chain .Require() calls, then .Build().
 type VB[T any] struct {
-	typeName   string
-	setID      SetIDFunc[T]
-	validators []func(*T, ifs.IVNic) error
+	typeName         string
+	setID            SetIDFunc[T]
+	validators       []func(*T, ifs.IVNic) error
+	actionValidators []ActionValidateFunc[T]
 }
 
 // NewValidation creates a validation builder for a ServiceCallback.
@@ -119,6 +120,12 @@ func (b *VB[T]) Custom(fn func(*T, ifs.IVNic) error) *VB[T] {
 	return b
 }
 
+// StatusTransition adds a status state-machine validator.
+func (b *VB[T]) StatusTransition(cfg *StatusTransitionConfig[T]) *VB[T] {
+	b.actionValidators = append(b.actionValidators, cfg.BuildValidator())
+	return b
+}
+
 // Build creates the IServiceCallback from the chained validators.
 func (b *VB[T]) Build() ifs.IServiceCallback {
 	return NewServiceCallback(b.typeName, b.setID, func(item *T, vnic ifs.IVNic) error {
@@ -128,5 +135,5 @@ func (b *VB[T]) Build() ifs.IServiceCallback {
 			}
 		}
 		return nil
-	})
+	}, b.actionValidators...)
 }

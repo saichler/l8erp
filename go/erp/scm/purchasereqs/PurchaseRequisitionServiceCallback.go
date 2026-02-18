@@ -24,8 +24,28 @@ import (
 func newPurchaseRequisitionServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmPurchaseRequisition]("ScmPurchaseRequisition",
 		func(e *scm.ScmPurchaseRequisition) { common.GenerateID(&e.RequisitionId) }).
+		StatusTransition(purchaseRequisitionTransitions()).
 		Require(func(e *scm.ScmPurchaseRequisition) string { return e.RequisitionId }, "RequisitionId").
 		Enum(func(e *scm.ScmPurchaseRequisition) int32 { return int32(e.Status) }, scm.ScmRequisitionStatus_name, "Status").
 		OptionalMoney(func(e *scm.ScmPurchaseRequisition) *erp.Money { return e.EstimatedTotal }, "EstimatedTotal").
 		Build()
+}
+
+func purchaseRequisitionTransitions() *common.StatusTransitionConfig[scm.ScmPurchaseRequisition] {
+	return &common.StatusTransitionConfig[scm.ScmPurchaseRequisition]{
+		StatusGetter:  func(e *scm.ScmPurchaseRequisition) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *scm.ScmPurchaseRequisition, s int32) { e.Status = scm.ScmRequisitionStatus(s) },
+		FilterBuilder: func(e *scm.ScmPurchaseRequisition) *scm.ScmPurchaseRequisition {
+			return &scm.ScmPurchaseRequisition{RequisitionId: e.RequisitionId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {2, 6},       // DRAFT → SUBMITTED, CANCELLED
+			2: {3, 4, 6},    // SUBMITTED → APPROVED, REJECTED, CANCELLED
+			3: {5},          // APPROVED → FULFILLED
+		},
+		StatusNames: scm.ScmRequisitionStatus_name,
+	}
 }

@@ -24,10 +24,30 @@ import (
 func newMfgEngChangeOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[mfg.MfgEngChangeOrder]("MfgEngChangeOrder",
 		func(e *mfg.MfgEngChangeOrder) { common.GenerateID(&e.ChangeOrderId) }).
+		StatusTransition(engChangeOrderTransitions()).
 		Require(func(e *mfg.MfgEngChangeOrder) string { return e.ChangeOrderId }, "ChangeOrderId").
 		Require(func(e *mfg.MfgEngChangeOrder) string { return e.Title }, "Title").
 		Enum(func(e *mfg.MfgEngChangeOrder) int32 { return int32(e.Status) }, mfg.MfgChangeOrderStatus_name, "Status").
 		OptionalMoney(func(e *mfg.MfgEngChangeOrder) *erp.Money { return e.EstimatedCost }, "EstimatedCost").
 		OptionalMoney(func(e *mfg.MfgEngChangeOrder) *erp.Money { return e.ActualCost }, "ActualCost").
 		Build()
+}
+
+func engChangeOrderTransitions() *common.StatusTransitionConfig[mfg.MfgEngChangeOrder] {
+	return &common.StatusTransitionConfig[mfg.MfgEngChangeOrder]{
+		StatusGetter:  func(e *mfg.MfgEngChangeOrder) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *mfg.MfgEngChangeOrder, s int32) { e.Status = mfg.MfgChangeOrderStatus(s) },
+		FilterBuilder: func(e *mfg.MfgEngChangeOrder) *mfg.MfgEngChangeOrder {
+			return &mfg.MfgEngChangeOrder{ChangeOrderId: e.ChangeOrderId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {2},       // DRAFT → SUBMITTED
+			2: {3, 4},    // SUBMITTED → APPROVED, REJECTED
+			3: {5},       // APPROVED → IMPLEMENTED
+		},
+		StatusNames: mfg.MfgChangeOrderStatus_name,
+	}
 }

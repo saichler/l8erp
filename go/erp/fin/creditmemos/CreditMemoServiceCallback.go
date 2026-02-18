@@ -24,9 +24,28 @@ import (
 func newCreditMemoServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[fin.CreditMemo]("CreditMemo",
 		func(e *fin.CreditMemo) { common.GenerateID(&e.CreditMemoId) }).
+		StatusTransition(creditMemoTransitions()).
 		Require(func(e *fin.CreditMemo) string { return e.CreditMemoId }, "CreditMemoId").
 		Require(func(e *fin.CreditMemo) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *fin.CreditMemo) int32 { return int32(e.Status) }, fin.CreditMemoStatus_name, "Status").
 		OptionalMoney(func(e *fin.CreditMemo) *erp.Money { return e.Amount }, "Amount").
 		Build()
+}
+
+func creditMemoTransitions() *common.StatusTransitionConfig[fin.CreditMemo] {
+	return &common.StatusTransitionConfig[fin.CreditMemo]{
+		StatusGetter:  func(e *fin.CreditMemo) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *fin.CreditMemo, s int32) { e.Status = fin.CreditMemoStatus(s) },
+		FilterBuilder: func(e *fin.CreditMemo) *fin.CreditMemo {
+			return &fin.CreditMemo{CreditMemoId: e.CreditMemoId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {2, 4},    // DRAFT → APPROVED, VOID
+			2: {3, 4},    // APPROVED → APPLIED, VOID
+		},
+		StatusNames: fin.CreditMemoStatus_name,
+	}
 }

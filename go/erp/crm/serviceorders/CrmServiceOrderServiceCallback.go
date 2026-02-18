@@ -24,6 +24,7 @@ import (
 func newCrmServiceOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmServiceOrder]("CrmServiceOrder",
 		func(e *crm.CrmServiceOrder) { common.GenerateID(&e.OrderId) }).
+		StatusTransition(crmServiceOrderTransitions()).
 		Require(func(e *crm.CrmServiceOrder) string { return e.OrderId }, "OrderId").
 		Require(func(e *crm.CrmServiceOrder) string { return e.AccountId }, "AccountId").
 		Enum(func(e *crm.CrmServiceOrder) int32 { return int32(e.OrderType) }, crm.CrmServiceOrderType_name, "OrderType").
@@ -32,4 +33,23 @@ func newCrmServiceOrderServiceCallback() ifs.IServiceCallback {
 		OptionalMoney(func(e *crm.CrmServiceOrder) *erp.Money { return e.EstimatedCost }, "EstimatedCost").
 		OptionalMoney(func(e *crm.CrmServiceOrder) *erp.Money { return e.ActualCost }, "ActualCost").
 		Build()
+}
+
+func crmServiceOrderTransitions() *common.StatusTransitionConfig[crm.CrmServiceOrder] {
+	return &common.StatusTransitionConfig[crm.CrmServiceOrder]{
+		StatusGetter:  func(e *crm.CrmServiceOrder) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *crm.CrmServiceOrder, s int32) { e.Status = crm.CrmServiceOrderStatus(s) },
+		FilterBuilder: func(e *crm.CrmServiceOrder) *crm.CrmServiceOrder {
+			return &crm.CrmServiceOrder{OrderId: e.OrderId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {2, 5},    // NEW → SCHEDULED, CANCELLED
+			2: {3, 5},    // SCHEDULED → IN_PROGRESS, CANCELLED
+			3: {4, 5},    // IN_PROGRESS → COMPLETED, CANCELLED
+		},
+		StatusNames: crm.CrmServiceOrderStatus_name,
+	}
 }

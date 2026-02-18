@@ -24,6 +24,7 @@ import (
 func newSalesInvoiceServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[fin.SalesInvoice]("SalesInvoice",
 		func(e *fin.SalesInvoice) { common.GenerateID(&e.InvoiceId) }).
+		StatusTransition(salesInvoiceTransitions()).
 		Require(func(e *fin.SalesInvoice) string { return e.InvoiceId }, "InvoiceId").
 		Require(func(e *fin.SalesInvoice) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *fin.SalesInvoice) string { return e.InvoiceNumber }, "InvoiceNumber").
@@ -35,4 +36,25 @@ func newSalesInvoiceServiceCallback() ifs.IServiceCallback {
 		OptionalMoney(func(e *fin.SalesInvoice) *erp.Money { return e.BalanceDue }, "BalanceDue").
 		DateAfter(func(e *fin.SalesInvoice) int64 { return e.DueDate }, func(e *fin.SalesInvoice) int64 { return e.InvoiceDate }, "DueDate", "InvoiceDate").
 		Build()
+}
+
+func salesInvoiceTransitions() *common.StatusTransitionConfig[fin.SalesInvoice] {
+	return &common.StatusTransitionConfig[fin.SalesInvoice]{
+		StatusGetter:  func(e *fin.SalesInvoice) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *fin.SalesInvoice, s int32) { e.Status = fin.InvoiceStatus(s) },
+		FilterBuilder: func(e *fin.SalesInvoice) *fin.SalesInvoice {
+			return &fin.SalesInvoice{InvoiceId: e.InvoiceId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {2, 7, 8},       // DRAFT → SUBMITTED, CANCELLED, VOID
+			2: {3, 7, 8},       // SUBMITTED → APPROVED, CANCELLED, VOID
+			3: {4, 5, 6, 7, 8}, // APPROVED → PARTIALLY_PAID, PAID, OVERDUE, CANCELLED, VOID
+			4: {5},             // PARTIALLY_PAID → PAID
+			6: {5, 7},          // OVERDUE → PAID, CANCELLED
+		},
+		StatusNames: fin.InvoiceStatus_name,
+	}
 }

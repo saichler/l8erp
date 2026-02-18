@@ -24,10 +24,31 @@ import (
 func newVendorPaymentServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[fin.VendorPayment]("VendorPayment",
 		func(e *fin.VendorPayment) { common.GenerateID(&e.PaymentId) }).
+		StatusTransition(vendorPaymentTransitions()).
 		Require(func(e *fin.VendorPayment) string { return e.PaymentId }, "PaymentId").
 		Require(func(e *fin.VendorPayment) string { return e.VendorId }, "VendorId").
 		Enum(func(e *fin.VendorPayment) int32 { return int32(e.PaymentMethod) }, fin.PaymentMethod_name, "PaymentMethod").
 		Enum(func(e *fin.VendorPayment) int32 { return int32(e.Status) }, fin.PaymentStatus_name, "Status").
 		OptionalMoney(func(e *fin.VendorPayment) *erp.Money { return e.Amount }, "Amount").
 		Build()
+}
+
+func vendorPaymentTransitions() *common.StatusTransitionConfig[fin.VendorPayment] {
+	return &common.StatusTransitionConfig[fin.VendorPayment]{
+		StatusGetter:  func(e *fin.VendorPayment) int32 { return int32(e.Status) },
+		StatusSetter:  func(e *fin.VendorPayment, s int32) { e.Status = fin.PaymentStatus(s) },
+		FilterBuilder: func(e *fin.VendorPayment) *fin.VendorPayment {
+			return &fin.VendorPayment{PaymentId: e.PaymentId}
+		},
+		ServiceName:   ServiceName,
+		ServiceArea:   ServiceArea,
+		InitialStatus: 0,
+		Transitions: map[int32][]int32{
+			1: {2, 5},    // PENDING → PROCESSING, CANCELLED
+			2: {3, 4},    // PROCESSING → COMPLETED, FAILED
+			3: {6},       // COMPLETED → REVERSED
+			4: {1},       // FAILED → PENDING
+		},
+		StatusNames: fin.PaymentStatus_name,
+	}
 }
