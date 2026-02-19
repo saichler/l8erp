@@ -61,7 +61,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 // Inline tables use a hidden input with data-inline-table-data attribute
                 // so form.elements[field.key] won't find a match — skip the guard for them
                 const element = form.elements[field.key];
-                if (!element && field.type !== 'money' && field.type !== 'inlineTable' && field.type !== 'tags' && field.type !== 'multiselect' && field.type !== 'richtext') return;
+                if (!element && field.type !== 'money' && field.type !== 'period' && field.type !== 'inlineTable' && field.type !== 'tags' && field.type !== 'multiselect' && field.type !== 'richtext') return;
 
                 let value;
                 switch (field.type) {
@@ -143,6 +143,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                         }
                         const currId = currencyEl ? currencyEl.value : '';
                         value = cents != null ? { amount: cents, currencyId: currId } : null;
+                        break;
+                    }
+
+                    case 'period': {
+                        const ptEl = form.querySelector(`select[name="${field.key}.__periodType"]`);
+                        const pyEl = form.querySelector(`select[name="${field.key}.__periodYear"]`);
+                        const pvEl = form.querySelector(`select[name="${field.key}.__periodValue"]`);
+                        const pt = ptEl ? parseInt(ptEl.value, 10) : 0;
+                        const py = pyEl ? parseInt(pyEl.value, 10) : 0;
+                        const pv = pvEl ? parseInt(pvEl.value, 10) : 0;
+                        value = pt ? { periodType: pt, periodYear: py, periodValue: pv } : null;
                         break;
                     }
 

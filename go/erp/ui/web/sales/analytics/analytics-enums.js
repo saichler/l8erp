@@ -49,13 +49,6 @@ limitations under the License.
         ['Closed', 'closed', 'layer8d-status-active']
     ]);
 
-    const TARGET_PERIOD = factory.create([
-        ['Unspecified', null, ''],
-        ['Monthly', 'monthly', 'layer8d-status-active'],
-        ['Quarterly', 'quarterly', 'layer8d-status-active'],
-        ['Annual', 'annual', 'layer8d-status-active']
-    ]);
-
     const TARGET_STATUS = factory.create([
         ['Unspecified', null, ''],
         ['On Track', 'ontrack', 'layer8d-status-active'],
@@ -76,8 +69,6 @@ limitations under the License.
         COMMISSION_TYPE_CLASSES: COMMISSION_TYPE.classes,
         FORECAST_CATEGORY: FORECAST_CATEGORY.enum,
         FORECAST_CATEGORY_CLASSES: FORECAST_CATEGORY.classes,
-        TARGET_PERIOD: TARGET_PERIOD.enum,
-        TARGET_PERIOD_CLASSES: TARGET_PERIOD.classes,
         TARGET_STATUS: TARGET_STATUS.enum,
         TARGET_STATUS_CLASSES: TARGET_STATUS.classes
     };
@@ -90,7 +81,6 @@ limitations under the License.
         territoryType: createStatusRenderer(TERRITORY_TYPE.enum, TERRITORY_TYPE.classes),
         commissionType: createStatusRenderer(COMMISSION_TYPE.enum, COMMISSION_TYPE.classes),
         forecastCategory: createStatusRenderer(FORECAST_CATEGORY.enum, FORECAST_CATEGORY.classes),
-        targetPeriod: createStatusRenderer(TARGET_PERIOD.enum, TARGET_PERIOD.classes),
         targetStatus: createStatusRenderer(TARGET_STATUS.enum, TARGET_STATUS.classes),
         date: renderDate,
         money: renderMoney

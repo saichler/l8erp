@@ -303,6 +303,10 @@ limitations under the License.
     flex: 1;
 }
 
+/* Period field (3 cascading selects) */
+.period-input-group { display: flex; gap: 8px; align-items: center; }
+.period-input-group select { flex: 1; min-width: 0; }
+
 /* Inline Table (embedded repeated child entities - card layout) */
 .mobile-form-inline-table {
     margin-top: var(--spacing-sm);

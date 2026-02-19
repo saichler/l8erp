@@ -20,6 +20,7 @@ limitations under the License.
 
     window.SalesAnalytics = window.SalesAnalytics || {};
 
+    const col = Layer8ColumnFactory;
     const { renderDate, renderMoney } = Layer8DRenderers;
     const render = SalesAnalytics.render;
 
@@ -45,15 +46,7 @@ limitations under the License.
                 sortKey: 'achievedAmount',
                 render: (item) => renderMoney(item.achievedAmount)
             },
-            {
-                key: 'period',
-                label: 'Period',
-                sortKey: 'period',
-                render: (item) => render.targetPeriod(item.period)
-            },
-            { key: 'year', label: 'Year', sortKey: 'year' },
-            { key: 'quarter', label: 'Quarter', sortKey: 'quarter' },
-            { key: 'month', label: 'Month', sortKey: 'month' },
+            ...col.period('period', 'Period'),
             { key: 'achievementPercent', label: '% Achieved', sortKey: 'achievementPercent' }
         ],
 
@@ -100,6 +93,7 @@ limitations under the License.
                 sortKey: 'category',
                 render: (item) => render.forecastCategory(item.category)
             },
+            ...col.period('period', 'Period'),
             {
                 key: 'forecastAmount',
                 label: 'Forecast',

@@ -31,10 +31,7 @@ limitations under the License.
             ...col.col('territoryId', 'Territory'),
             ...col.money('targetAmount', 'Target'),
             ...col.money('achievedAmount', 'Achieved'),
-            ...col.status('period', 'Period', enums.TARGET_PERIOD_VALUES, render.targetPeriod),
-            ...col.col('year', 'Year'),
-            ...col.col('quarter', 'Quarter'),
-            ...col.col('month', 'Month'),
+            ...col.period('period', 'Period'),
             ...col.col('achievementPercent', '% Achieved')
         ],
 
@@ -60,6 +57,7 @@ limitations under the License.
             ...col.col('name', 'Name'),
             ...col.col('salespersonId', 'Salesperson'),
             ...col.status('category', 'Category', enums.FORECAST_CATEGORY_VALUES, render.forecastCategory),
+            ...col.period('period', 'Period'),
             ...col.money('forecastAmount', 'Forecast'),
             ...col.date('expectedCloseDate', 'Date')
         ]

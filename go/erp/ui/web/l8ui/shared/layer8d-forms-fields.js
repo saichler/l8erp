@@ -244,6 +244,34 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 break;
             }
 
+            case 'period': {
+                const periodObj = (typeof value === 'object' && value !== null) ? value : {};
+                const periodType = periodObj.periodType || 0;
+                const periodYear = periodObj.periodYear || new Date().getFullYear();
+                const periodValue = periodObj.periodValue || 0;
+
+                // Period Type select
+                const typeOptions = [['', '-- Select --'], ['1', 'Yearly'], ['2', 'Quarterly'], ['3', 'Monthly']];
+                let typeHtml = `<select name="${field.key}.__periodType" class="period-type-select" onchange="Layer8DFormsFields.onPeriodTypeChange(this)" ${field.required ? 'required' : ''}>`;
+                for (const [val, lbl] of typeOptions) {
+                    typeHtml += `<option value="${val}"${String(periodType) === val ? ' selected' : ''}>${lbl}</option>`;
+                }
+                typeHtml += '</select>';
+
+                // Year select (2050 down to 1970)
+                let yearHtml = `<select name="${field.key}.__periodYear" class="period-year-select">`;
+                for (let y = 2050; y >= 1970; y--) {
+                    yearHtml += `<option value="${y}"${y === periodYear ? ' selected' : ''}>${y}</option>`;
+                }
+                yearHtml += '</select>';
+
+                // Period Value select (content depends on type)
+                let valHtml = generatePeriodValueSelect(field.key, periodType, periodValue);
+
+                inputHtml = `<div class="period-input-group">${typeHtml}${yearHtml}${valHtml}</div>`;
+                break;
+            }
+
             case 'reference':
                 inputHtml = generateReferenceInput(field, value);
                 break;
@@ -426,7 +454,27 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         }
     }
 
-    // Inline table HTML, tags/multiselect handlers are in layer8d-forms-fields-ext.js
+    // ========================================
+    // PERIOD FIELD HELPERS (onPeriodTypeChange in layer8d-forms-fields-ext.js)
+    // ========================================
+
+    function generatePeriodValueSelect(fieldKey, periodType, selectedValue) {
+        const months = [[1,'January'],[2,'February'],[3,'March'],[4,'April'],[5,'May'],[6,'June'],
+                        [7,'July'],[8,'August'],[9,'September'],[10,'October'],[11,'November'],[12,'December']];
+        const quarters = [[13,'Q1'],[14,'Q2'],[15,'Q3'],[16,'Q4']];
+        const hidden = (Number(periodType) === 1);
+        let options = Number(periodType) === 2 ? quarters : Number(periodType) === 3 ? months : [];
+
+        let html = `<select name="${fieldKey}.__periodValue" class="period-value-select"${hidden ? ' style="display:none"' : ''}>`;
+        html += '<option value="">--</option>';
+        for (const [val, lbl] of options) {
+            html += `<option value="${val}"${Number(selectedValue) === val ? ' selected' : ''}>${lbl}</option>`;
+        }
+        html += '</select>';
+        return html;
+    }
+
+    // Inline table HTML, tags/multiselect & period handlers are in layer8d-forms-fields-ext.js
 
     // Export (extended by layer8d-forms-fields-ext.js)
     window.Layer8DFormsFields = {

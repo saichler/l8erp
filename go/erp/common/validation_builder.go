@@ -15,8 +15,10 @@ limitations under the License.
 package common
 
 import (
+	"fmt"
 	erp "github.com/saichler/l8erp/go/types/erp"
 	"github.com/saichler/l8types/go/ifs"
+	l8api "github.com/saichler/l8types/go/types/l8api"
 )
 
 // VB (Validation Builder) chains validators for a ServiceCallback.
@@ -138,6 +140,50 @@ func (b *VB[T]) StatusTransition(cfg *StatusTransitionConfig[T]) *VB[T] {
 // After adds a function to run after successful persistence (PUT/PATCH only).
 func (b *VB[T]) After(fn ActionValidateFunc[T]) *VB[T] {
 	b.afterActions = append(b.afterActions, fn)
+	return b
+}
+
+// ValidatePeriod validates an L8Period field.
+func ValidatePeriod(p *l8api.L8Period, name string) error {
+	if p == nil {
+		return fmt.Errorf("%s is required", name)
+	}
+	if p.PeriodType == l8api.L8PeriodType_invalid_period_type {
+		return fmt.Errorf("%s type is required", name)
+	}
+	if p.PeriodYear < 1970 || p.PeriodYear > 2100 {
+		return fmt.Errorf("%s year must be between 1970 and 2100", name)
+	}
+	switch p.PeriodType {
+	case l8api.L8PeriodType_Quarterly:
+		if p.PeriodValue < l8api.L8PeriodValue_Q1 || p.PeriodValue > l8api.L8PeriodValue_Q4 {
+			return fmt.Errorf("%s quarterly value must be Q1-Q4", name)
+		}
+	case l8api.L8PeriodType_Monthly:
+		if p.PeriodValue < l8api.L8PeriodValue_January || p.PeriodValue > l8api.L8PeriodValue_December {
+			return fmt.Errorf("%s monthly value must be January-December", name)
+		}
+	}
+	return nil
+}
+
+// Period adds a required L8Period field validation.
+func (b *VB[T]) Period(getter func(*T) *l8api.L8Period, name string) *VB[T] {
+	b.validators = append(b.validators, func(e *T, _ ifs.IVNic) error {
+		return ValidatePeriod(getter(e), name)
+	})
+	return b
+}
+
+// OptionalPeriod validates an L8Period field only when non-nil.
+func (b *VB[T]) OptionalPeriod(getter func(*T) *l8api.L8Period, name string) *VB[T] {
+	b.validators = append(b.validators, func(e *T, _ ifs.IVNic) error {
+		p := getter(e)
+		if p == nil {
+			return nil
+		}
+		return ValidatePeriod(p, name)
+	})
 	return b
 }
 

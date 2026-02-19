@@ -33,10 +33,8 @@ message SalesTarget {
   string name = 2;
   string salesperson_id = 3;            // Cross-ref: HCM Employee
   string territory_id = 4;
-  SalesTargetPeriod period = 5;
-  int32 year = 6;
-  int32 quarter = 7;
-  int32 month = 8;
+  l8api.L8Period period = 5;
+  reserved 6, 7, 8;
   erp.Money target_amount = 9;
   erp.Money achieved_amount = 10;
   double achievement_percent = 11;
@@ -132,9 +130,8 @@ message SalesForecast {
   string territory_id = 4;
   string customer_id = 5;               // Cross-ref: FIN Customer
   SalesForecastCategory category = 6;
-  int32 year = 7;
-  int32 quarter = 8;
-  int32 month = 9;
+  l8api.L8Period period = 7;
+  reserved 8, 9;
   erp.Money forecast_amount = 10;
   erp.Money weighted_amount = 11;
   double probability = 12;

@@ -19,6 +19,7 @@ import (
 	"math/rand"
 	"time"
 
+	l8api "github.com/saichler/l8types/go/types/l8api"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -94,12 +95,12 @@ func generateSalesCommissionPlans(store *MockDataStore) []*sales.SalesCommission
 
 // generateSalesTargets creates sales target records
 func generateSalesTargets(store *MockDataStore) []*sales.SalesTarget {
-	periods := []sales.SalesTargetPeriod{
-		sales.SalesTargetPeriod_TARGET_PERIOD_MONTHLY,
-		sales.SalesTargetPeriod_TARGET_PERIOD_MONTHLY,
-		sales.SalesTargetPeriod_TARGET_PERIOD_QUARTERLY,
-		sales.SalesTargetPeriod_TARGET_PERIOD_QUARTERLY,
-		sales.SalesTargetPeriod_TARGET_PERIOD_ANNUAL,
+	periodTypes := []l8api.L8PeriodType{
+		l8api.L8PeriodType_Monthly,
+		l8api.L8PeriodType_Monthly,
+		l8api.L8PeriodType_Quarterly,
+		l8api.L8PeriodType_Quarterly,
+		l8api.L8PeriodType_Yearly,
 	}
 
 	count := 20
@@ -108,24 +109,31 @@ func generateSalesTargets(store *MockDataStore) []*sales.SalesTarget {
 		salespersonID := pickRef(store.EmployeeIDs, i)
 		territoryID := pickRef(store.SalesTerritoryIDs, i)
 
-		period := periods[i%len(periods)]
-		year := 2025
-		quarter := int32((i % 4) + 1)
-		month := int32((i % 12) + 1)
+		pt := periodTypes[i%len(periodTypes)]
+		var pv l8api.L8PeriodValue
+		switch pt {
+		case l8api.L8PeriodType_Monthly:
+			pv = l8api.L8PeriodValue((i % 12) + 1) // January-December
+		case l8api.L8PeriodType_Quarterly:
+			pv = l8api.L8PeriodValue((i % 4) + 13) // Q1-Q4
+		case l8api.L8PeriodType_Yearly:
+			pv = l8api.L8PeriodValue_invalid_period_value
+		}
 
 		targetAmount := int64(rand.Intn(100000000) + 10000000)
 		achievedAmount := targetAmount * int64(rand.Intn(120)+50) / 100
 		achievementPercent := float64(achievedAmount) / float64(targetAmount) * 100
 
 		targets[i] = &sales.SalesTarget{
-			TargetId:           genID("stgt", i),
-			Name:               fmt.Sprintf("Sales Target %d - Q%d %d", i+1, quarter, year),
-			SalespersonId:      salespersonID,
-			TerritoryId:        territoryID,
-			Period:             period,
-			Year:               int32(year),
-			Quarter:            quarter,
-			Month:              month,
+			TargetId:      genID("stgt", i),
+			Name:          fmt.Sprintf("Sales Target %d - %d", i+1, 2025),
+			SalespersonId: salespersonID,
+			TerritoryId:   territoryID,
+			Period: &l8api.L8Period{
+				PeriodType:  pt,
+				PeriodYear:  2025,
+				PeriodValue: pv,
+			},
 			TargetAmount:       money(store, targetAmount),
 			AchievedAmount:     money(store, achievedAmount),
 			AchievementPercent: achievementPercent,
@@ -146,6 +154,14 @@ func generateSalesForecasts(store *MockDataStore) []*sales.SalesForecast {
 		sales.SalesForecastCategory_FORECAST_CATEGORY_CLOSED,
 	}
 
+	periodTypes := []l8api.L8PeriodType{
+		l8api.L8PeriodType_Monthly,
+		l8api.L8PeriodType_Monthly,
+		l8api.L8PeriodType_Quarterly,
+		l8api.L8PeriodType_Quarterly,
+		l8api.L8PeriodType_Yearly,
+	}
+
 	count := 20
 	forecasts := make([]*sales.SalesForecast, count)
 	for i := 0; i < count; i++ {
@@ -153,9 +169,16 @@ func generateSalesForecasts(store *MockDataStore) []*sales.SalesForecast {
 		territoryID := pickRef(store.SalesTerritoryIDs, i)
 		customerID := pickRef(store.CustomerIDs, i)
 
-		year := 2025
-		quarter := int32((i % 4) + 1)
-		month := int32((i % 12) + 1)
+		pt := periodTypes[i%len(periodTypes)]
+		var pv l8api.L8PeriodValue
+		switch pt {
+		case l8api.L8PeriodType_Monthly:
+			pv = l8api.L8PeriodValue((i % 12) + 1)
+		case l8api.L8PeriodType_Quarterly:
+			pv = l8api.L8PeriodValue((i % 4) + 13)
+		case l8api.L8PeriodType_Yearly:
+			pv = l8api.L8PeriodValue_invalid_period_value
+		}
 
 		forecastAmount := int64(rand.Intn(50000000) + 5000000)
 		category := categories[i%len(categories)]
@@ -174,15 +197,17 @@ func generateSalesForecasts(store *MockDataStore) []*sales.SalesForecast {
 		expectedCloseDate := time.Now().AddDate(0, rand.Intn(6), rand.Intn(28))
 
 		forecasts[i] = &sales.SalesForecast{
-			ForecastId:        genID("sfcs", i),
-			Name:              fmt.Sprintf("Forecast %d - Q%d %d", i+1, quarter, year),
-			SalespersonId:     salespersonID,
-			TerritoryId:       territoryID,
-			CustomerId:        customerID,
-			Category:          category,
-			Year:              int32(year),
-			Quarter:           quarter,
-			Month:             month,
+			ForecastId:    genID("sfcs", i),
+			Name:          fmt.Sprintf("Forecast %d - %d", i+1, 2025),
+			SalespersonId: salespersonID,
+			TerritoryId:   territoryID,
+			CustomerId:    customerID,
+			Category:      category,
+			Period: &l8api.L8Period{
+				PeriodType:  pt,
+				PeriodYear:  2025,
+				PeriodValue: pv,
+			},
 			ForecastAmount:    money(store, forecastAmount),
 			WeightedAmount:    money(store, weightedAmount),
 			Probability:       probability,

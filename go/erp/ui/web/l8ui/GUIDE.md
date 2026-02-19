@@ -1411,7 +1411,7 @@ Same schema for both desktop and mobile:
 
 ### Supported Field Types
 
-`text`, `email`, `tel`, `number`, `textarea`, `date`, `select`, `checkbox`, `currency`, `percentage`, `phone`, `ssn`, `reference`, `url`, `rating`, `hours`, `ein`, `routingNumber`, `colorCode`
+`text`, `email`, `tel`, `number`, `textarea`, `date`, `select`, `checkbox`, `currency`, `percentage`, `phone`, `ssn`, `reference`, `url`, `rating`, `hours`, `ein`, `routingNumber`, `colorCode`, `period`
 
 ### Data Collection Behaviors
 
@@ -1424,6 +1424,7 @@ Same schema for both desktop and mobile:
 | reference | Picker | ID value |
 | checkbox | Toggle | 1 or 0 |
 | number | Number | parseFloat |
+| period | 3 cascading selects (type/year/value) | `{periodType, periodYear, periodValue}` (L8Period) |
 
 ---
 

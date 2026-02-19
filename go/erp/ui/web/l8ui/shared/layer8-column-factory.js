@@ -31,7 +31,7 @@ limitations under the License.
 (function() {
     'use strict';
 
-    const { renderBoolean, renderDate, renderMoney } = window.Layer8DRenderers || {};
+    const { renderBoolean, renderDate, renderMoney, renderPeriod } = window.Layer8DRenderers || {};
 
     window.Layer8ColumnFactory = {
         /**
@@ -158,6 +158,22 @@ limitations under the License.
                 sortKey: key,
                 type: 'money',
                 render: (item) => renderMoney(item[key])
+            }];
+        },
+
+        /**
+         * Create a period column (renders L8Period as "2025 / Q2").
+         * @param {string} key - The field key
+         * @param {string} [label] - Optional label
+         * @returns {Array} - Single column in array format
+         */
+        period: function(key, label) {
+            return [{
+                key: key,
+                label: label || this._toTitleCase(key),
+                sortKey: key,
+                type: 'period',
+                render: (item) => renderPeriod(item[key])
             }];
         },
 

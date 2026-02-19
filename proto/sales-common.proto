@@ -175,13 +175,6 @@ enum SalesForecastCategory {
   FORECAST_CATEGORY_CLOSED = 4;
 }
 
-enum SalesTargetPeriod {
-  TARGET_PERIOD_UNSPECIFIED = 0;
-  TARGET_PERIOD_MONTHLY = 1;
-  TARGET_PERIOD_QUARTERLY = 2;
-  TARGET_PERIOD_ANNUAL = 3;
-}
-
 // --- Billing Enums ---
 
 enum SalesBillingFrequency {

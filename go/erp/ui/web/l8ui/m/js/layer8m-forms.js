@@ -62,6 +62,8 @@ limitations under the License.
                     return F.renderMultiselectField(fieldConfig, value, readonly);
                 case 'richtext':
                     return F.renderRichtextField(fieldConfig, value, readonly);
+                case 'period':
+                    return F.renderPeriodField(fieldConfig, value, readonly);
                 case 'money':
                     return F.renderMoneyField(fieldConfig, value, readonly);
                 case 'currency':
@@ -219,6 +221,21 @@ limitations under the License.
                 formData[baseKey] = cents != null ? { amount: parseInt(cents, 10) || 0, currencyId: currId || '' } : null;
                 delete formData[baseKey + '.__amount'];
                 delete formData[baseKey + '.__currencyId'];
+            }
+
+            // Post-process period compound fields (__periodType + __periodYear + __periodValue → L8Period object)
+            const periodKeys = new Set();
+            for (const key of Object.keys(formData)) {
+                if (key.endsWith('.__periodType')) periodKeys.add(key.replace('.__periodType', ''));
+            }
+            for (const baseKey of periodKeys) {
+                const pt = parseInt(formData[baseKey + '.__periodType'], 10) || 0;
+                const py = parseInt(formData[baseKey + '.__periodYear'], 10) || 0;
+                const pv = parseInt(formData[baseKey + '.__periodValue'], 10) || 0;
+                formData[baseKey] = pt ? { periodType: pt, periodYear: py, periodValue: pv } : null;
+                delete formData[baseKey + '.__periodType'];
+                delete formData[baseKey + '.__periodYear'];
+                delete formData[baseKey + '.__periodValue'];
             }
 
             return formData;

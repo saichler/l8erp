@@ -156,7 +156,31 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         if (cb) { cb.checked = false; onMultiselectChange(cb); }
     }
 
+    // ========================================
+    // PERIOD TYPE CHANGE HANDLER
+    // ========================================
+
+    const PERIOD_MONTHS = [[1,'January'],[2,'February'],[3,'March'],[4,'April'],[5,'May'],[6,'June'],
+                           [7,'July'],[8,'August'],[9,'September'],[10,'October'],[11,'November'],[12,'December']];
+    const PERIOD_QUARTERS = [[13,'Q1'],[14,'Q2'],[15,'Q3'],[16,'Q4']];
+
+    function onPeriodTypeChange(selectEl) {
+        const group = selectEl.closest('.period-input-group');
+        if (!group) return;
+        const valueSelect = group.querySelector('.period-value-select');
+        if (!valueSelect) return;
+        const periodType = Number(selectEl.value);
+        let options = periodType === 2 ? PERIOD_QUARTERS : periodType === 3 ? PERIOD_MONTHS : [];
+        let html = '<option value="">--</option>';
+        for (const [val, lbl] of options) {
+            html += `<option value="${val}">${lbl}</option>`;
+        }
+        valueSelect.innerHTML = html;
+        valueSelect.style.display = (periodType === 1 || periodType === 0) ? 'none' : '';
+    }
+
     // Extend exports
+    F.onPeriodTypeChange = onPeriodTypeChange;
     F.generateInlineTableHtml = generateInlineTableHtml;
     F.formatInlineTableCell = formatInlineTableCell;
     F.onTagKeydown = onTagKeydown;
