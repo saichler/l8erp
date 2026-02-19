@@ -102,6 +102,8 @@ limitations under the License.
             if (zoom === 'day') return totalDays * cellWidth;
             if (zoom === 'week') return Math.ceil(totalDays / 7) * cellWidth;
             if (zoom === 'month') return Math.ceil(totalDays / 30) * cellWidth;
+            if (zoom === 'quarter') return Math.ceil(totalDays / 91) * cellWidth;
+            if (zoom === 'year') return Math.ceil(totalDays / 365) * cellWidth;
             return totalDays * cellWidth;
         },
 
@@ -155,7 +157,7 @@ limitations under the License.
                     wt.textContent = label;
                     svg.appendChild(wt);
                 }
-            } else {
+            } else if (gantt.zoom === 'month') {
                 const months = Math.ceil(totalDays / 30);
                 for (let m = 0; m < months; m++) {
                     const date = new Date(startDate);
@@ -169,6 +171,36 @@ limitations under the License.
                     });
                     mt.textContent = label;
                     svg.appendChild(mt);
+                }
+            } else if (gantt.zoom === 'quarter') {
+                const quarters = Math.ceil(totalDays / 91);
+                for (let q = 0; q < quarters; q++) {
+                    const date = new Date(startDate);
+                    date.setMonth(date.getMonth() + q * 3);
+                    const x = lw + q * zoomCfg.cellWidth;
+                    const qNum = Math.ceil((date.getMonth() + 1) / 3);
+                    const label = `Q${qNum} ${date.getFullYear()}`;
+
+                    const qt = createEl('text', {
+                        x: x + zoomCfg.cellWidth / 2, y: hh - 8,
+                        'text-anchor': 'middle', 'font-size': 11, fill: this._theme.textMedium
+                    });
+                    qt.textContent = label;
+                    svg.appendChild(qt);
+                }
+            } else if (gantt.zoom === 'year') {
+                const years = Math.ceil(totalDays / 365);
+                for (let yr = 0; yr < years; yr++) {
+                    const date = new Date(startDate);
+                    date.setFullYear(date.getFullYear() + yr);
+                    const x = lw + yr * zoomCfg.cellWidth;
+
+                    const yt = createEl('text', {
+                        x: x + zoomCfg.cellWidth / 2, y: hh - 8,
+                        'text-anchor': 'middle', 'font-size': 12, fill: this._theme.textMedium, 'font-weight': 'bold'
+                    });
+                    yt.textContent = String(date.getFullYear());
+                    svg.appendChild(yt);
                 }
             }
 
@@ -331,6 +363,8 @@ limitations under the License.
         _getCellCount(zoom, totalDays) {
             if (zoom === 'day') return totalDays;
             if (zoom === 'week') return Math.ceil(totalDays / 7);
+            if (zoom === 'quarter') return Math.ceil(totalDays / 91);
+            if (zoom === 'year') return Math.ceil(totalDays / 365);
             return Math.ceil(totalDays / 30);
         }
     };

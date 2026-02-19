@@ -922,7 +922,7 @@ Sub-renderers (internal, auto-dispatched by `chartType`):
 
 **L8Period support:** When the `categoryField` contains L8Period objects (objects with `periodType`, `periodYear`, `periodValue` properties), the chart auto-detects them and converts each period to a human-readable label: `"2025"` (yearly), `"2025 / Q1"` (quarterly), or `"2025 / January"` (monthly). Records with the same period are grouped and aggregated. Groups are sorted chronologically.
 
-**Date normalization:** When the `categoryField` contains Unix timestamps (from date columns), the chart normalizes them to year/quarter buckets. Labels use the format `"2025 / Q1"`. Records within the same quarter are grouped and their money values aggregated (default: sum). Groups are sorted chronologically.
+**Date normalization:** When the `categoryField` contains Unix timestamps (from date columns), the chart normalizes them to year/quarter buckets. Labels use the format `"2025 / Q1"`. Records within the same quarter are grouped and their money values aggregated (default: sum). Groups are sorted chronologically. Timestamps may arrive as numeric strings (e.g., `"1770840462"`) — both number and string formats are handled automatically.
 
 ### 5.21 Layer8DKanban
 
@@ -994,14 +994,26 @@ SVG-based Gantt chart for project scheduling with task bars, progress indicators
 // Registered as 'gantt' view type
 // viewConfig options:
 {
-    startDateField: 'startDate',       // Task start timestamp
-    endDateField: 'endDate',           // Task end timestamp
-    progressField: 'progress',         // 0-100 completion percentage
-    titleField: 'name',               // Task label
+    startDateField: 'startDate',       // Task start timestamp (auto-detected if omitted)
+    endDateField: 'endDate',           // Task end timestamp (auto-detected if omitted)
+    progressField: 'percentComplete',  // 0-100 completion percentage
+    titleField: 'name',               // Task label (auto-detected via detectTitleField)
     dependencyField: 'dependencies',   // Array of dependent task IDs
-    zoom: 'week'                       // 'day' | 'week' | 'month'
+    defaultZoom: 'week'                // 'day' | 'week' | 'month' | 'quarter' | 'year'
 }
 ```
+
+**Date field auto-detection:** When `startDateField` is not explicitly configured, the Gantt scans columns for date fields (`type: 'date'` or keys ending in `Date`, `Start`, `End`) and matches them to start/end roles using key patterns:
+- **Start**: keys containing `start`, `begin`, or `from`
+- **End**: keys containing `end`, `due`, `until`, `required`, or `expir`
+- If only one pattern matches and there are 2+ date columns, the other date column is assigned to the missing role
+- If a start column is found but no end column, the end field is inferred by replacing `Start` with `End` in the key (e.g., `plannedStartDate` → `plannedEndDate`)
+
+This allows models like `MfgWorkOrder` (`plannedStartDate`/`plannedEndDate`) and `MfgProdSchedule` (`scheduleStart`/`scheduleEnd`) to work without explicit `viewConfig`.
+
+**Zoom levels:** Day, Week, Month, Quarter, and Year. Quarter groups cells by ~91 days; Year groups by ~365 days.
+
+**Timestamp handling:** Timestamps from the server may arrive as numeric strings (e.g., `"1770840462"` instead of `1770840462`). The Gantt automatically coerces numeric strings to numbers for correct date parsing.
 
 ### 5.25 Layer8DTreeGrid
 

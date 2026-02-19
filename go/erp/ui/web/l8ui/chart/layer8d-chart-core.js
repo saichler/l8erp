@@ -142,7 +142,9 @@ limitations under the License.
                     return this._normalizePeriodData(items);
                 }
                 // Detect Unix timestamps (date columns) and normalize to year/quarter
-                if (typeof firstVal === 'number' && firstVal > 946684800) {
+                const numVal = typeof firstVal === 'number' ? firstVal
+                    : (typeof firstVal === 'string' && /^\d+$/.test(firstVal)) ? parseInt(firstVal, 10) : 0;
+                if (numVal > 946684800) {
                     return this._normalizeDateData(items);
                 }
             }
@@ -215,8 +217,10 @@ limitations under the License.
         _normalizeDateData(items) {
             const groups = {};
             items.forEach(item => {
-                const ts = this._getNestedValue(item, this.categoryField);
-                if (!ts || typeof ts !== 'number') return;
+                let ts = this._getNestedValue(item, this.categoryField);
+                if (!ts) return;
+                if (typeof ts === 'string' && /^\d+$/.test(ts)) ts = parseInt(ts, 10);
+                if (typeof ts !== 'number') return;
                 const d = new Date(ts * 1000);
                 const year = d.getFullYear();
                 const q = Math.ceil((d.getMonth() + 1) / 3);

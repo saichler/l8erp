@@ -14,7 +14,7 @@ limitations under the License.
 */
 // Layer8D Gantt Core
 // SVG horizontal timeline for project scheduling.
-// Supports day/week/month zoom, task bars with progress, and dependency arrows.
+// Supports day/week/month/quarter/year zoom, task bars with progress, and dependency arrows.
 
 (function() {
     'use strict';
@@ -22,7 +22,9 @@ limitations under the License.
     const ZOOM_LEVELS = {
         day: { label: 'Day', cellWidth: 40, format: 'd' },
         week: { label: 'Week', cellWidth: 80, format: 'W' },
-        month: { label: 'Month', cellWidth: 120, format: 'MMM' }
+        month: { label: 'Month', cellWidth: 120, format: 'MMM' },
+        quarter: { label: 'Quarter', cellWidth: 160, format: 'Q' },
+        year: { label: 'Year', cellWidth: 200, format: 'YYYY' }
     };
 
     const ROW_HEIGHT = 36;
@@ -48,6 +50,11 @@ limitations under the License.
             this.progressField = this.viewConfig.progressField || 'percentComplete';
             this.dependencyField = this.viewConfig.dependencyField || null;
             this.zoom = this.viewConfig.defaultZoom || 'week';
+
+            // Auto-detect date fields from columns if not explicitly configured
+            if (!this.viewConfig.startDateField) {
+                this._autoDetectDateFields();
+            }
 
             this.container = null;
             this.data = [];
@@ -99,6 +106,46 @@ limitations under the License.
             }
         }
 
+        _autoDetectDateFields() {
+            const cols = this.columns || [];
+
+            // Gather date columns: type:'date' OR key matches date naming patterns
+            const dateCols = cols.filter(c =>
+                c.type === 'date' || /Date$|Start$|End$/.test(c.key)
+            );
+            if (dateCols.length === 0) return;
+
+            // Find start/end by key patterns
+            const startPat = /start|begin|from/i;
+            const endPat = /end|due|until|required|expir/i;
+
+            let startCol = dateCols.find(c => startPat.test(c.key));
+            let endCol = dateCols.find(c => endPat.test(c.key));
+
+            // If only one pattern matched, assign the other date col to the missing role
+            if (!startCol && endCol && dateCols.length >= 2) {
+                startCol = dateCols.find(c => c !== endCol);
+            }
+            if (startCol && !endCol && dateCols.length >= 2) {
+                endCol = dateCols.find(c => c !== startCol);
+            }
+
+            // Fallback: first two date columns
+            if (!startCol && !endCol) {
+                if (dateCols.length >= 2) { startCol = dateCols[0]; endCol = dateCols[1]; }
+                else if (dateCols.length === 1) { startCol = dateCols[0]; }
+            }
+
+            if (startCol) this.startDateField = startCol.key;
+            if (endCol) {
+                this.endDateField = endCol.key;
+            } else if (startCol) {
+                // Infer end from start: plannedStartDate → plannedEndDate
+                const inferred = startCol.key.replace(/[Ss]tart/, m => m[0] === 'S' ? 'End' : 'end');
+                if (inferred !== startCol.key) this.endDateField = inferred;
+            }
+        }
+
         _computeDateRange() {
             let minDate = Infinity;
             let maxDate = -Infinity;
@@ -136,6 +183,7 @@ limitations under the License.
             const v = this._getNestedValue(item, field);
             if (!v) return 0;
             if (typeof v === 'number') return v;
+            if (typeof v === 'string' && /^\d+$/.test(v)) return parseInt(v, 10);
             return new Date(v).getTime() / 1000 || 0;
         }
 
