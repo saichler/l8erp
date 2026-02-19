@@ -52,7 +52,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('revision', 'Revision'),
                 ...f.date('effectiveDate', 'Effective Date'),
                 ...f.date('expiryDate', 'Expiry Date'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.number('baseQuantity', 'Base Quantity'),
+                ...f.text('unitOfMeasure', 'Unit Of Measure'),
             ]),
             f.section('Operations', [
                 ...f.inlineTable('operations', 'Routing Operations', [
@@ -77,7 +79,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('requiredDate', 'Required Date'),
                 ...f.number('priority', 'Priority'),
                 ...f.textarea('reason', 'Reason'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.date('approvalDate', 'Approval Date'),
+                ...f.text('approvedBy', 'Approved By'),
+                ...f.date('implementationDate', 'Implementation Date'),
+                ...f.money('estimatedCost', 'Estimated Cost'),
+                ...f.money('actualCost', 'Actual Cost'),
             ]),
             f.section('Change Details', [
                 ...f.inlineTable('details', 'ECO Details', [

@@ -28,7 +28,9 @@ window.MobileSalesBilling = window.MobileSalesBilling || {};
                 ...f.date('nextBillingDate', 'Next Billing Date'),
                 ...f.money('totalAmount', 'Total Amount'),
                 ...f.money('billedAmount', 'Billed Amount'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('contractId', 'Contract'),
+                ...f.money('remainingAmount', 'Remaining Amount'),
             ]),
             f.section('Milestones', [
                 ...f.inlineTable('milestones', 'Billing Milestones', [
@@ -52,7 +54,9 @@ window.MobileSalesBilling = window.MobileSalesBilling || {};
                 ...f.money('recognizedRevenue', 'Recognized Revenue'),
                 ...f.money('deferredRevenue', 'Deferred Revenue'),
                 ...f.reference('revenueAccountId', 'Revenue Account', 'Account'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('contractId', 'Contract'),
+                ...f.text('deferredAccountId', 'Deferred Account'),
             ])
         ])
     };

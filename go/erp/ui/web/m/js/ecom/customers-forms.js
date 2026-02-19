@@ -29,7 +29,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('customerGroup', 'Customer Group'),
                 ...f.text('locale', 'Locale'),
                 ...f.reference('currencyId', 'Currency', 'Currency'),
-                ...f.reference('salesCustomerId', 'Sales Customer', 'SalesCustomer')
+                ...f.reference('salesCustomerId', 'Sales Customer', 'SalesCustomer'),
+                ...f.text('passwordHash', 'Password Hash'),
+                ...f.date('createdDate', 'Created Date'),
+                ...f.date('lastLoginDate', 'Last Login Date'),
+                ...f.number('totalOrders', 'Total Orders'),
+                ...f.money('totalSpent', 'Total Spent'),
+                ...f.text('defaultBillingAddressId', 'Default Billing Address'),
+                ...f.text('defaultShippingAddressId', 'Default Shipping Address'),
             ]),
             f.section('Addresses', [
                 ...f.inlineTable('addresses', 'Customer Addresses', [
@@ -54,7 +61,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.checkbox('isPublic', 'Public'),
-                ...f.text('shareToken', 'Share Token')
+                ...f.text('shareToken', 'Share Token'),
+                ...f.date('createdDate', 'Created Date'),
+                ...f.date('updatedDate', 'Updated Date'),
+                ...f.number('itemCount', 'Item Count'),
             ]),
             f.section('Wishlist Items', [
                 ...f.inlineTable('items', 'Wishlist Items', [
@@ -77,7 +87,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('subtotal', 'Subtotal'),
                 ...f.money('discountAmount', 'Discount Amount'),
                 ...f.money('taxAmount', 'Tax Amount'),
-                ...f.money('total', 'Total')
+                ...f.money('total', 'Total'),
+                ...f.date('createdDate', 'Created Date'),
+                ...f.date('updatedDate', 'Updated Date'),
+                ...f.date('expiresAt', 'Expires At'),
+                ...f.number('itemCount', 'Item Count'),
+                ...f.text('ipAddress', 'Ip Address'),
+                ...f.text('userAgent', 'User Agent'),
             ])
         ])
     };

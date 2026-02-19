@@ -33,7 +33,15 @@ limitations under the License.
                 ...f.date('planningHorizonStart', 'Horizon Start'),
                 ...f.date('planningHorizonEnd', 'Horizon End'),
                 ...f.select('status', 'Status', enums.MRP_STATUS),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.checkbox('includeSafetyStock', 'Include Safety Stock'),
+                ...f.checkbox('includeForecasts', 'Include Forecasts'),
+                ...f.checkbox('includeOpenOrders', 'Include Open Orders'),
+                ...f.text('runBy', 'Run By'),
+                ...f.date('startTime', 'Start Time'),
+                ...f.date('endTime', 'End Time'),
+                ...f.number('itemsProcessed', 'Items Processed'),
+                ...f.number('exceptionsGenerated', 'Exceptions Generated'),
             ]),
             f.section('Requirements', [
                 ...f.inlineTable('requirements', 'MRP Requirements', [
@@ -51,7 +59,11 @@ limitations under the License.
                 ...f.textarea('description', 'Description'),
                 ...f.date('planningStart', 'Planning Start', true),
                 ...f.date('planningEnd', 'Planning End', true),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.select('status', 'Status', enums.SCHEDULE_STATUS),
+                ...f.text('timeBucket', 'Time Bucket'),
+                ...f.text('runBy', 'Run By'),
+                ...f.date('runDate', 'Run Date'),
             ]),
             f.section('Capacity Loads', [
                 ...f.inlineTable('loads', 'Capacity Loads', [
@@ -72,7 +84,13 @@ limitations under the License.
                 ...f.date('scheduleStart', 'Schedule Start', true),
                 ...f.date('scheduleEnd', 'Schedule End', true),
                 ...f.select('status', 'Status', enums.SCHEDULE_STATUS),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.select('scheduleType', 'Schedule Type', enums.SCHEDULE_TYPE),
+                ...f.text('createdBy', 'Created By'),
+                ...f.date('createdDate', 'Created Date'),
+                ...f.text('publishedBy', 'Published By'),
+                ...f.date('publishedDate', 'Published Date'),
+                ...f.number('workOrdersScheduled', 'Work Orders Scheduled'),
             ]),
             f.section('Schedule Blocks', [
                 ...f.inlineTable('blocks', 'Schedule Blocks', [

@@ -33,7 +33,9 @@ limitations under the License.
             ...f.date('requestDate', 'Request Date', true),
             ...f.select('status', 'Status', enums.REQUISITION_STATUS),
             ...f.text('priority', 'Priority'),
-            ...f.textarea('description', 'Description')
+            ...f.textarea('description', 'Description'),
+            ...f.money('estimatedTotal', 'Estimated Total'),
+            ...f.text('approvalWorkflowId', 'Approval Workflow'),
         ]),
         f.section('Lines', [
             ...f.inlineTable('lines', 'Requisition Lines', [
@@ -58,7 +60,8 @@ limitations under the License.
             ...f.date('responseDeadline', 'Response Deadline'),
             ...f.select('status', 'Status', enums.REQUISITION_STATUS),
             ...f.textarea('description', 'Description'),
-            ...f.textarea('notes', 'Notes')
+            ...f.textarea('notes', 'Notes'),
+            ...f.text('vendorIds', 'Vendor Ids'),
         ])
     ]),
 
@@ -70,7 +73,11 @@ limitations under the License.
             ...f.date('expectedDelivery', 'Expected Delivery'),
             ...f.select('status', 'Status', enums.PO_STATUS),
             ...f.text('paymentTerms', 'Payment Terms'),
-            ...f.textarea('notes', 'Notes')
+            ...f.textarea('notes', 'Notes'),
+            ...f.money('totalAmount', 'Total Amount'),
+            ...f.address('shippingAddress'),
+            ...f.text('requisitionId', 'Requisition'),
+            ...f.text('rfqId', 'Rfq'),
         ]),
         f.section('Order Lines', [
             ...f.inlineTable('lines', 'PO Lines', [
@@ -94,7 +101,8 @@ limitations under the License.
             ...f.date('endDate', 'End Date', true),
             ...f.money('maxAmount', 'Max Amount'),
             ...f.select('status', 'Status', enums.PO_STATUS),
-            ...f.textarea('description', 'Description')
+            ...f.textarea('description', 'Description'),
+            ...f.money('usedAmount', 'Used Amount'),
         ])
     ]),
 
@@ -106,7 +114,9 @@ limitations under the License.
             ...f.number('priceScore', 'Price Score'),
             ...f.number('serviceScore', 'Service Score'),
             ...f.number('overallScore', 'Overall Score'),
-            ...f.textarea('notes', 'Notes')
+            ...f.textarea('notes', 'Notes'),
+            ...f.date('evaluationPeriod.startDate', 'Evaluation Period Start'),
+            ...f.date('evaluationPeriod.endDate', 'Evaluation Period End'),
         ])
     ])
 };

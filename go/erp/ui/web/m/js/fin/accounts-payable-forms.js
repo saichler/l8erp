@@ -62,7 +62,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('totalAmount', 'Total Amount'),
                 ...f.money('taxAmount', 'Tax Amount'),
                 ...f.select('status', 'Status', enums.INVOICE_STATUS),
-                ...f.reference('currencyId', 'Currency', 'Currency')
+                ...f.reference('currencyId', 'Currency', 'Currency'),
+                ...f.text('fiscalPeriodId', 'Fiscal Period'),
+                ...f.money('subtotal', 'Subtotal'),
+                ...f.money('amountPaid', 'Amount Paid'),
+                ...f.money('balanceDue', 'Balance Due'),
+                ...f.number('paymentTermDays', 'Payment Term Days'),
+                ...f.number('discountPercent', 'Discount Percent'),
+                ...f.number('discountDays', 'Discount Days'),
+                ...f.text('apAccountId', 'Ap Account'),
+                ...f.text('purchaseOrderNumber', 'Purchase Order Number'),
+                ...f.text('notes', 'Notes'),
             ]),
             f.section('Lines', [
                 ...f.inlineTable('lines', 'Invoice Lines', [
@@ -82,7 +92,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('scheduledDate', 'Scheduled Date', true),
                 ...f.money('amount', 'Amount', true),
                 ...f.checkbox('isPaid', 'Paid'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('vendorId', 'Vendor'),
+                ...f.text('paymentId', 'Payment'),
             ])
         ]),
 
@@ -95,7 +107,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('status', 'Status', enums.PAYMENT_STATUS),
                 ...f.reference('bankAccountId', 'Bank Account', 'BankAccount'),
                 ...f.text('reference', 'Reference'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('checkNumber', 'Check Number'),
             ]),
             f.section('Allocations', [
                 ...f.inlineTable('allocations', 'Payment Allocations', [
@@ -114,7 +127,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('periodEnd', 'Period End'),
                 ...f.money('openingBalance', 'Opening Balance'),
                 ...f.money('closingBalance', 'Closing Balance'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.money('totalInvoices', 'Total Invoices'),
+                ...f.money('totalPayments', 'Total Payments'),
             ])
         ])
     };

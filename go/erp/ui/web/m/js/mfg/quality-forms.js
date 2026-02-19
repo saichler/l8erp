@@ -33,7 +33,10 @@ limitations under the License.
                 ...f.reference('itemId', 'Item', 'ScmItem'),
                 ...f.date('effectiveDate', 'Effective Date'),
                 ...f.text('revision', 'Revision'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('routingId', 'Routing'),
+                ...f.select('status', 'Status', enums.BOM_STATUS),
+                ...f.date('expiryDate', 'Expiry Date'),
             ]),
             f.section('Inspection Points', [
                 ...f.inlineTable('inspectionPoints', 'Inspection Points', [
@@ -55,7 +58,15 @@ limitations under the License.
                 ...f.date('inspectionDate', 'Inspection Date', true),
                 ...f.number('quantityInspected', 'Qty Inspected'),
                 ...f.select('overallResult', 'Result', enums.INSPECTION_RESULT),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('itemId', 'Item'),
+                ...f.text('lotNumber', 'Lot Number'),
+                ...f.number('quantityAccepted', 'Quantity Accepted'),
+                ...f.number('quantityRejected', 'Quantity Rejected'),
+                ...f.select('inspectionType', 'Inspection Type', enums.INSPECTION_TYPE),
+                ...f.text('inspectorId', 'Inspector'),
+                ...f.date('completedDate', 'Completed Date'),
+                ...f.text('warehouseId', 'Warehouse'),
             ]),
             f.section('Test Results', [
                 ...f.inlineTable('testResults', 'Test Results', [
@@ -80,7 +91,17 @@ limitations under the License.
                 ...f.date('reportedDate', 'Reported Date'),
                 ...f.number('quantityAffected', 'Qty Affected'),
                 ...f.select('disposition', 'Disposition', enums.NCR_DISPOSITION),
-                ...f.textarea('rootCause', 'Root Cause')
+                ...f.textarea('rootCause', 'Root Cause'),
+                ...f.text('inspectionId', 'Inspection'),
+                ...f.text('lotNumber', 'Lot Number'),
+                ...f.text('defectCode', 'Defect Code'),
+                ...f.text('correctiveAction', 'Corrective Action'),
+                ...f.text('reportedBy', 'Reported By'),
+                ...f.date('dueDate', 'Due Date'),
+                ...f.date('closedDate', 'Closed Date'),
+                ...f.money('estimatedCost', 'Estimated Cost'),
+                ...f.money('actualCost', 'Actual Cost'),
+                ...f.text('notes', 'Notes'),
             ]),
             f.section('Actions', [
                 ...f.inlineTable('actions', 'NCR Actions', [

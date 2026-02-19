@@ -25,7 +25,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('legalBasis', 'Legal Basis'),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
                 ...f.checkbox('isActive', 'Active'),
-                ...f.checkbox('isMandatory', 'Mandatory')
+                ...f.checkbox('isMandatory', 'Mandatory'),
+                ...f.select('documentType', 'Document Type', enums.DOCUMENT_TYPE),
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.date('expiryDate', 'Expiry Date'),
             ])
         ]),
 
@@ -40,7 +43,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('legalCounsel', 'Legal Counsel'),
                 ...f.date('effectiveDate', 'Effective Date'),
                 ...f.date('releaseDate', 'Release Date'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('releaseReason', 'Release Reason'),
+                ...f.text('releasedBy', 'Released By'),
+                ...f.text('documentIds', 'Document Ids'),
+                ...f.text('folderIds', 'Folder Ids'),
+                ...f.text('searchCriteria', 'Search Criteria'),
+                ...f.number('documentCount', 'Document Count'),
             ])
         ]),
 
@@ -51,7 +60,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('retentionPolicyId', 'Policy', 'DocRetentionPolicy'),
                 ...f.select('status', 'Status', enums.ARCHIVE_STATUS),
                 ...f.reference('initiatedBy', 'Initiated By', 'Employee'),
-                ...f.text('archiveLocation', 'Archive Location')
+                ...f.text('archiveLocation', 'Archive Location'),
+                ...f.text('sourceFolderId', 'Source Folder'),
+                ...f.text('searchCriteria', 'Search Criteria'),
+                ...f.number('documentCount', 'Document Count'),
+                ...f.number('totalSize', 'Total Size'),
+                ...f.date('initiatedDate', 'Initiated Date'),
+                ...f.date('completedDate', 'Completed Date'),
+                ...f.text('errorMessage', 'Error Message'),
+                ...f.text('documentIds', 'Document Ids'),
             ])
         ]),
 

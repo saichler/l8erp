@@ -36,6 +36,10 @@ limitations under the License.
         'Unspecified', 'Day', 'Evening', 'Night', 'Rotating'
     ]);
 
+    const DOWNTIME_TYPE = factory.simple([
+        'Unspecified', 'Planned', 'Unplanned', 'Breakdown', 'Maintenance', 'Changeover'
+    ]);
+
     const DOWNTIME_REASON = factory.create([
         ['Unspecified', null, ''],
         ['Planned Maintenance', 'planned', 'status-pending'],
@@ -54,6 +58,7 @@ limitations under the License.
     MobileMfgShopFloor.enums = {
         WORK_CENTER_TYPE: WORK_CENTER_TYPE.enum,
         SHIFT_TYPE: SHIFT_TYPE.enum,
+        DOWNTIME_TYPE: DOWNTIME_TYPE.enum,
         DOWNTIME_REASON: DOWNTIME_REASON.enum,
         DOWNTIME_REASON_VALUES: DOWNTIME_REASON.values,
         DOWNTIME_REASON_CLASSES: DOWNTIME_REASON.classes
@@ -65,6 +70,7 @@ limitations under the License.
 
     MobileMfgShopFloor.render = {
         workCenterType: (type) => renderEnum(type, WORK_CENTER_TYPE.enum),
+        downtimeType: (type) => renderEnum(type, DOWNTIME_TYPE.enum),
         shiftType: (type) => renderEnum(type, SHIFT_TYPE.enum),
         downtimeReason: createStatusRenderer(DOWNTIME_REASON.enum, DOWNTIME_REASON.classes),
         date: renderDate,

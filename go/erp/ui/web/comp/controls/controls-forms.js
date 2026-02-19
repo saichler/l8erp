@@ -23,7 +23,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.checkbox('isKeyControl', 'Key Control'),
                 ...f.checkbox('isAutomated', 'Automated'),
                 ...f.number('testFrequencyDays', 'Test Frequency (Days)'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('relatedRequirementIds', 'Related Requirement Ids'),
+                ...f.text('relatedRiskIds', 'Related Risk Ids'),
             ]),
             f.section('Ownership', [
                 ...f.reference('ownerId', 'Owner', 'Employee'),
@@ -63,7 +65,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('title', 'Title', true),
                 ...f.select('policyType', 'Type', enums.policyCategory),
                 ...f.text('version', 'Version'),
-                ...f.select('status', 'Status', enums.policyStatus)
+                ...f.select('status', 'Status', enums.policyStatus),
+                ...f.text('departmentId', 'Department'),
+                ...f.number('reviewFrequencyDays', 'Review Frequency Days'),
+                ...f.text('documentId', 'Document'),
+                ...f.text('relatedRegulationIds', 'Related Regulation Ids'),
+                ...f.text('relatedControlIds', 'Related Control Ids'),
+                ...f.checkbox('requiresAcknowledgment', 'Requires Acknowledgment'),
             ]),
             f.section('Dates', [
                 ...f.date('effectiveDate', 'Effective Date'),
@@ -83,7 +91,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Matrix Information', [
                 ...f.text('name', 'Name', true),
                 ...f.text('transactionType', 'Transaction Type'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('departmentId', 'Department'),
+                ...f.text('approverRoleIds', 'Approver Role Ids'),
+                ...f.number('requiredApprovals', 'Required Approvals'),
+                ...f.checkbox('requiresSequential', 'Requires Sequential'),
+                ...f.number('escalationDays', 'Escalation Days'),
+                ...f.text('escalationToId', 'Escalation To'),
+                ...f.number('priority', 'Priority'),
             ]),
             f.section('Amount Thresholds', [
                 ...f.money('thresholdMin', 'Min Amount'),

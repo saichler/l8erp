@@ -25,7 +25,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('status', 'Status', enums.QUOTATION_STATUS),
                 ...f.text('paymentTerms', 'Payment Terms'),
                 ...f.reference('currencyId', 'Currency', 'Currency'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('shipToAddressId', 'Ship To Address'),
+                ...f.text('billToAddressId', 'Bill To Address'),
+                ...f.money('subtotal', 'Subtotal'),
+                ...f.money('discountTotal', 'Discount Total'),
+                ...f.money('taxTotal', 'Tax Total'),
+                ...f.money('totalAmount', 'Total Amount'),
             ]),
             f.section('Lines', [
                 ...f.inlineTable('lines', 'Quotation Lines', [
@@ -54,7 +60,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('paymentTerms', 'Payment Terms'),
                 ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.text('priority', 'Priority'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('shipToAddressId', 'Ship To Address'),
+                ...f.text('billToAddressId', 'Bill To Address'),
+                ...f.money('subtotal', 'Subtotal'),
+                ...f.money('discountTotal', 'Discount Total'),
+                ...f.money('taxTotal', 'Tax Total'),
+                ...f.money('totalAmount', 'Total Amount'),
             ]),
             f.section('Order Lines', [
                 ...f.inlineTable('lines', 'Order Lines', [
@@ -99,7 +111,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('status', 'Status', enums.RETURN_STATUS),
                 ...f.textarea('reasonDescription', 'Reason'),
                 ...f.reference('warehouseId', 'Return Warehouse', 'ScmWarehouse'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('reasonCode', 'Reason Code'),
+                ...f.money('refundAmount', 'Refund Amount'),
             ]),
             f.section('Return Lines', [
                 ...f.inlineTable('lines', 'Return Lines', [

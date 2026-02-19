@@ -26,7 +26,13 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.date('scheduledStart', 'Scheduled Start'),
                 ...f.date('scheduledEnd', 'Scheduled End'),
                 ...f.money('estimatedCost', 'Estimated Cost'),
-                ...f.reference('ownerId', 'Owner', 'Employee')
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.address('serviceAddress'),
+                ...f.number('actualStart', 'Actual Start'),
+                ...f.number('actualEnd', 'Actual End'),
+                ...f.text('productId', 'Product'),
+                ...f.money('actualCost', 'Actual Cost'),
+                ...f.text('resolution', 'Resolution'),
             ]),
             f.section('Parts', [
                 ...f.inlineTable('parts', 'Service Parts', [
@@ -65,7 +71,9 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.number('hourlyRate', 'Hourly Rate'),
                 ...f.number('overtimeRate', 'Overtime Rate'),
                 ...f.number('maxDailyOrders', 'Max Daily Orders'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('skills', 'Skills'),
+                ...f.address('homeLocation'),
             ])
         ]),
 
@@ -83,7 +91,11 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.reference('slaId', 'SLA', 'CrmSLA'),
                 ...f.checkbox('autoRenew', 'Auto Renew'),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
-                ...f.textarea('terms', 'Terms')
+                ...f.textarea('terms', 'Terms'),
+                ...f.number('usedHours', 'Used Hours'),
+                ...f.number('usedVisits', 'Used Visits'),
+                ...f.text('billingFrequency', 'Billing Frequency'),
+                ...f.number('renewalNoticeDays', 'Renewal Notice Days'),
             ])
         ]),
 

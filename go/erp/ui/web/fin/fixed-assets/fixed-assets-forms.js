@@ -25,7 +25,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('acquisitionCost', 'Acquisition Cost', true),
                 ...f.date('acquisitionDate', 'Acquisition Date', true),
                 ...f.text('location', 'Location'),
-                ...f.text('serialNumber', 'Serial Number')
+                ...f.text('serialNumber', 'Serial Number'),
+                ...f.money('salvageValue', 'Salvage Value'),
+                ...f.number('usefulLifeMonths', 'Useful Life Months'),
+                ...f.select('depreciationMethod', 'Depreciation Method', enums.DEPRECIATION_METHOD),
+                ...f.money('accumulatedDepreciation', 'Accumulated Depreciation'),
+                ...f.money('netBookValue', 'Net Book Value'),
+                ...f.text('departmentId', 'Department'),
+                ...f.text('glAccountId', 'Gl Account'),
+                ...f.text('vendorId', 'Vendor'),
+                ...f.text('purchaseOrderNumber', 'Purchase Order Number'),
+                ...f.text('notes', 'Notes'),
             ]),
             f.section('Depreciation Schedules', [
                 ...f.inlineTable('depreciationSchedules', 'Depreciation', [
@@ -89,7 +99,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('defaultDepreciationMethod', 'Depreciation Method', enums.DEPRECIATION_METHOD, true),
-                ...f.number('defaultUsefulLifeMonths', 'Useful Life (Months)', true)
+                ...f.number('defaultUsefulLifeMonths', 'Useful Life (Months)', true),
+                ...f.text('code', 'Code'),
+                ...f.text('glAccountId', 'Gl Account'),
+                ...f.text('depreciationExpenseAccountId', 'Depreciation Expense Account'),
+                ...f.text('accumulatedDepreciationAccountId', 'Accumulated Depreciation Account'),
+                ...f.checkbox('isActive', 'Active'),
             ])
         ])
     };

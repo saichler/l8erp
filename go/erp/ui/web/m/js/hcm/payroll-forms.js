@@ -48,7 +48,8 @@ window.MobilePayroll = window.MobilePayroll || {};
                 ...f.reference('organizationId', 'Organization', 'Organization'),
                 ...f.select('componentType', 'Type', enums.PAY_COMPONENT_TYPE, true),
                 ...f.select('category', 'Category', enums.PAY_COMPONENT_CATEGORY),
-                ...f.select('calculationType', 'Calculation', enums.CALCULATION_TYPE, true)
+                ...f.select('calculationType', 'Calculation', enums.CALCULATION_TYPE, true),
+                ...f.money('fixedAmount', 'Fixed Amount'),
             ]),
             f.section('Calculation Settings', [
                 ...f.number('rate', 'Rate/Percentage'),
@@ -69,7 +70,17 @@ window.MobilePayroll = window.MobilePayroll || {};
                 ...f.select('status', 'Status', enums.PAYROLL_RUN_STATUS, true),
                 ...f.date('scheduledDate', 'Scheduled Date'),
                 ...f.date('paymentDate', 'Payment Date', true),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.date('processingDate', 'Processing Date'),
+                ...f.number('employeeCount', 'Employee Count'),
+                ...f.money('totalGross', 'Total Gross'),
+                ...f.money('totalDeductions', 'Total Deductions'),
+                ...f.money('totalTaxes', 'Total Taxes'),
+                ...f.money('totalNet', 'Total Net'),
+                ...f.money('totalEmployerCost', 'Total Employer Cost'),
+                ...f.text('processedBy', 'Processed By'),
+                ...f.text('approvedBy', 'Approved By'),
+                ...f.date('approvedDate', 'Approved Date'),
             ])
         ]),
 
@@ -77,7 +88,17 @@ window.MobilePayroll = window.MobilePayroll || {};
             f.section('Payslip Details', [
                 ...f.reference('employeeId', 'Employee', 'Employee', true),
                 ...f.reference('payrollRunId', 'Payroll Run', 'PayrollRun', true),
-                ...f.date('paymentDate', 'Payment Date', true)
+                ...f.date('paymentDate', 'Payment Date', true),
+                ...f.number('otherHours', 'Other Hours'),
+                ...f.number('totalHours', 'Total Hours'),
+                ...f.money('grossPay', 'Gross Pay'),
+                ...f.money('totalDeductions', 'Total Deductions'),
+                ...f.money('totalTaxes', 'Total Taxes'),
+                ...f.money('netPay', 'Net Pay'),
+                ...f.money('ytdGross', 'YTD Gross'),
+                ...f.money('ytdDeductions', 'YTD Deductions'),
+                ...f.money('ytdTaxes', 'YTD Taxes'),
+                ...f.money('ytdNet', 'YTD Net'),
             ]),
             f.section('Hours', [
                 ...f.number('regularHours', 'Regular Hours'),
@@ -98,7 +119,9 @@ window.MobilePayroll = window.MobilePayroll || {};
                 ...f.checkbox('useNewW4', 'Use 2020+ W-4'),
                 ...f.checkbox('exempt', 'Exempt'),
                 ...f.date('effectiveDate', 'Effective Date'),
-                ...f.date('signedDate', 'Signed Date')
+                ...f.date('signedDate', 'Signed Date'),
+                ...f.checkbox('useNewW4', 'Use New W4'),
+                ...f.money('additionalWithholding', 'Additional Withholding'),
             ])
         ]),
 
@@ -114,7 +137,9 @@ window.MobilePayroll = window.MobilePayroll || {};
                 ...f.number('priority', 'Priority'),
                 ...f.checkbox('isActive', 'Active'),
                 ...f.checkbox('isPrenoteComplete', 'Prenote Complete'),
-                ...f.date('effectiveDate', 'Effective Date')
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.text('accountNumberMasked', 'Account Number Masked'),
+                ...f.money('fixedAmount', 'Fixed Amount'),
             ])
         ]),
 
@@ -126,7 +151,12 @@ window.MobilePayroll = window.MobilePayroll || {};
                 ...f.text('issuingAuthority', 'Issuing Authority'),
                 ...f.text('payeeName', 'Payee Name', true),
                 ...f.textarea('payeeAddress', 'Payee Address'),
-                ...f.select('status', 'Status', enums.GARNISHMENT_STATUS, true)
+                ...f.select('status', 'Status', enums.GARNISHMENT_STATUS, true),
+                ...f.money('totalAmountOwed', 'Total Amount Owed'),
+                ...f.money('amountPerPeriod', 'Amount Per Period'),
+                ...f.money('maximumPercentage', 'Maximum Percentage'),
+                ...f.money('amountPaidToDate', 'Amount Paid To Date'),
+                ...f.text('documentId', 'Document'),
             ]),
             f.section('Amount Details', [
                 ...f.percentage('percentage', 'Percentage'),
@@ -147,6 +177,8 @@ window.MobilePayroll = window.MobilePayroll || {};
                 ...f.date('issuedDate', 'Issued Date'),
                 ...f.checkbox('isCorrected', 'Is Correction'),
                 ...f.text('originalDocumentId', 'Original Document ID'),
+                ...f.date('generatedDate', 'Generated Date'),
+                ...f.date('correctedDate', 'Corrected Date'),
                 ...f.url('fileUrl', 'File URL')
             ])
         ])

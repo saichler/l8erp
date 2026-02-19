@@ -23,7 +23,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('planningHorizonStart', 'Planning Horizon Start'),
                 ...f.date('planningHorizonEnd', 'Planning Horizon End'),
                 ...f.select('status', 'Status', enums.MRP_STATUS),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.checkbox('includeSafetyStock', 'Include Safety Stock'),
+                ...f.checkbox('includeForecasts', 'Include Forecasts'),
+                ...f.checkbox('includeOpenOrders', 'Include Open Orders'),
+                ...f.text('runBy', 'Run By'),
+                ...f.date('startTime', 'Start Time'),
+                ...f.date('endTime', 'End Time'),
+                ...f.number('itemsProcessed', 'Items Processed'),
+                ...f.number('exceptionsGenerated', 'Exceptions Generated'),
             ]),
             f.section('Requirements', [
                 ...f.inlineTable('requirements', 'MRP Requirements', [
@@ -42,7 +50,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('description', 'Description'),
                 ...f.date('planningStart', 'Planning Start', true),
                 ...f.date('planningEnd', 'Planning End', true),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.select('status', 'Status', enums.SCHEDULE_STATUS),
+                ...f.text('timeBucket', 'Time Bucket'),
+                ...f.text('runBy', 'Run By'),
+                ...f.date('runDate', 'Run Date'),
             ]),
             f.section('Capacity Loads', [
                 ...f.inlineTable('loads', 'Capacity Loads', [
@@ -64,7 +76,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('scheduleStart', 'Schedule Start', true),
                 ...f.date('scheduleEnd', 'Schedule End', true),
                 ...f.select('status', 'Status', enums.SCHEDULE_STATUS),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.select('scheduleType', 'Schedule Type', enums.SCHEDULE_TYPE),
+                ...f.text('createdBy', 'Created By'),
+                ...f.date('createdDate', 'Created Date'),
+                ...f.text('publishedBy', 'Published By'),
+                ...f.date('publishedDate', 'Published Date'),
+                ...f.number('workOrdersScheduled', 'Work Orders Scheduled'),
             ]),
             f.section('Schedule Blocks', [
                 ...f.inlineTable('blocks', 'Schedule Blocks', [

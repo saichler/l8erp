@@ -85,7 +85,8 @@ limitations under the License.
                 ...f.select('status', 'Status', enums.KPI_STATUS),
                 ...f.select('trend', 'Trend', enums.TREND_DIRECTION),
                 ...f.checkbox('isActive', 'Active'),
-                ...f.number('refreshInterval', 'Refresh Interval (seconds)')
+                ...f.number('refreshInterval', 'Refresh Interval (seconds)'),
+                ...f.number('lastUpdated', 'Last Updated'),
             ]),
             f.section('Thresholds', [
                 ...f.inlineTable('thresholds', 'KPI Thresholds', [

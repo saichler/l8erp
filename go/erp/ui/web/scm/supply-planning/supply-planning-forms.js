@@ -23,7 +23,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('planningMethod', 'Planning Method', enums.PLANNING_METHOD),
                 ...f.text('source', 'Source'),
                 ...f.select('status', 'Status', enums.TASK_STATUS),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.number('availableQuantity', 'Available Quantity'),
+                ...f.number('shortageQuantity', 'Shortage Quantity'),
+                ...f.date('plannedOrderDate', 'Planned Order Date'),
             ])
         ]),
 
@@ -34,7 +37,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('destinationWarehouseId', 'Destination Warehouse', 'ScmWarehouse', true),
                 ...f.number('requiredQuantity', 'Required Quantity', true),
                 ...f.date('requiredDate', 'Required Date', true),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.number('transferQuantity', 'Transfer Quantity'),
+                ...f.select('status', 'Status', enums.TASK_STATUS),
             ])
         ]),
 
@@ -45,7 +50,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('planPeriod.endDate', 'End Date', true),
                 ...f.text('createdBy', 'Created By'),
                 ...f.select('status', 'Status', enums.TASK_STATUS),
-                ...f.textarea('description', 'Description')
+                ...f.textarea('description', 'Description'),
+                ...f.date('planPeriod.startDate', 'Plan Period Start'),
+                ...f.date('planPeriod.endDate', 'Plan Period End'),
+                ...f.text('approvedBy', 'Approved By'),
+                ...f.text('notes', 'Notes'),
             ])
         ]),
 
@@ -56,7 +65,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('minOrderQuantity', 'Min Order Quantity', true),
                 ...f.checkbox('leadTimeAgreed', 'Lead Time Agreed'),
                 ...f.select('status', 'Status', enums.TASK_STATUS),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.checkbox('forecastShared', 'Forecast Shared'),
+                ...f.checkbox('inventoryVisible', 'Inventory Visible'),
             ])
         ]),
 
@@ -67,7 +78,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('safetyStockQuantity', 'Safety Stock Quantity', true),
                 ...f.text('calculationMethod', 'Calculation Method'),
                 ...f.number('serviceLevel', 'Service Level %'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.date('reviewDate', 'Review Date'),
+                ...f.checkbox('isActive', 'Active'),
             ])
         ]),
 
@@ -78,7 +91,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('leadTimeDays', 'Lead Time (days)', true),
                 ...f.number('transitDays', 'Transit (days)'),
                 ...f.number('totalDays', 'Total (days)'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.number('receivingDays', 'Receiving Days'),
+                ...f.checkbox('isActive', 'Active'),
             ])
         ])
     };

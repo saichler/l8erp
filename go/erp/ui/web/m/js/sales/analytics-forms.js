@@ -26,7 +26,10 @@ window.MobileSalesAnalytics = window.MobileSalesAnalytics || {};
                 ...f.number('year', 'Year', true),
                 ...f.money('targetAmount', 'Target Amount', true),
                 ...f.money('achievedAmount', 'Achieved Amount'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.number('quarter', 'Quarter'),
+                ...f.number('month', 'Month'),
+                ...f.number('achievementPercent', 'Achievement Percent'),
             ])
         ]),
 
@@ -38,7 +41,10 @@ window.MobileSalesAnalytics = window.MobileSalesAnalytics || {};
                 ...f.reference('parentTerritoryId', 'Parent Territory', 'SalesTerritory'),
                 ...f.text('region', 'Region'),
                 ...f.reference('managerId', 'Manager', 'Employee'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('countryCodes', 'Country Codes'),
+                ...f.text('stateCodes', 'State Codes'),
+                ...f.text('postalCodes', 'Postal Codes'),
             ]),
             f.section('Assignments', [
                 ...f.inlineTable('assignments', 'Territory Assignments', [
@@ -60,7 +66,10 @@ window.MobileSalesAnalytics = window.MobileSalesAnalytics || {};
                 ...f.number('baseRate', 'Base Rate', true),
                 ...f.date('effectiveDate', 'Effective Date', true),
                 ...f.date('expiryDate', 'Expiry Date'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.money('baseAmount', 'Base Amount'),
+                ...f.text('appliesTo', 'Applies To'),
+                ...f.text('notes', 'Notes'),
             ]),
             f.section('Calculations', [
                 ...f.inlineTable('calculations', 'Commission Calculations', [
@@ -84,7 +93,12 @@ window.MobileSalesAnalytics = window.MobileSalesAnalytics || {};
                 ...f.date('expectedCloseDate', 'Expected Close', true),
                 ...f.money('forecastAmount', 'Forecast Amount', true),
                 ...f.number('probability', 'Probability %'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('customerId', 'Customer'),
+                ...f.number('year', 'Year'),
+                ...f.number('quarter', 'Quarter'),
+                ...f.number('month', 'Month'),
+                ...f.money('weightedAmount', 'Weighted Amount'),
             ])
         ])
     };

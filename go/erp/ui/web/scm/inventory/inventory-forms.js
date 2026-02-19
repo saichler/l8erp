@@ -24,7 +24,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('categoryId', 'Category', 'ScmItemCategory'),
                 ...f.text('unitOfMeasure', 'Unit of Measure'),
                 ...f.money('unitCost', 'Unit Cost'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.money('unitPrice', 'Unit Price'),
+                ...f.select('valuationMethod', 'Valuation Method', enums.VALUATION_METHOD),
+                ...f.select('planningMethod', 'Planning Method', enums.PLANNING_METHOD),
+                ...f.checkbox('isLotTracked', 'Lot Tracked'),
+                ...f.checkbox('isSerialTracked', 'Serial Tracked'),
+                ...f.number('shelfLife', 'Shelf Life'),
+                ...f.text('defaultWarehouseId', 'Default Warehouse'),
             ]),
             f.section('Lot Numbers', [
                 ...f.inlineTable('lots', 'Lot Numbers', [
@@ -94,7 +101,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('status', 'Status', enums.TASK_STATUS),
                 ...f.number('itemsCounted', 'Items Counted'),
                 ...f.number('discrepancies', 'Discrepancies'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('counterId', 'Counter'),
             ])
         ]),
 

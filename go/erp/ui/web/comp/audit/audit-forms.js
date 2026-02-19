@@ -19,7 +19,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.select('auditType', 'Audit Type', enums.auditType, true),
                 ...f.text('fiscalYear', 'Fiscal Year'),
-                ...f.select('status', 'Status', enums.auditStatus)
+                ...f.select('status', 'Status', enums.auditStatus),
+                ...f.text('description', 'Description'),
+                ...f.text('departments', 'Departments'),
+                ...f.text('processes', 'Processes'),
+                ...f.text('auditorIds', 'Auditor Ids'),
+                ...f.money('budget', 'Budget'),
+                ...f.money('actualCost', 'Actual Cost'),
+                ...f.text('auditPlanDocumentId', 'Audit Plan Document'),
+                ...f.text('relatedRegulationIds', 'Related Regulation Ids'),
             ]),
             f.section('Timeline', [
                 ...f.date('plannedStartDate', 'Planned Start Date'),
@@ -54,7 +62,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('title', 'Title', true),
                 ...f.reference('auditScheduleId', 'Audit', 'CompAuditSchedule', true),
                 ...f.select('severity', 'Severity', enums.findingSeverity, true),
-                ...f.select('status', 'Status', enums.findingStatus)
+                ...f.select('status', 'Status', enums.findingStatus),
+                ...f.text('condition', 'Condition'),
+                ...f.text('criteria', 'Criteria'),
+                ...f.text('cause', 'Cause'),
+                ...f.text('effect', 'Effect'),
+                ...f.text('relatedControlIds', 'Related Control Ids'),
+                ...f.text('relatedRequirementIds', 'Related Requirement Ids'),
+                ...f.text('evidenceDocumentId', 'Evidence Document'),
+                ...f.checkbox('repeatFinding', 'Repeat Finding'),
+                ...f.text('priorFindingId', 'Prior Finding'),
             ]),
             f.section('Ownership', [
                 ...f.reference('responsibleId', 'Responsible', 'Employee')
@@ -87,7 +104,20 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Report Information', [
                 ...f.text('title', 'Title', true),
                 ...f.select('reportType', 'Report Type', enums.reportType),
-                ...f.select('status', 'Status', enums.reportStatus)
+                ...f.select('status', 'Status', enums.reportStatus),
+                ...f.text('reportNumber', 'Report Number'),
+                ...f.text('regulationId', 'Regulation'),
+                ...f.number('overallComplianceRate', 'Overall Compliance Rate'),
+                ...f.number('requirementsTotal', 'Requirements Total'),
+                ...f.number('requirementsCompliant', 'Requirements Compliant'),
+                ...f.number('requirementsPartial', 'Requirements Partial'),
+                ...f.number('requirementsNonCompliant', 'Requirements Non Compliant'),
+                ...f.number('openViolations', 'Open Violations'),
+                ...f.number('openFindings', 'Open Findings'),
+                ...f.number('overdueRemediations', 'Overdue Remediations'),
+                ...f.text('keyAchievements', 'Key Achievements'),
+                ...f.text('reportDocumentId', 'Report Document'),
+                ...f.text('distributionList', 'Distribution List'),
             ]),
             f.section('Period', [
                 ...f.date('periodStart', 'Period Start'),

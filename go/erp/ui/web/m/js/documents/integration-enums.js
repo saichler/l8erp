@@ -8,6 +8,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     window.MobileDocIntegration = window.MobileDocIntegration || {};
     MobileDocIntegration.enums = {};
 
+    MobileDocIntegration.enums.FILE_FORMAT = { 0: 'Unspecified', 1: 'PDF', 2: 'Word', 3: 'Excel', 4: 'PowerPoint', 5: 'Image', 6: 'Text', 7: 'HTML', 8: 'XML', 9: 'JSON', 10: 'Other' };
+
     MobileDocIntegration.enums.TEMPLATE_TYPE = { 0: 'Unspecified', 1: 'Document', 2: 'Email', 3: 'Form', 4: 'Report', 5: 'Contract' };
     MobileDocIntegration.enums.TEMPLATE_TYPE_CLASSES = { 1: 'status-active', 2: 'status-active', 3: 'status-active', 4: 'status-active', 5: 'status-pending' };
 
@@ -21,6 +23,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     MobileDocIntegration.enums.EMAIL_CAPTURE_STATUS_CLASSES = { 1: 'status-active', 2: 'status-pending', 3: 'status-active', 4: 'status-terminated' };
 
     MobileDocIntegration.render = {
+        fileFormat: (v) => Layer8MRenderers.renderEnum(v, MobileDocIntegration.enums.FILE_FORMAT),
         templateType: Layer8MRenderers.createStatusRenderer(MobileDocIntegration.enums.TEMPLATE_TYPE, MobileDocIntegration.enums.TEMPLATE_TYPE_CLASSES),
         fieldType: Layer8MRenderers.createStatusRenderer(MobileDocIntegration.enums.FIELD_TYPE, MobileDocIntegration.enums.FIELD_TYPE_CLASSES),
         scanStatus: Layer8MRenderers.createStatusRenderer(MobileDocIntegration.enums.SCAN_STATUS, MobileDocIntegration.enums.SCAN_STATUS_CLASSES),

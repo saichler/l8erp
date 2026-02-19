@@ -59,7 +59,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('itemId', 'Item (optional)', 'ScmItem'),
                 ...f.date('effectiveDate', 'Effective Date'),
                 ...f.date('expiryDate', 'Expiry Date'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('appliesTo', 'Applies To'),
+                ...f.text('customerIds', 'Customer Ids'),
+                ...f.text('itemIds', 'Item Ids'),
+                ...f.number('priority', 'Priority'),
+                ...f.checkbox('isCombinable', 'Combinable'),
             ])
         ]),
 
@@ -72,7 +77,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('startDate', 'Start Date', true),
                 ...f.date('endDate', 'End Date', true),
                 ...f.number('maxQuantity', 'Max Quantity'),
-                ...f.text('promoCode', 'Promo Code')
+                ...f.text('promoCode', 'Promo Code'),
+                ...f.money('originalPrice', 'Original Price'),
+                ...f.number('quantitySold', 'Quantity Sold'),
+                ...f.checkbox('isActive', 'Active'),
             ])
         ])
     };

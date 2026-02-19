@@ -26,7 +26,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('maritalStatus', 'Marital Status', enums.MARITAL_STATUS),
                 ...f.text('nationality', 'Nationality'),
                 ...f.ssn('nationalId', 'SSN'),
-                ...f.text('nationalIdType', 'ID Type')
+                ...f.text('nationalIdType', 'ID Type'),
+                ...f.text('suffix', 'Suffix'),
+                ...f.text('citizenship', 'Citizenship'),
+                ...f.text('photoUrl', 'Photo URL'),
             ]),
             f.section('Employment Information', [
                 ...f.select('employmentStatus', 'Status', enums.EMPLOYMENT_STATUS, true),
@@ -94,7 +97,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('workLocationId', 'Work Location'),
                 ...f.text('costCenterId', 'Cost Center'),
                 ...f.date('effectiveDate', 'Effective Date'),
-                ...f.date('endDate', 'End Date')
+                ...f.date('endDate', 'End Date'),
+                ...f.number('filledCount', 'Filled Count'),
             ])
         ]),
 
@@ -112,7 +116,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('eeoCategory', 'EEO Category'),
                 ...f.checkbox('isActive', 'Active'),
                 ...f.date('effectiveDate', 'Effective Date'),
-                ...f.date('endDate', 'End Date')
+                ...f.date('endDate', 'End Date'),
+                ...f.text('responsibilities', 'Responsibilities'),
+                ...f.text('qualifications', 'Qualifications'),
+                ...f.text('requiredSkills', 'Required Skills'),
+                ...f.text('preferredSkills', 'Preferred Skills'),
+                ...f.text('certificationsRequired', 'Certifications Required'),
             ])
         ]),
 
@@ -135,7 +144,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('expirationDate', 'Expiration Date'),
                 ...f.checkbox('isVerified', 'Verified'),
                 ...f.text('verifiedBy', 'Verified By'),
-                ...f.date('verifiedDate', 'Verification Date')
+                ...f.date('verifiedDate', 'Verification Date'),
+                ...f.text('fileType', 'File Type'),
+                ...f.number('fileSizeBytes', 'File Size Bytes'),
+                ...f.date('uploadDate', 'Upload Date'),
             ])
         ]),
 

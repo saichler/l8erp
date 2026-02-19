@@ -40,7 +40,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('expiryDate', 'Expiry Date'),
                 ...f.number('availableHours', 'Available Hours'),
                 ...f.number('capacityUnits', 'Capacity Units'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('shiftId', 'Shift'),
+                ...f.number('dayOfWeek', 'Day Of Week'),
             ])
         ]),
 
@@ -53,7 +55,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('endTime', 'End Time', true),
                 ...f.number('breakDuration', 'Break Duration (min)'),
                 ...f.checkbox('isOvernight', 'Overnight'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.date('expiryDate', 'Expiry Date'),
+                ...f.text('notes', 'Notes'),
             ])
         ]),
 
@@ -66,7 +71,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('durationMinutes', 'Duration (minutes)'),
                 ...f.select('reasonCode', 'Reason Code', enums.DOWNTIME_REASON),
                 ...f.textarea('description', 'Description'),
-                ...f.reference('reportedBy', 'Reported By', 'Employee')
+                ...f.reference('reportedBy', 'Reported By', 'Employee'),
+                ...f.select('downtimeType', 'Downtime Type', enums.DOWNTIME_TYPE),
+                ...f.text('resolvedBy', 'Resolved By'),
+                ...f.money('estimatedLoss', 'Estimated Loss'),
+                ...f.text('notes', 'Notes'),
             ])
         ])
     };

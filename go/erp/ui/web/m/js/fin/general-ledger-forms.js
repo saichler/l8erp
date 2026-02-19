@@ -23,7 +23,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('normalBalance', 'Normal Balance', enums.BALANCE_TYPE),
                 ...f.reference('parentAccountId', 'Parent Account', 'Account'),
                 ...f.reference('currencyId', 'Currency', 'Currency'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.checkbox('isHeader', 'Header'),
+                ...f.number('level', 'Level'),
             ]),
             f.section('Balances', [
                 ...f.inlineTable('balances', 'Account Balances', [
@@ -42,7 +44,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('description', 'Description'),
                 ...f.select('status', 'Status', enums.JOURNAL_ENTRY_STATUS),
                 ...f.reference('fiscalPeriodId', 'Fiscal Period', 'FiscalYear'),
-                ...f.text('reference', 'Reference')
+                ...f.text('reference', 'Reference'),
+                ...f.text('source', 'Source'),
+                ...f.money('totalAmount', 'Total Amount'),
+                ...f.text('postedBy', 'Posted By'),
+                ...f.date('postedDate', 'Posted Date'),
+                ...f.text('reversedBy', 'Reversed By'),
+                ...f.date('reversedDate', 'Reversed Date'),
+                ...f.text('reversalEntryId', 'Reversal Entry'),
+                ...f.text('notes', 'Notes'),
             ]),
             f.section('Lines', [
                 ...f.inlineTable('lines', 'Journal Entry Lines', [
@@ -60,7 +70,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('yearName', 'Year Name', true),
                 ...f.date('startDate', 'Start Date', true),
                 ...f.date('endDate', 'End Date', true),
-                ...f.checkbox('isClosed', 'Closed')
+                ...f.checkbox('isClosed', 'Closed'),
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('notes', 'Notes'),
             ]),
             f.section('Periods', [
                 ...f.inlineTable('periods', 'Fiscal Periods', [
@@ -99,7 +111,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('toCurrencyId', 'To Currency', 'Currency', true),
                 ...f.number('rate', 'Rate', true),
                 ...f.date('effectiveDate', 'Effective Date', true),
-                ...f.date('endDate', 'End Date')
+                ...f.date('endDate', 'End Date'),
+                ...f.text('source', 'Source'),
             ])
         ])
     };

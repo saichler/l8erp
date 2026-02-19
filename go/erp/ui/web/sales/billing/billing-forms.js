@@ -26,7 +26,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('nextBillingDate', 'Next Billing Date'),
                 ...f.money('totalAmount', 'Total Amount'),
                 ...f.money('billedAmount', 'Billed Amount'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('contractId', 'Contract'),
+                ...f.money('remainingAmount', 'Remaining Amount'),
             ]),
             f.section('Milestones', [
                 ...f.inlineTable('milestones', 'Billing Milestones', [
@@ -50,7 +52,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('recognizedRevenue', 'Recognized Revenue'),
                 ...f.money('deferredRevenue', 'Deferred Revenue'),
                 ...f.reference('revenueAccountId', 'Revenue Account', 'Account'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('contractId', 'Contract'),
+                ...f.text('deferredAccountId', 'Deferred Account'),
             ])
         ])
     };

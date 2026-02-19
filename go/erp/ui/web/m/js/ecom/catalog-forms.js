@@ -25,7 +25,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('productType', 'Product Type', enums.PRODUCT_TYPE),
                 ...f.select('status', 'Status', enums.PRODUCT_STATUS),
                 ...f.reference('categoryId', 'Category', 'EcomCategory'),
-                ...f.text('brand', 'Brand')
+                ...f.text('brand', 'Brand'),
+                ...f.text('tagIds', 'Tag Ids'),
             ]),
             f.section('Pricing', [
                 ...f.money('price', 'Price', true),
@@ -98,7 +99,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('attributeType', 'Attribute Type', enums.ATTRIBUTE_TYPE, true),
                 ...f.textarea('description', 'Description'),
                 ...f.text('defaultValue', 'Default Value'),
-                ...f.number('sortOrder', 'Sort Order')
+                ...f.number('sortOrder', 'Sort Order'),
+                ...f.text('options', 'Options'),
             ]),
             f.section('Settings', [
                 ...f.checkbox('isRequired', 'Is Required'),

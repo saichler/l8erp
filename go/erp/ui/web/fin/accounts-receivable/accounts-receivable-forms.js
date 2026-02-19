@@ -17,7 +17,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Basic Information', [
                 ...f.text('customerNumber', 'Customer Number', true),
                 ...f.text('name', 'Name', true),
-                ...f.select('status', 'Status', enums.CUSTOMER_STATUS, true)
+                ...f.select('status', 'Status', enums.CUSTOMER_STATUS, true),
+                ...f.text('legalName', 'Legal Name'),
+                ...f.text('taxId', 'Tax'),
+                ...f.text('defaultAccountId', 'Default Account'),
+                ...f.text('currencyId', 'Currency'),
+                ...f.number('paymentTermDays', 'Payment Term Days'),
+                ...f.text('website', 'Website'),
+                ...f.text('notes', 'Notes'),
             ]),
             f.section('Credit & Status', [
                 ...f.money('creditLimit', 'Credit Limit')
@@ -41,7 +48,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('customerId', 'Customer', 'Customer', true),
                 ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder'),
                 ...f.reference('deliveryOrderId', 'Delivery Order', 'SalesDeliveryOrder'),
-                ...f.select('status', 'Status', enums.INVOICE_STATUS, true)
+                ...f.select('status', 'Status', enums.INVOICE_STATUS, true),
+                ...f.text('currencyId', 'Currency'),
+                ...f.text('fiscalPeriodId', 'Fiscal Period'),
+                ...f.money('subtotal', 'Subtotal'),
+                ...f.money('amountPaid', 'Amount Paid'),
+                ...f.money('balanceDue', 'Balance Due'),
+                ...f.number('paymentTermDays', 'Payment Term Days'),
+                ...f.text('arAccountId', 'Ar Account'),
+                ...f.text('salesOrderNumber', 'Sales Order Number'),
+                ...f.text('notes', 'Notes'),
             ]),
             f.section('Dates & Amount', [
                 ...f.date('invoiceDate', 'Invoice Date', true),
@@ -65,7 +81,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Payment Details', [
                 ...f.reference('customerId', 'Customer', 'Customer', true),
                 ...f.select('paymentMethod', 'Payment Method', enums.PAYMENT_METHOD, true),
-                ...f.select('status', 'Status', enums.PAYMENT_STATUS, true)
+                ...f.select('status', 'Status', enums.PAYMENT_STATUS, true),
+                ...f.text('bankAccountId', 'Bank Account'),
+                ...f.text('checkNumber', 'Check Number'),
+                ...f.text('reference', 'Reference'),
+                ...f.text('notes', 'Notes'),
             ]),
             f.section('Amount & Date', [
                 ...f.date('paymentDate', 'Payment Date', true),
@@ -93,7 +113,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Memo Details', [
                 ...f.text('memoNumber', 'Memo Number', true),
                 ...f.reference('customerId', 'Customer', 'Customer', true),
-                ...f.select('status', 'Status', enums.CREDIT_MEMO_STATUS, true)
+                ...f.select('status', 'Status', enums.CREDIT_MEMO_STATUS, true),
+                ...f.text('originalInvoiceId', 'Original Invoice'),
+                ...f.text('reason', 'Reason'),
+                ...f.text('description', 'Description'),
+                ...f.text('notes', 'Notes'),
             ]),
             f.section('Amount & Date', [
                 ...f.date('memoDate', 'Memo Date', true),
@@ -106,7 +130,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('customerId', 'Customer', 'Customer', true),
                 ...f.date('letterDate', 'Letter Date', true),
                 ...f.select('dunningLevel', 'Dunning Level', enums.DUNNING_LEVEL, true),
-                ...f.money('totalOverdue', 'Total Overdue')
+                ...f.money('totalOverdue', 'Total Overdue'),
+                ...f.date('dueDate', 'Due Date'),
+                ...f.number('daysOverdue', 'Days Overdue'),
+                ...f.text('invoiceIds', 'Invoice Ids'),
+                ...f.checkbox('isSent', 'Sent'),
+                ...f.date('sentDate', 'Sent Date'),
+                ...f.text('notes', 'Notes'),
             ])
         ])
     };

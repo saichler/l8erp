@@ -33,7 +33,9 @@ limitations under the License.
                 ...f.select('reportType', 'Report Type', enums.REPORT_TYPE),
                 ...f.select('status', 'Status', enums.REPORT_STATUS),
                 ...f.text('category', 'Category'),
-                ...f.reference('ownerId', 'Owner', 'Employee')
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.number('lastExecuted', 'Last Executed'),
+                ...f.number('executionCount', 'Execution Count'),
             ]),
             f.section('Data Configuration', [
                 ...f.reference('dataSourceId', 'Data Source', 'BiDataSource'),

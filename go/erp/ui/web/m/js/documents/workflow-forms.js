@@ -16,7 +16,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('status', 'Status', enums.WORKFLOW_STATUS),
-                ...f.textarea('comments', 'Comments')
+                ...f.textarea('comments', 'Comments'),
+                ...f.text('documentId', 'Document'),
+                ...f.text('initiatedBy', 'Initiated By'),
+                ...f.date('initiatedDate', 'Initiated Date'),
+                ...f.date('completedDate', 'Completed Date'),
+                ...f.number('currentStep', 'Current Step'),
+                ...f.number('totalSteps', 'Total Steps'),
             ]),
             f.section('Workflow Steps', [
                 ...f.inlineTable('steps', 'Workflow Steps', [

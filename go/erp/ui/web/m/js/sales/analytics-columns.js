@@ -31,7 +31,11 @@ limitations under the License.
             ...col.col('territoryId', 'Territory'),
             ...col.money('targetAmount', 'Target'),
             ...col.money('achievedAmount', 'Achieved'),
-            ...col.col('period', 'Period')
+            ...col.status('period', 'Period', enums.TARGET_PERIOD_VALUES, render.targetPeriod),
+            ...col.col('year', 'Year'),
+            ...col.col('quarter', 'Quarter'),
+            ...col.col('month', 'Month'),
+            ...col.col('achievementPercent', '% Achieved')
         ],
 
         SalesTerritory: [

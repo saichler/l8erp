@@ -29,7 +29,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('warehouseId', 'Warehouse', 'ScmWarehouse'),
                 ...f.reference('salesOrderId', 'Sales Order', 'SalesOrder'),
                 ...f.number('priority', 'Priority'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.number('quantityScrapped', 'Quantity Scrapped'),
+                ...f.date('actualStartDate', 'Actual Start Date'),
+                ...f.date('actualEndDate', 'Actual End Date'),
+                ...f.money('estimatedCost', 'Estimated Cost'),
             ]),
             f.section('Operations', [
                 ...f.inlineTable('operations', 'Work Order Operations', [
@@ -111,7 +115,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('status', 'Status', enums.WORK_ORDER_STATUS),
                 ...f.number('priority', 'Priority'),
                 ...f.reference('plannerId', 'Planner', 'Employee'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.money('totalEstimatedCost', 'Total Estimated Cost'),
+                ...f.money('totalActualCost', 'Total Actual Cost'),
             ]),
             f.section('Order Lines', [
                 ...f.inlineTable('lines', 'Production Order Lines', [

@@ -31,7 +31,9 @@ limitations under the License.
                 ...f.text('title', 'Title', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('category', 'Category', enums.RISK_CATEGORY),
-                ...f.select('status', 'Status', enums.RISK_STATUS)
+                ...f.select('status', 'Status', enums.RISK_STATUS),
+                ...f.text('relatedControlIds', 'Related Control Ids'),
+                ...f.text('relatedRequirementIds', 'Related Requirement Ids'),
             ]),
             f.section('Risk Scores', [
                 ...f.number('inherentLikelihood', 'Inherent Likelihood'),

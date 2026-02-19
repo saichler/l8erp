@@ -32,7 +32,13 @@ window.MobileLearning = window.MobileLearning || {};
                 ...f.text('code', 'Code', true),
                 ...f.text('title', 'Title', true),
                 ...f.textarea('description', 'Description'),
-                ...f.textarea('learningObjectives', 'Learning Objectives')
+                ...f.textarea('learningObjectives', 'Learning Objectives'),
+                ...f.text('prerequisiteCourseIds', 'Prerequisite Course Ids'),
+                ...f.text('requiredSkills', 'Required Skills'),
+                ...f.text('applicableJobIds', 'Applicable Job Ids'),
+                ...f.money('costPerPerson', 'Cost Per Person'),
+                ...f.number('averageRating', 'Average Rating'),
+                ...f.number('totalCompletions', 'Total Completions'),
             ]),
             f.section('Course Details', [
                 ...f.select('courseType', 'Course Type', enums.COURSE_TYPE, true),
@@ -65,7 +71,10 @@ window.MobileLearning = window.MobileLearning || {};
                 ...f.reference('courseId', 'Course', 'Course', true),
                 ...f.select('status', 'Status', enums.SESSION_STATUS, true),
                 ...f.reference('instructorId', 'Instructor', 'Employee'),
-                ...f.text('instructorName', 'Instructor Name')
+                ...f.text('instructorName', 'Instructor Name'),
+                ...f.number('enrolledCount', 'Enrolled Count'),
+                ...f.number('waitlistCount', 'Waitlist Count'),
+                ...f.number('completedCount', 'Completed Count'),
             ]),
             f.section('Schedule', [
                 ...f.date('startDate', 'Start Date', true),
@@ -87,7 +96,10 @@ window.MobileLearning = window.MobileLearning || {};
                 ...f.reference('courseId', 'Course', 'Course', true),
                 ...f.reference('sessionId', 'Session', 'CourseSession'),
                 ...f.select('status', 'Status', enums.COURSE_ENROLLMENT_STATUS, true),
-                ...f.reference('managerId', 'Manager', 'Employee')
+                ...f.reference('managerId', 'Manager', 'Employee'),
+                ...f.text('completionCertificateUrl', 'Completion Certificate URL'),
+                ...f.text('approvedBy', 'Approved By'),
+                ...f.date('approvedDate', 'Approved Date'),
             ]),
             f.section('Dates', [
                 ...f.date('enrolledDate', 'Enrolled Date'),
@@ -114,7 +126,12 @@ window.MobileLearning = window.MobileLearning || {};
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.text('issuingOrganization', 'Issuing Organization'),
-                ...f.select('certificationType', 'Type', enums.CERTIFICATION_TYPE, true)
+                ...f.select('certificationType', 'Type', enums.CERTIFICATION_TYPE, true),
+                ...f.text('requiredCourseIds', 'Required Course Ids'),
+                ...f.text('prerequisiteCertificationIds', 'Prerequisite Certification Ids'),
+                ...f.text('renewalCourseIds', 'Renewal Course Ids'),
+                ...f.money('examCost', 'Exam Cost'),
+                ...f.money('renewalCost', 'Renewal Cost'),
             ]),
             f.section('Requirements', [
                 ...f.number('requiredExperienceMonths', 'Required Experience (months)'),
@@ -186,7 +203,8 @@ window.MobileLearning = window.MobileLearning || {};
                 ...f.reference('employeeId', 'Employee', 'Employee', true),
                 ...f.reference('courseId', 'Course', 'Course'),
                 ...f.text('trainingName', 'Training Name', true),
-                ...f.select('trainingType', 'Training Type', enums.TRAINING_TYPE, true)
+                ...f.select('trainingType', 'Training Type', enums.TRAINING_TYPE, true),
+                ...f.text('documentId', 'Document'),
             ]),
             f.section('Completion', [
                 ...f.date('completedDate', 'Completed Date', true),

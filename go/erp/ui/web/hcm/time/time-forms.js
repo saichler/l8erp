@@ -16,7 +16,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         Timesheet: f.form('Timesheet', [
             f.section('Basic Information', [
                 ...f.reference('employeeId', 'Employee', 'Employee', true),
-                ...f.select('status', 'Status', enums.TIMESHEET_STATUS, true)
+                ...f.select('status', 'Status', enums.TIMESHEET_STATUS, true),
+                ...f.date('period.startDate', 'Period Start'),
+                ...f.date('period.endDate', 'Period End'),
+                ...f.date('submittedDate', 'Submitted Date'),
+                ...f.text('submittedBy', 'Submitted By'),
+                ...f.text('approvedBy', 'Approved By'),
+                ...f.date('approvedDate', 'Approved Date'),
+                ...f.text('rejectedBy', 'Rejected By'),
+                ...f.date('rejectedDate', 'Rejected Date'),
+                ...f.text('rejectionReason', 'Rejection Reason'),
             ]),
             f.section('Period', [
                 ...f.date('period.startDate', 'Start Date', true),
@@ -41,7 +50,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('employeeId', 'Employee', 'Employee', true),
                 ...f.select('leaveType', 'Leave Type', enums.LEAVE_TYPE, true),
                 ...f.reference('leavePolicyId', 'Leave Policy', 'LeavePolicy'),
-                ...f.select('status', 'Status', enums.LEAVE_REQUEST_STATUS, true)
+                ...f.select('status', 'Status', enums.LEAVE_REQUEST_STATUS, true),
+                ...f.date('submittedDate', 'Submitted Date'),
+                ...f.text('approverId', 'Approver'),
+                ...f.text('approvedBy', 'Approved By'),
+                ...f.date('approvedDate', 'Approved Date'),
+                ...f.text('rejectionReason', 'Rejection Reason'),
+                ...f.text('documentIds', 'Document Ids'),
             ]),
             f.section('Dates & Duration', [
                 ...f.date('startDate', 'Start Date', true),
@@ -62,7 +77,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('employeeId', 'Employee', 'Employee', true),
                 ...f.reference('leavePolicyId', 'Leave Policy', 'LeavePolicy'),
                 ...f.select('leaveType', 'Leave Type', enums.LEAVE_TYPE, true),
-                ...f.number('year', 'Year', true)
+                ...f.number('year', 'Year', true),
+                ...f.date('lastAccrualDate', 'Last Accrual Date'),
+                ...f.date('nextAccrualDate', 'Next Accrual Date'),
             ]),
             f.section('Balances', [
                 ...f.number('beginningBalance', 'Beginning Balance'),
@@ -121,7 +138,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('shiftType', 'Shift Type', enums.SHIFT_TYPE, true),
-                ...f.text('colorCode', 'Color Code')
+                ...f.text('colorCode', 'Color Code'),
+                ...f.money('shiftDifferential', 'Shift Differential'),
             ]),
             f.section('Schedule', [
                 ...f.text('startTime', 'Start Time'),
@@ -138,7 +156,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         Schedule: f.form('Schedule', [
             f.section('Basic Information', [
                 ...f.reference('employeeId', 'Employee', 'Employee', true),
-                ...f.select('status', 'Status', enums.SCHEDULE_STATUS, true)
+                ...f.select('status', 'Status', enums.SCHEDULE_STATUS, true),
+                ...f.date('period.startDate', 'Period Start'),
+                ...f.date('period.endDate', 'Period End'),
+                ...f.text('publishedBy', 'Published By'),
+                ...f.date('publishedDate', 'Published Date'),
             ]),
             f.section('Period', [
                 ...f.date('period.startDate', 'Start Date', true),
@@ -155,7 +177,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.date('date', 'Date', true),
                 ...f.number('year', 'Year', true),
-                ...f.select('holidayType', 'Holiday Type', enums.HOLIDAY_TYPE, true)
+                ...f.select('holidayType', 'Holiday Type', enums.HOLIDAY_TYPE, true),
+                ...f.text('applicableLocationIds', 'Applicable Location Ids'),
             ]),
             f.section('Details', [
                 ...f.checkbox('isPaid', 'Paid Holiday'),

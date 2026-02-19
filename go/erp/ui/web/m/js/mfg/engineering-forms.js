@@ -36,7 +36,8 @@ limitations under the License.
                 ...f.date('effectiveDate', 'Effective Date'),
                 ...f.number('baseQuantity', 'Base Quantity'),
                 ...f.text('unitOfMeasure', 'UOM'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.date('expiryDate', 'Expiry Date'),
             ]),
             f.section('BOM Lines', [
                 ...f.inlineTable('lines', 'BOM Lines', [
@@ -59,7 +60,10 @@ limitations under the License.
                 ...f.select('status', 'Status', enums.ROUTING_STATUS),
                 ...f.text('revision', 'Revision'),
                 ...f.date('effectiveDate', 'Effective Date'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.date('expiryDate', 'Expiry Date'),
+                ...f.number('baseQuantity', 'Base Quantity'),
+                ...f.text('unitOfMeasure', 'Unit Of Measure'),
             ]),
             f.section('Operations', [
                 ...f.inlineTable('operations', 'Routing Operations', [
@@ -81,7 +85,14 @@ limitations under the License.
                 ...f.number('priority', 'Priority'),
                 ...f.date('requestDate', 'Request Date'),
                 ...f.date('requiredDate', 'Required Date'),
-                ...f.textarea('reason', 'Reason')
+                ...f.textarea('reason', 'Reason'),
+                ...f.text('requestedBy', 'Requested By'),
+                ...f.date('approvalDate', 'Approval Date'),
+                ...f.text('approvedBy', 'Approved By'),
+                ...f.date('implementationDate', 'Implementation Date'),
+                ...f.money('estimatedCost', 'Estimated Cost'),
+                ...f.money('actualCost', 'Actual Cost'),
+                ...f.text('notes', 'Notes'),
             ]),
             f.section('Change Details', [
                 ...f.inlineTable('details', 'ECO Details', [

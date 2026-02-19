@@ -31,6 +31,8 @@ limitations under the License.
             ...col.status('itemType', 'Type', enums.ITEM_TYPE_VALUES, render.itemType),
             ...col.col('categoryId', 'Category'),
             ...col.money('unitCost', 'Unit Cost'),
+            ...col.enum('planningMethod', 'Planning', null, render.planningMethod),
+            ...col.enum('valuationMethod', 'Valuation', null, render.valuationMethod),
             ...col.boolean('isActive', 'Active')
         ],
 

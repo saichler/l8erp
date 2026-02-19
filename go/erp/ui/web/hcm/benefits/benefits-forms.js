@@ -22,7 +22,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('carrierId', 'Carrier', 'Carrier'),
                 ...f.select('planType', 'Plan Type', enums.BENEFIT_PLAN_TYPE, true),
                 ...f.select('category', 'Category', enums.BENEFIT_PLAN_CATEGORY, true),
-                ...f.number('planYear', 'Plan Year', true)
+                ...f.number('planYear', 'Plan Year', true),
+                ...f.money('deductibleIndividual', 'Deductible Individual'),
+                ...f.money('deductibleFamily', 'Deductible Family'),
+                ...f.money('outOfPocketMaxIndividual', 'Out Of Pocket Max Individual'),
+                ...f.money('outOfPocketMaxFamily', 'Out Of Pocket Max Family'),
             ]),
             f.section('Dates', [
                 ...f.date('effectiveDate', 'Effective Date', true),
@@ -52,7 +56,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('coverageOptionId', 'Coverage Option'),
                 ...f.select('status', 'Status', enums.ENROLLMENT_STATUS, true),
                 ...f.select('reason', 'Reason', enums.ENROLLMENT_REASON, true),
-                ...f.reference('lifeEventId', 'Life Event', 'LifeEvent')
+                ...f.reference('lifeEventId', 'Life Event', 'LifeEvent'),
+                ...f.money('employeeCostPerPeriod', 'Employee Cost Per Period'),
+                ...f.money('employerCostPerPeriod', 'Employer Cost Per Period'),
             ]),
             f.section('Coverage Dates', [
                 ...f.date('coverageStartDate', 'Coverage Start', true),
@@ -73,7 +79,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('code', 'Code', true),
                 ...f.text('name', 'Name', true),
                 ...f.select('carrierType', 'Type', enums.CARRIER_TYPE, true),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.address('address'),
             ]),
             f.section('Contact Information', [
                 ...f.text('phone', 'Phone'),
@@ -97,7 +104,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('lastName', 'Last Name', true),
                 ...f.select('relationship', 'Relationship', enums.DEPENDENT_RELATIONSHIP, true),
                 ...f.date('dateOfBirth', 'Date of Birth', true),
-                ...f.select('gender', 'Gender', { 0: 'Unspecified', 1: 'Male', 2: 'Female', 3: 'Non-Binary', 4: 'Other', 5: 'Prefer Not to Say' })
+                ...f.select('gender', 'Gender', { 0: 'Unspecified', 1: 'Male', 2: 'Female', 3: 'Non-Binary', 4: 'Other', 5: 'Prefer Not to Say' }),
+                ...f.text('ssnMasked', 'Ssn Masked'),
+                ...f.address('address'),
             ]),
             f.section('Additional Information', [
                 ...f.checkbox('isStudent', 'Student'),
@@ -116,7 +125,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('reportedDate', 'Reported Date'),
                 ...f.date('enrollmentDeadline', 'Enrollment Deadline'),
                 ...f.select('status', 'Status', enums.LIFE_EVENT_STATUS, true),
-                ...f.textarea('description', 'Description')
+                ...f.textarea('description', 'Description'),
+                ...f.text('documentIds', 'Document Ids'),
             ]),
             f.section('Approval', [
                 ...f.text('approvedBy', 'Approved By'),
@@ -132,7 +142,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('qualifyingEventDate', 'Qualifying Event Date', true),
                 ...f.date('notificationDate', 'Notification Date'),
                 ...f.date('electionDeadline', 'Election Deadline'),
-                ...f.select('status', 'Status', enums.COBRA_STATUS, true)
+                ...f.select('status', 'Status', enums.COBRA_STATUS, true),
+                ...f.text('coveredDependentIds', 'Covered Dependent Ids'),
+                ...f.money('monthlyPremium', 'Monthly Premium'),
+                ...f.money('totalMonthlyCost', 'Total Monthly Cost'),
             ]),
             f.section('Coverage Period', [
                 ...f.date('coverageStartDate', 'Coverage Start'),

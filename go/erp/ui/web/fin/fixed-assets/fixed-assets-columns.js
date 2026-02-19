@@ -52,6 +52,18 @@ limitations under the License.
                 label: 'Acquisition Date',
                 sortKey: 'acquisitionDate',
                 render: (item) => renderDate(item.acquisitionDate)
+            },
+            {
+                key: 'depreciationMethod',
+                label: 'Depreciation',
+                sortKey: 'depreciationMethod',
+                render: (item) => render.depreciationMethod(item.depreciationMethod)
+            },
+            {
+                key: 'netBookValue',
+                label: 'Net Book Value',
+                sortKey: 'netBookValue',
+                render: (item) => renderMoney(item.netBookValue)
             }
         ],
 

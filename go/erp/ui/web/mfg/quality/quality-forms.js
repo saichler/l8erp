@@ -25,7 +25,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('effectiveDate', 'Effective Date'),
                 ...f.date('expiryDate', 'Expiry Date'),
                 ...f.text('revision', 'Revision'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.select('status', 'Status', enums.BOM_STATUS),
             ]),
             f.section('Inspection Points', [
                 ...f.inlineTable('inspectionPoints', 'Inspection Points', [
@@ -53,7 +54,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('quantityAccepted', 'Qty Accepted'),
                 ...f.number('quantityRejected', 'Qty Rejected'),
                 ...f.select('overallResult', 'Result', enums.INSPECTION_RESULT),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.select('inspectionType', 'Inspection Type', enums.INSPECTION_TYPE),
+                ...f.date('completedDate', 'Completed Date'),
+                ...f.text('warehouseId', 'Warehouse'),
             ]),
             f.section('Test Results', [
                 ...f.inlineTable('testResults', 'Test Results', [
@@ -82,7 +86,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('quantityAffected', 'Affected Qty'),
                 ...f.select('disposition', 'Disposition', enums.NCR_DISPOSITION),
                 ...f.textarea('rootCause', 'Root Cause'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('lotNumber', 'Lot Number'),
+                ...f.text('defectCode', 'Defect Code'),
+                ...f.text('correctiveAction', 'Corrective Action'),
+                ...f.date('dueDate', 'Due Date'),
+                ...f.date('closedDate', 'Closed Date'),
+                ...f.money('estimatedCost', 'Estimated Cost'),
+                ...f.money('actualCost', 'Actual Cost'),
             ]),
             f.section('NCR Actions', [
                 ...f.inlineTable('actions', 'NCR Actions', [

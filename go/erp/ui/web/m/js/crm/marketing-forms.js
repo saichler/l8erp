@@ -22,7 +22,13 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.money('budgetedCost', 'Budgeted Cost'),
                 ...f.money('expectedRevenue', 'Expected Revenue'),
                 ...f.number('expectedResponse', 'Expected Response %'),
-                ...f.reference('ownerId', 'Owner', 'Employee')
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.money('actualCost', 'Actual Cost'),
+                ...f.number('expectedResponseRate', 'Expected Response Rate'),
+                ...f.number('numSent', 'Num Sent'),
+                ...f.number('numResponses', 'Num Responses'),
+                ...f.text('parentCampaignId', 'Parent Campaign'),
+                ...f.checkbox('isActive', 'Active'),
             ]),
             f.section('Members', [
                 ...f.inlineTable('members', 'Campaign Members', [
@@ -63,7 +69,15 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.text('category', 'Category'),
                 ...f.textarea('htmlBody', 'HTML Body'),
                 ...f.textarea('textBody', 'Text Body'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('description', 'Description'),
+                ...f.text('bodyHtml', 'Body Html'),
+                ...f.text('bodyText', 'Body Text'),
+                ...f.text('folder', 'Folder'),
+                ...f.text('ownerId', 'Owner'),
+                ...f.text('templateType', 'Template Type'),
+                ...f.number('timesUsed', 'Times Used'),
+                ...f.date('lastUsedDate', 'Last Used Date'),
             ])
         ]),
 
@@ -75,7 +89,9 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.checkbox('isDynamic', 'Dynamic List'),
                 ...f.textarea('criteria', 'Criteria'),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.number('memberCount', 'Member Count'),
+                ...f.date('lastUsedDate', 'Last Used Date'),
             ])
         ]),
 

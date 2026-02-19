@@ -40,6 +40,10 @@ limitations under the License.
         'Reschedule In', 'Reschedule Out', 'Cancel'
     ]);
 
+    const SCHEDULE_TYPE = factory.simple([
+        'Unspecified', 'Forward', 'Backward', 'Constraint Based'
+    ]);
+
     const SCHEDULE_STATUS = factory.create([
         ['Unspecified', null, ''],
         ['Draft', 'draft', 'layer8d-status-pending'],
@@ -56,6 +60,7 @@ limitations under the License.
         MRP_STATUS: MRP_STATUS.enum,
         MRP_STATUS_CLASSES: MRP_STATUS.classes,
         REQUIREMENT_TYPE: REQUIREMENT_TYPE.enum,
+        SCHEDULE_TYPE: SCHEDULE_TYPE.enum,
         SCHEDULE_STATUS: SCHEDULE_STATUS.enum,
         SCHEDULE_STATUS_CLASSES: SCHEDULE_STATUS.classes
     };
@@ -67,6 +72,7 @@ limitations under the License.
     MfgPlanning.render = {
         mrpStatus: createStatusRenderer(MRP_STATUS.enum, MRP_STATUS.classes),
         requirementType: (v) => renderEnum(v, REQUIREMENT_TYPE.enum),
+        scheduleType: (v) => renderEnum(v, SCHEDULE_TYPE.enum),
         scheduleStatus: createStatusRenderer(SCHEDULE_STATUS.enum, SCHEDULE_STATUS.classes),
         date: renderDate
     };

@@ -135,6 +135,10 @@ limitations under the License.
     // ============================================================================
 
     window.Talent.enums = {
+        // Cross-module enum (from core-hr)
+        EMPLOYMENT_TYPE: window.CoreHR.enums.EMPLOYMENT_TYPE,
+        GENDER: window.CoreHR.enums.GENDER,
+
         // Recruiting enums (from split file)
         REQUISITION_STATUS: recruiting.REQUISITION_STATUS,
         REQUISITION_STATUS_VALUES: recruiting.REQUISITION_STATUS_VALUES,

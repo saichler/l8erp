@@ -22,7 +22,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('warehouseType', 'Type', enums.WAREHOUSE_TYPE, true),
                 ...f.address('address'),
                 ...f.reference('managerId', 'Manager', 'Employee'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.number('capacity', 'Capacity'),
+                ...f.text('notes', 'Notes'),
             ]),
             f.section('Bins', [
                 ...f.inlineTable('bins', 'Warehouse Bins', [
@@ -67,7 +69,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('planDate', 'Plan Date', true),
                 ...f.number('totalOrders', 'Total Orders'),
                 ...f.select('status', 'Status', enums.TASK_STATUS),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.number('totalItems', 'Total Items'),
             ]),
             f.section('Pick Tasks', [
                 ...f.inlineTable('pickTasks', 'Pick Tasks', [
@@ -110,7 +113,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('scheduleDate', 'Schedule Date', true),
                 ...f.text('direction', 'Direction'),
                 ...f.select('status', 'Status', enums.TASK_STATUS),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('warehouseId', 'Warehouse'),
+                ...f.date('startTime', 'Start Time'),
+                ...f.date('endTime', 'End Time'),
+                ...f.text('shipmentId', 'Shipment'),
             ])
         ])
     };

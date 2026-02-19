@@ -45,7 +45,16 @@ limitations under the License.
                 sortKey: 'achievedAmount',
                 render: (item) => renderMoney(item.achievedAmount)
             },
-            { key: 'period', label: 'Period', sortKey: 'period' }
+            {
+                key: 'period',
+                label: 'Period',
+                sortKey: 'period',
+                render: (item) => render.targetPeriod(item.period)
+            },
+            { key: 'year', label: 'Year', sortKey: 'year' },
+            { key: 'quarter', label: 'Quarter', sortKey: 'quarter' },
+            { key: 'month', label: 'Month', sortKey: 'month' },
+            { key: 'achievementPercent', label: '% Achieved', sortKey: 'achievementPercent' }
         ],
 
         SalesTerritory: [

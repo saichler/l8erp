@@ -73,7 +73,8 @@ limitations under the License.
         NCR_STATUS_CLASSES: NCR_STATUS.classes,
         NCR_DISPOSITION: NCR_DISPOSITION.enum,
         NCR_SEVERITY: NCR_SEVERITY.enum,
-        NCR_SEVERITY_CLASSES: NCR_SEVERITY.classes
+        NCR_SEVERITY_CLASSES: NCR_SEVERITY.classes,
+        BOM_STATUS: window.MfgEngineering.enums.BOM_STATUS
     };
 
     // ============================================================================

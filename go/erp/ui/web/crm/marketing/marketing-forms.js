@@ -75,7 +75,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('templateType', 'Template Type'),
                 ...f.text('folder', 'Folder'),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.number('timesUsed', 'Times Used'),
+                ...f.date('lastUsedDate', 'Last Used Date'),
             ]),
             f.section('Content', [
                 ...f.textarea('bodyHtml', 'HTML Body'),

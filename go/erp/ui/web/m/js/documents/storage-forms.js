@@ -21,7 +21,20 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('description', 'Description'),
                 ...f.select('documentType', 'Type', enums.DOCUMENT_TYPE),
                 ...f.select('status', 'Status', enums.DOCUMENT_STATUS),
-                ...f.select('accessLevel', 'Access Level', enums.ACCESS_LEVEL)
+                ...f.select('accessLevel', 'Access Level', enums.ACCESS_LEVEL),
+                ...f.select('fileFormat', 'File Format', enums.FILE_FORMAT),
+                ...f.text('mimeType', 'Mime Type'),
+                ...f.number('fileSize', 'File Size'),
+                ...f.text('storagePath', 'Storage Path'),
+                ...f.text('folderId', 'Folder'),
+                ...f.text('categoryId', 'Category'),
+                ...f.text('ownerId', 'Owner'),
+                ...f.checkbox('isPublic', 'Public'),
+                ...f.number('currentVersion', 'Current Version'),
+                ...f.text('checksum', 'Checksum'),
+                ...f.date('modifiedDate', 'Modified Date'),
+                ...f.date('expiryDate', 'Expiry Date'),
+                ...f.text('tagIds', 'Tag Ids'),
             ]),
             f.section('Versions', [
                 ...f.inlineTable('versions', 'Document Versions', [
@@ -95,7 +108,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('accessLevel', 'Access Level', enums.ACCESS_LEVEL),
-                ...f.checkbox('isSystem', 'System Folder')
+                ...f.checkbox('isSystem', 'System Folder'),
+                ...f.text('parentFolderId', 'Parent Folder'),
+                ...f.text('path', 'Path'),
+                ...f.text('ownerId', 'Owner'),
+                ...f.text('departmentId', 'Department'),
+                ...f.number('documentCount', 'Document Count'),
+                ...f.number('subfolderCount', 'Subfolder Count'),
             ])
         ]),
 
@@ -104,7 +123,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.text('code', 'Code'),
                 ...f.textarea('description', 'Description'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('parentCategoryId', 'Parent Category'),
+                ...f.number('sortOrder', 'Sort Order'),
+                ...f.text('retentionPolicyId', 'Retention Policy'),
             ])
         ]),
 
@@ -113,7 +135,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.text('color', 'Color'),
                 ...f.textarea('description', 'Description'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.number('usageCount', 'Usage Count'),
             ])
         ]),
 

@@ -20,7 +20,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.reference('parentHierarchyId', 'Parent Hierarchy', 'SalesCustomerHierarchy'),
                 ...f.number('level', 'Level'),
-                ...f.textarea('description', 'Description')
+                ...f.textarea('description', 'Description'),
+                ...f.text('customerIds', 'Customer Ids'),
+                ...f.checkbox('isActive', 'Active'),
             ])
         ]),
 
@@ -30,7 +32,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('segmentType', 'Type', enums.SEGMENT_TYPE),
                 ...f.textarea('description', 'Description'),
                 ...f.textarea('criteria', 'Criteria'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.number('customerCount', 'Customer Count'),
             ])
         ]),
 
@@ -45,7 +48,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('priceListId', 'Price List', 'SalesPriceList'),
                 ...f.text('paymentTerms', 'Payment Terms'),
                 ...f.textarea('terms', 'Terms & Conditions'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('name', 'Name'),
+                ...f.text('termsAndConditions', 'Terms And Conditions'),
+                ...f.text('salespersonId', 'Salesperson'),
+                ...f.checkbox('autoRenew', 'Auto Renew'),
+                ...f.number('renewalNoticeDays', 'Renewal Notice Days'),
             ]),
             f.section('Customer Prices', [
                 ...f.inlineTable('prices', 'Customer Prices', [
@@ -69,7 +77,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.checkbox('isActive', 'Active'),
                 ...f.number('commissionRate', 'Commission Rate %'),
                 ...f.reference('territoryId', 'Territory', 'SalesTerritory'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.address('address'),
+                ...f.date('startDate', 'Start Date'),
+                ...f.date('endDate', 'End Date'),
             ])
         ])
     };

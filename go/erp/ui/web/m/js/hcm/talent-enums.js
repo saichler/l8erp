@@ -204,6 +204,9 @@ limitations under the License.
     // ============================================================================
 
     MobileTalent.enums = {
+        // Cross-module enum (from core-hr)
+        EMPLOYMENT_TYPE: window.MobileCoreHR.enums.EMPLOYMENT_TYPE,
+        GENDER: window.MobileCoreHR.enums.GENDER,
         REQUISITION_STATUS: REQUISITION_STATUS.enum,
         REQUISITION_STATUS_VALUES: REQUISITION_STATUS.values,
         REQUISITION_STATUS_CLASSES: REQUISITION_STATUS.classes,

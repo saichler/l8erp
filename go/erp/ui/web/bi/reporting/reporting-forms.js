@@ -23,7 +23,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('reportType', 'Report Type', enums.REPORT_TYPE),
                 ...f.select('status', 'Status', enums.REPORT_STATUS),
                 ...f.text('category', 'Category'),
-                ...f.reference('ownerId', 'Owner', 'Employee')
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.number('lastExecuted', 'Last Executed'),
+                ...f.number('executionCount', 'Execution Count'),
             ]),
             f.section('Data Configuration', [
                 ...f.reference('dataSourceId', 'Data Source', 'BiDataSource'),

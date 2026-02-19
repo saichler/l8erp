@@ -52,7 +52,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('offTrackCount', 'Off Track Count'),
                 ...f.number('avgUtilization', 'Average Utilization (%)'),
                 ...f.number('avgMargin', 'Average Margin (%)'),
-                ...f.date('asOfDate', 'As Of Date')
+                ...f.date('asOfDate', 'As Of Date'),
+                ...f.text('projectIds', 'Project Ids'),
             ])
         ]),
 

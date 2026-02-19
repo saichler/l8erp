@@ -16,6 +16,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     // ENUM DEFINITIONS
     // ============================================================================
 
+    const DOCUMENT_TYPE = factory.simple([
+        'Unspecified', 'Contract', 'Invoice', 'Report', 'Policy', 'Procedure',
+        'Form', 'Image', 'Spreadsheet', 'Presentation', 'Other'
+    ]);
+
     const RETENTION_ACTION = factory.create([
         ['Unspecified', null, ''],
         ['Archive', 'archive', 'layer8d-status-active'],
@@ -47,6 +52,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     // ============================================================================
 
     DocCompliance.enums = {
+        DOCUMENT_TYPE: DOCUMENT_TYPE.enum,
         RETENTION_ACTION: RETENTION_ACTION.enum,
         RETENTION_ACTION_CLASSES: RETENTION_ACTION.classes,
         LEGAL_HOLD_STATUS: LEGAL_HOLD_STATUS.enum,
@@ -61,6 +67,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     // ============================================================================
 
     DocCompliance.render = {
+        documentType: (v) => renderEnum(v, DOCUMENT_TYPE.enum),
         retentionAction: createStatusRenderer(RETENTION_ACTION.enum, RETENTION_ACTION.classes),
         legalHoldStatus: createStatusRenderer(LEGAL_HOLD_STATUS.enum, LEGAL_HOLD_STATUS.classes),
         accessAction: (v) => renderEnum(v, ACCESS_ACTION.enum),

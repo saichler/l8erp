@@ -31,7 +31,9 @@ limitations under the License.
             ...col.col('categoryId', 'Category'),
             ...col.status('status', 'Status', enums.ASSET_STATUS_VALUES, render.assetStatus),
             ...col.money('acquisitionCost', 'Acquisition Cost'),
-            ...col.date('acquisitionDate', 'Acquisition Date')
+            ...col.date('acquisitionDate', 'Acquisition Date'),
+            ...col.enum('depreciationMethod', 'Depreciation', null, render.depreciationMethod),
+            ...col.money('netBookValue', 'Net Book Value')
         ],
 
         AssetCategory: [

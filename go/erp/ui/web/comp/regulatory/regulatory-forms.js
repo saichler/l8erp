@@ -23,7 +23,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('issuingBody', 'Issuing Body'),
                 ...f.date('effectiveDate', 'Effective Date'),
                 ...f.date('sunsetDate', 'Sunset Date'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('version', 'Version'),
+                ...f.text('applicableIndustries', 'Applicable Industries'),
+                ...f.text('applicableRegions', 'Applicable Regions'),
+                ...f.text('ownerId', 'Owner'),
             ]),
             f.section('Details', [
                 ...f.textarea('description', 'Description'),
@@ -47,7 +51,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('description', 'Description'),
                 ...f.text('issuingBody', 'Issuing Body'),
                 ...f.text('certificateNumber', 'Certificate Number'),
-                ...f.select('status', 'Status', enums.certificationStatus)
+                ...f.select('status', 'Status', enums.certificationStatus),
+                ...f.text('coveredLocations', 'Covered Locations'),
+                ...f.text('coveredProcesses', 'Covered Processes'),
+                ...f.text('regulationId', 'Regulation'),
+                ...f.text('certificateDocumentId', 'Certificate Document'),
+                ...f.text('responsibleId', 'Responsible'),
+                ...f.money('certificationCost', 'Certification Cost'),
             ]),
             f.section('Dates', [
                 ...f.date('issueDate', 'Issue Date'),

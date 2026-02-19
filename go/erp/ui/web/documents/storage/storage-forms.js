@@ -20,7 +20,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('description', 'Description'),
                 ...f.select('documentType', 'Document Type', enums.DOCUMENT_TYPE),
                 ...f.select('status', 'Status', enums.DOCUMENT_STATUS),
-                ...f.select('fileFormat', 'File Format', enums.FILE_FORMAT)
+                ...f.select('fileFormat', 'File Format', enums.FILE_FORMAT),
+                ...f.text('mimeType', 'Mime Type'),
+                ...f.number('fileSize', 'File Size'),
+                ...f.text('storagePath', 'Storage Path'),
+                ...f.checkbox('isPublic', 'Public'),
+                ...f.number('currentVersion', 'Current Version'),
+                ...f.text('checksum', 'Checksum'),
+                ...f.date('createdDate', 'Created Date'),
+                ...f.date('modifiedDate', 'Modified Date'),
+                ...f.text('tagIds', 'Tag Ids'),
             ]),
             f.section('Location & Access', [
                 ...f.reference('folderId', 'Folder', 'DocFolder'),
@@ -101,7 +110,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('parentFolderId', 'Parent Folder', 'DocFolder'),
                 ...f.select('accessLevel', 'Access Level', enums.ACCESS_LEVEL),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
-                ...f.checkbox('isSystem', 'System Folder')
+                ...f.checkbox('isSystem', 'System Folder'),
+                ...f.text('path', 'Path'),
+                ...f.text('departmentId', 'Department'),
+                ...f.number('documentCount', 'Document Count'),
+                ...f.number('subfolderCount', 'Subfolder Count'),
             ])
         ]),
 
@@ -111,7 +124,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('code', 'Code'),
                 ...f.textarea('description', 'Description'),
                 ...f.reference('parentCategoryId', 'Parent Category', 'DocCategory'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.number('sortOrder', 'Sort Order'),
+                ...f.text('retentionPolicyId', 'Retention Policy'),
             ])
         ]),
 
@@ -120,7 +135,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('name', 'Name', true),
                 ...f.text('color', 'Color'),
                 ...f.textarea('description', 'Description'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.number('usageCount', 'Usage Count'),
             ])
         ]),
 

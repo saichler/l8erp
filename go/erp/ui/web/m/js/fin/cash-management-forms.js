@@ -19,7 +19,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('accountName', 'Account Name', true),
                 ...f.text('bankName', 'Bank Name', true),
                 ...f.select('accountType', 'Account Type', enums.BANK_ACCOUNT_TYPE, true),
-                ...f.select('status', 'Status', enums.BANK_ACCOUNT_STATUS, true)
+                ...f.select('status', 'Status', enums.BANK_ACCOUNT_STATUS, true),
+                ...f.text('accountNumberMasked', 'Account Number Masked'),
+                ...f.text('routingNumber', 'Routing Number'),
+                ...f.text('swiftCode', 'Swift Code'),
+                ...f.text('iban', 'Iban'),
+                ...f.text('currencyId', 'Currency'),
+                ...f.text('glAccountId', 'Gl Account'),
+                ...f.date('lastReconciledDate', 'Last Reconciled Date'),
+                ...f.text('notes', 'Notes'),
             ]),
             f.section('Balance', [
                 ...f.money('currentBalance', 'Current Balance')
@@ -49,7 +57,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('forecastDate', 'Forecast Date', true),
                 ...f.money('projectedInflows', 'Projected Inflow', true),
                 ...f.money('projectedOutflows', 'Projected Outflow', true),
-                ...f.money('netCashFlow', 'Net Cash Flow')
+                ...f.money('netCashFlow', 'Net Cash Flow'),
+                ...f.text('forecastName', 'Forecast Name'),
+                ...f.number('periodStart', 'Period Start'),
+                ...f.number('periodEnd', 'Period End'),
+                ...f.money('openingBalance', 'Opening Balance'),
+                ...f.money('closingBalance', 'Closing Balance'),
+                ...f.text('notes', 'Notes'),
             ])
         ]),
 
@@ -59,7 +73,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('toBankAccountId', 'To Account', 'BankAccount', true),
                 ...f.money('amount', 'Amount', true),
                 ...f.date('transferDate', 'Transfer Date', true),
-                ...f.select('status', 'Status', enums.TRANSFER_STATUS, true)
+                ...f.select('status', 'Status', enums.TRANSFER_STATUS, true),
+                ...f.date('valueDate', 'Value Date'),
+                ...f.text('reference', 'Reference'),
+                ...f.text('notes', 'Notes'),
             ])
         ]),
 
@@ -68,7 +85,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('fundName', 'Fund Name', true),
                 ...f.money('fundLimit', 'Fund Limit', true),
                 ...f.money('currentBalance', 'Current Balance'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('custodianEmployeeId', 'Custodian Employee'),
+                ...f.date('lastReplenishedDate', 'Last Replenished Date'),
+                ...f.text('notes', 'Notes'),
             ])
         ])
     };

@@ -21,7 +21,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('budgetType', 'Budget Type', enums.BUDGET_TYPE, true),
                 ...f.reference('fiscalYearId', 'Fiscal Year', 'FiscalYear', true),
                 ...f.money('totalAmount', 'Total Amount', true),
-                ...f.select('status', 'Status', enums.BUDGET_STATUS)
+                ...f.select('status', 'Status', enums.BUDGET_STATUS),
+                ...f.text('departmentId', 'Department'),
+                ...f.text('approvedBy', 'Approved By'),
+                ...f.date('approvedDate', 'Approved Date'),
+                ...f.text('notes', 'Notes'),
             ]),
             f.section('Budget Lines', [
                 ...f.inlineTable('lines', 'Budget Lines', [
@@ -58,7 +62,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('requestedAmount', 'Requested Amount', true),
                 ...f.money('approvedAmount', 'Approved Amount'),
                 ...f.select('status', 'Status', enums.CAPEX_STATUS),
-                ...f.textarea('justification', 'Justification')
+                ...f.textarea('justification', 'Justification'),
+                ...f.text('departmentId', 'Department'),
+                ...f.text('fiscalYearId', 'Fiscal Year'),
+                ...f.money('spentAmount', 'Spent Amount'),
+                ...f.date('requestedDate', 'Requested Date'),
+                ...f.text('requestedBy', 'Requested By'),
+                ...f.text('approvedBy', 'Approved By'),
+                ...f.date('approvedDate', 'Approved Date'),
+                ...f.date('expectedCompletionDate', 'Expected Completion Date'),
+                ...f.text('notes', 'Notes'),
             ])
         ]),
 
@@ -69,7 +82,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('periodEnd', 'Period End', true),
                 ...f.money('projectedAmount', 'Projected Amount', true),
                 ...f.money('actualAmount', 'Actual Amount'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('forecastName', 'Forecast Name'),
+                ...f.text('description', 'Description'),
+                ...f.text('fiscalYearId', 'Fiscal Year'),
+                ...f.date('forecastDate', 'Forecast Date'),
+                ...f.money('variance', 'Variance'),
             ])
         ])
     };

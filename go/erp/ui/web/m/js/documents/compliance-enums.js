@@ -8,6 +8,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     window.MobileDocCompliance = window.MobileDocCompliance || {};
     MobileDocCompliance.enums = {};
 
+    MobileDocCompliance.enums.DOCUMENT_TYPE = { 0: 'Unspecified', 1: 'Contract', 2: 'Invoice', 3: 'Report', 4: 'Policy', 5: 'Procedure', 6: 'Form', 7: 'Image', 8: 'Spreadsheet', 9: 'Presentation', 10: 'Other' };
+
     MobileDocCompliance.enums.RETENTION_STATUS = { 0: 'Unspecified', 1: 'Active', 2: 'Expired', 3: 'Suspended' };
     MobileDocCompliance.enums.RETENTION_STATUS_CLASSES = { 1: 'status-active', 2: 'status-terminated', 3: 'status-pending' };
 
@@ -27,6 +29,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     MobileDocCompliance.enums.RETENTION_ACTION_CLASSES = { 1: 'status-active', 2: 'status-terminated', 3: 'status-pending' };
 
     MobileDocCompliance.render = {
+        documentType: (v) => Layer8MRenderers.renderEnum(v, MobileDocCompliance.enums.DOCUMENT_TYPE),
         retentionStatus: Layer8MRenderers.createStatusRenderer(MobileDocCompliance.enums.RETENTION_STATUS, MobileDocCompliance.enums.RETENTION_STATUS_CLASSES),
         legalHoldStatus: Layer8MRenderers.createStatusRenderer(MobileDocCompliance.enums.LEGAL_HOLD_STATUS, MobileDocCompliance.enums.LEGAL_HOLD_STATUS_CLASSES),
         accessType: Layer8MRenderers.createStatusRenderer(MobileDocCompliance.enums.ACCESS_TYPE, MobileDocCompliance.enums.ACCESS_TYPE_CLASSES),

@@ -22,7 +22,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('description', 'Description'),
                 ...f.select('taxType', 'Tax Type', enums.TAX_TYPE, true),
                 ...f.number('rate', 'Rate (%)', true),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.checkbox('isCompound', 'Compound'),
+                ...f.text('glAccountId', 'Gl Account'),
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.date('endDate', 'End Date'),
             ])
         ]),
 
@@ -32,7 +36,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('level', 'Level', enums.JURISDICTION_LEVEL, true),
                 ...f.text('countryCode', 'Country Code', true),
                 ...f.text('stateCode', 'State Code'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('code', 'Code'),
+                ...f.text('parentJurisdictionId', 'Parent Jurisdiction'),
+                ...f.text('description', 'Description'),
             ])
         ]),
 
@@ -43,7 +50,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('taxCodeId', 'Tax Code', 'TaxCode', true),
                 ...f.reference('jurisdictionId', 'Jurisdiction', 'TaxJurisdiction', true),
                 ...f.date('effectiveDate', 'Effective Date', true),
-                ...f.date('endDate', 'End Date')
+                ...f.date('endDate', 'End Date'),
+                ...f.number('rate', 'Rate'),
+                ...f.money('minimumThreshold', 'Minimum Threshold'),
+                ...f.money('maximumThreshold', 'Maximum Threshold'),
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('notes', 'Notes'),
             ])
         ]),
 
@@ -54,6 +66,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('reason', 'Reason', true),
                 ...f.date('effectiveDate', 'Effective Date', true),
                 ...f.date('expirationDate', 'Expiration Date'),
+                ...f.text('customerId', 'Customer'),
+                ...f.text('vendorId', 'Vendor'),
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('notes', 'Notes'),
                 ...f.url('documentUrl', 'Document URL')
             ])
         ])

@@ -2,7 +2,7 @@
 
 These are Claude Code global rules for the Layer8 ERP project. Load this file at the start of a session to apply all rules.
 
-**Source files:** `~/.claude/rules/*.md` (24 rule files)
+**Source files:** `~/.claude/rules/*.md` (25 rule files)
 
 ---
 
@@ -32,6 +32,7 @@ These are Claude Code global rules for the Layer8 ERP project. Load this file at
 22. [L8UI Theme Compliance](#22-l8ui-theme-compliance)
 23. [Select Field Enum Completeness](#23-select-field-enum-completeness)
 24. [L8UI Guide Update](#24-l8ui-guide-update)
+25. [Form and Column Field Coverage](#25-form-and-column-field-coverage)
 
 ---
 
@@ -1699,3 +1700,73 @@ For each component, the guide entry should include:
 
 ## Why This Matters
 The GUIDE.md is the primary reference for AI assistants and developers building with l8ui. If a component exists but isn't documented, it won't be used correctly (or at all), leading to reimplementation or incorrect integration.
+
+---
+
+# 25. Form and Column Field Coverage
+
+**Source:** `form-column-field-coverage.md`
+
+## Rule
+Every non-system field in a protobuf struct MUST be accounted for in both the form definition (`*-forms.js`) and column definition (`*-columns.js`). No field should be silently omitted.
+
+## Why This Matters
+When fields are silently skipped during form/column creation, the UI becomes incomplete in ways that are hard to detect. A selection field without its contextual fields (e.g., "Monthly" period without a month selector) renders the entire feature meaningless. Users can set a value but cannot provide the detail that gives it meaning.
+
+## System Fields (Excluded by Default)
+These fields are handled automatically and do NOT need form/column entries:
+- Primary key ID (e.g., `targetId`) — auto-generated on POST
+- `auditInfo` — rendered via `...f.audit()` or omitted (read-only metadata)
+- `customFields` — generic map, not a domain field
+
+## Process
+
+### When Creating or Modifying Form/Column Definitions
+
+1. **List all protobuf fields**:
+   ```bash
+   grep -A 30 "type ModelName struct" go/types/<module>/*.pb.go | grep 'json:"'
+   ```
+
+2. **For each non-system field**, verify it appears in:
+   - The form definition (`*-forms.js`) — as an input field
+   - The column definition (`*-columns.js`) — as a table column (at minimum the most important fields)
+
+3. **If a field is intentionally excluded**, add a comment in the form definition explaining why:
+   ```javascript
+   // Omitted: internalScore — system-calculated, not user-editable
+   ```
+
+4. **Watch for dependent field groups** — fields that only make sense together:
+   - Enum/type selector + detail fields (e.g., `period` + `quarter` + `month`)
+   - Parent reference + child context (e.g., `orderId` + `lineNumber`)
+   - Range pairs (e.g., `minQuantity` + `maxQuantity`)
+
+   If any field in a dependent group is included, ALL fields in that group must be included.
+
+## Verification Command
+After creating or modifying any form definition, compare against the protobuf:
+```bash
+# List all protobuf JSON field names for the model
+grep -A 40 "type ModelName struct" go/types/<module>/*.pb.go | \
+  grep -oP 'json:"\K[^,"]+' | sort
+
+# List all field keys in the form definition
+grep -oP "key:\s*'[^']+'" <forms-file> | sort
+
+# Compare (any field in protobuf but not in form needs justification)
+```
+
+## Error Symptoms
+- A selection/enum field exists but its meaning is unclear (e.g., "Monthly" with no month shown)
+- Users can create records but critical context is missing
+- Table rows show partial information that doesn't tell the full story
+- Data exists on the server but is invisible in the UI
+
+## Common Dependent Field Groups
+| Selector Field | Dependent Fields | Why |
+|---------------|-----------------|-----|
+| `period` (enum) | `month`, `quarter`, `year` | Period type without time specifics is meaningless |
+| `addressType` | address fields | Type without address is meaningless |
+| `paymentMethod` | method-specific fields | Method without details is meaningless |
+| `status` (with reason) | `reason`, `reasonCode` | Status change without reason loses context |

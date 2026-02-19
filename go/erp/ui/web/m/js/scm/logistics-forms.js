@@ -31,7 +31,9 @@ limitations under the License.
             ...f.text('name', 'Name', true),
             ...f.select('carrierType', 'Carrier Type', enums.CARRIER_TYPE, true),
             ...f.contact('contactInfo'),
-            ...f.checkbox('isActive', 'Active')
+            ...f.checkbox('isActive', 'Active'),
+            ...f.number('rating', 'Rating'),
+            ...f.text('notes', 'Notes'),
         ])
     ]),
 
@@ -43,7 +45,10 @@ limitations under the License.
             ...f.money('ratePerUnit', 'Rate per Unit', true),
             ...f.text('unitType', 'Unit Type'),
             ...f.date('effectiveDate', 'Effective Date', true),
-            ...f.date('expiryDate', 'Expiry Date')
+            ...f.date('expiryDate', 'Expiry Date'),
+            ...f.number('minWeight', 'Min Weight'),
+            ...f.number('maxWeight', 'Max Weight'),
+            ...f.text('notes', 'Notes'),
         ])
     ]),
 
@@ -56,7 +61,11 @@ limitations under the License.
             ...f.date('shipDate', 'Ship Date', true),
             ...f.date('expectedDelivery', 'Expected Delivery'),
             ...f.select('status', 'Status', enums.SHIPMENT_STATUS),
-            ...f.money('freightCost', 'Freight Cost')
+            ...f.money('freightCost', 'Freight Cost'),
+            ...f.text('customerId', 'Customer'),
+            ...f.number('actualDelivery', 'Actual Delivery'),
+            ...f.text('trackingNumber', 'Tracking Number'),
+            ...f.number('totalWeight', 'Total Weight'),
         ]),
         f.section('Delivery Proofs', [
             ...f.inlineTable('deliveryProofs', 'Delivery Proofs', [
@@ -88,7 +97,10 @@ limitations under the License.
             ...f.text('destination', 'Destination', true),
             ...f.number('distance', 'Distance'),
             ...f.text('estimatedTime', 'Estimated Time'),
-            ...f.textarea('description', 'Description')
+            ...f.textarea('description', 'Description'),
+            ...f.text('carrierId', 'Carrier'),
+            ...f.checkbox('isActive', 'Active'),
+            ...f.text('notes', 'Notes'),
         ])
     ]),
 
@@ -100,7 +112,9 @@ limitations under the License.
             ...f.number('totalWeight', 'Total Weight'),
             ...f.number('totalVolume', 'Total Volume'),
             ...f.select('status', 'Status', enums.TASK_STATUS),
-            ...f.textarea('notes', 'Notes')
+            ...f.textarea('notes', 'Notes'),
+            ...f.number('maxWeight', 'Max Weight'),
+            ...f.number('maxVolume', 'Max Volume'),
         ])
     ]),
 
@@ -111,7 +125,10 @@ limitations under the License.
             ...f.date('returnDate', 'Return Date', true),
             ...f.textarea('reason', 'Reason', true),
             ...f.select('status', 'Status', enums.TASK_STATUS),
-            ...f.textarea('notes', 'Notes')
+            ...f.textarea('notes', 'Notes'),
+            ...f.text('originalShipmentId', 'Original Shipment'),
+            ...f.text('itemsDescription', 'Items Description'),
+            ...f.money('refundAmount', 'Refund Amount'),
         ])
     ])
 };

@@ -61,7 +61,12 @@ window.MobileSalesPricing = window.MobileSalesPricing || {};
                 ...f.reference('itemId', 'Item (optional)', 'ScmItem'),
                 ...f.date('effectiveDate', 'Effective Date'),
                 ...f.date('expiryDate', 'Expiry Date'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('appliesTo', 'Applies To'),
+                ...f.text('customerIds', 'Customer Ids'),
+                ...f.text('itemIds', 'Item Ids'),
+                ...f.number('priority', 'Priority'),
+                ...f.checkbox('isCombinable', 'Combinable'),
             ])
         ]),
 
@@ -74,7 +79,10 @@ window.MobileSalesPricing = window.MobileSalesPricing || {};
                 ...f.date('startDate', 'Start Date', true),
                 ...f.date('endDate', 'End Date', true),
                 ...f.number('maxQuantity', 'Max Quantity'),
-                ...f.text('promoCode', 'Promo Code')
+                ...f.text('promoCode', 'Promo Code'),
+                ...f.money('originalPrice', 'Original Price'),
+                ...f.number('quantitySold', 'Quantity Sold'),
+                ...f.checkbox('isActive', 'Active'),
             ])
         ])
     };

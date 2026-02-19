@@ -31,7 +31,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('sicCode', 'SIC Code'),
                 ...f.text('tickerSymbol', 'Ticker Symbol'),
                 ...f.reference('customerId', 'Customer', 'Customer'),
-                ...f.textarea('description', 'Description')
+                ...f.textarea('description', 'Description'),
+                ...f.address('billingAddress'),
+                ...f.address('shippingAddress'),
+                ...f.date('lastActivityDate', 'Last Activity Date'),
             ]),
             f.section('Health Scores', [
                 ...f.inlineTable('healthScores', 'Health Scores', [
@@ -77,7 +80,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.checkbox('doNotCall', 'Do Not Call'),
                 ...f.checkbox('doNotEmail', 'Do Not Email'),
                 ...f.reference('leadSourceId', 'Lead Source', 'CrmLeadSource'),
-                ...f.textarea('description', 'Description')
+                ...f.textarea('description', 'Description'),
+                ...f.address('mailingAddress'),
+                ...f.date('lastActivityDate', 'Last Activity Date'),
             ])
         ]),
 

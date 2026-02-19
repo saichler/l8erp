@@ -24,7 +24,14 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.select('rating', 'Rating', enums.LEAD_RATING),
                 ...f.reference('sourceId', 'Lead Source', 'CrmLeadSource'),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
-                ...f.textarea('description', 'Description')
+                ...f.textarea('description', 'Description'),
+                ...f.text('website', 'Website'),
+                ...f.number('employeeCount', 'Employee Count'),
+                ...f.money('annualRevenue', 'Annual Revenue'),
+                ...f.address('address'),
+                ...f.date('lastActivityDate', 'Last Activity Date'),
+                ...f.number('score', 'Score'),
+                ...f.text('campaignId', 'Campaign'),
             ]),
             f.section('Activities', [
                 ...f.inlineTable('activities', 'Lead Activities', [
@@ -80,7 +87,8 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.reference('assignToUserId', 'Assign to User', 'Employee'),
                 ...f.number('priority', 'Priority'),
                 ...f.checkbox('roundRobin', 'Round Robin'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('assignToTeamId', 'Assign To Team'),
             ])
         ]),
 

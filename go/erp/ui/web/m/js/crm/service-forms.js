@@ -23,7 +23,15 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.select('caseType', 'Type', enums.CASE_TYPE),
                 ...f.reference('slaId', 'SLA', 'CrmSLA'),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
-                ...f.textarea('resolution', 'Resolution')
+                ...f.textarea('resolution', 'Resolution'),
+                ...f.date('openedDate', 'Opened Date'),
+                ...f.date('closedDate', 'Closed Date'),
+                ...f.date('dueDate', 'Due Date'),
+                ...f.text('origin', 'Origin'),
+                ...f.text('parentCaseId', 'Parent Case'),
+                ...f.text('productId', 'Product'),
+                ...f.number('escalationLevel', 'Escalation Level'),
+                ...f.checkbox('isEscalated', 'Escalated'),
             ]),
             f.section('Comments', [
                 ...f.inlineTable('comments', 'Case Comments', [
@@ -47,7 +55,13 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.text('subcategory', 'Subcategory'),
                 ...f.reference('authorId', 'Author', 'Employee'),
                 ...f.date('publishDate', 'Publish Date'),
-                ...f.checkbox('isFeatured', 'Featured')
+                ...f.checkbox('isFeatured', 'Featured'),
+                ...f.text('keywords', 'Keywords'),
+                ...f.number('viewCount', 'View Count'),
+                ...f.number('helpfulCount', 'Helpful Count'),
+                ...f.number('notHelpfulCount', 'Not Helpful Count'),
+                ...f.date('expiryDate', 'Expiry Date'),
+                ...f.text('version', 'Version'),
             ])
         ]),
 
@@ -60,7 +74,8 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.text('businessHours', 'Business Hours'),
                 ...f.checkbox('includeWeekends', 'Include Weekends'),
                 ...f.select('appliesToPriority', 'Applies To Priority', enums.CASE_PRIORITY),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('escalationRules', 'Escalation Rules'),
             ])
         ]),
 
@@ -74,7 +89,8 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.text('escalateToQueue', 'Escalate To Queue'),
                 ...f.checkbox('notifyOwner', 'Notify Owner'),
                 ...f.checkbox('notifyManager', 'Notify Manager'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('criteria', 'Criteria'),
             ])
         ]),
 
@@ -89,7 +105,10 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.number('overallRating', 'Overall Rating'),
                 ...f.textarea('feedback', 'Feedback'),
                 ...f.checkbox('wouldRecommend', 'Would Recommend'),
-                ...f.reference('ownerId', 'Owner', 'Employee')
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.date('sentDate', 'Sent Date'),
+                ...f.date('completedDate', 'Completed Date'),
+                ...f.text('surveyType', 'Survey Type'),
             ])
         ])
     };

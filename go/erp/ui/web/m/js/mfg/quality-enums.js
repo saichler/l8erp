@@ -77,7 +77,8 @@ limitations under the License.
         NCR_DISPOSITION: NCR_DISPOSITION.enum,
         NCR_SEVERITY: NCR_SEVERITY.enum,
         NCR_SEVERITY_VALUES: NCR_SEVERITY.values,
-        NCR_SEVERITY_CLASSES: NCR_SEVERITY.classes
+        NCR_SEVERITY_CLASSES: NCR_SEVERITY.classes,
+        BOM_STATUS: window.MobileMfgEngineering.enums.BOM_STATUS
     };
 
     // ============================================================================

@@ -31,7 +31,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('perCustomerLimit', 'Per Customer Limit'),
                 ...f.text('customerGroup', 'Customer Group'),
                 ...f.checkbox('stackable', 'Stackable'),
-                ...f.number('priority', 'Priority')
+                ...f.number('priority', 'Priority'),
+                ...f.number('usageCount', 'Usage Count'),
+                ...f.text('applicableProductIds', 'Applicable Product Ids'),
+                ...f.text('applicableCategoryIds', 'Applicable Category Ids'),
+                ...f.text('excludedProductIds', 'Excluded Product Ids'),
             ])
         ]),
 
@@ -50,7 +54,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('perCustomerLimit', 'Per Customer Limit'),
                 ...f.checkbox('firstOrderOnly', 'First Order Only'),
                 ...f.text('customerGroup', 'Customer Group'),
-                ...f.checkbox('freeShipping', 'Free Shipping')
+                ...f.checkbox('freeShipping', 'Free Shipping'),
+                ...f.number('usageCount', 'Usage Count'),
+                ...f.text('applicableProductIds', 'Applicable Product Ids'),
+                ...f.text('applicableCategoryIds', 'Applicable Category Ids'),
             ])
         ]),
 
@@ -67,7 +74,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('customerGroup', 'Customer Group'),
                 ...f.number('minQuantity', 'Min Quantity'),
                 ...f.number('maxQuantity', 'Max Quantity'),
-                ...f.checkbox('applyToAll', 'Apply to All')
+                ...f.checkbox('applyToAll', 'Apply to All'),
+                ...f.text('applicableProductIds', 'Applicable Product Ids'),
+                ...f.text('applicableCategoryIds', 'Applicable Category Ids'),
             ])
         ]),
 
@@ -85,7 +94,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('maxDeliveryDays', 'Max Delivery Days'),
                 ...f.checkbox('isActive', 'Is Active'),
                 ...f.number('sortOrder', 'Sort Order'),
-                ...f.checkbox('trackingAvailable', 'Tracking Available')
+                ...f.checkbox('trackingAvailable', 'Tracking Available'),
+                ...f.text('applicableZones', 'Applicable Zones'),
+                ...f.text('excludedZones', 'Excluded Zones'),
+                ...f.money('minOrderAmount', 'Min Order Amount'),
+                ...f.money('maxOrderAmount', 'Max Order Amount'),
+                ...f.number('maxWeight', 'Max Weight'),
             ])
         ]),
 
@@ -102,7 +116,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.textarea('instructions', 'Instructions'),
                 ...f.checkbox('requiresBillingAddress', 'Requires Billing Address'),
                 ...f.checkbox('supportsRefunds', 'Supports Refunds'),
-                ...f.checkbox('supportsPartialRefunds', 'Supports Partial Refunds')
+                ...f.checkbox('supportsPartialRefunds', 'Supports Partial Refunds'),
+                ...f.text('supportedCurrencies', 'Supported Currencies'),
+                ...f.text('supportedCountries', 'Supported Countries'),
+                ...f.money('minAmount', 'Min Amount'),
+                ...f.money('maxAmount', 'Max Amount'),
+                ...f.number('transactionFeePercent', 'Transaction Fee Percent'),
+                ...f.money('transactionFeeFixed', 'Transaction Fee Fixed'),
             ])
         ])
     };

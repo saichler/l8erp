@@ -36,7 +36,10 @@ limitations under the License.
                 ...f.money('outsideProcessingCost', 'Outside Processing Cost'),
                 ...f.money('totalCost', 'Total Cost'),
                 ...f.reference('currencyId', 'Currency', 'Currency'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('costVersion', 'Cost Version'),
+                ...f.text('costMethod', 'Cost Method'),
+                ...f.checkbox('isCurrent', 'Current'),
             ])
         ]),
         MfgCostRollup: f.form('Cost Rollup', [
@@ -45,7 +48,12 @@ limitations under the License.
                 ...f.textarea('description', 'Description'),
                 ...f.date('runDate', 'Run Date'),
                 ...f.select('status', 'Status', enums.ROLLUP_STATUS),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('costVersion', 'Cost Version'),
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.text('runBy', 'Run By'),
+                ...f.number('itemsProcessed', 'Items Processed'),
+                ...f.number('bomsProcessed', 'Boms Processed'),
             ])
         ]),
         MfgOverhead: f.form('Overhead', [
@@ -57,7 +65,11 @@ limitations under the License.
                 ...f.number('rate', 'Rate'),
                 ...f.text('costCenter', 'Cost Center'),
                 ...f.checkbox('isActive', 'Active'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('rateUnit', 'Rate Unit'),
+                ...f.text('currencyId', 'Currency'),
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.date('expiryDate', 'Expiry Date'),
             ]),
             f.section('Allocations', [
                 ...f.inlineTable('allocations', 'Overhead Allocations', [

@@ -32,7 +32,9 @@ limitations under the License.
                 ...f.textarea('description', 'Description'),
                 ...f.select('regulationType', 'Type', enums.REGULATION_TYPE),
                 ...f.text('jurisdiction', 'Jurisdiction'),
-                ...f.text('issuingBody', 'Issuing Body')
+                ...f.text('issuingBody', 'Issuing Body'),
+                ...f.text('applicableIndustries', 'Applicable Industries'),
+                ...f.text('applicableRegions', 'Applicable Regions'),
             ]),
             f.section('Dates & Status', [
                 ...f.date('effectiveDate', 'Effective Date'),
@@ -63,7 +65,12 @@ limitations under the License.
                 ...f.textarea('description', 'Description'),
                 ...f.text('issuingBody', 'Issuing Body', true),
                 ...f.text('certificateNumber', 'Certificate Number'),
-                ...f.select('status', 'Status', enums.CERTIFICATION_STATUS)
+                ...f.select('status', 'Status', enums.CERTIFICATION_STATUS),
+                ...f.text('coveredLocations', 'Covered Locations'),
+                ...f.text('coveredProcesses', 'Covered Processes'),
+                ...f.text('regulationId', 'Regulation'),
+                ...f.text('certificateDocumentId', 'Certificate Document'),
+                ...f.money('certificationCost', 'Certification Cost'),
             ]),
             f.section('Dates', [
                 ...f.date('issueDate', 'Issue Date'),

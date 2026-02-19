@@ -25,7 +25,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('status', 'Status', enums.DELIVERY_STATUS),
                 ...f.reference('carrierId', 'Carrier', 'ScmCarrier'),
                 ...f.text('shippingMethod', 'Shipping Method'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.date('actualShipDate', 'Actual Ship Date'),
+                ...f.date('plannedDeliveryDate', 'Planned Delivery Date'),
+                ...f.date('actualDeliveryDate', 'Actual Delivery Date'),
+                ...f.address('shipToAddress'),
+                ...f.text('trackingNumber', 'Tracking Number'),
+                ...f.money('shippingCost', 'Shipping Cost'),
             ]),
             f.section('Delivery Lines', [
                 ...f.inlineTable('lines', 'Delivery Lines', [

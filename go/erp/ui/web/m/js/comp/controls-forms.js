@@ -31,7 +31,10 @@ limitations under the License.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('controlType', 'Control Type', enums.CONTROL_TYPE),
-                ...f.text('processArea', 'Process Area')
+                ...f.text('processArea', 'Process Area'),
+                ...f.text('testProcedure', 'Test Procedure'),
+                ...f.text('relatedRequirementIds', 'Related Requirement Ids'),
+                ...f.text('relatedRiskIds', 'Related Risk Ids'),
             ]),
             f.section('Classification', [
                 ...f.reference('departmentId', 'Department', 'HcmDepartment'),
@@ -73,7 +76,11 @@ limitations under the License.
                 ...f.text('title', 'Title', true),
                 ...f.textarea('description', 'Description'),
                 ...f.text('policyType', 'Policy Type'),
-                ...f.reference('departmentId', 'Department', 'HcmDepartment')
+                ...f.reference('departmentId', 'Department', 'HcmDepartment'),
+                ...f.text('documentId', 'Document'),
+                ...f.text('relatedRegulationIds', 'Related Regulation Ids'),
+                ...f.text('relatedControlIds', 'Related Control Ids'),
+                ...f.checkbox('requiresAcknowledgment', 'Requires Acknowledgment'),
             ]),
             f.section('Version & Status', [
                 ...f.text('version', 'Version'),
@@ -94,7 +101,9 @@ limitations under the License.
                 ...f.text('name', 'Name', true),
                 ...f.textarea('description', 'Description'),
                 ...f.text('transactionType', 'Transaction Type', true),
-                ...f.reference('departmentId', 'Department', 'HcmDepartment')
+                ...f.reference('departmentId', 'Department', 'HcmDepartment'),
+                ...f.text('approverRoleIds', 'Approver Role Ids'),
+                ...f.text('escalationToId', 'Escalation To'),
             ]),
             f.section('Approval Rules', [
                 ...f.number('thresholdMin', 'Threshold Minimum'),

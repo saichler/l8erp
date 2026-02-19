@@ -18,7 +18,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('employeeId', 'Employee', 'Employee', true),
                 ...f.reference('reviewerId', 'Reviewer', 'Employee', true),
                 ...f.select('reviewType', 'Review Type', enums.REVIEW_TYPE, true),
-                ...f.select('status', 'Status', enums.PERFORMANCE_REVIEW_STATUS, true)
+                ...f.select('status', 'Status', enums.PERFORMANCE_REVIEW_STATUS, true),
+                ...f.date('reviewPeriod.startDate', 'Review Period Start'),
+                ...f.date('reviewPeriod.endDate', 'Review Period End'),
+                ...f.text('trainingRecommendations', 'Training Recommendations'),
+                ...f.date('employeeAcknowledgedDate', 'Employee Acknowledged Date'),
+                ...f.date('managerSubmittedDate', 'Manager Submitted Date'),
+                ...f.text('hrReviewerId', 'Hr Reviewer'),
+                ...f.date('hrApprovedDate', 'Hr Approved Date'),
+                ...f.checkbox('isCalibrated', 'Calibrated'),
+                ...f.text('calibrationNotes', 'Calibration Notes'),
             ]),
             f.section('Review Period', [
                 ...f.date('reviewPeriod.startDate', 'Start Date', true),
@@ -41,7 +50,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('employeeId', 'Employee', 'Employee', true),
                 ...f.text('title', 'Title', true),
                 ...f.textarea('description', 'Description'),
-                ...f.reference('parentGoalId', 'Parent Goal', 'Goal')
+                ...f.reference('parentGoalId', 'Parent Goal', 'Goal'),
+                ...f.text('alignedGoalIds', 'Aligned Goal Ids'),
+                ...f.text('reviewId', 'Review'),
             ]),
             f.section('Classification', [
                 ...f.select('goalType', 'Goal Type', enums.GOAL_TYPE, true),
@@ -64,7 +75,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('providerId', 'Provider (Giving)', 'Employee', true),
                 ...f.select('feedbackType', 'Feedback Type', enums.FEEDBACK_TYPE, true),
                 ...f.select('relationship', 'Relationship', enums.FEEDBACK_RELATIONSHIP),
-                ...f.select('status', 'Status', enums.FEEDBACK_STATUS, true)
+                ...f.select('status', 'Status', enums.FEEDBACK_STATUS, true),
+                ...f.text('reviewCycleId', 'Review Cycle'),
             ]),
             f.section('Dates', [
                 ...f.date('requestedDate', 'Requested Date'),
@@ -109,7 +121,18 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('title', 'Title', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('requisitionType', 'Type', enums.REQUISITION_TYPE, true),
-                ...f.select('status', 'Status', enums.REQUISITION_STATUS, true)
+                ...f.select('status', 'Status', enums.REQUISITION_STATUS, true),
+                ...f.number('filledCount', 'Filled Count'),
+                ...f.select('employmentType', 'Employment Type', enums.EMPLOYMENT_TYPE),
+                ...f.text('workLocationId', 'Work Location'),
+                ...f.money('salaryMin', 'Salary Min'),
+                ...f.money('salaryMax', 'Salary Max'),
+                ...f.text('payGradeCode', 'Pay Grade Code'),
+                ...f.text('interviewTeamIds', 'Interview Team Ids'),
+                ...f.text('jobBoardIds', 'Job Board Ids'),
+                ...f.number('applicantCount', 'Applicant Count'),
+                ...f.number('interviewCount', 'Interview Count'),
+                ...f.number('offerCount', 'Offer Count'),
             ]),
             f.section('Position Details', [
                 ...f.reference('organizationId', 'Organization', 'Organization'),
@@ -140,7 +163,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('firstName', 'First Name', true),
                 ...f.text('lastName', 'Last Name', true),
                 ...f.text('email', 'Email', true),
-                ...f.text('phone', 'Phone')
+                ...f.text('phone', 'Phone'),
+                ...f.address('address'),
+                ...f.text('documentIds', 'Document Ids'),
+                ...f.text('skills', 'Skills'),
+                ...f.select('gender', 'Gender', enums.GENDER),
+                ...f.text('ethnicity', 'Ethnicity'),
+                ...f.checkbox('isVeteran', 'Veteran'),
+                ...f.checkbox('isDisabled', 'Disabled'),
+                ...f.date('createdDate', 'Created Date'),
             ]),
             f.section('Source', [
                 ...f.select('source', 'Source', enums.APPLICANT_SOURCE),
@@ -160,7 +191,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('applicantId', 'Applicant', 'Applicant', true),
                 ...f.reference('requisitionId', 'Requisition', 'JobRequisition', true),
                 ...f.select('status', 'Status', enums.APPLICATION_STATUS, true),
-                ...f.select('stage', 'Stage', enums.APPLICATION_STAGE)
+                ...f.select('stage', 'Stage', enums.APPLICATION_STAGE),
+                ...f.date('appliedDate', 'Applied Date'),
+                ...f.text('offerId', 'Offer'),
             ]),
             f.section('Screening', [
                 ...f.number('screeningScore', 'Screening Score'),
@@ -179,7 +212,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('employeeId', 'Employee', 'Employee', true),
                 ...f.text('name', 'Task Name', true),
                 ...f.textarea('description', 'Description'),
-                ...f.select('category', 'Category', enums.ONBOARDING_TASK_CATEGORY, true)
+                ...f.select('category', 'Category', enums.ONBOARDING_TASK_CATEGORY, true),
+                ...f.text('templateId', 'Template'),
+                ...f.text('prerequisiteTaskIds', 'Prerequisite Task Ids'),
+                ...f.text('documentIds', 'Document Ids'),
+                ...f.text('formId', 'Form'),
             ]),
             f.section('Assignment', [
                 ...f.reference('assignedTo', 'Assigned To', 'Employee'),

@@ -22,7 +22,15 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.money('annualRevenue', 'Annual Revenue'),
                 ...f.number('employeeCount', 'Employees'),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
-                ...f.textarea('description', 'Description')
+                ...f.textarea('description', 'Description'),
+                ...f.text('parentAccountId', 'Parent Account'),
+                ...f.text('fax', 'Fax'),
+                ...f.address('billingAddress'),
+                ...f.address('shippingAddress'),
+                ...f.text('sicCode', 'Sic Code'),
+                ...f.text('tickerSymbol', 'Ticker Symbol'),
+                ...f.text('customerId', 'Customer'),
+                ...f.date('lastActivityDate', 'Last Activity Date'),
             ]),
             f.section('Health Scores', [
                 ...f.inlineTable('healthScores', 'Health Scores', [
@@ -60,7 +68,17 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.text('title', 'Title'),
                 ...f.text('department', 'Department'),
                 ...f.checkbox('isPrimary', 'Primary Contact'),
-                ...f.reference('ownerId', 'Owner', 'Employee')
+                ...f.reference('ownerId', 'Owner', 'Employee'),
+                ...f.text('mobile', 'Mobile'),
+                ...f.text('fax', 'Fax'),
+                ...f.address('mailingAddress'),
+                ...f.text('reportsToId', 'Reports To'),
+                ...f.text('description', 'Description'),
+                ...f.date('birthdate', 'Birthdate'),
+                ...f.checkbox('doNotCall', 'Do Not Call'),
+                ...f.checkbox('doNotEmail', 'Do Not Email'),
+                ...f.text('leadSourceId', 'Lead Source'),
+                ...f.date('lastActivityDate', 'Last Activity Date'),
             ])
         ]),
 
@@ -74,7 +92,11 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.textarea('description', 'Description'),
                 ...f.date('interactionDate', 'Date'),
                 ...f.number('durationMinutes', 'Duration (min)'),
-                ...f.reference('createdBy', 'Created By', 'Employee')
+                ...f.reference('createdBy', 'Created By', 'Employee'),
+                ...f.text('performedBy', 'Performed By'),
+                ...f.text('outcome', 'Outcome'),
+                ...f.text('caseId', 'Case'),
+                ...f.text('opportunityId', 'Opportunity'),
             ])
         ]),
 
@@ -86,7 +108,8 @@ Layer 8 Ecosystem - Apache 2.0
                 ...f.textarea('description', 'Description'),
                 ...f.date('startDate', 'Start Date'),
                 ...f.date('endDate', 'End Date'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('accountId', 'Account'),
             ])
         ]),
 

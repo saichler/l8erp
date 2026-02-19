@@ -54,7 +54,8 @@ limitations under the License.
             ...f.select('forecastMethod', 'Forecast Method', enums.FORECAST_METHOD, true),
             ...f.number('accuracyScore', 'Accuracy %'),
             ...f.textarea('parameters', 'Parameters'),
-            ...f.textarea('description', 'Description')
+            ...f.textarea('description', 'Description'),
+            ...f.checkbox('isActive', 'Active'),
         ])
     ]),
 
@@ -65,7 +66,11 @@ limitations under the License.
             ...f.date('planPeriod.endDate', 'End Date', true),
             ...f.select('status', 'Status', enums.TASK_STATUS),
             ...f.textarea('description', 'Description'),
-            ...f.textarea('notes', 'Notes')
+            ...f.textarea('notes', 'Notes'),
+            ...f.date('planPeriod.startDate', 'Plan Period Start'),
+            ...f.date('planPeriod.endDate', 'Plan Period End'),
+            ...f.text('createdBy', 'Created By'),
+            ...f.text('approvedBy', 'Approved By'),
         ])
     ]),
 
@@ -76,7 +81,9 @@ limitations under the License.
             ...f.date('startDate', 'Start Date', true),
             ...f.date('endDate', 'End Date', true),
             ...f.number('expectedUplift', 'Expected Uplift %'),
-            ...f.textarea('description', 'Description')
+            ...f.textarea('description', 'Description'),
+            ...f.text('itemIds', 'Item Ids'),
+            ...f.text('notes', 'Notes'),
         ])
     ]),
 
@@ -87,7 +94,9 @@ limitations under the License.
             ...f.number('initialForecast', 'Initial Forecast'),
             ...f.text('rampUpPeriod', 'Ramp-Up Period'),
             ...f.select('status', 'Status', enums.TASK_STATUS),
-            ...f.textarea('notes', 'Notes')
+            ...f.textarea('notes', 'Notes'),
+            ...f.text('itemId', 'Item'),
+            ...f.text('comparableItemId', 'Comparable Item'),
         ])
     ]),
 

@@ -35,7 +35,11 @@ limitations under the License.
                 ...f.number('capacityUnits', 'Capacity Units'),
                 ...f.number('efficiencyPercent', 'Efficiency %'),
                 ...f.checkbox('isActive', 'Active'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('departmentId', 'Department'),
+                ...f.text('warehouseId', 'Warehouse'),
+                ...f.text('currencyId', 'Currency'),
+                ...f.number('utilizationPercent', 'Utilization Percent'),
             ])
         ]),
         MfgWorkCenterCap: f.form('Work Center Capacity', [
@@ -44,7 +48,10 @@ limitations under the License.
                 ...f.date('effectiveDate', 'Effective Date', true),
                 ...f.date('expiryDate', 'Expiry Date'),
                 ...f.number('availableHours', 'Available Hours'),
-                ...f.number('capacityUnits', 'Capacity Units')
+                ...f.number('capacityUnits', 'Capacity Units'),
+                ...f.text('shiftId', 'Shift'),
+                ...f.number('dayOfWeek', 'Day Of Week'),
+                ...f.text('notes', 'Notes'),
             ])
         ]),
         MfgShiftSchedule: f.form('Shift Schedule', [
@@ -55,7 +62,11 @@ limitations under the License.
                 ...f.text('startTime', 'Start Time', true),
                 ...f.text('endTime', 'End Time', true),
                 ...f.number('breakDuration', 'Break Duration (min)'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.checkbox('isOvernight', 'Overnight'),
+                ...f.date('effectiveDate', 'Effective Date'),
+                ...f.date('expiryDate', 'Expiry Date'),
+                ...f.text('notes', 'Notes'),
             ])
         ]),
         MfgDowntimeEvent: f.form('Downtime Event', [
@@ -66,7 +77,12 @@ limitations under the License.
                 ...f.datetime('endTime', 'End Time'),
                 ...f.number('durationMinutes', 'Duration (minutes)'),
                 ...f.select('reasonCode', 'Reason Code', enums.DOWNTIME_REASON),
-                ...f.textarea('description', 'Description')
+                ...f.textarea('description', 'Description'),
+                ...f.select('downtimeType', 'Downtime Type', enums.DOWNTIME_TYPE),
+                ...f.text('reportedBy', 'Reported By'),
+                ...f.text('resolvedBy', 'Resolved By'),
+                ...f.money('estimatedLoss', 'Estimated Loss'),
+                ...f.text('notes', 'Notes'),
             ])
         ])
     };

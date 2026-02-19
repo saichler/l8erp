@@ -28,7 +28,20 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('shippingAmount', 'Shipping Amount'),
                 ...f.money('discountAmount', 'Discount Amount'),
                 ...f.money('totalAmount', 'Total Amount'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('couponCode', 'Coupon Code'),
+                ...f.text('shippingMethodId', 'Shipping Method'),
+                ...f.text('paymentMethodId', 'Payment Method'),
+                ...f.address('billingAddress'),
+                ...f.address('shippingAddress'),
+                ...f.text('customerNotes', 'Customer Notes'),
+                ...f.text('ipAddress', 'Ip Address'),
+                ...f.text('userAgent', 'User Agent'),
+                ...f.text('salesOrderId', 'Sales Order'),
+                ...f.text('warehouseId', 'Warehouse'),
+                ...f.date('shippedDate', 'Shipped Date'),
+                ...f.date('deliveredDate', 'Delivered Date'),
+                ...f.text('trackingNumber', 'Tracking Number'),
             ]),
             f.section('Order Lines', [
                 ...f.inlineTable('lines', 'Order Lines', [
@@ -64,7 +77,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.date('receivedDate', 'Received Date'),
                 ...f.money('refundAmount', 'Refund Amount'),
                 ...f.textarea('reason', 'Reason'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.date('refundedDate', 'Refunded Date'),
+                ...f.text('refundMethod', 'Refund Method'),
+                ...f.text('approvedBy', 'Approved By'),
+                ...f.text('trackingNumber', 'Tracking Number'),
+                ...f.text('shippingCarrier', 'Shipping Carrier'),
             ]),
             f.section('Return Lines', [
                 ...f.inlineTable('lines', 'Return Lines', [

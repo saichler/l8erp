@@ -32,7 +32,10 @@ window.MobileCompensation = window.MobileCompensation || {};
                 ...f.reference('salaryStructureId', 'Salary Structure', 'SalaryStructure'),
                 ...f.text('gradeCode', 'Grade Code', true),
                 ...f.text('name', 'Name', true),
-                ...f.number('level', 'Level', true)
+                ...f.number('level', 'Level', true),
+                ...f.money('minimum', 'Minimum'),
+                ...f.money('midpoint', 'Midpoint'),
+                ...f.money('maximum', 'Maximum'),
             ]),
             f.section('Salary Range', [
                 ...f.money('minimum.amount', 'Minimum', true),
@@ -74,7 +77,11 @@ window.MobileCompensation = window.MobileCompensation || {};
             f.section('Employee', [
                 ...f.reference('employeeId', 'Employee', 'Employee', true),
                 ...f.select('compensationType', 'Compensation Type', enums.COMPENSATION_TYPE, true),
-                ...f.reference('salaryGradeId', 'Salary Grade', 'SalaryGrade')
+                ...f.reference('salaryGradeId', 'Salary Grade', 'SalaryGrade'),
+                ...f.money('baseSalary', 'Base Salary'),
+                ...f.money('hourlyRate', 'Hourly Rate'),
+                ...f.text('approvedBy', 'Approved By'),
+                ...f.date('approvedDate', 'Approved Date'),
             ]),
             f.section('Compensation', [
                 ...f.money('baseSalary.amount', 'Base Salary', true),
@@ -96,7 +103,17 @@ window.MobileCompensation = window.MobileCompensation || {};
                 ...f.reference('employeeId', 'Employee', 'Employee', true),
                 ...f.reference('meritCycleId', 'Merit Cycle', 'MeritCycle', true),
                 ...f.reference('reviewId', 'Performance Review', 'PerformanceReview'),
-                ...f.select('status', 'Status', enums.MERIT_INCREASE_STATUS, true)
+                ...f.select('status', 'Status', enums.MERIT_INCREASE_STATUS, true),
+                ...f.money('currentSalary', 'Current Salary'),
+                ...f.money('proposedIncrease', 'Proposed Increase'),
+                ...f.money('newSalary', 'New Salary'),
+                ...f.money('budgetAmount', 'Budget Amount'),
+                ...f.money('managerRecommended', 'Manager Recommended'),
+                ...f.money('hrApproved', 'Hr Approved'),
+                ...f.text('submittedBy', 'Submitted By'),
+                ...f.date('submittedDate', 'Submitted Date'),
+                ...f.text('approvedBy', 'Approved By'),
+                ...f.date('approvedDate', 'Approved Date'),
             ]),
             f.section('Salary', [
                 ...f.money('currentSalary.amount', 'Current Salary'),
@@ -120,7 +137,8 @@ window.MobileCompensation = window.MobileCompensation || {};
                 ...f.reference('organizationId', 'Organization', 'Organization'),
                 ...f.text('name', 'Name', true),
                 ...f.number('year', 'Year', true),
-                ...f.select('status', 'Status', enums.MERIT_CYCLE_STATUS, true)
+                ...f.select('status', 'Status', enums.MERIT_CYCLE_STATUS, true),
+                ...f.money('totalBudget', 'Total Budget'),
             ]),
             f.section('Dates', [
                 ...f.date('planningStartDate', 'Planning Start'),
@@ -142,7 +160,10 @@ window.MobileCompensation = window.MobileCompensation || {};
                 ...f.textarea('description', 'Description'),
                 ...f.select('planType', 'Plan Type', enums.BONUS_PLAN_TYPE, true),
                 ...f.number('planYear', 'Plan Year', true),
-                ...f.select('frequency', 'Frequency', enums.BONUS_FREQUENCY)
+                ...f.select('frequency', 'Frequency', enums.BONUS_FREQUENCY),
+                ...f.money('targetAmount', 'Target Amount'),
+                ...f.money('maximumAmount', 'Maximum Amount'),
+                ...f.number('prorationMethod', 'Proration Method'),
             ]),
             f.section('Target', [
                 ...f.percentage('targetPercentage', 'Target'),
@@ -168,7 +189,14 @@ window.MobileCompensation = window.MobileCompensation || {};
                 ...f.reference('bonusPlanId', 'Bonus Plan', 'BonusPlan'),
                 ...f.select('bonusType', 'Bonus Type', enums.BONUS_PLAN_TYPE, true),
                 ...f.text('reason', 'Reason'),
-                ...f.select('status', 'Status', enums.BONUS_PAYMENT_STATUS, true)
+                ...f.select('status', 'Status', enums.BONUS_PAYMENT_STATUS, true),
+                ...f.money('targetAmount', 'Target Amount'),
+                ...f.money('actualAmount', 'Actual Amount'),
+                ...f.date('performancePeriod.startDate', 'Performance Period Start'),
+                ...f.date('performancePeriod.endDate', 'Performance Period End'),
+                ...f.text('payrollRunId', 'Payroll Run'),
+                ...f.text('approvedBy', 'Approved By'),
+                ...f.date('approvedDate', 'Approved Date'),
             ]),
             f.section('Amount', [
                 ...f.money('targetAmount.amount', 'Target Amount'),
@@ -193,7 +221,16 @@ window.MobileCompensation = window.MobileCompensation || {};
                 ...f.reference('employeeId', 'Employee', 'Employee', true),
                 ...f.select('grantType', 'Grant Type', enums.EQUITY_GRANT_TYPE, true),
                 ...f.text('grantNumber', 'Grant Number'),
-                ...f.select('status', 'Status', enums.EQUITY_GRANT_STATUS, true)
+                ...f.select('status', 'Status', enums.EQUITY_GRANT_STATUS, true),
+                ...f.text('planId', 'Plan'),
+                ...f.money('grantPrice', 'Grant Price'),
+                ...f.money('fairMarketValue', 'Fair Market Value'),
+                ...f.money('totalValue', 'Total Value'),
+                ...f.number('sharesCancelled', 'Shares Cancelled'),
+                ...f.text('approvedBy', 'Approved By'),
+                ...f.date('approvedDate', 'Approved Date'),
+                ...f.text('boardApprovalDate', 'Board Approval Date'),
+                ...f.text('agreementDocumentId', 'Agreement Document'),
             ]),
             f.section('Shares & Value', [
                 ...f.number('sharesGranted', 'Shares Granted', true),
@@ -219,7 +256,26 @@ window.MobileCompensation = window.MobileCompensation || {};
             f.section('Basic Information', [
                 ...f.reference('employeeId', 'Employee', 'Employee', true),
                 ...f.number('statementYear', 'Year', true),
-                ...f.date('asOfDate', 'As Of Date')
+                ...f.date('asOfDate', 'As Of Date'),
+                ...f.money('baseSalary', 'Base Salary'),
+                ...f.money('hourlyEquivalent', 'Hourly Equivalent'),
+                ...f.money('bonusTarget', 'Bonus Target'),
+                ...f.money('bonusActual', 'Bonus Actual'),
+                ...f.money('commissions', 'Commissions'),
+                ...f.money('equityValue', 'Equity Value'),
+                ...f.money('employerHealthContribution', 'Employer Health Contribution'),
+                ...f.money('employerDentalContribution', 'Employer Dental Contribution'),
+                ...f.money('employerVisionContribution', 'Employer Vision Contribution'),
+                ...f.money('employerLifeContribution', 'Employer Life Contribution'),
+                ...f.money('employerDisabilityContribution', 'Employer Disability Contribution'),
+                ...f.money('employerRetirementContribution', 'Employer Retirement Contribution'),
+                ...f.money('employerHsaContribution', 'Employer HSA Contribution'),
+                ...f.money('employerPayrollTaxes', 'Employer Payroll Taxes'),
+                ...f.money('otherBenefitsValue', 'Other Benefits Value'),
+                ...f.money('perksValue', 'Perks Value'),
+                ...f.money('totalCashCompensation', 'Total Cash Compensation'),
+                ...f.money('totalBenefitsValue', 'Total Benefits Value'),
+                ...f.money('totalCompensation', 'Total Compensation'),
             ]),
             f.section('Base Compensation', [
                 ...f.money('baseSalary.amount', 'Base Salary'),
@@ -246,7 +302,16 @@ window.MobileCompensation = window.MobileCompensation || {};
                 ...f.text('jobTitle', 'Job Title', true),
                 ...f.text('surveySource', 'Survey Source', true),
                 ...f.number('surveyYear', 'Survey Year', true),
-                ...f.text('marketDefinition', 'Market Definition')
+                ...f.text('marketDefinition', 'Market Definition'),
+                ...f.money('market25th', 'Market25th'),
+                ...f.money('market50th', 'Market50th'),
+                ...f.money('market75th', 'Market75th'),
+                ...f.money('market90th', 'Market90th'),
+                ...f.money('marketAverage', 'Market Average'),
+                ...f.money('totalCash25th', 'Total Cash25th'),
+                ...f.money('totalCash50th', 'Total Cash50th'),
+                ...f.money('totalCash75th', 'Total Cash75th'),
+                ...f.money('internalAverage', 'Internal Average'),
             ]),
             f.section('Market Data (Base)', [
                 ...f.money('market25th.amount', '25th Percentile'),

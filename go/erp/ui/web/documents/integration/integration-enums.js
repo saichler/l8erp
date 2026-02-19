@@ -16,6 +16,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     // ENUM DEFINITIONS
     // ============================================================================
 
+    const FILE_FORMAT = factory.simple([
+        'Unspecified', 'PDF', 'Word', 'Excel', 'PowerPoint', 'Image',
+        'Text', 'HTML', 'XML', 'JSON', 'Other'
+    ]);
+
     const TEMPLATE_TYPE = factory.simple([
         'Unspecified', 'Document', 'Email', 'Form', 'Report', 'Contract'
     ]);
@@ -45,6 +50,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     // ============================================================================
 
     DocIntegration.enums = {
+        FILE_FORMAT: FILE_FORMAT.enum,
         TEMPLATE_TYPE: TEMPLATE_TYPE.enum,
         FIELD_TYPE: FIELD_TYPE.enum,
         SCAN_STATUS: SCAN_STATUS.enum,
@@ -58,6 +64,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     // ============================================================================
 
     DocIntegration.render = {
+        fileFormat: (v) => renderEnum(v, FILE_FORMAT.enum),
         templateType: (v) => renderEnum(v, TEMPLATE_TYPE.enum),
         fieldType: (v) => renderEnum(v, FIELD_TYPE.enum),
         scanStatus: createStatusRenderer(SCAN_STATUS.enum, SCAN_STATUS.classes),

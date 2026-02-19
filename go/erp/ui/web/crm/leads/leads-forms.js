@@ -32,7 +32,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('rating', 'Rating', enums.LEAD_RATING),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
                 ...f.reference('campaignId', 'Campaign', 'CrmCampaign'),
-                ...f.textarea('description', 'Description')
+                ...f.textarea('description', 'Description'),
+                ...f.address('address'),
+                ...f.date('lastActivityDate', 'Last Activity Date'),
+                ...f.number('score', 'Score'),
             ]),
             f.section('Activities', [
                 ...f.inlineTable('activities', 'Lead Activities', [

@@ -25,7 +25,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('probability', 'Probability %'),
                 ...f.date('closeDate', 'Close Date'),
                 ...f.reference('ownerId', 'Owner', 'Employee'),
-                ...f.textarea('description', 'Description')
+                ...f.textarea('description', 'Description'),
+                ...f.text('leadSourceId', 'Lead Source'),
+                ...f.text('campaignId', 'Campaign'),
+                ...f.text('nextStep', 'Next Step'),
+                ...f.text('lossReason', 'Loss Reason'),
+                ...f.money('expectedRevenue', 'Expected Revenue'),
+                ...f.date('lastActivityDate', 'Last Activity Date'),
             ]),
             f.section('Activities', [
                 ...f.inlineTable('activities', 'Activities', [
@@ -78,7 +84,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.number('probability', 'Probability %'),
                 ...f.checkbox('isClosed', 'Is Closed'),
                 ...f.checkbox('isWon', 'Is Won'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.text('forecastCategory', 'Forecast Category'),
             ])
         ]),
 

@@ -31,7 +31,9 @@ window.MobileSalesCustomers = window.MobileSalesCustomers || {};
                 ...f.text('name', 'Name', true),
                 ...f.reference('parentHierarchyId', 'Parent Hierarchy', 'SalesCustomerHierarchy'),
                 ...f.number('level', 'Level'),
-                ...f.textarea('description', 'Description')
+                ...f.textarea('description', 'Description'),
+                ...f.text('customerIds', 'Customer Ids'),
+                ...f.checkbox('isActive', 'Active'),
             ])
         ]),
 
@@ -41,7 +43,8 @@ window.MobileSalesCustomers = window.MobileSalesCustomers || {};
                 ...f.text('segmentType', 'Segment Type', true),
                 ...f.textarea('description', 'Description'),
                 ...f.textarea('criteria', 'Criteria'),
-                ...f.checkbox('isActive', 'Active')
+                ...f.checkbox('isActive', 'Active'),
+                ...f.number('customerCount', 'Customer Count'),
             ])
         ]),
 
@@ -56,7 +59,12 @@ window.MobileSalesCustomers = window.MobileSalesCustomers || {};
                 ...f.reference('priceListId', 'Price List', 'PriceList'),
                 ...f.text('paymentTerms', 'Payment Terms'),
                 ...f.textarea('terms', 'Terms & Conditions'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.text('name', 'Name'),
+                ...f.text('termsAndConditions', 'Terms And Conditions'),
+                ...f.text('salespersonId', 'Salesperson'),
+                ...f.checkbox('autoRenew', 'Auto Renew'),
+                ...f.number('renewalNoticeDays', 'Renewal Notice Days'),
             ]),
             f.section('Customer Prices', [
                 ...f.inlineTable('prices', 'Customer Prices', [
@@ -80,7 +88,10 @@ window.MobileSalesCustomers = window.MobileSalesCustomers || {};
                 ...f.checkbox('isActive', 'Active'),
                 ...f.number('commissionRate', 'Commission Rate %'),
                 ...f.reference('territoryId', 'Territory', 'SalesTerritory'),
-                ...f.textarea('notes', 'Notes')
+                ...f.textarea('notes', 'Notes'),
+                ...f.address('address'),
+                ...f.date('startDate', 'Start Date'),
+                ...f.date('endDate', 'End Date'),
             ])
         ])
     };

@@ -22,6 +22,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.enum('itemType', 'Type', null, render.itemType),
             ...col.col('categoryId', 'Category'),
             ...col.money('unitCost', 'Unit Cost'),
+            ...col.enum('valuationMethod', 'Valuation', null, render.valuationMethod),
+            ...col.enum('planningMethod', 'Planning', null, render.planningMethod),
             ...col.boolean('isActive', 'Active')
         ],
 
