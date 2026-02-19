@@ -78,7 +78,7 @@ limitations under the License.
                 ...f.text('title', 'Title', true),
                 ...f.textarea('description', 'Description'),
                 ...f.select('status', 'Status', enums.ECO_STATUS),
-                ...f.select('priority', 'Priority', enums.ECO_PRIORITY),
+                ...f.number('priority', 'Priority'),
                 ...f.date('requestDate', 'Request Date'),
                 ...f.date('requiredDate', 'Required Date'),
                 ...f.textarea('reason', 'Reason')

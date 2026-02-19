@@ -93,9 +93,10 @@ limitations under the License.
 
             // Data points and labels
             points.forEach((p, i) => {
+                const bgColor = Layer8DChart.readThemeColor('--layer8d-bg-white', '#ffffff');
                 const circle = createEl('circle', {
                     cx: p.x, cy: p.y, r: 4,
-                    fill: '#fff', stroke: color, 'stroke-width': 2,
+                    fill: bgColor, stroke: color, 'stroke-width': 2,
                     class: 'layer8d-chart-point'
                 });
 

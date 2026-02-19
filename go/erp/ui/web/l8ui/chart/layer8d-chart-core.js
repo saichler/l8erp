@@ -19,16 +19,32 @@ limitations under the License.
 (function() {
     'use strict';
 
+    function _readThemeColor(varName, fallback) {
+        return getComputedStyle(document.documentElement)
+            .getPropertyValue(varName).trim() || fallback;
+    }
+
+    let _themePalette = null;
+    function _getThemePalette() {
+        if (!_themePalette) {
+            _themePalette = [
+                _readThemeColor('--layer8d-primary', '#0ea5e9'),
+                _readThemeColor('--layer8d-success', '#22c55e'),
+                _readThemeColor('--layer8d-warning', '#f59e0b'),
+                _readThemeColor('--layer8d-error', '#ef4444'),
+                '#8b5cf6', '#06b6d4', '#ec4899', '#84cc16', '#f97316', '#6366f1'
+            ];
+        }
+        return _themePalette;
+    }
+
     const CHART_DEFAULTS = {
         width: 600,
         height: 400,
         padding: { top: 30, right: 30, bottom: 50, left: 60 },
-        colors: [
-            '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
-            '#06b6d4', '#ec4899', '#84cc16', '#f97316', '#6366f1'
-        ],
-        gridColor: '#e5e7eb',
-        textColor: '#6b7280',
+        get colors() { return _getThemePalette(); },
+        get gridColor() { return _readThemeColor('--layer8d-border', '#e2e8f0'); },
+        get textColor() { return _readThemeColor('--layer8d-text-muted', '#718096'); },
         fontSize: 12,
         animationDuration: 300
     };
@@ -49,6 +65,10 @@ limitations under the License.
             this.aggregation = this.viewConfig.aggregation || 'count';
             this.seriesField = this.viewConfig.seriesField || null;
             this.title = this.viewConfig.title || '';
+
+            if (!this.categoryField && !this.valueField) {
+                this._autoDetectFields();
+            }
 
             this.container = null;
             this.svgEl = null;
@@ -137,6 +157,9 @@ limitations under the License.
         _getValue(item) {
             if (!this.valueField || this.aggregation === 'count') return 1;
             const v = this._getNestedValue(item, this.valueField);
+            if (v && typeof v === 'object' && v.amount !== undefined) {
+                return typeof v.amount === 'number' ? v.amount : parseFloat(v.amount) || 0;
+            }
             return typeof v === 'number' ? v : parseFloat(v) || 0;
         }
 
@@ -152,10 +175,49 @@ limitations under the License.
         _handleMetadata(metadata) {
             if (metadata?.keyCount?.counts && this.aggregation === 'count' && !this.categoryField) {
                 const counts = metadata.keyCount.counts;
-                this.chartData = Object.entries(counts)
+                const entries = Object.entries(counts)
                     .filter(([k]) => k !== 'Total')
                     .map(([label, value]) => ({ label, value }));
-                this._render();
+                if (entries.length > 0) {
+                    this.chartData = entries;
+                    this._render();
+                }
+            }
+        }
+
+        _autoDetectFields() {
+            const cols = this.columns || [];
+            const pk = cols.length > 0 ? cols[0].key : '';
+            const candidates = cols.filter(c => c.key !== pk);
+
+            // Detect categoryField
+            const exact = [/^status$/i, /^type$/i, /^category$/i, /^period$/i, /^health$/i];
+            const suffix = [/Status$/, /Type$/, /Category$/, /Period$/, /Health$/];
+
+            for (const p of exact) {
+                const m = candidates.find(c => p.test(c.key));
+                if (m) { this.categoryField = m.key; break; }
+            }
+            if (!this.categoryField) {
+                for (const p of suffix) {
+                    const m = candidates.find(c => p.test(c.key));
+                    if (m) { this.categoryField = m.key; break; }
+                }
+            }
+            if (!this.categoryField && typeof Layer8DViewFactory !== 'undefined') {
+                this.categoryField = Layer8DViewFactory.detectTitleField(cols, pk);
+            }
+
+            // Detect valueField
+            const valPat = [/Amount$/, /Value$/, /Price$/, /Cost$/, /Total$/,
+                            /Count$/, /Percent$/, /Rate$/, /Quantity$/];
+            for (const p of valPat) {
+                const m = candidates.find(c => p.test(c.key));
+                if (m) { this.valueField = m.key; break; }
+            }
+
+            if (this.valueField) {
+                this.aggregation = 'sum';
             }
         }
 
@@ -172,6 +234,8 @@ limitations under the License.
                 titleEl.textContent = this.title;
                 this.container.appendChild(titleEl);
             }
+
+            this._renderControls();
 
             this.svgEl = this._createSvg(w, h);
             this.container.appendChild(this.svgEl);
@@ -197,6 +261,29 @@ limitations under the License.
                 default:
                     Layer8DChartBar.render(this, w, h);
             }
+        }
+
+        _renderControls() {
+            const types = [
+                { key: 'bar', label: 'Bar', icon: '<rect x="1" y="8" width="3" height="6"/><rect x="5.5" y="4" width="3" height="10"/><rect x="10" y="6" width="3" height="8"/>' },
+                { key: 'line', label: 'Line', icon: '<polyline points="1,12 5,5 9,9 13,2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="5" cy="5" r="1.2"/><circle cx="9" cy="9" r="1.2"/><circle cx="13" cy="2" r="1.2"/>' },
+                { key: 'pie', label: 'Pie', icon: '<path d="M7,1 A6,6 0 1,1 1.3,10 L7,7 Z"/><path d="M7,1 L7,7 L1.3,10 A6,6 0 0,1 7,1" opacity="0.5"/>' }
+            ];
+            const controls = document.createElement('div');
+            controls.className = 'layer8d-chart-controls';
+            types.forEach(t => {
+                const btn = document.createElement('button');
+                btn.className = 'layer8d-chart-type-btn' + (this.chartType === t.key ? ' active' : '');
+                btn.innerHTML = `<svg viewBox="0 0 14 14" fill="currentColor">${t.icon}</svg>${t.label}`;
+                btn.addEventListener('click', () => {
+                    if (this.chartType !== t.key) {
+                        this.chartType = t.key;
+                        this._render();
+                    }
+                });
+                controls.appendChild(btn);
+            });
+            this.container.appendChild(controls);
         }
 
         // SVG helper methods
@@ -272,6 +359,8 @@ limitations under the License.
 
     // Static defaults accessible by sub-renderers
     Layer8DChart.DEFAULTS = CHART_DEFAULTS;
+    Layer8DChart.readThemeColor = _readThemeColor;
+    Layer8DChart.getThemePalette = _getThemePalette;
 
     window.Layer8DChart = Layer8DChart;
 

@@ -24,7 +24,10 @@ limitations under the License.
         return div.innerHTML;
     }
 
-    const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+    function _getColors() {
+        if (typeof Layer8DChart !== 'undefined') return Layer8DChart.getThemePalette();
+        return ['#0ea5e9', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+    }
 
     window.Layer8DCalendarRender = {
         render(cal) {
@@ -55,7 +58,7 @@ limitations under the License.
                     <button class="layer8d-calendar-btn" data-action="today">Today</button>
                     <button class="layer8d-calendar-btn ${cal.viewMode === 'month' ? 'active' : ''}" data-view="month">Month</button>
                     <button class="layer8d-calendar-btn ${cal.viewMode === 'week' ? 'active' : ''}" data-view="week">Week</button>
-                    ${cal.onAdd ? `<button class="layer8d-calendar-add-btn" data-action="add">${escapeHtml(cal.addButtonText)}</button>` : ''}
+                    ${cal.onAdd ? `<button class="layer8d-btn layer8d-btn-primary layer8d-btn-small layer8d-calendar-add-btn" data-action="add">${escapeHtml(cal.addButtonText)}</button>` : ''}
                 </div>
             </div>`;
         },
@@ -92,7 +95,7 @@ limitations under the License.
 
                 events.slice(0, maxShow).forEach((item, i) => {
                     const title = cal._getNestedValue(item, cal.titleField) || 'Event';
-                    const color = COLORS[i % COLORS.length];
+                    const color = _getColors()[i % _getColors().length];
                     const id = cal._getItemId(item);
                     html += `<div class="layer8d-calendar-event" style="background:${color}" data-id="${escapeHtml(String(id))}">${escapeHtml(title)}</div>`;
                 });
@@ -141,7 +144,7 @@ limitations under the License.
 
                 events.forEach((item, j) => {
                     const title = cal._getNestedValue(item, cal.titleField) || 'Event';
-                    const color = COLORS[j % COLORS.length];
+                    const color = _getColors()[j % _getColors().length];
                     const id = cal._getItemId(item);
                     html += `<div class="layer8d-calendar-event" style="background:${color}" data-id="${escapeHtml(String(id))}">${escapeHtml(title)}</div>`;
                 });

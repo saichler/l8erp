@@ -67,7 +67,8 @@ limitations under the License.
         _renderTrend(direction, value) {
             if (!direction) return '';
             const isUp = direction === 'up';
-            const color = isUp ? '#10b981' : '#ef4444';
+            const _read = typeof Layer8DChart !== 'undefined' ? Layer8DChart.readThemeColor : (n, f) => f;
+            const color = isUp ? _read('--layer8d-success', '#22c55e') : _read('--layer8d-error', '#ef4444');
             const arrow = isUp ? '&#9650;' : '&#9660;';
             const label = value ? `${value}%` : '';
 
@@ -82,7 +83,10 @@ limitations under the License.
          */
         _renderSparkline(data, color) {
             if (!data || data.length < 2) return '';
-            color = color || '#3b82f6';
+            if (!color) {
+                const _read = typeof Layer8DChart !== 'undefined' ? Layer8DChart.readThemeColor : (n, f) => f;
+                color = _read('--layer8d-primary', '#0ea5e9');
+            }
 
             const w = 120;
             const h = 30;
@@ -111,7 +115,7 @@ limitations under the License.
             if (!config || !config.data) return '';
 
             const data = config.data;
-            const colors = config.colors || ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
+            const colors = config.colors || (typeof Layer8DChart !== 'undefined' ? Layer8DChart.getThemePalette() : ['#0ea5e9', '#22c55e', '#f59e0b', '#ef4444', '#8b5cf6']);
             const max = Math.max(...data.map(d => d.value));
             const barW = 100 / data.length;
 

@@ -23,12 +23,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     MobileDocCompliance.enums.AUDIT_ACTION = { 0: 'Unspecified', 1: 'Create', 2: 'Update', 3: 'Delete', 4: 'Access', 5: 'Approve', 6: 'Reject' };
     MobileDocCompliance.enums.AUDIT_ACTION_CLASSES = { 1: 'status-active', 2: 'status-pending', 3: 'status-terminated', 4: 'status-active', 5: 'status-active', 6: 'status-terminated' };
 
+    MobileDocCompliance.enums.RETENTION_ACTION = { 0: 'Unspecified', 1: 'Archive', 2: 'Delete', 3: 'Review' };
+    MobileDocCompliance.enums.RETENTION_ACTION_CLASSES = { 1: 'status-active', 2: 'status-terminated', 3: 'status-pending' };
+
     MobileDocCompliance.render = {
         retentionStatus: Layer8MRenderers.createStatusRenderer(MobileDocCompliance.enums.RETENTION_STATUS, MobileDocCompliance.enums.RETENTION_STATUS_CLASSES),
         legalHoldStatus: Layer8MRenderers.createStatusRenderer(MobileDocCompliance.enums.LEGAL_HOLD_STATUS, MobileDocCompliance.enums.LEGAL_HOLD_STATUS_CLASSES),
         accessType: Layer8MRenderers.createStatusRenderer(MobileDocCompliance.enums.ACCESS_TYPE, MobileDocCompliance.enums.ACCESS_TYPE_CLASSES),
         archiveStatus: Layer8MRenderers.createStatusRenderer(MobileDocCompliance.enums.ARCHIVE_STATUS, MobileDocCompliance.enums.ARCHIVE_STATUS_CLASSES),
         auditAction: Layer8MRenderers.createStatusRenderer(MobileDocCompliance.enums.AUDIT_ACTION, MobileDocCompliance.enums.AUDIT_ACTION_CLASSES),
+        retentionAction: Layer8MRenderers.createStatusRenderer(MobileDocCompliance.enums.RETENTION_ACTION, MobileDocCompliance.enums.RETENTION_ACTION_CLASSES),
         date: Layer8MRenderers.renderDate
     };
 

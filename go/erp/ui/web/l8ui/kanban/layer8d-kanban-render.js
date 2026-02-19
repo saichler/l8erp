@@ -34,7 +34,7 @@ limitations under the License.
             // Add button
             if (kanban.onAdd) {
                 html += `<div class="layer8d-kanban-toolbar">
-                    <button class="layer8d-kanban-add-btn" data-action="add">${escapeHtml(kanban.addButtonText)}</button>
+                    <button class="layer8d-btn layer8d-btn-primary layer8d-btn-small" data-action="add">${escapeHtml(kanban.addButtonText)}</button>
                 </div>`;
             }
 
@@ -43,7 +43,9 @@ limitations under the License.
             const laneKeys = Object.keys(kanban.lanes);
             laneKeys.forEach(key => {
                 const lane = kanban.lanes[key];
-                const color = lane.config.color || '#6b7280';
+                const fallbackColor = (typeof Layer8DChart !== 'undefined')
+                    ? Layer8DChart.readThemeColor('--layer8d-text-muted', '#718096') : '#718096';
+                const color = lane.config.color || fallbackColor;
                 const label = lane.config.label || key;
 
                 html += `<div class="layer8d-kanban-lane" data-lane="${escapeHtml(key)}">

@@ -44,16 +44,16 @@ Layer 8 Ecosystem - Wizard/Stepper Styles
     justify-content: center;
     font-size: 13px;
     font-weight: 600;
-    border: 2px solid var(--border-color, #e2e8f0);
-    color: var(--text-tertiary, #94a3b8);
-    background: var(--bg-primary, #ffffff);
+    border: 2px solid var(--layer8d-border);
+    color: var(--layer8d-text-light);
+    background: var(--layer8d-bg-white);
     transition: all 0.2s ease;
 }
 
 .layer8d-wizard-step-indicator.active .layer8d-wizard-step-number {
-    border-color: var(--accent-color, #3b82f6);
-    color: var(--accent-color, #3b82f6);
-    background: rgba(59, 130, 246, 0.08);
+    border-color: var(--layer8d-primary);
+    color: var(--layer8d-primary);
+    background: rgba(14, 165, 233, 0.08);
 }
 
 .layer8d-wizard-step-indicator.completed .layer8d-wizard-step-number {
@@ -64,19 +64,19 @@ Layer 8 Ecosystem - Wizard/Stepper Styles
 
 .layer8d-wizard-step-label {
     font-size: 11px;
-    color: var(--text-tertiary, #94a3b8);
+    color: var(--layer8d-text-light);
     text-align: center;
 }
 
 .layer8d-wizard-step-indicator.active .layer8d-wizard-step-label {
-    color: var(--text-primary, #1a202c);
+    color: var(--layer8d-text-dark);
     font-weight: 600;
 }
 
 .layer8d-wizard-step-connector {
     flex: 1;
     height: 2px;
-    background: var(--border-color, #e2e8f0);
+    background: var(--layer8d-border);
     margin: 0 8px;
     margin-bottom: 18px;
 }
@@ -87,8 +87,8 @@ Layer 8 Ecosystem - Wizard/Stepper Styles
 
 /* Content */
 .layer8d-wizard-content {
-    background: var(--bg-primary, #ffffff);
-    border: 1px solid var(--border-color, #e2e8f0);
+    background: var(--layer8d-bg-white);
+    border: 1px solid var(--layer8d-border);
     border-radius: 8px;
     padding: 24px;
     margin-bottom: 16px;
@@ -98,13 +98,13 @@ Layer 8 Ecosystem - Wizard/Stepper Styles
 .layer8d-wizard-step-title {
     font-size: 18px;
     font-weight: 600;
-    color: var(--text-primary, #1a202c);
+    color: var(--layer8d-text-dark);
     margin: 0 0 8px 0;
 }
 
 .layer8d-wizard-step-desc {
     font-size: 14px;
-    color: var(--text-secondary, #64748b);
+    color: var(--layer8d-text-medium);
     margin: 0 0 20px 0;
 }
 
@@ -124,22 +124,22 @@ Layer 8 Ecosystem - Wizard/Stepper Styles
 .layer8d-wizard-label {
     font-size: 13px;
     font-weight: 500;
-    color: var(--text-primary, #1a202c);
+    color: var(--layer8d-text-dark);
 }
 
 .layer8d-wizard-input {
     padding: 8px 12px;
-    border: 1px solid var(--border-color, #e2e8f0);
+    border: 1px solid var(--layer8d-border);
     border-radius: 6px;
     font-size: 14px;
-    color: var(--text-primary, #1a202c);
-    background: var(--bg-primary, #ffffff);
+    color: var(--layer8d-text-dark);
+    background: var(--layer8d-bg-white);
 }
 
 .layer8d-wizard-input:focus {
     outline: none;
-    border-color: var(--accent-color, #3b82f6);
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+    border-color: var(--layer8d-primary);
+    box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.15);
 }
 
 .layer8d-wizard-field.has-error .layer8d-wizard-input {
@@ -161,41 +161,6 @@ Layer 8 Ecosystem - Wizard/Stepper Styles
 .layer8d-wizard-nav-right {
     display: flex;
     gap: 8px;
-}
-
-.layer8d-wizard-btn {
-    padding: 8px 20px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: background 0.15s ease;
-}
-
-.layer8d-wizard-btn-primary {
-    background: var(--accent-color, #3b82f6);
-    color: #fff;
-}
-
-.layer8d-wizard-btn-primary:hover {
-    opacity: 0.9;
-}
-
-.layer8d-wizard-btn-secondary {
-    background: var(--bg-secondary, #f1f5f9);
-    color: var(--text-secondary, #64748b);
-    border: 1px solid var(--border-color, #e2e8f0);
-}
-
-.layer8d-wizard-btn-secondary:hover {
-    background: var(--bg-tertiary, #e2e8f0);
-}
-
-/* Dark mode */
-[data-theme="dark"] .layer8d-wizard-content {
-    background: var(--bg-secondary, #1e293b);
-    border-color: var(--border-color, #334155);
 }
 
 /* Mobile wizard */

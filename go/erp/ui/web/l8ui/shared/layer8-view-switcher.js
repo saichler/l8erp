@@ -14,7 +14,7 @@ limitations under the License.
 */
 // Layer8 View Switcher
 // Small icon button with floating dropdown for switching between view types.
-// Persists preference in localStorage. Shared by desktop and mobile.
+// Always defaults to table view on navigation. Shared by desktop and mobile.
 
 (function() {
     'use strict';
@@ -47,7 +47,7 @@ limitations under the License.
     window.Layer8ViewSwitcher = {
         /**
          * Render an icon button with floating dropdown menu
-         * @param {string} serviceKey - unique key for localStorage persistence
+         * @param {string} serviceKey - unique key for the switcher
          * @param {string[]} viewTypes - registered view types
          * @param {string} activeType - currently selected view type
          * @returns {string} HTML string
@@ -95,21 +95,9 @@ limitations under the License.
                 menu.querySelectorAll('.l8-view-menu-check').forEach(c => c.textContent = '');
                 item.querySelector('.l8-view-menu-check').textContent = '\u2713';
                 menu.classList.remove('open');
-                // Persist
-                if (serviceKey) {
-                    try { localStorage.setItem('l8-view-' + serviceKey, newType); } catch (e) { /* ignore */ }
-                }
+                // No persistence — always default to table on navigation
                 if (onSwitch) onSwitch(newType);
             });
-        },
-
-        /**
-         * Get saved view type preference for a service
-         * @param {string} serviceKey
-         * @returns {string|null}
-         */
-        getSavedType(serviceKey) {
-            try { return localStorage.getItem('l8-view-' + serviceKey); } catch (e) { return null; }
         }
     };
 

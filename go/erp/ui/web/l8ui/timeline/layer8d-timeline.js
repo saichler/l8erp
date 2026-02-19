@@ -110,7 +110,7 @@ limitations under the License.
 
             if (this.onAdd) {
                 html += `<div class="layer8d-timeline-toolbar">
-                    <button class="layer8d-timeline-add-btn">${escapeHtml(this.addButtonText)}</button>
+                    <button class="layer8d-btn layer8d-btn-primary layer8d-btn-small">${escapeHtml(this.addButtonText)}</button>
                 </div>`;
             }
 
@@ -157,7 +157,7 @@ limitations under the License.
             if (!this.container) return;
 
             // Add button
-            const addBtn = this.container.querySelector('.layer8d-timeline-add-btn');
+            const addBtn = this.container.querySelector('.layer8d-timeline-toolbar .layer8d-btn');
             if (addBtn && this.onAdd) {
                 addBtn.addEventListener('click', () => this.onAdd());
             }

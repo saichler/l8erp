@@ -8,7 +8,7 @@ Layer 8 Ecosystem - Chart Component Styles
     position: relative;
     width: 100%;
     min-height: 300px;
-    background: var(--bg-primary, #ffffff);
+    background: var(--layer8d-bg-white);
     border-radius: 8px;
     padding: 16px;
     box-sizing: border-box;
@@ -17,7 +17,7 @@ Layer 8 Ecosystem - Chart Component Styles
 .layer8d-chart-title {
     font-size: 16px;
     font-weight: 600;
-    color: var(--text-primary, #1a202c);
+    color: var(--layer8d-text-dark);
     margin-bottom: 12px;
     text-align: center;
 }
@@ -26,6 +26,45 @@ Layer 8 Ecosystem - Chart Component Styles
     display: block;
     width: 100%;
     height: auto;
+}
+
+/* Chart type controls */
+.layer8d-chart-controls {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.layer8d-chart-type-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: var(--layer8d-text-medium);
+    background: var(--layer8d-bg-light);
+    border: 1px solid var(--layer8d-border);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.layer8d-chart-type-btn:hover {
+    border-color: var(--layer8d-primary);
+    color: var(--layer8d-primary);
+}
+
+.layer8d-chart-type-btn.active {
+    background: var(--layer8d-primary);
+    color: #ffffff;
+    border-color: var(--layer8d-primary);
+}
+
+.layer8d-chart-type-btn svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
 }
 
 /* Interactive elements */
@@ -52,8 +91,8 @@ Layer 8 Ecosystem - Chart Component Styles
 /* Tooltip */
 .layer8d-chart-tooltip {
     position: fixed;
-    background: var(--bg-primary, #1a202c);
-    color: var(--text-primary, #ffffff);
+    background: var(--layer8d-text-dark);
+    color: #ffffff;
     padding: 8px 12px;
     border-radius: 6px;
     font-size: 12px;
@@ -69,16 +108,6 @@ Layer 8 Ecosystem - Chart Component Styles
 
 .layer8d-chart-tooltip.visible {
     opacity: 1;
-}
-
-/* Dark mode support */
-[data-theme="dark"] .layer8d-chart-container {
-    background: var(--bg-primary, #1e293b);
-}
-
-[data-theme="dark"] .layer8d-chart-tooltip {
-    background: var(--bg-secondary, #334155);
-    color: var(--text-primary, #f1f5f9);
 }
 
 /* Mobile chart */

@@ -25,8 +25,8 @@ Layer 8 Ecosystem - Calendar View Styles
 }
 
 .layer8d-calendar-nav-btn {
-    background: var(--bg-secondary, #f1f5f9);
-    border: 1px solid var(--border-color, #e2e8f0);
+    background: var(--layer8d-bg-light);
+    border: 1px solid var(--layer8d-border);
     width: 32px;
     height: 32px;
     border-radius: 6px;
@@ -35,17 +35,17 @@ Layer 8 Ecosystem - Calendar View Styles
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-primary, #1a202c);
+    color: var(--layer8d-text-dark);
 }
 
 .layer8d-calendar-nav-btn:hover {
-    background: var(--bg-tertiary, #e2e8f0);
+    background: var(--layer8d-bg-input);
 }
 
 .layer8d-calendar-title {
     font-size: 18px;
     font-weight: 600;
-    color: var(--text-primary, #1a202c);
+    color: var(--layer8d-text-dark);
     min-width: 180px;
     text-align: center;
 }
@@ -57,29 +57,22 @@ Layer 8 Ecosystem - Calendar View Styles
 }
 
 .layer8d-calendar-btn {
-    background: var(--bg-secondary, #f1f5f9);
-    border: 1px solid var(--border-color, #e2e8f0);
+    background: var(--layer8d-bg-light);
+    border: 1px solid var(--layer8d-border);
     padding: 6px 12px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 12px;
-    color: var(--text-secondary, #64748b);
+    color: var(--layer8d-text-medium);
 }
 
 .layer8d-calendar-btn.active {
-    background: var(--accent-color, #3b82f6);
+    background: var(--layer8d-primary);
     color: #fff;
-    border-color: var(--accent-color, #3b82f6);
+    border-color: var(--layer8d-primary);
 }
 
 .layer8d-calendar-add-btn {
-    background: var(--accent-color, #3b82f6);
-    color: #fff;
-    border: none;
-    padding: 6px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 12px;
     margin-left: 8px;
 }
 
@@ -87,47 +80,47 @@ Layer 8 Ecosystem - Calendar View Styles
 .layer8d-calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-    border: 1px solid var(--border-color, #e2e8f0);
+    border: 1px solid var(--layer8d-border);
     border-radius: 8px;
     overflow: hidden;
 }
 
 .layer8d-calendar-day-header {
-    background: var(--bg-secondary, #f8fafc);
+    background: var(--layer8d-bg-light);
     padding: 8px;
     text-align: center;
     font-size: 12px;
     font-weight: 600;
-    color: var(--text-secondary, #64748b);
-    border-bottom: 1px solid var(--border-color, #e2e8f0);
+    color: var(--layer8d-text-medium);
+    border-bottom: 1px solid var(--layer8d-border);
 }
 
 .layer8d-calendar-day {
     min-height: 90px;
     padding: 4px;
-    border-bottom: 1px solid var(--border-color, #f1f5f9);
-    border-right: 1px solid var(--border-color, #f1f5f9);
-    background: var(--bg-primary, #ffffff);
+    border-bottom: 1px solid var(--layer8d-border);
+    border-right: 1px solid var(--layer8d-border);
+    background: var(--layer8d-bg-white);
 }
 
 .layer8d-calendar-day.empty {
-    background: var(--bg-secondary, #fafafa);
+    background: var(--layer8d-bg-light);
 }
 
 .layer8d-calendar-day.today {
-    background: rgba(59, 130, 246, 0.04);
+    background: rgba(14, 165, 233, 0.04);
 }
 
 .layer8d-calendar-day-num {
     font-size: 13px;
     font-weight: 500;
-    color: var(--text-secondary, #64748b);
+    color: var(--layer8d-text-medium);
     margin-bottom: 4px;
     padding: 2px 4px;
 }
 
 .layer8d-calendar-day-num.today {
-    background: var(--accent-color, #3b82f6);
+    background: var(--layer8d-primary);
     color: #fff;
     border-radius: 50%;
     width: 24px;
@@ -161,7 +154,7 @@ Layer 8 Ecosystem - Calendar View Styles
 
 .layer8d-calendar-more {
     font-size: 11px;
-    color: var(--text-tertiary, #94a3b8);
+    color: var(--layer8d-text-light);
     padding: 2px 4px;
     cursor: pointer;
 }
@@ -174,15 +167,15 @@ Layer 8 Ecosystem - Calendar View Styles
 }
 
 .layer8d-calendar-week-day {
-    background: var(--bg-primary, #ffffff);
-    border: 1px solid var(--border-color, #e2e8f0);
+    background: var(--layer8d-bg-white);
+    border: 1px solid var(--layer8d-border);
     border-radius: 8px;
     padding: 8px;
     min-height: 200px;
 }
 
 .layer8d-calendar-week-day.today {
-    border-color: var(--accent-color, #3b82f6);
+    border-color: var(--layer8d-primary);
 }
 
 .layer8d-calendar-week-header {
@@ -191,23 +184,23 @@ Layer 8 Ecosystem - Calendar View Styles
     align-items: center;
     margin-bottom: 8px;
     padding-bottom: 6px;
-    border-bottom: 1px solid var(--border-color, #f1f5f9);
+    border-bottom: 1px solid var(--layer8d-border);
 }
 
 .layer8d-calendar-week-label {
     font-size: 12px;
     font-weight: 600;
-    color: var(--text-secondary, #64748b);
+    color: var(--layer8d-text-medium);
 }
 
 .layer8d-calendar-week-date {
     font-size: 14px;
     font-weight: 600;
-    color: var(--text-primary, #1a202c);
+    color: var(--layer8d-text-dark);
 }
 
 .layer8d-calendar-week-date.today {
-    background: var(--accent-color, #3b82f6);
+    background: var(--layer8d-primary);
     color: #fff;
     border-radius: 50%;
     width: 28px;
@@ -221,15 +214,6 @@ Layer 8 Ecosystem - Calendar View Styles
     display: flex;
     flex-direction: column;
     gap: 4px;
-}
-
-/* Dark mode */
-[data-theme="dark"] .layer8d-calendar-day {
-    background: var(--bg-primary, #0f172a);
-}
-
-[data-theme="dark"] .layer8d-calendar-day.empty {
-    background: var(--bg-secondary, #1e293b);
 }
 
 /* Mobile calendar - list by day */

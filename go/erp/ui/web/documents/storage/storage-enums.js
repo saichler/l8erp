@@ -44,6 +44,29 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         ['Restricted', 'restricted', 'layer8d-status-terminated']
     ]);
 
+    const CHECKOUT_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Checked Out', 'checkedout', 'layer8d-status-pending'],
+        ['Checked In', 'checkedin', 'layer8d-status-active'],
+        ['Cancelled', 'cancelled', 'layer8d-status-terminated']
+    ]);
+
+    const SIGNATURE_TYPE = factory.simple([
+        'Unspecified', 'Electronic', 'Digital', 'Handwritten'
+    ]);
+
+    const SIGNATURE_STATUS = factory.create([
+        ['Unspecified', null, ''],
+        ['Pending', 'pending', 'layer8d-status-pending'],
+        ['Signed', 'signed', 'layer8d-status-active'],
+        ['Declined', 'declined', 'layer8d-status-terminated'],
+        ['Expired', 'expired', 'layer8d-status-inactive']
+    ]);
+
+    const ACCESS_ACTION = factory.simple([
+        'Unspecified', 'View', 'Download', 'Edit', 'Delete', 'Share', 'Print'
+    ]);
+
     // ============================================================================
     // EXPORT ENUMS
     // ============================================================================
@@ -54,7 +77,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         DOCUMENT_TYPE: DOCUMENT_TYPE.enum,
         FILE_FORMAT: FILE_FORMAT.enum,
         ACCESS_LEVEL: ACCESS_LEVEL.enum,
-        ACCESS_LEVEL_CLASSES: ACCESS_LEVEL.classes
+        ACCESS_LEVEL_CLASSES: ACCESS_LEVEL.classes,
+        CHECKOUT_STATUS: CHECKOUT_STATUS.enum,
+        CHECKOUT_STATUS_CLASSES: CHECKOUT_STATUS.classes,
+        SIGNATURE_TYPE: SIGNATURE_TYPE.enum,
+        SIGNATURE_STATUS: SIGNATURE_STATUS.enum,
+        SIGNATURE_STATUS_CLASSES: SIGNATURE_STATUS.classes,
+        ACCESS_ACTION: ACCESS_ACTION.enum
     };
 
     // ============================================================================
@@ -66,6 +95,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         documentType: (v) => renderEnum(v, DOCUMENT_TYPE.enum),
         fileFormat: (v) => renderEnum(v, FILE_FORMAT.enum),
         accessLevel: createStatusRenderer(ACCESS_LEVEL.enum, ACCESS_LEVEL.classes),
+        checkoutStatus: createStatusRenderer(CHECKOUT_STATUS.enum, CHECKOUT_STATUS.classes),
+        signatureType: (v) => renderEnum(v, SIGNATURE_TYPE.enum),
+        signatureStatus: createStatusRenderer(SIGNATURE_STATUS.enum, SIGNATURE_STATUS.classes),
+        accessAction: (v) => renderEnum(v, ACCESS_ACTION.enum),
         date: renderDate,
         fileSize: renderFileSize
     };

@@ -19,7 +19,10 @@ limitations under the License.
     'use strict';
 
     const NS = 'http://www.w3.org/2000/svg';
-    const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4', '#ec4899'];
+    function _getColors() {
+        if (typeof Layer8DChart !== 'undefined') return Layer8DChart.getThemePalette();
+        return ['#0ea5e9', '#22c55e', '#f59e0b', '#8b5cf6', '#06b6d4', '#ec4899'];
+    }
     const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     function createEl(tag, attrs) {
@@ -36,10 +39,24 @@ limitations under the License.
         return div.innerHTML;
     }
 
+    function _themeColor(name, fallback) {
+        if (typeof Layer8DChart !== 'undefined') return Layer8DChart.readThemeColor(name, fallback);
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+    }
+
     window.Layer8DGanttRender = {
         render(gantt) {
             const container = gantt.container;
             if (!container) return;
+
+            // Cache theme colors for this render pass
+            this._theme = {
+                bgLight: _themeColor('--layer8d-bg-light', '#f7fafc'),
+                textMedium: _themeColor('--layer8d-text-medium', '#4a5568'),
+                textLight: _themeColor('--layer8d-text-light', '#a0aec0'),
+                border: _themeColor('--layer8d-border', '#e2e8f0'),
+                borderLight: _themeColor('--layer8d-bg-input', '#f1f5f9')
+            };
 
             const zoomCfg = gantt.getZoomConfig();
             const totalDays = gantt.getTotalDays();
@@ -52,7 +69,7 @@ limitations under the License.
             // Toolbar
             html += '<div class="layer8d-gantt-toolbar">';
             if (gantt.onAdd) {
-                html += `<button class="layer8d-gantt-btn layer8d-gantt-add-btn" data-action="add">${escapeHtml(gantt.addButtonText)}</button>`;
+                html += `<button class="layer8d-btn layer8d-btn-primary layer8d-btn-small" data-action="add">${escapeHtml(gantt.addButtonText)}</button>`;
             }
             Object.keys(Layer8DGantt.ZOOM_LEVELS).forEach(level => {
                 const active = gantt.zoom === level ? 'active' : '';
@@ -96,7 +113,7 @@ limitations under the License.
             // Header background
             svg.appendChild(createEl('rect', {
                 x: lw, y: 0, width: timelineW, height: hh,
-                fill: '#f8fafc'
+                fill: this._theme.bgLight
             }));
 
             if (gantt.zoom === 'day') {
@@ -110,7 +127,7 @@ limitations under the License.
 
                     if (monthLabel) {
                         const mt = createEl('text', {
-                            x: x + 2, y: 14, 'font-size': 10, fill: '#64748b', 'font-weight': 'bold'
+                            x: x + 2, y: 14, 'font-size': 10, fill: this._theme.textMedium, 'font-weight': 'bold'
                         });
                         mt.textContent = monthLabel;
                         svg.appendChild(mt);
@@ -118,7 +135,7 @@ limitations under the License.
 
                     const dt = createEl('text', {
                         x: x + zoomCfg.cellWidth / 2, y: hh - 8,
-                        'text-anchor': 'middle', 'font-size': 10, fill: '#94a3b8'
+                        'text-anchor': 'middle', 'font-size': 10, fill: this._theme.textLight
                     });
                     dt.textContent = label;
                     svg.appendChild(dt);
@@ -133,7 +150,7 @@ limitations under the License.
 
                     const wt = createEl('text', {
                         x: x + zoomCfg.cellWidth / 2, y: hh - 8,
-                        'text-anchor': 'middle', 'font-size': 10, fill: '#94a3b8'
+                        'text-anchor': 'middle', 'font-size': 10, fill: this._theme.textLight
                     });
                     wt.textContent = label;
                     svg.appendChild(wt);
@@ -148,7 +165,7 @@ limitations under the License.
 
                     const mt = createEl('text', {
                         x: x + zoomCfg.cellWidth / 2, y: hh - 8,
-                        'text-anchor': 'middle', 'font-size': 11, fill: '#64748b'
+                        'text-anchor': 'middle', 'font-size': 11, fill: this._theme.textMedium
                     });
                     mt.textContent = label;
                     svg.appendChild(mt);
@@ -158,7 +175,7 @@ limitations under the License.
             // Header bottom line
             svg.appendChild(createEl('line', {
                 x1: lw, y1: hh, x2: lw + timelineW, y2: hh,
-                stroke: '#e2e8f0', 'stroke-width': 1
+                stroke: this._theme.border, 'stroke-width': 1
             }));
         },
 
@@ -173,7 +190,7 @@ limitations under the License.
                 const x = lw + i * zoomCfg.cellWidth;
                 svg.appendChild(createEl('line', {
                     x1: x, y1: hh, x2: x, y2: totalH,
-                    stroke: '#f1f5f9', 'stroke-width': 1
+                    stroke: this._theme.borderLight, 'stroke-width': 1
                 }));
             }
 
@@ -182,7 +199,7 @@ limitations under the License.
                 const y = hh + i * Layer8DGantt.ROW_HEIGHT;
                 svg.appendChild(createEl('line', {
                     x1: lw, y1: y, x2: lw + timelineW, y2: y,
-                    stroke: '#f1f5f9', 'stroke-width': 1
+                    stroke: this._theme.borderLight, 'stroke-width': 1
                 }));
             }
 
@@ -215,7 +232,7 @@ limitations under the License.
                 const barX = lw + ((startTs - rangeStart) / rangeDuration) * timelineW;
                 const barW = Math.max(4, ((endTs - startTs) / rangeDuration) * timelineW);
                 const barY = hh + i * Layer8DGantt.ROW_HEIGHT + barPadY;
-                const color = COLORS[i % COLORS.length];
+                const color = _getColors()[i % _getColors().length];
 
                 // Background bar
                 const bg = createEl('rect', {
@@ -274,7 +291,7 @@ limitations under the License.
                     const midX = (x1 + x2) / 2;
                     svg.appendChild(createEl('path', {
                         d: `M ${x1} ${y1} L ${midX} ${y1} L ${midX} ${y2} L ${x2} ${y2}`,
-                        fill: 'none', stroke: '#94a3b8', 'stroke-width': 1.5, 'marker-end': 'url(#arrow)'
+                        fill: 'none', stroke: this._theme.textLight, 'stroke-width': 1.5, 'marker-end': 'url(#arrow)'
                     }));
                 });
             });
@@ -285,7 +302,7 @@ limitations under the License.
                 id: 'arrow', viewBox: '0 0 10 10', refX: 10, refY: 5,
                 markerWidth: 8, markerHeight: 8, orient: 'auto'
             });
-            marker.appendChild(createEl('path', { d: 'M 0 0 L 10 5 L 0 10 Z', fill: '#94a3b8' }));
+            marker.appendChild(createEl('path', { d: 'M 0 0 L 10 5 L 0 10 Z', fill: this._theme.textLight }));
             defs.appendChild(marker);
             svg.insertBefore(defs, svg.firstChild);
         },

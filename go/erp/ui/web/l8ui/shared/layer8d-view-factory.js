@@ -90,19 +90,11 @@ limitations under the License.
          * @param {string} type - default view type
          * @param {Object} options - view options
          * @param {string[]} viewTypes - all registered view types
-         * @param {string} serviceKey - unique key for switcher persistence
+         * @param {string} serviceKey - unique key for the switcher
          * @param {Function} onViewSwitch - callback(newView) when user switches
          * @returns {Object} view instance
          */
         createWithSwitcher(type, options, viewTypes, serviceKey, onViewSwitch) {
-            // Restore saved preference
-            if (typeof Layer8ViewSwitcher !== 'undefined') {
-                const saved = Layer8ViewSwitcher.getSavedType(serviceKey);
-                if (saved && viewTypes.indexOf(saved) !== -1) {
-                    type = saved;
-                }
-            }
-
             let currentView = this.create(type, options);
 
             // Render dropdown and wire up switching

@@ -18,7 +18,7 @@ limitations under the License.
     'use strict';
 
     const factory = window.Layer8EnumFactory;
-    const { createStatusRenderer, renderDate, renderMoney } = Layer8DRenderers;
+    const { createStatusRenderer, renderEnum, renderDate, renderMoney } = Layer8DRenderers;
 
     window.SalesCustomers = window.SalesCustomers || {};
 
@@ -43,6 +43,10 @@ limitations under the License.
         ['Suspended', 'suspended', 'layer8d-status-terminated']
     ]);
 
+    const SEGMENT_TYPE = factory.simple([
+        'Unspecified', 'Industry', 'Size', 'Geography', 'Behavior', 'Value'
+    ]);
+
     // ============================================================================
     // EXPORT ENUMS
     // ============================================================================
@@ -51,7 +55,8 @@ limitations under the License.
         CONTRACT_STATUS: CONTRACT_STATUS.enum,
         CONTRACT_STATUS_CLASSES: CONTRACT_STATUS.classes,
         PARTNER_STATUS: PARTNER_STATUS.enum,
-        PARTNER_STATUS_CLASSES: PARTNER_STATUS.classes
+        PARTNER_STATUS_CLASSES: PARTNER_STATUS.classes,
+        SEGMENT_TYPE: SEGMENT_TYPE.enum
     };
 
     // ============================================================================
@@ -61,6 +66,7 @@ limitations under the License.
     SalesCustomers.render = {
         contractStatus: createStatusRenderer(CONTRACT_STATUS.enum, CONTRACT_STATUS.classes),
         partnerStatus: createStatusRenderer(PARTNER_STATUS.enum, PARTNER_STATUS.classes),
+        segmentType: (v) => renderEnum(v, SEGMENT_TYPE.enum),
         date: renderDate,
         money: renderMoney
     };

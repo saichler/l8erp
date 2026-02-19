@@ -127,17 +127,17 @@ limitations under the License.
         _renderNavigation(wizard) {
             let html = '<div class="layer8d-wizard-nav">';
 
-            html += `<button class="layer8d-wizard-btn layer8d-wizard-btn-secondary" data-action="cancel">Cancel</button>`;
+            html += `<button class="layer8d-btn layer8d-btn-secondary layer8d-btn-small" data-action="cancel">Cancel</button>`;
 
             html += '<div class="layer8d-wizard-nav-right">';
             if (!wizard.isFirstStep()) {
-                html += `<button class="layer8d-wizard-btn layer8d-wizard-btn-secondary" data-action="prev">Back</button>`;
+                html += `<button class="layer8d-btn layer8d-btn-secondary layer8d-btn-small" data-action="prev">Back</button>`;
             }
 
             if (wizard.isLastStep()) {
-                html += `<button class="layer8d-wizard-btn layer8d-wizard-btn-primary" data-action="finish">Finish</button>`;
+                html += `<button class="layer8d-btn layer8d-btn-primary layer8d-btn-small" data-action="finish">Finish</button>`;
             } else {
-                html += `<button class="layer8d-wizard-btn layer8d-wizard-btn-primary" data-action="next">Next</button>`;
+                html += `<button class="layer8d-btn layer8d-btn-primary layer8d-btn-small" data-action="next">Next</button>`;
             }
             html += '</div></div>';
 

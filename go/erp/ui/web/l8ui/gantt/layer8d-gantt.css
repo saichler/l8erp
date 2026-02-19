@@ -16,34 +16,28 @@ Layer 8 Ecosystem - Gantt Chart Styles
 }
 
 .layer8d-gantt-btn {
-    background: var(--bg-secondary, #f1f5f9);
-    border: 1px solid var(--border-color, #e2e8f0);
+    background: var(--layer8d-bg-light);
+    border: 1px solid var(--layer8d-border);
     padding: 6px 14px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 12px;
-    color: var(--text-secondary, #64748b);
+    color: var(--layer8d-text-medium);
 }
 
 .layer8d-gantt-btn.active {
-    background: var(--accent-color, #3b82f6);
+    background: var(--layer8d-primary);
     color: #fff;
-    border-color: var(--accent-color, #3b82f6);
-}
-
-.layer8d-gantt-add-btn {
-    background: var(--accent-color, #3b82f6) !important;
-    color: #fff !important;
-    border-color: var(--accent-color, #3b82f6) !important;
+    border-color: var(--layer8d-primary);
 }
 
 .layer8d-gantt-scroll {
     overflow-x: auto;
     overflow-y: visible;
     position: relative;
-    border: 1px solid var(--border-color, #e2e8f0);
+    border: 1px solid var(--layer8d-border);
     border-radius: 8px;
-    background: var(--bg-primary, #ffffff);
+    background: var(--layer8d-bg-white);
 }
 
 .layer8d-gantt-svg {
@@ -64,8 +58,8 @@ Layer 8 Ecosystem - Gantt Chart Styles
     left: 0;
     width: 200px;
     z-index: 2;
-    background: var(--bg-primary, #ffffff);
-    border-right: 1px solid var(--border-color, #e2e8f0);
+    background: var(--layer8d-bg-white);
+    border-right: 1px solid var(--layer8d-border);
 }
 
 .layer8d-gantt-label {
@@ -74,25 +68,16 @@ Layer 8 Ecosystem - Gantt Chart Styles
     padding: 0 12px;
     font-size: 12px;
     font-weight: 500;
-    color: var(--text-primary, #1a202c);
+    color: var(--layer8d-text-dark);
     cursor: pointer;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    border-bottom: 1px solid var(--border-color, #f1f5f9);
+    border-bottom: 1px solid var(--layer8d-border);
 }
 
 .layer8d-gantt-label:hover {
-    background: var(--bg-secondary, #f8fafc);
-}
-
-/* Dark mode */
-[data-theme="dark"] .layer8d-gantt-scroll {
-    background: var(--bg-primary, #0f172a);
-}
-
-[data-theme="dark"] .layer8d-gantt-labels {
-    background: var(--bg-primary, #0f172a);
+    background: var(--layer8d-bg-light);
 }
 
 /* Mobile */
