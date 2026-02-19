@@ -18,7 +18,7 @@ Layer8ModuleConfigFactory.create({
             label: 'Dashboards', icon: '📈',
             services: [
                 { key: 'dashboards', label: 'Dashboards', icon: '🖥️', endpoint: '/35/BiDashbrd', model: 'BiDashboard' },
-                { key: 'kpis', label: 'KPIs', icon: '🎯', endpoint: '/35/BiKPI', model: 'BiKPI' }
+                { key: 'kpis', label: 'KPIs', icon: '🎯', endpoint: '/35/BiKPI', model: 'BiKPI', supportedViews: ['table', 'chart'] }
             ]
         },
         'analytics': {
@@ -26,9 +26,9 @@ Layer8ModuleConfigFactory.create({
             services: [
                 { key: 'data-cubes', label: 'Data Cubes', icon: '🧊', endpoint: '/35/BiCube', model: 'BiDataCube' },
                 { key: 'analysis-models', label: 'Analysis Models', icon: '🔬', endpoint: '/35/BiAnaModel', model: 'BiAnalysisModel' },
-                { key: 'trend-analyses', label: 'Trend Analyses', icon: '📈', endpoint: '/35/BiTrend', model: 'BiTrendAnalysis' },
+                { key: 'trend-analyses', label: 'Trend Analyses', icon: '📈', endpoint: '/35/BiTrend', model: 'BiTrendAnalysis', supportedViews: ['table', 'chart'] },
                 { key: 'scenarios', label: 'Scenarios', icon: '🎭', endpoint: '/35/BiScenario', model: 'BiScenario' },
-                { key: 'benchmarks', label: 'Benchmarks', icon: '📏', endpoint: '/35/BiBenchmrk', model: 'BiBenchmark' }
+                { key: 'benchmarks', label: 'Benchmarks', icon: '📏', endpoint: '/35/BiBenchmrk', model: 'BiBenchmark', supportedViews: ['table', 'chart'] }
             ]
         },
         'datamanagement': {

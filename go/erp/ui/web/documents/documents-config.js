@@ -11,8 +11,8 @@ Layer8ModuleConfigFactory.create({
             label: 'Storage', icon: '📄',
             services: [
                 { key: 'documents', label: 'Documents', icon: '📄', endpoint: '/45/DocDoc', model: 'DocDocument' },
-                { key: 'folders', label: 'Folders', icon: '📁', endpoint: '/45/DocFolder', model: 'DocFolder' },
-                { key: 'categories', label: 'Categories', icon: '🏷️', endpoint: '/45/DocCategry', model: 'DocCategory' },
+                { key: 'folders', label: 'Folders', icon: '📁', endpoint: '/45/DocFolder', model: 'DocFolder', supportedViews: ['table', 'tree'] },
+                { key: 'categories', label: 'Categories', icon: '🏷️', endpoint: '/45/DocCategry', model: 'DocCategory', supportedViews: ['table', 'tree'] },
                 { key: 'tags', label: 'Tags', icon: '🔖', endpoint: '/45/DocTag', model: 'DocTag' }
             ]
         },

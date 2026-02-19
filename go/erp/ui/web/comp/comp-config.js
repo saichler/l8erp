@@ -26,15 +26,15 @@ Layer8ModuleConfigFactory.create({
             label: 'Risk Management', icon: '⚡',
             services: [
                 { key: 'risk-registers', label: 'Risk Registers', icon: '📚', endpoint: '/110/CompRisk', model: 'CompRiskRegister' },
-                { key: 'incidents', label: 'Incidents', icon: '🚨', endpoint: '/110/CompIncdnt', model: 'CompIncident' },
+                { key: 'incidents', label: 'Incidents', icon: '🚨', endpoint: '/110/CompIncdnt', model: 'CompIncident', supportedViews: ['table', 'kanban'] },
                 { key: 'insurance-policies', label: 'Insurance Policies', icon: '📄', endpoint: '/110/CompInsur', model: 'CompInsurancePolicy' }
             ]
         },
         'audit': {
             label: 'Audit Management', icon: '🔍',
             services: [
-                { key: 'audit-schedules', label: 'Audit Schedules', icon: '📅', endpoint: '/110/CompAudSch', model: 'CompAuditSchedule' },
-                { key: 'audit-findings', label: 'Audit Findings', icon: '🔎', endpoint: '/110/CompAudFnd', model: 'CompAuditFinding' },
+                { key: 'audit-schedules', label: 'Audit Schedules', icon: '📅', endpoint: '/110/CompAudSch', model: 'CompAuditSchedule', supportedViews: ['table', 'calendar'] },
+                { key: 'audit-findings', label: 'Audit Findings', icon: '🔎', endpoint: '/110/CompAudFnd', model: 'CompAuditFinding', supportedViews: ['table', 'kanban'] },
                 { key: 'compliance-reports', label: 'Compliance Reports', icon: '📋', endpoint: '/110/CompCmpRpt', model: 'CompComplianceReport' }
             ]
         }

@@ -50,6 +50,18 @@ limitations under the License.
                     return F.renderSelectField(fieldConfig, value, readonly);
                 case 'checkbox':
                     return F.renderCheckboxField(fieldConfig, value, readonly);
+                case 'toggle':
+                    return F.renderToggleField(fieldConfig, value, readonly);
+                case 'slider':
+                    return F.renderSliderField(fieldConfig, value, readonly);
+                case 'time':
+                    return F.renderTimeField(fieldConfig, value, readonly);
+                case 'tags':
+                    return F.renderTagsField(fieldConfig, value, readonly);
+                case 'multiselect':
+                    return F.renderMultiselectField(fieldConfig, value, readonly);
+                case 'richtext':
+                    return F.renderRichtextField(fieldConfig, value, readonly);
                 case 'money':
                     return F.renderMoneyField(fieldConfig, value, readonly);
                 case 'currency':
@@ -133,7 +145,7 @@ limitations under the License.
                     return;
                 }
 
-                if (input.type === 'checkbox') {
+                if (input.type === 'checkbox' || input.classList.contains('l8-toggle-input')) {
                     formData[input.name] = input.checked ? 1 : 0;
                 } else if (input.dataset.format === 'currency') {
                     formData[input.name] = Math.round(parseFloat(input.value || 0) * 100);
@@ -169,6 +181,31 @@ limitations under the License.
                 if (hiddenInput.value) {
                     try { formData[key] = JSON.parse(hiddenInput.value); } catch (e) { formData[key] = []; }
                 }
+            });
+
+            // Post-process tags fields (hidden JSON inputs)
+            form.querySelectorAll('input[data-tags-value]').forEach(hiddenInput => {
+                const key = hiddenInput.name;
+                if (hiddenInput.value) {
+                    try { formData[key] = JSON.parse(hiddenInput.value); } catch (e) { formData[key] = []; }
+                }
+            });
+
+            // Post-process multiselect fields (hidden JSON inputs)
+            form.querySelectorAll('input[data-multiselect-value]').forEach(hiddenInput => {
+                const key = hiddenInput.name;
+                if (hiddenInput.value) {
+                    try { formData[key] = JSON.parse(hiddenInput.value); } catch (e) { formData[key] = []; }
+                }
+            });
+
+            // Post-process richtext fields (contenteditable divs)
+            form.querySelectorAll('.l8-richtext-editor[data-field-key]').forEach(editor => {
+                const key = editor.dataset.fieldKey;
+                let html = editor.innerHTML || '';
+                html = html.replace(/<script[\s\S]*?<\/script>/gi, '');
+                html = html.replace(/\s*on\w+\s*=\s*(['"])[^'"]*\1/gi, '');
+                formData[key] = html.trim() || null;
             });
 
             // Post-process money compound fields (__currencyId + __amount → Money object)
@@ -245,163 +282,8 @@ limitations under the License.
             if (formDef) this.initInlineTableHandlers(container, formDef);
         },
 
-        /**
-         * Initialize inline table event handlers (add/edit/delete, row click)
-         */
-        initInlineTableHandlers(container, formDef) {
-            if (!formDef || !formDef.sections) return;
-
-            container.querySelectorAll('.mobile-form-inline-table').forEach(table => {
-                const fieldKey = table.dataset.inlineTable;
-                const hiddenInput = table.querySelector(`input[data-inline-table-data="${fieldKey}"]`);
-                const isReadOnly = table.querySelector('.l8-clickable-row') !== null;
-
-                // Find field def
-                let fieldDef = null;
-                for (const section of formDef.sections) {
-                    for (const field of section.fields) {
-                        if (field.key === fieldKey) { fieldDef = field; break; }
-                    }
-                    if (fieldDef) break;
-                }
-                if (!fieldDef || !fieldDef.columns) return;
-
-                function getRows() {
-                    try { return JSON.parse(hiddenInput.value || '[]'); } catch (e) { return []; }
-                }
-
-                table.addEventListener('click', (e) => {
-                    const btn = e.target.closest('[data-action]');
-                    const card = e.target.closest('.mobile-form-inline-card');
-
-                    if (btn) {
-                        const action = btn.dataset.action;
-                        const rowIndex = parseInt(btn.dataset.rowIndex, 10);
-
-                        if (action === 'add-row') {
-                            this._openMobileRowEditor(fieldDef, -1, {}, (newRow) => {
-                                const rows = getRows();
-                                rows.push(newRow);
-                                hiddenInput.value = JSON.stringify(rows);
-                                this._rerenderMobileTable(table, fieldDef, rows, false);
-                            });
-                        } else if (action === 'edit-row') {
-                            e.stopPropagation();
-                            const rows = getRows();
-                            this._openMobileRowEditor(fieldDef, rowIndex, rows[rowIndex] || {}, (updated) => {
-                                const rows = getRows();
-                                rows[rowIndex] = updated;
-                                hiddenInput.value = JSON.stringify(rows);
-                                this._rerenderMobileTable(table, fieldDef, rows, false);
-                            });
-                        } else if (action === 'delete-row') {
-                            e.stopPropagation();
-                            if (confirm('Delete this row?')) {
-                                const rows = getRows();
-                                rows.splice(rowIndex, 1);
-                                hiddenInput.value = JSON.stringify(rows);
-                                this._rerenderMobileTable(table, fieldDef, rows, false);
-                            }
-                        }
-                    } else if (card && isReadOnly) {
-                        const rowIndex = parseInt(card.dataset.rowIndex, 10);
-                        const rows = getRows();
-                        if (rows[rowIndex]) {
-                            this._showMobileChildDetail(fieldDef, rows[rowIndex]);
-                        }
-                    }
-                });
-            });
-        },
-
-        _openMobileRowEditor(fieldDef, rowIndex, rowData, onSave) {
-            const miniFormDef = {
-                sections: [{ title: fieldDef.label, fields: fieldDef.columns.filter(c => !c.hidden) }]
-            };
-            const content = this.renderForm(miniFormDef, rowData);
-
-            Layer8MPopup.show({
-                title: rowIndex >= 0 ? `Edit ${fieldDef.label}` : `Add ${fieldDef.label}`,
-                content: content,
-                size: 'large',
-                saveButtonText: rowIndex >= 0 ? 'Update' : 'Add',
-                onShow: (popup) => { this.initFormFields(popup.body); },
-                onSave: (popup) => {
-                    const data = this.getFormData(popup.body);
-                    fieldDef.columns.forEach(col => {
-                        if (col.hidden && rowData[col.key] !== undefined) data[col.key] = rowData[col.key];
-                    });
-                    onSave(data);
-                    Layer8MPopup.close();
-                }
-            });
-        },
-
-        _showMobileChildDetail(fieldDef, rowData) {
-            const miniFormDef = {
-                sections: [{ title: 'Details', fields: fieldDef.columns.filter(c => !c.hidden) }]
-            };
-            const content = this.renderForm(miniFormDef, rowData, true);
-
-            Layer8MPopup.show({
-                title: `${fieldDef.label} Details`,
-                content: content,
-                size: 'large',
-                showFooter: false,
-                onShow: (popup) => {
-                    popup.body.querySelectorAll('input, select, textarea').forEach(el => { el.disabled = true; });
-                }
-            });
-        },
-
-        _rerenderMobileTable(tableEl, fieldDef, rows, isReadOnly) {
-            // Remove existing cards and empty message
-            tableEl.querySelectorAll('.mobile-form-inline-card, .mobile-form-inline-empty').forEach(el => el.remove());
-
-            const addBtn = tableEl.querySelector('.mobile-form-inline-add');
-            const F = Layer8MFormFields;
-            const visibleCols = fieldDef.columns.filter(c => !c.hidden);
-
-            if (rows.length > 0) {
-                rows.forEach((row, idx) => {
-                    const card = document.createElement('div');
-                    card.className = 'mobile-form-inline-card';
-                    card.dataset.rowIndex = idx;
-
-                    const titleCol = visibleCols[0];
-                    const titleVal = titleCol ? F._formatMobileCell(titleCol, row[titleCol.key]) : '-';
-
-                    let cardHtml = `<div class="mobile-form-inline-card-header">`;
-                    cardHtml += `<span class="mobile-form-inline-card-title">${titleVal}</span>`;
-                    if (!isReadOnly) {
-                        cardHtml += `<div class="mobile-form-inline-card-actions">`;
-                        cardHtml += `<button type="button" data-action="edit-row" data-row-index="${idx}">Edit</button>`;
-                        cardHtml += `<button type="button" data-action="delete-row" data-row-index="${idx}">Delete</button>`;
-                        cardHtml += `</div>`;
-                    }
-                    cardHtml += `</div>`;
-                    if (visibleCols.length > 1) {
-                        cardHtml += `<div class="mobile-form-inline-card-body">`;
-                        visibleCols.slice(1).forEach(col => {
-                            cardHtml += `<div class="mobile-form-inline-card-row">`;
-                            cardHtml += `<span class="mobile-form-inline-card-label">${Layer8MUtils.escapeHtml(col.label)}</span>`;
-                            cardHtml += `<span class="mobile-form-inline-card-value">${F._formatMobileCell(col, row[col.key])}</span>`;
-                            cardHtml += `</div>`;
-                        });
-                        cardHtml += `</div>`;
-                    }
-                    card.innerHTML = cardHtml;
-                    if (addBtn) tableEl.insertBefore(card, addBtn);
-                    else tableEl.appendChild(card);
-                });
-            } else {
-                const empty = document.createElement('div');
-                empty.className = 'mobile-form-inline-empty';
-                empty.textContent = 'No records';
-                if (addBtn) tableEl.insertBefore(empty, addBtn);
-                else tableEl.appendChild(empty);
-            }
-        },
+        // initInlineTableHandlers, _openMobileRowEditor, _showMobileChildDetail,
+        // _rerenderMobileTable are in layer8m-forms-inline.js
 
         /**
          * Initialize reference picker fields - MATCHES DESKTOP attachReferencePickers() EXACTLY

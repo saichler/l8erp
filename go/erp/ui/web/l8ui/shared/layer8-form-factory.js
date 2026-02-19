@@ -89,6 +89,35 @@ limitations under the License.
         },
 
         /**
+         * Create a toggle switch field (boolean, styled as sliding switch).
+         */
+        toggle: function(key, label) {
+            return [{
+                key: key,
+                label: label || this._toTitleCase(key),
+                type: 'toggle'
+            }];
+        },
+
+        /**
+         * Create a slider/range field.
+         * @param {number} [min=0] - Minimum value
+         * @param {number} [max=100] - Maximum value
+         * @param {number} [step=1] - Step increment
+         */
+        slider: function(key, label, min, max, step) {
+            const field = {
+                key: key,
+                label: label || this._toTitleCase(key),
+                type: 'slider',
+                min: min !== undefined ? min : 0,
+                max: max !== undefined ? max : 100,
+                step: step !== undefined ? step : 1
+            };
+            return [field];
+        },
+
+        /**
          * Create a date field.
          * @param {string} key - The field key
          * @param {string} [label] - Optional label
@@ -297,13 +326,13 @@ limitations under the License.
         },
 
         /**
-         * Create a time field (renders as text).
+         * Create a time-of-day field (native time picker, HH:MM).
          */
         time: function(key, label, required) {
             const field = {
                 key: key,
                 label: label || this._toTitleCase(key),
-                type: 'text'
+                type: 'time'
             };
             if (required) field.required = true;
             return [field];
@@ -331,6 +360,44 @@ limitations under the License.
          * @param {boolean} [required] - Whether at least one row is required
          * @returns {Array} - Single field in array format
          */
+        /**
+         * Create a rich text editor field (stores HTML string).
+         */
+        richtext: function(key, label, required) {
+            const field = {
+                key: key,
+                label: label || this._toTitleCase(key),
+                type: 'richtext'
+            };
+            if (required) field.required = true;
+            return [field];
+        },
+
+        /**
+         * Create a tags/chips input field (stores []string).
+         */
+        tags: function(key, label) {
+            return [{
+                key: key,
+                label: label || this._toTitleCase(key),
+                type: 'tags'
+            }];
+        },
+
+        /**
+         * Create a multi-select dropdown with checkboxes (stores []int or []string).
+         */
+        multiselect: function(key, label, options, required) {
+            const field = {
+                key: key,
+                label: label || this._toTitleCase(key),
+                type: 'multiselect',
+                options: options
+            };
+            if (required) field.required = true;
+            return [field];
+        },
+
         inlineTable: function(key, label, columns, required) {
             const field = {
                 key: key,
@@ -342,142 +409,7 @@ limitations under the License.
             return [field];
         },
 
-        // ============================================================================
-        // PRESET FIELD GROUPS
-        // ============================================================================
-
-        /**
-         * Basic entity fields: code, name, description, isActive
-         * @returns {Array} - Array of field definitions
-         */
-        basicEntity: function() {
-            return [
-                { key: 'code', label: 'Code', type: 'text', required: true },
-                { key: 'name', label: 'Name', type: 'text', required: true },
-                { key: 'description', label: 'Description', type: 'textarea' },
-                { key: 'isActive', label: 'Active', type: 'checkbox' }
-            ];
-        },
-
-        /**
-         * Date range fields: effectiveDate, endDate
-         * @param {string} [prefix] - Optional prefix (e.g., 'effective' -> effectiveStartDate)
-         * @returns {Array} - Array of field definitions
-         */
-        dateRange: function(prefix) {
-            if (prefix) {
-                return [
-                    { key: prefix + 'Date', label: this._toTitleCase(prefix) + ' Date', type: 'date' },
-                    { key: 'endDate', label: 'End Date', type: 'date' }
-                ];
-            }
-            return [
-                { key: 'effectiveDate', label: 'Effective Date', type: 'date' },
-                { key: 'endDate', label: 'End Date', type: 'date' }
-            ];
-        },
-
-        /**
-         * Address fields (maps to *erp.Address protobuf type)
-         * @param {string} parentKey - Parent field name (e.g. 'address', 'serviceAddress')
-         * @returns {Array} - Array of field definitions with dot-notation keys
-         */
-        address: function(parentKey) {
-            const p = parentKey ? parentKey + '.' : '';
-            return [
-                { key: p + 'line1', label: 'Address Line 1', type: 'text' },
-                { key: p + 'line2', label: 'Address Line 2', type: 'text' },
-                { key: p + 'city', label: 'City', type: 'text' },
-                { key: p + 'stateProvince', label: 'State/Province', type: 'text' },
-                { key: p + 'postalCode', label: 'Postal Code', type: 'text' },
-                { key: p + 'countryCode', label: 'Country', type: 'text' }
-            ];
-        },
-
-        /**
-         * Contact info fields (maps to *erp.ContactInfo protobuf type)
-         * @param {string} parentKey - Parent field name (e.g. 'contactInfo')
-         * @returns {Array} - Array of field definitions with dot-notation keys
-         */
-        contact: function(parentKey) {
-            const p = parentKey ? parentKey + '.' : '';
-            return [
-                { key: p + 'value', label: 'Contact Value', type: 'text' },
-                { key: p + 'contactType', label: 'Contact Type', type: 'text' }
-            ];
-        },
-
-        /**
-         * Audit fields (typically read-only)
-         * @returns {Array} - Array of field definitions
-         */
-        audit: function() {
-            return [
-                { key: 'createdBy', label: 'Created By', type: 'text', readOnly: true },
-                { key: 'createdAt', label: 'Created At', type: 'date', readOnly: true },
-                { key: 'modifiedBy', label: 'Modified By', type: 'text', readOnly: true },
-                { key: 'modifiedAt', label: 'Modified At', type: 'date', readOnly: true }
-            ];
-        },
-
-        /**
-         * Person name fields: firstName, middleName (optional), lastName
-         * @param {boolean} [includeMiddle=false] - Include middle name field
-         * @returns {Array} - Array of field definitions
-         */
-        person: function(includeMiddle) {
-            const fields = [
-                { key: 'firstName', label: 'First Name', type: 'text', required: true }
-            ];
-            if (includeMiddle) {
-                fields.push({ key: 'middleName', label: 'Middle Name', type: 'text' });
-            }
-            fields.push({ key: 'lastName', label: 'Last Name', type: 'text', required: true });
-            return fields;
-        },
-
-        // ============================================================================
-        // UTILITY METHODS
-        // ============================================================================
-
-        /**
-         * Create a form section.
-         * @param {string} title - Section title
-         * @param {Array} fields - Array of field definitions
-         * @returns {Object} - Section object
-         */
-        section: function(title, fields) {
-            return {
-                title: title,
-                fields: fields.flat()
-            };
-        },
-
-        /**
-         * Create a full form definition.
-         * @param {string} title - Form title
-         * @param {Array} sections - Array of section objects
-         * @returns {Object} - Form definition object
-         */
-        form: function(title, sections) {
-            return {
-                title: title,
-                sections: sections
-            };
-        },
-
-        /**
-         * Convert camelCase to Title Case.
-         * @param {string} str - The string to convert
-         * @returns {string} - Title case string
-         * @private
-         */
-        _toTitleCase: function(str) {
-            if (!str) return '';
-            return str
-                .replace(/([A-Z])/g, ' $1')
-                .replace(/^./, (s) => s.toUpperCase())
-                .trim();
-        }
+        // Presets (basicEntity, dateRange, address, contact, audit, person)
+        // and utilities (section, form, _toTitleCase) are in layer8-form-factory-presets.js
     };
 })();

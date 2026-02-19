@@ -233,12 +233,12 @@ func generateSCMPurchaseOrders(store *MockDataStore) []*scm.ScmPurchaseOrder {
 }
 
 // generatePOLines creates 3 lines per purchase order = 45 total
-func generatePOLines(store *MockDataStore) []*scm.ScmPurchaseOrderLine {
-	lines := make([]*scm.ScmPurchaseOrderLine, 0, len(store.SCMPurchaseOrderIDs)*3)
+func generatePOLines(store *MockDataStore, poCount int) []*scm.ScmPurchaseOrderLine {
+	lines := make([]*scm.ScmPurchaseOrderLine, 0, poCount*3)
 	uoms := []string{"EA", "BOX", "KG", "LB", "PCS", "SET"}
 	idx := 1
 
-	for i := 0; i < len(store.SCMPurchaseOrderIDs); i++ {
+	for i := 0; i < poCount; i++ {
 		for lineNum := int32(1); lineNum <= 3; lineNum++ {
 			itemID := store.ItemIDs[idx%len(store.ItemIDs)]
 			quantity := float64(rand.Intn(100) + 1)

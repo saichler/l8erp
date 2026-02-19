@@ -101,19 +101,21 @@ All 242 Prime Objects reference each other via string ID fields only. No direct 
 
 ## 2. UI Framework Components
 
-### 2.1 Missing Form Field Types
+### 2.1 Missing Form Field Types — COMPLETE
 
 | Field Type | Status | Needed By |
 |------------|--------|-----------|
-| File/Attachment Upload | Missing | DOC, HCM (employee docs), COMP (evidence) |
-| Rich Text Editor | Missing | DOC, CRM (case notes), PRJ (descriptions) |
-| Tags/Chips Input | Missing | CRM (tags), DOC (keywords), ECOM (product tags) |
-| Multi-Select Dropdown | Missing | HCM (skills), PRJ (team members) |
-| Time-of-Day Picker | Missing | HCM (schedules), MFG (shifts) |
-| Autocomplete/Typeahead | Missing | All reference fields (currently manual picker) |
-| Slider/Range | Missing | BI (thresholds), COMP (risk scores) |
-| Toggle Switch | Missing | All boolean fields (currently checkbox) |
-| Address Autocomplete | Missing | FIN, Sales, ECOM (shipping addresses) |
+| Toggle Switch | **Done** | All boolean fields (currently checkbox) |
+| Slider/Range | **Done** | BI (thresholds), COMP (risk scores) |
+| Tags/Chips Input | **Done** | CRM (tags), DOC (keywords), ECOM (product tags) |
+| Multi-Select Dropdown | **Done** | HCM (skills), PRJ (team members) |
+| Time-of-Day Picker | **Done** | HCM (schedules), MFG (shifts) |
+| Rich Text Editor | **Done** | DOC, CRM (case notes), PRJ (descriptions) |
+| Autocomplete/Typeahead | **Already existed** | Reference pickers already have debounced search with fuzzy matching |
+| File/Attachment Upload | **Deferred** | DOC, HCM (employee docs), COMP (evidence) — requires backend file storage subsystem (see 8.9) |
+| Address Autocomplete | **Deferred** | FIN, Sales, ECOM — requires external geocoding API (Google Places, etc.) |
+
+See `plans/PLAN-MISSING-FORM-FIELD-TYPES.md` for implementation details.
 
 ### 2.2 Missing View Types
 

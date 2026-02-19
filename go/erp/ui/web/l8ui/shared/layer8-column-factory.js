@@ -79,6 +79,7 @@ limitations under the License.
                 key: key,
                 label: label || this._toTitleCase(key),
                 sortKey: key,
+                type: 'boolean',
                 render: options
                     ? (item) => renderBoolean(item[key], options)
                     : (item) => renderBoolean(item[key])
@@ -99,6 +100,7 @@ limitations under the License.
                 label: label,
                 sortKey: key,
                 filterKey: key,
+                type: 'status',
                 enumValues: enumValues,
                 render: (item) => renderer(item[key])
             }];
@@ -118,6 +120,7 @@ limitations under the License.
                 label: label,
                 sortKey: key,
                 filterKey: key,
+                type: 'enum',
                 render: (item) => renderer(item[key])
             };
             if (enumValues) {
@@ -137,6 +140,7 @@ limitations under the License.
                 key: key,
                 label: label || this._toTitleCase(key),
                 sortKey: key,
+                type: 'date',
                 render: (item) => renderDate(item[key])
             }];
         },
@@ -152,6 +156,7 @@ limitations under the License.
                 key: key,
                 label: label || this._toTitleCase(key),
                 sortKey: key,
+                type: 'money',
                 render: (item) => renderMoney(item[key])
             }];
         },
@@ -167,7 +172,8 @@ limitations under the License.
                 key: key,
                 label: label || 'ID',
                 sortKey: key,
-                filterKey: key
+                filterKey: key,
+                type: 'id'
             }];
         },
 

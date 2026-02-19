@@ -10,9 +10,9 @@ Layer8ModuleConfigFactory.create({
         'procurement': {
             label: 'Procurement', icon: '📦',
             services: [
-                { key: 'purchase-requisitions', label: 'Requisitions', icon: '📋', endpoint: '/50/PurchReq', model: 'ScmPurchaseRequisition' },
+                { key: 'purchase-requisitions', label: 'Requisitions', icon: '📋', endpoint: '/50/PurchReq', model: 'ScmPurchaseRequisition', supportedViews: ['table', 'kanban'] },
                 { key: 'rfqs', label: 'RFQs', icon: '📨', endpoint: '/50/RFQ', model: 'ScmRequestForQuotation' },
-                { key: 'purchase-orders', label: 'Purchase Orders', icon: '📄', endpoint: '/50/PurchOrder', model: 'ScmPurchaseOrder' },
+                { key: 'purchase-orders', label: 'Purchase Orders', icon: '📄', endpoint: '/50/PurchOrder', model: 'ScmPurchaseOrder', supportedViews: ['table', 'kanban'] },
                 { key: 'blanket-orders', label: 'Blanket Orders', icon: '📑', endpoint: '/50/BlnktOrder', model: 'ScmBlanketOrder' },
                 { key: 'supplier-scorecards', label: 'Scorecards', icon: '⭐', endpoint: '/50/SupplrCard', model: 'ScmSupplierScorecard' }
             ]
@@ -21,7 +21,7 @@ Layer8ModuleConfigFactory.create({
             label: 'Inventory', icon: '📦',
             services: [
                 { key: 'items', label: 'Items', icon: '📦', endpoint: '/50/Item', model: 'ScmItem' },
-                { key: 'item-categories', label: 'Categories', icon: '📁', endpoint: '/50/ItemCat', model: 'ScmItemCategory' },
+                { key: 'item-categories', label: 'Categories', icon: '📁', endpoint: '/50/ItemCat', model: 'ScmItemCategory', supportedViews: ['table', 'tree'] },
                 { key: 'cycle-counts', label: 'Cycle Counts', icon: '🔄', endpoint: '/50/CycleCount', model: 'ScmCycleCount' }
             ]
         },
@@ -31,7 +31,7 @@ Layer8ModuleConfigFactory.create({
                 { key: 'warehouses', label: 'Warehouses', icon: '🏭', endpoint: '/50/Warehouse', model: 'ScmWarehouse' },
                 { key: 'receiving-orders', label: 'Receiving', icon: '📥', endpoint: '/50/RecvOrder', model: 'ScmReceivingOrder' },
                 { key: 'wave-plans', label: 'Wave Plans', icon: '🌊', endpoint: '/50/WavePlan', model: 'ScmWavePlan' },
-                { key: 'dock-schedules', label: 'Dock Schedules', icon: '🚢', endpoint: '/50/DockSched', model: 'ScmDockSchedule' }
+                { key: 'dock-schedules', label: 'Dock Schedules', icon: '🚢', endpoint: '/50/DockSched', model: 'ScmDockSchedule', supportedViews: ['table', 'calendar'] }
             ]
         },
         'logistics': {
@@ -42,7 +42,7 @@ Layer8ModuleConfigFactory.create({
                 { key: 'shipments', label: 'Shipments', icon: '📦', endpoint: '/50/Shipment', model: 'ScmShipment' },
                 { key: 'routes', label: 'Routes', icon: '🗺️', endpoint: '/50/Route', model: 'ScmRoute' },
                 { key: 'load-plans', label: 'Load Plans', icon: '📋', endpoint: '/50/LoadPlan', model: 'ScmLoadPlan' },
-                { key: 'return-authorizations', label: 'Returns', icon: '↩️', endpoint: '/50/ReturnAuth', model: 'ScmReturnAuthorization' }
+                { key: 'return-authorizations', label: 'Returns', icon: '↩️', endpoint: '/50/ReturnAuth', model: 'ScmReturnAuthorization', supportedViews: ['table', 'kanban'] }
             ]
         },
         'demand-planning': {

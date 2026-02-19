@@ -10,7 +10,7 @@ Layer8ModuleConfigFactory.create({
         'customers': {
             label: 'Customers', icon: '👥',
             services: [
-                { key: 'hierarchies', label: 'Hierarchies', icon: '🏢', endpoint: '/60/CustHier', model: 'SalesCustomerHierarchy' },
+                { key: 'hierarchies', label: 'Hierarchies', icon: '🏢', endpoint: '/60/CustHier', model: 'SalesCustomerHierarchy', supportedViews: ['table', 'tree'] },
                 { key: 'segments', label: 'Segments', icon: '📊', endpoint: '/60/CustSegmt', model: 'SalesCustomerSegment' },
                 { key: 'contracts', label: 'Contracts', icon: '📄', endpoint: '/60/CustContr', model: 'SalesCustomerContract' },
                 { key: 'partners', label: 'Partners', icon: '🤝', endpoint: '/60/Partner', model: 'SalesPartnerChannel' }
@@ -19,9 +19,9 @@ Layer8ModuleConfigFactory.create({
         'orders': {
             label: 'Orders', icon: '📋',
             services: [
-                { key: 'quotations', label: 'Quotations', icon: '📝', endpoint: '/60/SalesQuote', model: 'SalesQuotation' },
-                { key: 'sales-orders', label: 'Sales Orders', icon: '📦', endpoint: '/60/SalesOrder', model: 'SalesOrder' },
-                { key: 'returns', label: 'Returns', icon: '↩️', endpoint: '/60/ReturnOrd', model: 'SalesReturnOrder' }
+                { key: 'quotations', label: 'Quotations', icon: '📝', endpoint: '/60/SalesQuote', model: 'SalesQuotation', supportedViews: ['table', 'kanban'] },
+                { key: 'sales-orders', label: 'Sales Orders', icon: '📦', endpoint: '/60/SalesOrder', model: 'SalesOrder', supportedViews: ['table', 'kanban'] },
+                { key: 'returns', label: 'Returns', icon: '↩️', endpoint: '/60/ReturnOrd', model: 'SalesReturnOrder', supportedViews: ['table', 'kanban'] }
             ]
         },
         'pricing': {
@@ -48,7 +48,7 @@ Layer8ModuleConfigFactory.create({
         'analytics': {
             label: 'Analytics', icon: '📊',
             services: [
-                { key: 'targets', label: 'Sales Targets', icon: '🎯', endpoint: '/60/SalesTrgt', model: 'SalesTarget' },
+                { key: 'targets', label: 'Sales Targets', icon: '🎯', endpoint: '/60/SalesTrgt', model: 'SalesTarget', supportedViews: ['table', 'chart'] },
                 { key: 'territories', label: 'Territories', icon: '🗺️', endpoint: '/60/Territory', model: 'SalesTerritory' },
                 { key: 'commission-plans', label: 'Commission Plans', icon: '💵', endpoint: '/60/CommPlan', model: 'SalesCommissionPlan' },
                 { key: 'forecasts', label: 'Forecasts', icon: '🔮', endpoint: '/60/SalesFcast', model: 'SalesForecast' }

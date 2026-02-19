@@ -104,7 +104,7 @@ func generateScmPhase4(client *HCMClient, store *MockDataStore) error {
 	purchaseOrders := generateSCMPurchaseOrders(store)
 
 	// Generate PO Lines and embed in POs (3 lines per PO)
-	poLines := generatePOLines(store)
+	poLines := generatePOLines(store, len(purchaseOrders))
 	for i, line := range poLines {
 		poIdx := i / 3 // 3 lines per PO
 		if poIdx < len(purchaseOrders) {
@@ -123,7 +123,7 @@ func generateScmPhase4(client *HCMClient, store *MockDataStore) error {
 func generateScmPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate Receiving Orders with embedded putaway tasks
 	receivingOrders := generateReceivingOrders(store)
-	putawayTasks := generatePutawayTasks(store)
+	putawayTasks := generatePutawayTasks(store, len(receivingOrders))
 	for i, task := range putawayTasks {
 		roIdx := i % len(receivingOrders)
 		receivingOrders[roIdx].PutawayTasks = append(receivingOrders[roIdx].PutawayTasks, task)

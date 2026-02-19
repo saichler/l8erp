@@ -1,0 +1,95 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+Layer 8 Ecosystem - Chart Component Styles
+*/
+
+/* Chart container */
+.layer8d-chart-container {
+    position: relative;
+    width: 100%;
+    min-height: 300px;
+    background: var(--bg-primary, #ffffff);
+    border-radius: 8px;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.layer8d-chart-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary, #1a202c);
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.layer8d-chart-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* Interactive elements */
+.layer8d-chart-bar {
+    transition: opacity 0.15s ease;
+}
+
+.layer8d-chart-slice {
+    transition: opacity 0.15s ease;
+}
+
+.layer8d-chart-point {
+    transition: r 0.15s ease;
+}
+
+.layer8d-chart-line {
+    transition: stroke-width 0.15s ease;
+}
+
+.layer8d-chart-area {
+    transition: opacity 0.15s ease;
+}
+
+/* Tooltip */
+.layer8d-chart-tooltip {
+    position: fixed;
+    background: var(--bg-primary, #1a202c);
+    color: var(--text-primary, #ffffff);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(-50%) translateY(-100%);
+    transition: opacity 0.15s ease;
+    z-index: 10000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+}
+
+.layer8d-chart-tooltip.visible {
+    opacity: 1;
+}
+
+/* Dark mode support */
+[data-theme="dark"] .layer8d-chart-container {
+    background: var(--bg-primary, #1e293b);
+}
+
+[data-theme="dark"] .layer8d-chart-tooltip {
+    background: var(--bg-secondary, #334155);
+    color: var(--text-primary, #f1f5f9);
+}
+
+/* Mobile chart */
+.layer8m-chart-container {
+    position: relative;
+    width: 100%;
+    min-height: 250px;
+    padding: 12px;
+    box-sizing: border-box;
+}
+
+.layer8m-chart-container .layer8d-chart-svg {
+    max-height: 300px;
+}

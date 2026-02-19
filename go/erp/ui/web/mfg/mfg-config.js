@@ -11,16 +11,16 @@ Layer8ModuleConfigFactory.create({
         'engineering': {
             label: 'Engineering', icon: '📐',
             services: [
-                { key: 'boms', label: 'BOMs', icon: '📋', endpoint: '/70/MfgBom', model: 'MfgBom' },
+                { key: 'boms', label: 'BOMs', icon: '📋', endpoint: '/70/MfgBom', model: 'MfgBom', supportedViews: ['table', 'tree'] },
                 { key: 'routings', label: 'Routings', icon: '🔄', endpoint: '/70/MfgRouting', model: 'MfgRouting' },
-                { key: 'change-orders', label: 'Change Orders', icon: '📑', endpoint: '/70/MfgECO', model: 'MfgEngChangeOrder' }
+                { key: 'change-orders', label: 'Change Orders', icon: '📑', endpoint: '/70/MfgECO', model: 'MfgEngChangeOrder', supportedViews: ['table', 'kanban'] }
             ]
         },
         'production': {
             label: 'Production', icon: '🏭',
             services: [
-                { key: 'work-orders', label: 'Work Orders', icon: '📦', endpoint: '/70/MfgWorkOrd', model: 'MfgWorkOrder' },
-                { key: 'prod-orders', label: 'Prod Orders', icon: '📋', endpoint: '/70/MfgProdOrd', model: 'MfgProductionOrder' }
+                { key: 'work-orders', label: 'Work Orders', icon: '📦', endpoint: '/70/MfgWorkOrd', model: 'MfgWorkOrder', supportedViews: ['table', 'kanban', 'gantt'] },
+                { key: 'prod-orders', label: 'Prod Orders', icon: '📋', endpoint: '/70/MfgProdOrd', model: 'MfgProductionOrder', supportedViews: ['table', 'kanban', 'gantt'] }
             ]
         },
         'shopfloor': {
@@ -36,7 +36,7 @@ Layer8ModuleConfigFactory.create({
             label: 'Quality', icon: '✅',
             services: [
                 { key: 'plans', label: 'Quality Plans', icon: '📋', endpoint: '/70/MfgQCPlan', model: 'MfgQualityPlan' },
-                { key: 'inspections', label: 'Inspections', icon: '🔍', endpoint: '/70/MfgQCInsp', model: 'MfgQualityInspection' },
+                { key: 'inspections', label: 'Inspections', icon: '🔍', endpoint: '/70/MfgQCInsp', model: 'MfgQualityInspection', supportedViews: ['table', 'kanban'] },
                 { key: 'ncrs', label: 'NCRs', icon: '⚠️', endpoint: '/70/MfgNCR', model: 'MfgNCR' }
             ]
         },
@@ -45,7 +45,7 @@ Layer8ModuleConfigFactory.create({
             services: [
                 { key: 'mrp-runs', label: 'MRP Runs', icon: '🔄', endpoint: '/70/MfgMrpRun', model: 'MfgMrpRun' },
                 { key: 'capacity-plans', label: 'Capacity Plans', icon: '📊', endpoint: '/70/MfgCapPlan', model: 'MfgCapacityPlan' },
-                { key: 'schedules', label: 'Prod Schedules', icon: '📅', endpoint: '/70/MfgProdSch', model: 'MfgProdSchedule' }
+                { key: 'schedules', label: 'Prod Schedules', icon: '📅', endpoint: '/70/MfgProdSch', model: 'MfgProdSchedule', supportedViews: ['table', 'gantt'] }
             ]
         },
         'costing': {

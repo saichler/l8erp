@@ -64,12 +64,9 @@ func generateReceivingOrders(store *MockDataStore) []*scm.ScmReceivingOrder {
 	return orders
 }
 
-// generatePutawayTasks creates 1 putaway task per receiving order (15 total)
-func generatePutawayTasks(store *MockDataStore) []*scm.ScmPutawayTask {
-	count := len(store.ReceivingOrderIDs)
-	if count == 0 {
-		count = 15
-	}
+// generatePutawayTasks creates 1 putaway task per receiving order
+func generatePutawayTasks(store *MockDataStore, roCount int) []*scm.ScmPutawayTask {
+	count := roCount
 	tasks := make([]*scm.ScmPutawayTask, count)
 
 	for i := 0; i < count; i++ {

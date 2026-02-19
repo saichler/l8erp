@@ -1,0 +1,299 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+// Layer8D Chart Core
+// Base chart class with shared SVG utilities, axes, grid, tooltips, and resize handling.
+// Subclasses (bar, line, pie) implement specific rendering.
+
+(function() {
+    'use strict';
+
+    const CHART_DEFAULTS = {
+        width: 600,
+        height: 400,
+        padding: { top: 30, right: 30, bottom: 50, left: 60 },
+        colors: [
+            '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
+            '#06b6d4', '#ec4899', '#84cc16', '#f97316', '#6366f1'
+        ],
+        gridColor: '#e5e7eb',
+        textColor: '#6b7280',
+        fontSize: 12,
+        animationDuration: 300
+    };
+
+    class Layer8DChart {
+        constructor(options) {
+            this.containerId = options.containerId;
+            this.columns = options.columns || [];
+            this.dataSource = options.dataSource || null;
+            this.viewConfig = options.viewConfig || {};
+            this.onItemClick = options.onItemClick || null;
+            this.onAdd = options.onAdd || null;
+
+            // Chart settings
+            this.chartType = this.viewConfig.chartType || 'bar';
+            this.categoryField = this.viewConfig.categoryField || null;
+            this.valueField = this.viewConfig.valueField || null;
+            this.aggregation = this.viewConfig.aggregation || 'count';
+            this.seriesField = this.viewConfig.seriesField || null;
+            this.title = this.viewConfig.title || '';
+
+            this.container = null;
+            this.svgEl = null;
+            this.tooltipEl = null;
+            this.data = [];
+            this.chartData = [];
+            this._resizeObserver = null;
+        }
+
+        init() {
+            this.container = document.getElementById(this.containerId);
+            if (!this.container) {
+                console.error('Chart container not found:', this.containerId);
+                return;
+            }
+            this.container.classList.add('layer8d-chart-container');
+            this._setupTooltip();
+            this._setupResizeObserver();
+
+            if (this.dataSource) {
+                this.dataSource._onDataLoaded = (result) => {
+                    this.setData(result.items, result.totalCount);
+                    if (result.metadata) this._handleMetadata(result.metadata);
+                };
+                this.dataSource.fetchData(1);
+            }
+        }
+
+        setData(items, total) {
+            this.data = items || [];
+            this.chartData = this._aggregateData(this.data);
+            this._render();
+        }
+
+        refresh() {
+            if (this.dataSource) {
+                this.dataSource.fetchData(1);
+            } else {
+                this._render();
+            }
+        }
+
+        destroy() {
+            if (this._resizeObserver) {
+                this._resizeObserver.disconnect();
+                this._resizeObserver = null;
+            }
+            if (this.tooltipEl && this.tooltipEl.parentNode) {
+                this.tooltipEl.parentNode.removeChild(this.tooltipEl);
+            }
+            if (this.container) {
+                this.container.classList.remove('layer8d-chart-container');
+                this.container.innerHTML = '';
+            }
+        }
+
+        // Aggregate raw data into chart-ready format
+        _aggregateData(items) {
+            if (!this.categoryField) {
+                return items.map((item, i) => ({
+                    label: String(i),
+                    value: this._getValue(item),
+                    item: item
+                }));
+            }
+
+            const groups = {};
+            items.forEach(item => {
+                const key = this._getNestedValue(item, this.categoryField);
+                const label = String(key === undefined || key === null ? 'Unknown' : key);
+                if (!groups[label]) {
+                    groups[label] = { label, values: [], items: [] };
+                }
+                groups[label].values.push(this._getValue(item));
+                groups[label].items.push(item);
+            });
+
+            return Object.values(groups).map(g => ({
+                label: g.label,
+                value: this._aggregate(g.values),
+                count: g.items.length,
+                items: g.items
+            }));
+        }
+
+        _getValue(item) {
+            if (!this.valueField || this.aggregation === 'count') return 1;
+            const v = this._getNestedValue(item, this.valueField);
+            return typeof v === 'number' ? v : parseFloat(v) || 0;
+        }
+
+        _aggregate(values) {
+            if (this.aggregation === 'count') return values.length;
+            if (this.aggregation === 'sum') return values.reduce((a, b) => a + b, 0);
+            if (this.aggregation === 'avg') return values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
+            if (this.aggregation === 'min') return Math.min(...values);
+            if (this.aggregation === 'max') return Math.max(...values);
+            return values.length;
+        }
+
+        _handleMetadata(metadata) {
+            if (metadata?.keyCount?.counts && this.aggregation === 'count' && !this.categoryField) {
+                const counts = metadata.keyCount.counts;
+                this.chartData = Object.entries(counts)
+                    .filter(([k]) => k !== 'Total')
+                    .map(([label, value]) => ({ label, value }));
+                this._render();
+            }
+        }
+
+        _render() {
+            if (!this.container) return;
+            const rect = this.container.getBoundingClientRect();
+            const w = rect.width || CHART_DEFAULTS.width;
+            const h = Math.max(300, Math.min(w * 0.6, CHART_DEFAULTS.height));
+
+            this.container.innerHTML = '';
+            if (this.title) {
+                const titleEl = document.createElement('div');
+                titleEl.className = 'layer8d-chart-title';
+                titleEl.textContent = this.title;
+                this.container.appendChild(titleEl);
+            }
+
+            this.svgEl = this._createSvg(w, h);
+            this.container.appendChild(this.svgEl);
+
+            if (this.chartData.length === 0) {
+                this._renderEmpty(w, h);
+                return;
+            }
+
+            // Dispatch to chart type renderer
+            switch (this.chartType) {
+                case 'bar':
+                    Layer8DChartBar.render(this, w, h);
+                    break;
+                case 'line':
+                case 'area':
+                    Layer8DChartLine.render(this, w, h);
+                    break;
+                case 'pie':
+                case 'donut':
+                    Layer8DChartPie.render(this, w, h);
+                    break;
+                default:
+                    Layer8DChartBar.render(this, w, h);
+            }
+        }
+
+        // SVG helper methods
+        _createSvg(w, h) {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', w);
+            svg.setAttribute('height', h);
+            svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+            svg.classList.add('layer8d-chart-svg');
+            return svg;
+        }
+
+        _renderEmpty(w, h) {
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', w / 2);
+            text.setAttribute('y', h / 2);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('fill', CHART_DEFAULTS.textColor);
+            text.textContent = 'No data available';
+            this.svgEl.appendChild(text);
+        }
+
+        _setupTooltip() {
+            this.tooltipEl = document.createElement('div');
+            this.tooltipEl.className = 'layer8d-chart-tooltip';
+            document.body.appendChild(this.tooltipEl);
+        }
+
+        showTooltip(x, y, html) {
+            if (!this.tooltipEl) return;
+            this.tooltipEl.innerHTML = html;
+            this.tooltipEl.style.left = x + 'px';
+            this.tooltipEl.style.top = (y - 10) + 'px';
+            this.tooltipEl.classList.add('visible');
+        }
+
+        hideTooltip() {
+            if (this.tooltipEl) {
+                this.tooltipEl.classList.remove('visible');
+            }
+        }
+
+        _setupResizeObserver() {
+            if (typeof ResizeObserver === 'undefined') return;
+            let timeout;
+            this._resizeObserver = new ResizeObserver(() => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => this._render(), 200);
+            });
+            this._resizeObserver.observe(this.container);
+        }
+
+        _getNestedValue(obj, key) {
+            if (!key) return '';
+            const keys = key.split('.');
+            let value = obj;
+            for (const k of keys) {
+                if (value === null || value === undefined) return '';
+                value = value[k];
+            }
+            return value !== null && value !== undefined ? value : '';
+        }
+
+        getColor(index) {
+            const colors = this.viewConfig.colors || CHART_DEFAULTS.colors;
+            return colors[index % colors.length];
+        }
+
+        getPadding() {
+            return this.viewConfig.padding || CHART_DEFAULTS.padding;
+        }
+    }
+
+    // Static defaults accessible by sub-renderers
+    Layer8DChart.DEFAULTS = CHART_DEFAULTS;
+
+    window.Layer8DChart = Layer8DChart;
+
+    // Register with view factory
+    if (window.Layer8DViewFactory) {
+        Layer8DViewFactory.register('chart', function(options) {
+            const ds = new Layer8DDataSource({
+                endpoint: options.endpoint,
+                modelName: options.modelName,
+                columns: options.columns,
+                pageSize: options.viewConfig?.pageSize || 100
+            });
+            const chart = new Layer8DChart({
+                containerId: options.containerId,
+                columns: options.columns,
+                dataSource: ds,
+                viewConfig: options.viewConfig || {},
+                onItemClick: options.onRowClick,
+                onAdd: options.onAdd
+            });
+            return chart;
+        });
+    }
+
+})();

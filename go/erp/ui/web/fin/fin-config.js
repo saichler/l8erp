@@ -10,7 +10,7 @@ Layer8ModuleConfigFactory.create({
         'general-ledger': {
             label: 'General Ledger', icon: '📒',
             services: [
-                { key: 'accounts', label: 'Accounts', icon: '📒', endpoint: '/40/Account', model: 'Account' },
+                { key: 'accounts', label: 'Accounts', icon: '📒', endpoint: '/40/Account', model: 'Account', supportedViews: ['table', 'tree'] },
                 { key: 'journal-entries', label: 'Journal Entries', icon: '📝', endpoint: '/40/JrnlEntry', model: 'JournalEntry' },
                 { key: 'fiscal-years', label: 'Fiscal Years', icon: '📅', endpoint: '/40/FiscalYr', model: 'FiscalYear' },
                 { key: 'currencies', label: 'Currencies', icon: '💱', endpoint: '/40/Currency', model: 'Currency' },
@@ -41,7 +41,7 @@ Layer8ModuleConfigFactory.create({
             label: 'Cash Management', icon: '🏦',
             services: [
                 { key: 'bank-accounts', label: 'Bank Accounts', icon: '🏦', endpoint: '/40/BankAcct', model: 'BankAccount' },
-                { key: 'cash-forecasts', label: 'Cash Forecasts', icon: '📊', endpoint: '/40/CashFcst', model: 'CashForecast' },
+                { key: 'cash-forecasts', label: 'Cash Forecasts', icon: '📊', endpoint: '/40/CashFcst', model: 'CashForecast', supportedViews: ['table', 'chart'] },
                 { key: 'fund-transfers', label: 'Fund Transfers', icon: '🔄', endpoint: '/40/FundXfer', model: 'FundTransfer' },
                 { key: 'petty-cash', label: 'Petty Cash', icon: '💰', endpoint: '/40/PettyCash', model: 'PettyCash' }
             ]
@@ -56,9 +56,9 @@ Layer8ModuleConfigFactory.create({
         'budgeting': {
             label: 'Budgeting', icon: '📊',
             services: [
-                { key: 'budgets', label: 'Budgets', icon: '📊', endpoint: '/40/Budget', model: 'Budget' },
+                { key: 'budgets', label: 'Budgets', icon: '📊', endpoint: '/40/Budget', model: 'Budget', supportedViews: ['table', 'chart'] },
                 { key: 'capital-expenditures', label: 'Capital Expenditures', icon: '🏗️', endpoint: '/40/CapEx', model: 'CapitalExpenditure' },
-                { key: 'forecasts', label: 'Forecasts', icon: '📈', endpoint: '/40/Forecast', model: 'Forecast' }
+                { key: 'forecasts', label: 'Forecasts', icon: '📈', endpoint: '/40/Forecast', model: 'Forecast', supportedViews: ['table', 'chart'] }
             ]
         },
         'tax': {

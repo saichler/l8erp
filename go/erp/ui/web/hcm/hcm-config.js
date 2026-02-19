@@ -48,12 +48,12 @@ Layer8ModuleConfigFactory.create({
             label: 'Time', icon: '⏱️',
             services: [
                 { key: 'timesheets', label: 'Timesheets', icon: '⏱️', endpoint: '/30/Timesheet', model: 'Timesheet' },
-                { key: 'leave-requests', label: 'Leave Requests', icon: '🏖️', endpoint: '/30/LeaveReq', model: 'LeaveRequest' },
+                { key: 'leave-requests', label: 'Leave Requests', icon: '🏖️', endpoint: '/30/LeaveReq', model: 'LeaveRequest', supportedViews: ['table', 'kanban', 'calendar'] },
                 { key: 'leave-balances', label: 'Leave Balances', icon: '📊', endpoint: '/30/LeaveBal', model: 'LeaveBalance' },
                 { key: 'leave-policies', label: 'Leave Policies', icon: '📜', endpoint: '/30/LeavePol', model: 'LeavePolicy' },
-                { key: 'shifts', label: 'Shifts', icon: '🔄', endpoint: '/30/Shift', model: 'Shift' },
-                { key: 'schedules', label: 'Schedules', icon: '📅', endpoint: '/30/Schedule', model: 'Schedule' },
-                { key: 'holidays', label: 'Holidays', icon: '🎉', endpoint: '/30/Holiday', model: 'Holiday' },
+                { key: 'shifts', label: 'Shifts', icon: '🔄', endpoint: '/30/Shift', model: 'Shift', supportedViews: ['table', 'calendar'] },
+                { key: 'schedules', label: 'Schedules', icon: '📅', endpoint: '/30/Schedule', model: 'Schedule', supportedViews: ['table', 'calendar'] },
+                { key: 'holidays', label: 'Holidays', icon: '🎉', endpoint: '/30/Holiday', model: 'Holiday', supportedViews: ['table', 'calendar'] },
                 { key: 'absences', label: 'Absences', icon: '🚫', endpoint: '/30/Absence', model: 'Absence' }
             ]
         },
@@ -65,17 +65,17 @@ Layer8ModuleConfigFactory.create({
                 { key: 'feedback', label: 'Feedback', icon: '💬', endpoint: '/30/Feedback', model: 'Feedback' },
                 { key: 'career-paths', label: 'Career Paths', icon: '📈', endpoint: '/30/CarPath', model: 'CareerPath' },
                 { key: 'succession', label: 'Succession Plans', icon: '👑', endpoint: '/30/SuccPlan', model: 'SuccessionPlan' },
-                { key: 'requisitions', label: 'Requisitions', icon: '📝', endpoint: '/30/JobReq', model: 'JobRequisition' },
+                { key: 'requisitions', label: 'Requisitions', icon: '📝', endpoint: '/30/JobReq', model: 'JobRequisition', supportedViews: ['table', 'kanban'] },
                 { key: 'applicants', label: 'Applicants', icon: '👥', endpoint: '/30/Applicant', model: 'Applicant' },
                 { key: 'applications', label: 'Applications', icon: '📨', endpoint: '/30/Applctn', model: 'Application' },
-                { key: 'onboarding', label: 'Onboarding', icon: '🚀', endpoint: '/30/OnbrdTsk', model: 'OnboardingTask' }
+                { key: 'onboarding', label: 'Onboarding', icon: '🚀', endpoint: '/30/OnbrdTsk', model: 'OnboardingTask', supportedViews: ['table', 'kanban'] }
             ]
         },
         'learning': {
             label: 'Learning', icon: '📚',
             services: [
                 { key: 'courses', label: 'Courses', icon: '📚', endpoint: '/30/Course', model: 'Course' },
-                { key: 'sessions', label: 'Sessions', icon: '📅', endpoint: '/30/CrsSess', model: 'CourseSession' },
+                { key: 'sessions', label: 'Sessions', icon: '📅', endpoint: '/30/CrsSess', model: 'CourseSession', supportedViews: ['table', 'calendar'] },
                 { key: 'course-enrollments', label: 'Enrollments', icon: '✅', endpoint: '/30/CrsEnrol', model: 'CourseEnrollment' },
                 { key: 'certifications', label: 'Certifications', icon: '🏆', endpoint: '/30/Cert', model: 'Certification' },
                 { key: 'emp-certifications', label: 'Emp. Certs', icon: '📜', endpoint: '/30/EmpCert', model: 'EmployeeCertification' },

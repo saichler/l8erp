@@ -10,7 +10,7 @@ Layer8ModuleConfigFactory.create({
         'planning': {
             label: 'Planning', icon: '📋',
             services: [
-                { key: 'projects', label: 'Projects', icon: '📁', endpoint: '/90/PrjProj', model: 'PrjProject' },
+                { key: 'projects', label: 'Projects', icon: '📁', endpoint: '/90/PrjProj', model: 'PrjProject', supportedViews: ['table', 'kanban', 'gantt', 'timeline'] },
                 { key: 'templates', label: 'Templates', icon: '📄', endpoint: '/90/PrjProjTpl', model: 'PrjProjectTemplate' }
             ]
         },
@@ -20,7 +20,7 @@ Layer8ModuleConfigFactory.create({
                 { key: 'resource-pools', label: 'Resource Pools', icon: '🏊', endpoint: '/90/PrjResPool', model: 'PrjResourcePool' },
                 { key: 'resources', label: 'Resources', icon: '👤', endpoint: '/90/PrjRes', model: 'PrjResource' },
                 { key: 'allocations', label: 'Allocations', icon: '📊', endpoint: '/90/PrjAlloc', model: 'PrjAllocation' },
-                { key: 'bookings', label: 'Bookings', icon: '📅', endpoint: '/90/PrjBooking', model: 'PrjBooking' },
+                { key: 'bookings', label: 'Bookings', icon: '📅', endpoint: '/90/PrjBooking', model: 'PrjBooking', supportedViews: ['table', 'calendar'] },
                 { key: 'capacity-plans', label: 'Capacity Plans', icon: '📈', endpoint: '/90/PrjCapPlan', model: 'PrjCapacityPlan' },
                 { key: 'utilizations', label: 'Utilizations', icon: '⚡', endpoint: '/90/PrjUtil', model: 'PrjUtilization' }
             ]
@@ -48,9 +48,9 @@ Layer8ModuleConfigFactory.create({
         'analytics': {
             label: 'Analytics', icon: '📊',
             services: [
-                { key: 'status-reports', label: 'Status Reports', icon: '📋', endpoint: '/90/PrjStatus', model: 'PrjStatusReport' },
-                { key: 'portfolio-views', label: 'Portfolio', icon: '🗂️', endpoint: '/90/PrjPortflo', model: 'PrjPortfolioView' },
-                { key: 'kpis', label: 'KPIs', icon: '🎯', endpoint: '/90/PrjKPI', model: 'PrjProjectKPI' }
+                { key: 'status-reports', label: 'Status Reports', icon: '📋', endpoint: '/90/PrjStatus', model: 'PrjStatusReport', supportedViews: ['table', 'chart'] },
+                { key: 'portfolio-views', label: 'Portfolio', icon: '🗂️', endpoint: '/90/PrjPortflo', model: 'PrjPortfolioView', supportedViews: ['table', 'chart'] },
+                { key: 'kpis', label: 'KPIs', icon: '🎯', endpoint: '/90/PrjKPI', model: 'PrjProjectKPI', supportedViews: ['table', 'chart'] }
             ]
         }
     },
