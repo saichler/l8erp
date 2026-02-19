@@ -66,6 +66,20 @@ Layer8DUtils  <--- Layer8DRenderers
     +--- Layer8DToggleTree
     +--- Layer8DModuleFilter
     +--- Layer8DModuleFactory (orchestrates all)
+    |
+    +--- View System
+    |       Layer8DViewFactory (registry + table auto-registered)
+    |       Layer8ViewSwitcher (dropdown UI)
+    |       Layer8DDataSource (shared fetch/pagination)
+    |       Layer8DChart (bar/line/pie with type selector)
+    |           Layer8DChartBar, Layer8DChartLine, Layer8DChartPie
+    |       Layer8DKanban + Layer8DKanbanRender
+    |       Layer8DTimeline
+    |       Layer8DCalendar + Layer8DCalendarRender
+    |       Layer8DGantt + Layer8DGanttRender
+    |       Layer8DTreeGrid
+    |       Layer8DWizard + Layer8DWizardRender
+    +--- Layer8DWidget (dashboard KPI cards)
 ```
 
 ### Dependency Graph (Mobile)
@@ -167,6 +181,17 @@ CSS files first, then JS in strict dependency order:
 <link rel="stylesheet" href="l8ui/input_formatters/layer8d-input-formatter.css">
 <link rel="stylesheet" href="l8ui/notification/layer8d-notification.css">
 
+<!-- CSS: View System -->
+<link rel="stylesheet" href="l8ui/shared/layer8-view-switcher.css">
+<link rel="stylesheet" href="l8ui/chart/layer8d-chart.css">
+<link rel="stylesheet" href="l8ui/kanban/layer8d-kanban.css">
+<link rel="stylesheet" href="l8ui/timeline/layer8d-timeline.css">
+<link rel="stylesheet" href="l8ui/calendar/layer8d-calendar.css">
+<link rel="stylesheet" href="l8ui/gantt/layer8d-gantt.css">
+<link rel="stylesheet" href="l8ui/tree_grid/layer8d-tree-grid.css">
+<link rel="stylesheet" href="l8ui/wizard/layer8d-wizard.css">
+<link rel="stylesheet" href="l8ui/dashboard/layer8d-widget.css">
+
 <!-- CSS: SYS Module -->
 <link rel="stylesheet" href="l8ui/sys/l8sys.css">
 <link rel="stylesheet" href="l8ui/sys/health/l8health.css">
@@ -245,6 +270,26 @@ CSS files first, then JS in strict dependency order:
 <script src="l8ui/edit_table/layer8d-table-events.js"></script>
 <script src="l8ui/edit_table/layer8d-table-filter.js"></script>
 <script src="l8ui/edit_table/layer8d-table.js"></script>
+
+<!-- JS: View System (load after table) -->
+<script src="l8ui/shared/layer8d-view-factory.js"></script>
+<script src="l8ui/shared/layer8-view-switcher.js"></script>
+<script src="l8ui/shared/layer8d-data-source.js"></script>
+<script src="l8ui/chart/layer8d-chart-core.js"></script>
+<script src="l8ui/chart/layer8d-chart-bar.js"></script>
+<script src="l8ui/chart/layer8d-chart-line.js"></script>
+<script src="l8ui/chart/layer8d-chart-pie.js"></script>
+<script src="l8ui/kanban/layer8d-kanban-core.js"></script>
+<script src="l8ui/kanban/layer8d-kanban-render.js"></script>
+<script src="l8ui/timeline/layer8d-timeline.js"></script>
+<script src="l8ui/calendar/layer8d-calendar-core.js"></script>
+<script src="l8ui/calendar/layer8d-calendar-render.js"></script>
+<script src="l8ui/gantt/layer8d-gantt-core.js"></script>
+<script src="l8ui/gantt/layer8d-gantt-render.js"></script>
+<script src="l8ui/tree_grid/layer8d-tree-grid-core.js"></script>
+<script src="l8ui/wizard/layer8d-wizard-core.js"></script>
+<script src="l8ui/wizard/layer8d-wizard-render.js"></script>
+<script src="l8ui/dashboard/layer8d-widget.js"></script>
 
 <!-- JS: Module Abstractions -->
 <script src="l8ui/shared/layer8d-service-registry.js"></script>
@@ -767,6 +812,251 @@ Module.forms = {
         ])
     ])
 };
+```
+
+### 5.17 Layer8DViewFactory
+
+Registry of view type constructors. Creates the appropriate view component based on service `viewType` configuration. Default is `'table'`.
+
+```js
+Layer8DViewFactory.register('chart', factoryFn)       // Register a view type
+Layer8DViewFactory.create('chart', options)            // Create view instance
+Layer8DViewFactory.has('kanban')                       // Check if type registered
+Layer8DViewFactory.getTypes()                          // ['table','chart','kanban',...]
+Layer8DViewFactory.detectTitleField(columns, pk)       // Auto-detect label field
+
+// Create view with a type-switcher dropdown
+Layer8DViewFactory.createWithSwitcher(type, options, viewTypes, serviceKey, onSwitch)
+```
+
+All view instances follow the same interface: `init()`, `refresh()`, `destroy()`.
+
+Registered view types: `table`, `chart`, `kanban`, `timeline`, `calendar`, `gantt`, `tree`, `wizard`.
+
+### 5.18 Layer8ViewSwitcher
+
+Small icon button with floating dropdown menu for switching between view types. Shared by desktop and mobile.
+
+```js
+// Render HTML for the switcher
+const html = Layer8ViewSwitcher.render(serviceKey, viewTypes, activeType)
+
+// Attach click handlers
+Layer8ViewSwitcher.attach(container, function(newViewType) { ... })
+```
+
+View labels: `table` → "Table View", `chart` → "Chart View", `kanban` → "Kanban Board", `timeline` → "Timeline", `calendar` → "Calendar", `tree` → "Tree Grid", `gantt` → "Gantt Chart", `wizard` → "Wizard".
+
+### 5.19 Layer8DDataSource
+
+Shared data fetching layer used by all view types. Builds L8Query strings, handles pagination, and enforces the metadata-on-page-1-only rule.
+
+```js
+const ds = new Layer8DDataSource({
+    endpoint: '/erp/30/Employee',
+    modelName: 'Employee',
+    columns: [...],                     // Column defs (for filter/sort keys)
+    pageSize: 10,
+    baseWhereClause: 'status=1',
+    transformData: (item) => ({...})
+});
+
+ds.fetchData(page)                      // Fetch page (1-indexed)
+ds.buildQuery(page, pageSize)           // Returns { query, invalidFilters }
+ds.setBaseWhereClause('status=2')       // Update WHERE, resets to page 1
+ds.setFilter('name', 'Smith')           // Set column filter
+ds.clearFilters()
+ds.setSort('name', 'asc')              // Set sort column/direction
+ds.getTotalPages()                      // ceil(totalItems / pageSize)
+```
+
+**Pagination rule:** Metadata (totalCount, key counts) is valid ONLY on page 1. Pages 2+ preserve existing metadata.
+
+### 5.20 Layer8DChart
+
+SVG chart component supporting bar, line, and pie/donut renderers. Auto-detects category and value fields from column definitions. Includes an inline chart type selector (bar | line | pie).
+
+```js
+const chart = new Layer8DChart({
+    containerId: 'chart-container',
+    columns: [...],                     // Column defs (for auto-detection)
+    dataSource: dataSourceInstance,      // Layer8DDataSource
+    viewConfig: {
+        chartType: 'bar',              // 'bar'|'line'|'area'|'pie'|'donut'
+        categoryField: 'status',       // Group-by field (auto-detected if omitted)
+        valueField: 'amount',          // Value field (auto-detected if omitted)
+        aggregation: 'count',          // 'count'|'sum'|'avg'|'min'|'max'
+        title: 'Chart Title',
+        colors: ['#0ea5e9', ...],      // Custom palette (uses theme if omitted)
+        pageSize: 100                  // Fetch all data for chart
+    },
+    onItemClick: (item, label) => {},
+    onAdd: () => {}
+});
+chart.init();
+chart.setData(items, total);
+chart.refresh();
+chart.destroy();
+```
+
+Static utilities:
+```js
+Layer8DChart.readThemeColor('--layer8d-primary', '#0ea5e9')
+Layer8DChart.getThemePalette()          // Array of 10 theme colors
+```
+
+Sub-renderers (internal, auto-dispatched by `chartType`):
+- `Layer8DChartBar.render(chart, w, h)` — vertical/horizontal bars
+- `Layer8DChartLine.render(chart, w, h)` — line/area with data points
+- `Layer8DChartPie.render(chart, w, h)` — pie/donut with legend
+
+**Chart type selector:** An inline button group (Bar | Line | Pie) renders above the chart. Clicking a button updates `chartType` and re-renders the SVG without refetching data.
+
+### 5.21 Layer8DKanban
+
+Kanban board with configurable lanes. Cards display title, subtitle, and custom fields.
+
+```js
+// Registered as 'kanban' view type
+// viewConfig options:
+{
+    laneField: 'status',               // Field that determines the lane
+    lanes: {                            // Lane definitions (keyed by field value)
+        1: { label: 'To Do', color: '#0ea5e9' },
+        2: { label: 'In Progress', color: '#f59e0b' },
+        3: { label: 'Done', color: '#22c55e' }
+    },
+    cardTitle: 'name',                 // Field for card title
+    cardSubtitle: 'assignee',          // Field for card subtitle
+    cardFields: ['priority', 'dueDate'] // Additional fields on cards
+}
+```
+
+### 5.22 Layer8DTimeline
+
+Vertical timeline displaying events in chronological order with alternating left/right layout.
+
+```js
+const timeline = new Layer8DTimeline({
+    containerId: 'timeline-container',
+    columns: [...],
+    dataSource: dataSourceInstance,
+    viewConfig: {
+        dateField: 'auditInfo.createdDate',    // Timestamp field
+        actorField: 'auditInfo.createdBy',     // Who performed the action
+        titleField: 'name',                    // Auto-detected if omitted
+        descriptionField: 'description',
+        colorField: 'status',                  // Optional color grouping
+        pageSize: 20
+    },
+    onItemClick: (item, id) => {},
+    onAdd: () => {}
+});
+timeline.init();
+timeline.setData(items, total);
+timeline.refresh();
+timeline.destroy();
+```
+
+### 5.23 Layer8DCalendar
+
+Month/week calendar view for date-based data.
+
+```js
+// Registered as 'calendar' view type
+// viewConfig options:
+{
+    dateField: 'startDate',            // Date field for event placement
+    titleField: 'name',               // Event display title
+    viewMode: 'month'                  // 'month' | 'week'
+}
+```
+
+Supports navigation (prev/next month/week) and renders events as colored dots on calendar cells.
+
+### 5.24 Layer8DGantt
+
+SVG-based Gantt chart for project scheduling with task bars, progress indicators, and dependency arrows.
+
+```js
+// Registered as 'gantt' view type
+// viewConfig options:
+{
+    startDateField: 'startDate',       // Task start timestamp
+    endDateField: 'endDate',           // Task end timestamp
+    progressField: 'progress',         // 0-100 completion percentage
+    titleField: 'name',               // Task label
+    dependencyField: 'dependencies',   // Array of dependent task IDs
+    zoom: 'week'                       // 'day' | 'week' | 'month'
+}
+```
+
+### 5.25 Layer8DTreeGrid
+
+Hierarchical tree table that builds parent-child relationships from a flat list using a `parentIdField`.
+
+```js
+const tree = new Layer8DTreeGrid({
+    containerId: 'tree-container',
+    columns: [...],
+    dataSource: dataSourceInstance,
+    viewConfig: {
+        parentIdField: 'parentId',     // Field linking to parent's ID
+        idField: 'categoryId',         // Primary key (default: primaryKey)
+        labelField: 'name',            // Auto-detected if omitted
+        expandedByDefault: true,       // Start expanded (default: true)
+        pageSize: 500                  // Fetch all for tree building
+    },
+    primaryKey: 'categoryId',
+    onItemClick: (item, id) => {},
+    onAdd: () => {},
+    onEdit: (id) => {},
+    onDelete: (id) => {}
+});
+tree.init();
+tree.setData(items);
+tree.toggleNode(nodeId);
+tree.expandAll();
+tree.collapseAll();
+tree.refresh();
+tree.destroy();
+```
+
+### 5.26 Layer8DWizard
+
+Multi-step wizard view with step navigation, progress indicator, and per-step content rendering.
+
+```js
+// Registered as 'wizard' view type
+// viewConfig options:
+{
+    steps: [
+        { key: 'info', label: 'Basic Info', fields: ['name', 'code'] },
+        { key: 'config', label: 'Configuration', fields: ['type', 'status'] },
+        { key: 'review', label: 'Review' }
+    ]
+}
+```
+
+### 5.27 Layer8DWidget
+
+Dashboard KPI card component for rendering stats with trends, sparklines, and mini charts.
+
+```js
+// Render a single KPI card
+Layer8DWidget.render(
+    { label: 'Total Revenue', icon: '$', onClick: () => {} },
+    1500000,                           // Value (auto-formats to 1.5M)
+    {
+        trend: 'up',                   // 'up' | 'down'
+        trendValue: 12.5,             // Percentage change
+        sparklineData: [10, 20, 15, 30, 25],  // SVG sparkline
+        sparklineColor: '#22c55e'
+    }
+)
+
+// Render a grid of KPI widgets
+Layer8DWidget.renderEnhancedStatsGrid(kpis, iconMap)   // Returns HTML string
 ```
 
 ---

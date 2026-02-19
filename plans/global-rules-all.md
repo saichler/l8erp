@@ -2,7 +2,7 @@
 
 These are Claude Code global rules for the Layer8 ERP project. Load this file at the start of a session to apply all rules.
 
-**Source files:** `~/.claude/rules/*.md` (21 rule files)
+**Source files:** `~/.claude/rules/*.md` (24 rule files)
 
 ---
 
@@ -29,6 +29,9 @@ These are Claude Code global rules for the Layer8 ERP project. Load this file at
 19. [Mock Data Completeness](#19-mock-data-completeness)
 20. [Mock Endpoint Construction](#20-mock-endpoint-construction)
 21. [Mock Phase Ordering](#21-mock-phase-ordering)
+22. [L8UI Theme Compliance](#22-l8ui-theme-compliance)
+23. [Select Field Enum Completeness](#23-select-field-enum-completeness)
+24. [L8UI Guide Update](#24-l8ui-guide-update)
 
 ---
 
@@ -1545,3 +1548,154 @@ Before adding `common.ValidateRequired(entity.SomeId, "SomeId")` to a service ca
 
 ## Direct Index Access Trap
 Some generators use `store.XxxIDs[i]` or `store.XxxIDs[0]` (direct index, not `pickRef`). These will **panic** with "index out of range" if the slice is empty, rather than silently returning "". Both patterns are dangerous but panics are at least immediately visible.
+
+---
+
+# 22. L8UI Theme Compliance
+
+**Source:** `l8ui-theme-compliance.md`
+
+## Rule
+All UI components in the `l8ui/` directory MUST use the canonical `--layer8d-*` CSS custom properties defined in `layer8d-theme.css`. Never introduce generic/unprefixed CSS variable names (e.g., `--accent-color`, `--bg-primary`, `--text-primary`) in component CSS files.
+
+## CSS Variables
+
+### Required Token Usage
+| Purpose | Use | Never Use |
+|---------|-----|-----------|
+| Primary accent | `var(--layer8d-primary)` | `var(--accent-color, ...)` |
+| White/card background | `var(--layer8d-bg-white)` | `var(--bg-primary, #ffffff)` |
+| Light background | `var(--layer8d-bg-light)` | `var(--bg-secondary, ...)` |
+| Input background | `var(--layer8d-bg-input)` | `var(--bg-tertiary, ...)` |
+| Dark text | `var(--layer8d-text-dark)` | `var(--text-primary, ...)` |
+| Medium text | `var(--layer8d-text-medium)` | `var(--text-secondary, ...)` |
+| Light text | `var(--layer8d-text-light)` | `var(--text-tertiary, ...)` |
+| Muted text | `var(--layer8d-text-muted)` | hardcoded `#718096` etc. |
+| Border | `var(--layer8d-border)` | `var(--border-color, ...)` |
+| Status colors | `var(--layer8d-success)`, `var(--layer8d-warning)`, `var(--layer8d-error)` | hardcoded hex |
+
+### No Per-View Dark Mode Blocks
+Dark mode is handled centrally in `layer8d-theme.css` via `[data-theme="dark"]` overrides on `--layer8d-*` tokens. Component CSS files MUST NOT contain their own `[data-theme="dark"]` blocks. If a component uses `--layer8d-*` tokens, dark mode works automatically.
+
+## Buttons
+Reuse the shared button classes from `layer8d-theme.css`:
+- `layer8d-btn layer8d-btn-primary layer8d-btn-small` for primary actions
+- `layer8d-btn layer8d-btn-secondary layer8d-btn-small` for secondary actions
+
+Do NOT create per-view button styles (e.g., `.layer8d-kanban-add-btn`, `.layer8d-wizard-btn-primary`).
+
+## JavaScript Color References
+JS render files MUST NOT hardcode hex color values for theme-dependent elements (backgrounds, text, borders, chart palettes). Instead:
+
+1. Use `Layer8DChart.readThemeColor(varName, fallback)` for individual colors
+2. Use `Layer8DChart.getThemePalette()` for chart/data visualization color arrays
+3. Cache theme colors at the start of a render pass if reading multiple values
+
+### Example
+```javascript
+// WRONG
+const color = '#3b82f6';
+const colors = ['#0ea5e9', '#22c55e', '#f59e0b'];
+
+// CORRECT
+const color = Layer8DChart.readThemeColor('--layer8d-primary', '#0ea5e9');
+const colors = Layer8DChart.getThemePalette();
+```
+
+## Verification
+After creating or modifying any l8ui component CSS/JS:
+1. `grep 'var(--accent-color\|var(--bg-primary\|var(--text-primary\|var(--border-color' <file>` should return nothing
+2. `grep '#3b82f6' <file>` should return nothing (old indigo accent)
+3. No `[data-theme="dark"]` blocks in the component CSS
+4. `node -c <file>` passes for any modified JS files
+
+---
+
+# 23. Select Field Enum Completeness
+
+**Source:** `select-enum-completeness.md`
+
+## Rule
+Every `f.select()` call in a form definition MUST reference an enum that is **defined and exported** in the corresponding `*-enums.js` file. Never add a `f.select()` with an enum reference without verifying the enum exists in the exports.
+
+## Why This Is Critical
+`f.select('field', 'Label', enums.SOME_ENUM)` stores `enums.SOME_ENUM` as `field.options`. If `SOME_ENUM` is not exported from the enums file, `field.options` is `undefined`. When the detail modal opens, `generateSelectHtml()` calls `Object.entries(field.options)` which throws:
+```
+Uncaught TypeError: Cannot convert undefined or null to object
+    at Object.entries (<anonymous>)
+    at generateSelectHtml (layer8d-forms-fields.js:284)
+```
+
+This crash is **deferred** — it only happens when a user clicks a row to open the detail view, not at page load. The table renders fine, making it hard to catch during development.
+
+## The Bug Pattern
+```javascript
+// In *-forms.js:
+const enums = SomeModule.enums;
+SomeModule.forms = {
+    SomeModel: f.form('Model', [
+        f.section('Details', [
+            ...f.select('status', 'Status', enums.SOME_STATUS),  // ← crashes if SOME_STATUS not exported
+        ])
+    ])
+};
+
+// In *-enums.js:
+SomeModule.enums = {
+    OTHER_STATUS: OTHER_STATUS.enum,        // ← SOME_STATUS is missing!
+    OTHER_STATUS_CLASSES: OTHER_STATUS.classes
+};
+```
+
+## Checklist When Adding f.select()
+1. **Identify the enum name** used as the 3rd argument (e.g., `enums.SEGMENT_TYPE`)
+2. **Open the corresponding `*-enums.js` file** and verify `SEGMENT_TYPE` exists in the `.enums = { ... }` export block
+3. If missing:
+   a. Check the protobuf for enum values: `grep -A 10 'EnumName_' go/types/<module>/*.pb.go`
+   b. Add the `factory.create([...])` definition
+   c. Add to the `.enums = { ... }` export
+   d. Add a renderer to `.render = { ... }` if the enum is used in columns
+4. **Verify on BOTH desktop and mobile** — enum files are separate per platform
+
+## Verification Command
+After creating or modifying any `*-forms.js` file:
+```bash
+# Extract all enum references from f.select() calls in the forms file
+grep -oP "enums\.\K[A-Z_]+" <forms-file>
+
+# Check each one exists in the corresponding enums file export block
+grep "<ENUM_NAME>" <enums-file>
+```
+
+## Error Symptom
+- Clicking a table row to open detail view throws `Cannot convert undefined or null to object`
+- Stack trace shows `generateSelectHtml` → `generateFieldHtml` → `generateFormHtml`
+- The table itself renders fine — only the detail modal crashes
+- ALL rows crash, not just specific ones (since the field definition is static)
+
+---
+
+# 24. L8UI Guide Update
+
+**Source:** `l8ui-guide-update.md`
+
+## Rule
+Whenever a component in the `l8ui/` directory is **created, modified, or deleted**, the `l8ui/GUIDE.md` file MUST be updated to reflect the change. Do not mark the task as complete until the guide is up to date.
+
+## What to Update
+- **New component**: Add a new subsection under the appropriate API section (Desktop or Mobile) documenting the constructor/options, public methods, and any viewConfig options.
+- **Modified component**: Update the existing subsection to reflect new methods, changed parameters, removed APIs, or new behavior.
+- **New CSS file**: Add to the script/CSS loading order sections (Desktop section 3, Mobile section 4).
+- **New JS file**: Add to the script loading order sections in the correct dependency position.
+- **Deleted component**: Remove the subsection and any references from loading order sections.
+
+## What to Document
+For each component, the guide entry should include:
+1. **Global object name** (e.g., `window.Layer8DChart`)
+2. **Constructor options** or factory parameters
+3. **Public methods** with parameter signatures
+4. **viewConfig options** (if the component is a registered view type)
+5. **Registration** with Layer8DViewFactory if applicable
+
+## Why This Matters
+The GUIDE.md is the primary reference for AI assistants and developers building with l8ui. If a component exists but isn't documented, it won't be used correctly (or at all), leading to reimplementation or incorrect integration.
