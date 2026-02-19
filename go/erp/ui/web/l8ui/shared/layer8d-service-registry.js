@@ -100,7 +100,12 @@ limitations under the License.
         };
 
         const switcherKey = `${moduleKey}-${service.key}`;
-        const allViewTypes = service.supportedViews || ['table'];
+        const allViewTypes = service.supportedViews ? service.supportedViews.slice() : ['table'];
+        const hasDate = columns.some(c => c.type === 'date');
+        const hasMoney = columns.some(c => c.type === 'money');
+        if (hasDate && hasMoney && allViewTypes.indexOf('chart') === -1) {
+            allViewTypes.push('chart');
+        }
         const view = (allViewTypes.length > 1 && Layer8DViewFactory.createWithSwitcher)
             ? Layer8DViewFactory.createWithSwitcher(viewType, viewOptions, allViewTypes, switcherKey, function(newView) {
                 moduleNS._state.serviceTables[tableId] = newView;

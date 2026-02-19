@@ -135,6 +135,18 @@ limitations under the License.
                 }));
             }
 
+            // Detect L8Period objects and normalize
+            if (items.length > 0) {
+                const firstVal = this._getNestedValue(items[0], this.categoryField);
+                if (firstVal && typeof firstVal === 'object' && firstVal.periodType !== undefined) {
+                    return this._normalizePeriodData(items);
+                }
+                // Detect Unix timestamps (date columns) and normalize to year/quarter
+                if (typeof firstVal === 'number' && firstVal > 946684800) {
+                    return this._normalizeDateData(items);
+                }
+            }
+
             const groups = {};
             items.forEach(item => {
                 const key = this._getNestedValue(item, this.categoryField);
@@ -152,6 +164,79 @@ limitations under the License.
                 count: g.items.length,
                 items: g.items
             }));
+        }
+
+        // Convert L8Period objects to labeled, sorted chart groups
+        _normalizePeriodData(items) {
+            const PERIOD_NAMES = {
+                1:'January', 2:'February', 3:'March', 4:'April',
+                5:'May', 6:'June', 7:'July', 8:'August',
+                9:'September', 10:'October', 11:'November', 12:'December',
+                13:'Q1', 14:'Q2', 15:'Q3', 16:'Q4'
+            };
+
+            // Build sort key + display label for each period
+            const periodKey = (p) => {
+                if (!p || typeof p !== 'object') return { key: '0', label: 'Unknown' };
+                const year = p.periodYear || 0;
+                const type = p.periodType || 0;
+                if (type === 1) return { key: year + '-00', label: String(year) };
+                const val = p.periodValue || 0;
+                const name = PERIOD_NAMES[val];
+                const pad = String(val).padStart(2, '0');
+                return {
+                    key: year + '-' + pad,
+                    label: name ? year + ' / ' + name : String(year)
+                };
+            };
+
+            const groups = {};
+            items.forEach(item => {
+                const p = this._getNestedValue(item, this.categoryField);
+                const { key, label } = periodKey(p);
+                if (!groups[key]) {
+                    groups[key] = { key, label, values: [], items: [] };
+                }
+                groups[key].values.push(this._getValue(item));
+                groups[key].items.push(item);
+            });
+
+            return Object.values(groups)
+                .sort((a, b) => a.key.localeCompare(b.key))
+                .map(g => ({
+                    label: g.label,
+                    value: this._aggregate(g.values),
+                    count: g.items.length,
+                    items: g.items
+                }));
+        }
+
+        // Convert Unix timestamps to year/quarter groups
+        _normalizeDateData(items) {
+            const groups = {};
+            items.forEach(item => {
+                const ts = this._getNestedValue(item, this.categoryField);
+                if (!ts || typeof ts !== 'number') return;
+                const d = new Date(ts * 1000);
+                const year = d.getFullYear();
+                const q = Math.ceil((d.getMonth() + 1) / 3);
+                const key = year + '-Q' + q;
+                const label = year + ' / Q' + q;
+                if (!groups[key]) {
+                    groups[key] = { key, label, values: [], items: [] };
+                }
+                groups[key].values.push(this._getValue(item));
+                groups[key].items.push(item);
+            });
+
+            return Object.values(groups)
+                .sort((a, b) => a.key.localeCompare(b.key))
+                .map(g => ({
+                    label: g.label,
+                    value: this._aggregate(g.values),
+                    count: g.items.length,
+                    items: g.items
+                }));
         }
 
         _getValue(item) {
@@ -190,18 +275,36 @@ limitations under the License.
             const pk = cols.length > 0 ? cols[0].key : '';
             const candidates = cols.filter(c => c.key !== pk);
 
-            // Detect categoryField
-            const exact = [/^status$/i, /^type$/i, /^category$/i, /^period$/i, /^health$/i];
-            const suffix = [/Status$/, /Type$/, /Category$/, /Period$/, /Health$/];
-
-            for (const p of exact) {
-                const m = candidates.find(c => p.test(c.key));
-                if (m) { this.categoryField = m.key; break; }
+            // 1. Priority: period columns (L8Period)
+            const periodCol = candidates.find(c => c.type === 'period');
+            if (periodCol) {
+                this.categoryField = periodCol.key;
             }
+
+            // 2. Date columns when money columns also exist (money-over-time chart)
             if (!this.categoryField) {
-                for (const p of suffix) {
+                const hasMoney = candidates.some(c => c.type === 'money');
+                if (hasMoney) {
+                    const dateCol = candidates.find(c => c.type === 'date');
+                    if (dateCol) {
+                        this.categoryField = dateCol.key;
+                    }
+                }
+            }
+
+            // 3. Status/type/category/health patterns
+            if (!this.categoryField) {
+                const exact = [/^status$/i, /^type$/i, /^category$/i, /^health$/i];
+                const suffix = [/Status$/, /Type$/, /Category$/, /Health$/];
+                for (const p of exact) {
                     const m = candidates.find(c => p.test(c.key));
                     if (m) { this.categoryField = m.key; break; }
+                }
+                if (!this.categoryField) {
+                    for (const p of suffix) {
+                        const m = candidates.find(c => p.test(c.key));
+                        if (m) { this.categoryField = m.key; break; }
+                    }
                 }
             }
             if (!this.categoryField && typeof Layer8DViewFactory !== 'undefined') {

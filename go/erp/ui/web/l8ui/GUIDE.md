@@ -912,6 +912,18 @@ Sub-renderers (internal, auto-dispatched by `chartType`):
 
 **Chart type selector:** An inline button group (Bar | Line | Pie) renders above the chart. Clicking a button updates `chartType` and re-renders the SVG without refetching data.
 
+**Auto-detection priority:** When `categoryField` and `valueField` are not specified in `viewConfig`, the chart auto-detects them from columns in this order:
+1. **Period columns** (`type: 'period'`) — L8Period objects, grouped by period label
+2. **Date columns** (`type: 'date'`) when money columns (`type: 'money'`) also exist — timestamps normalized to year/quarter
+3. **Status/type/category/health** patterns — grouped by enum value
+4. **Fallback** — title field via `Layer8DViewFactory.detectTitleField()`
+
+**Auto-enabled chart view:** The service registry automatically adds `'chart'` to a service's `supportedViews` when its columns include both a `type: 'date'` and a `type: 'money'` column. No manual `supportedViews` config is needed for date+money models.
+
+**L8Period support:** When the `categoryField` contains L8Period objects (objects with `periodType`, `periodYear`, `periodValue` properties), the chart auto-detects them and converts each period to a human-readable label: `"2025"` (yearly), `"2025 / Q1"` (quarterly), or `"2025 / January"` (monthly). Records with the same period are grouped and aggregated. Groups are sorted chronologically.
+
+**Date normalization:** When the `categoryField` contains Unix timestamps (from date columns), the chart normalizes them to year/quarter buckets. Labels use the format `"2025 / Q1"`. Records within the same quarter are grouped and their money values aggregated (default: sum). Groups are sorted chronologically.
+
 ### 5.21 Layer8DKanban
 
 Kanban board with configurable lanes. Cards display title, subtitle, and custom fields.

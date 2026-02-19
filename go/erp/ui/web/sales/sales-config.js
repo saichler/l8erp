@@ -51,7 +51,7 @@ Layer8ModuleConfigFactory.create({
                 { key: 'targets', label: 'Sales Targets', icon: '🎯', endpoint: '/60/SalesTrgt', model: 'SalesTarget', supportedViews: ['table', 'chart'] },
                 { key: 'territories', label: 'Territories', icon: '🗺️', endpoint: '/60/Territory', model: 'SalesTerritory' },
                 { key: 'commission-plans', label: 'Commission Plans', icon: '💵', endpoint: '/60/CommPlan', model: 'SalesCommissionPlan' },
-                { key: 'forecasts', label: 'Forecasts', icon: '🔮', endpoint: '/60/SalesFcast', model: 'SalesForecast' }
+                { key: 'forecasts', label: 'Forecasts', icon: '🔮', endpoint: '/60/SalesFcast', model: 'SalesForecast', supportedViews: ['table', 'chart'] }
             ]
         }
     },
