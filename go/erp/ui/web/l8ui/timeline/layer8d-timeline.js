@@ -45,7 +45,7 @@ limitations under the License.
             this.addButtonText = options.addButtonText || 'Add';
 
             // Timeline config
-            this.dateField = this.viewConfig.dateField || 'auditInfo.createdDate';
+            this.dateField = this.viewConfig.dateField || 'auditInfo.createdAt';
             this.actorField = this.viewConfig.actorField || 'auditInfo.createdBy';
             this.titleField = this.viewConfig.titleField
                 || (Layer8DViewFactory.detectTitleField ? Layer8DViewFactory.detectTitleField(this.columns, this.primaryKey) : 'name');
@@ -194,6 +194,7 @@ limitations under the License.
             const v = this._getNestedValue(item, this.dateField);
             if (!v) return 0;
             if (typeof v === 'number') return v;
+            if (typeof v === 'string' && /^\d+$/.test(v)) return parseInt(v, 10);
             return new Date(v).getTime() / 1000 || 0;
         }
 

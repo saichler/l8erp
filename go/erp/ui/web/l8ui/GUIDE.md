@@ -111,6 +111,13 @@ Layer8MUtils
     +--- LAYER8M_NAV_CONFIG (data)
     +--- Layer8MNavCrud, Layer8MNavData
     +--- Layer8MNav (uses all above)
+    |
+    +--- View System (wraps desktop core components)
+    |       Layer8MViewFactory (registry + table auto-registered)
+    |       Layer8ViewSwitcher (shared with desktop)
+    |       Layer8MChart, Layer8MKanban, Layer8MCalendar
+    |       Layer8MTimeline, Layer8MGantt, Layer8MTreeGrid
+    |       Layer8MWizard
 ```
 
 ---
@@ -1271,6 +1278,9 @@ window.LAYER8M_NAV_CONFIG = {
             'core-hr': [
                 { key: 'employees', label: 'Employees', icon: 'employees',
                   endpoint: '/30/Employee', model: 'Employee', idField: 'employeeId' },
+                { key: 'leave-requests', label: 'Leave Requests', icon: 'time',
+                  endpoint: '/30/LeaveReq', model: 'LeaveRequest', idField: 'requestId',
+                  supportedViews: ['table', 'kanban', 'calendar'] },
                 { key: 'health', label: 'Health', icon: 'health',
                   endpoint: '/0/Health', model: 'L8Health', idField: 'service',
                   readOnly: true }
@@ -1375,6 +1385,31 @@ registry.getRender(modelName)       // Render object or null
 registry.hasModel(modelName)        // Boolean
 registry.getAllModels()             // Array of all model names
 registry.getModuleName(modelName)   // Sub-module name or null
+```
+
+### 6.16 Layer8MViewFactory
+
+Mobile view factory — mirrors `Layer8DViewFactory` for mobile. Creates view instances by type. All mobile view wrappers auto-register on load.
+
+```js
+Layer8MViewFactory.register('chart', factoryFn)       // Register a view type
+Layer8MViewFactory.create('chart', options)            // Create view instance
+Layer8MViewFactory.has('kanban')                       // Check if type registered
+```
+
+Registered view types: `table`, `chart`, `kanban`, `calendar`, `timeline`, `gantt`, `tree`, `wizard`.
+
+All view instances follow the same interface: `init()`, `refresh()`, `destroy()`.
+
+**Mobile view switching:** `Layer8MNavData.loadServiceData()` reads `supportedViews` from the service config. When multiple views are available, it renders a `Layer8ViewSwitcher` dropdown above the data container. Switching views destroys the current view and creates a new one via `Layer8MViewFactory.create()`.
+
+**Auto-detect chart:** If a service's columns include both `type: 'date'` and `type: 'money'`, `'chart'` is automatically added to the available views (same logic as desktop `layer8d-service-registry.js`).
+
+**Service config `supportedViews`:**
+```js
+{ key: 'work-orders', label: 'Work Orders', endpoint: '/70/MfgWorkOrd',
+  model: 'MfgWorkOrder', idField: 'workOrderId',
+  supportedViews: ['table', 'kanban', 'gantt'] }
 ```
 
 ---
@@ -1681,7 +1716,8 @@ LAYER8M_NAV_CONFIG.projects = {
     services: {
         'planning': [
             { key: 'projects', label: 'Projects', icon: 'projects',
-              endpoint: '/60/Project', model: 'Project', idField: 'projectId' },
+              endpoint: '/60/Project', model: 'Project', idField: 'projectId',
+              supportedViews: ['table', 'kanban', 'gantt', 'timeline'] },
             { key: 'tasks', label: 'Tasks', icon: 'projects',
               endpoint: '/60/Task', model: 'ProjectTask', idField: 'taskId' }
         ]

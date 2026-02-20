@@ -23,22 +23,22 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
             services: {
                 'procurement': [
-                    { key: 'purchase-requisitions', label: 'Requisitions', icon: 'procurement', endpoint: '/50/PurchReq', model: 'ScmPurchaseRequisition', idField: 'requisitionId' },
+                    { key: 'purchase-requisitions', label: 'Requisitions', icon: 'procurement', endpoint: '/50/PurchReq', model: 'ScmPurchaseRequisition', idField: 'requisitionId', supportedViews: ['table', 'kanban'] },
                     { key: 'rfqs', label: 'RFQs', icon: 'procurement', endpoint: '/50/RFQ', model: 'ScmRequestForQuotation', idField: 'rfqId' },
-                    { key: 'purchase-orders', label: 'Purchase Orders', icon: 'procurement', endpoint: '/50/PurchOrder', model: 'ScmPurchaseOrder', idField: 'purchaseOrderId' },
+                    { key: 'purchase-orders', label: 'Purchase Orders', icon: 'procurement', endpoint: '/50/PurchOrder', model: 'ScmPurchaseOrder', idField: 'purchaseOrderId', supportedViews: ['table', 'kanban'] },
                     { key: 'blanket-orders', label: 'Blanket Orders', icon: 'procurement', endpoint: '/50/BlnktOrder', model: 'ScmBlanketOrder', idField: 'blanketOrderId' },
                     { key: 'supplier-scorecards', label: 'Scorecards', icon: 'procurement', endpoint: '/50/SupplrCard', model: 'ScmSupplierScorecard', idField: 'scorecardId' }
                 ],
                 'inventory': [
                     { key: 'items', label: 'Items', icon: 'inventory', endpoint: '/50/Item', model: 'ScmItem', idField: 'itemId' },
-                    { key: 'item-categories', label: 'Categories', icon: 'inventory', endpoint: '/50/ItemCat', model: 'ScmItemCategory', idField: 'categoryId' },
+                    { key: 'item-categories', label: 'Categories', icon: 'inventory', endpoint: '/50/ItemCat', model: 'ScmItemCategory', idField: 'categoryId', supportedViews: ['table', 'tree'] },
                     { key: 'cycle-counts', label: 'Cycle Counts', icon: 'inventory', endpoint: '/50/CycleCount', model: 'ScmCycleCount', idField: 'cycleCountId' }
                 ],
                 'warehouse': [
                     { key: 'warehouses', label: 'Warehouses', icon: 'warehouse', endpoint: '/50/Warehouse', model: 'ScmWarehouse', idField: 'warehouseId' },
                     { key: 'receiving-orders', label: 'Receiving', icon: 'warehouse', endpoint: '/50/RecvOrder', model: 'ScmReceivingOrder', idField: 'receivingOrderId' },
                     { key: 'wave-plans', label: 'Wave Plans', icon: 'warehouse', endpoint: '/50/WavePlan', model: 'ScmWavePlan', idField: 'wavePlanId' },
-                    { key: 'dock-schedules', label: 'Dock Schedules', icon: 'warehouse', endpoint: '/50/DockSched', model: 'ScmDockSchedule', idField: 'scheduleId' }
+                    { key: 'dock-schedules', label: 'Dock Schedules', icon: 'warehouse', endpoint: '/50/DockSched', model: 'ScmDockSchedule', idField: 'scheduleId', supportedViews: ['table', 'calendar'] }
                 ],
                 'logistics': [
                     { key: 'carriers', label: 'Carriers', icon: 'logistics', endpoint: '/50/ScmCarrier', model: 'ScmCarrier', idField: 'carrierId' },
@@ -46,7 +46,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'shipments', label: 'Shipments', icon: 'logistics', endpoint: '/50/Shipment', model: 'ScmShipment', idField: 'shipmentId' },
                     { key: 'routes', label: 'Routes', icon: 'logistics', endpoint: '/50/Route', model: 'ScmRoute', idField: 'routeId' },
                     { key: 'load-plans', label: 'Load Plans', icon: 'logistics', endpoint: '/50/LoadPlan', model: 'ScmLoadPlan', idField: 'loadPlanId' },
-                    { key: 'return-authorizations', label: 'Returns', icon: 'logistics', endpoint: '/50/ReturnAuth', model: 'ScmReturnAuthorization', idField: 'rmaId' }
+                    { key: 'return-authorizations', label: 'Returns', icon: 'logistics', endpoint: '/50/ReturnAuth', model: 'ScmReturnAuthorization', idField: 'rmaId', supportedViews: ['table', 'kanban'] }
                 ],
                 'demand-planning': [
                     { key: 'demand-forecasts', label: 'Forecasts', icon: 'demand-planning', endpoint: '/50/DmndFcast', model: 'ScmDemandForecast', idField: 'forecastId' },
@@ -79,13 +79,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
             services: {
                 'engineering': [
-                    { key: 'boms', label: 'BOMs', icon: 'documents', endpoint: '/70/MfgBom', model: 'MfgBom', idField: 'bomId' },
+                    { key: 'boms', label: 'BOMs', icon: 'documents', endpoint: '/70/MfgBom', model: 'MfgBom', idField: 'bomId', supportedViews: ['table', 'tree'] },
                     { key: 'routings', label: 'Routings', icon: 'scm', endpoint: '/70/MfgRouting', model: 'MfgRouting', idField: 'routingId' },
-                    { key: 'change-orders', label: 'Change Orders', icon: 'documents', endpoint: '/70/MfgECO', model: 'MfgEngChangeOrder', idField: 'changeOrderId' }
+                    { key: 'change-orders', label: 'Change Orders', icon: 'documents', endpoint: '/70/MfgECO', model: 'MfgEngChangeOrder', idField: 'changeOrderId', supportedViews: ['table', 'kanban'] }
                 ],
                 'production': [
-                    { key: 'work-orders', label: 'Work Orders', icon: 'inventory', endpoint: '/70/MfgWorkOrd', model: 'MfgWorkOrder', idField: 'workOrderId' },
-                    { key: 'prod-orders', label: 'Prod Orders', icon: 'documents', endpoint: '/70/MfgProdOrd', model: 'MfgProductionOrder', idField: 'prodOrderId' }
+                    { key: 'work-orders', label: 'Work Orders', icon: 'inventory', endpoint: '/70/MfgWorkOrd', model: 'MfgWorkOrder', idField: 'workOrderId', supportedViews: ['table', 'kanban', 'gantt'] },
+                    { key: 'prod-orders', label: 'Prod Orders', icon: 'documents', endpoint: '/70/MfgProdOrd', model: 'MfgProductionOrder', idField: 'prodOrderId', supportedViews: ['table', 'kanban', 'gantt'] }
                 ],
                 'shopfloor': [
                     { key: 'work-centers', label: 'Work Centers', icon: 'manufacturing', endpoint: '/70/MfgWorkCtr', model: 'MfgWorkCenter', idField: 'workCenterId' },
@@ -95,13 +95,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ],
                 'quality': [
                     { key: 'plans', label: 'Quality Plans', icon: 'documents', endpoint: '/70/MfgQCPlan', model: 'MfgQualityPlan', idField: 'planId' },
-                    { key: 'inspections', label: 'Inspections', icon: 'compliance', endpoint: '/70/MfgQCInsp', model: 'MfgQualityInspection', idField: 'inspectionId' },
+                    { key: 'inspections', label: 'Inspections', icon: 'compliance', endpoint: '/70/MfgQCInsp', model: 'MfgQualityInspection', idField: 'inspectionId', supportedViews: ['table', 'kanban'] },
                     { key: 'ncrs', label: 'NCRs', icon: 'compliance', endpoint: '/70/MfgNCR', model: 'MfgNCR', idField: 'ncrId' }
                 ],
                 'planning': [
                     { key: 'mrp-runs', label: 'MRP Runs', icon: 'scm', endpoint: '/70/MfgMrpRun', model: 'MfgMrpRun', idField: 'runId' },
                     { key: 'capacity-plans', label: 'Capacity Plans', icon: 'demand-planning', endpoint: '/70/MfgCapPlan', model: 'MfgCapacityPlan', idField: 'planId' },
-                    { key: 'schedules', label: 'Prod Schedules', icon: 'time', endpoint: '/70/MfgProdSch', model: 'MfgProdSchedule', idField: 'scheduleId' }
+                    { key: 'schedules', label: 'Prod Schedules', icon: 'time', endpoint: '/70/MfgProdSch', model: 'MfgProdSchedule', idField: 'scheduleId', supportedViews: ['table', 'gantt'] }
                 ],
                 'costing': [
                     { key: 'standard-costs', label: 'Standard Costs', icon: 'financial', endpoint: '/70/MfgStdCost', model: 'MfgStandardCost', idField: 'costId' },
@@ -124,15 +124,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
             services: {
                 'customers': [
-                    { key: 'hierarchies', label: 'Hierarchies', icon: 'organizations', endpoint: '/60/CustHier', model: 'SalesCustomerHierarchy', idField: 'hierarchyId' },
+                    { key: 'hierarchies', label: 'Hierarchies', icon: 'organizations', endpoint: '/60/CustHier', model: 'SalesCustomerHierarchy', idField: 'hierarchyId', supportedViews: ['table', 'tree'] },
                     { key: 'segments', label: 'Segments', icon: 'departments', endpoint: '/60/CustSegmt', model: 'SalesCustomerSegment', idField: 'segmentId' },
                     { key: 'contracts', label: 'Contracts', icon: 'documents', endpoint: '/60/CustContr', model: 'SalesCustomerContract', idField: 'contractId' },
                     { key: 'partners', label: 'Partners', icon: 'hcm', endpoint: '/60/Partner', model: 'SalesPartnerChannel', idField: 'partnerId' }
                 ],
                 'orders': [
-                    { key: 'quotations', label: 'Quotations', icon: 'documents', endpoint: '/60/SalesQuote', model: 'SalesQuotation', idField: 'quotationId' },
-                    { key: 'sales-orders', label: 'Sales Orders', icon: 'procurement', endpoint: '/60/SalesOrder', model: 'SalesOrder', idField: 'salesOrderId' },
-                    { key: 'returns', label: 'Returns', icon: 'logistics', endpoint: '/60/ReturnOrd', model: 'SalesReturnOrder', idField: 'returnOrderId' }
+                    { key: 'quotations', label: 'Quotations', icon: 'documents', endpoint: '/60/SalesQuote', model: 'SalesQuotation', idField: 'quotationId', supportedViews: ['table', 'kanban'] },
+                    { key: 'sales-orders', label: 'Sales Orders', icon: 'procurement', endpoint: '/60/SalesOrder', model: 'SalesOrder', idField: 'salesOrderId', supportedViews: ['table', 'kanban'] },
+                    { key: 'returns', label: 'Returns', icon: 'logistics', endpoint: '/60/ReturnOrd', model: 'SalesReturnOrder', idField: 'returnOrderId', supportedViews: ['table', 'kanban'] }
                 ],
                 'pricing': [
                     { key: 'price-lists', label: 'Price Lists', icon: 'documents', endpoint: '/60/PriceList', model: 'SalesPriceList', idField: 'priceListId' },
@@ -147,10 +147,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'revenue', label: 'Revenue Recog', icon: 'financial', endpoint: '/60/RevSched', model: 'SalesRevenueSchedule', idField: 'scheduleId' }
                 ],
                 'analytics': [
-                    { key: 'targets', label: 'Sales Targets', icon: 'talent', endpoint: '/60/SalesTrgt', model: 'SalesTarget', idField: 'targetId' },
+                    { key: 'targets', label: 'Sales Targets', icon: 'talent', endpoint: '/60/SalesTrgt', model: 'SalesTarget', idField: 'targetId', supportedViews: ['table', 'chart'] },
                     { key: 'territories', label: 'Territories', icon: 'organizations', endpoint: '/60/Territory', model: 'SalesTerritory', idField: 'territoryId' },
                     { key: 'commission-plans', label: 'Commission Plans', icon: 'financial', endpoint: '/60/CommPlan', model: 'SalesCommissionPlan', idField: 'planId' },
-                    { key: 'forecasts', label: 'Forecasts', icon: 'demand-planning', endpoint: '/60/SalesFcast', model: 'SalesForecast', idField: 'forecastId' }
+                    { key: 'forecasts', label: 'Forecasts', icon: 'demand-planning', endpoint: '/60/SalesFcast', model: 'SalesForecast', idField: 'forecastId', supportedViews: ['table', 'chart'] }
                 ]
             }
         },
@@ -168,13 +168,13 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
             services: {
                 'leads': [
-                    { key: 'leads', label: 'Leads', icon: 'hcm', endpoint: '/80/CrmLead', model: 'CrmLead', idField: 'leadId' },
+                    { key: 'leads', label: 'Leads', icon: 'hcm', endpoint: '/80/CrmLead', model: 'CrmLead', idField: 'leadId', supportedViews: ['table', 'kanban'] },
                     { key: 'lead-sources', label: 'Lead Sources', icon: 'procurement', endpoint: '/80/CrmLeadSrc', model: 'CrmLeadSource', idField: 'sourceId' },
                     { key: 'lead-scores', label: 'Lead Scores', icon: 'bi', endpoint: '/80/CrmLdScore', model: 'CrmLeadScore', idField: 'scoreId' },
                     { key: 'lead-assigns', label: 'Assignments', icon: 'hcm', endpoint: '/80/CrmLdAssn', model: 'CrmLeadAssign', idField: 'assignmentId' }
                 ],
                 'opportunities': [
-                    { key: 'opportunities', label: 'Opportunities', icon: 'financial', endpoint: '/80/CrmOpp', model: 'CrmOpportunity', idField: 'opportunityId' },
+                    { key: 'opportunities', label: 'Opportunities', icon: 'financial', endpoint: '/80/CrmOpp', model: 'CrmOpportunity', idField: 'opportunityId', supportedViews: ['table', 'kanban'] },
                     { key: 'opp-stages', label: 'Sales Stages', icon: 'demand-planning', endpoint: '/80/CrmOppStg', model: 'CrmOppStage', idField: 'stageId' }
                 ],
                 'accounts': [
@@ -184,22 +184,22 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'relationships', label: 'Relationships', icon: 'scm', endpoint: '/80/CrmRelshp', model: 'CrmRelationship', idField: 'relationshipId' }
                 ],
                 'marketing': [
-                    { key: 'campaigns', label: 'Campaigns', icon: 'talent', endpoint: '/80/CrmCmpgn', model: 'CrmCampaign', idField: 'campaignId' },
+                    { key: 'campaigns', label: 'Campaigns', icon: 'talent', endpoint: '/80/CrmCmpgn', model: 'CrmCampaign', idField: 'campaignId', supportedViews: ['table', 'timeline'] },
                     { key: 'email-templates', label: 'Email Templates', icon: 'documents', endpoint: '/80/CrmEmailTp', model: 'CrmEmailTemplate', idField: 'templateId' },
                     { key: 'marketing-lists', label: 'Lists', icon: 'documents', endpoint: '/80/CrmMktList', model: 'CrmMarketingList', idField: 'listId' }
                 ],
                 'service': [
-                    { key: 'cases', label: 'Cases', icon: 'documents', endpoint: '/80/CrmCase', model: 'CrmCase', idField: 'caseId' },
+                    { key: 'cases', label: 'Cases', icon: 'documents', endpoint: '/80/CrmCase', model: 'CrmCase', idField: 'caseId', supportedViews: ['table', 'kanban'] },
                     { key: 'kb-articles', label: 'Knowledge Base', icon: 'learning', endpoint: '/80/CrmKBart', model: 'CrmKBArticle', idField: 'articleId' },
                     { key: 'slas', label: 'SLAs', icon: 'time', endpoint: '/80/CrmSLA', model: 'CrmSLA', idField: 'slaId' },
                     { key: 'escalations', label: 'Escalations', icon: 'compliance', endpoint: '/80/CrmEscal', model: 'CrmEscalation', idField: 'escalationId' },
                     { key: 'surveys', label: 'Surveys', icon: 'documents', endpoint: '/80/CrmSurvey', model: 'CrmSurvey', idField: 'surveyId' }
                 ],
                 'fieldservice': [
-                    { key: 'service-orders', label: 'Service Orders', icon: 'documents', endpoint: '/80/CrmSvcOrd', model: 'CrmServiceOrder', idField: 'orderId' },
+                    { key: 'service-orders', label: 'Service Orders', icon: 'documents', endpoint: '/80/CrmSvcOrd', model: 'CrmServiceOrder', idField: 'orderId', supportedViews: ['table', 'kanban', 'calendar'] },
                     { key: 'technicians', label: 'Technicians', icon: 'hcm', endpoint: '/80/CrmTech', model: 'CrmTechnician', idField: 'technicianId' },
                     { key: 'service-contracts', label: 'Contracts', icon: 'documents', endpoint: '/80/CrmSvcCntr', model: 'CrmServiceContract', idField: 'contractId' },
-                    { key: 'service-schedules', label: 'Schedules', icon: 'time', endpoint: '/80/CrmSvcSchd', model: 'CrmServiceSchedule', idField: 'scheduleId' }
+                    { key: 'service-schedules', label: 'Schedules', icon: 'time', endpoint: '/80/CrmSvcSchd', model: 'CrmServiceSchedule', idField: 'scheduleId', supportedViews: ['table', 'calendar'] }
                 ]
             }
         }

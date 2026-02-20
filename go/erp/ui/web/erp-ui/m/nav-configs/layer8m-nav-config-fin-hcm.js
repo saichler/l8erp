@@ -25,7 +25,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             // Services for each sub-module (Level 3) - EXACT order from desktop fin-config.js
             services: {
                 'general-ledger': [
-                    { key: 'accounts', label: 'Accounts', icon: 'financial', endpoint: '/40/Account', model: 'Account', idField: 'accountId' },
+                    { key: 'accounts', label: 'Accounts', icon: 'financial', endpoint: '/40/Account', model: 'Account', idField: 'accountId', supportedViews: ['table', 'tree'] },
                     { key: 'journal-entries', label: 'Journal Entries', icon: 'financial', endpoint: '/40/JrnlEntry', model: 'JournalEntry', idField: 'journalEntryId' },
                     { key: 'fiscal-years', label: 'Fiscal Years', icon: 'financial', endpoint: '/40/FiscalYr', model: 'FiscalYear', idField: 'fiscalYearId' },
                     { key: 'currencies', label: 'Currencies', icon: 'financial', endpoint: '/40/Currency', model: 'Currency', idField: 'currencyId' },
@@ -47,7 +47,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ],
                 'cash-management': [
                     { key: 'bank-accounts', label: 'Bank Accounts', icon: 'financial', endpoint: '/40/BankAcct', model: 'BankAccount', idField: 'bankAccountId' },
-                    { key: 'cash-forecasts', label: 'Cash Forecasts', icon: 'financial', endpoint: '/40/CashFcst', model: 'CashForecast', idField: 'forecastId' },
+                    { key: 'cash-forecasts', label: 'Cash Forecasts', icon: 'financial', endpoint: '/40/CashFcst', model: 'CashForecast', idField: 'forecastId', supportedViews: ['table', 'chart'] },
                     { key: 'fund-transfers', label: 'Fund Transfers', icon: 'financial', endpoint: '/40/FundXfer', model: 'FundTransfer', idField: 'transferId' },
                     { key: 'petty-cash', label: 'Petty Cash', icon: 'financial', endpoint: '/40/PettyCash', model: 'PettyCash', idField: 'pettyCashId' }
                 ],
@@ -56,9 +56,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'asset-categories', label: 'Categories', icon: 'financial', endpoint: '/40/AstCat', model: 'AssetCategory', idField: 'categoryId' }
                 ],
                 'budgeting': [
-                    { key: 'budgets', label: 'Budgets', icon: 'financial', endpoint: '/40/Budget', model: 'Budget', idField: 'budgetId' },
+                    { key: 'budgets', label: 'Budgets', icon: 'financial', endpoint: '/40/Budget', model: 'Budget', idField: 'budgetId', supportedViews: ['table', 'chart'] },
                     { key: 'capital-expenditures', label: 'Capital Expenditures', icon: 'financial', endpoint: '/40/CapEx', model: 'CapitalExpenditure', idField: 'capexId' },
-                    { key: 'forecasts', label: 'Forecasts', icon: 'financial', endpoint: '/40/Forecast', model: 'Forecast', idField: 'forecastId' }
+                    { key: 'forecasts', label: 'Forecasts', icon: 'financial', endpoint: '/40/Forecast', model: 'Forecast', idField: 'forecastId', supportedViews: ['table', 'chart'] }
                 ],
                 'tax-management': [
                     { key: 'tax-codes', label: 'Tax Codes', icon: 'financial', endpoint: '/40/TaxCode', model: 'TaxCode', idField: 'taxCodeId' },
@@ -113,12 +113,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ],
                 'time': [
                     { key: 'timesheets', label: 'Timesheets', icon: 'timesheets', endpoint: '/30/Timesheet', model: 'Timesheet', idField: 'timesheetId' },
-                    { key: 'leave-requests', label: 'Leave Requests', icon: 'leave-requests', endpoint: '/30/LeaveReq', model: 'LeaveRequest', idField: 'leaveRequestId' },
+                    { key: 'leave-requests', label: 'Leave Requests', icon: 'leave-requests', endpoint: '/30/LeaveReq', model: 'LeaveRequest', idField: 'leaveRequestId', supportedViews: ['table', 'kanban', 'calendar'] },
                     { key: 'leave-balances', label: 'Leave Balances', icon: 'leave-balances', endpoint: '/30/LeaveBal', model: 'LeaveBalance', idField: 'leaveBalanceId' },
                     { key: 'leave-policies', label: 'Leave Policies', icon: 'leave-policies', endpoint: '/30/LeavePol', model: 'LeavePolicy', idField: 'leavePolicyId' },
-                    { key: 'shifts', label: 'Shifts', icon: 'shifts', endpoint: '/30/Shift', model: 'Shift', idField: 'shiftId' },
-                    { key: 'schedules', label: 'Schedules', icon: 'schedules', endpoint: '/30/Schedule', model: 'Schedule', idField: 'scheduleId' },
-                    { key: 'holidays', label: 'Holidays', icon: 'holidays', endpoint: '/30/Holiday', model: 'Holiday', idField: 'holidayId' },
+                    { key: 'shifts', label: 'Shifts', icon: 'shifts', endpoint: '/30/Shift', model: 'Shift', idField: 'shiftId', supportedViews: ['table', 'calendar'] },
+                    { key: 'schedules', label: 'Schedules', icon: 'schedules', endpoint: '/30/Schedule', model: 'Schedule', idField: 'scheduleId', supportedViews: ['table', 'calendar'] },
+                    { key: 'holidays', label: 'Holidays', icon: 'holidays', endpoint: '/30/Holiday', model: 'Holiday', idField: 'holidayId', supportedViews: ['table', 'calendar'] },
                     { key: 'absences', label: 'Absences', icon: 'absences', endpoint: '/30/Absence', model: 'Absence', idField: 'absenceId' }
                 ],
                 'talent': [
@@ -127,14 +127,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'feedback', label: 'Feedback', icon: 'feedback', endpoint: '/30/Feedback', model: 'Feedback', idField: 'feedbackId' },
                     { key: 'career-paths', label: 'Career Paths', icon: 'career-paths', endpoint: '/30/CarPath', model: 'CareerPath', idField: 'careerPathId' },
                     { key: 'succession', label: 'Succession Plans', icon: 'succession', endpoint: '/30/SuccPlan', model: 'SuccessionPlan', idField: 'successionPlanId' },
-                    { key: 'requisitions', label: 'Requisitions', icon: 'requisitions', endpoint: '/30/JobReq', model: 'JobRequisition', idField: 'requisitionId' },
+                    { key: 'requisitions', label: 'Requisitions', icon: 'requisitions', endpoint: '/30/JobReq', model: 'JobRequisition', idField: 'requisitionId', supportedViews: ['table', 'kanban'] },
                     { key: 'applicants', label: 'Applicants', icon: 'applicants', endpoint: '/30/Applicant', model: 'Applicant', idField: 'applicantId' },
                     { key: 'applications', label: 'Applications', icon: 'applications', endpoint: '/30/Applctn', model: 'Application', idField: 'applicationId' },
-                    { key: 'onboarding', label: 'Onboarding', icon: 'onboarding', endpoint: '/30/OnbrdTsk', model: 'OnboardingTask', idField: 'taskId' }
+                    { key: 'onboarding', label: 'Onboarding', icon: 'onboarding', endpoint: '/30/OnbrdTsk', model: 'OnboardingTask', idField: 'taskId', supportedViews: ['table', 'kanban'] }
                 ],
                 'learning': [
                     { key: 'courses', label: 'Courses', icon: 'courses', endpoint: '/30/Course', model: 'Course', idField: 'courseId' },
-                    { key: 'sessions', label: 'Sessions', icon: 'sessions', endpoint: '/30/CrsSess', model: 'CourseSession', idField: 'sessionId' },
+                    { key: 'sessions', label: 'Sessions', icon: 'sessions', endpoint: '/30/CrsSess', model: 'CourseSession', idField: 'sessionId', supportedViews: ['table', 'calendar'] },
                     { key: 'course-enrollments', label: 'Enrollments', icon: 'enrollments', endpoint: '/30/CrsEnrol', model: 'CourseEnrollment', idField: 'enrollmentId' },
                     { key: 'certifications', label: 'Certifications', icon: 'certifications', endpoint: '/30/Cert', model: 'Certification', idField: 'certificationId' },
                     { key: 'emp-certifications', label: 'Emp. Certs', icon: 'emp-certifications', endpoint: '/30/EmpCert', model: 'EmployeeCertification', idField: 'empCertificationId' },

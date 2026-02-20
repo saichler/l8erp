@@ -47,7 +47,7 @@ limitations under the License.
     // Auto-register 'table' view type (Layer8MEditTable)
     Layer8MViewFactory.register('table', function(options) {
         return new Layer8MEditTable(options.containerId, {
-            endpoint: options.endpoint,
+            endpoint: Layer8MConfig.resolveEndpoint(options.endpoint),
             modelName: options.modelName,
             columns: options.columns,
             rowsPerPage: options.pageSize || 15,

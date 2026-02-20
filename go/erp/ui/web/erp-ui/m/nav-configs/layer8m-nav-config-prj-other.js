@@ -22,14 +22,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
             services: {
                 'planning': [
-                    { key: 'projects', label: 'Projects', icon: 'projects', endpoint: '/90/PrjProj', model: 'PrjProject', idField: 'projectId' },
+                    { key: 'projects', label: 'Projects', icon: 'projects', endpoint: '/90/PrjProj', model: 'PrjProject', idField: 'projectId', supportedViews: ['table', 'kanban', 'gantt', 'timeline'] },
                     { key: 'templates', label: 'Templates', icon: 'documents', endpoint: '/90/PrjProjTpl', model: 'PrjProjectTemplate', idField: 'templateId' }
                 ],
                 'resources': [
                     { key: 'resource-pools', label: 'Resource Pools', icon: 'organizations', endpoint: '/90/PrjResPool', model: 'PrjResourcePool', idField: 'poolId' },
                     { key: 'resources', label: 'Resources', icon: 'hcm', endpoint: '/90/PrjRes', model: 'PrjResource', idField: 'resourceId' },
                     { key: 'allocations', label: 'Allocations', icon: 'demand-planning', endpoint: '/90/PrjAlloc', model: 'PrjAllocation', idField: 'allocationId' },
-                    { key: 'bookings', label: 'Bookings', icon: 'time', endpoint: '/90/PrjBooking', model: 'PrjBooking', idField: 'bookingId' },
+                    { key: 'bookings', label: 'Bookings', icon: 'time', endpoint: '/90/PrjBooking', model: 'PrjBooking', idField: 'bookingId', supportedViews: ['table', 'calendar'] },
                     { key: 'capacity-plans', label: 'Capacity Plans', icon: 'demand-planning', endpoint: '/90/PrjCapPlan', model: 'PrjCapacityPlan', idField: 'planId' },
                     { key: 'utilizations', label: 'Utilizations', icon: 'bi', endpoint: '/90/PrjUtil', model: 'PrjUtilization', idField: 'utilizationId' }
                 ],
@@ -48,9 +48,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'budgets', label: 'Budgets', icon: 'financial', endpoint: '/90/PrjBudget', model: 'PrjProjectBudget', idField: 'budgetId' }
                 ],
                 'analytics': [
-                    { key: 'status-reports', label: 'Status Reports', icon: 'documents', endpoint: '/90/PrjStatus', model: 'PrjStatusReport', idField: 'statusId' },
-                    { key: 'portfolio-views', label: 'Portfolio', icon: 'projects', endpoint: '/90/PrjPortflo', model: 'PrjPortfolioView', idField: 'viewId' },
-                    { key: 'kpis', label: 'KPIs', icon: 'talent', endpoint: '/90/PrjKPI', model: 'PrjProjectKPI', idField: 'kpiId' }
+                    { key: 'status-reports', label: 'Status Reports', icon: 'documents', endpoint: '/90/PrjStatus', model: 'PrjStatusReport', idField: 'statusId', supportedViews: ['table', 'chart'] },
+                    { key: 'portfolio-views', label: 'Portfolio', icon: 'projects', endpoint: '/90/PrjPortflo', model: 'PrjPortfolioView', idField: 'viewId', supportedViews: ['table', 'chart'] },
+                    { key: 'kpis', label: 'KPIs', icon: 'talent', endpoint: '/90/PrjKPI', model: 'PrjProjectKPI', idField: 'kpiId', supportedViews: ['table', 'chart'] }
                 ]
             }
         },
@@ -71,14 +71,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ],
                 'dashboards': [
                     { key: 'dashboards', label: 'Dashboards', icon: 'bi', endpoint: '/35/BiDashbrd', model: 'BiDashboard', idField: 'dashboardId' },
-                    { key: 'kpis', label: 'KPIs', icon: 'talent', endpoint: '/35/BiKPI', model: 'BiKPI', idField: 'kpiId' }
+                    { key: 'kpis', label: 'KPIs', icon: 'talent', endpoint: '/35/BiKPI', model: 'BiKPI', idField: 'kpiId', supportedViews: ['table', 'chart'] }
                 ],
                 'analytics': [
                     { key: 'data-cubes', label: 'Data Cubes', icon: 'inventory', endpoint: '/35/BiCube', model: 'BiDataCube', idField: 'cubeId' },
                     { key: 'analysis-models', label: 'Models', icon: 'learning', endpoint: '/35/BiAnaModel', model: 'BiAnalysisModel', idField: 'modelId' },
-                    { key: 'trend-analyses', label: 'Trends', icon: 'demand-planning', endpoint: '/35/BiTrend', model: 'BiTrendAnalysis', idField: 'analysisId' },
+                    { key: 'trend-analyses', label: 'Trends', icon: 'demand-planning', endpoint: '/35/BiTrend', model: 'BiTrendAnalysis', idField: 'analysisId', supportedViews: ['table', 'chart'] },
                     { key: 'scenarios', label: 'Scenarios', icon: 'documents', endpoint: '/35/BiScenario', model: 'BiScenario', idField: 'scenarioId' },
-                    { key: 'benchmarks', label: 'Benchmarks', icon: 'financial', endpoint: '/35/BiBenchmrk', model: 'BiBenchmark', idField: 'benchmarkId' }
+                    { key: 'benchmarks', label: 'Benchmarks', icon: 'financial', endpoint: '/35/BiBenchmrk', model: 'BiBenchmark', idField: 'benchmarkId', supportedViews: ['table', 'chart'] }
                 ],
                 'datamanagement': [
                     { key: 'data-sources', label: 'Data Sources', icon: 'scm', endpoint: '/35/BiDataSrc', model: 'BiDataSource', idField: 'sourceId' },
@@ -102,8 +102,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             services: {
                 'storage': [
                     { key: 'documents', label: 'Documents', icon: 'documents', endpoint: '/45/DocDoc', model: 'DocDocument', idField: 'documentId' },
-                    { key: 'folders', label: 'Folders', icon: 'job-families', endpoint: '/45/DocFolder', model: 'DocFolder', idField: 'folderId' },
-                    { key: 'categories', label: 'Categories', icon: 'inventory', endpoint: '/45/DocCategry', model: 'DocCategory', idField: 'categoryId' },
+                    { key: 'folders', label: 'Folders', icon: 'job-families', endpoint: '/45/DocFolder', model: 'DocFolder', idField: 'folderId', supportedViews: ['table', 'tree'] },
+                    { key: 'categories', label: 'Categories', icon: 'inventory', endpoint: '/45/DocCategry', model: 'DocCategory', idField: 'categoryId', supportedViews: ['table', 'tree'] },
                     { key: 'tags', label: 'Tags', icon: 'benefits', endpoint: '/45/DocTag', model: 'DocTag', idField: 'tagId' }
                 ],
                 'workflow': [
@@ -134,12 +134,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             services: {
                 'catalog': [
                     { key: 'products', label: 'Products', icon: 'inventory', endpoint: '/100/EcomProd', model: 'EcomProduct', idField: 'productId' },
-                    { key: 'categories', label: 'Categories', icon: 'job-families', endpoint: '/100/EcomCat', model: 'EcomCategory', idField: 'categoryId' },
+                    { key: 'categories', label: 'Categories', icon: 'job-families', endpoint: '/100/EcomCat', model: 'EcomCategory', idField: 'categoryId', supportedViews: ['table', 'tree'] },
                     { key: 'attributes', label: 'Attributes', icon: 'positions', endpoint: '/100/EcomAttr', model: 'EcomAttribute', idField: 'attributeId' }
                 ],
                 'orders': [
-                    { key: 'orders', label: 'Orders', icon: 'procurement', endpoint: '/100/EcomOrder', model: 'EcomOrder', idField: 'orderId' },
-                    { key: 'returns', label: 'Returns', icon: 'logistics', endpoint: '/100/EcomReturn', model: 'EcomReturn', idField: 'returnId' }
+                    { key: 'orders', label: 'Orders', icon: 'procurement', endpoint: '/100/EcomOrder', model: 'EcomOrder', idField: 'orderId', supportedViews: ['table', 'kanban'] },
+                    { key: 'returns', label: 'Returns', icon: 'logistics', endpoint: '/100/EcomReturn', model: 'EcomReturn', idField: 'returnId', supportedViews: ['table', 'kanban'] }
                 ],
                 'customers': [
                     { key: 'customers', label: 'Customers', icon: 'hcm', endpoint: '/100/EcomCust', model: 'EcomCustomer', idField: 'customerId' },
@@ -177,12 +177,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ],
                 'risk': [
                     { key: 'risk-registers', label: 'Risk Registers', icon: 'documents', endpoint: '/110/CompRisk', model: 'CompRiskRegister', idField: 'riskId' },
-                    { key: 'incidents', label: 'Incidents', icon: 'compliance', endpoint: '/110/CompIncdnt', model: 'CompIncident', idField: 'incidentId' },
+                    { key: 'incidents', label: 'Incidents', icon: 'compliance', endpoint: '/110/CompIncdnt', model: 'CompIncident', idField: 'incidentId', supportedViews: ['table', 'kanban'] },
                     { key: 'insurance-policies', label: 'Insurance Policies', icon: 'documents', endpoint: '/110/CompInsur', model: 'CompInsurancePolicy', idField: 'insuranceId' }
                 ],
                 'audit': [
-                    { key: 'audit-schedules', label: 'Audit Schedules', icon: 'time', endpoint: '/110/CompAudSch', model: 'CompAuditSchedule', idField: 'scheduleId' },
-                    { key: 'audit-findings', label: 'Audit Findings', icon: 'compliance', endpoint: '/110/CompAudFnd', model: 'CompAuditFinding', idField: 'findingId' },
+                    { key: 'audit-schedules', label: 'Audit Schedules', icon: 'time', endpoint: '/110/CompAudSch', model: 'CompAuditSchedule', idField: 'scheduleId', supportedViews: ['table', 'calendar'] },
+                    { key: 'audit-findings', label: 'Audit Findings', icon: 'compliance', endpoint: '/110/CompAudFnd', model: 'CompAuditFinding', idField: 'findingId', supportedViews: ['table', 'kanban'] },
                     { key: 'compliance-reports', label: 'Compliance Reports', icon: 'documents', endpoint: '/110/CompCmpRpt', model: 'CompComplianceReport', idField: 'reportId' }
                 ]
             }
