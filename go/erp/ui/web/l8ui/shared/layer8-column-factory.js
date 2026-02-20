@@ -95,6 +95,9 @@ limitations under the License.
          * @returns {Array} - Single column in array format
          */
         status: function(key, label, enumValues, renderer) {
+            if (typeof renderer !== 'function') {
+                console.error(`Layer8ColumnFactory.status('${key}', '${label}'): renderer is not a function (got ${typeof renderer}). Check that the render object is populated before columns are defined.`);
+            }
             return [{
                 key: key,
                 label: label,
@@ -102,7 +105,9 @@ limitations under the License.
                 filterKey: key,
                 type: 'status',
                 enumValues: enumValues,
-                render: (item) => renderer(item[key])
+                render: typeof renderer === 'function'
+                    ? (item) => renderer(item[key])
+                    : (item) => String(item[key] ?? '')
             }];
         },
 
@@ -115,13 +120,18 @@ limitations under the License.
          * @returns {Array} - Single column in array format
          */
         enum: function(key, label, enumValues, renderer) {
+            if (typeof renderer !== 'function') {
+                console.error(`Layer8ColumnFactory.enum('${key}', '${label}'): renderer is not a function (got ${typeof renderer}). Check that the render object is populated before columns are defined.`);
+            }
             const col = {
                 key: key,
                 label: label,
                 sortKey: key,
                 filterKey: key,
                 type: 'enum',
-                render: (item) => renderer(item[key])
+                render: typeof renderer === 'function'
+                    ? (item) => renderer(item[key])
+                    : (item) => String(item[key] ?? '')
             };
             if (enumValues) {
                 col.enumValues = enumValues;

@@ -177,19 +177,25 @@ limitations under the License.
         return `${min} - ${max}`;
     }
 
+    function renderCompensationType(v) { return renderEnum(v, COMPENSATION_TYPE.enum); }
+    function renderBonusPlanType(v) { return renderEnum(v, BONUS_PLAN_TYPE.enum); }
+    function renderBonusFrequency(v) { return renderEnum(v, BONUS_FREQUENCY.enum); }
+    function renderEquityGrantType(v) { return renderEnum(v, EQUITY_GRANT_TYPE.enum); }
+    function renderPayFrequency(v) { return PAY_FREQUENCY.enum[v] || 'Unknown'; }
+
     window.Compensation.render = {
-        compensationType: (v) => renderEnum(v, COMPENSATION_TYPE.enum),
+        compensationType: renderCompensationType,
         meritIncreaseStatus: renderMeritIncreaseStatus,
         meritCycleStatus: renderMeritCycleStatus,
-        bonusPlanType: (v) => renderEnum(v, BONUS_PLAN_TYPE.enum),
-        bonusFrequency: (v) => renderEnum(v, BONUS_FREQUENCY.enum),
+        bonusPlanType: renderBonusPlanType,
+        bonusFrequency: renderBonusFrequency,
         bonusFundingType: (v) => renderEnum(v, BONUS_FUNDING_TYPE.enum),
         bonusPaymentStatus: renderBonusPaymentStatus,
-        equityGrantType: (v) => renderEnum(v, EQUITY_GRANT_TYPE.enum),
+        equityGrantType: renderEquityGrantType,
         equityGrantStatus: renderEquityGrantStatus,
         vestingType: (v) => renderEnum(v, VESTING_TYPE.enum),
         vestingFrequency: (v) => renderEnum(v, VESTING_FREQUENCY.enum),
-        payFrequency: (v) => PAY_FREQUENCY.enum[v] || 'Unknown',
+        payFrequency: renderPayFrequency,
         money: renderMoney,
         boolean: renderBoolean,
         date: renderDate,
@@ -202,7 +208,9 @@ limitations under the License.
     window.Compensation._internal = {
         renderMeritIncreaseStatus, renderMeritCycleStatus, renderBonusPaymentStatus,
         renderEquityGrantStatus, renderPercentageComp, renderCompaRatio,
-        renderShares, renderSalaryRange
+        renderShares, renderSalaryRange,
+        renderCompensationType, renderBonusPlanType, renderBonusFrequency,
+        renderEquityGrantType, renderPayFrequency
     };
 
 })();

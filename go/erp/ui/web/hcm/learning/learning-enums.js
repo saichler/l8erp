@@ -168,17 +168,22 @@ limitations under the License.
         return `${rating.toFixed(1)}/${maxRating}`;
     }
 
+    function renderCourseType(v) { return renderEnum(v, COURSE_TYPE.enum); }
+    function renderCertificationType(v) { return renderEnum(v, CERTIFICATION_TYPE.enum); }
+    function renderSkillCategory(v) { return renderEnum(v, SKILL_CATEGORY.enum); }
+    function renderTrainingType(v) { return renderEnum(v, TRAINING_TYPE.enum); }
+
     window.Learning.render = {
-        courseType: (v) => renderEnum(v, COURSE_TYPE.enum),
+        courseType: renderCourseType,
         courseDeliveryMethod: renderCourseDeliveryMethod,
         courseCategory: (v) => renderEnum(v, COURSE_CATEGORY.enum),
         courseLevel: renderCourseLevel,
         sessionStatus: renderSessionStatus,
         courseEnrollmentStatus: renderCourseEnrollmentStatus,
-        certificationType: (v) => renderEnum(v, CERTIFICATION_TYPE.enum),
+        certificationType: renderCertificationType,
         certificationStatus: renderCertificationStatus,
-        skillCategory: (v) => renderEnum(v, SKILL_CATEGORY.enum),
-        trainingType: (v) => renderEnum(v, TRAINING_TYPE.enum),
+        skillCategory: renderSkillCategory,
+        trainingType: renderTrainingType,
         money: renderMoney,
         boolean: renderBoolean,
         date: renderDate,
@@ -191,7 +196,8 @@ limitations under the License.
     window.Learning._internal = {
         renderSessionStatus, renderCourseEnrollmentStatus, renderCertificationStatus,
         renderCourseDeliveryMethod, renderCourseLevel, renderDurationMinutes,
-        renderPercentageLearning, renderProficiencyLevel, renderRatingLearning
+        renderPercentageLearning, renderProficiencyLevel, renderRatingLearning,
+        renderCourseType, renderCertificationType, renderSkillCategory, renderTrainingType
     };
 
 })();
