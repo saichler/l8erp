@@ -48,7 +48,8 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared infrastr
 ## Features
 
 - **242 Business Services** across 12 integrated modules
-- **Desktop + Mobile Apps** — full-featured web and mobile interfaces with complete parity
+- **8 Data View Types** — Table, Chart, Kanban, Calendar, Timeline, Gantt, Tree Grid, and Wizard with per-service view switching
+- **Desktop + Mobile Apps** — full-featured web and mobile interfaces with complete view parity
 - **Module Selection** — enable/disable modules at runtime with automatic dependency management
 - **System Dependency Map** — visual module dependency graph for configuration
 - **Multi-Currency Support** — real-time exchange rate conversion across all financial fields
@@ -195,7 +196,7 @@ l8erp/
 │   │   │       ├── comp/        #     Compliance UI
 │   │   │       ├── js/          #     Shared JS (reference registries, sections, utils)
 │   │   │       ├── marketing/   #     Marketing landing page
-│   │   │       ├── m/           #     Mobile app (193 JS files, full parity with desktop)
+│   │   │       ├── m/           #     Mobile app (239 JS files, full view parity with desktop)
 │   │   │       └── login/       #     Login page
 │   │   └── vnet/                # Virtual network layer + Dockerfile
 │   ├── types/                   # Generated Go types from protobuf (~134,000 lines)
@@ -276,10 +277,10 @@ This ERP is built on top of the Layer 8 open-source infrastructure:
 
 | Category | Files | Lines |
 |----------|-------|-------|
-| Go source (hand-written) | 739 | ~49,600 |
-| Go types (generated from protobuf) | — | ~134,000 |
-| JavaScript | 530 | ~60,300 |
-| CSS | 72 | ~16,900 |
+| Go source (hand-written) | 663 | ~49,500 |
+| Go types (generated from protobuf) | — | ~133,500 |
+| JavaScript | 566 | ~67,600 |
+| CSS | 82 | ~18,500 |
 | HTML | 51 | — |
 | Protobuf schemas | 72 | ~14,200 |
 | Mock data generators | 74 | — |
