@@ -2,7 +2,7 @@
 
 These are Claude Code global rules for the Layer8 ERP project. Load this file at the start of a session to apply all rules.
 
-**Source files:** `~/.claude/rules/*.md` (25 rule files)
+**Source files:** `~/.claude/rules/*.md` (29 rule files)
 
 ---
 
@@ -33,6 +33,10 @@ These are Claude Code global rules for the Layer8 ERP project. Load this file at
 23. [Select Field Enum Completeness](#23-select-field-enum-completeness)
 24. [L8UI Guide Update](#24-l8ui-guide-update)
 25. [Form and Column Field Coverage](#25-form-and-column-field-coverage)
+26. [Protobuf Enum Zero Value Convention](#26-protobuf-enum-zero-value-convention)
+27. [Proto Generation Method](#27-proto-generation-method)
+28. [Column Factory Renderer Validation](#28-column-factory-renderer-validation)
+29. [L8UI GUIDE.md Prerequisite](#29-l8ui-guidemd-prerequisite)
 
 ---
 
@@ -1770,3 +1774,178 @@ grep -oP "key:\s*'[^']+'" <forms-file> | sort
 | `addressType` | address fields | Type without address is meaningless |
 | `paymentMethod` | method-specific fields | Method without details is meaningless |
 | `status` (with reason) | `reason`, `reasonCode` | Status change without reason loses context |
+
+---
+
+# 26. Protobuf Enum Zero Value Convention
+
+**Source:** `proto-enum-zero-value.md`
+
+## Rule
+Every protobuf enum MUST have an invalid/unspecified zero value as its first entry. The zero value MUST NOT represent a valid, meaningful state.
+
+## Why This Matters
+Protobuf defaults unset enum fields to 0. If 0 is a valid value (e.g., "Active"), then unset fields silently appear as "Active" instead of being detectable as missing. This makes it impossible to distinguish "explicitly set to the first value" from "never set."
+
+## Naming Convention
+The zero value name MUST follow this pattern:
+```
+[MODULE_PREFIX_]FIELD_NAME_UNSPECIFIED = 0
+```
+
+Examples:
+```protobuf
+// CORRECT
+enum AccountType {
+  ACCOUNT_TYPE_UNSPECIFIED = 0;
+  ACCOUNT_TYPE_ASSET = 1;
+  ACCOUNT_TYPE_LIABILITY = 2;
+}
+
+enum MfgBomStatus {
+  MFG_BOM_STATUS_UNSPECIFIED = 0;
+  MFG_BOM_STATUS_DRAFT = 1;
+  MFG_BOM_STATUS_ACTIVE = 2;
+}
+
+// WRONG - 0 is a valid value
+enum Priority {
+  LOW = 0;      // BAD: unset fields appear as LOW
+  MEDIUM = 1;
+  HIGH = 2;
+}
+
+// WRONG - no zero value
+enum Status {
+  ACTIVE = 1;   // BAD: no 0 value defined
+  INACTIVE = 2;
+}
+```
+
+## Verification
+After creating or modifying any proto file with enums:
+```bash
+# Check all enums have a 0 value containing UNSPECIFIED, INVALID, or UNKNOWN
+grep -A1 "^enum " proto/*.proto | grep "= 0" | grep -iv "unspecified\|invalid\|unknown"
+```
+If any results appear, those enums need a proper zero value.
+
+## Current Compliance
+All 289 ERP enums across 12 modules follow this convention (verified Feb 2026).
+
+---
+
+# 27. Proto Generation Method
+
+**Source:** `proto-generation-method.md`
+
+## Rule (CRITICAL)
+To generate protobuf bindings, you MUST `cd` into the `proto/` directory and run `./make-bindings.sh` directly. **ANY other method will break.**
+
+## The ONLY Correct Way
+```bash
+cd proto && ./make-bindings.sh
+```
+
+## What Will Break
+- Running the script via `sed` pipe (`sed 's/-it /-i /g' make-bindings.sh | bash`) — silently fails on some steps
+- Running individual `docker run` commands manually — misses dependency ordering, move steps, and sed fixups
+- Running `wget` + `protoc` commands manually — misses the full pipeline
+- Running from any directory other than `proto/` — paths break
+
+## Why
+The `make-bindings.sh` script is designed to run interactively from the `proto/` directory. It uses relative paths, Docker bind mounts with `$PWD`, and sequential steps that depend on each other. Any attempt to run it non-interactively or from a different directory will silently produce stale or incomplete output.
+
+---
+
+# 28. Column Factory Renderer Validation
+
+**Source:** `column-factory-renderer-validation.md`
+
+## Rule
+Every `col.enum()` and `col.status()` call MUST pass a valid function as the `renderer` argument (4th parameter). The renderer is captured in a closure at column-definition time and called later at render time. If it is `undefined`, the error only appears when data arrives — with an unhelpful "renderer is not a function" stack trace that does NOT identify which column caused it.
+
+## Why This Is Critical
+The column factory's `enum(key, label, enumValues, renderer)` and `status(key, label, enumValues, renderer)` methods create a closure: `render: (item) => renderer(item[key])`. If `renderer` is `undefined` at definition time:
+- No error occurs when the column is defined (silent capture of `undefined`)
+- No error occurs when the table initializes
+- The crash only happens when data arrives and the table tries to render
+- The error message ("renderer is not a function") gives no indication of WHICH column or module is broken
+- All modules initialize successfully, making the bug extremely hard to trace
+
+## Common Causes
+
+### 1. Missing render property in enum file
+```javascript
+// enums file defines render object but misses a property
+Module.render = {
+    statusA: createStatusRenderer(...),
+    // statusB is missing!
+};
+
+// columns file references the missing property
+...col.enum('status', 'Status', null, render.statusB)  // renderer = undefined
+```
+
+### 2. Wrong argument order (3 args instead of 4)
+```javascript
+// WRONG: renderer goes into enumValues, 4th arg is undefined
+...col.enum('status', 'Status', render.myFunc)
+
+// CORRECT: null for enumValues, renderer as 4th arg
+...col.enum('status', 'Status', null, render.myFunc)
+```
+
+### 3. Render object not yet populated
+```javascript
+// columns file captures render object before enums file runs
+const render = Module.render;  // undefined if enums hasn't loaded yet
+```
+
+## Defensive Guard (Built Into Factory)
+The column factory now validates `renderer` at definition time and logs a clear error:
+```
+Layer8ColumnFactory.enum('status', 'Status'): renderer is not a function (got undefined).
+Check that the render object is populated before columns are defined.
+```
+If renderer is not a function, it falls back to `String(item[key] ?? '')` to prevent crashes.
+
+## Verification
+After creating or modifying any `*-columns.js` file:
+1. Check that every `col.enum()` and `col.status()` call has exactly 4 arguments
+2. Verify the 4th argument references a function that exists in the corresponding `*-enums.js` render object
+3. Open the browser console — any renderer validation errors will appear immediately at page load (not deferred to data fetch)
+
+---
+
+# 29. L8UI GUIDE.md Prerequisite
+
+**Source:** `l8ui-guide-prerequisite.md`
+
+## Rule
+Before implementing or using ANY l8ui component (desktop or mobile), you MUST read the `l8ui/GUIDE.md` file in the project's web directory. Do not write UI code that references l8ui components without first reading this guide.
+
+## Why This Matters
+The GUIDE.md documents all available l8ui components, their APIs, constructor options, viewConfig parameters, and integration patterns. Without reading it, you will:
+- Miss existing components and reinvent functionality
+- Use incorrect API signatures or viewConfig options
+- Fail to follow established integration patterns (e.g., Layer8DViewFactory registration, Layer8DModuleFactory.create() options)
+
+## When This Applies
+- Creating a new module or section UI
+- Adding a new view type (kanban, chart, etc.) to an existing service
+- Modifying how services are initialized or registered
+- Using any Layer8D* or Layer8M* component
+- Configuring viewConfig options for any view type
+- Adding script includes to app.html or m/app.html
+
+## What to Look For in GUIDE.md
+1. **Component APIs**: Constructor options, public methods, event callbacks
+2. **viewConfig options**: Per-view-type configuration (kanban lanes, chart axes, etc.)
+3. **Script loading order**: Dependency order for JS/CSS includes
+4. **Module creation pattern**: How to use Layer8DModuleFactory.create()
+5. **Mobile equivalents**: Mobile component APIs and differences from desktop
+
+## Location
+- **L8ERP**: `go/erp/ui/web/l8ui/GUIDE.md`
+- **L8Bugs**: `go/bugs/website/web/l8ui/GUIDE.md`
