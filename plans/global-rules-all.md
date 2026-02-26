@@ -2,41 +2,71 @@
 
 These are Claude Code global rules for the Layer8 ERP project. Load this file at the start of a session to apply all rules.
 
-**Source files:** `~/.claude/rules/*.md` (29 rule files)
+**Source files:** `~/.claude/rules/*.md` (38 rule files)
 
 ---
 
 ## Table of Contents
 
+### Architecture & Process
 1. [Plan Approval Workflow](#1-plan-approval-workflow)
 2. [Code Maintainability Standards](#2-code-maintainability-standards)
 3. [Prime Object Rules](#3-prime-object-rules)
+
+### Protobuf
 4. [Protobuf Generation](#4-protobuf-generation)
-5. [Protobuf List Type Convention](#5-protobuf-list-type-convention)
-6. [JavaScript Protobuf Field Name Mapping](#6-javascript-protobuf-field-name-mapping)
-7. [JS Column and Form Field Name Verification](#7-js-column-and-form-field-name-verification)
-8. [JavaScript UI Model Names Must Match Protobuf Types](#8-javascript-ui-model-names-must-match-protobuf-types)
-9. [Nested Protobuf Types in Form Definitions](#9-nested-protobuf-types-in-form-definitions)
-10. [Compound Form Field Data Collection](#10-compound-form-field-data-collection)
-11. [Template Literal Ternary Edit Safety](#11-template-literal-ternary-edit-safety)
-12. [Stacked Popup DOM Scoping](#12-stacked-popup-dom-scoping)
-13. [Server-Side Pagination Metadata](#13-server-side-pagination-metadata)
-14. [UI Module Integration Checklist](#14-ui-module-integration-checklist)
-15. [Module Init sectionSelector Must Match defaultModule](#15-module-init-sectionselector-must-match-defaultmodule)
-16. [Reference Registry Completeness](#16-reference-registry-completeness)
-17. [Mobile Parity](#17-mobile-parity)
-18. [Mock Data Generation](#18-mock-data-generation)
-19. [Mock Data Completeness](#19-mock-data-completeness)
-20. [Mock Endpoint Construction](#20-mock-endpoint-construction)
-21. [Mock Phase Ordering](#21-mock-phase-ordering)
-22. [L8UI Theme Compliance](#22-l8ui-theme-compliance)
-23. [Select Field Enum Completeness](#23-select-field-enum-completeness)
-24. [L8UI Guide Update](#24-l8ui-guide-update)
-25. [Form and Column Field Coverage](#25-form-and-column-field-coverage)
-26. [Protobuf Enum Zero Value Convention](#26-protobuf-enum-zero-value-convention)
-27. [Proto Generation Method](#27-proto-generation-method)
-28. [Column Factory Renderer Validation](#28-column-factory-renderer-validation)
-29. [L8UI GUIDE.md Prerequisite](#29-l8ui-guidemd-prerequisite)
+5. [Proto Generation Method](#5-proto-generation-method)
+6. [Protobuf List Type Convention](#6-protobuf-list-type-convention)
+7. [Protobuf Enum Zero Value Convention](#7-protobuf-enum-zero-value-convention)
+
+### Go/Server
+8. [Third-Party Code Lives in Vendor](#8-third-party-code-lives-in-vendor)
+9. [Test Location and Approach](#9-test-location-and-approach)
+10. [Test Data Field Verification](#10-test-data-field-verification)
+
+### L8Query
+11. [L8Query Model Names Must Match Protobuf Types](#11-l8query-model-names-must-match-protobuf-types)
+12. [L8Query Must Use SELECT * for Detail Popups](#12-l8query-must-use-select--for-detail-popups)
+
+### JavaScript Field Naming
+13. [JavaScript Protobuf Field Name Mapping](#13-javascript-protobuf-field-name-mapping)
+14. [JS Column and Form Field Name Verification](#14-js-column-and-form-field-name-verification)
+15. [JavaScript UI Model Names Must Match Protobuf Types](#15-javascript-ui-model-names-must-match-protobuf-types)
+
+### JavaScript Forms
+16. [Nested Protobuf Types in Form Definitions](#16-nested-protobuf-types-in-form-definitions)
+17. [Compound Form Field Data Collection](#17-compound-form-field-data-collection)
+18. [Form and Column Field Coverage](#18-form-and-column-field-coverage)
+19. [Select Field Enum Completeness](#19-select-field-enum-completeness)
+
+### JavaScript Columns & Renderers
+20. [Column Factory Method Completeness](#20-column-factory-method-completeness)
+21. [Column Factory Renderer Validation](#21-column-factory-renderer-validation)
+22. [Renderer Factory vs Direct Call](#22-renderer-factory-vs-direct-call)
+
+### JavaScript Template/DOM
+23. [Template Literal Ternary Edit Safety](#23-template-literal-ternary-edit-safety)
+24. [Stacked Popup DOM Scoping](#24-stacked-popup-dom-scoping)
+
+### UI Integration
+25. [UI Module Integration Checklist](#25-ui-module-integration-checklist)
+26. [Module Init sectionSelector Must Match defaultModule](#26-module-init-sectionselector-must-match-defaultmodule)
+27. [Reference Registry Completeness](#27-reference-registry-completeness)
+28. [Server-Side Pagination Metadata](#28-server-side-pagination-metadata)
+29. [Mobile Parity](#29-mobile-parity)
+30. [Demo Directory Must Stay in Sync with Source](#30-demo-directory-must-stay-in-sync-with-source)
+
+### L8UI
+31. [L8UI Theme Compliance](#31-l8ui-theme-compliance)
+32. [L8UI Guide Update](#32-l8ui-guide-update)
+33. [L8UI GUIDE.md Prerequisite](#33-l8ui-guidemd-prerequisite)
+
+### Mock Data
+34. [Mock Data Generation](#34-mock-data-generation)
+35. [Mock Data Completeness](#35-mock-data-completeness)
+36. [Mock Data Must Cover All UI Columns](#36-mock-data-must-cover-all-ui-columns)
+37. [Mock Endpoint Construction](#37-mock-endpoint-construction)
+38. [Mock Phase Ordering](#38-mock-phase-ordering)
 
 ---
 
@@ -119,6 +149,8 @@ All third-party dependencies must be vendored. After adding or updating any depe
 - Each file should have a single responsibility
 - Use logical module/package organization
 - Check for existing shared utilities before creating new ones
+
+---
 
 ## Duplication Prevention Rules
 
@@ -245,6 +277,8 @@ message BenefitPlan {
 
 `CoverageOption`, `PlanCost`, and `EligibilityRules` do NOT have service directories. They are managed entirely through the `BenefitPlan` service. This is the correct pattern.
 
+---
+
 ## Rule 2: Cross-References Between Prime Objects
 
 Prime Objects MUST NEVER contain direct struct references (`*OtherPrimeType` or `[]*OtherPrimeType`) to other Prime Objects. Prime Objects refer to each other **ONLY via ID fields** (string).
@@ -271,6 +305,8 @@ message BenefitEnrollment {
 - Prime Objects MAY contain fields of **shared/common types** (e.g., `erp.Money`, `erp.Address`, `erp.AuditInfo`, `erp.ContactInfo`, `erp.DateRange`)
 - Prime Objects MAY contain `repeated` fields of **embedded child types** (types without their own service, e.g., `SalesOrderLine`, `CoverageOption`, `PlanCost`)
 - Prime Objects MAY reference other Prime Objects via **string ID fields** (e.g., `employee_id`, `department_id`)
+
+---
 
 ## Rule 3: UI Implications of Prime vs Child
 
@@ -335,6 +371,8 @@ SalesOrderLine: f.form('Order Line', [
 ### Why This Matters
 When a child is wrongly given standalone UI, users see it as an independent navigable entity — they can create "orphan" lines without an order, browse lines across all orders (which is never useful), and the parent form shows no children. The correct UX is always: navigate to the parent, see its children inline, edit children within the parent context.
 
+---
+
 ## Verification
 
 ### Before creating a new service
@@ -369,52 +407,72 @@ grep -rn '\[\]\*\|^\s*\*' go/types/**/*.pb.go | grep 'protobuf:' | grep -v 'List
 **Source:** `protobuf-generation.md`
 
 ## Rule
-Whenever ANY `.proto` file is created, modified, or removed, you MUST run `make-bindings.sh` to regenerate ALL protobuf bindings. The script handles everything: it generates `.pb.go` files and places them in the correct directory at `/go/types/`. This step is essential before any other steps so there are no mistakes and issues.
+Whenever ANY `.proto` file is created, modified, or removed, you **MUST** run `make-bindings.sh` to regenerate ALL protobuf bindings. **NO EXCEPTIONS.**
 
-**This is mandatory** — never skip regeneration. Even a single field addition or removal in a `.proto` file requires running the full script.
+**NEVER attempt to compile individual proto files manually.** Do NOT run individual `docker run` commands or `protoc` commands. The ONLY way to generate bindings is via `make-bindings.sh`. This is a hard requirement — violating it wastes time and produces errors.
 
-## Process
+## How to Run
 
-1. **Create/Update/Remove .proto files** in `/proto/` directory
-2. **Update make-bindings.sh** if new proto files were added or removed
-3. **Run make-bindings.sh** to regenerate ALL Go bindings:
-   ```bash
-   cd /path/to/project/proto && ./make-bindings.sh
-   ```
-   The script generates all bindings and moves them to `/go/types/` automatically.
-4. **Verify generation** by checking `/go/types/<module>/` for .pb.go files
-5. **Build dependent code** to ensure types are correct before proceeding
+```bash
+cd proto && ./make-bindings.sh
+```
+
+**Do NOT use the `sed` pipe method** (`sed 's/-it /-i /g' make-bindings.sh | bash`) — it silently fails on some steps. Run the script directly.
+
+The script handles everything automatically:
+1. Downloads `api.proto` dependency
+2. Compiles ALL proto files in the correct order
+3. Moves generated `.pb.go` files to `/go/types/`
+4. Fixes import paths
+
+## When to Run
+- After ANY change to ANY `.proto` file (add field, remove field, add message, remove message, add import, etc.)
+- After adding a new `.proto` file (also update `make-bindings.sh` to include it)
+- After removing a `.proto` file (also update `make-bindings.sh` to remove it)
 
 ## Why This Matters
 - Generated .pb.go files contain the actual Go struct definitions
 - Field names in generated code may differ from what you expect
 - Building code that uses these types before generation will fail
 - Mock data generators, services, and UI code all depend on these types
+- The script handles cross-file imports, dependency ordering, and path fixups that manual compilation misses
 
-## Common Issues
+## After Running
+1. Verify `.pb.go` files exist in `/go/types/<module>/`
+2. Build dependent code to ensure types are correct: `go build ./...`
 
-### TTY Error
-If running in a non-interactive shell and you see `the input device is not a TTY`:
-```bash
-sed 's/-it /-i /g' make-bindings.sh | bash
-```
-
-### Field Name Verification
+## Field Name Verification
 After generation, verify field names by checking the .pb.go files:
 ```bash
 grep -A 30 "type TypeName struct" go/types/<module>/*.pb.go | grep 'json:"'
 ```
 
-## Checklist Before Proceeding
-- [ ] All .proto files created/updated
-- [ ] make-bindings.sh updated with new proto files
-- [ ] make-bindings.sh executed successfully
-- [ ] .pb.go files exist in /go/types/<module>/
-- [ ] Dependent code builds: `go build ./...`
+---
+
+# 5. Proto Generation Method
+
+**Source:** `proto-generation-method.md`
+
+## Rule
+To generate protobuf bindings, you MUST `cd` into the `proto/` directory and run `./make-bindings.sh` directly. **ANY other method will break.**
+
+## The ONLY Correct Way
+```bash
+cd proto && ./make-bindings.sh
+```
+
+## What Will Break
+- Running the script via `sed` pipe (`sed 's/-it /-i /g' make-bindings.sh | bash`) — silently fails on some steps
+- Running individual `docker run` commands manually — misses dependency ordering, move steps, and sed fixups
+- Running `wget` + `protoc` commands manually — misses the full pipeline
+- Running from any directory other than `proto/` — paths break
+
+## Why
+The `make-bindings.sh` script is designed to run interactively from the `proto/` directory. It uses relative paths, Docker bind mounts with `$PWD`, and sequential steps that depend on each other. Any attempt to run it non-interactively or from a different directory will silently produce stale or incomplete output.
 
 ---
 
-# 5. Protobuf List Type Convention
+# 6. Protobuf List Type Convention
 
 **Source:** `proto-list-convention.md`
 
@@ -461,7 +519,266 @@ message EcomCategoryList {
 
 ---
 
-# 6. JavaScript Protobuf Field Name Mapping
+# 7. Protobuf Enum Zero Value Convention
+
+**Source:** `proto-enum-zero-value.md`
+
+## Rule
+Every protobuf enum MUST have an invalid/unspecified zero value as its first entry. The zero value MUST NOT represent a valid, meaningful state.
+
+## Why This Matters
+Protobuf defaults unset enum fields to 0. If 0 is a valid value (e.g., "Active"), then unset fields silently appear as "Active" instead of being detectable as missing. This makes it impossible to distinguish "explicitly set to the first value" from "never set."
+
+## Naming Convention
+The zero value name MUST follow this pattern:
+```
+[MODULE_PREFIX_]FIELD_NAME_UNSPECIFIED = 0
+```
+
+Examples:
+```protobuf
+// CORRECT
+enum AccountType {
+  ACCOUNT_TYPE_UNSPECIFIED = 0;
+  ACCOUNT_TYPE_ASSET = 1;
+  ACCOUNT_TYPE_LIABILITY = 2;
+}
+
+enum MfgBomStatus {
+  MFG_BOM_STATUS_UNSPECIFIED = 0;
+  MFG_BOM_STATUS_DRAFT = 1;
+  MFG_BOM_STATUS_ACTIVE = 2;
+}
+
+// WRONG - 0 is a valid value
+enum Priority {
+  LOW = 0;      // BAD: unset fields appear as LOW
+  MEDIUM = 1;
+  HIGH = 2;
+}
+
+// WRONG - no zero value
+enum Status {
+  ACTIVE = 1;   // BAD: no 0 value defined
+  INACTIVE = 2;
+}
+```
+
+## Verification
+After creating or modifying any proto file with enums:
+```bash
+# Check all enums have a 0 value containing UNSPECIFIED, INVALID, or UNKNOWN
+grep -A1 "^enum " proto/*.proto | grep "= 0" | grep -iv "unspecified\|invalid\|unknown"
+```
+If any results appear, those enums need a proper zero value.
+
+## Current Compliance
+All 289 ERP enums across 12 modules follow this convention (verified Feb 2026).
+
+---
+
+# 8. Third-Party Code Lives in Vendor
+
+**Source:** `vendor-third-party-code.md`
+
+## Rule
+All third-party dependencies are vendored. The `vendor/` directory is the location for all external code. When searching for code across the project's dependencies, look in `vendor/`, not in `$GOPATH` or module cache.
+
+## Implications
+- When tracing code into dependencies (e.g., `l8bus`, `l8types`), find the source in `vendor/`
+- Do NOT use `go get` to fetch code for reading — it's already in `vendor/`
+- After adding or updating any dependency, run `go mod vendor`
+
+---
+
+# 9. Test Location and Approach
+
+**Source:** `test-location-and-approach.md`
+
+## Rule
+All tests MUST live in the `go/tests/` directory. Do NOT place `_test.go` files alongside source code in package directories (e.g., do NOT create `go/alm/correlation/engine_test.go`).
+
+Tests MUST use the system API (IVNic, service endpoints, HTTP calls) to exercise functionality end-to-end. Do NOT write unit tests that directly call unexported/internal functions. The test should interact with the system the same way a real client would.
+
+## Why This Matters
+- Tests alongside source code in package directories have access to unexported internals, which couples tests to implementation details and makes refactoring harder.
+- Testing through the system API validates the full stack (validation, callbacks, persistence, service routing) rather than isolated functions.
+- Centralizing tests in `go/tests/` keeps the source tree clean and makes it easy to find and run all tests.
+
+## Correct Pattern
+```
+go/tests/
+├── mocks/          # Mock data generators
+├── integration/    # Integration tests using IVNic
+└── ...
+```
+
+Tests should:
+1. Set up the system (IVNic, services)
+2. Call service endpoints (POST, GET, PUT, DELETE) via the API
+3. Assert on the API responses
+
+## Wrong Pattern
+```
+go/alm/correlation/engine_test.go      # WRONG: test next to source
+go/alm/common/validation_test.go       # WRONG: test next to source
+```
+
+## Verification
+Before creating any test file, check its path:
+```bash
+# All test files must be under go/tests/
+find go/ -name "*_test.go" -not -path "go/tests/*"
+# If any results appear, those tests are in the wrong location
+```
+
+---
+
+# 10. Test Data Field Verification
+
+**Source:** `test-data-field-verification.md`
+
+## Rule
+When constructing test data as `map[string]interface{}` for HTTP POST/PUT requests, every key in the map MUST exist as a field on the target protobuf struct. Never guess or assume field names — always verify against the `.pb.go` file first.
+
+## Why This Matters
+The server deserializes JSON request bodies against registered protobuf types. If the JSON contains a field that doesn't exist on the protobuf struct, the parser rejects the entire payload with `unknown field "xxx"`. This causes a `400 Bad Request` with the cryptic error `Cannot find pb for method POST` because the server tries all registered body types and none match.
+
+## The Bug Pattern
+```go
+// WRONG — "message" does not exist on the Alarm struct
+alarm := map[string]interface{}{
+    "alarmId":  alarmId,
+    "nodeId":   "test-node",
+    "state":    1,
+    "severity": 1,
+    "message":  "Test Alarm",  // ← Alarm has no "message" field; Event does
+}
+client.Post("/alm/10/Alarm", alarm)
+// Result: 400 Bad Request — Cannot find pb for method POST
+```
+
+```go
+// CORRECT — all fields verified against Alarm struct in .pb.go
+alarm := map[string]interface{}{
+    "alarmId":      alarmId,
+    "definitionId": defId,
+    "nodeId":       "test-node",
+    "state":        1,
+    "severity":     1,
+    "name":         "Test Alarm",  // ← "name" exists on Alarm struct
+}
+```
+
+## Verification Before Writing Test Data
+Before constructing any `map[string]interface{}` for an HTTP request:
+
+```bash
+# List all fields and their JSON names for the target type
+grep -A 40 "type <TypeName> struct" go/types/<module>/*.pb.go | grep 'json:"'
+```
+
+Cross-check every key in your map against the output. If a key doesn't appear in the JSON tags, it will cause a silent 400 error.
+
+## Common Mistakes
+| Mistake | Why It Happens |
+|---------|---------------|
+| Using a field from a related type | e.g., `message` belongs to Event, not Alarm |
+| Inventing descriptive fields | e.g., adding `"reason"` when the struct has `"reasonCode"` |
+| Confusing parent/child fields | e.g., using `"orderId"` on a line item that has `"salesOrderId"` |
+| Using Go field name instead of JSON name | e.g., `"AlarmId"` instead of `"alarmId"` or `"alarm_id"` |
+
+## Error Symptom
+- `400 Bad Request` on POST or PUT
+- Server log: `Cannot find pb for method POST` or `Cannot find pb for method PUT`
+- Followed by: `cannot find any matching body type <TypeName> ... unknown field "<fieldName>"`
+- The error lists ALL unrecognized fields, helping identify which keys are wrong
+
+## Applies To
+- CRUD test data (`TestCRUD_test.go`)
+- Validation test data (`TestValidation_test.go`)
+- Any `map[string]interface{}` sent via HTTP to the server
+- Mock data generators that use maps instead of protobuf structs (rare but possible)
+
+---
+
+# 11. L8Query Model Names Must Match Protobuf Types
+
+**Source:** `l8query-model-names.md`
+
+## Rule
+When constructing L8Query strings (e.g., `select * from ModelName`), the model name MUST be the **protobuf type name**, NOT the ServiceName constant. These are often different.
+
+## Why This Matters
+The server resolves the `from` clause against the protobuf type registry. If the name doesn't match a registered protobuf type, the query returns a 400 Bad Request. The ServiceName is an HTTP routing label (max 10 chars); the protobuf type is the actual data model name.
+
+## Common Mismatches
+
+| ServiceName (HTTP path) | Protobuf Type (query model) |
+|------------------------|-----------------------------|
+| `Sprint` | `BugsSprint` |
+| `Project` | `BugsProject` |
+| `Assignee` | `BugsAssignee` |
+| `Territory` | `SalesTerritory` |
+| `DlvryOrder` | `ScmDeliveryOrder` |
+| `MfgWorkOrd` | `MfgWorkOrder` |
+
+ServiceName is found in `*Service.go` files. Protobuf type is found in `*.pb.go` files.
+
+## Verification
+Before writing any L8Query string, confirm the protobuf type:
+```bash
+grep "type.*struct {" go/types/<module>/*.pb.go | grep -i <keyword>
+```
+
+## Error Symptom
+- HTTP 400 Bad Request on a GET with `?body=` query parameter
+- Server log: `Cannot find node for table <wrong-name>`
+
+---
+
+# 12. L8Query Must Use SELECT * for Detail Popups
+
+**Source:** `l8query-select-star-for-detail.md`
+
+## Rule
+When a detail popup/modal is opened for any entity and an L8Query is constructed to fetch that entity's data, the query MUST use `select * from ...`. Never use `select attr1, attr2, ... from ...` with a specific column list.
+
+## Why This Matters
+Detail forms display ALL fields of an entity. If the query selects only specific columns, the response omits the remaining fields. The detail form then shows empty values for those fields — no error, no warning, just blank inputs. The user sees a partially-filled form and assumes the data was never set.
+
+## Correct Pattern
+```javascript
+// CORRECT — fetches all fields for the detail form
+const query = `select * from AlarmDefinition where definition_id=${id}`;
+```
+
+```go
+// CORRECT — fetches all fields
+q := fmt.Sprintf("select * from Alarm where alarm_id=%s", alarmId)
+```
+
+## Wrong Pattern
+```javascript
+// WRONG — detail form will have empty fields for anything not listed
+const query = `select name, status, severity from AlarmDefinition where definition_id=${id}`;
+```
+
+## When This Applies
+- Detail popup/modal opened by clicking a table row
+- Edit form pre-population
+- Any single-entity fetch intended to display all entity fields
+- CRUD test GET operations that verify full entity data
+
+## When SELECT specific columns IS acceptable
+- Table/list views where only visible columns are needed
+- Reference lookups that only need ID + display name
+- Autocomplete/search dropdowns
+- Aggregation queries
+
+---
+
+# 13. JavaScript Protobuf Field Name Mapping
 
 **Source:** `js-protobuf-field-names.md`
 
@@ -550,7 +867,7 @@ grep -A 30 "type ScmWarehouse struct" go/types/scm/*.pb.go | grep 'json:"'
 
 ---
 
-# 7. JS Column and Form Field Name Verification
+# 14. JS Column and Form Field Name Verification
 
 **Source:** `js-column-field-verification.md`
 
@@ -605,7 +922,7 @@ During refactoring, it is tempting to write field names from memory to save time
 
 ---
 
-# 8. JavaScript UI Model Names Must Match Protobuf Types
+# 15. JavaScript UI Model Names Must Match Protobuf Types
 
 **Source:** `js-protobuf-model-names.md`
 
@@ -704,7 +1021,7 @@ This means JS sent `ReturnOrder` but the protobuf type is `SalesReturnOrder`.
 
 ---
 
-# 9. Nested Protobuf Types in Form Definitions
+# 16. Nested Protobuf Types in Form Definitions
 
 **Source:** `money-field-type-mapping.md`
 
@@ -753,7 +1070,7 @@ This will appear to work during development but will display `[object Object]` a
 
 ---
 
-# 10. Compound Form Field Data Collection
+# 17. Compound Form Field Data Collection
 
 **Source:** `compound-form-field-data-collection.md`
 
@@ -792,7 +1109,372 @@ When adding a new compound field type (a field that renders multiple sub-inputs)
 
 ---
 
-# 11. Template Literal Ternary Edit Safety
+# 18. Form and Column Field Coverage
+
+**Source:** `form-column-field-coverage.md`
+
+## Rule
+Every non-system field in a protobuf struct MUST be accounted for in both the form definition (`*-forms.js`) and column definition (`*-columns.js`). No field should be silently omitted.
+
+## Why This Matters
+When fields are silently skipped during form/column creation, the UI becomes incomplete in ways that are hard to detect. A selection field without its contextual fields (e.g., "Monthly" period without a month selector) renders the entire feature meaningless. Users can set a value but cannot provide the detail that gives it meaning.
+
+## System Fields (Excluded by Default)
+These fields are handled automatically and do NOT need form/column entries:
+- Primary key ID (e.g., `targetId`) — auto-generated on POST
+- `auditInfo` — rendered via `...f.audit()` or omitted (read-only metadata)
+- `customFields` — generic map, not a domain field
+
+## Process
+
+### When Creating or Modifying Form/Column Definitions
+
+1. **List all protobuf fields**:
+   ```bash
+   grep -A 30 "type ModelName struct" go/types/<module>/*.pb.go | grep 'json:"'
+   ```
+
+2. **For each non-system field**, verify it appears in:
+   - The form definition (`*-forms.js`) — as an input field
+   - The column definition (`*-columns.js`) — as a table column (at minimum the most important fields)
+
+3. **If a field is intentionally excluded**, add a comment in the form definition explaining why:
+   ```javascript
+   // Omitted: internalScore — system-calculated, not user-editable
+   ```
+
+4. **Watch for dependent field groups** — fields that only make sense together:
+   - Enum/type selector + detail fields (e.g., `period` + `quarter` + `month`)
+   - Parent reference + child context (e.g., `orderId` + `lineNumber`)
+   - Range pairs (e.g., `minQuantity` + `maxQuantity`)
+
+   If any field in a dependent group is included, ALL fields in that group must be included.
+
+## Verification Command
+After creating or modifying any form definition, compare against the protobuf:
+```bash
+# List all protobuf JSON field names for the model
+grep -A 40 "type ModelName struct" go/types/<module>/*.pb.go | \
+  grep -oP 'json:"\K[^,"]+' | sort
+
+# List all field keys in the form definition
+grep -oP "key:\s*'[^']+'" <forms-file> | sort
+
+# Compare (any field in protobuf but not in form needs justification)
+```
+
+## Error Symptoms
+- A selection/enum field exists but its meaning is unclear (e.g., "Monthly" with no month shown)
+- Users can create records but critical context is missing
+- Table rows show partial information that doesn't tell the full story
+- Data exists on the server but is invisible in the UI
+
+## Common Dependent Field Groups
+| Selector Field | Dependent Fields | Why |
+|---------------|-----------------|-----|
+| `period` (enum) | `month`, `quarter`, `year` | Period type without time specifics is meaningless |
+| `addressType` | address fields | Type without address is meaningless |
+| `paymentMethod` | method-specific fields | Method without details is meaningless |
+| `status` (with reason) | `reason`, `reasonCode` | Status change without reason loses context |
+
+---
+
+# 19. Select Field Enum Completeness
+
+**Source:** `select-enum-completeness.md`
+
+## Rule
+Every `f.select()` call in a form definition MUST reference an enum that is **defined and exported** in the corresponding `*-enums.js` file. Never add a `f.select()` with an enum reference without verifying the enum exists in the exports.
+
+## Why This Is Critical
+`f.select('field', 'Label', enums.SOME_ENUM)` stores `enums.SOME_ENUM` as `field.options`. If `SOME_ENUM` is not exported from the enums file, `field.options` is `undefined`. When the detail modal opens, `generateSelectHtml()` calls `Object.entries(field.options)` which throws:
+```
+Uncaught TypeError: Cannot convert undefined or null to object
+    at Object.entries (<anonymous>)
+    at generateSelectHtml (layer8d-forms-fields.js:284)
+```
+
+This crash is **deferred** — it only happens when a user clicks a row to open the detail view, not at page load. The table renders fine, making it hard to catch during development.
+
+## The Bug Pattern
+```javascript
+// In *-forms.js:
+const enums = SomeModule.enums;
+SomeModule.forms = {
+    SomeModel: f.form('Model', [
+        f.section('Details', [
+            ...f.select('status', 'Status', enums.SOME_STATUS),  // ← crashes if SOME_STATUS not exported
+        ])
+    ])
+};
+
+// In *-enums.js:
+SomeModule.enums = {
+    OTHER_STATUS: OTHER_STATUS.enum,        // ← SOME_STATUS is missing!
+    OTHER_STATUS_CLASSES: OTHER_STATUS.classes
+};
+```
+
+## Checklist When Adding f.select()
+1. **Identify the enum name** used as the 3rd argument (e.g., `enums.SEGMENT_TYPE`)
+2. **Open the corresponding `*-enums.js` file** and verify `SEGMENT_TYPE` exists in the `.enums = { ... }` export block
+3. If missing:
+   a. Check the protobuf for enum values: `grep -A 10 'EnumName_' go/types/<module>/*.pb.go`
+   b. Add the `factory.create([...])` definition
+   c. Add to the `.enums = { ... }` export
+   d. Add a renderer to `.render = { ... }` if the enum is used in columns
+4. **Verify on BOTH desktop and mobile** — enum files are separate per platform
+
+## Verification Command
+After creating or modifying any `*-forms.js` file:
+```bash
+# Extract all enum references from f.select() calls in the forms file
+grep -oP "enums\.\K[A-Z_]+" <forms-file>
+
+# Check each one exists in the corresponding enums file export block
+grep "<ENUM_NAME>" <enums-file>
+```
+
+## Error Symptom
+- Clicking a table row to open detail view throws `Cannot convert undefined or null to object`
+- Stack trace shows `generateSelectHtml` → `generateFieldHtml` → `generateFormHtml`
+- The table itself renders fine — only the detail modal crashes
+- ALL rows crash, not just specific ones (since the field definition is static)
+
+---
+
+# 20. Column Factory Method Completeness
+
+**Source:** `column-factory-method-completeness.md`
+
+## Rule
+Every column factory method used in `*-columns.js` files MUST exist in `layer8-column-factory.js`. If a column definition calls `col.someMethod()` and `someMethod` does not exist on the factory object, the entire column definition object literal will fail with a TypeError — silently breaking ALL tables across ALL sections.
+
+## Why This Is Critical
+JavaScript object literal construction is atomic. If ANY spread expression (`...col.missing()`) throws during construction, the ENTIRE assignment fails:
+
+```javascript
+// If col.number() doesn't exist, this ENTIRE object is never assigned
+Module.columns = {
+    ModelA: [
+        ...col.id('id'),          // would work
+        ...col.col('name'),       // would work
+        ...col.number('qty'),     // THROWS TypeError — entire Module.columns = undefined
+    ],
+    ModelB: [...],                // never reached
+    ModelC: [...],                // never reached
+};
+```
+
+**Result**: `Module.columns` remains `undefined`. The service registry falls back to `DEFAULT_COLUMNS` (`id`, `name`, `status`) for ALL models. Most columns appear empty because the data fields don't match these default keys. No console error is visible unless the developer opens DevTools and checks for the TypeError.
+
+## The Failure Mode
+1. Developer adds `...col.number('field')` to column definitions
+2. `col.number` is `undefined` (method doesn't exist on factory)
+3. `col.number('field')` throws `TypeError: col.number is not a function`
+4. The entire `Module.columns = { ... }` assignment fails
+5. ALL models lose their column definitions — not just the one with the bad call
+6. ALL tables fall back to DEFAULT_COLUMNS: `id`, `name`, `status`
+7. User sees "most columns are empty across ALL sections"
+8. No obvious error — looks like a data or serialization bug
+
+## Prevention
+
+### Before Using Any Factory Method
+Verify the method exists in `layer8-column-factory.js`:
+```bash
+grep "function(key" layer8-column-factory.js | grep -oP '^\s+\K\w+'
+```
+
+### Available Factory Methods
+Keep this list synchronized with the factory:
+- `col(key, label)` — basic text column
+- `basic(keys)` — multiple basic columns from array
+- `number(key, label)` — numeric column
+- `boolean(key, label, options)` — boolean column
+- `status(key, label, enumValues, renderer)` — status badge column
+- `enum(key, label, enumValues, renderer)` — enum text column
+- `date(key, label)` — date column
+- `money(key, label)` — money column
+- `period(key, label)` — period column
+- `id(key, label)` — ID column
+- `custom(key, label, renderFn, options)` — custom render column
+- `link(key, label, onClick, displayFn)` — clickable link column
+
+### When Adding a New Column Type
+If a new column type is needed (e.g., `percent`, `duration`, `badge`):
+1. **Add the method to `layer8-column-factory.js` FIRST**
+2. **Then** use it in `*-columns.js` files
+3. **Never** use a factory method that doesn't exist yet
+
+### Verification After Any Column Change
+```bash
+# Extract all factory method calls from column files
+grep -oP 'col\.(\w+)\(' *-columns.js | sort -u
+
+# Extract all defined methods from factory
+grep -oP '^\s+(\w+):\s*function' layer8-column-factory.js | sort -u
+
+# Any method in the first list but NOT in the second list will cause a total UI failure
+```
+
+## Error Symptom
+- ALL table sections show only `id`, `name`, `status` columns (DEFAULT_COLUMNS)
+- Most columns are empty across ALL sections — not just one model
+- No server errors — data retrieval works correctly
+- TypeError in console (only visible if DevTools is open): `col.xxx is not a function`
+- Looks like a serialization or field name mismatch, but the real issue is a missing factory method
+
+## Historical Context
+This bug affected the l8bugs project when `col.number()` was used in column definitions but the `number()` method did not exist in the column factory. All 6 model tables (Bug, Feature, BugsProject, BugsAssignee, BugsDigest, BugsSprint) fell back to DEFAULT_COLUMNS, making it appear as though field names were mismatched with the protobuf.
+
+---
+
+# 21. Column Factory Renderer Validation
+
+**Source:** `column-factory-renderer-validation.md`
+
+## Rule
+Every `col.enum()` and `col.status()` call MUST pass a valid function as the `renderer` argument (4th parameter). The renderer is captured in a closure at column-definition time and called later at render time. If it is `undefined`, the error only appears when data arrives — with an unhelpful "renderer is not a function" stack trace that does NOT identify which column caused it.
+
+## Why This Is Critical
+The column factory's `enum(key, label, enumValues, renderer)` and `status(key, label, enumValues, renderer)` methods create a closure: `render: (item) => renderer(item[key])`. If `renderer` is `undefined` at definition time:
+- No error occurs when the column is defined (silent capture of `undefined`)
+- No error occurs when the table initializes
+- The crash only happens when data arrives and the table tries to render
+- The error message ("renderer is not a function") gives no indication of WHICH column or module is broken
+- All modules initialize successfully, making the bug extremely hard to trace
+
+## Common Causes
+
+### 1. Missing render property in enum file
+```javascript
+// enums file defines render object but misses a property
+Module.render = {
+    statusA: createStatusRenderer(...),
+    // statusB is missing!
+};
+
+// columns file references the missing property
+...col.enum('status', 'Status', null, render.statusB)  // renderer = undefined
+```
+
+### 2. Wrong argument order (3 args instead of 4)
+```javascript
+// WRONG: renderer goes into enumValues, 4th arg is undefined
+...col.enum('status', 'Status', render.myFunc)
+
+// CORRECT: null for enumValues, renderer as 4th arg
+...col.enum('status', 'Status', null, render.myFunc)
+```
+
+### 3. Render object not yet populated
+```javascript
+// columns file captures render object before enums file runs
+const render = Module.render;  // undefined if enums hasn't loaded yet
+```
+
+## Defensive Guard (Built Into Factory)
+The column factory now validates `renderer` at definition time and logs a clear error:
+```
+Layer8ColumnFactory.enum('status', 'Status'): renderer is not a function (got undefined).
+Check that the render object is populated before columns are defined.
+```
+If renderer is not a function, it falls back to `String(item[key] ?? '')` to prevent crashes.
+
+## Verification
+After creating or modifying any `*-columns.js` file:
+1. Check that every `col.enum()` and `col.status()` call has exactly 4 arguments
+2. Verify the 4th argument references a function that exists in the corresponding `*-enums.js` render object
+3. Open the browser console — any renderer validation errors will appear immediately at page load (not deferred to data fetch)
+
+---
+
+# 22. Renderer Factory vs Direct Call
+
+**Source:** `renderer-factory-vs-direct.md`
+
+## Rule
+When assigning a renderer function to a render object property, you MUST distinguish between **factory functions** (which return a renderer) and **direct renderers** (which render a value immediately). Calling a direct renderer as if it were a factory silently crashes the entire file.
+
+## The Two Patterns
+
+### Factory Functions (return a function)
+These are called WITH arguments to CREATE a renderer:
+```javascript
+// createStatusRenderer IS a factory — returns a function
+bugStatus: createStatusRenderer(BUG_STATUS.enum, BUG_STATUS.classes),
+// Result: bugStatus is a FUNCTION that can be called later as bugStatus(value)
+```
+
+### Direct Renderers (render immediately)
+These must be WRAPPED in a closure, not called directly:
+```javascript
+// WRONG — calls renderEnum immediately with wrong arguments, crashes
+assigneeType: renderEnum(ASSIGNEE_TYPE.enum),
+// renderEnum(value, enumMap) is called with (enumMap) as value — enumMap param is undefined → TypeError
+
+// CORRECT — wrap in a closure to create a factory-like renderer
+assigneeType: createEnumRenderer(ASSIGNEE_TYPE.enum),
+// OR manually:
+assigneeType: (value) => renderEnum(value, ASSIGNEE_TYPE.enum),
+```
+
+## Why This Crashes Everything
+The render object is typically assigned inside an IIFE:
+```javascript
+(function() {
+    Module.render = {
+        bugStatus: createStatusRenderer(...),    // OK — factory
+        assigneeType: renderEnum(ENUM_MAP),      // CRASHES — direct call with wrong args
+        projectVisibility: renderEnum(ENUM_MAP), // never reached
+    };
+})();
+```
+
+When `renderEnum(ENUM_MAP)` throws TypeError, the ENTIRE IIFE fails. `Module.render` is never assigned. Then the columns file does `const render = Module.render;` which gets `undefined`. Then `render.bugStatus` throws another TypeError, preventing `Module.columns` from being assigned. ALL tables fall back to DEFAULT_COLUMNS (`id`, `name`, `status`).
+
+## The Cascade
+1. Direct renderer called as factory → TypeError in enums file
+2. `Module.render` never assigned (stays undefined)
+3. Columns file: `const render = Module.render` → render is undefined
+4. `render.bugStatus` → TypeError in columns file
+5. `Module.columns` never assigned
+6. ALL tables use DEFAULT_COLUMNS: `{key:'id'}, {key:'name'}, {key:'status'}`
+7. ID columns blank (data has `bugId` not `id`)
+8. Name columns blank (data has `title` not `name`)
+9. Status shows raw numbers (no renderer function)
+
+## Available Renderer Functions
+
+### Factories (call directly, they return functions)
+- `createStatusRenderer(enumMap, classMap)` → returns `(value) => renderStatus(...)`
+- `createEnumRenderer(enumMap, defaultLabel)` → returns `(value) => renderEnum(...)`
+
+### Direct Renderers (must wrap in closure or use factory equivalent)
+- `renderEnum(value, enumMap, defaultLabel)` — use `createEnumRenderer` instead
+- `renderStatus(value, enumMap, classMap)` — use `createStatusRenderer` instead
+- `renderDate(value, options)` — OK to assign directly as `date: renderDate` (function reference, not called)
+- `renderBoolean(value, options)` — wrap: `(value) => renderBoolean(value, opts)`
+
+## Verification
+After creating or modifying any `*-enums.js` render object:
+1. Check every property — is it calling a factory or a direct renderer?
+2. If calling a direct renderer (more than 1 arg expected), it MUST be wrapped
+3. Open the browser console — look for TypeError in the enums file
+4. Check if `Module.render` is defined: `console.log(Module.render)` should not be undefined
+
+## Error Symptoms
+- ALL table sections show only `id`, `name`, `status` columns
+- ID columns are blank (data uses model-specific IDs like `bugId`, `featureId`)
+- Name columns are blank (data uses `title` or model-specific fields)
+- Status columns show raw numbers (1, 2, 3) instead of labels
+- NO console errors visible unless DevTools is open before page load
+- Looks like field name mismatches or serialization issues, but the real cause is a crashed enums file
+
+---
+
+# 23. Template Literal Ternary Edit Safety
 
 **Source:** `template-literal-ternary-edits.md`
 
@@ -858,7 +1540,7 @@ After ANY edit that adds ternary expressions or conditional wrappers inside temp
 
 ---
 
-# 12. Stacked Popup DOM Scoping
+# 24. Stacked Popup DOM Scoping
 
 **Source:** `stacked-popup-dom-scoping.md`
 
@@ -906,34 +1588,7 @@ if (!form) {
 
 ---
 
-# 13. Server-Side Pagination Metadata
-
-**Source:** `server-pagination-metadata.md`
-
-## Rule
-Server-side paginated responses only return valid metadata (total count, key counts)
-on the FIRST page (page 1). Metadata in subsequent page responses MUST be disregarded.
-
-## Why
-The server computes aggregate metadata (total counts, status breakdowns) only when
-processing page 0 (the first page). Subsequent page responses may include stale,
-partial, or zero metadata that does not reflect the actual dataset.
-
-## Implementation Pattern
-When processing server responses in pagination code:
-- Page 1: Read and store metadata (totalItems, key counts)
-- Page 2+: Preserve existing metadata, only update the data items
-
-## What Resets to Page 1 (and triggers fresh metadata)
-- Filter changes
-- Sort changes (if server-side)
-- Base where clause changes
-- Page size changes
-- Initial load
-
----
-
-# 14. UI Module Integration Checklist
+# 25. UI Module Integration Checklist
 
 **Source:** `ui-module-integration.md`
 
@@ -1024,7 +1679,7 @@ This results in the module appearing in navigation but showing "under developmen
 
 ---
 
-# 15. Module Init sectionSelector Must Match defaultModule
+# 26. Module Init sectionSelector Must Match defaultModule
 
 **Source:** `module-init-section-selector.md`
 
@@ -1086,7 +1741,7 @@ When creating a module init file, verify:
 
 ---
 
-# 16. Reference Registry Completeness
+# 27. Reference Registry Completeness
 
 **Source:** `reference-registry-completeness.md`
 
@@ -1199,7 +1854,34 @@ This console warning means the lookupModel for that field is not in the referenc
 
 ---
 
-# 17. Mobile Parity
+# 28. Server-Side Pagination Metadata
+
+**Source:** `server-pagination-metadata.md`
+
+## Rule
+Server-side paginated responses only return valid metadata (total count, key counts)
+on the FIRST page (page 1). Metadata in subsequent page responses MUST be disregarded.
+
+## Why
+The server computes aggregate metadata (total counts, status breakdowns) only when
+processing page 0 (the first page). Subsequent page responses may include stale,
+partial, or zero metadata that does not reflect the actual dataset.
+
+## Implementation Pattern
+When processing server responses in pagination code:
+- Page 1: Read and store metadata (totalItems, key counts)
+- Page 2+: Preserve existing metadata, only update the data items
+
+## What Resets to Page 1 (and triggers fresh metadata)
+- Filter changes
+- Sort changes (if server-side)
+- Base where clause changes
+- Page size changes
+- Initial load
+
+---
+
+# 29. Mobile Parity
 
 **Source:** `mobile-parity.md`
 
@@ -1241,7 +1923,162 @@ Parity is not just "does the same button exist on both platforms." It is "does t
 
 ---
 
-# 18. Mock Data Generation
+# 30. Demo Directory Must Stay in Sync with Source
+
+**Source:** `demo-directory-sync.md`
+
+## Rule
+The `/go/demo/web/` directory is a copy of `/go/bugs/website/web/` (or the equivalent source web directory). After modifying ANY file under the source web directory, the corresponding file in the demo directory MUST be updated immediately.
+
+## Why This Matters
+The demo directory serves as the local development/testing server's web root. If the source files are fixed but the demo copies are not updated, the user continues to see the bug in their browser. This creates confusion where "the fix was applied" but "nothing changed."
+
+## Process
+After editing any file under the source web directory:
+```bash
+# Copy the modified file to the demo directory
+cp /go/bugs/website/web/<path> /go/demo/web/<path>
+
+# Verify all files are in sync
+diff -rq /go/bugs/website/web/l8ui/ /go/demo/web/l8ui/
+diff -rq /go/bugs/website/web/m/ /go/demo/web/m/
+```
+
+## What to Sync
+- All files under `l8ui/` (shared components, module files)
+- All files under `m/` (mobile files)
+- `app.html` and `m/app.html`
+- CSS files, JS files, images
+
+## What NOT to Sync
+- `login.json` (demo may have different config)
+- Server-generated files
+- Build artifacts
+
+---
+
+# 31. L8UI Theme Compliance
+
+**Source:** `l8ui-theme-compliance.md`
+
+## Rule
+All UI components in the `l8ui/` directory MUST use the canonical `--layer8d-*` CSS custom properties defined in `layer8d-theme.css`. Never introduce generic/unprefixed CSS variable names (e.g., `--accent-color`, `--bg-primary`, `--text-primary`) in component CSS files.
+
+## CSS Variables
+
+### Required Token Usage
+| Purpose | Use | Never Use |
+|---------|-----|-----------|
+| Primary accent | `var(--layer8d-primary)` | `var(--accent-color, ...)` |
+| White/card background | `var(--layer8d-bg-white)` | `var(--bg-primary, #ffffff)` |
+| Light background | `var(--layer8d-bg-light)` | `var(--bg-secondary, ...)` |
+| Input background | `var(--layer8d-bg-input)` | `var(--bg-tertiary, ...)` |
+| Dark text | `var(--layer8d-text-dark)` | `var(--text-primary, ...)` |
+| Medium text | `var(--layer8d-text-medium)` | `var(--text-secondary, ...)` |
+| Light text | `var(--layer8d-text-light)` | `var(--text-tertiary, ...)` |
+| Muted text | `var(--layer8d-text-muted)` | hardcoded `#718096` etc. |
+| Border | `var(--layer8d-border)` | `var(--border-color, ...)` |
+| Status colors | `var(--layer8d-success)`, `var(--layer8d-warning)`, `var(--layer8d-error)` | hardcoded hex |
+
+### No Per-View Dark Mode Blocks
+Dark mode is handled centrally in `layer8d-theme.css` via `[data-theme="dark"]` overrides on `--layer8d-*` tokens. Component CSS files MUST NOT contain their own `[data-theme="dark"]` blocks. If a component uses `--layer8d-*` tokens, dark mode works automatically.
+
+## Buttons
+Reuse the shared button classes from `layer8d-theme.css`:
+- `layer8d-btn layer8d-btn-primary layer8d-btn-small` for primary actions
+- `layer8d-btn layer8d-btn-secondary layer8d-btn-small` for secondary actions
+
+Do NOT create per-view button styles (e.g., `.layer8d-kanban-add-btn`, `.layer8d-wizard-btn-primary`).
+
+## JavaScript Color References
+JS render files MUST NOT hardcode hex color values for theme-dependent elements (backgrounds, text, borders, chart palettes). Instead:
+
+1. Use `Layer8DChart.readThemeColor(varName, fallback)` for individual colors
+2. Use `Layer8DChart.getThemePalette()` for chart/data visualization color arrays
+3. Cache theme colors at the start of a render pass if reading multiple values
+
+### Example
+```javascript
+// WRONG
+const color = '#3b82f6';
+const colors = ['#0ea5e9', '#22c55e', '#f59e0b'];
+
+// CORRECT
+const color = Layer8DChart.readThemeColor('--layer8d-primary', '#0ea5e9');
+const colors = Layer8DChart.getThemePalette();
+```
+
+## Verification
+After creating or modifying any l8ui component CSS/JS:
+1. `grep 'var(--accent-color\|var(--bg-primary\|var(--text-primary\|var(--border-color' <file>` should return nothing
+2. `grep '#3b82f6' <file>` should return nothing (old indigo accent)
+3. No `[data-theme="dark"]` blocks in the component CSS
+4. `node -c <file>` passes for any modified JS files
+
+---
+
+# 32. L8UI Guide Update
+
+**Source:** `l8ui-guide-update.md`
+
+## Rule
+Whenever a component in the `l8ui/` directory is **created, modified, or deleted**, the `l8ui/GUIDE.md` file MUST be updated to reflect the change. Do not mark the task as complete until the guide is up to date.
+
+## What to Update
+- **New component**: Add a new subsection under the appropriate API section (Desktop or Mobile) documenting the constructor/options, public methods, and any viewConfig options.
+- **Modified component**: Update the existing subsection to reflect new methods, changed parameters, removed APIs, or new behavior.
+- **New CSS file**: Add to the script/CSS loading order sections (Desktop section 3, Mobile section 4).
+- **New JS file**: Add to the script loading order sections in the correct dependency position.
+- **Deleted component**: Remove the subsection and any references from loading order sections.
+
+## What to Document
+For each component, the guide entry should include:
+1. **Global object name** (e.g., `window.Layer8DChart`)
+2. **Constructor options** or factory parameters
+3. **Public methods** with parameter signatures
+4. **viewConfig options** (if the component is a registered view type)
+5. **Registration** with Layer8DViewFactory if applicable
+
+## Why This Matters
+The GUIDE.md is the primary reference for AI assistants and developers building with l8ui. If a component exists but isn't documented, it won't be used correctly (or at all), leading to reimplementation or incorrect integration.
+
+---
+
+# 33. L8UI GUIDE.md Prerequisite
+
+**Source:** `l8ui-guide-prerequisite.md`
+
+## Rule
+Before implementing or using ANY l8ui component (desktop or mobile), you MUST read the `l8ui/GUIDE.md` file in the project's web directory. Do not write UI code that references l8ui components without first reading this guide.
+
+## Why This Matters
+The GUIDE.md documents all available l8ui components, their APIs, constructor options, viewConfig parameters, and integration patterns. Without reading it, you will:
+- Miss existing components and reinvent functionality
+- Use incorrect API signatures or viewConfig options
+- Fail to follow established integration patterns (e.g., Layer8DViewFactory registration, Layer8DModuleFactory.create() options)
+
+## When This Applies
+- Creating a new module or section UI
+- Adding a new view type (kanban, chart, etc.) to an existing service
+- Modifying how services are initialized or registered
+- Using any Layer8D* or Layer8M* component
+- Configuring viewConfig options for any view type
+- Adding script includes to app.html or m/app.html
+
+## What to Look For in GUIDE.md
+1. **Component APIs**: Constructor options, public methods, event callbacks
+2. **viewConfig options**: Per-view-type configuration (kanban lanes, chart axes, etc.)
+3. **Script loading order**: Dependency order for JS/CSS includes
+4. **Module creation pattern**: How to use Layer8DModuleFactory.create()
+5. **Mobile equivalents**: Mobile component APIs and differences from desktop
+
+## Location
+- **L8ERP**: `go/erp/ui/web/l8ui/GUIDE.md`
+- **L8Bugs**: `go/bugs/website/web/l8ui/GUIDE.md`
+
+---
+
+# 34. Mock Data Generation
 
 **Source:** `mock-data-generation.md`
 
@@ -1322,7 +2159,7 @@ All mock data files live in `go/tests/mocks/`. The system generates phased, depe
 
 ---
 
-# 19. Mock Data Completeness
+# 35. Mock Data Completeness
 
 **Source:** `mock-completeness.md`
 
@@ -1347,7 +2184,44 @@ Incomplete mock data causes confusion during testing and development. Users see 
    Check `go/erp/ui/web/<module>/<module>-config.js` to see all services defined in the UI.
 
 ### During Implementation
-Create a checklist of all services and mark them as you implement.
+Create a checklist of all services and mark them as you implement:
+
+```
+Module: Sales (33 services)
+- [ ] customerhierarchies
+- [ ] customersegments
+- [ ] customercontracts
+- [ ] partnerchannels
+- [ ] pricelists
+- [ ] pricelistentries
+- [ ] customerprices
+- [ ] discountrules
+- [ ] promotionalprices
+- [ ] quantitybreaks        <-- Easy to miss!
+- [ ] salesquotations
+- [ ] quotationlines
+- [ ] salesorders
+- [ ] salesorderlines
+- [ ] orderallocations      <-- Easy to miss!
+- [ ] backorders            <-- Easy to miss!
+- [ ] returnorders
+- [ ] returnorderlines      <-- Easy to miss!
+- [ ] deliveryorders
+- [ ] deliverylines
+- [ ] pickreleases
+- [ ] packingslips
+- [ ] shippingdocs
+- [ ] deliveryconfirms      <-- Easy to miss!
+- [ ] billingschedules
+- [ ] billingmilestones
+- [ ] revenueschedules
+- [ ] salesterritories
+- [ ] territoryassigns
+- [ ] commissionplans
+- [ ] commissioncalcs
+- [ ] salestargets
+- [ ] salesforecasts
+```
 
 ### After Implementation
 1. **Verify store.go has ID slices for all entities**:
@@ -1378,9 +2252,9 @@ Create a checklist of all services and mark them as you implement.
 
 ### 1. Line Items
 When a parent entity has line items, both need generators:
-- SalesOrder → SalesOrderLine
-- SalesReturnOrder → SalesReturnOrderLine (often missed!)
-- SalesQuotation → SalesQuotationLine
+- ✅ SalesOrder → ✅ SalesOrderLine
+- ✅ SalesReturnOrder → ❌ SalesReturnOrderLine (often missed!)
+- ✅ SalesQuotation → ✅ SalesQuotationLine
 
 ### 2. Secondary/Support Entities
 These are often overlooked:
@@ -1403,6 +2277,21 @@ gen_<module>_foundation.go    - Base/master data
 gen_<module>_<area1>.go       - First functional area
 gen_<module>_<area2>.go       - Second functional area
 ...
+```
+
+Each file should have a comment header listing what it generates:
+
+```go
+// gen_sales_orders.go
+// Generates:
+// - SalesQuotation
+// - SalesQuotationLine
+// - SalesOrder
+// - SalesOrderLine
+// - SalesOrderAllocation
+// - SalesBackOrder
+// - SalesReturnOrder
+// - SalesReturnOrderLine
 ```
 
 ## Phase Organization
@@ -1429,7 +2318,74 @@ Phase 6+: Additional areas
 
 ---
 
-# 20. Mock Endpoint Construction
+# 36. Mock Data Must Cover All UI Columns
+
+**Source:** `mock-data-column-coverage.md`
+
+## Rule
+Every field that has a UI column definition (`*-columns.js`) MUST be populated by the corresponding mock data generator. If a column exists for a field, the mock data MUST set a non-zero value for that field. No column should display empty because mock data omitted the field.
+
+## Why This Matters
+Protobuf uses `omitempty` for JSON serialization. Any field left at its zero value (0 for int32, "" for string, 0 for enum) is omitted from the JSON response. The UI table then shows an empty cell. This creates the false impression of a bug when the real issue is incomplete mock data.
+
+This is especially insidious because:
+- The field name is correct in the column definition
+- The field exists in the protobuf
+- No error is logged anywhere
+- The column renders fine — it just has no data to show
+
+## Verification Process
+
+### When Adding or Modifying Column Definitions
+1. List all field keys used in the column definitions:
+   ```bash
+   grep -oP "col\.\w+\('[^']+'" <columns-file> | grep -oP "'[^']+'" | tr -d "'"
+   ```
+
+2. For each field key, verify the mock data generator sets that field:
+   ```bash
+   grep "<FieldName>:" go/tests/mocks/gen_*.go
+   ```
+
+3. If any column field is NOT set in the generator, add it immediately.
+
+### When Adding or Modifying Mock Data Generators
+1. List all column fields for the model:
+   ```bash
+   grep -A 50 "ModelName:" <columns-file>
+   ```
+
+2. Verify every column field is set in the generator.
+
+## Special Cases
+
+### Enum Fields
+Enum fields with `omitempty` are omitted when set to 0 (the UNSPECIFIED value). Mock data for enum columns MUST use a non-zero enum value to ensure the column displays data.
+
+### AI/Computed Fields
+Fields populated by AI or background processes (e.g., `triageStatus`, `aiConfidence`, `aiEstimatedEffort`) still need mock data. Use realistic simulated values. A subset of records (e.g., first 20%) can be left at zero to simulate "pending" status.
+
+### Conditional Fields
+Fields that only apply in certain states (e.g., `resolvedDate` only for resolved bugs, `resolution` only for closed bugs) should be populated on records that are in the appropriate state.
+
+## Checklist Before PR
+
+When touching column definitions or mock generators:
+- [ ] Every column field key has a matching field set in the mock generator
+- [ ] Enum columns use non-zero values (at least on most records)
+- [ ] `go build ./tests/mocks/` passes
+- [ ] `go vet ./tests/mocks/` passes
+- [ ] Run the test suite and visually verify tables show data in all columns
+
+## Error Symptom
+- Table columns appear but show no data (empty cells)
+- No console errors, no server errors
+- The protobuf field exists and the column key is correct
+- Data appears for some columns but not others in the same row
+
+---
+
+# 37. Mock Endpoint Construction
 
 **Source:** `mock-endpoint-construction.md`
 
@@ -1482,7 +2438,7 @@ Before creating mock phase files:
 
 ---
 
-# 21. Mock Phase Ordering
+# 38. Mock Phase Ordering
 
 **Source:** `mock-phase-ordering.md`
 
@@ -1553,399 +2509,3 @@ Before adding `common.ValidateRequired(entity.SomeId, "SomeId")` to a service ca
 
 ## Direct Index Access Trap
 Some generators use `store.XxxIDs[i]` or `store.XxxIDs[0]` (direct index, not `pickRef`). These will **panic** with "index out of range" if the slice is empty, rather than silently returning "". Both patterns are dangerous but panics are at least immediately visible.
-
----
-
-# 22. L8UI Theme Compliance
-
-**Source:** `l8ui-theme-compliance.md`
-
-## Rule
-All UI components in the `l8ui/` directory MUST use the canonical `--layer8d-*` CSS custom properties defined in `layer8d-theme.css`. Never introduce generic/unprefixed CSS variable names (e.g., `--accent-color`, `--bg-primary`, `--text-primary`) in component CSS files.
-
-## CSS Variables
-
-### Required Token Usage
-| Purpose | Use | Never Use |
-|---------|-----|-----------|
-| Primary accent | `var(--layer8d-primary)` | `var(--accent-color, ...)` |
-| White/card background | `var(--layer8d-bg-white)` | `var(--bg-primary, #ffffff)` |
-| Light background | `var(--layer8d-bg-light)` | `var(--bg-secondary, ...)` |
-| Input background | `var(--layer8d-bg-input)` | `var(--bg-tertiary, ...)` |
-| Dark text | `var(--layer8d-text-dark)` | `var(--text-primary, ...)` |
-| Medium text | `var(--layer8d-text-medium)` | `var(--text-secondary, ...)` |
-| Light text | `var(--layer8d-text-light)` | `var(--text-tertiary, ...)` |
-| Muted text | `var(--layer8d-text-muted)` | hardcoded `#718096` etc. |
-| Border | `var(--layer8d-border)` | `var(--border-color, ...)` |
-| Status colors | `var(--layer8d-success)`, `var(--layer8d-warning)`, `var(--layer8d-error)` | hardcoded hex |
-
-### No Per-View Dark Mode Blocks
-Dark mode is handled centrally in `layer8d-theme.css` via `[data-theme="dark"]` overrides on `--layer8d-*` tokens. Component CSS files MUST NOT contain their own `[data-theme="dark"]` blocks. If a component uses `--layer8d-*` tokens, dark mode works automatically.
-
-## Buttons
-Reuse the shared button classes from `layer8d-theme.css`:
-- `layer8d-btn layer8d-btn-primary layer8d-btn-small` for primary actions
-- `layer8d-btn layer8d-btn-secondary layer8d-btn-small` for secondary actions
-
-Do NOT create per-view button styles (e.g., `.layer8d-kanban-add-btn`, `.layer8d-wizard-btn-primary`).
-
-## JavaScript Color References
-JS render files MUST NOT hardcode hex color values for theme-dependent elements (backgrounds, text, borders, chart palettes). Instead:
-
-1. Use `Layer8DChart.readThemeColor(varName, fallback)` for individual colors
-2. Use `Layer8DChart.getThemePalette()` for chart/data visualization color arrays
-3. Cache theme colors at the start of a render pass if reading multiple values
-
-### Example
-```javascript
-// WRONG
-const color = '#3b82f6';
-const colors = ['#0ea5e9', '#22c55e', '#f59e0b'];
-
-// CORRECT
-const color = Layer8DChart.readThemeColor('--layer8d-primary', '#0ea5e9');
-const colors = Layer8DChart.getThemePalette();
-```
-
-## Verification
-After creating or modifying any l8ui component CSS/JS:
-1. `grep 'var(--accent-color\|var(--bg-primary\|var(--text-primary\|var(--border-color' <file>` should return nothing
-2. `grep '#3b82f6' <file>` should return nothing (old indigo accent)
-3. No `[data-theme="dark"]` blocks in the component CSS
-4. `node -c <file>` passes for any modified JS files
-
----
-
-# 23. Select Field Enum Completeness
-
-**Source:** `select-enum-completeness.md`
-
-## Rule
-Every `f.select()` call in a form definition MUST reference an enum that is **defined and exported** in the corresponding `*-enums.js` file. Never add a `f.select()` with an enum reference without verifying the enum exists in the exports.
-
-## Why This Is Critical
-`f.select('field', 'Label', enums.SOME_ENUM)` stores `enums.SOME_ENUM` as `field.options`. If `SOME_ENUM` is not exported from the enums file, `field.options` is `undefined`. When the detail modal opens, `generateSelectHtml()` calls `Object.entries(field.options)` which throws:
-```
-Uncaught TypeError: Cannot convert undefined or null to object
-    at Object.entries (<anonymous>)
-    at generateSelectHtml (layer8d-forms-fields.js:284)
-```
-
-This crash is **deferred** — it only happens when a user clicks a row to open the detail view, not at page load. The table renders fine, making it hard to catch during development.
-
-## The Bug Pattern
-```javascript
-// In *-forms.js:
-const enums = SomeModule.enums;
-SomeModule.forms = {
-    SomeModel: f.form('Model', [
-        f.section('Details', [
-            ...f.select('status', 'Status', enums.SOME_STATUS),  // ← crashes if SOME_STATUS not exported
-        ])
-    ])
-};
-
-// In *-enums.js:
-SomeModule.enums = {
-    OTHER_STATUS: OTHER_STATUS.enum,        // ← SOME_STATUS is missing!
-    OTHER_STATUS_CLASSES: OTHER_STATUS.classes
-};
-```
-
-## Checklist When Adding f.select()
-1. **Identify the enum name** used as the 3rd argument (e.g., `enums.SEGMENT_TYPE`)
-2. **Open the corresponding `*-enums.js` file** and verify `SEGMENT_TYPE` exists in the `.enums = { ... }` export block
-3. If missing:
-   a. Check the protobuf for enum values: `grep -A 10 'EnumName_' go/types/<module>/*.pb.go`
-   b. Add the `factory.create([...])` definition
-   c. Add to the `.enums = { ... }` export
-   d. Add a renderer to `.render = { ... }` if the enum is used in columns
-4. **Verify on BOTH desktop and mobile** — enum files are separate per platform
-
-## Verification Command
-After creating or modifying any `*-forms.js` file:
-```bash
-# Extract all enum references from f.select() calls in the forms file
-grep -oP "enums\.\K[A-Z_]+" <forms-file>
-
-# Check each one exists in the corresponding enums file export block
-grep "<ENUM_NAME>" <enums-file>
-```
-
-## Error Symptom
-- Clicking a table row to open detail view throws `Cannot convert undefined or null to object`
-- Stack trace shows `generateSelectHtml` → `generateFieldHtml` → `generateFormHtml`
-- The table itself renders fine — only the detail modal crashes
-- ALL rows crash, not just specific ones (since the field definition is static)
-
----
-
-# 24. L8UI Guide Update
-
-**Source:** `l8ui-guide-update.md`
-
-## Rule
-Whenever a component in the `l8ui/` directory is **created, modified, or deleted**, the `l8ui/GUIDE.md` file MUST be updated to reflect the change. Do not mark the task as complete until the guide is up to date.
-
-## What to Update
-- **New component**: Add a new subsection under the appropriate API section (Desktop or Mobile) documenting the constructor/options, public methods, and any viewConfig options.
-- **Modified component**: Update the existing subsection to reflect new methods, changed parameters, removed APIs, or new behavior.
-- **New CSS file**: Add to the script/CSS loading order sections (Desktop section 3, Mobile section 4).
-- **New JS file**: Add to the script loading order sections in the correct dependency position.
-- **Deleted component**: Remove the subsection and any references from loading order sections.
-
-## What to Document
-For each component, the guide entry should include:
-1. **Global object name** (e.g., `window.Layer8DChart`)
-2. **Constructor options** or factory parameters
-3. **Public methods** with parameter signatures
-4. **viewConfig options** (if the component is a registered view type)
-5. **Registration** with Layer8DViewFactory if applicable
-
-## Why This Matters
-The GUIDE.md is the primary reference for AI assistants and developers building with l8ui. If a component exists but isn't documented, it won't be used correctly (or at all), leading to reimplementation or incorrect integration.
-
----
-
-# 25. Form and Column Field Coverage
-
-**Source:** `form-column-field-coverage.md`
-
-## Rule
-Every non-system field in a protobuf struct MUST be accounted for in both the form definition (`*-forms.js`) and column definition (`*-columns.js`). No field should be silently omitted.
-
-## Why This Matters
-When fields are silently skipped during form/column creation, the UI becomes incomplete in ways that are hard to detect. A selection field without its contextual fields (e.g., "Monthly" period without a month selector) renders the entire feature meaningless. Users can set a value but cannot provide the detail that gives it meaning.
-
-## System Fields (Excluded by Default)
-These fields are handled automatically and do NOT need form/column entries:
-- Primary key ID (e.g., `targetId`) — auto-generated on POST
-- `auditInfo` — rendered via `...f.audit()` or omitted (read-only metadata)
-- `customFields` — generic map, not a domain field
-
-## Process
-
-### When Creating or Modifying Form/Column Definitions
-
-1. **List all protobuf fields**:
-   ```bash
-   grep -A 30 "type ModelName struct" go/types/<module>/*.pb.go | grep 'json:"'
-   ```
-
-2. **For each non-system field**, verify it appears in:
-   - The form definition (`*-forms.js`) — as an input field
-   - The column definition (`*-columns.js`) — as a table column (at minimum the most important fields)
-
-3. **If a field is intentionally excluded**, add a comment in the form definition explaining why:
-   ```javascript
-   // Omitted: internalScore — system-calculated, not user-editable
-   ```
-
-4. **Watch for dependent field groups** — fields that only make sense together:
-   - Enum/type selector + detail fields (e.g., `period` + `quarter` + `month`)
-   - Parent reference + child context (e.g., `orderId` + `lineNumber`)
-   - Range pairs (e.g., `minQuantity` + `maxQuantity`)
-
-   If any field in a dependent group is included, ALL fields in that group must be included.
-
-## Verification Command
-After creating or modifying any form definition, compare against the protobuf:
-```bash
-# List all protobuf JSON field names for the model
-grep -A 40 "type ModelName struct" go/types/<module>/*.pb.go | \
-  grep -oP 'json:"\K[^,"]+' | sort
-
-# List all field keys in the form definition
-grep -oP "key:\s*'[^']+'" <forms-file> | sort
-
-# Compare (any field in protobuf but not in form needs justification)
-```
-
-## Error Symptoms
-- A selection/enum field exists but its meaning is unclear (e.g., "Monthly" with no month shown)
-- Users can create records but critical context is missing
-- Table rows show partial information that doesn't tell the full story
-- Data exists on the server but is invisible in the UI
-
-## Common Dependent Field Groups
-| Selector Field | Dependent Fields | Why |
-|---------------|-----------------|-----|
-| `period` (enum) | `month`, `quarter`, `year` | Period type without time specifics is meaningless |
-| `addressType` | address fields | Type without address is meaningless |
-| `paymentMethod` | method-specific fields | Method without details is meaningless |
-| `status` (with reason) | `reason`, `reasonCode` | Status change without reason loses context |
-
----
-
-# 26. Protobuf Enum Zero Value Convention
-
-**Source:** `proto-enum-zero-value.md`
-
-## Rule
-Every protobuf enum MUST have an invalid/unspecified zero value as its first entry. The zero value MUST NOT represent a valid, meaningful state.
-
-## Why This Matters
-Protobuf defaults unset enum fields to 0. If 0 is a valid value (e.g., "Active"), then unset fields silently appear as "Active" instead of being detectable as missing. This makes it impossible to distinguish "explicitly set to the first value" from "never set."
-
-## Naming Convention
-The zero value name MUST follow this pattern:
-```
-[MODULE_PREFIX_]FIELD_NAME_UNSPECIFIED = 0
-```
-
-Examples:
-```protobuf
-// CORRECT
-enum AccountType {
-  ACCOUNT_TYPE_UNSPECIFIED = 0;
-  ACCOUNT_TYPE_ASSET = 1;
-  ACCOUNT_TYPE_LIABILITY = 2;
-}
-
-enum MfgBomStatus {
-  MFG_BOM_STATUS_UNSPECIFIED = 0;
-  MFG_BOM_STATUS_DRAFT = 1;
-  MFG_BOM_STATUS_ACTIVE = 2;
-}
-
-// WRONG - 0 is a valid value
-enum Priority {
-  LOW = 0;      // BAD: unset fields appear as LOW
-  MEDIUM = 1;
-  HIGH = 2;
-}
-
-// WRONG - no zero value
-enum Status {
-  ACTIVE = 1;   // BAD: no 0 value defined
-  INACTIVE = 2;
-}
-```
-
-## Verification
-After creating or modifying any proto file with enums:
-```bash
-# Check all enums have a 0 value containing UNSPECIFIED, INVALID, or UNKNOWN
-grep -A1 "^enum " proto/*.proto | grep "= 0" | grep -iv "unspecified\|invalid\|unknown"
-```
-If any results appear, those enums need a proper zero value.
-
-## Current Compliance
-All 289 ERP enums across 12 modules follow this convention (verified Feb 2026).
-
----
-
-# 27. Proto Generation Method
-
-**Source:** `proto-generation-method.md`
-
-## Rule (CRITICAL)
-To generate protobuf bindings, you MUST `cd` into the `proto/` directory and run `./make-bindings.sh` directly. **ANY other method will break.**
-
-## The ONLY Correct Way
-```bash
-cd proto && ./make-bindings.sh
-```
-
-## What Will Break
-- Running the script via `sed` pipe (`sed 's/-it /-i /g' make-bindings.sh | bash`) — silently fails on some steps
-- Running individual `docker run` commands manually — misses dependency ordering, move steps, and sed fixups
-- Running `wget` + `protoc` commands manually — misses the full pipeline
-- Running from any directory other than `proto/` — paths break
-
-## Why
-The `make-bindings.sh` script is designed to run interactively from the `proto/` directory. It uses relative paths, Docker bind mounts with `$PWD`, and sequential steps that depend on each other. Any attempt to run it non-interactively or from a different directory will silently produce stale or incomplete output.
-
----
-
-# 28. Column Factory Renderer Validation
-
-**Source:** `column-factory-renderer-validation.md`
-
-## Rule
-Every `col.enum()` and `col.status()` call MUST pass a valid function as the `renderer` argument (4th parameter). The renderer is captured in a closure at column-definition time and called later at render time. If it is `undefined`, the error only appears when data arrives — with an unhelpful "renderer is not a function" stack trace that does NOT identify which column caused it.
-
-## Why This Is Critical
-The column factory's `enum(key, label, enumValues, renderer)` and `status(key, label, enumValues, renderer)` methods create a closure: `render: (item) => renderer(item[key])`. If `renderer` is `undefined` at definition time:
-- No error occurs when the column is defined (silent capture of `undefined`)
-- No error occurs when the table initializes
-- The crash only happens when data arrives and the table tries to render
-- The error message ("renderer is not a function") gives no indication of WHICH column or module is broken
-- All modules initialize successfully, making the bug extremely hard to trace
-
-## Common Causes
-
-### 1. Missing render property in enum file
-```javascript
-// enums file defines render object but misses a property
-Module.render = {
-    statusA: createStatusRenderer(...),
-    // statusB is missing!
-};
-
-// columns file references the missing property
-...col.enum('status', 'Status', null, render.statusB)  // renderer = undefined
-```
-
-### 2. Wrong argument order (3 args instead of 4)
-```javascript
-// WRONG: renderer goes into enumValues, 4th arg is undefined
-...col.enum('status', 'Status', render.myFunc)
-
-// CORRECT: null for enumValues, renderer as 4th arg
-...col.enum('status', 'Status', null, render.myFunc)
-```
-
-### 3. Render object not yet populated
-```javascript
-// columns file captures render object before enums file runs
-const render = Module.render;  // undefined if enums hasn't loaded yet
-```
-
-## Defensive Guard (Built Into Factory)
-The column factory now validates `renderer` at definition time and logs a clear error:
-```
-Layer8ColumnFactory.enum('status', 'Status'): renderer is not a function (got undefined).
-Check that the render object is populated before columns are defined.
-```
-If renderer is not a function, it falls back to `String(item[key] ?? '')` to prevent crashes.
-
-## Verification
-After creating or modifying any `*-columns.js` file:
-1. Check that every `col.enum()` and `col.status()` call has exactly 4 arguments
-2. Verify the 4th argument references a function that exists in the corresponding `*-enums.js` render object
-3. Open the browser console — any renderer validation errors will appear immediately at page load (not deferred to data fetch)
-
----
-
-# 29. L8UI GUIDE.md Prerequisite
-
-**Source:** `l8ui-guide-prerequisite.md`
-
-## Rule
-Before implementing or using ANY l8ui component (desktop or mobile), you MUST read the `l8ui/GUIDE.md` file in the project's web directory. Do not write UI code that references l8ui components without first reading this guide.
-
-## Why This Matters
-The GUIDE.md documents all available l8ui components, their APIs, constructor options, viewConfig parameters, and integration patterns. Without reading it, you will:
-- Miss existing components and reinvent functionality
-- Use incorrect API signatures or viewConfig options
-- Fail to follow established integration patterns (e.g., Layer8DViewFactory registration, Layer8DModuleFactory.create() options)
-
-## When This Applies
-- Creating a new module or section UI
-- Adding a new view type (kanban, chart, etc.) to an existing service
-- Modifying how services are initialized or registered
-- Using any Layer8D* or Layer8M* component
-- Configuring viewConfig options for any view type
-- Adding script includes to app.html or m/app.html
-
-## What to Look For in GUIDE.md
-1. **Component APIs**: Constructor options, public methods, event callbacks
-2. **viewConfig options**: Per-view-type configuration (kanban lanes, chart axes, etc.)
-3. **Script loading order**: Dependency order for JS/CSS includes
-4. **Module creation pattern**: How to use Layer8DModuleFactory.create()
-5. **Mobile equivalents**: Mobile component APIs and differences from desktop
-
-## Location
-- **L8ERP**: `go/erp/ui/web/l8ui/GUIDE.md`
-- **L8Bugs**: `go/bugs/website/web/l8ui/GUIDE.md`
