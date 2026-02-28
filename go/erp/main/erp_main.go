@@ -21,6 +21,7 @@ import (
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/erp/services"
 	"github.com/saichler/l8types/go/ifs"
+	"os"
 	"os/exec"
 	"time"
 )
@@ -32,8 +33,10 @@ func main() {
 	nic.Start()
 	nic.WaitForConnection()
 
-	//Start postgres
-	startDb(nic)
+	//Start postgres if not local
+	if len(os.Args) == 1 {
+		startDb(nic)
+	}
 
 	services.ActivateAllServices(common.DB_CREDS, common.DB_NAME, nic)
 

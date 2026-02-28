@@ -4,7 +4,7 @@
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 You may obtain a copy of the License at:
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,6 +15,7 @@ limitations under the License.
 package common
 
 import (
+	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/saichler/l8orm/go/orm/persist"
 	"github.com/saichler/l8orm/go/orm/plugins/postgres"
@@ -24,6 +25,7 @@ import (
 	"github.com/saichler/l8types/go/types/l8web"
 	"github.com/saichler/l8utils/go/utils/web"
 	"google.golang.org/protobuf/proto"
+	"reflect"
 )
 
 // ProtoMessage constrains T to be a protobuf message type.
@@ -43,11 +45,11 @@ type ServiceConfig struct {
 
 // ActivateService sets up and activates a service with the standard ERP boilerplate.
 func ActivateService[T any, TList any, PT ProtoMessage[T], PTL ProtoMessage[TList]](cfg ServiceConfig, creds, dbname string, vnic ifs.IVNic) {
-	_, user, pass, _, err := vnic.Resources().Security().Credential(creds, dbname, vnic.Resources())
+	realdb, user, pass, _, err := vnic.Resources().Security().Credential(creds, dbname, vnic.Resources())
 	if err != nil {
 		panic(err)
 	}
-	db := OpenDBConection(dbname, user, pass)
+	db := OpenDBConection(realdb, user, pass)
 	p := postgres.NewPostgres(db, vnic.Resources())
 
 	sla := ifs.NewServiceLevelAgreement(&persist.OrmService{}, cfg.ServiceName, cfg.ServiceArea, true, cfg.Callback)
@@ -102,8 +104,30 @@ func GetEntity[T any](serviceName string, serviceArea byte, filter *T, vnic ifs.
 	return nil, nil
 }
 
+// isFilterEmpty returns true if the filter struct has all zero-value fields.
+func isFilterEmpty(filter interface{}) bool {
+	v := reflect.ValueOf(filter)
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem()
+	}
+	return v.IsZero()
+}
+
+// filterTypeName returns the protobuf type name of the filter struct.
+func filterTypeName(filter interface{}) string {
+	v := reflect.ValueOf(filter)
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem()
+	}
+	return v.Type().Name()
+}
+
 // GetEntities retrieves all entities matching a filter.
+// When the filter is empty (all zero values), it uses an L8Query to fetch all entities.
 func GetEntities[T any](serviceName string, serviceArea byte, filter *T, vnic ifs.IVNic) ([]*T, error) {
+	if isFilterEmpty(filter) {
+		return getAllEntities[T](serviceName, serviceArea, filter, vnic)
+	}
 	handler, ok := ServiceHandler(serviceName, serviceArea, vnic)
 	if ok {
 		resp := handler.Get(object.New(nil, filter), vnic)
@@ -113,6 +137,29 @@ func GetEntities[T any](serviceName string, serviceArea byte, filter *T, vnic if
 		return extractElements[T](resp.Elements()), nil
 	}
 	resp := vnic.Request("", serviceName, serviceArea, ifs.GET, filter, 30)
+	if resp.Error() != nil {
+		return nil, resp.Error()
+	}
+	return extractElements[T](resp.Elements()), nil
+}
+
+// getAllEntities fetches all entities using an L8Query when the filter is empty.
+func getAllEntities[T any](serviceName string, serviceArea byte, filter *T, vnic ifs.IVNic) ([]*T, error) {
+	typeName := filterTypeName(filter)
+	query := fmt.Sprintf("select * from %s", typeName)
+	handler, ok := ServiceHandler(serviceName, serviceArea, vnic)
+	if ok {
+		elems, err := object.NewQuery(query, vnic.Resources())
+		if err != nil {
+			return nil, err
+		}
+		resp := handler.Get(elems, vnic)
+		if resp.Error() != nil {
+			return nil, resp.Error()
+		}
+		return extractElements[T](resp.Elements()), nil
+	}
+	resp := vnic.Request("", serviceName, serviceArea, ifs.GET, query, 30)
 	if resp.Error() != nil {
 		return nil, resp.Error()
 	}

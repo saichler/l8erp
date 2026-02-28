@@ -53,8 +53,11 @@ func generateJournalEntries(store *MockDataStore) []*fin.JournalEntry {
 			periodIdx = len(store.FiscalPeriodIDs) - 1
 		}
 
+		// Only post to open periods (2025 months that haven't ended yet);
+		// use DRAFT for entries targeting closed periods.
+		periodEnd := time.Date(2025, time.Month((i%12)+1), 28, 23, 59, 59, 0, time.UTC)
 		status := fin.JournalEntryStatus_JOURNAL_ENTRY_STATUS_POSTED
-		if i == 18 || i == 19 {
+		if i == 18 || i == 19 || periodEnd.Before(time.Now()) {
 			status = fin.JournalEntryStatus_JOURNAL_ENTRY_STATUS_DRAFT
 		}
 

@@ -81,3 +81,16 @@ func SumLineInt64[L any](lines []*L, getter func(*L) int64) int64 {
 	}
 	return total
 }
+
+// MoneyAmount returns the amount of a Money value, or 0 if nil.
+func MoneyAmount(m *erp.Money) int64 {
+	if m == nil {
+		return 0
+	}
+	return m.Amount
+}
+
+// MoneyIsZero returns true if the Money value is nil or has a zero amount.
+func MoneyIsZero(m *erp.Money) bool {
+	return m == nil || m.Amount == 0
+}

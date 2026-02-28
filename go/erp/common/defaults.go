@@ -33,8 +33,8 @@ import (
 )
 
 const (
-	ERP_VNET      = 35001
-	ERP_LOGS_VNET = 35005
+	ERP_VNET      = 39001
+	ERP_LOGS_VNET = 39005
 	PREFIX        = "/erp/"
 )
 
@@ -45,7 +45,7 @@ var dbInstance *sql.DB
 var dbMtx = &sync.Mutex{}
 
 func CreateResources(alias string) ifs.IResources {
-	logger.SetLogToFile("/data/logs/erp", alias)
+	//logger.SetLogToFile("/data/logs/erp", alias)
 	log := logger.NewLoggerImpl(&logger.FmtLogMethod{})
 	log.SetLogLevel(ifs.Info_Level)
 	res := resources.NewResources(log)
