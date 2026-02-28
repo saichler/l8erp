@@ -2,7 +2,7 @@
 
 These are Claude Code global rules for the Layer8 ERP project. Load this file at the start of a session to apply all rules.
 
-**Source files:** `~/.claude/rules/*.md` (38 rule files)
+**Source files:** `~/.claude/rules/*.md` (40 rule files)
 
 ---
 
@@ -53,20 +53,22 @@ These are Claude Code global rules for the Layer8 ERP project. Load this file at
 26. [Module Init sectionSelector Must Match defaultModule](#26-module-init-sectionselector-must-match-defaultmodule)
 27. [Reference Registry Completeness](#27-reference-registry-completeness)
 28. [Server-Side Pagination Metadata](#28-server-side-pagination-metadata)
-29. [Mobile Parity](#29-mobile-parity)
-30. [Demo Directory Must Stay in Sync with Source](#30-demo-directory-must-stay-in-sync-with-source)
+29. [Layer8DTable: Pagination Metadata Must Only Be Read on Page 1](#29-layer8dtable-pagination-metadata-must-only-be-read-on-page-1)
+30. [Immutability Must Be Reflected in the UI](#30-immutability-must-be-reflected-in-the-ui)
+31. [Mobile Parity](#31-mobile-parity)
+32. [Demo Directory Must Stay in Sync with Source](#32-demo-directory-must-stay-in-sync-with-source)
 
 ### L8UI
-31. [L8UI Theme Compliance](#31-l8ui-theme-compliance)
-32. [L8UI Guide Update](#32-l8ui-guide-update)
-33. [L8UI GUIDE.md Prerequisite](#33-l8ui-guidemd-prerequisite)
+33. [L8UI Theme Compliance](#33-l8ui-theme-compliance)
+34. [L8UI Guide Update](#34-l8ui-guide-update)
+35. [L8UI GUIDE.md Prerequisite](#35-l8ui-guidemd-prerequisite)
 
 ### Mock Data
-34. [Mock Data Generation](#34-mock-data-generation)
-35. [Mock Data Completeness](#35-mock-data-completeness)
-36. [Mock Data Must Cover All UI Columns](#36-mock-data-must-cover-all-ui-columns)
-37. [Mock Endpoint Construction](#37-mock-endpoint-construction)
-38. [Mock Phase Ordering](#38-mock-phase-ordering)
+36. [Mock Data Generation](#36-mock-data-generation)
+37. [Mock Data Completeness](#37-mock-data-completeness)
+38. [Mock Data Must Cover All UI Columns](#38-mock-data-must-cover-all-ui-columns)
+39. [Mock Endpoint Construction](#39-mock-endpoint-construction)
+40. [Mock Phase Ordering](#40-mock-phase-ordering)
 
 ---
 
@@ -1881,7 +1883,95 @@ When processing server responses in pagination code:
 
 ---
 
-# 29. Mobile Parity
+# 29. Layer8DTable: Pagination Metadata Must Only Be Read on Page 1 (CRITICAL)
+
+**Source:** `layer8d-table-pagination-metadata.md`
+
+## Rule
+In `Layer8DTable.prototype.fetchData()` (in `layer8d-table-data.js`), the response metadata (`data.metadata.keyCount.counts.Total`) MUST only be read and stored when `page === 1`. On all subsequent pages (page 2+), the previously stored `this.totalItems` value MUST be reused.
+
+## Why This Is Critical
+The server only computes aggregate metadata (total count, status breakdowns, key counts) when processing page 0 (the first page). Subsequent page responses return **zero or stale metadata**. If `fetchData` reads metadata on every page, page 2+ will overwrite the correct `totalItems` with 0, causing:
+
+- **Page 1**: "Page 1 of 2002" (correct)
+- **Page 2**: "Page 2 of 1" (totalItems overwritten with 0, `Math.ceil(0/15) = 0` → displays as 1)
+
+## The Correct Pattern
+```javascript
+// CORRECT — only read metadata on page 1
+let totalCount = 0;
+if (page === 1 && data.metadata?.keyCount?.counts) {
+    totalCount = data.metadata.keyCount.counts.Total || 0;
+    this.totalItems = totalCount;
+} else {
+    totalCount = this.totalItems;  // Reuse cached value
+}
+```
+
+## The Wrong Pattern
+```javascript
+// WRONG — overwrites totalItems on every page
+let totalCount = 0;
+if (data.metadata?.keyCount?.counts) {
+    totalCount = data.metadata.keyCount.counts.Total || 0;
+}
+this.setServerData(items, totalCount);  // totalCount is 0 on page 2+!
+```
+
+## What Resets to Page 1 (Triggers Fresh Metadata)
+These actions set `currentPage = 1` before calling `fetchData`, so metadata is correctly refreshed:
+- Filter changes (typing in filter inputs)
+- Sort changes (clicking column headers)
+- Page size changes (changing items per page)
+- Base where clause changes (`setBaseWhereClause()`)
+- Initial load / `init()`
+
+## Applies To
+- `layer8d-table-data.js` — `Layer8DTable.prototype.fetchData()`
+- `layer8d-data-source.js` — `Layer8DDataSource.fetchData()` (already correct)
+- Any future data-fetching component that uses server-side pagination
+
+## This Bug Has Recurred Multiple Times
+This exact bug has been introduced and fixed repeatedly. The pattern is:
+1. Someone modifies `fetchData` or `setServerData`
+2. The `page === 1` guard is accidentally removed or bypassed
+3. Pagination breaks on page 2+ for ALL server-side tables
+4. Symptom: "Page N of 1" on any page after the first
+
+**When modifying ANY pagination or data-fetching code, verify the `page === 1` guard is intact.**
+
+---
+
+# 30. Immutability Must Be Reflected in the UI
+
+**Source:** `immutability-ui-alignment.md`
+
+## Rule
+When an entity or field is defined as immutable (in the PRD, proto, or backend validation), the UI MUST be updated to match. Backend immutability without corresponding UI changes is incomplete implementation.
+
+## Entity-Level Immutability
+If an entity rejects PUT requests (the entire entity is immutable after creation):
+- The table view MUST be set to read-only mode (no edit/update controls)
+- Detail popups MUST render all fields as display-only (no editable inputs)
+- The "Edit" / "Save" buttons MUST be hidden or disabled
+- POST (create) and DELETE may still be allowed unless also restricted
+
+## Field-Level Immutability
+If specific fields on an entity are protected from modification on PUT:
+- Those fields MUST render as read-only / display-only in edit forms
+- Editable fields should remain as normal inputs
+- The form should visually distinguish between editable and read-only fields
+
+## Checklist
+When implementing immutability at any level:
+1. Backend: Add validation (reject PUT, protect fields)
+2. UI config: Set service/table to read-only mode if entity-level
+3. UI forms: Mark protected fields as display-only if field-level
+4. Verify: Confirm the UI does not present controls that the backend will reject
+
+---
+
+# 31. Mobile Parity
 
 **Source:** `mobile-parity.md`
 
@@ -1923,7 +2013,7 @@ Parity is not just "does the same button exist on both platforms." It is "does t
 
 ---
 
-# 30. Demo Directory Must Stay in Sync with Source
+# 32. Demo Directory Must Stay in Sync with Source
 
 **Source:** `demo-directory-sync.md`
 
@@ -1957,7 +2047,7 @@ diff -rq /go/bugs/website/web/m/ /go/demo/web/m/
 
 ---
 
-# 31. L8UI Theme Compliance
+# 33. L8UI Theme Compliance
 
 **Source:** `l8ui-theme-compliance.md`
 
@@ -2017,7 +2107,7 @@ After creating or modifying any l8ui component CSS/JS:
 
 ---
 
-# 32. L8UI Guide Update
+# 34. L8UI Guide Update
 
 **Source:** `l8ui-guide-update.md`
 
@@ -2044,7 +2134,7 @@ The GUIDE.md is the primary reference for AI assistants and developers building 
 
 ---
 
-# 33. L8UI GUIDE.md Prerequisite
+# 35. L8UI GUIDE.md Prerequisite
 
 **Source:** `l8ui-guide-prerequisite.md`
 
@@ -2078,7 +2168,7 @@ The GUIDE.md documents all available l8ui components, their APIs, constructor op
 
 ---
 
-# 34. Mock Data Generation
+# 36. Mock Data Generation
 
 **Source:** `mock-data-generation.md`
 
@@ -2159,7 +2249,7 @@ All mock data files live in `go/tests/mocks/`. The system generates phased, depe
 
 ---
 
-# 35. Mock Data Completeness
+# 37. Mock Data Completeness
 
 **Source:** `mock-completeness.md`
 
@@ -2318,7 +2408,7 @@ Phase 6+: Additional areas
 
 ---
 
-# 36. Mock Data Must Cover All UI Columns
+# 38. Mock Data Must Cover All UI Columns
 
 **Source:** `mock-data-column-coverage.md`
 
@@ -2385,7 +2475,7 @@ When touching column definitions or mock generators:
 
 ---
 
-# 37. Mock Endpoint Construction
+# 39. Mock Endpoint Construction
 
 **Source:** `mock-endpoint-construction.md`
 
@@ -2438,7 +2528,7 @@ Before creating mock phase files:
 
 ---
 
-# 38. Mock Phase Ordering
+# 40. Mock Phase Ordering
 
 **Source:** `mock-phase-ordering.md`
 
