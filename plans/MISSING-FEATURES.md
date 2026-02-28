@@ -117,19 +117,21 @@ All 242 Prime Objects reference each other via string ID fields only. No direct 
 
 See `plans/PLAN-MISSING-FORM-FIELD-TYPES.md` for implementation details.
 
-### 2.2 Missing View Types
+### 2.2 View Types — COMPLETE ✓
 
-| View Type | Status | Needed By |
-|-----------|--------|-----------|
-| Charts (Bar, Line, Pie) | Missing | BI, Dashboard, FIN (trends), Sales (forecasts) |
-| Gantt Chart | Missing | PRJ (schedules), MFG (production planning) |
-| Kanban Board | Missing | CRM (pipeline), PRJ (task board), MFG (shop floor) |
-| Calendar View | Missing | HCM (leave, schedules), PRJ (milestones) |
-| Timeline/History | Missing | All modules (audit trail view) |
-| Tree/Hierarchy Grid | Missing | FIN (chart of accounts), HCM (org chart), SCM (BOM) |
-| Master-Detail Split | **Done** (inline table) | Sales (order + lines), SCM (PO + lines), MFG (BOM + components) — implemented via `f.inlineTable()` in parent forms |
-| Wizard/Stepper | Missing | ECOM (checkout), HCM (onboarding), FIN (period close) |
-| Dashboard Widgets | Partial | Dashboard has KPI counts only - no charts, no trends |
+All view types implemented and registered in both desktop (`Layer8DViewFactory`) and mobile (`Layer8MViewFactory`).
+
+| View Type | Status | Desktop | Mobile |
+|-----------|--------|---------|--------|
+| Charts (Bar, Line, Pie) | **Done** | `layer8d-chart-core.js` + bar/line/pie | `layer8m-chart.js` |
+| Gantt Chart | **Done** | `layer8d-gantt-core.js` + render/events | `layer8m-gantt.js` |
+| Kanban Board | **Done** | `layer8d-kanban-core.js` + render/events | `layer8m-kanban.js` |
+| Calendar View | **Done** | `layer8d-calendar-core.js` + render/events | `layer8m-calendar.js` |
+| Timeline/History | **Done** | `layer8d-timeline.js` | `layer8m-timeline.js` |
+| Tree/Hierarchy Grid | **Done** | `layer8d-tree-grid-core.js` + render/events | `layer8m-tree-grid.js` |
+| Master-Detail Split | **Done** (inline table) | `f.inlineTable()` in parent forms | Mobile inline table rendering |
+| Wizard/Stepper | **Done** | `layer8d-wizard-core.js` + render | `layer8m-wizard.js` |
+| Dashboard Widgets | **Done** | `layer8d-widget.js` (KPI cards with mini-charts, sparklines, trend arrows) | — |
 
 ### 2.3 Missing Table Features
 
@@ -535,16 +537,16 @@ All 6 audit items passed with no issues found:
 ### Phase B: Core Business Logic Foundation
 1. ~~Status transition enforcement framework (reusable across all modules)~~ — **DONE**: `StatusTransitionConfig[T]` + `ActionValidateFunc[T]` in ValidationBuilder. 27 entities enforced, HCM deferred.
 2. ~~Cross-service operations framework (parent-child cascading)~~ — **DONE**: 10 cascading document flows across 5 modules via `After()` hooks. `PostEntity[T]` + `EntityExists[T]` helpers. See §1.2.
-3. Calculated fields framework (server-side computed values)
+3. ~~Calculated fields framework (server-side computed values)~~ — **DONE**: `Compute()` method on VB, generic helpers (`SumLineMoney`, `MoneyAdd/Subtract`, `SumLineFloat64/Int64`). 14 entities computed across Sales, FIN, SCM, HCM, PRJ. See §1.3.
 4. FIN double-entry enforcement and period management
 5. SCM inventory quantity tracking
 
 ### Phase C: Essential UI Components
-1. Charts/visualization library integration (for BI and Dashboard)
+1. ~~Charts/visualization library integration (for BI and Dashboard)~~ — **DONE**: Bar, Line, Pie charts implemented (desktop + mobile). Dashboard widgets with sparklines and trend arrows.
 2. ~~Master-detail view component (for orders + lines pattern)~~ — **DONE**: Implemented as `f.inlineTable()` during child entity consolidation
 3. Data export (CSV at minimum)
 4. File upload component (for DOC module)
-5. Tree/hierarchy view (for FIN chart of accounts, HCM org chart)
+5. ~~Tree/hierarchy view (for FIN chart of accounts, HCM org chart)~~ — **DONE**: Tree grid implemented (desktop + mobile) with expand/collapse, events, rendering.
 
 ### Phase D: Authorization & Security
 1. Permission definitions and role-permission mapping
