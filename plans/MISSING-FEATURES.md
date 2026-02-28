@@ -148,7 +148,7 @@ All view types implemented and registered in both desktop (`Layer8DViewFactory`)
 | Column Grouping Headers | Missing |
 | Row Grouping/Aggregation | Missing |
 | Virtual Scrolling | Missing |
-| Export (CSV/Excel/PDF) | Missing |
+| Export (CSV/Excel/PDF) | CSV done (backend + UI); Excel/PDF missing |
 
 ---
 
@@ -158,7 +158,7 @@ All view types implemented and registered in both desktop (`Layer8DViewFactory`)
 
 | Capability | Status |
 |------------|--------|
-| CSV Export | Missing |
+| CSV Export | **Done** — Backend `CsvExport` service + `Layer8CsvExport` UI component |
 | Excel Export | Missing |
 | PDF Export | Missing |
 | Print-Friendly Views | Missing |
@@ -544,7 +544,7 @@ All 6 audit items passed with no issues found:
 ### Phase C: Essential UI Components
 1. ~~Charts/visualization library integration (for BI and Dashboard)~~ — **DONE**: Bar, Line, Pie charts implemented (desktop + mobile). Dashboard widgets with sparklines and trend arrows.
 2. ~~Master-detail view component (for orders + lines pattern)~~ — **DONE**: Implemented as `f.inlineTable()` during child entity consolidation
-3. Data export (CSV at minimum)
+3. ~~Data export (CSV at minimum)~~ — **DONE**: Backend `CsvExport` service (go/erp/common/csvexport/) with paginated server-side CSV generation via introspector. Shared `Layer8CsvExport` JS component auto-adds Export button to desktop (Layer8DTable) and mobile (Layer8MTable) pagination bars.
 4. File upload component (for DOC module)
 5. ~~Tree/hierarchy view (for FIN chart of accounts, HCM org chart)~~ — **DONE**: Tree grid implemented (desktop + mobile) with expand/collapse, events, rendering.
 

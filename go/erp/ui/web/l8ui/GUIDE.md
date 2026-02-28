@@ -1843,3 +1843,51 @@ window.initializeMyModule = function() {
 - CSS classes use `l8-` prefix for ALL desktop modules (shared CSS from `layer8-section-layout.css`)
 - Desktop: `new Layer8DTable(options)` then `table.init()` -- single options object
 - Mobile: `new Layer8MEditTable(containerId, config)` -- two arguments, no init() call needed
+
+---
+
+## 11. CSV Export (`layer8-csv-export.js`)
+
+**Global object:** `window.Layer8CsvExport` (shared between desktop and mobile)
+
+### How It Works
+Posts to the backend `CsvExport` service which pages through all data server-side, builds a CSV with attribute-based column headers, and returns the complete CSV string. The client triggers a browser file download.
+
+### Backend Endpoint
+`POST /erp/0/CsvExport` with JSON body:
+```json
+{ "modelType": "Employee", "serviceName": "Employee", "serviceArea": 30 }
+```
+
+### Public Methods
+
+#### `Layer8CsvExport.export(options)`
+Triggers a CSV export and downloads the file.
+
+| Option | Type | Required | Description |
+|--------|------|----------|-------------|
+| `modelName` | string | Yes | Protobuf type name (e.g., `"Employee"`) |
+| `serviceName` | string | Yes | Backend service name (e.g., `"Employee"`) |
+| `serviceArea` | number | Yes | Service area number (e.g., `30`) |
+| `filename` | string | No | Base filename (defaults to `modelName`) |
+
+```javascript
+Layer8CsvExport.export({
+    modelName: 'Employee',
+    serviceName: 'Employee',
+    serviceArea: 30,
+    filename: 'Employee'
+});
+```
+
+#### `Layer8CsvExport.parseEndpoint(endpoint)`
+Parses a table endpoint string to extract `serviceName` and `serviceArea`.
+- Input: `"/erp/30/Employee"`
+- Returns: `{ serviceName: "Employee", serviceArea: 30 }` or `null`
+
+### Table Integration
+The Export button appears automatically in both desktop (`Layer8DTable`) and mobile (`Layer8MTable`) pagination bars when `endpoint` and `modelName` are set. No additional configuration needed.
+
+### Script Loading Order
+- **Desktop** (`app.html`): After table scripts, before Data Source
+- **Mobile** (`m/app.html`): After `layer8m-edit-table.js`, before `layer8m-view-factory.js`

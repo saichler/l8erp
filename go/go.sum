@@ -22,8 +22,8 @@ github.com/saichler/l8srlz v0.0.0-20251226163123-de32dc54dd4b h1:Hqep80S1do7Zfe0
 github.com/saichler/l8srlz v0.0.0-20251226163123-de32dc54dd4b/go.mod h1:uDYNwF/5JUA39cg47kX8k+Qh5sI5WjfxgrfmCX5zmwo=
 github.com/saichler/l8test v0.0.0-20260211144346-d5d15efbde4f h1:swdxgTPL3q8LYyKwFcrgOz0h9pPNqYupSjD3HwMG4lo=
 github.com/saichler/l8test v0.0.0-20260211144346-d5d15efbde4f/go.mod h1:C4B8Zpv0L/Di/qB0lOWHOXF3r3Pz/6Oabu730TthWsc=
-github.com/saichler/l8types v0.0.0-20260227155501-8fa330f2540d h1:vgbK8QaNSkRRNOfxIoNksBw75TkaybDqT7O5Um0dB3w=
-github.com/saichler/l8types v0.0.0-20260227155501-8fa330f2540d/go.mod h1:0+Snl9PYq+caqTu6OBVaw7mQVn0TrRY9OJz+GelHuM4=
+github.com/saichler/l8types v0.0.0-20260228204826-523b8b0f4c62 h1:1y+eK7tWTU5Y/cPn3xPuts3eMNUAmNsadfYowSRVOcE=
+github.com/saichler/l8types v0.0.0-20260228204826-523b8b0f4c62/go.mod h1:0+Snl9PYq+caqTu6OBVaw7mQVn0TrRY9OJz+GelHuM4=
 github.com/saichler/l8utils v0.0.0-20260211151437-9b2ec4a159ae h1:llccLrKXvU3TdoXFaejfxBA5mkjWlRKcaCXN90CR7kA=
 github.com/saichler/l8utils v0.0.0-20260211151437-9b2ec4a159ae/go.mod h1:nKdvYAEGLyHfxPg09oR6OfkJ0SniSbPb+Zi6wr/D5LU=
 github.com/saichler/l8web v0.0.0-20260224202612-c973e8a2c2db h1:QwaiOc530I4+c8tj1dbJb4igyuXtA0/ZSoKE48it/lA=
