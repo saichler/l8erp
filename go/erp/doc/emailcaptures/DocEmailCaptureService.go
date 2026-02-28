@@ -28,7 +28,7 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[doc.DocEmailCapture, doc.DocEmailCaptureList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
 		PrimaryKey: "CaptureId", Callback: newDocEmailCaptureServiceCallback(),
-		Transactional: true,
+		Transactional: true, EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

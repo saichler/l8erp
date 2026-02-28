@@ -28,7 +28,7 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[scm.ScmDemandPlan, scm.ScmDemandPlanList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
 		PrimaryKey: "PlanId", Callback: newDemandPlanServiceCallback(),
-		Transactional: true,
+		Transactional: true, EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

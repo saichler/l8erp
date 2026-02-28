@@ -28,7 +28,7 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[mfg.MfgStandardCost, mfg.MfgStandardCostList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
 		PrimaryKey: "CostId", Callback: newMfgStandardCostServiceCallback(),
-		Transactional: true,
+		Transactional: true, EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

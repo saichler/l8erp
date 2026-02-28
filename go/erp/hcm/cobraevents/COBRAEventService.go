@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.COBRAEvent, hcm.COBRAEventList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CobraEventId", Callback: newCOBRAEventServiceCallback(),
+		PrimaryKey: "CobraEventId", Callback: newCOBRAEventServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

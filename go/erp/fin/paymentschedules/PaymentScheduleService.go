@@ -28,7 +28,7 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[fin.PaymentSchedule, fin.PaymentScheduleList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
 		PrimaryKey: "ScheduleId", Callback: newPaymentScheduleServiceCallback(),
-		Transactional: true,
+		Transactional: true, EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

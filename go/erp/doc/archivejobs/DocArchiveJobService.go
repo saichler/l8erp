@@ -28,7 +28,7 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[doc.DocArchiveJob, doc.DocArchiveJobList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
 		PrimaryKey: "JobId", Callback: newDocArchiveJobServiceCallback(),
-		Transactional: true,
+		Transactional: true, EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

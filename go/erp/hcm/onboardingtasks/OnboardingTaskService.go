@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.OnboardingTask, hcm.OnboardingTaskList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TaskId", Callback: newOnboardingTaskServiceCallback(),
+		PrimaryKey: "TaskId", Callback: newOnboardingTaskServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

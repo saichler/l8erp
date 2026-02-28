@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.PayStructure, hcm.PayStructureList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PayStructureId", Callback: newPayStructureServiceCallback(),
+		PrimaryKey: "PayStructureId", Callback: newPayStructureServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

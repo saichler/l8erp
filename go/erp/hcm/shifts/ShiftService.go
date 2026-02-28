@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.Shift, hcm.ShiftList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ShiftId", Callback: newShiftServiceCallback(),
+		PrimaryKey: "ShiftId", Callback: newShiftServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

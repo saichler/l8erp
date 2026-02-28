@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.Job, hcm.JobList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "JobId", Callback: newJobServiceCallback(),
+		PrimaryKey: "JobId", Callback: newJobServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

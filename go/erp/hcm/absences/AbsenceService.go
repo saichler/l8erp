@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.Absence, hcm.AbsenceList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "AbsenceId", Callback: newAbsenceServiceCallback(),
+		PrimaryKey: "AbsenceId", Callback: newAbsenceServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

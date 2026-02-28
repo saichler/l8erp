@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.EmployeeCertification, hcm.EmployeeCertificationList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "EmployeeCertificationId", Callback: newEmployeeCertificationServiceCallback(),
+		PrimaryKey: "EmployeeCertificationId", Callback: newEmployeeCertificationServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

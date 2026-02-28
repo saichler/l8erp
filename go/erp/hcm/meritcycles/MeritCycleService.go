@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.MeritCycle, hcm.MeritCycleList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CycleId", Callback: newMeritCycleServiceCallback(),
+		PrimaryKey: "CycleId", Callback: newMeritCycleServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

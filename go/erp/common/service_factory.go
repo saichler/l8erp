@@ -41,6 +41,7 @@ type ServiceConfig struct {
 	PrimaryKey    string
 	Callback      ifs.IServiceCallback
 	Transactional bool
+	EnableCache   bool
 }
 
 // ActivateService sets up and activates a service with the standard ERP boilerplate.
@@ -56,7 +57,7 @@ func ActivateService[T any, TList any, PT ProtoMessage[T], PTL ProtoMessage[TLis
 	sla.SetServiceItem(PT(new(T)))
 	sla.SetServiceItemList(PTL(new(TList)))
 	sla.SetPrimaryKeys(cfg.PrimaryKey)
-	sla.SetArgs(p)
+	sla.SetArgs(p, cfg.EnableCache)
 
 	if cfg.Transactional {
 		sla.SetTransactional(true)

@@ -27,9 +27,64 @@ func newReceivingOrderServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmReceivingOrder]("ScmReceivingOrder",
 		func(e *scm.ScmReceivingOrder) { common.GenerateID(&e.ReceivingOrderId) }).
 		After(cascadeCreatePurchaseInvoice).
+		After(updateInventoryOnReceipt).
 		Require(func(e *scm.ScmReceivingOrder) string { return e.ReceivingOrderId }, "ReceivingOrderId").
 		Enum(func(e *scm.ScmReceivingOrder) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
+}
+
+// updateInventoryOnReceipt appends RECEIPT stock movements and increments bin quantities.
+func updateInventoryOnReceipt(recv *scm.ScmReceivingOrder, action ifs.Action, vnic ifs.IVNic) error {
+	if recv.Status != scm.ScmTaskStatus_TASK_STATUS_COMPLETED {
+		return nil
+	}
+	now := time.Now().Unix()
+	for _, task := range recv.PutawayTasks {
+		if task.Status != scm.ScmTaskStatus_TASK_STATUS_COMPLETED {
+			continue
+		}
+		item, err := common.GetEntity("Item", 50, &scm.ScmItem{ItemId: task.ItemId}, vnic)
+		if err != nil || item == nil {
+			return err
+		}
+		var movementId string
+		common.GenerateID(&movementId)
+		item.Movements = append(item.Movements, &scm.ScmStockMovement{
+			MovementId:    movementId,
+			WarehouseId:   recv.WarehouseId,
+			BinId:         task.ToBinId,
+			MovementType:  scm.ScmMovementType_MOVEMENT_TYPE_RECEIPT,
+			Quantity:      task.Quantity,
+			UnitOfMeasure: item.UnitOfMeasure,
+			ReferenceId:   recv.ReceivingOrderId,
+			ReferenceType: "ReceivingOrder",
+			MovementDate:  now,
+		})
+		if err := common.PutEntity("Item", 50, item, vnic); err != nil {
+			return err
+		}
+		wh, err := common.GetEntity("Warehouse", 50,
+			&scm.ScmWarehouse{WarehouseId: recv.WarehouseId}, vnic)
+		if err != nil || wh == nil {
+			return err
+		}
+		if bin := findBin(wh, task.ToBinId); bin != nil {
+			bin.CurrentQuantity += task.Quantity
+		}
+		if err := common.PutEntity("Warehouse", 50, wh, vnic); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func findBin(warehouse *scm.ScmWarehouse, binId string) *scm.ScmBin {
+	for _, bin := range warehouse.Bins {
+		if bin.BinId == binId {
+			return bin
+		}
+	}
+	return nil
 }
 
 // cascadeCreatePurchaseInvoice auto-creates a purchase invoice when receiving is completed.

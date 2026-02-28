@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.CareerPath, hcm.CareerPathList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CareerPathId", Callback: newCareerPathServiceCallback(),
+		PrimaryKey: "CareerPathId", Callback: newCareerPathServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

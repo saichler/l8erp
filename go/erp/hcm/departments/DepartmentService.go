@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.Department, hcm.DepartmentList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "DepartmentId", Callback: newDepartmentServiceCallback(),
+		PrimaryKey: "DepartmentId", Callback: newDepartmentServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

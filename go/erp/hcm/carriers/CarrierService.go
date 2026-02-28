@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.Carrier, hcm.CarrierList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CarrierId", Callback: newCarrierServiceCallback(),
+		PrimaryKey: "CarrierId", Callback: newCarrierServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

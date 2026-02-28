@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.MarketBenchmark, hcm.MarketBenchmarkList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "BenchmarkId", Callback: newMarketBenchmarkServiceCallback(),
+		PrimaryKey: "BenchmarkId", Callback: newMarketBenchmarkServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

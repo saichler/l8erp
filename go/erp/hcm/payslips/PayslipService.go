@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.Payslip, hcm.PayslipList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PayslipId", Callback: newPayslipServiceCallback(),
+		PrimaryKey: "PayslipId", Callback: newPayslipServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

@@ -313,8 +313,8 @@ The mobile-parity rule requires that the same action produces the same result on
 
 ### 8.2 FIN (28 services, was 49 — 21 children consolidated)
 
-- Double-entry journal enforcement (debit = credit)
-- Period open/close management
+- ~~Double-entry journal enforcement (debit = credit)~~ — **DONE**: `validateLines` in JournalEntryServiceCallback enforces debit/credit exclusivity per line and total debit = total credit on POSTED entries
+- ~~Period open/close management~~ — **DONE**: `validatePeriodOpen` blocks posting to closed fiscal periods; `GetEntities` enhanced to support "get all" via L8Query when filter is empty; `updateAccountBalances` After() hook updates Account balances on post
 - Bank reconciliation
 - Multi-currency conversion with exchange rates
 - Intercompany transactions
@@ -538,7 +538,7 @@ All 6 audit items passed with no issues found:
 1. ~~Status transition enforcement framework (reusable across all modules)~~ — **DONE**: `StatusTransitionConfig[T]` + `ActionValidateFunc[T]` in ValidationBuilder. 27 entities enforced, HCM deferred.
 2. ~~Cross-service operations framework (parent-child cascading)~~ — **DONE**: 10 cascading document flows across 5 modules via `After()` hooks. `PostEntity[T]` + `EntityExists[T]` helpers. See §1.2.
 3. ~~Calculated fields framework (server-side computed values)~~ — **DONE**: `Compute()` method on VB, generic helpers (`SumLineMoney`, `MoneyAdd/Subtract`, `SumLineFloat64/Int64`). 14 entities computed across Sales, FIN, SCM, HCM, PRJ. See §1.3.
-4. FIN double-entry enforcement and period management
+4. ~~FIN double-entry enforcement and period management~~ — **DONE**: JournalEntry validates double-entry balance on POST, blocks posting to closed fiscal periods, updates Account balances via After() hook. `GetEntities` enhanced with L8Query fallback for empty filters.
 5. SCM inventory quantity tracking
 
 ### Phase C: Essential UI Components

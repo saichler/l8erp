@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.PayComponent, hcm.PayComponentList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ComponentId", Callback: newPayComponentServiceCallback(),
+		PrimaryKey: "ComponentId", Callback: newPayComponentServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

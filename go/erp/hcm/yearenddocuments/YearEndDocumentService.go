@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.YearEndDocument, hcm.YearEndDocumentList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "DocumentId", Callback: newYearEndDocumentServiceCallback(),
+		PrimaryKey: "DocumentId", Callback: newYearEndDocumentServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

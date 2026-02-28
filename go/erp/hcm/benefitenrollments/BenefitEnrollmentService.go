@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.BenefitEnrollment, hcm.BenefitEnrollmentList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "EnrollmentId", Callback: newBenefitEnrollmentServiceCallback(),
+		PrimaryKey: "EnrollmentId", Callback: newBenefitEnrollmentServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

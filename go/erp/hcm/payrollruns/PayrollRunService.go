@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.PayrollRun, hcm.PayrollRunList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PayrollRunId", Callback: newPayrollRunServiceCallback(),
+		PrimaryKey: "PayrollRunId", Callback: newPayrollRunServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

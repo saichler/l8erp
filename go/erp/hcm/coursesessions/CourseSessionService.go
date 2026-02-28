@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.CourseSession, hcm.CourseSessionList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "SessionId", Callback: newCourseSessionServiceCallback(),
+		PrimaryKey: "SessionId", Callback: newCourseSessionServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

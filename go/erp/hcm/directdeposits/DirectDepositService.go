@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.DirectDeposit, hcm.DirectDepositList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "DirectDepositId", Callback: newDirectDepositServiceCallback(),
+		PrimaryKey: "DirectDepositId", Callback: newDirectDepositServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

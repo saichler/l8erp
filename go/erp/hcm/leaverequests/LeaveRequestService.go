@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.LeaveRequest, hcm.LeaveRequestList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RequestId", Callback: newLeaveRequestServiceCallback(),
+		PrimaryKey: "RequestId", Callback: newLeaveRequestServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

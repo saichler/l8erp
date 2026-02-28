@@ -27,7 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.LeaveBalance, hcm.LeaveBalanceList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "BalanceId", Callback: newLeaveBalanceServiceCallback(),
+		PrimaryKey: "BalanceId", Callback: newLeaveBalanceServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 
