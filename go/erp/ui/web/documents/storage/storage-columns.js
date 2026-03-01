@@ -20,8 +20,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.documentStatus(item.status) },
             { key: 'fileFormat', label: 'Format', sortKey: 'fileFormat', render: (item) => render.fileFormat(item.fileFormat) },
             { key: 'fileSize', label: 'Size', sortKey: 'fileSize', render: (item) => renderFileSize(item.fileSize) },
+            { key: 'storagePath', label: 'Download', render: (item) => {
+                if (!item.storagePath) return '-';
+                return `<button type="button" class="l8-file-download-btn" onclick="event.stopPropagation(); Layer8FileUpload.download('${Layer8DUtils.escapeAttr(item.storagePath)}', '${Layer8DUtils.escapeAttr(item.fileName || '')}')">Download</button>`;
+            }},
             { key: 'accessLevel', label: 'Access', sortKey: 'accessLevel', render: (item) => render.accessLevel(item.accessLevel) },
-            { key: 'folderId', label: 'Folder', sortKey: 'folderId' },
             { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' },
             { key: 'currentVersion', label: 'Version', sortKey: 'currentVersion' }
         ],

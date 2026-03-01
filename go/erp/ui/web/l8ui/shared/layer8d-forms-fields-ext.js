@@ -207,6 +207,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             html += `<div class="l8-file-existing">
                 <span>${displayName}</span>
                 ${sizeStr ? `<span>(${escapeHtml(sizeStr)})</span>` : ''}
+                <button type="button" class="l8-file-download-btn" data-storage-path="${escapeAttr(storagePath)}" data-file-name="${escapeAttr(fileName)}" onclick="Layer8DFormsFields.onFileDownload(this)">Download</button>
             </div>`;
         }
 

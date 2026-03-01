@@ -250,6 +250,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                                     setNestedValue(data, 'fileSize', result.fileSize || 0);
                                     setNestedValue(data, 'mimeType', result.mimeType || '');
                                     setNestedValue(data, 'checksum', result.checksum || '');
+                                    return; // skip post-switch setNestedValue
                                 } catch (e) {
                                     value = fileHidden.value || null;
                                 }

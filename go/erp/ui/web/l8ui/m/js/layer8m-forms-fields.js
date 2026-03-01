@@ -265,6 +265,7 @@ limitations under the License.
                 existingHtml = `<div class="l8-file-existing">
                     <span>${Layer8MUtils.escapeHtml(displayName)}</span>
                     ${sizeStr ? `<span>(${Layer8MUtils.escapeHtml(sizeStr)})</span>` : ''}
+                    <button type="button" class="l8-file-download-btn" onclick="Layer8FileUpload.download('${Layer8MUtils.escapeAttr(storagePath)}', '${Layer8MUtils.escapeAttr(fileName)}')">Download</button>
                 </div>`;
             }
 
