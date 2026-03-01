@@ -30,6 +30,7 @@ import (
 	"os/signal"
 	"sync"
 	"syscall"
+	"time"
 )
 
 const (
@@ -99,6 +100,10 @@ func OpenDBConection(dbname, user, pass string) *sql.DB {
 	if err != nil {
 		panic(fmt.Errorf("failed to connect to database: %w", err))
 	}
+
+	db.SetMaxOpenConns(25)
+	db.SetMaxIdleConns(10)
+	db.SetConnMaxLifetime(5 * time.Minute)
 
 	dbInstance = db
 	return dbInstance

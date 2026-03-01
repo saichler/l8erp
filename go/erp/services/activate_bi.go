@@ -29,26 +29,25 @@ import (
 	"github.com/saichler/l8erp/go/erp/bi/masterdataconfigs"
 )
 
-func ActivateBiServices(creds, dbname string, nic ifs.IVNic) {
-	// Reporting
-	reports.Activate(creds, dbname, nic)
-	reporttemplates.Activate(creds, dbname, nic)
-
-	// Dashboards
-	dashboards.Activate(creds, dbname, nic)
-	kpis.Activate(creds, dbname, nic)
-
-	// Analytics
-	datacubes.Activate(creds, dbname, nic)
-	analysismodels.Activate(creds, dbname, nic)
-	trendanalyses.Activate(creds, dbname, nic)
-	scenarios.Activate(creds, dbname, nic)
-	benchmarks.Activate(creds, dbname, nic)
-
-	// Data Management
-	datasources.Activate(creds, dbname, nic)
-	etljobs.Activate(creds, dbname, nic)
-	dataqualityrules.Activate(creds, dbname, nic)
-	masterdataconfigs.Activate(creds, dbname, nic)
-	datagovernances.Activate(creds, dbname, nic)
+func collectBiActivations(creds, dbname string, nic ifs.IVNic) []func() {
+	return []func(){
+		// Reporting
+		func() { reports.Activate(creds, dbname, nic) },
+		func() { reporttemplates.Activate(creds, dbname, nic) },
+		// Dashboards
+		func() { dashboards.Activate(creds, dbname, nic) },
+		func() { kpis.Activate(creds, dbname, nic) },
+		// Analytics
+		func() { datacubes.Activate(creds, dbname, nic) },
+		func() { analysismodels.Activate(creds, dbname, nic) },
+		func() { trendanalyses.Activate(creds, dbname, nic) },
+		func() { scenarios.Activate(creds, dbname, nic) },
+		func() { benchmarks.Activate(creds, dbname, nic) },
+		// Data Management
+		func() { datasources.Activate(creds, dbname, nic) },
+		func() { etljobs.Activate(creds, dbname, nic) },
+		func() { dataqualityrules.Activate(creds, dbname, nic) },
+		func() { masterdataconfigs.Activate(creds, dbname, nic) },
+		func() { datagovernances.Activate(creds, dbname, nic) },
+	}
 }

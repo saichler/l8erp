@@ -28,25 +28,24 @@ import (
 	"github.com/saichler/l8erp/go/erp/ecom/shippingmethods"
 )
 
-func ActivateEcomServices(creds, dbname string, nic ifs.IVNic) {
-	// Catalog
-	products.Activate(creds, dbname, nic)
-	categories.Activate(creds, dbname, nic)
-	attributes.Activate(creds, dbname, nic)
-
-	// Orders
-	orders.Activate(creds, dbname, nic)
-	returns.Activate(creds, dbname, nic)
-
-	// Customers
-	customers.Activate(creds, dbname, nic)
-	wishlists.Activate(creds, dbname, nic)
-	carts.Activate(creds, dbname, nic)
-
-	// Promotions
-	promotions.Activate(creds, dbname, nic)
-	coupons.Activate(creds, dbname, nic)
-	pricerules.Activate(creds, dbname, nic)
-	shippingmethods.Activate(creds, dbname, nic)
-	paymentmethods.Activate(creds, dbname, nic)
+func collectEcomActivations(creds, dbname string, nic ifs.IVNic) []func() {
+	return []func(){
+		// Catalog
+		func() { products.Activate(creds, dbname, nic) },
+		func() { categories.Activate(creds, dbname, nic) },
+		func() { attributes.Activate(creds, dbname, nic) },
+		// Orders
+		func() { orders.Activate(creds, dbname, nic) },
+		func() { returns.Activate(creds, dbname, nic) },
+		// Customers
+		func() { customers.Activate(creds, dbname, nic) },
+		func() { wishlists.Activate(creds, dbname, nic) },
+		func() { carts.Activate(creds, dbname, nic) },
+		// Promotions
+		func() { promotions.Activate(creds, dbname, nic) },
+		func() { coupons.Activate(creds, dbname, nic) },
+		func() { pricerules.Activate(creds, dbname, nic) },
+		func() { shippingmethods.Activate(creds, dbname, nic) },
+		func() { paymentmethods.Activate(creds, dbname, nic) },
+	}
 }

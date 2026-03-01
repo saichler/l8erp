@@ -36,33 +36,35 @@ import (
 	"github.com/saichler/l8erp/go/erp/crm/technicians"
 )
 
-func ActivateCrmServices(creds, dbname string, nic ifs.IVNic) {
-	// Lead Management
-	leads.Activate(creds, dbname, nic)
-	leadsources.Activate(creds, dbname, nic)
-	leadscores.Activate(creds, dbname, nic)
-	leadassigns.Activate(creds, dbname, nic)
-	// Opportunity Management
-	opportunities.Activate(creds, dbname, nic)
-	oppstages.Activate(creds, dbname, nic)
-	// Account Management
-	accounts.Activate(creds, dbname, nic)
-	contacts.Activate(creds, dbname, nic)
-	interactions.Activate(creds, dbname, nic)
-	relationships.Activate(creds, dbname, nic)
-	// Marketing
-	campaigns.Activate(creds, dbname, nic)
-	emailtemplates.Activate(creds, dbname, nic)
-	marketinglists.Activate(creds, dbname, nic)
-	// Customer Service
-	cases.Activate(creds, dbname, nic)
-	kbarticles.Activate(creds, dbname, nic)
-	slas.Activate(creds, dbname, nic)
-	escalations.Activate(creds, dbname, nic)
-	surveys.Activate(creds, dbname, nic)
-	// Field Service
-	serviceorders.Activate(creds, dbname, nic)
-	technicians.Activate(creds, dbname, nic)
-	servicecontracts.Activate(creds, dbname, nic)
-	serviceschedules.Activate(creds, dbname, nic)
+func collectCrmActivations(creds, dbname string, nic ifs.IVNic) []func() {
+	return []func(){
+		// Lead Management
+		func() { leads.Activate(creds, dbname, nic) },
+		func() { leadsources.Activate(creds, dbname, nic) },
+		func() { leadscores.Activate(creds, dbname, nic) },
+		func() { leadassigns.Activate(creds, dbname, nic) },
+		// Opportunity Management
+		func() { opportunities.Activate(creds, dbname, nic) },
+		func() { oppstages.Activate(creds, dbname, nic) },
+		// Account Management
+		func() { accounts.Activate(creds, dbname, nic) },
+		func() { contacts.Activate(creds, dbname, nic) },
+		func() { interactions.Activate(creds, dbname, nic) },
+		func() { relationships.Activate(creds, dbname, nic) },
+		// Marketing
+		func() { campaigns.Activate(creds, dbname, nic) },
+		func() { emailtemplates.Activate(creds, dbname, nic) },
+		func() { marketinglists.Activate(creds, dbname, nic) },
+		// Customer Service
+		func() { cases.Activate(creds, dbname, nic) },
+		func() { kbarticles.Activate(creds, dbname, nic) },
+		func() { slas.Activate(creds, dbname, nic) },
+		func() { escalations.Activate(creds, dbname, nic) },
+		func() { surveys.Activate(creds, dbname, nic) },
+		// Field Service
+		func() { serviceorders.Activate(creds, dbname, nic) },
+		func() { technicians.Activate(creds, dbname, nic) },
+		func() { servicecontracts.Activate(creds, dbname, nic) },
+		func() { serviceschedules.Activate(creds, dbname, nic) },
+	}
 }

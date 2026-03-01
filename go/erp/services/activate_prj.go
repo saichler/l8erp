@@ -34,31 +34,33 @@ import (
 	"github.com/saichler/l8erp/go/erp/prj/projectstatuses"
 )
 
-func ActivatePrjServices(creds, dbname string, nic ifs.IVNic) {
-	// Planning
-	projects.Activate(creds, dbname, nic)
-	projecttemplates.Activate(creds, dbname, nic)
-	// Resources
-	resourcepools.Activate(creds, dbname, nic)
-	resources.Activate(creds, dbname, nic)
-	allocations.Activate(creds, dbname, nic)
-	bookings.Activate(creds, dbname, nic)
-	capacityplans.Activate(creds, dbname, nic)
-	utilizations.Activate(creds, dbname, nic)
-	// Time & Expense
-	timesheets.Activate(creds, dbname, nic)
-	expensereports.Activate(creds, dbname, nic)
-	approvalrules.Activate(creds, dbname, nic)
-	expensecategories.Activate(creds, dbname, nic)
-	expensepolicies.Activate(creds, dbname, nic)
-	// Billing
-	billingrates.Activate(creds, dbname, nic)
-	billingschedules.Activate(creds, dbname, nic)
-	projectinvoices.Activate(creds, dbname, nic)
-	revenuerecognitions.Activate(creds, dbname, nic)
-	projectbudgets.Activate(creds, dbname, nic)
-	// Analytics
-	projectstatuses.Activate(creds, dbname, nic)
-	portfolioviews.Activate(creds, dbname, nic)
-	projectkpis.Activate(creds, dbname, nic)
+func collectPrjActivations(creds, dbname string, nic ifs.IVNic) []func() {
+	return []func(){
+		// Planning
+		func() { projects.Activate(creds, dbname, nic) },
+		func() { projecttemplates.Activate(creds, dbname, nic) },
+		// Resources
+		func() { resourcepools.Activate(creds, dbname, nic) },
+		func() { resources.Activate(creds, dbname, nic) },
+		func() { allocations.Activate(creds, dbname, nic) },
+		func() { bookings.Activate(creds, dbname, nic) },
+		func() { capacityplans.Activate(creds, dbname, nic) },
+		func() { utilizations.Activate(creds, dbname, nic) },
+		// Time & Expense
+		func() { timesheets.Activate(creds, dbname, nic) },
+		func() { expensereports.Activate(creds, dbname, nic) },
+		func() { approvalrules.Activate(creds, dbname, nic) },
+		func() { expensecategories.Activate(creds, dbname, nic) },
+		func() { expensepolicies.Activate(creds, dbname, nic) },
+		// Billing
+		func() { billingrates.Activate(creds, dbname, nic) },
+		func() { billingschedules.Activate(creds, dbname, nic) },
+		func() { projectinvoices.Activate(creds, dbname, nic) },
+		func() { revenuerecognitions.Activate(creds, dbname, nic) },
+		func() { projectbudgets.Activate(creds, dbname, nic) },
+		// Analytics
+		func() { projectstatuses.Activate(creds, dbname, nic) },
+		func() { portfolioviews.Activate(creds, dbname, nic) },
+		func() { projectkpis.Activate(creds, dbname, nic) },
+	}
 }

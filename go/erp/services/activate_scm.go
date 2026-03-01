@@ -37,40 +37,42 @@ import (
 	"github.com/saichler/l8erp/go/erp/scm/waveplans"
 )
 
-func ActivateSCMServices(creds, dbname string, nic ifs.IVNic) {
-	// Procurement
-	purchasereqs.Activate(creds, dbname, nic)
-	rfqs.Activate(creds, dbname, nic)
-	purchaseorders.Activate(creds, dbname, nic)
-	blanketorders.Activate(creds, dbname, nic)
-	supplierscorecards.Activate(creds, dbname, nic)
-	// Inventory Management
-	items.Activate(creds, dbname, nic)
-	itemcategories.Activate(creds, dbname, nic)
-	cyclecounts.Activate(creds, dbname, nic)
-	// Warehouse Management
-	warehouses.Activate(creds, dbname, nic)
-	receivingorders.Activate(creds, dbname, nic)
-	waveplans.Activate(creds, dbname, nic)
-	dockschedules.Activate(creds, dbname, nic)
-	// Logistics and Transportation
-	carriers.Activate(creds, dbname, nic)
-	freightrates.Activate(creds, dbname, nic)
-	shipments.Activate(creds, dbname, nic)
-	routes.Activate(creds, dbname, nic)
-	loadplans.Activate(creds, dbname, nic)
-	returnauths.Activate(creds, dbname, nic)
-	// Demand Planning
-	demandforecasts.Activate(creds, dbname, nic)
-	forecastmodels.Activate(creds, dbname, nic)
-	demandplans.Activate(creds, dbname, nic)
-	promoplans.Activate(creds, dbname, nic)
-	newproductplans.Activate(creds, dbname, nic)
-	// Supply Planning
-	materialreqs.Activate(creds, dbname, nic)
-	distributionreqs.Activate(creds, dbname, nic)
-	supplyplans.Activate(creds, dbname, nic)
-	suppliercollabs.Activate(creds, dbname, nic)
-	safetystocks.Activate(creds, dbname, nic)
-	leadtimes.Activate(creds, dbname, nic)
+func collectSCMActivations(creds, dbname string, nic ifs.IVNic) []func() {
+	return []func(){
+		// Procurement
+		func() { purchasereqs.Activate(creds, dbname, nic) },
+		func() { rfqs.Activate(creds, dbname, nic) },
+		func() { purchaseorders.Activate(creds, dbname, nic) },
+		func() { blanketorders.Activate(creds, dbname, nic) },
+		func() { supplierscorecards.Activate(creds, dbname, nic) },
+		// Inventory Management
+		func() { items.Activate(creds, dbname, nic) },
+		func() { itemcategories.Activate(creds, dbname, nic) },
+		func() { cyclecounts.Activate(creds, dbname, nic) },
+		// Warehouse Management
+		func() { warehouses.Activate(creds, dbname, nic) },
+		func() { receivingorders.Activate(creds, dbname, nic) },
+		func() { waveplans.Activate(creds, dbname, nic) },
+		func() { dockschedules.Activate(creds, dbname, nic) },
+		// Logistics and Transportation
+		func() { carriers.Activate(creds, dbname, nic) },
+		func() { freightrates.Activate(creds, dbname, nic) },
+		func() { shipments.Activate(creds, dbname, nic) },
+		func() { routes.Activate(creds, dbname, nic) },
+		func() { loadplans.Activate(creds, dbname, nic) },
+		func() { returnauths.Activate(creds, dbname, nic) },
+		// Demand Planning
+		func() { demandforecasts.Activate(creds, dbname, nic) },
+		func() { forecastmodels.Activate(creds, dbname, nic) },
+		func() { demandplans.Activate(creds, dbname, nic) },
+		func() { promoplans.Activate(creds, dbname, nic) },
+		func() { newproductplans.Activate(creds, dbname, nic) },
+		// Supply Planning
+		func() { materialreqs.Activate(creds, dbname, nic) },
+		func() { distributionreqs.Activate(creds, dbname, nic) },
+		func() { supplyplans.Activate(creds, dbname, nic) },
+		func() { suppliercollabs.Activate(creds, dbname, nic) },
+		func() { safetystocks.Activate(creds, dbname, nic) },
+		func() { leadtimes.Activate(creds, dbname, nic) },
+	}
 }

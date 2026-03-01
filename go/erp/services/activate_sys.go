@@ -8,6 +8,8 @@ import (
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func ActivateSysServices(creds, dbname string, nic ifs.IVNic) {
-	moduleconfig.Activate(creds, dbname, nic)
+func collectSysActivations(creds, dbname string, nic ifs.IVNic) []func() {
+	return []func(){
+		func() { moduleconfig.Activate(creds, dbname, nic) },
+	}
 }

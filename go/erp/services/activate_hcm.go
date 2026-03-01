@@ -72,69 +72,71 @@ import (
 	"github.com/saichler/l8erp/go/erp/hcm/salarystructures"
 )
 
-func ActivateHCMServices(creds, dbname string, nic ifs.IVNic) {
-	// Core HR
-	employees.Activate(creds, dbname, nic)
-	organizations.Activate(creds, dbname, nic)
-	departments.Activate(creds, dbname, nic)
-	positions.Activate(creds, dbname, nic)
-	jobs.Activate(creds, dbname, nic)
-	jobfamilies.Activate(creds, dbname, nic)
-	employeedocuments.Activate(creds, dbname, nic)
-	compliancerecords.Activate(creds, dbname, nic)
-	// Payroll
-	paystructures.Activate(creds, dbname, nic)
-	paycomponents.Activate(creds, dbname, nic)
-	payrollruns.Activate(creds, dbname, nic)
-	payslips.Activate(creds, dbname, nic)
-	taxwithholdings.Activate(creds, dbname, nic)
-	directdeposits.Activate(creds, dbname, nic)
-	garnishments.Activate(creds, dbname, nic)
-	yearenddocuments.Activate(creds, dbname, nic)
-	// Benefits
-	benefitplans.Activate(creds, dbname, nic)
-	benefitenrollments.Activate(creds, dbname, nic)
-	dependents.Activate(creds, dbname, nic)
-	lifeevents.Activate(creds, dbname, nic)
-	carriers.Activate(creds, dbname, nic)
-	cobraevents.Activate(creds, dbname, nic)
-	// Time & Attendance
-	timesheets.Activate(creds, dbname, nic)
-	leaverequests.Activate(creds, dbname, nic)
-	leavebalances.Activate(creds, dbname, nic)
-	leavepolicies.Activate(creds, dbname, nic)
-	shifts.Activate(creds, dbname, nic)
-	schedules.Activate(creds, dbname, nic)
-	holidays.Activate(creds, dbname, nic)
-	absences.Activate(creds, dbname, nic)
-	// Talent
-	jobrequisitions.Activate(creds, dbname, nic)
-	applicants.Activate(creds, dbname, nic)
-	applications.Activate(creds, dbname, nic)
-	onboardingtasks.Activate(creds, dbname, nic)
-	performancereviews.Activate(creds, dbname, nic)
-	goals.Activate(creds, dbname, nic)
-	successionplans.Activate(creds, dbname, nic)
-	careerpaths.Activate(creds, dbname, nic)
-	feedbacks.Activate(creds, dbname, nic)
-	// Learning
-	courses.Activate(creds, dbname, nic)
-	coursesessions.Activate(creds, dbname, nic)
-	courseenrollments.Activate(creds, dbname, nic)
-	certifications.Activate(creds, dbname, nic)
-	employeecertifications.Activate(creds, dbname, nic)
-	skills.Activate(creds, dbname, nic)
-	employeeskills.Activate(creds, dbname, nic)
-	trainingrecords.Activate(creds, dbname, nic)
-	// Compensation
-	salarygrades.Activate(creds, dbname, nic)
-	salarystructures.Activate(creds, dbname, nic)
-	employeecompensations.Activate(creds, dbname, nic)
-	meritincreases.Activate(creds, dbname, nic)
-	meritcycles.Activate(creds, dbname, nic)
-	bonusplans.Activate(creds, dbname, nic)
-	bonuspayments.Activate(creds, dbname, nic)
-	equitygrants.Activate(creds, dbname, nic)
-	compensationstatements.Activate(creds, dbname, nic)
-	marketbenchmarks.Activate(creds, dbname, nic)
+func collectHCMActivations(creds, dbname string, nic ifs.IVNic) []func() {
+	return []func(){
+		// Core HR
+		func() { employees.Activate(creds, dbname, nic) },
+		func() { organizations.Activate(creds, dbname, nic) },
+		func() { departments.Activate(creds, dbname, nic) },
+		func() { positions.Activate(creds, dbname, nic) },
+		func() { jobs.Activate(creds, dbname, nic) },
+		func() { jobfamilies.Activate(creds, dbname, nic) },
+		func() { employeedocuments.Activate(creds, dbname, nic) },
+		func() { compliancerecords.Activate(creds, dbname, nic) },
+		// Payroll
+		func() { paystructures.Activate(creds, dbname, nic) },
+		func() { paycomponents.Activate(creds, dbname, nic) },
+		func() { payrollruns.Activate(creds, dbname, nic) },
+		func() { payslips.Activate(creds, dbname, nic) },
+		func() { taxwithholdings.Activate(creds, dbname, nic) },
+		func() { directdeposits.Activate(creds, dbname, nic) },
+		func() { garnishments.Activate(creds, dbname, nic) },
+		func() { yearenddocuments.Activate(creds, dbname, nic) },
+		// Benefits
+		func() { benefitplans.Activate(creds, dbname, nic) },
+		func() { benefitenrollments.Activate(creds, dbname, nic) },
+		func() { dependents.Activate(creds, dbname, nic) },
+		func() { lifeevents.Activate(creds, dbname, nic) },
+		func() { carriers.Activate(creds, dbname, nic) },
+		func() { cobraevents.Activate(creds, dbname, nic) },
+		// Time & Attendance
+		func() { timesheets.Activate(creds, dbname, nic) },
+		func() { leaverequests.Activate(creds, dbname, nic) },
+		func() { leavebalances.Activate(creds, dbname, nic) },
+		func() { leavepolicies.Activate(creds, dbname, nic) },
+		func() { shifts.Activate(creds, dbname, nic) },
+		func() { schedules.Activate(creds, dbname, nic) },
+		func() { holidays.Activate(creds, dbname, nic) },
+		func() { absences.Activate(creds, dbname, nic) },
+		// Talent
+		func() { jobrequisitions.Activate(creds, dbname, nic) },
+		func() { applicants.Activate(creds, dbname, nic) },
+		func() { applications.Activate(creds, dbname, nic) },
+		func() { onboardingtasks.Activate(creds, dbname, nic) },
+		func() { performancereviews.Activate(creds, dbname, nic) },
+		func() { goals.Activate(creds, dbname, nic) },
+		func() { successionplans.Activate(creds, dbname, nic) },
+		func() { careerpaths.Activate(creds, dbname, nic) },
+		func() { feedbacks.Activate(creds, dbname, nic) },
+		// Learning
+		func() { courses.Activate(creds, dbname, nic) },
+		func() { coursesessions.Activate(creds, dbname, nic) },
+		func() { courseenrollments.Activate(creds, dbname, nic) },
+		func() { certifications.Activate(creds, dbname, nic) },
+		func() { employeecertifications.Activate(creds, dbname, nic) },
+		func() { skills.Activate(creds, dbname, nic) },
+		func() { employeeskills.Activate(creds, dbname, nic) },
+		func() { trainingrecords.Activate(creds, dbname, nic) },
+		// Compensation
+		func() { salarygrades.Activate(creds, dbname, nic) },
+		func() { salarystructures.Activate(creds, dbname, nic) },
+		func() { employeecompensations.Activate(creds, dbname, nic) },
+		func() { meritincreases.Activate(creds, dbname, nic) },
+		func() { meritcycles.Activate(creds, dbname, nic) },
+		func() { bonusplans.Activate(creds, dbname, nic) },
+		func() { bonuspayments.Activate(creds, dbname, nic) },
+		func() { equitygrants.Activate(creds, dbname, nic) },
+		func() { compensationstatements.Activate(creds, dbname, nic) },
+		func() { marketbenchmarks.Activate(creds, dbname, nic) },
+	}
 }

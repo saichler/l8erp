@@ -3,19 +3,40 @@
  */
 package services
 
-import "github.com/saichler/l8types/go/ifs"
+import (
+	"sync"
+
+	"github.com/saichler/l8types/go/ifs"
+)
+
+const parallelWorkers = 20
 
 func ActivateAllServices(creds, dbname string, nic ifs.IVNic) {
-	ActivateHCMServices(creds, dbname, nic)
-	ActivateFinServices(creds, dbname, nic)
-	ActivateSCMServices(creds, dbname, nic)
-	ActivateSalesServices(creds, dbname, nic)
-	ActivateMfgServices(creds, dbname, nic)
-	ActivateCrmServices(creds, dbname, nic)
-	ActivatePrjServices(creds, dbname, nic)
-	ActivateBiServices(creds, dbname, nic)
-	ActivateDocServices(creds, dbname, nic)
-	ActivateEcomServices(creds, dbname, nic)
-	ActivateCompServices(creds, dbname, nic)
-	ActivateSysServices(creds, dbname, nic)
+	var all []func()
+	all = append(all, collectHCMActivations(creds, dbname, nic)...)
+	all = append(all, collectFinActivations(creds, dbname, nic)...)
+	all = append(all, collectSCMActivations(creds, dbname, nic)...)
+	all = append(all, collectSalesActivations(creds, dbname, nic)...)
+	all = append(all, collectMfgActivations(creds, dbname, nic)...)
+	all = append(all, collectCrmActivations(creds, dbname, nic)...)
+	all = append(all, collectPrjActivations(creds, dbname, nic)...)
+	all = append(all, collectBiActivations(creds, dbname, nic)...)
+	all = append(all, collectDocActivations(creds, dbname, nic)...)
+	all = append(all, collectEcomActivations(creds, dbname, nic)...)
+	all = append(all, collectCompActivations(creds, dbname, nic)...)
+	all = append(all, collectSysActivations(creds, dbname, nic)...)
+
+	sem := make(chan struct{}, parallelWorkers)
+	var wg sync.WaitGroup
+
+	for _, fn := range all {
+		wg.Add(1)
+		sem <- struct{}{}
+		go func(f func()) {
+			defer wg.Done()
+			defer func() { <-sem }()
+			f()
+		}(fn)
+	}
+	wg.Wait()
 }

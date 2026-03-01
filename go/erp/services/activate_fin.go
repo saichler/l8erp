@@ -36,40 +36,42 @@ import (
 	"github.com/saichler/l8erp/go/erp/fin/vendorstatements"
 )
 
-func ActivateFinServices(creds, dbname string, nic ifs.IVNic) {
-	// General Ledger
-	accounts.Activate(creds, dbname, nic)
-	journalentries.Activate(creds, dbname, nic)
-	fiscalyears.Activate(creds, dbname, nic)
-	currencies.Activate(creds, dbname, nic)
-	exchangerates.Activate(creds, dbname, nic)
-	// Accounts Payable
-	vendors.Activate(creds, dbname, nic)
-	purchaseinvoices.Activate(creds, dbname, nic)
-	paymentschedules.Activate(creds, dbname, nic)
-	vendorpayments.Activate(creds, dbname, nic)
-	vendorstatements.Activate(creds, dbname, nic)
-	// Accounts Receivable
-	customers.Activate(creds, dbname, nic)
-	salesinvoices.Activate(creds, dbname, nic)
-	customerpayments.Activate(creds, dbname, nic)
-	creditmemos.Activate(creds, dbname, nic)
-	dunningletters.Activate(creds, dbname, nic)
-	// Cash Management
-	bankaccounts.Activate(creds, dbname, nic)
-	cashforecasts.Activate(creds, dbname, nic)
-	fundtransfers.Activate(creds, dbname, nic)
-	pettycash.Activate(creds, dbname, nic)
-	// Fixed Assets
-	assets.Activate(creds, dbname, nic)
-	assetcategories.Activate(creds, dbname, nic)
-	// Budgeting and Planning
-	budgets.Activate(creds, dbname, nic)
-	capitalexpenditures.Activate(creds, dbname, nic)
-	forecasts.Activate(creds, dbname, nic)
-	// Tax Management
-	taxcodes.Activate(creds, dbname, nic)
-	taxjurisdictions.Activate(creds, dbname, nic)
-	taxrules.Activate(creds, dbname, nic)
-	taxexemptions.Activate(creds, dbname, nic)
+func collectFinActivations(creds, dbname string, nic ifs.IVNic) []func() {
+	return []func(){
+		// General Ledger
+		func() { accounts.Activate(creds, dbname, nic) },
+		func() { journalentries.Activate(creds, dbname, nic) },
+		func() { fiscalyears.Activate(creds, dbname, nic) },
+		func() { currencies.Activate(creds, dbname, nic) },
+		func() { exchangerates.Activate(creds, dbname, nic) },
+		// Accounts Payable
+		func() { vendors.Activate(creds, dbname, nic) },
+		func() { purchaseinvoices.Activate(creds, dbname, nic) },
+		func() { paymentschedules.Activate(creds, dbname, nic) },
+		func() { vendorpayments.Activate(creds, dbname, nic) },
+		func() { vendorstatements.Activate(creds, dbname, nic) },
+		// Accounts Receivable
+		func() { customers.Activate(creds, dbname, nic) },
+		func() { salesinvoices.Activate(creds, dbname, nic) },
+		func() { customerpayments.Activate(creds, dbname, nic) },
+		func() { creditmemos.Activate(creds, dbname, nic) },
+		func() { dunningletters.Activate(creds, dbname, nic) },
+		// Cash Management
+		func() { bankaccounts.Activate(creds, dbname, nic) },
+		func() { cashforecasts.Activate(creds, dbname, nic) },
+		func() { fundtransfers.Activate(creds, dbname, nic) },
+		func() { pettycash.Activate(creds, dbname, nic) },
+		// Fixed Assets
+		func() { assets.Activate(creds, dbname, nic) },
+		func() { assetcategories.Activate(creds, dbname, nic) },
+		// Budgeting and Planning
+		func() { budgets.Activate(creds, dbname, nic) },
+		func() { capitalexpenditures.Activate(creds, dbname, nic) },
+		func() { forecasts.Activate(creds, dbname, nic) },
+		// Tax Management
+		func() { taxcodes.Activate(creds, dbname, nic) },
+		func() { taxjurisdictions.Activate(creds, dbname, nic) },
+		func() { taxrules.Activate(creds, dbname, nic) },
+		func() { taxexemptions.Activate(creds, dbname, nic) },
+	}
 }

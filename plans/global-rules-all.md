@@ -2,7 +2,7 @@
 
 These are Claude Code global rules for the Layer8 ERP project. Load this file at the start of a session to apply all rules.
 
-**Source files:** `~/.claude/rules/*.md` (40 rule files)
+**Source files:** `~/.claude/rules/*.md` (44 rule files)
 
 ---
 
@@ -12,63 +12,67 @@ These are Claude Code global rules for the Layer8 ERP project. Load this file at
 1. [Plan Approval Workflow](#1-plan-approval-workflow)
 2. [Code Maintainability Standards](#2-code-maintainability-standards)
 3. [Prime Object Rules](#3-prime-object-rules)
+4. [Report Infrastructure Bugs Instead of Working Around Them](#4-report-infrastructure-bugs-instead-of-working-around-them)
 
 ### Protobuf
-4. [Protobuf Generation](#4-protobuf-generation)
-5. [Proto Generation Method](#5-proto-generation-method)
-6. [Protobuf List Type Convention](#6-protobuf-list-type-convention)
-7. [Protobuf Enum Zero Value Convention](#7-protobuf-enum-zero-value-convention)
+5. [Protobuf Generation](#5-protobuf-generation)
+6. [Proto Generation Method](#6-proto-generation-method)
+7. [Protobuf List Type Convention](#7-protobuf-list-type-convention)
+8. [Protobuf Enum Zero Value Convention](#8-protobuf-enum-zero-value-convention)
 
 ### Go/Server
-8. [Third-Party Code Lives in Vendor](#8-third-party-code-lives-in-vendor)
-9. [Test Location and Approach](#9-test-location-and-approach)
-10. [Test Data Field Verification](#10-test-data-field-verification)
+9. [Third-Party Code Lives in Vendor](#9-third-party-code-lives-in-vendor)
+10. [Test Location and Approach](#10-test-location-and-approach)
+11. [Test Data Field Verification](#11-test-data-field-verification)
+12. [Clean Up Test Binaries](#12-clean-up-test-binaries)
+13. [Run-Local Script Requirement](#13-run-local-script-requirement)
 
 ### L8Query
-11. [L8Query Model Names Must Match Protobuf Types](#11-l8query-model-names-must-match-protobuf-types)
-12. [L8Query Must Use SELECT * for Detail Popups](#12-l8query-must-use-select--for-detail-popups)
+14. [L8Query Model Names Must Match Protobuf Types](#14-l8query-model-names-must-match-protobuf-types)
+15. [L8Query Must Use SELECT * for Detail Popups](#15-l8query-must-use-select--for-detail-popups)
+16. [GetEntities with Empty Filter Must Use L8Query](#16-getentities-with-empty-filter-must-use-l8query)
 
 ### JavaScript Field Naming
-13. [JavaScript Protobuf Field Name Mapping](#13-javascript-protobuf-field-name-mapping)
-14. [JS Column and Form Field Name Verification](#14-js-column-and-form-field-name-verification)
-15. [JavaScript UI Model Names Must Match Protobuf Types](#15-javascript-ui-model-names-must-match-protobuf-types)
+17. [JavaScript Protobuf Field Name Mapping](#17-javascript-protobuf-field-name-mapping)
+18. [JS Column and Form Field Name Verification](#18-js-column-and-form-field-name-verification)
+19. [JavaScript UI Model Names Must Match Protobuf Types](#19-javascript-ui-model-names-must-match-protobuf-types)
 
 ### JavaScript Forms
-16. [Nested Protobuf Types in Form Definitions](#16-nested-protobuf-types-in-form-definitions)
-17. [Compound Form Field Data Collection](#17-compound-form-field-data-collection)
-18. [Form and Column Field Coverage](#18-form-and-column-field-coverage)
-19. [Select Field Enum Completeness](#19-select-field-enum-completeness)
+20. [Nested Protobuf Types in Form Definitions](#20-nested-protobuf-types-in-form-definitions)
+21. [Compound Form Field Data Collection](#21-compound-form-field-data-collection)
+22. [Form and Column Field Coverage](#22-form-and-column-field-coverage)
+23. [Select Field Enum Completeness](#23-select-field-enum-completeness)
 
 ### JavaScript Columns & Renderers
-20. [Column Factory Method Completeness](#20-column-factory-method-completeness)
-21. [Column Factory Renderer Validation](#21-column-factory-renderer-validation)
-22. [Renderer Factory vs Direct Call](#22-renderer-factory-vs-direct-call)
+24. [Column Factory Method Completeness](#24-column-factory-method-completeness)
+25. [Column Factory Renderer Validation](#25-column-factory-renderer-validation)
+26. [Renderer Factory vs Direct Call](#26-renderer-factory-vs-direct-call)
 
 ### JavaScript Template/DOM
-23. [Template Literal Ternary Edit Safety](#23-template-literal-ternary-edit-safety)
-24. [Stacked Popup DOM Scoping](#24-stacked-popup-dom-scoping)
+27. [Template Literal Ternary Edit Safety](#27-template-literal-ternary-edit-safety)
+28. [Stacked Popup DOM Scoping](#28-stacked-popup-dom-scoping)
 
 ### UI Integration
-25. [UI Module Integration Checklist](#25-ui-module-integration-checklist)
-26. [Module Init sectionSelector Must Match defaultModule](#26-module-init-sectionselector-must-match-defaultmodule)
-27. [Reference Registry Completeness](#27-reference-registry-completeness)
-28. [Server-Side Pagination Metadata](#28-server-side-pagination-metadata)
-29. [Layer8DTable: Pagination Metadata Must Only Be Read on Page 1](#29-layer8dtable-pagination-metadata-must-only-be-read-on-page-1)
-30. [Immutability Must Be Reflected in the UI](#30-immutability-must-be-reflected-in-the-ui)
-31. [Mobile Parity](#31-mobile-parity)
-32. [Demo Directory Must Stay in Sync with Source](#32-demo-directory-must-stay-in-sync-with-source)
+29. [UI Module Integration Checklist](#29-ui-module-integration-checklist)
+30. [Module Init sectionSelector Must Match defaultModule](#30-module-init-sectionselector-must-match-defaultmodule)
+31. [Reference Registry Completeness](#31-reference-registry-completeness)
+32. [Server-Side Pagination Metadata](#32-server-side-pagination-metadata)
+33. [Layer8DTable: Pagination Metadata Must Only Be Read on Page 1](#33-layer8dtable-pagination-metadata-must-only-be-read-on-page-1)
+34. [Immutability Must Be Reflected in the UI](#34-immutability-must-be-reflected-in-the-ui)
+35. [Mobile Parity](#35-mobile-parity)
+36. [Demo Directory Must Stay in Sync with Source](#36-demo-directory-must-stay-in-sync-with-source)
 
 ### L8UI
-33. [L8UI Theme Compliance](#33-l8ui-theme-compliance)
-34. [L8UI Guide Update](#34-l8ui-guide-update)
-35. [L8UI GUIDE.md Prerequisite](#35-l8ui-guidemd-prerequisite)
+37. [L8UI Theme Compliance](#37-l8ui-theme-compliance)
+38. [L8UI Guide Update](#38-l8ui-guide-update)
+39. [L8UI GUIDE.md Prerequisite](#39-l8ui-guidemd-prerequisite)
 
 ### Mock Data
-36. [Mock Data Generation](#36-mock-data-generation)
-37. [Mock Data Completeness](#37-mock-data-completeness)
-38. [Mock Data Must Cover All UI Columns](#38-mock-data-must-cover-all-ui-columns)
-39. [Mock Endpoint Construction](#39-mock-endpoint-construction)
-40. [Mock Phase Ordering](#40-mock-phase-ordering)
+40. [Mock Data Generation](#40-mock-data-generation)
+41. [Mock Data Completeness](#41-mock-data-completeness)
+42. [Mock Data Must Cover All UI Columns](#42-mock-data-must-cover-all-ui-columns)
+43. [Mock Endpoint Construction](#43-mock-endpoint-construction)
+44. [Mock Phase Ordering](#44-mock-phase-ordering)
 
 ---
 
@@ -199,6 +203,7 @@ Maintain a "How to Add a New Module" guide that specifies exactly which files to
 # 3. Prime Object Rules
 
 **Source:** `prime-object-references.md`
+
 
 ## Rule 1: What IS a Prime Object
 
@@ -404,7 +409,35 @@ grep -rn '\[\]\*\|^\s*\*' go/types/**/*.pb.go | grep 'protobuf:' | grep -v 'List
 
 ---
 
-# 4. Protobuf Generation
+# 4. Report Infrastructure Bugs Instead of Working Around Them
+
+**Source:** `report-infra-bugs.md`
+
+## Rule
+When an expected scenario does not work properly due to a bug in the underlying infrastructure (framework, SDK, shared libraries), do NOT alter the code to work around the bug. Instead, highlight the bug to the user and let them fix it.
+
+## What This Means
+- If a function call should work based on its documented/expected behavior but doesn't, report it — don't remove the call or add workarounds.
+- If a framework API returns unexpected results (e.g., empty results when it should return data), flag it — don't restructure the code to avoid the API.
+- If a shared component has a bug that causes downstream failures, identify the root cause — don't patch over it in the consuming code.
+
+## What to Report
+1. **What fails**: The exact error or unexpected behavior
+2. **Where the bug is**: Which infrastructure function/API is misbehaving
+3. **Expected behavior**: What the function should do based on its contract
+4. **Actual behavior**: What it actually does
+5. **Impact**: What features are blocked until the bug is fixed
+
+## Why This Matters
+Working around infrastructure bugs:
+- Adds unnecessary complexity to consuming code
+- Masks the real problem, making it harder to find and fix later
+- May introduce subtle behavioral differences from the intended design
+- Wastes time on workarounds that become dead code once the bug is fixed
+
+---
+
+# 5. Protobuf Generation
 
 **Source:** `protobuf-generation.md`
 
@@ -451,7 +484,7 @@ grep -A 30 "type TypeName struct" go/types/<module>/*.pb.go | grep 'json:"'
 
 ---
 
-# 5. Proto Generation Method
+# 6. Proto Generation Method
 
 **Source:** `proto-generation-method.md`
 
@@ -474,7 +507,7 @@ The `make-bindings.sh` script is designed to run interactively from the `proto/`
 
 ---
 
-# 6. Protobuf List Type Convention
+# 7. Protobuf List Type Convention
 
 **Source:** `proto-list-convention.md`
 
@@ -521,7 +554,7 @@ message EcomCategoryList {
 
 ---
 
-# 7. Protobuf Enum Zero Value Convention
+# 8. Protobuf Enum Zero Value Convention
 
 **Source:** `proto-enum-zero-value.md`
 
@@ -579,7 +612,7 @@ All 289 ERP enums across 12 modules follow this convention (verified Feb 2026).
 
 ---
 
-# 8. Third-Party Code Lives in Vendor
+# 9. Third-Party Code Lives in Vendor
 
 **Source:** `vendor-third-party-code.md`
 
@@ -593,7 +626,7 @@ All third-party dependencies are vendored. The `vendor/` directory is the locati
 
 ---
 
-# 9. Test Location and Approach
+# 10. Test Location and Approach
 
 **Source:** `test-location-and-approach.md`
 
@@ -636,7 +669,7 @@ find go/ -name "*_test.go" -not -path "go/tests/*"
 
 ---
 
-# 10. Test Data Field Verification
+# 11. Test Data Field Verification
 
 **Source:** `test-data-field-verification.md`
 
@@ -704,7 +737,82 @@ Cross-check every key in your map against the output. If a key doesn't appear in
 
 ---
 
-# 11. L8Query Model Names Must Match Protobuf Types
+# 12. Clean Up Test Binaries
+
+**Source:** `cleanup-test-binaries.md`
+
+## Rule
+When running `go build` to verify compilation, always use `go build ./path/to/package/` (without `-o`) so no binary is produced. If a binary is produced for any reason, delete it immediately after verifying the build succeeded.
+
+## Why
+Leftover binaries clutter the working directory and may accidentally get committed. Build verification only needs to confirm zero errors — it does not need the output binary.
+
+---
+
+# 13. Run-Local Script Requirement
+
+**Source:** `run-local-script.md`
+
+## Rule
+Every Layer 8 project that has a fully implemented PRD (backend services, UI, mock data) MUST include a `run-local.sh` script at the Go module root (e.g., `go/run-local.sh`) that starts the entire system locally for testing and development.
+
+## When to Create
+- After all PRD phases are implemented and the system is functional end-to-end
+- When a new project reaches the point where it can be started, populated with mock data, and tested in a browser
+
+## What the Script Must Do
+1. **Clean and fetch dependencies**: `rm -rf go.sum go.mod vendor && go mod init && GOPROXY=direct GOPRIVATE=github.com go mod tidy && go mod vendor`
+2. **Start infrastructure** (e.g., database container): `docker run -d ...`
+3. **Build all binaries** into a `demo/` directory:
+   - Mock data generator (`tests/mocks/cmd/`)
+   - Log agent and log vnet (if applicable)
+   - Backend vnet
+   - Main ERP/application server
+   - UI web server
+4. **Copy web assets** to `demo/`
+5. **Generate a `kill_demo.sh`** cleanup script that kills all demo processes and removes temp data
+6. **Start all services** in correct order (vnet first, then services, then UI)
+7. **Wait for services to be ready**, then prompt user to upload mock data
+8. **Upload mock data** via the mock data generator
+9. **Wait for user**, then clean up
+
+## Reference Implementation
+See `l8erp/go/run-local.sh` for the canonical example:
+```bash
+set -e
+# clean up
+rm -rf go.sum go.mod vendor
+# fetch dependencies
+go mod init
+GOPROXY=direct GOPRIVATE=github.com go mod tidy
+go mod vendor
+# start database
+docker rm -f unsecure-postgres 2>/dev/null || true
+docker run -d --name unsecure-postgres -p 5432:5432 -v /data/:/data/ saichler/unsecure-postgres:latest admin admin admin 5432
+# build binaries
+rm -rf demo && mkdir -p demo
+cd tests/mocks/cmd && go build -o ../../../demo/mocks_demo
+# ... build other binaries ...
+# copy web assets
+cp -r ./web ../../demo/.
+# generate cleanup script
+echo "pkill -9 demo" >> ./kill_demo.sh
+# start services
+./vnet_demo &
+./erp_demo local &
+./ui_demo &
+# upload mocks
+./mocks_demo --address https://${EXTERNAL_IP}:2773 --user admin --password admin --insecure
+# cleanup
+./kill_demo.sh
+```
+
+## PRD Requirement
+Every PRD document MUST include a section titled **"Local Development Setup"** that describes the `run-local.sh` script and how to start the system locally. This ensures the script is planned from the start, not added as an afterthought.
+
+---
+
+# 14. L8Query Model Names Must Match Protobuf Types
 
 **Source:** `l8query-model-names.md`
 
@@ -739,7 +847,7 @@ grep "type.*struct {" go/types/<module>/*.pb.go | grep -i <keyword>
 
 ---
 
-# 12. L8Query Must Use SELECT * for Detail Popups
+# 15. L8Query Must Use SELECT * for Detail Popups
 
 **Source:** `l8query-select-star-for-detail.md`
 
@@ -780,7 +888,33 @@ const query = `select name, status, severity from AlarmDefinition where definiti
 
 ---
 
-# 13. JavaScript Protobuf Field Name Mapping
+# 16. GetEntities with Empty Filter Must Use L8Query
+
+**Source:** `get-all-entities-l8query.md`
+
+## Rule
+When calling `common.GetEntities` with an empty filter (all zero-value fields), the filter-based lookup will return no results. To fetch all entities of a type, you MUST use an L8Query instead.
+
+## Why This Matters
+`GetEntities` passes the filter struct to `handler.Get()`, which matches against non-zero fields. An empty struct has no non-zero fields, so nothing matches. This is not a bug — it's by design. To retrieve all entities, use an L8Query with `select * from <ProtobufTypeName>`.
+
+## Correct Pattern
+```go
+// WRONG — empty filter returns nothing
+years, err := common.GetEntities("FiscalYr", 40, &fin.FiscalYear{}, vnic)
+
+// CORRECT — L8Query fetches all entities
+// Use "select * from FiscalYear" (protobuf type name, NOT ServiceName)
+```
+
+## Key Reminder
+The model name in the L8Query must be the **protobuf type name**, not the ServiceName:
+- `select * from FiscalYear` (CORRECT — protobuf type)
+- `select * from FiscalYr` (WRONG — ServiceName, will return 400)
+
+---
+
+# 17. JavaScript Protobuf Field Name Mapping
 
 **Source:** `js-protobuf-field-names.md`
 
@@ -869,7 +1003,7 @@ grep -A 30 "type ScmWarehouse struct" go/types/scm/*.pb.go | grep 'json:"'
 
 ---
 
-# 14. JS Column and Form Field Name Verification
+# 18. JS Column and Form Field Name Verification
 
 **Source:** `js-column-field-verification.md`
 
@@ -924,7 +1058,7 @@ During refactoring, it is tempting to write field names from memory to save time
 
 ---
 
-# 15. JavaScript UI Model Names Must Match Protobuf Types
+# 19. JavaScript UI Model Names Must Match Protobuf Types
 
 **Source:** `js-protobuf-model-names.md`
 
@@ -1023,7 +1157,7 @@ This means JS sent `ReturnOrder` but the protobuf type is `SalesReturnOrder`.
 
 ---
 
-# 16. Nested Protobuf Types in Form Definitions
+# 20. Nested Protobuf Types in Form Definitions
 
 **Source:** `money-field-type-mapping.md`
 
@@ -1072,7 +1206,7 @@ This will appear to work during development but will display `[object Object]` a
 
 ---
 
-# 17. Compound Form Field Data Collection
+# 21. Compound Form Field Data Collection
 
 **Source:** `compound-form-field-data-collection.md`
 
@@ -1111,7 +1245,7 @@ When adding a new compound field type (a field that renders multiple sub-inputs)
 
 ---
 
-# 18. Form and Column Field Coverage
+# 22. Form and Column Field Coverage
 
 **Source:** `form-column-field-coverage.md`
 
@@ -1181,7 +1315,7 @@ grep -oP "key:\s*'[^']+'" <forms-file> | sort
 
 ---
 
-# 19. Select Field Enum Completeness
+# 23. Select Field Enum Completeness
 
 **Source:** `select-enum-completeness.md`
 
@@ -1245,7 +1379,7 @@ grep "<ENUM_NAME>" <enums-file>
 
 ---
 
-# 20. Column Factory Method Completeness
+# 24. Column Factory Method Completeness
 
 **Source:** `column-factory-method-completeness.md`
 
@@ -1332,7 +1466,7 @@ This bug affected the l8bugs project when `col.number()` was used in column defi
 
 ---
 
-# 21. Column Factory Renderer Validation
+# 25. Column Factory Renderer Validation
 
 **Source:** `column-factory-renderer-validation.md`
 
@@ -1392,7 +1526,7 @@ After creating or modifying any `*-columns.js` file:
 
 ---
 
-# 22. Renderer Factory vs Direct Call
+# 26. Renderer Factory vs Direct Call
 
 **Source:** `renderer-factory-vs-direct.md`
 
@@ -1476,7 +1610,7 @@ After creating or modifying any `*-enums.js` render object:
 
 ---
 
-# 23. Template Literal Ternary Edit Safety
+# 27. Template Literal Ternary Edit Safety
 
 **Source:** `template-literal-ternary-edits.md`
 
@@ -1542,7 +1676,7 @@ After ANY edit that adds ternary expressions or conditional wrappers inside temp
 
 ---
 
-# 24. Stacked Popup DOM Scoping
+# 28. Stacked Popup DOM Scoping
 
 **Source:** `stacked-popup-dom-scoping.md`
 
@@ -1590,7 +1724,7 @@ if (!form) {
 
 ---
 
-# 25. UI Module Integration Checklist
+# 29. UI Module Integration Checklist
 
 **Source:** `ui-module-integration.md`
 
@@ -1681,7 +1815,7 @@ This results in the module appearing in navigation but showing "under developmen
 
 ---
 
-# 26. Module Init sectionSelector Must Match defaultModule
+# 30. Module Init sectionSelector Must Match defaultModule
 
 **Source:** `module-init-section-selector.md`
 
@@ -1743,7 +1877,7 @@ When creating a module init file, verify:
 
 ---
 
-# 27. Reference Registry Completeness
+# 31. Reference Registry Completeness
 
 **Source:** `reference-registry-completeness.md`
 
@@ -1856,7 +1990,7 @@ This console warning means the lookupModel for that field is not in the referenc
 
 ---
 
-# 28. Server-Side Pagination Metadata
+# 32. Server-Side Pagination Metadata
 
 **Source:** `server-pagination-metadata.md`
 
@@ -1883,7 +2017,7 @@ When processing server responses in pagination code:
 
 ---
 
-# 29. Layer8DTable: Pagination Metadata Must Only Be Read on Page 1 (CRITICAL)
+# 33. Layer8DTable: Pagination Metadata Must Only Be Read on Page 1 (CRITICAL)
 
 **Source:** `layer8d-table-pagination-metadata.md`
 
@@ -1942,7 +2076,7 @@ This exact bug has been introduced and fixed repeatedly. The pattern is:
 
 ---
 
-# 30. Immutability Must Be Reflected in the UI
+# 34. Immutability Must Be Reflected in the UI
 
 **Source:** `immutability-ui-alignment.md`
 
@@ -1971,7 +2105,7 @@ When implementing immutability at any level:
 
 ---
 
-# 31. Mobile Parity
+# 35. Mobile Parity
 
 **Source:** `mobile-parity.md`
 
@@ -2013,7 +2147,7 @@ Parity is not just "does the same button exist on both platforms." It is "does t
 
 ---
 
-# 32. Demo Directory Must Stay in Sync with Source
+# 36. Demo Directory Must Stay in Sync with Source
 
 **Source:** `demo-directory-sync.md`
 
@@ -2047,7 +2181,7 @@ diff -rq /go/bugs/website/web/m/ /go/demo/web/m/
 
 ---
 
-# 33. L8UI Theme Compliance
+# 37. L8UI Theme Compliance
 
 **Source:** `l8ui-theme-compliance.md`
 
@@ -2107,7 +2241,7 @@ After creating or modifying any l8ui component CSS/JS:
 
 ---
 
-# 34. L8UI Guide Update
+# 38. L8UI Guide Update
 
 **Source:** `l8ui-guide-update.md`
 
@@ -2134,7 +2268,7 @@ The GUIDE.md is the primary reference for AI assistants and developers building 
 
 ---
 
-# 35. L8UI GUIDE.md Prerequisite
+# 39. L8UI GUIDE.md Prerequisite
 
 **Source:** `l8ui-guide-prerequisite.md`
 
@@ -2168,7 +2302,7 @@ The GUIDE.md documents all available l8ui components, their APIs, constructor op
 
 ---
 
-# 36. Mock Data Generation
+# 40. Mock Data Generation
 
 **Source:** `mock-data-generation.md`
 
@@ -2249,7 +2383,7 @@ All mock data files live in `go/tests/mocks/`. The system generates phased, depe
 
 ---
 
-# 37. Mock Data Completeness
+# 41. Mock Data Completeness
 
 **Source:** `mock-completeness.md`
 
@@ -2408,7 +2542,7 @@ Phase 6+: Additional areas
 
 ---
 
-# 38. Mock Data Must Cover All UI Columns
+# 42. Mock Data Must Cover All UI Columns
 
 **Source:** `mock-data-column-coverage.md`
 
@@ -2475,7 +2609,7 @@ When touching column definitions or mock generators:
 
 ---
 
-# 39. Mock Endpoint Construction
+# 43. Mock Endpoint Construction
 
 **Source:** `mock-endpoint-construction.md`
 
@@ -2528,7 +2662,7 @@ Before creating mock phase files:
 
 ---
 
-# 40. Mock Phase Ordering
+# 44. Mock Phase Ordering
 
 **Source:** `mock-phase-ordering.md`
 

@@ -26,23 +26,22 @@ import (
 	"github.com/saichler/l8erp/go/erp/doc/retentionpolicies"
 )
 
-func ActivateDocServices(creds, dbname string, nic ifs.IVNic) {
-	// Storage
-	documents.Activate(creds, dbname, nic)
-	folders.Activate(creds, dbname, nic)
-	categories.Activate(creds, dbname, nic)
-	tags.Activate(creds, dbname, nic)
-
-	// Workflow
-	approvalworkflows.Activate(creds, dbname, nic)
-
-	// Integration
-	templates.Activate(creds, dbname, nic)
-	emailcaptures.Activate(creds, dbname, nic)
-	scanjobs.Activate(creds, dbname, nic)
-
-	// Compliance
-	retentionpolicies.Activate(creds, dbname, nic)
-	legalholds.Activate(creds, dbname, nic)
-	archivejobs.Activate(creds, dbname, nic)
+func collectDocActivations(creds, dbname string, nic ifs.IVNic) []func() {
+	return []func(){
+		// Storage
+		func() { documents.Activate(creds, dbname, nic) },
+		func() { folders.Activate(creds, dbname, nic) },
+		func() { categories.Activate(creds, dbname, nic) },
+		func() { tags.Activate(creds, dbname, nic) },
+		// Workflow
+		func() { approvalworkflows.Activate(creds, dbname, nic) },
+		// Integration
+		func() { templates.Activate(creds, dbname, nic) },
+		func() { emailcaptures.Activate(creds, dbname, nic) },
+		func() { scanjobs.Activate(creds, dbname, nic) },
+		// Compliance
+		func() { retentionpolicies.Activate(creds, dbname, nic) },
+		func() { legalholds.Activate(creds, dbname, nic) },
+		func() { archivejobs.Activate(creds, dbname, nic) },
+	}
 }

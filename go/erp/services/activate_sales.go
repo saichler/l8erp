@@ -25,28 +25,30 @@ import (
 	"github.com/saichler/l8erp/go/erp/sales/salesterritories"
 )
 
-func ActivateSalesServices(creds, dbname string, nic ifs.IVNic) {
-	// Customer Management
-	customerhierarchies.Activate(creds, dbname, nic)
-	customersegments.Activate(creds, dbname, nic)
-	customercontracts.Activate(creds, dbname, nic)
-	partnerchannels.Activate(creds, dbname, nic)
-	// Sales Orders
-	salesquotations.Activate(creds, dbname, nic)
-	salesorders.Activate(creds, dbname, nic)
-	returnorders.Activate(creds, dbname, nic)
-	// Pricing
-	pricelists.Activate(creds, dbname, nic)
-	discountrules.Activate(creds, dbname, nic)
-	promotionalprices.Activate(creds, dbname, nic)
-	// Shipping and Delivery
-	deliveryorders.Activate(creds, dbname, nic)
-	// Billing
-	billingschedules.Activate(creds, dbname, nic)
-	revenueschedules.Activate(creds, dbname, nic)
-	// Sales Analytics
-	salestargets.Activate(creds, dbname, nic)
-	salesterritories.Activate(creds, dbname, nic)
-	commissionplans.Activate(creds, dbname, nic)
-	salesforecasts.Activate(creds, dbname, nic)
+func collectSalesActivations(creds, dbname string, nic ifs.IVNic) []func() {
+	return []func(){
+		// Customer Management
+		func() { customerhierarchies.Activate(creds, dbname, nic) },
+		func() { customersegments.Activate(creds, dbname, nic) },
+		func() { customercontracts.Activate(creds, dbname, nic) },
+		func() { partnerchannels.Activate(creds, dbname, nic) },
+		// Sales Orders
+		func() { salesquotations.Activate(creds, dbname, nic) },
+		func() { salesorders.Activate(creds, dbname, nic) },
+		func() { returnorders.Activate(creds, dbname, nic) },
+		// Pricing
+		func() { pricelists.Activate(creds, dbname, nic) },
+		func() { discountrules.Activate(creds, dbname, nic) },
+		func() { promotionalprices.Activate(creds, dbname, nic) },
+		// Shipping and Delivery
+		func() { deliveryorders.Activate(creds, dbname, nic) },
+		// Billing
+		func() { billingschedules.Activate(creds, dbname, nic) },
+		func() { revenueschedules.Activate(creds, dbname, nic) },
+		// Sales Analytics
+		func() { salestargets.Activate(creds, dbname, nic) },
+		func() { salesterritories.Activate(creds, dbname, nic) },
+		func() { commissionplans.Activate(creds, dbname, nic) },
+		func() { salesforecasts.Activate(creds, dbname, nic) },
+	}
 }
