@@ -302,6 +302,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 inputHtml = generateReferenceInput(field, value);
                 break;
 
+            case 'file':
+                inputHtml = Layer8DFormsFields.generateFileFieldHtml(field, value);
+                break;
+
             default:
                 inputHtml = `<input type="text" id="field-${field.key}" name="${field.key}" value="${escapeAttr(value || '')}" ${required}>`;
         }

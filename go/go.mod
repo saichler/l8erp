@@ -8,10 +8,10 @@ require (
 	github.com/saichler/l8logfusion v0.0.0-20260211141533-554cf59367fe
 	github.com/saichler/l8orm v0.0.0-20260228190952-a538542eeb8c
 	github.com/saichler/l8reflect v0.0.0-20260224010106-68da13dcd0f9
-	github.com/saichler/l8services v0.0.0-20260222022720-4dee316c2323
+	github.com/saichler/l8services v0.0.0-20260301170535-3cadaa8bbbcc
 	github.com/saichler/l8srlz v0.0.0-20251226163123-de32dc54dd4b
 	github.com/saichler/l8test v0.0.0-20260211144346-d5d15efbde4f
-	github.com/saichler/l8types v0.0.0-20260228204826-523b8b0f4c62
+	github.com/saichler/l8types v0.0.0-20260301141609-181de6f5ed44
 	github.com/saichler/l8utils v0.0.0-20260211151437-9b2ec4a159ae
 	github.com/saichler/l8web v0.0.0-20260224202612-c973e8a2c2db
 	google.golang.org/protobuf v1.36.11
@@ -19,7 +19,7 @@ require (
 
 require (
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/saichler/l8pollaris v0.0.0-20260228165030-1fe429523314 // indirect
+	github.com/saichler/l8pollaris v0.0.0-20260301140058-24ca66c4852f // indirect
 	github.com/saichler/l8ql v0.0.0-20260228184750-adc402b17e27 // indirect
 	github.com/saichler/probler v0.0.0-20260227185639-a91181a42061 // indirect
 	golang.org/x/sys v0.41.0 // indirect

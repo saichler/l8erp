@@ -539,7 +539,7 @@ All 6 audit items passed with no issues found:
 2. ~~Cross-service operations framework (parent-child cascading)~~ — **DONE**: 10 cascading document flows across 5 modules via `After()` hooks. `PostEntity[T]` + `EntityExists[T]` helpers. See §1.2.
 3. ~~Calculated fields framework (server-side computed values)~~ — **DONE**: `Compute()` method on VB, generic helpers (`SumLineMoney`, `MoneyAdd/Subtract`, `SumLineFloat64/Int64`). 14 entities computed across Sales, FIN, SCM, HCM, PRJ. See §1.3.
 4. ~~FIN double-entry enforcement and period management~~ — **DONE**: JournalEntry validates double-entry balance on POST, blocks posting to closed fiscal periods, updates Account balances via After() hook. `GetEntities` enhanced with L8Query fallback for empty filters.
-5. SCM inventory quantity tracking
+5. ~~SCM inventory quantity tracking~~ — **DONE**: After() hooks on ReceivingOrder (receipt → bin quantity increase + RECEIPT movement) and WavePlan (pick → bin quantity decrease + ISSUE movement). Updates ScmItem.Movements and ScmWarehouse bin quantities.
 
 ### Phase C: Essential UI Components
 1. ~~Charts/visualization library integration (for BI and Dashboard)~~ — **DONE**: Bar, Line, Pie charts implemented (desktop + mobile). Dashboard widgets with sparklines and trend arrows.
@@ -548,7 +548,9 @@ All 6 audit items passed with no issues found:
 4. File upload component (for DOC module)
 5. ~~Tree/hierarchy view (for FIN chart of accounts, HCM org chart)~~ — **DONE**: Tree grid implemented (desktop + mobile) with expand/collapse, events, rendering.
 
-### Phase D: Authorization & Security
+### Phase D: Authorization & Security — PAUSED
+Proto types designed in `proto-phase-d/` (sys-user, sys-permissions, sys-security-policy, sys-audit). Runtime enforcement already exists in ISecurityProvider (CanDoAction, ScopeView). Remaining: service implementations, UI admin pages.
+
 1. Permission definitions and role-permission mapping
 2. API endpoint authorization middleware
 3. Row-level and field-level security

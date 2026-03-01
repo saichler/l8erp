@@ -25,7 +25,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.select('fileFormat', 'File Format', enums.FILE_FORMAT),
                 ...f.text('mimeType', 'Mime Type'),
                 ...f.number('fileSize', 'File Size'),
-                ...f.text('storagePath', 'Storage Path'),
+                ...f.file('storagePath', 'File'),
                 ...f.text('folderId', 'Folder'),
                 ...f.text('categoryId', 'Category'),
                 ...f.text('ownerId', 'Owner'),

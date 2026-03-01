@@ -1891,3 +1891,67 @@ The Export button appears automatically in both desktop (`Layer8DTable`) and mob
 ### Script Loading Order
 - **Desktop** (`app.html`): After table scripts, before Data Source
 - **Mobile** (`m/app.html`): After `layer8m-edit-table.js`, before `layer8m-view-factory.js`
+
+## 12. File Upload (`layer8-file-upload.js`)
+
+**Global object:** `window.Layer8FileUpload` (shared between desktop and mobile)
+
+**CSS:** `layer8-file-upload.css` (shared)
+
+Uploads and downloads files via the backend `FileStore` protobuf service. Files are sent as base64-encoded bytes within standard JSON requests, going through the full Layer 8 security stack. Maximum file size: 5MB.
+
+### Backend Endpoints
+
+**Upload** — `POST /erp/0/FileStore` with JSON body:
+```json
+{ "fileName": "report.pdf", "mimeType": "application/pdf", "fileData": "<base64>", "documentId": "doc-001", "version": 1 }
+```
+Response: `{ "storagePath": "...", "fileName": "...", "fileSize": 12345, "mimeType": "...", "checksum": "sha256hex" }`
+
+**Download** — `PUT /erp/0/FileStore` with JSON body:
+```json
+{ "storagePath": "/data/l8files/doc-001/1/report.pdf" }
+```
+Response: `{ "fileData": "<base64>", "fileName": "...", "mimeType": "...", "fileSize": 12345 }`
+
+### `Layer8FileUpload.upload(file, documentId, version)`
+
+Reads a browser `File` object, validates size (<= 5MB), converts to base64, and POSTs to FileStore.
+
+- `file` — Browser File object (from `<input type="file">` or drag-and-drop)
+- `documentId` (optional) — organizes storage path (default: "general")
+- `version` (optional) — version number (default: 1)
+- Returns `Promise<{ storagePath, fileName, fileSize, mimeType, checksum }>`
+
+### `Layer8FileUpload.download(storagePath, fileName)`
+
+PUTs to FileStore, decodes base64 response, creates a Blob, and triggers browser download.
+
+- `storagePath` — server storage path (from upload response or entity field)
+- `fileName` (optional) — download filename (extracted from path if omitted)
+
+### `Layer8FileUpload.formatSize(bytes)`
+
+Returns human-readable size string (e.g., "1.5 MB").
+
+### Form Field Type: `file`
+
+**Factory:** `f.file(key, label, required)` — creates a file upload field.
+
+**Desktop rendering:**
+- Read-only: displays file name, size, and Download button
+- Editable: shows existing file info (if any) + drag-and-drop area with "Drop file here or click to browse (max 5MB)"
+- Upload triggers automatically on file select/drop
+- Upload result stored in hidden input for form data collection
+
+**Mobile rendering:**
+- Read-only: file name + Download button
+- Editable: native `<input type="file">` (triggers camera/gallery picker on mobile) + upload status
+- No drag-and-drop (not practical on touch devices)
+
+**Data collection:** When a file is uploaded, the form collects `storagePath`, `fileName`, `fileSize`, `mimeType`, and `checksum` from the upload result and spreads them onto the data object.
+
+### Script Loading Order
+- **Desktop** (`app.html`): After `layer8-csv-export.js`
+- **Mobile** (`m/app.html`): After `layer8-csv-export.js`
+- **CSS**: After `layer8d-form-fields.css` in both `app.html` and `m/app.html`
