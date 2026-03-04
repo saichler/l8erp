@@ -112,7 +112,7 @@ All 242 Prime Objects reference each other via string ID fields only. No direct 
 | Time-of-Day Picker | **Done** | HCM (schedules), MFG (shifts) |
 | Rich Text Editor | **Done** | DOC, CRM (case notes), PRJ (descriptions) |
 | Autocomplete/Typeahead | **Already existed** | Reference pickers already have debounced search with fuzzy matching |
-| File/Attachment Upload | **Deferred** | DOC, HCM (employee docs), COMP (evidence) — requires backend file storage subsystem (see 8.9) |
+| File/Attachment Upload | **Done** | DOC, HCM (employee docs), COMP (evidence) — `Layer8FileUpload` shared component + `FileStore` backend service + `f.file()` form factory method |
 | Address Autocomplete | **Deferred** | FIN, Sales, ECOM — requires external geocoding API (Google Places, etc.) |
 
 See `plans/PLAN-MISSING-FORM-FIELD-TYPES.md` for implementation details.
@@ -384,7 +384,7 @@ The mobile-parity rule requires that the same action produces the same result on
 
 ### 8.9 DOC (11 services, was 20 — 9 children consolidated)
 
-- File storage backend
+- ~~File storage backend~~ — **DONE**: `FileStore` service with base64 upload/download, `Layer8FileUpload` shared JS component
 - Version history
 - Check-in/check-out locking
 - Full-text search
@@ -545,7 +545,7 @@ All 6 audit items passed with no issues found:
 1. ~~Charts/visualization library integration (for BI and Dashboard)~~ — **DONE**: Bar, Line, Pie charts implemented (desktop + mobile). Dashboard widgets with sparklines and trend arrows.
 2. ~~Master-detail view component (for orders + lines pattern)~~ — **DONE**: Implemented as `f.inlineTable()` during child entity consolidation
 3. ~~Data export (CSV at minimum)~~ — **DONE**: Backend `CsvExport` service (go/erp/common/csvexport/) with paginated server-side CSV generation via introspector. Shared `Layer8CsvExport` JS component auto-adds Export button to desktop (Layer8DTable) and mobile (Layer8MTable) pagination bars.
-4. File upload component (for DOC module)
+4. ~~File upload component (for DOC module)~~ — **DONE**: `FileStore` backend service (go/erp/common/filestore/) with base64 upload/download via protobuf. Shared `Layer8FileUpload` JS component (upload, download, formatSize). `f.file()` form factory method with drag-and-drop, upload status, and download button. Desktop + mobile rendering. Download column in DocDocument table.
 5. ~~Tree/hierarchy view (for FIN chart of accounts, HCM org chart)~~ — **DONE**: Tree grid implemented (desktop + mobile) with expand/collapse, events, rendering.
 
 ### Phase D: Authorization & Security — PAUSED

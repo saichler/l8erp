@@ -8,6 +8,7 @@ import (
 	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8erp/go/types/sys"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8types/go/types/l8api"
 )
 
 func registerBiTypes(resources ifs.IResources) {
@@ -101,4 +102,5 @@ func registerCompTypes(resources ifs.IResources) {
 
 func registerSysTypes(resources ifs.IResources) {
 	common.RegisterType[sys.SysModuleConfig, sys.SysModuleConfigList](resources, "ConfigId")
+	common.RegisterType[l8api.L8ImportTemplate, l8api.L8ImportTemplateList](resources, "TemplateId")
 }

@@ -19,6 +19,7 @@ import (
 	"github.com/saichler/l8bus/go/overlay/health"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8services/go/services/csvexport"
+	"github.com/saichler/l8services/go/services/dataimport"
 	"github.com/saichler/l8services/go/services/filestore"
 	"github.com/saichler/l8erp/go/erp/ui"
 	"github.com/saichler/l8types/go/ifs"
@@ -48,6 +49,7 @@ func startWebServer(port int, cert string) {
 
 	csvexport.Activate(nic1)
 	filestore.Activate(nic1)
+	dataimport.Activate(nic1)
 
 	hs, ok := nic1.Resources().Services().ServiceHandler(health.ServiceName, 0)
 	if ok {
