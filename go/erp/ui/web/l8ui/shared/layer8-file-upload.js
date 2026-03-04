@@ -26,7 +26,7 @@ limitations under the License.
 (function() {
     'use strict';
 
-    const ENDPOINT = '/erp/0/FileStore';
+    const ENDPOINT = Layer8DConfig.resolveEndpoint('/0/FileStore');
     const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
     function getHeaders() {

@@ -39,7 +39,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     function loadTemplates() {
         var query = 'select * from L8ImportTemplate';
         var body = encodeURIComponent(JSON.stringify({ text: query }));
-        fetch('/erp/0/ImprtTmpl?body=' + body, {
+        fetch(Layer8DConfig.resolveEndpoint('/0/ImprtTmpl') + '?body=' + body, {
             method: 'GET',
             headers: getHeaders()
         }).then(function(r) { return r.json(); })
@@ -290,7 +290,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     function fetchModelInfo(modelType) {
         if (!modelType) return;
         var status = document.getElementById('l8di-ai-status');
-        fetch('/erp/0/ImprtInfo', {
+        fetch(Layer8DConfig.resolveEndpoint('/0/ImprtInfo'), {
             method: 'POST',
             headers: getHeaders(),
             body: JSON.stringify({ modelType: modelType })
@@ -324,7 +324,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             sourceFormat: currentTemplate.sourceFormat || 'csv'
         };
 
-        fetch('/erp/0/ImprtAI', {
+        fetch(Layer8DConfig.resolveEndpoint('/0/ImprtAI'), {
             method: 'POST',
             headers: getHeaders(),
             body: JSON.stringify(body)
@@ -364,7 +364,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         var isNew = !currentTemplate.templateId;
         var method = isNew ? 'POST' : 'PUT';
 
-        fetch('/erp/0/ImprtTmpl', {
+        fetch(Layer8DConfig.resolveEndpoint('/0/ImprtTmpl'), {
             method: method,
             headers: getHeaders(),
             body: JSON.stringify(currentTemplate)
@@ -381,7 +381,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     function deleteTemplate() {
         if (!currentTemplate.templateId) return;
         if (!confirm('Delete template "' + currentTemplate.name + '"?')) return;
-        fetch('/erp/0/ImprtTmpl?body=' + encodeURIComponent(
+        fetch(Layer8DConfig.resolveEndpoint('/0/ImprtTmpl') + '?body=' + encodeURIComponent(
             JSON.stringify({ templateId: currentTemplate.templateId })), {
             method: 'DELETE',
             headers: getHeaders()

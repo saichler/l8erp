@@ -52,7 +52,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     function loadTemplates() {
         var query = 'select * from L8ImportTemplate';
         var body = encodeURIComponent(JSON.stringify({ text: query }));
-        fetch('/erp/0/ImprtTmpl?body=' + body, {
+        fetch(Layer8DConfig.resolveEndpoint('/0/ImprtTmpl') + '?body=' + body, {
             method: 'GET',
             headers: getHeaders()
         }).then(function(r) { return r.json(); })
@@ -164,7 +164,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         var btn = document.getElementById('l8di-exec-btn');
         if (btn) btn.disabled = true;
 
-        fetch('/erp/0/ImprtExec', {
+        fetch(Layer8DConfig.resolveEndpoint('/0/ImprtExec'), {
             method: 'POST',
             headers: getHeaders(),
             body: JSON.stringify({

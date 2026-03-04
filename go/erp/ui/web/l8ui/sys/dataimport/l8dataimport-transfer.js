@@ -57,7 +57,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     function loadTemplates() {
         var query = 'select * from L8ImportTemplate';
         var body = encodeURIComponent(JSON.stringify({ text: query }));
-        fetch('/erp/0/ImprtTmpl?body=' + body, {
+        fetch(Layer8DConfig.resolveEndpoint('/0/ImprtTmpl') + '?body=' + body, {
             method: 'GET',
             headers: getHeaders()
         }).then(function(r) { return r.json(); })
@@ -150,7 +150,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         });
         if (ids.length === 0) return;
 
-        fetch('/erp/0/ImprtXfer', {
+        fetch(Layer8DConfig.resolveEndpoint('/0/ImprtXfer'), {
             method: 'POST',
             headers: getHeaders(),
             body: JSON.stringify({ templateIds: ids })
@@ -187,7 +187,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         var reader = new FileReader();
         reader.onload = function() {
             var overwrite = (document.getElementById('l8di-overwrite') || {}).checked || false;
-            fetch('/erp/0/ImprtXfer', {
+            fetch(Layer8DConfig.resolveEndpoint('/0/ImprtXfer'), {
                 method: 'PUT',
                 headers: getHeaders(),
                 body: JSON.stringify({
