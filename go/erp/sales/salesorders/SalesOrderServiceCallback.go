@@ -27,7 +27,11 @@ func newSalesOrderServiceCallback() ifs.IServiceCallback {
 		StatusTransition(salesOrderTransitions()).
 		After(cascadeCancelDeliveryOrders).
 		After(cascadeCreateDeliveryOrder).
+		After(calculateCommission).
+		Custom(computePricing).
+		Custom(applyTaxRules).
 		Compute(computeSalesOrderTotals).
+		Custom(validateCreditLimit).
 		Require(func(e *sales.SalesOrder) string { return e.SalesOrderId }, "SalesOrderId").
 		Require(func(e *sales.SalesOrder) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *sales.SalesOrder) string { return e.CurrencyId }, "CurrencyId").

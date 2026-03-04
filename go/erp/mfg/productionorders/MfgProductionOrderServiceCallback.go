@@ -83,6 +83,8 @@ func cascadeCreateWorkOrders(order *mfg.MfgProductionOrder, action ifs.Action, v
 			Operations:      operations,
 			AuditInfo:       &erp.AuditInfo{},
 		}
+		// Explode BOM into material consumption records
+		explodeBOM(wo, line.QuantityOrdered, vnic)
 		if _, err := common.PostEntity("MfgWorkOrd", 70, wo, vnic); err != nil {
 			return err
 		}

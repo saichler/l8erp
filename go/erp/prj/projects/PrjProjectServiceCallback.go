@@ -24,6 +24,8 @@ import (
 func newPrjProjectServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjProject]("PrjProject",
 		func(e *prj.PrjProject) { common.GenerateID(&e.ProjectId) }).
+		Compute(computeTaskSchedule).
+		Compute(computeEarnedValue).
 		Require(func(e *prj.PrjProject) string { return e.ProjectId }, "ProjectId").
 		Enum(func(e *prj.PrjProject) int32 { return int32(e.BillingType) }, prj.PrjBillingType_name, "BillingType").
 		Enum(func(e *prj.PrjProject) int32 { return int32(e.Priority) }, prj.PrjProjectPriority_name, "Priority").

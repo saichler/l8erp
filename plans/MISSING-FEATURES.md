@@ -225,7 +225,7 @@ None of the standard financial reports are implemented:
 | Notification System (in-app) | Missing |
 | Webhook Support | Missing |
 | REST API Documentation (OpenAPI) | Missing |
-| Import from CSV/Excel | Missing |
+| Import from CSV/Excel | **Done** — Generic `L8ImportTemplate` system with AI-assisted column mapping (heuristic + pluggable LLM), multi-format parsing (CSV/JSON/XML), value transforms, template transfer between environments. Backend in l8services (`dataimport/` package), UI in l8ui (desktop + mobile), integrated into SYS Data Import tab. |
 | External System Connectors | Missing |
 | EDI Support | Missing |
 | Payment Gateway Integration | Missing (ECOM) |
@@ -327,47 +327,47 @@ The mobile-parity rule requires that the same action produces the same result on
 - Inventory quantity tracking (on-hand, committed, available)
 - Lot/serial number tracking
 - Warehouse location management (bin/zone/aisle)
-- Reorder point calculations
+- ~~Reorder point calculations~~ — **DONE** (Phase F.2, auto-creates purchase requisition)
 - Purchase requisition approval workflow
 - Goods receipt/issue processing
 - Quality inspection workflow
 
 ### 8.4 Sales (17 services, was 33 — 16 children consolidated)
 
-- Pricing engine (price lists, quantity breaks, discounts, promotions)
+- ~~Pricing engine (price lists, quantity breaks, discounts, promotions)~~ — **DONE** (Phase F.1)
 - Available-to-promise (ATP) checking
 - Order allocation logic
-- Credit limit checking
-- Commission calculations
-- Sales tax calculation
+- ~~Credit limit checking~~ — **DONE** (Phase F.1)
+- ~~Commission calculations~~ — **DONE** (Phase F.1)
+- ~~Sales tax calculation~~ — **DONE** (Phase F.1)
 - Revenue recognition
 
 ### 8.5 MFG (18 services, was 36 — 18 children consolidated)
 
-- BOM explosion (multi-level)
+- ~~BOM explosion (multi-level)~~ — **DONE** (Phase F.3, with phantom BOM support)
 - MRP (Material Requirements Planning) engine
 - Production scheduling
 - Shop floor data collection
 - Work order routing/operation tracking
-- Cost rollup
+- ~~Cost rollup~~ — **DONE** (Phase F.3, labor + material cost rollup)
 - Quality control integration
 
 ### 8.6 CRM (22 services, was 36 — 14 children consolidated)
 
-- Lead scoring engine
-- Lead-to-opportunity conversion
+- ~~Lead scoring engine~~ — **DONE** (Phase F.4)
+- ~~Lead-to-opportunity conversion~~ — **DONE** (Phase F.4)
 - Pipeline stage automation
-- SLA timer enforcement
+- ~~SLA timer enforcement~~ — **DONE** (Phase F.4, with auto-escalation)
 - Email integration for cases
 - Customer 360 view
-- Campaign ROI tracking
+- ~~Campaign ROI tracking~~ — **DONE** (Phase F.4)
 
 ### 8.7 PRJ (21 services, was 36 — 15 children consolidated)
 
 - Critical path calculation
 - Resource leveling
-- Earned value management (EVM)
-- Time & expense approval workflow
+- ~~Earned value management (EVM)~~ — **DONE** (Phase F.5)
+- ~~Time & expense approval workflow~~ — **DONE** (Phase F.5, with status transitions + project rollup)
 - Budget tracking with forecasting
 - Milestone billing triggers
 - Project template cloning
@@ -379,13 +379,13 @@ The mobile-parity rule requires that the same action produces the same result on
 - Chart/visualization rendering
 - Report scheduling
 - Data drill-down
-- KPI alerting
+- ~~KPI alerting~~ — **DONE** (Phase F.7, threshold-based status checking)
 - Ad-hoc query builder
 
 ### 8.9 DOC (11 services, was 20 — 9 children consolidated)
 
 - ~~File storage backend~~ — **DONE**: `FileStore` service with base64 upload/download, `Layer8FileUpload` shared JS component
-- Version history
+- ~~Version history~~ — **DONE** (Phase F.7, auto-increment on checksum change)
 - Check-in/check-out locking
 - Full-text search
 - Document preview (PDF, images)
@@ -404,7 +404,7 @@ The mobile-parity rule requires that the same action produces the same result on
 
 ### 8.11 COMP (11 services, was 20 — 9 children consolidated)
 
-- Risk scoring engine
+- ~~Risk scoring engine~~ — **DONE** (Phase F.7, inherent/residual scoring)
 - Compliance check automation
 - Audit scheduling and tracking
 - Regulatory mapping
@@ -558,16 +558,17 @@ Proto types designed in `proto-phase-d/` (sys-user, sys-permissions, sys-securit
 
 ### Phase E: Integration
 1. Email/notification system
-2. Import from CSV/Excel
+2. ~~Import from CSV/Excel~~ — **DONE**: Generic data import system with AI-assisted mapping, multi-format parsing (CSV/JSON/XML), value transforms, template transfer. Backend: `l8services/dataimport/` (9 files). UI: l8ui desktop (4 JS + CSS) + mobile (1 JS). Integrated into SYS Data Import tab. See `plans/data-import-system.md`.
 3. Webhook/event system for cross-module triggers
 
-### Phase F: Module-Specific Business Logic
-1. Sales pricing engine and order-to-cash flow
-2. SCM procurement-to-pay and inventory management
-3. MFG BOM explosion and production scheduling
-4. CRM lead management and SLA enforcement
-5. PRJ scheduling and earned value
-6. Remaining modules (BI, DOC, ECOM, COMP)
+### Phase F: Module-Specific Business Logic — DONE
+Implemented across all 12 modules (~30 new files, ~2,000 lines). See `plans/PLAN-PHASE-F-MODULE-BUSINESS-LOGIC.md`.
+1. ~~Sales pricing engine and order-to-cash flow~~ — **DONE**: Price list lookup, credit limit validation, tax rule application, commission calculation, quotation-to-order conversion
+2. ~~SCM procurement-to-pay and inventory management~~ — **DONE**: Reorder point checking with auto-purchase-req, lot/serial validation on receiving, inventory stock movements on receipt
+3. ~~MFG BOM explosion and production scheduling~~ — **DONE**: Multi-level BOM explosion with phantom support, cost rollup from labor+materials, work order progress tracking
+4. ~~CRM lead management and SLA enforcement~~ — **DONE**: Lead scoring from rules, lead-to-opportunity conversion, SLA deadline enforcement with auto-escalation, campaign ROI metrics
+5. ~~PRJ scheduling and earned value~~ — **DONE**: Task dependency scheduling (forward pass), EVM calculations (PV/EV/AC/SPI/CPI/EAC), timesheet/expense approval flows with project rollup
+6. ~~Remaining modules (BI, DOC, ECOM, COMP, FIN)~~ — **DONE**: Fixed asset depreciation schedule generation, multi-currency conversion, ECOM order totals, COMP risk scoring + finding escalation, BI KPI threshold checking, DOC version tracking
 
 ### Phase G: Polish & Production Readiness
 1. Mobile CSS and behavioral parity

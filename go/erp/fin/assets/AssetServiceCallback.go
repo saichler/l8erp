@@ -25,6 +25,7 @@ func newAssetServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[fin.Asset]("Asset",
 		func(e *fin.Asset) { common.GenerateID(&e.AssetId) }).
 		StatusTransition(assetTransitions()).
+		After(generateDepreciationSchedule).
 		Compute(computeAssetValues).
 		Require(func(e *fin.Asset) string { return e.AssetId }, "AssetId").
 		Require(func(e *fin.Asset) string { return e.Name }, "Name").

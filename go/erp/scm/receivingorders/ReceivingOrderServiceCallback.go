@@ -28,6 +28,7 @@ func newReceivingOrderServiceCallback() ifs.IServiceCallback {
 		func(e *scm.ScmReceivingOrder) { common.GenerateID(&e.ReceivingOrderId) }).
 		After(cascadeCreatePurchaseInvoice).
 		After(updateInventoryOnReceipt).
+		Custom(validateLotSerial).
 		Require(func(e *scm.ScmReceivingOrder) string { return e.ReceivingOrderId }, "ReceivingOrderId").
 		Enum(func(e *scm.ScmReceivingOrder) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()

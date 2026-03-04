@@ -25,6 +25,8 @@ func newCrmCaseServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[crm.CrmCase]("CrmCase",
 		func(e *crm.CrmCase) { common.GenerateID(&e.CaseId) }).
 		After(cascadeCreateSurvey).
+		After(checkSLABreach).
+		Custom(applySLADeadline).
 		Require(func(e *crm.CrmCase) string { return e.CaseId }, "CaseId").
 		Require(func(e *crm.CrmCase) string { return e.Subject }, "Subject").
 		Require(func(e *crm.CrmCase) string { return e.AccountId }, "AccountId").

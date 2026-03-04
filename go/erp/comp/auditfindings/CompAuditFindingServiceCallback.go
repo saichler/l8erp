@@ -23,6 +23,7 @@ import (
 func newCompAuditFindingServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompAuditFinding]("CompAuditFinding",
 		func(e *comp.CompAuditFinding) { common.GenerateID(&e.FindingId) }).
+		After(escalateCriticalFindings).
 		Require(func(e *comp.CompAuditFinding) string { return e.FindingId }, "FindingId").
 		Enum(func(e *comp.CompAuditFinding) int32 { return int32(e.Severity) }, comp.CompSeverityLevel_name, "Severity").
 		Enum(func(e *comp.CompAuditFinding) int32 { return int32(e.Status) }, comp.CompFindingStatus_name, "Status").

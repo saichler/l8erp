@@ -27,8 +27,6 @@ limitations under the License.
 (function() {
     'use strict';
 
-    const EXPORT_ENDPOINT = '/erp/0/CsvExport';
-
     window.Layer8CsvExport = {
         /**
          * Export table data as CSV via the backend CsvExport service.
@@ -58,7 +56,8 @@ limitations under the License.
                     : { 'Content-Type': 'application/json' };
                 headers['Content-Type'] = 'application/json';
 
-                const response = await fetch(EXPORT_ENDPOINT, {
+                const endpoint = Layer8DConfig.resolveEndpoint('/0/CsvExport');
+                const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: headers,
                     body: JSON.stringify(requestBody)
@@ -96,10 +95,10 @@ limitations under the License.
         parseEndpoint: function(endpoint) {
             if (!endpoint) return null;
             const parts = endpoint.split('/').filter(function(p) { return p; });
-            if (parts.length < 3) return null;
+            if (parts.length < 2) return null;
             return {
-                serviceArea: parseInt(parts[1], 10),
-                serviceName: parts[2]
+                serviceArea: parseInt(parts[parts.length - 2], 10),
+                serviceName: parts[parts.length - 1]
             };
         },
 

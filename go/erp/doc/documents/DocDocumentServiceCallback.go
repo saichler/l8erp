@@ -23,6 +23,7 @@ import (
 func newDocDocumentServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[doc.DocDocument]("DocDocument",
 		func(e *doc.DocDocument) { common.GenerateID(&e.DocumentId) }).
+		Custom(trackDocumentVersion).
 		Require(func(e *doc.DocDocument) string { return e.DocumentId }, "DocumentId").
 		Enum(func(e *doc.DocDocument) int32 { return int32(e.AccessLevel) }, doc.DocAccessLevel_name, "AccessLevel").
 		Enum(func(e *doc.DocDocument) int32 { return int32(e.DocumentType) }, doc.DocDocumentType_name, "DocumentType").

@@ -25,6 +25,7 @@ func newSalesQuotationServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[sales.SalesQuotation]("SalesQuotation",
 		func(e *sales.SalesQuotation) { common.GenerateID(&e.QuotationId) }).
 		StatusTransition(salesQuotationTransitions()).
+		After(cascadeCreateSalesOrder).
 		Compute(computeSalesQuotationTotals).
 		Require(func(e *sales.SalesQuotation) string { return e.QuotationId }, "QuotationId").
 		Require(func(e *sales.SalesQuotation) string { return e.CustomerId }, "CustomerId").

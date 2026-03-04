@@ -24,6 +24,7 @@ import (
 func newItemServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmItem]("ScmItem",
 		func(e *scm.ScmItem) { common.GenerateID(&e.ItemId) }).
+		After(checkReorderPoint).
 		Require(func(e *scm.ScmItem) string { return e.ItemId }, "ItemId").
 		Enum(func(e *scm.ScmItem) int32 { return int32(e.ItemType) }, scm.ScmItemType_name, "ItemType").
 		Enum(func(e *scm.ScmItem) int32 { return int32(e.PlanningMethod) }, scm.ScmPlanningMethod_name, "PlanningMethod").
