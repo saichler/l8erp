@@ -2,7 +2,7 @@
 
 These are Claude Code global rules for the Layer8 ERP project. Load this file at the start of a session to apply all rules.
 
-**Source files:** `~/.claude/rules/*.md` (41 rule files)
+**Source files:** `~/.claude/rules/*.md` (44 rule files)
 
 ---
 
@@ -72,6 +72,11 @@ These are Claude Code global rules for the Layer8 ERP project. Load this file at
 ### Deployment & Configuration
 40. [Login JSON Adaptation](#40-login-json-adaptation)
 41. [ModConfig Failure Must Not Logout](#41-modconfig-failure-must-not-logout)
+
+### New Project Setup
+42. [Copy l8ui Library to New Projects](#42-copy-l8ui-library-to-new-projects)
+43. [Mobile App Must Match L8ERP Mobile Structure](#43-mobile-app-must-match-l8erp-mobile-structure)
+44. [K8s YAML Required Entries](#44-k8s-yaml-required-entries)
 
 ---
 
@@ -1682,3 +1687,158 @@ Other l8erp-specific fetches that may not apply:
 - Currency cache loading (`/erp/40/Currency`)
 - Exchange rate cache loading (`/erp/40/XchgRate`)
 - Any endpoint with `/erp/` prefix
+
+---
+
+# 42. Copy l8ui Library to New Projects
+
+**Source:** `l8ui-copy-to-new-project.md`
+
+## Rule
+Before implementing ANY UI in a new project, you MUST copy the entire `l8ui/` directory from l8erp into the new project's web directory. Never reference l8ui from another project via relative paths.
+
+## Why This Matters
+The l8ui library is a shared component library, but each project needs its own copy because:
+- Relative paths like `../l8erp/go/erp/ui/web/l8ui/` break in Docker builds and deployments
+- Project-specific files (nav configs, reference registries) live alongside l8ui and cannot reference another project's `erp-ui/` directory
+- Each project's web assets are copied into its own Docker image — cross-project references don't exist at runtime
+
+## Steps
+1. **Copy l8ui**: `cp -r <path-to-l8erp>/go/erp/ui/web/l8ui/ <new-project>/go/<project>/ui/web/l8ui/`
+2. **Verify the copy** is complete (all subdirectories: shared, m, d, sys, chart, kanban, timeline, calendar, tree_grid, gantt, wizard, dashboard, images)
+3. **Create project-specific files** (nav configs, reference registries) inside the new project — never reference another project's files
+4. **Update all HTML paths** to use `../l8ui/` relative to the project's own web directory
+
+## What NOT to Do
+- Do NOT use `../l8erp/...` or `../erp-ui/...` paths in HTML files
+- Do NOT symlink to another project's l8ui
+- Do NOT skip this step and "reference it later"
+
+## When to Do This
+At the very start of UI implementation — before creating any `app.html`, section HTML, or module JS files.
+
+---
+
+# 43. Mobile App Must Match L8ERP Mobile Structure
+
+**Source:** `mobile-app-from-l8erp-reference.md`
+
+## Rule
+When implementing the mobile UI for a new project, you MUST read and replicate the l8erp mobile app structure exactly. Do NOT write custom HTML layouts, custom sidebars, or custom navigation. The l8erp mobile app is the canonical reference — copy its structure and adapt only the project-specific data.
+
+## Before Starting Mobile UI
+1. **Read l8erp's mobile `app.html`** (`l8erp/go/erp/ui/web/m/app.html`) in full
+2. **Read l8erp's mobile `app-core.js`** (or equivalent bootstrap file) in full
+3. **Read l8erp's mobile nav config files** (`erp-ui/m/nav-configs/`) in full
+4. **Understand the initialization flow**: how modules are registered, how navigation is generated, how sections are loaded
+
+## What to Copy from L8ERP (structure, not content)
+- **`m/app.html` body structure**: header, sidebar, main content area — use the same HTML skeleton
+- **`m/app-core.js` initialization pattern**: how it bootstraps the mobile app, registers modules, sets up navigation
+- **`m/nav-configs/` pattern**: icons file, per-module config files, merged config file
+- **`m/reference-registries/` pattern**: per-module reference registry files
+
+## What to Change (project-specific data only)
+- App title and branding
+- Module list
+- Sub-module and service definitions
+- Nav config module entries
+- Reference registry entries
+- CSS accent colors
+
+## What NOT to Do
+- Do NOT write a custom sidebar with hardcoded `<a>` tags — use the l8ui mobile navigation system
+- Do NOT write a custom header layout — use the l8erp header pattern
+- Do NOT skip the `Layer8MModuleRegistry` / dynamic nav system in favor of static HTML
+- Do NOT invent a new app initialization flow — follow l8erp's `app-core.js` pattern
+
+## The Trap
+It looks faster to write a simple custom HTML sidebar with a few nav links. But this produces a mobile UI that:
+- Has no card-based module/sub-module/service navigation
+- Has no dynamic section loading
+- Looks nothing like the l8erp mobile experience
+- Misses all the built-in navigation features (back buttons, breadcrumbs, service cards, view switching)
+
+## Verification
+After implementing mobile UI for a new project:
+1. Compare `m/app.html` body structure against l8erp's — should be nearly identical except for branding
+2. Compare `app-core.js` initialization against l8erp's — should follow the same pattern
+3. Open both mobile UIs side by side — navigation flow should feel identical
+4. No hardcoded sidebar nav items — navigation should be dynamically generated from nav config
+
+---
+
+# 44. K8s YAML Required Entries
+
+**Source:** `k8s-yaml-required-entries.md`
+
+## Rule
+When creating Kubernetes YAML manifests for any new project, ALL of the following entries from the l8erp reference YAMLs MUST be included. Never omit structural entries that exist in the l8erp k8s YAMLs.
+
+## Required Entries Checklist
+
+### Namespace metadata
+```yaml
+metadata:
+  name: <namespace>
+  labels:
+    name: <namespace>    # REQUIRED — do not omit labels
+```
+
+### StatefulSet/DaemonSet metadata
+```yaml
+metadata:
+  namespace: <namespace>
+  name: <name>
+  labels:
+    app: <name>          # REQUIRED — do not omit labels
+```
+
+### Container env section (ALL containers)
+```yaml
+containers:
+  - name: <name>
+    image: <image>
+    imagePullPolicy: Always
+    env:                           # REQUIRED — do not omit
+      - name: NODE_IP
+        valueFrom:
+          fieldRef:
+            fieldPath: status.hostIP
+```
+
+### Volume naming convention
+```yaml
+volumeMounts:
+  - name: hdata              # Use "hdata", not "data"
+    mountPath: /data
+volumes:
+  - name: hdata              # Must match volumeMounts name
+    hostPath:
+      path: /data
+      type: DirectoryOrCreate
+```
+
+## Why This Matters
+- **Namespace labels**: Required for label-based selectors and network policies
+- **Resource labels**: Required for `kubectl` filtering and service discovery
+- **NODE_IP env var**: Used by the application to know which node it's running on — without it, inter-service communication and vnet discovery fail
+- **Volume name `hdata`**: Convention consistency across all projects
+
+## Verification
+```bash
+# Check namespace has labels
+grep -A2 "kind: Namespace" <file> | grep "labels:"
+
+# Check resource has labels
+grep -A4 "kind: StatefulSet\|kind: DaemonSet" <file> | grep "labels:"
+
+# Check NODE_IP env is present
+grep "NODE_IP" <file>
+
+# Check volume name convention
+grep "name: hdata" <file>
+```
+
+## Reference
+The canonical k8s YAMLs are in `l8erp/k8s/`. Always diff new project YAMLs against these before finalizing.
