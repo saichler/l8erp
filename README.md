@@ -28,7 +28,7 @@
 
 ERP by Layer 8 is a comprehensive Enterprise Resource Planning system built from the ground up with Go. It provides a unified platform for managing all aspects of an organization — from financial operations and human capital to supply chain, manufacturing, sales, and beyond.
 
-With **12 modules**, **242 business services**, and **72 protobuf schemas** defining **410 entity types**, the system covers the complete enterprise lifecycle:
+With **12 modules**, **243 business services**, and **72 protobuf schemas** defining **654 entity types**, the system covers the complete enterprise lifecycle:
 
 - **Financial Management** — GL, AP, AR, Cash, Fixed Assets, Budgeting, Tax
 - **Human Capital** — Core HR, Payroll, Benefits, Talent, Learning, Compensation, Time & Attendance
@@ -47,13 +47,13 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared infrastr
 
 ## Features
 
-- **242 Business Services** across 12 integrated modules
+- **243 Business Services** across 12 integrated modules
 - **8 Data View Types** — Table, Chart, Kanban, Calendar, Timeline, Gantt, Tree Grid, and Wizard with per-service view switching
 - **Desktop + Mobile Apps** — full-featured web and mobile interfaces with complete view parity
 - **Module Selection** — enable/disable modules at runtime with automatic dependency management
 - **System Dependency Map** — visual module dependency graph for configuration
 - **Multi-Currency Support** — real-time exchange rate conversion across all financial fields
-- **Protobuf Data Model** — 72 schema files defining 410 entity types with cross-module references
+- **Protobuf Data Model** — 72 schema files defining 654 entity types with cross-module references
 - **Mock Data Generation** — realistic test data generators for all services with phased dependency ordering
 - **Validation Framework** — declarative validation builder with required fields, enums, and reference checks
 - **Factory-Driven UI** — shared factories for forms, columns, enums, references, sections, and SVG
@@ -78,8 +78,8 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared infrastr
 | **E-Commerce (ECOM)** | 13 | Catalog, Orders, Customers, Promotions |
 | **Document Management (DOC)** | 11 | Storage, Workflows, Signatures, Compliance, Integration |
 | **Compliance & Risk (COMP)** | 11 | Regulatory, Controls, Risk, Audit |
-| **System Administration (SYS)** | 1 | Module Configuration & Dependencies |
-| **Total** | **242** | |
+| **System Administration (SYS)** | 2 | Module Configuration & Dependencies |
+| **Total** | **243** | |
 
 ## Quick Start
 
@@ -277,10 +277,10 @@ This ERP is built on top of the Layer 8 open-source infrastructure:
 
 | Category | Files | Lines |
 |----------|-------|-------|
-| Go source (hand-written) | 663 | ~49,500 |
+| Go source (hand-written) | 692 | ~51,900 |
 | Go types (generated from protobuf) | — | ~133,500 |
-| JavaScript | 566 | ~67,600 |
-| CSS | 82 | ~18,500 |
+| JavaScript | 572 | ~69,300 |
+| CSS | 84 | ~18,800 |
 | HTML | 51 | — |
 | Protobuf schemas | 72 | ~14,200 |
 | Mock data generators | 74 | — |
@@ -311,7 +311,7 @@ go build -o erp-main ./go/erp/main/
 go build -o erp-vnet ./go/erp/vnet/
 
 # Regenerate protobuf types (after modifying .proto files)
-cd proto && sed 's/-it /-i /g' make-bindings.sh | bash
+cd proto && ./make-bindings.sh
 ```
 
 ### UI Development
