@@ -46,7 +46,7 @@ var dbInstance *sql.DB
 var dbMtx = &sync.Mutex{}
 
 func CreateResources(alias string) ifs.IResources {
-	//logger.SetLogToFile("/data/logs/erp", alias)
+	logger.SetLogToFile("/data/logs/erp", alias)
 	log := logger.NewLoggerImpl(&logger.FmtLogMethod{})
 	log.SetLogLevel(ifs.Info_Level)
 	res := resources.NewResources(log)

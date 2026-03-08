@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: erp-maint
+  labels:
+    name: erp-maint
+
+---
+
+apiVersion: apps/v1
+kind: DaemonSet 
+metadata:
+  namespace: erp-maint
+  name: erp-maint
+  labels:
+    app: erp-maint
+spec:
+  selector:
+    matchLabels:
+      app: erp-maint
+  template:
+    metadata:
+      labels:
+        app: erp-maint
+    spec:
+      hostNetwork: true
+      containers:
+        - name: erp-maint
+          image: saichler/erp-maint:latest
+          imagePullPolicy: Always
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
