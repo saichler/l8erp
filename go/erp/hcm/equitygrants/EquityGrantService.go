@@ -27,6 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.EquityGrant, hcm.EquityGrantList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "GrantId", Callback: newEquityGrantServiceCallback(),
 	}, creds, dbname, vnic)
 }
 

@@ -27,6 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.Feedback, hcm.FeedbackList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "FeedbackId", Callback: newFeedbackServiceCallback(),
 	}, creds, dbname, vnic)
 }
 

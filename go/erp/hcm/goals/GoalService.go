@@ -27,6 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.Goal, hcm.GoalList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "GoalId", Callback: newGoalServiceCallback(),
 	}, creds, dbname, vnic)
 }
 

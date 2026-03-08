@@ -27,6 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.PerformanceReview, hcm.PerformanceReviewList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "ReviewId", Callback: newPerformanceReviewServiceCallback(),
 	}, creds, dbname, vnic)
 }
 

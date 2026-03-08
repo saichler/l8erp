@@ -27,6 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.LeavePolicy, hcm.LeavePolicyList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "PolicyId", Callback: newLeavePolicyServiceCallback(),
 	}, creds, dbname, vnic)
 }
 

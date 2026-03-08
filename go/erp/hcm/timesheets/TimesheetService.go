@@ -27,6 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.Timesheet, hcm.TimesheetList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "TimesheetId", Callback: newTimesheetServiceCallback(),
 	}, creds, dbname, vnic)
 }
 

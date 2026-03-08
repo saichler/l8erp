@@ -27,6 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.TrainingRecord, hcm.TrainingRecordList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "RecordId", Callback: newTrainingRecordServiceCallback(),
 	}, creds, dbname, vnic)
 }
 

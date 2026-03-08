@@ -27,6 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.LifeEvent, hcm.LifeEventList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "LifeEventId", Callback: newLifeEventServiceCallback(),
 	}, creds, dbname, vnic)
 }
 

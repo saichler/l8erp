@@ -27,6 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.BonusPayment, hcm.BonusPaymentList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "PaymentId", Callback: newBonusPaymentServiceCallback(),
 	}, creds, dbname, vnic)
 }
 

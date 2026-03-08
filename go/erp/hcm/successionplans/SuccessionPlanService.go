@@ -27,6 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.SuccessionPlan, hcm.SuccessionPlanList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "PlanId", Callback: newSuccessionPlanServiceCallback(),
 	}, creds, dbname, vnic)
 }
 

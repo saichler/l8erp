@@ -27,6 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.Garnishment, hcm.GarnishmentList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "GarnishmentId", Callback: newGarnishmentServiceCallback(),
 	}, creds, dbname, vnic)
 }
 

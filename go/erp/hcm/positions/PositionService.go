@@ -27,6 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.Position, hcm.PositionList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "PositionId", Callback: newPositionServiceCallback(),
 	}, creds, dbname, vnic)
 }
 

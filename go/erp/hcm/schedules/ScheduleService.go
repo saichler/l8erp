@@ -27,6 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.Schedule, hcm.ScheduleList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "ScheduleId", Callback: newScheduleServiceCallback(),
 	}, creds, dbname, vnic)
 }
 

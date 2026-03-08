@@ -27,6 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.TaxWithholding, hcm.TaxWithholdingList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "WithholdingId", Callback: newTaxWithholdingServiceCallback(),
 	}, creds, dbname, vnic)
 }
 

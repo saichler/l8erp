@@ -44,6 +44,9 @@ type ServiceConfig struct {
 
 // ActivateService sets up and activates a service with the standard ERP boilerplate.
 func ActivateService[T any, TList any, PT ProtoMessage[T], PTL ProtoMessage[TList]](cfg ServiceConfig, creds, dbname string, vnic ifs.IVNic) {
+	if cfg.PrimaryKey == "" {
+		panic(fmt.Sprintf("service %s (area %d): PrimaryKey is required", cfg.ServiceName, cfg.ServiceArea))
+	}
 	realdb, user, pass, _, err := vnic.Resources().Security().Credential(creds, dbname, vnic.Resources())
 	if err != nil {
 		panic(err)

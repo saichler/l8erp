@@ -27,6 +27,7 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.BenefitPlan, hcm.BenefitPlanList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
+		PrimaryKey: "PlanId", Callback: newBenefitPlanServiceCallback(),
 	}, creds, dbname, vnic)
 }
 
