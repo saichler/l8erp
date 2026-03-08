@@ -28,7 +28,6 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[doc.DocCategory, doc.DocCategoryList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
 		PrimaryKey: "CategoryId", Callback: newDocCategoryServiceCallback(),
-		Transactional: true, EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

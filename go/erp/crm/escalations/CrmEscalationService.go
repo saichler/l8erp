@@ -28,7 +28,6 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[crm.CrmEscalation, crm.CrmEscalationList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
 		PrimaryKey: "EscalationId", Callback: newCrmEscalationServiceCallback(),
-		Transactional: true, EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

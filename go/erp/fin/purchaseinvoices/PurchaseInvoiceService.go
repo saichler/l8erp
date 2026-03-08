@@ -28,7 +28,6 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[fin.PurchaseInvoice, fin.PurchaseInvoiceList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
 		PrimaryKey: "InvoiceId", Callback: newPurchaseInvoiceServiceCallback(),
-		Transactional: true, EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

@@ -28,7 +28,6 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[scm.ScmFreightRate, scm.ScmFreightRateList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
 		PrimaryKey: "RateId", Callback: newFreightRateServiceCallback(),
-		Transactional: true, EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

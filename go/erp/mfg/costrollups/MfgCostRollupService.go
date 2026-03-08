@@ -28,7 +28,6 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[mfg.MfgCostRollup, mfg.MfgCostRollupList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
 		PrimaryKey: "RollupId", Callback: newMfgCostRollupServiceCallback(),
-		Transactional: true, EnableCache: true,
 	}, creds, dbname, vnic)
 }
 

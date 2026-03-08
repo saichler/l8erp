@@ -6,13 +6,10 @@ RUN go mod init
 RUN GOPROXY=direct GOPRIVATE=github.com go mod tidy
 RUN go mod vendor
 
-WORKDIR /
-RUN /patch.sh
-
 WORKDIR /home/src/github.com/saichler/build
-RUN go build -o vnet
+RUN go build -o erp-vnet
 
 FROM saichler/erp-security:latest AS final
-COPY --from=build /home/src/github.com/saichler/build/vnet /home/run/vnet
+COPY --from=build /home/src/github.com/saichler/build/erp-vnet /home/run/erp-vnet
 
-ENTRYPOINT ["/home/run/vnet"]
+ENTRYPOINT ["/home/run/erp-vnet"]

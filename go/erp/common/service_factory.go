@@ -36,12 +36,10 @@ type ProtoMessage[T any] interface {
 
 // ServiceConfig holds the configuration for activating a service.
 type ServiceConfig struct {
-	ServiceName   string
-	ServiceArea   byte
-	PrimaryKey    string
-	Callback      ifs.IServiceCallback
-	Transactional bool
-	EnableCache   bool
+	ServiceName string
+	ServiceArea byte
+	PrimaryKey  string
+	Callback    ifs.IServiceCallback
 }
 
 // ActivateService sets up and activates a service with the standard ERP boilerplate.
@@ -58,13 +56,10 @@ func ActivateService[T any, TList any, PT ProtoMessage[T], PTL ProtoMessage[TLis
 	sla.SetServiceItem(PT(new(T)))
 	sla.SetServiceItemList(PTL(new(TList)))
 	sla.SetPrimaryKeys(cfg.PrimaryKey)
-	sla.SetArgs(p, cfg.EnableCache)
-
-	if cfg.Transactional {
-		sla.SetTransactional(true)
-		sla.SetReplication(true)
-		sla.SetReplicationCount(3)
-	}
+	sla.SetArgs(p, true)
+	sla.SetTransactional(true)
+	sla.SetReplication(true)
+	sla.SetReplicationCount(3)
 
 	ws := web.New(cfg.ServiceName, cfg.ServiceArea, 0)
 	ws.AddEndpoint(PT(new(T)), ifs.POST, &l8web.L8Empty{})
@@ -75,6 +70,7 @@ func ActivateService[T any, TList any, PT ProtoMessage[T], PTL ProtoMessage[TLis
 	ws.AddEndpoint(&l8api.L8Query{}, ifs.GET, PTL(new(TList)))
 	sla.SetWebService(ws)
 
+	sla.SetServiceGroup("ERPSG")
 	vnic.Resources().Services().Activate(sla, vnic)
 }
 

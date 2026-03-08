@@ -27,7 +27,6 @@ const (
 func Activate(creds, dbname string, vnic ifs.IVNic) {
 	common.ActivateService[hcm.Organization, hcm.OrganizationList](common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "OrganizationId", Callback: newOrganizationServiceCallback(), EnableCache: true,
 	}, creds, dbname, vnic)
 }
 
