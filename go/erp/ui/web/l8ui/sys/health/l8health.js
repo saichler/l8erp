@@ -224,7 +224,8 @@ limitations under the License.
         });
 
         var endpoint = getHealthEndpoint();
-        var body = encodeURIComponent(JSON.stringify(rawData));
+        var payload = { aUuid: rawData.aUuid, pprofCollect: true };
+        var body = encodeURIComponent(JSON.stringify(payload));
         var headers = typeof getAuthHeaders === 'function' ? getAuthHeaders() : { 'Content-Type': 'application/json' };
 
         fetch(endpoint + '?body=' + body, {

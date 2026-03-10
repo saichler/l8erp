@@ -8,7 +8,7 @@ require (
 	github.com/saichler/l8logfusion v0.0.0-20260211141533-554cf59367fe
 	github.com/saichler/l8orm v0.0.0-20260228190952-a538542eeb8c
 	github.com/saichler/l8reflect v0.0.0-20260306101914-2763da1fd8d5
-	github.com/saichler/l8services v0.0.0-20260309221744-5aef1c1b12a3
+	github.com/saichler/l8services v0.0.0-20260309235524-84b2a4a0288b
 	github.com/saichler/l8srlz v0.0.0-20251226163123-de32dc54dd4b
 	github.com/saichler/l8test v0.0.0-20260307095409-07345170933e
 	github.com/saichler/l8types v0.0.0-20260309221622-8910f592ac8d
