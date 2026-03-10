@@ -2,7 +2,7 @@
 
 These are Claude Code global rules for the Layer8 ERP project. Load this file at the start of a session to apply all rules.
 
-**Source files:** `~/.claude/rules/*.md` (44 rule files)
+**Source files:** `~/.claude/rules/*.md` (49 rule files)
 
 ---
 
@@ -13,6 +13,13 @@ These are Claude Code global rules for the Layer8 ERP project. Load this file at
 2. [Code Maintainability Standards](#2-code-maintainability-standards)
 3. [Prime Object Rules](#3-prime-object-rules)
 4. [Report Infrastructure Bugs Instead of Working Around Them](#4-report-infrastructure-bugs-instead-of-working-around-them)
+
+### PRD & Planning
+45. [PRD Must Be Compliant with Global Rules](#45-prd-must-be-compliant-with-global-rules)
+46. [PRD Must Follow L8ERP Project Structure and Architecture](#46-prd-must-follow-l8erp-project-structure-and-architecture)
+47. [PRD UI Sections Must Follow the L8UI Library Guide](#47-prd-ui-sections-must-follow-the-l8ui-library-guide)
+48. [Plan Traceability and Verification](#48-plan-traceability-and-verification)
+49. [Parity Plans Must Trace Data Transforms](#49-parity-plans-must-trace-data-transforms)
 
 ### Protobuf
 5. [Protobuf Generation](#5-protobuf-generation)
@@ -1842,3 +1849,308 @@ grep "name: hdata" <file>
 
 ## Reference
 The canonical k8s YAMLs are in `l8erp/k8s/`. Always diff new project YAMLs against these before finalizing.
+
+---
+
+# 45. PRD Must Be Compliant with Global Rules
+
+`prd-global-rules-compliance.md`
+
+Every PRD (Product Requirements Document) MUST be reviewed against ALL active global rules before it is considered complete. If a PRD specifies a design that contradicts or omits requirements from a global rule, the PRD must be corrected before approval.
+
+Global rules encode hard-won lessons — bugs that regressed multiple times, architectural decisions that prevent cascading failures, and conventions that keep the codebase consistent.
+
+## Compliance Checklist
+
+When writing or reviewing a PRD, verify it does not conflict with any global rule:
+
+### Project Structure & Architecture
+- Project structure follows l8erp layout (`prd-l8erp-architecture-compliance`)
+- Directory names, file naming conventions, and organization match l8erp patterns
+
+### Protobuf Design
+- Enum zero values are UNSPECIFIED (`proto-enum-zero-value`)
+- List types use `repeated X list = 1` convention (`proto-list-convention`)
+- No direct struct references between Prime Objects — use ID fields only (`prime-object-references`)
+- Child entities are embedded `repeated` fields, not separate services (`prime-object-references`)
+
+### Service Design
+- ServiceName is 10 characters or less (`maintainability`)
+- ServiceArea is consistent within a module (`maintainability`)
+- ServiceCallback auto-generates primary key on POST (`maintainability`)
+- Types are registered in UI main.go (`maintainability`)
+
+### UI Design
+- All UI module integration steps are planned (`ui-module-integration`)
+- Desktop and mobile parity is addressed (`mobile-parity`)
+- Immutable entities/fields have read-only UI (`immutability-ui-alignment`)
+- Child types use inline tables, not standalone UI (`prime-object-references`)
+- UI components and patterns follow the Layer 8 UI Library Guide (`prd-l8ui-guide-compliance`)
+
+### Mock Data
+- All services have mock data generators planned (`data-completeness-pipeline`)
+- Phase ordering accounts for cross-module dependencies (`mock-phase-ordering`)
+
+### Deployment
+- New deployable services include build.sh, Dockerfile, K8s YAML (`deployment-artifacts`)
+- run-local.sh section is included (`run-local-script`)
+- K8s YAMLs include all required entries (`k8s-yaml-required-entries`)
+
+### Configuration
+- login.json adaptation is planned if copied from another project (`login-json-adaptation`)
+- ModConfig handling is addressed (`modconfig-failure-no-logout`)
+
+## Process
+1. After drafting a PRD, review it against `~/.claude/rules/*.md`
+2. Flag any conflicts or omissions
+3. Update the PRD to comply before writing it to `./plans/`
+4. If a global rule does not apply to the project, note the exemption explicitly in the PRD
+
+---
+
+# 46. PRD Must Follow L8ERP Project Structure and Architecture
+
+`prd-l8erp-architecture-compliance.md`
+
+Every PRD MUST follow the project structure and architecture established in `l8erp`. Before writing a PRD for a new project or module, the l8erp project layout MUST be studied and replicated. Do NOT invent new directory structures, naming conventions, or architectural patterns.
+
+L8ERP is the reference implementation for all Layer 8 projects. Its structure has been refined through multiple modules and iterations. Deviating from it creates inconsistency across projects, makes cross-project navigation harder, and breaks assumptions that shared tooling relies on.
+
+## Project Structure to Follow
+
+### Go Module Root (`go/`)
+```
+go/
+├── go.mod
+├── go.sum
+├── vendor/                          # Vendored dependencies
+├── build-all-images.sh              # Builds all Docker images
+├── run-local.sh                     # Local development startup
+├── <module>/                        # Module directory (e.g., erp/, bugs/)
+│   ├── common/                      # Shared constants (PREFIX, defaults)
+│   ├── <submodule>/                 # One directory per service group
+│   │   ├── <entity>Service.go       # Service definition (ServiceName, ServiceArea)
+│   │   └── <entity>ServiceCallback.go  # Validation, auto-ID, business logic
+│   ├── ui/
+│   │   ├── main.go                  # UI server + type registration
+│   │   ├── web/                     # Web assets (desktop)
+│   │   │   ├── app.html             # Desktop app shell
+│   │   │   ├── login.html           # Login page
+│   │   │   ├── login.json           # App config (apiPrefix, title)
+│   │   │   ├── l8ui/                # Shared UI library (copied from l8erp)
+│   │   │   ├── js/                  # Shared JS (sections.js, reference registries)
+│   │   │   ├── sections/            # Section HTML files per module
+│   │   │   ├── <submodule>/         # Per-submodule JS (config, enums, columns, forms, init)
+│   │   │   └── m/                   # Mobile web assets
+│   │   │       ├── app.html         # Mobile app shell
+│   │   │       └── js/              # Mobile JS files
+│   │   ├── build.sh                 # Docker build for UI image
+│   │   └── Dockerfile
+│   ├── main/                        # Backend server entry point
+│   │   ├── main.go
+│   │   ├── build.sh
+│   │   └── Dockerfile
+│   └── vnet/                        # Virtual network entry point
+│       ├── main.go
+│       ├── build.sh
+│       └── Dockerfile
+├── types/                           # Generated protobuf types
+│   └── <module>/                    # Per-module .pb.go files
+├── tests/
+│   └── mocks/                       # Mock data generators
+│       ├── cmd/                     # Mock data CLI entry point
+│       ├── data.go                  # Curated name arrays
+│       ├── store.go                 # ID slices for cross-references
+│       ├── main_phases.go           # Phase orchestration
+│       └── gen_<module>_*.go        # Generator files per module area
+└── k8s/                             # Kubernetes manifests
+    ├── deploy.sh
+    ├── undeploy.sh
+    └── *.yaml                       # Per-service manifests
+```
+
+### Proto Directory (`proto/`)
+```
+proto/
+├── make-bindings.sh                 # Generates all .pb.go files
+├── <module>.proto                   # One proto file per module
+└── api.proto                        # Shared API types (auto-downloaded)
+```
+
+## Architecture Patterns to Follow
+
+### Service Pattern
+- One service per Prime Object (entity with independent lifecycle)
+- ServiceName constant (max 10 chars) + ServiceArea constant (same across module)
+- ServiceCallback with Before/After hooks for validation and auto-ID generation
+- Child entities embedded as `repeated` fields in parent, not separate services
+
+### UI Pattern
+- Module config + enums + columns + forms + init files per submodule
+- Section HTML with header, tabs, service navigation
+- Init file calls `Layer8DModuleFactory.create()` with config
+- Desktop and mobile parity
+
+### Main Entry Points
+- Backend main registers services on a vnic and starts listening
+- UI main registers types for introspection, serves web assets, proxies API calls
+- Vnet main starts the virtual network layer
+
+## Process
+1. Before writing a PRD, read the l8erp directory structure: `ls -R l8erp/go/` and `ls -R l8erp/proto/`
+2. Map your new project's components to the l8erp equivalents
+3. Use the same directory names, file naming conventions, and organizational patterns
+4. If a structural deviation is genuinely needed, document the reason explicitly in the PRD
+
+---
+
+# 47. PRD UI Sections Must Follow the L8UI Library Guide
+
+`prd-l8ui-guide-compliance.md`
+
+Any PRD that includes UI work MUST be designed in compliance with the Layer 8 UI Library Guide at `l8erp/go/erp/ui/web/l8ui/GUIDE.md`. Before writing UI-related sections of a PRD, the guide MUST be read in full.
+
+The L8UI library provides a complete set of shared components for desktop and mobile (tables, forms, popups, navigation, charts, kanban, timeline, calendar, tree grid, gantt, wizard, dashboard, etc.). PRDs that design UI without consulting the guide will:
+- Reinvent components that already exist
+- Specify custom layouts that conflict with the shared component system
+- Miss required initialization patterns (Layer8DModuleFactory, Layer8DViewFactory, etc.)
+- Produce implementations that don't integrate with the existing navigation, theming, and data-fetching infrastructure
+
+## What to Check
+
+When a PRD describes UI behavior, verify each element against the guide:
+
+1. **Tables and data views** — use Layer8DTable / Layer8MTable, not custom table HTML
+2. **Forms and detail popups** — use the form framework (f.form, f.section, field factories), not custom form HTML
+3. **Navigation** — use Layer8DModuleFactory.create() and nav configs, not hardcoded sidebar links
+4. **View types** (kanban, chart, timeline, calendar, tree grid, gantt) — use registered view types via Layer8DViewFactory, not custom implementations
+5. **Dashboards** — use Layer8DDashboard with widget configs, not custom dashboard layouts
+6. **Wizards** — use Layer8DWizard, not custom multi-step forms
+7. **Reference pickers** — use the reference picker system, not custom search dropdowns
+8. **Theming** — use `--layer8d-*` CSS custom properties, not hardcoded colors or custom variables
+9. **Mobile** — use Layer8M* equivalents, not custom mobile layouts
+
+## Process
+1. Read `l8erp/go/erp/ui/web/l8ui/GUIDE.md` before writing any UI section of a PRD
+2. For each UI element described in the PRD, identify the corresponding l8ui component from the guide
+3. Reference the component by name in the PRD (e.g., "uses Layer8DTable with viewConfig for kanban")
+4. If no existing component covers the need, explicitly note this and propose either extending an existing component or creating a new one following l8ui patterns
+
+## Location of the Guide
+The canonical guide is at: `l8erp/go/erp/ui/web/l8ui/GUIDE.md`
+
+When working on a project other than l8erp, the guide will be in the project's own l8ui copy (e.g., `go/<project>/ui/web/l8ui/GUIDE.md`) after the l8ui directory has been copied per the l8ui-copy-to-new-project rule.
+
+---
+
+# 48. Plan Traceability and Verification
+
+`plan-traceability-and-verification.md`
+
+Every implementation plan MUST include:
+
+1. **A traceability matrix** at the end of the analysis sections, before the phase breakdown. This is a table mapping every identified gap, MISSING item, or action item to the specific phase that will address it. Any gap without a corresponding phase is a planning error that must be resolved before the plan is written to `./plans/`.
+
+2. **A final verification phase** as the last implementation phase. This phase smoke-tests every affected section end-to-end: navigate to each section, verify data loads in tables, verify row clicks open details, verify forms submit correctly.
+
+## Why This Matters
+Analysis and implementation phases are often written separately. Thorough analysis can identify 50+ gaps, but if the phase breakdown is written without back-referencing those gaps, some will fall through the cracks. The traceability matrix forces a cross-check: every finding must land somewhere, and any orphan is visible immediately.
+
+The verification phase catches integration issues that per-phase testing misses — blank tables, broken click handlers, missing transforms, wrong container IDs — problems that only surface when the full system is exercised.
+
+## Traceability Matrix Format
+
+After all analysis sections and before the phase breakdown:
+
+```markdown
+## Traceability Matrix
+
+| # | Section | Gap / Action Item | Phase |
+|---|---------|-------------------|-------|
+| 1 | 1.3 Data Transform | Add transformDeviceData to mobile | Phase 2 |
+| 2 | 1.4 Overview | Add System Name, Last Seen, Coordinates | Phase 1 |
+| 3 | 4.1 K8s Columns | Add Namespace, NetworkPolicy column defs | Phase 2 |
+| ...| ... | ... | ... |
+```
+
+Every row in every "Actions" or "MISSING" note from the analysis MUST appear in this table. If a gap is intentionally deferred, mark it as "Deferred — {reason}" instead of a phase number.
+
+## Verification Phase Format
+
+```markdown
+## Phase N: End-to-End Verification
+
+For every section affected by this plan:
+1. Navigate to the section
+2. Verify table data loads (not blank)
+3. Verify row click opens detail/modal
+4. Verify detail content is populated (not empty)
+5. Verify CRUD operations work (if applicable)
+6. Verify on both desktop and mobile (if both are in scope)
+
+Sections to verify:
+- [ ] Section A
+- [ ] Section B
+- [ ] ...
+```
+
+## Process
+1. Write analysis sections with gaps and action items
+2. Write the traceability matrix — one row per gap
+3. Write the phase breakdown
+4. Cross-check: every matrix row has a valid phase number
+5. Add the verification phase as the final phase
+6. Only then write the plan to `./plans/`
+
+---
+
+# 49. Parity Plans Must Trace Data Transforms
+
+`parity-plan-transform-tracing.md`
+
+When comparing two implementations for parity (desktop vs mobile, v1 vs v2, etc.), every field comparison MUST verify not just the field **name/path** but also the field **value type** arriving at the consuming code. If one side applies a transform (e.g., enum integer → string label, timestamp → formatted date, nested object → flat field), the plan must explicitly state whether the other side receives the same transformed value or the raw server value.
+
+## Why This Matters
+A field can exist on both sides with the same name but arrive as different types. The server returns `status: 1` (integer enum). A desktop transform converts it to `status: "Online"` (string). The mobile detail code receives the raw `1` and calls `.toUpperCase()` on it — TypeError. The parity plan marked the field as "YES" because both sides had a `status` field, missing that the values are fundamentally different types.
+
+## The Bug Pattern
+1. Server returns `{ status: 1, lastSeen: 1710000000 }` (raw protobuf values)
+2. Desktop has `transformData()` that converts to `{ status: "Online", lastSeen: "2024-03-09 12:00" }`
+3. Desktop detail code uses `device.status.toUpperCase()` — works (string)
+4. Mobile detail code uses `device.status.toUpperCase()` — crashes (number has no toUpperCase)
+5. Parity plan says "status: YES" because both sides have the field
+
+## Required Plan Columns
+When building a field-by-field parity table, add a **Value Type** column:
+
+```markdown
+| # | Field | Desktop Path | Mobile Path | Name Match? | Value Type Match? | Notes |
+|---|-------|-------------|-------------|-------------|-------------------|-------|
+| 1 | Status | device.status | item.status | YES | NO — desktop is post-transform string, mobile is raw enum int | Must apply enum label before detail code |
+| 2 | Last Seen | device.lastSeen | item.lastSeen | YES | NO — desktop formats as date string, mobile is raw timestamp | Must format before detail code |
+| 3 | Name | device.name | item.name | YES | YES — both are raw strings from server | OK |
+```
+
+## Checklist
+When writing a parity plan:
+
+1. **Identify all transforms** on the source side (search for transform functions, renderers, formatters, enum maps applied before the data reaches the consuming code)
+2. **For every transformed field**, verify the target side either:
+   - Applies the same transform before the consuming code runs, OR
+   - The consuming code handles the raw type (e.g., uses an enum map instead of `.toUpperCase()`)
+3. **Mark value type mismatches** as action items in the traceability matrix — they are bugs, not just cosmetic differences
+
+## Fields Most Likely to Have Transform Mismatches
+| Raw Server Type | Common Transform | Breaks When |
+|----------------|-----------------|-------------|
+| Enum integer (0, 1, 2...) | → String label ("Online", "Active") | `.toUpperCase()`, string concatenation, display |
+| Unix timestamp (seconds) | → Formatted date string | `.includes()`, `.substring()`, display |
+| Nested object (`{amount, currency}`) | → Flat string ("$1,234.56") | String methods, display |
+| Boolean (true/false) | → Label ("Yes"/"No", "Enabled"/"Disabled") | `.toUpperCase()`, display |
+| Repeated/array field | → Comma-joined string or count | `.length` means different things |
+
+## Verification
+After writing any parity comparison table:
+1. Find all transform/formatter functions on the source side
+2. List every field they modify
+3. Confirm each modified field has "Value Type Match?" answered — not left as assumed "YES"
