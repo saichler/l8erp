@@ -1,3 +1,0 @@
-[submodule "go/erp/ui/web/l8ui"]
-	path = go/erp/ui/web/l8ui
-	url = https://github.com/saichler/l8ui
