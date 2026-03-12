@@ -34,8 +34,8 @@ import (
 )
 
 const (
-	ERP_VNET      = 39001
-	ERP_LOGS_VNET = 39005
+	ERP_VNET      = 49001
+	ERP_LOGS_VNET = 49005
 	PREFIX        = "/erp/"
 )
 

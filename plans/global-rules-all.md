@@ -2,7 +2,7 @@
 
 These are Claude Code global rules for the Layer8 ERP project. Load this file at the start of a session to apply all rules.
 
-**Source files:** `~/.claude/rules/*.md` (49 rule files)
+**Source files:** `~/.claude/rules/*.md` (50 rule files)
 
 ---
 
@@ -20,6 +20,7 @@ These are Claude Code global rules for the Layer8 ERP project. Load this file at
 47. [PRD UI Sections Must Follow the L8UI Library Guide](#47-prd-ui-sections-must-follow-the-l8ui-library-guide)
 48. [Plan Traceability and Verification](#48-plan-traceability-and-verification)
 49. [Parity Plans Must Trace Data Transforms](#49-parity-plans-must-trace-data-transforms)
+50. [Platform Conversion Must Trace Data Flow](#50-platform-conversion-must-trace-data-flow)
 
 ### Protobuf
 5. [Protobuf Generation](#5-protobuf-generation)
@@ -2154,3 +2155,166 @@ After writing any parity comparison table:
 1. Find all transform/formatter functions on the source side
 2. List every field they modify
 3. Confirm each modified field has "Value Type Match?" answered — not left as assumed "YES"
+
+---
+
+# 50. Platform Conversion Must Trace Data Flow
+
+`platform-conversion-data-flow.md`
+
+When converting code from one platform to another (desktop to mobile, v1 to v2, iframe to direct), you MUST trace the **data flow** end-to-end before writing any code. Do NOT replicate the visual output and assume how the data gets there.
+
+## The 5-Step Conversion Protocol
+
+### Step 0: Feature inventory of the source platform
+Before writing any code, enumerate **every interactive element** on the source platform's page — not just the main CRUD flows. Create a checklist covering:
+
+1. **Table chrome**: filters, dropdowns, search bars, column pickers, base where clauses, toolbar buttons
+2. **CRUD flows**: add, edit, delete, detail popup, save
+3. **State management**: local caches, global variables, selected filters that persist across interactions
+4. **Navigation elements**: tabs, sub-tabs, view switchers, breadcrumbs
+5. **Supplementary features**: toggle buttons (e.g., state toggle), bulk actions, export, refresh
+
+Each item must be accounted for in the target platform — either implemented, or explicitly marked as deferred with a reason. A feature that is not in the inventory will not be ported.
+
+#### Example: The Inventory Type Filter Gap
+```
+Desktop targets.js feature inventory:
+  ✓ Target table with pagination
+  ✓ Add/Edit/Delete target CRUD
+  ✓ Target detail popup
+  ✓ Nested host/protocol editing
+  ✗ Inventory type filter dropdown (initInventoryTypeFilter, baseWhereClause)  ← MISSED
+  ✗ Toggle target state button (toggleTargetState)  ← MISSED
+```
+The mobile port implemented the CRUD flows but missed the filter dropdown because no feature inventory was created. The dropdown was part of the table initialization code (lines 155-201), not the modal/form code, so it fell outside the scope of what was being read.
+
+### Step 1: Trace the source platform's data flow
+For every user interaction (row click, edit button, detail popup, save), answer:
+1. **Where does the data come from?** (server query, table's loaded data, local cache, parent component?)
+2. **How does it get to the handler?** (passed as parameter, looked up by ID, fetched from server?)
+3. **What transforms are applied?** (enum mapping, date formatting, nested object flattening?)
+
+Write down the answers. Do not proceed until this is documented.
+
+### Step 2: Map to the target platform's equivalents
+For each data flow path identified in Step 1:
+1. Does the target platform's framework provide the same data? (e.g., does the mobile table also pass the full item to onRowClick?)
+2. If yes, use it directly — do NOT introduce additional server calls.
+3. If no, document what's missing and design the minimal bridge.
+
+### Step 3: Trace every link in the target platform's pipeline
+After writing the code, trace the data through **every intermediate layer** on the target platform — not just the entry point and exit point, but every function, factory, and lookup in between. Verify that each link forwards the data correctly to the next.
+
+**This step catches "dropped parameter" bugs**: cases where the data exists at point A and is consumed at point C, but an intermediate layer B (factory, adapter, registry) fails to forward it.
+
+For each intermediate layer, verify:
+1. Does it receive the data from the previous layer?
+2. Does it forward/pass it to the next layer?
+3. Does it transform or rename it? If so, does the next layer expect the new name?
+
+#### Example: The `getItemId` Bug
+```
+Nav system (A) → builds getItemId from idField ✓
+View factory (B) → receives getItemId in options BUT DOES NOT PASS IT to table constructor ✗
+EditTable (C) → falls back to _defaultGetItemId → item.id || '' → always returns '' for non-'id' keys
+Handler (D) → _findItemById('') → always returns first item
+```
+
+### Step 4: Verify parity by diffing behavior, not structure
+After implementation, for each interaction path:
+1. Does the target platform get its data from the same source type? (local data vs server query)
+2. Does it make the same number of server calls? (zero should stay zero)
+3. Does it pass the same data types to the same functions?
+4. **Click through the actual UI** — test at least one path end-to-end to catch dropped parameters
+
+## The Anti-Patterns This Prevents
+
+### Anti-Pattern 1: Unnecessary server calls
+```
+Desktop: Table → onRowClick(item) → showDetail(item) → render item fields
+                 ↑ item comes from table's loaded data, NO server call
+
+Mobile (WRONG): Table → onRowClick(item) → IGNORE item → L8Query server call → render response
+                 ↑ unnecessary server call that desktop never makes, with broken syntax
+```
+
+### Anti-Pattern 2: Dropped parameters in intermediate layers
+```
+Config:  idField='targetId' → getItemId=(item)=>item.targetId  ✓
+Factory: receives getItemId in options → DOES NOT pass to constructor  ✗
+Table:   no getItemId → falls back to item.id → '' for all items  ✗
+Result:  every card has data-id="", every click returns first item
+```
+
+## Rendering Lifecycle: Hidden Containers and Deferred Initialization
+
+When the source platform renders components inside **tabbed interfaces, collapsible panels, or other initially-hidden containers**, you MUST trace **when** each component initializes relative to its container's visibility.
+
+### The Problem
+Chart libraries, canvas elements, and layout-dependent components require their container to have non-zero dimensions at render time. If the container is hidden (inactive tab, collapsed section, `display:none`), the component renders with zero width/height and appears blank or broken even after the container becomes visible.
+
+### What to Trace
+For every component inside a tabbed or hideable container on the source platform:
+1. **When does it initialize?** On popup open? On tab activation? On first visibility?
+2. **Does the source platform defer rendering?** Look for tab-change event handlers that trigger `init()`, `render()`, `resize()`, or `chart.update()`.
+3. **Does the source platform re-render on tab switch?** Some components render once; others re-render each time the tab is activated.
+
+### Correct Pattern
+```javascript
+// CORRECT — render chart when tab becomes active, not on popup open
+tabContainer.addEventListener('click', (e) => {
+    const tab = e.target.closest('[data-tab]');
+    if (tab && tab.dataset.tab === 'performance') {
+        initPerformanceCharts();  // Container is now visible with real dimensions
+    }
+});
+```
+
+### Wrong Pattern
+```javascript
+// WRONG — chart renders into hidden tab on popup open
+onShow: (popup) => {
+    initPerformanceCharts();  // Performance tab is hidden, container has 0x0 dimensions
+}
+```
+
+## Never Bypass Existing Abstractions
+
+When fixing a bug or adding a feature to converted code, **extend the existing wrapper/helper** — do NOT replace it with a direct call to the underlying API.
+
+### The Anti-Pattern
+```javascript
+// BEFORE: Uses existing wrapper that works
+D.showTabbedPopup(device.name, tabs, onShowCallback);
+
+// WRONG FIX: Bypasses wrapper, calls underlying API directly
+Layer8MPopup.show({ title: device.name, tabs: tabs, onShow: ..., onTabChange: ... });
+```
+
+### The Correct Approach
+```javascript
+// CORRECT: Extend the wrapper to support the new feature
+ProblerDetail.showTabbedPopup = function(title, tabs, onShow, onTabChange) {
+    // ... existing logic unchanged ...
+    if (onTabChange) opts.onTabChange = onTabChange;
+    Layer8MPopup.show(opts);
+};
+```
+
+## Checklist Before Writing Conversion Code
+- [ ] I have created a feature inventory of every interactive element on the source platform's page
+- [ ] Every item in the inventory is marked as "implement" or "defer (reason)"
+- [ ] I have traced every data flow path in the source platform
+- [ ] I know whether each path uses local data or server queries
+- [ ] I have verified the target platform's framework provides equivalent data access
+- [ ] I am NOT introducing server calls that the source platform doesn't make
+- [ ] I am NOT adding UI features (edit buttons, shortcuts) that the source platform doesn't have
+- [ ] I have verified the target platform's auth/transport layer supports all HTTP methods used by the source
+
+## Checklist After Writing Conversion Code
+- [ ] I have traced the data through EVERY intermediate layer (factories, registries, adapters)
+- [ ] Every parameter needed by the consuming code is forwarded by all intermediate layers
+- [ ] Components in hidden containers (tabs, collapsed panels) defer initialization until visible
+- [ ] I did NOT bypass any existing wrapper/helper — I extended it instead
+- [ ] I have tested at least one complete interaction path end-to-end in the actual UI
