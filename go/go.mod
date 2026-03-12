@@ -4,7 +4,7 @@ go 1.25.4
 
 require (
 	github.com/lib/pq v1.11.2
-	github.com/saichler/l8bus v0.0.0-20260309222014-c8f14765f1d7
+	github.com/saichler/l8bus v0.0.0-20260310141658-6ba8eca75fd3
 	github.com/saichler/l8logfusion v0.0.0-20260211141533-554cf59367fe
 	github.com/saichler/l8orm v0.0.0-20260228190952-a538542eeb8c
 	github.com/saichler/l8reflect v0.0.0-20260306101914-2763da1fd8d5
@@ -19,8 +19,8 @@ require (
 
 require (
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/saichler/l8pollaris v0.0.0-20260301140058-24ca66c4852f // indirect
+	github.com/saichler/l8pollaris v0.0.0-20260310131422-d7a531a1535d // indirect
 	github.com/saichler/l8ql v0.0.0-20260228184750-adc402b17e27 // indirect
-	github.com/saichler/probler v0.0.0-20260308022450-a0dbf8ba4f36 // indirect
+	github.com/saichler/probler v0.0.0-20260311172422-4557bf38e39e // indirect
 	golang.org/x/sys v0.42.0 // indirect
 )

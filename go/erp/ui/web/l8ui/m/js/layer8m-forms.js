@@ -311,8 +311,6 @@ limitations under the License.
             const refInputs = container.querySelectorAll('input.reference-input');
 
             refInputs.forEach(async input => {
-                if (input.disabled) return;
-
                 let config = {};
                 try {
                     config = JSON.parse(input.dataset.refConfig || '{}');
@@ -348,38 +346,41 @@ limitations under the License.
                     }
                 }
 
-                input.style.cursor = 'pointer';
+                // Only attach click handler for editable inputs
+                if (!input.disabled) {
+                    input.style.cursor = 'pointer';
 
-                input.addEventListener('click', (e) => {
-                    e.stopPropagation();
+                    input.addEventListener('click', (e) => {
+                        e.stopPropagation();
 
-                    Layer8MReferencePicker.show({
-                        endpoint: config.endpoint,
-                        modelName: config.modelName,
-                        idColumn: config.idColumn,
-                        displayColumn: config.displayColumn,
-                        displayFormat: config.displayFormat,
-                        selectColumns: config.selectColumns,
-                        displayLabel: config.displayLabel,
-                        baseWhereClause: config.baseWhereClause,
-                        title: config.title || `Select ${config.modelName}`,
-                        placeholder: config.placeholder,
-                        currentValue: input.dataset.refId || null,
-                        onChange: (id, displayValue, item) => {
-                            if (id === null || id === undefined) {
-                                input.value = '';
-                                delete input.dataset.refId;
-                                delete input.dataset.refItem;
-                            } else {
-                                input.value = displayValue || '';
-                                input.dataset.refId = id;
-                                if (item) {
-                                    input.dataset.refItem = JSON.stringify(item);
+                        Layer8MReferencePicker.show({
+                            endpoint: config.endpoint,
+                            modelName: config.modelName,
+                            idColumn: config.idColumn,
+                            displayColumn: config.displayColumn,
+                            displayFormat: config.displayFormat,
+                            selectColumns: config.selectColumns,
+                            displayLabel: config.displayLabel,
+                            baseWhereClause: config.baseWhereClause,
+                            title: config.title || `Select ${config.modelName}`,
+                            placeholder: config.placeholder,
+                            currentValue: input.dataset.refId || null,
+                            onChange: (id, displayValue, item) => {
+                                if (id === null || id === undefined) {
+                                    input.value = '';
+                                    delete input.dataset.refId;
+                                    delete input.dataset.refItem;
+                                } else {
+                                    input.value = displayValue || '';
+                                    input.dataset.refId = id;
+                                    if (item) {
+                                        input.dataset.refItem = JSON.stringify(item);
+                                    }
                                 }
                             }
-                        }
+                        });
                     });
-                });
+                }
 
                 // Fetch display value for existing ID (matches desktop)
                 const refId = input.dataset.refId;

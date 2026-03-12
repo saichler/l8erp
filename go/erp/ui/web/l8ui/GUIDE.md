@@ -1151,7 +1151,8 @@ Layer8MPopup.show({
     cancelButtonText: 'Cancel',
     showCancelButton: true,
     onSave: (popup) => {},                     // popup.body for DOM access
-    onShow: (popup) => {}                      // Called after render
+    onShow: (popup) => {},                     // Called after render
+    onTabChange: (tabId, popup) => {}          // Called when tab switches (50ms delay for layout)
 });
 Layer8MPopup.close()
 Layer8MPopup.getBody()

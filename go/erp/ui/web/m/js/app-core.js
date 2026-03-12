@@ -81,6 +81,9 @@ limitations under the License.
             // Load configuration
             await Layer8MConfig.load();
 
+            // Load shared desktop config (needed by Layer8DModuleFilter)
+            await Layer8DConfig.load();
+
             // Set user info
             this.updateUserInfo();
 

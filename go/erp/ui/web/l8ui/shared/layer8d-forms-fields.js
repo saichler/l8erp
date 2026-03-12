@@ -10,7 +10,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 (function() {
     'use strict';
 
-    const { escapeHtml, escapeAttr, formatDateForInput } = Layer8DUtils;
+    const { escapeHtml, escapeAttr, formatDateForInput, formatDate, formatMoney } = Layer8DUtils;
 
     /**
      * Determine the appropriate zero-value label for a date field
@@ -96,6 +96,18 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             `;
         }
 
+        // Reference fields: render as disabled input even in readOnly mode
+        // so attachReferencePickers can resolve display values from IDs
+        if (isReadOnly && field.type === 'reference') {
+            const refInput = generateReferenceInput(field, value);
+            return `
+                <div class="form-group">
+                    <label for="field-${field.key}">${escapeHtml(field.label)}</label>
+                    ${refInput}
+                </div>
+            `;
+        }
+
         if (isReadOnly) {
             let displayValue = '-';
             if (value !== null && value !== undefined && value !== '' && value !== 0) {
@@ -103,9 +115,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     displayValue = field.options[value];
                 } else if (field.type === 'checkbox' || field.type === 'toggle') {
                     displayValue = value ? 'Yes' : 'No';
+                } else if (field.type === 'money') {
+                    displayValue = formatMoney(value);
+                } else if (field.type === 'date' && typeof value === 'number') {
+                    displayValue = formatDate(value);
                 } else {
                     displayValue = String(value);
                 }
+            } else if (value === 0 && field.type === 'date') {
+                displayValue = getDateZeroLabel(field.key);
             }
             return `
                 <div class="form-group">

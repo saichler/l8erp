@@ -65,6 +65,8 @@ limitations under the License.
                        name="${config.key}"
                        value="${Layer8MUtils.escapeAttr(displayValue || 'N/A')}"
                        data-ref-id="${Layer8MUtils.escapeAttr(String(refId))}"
+                       data-ref-config='${Layer8MUtils.escapeAttr(JSON.stringify(serializableConfig))}'
+                       data-lookup-model="${Layer8MUtils.escapeAttr(config.lookupModel || refConfig.modelName || '')}"
                        class="mobile-form-input reference-input"
                        readonly disabled>`;
         }

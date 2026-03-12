@@ -25,7 +25,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             const columns = this.getServiceColumns(serviceConfig);
             const transformData = this.getServiceTransformData(serviceConfig);
             const viewType = serviceConfig.viewType || 'table';
-            const primaryKey = serviceConfig.idField || 'id';
+            const primaryKey = serviceConfig.idField;
+            if (!primaryKey) {
+                console.error(`Layer8MNav: Service "${serviceConfig.key}" has no idField configured. Every service config must specify idField.`);
+            }
 
             // Build view options
             const viewOptions = {
@@ -36,7 +39,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 pageSize: 15,
                 primaryKey: primaryKey,
                 viewConfig: serviceConfig.viewConfig || {},
-                getItemId: (item) => item[primaryKey] || item.id
+                getItemId: (item) => item[primaryKey],
+                baseWhereClause: serviceConfig.baseWhereClause || null
             };
 
             if (transformData) {
@@ -49,6 +53,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 viewOptions.onAdd = () => Layer8MNavCrud.openServiceForm(serviceConfig, formDef, null);
                 viewOptions.onEdit = (id, item) => Layer8MNavCrud.openServiceForm(serviceConfig, formDef, item);
                 viewOptions.onDelete = (id, item) => Layer8MNavCrud.deleteServiceRecord(serviceConfig, id, item);
+                viewOptions.onRowClick = (item, id) => Layer8MNavCrud.showRecordDetails(serviceConfig, formDef, item);
+            } else {
                 viewOptions.onRowClick = (item, id) => Layer8MNavCrud.showRecordDetails(serviceConfig, formDef, item);
             }
 
@@ -105,6 +111,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             }
 
             // Fallback to defaults
+            console.error(`Layer8MNav: No column definitions found for model "${serviceConfig.model}". Falling back to default columns. Register columns in the appropriate Mobile module registry.`);
             return [
                 { key: serviceConfig.idField, label: 'ID', sortKey: serviceConfig.idField },
                 { key: 'name', label: 'Name', sortKey: 'name' },
