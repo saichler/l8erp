@@ -1,26 +1,27 @@
 module github.com/saichler/l8erp/go
 
-go 1.25.4
+go 1.26.1
 
 require (
 	github.com/lib/pq v1.11.2
-	github.com/saichler/l8bus v0.0.0-20260310141658-6ba8eca75fd3
+	github.com/saichler/l8bus v0.0.0-20260313172528-28faa07e3dcc
 	github.com/saichler/l8logfusion v0.0.0-20260211141533-554cf59367fe
-	github.com/saichler/l8orm v0.0.0-20260228190952-a538542eeb8c
+	github.com/saichler/l8orm v0.0.0-20260314140035-14439941c449
 	github.com/saichler/l8reflect v0.0.0-20260306101914-2763da1fd8d5
-	github.com/saichler/l8services v0.0.0-20260309235524-84b2a4a0288b
+	github.com/saichler/l8services v0.0.0-20260314152440-3ca2cb22511d
 	github.com/saichler/l8srlz v0.0.0-20251226163123-de32dc54dd4b
-	github.com/saichler/l8test v0.0.0-20260307095409-07345170933e
-	github.com/saichler/l8types v0.0.0-20260309221622-8910f592ac8d
-	github.com/saichler/l8utils v0.0.0-20260308172559-7f416422a625
-	github.com/saichler/l8web v0.0.0-20260307160922-3fca15c079b7
+	github.com/saichler/l8test v0.0.0-20260313152720-149b5154e8a7
+	github.com/saichler/l8types v0.0.0-20260314185642-0c8622597dbd
+	github.com/saichler/l8utils v0.0.0-20260313172115-9e9a3c6234e3
+	github.com/saichler/l8web v0.0.0-20260314153329-75a4c9185638
 	google.golang.org/protobuf v1.36.11
 )
 
 require (
 	github.com/google/uuid v1.6.0 // indirect
+	github.com/saichler/l8agent/go v0.0.0-20260315124109-2fd8ce2a0838 // indirect
 	github.com/saichler/l8pollaris v0.0.0-20260310131422-d7a531a1535d // indirect
-	github.com/saichler/l8ql v0.0.0-20260228184750-adc402b17e27 // indirect
+	github.com/saichler/l8ql v0.0.0-20260315011229-afeee38686c0 // indirect
 	github.com/saichler/probler v0.0.0-20260311172422-4557bf38e39e // indirect
 	golang.org/x/sys v0.42.0 // indirect
 )
