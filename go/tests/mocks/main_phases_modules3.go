@@ -63,3 +63,7 @@ func runCOMPPhases(client *HCMClient, store *MockDataStore) {
 
 	runPhase("COMP Phase 4: Reports (compliance reports)", func() error { return generateCompPhase4(client, store) })
 }
+
+func runAIAPhases(client *HCMClient, store *MockDataStore) {
+	runPhase("AIA Phase 1: Prompts and Conversations (with embedded messages)", func() error { return generateAIAPhase1(client, store) })
+}
