@@ -28,6 +28,7 @@ const sections = {
     documents: 'sections/documents.html',
     ecommerce: 'sections/ecommerce.html',
     compliance: 'sections/compliance.html',
+    aia: 'sections/aia.html',
     system: 'sections/system.html'
 };
 
@@ -91,6 +92,14 @@ const sectionInitializers = {
     compliance: () => {
         if (typeof initializeComp === 'function') {
             initializeComp();
+        }
+    },
+    aia: () => {
+        if (typeof initializeAia === 'function') {
+            initializeAia();
+        }
+        if (typeof _aiaPostInit === 'function') {
+            _aiaPostInit();
         }
     },
     system: () => {
