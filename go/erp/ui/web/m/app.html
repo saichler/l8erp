@@ -51,6 +51,7 @@ limitations under the License.
     <link rel="stylesheet" href="../l8ui/gantt/layer8d-gantt.css">
     <link rel="stylesheet" href="../l8ui/wizard/layer8d-wizard.css">
     <link rel="stylesheet" href="../l8ui/dashboard/layer8d-widget.css">
+    <link rel="stylesheet" href="../l8ui/l8agent/m/l8agent-chat-m.css">
     <link rel="stylesheet" href="../l8ui/shared/layer8-view-switcher.css">
 </head>
 <body>
@@ -200,6 +201,16 @@ limitations under the License.
                             </svg>
                         </span>
                         Compliance
+                    </a>
+                    <a href="#dashboard" class="sidebar-item" data-section="dashboard" data-module="aia">
+                        <span class="sidebar-item-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1.17A7 7 0 0 1 14 23h-4a7 7 0 0 1-6.83-4H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"></path>
+                                <circle cx="9" cy="15" r="1"></circle>
+                                <circle cx="15" cy="15" r="1"></circle>
+                            </svg>
+                        </span>
+                        AI Agent
                     </a>
                     <a href="#dashboard" class="sidebar-item" data-section="dashboard" data-module="hcm">
                         <span class="sidebar-item-icon">
@@ -582,6 +593,21 @@ limitations under the License.
 
     <!-- Scripts - ECOM Registry -->
     <script src="js/ecom/ecom-index.js"></script>
+
+    <!-- Scripts - L8Agent Shared (from l8ui) -->
+    <script src="../l8ui/l8agent/l8agent-enums.js"></script>
+    <script src="../l8ui/l8agent/l8agent-columns.js"></script>
+    <script src="../l8ui/l8agent/l8agent-forms.js"></script>
+    <script src="../l8ui/l8agent/m/l8agent-chat-m.js"></script>
+
+    <!-- Scripts - AIA Enums/Columns/Forms -->
+    <script src="js/aia/agent-enums.js"></script>
+    <script src="js/aia/agent-columns.js"></script>
+    <script src="js/aia/agent-forms.js"></script>
+    <script src="js/aia/agent-chat-init.js"></script>
+
+    <!-- Scripts - AIA Registry -->
+    <script src="js/aia/aia-index.js"></script>
 
     <!-- Scripts - PRJ Enums -->
     <script src="js/prj/planning-enums.js"></script>

@@ -47,6 +47,7 @@ limitations under the License.
         documents: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.documents,
         ecommerce: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.ecommerce,
         compliance: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.compliance,
+        aia: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.aia,
         system: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.system,
 
         // Icons from icons config

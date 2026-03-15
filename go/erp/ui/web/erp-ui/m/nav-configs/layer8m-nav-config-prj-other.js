@@ -188,6 +188,21 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             }
         },
 
+        // AIA Sub-Modules (Level 2)
+        aia: {
+            subModules: [
+                { key: 'agent', label: 'Agent', icon: 'aia' }
+            ],
+
+            services: {
+                'agent': [
+                    { key: 'chat', label: 'Chat', icon: 'aia', customInit: 'MobileAiaAgent', customContainer: 'aia-chat-container', subtitle: 'AI-powered assistant' },
+                    { key: 'conversations', label: 'Conversations', icon: 'documents', endpoint: '/120/AgntConvo', model: 'L8AgentConversation', idField: 'conversationId' },
+                    { key: 'prompts', label: 'Prompts', icon: 'learning', endpoint: '/120/AgntPrmpt', model: 'L8AgentPrompt', idField: 'promptId' }
+                ]
+            }
+        },
+
         // System Sub-Modules (Level 2)
         system: {
             subModules: [
