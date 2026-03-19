@@ -98,9 +98,6 @@ const sectionInitializers = {
         if (typeof initializeAia === 'function') {
             initializeAia();
         }
-        if (typeof _aiaPostInit === 'function') {
-            _aiaPostInit();
-        }
     },
     system: () => {
         if (typeof initializeL8Sys === 'function') {

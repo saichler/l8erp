@@ -4,7 +4,8 @@
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
 // AI Agent - Chat Component Initialization for L8ERP
-// Initializes L8AgentChat with ERP-specific endpoints
+// Hooks into the module navigation to render the ChatGPT-like chat UI
+// instead of a standard table when the "chat" service is active.
 
 (function() {
     'use strict';
@@ -21,25 +22,23 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         }
     };
 
-    // Hook into the module navigation to initialize chat when the chat service is shown
+    // Override the module initializer to also init the chat UI
     var origInit = window.initializeAia;
-    window._aiaPostInit = function() {
+    window.initializeAia = function() {
         if (origInit) origInit();
+
         // Initialize chat when the chat service view becomes active
         var chatView = document.querySelector('.l8-service-view[data-service="chat"]');
         if (chatView) {
-            var observer = new MutationObserver(function(mutations) {
+            if (chatView.classList.contains('active')) {
+                AiaAgent.initChat();
+            }
+            var observer = new MutationObserver(function() {
                 if (chatView.classList.contains('active')) {
                     AiaAgent.initChat();
-                    observer.disconnect();
                 }
             });
             observer.observe(chatView, { attributes: true, attributeFilter: ['class'] });
-            // If already active, init now
-            if (chatView.classList.contains('active')) {
-                AiaAgent.initChat();
-                observer.disconnect();
-            }
         }
     };
 })();
