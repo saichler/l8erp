@@ -316,7 +316,7 @@ The mobile-parity rule requires that the same action produces the same result on
 - ~~Double-entry journal enforcement (debit = credit)~~ — **DONE**: `validateLines` in JournalEntryServiceCallback enforces debit/credit exclusivity per line and total debit = total credit on POSTED entries
 - ~~Period open/close management~~ — **DONE**: `validatePeriodOpen` blocks posting to closed fiscal periods; `GetEntities` enhanced to support "get all" via L8Query when filter is empty; `updateAccountBalances` After() hook updates Account balances on post
 - Bank reconciliation
-- Multi-currency conversion with exchange rates
+- Multi-currency conversion with exchange rates — **NOTE**: L8Query aggregate functions (sum, avg, etc.) on Money fields currently use `totalAmount.amount` which sums raw cent values without currency conversion. Records with different `currencyCode` values are summed as-is. A proper implementation must convert all amounts to a common currency using exchange rates before aggregation.
 - Intercompany transactions
 - Fixed asset depreciation calculations
 - Tax calculation engine
