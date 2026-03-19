@@ -39,6 +39,7 @@ func main() {
 	}
 
 	services.ActivateAllServices(common.DB_CREDS, common.DB_NAME, nic)
+	services.ActivateChatService(common.DB_CREDS, common.DB_NAME, nic)
 
 	common.WaitForSignal(res)
 }

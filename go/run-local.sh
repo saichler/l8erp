@@ -43,7 +43,7 @@ echo "rm -rf demo" >> ./kill_demo.sh
 echo "rm -rf /data/postgres/admin" >> ./kill_demo.sh
 echo "pkill -9 demo" >> ./kill_demo.sh
 chmod +x ./kill_demo.sh
-echo "Key=$ANTHROPIC_API_KEY"
+echo "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY"
 read -p "Press Enter"
 ./log-vnet_demo &
 ./vnet_demo &

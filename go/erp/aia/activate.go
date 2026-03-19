@@ -6,21 +6,17 @@ package aia
 import (
 	agent "github.com/saichler/l8agent/go"
 	"github.com/saichler/l8agent/go/types/l8agent"
-	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
 const (
 	ServiceArea = byte(120)
-	WebPort     = 2773
 )
 
-func Activate(creds, dbname string, vnic ifs.IVNic) {
-	agent.Initialize(agent.AgentConfig{
+func AgentConfig(creds, dbname string, vnic ifs.IVNic) agent.AgentConfig {
+	return agent.AgentConfig{
 		Resources:   vnic.Resources(),
-		Prefix:      common.PREFIX,
 		ServiceArea: ServiceArea,
-		WebPort:     WebPort,
 		DBCreds:     creds,
 		DBName:      dbname,
 		DefaultPrompts: []*l8agent.L8AgentPrompt{
@@ -52,5 +48,18 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 				Category:       int32(l8agent.L8AgentPromptCategory_L8_AGENT_PROMPT_CATEGORY_ANALYSIS),
 			},
 		},
-	}, vnic)
+	}
+}
+
+// Activate activates the ORM services (conversations, messages, prompts).
+func Activate(creds, dbname string, vnic ifs.IVNic) {
+	config := AgentConfig(creds, dbname, vnic)
+	agent.Initialize(config, vnic)
+}
+
+// ActivateChat activates the Chat orchestration service.
+// Must be called after all other services are activated.
+func ActivateChat(creds, dbname string, vnic ifs.IVNic) {
+	config := AgentConfig(creds, dbname, vnic)
+	agent.InitializeChat(config, vnic)
 }

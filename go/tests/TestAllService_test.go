@@ -52,7 +52,8 @@ func TestAllServices(t *testing.T) {
 	dropAllTables(t)
 
 	// 1. Activate all ERP services on the services vNic
-	services.ActivateAllServices("admin", "admin", erpServicesVnic)
+	services.ActivateAllServices(common.DB_CREDS, common.DB_NAME, erpServicesVnic)
+	services.ActivateChatService(common.DB_CREDS, common.DB_NAME, erpServicesVnic)
 	// 2. Start web server on the web service vNic (non-blocking)
 	port := 9443
 	startWebServer(port, webServiceVnic)

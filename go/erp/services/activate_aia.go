@@ -13,3 +13,9 @@ func collectAiaActivations(creds, dbname string, nic ifs.IVNic) []func() {
 		func() { aia.Activate(creds, dbname, nic) },
 	}
 }
+
+// ActivateChatService activates the AI Agent Chat service.
+// Must be called after ActivateAllServices so the introspector is fully populated.
+func ActivateChatService(creds, dbname string, nic ifs.IVNic) {
+	aia.ActivateChat(creds, dbname, nic)
+}

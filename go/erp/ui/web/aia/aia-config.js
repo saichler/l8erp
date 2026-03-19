@@ -11,7 +11,7 @@ Layer8ModuleConfigFactory.create({
         'agent': {
             label: 'Agent', icon: '🤖',
             services: [
-                { key: 'chat', label: 'Chat', icon: '💬', endpoint: '/120/AgntChat', model: 'L8AgentChatConversation' },
+                { key: 'chat', label: 'Chat', icon: '💬', endpoint: '/120/AgntChat', model: 'L8AgentChatConversation', customView: true },
                 { key: 'prompts', label: 'Prompts', icon: '📋', endpoint: '/120/AgntPrmpt', model: 'L8AgentPrompt' }
             ]
         }
