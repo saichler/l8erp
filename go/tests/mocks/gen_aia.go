@@ -17,7 +17,8 @@ package mocks
 // gen_aia.go
 // Generates:
 // - L8AgentPrompt (5 records — built-in prompt templates)
-// - L8AgentConversation (3 records — sample conversations with embedded messages)
+// - L8AgentConversation (3 records — conversation metadata)
+// - L8AgentChatMessage (8 records — messages across conversations)
 
 import (
 	"fmt"
@@ -98,7 +99,7 @@ func generateAgentPrompts(store *MockDataStore) []*l8agent.L8AgentPrompt {
 	return prompts
 }
 
-// generateAgentConversations creates sample conversation records with embedded messages
+// generateAgentConversations creates conversation metadata records (no embedded messages)
 func generateAgentConversations(store *MockDataStore) []*l8agent.L8AgentConversation {
 	now := time.Now()
 
@@ -110,36 +111,6 @@ func generateAgentConversations(store *MockDataStore) []*l8agent.L8AgentConversa
 			Status:         int32(l8agent.L8AgentConvoStatus_L8_AGENT_CONVO_STATUS_ACTIVE),
 			CreatedAt:      now.AddDate(0, 0, -7).Unix(),
 			UpdatedAt:      now.AddDate(0, 0, -7).Unix(),
-			Messages: []*l8agent.L8AgentMessage{
-				{
-					MessageId:  fmt.Sprintf("msg-%03d", 1),
-					Role:       int32(l8agent.L8AgentMessageRole_L8_AGENT_MESSAGE_ROLE_USER),
-					Content:    "What is the total revenue for Q4 across all accounts?",
-					Timestamp:  now.AddDate(0, 0, -7).Unix(),
-					TokenCount: 15,
-				},
-				{
-					MessageId:  fmt.Sprintf("msg-%03d", 2),
-					Role:       int32(l8agent.L8AgentMessageRole_L8_AGENT_MESSAGE_ROLE_ASSISTANT),
-					Content:    "Based on the General Ledger data, the total Q4 revenue across all revenue accounts is $2,450,000. This represents a 12% increase over Q3.",
-					Timestamp:  now.AddDate(0, 0, -7).Add(time.Second * 3).Unix(),
-					TokenCount: 42,
-					ToolCalls: []*l8agent.L8AgentToolCall{
-						{
-							ToolCallId: "tc-001",
-							ToolName:   "query_data",
-							ToolInput:  `{"query":"select * from FinAccount where accountType=1","module":"fin"}`,
-						},
-					},
-					ToolResults: []*l8agent.L8AgentToolResult{
-						{
-							ToolCallId: "tc-001",
-							Result:     `{"totalRevenue":245000000,"accountCount":15}`,
-							IsError:    false,
-						},
-					},
-				},
-			},
 		},
 		{
 			ConversationId: genID("aconv", 1),
@@ -148,36 +119,6 @@ func generateAgentConversations(store *MockDataStore) []*l8agent.L8AgentConversa
 			Status:         int32(l8agent.L8AgentConvoStatus_L8_AGENT_CONVO_STATUS_ACTIVE),
 			CreatedAt:      now.AddDate(0, 0, -3).Unix(),
 			UpdatedAt:      now.AddDate(0, 0, -3).Unix(),
-			Messages: []*l8agent.L8AgentMessage{
-				{
-					MessageId:  fmt.Sprintf("msg-%03d", 3),
-					Role:       int32(l8agent.L8AgentMessageRole_L8_AGENT_MESSAGE_ROLE_USER),
-					Content:    "Show me the headcount breakdown by department",
-					Timestamp:  now.AddDate(0, 0, -3).Unix(),
-					TokenCount: 12,
-				},
-				{
-					MessageId:  fmt.Sprintf("msg-%03d", 4),
-					Role:       int32(l8agent.L8AgentMessageRole_L8_AGENT_MESSAGE_ROLE_ASSISTANT),
-					Content:    "Here is the headcount breakdown by department:\n- Engineering: 45\n- Sales: 32\n- Marketing: 18\n- Finance: 12\n- HR: 8\nTotal active employees: 115",
-					Timestamp:  now.AddDate(0, 0, -3).Add(time.Second * 2).Unix(),
-					TokenCount: 55,
-				},
-				{
-					MessageId:  fmt.Sprintf("msg-%03d", 5),
-					Role:       int32(l8agent.L8AgentMessageRole_L8_AGENT_MESSAGE_ROLE_USER),
-					Content:    "Which department has the highest turnover rate?",
-					Timestamp:  now.AddDate(0, 0, -3).Add(time.Minute).Unix(),
-					TokenCount: 10,
-				},
-				{
-					MessageId:  fmt.Sprintf("msg-%03d", 6),
-					Role:       int32(l8agent.L8AgentMessageRole_L8_AGENT_MESSAGE_ROLE_ASSISTANT),
-					Content:    "Sales has the highest turnover rate at 18% annually, followed by Marketing at 12%. Engineering has the lowest at 5%.",
-					Timestamp:  now.AddDate(0, 0, -3).Add(time.Minute + time.Second*3).Unix(),
-					TokenCount: 35,
-				},
-			},
 		},
 		{
 			ConversationId: genID("aconv", 2),
@@ -186,23 +127,82 @@ func generateAgentConversations(store *MockDataStore) []*l8agent.L8AgentConversa
 			Status:         int32(l8agent.L8AgentConvoStatus_L8_AGENT_CONVO_STATUS_ARCHIVED),
 			CreatedAt:      now.AddDate(0, 0, -14).Unix(),
 			UpdatedAt:      now.AddDate(0, 0, -10).Unix(),
-			Messages: []*l8agent.L8AgentMessage{
-				{
-					MessageId:  fmt.Sprintf("msg-%03d", 7),
-					Role:       int32(l8agent.L8AgentMessageRole_L8_AGENT_MESSAGE_ROLE_USER),
-					Content:    "Are there any items below reorder point?",
-					Timestamp:  now.AddDate(0, 0, -14).Unix(),
-					TokenCount: 10,
-				},
-				{
-					MessageId:  fmt.Sprintf("msg-%03d", 8),
-					Role:       int32(l8agent.L8AgentMessageRole_L8_AGENT_MESSAGE_ROLE_ASSISTANT),
-					Content:    "There are 7 items currently below their reorder points. The most critical are: Raw Material A (12 units vs 50 minimum), Component B (3 units vs 25 minimum).",
-					Timestamp:  now.AddDate(0, 0, -14).Add(time.Second * 4).Unix(),
-					TokenCount: 48,
-				},
-			},
 		},
 	}
 	return conversations
+}
+
+// generateAgentChatMessages creates individual chat messages for the sample conversations
+func generateAgentChatMessages(store *MockDataStore) []*l8agent.L8AgentChatMessage {
+	now := time.Now()
+	convo0 := genID("aconv", 0)
+	convo1 := genID("aconv", 1)
+	convo2 := genID("aconv", 2)
+
+	messages := []*l8agent.L8AgentChatMessage{
+		// Conversation 0: Q4 Revenue Analysis (2 messages)
+		{
+			ConversationId: convo0,
+			Sequence:       1,
+			IsLlm:          false,
+			Message:        "What is the total revenue for Q4 across all accounts?",
+			Timestamp:      now.AddDate(0, 0, -7).Unix(),
+		},
+		{
+			ConversationId: convo0,
+			Sequence:       2,
+			IsLlm:          true,
+			Message:        "Based on the General Ledger data, the total Q4 revenue across all revenue accounts is $2,450,000. This represents a 12% increase over Q3.",
+			Timestamp:      now.AddDate(0, 0, -7).Add(time.Second * 3).Unix(),
+			TokenCount:     42,
+		},
+		// Conversation 1: Department Headcount (4 messages)
+		{
+			ConversationId: convo1,
+			Sequence:       1,
+			IsLlm:          false,
+			Message:        "Show me the headcount breakdown by department",
+			Timestamp:      now.AddDate(0, 0, -3).Unix(),
+		},
+		{
+			ConversationId: convo1,
+			Sequence:       2,
+			IsLlm:          true,
+			Message:        fmt.Sprintf("Here is the headcount breakdown by department:\n- Engineering: 45\n- Sales: 32\n- Marketing: 18\n- Finance: 12\n- HR: 8\nTotal active employees: 115"),
+			Timestamp:      now.AddDate(0, 0, -3).Add(time.Second * 2).Unix(),
+			TokenCount:     55,
+		},
+		{
+			ConversationId: convo1,
+			Sequence:       3,
+			IsLlm:          false,
+			Message:        "Which department has the highest turnover rate?",
+			Timestamp:      now.AddDate(0, 0, -3).Add(time.Minute).Unix(),
+		},
+		{
+			ConversationId: convo1,
+			Sequence:       4,
+			IsLlm:          true,
+			Message:        "Sales has the highest turnover rate at 18% annually, followed by Marketing at 12%. Engineering has the lowest at 5%.",
+			Timestamp:      now.AddDate(0, 0, -3).Add(time.Minute + time.Second*3).Unix(),
+			TokenCount:     35,
+		},
+		// Conversation 2: Inventory Status (2 messages)
+		{
+			ConversationId: convo2,
+			Sequence:       1,
+			IsLlm:          false,
+			Message:        "Are there any items below reorder point?",
+			Timestamp:      now.AddDate(0, 0, -14).Unix(),
+		},
+		{
+			ConversationId: convo2,
+			Sequence:       2,
+			IsLlm:          true,
+			Message:        "There are 7 items currently below their reorder points. The most critical are: Raw Material A (12 units vs 50 minimum), Component B (3 units vs 25 minimum).",
+			Timestamp:      now.AddDate(0, 0, -14).Add(time.Second * 4).Unix(),
+			TokenCount:     48,
+		},
+	}
+	return messages
 }

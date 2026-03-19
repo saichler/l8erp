@@ -24,7 +24,7 @@ import (
 	"github.com/saichler/l8agent/go/types/l8agent"
 )
 
-// generateAIAPhase1 generates prompts and sample conversations
+// generateAIAPhase1 generates prompts, conversations, and messages
 func generateAIAPhase1(client *HCMClient, store *MockDataStore) error {
 	// Generate L8AgentPrompts
 	prompts := generateAgentPrompts(store)
@@ -37,7 +37,7 @@ func generateAIAPhase1(client *HCMClient, store *MockDataStore) error {
 	}
 	fmt.Printf("  Created %d L8AgentPrompts\n", len(prompts))
 
-	// Generate L8AgentConversations (with embedded messages)
+	// Generate L8AgentConversations (metadata only)
 	conversations := generateAgentConversations(store)
 	_, err = client.Post("/erp/120/AgntConvo", &l8agent.L8AgentConversationList{List: conversations})
 	if err != nil {
@@ -46,7 +46,15 @@ func generateAIAPhase1(client *HCMClient, store *MockDataStore) error {
 	for _, c := range conversations {
 		store.ConversationIDs = append(store.ConversationIDs, c.ConversationId)
 	}
-	fmt.Printf("  Created %d L8AgentConversations (with embedded messages)\n", len(conversations))
+	fmt.Printf("  Created %d L8AgentConversations\n", len(conversations))
+
+	// Generate L8AgentChatMessages (separate from conversations)
+	messages := generateAgentChatMessages(store)
+	_, err = client.Post("/erp/120/AgntMsg", &l8agent.L8AgentChatMessageList{List: messages})
+	if err != nil {
+		return fmt.Errorf("failed to create L8AgentChatMessages: %w", err)
+	}
+	fmt.Printf("  Created %d L8AgentChatMessages\n", len(messages))
 
 	return nil
 }

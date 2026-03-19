@@ -16,7 +16,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             L8AgentChat.init({
                 containerId: 'agent-chat-container',
                 chatEndpoint: '/120/AgntChat',
-                convoEndpoint: '/120/AgntConvo',
                 promptEndpoint: '/120/AgntPrmpt'
             });
         }
