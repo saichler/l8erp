@@ -28,7 +28,7 @@
 
 ERP by Layer 8 is a comprehensive Enterprise Resource Planning system built from the ground up with Go. It provides a unified platform for managing all aspects of an organization — from financial operations and human capital to supply chain, manufacturing, sales, and beyond.
 
-With **12 modules**, **243 business services**, and **72 protobuf schemas** defining **654 entity types**, the system covers the complete enterprise lifecycle:
+With **12 modules**, **243 business services**, and **72 protobuf schemas** defining **654 message types** and **288 enums**, the system covers the complete enterprise lifecycle:
 
 - **Financial Management** — GL, AP, AR, Cash, Fixed Assets, Budgeting, Tax
 - **Human Capital** — Core HR, Payroll, Benefits, Talent, Learning, Compensation, Time & Attendance
@@ -50,18 +50,21 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared infrastr
 - **243 Business Services** across 12 integrated modules
 - **8 Data View Types** — Table, Chart, Kanban, Calendar, Timeline, Gantt, Tree Grid, and Wizard with per-service view switching
 - **Desktop + Mobile Apps** — full-featured web and mobile interfaces with complete view parity
+- **AI Agent** — integrated AI chat assistant with contextual ERP knowledge
+- **Dashboard** — cross-module statistics and KPI overview
 - **Module Selection** — enable/disable modules at runtime with automatic dependency management
 - **System Dependency Map** — visual module dependency graph for configuration
 - **Multi-Currency Support** — real-time exchange rate conversion across all financial fields
-- **Protobuf Data Model** — 72 schema files defining 654 entity types with cross-module references
-- **Mock Data Generation** — realistic test data generators for all services with phased dependency ordering
+- **Protobuf Data Model** — 72 schema files defining 654 message types with cross-module references
+- **Mock Data Generation** — realistic test data generators covering all 243 services with phased dependency ordering
 - **Validation Framework** — declarative validation builder with required fields, enums, and reference checks
 - **Factory-Driven UI** — shared factories for forms, columns, enums, references, sections, and SVG
 - **Full Audit Trail** — complete transaction history across all modules
-- **API-First Design** — RESTful APIs for all services
-- **Kubernetes Native** — deploy on any K8s cluster with included manifests
+- **Marketing Site** — product landing page with feature showcase
+- **API-First Design** — RESTful APIs for all services with L8Query language
+- **Kubernetes Native** — deploy on any K8s cluster with 6 included manifests
 - **Zero Frontend Dependencies** — pure vanilla JavaScript, no build step required
-- **Comprehensive Tests** — 25 test files covering service getters and handlers
+- **Comprehensive Tests** — 25 test files covering service getters and handlers across all modules
 
 ## Modules
 
@@ -86,20 +89,20 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared infrastr
 ### Prerequisites
 
 - Go 1.25 or later
-- PostgreSQL 14 or later
+- Docker (for PostgreSQL and deployment)
 
 ### Run Locally
 
 ```bash
 # Clone the repository
 git clone https://github.com/saichler/l8erp.git
-cd l8erp
+cd l8erp/go
 
-# Run the web server
-go run ./go/erp/ui/main1/
+# Full local startup (builds, starts DB, loads mock data)
+./run-local.sh
 
-# Generate mock data (optional, in a separate terminal)
-go run ./go/tests/mocks/
+# Or run just the web server
+go run ./erp/ui/main1/
 ```
 
 ### Access the Application
@@ -133,12 +136,18 @@ docker build -t erp-web -f go/erp/ui/Dockerfile go/
 
 ```bash
 # Deploy all components
-kubectl apply -f k8s/
+cd k8s && ./deploy.sh
 
-# Components:
-#   erp-web  (DaemonSet)    — Web UI on all nodes
-#   erp-main (StatefulSet)  — ERP services with persistent storage
-#   vnet     (DaemonSet)    — Virtual network overlay
+# Components (6 manifests):
+#   vnet       (DaemonSet)    — Virtual network overlay
+#   logs       (DaemonSet)    — Log aggregation vnet
+#   erp        (StatefulSet)  — ERP backend services
+#   web        (DaemonSet)    — Web UI on all nodes
+#   log-agent  (DaemonSet)    — Log collection agent
+#   maint      (Service)      — Maintenance operations
+
+# Teardown
+./undeploy.sh
 ```
 
 ## Project Structure
@@ -163,6 +172,7 @@ l8erp/
 │   ├── erp/
 │   │   ├── common/              # Shared: validation builder, service factory, defaults
 │   │   ├── services/            # Module activation (activate_hcm.go, activate_fin.go, ...)
+│   │   ├── aia/                 # AI Agent (chat assistant)
 │   │   ├── hcm/                 # Human Capital Management (57 services)
 │   │   ├── fin/                 # Financial Management (28 services)
 │   │   ├── scm/                 # Supply Chain Management (29 services)
@@ -174,15 +184,17 @@ l8erp/
 │   │   ├── doc/                 # Document Management (11 services)
 │   │   ├── ecom/                # E-Commerce (13 services)
 │   │   ├── comp/                # Compliance & Risk (11 services)
-│   │   ├── sys/                 # System Administration (1 service)
-│   │   ├── main/                # ERP service entry point + Dockerfile
+│   │   ├── sys/                 # System Administration (2 services)
+│   │   ├── main/                # ERP backend entry point + Dockerfile
 │   │   ├── ui/                  # Web server + UI assets
 │   │   │   ├── main1/           #   Web server entry point
 │   │   │   └── web/             #   Web application root
 │   │   │       ├── app.html     #     Desktop application shell
-│   │   │       ├── l8ui/        #     Shared UI framework (factories, navigation, CRUD, forms)
+│   │   │       ├── l8ui/        #     Shared UI library (submodule)
 │   │   │       ├── erp-ui/      #     ERP-specific UI (SVG templates, section configs)
-│   │   │       ├── sections/    #     Section HTML files (13 sections)
+│   │   │       ├── sections/    #     Section HTML files (14 sections)
+│   │   │       ├── dashboard/   #     Cross-module dashboard
+│   │   │       ├── aia/         #     AI Agent UI
 │   │   │       ├── hcm/         #     HCM UI (config, enums, columns, forms per submodule)
 │   │   │       ├── fin/         #     Financial UI
 │   │   │       ├── scm/         #     SCM UI
@@ -196,20 +208,25 @@ l8erp/
 │   │   │       ├── comp/        #     Compliance UI
 │   │   │       ├── js/          #     Shared JS (reference registries, sections, utils)
 │   │   │       ├── marketing/   #     Marketing landing page
-│   │   │       ├── m/           #     Mobile app (239 JS files, full view parity with desktop)
+│   │   │       ├── m/           #     Mobile app (full view parity with desktop)
 │   │   │       └── login/       #     Login page
 │   │   └── vnet/                # Virtual network layer + Dockerfile
-│   ├── types/                   # Generated Go types from protobuf (~134,000 lines)
+│   ├── logs/                    # Log infrastructure
+│   │   ├── agent/               #   Log collection agent + Dockerfile
+│   │   └── vnet/                #   Log aggregation vnet + Dockerfile
+│   ├── maint/                   # Maintenance service + Dockerfile
+│   ├── types/                   # Generated Go types from protobuf (~133,500 lines)
 │   ├── tests/                   # Test suite
 │   │   ├── *_test.go            #   25 test files (getters + handlers per module)
-│   │   └── mocks/               #   Mock data generators (118 files)
+│   │   └── mocks/               #   Mock data generators (120 files)
 │   │       ├── data_*.go        #     Curated name/data arrays per module
-│   │       ├── gen_*.go         #     Entity generators (74 files)
+│   │       ├── gen_*.go         #     Entity generators (75 files)
 │   │       ├── *_phases*.go     #     Phase orchestration
-│   │       ├── store*.go        #     Shared mock data store
+│   │       ├── store*.go        #     Shared mock data store (ID slices per module)
 │   │       └── utils.go         #     Helpers (pickRef, randomMoney, genID, genLines, ...)
-│   └── vendor/                  # Vendored Go dependencies
-├── k8s/                         # Kubernetes manifests (erp, web, vnet)
+│   ├── vendor/                  # Vendored Go dependencies
+│   └── run-local.sh             # Full local development startup script
+├── k8s/                         # 6 Kubernetes manifests + deploy/undeploy scripts
 └── tools/                       # Dev tools (REST client, migration scripts)
 ```
 
@@ -250,7 +267,8 @@ l8erp/
 | Backend | Go 1.25 |
 | Database | PostgreSQL 14+ |
 | Frontend | Vanilla JavaScript (zero dependencies, no build step) |
-| API | REST |
+| UI Library | [l8ui](https://github.com/saichler/l8ui) (shared component framework) |
+| API | REST with L8Query language |
 | Serialization | Protocol Buffers |
 | Container | Docker |
 | Orchestration | Kubernetes |
@@ -263,6 +281,7 @@ This ERP is built on top of the Layer 8 open-source infrastructure:
 
 | Component | Purpose |
 |-----------|---------|
+| [l8ui](https://github.com/saichler/l8ui) | Shared UI component library (tables, forms, charts, kanban, etc.) |
 | [l8bus](https://github.com/saichler/l8bus) | Message bus and virtual network overlay |
 | [l8orm](https://github.com/saichler/l8orm) | Object-relational mapping |
 | [l8services](https://github.com/saichler/l8services) | Service framework (activation, callbacks, routing) |
@@ -277,53 +296,100 @@ This ERP is built on top of the Layer 8 open-source infrastructure:
 
 | Category | Files | Lines |
 |----------|-------|-------|
-| Go source (hand-written) | 692 | ~51,900 |
+| Go source (hand-written) | 702 | ~53,100 |
 | Go types (generated from protobuf) | — | ~133,500 |
-| JavaScript | 572 | ~69,300 |
-| CSS | 84 | ~18,800 |
-| HTML | 51 | — |
+| JavaScript (ERP-specific) | 457 | ~43,900 |
+| JavaScript (l8ui shared library) | 133 | ~26,700 |
+| CSS (ERP-specific) | 40 | ~8,600 |
+| CSS (l8ui shared library) | 48 | ~10,700 |
+| HTML | 50 | — |
 | Protobuf schemas | 72 | ~14,200 |
-| Mock data generators | 74 | — |
+| Protobuf enums | 288 | — |
+| Mock data generators | 75 | — |
+| Mock data files (total) | 120 | — |
 | Test files | 25 | — |
+
+## UI Architecture
+
+The frontend is a zero-dependency vanilla JavaScript application with full desktop and mobile parity.
+
+### Shared UI Library (l8ui)
+
+The [l8ui](https://github.com/saichler/l8ui) submodule provides reusable components for both desktop and mobile:
+
+- **Table** — paginated data grid with sorting, filtering, and inline editing
+- **Chart** — bar, line, pie, and area charts with theme-aware colors
+- **Kanban** — drag-and-drop lane-based board
+- **Calendar** — month/week/day event views
+- **Timeline** — chronological event visualization
+- **Gantt** — project scheduling and dependency charts
+- **Tree Grid** — hierarchical data display
+- **Wizard** — multi-step guided workflows
+- **Dashboard** — configurable widget grid with stats cards
+- **Forms** — field factory with 15+ field types (text, select, money, date, reference, inline table, etc.)
+- **Reference Picker** — searchable lookup for cross-entity references
+- **Popup** — stacking modal system with scoped DOM queries
+- **Navigation** — module/submodule/service card-based navigation
+
+### Factory-Driven Module Pattern
+
+Each ERP module's UI consists of configuration-only files — all behavioral logic lives in shared factories:
+
+```
+<module>/
+├── <module>-config.js          # Service definitions and endpoints
+├── <module>-init.js            # ~10 lines: Layer8DModuleFactory.create() call
+└── <submodule>/
+    ├── <submodule>-enums.js    # Status/type/priority enums via Layer8EnumFactory
+    ├── <submodule>-columns.js  # Table columns via Layer8ColumnFactory
+    └── <submodule>-forms.js    # Form fields via Layer8FormFactory
+```
 
 ## Development
 
 ### Running Tests
 
 ```bash
-# Run all service tests
-go test ./go/tests/...
+cd go
 
-# Generate mock data
-go run ./go/tests/mocks/
+# Run all service tests
+go test ./tests/...
+
+# Generate mock data (requires running server)
+go run ./tests/mocks/cmd/
 ```
 
 ### Building
 
 ```bash
-# Build web server
-go build -o erp-web ./go/erp/ui/main1/
+cd go
 
-# Build ERP service
-go build -o erp-main ./go/erp/main/
-
-# Build virtual network
-go build -o erp-vnet ./go/erp/vnet/
+# Build all packages
+go build ./...
 
 # Regenerate protobuf types (after modifying .proto files)
-cd proto && ./make-bindings.sh
+cd ../proto && ./make-bindings.sh
 ```
 
 ### UI Development
 
 The frontend uses no build tools. Edit files in `go/erp/ui/web/` and refresh the browser.
 
-Each module's UI follows a consistent pattern:
-- `<module>-config.js` — service definitions and endpoints
-- `<submodule>-enums.js` — status/type/priority enums
-- `<submodule>-columns.js` — table column definitions
-- `<submodule>-forms.js` — form field definitions
-- `<module>-init.js` — module initialization via `Layer8DModuleFactory.create()`
+### Local Development
+
+The `run-local.sh` script handles the full local setup:
+
+1. Cleans and fetches Go dependencies
+2. Starts a PostgreSQL container
+3. Builds all binaries (backend, vnet, UI, mock data generator)
+4. Copies web assets
+5. Starts all services in dependency order
+6. Uploads mock data
+7. Generates a cleanup script (`kill_demo.sh`)
+
+```bash
+cd go && ./run-local.sh
+```
 
 ## License
 
