@@ -70,6 +70,16 @@ limitations under the License.
     let currentSection = 'dashboard';
     let sectionCache = {};
 
+    // Global showErrorAndLogout for layer8d-module-filter.js compatibility
+    window.showErrorAndLogout = function(message, detail) {
+        if (typeof Layer8MAuth !== 'undefined') {
+            Layer8MAuth.showErrorAndLogout(message, detail);
+        } else {
+            alert(message + (detail ? '\n\n' + detail : ''));
+            window.location.href = '/l8ui/login/';
+        }
+    };
+
     window.MobileApp = {
         /**
          * Initialize the app

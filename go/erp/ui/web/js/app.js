@@ -29,7 +29,7 @@ async function makeAuthenticatedRequest(url, options = {}) {
 
     if (!bearerToken) {
         console.error('No bearer token found');
-        window.location.href = 'l8ui/login/index.html';
+        showErrorAndLogout('Your session has expired or is missing.', 'No authentication token was found. Please log in again.');
         return;
     }
 
@@ -46,10 +46,9 @@ async function makeAuthenticatedRequest(url, options = {}) {
             headers: headers
         });
 
-        // If unauthorized, redirect to login
+        // If unauthorized, show error and redirect to login
         if (response.status === 401) {
-            sessionStorage.removeItem('bearerToken');
-            window.location.href = 'l8ui/login/index.html';
+            showErrorAndLogout('Unauthorized — your session has expired.', 'The server returned 401 for endpoint: ' + url);
             return;
         }
 
@@ -71,6 +70,37 @@ function logout() {
     window.location.href = 'l8ui/login/index.html';
 }
 
+// Show error popup before logging out — gives user visibility into what went wrong
+function showErrorAndLogout(message, detail) {
+    // Clear tokens immediately so no further API calls are attempted
+    sessionStorage.removeItem('bearerToken');
+    localStorage.removeItem('bearerToken');
+    localStorage.removeItem('rememberedUser');
+
+    // If Layer8DPopup is available, show a blocking popup
+    if (typeof Layer8DPopup !== 'undefined') {
+        Layer8DPopup.show({
+            title: 'Session Error',
+            content: '<div style="padding:16px;">' +
+                '<p style="margin-bottom:12px;font-size:15px;">' + Layer8DUtils.escapeHtml(message) + '</p>' +
+                (detail ? '<pre style="background:var(--layer8d-bg-light);padding:12px;border-radius:6px;font-size:12px;max-height:200px;overflow:auto;white-space:pre-wrap;word-break:break-word;">' + Layer8DUtils.escapeHtml(detail) + '</pre>' : '') +
+                '</div>',
+            size: 'medium',
+            showFooter: true,
+            saveButtonText: 'Go to Login',
+            showCancelButton: false,
+            onSave: function() {
+                Layer8DPopup.close();
+                window.location.href = 'l8ui/login/index.html';
+            }
+        });
+    } else {
+        // Fallback if popup not loaded yet
+        alert(message + (detail ? '\n\n' + detail : ''));
+        window.location.href = 'l8ui/login/index.html';
+    }
+}
+
 // Initialize the application
 document.addEventListener('DOMContentLoaded', async function() {
     // Load app configuration first
@@ -82,6 +112,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Using sessionStorage so session is cleared when browser tab is closed
     const bearerToken = sessionStorage.getItem('bearerToken');
     if (!bearerToken) {
+        // No popup here — user simply hasn't logged in yet, redirect silently
         window.location.href = 'l8ui/login/index.html';
         return;
     }
