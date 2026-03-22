@@ -11,9 +11,10 @@ go mod init
 GOPROXY=direct GOPRIVATE=github.com go mod tidy
 go mod vendor
 
-docker rm -f unsecure-postgres 2>/dev/null || true
-docker ps -q --filter "publish=5432" | xargs -r docker rm -f 2>/dev/null || true
-docker run -d --name unsecure-postgres -p 5432:5432 -v /data/:/data/ saichler/unsecure-postgres:latest admin admin admin 5432
+#docker rm -f unsecure-postgres 2>/dev/null || true
+#docker ps -q --filter "publish=5432" | xargs -r docker rm -f 2>/dev/null || true
+#docker run -d --name unsecure-postgres -p 5432:5432 -v /data/:/data/ saichler/unsecure-postgres:latest admin admin admin 5432
+
 rm -rf demo
 mkdir -p demo
 cd tests/mocks/cmd
@@ -43,8 +44,7 @@ echo "rm -rf demo" >> ./kill_demo.sh
 echo "rm -rf /data/postgres/admin" >> ./kill_demo.sh
 echo "pkill -9 demo" >> ./kill_demo.sh
 chmod +x ./kill_demo.sh
-echo "ANTHROPIC_API_KEY=$ANTHROPIC_API_KEY"
-read -p "Press Enter"
+
 ./log-vnet_demo &
 ./vnet_demo &
 sleep 1

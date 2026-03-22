@@ -19,6 +19,7 @@ func AgentConfig(creds, dbname string, vnic ifs.IVNic) agent.AgentConfig {
 		ServiceArea: ServiceArea,
 		DBCreds:     creds,
 		DBName:      dbname,
+		LLMCreds:    "Anthropic",
 		DefaultPrompts: []*l8agent.L8AgentPrompt{
 			{
 				Name:           "Financial Analyst",

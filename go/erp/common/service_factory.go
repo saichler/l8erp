@@ -51,7 +51,6 @@ func ActivateService[T any, TList any, PT ProtoMessage[T], PTL ProtoMessage[TLis
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(realdb, ":", user, ":", pass)
 	db := OpenDBConection(realdb, user, pass)
 	p := postgres.NewPostgres(db, vnic.Resources())
 

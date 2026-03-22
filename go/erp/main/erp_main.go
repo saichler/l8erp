@@ -53,7 +53,7 @@ func startDb(nic ifs.IVNic) {
 	if user == "admin" && pass == "admin" {
 		common.DB_NAME = "admin"
 	}
-	fmt.Println("/start-postgres.sh", common.DB_NAME, user, pass)
+
 	var cmd *exec.Cmd
 	cmd = exec.Command("nohup", "/start-postgres.sh", common.DB_NAME, user, pass)
 	out, err := cmd.Output()
