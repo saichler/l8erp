@@ -1,674 +1,273 @@
-<!--
-© 2025 Sharon Aicler (saichler@gmail.com)
-
-Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="ERP by Layer 8 - Enterprise Resource Planning system built for the modern enterprise. Unified platform for Financial Management, Human Capital, Supply Chain, and more.">
-    <meta name="keywords" content="ERP, Enterprise Resource Planning, Financial Management, HCM, Supply Chain, Manufacturing">
-    <title>ERP by Layer 8 - Enterprise Resource Planning</title>
-
-    <!-- Favicon -->
+    <meta name="description" content="ERP by Layer 8 is a multi-domain enterprise platform for finance, people, supply chain, manufacturing, projects, analytics, documents, and system operations.">
+    <meta name="keywords" content="ERP, enterprise resource planning, finance, HCM, supply chain, manufacturing, Layer 8">
+    <title>ERP by Layer 8</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Mobile Detection -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="js/mobile-detect.js"></script>
-
-    <!-- Stylesheets -->
     <link rel="stylesheet" href="css/landing-base.css">
     <link rel="stylesheet" href="css/landing-header.css">
     <link rel="stylesheet" href="css/landing-hero.css">
     <link rel="stylesheet" href="css/landing-sections.css">
     <link rel="stylesheet" href="css/landing-footer.css">
-    <link rel="stylesheet" href="css/landing-animations.css">
     <link rel="stylesheet" href="css/landing-modals.css">
+    <link rel="stylesheet" href="css/landing-animations.css">
     <link rel="stylesheet" href="css/landing-responsive.css">
 </head>
 <body>
-    <!-- Header -->
-    <header class="landing-header">
-        <div class="header-container">
-            <a href="#" class="header-logo">
-                <img src="logo.gif" alt="ERP Logo">
-                <div class="header-logo-text">
-                    <span class="header-logo-title">ERP by Layer 8</span>
-                    <span class="header-logo-subtitle">
-                        Powered by
-                        <img src="Layer8Logo.gif" alt="Layer 8">
-                    </span>
+    <header>
+        <nav>
+            <div class="logo">
+                <div class="logo-mark">
+                    <img src="logo.gif" alt="ERP by Layer 8" class="logo-image">
+                    <span>ERP by Layer 8</span>
                 </div>
-            </a>
-
-            <nav class="header-nav">
-                <ul class="nav-links">
-                    <li><a href="#modules">Modules</a></li>
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#architecture">Architecture</a></li>
-                    <li><a href="#get-started">Get Started</a></li>
-                    <li><a href="#" data-modal="developer" class="nav-emphasized">Developer</a></li>
-                </ul>
-
-                <div class="header-buttons">
-                    <iframe src="https://github.com/sponsors/saichler/button" title="Sponsor saichler" height="32" width="114" style="border: 0; border-radius: 6px; vertical-align: middle;"></iframe>
-                    <button class="btn btn-secondary" data-modal="demo">Demo</button>
-                    <a href="https://www.probler.dev:2883" target="_blank" class="btn btn-primary">Live Demo</a>
-                </div>
-            </nav>
-
-            <button class="mobile-menu-toggle" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
+                <div class="logo-subtitle">Built on Layer 8</div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#modules">Modules</a></li>
+                <li><a href="#proof">Proof</a></li>
+                <li><a href="#start">Start</a></li>
+                <li><a href="https://github.com/saichler/l8erp" target="_blank">GitHub</a></li>
+                <li><a href="#" data-modal="developer">Developer</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <iframe src="https://github.com/sponsors/saichler/button" title="Sponsor saichler" height="32" width="114" style="border: 0; border-radius: 6px; vertical-align: middle;"></iframe>
+                <a href="#" data-modal="demo" class="demo-button">Demo</a>
+                <a href="#start" class="cta-button">Run Locally</a>
+            </div>
+        </nav>
     </header>
 
-    <!-- Mobile Navigation -->
-    <nav class="mobile-nav">
-        <ul class="mobile-nav-links">
-            <li><a href="#modules">Modules</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#architecture">Architecture</a></li>
-            <li><a href="#get-started">Get Started</a></li>
-            <li><a href="#" data-modal="developer" class="nav-emphasized">Developer</a></li>
-        </ul>
-        <div class="mobile-nav-sponsor">
-            <iframe src="https://github.com/sponsors/saichler/button" title="Sponsor saichler" height="32" width="114" style="border: 0; border-radius: 6px;"></iframe>
-        </div>
-        <div class="mobile-nav-buttons">
-            <button class="btn btn-secondary" data-modal="demo">View Demo</button>
-            <a href="https://www.probler.dev:2883" target="_blank" class="btn btn-primary">Live Demo</a>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
     <main>
-        <!-- Hero Section -->
-        <section id="hero" class="hero-section">
-            <div class="hero-background">
-                <div class="hero-gradient-overlay"></div>
-                <svg class="hero-illustration" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Central ERP Hub -->
-                    <circle class="node node-center" cx="400" cy="300" r="50" opacity="0.3"/>
-                    <circle class="node node-center" cx="400" cy="300" r="35" opacity="0.5"/>
-                    <text x="400" y="305" text-anchor="middle" fill="#0ea5e9" font-size="14" font-weight="bold">ERP</text>
-
-                    <!-- Module Nodes - Inner Ring -->
-                    <g class="module-nodes">
-                        <!-- Finance -->
-                        <circle class="node" cx="250" cy="180" r="25" opacity="0.6"/>
-                        <text x="250" y="185" text-anchor="middle" fill="#f8fafc" font-size="10">FIN</text>
-
-                        <!-- HCM -->
-                        <circle class="node" cx="550" cy="180" r="25" opacity="0.6"/>
-                        <text x="550" y="185" text-anchor="middle" fill="#f8fafc" font-size="10">HCM</text>
-
-                        <!-- Supply Chain -->
-                        <circle class="node" cx="180" cy="350" r="25" opacity="0.6"/>
-                        <text x="180" y="355" text-anchor="middle" fill="#f8fafc" font-size="10">SCM</text>
-
-                        <!-- Manufacturing -->
-                        <circle class="node" cx="620" cy="350" r="25" opacity="0.6"/>
-                        <text x="620" y="355" text-anchor="middle" fill="#f8fafc" font-size="10">MFG</text>
-
-                        <!-- Sales -->
-                        <circle class="node" cx="280" cy="470" r="25" opacity="0.6"/>
-                        <text x="280" y="475" text-anchor="middle" fill="#f8fafc" font-size="10">SALES</text>
-
-                        <!-- CRM -->
-                        <circle class="node" cx="520" cy="470" r="25" opacity="0.6"/>
-                        <text x="520" y="475" text-anchor="middle" fill="#f8fafc" font-size="10">CRM</text>
-
-                        <!-- Projects -->
-                        <circle class="node" cx="400" cy="130" r="20" opacity="0.5"/>
-                        <text x="400" y="134" text-anchor="middle" fill="#f8fafc" font-size="9">PRJ</text>
-
-                        <!-- Business Intelligence -->
-                        <circle class="node" cx="120" cy="260" r="20" opacity="0.5"/>
-                        <text x="120" y="264" text-anchor="middle" fill="#f8fafc" font-size="9">BI</text>
-
-                        <!-- Documents -->
-                        <circle class="node" cx="680" cy="260" r="20" opacity="0.5"/>
-                        <text x="680" y="264" text-anchor="middle" fill="#f8fafc" font-size="9">DOC</text>
-
-                        <!-- E-Commerce -->
-                        <circle class="node" cx="150" cy="480" r="20" opacity="0.5"/>
-                        <text x="150" y="484" text-anchor="middle" fill="#f8fafc" font-size="9">ECOM</text>
-
-                        <!-- Compliance -->
-                        <circle class="node" cx="650" cy="480" r="20" opacity="0.5"/>
-                        <text x="650" y="484" text-anchor="middle" fill="#f8fafc" font-size="9">COMP</text>
-                    </g>
-
-                    <!-- Connections -->
-                    <g class="connections">
-                        <line class="connection" x1="400" y1="265" x2="250" y2="200"/>
-                        <line class="connection" x1="400" y1="265" x2="550" y2="200"/>
-                        <line class="connection" x1="365" y1="300" x2="205" y2="340"/>
-                        <line class="connection" x1="435" y1="300" x2="595" y2="340"/>
-                        <line class="connection" x1="380" y1="340" x2="300" y2="450"/>
-                        <line class="connection" x1="420" y1="340" x2="500" y2="450"/>
-                        <line class="connection" x1="400" y1="250" x2="400" y2="155"/>
-                        <line class="connection" x1="350" y1="290" x2="145" y2="265"/>
-                        <line class="connection" x1="450" y1="290" x2="655" y2="265"/>
-                        <line class="connection" x1="365" y1="335" x2="175" y2="465"/>
-                        <line class="connection" x1="435" y1="335" x2="625" y2="465"/>
-                    </g>
-                </svg>
-                <div class="floating-shapes">
-                    <div class="shape shape-1"></div>
-                    <div class="shape shape-2"></div>
-                    <div class="shape shape-3"></div>
-                    <div class="shape shape-4"></div>
-                </div>
-            </div>
-
-            <div class="hero-content">
+        <section class="hero">
+            <div class="container hero-layout">
                 <div id="demoBanner" class="demo-banner">
                     <div class="demo-banner-content">
-                        <span class="demo-banner-pulse"></span>
-                        <span class="demo-banner-text">Live Demo Available</span>
-                        <a href="#" class="demo-banner-link" data-modal="demo">Try it now &rarr;</a>
+                        <span class="demo-banner-text">Live demo available</span>
+                        <a href="#" data-modal="demo" class="demo-banner-link">Try it now &rarr;</a>
                     </div>
                     <button class="demo-banner-close" onclick="dismissDemoBanner()" title="Dismiss">&times;</button>
                 </div>
-                <h1 class="hero-title">
-                    <span class="gradient-text">Enterprise Resource Planning</span>
-                    Built for the Modern Enterprise
-                </h1>
-                <p class="hero-subtitle">
-                    Unified platform for Financial Management, Human Capital, Supply Chain,
-                    Manufacturing, Sales, CRM, and 6 more modules. 243 services. 8 view types. One system to run your entire business.
-                </p>
+                <p class="hero-eyebrow">ERP / Layer 8 Product</p>
+                <h1>One operating system for finance, people, supply chain, projects, manufacturing, and control functions.</h1>
+                <p class="hero-summary">ERP by Layer 8 is a multi-domain enterprise platform built as explicit service groups and shared UI primitives, not a stack of unrelated modules behind a common login.</p>
+                <p class="hero-secondary">It is designed for operators who need accounting, workforce, inventory, production, analytics, documents, and compliance to behave like one system with shared structure, shared workflows, and shared runtime conventions.</p>
+                <div class="hero-proof">
+                    <div class="proof-item">
+                        <span class="proof-label">Coverage</span>
+                        <strong>Finance, HCM, SCM, MFG, CRM, BI, docs, projects</strong>
+                    </div>
+                    <div class="proof-item">
+                        <span class="proof-label">System shape</span>
+                        <strong>243 services across 12 module families</strong>
+                    </div>
+                    <div class="proof-item">
+                        <span class="proof-label">UI model</span>
+                        <strong>Shared shell, shared popups, shared view types</strong>
+                    </div>
+                </div>
                 <div class="hero-buttons">
-                    <a href="#get-started" class="btn btn-primary">Get Started</a>
-                    <a href="#" class="btn btn-secondary" data-modal="demo">Try Demo</a>
+                    <a href="#start" class="btn-primary">Run Locally</a>
+                    <a href="https://github.com/saichler/l8erp" target="_blank" class="btn-secondary">GitHub</a>
                 </div>
                 <div class="hero-badges">
                     <span class="badge">Go 1.25</span>
                     <span class="badge">Protobuf</span>
-                    <span class="badge">Kubernetes</span>
+                    <span class="badge">Kubernetes Ready</span>
                     <span class="badge">Zero JS Dependencies</span>
-                    <span class="badge">Mobile App</span>
-                </div>
-            </div>
-
-            <div class="scroll-indicator">
-                <span>Scroll to explore</span>
-                <div class="scroll-arrow"></div>
-            </div>
-        </section>
-
-        <!-- Modules Section -->
-        <section id="modules" class="modules-section">
-            <div class="section-title">
-                <h2 class="gradient-text">Integrated Modules</h2>
-                <p>Comprehensive suite of business modules working together seamlessly</p>
-            </div>
-
-            <div class="modules-grid">
-                <div class="module-card reveal">
-                    <div class="module-icon">&#128202;</div>
-                    <h3>Dashboard</h3>
-                    <p>Real-time business insights and KPIs at your fingertips. Monitor performance across all modules.</p>
-                </div>
-
-                <div class="module-card reveal">
-                    <div class="module-icon">&#128176;</div>
-                    <h3>Financial Management</h3>
-                    <p>28 services: General Ledger, Accounts Payable, Accounts Receivable, Cash Management, Fixed Assets, Budgeting, and Tax.</p>
-                </div>
-
-                <div class="module-card reveal">
-                    <div class="module-icon">&#128101;</div>
-                    <h3>Human Capital</h3>
-                    <p>57 services: Core HR, Payroll, Benefits, Talent Acquisition, Learning Management, Compensation, and Time & Attendance.</p>
-                </div>
-
-                <div class="module-card reveal">
-                    <div class="module-icon">&#128279;</div>
-                    <h3>Supply Chain</h3>
-                    <p>29 services: Procurement, Inventory Management, Warehouse Operations, Logistics, and Demand/Supply Planning.</p>
-                </div>
-
-                <div class="module-card reveal">
-                    <div class="module-icon">&#127981;</div>
-                    <h3>Manufacturing</h3>
-                    <p>18 services: Engineering, Production Planning, Shop Floor Control, Quality Management, Costing, and BOM.</p>
-                </div>
-
-                <div class="module-card reveal">
-                    <div class="module-icon">&#128200;</div>
-                    <h3>Sales & Distribution</h3>
-                    <p>17 services: Customer Management, Orders, Pricing, Shipping, Billing, Commissions, and Sales Analytics.</p>
-                </div>
-
-                <div class="module-card reveal">
-                    <div class="module-icon">&#129309;</div>
-                    <h3>CRM</h3>
-                    <p>22 services: Accounts, Leads, Opportunities, Campaign Management, Marketing, Field Service, and Support.</p>
-                </div>
-
-                <div class="module-card reveal">
-                    <div class="module-icon">&#128203;</div>
-                    <h3>Project Management</h3>
-                    <p>21 services: Planning, Resource Allocation, Time & Expense, Billing, Milestones, and Analytics.</p>
-                </div>
-
-                <div class="module-card reveal">
-                    <div class="module-icon">&#128202;</div>
-                    <h3>Business Intelligence</h3>
-                    <p>14 services: Interactive Dashboards, Custom Reports, KPI Tracking, Analytics, and Data Source Management.</p>
-                </div>
-
-                <div class="module-card reveal">
-                    <div class="module-icon">&#128196;</div>
-                    <h3>Document Management</h3>
-                    <p>11 services: Storage, Version Control, Approval Workflows, Digital Signatures, Compliance, and Integration.</p>
-                </div>
-
-                <div class="module-card reveal">
-                    <div class="module-icon">&#128722;</div>
-                    <h3>E-Commerce</h3>
-                    <p>13 services: Product Catalog, Online Orders, Customer Portals, and Promotional Campaigns.</p>
-                </div>
-
-                <div class="module-card reveal">
-                    <div class="module-icon">&#128737;</div>
-                    <h3>Compliance & Risk</h3>
-                    <p>11 services: Regulatory Compliance, Internal Controls, Risk Assessment, Audit Management, and Policy Enforcement.</p>
+                    <span class="badge">Layer 8 UI</span>
                 </div>
             </div>
         </section>
 
-        <!-- Features Section -->
-        <section id="features" class="features-section">
-            <div class="section-title">
-                <h2 class="gradient-text">Enterprise Features</h2>
-                <p>Built with modern architecture and enterprise-grade capabilities</p>
+        <section class="architecture" id="architecture">
+            <div class="section-header">
+                <div class="container">
+                    <p class="section-kicker">Architecture</p>
+                    <h2>Domain services with shared platform conventions and a single operator surface.</h2>
+                    <p>ERP is structured as focused service groups for each business domain while sharing Layer 8 runtime services, web infrastructure, reference registries, view factories, popup systems, and navigation rules across the whole product.</p>
+                </div>
             </div>
+            <div class="section-content">
+                <div class="container">
+                    <div class="arch-diagram">
+                        <h3 class="arch-title">Enterprise runtime layout</h3>
+                        <div class="arch-canvas">
+                            <svg width="920" height="420" viewBox="0 0 920 420" style="max-width: 100%; height: auto;" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="50" y="40" width="820" height="92" fill="#f9f9f7" stroke="#e5e5e5"/>
+                                <text x="460" y="70" text-anchor="middle" fill="#111111" font-size="14" font-weight="600">Operator Surface</text>
+                                <text x="460" y="102" text-anchor="middle" fill="#5f5f5f" font-size="13">Shared app shell, section layout, popups, tables, charts, calendars, kanban, gantt, dashboard widgets</text>
 
-            <div class="features-grid">
-                <div class="feature-card reveal">
-                    <div class="feature-icon">&#127919;</div>
-                    <div class="feature-content">
-                        <h4>Protobuf Data Model</h4>
-                        <p>72 schema files define a unified type system with cross-module references and automatic serialization.</p>
-                    </div>
-                </div>
+                                <rect x="50" y="164" width="820" height="110" fill="#ffffff" stroke="#e5e5e5"/>
+                                <text x="460" y="194" text-anchor="middle" fill="#111111" font-size="14" font-weight="600">ERP Domain Services</text>
+                                <text x="160" y="230" fill="#5f5f5f" font-size="13">Finance</text>
+                                <text x="250" y="230" fill="#5f5f5f" font-size="13">HCM</text>
+                                <text x="335" y="230" fill="#5f5f5f" font-size="13">SCM</text>
+                                <text x="420" y="230" fill="#5f5f5f" font-size="13">Manufacturing</text>
+                                <text x="560" y="230" fill="#5f5f5f" font-size="13">Sales / CRM</text>
+                                <text x="675" y="230" fill="#5f5f5f" font-size="13">Projects / BI</text>
+                                <text x="795" y="230" fill="#5f5f5f" font-size="13">Docs / Comp / Sys</text>
+                                <text x="460" y="255" text-anchor="middle" fill="#8d8d8d" font-size="12">Service groups remain explicit by responsibility while references, navigation, and UX conventions stay shared.</text>
 
-                <div class="feature-card reveal">
-                    <div class="feature-icon">&#9889;</div>
-                    <div class="feature-content">
-                        <h4>Module Selection</h4>
-                        <p>Enable or disable modules at runtime with automatic dependency management and visual dependency map.</p>
-                    </div>
-                </div>
-
-                <div class="feature-card reveal">
-                    <div class="feature-icon">&#127760;</div>
-                    <div class="feature-content">
-                        <h4>Multi-Currency Exchange</h4>
-                        <p>Real-time currency conversion with automatic amount recalculation when switching currencies.</p>
-                    </div>
-                </div>
-
-                <div class="feature-card reveal">
-                    <div class="feature-icon">&#128241;</div>
-                    <div class="feature-content">
-                        <h4>Desktop + Mobile Apps</h4>
-                        <p>Full-featured web and mobile interfaces with complete view parity and card navigation.</p>
-                    </div>
-                </div>
-
-                <div class="feature-card reveal">
-                    <div class="feature-icon">&#128202;</div>
-                    <div class="feature-content">
-                        <h4>8 Data View Types</h4>
-                        <p>Table, Chart, Kanban, Calendar, Timeline, Gantt, Tree Grid, and Wizard with per-service view switching.</p>
-                    </div>
-                </div>
-
-                <div class="feature-card reveal">
-                    <div class="feature-icon">&#128295;</div>
-                    <div class="feature-content">
-                        <h4>Factory-Driven UI</h4>
-                        <p>Shared factories for forms, columns, enums, references, sections, and SVG illustrations.</p>
-                    </div>
-                </div>
-
-                <div class="feature-card reveal">
-                    <div class="feature-icon">&#128274;</div>
-                    <div class="feature-content">
-                        <h4>Validation Framework</h4>
-                        <p>Declarative validation builder with required fields, enum checks, and reference verification.</p>
-                    </div>
-                </div>
-
-                <div class="feature-card reveal">
-                    <div class="feature-icon">&#128268;</div>
-                    <div class="feature-content">
-                        <h4>API-first Design</h4>
-                        <p>RESTful APIs for all 243 services with consistent endpoints and Protobuf serialization.</p>
-                    </div>
-                </div>
-
-                <div class="feature-card reveal">
-                    <div class="feature-icon">&#128209;</div>
-                    <div class="feature-content">
-                        <h4>Full Audit Trail</h4>
-                        <p>Complete transaction history across all modules with AuditInfo on every record.</p>
-                    </div>
-                </div>
-
-                <div class="feature-card reveal">
-                    <div class="feature-icon">&#128202;</div>
-                    <div class="feature-content">
-                        <h4>Mock Data Generation</h4>
-                        <p>Realistic test data generators for all services with phased dependency ordering and cross-module references.</p>
-                    </div>
-                </div>
-
-                <div class="feature-card reveal">
-                    <div class="feature-icon">&#128187;</div>
-                    <div class="feature-content">
-                        <h4>Zero Frontend Dependencies</h4>
-                        <p>Pure vanilla JavaScript with no build step. No frameworks, no bundlers, no node_modules.</p>
-                    </div>
-                </div>
-
-                <div class="feature-card reveal">
-                    <div class="feature-icon">&#9784;</div>
-                    <div class="feature-content">
-                        <h4>Kubernetes Native</h4>
-                        <p>Production-ready K8s manifests with DaemonSets, StatefulSets, and virtual network overlay.</p>
-                    </div>
-                </div>
-
-                <div class="feature-card reveal">
-                    <div class="feature-icon">&#128300;</div>
-                    <div class="feature-content">
-                        <h4>Comprehensive Tests</h4>
-                        <p>25 test suites covering service getters and handlers for every module.</p>
+                                <rect x="50" y="306" width="820" height="74" fill="#f0f0ee" stroke="#e5e5e5"/>
+                                <text x="460" y="336" text-anchor="middle" fill="#111111" font-size="14" font-weight="600">Layer 8 Platform Base</text>
+                                <text x="460" y="363" text-anchor="middle" fill="#5f5f5f" font-size="13">Messaging, web services, persistence, schemas, reflection, shared site assets, and deployment plumbing</text>
+                            </svg>
+                        </div>
+                        <p class="arch-caption">The point of the architecture is operational coherence. Domain modules stay distinct, but the system is intentionally built so navigation, references, forms, detail views, and shared runtime behavior do not fragment by module.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Architecture Section -->
-        <section id="architecture" class="architecture-section">
-            <div class="section-title">
-                <h2 class="gradient-text">Modern Architecture</h2>
-                <p>Built on proven technologies for performance and reliability</p>
+        <section class="features" id="modules">
+            <div class="section-header">
+                <div class="container">
+                    <p class="section-kicker">Modules</p>
+                    <h2>The business surface is broad, but the system language stays consistent.</h2>
+                    <p>Each module family covers a concrete operational domain. The shared shell and shared component system keep the product readable instead of turning it into twelve disconnected applications.</p>
+                </div>
             </div>
-
-            <div class="architecture-container">
-                <div class="architecture-diagram reveal">
-                    <div class="architecture-layers">
-                        <div class="arch-layer">
-                            <div class="arch-layer-title">Presentation Layer</div>
-                            <div class="arch-layer-items">
-                                <span class="arch-item">Desktop App</span>
-                                <span class="arch-item">Mobile App</span>
-                                <span class="arch-item">REST API</span>
-                                <span class="arch-item">Marketing Site</span>
-                            </div>
+            <div class="section-content">
+                <div class="container">
+                    <div class="features-grid">
+                        <div class="feature-card reveal">
+                            <h3>Financial Management</h3>
+                            <p>General ledger, receivables, payables, banking, budgets, assets, tax, cash forecasting, and period-close workflows.</p>
                         </div>
-
-                        <div class="arch-layer">
-                            <div class="arch-layer-title">Application Layer</div>
-                            <div class="arch-layer-items">
-                                <span class="arch-item">L8 Services</span>
-                                <span class="arch-item">Validation Builder</span>
-                                <span class="arch-item">Type Registry</span>
-                                <span class="arch-item">Service Callbacks</span>
-                            </div>
+                        <div class="feature-card reveal">
+                            <h3>Human Capital</h3>
+                            <p>Core HR, payroll, benefits, recruiting, learning, performance, compensation, time, and workforce planning.</p>
                         </div>
-
-                        <div class="arch-layer">
-                            <div class="arch-layer-title">Data Layer</div>
-                            <div class="arch-layer-items">
-                                <span class="arch-item">L8 ORM</span>
-                                <span class="arch-item">Protobuf Srlz</span>
-                                <span class="arch-item">L8 Query Language</span>
-                                <span class="arch-item">PostgreSQL</span>
-                            </div>
+                        <div class="feature-card reveal">
+                            <h3>Supply Chain</h3>
+                            <p>Items, suppliers, purchasing, inventory, warehouses, routes, forecasts, shipments, receiving, and planning services.</p>
                         </div>
-
-                        <div class="arch-layer">
-                            <div class="arch-layer-title">Infrastructure Layer</div>
-                            <div class="arch-layer-items">
-                                <span class="arch-item">Kubernetes</span>
-                                <span class="arch-item">Docker</span>
-                                <span class="arch-item">L8 Bus (VNet)</span>
-                                <span class="arch-item">L8 Web Server</span>
-                            </div>
+                        <div class="feature-card reveal">
+                            <h3>Manufacturing</h3>
+                            <p>Engineering, BOM, shop floor, work centers, quality, costing, production planning, and execution tracking.</p>
+                        </div>
+                        <div class="feature-card reveal">
+                            <h3>Sales and CRM</h3>
+                            <p>Accounts, leads, opportunities, orders, pricing, billing flow, customer service, field activity, and commercial reporting.</p>
+                        </div>
+                        <div class="feature-card reveal">
+                            <h3>Projects and BI</h3>
+                            <p>Projects, resources, timesheets, billing, budgets, dashboards, benchmarks, data quality, and reporting models.</p>
+                        </div>
+                        <div class="feature-card reveal">
+                            <h3>Documents and Compliance</h3>
+                            <p>Document lifecycles, templates, retention, approvals, risk registers, incidents, audits, and policy controls.</p>
+                        </div>
+                        <div class="feature-card reveal">
+                            <h3>System Operations</h3>
+                            <p>Module configuration, import templates, health, logs, admin tooling, and shared operator functions across the platform.</p>
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
 
-                <div class="tech-stack reveal">
-                    <div class="tech-card">
-                        <span class="tech-icon">&#128311;</span>
-                        <span class="tech-name">Go 1.25</span>
-                    </div>
-                    <div class="tech-card">
-                        <span class="tech-icon">&#128024;</span>
-                        <span class="tech-name">PostgreSQL</span>
-                    </div>
-                    <div class="tech-card">
-                        <span class="tech-icon">&#128220;</span>
-                        <span class="tech-name">Protobuf</span>
-                    </div>
-                    <div class="tech-card">
-                        <span class="tech-icon">&#9784;</span>
-                        <span class="tech-name">Kubernetes</span>
-                    </div>
-                    <div class="tech-card">
-                        <span class="tech-icon">&#128230;</span>
-                        <span class="tech-name">Docker</span>
-                    </div>
-                    <div class="tech-card">
-                        <span class="tech-icon">&#128279;</span>
-                        <span class="tech-name">Vanilla JS</span>
+        <section class="stats" id="proof">
+            <div class="section-header">
+                <div class="container">
+                    <p class="section-kicker">Proof</p>
+                    <h2>Built as a real product surface, not a landing-page claim.</h2>
+                    <p>The project already has broad service coverage, a shared UI layer, and an app shell that spans multiple enterprise domains with common runtime rules and view systems.</p>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="container">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <strong>243</strong>
+                            <span>Services</span>
+                        </div>
+                        <div class="stat-item">
+                            <strong>12</strong>
+                            <span>Module families</span>
+                        </div>
+                        <div class="stat-item">
+                            <strong>8</strong>
+                            <span>View types</span>
+                        </div>
+                        <div class="stat-item">
+                            <strong>1</strong>
+                            <span>Shared shell</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Stats Section -->
-        <section id="stats" class="stats-section">
-            <div class="stats-grid">
-                <div class="stat-card reveal">
-                    <span class="stat-number">12</span>
-                    <span class="stat-label">Active Modules</span>
-                </div>
-                <div class="stat-card reveal">
-                    <span class="stat-number">243</span>
-                    <span class="stat-label">Business Services</span>
-                </div>
-                <div class="stat-card reveal">
-                    <span class="stat-number">72</span>
-                    <span class="stat-label">Protobuf Schemas</span>
-                </div>
-                <div class="stat-card reveal">
-                    <span class="stat-number">8</span>
-                    <span class="stat-label">Data View Types</span>
-                </div>
-                <div class="stat-card reveal">
-                    <span class="stat-number">25</span>
-                    <span class="stat-label">Test Suites</span>
-                </div>
-                <div class="stat-card reveal">
-                    <span class="stat-number">0</span>
-                    <span class="stat-label">JS Dependencies</span>
+        <section class="getting-started" id="start">
+            <div class="section-header">
+                <div class="container">
+                    <p class="section-kicker">Start</p>
+                    <h2>Run the code, inspect the modules, and work from the actual system.</h2>
+                    <p>The project is organized as source-first Layer 8 infrastructure. Start locally, inspect the app shell, and then move into the domain services that matter for your use case.</p>
                 </div>
             </div>
-        </section>
+            <div class="section-content">
+                <div class="container">
+                    <div class="code-block"><span class="comment"># clone the repository</span>
+git clone https://github.com/saichler/l8erp.git
 
-        <!-- Get Started Section -->
-        <section id="get-started" class="get-started-section">
-            <div class="section-title">
-                <h2 class="gradient-text">Get Started</h2>
-                <p>Deploy your ERP system in minutes</p>
-            </div>
+<span class="comment"># move into the project</span>
+cd l8erp/go/erp/ui/web
 
-            <div class="get-started-container">
-                <div class="steps-grid">
-                    <div class="step-card reveal">
-                        <span class="step-number">1</span>
-                        <h4>Clone Repository</h4>
-                        <p>Get the source code from the Git repository</p>
-                    </div>
-                    <div class="step-card reveal">
-                        <span class="step-number">2</span>
-                        <h4>Configure Database</h4>
-                        <p>Set up PostgreSQL connection</p>
-                    </div>
-                    <div class="step-card reveal">
-                        <span class="step-number">3</span>
-                        <h4>Run Server</h4>
-                        <p>Start the Go backend server</p>
-                    </div>
-                    <div class="step-card reveal">
-                        <span class="step-number">4</span>
-                        <h4>Access Application</h4>
-                        <p>Open the web interface</p>
+<span class="comment"># serve the web app or wire it into your runtime</span>
+./setup-l8ui-submodule.sh</div>
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <h3>Review the app shell</h3>
+                            <p>Open `app.html`, shared theme files, and module configs to see how the common desktop surface is assembled.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <h3>Inspect domain modules</h3>
+                            <p>Move into finance, HCM, SCM, manufacturing, projects, BI, and documents to understand service boundaries and UI coverage.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <h3>Adapt the deployment</h3>
+                            <p>Wire the ERP services into your Layer 8 runtime, storage, auth, and deployment model instead of treating the project as a static demo.</p>
+                        </div>
                     </div>
                 </div>
-
-                <div class="code-example reveal">
-                    <div class="code-block">
-                        <button class="copy-btn" data-copy="#clone-cmd">Copy</button>
-                        <code id="clone-cmd">git clone https://github.com/saichler/l8erp.git
-cd l8erp
-go run ./go/erp/ui/main1/</code>
-                    </div>
-                </div>
-
-                <div class="text-center mt-4">
-                    <button class="btn btn-primary" data-modal="demo">View Demo Credentials</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- Documentation Section -->
-        <section id="docs" class="docs-section">
-            <div class="section-title">
-                <h2 class="gradient-text">Resources</h2>
-                <p>Everything you need to get up and running</p>
-            </div>
-
-            <div class="docs-grid">
-                <a href="#" class="doc-card reveal">
-                    <h4>&#128214; Documentation</h4>
-                    <p>Comprehensive guides for configuration, customization, and module usage.</p>
-                </a>
-                <a href="#" class="doc-card reveal">
-                    <h4>&#128187; API Reference</h4>
-                    <p>Complete REST API documentation with examples and schemas.</p>
-                </a>
-                <a href="#" class="doc-card reveal">
-                    <h4>&#127891; Tutorials</h4>
-                    <p>Step-by-step tutorials for common workflows and integrations.</p>
-                </a>
-                <a href="#" class="doc-card reveal">
-                    <h4>&#128172; Community</h4>
-                    <p>Join the community for support, discussions, and contributions.</p>
-                </a>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer class="landing-footer">
-        <div class="footer-container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <div class="footer-logo">
-                        <img src="logo.gif" alt="ERP Logo">
-                        <span>ERP by Layer 8</span>
-                    </div>
-                    <p>Enterprise Resource Planning system built for the modern enterprise. Unified, powerful, and extensible.</p>
-                </div>
-
-                <div class="footer-column">
-                    <h5>Quick Links</h5>
-                    <ul>
-                        <li><a href="#modules">Modules</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#architecture">Architecture</a></li>
-                        <li><a href="#get-started">Get Started</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-column">
-                    <h5>Modules</h5>
-                    <ul>
-                        <li><a href="#modules">Financial (28)</a></li>
-                        <li><a href="#modules">Human Capital (57)</a></li>
-                        <li><a href="#modules">Supply Chain (29)</a></li>
-                        <li><a href="#modules">+ 8 more modules</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-column">
-                    <h5>Resources</h5>
-                    <ul>
-                        <li><a href="#docs">Documentation</a></li>
-                        <li><a href="#docs">API Reference</a></li>
-                        <li><a href="#docs">Tutorials</a></li>
-                        <li><a href="#docs">Community</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-powered">
-                    <h5>Powered By</h5>
-                    <div class="footer-powered-logo">
-                        <img src="Layer8Logo.gif" alt="Layer 8">
-                        <span>Layer 8</span>
-                    </div>
-                </div>
-
-                <div class="footer-sponsor">
-                    <h5>Support the Project</h5>
-                    <iframe src="https://github.com/sponsors/saichler/card" title="Sponsor saichler" height="225" width="100%" style="border: 0; max-width: 300px;"></iframe>
+        <div class="container footer-layout">
+            <div class="footer-brand">
+                <img src="logo.gif" alt="ERP by Layer 8" class="footer-logo">
+                <div>
+                    <strong>ERP by Layer 8</strong>
+                    <p>Enterprise domains on a shared runtime, shared shell, and shared UI system.</p>
                 </div>
             </div>
-
-            <div class="footer-bottom">
-                <span class="footer-copyright">&copy; 2026 Layer 8. All rights reserved.</span>
-                <div class="footer-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="m/index.html">Mobile Version</a>
-                </div>
+            <div class="footer-links">
+                <a href="#architecture">Architecture</a>
+                <a href="#modules">Modules</a>
+                <a href="#proof">Proof</a>
+                <a href="#start">Start</a>
+                <a href="https://github.com/saichler/l8erp" target="_blank">GitHub</a>
             </div>
         </div>
     </footer>
 
-    <!-- Modal Container -->
     <div id="modal-container"></div>
-
-    <!-- Scripts -->
     <script src="js/landing.js"></script>
 </body>
 </html>

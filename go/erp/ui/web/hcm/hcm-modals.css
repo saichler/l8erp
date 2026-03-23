@@ -59,8 +59,8 @@ limitations under the License.
     align-items: center;
     justify-content: space-between;
     padding: 20px 24px;
-    border-bottom: 1px solid #e2e8f0;
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 1px solid #ddd7ce;
+    background: linear-gradient(135deg, #f8f5ef 0%, #f1ebe2 100%);
     border-radius: 16px 16px 0 0;
 }
 
@@ -83,7 +83,7 @@ limitations under the License.
 }
 
 .hcm-modal-close:hover {
-    background: #e2e8f0;
+    background: #e6ddd0;
     color: #1e293b;
 }
 
@@ -98,8 +98,8 @@ limitations under the License.
     justify-content: flex-end;
     gap: 12px;
     padding: 16px 24px;
-    border-top: 1px solid #e2e8f0;
-    background: #f8fafc;
+    border-top: 1px solid #ddd7ce;
+    background: #f4f1ea;
     border-radius: 0 0 16px 16px;
 }
 
@@ -118,10 +118,10 @@ limitations under the License.
 }
 
 .hcm-details-section {
-    background: #f8fafc;
+    background: #fdfbf7;
     border-radius: 12px;
     padding: 16px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #ddd7ce;
 }
 
 .hcm-details-section-title {
@@ -133,7 +133,7 @@ limitations under the License.
     letter-spacing: normal;
     font-family: 'Figtree', sans-serif;
     padding-bottom: 8px;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid #ddd7ce;
 }
 
 .hcm-details-grid {

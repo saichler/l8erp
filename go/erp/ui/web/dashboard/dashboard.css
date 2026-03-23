@@ -33,14 +33,14 @@ limitations under the License.
 /* ============================================ */
 
 .dashboard-stat-card {
-    background: white;
+    background: #fcfbf8;
     border-radius: 12px;
     padding: 20px;
     display: flex;
     align-items: center;
     gap: 16px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    border: 1px solid #e2e8f0;
+    border: 1px solid #ddd7ce;
     transition: all 0.3s ease;
     cursor: pointer;
 }
@@ -48,7 +48,7 @@ limitations under the License.
 .dashboard-stat-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    border-color: #cbd5e1;
+    border-color: #c8c0b4;
 }
 
 .dashboard-stat-icon {
@@ -59,8 +59,8 @@ limitations under the License.
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    background: linear-gradient(135deg, #e0f2fe, #bae6fd);
-    color: #0284c7;
+    background: linear-gradient(135deg, #f1ebe2, #e6ddd0);
+    color: #7c5f3f;
 }
 
 .dashboard-stat-icon svg {
@@ -69,8 +69,8 @@ limitations under the License.
 }
 
 .dashboard-stat-icon.hcm {
-    background: linear-gradient(135deg, #e0f2fe, #bae6fd);
-    color: #0284c7;
+    background: linear-gradient(135deg, #f1ebe2, #e6ddd0);
+    color: #7c5f3f;
 }
 
 .dashboard-stat-icon.sales {
@@ -146,7 +146,7 @@ limitations under the License.
     gap: 12px;
     margin-bottom: 16px;
     padding-bottom: 12px;
-    border-bottom: 2px solid #e2e8f0;
+    border-bottom: 2px solid #ddd7ce;
 }
 
 .dashboard-section-title {
