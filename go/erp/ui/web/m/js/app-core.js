@@ -131,6 +131,11 @@ limitations under the License.
                 this.applyModuleFilter();
             }
 
+            // Initialize mobile AI chat bubble
+            if (typeof L8AgentBubbleMobile !== 'undefined') {
+                L8AgentBubbleMobile.init({ chatEndpoint: '/120/AgntChat' });
+            }
+
             // Setup navigation
             this.initSidebar();
 

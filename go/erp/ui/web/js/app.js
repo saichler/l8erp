@@ -157,6 +157,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         Layer8DModuleFilter.applyToSidebar();
     }
 
+    // Initialize floating AI chat bubble
+    if (typeof L8AgentBubble !== 'undefined') {
+        L8AgentBubble.init({ chatEndpoint: '/120/AgntChat' });
+    }
+
     // Load default section (dashboard)
     loadSection('dashboard');
 
