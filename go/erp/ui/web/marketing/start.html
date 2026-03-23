@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Getting started with ERP by Layer 8.">
+    <title>Start - ERP by Layer 8</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="js/mobile-detect.js"></script>
+    <link rel="stylesheet" href="css/landing-base.css">
+    <link rel="stylesheet" href="css/landing-header.css">
+    <link rel="stylesheet" href="css/landing-hero.css">
+    <link rel="stylesheet" href="css/landing-sections.css">
+    <link rel="stylesheet" href="css/landing-footer.css">
+    <link rel="stylesheet" href="css/landing-modals.css">
+    <link rel="stylesheet" href="css/landing-animations.css">
+    <link rel="stylesheet" href="css/landing-responsive.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <div class="logo-mark">
+                    <img src="logo.gif" alt="ERP by Layer 8" class="logo-image">
+                    <span>ERP by Layer 8</span>
+                </div>
+                <div class="logo-subtitle">Built on Layer 8</div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="architecture.html">Architecture</a></li>
+                <li><a href="modules.html">Modules</a></li>
+                <li><a href="proof.html">Proof</a></li>
+                <li><a href="start.html">Start</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="https://github.com/saichler/l8erp" target="_blank">GitHub</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <a href="index.html" class="demo-button">Home</a>
+                <a href="about.html" class="cta-button">About</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero page-hero">
+            <div class="container hero-layout">
+                <p class="hero-eyebrow">Start</p>
+                <h1>Run the code, inspect the modules, and work from the actual system.</h1>
+                <p class="hero-summary">The project is organized as source-first Layer 8 infrastructure. Start locally, inspect the app shell, and then move into the domain services that matter for your use case.</p>
+                <div class="hero-buttons">
+                    <a href="architecture.html" class="btn-primary">Architecture</a>
+                    <a href="index.html" class="btn-secondary">Home</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="getting-started">
+            <div class="section-content">
+                <div class="container">
+                    <div class="code-block"><span class="comment"># clone the repository</span>
+git clone https://github.com/saichler/l8erp.git
+
+<span class="comment"># move into the project</span>
+cd l8erp/go/erp/ui/web
+
+<span class="comment"># serve the web app or wire it into your runtime</span>
+./setup-l8ui-submodule.sh</div>
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <h3>Review the app shell</h3>
+                            <p>Open `app.html`, shared theme files, and module configs to see how the common desktop surface is assembled.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <h3>Inspect domain modules</h3>
+                            <p>Move into finance, HCM, SCM, manufacturing, projects, BI, and documents to understand service boundaries and UI coverage.</p>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <h3>Adapt the deployment</h3>
+                            <p>Wire the ERP services into your Layer 8 runtime, storage, auth, and deployment model instead of treating the project as a static demo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="landing-footer">
+        <div class="container footer-layout">
+            <div class="footer-brand">
+                <img src="logo.gif" alt="ERP by Layer 8" class="footer-logo">
+                <div>
+                    <strong>ERP by Layer 8</strong>
+                    <p>Enterprise domains on a shared runtime, shared shell, and shared UI system.</p>
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="architecture.html">Architecture</a>
+                <a href="modules.html">Modules</a>
+                <a href="proof.html">Proof</a>
+                <a href="start.html">Start</a>
+                <a href="about.html">About</a>
+                <a href="index.html">Home</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

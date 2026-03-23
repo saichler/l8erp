@@ -144,3 +144,22 @@ main section {
 .stat-item span {
     color: var(--color-text-secondary);
 }
+
+.page-hero {
+    min-height: auto;
+    padding-top: 96px;
+    padding-bottom: 30px;
+}
+
+.page-hero .hero-layout {
+    gap: 1rem;
+}
+
+.feature-card-link {
+    display: block;
+    color: inherit;
+}
+
+.feature-card-link:hover {
+    color: inherit;
+}
