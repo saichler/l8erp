@@ -28,7 +28,7 @@ import (
 )
 
 func main() {
-	startWebServer2(7773, "/data/erp")
+	startWebServer2(2773, "/data/erp")
 }
 
 func startWebServer2(port int, cert string) {
@@ -45,7 +45,7 @@ func startWebServer2(port int, cert string) {
 	}
 
 	nic1 := ui.CreateVnic(common.ERP_VNET)
-	nic2 := ui.CreateVnic(common.ERP_LOGS_VNET)
+	//nic2 := ui.CreateVnic(common.ERP_LOGS_VNET)
 
 	csvexport.Activate(nic1)
 	filestore.Activate(nic1)
@@ -59,7 +59,8 @@ func startWebServer2(port int, cert string) {
 
 	//Activate the webpoints service
 	sla := ifs.NewServiceLevelAgreement(&server.WebService{}, ifs.WebService, 0, false, nil)
-	sla.SetArgs(svr, nic2)
+	sla.SetArgs(svr)
+	//sla.SetArgs(svr, nic2)
 	nic1.Resources().Services().Activate(sla, nic1)
 
 	nic1.Resources().Logger().Info("Web Server Started!")

@@ -8,7 +8,6 @@ require (
 	github.com/saichler/l8bus v0.0.0-20260320104145-f708e54617f0
 	github.com/saichler/l8logfusion v0.0.0-20260320120056-3a3617eed28f
 	github.com/saichler/l8orm v0.0.0-20260322220435-6283ea6a45ee
-	github.com/saichler/l8ql v0.0.0-20260322130921-a31581a0ab5f
 	github.com/saichler/l8reflect v0.0.0-20260320113844-ab23d1971f13
 	github.com/saichler/l8services v0.0.0-20260324202357-03d40602ca59
 	github.com/saichler/l8srlz v0.0.0-20260322124809-505a0d08f95d
@@ -22,6 +21,7 @@ require (
 require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/saichler/l8pollaris v0.0.0-20260320112831-4bda37975bd5 // indirect
+	github.com/saichler/l8ql v0.0.0-20260322130921-a31581a0ab5f // indirect
 	github.com/saichler/probler v0.0.0-20260323162415-5389cadce454 // indirect
 	golang.org/x/sys v0.42.0 // indirect
 )
