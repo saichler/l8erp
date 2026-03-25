@@ -84,7 +84,10 @@ limitations under the License.
     MobileSysSecurity.columns = {
         L8User: [
             ...col.col('userId', 'User ID'),
-            ...col.col('fullName', 'Full Name')
+            ...col.col('fullName', 'Full Name'),
+            ...col.col('email', 'Email'),
+            ...col.col('accountStatus', 'Status'),
+            ...col.date('lastLogin', 'Last Login')
         ],
         L8Role: [
             ...col.col('roleId', 'Role ID'),

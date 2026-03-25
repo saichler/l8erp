@@ -16,7 +16,26 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         L8User: f.form('User', [
             f.section('User Information', [
                 ...f.text('userId', 'User ID', true),
-                ...f.text('fullName', 'Full Name', true)
+                ...f.text('fullName', 'Full Name', true),
+                ...f.text('email', 'Email'),
+                ...f.select('accountStatus', 'Account Status', {
+                    'ACCOUNT_STATUS_UNSPECIFIED': 'Unspecified',
+                    'ACCOUNT_STATUS_ACTIVE': 'Active',
+                    'ACCOUNT_STATUS_INACTIVE': 'Inactive',
+                    'ACCOUNT_STATUS_LOCKED': 'Locked',
+                    'ACCOUNT_STATUS_SUSPENDED': 'Suspended',
+                    'ACCOUNT_STATUS_PENDING_ACTIVATION': 'Pending Activation'
+                }),
+                ...f.checkbox('fa', 'First-Factor Auth'),
+                ...f.checkbox('mustChangePassword', 'Must Change Password')
+            ]),
+            f.section('Account Activity', [
+                ...f.date('lastLogin', 'Last Login'),
+                ...f.date('lastFailedLogin', 'Last Failed Login'),
+                ...f.number('failedLoginCount', 'Failed Login Count'),
+                ...f.date('passwordChangedAt', 'Password Changed At'),
+                ...f.date('lockoutUntil', 'Lockout Until'),
+                ...f.checkbox('faVerified', 'Auth Verified')
             ])
         ]),
 

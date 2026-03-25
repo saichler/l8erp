@@ -196,34 +196,67 @@ None of the standard financial reports are implemented:
 - Login/authentication flow exists (login forms, TFA support)
 - Users, Roles, Credentials services exist in SYS module
 - Users can be assigned to Roles
+- Security proto (`proto-sec/secure.proto`): L8User, L8Role, L8Rule, L8Token, L8SecureConfig
+- `go/sec/` package: SecurityProvider with AAA (pre-computed permission index), CanDoAction, ScopeView, AllowedTypes
+- SYS Security tab UI: full admin pages for Users (role assignment), Roles (nested rule editing with elem type, allow/deny, actions, attributes), Credentials
 
-### 4.2 Missing
+### 4.2 SecurityProvider Implementation (`go/sec/`)
+
+**AAA** (`aaa.go`): Pre-computed permission index with O(1) lookup per role. Thread-safe (RWMutex). Structures:
+- `RolePermissions.allow/deny`: `elem_type → action → bool` for action-level authorization
+- `RolePermissions.denyAttrs`: `elem_type → attribute key → value` for field/row-level security
+- Deny-before-allow evaluation: if any role denies, access is denied regardless of other roles
+
+**CanDoAction** (`CanDoAction.go`): Extracts type name from IElements (filter mode via reflection, query mode via parsed query). Checks all user roles with deny-before-allow logic. Internal/system calls (short AAA ID) bypass authorization.
+
+**ScopeView** (`ScopeView.go`): Dual-pass post-response filtering:
+- **Row-level**: Attribute keys without `.` = model names, values = L8Query strings. Parsed via `interpreter.NewQuery()`, filtered via `IQuery.Match()` — elements matching a deny query are removed.
+- **Field-level**: Attribute keys with `.` = introspector node keys (e.g., `salesorder.customerid`). Matched against struct fields via reflection, denied fields zeroed out.
+- Wildcard `"*"` blanks all exported fields on all elements.
+
+**AllowedTypes** (`AllowedTypes.go`): Returns list of type names the user has GET access to. Enumerates all registered root types from the introspector, checks each against the user's roles. Used by UI for role-based menu filtering.
+
+### 4.3 L8Rule Attributes Map Convention
+
+The `L8Rule.Attributes` (`map<string, string>`) serves dual purpose based on key format:
+
+| Key Format | Meaning | Value |
+|---|---|---|
+| `*` | Wildcard — all attributes | `*` (deny entire type from view) |
+| Key without `.` (e.g., `SalesOrder`) | Row-level filter | L8Query string (e.g., `select * from SalesOrder where salesRepId='{userId}'`) |
+| Key with `.` (e.g., `salesorder.customerid`) | Field-level deny | Unused (presence = denied) |
+
+The allow/deny signal comes from `L8Rule.Allowed`, not from the attributes map values.
+
+### 4.4 Status
 
 | Feature | Status |
 |---------|--------|
-| Permission Definitions | Missing - Roles exist but no permissions mapped to them |
-| Field-Level Security | Missing - All fields visible to all users |
-| Row-Level Security | Missing - All data visible to all users |
-| Role-Based Menu Filtering | Missing - All modules visible regardless of role |
-| API Endpoint Authorization | Missing - No middleware checking permissions |
-| Password Policy | Missing - No complexity, expiry, or history rules |
-| Session Management | Missing - No timeout, concurrent session limits |
-| Audit Log of User Actions | Missing - AuditInfo tracks create/modify but not reads or failed attempts |
+| Permission Definitions | **Done** — L8Role → L8Rule with elem_type, allowed, actions map, attributes map. Pre-computed in AAA for O(1) lookup |
+| API Endpoint Authorization | **Done** — CanDoAction enforces deny-before-allow across user's roles per elem_type + action |
+| Field-Level Security | **Done** — ScopeView blanks denied attributes via reflection using introspector node keys |
+| Row-Level Security | **Done** — ScopeView filters rows using L8Query Match on deny rules where attribute key is a model name (no `.`) |
+| Role-Based Menu Filtering | **Done** — AllowedTypes returns GET-permitted type names; UI wiring to hide nav entries remaining |
+| UI Admin Pages | **Done** — SYS Security tab: Users (role checkbox assignment), Roles (nested rule editor with stacked modals), Credentials |
+| Audit Log of User Actions | **Done** (infrastructure) — l8events provides `AuditEventType` (CREATE/UPDATE/DELETE/LOGIN/LOGOUT/CONFIG_CHANGE/PERMISSION_CHANGE/EXPORT/IMPORT) and `SecurityEventType` (AUTH_SUCCESS/AUTH_FAILURE/ACCESS_DENIED/BRUTE_FORCE/PRIVILEGE_ESCALATION/POLICY_VIOLATION/TOKEN_REVOKED). l8alarms provides event→alarm correlation and escalation. l8notify provides delivery channels (email/webhook/Slack). Remaining: wiring SecurityProvider to emit events on CanDoAction deny, ScopeView redaction, Authenticate success/failure |
+| Password Policy | Missing — No complexity, expiry, or history rules |
+| Session Management | Missing — No timeout, concurrent session limits |
 | SSO/SAML/OAuth Integration | Missing |
-| API Key Management | Missing - Credentials service exists but no clear purpose |
+| API Key Management | Missing — Credentials service exists but no clear purpose |
 
 ---
 
 ## 5. Integration & External Communication
 
-### 5.1 Missing Integration Features
+### 5.1 Integration Features
 
 | Feature | Status |
 |---------|--------|
-| Email Sending (SMTP) | Missing |
-| Email Templates | Missing |
+| Email Sending (SMTP) | **Done** (infrastructure) — l8notify `email.go` channel with SmtpConfig. Remaining: ERP-specific wiring |
+| Email Templates | **Done** (infrastructure) — l8notify `template.go` with `{{key}}` placeholder engine. Remaining: ERP-specific templates |
 | Notification System (in-app) | Missing |
-| Webhook Support | Missing |
+| Webhook Support | **Done** (infrastructure) — l8notify `webhook.go` channel with WebhookConfig. Remaining: ERP-specific wiring |
+| Event/Alarm Pipeline | **Done** (infrastructure) — l8events EventRecord with categories (Audit, Security, + others), l8alarms event→alarm correlation engine (temporal, topological, pattern matching), alarm lifecycle (state, escalation, suppression, archiving, notification). Remaining: ERP-specific event wiring |
 | REST API Documentation (OpenAPI) | Missing |
 | Import from CSV/Excel | **Done** — Generic `L8ImportTemplate` system with AI-assisted column mapping (heuristic + pluggable LLM), multi-format parsing (CSV/JSON/XML), value transforms, template transfer between environments. Backend in l8services (`dataimport/` package), UI in l8ui (desktop + mobile), integrated into SYS Data Import tab. |
 | External System Connectors | Missing |
@@ -548,18 +581,26 @@ All 6 audit items passed with no issues found:
 4. ~~File upload component (for DOC module)~~ — **DONE**: `FileStore` backend service (go/erp/common/filestore/) with base64 upload/download via protobuf. Shared `Layer8FileUpload` JS component (upload, download, formatSize). `f.file()` form factory method with drag-and-drop, upload status, and download button. Desktop + mobile rendering. Download column in DocDocument table.
 5. ~~Tree/hierarchy view (for FIN chart of accounts, HCM org chart)~~ — **DONE**: Tree grid implemented (desktop + mobile) with expand/collapse, events, rendering.
 
-### Phase D: Authorization & Security — PAUSED
-Proto types designed in `proto-phase-d/` (sys-user, sys-permissions, sys-security-policy, sys-audit). Runtime enforcement already exists in ISecurityProvider (CanDoAction, ScopeView). Remaining: service implementations, UI admin pages.
+### Phase D: Authorization & Security — IN PROGRESS
+Security proto (`proto-sec/secure.proto`) and `go/sec/` package implemented. AAA with pre-computed permission index, deny-before-allow enforcement. SYS Security tab UI already existed. Audit event infrastructure exists in l8events/l8alarms/l8notify. ERP-specific security config implemented with 15 granular roles and example users.
 
-1. Permission definitions and role-permission mapping
-2. API endpoint authorization middleware
-3. Row-level and field-level security
-4. Audit logging of user actions
+1. ~~Permission definitions and role-permission mapping~~ — **DONE**: L8Role/L8Rule proto + AAA pre-computed index (RolePermissions with allow/deny/denyAttrs maps)
+2. ~~API endpoint authorization middleware~~ — **DONE**: SecurityProvider.CanDoAction enforces per elem_type + action, called by ServiceManager before handler
+3. ~~Field-level security~~ — **DONE**: SecurityProvider.ScopeView blanks denied attributes via reflection, called by ServiceManager after handler
+4. ~~Row-level security~~ — **DONE**: ScopeView filters rows using L8Query Match on deny rules where attribute key is a model name (no `.`), value is L8Query string
+5. ~~Role-based menu filtering (backend)~~ — **DONE**: SecurityProvider.AllowedTypes returns GET-permitted type names from introspector
+6. ~~UI admin pages~~ — **DONE** (pre-existing): SYS Security tab with Users, Roles (nested rule editor), Credentials
+7. ~~Audit logging (infrastructure)~~ — **DONE** (pre-existing in l8events/l8alarms/l8notify): AuditEventType + SecurityEventType enums, event→alarm correlation, email/webhook/Slack notification delivery
+8. ~~ERP security configuration~~ — **DONE**: `ERPSecureConfig()` in `go/sec/erp_config.go`. 15 ERP roles (erp-admin, hr-manager, hr-clerk, accountant, fin-clerk, sales-manager, sales-rep, warehouse-mgr, warehouse-clerk, production-mgr, project-mgr, bi-analyst, compliance-officer, doc-admin, ecom-manager) with granular per-module permissions. Module type registry (`erp_types.go`) covers all 11 ERP modules. Rule helpers (`erp_rules.go`) for allowModule/readOnlyModule/denyTypes. 15 example users + 3 platform defaults. `Prepare()` integrates ERPSecureConfig for combined JSON generation.
+9. Role-based menu filtering (UI wiring) — remaining: UI needs to call AllowedTypes on login and hide nav entries for denied types
+10. Audit logging (wiring) — remaining: SecurityProvider needs to emit EventRecords on CanDoAction deny, ScopeView redaction, Authenticate success/failure
+11. Password policy — remaining: complexity rules, expiry, history enforcement
+12. Session management — remaining: timeout, concurrent session limits
 
 ### Phase E: Integration
-1. Email/notification system
+1. ~~Email/notification system (infrastructure)~~ — **DONE** (pre-existing in l8notify): Email (SMTP), webhook, Slack channels. Template engine with `{{key}}` placeholders. Throttling, escalation scheduler with steps. Remaining: ERP-specific integration (connecting l8notify to ERP events)
 2. ~~Import from CSV/Excel~~ — **DONE**: Generic data import system with AI-assisted mapping, multi-format parsing (CSV/JSON/XML), value transforms, template transfer. Backend: `l8services/dataimport/` (9 files). UI: l8ui desktop (4 JS + CSS) + mobile (1 JS). Integrated into SYS Data Import tab. See `plans/data-import-system.md`.
-3. Webhook/event system for cross-module triggers
+3. ~~Webhook/event system (infrastructure)~~ — **DONE** (pre-existing in l8events/l8alarms): EventRecord with categories, severity, attributes. Event→alarm correlation engine (temporal, topological, pattern). Alarm lifecycle (state, escalation, suppression, archiving). Remaining: ERP-specific event wiring
 
 ### Phase F: Module-Specific Business Logic — DONE
 Implemented across all 12 modules (~30 new files, ~2,000 lines). See `plans/PLAN-PHASE-F-MODULE-BUSINESS-LOGIC.md`.
