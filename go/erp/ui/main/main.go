@@ -18,20 +18,20 @@ package main
 import (
 	"github.com/saichler/l8bus/go/overlay/health"
 	"github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8erp/go/erp/ui"
 	"github.com/saichler/l8services/go/services/csvexport"
 	"github.com/saichler/l8services/go/services/dataimport"
 	"github.com/saichler/l8services/go/services/filestore"
-	"github.com/saichler/l8erp/go/erp/ui"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8utils/go/utils/ipsegment"
 	"github.com/saichler/l8web/go/web/server"
 )
 
 func main() {
-	startWebServer(2773, "/data/probler")
+	startWebServer2(7773, "/data/erp")
 }
 
-func startWebServer(port int, cert string) {
+func startWebServer2(port int, cert string) {
 	serverConfig := &server.RestServerConfig{
 		Host:           ipsegment.MachineIP,
 		Port:           port,

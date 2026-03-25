@@ -22,10 +22,10 @@ echo "Building Mocks"
 go build -o ../../../demo/mocks_demo
 cd ../../../logs/agent
 echo "Building logs agent"
-go build -o ../../demo/log-agent_demo
+#go build -o ../../demo/log-agent_demo
 cd ../vnet
 echo "Building logs vnet"
-go build -o ../../demo/log-vnet_demo
+#go build -o ../../demo/log-vnet_demo
 cd ../../erp/vnet/
 echo "Building vnet"
 go build -o ../../demo/vnet_demo
