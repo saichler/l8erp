@@ -7,6 +7,7 @@ import (
 	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8erp/go/types/sys"
+	l8events "github.com/saichler/l8events/go/types/l8events"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8types/go/types/l8api"
 )
@@ -103,4 +104,5 @@ func registerCompTypes(resources ifs.IResources) {
 func registerSysTypes(resources ifs.IResources) {
 	common.RegisterType[sys.SysModuleConfig, sys.SysModuleConfigList](resources, "ConfigId")
 	common.RegisterType[l8api.L8ImportTemplate, l8api.L8ImportTemplateList](resources, "TemplateId")
+	common.RegisterType[l8events.EventRecord, l8events.EventRecordList](resources, "EventId")
 }

@@ -47,6 +47,7 @@ limitations under the License.
             <button class="section-tab active" data-service="users">Users</button>
             <button class="section-tab" data-service="roles">Roles</button>
             <button class="section-tab" data-service="credentials">Creds</button>
+            <button class="section-tab" data-service="events">Events</button>
         </div>
         <div id="system-security-table"></div>
     </div>
@@ -98,6 +99,16 @@ var SECURITY_SERVICES = {
             { key: 'id', label: 'ID', primary: true, filterKey: 'id' },
             { key: 'name', label: 'Name', secondary: true, filterKey: 'name' }
         ]
+    },
+    events: {
+        endpoint: Layer8MConfig.resolveEndpoint('/76/Events'),
+        modelName: 'EventRecord',
+        idField: 'eventId',
+        columns: [
+            { key: 'eventType', label: 'Event Type', primary: true, filterKey: 'eventType' },
+            { key: 'message', label: 'Message', secondary: true, filterKey: 'message' }
+        ],
+        defaultSort: { column: 'occurredAt', direction: 'desc' }
     }
 };
 

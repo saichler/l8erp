@@ -5,7 +5,8 @@ go 1.26.1
 require (
 	github.com/lib/pq v1.12.0
 	github.com/saichler/l8agent v0.0.0-20260323172340-3d4f742ba981
-	github.com/saichler/l8bus v0.0.0-20260320104145-f708e54617f0
+	github.com/saichler/l8bus v0.0.0-20260326134657-42f845bc01f6
+	github.com/saichler/l8events v0.0.0-20260326140304-4e54a1195008
 	github.com/saichler/l8logfusion v0.0.0-20260320120056-3a3617eed28f
 	github.com/saichler/l8orm v0.0.0-20260322220435-6283ea6a45ee
 	github.com/saichler/l8reflect v0.0.0-20260320113844-ab23d1971f13

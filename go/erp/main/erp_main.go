@@ -20,6 +20,7 @@ import (
 	"github.com/saichler/l8bus/go/overlay/vnic"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/erp/services"
+	evtservices "github.com/saichler/l8events/go/services"
 	"github.com/saichler/l8types/go/ifs"
 	"os"
 	"os/exec"
@@ -40,6 +41,7 @@ func main() {
 
 	services.ActivateAllServices(common.DB_CREDS, common.DB_NAME, nic)
 	services.ActivateChatService(common.DB_CREDS, common.DB_NAME, nic)
+	evtservices.ActivateEvents(common.DB_CREDS, common.DB_NAME, nic)
 
 	common.WaitForSignal(res)
 }
