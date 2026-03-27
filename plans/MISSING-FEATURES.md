@@ -197,7 +197,7 @@ None of the standard financial reports are implemented:
 - Users, Roles, Credentials services exist in SYS module
 - Users can be assigned to Roles
 - Security proto (`proto-sec/secure.proto`): L8User, L8Role, L8Rule, L8Token, L8SecureConfig
-- `go/sec/` package: SecurityProvider with AAA (pre-computed permission index), CanDoAction, ScopeView, AllowedTypes
+- `go/sec/` package: SecurityProvider with AAA (pre-computed permission index), CanDoAction, ScopeView, AllowedTypes, AllowedActions
 - SYS Security tab UI: full admin pages for Users (role assignment), Roles (nested rule editing with elem type, allow/deny, actions, attributes), Credentials
 
 ### 4.2 SecurityProvider Implementation (`go/sec/`)
@@ -215,6 +215,8 @@ None of the standard financial reports are implemented:
 - Wildcard `"*"` blanks all exported fields on all elements.
 
 **AllowedTypes** (`AllowedTypes.go`): Returns list of type names the user has GET access to. Enumerates all registered root types from the introspector, checks each against the user's roles. Used by UI for role-based menu filtering.
+
+**AllowedActions** (`AllowedActions.go`): Returns `map[string][]int32` — for each registered type, the list of action codes (1=POST, 2=PUT, 3=PATCH, 4=DELETE, 5=GET) the user is allowed to perform. Uses `Introspector().Nodes(false, true)` to enumerate all root types, then evaluates each type × action against the user's roles with deny-before-allow logic. Exposed via `/permissions` HTTP endpoint (l8web). UI fetches on login and stores as `window.Layer8DPermissions`; `Layer8DServiceRegistry.initializeServiceTable()` uses it to show/hide Add/Edit/Delete buttons per type.
 
 ### 4.3 L8Rule Attributes Map Convention
 
@@ -237,8 +239,9 @@ The allow/deny signal comes from `L8Rule.Allowed`, not from the attributes map v
 | Field-Level Security | **Done** — ScopeView blanks denied attributes via reflection using introspector node keys |
 | Row-Level Security | **Done** — ScopeView filters rows using L8Query Match on deny rules where attribute key is a model name (no `.`) |
 | Role-Based Menu Filtering | **Done** — AllowedTypes returns GET-permitted type names; UI wiring to hide nav entries remaining |
+| Per-Type Action Permissions | **Done** — AllowedActions returns per-type allowed action codes; `/permissions` endpoint; UI `initializeServiceTable` hides Add/Edit/Delete buttons based on permissions |
 | UI Admin Pages | **Done** — SYS Security tab: Users (role checkbox assignment), Roles (nested rule editor with stacked modals), Credentials |
-| Audit Log of User Actions | **Done** (infrastructure) — l8events provides `AuditEventType` (CREATE/UPDATE/DELETE/LOGIN/LOGOUT/CONFIG_CHANGE/PERMISSION_CHANGE/EXPORT/IMPORT) and `SecurityEventType` (AUTH_SUCCESS/AUTH_FAILURE/ACCESS_DENIED/BRUTE_FORCE/PRIVILEGE_ESCALATION/POLICY_VIOLATION/TOKEN_REVOKED). l8alarms provides event→alarm correlation and escalation. l8notify provides delivery channels (email/webhook/Slack). Remaining: wiring SecurityProvider to emit events on CanDoAction deny, ScopeView redaction, Authenticate success/failure |
+| Audit Log of User Actions | **Done** — SecurityProvider emits EventRecords: LOGIN_FAILED, LOGIN_SUCCESS, ACCESS_DENIED, TFA_FAILED, USER_REGISTERED via l8events (PostSecurityEvent/PostAuditEvent). Events visible in SYS Security tab (EventRecord, read-only). Infrastructure: l8events AuditEventType/SecurityEventType enums, l8alarms event→alarm correlation, l8notify delivery channels (email/webhook/Slack) |
 | Password Policy | Missing — No complexity, expiry, or history rules |
 | Session Management | Missing — No timeout, concurrent session limits |
 | SSO/SAML/OAuth Integration | Missing |
@@ -592,10 +595,11 @@ Security proto (`proto-sec/secure.proto`) and `go/sec/` package implemented. AAA
 6. ~~UI admin pages~~ — **DONE** (pre-existing): SYS Security tab with Users, Roles (nested rule editor), Credentials
 7. ~~Audit logging (infrastructure)~~ — **DONE** (pre-existing in l8events/l8alarms/l8notify): AuditEventType + SecurityEventType enums, event→alarm correlation, email/webhook/Slack notification delivery
 8. ~~ERP security configuration~~ — **DONE**: `ERPSecureConfig()` in `go/sec/erp_config.go`. 15 ERP roles (erp-admin, hr-manager, hr-clerk, accountant, fin-clerk, sales-manager, sales-rep, warehouse-mgr, warehouse-clerk, production-mgr, project-mgr, bi-analyst, compliance-officer, doc-admin, ecom-manager) with granular per-module permissions. Module type registry (`erp_types.go`) covers all 11 ERP modules. Rule helpers (`erp_rules.go`) for allowModule/readOnlyModule/denyTypes. 15 example users + 3 platform defaults. `Prepare()` integrates ERPSecureConfig for combined JSON generation.
-9. Role-based menu filtering (UI wiring) — remaining: UI needs to call AllowedTypes on login and hide nav entries for denied types
-10. Audit logging (wiring) — remaining: SecurityProvider needs to emit EventRecords on CanDoAction deny, ScopeView redaction, Authenticate success/failure
-11. Password policy — remaining: complexity rules, expiry, history enforcement
-12. Session management — remaining: timeout, concurrent session limits
+9. ~~Per-type action permissions (AllowedActions + UI wiring)~~ — **DONE**: `AllowedActions` in SecurityProvider returns `map[string][]int32` per type. `/permissions` HTTP endpoint in l8web. UI fetches on login → `window.Layer8DPermissions`. `Layer8DServiceRegistry.initializeServiceTable()` checks permissions to show/hide Add/Edit/Delete buttons. Bug fix: `Introspector().Nodes(true, true)` returned empty (impossible filter — no node is both leaf and root); fixed to `Nodes(false, true)`. Panic guard added to l8reflect.
+10. Role-based menu filtering (UI wiring) — partially done: `window.Layer8DPermissions` already contains per-type allowed actions (from AllowedActions/`/permissions`). Remaining: nav-level filtering to hide sidebar/service entries when `perms.indexOf(5) === -1` (no GET access)
+11. ~~Audit logging (wiring)~~ — **DONE**: SecurityProvider emits EventRecords via l8events: LOGIN_FAILED (security/warning), LOGIN_SUCCESS (audit/info), ACCESS_DENIED (security/warning), TFA_FAILED (security/warning), USER_REGISTERED (audit/info). Events visible in SYS Security tab (EventRecord service, read-only, sorted by occurredAt desc)
+12. Password policy — remaining: complexity rules, expiry, history enforcement
+13. Session management — remaining: timeout, concurrent session limits
 
 ### Phase E: Integration
 1. ~~Email/notification system (infrastructure)~~ — **DONE** (pre-existing in l8notify): Email (SMTP), webhook, Slack channels. Template engine with `{{key}}` placeholders. Throttling, escalation scheduler with steps. Remaining: ERP-specific integration (connecting l8notify to ERP events)
