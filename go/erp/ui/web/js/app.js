@@ -150,6 +150,16 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     } catch (e) { console.warn('Failed to load exchange rates:', e); }
 
+    // Load per-type action permissions for the current user
+    try {
+        const permResp = await fetch('/permissions', {
+            headers: { 'Authorization': `Bearer ${bearerToken}`, 'Content-Type': 'application/json' }
+        });
+        if (permResp.ok) {
+            window.Layer8DPermissions = await permResp.json();
+        }
+    } catch (e) { console.warn('Failed to load permissions:', e); }
+
     // Load module configuration — blocks app if server not ready
     if (typeof Layer8DModuleFilter !== 'undefined') {
         const configLoaded = await Layer8DModuleFilter.load(bearerToken);

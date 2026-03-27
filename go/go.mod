@@ -9,13 +9,13 @@ require (
 	github.com/saichler/l8events v0.0.0-20260326140304-4e54a1195008
 	github.com/saichler/l8logfusion v0.0.0-20260320120056-3a3617eed28f
 	github.com/saichler/l8orm v0.0.0-20260322220435-6283ea6a45ee
-	github.com/saichler/l8reflect v0.0.0-20260320113844-ab23d1971f13
+	github.com/saichler/l8reflect v0.0.0-20260327101437-6da0c1cef4c9
 	github.com/saichler/l8services v0.0.0-20260324202357-03d40602ca59
 	github.com/saichler/l8srlz v0.0.0-20260322124809-505a0d08f95d
 	github.com/saichler/l8test v0.0.0-20260320115253-b43de9c1c822
-	github.com/saichler/l8types v0.0.0-20260324201830-a80b3f1da55c
+	github.com/saichler/l8types v0.0.0-20260326200318-42f7cfad8273
 	github.com/saichler/l8utils v0.0.0-20260322182652-722ad1c4c3b9
-	github.com/saichler/l8web v0.0.0-20260320115130-eff45fba29e8
+	github.com/saichler/l8web v0.0.0-20260327100520-e186fc18aa5b
 	google.golang.org/protobuf v1.36.11
 )
 
