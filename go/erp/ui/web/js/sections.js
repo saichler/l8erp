@@ -166,6 +166,11 @@ function loadSection(sectionName) {
                 if (window.Layer8DModuleFilter) {
                     Layer8DModuleFilter.applyToSection(sectionName);
                 }
+
+                // Apply permission filter to hide services user can't GET
+                if (window.Layer8DPermissionFilter) {
+                    Layer8DPermissionFilter.applyToSection(sectionName);
+                }
             }, 200);
         })
         .catch(error => {

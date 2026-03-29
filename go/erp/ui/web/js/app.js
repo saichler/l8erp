@@ -167,6 +167,35 @@ document.addEventListener('DOMContentLoaded', async function() {
         Layer8DModuleFilter.applyToSidebar();
     }
 
+    // Apply permission-based nav filtering (hide modules/services user can't GET)
+    if (typeof Layer8DPermissionFilter !== 'undefined') {
+        // Register resolver: maps section/module/service to model name via module configs
+        const nsMap = {
+            'hcm': 'HCM', 'financial': 'FIN', 'scm': 'SCM', 'sales': 'Sales',
+            'manufacturing': 'MFG', 'crm': 'CRM', 'projects': 'Prj', 'bi': 'BI',
+            'documents': 'DOC', 'ecommerce': 'ECOM', 'compliance': 'COMP'
+        };
+        Layer8DPermissionFilter.registerResolver(function(sectionKey, moduleKey, serviceKey) {
+            var ns = window[nsMap[sectionKey]];
+            if (!ns || !ns.modules || !ns.modules[moduleKey]) return null;
+            var svc = ns.modules[moduleKey].services.find(function(s) { return s.key === serviceKey; });
+            return svc ? svc.model : null;
+        });
+
+        // Build sidebar model map and apply
+        var sidebarModels = {};
+        Object.keys(nsMap).forEach(function(section) {
+            var ns = window[nsMap[section]];
+            if (!ns || !ns.modules) return;
+            var models = [];
+            Object.values(ns.modules).forEach(function(mod) {
+                if (mod.services) mod.services.forEach(function(svc) { if (svc.model) models.push(svc.model); });
+            });
+            sidebarModels[section] = models;
+        });
+        Layer8DPermissionFilter.applyToSidebar(sidebarModels);
+    }
+
     // Initialize floating AI chat bubble
     if (typeof L8AgentBubble !== 'undefined') {
         L8AgentBubble.init({ chatEndpoint: '/120/AgntChat' });
