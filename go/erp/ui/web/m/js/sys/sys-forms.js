@@ -26,6 +26,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     'ACCOUNT_STATUS_SUSPENDED': 'Suspended',
                     'ACCOUNT_STATUS_PENDING_ACTIVATION': 'Pending Activation'
                 }),
+                ...f.text('portal', 'Portal (path suffix)'),
                 ...f.checkbox('fa', 'First-Factor Auth'),
                 ...f.checkbox('mustChangePassword', 'Must Change Password')
             ]),
@@ -43,6 +44,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Role Information', [
                 ...f.text('roleId', 'Role ID', true),
                 ...f.text('roleName', 'Role Name', true)
+            ])
+        ]),
+
+        L8Portal: f.form('Portal', [
+            f.section('Portal Info', [
+                ...f.text('portalId', 'Portal ID', true)
             ])
         ]),
 

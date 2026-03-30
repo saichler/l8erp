@@ -87,7 +87,11 @@ limitations under the License.
             ...col.col('fullName', 'Full Name'),
             ...col.col('email', 'Email'),
             ...col.col('accountStatus', 'Status'),
+            ...col.col('portal', 'Portal'),
             ...col.date('lastLogin', 'Last Login')
+        ],
+        L8Portal: [
+            ...col.col('portalId', 'Portal ID')
         ],
         L8Role: [
             ...col.col('roleId', 'Role ID'),
