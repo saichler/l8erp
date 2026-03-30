@@ -55,7 +55,13 @@ Layer8ModuleConfigFactory.create({
                 { key: 'cost-rollups', label: 'Cost Rollups', icon: '📊', endpoint: '/70/MfgRollup', model: 'MfgCostRollup' },
                 { key: 'overheads', label: 'Overheads', icon: '🏢', endpoint: '/70/MfgOverhd', model: 'MfgOverhead' }
             ]
+        },
+        'reports': {
+            label: 'Reports', icon: '📊',
+            services: [
+                { key: 'module-reports', label: 'Reports', endpoint: '/70/MfgReport', model: 'FinReport' }
+            ]
         }
     },
-    submodules: ['MfgEngineering', 'MfgProduction', 'MfgShopFloor', 'MfgQuality', 'MfgPlanning', 'MfgCosting']
+    submodules: ['MfgEngineering', 'MfgProduction', 'MfgShopFloor', 'MfgQuality', 'MfgPlanning', 'MfgCosting', 'Reports']
 });

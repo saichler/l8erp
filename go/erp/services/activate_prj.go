@@ -32,6 +32,8 @@ import (
 	"github.com/saichler/l8erp/go/erp/prj/portfolioviews"
 	"github.com/saichler/l8erp/go/erp/prj/projectkpis"
 	"github.com/saichler/l8erp/go/erp/prj/projectstatuses"
+	// Reports
+	"github.com/saichler/l8erp/go/erp/prj/prjreports"
 )
 
 func collectPrjActivations(creds, dbname string, nic ifs.IVNic) []func() {
@@ -62,5 +64,7 @@ func collectPrjActivations(creds, dbname string, nic ifs.IVNic) []func() {
 		func() { projectstatuses.Activate(creds, dbname, nic) },
 		func() { portfolioviews.Activate(creds, dbname, nic) },
 		func() { projectkpis.Activate(creds, dbname, nic) },
+		// Reports
+		func() { prjreports.Activate(creds, dbname, nic) },
 	}
 }

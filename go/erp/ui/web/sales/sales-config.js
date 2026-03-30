@@ -53,7 +53,13 @@ Layer8ModuleConfigFactory.create({
                 { key: 'commission-plans', label: 'Commission Plans', icon: '💵', endpoint: '/60/CommPlan', model: 'SalesCommissionPlan' },
                 { key: 'forecasts', label: 'Forecasts', icon: '🔮', endpoint: '/60/SalesFcast', model: 'SalesForecast', supportedViews: ['table', 'chart'] }
             ]
+        },
+        'reports': {
+            label: 'Reports', icon: '📊',
+            services: [
+                { key: 'module-reports', label: 'Reports', endpoint: '/60/SalesRept', model: 'FinReport' }
+            ]
         }
     },
-    submodules: ['SalesCustomers', 'SalesOrders', 'SalesPricing', 'SalesShipping', 'SalesBilling', 'SalesAnalytics']
+    submodules: ['SalesCustomers', 'SalesOrders', 'SalesPricing', 'SalesShipping', 'SalesBilling', 'SalesAnalytics', 'Reports']
 });

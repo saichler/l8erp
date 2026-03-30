@@ -33,6 +33,7 @@ import (
 	"github.com/saichler/l8erp/go/erp/fin/taxrules"
 	"github.com/saichler/l8erp/go/erp/fin/vendorpayments"
 	"github.com/saichler/l8erp/go/erp/fin/vendors"
+	"github.com/saichler/l8erp/go/erp/fin/finreports"
 	"github.com/saichler/l8erp/go/erp/fin/vendorstatements"
 )
 
@@ -73,5 +74,7 @@ func collectFinActivations(creds, dbname string, nic ifs.IVNic) []func() {
 		func() { taxjurisdictions.Activate(creds, dbname, nic) },
 		func() { taxrules.Activate(creds, dbname, nic) },
 		func() { taxexemptions.Activate(creds, dbname, nic) },
+		// Reports
+		func() { finreports.Activate(creds, dbname, nic) },
 	}
 }

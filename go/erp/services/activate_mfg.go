@@ -30,6 +30,8 @@ import (
 	"github.com/saichler/l8erp/go/erp/mfg/costrollups"
 	"github.com/saichler/l8erp/go/erp/mfg/overheads"
 	"github.com/saichler/l8erp/go/erp/mfg/standardcosts"
+	// Reports
+	"github.com/saichler/l8erp/go/erp/mfg/mfgreports"
 )
 
 func collectMfgActivations(creds, dbname string, nic ifs.IVNic) []func() {
@@ -58,5 +60,7 @@ func collectMfgActivations(creds, dbname string, nic ifs.IVNic) []func() {
 		func() { standardcosts.Activate(creds, dbname, nic) },
 		func() { costrollups.Activate(creds, dbname, nic) },
 		func() { overheads.Activate(creds, dbname, nic) },
+		// Reports
+		func() { mfgreports.Activate(creds, dbname, nic) },
 	}
 }

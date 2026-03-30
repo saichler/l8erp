@@ -58,7 +58,13 @@ Layer8ModuleConfigFactory.create({
                 { key: 'service-contracts', label: 'Contracts', icon: '📄', endpoint: '/80/CrmSvcCntr', model: 'CrmServiceContract' },
                 { key: 'service-schedules', label: 'Schedules', icon: '📅', endpoint: '/80/CrmSvcSchd', model: 'CrmServiceSchedule', supportedViews: ['table', 'calendar'] }
             ]
+        },
+        'reports': {
+            label: 'Reports', icon: '📊',
+            services: [
+                { key: 'module-reports', label: 'Reports', endpoint: '/80/CrmReport', model: 'FinReport' }
+            ]
         }
     },
-    submodules: ['CrmLeads', 'CrmOpportunities', 'CrmAccounts', 'CrmMarketing', 'CrmService', 'CrmFieldService']
+    submodules: ['CrmLeads', 'CrmOpportunities', 'CrmAccounts', 'CrmMarketing', 'CrmService', 'CrmFieldService', 'Reports']
 });

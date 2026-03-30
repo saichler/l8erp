@@ -35,6 +35,8 @@ import (
 	"github.com/saichler/l8erp/go/erp/scm/supplyplans"
 	"github.com/saichler/l8erp/go/erp/scm/warehouses"
 	"github.com/saichler/l8erp/go/erp/scm/waveplans"
+	// Reports
+	"github.com/saichler/l8erp/go/erp/scm/scmreports"
 )
 
 func collectSCMActivations(creds, dbname string, nic ifs.IVNic) []func() {
@@ -74,5 +76,7 @@ func collectSCMActivations(creds, dbname string, nic ifs.IVNic) []func() {
 		func() { suppliercollabs.Activate(creds, dbname, nic) },
 		func() { safetystocks.Activate(creds, dbname, nic) },
 		func() { leadtimes.Activate(creds, dbname, nic) },
+		// Reports
+		func() { scmreports.Activate(creds, dbname, nic) },
 	}
 }

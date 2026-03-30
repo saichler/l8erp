@@ -69,7 +69,13 @@ Layer8ModuleConfigFactory.create({
                 { key: 'tax-rules', label: 'Tax Rules', icon: '📜', endpoint: '/40/TaxRule', model: 'TaxRule' },
                 { key: 'tax-exemptions', label: 'Exemptions', icon: '✋', endpoint: '/40/TaxExmpt', model: 'TaxExemption' }
             ]
+        },
+        'reports': {
+            label: 'Reports', icon: '📊',
+            services: [
+                { key: 'financial-reports', label: 'Financial Reports', icon: '📊', endpoint: '/40/FinReport', model: 'FinReport' }
+            ]
         }
     },
-    submodules: ['GeneralLedger', 'AccountsPayable', 'AccountsReceivable', 'CashManagement', 'FixedAssets', 'Budgeting', 'TaxManagement']
+    submodules: ['GeneralLedger', 'AccountsPayable', 'AccountsReceivable', 'CashManagement', 'FixedAssets', 'Budgeting', 'TaxManagement', 'Reports']
 });

@@ -34,6 +34,8 @@ import (
 	"github.com/saichler/l8erp/go/erp/crm/serviceorders"
 	"github.com/saichler/l8erp/go/erp/crm/serviceschedules"
 	"github.com/saichler/l8erp/go/erp/crm/technicians"
+	// Reports
+	"github.com/saichler/l8erp/go/erp/crm/crmreports"
 )
 
 func collectCrmActivations(creds, dbname string, nic ifs.IVNic) []func() {
@@ -66,5 +68,7 @@ func collectCrmActivations(creds, dbname string, nic ifs.IVNic) []func() {
 		func() { technicians.Activate(creds, dbname, nic) },
 		func() { servicecontracts.Activate(creds, dbname, nic) },
 		func() { serviceschedules.Activate(creds, dbname, nic) },
+		// Reports
+		func() { crmreports.Activate(creds, dbname, nic) },
 	}
 }

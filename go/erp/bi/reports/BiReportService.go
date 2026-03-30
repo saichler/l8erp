@@ -29,6 +29,7 @@ func Activate(creds, dbname string, vnic ifs.IVNic) {
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
 		PrimaryKey: "ReportId", Callback: newBiReportServiceCallback(),
 	}, creds, dbname, vnic)
+	StartScheduler(vnic)
 }
 
 func BiReports(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

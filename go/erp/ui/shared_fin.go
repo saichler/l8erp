@@ -48,4 +48,7 @@ func registerFinTypes(resources ifs.IResources) {
 	common.RegisterType[fin.TaxJurisdiction, fin.TaxJurisdictionList](resources, "JurisdictionId")
 	common.RegisterType[fin.TaxRule, fin.TaxRuleList](resources, "RuleId")
 	common.RegisterType[fin.TaxExemption, fin.TaxExemptionList](resources, "ExemptionId")
+
+	// Reports
+	common.RegisterType[fin.FinReport, fin.FinReportList](resources, "ReportId")
 }

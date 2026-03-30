@@ -24,6 +24,6 @@ limitations under the License.
         defaultService: 'accounts',
         sectionSelector: 'general-ledger',
         initializerName: 'initializeFIN',
-        requiredNamespaces: ['GeneralLedger', 'AccountsPayable', 'AccountsReceivable', 'CashManagement', 'FixedAssets', 'Budgeting', 'TaxManagement']
+        requiredNamespaces: ['GeneralLedger', 'AccountsPayable', 'AccountsReceivable', 'CashManagement', 'FixedAssets', 'Budgeting', 'TaxManagement', 'Reports']
     });
 })();

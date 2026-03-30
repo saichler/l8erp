@@ -66,6 +66,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'service-contracts', label: 'Contracts', icon: '📄' },
                     { key: 'service-schedules', label: 'Schedules', icon: '📅' }
                 ]
+            },
+            {
+                key: 'reports',
+                label: 'Reports',
+                icon: '📊',
+                services: [
+                    { key: 'module-reports', label: 'Module Reports', icon: '📊', isDefault: true }
+                ]
             }
         ]
     });

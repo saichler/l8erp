@@ -23,6 +23,8 @@ import (
 	"github.com/saichler/l8erp/go/erp/sales/salesquotations"
 	"github.com/saichler/l8erp/go/erp/sales/salestargets"
 	"github.com/saichler/l8erp/go/erp/sales/salesterritories"
+	// Reports
+	"github.com/saichler/l8erp/go/erp/sales/salesreports"
 )
 
 func collectSalesActivations(creds, dbname string, nic ifs.IVNic) []func() {
@@ -50,5 +52,7 @@ func collectSalesActivations(creds, dbname string, nic ifs.IVNic) []func() {
 		func() { salesterritories.Activate(creds, dbname, nic) },
 		func() { commissionplans.Activate(creds, dbname, nic) },
 		func() { salesforecasts.Activate(creds, dbname, nic) },
+		// Reports
+		func() { salesreports.Activate(creds, dbname, nic) },
 	}
 }

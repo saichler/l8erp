@@ -92,6 +92,14 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'tax-rules', label: 'Tax Rules', icon: '📜' },
                     { key: 'tax-exemptions', label: 'Exemptions', icon: '✋' }
                 ]
+            },
+            {
+                key: 'reports',
+                label: 'Reports',
+                icon: '📊',
+                services: [
+                    { key: 'financial-reports', label: 'Financial Reports', icon: '📊', isDefault: true }
+                ]
             }
         ]
     });

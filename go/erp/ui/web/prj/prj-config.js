@@ -52,7 +52,13 @@ Layer8ModuleConfigFactory.create({
                 { key: 'portfolio-views', label: 'Portfolio', icon: '🗂️', endpoint: '/90/PrjPortflo', model: 'PrjPortfolioView', supportedViews: ['table', 'chart'] },
                 { key: 'kpis', label: 'KPIs', icon: '🎯', endpoint: '/90/PrjKPI', model: 'PrjProjectKPI', supportedViews: ['table', 'chart'] }
             ]
+        },
+        'reports': {
+            label: 'Reports', icon: '📊',
+            services: [
+                { key: 'module-reports', label: 'Reports', endpoint: '/90/PrjReport', model: 'FinReport' }
+            ]
         }
     },
-    submodules: ['PrjPlanning', 'PrjResources', 'PrjTimeExpense', 'PrjBilling', 'PrjAnalytics']
+    submodules: ['PrjPlanning', 'PrjResources', 'PrjTimeExpense', 'PrjBilling', 'PrjAnalytics', 'Reports']
 });

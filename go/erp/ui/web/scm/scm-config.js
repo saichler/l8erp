@@ -65,7 +65,13 @@ Layer8ModuleConfigFactory.create({
                 { key: 'safety-stocks', label: 'Safety Stock', icon: '🛡️', endpoint: '/50/SafeStock', model: 'ScmSafetyStock' },
                 { key: 'lead-times', label: 'Lead Times', icon: '⏱️', endpoint: '/50/LeadTime', model: 'ScmLeadTime' }
             ]
+        },
+        'reports': {
+            label: 'Reports', icon: '📊',
+            services: [
+                { key: 'module-reports', label: 'Reports', endpoint: '/50/ScmReport', model: 'FinReport' }
+            ]
         }
     },
-    submodules: ['Procurement', 'Inventory', 'WarehouseManagement', 'Logistics', 'ScmDemandPlanning', 'ScmSupplyPlanning']
+    submodules: ['Procurement', 'Inventory', 'WarehouseManagement', 'Logistics', 'ScmDemandPlanning', 'ScmSupplyPlanning', 'Reports']
 });

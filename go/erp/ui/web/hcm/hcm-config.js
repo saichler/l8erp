@@ -98,7 +98,13 @@ Layer8ModuleConfigFactory.create({
                 { key: 'comp-statements', label: 'Comp. Statements', icon: '📄', endpoint: '/30/CompStmt', model: 'CompensationStatement' },
                 { key: 'market-benchmarks', label: 'Market Benchmarks', icon: '📊', endpoint: '/30/MktBench', model: 'MarketBenchmark' }
             ]
+        },
+        'reports': {
+            label: 'Reports', icon: '📊',
+            services: [
+                { key: 'module-reports', label: 'Reports', endpoint: '/30/HcmReport', model: 'FinReport' }
+            ]
         }
     },
-    submodules: ['CoreHR', 'Payroll', 'Benefits', 'Time', 'Talent', 'Learning', 'Compensation']
+    submodules: ['CoreHR', 'Payroll', 'Benefits', 'Time', 'Talent', 'Learning', 'Compensation', 'Reports']
 });

@@ -70,6 +70,8 @@ import (
 	"github.com/saichler/l8erp/go/erp/hcm/meritincreases"
 	"github.com/saichler/l8erp/go/erp/hcm/salarygrades"
 	"github.com/saichler/l8erp/go/erp/hcm/salarystructures"
+	// Reports
+	"github.com/saichler/l8erp/go/erp/hcm/hcmreports"
 )
 
 func collectHCMActivations(creds, dbname string, nic ifs.IVNic) []func() {
@@ -138,5 +140,7 @@ func collectHCMActivations(creds, dbname string, nic ifs.IVNic) []func() {
 		func() { equitygrants.Activate(creds, dbname, nic) },
 		func() { compensationstatements.Activate(creds, dbname, nic) },
 		func() { marketbenchmarks.Activate(creds, dbname, nic) },
+		// Reports
+		func() { hcmreports.Activate(creds, dbname, nic) },
 	}
 }

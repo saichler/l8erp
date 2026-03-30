@@ -159,33 +159,36 @@ All view types implemented and registered in both desktop (`Layer8DViewFactory`)
 | Capability | Status |
 |------------|--------|
 | CSV Export | **Done** — Backend `CsvExport` service + `Layer8CsvExport` UI component |
-| Excel Export | Missing |
-| PDF Export | Missing |
-| Print-Friendly Views | Missing |
-| Report Builder | Missing |
-| Scheduled Reports | Missing |
-| Email Report Distribution | Missing |
+| Excel Export | **Done** — Client-side CSV-to-Excel conversion (`layer8-excel-export.js`) |
+| PDF Export | **Done** — Client-side CSV-to-PDF conversion (`layer8-pdf-export.js`) |
+| Print-Friendly Views | **Done** — `layer8-print.css` + Print button in table toolbar |
+| Report Builder | Deferred — Will be handled by dedicated AI Agent |
+| Scheduled Reports | **Done** — BI report scheduler (`report_scheduler.go`), delegates execution to AI Agent |
+| Email Report Distribution | Deferred — Will be handled by dedicated AI Agent |
 
 ### 3.2 Financial Reports (FIN)
 
-None of the standard financial reports are implemented:
-
-- Balance Sheet
-- Income Statement / P&L
-- Cash Flow Statement
-- Trial Balance
-- Aged Receivables / Payables
-- General Ledger Detail
-- Budget vs Actual
+| Report | Status |
+|--------|--------|
+| Balance Sheet | **Done** — `report_balance_sheet.go` |
+| Income Statement / P&L | **Done** — `report_income_statement.go` |
+| Cash Flow Statement | **Planned** — See `plans/PLAN-CASH-FLOW-STATEMENT.md` |
+| Trial Balance | **Done** — `report_trial_balance.go` |
+| Aged Receivables | **Done** — `report_aged_ar.go` |
+| Aged Payables | **Done** — `report_aged_ap.go` |
+| General Ledger Detail | **Done** — `report_gl_detail.go` |
+| Budget vs Actual | **Done** — `report_budget_vs_actual.go` |
 
 ### 3.3 Module-Specific Reports
 
-- **HCM**: Headcount, turnover, compensation summary, leave balances
-- **SCM**: Inventory valuation, stock aging, purchase analysis
-- **Sales**: Sales by region/product/customer, pipeline, quota attainment
-- **MFG**: Production efficiency, scrap rates, capacity utilization
-- **CRM**: Lead conversion, case resolution time, customer satisfaction
-- **PRJ**: Resource utilization, budget burn, milestone tracking
+All module report services are **Done**:
+
+- ~~**HCM**: Headcount, turnover, compensation summary, leave balances~~ — **Done** (`HcmReport`, area 30)
+- ~~**SCM**: Inventory valuation, stock aging, purchase analysis~~ — **Done** (`ScmReport`, area 50)
+- ~~**Sales**: Sales by region/product/customer, pipeline, quota attainment~~ — **Done** (`SalesRept`, area 60)
+- ~~**MFG**: Production efficiency, scrap rates, capacity utilization~~ — **Done** (`MfgReport`, area 70)
+- ~~**CRM**: Lead conversion, case resolution time, customer satisfaction~~ — **Done** (`CrmReport`, area 80)
+- ~~**PRJ**: Resource utilization, budget burn, milestone tracking~~ — **Done** (`PrjReport`, area 90)
 
 ---
 
