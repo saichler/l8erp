@@ -21,8 +21,7 @@ limitations under the License.
     // Ensure FixedAssets namespace exists
     window.FixedAssets = window.FixedAssets || {};
 
-    const { renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
-    const enums = FixedAssets.enums;
+    const col = window.Layer8ColumnFactory;
     const render = FixedAssets.render;
 
     // ============================================================================
@@ -31,53 +30,23 @@ limitations under the License.
 
     FixedAssets.columns = {
         Asset: [
-            { key: 'assetId', label: 'ID', sortKey: 'assetId', filterKey: 'assetId' },
-            { key: 'assetNumber', label: 'Asset #', sortKey: 'assetNumber', filterKey: 'assetNumber' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'categoryId', label: 'Category', sortKey: 'categoryId', filterKey: 'categoryId' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.assetStatus(item.status)
-            },
-            {
-                key: 'acquisitionCost',
-                label: 'Acquisition Cost',
-                sortKey: 'acquisitionCost',
-                render: (item) => renderMoney(item.acquisitionCost)
-            },
-            {
-                key: 'acquisitionDate',
-                label: 'Acquisition Date',
-                sortKey: 'acquisitionDate',
-                render: (item) => renderDate(item.acquisitionDate)
-            },
-            {
-                key: 'depreciationMethod',
-                label: 'Depreciation',
-                sortKey: 'depreciationMethod',
-                render: (item) => render.depreciationMethod(item.depreciationMethod)
-            },
-            {
-                key: 'netBookValue',
-                label: 'Net Book Value',
-                sortKey: 'netBookValue',
-                render: (item) => renderMoney(item.netBookValue)
-            }
+            ...col.id('assetId'),
+            ...col.col('assetNumber', 'Asset #'),
+            ...col.col('name', 'Name'),
+            ...col.col('categoryId', 'Category'),
+            ...col.enum('status', 'Status', null, render.assetStatus),
+            ...col.money('acquisitionCost', 'Acquisition Cost'),
+            ...col.date('acquisitionDate', 'Acquisition Date'),
+            ...col.enum('depreciationMethod', 'Depreciation', null, render.depreciationMethod),
+            ...col.money('netBookValue', 'Net Book Value'),
         ],
 
         AssetCategory: [
-            { key: 'categoryId', label: 'ID', sortKey: 'categoryId', filterKey: 'categoryId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            {
-                key: 'defaultDepreciationMethod',
-                label: 'Depreciation Method',
-                sortKey: 'defaultDepreciationMethod',
-                render: (item) => render.depreciationMethod(item.defaultDepreciationMethod)
-            },
-            { key: 'defaultUsefulLifeMonths', label: 'Useful Life (Months)', sortKey: 'defaultUsefulLifeMonths' }
+            ...col.id('categoryId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.enum('defaultDepreciationMethod', 'Depreciation Method', null, render.depreciationMethod),
+            ...col.col('defaultUsefulLifeMonths', 'Useful Life (Months)'),
         ]
     };
 

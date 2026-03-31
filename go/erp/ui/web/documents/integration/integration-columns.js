@@ -9,39 +9,39 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
     window.DocIntegration = window.DocIntegration || {};
 
-    const { renderDate } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = DocIntegration.render;
 
     DocIntegration.columns = {
         DocTemplate: [
-            { key: 'templateId', label: 'ID', sortKey: 'templateId', filterKey: 'templateId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'templateType', label: 'Type', sortKey: 'templateType', render: (item) => render.templateType(item.templateType) },
-            { key: 'version', label: 'Version', sortKey: 'version' },
-            { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('templateId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.enum('templateType', 'Type', null, render.templateType),
+            ...col.col('version', 'Version'),
+            ...col.col('ownerId', 'Owner'),
+            ...col.boolean('isActive', 'Active'),
         ],
 
         DocEmailCapture: [
-            { key: 'captureId', label: 'ID', sortKey: 'captureId', filterKey: 'captureId' },
-            { key: 'subject', label: 'Subject', sortKey: 'subject', filterKey: 'subject' },
-            { key: 'fromAddress', label: 'From', sortKey: 'fromAddress' },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.emailCaptureStatus(item.status) },
-            { key: 'receivedDate', label: 'Received', sortKey: 'receivedDate', render: (item) => renderDate(item.receivedDate) },
-            { key: 'documentId', label: 'Document', sortKey: 'documentId' },
-            { key: 'folderId', label: 'Folder', sortKey: 'folderId' }
+            ...col.id('captureId'),
+            ...col.col('subject', 'Subject'),
+            ...col.col('fromAddress', 'From'),
+            ...col.enum('status', 'Status', null, render.emailCaptureStatus),
+            ...col.date('receivedDate', 'Received'),
+            ...col.col('documentId', 'Document'),
+            ...col.col('folderId', 'Folder'),
         ],
 
         DocScanJob: [
-            { key: 'scanJobId', label: 'ID', sortKey: 'scanJobId', filterKey: 'scanJobId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.scanStatus(item.status) },
-            { key: 'pageCount', label: 'Pages', sortKey: 'pageCount' },
-            { key: 'documentCount', label: 'Documents', sortKey: 'documentCount' },
-            { key: 'initiatedBy', label: 'Initiated By', sortKey: 'initiatedBy' },
-            { key: 'initiatedDate', label: 'Initiated', sortKey: 'initiatedDate', render: (item) => renderDate(item.initiatedDate) },
-            { key: 'ocrEnabled', label: 'OCR', sortKey: 'ocrEnabled', render: (item) => item.ocrEnabled ? 'Yes' : 'No' }
+            ...col.id('scanJobId'),
+            ...col.col('name', 'Name'),
+            ...col.enum('status', 'Status', null, render.scanStatus),
+            ...col.col('pageCount', 'Pages'),
+            ...col.col('documentCount', 'Documents'),
+            ...col.col('initiatedBy', 'Initiated By'),
+            ...col.date('initiatedDate', 'Initiated'),
+            ...col.boolean('ocrEnabled', 'OCR'),
         ]
     };
 

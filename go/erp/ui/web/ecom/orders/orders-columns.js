@@ -19,63 +19,28 @@ limitations under the License.
 
     window.EcomOrders = window.EcomOrders || {};
 
-    const { renderDate, renderMoney } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = EcomOrders.render;
 
     EcomOrders.columns = {
         EcomOrder: [
-            { key: 'orderId', label: 'ID', sortKey: 'orderId', filterKey: 'orderId' },
-            { key: 'orderNumber', label: 'Order Number', sortKey: 'orderNumber', filterKey: 'orderNumber' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.orderStatus(item.status)
-            },
-            {
-                key: 'paymentStatus',
-                label: 'Payment Status',
-                sortKey: 'paymentStatus',
-                render: (item) => render.paymentStatus(item.paymentStatus)
-            },
-            {
-                key: 'orderDate',
-                label: 'Order Date',
-                sortKey: 'orderDate',
-                render: (item) => renderDate(item.orderDate)
-            },
-            {
-                key: 'totalAmount',
-                label: 'Total Amount',
-                sortKey: 'totalAmount',
-                render: (item) => renderMoney(item.totalAmount)
-            }
+            ...col.id('orderId'),
+            ...col.col('orderNumber', 'Order Number'),
+            ...col.col('customerId', 'Customer'),
+            ...col.enum('status', 'Status', null, render.orderStatus),
+            ...col.enum('paymentStatus', 'Payment Status', null, render.paymentStatus),
+            ...col.date('orderDate', 'Order Date'),
+            ...col.money('totalAmount', 'Total Amount'),
         ],
 
         EcomReturn: [
-            { key: 'returnId', label: 'ID', sortKey: 'returnId', filterKey: 'returnId' },
-            { key: 'returnNumber', label: 'Return Number', sortKey: 'returnNumber', filterKey: 'returnNumber' },
-            { key: 'orderId', label: 'Order', sortKey: 'orderId', filterKey: 'orderId' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.returnStatus(item.status)
-            },
-            {
-                key: 'requestedDate',
-                label: 'Requested Date',
-                sortKey: 'requestedDate',
-                render: (item) => renderDate(item.requestedDate)
-            },
-            {
-                key: 'refundAmount',
-                label: 'Refund Amount',
-                sortKey: 'refundAmount',
-                render: (item) => renderMoney(item.refundAmount)
-            }
+            ...col.id('returnId'),
+            ...col.col('returnNumber', 'Return Number'),
+            ...col.col('orderId', 'Order'),
+            ...col.col('customerId', 'Customer'),
+            ...col.enum('status', 'Status', null, render.returnStatus),
+            ...col.date('requestedDate', 'Requested Date'),
+            ...col.money('refundAmount', 'Refund Amount'),
         ],
 
         // EcomOrderLine, EcomOrderStatusHistory, EcomReturnLine - now inline tables in parents

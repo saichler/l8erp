@@ -19,71 +19,41 @@ limitations under the License.
 
     window.PrjAnalytics = window.PrjAnalytics || {};
 
-    const { renderDate, renderMoney } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = PrjAnalytics.render;
 
     PrjAnalytics.columns = {
         PrjStatusReport: [
-            { key: 'statusId', label: 'ID', sortKey: 'statusId', filterKey: 'statusId' },
-            { key: 'projectId', label: 'Project', sortKey: 'projectId', filterKey: 'projectId' },
-            {
-                key: 'reportDate',
-                label: 'Report Date',
-                sortKey: 'reportDate',
-                render: (item) => renderDate(item.reportDate)
-            },
-            {
-                key: 'overallHealth',
-                label: 'Overall Health',
-                sortKey: 'overallHealth',
-                render: (item) => render.healthIndicator(item.overallHealth)
-            },
-            {
-                key: 'scheduleHealth',
-                label: 'Schedule Health',
-                sortKey: 'scheduleHealth',
-                render: (item) => render.healthIndicator(item.scheduleHealth)
-            },
-            {
-                key: 'budgetHealth',
-                label: 'Budget Health',
-                sortKey: 'budgetHealth',
-                render: (item) => render.healthIndicator(item.budgetHealth)
-            },
-            {
-                key: 'resourceHealth',
-                label: 'Resource Health',
-                sortKey: 'resourceHealth',
-                render: (item) => render.healthIndicator(item.resourceHealth)
-            },
-            { key: 'percentComplete', label: '% Complete', sortKey: 'percentComplete' }
+            ...col.id('statusId'),
+            ...col.col('projectId', 'Project'),
+            ...col.date('reportDate', 'Report Date'),
+            ...col.enum('overallHealth', 'Overall Health', null, render.healthIndicator),
+            ...col.enum('scheduleHealth', 'Schedule Health', null, render.healthIndicator),
+            ...col.enum('budgetHealth', 'Budget Health', null, render.healthIndicator),
+            ...col.enum('resourceHealth', 'Resource Health', null, render.healthIndicator),
+            ...col.col('percentComplete', '% Complete')
         ],
 
         PrjPortfolioView: [
-            { key: 'viewId', label: 'ID', sortKey: 'viewId', filterKey: 'viewId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' },
-            { key: 'totalProjects', label: 'Total Projects', sortKey: 'totalProjects' },
-            { key: 'onTrackCount', label: 'On Track', sortKey: 'onTrackCount' },
-            { key: 'atRiskCount', label: 'At Risk', sortKey: 'atRiskCount' },
-            { key: 'offTrackCount', label: 'Off Track', sortKey: 'offTrackCount' }
+            ...col.id('viewId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.col('ownerId', 'Owner'),
+            ...col.col('totalProjects', 'Total Projects'),
+            ...col.col('onTrackCount', 'On Track'),
+            ...col.col('atRiskCount', 'At Risk'),
+            ...col.col('offTrackCount', 'Off Track')
         ],
 
         PrjProjectKPI: [
-            { key: 'kpiId', label: 'ID', sortKey: 'kpiId', filterKey: 'kpiId' },
-            { key: 'projectId', label: 'Project', sortKey: 'projectId', filterKey: 'projectId' },
-            { key: 'kpiName', label: 'KPI Name', sortKey: 'kpiName', filterKey: 'kpiName' },
-            { key: 'targetValue', label: 'Target', sortKey: 'targetValue' },
-            { key: 'actualValue', label: 'Actual', sortKey: 'actualValue' },
-            { key: 'unitOfMeasure', label: 'Unit', sortKey: 'unitOfMeasure' },
-            {
-                key: 'measurementDate',
-                label: 'Measurement Date',
-                sortKey: 'measurementDate',
-                render: (item) => renderDate(item.measurementDate)
-            },
-            { key: 'trend', label: 'Trend', sortKey: 'trend' }
+            ...col.id('kpiId'),
+            ...col.col('projectId', 'Project'),
+            ...col.col('kpiName', 'KPI Name'),
+            ...col.col('targetValue', 'Target'),
+            ...col.col('actualValue', 'Actual'),
+            ...col.col('unitOfMeasure', 'Unit'),
+            ...col.date('measurementDate', 'Measurement Date'),
+            ...col.col('trend', 'Trend')
         ]
     };
 

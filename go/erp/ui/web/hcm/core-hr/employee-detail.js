@@ -19,6 +19,8 @@ limitations under the License.
 // EMPLOYEE DETAIL VIEW
 // ============================================================================
 
+const { escapeHtml, escapeAttr } = Layer8DUtils;
+
 // Open employee detail modal
 async function openEmployeeDetail(employeeId) {
     // Show loading modal
@@ -442,23 +444,6 @@ function openEditEmployeeFromDetail(employeeId) {
     if (service) {
         openEditModal(service, employeeId);
     }
-}
-
-function escapeHtml(text) {
-    if (text === null || text === undefined) return '';
-    const div = document.createElement('div');
-    div.textContent = String(text);
-    return div.innerHTML;
-}
-
-function escapeAttr(text) {
-    if (text === null || text === undefined) return '';
-    return String(text)
-        .replace(/&/g, '&amp;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
 }
 
 // ============================================================================

@@ -20,7 +20,7 @@ limitations under the License.
 
     window.SalesShipping = window.SalesShipping || {};
 
-    const { renderDate, renderMoney } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = SalesShipping.render;
 
     // ============================================================================
@@ -29,22 +29,12 @@ limitations under the License.
 
     SalesShipping.columns = {
         SalesDeliveryOrder: [
-            { key: 'deliveryOrderId', label: 'ID', sortKey: 'deliveryOrderId', filterKey: 'deliveryOrderId' },
-            { key: 'deliveryNumber', label: 'Delivery #', sortKey: 'deliveryNumber', filterKey: 'deliveryNumber' },
-            { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            {
-                key: 'plannedShipDate',
-                label: 'Planned',
-                sortKey: 'plannedShipDate',
-                render: (item) => renderDate(item.plannedShipDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.deliveryStatus(item.status)
-            }
+            ...col.id('deliveryOrderId'),
+            ...col.col('deliveryNumber', 'Delivery #'),
+            ...col.col('salesOrderId', 'Order'),
+            ...col.col('customerId', 'Customer'),
+            ...col.date('plannedShipDate', 'Planned'),
+            ...col.enum('status', 'Status', null, render.deliveryStatus),
         ]
     };
 

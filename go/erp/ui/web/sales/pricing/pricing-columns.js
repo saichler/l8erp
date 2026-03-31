@@ -20,7 +20,7 @@ limitations under the License.
 
     window.SalesPricing = window.SalesPricing || {};
 
-    const { renderDate, renderMoney } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = SalesPricing.render;
 
     // ============================================================================
@@ -29,65 +29,30 @@ limitations under the License.
 
     SalesPricing.columns = {
         SalesPriceList: [
-            { key: 'priceListId', label: 'ID', sortKey: 'priceListId', filterKey: 'priceListId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'currencyId', label: 'Currency', sortKey: 'currencyId' },
-            {
-                key: 'effectiveDate',
-                label: 'Effective',
-                sortKey: 'effectiveDate',
-                render: (item) => renderDate(item.effectiveDate)
-            },
-            {
-                key: 'expiryDate',
-                label: 'Expires',
-                sortKey: 'expiryDate',
-                render: (item) => renderDate(item.expiryDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.priceListStatus(item.status)
-            }
+            ...col.id('priceListId'),
+            ...col.col('name', 'Name'),
+            ...col.col('currencyId', 'Currency'),
+            ...col.date('effectiveDate', 'Effective'),
+            ...col.date('expiryDate', 'Expires'),
+            ...col.enum('status', 'Status', null, render.priceListStatus),
         ],
 
         SalesDiscountRule: [
-            { key: 'ruleId', label: 'ID', sortKey: 'ruleId', filterKey: 'ruleId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'discountType',
-                label: 'Type',
-                sortKey: 'discountType',
-                render: (item) => render.discountType(item.discountType)
-            },
-            { key: 'discountValue', label: 'Value', sortKey: 'discountValue' },
-            { key: 'minimumAmount', label: 'Min Order', sortKey: 'minimumAmount' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive' }
+            ...col.id('ruleId'),
+            ...col.col('name', 'Name'),
+            ...col.enum('discountType', 'Type', null, render.discountType),
+            ...col.col('discountValue', 'Value'),
+            ...col.col('minimumAmount', 'Min Order'),
+            ...col.col('isActive', 'Active'),
         ],
 
         SalesPromotionalPrice: [
-            { key: 'promoId', label: 'ID', sortKey: 'promoId', filterKey: 'promoId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            {
-                key: 'promotionalPrice',
-                label: 'Promo Price',
-                sortKey: 'promotionalPrice',
-                render: (item) => renderMoney(item.promotionalPrice)
-            },
-            {
-                key: 'startDate',
-                label: 'Start',
-                sortKey: 'startDate',
-                render: (item) => renderDate(item.startDate)
-            },
-            {
-                key: 'endDate',
-                label: 'End',
-                sortKey: 'endDate',
-                render: (item) => renderDate(item.endDate)
-            }
+            ...col.id('promoId'),
+            ...col.col('name', 'Name'),
+            ...col.col('itemId', 'Item'),
+            ...col.money('promotionalPrice', 'Promo Price'),
+            ...col.date('startDate', 'Start'),
+            ...col.date('endDate', 'End'),
         ]
     };
 

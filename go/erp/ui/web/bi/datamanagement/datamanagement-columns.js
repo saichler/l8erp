@@ -19,137 +19,67 @@ limitations under the License.
 
     window.BiDataManagement = window.BiDataManagement || {};
 
-    const { renderDate } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = BiDataManagement.render;
 
     BiDataManagement.columns = {
         BiDataSource: [
-            { key: 'sourceId', label: 'ID', sortKey: 'sourceId', filterKey: 'sourceId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'sourceType',
-                label: 'Type',
-                sortKey: 'sourceType',
-                render: (item) => render.dataSourceType(item.sourceType)
-            },
-            { key: 'host', label: 'Host', sortKey: 'host', filterKey: 'host' },
-            { key: 'database', label: 'Database', sortKey: 'database', filterKey: 'database' },
-            {
-                key: 'connectionStatus',
-                label: 'Status',
-                sortKey: 'connectionStatus',
-                render: (item) => render.connectionStatus(item.connectionStatus)
-            },
-            {
-                key: 'lastConnected',
-                label: 'Last Connected',
-                sortKey: 'lastConnected',
-                render: (item) => renderDate(item.lastConnected)
-            },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => item.isActive ? 'Yes' : 'No'
-            }
+            ...col.id('sourceId'),
+            ...col.col('name', 'Name'),
+            ...col.enum('sourceType', 'Type', null, render.dataSourceType),
+            ...col.col('host', 'Host'),
+            ...col.col('database', 'Database'),
+            ...col.enum('connectionStatus', 'Status', null, render.connectionStatus),
+            ...col.date('lastConnected', 'Last Connected'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BiETLJob: [
-            { key: 'jobId', label: 'ID', sortKey: 'jobId', filterKey: 'jobId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'sourceId', label: 'Source', sortKey: 'sourceId', filterKey: 'sourceId' },
-            { key: 'targetId', label: 'Target', sortKey: 'targetId', filterKey: 'targetId' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.etlStatus(item.status)
-            },
-            { key: 'loadMode', label: 'Load Mode', sortKey: 'loadMode' },
-            {
-                key: 'lastRun',
-                label: 'Last Run',
-                sortKey: 'lastRun',
-                render: (item) => renderDate(item.lastRun)
-            },
-            { key: 'rowsProcessed', label: 'Rows Processed', sortKey: 'rowsProcessed' },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => item.isActive ? 'Yes' : 'No'
-            }
+            ...col.id('jobId'),
+            ...col.col('name', 'Name'),
+            ...col.col('sourceId', 'Source'),
+            ...col.col('targetId', 'Target'),
+            ...col.enum('status', 'Status', null, render.etlStatus),
+            ...col.col('loadMode', 'Load Mode'),
+            ...col.date('lastRun', 'Last Run'),
+            ...col.col('rowsProcessed', 'Rows Processed'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BiDataQualityRule: [
-            { key: 'ruleId', label: 'ID', sortKey: 'ruleId', filterKey: 'ruleId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'dataSourceId', label: 'Data Source', sortKey: 'dataSourceId' },
-            { key: 'tableName', label: 'Table', sortKey: 'tableName', filterKey: 'tableName' },
-            { key: 'columnName', label: 'Column', sortKey: 'columnName' },
-            { key: 'ruleType', label: 'Rule Type', sortKey: 'ruleType' },
-            {
-                key: 'lastStatus',
-                label: 'Status',
-                sortKey: 'lastStatus',
-                render: (item) => render.dataQualityStatus(item.lastStatus)
-            },
-            { key: 'lastScore', label: 'Score', sortKey: 'lastScore' },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => item.isActive ? 'Yes' : 'No'
-            }
+            ...col.id('ruleId'),
+            ...col.col('name', 'Name'),
+            ...col.col('dataSourceId', 'Data Source'),
+            ...col.col('tableName', 'Table'),
+            ...col.col('columnName', 'Column'),
+            ...col.col('ruleType', 'Rule Type'),
+            ...col.enum('lastStatus', 'Status', null, render.dataQualityStatus),
+            ...col.col('lastScore', 'Score'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BiMasterDataConfig: [
-            { key: 'configId', label: 'ID', sortKey: 'configId', filterKey: 'configId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'entityType', label: 'Entity Type', sortKey: 'entityType', filterKey: 'entityType' },
-            { key: 'sourceSystemId', label: 'Source System', sortKey: 'sourceSystemId' },
-            { key: 'totalRecords', label: 'Total Records', sortKey: 'totalRecords' },
-            { key: 'matchedRecords', label: 'Matched', sortKey: 'matchedRecords' },
-            { key: 'duplicateRecords', label: 'Duplicates', sortKey: 'duplicateRecords' },
-            {
-                key: 'lastSync',
-                label: 'Last Sync',
-                sortKey: 'lastSync',
-                render: (item) => renderDate(item.lastSync)
-            },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => item.isActive ? 'Yes' : 'No'
-            }
+            ...col.id('configId'),
+            ...col.col('name', 'Name'),
+            ...col.col('entityType', 'Entity Type'),
+            ...col.col('sourceSystemId', 'Source System'),
+            ...col.col('totalRecords', 'Total Records'),
+            ...col.col('matchedRecords', 'Matched'),
+            ...col.col('duplicateRecords', 'Duplicates'),
+            ...col.date('lastSync', 'Last Sync'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BiDataGovernance: [
-            { key: 'governanceId', label: 'ID', sortKey: 'governanceId', filterKey: 'governanceId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'dataDomain', label: 'Data Domain', sortKey: 'dataDomain', filterKey: 'dataDomain' },
-            {
-                key: 'classification',
-                label: 'Classification',
-                sortKey: 'classification',
-                render: (item) => render.governanceLevel(item.classification)
-            },
-            { key: 'dataOwnerId', label: 'Owner', sortKey: 'dataOwnerId' },
-            { key: 'dataStewardId', label: 'Steward', sortKey: 'dataStewardId' },
-            { key: 'retentionDays', label: 'Retention Days', sortKey: 'retentionDays' },
-            {
-                key: 'nextReview',
-                label: 'Next Review',
-                sortKey: 'nextReview',
-                render: (item) => renderDate(item.nextReview)
-            },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => item.isActive ? 'Yes' : 'No'
-            }
+            ...col.id('governanceId'),
+            ...col.col('name', 'Name'),
+            ...col.col('dataDomain', 'Data Domain'),
+            ...col.enum('classification', 'Classification', null, render.governanceLevel),
+            ...col.col('dataOwnerId', 'Owner'),
+            ...col.col('dataStewardId', 'Steward'),
+            ...col.col('retentionDays', 'Retention Days'),
+            ...col.date('nextReview', 'Next Review'),
+            ...col.boolean('isActive', 'Active')
         ]
     };
 

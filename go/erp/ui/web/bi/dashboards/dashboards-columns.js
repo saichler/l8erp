@@ -19,63 +19,33 @@ limitations under the License.
 
     window.BiDashboards = window.BiDashboards || {};
 
-    const { renderDate } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = BiDashboards.render;
 
     BiDashboards.columns = {
         BiDashboard: [
-            { key: 'dashboardId', label: 'ID', sortKey: 'dashboardId', filterKey: 'dashboardId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'category', label: 'Category', sortKey: 'category', filterKey: 'category' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.dashboardStatus(item.status)
-            },
-            { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' },
-            {
-                key: 'isDefault',
-                label: 'Default',
-                sortKey: 'isDefault',
-                render: (item) => item.isDefault ? 'Yes' : 'No'
-            },
-            {
-                key: 'isPublic',
-                label: 'Public',
-                sortKey: 'isPublic',
-                render: (item) => item.isPublic ? 'Yes' : 'No'
-            },
-            { key: 'refreshInterval', label: 'Refresh (sec)', sortKey: 'refreshInterval' }
+            ...col.id('dashboardId'),
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
+            ...col.col('category', 'Category'),
+            ...col.enum('status', 'Status', null, render.dashboardStatus),
+            ...col.col('ownerId', 'Owner'),
+            ...col.boolean('isDefault', 'Default'),
+            ...col.boolean('isPublic', 'Public'),
+            ...col.col('refreshInterval', 'Refresh (sec)')
         ],
 
         BiKPI: [
-            { key: 'kpiId', label: 'ID', sortKey: 'kpiId', filterKey: 'kpiId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'category', label: 'Category', sortKey: 'category', filterKey: 'category' },
-            { key: 'unit', label: 'Unit', sortKey: 'unit' },
-            { key: 'currentValue', label: 'Current', sortKey: 'currentValue' },
-            { key: 'targetValue', label: 'Target', sortKey: 'targetValue' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.kpiStatus(item.status)
-            },
-            {
-                key: 'trend',
-                label: 'Trend',
-                sortKey: 'trend',
-                render: (item) => render.trendDirection(item.trend)
-            },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => item.isActive ? 'Yes' : 'No'
-            }
+            ...col.id('kpiId'),
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
+            ...col.col('category', 'Category'),
+            ...col.col('unit', 'Unit'),
+            ...col.col('currentValue', 'Current'),
+            ...col.col('targetValue', 'Target'),
+            ...col.enum('status', 'Status', null, render.kpiStatus),
+            ...col.enum('trend', 'Trend', null, render.trendDirection),
+            ...col.boolean('isActive', 'Active')
         ],
 
     };

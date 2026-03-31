@@ -21,8 +21,7 @@ limitations under the License.
     // Ensure AccountsPayable namespace exists
     window.AccountsPayable = window.AccountsPayable || {};
 
-    const { renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
-    const enums = AccountsPayable.enums;
+    const col = window.Layer8ColumnFactory;
     const render = AccountsPayable.render;
 
     // ============================================================================
@@ -31,116 +30,45 @@ limitations under the License.
 
     AccountsPayable.columns = {
         Vendor: [
-            { key: 'vendorId', label: 'ID', sortKey: 'vendorId', filterKey: 'vendorId' },
-            { key: 'vendorNumber', label: 'Vendor #', sortKey: 'vendorNumber', filterKey: 'vendorNumber' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                filterKey: 'status',
-                render: (item) => render.vendorStatus(item.status)
-            },
-            { key: 'paymentTermDays', label: 'Payment Terms', sortKey: 'paymentTermDays', filterKey: 'paymentTermDays' }
+            ...col.id('vendorId'),
+            ...col.col('vendorNumber', 'Vendor #'),
+            ...col.col('name', 'Name'),
+            ...col.enum('status', 'Status', null, render.vendorStatus),
+            ...col.col('paymentTermDays', 'Payment Terms'),
         ],
 
         PurchaseInvoice: [
-            { key: 'invoiceId', label: 'ID', sortKey: 'invoiceId', filterKey: 'invoiceId' },
-            { key: 'invoiceNumber', label: 'Invoice #', sortKey: 'invoiceNumber', filterKey: 'invoiceNumber' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            {
-                key: 'invoiceDate',
-                label: 'Invoice Date',
-                sortKey: 'invoiceDate',
-                render: (item) => renderDate(item.invoiceDate)
-            },
-            {
-                key: 'dueDate',
-                label: 'Due Date',
-                sortKey: 'dueDate',
-                render: (item) => renderDate(item.dueDate)
-            },
-            {
-                key: 'totalAmount',
-                label: 'Total',
-                sortKey: 'totalAmount',
-                render: (item) => renderMoney(item.totalAmount)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.invoiceStatus(item.status)
-            }
+            ...col.id('invoiceId'),
+            ...col.col('invoiceNumber', 'Invoice #'),
+            ...col.col('vendorId', 'Vendor'),
+            ...col.date('invoiceDate', 'Invoice Date'),
+            ...col.date('dueDate', 'Due Date'),
+            ...col.money('totalAmount', 'Total'),
+            ...col.enum('status', 'Status', null, render.invoiceStatus),
         ],
 
         PaymentSchedule: [
-            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'invoiceId', label: 'Invoice', sortKey: 'invoiceId', filterKey: 'invoiceId' },
-            {
-                key: 'scheduledDate',
-                label: 'Scheduled Date',
-                sortKey: 'scheduledDate',
-                render: (item) => renderDate(item.scheduledDate)
-            },
-            {
-                key: 'amount',
-                label: 'Amount',
-                sortKey: 'amount',
-                render: (item) => renderMoney(item.amount)
-            },
-            {
-                key: 'isPaid',
-                label: 'Paid',
-                sortKey: 'isPaid',
-                render: (item) => renderBoolean(item.isPaid)
-            }
+            ...col.id('scheduleId'),
+            ...col.col('invoiceId', 'Invoice'),
+            ...col.date('scheduledDate', 'Scheduled Date'),
+            ...col.money('amount', 'Amount'),
+            ...col.boolean('isPaid', 'Paid'),
         ],
 
         VendorPayment: [
-            { key: 'paymentId', label: 'ID', sortKey: 'paymentId', filterKey: 'paymentId' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            {
-                key: 'paymentDate',
-                label: 'Payment Date',
-                sortKey: 'paymentDate',
-                render: (item) => renderDate(item.paymentDate)
-            },
-            {
-                key: 'amount',
-                label: 'Amount',
-                sortKey: 'amount',
-                render: (item) => renderMoney(item.amount)
-            },
-            {
-                key: 'paymentMethod',
-                label: 'Method',
-                sortKey: 'paymentMethod',
-                render: (item) => render.paymentMethod(item.paymentMethod)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.paymentStatus(item.status)
-            }
+            ...col.id('paymentId'),
+            ...col.col('vendorId', 'Vendor'),
+            ...col.date('paymentDate', 'Payment Date'),
+            ...col.money('amount', 'Amount'),
+            ...col.enum('paymentMethod', 'Method', null, render.paymentMethod),
+            ...col.enum('status', 'Status', null, render.paymentStatus),
         ],
 
         VendorStatement: [
-            { key: 'statementId', label: 'ID', sortKey: 'statementId', filterKey: 'statementId' },
-            { key: 'vendorId', label: 'Vendor', sortKey: 'vendorId', filterKey: 'vendorId' },
-            {
-                key: 'statementDate',
-                label: 'Statement Date',
-                sortKey: 'statementDate',
-                render: (item) => renderDate(item.statementDate)
-            },
-            {
-                key: 'closingBalance',
-                label: 'Closing Balance',
-                sortKey: 'closingBalance',
-                render: (item) => renderMoney(item.closingBalance)
-            }
+            ...col.id('statementId'),
+            ...col.col('vendorId', 'Vendor'),
+            ...col.date('statementDate', 'Statement Date'),
+            ...col.money('closingBalance', 'Closing Balance'),
         ]
     };
 

@@ -19,55 +19,35 @@ limitations under the License.
 
     window.EcomCatalog = window.EcomCatalog || {};
 
-    const { renderMoney } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = EcomCatalog.render;
 
     EcomCatalog.columns = {
         EcomProduct: [
-            { key: 'productId', label: 'ID', sortKey: 'productId', filterKey: 'productId' },
-            { key: 'sku', label: 'SKU', sortKey: 'sku', filterKey: 'sku' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'productType',
-                label: 'Type',
-                sortKey: 'productType',
-                render: (item) => render.productType(item.productType)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.productStatus(item.status)
-            },
-            {
-                key: 'price',
-                label: 'Price',
-                sortKey: 'price',
-                render: (item) => renderMoney(item.price)
-            },
-            { key: 'stockQuantity', label: 'Stock Qty', sortKey: 'stockQuantity' }
+            ...col.id('productId'),
+            ...col.col('sku', 'SKU'),
+            ...col.col('name', 'Name'),
+            ...col.enum('productType', 'Type', null, render.productType),
+            ...col.enum('status', 'Status', null, render.productStatus),
+            ...col.money('price', 'Price'),
+            ...col.col('stockQuantity', 'Stock Qty'),
         ],
 
         EcomCategory: [
-            { key: 'categoryId', label: 'ID', sortKey: 'categoryId', filterKey: 'categoryId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'slug', label: 'Slug', sortKey: 'slug', filterKey: 'slug' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive' },
-            { key: 'sortOrder', label: 'Sort Order', sortKey: 'sortOrder' }
+            ...col.id('categoryId'),
+            ...col.col('name', 'Name'),
+            ...col.col('slug', 'Slug'),
+            ...col.boolean('isActive', 'Active'),
+            ...col.col('sortOrder', 'Sort Order'),
         ],
 
         EcomAttribute: [
-            { key: 'attributeId', label: 'ID', sortKey: 'attributeId', filterKey: 'attributeId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            {
-                key: 'attributeType',
-                label: 'Type',
-                sortKey: 'attributeType',
-                render: (item) => render.attributeType(item.attributeType)
-            },
-            { key: 'isRequired', label: 'Required', sortKey: 'isRequired' },
-            { key: 'isFilterable', label: 'Filterable', sortKey: 'isFilterable' }
+            ...col.id('attributeId'),
+            ...col.col('name', 'Name'),
+            ...col.col('code', 'Code'),
+            ...col.enum('attributeType', 'Type', null, render.attributeType),
+            ...col.boolean('isRequired', 'Required'),
+            ...col.boolean('isFilterable', 'Filterable'),
         ]
     };
 

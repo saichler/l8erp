@@ -5,31 +5,32 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 (function() {
     'use strict';
     window.CompControls = window.CompControls || {};
+    const col = window.Layer8ColumnFactory;
 
     CompControls.columns = {
         CompControl: [
-            { key: 'code', label: 'Code', width: '100px' },
-            { key: 'name', label: 'Name', width: '200px' },
-            { key: 'controlType', label: 'Type', width: '100px' },
-            { key: 'processArea', label: 'Process Area', width: '100px' },
-            { key: 'isKeyControl', label: 'Key Control', width: '120px' },
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
+            ...col.col('controlType', 'Type'),
+            ...col.col('processArea', 'Process Area'),
+            ...col.boolean('isKeyControl', 'Key Control'),
             { key: 'ownerId', label: 'Owner', width: '150px', type: 'reference', referenceType: 'Employee' },
-            { key: 'isActive', label: 'Active', width: '100px' }
+            ...col.boolean('isActive', 'Active'),
         ],
         CompPolicyDocument: [
-            { key: 'code', label: 'Code', width: '100px' },
-            { key: 'title', label: 'Title', width: '200px' },
-            { key: 'policyType', label: 'Type', width: '120px' },
-            { key: 'version', label: 'Version', width: '80px' },
-            { key: 'effectiveDate', label: 'Effective Date', width: '120px', type: 'date' },
-            { key: 'status', label: 'Status', width: '100px' }
+            ...col.col('code', 'Code'),
+            ...col.col('title', 'Title'),
+            ...col.col('policyType', 'Type'),
+            ...col.col('version', 'Version'),
+            ...col.date('effectiveDate', 'Effective Date'),
+            ...col.col('status', 'Status'),
         ],
         CompApprovalMatrix: [
-            { key: 'name', label: 'Name', width: '200px' },
-            { key: 'transactionType', label: 'Transaction Type', width: '120px' },
-            { key: 'thresholdMin', label: 'Min Amount', width: '100px', type: 'money' },
-            { key: 'thresholdMax', label: 'Max Amount', width: '100px', type: 'money' },
-            { key: 'isActive', label: 'Active', width: '100px' }
+            ...col.col('name', 'Name'),
+            ...col.col('transactionType', 'Transaction Type'),
+            ...col.money('thresholdMin', 'Min Amount'),
+            ...col.money('thresholdMax', 'Max Amount'),
+            ...col.boolean('isActive', 'Active'),
         ]
     };
 

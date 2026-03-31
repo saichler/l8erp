@@ -19,66 +19,31 @@ limitations under the License.
 
     window.BiReporting = window.BiReporting || {};
 
-    const { renderDate } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = BiReporting.render;
 
     BiReporting.columns = {
         BiReport: [
-            { key: 'reportId', label: 'ID', sortKey: 'reportId', filterKey: 'reportId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'reportType',
-                label: 'Type',
-                sortKey: 'reportType',
-                render: (item) => render.reportType(item.reportType)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.reportStatus(item.status)
-            },
-            { key: 'category', label: 'Category', sortKey: 'category' },
-            { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' },
-            {
-                key: 'defaultFormat',
-                label: 'Format',
-                sortKey: 'defaultFormat',
-                render: (item) => render.exportFormat(item.defaultFormat)
-            },
-            {
-                key: 'isPublic',
-                label: 'Public',
-                sortKey: 'isPublic',
-                render: (item) => item.isPublic ? 'Yes' : 'No'
-            },
-            {
-                key: 'lastExecuted',
-                label: 'Last Executed',
-                sortKey: 'lastExecuted',
-                render: (item) => renderDate(item.lastExecuted)
-            },
-            { key: 'executionCount', label: 'Executions', sortKey: 'executionCount' }
+            ...col.id('reportId'),
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
+            ...col.enum('reportType', 'Type', null, render.reportType),
+            ...col.enum('status', 'Status', null, render.reportStatus),
+            ...col.col('category', 'Category'),
+            ...col.col('ownerId', 'Owner'),
+            ...col.enum('defaultFormat', 'Format', null, render.exportFormat),
+            ...col.boolean('isPublic', 'Public'),
+            ...col.date('lastExecuted', 'Last Executed'),
+            ...col.col('executionCount', 'Executions')
         ],
 
         BiReportTemplate: [
-            { key: 'templateId', label: 'ID', sortKey: 'templateId', filterKey: 'templateId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            {
-                key: 'reportType',
-                label: 'Type',
-                sortKey: 'reportType',
-                render: (item) => render.reportType(item.reportType)
-            },
-            { key: 'category', label: 'Category', sortKey: 'category' },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => item.isActive ? 'Yes' : 'No'
-            }
+            ...col.id('templateId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.enum('reportType', 'Type', null, render.reportType),
+            ...col.col('category', 'Category'),
+            ...col.boolean('isActive', 'Active')
         ]
     };
 

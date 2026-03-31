@@ -26,8 +26,8 @@ limitations under the License.
     window.Talent = window.Talent || {};
 
     // Import shared utilities
-    const { escapeHtml, formatDate } = Layer8DUtils;
-    const { renderEnum, createStatusRenderer, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+    const { escapeHtml } = Layer8DUtils;
+    const { renderEnum, createStatusRenderer, renderBoolean, renderDate, renderMoney, renderPercentage, renderRating, renderDateRange } = Layer8DRenderers;
 
     const factory = window.Layer8EnumFactory;
 
@@ -113,22 +113,6 @@ limitations under the License.
         return `<span style="color: ${color}; font-weight: 500;">${escapeHtml(label)}</span>`;
     }
 
-    function renderPercentage(value) {
-        if (value === null || value === undefined) return '-';
-        return `${value.toFixed(0)}%`;
-    }
-
-    function renderRating(rating, maxRating = 5) {
-        if (rating === null || rating === undefined) return '-';
-        return `${rating}/${maxRating}`;
-    }
-
-    function renderReviewPeriod(period) {
-        if (!period) return '-';
-        const start = period.startDate ? formatDate(period.startDate) : '?';
-        const end = period.endDate ? formatDate(period.endDate) : '?';
-        return `${start} - ${end}`;
-    }
 
     // ============================================================================
     // EXPORT MERGED ENUMS TO NAMESPACE
@@ -213,9 +197,9 @@ limitations under the License.
         money: renderMoney,
         boolean: renderBoolean,
         date: renderDate,
-        percentage: renderPercentage,
-        rating: renderRating,
-        period: renderReviewPeriod
+        percentage: (v) => renderPercentage(v, 0),
+        rating: (v) => renderRating(v, 5, 0),
+        period: renderDateRange
     };
 
     // Export internal functions for use by other talent files
@@ -230,9 +214,6 @@ limitations under the License.
         renderGoalPriority,
         renderRiskLevel,
         renderReadinessLevel,
-        renderPercentage,
-        renderRating,
-        renderReviewPeriod
     };
 
 })();

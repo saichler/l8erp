@@ -19,67 +19,32 @@ limitations under the License.
 
     window.MfgPlanning = window.MfgPlanning || {};
 
-    const { renderDate } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = MfgPlanning.render;
 
     MfgPlanning.columns = {
         MfgMrpRun: [
-            { key: 'runId', label: 'ID', sortKey: 'runId', filterKey: 'runId' },
-            { key: 'runNumber', label: 'Run #', sortKey: 'runNumber', filterKey: 'runNumber' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            {
-                key: 'runDate',
-                label: 'Run Date',
-                sortKey: 'runDate',
-                render: (item) => renderDate(item.runDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.mrpStatus(item.status)
-            }
+            ...col.id('runId'),
+            ...col.col('runNumber', 'Run #'),
+            ...col.col('description', 'Description'),
+            ...col.date('runDate', 'Run Date'),
+            ...col.enum('status', 'Status', null, render.mrpStatus),
         ],
 
         MfgCapacityPlan: [
-            { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'planNumber', label: 'Plan #', sortKey: 'planNumber', filterKey: 'planNumber' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            {
-                key: 'planningStart',
-                label: 'Start Date',
-                sortKey: 'planningStart',
-                render: (item) => renderDate(item.planningStart)
-            },
-            {
-                key: 'planningEnd',
-                label: 'End Date',
-                sortKey: 'planningEnd',
-                render: (item) => renderDate(item.planningEnd)
-            }
+            ...col.id('planId'),
+            ...col.col('planNumber', 'Plan #'),
+            ...col.col('description', 'Description'),
+            ...col.date('planningStart', 'Start Date'),
+            ...col.date('planningEnd', 'End Date'),
         ],
 
         MfgProdSchedule: [
-            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'scheduleNumber', label: 'Schedule #', sortKey: 'scheduleNumber', filterKey: 'scheduleNumber' },
-            {
-                key: 'scheduleStart',
-                label: 'Start Date',
-                sortKey: 'scheduleStart',
-                render: (item) => renderDate(item.scheduleStart)
-            },
-            {
-                key: 'scheduleEnd',
-                label: 'End Date',
-                sortKey: 'scheduleEnd',
-                render: (item) => renderDate(item.scheduleEnd)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.scheduleStatus(item.status)
-            }
+            ...col.id('scheduleId'),
+            ...col.col('scheduleNumber', 'Schedule #'),
+            ...col.date('scheduleStart', 'Start Date'),
+            ...col.date('scheduleEnd', 'End Date'),
+            ...col.enum('status', 'Status', null, render.scheduleStatus),
         ],
 
     };

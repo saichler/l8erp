@@ -5,31 +5,32 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 (function() {
     'use strict';
     window.CompRisk = window.CompRisk || {};
+    const col = window.Layer8ColumnFactory;
 
     CompRisk.columns = {
         CompRiskRegister: [
-            { key: 'code', label: 'Code', width: '100px' },
-            { key: 'title', label: 'Title', width: '200px' },
-            { key: 'category', label: 'Category', width: '100px' },
-            { key: 'inherentRiskScore', label: 'Inherent Risk', width: '100px' },
-            { key: 'residualRiskScore', label: 'Residual Risk', width: '100px' },
+            ...col.col('code', 'Code'),
+            ...col.col('title', 'Title'),
+            ...col.col('category', 'Category'),
+            ...col.col('inherentRiskScore', 'Inherent Risk'),
+            ...col.col('residualRiskScore', 'Residual Risk'),
             { key: 'ownerId', label: 'Owner', width: '150px', type: 'reference', referenceType: 'Employee' },
-            { key: 'status', label: 'Status', width: '100px' }
+            ...col.col('status', 'Status'),
         ],
         CompIncident: [
-            { key: 'incidentNumber', label: 'Number', width: '100px' },
-            { key: 'title', label: 'Title', width: '200px' },
-            { key: 'severity', label: 'Severity', width: '100px' },
-            { key: 'occurredDate', label: 'Occurred', width: '100px', type: 'date' },
-            { key: 'status', label: 'Status', width: '100px' }
+            ...col.col('incidentNumber', 'Number'),
+            ...col.col('title', 'Title'),
+            ...col.col('severity', 'Severity'),
+            ...col.date('occurredDate', 'Occurred'),
+            ...col.col('status', 'Status'),
         ],
         CompInsurancePolicy: [
-            { key: 'policyNumber', label: 'Policy Number', width: '120px' },
-            { key: 'name', label: 'Name', width: '200px' },
-            { key: 'policyType', label: 'Type', width: '120px' },
-            { key: 'provider', label: 'Provider', width: '150px' },
-            { key: 'expiryDate', label: 'Expiry', width: '100px', type: 'date' },
-            { key: 'status', label: 'Status', width: '100px' }
+            ...col.col('policyNumber', 'Policy Number'),
+            ...col.col('name', 'Name'),
+            ...col.col('policyType', 'Type'),
+            ...col.col('provider', 'Provider'),
+            ...col.date('expiryDate', 'Expiry'),
+            ...col.col('status', 'Status'),
         ]
     };
 

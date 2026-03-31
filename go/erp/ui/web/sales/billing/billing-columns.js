@@ -20,7 +20,7 @@ limitations under the License.
 
     window.SalesBilling = window.SalesBilling || {};
 
-    const { renderDate, renderMoney } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = SalesBilling.render;
 
     // ============================================================================
@@ -29,52 +29,22 @@ limitations under the License.
 
     SalesBilling.columns = {
         SalesBillingSchedule: [
-            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            {
-                key: 'frequency',
-                label: 'Frequency',
-                sortKey: 'frequency',
-                render: (item) => render.billingFrequency(item.frequency)
-            },
-            {
-                key: 'nextBillingDate',
-                label: 'Next Billing',
-                sortKey: 'nextBillingDate',
-                render: (item) => renderDate(item.nextBillingDate)
-            },
-            {
-                key: 'totalAmount',
-                label: 'Total',
-                sortKey: 'totalAmount',
-                render: (item) => renderMoney(item.totalAmount)
-            }
+            ...col.id('scheduleId'),
+            ...col.col('name', 'Name'),
+            ...col.col('salesOrderId', 'Order'),
+            ...col.col('customerId', 'Customer'),
+            ...col.enum('frequency', 'Frequency', null, render.billingFrequency),
+            ...col.date('nextBillingDate', 'Next Billing'),
+            ...col.money('totalAmount', 'Total'),
         ],
 
         SalesRevenueSchedule: [
-            { key: 'scheduleId', label: 'ID', sortKey: 'scheduleId', filterKey: 'scheduleId' },
-            { key: 'salesOrderId', label: 'Order', sortKey: 'salesOrderId', filterKey: 'salesOrderId' },
-            {
-                key: 'totalRevenue',
-                label: 'Total Revenue',
-                sortKey: 'totalRevenue',
-                render: (item) => renderMoney(item.totalRevenue)
-            },
-            {
-                key: 'recognizedRevenue',
-                label: 'Recognized',
-                sortKey: 'recognizedRevenue',
-                render: (item) => renderMoney(item.recognizedRevenue)
-            },
-            {
-                key: 'deferredRevenue',
-                label: 'Deferred',
-                sortKey: 'deferredRevenue',
-                render: (item) => renderMoney(item.deferredRevenue)
-            },
-            { key: 'recognitionMethod', label: 'Method', sortKey: 'recognitionMethod' }
+            ...col.id('scheduleId'),
+            ...col.col('salesOrderId', 'Order'),
+            ...col.money('totalRevenue', 'Total Revenue'),
+            ...col.money('recognizedRevenue', 'Recognized'),
+            ...col.money('deferredRevenue', 'Deferred'),
+            ...col.col('recognitionMethod', 'Method'),
         ]
     };
 

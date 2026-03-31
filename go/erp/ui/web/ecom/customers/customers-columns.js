@@ -19,76 +19,41 @@ limitations under the License.
 
     window.EcomCustomers = window.EcomCustomers || {};
 
-    const { renderDate, renderMoney } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = EcomCustomers.render;
 
     EcomCustomers.columns = {
         EcomCustomer: [
-            { key: 'customerId', label: 'ID', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'email', label: 'Email', sortKey: 'email', filterKey: 'email' },
-            { key: 'firstName', label: 'First Name', sortKey: 'firstName', filterKey: 'firstName' },
-            { key: 'lastName', label: 'Last Name', sortKey: 'lastName', filterKey: 'lastName' },
-            { key: 'phone', label: 'Phone', sortKey: 'phone' },
-            {
-                key: 'customerType',
-                label: 'Type',
-                sortKey: 'customerType',
-                render: (item) => render.customerType(item.customerType)
-            },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive' },
-            { key: 'totalOrders', label: 'Total Orders', sortKey: 'totalOrders' },
-            {
-                key: 'totalSpent',
-                label: 'Total Spent',
-                sortKey: 'totalSpent',
-                render: (item) => renderMoney(item.totalSpent)
-            }
+            ...col.id('customerId'),
+            ...col.col('email', 'Email'),
+            ...col.col('firstName', 'First Name'),
+            ...col.col('lastName', 'Last Name'),
+            ...col.col('phone', 'Phone'),
+            ...col.enum('customerType', 'Type', null, render.customerType),
+            ...col.boolean('isActive', 'Active'),
+            ...col.col('totalOrders', 'Total Orders'),
+            ...col.money('totalSpent', 'Total Spent'),
         ],
 
         EcomWishlist: [
-            { key: 'wishlistId', label: 'ID', sortKey: 'wishlistId', filterKey: 'wishlistId' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'isPublic', label: 'Public', sortKey: 'isPublic' },
-            { key: 'itemCount', label: 'Items', sortKey: 'itemCount' },
-            {
-                key: 'createdDate',
-                label: 'Created',
-                sortKey: 'createdDate',
-                render: (item) => renderDate(item.createdDate)
-            }
+            ...col.id('wishlistId'),
+            ...col.col('customerId', 'Customer'),
+            ...col.col('name', 'Name'),
+            ...col.boolean('isPublic', 'Public'),
+            ...col.col('itemCount', 'Items'),
+            ...col.date('createdDate', 'Created'),
         ],
 
         // EcomCustomerAddress, EcomWishlistItem - now inline tables in parents
 
         EcomCart: [
-            { key: 'cartId', label: 'ID', sortKey: 'cartId', filterKey: 'cartId' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.cartStatus(item.status)
-            },
-            { key: 'itemCount', label: 'Items', sortKey: 'itemCount' },
-            {
-                key: 'subtotal',
-                label: 'Subtotal',
-                sortKey: 'subtotal',
-                render: (item) => renderMoney(item.subtotal)
-            },
-            {
-                key: 'total',
-                label: 'Total',
-                sortKey: 'total',
-                render: (item) => renderMoney(item.total)
-            },
-            {
-                key: 'createdDate',
-                label: 'Created',
-                sortKey: 'createdDate',
-                render: (item) => renderDate(item.createdDate)
-            }
+            ...col.id('cartId'),
+            ...col.col('customerId', 'Customer'),
+            ...col.enum('status', 'Status', null, render.cartStatus),
+            ...col.col('itemCount', 'Items'),
+            ...col.money('subtotal', 'Subtotal'),
+            ...col.money('total', 'Total'),
+            ...col.date('createdDate', 'Created'),
         ]
     };
 

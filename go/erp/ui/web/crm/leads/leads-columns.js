@@ -19,92 +19,52 @@ limitations under the License.
 
     window.CrmLeads = window.CrmLeads || {};
 
-    const { renderDate, renderMoney } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = CrmLeads.render;
 
     CrmLeads.columns = {
         CrmLead: [
-            { key: 'leadId', label: 'ID', sortKey: 'leadId', filterKey: 'leadId' },
-            { key: 'firstName', label: 'First Name', sortKey: 'firstName', filterKey: 'firstName' },
-            { key: 'lastName', label: 'Last Name', sortKey: 'lastName', filterKey: 'lastName' },
-            { key: 'email', label: 'Email', sortKey: 'email', filterKey: 'email' },
-            { key: 'company', label: 'Company', sortKey: 'company', filterKey: 'company' },
-            { key: 'title', label: 'Title', sortKey: 'title' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.leadStatus(item.status)
-            },
-            {
-                key: 'rating',
-                label: 'Rating',
-                sortKey: 'rating',
-                render: (item) => render.leadRating(item.rating)
-            },
-            { key: 'score', label: 'Score', sortKey: 'score' },
-            {
-                key: 'lastActivityDate',
-                label: 'Last Activity',
-                sortKey: 'lastActivityDate',
-                render: (item) => renderDate(item.lastActivityDate)
-            }
+            ...col.id('leadId'),
+            ...col.col('firstName', 'First Name'),
+            ...col.col('lastName', 'Last Name'),
+            ...col.col('email', 'Email'),
+            ...col.col('company', 'Company'),
+            ...col.col('title', 'Title'),
+            ...col.enum('status', 'Status', null, render.leadStatus),
+            ...col.enum('rating', 'Rating', null, render.leadRating),
+            ...col.col('score', 'Score'),
+            ...col.date('lastActivityDate', 'Last Activity'),
         ],
 
         CrmLeadSource: [
-            { key: 'sourceId', label: 'ID', sortKey: 'sourceId', filterKey: 'sourceId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            {
-                key: 'sourceType',
-                label: 'Type',
-                sortKey: 'sourceType',
-                render: (item) => render.leadSourceType(item.sourceType)
-            },
-            { key: 'defaultCost', label: 'Default Cost', sortKey: 'defaultCost' },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => item.isActive ? 'Yes' : 'No'
-            }
+            ...col.id('sourceId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.enum('sourceType', 'Type', null, render.leadSourceType),
+            ...col.col('defaultCost', 'Default Cost'),
+            ...col.boolean('isActive', 'Active'),
         ],
 
         CrmLeadScore: [
-            { key: 'scoreId', label: 'ID', sortKey: 'scoreId', filterKey: 'scoreId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'fieldName', label: 'Field', sortKey: 'fieldName' },
-            { key: 'fieldValue', label: 'Value', sortKey: 'fieldValue' },
-            { key: 'scoreValue', label: 'Score', sortKey: 'scoreValue' },
-            { key: 'priority', label: 'Priority', sortKey: 'priority' },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => item.isActive ? 'Yes' : 'No'
-            }
+            ...col.id('scoreId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.col('fieldName', 'Field'),
+            ...col.col('fieldValue', 'Value'),
+            ...col.col('scoreValue', 'Score'),
+            ...col.col('priority', 'Priority'),
+            ...col.boolean('isActive', 'Active'),
         ],
 
         CrmLeadAssign: [
-            { key: 'assignmentId', label: 'ID', sortKey: 'assignmentId', filterKey: 'assignmentId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'criteriaField', label: 'Criteria Field', sortKey: 'criteriaField' },
-            { key: 'criteriaValue', label: 'Criteria Value', sortKey: 'criteriaValue' },
-            { key: 'priority', label: 'Priority', sortKey: 'priority' },
-            {
-                key: 'roundRobin',
-                label: 'Round Robin',
-                sortKey: 'roundRobin',
-                render: (item) => item.roundRobin ? 'Yes' : 'No'
-            },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => item.isActive ? 'Yes' : 'No'
-            }
+            ...col.id('assignmentId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.col('criteriaField', 'Criteria Field'),
+            ...col.col('criteriaValue', 'Criteria Value'),
+            ...col.col('priority', 'Priority'),
+            ...col.boolean('roundRobin', 'Round Robin'),
+            ...col.boolean('isActive', 'Active'),
         ],
 
     };

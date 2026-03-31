@@ -5,31 +5,32 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 (function() {
     'use strict';
     window.CompAudit = window.CompAudit || {};
+    const col = window.Layer8ColumnFactory;
 
     CompAudit.columns = {
         CompAuditSchedule: [
-            { key: 'name', label: 'Name', width: '200px' },
-            { key: 'auditType', label: 'Type', width: '100px' },
-            { key: 'fiscalYear', label: 'Fiscal Year', width: '100px' },
-            { key: 'plannedStartDate', label: 'Start Date', width: '100px', type: 'date' },
-            { key: 'plannedEndDate', label: 'End Date', width: '100px', type: 'date' },
+            ...col.col('name', 'Name'),
+            ...col.col('auditType', 'Type'),
+            ...col.col('fiscalYear', 'Fiscal Year'),
+            ...col.date('plannedStartDate', 'Start Date'),
+            ...col.date('plannedEndDate', 'End Date'),
             { key: 'leadAuditorId', label: 'Lead Auditor', width: '150px', type: 'reference', referenceType: 'Employee' },
-            { key: 'status', label: 'Status', width: '100px' }
+            ...col.col('status', 'Status'),
         ],
         CompAuditFinding: [
-            { key: 'findingNumber', label: 'Number', width: '100px' },
-            { key: 'title', label: 'Title', width: '200px' },
+            ...col.col('findingNumber', 'Number'),
+            ...col.col('title', 'Title'),
             { key: 'auditScheduleId', label: 'Audit', width: '150px', type: 'reference', referenceType: 'CompAuditSchedule' },
-            { key: 'severity', label: 'Severity', width: '100px' },
+            ...col.col('severity', 'Severity'),
             { key: 'responsibleId', label: 'Responsible', width: '150px', type: 'reference', referenceType: 'Employee' },
-            { key: 'status', label: 'Status', width: '100px' }
+            ...col.col('status', 'Status'),
         ],
         CompComplianceReport: [
-            { key: 'title', label: 'Title', width: '250px' },
-            { key: 'reportType', label: 'Type', width: '120px' },
-            { key: 'periodStart', label: 'Period Start', width: '100px', type: 'date' },
-            { key: 'periodEnd', label: 'Period End', width: '100px', type: 'date' },
-            { key: 'status', label: 'Status', width: '100px' }
+            ...col.col('title', 'Title'),
+            ...col.col('reportType', 'Type'),
+            ...col.date('periodStart', 'Period Start'),
+            ...col.date('periodEnd', 'Period End'),
+            ...col.col('status', 'Status'),
         ]
     };
 

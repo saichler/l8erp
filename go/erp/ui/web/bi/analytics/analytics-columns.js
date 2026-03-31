@@ -19,133 +19,64 @@ limitations under the License.
 
     window.BiAnalytics = window.BiAnalytics || {};
 
-    const { renderDate, renderPercentage } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
+    const { renderPercentage } = Layer8DRenderers;
     const render = BiAnalytics.render;
 
     BiAnalytics.columns = {
         BiDataCube: [
-            { key: 'cubeId', label: 'ID', sortKey: 'cubeId', filterKey: 'cubeId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'dataSourceId', label: 'Data Source', sortKey: 'dataSourceId' },
-            { key: 'refreshSchedule', label: 'Refresh Schedule', sortKey: 'refreshSchedule' },
-            {
-                key: 'lastRefresh',
-                label: 'Last Refresh',
-                sortKey: 'lastRefresh',
-                render: (item) => renderDate(item.lastRefresh)
-            },
-            { key: 'rowCount', label: 'Row Count', sortKey: 'rowCount' },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => item.isActive ? 'Yes' : 'No'
-            }
+            ...col.id('cubeId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.col('dataSourceId', 'Data Source'),
+            ...col.col('refreshSchedule', 'Refresh Schedule'),
+            ...col.date('lastRefresh', 'Last Refresh'),
+            ...col.col('rowCount', 'Row Count'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BiAnalysisModel: [
-            { key: 'modelId', label: 'ID', sortKey: 'modelId', filterKey: 'modelId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'modelType',
-                label: 'Type',
-                sortKey: 'modelType',
-                render: (item) => render.modelType(item.modelType)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.modelStatus(item.status)
-            },
-            { key: 'algorithm', label: 'Algorithm', sortKey: 'algorithm' },
-            {
-                key: 'accuracy',
-                label: 'Accuracy',
-                sortKey: 'accuracy',
-                render: (item) => renderPercentage(item.accuracy)
-            },
-            {
-                key: 'trainingDate',
-                label: 'Training Date',
-                sortKey: 'trainingDate',
-                render: (item) => renderDate(item.trainingDate)
-            },
-            { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' }
+            ...col.id('modelId'),
+            ...col.col('name', 'Name'),
+            ...col.enum('modelType', 'Type', null, render.modelType),
+            ...col.enum('status', 'Status', null, render.modelStatus),
+            ...col.col('algorithm', 'Algorithm'),
+            ...col.custom('accuracy', 'Accuracy', (item) => renderPercentage(item.accuracy)),
+            ...col.date('trainingDate', 'Training Date'),
+            ...col.col('ownerId', 'Owner')
         ],
 
         BiTrendAnalysis: [
-            { key: 'analysisId', label: 'ID', sortKey: 'analysisId', filterKey: 'analysisId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'metric', label: 'Metric', sortKey: 'metric' },
-            { key: 'timePeriod', label: 'Time Period', sortKey: 'timePeriod' },
-            {
-                key: 'direction',
-                label: 'Direction',
-                sortKey: 'direction',
-                render: (item) => render.trendDirection(item.direction)
-            },
-            {
-                key: 'changePercent',
-                label: 'Change %',
-                sortKey: 'changePercent',
-                render: (item) => renderPercentage(item.changePercent)
-            },
-            {
-                key: 'startDate',
-                label: 'Start Date',
-                sortKey: 'startDate',
-                render: (item) => renderDate(item.startDate)
-            },
-            {
-                key: 'endDate',
-                label: 'End Date',
-                sortKey: 'endDate',
-                render: (item) => renderDate(item.endDate)
-            }
+            ...col.id('analysisId'),
+            ...col.col('name', 'Name'),
+            ...col.col('metric', 'Metric'),
+            ...col.col('timePeriod', 'Time Period'),
+            ...col.enum('direction', 'Direction', null, render.trendDirection),
+            ...col.custom('changePercent', 'Change %', (item) => renderPercentage(item.changePercent)),
+            ...col.date('startDate', 'Start Date'),
+            ...col.date('endDate', 'End Date')
         ],
 
         BiScenario: [
-            { key: 'scenarioId', label: 'ID', sortKey: 'scenarioId', filterKey: 'scenarioId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            {
-                key: 'scenarioType',
-                label: 'Type',
-                sortKey: 'scenarioType',
-                render: (item) => render.scenarioType(item.scenarioType)
-            },
-            { key: 'dataSourceId', label: 'Data Source', sortKey: 'dataSourceId' },
-            {
-                key: 'createdDate',
-                label: 'Created',
-                sortKey: 'createdDate',
-                render: (item) => renderDate(item.createdDate)
-            },
-            { key: 'createdBy', label: 'Created By', sortKey: 'createdBy' },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => item.isActive ? 'Yes' : 'No'
-            }
+            ...col.id('scenarioId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.enum('scenarioType', 'Type', null, render.scenarioType),
+            ...col.col('dataSourceId', 'Data Source'),
+            ...col.date('createdDate', 'Created'),
+            ...col.col('createdBy', 'Created By'),
+            ...col.boolean('isActive', 'Active')
         ],
 
         BiBenchmark: [
-            { key: 'benchmarkId', label: 'ID', sortKey: 'benchmarkId', filterKey: 'benchmarkId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'category', label: 'Category', sortKey: 'category' },
-            { key: 'metric', label: 'Metric', sortKey: 'metric' },
-            { key: 'internalValue', label: 'Internal Value', sortKey: 'internalValue' },
-            { key: 'benchmarkValue', label: 'Benchmark Value', sortKey: 'benchmarkValue' },
-            {
-                key: 'variancePercent',
-                label: 'Variance %',
-                sortKey: 'variancePercent',
-                render: (item) => renderPercentage(item.variancePercent)
-            },
-            { key: 'industry', label: 'Industry', sortKey: 'industry' }
+            ...col.id('benchmarkId'),
+            ...col.col('name', 'Name'),
+            ...col.col('category', 'Category'),
+            ...col.col('metric', 'Metric'),
+            ...col.col('internalValue', 'Internal Value'),
+            ...col.col('benchmarkValue', 'Benchmark Value'),
+            ...col.custom('variancePercent', 'Variance %', (item) => renderPercentage(item.variancePercent)),
+            ...col.col('industry', 'Industry')
         ]
     };
 

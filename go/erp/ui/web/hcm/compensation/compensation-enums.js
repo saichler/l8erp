@@ -18,7 +18,7 @@ limitations under the License.
     'use strict';
 
     const factory = window.Layer8EnumFactory;
-    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney, renderPercentage } = Layer8DRenderers;
 
     window.Compensation = window.Compensation || {};
 
@@ -148,11 +148,6 @@ limitations under the License.
     const renderBonusPaymentStatus = createStatusRenderer(BONUS_PAYMENT_STATUS.enum, BONUS_PAYMENT_STATUS.classes);
     const renderEquityGrantStatus = createStatusRenderer(EQUITY_GRANT_STATUS.enum, EQUITY_GRANT_STATUS.classes);
 
-    function renderPercentageComp(value) {
-        if (value === null || value === undefined) return '-';
-        return `${value.toFixed(1)}%`;
-    }
-
     function renderCompaRatio(ratio) {
         if (ratio === null || ratio === undefined) return '-';
         const percentage = (ratio * 100).toFixed(1);
@@ -199,7 +194,7 @@ limitations under the License.
         money: renderMoney,
         boolean: renderBoolean,
         date: renderDate,
-        percentage: renderPercentageComp,
+        percentage: (v) => renderPercentage(v, 1),
         compaRatio: renderCompaRatio,
         shares: renderShares,
         salaryRange: renderSalaryRange
@@ -207,7 +202,7 @@ limitations under the License.
 
     window.Compensation._internal = {
         renderMeritIncreaseStatus, renderMeritCycleStatus, renderBonusPaymentStatus,
-        renderEquityGrantStatus, renderPercentageComp, renderCompaRatio,
+        renderEquityGrantStatus, renderCompaRatio,
         renderShares, renderSalaryRange,
         renderCompensationType, renderBonusPlanType, renderBonusFrequency,
         renderEquityGrantType, renderPayFrequency

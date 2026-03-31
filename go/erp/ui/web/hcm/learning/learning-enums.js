@@ -19,7 +19,7 @@ limitations under the License.
 
     const factory = window.Layer8EnumFactory;
     const { escapeHtml } = Layer8DUtils;
-    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney, renderPercentage, renderRating } = Layer8DRenderers;
 
     window.Learning = window.Learning || {};
 
@@ -152,20 +152,10 @@ limitations under the License.
         return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
     }
 
-    function renderPercentageLearning(value) {
-        if (value === null || value === undefined) return '-';
-        return `${value.toFixed(0)}%`;
-    }
-
     function renderProficiencyLevel(level) {
         if (!level) return '-';
         const stars = '★'.repeat(level) + '☆'.repeat(5 - level);
         return `<span title="Level ${level}/5">${stars}</span>`;
-    }
-
-    function renderRatingLearning(rating, maxRating = 5) {
-        if (rating === null || rating === undefined) return '-';
-        return `${rating.toFixed(1)}/${maxRating}`;
     }
 
     function renderCourseType(v) { return renderEnum(v, COURSE_TYPE.enum); }
@@ -188,15 +178,15 @@ limitations under the License.
         boolean: renderBoolean,
         date: renderDate,
         duration: renderDurationMinutes,
-        percentage: renderPercentageLearning,
+        percentage: (v) => renderPercentage(v, 0),
         proficiency: renderProficiencyLevel,
-        rating: renderRatingLearning
+        rating: (v) => renderRating(v, 5, 1)
     };
 
     window.Learning._internal = {
         renderSessionStatus, renderCourseEnrollmentStatus, renderCertificationStatus,
         renderCourseDeliveryMethod, renderCourseLevel, renderDurationMinutes,
-        renderPercentageLearning, renderProficiencyLevel, renderRatingLearning,
+        renderProficiencyLevel,
         renderCourseType, renderCertificationType, renderSkillCategory, renderTrainingType
     };
 

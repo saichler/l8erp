@@ -5,23 +5,24 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 (function() {
     'use strict';
     window.CompRegulatory = window.CompRegulatory || {};
+    const col = window.Layer8ColumnFactory;
 
     CompRegulatory.columns = {
         CompRegulation: [
-            { key: 'code', label: 'Code', width: '100px' },
-            { key: 'name', label: 'Name', width: '200px' },
-            { key: 'regulationType', label: 'Type', width: '120px' },
-            { key: 'jurisdiction', label: 'Jurisdiction', width: '120px' },
-            { key: 'effectiveDate', label: 'Effective Date', width: '120px', type: 'date' },
-            { key: 'isActive', label: 'Active', width: '100px' }
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
+            ...col.col('regulationType', 'Type'),
+            ...col.col('jurisdiction', 'Jurisdiction'),
+            ...col.date('effectiveDate', 'Effective Date'),
+            ...col.boolean('isActive', 'Active'),
         ],
         CompCertification: [
-            { key: 'name', label: 'Name', width: '200px' },
-            { key: 'certificateNumber', label: 'Certificate #', width: '120px' },
-            { key: 'issuingBody', label: 'Issuing Body', width: '150px' },
-            { key: 'issueDate', label: 'Issue Date', width: '120px', type: 'date' },
-            { key: 'expiryDate', label: 'Expiry Date', width: '120px', type: 'date' },
-            { key: 'status', label: 'Status', width: '100px' }
+            ...col.col('name', 'Name'),
+            ...col.col('certificateNumber', 'Certificate #'),
+            ...col.col('issuingBody', 'Issuing Body'),
+            ...col.date('issueDate', 'Issue Date'),
+            ...col.date('expiryDate', 'Expiry Date'),
+            ...col.col('status', 'Status'),
         ],
     };
 

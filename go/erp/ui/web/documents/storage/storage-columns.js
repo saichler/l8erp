@@ -9,52 +9,53 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
     window.DocStorage = window.DocStorage || {};
 
-    const { renderDate, renderFileSize } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
+    const { renderFileSize } = Layer8DRenderers;
     const render = DocStorage.render;
 
     DocStorage.columns = {
         DocDocument: [
-            { key: 'documentId', label: 'ID', sortKey: 'documentId', filterKey: 'documentId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'documentType', label: 'Type', sortKey: 'documentType', render: (item) => render.documentType(item.documentType) },
-            { key: 'status', label: 'Status', sortKey: 'status', render: (item) => render.documentStatus(item.status) },
-            { key: 'fileFormat', label: 'Format', sortKey: 'fileFormat', render: (item) => render.fileFormat(item.fileFormat) },
+            ...col.id('documentId'),
+            ...col.col('name', 'Name'),
+            ...col.enum('documentType', 'Type', null, render.documentType),
+            ...col.enum('status', 'Status', null, render.documentStatus),
+            ...col.enum('fileFormat', 'Format', null, render.fileFormat),
             { key: 'fileSize', label: 'Size', sortKey: 'fileSize', render: (item) => renderFileSize(item.fileSize) },
             { key: 'storagePath', label: 'Download', render: (item) => {
                 if (!item.storagePath) return '-';
                 return `<button type="button" class="l8-file-download-btn" onclick="event.stopPropagation(); Layer8FileUpload.download('${Layer8DUtils.escapeAttr(item.storagePath)}', '${Layer8DUtils.escapeAttr(item.fileName || '')}')">Download</button>`;
             }},
-            { key: 'accessLevel', label: 'Access', sortKey: 'accessLevel', render: (item) => render.accessLevel(item.accessLevel) },
-            { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' },
-            { key: 'currentVersion', label: 'Version', sortKey: 'currentVersion' }
+            ...col.enum('accessLevel', 'Access', null, render.accessLevel),
+            ...col.col('ownerId', 'Owner'),
+            ...col.col('currentVersion', 'Version'),
         ],
 
         DocFolder: [
-            { key: 'folderId', label: 'ID', sortKey: 'folderId', filterKey: 'folderId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'parentFolderId', label: 'Parent', sortKey: 'parentFolderId' },
-            { key: 'path', label: 'Path', sortKey: 'path' },
-            { key: 'accessLevel', label: 'Access', sortKey: 'accessLevel', render: (item) => render.accessLevel(item.accessLevel) },
-            { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' },
-            { key: 'isSystem', label: 'System', sortKey: 'isSystem', render: (item) => item.isSystem ? 'Yes' : 'No' }
+            ...col.id('folderId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.col('parentFolderId', 'Parent'),
+            ...col.col('path', 'Path'),
+            ...col.enum('accessLevel', 'Access', null, render.accessLevel),
+            ...col.col('ownerId', 'Owner'),
+            ...col.boolean('isSystem', 'System'),
         ],
 
         DocCategory: [
-            { key: 'categoryId', label: 'ID', sortKey: 'categoryId', filterKey: 'categoryId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'parentCategoryId', label: 'Parent', sortKey: 'parentCategoryId' },
-            { key: 'code', label: 'Code', sortKey: 'code' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('categoryId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.col('parentCategoryId', 'Parent'),
+            ...col.col('code', 'Code'),
+            ...col.boolean('isActive', 'Active'),
         ],
 
         DocTag: [
-            { key: 'tagId', label: 'ID', sortKey: 'tagId', filterKey: 'tagId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'color', label: 'Color', sortKey: 'color' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive', render: (item) => item.isActive ? 'Yes' : 'No' }
+            ...col.id('tagId'),
+            ...col.col('name', 'Name'),
+            ...col.col('color', 'Color'),
+            ...col.col('description', 'Description'),
+            ...col.boolean('isActive', 'Active'),
         ]
     };
 

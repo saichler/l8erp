@@ -19,76 +19,41 @@ limitations under the License.
 
     window.CrmMarketing = window.CrmMarketing || {};
 
-    const { renderDate, renderMoney } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = CrmMarketing.render;
 
     CrmMarketing.columns = {
         CrmCampaign: [
-            { key: 'campaignId', label: 'ID', sortKey: 'campaignId', filterKey: 'campaignId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'campaignType',
-                label: 'Type',
-                sortKey: 'campaignType',
-                render: (item) => render.campaignType(item.campaignType)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.campaignStatus(item.status)
-            },
-            {
-                key: 'startDate',
-                label: 'Start Date',
-                sortKey: 'startDate',
-                render: (item) => renderDate(item.startDate)
-            },
-            {
-                key: 'endDate',
-                label: 'End Date',
-                sortKey: 'endDate',
-                render: (item) => renderDate(item.endDate)
-            },
-            {
-                key: 'budgetedCost',
-                label: 'Budget',
-                sortKey: 'budgetedCost',
-                render: (item) => renderMoney(item.budgetedCost)
-            },
-            { key: 'numSent', label: 'Sent', sortKey: 'numSent' },
-            { key: 'numResponses', label: 'Responses', sortKey: 'numResponses' }
+            ...col.id('campaignId'),
+            ...col.col('name', 'Name'),
+            ...col.enum('campaignType', 'Type', null, render.campaignType),
+            ...col.enum('status', 'Status', null, render.campaignStatus),
+            ...col.date('startDate', 'Start Date'),
+            ...col.date('endDate', 'End Date'),
+            ...col.money('budgetedCost', 'Budget'),
+            ...col.col('numSent', 'Sent'),
+            ...col.col('numResponses', 'Responses'),
         ],
 
         CrmEmailTemplate: [
-            { key: 'templateId', label: 'ID', sortKey: 'templateId', filterKey: 'templateId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'subject', label: 'Subject', sortKey: 'subject' },
-            { key: 'templateType', label: 'Type', sortKey: 'templateType' },
-            { key: 'folder', label: 'Folder', sortKey: 'folder' },
-            { key: 'timesUsed', label: 'Times Used', sortKey: 'timesUsed' },
-            {
-                key: 'lastUsedDate',
-                label: 'Last Used',
-                sortKey: 'lastUsedDate',
-                render: (item) => renderDate(item.lastUsedDate)
-            },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive' }
+            ...col.id('templateId'),
+            ...col.col('name', 'Name'),
+            ...col.col('subject', 'Subject'),
+            ...col.col('templateType', 'Type'),
+            ...col.col('folder', 'Folder'),
+            ...col.col('timesUsed', 'Times Used'),
+            ...col.date('lastUsedDate', 'Last Used'),
+            ...col.col('isActive', 'Active'),
         ],
 
         CrmMarketingList: [
-            { key: 'listId', label: 'ID', sortKey: 'listId', filterKey: 'listId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'listType', label: 'Type', sortKey: 'listType' },
-            { key: 'memberCount', label: 'Members', sortKey: 'memberCount' },
-            { key: 'isDynamic', label: 'Dynamic', sortKey: 'isDynamic' },
-            {
-                key: 'lastUsedDate',
-                label: 'Last Used',
-                sortKey: 'lastUsedDate',
-                render: (item) => renderDate(item.lastUsedDate)
-            },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive' }
+            ...col.id('listId'),
+            ...col.col('name', 'Name'),
+            ...col.col('listType', 'Type'),
+            ...col.col('memberCount', 'Members'),
+            ...col.col('isDynamic', 'Dynamic'),
+            ...col.date('lastUsedDate', 'Last Used'),
+            ...col.col('isActive', 'Active'),
         ],
 
     };

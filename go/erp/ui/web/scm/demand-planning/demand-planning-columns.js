@@ -21,7 +21,7 @@ limitations under the License.
     // Ensure ScmDemandPlanning namespace exists
     window.ScmDemandPlanning = window.ScmDemandPlanning || {};
 
-    const { renderDate, renderMoney } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = ScmDemandPlanning.render;
 
     // ============================================================================
@@ -30,100 +30,55 @@ limitations under the License.
 
     ScmDemandPlanning.columns = {
         ScmDemandForecast: [
-            { key: 'forecastId', label: 'ID', sortKey: 'forecastId', filterKey: 'forecastId' },
-            {
-                key: 'forecastMethod',
-                label: 'Method',
-                sortKey: 'forecastMethod',
-                render: (item) => render.forecastMethod(item.forecastMethod)
-            },
-            { key: 'itemId', label: 'Item', sortKey: 'itemId', filterKey: 'itemId' },
-            {
-                key: 'periodStart',
-                label: 'Start',
-                sortKey: 'periodStart',
-                render: (item) => renderDate(item.periodStart)
-            },
-            { key: 'forecastQuantity', label: 'Qty', sortKey: 'forecastQuantity' },
-            { key: 'confidenceLevel', label: 'Confidence', sortKey: 'confidenceLevel' }
+            ...col.id('forecastId'),
+            ...col.enum('forecastMethod', 'Method', null, render.forecastMethod),
+            ...col.col('itemId', 'Item'),
+            ...col.date('periodStart', 'Start'),
+            ...col.col('forecastQuantity', 'Qty'),
+            ...col.col('confidenceLevel', 'Confidence'),
         ],
 
         ScmForecastModel: [
-            { key: 'modelId', label: 'ID', sortKey: 'modelId', filterKey: 'modelId' },
-            { key: 'name', label: 'Model', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'forecastMethod',
-                label: 'Method',
-                sortKey: 'forecastMethod',
-                render: (item) => render.forecastMethod(item.forecastMethod)
-            },
-            { key: 'accuracyScore', label: 'Accuracy %', sortKey: 'accuracyScore' },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' }
+            ...col.id('modelId'),
+            ...col.col('name', 'Model'),
+            ...col.enum('forecastMethod', 'Method', null, render.forecastMethod),
+            ...col.col('accuracyScore', 'Accuracy %'),
+            ...col.col('description', 'Description'),
         ],
 
         ScmDemandPlan: [
-            { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'name', label: 'Plan', sortKey: 'name', filterKey: 'name' },
+            ...col.id('planId'),
+            ...col.col('name', 'Plan'),
             {
                 key: 'planPeriod',
                 label: 'Start',
                 sortKey: 'planPeriod.startDate',
-                render: (item) => renderDate(item.planPeriod?.startDate)
+                render: (item) => Layer8DRenderers.renderDate(item.planPeriod?.startDate)
             },
             {
                 key: 'planPeriod',
                 label: 'End',
                 sortKey: 'planPeriod.endDate',
-                render: (item) => renderDate(item.planPeriod?.endDate)
+                render: (item) => Layer8DRenderers.renderDate(item.planPeriod?.endDate)
             },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.taskStatus(item.status)
-            }
+            ...col.enum('status', 'Status', null, render.taskStatus),
         ],
 
         ScmPromotionalPlan: [
-            { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'name', label: 'Plan', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.taskStatus(item.status)
-            },
-            {
-                key: 'startDate',
-                label: 'Start',
-                sortKey: 'startDate',
-                render: (item) => renderDate(item.startDate)
-            },
-            {
-                key: 'endDate',
-                label: 'End',
-                sortKey: 'endDate',
-                render: (item) => renderDate(item.endDate)
-            },
-            { key: 'expectedUplift', label: 'Uplift %', sortKey: 'expectedUplift' }
+            ...col.id('planId'),
+            ...col.col('name', 'Plan'),
+            ...col.enum('status', 'Status', null, render.taskStatus),
+            ...col.date('startDate', 'Start'),
+            ...col.date('endDate', 'End'),
+            ...col.col('expectedUplift', 'Uplift %'),
         ],
 
         ScmNewProductPlan: [
-            { key: 'planId', label: 'ID', sortKey: 'planId', filterKey: 'planId' },
-            { key: 'name', label: 'Product', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'launchDate',
-                label: 'Launch',
-                sortKey: 'launchDate',
-                render: (item) => renderDate(item.launchDate)
-            },
-            { key: 'initialForecast', label: 'Initial Forecast', sortKey: 'initialForecast' },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.taskStatus(item.status)
-            }
+            ...col.id('planId'),
+            ...col.col('name', 'Product'),
+            ...col.date('launchDate', 'Launch'),
+            ...col.col('initialForecast', 'Initial Forecast'),
+            ...col.enum('status', 'Status', null, render.taskStatus),
         ],
 
     };

@@ -19,142 +19,67 @@ limitations under the License.
 
     window.CrmService = window.CrmService || {};
 
-    const { renderDate, renderBoolean } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = CrmService.render;
 
     CrmService.columns = {
         CrmCase: [
-            { key: 'caseId', label: 'ID', sortKey: 'caseId', filterKey: 'caseId' },
-            { key: 'caseNumber', label: 'Case #', sortKey: 'caseNumber', filterKey: 'caseNumber' },
-            { key: 'subject', label: 'Subject', sortKey: 'subject', filterKey: 'subject' },
-            { key: 'accountId', label: 'Account', sortKey: 'accountId', filterKey: 'accountId' },
-            { key: 'contactId', label: 'Contact', sortKey: 'contactId' },
-            { key: 'ownerId', label: 'Owner', sortKey: 'ownerId' },
-            {
-                key: 'priority',
-                label: 'Priority',
-                sortKey: 'priority',
-                render: (item) => render.casePriority(item.priority)
-            },
-            {
-                key: 'caseType',
-                label: 'Type',
-                sortKey: 'caseType',
-                render: (item) => render.caseType(item.caseType)
-            },
-            {
-                key: 'openedDate',
-                label: 'Opened',
-                sortKey: 'openedDate',
-                render: (item) => renderDate(item.openedDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.caseStatus(item.status)
-            }
+            ...col.id('caseId'),
+            ...col.col('caseNumber', 'Case #'),
+            ...col.col('subject', 'Subject'),
+            ...col.col('accountId', 'Account'),
+            ...col.col('contactId', 'Contact'),
+            ...col.col('ownerId', 'Owner'),
+            ...col.enum('priority', 'Priority', null, render.casePriority),
+            ...col.enum('caseType', 'Type', null, render.caseType),
+            ...col.date('openedDate', 'Opened'),
+            ...col.enum('status', 'Status', null, render.caseStatus),
         ],
 
         CrmKBArticle: [
-            { key: 'articleId', label: 'ID', sortKey: 'articleId', filterKey: 'articleId' },
-            { key: 'articleNumber', label: 'Article #', sortKey: 'articleNumber', filterKey: 'articleNumber' },
-            { key: 'title', label: 'Title', sortKey: 'title', filterKey: 'title' },
-            { key: 'category', label: 'Category', sortKey: 'category', filterKey: 'category' },
-            { key: 'authorId', label: 'Author', sortKey: 'authorId' },
-            { key: 'viewCount', label: 'Views', sortKey: 'viewCount' },
-            {
-                key: 'isFeatured',
-                label: 'Featured',
-                sortKey: 'isFeatured',
-                render: (item) => renderBoolean(item.isFeatured)
-            },
-            {
-                key: 'publishDate',
-                label: 'Published',
-                sortKey: 'publishDate',
-                render: (item) => renderDate(item.publishDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.articleStatus(item.status)
-            }
+            ...col.id('articleId'),
+            ...col.col('articleNumber', 'Article #'),
+            ...col.col('title', 'Title'),
+            ...col.col('category', 'Category'),
+            ...col.col('authorId', 'Author'),
+            ...col.col('viewCount', 'Views'),
+            ...col.boolean('isFeatured', 'Featured'),
+            ...col.date('publishDate', 'Published'),
+            ...col.enum('status', 'Status', null, render.articleStatus),
         ],
 
         CrmSLA: [
-            { key: 'slaId', label: 'ID', sortKey: 'slaId', filterKey: 'slaId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'firstResponseMinutes', label: 'First Response (min)', sortKey: 'firstResponseMinutes' },
-            { key: 'resolutionMinutes', label: 'Resolution (min)', sortKey: 'resolutionMinutes' },
-            { key: 'businessHours', label: 'Business Hours', sortKey: 'businessHours' },
-            {
-                key: 'includeWeekends',
-                label: 'Weekends',
-                sortKey: 'includeWeekends',
-                render: (item) => renderBoolean(item.includeWeekends)
-            },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
-            }
+            ...col.id('slaId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.col('firstResponseMinutes', 'First Response (min)'),
+            ...col.col('resolutionMinutes', 'Resolution (min)'),
+            ...col.col('businessHours', 'Business Hours'),
+            ...col.boolean('includeWeekends', 'Weekends'),
+            ...col.boolean('isActive', 'Active'),
         ],
 
         CrmEscalation: [
-            { key: 'escalationId', label: 'ID', sortKey: 'escalationId', filterKey: 'escalationId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            {
-                key: 'level',
-                label: 'Level',
-                sortKey: 'level',
-                render: (item) => render.escalationLevel(item.level)
-            },
-            { key: 'triggerMinutes', label: 'Trigger (min)', sortKey: 'triggerMinutes' },
-            { key: 'escalateToUserId', label: 'Escalate To', sortKey: 'escalateToUserId' },
-            {
-                key: 'notifyOwner',
-                label: 'Notify Owner',
-                sortKey: 'notifyOwner',
-                render: (item) => renderBoolean(item.notifyOwner)
-            },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
-            }
+            ...col.id('escalationId'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
+            ...col.enum('level', 'Level', null, render.escalationLevel),
+            ...col.col('triggerMinutes', 'Trigger (min)'),
+            ...col.col('escalateToUserId', 'Escalate To'),
+            ...col.boolean('notifyOwner', 'Notify Owner'),
+            ...col.boolean('isActive', 'Active'),
         ],
 
         CrmSurvey: [
-            { key: 'surveyId', label: 'ID', sortKey: 'surveyId', filterKey: 'surveyId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'surveyType', label: 'Type', sortKey: 'surveyType', filterKey: 'surveyType' },
-            { key: 'accountId', label: 'Account', sortKey: 'accountId' },
-            { key: 'contactId', label: 'Contact', sortKey: 'contactId' },
-            { key: 'overallRating', label: 'Rating', sortKey: 'overallRating' },
-            {
-                key: 'wouldRecommend',
-                label: 'Recommend',
-                sortKey: 'wouldRecommend',
-                render: (item) => renderBoolean(item.wouldRecommend)
-            },
-            {
-                key: 'sentDate',
-                label: 'Sent',
-                sortKey: 'sentDate',
-                render: (item) => renderDate(item.sentDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.surveyStatus(item.status)
-            }
+            ...col.id('surveyId'),
+            ...col.col('name', 'Name'),
+            ...col.col('surveyType', 'Type'),
+            ...col.col('accountId', 'Account'),
+            ...col.col('contactId', 'Contact'),
+            ...col.col('overallRating', 'Rating'),
+            ...col.boolean('wouldRecommend', 'Recommend'),
+            ...col.date('sentDate', 'Sent'),
+            ...col.enum('status', 'Status', null, render.surveyStatus),
         ]
     };
 

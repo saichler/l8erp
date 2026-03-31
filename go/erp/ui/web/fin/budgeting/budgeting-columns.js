@@ -21,8 +21,7 @@ limitations under the License.
     // Ensure Budgeting namespace exists
     window.Budgeting = window.Budgeting || {};
 
-    const { renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
-    const enums = Budgeting.enums;
+    const col = window.Layer8ColumnFactory;
     const render = Budgeting.render;
 
     // ============================================================================
@@ -31,85 +30,30 @@ limitations under the License.
 
     Budgeting.columns = {
         Budget: [
-            { key: 'budgetId', label: 'ID', sortKey: 'budgetId', filterKey: 'budgetId' },
-            { key: 'budgetName', label: 'Budget Name', sortKey: 'budgetName', filterKey: 'budgetName' },
-            {
-                key: 'budgetType',
-                label: 'Type',
-                sortKey: 'budgetType',
-                render: (item) => render.budgetType(item.budgetType)
-            },
-            { key: 'fiscalYearId', label: 'Fiscal Year', sortKey: 'fiscalYearId', filterKey: 'fiscalYearId' },
-            {
-                key: 'totalAmount',
-                label: 'Total Amount',
-                sortKey: 'totalAmount',
-                render: (item) => renderMoney(item.totalAmount)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.budgetStatus(item.status)
-            }
+            ...col.id('budgetId'),
+            ...col.col('budgetName', 'Budget Name'),
+            ...col.enum('budgetType', 'Type', null, render.budgetType),
+            ...col.col('fiscalYearId', 'Fiscal Year'),
+            ...col.money('totalAmount', 'Total Amount'),
+            ...col.enum('status', 'Status', null, render.budgetStatus),
         ],
 
         CapitalExpenditure: [
-            { key: 'capexId', label: 'ID', sortKey: 'capexId', filterKey: 'capexId' },
-            { key: 'projectName', label: 'Project Name', sortKey: 'projectName', filterKey: 'projectName' },
-            { key: 'description', label: 'Description', sortKey: 'description', filterKey: 'description' },
-            {
-                key: 'requestedAmount',
-                label: 'Requested',
-                sortKey: 'requestedAmount',
-                render: (item) => renderMoney(item.requestedAmount)
-            },
-            {
-                key: 'approvedAmount',
-                label: 'Approved',
-                sortKey: 'approvedAmount',
-                render: (item) => renderMoney(item.approvedAmount)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.capexStatus(item.status)
-            }
+            ...col.id('capexId'),
+            ...col.col('projectName', 'Project Name'),
+            ...col.col('description', 'Description'),
+            ...col.money('requestedAmount', 'Requested'),
+            ...col.money('approvedAmount', 'Approved'),
+            ...col.enum('status', 'Status', null, render.capexStatus),
         ],
 
         Forecast: [
-            { key: 'forecastId', label: 'ID', sortKey: 'forecastId', filterKey: 'forecastId' },
-            {
-                key: 'forecastType',
-                label: 'Type',
-                sortKey: 'forecastType',
-                render: (item) => render.forecastType(item.forecastType)
-            },
-            {
-                key: 'periodStart',
-                label: 'Period Start',
-                sortKey: 'periodStart',
-                render: (item) => renderDate(item.periodStart)
-            },
-            {
-                key: 'periodEnd',
-                label: 'Period End',
-                sortKey: 'periodEnd',
-                render: (item) => renderDate(item.periodEnd)
-            },
-            {
-                key: 'projectedAmount',
-                label: 'Projected',
-                sortKey: 'projectedAmount',
-                render: (item) => renderMoney(item.projectedAmount)
-            },
-            {
-                key: 'actualAmount',
-                label: 'Actual',
-                sortKey: 'actualAmount',
-                render: (item) => renderMoney(item.actualAmount)
-            }
+            ...col.id('forecastId'),
+            ...col.enum('forecastType', 'Type', null, render.forecastType),
+            ...col.date('periodStart', 'Period Start'),
+            ...col.date('periodEnd', 'Period End'),
+            ...col.money('projectedAmount', 'Projected'),
+            ...col.money('actualAmount', 'Actual'),
         ]
     };
 

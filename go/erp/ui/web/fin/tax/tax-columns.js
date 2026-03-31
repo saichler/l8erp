@@ -21,8 +21,8 @@ limitations under the License.
     // Ensure TaxManagement namespace exists
     window.TaxManagement = window.TaxManagement || {};
 
-    const { renderBoolean, renderDate, renderMoney, renderPercentage } = Layer8DRenderers;
-    const enums = TaxManagement.enums;
+    const col = window.Layer8ColumnFactory;
+    const { renderPercentage } = Layer8DRenderers;
     const render = TaxManagement.render;
 
     // ============================================================================
@@ -31,84 +31,39 @@ limitations under the License.
 
     TaxManagement.columns = {
         TaxCode: [
-            { key: 'taxCodeId', label: 'ID', sortKey: 'taxCodeId', filterKey: 'taxCodeId' },
-            { key: 'code', label: 'Code', sortKey: 'code', filterKey: 'code' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'taxType',
-                label: 'Tax Type',
-                sortKey: 'taxType',
-                render: (item) => render.taxType(item.taxType)
-            },
-            {
-                key: 'rate',
-                label: 'Rate',
-                sortKey: 'rate',
-                render: (item) => renderPercentage(item.rate)
-            },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
-            }
+            ...col.id('taxCodeId'),
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
+            ...col.enum('taxType', 'Tax Type', null, render.taxType),
+            ...col.custom('rate', 'Rate', (item) => renderPercentage(item.rate)),
+            ...col.boolean('isActive', 'Active'),
         ],
 
         TaxJurisdiction: [
-            { key: 'jurisdictionId', label: 'ID', sortKey: 'jurisdictionId', filterKey: 'jurisdictionId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            {
-                key: 'level',
-                label: 'Level',
-                sortKey: 'level',
-                render: (item) => render.jurisdictionLevel(item.level)
-            },
-            { key: 'countryCode', label: 'Country', sortKey: 'countryCode', filterKey: 'countryCode' },
-            { key: 'stateCode', label: 'State/Province', sortKey: 'stateCode', filterKey: 'stateCode' },
-            {
-                key: 'isActive',
-                label: 'Active',
-                sortKey: 'isActive',
-                render: (item) => renderBoolean(item.isActive)
-            }
+            ...col.id('jurisdictionId'),
+            ...col.col('name', 'Name'),
+            ...col.enum('level', 'Level', null, render.jurisdictionLevel),
+            ...col.col('countryCode', 'Country'),
+            ...col.col('stateCode', 'State/Province'),
+            ...col.boolean('isActive', 'Active'),
         ],
 
         TaxRule: [
-            { key: 'ruleId', label: 'ID', sortKey: 'ruleId', filterKey: 'ruleId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'taxCodeId', label: 'Tax Code', sortKey: 'taxCodeId', filterKey: 'taxCodeId' },
-            { key: 'jurisdictionId', label: 'Jurisdiction', sortKey: 'jurisdictionId', filterKey: 'jurisdictionId' },
-            {
-                key: 'effectiveDate',
-                label: 'Effective Date',
-                sortKey: 'effectiveDate',
-                render: (item) => renderDate(item.effectiveDate)
-            },
-            {
-                key: 'endDate',
-                label: 'End Date',
-                sortKey: 'endDate',
-                render: (item) => renderDate(item.endDate)
-            }
+            ...col.id('ruleId'),
+            ...col.col('name', 'Name'),
+            ...col.col('taxCodeId', 'Tax Code'),
+            ...col.col('jurisdictionId', 'Jurisdiction'),
+            ...col.date('effectiveDate', 'Effective Date'),
+            ...col.date('endDate', 'End Date'),
         ],
 
         TaxExemption: [
-            { key: 'exemptionId', label: 'ID', sortKey: 'exemptionId', filterKey: 'exemptionId' },
-            { key: 'exemptionNumber', label: 'Exemption #', sortKey: 'exemptionNumber', filterKey: 'exemptionNumber' },
-            { key: 'taxCodeId', label: 'Tax Code', sortKey: 'taxCodeId', filterKey: 'taxCodeId' },
-            { key: 'reason', label: 'Reason', sortKey: 'reason', filterKey: 'reason' },
-            {
-                key: 'effectiveDate',
-                label: 'Effective Date',
-                sortKey: 'effectiveDate',
-                render: (item) => renderDate(item.effectiveDate)
-            },
-            {
-                key: 'expirationDate',
-                label: 'Expiration Date',
-                sortKey: 'expirationDate',
-                render: (item) => renderDate(item.expirationDate)
-            }
+            ...col.id('exemptionId'),
+            ...col.col('exemptionNumber', 'Exemption #'),
+            ...col.col('taxCodeId', 'Tax Code'),
+            ...col.col('reason', 'Reason'),
+            ...col.date('effectiveDate', 'Effective Date'),
+            ...col.date('expirationDate', 'Expiration Date'),
         ]
     };
 

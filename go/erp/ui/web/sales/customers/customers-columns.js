@@ -20,7 +20,7 @@ limitations under the License.
 
     window.SalesCustomers = window.SalesCustomers || {};
 
-    const { renderDate, renderMoney } = Layer8DRenderers;
+    const col = window.Layer8ColumnFactory;
     const render = SalesCustomers.render;
 
     // ============================================================================
@@ -29,58 +29,38 @@ limitations under the License.
 
     SalesCustomers.columns = {
         SalesCustomerHierarchy: [
-            { key: 'hierarchyId', label: 'ID', sortKey: 'hierarchyId', filterKey: 'hierarchyId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'parentHierarchyId', label: 'Parent', sortKey: 'parentHierarchyId', filterKey: 'parentHierarchyId' },
-            { key: 'level', label: 'Level', sortKey: 'level' },
-            { key: 'description', label: 'Description', sortKey: 'description' }
+            ...col.id('hierarchyId'),
+            ...col.col('name', 'Name'),
+            ...col.col('parentHierarchyId', 'Parent'),
+            ...col.col('level', 'Level'),
+            ...col.col('description', 'Description'),
         ],
 
         SalesCustomerSegment: [
-            { key: 'segmentId', label: 'ID', sortKey: 'segmentId', filterKey: 'segmentId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'segmentType', label: 'Type', sortKey: 'segmentType' },
-            { key: 'description', label: 'Description', sortKey: 'description' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive' }
+            ...col.id('segmentId'),
+            ...col.col('name', 'Name'),
+            ...col.col('segmentType', 'Type'),
+            ...col.col('description', 'Description'),
+            ...col.col('isActive', 'Active'),
         ],
 
         SalesCustomerContract: [
-            { key: 'contractId', label: 'ID', sortKey: 'contractId', filterKey: 'contractId' },
-            { key: 'contractNumber', label: 'Contract #', sortKey: 'contractNumber', filterKey: 'contractNumber' },
-            { key: 'customerId', label: 'Customer', sortKey: 'customerId', filterKey: 'customerId' },
-            {
-                key: 'startDate',
-                label: 'Start',
-                sortKey: 'startDate',
-                render: (item) => renderDate(item.startDate)
-            },
-            {
-                key: 'endDate',
-                label: 'End',
-                sortKey: 'endDate',
-                render: (item) => renderDate(item.endDate)
-            },
-            {
-                key: 'status',
-                label: 'Status',
-                sortKey: 'status',
-                render: (item) => render.contractStatus(item.status)
-            },
-            {
-                key: 'contractValue',
-                label: 'Value',
-                sortKey: 'contractValue',
-                render: (item) => renderMoney(item.contractValue)
-            }
+            ...col.id('contractId'),
+            ...col.col('contractNumber', 'Contract #'),
+            ...col.col('customerId', 'Customer'),
+            ...col.date('startDate', 'Start'),
+            ...col.date('endDate', 'End'),
+            ...col.enum('status', 'Status', null, render.contractStatus),
+            ...col.money('contractValue', 'Value'),
         ],
 
         SalesPartnerChannel: [
-            { key: 'partnerId', label: 'ID', sortKey: 'partnerId', filterKey: 'partnerId' },
-            { key: 'name', label: 'Name', sortKey: 'name', filterKey: 'name' },
-            { key: 'partnerType', label: 'Type', sortKey: 'partnerType', filterKey: 'partnerType' },
-            { key: 'contactName', label: 'Contact', sortKey: 'contactName' },
-            { key: 'isActive', label: 'Active', sortKey: 'isActive' },
-            { key: 'commissionRate', label: 'Commission %', sortKey: 'commissionRate' }
+            ...col.id('partnerId'),
+            ...col.col('name', 'Name'),
+            ...col.col('partnerType', 'Type'),
+            ...col.col('contactName', 'Contact'),
+            ...col.col('isActive', 'Active'),
+            ...col.col('commissionRate', 'Commission %'),
         ]
     };
 

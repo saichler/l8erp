@@ -18,8 +18,8 @@ limitations under the License.
     'use strict';
 
     const factory = window.Layer8EnumFactory;
-    const { escapeHtml, formatDate } = Layer8DUtils;
-    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney } = Layer8DRenderers;
+    const { escapeHtml } = Layer8DUtils;
+    const { createStatusRenderer, renderEnum, renderBoolean, renderDate, renderMoney, renderDateRange } = Layer8DRenderers;
 
     window.Time = window.Time || {};
 
@@ -152,13 +152,6 @@ limitations under the License.
         return `${hours.toFixed(2)} hrs`;
     }
 
-    function renderTimePeriod(period) {
-        if (!period) return '-';
-        const start = period.startDate ? formatDate(period.startDate) : '?';
-        const end = period.endDate ? formatDate(period.endDate) : '?';
-        return `${start} - ${end}`;
-    }
-
     window.Time.render = {
         timesheetStatus: renderTimesheetStatus,
         timeEntryType: (v) => renderEnum(v, TIME_ENTRY_TYPE.enum),
@@ -175,12 +168,12 @@ limitations under the License.
         boolean: renderBoolean,
         date: renderDate,
         hours: renderHoursTime,
-        period: renderTimePeriod
+        period: renderDateRange
     };
 
     window.Time._internal = {
         renderTimesheetStatus, renderLeaveRequestStatus, renderScheduleStatus, renderAbsenceStatus,
-        renderShiftType, renderHoursTime, renderTimePeriod
+        renderShiftType, renderHoursTime
     };
 
 })();
