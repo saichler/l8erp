@@ -19,7 +19,7 @@ limitations under the License.
 
     window.CrmFieldService = window.CrmFieldService || {};
 
-    const { renderDate, renderMoney, renderBoolean } = Layer8DRenderers;
+    const { renderDate, renderDateTime, renderMoney, renderBoolean } = Layer8DRenderers;
     const render = CrmFieldService.render;
 
     CrmFieldService.columns = {
@@ -117,8 +117,8 @@ limitations under the License.
                 sortKey: 'scheduleDate',
                 render: (item) => renderDate(item.scheduleDate)
             },
-            { key: 'startTime', label: 'Start Time', sortKey: 'startTime' },
-            { key: 'endTime', label: 'End Time', sortKey: 'endTime' },
+            { key: 'startTime', label: 'Start Time', sortKey: 'startTime', render: (item) => renderDateTime(item.startTime) },
+            { key: 'endTime', label: 'End Time', sortKey: 'endTime', render: (item) => renderDateTime(item.endTime) },
             { key: 'scheduleType', label: 'Type', sortKey: 'scheduleType' },
             {
                 key: 'isAvailable',

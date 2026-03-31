@@ -142,8 +142,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.money('shiftDifferential', 'Shift Differential'),
             ]),
             f.section('Schedule', [
-                ...f.text('startTime', 'Start Time'),
-                ...f.text('endTime', 'End Time'),
+                ...f.time('startTime', 'Start Time'),
+                ...f.time('endTime', 'End Time'),
                 ...f.number('durationHours', 'Duration (hours)'),
                 ...f.number('breakDurationMinutes', 'Break Duration (minutes)'),
                 ...f.checkbox('isOvernight', 'Overnight')

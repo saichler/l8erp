@@ -125,8 +125,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('serviceOrderId', 'Service Order', 'CrmServiceOrder', true),
                 ...f.reference('technicianId', 'Technician', 'CrmTechnician', true),
                 ...f.date('scheduleDate', 'Schedule Date', true),
-                ...f.text('startTime', 'Start Time'),
-                ...f.text('endTime', 'End Time'),
+                ...f.datetime('startTime', 'Start Time'),
+                ...f.datetime('endTime', 'End Time'),
                 ...f.text('scheduleType', 'Schedule Type')
             ]),
             f.section('Availability', [

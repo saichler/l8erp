@@ -44,8 +44,8 @@ limitations under the License.
             ...col.id('scheduleId'),
             ...col.col('name', 'Name'),
             ...col.enum('shiftType', 'Type', null, render.shiftType),
-            ...col.col('startTime', 'Start Time'),
-            ...col.col('endTime', 'End Time'),
+            ...col.datetime('startTime', 'Start Time'),
+            ...col.datetime('endTime', 'End Time'),
             ...col.boolean('isActive', 'Active')
         ],
         MfgDowntimeEvent: [

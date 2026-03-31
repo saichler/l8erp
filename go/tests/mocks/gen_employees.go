@@ -32,6 +32,11 @@ func generateEmployees(store *MockDataStore) []*hcm.Employee {
 	for i := 0; i < 50; i++ {
 		firstName := firstNames[rand.Intn(len(firstNames))]
 		lastName := lastNames[rand.Intn(len(lastNames))]
+		// Last employee is the ESS portal demo user (login: hcm / Hcm123!)
+		if i == 49 {
+			firstName = "Jordan"
+			lastName = "Rivera"
+		}
 		email := fmt.Sprintf("%s.%s@acme.com", sanitizeEmail(firstName), sanitizeEmail(lastName))
 
 		deptIdx := i % len(store.DepartmentIDs)
@@ -55,8 +60,14 @@ func generateEmployees(store *MockDataStore) []*hcm.Employee {
 			managerID = fmt.Sprintf("emp-%03d", managerIndex)
 		}
 
+		// ESS portal demo user gets employeeId="hcm" to match login username
+		empId := genID("emp", i)
+		if i == 49 {
+			empId = "hcm"
+		}
+
 		employees[i] = &hcm.Employee{
-			EmployeeId:     genID("emp", i),
+			EmployeeId:     empId,
 			EmployeeNumber: fmt.Sprintf("E%05d", i+1),
 			FirstName:      firstName,
 			LastName:       lastName,

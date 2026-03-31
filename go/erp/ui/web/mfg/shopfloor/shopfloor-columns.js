@@ -42,7 +42,8 @@ limitations under the License.
             ...col.id('scheduleId'),
             ...col.col('name', 'Name'),
             ...col.custom('shiftType', 'Type', (item) => render.shiftType(item.shiftType)),
-            ...col.basic([['startTime', 'Start Time'], ['endTime', 'End Time']]),
+            ...col.datetime('startTime', 'Start Time'),
+            ...col.datetime('endTime', 'End Time'),
             ...col.custom('isActive', 'Active', (item) => render.boolean(item.isActive))
         ],
 
