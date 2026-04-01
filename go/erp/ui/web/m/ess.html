@@ -1,0 +1,350 @@
+<!--
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#0ea5e9">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Employee Self-Service</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="../l8ui/images/logo.gif">
+    <link rel="apple-touch-icon" href="../l8ui/images/logo.gif">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/app-base.css">
+    <link rel="stylesheet" href="css/app-header.css">
+    <link rel="stylesheet" href="css/app-sidebar.css">
+    <link rel="stylesheet" href="../l8ui/m/css/layer8m-popup.css">
+    <link rel="stylesheet" href="../l8ui/m/css/layer8m-confirm.css">
+    <link rel="stylesheet" href="../l8ui/m/css/layer8m-table.css">
+    <link rel="stylesheet" href="../l8ui/m/css/layer8m-edit-table.css">
+    <link rel="stylesheet" href="../l8ui/m/css/layer8m-forms.css">
+    <link rel="stylesheet" href="../l8ui/shared/layer8d-form-fields.css">
+    <link rel="stylesheet" href="../l8ui/shared/layer8-file-upload.css">
+    <link rel="stylesheet" href="../l8ui/m/css/layer8m-datepicker.css">
+    <link rel="stylesheet" href="../l8ui/m/css/layer8m-reference-picker.css">
+    <link rel="stylesheet" href="../l8ui/shared/layer8-print.css" media="print">
+
+    <style>
+        /* ESS mobile nav overrides */
+        .ess-nav-section { padding: 8px 0; }
+        .ess-nav-section-title {
+            padding: 8px 20px 4px;
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .ess-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            transition: all var(--transition-fast);
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        .ess-nav-item:hover, .ess-nav-item:active {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        .ess-nav-item.active {
+            background: var(--layer8d-primary);
+            color: var(--text-light);
+        }
+        .ess-nav-icon { font-size: 18px; width: 24px; text-align: center; }
+
+        /* Section title */
+        .ess-section-header {
+            padding: 16px 16px 8px;
+        }
+        .ess-section-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+
+        /* Service tabs */
+        .ess-service-tabs {
+            display: flex;
+            gap: 6px;
+            padding: 8px 16px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .ess-service-tab {
+            flex-shrink: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            padding: 8px 14px;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+        .ess-service-tab:active { transform: scale(0.97); }
+        .ess-service-tab.active {
+            background: var(--layer8d-primary);
+            color: var(--text-light);
+            border-color: var(--layer8d-primary);
+        }
+
+        /* Dashboard cards */
+        .ess-dashboard-welcome {
+            padding: 20px 16px 12px;
+        }
+        .ess-dashboard-welcome h2 {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: 2px;
+        }
+        .ess-dashboard-welcome p {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+        }
+        .ess-dashboard-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 0 16px 16px;
+        }
+        .ess-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .ess-card-icon { font-size: 24px; }
+        .ess-card-label {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+        .ess-card-value {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+        .ess-quick-section {
+            padding: 0 16px 16px;
+        }
+        .ess-quick-section h3 {
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: 10px;
+        }
+        .ess-quick-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .ess-quick-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 16px;
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            border: none;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+        .ess-quick-btn:active { transform: scale(0.97); }
+        .ess-quick-btn-primary {
+            background: var(--layer8d-primary);
+            color: var(--text-light);
+        }
+        .ess-quick-btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        /* Table container */
+        #ess-table-container {
+            padding: 0 16px 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="mobile-header">
+            <button class="header-menu-btn" id="menu-toggle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+            <div class="header-logo">
+                <img src="../l8ui/images/logo.gif" alt="ESS">
+                <span class="header-logo-text">Employee Self-Service</span>
+            </div>
+            <div class="header-actions">
+                <button class="header-action-btn" id="refresh-btn" title="Refresh">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 4v6h-6"></path>
+                        <path d="M1 20v-6h6"></path>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <!-- Sidebar -->
+        <aside class="mobile-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="../l8ui/images/logo.gif" alt="ESS">
+                    <span class="sidebar-logo-text">Self-Service</span>
+                </div>
+            </div>
+
+            <nav id="ess-sidebar-nav">
+                <!-- Populated dynamically by ess-app.js -->
+            </nav>
+
+            <div class="sidebar-user">
+                <div class="sidebar-user-info">
+                    <div class="sidebar-avatar" id="user-avatar">E</div>
+                    <div class="sidebar-user-details">
+                        <div class="sidebar-user-name" id="user-name">Employee</div>
+                        <div class="sidebar-user-role">Employee</div>
+                    </div>
+                </div>
+                <button class="sidebar-logout-btn" onclick="MobileESS.logout()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div id="content-area">
+                <div class="loading">Loading</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts - Core Mobile Framework -->
+    <script src="../l8ui/m/js/layer8m-config.js"></script>
+    <script src="../l8ui/m/js/layer8m-auth.js"></script>
+    <script src="../l8ui/m/js/layer8m-utils.js"></script>
+    <!-- Shared Desktop Utilities (needed for currency cache, renderers) -->
+    <script src="../l8ui/shared/layer8d-config.js"></script>
+    <script src="../l8ui/shared/layer8d-utils.js"></script>
+    <script src="../l8ui/shared/layer8d-renderers.js"></script>
+    <script src="../l8ui/shared/layer8d-reference-registry.js"></script>
+    <!-- Factory Components -->
+    <script src="../l8ui/shared/layer8-enum-factory.js"></script>
+    <script src="../l8ui/shared/layer8-ref-factory.js"></script>
+    <script src="../l8ui/shared/layer8-column-factory.js"></script>
+    <script src="../l8ui/shared/layer8-form-factory.js"></script>
+    <script src="../l8ui/shared/layer8-form-factory-presets.js"></script>
+    <script src="../l8ui/shared/layer8d-module-config-factory.js"></script>
+    <!-- Service Registry (needed for form definition lookups) -->
+    <script src="../l8ui/shared/layer8d-service-registry.js"></script>
+    <!-- Mobile Components -->
+    <script src="../l8ui/m/js/layer8m-popup.js"></script>
+    <script src="../l8ui/m/js/layer8m-confirm.js"></script>
+    <script src="../l8ui/m/js/layer8m-data-source.js"></script>
+    <script src="../l8ui/m/js/layer8m-table.js"></script>
+    <script src="../l8ui/m/js/layer8m-edit-table.js"></script>
+    <script src="../l8ui/shared/layer8-csv-export.js"></script>
+    <script src="../l8ui/shared/layer8-file-upload.js"></script>
+    <script src="../l8ui/m/js/layer8m-forms-fields.js"></script>
+    <script src="../l8ui/m/js/layer8m-forms-fields-reference.js"></script>
+    <script src="../l8ui/m/js/layer8m-forms-fields-ext.js"></script>
+    <script src="../l8ui/m/js/layer8m-forms.js"></script>
+    <script src="../l8ui/m/js/layer8m-forms-inline.js"></script>
+    <script src="../l8ui/m/js/layer8m-datepicker.js"></script>
+    <!-- Mobile Reference Registry -->
+    <script src="../l8ui/m/js/layer8m-reference-registry.js"></script>
+    <script src="../erp-ui/m/reference-registries/layer8m-reference-registry-hcm.js"></script>
+    <script src="../l8ui/m/js/layer8m-reference-picker.js"></script>
+    <!-- Mobile Renderers -->
+    <script src="../l8ui/m/js/layer8m-renderers.js"></script>
+    <!-- Mobile CRUD (used by ESS actions for add/edit popups) -->
+    <script src="../l8ui/m/js/layer8m-nav-crud.js"></script>
+
+    <!-- HCM Module Config (registers HCM service endpoints for reference pickers) -->
+    <script src="../hcm/hcm-config.js"></script>
+    <script>
+        // Register HCM submodules with ServiceRegistry so getEndpointForModel() can resolve reference pickers
+        if (typeof Layer8DServiceRegistry !== 'undefined' && window.HCM && HCM.submodules) {
+            HCM.submodules.forEach(function(sub) { Layer8DServiceRegistry.register('HCM', sub); });
+        }
+    </script>
+
+    <!-- HCM Module Enums & Forms (reused for detail views) -->
+    <script src="../hcm/core-hr/core-hr-enums.js"></script>
+    <script src="../hcm/core-hr/core-hr-forms.js"></script>
+    <script src="../hcm/payroll/payroll-enums.js"></script>
+    <script src="../hcm/payroll/payroll-forms.js"></script>
+    <script src="../hcm/benefits/benefits-enums.js"></script>
+    <script src="../hcm/benefits/benefits-forms.js"></script>
+    <script src="../hcm/time/time-enums.js"></script>
+    <script src="../hcm/time/time-forms.js"></script>
+    <script src="../hcm/talent/talent-enums-recruiting.js"></script>
+    <script src="../hcm/talent/talent-enums-performance.js"></script>
+    <script src="../hcm/talent/talent-enums.js"></script>
+    <script src="../hcm/talent/talent-forms.js"></script>
+    <script src="../hcm/learning/learning-enums.js"></script>
+    <script src="../hcm/learning/learning-forms.js"></script>
+    <script src="../hcm/compensation/compensation-enums.js"></script>
+    <script src="../hcm/compensation/compensation-forms.js"></script>
+
+    <!-- Shared ESS Data Files (reused from desktop) -->
+    <script src="../ess/ess-enums.js"></script>
+    <script src="../ess/ess-config.js"></script>
+    <script src="../ess/ess-nav-config.js"></script>
+    <script src="../ess/ess-columns.js"></script>
+    <script src="../ess/ess-forms.js"></script>
+
+    <!-- Mobile ESS Scripts -->
+    <script src="js/ess/ess-dashboard.js"></script>
+    <script src="js/ess/ess-actions.js"></script>
+    <script src="js/ess/ess-app.js"></script>
+</body>
+</html>
