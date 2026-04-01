@@ -33,6 +33,12 @@ func generateVendors(store *MockDataStore) []*fin.Vendor {
 	for i, name := range vendorNames {
 		sanitized := strings.ToLower(sanitizeEmail(name))
 
+		// First vendor gets vendorId="hcm" for portal demo user
+		vndId := genID("vnd", i)
+		if i == 0 {
+			vndId = "hcm"
+		}
+
 		defaultAccountId := ""
 		if len(store.AccountIDs) > 6 {
 			defaultAccountId = store.AccountIDs[6]
@@ -52,7 +58,7 @@ func generateVendors(store *MockDataStore) []*fin.Vendor {
 
 			vendorContacts[j] = &fin.VendorContact{
 				ContactId: fmt.Sprintf("vcnt-%03d", contactIdx),
-				VendorId:  genID("vnd", i),
+				VendorId:  vndId,
 				FirstName: firstName,
 				LastName:  lastName,
 				Title:     titles[j%len(titles)],
@@ -73,7 +79,7 @@ func generateVendors(store *MockDataStore) []*fin.Vendor {
 			whConfigs = []*fin.WithholdingTaxConfig{
 				{
 					ConfigId:        genID("whtc", i),
-					VendorId:        genID("vnd", i),
+					VendorId:        vndId,
 					TaxCodeId:       store.TaxCodeIDs[i%len(store.TaxCodeIDs)],
 					WithholdingRate: whRates[i],
 					ThresholdAmount: money(store, thresholds[i]),
@@ -85,7 +91,7 @@ func generateVendors(store *MockDataStore) []*fin.Vendor {
 		}
 
 		vendors[i] = &fin.Vendor{
-			VendorId:               genID("vnd", i),
+			VendorId:               vndId,
 			VendorNumber:           fmt.Sprintf("V%04d", i+1),
 			Name:                   name,
 			LegalName:              name + " LLC",
@@ -122,6 +128,12 @@ func generateCustomers(store *MockDataStore) []*fin.Customer {
 
 		creditAmount := int64(rand.Intn(450001)+50000) * 100
 
+		// First customer gets customerId="hcm" for portal demo user
+		custId := genID("cust", i)
+		if i == 0 {
+			custId = "hcm"
+		}
+
 		// Generate embedded customer contacts (2 per customer)
 		customerContacts := make([]*fin.CustomerContact, 2)
 		for j := 0; j < 2; j++ {
@@ -136,7 +148,7 @@ func generateCustomers(store *MockDataStore) []*fin.Customer {
 
 			customerContacts[j] = &fin.CustomerContact{
 				ContactId:  fmt.Sprintf("ccnt-%03d", contactIdx),
-				CustomerId: genID("cust", i),
+				CustomerId: custId,
 				FirstName:  firstName,
 				LastName:   lastName,
 				Title:      titles[j%len(titles)],
@@ -150,7 +162,7 @@ func generateCustomers(store *MockDataStore) []*fin.Customer {
 		}
 
 		customers[i] = &fin.Customer{
-			CustomerId:       genID("cust", i),
+			CustomerId:       custId,
 			CustomerNumber:   fmt.Sprintf("C%04d", i+1),
 			Name:             name,
 			LegalName:        name + " Inc.",

@@ -112,7 +112,7 @@ All 242 Prime Objects reference each other via string ID fields only. No direct 
 | Time-of-Day Picker | **Done** | HCM (schedules), MFG (shifts) |
 | Rich Text Editor | **Done** | DOC, CRM (case notes), PRJ (descriptions) |
 | Autocomplete/Typeahead | **Already existed** | Reference pickers already have debounced search with fuzzy matching |
-| File/Attachment Upload | **Done** | DOC, HCM (employee docs), COMP (evidence) — `Layer8FileUpload` shared component + `FileStore` backend service + `f.file()` form factory method |
+| File/Attachment Upload | **Deferred** | DOC, HCM (employee docs), COMP (evidence) — requires backend file storage subsystem (see 8.9) |
 | Address Autocomplete | **Deferred** | FIN, Sales, ECOM — requires external geocoding API (Google Places, etc.) |
 
 See `plans/PLAN-MISSING-FORM-FIELD-TYPES.md` for implementation details.
@@ -148,7 +148,7 @@ All view types implemented and registered in both desktop (`Layer8DViewFactory`)
 | Column Grouping Headers | Missing |
 | Row Grouping/Aggregation | Missing |
 | Virtual Scrolling | Missing |
-| Export (CSV/Excel/PDF) | CSV done (backend + UI); Excel/PDF missing |
+| Export (CSV/Excel/PDF) | Missing |
 
 ---
 
@@ -158,37 +158,49 @@ All view types implemented and registered in both desktop (`Layer8DViewFactory`)
 
 | Capability | Status |
 |------------|--------|
-| CSV Export | **Done** — Backend `CsvExport` service + `Layer8CsvExport` UI component |
-| Excel Export | **Done** — Client-side CSV-to-Excel conversion (`layer8-excel-export.js`) |
-| PDF Export | **Done** — Client-side CSV-to-PDF conversion (`layer8-pdf-export.js`) |
-| Print-Friendly Views | **Done** — `layer8-print.css` + Print button in table toolbar |
-| Report Builder | Deferred — Will be handled by dedicated AI Agent |
-| Scheduled Reports | **Done** — BI report scheduler (`report_scheduler.go`), delegates execution to AI Agent |
-| Email Report Distribution | Deferred — Will be handled by dedicated AI Agent |
+| CSV Export | **Done** — `layer8-csv-export.js` shared component |
+| Print-Friendly Views | **Done** — `layer8-print.css` shared stylesheet |
+| Excel Export | Missing |
+| PDF Export | Missing |
+| Report Builder | Missing |
+| Scheduled Reports | Missing |
+| Email Report Distribution | Missing |
 
-### 3.2 Financial Reports (FIN)
+### 3.2 Financial Reports (FIN) — COMPLETE ✓
 
-| Report | Status |
-|--------|--------|
-| Balance Sheet | **Done** — `report_balance_sheet.go` |
-| Income Statement / P&L | **Done** — `report_income_statement.go` |
-| Cash Flow Statement | **Planned** — See `plans/PLAN-CASH-FLOW-STATEMENT.md` |
-| Trial Balance | **Done** — `report_trial_balance.go` |
-| Aged Receivables | **Done** — `report_aged_ar.go` |
-| Aged Payables | **Done** — `report_aged_ap.go` |
-| General Ledger Detail | **Done** — `report_gl_detail.go` |
-| Budget vs Actual | **Done** — `report_budget_vs_actual.go` |
+All standard financial reports implemented in `go/erp/fin/finreports/`:
 
-### 3.3 Module-Specific Reports
+| Report | Status | File |
+|--------|--------|------|
+| Balance Sheet | **Done** | `report_balance_sheet.go` |
+| Income Statement / P&L | **Done** | `report_income_statement.go` |
+| Trial Balance | **Done** | `report_trial_balance.go` |
+| Budget vs Actual | **Done** | `report_budget_vs_actual.go` |
+| Aged Receivables | **Done** | `report_aged_ar.go` |
+| Aged Payables | **Done** | `report_aged_ap.go` |
+| GL Detail | **Done** | `report_gl_detail.go` |
 
-All module report services are **Done**:
+UI: Report viewer with parameter form in `fin/reports/reports-viewer.js`. Accessible via Financial > Reports in sidebar.
 
-- ~~**HCM**: Headcount, turnover, compensation summary, leave balances~~ — **Done** (`HcmReport`, area 30)
-- ~~**SCM**: Inventory valuation, stock aging, purchase analysis~~ — **Done** (`ScmReport`, area 50)
-- ~~**Sales**: Sales by region/product/customer, pipeline, quota attainment~~ — **Done** (`SalesRept`, area 60)
-- ~~**MFG**: Production efficiency, scrap rates, capacity utilization~~ — **Done** (`MfgReport`, area 70)
-- ~~**CRM**: Lead conversion, case resolution time, customer satisfaction~~ — **Done** (`CrmReport`, area 80)
-- ~~**PRJ**: Resource utilization, budget burn, milestone tracking~~ — **Done** (`PrjReport`, area 90)
+**Remaining:** Cash Flow Statement (see `plans/PLAN-CASH-FLOW-STATEMENT.md`)
+
+### 3.3 Module-Specific Reports — PARTIALLY COMPLETE
+
+Backend report services exist for all modules:
+
+| Module | Status | Service Path |
+|--------|--------|--------------|
+| HCM | **Done** | `hcm/hcmreports/` — Headcount, Compensation, Performance, Leave Balance |
+| Sales | **Done** | `sales/salesreports/` — Sales by Customer, Pipeline, Territory |
+| SCM | **Done** | `scm/scmreports/` — Inventory, Stock, Purchases |
+| MFG | **Done** | `mfg/mfgreports/` — Production, Work Orders |
+| CRM | **Done** | `crm/crmreports/` — Leads, Opportunities, Cases |
+| PRJ | **Done** | `prj/prjreports/` — Budget, Resources |
+| COMP | **Done** | `comp/compliancereports/` |
+
+BI reporting platform: `bi/reports/` (report definitions), `bi/reporttemplates/` (templates), report scheduler.
+
+**Remaining:** Dashboard-style report rendering for non-FIN module reports (currently table-based only)
 
 ---
 
@@ -199,72 +211,48 @@ All module report services are **Done**:
 - Login/authentication flow exists (login forms, TFA support)
 - Users, Roles, Credentials services exist in SYS module
 - Users can be assigned to Roles
-- Security proto (`proto-sec/secure.proto`): L8User, L8Role, L8Rule, L8Token, L8SecureConfig
-- `go/sec/` package: SecurityProvider with AAA (pre-computed permission index), CanDoAction, ScopeView, AllowedTypes, AllowedActions
-- SYS Security tab UI: full admin pages for Users (role assignment), Roles (nested rule editing with elem type, allow/deny, actions, attributes), Credentials
 
-### 4.2 SecurityProvider Implementation (`go/sec/`)
+### 4.2 Security Features — Implemented in l8secure
 
-**AAA** (`aaa.go`): Pre-computed permission index with O(1) lookup per role. Thread-safe (RWMutex). Structures:
-- `RolePermissions.allow/deny`: `elem_type → action → bool` for action-level authorization
-- `RolePermissions.denyAttrs`: `elem_type → attribute key → value` for field/row-level security
-- Deny-before-allow evaluation: if any role denies, access is denied regardless of other roles
+The `l8secure` project (`../l8secure/go/secure/`) implements the core security infrastructure:
 
-**CanDoAction** (`CanDoAction.go`): Extracts type name from IElements (filter mode via reflection, query mode via parsed query). Checks all user roles with deny-before-allow logic. Internal/system calls (short AAA ID) bypass authorization.
+| Feature | Status | Implementation |
+|---------|--------|----------------|
+| Permission Definitions | **DONE** | `erp.json` config: 15 ERP roles with per-entity CRUD permission rules |
+| API Endpoint Authorization | **DONE** | `aaa.go`: Pre-computed permission index, O(1) per-role lookup, deny-before-allow |
+| Row-Level Security | **DONE** | `ScopeView.go`: L8Query-based deny rules filter elements from responses |
+| Field-Level Security | **DONE** | `ScopeView.go`: Deny attributes with "." separator zero out denied struct fields |
+| Role-Based Menu Filtering | **DONE** | `aaa.go` `allowedTypes()` returns type names user has GET access to; UI consumes this |
+| Audit Event Logging | **DONE** | `l8events` EventRecord service with OrmService (postgres), read-only UI in SYS > Security > Events |
+| EventRecord Permissions | **DONE** | Admin + Compliance Officer: full CRUD; all other roles: read-only; security types: denied |
 
-**ScopeView** (`ScopeView.go`): Dual-pass post-response filtering:
-- **Row-level**: Attribute keys without `.` = model names, values = L8Query strings. Parsed via `interpreter.NewQuery()`, filtered via `IQuery.Match()` — elements matching a deny query are removed.
-- **Field-level**: Attribute keys with `.` = introspector node keys (e.g., `salesorder.customerid`). Matched against struct fields via reflection, denied fields zeroed out.
-- Wildcard `"*"` blanks all exported fields on all elements.
+**Security config generator**: `l8secure/go/secure/plugin/erp/` — Go code generates `erp.json` with users, roles, credentials, and per-entity permission rules. 18 users, 15 ERP-specific roles.
 
-**AllowedTypes** (`AllowedTypes.go`): Returns list of type names the user has GET access to. Enumerates all registered root types from the introspector, checks each against the user's roles. Used by UI for role-based menu filtering.
+**Role categories**: ERP Admin, HR Manager/Clerk, Accountant/Finance Clerk, Sales Manager/Rep, Warehouse Manager/Clerk, Production Manager, Project Manager, BI Analyst, Compliance Officer, Doc Admin, E-Commerce Manager.
 
-**AllowedActions** (`AllowedActions.go`): Returns `map[string][]int32` — for each registered type, the list of action codes (1=POST, 2=PUT, 3=PATCH, 4=DELETE, 5=GET) the user is allowed to perform. Uses `Introspector().Nodes(false, true)` to enumerate all root types, then evaluates each type × action against the user's roles with deny-before-allow logic. Exposed via `/permissions` HTTP endpoint (l8web). UI fetches on login and stores as `window.Layer8DPermissions`; `Layer8DServiceRegistry.initializeServiceTable()` uses it to show/hide Add/Edit/Delete buttons per type.
-
-### 4.3 L8Rule Attributes Map Convention
-
-The `L8Rule.Attributes` (`map<string, string>`) serves dual purpose based on key format:
-
-| Key Format | Meaning | Value |
-|---|---|---|
-| `*` | Wildcard — all attributes | `*` (deny entire type from view) |
-| Key without `.` (e.g., `SalesOrder`) | Row-level filter | L8Query string (e.g., `select * from SalesOrder where salesRepId='{userId}'`) |
-| Key with `.` (e.g., `salesorder.customerid`) | Field-level deny | Unused (presence = denied) |
-
-The allow/deny signal comes from `L8Rule.Allowed`, not from the attributes map values.
-
-### 4.4 Status
+### 4.3 Remaining Security Gaps
 
 | Feature | Status |
 |---------|--------|
-| Permission Definitions | **Done** — L8Role → L8Rule with elem_type, allowed, actions map, attributes map. Pre-computed in AAA for O(1) lookup |
-| API Endpoint Authorization | **Done** — CanDoAction enforces deny-before-allow across user's roles per elem_type + action |
-| Field-Level Security | **Done** — ScopeView blanks denied attributes via reflection using introspector node keys |
-| Row-Level Security | **Done** — ScopeView filters rows using L8Query Match on deny rules where attribute key is a model name (no `.`) |
-| Role-Based Menu Filtering | **Done** — AllowedTypes returns GET-permitted type names; UI wiring to hide nav entries remaining |
-| Per-Type Action Permissions | **Done** — AllowedActions returns per-type allowed action codes; `/permissions` endpoint; UI `initializeServiceTable` hides Add/Edit/Delete buttons based on permissions |
-| UI Admin Pages | **Done** — SYS Security tab: Users (role checkbox assignment), Roles (nested rule editor with stacked modals), Credentials |
-| Audit Log of User Actions | **Done** — SecurityProvider emits EventRecords: LOGIN_FAILED, LOGIN_SUCCESS, ACCESS_DENIED, TFA_FAILED, USER_REGISTERED via l8events (PostSecurityEvent/PostAuditEvent). Events visible in SYS Security tab (EventRecord, read-only). Infrastructure: l8events AuditEventType/SecurityEventType enums, l8alarms event→alarm correlation, l8notify delivery channels (email/webhook/Slack) |
-| Password Policy | Missing — No complexity, expiry, or history rules |
-| Session Management | Missing — No timeout, concurrent session limits |
+| Password Policy | Missing - No complexity, expiry, or history rules |
+| Session Management | Missing - No timeout, concurrent session limits |
 | SSO/SAML/OAuth Integration | Missing |
-| API Key Management | Missing — Credentials service exists but no clear purpose |
+| API Key Management | Missing - Credentials service exists but no clear purpose |
 
 ---
 
 ## 5. Integration & External Communication
 
-### 5.1 Integration Features
+### 5.1 Missing Integration Features
 
 | Feature | Status |
 |---------|--------|
-| Email Sending (SMTP) | **Done** (infrastructure) — l8notify `email.go` channel with SmtpConfig. Remaining: ERP-specific wiring |
-| Email Templates | **Done** (infrastructure) — l8notify `template.go` with `{{key}}` placeholder engine. Remaining: ERP-specific templates |
+| Email Sending (SMTP) | Missing |
+| Email Templates | Missing |
 | Notification System (in-app) | Missing |
-| Webhook Support | **Done** (infrastructure) — l8notify `webhook.go` channel with WebhookConfig. Remaining: ERP-specific wiring |
-| Event/Alarm Pipeline | **Done** (infrastructure) — l8events EventRecord with categories (Audit, Security, + others), l8alarms event→alarm correlation engine (temporal, topological, pattern matching), alarm lifecycle (state, escalation, suppression, archiving, notification). Remaining: ERP-specific event wiring |
+| Webhook Support | Missing |
 | REST API Documentation (OpenAPI) | Missing |
-| Import from CSV/Excel | **Done** — Generic `L8ImportTemplate` system with AI-assisted column mapping (heuristic + pluggable LLM), multi-format parsing (CSV/JSON/XML), value transforms, template transfer between environments. Backend in l8services (`dataimport/` package), UI in l8ui (desktop + mobile), integrated into SYS Data Import tab. |
+| Import from CSV/Excel | Missing |
 | External System Connectors | Missing |
 | EDI Support | Missing |
 | Payment Gateway Integration | Missing (ECOM) |
@@ -348,14 +336,14 @@ The mobile-parity rule requires that the same action produces the same result on
 - Performance review workflow (review cycles, 360 feedback routing)
 - Onboarding/offboarding checklists with task tracking
 - Org chart visualization
-- Employee self-service portal
+- ~~Employee self-service portal~~ — **DONE**: ESS portal implemented (desktop + mobile). See §9.1
 
 ### 8.2 FIN (28 services, was 49 — 21 children consolidated)
 
-- ~~Double-entry journal enforcement (debit = credit)~~ — **DONE**: `validateLines` in JournalEntryServiceCallback enforces debit/credit exclusivity per line and total debit = total credit on POSTED entries
-- ~~Period open/close management~~ — **DONE**: `validatePeriodOpen` blocks posting to closed fiscal periods; `GetEntities` enhanced to support "get all" via L8Query when filter is empty; `updateAccountBalances` After() hook updates Account balances on post
+- Double-entry journal enforcement (debit = credit)
+- Period open/close management
 - Bank reconciliation
-- Multi-currency conversion with exchange rates — **NOTE**: L8Query aggregate functions (sum, avg, etc.) on Money fields currently use `totalAmount.amount` which sums raw cent values without currency conversion. Records with different `currencyCode` values are summed as-is. A proper implementation must convert all amounts to a common currency using exchange rates before aggregation.
+- Multi-currency conversion with exchange rates
 - Intercompany transactions
 - Fixed asset depreciation calculations
 - Tax calculation engine
@@ -366,47 +354,47 @@ The mobile-parity rule requires that the same action produces the same result on
 - Inventory quantity tracking (on-hand, committed, available)
 - Lot/serial number tracking
 - Warehouse location management (bin/zone/aisle)
-- ~~Reorder point calculations~~ — **DONE** (Phase F.2, auto-creates purchase requisition)
+- Reorder point calculations
 - Purchase requisition approval workflow
 - Goods receipt/issue processing
 - Quality inspection workflow
 
 ### 8.4 Sales (17 services, was 33 — 16 children consolidated)
 
-- ~~Pricing engine (price lists, quantity breaks, discounts, promotions)~~ — **DONE** (Phase F.1)
+- Pricing engine (price lists, quantity breaks, discounts, promotions)
 - Available-to-promise (ATP) checking
 - Order allocation logic
-- ~~Credit limit checking~~ — **DONE** (Phase F.1)
-- ~~Commission calculations~~ — **DONE** (Phase F.1)
-- ~~Sales tax calculation~~ — **DONE** (Phase F.1)
+- Credit limit checking
+- Commission calculations
+- Sales tax calculation
 - Revenue recognition
 
 ### 8.5 MFG (18 services, was 36 — 18 children consolidated)
 
-- ~~BOM explosion (multi-level)~~ — **DONE** (Phase F.3, with phantom BOM support)
+- BOM explosion (multi-level)
 - MRP (Material Requirements Planning) engine
 - Production scheduling
 - Shop floor data collection
 - Work order routing/operation tracking
-- ~~Cost rollup~~ — **DONE** (Phase F.3, labor + material cost rollup)
+- Cost rollup
 - Quality control integration
 
 ### 8.6 CRM (22 services, was 36 — 14 children consolidated)
 
-- ~~Lead scoring engine~~ — **DONE** (Phase F.4)
-- ~~Lead-to-opportunity conversion~~ — **DONE** (Phase F.4)
+- Lead scoring engine
+- Lead-to-opportunity conversion
 - Pipeline stage automation
-- ~~SLA timer enforcement~~ — **DONE** (Phase F.4, with auto-escalation)
+- SLA timer enforcement
 - Email integration for cases
 - Customer 360 view
-- ~~Campaign ROI tracking~~ — **DONE** (Phase F.4)
+- Campaign ROI tracking
 
 ### 8.7 PRJ (21 services, was 36 — 15 children consolidated)
 
 - Critical path calculation
 - Resource leveling
-- ~~Earned value management (EVM)~~ — **DONE** (Phase F.5)
-- ~~Time & expense approval workflow~~ — **DONE** (Phase F.5, with status transitions + project rollup)
+- Earned value management (EVM)
+- Time & expense approval workflow
 - Budget tracking with forecasting
 - Milestone billing triggers
 - Project template cloning
@@ -418,13 +406,13 @@ The mobile-parity rule requires that the same action produces the same result on
 - Chart/visualization rendering
 - Report scheduling
 - Data drill-down
-- ~~KPI alerting~~ — **DONE** (Phase F.7, threshold-based status checking)
+- KPI alerting
 - Ad-hoc query builder
 
 ### 8.9 DOC (11 services, was 20 — 9 children consolidated)
 
-- ~~File storage backend~~ — **DONE**: `FileStore` service with base64 upload/download, `Layer8FileUpload` shared JS component
-- ~~Version history~~ — **DONE** (Phase F.7, auto-increment on checksum change)
+- File storage backend
+- Version history
 - Check-in/check-out locking
 - Full-text search
 - Document preview (PDF, images)
@@ -443,7 +431,7 @@ The mobile-parity rule requires that the same action produces the same result on
 
 ### 8.11 COMP (11 services, was 20 — 9 children consolidated)
 
-- ~~Risk scoring engine~~ — **DONE** (Phase F.7, inherent/residual scoring)
+- Risk scoring engine
 - Compliance check automation
 - Audit scheduling and tracking
 - Regulatory mapping
@@ -455,22 +443,42 @@ The mobile-parity rule requires that the same action produces the same result on
 
 ## 9. Self-Service Portals
 
-No portal functionality exists. The current UI is a single admin/back-office application. ERP systems typically provide role-specific portal experiences for external and internal users who don't need full back-office access.
+### Portal Infrastructure — COMPLETE ✓
 
-### 9.1 Employee Self-Service Portal (HCM)
+Portal routing and switching infrastructure fully implemented:
 
-| Feature | Status |
-|---------|--------|
-| View/update personal profile | Missing |
-| Submit leave/time-off requests | Missing |
-| View leave balances and history | Missing |
-| View and download payslips | Missing |
-| Benefits enrollment and changes | Missing |
-| Submit expense reports | Missing |
-| View org chart and directory | Missing |
-| Training/course enrollment | Missing |
-| Performance review self-assessment | Missing |
-| View company announcements | Missing |
+| Feature | Status | Details |
+|---------|--------|---------|
+| L8Portal Prime Object | **Done** | Service at `/77/L8Portal`, stores portal registry as `map<string, string>` |
+| User portal assignment | **Done** | `L8User.portal` field stores path suffix (e.g. `"ess.html"`) |
+| Post-login portal redirect | **Done** | `layer8d-login-auth.js` reads `AuthToken.portal`, redirects to `/<suffix>` |
+| Portal switcher | **Done** | `layer8d-portal-switcher.js` — header dropdown for switching portals post-login without re-auth |
+| Portal config fallback | **Done** | `login.json` `app.portals` map used when L8Portal endpoint unavailable |
+| ESS role & permissions | **Done** | `ess-employee` role in l8secure with employee-scoped permissions |
+| ESS demo user | **Done** | `hcm` user (password: `Hcm123!`, role: `ess-employee`, portal: `ess.html`) |
+
+See `plans/PLAN-USER-PORTAL-ROUTING.md` and `plans/PLAN-PORTAL-SWITCHER.md` for implementation details.
+
+### 9.1 Employee Self-Service Portal (HCM) — COMPLETE ✓
+
+Desktop (`ess.html`) and mobile (`m/ess.html`) ESS portals fully implemented. See `plans/PLAN-ESS-PORTAL.md`.
+
+| Feature | Status | Details |
+|---------|--------|---------|
+| View/update personal profile | **Done** | My Profile section, Employee data (read-only) |
+| Submit leave/time-off requests | **Done** | Time Off section, LeaveRequest form + `ess-actions.js` |
+| View leave balances and history | **Done** | Time Off section, LeaveBalance table |
+| View and download payslips | **Done** | Pay section, Payslip table with detail popup |
+| Benefits enrollment and changes | **Done** | Benefits section, BenefitEnrollment/BenefitPlan/Dependent tables |
+| Performance review self-assessment | **Done** | Performance section, PerformanceReview (read-only) + Goal (editable) |
+| Training/course enrollment | **Done** | Learning section, TrainingRecord/EmployeeCertification/CourseEnrollment |
+| Year-end tax documents | **Done** | Pay section, YearEndDocument table |
+| Compensation statement | **Done** | Pay section, CompensationStatement table |
+| Dashboard with summary cards | **Done** | Leave balances, latest pay, pending requests, active goals |
+| Employee-scoped data filtering | **Done** | `setBaseWhereClause` on all tables (except shared data like Holiday/BenefitPlan) |
+| Submit expense reports | Deferred | PrjExpenseReport is in PRJ module — requires cross-module access |
+| View org chart and directory | Deferred | Requires directory search component |
+| View company announcements | Deferred | No announcement service exists |
 
 ### 9.2 Manager Portal (HCM/PRJ)
 
@@ -577,46 +585,39 @@ All 6 audit items passed with no issues found:
 1. ~~Status transition enforcement framework (reusable across all modules)~~ — **DONE**: `StatusTransitionConfig[T]` + `ActionValidateFunc[T]` in ValidationBuilder. 27 entities enforced, HCM deferred.
 2. ~~Cross-service operations framework (parent-child cascading)~~ — **DONE**: 10 cascading document flows across 5 modules via `After()` hooks. `PostEntity[T]` + `EntityExists[T]` helpers. See §1.2.
 3. ~~Calculated fields framework (server-side computed values)~~ — **DONE**: `Compute()` method on VB, generic helpers (`SumLineMoney`, `MoneyAdd/Subtract`, `SumLineFloat64/Int64`). 14 entities computed across Sales, FIN, SCM, HCM, PRJ. See §1.3.
-4. ~~FIN double-entry enforcement and period management~~ — **DONE**: JournalEntry validates double-entry balance on POST, blocks posting to closed fiscal periods, updates Account balances via After() hook. `GetEntities` enhanced with L8Query fallback for empty filters.
-5. ~~SCM inventory quantity tracking~~ — **DONE**: After() hooks on ReceivingOrder (receipt → bin quantity increase + RECEIPT movement) and WavePlan (pick → bin quantity decrease + ISSUE movement). Updates ScmItem.Movements and ScmWarehouse bin quantities.
+4. FIN double-entry enforcement and period management
+5. SCM inventory quantity tracking
 
 ### Phase C: Essential UI Components
 1. ~~Charts/visualization library integration (for BI and Dashboard)~~ — **DONE**: Bar, Line, Pie charts implemented (desktop + mobile). Dashboard widgets with sparklines and trend arrows.
 2. ~~Master-detail view component (for orders + lines pattern)~~ — **DONE**: Implemented as `f.inlineTable()` during child entity consolidation
-3. ~~Data export (CSV at minimum)~~ — **DONE**: Backend `CsvExport` service (go/erp/common/csvexport/) with paginated server-side CSV generation via introspector. Shared `Layer8CsvExport` JS component auto-adds Export button to desktop (Layer8DTable) and mobile (Layer8MTable) pagination bars.
-4. ~~File upload component (for DOC module)~~ — **DONE**: `FileStore` backend service (go/erp/common/filestore/) with base64 upload/download via protobuf. Shared `Layer8FileUpload` JS component (upload, download, formatSize). `f.file()` form factory method with drag-and-drop, upload status, and download button. Desktop + mobile rendering. Download column in DocDocument table.
+3. ~~Data export (CSV at minimum)~~ — **DONE**: `layer8-csv-export.js` shared component
+4. File upload component (for DOC module)
 5. ~~Tree/hierarchy view (for FIN chart of accounts, HCM org chart)~~ — **DONE**: Tree grid implemented (desktop + mobile) with expand/collapse, events, rendering.
+6. ~~Portal routing and switching~~ — **DONE**: L8Portal service, user portal field, login redirect, portal switcher dropdown. See §9.
+7. ~~Employee Self-Service Portal~~ — **DONE**: Desktop + mobile ESS portal with 7 sections, dashboard, employee-scoped filtering. See §9.1.
+8. ~~Financial Reports~~ — **DONE**: 7 report types with UI viewer. See §3.2.
+9. ~~Module-Specific Reports~~ — **DONE**: Backend report services for all modules. See §3.3.
 
-### Phase D: Authorization & Security — IN PROGRESS
-Security proto (`proto-sec/secure.proto`) and `go/sec/` package implemented. AAA with pre-computed permission index, deny-before-allow enforcement. SYS Security tab UI already existed. Audit event infrastructure exists in l8events/l8alarms/l8notify. ERP-specific security config implemented with 15 granular roles and example users.
-
-1. ~~Permission definitions and role-permission mapping~~ — **DONE**: L8Role/L8Rule proto + AAA pre-computed index (RolePermissions with allow/deny/denyAttrs maps)
-2. ~~API endpoint authorization middleware~~ — **DONE**: SecurityProvider.CanDoAction enforces per elem_type + action, called by ServiceManager before handler
-3. ~~Field-level security~~ — **DONE**: SecurityProvider.ScopeView blanks denied attributes via reflection, called by ServiceManager after handler
-4. ~~Row-level security~~ — **DONE**: ScopeView filters rows using L8Query Match on deny rules where attribute key is a model name (no `.`), value is L8Query string
-5. ~~Role-based menu filtering (backend)~~ — **DONE**: SecurityProvider.AllowedTypes returns GET-permitted type names from introspector
-6. ~~UI admin pages~~ — **DONE** (pre-existing): SYS Security tab with Users, Roles (nested rule editor), Credentials
-7. ~~Audit logging (infrastructure)~~ — **DONE** (pre-existing in l8events/l8alarms/l8notify): AuditEventType + SecurityEventType enums, event→alarm correlation, email/webhook/Slack notification delivery
-8. ~~ERP security configuration~~ — **DONE**: `ERPSecureConfig()` in `go/sec/erp_config.go`. 15 ERP roles (erp-admin, hr-manager, hr-clerk, accountant, fin-clerk, sales-manager, sales-rep, warehouse-mgr, warehouse-clerk, production-mgr, project-mgr, bi-analyst, compliance-officer, doc-admin, ecom-manager) with granular per-module permissions. Module type registry (`erp_types.go`) covers all 11 ERP modules. Rule helpers (`erp_rules.go`) for allowModule/readOnlyModule/denyTypes. 15 example users + 3 platform defaults. `Prepare()` integrates ERPSecureConfig for combined JSON generation.
-9. ~~Per-type action permissions (AllowedActions + UI wiring)~~ — **DONE**: `AllowedActions` in SecurityProvider returns `map[string][]int32` per type. `/permissions` HTTP endpoint in l8web. UI fetches on login → `window.Layer8DPermissions`. `Layer8DServiceRegistry.initializeServiceTable()` checks permissions to show/hide Add/Edit/Delete buttons. Bug fix: `Introspector().Nodes(true, true)` returned empty (impossible filter — no node is both leaf and root); fixed to `Nodes(false, true)`. Panic guard added to l8reflect.
-10. ~~Role-based menu filtering (UI wiring)~~ — **DONE**: Generic `Layer8DPermissionFilter` component in l8ui/shared/ with resolver pattern. Desktop: hides sidebar modules (applyToSidebar), section tabs, and sub-nav service items (applyToSection) when user lacks GET access. Mobile: filters module cards, sub-module cards, and service cards at all 3 nav levels. Cascading hide: empty sub-modules hide their tab, empty modules hide their sidebar entry. First-visible-tab activation when active tab is hidden. ERP wiring in app.js (resolver + sidebar models) and sections.js (applyToSection).
-11. ~~Audit logging (wiring)~~ — **DONE**: SecurityProvider emits EventRecords via l8events: LOGIN_FAILED (security/warning), LOGIN_SUCCESS (audit/info), ACCESS_DENIED (security/warning), TFA_FAILED (security/warning), USER_REGISTERED (audit/info). Events visible in SYS Security tab (EventRecord service, read-only, sorted by occurredAt desc)
-12. Password policy — remaining: complexity rules, expiry, history enforcement
-13. Session management — remaining: timeout, concurrent session limits
+### Phase D: Authorization & Security — MOSTLY COMPLETE ✓
+1. ~~Permission definitions and role-permission mapping~~ — **DONE**: 15 ERP roles in `l8secure/go/secure/plugin/erp/`, per-entity CRUD rules
+2. ~~API endpoint authorization middleware~~ — **DONE**: `aaa.go` pre-computed permission index with deny-before-allow
+3. ~~Row-level and field-level security~~ — **DONE**: `ScopeView.go` with L8Query deny rules and field blanking
+4. ~~Audit logging of user actions~~ — **DONE**: EventRecord service (l8events) with OrmService/postgres persistence
+5. Remaining: Password policy, session management, SSO/SAML/OAuth (see §4.3)
 
 ### Phase E: Integration
-1. ~~Email/notification system (infrastructure)~~ — **DONE** (pre-existing in l8notify): Email (SMTP), webhook, Slack channels. Template engine with `{{key}}` placeholders. Throttling, escalation scheduler with steps. Remaining: ERP-specific integration (connecting l8notify to ERP events)
-2. ~~Import from CSV/Excel~~ — **DONE**: Generic data import system with AI-assisted mapping, multi-format parsing (CSV/JSON/XML), value transforms, template transfer. Backend: `l8services/dataimport/` (9 files). UI: l8ui desktop (4 JS + CSS) + mobile (1 JS). Integrated into SYS Data Import tab. See `plans/data-import-system.md`.
-3. ~~Webhook/event system (infrastructure)~~ — **DONE** (pre-existing in l8events/l8alarms): EventRecord with categories, severity, attributes. Event→alarm correlation engine (temporal, topological, pattern). Alarm lifecycle (state, escalation, suppression, archiving). Remaining: ERP-specific event wiring
+1. Email/notification system
+2. Import from CSV/Excel
+3. Webhook/event system for cross-module triggers
 
-### Phase F: Module-Specific Business Logic — DONE
-Implemented across all 12 modules (~30 new files, ~2,000 lines). See `plans/PLAN-PHASE-F-MODULE-BUSINESS-LOGIC.md`.
-1. ~~Sales pricing engine and order-to-cash flow~~ — **DONE**: Price list lookup, credit limit validation, tax rule application, commission calculation, quotation-to-order conversion
-2. ~~SCM procurement-to-pay and inventory management~~ — **DONE**: Reorder point checking with auto-purchase-req, lot/serial validation on receiving, inventory stock movements on receipt
-3. ~~MFG BOM explosion and production scheduling~~ — **DONE**: Multi-level BOM explosion with phantom support, cost rollup from labor+materials, work order progress tracking
-4. ~~CRM lead management and SLA enforcement~~ — **DONE**: Lead scoring from rules, lead-to-opportunity conversion, SLA deadline enforcement with auto-escalation, campaign ROI metrics
-5. ~~PRJ scheduling and earned value~~ — **DONE**: Task dependency scheduling (forward pass), EVM calculations (PV/EV/AC/SPI/CPI/EAC), timesheet/expense approval flows with project rollup
-6. ~~Remaining modules (BI, DOC, ECOM, COMP, FIN)~~ — **DONE**: Fixed asset depreciation schedule generation, multi-currency conversion, ECOM order totals, COMP risk scoring + finding escalation, BI KPI threshold checking, DOC version tracking
+### Phase F: Module-Specific Business Logic
+1. Sales pricing engine and order-to-cash flow
+2. SCM procurement-to-pay and inventory management
+3. MFG BOM explosion and production scheduling
+4. CRM lead management and SLA enforcement
+5. PRJ scheduling and earned value
+6. Remaining modules (BI, DOC, ECOM, COMP)
 
 ### Phase G: Polish & Production Readiness
 1. Mobile CSS and behavioral parity

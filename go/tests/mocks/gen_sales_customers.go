@@ -37,6 +37,12 @@ func generateSalesPartnerChannels(store *MockDataStore) []*sales.SalesPartnerCha
 	for i, name := range salesPartnerNames {
 		territoryID := pickRef(store.SalesTerritoryIDs, i)
 
+		// First partner gets partnerId="hcm" for portal demo user
+		ptnrId := genID("spc", i)
+		if i == 0 {
+			ptnrId = "hcm"
+		}
+
 		startDate := time.Now().AddDate(-rand.Intn(3), 0, 0)
 		var endDate int64
 		if i%4 == 0 { // 25% have end dates
@@ -44,7 +50,7 @@ func generateSalesPartnerChannels(store *MockDataStore) []*sales.SalesPartnerCha
 		}
 
 		partners[i] = &sales.SalesPartnerChannel{
-			PartnerId:      genID("spc", i),
+			PartnerId:      ptnrId,
 			Name:           name,
 			PartnerType:    partnerTypes[i%len(partnerTypes)],
 			ContactName:    randomName(),

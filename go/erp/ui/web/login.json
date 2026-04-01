@@ -14,8 +14,13 @@
         "apiPrefix": "/erp",
         "healthPath": "/0/Health",
         "portals": {
-            "app.html": "ERP Dashboard",
-            "ess.html": "Employee Self-Service"
+            "app.html": "Admin / Operator Portal",
+            "ess.html": "Employee Self-Service",
+            "mgr.html": "Manager Portal",
+            "customer.html": "Customer Portal",
+            "vendor.html": "Vendor Portal",
+            "partner.html": "Partner Portal",
+            "projclient.html": "Project Client Portal"
         }
     }
 }

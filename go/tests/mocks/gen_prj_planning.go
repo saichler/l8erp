@@ -61,7 +61,11 @@ func generateProjects(store *MockDataStore) []*prj.PrjProject {
 
 	for i := 0; i < count; i++ {
 		// Cross-module references
+		// First project gets customerId="hcm" for portal demo user
 		customerID := pickRef(store.CustomerIDs, i)
+		if i == 0 {
+			customerID = "hcm"
+		}
 		accountID := pickRef(store.CrmAccountIDs, i)
 		managerID := pickRef(store.ManagerIDs, i)
 		departmentID := pickRef(store.DepartmentIDs, i)

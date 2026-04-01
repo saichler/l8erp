@@ -23,7 +23,7 @@ limitations under the License.
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Employee Self-Service</title>
+    <title>Customer Portal</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="../l8ui/images/logo.gif">
     <link rel="apple-touch-icon" href="../l8ui/images/logo.gif">
@@ -57,8 +57,8 @@ limitations under the License.
                 </svg>
             </button>
             <div class="header-logo">
-                <img src="../l8ui/images/logo.gif" alt="ESS">
-                <span class="header-logo-text">Employee Self-Service</span>
+                <img src="../l8ui/images/logo.gif" alt="CUST">
+                <span class="header-logo-text">Customer Portal</span>
             </div>
             <div class="header-actions">
                 <button class="header-action-btn" id="refresh-btn" title="Refresh">
@@ -78,8 +78,8 @@ limitations under the License.
         <aside class="mobile-sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
-                    <img src="../l8ui/images/logo.gif" alt="ESS">
-                    <span class="sidebar-logo-text">Self-Service</span>
+                    <img src="../l8ui/images/logo.gif" alt="CUST">
+                    <span class="sidebar-logo-text">Customer</span>
                 </div>
             </div>
 
@@ -89,13 +89,13 @@ limitations under the License.
 
             <div class="sidebar-user">
                 <div class="sidebar-user-info">
-                    <div class="sidebar-avatar" id="user-avatar">E</div>
+                    <div class="sidebar-avatar" id="user-avatar">C</div>
                     <div class="sidebar-user-details">
-                        <div class="sidebar-user-name" id="user-name">Employee</div>
-                        <div class="sidebar-user-role">Employee</div>
+                        <div class="sidebar-user-name" id="user-name">Customer</div>
+                        <div class="sidebar-user-role">Customer</div>
                     </div>
                 </div>
-                <button class="sidebar-logout-btn" onclick="MobileESS.logout()">
+                <button class="sidebar-logout-btn" onclick="MobileCUST.logout()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                         <polyline points="16 17 21 12 16 7"></polyline>
@@ -148,53 +148,59 @@ limitations under the License.
     <script src="../l8ui/m/js/layer8m-datepicker.js"></script>
     <!-- Mobile Reference Registry -->
     <script src="../l8ui/m/js/layer8m-reference-registry.js"></script>
-    <script src="../erp-ui/m/reference-registries/layer8m-reference-registry-hcm.js"></script>
     <script src="../l8ui/m/js/layer8m-reference-picker.js"></script>
     <!-- Mobile Renderers -->
     <script src="../l8ui/m/js/layer8m-renderers.js"></script>
-    <!-- Mobile CRUD (used by ESS actions for add/edit popups) -->
+    <!-- Mobile CRUD -->
     <script src="../l8ui/m/js/layer8m-nav-crud.js"></script>
     <!-- Portal Framework -->
     <script src="../l8ui/portal/layer8d-portal-dashboard.js"></script>
     <script src="../l8ui/portal/layer8m-portal.js"></script>
 
-    <!-- HCM Module Config (registers HCM service endpoints for reference pickers) -->
-    <script src="../hcm/hcm-config.js"></script>
+    <!-- Sales Module Config -->
+    <script src="../sales/sales-config.js"></script>
     <script>
-        // Register HCM submodules with ServiceRegistry so getEndpointForModel() can resolve reference pickers
-        if (typeof Layer8DServiceRegistry !== 'undefined' && window.HCM && HCM.submodules) {
-            HCM.submodules.forEach(function(sub) { Layer8DServiceRegistry.register('HCM', sub); });
+        if (typeof Layer8DServiceRegistry !== 'undefined' && window.Sales && Sales.submodules) {
+            Sales.submodules.forEach(function(sub) { Layer8DServiceRegistry.register('Sales', sub); });
+        }
+    </script>
+    <!-- FIN Module Config -->
+    <script src="../fin/fin-config.js"></script>
+    <script>
+        if (typeof Layer8DServiceRegistry !== 'undefined' && window.FIN && FIN.submodules) {
+            FIN.submodules.forEach(function(sub) { Layer8DServiceRegistry.register('FIN', sub); });
+        }
+    </script>
+    <!-- CRM Module Config -->
+    <script src="../crm/crm-config.js"></script>
+    <script>
+        if (typeof Layer8DServiceRegistry !== 'undefined' && window.CRM && CRM.submodules) {
+            CRM.submodules.forEach(function(sub) { Layer8DServiceRegistry.register('CRM', sub); });
         }
     </script>
 
-    <!-- HCM Module Enums & Forms (reused for detail views) -->
-    <script src="../hcm/core-hr/core-hr-enums.js"></script>
-    <script src="../hcm/core-hr/core-hr-forms.js"></script>
-    <script src="../hcm/payroll/payroll-enums.js"></script>
-    <script src="../hcm/payroll/payroll-forms.js"></script>
-    <script src="../hcm/benefits/benefits-enums.js"></script>
-    <script src="../hcm/benefits/benefits-forms.js"></script>
-    <script src="../hcm/time/time-enums.js"></script>
-    <script src="../hcm/time/time-forms.js"></script>
-    <script src="../hcm/talent/talent-enums-recruiting.js"></script>
-    <script src="../hcm/talent/talent-enums-performance.js"></script>
-    <script src="../hcm/talent/talent-enums.js"></script>
-    <script src="../hcm/talent/talent-forms.js"></script>
-    <script src="../hcm/learning/learning-enums.js"></script>
-    <script src="../hcm/learning/learning-forms.js"></script>
-    <script src="../hcm/compensation/compensation-enums.js"></script>
-    <script src="../hcm/compensation/compensation-forms.js"></script>
+    <!-- Module Enums & Forms (reused for detail views) -->
+    <script src="../sales/orders/orders-enums.js"></script>
+    <script src="../sales/orders/orders-forms.js"></script>
+    <script src="../sales/shipping/shipping-enums.js"></script>
+    <script src="../sales/shipping/shipping-forms.js"></script>
+    <script src="../sales/customers/customers-enums.js"></script>
+    <script src="../sales/customers/customers-forms.js"></script>
+    <script src="../fin/accounts-receivable/accounts-receivable-enums.js"></script>
+    <script src="../fin/accounts-receivable/accounts-receivable-forms.js"></script>
+    <script src="../crm/service/service-enums.js"></script>
+    <script src="../crm/service/service-forms.js"></script>
 
-    <!-- Shared ESS Data Files (reused from desktop) -->
-    <script src="../ess/ess-enums.js"></script>
-    <script src="../ess/ess-config.js"></script>
-    <script src="../ess/ess-nav-config.js"></script>
-    <script src="../ess/ess-columns.js"></script>
-    <script src="../ess/ess-forms.js"></script>
+    <!-- Shared CUST Data Files (reused from desktop) -->
+    <script src="../customer/customer-enums.js"></script>
+    <script src="../customer/customer-config.js"></script>
+    <script src="../customer/customer-nav-config.js"></script>
+    <script src="../customer/customer-columns.js"></script>
+    <script src="../customer/customer-forms.js"></script>
 
-    <!-- Mobile ESS Scripts -->
-    <script src="js/ess/ess-dashboard.js"></script>
-    <script src="js/ess/ess-actions.js"></script>
-    <script src="js/ess/ess-app.js"></script>
+    <!-- Mobile CUST Scripts -->
+    <script src="js/customer/customer-dashboard.js"></script>
+    <script src="js/customer/customer-actions.js"></script>
+    <script src="js/customer/customer-app.js"></script>
 </body>
 </html>

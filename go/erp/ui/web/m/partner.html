@@ -23,7 +23,7 @@ limitations under the License.
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Employee Self-Service</title>
+    <title>Partner Portal</title>
     <link rel="manifest" href="manifest.json">
     <link rel="icon" href="../l8ui/images/logo.gif">
     <link rel="apple-touch-icon" href="../l8ui/images/logo.gif">
@@ -47,7 +47,6 @@ limitations under the License.
 </head>
 <body>
     <div class="app-container">
-        <!-- Header -->
         <header class="mobile-header">
             <button class="header-menu-btn" id="menu-toggle">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -57,8 +56,8 @@ limitations under the License.
                 </svg>
             </button>
             <div class="header-logo">
-                <img src="../l8ui/images/logo.gif" alt="ESS">
-                <span class="header-logo-text">Employee Self-Service</span>
+                <img src="../l8ui/images/logo.gif" alt="PTNR">
+                <span class="header-logo-text">Partner Portal</span>
             </div>
             <div class="header-actions">
                 <button class="header-action-btn" id="refresh-btn" title="Refresh">
@@ -71,31 +70,27 @@ limitations under the License.
             </div>
         </header>
 
-        <!-- Sidebar Overlay -->
         <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-        <!-- Sidebar -->
         <aside class="mobile-sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="sidebar-logo">
-                    <img src="../l8ui/images/logo.gif" alt="ESS">
-                    <span class="sidebar-logo-text">Self-Service</span>
+                    <img src="../l8ui/images/logo.gif" alt="PTNR">
+                    <span class="sidebar-logo-text">Partner</span>
                 </div>
             </div>
 
-            <nav id="l8-portal-sidebar-nav">
-                <!-- Populated dynamically by portal framework -->
-            </nav>
+            <nav id="l8-portal-sidebar-nav"></nav>
 
             <div class="sidebar-user">
                 <div class="sidebar-user-info">
-                    <div class="sidebar-avatar" id="user-avatar">E</div>
+                    <div class="sidebar-avatar" id="user-avatar">P</div>
                     <div class="sidebar-user-details">
-                        <div class="sidebar-user-name" id="user-name">Employee</div>
-                        <div class="sidebar-user-role">Employee</div>
+                        <div class="sidebar-user-name" id="user-name">Partner</div>
+                        <div class="sidebar-user-role">Partner</div>
                     </div>
                 </div>
-                <button class="sidebar-logout-btn" onclick="MobileESS.logout()">
+                <button class="sidebar-logout-btn" onclick="MobilePTNR.logout()">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                         <polyline points="16 17 21 12 16 7"></polyline>
@@ -106,7 +101,6 @@ limitations under the License.
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content">
             <div id="content-area">
                 <div class="loading">Loading</div>
@@ -118,21 +112,17 @@ limitations under the License.
     <script src="../l8ui/m/js/layer8m-config.js"></script>
     <script src="../l8ui/m/js/layer8m-auth.js"></script>
     <script src="../l8ui/m/js/layer8m-utils.js"></script>
-    <!-- Shared Desktop Utilities (needed for currency cache, renderers) -->
     <script src="../l8ui/shared/layer8d-config.js"></script>
     <script src="../l8ui/shared/layer8d-utils.js"></script>
     <script src="../l8ui/shared/layer8d-renderers.js"></script>
     <script src="../l8ui/shared/layer8d-reference-registry.js"></script>
-    <!-- Factory Components -->
     <script src="../l8ui/shared/layer8-enum-factory.js"></script>
     <script src="../l8ui/shared/layer8-ref-factory.js"></script>
     <script src="../l8ui/shared/layer8-column-factory.js"></script>
     <script src="../l8ui/shared/layer8-form-factory.js"></script>
     <script src="../l8ui/shared/layer8-form-factory-presets.js"></script>
     <script src="../l8ui/shared/layer8d-module-config-factory.js"></script>
-    <!-- Service Registry (needed for form definition lookups) -->
     <script src="../l8ui/shared/layer8d-service-registry.js"></script>
-    <!-- Mobile Components -->
     <script src="../l8ui/m/js/layer8m-popup.js"></script>
     <script src="../l8ui/m/js/layer8m-confirm.js"></script>
     <script src="../l8ui/m/js/layer8m-data-source.js"></script>
@@ -146,55 +136,52 @@ limitations under the License.
     <script src="../l8ui/m/js/layer8m-forms.js"></script>
     <script src="../l8ui/m/js/layer8m-forms-inline.js"></script>
     <script src="../l8ui/m/js/layer8m-datepicker.js"></script>
-    <!-- Mobile Reference Registry -->
     <script src="../l8ui/m/js/layer8m-reference-registry.js"></script>
-    <script src="../erp-ui/m/reference-registries/layer8m-reference-registry-hcm.js"></script>
     <script src="../l8ui/m/js/layer8m-reference-picker.js"></script>
-    <!-- Mobile Renderers -->
     <script src="../l8ui/m/js/layer8m-renderers.js"></script>
-    <!-- Mobile CRUD (used by ESS actions for add/edit popups) -->
     <script src="../l8ui/m/js/layer8m-nav-crud.js"></script>
-    <!-- Portal Framework -->
     <script src="../l8ui/portal/layer8d-portal-dashboard.js"></script>
     <script src="../l8ui/portal/layer8m-portal.js"></script>
 
-    <!-- HCM Module Config (registers HCM service endpoints for reference pickers) -->
-    <script src="../hcm/hcm-config.js"></script>
+    <!-- CRM Module Config -->
+    <script src="../crm/crm-config.js"></script>
     <script>
-        // Register HCM submodules with ServiceRegistry so getEndpointForModel() can resolve reference pickers
-        if (typeof Layer8DServiceRegistry !== 'undefined' && window.HCM && HCM.submodules) {
-            HCM.submodules.forEach(function(sub) { Layer8DServiceRegistry.register('HCM', sub); });
+        if (typeof Layer8DServiceRegistry !== 'undefined' && window.CRM && CRM.submodules) {
+            CRM.submodules.forEach(function(sub) { Layer8DServiceRegistry.register('CRM', sub); });
+        }
+    </script>
+    <!-- Sales Module Config -->
+    <script src="../sales/sales-config.js"></script>
+    <script>
+        if (typeof Layer8DServiceRegistry !== 'undefined' && window.Sales && Sales.submodules) {
+            Sales.submodules.forEach(function(sub) { Layer8DServiceRegistry.register('Sales', sub); });
         }
     </script>
 
-    <!-- HCM Module Enums & Forms (reused for detail views) -->
-    <script src="../hcm/core-hr/core-hr-enums.js"></script>
-    <script src="../hcm/core-hr/core-hr-forms.js"></script>
-    <script src="../hcm/payroll/payroll-enums.js"></script>
-    <script src="../hcm/payroll/payroll-forms.js"></script>
-    <script src="../hcm/benefits/benefits-enums.js"></script>
-    <script src="../hcm/benefits/benefits-forms.js"></script>
-    <script src="../hcm/time/time-enums.js"></script>
-    <script src="../hcm/time/time-forms.js"></script>
-    <script src="../hcm/talent/talent-enums-recruiting.js"></script>
-    <script src="../hcm/talent/talent-enums-performance.js"></script>
-    <script src="../hcm/talent/talent-enums.js"></script>
-    <script src="../hcm/talent/talent-forms.js"></script>
-    <script src="../hcm/learning/learning-enums.js"></script>
-    <script src="../hcm/learning/learning-forms.js"></script>
-    <script src="../hcm/compensation/compensation-enums.js"></script>
-    <script src="../hcm/compensation/compensation-forms.js"></script>
+    <!-- Module Enums & Forms -->
+    <script src="../crm/leads/leads-enums.js"></script>
+    <script src="../crm/leads/leads-forms.js"></script>
+    <script src="../crm/opportunities/opportunities-enums.js"></script>
+    <script src="../crm/opportunities/opportunities-forms.js"></script>
+    <script src="../crm/marketing/marketing-enums.js"></script>
+    <script src="../crm/marketing/marketing-forms.js"></script>
+    <script src="../sales/orders/orders-enums.js"></script>
+    <script src="../sales/orders/orders-forms.js"></script>
+    <script src="../sales/analytics/analytics-enums.js"></script>
+    <script src="../sales/analytics/analytics-forms.js"></script>
+    <script src="../sales/customers/customers-enums.js"></script>
+    <script src="../sales/customers/customers-forms.js"></script>
 
-    <!-- Shared ESS Data Files (reused from desktop) -->
-    <script src="../ess/ess-enums.js"></script>
-    <script src="../ess/ess-config.js"></script>
-    <script src="../ess/ess-nav-config.js"></script>
-    <script src="../ess/ess-columns.js"></script>
-    <script src="../ess/ess-forms.js"></script>
+    <!-- Shared PTNR Data Files -->
+    <script src="../partner/partner-enums.js"></script>
+    <script src="../partner/partner-config.js"></script>
+    <script src="../partner/partner-nav-config.js"></script>
+    <script src="../partner/partner-columns.js"></script>
+    <script src="../partner/partner-forms.js"></script>
 
-    <!-- Mobile ESS Scripts -->
-    <script src="js/ess/ess-dashboard.js"></script>
-    <script src="js/ess/ess-actions.js"></script>
-    <script src="js/ess/ess-app.js"></script>
+    <!-- Mobile PTNR Scripts -->
+    <script src="js/partner/partner-dashboard.js"></script>
+    <script src="js/partner/partner-actions.js"></script>
+    <script src="js/partner/partner-app.js"></script>
 </body>
 </html>

@@ -1,16 +1,6 @@
 <!--
 © 2025 Sharon Aicler (saichler@gmail.com)
-
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
-You may obtain a copy of the License at:
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +10,7 @@ limitations under the License.
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Employee Self-Service</title>
+    <title>Customer Portal</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <!-- Theme & Layout -->
     <link rel="stylesheet" href="l8ui/shared/layer8d-theme.css">
@@ -44,138 +34,123 @@ limitations under the License.
 </head>
 <body>
     <div class="l8-portal-container">
-        <!-- Header -->
         <header class="l8-portal-header">
             <div class="l8-portal-header-left">
                 <img src="l8ui/images/logo.gif" alt="Logo" class="l8-portal-header-logo">
                 <div class="l8-portal-header-title">
-                    <h1>Employee Self-Service</h1>
+                    <h1>Customer Portal</h1>
                     <p>ERP by Layer 8</p>
                 </div>
             </div>
             <div class="l8-portal-header-right">
-                <span class="l8-portal-username">Employee</span>
+                <span class="l8-portal-username">Customer</span>
                 <button class="l8-portal-logout-btn" onclick="logout()">Logout</button>
             </div>
         </header>
 
-        <!-- Body -->
         <div class="l8-portal-body">
-            <!-- Sidebar Navigation -->
             <nav class="l8-portal-sidebar">
-                <ul class="l8-portal-nav-menu">
-                    <!-- Populated dynamically by portal framework -->
-                </ul>
+                <ul class="l8-portal-nav-menu"></ul>
             </nav>
-
-            <!-- Main Content -->
-            <main class="l8-portal-content" id="l8-portal-content-area">
-                <!-- Populated dynamically -->
-            </main>
+            <main class="l8-portal-content" id="l8-portal-content-area"></main>
         </div>
     </div>
 
-    <!-- Popup Root -->
     <div id="layer8d-popup-root"></div>
 
-    <!-- Shared l8ui Scripts (in dependency order) -->
+    <!-- Shared l8ui Scripts -->
     <script src="l8ui/shared/layer8d-config.js"></script>
     <script src="l8ui/shared/layer8d-utils.js"></script>
     <script src="l8ui/shared/layer8d-renderers.js"></script>
     <script src="l8ui/shared/layer8d-reference-registry.js"></script>
     <script src="l8ui/shared/layer8d-portal-switcher.js"></script>
-    <!-- Factory Components -->
     <script src="l8ui/shared/layer8-enum-factory.js"></script>
     <script src="l8ui/shared/layer8-ref-factory.js"></script>
     <script src="l8ui/shared/layer8-column-factory.js"></script>
     <script src="l8ui/shared/layer8-form-factory.js"></script>
     <script src="l8ui/shared/layer8-form-factory-presets.js"></script>
     <script src="l8ui/shared/layer8d-module-config-factory.js"></script>
-    <!-- Notification -->
     <script src="l8ui/notification/layer8d-notification.js"></script>
-    <!-- Input Formatters -->
     <script src="l8ui/input_formatters/layer8d-input-formatter-utils.js"></script>
     <script src="l8ui/input_formatters/layer8d-input-formatter-masks.js"></script>
     <script src="l8ui/input_formatters/layer8d-input-formatter-types-validators.js"></script>
     <script src="l8ui/input_formatters/layer8d-input-formatter-types.js"></script>
     <script src="l8ui/input_formatters/layer8d-input-formatter-core.js"></script>
     <script src="l8ui/input_formatters/layer8d-input-formatter.js"></script>
-    <!-- Service Registry -->
     <script src="l8ui/shared/layer8d-service-registry.js"></script>
-    <!-- Forms -->
     <script src="l8ui/shared/layer8d-forms-fields.js"></script>
     <script src="l8ui/shared/layer8d-forms-fields-ext.js"></script>
     <script src="l8ui/shared/layer8d-forms-data.js"></script>
     <script src="l8ui/shared/layer8d-forms-pickers.js"></script>
     <script src="l8ui/shared/layer8d-forms-modal.js"></script>
     <script src="l8ui/shared/layer8d-forms.js"></script>
-    <!-- Popup -->
     <script src="l8ui/popup/layer8d-popup.js"></script>
-    <!-- Date Picker -->
     <script src="l8ui/datepicker/layer8d-datepicker-utils.js"></script>
     <script src="l8ui/datepicker/layer8d-datepicker-calendar.js"></script>
     <script src="l8ui/datepicker/layer8d-datepicker-core.js"></script>
     <script src="l8ui/datepicker/layer8d-datepicker.js"></script>
-    <!-- Reference Picker -->
     <script src="l8ui/reference_picker/layer8d-reference-picker-utils.js"></script>
     <script src="l8ui/reference_picker/layer8d-reference-picker-data.js"></script>
     <script src="l8ui/reference_picker/layer8d-reference-picker-render.js"></script>
     <script src="l8ui/reference_picker/layer8d-reference-picker-events.js"></script>
     <script src="l8ui/reference_picker/layer8d-reference-picker-core.js"></script>
     <script src="l8ui/reference_picker/layer8d-reference-picker.js"></script>
-    <!-- Table -->
     <script src="l8ui/edit_table/layer8d-table-core.js"></script>
     <script src="l8ui/edit_table/layer8d-table-data.js"></script>
     <script src="l8ui/edit_table/layer8d-table-render.js"></script>
     <script src="l8ui/edit_table/layer8d-table-events.js"></script>
     <script src="l8ui/edit_table/layer8d-table-filter.js"></script>
     <script src="l8ui/edit_table/layer8d-table.js"></script>
-    <!-- Export -->
     <script src="l8ui/shared/layer8-csv-export.js"></script>
-    <!-- Data Source -->
     <script src="l8ui/shared/layer8d-data-source.js"></script>
     <!-- Portal Framework -->
     <script src="l8ui/portal/layer8d-portal-dashboard.js"></script>
     <script src="l8ui/portal/layer8d-portal.js"></script>
 
-    <!-- HCM Reference Registry (needed by HCM forms) -->
-    <script src="js/reference-registry-hcm.js"></script>
-
-    <!-- HCM Module Config (registers HCM service endpoints for reference pickers) -->
-    <script src="hcm/hcm-config.js"></script>
+    <!-- Sales Reference Registry -->
+    <script src="js/reference-registry-sales.js"></script>
+    <!-- Sales Module Config -->
+    <script src="sales/sales-config.js"></script>
     <script>
-        // Register HCM submodules with ServiceRegistry so getEndpointForModel() can resolve reference pickers
-        if (typeof Layer8DServiceRegistry !== 'undefined' && window.HCM && HCM.submodules) {
-            HCM.submodules.forEach(function(sub) { Layer8DServiceRegistry.register('HCM', sub); });
+        if (typeof Layer8DServiceRegistry !== 'undefined' && window.Sales && Sales.submodules) {
+            Sales.submodules.forEach(function(sub) { Layer8DServiceRegistry.register('Sales', sub); });
+        }
+    </script>
+    <!-- FIN Module Config -->
+    <script src="fin/fin-config.js"></script>
+    <script>
+        if (typeof Layer8DServiceRegistry !== 'undefined' && window.FIN && FIN.submodules) {
+            FIN.submodules.forEach(function(sub) { Layer8DServiceRegistry.register('FIN', sub); });
+        }
+    </script>
+    <!-- CRM Module Config -->
+    <script src="crm/crm-config.js"></script>
+    <script>
+        if (typeof Layer8DServiceRegistry !== 'undefined' && window.CRM && CRM.submodules) {
+            CRM.submodules.forEach(function(sub) { Layer8DServiceRegistry.register('CRM', sub); });
         }
     </script>
 
-    <!-- HCM Module Enums & Forms (reused for detail views) -->
-    <script src="hcm/core-hr/core-hr-enums.js"></script>
-    <script src="hcm/core-hr/core-hr-forms.js"></script>
-    <script src="hcm/payroll/payroll-enums.js"></script>
-    <script src="hcm/payroll/payroll-forms.js"></script>
-    <script src="hcm/benefits/benefits-enums.js"></script>
-    <script src="hcm/benefits/benefits-forms.js"></script>
-    <script src="hcm/time/time-enums.js"></script>
-    <script src="hcm/time/time-forms.js"></script>
-    <script src="hcm/talent/talent-enums-recruiting.js"></script>
-    <script src="hcm/talent/talent-enums-performance.js"></script>
-    <script src="hcm/talent/talent-enums.js"></script>
-    <script src="hcm/talent/talent-forms.js"></script>
-    <script src="hcm/learning/learning-enums.js"></script>
-    <script src="hcm/learning/learning-forms.js"></script>
-    <script src="hcm/compensation/compensation-enums.js"></script>
-    <script src="hcm/compensation/compensation-forms.js"></script>
+    <!-- Module Enums & Forms (reused for detail views) -->
+    <script src="sales/orders/orders-enums.js"></script>
+    <script src="sales/orders/orders-forms.js"></script>
+    <script src="sales/shipping/shipping-enums.js"></script>
+    <script src="sales/shipping/shipping-forms.js"></script>
+    <script src="sales/customers/customers-enums.js"></script>
+    <script src="sales/customers/customers-forms.js"></script>
+    <script src="fin/accounts-receivable/accounts-receivable-enums.js"></script>
+    <script src="fin/accounts-receivable/accounts-receivable-forms.js"></script>
+    <script src="crm/service/service-enums.js"></script>
+    <script src="crm/service/service-forms.js"></script>
 
-    <!-- ESS Portal Scripts (in dependency order) -->
-    <script src="ess/ess-enums.js"></script>
-    <script src="ess/ess-config.js"></script>
-    <script src="ess/ess-nav-config.js"></script>
-    <script src="ess/ess-columns.js"></script>
-    <script src="ess/ess-forms.js"></script>
-    <script src="ess/ess-dashboard.js"></script>
-    <script src="ess/ess-actions.js"></script>
-    <script src="ess/ess-app.js"></script>
+    <!-- Customer Portal Scripts -->
+    <script src="customer/customer-enums.js"></script>
+    <script src="customer/customer-config.js"></script>
+    <script src="customer/customer-nav-config.js"></script>
+    <script src="customer/customer-columns.js"></script>
+    <script src="customer/customer-forms.js"></script>
+    <script src="customer/customer-dashboard.js"></script>
+    <script src="customer/customer-actions.js"></script>
+    <script src="customer/customer-app.js"></script>
 </body>
 </html>
