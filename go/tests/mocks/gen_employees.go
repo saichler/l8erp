@@ -100,8 +100,12 @@ func generateEmployees(store *MockDataStore) []*hcm.Employee {
 			PositionId:       store.PositionIDs[posIdx],
 			JobId:            store.JobIDs[rand.Intn(len(store.JobIDs))],
 			ManagerId:        managerID,
-			ApplicationId:    pickRef(store.ApplicationIDs, i),
-			AuditInfo:        createAuditInfo(),
+			ApplicationId: pickRef(store.ApplicationIDs, i),
+			EmergencyContacts: []*hcm.EmergencyContact{
+				{ContactId: fmt.Sprintf("ec-%03d", i+1), Name: fmt.Sprintf("%s Contact", firstNames[rand.Intn(len(firstNames))]),
+					Relationship: "Spouse", PhonePrimary: randomPhone(), Priority: 1},
+			},
+			AuditInfo: createAuditInfo(),
 		}
 	}
 

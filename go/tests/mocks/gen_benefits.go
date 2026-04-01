@@ -107,6 +107,7 @@ func generateCOBRAEvents(store *MockDataStore) []*hcm.COBRAEvent {
 		notificationDate := qualifyingDate.AddDate(0, 0, 14)
 		monthlyPremium := int64(rand.Intn(1000)+500) * 100
 
+		planID := pickRef(store.BenefitPlanIDs, i)
 		events = append(events, &hcm.COBRAEvent{
 			CobraEventId:        fmt.Sprintf("cobra-%04d", idx),
 			EmployeeId:          empID,
@@ -120,8 +121,11 @@ func generateCOBRAEvents(store *MockDataStore) []*hcm.COBRAEvent {
 			Status:              hcm.COBRAStatus_COBRA_STATUS_NOTIFIED,
 			MonthlyPremium:      money(store, monthlyPremium),
 			AdminFeePercentage:  2.0,
-			TotalMonthlyCost:    money(store, int64(float64(monthlyPremium) * 1.02)),
-			AuditInfo:           createAuditInfo(),
+			TotalMonthlyCost:    money(store, int64(float64(monthlyPremium)*1.02)),
+			Enrollments: []*hcm.COBRAEnrollment{
+				{PlanId: planID, PlanName: "Health Plan", CoverageOptionId: "copt-001", MonthlyPremium: money(store, monthlyPremium)},
+			},
+			AuditInfo: createAuditInfo(),
 		})
 		idx++
 	}

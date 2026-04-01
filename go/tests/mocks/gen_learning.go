@@ -141,7 +141,11 @@ func generateFeedback(store *MockDataStore) []*hcm.Feedback {
 			GeneralComments: "Great collaboration and teamwork.",
 			SubmittedDate:   time.Now().AddDate(0, -rand.Intn(6), 0).Unix(),
 			Status:          hcm.FeedbackStatus_FEEDBACK_STATUS_SUBMITTED,
-			AuditInfo:       createAuditInfo(),
+			Responses: []*hcm.FeedbackQuestion{
+				{QuestionId: fmt.Sprintf("fq-%04d-1", idx), QuestionText: "How well does the employee communicate?", ResponseType: "rating", RatingResponse: int32(rand.Intn(3) + 3)},
+				{QuestionId: fmt.Sprintf("fq-%04d-2", idx), QuestionText: "What are the employee's strengths?", ResponseType: "text", TextResponse: "Strong problem-solving and collaboration skills."},
+			},
+			AuditInfo: createAuditInfo(),
 		})
 		idx++
 	}

@@ -129,7 +129,24 @@ func generateProjects(store *MockDataStore) []*prj.PrjProject {
 			ActualCost:      money(store, actualCost),
 			PercentComplete: percentComplete,
 			BillingType:     billingTypes[i%len(billingTypes)],
-			AuditInfo:       createAuditInfo(),
+			BudgetVariances: []*prj.PrjBudgetVariance{
+				{VarianceId: fmt.Sprintf("pbv-%03d-1", i+1), Category: "Labor",
+					BudgetedAmount: money(store, budgetAmount*60/100), ActualAmount: money(store, actualCost*55/100),
+					VarianceAmount: money(store, budgetAmount*60/100-actualCost*55/100), VariancePercent: -5.0,
+					BudgetedHours: estimatedHours * 0.6, ActualHours: actualHours * 0.55, AuditInfo: createAuditInfo()},
+				{VarianceId: fmt.Sprintf("pbv-%03d-2", i+1), Category: "Materials",
+					BudgetedAmount: money(store, budgetAmount*40/100), ActualAmount: money(store, actualCost*45/100),
+					VarianceAmount: money(store, budgetAmount*40/100-actualCost*45/100), VariancePercent: 5.0,
+					AuditInfo: createAuditInfo()},
+			},
+			ResourceForecasts: []*prj.PrjResourceForecast{
+				{ForecastId: fmt.Sprintf("prf-%03d", i+1), SkillCategory: "Development", Role: "Developer",
+					PeriodStart: startDate.Unix(), PeriodEnd: endDate.Unix(),
+					ForecastedHours: estimatedHours * 0.7, ConfirmedHours: actualHours * 0.6,
+					GapHours: estimatedHours*0.7 - actualHours*0.6, HeadcountNeeded: 3, HeadcountAvailable: 2,
+					ConfidenceLevel: 75.0, AuditInfo: createAuditInfo()},
+			},
+			AuditInfo: createAuditInfo(),
 		}
 	}
 	return projects

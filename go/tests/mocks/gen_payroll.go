@@ -72,16 +72,63 @@ func generatePayslips(store *MockDataStore) []*hcm.Payslip {
 			periodEnd := periodStart.AddDate(0, 1, -1)
 			paymentDate := periodEnd.AddDate(0, 0, 5)
 
-			grossPay := int64(rand.Intn(8000)+4000) * 100
-			taxes := grossPay * 25 / 100
-			deductions := grossPay * 10 / 100
-			netPay := grossPay - taxes - deductions
+			regHours := float64(80)
+			otHours := float64(rand.Intn(10))
+			regRate := float64(rand.Intn(40)+20) * 100 // $20-$60/hr in cents
+			otRate := regRate * 1.5
+			regPay := int64(regHours * regRate)
+			otPay := int64(otHours * otRate)
+			grossPay := regPay + otPay
+
+			fedTax := grossPay * 22 / 100
+			stateTax := grossPay * 5 / 100
+			socialSec := grossPay * 62 / 1000
+			medicare := grossPay * 145 / 10000
+			totalTaxes := fedTax + stateTax + socialSec + medicare
+
+			healthDed := int64(25000) // $250
+			retireDed := grossPay * 6 / 100
+			totalDeductions := healthDed + retireDed
+
+			netPay := grossPay - totalTaxes - totalDeductions
 
 			// Accumulate year-to-date totals
 			ytdGross += grossPay
-			ytdTaxes += taxes
-			ytdDeductions += deductions
+			ytdTaxes += totalTaxes
+			ytdDeductions += totalDeductions
 			ytdNet += netPay
+
+			// Earnings line items
+			earnings := []*hcm.PayslipLine{
+				{ComponentId: "REG", Code: "REG", Description: "Regular Pay",
+					Hours: regHours, Rate: regRate, CurrentAmount: money(store, regPay), YtdAmount: money(store, ytdGross)},
+			}
+			if otPay > 0 {
+				earnings = append(earnings, &hcm.PayslipLine{
+					ComponentId: "OT", Code: "OT", Description: "Overtime Pay",
+					Hours: otHours, Rate: otRate, CurrentAmount: money(store, otPay)})
+			}
+
+			// Tax line items
+			taxes := []*hcm.PayslipLine{
+				{ComponentId: "FED", Code: "FED", Description: "Federal Income Tax", CurrentAmount: money(store, fedTax)},
+				{ComponentId: "STATE", Code: "STATE", Description: "State Income Tax", CurrentAmount: money(store, stateTax)},
+				{ComponentId: "SS", Code: "FICA-SS", Description: "Social Security", CurrentAmount: money(store, socialSec)},
+				{ComponentId: "MED", Code: "FICA-MED", Description: "Medicare", CurrentAmount: money(store, medicare)},
+			}
+
+			// Deduction line items
+			deductions := []*hcm.PayslipLine{
+				{ComponentId: "HEALTH", Code: "HEALTH", Description: "Health Insurance", CurrentAmount: money(store, healthDed)},
+				{ComponentId: "401K", Code: "401K", Description: "401(k) Contribution", CurrentAmount: money(store, retireDed)},
+			}
+
+			// Employer contributions
+			employerContribs := []*hcm.PayslipLine{
+				{ComponentId: "ER-SS", Code: "ER-FICA-SS", Description: "Employer Social Security", CurrentAmount: money(store, socialSec)},
+				{ComponentId: "ER-MED", Code: "ER-FICA-MED", Description: "Employer Medicare", CurrentAmount: money(store, medicare)},
+				{ComponentId: "ER-401K", Code: "ER-401K", Description: "Employer 401(k) Match", CurrentAmount: money(store, retireDed/2)},
+			}
 
 			slips = append(slips, &hcm.Payslip{
 				PayslipId:    fmt.Sprintf("payslip-%05d", slipIdx),
@@ -91,19 +138,23 @@ func generatePayslips(store *MockDataStore) []*hcm.Payslip {
 					StartDate: periodStart.Unix(),
 					EndDate:   periodEnd.Unix(),
 				},
-				PaymentDate:     paymentDate.Unix(),
-				RegularHours:    80,
-				OvertimeHours:   float64(rand.Intn(10)),
-				TotalHours:      80 + float64(rand.Intn(10)),
-				GrossPay:        money(store, grossPay),
-				TotalTaxes:      money(store, taxes),
-				TotalDeductions: money(store, deductions),
-				NetPay:          money(store, netPay),
-				YtdGross:        money(store, ytdGross),
-				YtdTaxes:        money(store, ytdTaxes),
-				YtdDeductions:   money(store, ytdDeductions),
-				YtdNet:          money(store, ytdNet),
-				AuditInfo:       createAuditInfo(),
+				PaymentDate:           paymentDate.Unix(),
+				RegularHours:          regHours,
+				OvertimeHours:         otHours,
+				TotalHours:            regHours + otHours,
+				Earnings:              earnings,
+				Taxes:                 taxes,
+				Deductions:            deductions,
+				EmployerContributions: employerContribs,
+				GrossPay:              money(store, grossPay),
+				TotalTaxes:            money(store, totalTaxes),
+				TotalDeductions:       money(store, totalDeductions),
+				NetPay:                money(store, netPay),
+				YtdGross:              money(store, ytdGross),
+				YtdTaxes:              money(store, ytdTaxes),
+				YtdDeductions:         money(store, ytdDeductions),
+				YtdNet:                money(store, ytdNet),
+				AuditInfo:             createAuditInfo(),
 			})
 			slipIdx++
 		}

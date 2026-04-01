@@ -97,7 +97,12 @@ func generateSkills() []*hcm.Skill {
 		hcm.SkillCategory_SKILL_CATEGORY_LEADERSHIP,
 		hcm.SkillCategory_SKILL_CATEGORY_DOMAIN,
 	}
+	levelNames := []string{"Beginner", "Intermediate", "Advanced", "Expert", "Master"}
 	for i, name := range skillNames {
+		levels := make([]*hcm.SkillLevelDefinition, 5)
+		for l := 0; l < 5; l++ {
+			levels[l] = &hcm.SkillLevelDefinition{Level: int32(l + 1), Name: levelNames[l], Description: fmt.Sprintf("%s - %s level", name, levelNames[l])}
+		}
 		skills[i] = &hcm.Skill{
 			SkillId:     genID("skill", i),
 			Name:        name,
@@ -105,6 +110,7 @@ func generateSkills() []*hcm.Skill {
 			Category:    categories[i%len(categories)],
 			Description: fmt.Sprintf("Proficiency in %s", name),
 			IsActive:    true,
+			Levels:      levels,
 			AuditInfo:   createAuditInfo(),
 		}
 	}

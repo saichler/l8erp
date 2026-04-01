@@ -63,6 +63,18 @@ func generateSchedules(store *MockDataStore) []*hcm.Schedule {
 		periodStart := time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC)
 		periodEnd := time.Date(2024, 12, 31, 0, 0, 0, 0, time.UTC)
 
+		// Generate 5 weekly schedule entries
+		entries := make([]*hcm.ScheduleEntry, 5)
+		for e := 0; e < 5; e++ {
+			entryDate := periodStart.AddDate(0, 0, e*7)
+			start := time.Date(entryDate.Year(), entryDate.Month(), entryDate.Day(), 9, 0, 0, 0, time.UTC)
+			end := time.Date(entryDate.Year(), entryDate.Month(), entryDate.Day(), 17, 0, 0, 0, time.UTC)
+			entries[e] = &hcm.ScheduleEntry{
+				EntryId: fmt.Sprintf("se-%04d-%d", idx, e+1), Date: entryDate.Unix(),
+				StartTime: start.Unix(), EndTime: end.Unix(), Hours: 8,
+				DepartmentId: pickRef(store.DepartmentIDs, idx+e), IsPublished: true,
+			}
+		}
 		schedules = append(schedules, &hcm.Schedule{
 			ScheduleId: fmt.Sprintf("sched-%04d", idx),
 			EmployeeId: empID,
@@ -71,8 +83,9 @@ func generateSchedules(store *MockDataStore) []*hcm.Schedule {
 				EndDate:   periodEnd.Unix(),
 			},
 			Status:              hcm.ScheduleStatus_SCHEDULE_STATUS_PUBLISHED,
-			TotalScheduledHours: 2080, // Standard work year
+			TotalScheduledHours: 2080,
 			PublishedDate:       time.Now().Unix(),
+			Entries:             entries,
 			AuditInfo:           createAuditInfo(),
 		})
 		idx++

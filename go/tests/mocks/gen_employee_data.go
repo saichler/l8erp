@@ -144,6 +144,8 @@ func generateBenefitEnrollments(store *MockDataStore) []*hcm.BenefitEnrollment {
 			}
 			usedPlans[planIdx] = true
 
+			contribAmt := int64(rand.Intn(5000)+1000) * 100
+			annualAmt := contribAmt * 26 // bi-weekly
 			enrollments = append(enrollments, &hcm.BenefitEnrollment{
 				EnrollmentId:      fmt.Sprintf("benrol-%03d", enrolIdx),
 				EmployeeId:        empID,
@@ -152,7 +154,16 @@ func generateBenefitEnrollments(store *MockDataStore) []*hcm.BenefitEnrollment {
 				Reason:            hcm.EnrollmentReason_ENROLLMENT_REASON_NEW_HIRE,
 				EnrollmentDate:    time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),
 				CoverageStartDate: time.Date(2024, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),
-				AuditInfo:         createAuditInfo(),
+				Elections: []*hcm.BenefitElection{
+					{ElectionId: fmt.Sprintf("belec-%03d", enrolIdx), ElectionType: "Coverage", ElectionValue: "Employee Only",
+						ContributionAmount: money(store, contribAmt), ContributionPercentage: 6.0, AnnualAmount: money(store, annualAmt)},
+				},
+				Beneficiaries: []*hcm.Beneficiary{
+					{BeneficiaryId: fmt.Sprintf("bfcry-%03d", enrolIdx), EnrollmentId: fmt.Sprintf("benrol-%03d", enrolIdx),
+						BeneficiaryType: hcm.BeneficiaryType_BENEFICIARY_TYPE_PERSON, Name: "Next of Kin",
+						Relationship: "Spouse", Percentage: 100.0, AuditInfo: createAuditInfo()},
+				},
+				AuditInfo: createAuditInfo(),
 			})
 			enrolIdx++
 		}
@@ -205,6 +216,8 @@ func generatePerformanceReviews(store *MockDataStore) []*hcm.PerformanceReview {
 
 		managerID := store.ManagerIDs[i%len(store.ManagerIDs)]
 
+		rating := int32(rand.Intn(3) + 2)
+		ratingLabels := []string{"", "Needs Improvement", "Meets Expectations", "Exceeds Expectations", "Outstanding", "Exceptional"}
 		reviews = append(reviews, &hcm.PerformanceReview{
 			ReviewId:   fmt.Sprintf("review-%03d", reviewIdx),
 			EmployeeId: empID,
@@ -215,9 +228,17 @@ func generatePerformanceReviews(store *MockDataStore) []*hcm.PerformanceReview {
 			},
 			ReviewType:      hcm.ReviewType_REVIEW_TYPE_ANNUAL,
 			Status:          hcm.PerformanceReviewStatus_PERFORMANCE_REVIEW_STATUS_COMPLETED,
-			OverallRating:   int32(rand.Intn(3) + 2), // 2-4 rating (1-5 scale)
+			OverallRating:   rating,
 			ManagerComments: "Good performance throughout the year.",
-			AuditInfo:       createAuditInfo(),
+			Competencies: []*hcm.CompetencyRating{
+				{CompetencyId: "comp-comm", CompetencyName: "Communication", Rating: rating, RatingLabel: ratingLabels[rating], Comments: "Strong communicator"},
+				{CompetencyId: "comp-team", CompetencyName: "Teamwork", Rating: rating + 1, RatingLabel: ratingLabels[min(int(rating+1), 5)], Comments: "Excellent collaborator"},
+			},
+			Goals: []*hcm.GoalRating{
+				{GoalId: pickRef(store.GoalIDs, reviewIdx), GoalName: "Annual Goal", Rating: rating,
+					RatingLabel: ratingLabels[rating], CompletionPercentage: float64(rand.Intn(40) + 60), Comments: "Good progress"},
+			},
+			AuditInfo: createAuditInfo(),
 		})
 		reviewIdx++
 	}
@@ -240,6 +261,16 @@ func generateGoals(store *MockDataStore) []*hcm.Goal {
 		numGoals := rand.Intn(2) + 2 // 2-3 goals
 		for j := 0; j < numGoals; j++ {
 			goalType := goalTypes[rand.Intn(len(goalTypes))]
+			completion := float64(rand.Intn(80) + 10)
+			numKR := rand.Intn(2) + 2
+			keyResults := make([]*hcm.KeyResult, numKR)
+			for k := 0; k < numKR; k++ {
+				target := float64(rand.Intn(100) + 50)
+				keyResults[k] = &hcm.KeyResult{
+					KeyResultId: fmt.Sprintf("kr-%03d-%d", goalIdx, k+1), Description: fmt.Sprintf("Key result %d for %s", k+1, goalType),
+					TargetValue: target, CurrentValue: target * completion / 100, Unit: "count", CompletionPercentage: completion,
+				}
+			}
 			goals = append(goals, &hcm.Goal{
 				GoalId:               fmt.Sprintf("goal-%03d", goalIdx),
 				EmployeeId:           empID,
@@ -249,10 +280,11 @@ func generateGoals(store *MockDataStore) []*hcm.Goal {
 				GoalCategory:         hcm.GoalCategory(rand.Intn(4) + 1),
 				Priority:             hcm.GoalPriority(rand.Intn(3) + 1),
 				Status:               hcm.GoalStatus_GOAL_STATUS_ACTIVE,
-				CompletionPercentage: float64(rand.Intn(80) + 10),
+				CompletionPercentage: completion,
 				StartDate:            time.Date(2025, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),
 				DueDate:              time.Date(2025, 12, 31, 0, 0, 0, 0, time.UTC).Unix(),
 				Weight:               float64(rand.Intn(30) + 20),
+				KeyResults:           keyResults,
 				AuditInfo:            createAuditInfo(),
 			})
 			goalIdx++
