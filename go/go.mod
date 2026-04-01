@@ -21,8 +21,8 @@ require (
 
 require (
 	github.com/google/uuid v1.6.0 // indirect
-	github.com/saichler/l8pollaris v0.0.0-20260320112831-4bda37975bd5 // indirect
+	github.com/saichler/l8pollaris v0.0.0-20260331142743-079cf6e4e527 // indirect
 	github.com/saichler/l8ql v0.0.0-20260322130921-a31581a0ab5f // indirect
-	github.com/saichler/probler v0.0.0-20260329010813-9614713cccc3 // indirect
+	github.com/saichler/probler v0.0.0-20260401113718-6ff98e3b888e // indirect
 	golang.org/x/sys v0.42.0 // indirect
 )

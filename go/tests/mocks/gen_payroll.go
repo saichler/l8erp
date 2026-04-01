@@ -66,6 +66,7 @@ func generatePayslips(store *MockDataStore) []*hcm.Payslip {
 
 	// Create payslips for last 3 months for each employee
 	for _, empID := range store.EmployeeIDs {
+		var ytdGross, ytdTaxes, ytdDeductions, ytdNet int64
 		for month := 10; month <= 12; month++ {
 			periodStart := time.Date(2024, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
 			periodEnd := periodStart.AddDate(0, 1, -1)
@@ -75,6 +76,12 @@ func generatePayslips(store *MockDataStore) []*hcm.Payslip {
 			taxes := grossPay * 25 / 100
 			deductions := grossPay * 10 / 100
 			netPay := grossPay - taxes - deductions
+
+			// Accumulate year-to-date totals
+			ytdGross += grossPay
+			ytdTaxes += taxes
+			ytdDeductions += deductions
+			ytdNet += netPay
 
 			slips = append(slips, &hcm.Payslip{
 				PayslipId:    fmt.Sprintf("payslip-%05d", slipIdx),
@@ -92,6 +99,10 @@ func generatePayslips(store *MockDataStore) []*hcm.Payslip {
 				TotalTaxes:      money(store, taxes),
 				TotalDeductions: money(store, deductions),
 				NetPay:          money(store, netPay),
+				YtdGross:        money(store, ytdGross),
+				YtdTaxes:        money(store, ytdTaxes),
+				YtdDeductions:   money(store, ytdDeductions),
+				YtdNet:          money(store, ytdNet),
 				AuditInfo:       createAuditInfo(),
 			})
 			slipIdx++
