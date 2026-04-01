@@ -126,6 +126,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     const username = sessionStorage.getItem('currentUser') || 'Admin';
     document.querySelector('.username').textContent = username;
 
+    // Initialize portal switcher (non-blocking)
+    if (typeof Layer8DPortalSwitcher !== 'undefined') {
+        Layer8DPortalSwitcher.init({
+            container: document.querySelector('.header-right'),
+            insertBefore: document.querySelector('.user-menu'),
+            apiPrefix: Layer8DConfig.getApiPrefix(),
+            currentPath: window.location.pathname
+        });
+    }
+
     // Load currency cache for Money form fields
     try {
         const query = encodeURIComponent(JSON.stringify({ text: 'select * from Currency where isActive=true' }));

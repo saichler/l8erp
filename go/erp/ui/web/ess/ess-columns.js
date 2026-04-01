@@ -11,6 +11,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     var col = Layer8ColumnFactory;
     var render = ESS.render;
     var renderDate = Layer8DRenderers.renderDate;
+    var renderDateRange = Layer8DRenderers.renderDateRange;
 
     ESS.columns = {
         // Profile
@@ -36,7 +37,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         Payslip: [
             ...col.id('payslipId'),
             ...col.date('paymentDate', 'Payment Date'),
-            ...col.col('payPeriod', 'Pay Period'),
+            ...col.custom('payPeriod', 'Pay Period', (item) => renderDateRange(item.payPeriod)),
             ...col.money('grossPay', 'Gross Pay'),
             ...col.money('totalDeductions', 'Deductions'),
             ...col.money('netPay', 'Net Pay')

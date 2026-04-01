@@ -225,6 +225,16 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         var usernameEl = document.querySelector('.ess-username');
         if (usernameEl) usernameEl.textContent = username;
 
+        // Initialize portal switcher (non-blocking)
+        if (typeof Layer8DPortalSwitcher !== 'undefined') {
+            Layer8DPortalSwitcher.init({
+                container: document.querySelector('.ess-header-right'),
+                insertBefore: document.querySelector('.ess-logout-btn'),
+                apiPrefix: Layer8DConfig.getApiPrefix(),
+                currentPath: window.location.pathname
+            });
+        }
+
         // Load permissions
         try {
             var permResp = await fetch('/permissions', {
