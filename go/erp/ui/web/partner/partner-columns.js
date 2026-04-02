@@ -15,17 +15,17 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         // Pipeline
         CrmLead: [
             ...col.id('leadId', 'Lead ID'),
-            ...col('firstName', 'First Name'),
-            ...col('lastName', 'Last Name'),
-            ...col('company', 'Company'),
-            ...col('email', 'Email'),
+            ...col.col('firstName', 'First Name'),
+            ...col.col('lastName', 'Last Name'),
+            ...col.col('company', 'Company'),
+            ...col.col('email', 'Email'),
             ...col.status('status', 'Status', PTNR.enums.LEAD_STATUS, render.leadStatus),
             ...col.enum('rating', 'Rating', PTNR.enums.LEAD_RATING, render.leadRating),
             ...col.date('lastActivityDate', 'Last Activity')
         ],
         CrmOpportunity: [
             ...col.id('opportunityId', 'Opportunity ID'),
-            ...col('name', 'Name'),
+            ...col.col('name', 'Name'),
             ...col.money('amount', 'Amount'),
             ...col.status('stage', 'Stage', PTNR.enums.SALES_STAGE, render.salesStage),
             ...col.status('status', 'Status', PTNR.enums.OPP_STATUS, render.oppStatus),
@@ -34,15 +34,15 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         ],
         CrmLeadSource: [
             ...col.id('sourceId', 'Source ID'),
-            ...col('name', 'Name'),
-            ...col('description', 'Description'),
+            ...col.col('name', 'Name'),
+            ...col.col('description', 'Description'),
             ...col.boolean('isActive', 'Active')
         ],
 
         // Sales
         SalesQuotation: [
             ...col.id('quotationId', 'Quotation ID'),
-            ...col('quotationNumber', 'Quotation #'),
+            ...col.col('quotationNumber', 'Quotation #'),
             ...col.date('quotationDate', 'Date'),
             ...col.date('validUntil', 'Valid Until'),
             ...col.money('totalAmount', 'Total'),
@@ -50,7 +50,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         ],
         SalesOrder: [
             ...col.id('salesOrderId', 'Order ID'),
-            ...col('orderNumber', 'Order #'),
+            ...col.col('orderNumber', 'Order #'),
             ...col.date('orderDate', 'Date'),
             ...col.money('totalAmount', 'Total'),
             ...col.status('status', 'Status', PTNR.enums.ORDER_STATUS, render.orderStatus)
@@ -59,7 +59,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         // Marketing
         CrmCampaign: [
             ...col.id('campaignId', 'Campaign ID'),
-            ...col('name', 'Name'),
+            ...col.col('name', 'Name'),
             ...col.enum('campaignType', 'Type', PTNR.enums.CAMPAIGN_TYPE, render.campaignType),
             ...col.status('status', 'Status', PTNR.enums.CAMPAIGN_STATUS, render.campaignStatus),
             ...col.date('startDate', 'Start'),
@@ -67,8 +67,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         ],
         CrmMarketingList: [
             ...col.id('listId', 'List ID'),
-            ...col('name', 'Name'),
-            ...col('listType', 'Type'),
+            ...col.col('name', 'Name'),
+            ...col.col('listType', 'Type'),
             ...col.number('memberCount', 'Members'),
             ...col.boolean('isActive', 'Active')
         ],
@@ -76,7 +76,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         // Commissions
         SalesCommissionPlan: [
             ...col.id('planId', 'Plan ID'),
-            ...col('name', 'Name'),
+            ...col.col('name', 'Name'),
             ...col.enum('commissionType', 'Type', PTNR.enums.COMMISSION_TYPE, render.commissionType),
             ...col.number('baseRate', 'Base Rate'),
             ...col.money('baseAmount', 'Base Amount'),
@@ -88,11 +88,11 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         // Profile
         SalesPartnerChannel: [
             ...col.id('partnerId', 'Partner ID'),
-            ...col('name', 'Name'),
+            ...col.col('name', 'Name'),
             ...col.enum('partnerType', 'Type', PTNR.enums.PARTNER_TYPE, render.partnerType),
-            ...col('contactName', 'Contact'),
-            ...col('email', 'Email'),
-            ...col('phone', 'Phone'),
+            ...col.col('contactName', 'Contact'),
+            ...col.col('email', 'Email'),
+            ...col.col('phone', 'Phone'),
             ...col.number('commissionRate', 'Commission %'),
             ...col.boolean('isActive', 'Active')
         ]

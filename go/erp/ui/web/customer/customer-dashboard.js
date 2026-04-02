@@ -15,11 +15,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         render: function(container) {
             var customerId = CUST._scopeValue || '';
 
-            container.innerHTML =
-                '<div class="l8-portal-dashboard-welcome">' +
-                    '<h2>Customer Portal</h2>' +
-                    '<p>View your orders, invoices, and support cases.</p>' +
-                '</div>' +
+            container.innerHTML = '';
+            Layer8DPortalDashboard.renderHeader(container, '🛒', 'Customer Portal', 'View your orders, invoices, and support cases.');
+            container.insertAdjacentHTML('beforeend',
                 '<div class="l8-portal-dashboard-cards">' +
                     '<div class="l8-portal-card">' +
                         '<div class="l8-portal-card-icon">🛒</div>' +
@@ -49,7 +47,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                         '<button class="l8-portal-action-btn l8-portal-action-btn-secondary" onclick="CUST.loadSection(\'support\')">Open Support Case</button>' +
                         '<button class="l8-portal-action-btn l8-portal-action-btn-secondary" onclick="CUST.loadSection(\'billing\')">View Invoices</button>' +
                     '</div>' +
-                '</div>';
+                '</div>');
 
             var w = sw('customerId', customerId, false);
             var wp = sw('customerId', customerId, true);
@@ -72,8 +70,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 if (el) el.textContent = total + ' shipments';
             });
 
-            // Open support cases (status 1=New or 2=In Progress)
-            fetch_('/80/CrmCase', 'select * from CrmCase where ' + wp + '(status=1 or status=2) limit 1 page 0', function(total) {
+            // Open support cases (status 1=New or 2=In Progress) — CrmCase uses accountId, not customerId
+            fetch_('/80/CrmCase', 'select * from CrmCase where (status=1 or status=2) limit 1 page 0', function(total) {
                 var el = document.getElementById('cust-d-cases-value');
                 if (el) el.textContent = total + ' cases';
             });

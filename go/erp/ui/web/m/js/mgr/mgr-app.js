@@ -13,7 +13,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         namespace: 'MGR',
         mobileObject: 'MobileMGR',
         scopeField: 'managerId',
-        sharedModels: ['Department'],
+        sharedModels: ['Department', 'LeaveRequest', 'Timesheet', 'PerformanceReview', 'Goal', 'EmployeeSkill', 'CompensationStatement'],
         moduleNamespace: 'HCM',
         contentAreaId: 'content-area',
         sidebarNavId: 'l8-portal-sidebar-nav',

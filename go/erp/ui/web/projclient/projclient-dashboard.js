@@ -15,11 +15,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         render: function(container) {
             var clientId = PRJC._scopeValue || '';
 
-            container.innerHTML =
-                '<div class="l8-portal-dashboard-welcome">' +
-                    '<h2>Project Client Portal</h2>' +
-                    '<p>Your projects, budgets, and deliverables at a glance.</p>' +
-                '</div>' +
+            container.innerHTML = '';
+            Layer8DPortalDashboard.renderHeader(container, '📁', 'Project Client Portal', 'Your projects, budgets, and deliverables at a glance.');
+            container.insertAdjacentHTML('beforeend',
                 '<div class="l8-portal-dashboard-cards">' +
                     '<div class="l8-portal-card">' +
                         '<div class="l8-portal-card-icon">📁</div>' +
@@ -46,21 +44,22 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     '<h3>Quick Actions</h3>' +
                     '<button class="layer8d-btn layer8d-btn-primary layer8d-btn-small" onclick="PRJC._loadSection(\'projects\')">View Projects</button>' +
                     '<button class="layer8d-btn layer8d-btn-secondary layer8d-btn-small" onclick="PRJC._loadSection(\'budget\')">View Budget</button>' +
-                '</div>';
+                '</div>');
 
-            var w = sw('customerId', clientId, false);
+            var wp = sw('customerId', clientId, true);
 
-            fetch_('/90/PrjProj', 'select * from PrjProject where ' + w + '(status=2 or status=3) limit 1 page 0', function(total) {
+            fetch_('/90/PrjProj', 'select * from PrjProject where ' + wp + '(status=2 or status=3) limit 1 page 0', function(total) {
                 var el = document.getElementById('prjc-proj-value');
                 if (el) el.textContent = total + ' active';
             });
 
+            // PrjStatusReport has no customerId — query unscoped
             fetch_('/90/PrjStatus', 'select * from PrjStatusReport limit 1 page 0', function(total) {
                 var el = document.getElementById('prjc-status-value');
                 if (el) el.textContent = total + ' reports';
             });
 
-            fetch_('/90/PrjInvoice', 'select * from PrjProjectInvoice where ' + w + '(status=2 or status=3 or status=5) limit 1 page 0', function(total) {
+            fetch_('/90/PrjInvoice', 'select * from PrjProjectInvoice where ' + wp + '(status=2 or status=3 or status=5) limit 1 page 0', function(total) {
                 var el = document.getElementById('prjc-inv-value');
                 if (el) el.textContent = total + ' open';
             });

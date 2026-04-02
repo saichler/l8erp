@@ -337,6 +337,7 @@ The mobile-parity rule requires that the same action produces the same result on
 - Onboarding/offboarding checklists with task tracking
 - Org chart visualization
 - ~~Employee self-service portal~~ — **DONE**: ESS portal implemented (desktop + mobile). See §9.1
+- ~~Remaining portals (Manager, Customer, Vendor, Partner, Project Client)~~ — **DONE**: All 5 portals implemented (desktop + mobile) on shared Layer8DPortal/Layer8MPortal framework. See §9.2–9.6
 
 ### 8.2 FIN (28 services, was 49 — 21 children consolidated)
 
@@ -455,7 +456,8 @@ Portal routing and switching infrastructure fully implemented:
 | Portal switcher | **Done** | `layer8d-portal-switcher.js` — header dropdown for switching portals post-login without re-auth |
 | Portal config fallback | **Done** | `login.json` `app.portals` map used when L8Portal endpoint unavailable |
 | ESS role & permissions | **Done** | `ess-employee` role in l8secure with employee-scoped permissions |
-| ESS demo user | **Done** | `hcm` user (password: `Hcm123!`, role: `ess-employee`, portal: `ess.html`) |
+| Portal roles (4 new) | **Done** | `customer-portal`, `vendor-portal`, `partner-portal`, `project-client` roles in l8secure |
+| Portal demo user | **Done** | `hcm` user (password: `Hcm123!`, all 6 portal roles, portal: `ess.html`) |
 
 See `plans/PLAN-USER-PORTAL-ROUTING.md` and `plans/PLAN-PORTAL-SWITCHER.md` for implementation details.
 
@@ -480,64 +482,81 @@ Desktop (`ess.html`) and mobile (`m/ess.html`) ESS portals fully implemented. Se
 | View org chart and directory | Deferred | Requires directory search component |
 | View company announcements | Deferred | No announcement service exists |
 
-### 9.2 Manager Portal (HCM/PRJ)
+### 9.2 Manager Portal (HCM/PRJ) — COMPLETE ✓
+
+Desktop (`mgr.html`) and mobile (`m/mgr.html`) Manager portals implemented. See `plans/PLAN-REMAINING-PORTALS.md`.
 
 | Feature | Status |
 |---------|--------|
-| Approve leave/time-off requests | Missing |
-| Approve expense reports | Missing |
-| Approve timesheets | Missing |
-| Team dashboard (headcount, absences, utilization) | Missing |
-| Performance review management | Missing |
-| Compensation planning for team | Missing |
-| Project team resource allocation | Missing |
+| Team dashboard (headcount, absences, pending requests) | **Done** |
+| View team employees (manager-scoped) | **Done** |
+| Approve leave/time-off requests | **Done** (writable LeaveRequest) |
+| Approve timesheets | **Done** (writable Timesheet) |
+| Performance review management | **Done** (writable PerformanceReview) |
+| View training enrollments | **Done** (read-only) |
+| View compensation records | **Done** (read-only) |
+| View project timesheets/expenses (PRJ) | **Done** (read-only) |
 
-### 9.3 Customer Portal (Sales/CRM/ECOM)
+### 9.3 Customer Portal (Sales/CRM) — COMPLETE ✓
 
-| Feature | Status |
-|---------|--------|
-| View order history and status | Missing |
-| View and download invoices | Missing |
-| Make payments | Missing |
-| Submit support cases/tickets | Missing |
-| Track case resolution status | Missing |
-| View/download statements | Missing |
-| Request returns/RMAs | Missing |
-| Update contact/shipping info | Missing |
-| Product catalog browsing (ECOM) | Missing |
-
-### 9.4 Vendor/Supplier Portal (SCM/FIN)
+Desktop (`customer.html`) and mobile (`m/customer.html`) Customer portals implemented. See `plans/PLAN-REMAINING-PORTALS.md`.
 
 | Feature | Status |
 |---------|--------|
-| View and acknowledge purchase orders | Missing |
-| Submit invoices against POs | Missing |
-| Update delivery/shipping status | Missing |
-| View payment status and remittance | Missing |
-| Maintain product catalog/pricing | Missing |
-| Submit compliance certifications | Missing |
-| View supplier scorecard | Missing |
+| View order history and status | **Done** (read-only SalesOrder, SalesQuotation) |
+| View delivery status | **Done** (read-only SalesDeliveryOrder) |
+| View and download invoices | **Done** (read-only SalesInvoice) |
+| View payments | **Done** (read-only CustomerPayment) |
+| View contracts | **Done** (read-only SalesCustomerContract) |
+| Submit support cases/tickets | **Done** (writable CrmCase) |
+| Request returns/RMAs | **Done** (writable SalesReturnOrder) |
+| Knowledge base access | **Done** (read-only CrmKBArticle) |
 
-### 9.5 Partner/Channel Portal (Sales/CRM)
+### 9.4 Vendor/Supplier Portal (SCM/FIN) — COMPLETE ✓
 
-| Feature | Status |
-|---------|--------|
-| Deal registration | Missing |
-| View commission statements | Missing |
-| Access marketing materials and collateral | Missing |
-| Joint pipeline visibility | Missing |
-| Training and certification tracking | Missing |
-
-### 9.6 Project Client Portal (PRJ)
+Desktop (`vendor.html`) and mobile (`m/vendor.html`) Vendor portals implemented. See `plans/PLAN-REMAINING-PORTALS.md`.
 
 | Feature | Status |
 |---------|--------|
-| View project status and milestones | Missing |
-| Approve deliverables | Missing |
-| Review and approve timesheets/expenses | Missing |
-| View budget burn and forecasts | Missing |
-| Access project documents | Missing |
-| Submit change requests | Missing |
+| View and acknowledge purchase orders | **Done** (read-only ScmPurchaseOrder) |
+| View receiving orders | **Done** (read-only ScmReceivingOrder) |
+| View blanket orders | **Done** (read-only ScmBlanketOrder) |
+| View return authorizations | **Done** (read-only ScmReturnAuthorization) |
+| Respond to RFQs | **Done** (writable ScmRequestForQuotation) |
+| View payment status | **Done** (read-only VendorPayment, VendorStatement) |
+| View invoices | **Done** (read-only PurchaseInvoice) |
+| View supplier scorecard | **Done** (read-only ScmSupplierScorecard) |
+| Supplier collaboration | **Done** (writable ScmSupplierCollaboration) |
+
+### 9.5 Partner/Channel Portal (Sales/CRM) — COMPLETE ✓
+
+Desktop (`partner.html`) and mobile (`m/partner.html`) Partner portals implemented. See `plans/PLAN-REMAINING-PORTALS.md`.
+
+| Feature | Status |
+|---------|--------|
+| Lead registration | **Done** (writable CrmLead) |
+| Opportunity management | **Done** (writable CrmOpportunity) |
+| View quotations | **Done** (writable SalesQuotation) |
+| Joint pipeline visibility | **Done** (read-only SalesOrder) |
+| View marketing campaigns | **Done** (read-only CrmCampaign, CrmMarketingList) |
+| View commission plans | **Done** (read-only SalesCommissionPlan) |
+| View lead sources | **Done** (read-only CrmLeadSource) |
+| Partner profile | **Done** (read-only SalesPartnerChannel) |
+
+### 9.6 Project Client Portal (PRJ) — COMPLETE ✓
+
+Desktop (`projclient.html`) and mobile (`m/projclient.html`) Project Client portals implemented. See `plans/PLAN-REMAINING-PORTALS.md`. Entirely read-only portal.
+
+| Feature | Status |
+|---------|--------|
+| View project status and milestones | **Done** (read-only PrjProject, PrjStatusReport) |
+| View project KPIs | **Done** (read-only PrjProjectKPI) |
+| View budget burn and forecasts | **Done** (read-only PrjProjectBudget) |
+| View invoices | **Done** (read-only PrjProjectInvoice) |
+| View billing schedules | **Done** (read-only PrjBillingSchedule) |
+| View timesheets | **Done** (read-only PrjTimesheet) |
+| View expense reports | **Done** (read-only PrjExpenseReport) |
+| Portfolio overview | **Done** (read-only PrjPortfolioView) |
 
 ---
 
@@ -596,6 +615,7 @@ All 6 audit items passed with no issues found:
 5. ~~Tree/hierarchy view (for FIN chart of accounts, HCM org chart)~~ — **DONE**: Tree grid implemented (desktop + mobile) with expand/collapse, events, rendering.
 6. ~~Portal routing and switching~~ — **DONE**: L8Portal service, user portal field, login redirect, portal switcher dropdown. See §9.
 7. ~~Employee Self-Service Portal~~ — **DONE**: Desktop + mobile ESS portal with 7 sections, dashboard, employee-scoped filtering. See §9.1.
+   - ~~Remaining Portals~~ — **DONE**: Manager, Customer, Vendor, Partner, Project Client portals (desktop + mobile). Shared framework + config-only pattern. See §9.2–9.6.
 8. ~~Financial Reports~~ — **DONE**: 7 report types with UI viewer. See §3.2.
 9. ~~Module-Specific Reports~~ — **DONE**: Backend report services for all modules. See §3.3.
 

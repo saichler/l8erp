@@ -15,11 +15,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         render: function(container) {
             var partnerId = PTNR._scopeValue || '';
 
-            container.innerHTML =
-                '<div class="l8-portal-dashboard-welcome">' +
-                    '<h2>Partner Portal</h2>' +
-                    '<p>Your pipeline, sales, and commissions at a glance.</p>' +
-                '</div>' +
+            container.innerHTML = '';
+            Layer8DPortalDashboard.renderHeader(container, '🤝', 'Partner Portal', 'Your pipeline, sales, and commissions at a glance.');
+            container.insertAdjacentHTML('beforeend',
                 '<div class="l8-portal-dashboard-cards">' +
                     '<div class="l8-portal-card">' +
                         '<div class="l8-portal-card-icon">🔄</div>' +
@@ -46,21 +44,21 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     '<h3>Quick Actions</h3>' +
                     '<button class="layer8d-btn layer8d-btn-primary layer8d-btn-small" onclick="PTNR.actions.registerLead()">Register Lead</button>' +
                     '<button class="layer8d-btn layer8d-btn-secondary layer8d-btn-small" onclick="PTNR._loadSection(\'pipeline\')">View Pipeline</button>' +
-                '</div>';
+                '</div>');
 
-            var w = sw('ownerId', partnerId, false);
-
-            fetch_('/80/CrmLead', 'select * from CrmLead where ' + w + '(status=1 or status=2) limit 1 page 0', function(total) {
+            // CrmLead/CrmOpportunity don't have ownerId — query unscoped
+            fetch_('/80/CrmLead', 'select * from CrmLead where (status=1 or status=2) limit 1 page 0', function(total) {
                 var el = document.getElementById('ptnr-lead-value');
                 if (el) el.textContent = total + ' leads';
             });
 
-            fetch_('/80/CrmOpp', 'select * from CrmOpportunity where ' + w + 'status=1 limit 1 page 0', function(total) {
+            fetch_('/80/CrmOpp', 'select * from CrmOpportunity where status=1 limit 1 page 0', function(total) {
                 var el = document.getElementById('ptnr-opp-value');
                 if (el) el.textContent = total + ' open';
             });
 
-            fetch_('/60/SalesQuote', 'select * from SalesQuotation where ' + w + '(status=1 or status=2) limit 1 page 0', function(total) {
+            // SalesQuotation has no ownerId — query unscoped
+            fetch_('/60/SalesQuote', 'select * from SalesQuotation where (status=1 or status=2) limit 1 page 0', function(total) {
                 var el = document.getElementById('ptnr-quote-value');
                 if (el) el.textContent = total + ' active';
             });

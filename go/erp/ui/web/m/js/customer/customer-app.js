@@ -13,7 +13,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         namespace: 'CUST',
         mobileObject: 'MobileCUST',
         scopeField: 'customerId',
-        sharedModels: ['CrmKBArticle'],
+        sharedModels: ['CrmCase', 'CrmKBArticle'],
         moduleNamespace: 'Sales',
         contentAreaId: 'content-area',
         sidebarNavId: 'l8-portal-sidebar-nav',

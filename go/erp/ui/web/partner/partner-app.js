@@ -12,7 +12,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     Layer8DPortal.init({
         namespace: 'PTNR',
         scopeField: 'partnerId',
-        sharedModels: ['CrmLeadSource', 'SalesCommissionPlan'],
+        sharedModels: ['CrmLead', 'CrmOpportunity', 'CrmLeadSource', 'CrmCampaign', 'CrmMarketingList', 'SalesQuotation', 'SalesOrder', 'SalesCommissionPlan'],
         moduleNamespace: 'CRM'
     });
 })();

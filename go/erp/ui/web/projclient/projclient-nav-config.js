@@ -9,7 +9,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
     var PRJC = window.PRJC = window.PRJC || {};
 
-    PRJC.navItems = [
+    PRJC.nav = [
         { key: 'dashboard', label: 'Dashboard', icon: '📊' },
         { key: 'projects', label: 'Projects', icon: '📁' },
         { key: 'budget', label: 'Budget', icon: '💰' },

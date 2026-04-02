@@ -9,7 +9,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
     var PTNR = window.PTNR = window.PTNR || {};
 
-    PTNR.navItems = [
+    PTNR.nav = [
         { key: 'dashboard', label: 'Dashboard', icon: '📊' },
         { key: 'pipeline', label: 'Pipeline', icon: '🔄' },
         { key: 'sales', label: 'Sales', icon: '💼' },

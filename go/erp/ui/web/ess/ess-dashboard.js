@@ -14,11 +14,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     ESS.dashboard = {
         render: function(container) {
             var employeeId = ESS.employeeId || '';
-            container.innerHTML = '<div class="l8-portal-dashboard">' +
-                '<div class="l8-portal-dashboard-welcome">' +
-                    '<h2>Welcome back, ' + Layer8DUtils.escapeHtml(ESS.employeeName || 'Employee') + '</h2>' +
-                    '<p>Here is a summary of your information.</p>' +
-                '</div>' +
+            var name = Layer8DUtils.escapeHtml(ESS.employeeName || 'Employee');
+            container.innerHTML = '';
+            Layer8DPortalDashboard.renderHeader(container, '👤', 'Welcome back, ' + name, 'Here is a summary of your information.');
+            container.insertAdjacentHTML('beforeend', '<div class="l8-portal-dashboard">' +
                 '<div class="l8-portal-dashboard-cards">' +
                     '<div class="l8-portal-card" id="ess-card-leave">' +
                         '<div class="l8-portal-card-icon">🏖️</div>' +
@@ -57,7 +56,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                         '<button class="layer8d-btn layer8d-btn-secondary layer8d-btn-small" onclick="ESS.loadSection(\'profile\')">View Profile</button>' +
                     '</div>' +
                 '</div>' +
-            '</div>';
+            '</div>');
 
             var w = sw('employeeId', employeeId, false);
             var wp = sw('employeeId', employeeId, true);

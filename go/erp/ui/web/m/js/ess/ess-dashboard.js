@@ -16,11 +16,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             var employeeId = ESS.employeeId || '';
             var name = Layer8DUtils ? Layer8DUtils.escapeHtml(ESS.employeeName || 'Employee') : (ESS.employeeName || 'Employee');
 
-            container.innerHTML =
-                '<div class="l8-portal-m-dashboard-welcome">' +
-                    '<h2>Welcome, ' + name + '</h2>' +
-                    '<p>Here is a summary of your information.</p>' +
-                '</div>' +
+            container.innerHTML = '';
+            Layer8DPortalDashboard.renderHeader(container, '👤', 'Welcome, ' + name, 'Here is a summary of your information.');
+            container.insertAdjacentHTML('beforeend',
                 '<div class="l8-portal-m-dashboard-cards">' +
                     '<div class="l8-portal-m-card">' +
                         '<div class="l8-portal-m-card-icon">🏖️</div>' +
@@ -50,7 +48,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                         '<button class="l8-portal-m-quick-btn l8-portal-m-quick-btn-secondary" onclick="MobileESS.loadSection(\'pay\')">View Pay Stubs</button>' +
                         '<button class="l8-portal-m-quick-btn l8-portal-m-quick-btn-secondary" onclick="MobileESS.loadSection(\'profile\')">View Profile</button>' +
                     '</div>' +
-                '</div>';
+                '</div>');
 
             var w = sw('employeeId', employeeId, false);
             var wp = sw('employeeId', employeeId, true);

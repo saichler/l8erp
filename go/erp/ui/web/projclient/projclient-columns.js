@@ -15,8 +15,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         // Projects
         PrjProject: [
             ...col.id('projectId', 'Project ID'),
-            ...col('code', 'Code'),
-            ...col('name', 'Name'),
+            ...col.col('code', 'Code'),
+            ...col.col('name', 'Name'),
             ...col.enum('projectType', 'Type', PRJC.enums.PROJECT_TYPE, render.projectType),
             ...col.status('status', 'Status', PRJC.enums.PROJECT_STATUS, render.projectStatus),
             ...col.status('priority', 'Priority', PRJC.enums.PROJECT_PRIORITY, render.projectPriority),
@@ -34,8 +34,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         ],
         PrjProjectKPI: [
             ...col.id('kpiId', 'KPI ID'),
-            ...col('kpiName', 'Name'),
-            ...col('kpiCategory', 'Category'),
+            ...col.col('kpiName', 'Name'),
+            ...col.col('kpiCategory', 'Category'),
             ...col.number('targetValue', 'Target'),
             ...col.number('actualValue', 'Actual'),
             ...col.number('variancePercent', 'Variance %'),
@@ -45,8 +45,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         // Budget
         PrjProjectBudget: [
             ...col.id('budgetId', 'Budget ID'),
-            ...col('name', 'Name'),
-            ...col('budgetType', 'Type'),
+            ...col.col('name', 'Name'),
+            ...col.col('budgetType', 'Type'),
             ...col.money('budgetedAmount', 'Budgeted'),
             ...col.money('actualAmount', 'Actual'),
             ...col.money('remainingAmount', 'Remaining'),
@@ -54,7 +54,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         ],
         PrjProjectInvoice: [
             ...col.id('invoiceId', 'Invoice ID'),
-            ...col('invoiceNumber', 'Invoice #'),
+            ...col.col('invoiceNumber', 'Invoice #'),
             ...col.date('invoiceDate', 'Date'),
             ...col.date('dueDate', 'Due Date'),
             ...col.money('totalAmount', 'Total'),
@@ -64,9 +64,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         ],
         PrjBillingSchedule: [
             ...col.id('scheduleId', 'Schedule ID'),
-            ...col('name', 'Name'),
+            ...col.col('name', 'Name'),
             ...col.enum('billingType', 'Type', PRJC.enums.BILLING_TYPE, render.billingType),
-            ...col('billingFrequency', 'Frequency'),
+            ...col.col('billingFrequency', 'Frequency'),
             ...col.money('fixedAmount', 'Fixed Amount'),
             ...col.boolean('isActive', 'Active')
         ],
@@ -82,8 +82,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         ],
         PrjExpenseReport: [
             ...col.id('reportId', 'Report ID'),
-            ...col('reportNumber', 'Report #'),
-            ...col('title', 'Title'),
+            ...col.col('reportNumber', 'Report #'),
+            ...col.col('title', 'Title'),
             ...col.money('totalAmount', 'Total'),
             ...col.money('approvedAmount', 'Approved'),
             ...col.status('status', 'Status', PRJC.enums.EXPENSE_STATUS, render.expenseStatus)
@@ -92,7 +92,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         // Deliverables
         PrjPortfolioView: [
             ...col.id('viewId', 'View ID'),
-            ...col('name', 'Name'),
+            ...col.col('name', 'Name'),
             ...col.number('totalProjects', 'Projects'),
             ...col.number('onTrackCount', 'On Track'),
             ...col.number('atRiskCount', 'At Risk'),

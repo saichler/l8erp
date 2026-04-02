@@ -15,11 +15,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         render: function(container) {
             var managerId = MGR._scopeValue || '';
 
-            container.innerHTML =
-                '<div class="l8-portal-m-dashboard-welcome">' +
-                    '<h2>Manager Dashboard</h2>' +
-                    '<p>Team overview and pending approvals.</p>' +
-                '</div>' +
+            container.innerHTML = '';
+            Layer8DPortalDashboard.renderHeader(container, '👥', 'Manager Dashboard', 'Team overview and pending approvals.');
+            container.insertAdjacentHTML('beforeend',
                 '<div class="l8-portal-m-dashboard-cards">' +
                     '<div class="l8-portal-m-card">' +
                         '<div class="l8-portal-m-card-icon">👥</div>' +
@@ -48,7 +46,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                         '<button class="l8-portal-m-quick-btn l8-portal-m-quick-btn-primary" onclick="MobileMGR.loadSection(\'approvals\')">Review Approvals</button>' +
                         '<button class="l8-portal-m-quick-btn l8-portal-m-quick-btn-secondary" onclick="MobileMGR.loadSection(\'team\')">View Team</button>' +
                     '</div>' +
-                '</div>';
+                '</div>');
 
             var w = sw('managerId', managerId, false);
             var wp = sw('managerId', managerId, true);
@@ -58,17 +56,18 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 if (el) el.textContent = total + ' members';
             });
 
-            fetch_('/30/LeaveReq', 'select * from LeaveRequest where ' + wp + 'status=2 limit 1 page 0', function(total) {
+            // LeaveRequest/Timesheet/PerformanceReview don't have managerId — query unscoped
+            fetch_('/30/LeaveReq', 'select * from LeaveRequest where status=2 limit 1 page 0', function(total) {
                 var el = document.getElementById('mgr-m-leave-value');
                 if (el) el.textContent = total + ' pending';
             });
 
-            fetch_('/30/Timesheet', 'select * from Timesheet where ' + wp + 'status=2 limit 1 page 0', function(total) {
+            fetch_('/30/Timesheet', 'select * from Timesheet where status=2 limit 1 page 0', function(total) {
                 var el = document.getElementById('mgr-m-timesheet-value');
                 if (el) el.textContent = total + ' pending';
             });
 
-            fetch_('/30/PerfRevw', 'select * from PerformanceReview where ' + wp + 'status=4 limit 1 page 0', function(total) {
+            fetch_('/30/PerfRevw', 'select * from PerformanceReview where status=4 limit 1 page 0', function(total) {
                 var el = document.getElementById('mgr-m-review-value');
                 if (el) el.textContent = total + ' in progress';
             });

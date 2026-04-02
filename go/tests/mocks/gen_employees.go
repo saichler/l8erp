@@ -58,7 +58,11 @@ func generateEmployees(store *MockDataStore) []*hcm.Employee {
 			// Regular employees report to one of the managers (2-10)
 			// Distribute employees among managers: employee 11 -> manager 2, employee 12 -> manager 3, etc.
 			managerIndex := ((i - 10) % 9) + 2 // Results in 2-10
-			managerID = fmt.Sprintf("emp-%03d", managerIndex)
+			if managerIndex == 2 {
+				managerID = "hcm" // emp-002 was renamed to "hcm" for portal demo user
+			} else {
+				managerID = fmt.Sprintf("emp-%03d", managerIndex)
+			}
 		}
 
 		// Portal demo user gets employeeId="hcm" to match login username
