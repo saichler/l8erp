@@ -263,36 +263,36 @@ The `l8secure` project (`../l8secure/go/secure/`) implements the core security i
 
 ---
 
-## 6. Desktop/Mobile Parity Gaps
+## 6. Desktop/Mobile Parity Gaps — MOSTLY COMPLETE
 
-### 6.1 CSS Parity
+### 6.1 ~~CSS Parity~~ ✓ DONE
 
-- Desktop has **17 module-specific CSS files** (accent colors, status styling)
-- Mobile has **0 module-specific CSS files** (relies entirely on generic app CSS)
+- ~~Desktop has 17 module-specific CSS files (accent colors, status styling)~~
+- ~~Mobile has 0 module-specific CSS files~~
+- **Fixed:** Created `m/css/m-module-accents.css` with accent colors for all 12 modules. Added `data-module` attribute to nav cards.
 
-### 6.2 Structural Differences
+### 6.2 ~~Structural Differences~~ ✓ DONE
 
-- Mobile HCM has 8 sub-section HTML files; desktop uses a single factory-generated section
-- Mobile SCM top-level section is still a placeholder ("Under Development") though sub-sections exist
-- Mobile JS files are 2-5 fewer per module than desktop (consolidated enum files)
+- ~~Mobile HCM has 8 sub-section HTML files; desktop uses a single factory-generated section~~
+- ~~Mobile SCM top-level section is still a placeholder ("Under Development") though sub-sections exist~~
+- ~~Mobile JS files are 2-5 fewer per module than desktop (consolidated enum files)~~
+- **Fixed:** Deleted 24 dead placeholder HTML files. All modules route through nav card system. Only `dashboard.html` and `system.html` remain in `m/sections/`.
 
-### 6.3 Behavioral Parity Gaps
+### 6.3 ~~Behavioral Parity Gaps~~ ✓ DONE
 
-The mobile-parity rule requires that the same action produces the same result on both platforms. Key behavioral gaps:
+- ~~**Module enable/disable propagation**~~ — **DONE**: Mobile `app-core.js` loads `Layer8DModuleFilter`, calls `.load(token)` and `.applyModuleFilter()` on startup.
+- ~~**Configuration change effects**~~ — **DONE**: Currency/exchange rate caches loaded in `app-core.js`. No dark mode toggle exists on either platform.
+- ~~**Cross-view data effects**~~ — **DONE**: `layer8m-nav-crud.js` calls `table.refresh()` after save and delete.
+- ~~**Section placeholder status**~~ — **DONE**: All placeholders deleted in Phase 2.
 
-- ~~**Module enable/disable propagation**~~ — **DONE**: Mobile `app-core.js` loads `Layer8DModuleFilter`, calls `.load(token)` and `.applyModuleFilter()` on startup. Both platforms consume the same module filter state.
-- **Configuration change effects**: Currency selection, theme changes, and other settings may only propagate to desktop UI components, leaving mobile unaffected.
-- **Cross-view data effects**: CRUD operations that update one view and affect another (e.g., status change on a list refreshing a detail view) need verification on both platforms.
-- **Section placeholder status**: Some mobile sections may still show "Under Development" while desktop is fully functional (e.g., mobile SCM top-level section).
+### 6.4 ~~Missing Mobile Features~~ ✓ MOSTLY DONE
 
-### 6.4 Missing Mobile Features
-
-- Employee detail view handler (HCM)
-- Module-specific styling/theming
-- Pull-to-refresh
-- Swipe actions on list items
-- Bottom sheet modals
-- Offline support / service worker
+- ~~Employee detail view handler (HCM)~~ — **DONE**: `m/js/hcm/employee-detail-m.js` with 4-tab popup
+- ~~Module-specific styling/theming~~ — **DONE**: `m/css/m-module-accents.css`
+- ~~Pull-to-refresh~~ — **DONE**: `l8ui/m/js/layer8m-table-touch.js`
+- ~~Swipe actions on list items~~ — **DONE**: swipe-left for Edit/Delete in `layer8m-table-touch.js`
+- ~~Bottom sheet modals~~ — **DONE**: `Layer8MPopup.show({ position: 'bottom' })`
+- Offline support / service worker — **Deferred** (needs own plan)
 
 ---
 

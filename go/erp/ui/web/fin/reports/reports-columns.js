@@ -26,8 +26,8 @@ limitations under the License.
     FIN.Reports.columns = {
         FinReport: [
             ...col.enum('reportType', 'Report Type', enums.REPORT_TYPE, function(v) { return Layer8DRenderers.renderEnum(v, enums.REPORT_TYPE); }),
-            ...col('title', 'Title'),
-            ...col('periodName', 'Period'),
+            ...col.col('title', 'Title'),
+            ...col.col('periodName', 'Period'),
             ...col.date('generatedAt', 'Generated'),
             ...col.number('rowCount', 'Rows')
         ]
