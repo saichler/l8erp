@@ -15,6 +15,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         scopeField: 'partnerId',
         sharedModels: ['CrmLead', 'CrmOpportunity', 'CrmLeadSource', 'CrmCampaign', 'CrmMarketingList', 'SalesQuotation', 'SalesOrder', 'SalesCommissionPlan'],
         moduleNamespace: 'CRM',
+        portalSvgKey: 'crm',
+        portalIcon: '🤝',
         contentAreaId: 'content-area',
         sidebarNavId: 'l8-portal-sidebar-nav',
         navMenuTitle: 'Menu'

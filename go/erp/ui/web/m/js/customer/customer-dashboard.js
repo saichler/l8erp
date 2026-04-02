@@ -16,7 +16,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             var customerId = CUST._scopeValue || '';
 
             container.innerHTML = '';
-            Layer8DPortalDashboard.renderHeader(container, '🛒', 'Customer Portal', 'Your orders, invoices, and support.');
             container.insertAdjacentHTML('beforeend',
                 '<div class="l8-portal-m-dashboard-cards">' +
                     '<div class="l8-portal-m-card">' +

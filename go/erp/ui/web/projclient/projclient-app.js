@@ -13,6 +13,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         namespace: 'PRJC',
         scopeField: 'customerId',
         sharedModels: ['PrjStatusReport', 'PrjProjectKPI', 'PrjProjectBudget', 'PrjBillingSchedule', 'PrjTimesheet', 'PrjExpenseReport', 'PrjPortfolioView'],
-        moduleNamespace: 'Prj'
+        moduleNamespace: 'Prj',
+        portalSvgKey: 'projects',
+        portalIcon: '📋'
     });
 })();

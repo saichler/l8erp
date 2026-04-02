@@ -17,7 +17,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             var name = Layer8DUtils ? Layer8DUtils.escapeHtml(ESS.employeeName || 'Employee') : (ESS.employeeName || 'Employee');
 
             container.innerHTML = '';
-            Layer8DPortalDashboard.renderHeader(container, '👤', 'Welcome, ' + name, 'Here is a summary of your information.');
             container.insertAdjacentHTML('beforeend',
                 '<div class="l8-portal-m-dashboard-cards">' +
                     '<div class="l8-portal-m-card">' +

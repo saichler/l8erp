@@ -16,35 +16,45 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             var clientId = PRJC._scopeValue || '';
 
             container.innerHTML = '';
-            Layer8DPortalDashboard.renderHeader(container, '📁', 'Project Client Portal', 'Your projects, budgets, and deliverables at a glance.');
-            container.insertAdjacentHTML('beforeend',
+            container.insertAdjacentHTML('beforeend', '<div class="l8-portal-dashboard">' +
                 '<div class="l8-portal-dashboard-cards">' +
                     '<div class="l8-portal-card">' +
                         '<div class="l8-portal-card-icon">📁</div>' +
-                        '<div class="l8-portal-card-label">Active Projects</div>' +
-                        '<div class="l8-portal-card-value" id="prjc-proj-value">Loading...</div>' +
+                        '<div class="l8-portal-card-content">' +
+                            '<h3>Active Projects</h3>' +
+                            '<div class="l8-portal-card-value" id="prjc-proj-value">Loading...</div>' +
+                        '</div>' +
                     '</div>' +
                     '<div class="l8-portal-card">' +
                         '<div class="l8-portal-card-icon">📊</div>' +
-                        '<div class="l8-portal-card-label">Status Reports</div>' +
-                        '<div class="l8-portal-card-value" id="prjc-status-value">Loading...</div>' +
+                        '<div class="l8-portal-card-content">' +
+                            '<h3>Status Reports</h3>' +
+                            '<div class="l8-portal-card-value" id="prjc-status-value">Loading...</div>' +
+                        '</div>' +
                     '</div>' +
                     '<div class="l8-portal-card">' +
                         '<div class="l8-portal-card-icon">💰</div>' +
-                        '<div class="l8-portal-card-label">Open Invoices</div>' +
-                        '<div class="l8-portal-card-value" id="prjc-inv-value">Loading...</div>' +
+                        '<div class="l8-portal-card-content">' +
+                            '<h3>Open Invoices</h3>' +
+                            '<div class="l8-portal-card-value" id="prjc-inv-value">Loading...</div>' +
+                        '</div>' +
                     '</div>' +
                     '<div class="l8-portal-card">' +
                         '<div class="l8-portal-card-icon">⏱</div>' +
-                        '<div class="l8-portal-card-label">Recent Timesheets</div>' +
-                        '<div class="l8-portal-card-value" id="prjc-ts-value">Loading...</div>' +
+                        '<div class="l8-portal-card-content">' +
+                            '<h3>Recent Timesheets</h3>' +
+                            '<div class="l8-portal-card-value" id="prjc-ts-value">Loading...</div>' +
+                        '</div>' +
                     '</div>' +
                 '</div>' +
-                '<div class="l8-portal-quick-actions">' +
+                '<div class="l8-portal-dashboard-quick">' +
                     '<h3>Quick Actions</h3>' +
-                    '<button class="layer8d-btn layer8d-btn-primary layer8d-btn-small" onclick="PRJC._loadSection(\'projects\')">View Projects</button>' +
-                    '<button class="layer8d-btn layer8d-btn-secondary layer8d-btn-small" onclick="PRJC._loadSection(\'budget\')">View Budget</button>' +
-                '</div>');
+                    '<div class="l8-portal-quick-actions">' +
+                        '<button class="layer8d-btn layer8d-btn-primary layer8d-btn-small" onclick="PRJC._loadSection(\'projects\')">View Projects</button>' +
+                        '<button class="layer8d-btn layer8d-btn-secondary layer8d-btn-small" onclick="PRJC._loadSection(\'budget\')">View Budget</button>' +
+                    '</div>' +
+                '</div>' +
+            '</div>');
 
             var wp = sw('customerId', clientId, true);
 

@@ -255,4 +255,33 @@ limitations under the License.
             <path d="M 992 55 L 1000 50 L 1008 55 L 1008 67 L 1000 72 L 992 67 Z" fill="#fff" opacity="1.0"/>`;
     });
 
+    // AIA - AI Agent (brain, chat bubbles, neural connections)
+    factory.registerTemplate('aia', function(gradientId) {
+        return `
+            <circle cx="200" cy="60" r="22" fill="url(#${gradientId})" opacity="0.8"/>
+            <path d="M 189 55 Q 200 42 211 55 Q 215 65 200 72 Q 185 65 189 55 Z" fill="#fff" opacity="1.0"/>
+            <circle cx="195" cy="58" r="2" fill="url(#${gradientId})" opacity="0.9"/>
+            <circle cx="205" cy="58" r="2" fill="url(#${gradientId})" opacity="0.9"/>
+            <rect x="382" y="44" width="36" height="26" rx="6" fill="url(#${gradientId})" opacity="0.7"/>
+            <rect x="386" y="50" width="16" height="2.5" rx="1" fill="#fff" opacity="1.0"/>
+            <rect x="386" y="56" width="22" height="2.5" rx="1" fill="#fff" opacity="0.9"/>
+            <polygon points="390,70 398,70 394,76" fill="url(#${gradientId})" opacity="0.7"/>
+            <circle cx="600" cy="60" r="26" fill="url(#${gradientId})" opacity="0.9"/>
+            <path d="M 586 55 Q 600 38 614 55 Q 620 68 600 78 Q 580 68 586 55 Z" fill="#fff" opacity="1.0"/>
+            <circle cx="593" cy="58" r="3" fill="url(#${gradientId})" opacity="0.9"/>
+            <circle cx="607" cy="58" r="3" fill="url(#${gradientId})" opacity="0.9"/>
+            <path d="M 593 66 Q 600 72 607 66" fill="none" stroke="url(#${gradientId})" stroke-width="2" opacity="0.8"/>
+            <rect x="778" y="42" width="44" height="30" rx="6" fill="url(#${gradientId})" opacity="0.7"/>
+            <circle cx="790" cy="54" r="3" fill="#fff" opacity="1.0"/>
+            <circle cx="800" cy="54" r="3" fill="#fff" opacity="1.0"/>
+            <circle cx="810" cy="54" r="3" fill="#fff" opacity="1.0"/>
+            <polygon points="784,72 792,72 788,78" fill="url(#${gradientId})" opacity="0.7"/>
+            <circle cx="1000" cy="60" r="20" fill="url(#${gradientId})" opacity="0.8"/>
+            <line x1="988" y1="52" x2="996" y2="60" stroke="#fff" stroke-width="2" opacity="0.9"/>
+            <line x1="996" y1="60" x2="1004" y2="52" stroke="#fff" stroke-width="2" opacity="0.9"/>
+            <line x1="1004" y1="52" x2="1012" y2="60" stroke="#fff" stroke-width="2" opacity="0.9"/>
+            <line x1="988" y1="68" x2="996" y2="60" stroke="#fff" stroke-width="2" opacity="0.9"/>
+            <line x1="1012" y1="68" x2="1004" y2="60" stroke="#fff" stroke-width="2" opacity="0.9"/>`;
+    });
+
 })();

@@ -18,6 +18,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         scopeField: 'employeeId',
         sharedModels: ['Holiday', 'BenefitPlan'],
         moduleNamespace: 'HCM',
+        portalSvgKey: 'people',
+        portalIcon: '👤',
         contentAreaId: 'l8-portal-content-area',
         navMenuSelector: '.l8-portal-nav-menu',
         headerRightSelector: '.l8-portal-header-right',

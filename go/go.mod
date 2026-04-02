@@ -3,7 +3,7 @@ module github.com/saichler/l8erp/go
 go 1.26.1
 
 require (
-	github.com/lib/pq v1.12.1
+	github.com/lib/pq v1.12.2
 	github.com/saichler/l8agent v0.0.0-20260327104032-03223fdf7dc2
 	github.com/saichler/l8bus v0.0.0-20260326134657-42f845bc01f6
 	github.com/saichler/l8events v0.0.0-20260326140304-4e54a1195008

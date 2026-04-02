@@ -3,31 +3,12 @@
 
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 -->
-<div class="section-container l8-section">
-    <div class="page-header"><h1>AI Agent</h1></div>
-    <div class="l8-module-tabs">
-        <button class="l8-module-tab active" data-module="agent">
-            <span class="tab-icon">🤖</span>
-            <span class="tab-label">Agent</span>
-        </button>
-    </div>
-    <div class="l8-module-content active" data-module="agent">
-        <div class="l8-subnav">
-            <a class="l8-subnav-item active" data-service="chat">💬 Chat</a>
-            <a class="l8-subnav-item" data-service="prompts">📋 Prompts</a>
-        </div>
-        <div class="l8-service-content">
-            <div class="l8-service-view active" data-service="chat">
-                <div id="agent-chat-container"></div>
-            </div>
-            <div class="l8-service-view" data-service="prompts">
-                <div class="l8-table-container" id="agent-prompts-table-container"></div>
-            </div>
-        </div>
-    </div>
-</div>
+<div id="aia-section-placeholder"></div>
 <script>
-    if (typeof initializeAia === 'function') {
-        initializeAia();
-    }
+    (function() {
+        var placeholder = document.getElementById('aia-section-placeholder');
+        if (placeholder && window.Layer8SectionGenerator) {
+            placeholder.outerHTML = Layer8SectionGenerator.generate('aia');
+        }
+    })();
 </script>

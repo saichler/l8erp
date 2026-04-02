@@ -16,38 +16,46 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             var customerId = CUST._scopeValue || '';
 
             container.innerHTML = '';
-            Layer8DPortalDashboard.renderHeader(container, '🛒', 'Customer Portal', 'View your orders, invoices, and support cases.');
-            container.insertAdjacentHTML('beforeend',
+            container.insertAdjacentHTML('beforeend', '<div class="l8-portal-dashboard">' +
                 '<div class="l8-portal-dashboard-cards">' +
                     '<div class="l8-portal-card">' +
                         '<div class="l8-portal-card-icon">🛒</div>' +
-                        '<div class="l8-portal-card-label">Active Orders</div>' +
-                        '<div class="l8-portal-card-value" id="cust-d-orders-value">Loading...</div>' +
+                        '<div class="l8-portal-card-content">' +
+                            '<h3>Active Orders</h3>' +
+                            '<div class="l8-portal-card-value" id="cust-d-orders-value">Loading...</div>' +
+                        '</div>' +
                     '</div>' +
                     '<div class="l8-portal-card">' +
                         '<div class="l8-portal-card-icon">📄</div>' +
-                        '<div class="l8-portal-card-label">Open Invoices</div>' +
-                        '<div class="l8-portal-card-value" id="cust-d-invoices-value">Loading...</div>' +
+                        '<div class="l8-portal-card-content">' +
+                            '<h3>Open Invoices</h3>' +
+                            '<div class="l8-portal-card-value" id="cust-d-invoices-value">Loading...</div>' +
+                        '</div>' +
                     '</div>' +
                     '<div class="l8-portal-card">' +
                         '<div class="l8-portal-card-icon">🚚</div>' +
-                        '<div class="l8-portal-card-label">In Transit</div>' +
-                        '<div class="l8-portal-card-value" id="cust-d-deliveries-value">Loading...</div>' +
+                        '<div class="l8-portal-card-content">' +
+                            '<h3>In Transit</h3>' +
+                            '<div class="l8-portal-card-value" id="cust-d-deliveries-value">Loading...</div>' +
+                        '</div>' +
                     '</div>' +
                     '<div class="l8-portal-card">' +
                         '<div class="l8-portal-card-icon">🎧</div>' +
-                        '<div class="l8-portal-card-label">Open Cases</div>' +
-                        '<div class="l8-portal-card-value" id="cust-d-cases-value">Loading...</div>' +
+                        '<div class="l8-portal-card-content">' +
+                            '<h3>Open Cases</h3>' +
+                            '<div class="l8-portal-card-value" id="cust-d-cases-value">Loading...</div>' +
+                        '</div>' +
                     '</div>' +
                 '</div>' +
-                '<div class="l8-portal-quick-actions">' +
+                '<div class="l8-portal-dashboard-quick">' +
                     '<h3>Quick Actions</h3>' +
-                    '<div class="l8-portal-action-buttons">' +
-                        '<button class="l8-portal-action-btn l8-portal-action-btn-primary" onclick="CUST.loadSection(\'orders\')">View Orders</button>' +
-                        '<button class="l8-portal-action-btn l8-portal-action-btn-secondary" onclick="CUST.loadSection(\'support\')">Open Support Case</button>' +
-                        '<button class="l8-portal-action-btn l8-portal-action-btn-secondary" onclick="CUST.loadSection(\'billing\')">View Invoices</button>' +
+                    '<div class="l8-portal-quick-actions">' +
+                        '<button class="layer8d-btn layer8d-btn-primary layer8d-btn-small" onclick="CUST.loadSection(\'orders\')">View Orders</button>' +
+                        '<button class="layer8d-btn layer8d-btn-secondary layer8d-btn-small" onclick="CUST.loadSection(\'support\')">Open Support Case</button>' +
+                        '<button class="layer8d-btn layer8d-btn-secondary layer8d-btn-small" onclick="CUST.loadSection(\'billing\')">View Invoices</button>' +
                     '</div>' +
-                '</div>');
+                '</div>' +
+            '</div>');
 
             var w = sw('customerId', customerId, false);
             var wp = sw('customerId', customerId, true);

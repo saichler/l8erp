@@ -16,7 +16,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             var managerId = MGR._scopeValue || '';
 
             container.innerHTML = '';
-            Layer8DPortalDashboard.renderHeader(container, '👥', 'Manager Dashboard', 'Team overview and pending approvals.');
             container.insertAdjacentHTML('beforeend',
                 '<div class="l8-portal-m-dashboard-cards">' +
                     '<div class="l8-portal-m-card">' +
