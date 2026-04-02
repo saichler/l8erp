@@ -15,7 +15,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
     AiaAgent.initChat = function() {
         if (typeof L8AgentChat !== 'undefined') {
             L8AgentChat.init({
-                containerId: 'agent-chat-container',
+                containerId: 'agent-chat-table-container',
                 chatEndpoint: '/120/AgntChat',
                 promptEndpoint: '/120/AgntPrmpt'
             });
