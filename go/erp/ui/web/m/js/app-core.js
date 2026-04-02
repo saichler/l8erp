@@ -18,52 +18,11 @@ limitations under the License.
 (function() {
     'use strict';
 
-    // Section URL mappings - All ERP modules matching desktop version
+    // Section URL mappings
+    // Modules with nav config (financial, hcm, scm, etc.) are handled by
+    // Layer8MNav via _loadDashboardForModule — no static HTML needed.
     const SECTIONS = {
-        // Dashboard
         'dashboard': 'sections/dashboard.html',
-
-        // Financial Management
-        'financial': 'sections/financial.html',
-
-        // Human Capital Management (HCM)
-        'hcm-employees': 'sections/hcm/employees.html',
-        'hcm-organization': 'sections/hcm/organization.html',
-        'hcm-payroll': 'sections/hcm/payroll.html',
-        'hcm-benefits': 'sections/hcm/benefits.html',
-        'hcm-time': 'sections/hcm/time.html',
-        'hcm-talent': 'sections/hcm/talent.html',
-        'hcm-learning': 'sections/hcm/learning.html',
-        'hcm-compensation': 'sections/hcm/compensation.html',
-
-        // Supply Chain Management
-        'scm': 'sections/scm.html',
-
-        // Manufacturing
-        'manufacturing': 'sections/manufacturing.html',
-
-        // Sales & Distribution
-        'sales': 'sections/sales.html',
-
-        // Customer Relationship Management
-        'crm': 'sections/crm.html',
-
-        // Project Management
-        'projects': 'sections/projects.html',
-
-        // Business Intelligence
-        'bi': 'sections/bi.html',
-
-        // Document Management
-        'documents': 'sections/documents.html',
-
-        // E-Commerce
-        'ecommerce': 'sections/ecommerce.html',
-
-        // Compliance & Risk Management
-        'compliance': 'sections/compliance.html',
-
-        // System Administration
         'system': 'sections/system.html'
     };
 
@@ -362,14 +321,6 @@ limitations under the License.
             // Map section names to init function names
             const initFunctions = {
                 'dashboard': 'initMobileDashboard',
-                'hcm-employees': 'initMobileEmployees',
-                'hcm-organization': 'initMobileOrganization',
-                'hcm-payroll': 'initMobilePayroll',
-                'hcm-benefits': 'initMobileBenefits',
-                'hcm-time': 'initMobileTime',
-                'hcm-talent': 'initMobileTalent',
-                'hcm-learning': 'initMobileLearning',
-                'hcm-compensation': 'initMobileCompensation',
                 'system': 'initMobileSystem'
             };
 

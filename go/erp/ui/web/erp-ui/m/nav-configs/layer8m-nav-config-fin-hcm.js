@@ -84,7 +84,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             // Services for each sub-module (Level 3) - EXACT order from desktop hcm-config.js
             services: {
                 'core-hr': [
-                    { key: 'employees', label: 'Employees', icon: 'employees', endpoint: '/30/Employee', model: 'Employee', idField: 'employeeId' },
+                    { key: 'employees', label: 'Employees', icon: 'employees', endpoint: '/30/Employee', model: 'Employee', idField: 'employeeId',
+                      onRowClick: function(item) { MobileEmployeeDetail.open(item); } },
                     { key: 'positions', label: 'Positions', icon: 'positions', endpoint: '/30/Position', model: 'Position', idField: 'positionId' },
                     { key: 'jobs', label: 'Jobs', icon: 'jobs', endpoint: '/30/Job', model: 'Job', idField: 'jobId' },
                     { key: 'job-families', label: 'Job Families', icon: 'job-families', endpoint: '/30/JobFamily', model: 'JobFamily', idField: 'jobFamilyId' },

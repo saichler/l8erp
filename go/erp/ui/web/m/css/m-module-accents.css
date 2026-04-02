@@ -1,0 +1,43 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+*/
+/* Mobile module accent colors — one selector per module */
+/* Applied to nav cards via data-module attribute */
+
+.nav-card[data-module="hcm"] .nav-card-icon { background: linear-gradient(135deg, #f1ebe2, #e6ddd0); }
+.nav-card[data-module="hcm"] .nav-card-icon svg { stroke: #7c5f3f; }
+
+.nav-card[data-module="fin"] .nav-card-icon { background: linear-gradient(135deg, #ede9fe, #ddd6fe); }
+.nav-card[data-module="fin"] .nav-card-icon svg { stroke: #7c3aed; }
+
+.nav-card[data-module="scm"] .nav-card-icon { background: linear-gradient(135deg, #ffedd5, #fed7aa); }
+.nav-card[data-module="scm"] .nav-card-icon svg { stroke: #ea580c; }
+
+.nav-card[data-module="sales"] .nav-card-icon { background: linear-gradient(135deg, #dcfce7, #bbf7d0); }
+.nav-card[data-module="sales"] .nav-card-icon svg { stroke: #16a34a; }
+
+.nav-card[data-module="mfg"] .nav-card-icon { background: linear-gradient(135deg, #fce7f3, #fbcfe8); }
+.nav-card[data-module="mfg"] .nav-card-icon svg { stroke: #db2777; }
+
+.nav-card[data-module="crm"] .nav-card-icon { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+.nav-card[data-module="crm"] .nav-card-icon svg { stroke: #d97706; }
+
+.nav-card[data-module="prj"] .nav-card-icon { background: linear-gradient(135deg, #f3e8ff, #e9d5ff); }
+.nav-card[data-module="prj"] .nav-card-icon svg { stroke: #9333ea; }
+
+.nav-card[data-module="bi"] .nav-card-icon { background: linear-gradient(135deg, #e0e7ff, #c7d2fe); }
+.nav-card[data-module="bi"] .nav-card-icon svg { stroke: #6366f1; }
+
+.nav-card[data-module="doc"] .nav-card-icon { background: linear-gradient(135deg, #f5f5f4, #e7e5e4); }
+.nav-card[data-module="doc"] .nav-card-icon svg { stroke: #78716c; }
+
+.nav-card[data-module="ecom"] .nav-card-icon { background: linear-gradient(135deg, #ffedd5, #fdba74); }
+.nav-card[data-module="ecom"] .nav-card-icon svg { stroke: #f97316; }
+
+.nav-card[data-module="comp"] .nav-card-icon { background: linear-gradient(135deg, #fee2e2, #fecaca); }
+.nav-card[data-module="comp"] .nav-card-icon svg { stroke: #dc2626; }
+
+.nav-card[data-module="aia"] .nav-card-icon { background: linear-gradient(135deg, #dbeafe, #bfdbfe); }
+.nav-card[data-module="aia"] .nav-card-icon svg { stroke: #2563eb; }
