@@ -19,7 +19,7 @@ package crm;
 option go_package = "./types/crm";
 
 import "crm-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -44,13 +44,13 @@ message CrmLead {
   string description = 13;
   string website = 14;
   int32 employee_count = 15;
-  erp.Money annual_revenue = 16;
-  erp.Address address = 17;
+  l8common.Money annual_revenue = 16;
+  l8common.Address address = 17;
   int64 last_activity_date = 18;
   int32 score = 19;
   string campaign_id = 20;                 // cross-ref: CrmCampaign (optional)
   map<string, string> custom_fields = 21;
-  erp.AuditInfo audit_info = 22;
+  l8common.AuditInfo audit_info = 22;
   repeated CrmLeadActivity activities = 23;
   repeated CrmLeadConversion conversions = 24;
 }
@@ -70,7 +70,7 @@ message CrmLeadSource {
   bool is_active = 5;
   double default_cost = 6;
   map<string, string> custom_fields = 7;
-  erp.AuditInfo audit_info = 8;
+  l8common.AuditInfo audit_info = 8;
 }
 
 message CrmLeadSourceList {
@@ -90,7 +90,7 @@ message CrmLeadScore {
   bool is_active = 7;
   int32 priority = 8;
   map<string, string> custom_fields = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message CrmLeadScoreList {
@@ -111,7 +111,7 @@ message CrmLeadActivity {
   string outcome = 10;
   bool is_completed = 11;
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 
 
@@ -129,7 +129,7 @@ message CrmLeadAssign {
   bool is_active = 9;
   bool round_robin = 10;
   map<string, string> custom_fields = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 message CrmLeadAssignList {
@@ -148,6 +148,6 @@ message CrmLeadConversion {
   string notes = 8;
   bool create_opportunity = 9;
   map<string, string> custom_fields = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }
 

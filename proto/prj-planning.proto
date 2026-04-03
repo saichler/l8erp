@@ -20,7 +20,7 @@ option go_package = "./types/prj";
 
 import "prj-common.proto";
 import "prj-analytics.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -48,13 +48,13 @@ message PrjProject {
   int64 actual_end_date = 16;
   double estimated_hours = 17;
   double actual_hours = 18;
-  erp.Money budget = 19;
-  erp.Money actual_cost = 20;
+  l8common.Money budget = 19;
+  l8common.Money actual_cost = 20;
   int32 percent_complete = 21;
   PrjBillingType billing_type = 22;
   string opportunity_id = 23;              // cross-ref: CRM Opportunity
   map<string, string> custom_fields = 24;
-  erp.AuditInfo audit_info = 25;
+  l8common.AuditInfo audit_info = 25;
   repeated PrjPhase phases = 26;
   repeated PrjTask tasks = 27;
   repeated PrjMilestone milestones = 28;
@@ -80,11 +80,11 @@ message PrjProjectTemplate {
   string description = 3;
   PrjProjectType project_type = 4;
   double default_estimated_hours = 5;
-  erp.Money default_budget = 6;
+  l8common.Money default_budget = 6;
   PrjBillingType default_billing_type = 7;
   bool is_active = 8;
   map<string, string> custom_fields = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message PrjProjectTemplateList {
@@ -107,7 +107,7 @@ message PrjPhase {
   int32 percent_complete = 12;
   PrjProjectStatus status = 13;
   map<string, string> custom_fields = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 // PrjTask represents a project task
@@ -132,7 +132,7 @@ message PrjTask {
   bool is_billable = 19;
   bool is_milestone = 20;
   map<string, string> custom_fields = 21;
-  erp.AuditInfo audit_info = 22;
+  l8common.AuditInfo audit_info = 22;
 }
 
 // PrjMilestone represents a project milestone
@@ -145,10 +145,10 @@ message PrjMilestone {
   int64 actual_date = 7;
   PrjMilestoneStatus status = 8;
   bool is_billable = 9;
-  erp.Money billing_amount = 10;
+  l8common.Money billing_amount = 10;
   string owner_id = 11;                    // cross-ref: HCM Employee
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 
 // PrjDeliverable represents a project deliverable
@@ -165,7 +165,7 @@ message PrjDeliverable {
   int64 acceptance_date = 11;
   string notes = 12;
   map<string, string> custom_fields = 13;
-  erp.AuditInfo audit_info = 14;
+  l8common.AuditInfo audit_info = 14;
 }
 
 // PrjDependency represents a task dependency
@@ -176,7 +176,7 @@ message PrjDependency {
   PrjDependencyType dependency_type = 5;
   int32 lag_days = 6;
   map<string, string> custom_fields = 7;
-  erp.AuditInfo audit_info = 8;
+  l8common.AuditInfo audit_info = 8;
 }
 
 // PrjRisk represents a project risk
@@ -187,7 +187,7 @@ message PrjRisk {
   string category = 5;
   PrjRiskSeverity severity = 6;
   int32 probability = 7;                   // 0-100 percentage
-  erp.Money potential_impact = 8;
+  l8common.Money potential_impact = 8;
   string impact_description = 9;
   string mitigation_plan = 10;
   string contingency_plan = 11;
@@ -196,6 +196,6 @@ message PrjRisk {
   int64 identified_date = 14;
   int64 due_date = 15;
   map<string, string> custom_fields = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
 }
 

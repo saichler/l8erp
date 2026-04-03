@@ -18,7 +18,7 @@ package fin;
 
 option go_package = "./types/fin";
 
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -53,9 +53,9 @@ message FinReport {
   string period_name = 9;
   int64 generated_at = 10;
   repeated FinReportSection sections = 11;
-  erp.Money grand_total = 12;
+  l8common.Money grand_total = 12;
   int32 row_count = 13;
-  erp.AuditInfo audit_info = 30;
+  l8common.AuditInfo audit_info = 30;
 }
 
 message FinReportList {
@@ -66,7 +66,7 @@ message FinReportList {
 message FinReportSection {
   string title = 1;
   repeated FinReportLine lines = 2;
-  erp.Money section_total = 3;
+  l8common.Money section_total = 3;
 }
 
 message FinReportLine {
@@ -75,13 +75,13 @@ message FinReportLine {
   string account_name = 3;
   int32 level = 4;
   bool is_header = 5;
-  erp.Money debit = 6;
-  erp.Money credit = 7;
-  erp.Money balance = 8;
-  erp.Money budget_amount = 9;
-  erp.Money variance = 10;
+  l8common.Money debit = 6;
+  l8common.Money credit = 7;
+  l8common.Money balance = 8;
+  l8common.Money budget_amount = 9;
+  l8common.Money variance = 10;
   double variance_percent = 11;
-  erp.Money prior_period = 12;
+  l8common.Money prior_period = 12;
   string description = 13;
   int64 entry_date = 14;
   string reference = 15;

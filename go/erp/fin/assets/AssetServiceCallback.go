@@ -15,9 +15,9 @@ limitations under the License.
 package assets
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -32,16 +32,16 @@ func newAssetServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.Asset) string { return e.CategoryId }, "CategoryId").
 		Enum(func(e *fin.Asset) int32 { return int32(e.DepreciationMethod) }, fin.DepreciationMethod_name, "DepreciationMethod").
 		Enum(func(e *fin.Asset) int32 { return int32(e.Status) }, fin.AssetStatus_name, "Status").
-		OptionalMoney(func(e *fin.Asset) *erp.Money { return e.AcquisitionCost }, "AcquisitionCost").
-		OptionalMoney(func(e *fin.Asset) *erp.Money { return e.SalvageValue }, "SalvageValue").
-		OptionalMoney(func(e *fin.Asset) *erp.Money { return e.AccumulatedDepreciation }, "AccumulatedDepreciation").
-		OptionalMoney(func(e *fin.Asset) *erp.Money { return e.NetBookValue }, "NetBookValue").
+		OptionalMoney(func(e *fin.Asset) *l8common.Money { return e.AcquisitionCost }, "AcquisitionCost").
+		OptionalMoney(func(e *fin.Asset) *l8common.Money { return e.SalvageValue }, "SalvageValue").
+		OptionalMoney(func(e *fin.Asset) *l8common.Money { return e.AccumulatedDepreciation }, "AccumulatedDepreciation").
+		OptionalMoney(func(e *fin.Asset) *l8common.Money { return e.NetBookValue }, "NetBookValue").
 		Build()
 }
 
 func computeAssetValues(a *fin.Asset) error {
 	a.AccumulatedDepreciation = common.SumLineMoney(a.DepreciationSchedules,
-		func(s *fin.DepreciationSchedule) *erp.Money { return s.DepreciationAmount })
+		func(s *fin.DepreciationSchedule) *l8common.Money { return s.DepreciationAmount })
 	a.NetBookValue = common.MoneySubtract(a.AcquisitionCost, a.AccumulatedDepreciation)
 	return nil
 }

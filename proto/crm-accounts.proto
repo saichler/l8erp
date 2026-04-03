@@ -19,7 +19,7 @@ package crm;
 option go_package = "./types/crm";
 
 import "crm-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -38,10 +38,10 @@ message CrmAccount {
   string website = 7;
   string phone = 8;
   string fax = 9;
-  erp.Address billing_address = 10;
-  erp.Address shipping_address = 11;
+  l8common.Address billing_address = 10;
+  l8common.Address shipping_address = 11;
   int32 employee_count = 12;
-  erp.Money annual_revenue = 13;
+  l8common.Money annual_revenue = 13;
   string owner_id = 14;                    // cross-ref: HCM Employee
   string description = 15;
   string sic_code = 16;
@@ -49,7 +49,7 @@ message CrmAccount {
   string customer_id = 18;                 // cross-ref: FIN Customer (optional)
   int64 last_activity_date = 19;
   map<string, string> custom_fields = 20;
-  erp.AuditInfo audit_info = 21;
+  l8common.AuditInfo audit_info = 21;
   repeated CrmHealthScore health_scores = 22;
   repeated CrmAccountPlan account_plans = 23;
 }
@@ -72,7 +72,7 @@ message CrmContact {
   string phone = 8;
   string mobile = 9;
   string fax = 10;
-  erp.Address mailing_address = 11;
+  l8common.Address mailing_address = 11;
   string reports_to_id = 12;               // cross-ref: CrmContact (self-reference)
   string owner_id = 13;                    // cross-ref: HCM Employee
   bool is_primary = 14;
@@ -83,7 +83,7 @@ message CrmContact {
   string lead_source_id = 19;              // cross-ref: CrmLeadSource
   int64 last_activity_date = 20;
   map<string, string> custom_fields = 21;
-  erp.AuditInfo audit_info = 22;
+  l8common.AuditInfo audit_info = 22;
 }
 
 message CrmContactList {
@@ -108,7 +108,7 @@ message CrmInteraction {
   string case_id = 12;                     // cross-ref: CrmCase (optional)
   string opportunity_id = 13;              // cross-ref: CrmOpportunity (optional)
   map<string, string> custom_fields = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 message CrmInteractionList {
@@ -128,7 +128,7 @@ message CrmRelationship {
   int64 end_date = 7;
   bool is_active = 8;
   map<string, string> custom_fields = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message CrmRelationshipList {
@@ -149,7 +149,7 @@ message CrmHealthScore {
   string notes = 10;
   string calculated_by = 11;               // cross-ref: HCM Employee or "System"
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 
 
@@ -158,8 +158,8 @@ message CrmAccountPlan {
   string plan_id = 1;
   string name = 3;
   string fiscal_year = 4;
-  erp.Money revenue_target = 5;
-  erp.Money current_revenue = 6;
+  l8common.Money revenue_target = 5;
+  l8common.Money current_revenue = 6;
   string objectives = 7;
   string strategies = 8;
   string action_items = 9;
@@ -169,6 +169,6 @@ message CrmAccountPlan {
   int64 end_date = 13;
   string status = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
 }
 

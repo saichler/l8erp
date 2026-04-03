@@ -15,11 +15,11 @@ limitations under the License.
 package crmreports
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
@@ -50,7 +50,7 @@ func generateOpportunityPipeline(report *fin.FinReport, vnic ifs.IVNic) error {
 
 	section := &fin.FinReportSection{
 		Title:        "Opportunity Pipeline",
-		SectionTotal: &erp.Money{Amount: 0, CurrencyId: "USD"},
+		SectionTotal: &l8common.Money{Amount: 0, CurrencyId: "USD"},
 	}
 
 	var grandTotal, weightedTotal int64
@@ -59,29 +59,29 @@ func generateOpportunityPipeline(report *fin.FinReport, vnic ifs.IVNic) error {
 			AccountName: stage.String(),
 			Description: stage.String(),
 			Level:       g.count,
-			Balance:     &erp.Money{Amount: g.total, CurrencyId: "USD"},
-			Variance:    &erp.Money{Amount: g.weighted, CurrencyId: "USD"},
+			Balance:     &l8common.Money{Amount: g.total, CurrencyId: "USD"},
+			Variance:    &l8common.Money{Amount: g.weighted, CurrencyId: "USD"},
 		}
 		section.Lines = append(section.Lines, line)
 		grandTotal += g.total
 		weightedTotal += g.weighted
 	}
-	section.SectionTotal = &erp.Money{Amount: grandTotal, CurrencyId: "USD"}
+	section.SectionTotal = &l8common.Money{Amount: grandTotal, CurrencyId: "USD"}
 
 	// Add weighted pipeline summary line
 	section.Lines = append(section.Lines, &fin.FinReportLine{
 		AccountName: "Weighted Pipeline Total",
 		IsHeader:    true,
-		Balance:     &erp.Money{Amount: weightedTotal, CurrencyId: "USD"},
+		Balance:     &l8common.Money{Amount: weightedTotal, CurrencyId: "USD"},
 	})
 
 	report.Sections = []*fin.FinReportSection{section}
-	report.GrandTotal = &erp.Money{Amount: grandTotal, CurrencyId: "USD"}
+	report.GrandTotal = &l8common.Money{Amount: grandTotal, CurrencyId: "USD"}
 	report.RowCount = int32(len(section.Lines))
 	return nil
 }
 
-func moneyAmount(m *erp.Money) int64 {
+func moneyAmount(m *l8common.Money) int64 {
 	if m == nil {
 		return 0
 	}

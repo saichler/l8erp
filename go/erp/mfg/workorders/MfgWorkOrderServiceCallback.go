@@ -15,9 +15,9 @@ limitations under the License.
 package workorders
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
@@ -31,8 +31,8 @@ func newMfgWorkOrderServiceCallback() ifs.IServiceCallback {
 		Require(func(e *mfg.MfgWorkOrder) string { return e.WorkOrderId }, "WorkOrderId").
 		Require(func(e *mfg.MfgWorkOrder) string { return e.ItemId }, "ItemId").
 		Enum(func(e *mfg.MfgWorkOrder) int32 { return int32(e.Status) }, mfg.MfgWorkOrderStatus_name, "Status").
-		OptionalMoney(func(e *mfg.MfgWorkOrder) *erp.Money { return e.EstimatedCost }, "EstimatedCost").
-		OptionalMoney(func(e *mfg.MfgWorkOrder) *erp.Money { return e.ActualCost }, "ActualCost").
+		OptionalMoney(func(e *mfg.MfgWorkOrder) *l8common.Money { return e.EstimatedCost }, "EstimatedCost").
+		OptionalMoney(func(e *mfg.MfgWorkOrder) *l8common.Money { return e.ActualCost }, "ActualCost").
 		DateAfter(func(e *mfg.MfgWorkOrder) int64 { return e.PlannedEndDate }, func(e *mfg.MfgWorkOrder) int64 { return e.PlannedStartDate }, "PlannedEndDate", "PlannedStartDate").
 		DateAfter(func(e *mfg.MfgWorkOrder) int64 { return e.ActualEndDate }, func(e *mfg.MfgWorkOrder) int64 { return e.ActualStartDate }, "ActualEndDate", "ActualStartDate").
 		Build()

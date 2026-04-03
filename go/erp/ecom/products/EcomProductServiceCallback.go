@@ -15,9 +15,9 @@ limitations under the License.
 package products
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
@@ -27,8 +27,8 @@ func newEcomProductServiceCallback() ifs.IServiceCallback {
 		Require(func(e *ecom.EcomProduct) string { return e.ProductId }, "ProductId").
 		Enum(func(e *ecom.EcomProduct) int32 { return int32(e.ProductType) }, ecom.EcomProductType_name, "ProductType").
 		Enum(func(e *ecom.EcomProduct) int32 { return int32(e.Status) }, ecom.EcomProductStatus_name, "Status").
-		OptionalMoney(func(e *ecom.EcomProduct) *erp.Money { return e.Price }, "Price").
-		OptionalMoney(func(e *ecom.EcomProduct) *erp.Money { return e.CompareAtPrice }, "CompareAtPrice").
-		OptionalMoney(func(e *ecom.EcomProduct) *erp.Money { return e.CostPrice }, "CostPrice").
+		OptionalMoney(func(e *ecom.EcomProduct) *l8common.Money { return e.Price }, "Price").
+		OptionalMoney(func(e *ecom.EcomProduct) *l8common.Money { return e.CompareAtPrice }, "CompareAtPrice").
+		OptionalMoney(func(e *ecom.EcomProduct) *l8common.Money { return e.CostPrice }, "CostPrice").
 		Build()
 }

@@ -16,9 +16,9 @@ package leads
 
 import (
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/crm"
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 )
 
 func newCrmLeadServiceCallback() ifs.IServiceCallback {
@@ -30,7 +30,7 @@ func newCrmLeadServiceCallback() ifs.IServiceCallback {
 		Require(func(e *crm.CrmLead) string { return e.LeadId }, "LeadId").
 		Enum(func(e *crm.CrmLead) int32 { return int32(e.Rating) }, crm.CrmLeadRating_name, "Rating").
 		Enum(func(e *crm.CrmLead) int32 { return int32(e.Status) }, crm.CrmLeadStatus_name, "Status").
-		OptionalMoney(func(e *crm.CrmLead) *erp.Money { return e.AnnualRevenue }, "AnnualRevenue").
+		OptionalMoney(func(e *crm.CrmLead) *l8common.Money { return e.AnnualRevenue }, "AnnualRevenue").
 		Build()
 }
 

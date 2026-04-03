@@ -15,9 +15,9 @@ limitations under the License.
 package dunningletters
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
 )
 
@@ -27,6 +27,6 @@ func newDunningLetterServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.DunningLetter) string { return e.LetterId }, "LetterId").
 		Require(func(e *fin.DunningLetter) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *fin.DunningLetter) int32 { return int32(e.DunningLevel) }, fin.DunningLevel_name, "DunningLevel").
-		OptionalMoney(func(e *fin.DunningLetter) *erp.Money { return e.TotalOverdue }, "TotalOverdue").
+		OptionalMoney(func(e *fin.DunningLetter) *l8common.Money { return e.TotalOverdue }, "TotalOverdue").
 		Build()
 }

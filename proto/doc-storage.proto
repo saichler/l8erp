@@ -23,7 +23,7 @@ import "doc-common.proto";
 import "doc-workflow.proto";
 import "doc-integration.proto";
 import "doc-compliance.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // =====================
@@ -56,7 +56,7 @@ message DocDocument {
   repeated string tag_ids = 21;             // cross-ref: DocTag
   map<string, string> metadata = 22;
   map<string, string> custom_fields = 23;
-  erp.AuditInfo audit_info = 24;
+  l8common.AuditInfo audit_info = 24;
   repeated DocDocumentVersion versions = 25;
   repeated DocCheckout checkouts = 26;
   repeated DocReviewComment comments = 27;
@@ -90,7 +90,7 @@ message DocFolder {
   int32 document_count = 10;
   int32 subfolder_count = 11;
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 
 message DocFolderList {
@@ -114,7 +114,7 @@ message DocCategory {
   bool is_active = 7;
   string retention_policy_id = 8;           // cross-ref: DocRetentionPolicy
   map<string, string> custom_fields = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message DocCategoryList {
@@ -136,7 +136,7 @@ message DocTag {
   int32 usage_count = 5;
   bool is_active = 6;
   map<string, string> custom_fields = 7;
-  erp.AuditInfo audit_info = 8;
+  l8common.AuditInfo audit_info = 8;
 }
 
 message DocTagList {
@@ -161,6 +161,6 @@ message DocDocumentVersion {
   string created_by = 10;                   // cross-ref: HCM Employee
   int64 created_date = 11;
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 

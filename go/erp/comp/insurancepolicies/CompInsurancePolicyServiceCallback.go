@@ -15,9 +15,9 @@ limitations under the License.
 package insurancepolicies
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/comp"
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
 )
 
@@ -25,9 +25,9 @@ func newCompInsurancePolicyServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[comp.CompInsurancePolicy]("CompInsurancePolicy",
 		func(e *comp.CompInsurancePolicy) { common.GenerateID(&e.InsuranceId) }).
 		Require(func(e *comp.CompInsurancePolicy) string { return e.InsuranceId }, "InsuranceId").
-		OptionalMoney(func(e *comp.CompInsurancePolicy) *erp.Money { return e.CoverageAmount }, "CoverageAmount").
-		OptionalMoney(func(e *comp.CompInsurancePolicy) *erp.Money { return e.Deductible }, "Deductible").
-		OptionalMoney(func(e *comp.CompInsurancePolicy) *erp.Money { return e.Premium }, "Premium").
+		OptionalMoney(func(e *comp.CompInsurancePolicy) *l8common.Money { return e.CoverageAmount }, "CoverageAmount").
+		OptionalMoney(func(e *comp.CompInsurancePolicy) *l8common.Money { return e.Deductible }, "Deductible").
+		OptionalMoney(func(e *comp.CompInsurancePolicy) *l8common.Money { return e.Premium }, "Premium").
 		DateAfter(func(e *comp.CompInsurancePolicy) int64 { return e.ExpiryDate }, func(e *comp.CompInsurancePolicy) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

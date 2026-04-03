@@ -17,12 +17,12 @@ package prjreports
 import (
 	"fmt"
 
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 )
 
 func generateResourceUtilization(report *fin.FinReport, vnic ifs.IVNic) error {
@@ -33,7 +33,7 @@ func generateResourceUtilization(report *fin.FinReport, vnic ifs.IVNic) error {
 
 	section := &fin.FinReportSection{
 		Title:        "Resource Utilization",
-		SectionTotal: &erp.Money{Amount: 0, CurrencyId: "USD"},
+		SectionTotal: &l8common.Money{Amount: 0, CurrencyId: "USD"},
 	}
 
 	var totalCost int64
@@ -54,7 +54,7 @@ func generateResourceUtilization(report *fin.FinReport, vnic ifs.IVNic) error {
 		section.Lines = append(section.Lines, line)
 		totalCost += moneyAmount(r.HourlyCost)
 	}
-	section.SectionTotal = &erp.Money{Amount: totalCost, CurrencyId: "USD"}
+	section.SectionTotal = &l8common.Money{Amount: totalCost, CurrencyId: "USD"}
 
 	report.Sections = []*fin.FinReportSection{section}
 	report.GrandTotal = section.SectionTotal
@@ -70,7 +70,7 @@ func generateMilestoneTracking(report *fin.FinReport, vnic ifs.IVNic) error {
 
 	section := &fin.FinReportSection{
 		Title:        "Milestone Tracking",
-		SectionTotal: &erp.Money{Amount: 0, CurrencyId: "USD"},
+		SectionTotal: &l8common.Money{Amount: 0, CurrencyId: "USD"},
 	}
 
 	for _, p := range projects {
@@ -91,7 +91,7 @@ func generateMilestoneTracking(report *fin.FinReport, vnic ifs.IVNic) error {
 	}
 
 	report.Sections = []*fin.FinReportSection{section}
-	report.GrandTotal = &erp.Money{Amount: int64(len(section.Lines)), CurrencyId: "USD"}
+	report.GrandTotal = &l8common.Money{Amount: int64(len(section.Lines)), CurrencyId: "USD"}
 	report.RowCount = int32(len(section.Lines))
 	return nil
 }

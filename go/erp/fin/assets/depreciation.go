@@ -16,8 +16,8 @@ package assets
 
 import (
 	"fmt"
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 	"time"
@@ -73,10 +73,10 @@ func generateDepreciationSchedule(asset *fin.Asset, action ifs.Action, vnic ifs.
 			ScheduleId:        schedId,
 			AssetId:           asset.AssetId,
 			DepreciationDate:  depDate.Unix(),
-			DepreciationAmount: &erp.Money{Amount: monthlyAmount, CurrencyId: currency},
-			AccumulatedAmount:  &erp.Money{Amount: accumulated, CurrencyId: currency},
-			RemainingValue:     &erp.Money{Amount: cost - accumulated, CurrencyId: currency},
-			AuditInfo:          &erp.AuditInfo{},
+			DepreciationAmount: &l8common.Money{Amount: monthlyAmount, CurrencyId: currency},
+			AccumulatedAmount:  &l8common.Money{Amount: accumulated, CurrencyId: currency},
+			RemainingValue:     &l8common.Money{Amount: cost - accumulated, CurrencyId: currency},
+			AuditInfo:          &l8common.AuditInfo{},
 		})
 	}
 	asset.DepreciationSchedules = schedules

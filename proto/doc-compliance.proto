@@ -20,7 +20,7 @@ package doc;
 option go_package = "./types/doc";
 
 import "doc-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // =====================
@@ -45,7 +45,7 @@ message DocRetentionPolicy {
   int64 effective_date = 13;
   int64 expiry_date = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
 }
 
 message DocRetentionPolicyList {
@@ -78,7 +78,7 @@ message DocLegalHold {
   int32 document_count = 16;
   string notes = 17;
   map<string, string> custom_fields = 18;
-  erp.AuditInfo audit_info = 19;
+  l8common.AuditInfo audit_info = 19;
 }
 
 message DocLegalHoldList {
@@ -105,7 +105,7 @@ message DocAccessLog {
   string failure_reason = 12;
   string details = 13;
   map<string, string> custom_fields = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 
@@ -132,7 +132,7 @@ message DocArchiveJob {
   string error_message = 14;
   repeated string document_ids = 15;        // cross-ref: DocDocument (archived)
   map<string, string> custom_fields = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
 }
 
 message DocArchiveJobList {
@@ -160,6 +160,6 @@ message DocAuditTrail {
   string ip_address = 13;
   string session_id = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
 }
 

@@ -15,9 +15,9 @@ limitations under the License.
 package paymentschedules
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -27,6 +27,6 @@ func newPaymentScheduleServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.PaymentSchedule) string { return e.ScheduleId }, "ScheduleId").
 		Require(func(e *fin.PaymentSchedule) string { return e.VendorId }, "VendorId").
 		Require(func(e *fin.PaymentSchedule) string { return e.InvoiceId }, "InvoiceId").
-		OptionalMoney(func(e *fin.PaymentSchedule) *erp.Money { return e.Amount }, "Amount").
+		OptionalMoney(func(e *fin.PaymentSchedule) *l8common.Money { return e.Amount }, "Amount").
 		Build()
 }

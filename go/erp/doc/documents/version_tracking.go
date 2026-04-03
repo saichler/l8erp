@@ -15,8 +15,8 @@ limitations under the License.
 package documents
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8types/go/ifs"
 	"time"
@@ -54,7 +54,7 @@ func trackDocumentVersion(d *doc.DocDocument, vnic ifs.IVNic) error {
 		StoragePath:   d.StoragePath,
 		Checksum:      d.Checksum,
 		CreatedDate:   d.ModifiedDate,
-		AuditInfo:     &erp.AuditInfo{},
+		AuditInfo:     &l8common.AuditInfo{},
 	})
 	return nil
 }

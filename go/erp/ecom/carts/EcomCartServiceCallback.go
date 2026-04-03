@@ -15,9 +15,9 @@ limitations under the License.
 package carts
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
@@ -27,9 +27,9 @@ func newEcomCartServiceCallback() ifs.IServiceCallback {
 		Require(func(e *ecom.EcomCart) string { return e.CartId }, "CartId").
 		Require(func(e *ecom.EcomCart) string { return e.CurrencyId }, "CurrencyId").
 		Enum(func(e *ecom.EcomCart) int32 { return int32(e.Status) }, ecom.EcomCartStatus_name, "Status").
-		OptionalMoney(func(e *ecom.EcomCart) *erp.Money { return e.Subtotal }, "Subtotal").
-		OptionalMoney(func(e *ecom.EcomCart) *erp.Money { return e.DiscountAmount }, "DiscountAmount").
-		OptionalMoney(func(e *ecom.EcomCart) *erp.Money { return e.TaxAmount }, "TaxAmount").
-		OptionalMoney(func(e *ecom.EcomCart) *erp.Money { return e.Total }, "Total").
+		OptionalMoney(func(e *ecom.EcomCart) *l8common.Money { return e.Subtotal }, "Subtotal").
+		OptionalMoney(func(e *ecom.EcomCart) *l8common.Money { return e.DiscountAmount }, "DiscountAmount").
+		OptionalMoney(func(e *ecom.EcomCart) *l8common.Money { return e.TaxAmount }, "TaxAmount").
+		OptionalMoney(func(e *ecom.EcomCart) *l8common.Money { return e.Total }, "Total").
 		Build()
 }

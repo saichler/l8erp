@@ -15,9 +15,9 @@ limitations under the License.
 package campaigns
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
@@ -29,9 +29,9 @@ func newCrmCampaignServiceCallback() ifs.IServiceCallback {
 		Require(func(e *crm.CrmCampaign) string { return e.CampaignId }, "CampaignId").
 		Enum(func(e *crm.CrmCampaign) int32 { return int32(e.CampaignType) }, crm.CrmCampaignType_name, "CampaignType").
 		Enum(func(e *crm.CrmCampaign) int32 { return int32(e.Status) }, crm.CrmCampaignStatus_name, "Status").
-		OptionalMoney(func(e *crm.CrmCampaign) *erp.Money { return e.BudgetedCost }, "BudgetedCost").
-		OptionalMoney(func(e *crm.CrmCampaign) *erp.Money { return e.ActualCost }, "ActualCost").
-		OptionalMoney(func(e *crm.CrmCampaign) *erp.Money { return e.ExpectedRevenue }, "ExpectedRevenue").
+		OptionalMoney(func(e *crm.CrmCampaign) *l8common.Money { return e.BudgetedCost }, "BudgetedCost").
+		OptionalMoney(func(e *crm.CrmCampaign) *l8common.Money { return e.ActualCost }, "ActualCost").
+		OptionalMoney(func(e *crm.CrmCampaign) *l8common.Money { return e.ExpectedRevenue }, "ExpectedRevenue").
 		DateAfter(func(e *crm.CrmCampaign) int64 { return e.EndDate }, func(e *crm.CrmCampaign) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }

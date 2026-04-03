@@ -15,10 +15,10 @@ limitations under the License.
 package payslips
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/erp/hcm/payrollruns"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -31,9 +31,9 @@ func newPayslipServiceCallback() ifs.IServiceCallback {
 
 func computePayslipTotals(p *hcm.Payslip) {
 	p.TotalHours = p.RegularHours + p.OvertimeHours + p.PtoHours + p.HolidayHours + p.OtherHours
-	p.GrossPay = common.SumLineMoney(p.Earnings, func(l *hcm.PayslipLine) *erp.Money { return l.CurrentAmount })
-	p.TotalDeductions = common.SumLineMoney(p.Deductions, func(l *hcm.PayslipLine) *erp.Money { return l.CurrentAmount })
-	p.TotalTaxes = common.SumLineMoney(p.Taxes, func(l *hcm.PayslipLine) *erp.Money { return l.CurrentAmount })
+	p.GrossPay = common.SumLineMoney(p.Earnings, func(l *hcm.PayslipLine) *l8common.Money { return l.CurrentAmount })
+	p.TotalDeductions = common.SumLineMoney(p.Deductions, func(l *hcm.PayslipLine) *l8common.Money { return l.CurrentAmount })
+	p.TotalTaxes = common.SumLineMoney(p.Taxes, func(l *hcm.PayslipLine) *l8common.Money { return l.CurrentAmount })
 	p.NetPay = common.MoneySubtract(p.GrossPay, common.MoneyAdd(p.TotalDeductions, p.TotalTaxes))
 }
 

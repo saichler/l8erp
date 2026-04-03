@@ -19,7 +19,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
@@ -298,7 +298,7 @@ func generateSupplierScorecards(store *MockDataStore) []*scm.ScmSupplierScorecar
 		scorecards[i] = &scm.ScmSupplierScorecard{
 			ScorecardId: genID("ssc", i),
 			VendorId:    vendorId,
-			EvaluationPeriod: &erp.DateRange{
+			EvaluationPeriod: &l8common.DateRange{
 				StartDate: periodStart.Unix(),
 				EndDate:   periodEnd.Unix(),
 			},

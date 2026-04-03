@@ -17,11 +17,11 @@ package crmreports
 import (
 	"fmt"
 
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
@@ -38,7 +38,7 @@ func generateLeadConversion(report *fin.FinReport, vnic ifs.IVNic) error {
 
 	section := &fin.FinReportSection{
 		Title:        "Lead Conversion Summary",
-		SectionTotal: &erp.Money{Amount: 0, CurrencyId: "USD"},
+		SectionTotal: &l8common.Money{Amount: 0, CurrencyId: "USD"},
 	}
 
 	total := int32(len(leads))
@@ -65,7 +65,7 @@ func generateLeadConversion(report *fin.FinReport, vnic ifs.IVNic) error {
 	})
 
 	report.Sections = []*fin.FinReportSection{section}
-	report.GrandTotal = &erp.Money{Amount: int64(total), CurrencyId: "USD"}
+	report.GrandTotal = &l8common.Money{Amount: int64(total), CurrencyId: "USD"}
 	report.RowCount = int32(len(section.Lines))
 	return nil
 }

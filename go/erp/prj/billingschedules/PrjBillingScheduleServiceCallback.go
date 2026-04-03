@@ -15,9 +15,9 @@ limitations under the License.
 package billingschedules
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -26,8 +26,8 @@ func newPrjBillingScheduleServiceCallback() ifs.IServiceCallback {
 		func(e *prj.PrjBillingSchedule) { common.GenerateID(&e.ScheduleId) }).
 		Require(func(e *prj.PrjBillingSchedule) string { return e.ScheduleId }, "ScheduleId").
 		Enum(func(e *prj.PrjBillingSchedule) int32 { return int32(e.BillingType) }, prj.PrjBillingType_name, "BillingType").
-		OptionalMoney(func(e *prj.PrjBillingSchedule) *erp.Money { return e.FixedAmount }, "FixedAmount").
-		OptionalMoney(func(e *prj.PrjBillingSchedule) *erp.Money { return e.RetainerAmount }, "RetainerAmount").
+		OptionalMoney(func(e *prj.PrjBillingSchedule) *l8common.Money { return e.FixedAmount }, "FixedAmount").
+		OptionalMoney(func(e *prj.PrjBillingSchedule) *l8common.Money { return e.RetainerAmount }, "RetainerAmount").
 		DateAfter(func(e *prj.PrjBillingSchedule) int64 { return e.EndDate }, func(e *prj.PrjBillingSchedule) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }

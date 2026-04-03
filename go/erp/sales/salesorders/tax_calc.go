@@ -15,8 +15,8 @@ limitations under the License.
 package salesorders
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
@@ -46,7 +46,7 @@ func applyTaxRules(order *sales.SalesOrder, vnic ifs.IVNic) error {
 		if taxable <= 0 {
 			continue
 		}
-		line.TaxAmount = &erp.Money{
+		line.TaxAmount = &l8common.Money{
 			Amount:     int64(float64(taxable) * rate / 100),
 			CurrencyId: line.UnitPrice.CurrencyId,
 		}

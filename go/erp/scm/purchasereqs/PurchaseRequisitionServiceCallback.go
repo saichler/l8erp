@@ -15,9 +15,9 @@ limitations under the License.
 package purchasereqs
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"time"
 )
@@ -30,7 +30,7 @@ func newPurchaseRequisitionServiceCallback() ifs.IServiceCallback {
 		After(cascadeCreatePurchaseOrder).
 		Require(func(e *scm.ScmPurchaseRequisition) string { return e.RequisitionId }, "RequisitionId").
 		Enum(func(e *scm.ScmPurchaseRequisition) int32 { return int32(e.Status) }, scm.ScmRequisitionStatus_name, "Status").
-		OptionalMoney(func(e *scm.ScmPurchaseRequisition) *erp.Money { return e.EstimatedTotal }, "EstimatedTotal").
+		OptionalMoney(func(e *scm.ScmPurchaseRequisition) *l8common.Money { return e.EstimatedTotal }, "EstimatedTotal").
 		Build()
 }
 
@@ -82,7 +82,7 @@ func cascadeCreatePurchaseOrder(req *scm.ScmPurchaseRequisition, action ifs.Acti
 			UnitOfMeasure: rl.UnitOfMeasure,
 			UnitPrice:     rl.EstimatedUnitPrice,
 			TotalPrice:    rl.EstimatedTotal,
-			AuditInfo:     &erp.AuditInfo{},
+			AuditInfo:     &l8common.AuditInfo{},
 		}
 	}
 	_, err = common.PostEntity("PurchOrder", 50, &scm.ScmPurchaseOrder{
@@ -92,7 +92,7 @@ func cascadeCreatePurchaseOrder(req *scm.ScmPurchaseRequisition, action ifs.Acti
 		Status:        scm.ScmPurchaseOrderStatus_PO_STATUS_DRAFT,
 		TotalAmount:   req.EstimatedTotal,
 		Lines:         lines,
-		AuditInfo:     &erp.AuditInfo{},
+		AuditInfo:     &l8common.AuditInfo{},
 	}, vnic)
 	return err
 }

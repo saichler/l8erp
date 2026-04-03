@@ -15,9 +15,9 @@ limitations under the License.
 package projectbudgets
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -32,9 +32,9 @@ func newPrjProjectBudgetServiceCallback() ifs.IServiceCallback {
 		func(e *prj.PrjProjectBudget) { common.GenerateID(&e.BudgetId) }).
 		Compute(computeProjectBudget).
 		Require(func(e *prj.PrjProjectBudget) string { return e.BudgetId }, "BudgetId").
-		OptionalMoney(func(e *prj.PrjProjectBudget) *erp.Money { return e.BudgetedAmount }, "BudgetedAmount").
-		OptionalMoney(func(e *prj.PrjProjectBudget) *erp.Money { return e.CommittedAmount }, "CommittedAmount").
-		OptionalMoney(func(e *prj.PrjProjectBudget) *erp.Money { return e.ActualAmount }, "ActualAmount").
-		OptionalMoney(func(e *prj.PrjProjectBudget) *erp.Money { return e.RemainingAmount }, "RemainingAmount").
+		OptionalMoney(func(e *prj.PrjProjectBudget) *l8common.Money { return e.BudgetedAmount }, "BudgetedAmount").
+		OptionalMoney(func(e *prj.PrjProjectBudget) *l8common.Money { return e.CommittedAmount }, "CommittedAmount").
+		OptionalMoney(func(e *prj.PrjProjectBudget) *l8common.Money { return e.ActualAmount }, "ActualAmount").
+		OptionalMoney(func(e *prj.PrjProjectBudget) *l8common.Money { return e.RemainingAmount }, "RemainingAmount").
 		Build()
 }

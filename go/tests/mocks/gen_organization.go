@@ -19,7 +19,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
@@ -36,8 +36,8 @@ func generateOrganizations() []*hcm.Organization {
 		LegalName:        "Acme Corporation Inc.",
 		TaxId:            "12-3456789",
 		IndustryCode:     "541511",
-		Addresses:        []*erp.Address{createAddress()},
-		Contacts:         []*erp.ContactInfo{createContact()},
+		Addresses:        []*l8common.Address{createAddress()},
+		Contacts:         []*l8common.ContactInfo{createContact()},
 		IsActive:         true,
 		EffectiveDate:    time.Date(2020, 1, 1, 0, 0, 0, 0, time.UTC).Unix(),
 		AuditInfo:        createAuditInfo(),

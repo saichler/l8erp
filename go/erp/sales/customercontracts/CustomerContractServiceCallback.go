@@ -15,9 +15,9 @@ limitations under the License.
 package customercontracts
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -27,7 +27,7 @@ func newCustomerContractServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesCustomerContract) string { return e.ContractId }, "ContractId").
 		Require(func(e *sales.SalesCustomerContract) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *sales.SalesCustomerContract) int32 { return int32(e.Status) }, sales.SalesContractStatus_name, "Status").
-		OptionalMoney(func(e *sales.SalesCustomerContract) *erp.Money { return e.ContractValue }, "ContractValue").
+		OptionalMoney(func(e *sales.SalesCustomerContract) *l8common.Money { return e.ContractValue }, "ContractValue").
 		DateAfter(func(e *sales.SalesCustomerContract) int64 { return e.EndDate }, func(e *sales.SalesCustomerContract) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }

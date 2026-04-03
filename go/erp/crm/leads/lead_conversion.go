@@ -15,8 +15,8 @@ limitations under the License.
 package leads
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 	"time"
@@ -60,7 +60,7 @@ func cascadeConvertLead(lead *crm.CrmLead, action ifs.Action, vnic ifs.IVNic) er
 		Amount:         lead.AnnualRevenue,
 		OwnerId:        lead.OwnerId,
 		CloseDate:      time.Now().Add(90 * 24 * time.Hour).Unix(),
-		AuditInfo:      &erp.AuditInfo{},
+		AuditInfo:      &l8common.AuditInfo{},
 	}
 	_, err = common.PostEntity("CrmOpp", 80, opp, vnic)
 	return err

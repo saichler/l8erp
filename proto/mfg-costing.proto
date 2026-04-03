@@ -19,7 +19,7 @@ package mfg;
 option go_package = "./types/mfg";
 
 import "mfg-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -34,17 +34,17 @@ message MfgStandardCost {
   string cost_version = 3;
   int64 effective_date = 4;
   int64 expiry_date = 5;
-  erp.Money material_cost = 6;
-  erp.Money labor_cost = 7;
-  erp.Money overhead_cost = 8;
-  erp.Money outside_processing_cost = 9;
-  erp.Money total_cost = 10;
+  l8common.Money material_cost = 6;
+  l8common.Money labor_cost = 7;
+  l8common.Money overhead_cost = 8;
+  l8common.Money outside_processing_cost = 9;
+  l8common.Money total_cost = 10;
   string currency_id = 11;
   string cost_method = 12;               // STANDARD, ACTUAL, AVERAGE
   bool is_current = 13;
   string notes = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
 }
 
 message MfgStandardCostList {
@@ -66,7 +66,7 @@ message MfgCostRollup {
   int32 items_processed = 9;
   int32 boms_processed = 10;
   string notes = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 message MfgCostRollupList {
@@ -84,15 +84,15 @@ message MfgActualCost {
   string work_order_id = 2;              // cross-ref: MfgWorkOrder
   MfgCostType cost_type = 3;
   string cost_element = 4;
-  erp.Money amount = 5;
+  l8common.Money amount = 5;
   double quantity = 6;
   string unit_of_measure = 7;
-  erp.Money unit_cost = 8;
+  l8common.Money unit_cost = 8;
   string source_type = 9;                // LABOR, MACHINE, MATERIAL, PO
   string source_id = 10;                 // ID of source transaction
   int64 transaction_date = 11;
   string notes = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 
 // MfgCostVariance represents cost variance analysis
@@ -101,15 +101,15 @@ message MfgCostVariance {
   string work_order_id = 2;              // cross-ref: MfgWorkOrder
   MfgVarianceType variance_type = 3;
   MfgCostType cost_type = 4;
-  erp.Money standard_cost = 5;
-  erp.Money actual_cost = 6;
-  erp.Money variance_amount = 7;
+  l8common.Money standard_cost = 5;
+  l8common.Money actual_cost = 6;
+  l8common.Money variance_amount = 7;
   double variance_percent = 8;
   string variance_reason = 9;
   int64 analysis_date = 10;
   string analyzed_by = 11;               // cross-ref: HCM Employee
   string notes = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 
 // ============================================================================
@@ -132,7 +132,7 @@ message MfgOverhead {
   int64 effective_date = 11;
   int64 expiry_date = 12;
   string notes = 13;
-  erp.AuditInfo audit_info = 14;
+  l8common.AuditInfo audit_info = 14;
   repeated MfgOverheadAlloc allocations = 15;
 }
 
@@ -149,9 +149,9 @@ message MfgOverheadAlloc {
   string work_center_id = 4;             // cross-ref: MfgWorkCenter
   double allocation_base = 5;            // hours, units, etc.
   double rate = 6;
-  erp.Money allocated_amount = 7;
+  l8common.Money allocated_amount = 7;
   int64 allocation_date = 8;
   string period = 9;                     // YYYY-MM format
   string notes = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }

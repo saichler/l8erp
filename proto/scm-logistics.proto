@@ -19,7 +19,7 @@ package scm;
 option go_package = "./types/scm";
 
 import "scm-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -33,12 +33,12 @@ message ScmCarrier {
   string code = 2;
   string name = 3;
   ScmCarrierType carrier_type = 4;
-  erp.ContactInfo contact_info = 5;
+  l8common.ContactInfo contact_info = 5;
   bool is_active = 6;
   double rating = 7;
   string notes = 8;
   map<string, string> custom_fields = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message ScmCarrierList {
@@ -53,14 +53,14 @@ message ScmFreightRate {
   string carrier_id = 2;
   string origin = 3;
   string destination = 4;
-  erp.Money rate_per_unit = 5;
+  l8common.Money rate_per_unit = 5;
   string unit_type = 6;
   int64 effective_date = 7;
   int64 expiry_date = 8;
   double min_weight = 9;
   double max_weight = 10;
   string notes = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 message ScmFreightRateList {
@@ -75,7 +75,7 @@ message ScmShipment {
   string shipment_number = 2;
   string carrier_id = 3;
   string origin_warehouse_id = 4;
-  erp.Address destination_address = 5;
+  l8common.Address destination_address = 5;
   string customer_id = 6;           // Cross-ref: FIN Customer
   int64 ship_date = 7;
   int64 expected_delivery = 8;
@@ -83,10 +83,10 @@ message ScmShipment {
   ScmShipmentStatus status = 10;
   string tracking_number = 11;
   double total_weight = 12;
-  erp.Money freight_cost = 13;
+  l8common.Money freight_cost = 13;
   string notes = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
   repeated ScmDeliveryProof delivery_proofs = 17;
   repeated ScmFreightAudit freight_audits = 18;
 }
@@ -109,7 +109,7 @@ message ScmRoute {
   string carrier_id = 8;
   bool is_active = 9;
   string notes = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }
 
 message ScmRouteList {
@@ -130,7 +130,7 @@ message ScmLoadPlan {
   ScmTaskStatus status = 8;
   int64 planned_date = 9;
   string notes = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }
 
 message ScmLoadPlanList {
@@ -147,20 +147,20 @@ message ScmDeliveryProof {
   string photo_url = 6;
   string notes = 7;
   string status = 8;
-  erp.AuditInfo audit_info = 9;
+  l8common.AuditInfo audit_info = 9;
 }
 
 // ScmFreightAudit represents an audit of freight charges
 message ScmFreightAudit {
   string audit_id = 1;
   string carrier_id = 3;
-  erp.Money invoiced_amount = 4;
-  erp.Money actual_amount = 5;
-  erp.Money variance = 6;
+  l8common.Money invoiced_amount = 4;
+  l8common.Money actual_amount = 5;
+  l8common.Money variance = 6;
   int64 audit_date = 7;
   string status = 8;
   string notes = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 // @PrimeObject
@@ -174,10 +174,10 @@ message ScmReturnAuthorization {
   ScmRequisitionStatus status = 6;
   int64 return_date = 7;
   string items_description = 8;
-  erp.Money refund_amount = 9;
+  l8common.Money refund_amount = 9;
   string notes = 10;
   map<string, string> custom_fields = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 message ScmReturnAuthorizationList {

@@ -15,9 +15,9 @@ limitations under the License.
 package projecttemplates
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
 )
 
@@ -27,6 +27,6 @@ func newPrjProjectTemplateServiceCallback() ifs.IServiceCallback {
 		Require(func(e *prj.PrjProjectTemplate) string { return e.TemplateId }, "TemplateId").
 		Enum(func(e *prj.PrjProjectTemplate) int32 { return int32(e.DefaultBillingType) }, prj.PrjBillingType_name, "DefaultBillingType").
 		Enum(func(e *prj.PrjProjectTemplate) int32 { return int32(e.ProjectType) }, prj.PrjProjectType_name, "ProjectType").
-		OptionalMoney(func(e *prj.PrjProjectTemplate) *erp.Money { return e.DefaultBudget }, "DefaultBudget").
+		OptionalMoney(func(e *prj.PrjProjectTemplate) *l8common.Money { return e.DefaultBudget }, "DefaultBudget").
 		Build()
 }

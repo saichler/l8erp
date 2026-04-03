@@ -15,9 +15,9 @@ limitations under the License.
 package pricerules
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
@@ -26,8 +26,8 @@ func newEcomPriceRuleServiceCallback() ifs.IServiceCallback {
 		func(e *ecom.EcomPriceRule) { common.GenerateID(&e.RuleId) }).
 		Require(func(e *ecom.EcomPriceRule) string { return e.RuleId }, "RuleId").
 		Enum(func(e *ecom.EcomPriceRule) int32 { return int32(e.DiscountType) }, ecom.EcomDiscountType_name, "DiscountType").
-		OptionalMoney(func(e *ecom.EcomPriceRule) *erp.Money { return e.MinQuantity }, "MinQuantity").
-		OptionalMoney(func(e *ecom.EcomPriceRule) *erp.Money { return e.MaxQuantity }, "MaxQuantity").
+		OptionalMoney(func(e *ecom.EcomPriceRule) *l8common.Money { return e.MinQuantity }, "MinQuantity").
+		OptionalMoney(func(e *ecom.EcomPriceRule) *l8common.Money { return e.MaxQuantity }, "MaxQuantity").
 		DateAfter(func(e *ecom.EcomPriceRule) int64 { return e.EndDate }, func(e *ecom.EcomPriceRule) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }

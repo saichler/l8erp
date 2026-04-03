@@ -17,7 +17,7 @@ package cyclecounts
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 )
 
 func newCycleCountServiceCallback() ifs.IServiceCallback {

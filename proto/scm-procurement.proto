@@ -19,7 +19,7 @@ package scm;
 option go_package = "./types/scm";
 
 import "scm-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -37,10 +37,10 @@ message ScmPurchaseRequisition {
   ScmRequisitionStatus status = 6;
   string description = 7;
   string priority = 8;
-  erp.Money estimated_total = 9;
+  l8common.Money estimated_total = 9;
   string approval_workflow_id = 10;
   map<string, string> custom_fields = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
   repeated ScmRequisitionLine lines = 13;
 }
 
@@ -57,11 +57,11 @@ message ScmRequisitionLine {
   string description = 5;
   double quantity = 6;
   string unit_of_measure = 7;
-  erp.Money estimated_unit_price = 8;
-  erp.Money estimated_total = 9;
+  l8common.Money estimated_unit_price = 8;
+  l8common.Money estimated_total = 9;
   string vendor_id = 10;            // Cross-ref: FIN Vendor
   int64 delivery_date = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 // @PrimeObject
@@ -77,7 +77,7 @@ message ScmRequestForQuotation {
   ScmRequisitionStatus status = 8;
   string notes = 9;
   map<string, string> custom_fields = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }
 
 message ScmRequestForQuotationList {
@@ -94,14 +94,14 @@ message ScmPurchaseOrder {
   int64 order_date = 4;
   int64 expected_delivery = 5;
   ScmPurchaseOrderStatus status = 6;
-  erp.Money total_amount = 7;
-  erp.Address shipping_address = 8;
+  l8common.Money total_amount = 7;
+  l8common.Address shipping_address = 8;
   string payment_terms = 9;
   string notes = 10;
   string requisition_id = 11;
   string rfq_id = 12;
   map<string, string> custom_fields = 13;
-  erp.AuditInfo audit_info = 14;
+  l8common.AuditInfo audit_info = 14;
   repeated ScmPurchaseOrderLine lines = 15;
 }
 
@@ -117,11 +117,11 @@ message ScmPurchaseOrderLine {
   string item_id = 4;
   string description = 5;
   double quantity = 6;
-  erp.Money unit_price = 7;
-  erp.Money total_price = 8;
+  l8common.Money unit_price = 7;
+  l8common.Money total_price = 8;
   string unit_of_measure = 9;
   double received_quantity = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }
 
 // @PrimeObject
@@ -132,12 +132,12 @@ message ScmBlanketOrder {
   string vendor_id = 3;
   int64 start_date = 4;
   int64 end_date = 5;
-  erp.Money max_amount = 6;
-  erp.Money used_amount = 7;
+  l8common.Money max_amount = 6;
+  l8common.Money used_amount = 7;
   ScmPurchaseOrderStatus status = 8;
   string description = 9;
   map<string, string> custom_fields = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }
 
 message ScmBlanketOrderList {
@@ -150,14 +150,14 @@ message ScmBlanketOrderList {
 message ScmSupplierScorecard {
   string scorecard_id = 1;
   string vendor_id = 2;             // Cross-ref: FIN Vendor
-  erp.DateRange evaluation_period = 3;
+  l8common.DateRange evaluation_period = 3;
   double quality_score = 4;
   double delivery_score = 5;
   double price_score = 6;
   double service_score = 7;
   double overall_score = 8;
   string notes = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message ScmSupplierScorecardList {

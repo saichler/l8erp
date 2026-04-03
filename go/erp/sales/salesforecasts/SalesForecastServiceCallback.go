@@ -15,8 +15,8 @@ limitations under the License.
 package salesforecasts
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 	l8api "github.com/saichler/l8types/go/types/l8api"
@@ -30,7 +30,7 @@ func newSalesForecastServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesForecast) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *sales.SalesForecast) int32 { return int32(e.Category) }, sales.SalesForecastCategory_name, "Category").
 		OptionalPeriod(func(e *sales.SalesForecast) *l8api.L8Period { return e.Period }, "Period").
-		OptionalMoney(func(e *sales.SalesForecast) *erp.Money { return e.ForecastAmount }, "ForecastAmount").
-		OptionalMoney(func(e *sales.SalesForecast) *erp.Money { return e.WeightedAmount }, "WeightedAmount").
+		OptionalMoney(func(e *sales.SalesForecast) *l8common.Money { return e.ForecastAmount }, "ForecastAmount").
+		OptionalMoney(func(e *sales.SalesForecast) *l8common.Money { return e.WeightedAmount }, "WeightedAmount").
 		Build()
 }

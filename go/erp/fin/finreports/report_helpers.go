@@ -15,12 +15,12 @@ limitations under the License.
 package finreports
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
 // moneyAmount safely extracts the amount from a Money pointer, returning 0 if nil.
-func moneyAmount(m *erp.Money) int64 {
+func moneyAmount(m *l8common.Money) int64 {
 	if m == nil {
 		return 0
 	}
@@ -28,12 +28,12 @@ func moneyAmount(m *erp.Money) int64 {
 }
 
 // newMoney creates a new Money instance with the given amount and currency.
-func newMoney(amount int64, currencyId string) *erp.Money {
-	return &erp.Money{Amount: amount, CurrencyId: currencyId}
+func newMoney(amount int64, currencyId string) *l8common.Money {
+	return &l8common.Money{Amount: amount, CurrencyId: currencyId}
 }
 
 // addMoney adds two Money values, using the currency from the first non-nil operand.
-func addMoney(a, b *erp.Money) *erp.Money {
+func addMoney(a, b *l8common.Money) *l8common.Money {
 	total := moneyAmount(a) + moneyAmount(b)
 	cid := ""
 	if a != nil {

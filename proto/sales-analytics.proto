@@ -19,7 +19,7 @@ package sales;
 option go_package = "./types/sales";
 
 import "sales-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -35,12 +35,12 @@ message SalesTarget {
   string territory_id = 4;
   l8api.L8Period period = 5;
   reserved 6, 7, 8;
-  erp.Money target_amount = 9;
-  erp.Money achieved_amount = 10;
+  l8common.Money target_amount = 9;
+  l8common.Money achieved_amount = 10;
   double achievement_percent = 11;
   string notes = 12;
   map<string, string> custom_fields = 13;
-  erp.AuditInfo audit_info = 14;
+  l8common.AuditInfo audit_info = 14;
 }
 
 message SalesTargetList {
@@ -63,7 +63,7 @@ message SalesTerritory {
   string manager_id = 10;               // Cross-ref: HCM Employee
   bool is_active = 11;
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
   repeated SalesTerritoryAssign assignments = 14;
 }
 
@@ -91,14 +91,14 @@ message SalesCommissionPlan {
   string description = 3;
   SalesCommissionType commission_type = 4;
   double base_rate = 5;
-  erp.Money base_amount = 6;
+  l8common.Money base_amount = 6;
   int64 effective_date = 7;
   int64 expiry_date = 8;
   bool is_active = 9;
   string applies_to = 10;
   string notes = 11;
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
   repeated SalesCommissionCalc calculations = 14;
 }
 
@@ -113,9 +113,9 @@ message SalesCommissionCalc {
   string salesperson_id = 2;            // Cross-ref: HCM Employee
   string sales_order_id = 3;
   int64 calculation_date = 4;
-  erp.Money sales_amount = 5;
+  l8common.Money sales_amount = 5;
   double commission_rate = 6;
-  erp.Money commission_amount = 7;
+  l8common.Money commission_amount = 7;
   string status = 8;
   int64 paid_date = 9;
   string notes = 10;
@@ -132,13 +132,13 @@ message SalesForecast {
   SalesForecastCategory category = 6;
   l8api.L8Period period = 7;
   reserved 8, 9;
-  erp.Money forecast_amount = 10;
-  erp.Money weighted_amount = 11;
+  l8common.Money forecast_amount = 10;
+  l8common.Money weighted_amount = 11;
   double probability = 12;
   int64 expected_close_date = 13;
   string notes = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
 }
 
 message SalesForecastList {

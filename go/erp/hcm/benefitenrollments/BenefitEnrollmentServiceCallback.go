@@ -17,7 +17,7 @@ package benefitenrollments
 import (
 	"github.com/saichler/l8erp/go/erp/hcm/lifeevents"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/benefitplans"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"

@@ -15,11 +15,12 @@ limitations under the License.
 package common
 
 import (
+	l8c "github.com/saichler/l8common/go/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
 // RegisterType registers a type and its list wrapper with the introspector and registry.
+// Generic wrapper — creates instances via new(T) and new(TList).
 func RegisterType[T any, TList any](resources ifs.IResources, pkField string) {
-	resources.Introspector().Decorators().AddPrimaryKeyDecorator(new(T), pkField)
-	resources.Registry().Register(new(TList))
+	l8c.RegisterType(resources, new(T), new(TList), pkField)
 }

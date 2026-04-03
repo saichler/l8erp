@@ -20,7 +20,7 @@ package ecom;
 option go_package = "./types/ecom";
 
 import "ecom-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // =====================
@@ -42,7 +42,7 @@ message EcomCustomer {
     int64 created_date = 10;
     int64 last_login_date = 11;
     int32 total_orders = 12;
-    erp.Money total_spent = 13;
+    l8common.Money total_spent = 13;
     string sales_customer_id = 14;          // cross-ref: Sales Customer
     string default_billing_address_id = 15; // cross-ref: EcomCustomerAddress
     string default_shipping_address_id = 16;// cross-ref: EcomCustomerAddress
@@ -51,7 +51,7 @@ message EcomCustomer {
     string locale = 19;
     string currency_id = 20;
     map<string, string> custom_fields = 21;
-    erp.AuditInfo audit_info = 22;
+    l8common.AuditInfo audit_info = 22;
     repeated EcomCustomerAddress addresses = 23;
 }
 
@@ -81,7 +81,7 @@ message EcomCustomerAddress {
     bool is_default_billing = 14;
     bool is_default_shipping = 15;
     map<string, string> custom_fields = 16;
-    erp.AuditInfo audit_info = 17;
+    l8common.AuditInfo audit_info = 17;
 }
 
 // =====================
@@ -101,7 +101,7 @@ message EcomWishlist {
     int64 updated_date = 8;
     int32 item_count = 9;
     map<string, string> custom_fields = 10;
-    erp.AuditInfo audit_info = 11;
+    l8common.AuditInfo audit_info = 11;
     repeated EcomWishlistItem items = 12;
 }
 
@@ -122,10 +122,10 @@ message EcomWishlistItem {
     int32 quantity = 5;
     string notes = 6;
     int64 added_date = 7;
-    erp.Money price_when_added = 8;
+    l8common.Money price_when_added = 8;
     int32 priority = 9;
     map<string, string> custom_fields = 10;
-    erp.AuditInfo audit_info = 11;
+    l8common.AuditInfo audit_info = 11;
 }
 
 // =====================
@@ -142,17 +142,17 @@ message EcomCart {
     int64 created_date = 5;
     int64 updated_date = 6;
     int64 expires_at = 7;
-    erp.Money subtotal = 8;
-    erp.Money discount_amount = 9;
-    erp.Money tax_amount = 10;
-    erp.Money total = 11;
+    l8common.Money subtotal = 8;
+    l8common.Money discount_amount = 9;
+    l8common.Money tax_amount = 10;
+    l8common.Money total = 11;
     string coupon_code = 12;
     string currency_id = 13;
     int32 item_count = 14;
     string ip_address = 15;
     string user_agent = 16;
     map<string, string> custom_fields = 17;
-    erp.AuditInfo audit_info = 18;
+    l8common.AuditInfo audit_info = 18;
 }
 
 message EcomCartList {

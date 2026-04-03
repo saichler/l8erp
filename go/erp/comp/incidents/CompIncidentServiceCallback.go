@@ -15,9 +15,9 @@ limitations under the License.
 package incidents
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/comp"
 )
 
@@ -28,6 +28,6 @@ func newCompIncidentServiceCallback() ifs.IServiceCallback {
 		Enum(func(e *comp.CompIncident) int32 { return int32(e.Category) }, comp.CompRiskCategory_name, "Category").
 		Enum(func(e *comp.CompIncident) int32 { return int32(e.Severity) }, comp.CompSeverityLevel_name, "Severity").
 		Enum(func(e *comp.CompIncident) int32 { return int32(e.Status) }, comp.CompIncidentStatus_name, "Status").
-		OptionalMoney(func(e *comp.CompIncident) *erp.Money { return e.FinancialImpact }, "FinancialImpact").
+		OptionalMoney(func(e *comp.CompIncident) *l8common.Money { return e.FinancialImpact }, "FinancialImpact").
 		Build()
 }

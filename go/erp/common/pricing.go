@@ -15,7 +15,7 @@ limitations under the License.
 package common
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 	"time"
@@ -23,13 +23,13 @@ import (
 
 // FindActivePriceListForItem returns the best price for an item from active price lists.
 // It checks price list entries and applies quantity breaks if applicable.
-func FindActivePriceListForItem(itemId string, quantity float64, vnic ifs.IVNic) (*erp.Money, error) {
+func FindActivePriceListForItem(itemId string, quantity float64, vnic ifs.IVNic) (*l8common.Money, error) {
 	priceLists, err := GetEntities("PriceList", 60, &sales.SalesPriceList{}, vnic)
 	if err != nil {
 		return nil, err
 	}
 	now := time.Now().Unix()
-	var bestPrice *erp.Money
+	var bestPrice *l8common.Money
 	for _, pl := range priceLists {
 		if int32(pl.Status) != 2 { // ACTIVE
 			continue
@@ -53,7 +53,7 @@ func FindActivePriceListForItem(itemId string, quantity float64, vnic ifs.IVNic)
 }
 
 // findQuantityBreakPrice finds the applicable quantity break price for an item.
-func findQuantityBreakPrice(breaks []*sales.SalesQuantityBreak, itemId string, qty float64) *erp.Money {
+func findQuantityBreakPrice(breaks []*sales.SalesQuantityBreak, itemId string, qty float64) *l8common.Money {
 	for _, qb := range breaks {
 		if qb.ItemId != itemId {
 			continue
@@ -68,7 +68,7 @@ func findQuantityBreakPrice(breaks []*sales.SalesQuantityBreak, itemId string, q
 }
 
 // findEntryPrice finds the applicable price list entry for an item.
-func findEntryPrice(entries []*sales.SalesPriceListEntry, itemId string, qty float64, now int64) *erp.Money {
+func findEntryPrice(entries []*sales.SalesPriceListEntry, itemId string, qty float64, now int64) *l8common.Money {
 	for _, entry := range entries {
 		if entry.ItemId != itemId {
 			continue
@@ -90,7 +90,7 @@ func findEntryPrice(entries []*sales.SalesPriceListEntry, itemId string, qty flo
 }
 
 // ApplyDiscountRules finds and applies the best applicable discount for a customer/item.
-func ApplyDiscountRules(basePrice *erp.Money, customerId, itemId string, vnic ifs.IVNic) (*erp.Money, error) {
+func ApplyDiscountRules(basePrice *l8common.Money, customerId, itemId string, vnic ifs.IVNic) (*l8common.Money, error) {
 	if basePrice == nil || basePrice.Amount == 0 {
 		return nil, nil
 	}
@@ -121,7 +121,7 @@ func ApplyDiscountRules(basePrice *erp.Money, customerId, itemId string, vnic if
 	if bestDiscount == 0 {
 		return nil, nil
 	}
-	return &erp.Money{Amount: bestDiscount, CurrencyId: basePrice.CurrencyId}, nil
+	return &l8common.Money{Amount: bestDiscount, CurrencyId: basePrice.CurrencyId}, nil
 }
 
 func matchesCustomer(ids []string, customerId string) bool {

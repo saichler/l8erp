@@ -15,9 +15,9 @@ limitations under the License.
 package promotionalprices
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -26,8 +26,8 @@ func newPromotionalPriceServiceCallback() ifs.IServiceCallback {
 		func(e *sales.SalesPromotionalPrice) { common.GenerateID(&e.PromoId) }).
 		Require(func(e *sales.SalesPromotionalPrice) string { return e.PromoId }, "PromoId").
 		Require(func(e *sales.SalesPromotionalPrice) string { return e.Name }, "Name").
-		OptionalMoney(func(e *sales.SalesPromotionalPrice) *erp.Money { return e.PromotionalPrice }, "PromotionalPrice").
-		OptionalMoney(func(e *sales.SalesPromotionalPrice) *erp.Money { return e.OriginalPrice }, "OriginalPrice").
+		OptionalMoney(func(e *sales.SalesPromotionalPrice) *l8common.Money { return e.PromotionalPrice }, "PromotionalPrice").
+		OptionalMoney(func(e *sales.SalesPromotionalPrice) *l8common.Money { return e.OriginalPrice }, "OriginalPrice").
 		DateAfter(func(e *sales.SalesPromotionalPrice) int64 { return e.EndDate }, func(e *sales.SalesPromotionalPrice) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }

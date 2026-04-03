@@ -15,9 +15,9 @@ limitations under the License.
 package bankaccounts
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -30,6 +30,6 @@ func newBankAccountServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.BankAccount) string { return e.GlAccountId }, "GlAccountId").
 		Enum(func(e *fin.BankAccount) int32 { return int32(e.AccountType) }, fin.BankAccountType_name, "AccountType").
 		Enum(func(e *fin.BankAccount) int32 { return int32(e.Status) }, fin.BankAccountStatus_name, "Status").
-		OptionalMoney(func(e *fin.BankAccount) *erp.Money { return e.CurrentBalance }, "CurrentBalance").
+		OptionalMoney(func(e *fin.BankAccount) *l8common.Money { return e.CurrentBalance }, "CurrentBalance").
 		Build()
 }

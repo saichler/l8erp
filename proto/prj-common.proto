@@ -18,7 +18,7 @@ package prj;
 
 option go_package = "./types/prj";
 
-import "erp-common.proto";
+import "l8common.proto";
 
 // ============================================================================
 // PROJECT-SPECIFIC COMMON TYPES AND ENUMS

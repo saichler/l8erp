@@ -15,9 +15,9 @@ limitations under the License.
 package receivingorders
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/scm"
 	"time"
@@ -114,7 +114,7 @@ func cascadeCreatePurchaseInvoice(recv *scm.ScmReceivingOrder, action ifs.Action
 			Quantity:    pl.Quantity,
 			UnitPrice:   pl.UnitPrice,
 			LineAmount:  pl.TotalPrice,
-			AuditInfo:   &erp.AuditInfo{},
+			AuditInfo:   &l8common.AuditInfo{},
 		}
 	}
 	now := time.Now().Unix()
@@ -129,7 +129,7 @@ func cascadeCreatePurchaseInvoice(recv *scm.ScmReceivingOrder, action ifs.Action
 		BalanceDue:       po.TotalAmount,
 		PaymentTermDays:  30,
 		Lines:            lines,
-		AuditInfo:        &erp.AuditInfo{},
+		AuditInfo:        &l8common.AuditInfo{},
 	}, vnic)
 	return err
 }

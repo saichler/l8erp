@@ -15,9 +15,9 @@ limitations under the License.
 package billingschedules
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
 )
 
@@ -29,9 +29,9 @@ func newBillingScheduleServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesBillingSchedule) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *sales.SalesBillingSchedule) int32 { return int32(e.Frequency) }, sales.SalesBillingFrequency_name, "Frequency").
 		Enum(func(e *sales.SalesBillingSchedule) int32 { return int32(e.Status) }, sales.SalesBillingStatus_name, "Status").
-		OptionalMoney(func(e *sales.SalesBillingSchedule) *erp.Money { return e.TotalAmount }, "TotalAmount").
-		OptionalMoney(func(e *sales.SalesBillingSchedule) *erp.Money { return e.BilledAmount }, "BilledAmount").
-		OptionalMoney(func(e *sales.SalesBillingSchedule) *erp.Money { return e.RemainingAmount }, "RemainingAmount").
+		OptionalMoney(func(e *sales.SalesBillingSchedule) *l8common.Money { return e.TotalAmount }, "TotalAmount").
+		OptionalMoney(func(e *sales.SalesBillingSchedule) *l8common.Money { return e.BilledAmount }, "BilledAmount").
+		OptionalMoney(func(e *sales.SalesBillingSchedule) *l8common.Money { return e.RemainingAmount }, "RemainingAmount").
 		DateAfter(func(e *sales.SalesBillingSchedule) int64 { return e.EndDate }, func(e *sales.SalesBillingSchedule) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }

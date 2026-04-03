@@ -15,8 +15,8 @@ limitations under the License.
 package items
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 	"time"
@@ -83,7 +83,7 @@ func checkReorderPoint(item *scm.ScmItem, action ifs.Action, vnic ifs.IVNic) err
 				UnitOfMeasure: item.UnitOfMeasure,
 			},
 		},
-		AuditInfo: &erp.AuditInfo{},
+		AuditInfo: &l8common.AuditInfo{},
 	}, vnic)
 	return err
 }

@@ -19,7 +19,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
@@ -78,7 +78,7 @@ func generateSchedules(store *MockDataStore) []*hcm.Schedule {
 		schedules = append(schedules, &hcm.Schedule{
 			ScheduleId: fmt.Sprintf("sched-%04d", idx),
 			EmployeeId: empID,
-			Period: &erp.DateRange{
+			Period: &l8common.DateRange{
 				StartDate: periodStart.Unix(),
 				EndDate:   periodEnd.Unix(),
 			},

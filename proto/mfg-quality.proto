@@ -19,7 +19,7 @@ package mfg;
 option go_package = "./types/mfg";
 
 import "mfg-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -41,7 +41,7 @@ message MfgQualityPlan {
   string revision = 10;
   string notes = 11;
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
   repeated MfgInspectionPoint inspection_points = 14;
 }
 
@@ -68,7 +68,7 @@ message MfgInspectionPoint {
   int32 sample_size = 14;
   bool is_mandatory = 15;
   string notes = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
 }
 
 // ============================================================================
@@ -95,7 +95,7 @@ message MfgQualityInspection {
   string warehouse_id = 15;              // cross-ref: SCM Warehouse
   string notes = 16;
   map<string, string> custom_fields = 17;
-  erp.AuditInfo audit_info = 18;
+  l8common.AuditInfo audit_info = 18;
   repeated MfgTestResult test_results = 19;
 }
 
@@ -118,7 +118,7 @@ message MfgTestResult {
   int64 test_date = 10;
   string equipment_id = 11;
   string notes = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 
 // ============================================================================
@@ -148,11 +148,11 @@ message MfgNCR {
   string assigned_to = 18;               // cross-ref: HCM Employee
   int64 due_date = 19;
   int64 closed_date = 20;
-  erp.Money estimated_cost = 21;
-  erp.Money actual_cost = 22;
+  l8common.Money estimated_cost = 21;
+  l8common.Money actual_cost = 22;
   string notes = 23;
   map<string, string> custom_fields = 24;
-  erp.AuditInfo audit_info = 25;
+  l8common.AuditInfo audit_info = 25;
   repeated MfgNCRAction actions = 26;
 }
 
@@ -176,5 +176,5 @@ message MfgNCRAction {
   string verified_by = 11;               // cross-ref: HCM Employee
   int64 verified_date = 12;
   string notes = 13;
-  erp.AuditInfo audit_info = 14;
+  l8common.AuditInfo audit_info = 14;
 }

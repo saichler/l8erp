@@ -18,7 +18,7 @@ package scm;
 
 option go_package = "./types/scm";
 
-import "erp-common.proto";
+import "l8common.proto";
 
 // ============================================================================
 // SCM-SPECIFIC COMMON TYPES AND ENUMS

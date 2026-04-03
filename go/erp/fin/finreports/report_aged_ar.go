@@ -17,8 +17,8 @@ package finreports
 import (
 	"time"
 
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -63,7 +63,7 @@ func agingDays(now time.Time, dueDate int64) int {
 	return days
 }
 
-func agingGrandTotal(buckets agingBucketSet, currencyId string) *erp.Money {
+func agingGrandTotal(buckets agingBucketSet, currencyId string) *l8common.Money {
 	var total int64
 	for _, b := range buckets {
 		total += moneyAmount(b.SectionTotal)

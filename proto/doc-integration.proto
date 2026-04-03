@@ -20,7 +20,7 @@ package doc;
 option go_package = "./types/doc";
 
 import "doc-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // =====================
@@ -39,7 +39,7 @@ message DocAttachment {
   string attached_by = 9;                   // cross-ref: HCM Employee
   int64 attached_date = 10;
   map<string, string> custom_fields = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 
@@ -66,7 +66,7 @@ message DocTemplate {
   int32 usage_count = 14;
   map<string, string> default_values = 15;
   map<string, string> custom_fields = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
   repeated DocTemplateField fields = 18;
 }
 
@@ -95,7 +95,7 @@ message DocTemplateField {
   string options = 13;                      // JSON array for select fields
   string reference_model = 14;              // For reference fields
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
 }
 
 
@@ -122,7 +122,7 @@ message DocEmailCapture {
   string error_message = 14;
   map<string, string> headers = 15;
   map<string, string> custom_fields = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
 }
 
 message DocEmailCaptureList {
@@ -154,7 +154,7 @@ message DocScanJob {
   repeated string document_ids = 15;        // cross-ref: DocDocument (created)
   map<string, string> settings = 16;
   map<string, string> custom_fields = 17;
-  erp.AuditInfo audit_info = 18;
+  l8common.AuditInfo audit_info = 18;
 }
 
 message DocScanJobList {

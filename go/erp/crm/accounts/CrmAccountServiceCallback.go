@@ -15,9 +15,9 @@ limitations under the License.
 package accounts
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
@@ -27,6 +27,6 @@ func newCrmAccountServiceCallback() ifs.IServiceCallback {
 		Require(func(e *crm.CrmAccount) string { return e.AccountId }, "AccountId").
 		Enum(func(e *crm.CrmAccount) int32 { return int32(e.AccountType) }, crm.CrmAccountType_name, "AccountType").
 		Enum(func(e *crm.CrmAccount) int32 { return int32(e.Status) }, crm.CrmAccountStatus_name, "Status").
-		OptionalMoney(func(e *crm.CrmAccount) *erp.Money { return e.AnnualRevenue }, "AnnualRevenue").
+		OptionalMoney(func(e *crm.CrmAccount) *l8common.Money { return e.AnnualRevenue }, "AnnualRevenue").
 		Build()
 }

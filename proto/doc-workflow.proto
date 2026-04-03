@@ -20,7 +20,7 @@ package doc;
 option go_package = "./types/doc";
 
 import "doc-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // =====================
@@ -38,7 +38,7 @@ message DocCheckout {
   string checkout_notes = 8;
   string checkin_notes = 9;
   map<string, string> custom_fields = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }
 
 
@@ -61,7 +61,7 @@ message DocApprovalWorkflow {
   int32 total_steps = 10;
   string comments = 11;
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
   repeated DocWorkflowStep steps = 14;
 }
 
@@ -89,7 +89,7 @@ message DocWorkflowStep {
   string comments = 12;
   bool is_required = 13;
   map<string, string> custom_fields = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 
@@ -114,7 +114,7 @@ message DocSignature {
   string ip_address = 14;
   string reason = 15;
   map<string, string> custom_fields = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
 }
 
 
@@ -137,6 +137,6 @@ message DocReviewComment {
   int64 resolved_date = 12;
   int64 created_date = 13;
   map<string, string> custom_fields = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 

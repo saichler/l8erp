@@ -15,22 +15,22 @@ limitations under the License.
 package hcmreports
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func moneyAmount(m *erp.Money) int64 {
+func moneyAmount(m *l8common.Money) int64 {
 	if m == nil {
 		return 0
 	}
 	return m.Amount
 }
 
-func newMoney(amount int64, currencyId string) *erp.Money {
-	return &erp.Money{Amount: amount, CurrencyId: currencyId}
+func newMoney(amount int64, currencyId string) *l8common.Money {
+	return &l8common.Money{Amount: amount, CurrencyId: currencyId}
 }
 
-func addMoney(a, b *erp.Money) *erp.Money {
+func addMoney(a, b *l8common.Money) *l8common.Money {
 	total := moneyAmount(a) + moneyAmount(b)
 	cid := ""
 	if a != nil {

@@ -15,9 +15,9 @@ limitations under the License.
 package returns
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
@@ -27,6 +27,6 @@ func newEcomReturnServiceCallback() ifs.IServiceCallback {
 		Require(func(e *ecom.EcomReturn) string { return e.ReturnId }, "ReturnId").
 		Require(func(e *ecom.EcomReturn) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *ecom.EcomReturn) int32 { return int32(e.Status) }, ecom.EcomReturnStatus_name, "Status").
-		OptionalMoney(func(e *ecom.EcomReturn) *erp.Money { return e.RefundAmount }, "RefundAmount").
+		OptionalMoney(func(e *ecom.EcomReturn) *l8common.Money { return e.RefundAmount }, "RefundAmount").
 		Build()
 }

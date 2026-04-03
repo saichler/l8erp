@@ -20,7 +20,7 @@ package comp;
 option go_package = "./types/comp";
 
 import "comp-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // =====================
@@ -46,7 +46,7 @@ message CompRegulation {
     repeated string applicable_regions = 14;
     string owner_id = 15;                      // cross-ref: Employee
     map<string, string> custom_fields = 16;
-    erp.AuditInfo audit_info = 17;
+    l8common.AuditInfo audit_info = 17;
     repeated CompRequirement requirements = 18;
 }
 
@@ -75,7 +75,7 @@ message CompRequirement {
     string owner_id = 13;                      // cross-ref: Employee
     bool is_active = 14;
     map<string, string> custom_fields = 15;
-    erp.AuditInfo audit_info = 16;
+    l8common.AuditInfo audit_info = 16;
     repeated CompViolationRecord violations = 17;
     repeated CompComplianceStatus statuses = 18;
 }
@@ -98,7 +98,7 @@ message CompComplianceStatus {
     double compliance_score = 11;
     repeated string gap_descriptions = 12;
     map<string, string> custom_fields = 13;
-    erp.AuditInfo audit_info = 14;
+    l8common.AuditInfo audit_info = 14;
 }
 
 // =====================
@@ -122,10 +122,10 @@ message CompCertification {
     string regulation_id = 12;                 // cross-ref: CompRegulation
     string certificate_document_id = 13;       // cross-ref: DocDocument
     string responsible_id = 14;                // cross-ref: Employee
-    erp.Money certification_cost = 15;
+    l8common.Money certification_cost = 15;
     int32 renewal_lead_days = 16;
     map<string, string> custom_fields = 17;
-    erp.AuditInfo audit_info = 18;
+    l8common.AuditInfo audit_info = 18;
 }
 
 message CompCertificationList {
@@ -154,10 +154,10 @@ message CompViolationRecord {
     string corrective_action = 14;
     int64 due_date = 15;
     int64 closed_date = 16;
-    erp.Money potential_penalty = 17;
-    erp.Money actual_penalty = 18;
+    l8common.Money potential_penalty = 17;
+    l8common.Money actual_penalty = 18;
     string evidence_document_id = 19;          // cross-ref: DocDocument
     map<string, string> custom_fields = 20;
-    erp.AuditInfo audit_info = 21;
+    l8common.AuditInfo audit_info = 21;
 }
 

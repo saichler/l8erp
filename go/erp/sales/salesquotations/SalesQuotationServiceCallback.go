@@ -15,9 +15,9 @@ limitations under the License.
 package salesquotations
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -31,10 +31,10 @@ func newSalesQuotationServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesQuotation) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *sales.SalesQuotation) string { return e.CurrencyId }, "CurrencyId").
 		Enum(func(e *sales.SalesQuotation) int32 { return int32(e.Status) }, sales.SalesQuotationStatus_name, "Status").
-		OptionalMoney(func(e *sales.SalesQuotation) *erp.Money { return e.Subtotal }, "Subtotal").
-		OptionalMoney(func(e *sales.SalesQuotation) *erp.Money { return e.DiscountTotal }, "DiscountTotal").
-		OptionalMoney(func(e *sales.SalesQuotation) *erp.Money { return e.TaxTotal }, "TaxTotal").
-		OptionalMoney(func(e *sales.SalesQuotation) *erp.Money { return e.TotalAmount }, "TotalAmount").
+		OptionalMoney(func(e *sales.SalesQuotation) *l8common.Money { return e.Subtotal }, "Subtotal").
+		OptionalMoney(func(e *sales.SalesQuotation) *l8common.Money { return e.DiscountTotal }, "DiscountTotal").
+		OptionalMoney(func(e *sales.SalesQuotation) *l8common.Money { return e.TaxTotal }, "TaxTotal").
+		OptionalMoney(func(e *sales.SalesQuotation) *l8common.Money { return e.TotalAmount }, "TotalAmount").
 		Build()
 }
 
@@ -51,7 +51,7 @@ func computeSalesQuotationTotals(q *sales.SalesQuotation) error {
 		gross := int64(line.Quantity * float64(line.UnitPrice.Amount))
 		subtotal += gross
 		if line.DiscountPercent > 0 && line.DiscountAmount == nil {
-			line.DiscountAmount = &erp.Money{
+			line.DiscountAmount = &l8common.Money{
 				Amount:     int64(float64(gross) * line.DiscountPercent / 100),
 				CurrencyId: currencyId,
 			}
@@ -64,14 +64,14 @@ func computeSalesQuotationTotals(q *sales.SalesQuotation) error {
 		if line.TaxAmount != nil {
 			tax = line.TaxAmount.Amount
 		}
-		line.LineTotal = &erp.Money{Amount: gross - disc + tax, CurrencyId: currencyId}
+		line.LineTotal = &l8common.Money{Amount: gross - disc + tax, CurrencyId: currencyId}
 	}
 	if currencyId == "" {
 		return nil
 	}
-	q.Subtotal = &erp.Money{Amount: subtotal, CurrencyId: currencyId}
-	q.DiscountTotal = common.SumLineMoney(q.Lines, func(l *sales.SalesQuotationLine) *erp.Money { return l.DiscountAmount })
-	q.TaxTotal = common.SumLineMoney(q.Lines, func(l *sales.SalesQuotationLine) *erp.Money { return l.TaxAmount })
+	q.Subtotal = &l8common.Money{Amount: subtotal, CurrencyId: currencyId}
+	q.DiscountTotal = common.SumLineMoney(q.Lines, func(l *sales.SalesQuotationLine) *l8common.Money { return l.DiscountAmount })
+	q.TaxTotal = common.SumLineMoney(q.Lines, func(l *sales.SalesQuotationLine) *l8common.Money { return l.TaxAmount })
 	q.TotalAmount = common.MoneyAdd(common.MoneySubtract(q.Subtotal, q.DiscountTotal), q.TaxTotal)
 	return nil
 }

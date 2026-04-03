@@ -19,7 +19,7 @@ package prj;
 option go_package = "./types/prj";
 
 import "prj-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -47,7 +47,7 @@ message PrjStatusReport {
   string decisions_needed = 16;
   string reported_by = 17;                 // cross-ref: HCM Employee
   map<string, string> custom_fields = 18;
-  erp.AuditInfo audit_info = 19;
+  l8common.AuditInfo audit_info = 19;
 }
 
 message PrjStatusReportList {
@@ -59,22 +59,22 @@ message PrjStatusReportList {
 message PrjEarnedValue {
   string earned_value_id = 1;
   int64 as_of_date = 3;
-  erp.Money budget_at_completion = 4;      // BAC
-  erp.Money planned_value = 5;             // PV (BCWS)
-  erp.Money earned_value = 6;              // EV (BCWP)
-  erp.Money actual_cost = 7;               // AC (ACWP)
-  erp.Money schedule_variance = 8;         // SV = EV - PV
-  erp.Money cost_variance = 9;             // CV = EV - AC
+  l8common.Money budget_at_completion = 4;      // BAC
+  l8common.Money planned_value = 5;             // PV (BCWS)
+  l8common.Money earned_value = 6;              // EV (BCWP)
+  l8common.Money actual_cost = 7;               // AC (ACWP)
+  l8common.Money schedule_variance = 8;         // SV = EV - PV
+  l8common.Money cost_variance = 9;             // CV = EV - AC
   double schedule_performance_index = 10;  // SPI = EV / PV
   double cost_performance_index = 11;      // CPI = EV / AC
-  erp.Money estimate_at_completion = 12;   // EAC
-  erp.Money estimate_to_complete = 13;     // ETC
-  erp.Money variance_at_completion = 14;   // VAC = BAC - EAC
+  l8common.Money estimate_at_completion = 12;   // EAC
+  l8common.Money estimate_to_complete = 13;     // ETC
+  l8common.Money variance_at_completion = 14;   // VAC = BAC - EAC
   double to_complete_performance_index = 15; // TCPI
   double percent_complete = 16;
   double percent_spent = 17;
   map<string, string> custom_fields = 18;
-  erp.AuditInfo audit_info = 19;
+  l8common.AuditInfo audit_info = 19;
 }
 
 // PrjBudgetVariance represents budget variance analysis
@@ -84,9 +84,9 @@ message PrjBudgetVariance {
   string phase_id = 4;                     // cross-ref: PrjPhase
   int64 as_of_date = 5;
   string category = 6;                     // labor, expense, materials, etc.
-  erp.Money budgeted_amount = 7;
-  erp.Money actual_amount = 8;
-  erp.Money variance_amount = 9;
+  l8common.Money budgeted_amount = 7;
+  l8common.Money actual_amount = 8;
+  l8common.Money variance_amount = 9;
   double variance_percent = 10;
   double budgeted_hours = 11;
   double actual_hours = 12;
@@ -94,7 +94,7 @@ message PrjBudgetVariance {
   string variance_explanation = 14;
   string corrective_action = 15;
   map<string, string> custom_fields = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
 }
 
 // PrjResourceForecast represents resource demand forecasting
@@ -114,7 +114,7 @@ message PrjResourceForecast {
   double confidence_level = 14;            // 0-100 percentage
   string notes = 15;
   map<string, string> custom_fields = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
 }
 
 // @PrimeObject
@@ -126,10 +126,10 @@ message PrjPortfolioView {
   repeated string project_ids = 4;         // cross-ref: PrjProject
   string owner_id = 5;                     // cross-ref: HCM Employee
   string department_id = 6;                // cross-ref: HCM Department
-  erp.Money total_budget = 7;
-  erp.Money total_actual_cost = 8;
-  erp.Money total_revenue = 9;
-  erp.Money total_profit = 10;
+  l8common.Money total_budget = 7;
+  l8common.Money total_actual_cost = 8;
+  l8common.Money total_revenue = 9;
+  l8common.Money total_profit = 10;
   int32 total_projects = 11;
   int32 on_track_count = 12;
   int32 at_risk_count = 13;
@@ -138,7 +138,7 @@ message PrjPortfolioView {
   double avg_margin = 16;
   int64 as_of_date = 17;
   map<string, string> custom_fields = 18;
-  erp.AuditInfo audit_info = 19;
+  l8common.AuditInfo audit_info = 19;
 }
 
 message PrjPortfolioViewList {
@@ -165,7 +165,7 @@ message PrjProjectKPI {
   string trend = 14;                       // improving, stable, declining
   string notes = 15;
   map<string, string> custom_fields = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
 }
 
 message PrjProjectKPIList {
@@ -190,10 +190,10 @@ message PrjProjectIssue {
   int64 resolved_date = 14;
   string resolution = 15;
   string root_cause = 16;
-  erp.Money impact_cost = 17;
+  l8common.Money impact_cost = 17;
   int32 impact_days = 18;
   string related_risk_id = 19;             // cross-ref: PrjRisk
   map<string, string> custom_fields = 20;
-  erp.AuditInfo audit_info = 21;
+  l8common.AuditInfo audit_info = 21;
 }
 

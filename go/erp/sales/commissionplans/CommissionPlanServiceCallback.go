@@ -15,9 +15,9 @@ limitations under the License.
 package commissionplans
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -27,7 +27,7 @@ func newCommissionPlanServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesCommissionPlan) string { return e.PlanId }, "PlanId").
 		Require(func(e *sales.SalesCommissionPlan) string { return e.Name }, "Name").
 		Enum(func(e *sales.SalesCommissionPlan) int32 { return int32(e.CommissionType) }, sales.SalesCommissionType_name, "CommissionType").
-		OptionalMoney(func(e *sales.SalesCommissionPlan) *erp.Money { return e.BaseAmount }, "BaseAmount").
+		OptionalMoney(func(e *sales.SalesCommissionPlan) *l8common.Money { return e.BaseAmount }, "BaseAmount").
 		DateAfter(func(e *sales.SalesCommissionPlan) int64 { return e.ExpiryDate }, func(e *sales.SalesCommissionPlan) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

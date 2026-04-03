@@ -26,7 +26,7 @@ import (
 	"math/rand"
 
 	"github.com/saichler/l8erp/go/types/comp"
-	"github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 )
 
 // generateCompApprovalMatrices creates approval authority records
@@ -48,7 +48,7 @@ func generateCompApprovalMatrices(store *MockDataStore) []*comp.CompApprovalMatr
 			Description: fmt.Sprintf("Approval authority matrix for %s transactions", compTransactionTypes[i]),
 			TransactionType: compTransactionTypes[i],
 			DepartmentId:    departmentID,
-			ThresholdMin: &erp.Money{
+			ThresholdMin: &l8common.Money{
 				Amount:     thresholdMin * 100, // Convert to cents
 				CurrencyId: pickRef(store.CurrencyIDs, i),
 			},

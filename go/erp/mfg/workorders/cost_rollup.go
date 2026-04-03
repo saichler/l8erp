@@ -15,8 +15,8 @@ limitations under the License.
 package workorders
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
@@ -57,7 +57,7 @@ func rollUpCosts(wo *mfg.MfgWorkOrder, action ifs.Action, vnic ifs.IVNic) error 
 			}
 		}
 	}
-	wo.ActualCost = &erp.Money{
+	wo.ActualCost = &l8common.Money{
 		Amount:     laborCost + materialCost,
 		CurrencyId: currencyId,
 	}

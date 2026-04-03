@@ -15,12 +15,12 @@ limitations under the License.
 package common
 
 import (
-	"errors"
-	"fmt"
+	l8c "github.com/saichler/l8common/go/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
 // StatusTransitionConfig defines a state machine for an entity's status field.
+// Generic wrapper — typed getters/setters delegate to l8common's interface{}-based implementation.
 type StatusTransitionConfig[T any] struct {
 	StatusGetter  func(*T) int32
 	StatusSetter  func(*T, int32)
@@ -34,50 +34,18 @@ type StatusTransitionConfig[T any] struct {
 
 // BuildValidator returns an ActionValidateFunc that enforces status transitions.
 func (cfg *StatusTransitionConfig[T]) BuildValidator() ActionValidateFunc[T] {
+	inner := &l8c.StatusTransitionConfig{
+		StatusGetter:  func(v interface{}) int32 { return cfg.StatusGetter(v.(*T)) },
+		StatusSetter:  func(v interface{}, s int32) { cfg.StatusSetter(v.(*T), s) },
+		FilterBuilder: func(v interface{}) interface{} { return cfg.FilterBuilder(v.(*T)) },
+		ServiceName:   cfg.ServiceName,
+		ServiceArea:   cfg.ServiceArea,
+		InitialStatus: cfg.InitialStatus,
+		Transitions:   cfg.Transitions,
+		StatusNames:   cfg.StatusNames,
+	}
+	innerFn := inner.BuildValidator()
 	return func(entity *T, action ifs.Action, vnic ifs.IVNic) error {
-		if action == ifs.POST {
-			if cfg.InitialStatus > 0 {
-				cfg.StatusSetter(entity, cfg.InitialStatus)
-			}
-			return nil
-		}
-		if action != ifs.PUT && action != ifs.PATCH {
-			return nil
-		}
-
-		newStatus := cfg.StatusGetter(entity)
-		filter := cfg.FilterBuilder(entity)
-		old, err := GetEntity[T](cfg.ServiceName, cfg.ServiceArea, filter, vnic)
-		if err != nil {
-			return fmt.Errorf("failed to fetch existing entity for status validation: %w", err)
-		}
-		if old == nil {
-			return errors.New("entity not found for status transition validation")
-		}
-
-		oldStatus := cfg.StatusGetter(old)
-		if oldStatus == newStatus {
-			return nil
-		}
-
-		allowed, ok := cfg.Transitions[oldStatus]
-		if !ok {
-			return fmt.Errorf("status %s is terminal and cannot be changed",
-				cfg.statusName(oldStatus))
-		}
-		for _, a := range allowed {
-			if a == newStatus {
-				return nil
-			}
-		}
-		return fmt.Errorf("invalid status transition from %s to %s",
-			cfg.statusName(oldStatus), cfg.statusName(newStatus))
+		return innerFn(entity, action, vnic)
 	}
-}
-
-func (cfg *StatusTransitionConfig[T]) statusName(val int32) string {
-	if n, ok := cfg.StatusNames[val]; ok {
-		return n
-	}
-	return fmt.Sprintf("UNKNOWN(%d)", val)
 }

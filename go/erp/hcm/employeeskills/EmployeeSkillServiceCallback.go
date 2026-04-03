@@ -19,7 +19,7 @@ import (
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/erp/hcm/skills"
 	"github.com/saichler/l8erp/go/types/hcm"
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 )
 
 func newEmployeeSkillServiceCallback() ifs.IServiceCallback {

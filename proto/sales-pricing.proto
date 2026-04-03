@@ -19,7 +19,7 @@ package sales;
 option go_package = "./types/sales";
 
 import "sales-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -39,7 +39,7 @@ message SalesPriceList {
   bool is_default = 8;
   string notes = 9;
   map<string, string> custom_fields = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
   repeated SalesPriceListEntry entries = 12;
   repeated SalesQuantityBreak quantity_breaks = 13;
 }
@@ -53,7 +53,7 @@ message SalesPriceListList {
 message SalesPriceListEntry {
   string entry_id = 1;
   string item_id = 2;                   // Cross-ref: SCM Item
-  erp.Money unit_price = 3;
+  l8common.Money unit_price = 3;
   string unit_of_measure = 4;
   double minimum_quantity = 5;
   int64 effective_date = 6;
@@ -78,7 +78,7 @@ message SalesDiscountRule {
   bool is_active = 13;
   int32 priority = 14;
   bool is_combinable = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
 }
 
 message SalesDiscountRuleList {
@@ -93,15 +93,15 @@ message SalesPromotionalPrice {
   string name = 2;
   string description = 3;
   string item_id = 4;                   // Cross-ref: SCM Item
-  erp.Money promotional_price = 5;
-  erp.Money original_price = 6;
+  l8common.Money promotional_price = 5;
+  l8common.Money original_price = 6;
   int64 start_date = 7;
   int64 end_date = 8;
   double max_quantity = 9;
   double quantity_sold = 10;
   bool is_active = 11;
   string promo_code = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 
 message SalesPromotionalPriceList {
@@ -115,7 +115,7 @@ message SalesQuantityBreak {
   string item_id = 2;                   // Cross-ref: SCM Item
   double from_quantity = 3;
   double to_quantity = 4;
-  erp.Money unit_price = 5;
+  l8common.Money unit_price = 5;
   double discount_percent = 6;
 }
 
@@ -124,7 +124,7 @@ message SalesCustomerPrice {
   string customer_price_id = 1;
   string customer_id = 2;               // Cross-ref: FIN Customer
   string item_id = 3;                   // Cross-ref: SCM Item
-  erp.Money unit_price = 4;
+  l8common.Money unit_price = 4;
   string currency_id = 5;
   SalesPricingMethod pricing_method = 6;
   double minimum_quantity = 7;

@@ -15,9 +15,9 @@ limitations under the License.
 package customerpayments
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -30,7 +30,7 @@ func newCustomerPaymentServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.CustomerPayment) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *fin.CustomerPayment) int32 { return int32(e.PaymentMethod) }, fin.PaymentMethod_name, "PaymentMethod").
 		Enum(func(e *fin.CustomerPayment) int32 { return int32(e.Status) }, fin.PaymentStatus_name, "Status").
-		OptionalMoney(func(e *fin.CustomerPayment) *erp.Money { return e.Amount }, "Amount").
+		OptionalMoney(func(e *fin.CustomerPayment) *l8common.Money { return e.Amount }, "Amount").
 		Build()
 }
 
@@ -54,12 +54,12 @@ func cascadeUpdateInvoicePaymentStatus(payment *fin.CustomerPayment, action ifs.
 			paid = invoice.AmountPaid.Amount
 		}
 		paid += app.AppliedAmount.Amount
-		invoice.AmountPaid = &erp.Money{Amount: paid, CurrencyId: app.AppliedAmount.CurrencyId}
+		invoice.AmountPaid = &l8common.Money{Amount: paid, CurrencyId: app.AppliedAmount.CurrencyId}
 		total := int64(0)
 		if invoice.TotalAmount != nil {
 			total = invoice.TotalAmount.Amount
 		}
-		invoice.BalanceDue = &erp.Money{Amount: total - paid, CurrencyId: app.AppliedAmount.CurrencyId}
+		invoice.BalanceDue = &l8common.Money{Amount: total - paid, CurrencyId: app.AppliedAmount.CurrencyId}
 		if total-paid <= 0 {
 			invoice.Status = fin.InvoiceStatus_INVOICE_STATUS_PAID
 		} else if paid > 0 {

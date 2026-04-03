@@ -19,7 +19,7 @@ package bi;
 option go_package = "./types/bi";
 
 import "bi-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -50,7 +50,7 @@ message BiReport {
   repeated BiReportAccess access_controls = 20;
   repeated BiReportSubscription subscriptions = 21;
   repeated BiReportSchedule schedules = 22;
-  erp.AuditInfo audit_info = 18;
+  l8common.AuditInfo audit_info = 18;
 }
 
 message BiReportList {
@@ -70,7 +70,7 @@ message BiReportTemplate {
   string style_template = 7;
   bool is_active = 8;
   map<string, string> custom_fields = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message BiReportTemplateList {
@@ -96,7 +96,7 @@ message BiReportSchedule {
   bool is_active = 15;
   map<string, string> parameters = 16;
   map<string, string> custom_fields = 17;
-  erp.AuditInfo audit_info = 18;
+  l8common.AuditInfo audit_info = 18;
 }
 
 // BiReportExecution represents a report execution record
@@ -114,7 +114,7 @@ message BiReportExecution {
   string error_message = 12;
   map<string, string> parameters = 13;
   map<string, string> custom_fields = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 // BiReportAccess represents report access control
@@ -127,7 +127,7 @@ message BiReportAccess {
   string granted_by = 7;                    // cross-ref: HCM Employee
   int64 expiry_date = 8;
   map<string, string> custom_fields = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 // BiReportSubscription represents a report subscription
@@ -140,5 +140,5 @@ message BiReportSubscription {
   bool include_empty = 7;
   bool is_active = 8;
   map<string, string> custom_fields = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }

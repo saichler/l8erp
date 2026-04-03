@@ -20,7 +20,7 @@ package ecom;
 option go_package = "./types/ecom";
 
 import "ecom-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // =====================
@@ -38,9 +38,9 @@ message EcomProduct {
     EcomProductType product_type = 6;
     EcomProductStatus status = 7;
     string category_id = 8;                 // cross-ref: EcomCategory
-    erp.Money price = 9;
-    erp.Money compare_at_price = 10;
-    erp.Money cost_price = 11;
+    l8common.Money price = 9;
+    l8common.Money compare_at_price = 10;
+    l8common.Money cost_price = 11;
     int32 stock_quantity = 12;
     int32 low_stock_threshold = 13;
     bool track_inventory = 14;
@@ -56,7 +56,7 @@ message EcomProduct {
     bool is_taxable = 24;
     string tax_class = 25;
     map<string, string> custom_fields = 26;
-    erp.AuditInfo audit_info = 27;
+    l8common.AuditInfo audit_info = 27;
     repeated EcomImage images = 28;
     repeated EcomVariant variants = 29;
 }
@@ -86,7 +86,7 @@ message EcomCategory {
     int32 level = 11;
     string path = 12;
     map<string, string> custom_fields = 13;
-    erp.AuditInfo audit_info = 14;
+    l8common.AuditInfo audit_info = 14;
 }
 
 message EcomCategoryList {
@@ -114,7 +114,7 @@ message EcomAttribute {
     string default_value = 11;
     int32 sort_order = 12;
     map<string, string> custom_fields = 13;
-    erp.AuditInfo audit_info = 14;
+    l8common.AuditInfo audit_info = 14;
 }
 
 message EcomAttributeList {
@@ -143,7 +143,7 @@ message EcomImage {
     int32 sort_order = 14;
     bool is_primary = 15;
     map<string, string> custom_fields = 16;
-    erp.AuditInfo audit_info = 17;
+    l8common.AuditInfo audit_info = 17;
 }
 
 // =====================
@@ -155,9 +155,9 @@ message EcomVariant {
     string variant_id = 1;
     string sku = 3;
     string name = 4;
-    erp.Money price = 5;
-    erp.Money compare_at_price = 6;
-    erp.Money cost_price = 7;
+    l8common.Money price = 5;
+    l8common.Money compare_at_price = 6;
+    l8common.Money cost_price = 7;
     int32 stock_quantity = 8;
     double weight = 9;
     string weight_unit = 10;
@@ -167,5 +167,5 @@ message EcomVariant {
     int32 sort_order = 14;
     string image_id = 15;
     map<string, string> custom_fields = 16;
-    erp.AuditInfo audit_info = 17;
+    l8common.AuditInfo audit_info = 17;
 }

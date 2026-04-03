@@ -19,7 +19,7 @@ package sales;
 option go_package = "./types/sales";
 
 import "sales-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -38,13 +38,13 @@ message SalesBillingSchedule {
   int64 start_date = 7;
   int64 end_date = 8;
   int64 next_billing_date = 9;
-  erp.Money total_amount = 10;
-  erp.Money billed_amount = 11;
-  erp.Money remaining_amount = 12;
+  l8common.Money total_amount = 10;
+  l8common.Money billed_amount = 11;
+  l8common.Money remaining_amount = 12;
   SalesBillingStatus status = 13;
   string notes = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
   repeated SalesBillingMilestone milestones = 17;
 }
 
@@ -59,7 +59,7 @@ message SalesBillingMilestone {
   string name = 2;
   string description = 3;
   int32 sequence = 4;
-  erp.Money amount = 5;
+  l8common.Money amount = 5;
   double percentage = 6;
   int64 target_date = 7;
   int64 actual_date = 8;
@@ -77,14 +77,14 @@ message SalesRevenueSchedule {
   SalesRevenueRecognition recognition_method = 4;
   int64 start_date = 5;
   int64 end_date = 6;
-  erp.Money total_revenue = 7;
-  erp.Money recognized_revenue = 8;
-  erp.Money deferred_revenue = 9;
+  l8common.Money total_revenue = 7;
+  l8common.Money recognized_revenue = 8;
+  l8common.Money deferred_revenue = 9;
   string revenue_account_id = 10;       // Cross-ref: FIN Account
   string deferred_account_id = 11;      // Cross-ref: FIN Account
   string notes = 12;
   map<string, string> custom_fields = 13;
-  erp.AuditInfo audit_info = 14;
+  l8common.AuditInfo audit_info = 14;
 }
 
 message SalesRevenueScheduleList {

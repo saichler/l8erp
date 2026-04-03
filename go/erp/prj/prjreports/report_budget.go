@@ -15,12 +15,12 @@ limitations under the License.
 package prjreports
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 )
 
 func generateProjectBudget(report *fin.FinReport, vnic ifs.IVNic) error {
@@ -31,7 +31,7 @@ func generateProjectBudget(report *fin.FinReport, vnic ifs.IVNic) error {
 
 	section := &fin.FinReportSection{
 		Title:        "Project Budget Summary",
-		SectionTotal: &erp.Money{Amount: 0, CurrencyId: "USD"},
+		SectionTotal: &l8common.Money{Amount: 0, CurrencyId: "USD"},
 	}
 
 	var totalVariance int64
@@ -50,14 +50,14 @@ func generateProjectBudget(report *fin.FinReport, vnic ifs.IVNic) error {
 			AccountName:     p.Name,
 			BudgetAmount:    p.Budget,
 			Balance:         p.ActualCost,
-			Variance:        &erp.Money{Amount: variance, CurrencyId: "USD"},
+			Variance:        &l8common.Money{Amount: variance, CurrencyId: "USD"},
 			VariancePercent: pct,
 			Description:     p.Status.String(),
 		}
 		section.Lines = append(section.Lines, line)
 		totalVariance += variance
 	}
-	section.SectionTotal = &erp.Money{Amount: totalVariance, CurrencyId: "USD"}
+	section.SectionTotal = &l8common.Money{Amount: totalVariance, CurrencyId: "USD"}
 
 	report.Sections = []*fin.FinReportSection{section}
 	report.GrandTotal = section.SectionTotal
@@ -65,7 +65,7 @@ func generateProjectBudget(report *fin.FinReport, vnic ifs.IVNic) error {
 	return nil
 }
 
-func moneyAmount(m *erp.Money) int64 {
+func moneyAmount(m *l8common.Money) int64 {
 	if m == nil {
 		return 0
 	}

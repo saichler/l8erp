@@ -19,7 +19,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -181,10 +181,10 @@ func generateTaxReturnsForYear(store *MockDataStore) []*fin.TaxReturn {
 			TaxType:        fin.TaxType_TAX_TYPE_INCOME,
 			Status:         status,
 			DueDate:        dueDate.Unix(),
-			TaxableAmount:  &erp.Money{Amount: taxableAmount, CurrencyId: pickRef(store.CurrencyIDs, 0)},
-			TaxAmount:      &erp.Money{Amount: taxAmount, CurrencyId: pickRef(store.CurrencyIDs, 0)},
-			AmountPaid:     &erp.Money{Amount: amountPaid, CurrencyId: pickRef(store.CurrencyIDs, 0)},
-			AmountDue:      &erp.Money{Amount: amountDue, CurrencyId: pickRef(store.CurrencyIDs, 0)},
+			TaxableAmount:  &l8common.Money{Amount: taxableAmount, CurrencyId: pickRef(store.CurrencyIDs, 0)},
+			TaxAmount:      &l8common.Money{Amount: taxAmount, CurrencyId: pickRef(store.CurrencyIDs, 0)},
+			AmountPaid:     &l8common.Money{Amount: amountPaid, CurrencyId: pickRef(store.CurrencyIDs, 0)},
+			AmountDue:      &l8common.Money{Amount: amountDue, CurrencyId: pickRef(store.CurrencyIDs, 0)},
 			Notes:          fmt.Sprintf("Q%d 2025 Federal Income Tax Return", i+1),
 			AuditInfo:      createAuditInfo(),
 		}

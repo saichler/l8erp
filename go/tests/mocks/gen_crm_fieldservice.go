@@ -20,7 +20,7 @@ import (
 	"time"
 
 	"github.com/saichler/l8erp/go/types/crm"
-	"github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 )
 
 // generateTechnicians creates technician records
@@ -65,7 +65,7 @@ func generateTechnicians(store *MockDataStore) []*crm.CrmTechnician {
 			Status:       status,
 			Skills:       skills,
 			Territory:    crmTerritories[i%len(crmTerritories)],
-			HomeLocation: &erp.Address{
+			HomeLocation: &l8common.Address{
 				Line1:         fmt.Sprintf("%d %s", rand.Intn(9999)+1, streetNames[i%len(streetNames)]),
 				City:          cities[i%len(cities)],
 				StateProvince: states[i%len(states)],
@@ -298,7 +298,7 @@ func generateServiceOrders(store *MockDataStore) []*crm.CrmServiceOrder {
 			CaseId:      caseID,
 			ContractId:  contractID,
 			Description: fmt.Sprintf("Service order %d - %s", i+1, types[i%len(types)].String()),
-			ServiceAddress: &erp.Address{
+			ServiceAddress: &l8common.Address{
 				Line1:         fmt.Sprintf("%d %s", rand.Intn(9999)+1, streetNames[i%len(streetNames)]),
 				City:          cities[i%len(cities)],
 				StateProvince: states[i%len(states)],

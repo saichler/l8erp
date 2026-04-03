@@ -15,9 +15,9 @@ limitations under the License.
 package blanketorders
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
@@ -27,8 +27,8 @@ func newBlanketOrderServiceCallback() ifs.IServiceCallback {
 		Require(func(e *scm.ScmBlanketOrder) string { return e.BlanketOrderId }, "BlanketOrderId").
 		Require(func(e *scm.ScmBlanketOrder) string { return e.VendorId }, "VendorId").
 		Enum(func(e *scm.ScmBlanketOrder) int32 { return int32(e.Status) }, scm.ScmPurchaseOrderStatus_name, "Status").
-		OptionalMoney(func(e *scm.ScmBlanketOrder) *erp.Money { return e.MaxAmount }, "MaxAmount").
-		OptionalMoney(func(e *scm.ScmBlanketOrder) *erp.Money { return e.UsedAmount }, "UsedAmount").
+		OptionalMoney(func(e *scm.ScmBlanketOrder) *l8common.Money { return e.MaxAmount }, "MaxAmount").
+		OptionalMoney(func(e *scm.ScmBlanketOrder) *l8common.Money { return e.UsedAmount }, "UsedAmount").
 		DateAfter(func(e *scm.ScmBlanketOrder) int64 { return e.EndDate }, func(e *scm.ScmBlanketOrder) int64 { return e.StartDate }, "EndDate", "StartDate").
 		Build()
 }

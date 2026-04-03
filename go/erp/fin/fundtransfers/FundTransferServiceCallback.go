@@ -15,9 +15,9 @@ limitations under the License.
 package fundtransfers
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -28,6 +28,6 @@ func newFundTransferServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.FundTransfer) string { return e.FromBankAccountId }, "FromBankAccountId").
 		Require(func(e *fin.FundTransfer) string { return e.ToBankAccountId }, "ToBankAccountId").
 		Enum(func(e *fin.FundTransfer) int32 { return int32(e.Status) }, fin.TransferStatus_name, "Status").
-		OptionalMoney(func(e *fin.FundTransfer) *erp.Money { return e.Amount }, "Amount").
+		OptionalMoney(func(e *fin.FundTransfer) *l8common.Money { return e.Amount }, "Amount").
 		Build()
 }

@@ -20,7 +20,7 @@ option go_package = "./types/sales";
 
 import "sales-common.proto";
 import "sales-pricing.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -38,7 +38,7 @@ message SalesCustomerHierarchy {
   repeated string customer_ids = 6;     // Cross-ref: FIN Customer
   bool is_active = 7;
   map<string, string> custom_fields = 8;
-  erp.AuditInfo audit_info = 9;
+  l8common.AuditInfo audit_info = 9;
 }
 
 message SalesCustomerHierarchyList {
@@ -57,7 +57,7 @@ message SalesCustomerSegment {
   int32 customer_count = 6;
   bool is_active = 7;
   map<string, string> custom_fields = 8;
-  erp.AuditInfo audit_info = 9;
+  l8common.AuditInfo audit_info = 9;
 }
 
 message SalesCustomerSegmentList {
@@ -75,7 +75,7 @@ message SalesCustomerContract {
   SalesContractStatus status = 5;
   int64 start_date = 6;
   int64 end_date = 7;
-  erp.Money contract_value = 8;
+  l8common.Money contract_value = 8;
   string price_list_id = 9;
   string payment_terms = 10;
   string terms_and_conditions = 11;
@@ -83,7 +83,7 @@ message SalesCustomerContract {
   bool auto_renew = 13;
   int32 renewal_notice_days = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
   repeated SalesCustomerPrice prices = 17;
 }
 
@@ -101,7 +101,7 @@ message SalesPartnerChannel {
   string contact_name = 4;
   string email = 5;
   string phone = 6;
-  erp.Address address = 7;
+  l8common.Address address = 7;
   double commission_rate = 8;
   string territory_id = 9;
   bool is_active = 10;
@@ -109,7 +109,7 @@ message SalesPartnerChannel {
   int64 end_date = 12;
   string notes = 13;
   map<string, string> custom_fields = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 message SalesPartnerChannelList {

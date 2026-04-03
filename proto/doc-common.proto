@@ -19,7 +19,7 @@ package doc;
 
 option go_package = "./types/doc";
 
-import "erp-common.proto";
+import "l8common.proto";
 
 // =====================
 // STORAGE ENUMS

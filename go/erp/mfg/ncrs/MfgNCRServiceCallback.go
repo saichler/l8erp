@@ -16,9 +16,9 @@ package ncrs
 
 import (
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/mfg"
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 )
 
 func newMfgNCRServiceCallback() ifs.IServiceCallback {
@@ -30,8 +30,8 @@ func newMfgNCRServiceCallback() ifs.IServiceCallback {
 		Enum(func(e *mfg.MfgNCR) int32 { return int32(e.Disposition) }, mfg.MfgNCRDisposition_name, "Disposition").
 		Enum(func(e *mfg.MfgNCR) int32 { return int32(e.Severity) }, mfg.MfgNCRSeverity_name, "Severity").
 		Enum(func(e *mfg.MfgNCR) int32 { return int32(e.Status) }, mfg.MfgNCRStatus_name, "Status").
-		OptionalMoney(func(e *mfg.MfgNCR) *erp.Money { return e.EstimatedCost }, "EstimatedCost").
-		OptionalMoney(func(e *mfg.MfgNCR) *erp.Money { return e.ActualCost }, "ActualCost").
+		OptionalMoney(func(e *mfg.MfgNCR) *l8common.Money { return e.EstimatedCost }, "EstimatedCost").
+		OptionalMoney(func(e *mfg.MfgNCR) *l8common.Money { return e.ActualCost }, "ActualCost").
 		Build()
 }
 

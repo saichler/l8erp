@@ -19,7 +19,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -128,7 +128,7 @@ func generateSalesCustomerContracts(store *MockDataStore) []*sales.SalesCustomer
 			Status:         statuses[i%len(statuses)],
 			StartDate:      startDate.Unix(),
 			EndDate:        endDate.Unix(),
-			ContractValue: &erp.Money{
+			ContractValue: &l8common.Money{
 				Amount:     int64(rand.Intn(50000000) + 1000000),
 				CurrencyId: pickRef(store.CurrencyIDs, i),
 			},

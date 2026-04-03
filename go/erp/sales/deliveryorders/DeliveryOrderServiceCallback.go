@@ -15,9 +15,9 @@ limitations under the License.
 package deliveryorders
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/sales"
 	"time"
@@ -32,7 +32,7 @@ func newDeliveryOrderServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesDeliveryOrder) string { return e.SalesOrderId }, "SalesOrderId").
 		Require(func(e *sales.SalesDeliveryOrder) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *sales.SalesDeliveryOrder) int32 { return int32(e.Status) }, sales.SalesDeliveryStatus_name, "Status").
-		OptionalMoney(func(e *sales.SalesDeliveryOrder) *erp.Money { return e.ShippingCost }, "ShippingCost").
+		OptionalMoney(func(e *sales.SalesDeliveryOrder) *l8common.Money { return e.ShippingCost }, "ShippingCost").
 		Build()
 }
 
@@ -82,7 +82,7 @@ func cascadeCreateSalesInvoice(delivery *sales.SalesDeliveryOrder, action ifs.Ac
 		Status:          fin.InvoiceStatus_INVOICE_STATUS_DRAFT,
 		PaymentTermDays: 30,
 		Lines:           lines,
-		AuditInfo:       &erp.AuditInfo{},
+		AuditInfo:       &l8common.AuditInfo{},
 	}
 	// Copy totals from order if available
 	if order != nil {

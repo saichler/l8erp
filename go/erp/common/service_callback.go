@@ -15,8 +15,7 @@ limitations under the License.
 package common
 
 import (
-	"errors"
-	"fmt"
+	l8c "github.com/saichler/l8common/go/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
@@ -29,70 +28,60 @@ type ActionValidateFunc[T any] func(*T, ifs.Action, ifs.IVNic) error
 // SetIDFunc is a function that generates/sets the primary key on an entity.
 type SetIDFunc[T any] func(*T)
 
-type genericCallback[T any] struct {
-	typeName         string
-	setID            SetIDFunc[T]
-	validate         ValidateFunc[T]
-	actionValidators []ActionValidateFunc[T]
-	afterActions     []ActionValidateFunc[T]
-}
-
-// NewServiceCallback creates a standard IServiceCallback that handles type assertion,
-// ID generation on POST, and validation.
+// NewServiceCallback creates a standard IServiceCallback with generic type safety.
+// Delegates to l8common's non-generic implementation.
 func NewServiceCallback[T any](typeName string, setID SetIDFunc[T], validate ValidateFunc[T], actionValidators ...ActionValidateFunc[T]) ifs.IServiceCallback {
-	return &genericCallback[T]{
-		typeName:         typeName,
-		setID:            setID,
-		validate:         validate,
-		actionValidators: actionValidators,
+	avs := make([]l8c.ActionValidateFunc, len(actionValidators))
+	for i, av := range actionValidators {
+		fn := av
+		avs[i] = func(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+			return fn(v.(*T), action, vnic)
+		}
 	}
+	var vf l8c.ValidateFunc
+	if validate != nil {
+		vf = func(v interface{}, vnic ifs.IVNic) error {
+			return validate(v.(*T), vnic)
+		}
+	}
+	return l8c.NewServiceCallback(
+		typeName,
+		func(v interface{}) bool { _, ok := v.(*T); return ok },
+		func(v interface{}) { setID(v.(*T)) },
+		vf,
+		avs...,
+	)
 }
 
 // NewServiceCallbackWithAfter creates a ServiceCallback with both action validators
 // and after-actions that run after successful PUT/PATCH persistence.
 func NewServiceCallbackWithAfter[T any](typeName string, setID SetIDFunc[T], validate ValidateFunc[T], actionValidators []ActionValidateFunc[T], afterActions []ActionValidateFunc[T]) ifs.IServiceCallback {
-	return &genericCallback[T]{
-		typeName:         typeName,
-		setID:            setID,
-		validate:         validate,
-		actionValidators: actionValidators,
-		afterActions:     afterActions,
-	}
-}
-
-func (cb *genericCallback[T]) Before(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	entity, ok := any.(*T)
-	if !ok {
-		return nil, false, errors.New("invalid " + cb.typeName + " type")
-	}
-	if action == ifs.POST {
-		cb.setID(entity)
-	}
-	for _, av := range cb.actionValidators {
-		if err := av(entity, action, vnic); err != nil {
-			return nil, false, err
+	avs := make([]l8c.ActionValidateFunc, len(actionValidators))
+	for i, av := range actionValidators {
+		fn := av
+		avs[i] = func(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+			return fn(v.(*T), action, vnic)
 		}
 	}
-	if cb.validate != nil {
-		if err := cb.validate(entity, vnic); err != nil {
-			return nil, false, err
+	aas := make([]l8c.ActionValidateFunc, len(afterActions))
+	for i, aa := range afterActions {
+		fn := aa
+		aas[i] = func(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+			return fn(v.(*T), action, vnic)
 		}
 	}
-	return nil, true, nil
-}
-
-func (cb *genericCallback[T]) After(any interface{}, action ifs.Action, cont bool, vnic ifs.IVNic) (interface{}, bool, error) {
-	if (action != ifs.PUT && action != ifs.PATCH) || len(cb.afterActions) == 0 {
-		return nil, true, nil
-	}
-	entity, ok := any.(*T)
-	if !ok {
-		return nil, true, nil
-	}
-	for _, aa := range cb.afterActions {
-		if err := aa(entity, action, vnic); err != nil {
-			fmt.Println("[cascade] warning:", err.Error())
+	var vf l8c.ValidateFunc
+	if validate != nil {
+		vf = func(v interface{}, vnic ifs.IVNic) error {
+			return validate(v.(*T), vnic)
 		}
 	}
-	return nil, true, nil
+	return l8c.NewServiceCallbackWithAfter(
+		typeName,
+		func(v interface{}) bool { _, ok := v.(*T); return ok },
+		func(v interface{}) { setID(v.(*T)) },
+		vf,
+		avs,
+		aas,
+	)
 }

@@ -15,8 +15,8 @@ limitations under the License.
 package auditfindings
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8types/go/ifs"
 	"time"
@@ -48,7 +48,7 @@ func escalateCriticalFindings(finding *comp.CompAuditFinding, action ifs.Action,
 		AssignedToId:   finding.ResponsibleId,
 		DiscoveredDate: finding.DiscoveryDate,
 		ReportedDate:   time.Now().Unix(),
-		AuditInfo:      &erp.AuditInfo{},
+		AuditInfo:      &l8common.AuditInfo{},
 	}, vnic)
 	return err
 }

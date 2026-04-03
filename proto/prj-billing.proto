@@ -19,7 +19,7 @@ package prj;
 option go_package = "./types/prj";
 
 import "prj-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -36,15 +36,15 @@ message PrjBillingRate {
   string resource_id = 5;                  // cross-ref: PrjResource (optional)
   string role = 6;
   string skill_category = 7;
-  erp.Money rate = 8;
+  l8common.Money rate = 8;
   string rate_unit = 9;                    // hourly, daily, weekly
-  erp.Money overtime_rate = 10;
+  l8common.Money overtime_rate = 10;
   int64 effective_from = 11;
   int64 effective_until = 12;
   bool is_active = 13;
   string currency_id = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
 }
 
 message PrjBillingRateList {
@@ -62,15 +62,15 @@ message PrjBillingSchedule {
   PrjBillingType billing_type = 5;
   string billing_frequency = 6;            // weekly, bi-weekly, monthly, milestone
   int32 billing_day = 7;                   // day of month for billing
-  erp.Money fixed_amount = 8;              // for fixed price billing
-  erp.Money retainer_amount = 9;           // for retainer billing
+  l8common.Money fixed_amount = 8;              // for fixed price billing
+  l8common.Money retainer_amount = 9;           // for retainer billing
   bool include_expenses = 10;
   double expense_markup_percent = 11;
   bool is_active = 12;
   int64 start_date = 13;
   int64 end_date = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
   repeated PrjBillingMilestone milestones = 17;
 }
 
@@ -86,7 +86,7 @@ message PrjBillingMilestone {
   string project_milestone_id = 4;         // cross-ref: PrjMilestone
   string name = 5;
   string description = 6;
-  erp.Money amount = 7;
+  l8common.Money amount = 7;
   double percentage = 8;                   // percentage of total project value
   int64 due_date = 9;
   int64 billed_date = 10;
@@ -94,7 +94,7 @@ message PrjBillingMilestone {
   bool is_billed = 12;
   string deliverables = 13;
   map<string, string> custom_fields = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 // @PrimeObject
@@ -109,11 +109,11 @@ message PrjProjectInvoice {
   int64 due_date = 7;
   int64 period_start = 8;
   int64 period_end = 9;
-  erp.Money subtotal = 10;
-  erp.Money tax_amount = 11;
-  erp.Money total_amount = 12;
-  erp.Money paid_amount = 13;
-  erp.Money balance_due = 14;
+  l8common.Money subtotal = 10;
+  l8common.Money tax_amount = 11;
+  l8common.Money total_amount = 12;
+  l8common.Money paid_amount = 13;
+  l8common.Money balance_due = 14;
   PrjInvoiceStatus status = 15;
   string payment_terms = 16;
   string notes = 17;
@@ -121,7 +121,7 @@ message PrjProjectInvoice {
   int64 paid_date = 19;
   string currency_id = 20;
   map<string, string> custom_fields = 21;
-  erp.AuditInfo audit_info = 22;
+  l8common.AuditInfo audit_info = 22;
   repeated PrjInvoiceLine lines = 23;
 }
 
@@ -142,14 +142,14 @@ message PrjInvoiceLine {
   string description = 9;
   double quantity = 10;
   string unit = 11;
-  erp.Money unit_price = 12;
-  erp.Money amount = 13;
-  erp.Money tax_amount = 14;
-  erp.Money total_amount = 15;
+  l8common.Money unit_price = 12;
+  l8common.Money amount = 13;
+  l8common.Money tax_amount = 14;
+  l8common.Money total_amount = 15;
   string line_type = 16;                   // time, expense, milestone, fixed
   bool is_taxable = 17;
   map<string, string> custom_fields = 18;
-  erp.AuditInfo audit_info = 19;
+  l8common.AuditInfo audit_info = 19;
 }
 
 // @PrimeObject
@@ -161,9 +161,9 @@ message PrjRevenueRecognition {
   int64 recognition_date = 4;
   int64 period_start = 5;
   int64 period_end = 6;
-  erp.Money recognized_amount = 7;
-  erp.Money deferred_amount = 8;
-  erp.Money cumulative_recognized = 9;
+  l8common.Money recognized_amount = 7;
+  l8common.Money deferred_amount = 8;
+  l8common.Money cumulative_recognized = 9;
   PrjRevenueRecognitionMethod method = 10;
   double percent_complete = 11;
   string gl_account = 12;
@@ -172,7 +172,7 @@ message PrjRevenueRecognition {
   bool is_posted = 15;
   int64 posted_date = 16;
   map<string, string> custom_fields = 17;
-  erp.AuditInfo audit_info = 18;
+  l8common.AuditInfo audit_info = 18;
 }
 
 message PrjRevenueRecognitionList {
@@ -189,10 +189,10 @@ message PrjProjectBudget {
   string description = 4;
   string budget_type = 5;                  // labor, expense, total, phase
   string phase_id = 6;                     // cross-ref: PrjPhase (optional)
-  erp.Money budgeted_amount = 7;
-  erp.Money committed_amount = 8;
-  erp.Money actual_amount = 9;
-  erp.Money remaining_amount = 10;
+  l8common.Money budgeted_amount = 7;
+  l8common.Money committed_amount = 8;
+  l8common.Money actual_amount = 9;
+  l8common.Money remaining_amount = 10;
   double budgeted_hours = 11;
   double actual_hours = 12;
   double remaining_hours = 13;
@@ -203,7 +203,7 @@ message PrjProjectBudget {
   int64 approved_date = 18;
   int32 version = 19;
   map<string, string> custom_fields = 20;
-  erp.AuditInfo audit_info = 21;
+  l8common.AuditInfo audit_info = 21;
 }
 
 message PrjProjectBudgetList {

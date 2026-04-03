@@ -16,8 +16,8 @@ package journalentries
 
 import (
 	"fmt"
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -30,7 +30,7 @@ func newJournalEntryServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.JournalEntry) string { return e.JournalEntryId }, "JournalEntryId").
 		Require(func(e *fin.JournalEntry) string { return e.FiscalPeriodId }, "FiscalPeriodId").
 		Enum(func(e *fin.JournalEntry) int32 { return int32(e.Status) }, fin.JournalEntryStatus_name, "Status").
-		OptionalMoney(func(e *fin.JournalEntry) *erp.Money { return e.TotalAmount }, "TotalAmount").
+		OptionalMoney(func(e *fin.JournalEntry) *l8common.Money { return e.TotalAmount }, "TotalAmount").
 		Custom(validateLines).
 		Custom(validatePeriodOpen).
 		After(updateAccountBalances).
@@ -38,7 +38,7 @@ func newJournalEntryServiceCallback() ifs.IServiceCallback {
 }
 
 func computeJournalEntryTotals(je *fin.JournalEntry) error {
-	je.TotalAmount = common.SumLineMoney(je.Lines, func(l *fin.JournalEntryLine) *erp.Money { return l.DebitAmount })
+	je.TotalAmount = common.SumLineMoney(je.Lines, func(l *fin.JournalEntryLine) *l8common.Money { return l.DebitAmount })
 	return nil
 }
 
@@ -171,12 +171,12 @@ func findOrCreateBalance(account *fin.Account, fiscalPeriodId string) *fin.Accou
 }
 
 // addToMoney adds an amount to a Money field, creating it if nil.
-func addToMoney(m **erp.Money, amount int64, currencyId string) {
+func addToMoney(m **l8common.Money, amount int64, currencyId string) {
 	if amount == 0 {
 		return
 	}
 	if *m == nil {
-		*m = &erp.Money{Amount: amount, CurrencyId: currencyId}
+		*m = &l8common.Money{Amount: amount, CurrencyId: currencyId}
 	} else {
 		(*m).Amount += amount
 	}
@@ -195,5 +195,5 @@ func recomputeEndingBalance(bal *fin.AccountBalance, normalBalance fin.BalanceTy
 	} else {
 		ending = beginning + debit - credit
 	}
-	bal.EndingBalance = &erp.Money{Amount: ending, CurrencyId: currencyId}
+	bal.EndingBalance = &l8common.Money{Amount: ending, CurrencyId: currencyId}
 }

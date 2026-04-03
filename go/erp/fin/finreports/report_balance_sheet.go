@@ -15,8 +15,8 @@ limitations under the License.
 package finreports
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -82,7 +82,7 @@ func sectionForAccountType(
 	}
 }
 
-func endingBalanceOrZero(bal *fin.AccountBalance, currencyId string) *erp.Money {
+func endingBalanceOrZero(bal *fin.AccountBalance, currencyId string) *l8common.Money {
 	if bal != nil && bal.EndingBalance != nil {
 		return bal.EndingBalance
 	}

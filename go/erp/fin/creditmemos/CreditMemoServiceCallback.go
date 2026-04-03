@@ -15,9 +15,9 @@ limitations under the License.
 package creditmemos
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -28,7 +28,7 @@ func newCreditMemoServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.CreditMemo) string { return e.CreditMemoId }, "CreditMemoId").
 		Require(func(e *fin.CreditMemo) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *fin.CreditMemo) int32 { return int32(e.Status) }, fin.CreditMemoStatus_name, "Status").
-		OptionalMoney(func(e *fin.CreditMemo) *erp.Money { return e.Amount }, "Amount").
+		OptionalMoney(func(e *fin.CreditMemo) *l8common.Money { return e.Amount }, "Amount").
 		Build()
 }
 

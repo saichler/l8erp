@@ -18,7 +18,7 @@ package crm;
 
 option go_package = "./types/crm";
 
-import "erp-common.proto";
+import "l8common.proto";
 
 // ============================================================================
 // CRM-SPECIFIC COMMON TYPES AND ENUMS

@@ -15,9 +15,9 @@ limitations under the License.
 package billingrates
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -26,7 +26,7 @@ func newPrjBillingRateServiceCallback() ifs.IServiceCallback {
 		func(e *prj.PrjBillingRate) { common.GenerateID(&e.RateId) }).
 		Require(func(e *prj.PrjBillingRate) string { return e.RateId }, "RateId").
 		Require(func(e *prj.PrjBillingRate) string { return e.CurrencyId }, "CurrencyId").
-		OptionalMoney(func(e *prj.PrjBillingRate) *erp.Money { return e.Rate }, "Rate").
-		OptionalMoney(func(e *prj.PrjBillingRate) *erp.Money { return e.OvertimeRate }, "OvertimeRate").
+		OptionalMoney(func(e *prj.PrjBillingRate) *l8common.Money { return e.Rate }, "Rate").
+		OptionalMoney(func(e *prj.PrjBillingRate) *l8common.Money { return e.OvertimeRate }, "OvertimeRate").
 		Build()
 }

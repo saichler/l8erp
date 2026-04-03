@@ -19,7 +19,7 @@ package mfg;
 option go_package = "./types/mfg";
 
 import "mfg-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -42,7 +42,7 @@ message MfgBom {
   string unit_of_measure = 11;
   string notes = 12;
   map<string, string> custom_fields = 13;
-  erp.AuditInfo audit_info = 14;
+  l8common.AuditInfo audit_info = 14;
   repeated MfgBomLine lines = 15;
 }
 
@@ -67,7 +67,7 @@ message MfgBomLine {
   int64 effective_date = 12;
   int64 expiry_date = 13;
   string notes = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 // ============================================================================
@@ -89,7 +89,7 @@ message MfgRouting {
   string unit_of_measure = 10;
   string notes = 11;
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
   repeated MfgRoutingOperation operations = 14;
 }
 
@@ -116,7 +116,7 @@ message MfgRoutingOperation {
   string vendor_id = 14;                 // cross-ref: FIN Vendor (if subcontract)
   string quality_plan_id = 15;           // cross-ref: MfgQualityPlan
   string notes = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
 }
 
 // ============================================================================
@@ -139,11 +139,11 @@ message MfgEngChangeOrder {
   int64 approval_date = 11;
   string approved_by = 12;               // cross-ref: HCM Employee
   int64 implementation_date = 13;
-  erp.Money estimated_cost = 14;
-  erp.Money actual_cost = 15;
+  l8common.Money estimated_cost = 14;
+  l8common.Money actual_cost = 15;
   string notes = 16;
   map<string, string> custom_fields = 17;
-  erp.AuditInfo audit_info = 18;
+  l8common.AuditInfo audit_info = 18;
   repeated MfgEngChangeDetail details = 19;
 }
 
@@ -164,5 +164,5 @@ message MfgEngChangeDetail {
   string old_revision = 8;
   string new_revision = 9;
   string notes = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }

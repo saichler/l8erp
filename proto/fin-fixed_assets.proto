@@ -19,7 +19,7 @@ package fin;
 option go_package = "./types/fin";
 
 import "fin-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -37,12 +37,12 @@ message Asset {
   string serial_number = 6;
   AssetStatus status = 7;
   int64 acquisition_date = 8;
-  erp.Money acquisition_cost = 9;
-  erp.Money salvage_value = 10;
+  l8common.Money acquisition_cost = 9;
+  l8common.Money salvage_value = 10;
   int32 useful_life_months = 11;
   DepreciationMethod depreciation_method = 12;
-  erp.Money accumulated_depreciation = 13;
-  erp.Money net_book_value = 14;
+  l8common.Money accumulated_depreciation = 13;
+  l8common.Money net_book_value = 14;
   string department_id = 15;
   string location = 16;
   string gl_account_id = 17;
@@ -50,7 +50,7 @@ message Asset {
   string purchase_order_number = 19;
   string notes = 20;
   map<string, string> custom_fields = 21;
-  erp.AuditInfo audit_info = 22;
+  l8common.AuditInfo audit_info = 22;
   repeated DepreciationSchedule depreciation_schedules = 23;
   repeated AssetDisposal disposals = 24;
   repeated AssetTransfer transfers = 25;
@@ -76,7 +76,7 @@ message AssetCategory {
   string depreciation_expense_account_id = 8;
   string accumulated_depreciation_account_id = 9;
   bool is_active = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }
 
 message AssetCategoryList {
@@ -90,12 +90,12 @@ message DepreciationSchedule {
   string asset_id = 2;
   string fiscal_period_id = 3;
   int64 depreciation_date = 4;
-  erp.Money depreciation_amount = 5;
-  erp.Money accumulated_amount = 6;
-  erp.Money remaining_value = 7;
+  l8common.Money depreciation_amount = 5;
+  l8common.Money accumulated_amount = 6;
+  l8common.Money remaining_value = 7;
   bool is_posted = 8;
   string journal_entry_id = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 // AssetDisposal represents the disposal of a fixed asset
@@ -104,14 +104,14 @@ message AssetDisposal {
   string asset_id = 2;
   int64 disposal_date = 3;
   DisposalMethod disposal_method = 4;
-  erp.Money disposal_proceeds = 5;
-  erp.Money net_book_value_at_disposal = 6;
-  erp.Money gain_loss = 7;
+  l8common.Money disposal_proceeds = 5;
+  l8common.Money net_book_value_at_disposal = 6;
+  l8common.Money gain_loss = 7;
   string gain_loss_account_id = 8;
   string buyer_name = 9;
   string journal_entry_id = 10;
   string notes = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 // AssetTransfer represents a transfer of an asset between departments
@@ -127,7 +127,7 @@ message AssetTransfer {
   string approved_by = 9;
   int64 approved_date = 10;
   string notes = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 // AssetMaintenance represents maintenance performed on an asset
@@ -139,11 +139,11 @@ message AssetMaintenance {
   int64 scheduled_date = 5;
   int64 completed_date = 6;
   string vendor_id = 7;
-  erp.Money cost = 8;
+  l8common.Money cost = 8;
   string description = 9;
   string work_order_number = 10;
   string notes = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 // AssetRevaluation represents a revaluation of an asset's value
@@ -151,12 +151,12 @@ message AssetRevaluation {
   string revaluation_id = 1;
   string asset_id = 2;
   int64 revaluation_date = 3;
-  erp.Money previous_value = 4;
-  erp.Money new_value = 5;
-  erp.Money adjustment_amount = 6;
+  l8common.Money previous_value = 4;
+  l8common.Money new_value = 5;
+  l8common.Money adjustment_amount = 6;
   string reason = 7;
   string appraiser = 8;
   string journal_entry_id = 9;
   string notes = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }

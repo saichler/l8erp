@@ -15,12 +15,12 @@ limitations under the License.
 package mfgreports
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 )
 
 func generateWorkOrderStatus(report *fin.FinReport, vnic ifs.IVNic) error {
@@ -47,7 +47,7 @@ func generateWorkOrderStatus(report *fin.FinReport, vnic ifs.IVNic) error {
 
 	section := &fin.FinReportSection{
 		Title:        "Work Order Status Summary",
-		SectionTotal: &erp.Money{Amount: 0, CurrencyId: "USD"},
+		SectionTotal: &l8common.Money{Amount: 0, CurrencyId: "USD"},
 	}
 
 	var grandTotal int64
@@ -56,12 +56,12 @@ func generateWorkOrderStatus(report *fin.FinReport, vnic ifs.IVNic) error {
 			AccountName: status.String(),
 			Description: status.String(),
 			Level:       g.count,
-			Balance:     &erp.Money{Amount: g.cost, CurrencyId: "USD"},
+			Balance:     &l8common.Money{Amount: g.cost, CurrencyId: "USD"},
 		}
 		section.Lines = append(section.Lines, line)
 		grandTotal += g.cost
 	}
-	section.SectionTotal = &erp.Money{Amount: grandTotal, CurrencyId: "USD"}
+	section.SectionTotal = &l8common.Money{Amount: grandTotal, CurrencyId: "USD"}
 
 	report.Sections = []*fin.FinReportSection{section}
 	report.GrandTotal = section.SectionTotal

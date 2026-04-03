@@ -19,7 +19,7 @@ package sys;
 option go_package = "./types/sys";
 
 import "api.proto";
-import "erp-common.proto";
+import "l8common.proto";
 
 // Stores which modules/sub-modules/services are disabled.
 // By default everything is enabled. Only disabled paths are stored.
@@ -30,7 +30,7 @@ message SysModuleConfig {
   //   "hcm.learning"          - HCM Learning sub-module disabled
   //   "hcm.core-hr.documents" - just the Documents service disabled
   repeated string disabled_paths = 2;
-  erp.AuditInfo audit_info = 3;
+  l8common.AuditInfo audit_info = 3;
 }
 
 message SysModuleConfigList {

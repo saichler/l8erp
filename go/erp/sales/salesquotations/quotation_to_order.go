@@ -15,8 +15,8 @@ limitations under the License.
 package salesquotations
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 	"time"
@@ -50,7 +50,7 @@ func cascadeCreateSalesOrder(q *sales.SalesQuotation, action ifs.Action, vnic if
 		OrderDate:   time.Now().Unix(),
 		Status:      sales.SalesOrderStatus_SALES_ORDER_STATUS_DRAFT,
 		Lines:       lines,
-		AuditInfo:   &erp.AuditInfo{},
+		AuditInfo:   &l8common.AuditInfo{},
 	}, vnic)
 	return err
 }

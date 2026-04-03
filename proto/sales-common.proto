@@ -18,7 +18,7 @@ package sales;
 
 option go_package = "./types/sales";
 
-import "erp-common.proto";
+import "l8common.proto";
 
 // ============================================================================
 // SALES-SPECIFIC COMMON TYPES AND ENUMS

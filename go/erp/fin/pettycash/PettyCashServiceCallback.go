@@ -15,9 +15,9 @@ limitations under the License.
 package pettycash
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -26,7 +26,7 @@ func newPettyCashServiceCallback() ifs.IServiceCallback {
 		func(e *fin.PettyCash) { common.GenerateID(&e.PettyCashId) }).
 		Require(func(e *fin.PettyCash) string { return e.PettyCashId }, "PettyCashId").
 		Require(func(e *fin.PettyCash) string { return e.FundName }, "FundName").
-		OptionalMoney(func(e *fin.PettyCash) *erp.Money { return e.FundLimit }, "FundLimit").
-		OptionalMoney(func(e *fin.PettyCash) *erp.Money { return e.CurrentBalance }, "CurrentBalance").
+		OptionalMoney(func(e *fin.PettyCash) *l8common.Money { return e.FundLimit }, "FundLimit").
+		OptionalMoney(func(e *fin.PettyCash) *l8common.Money { return e.CurrentBalance }, "CurrentBalance").
 		Build()
 }

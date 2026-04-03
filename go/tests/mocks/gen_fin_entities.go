@@ -20,7 +20,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -101,8 +101,8 @@ func generateVendors(store *MockDataStore) []*fin.Vendor {
 			CurrencyId:             store.CurrencyIDs[0],
 			PaymentTermDays:        30,
 			PreferredPaymentMethod: fin.PaymentMethod_PAYMENT_METHOD_ACH,
-			Addresses:              []*erp.Address{createAddress()},
-			Contacts:               []*erp.ContactInfo{createContact()},
+			Addresses:              []*l8common.Address{createAddress()},
+			Contacts:               []*l8common.ContactInfo{createContact()},
 			Website:                fmt.Sprintf("www.%s.com", sanitized),
 			AuditInfo:              createAuditInfo(),
 			VendorContacts:         vendorContacts,
@@ -172,8 +172,8 @@ func generateCustomers(store *MockDataStore) []*fin.Customer {
 			CurrencyId:       store.CurrencyIDs[0],
 			PaymentTermDays:  30,
 			CreditLimit:      money(store, creditAmount),
-			Addresses:        []*erp.Address{createAddress()},
-			Contacts:         []*erp.ContactInfo{createContact()},
+			Addresses:        []*l8common.Address{createAddress()},
+			Contacts:         []*l8common.ContactInfo{createContact()},
 			Website:          fmt.Sprintf("www.%s.com", sanitized),
 			AuditInfo:        createAuditInfo(),
 			CustomerContacts: customerContacts,

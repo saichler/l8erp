@@ -15,9 +15,9 @@ limitations under the License.
 package serviceorders
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/crm"
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
 )
 
@@ -30,8 +30,8 @@ func newCrmServiceOrderServiceCallback() ifs.IServiceCallback {
 		Enum(func(e *crm.CrmServiceOrder) int32 { return int32(e.OrderType) }, crm.CrmServiceOrderType_name, "OrderType").
 		Enum(func(e *crm.CrmServiceOrder) int32 { return int32(e.Priority) }, crm.CrmServiceOrderPriority_name, "Priority").
 		Enum(func(e *crm.CrmServiceOrder) int32 { return int32(e.Status) }, crm.CrmServiceOrderStatus_name, "Status").
-		OptionalMoney(func(e *crm.CrmServiceOrder) *erp.Money { return e.EstimatedCost }, "EstimatedCost").
-		OptionalMoney(func(e *crm.CrmServiceOrder) *erp.Money { return e.ActualCost }, "ActualCost").
+		OptionalMoney(func(e *crm.CrmServiceOrder) *l8common.Money { return e.EstimatedCost }, "EstimatedCost").
+		OptionalMoney(func(e *crm.CrmServiceOrder) *l8common.Money { return e.ActualCost }, "ActualCost").
 		Build()
 }
 

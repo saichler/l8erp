@@ -20,7 +20,7 @@ option go_package = "./types/hcm";
 
 
 import "hcm-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -41,7 +41,7 @@ message PayStructure {
   int64 effective_date = 9;
   int64 end_date = 10;
   bool is_active = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 message PayStructureList {
@@ -53,15 +53,15 @@ message PayGradeDefinition {
   string grade_code = 1;
   string grade_name = 2;
   int32 grade_level = 3;
-  erp.Money minimum = 4;
-  erp.Money midpoint = 5;
-  erp.Money maximum = 6;
+  l8common.Money minimum = 4;
+  l8common.Money midpoint = 5;
+  l8common.Money maximum = 6;
   repeated PayStep steps = 7;  // For step-based pay systems
 }
 
 message PayStep {
   int32 step_number = 1;
-  erp.Money amount = 2;
+  l8common.Money amount = 2;
 }
 
 // @PrimeObject
@@ -75,7 +75,7 @@ message PayComponent {
   PayComponentType component_type = 6;
   PayComponentCategory category = 7;
   CalculationType calculation_type = 8;
-  erp.Money fixed_amount = 9;
+  l8common.Money fixed_amount = 9;
   double rate = 10;                    // For percentage-based
   double hours_multiplier = 11;        // For hourly (e.g., 1.5 for overtime)
   bool is_taxable = 12;
@@ -84,7 +84,7 @@ message PayComponent {
   bool is_active = 15;
   int32 display_order = 16;
   map<string, string> gl_accounts = 17;  // GL account mappings
-  erp.AuditInfo audit_info = 18;
+  l8common.AuditInfo audit_info = 18;
 }
 
 message PayComponentList {
@@ -154,16 +154,16 @@ message PayrollRun {
   int64 processing_date = 8;
   int64 payment_date = 9;
   int32 employee_count = 10;
-  erp.Money total_gross = 11;
-  erp.Money total_deductions = 12;
-  erp.Money total_taxes = 13;
-  erp.Money total_net = 14;
-  erp.Money total_employer_cost = 15;
+  l8common.Money total_gross = 11;
+  l8common.Money total_deductions = 12;
+  l8common.Money total_taxes = 13;
+  l8common.Money total_net = 14;
+  l8common.Money total_employer_cost = 15;
   string processed_by = 16;
   string approved_by = 17;
   int64 approved_date = 18;
   string notes = 19;
-  erp.AuditInfo audit_info = 20;
+  l8common.AuditInfo audit_info = 20;
 }
 
 message PayrollRunList {
@@ -222,21 +222,21 @@ message Payslip {
   repeated PayslipLine employer_contributions = 15;
 
   // Totals
-  erp.Money gross_pay = 16;
-  erp.Money total_deductions = 17;
-  erp.Money total_taxes = 18;
-  erp.Money net_pay = 19;
+  l8common.Money gross_pay = 16;
+  l8common.Money total_deductions = 17;
+  l8common.Money total_taxes = 18;
+  l8common.Money net_pay = 19;
 
   // Year-to-date
-  erp.Money ytd_gross = 20;
-  erp.Money ytd_deductions = 21;
-  erp.Money ytd_taxes = 22;
-  erp.Money ytd_net = 23;
+  l8common.Money ytd_gross = 20;
+  l8common.Money ytd_deductions = 21;
+  l8common.Money ytd_taxes = 22;
+  l8common.Money ytd_net = 23;
 
   // Payment info
   repeated PaymentDistribution distributions = 24;
 
-  erp.AuditInfo audit_info = 25;
+  l8common.AuditInfo audit_info = 25;
 }
 
 message PayslipList {
@@ -250,14 +250,14 @@ message PayslipLine {
   string description = 3;
   double hours = 4;
   double rate = 5;
-  erp.Money current_amount = 6;
-  erp.Money ytd_amount = 7;
+  l8common.Money current_amount = 6;
+  l8common.Money ytd_amount = 7;
 }
 
 message PaymentDistribution {
   string direct_deposit_id = 1;
   PaymentMethod payment_method = 2;
-  erp.Money amount = 3;
+  l8common.Money amount = 3;
   double percentage = 4;
 }
 
@@ -285,12 +285,12 @@ message TaxWithholding {
   FilingStatus filing_status = 6;
   int32 allowances = 7;              // Old W-4 style
   bool use_new_w4 = 8;               // 2020+ W-4
-  erp.Money additional_withholding = 9;
+  l8common.Money additional_withholding = 9;
   bool exempt = 10;
   int64 effective_date = 11;
   int64 signed_date = 12;
   map<string, string> form_data = 13;  // Form-specific fields
-  erp.AuditInfo audit_info = 14;
+  l8common.AuditInfo audit_info = 14;
 }
 
 enum TaxType {
@@ -327,13 +327,13 @@ message DirectDeposit {
   string account_number_masked = 6;  // Only last 4 digits
   AccountType account_type = 7;
   DepositType deposit_type = 8;
-  erp.Money fixed_amount = 9;
+  l8common.Money fixed_amount = 9;
   double percentage = 10;
   int32 priority = 11;               // Order for multiple accounts
   bool is_active = 12;
   bool is_prenote_complete = 13;     // Pre-notification verified
   int64 effective_date = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 enum AccountType {
@@ -364,18 +364,18 @@ message Garnishment {
   string issuing_authority = 5;
   string payee_name = 6;
   string payee_address = 7;
-  erp.Money total_amount_owed = 8;
-  erp.Money amount_per_period = 9;
+  l8common.Money total_amount_owed = 8;
+  l8common.Money amount_per_period = 9;
   double percentage = 10;
-  erp.Money maximum_percentage = 11;     // Disposable income limit
-  erp.Money amount_paid_to_date = 12;
+  l8common.Money maximum_percentage = 11;     // Disposable income limit
+  l8common.Money amount_paid_to_date = 12;
   int64 start_date = 13;
   int64 end_date = 14;
   int32 priority = 15;               // Processing order
   GarnishmentStatus status = 16;
   string document_id = 17;           // Link to court order document
   string notes = 18;
-  erp.AuditInfo audit_info = 19;
+  l8common.AuditInfo audit_info = 19;
 }
 
 enum GarnishmentType {
@@ -417,7 +417,7 @@ message YearEndDocument {
   string original_document_id = 11;  // If correction
   string file_url = 12;
   map<string, string> box_data = 13; // Box values (W-2 boxes, etc.)
-  erp.AuditInfo audit_info = 14;
+  l8common.AuditInfo audit_info = 14;
 }
 
 enum YearEndDocumentType {

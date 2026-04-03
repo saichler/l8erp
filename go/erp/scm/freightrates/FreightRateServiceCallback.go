@@ -15,9 +15,9 @@ limitations under the License.
 package freightrates
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
 )
 
@@ -25,7 +25,7 @@ func newFreightRateServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmFreightRate]("ScmFreightRate",
 		func(e *scm.ScmFreightRate) { common.GenerateID(&e.RateId) }).
 		Require(func(e *scm.ScmFreightRate) string { return e.RateId }, "RateId").
-		OptionalMoney(func(e *scm.ScmFreightRate) *erp.Money { return e.RatePerUnit }, "RatePerUnit").
+		OptionalMoney(func(e *scm.ScmFreightRate) *l8common.Money { return e.RatePerUnit }, "RatePerUnit").
 		DateAfter(func(e *scm.ScmFreightRate) int64 { return e.ExpiryDate }, func(e *scm.ScmFreightRate) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

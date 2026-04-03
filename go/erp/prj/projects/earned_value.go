@@ -15,8 +15,8 @@ limitations under the License.
 package projects
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -29,10 +29,10 @@ func computeEarnedValue(p *prj.PrjProject) error {
 	bac := p.Budget.Amount
 	currency := p.Budget.CurrencyId
 	for _, ev := range p.EarnedValues {
-		ev.BudgetAtCompletion = &erp.Money{Amount: bac, CurrencyId: currency}
+		ev.BudgetAtCompletion = &l8common.Money{Amount: bac, CurrencyId: currency}
 		// PV = scheduled % complete × BAC
 		if ev.PlannedValue == nil {
-			ev.PlannedValue = &erp.Money{CurrencyId: currency}
+			ev.PlannedValue = &l8common.Money{CurrencyId: currency}
 		}
 		// EV = actual % complete × BAC
 		pctComplete := ev.PercentComplete
@@ -40,16 +40,16 @@ func computeEarnedValue(p *prj.PrjProject) error {
 			pctComplete = float64(p.PercentComplete)
 		}
 		evAmount := int64(pctComplete / 100 * float64(bac))
-		ev.EarnedValue = &erp.Money{Amount: evAmount, CurrencyId: currency}
+		ev.EarnedValue = &l8common.Money{Amount: evAmount, CurrencyId: currency}
 		pvAmount := ev.PlannedValue.Amount
 		acAmount := int64(0)
 		if ev.ActualCost != nil {
 			acAmount = ev.ActualCost.Amount
 		}
 		// SV = EV - PV
-		ev.ScheduleVariance = &erp.Money{Amount: evAmount - pvAmount, CurrencyId: currency}
+		ev.ScheduleVariance = &l8common.Money{Amount: evAmount - pvAmount, CurrencyId: currency}
 		// CV = EV - AC
-		ev.CostVariance = &erp.Money{Amount: evAmount - acAmount, CurrencyId: currency}
+		ev.CostVariance = &l8common.Money{Amount: evAmount - acAmount, CurrencyId: currency}
 		// SPI = EV / PV
 		if pvAmount > 0 {
 			ev.SchedulePerformanceIndex = float64(evAmount) / float64(pvAmount)
@@ -59,11 +59,11 @@ func computeEarnedValue(p *prj.PrjProject) error {
 			ev.CostPerformanceIndex = float64(evAmount) / float64(acAmount)
 			// EAC = BAC / CPI
 			eac := int64(float64(bac) / ev.CostPerformanceIndex)
-			ev.EstimateAtCompletion = &erp.Money{Amount: eac, CurrencyId: currency}
+			ev.EstimateAtCompletion = &l8common.Money{Amount: eac, CurrencyId: currency}
 			// ETC = EAC - AC
-			ev.EstimateToComplete = &erp.Money{Amount: eac - acAmount, CurrencyId: currency}
+			ev.EstimateToComplete = &l8common.Money{Amount: eac - acAmount, CurrencyId: currency}
 			// VAC = BAC - EAC
-			ev.VarianceAtCompletion = &erp.Money{Amount: bac - eac, CurrencyId: currency}
+			ev.VarianceAtCompletion = &l8common.Money{Amount: bac - eac, CurrencyId: currency}
 		}
 		// Percent spent
 		if bac > 0 {
@@ -83,7 +83,7 @@ func computeEarnedValue(p *prj.PrjProject) error {
 	p.ActualHours = totalActual
 	// Sum actual cost from expenses
 	if p.ActualCost != nil {
-		common.MoneyAdd(p.ActualCost, &erp.Money{Amount: 0, CurrencyId: currency})
+		common.MoneyAdd(p.ActualCost, &l8common.Money{Amount: 0, CurrencyId: currency})
 	}
 	return nil
 }

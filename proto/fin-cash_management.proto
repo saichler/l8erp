@@ -19,7 +19,7 @@ package fin;
 option go_package = "./types/fin";
 
 import "fin-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -40,11 +40,11 @@ message BankAccount {
   BankAccountStatus status = 9;
   string currency_id = 10;
   string gl_account_id = 11;
-  erp.Money current_balance = 12;
+  l8common.Money current_balance = 12;
   int64 last_reconciled_date = 13;
   string notes = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
   repeated BankTransaction transactions = 17;
   repeated BankReconciliation reconciliations = 18;
 }
@@ -61,15 +61,15 @@ message BankTransaction {
   int64 transaction_date = 3;
   int64 value_date = 4;
   TransactionType transaction_type = 5;
-  erp.Money amount = 6;
-  erp.Money running_balance = 7;
+  l8common.Money amount = 6;
+  l8common.Money running_balance = 7;
   string description = 8;
   string reference = 9;
   string check_number = 10;
   bool is_reconciled = 11;
   string reconciliation_id = 12;
   string notes = 13;
-  erp.AuditInfo audit_info = 14;
+  l8common.AuditInfo audit_info = 14;
 }
 
 // BankReconciliation represents a bank reconciliation
@@ -79,17 +79,17 @@ message BankReconciliation {
   int64 statement_date = 3;
   int64 period_start = 4;
   int64 period_end = 5;
-  erp.Money statement_balance = 6;
-  erp.Money book_balance = 7;
-  erp.Money adjusted_balance = 8;
-  erp.Money difference = 9;
+  l8common.Money statement_balance = 6;
+  l8common.Money book_balance = 7;
+  l8common.Money adjusted_balance = 8;
+  l8common.Money difference = 9;
   ReconciliationStatus status = 10;
   int32 matched_count = 11;
   int32 unmatched_count = 12;
   string reconciled_by = 13;
   int64 reconciled_date = 14;
   string notes = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
 }
 
 // @PrimeObject
@@ -100,13 +100,13 @@ message CashForecast {
   int64 forecast_date = 3;
   int64 period_start = 4;
   int64 period_end = 5;
-  erp.Money opening_balance = 6;
-  erp.Money projected_inflows = 7;
-  erp.Money projected_outflows = 8;
-  erp.Money net_cash_flow = 9;
-  erp.Money closing_balance = 10;
+  l8common.Money opening_balance = 6;
+  l8common.Money projected_inflows = 7;
+  l8common.Money projected_outflows = 8;
+  l8common.Money net_cash_flow = 9;
+  l8common.Money closing_balance = 10;
   string notes = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 message CashForecastList {
@@ -120,13 +120,13 @@ message FundTransfer {
   string transfer_id = 1;
   string from_bank_account_id = 2;
   string to_bank_account_id = 3;
-  erp.Money amount = 4;
+  l8common.Money amount = 4;
   int64 transfer_date = 5;
   int64 value_date = 6;
   TransferStatus status = 7;
   string reference = 8;
   string notes = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message FundTransferList {
@@ -140,12 +140,12 @@ message PettyCash {
   string petty_cash_id = 1;
   string fund_name = 2;
   string custodian_employee_id = 3;
-  erp.Money fund_limit = 4;
-  erp.Money current_balance = 5;
+  l8common.Money fund_limit = 4;
+  l8common.Money current_balance = 5;
   int64 last_replenished_date = 6;
   bool is_active = 7;
   string notes = 8;
-  erp.AuditInfo audit_info = 9;
+  l8common.AuditInfo audit_info = 9;
 }
 
 message PettyCashList {

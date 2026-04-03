@@ -19,7 +19,7 @@ package sales;
 option go_package = "./types/sales";
 
 import "sales-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -40,13 +40,13 @@ message SalesQuotation {
   string bill_to_address_id = 9;
   string payment_terms = 10;
   string currency_id = 11;
-  erp.Money subtotal = 12;
-  erp.Money discount_total = 13;
-  erp.Money tax_total = 14;
-  erp.Money total_amount = 15;
+  l8common.Money subtotal = 12;
+  l8common.Money discount_total = 13;
+  l8common.Money tax_total = 14;
+  l8common.Money total_amount = 15;
   string notes = 16;
   map<string, string> custom_fields = 17;
-  erp.AuditInfo audit_info = 18;
+  l8common.AuditInfo audit_info = 18;
   repeated SalesQuotationLine lines = 19;
 }
 
@@ -63,11 +63,11 @@ message SalesQuotationLine {
   string description = 4;
   double quantity = 5;
   string unit_of_measure = 6;
-  erp.Money unit_price = 7;
+  l8common.Money unit_price = 7;
   double discount_percent = 8;
-  erp.Money discount_amount = 9;
-  erp.Money tax_amount = 10;
-  erp.Money line_total = 11;
+  l8common.Money discount_amount = 9;
+  l8common.Money tax_amount = 10;
+  l8common.Money line_total = 11;
 }
 
 // @PrimeObject
@@ -85,15 +85,15 @@ message SalesOrder {
   string bill_to_address_id = 10;
   string payment_terms = 11;
   string currency_id = 12;
-  erp.Money subtotal = 13;
-  erp.Money discount_total = 14;
-  erp.Money tax_total = 15;
-  erp.Money total_amount = 16;
+  l8common.Money subtotal = 13;
+  l8common.Money discount_total = 14;
+  l8common.Money tax_total = 15;
+  l8common.Money total_amount = 16;
   string warehouse_id = 17;             // Cross-ref: SCM Warehouse
   string notes = 18;
   string priority = 19;
   map<string, string> custom_fields = 20;
-  erp.AuditInfo audit_info = 21;
+  l8common.AuditInfo audit_info = 21;
   repeated SalesOrderLine lines = 22;
   repeated SalesOrderAllocation allocations = 23;
   repeated SalesBackOrder back_orders = 24;
@@ -112,11 +112,11 @@ message SalesOrderLine {
   string description = 4;
   double quantity = 5;
   string unit_of_measure = 6;
-  erp.Money unit_price = 7;
+  l8common.Money unit_price = 7;
   double discount_percent = 8;
-  erp.Money discount_amount = 9;
-  erp.Money tax_amount = 10;
-  erp.Money line_total = 11;
+  l8common.Money discount_amount = 9;
+  l8common.Money tax_amount = 10;
+  l8common.Money line_total = 11;
   double allocated_quantity = 12;
   double shipped_quantity = 13;
 }
@@ -156,11 +156,11 @@ message SalesReturnOrder {
   SalesReturnStatus status = 6;
   string reason_code = 7;
   string reason_description = 8;
-  erp.Money refund_amount = 9;
+  l8common.Money refund_amount = 9;
   string warehouse_id = 10;             // Cross-ref: SCM Warehouse
   string notes = 11;
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
   repeated SalesReturnOrderLine lines = 14;
 }
 
@@ -177,8 +177,8 @@ message SalesReturnOrderLine {
   string description = 4;
   double quantity = 5;
   string unit_of_measure = 6;
-  erp.Money unit_price = 7;
-  erp.Money line_total = 8;
+  l8common.Money unit_price = 7;
+  l8common.Money line_total = 8;
   string condition = 9;
   string disposition = 10;
 }

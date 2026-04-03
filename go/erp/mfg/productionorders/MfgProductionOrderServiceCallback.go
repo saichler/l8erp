@@ -15,9 +15,9 @@ limitations under the License.
 package productionorders
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/mfg"
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
 )
 
@@ -28,8 +28,8 @@ func newMfgProductionOrderServiceCallback() ifs.IServiceCallback {
 		After(cascadeCreateWorkOrders).
 		Require(func(e *mfg.MfgProductionOrder) string { return e.ProdOrderId }, "ProdOrderId").
 		Enum(func(e *mfg.MfgProductionOrder) int32 { return int32(e.Status) }, mfg.MfgProductionOrderStatus_name, "Status").
-		OptionalMoney(func(e *mfg.MfgProductionOrder) *erp.Money { return e.TotalEstimatedCost }, "TotalEstimatedCost").
-		OptionalMoney(func(e *mfg.MfgProductionOrder) *erp.Money { return e.TotalActualCost }, "TotalActualCost").
+		OptionalMoney(func(e *mfg.MfgProductionOrder) *l8common.Money { return e.TotalEstimatedCost }, "TotalEstimatedCost").
+		OptionalMoney(func(e *mfg.MfgProductionOrder) *l8common.Money { return e.TotalActualCost }, "TotalActualCost").
 		Build()
 }
 
@@ -68,7 +68,7 @@ func cascadeCreateWorkOrders(order *mfg.MfgProductionOrder, action ifs.Action, v
 					SetupTimePlanned:   op.SetupTime,
 					RunTimePlanned:     op.RunTime,
 					RoutingOperationId: op.OperationId,
-					AuditInfo:          &erp.AuditInfo{},
+					AuditInfo:          &l8common.AuditInfo{},
 				}
 			}
 		}
@@ -81,7 +81,7 @@ func cascadeCreateWorkOrders(order *mfg.MfgProductionOrder, action ifs.Action, v
 			SalesOrderId:    order.SalesOrderId,
 			Priority:        order.Priority,
 			Operations:      operations,
-			AuditInfo:       &erp.AuditInfo{},
+			AuditInfo:       &l8common.AuditInfo{},
 		}
 		// Explode BOM into material consumption records
 		explodeBOM(wo, line.QuantityOrdered, vnic)

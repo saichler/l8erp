@@ -15,9 +15,9 @@ limitations under the License.
 package salesorders
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -36,10 +36,10 @@ func newSalesOrderServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesOrder) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *sales.SalesOrder) string { return e.CurrencyId }, "CurrencyId").
 		Enum(func(e *sales.SalesOrder) int32 { return int32(e.Status) }, sales.SalesOrderStatus_name, "Status").
-		OptionalMoney(func(e *sales.SalesOrder) *erp.Money { return e.Subtotal }, "Subtotal").
-		OptionalMoney(func(e *sales.SalesOrder) *erp.Money { return e.DiscountTotal }, "DiscountTotal").
-		OptionalMoney(func(e *sales.SalesOrder) *erp.Money { return e.TaxTotal }, "TaxTotal").
-		OptionalMoney(func(e *sales.SalesOrder) *erp.Money { return e.TotalAmount }, "TotalAmount").
+		OptionalMoney(func(e *sales.SalesOrder) *l8common.Money { return e.Subtotal }, "Subtotal").
+		OptionalMoney(func(e *sales.SalesOrder) *l8common.Money { return e.DiscountTotal }, "DiscountTotal").
+		OptionalMoney(func(e *sales.SalesOrder) *l8common.Money { return e.TaxTotal }, "TaxTotal").
+		OptionalMoney(func(e *sales.SalesOrder) *l8common.Money { return e.TotalAmount }, "TotalAmount").
 		DateAfter(func(e *sales.SalesOrder) int64 { return e.RequestedDeliveryDate }, func(e *sales.SalesOrder) int64 { return e.OrderDate }, "RequestedDeliveryDate", "OrderDate").
 		Build()
 }
@@ -96,7 +96,7 @@ func cascadeCreateDeliveryOrder(order *sales.SalesOrder, action ifs.Action, vnic
 		PlannedDeliveryDate: order.RequestedDeliveryDate,
 		Status:              sales.SalesDeliveryStatus_DELIVERY_STATUS_PLANNED,
 		Lines:               lines,
-		AuditInfo:           &erp.AuditInfo{},
+		AuditInfo:           &l8common.AuditInfo{},
 	}, vnic)
 	return err
 }
@@ -114,7 +114,7 @@ func computeSalesOrderTotals(o *sales.SalesOrder) error {
 		gross := int64(line.Quantity * float64(line.UnitPrice.Amount))
 		subtotal += gross
 		if line.DiscountPercent > 0 && line.DiscountAmount == nil {
-			line.DiscountAmount = &erp.Money{
+			line.DiscountAmount = &l8common.Money{
 				Amount:     int64(float64(gross) * line.DiscountPercent / 100),
 				CurrencyId: currencyId,
 			}
@@ -127,14 +127,14 @@ func computeSalesOrderTotals(o *sales.SalesOrder) error {
 		if line.TaxAmount != nil {
 			tax = line.TaxAmount.Amount
 		}
-		line.LineTotal = &erp.Money{Amount: gross - disc + tax, CurrencyId: currencyId}
+		line.LineTotal = &l8common.Money{Amount: gross - disc + tax, CurrencyId: currencyId}
 	}
 	if currencyId == "" {
 		return nil
 	}
-	o.Subtotal = &erp.Money{Amount: subtotal, CurrencyId: currencyId}
-	o.DiscountTotal = common.SumLineMoney(o.Lines, func(l *sales.SalesOrderLine) *erp.Money { return l.DiscountAmount })
-	o.TaxTotal = common.SumLineMoney(o.Lines, func(l *sales.SalesOrderLine) *erp.Money { return l.TaxAmount })
+	o.Subtotal = &l8common.Money{Amount: subtotal, CurrencyId: currencyId}
+	o.DiscountTotal = common.SumLineMoney(o.Lines, func(l *sales.SalesOrderLine) *l8common.Money { return l.DiscountAmount })
+	o.TaxTotal = common.SumLineMoney(o.Lines, func(l *sales.SalesOrderLine) *l8common.Money { return l.TaxAmount })
 	o.TotalAmount = common.MoneyAdd(common.MoneySubtract(o.Subtotal, o.DiscountTotal), o.TaxTotal)
 	return nil
 }

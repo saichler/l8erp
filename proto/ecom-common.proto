@@ -19,7 +19,7 @@ package ecom;
 
 option go_package = "./types/ecom";
 
-import "erp-common.proto";
+import "l8common.proto";
 
 // =====================
 // E-COMMERCE SHARED ENUMS

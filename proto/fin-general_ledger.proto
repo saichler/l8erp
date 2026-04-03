@@ -20,7 +20,7 @@ option go_package = "./types/fin";
 
 import "fin-common.proto";
 import "fin-tax.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -42,7 +42,7 @@ message Account {
   bool is_header = 10;          // Header/summary account (not postable)
   int32 level = 11;             // Hierarchy level
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
   repeated AccountBalance balances = 14;
 }
 
@@ -62,7 +62,7 @@ message JournalEntry {
   string source = 6;            // Manual, AP, AR, Payroll, etc.
   string reference = 7;
   JournalEntryStatus status = 8;
-  erp.Money total_amount = 9;
+  l8common.Money total_amount = 9;
   string posted_by = 10;
   int64 posted_date = 11;
   string reversed_by = 12;
@@ -70,7 +70,7 @@ message JournalEntry {
   string reversal_entry_id = 14;
   string notes = 15;
   map<string, string> custom_fields = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
   repeated JournalEntryLine lines = 18;
 }
 
@@ -86,13 +86,13 @@ message JournalEntryLine {
   int32 line_number = 3;
   string account_id = 4;
   string description = 5;
-  erp.Money debit_amount = 6;
-  erp.Money credit_amount = 7;
+  l8common.Money debit_amount = 6;
+  l8common.Money credit_amount = 7;
   string cost_center_id = 8;
   string department_id = 9;
   string project_id = 10;
   string reference = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 // @PrimeObject
@@ -105,7 +105,7 @@ message FiscalYear {
   bool is_closed = 5;
   bool is_active = 6;
   string notes = 7;
-  erp.AuditInfo audit_info = 8;
+  l8common.AuditInfo audit_info = 8;
   repeated FiscalPeriod periods = 9;
   repeated TaxReturn returns = 10;
 }
@@ -124,7 +124,7 @@ message FiscalPeriod {
   int64 start_date = 5;
   int64 end_date = 6;
   FiscalPeriodStatus status = 7;
-  erp.AuditInfo audit_info = 8;
+  l8common.AuditInfo audit_info = 8;
 }
 
 // @PrimeObject
@@ -136,7 +136,7 @@ message Currency {
   string symbol = 4;            // e.g., $, €, £
   int32 decimal_places = 5;
   bool is_active = 6;
-  erp.AuditInfo audit_info = 7;
+  l8common.AuditInfo audit_info = 7;
 }
 
 message CurrencyList {
@@ -154,7 +154,7 @@ message ExchangeRate {
   int64 effective_date = 5;
   int64 end_date = 6;
   string source = 7;            // Manual, API feed, etc.
-  erp.AuditInfo audit_info = 8;
+  l8common.AuditInfo audit_info = 8;
 }
 
 message ExchangeRateList {
@@ -167,11 +167,11 @@ message AccountBalance {
   string balance_id = 1;
   string account_id = 2;
   string fiscal_period_id = 3;
-  erp.Money beginning_balance = 4;
-  erp.Money period_debit = 5;
-  erp.Money period_credit = 6;
-  erp.Money ending_balance = 7;
-  erp.Money ytd_debit = 8;
-  erp.Money ytd_credit = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.Money beginning_balance = 4;
+  l8common.Money period_debit = 5;
+  l8common.Money period_credit = 6;
+  l8common.Money ending_balance = 7;
+  l8common.Money ytd_debit = 8;
+  l8common.Money ytd_credit = 9;
+  l8common.AuditInfo audit_info = 10;
 }

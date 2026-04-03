@@ -26,7 +26,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -131,8 +131,8 @@ func generateBillingSchedules(store *MockDataStore) []*prj.PrjBillingSchedule {
 		endDate := startDate.AddDate(1, 0, 0)
 
 		// Fixed amount for fixed price or retainer billing
-		var fixedAmount *erp.Money
-		var retainerAmount *erp.Money
+		var fixedAmount *l8common.Money
+		var retainerAmount *l8common.Money
 		if billingType == prj.PrjBillingType_PRJ_BILLING_TYPE_FIXED_PRICE {
 			fixedAmount = money(store, int64(rand.Intn(500000)+50000) * 100)
 		} else if billingType == prj.PrjBillingType_PRJ_BILLING_TYPE_RETAINER {

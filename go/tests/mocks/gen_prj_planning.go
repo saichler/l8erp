@@ -26,7 +26,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -319,7 +319,7 @@ func generateMilestones(store *MockDataStore) []*prj.PrjMilestone {
 
 		// Billing
 		isBillable := i%3 == 0
-		var billingAmount *erp.Money
+		var billingAmount *l8common.Money
 		if isBillable {
 			billingAmount = randomMoney(store, 5000, 50000)
 		}

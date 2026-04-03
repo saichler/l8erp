@@ -20,7 +20,7 @@ package ecom;
 option go_package = "./types/ecom";
 
 import "ecom-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // =====================
@@ -36,16 +36,16 @@ message EcomOrder {
     EcomOrderStatus status = 4;
     EcomPaymentStatus payment_status = 5;
     int64 order_date = 6;
-    erp.Money subtotal = 7;
-    erp.Money discount_amount = 8;
-    erp.Money shipping_amount = 9;
-    erp.Money tax_amount = 10;
-    erp.Money total_amount = 11;
+    l8common.Money subtotal = 7;
+    l8common.Money discount_amount = 8;
+    l8common.Money shipping_amount = 9;
+    l8common.Money tax_amount = 10;
+    l8common.Money total_amount = 11;
     string coupon_code = 12;
     string shipping_method_id = 13;         // cross-ref: EcomShippingMethod
     string payment_method_id = 14;          // cross-ref: EcomPaymentMethod
-    erp.Address billing_address = 15;
-    erp.Address shipping_address = 16;
+    l8common.Address billing_address = 15;
+    l8common.Address shipping_address = 16;
     string notes = 17;
     string customer_notes = 18;
     string ip_address = 19;
@@ -56,7 +56,7 @@ message EcomOrder {
     int64 delivered_date = 24;
     string tracking_number = 25;
     map<string, string> custom_fields = 26;
-    erp.AuditInfo audit_info = 27;
+    l8common.AuditInfo audit_info = 27;
     repeated EcomOrderLine lines = 28;
     repeated EcomOrderStatusHistory status_history = 29;
 }
@@ -78,16 +78,16 @@ message EcomOrderLine {
     string sku = 5;
     string name = 6;
     int32 quantity = 7;
-    erp.Money unit_price = 8;
-    erp.Money discount_amount = 9;
-    erp.Money tax_amount = 10;
-    erp.Money line_total = 11;
+    l8common.Money unit_price = 8;
+    l8common.Money discount_amount = 9;
+    l8common.Money tax_amount = 10;
+    l8common.Money line_total = 11;
     double weight = 12;
     bool is_gift = 13;
     string gift_message = 14;
     map<string, string> attributes = 15;
     map<string, string> custom_fields = 16;
-    erp.AuditInfo audit_info = 17;
+    l8common.AuditInfo audit_info = 17;
 }
 
 // =====================
@@ -104,7 +104,7 @@ message EcomOrderStatusHistory {
     string notes = 7;
     bool notify_customer = 8;
     map<string, string> custom_fields = 9;
-    erp.AuditInfo audit_info = 10;
+    l8common.AuditInfo audit_info = 10;
 }
 
 // =====================
@@ -125,13 +125,13 @@ message EcomReturn {
     int64 approved_date = 9;
     int64 received_date = 10;
     int64 refunded_date = 11;
-    erp.Money refund_amount = 12;
+    l8common.Money refund_amount = 12;
     string refund_method = 13;
     string approved_by = 14;                // cross-ref: HCM Employee
     string tracking_number = 15;
     string shipping_carrier = 16;
     map<string, string> custom_fields = 17;
-    erp.AuditInfo audit_info = 18;
+    l8common.AuditInfo audit_info = 18;
     repeated EcomReturnLine lines = 19;
 }
 
@@ -153,10 +153,10 @@ message EcomReturnLine {
     string sku = 6;
     string name = 7;
     int32 quantity = 8;
-    erp.Money refund_amount = 9;
+    l8common.Money refund_amount = 9;
     string reason = 10;
     string condition = 11;
     bool restock = 12;
     map<string, string> custom_fields = 13;
-    erp.AuditInfo audit_info = 14;
+    l8common.AuditInfo audit_info = 14;
 }

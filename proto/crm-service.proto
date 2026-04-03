@@ -19,7 +19,7 @@ package crm;
 option go_package = "./types/crm";
 
 import "crm-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -50,7 +50,7 @@ message CrmCase {
   int32 escalation_level = 19;
   bool is_escalated = 20;
   map<string, string> custom_fields = 21;
-  erp.AuditInfo audit_info = 22;
+  l8common.AuditInfo audit_info = 22;
   repeated CrmCaseComment comments = 23;
 }
 
@@ -67,7 +67,7 @@ message CrmCaseComment {
   string created_by_id = 5;                // cross-ref: HCM Employee
   int64 comment_date = 6;
   map<string, string> custom_fields = 7;
-  erp.AuditInfo audit_info = 8;
+  l8common.AuditInfo audit_info = 8;
 }
 
 // @PrimeObject
@@ -91,7 +91,7 @@ message CrmKBArticle {
   string version = 16;
   bool is_featured = 17;
   map<string, string> custom_fields = 18;
-  erp.AuditInfo audit_info = 19;
+  l8common.AuditInfo audit_info = 19;
 }
 
 message CrmKBArticleList {
@@ -113,7 +113,7 @@ message CrmSLA {
   string escalation_rules = 9;
   CrmCasePriority applies_to_priority = 10;
   map<string, string> custom_fields = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 message CrmSLAList {
@@ -136,7 +136,7 @@ message CrmEscalation {
   string criteria = 10;
   bool is_active = 11;
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 
 message CrmEscalationList {
@@ -162,7 +162,7 @@ message CrmSurvey {
   string survey_type = 13;
   string owner_id = 14;                    // cross-ref: HCM Employee
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
 }
 
 message CrmSurveyList {

@@ -19,7 +19,7 @@ package fin;
 option go_package = "./types/fin";
 
 import "fin-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -40,7 +40,7 @@ message TaxCode {
   bool is_active = 9;
   int64 effective_date = 10;
   int64 end_date = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 message TaxCodeList {
@@ -60,7 +60,7 @@ message TaxJurisdiction {
   string state_code = 7;
   string description = 8;
   bool is_active = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message TaxJurisdictionList {
@@ -76,13 +76,13 @@ message TaxRule {
   string jurisdiction_id = 3;
   string name = 4;
   double rate = 5;
-  erp.Money minimum_threshold = 6;
-  erp.Money maximum_threshold = 7;
+  l8common.Money minimum_threshold = 6;
+  l8common.Money maximum_threshold = 7;
   int64 effective_date = 8;
   int64 end_date = 9;
   bool is_active = 10;
   string notes = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 message TaxRuleList {
@@ -104,7 +104,7 @@ message TaxExemption {
   bool is_active = 9;
   string document_url = 10;
   string notes = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 message TaxExemptionList {
@@ -121,14 +121,14 @@ message TaxReturn {
   TaxReturnStatus status = 5;
   int64 filing_date = 6;
   int64 due_date = 7;
-  erp.Money taxable_amount = 8;
-  erp.Money tax_amount = 9;
-  erp.Money amount_paid = 10;
-  erp.Money amount_due = 11;
+  l8common.Money taxable_amount = 8;
+  l8common.Money tax_amount = 9;
+  l8common.Money amount_paid = 10;
+  l8common.Money amount_due = 11;
   string filed_by = 12;
   string confirmation_number = 13;
   string notes = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 // WithholdingTaxConfig represents withholding tax configuration for a vendor
@@ -137,10 +137,10 @@ message WithholdingTaxConfig {
   string vendor_id = 2;
   string tax_code_id = 3;
   double withholding_rate = 4;
-  erp.Money threshold_amount = 5;
+  l8common.Money threshold_amount = 5;
   int64 effective_date = 6;
   int64 end_date = 7;
   bool is_active = 8;
   string notes = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }

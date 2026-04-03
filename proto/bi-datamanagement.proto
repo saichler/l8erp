@@ -19,7 +19,7 @@ package bi;
 option go_package = "./types/bi";
 
 import "bi-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -45,7 +45,7 @@ message BiDataSource {
   bool is_active = 14;
   map<string, string> connection_params = 15;
   map<string, string> custom_fields = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
 }
 
 message BiDataSourceList {
@@ -75,7 +75,7 @@ message BiETLJob {
   bool is_active = 17;
   map<string, string> custom_fields = 18;
   repeated BiETLSchedule schedules = 20;
-  erp.AuditInfo audit_info = 19;
+  l8common.AuditInfo audit_info = 19;
 }
 
 message BiETLJobList {
@@ -98,7 +98,7 @@ message BiETLSchedule {
   int64 last_run = 12;
   bool is_active = 13;
   map<string, string> custom_fields = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 // @PrimeObject
@@ -121,7 +121,7 @@ message BiDataQualityRule {
   int64 records_failed = 15;
   bool is_active = 16;
   map<string, string> custom_fields = 17;
-  erp.AuditInfo audit_info = 18;
+  l8common.AuditInfo audit_info = 18;
 }
 
 message BiDataQualityRuleList {
@@ -146,7 +146,7 @@ message BiMasterDataConfig {
   int64 duplicate_records = 12;
   bool is_active = 13;
   map<string, string> custom_fields = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 message BiMasterDataConfigList {
@@ -172,7 +172,7 @@ message BiDataGovernance {
   int64 next_review = 13;
   bool is_active = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
 }
 
 message BiDataGovernanceList {

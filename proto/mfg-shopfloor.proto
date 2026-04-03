@@ -19,7 +19,7 @@ package mfg;
 option go_package = "./types/mfg";
 
 import "mfg-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -44,7 +44,7 @@ message MfgWorkCenter {
   bool is_active = 13;
   string notes = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
 }
 
 message MfgWorkCenterList {
@@ -64,7 +64,7 @@ message MfgWorkCenterCap {
   string shift_id = 7;                   // cross-ref: MfgShiftSchedule
   int32 day_of_week = 8;                 // 0=Sunday, 6=Saturday
   string notes = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message MfgWorkCenterCapList {
@@ -90,9 +90,9 @@ message MfgLaborEntry {
   double quantity_scrapped = 10;
   string labor_type = 11;                // DIRECT, INDIRECT, SETUP
   double hourly_rate = 12;
-  erp.Money labor_cost = 13;
+  l8common.Money labor_cost = 13;
   string notes = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 // MfgMachineEntry represents machine time recording
@@ -108,10 +108,10 @@ message MfgMachineEntry {
   double quantity_scrapped = 9;
   string machine_status = 10;            // RUNNING, IDLE, SETUP
   double hourly_rate = 11;
-  erp.Money machine_cost = 12;
+  l8common.Money machine_cost = 12;
   string operator_id = 13;               // cross-ref: HCM Employee
   string notes = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 // ============================================================================
@@ -133,7 +133,7 @@ message MfgShiftSchedule {
   int64 effective_date = 10;
   int64 expiry_date = 11;
   string notes = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 
 message MfgShiftScheduleList {
@@ -155,9 +155,9 @@ message MfgDowntimeEvent {
   double duration_minutes = 9;
   string reported_by = 10;               // cross-ref: HCM Employee
   string resolved_by = 11;               // cross-ref: HCM Employee
-  erp.Money estimated_loss = 12;
+  l8common.Money estimated_loss = 12;
   string notes = 13;
-  erp.AuditInfo audit_info = 14;
+  l8common.AuditInfo audit_info = 14;
 }
 
 message MfgDowntimeEventList {

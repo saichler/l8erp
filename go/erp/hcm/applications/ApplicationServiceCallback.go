@@ -15,10 +15,10 @@ limitations under the License.
 package applications
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8erp/go/erp/hcm/applicants"
 	"github.com/saichler/l8erp/go/erp/hcm/jobrequisitions"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 	"time"
@@ -124,7 +124,7 @@ func cascadeCreateEmployee(app *hcm.Application, action ifs.Action, vnic ifs.IVN
 		EmploymentStatus: hcm.EmploymentStatus_EMPLOYMENT_STATUS_ACTIVE,
 		HireDate:         time.Now().Unix(),
 		ApplicationId:    app.ApplicationId,
-		AuditInfo:        &erp.AuditInfo{},
+		AuditInfo:        &l8common.AuditInfo{},
 	}
 	if applicant != nil {
 		emp.FirstName = applicant.FirstName
@@ -167,7 +167,7 @@ func cascadeCreateEmployee(app *hcm.Application, action ifs.Action, vnic ifs.IVN
 			SequenceOrder: t.seq,
 			Status:        hcm.OnboardingTaskStatus_ONBOARDING_TASK_STATUS_NOT_STARTED,
 			DueDate:       time.Now().Add(30 * 24 * time.Hour).Unix(),
-			AuditInfo:     &erp.AuditInfo{},
+			AuditInfo:     &l8common.AuditInfo{},
 		}, vnic); err != nil {
 			return err
 		}

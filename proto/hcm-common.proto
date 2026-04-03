@@ -18,7 +18,7 @@ package hcm;
 
 option go_package = "./types/hcm";
 
-import "erp-common.proto";
+import "l8common.proto";
 
 // ============================================================================
 // HCM-SPECIFIC COMMON TYPES
@@ -32,7 +32,7 @@ message EmergencyContact {
   string phone_primary = 4;
   string phone_secondary = 5;
   string email = 6;
-  erp.Address address = 7;
+  l8common.Address address = 7;
   int32 priority = 8;  // 1 = primary, 2 = secondary, etc.
 }
 

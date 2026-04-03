@@ -20,7 +20,7 @@ option go_package = "./types/fin";
 
 import "fin-common.proto";
 import "fin-accounts_payable.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -39,13 +39,13 @@ message Customer {
   string default_account_id = 7;
   string currency_id = 8;
   int32 payment_term_days = 9;
-  erp.Money credit_limit = 10;
-  repeated erp.Address addresses = 11;
-  repeated erp.ContactInfo contacts = 12;
+  l8common.Money credit_limit = 10;
+  repeated l8common.Address addresses = 11;
+  repeated l8common.ContactInfo contacts = 12;
   string website = 13;
   string notes = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
   repeated CustomerContact customer_contacts = 17;
 }
 
@@ -67,7 +67,7 @@ message CustomerContact {
   bool is_primary = 9;
   bool is_active = 10;
   string notes = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 // @PrimeObject
@@ -81,18 +81,18 @@ message SalesInvoice {
   string currency_id = 6;
   string fiscal_period_id = 7;
   InvoiceStatus status = 8;
-  erp.Money subtotal = 9;
-  erp.Money tax_amount = 10;
-  erp.Money total_amount = 11;
-  erp.Money amount_paid = 12;
-  erp.Money balance_due = 13;
+  l8common.Money subtotal = 9;
+  l8common.Money tax_amount = 10;
+  l8common.Money total_amount = 11;
+  l8common.Money amount_paid = 12;
+  l8common.Money balance_due = 13;
   int32 payment_term_days = 14;
   string ar_account_id = 15;
   string sales_order_number = 16;
   string description = 17;
   string notes = 18;
   map<string, string> custom_fields = 19;
-  erp.AuditInfo audit_info = 20;
+  l8common.AuditInfo audit_info = 20;
   repeated SalesInvoiceLine lines = 21;
   string sales_order_id = 22;
   string delivery_order_id = 23;
@@ -111,13 +111,13 @@ message SalesInvoiceLine {
   string account_id = 4;
   string description = 5;
   double quantity = 6;
-  erp.Money unit_price = 7;
-  erp.Money line_amount = 8;
+  l8common.Money unit_price = 7;
+  l8common.Money line_amount = 8;
   string tax_code_id = 9;
-  erp.Money tax_amount = 10;
+  l8common.Money tax_amount = 10;
   string cost_center_id = 11;
   string project_id = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 
 // @PrimeObject
@@ -126,7 +126,7 @@ message CustomerPayment {
   string payment_id = 1;
   string customer_id = 2;
   int64 payment_date = 3;
-  erp.Money amount = 4;
+  l8common.Money amount = 4;
   PaymentMethod payment_method = 5;
   PaymentStatus status = 6;
   string bank_account_id = 7;
@@ -134,7 +134,7 @@ message CustomerPayment {
   string reference = 9;
   string notes = 10;
   map<string, string> custom_fields = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
   repeated PaymentAllocation allocations = 13;
   repeated PaymentApplication applications = 14;
 }
@@ -149,9 +149,9 @@ message PaymentApplication {
   string application_id = 1;
   string payment_id = 2;
   string invoice_id = 3;
-  erp.Money applied_amount = 4;
-  erp.Money discount_taken = 5;
-  erp.AuditInfo audit_info = 6;
+  l8common.Money applied_amount = 4;
+  l8common.Money discount_taken = 5;
+  l8common.AuditInfo audit_info = 6;
 }
 
 // @PrimeObject
@@ -162,12 +162,12 @@ message CreditMemo {
   string customer_id = 3;
   string original_invoice_id = 4;
   int64 memo_date = 5;
-  erp.Money amount = 6;
+  l8common.Money amount = 6;
   CreditMemoStatus status = 7;
   string reason = 8;
   string description = 9;
   string notes = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }
 
 message CreditMemoList {
@@ -183,13 +183,13 @@ message DunningLetter {
   DunningLevel dunning_level = 3;
   int64 letter_date = 4;
   int64 due_date = 5;
-  erp.Money total_overdue = 6;
+  l8common.Money total_overdue = 6;
   int32 days_overdue = 7;
   repeated string invoice_ids = 8;
   bool is_sent = 9;
   int64 sent_date = 10;
   string notes = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 message DunningLetterList {

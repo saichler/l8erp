@@ -19,7 +19,7 @@ package scm;
 option go_package = "./types/scm";
 
 import "scm-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -33,13 +33,13 @@ message ScmWarehouse {
   string code = 2;
   string name = 3;
   ScmWarehouseType warehouse_type = 4;
-  erp.Address address = 5;
+  l8common.Address address = 5;
   string manager_id = 6;            // Cross-ref: HCM Employee
   bool is_active = 7;
   double capacity = 8;
   string notes = 9;
   map<string, string> custom_fields = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
   repeated ScmBin bins = 12;
 }
 
@@ -60,7 +60,7 @@ message ScmBin {
   bool is_active = 9;
   double max_capacity = 10;
   double current_quantity = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 // @PrimeObject
@@ -74,7 +74,7 @@ message ScmReceivingOrder {
   string received_by = 6;
   string notes = 7;
   map<string, string> custom_fields = 8;
-  erp.AuditInfo audit_info = 9;
+  l8common.AuditInfo audit_info = 9;
   repeated ScmPutawayTask putaway_tasks = 10;
 }
 
@@ -93,7 +93,7 @@ message ScmPutawayTask {
   ScmTaskStatus status = 7;
   string assigned_to = 8;
   int64 completed_at = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 // ScmPickTask represents a task to pick items from storage bins
@@ -106,7 +106,7 @@ message ScmPickTask {
   string assigned_to = 7;
   int64 completed_at = 8;
   string order_reference = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 // ScmPackTask represents a task to pack picked items for shipment
@@ -118,7 +118,7 @@ message ScmPackTask {
   ScmTaskStatus status = 6;
   string assigned_to = 7;
   int64 completed_at = 8;
-  erp.AuditInfo audit_info = 9;
+  l8common.AuditInfo audit_info = 9;
 }
 
 // ScmShipTask represents a task to ship packed items
@@ -129,7 +129,7 @@ message ScmShipTask {
   string tracking_number = 5;
   ScmTaskStatus status = 6;
   int64 shipped_at = 7;
-  erp.AuditInfo audit_info = 8;
+  l8common.AuditInfo audit_info = 8;
 }
 
 // @PrimeObject
@@ -143,7 +143,7 @@ message ScmWavePlan {
   int32 total_items = 6;
   string assigned_to = 7;
   string notes = 8;
-  erp.AuditInfo audit_info = 9;
+  l8common.AuditInfo audit_info = 9;
   repeated ScmPickTask pick_tasks = 10;
   repeated ScmPackTask pack_tasks = 11;
   repeated ScmShipTask ship_tasks = 12;
@@ -168,7 +168,7 @@ message ScmDockSchedule {
   string direction = 9;             // Inbound or Outbound
   ScmTaskStatus status = 10;
   string notes = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 message ScmDockScheduleList {

@@ -15,82 +15,42 @@ limitations under the License.
 package common
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8c "github.com/saichler/l8common/go/common"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 )
 
 // SumLineMoney sums a Money field across a slice of line items.
-func SumLineMoney[L any](lines []*L, getter func(*L) *erp.Money) *erp.Money {
-	total := int64(0)
-	currencyId := ""
-	for _, line := range lines {
-		if m := getter(line); m != nil {
-			total += m.Amount
-			if currencyId == "" {
-				currencyId = m.CurrencyId
-			}
-		}
+// Generic wrapper — converts typed slice to []interface{} and delegates to l8common.
+func SumLineMoney[L any](lines []*L, getter func(*L) *l8common.Money) *l8common.Money {
+	ifaces := make([]interface{}, len(lines))
+	for i, l := range lines {
+		ifaces[i] = l
 	}
-	if currencyId == "" {
-		return nil
-	}
-	return &erp.Money{Amount: total, CurrencyId: currencyId}
-}
-
-// MoneyAdd returns a + b (same currency). Returns nil if both are nil.
-func MoneyAdd(a, b *erp.Money) *erp.Money {
-	if a == nil && b == nil {
-		return nil
-	}
-	if a == nil {
-		return b
-	}
-	if b == nil {
-		return a
-	}
-	return &erp.Money{Amount: a.Amount + b.Amount, CurrencyId: a.CurrencyId}
-}
-
-// MoneySubtract returns a - b (same currency). Returns nil if both are nil.
-func MoneySubtract(a, b *erp.Money) *erp.Money {
-	if a == nil && b == nil {
-		return nil
-	}
-	if a == nil {
-		return &erp.Money{Amount: -b.Amount, CurrencyId: b.CurrencyId}
-	}
-	if b == nil {
-		return a
-	}
-	return &erp.Money{Amount: a.Amount - b.Amount, CurrencyId: a.CurrencyId}
+	return l8c.SumLineMoney(ifaces, func(v interface{}) *l8common.Money { return getter(v.(*L)) })
 }
 
 // SumLineFloat64 sums a float64 field across a slice of line items.
 func SumLineFloat64[L any](lines []*L, getter func(*L) float64) float64 {
-	total := float64(0)
-	for _, line := range lines {
-		total += getter(line)
+	ifaces := make([]interface{}, len(lines))
+	for i, l := range lines {
+		ifaces[i] = l
 	}
-	return total
+	return l8c.SumLineFloat64(ifaces, func(v interface{}) float64 { return getter(v.(*L)) })
 }
 
 // SumLineInt64 sums an int64 field across a slice of line items.
 func SumLineInt64[L any](lines []*L, getter func(*L) int64) int64 {
-	total := int64(0)
-	for _, line := range lines {
-		total += getter(line)
+	ifaces := make([]interface{}, len(lines))
+	for i, l := range lines {
+		ifaces[i] = l
 	}
-	return total
+	return l8c.SumLineInt64(ifaces, func(v interface{}) int64 { return getter(v.(*L)) })
 }
 
-// MoneyAmount returns the amount of a Money value, or 0 if nil.
-func MoneyAmount(m *erp.Money) int64 {
-	if m == nil {
-		return 0
-	}
-	return m.Amount
-}
-
-// MoneyIsZero returns true if the Money value is nil or has a zero amount.
-func MoneyIsZero(m *erp.Money) bool {
-	return m == nil || m.Amount == 0
-}
+// Re-export non-generic money helpers from l8common.
+var (
+	MoneyAdd      = l8c.MoneyAdd
+	MoneySubtract = l8c.MoneySubtract
+	MoneyAmount   = l8c.MoneyAmount
+	MoneyIsZero   = l8c.MoneyIsZero
+)

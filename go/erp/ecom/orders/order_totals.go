@@ -15,7 +15,7 @@ limitations under the License.
 package orders
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
@@ -34,7 +34,7 @@ func computeOrderTotals(order *ecom.EcomOrder) error {
 			if line.DiscountAmount != nil {
 				lineAmt -= line.DiscountAmount.Amount
 			}
-			line.LineTotal = &erp.Money{Amount: lineAmt, CurrencyId: line.UnitPrice.CurrencyId}
+			line.LineTotal = &l8common.Money{Amount: lineAmt, CurrencyId: line.UnitPrice.CurrencyId}
 			currency = line.UnitPrice.CurrencyId
 		}
 		if line.LineTotal != nil {
@@ -44,9 +44,9 @@ func computeOrderTotals(order *ecom.EcomOrder) error {
 			taxTotal += line.TaxAmount.Amount
 		}
 	}
-	order.Subtotal = &erp.Money{Amount: subtotal, CurrencyId: currency}
+	order.Subtotal = &l8common.Money{Amount: subtotal, CurrencyId: currency}
 	if taxTotal > 0 {
-		order.TaxAmount = &erp.Money{Amount: taxTotal, CurrencyId: currency}
+		order.TaxAmount = &l8common.Money{Amount: taxTotal, CurrencyId: currency}
 	}
 	// Total = subtotal - discount + shipping + tax
 	total := subtotal
@@ -57,6 +57,6 @@ func computeOrderTotals(order *ecom.EcomOrder) error {
 		total += order.ShippingAmount.Amount
 	}
 	total += taxTotal
-	order.TotalAmount = &erp.Money{Amount: total, CurrencyId: currency}
+	order.TotalAmount = &l8common.Money{Amount: total, CurrencyId: currency}
 	return nil
 }

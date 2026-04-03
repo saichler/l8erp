@@ -19,7 +19,7 @@ package scm;
 option go_package = "./types/scm";
 
 import "scm-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -38,7 +38,7 @@ message ScmDemandForecast {
   ScmForecastMethod forecast_method = 7;
   double confidence_level = 8;
   string notes = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
   repeated ScmForecastAccuracy accuracies = 11;
 }
 
@@ -57,7 +57,7 @@ message ScmForecastModel {
   map<string, string> parameters = 5;
   bool is_active = 6;
   double accuracy_score = 7;
-  erp.AuditInfo audit_info = 8;
+  l8common.AuditInfo audit_info = 8;
 }
 
 message ScmForecastModelList {
@@ -71,13 +71,13 @@ message ScmDemandPlan {
   string plan_id = 1;
   string name = 2;
   string description = 3;
-  erp.DateRange plan_period = 4;
+  l8common.DateRange plan_period = 4;
   ScmTaskStatus status = 5;
   string created_by = 6;
   string approved_by = 7;
   string notes = 8;
   map<string, string> custom_fields = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message ScmDemandPlanList {
@@ -97,7 +97,7 @@ message ScmPromotionalPlan {
   repeated string item_ids = 7;
   ScmTaskStatus status = 8;
   string notes = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message ScmPromotionalPlanList {
@@ -117,7 +117,7 @@ message ScmNewProductPlan {
   string comparable_item_id = 7;
   ScmTaskStatus status = 8;
   string notes = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message ScmNewProductPlanList {
@@ -129,12 +129,12 @@ message ScmNewProductPlanList {
 message ScmForecastAccuracy {
   string accuracy_id = 1;
   string item_id = 3;
-  erp.DateRange period = 4;
+  l8common.DateRange period = 4;
   double forecast_quantity = 5;
   double actual_quantity = 6;
   double mape = 7;                   // Mean Absolute Percentage Error
   double bias = 8;
   string notes = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 

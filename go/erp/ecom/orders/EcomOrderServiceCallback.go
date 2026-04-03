@@ -15,9 +15,9 @@ limitations under the License.
 package orders
 
 import (
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
 )
 
@@ -29,10 +29,10 @@ func newEcomOrderServiceCallback() ifs.IServiceCallback {
 		Require(func(e *ecom.EcomOrder) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *ecom.EcomOrder) int32 { return int32(e.PaymentStatus) }, ecom.EcomPaymentStatus_name, "PaymentStatus").
 		Enum(func(e *ecom.EcomOrder) int32 { return int32(e.Status) }, ecom.EcomOrderStatus_name, "Status").
-		OptionalMoney(func(e *ecom.EcomOrder) *erp.Money { return e.Subtotal }, "Subtotal").
-		OptionalMoney(func(e *ecom.EcomOrder) *erp.Money { return e.DiscountAmount }, "DiscountAmount").
-		OptionalMoney(func(e *ecom.EcomOrder) *erp.Money { return e.ShippingAmount }, "ShippingAmount").
-		OptionalMoney(func(e *ecom.EcomOrder) *erp.Money { return e.TaxAmount }, "TaxAmount").
-		OptionalMoney(func(e *ecom.EcomOrder) *erp.Money { return e.TotalAmount }, "TotalAmount").
+		OptionalMoney(func(e *ecom.EcomOrder) *l8common.Money { return e.Subtotal }, "Subtotal").
+		OptionalMoney(func(e *ecom.EcomOrder) *l8common.Money { return e.DiscountAmount }, "DiscountAmount").
+		OptionalMoney(func(e *ecom.EcomOrder) *l8common.Money { return e.ShippingAmount }, "ShippingAmount").
+		OptionalMoney(func(e *ecom.EcomOrder) *l8common.Money { return e.TaxAmount }, "TaxAmount").
+		OptionalMoney(func(e *ecom.EcomOrder) *l8common.Money { return e.TotalAmount }, "TotalAmount").
 		Build()
 }

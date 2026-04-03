@@ -15,9 +15,9 @@ limitations under the License.
 package returnorders
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
@@ -30,12 +30,12 @@ func newReturnOrderServiceCallback() ifs.IServiceCallback {
 		Require(func(e *sales.SalesReturnOrder) string { return e.SalesOrderId }, "SalesOrderId").
 		Require(func(e *sales.SalesReturnOrder) string { return e.CustomerId }, "CustomerId").
 		Enum(func(e *sales.SalesReturnOrder) int32 { return int32(e.Status) }, sales.SalesReturnStatus_name, "Status").
-		OptionalMoney(func(e *sales.SalesReturnOrder) *erp.Money { return e.RefundAmount }, "RefundAmount").
+		OptionalMoney(func(e *sales.SalesReturnOrder) *l8common.Money { return e.RefundAmount }, "RefundAmount").
 		Build()
 }
 
 func computeReturnOrderTotals(o *sales.SalesReturnOrder) error {
-	o.RefundAmount = common.SumLineMoney(o.Lines, func(l *sales.SalesReturnOrderLine) *erp.Money { return l.LineTotal })
+	o.RefundAmount = common.SumLineMoney(o.Lines, func(l *sales.SalesReturnOrderLine) *l8common.Money { return l.LineTotal })
 	return nil
 }
 

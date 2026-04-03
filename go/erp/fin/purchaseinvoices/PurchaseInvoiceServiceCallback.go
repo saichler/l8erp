@@ -15,9 +15,9 @@ limitations under the License.
 package purchaseinvoices
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -30,11 +30,11 @@ func newPurchaseInvoiceServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.PurchaseInvoice) string { return e.VendorId }, "VendorId").
 		Require(func(e *fin.PurchaseInvoice) string { return e.InvoiceNumber }, "InvoiceNumber").
 		Enum(func(e *fin.PurchaseInvoice) int32 { return int32(e.Status) }, fin.InvoiceStatus_name, "Status").
-		OptionalMoney(func(e *fin.PurchaseInvoice) *erp.Money { return e.Subtotal }, "Subtotal").
-		OptionalMoney(func(e *fin.PurchaseInvoice) *erp.Money { return e.TaxAmount }, "TaxAmount").
-		OptionalMoney(func(e *fin.PurchaseInvoice) *erp.Money { return e.TotalAmount }, "TotalAmount").
-		OptionalMoney(func(e *fin.PurchaseInvoice) *erp.Money { return e.AmountPaid }, "AmountPaid").
-		OptionalMoney(func(e *fin.PurchaseInvoice) *erp.Money { return e.BalanceDue }, "BalanceDue").
+		OptionalMoney(func(e *fin.PurchaseInvoice) *l8common.Money { return e.Subtotal }, "Subtotal").
+		OptionalMoney(func(e *fin.PurchaseInvoice) *l8common.Money { return e.TaxAmount }, "TaxAmount").
+		OptionalMoney(func(e *fin.PurchaseInvoice) *l8common.Money { return e.TotalAmount }, "TotalAmount").
+		OptionalMoney(func(e *fin.PurchaseInvoice) *l8common.Money { return e.AmountPaid }, "AmountPaid").
+		OptionalMoney(func(e *fin.PurchaseInvoice) *l8common.Money { return e.BalanceDue }, "BalanceDue").
 		DateAfter(func(e *fin.PurchaseInvoice) int64 { return e.DueDate }, func(e *fin.PurchaseInvoice) int64 { return e.InvoiceDate }, "DueDate", "InvoiceDate").
 		Build()
 }
@@ -42,14 +42,14 @@ func newPurchaseInvoiceServiceCallback() ifs.IServiceCallback {
 func computePurchaseInvoiceTotals(inv *fin.PurchaseInvoice) error {
 	for _, line := range inv.Lines {
 		if line.UnitPrice != nil && line.Quantity > 0 {
-			line.LineAmount = &erp.Money{
+			line.LineAmount = &l8common.Money{
 				Amount:     int64(line.Quantity * float64(line.UnitPrice.Amount)),
 				CurrencyId: line.UnitPrice.CurrencyId,
 			}
 		}
 	}
-	inv.Subtotal = common.SumLineMoney(inv.Lines, func(l *fin.PurchaseInvoiceLine) *erp.Money { return l.LineAmount })
-	inv.TaxAmount = common.SumLineMoney(inv.Lines, func(l *fin.PurchaseInvoiceLine) *erp.Money { return l.TaxAmount })
+	inv.Subtotal = common.SumLineMoney(inv.Lines, func(l *fin.PurchaseInvoiceLine) *l8common.Money { return l.LineAmount })
+	inv.TaxAmount = common.SumLineMoney(inv.Lines, func(l *fin.PurchaseInvoiceLine) *l8common.Money { return l.TaxAmount })
 	inv.TotalAmount = common.MoneyAdd(inv.Subtotal, inv.TaxAmount)
 	inv.BalanceDue = common.MoneySubtract(inv.TotalAmount, inv.AmountPaid)
 	return nil

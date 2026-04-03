@@ -18,7 +18,7 @@ package bi;
 
 option go_package = "./types/bi";
 
-import "erp-common.proto";
+import "l8common.proto";
 
 // ============================================================================
 // BUSINESS INTELLIGENCE COMMON TYPES AND ENUMS

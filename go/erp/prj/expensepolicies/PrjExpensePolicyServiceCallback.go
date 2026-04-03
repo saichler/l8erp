@@ -15,9 +15,9 @@ limitations under the License.
 package expensepolicies
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -25,12 +25,12 @@ func newPrjExpensePolicyServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[prj.PrjExpensePolicy]("PrjExpensePolicy",
 		func(e *prj.PrjExpensePolicy) { common.GenerateID(&e.PolicyId) }).
 		Require(func(e *prj.PrjExpensePolicy) string { return e.PolicyId }, "PolicyId").
-		OptionalMoney(func(e *prj.PrjExpensePolicy) *erp.Money { return e.DailyMealLimit }, "DailyMealLimit").
-		OptionalMoney(func(e *prj.PrjExpensePolicy) *erp.Money { return e.DailyLodgingLimit }, "DailyLodgingLimit").
-		OptionalMoney(func(e *prj.PrjExpensePolicy) *erp.Money { return e.MileageRate }, "MileageRate").
-		OptionalMoney(func(e *prj.PrjExpensePolicy) *erp.Money { return e.MaxSingleExpense }, "MaxSingleExpense").
-		OptionalMoney(func(e *prj.PrjExpensePolicy) *erp.Money { return e.ReceiptThreshold }, "ReceiptThreshold").
-		OptionalMoney(func(e *prj.PrjExpensePolicy) *erp.Money { return e.AdvanceApprovalThreshold }, "AdvanceApprovalThreshold").
+		OptionalMoney(func(e *prj.PrjExpensePolicy) *l8common.Money { return e.DailyMealLimit }, "DailyMealLimit").
+		OptionalMoney(func(e *prj.PrjExpensePolicy) *l8common.Money { return e.DailyLodgingLimit }, "DailyLodgingLimit").
+		OptionalMoney(func(e *prj.PrjExpensePolicy) *l8common.Money { return e.MileageRate }, "MileageRate").
+		OptionalMoney(func(e *prj.PrjExpensePolicy) *l8common.Money { return e.MaxSingleExpense }, "MaxSingleExpense").
+		OptionalMoney(func(e *prj.PrjExpensePolicy) *l8common.Money { return e.ReceiptThreshold }, "ReceiptThreshold").
+		OptionalMoney(func(e *prj.PrjExpensePolicy) *l8common.Money { return e.AdvanceApprovalThreshold }, "AdvanceApprovalThreshold").
 		DateAfter(func(e *prj.PrjExpensePolicy) int64 { return e.ExpiryDate }, func(e *prj.PrjExpensePolicy) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

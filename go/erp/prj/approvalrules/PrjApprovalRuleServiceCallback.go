@@ -15,9 +15,9 @@ limitations under the License.
 package approvalrules
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -26,6 +26,6 @@ func newPrjApprovalRuleServiceCallback() ifs.IServiceCallback {
 		func(e *prj.PrjApprovalRule) { common.GenerateID(&e.RuleId) }).
 		Require(func(e *prj.PrjApprovalRule) string { return e.RuleId }, "RuleId").
 		Enum(func(e *prj.PrjApprovalRule) int32 { return int32(e.ApprovalType) }, prj.PrjApprovalType_name, "ApprovalType").
-		OptionalMoney(func(e *prj.PrjApprovalRule) *erp.Money { return e.ThresholdAmount }, "ThresholdAmount").
+		OptionalMoney(func(e *prj.PrjApprovalRule) *l8common.Money { return e.ThresholdAmount }, "ThresholdAmount").
 		Build()
 }

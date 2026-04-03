@@ -19,7 +19,7 @@ package scm;
 option go_package = "./types/scm";
 
 import "scm-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -36,8 +36,8 @@ message ScmItem {
   ScmItemType item_type = 5;
   string category_id = 6;
   string unit_of_measure = 7;
-  erp.Money unit_cost = 8;
-  erp.Money unit_price = 9;
+  l8common.Money unit_cost = 8;
+  l8common.Money unit_price = 9;
   ScmValuationMethod valuation_method = 10;
   ScmPlanningMethod planning_method = 11;
   bool is_lot_tracked = 12;
@@ -46,7 +46,7 @@ message ScmItem {
   string default_warehouse_id = 15;
   bool is_active = 16;
   map<string, string> custom_fields = 17;
-  erp.AuditInfo audit_info = 18;
+  l8common.AuditInfo audit_info = 18;
   repeated ScmLotNumber lots = 19;
   repeated ScmSerialNumber serials = 20;
   repeated ScmReorderPoint reorder_points = 21;
@@ -67,7 +67,7 @@ message ScmItemCategory {
   string description = 3;
   string parent_category_id = 4;
   bool is_active = 5;
-  erp.AuditInfo audit_info = 6;
+  l8common.AuditInfo audit_info = 6;
 }
 
 message ScmItemCategoryList {
@@ -88,9 +88,9 @@ message ScmStockMovement {
   int64 movement_date = 10;
   string lot_id = 11;
   string serial_id = 12;
-  erp.Money cost = 13;
+  l8common.Money cost = 13;
   string notes = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 // ScmLotNumber represents a lot/batch number for lot-tracked items
@@ -103,7 +103,7 @@ message ScmLotNumber {
   string warehouse_id = 7;
   string status = 8;
   string notes = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 // ScmSerialNumber represents a serial number for serial-tracked items
@@ -115,7 +115,7 @@ message ScmSerialNumber {
   string bin_id = 6;
   string status = 7;
   string notes = 8;
-  erp.AuditInfo audit_info = 9;
+  l8common.AuditInfo audit_info = 9;
 }
 
 // @PrimeObject
@@ -129,7 +129,7 @@ message ScmCycleCount {
   int32 items_counted = 6;
   int32 discrepancies = 7;
   string notes = 8;
-  erp.AuditInfo audit_info = 9;
+  l8common.AuditInfo audit_info = 9;
 }
 
 message ScmCycleCountList {
@@ -147,7 +147,7 @@ message ScmReorderPoint {
   int32 lead_time_days = 7;
   double safety_stock_quantity = 8;
   bool is_active = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 // ScmInventoryValuation represents the valuation of inventory at a point in time
@@ -156,10 +156,10 @@ message ScmInventoryValuation {
   string warehouse_id = 3;
   int64 valuation_date = 4;
   double quantity_on_hand = 5;
-  erp.Money unit_cost = 6;
-  erp.Money total_value = 7;
+  l8common.Money unit_cost = 6;
+  l8common.Money total_value = 7;
   ScmValuationMethod valuation_method = 8;
   string account_id = 9;            // Cross-ref: FIN Account
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 

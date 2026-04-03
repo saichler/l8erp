@@ -15,9 +15,9 @@ limitations under the License.
 package taxrules
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -27,7 +27,7 @@ func newTaxRuleServiceCallback() ifs.IServiceCallback {
 		Require(func(e *fin.TaxRule) string { return e.RuleId }, "RuleId").
 		Require(func(e *fin.TaxRule) string { return e.TaxCodeId }, "TaxCodeId").
 		Require(func(e *fin.TaxRule) string { return e.JurisdictionId }, "JurisdictionId").
-		OptionalMoney(func(e *fin.TaxRule) *erp.Money { return e.MinimumThreshold }, "MinimumThreshold").
-		OptionalMoney(func(e *fin.TaxRule) *erp.Money { return e.MaximumThreshold }, "MaximumThreshold").
+		OptionalMoney(func(e *fin.TaxRule) *l8common.Money { return e.MinimumThreshold }, "MinimumThreshold").
+		OptionalMoney(func(e *fin.TaxRule) *l8common.Money { return e.MaximumThreshold }, "MaximumThreshold").
 		Build()
 }

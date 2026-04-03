@@ -15,8 +15,8 @@ limitations under the License.
 package mfgreports
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
@@ -30,7 +30,7 @@ func generateProductionEfficiency(report *fin.FinReport, vnic ifs.IVNic) error {
 
 	section := &fin.FinReportSection{
 		Title:        "Production Efficiency",
-		SectionTotal: &erp.Money{Amount: 0, CurrencyId: "USD"},
+		SectionTotal: &l8common.Money{Amount: 0, CurrencyId: "USD"},
 	}
 
 	var totalVariance int64
@@ -54,14 +54,14 @@ func generateProductionEfficiency(report *fin.FinReport, vnic ifs.IVNic) error {
 			AccountName:     wo.WorkOrderNumber,
 			BudgetAmount:    wo.EstimatedCost,
 			Balance:         wo.ActualCost,
-			Variance:        &erp.Money{Amount: variance, CurrencyId: "USD"},
+			Variance:        &l8common.Money{Amount: variance, CurrencyId: "USD"},
 			VariancePercent: pct,
 		}
 		section.Lines = append(section.Lines, line)
 		totalVariance += variance
 		count++
 	}
-	section.SectionTotal = &erp.Money{Amount: totalVariance, CurrencyId: "USD"}
+	section.SectionTotal = &l8common.Money{Amount: totalVariance, CurrencyId: "USD"}
 
 	report.Sections = []*fin.FinReportSection{section}
 	report.GrandTotal = section.SectionTotal
@@ -77,7 +77,7 @@ func generateScrapRate(report *fin.FinReport, vnic ifs.IVNic) error {
 
 	section := &fin.FinReportSection{
 		Title:        "Scrap Rate Analysis",
-		SectionTotal: &erp.Money{Amount: 0, CurrencyId: "USD"},
+		SectionTotal: &l8common.Money{Amount: 0, CurrencyId: "USD"},
 	}
 
 	var totalOrdered, totalScrapped float64
@@ -102,7 +102,7 @@ func generateScrapRate(report *fin.FinReport, vnic ifs.IVNic) error {
 	if totalOrdered > 0 {
 		overallRate = totalScrapped / totalOrdered * 100
 	}
-	section.SectionTotal = &erp.Money{Amount: int64(overallRate * 100), CurrencyId: "USD"}
+	section.SectionTotal = &l8common.Money{Amount: int64(overallRate * 100), CurrencyId: "USD"}
 
 	report.Sections = []*fin.FinReportSection{section}
 	report.GrandTotal = section.SectionTotal
@@ -110,7 +110,7 @@ func generateScrapRate(report *fin.FinReport, vnic ifs.IVNic) error {
 	return nil
 }
 
-func moneyAmount(m *erp.Money) int64 {
+func moneyAmount(m *l8common.Money) int64 {
 	if m == nil {
 		return 0
 	}

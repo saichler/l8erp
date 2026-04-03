@@ -19,7 +19,7 @@ package crm;
 option go_package = "./types/crm";
 
 import "crm-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -39,7 +39,7 @@ message CrmServiceOrder {
   string case_id = 8;                      // cross-ref: CrmCase (optional)
   string contract_id = 9;                  // cross-ref: CrmServiceContract (optional)
   string description = 10;
-  erp.Address service_address = 11;
+  l8common.Address service_address = 11;
   int64 scheduled_start = 12;
   int64 scheduled_end = 13;
   int64 actual_start = 14;
@@ -47,12 +47,12 @@ message CrmServiceOrder {
   string technician_id = 16;               // cross-ref: CrmTechnician
   string product_id = 17;                  // cross-ref: SCM Item (optional)
   string serial_number = 18;
-  erp.Money estimated_cost = 19;
-  erp.Money actual_cost = 20;
+  l8common.Money estimated_cost = 19;
+  l8common.Money actual_cost = 20;
   string resolution = 21;
   string owner_id = 22;                    // cross-ref: HCM Employee
   map<string, string> custom_fields = 23;
-  erp.AuditInfo audit_info = 24;
+  l8common.AuditInfo audit_info = 24;
   repeated CrmServicePart parts = 25;
   repeated CrmServiceVisit visits = 26;
 }
@@ -73,13 +73,13 @@ message CrmTechnician {
   CrmTechnicianStatus status = 6;
   repeated string skills = 7;
   string territory = 8;
-  erp.Address home_location = 9;
+  l8common.Address home_location = 9;
   double hourly_rate = 10;
   double overtime_rate = 11;
   int32 max_daily_orders = 12;
   bool is_active = 13;
   map<string, string> custom_fields = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 message CrmTechnicianList {
@@ -97,7 +97,7 @@ message CrmServiceContract {
   CrmContractStatus status = 5;
   int64 start_date = 6;
   int64 end_date = 7;
-  erp.Money contract_value = 8;
+  l8common.Money contract_value = 8;
   int32 included_hours = 9;
   int32 used_hours = 10;
   int32 included_visits = 11;
@@ -109,7 +109,7 @@ message CrmServiceContract {
   bool auto_renew = 17;
   int32 renewal_notice_days = 18;
   map<string, string> custom_fields = 19;
-  erp.AuditInfo audit_info = 20;
+  l8common.AuditInfo audit_info = 20;
 }
 
 message CrmServiceContractList {
@@ -130,7 +130,7 @@ message CrmServiceSchedule {
   string service_order_id = 8;             // cross-ref: CrmServiceOrder (optional)
   string notes = 9;
   map<string, string> custom_fields = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }
 
 message CrmServiceScheduleList {
@@ -144,14 +144,14 @@ message CrmServicePart {
   string item_id = 3;                      // cross-ref: SCM Item
   string item_name = 4;
   double quantity = 5;
-  erp.Money unit_cost = 6;
-  erp.Money total_cost = 7;
+  l8common.Money unit_cost = 6;
+  l8common.Money total_cost = 7;
   string serial_number = 8;
   bool is_warranty = 9;
   string warehouse_id = 10;                // cross-ref: SCM Warehouse
   string notes = 11;
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 
 
@@ -170,9 +170,9 @@ message CrmServiceVisit {
   string customer_signature = 12;
   int32 customer_rating = 13;
   string customer_feedback = 14;
-  erp.Money labor_cost = 15;
-  erp.Money travel_cost = 16;
+  l8common.Money labor_cost = 15;
+  l8common.Money travel_cost = 16;
   map<string, string> custom_fields = 17;
-  erp.AuditInfo audit_info = 18;
+  l8common.AuditInfo audit_info = 18;
 }
 

@@ -15,9 +15,9 @@ limitations under the License.
 package customers
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
@@ -27,6 +27,6 @@ func newEcomCustomerServiceCallback() ifs.IServiceCallback {
 		Require(func(e *ecom.EcomCustomer) string { return e.CustomerId }, "CustomerId").
 		Require(func(e *ecom.EcomCustomer) string { return e.CurrencyId }, "CurrencyId").
 		Enum(func(e *ecom.EcomCustomer) int32 { return int32(e.CustomerType) }, ecom.EcomCustomerType_name, "CustomerType").
-		OptionalMoney(func(e *ecom.EcomCustomer) *erp.Money { return e.TotalSpent }, "TotalSpent").
+		OptionalMoney(func(e *ecom.EcomCustomer) *l8common.Money { return e.TotalSpent }, "TotalSpent").
 		Build()
 }

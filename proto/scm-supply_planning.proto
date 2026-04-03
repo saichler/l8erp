@@ -19,7 +19,7 @@ package scm;
 option go_package = "./types/scm";
 
 import "scm-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -39,7 +39,7 @@ message ScmMaterialRequirement {
   ScmPlanningMethod planning_method = 8;
   string source = 9;
   ScmTaskStatus status = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }
 
 message ScmMaterialRequirementList {
@@ -59,7 +59,7 @@ message ScmDistributionRequirement {
   double transfer_quantity = 7;
   ScmTaskStatus status = 8;
   string notes = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message ScmDistributionRequirementList {
@@ -73,13 +73,13 @@ message ScmSupplyPlan {
   string plan_id = 1;
   string name = 2;
   string description = 3;
-  erp.DateRange plan_period = 4;
+  l8common.DateRange plan_period = 4;
   ScmTaskStatus status = 5;
   string created_by = 6;
   string approved_by = 7;
   string notes = 8;
   map<string, string> custom_fields = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message ScmSupplyPlanList {
@@ -99,7 +99,7 @@ message ScmSupplierCollaboration {
   double min_order_quantity = 7;
   string status = 8;
   string notes = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message ScmSupplierCollaborationList {
@@ -119,7 +119,7 @@ message ScmSafetyStock {
   int64 review_date = 7;
   bool is_active = 8;
   string notes = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message ScmSafetyStockList {
@@ -139,7 +139,7 @@ message ScmLeadTime {
   int32 total_days = 7;
   bool is_active = 8;
   string notes = 9;
-  erp.AuditInfo audit_info = 10;
+  l8common.AuditInfo audit_info = 10;
 }
 
 message ScmLeadTimeList {

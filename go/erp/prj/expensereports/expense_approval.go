@@ -15,8 +15,8 @@ limitations under the License.
 package expensereports
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 	"time"
@@ -37,7 +37,7 @@ func computeExpenseTotals(report *prj.PrjExpenseReport) error {
 			}
 		}
 	}
-	report.TotalAmount = &erp.Money{Amount: total, CurrencyId: currencyId}
+	report.TotalAmount = &l8common.Money{Amount: total, CurrencyId: currencyId}
 	return nil
 }
 

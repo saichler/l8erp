@@ -15,9 +15,9 @@ limitations under the License.
 package expensecategories
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
@@ -26,6 +26,6 @@ func newPrjExpenseCategoryServiceCallback() ifs.IServiceCallback {
 		func(e *prj.PrjExpenseCategory) { common.GenerateID(&e.CategoryId) }).
 		Require(func(e *prj.PrjExpenseCategory) string { return e.CategoryId }, "CategoryId").
 		Enum(func(e *prj.PrjExpenseCategory) int32 { return int32(e.ExpenseType) }, prj.PrjExpenseType_name, "ExpenseType").
-		OptionalMoney(func(e *prj.PrjExpenseCategory) *erp.Money { return e.DefaultLimit }, "DefaultLimit").
+		OptionalMoney(func(e *prj.PrjExpenseCategory) *l8common.Money { return e.DefaultLimit }, "DefaultLimit").
 		Build()
 }

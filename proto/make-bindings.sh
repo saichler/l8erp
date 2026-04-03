@@ -3,11 +3,11 @@
 set -e
 
 wget https://raw.githubusercontent.com/saichler/l8types/refs/heads/main/proto/api.proto
+wget https://raw.githubusercontent.com/saichler/l8common/refs/heads/main/proto/l8common.proto
 
 # Use the protoc image to run protoc.sh and generate the bindings.
-
-# Shared ERP types (must be first - other modules depend on it)
-docker run --user "$(id -u):$(id -g)" -e PROTO=erp-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+# Note: l8common.proto is downloaded for import resolution only — its Go code
+# comes from the vendored l8common dependency, not from local generation.
 
 # Human Capital Management
 docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
@@ -105,11 +105,13 @@ docker run --user "$(id -u):$(id -g)" -e PROTO=comp-audit.proto --mount type=bin
 # System
 docker run --user "$(id -u):$(id -g)" -e PROTO=sys-moduleconfig.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 
-rm api.proto
+rm api.proto l8common.proto
 
 # Now move the generated bindings to the models directory and clean up
 rm -rf ../go/types
 mkdir -p ../go/types
+# Remove l8common generated types if present — those come from vendored dependency
+rm -rf ./types/l8common
 mv ./types/* ../go/types/.
 rm -rf ./types
 
@@ -118,7 +120,7 @@ rm -rf *.rs
 cd ../go
 find . -name "*.go" -type f -exec sed -i 's|"./types/l8services"|"github.com/saichler/l8types/go/types/l8services"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/l8api"|"github.com/saichler/l8types/go/types/l8api"|g' {} +
-find . -name "*.go" -type f -exec sed -i 's|"./types/erp"|"github.com/saichler/l8erp/go/types/erp"|g' {} +
+find . -name "*.go" -type f -exec sed -i 's|"./types/l8common"|"github.com/saichler/l8common/go/types/l8common"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/scm"|"github.com/saichler/l8erp/go/types/scm"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/sales"|"github.com/saichler/l8erp/go/types/sales"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/mfg"|"github.com/saichler/l8erp/go/types/mfg"|g' {} +

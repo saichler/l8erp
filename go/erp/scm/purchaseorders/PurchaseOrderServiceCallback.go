@@ -15,9 +15,9 @@ limitations under the License.
 package purchaseorders
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
@@ -29,20 +29,20 @@ func newPurchaseOrderServiceCallback() ifs.IServiceCallback {
 		Require(func(e *scm.ScmPurchaseOrder) string { return e.PurchaseOrderId }, "PurchaseOrderId").
 		Require(func(e *scm.ScmPurchaseOrder) string { return e.VendorId }, "VendorId").
 		Enum(func(e *scm.ScmPurchaseOrder) int32 { return int32(e.Status) }, scm.ScmPurchaseOrderStatus_name, "Status").
-		OptionalMoney(func(e *scm.ScmPurchaseOrder) *erp.Money { return e.TotalAmount }, "TotalAmount").
+		OptionalMoney(func(e *scm.ScmPurchaseOrder) *l8common.Money { return e.TotalAmount }, "TotalAmount").
 		Build()
 }
 
 func computePurchaseOrderTotals(po *scm.ScmPurchaseOrder) error {
 	for _, line := range po.Lines {
 		if line.UnitPrice != nil {
-			line.TotalPrice = &erp.Money{
+			line.TotalPrice = &l8common.Money{
 				Amount:     int64(line.Quantity * float64(line.UnitPrice.Amount)),
 				CurrencyId: line.UnitPrice.CurrencyId,
 			}
 		}
 	}
-	po.TotalAmount = common.SumLineMoney(po.Lines, func(l *scm.ScmPurchaseOrderLine) *erp.Money { return l.TotalPrice })
+	po.TotalAmount = common.SumLineMoney(po.Lines, func(l *scm.ScmPurchaseOrderLine) *l8common.Money { return l.TotalPrice })
 	return nil
 }
 

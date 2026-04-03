@@ -20,7 +20,7 @@ package ecom;
 option go_package = "./types/ecom";
 
 import "ecom-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // =====================
@@ -35,8 +35,8 @@ message EcomPromotion {
     string description = 3;
     EcomPromotionType promotion_type = 4;
     double discount_value = 5;
-    erp.Money max_discount = 6;
-    erp.Money min_purchase = 7;
+    l8common.Money max_discount = 6;
+    l8common.Money min_purchase = 7;
     int64 start_date = 8;
     int64 end_date = 9;
     bool is_active = 10;
@@ -50,7 +50,7 @@ message EcomPromotion {
     bool stackable = 18;
     int32 priority = 19;
     map<string, string> custom_fields = 20;
-    erp.AuditInfo audit_info = 21;
+    l8common.AuditInfo audit_info = 21;
 }
 
 message EcomPromotionList {
@@ -70,8 +70,8 @@ message EcomCoupon {
     string description = 3;
     EcomDiscountType discount_type = 4;
     double discount_value = 5;
-    erp.Money max_discount = 6;
-    erp.Money min_purchase = 7;
+    l8common.Money max_discount = 6;
+    l8common.Money min_purchase = 7;
     int64 start_date = 8;
     int64 end_date = 9;
     bool is_active = 10;
@@ -84,7 +84,7 @@ message EcomCoupon {
     string customer_group = 17;
     bool free_shipping = 18;
     map<string, string> custom_fields = 19;
-    erp.AuditInfo audit_info = 20;
+    l8common.AuditInfo audit_info = 20;
 }
 
 message EcomCouponList {
@@ -109,14 +109,14 @@ message EcomPriceRule {
     bool is_active = 8;
     int32 priority = 9;
     string customer_group = 10;
-    erp.Money min_quantity = 11;
-    erp.Money max_quantity = 12;
+    l8common.Money min_quantity = 11;
+    l8common.Money max_quantity = 12;
     repeated string applicable_product_ids = 13;
     repeated string applicable_category_ids = 14;
     bool apply_to_all = 15;
     map<string, string> conditions = 16;
     map<string, string> custom_fields = 17;
-    erp.AuditInfo audit_info = 18;
+    l8common.AuditInfo audit_info = 18;
 }
 
 message EcomPriceRuleList {
@@ -136,22 +136,22 @@ message EcomShippingMethod {
     string description = 3;
     string carrier = 4;
     string carrier_service = 5;
-    erp.Money base_rate = 6;
-    erp.Money per_item_rate = 7;
-    erp.Money per_weight_rate = 8;
-    erp.Money free_shipping_threshold = 9;
+    l8common.Money base_rate = 6;
+    l8common.Money per_item_rate = 7;
+    l8common.Money per_weight_rate = 8;
+    l8common.Money free_shipping_threshold = 9;
     int32 min_delivery_days = 10;
     int32 max_delivery_days = 11;
     bool is_active = 12;
     repeated string applicable_zones = 13;
     repeated string excluded_zones = 14;
-    erp.Money min_order_amount = 15;
-    erp.Money max_order_amount = 16;
+    l8common.Money min_order_amount = 15;
+    l8common.Money max_order_amount = 16;
     double max_weight = 17;
     int32 sort_order = 18;
     bool tracking_available = 19;
     map<string, string> custom_fields = 20;
-    erp.AuditInfo audit_info = 21;
+    l8common.AuditInfo audit_info = 21;
 }
 
 message EcomShippingMethodList {
@@ -175,10 +175,10 @@ message EcomPaymentMethod {
     bool is_test_mode = 7;
     repeated string supported_currencies = 8;
     repeated string supported_countries = 9;
-    erp.Money min_amount = 10;
-    erp.Money max_amount = 11;
+    l8common.Money min_amount = 10;
+    l8common.Money max_amount = 11;
     double transaction_fee_percent = 12;
-    erp.Money transaction_fee_fixed = 13;
+    l8common.Money transaction_fee_fixed = 13;
     int32 sort_order = 14;
     string icon_url = 15;
     string instructions = 16;
@@ -186,7 +186,7 @@ message EcomPaymentMethod {
     bool supports_refunds = 18;
     bool supports_partial_refunds = 19;
     map<string, string> custom_fields = 20;
-    erp.AuditInfo audit_info = 21;
+    l8common.AuditInfo audit_info = 21;
 }
 
 message EcomPaymentMethodList {

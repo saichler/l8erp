@@ -15,8 +15,8 @@ limitations under the License.
 package finreports
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	common "github.com/saichler/l8common/go/generic"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -71,7 +71,7 @@ func generateIncomeStatement(report *fin.FinReport, vnic ifs.IVNic) error {
 
 // periodActivity returns the net activity for a period based on account type.
 // Revenue accounts: credits - debits. Expense accounts: debits - credits.
-func periodActivity(bal *fin.AccountBalance, acctType fin.AccountType, currencyId string) *erp.Money {
+func periodActivity(bal *fin.AccountBalance, acctType fin.AccountType, currencyId string) *l8common.Money {
 	if bal == nil {
 		return newMoney(0, currencyId)
 	}
@@ -83,14 +83,14 @@ func periodActivity(bal *fin.AccountBalance, acctType fin.AccountType, currencyI
 	return newMoney(debit-credit, currencyId)
 }
 
-func periodDebitOrZero(bal *fin.AccountBalance, currencyId string) *erp.Money {
+func periodDebitOrZero(bal *fin.AccountBalance, currencyId string) *l8common.Money {
 	if bal != nil && bal.PeriodDebit != nil {
 		return bal.PeriodDebit
 	}
 	return newMoney(0, currencyId)
 }
 
-func periodCreditOrZero(bal *fin.AccountBalance, currencyId string) *erp.Money {
+func periodCreditOrZero(bal *fin.AccountBalance, currencyId string) *l8common.Money {
 	if bal != nil && bal.PeriodCredit != nil {
 		return bal.PeriodCredit
 	}

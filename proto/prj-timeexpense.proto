@@ -19,7 +19,7 @@ package prj;
 option go_package = "./types/prj";
 
 import "prj-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -44,7 +44,7 @@ message PrjTimesheet {
   string rejection_reason = 13;
   string notes = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
   repeated PrjTimesheetEntry entries = 17;
 }
 
@@ -62,13 +62,13 @@ message PrjTimesheetEntry {
   int64 work_date = 6;
   double hours = 7;
   bool is_billable = 8;
-  erp.Money billing_rate = 9;
-  erp.Money billing_amount = 10;
+  l8common.Money billing_rate = 9;
+  l8common.Money billing_amount = 10;
   string description = 11;
   string activity_type = 12;
   bool is_overtime = 13;
   map<string, string> custom_fields = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 // @PrimeObject
@@ -81,9 +81,9 @@ message PrjExpenseReport {
   string title = 5;
   string description = 6;
   PrjExpenseStatus status = 7;
-  erp.Money total_amount = 8;
-  erp.Money approved_amount = 9;
-  erp.Money reimbursed_amount = 10;
+  l8common.Money total_amount = 8;
+  l8common.Money approved_amount = 9;
+  l8common.Money reimbursed_amount = 10;
   int64 submit_date = 11;
   int64 approved_date = 12;
   string approved_by = 13;                 // cross-ref: HCM Employee
@@ -91,7 +91,7 @@ message PrjExpenseReport {
   string rejection_reason = 15;
   string notes = 16;
   map<string, string> custom_fields = 17;
-  erp.AuditInfo audit_info = 18;
+  l8common.AuditInfo audit_info = 18;
   repeated PrjExpenseEntry entries = 19;
 }
 
@@ -109,9 +109,9 @@ message PrjExpenseEntry {
   int64 expense_date = 6;
   string description = 7;
   string vendor = 8;
-  erp.Money amount = 9;
+  l8common.Money amount = 9;
   string currency_id = 10;
-  erp.Money converted_amount = 11;
+  l8common.Money converted_amount = 11;
   double exchange_rate = 12;
   bool is_billable = 13;
   bool is_reimbursable = 14;
@@ -120,7 +120,7 @@ message PrjExpenseEntry {
   PrjExpenseType expense_type = 17;
   string payment_method = 18;
   map<string, string> custom_fields = 19;
-  erp.AuditInfo audit_info = 20;
+  l8common.AuditInfo audit_info = 20;
 }
 
 // @PrimeObject
@@ -130,7 +130,7 @@ message PrjApprovalRule {
   string name = 2;
   string description = 3;
   PrjApprovalType approval_type = 4;
-  erp.Money threshold_amount = 5;
+  l8common.Money threshold_amount = 5;
   double threshold_hours = 6;
   string approver_id = 7;                  // cross-ref: HCM Employee
   string approver_role = 8;
@@ -140,7 +140,7 @@ message PrjApprovalRule {
   bool is_active = 12;
   int32 priority = 13;
   map<string, string> custom_fields = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 message PrjApprovalRuleList {
@@ -157,14 +157,14 @@ message PrjExpenseCategory {
   string parent_category_id = 4;           // cross-ref: PrjExpenseCategory
   string gl_account = 5;
   PrjExpenseType expense_type = 6;
-  erp.Money default_limit = 7;
+  l8common.Money default_limit = 7;
   bool requires_receipt = 8;
   bool is_billable_default = 9;
   bool is_reimbursable_default = 10;
   bool is_active = 11;
   int32 sort_order = 12;
   map<string, string> custom_fields = 13;
-  erp.AuditInfo audit_info = 14;
+  l8common.AuditInfo audit_info = 14;
 }
 
 message PrjExpenseCategoryList {
@@ -178,20 +178,20 @@ message PrjExpensePolicy {
   string policy_id = 1;
   string name = 2;
   string description = 3;
-  erp.Money daily_meal_limit = 4;
-  erp.Money daily_lodging_limit = 5;
-  erp.Money mileage_rate = 6;
-  erp.Money max_single_expense = 7;
+  l8common.Money daily_meal_limit = 4;
+  l8common.Money daily_lodging_limit = 5;
+  l8common.Money mileage_rate = 6;
+  l8common.Money max_single_expense = 7;
   bool receipt_required_above = 8;
-  erp.Money receipt_threshold = 9;
+  l8common.Money receipt_threshold = 9;
   bool advance_approval_required = 10;
-  erp.Money advance_approval_threshold = 11;
+  l8common.Money advance_approval_threshold = 11;
   int32 submission_deadline_days = 12;
   bool is_active = 13;
   int64 effective_date = 14;
   int64 expiry_date = 15;
   map<string, string> custom_fields = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
 }
 
 message PrjExpensePolicyList {

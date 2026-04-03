@@ -19,7 +19,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
@@ -110,7 +110,7 @@ func generateDemandPlans(store *MockDataStore) []*scm.ScmDemandPlan {
 			PlanId:      genID("dplan", i),
 			Name:        d.name,
 			Description: d.description,
-			PlanPeriod: &erp.DateRange{
+			PlanPeriod: &l8common.DateRange{
 				StartDate: startDate.Unix(),
 				EndDate:   endDate.Unix(),
 			},
@@ -239,7 +239,7 @@ func generateForecastAccuracy(store *MockDataStore) []*scm.ScmForecastAccuracy {
 		records[i] = &scm.ScmForecastAccuracy{
 			AccuracyId:       genID("facc", i),
 			ItemId:           store.ItemIDs[itemIdx],
-			Period: &erp.DateRange{
+			Period: &l8common.DateRange{
 				StartDate: periodStart.Unix(),
 				EndDate:   periodEnd.Unix(),
 			},
@@ -388,7 +388,7 @@ func generateSupplyPlans(store *MockDataStore) []*scm.ScmSupplyPlan {
 			PlanId:      genID("splan", i),
 			Name:        d.name,
 			Description: d.description,
-			PlanPeriod: &erp.DateRange{
+			PlanPeriod: &l8common.DateRange{
 				StartDate: startDate.Unix(),
 				EndDate:   endDate.Unix(),
 			},

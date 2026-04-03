@@ -15,9 +15,9 @@ limitations under the License.
 package engchangeorders
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
@@ -28,8 +28,8 @@ func newMfgEngChangeOrderServiceCallback() ifs.IServiceCallback {
 		Require(func(e *mfg.MfgEngChangeOrder) string { return e.ChangeOrderId }, "ChangeOrderId").
 		Require(func(e *mfg.MfgEngChangeOrder) string { return e.Title }, "Title").
 		Enum(func(e *mfg.MfgEngChangeOrder) int32 { return int32(e.Status) }, mfg.MfgChangeOrderStatus_name, "Status").
-		OptionalMoney(func(e *mfg.MfgEngChangeOrder) *erp.Money { return e.EstimatedCost }, "EstimatedCost").
-		OptionalMoney(func(e *mfg.MfgEngChangeOrder) *erp.Money { return e.ActualCost }, "ActualCost").
+		OptionalMoney(func(e *mfg.MfgEngChangeOrder) *l8common.Money { return e.EstimatedCost }, "EstimatedCost").
+		OptionalMoney(func(e *mfg.MfgEngChangeOrder) *l8common.Money { return e.ActualCost }, "ActualCost").
 		Build()
 }
 

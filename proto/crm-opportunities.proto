@@ -19,7 +19,7 @@ package crm;
 option go_package = "./types/crm";
 
 import "crm-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -33,7 +33,7 @@ message CrmOpportunity {
   string name = 2;
   string account_id = 3;                   // cross-ref: CrmAccount
   string primary_contact_id = 4;           // cross-ref: CrmContact
-  erp.Money amount = 5;
+  l8common.Money amount = 5;
   CrmSalesStage stage = 6;
   int32 probability = 7;
   int64 close_date = 8;
@@ -45,10 +45,10 @@ message CrmOpportunity {
   string next_step = 14;
   string loss_reason = 15;
   string competitor_id = 16;               // cross-ref: CrmOppCompetitor (primary competitor)
-  erp.Money expected_revenue = 17;
+  l8common.Money expected_revenue = 17;
   int64 last_activity_date = 18;
   map<string, string> custom_fields = 19;
-  erp.AuditInfo audit_info = 20;
+  l8common.AuditInfo audit_info = 20;
   repeated CrmOppActivity activities = 21;
   repeated CrmOppProduct products = 22;
   repeated CrmOppTeam team_members = 23;
@@ -73,7 +73,7 @@ message CrmOppStage {
   bool is_active = 8;
   string forecast_category = 9;
   map<string, string> custom_fields = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }
 
 message CrmOppStageList {
@@ -89,11 +89,11 @@ message CrmOppCompetitor {
   string strengths = 5;
   string weaknesses = 6;
   CrmThreatLevel threat_level = 7;
-  erp.Money competitor_price = 8;
+  l8common.Money competitor_price = 8;
   string notes = 9;
   bool is_primary = 10;
   map<string, string> custom_fields = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 // CrmOppProduct represents a product line on an opportunity (child of CrmOpportunity)
@@ -102,13 +102,13 @@ message CrmOppProduct {
   string product_id = 3;                   // cross-ref: SCM Item
   string product_name = 4;
   double quantity = 5;
-  erp.Money unit_price = 6;
+  l8common.Money unit_price = 6;
   double discount_percent = 7;
-  erp.Money total_price = 8;
+  l8common.Money total_price = 8;
   string description = 9;
   int32 line_number = 10;
   map<string, string> custom_fields = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 // CrmOppTeam represents a team member on an opportunity (child of CrmOpportunity)
@@ -120,7 +120,7 @@ message CrmOppTeam {
   double split_percent = 6;
   string notes = 7;
   map<string, string> custom_fields = 8;
-  erp.AuditInfo audit_info = 9;
+  l8common.AuditInfo audit_info = 9;
 }
 
 // CrmOppActivity represents an activity on an opportunity (child of CrmOpportunity)
@@ -136,6 +136,6 @@ message CrmOppActivity {
   string outcome = 10;
   bool is_completed = 11;
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 

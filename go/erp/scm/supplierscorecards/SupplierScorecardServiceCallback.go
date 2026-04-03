@@ -15,9 +15,9 @@ limitations under the License.
 package supplierscorecards
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
@@ -25,6 +25,6 @@ func newSupplierScorecardServiceCallback() ifs.IServiceCallback {
 	return common.NewValidation[scm.ScmSupplierScorecard]("ScmSupplierScorecard",
 		func(e *scm.ScmSupplierScorecard) { common.GenerateID(&e.ScorecardId) }).
 		Require(func(e *scm.ScmSupplierScorecard) string { return e.ScorecardId }, "ScorecardId").
-		DateRange(func(e *scm.ScmSupplierScorecard) *erp.DateRange { return e.EvaluationPeriod }, "EvaluationPeriod").
+		DateRange(func(e *scm.ScmSupplierScorecard) *l8common.DateRange { return e.EvaluationPeriod }, "EvaluationPeriod").
 		Build()
 }

@@ -19,7 +19,7 @@ package prj;
 option go_package = "./types/prj";
 
 import "prj-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -37,7 +37,7 @@ message PrjResourcePool {
   bool is_active = 6;
   double total_capacity_hours = 7;
   map<string, string> custom_fields = 8;
-  erp.AuditInfo audit_info = 9;
+  l8common.AuditInfo audit_info = 9;
 }
 
 message PrjResourcePoolList {
@@ -54,8 +54,8 @@ message PrjResource {
   string pool_id = 4;                      // cross-ref: PrjResourcePool
   PrjResourceType resource_type = 5;
   string job_title = 6;
-  erp.Money hourly_cost = 7;
-  erp.Money billing_rate = 8;
+  l8common.Money hourly_cost = 7;
+  l8common.Money billing_rate = 8;
   double availability_percent = 9;         // 0-100
   double capacity_hours_per_week = 10;
   int64 available_from = 11;
@@ -64,7 +64,7 @@ message PrjResource {
   string location = 14;
   string time_zone = 15;
   map<string, string> custom_fields = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
   repeated PrjResourceSkill skills = 18;
 }
 
@@ -84,7 +84,7 @@ message PrjResourceSkill {
   int64 certified_date = 8;
   int64 certification_expiry = 9;
   map<string, string> custom_fields = 10;
-  erp.AuditInfo audit_info = 11;
+  l8common.AuditInfo audit_info = 11;
 }
 
 // @PrimeObject
@@ -100,12 +100,12 @@ message PrjAllocation {
   double allocated_hours = 8;
   double allocated_percent = 9;            // 0-100
   PrjAllocationStatus status = 10;
-  erp.Money billing_rate = 11;
+  l8common.Money billing_rate = 11;
   bool is_billable = 12;
   string role = 13;
   string notes = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
 }
 
 message PrjAllocationList {
@@ -132,7 +132,7 @@ message PrjBooking {
   int64 requested_date = 14;
   int64 decision_date = 15;
   map<string, string> custom_fields = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
 }
 
 message PrjBookingList {
@@ -155,7 +155,7 @@ message PrjCapacityPlan {
   double utilization_target = 10;          // 0-100 percentage
   bool is_active = 11;
   map<string, string> custom_fields = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 
 message PrjCapacityPlanList {
@@ -177,10 +177,10 @@ message PrjUtilization {
   double total_hours = 9;
   double utilization_percent = 10;
   double billable_utilization_percent = 11;
-  erp.Money revenue = 12;
-  erp.Money cost = 13;
+  l8common.Money revenue = 12;
+  l8common.Money cost = 13;
   map<string, string> custom_fields = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }
 
 message PrjUtilizationList {

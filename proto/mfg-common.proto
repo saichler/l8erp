@@ -18,7 +18,7 @@ package mfg;
 
 option go_package = "./types/mfg";
 
-import "erp-common.proto";
+import "l8common.proto";
 
 // ============================================================================
 // MANUFACTURING-SPECIFIC COMMON TYPES AND ENUMS

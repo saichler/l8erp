@@ -15,9 +15,9 @@ limitations under the License.
 package cases
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
@@ -54,7 +54,7 @@ func cascadeCreateSurvey(crmCase *crm.CrmCase, action ifs.Action, vnic ifs.IVNic
 		OwnerId:    crmCase.OwnerId,
 		Status:     crm.CrmSurveyStatus_CRM_SURVEY_STATUS_DRAFT,
 		SurveyType: "CASE_RESOLUTION",
-		AuditInfo:  &erp.AuditInfo{},
+		AuditInfo:  &l8common.AuditInfo{},
 	}, vnic)
 	return err
 }

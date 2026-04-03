@@ -20,7 +20,7 @@ import (
 	"time"
 
 	"github.com/saichler/l8erp/go/types/crm"
-	"github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 )
 
 // generateCrmAccounts creates CRM account records with embedded health scores and account plans
@@ -133,14 +133,14 @@ func generateCrmAccounts(store *MockDataStore) []*crm.CrmAccount {
 			Industry:        crmIndustries[i%len(crmIndustries)],
 			Website:         fmt.Sprintf("https://www.%s.com", customerNames[i%len(customerNames)]),
 			Phone:           fmt.Sprintf("555-%03d-%04d", rand.Intn(1000), rand.Intn(10000)),
-			BillingAddress: &erp.Address{
+			BillingAddress: &l8common.Address{
 				Line1:         fmt.Sprintf("%d %s", rand.Intn(9999)+1, streetNames[i%len(streetNames)]),
 				City:          cities[i%len(cities)],
 				StateProvince: states[i%len(states)],
 				PostalCode:    fmt.Sprintf("%05d", rand.Intn(100000)),
 				CountryCode:   "US",
 			},
-			ShippingAddress: &erp.Address{
+			ShippingAddress: &l8common.Address{
 				Line1:         fmt.Sprintf("%d %s", rand.Intn(9999)+1, streetNames[i%len(streetNames)]),
 				City:          cities[i%len(cities)],
 				StateProvince: states[i%len(states)],
@@ -187,7 +187,7 @@ func generateCrmContacts(store *MockDataStore) []*crm.CrmContact {
 				Email:      fmt.Sprintf("%s.%s@company.com", firstName, lastName),
 				Phone:      fmt.Sprintf("555-%03d-%04d", rand.Intn(1000), rand.Intn(10000)),
 				Mobile:     fmt.Sprintf("555-%03d-%04d", rand.Intn(1000), rand.Intn(10000)),
-				MailingAddress: &erp.Address{
+				MailingAddress: &l8common.Address{
 					Line1:         fmt.Sprintf("%d %s", rand.Intn(9999)+1, streetNames[(idx-1)%len(streetNames)]),
 					City:          cities[(idx-1)%len(cities)],
 					StateProvince: states[(idx-1)%len(states)],

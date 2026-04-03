@@ -20,7 +20,7 @@ option go_package = "./types/hcm";
 
 
 import "hcm-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -54,16 +54,16 @@ message BenefitPlan {
   EligibilityRules eligibility = 16;
 
   // Plan details
-  erp.Money deductible_individual = 17;
-  erp.Money deductible_family = 18;
-  erp.Money out_of_pocket_max_individual = 19;
-  erp.Money out_of_pocket_max_family = 20;
+  l8common.Money deductible_individual = 17;
+  l8common.Money deductible_family = 18;
+  l8common.Money out_of_pocket_max_individual = 19;
+  l8common.Money out_of_pocket_max_family = 20;
 
   bool is_active = 21;
   string plan_document_url = 22;
   string summary_document_url = 23;
   map<string, string> custom_fields = 24;
-  erp.AuditInfo audit_info = 25;
+  l8common.AuditInfo audit_info = 25;
 }
 
 message BenefitPlanList {
@@ -121,9 +121,9 @@ enum CoverageLevel {
 
 message PlanCost {
   string coverage_option_id = 1;
-  erp.Money employee_cost = 2;       // Per period
-  erp.Money employer_cost = 3;       // Per period
-  erp.Money total_cost = 4;          // Per period
+  l8common.Money employee_cost = 2;       // Per period
+  l8common.Money employer_cost = 3;       // Per period
+  l8common.Money total_cost = 4;          // Per period
   PayFrequency pay_frequency = 5;
 }
 
@@ -142,8 +142,8 @@ message BenefitEnrollment {
   int64 enrollment_date = 10;
 
   // Cost
-  erp.Money employee_cost_per_period = 11;
-  erp.Money employer_cost_per_period = 12;
+  l8common.Money employee_cost_per_period = 11;
+  l8common.Money employer_cost_per_period = 12;
 
   // Elections
   repeated BenefitElection elections = 13;
@@ -155,7 +155,7 @@ message BenefitEnrollment {
   string primary_care_provider_id = 17;
 
   map<string, string> custom_fields = 18;
-  erp.AuditInfo audit_info = 19;
+  l8common.AuditInfo audit_info = 19;
 }
 
 message BenefitEnrollmentList {
@@ -187,9 +187,9 @@ message BenefitElection {
   string election_id = 1;
   string election_type = 2;          // Plan-specific election type
   string election_value = 3;         // The elected value
-  erp.Money contribution_amount = 4;     // For contribution-based (401k, HSA)
+  l8common.Money contribution_amount = 4;     // For contribution-based (401k, HSA)
   double contribution_percentage = 5;
-  erp.Money annual_amount = 6;
+  l8common.Money annual_amount = 6;
 }
 
 // Beneficiary designation for life insurance, retirement, etc.
@@ -203,9 +203,9 @@ message Beneficiary {
   string ssn_masked = 7;
   double percentage = 8;
   bool is_contingent = 9;
-  erp.Address address = 10;
+  l8common.Address address = 10;
   string phone = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 enum BeneficiaryType {
@@ -232,9 +232,9 @@ message Dependent {
   bool is_disabled = 11;
   bool is_tobacco_user = 12;
   int64 coverage_end_date = 13;  // Age-out date
-  erp.Address address = 14;
+  l8common.Address address = 14;
   VerificationStatus verification_status = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
 }
 
 message DependentList {
@@ -269,7 +269,7 @@ message LifeEvent {
   string approved_by = 10;
   int64 approved_date = 11;
   string notes = 12;
-  erp.AuditInfo audit_info = 13;
+  l8common.AuditInfo audit_info = 13;
 }
 
 message LifeEventList {
@@ -307,7 +307,7 @@ message Carrier {
   string name = 2;
   string code = 3;
   CarrierType carrier_type = 4;
-  erp.Address address = 5;
+  l8common.Address address = 5;
   string phone = 6;
   string fax = 7;
   string email = 8;
@@ -318,7 +318,7 @@ message Carrier {
   string edi_payer_id = 13;
   bool is_active = 14;
   map<string, string> custom_fields = 15;
-  erp.AuditInfo audit_info = 16;
+  l8common.AuditInfo audit_info = 16;
 }
 
 message CarrierList {
@@ -357,12 +357,12 @@ message COBRAEvent {
   repeated string covered_dependent_ids = 12;
 
   // Premium information
-  erp.Money monthly_premium = 13;
+  l8common.Money monthly_premium = 13;
   double admin_fee_percentage = 14;
-  erp.Money total_monthly_cost = 15;
+  l8common.Money total_monthly_cost = 15;
 
   string notes = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
 }
 
 message COBRAEventList {
@@ -395,5 +395,5 @@ message COBRAEnrollment {
   string plan_id = 1;
   string plan_name = 2;
   string coverage_option_id = 3;
-  erp.Money monthly_premium = 4;
+  l8common.Money monthly_premium = 4;
 }

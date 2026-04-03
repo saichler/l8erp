@@ -19,7 +19,7 @@ package bi;
 option go_package = "./types/bi";
 
 import "bi-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -40,7 +40,7 @@ message BiDataCube {
   int64 row_count = 9;
   bool is_active = 10;
   map<string, string> custom_fields = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 message BiDataCubeList {
@@ -69,7 +69,7 @@ message BiAnalysisModel {
   string owner_id = 16;                     // cross-ref: HCM Employee
   map<string, string> custom_fields = 17;
   repeated BiPrediction predictions = 19;
-  erp.AuditInfo audit_info = 18;
+  l8common.AuditInfo audit_info = 18;
 }
 
 message BiAnalysisModelList {
@@ -89,7 +89,7 @@ message BiPrediction {
   string predicted_by = 9;                  // cross-ref: HCM Employee
   string notes = 10;
   map<string, string> custom_fields = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 // @PrimeObject
@@ -111,7 +111,7 @@ message BiTrendAnalysis {
   int64 analysis_date = 14;
   string analyzed_by = 15;                  // cross-ref: HCM Employee
   map<string, string> custom_fields = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
 }
 
 message BiTrendAnalysisList {
@@ -135,7 +135,7 @@ message BiScenario {
   string created_by = 11;                   // cross-ref: HCM Employee
   bool is_active = 12;
   map<string, string> custom_fields = 13;
-  erp.AuditInfo audit_info = 14;
+  l8common.AuditInfo audit_info = 14;
 }
 
 message BiScenarioList {
@@ -162,7 +162,7 @@ message BiBenchmark {
   int64 period_end = 14;
   int64 last_updated = 15;
   map<string, string> custom_fields = 16;
-  erp.AuditInfo audit_info = 17;
+  l8common.AuditInfo audit_info = 17;
 }
 
 message BiBenchmarkList {

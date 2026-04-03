@@ -15,9 +15,9 @@ limitations under the License.
 package vendorstatements
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
@@ -26,9 +26,9 @@ func newVendorStatementServiceCallback() ifs.IServiceCallback {
 		func(e *fin.VendorStatement) { common.GenerateID(&e.StatementId) }).
 		Require(func(e *fin.VendorStatement) string { return e.StatementId }, "StatementId").
 		Require(func(e *fin.VendorStatement) string { return e.VendorId }, "VendorId").
-		OptionalMoney(func(e *fin.VendorStatement) *erp.Money { return e.OpeningBalance }, "OpeningBalance").
-		OptionalMoney(func(e *fin.VendorStatement) *erp.Money { return e.TotalInvoices }, "TotalInvoices").
-		OptionalMoney(func(e *fin.VendorStatement) *erp.Money { return e.TotalPayments }, "TotalPayments").
-		OptionalMoney(func(e *fin.VendorStatement) *erp.Money { return e.ClosingBalance }, "ClosingBalance").
+		OptionalMoney(func(e *fin.VendorStatement) *l8common.Money { return e.OpeningBalance }, "OpeningBalance").
+		OptionalMoney(func(e *fin.VendorStatement) *l8common.Money { return e.TotalInvoices }, "TotalInvoices").
+		OptionalMoney(func(e *fin.VendorStatement) *l8common.Money { return e.TotalPayments }, "TotalPayments").
+		OptionalMoney(func(e *fin.VendorStatement) *l8common.Money { return e.ClosingBalance }, "ClosingBalance").
 		Build()
 }

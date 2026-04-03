@@ -19,7 +19,7 @@ package sales;
 option go_package = "./types/sales";
 
 import "sales-common.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -39,14 +39,14 @@ message SalesDeliveryOrder {
   int64 actual_delivery_date = 8;
   SalesDeliveryStatus status = 9;
   string warehouse_id = 10;             // Cross-ref: SCM Warehouse
-  erp.Address ship_to_address = 11;
+  l8common.Address ship_to_address = 11;
   string carrier_id = 12;
   string tracking_number = 13;
   string shipping_method = 14;
-  erp.Money shipping_cost = 15;
+  l8common.Money shipping_cost = 15;
   string notes = 16;
   map<string, string> custom_fields = 17;
-  erp.AuditInfo audit_info = 18;
+  l8common.AuditInfo audit_info = 18;
   repeated SalesDeliveryLine lines = 19;
   repeated SalesPickRelease pick_releases = 20;
   repeated SalesPackingSlip packing_slips = 21;

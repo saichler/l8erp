@@ -15,9 +15,9 @@ limitations under the License.
 package riskregisters
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
+	common "github.com/saichler/l8common/go/generic"
 	"github.com/saichler/l8types/go/ifs"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/comp"
 )
 
@@ -28,6 +28,6 @@ func newCompRiskRegisterServiceCallback() ifs.IServiceCallback {
 		Require(func(e *comp.CompRiskRegister) string { return e.RiskId }, "RiskId").
 		Enum(func(e *comp.CompRiskRegister) int32 { return int32(e.Category) }, comp.CompRiskCategory_name, "Category").
 		Enum(func(e *comp.CompRiskRegister) int32 { return int32(e.Status) }, comp.CompRiskStatus_name, "Status").
-		OptionalMoney(func(e *comp.CompRiskRegister) *erp.Money { return e.PotentialFinancialImpact }, "PotentialFinancialImpact").
+		OptionalMoney(func(e *comp.CompRiskRegister) *l8common.Money { return e.PotentialFinancialImpact }, "PotentialFinancialImpact").
 		Build()
 }

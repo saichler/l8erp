@@ -21,7 +21,7 @@ option go_package = "./types/mfg";
 import "mfg-common.proto";
 import "mfg-shopfloor.proto";
 import "mfg-costing.proto";
-import "erp-common.proto";
+import "l8common.proto";
 import "api.proto";
 
 // ============================================================================
@@ -48,11 +48,11 @@ message MfgWorkOrder {
   string work_center_id = 15;            // cross-ref: MfgWorkCenter
   string sales_order_id = 16;            // cross-ref: Sales Order (for MTO)
   int32 priority = 17;
-  erp.Money estimated_cost = 18;
-  erp.Money actual_cost = 19;
+  l8common.Money estimated_cost = 18;
+  l8common.Money actual_cost = 19;
   string notes = 20;
   map<string, string> custom_fields = 21;
-  erp.AuditInfo audit_info = 22;
+  l8common.AuditInfo audit_info = 22;
   repeated MfgWorkOrderOp operations = 23;
   repeated MfgLaborEntry labor_entries = 24;
   repeated MfgMachineEntry machine_entries = 25;
@@ -88,7 +88,7 @@ message MfgWorkOrderOp {
   int64 actual_end = 17;
   string operator_id = 18;               // cross-ref: HCM Employee
   string notes = 19;
-  erp.AuditInfo audit_info = 20;
+  l8common.AuditInfo audit_info = 20;
 }
 
 // ============================================================================
@@ -107,11 +107,11 @@ message MfgProductionOrder {
   MfgProductionOrderStatus status = 7;
   int32 priority = 8;
   string planner_id = 9;                 // cross-ref: HCM Employee
-  erp.Money total_estimated_cost = 10;
-  erp.Money total_actual_cost = 11;
+  l8common.Money total_estimated_cost = 10;
+  l8common.Money total_actual_cost = 11;
   string notes = 12;
   map<string, string> custom_fields = 13;
-  erp.AuditInfo audit_info = 14;
+  l8common.AuditInfo audit_info = 14;
   repeated MfgProdOrderLine lines = 15;
 }
 
@@ -133,7 +133,7 @@ message MfgProdOrderLine {
   int64 promised_date = 9;
   string warehouse_id = 10;              // cross-ref: SCM Warehouse
   string notes = 11;
-  erp.AuditInfo audit_info = 12;
+  l8common.AuditInfo audit_info = 12;
 }
 
 // ============================================================================
@@ -155,7 +155,7 @@ message MfgProdBatch {
   string bin_id = 11;                    // cross-ref: SCM Bin
   string quality_status = 12;
   string notes = 13;
-  erp.AuditInfo audit_info = 14;
+  l8common.AuditInfo audit_info = 14;
 }
 
 // MfgProdConsumption represents material consumption for production
@@ -171,8 +171,8 @@ message MfgProdConsumption {
   string warehouse_id = 9;               // cross-ref: SCM Warehouse
   string bin_id = 10;                    // cross-ref: SCM Bin
   int64 consumption_date = 11;
-  erp.Money unit_cost = 12;
-  erp.Money total_cost = 13;
+  l8common.Money unit_cost = 12;
+  l8common.Money total_cost = 13;
   string notes = 14;
-  erp.AuditInfo audit_info = 15;
+  l8common.AuditInfo audit_info = 15;
 }

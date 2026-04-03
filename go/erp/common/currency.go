@@ -4,7 +4,7 @@
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 You may obtain a copy of the License at:
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,7 @@ package common
 
 import (
 	"fmt"
-	erp "github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -51,15 +51,15 @@ func ResolveCurrencyRate(fromCurrency, toCurrency string, effectiveDate int64, v
 
 // ConvertAmount converts a Money value from one currency to another using
 // the exchange rate effective on the given date.
-func ConvertAmount(amount *erp.Money, toCurrency string, effectiveDate int64, vnic ifs.IVNic) (*erp.Money, error) {
+func ConvertAmount(amount *l8common.Money, toCurrency string, effectiveDate int64, vnic ifs.IVNic) (*l8common.Money, error) {
 	if amount == nil || amount.Amount == 0 {
-		return &erp.Money{CurrencyId: toCurrency}, nil
+		return &l8common.Money{CurrencyId: toCurrency}, nil
 	}
 	rate, err := ResolveCurrencyRate(amount.CurrencyId, toCurrency, effectiveDate, vnic)
 	if err != nil {
 		return nil, err
 	}
-	return &erp.Money{
+	return &l8common.Money{
 		Amount:     int64(float64(amount.Amount) * rate),
 		CurrencyId: toCurrency,
 	}, nil

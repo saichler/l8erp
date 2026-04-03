@@ -20,7 +20,7 @@ import (
 	"time"
 
 	"github.com/saichler/l8erp/go/types/ecom"
-	"github.com/saichler/l8erp/go/types/erp"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 )
 
 // generateEcomCustomers creates e-commerce customer records
@@ -135,7 +135,7 @@ func generateEcomWishlists(store *MockDataStore) []*ecom.EcomWishlist {
 				ProductId: productID,
 				Quantity:  int32(rand.Intn(3) + 1),
 				AddedDate: addedDate.Unix(),
-				PriceWhenAdded: &erp.Money{
+				PriceWhenAdded: &l8common.Money{
 					Amount:     int64(rand.Intn(20000) + 1000),
 					CurrencyId: pickRef(store.CurrencyIDs, i*3+j),
 				},
