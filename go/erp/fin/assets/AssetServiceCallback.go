@@ -16,10 +16,11 @@ package assets
 
 import (
 	"reflect"
-	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8types/go/ifs"
+	l8c "github.com/saichler/l8common/go/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
+	"github.com/saichler/l8types/go/ifs"
 )
 
 
@@ -51,8 +52,8 @@ func newAssetServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 
 func computeAssetValues(v interface{}) error {
 	a := v.(*fin.Asset)
-	a.AccumulatedDepreciation = common.SumLineMoney(toSlice(a.DepreciationSchedules), func(v interface{}) *l8common.Money { return v.(*fin.DepreciationSchedule).DepreciationAmount })
-	a.NetBookValue = common.MoneySubtract(a.AcquisitionCost, a.AccumulatedDepreciation)
+	a.AccumulatedDepreciation = l8c.SumLineMoney(toSlice(a.DepreciationSchedules), func(v interface{}) *l8common.Money { return v.(*fin.DepreciationSchedule).DepreciationAmount })
+	a.NetBookValue = l8c.MoneySubtract(a.AcquisitionCost, a.AccumulatedDepreciation)
 	return nil
 }
 

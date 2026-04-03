@@ -15,15 +15,16 @@ limitations under the License.
 package projectbudgets
 
 import (
-	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8types/go/ifs"
+	l8c "github.com/saichler/l8common/go/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
+	"github.com/saichler/l8types/go/ifs"
 )
 
 func computeProjectBudget(v interface{}) error {
 	pb := v.(*prj.PrjProjectBudget)
-	pb.RemainingAmount = common.MoneySubtract(pb.BudgetedAmount, pb.ActualAmount)
+	pb.RemainingAmount = l8c.MoneySubtract(pb.BudgetedAmount, pb.ActualAmount)
 	pb.RemainingHours = pb.BudgetedHours - pb.ActualHours
 	return nil
 }

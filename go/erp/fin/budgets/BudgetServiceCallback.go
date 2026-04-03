@@ -16,9 +16,10 @@ package budgets
 
 import (
 	"reflect"
+	l8c "github.com/saichler/l8common/go/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
-	"github.com/saichler/l8erp/go/types/fin"
 	common "github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
 
@@ -47,9 +48,9 @@ func newBudgetServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 
 func computeBudgetTotals(v interface{}) error {
 	b := v.(*fin.Budget)
-	b.TotalAmount = common.SumLineMoney(toSlice(b.Lines), func(v interface{}) *l8common.Money { return v.(*fin.BudgetLine).BudgetedAmount })
+	b.TotalAmount = l8c.SumLineMoney(toSlice(b.Lines), func(v interface{}) *l8common.Money { return v.(*fin.BudgetLine).BudgetedAmount })
 	for _, line := range b.Lines {
-		line.Variance = common.MoneySubtract(line.BudgetedAmount, line.ActualAmount)
+		line.Variance = l8c.MoneySubtract(line.BudgetedAmount, line.ActualAmount)
 		if line.BudgetedAmount != nil && line.BudgetedAmount.Amount != 0 && line.Variance != nil {
 			line.VariancePercent = float64(line.Variance.Amount) / float64(line.BudgetedAmount.Amount) * 100
 		}

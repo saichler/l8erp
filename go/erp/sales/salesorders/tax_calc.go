@@ -15,12 +15,13 @@ limitations under the License.
 package salesorders
 
 import (
-	common "github.com/saichler/l8erp/go/erp/common"
+	"time"
+	l8c "github.com/saichler/l8common/go/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
-	"time"
 )
 
 // applyTaxRules looks up active tax rules and applies them to order lines
@@ -42,7 +43,7 @@ func applyTaxRules(v interface{}, vnic ifs.IVNic) error {
 			continue
 		}
 		gross := int64(line.Quantity * float64(line.UnitPrice.Amount))
-		disc := common.MoneyAmount(line.DiscountAmount)
+		disc := l8c.MoneyAmount(line.DiscountAmount)
 		taxable := gross - disc
 		if taxable <= 0 {
 			continue

@@ -15,10 +15,11 @@ limitations under the License.
 package journalentries
 
 import (
-	"reflect"
 	"fmt"
-	common "github.com/saichler/l8erp/go/erp/common"
+	"reflect"
+	l8c "github.com/saichler/l8common/go/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -49,7 +50,7 @@ func newJournalEntryServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 
 func computeJournalEntryTotals(v interface{}) error {
 	je := v.(*fin.JournalEntry)
-	je.TotalAmount = common.SumLineMoney(toSlice(je.Lines), func(v interface{}) *l8common.Money { return v.(*fin.JournalEntryLine).DebitAmount })
+	je.TotalAmount = l8c.SumLineMoney(toSlice(je.Lines), func(v interface{}) *l8common.Money { return v.(*fin.JournalEntryLine).DebitAmount })
 	return nil
 }
 
@@ -76,8 +77,8 @@ func journalEntryTransitions() *common.StatusTransitionConfig {
 func validateLines(v interface{}, _ ifs.IVNic) error {
 	je := v.(*fin.JournalEntry)
 	for i, line := range je.Lines {
-		hasDebit := !common.MoneyIsZero(line.DebitAmount)
-		hasCredit := !common.MoneyIsZero(line.CreditAmount)
+		hasDebit := !l8c.MoneyIsZero(line.DebitAmount)
+		hasCredit := !l8c.MoneyIsZero(line.CreditAmount)
 		if !hasDebit && !hasCredit {
 			return fmt.Errorf("line %d: must have either DebitAmount or CreditAmount", i+1)
 		}
@@ -95,8 +96,8 @@ func validateLines(v interface{}, _ ifs.IVNic) error {
 		totalDebit := int64(0)
 		totalCredit := int64(0)
 		for _, line := range je.Lines {
-			totalDebit += common.MoneyAmount(line.DebitAmount)
-			totalCredit += common.MoneyAmount(line.CreditAmount)
+			totalDebit += l8c.MoneyAmount(line.DebitAmount)
+			totalCredit += l8c.MoneyAmount(line.CreditAmount)
 		}
 		if totalDebit != totalCredit {
 			return fmt.Errorf("double-entry violation: total debits (%d) must equal total credits (%d)",
@@ -159,8 +160,8 @@ func updateAccountBalances(v interface{}, _ ifs.Action, vnic ifs.IVNic) error {
 		}
 		account := accountRaw.(*fin.Account)
 		bal := findOrCreateBalance(account, je.FiscalPeriodId)
-		debit := common.MoneyAmount(line.DebitAmount)
-		credit := common.MoneyAmount(line.CreditAmount)
+		debit := l8c.MoneyAmount(line.DebitAmount)
+		credit := l8c.MoneyAmount(line.CreditAmount)
 		addToMoney(&bal.PeriodDebit, debit, account.CurrencyId)
 		addToMoney(&bal.PeriodCredit, credit, account.CurrencyId)
 		recomputeEndingBalance(bal, account.NormalBalance, account.CurrencyId)
@@ -203,9 +204,9 @@ func addToMoney(m **l8common.Money, amount int64, currencyId string) {
 // DEBIT normal: ending = beginning + debit - credit
 // CREDIT normal: ending = beginning - debit + credit
 func recomputeEndingBalance(bal *fin.AccountBalance, normalBalance fin.BalanceType, currencyId string) {
-	beginning := common.MoneyAmount(bal.BeginningBalance)
-	debit := common.MoneyAmount(bal.PeriodDebit)
-	credit := common.MoneyAmount(bal.PeriodCredit)
+	beginning := l8c.MoneyAmount(bal.BeginningBalance)
+	debit := l8c.MoneyAmount(bal.PeriodDebit)
+	credit := l8c.MoneyAmount(bal.PeriodCredit)
 	var ending int64
 	if normalBalance == fin.BalanceType_BALANCE_TYPE_CREDIT {
 		ending = beginning - debit + credit

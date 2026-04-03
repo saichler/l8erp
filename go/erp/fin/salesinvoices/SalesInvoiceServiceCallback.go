@@ -16,10 +16,11 @@ package salesinvoices
 
 import (
 	"reflect"
-	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8types/go/ifs"
+	l8c "github.com/saichler/l8common/go/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
+	"github.com/saichler/l8types/go/ifs"
 )
 
 
@@ -60,10 +61,10 @@ func computeSalesInvoiceTotals(v interface{}) error {
 			}
 		}
 	}
-	inv.Subtotal = common.SumLineMoney(toSlice(inv.Lines), func(v interface{}) *l8common.Money { return v.(*fin.SalesInvoiceLine).LineAmount })
-	inv.TaxAmount = common.SumLineMoney(toSlice(inv.Lines), func(v interface{}) *l8common.Money { return v.(*fin.SalesInvoiceLine).TaxAmount })
-	inv.TotalAmount = common.MoneyAdd(inv.Subtotal, inv.TaxAmount)
-	inv.BalanceDue = common.MoneySubtract(inv.TotalAmount, inv.AmountPaid)
+	inv.Subtotal = l8c.SumLineMoney(toSlice(inv.Lines), func(v interface{}) *l8common.Money { return v.(*fin.SalesInvoiceLine).LineAmount })
+	inv.TaxAmount = l8c.SumLineMoney(toSlice(inv.Lines), func(v interface{}) *l8common.Money { return v.(*fin.SalesInvoiceLine).TaxAmount })
+	inv.TotalAmount = l8c.MoneyAdd(inv.Subtotal, inv.TaxAmount)
+	inv.BalanceDue = l8c.MoneySubtract(inv.TotalAmount, inv.AmountPaid)
 	return nil
 }
 

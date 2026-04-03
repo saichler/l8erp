@@ -15,7 +15,7 @@ limitations under the License.
 package projects
 
 import (
-	common "github.com/saichler/l8erp/go/erp/common"
+	l8c "github.com/saichler/l8common/go/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
@@ -84,7 +84,7 @@ func computeEarnedValue(v interface{}) error {
 	p.ActualHours = totalActual
 	// Sum actual cost from expenses
 	if p.ActualCost != nil {
-		common.MoneyAdd(p.ActualCost, &l8common.Money{Amount: 0, CurrencyId: currency})
+		l8c.MoneyAdd(p.ActualCost, &l8common.Money{Amount: 0, CurrencyId: currency})
 	}
 	return nil
 }

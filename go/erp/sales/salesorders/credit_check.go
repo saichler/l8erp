@@ -16,6 +16,7 @@ package salesorders
 
 import (
 	"fmt"
+	l8c "github.com/saichler/l8common/go/common"
 	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/sales"
@@ -55,9 +56,9 @@ func validateCreditLimit(v interface{}, vnic ifs.IVNic) error {
 		if s == 6 || s == 7 { // DELIVERED or CANCELLED — skip
 			continue
 		}
-		openTotal += common.MoneyAmount(o.TotalAmount)
+		openTotal += l8c.MoneyAmount(o.TotalAmount)
 	}
-	orderAmount := common.MoneyAmount(order.TotalAmount)
+	orderAmount := l8c.MoneyAmount(order.TotalAmount)
 	if openTotal+orderAmount > customerTyped.CreditLimit.Amount {
 		return fmt.Errorf("credit limit exceeded for customer %s: open %d + order %d > limit %d",
 			order.CustomerId, openTotal, orderAmount, customerTyped.CreditLimit.Amount)

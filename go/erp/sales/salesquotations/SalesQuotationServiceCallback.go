@@ -16,10 +16,11 @@ package salesquotations
 
 import (
 	"reflect"
-	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8types/go/ifs"
+	l8c "github.com/saichler/l8common/go/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
+	"github.com/saichler/l8types/go/ifs"
 )
 
 
@@ -81,9 +82,9 @@ func computeSalesQuotationTotals(v interface{}) error {
 		return nil
 	}
 	q.Subtotal = &l8common.Money{Amount: subtotal, CurrencyId: currencyId}
-	q.DiscountTotal = common.SumLineMoney(toSlice(q.Lines), func(v interface{}) *l8common.Money { return v.(*sales.SalesQuotationLine).DiscountAmount })
-	q.TaxTotal = common.SumLineMoney(toSlice(q.Lines), func(v interface{}) *l8common.Money { return v.(*sales.SalesQuotationLine).TaxAmount })
-	q.TotalAmount = common.MoneyAdd(common.MoneySubtract(q.Subtotal, q.DiscountTotal), q.TaxTotal)
+	q.DiscountTotal = l8c.SumLineMoney(toSlice(q.Lines), func(v interface{}) *l8common.Money { return v.(*sales.SalesQuotationLine).DiscountAmount })
+	q.TaxTotal = l8c.SumLineMoney(toSlice(q.Lines), func(v interface{}) *l8common.Money { return v.(*sales.SalesQuotationLine).TaxAmount })
+	q.TotalAmount = l8c.MoneyAdd(l8c.MoneySubtract(q.Subtotal, q.DiscountTotal), q.TaxTotal)
 	return nil
 }
 

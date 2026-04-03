@@ -15,11 +15,12 @@ limitations under the License.
 package expensereports
 
 import (
-	common "github.com/saichler/l8erp/go/erp/common"
+	"time"
+	l8c "github.com/saichler/l8common/go/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
-	"time"
 )
 
 // computeExpenseTotals sums entry amounts into the report total.
@@ -59,7 +60,7 @@ func rollUpExpenseCost(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
 		return nil
 	}
 	projectTyped := project.(*prj.PrjProject)
-	projectTyped.ActualCost = common.MoneyAdd(projectTyped.ActualCost, report.TotalAmount)
+	projectTyped.ActualCost = l8c.MoneyAdd(projectTyped.ActualCost, report.TotalAmount)
 	_ = common.PutEntity("PrjProj", 90, project, vnic)
 	return nil
 }

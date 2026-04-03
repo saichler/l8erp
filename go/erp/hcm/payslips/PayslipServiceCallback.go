@@ -16,10 +16,11 @@ package payslips
 
 import (
 	"reflect"
+	l8c "github.com/saichler/l8common/go/common"
+	l8common "github.com/saichler/l8common/go/types/l8common"
 	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/erp/hcm/payrollruns"
-	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -43,10 +44,10 @@ func newPayslipServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 
 func computePayslipTotals(p *hcm.Payslip) {
 	p.TotalHours = p.RegularHours + p.OvertimeHours + p.PtoHours + p.HolidayHours + p.OtherHours
-	p.GrossPay = common.SumLineMoney(toSlice(p.Earnings), func(v interface{}) *l8common.Money { return v.(*hcm.PayslipLine).CurrentAmount })
-	p.TotalDeductions = common.SumLineMoney(toSlice(p.Deductions), func(v interface{}) *l8common.Money { return v.(*hcm.PayslipLine).CurrentAmount })
-	p.TotalTaxes = common.SumLineMoney(toSlice(p.Taxes), func(v interface{}) *l8common.Money { return v.(*hcm.PayslipLine).CurrentAmount })
-	p.NetPay = common.MoneySubtract(p.GrossPay, common.MoneyAdd(p.TotalDeductions, p.TotalTaxes))
+	p.GrossPay = l8c.SumLineMoney(toSlice(p.Earnings), func(v interface{}) *l8common.Money { return v.(*hcm.PayslipLine).CurrentAmount })
+	p.TotalDeductions = l8c.SumLineMoney(toSlice(p.Deductions), func(v interface{}) *l8common.Money { return v.(*hcm.PayslipLine).CurrentAmount })
+	p.TotalTaxes = l8c.SumLineMoney(toSlice(p.Taxes), func(v interface{}) *l8common.Money { return v.(*hcm.PayslipLine).CurrentAmount })
+	p.NetPay = l8c.MoneySubtract(p.GrossPay, l8c.MoneyAdd(p.TotalDeductions, p.TotalTaxes))
 }
 
 func validatePayslip(entity *hcm.Payslip, vnic ifs.IVNic) error {

@@ -16,10 +16,11 @@ package salesorders
 
 import (
 	"reflect"
-	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8types/go/ifs"
+	l8c "github.com/saichler/l8common/go/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
+	"github.com/saichler/l8types/go/ifs"
 )
 
 
@@ -147,9 +148,9 @@ func computeSalesOrderTotals(v interface{}) error {
 		return nil
 	}
 	o.Subtotal = &l8common.Money{Amount: subtotal, CurrencyId: currencyId}
-	o.DiscountTotal = common.SumLineMoney(toSlice(o.Lines), func(v interface{}) *l8common.Money { return v.(*sales.SalesOrderLine).DiscountAmount })
-	o.TaxTotal = common.SumLineMoney(toSlice(o.Lines), func(v interface{}) *l8common.Money { return v.(*sales.SalesOrderLine).TaxAmount })
-	o.TotalAmount = common.MoneyAdd(common.MoneySubtract(o.Subtotal, o.DiscountTotal), o.TaxTotal)
+	o.DiscountTotal = l8c.SumLineMoney(toSlice(o.Lines), func(v interface{}) *l8common.Money { return v.(*sales.SalesOrderLine).DiscountAmount })
+	o.TaxTotal = l8c.SumLineMoney(toSlice(o.Lines), func(v interface{}) *l8common.Money { return v.(*sales.SalesOrderLine).TaxAmount })
+	o.TotalAmount = l8c.MoneyAdd(l8c.MoneySubtract(o.Subtotal, o.DiscountTotal), o.TaxTotal)
 	return nil
 }
 

@@ -16,10 +16,11 @@ package purchaseorders
 
 import (
 	"reflect"
-	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8types/go/ifs"
+	l8c "github.com/saichler/l8common/go/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
+	"github.com/saichler/l8types/go/ifs"
 )
 
 
@@ -53,7 +54,7 @@ func computePurchaseOrderTotals(v interface{}) error {
 			}
 		}
 	}
-	po.TotalAmount = common.SumLineMoney(toSlice(po.Lines), func(v interface{}) *l8common.Money { return v.(*scm.ScmPurchaseOrderLine).TotalPrice })
+	po.TotalAmount = l8c.SumLineMoney(toSlice(po.Lines), func(v interface{}) *l8common.Money { return v.(*scm.ScmPurchaseOrderLine).TotalPrice })
 	return nil
 }
 

@@ -15,12 +15,13 @@ limitations under the License.
 package workorders
 
 import (
-	common "github.com/saichler/l8erp/go/erp/common"
+	"math"
+	l8c "github.com/saichler/l8common/go/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
-	"math"
 )
 
 // rollUpCosts calculates the actual cost of a completed work order from labor,
@@ -75,7 +76,7 @@ func rollUpCosts(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
 	for _, order := range orders {
 		for _, line := range order.Lines {
 			if line.WorkOrderId == wo.WorkOrderId {
-				order.TotalActualCost = common.MoneyAdd(order.TotalActualCost, wo.ActualCost)
+				order.TotalActualCost = l8c.MoneyAdd(order.TotalActualCost, wo.ActualCost)
 				_ = common.PutEntity("MfgProdOrd", 70, order, vnic)
 				return nil
 			}

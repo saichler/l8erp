@@ -16,10 +16,11 @@ package returnorders
 
 import (
 	"reflect"
-	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8types/go/ifs"
+	l8c "github.com/saichler/l8common/go/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
+	"github.com/saichler/l8types/go/ifs"
 )
 
 
@@ -46,7 +47,7 @@ func newReturnOrderServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 
 func computeReturnOrderTotals(v interface{}) error {
 	o := v.(*sales.SalesReturnOrder)
-	o.RefundAmount = common.SumLineMoney(toSlice(o.Lines), func(v interface{}) *l8common.Money { return v.(*sales.SalesReturnOrderLine).LineTotal })
+	o.RefundAmount = l8c.SumLineMoney(toSlice(o.Lines), func(v interface{}) *l8common.Money { return v.(*sales.SalesReturnOrderLine).LineTotal })
 	return nil
 }
 
