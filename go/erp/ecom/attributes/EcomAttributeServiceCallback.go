@@ -17,13 +17,12 @@ package attributes
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/ecom"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newEcomAttributeServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[ecom.EcomAttribute]("EcomAttribute",
-		func(e *ecom.EcomAttribute) { common.GenerateID(&e.AttributeId) }).
-		Require(func(e *ecom.EcomAttribute) string { return e.AttributeId }, "AttributeId").
-		Enum(func(e *ecom.EcomAttribute) int32 { return int32(e.AttributeType) }, ecom.EcomAttributeType_name, "AttributeType").
+func newEcomAttributeServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&ecom.EcomAttribute{}, vnic).
+		Require(func(v interface{}) string { return v.(*ecom.EcomAttribute).AttributeId }, "AttributeId").
+		Enum(func(v interface{}) int32 { return int32(v.(*ecom.EcomAttribute).AttributeType) }, ecom.EcomAttributeType_name, "AttributeType").
 		Build()
 }

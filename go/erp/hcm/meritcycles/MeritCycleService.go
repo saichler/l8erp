@@ -14,7 +14,7 @@
 package meritcycles
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.MeritCycle, hcm.MeritCycleList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CycleId", Callback: newMeritCycleServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CycleId", Callback: newMeritCycleServiceCallback(vnic),
+	}, &hcm.MeritCycle{}, &hcm.MeritCycleList{}, creds, dbname, vnic)
 }
 
 func MeritCycles(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func MeritCycles(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MeritCycle(cycleId string, vnic ifs.IVNic) (*hcm.MeritCycle, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.MeritCycle{CycleId: cycleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.MeritCycle{CycleId: cycleId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.MeritCycle), nil
 }

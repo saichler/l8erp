@@ -15,7 +15,7 @@ limitations under the License.
 package salesorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/sales"
@@ -25,7 +25,8 @@ import (
 
 // applyTaxRules looks up active tax rules and applies them to order lines
 // that don't already have a tax amount set.
-func applyTaxRules(order *sales.SalesOrder, vnic ifs.IVNic) error {
+func applyTaxRules(v interface{}, vnic ifs.IVNic) error {
+	order := v.(*sales.SalesOrder)
 	if len(order.Lines) == 0 {
 		return nil
 	}
@@ -56,7 +57,9 @@ func applyTaxRules(order *sales.SalesOrder, vnic ifs.IVNic) error {
 
 // findApplicableTaxRate returns the first active tax rule rate.
 func findApplicableTaxRate(vnic ifs.IVNic) (float64, error) {
-	rules, err := common.GetEntities("TaxRule", 40, &fin.TaxRule{}, vnic)
+	rulesRaw, err := common.GetEntities("TaxRule", 40, &fin.TaxRule{}, vnic)
+	rules := make([]*fin.TaxRule, 0, len(rulesRaw))
+	for _, ri := range rulesRaw { rules = append(rules, ri.(*fin.TaxRule)) }
 	if err != nil {
 		return 0, err
 	}

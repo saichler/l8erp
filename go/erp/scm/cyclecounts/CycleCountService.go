@@ -14,7 +14,7 @@
 package cyclecounts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmCycleCount, scm.ScmCycleCountList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CycleCountId", Callback: newCycleCountServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CycleCountId", Callback: newCycleCountServiceCallback(vnic),
+	}, &scm.ScmCycleCount{}, &scm.ScmCycleCountList{}, creds, dbname, vnic)
 }
 
 func CycleCounts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CycleCounts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CycleCount(cycleCountId string, vnic ifs.IVNic) (*scm.ScmCycleCount, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmCycleCount{CycleCountId: cycleCountId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmCycleCount{CycleCountId: cycleCountId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmCycleCount), nil
 }

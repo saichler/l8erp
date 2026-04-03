@@ -19,13 +19,14 @@ import (
 	"github.com/saichler/l8erp/go/erp/hcm/certifications"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newEmployeeCertificationServiceCallback() ifs.IServiceCallback {
+func newEmployeeCertificationServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("EmployeeCertification",
-		func(e *hcm.EmployeeCertification) { common.GenerateID(&e.EmployeeCertificationId) },
-		validateEmployeeCertification)
+		func(v interface{}) bool { _, ok := v.(*hcm.EmployeeCertification); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.EmployeeCertification).EmployeeCertificationId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateEmployeeCertification(v.(*hcm.EmployeeCertification), vnic) })
 }
 
 func validateEmployeeCertification(entity *hcm.EmployeeCertification, vnic ifs.IVNic) error {

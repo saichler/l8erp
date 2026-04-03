@@ -14,7 +14,7 @@
 package reports
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[bi.BiReport, bi.BiReportList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ReportId", Callback: newBiReportServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ReportId", Callback: newBiReportServiceCallback(vnic),
+	}, &bi.BiReport{}, &bi.BiReportList{}, creds, dbname, vnic)
 	StartScheduler(vnic)
 }
 
@@ -37,5 +37,9 @@ func BiReports(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiReport(reportId string, vnic ifs.IVNic) (*bi.BiReport, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &bi.BiReport{ReportId: reportId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiReport{ReportId: reportId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*bi.BiReport), nil
 }

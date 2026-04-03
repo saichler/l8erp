@@ -14,7 +14,7 @@
 package taxcodes
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.TaxCode, fin.TaxCodeList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TaxCodeId", Callback: newTaxCodeServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "TaxCodeId", Callback: newTaxCodeServiceCallback(vnic),
+	}, &fin.TaxCode{}, &fin.TaxCodeList{}, creds, dbname, vnic)
 }
 
 func TaxCodes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func TaxCodes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func TaxCode(taxCodeId string, vnic ifs.IVNic) (*fin.TaxCode, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.TaxCode{TaxCodeId: taxCodeId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.TaxCode{TaxCodeId: taxCodeId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.TaxCode), nil
 }

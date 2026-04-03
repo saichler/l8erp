@@ -15,16 +15,15 @@ limitations under the License.
 package salesterritories
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
-func newSalesTerritoryServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sales.SalesTerritory]("SalesTerritory",
-		func(e *sales.SalesTerritory) { common.GenerateID(&e.TerritoryId) }).
-		Require(func(e *sales.SalesTerritory) string { return e.TerritoryId }, "TerritoryId").
-		Require(func(e *sales.SalesTerritory) string { return e.Name }, "Name").
-		Enum(func(e *sales.SalesTerritory) int32 { return int32(e.TerritoryType) }, sales.SalesTerritoryType_name, "TerritoryType").
+func newSalesTerritoryServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sales.SalesTerritory{}, vnic).
+		Require(func(v interface{}) string { return v.(*sales.SalesTerritory).TerritoryId }, "TerritoryId").
+		Require(func(v interface{}) string { return v.(*sales.SalesTerritory).Name }, "Name").
+		Enum(func(v interface{}) int32 { return int32(v.(*sales.SalesTerritory).TerritoryType) }, sales.SalesTerritoryType_name, "TerritoryType").
 		Build()
 }

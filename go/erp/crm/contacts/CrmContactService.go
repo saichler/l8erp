@@ -14,7 +14,7 @@
 package contacts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[crm.CrmContact, crm.CrmContactList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ContactId", Callback: newCrmContactServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ContactId", Callback: newCrmContactServiceCallback(vnic),
+	}, &crm.CrmContact{}, &crm.CrmContactList{}, creds, dbname, vnic)
 }
 
 func CrmContacts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CrmContacts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmContact(contactId string, vnic ifs.IVNic) (*crm.CrmContact, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &crm.CrmContact{ContactId: contactId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmContact{ContactId: contactId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*crm.CrmContact), nil
 }

@@ -15,15 +15,14 @@ limitations under the License.
 package dockschedules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newDockScheduleServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmDockSchedule]("ScmDockSchedule",
-		func(e *scm.ScmDockSchedule) { common.GenerateID(&e.ScheduleId) }).
-		Require(func(e *scm.ScmDockSchedule) string { return e.ScheduleId }, "ScheduleId").
-		Enum(func(e *scm.ScmDockSchedule) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
+func newDockScheduleServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmDockSchedule{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmDockSchedule).ScheduleId }, "ScheduleId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmDockSchedule).Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }

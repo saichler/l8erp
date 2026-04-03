@@ -15,15 +15,14 @@ limitations under the License.
 package emailcaptures
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/doc"
 )
 
-func newDocEmailCaptureServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[doc.DocEmailCapture]("DocEmailCapture",
-		func(e *doc.DocEmailCapture) { common.GenerateID(&e.CaptureId) }).
-		Require(func(e *doc.DocEmailCapture) string { return e.CaptureId }, "CaptureId").
-		Enum(func(e *doc.DocEmailCapture) int32 { return int32(e.Status) }, doc.DocEmailCaptureStatus_name, "Status").
+func newDocEmailCaptureServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&doc.DocEmailCapture{}, vnic).
+		Require(func(v interface{}) string { return v.(*doc.DocEmailCapture).CaptureId }, "CaptureId").
+		Enum(func(v interface{}) int32 { return int32(v.(*doc.DocEmailCapture).Status) }, doc.DocEmailCaptureStatus_name, "Status").
 		Build()
 }

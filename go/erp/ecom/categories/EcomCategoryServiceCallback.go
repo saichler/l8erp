@@ -15,14 +15,13 @@ limitations under the License.
 package categories
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
-func newEcomCategoryServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[ecom.EcomCategory]("EcomCategory",
-		func(e *ecom.EcomCategory) { common.GenerateID(&e.CategoryId) }).
-		Require(func(e *ecom.EcomCategory) string { return e.CategoryId }, "CategoryId").
+func newEcomCategoryServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&ecom.EcomCategory{}, vnic).
+		Require(func(v interface{}) string { return v.(*ecom.EcomCategory).CategoryId }, "CategoryId").
 		Build()
 }

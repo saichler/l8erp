@@ -15,15 +15,15 @@ limitations under the License.
 package applicants
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newApplicantServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("Applicant",
-		func(e *hcm.Applicant) { common.GenerateID(&e.ApplicantId) },
-		nil)
+func newApplicantServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&hcm.Applicant{}, vnic).
+		Custom(validateApplicant).
+		Build()
 }
 
 func validateApplicant(entity *hcm.Applicant) error {
@@ -53,7 +53,7 @@ func validateApplicantRequiredFields(entity *hcm.Applicant) error {
 }
 
 func validateApplicantEnums(entity *hcm.Applicant) error {
-	if err := common.ValidateEnum(entity.Source, hcm.ApplicantSource_name, "Source"); err != nil {
+	if err := common.ValidateEnum(int32(entity.Source), hcm.ApplicantSource_name, "Source"); err != nil {
 		return err
 	}
 	return nil

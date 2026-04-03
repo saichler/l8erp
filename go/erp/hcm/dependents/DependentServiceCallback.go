@@ -15,16 +15,17 @@ limitations under the License.
 package dependents
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newDependentServiceCallback() ifs.IServiceCallback {
+func newDependentServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("Dependent",
-		func(e *hcm.Dependent) { common.GenerateID(&e.DependentId) },
-		validateDep)
+		func(v interface{}) bool { _, ok := v.(*hcm.Dependent); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.Dependent).DependentId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateDep(v.(*hcm.Dependent), vnic) })
 }
 
 func validateDep(entity *hcm.Dependent, vnic ifs.IVNic) error {

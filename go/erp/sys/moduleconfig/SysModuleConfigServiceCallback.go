@@ -14,14 +14,13 @@
 package moduleconfig
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sys"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newSysModuleConfigServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sys.SysModuleConfig]("SysModuleConfig",
-		func(e *sys.SysModuleConfig) { common.GenerateID(&e.ConfigId) }).
-		Require(func(e *sys.SysModuleConfig) string { return e.ConfigId }, "ConfigId").
+func newSysModuleConfigServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sys.SysModuleConfig{}, vnic).
+		Require(func(v interface{}) string { return v.(*sys.SysModuleConfig).ConfigId }, "ConfigId").
 		Build()
 }

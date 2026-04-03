@@ -14,7 +14,7 @@
 package standardcosts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[mfg.MfgStandardCost, mfg.MfgStandardCostList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CostId", Callback: newMfgStandardCostServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CostId", Callback: newMfgStandardCostServiceCallback(vnic),
+	}, &mfg.MfgStandardCost{}, &mfg.MfgStandardCostList{}, creds, dbname, vnic)
 }
 
 func MfgStandardCosts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func MfgStandardCosts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgStandardCost(costId string, vnic ifs.IVNic) (*mfg.MfgStandardCost, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &mfg.MfgStandardCost{CostId: costId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgStandardCost{CostId: costId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*mfg.MfgStandardCost), nil
 }

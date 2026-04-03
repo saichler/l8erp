@@ -14,7 +14,7 @@
 package bookings
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[prj.PrjBooking, prj.PrjBookingList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "BookingId", Callback: newPrjBookingServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "BookingId", Callback: newPrjBookingServiceCallback(vnic),
+	}, &prj.PrjBooking{}, &prj.PrjBookingList{}, creds, dbname, vnic)
 }
 
 func PrjBookings(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PrjBookings(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjBooking(bookingId string, vnic ifs.IVNic) (*prj.PrjBooking, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &prj.PrjBooking{BookingId: bookingId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjBooking{BookingId: bookingId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*prj.PrjBooking), nil
 }

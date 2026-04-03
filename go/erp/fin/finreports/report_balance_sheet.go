@@ -15,14 +15,16 @@ limitations under the License.
 package finreports
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
 
 func generateBalanceSheet(report *fin.FinReport, vnic ifs.IVNic) error {
-	accounts, err := common.GetEntities("Account", 40, &fin.Account{}, vnic)
+	accountsRaw, err := common.GetEntities("Account", 40, &fin.Account{}, vnic)
+	accounts := make([]*fin.Account, 0, len(accountsRaw))
+	for _, ri := range accountsRaw { accounts = append(accounts, ri.(*fin.Account)) }
 	if err != nil {
 		return err
 	}

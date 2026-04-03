@@ -15,7 +15,7 @@ limitations under the License.
 package expensereports
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
@@ -23,7 +23,8 @@ import (
 )
 
 // computeExpenseTotals sums entry amounts into the report total.
-func computeExpenseTotals(report *prj.PrjExpenseReport) error {
+func computeExpenseTotals(v interface{}) error {
+	report := v.(*prj.PrjExpenseReport)
 	if len(report.Entries) == 0 {
 		return nil
 	}
@@ -42,7 +43,8 @@ func computeExpenseTotals(report *prj.PrjExpenseReport) error {
 }
 
 // rollUpExpenseCost updates project actual cost when an expense report is approved.
-func rollUpExpenseCost(report *prj.PrjExpenseReport, action ifs.Action, vnic ifs.IVNic) error {
+func rollUpExpenseCost(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	report := v.(*prj.PrjExpenseReport)
 	if report.Status != prj.PrjExpenseStatus_PRJ_EXPENSE_STATUS_APPROVED {
 		return nil
 	}
@@ -56,16 +58,17 @@ func rollUpExpenseCost(report *prj.PrjExpenseReport, action ifs.Action, vnic ifs
 	if err != nil || project == nil {
 		return nil
 	}
-	project.ActualCost = common.MoneyAdd(project.ActualCost, report.TotalAmount)
+	projectTyped := project.(*prj.PrjProject)
+	projectTyped.ActualCost = common.MoneyAdd(projectTyped.ActualCost, report.TotalAmount)
 	_ = common.PutEntity("PrjProj", 90, project, vnic)
 	return nil
 }
 
-func expenseTransitions() *common.StatusTransitionConfig[prj.PrjExpenseReport] {
-	return &common.StatusTransitionConfig[prj.PrjExpenseReport]{
-		StatusGetter:  func(e *prj.PrjExpenseReport) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *prj.PrjExpenseReport, s int32) { e.Status = prj.PrjExpenseStatus(s) },
-		FilterBuilder: func(e *prj.PrjExpenseReport) *prj.PrjExpenseReport {
+func expenseTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*prj.PrjExpenseReport).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*prj.PrjExpenseReport).Status = prj.PrjExpenseStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*prj.PrjExpenseReport);
 			return &prj.PrjExpenseReport{ReportId: e.ReportId}
 		},
 		ServiceName:   ServiceName,

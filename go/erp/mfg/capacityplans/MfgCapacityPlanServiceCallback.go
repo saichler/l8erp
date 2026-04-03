@@ -15,15 +15,14 @@ limitations under the License.
 package capacityplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-func newMfgCapacityPlanServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgCapacityPlan]("MfgCapacityPlan",
-		func(e *mfg.MfgCapacityPlan) { common.GenerateID(&e.PlanId) }).
-		Require(func(e *mfg.MfgCapacityPlan) string { return e.PlanId }, "PlanId").
-		Enum(func(e *mfg.MfgCapacityPlan) int32 { return int32(e.Status) }, mfg.MfgScheduleStatus_name, "Status").
+func newMfgCapacityPlanServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgCapacityPlan{}, vnic).
+		Require(func(v interface{}) string { return v.(*mfg.MfgCapacityPlan).PlanId }, "PlanId").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgCapacityPlan).Status) }, mfg.MfgScheduleStatus_name, "Status").
 		Build()
 }

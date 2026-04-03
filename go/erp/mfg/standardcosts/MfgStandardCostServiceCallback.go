@@ -15,23 +15,22 @@ limitations under the License.
 package standardcosts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-func newMfgStandardCostServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgStandardCost]("MfgStandardCost",
-		func(e *mfg.MfgStandardCost) { common.GenerateID(&e.CostId) }).
-		Require(func(e *mfg.MfgStandardCost) string { return e.CostId }, "CostId").
-		Require(func(e *mfg.MfgStandardCost) string { return e.ItemId }, "ItemId").
-		Require(func(e *mfg.MfgStandardCost) string { return e.CurrencyId }, "CurrencyId").
-		OptionalMoney(func(e *mfg.MfgStandardCost) *l8common.Money { return e.MaterialCost }, "MaterialCost").
-		OptionalMoney(func(e *mfg.MfgStandardCost) *l8common.Money { return e.LaborCost }, "LaborCost").
-		OptionalMoney(func(e *mfg.MfgStandardCost) *l8common.Money { return e.OverheadCost }, "OverheadCost").
-		OptionalMoney(func(e *mfg.MfgStandardCost) *l8common.Money { return e.OutsideProcessingCost }, "OutsideProcessingCost").
-		OptionalMoney(func(e *mfg.MfgStandardCost) *l8common.Money { return e.TotalCost }, "TotalCost").
-		DateAfter(func(e *mfg.MfgStandardCost) int64 { return e.ExpiryDate }, func(e *mfg.MfgStandardCost) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
+func newMfgStandardCostServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgStandardCost{}, vnic).
+		Require(func(v interface{}) string { return v.(*mfg.MfgStandardCost).CostId }, "CostId").
+		Require(func(v interface{}) string { return v.(*mfg.MfgStandardCost).ItemId }, "ItemId").
+		Require(func(v interface{}) string { return v.(*mfg.MfgStandardCost).CurrencyId }, "CurrencyId").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*mfg.MfgStandardCost).MaterialCost }, "MaterialCost").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*mfg.MfgStandardCost).LaborCost }, "LaborCost").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*mfg.MfgStandardCost).OverheadCost }, "OverheadCost").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*mfg.MfgStandardCost).OutsideProcessingCost }, "OutsideProcessingCost").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*mfg.MfgStandardCost).TotalCost }, "TotalCost").
+		DateAfter(func(v interface{}) int64 { return v.(*mfg.MfgStandardCost).ExpiryDate }, func(v interface{}) int64 { return v.(*mfg.MfgStandardCost).EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

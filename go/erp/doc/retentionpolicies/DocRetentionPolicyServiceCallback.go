@@ -15,17 +15,16 @@ limitations under the License.
 package retentionpolicies
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/doc"
 )
 
-func newDocRetentionPolicyServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[doc.DocRetentionPolicy]("DocRetentionPolicy",
-		func(e *doc.DocRetentionPolicy) { common.GenerateID(&e.PolicyId) }).
-		Require(func(e *doc.DocRetentionPolicy) string { return e.PolicyId }, "PolicyId").
-		Enum(func(e *doc.DocRetentionPolicy) int32 { return int32(e.ActionOnExpiry) }, doc.DocRetentionAction_name, "ActionOnExpiry").
-		Enum(func(e *doc.DocRetentionPolicy) int32 { return int32(e.DocumentType) }, doc.DocDocumentType_name, "DocumentType").
-		DateAfter(func(e *doc.DocRetentionPolicy) int64 { return e.ExpiryDate }, func(e *doc.DocRetentionPolicy) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
+func newDocRetentionPolicyServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&doc.DocRetentionPolicy{}, vnic).
+		Require(func(v interface{}) string { return v.(*doc.DocRetentionPolicy).PolicyId }, "PolicyId").
+		Enum(func(v interface{}) int32 { return int32(v.(*doc.DocRetentionPolicy).ActionOnExpiry) }, doc.DocRetentionAction_name, "ActionOnExpiry").
+		Enum(func(v interface{}) int32 { return int32(v.(*doc.DocRetentionPolicy).DocumentType) }, doc.DocDocumentType_name, "DocumentType").
+		DateAfter(func(v interface{}) int64 { return v.(*doc.DocRetentionPolicy).ExpiryDate }, func(v interface{}) int64 { return v.(*doc.DocRetentionPolicy).EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

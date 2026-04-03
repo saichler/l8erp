@@ -15,18 +15,17 @@ limitations under the License.
 package paymentmethods
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
-func newEcomPaymentMethodServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[ecom.EcomPaymentMethod]("EcomPaymentMethod",
-		func(e *ecom.EcomPaymentMethod) { common.GenerateID(&e.MethodId) }).
-		Require(func(e *ecom.EcomPaymentMethod) string { return e.MethodId }, "MethodId").
-		OptionalMoney(func(e *ecom.EcomPaymentMethod) *l8common.Money { return e.MinAmount }, "MinAmount").
-		OptionalMoney(func(e *ecom.EcomPaymentMethod) *l8common.Money { return e.MaxAmount }, "MaxAmount").
-		OptionalMoney(func(e *ecom.EcomPaymentMethod) *l8common.Money { return e.TransactionFeeFixed }, "TransactionFeeFixed").
+func newEcomPaymentMethodServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&ecom.EcomPaymentMethod{}, vnic).
+		Require(func(v interface{}) string { return v.(*ecom.EcomPaymentMethod).MethodId }, "MethodId").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomPaymentMethod).MinAmount }, "MinAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomPaymentMethod).MaxAmount }, "MaxAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomPaymentMethod).TransactionFeeFixed }, "TransactionFeeFixed").
 		Build()
 }

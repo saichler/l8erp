@@ -15,15 +15,15 @@ limitations under the License.
 package shifts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newShiftServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("Shift",
-		func(e *hcm.Shift) { common.GenerateID(&e.ShiftId) },
-		nil)
+func newShiftServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&hcm.Shift{}, vnic).
+		Custom(validateShift).
+		Build()
 }
 
 func validateShift(entity *hcm.Shift) error {
@@ -47,7 +47,7 @@ func validateShiftRequiredFields(entity *hcm.Shift) error {
 }
 
 func validateShiftEnums(entity *hcm.Shift) error {
-	if err := common.ValidateEnum(entity.ShiftType, hcm.ShiftType_name, "ShiftType"); err != nil {
+	if err := common.ValidateEnum(int32(entity.ShiftType), hcm.ShiftType_name, "ShiftType"); err != nil {
 		return err
 	}
 	return nil

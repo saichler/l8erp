@@ -15,19 +15,18 @@ limitations under the License.
 package portfolioviews
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
-func newPrjPortfolioViewServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjPortfolioView]("PrjPortfolioView",
-		func(e *prj.PrjPortfolioView) { common.GenerateID(&e.ViewId) }).
-		Require(func(e *prj.PrjPortfolioView) string { return e.ViewId }, "ViewId").
-		OptionalMoney(func(e *prj.PrjPortfolioView) *l8common.Money { return e.TotalBudget }, "TotalBudget").
-		OptionalMoney(func(e *prj.PrjPortfolioView) *l8common.Money { return e.TotalActualCost }, "TotalActualCost").
-		OptionalMoney(func(e *prj.PrjPortfolioView) *l8common.Money { return e.TotalRevenue }, "TotalRevenue").
-		OptionalMoney(func(e *prj.PrjPortfolioView) *l8common.Money { return e.TotalProfit }, "TotalProfit").
+func newPrjPortfolioViewServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjPortfolioView{}, vnic).
+		Require(func(v interface{}) string { return v.(*prj.PrjPortfolioView).ViewId }, "ViewId").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjPortfolioView).TotalBudget }, "TotalBudget").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjPortfolioView).TotalActualCost }, "TotalActualCost").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjPortfolioView).TotalRevenue }, "TotalRevenue").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjPortfolioView).TotalProfit }, "TotalProfit").
 		Build()
 }

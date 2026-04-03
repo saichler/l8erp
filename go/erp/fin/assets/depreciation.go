@@ -16,7 +16,7 @@ package assets
 
 import (
 	"fmt"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
@@ -25,7 +25,8 @@ import (
 
 // generateDepreciationSchedule creates monthly depreciation schedule entries
 // when an asset transitions to ACTIVE status.
-func generateDepreciationSchedule(asset *fin.Asset, action ifs.Action, vnic ifs.IVNic) error {
+func generateDepreciationSchedule(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	asset := v.(*fin.Asset)
 	if asset.Status != fin.AssetStatus_ASSET_STATUS_ACTIVE {
 		return nil
 	}

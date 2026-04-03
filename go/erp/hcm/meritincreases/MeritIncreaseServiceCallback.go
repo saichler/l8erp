@@ -19,13 +19,14 @@ import (
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/erp/hcm/meritcycles"
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newMeritIncreaseServiceCallback() ifs.IServiceCallback {
+func newMeritIncreaseServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("MeritIncrease",
-		func(e *hcm.MeritIncrease) { common.GenerateID(&e.IncreaseId) },
-		validateMeritInc)
+		func(v interface{}) bool { _, ok := v.(*hcm.MeritIncrease); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.MeritIncrease).IncreaseId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateMeritInc(v.(*hcm.MeritIncrease), vnic) })
 }
 
 func validateMeritInc(entity *hcm.MeritIncrease, vnic ifs.IVNic) error {

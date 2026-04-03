@@ -21,12 +21,14 @@ import (
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
 func generateCaseResolution(report *fin.FinReport, vnic ifs.IVNic) error {
-	cases, err := common.GetEntities("CrmCase", 80, &crm.CrmCase{}, vnic)
+	casesRaw, err := common.GetEntities("CrmCase", 80, &crm.CrmCase{}, vnic)
+	cases := make([]*crm.CrmCase, 0, len(casesRaw))
+	for _, ri := range casesRaw { cases = append(cases, ri.(*crm.CrmCase)) }
 	if err != nil {
 		return err
 	}

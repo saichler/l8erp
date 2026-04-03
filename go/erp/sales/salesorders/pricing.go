@@ -22,7 +22,8 @@ import (
 
 // computePricing looks up prices from active price lists for order lines
 // that have an itemId but no unitPrice set.
-func computePricing(order *sales.SalesOrder, vnic ifs.IVNic) error {
+func computePricing(v interface{}, vnic ifs.IVNic) error {
+	order := v.(*sales.SalesOrder)
 	for _, line := range order.Lines {
 		if line.UnitPrice != nil || line.ItemId == "" {
 			continue

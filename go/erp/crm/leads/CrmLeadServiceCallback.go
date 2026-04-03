@@ -18,27 +18,26 @@ import (
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/crm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newCrmLeadServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmLead]("CrmLead",
-		func(e *crm.CrmLead) { common.GenerateID(&e.LeadId) }).
+func newCrmLeadServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmLead{}, vnic).
 		StatusTransition(crmLeadTransitions()).
 		After(cascadeConvertLead).
 		Custom(computeLeadScore).
-		Require(func(e *crm.CrmLead) string { return e.LeadId }, "LeadId").
-		Enum(func(e *crm.CrmLead) int32 { return int32(e.Rating) }, crm.CrmLeadRating_name, "Rating").
-		Enum(func(e *crm.CrmLead) int32 { return int32(e.Status) }, crm.CrmLeadStatus_name, "Status").
-		OptionalMoney(func(e *crm.CrmLead) *l8common.Money { return e.AnnualRevenue }, "AnnualRevenue").
+		Require(func(v interface{}) string { return v.(*crm.CrmLead).LeadId }, "LeadId").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmLead).Rating) }, crm.CrmLeadRating_name, "Rating").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmLead).Status) }, crm.CrmLeadStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*crm.CrmLead).AnnualRevenue }, "AnnualRevenue").
 		Build()
 }
 
-func crmLeadTransitions() *common.StatusTransitionConfig[crm.CrmLead] {
-	return &common.StatusTransitionConfig[crm.CrmLead]{
-		StatusGetter:  func(e *crm.CrmLead) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *crm.CrmLead, s int32) { e.Status = crm.CrmLeadStatus(s) },
-		FilterBuilder: func(e *crm.CrmLead) *crm.CrmLead {
+func crmLeadTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*crm.CrmLead).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*crm.CrmLead).Status = crm.CrmLeadStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*crm.CrmLead);
 			return &crm.CrmLead{LeadId: e.LeadId}
 		},
 		ServiceName:   ServiceName,

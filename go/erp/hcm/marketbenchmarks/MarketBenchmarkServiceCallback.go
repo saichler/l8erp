@@ -15,16 +15,17 @@ limitations under the License.
 package marketbenchmarks
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/jobs"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newMarketBenchmarkServiceCallback() ifs.IServiceCallback {
+func newMarketBenchmarkServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("MarketBenchmark",
-		func(e *hcm.MarketBenchmark) { common.GenerateID(&e.BenchmarkId) },
-		validateMktBench)
+		func(v interface{}) bool { _, ok := v.(*hcm.MarketBenchmark); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.MarketBenchmark).BenchmarkId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateMktBench(v.(*hcm.MarketBenchmark), vnic) })
 }
 
 func validateMktBench(entity *hcm.MarketBenchmark, vnic ifs.IVNic) error {

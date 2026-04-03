@@ -15,32 +15,31 @@ limitations under the License.
 package campaigns
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmCampaignServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmCampaign]("CrmCampaign",
-		func(e *crm.CrmCampaign) { common.GenerateID(&e.CampaignId) }).
+func newCrmCampaignServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmCampaign{}, vnic).
 		StatusTransition(crmCampaignTransitions()).
 		Compute(computeCampaignMetrics).
-		Require(func(e *crm.CrmCampaign) string { return e.CampaignId }, "CampaignId").
-		Enum(func(e *crm.CrmCampaign) int32 { return int32(e.CampaignType) }, crm.CrmCampaignType_name, "CampaignType").
-		Enum(func(e *crm.CrmCampaign) int32 { return int32(e.Status) }, crm.CrmCampaignStatus_name, "Status").
-		OptionalMoney(func(e *crm.CrmCampaign) *l8common.Money { return e.BudgetedCost }, "BudgetedCost").
-		OptionalMoney(func(e *crm.CrmCampaign) *l8common.Money { return e.ActualCost }, "ActualCost").
-		OptionalMoney(func(e *crm.CrmCampaign) *l8common.Money { return e.ExpectedRevenue }, "ExpectedRevenue").
-		DateAfter(func(e *crm.CrmCampaign) int64 { return e.EndDate }, func(e *crm.CrmCampaign) int64 { return e.StartDate }, "EndDate", "StartDate").
+		Require(func(v interface{}) string { return v.(*crm.CrmCampaign).CampaignId }, "CampaignId").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmCampaign).CampaignType) }, crm.CrmCampaignType_name, "CampaignType").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmCampaign).Status) }, crm.CrmCampaignStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*crm.CrmCampaign).BudgetedCost }, "BudgetedCost").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*crm.CrmCampaign).ActualCost }, "ActualCost").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*crm.CrmCampaign).ExpectedRevenue }, "ExpectedRevenue").
+		DateAfter(func(v interface{}) int64 { return v.(*crm.CrmCampaign).EndDate }, func(v interface{}) int64 { return v.(*crm.CrmCampaign).StartDate }, "EndDate", "StartDate").
 		Build()
 }
 
-func crmCampaignTransitions() *common.StatusTransitionConfig[crm.CrmCampaign] {
-	return &common.StatusTransitionConfig[crm.CrmCampaign]{
-		StatusGetter:  func(e *crm.CrmCampaign) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *crm.CrmCampaign, s int32) { e.Status = crm.CrmCampaignStatus(s) },
-		FilterBuilder: func(e *crm.CrmCampaign) *crm.CrmCampaign {
+func crmCampaignTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*crm.CrmCampaign).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*crm.CrmCampaign).Status = crm.CrmCampaignStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*crm.CrmCampaign);
 			return &crm.CrmCampaign{CampaignId: e.CampaignId}
 		},
 		ServiceName:   ServiceName,

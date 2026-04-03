@@ -14,7 +14,7 @@
 package successionplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.SuccessionPlan, hcm.SuccessionPlanList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PlanId", Callback: newSuccessionPlanServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PlanId", Callback: newSuccessionPlanServiceCallback(vnic),
+	}, &hcm.SuccessionPlan{}, &hcm.SuccessionPlanList{}, creds, dbname, vnic)
 }
 
 func SuccessionPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func SuccessionPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SuccessionPlan(planId string, vnic ifs.IVNic) (*hcm.SuccessionPlan, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.SuccessionPlan{PlanId: planId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.SuccessionPlan{PlanId: planId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.SuccessionPlan), nil
 }

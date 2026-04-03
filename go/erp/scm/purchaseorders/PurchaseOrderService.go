@@ -14,7 +14,7 @@
 package purchaseorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmPurchaseOrder, scm.ScmPurchaseOrderList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PurchaseOrderId", Callback: newPurchaseOrderServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PurchaseOrderId", Callback: newPurchaseOrderServiceCallback(vnic),
+	}, &scm.ScmPurchaseOrder{}, &scm.ScmPurchaseOrderList{}, creds, dbname, vnic)
 }
 
 func PurchaseOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PurchaseOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PurchaseOrder(purchaseOrderId string, vnic ifs.IVNic) (*scm.ScmPurchaseOrder, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmPurchaseOrder{PurchaseOrderId: purchaseOrderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmPurchaseOrder{PurchaseOrderId: purchaseOrderId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmPurchaseOrder), nil
 }

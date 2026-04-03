@@ -15,15 +15,14 @@ limitations under the License.
 package legalholds
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/doc"
 )
 
-func newDocLegalHoldServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[doc.DocLegalHold]("DocLegalHold",
-		func(e *doc.DocLegalHold) { common.GenerateID(&e.HoldId) }).
-		Require(func(e *doc.DocLegalHold) string { return e.HoldId }, "HoldId").
-		Enum(func(e *doc.DocLegalHold) int32 { return int32(e.Status) }, doc.DocLegalHoldStatus_name, "Status").
+func newDocLegalHoldServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&doc.DocLegalHold{}, vnic).
+		Require(func(v interface{}) string { return v.(*doc.DocLegalHold).HoldId }, "HoldId").
+		Enum(func(v interface{}) int32 { return int32(v.(*doc.DocLegalHold).Status) }, doc.DocLegalHoldStatus_name, "Status").
 		Build()
 }

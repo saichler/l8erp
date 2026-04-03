@@ -30,7 +30,8 @@ func FindActivePriceListForItem(itemId string, quantity float64, vnic ifs.IVNic)
 	}
 	now := time.Now().Unix()
 	var bestPrice *l8common.Money
-	for _, pl := range priceLists {
+	for _, v := range priceLists {
+		pl := v.(*sales.SalesPriceList)
 		if int32(pl.Status) != 2 { // ACTIVE
 			continue
 		}
@@ -100,7 +101,8 @@ func ApplyDiscountRules(basePrice *l8common.Money, customerId, itemId string, vn
 	}
 	now := time.Now().Unix()
 	bestDiscount := int64(0)
-	for _, rule := range rules {
+	for _, v := range rules {
+		rule := v.(*sales.SalesDiscountRule)
 		if !rule.IsActive {
 			continue
 		}

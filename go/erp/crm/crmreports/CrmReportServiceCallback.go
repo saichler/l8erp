@@ -18,13 +18,13 @@ import (
 	"fmt"
 	"time"
 
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
 
 func newCrmReportServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
-	generateOnPost := func(report *fin.FinReport, action ifs.Action, _ ifs.IVNic) error {
+	generateOnPost := func(vi interface{}, action ifs.Action, _ ifs.IVNic) error { report := vi.(*fin.FinReport);
 		if action != ifs.POST {
 			return nil
 		}
@@ -32,9 +32,10 @@ func newCrmReportServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 		return generateCrmReport(report, vnic)
 	}
 	return common.NewServiceCallback("FinReport",
-		func(e *fin.FinReport) { common.GenerateID(&e.ReportId) },
+		func(v interface{}) bool { _, ok := v.(*fin.FinReport); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*fin.FinReport).ReportId) },
 		nil,
-		generateOnPost,
+		func(v interface{}, action ifs.Action, vnic ifs.IVNic) error { return generateOnPost(v.(*fin.FinReport), action, vnic) },
 	)
 }
 

@@ -15,14 +15,13 @@ limitations under the License.
 package emailtemplates
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmEmailTemplateServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmEmailTemplate]("CrmEmailTemplate",
-		func(e *crm.CrmEmailTemplate) { common.GenerateID(&e.TemplateId) }).
-		Require(func(e *crm.CrmEmailTemplate) string { return e.TemplateId }, "TemplateId").
+func newCrmEmailTemplateServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmEmailTemplate{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmEmailTemplate).TemplateId }, "TemplateId").
 		Build()
 }

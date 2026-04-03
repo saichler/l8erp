@@ -15,16 +15,17 @@ limitations under the License.
 package equitygrants
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newEquityGrantServiceCallback() ifs.IServiceCallback {
+func newEquityGrantServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("EquityGrant",
-		func(e *hcm.EquityGrant) { common.GenerateID(&e.GrantId) },
-		validateEqGrant)
+		func(v interface{}) bool { _, ok := v.(*hcm.EquityGrant); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.EquityGrant).GrantId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateEqGrant(v.(*hcm.EquityGrant), vnic) })
 }
 
 func validateEqGrant(entity *hcm.EquityGrant, vnic ifs.IVNic) error {

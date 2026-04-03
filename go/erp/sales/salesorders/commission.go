@@ -15,7 +15,7 @@ limitations under the License.
 package salesorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 	"time"
@@ -23,14 +23,17 @@ import (
 
 // calculateCommission finds the commission plan for the salesperson and updates
 // the plan's earned amount when an order is delivered.
-func calculateCommission(order *sales.SalesOrder, action ifs.Action, vnic ifs.IVNic) error {
+func calculateCommission(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	order := v.(*sales.SalesOrder)
 	if order.Status != sales.SalesOrderStatus_SALES_ORDER_STATUS_DELIVERED {
 		return nil
 	}
 	if order.SalespersonId == "" || order.TotalAmount == nil {
 		return nil
 	}
-	plans, err := common.GetEntities("CommPlan", 60, &sales.SalesCommissionPlan{}, vnic)
+	plansRaw, err := common.GetEntities("CommPlan", 60, &sales.SalesCommissionPlan{}, vnic)
+	plans := make([]*sales.SalesCommissionPlan, 0, len(plansRaw))
+	for _, ri := range plansRaw { plans = append(plans, ri.(*sales.SalesCommissionPlan)) }
 	if err != nil {
 		return err
 	}

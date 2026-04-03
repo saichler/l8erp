@@ -14,7 +14,7 @@
 package boms
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[mfg.MfgBom, mfg.MfgBomList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "BomId", Callback: newMfgBomServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "BomId", Callback: newMfgBomServiceCallback(vnic),
+	}, &mfg.MfgBom{}, &mfg.MfgBomList{}, creds, dbname, vnic)
 }
 
 func MfgBoms(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func MfgBoms(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgBom(bomId string, vnic ifs.IVNic) (*mfg.MfgBom, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &mfg.MfgBom{BomId: bomId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgBom{BomId: bomId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*mfg.MfgBom), nil
 }

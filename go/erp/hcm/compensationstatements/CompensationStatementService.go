@@ -14,7 +14,7 @@
 package compensationstatements
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.CompensationStatement, hcm.CompensationStatementList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "StatementId", Callback: newCompensationStatementServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "StatementId", Callback: newCompensationStatementServiceCallback(vnic),
+	}, &hcm.CompensationStatement{}, &hcm.CompensationStatementList{}, creds, dbname, vnic)
 }
 
 func CompensationStatements(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CompensationStatements(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompensationStatement(statementId string, vnic ifs.IVNic) (*hcm.CompensationStatement, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.CompensationStatement{StatementId: statementId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.CompensationStatement{StatementId: statementId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.CompensationStatement), nil
 }

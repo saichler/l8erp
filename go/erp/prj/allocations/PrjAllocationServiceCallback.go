@@ -15,18 +15,17 @@ limitations under the License.
 package allocations
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
-func newPrjAllocationServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjAllocation]("PrjAllocation",
-		func(e *prj.PrjAllocation) { common.GenerateID(&e.AllocationId) }).
-		Require(func(e *prj.PrjAllocation) string { return e.AllocationId }, "AllocationId").
-		Enum(func(e *prj.PrjAllocation) int32 { return int32(e.Status) }, prj.PrjAllocationStatus_name, "Status").
-		OptionalMoney(func(e *prj.PrjAllocation) *l8common.Money { return e.BillingRate }, "BillingRate").
-		DateAfter(func(e *prj.PrjAllocation) int64 { return e.EndDate }, func(e *prj.PrjAllocation) int64 { return e.StartDate }, "EndDate", "StartDate").
+func newPrjAllocationServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjAllocation{}, vnic).
+		Require(func(v interface{}) string { return v.(*prj.PrjAllocation).AllocationId }, "AllocationId").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjAllocation).Status) }, prj.PrjAllocationStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjAllocation).BillingRate }, "BillingRate").
+		DateAfter(func(v interface{}) int64 { return v.(*prj.PrjAllocation).EndDate }, func(v interface{}) int64 { return v.(*prj.PrjAllocation).StartDate }, "EndDate", "StartDate").
 		Build()
 }

@@ -14,7 +14,7 @@
 package applications
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.Application, hcm.ApplicationList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ApplicationId", Callback: newApplicationServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ApplicationId", Callback: newApplicationServiceCallback(vnic),
+	}, &hcm.Application{}, &hcm.ApplicationList{}, creds, dbname, vnic)
 }
 
 func Applications(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Applications(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Application(applicationId string, vnic ifs.IVNic) (*hcm.Application, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.Application{ApplicationId: applicationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Application{ApplicationId: applicationId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.Application), nil
 }

@@ -15,19 +15,18 @@ limitations under the License.
 package taxrules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newTaxRuleServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.TaxRule]("TaxRule",
-		func(e *fin.TaxRule) { common.GenerateID(&e.RuleId) }).
-		Require(func(e *fin.TaxRule) string { return e.RuleId }, "RuleId").
-		Require(func(e *fin.TaxRule) string { return e.TaxCodeId }, "TaxCodeId").
-		Require(func(e *fin.TaxRule) string { return e.JurisdictionId }, "JurisdictionId").
-		OptionalMoney(func(e *fin.TaxRule) *l8common.Money { return e.MinimumThreshold }, "MinimumThreshold").
-		OptionalMoney(func(e *fin.TaxRule) *l8common.Money { return e.MaximumThreshold }, "MaximumThreshold").
+func newTaxRuleServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.TaxRule{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.TaxRule).RuleId }, "RuleId").
+		Require(func(v interface{}) string { return v.(*fin.TaxRule).TaxCodeId }, "TaxCodeId").
+		Require(func(v interface{}) string { return v.(*fin.TaxRule).JurisdictionId }, "JurisdictionId").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.TaxRule).MinimumThreshold }, "MinimumThreshold").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.TaxRule).MaximumThreshold }, "MaximumThreshold").
 		Build()
 }

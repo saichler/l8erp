@@ -17,24 +17,24 @@ package productionorders
 import (
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/mfg"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newMfgProductionOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgProductionOrder]("MfgProductionOrder",
-		func(e *mfg.MfgProductionOrder) { common.GenerateID(&e.ProdOrderId) }).
+func newMfgProductionOrderServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgProductionOrder{}, vnic).
 		StatusTransition(productionOrderTransitions()).
 		After(cascadeCreateWorkOrders).
-		Require(func(e *mfg.MfgProductionOrder) string { return e.ProdOrderId }, "ProdOrderId").
-		Enum(func(e *mfg.MfgProductionOrder) int32 { return int32(e.Status) }, mfg.MfgProductionOrderStatus_name, "Status").
-		OptionalMoney(func(e *mfg.MfgProductionOrder) *l8common.Money { return e.TotalEstimatedCost }, "TotalEstimatedCost").
-		OptionalMoney(func(e *mfg.MfgProductionOrder) *l8common.Money { return e.TotalActualCost }, "TotalActualCost").
+		Require(func(v interface{}) string { return v.(*mfg.MfgProductionOrder).ProdOrderId }, "ProdOrderId").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgProductionOrder).Status) }, mfg.MfgProductionOrderStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*mfg.MfgProductionOrder).TotalEstimatedCost }, "TotalEstimatedCost").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*mfg.MfgProductionOrder).TotalActualCost }, "TotalActualCost").
 		Build()
 }
 
 // cascadeCreateWorkOrders auto-creates work orders when a production order is confirmed.
-func cascadeCreateWorkOrders(order *mfg.MfgProductionOrder, action ifs.Action, vnic ifs.IVNic) error {
+func cascadeCreateWorkOrders(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	order := v.(*mfg.MfgProductionOrder)
 	if order.Status != mfg.MfgProductionOrderStatus_MFG_PROD_ORDER_STATUS_CONFIRMED {
 		return nil
 	}
@@ -47,16 +47,18 @@ func cascadeCreateWorkOrders(order *mfg.MfgProductionOrder, action ifs.Action, v
 			continue
 		}
 		// Look up BOM for this item
-		bom, _ := common.GetEntity("MfgBom", 70,
-			&mfg.MfgBom{ItemId: line.ItemId}, vnic)
+		bomRaw, _ := common.GetEntity("MfgBom", 70, &mfg.MfgBom{ItemId: line.ItemId}, vnic)
+		var bom *mfg.MfgBom
+		if bomRaw != nil { bom = bomRaw.(*mfg.MfgBom) }
 		var bomId, routingId string
 		var operations []*mfg.MfgWorkOrderOp
 		if bom != nil {
 			bomId = bom.BomId
 		}
 		// Look up routing for this item to get operations
-		routing, _ := common.GetEntity("MfgRouting", 70,
-			&mfg.MfgRouting{ItemId: line.ItemId}, vnic)
+		routingRaw, _ := common.GetEntity("MfgRouting", 70, &mfg.MfgRouting{ItemId: line.ItemId}, vnic)
+		var routing *mfg.MfgRouting
+		if routingRaw != nil { routing = routingRaw.(*mfg.MfgRouting) }
 		if routing != nil {
 			routingId = routing.RoutingId
 			operations = make([]*mfg.MfgWorkOrderOp, len(routing.Operations))
@@ -92,11 +94,11 @@ func cascadeCreateWorkOrders(order *mfg.MfgProductionOrder, action ifs.Action, v
 	return nil
 }
 
-func productionOrderTransitions() *common.StatusTransitionConfig[mfg.MfgProductionOrder] {
-	return &common.StatusTransitionConfig[mfg.MfgProductionOrder]{
-		StatusGetter:  func(e *mfg.MfgProductionOrder) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *mfg.MfgProductionOrder, s int32) { e.Status = mfg.MfgProductionOrderStatus(s) },
-		FilterBuilder: func(e *mfg.MfgProductionOrder) *mfg.MfgProductionOrder {
+func productionOrderTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*mfg.MfgProductionOrder).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*mfg.MfgProductionOrder).Status = mfg.MfgProductionOrderStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*mfg.MfgProductionOrder);
 			return &mfg.MfgProductionOrder{ProdOrderId: e.ProdOrderId}
 		},
 		ServiceName:   ServiceName,

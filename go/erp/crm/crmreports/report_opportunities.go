@@ -19,12 +19,14 @@ import (
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
 func generateOpportunityPipeline(report *fin.FinReport, vnic ifs.IVNic) error {
-	opps, err := common.GetEntities("CrmOpp", 80, &crm.CrmOpportunity{}, vnic)
+	oppsRaw, err := common.GetEntities("CrmOpp", 80, &crm.CrmOpportunity{}, vnic)
+	opps := make([]*crm.CrmOpportunity, 0, len(oppsRaw))
+	for _, ri := range oppsRaw { opps = append(opps, ri.(*crm.CrmOpportunity)) }
 	if err != nil {
 		return err
 	}

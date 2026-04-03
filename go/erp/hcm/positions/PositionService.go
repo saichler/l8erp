@@ -14,7 +14,7 @@
 package positions
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.Position, hcm.PositionList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PositionId", Callback: newPositionServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PositionId", Callback: newPositionServiceCallback(vnic),
+	}, &hcm.Position{}, &hcm.PositionList{}, creds, dbname, vnic)
 }
 
 func Positions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Positions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Position(positionId string, vnic ifs.IVNic) (*hcm.Position, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.Position{PositionId: positionId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Position{PositionId: positionId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.Position), nil
 }

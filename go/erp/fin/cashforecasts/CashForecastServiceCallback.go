@@ -15,21 +15,20 @@ limitations under the License.
 package cashforecasts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newCashForecastServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.CashForecast]("CashForecast",
-		func(e *fin.CashForecast) { common.GenerateID(&e.ForecastId) }).
-		Require(func(e *fin.CashForecast) string { return e.ForecastId }, "ForecastId").
-		Require(func(e *fin.CashForecast) string { return e.ForecastName }, "ForecastName").
-		OptionalMoney(func(e *fin.CashForecast) *l8common.Money { return e.OpeningBalance }, "OpeningBalance").
-		OptionalMoney(func(e *fin.CashForecast) *l8common.Money { return e.ProjectedInflows }, "ProjectedInflows").
-		OptionalMoney(func(e *fin.CashForecast) *l8common.Money { return e.ProjectedOutflows }, "ProjectedOutflows").
-		OptionalMoney(func(e *fin.CashForecast) *l8common.Money { return e.NetCashFlow }, "NetCashFlow").
-		OptionalMoney(func(e *fin.CashForecast) *l8common.Money { return e.ClosingBalance }, "ClosingBalance").
+func newCashForecastServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.CashForecast{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.CashForecast).ForecastId }, "ForecastId").
+		Require(func(v interface{}) string { return v.(*fin.CashForecast).ForecastName }, "ForecastName").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.CashForecast).OpeningBalance }, "OpeningBalance").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.CashForecast).ProjectedInflows }, "ProjectedInflows").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.CashForecast).ProjectedOutflows }, "ProjectedOutflows").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.CashForecast).NetCashFlow }, "NetCashFlow").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.CashForecast).ClosingBalance }, "ClosingBalance").
 		Build()
 }

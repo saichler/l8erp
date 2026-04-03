@@ -14,7 +14,7 @@
 package jobrequisitions
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.JobRequisition, hcm.JobRequisitionList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RequisitionId", Callback: newJobRequisitionServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RequisitionId", Callback: newJobRequisitionServiceCallback(vnic),
+	}, &hcm.JobRequisition{}, &hcm.JobRequisitionList{}, creds, dbname, vnic)
 }
 
 func JobRequisitions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func JobRequisitions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func JobRequisition(requisitionId string, vnic ifs.IVNic) (*hcm.JobRequisition, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.JobRequisition{RequisitionId: requisitionId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.JobRequisition{RequisitionId: requisitionId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.JobRequisition), nil
 }

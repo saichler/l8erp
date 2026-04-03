@@ -14,7 +14,7 @@
 package schedules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.Schedule, hcm.ScheduleList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ScheduleId", Callback: newScheduleServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ScheduleId", Callback: newScheduleServiceCallback(vnic),
+	}, &hcm.Schedule{}, &hcm.ScheduleList{}, creds, dbname, vnic)
 }
 
 func Schedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Schedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Schedule(scheduleId string, vnic ifs.IVNic) (*hcm.Schedule, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.Schedule{ScheduleId: scheduleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Schedule{ScheduleId: scheduleId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.Schedule), nil
 }

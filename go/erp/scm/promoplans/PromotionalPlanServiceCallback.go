@@ -15,16 +15,15 @@ limitations under the License.
 package promoplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newPromotionalPlanServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmPromotionalPlan]("ScmPromotionalPlan",
-		func(e *scm.ScmPromotionalPlan) { common.GenerateID(&e.PlanId) }).
-		Require(func(e *scm.ScmPromotionalPlan) string { return e.PlanId }, "PlanId").
-		Enum(func(e *scm.ScmPromotionalPlan) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
-		DateAfter(func(e *scm.ScmPromotionalPlan) int64 { return e.EndDate }, func(e *scm.ScmPromotionalPlan) int64 { return e.StartDate }, "EndDate", "StartDate").
+func newPromotionalPlanServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmPromotionalPlan{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmPromotionalPlan).PlanId }, "PlanId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmPromotionalPlan).Status) }, scm.ScmTaskStatus_name, "Status").
+		DateAfter(func(v interface{}) int64 { return v.(*scm.ScmPromotionalPlan).EndDate }, func(v interface{}) int64 { return v.(*scm.ScmPromotionalPlan).StartDate }, "EndDate", "StartDate").
 		Build()
 }

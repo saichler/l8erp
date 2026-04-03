@@ -15,15 +15,14 @@ limitations under the License.
 package taxexemptions
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newTaxExemptionServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.TaxExemption]("TaxExemption",
-		func(e *fin.TaxExemption) { common.GenerateID(&e.ExemptionId) }).
-		Require(func(e *fin.TaxExemption) string { return e.ExemptionId }, "ExemptionId").
-		Require(func(e *fin.TaxExemption) string { return e.TaxCodeId }, "TaxCodeId").
+func newTaxExemptionServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.TaxExemption{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.TaxExemption).ExemptionId }, "ExemptionId").
+		Require(func(v interface{}) string { return v.(*fin.TaxExemption).TaxCodeId }, "TaxCodeId").
 		Build()
 }

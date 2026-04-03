@@ -17,16 +17,15 @@ package overheads
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/mfg"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newMfgOverheadServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgOverhead]("MfgOverhead",
-		func(e *mfg.MfgOverhead) { common.GenerateID(&e.OverheadId) }).
-		Require(func(e *mfg.MfgOverhead) string { return e.OverheadId }, "OverheadId").
-		Require(func(e *mfg.MfgOverhead) string { return e.Name }, "Name").
-		Require(func(e *mfg.MfgOverhead) string { return e.CurrencyId }, "CurrencyId").
-		Enum(func(e *mfg.MfgOverhead) int32 { return int32(e.AllocationMethod) }, mfg.MfgOverheadMethod_name, "AllocationMethod").
-		DateAfter(func(e *mfg.MfgOverhead) int64 { return e.ExpiryDate }, func(e *mfg.MfgOverhead) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
+func newMfgOverheadServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgOverhead{}, vnic).
+		Require(func(v interface{}) string { return v.(*mfg.MfgOverhead).OverheadId }, "OverheadId").
+		Require(func(v interface{}) string { return v.(*mfg.MfgOverhead).Name }, "Name").
+		Require(func(v interface{}) string { return v.(*mfg.MfgOverhead).CurrencyId }, "CurrencyId").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgOverhead).AllocationMethod) }, mfg.MfgOverheadMethod_name, "AllocationMethod").
+		DateAfter(func(v interface{}) int64 { return v.(*mfg.MfgOverhead).ExpiryDate }, func(v interface{}) int64 { return v.(*mfg.MfgOverhead).EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

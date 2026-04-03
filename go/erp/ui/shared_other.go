@@ -1,7 +1,7 @@
 package ui
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8erp/go/types/doc"
@@ -14,95 +14,95 @@ import (
 
 func registerBiTypes(resources ifs.IResources) {
 	// Reporting
-	common.RegisterType[bi.BiReport, bi.BiReportList](resources, "ReportId")
-	common.RegisterType[bi.BiReportTemplate, bi.BiReportTemplateList](resources, "TemplateId")
+	common.RegisterType(resources, &bi.BiReport{}, &bi.BiReportList{}, "ReportId")
+	common.RegisterType(resources, &bi.BiReportTemplate{}, &bi.BiReportTemplateList{}, "TemplateId")
 
 	// Dashboards
-	common.RegisterType[bi.BiDashboard, bi.BiDashboardList](resources, "DashboardId")
-	common.RegisterType[bi.BiKPI, bi.BiKPIList](resources, "KpiId")
+	common.RegisterType(resources, &bi.BiDashboard{}, &bi.BiDashboardList{}, "DashboardId")
+	common.RegisterType(resources, &bi.BiKPI{}, &bi.BiKPIList{}, "KpiId")
 
 	// Analytics
-	common.RegisterType[bi.BiDataCube, bi.BiDataCubeList](resources, "CubeId")
-	common.RegisterType[bi.BiAnalysisModel, bi.BiAnalysisModelList](resources, "ModelId")
-	common.RegisterType[bi.BiTrendAnalysis, bi.BiTrendAnalysisList](resources, "AnalysisId")
-	common.RegisterType[bi.BiScenario, bi.BiScenarioList](resources, "ScenarioId")
-	common.RegisterType[bi.BiBenchmark, bi.BiBenchmarkList](resources, "BenchmarkId")
+	common.RegisterType(resources, &bi.BiDataCube{}, &bi.BiDataCubeList{}, "CubeId")
+	common.RegisterType(resources, &bi.BiAnalysisModel{}, &bi.BiAnalysisModelList{}, "ModelId")
+	common.RegisterType(resources, &bi.BiTrendAnalysis{}, &bi.BiTrendAnalysisList{}, "AnalysisId")
+	common.RegisterType(resources, &bi.BiScenario{}, &bi.BiScenarioList{}, "ScenarioId")
+	common.RegisterType(resources, &bi.BiBenchmark{}, &bi.BiBenchmarkList{}, "BenchmarkId")
 
 	// Data Management
-	common.RegisterType[bi.BiDataSource, bi.BiDataSourceList](resources, "SourceId")
-	common.RegisterType[bi.BiETLJob, bi.BiETLJobList](resources, "JobId")
-	common.RegisterType[bi.BiDataQualityRule, bi.BiDataQualityRuleList](resources, "RuleId")
-	common.RegisterType[bi.BiMasterDataConfig, bi.BiMasterDataConfigList](resources, "ConfigId")
-	common.RegisterType[bi.BiDataGovernance, bi.BiDataGovernanceList](resources, "GovernanceId")
+	common.RegisterType(resources, &bi.BiDataSource{}, &bi.BiDataSourceList{}, "SourceId")
+	common.RegisterType(resources, &bi.BiETLJob{}, &bi.BiETLJobList{}, "JobId")
+	common.RegisterType(resources, &bi.BiDataQualityRule{}, &bi.BiDataQualityRuleList{}, "RuleId")
+	common.RegisterType(resources, &bi.BiMasterDataConfig{}, &bi.BiMasterDataConfigList{}, "ConfigId")
+	common.RegisterType(resources, &bi.BiDataGovernance{}, &bi.BiDataGovernanceList{}, "GovernanceId")
 }
 
 func registerDocTypes(resources ifs.IResources) {
 	// Storage
-	common.RegisterType[doc.DocDocument, doc.DocDocumentList](resources, "DocumentId")
-	common.RegisterType[doc.DocFolder, doc.DocFolderList](resources, "FolderId")
-	common.RegisterType[doc.DocCategory, doc.DocCategoryList](resources, "CategoryId")
-	common.RegisterType[doc.DocTag, doc.DocTagList](resources, "TagId")
+	common.RegisterType(resources, &doc.DocDocument{}, &doc.DocDocumentList{}, "DocumentId")
+	common.RegisterType(resources, &doc.DocFolder{}, &doc.DocFolderList{}, "FolderId")
+	common.RegisterType(resources, &doc.DocCategory{}, &doc.DocCategoryList{}, "CategoryId")
+	common.RegisterType(resources, &doc.DocTag{}, &doc.DocTagList{}, "TagId")
 
 	// Workflow
-	common.RegisterType[doc.DocApprovalWorkflow, doc.DocApprovalWorkflowList](resources, "WorkflowId")
+	common.RegisterType(resources, &doc.DocApprovalWorkflow{}, &doc.DocApprovalWorkflowList{}, "WorkflowId")
 
 	// Integration
-	common.RegisterType[doc.DocTemplate, doc.DocTemplateList](resources, "TemplateId")
-	common.RegisterType[doc.DocEmailCapture, doc.DocEmailCaptureList](resources, "CaptureId")
-	common.RegisterType[doc.DocScanJob, doc.DocScanJobList](resources, "ScanJobId")
+	common.RegisterType(resources, &doc.DocTemplate{}, &doc.DocTemplateList{}, "TemplateId")
+	common.RegisterType(resources, &doc.DocEmailCapture{}, &doc.DocEmailCaptureList{}, "CaptureId")
+	common.RegisterType(resources, &doc.DocScanJob{}, &doc.DocScanJobList{}, "ScanJobId")
 
 	// Compliance
-	common.RegisterType[doc.DocRetentionPolicy, doc.DocRetentionPolicyList](resources, "PolicyId")
-	common.RegisterType[doc.DocLegalHold, doc.DocLegalHoldList](resources, "HoldId")
-	common.RegisterType[doc.DocArchiveJob, doc.DocArchiveJobList](resources, "JobId")
+	common.RegisterType(resources, &doc.DocRetentionPolicy{}, &doc.DocRetentionPolicyList{}, "PolicyId")
+	common.RegisterType(resources, &doc.DocLegalHold{}, &doc.DocLegalHoldList{}, "HoldId")
+	common.RegisterType(resources, &doc.DocArchiveJob{}, &doc.DocArchiveJobList{}, "JobId")
 }
 
 func registerEcomTypes(resources ifs.IResources) {
 	// Catalog
-	common.RegisterType[ecom.EcomProduct, ecom.EcomProductList](resources, "ProductId")
-	common.RegisterType[ecom.EcomCategory, ecom.EcomCategoryList](resources, "CategoryId")
-	common.RegisterType[ecom.EcomAttribute, ecom.EcomAttributeList](resources, "AttributeId")
+	common.RegisterType(resources, &ecom.EcomProduct{}, &ecom.EcomProductList{}, "ProductId")
+	common.RegisterType(resources, &ecom.EcomCategory{}, &ecom.EcomCategoryList{}, "CategoryId")
+	common.RegisterType(resources, &ecom.EcomAttribute{}, &ecom.EcomAttributeList{}, "AttributeId")
 
 	// Orders
-	common.RegisterType[ecom.EcomOrder, ecom.EcomOrderList](resources, "OrderId")
-	common.RegisterType[ecom.EcomReturn, ecom.EcomReturnList](resources, "ReturnId")
+	common.RegisterType(resources, &ecom.EcomOrder{}, &ecom.EcomOrderList{}, "OrderId")
+	common.RegisterType(resources, &ecom.EcomReturn{}, &ecom.EcomReturnList{}, "ReturnId")
 
 	// Customers
-	common.RegisterType[ecom.EcomCustomer, ecom.EcomCustomerList](resources, "CustomerId")
-	common.RegisterType[ecom.EcomWishlist, ecom.EcomWishlistList](resources, "WishlistId")
-	common.RegisterType[ecom.EcomCart, ecom.EcomCartList](resources, "CartId")
+	common.RegisterType(resources, &ecom.EcomCustomer{}, &ecom.EcomCustomerList{}, "CustomerId")
+	common.RegisterType(resources, &ecom.EcomWishlist{}, &ecom.EcomWishlistList{}, "WishlistId")
+	common.RegisterType(resources, &ecom.EcomCart{}, &ecom.EcomCartList{}, "CartId")
 
 	// Promotions
-	common.RegisterType[ecom.EcomPromotion, ecom.EcomPromotionList](resources, "PromotionId")
-	common.RegisterType[ecom.EcomCoupon, ecom.EcomCouponList](resources, "CouponId")
-	common.RegisterType[ecom.EcomPriceRule, ecom.EcomPriceRuleList](resources, "RuleId")
-	common.RegisterType[ecom.EcomShippingMethod, ecom.EcomShippingMethodList](resources, "MethodId")
-	common.RegisterType[ecom.EcomPaymentMethod, ecom.EcomPaymentMethodList](resources, "MethodId")
+	common.RegisterType(resources, &ecom.EcomPromotion{}, &ecom.EcomPromotionList{}, "PromotionId")
+	common.RegisterType(resources, &ecom.EcomCoupon{}, &ecom.EcomCouponList{}, "CouponId")
+	common.RegisterType(resources, &ecom.EcomPriceRule{}, &ecom.EcomPriceRuleList{}, "RuleId")
+	common.RegisterType(resources, &ecom.EcomShippingMethod{}, &ecom.EcomShippingMethodList{}, "MethodId")
+	common.RegisterType(resources, &ecom.EcomPaymentMethod{}, &ecom.EcomPaymentMethodList{}, "MethodId")
 }
 
 func registerCompTypes(resources ifs.IResources) {
 	// Regulatory
-	common.RegisterType[comp.CompRegulation, comp.CompRegulationList](resources, "RegulationId")
-	common.RegisterType[comp.CompCertification, comp.CompCertificationList](resources, "CertificationId")
+	common.RegisterType(resources, &comp.CompRegulation{}, &comp.CompRegulationList{}, "RegulationId")
+	common.RegisterType(resources, &comp.CompCertification{}, &comp.CompCertificationList{}, "CertificationId")
 
 	// Internal Controls
-	common.RegisterType[comp.CompControl, comp.CompControlList](resources, "ControlId")
-	common.RegisterType[comp.CompPolicyDocument, comp.CompPolicyDocumentList](resources, "PolicyId")
-	common.RegisterType[comp.CompApprovalMatrix, comp.CompApprovalMatrixList](resources, "MatrixId")
+	common.RegisterType(resources, &comp.CompControl{}, &comp.CompControlList{}, "ControlId")
+	common.RegisterType(resources, &comp.CompPolicyDocument{}, &comp.CompPolicyDocumentList{}, "PolicyId")
+	common.RegisterType(resources, &comp.CompApprovalMatrix{}, &comp.CompApprovalMatrixList{}, "MatrixId")
 
 	// Risk Management
-	common.RegisterType[comp.CompRiskRegister, comp.CompRiskRegisterList](resources, "RiskId")
-	common.RegisterType[comp.CompIncident, comp.CompIncidentList](resources, "IncidentId")
-	common.RegisterType[comp.CompInsurancePolicy, comp.CompInsurancePolicyList](resources, "PolicyId")
+	common.RegisterType(resources, &comp.CompRiskRegister{}, &comp.CompRiskRegisterList{}, "RiskId")
+	common.RegisterType(resources, &comp.CompIncident{}, &comp.CompIncidentList{}, "IncidentId")
+	common.RegisterType(resources, &comp.CompInsurancePolicy{}, &comp.CompInsurancePolicyList{}, "PolicyId")
 
 	// Audit Management
-	common.RegisterType[comp.CompAuditSchedule, comp.CompAuditScheduleList](resources, "ScheduleId")
-	common.RegisterType[comp.CompAuditFinding, comp.CompAuditFindingList](resources, "FindingId")
-	common.RegisterType[comp.CompComplianceReport, comp.CompComplianceReportList](resources, "ReportId")
+	common.RegisterType(resources, &comp.CompAuditSchedule{}, &comp.CompAuditScheduleList{}, "ScheduleId")
+	common.RegisterType(resources, &comp.CompAuditFinding{}, &comp.CompAuditFindingList{}, "FindingId")
+	common.RegisterType(resources, &comp.CompComplianceReport{}, &comp.CompComplianceReportList{}, "ReportId")
 }
 
 func registerSysTypes(resources ifs.IResources) {
-	common.RegisterType[sys.SysModuleConfig, sys.SysModuleConfigList](resources, "ConfigId")
-	common.RegisterType[l8api.L8ImportTemplate, l8api.L8ImportTemplateList](resources, "TemplateId")
-	common.RegisterType[l8events.EventRecord, l8events.EventRecordList](resources, "EventId")
+	common.RegisterType(resources, &sys.SysModuleConfig{}, &sys.SysModuleConfigList{}, "ConfigId")
+	common.RegisterType(resources, &l8api.L8ImportTemplate{}, &l8api.L8ImportTemplateList{}, "TemplateId")
+	common.RegisterType(resources, &l8events.EventRecord{}, &l8events.EventRecordList{}, "EventId")
 }

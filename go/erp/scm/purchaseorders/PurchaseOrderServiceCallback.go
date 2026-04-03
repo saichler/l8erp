@@ -15,25 +15,36 @@ limitations under the License.
 package purchaseorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	"reflect"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newPurchaseOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmPurchaseOrder]("ScmPurchaseOrder",
-		func(e *scm.ScmPurchaseOrder) { common.GenerateID(&e.PurchaseOrderId) }).
+
+func toSlice(slice interface{}) []interface{} {
+	v := reflect.ValueOf(slice)
+	result := make([]interface{}, v.Len())
+	for i := 0; i < v.Len(); i++ {
+		result[i] = v.Index(i).Interface()
+	}
+	return result
+}
+
+func newPurchaseOrderServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmPurchaseOrder{}, vnic).
 		StatusTransition(purchaseOrderTransitions()).
 		Compute(computePurchaseOrderTotals).
-		Require(func(e *scm.ScmPurchaseOrder) string { return e.PurchaseOrderId }, "PurchaseOrderId").
-		Require(func(e *scm.ScmPurchaseOrder) string { return e.VendorId }, "VendorId").
-		Enum(func(e *scm.ScmPurchaseOrder) int32 { return int32(e.Status) }, scm.ScmPurchaseOrderStatus_name, "Status").
-		OptionalMoney(func(e *scm.ScmPurchaseOrder) *l8common.Money { return e.TotalAmount }, "TotalAmount").
+		Require(func(v interface{}) string { return v.(*scm.ScmPurchaseOrder).PurchaseOrderId }, "PurchaseOrderId").
+		Require(func(v interface{}) string { return v.(*scm.ScmPurchaseOrder).VendorId }, "VendorId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmPurchaseOrder).Status) }, scm.ScmPurchaseOrderStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*scm.ScmPurchaseOrder).TotalAmount }, "TotalAmount").
 		Build()
 }
 
-func computePurchaseOrderTotals(po *scm.ScmPurchaseOrder) error {
+func computePurchaseOrderTotals(v interface{}) error {
+	po := v.(*scm.ScmPurchaseOrder)
 	for _, line := range po.Lines {
 		if line.UnitPrice != nil {
 			line.TotalPrice = &l8common.Money{
@@ -42,15 +53,15 @@ func computePurchaseOrderTotals(po *scm.ScmPurchaseOrder) error {
 			}
 		}
 	}
-	po.TotalAmount = common.SumLineMoney(po.Lines, func(l *scm.ScmPurchaseOrderLine) *l8common.Money { return l.TotalPrice })
+	po.TotalAmount = common.SumLineMoney(toSlice(po.Lines), func(v interface{}) *l8common.Money { return v.(*scm.ScmPurchaseOrderLine).TotalPrice })
 	return nil
 }
 
-func purchaseOrderTransitions() *common.StatusTransitionConfig[scm.ScmPurchaseOrder] {
-	return &common.StatusTransitionConfig[scm.ScmPurchaseOrder]{
-		StatusGetter:  func(e *scm.ScmPurchaseOrder) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *scm.ScmPurchaseOrder, s int32) { e.Status = scm.ScmPurchaseOrderStatus(s) },
-		FilterBuilder: func(e *scm.ScmPurchaseOrder) *scm.ScmPurchaseOrder {
+func purchaseOrderTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*scm.ScmPurchaseOrder).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*scm.ScmPurchaseOrder).Status = scm.ScmPurchaseOrderStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*scm.ScmPurchaseOrder);
 			return &scm.ScmPurchaseOrder{PurchaseOrderId: e.PurchaseOrderId}
 		},
 		ServiceName:   ServiceName,

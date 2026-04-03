@@ -15,19 +15,18 @@ limitations under the License.
 package fundtransfers
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newFundTransferServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.FundTransfer]("FundTransfer",
-		func(e *fin.FundTransfer) { common.GenerateID(&e.TransferId) }).
-		Require(func(e *fin.FundTransfer) string { return e.TransferId }, "TransferId").
-		Require(func(e *fin.FundTransfer) string { return e.FromBankAccountId }, "FromBankAccountId").
-		Require(func(e *fin.FundTransfer) string { return e.ToBankAccountId }, "ToBankAccountId").
-		Enum(func(e *fin.FundTransfer) int32 { return int32(e.Status) }, fin.TransferStatus_name, "Status").
-		OptionalMoney(func(e *fin.FundTransfer) *l8common.Money { return e.Amount }, "Amount").
+func newFundTransferServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.FundTransfer{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.FundTransfer).TransferId }, "TransferId").
+		Require(func(v interface{}) string { return v.(*fin.FundTransfer).FromBankAccountId }, "FromBankAccountId").
+		Require(func(v interface{}) string { return v.(*fin.FundTransfer).ToBankAccountId }, "ToBankAccountId").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.FundTransfer).Status) }, fin.TransferStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.FundTransfer).Amount }, "Amount").
 		Build()
 }

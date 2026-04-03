@@ -15,21 +15,20 @@ limitations under the License.
 package shippingmethods
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
-func newEcomShippingMethodServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[ecom.EcomShippingMethod]("EcomShippingMethod",
-		func(e *ecom.EcomShippingMethod) { common.GenerateID(&e.MethodId) }).
-		Require(func(e *ecom.EcomShippingMethod) string { return e.MethodId }, "MethodId").
-		OptionalMoney(func(e *ecom.EcomShippingMethod) *l8common.Money { return e.BaseRate }, "BaseRate").
-		OptionalMoney(func(e *ecom.EcomShippingMethod) *l8common.Money { return e.PerItemRate }, "PerItemRate").
-		OptionalMoney(func(e *ecom.EcomShippingMethod) *l8common.Money { return e.PerWeightRate }, "PerWeightRate").
-		OptionalMoney(func(e *ecom.EcomShippingMethod) *l8common.Money { return e.FreeShippingThreshold }, "FreeShippingThreshold").
-		OptionalMoney(func(e *ecom.EcomShippingMethod) *l8common.Money { return e.MinOrderAmount }, "MinOrderAmount").
-		OptionalMoney(func(e *ecom.EcomShippingMethod) *l8common.Money { return e.MaxOrderAmount }, "MaxOrderAmount").
+func newEcomShippingMethodServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&ecom.EcomShippingMethod{}, vnic).
+		Require(func(v interface{}) string { return v.(*ecom.EcomShippingMethod).MethodId }, "MethodId").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomShippingMethod).BaseRate }, "BaseRate").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomShippingMethod).PerItemRate }, "PerItemRate").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomShippingMethod).PerWeightRate }, "PerWeightRate").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomShippingMethod).FreeShippingThreshold }, "FreeShippingThreshold").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomShippingMethod).MinOrderAmount }, "MinOrderAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomShippingMethod).MaxOrderAmount }, "MaxOrderAmount").
 		Build()
 }

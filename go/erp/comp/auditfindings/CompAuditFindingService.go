@@ -14,7 +14,7 @@
 package auditfindings
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[comp.CompAuditFinding, comp.CompAuditFindingList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "FindingId", Callback: newCompAuditFindingServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "FindingId", Callback: newCompAuditFindingServiceCallback(vnic),
+	}, &comp.CompAuditFinding{}, &comp.CompAuditFindingList{}, creds, dbname, vnic)
 }
 
 func CompAuditFindings(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CompAuditFindings(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompAuditFinding(findingId string, vnic ifs.IVNic) (*comp.CompAuditFinding, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &comp.CompAuditFinding{FindingId: findingId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompAuditFinding{FindingId: findingId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*comp.CompAuditFinding), nil
 }

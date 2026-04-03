@@ -17,22 +17,21 @@ package orders
 import (
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newEcomOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[ecom.EcomOrder]("EcomOrder",
-		func(e *ecom.EcomOrder) { common.GenerateID(&e.OrderId) }).
+func newEcomOrderServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&ecom.EcomOrder{}, vnic).
 		Compute(computeOrderTotals).
-		Require(func(e *ecom.EcomOrder) string { return e.OrderId }, "OrderId").
-		Require(func(e *ecom.EcomOrder) string { return e.CustomerId }, "CustomerId").
-		Enum(func(e *ecom.EcomOrder) int32 { return int32(e.PaymentStatus) }, ecom.EcomPaymentStatus_name, "PaymentStatus").
-		Enum(func(e *ecom.EcomOrder) int32 { return int32(e.Status) }, ecom.EcomOrderStatus_name, "Status").
-		OptionalMoney(func(e *ecom.EcomOrder) *l8common.Money { return e.Subtotal }, "Subtotal").
-		OptionalMoney(func(e *ecom.EcomOrder) *l8common.Money { return e.DiscountAmount }, "DiscountAmount").
-		OptionalMoney(func(e *ecom.EcomOrder) *l8common.Money { return e.ShippingAmount }, "ShippingAmount").
-		OptionalMoney(func(e *ecom.EcomOrder) *l8common.Money { return e.TaxAmount }, "TaxAmount").
-		OptionalMoney(func(e *ecom.EcomOrder) *l8common.Money { return e.TotalAmount }, "TotalAmount").
+		Require(func(v interface{}) string { return v.(*ecom.EcomOrder).OrderId }, "OrderId").
+		Require(func(v interface{}) string { return v.(*ecom.EcomOrder).CustomerId }, "CustomerId").
+		Enum(func(v interface{}) int32 { return int32(v.(*ecom.EcomOrder).PaymentStatus) }, ecom.EcomPaymentStatus_name, "PaymentStatus").
+		Enum(func(v interface{}) int32 { return int32(v.(*ecom.EcomOrder).Status) }, ecom.EcomOrderStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomOrder).Subtotal }, "Subtotal").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomOrder).DiscountAmount }, "DiscountAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomOrder).ShippingAmount }, "ShippingAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomOrder).TaxAmount }, "TaxAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomOrder).TotalAmount }, "TotalAmount").
 		Build()
 }

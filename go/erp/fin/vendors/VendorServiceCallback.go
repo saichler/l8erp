@@ -15,17 +15,16 @@ limitations under the License.
 package vendors
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newVendorServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.Vendor]("Vendor",
-		func(e *fin.Vendor) { common.GenerateID(&e.VendorId) }).
-		Require(func(e *fin.Vendor) string { return e.VendorId }, "VendorId").
-		Require(func(e *fin.Vendor) string { return e.Name }, "Name").
-		Enum(func(e *fin.Vendor) int32 { return int32(e.PreferredPaymentMethod) }, fin.PaymentMethod_name, "PreferredPaymentMethod").
-		Enum(func(e *fin.Vendor) int32 { return int32(e.Status) }, fin.VendorStatus_name, "Status").
+func newVendorServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.Vendor{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.Vendor).VendorId }, "VendorId").
+		Require(func(v interface{}) string { return v.(*fin.Vendor).Name }, "Name").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.Vendor).PreferredPaymentMethod) }, fin.PaymentMethod_name, "PreferredPaymentMethod").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.Vendor).Status) }, fin.VendorStatus_name, "Status").
 		Build()
 }

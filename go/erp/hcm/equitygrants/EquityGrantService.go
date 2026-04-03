@@ -14,7 +14,7 @@
 package equitygrants
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.EquityGrant, hcm.EquityGrantList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "GrantId", Callback: newEquityGrantServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "GrantId", Callback: newEquityGrantServiceCallback(vnic),
+	}, &hcm.EquityGrant{}, &hcm.EquityGrantList{}, creds, dbname, vnic)
 }
 
 func EquityGrants(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func EquityGrants(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EquityGrant(grantId string, vnic ifs.IVNic) (*hcm.EquityGrant, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.EquityGrant{GrantId: grantId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.EquityGrant{GrantId: grantId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.EquityGrant), nil
 }

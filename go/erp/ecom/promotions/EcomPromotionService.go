@@ -14,7 +14,7 @@
 package promotions
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[ecom.EcomPromotion, ecom.EcomPromotionList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PromotionId", Callback: newEcomPromotionServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PromotionId", Callback: newEcomPromotionServiceCallback(vnic),
+	}, &ecom.EcomPromotion{}, &ecom.EcomPromotionList{}, creds, dbname, vnic)
 }
 
 func EcomPromotions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func EcomPromotions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomPromotion(promotionId string, vnic ifs.IVNic) (*ecom.EcomPromotion, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &ecom.EcomPromotion{PromotionId: promotionId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomPromotion{PromotionId: promotionId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*ecom.EcomPromotion), nil
 }

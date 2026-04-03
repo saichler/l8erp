@@ -16,15 +16,16 @@ package directdeposits
 
 import (
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 )
 
-func newDirectDepositServiceCallback() ifs.IServiceCallback {
+func newDirectDepositServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("DirectDeposit",
-		func(e *hcm.DirectDeposit) { common.GenerateID(&e.DirectDepositId) },
-		validateDirDep)
+		func(v interface{}) bool { _, ok := v.(*hcm.DirectDeposit); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.DirectDeposit).DirectDepositId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateDirDep(v.(*hcm.DirectDeposit), vnic) })
 }
 
 func validateDirDep(entity *hcm.DirectDeposit, vnic ifs.IVNic) error {

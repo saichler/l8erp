@@ -15,21 +15,20 @@ limitations under the License.
 package bankaccounts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newBankAccountServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.BankAccount]("BankAccount",
-		func(e *fin.BankAccount) { common.GenerateID(&e.BankAccountId) }).
-		Require(func(e *fin.BankAccount) string { return e.BankAccountId }, "BankAccountId").
-		Require(func(e *fin.BankAccount) string { return e.AccountName }, "AccountName").
-		Require(func(e *fin.BankAccount) string { return e.BankName }, "BankName").
-		Require(func(e *fin.BankAccount) string { return e.GlAccountId }, "GlAccountId").
-		Enum(func(e *fin.BankAccount) int32 { return int32(e.AccountType) }, fin.BankAccountType_name, "AccountType").
-		Enum(func(e *fin.BankAccount) int32 { return int32(e.Status) }, fin.BankAccountStatus_name, "Status").
-		OptionalMoney(func(e *fin.BankAccount) *l8common.Money { return e.CurrentBalance }, "CurrentBalance").
+func newBankAccountServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.BankAccount{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.BankAccount).BankAccountId }, "BankAccountId").
+		Require(func(v interface{}) string { return v.(*fin.BankAccount).AccountName }, "AccountName").
+		Require(func(v interface{}) string { return v.(*fin.BankAccount).BankName }, "BankName").
+		Require(func(v interface{}) string { return v.(*fin.BankAccount).GlAccountId }, "GlAccountId").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.BankAccount).AccountType) }, fin.BankAccountType_name, "AccountType").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.BankAccount).Status) }, fin.BankAccountStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.BankAccount).CurrentBalance }, "CurrentBalance").
 		Build()
 }

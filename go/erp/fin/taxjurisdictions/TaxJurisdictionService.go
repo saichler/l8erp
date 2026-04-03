@@ -14,7 +14,7 @@
 package taxjurisdictions
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.TaxJurisdiction, fin.TaxJurisdictionList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "JurisdictionId", Callback: newTaxJurisdictionServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "JurisdictionId", Callback: newTaxJurisdictionServiceCallback(vnic),
+	}, &fin.TaxJurisdiction{}, &fin.TaxJurisdictionList{}, creds, dbname, vnic)
 }
 
 func TaxJurisdictions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func TaxJurisdictions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func TaxJurisdiction(jurisdictionId string, vnic ifs.IVNic) (*fin.TaxJurisdiction, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.TaxJurisdiction{JurisdictionId: jurisdictionId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.TaxJurisdiction{JurisdictionId: jurisdictionId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.TaxJurisdiction), nil
 }

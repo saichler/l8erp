@@ -1,54 +1,54 @@
 package ui
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
 
 func registerFinTypes(resources ifs.IResources) {
 	// General Ledger
-	common.RegisterType[fin.Account, fin.AccountList](resources, "AccountId")
-	common.RegisterType[fin.JournalEntry, fin.JournalEntryList](resources, "JournalEntryId")
-	common.RegisterType[fin.FiscalYear, fin.FiscalYearList](resources, "FiscalYearId")
-	common.RegisterType[fin.Currency, fin.CurrencyList](resources, "CurrencyId")
-	common.RegisterType[fin.ExchangeRate, fin.ExchangeRateList](resources, "ExchangeRateId")
+	common.RegisterType(resources, &fin.Account{}, &fin.AccountList{}, "AccountId")
+	common.RegisterType(resources, &fin.JournalEntry{}, &fin.JournalEntryList{}, "JournalEntryId")
+	common.RegisterType(resources, &fin.FiscalYear{}, &fin.FiscalYearList{}, "FiscalYearId")
+	common.RegisterType(resources, &fin.Currency{}, &fin.CurrencyList{}, "CurrencyId")
+	common.RegisterType(resources, &fin.ExchangeRate{}, &fin.ExchangeRateList{}, "ExchangeRateId")
 
 	// Accounts Payable
-	common.RegisterType[fin.Vendor, fin.VendorList](resources, "VendorId")
-	common.RegisterType[fin.PurchaseInvoice, fin.PurchaseInvoiceList](resources, "InvoiceId")
-	common.RegisterType[fin.PaymentSchedule, fin.PaymentScheduleList](resources, "ScheduleId")
-	common.RegisterType[fin.VendorPayment, fin.VendorPaymentList](resources, "PaymentId")
-	common.RegisterType[fin.VendorStatement, fin.VendorStatementList](resources, "StatementId")
+	common.RegisterType(resources, &fin.Vendor{}, &fin.VendorList{}, "VendorId")
+	common.RegisterType(resources, &fin.PurchaseInvoice{}, &fin.PurchaseInvoiceList{}, "InvoiceId")
+	common.RegisterType(resources, &fin.PaymentSchedule{}, &fin.PaymentScheduleList{}, "ScheduleId")
+	common.RegisterType(resources, &fin.VendorPayment{}, &fin.VendorPaymentList{}, "PaymentId")
+	common.RegisterType(resources, &fin.VendorStatement{}, &fin.VendorStatementList{}, "StatementId")
 
 	// Accounts Receivable
-	common.RegisterType[fin.Customer, fin.CustomerList](resources, "CustomerId")
-	common.RegisterType[fin.SalesInvoice, fin.SalesInvoiceList](resources, "InvoiceId")
-	common.RegisterType[fin.CustomerPayment, fin.CustomerPaymentList](resources, "PaymentId")
-	common.RegisterType[fin.CreditMemo, fin.CreditMemoList](resources, "CreditMemoId")
-	common.RegisterType[fin.DunningLetter, fin.DunningLetterList](resources, "LetterId")
+	common.RegisterType(resources, &fin.Customer{}, &fin.CustomerList{}, "CustomerId")
+	common.RegisterType(resources, &fin.SalesInvoice{}, &fin.SalesInvoiceList{}, "InvoiceId")
+	common.RegisterType(resources, &fin.CustomerPayment{}, &fin.CustomerPaymentList{}, "PaymentId")
+	common.RegisterType(resources, &fin.CreditMemo{}, &fin.CreditMemoList{}, "CreditMemoId")
+	common.RegisterType(resources, &fin.DunningLetter{}, &fin.DunningLetterList{}, "LetterId")
 
 	// Cash Management
-	common.RegisterType[fin.BankAccount, fin.BankAccountList](resources, "BankAccountId")
-	common.RegisterType[fin.CashForecast, fin.CashForecastList](resources, "ForecastId")
-	common.RegisterType[fin.FundTransfer, fin.FundTransferList](resources, "TransferId")
-	common.RegisterType[fin.PettyCash, fin.PettyCashList](resources, "PettyCashId")
+	common.RegisterType(resources, &fin.BankAccount{}, &fin.BankAccountList{}, "BankAccountId")
+	common.RegisterType(resources, &fin.CashForecast{}, &fin.CashForecastList{}, "ForecastId")
+	common.RegisterType(resources, &fin.FundTransfer{}, &fin.FundTransferList{}, "TransferId")
+	common.RegisterType(resources, &fin.PettyCash{}, &fin.PettyCashList{}, "PettyCashId")
 
 	// Fixed Assets
-	common.RegisterType[fin.Asset, fin.AssetList](resources, "AssetId")
-	common.RegisterType[fin.AssetCategory, fin.AssetCategoryList](resources, "CategoryId")
+	common.RegisterType(resources, &fin.Asset{}, &fin.AssetList{}, "AssetId")
+	common.RegisterType(resources, &fin.AssetCategory{}, &fin.AssetCategoryList{}, "CategoryId")
 
 	// Budgeting
-	common.RegisterType[fin.Budget, fin.BudgetList](resources, "BudgetId")
-	common.RegisterType[fin.CapitalExpenditure, fin.CapitalExpenditureList](resources, "CapexId")
-	common.RegisterType[fin.Forecast, fin.ForecastList](resources, "ForecastId")
+	common.RegisterType(resources, &fin.Budget{}, &fin.BudgetList{}, "BudgetId")
+	common.RegisterType(resources, &fin.CapitalExpenditure{}, &fin.CapitalExpenditureList{}, "CapexId")
+	common.RegisterType(resources, &fin.Forecast{}, &fin.ForecastList{}, "ForecastId")
 
 	// Tax
-	common.RegisterType[fin.TaxCode, fin.TaxCodeList](resources, "TaxCodeId")
-	common.RegisterType[fin.TaxJurisdiction, fin.TaxJurisdictionList](resources, "JurisdictionId")
-	common.RegisterType[fin.TaxRule, fin.TaxRuleList](resources, "RuleId")
-	common.RegisterType[fin.TaxExemption, fin.TaxExemptionList](resources, "ExemptionId")
+	common.RegisterType(resources, &fin.TaxCode{}, &fin.TaxCodeList{}, "TaxCodeId")
+	common.RegisterType(resources, &fin.TaxJurisdiction{}, &fin.TaxJurisdictionList{}, "JurisdictionId")
+	common.RegisterType(resources, &fin.TaxRule{}, &fin.TaxRuleList{}, "RuleId")
+	common.RegisterType(resources, &fin.TaxExemption{}, &fin.TaxExemptionList{}, "ExemptionId")
 
 	// Reports
-	common.RegisterType[fin.FinReport, fin.FinReportList](resources, "ReportId")
+	common.RegisterType(resources, &fin.FinReport{}, &fin.FinReportList{}, "ReportId")
 }

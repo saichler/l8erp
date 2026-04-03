@@ -14,7 +14,7 @@
 package expensereports
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[prj.PrjExpenseReport, prj.PrjExpenseReportList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ReportId", Callback: newPrjExpenseReportServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ReportId", Callback: newPrjExpenseReportServiceCallback(vnic),
+	}, &prj.PrjExpenseReport{}, &prj.PrjExpenseReportList{}, creds, dbname, vnic)
 }
 
 func PrjExpenseReports(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PrjExpenseReports(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjExpenseReport(reportId string, vnic ifs.IVNic) (*prj.PrjExpenseReport, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &prj.PrjExpenseReport{ReportId: reportId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjExpenseReport{ReportId: reportId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*prj.PrjExpenseReport), nil
 }

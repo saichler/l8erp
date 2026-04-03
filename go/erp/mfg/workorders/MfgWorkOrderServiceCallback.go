@@ -15,38 +15,39 @@ limitations under the License.
 package workorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-func newMfgWorkOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgWorkOrder]("MfgWorkOrder",
-		func(e *mfg.MfgWorkOrder) { common.GenerateID(&e.WorkOrderId) }).
+func newMfgWorkOrderServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgWorkOrder{}, vnic).
 		StatusTransition(workOrderTransitions()).
 		After(cascadeRollUpProductionOrderStatus).
 		After(rollUpCosts).
 		Compute(computeWorkOrderProgress).
-		Require(func(e *mfg.MfgWorkOrder) string { return e.WorkOrderId }, "WorkOrderId").
-		Require(func(e *mfg.MfgWorkOrder) string { return e.ItemId }, "ItemId").
-		Enum(func(e *mfg.MfgWorkOrder) int32 { return int32(e.Status) }, mfg.MfgWorkOrderStatus_name, "Status").
-		OptionalMoney(func(e *mfg.MfgWorkOrder) *l8common.Money { return e.EstimatedCost }, "EstimatedCost").
-		OptionalMoney(func(e *mfg.MfgWorkOrder) *l8common.Money { return e.ActualCost }, "ActualCost").
-		DateAfter(func(e *mfg.MfgWorkOrder) int64 { return e.PlannedEndDate }, func(e *mfg.MfgWorkOrder) int64 { return e.PlannedStartDate }, "PlannedEndDate", "PlannedStartDate").
-		DateAfter(func(e *mfg.MfgWorkOrder) int64 { return e.ActualEndDate }, func(e *mfg.MfgWorkOrder) int64 { return e.ActualStartDate }, "ActualEndDate", "ActualStartDate").
+		Require(func(v interface{}) string { return v.(*mfg.MfgWorkOrder).WorkOrderId }, "WorkOrderId").
+		Require(func(v interface{}) string { return v.(*mfg.MfgWorkOrder).ItemId }, "ItemId").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgWorkOrder).Status) }, mfg.MfgWorkOrderStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*mfg.MfgWorkOrder).EstimatedCost }, "EstimatedCost").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*mfg.MfgWorkOrder).ActualCost }, "ActualCost").
+		DateAfter(func(v interface{}) int64 { return v.(*mfg.MfgWorkOrder).PlannedEndDate }, func(v interface{}) int64 { return v.(*mfg.MfgWorkOrder).PlannedStartDate }, "PlannedEndDate", "PlannedStartDate").
+		DateAfter(func(v interface{}) int64 { return v.(*mfg.MfgWorkOrder).ActualEndDate }, func(v interface{}) int64 { return v.(*mfg.MfgWorkOrder).ActualStartDate }, "ActualEndDate", "ActualStartDate").
 		Build()
 }
 
 // cascadeRollUpProductionOrderStatus checks if all work orders for a production
 // order are completed and updates the production order status accordingly.
-func cascadeRollUpProductionOrderStatus(wo *mfg.MfgWorkOrder, action ifs.Action, vnic ifs.IVNic) error {
+func cascadeRollUpProductionOrderStatus(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	wo := v.(*mfg.MfgWorkOrder)
 	if wo.Status != mfg.MfgWorkOrderStatus_MFG_WORK_ORDER_STATUS_COMPLETED {
 		return nil
 	}
 	// Find production orders that are IN_PROGRESS and reference this work order
-	orders, err := common.GetEntities("MfgProdOrd", 70,
-		&mfg.MfgProductionOrder{Status: mfg.MfgProductionOrderStatus_MFG_PROD_ORDER_STATUS_IN_PROGRESS}, vnic)
+	ordersRaw, err := common.GetEntities("MfgProdOrd", 70, &mfg.MfgProductionOrder{Status: mfg.MfgProductionOrderStatus_MFG_PROD_ORDER_STATUS_IN_PROGRESS}, vnic)
+	orders := make([]*mfg.MfgProductionOrder, 0, len(ordersRaw))
+	for _, ri := range ordersRaw { orders = append(orders, ri.(*mfg.MfgProductionOrder)) }
 	if err != nil {
 		return err
 	}
@@ -59,8 +60,9 @@ func cascadeRollUpProductionOrderStatus(wo *mfg.MfgWorkOrder, action ifs.Action,
 			}
 			if line.WorkOrderId != "" && line.WorkOrderId != wo.WorkOrderId {
 				// Check if the other work order is completed
-				otherWO, _ := common.GetEntity("MfgWorkOrd", 70,
-					&mfg.MfgWorkOrder{WorkOrderId: line.WorkOrderId}, vnic)
+				otherWORaw, _ := common.GetEntity("MfgWorkOrd", 70, &mfg.MfgWorkOrder{WorkOrderId: line.WorkOrderId}, vnic)
+				var otherWO *mfg.MfgWorkOrder
+				if otherWORaw != nil { otherWO = otherWORaw.(*mfg.MfgWorkOrder) }
 				if otherWO == nil || otherWO.Status != mfg.MfgWorkOrderStatus_MFG_WORK_ORDER_STATUS_COMPLETED {
 					allCompleted = false
 				}
@@ -76,11 +78,11 @@ func cascadeRollUpProductionOrderStatus(wo *mfg.MfgWorkOrder, action ifs.Action,
 	return nil
 }
 
-func workOrderTransitions() *common.StatusTransitionConfig[mfg.MfgWorkOrder] {
-	return &common.StatusTransitionConfig[mfg.MfgWorkOrder]{
-		StatusGetter:  func(e *mfg.MfgWorkOrder) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *mfg.MfgWorkOrder, s int32) { e.Status = mfg.MfgWorkOrderStatus(s) },
-		FilterBuilder: func(e *mfg.MfgWorkOrder) *mfg.MfgWorkOrder {
+func workOrderTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*mfg.MfgWorkOrder).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*mfg.MfgWorkOrder).Status = mfg.MfgWorkOrderStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*mfg.MfgWorkOrder);
 			return &mfg.MfgWorkOrder{WorkOrderId: e.WorkOrderId}
 		},
 		ServiceName:   ServiceName,

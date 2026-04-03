@@ -14,7 +14,7 @@
 package customersegments
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[sales.SalesCustomerSegment, sales.SalesCustomerSegmentList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "SegmentId", Callback: newCustomerSegmentServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "SegmentId", Callback: newCustomerSegmentServiceCallback(vnic),
+	}, &sales.SalesCustomerSegment{}, &sales.SalesCustomerSegmentList{}, creds, dbname, vnic)
 }
 
 func CustomerSegments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CustomerSegments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CustomerSegment(segmentId string, vnic ifs.IVNic) (*sales.SalesCustomerSegment, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &sales.SalesCustomerSegment{SegmentId: segmentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesCustomerSegment{SegmentId: segmentId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*sales.SalesCustomerSegment), nil
 }

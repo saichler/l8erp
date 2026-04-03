@@ -14,7 +14,7 @@
 package currencies
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.Currency, fin.CurrencyList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CurrencyId", Callback: newCurrencyServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CurrencyId", Callback: newCurrencyServiceCallback(vnic),
+	}, &fin.Currency{}, &fin.CurrencyList{}, creds, dbname, vnic)
 }
 
 func Currencies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Currencies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Currency(currencyId string, vnic ifs.IVNic) (*fin.Currency, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.Currency{CurrencyId: currencyId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.Currency{CurrencyId: currencyId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.Currency), nil
 }

@@ -14,7 +14,7 @@
 package compliancerecords
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.ComplianceRecord, hcm.ComplianceRecordList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RecordId", Callback: newComplianceRecordServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RecordId", Callback: newComplianceRecordServiceCallback(vnic),
+	}, &hcm.ComplianceRecord{}, &hcm.ComplianceRecordList{}, creds, dbname, vnic)
 }
 
 func ComplianceRecords(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func ComplianceRecords(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func ComplianceRecord(recordId string, vnic ifs.IVNic) (*hcm.ComplianceRecord, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.ComplianceRecord{RecordId: recordId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.ComplianceRecord{RecordId: recordId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.ComplianceRecord), nil
 }

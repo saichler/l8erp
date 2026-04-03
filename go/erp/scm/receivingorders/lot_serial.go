@@ -16,7 +16,7 @@ package receivingorders
 
 import (
 	"fmt"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -24,7 +24,8 @@ import (
 // validateLotSerial checks that items with existing lot/serial tracking data
 // have lot/serial IDs on the receiving order's putaway task movements.
 // This runs as a Custom validator before persistence.
-func validateLotSerial(recv *scm.ScmReceivingOrder, vnic ifs.IVNic) error {
+func validateLotSerial(v interface{}, vnic ifs.IVNic) error {
+	recv := v.(*scm.ScmReceivingOrder)
 	if recv.Status != scm.ScmTaskStatus_TASK_STATUS_COMPLETED {
 		return nil
 	}
@@ -32,10 +33,11 @@ func validateLotSerial(recv *scm.ScmReceivingOrder, vnic ifs.IVNic) error {
 		if task.ItemId == "" || task.Status != scm.ScmTaskStatus_TASK_STATUS_COMPLETED {
 			continue
 		}
-		item, err := common.GetEntity("Item", 50, &scm.ScmItem{ItemId: task.ItemId}, vnic)
-		if err != nil || item == nil {
+		itemRaw, err := common.GetEntity("Item", 50, &scm.ScmItem{ItemId: task.ItemId}, vnic)
+		if err != nil || itemRaw == nil {
 			continue
 		}
+		item := itemRaw.(*scm.ScmItem)
 		if len(item.Lots) > 0 {
 			// Item uses lot tracking — warn if quantity > 1 without a lot reference
 			if task.Quantity > 1 {

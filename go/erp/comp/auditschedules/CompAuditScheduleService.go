@@ -14,7 +14,7 @@
 package auditschedules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[comp.CompAuditSchedule, comp.CompAuditScheduleList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ScheduleId", Callback: newCompAuditScheduleServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ScheduleId", Callback: newCompAuditScheduleServiceCallback(vnic),
+	}, &comp.CompAuditSchedule{}, &comp.CompAuditScheduleList{}, creds, dbname, vnic)
 }
 
 func CompAuditSchedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CompAuditSchedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompAuditSchedule(scheduleId string, vnic ifs.IVNic) (*comp.CompAuditSchedule, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &comp.CompAuditSchedule{ScheduleId: scheduleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompAuditSchedule{ScheduleId: scheduleId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*comp.CompAuditSchedule), nil
 }

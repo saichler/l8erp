@@ -17,13 +17,15 @@ package finreports
 import (
 	"time"
 
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
 
 func generateAgedPayables(report *fin.FinReport, vnic ifs.IVNic) error {
-	invoices, err := common.GetEntities("PurchInv", 40, &fin.PurchaseInvoice{}, vnic)
+	invoicesRaw, err := common.GetEntities("PurchInv", 40, &fin.PurchaseInvoice{}, vnic)
+	invoices := make([]*fin.PurchaseInvoice, 0, len(invoicesRaw))
+	for _, ri := range invoicesRaw { invoices = append(invoices, ri.(*fin.PurchaseInvoice)) }
 	if err != nil {
 		return err
 	}

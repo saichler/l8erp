@@ -14,7 +14,7 @@
 package mrpruns
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[mfg.MfgMrpRun, mfg.MfgMrpRunList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RunId", Callback: newMfgMrpRunServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RunId", Callback: newMfgMrpRunServiceCallback(vnic),
+	}, &mfg.MfgMrpRun{}, &mfg.MfgMrpRunList{}, creds, dbname, vnic)
 }
 
 func MfgMrpRuns(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func MfgMrpRuns(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgMrpRun(runId string, vnic ifs.IVNic) (*mfg.MfgMrpRun, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &mfg.MfgMrpRun{RunId: runId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgMrpRun{RunId: runId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*mfg.MfgMrpRun), nil
 }

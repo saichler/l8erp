@@ -15,7 +15,7 @@ limitations under the License.
 package positions
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/departments"
 	"github.com/saichler/l8erp/go/erp/hcm/jobs"
@@ -23,10 +23,11 @@ import (
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newPositionServiceCallback() ifs.IServiceCallback {
+func newPositionServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("Position",
-		func(e *hcm.Position) { common.GenerateID(&e.PositionId) },
-		validatePos)
+		func(v interface{}) bool { _, ok := v.(*hcm.Position); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.Position).PositionId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validatePos(v.(*hcm.Position), vnic) })
 }
 
 func validatePos(entity *hcm.Position, vnic ifs.IVNic) error {
@@ -71,7 +72,7 @@ func validatePosRequiredFields(entity *hcm.Position) error {
 }
 
 func validatePosEnums(entity *hcm.Position) error {
-	if err := common.ValidateEnum(entity.Status, hcm.PositionStatus_name, "Status"); err != nil {
+	if err := common.ValidateEnum(int32(entity.Status), hcm.PositionStatus_name, "Status"); err != nil {
 		return err
 	}
 	return nil

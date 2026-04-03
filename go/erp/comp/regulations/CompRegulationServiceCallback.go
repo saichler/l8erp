@@ -15,15 +15,14 @@ limitations under the License.
 package regulations
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/comp"
 )
 
-func newCompRegulationServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[comp.CompRegulation]("CompRegulation",
-		func(e *comp.CompRegulation) { common.GenerateID(&e.RegulationId) }).
-		Require(func(e *comp.CompRegulation) string { return e.RegulationId }, "RegulationId").
-		Enum(func(e *comp.CompRegulation) int32 { return int32(e.RegulationType) }, comp.CompRegulationType_name, "RegulationType").
+func newCompRegulationServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&comp.CompRegulation{}, vnic).
+		Require(func(v interface{}) string { return v.(*comp.CompRegulation).RegulationId }, "RegulationId").
+		Enum(func(v interface{}) int32 { return int32(v.(*comp.CompRegulation).RegulationType) }, comp.CompRegulationType_name, "RegulationType").
 		Build()
 }

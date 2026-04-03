@@ -15,17 +15,16 @@ limitations under the License.
 package partnerchannels
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
-func newPartnerChannelServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sales.SalesPartnerChannel]("SalesPartnerChannel",
-		func(e *sales.SalesPartnerChannel) { common.GenerateID(&e.PartnerId) }).
-		Require(func(e *sales.SalesPartnerChannel) string { return e.PartnerId }, "PartnerId").
-		Require(func(e *sales.SalesPartnerChannel) string { return e.Name }, "Name").
-		Enum(func(e *sales.SalesPartnerChannel) int32 { return int32(e.PartnerType) }, sales.SalesPartnerType_name, "PartnerType").
-		DateAfter(func(e *sales.SalesPartnerChannel) int64 { return e.EndDate }, func(e *sales.SalesPartnerChannel) int64 { return e.StartDate }, "EndDate", "StartDate").
+func newPartnerChannelServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sales.SalesPartnerChannel{}, vnic).
+		Require(func(v interface{}) string { return v.(*sales.SalesPartnerChannel).PartnerId }, "PartnerId").
+		Require(func(v interface{}) string { return v.(*sales.SalesPartnerChannel).Name }, "Name").
+		Enum(func(v interface{}) int32 { return int32(v.(*sales.SalesPartnerChannel).PartnerType) }, sales.SalesPartnerType_name, "PartnerType").
+		DateAfter(func(v interface{}) int64 { return v.(*sales.SalesPartnerChannel).EndDate }, func(v interface{}) int64 { return v.(*sales.SalesPartnerChannel).StartDate }, "EndDate", "StartDate").
 		Build()
 }

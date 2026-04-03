@@ -15,17 +15,16 @@ limitations under the License.
 package utilizations
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
-func newPrjUtilizationServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjUtilization]("PrjUtilization",
-		func(e *prj.PrjUtilization) { common.GenerateID(&e.UtilizationId) }).
-		Require(func(e *prj.PrjUtilization) string { return e.UtilizationId }, "UtilizationId").
-		OptionalMoney(func(e *prj.PrjUtilization) *l8common.Money { return e.Revenue }, "Revenue").
-		OptionalMoney(func(e *prj.PrjUtilization) *l8common.Money { return e.Cost }, "Cost").
+func newPrjUtilizationServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjUtilization{}, vnic).
+		Require(func(v interface{}) string { return v.(*prj.PrjUtilization).UtilizationId }, "UtilizationId").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjUtilization).Revenue }, "Revenue").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjUtilization).Cost }, "Cost").
 		Build()
 }

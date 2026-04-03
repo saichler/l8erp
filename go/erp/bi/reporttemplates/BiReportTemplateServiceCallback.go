@@ -15,15 +15,14 @@ limitations under the License.
 package reporttemplates
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/bi"
 )
 
-func newBiReportTemplateServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[bi.BiReportTemplate]("BiReportTemplate",
-		func(e *bi.BiReportTemplate) { common.GenerateID(&e.TemplateId) }).
-		Require(func(e *bi.BiReportTemplate) string { return e.TemplateId }, "TemplateId").
-		Enum(func(e *bi.BiReportTemplate) int32 { return int32(e.ReportType) }, bi.BiReportType_name, "ReportType").
+func newBiReportTemplateServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&bi.BiReportTemplate{}, vnic).
+		Require(func(v interface{}) string { return v.(*bi.BiReportTemplate).TemplateId }, "TemplateId").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiReportTemplate).ReportType) }, bi.BiReportType_name, "ReportType").
 		Build()
 }

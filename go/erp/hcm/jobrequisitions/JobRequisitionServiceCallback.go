@@ -16,16 +16,17 @@ package jobrequisitions
 
 import (
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/departments"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 )
 
-func newJobRequisitionServiceCallback() ifs.IServiceCallback {
+func newJobRequisitionServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("JobRequisition",
-		func(e *hcm.JobRequisition) { common.GenerateID(&e.RequisitionId) },
-		validateJobReq)
+		func(v interface{}) bool { _, ok := v.(*hcm.JobRequisition); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.JobRequisition).RequisitionId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateJobReq(v.(*hcm.JobRequisition), vnic) })
 }
 
 func validateJobReq(entity *hcm.JobRequisition, vnic ifs.IVNic) error {

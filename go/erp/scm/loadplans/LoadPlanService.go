@@ -14,7 +14,7 @@
 package loadplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmLoadPlan, scm.ScmLoadPlanList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "LoadPlanId", Callback: newLoadPlanServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "LoadPlanId", Callback: newLoadPlanServiceCallback(vnic),
+	}, &scm.ScmLoadPlan{}, &scm.ScmLoadPlanList{}, creds, dbname, vnic)
 }
 
 func LoadPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func LoadPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func LoadPlan(loadPlanId string, vnic ifs.IVNic) (*scm.ScmLoadPlan, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmLoadPlan{LoadPlanId: loadPlanId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmLoadPlan{LoadPlanId: loadPlanId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmLoadPlan), nil
 }

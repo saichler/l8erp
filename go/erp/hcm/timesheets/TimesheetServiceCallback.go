@@ -15,16 +15,17 @@ limitations under the License.
 package timesheets
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newTimesheetServiceCallback() ifs.IServiceCallback {
+func newTimesheetServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("Timesheet",
-		func(e *hcm.Timesheet) { common.GenerateID(&e.TimesheetId) },
-		validateTimesheet)
+		func(v interface{}) bool { _, ok := v.(*hcm.Timesheet); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.Timesheet).TimesheetId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateTimesheet(v.(*hcm.Timesheet), vnic) })
 }
 
 func computeTimesheetHours(t *hcm.Timesheet) {

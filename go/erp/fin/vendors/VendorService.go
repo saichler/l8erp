@@ -14,7 +14,7 @@
 package vendors
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.Vendor, fin.VendorList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "VendorId", Callback: newVendorServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "VendorId", Callback: newVendorServiceCallback(vnic),
+	}, &fin.Vendor{}, &fin.VendorList{}, creds, dbname, vnic)
 }
 
 func Vendors(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Vendors(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Vendor(vendorId string, vnic ifs.IVNic) (*fin.Vendor, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.Vendor{VendorId: vendorId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.Vendor{VendorId: vendorId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.Vendor), nil
 }

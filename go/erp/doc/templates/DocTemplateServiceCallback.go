@@ -15,16 +15,15 @@ limitations under the License.
 package templates
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/doc"
 )
 
-func newDocTemplateServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[doc.DocTemplate]("DocTemplate",
-		func(e *doc.DocTemplate) { common.GenerateID(&e.TemplateId) }).
-		Require(func(e *doc.DocTemplate) string { return e.TemplateId }, "TemplateId").
-		Enum(func(e *doc.DocTemplate) int32 { return int32(e.OutputFormat) }, doc.DocFileFormat_name, "OutputFormat").
-		Enum(func(e *doc.DocTemplate) int32 { return int32(e.TemplateType) }, doc.DocTemplateType_name, "TemplateType").
+func newDocTemplateServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&doc.DocTemplate{}, vnic).
+		Require(func(v interface{}) string { return v.(*doc.DocTemplate).TemplateId }, "TemplateId").
+		Enum(func(v interface{}) int32 { return int32(v.(*doc.DocTemplate).OutputFormat) }, doc.DocFileFormat_name, "OutputFormat").
+		Enum(func(v interface{}) int32 { return int32(v.(*doc.DocTemplate).TemplateType) }, doc.DocTemplateType_name, "TemplateType").
 		Build()
 }

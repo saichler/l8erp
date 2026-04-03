@@ -15,14 +15,13 @@ limitations under the License.
 package capacityplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
-func newPrjCapacityPlanServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjCapacityPlan]("PrjCapacityPlan",
-		func(e *prj.PrjCapacityPlan) { common.GenerateID(&e.PlanId) }).
-		Require(func(e *prj.PrjCapacityPlan) string { return e.PlanId }, "PlanId").
+func newPrjCapacityPlanServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjCapacityPlan{}, vnic).
+		Require(func(v interface{}) string { return v.(*prj.PrjCapacityPlan).PlanId }, "PlanId").
 		Build()
 }

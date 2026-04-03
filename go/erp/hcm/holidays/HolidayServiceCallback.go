@@ -15,15 +15,15 @@ limitations under the License.
 package holidays
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newHolidayServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("Holiday",
-		func(e *hcm.Holiday) { common.GenerateID(&e.HolidayId) },
-		nil)
+func newHolidayServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&hcm.Holiday{}, vnic).
+		Custom(validateHoliday).
+		Build()
 }
 
 func validateHoliday(entity *hcm.Holiday) error {
@@ -47,7 +47,7 @@ func validateHolidayRequiredFields(entity *hcm.Holiday) error {
 }
 
 func validateHolidayEnums(entity *hcm.Holiday) error {
-	if err := common.ValidateEnum(entity.HolidayType, hcm.HolidayType_name, "HolidayType"); err != nil {
+	if err := common.ValidateEnum(int32(entity.HolidayType), hcm.HolidayType_name, "HolidayType"); err != nil {
 		return err
 	}
 	return nil

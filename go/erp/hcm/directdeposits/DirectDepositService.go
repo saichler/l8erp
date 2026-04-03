@@ -14,7 +14,7 @@
 package directdeposits
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.DirectDeposit, hcm.DirectDepositList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "DirectDepositId", Callback: newDirectDepositServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "DirectDepositId", Callback: newDirectDepositServiceCallback(vnic),
+	}, &hcm.DirectDeposit{}, &hcm.DirectDepositList{}, creds, dbname, vnic)
 }
 
 func DirectDeposits(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func DirectDeposits(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DirectDeposit(directDepositId string, vnic ifs.IVNic) (*hcm.DirectDeposit, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.DirectDeposit{DirectDepositId: directDepositId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.DirectDeposit{DirectDepositId: directDepositId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.DirectDeposit), nil
 }

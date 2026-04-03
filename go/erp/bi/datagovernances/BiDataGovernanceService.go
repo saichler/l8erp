@@ -14,7 +14,7 @@
 package datagovernances
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[bi.BiDataGovernance, bi.BiDataGovernanceList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "GovernanceId", Callback: newBiDataGovernanceServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "GovernanceId", Callback: newBiDataGovernanceServiceCallback(vnic),
+	}, &bi.BiDataGovernance{}, &bi.BiDataGovernanceList{}, creds, dbname, vnic)
 }
 
 func BiDataGovernances(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func BiDataGovernances(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiDataGovernance(governanceId string, vnic ifs.IVNic) (*bi.BiDataGovernance, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &bi.BiDataGovernance{GovernanceId: governanceId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiDataGovernance{GovernanceId: governanceId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*bi.BiDataGovernance), nil
 }

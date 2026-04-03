@@ -16,14 +16,15 @@ package salesorders
 
 import (
 	"fmt"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 )
 
 // validateCreditLimit checks that confirming an order does not exceed the customer's credit limit.
-func validateCreditLimit(order *sales.SalesOrder, vnic ifs.IVNic) error {
+func validateCreditLimit(v interface{}, vnic ifs.IVNic) error {
+	order := v.(*sales.SalesOrder)
 	if order.Status != sales.SalesOrderStatus_SALES_ORDER_STATUS_CONFIRMED {
 		return nil
 	}
@@ -34,12 +35,14 @@ func validateCreditLimit(order *sales.SalesOrder, vnic ifs.IVNic) error {
 	if err != nil || customer == nil {
 		return err
 	}
-	if customer.CreditLimit == nil || customer.CreditLimit.Amount == 0 {
+	customerTyped := customer.(*fin.Customer)
+	if customerTyped.CreditLimit == nil || customerTyped.CreditLimit.Amount == 0 {
 		return nil // no credit limit set
 	}
 	// Sum all open orders for this customer
-	openOrders, err := common.GetEntities("SalesOrder", 60,
-		&sales.SalesOrder{CustomerId: order.CustomerId}, vnic)
+	openOrdersRaw, err := common.GetEntities("SalesOrder", 60, &sales.SalesOrder{CustomerId: order.CustomerId}, vnic)
+	openOrders := make([]*sales.SalesOrder, 0, len(openOrdersRaw))
+	for _, ri := range openOrdersRaw { openOrders = append(openOrders, ri.(*sales.SalesOrder)) }
 	if err != nil {
 		return err
 	}
@@ -55,9 +58,9 @@ func validateCreditLimit(order *sales.SalesOrder, vnic ifs.IVNic) error {
 		openTotal += common.MoneyAmount(o.TotalAmount)
 	}
 	orderAmount := common.MoneyAmount(order.TotalAmount)
-	if openTotal+orderAmount > customer.CreditLimit.Amount {
+	if openTotal+orderAmount > customerTyped.CreditLimit.Amount {
 		return fmt.Errorf("credit limit exceeded for customer %s: open %d + order %d > limit %d",
-			order.CustomerId, openTotal, orderAmount, customer.CreditLimit.Amount)
+			order.CustomerId, openTotal, orderAmount, customerTyped.CreditLimit.Amount)
 	}
 	return nil
 }

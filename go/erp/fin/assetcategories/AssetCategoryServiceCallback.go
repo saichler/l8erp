@@ -15,16 +15,15 @@ limitations under the License.
 package assetcategories
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newAssetCategoryServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.AssetCategory]("AssetCategory",
-		func(e *fin.AssetCategory) { common.GenerateID(&e.CategoryId) }).
-		Require(func(e *fin.AssetCategory) string { return e.CategoryId }, "CategoryId").
-		Require(func(e *fin.AssetCategory) string { return e.Name }, "Name").
-		Enum(func(e *fin.AssetCategory) int32 { return int32(e.DefaultDepreciationMethod) }, fin.DepreciationMethod_name, "DefaultDepreciationMethod").
+func newAssetCategoryServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.AssetCategory{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.AssetCategory).CategoryId }, "CategoryId").
+		Require(func(v interface{}) string { return v.(*fin.AssetCategory).Name }, "Name").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.AssetCategory).DefaultDepreciationMethod) }, fin.DepreciationMethod_name, "DefaultDepreciationMethod").
 		Build()
 }

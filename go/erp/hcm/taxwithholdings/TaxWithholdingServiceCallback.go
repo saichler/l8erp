@@ -15,16 +15,17 @@ limitations under the License.
 package taxwithholdings
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newTaxWithholdingServiceCallback() ifs.IServiceCallback {
+func newTaxWithholdingServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("TaxWithholding",
-		func(e *hcm.TaxWithholding) { common.GenerateID(&e.WithholdingId) },
-		validateTaxWith)
+		func(v interface{}) bool { _, ok := v.(*hcm.TaxWithholding); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.TaxWithholding).WithholdingId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateTaxWith(v.(*hcm.TaxWithholding), vnic) })
 }
 
 func validateTaxWith(entity *hcm.TaxWithholding, vnic ifs.IVNic) error {

@@ -15,33 +15,34 @@ limitations under the License.
 package purchasereqs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"time"
 )
 
-func newPurchaseRequisitionServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmPurchaseRequisition]("ScmPurchaseRequisition",
-		func(e *scm.ScmPurchaseRequisition) { common.GenerateID(&e.RequisitionId) }).
+func newPurchaseRequisitionServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmPurchaseRequisition{}, vnic).
 		StatusTransition(purchaseRequisitionTransitions()).
 		After(cascadeCancelPurchaseOrders).
 		After(cascadeCreatePurchaseOrder).
-		Require(func(e *scm.ScmPurchaseRequisition) string { return e.RequisitionId }, "RequisitionId").
-		Enum(func(e *scm.ScmPurchaseRequisition) int32 { return int32(e.Status) }, scm.ScmRequisitionStatus_name, "Status").
-		OptionalMoney(func(e *scm.ScmPurchaseRequisition) *l8common.Money { return e.EstimatedTotal }, "EstimatedTotal").
+		Require(func(v interface{}) string { return v.(*scm.ScmPurchaseRequisition).RequisitionId }, "RequisitionId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmPurchaseRequisition).Status) }, scm.ScmRequisitionStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*scm.ScmPurchaseRequisition).EstimatedTotal }, "EstimatedTotal").
 		Build()
 }
 
 // cascadeCancelPurchaseOrders cancels DRAFT purchase orders
 // when a purchase requisition is cancelled.
-func cascadeCancelPurchaseOrders(req *scm.ScmPurchaseRequisition, action ifs.Action, vnic ifs.IVNic) error {
+func cascadeCancelPurchaseOrders(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	req := v.(*scm.ScmPurchaseRequisition)
 	if req.Status != scm.ScmRequisitionStatus_REQUISITION_STATUS_CANCELLED {
 		return nil
 	}
-	children, err := common.GetEntities("PurchOrder", 50,
-		&scm.ScmPurchaseOrder{RequisitionId: req.RequisitionId}, vnic)
+	childrenRaw, err := common.GetEntities("PurchOrder", 50, &scm.ScmPurchaseOrder{RequisitionId: req.RequisitionId}, vnic)
+	children := make([]*scm.ScmPurchaseOrder, 0, len(childrenRaw))
+	for _, ri := range childrenRaw { children = append(children, ri.(*scm.ScmPurchaseOrder)) }
 	if err != nil {
 		return err
 	}
@@ -58,7 +59,8 @@ func cascadeCancelPurchaseOrders(req *scm.ScmPurchaseRequisition, action ifs.Act
 }
 
 // cascadeCreatePurchaseOrder auto-creates a purchase order when a requisition is approved.
-func cascadeCreatePurchaseOrder(req *scm.ScmPurchaseRequisition, action ifs.Action, vnic ifs.IVNic) error {
+func cascadeCreatePurchaseOrder(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	req := v.(*scm.ScmPurchaseRequisition)
 	if req.Status != scm.ScmRequisitionStatus_REQUISITION_STATUS_APPROVED {
 		return nil
 	}
@@ -97,11 +99,11 @@ func cascadeCreatePurchaseOrder(req *scm.ScmPurchaseRequisition, action ifs.Acti
 	return err
 }
 
-func purchaseRequisitionTransitions() *common.StatusTransitionConfig[scm.ScmPurchaseRequisition] {
-	return &common.StatusTransitionConfig[scm.ScmPurchaseRequisition]{
-		StatusGetter:  func(e *scm.ScmPurchaseRequisition) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *scm.ScmPurchaseRequisition, s int32) { e.Status = scm.ScmRequisitionStatus(s) },
-		FilterBuilder: func(e *scm.ScmPurchaseRequisition) *scm.ScmPurchaseRequisition {
+func purchaseRequisitionTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*scm.ScmPurchaseRequisition).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*scm.ScmPurchaseRequisition).Status = scm.ScmRequisitionStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*scm.ScmPurchaseRequisition);
 			return &scm.ScmPurchaseRequisition{RequisitionId: e.RequisitionId}
 		},
 		ServiceName:   ServiceName,

@@ -15,7 +15,7 @@ limitations under the License.
 package documents
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8types/go/ifs"
@@ -24,20 +24,22 @@ import (
 
 // trackDocumentVersion increments the version counter and creates a version
 // history entry when the document's checksum changes on update.
-func trackDocumentVersion(d *doc.DocDocument, vnic ifs.IVNic) error {
+func trackDocumentVersion(v interface{}, vnic ifs.IVNic) error {
+	d := v.(*doc.DocDocument)
 	if d.Checksum == "" {
 		return nil
 	}
 	// Check if this is an update with a different checksum
-	existing, err := common.GetEntity("DocDoc", 45,
+	existingRaw, err := common.GetEntity("DocDoc", 45,
 		&doc.DocDocument{DocumentId: d.DocumentId}, vnic)
-	if err != nil || existing == nil {
+	if err != nil || existingRaw == nil {
 		// New document — set initial version
 		if d.CurrentVersion == 0 {
 			d.CurrentVersion = 1
 		}
 		return nil
 	}
+	existing := existingRaw.(*doc.DocDocument)
 	if existing.Checksum == d.Checksum {
 		return nil
 	}

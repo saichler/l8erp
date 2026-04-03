@@ -14,7 +14,7 @@
 package portfolioviews
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[prj.PrjPortfolioView, prj.PrjPortfolioViewList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ViewId", Callback: newPrjPortfolioViewServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ViewId", Callback: newPrjPortfolioViewServiceCallback(vnic),
+	}, &prj.PrjPortfolioView{}, &prj.PrjPortfolioViewList{}, creds, dbname, vnic)
 }
 
 func PrjPortfolioViews(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PrjPortfolioViews(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjPortfolioView(viewId string, vnic ifs.IVNic) (*prj.PrjPortfolioView, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &prj.PrjPortfolioView{ViewId: viewId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjPortfolioView{ViewId: viewId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*prj.PrjPortfolioView), nil
 }

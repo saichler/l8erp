@@ -23,22 +23,22 @@ import (
 // generatePrjPhase1 creates foundation data: templates, expense categories, policies, approval rules
 func generatePrjPhase1(client *HCMClient, store *MockDataStore) error {
 	templates := generateProjectTemplates(store)
-	if err := runOp(client, "Project Templates", "/erp/90/PrjProjTpl", &prj.PrjProjectTemplateList{List: templates}, extractIDs(templates, func(e *prj.PrjProjectTemplate) string { return e.TemplateId }), &store.PrjProjectTemplateIDs); err != nil {
+	if err := runOp(client, "Project Templates", "/erp/90/PrjProjTpl", &prj.PrjProjectTemplateList{List: templates}, extractIDs(templates, func(v interface{}) string { return v.(*prj.PrjProjectTemplate).TemplateId }), &store.PrjProjectTemplateIDs); err != nil {
 		return err
 	}
 
 	categories := generateExpenseCategories(store)
-	if err := runOp(client, "Expense Categories", "/erp/90/PrjExpCat", &prj.PrjExpenseCategoryList{List: categories}, extractIDs(categories, func(e *prj.PrjExpenseCategory) string { return e.CategoryId }), &store.PrjExpenseCategoryIDs); err != nil {
+	if err := runOp(client, "Expense Categories", "/erp/90/PrjExpCat", &prj.PrjExpenseCategoryList{List: categories}, extractIDs(categories, func(v interface{}) string { return v.(*prj.PrjExpenseCategory).CategoryId }), &store.PrjExpenseCategoryIDs); err != nil {
 		return err
 	}
 
 	policies := generateExpensePolicies(store)
-	if err := runOp(client, "Expense Policies", "/erp/90/PrjExpPol", &prj.PrjExpensePolicyList{List: policies}, extractIDs(policies, func(e *prj.PrjExpensePolicy) string { return e.PolicyId }), &store.PrjExpensePolicyIDs); err != nil {
+	if err := runOp(client, "Expense Policies", "/erp/90/PrjExpPol", &prj.PrjExpensePolicyList{List: policies}, extractIDs(policies, func(v interface{}) string { return v.(*prj.PrjExpensePolicy).PolicyId }), &store.PrjExpensePolicyIDs); err != nil {
 		return err
 	}
 
 	rules := generateApprovalRules(store)
-	if err := runOp(client, "Approval Rules", "/erp/90/PrjApprRl", &prj.PrjApprovalRuleList{List: rules}, extractIDs(rules, func(e *prj.PrjApprovalRule) string { return e.RuleId }), &store.PrjApprovalRuleIDs); err != nil {
+	if err := runOp(client, "Approval Rules", "/erp/90/PrjApprRl", &prj.PrjApprovalRuleList{List: rules}, extractIDs(rules, func(v interface{}) string { return v.(*prj.PrjApprovalRule).RuleId }), &store.PrjApprovalRuleIDs); err != nil {
 		return err
 	}
 
@@ -50,23 +50,23 @@ func generatePrjPhase1(client *HCMClient, store *MockDataStore) error {
 func generatePrjPhase2(client *HCMClient, store *MockDataStore) error {
 	// Generate project shells and extract IDs for cross-references
 	projects := generateProjects(store)
-	store.PrjProjectIDs = extractIDs(projects, func(e *prj.PrjProject) string { return e.ProjectId })
+	store.PrjProjectIDs = extractIDs(projects, func(v interface{}) string { return v.(*prj.PrjProject).ProjectId })
 
 	// Generate children in dependency order, extracting IDs for cross-refs
 	phases := generatePhases(store)
-	store.PrjPhaseIDs = extractIDs(phases, func(e *prj.PrjPhase) string { return e.PhaseId })
+	store.PrjPhaseIDs = extractIDs(phases, func(v interface{}) string { return v.(*prj.PrjPhase).PhaseId })
 	fmt.Printf("  Generated %d phases\n", len(phases))
 
 	risks := generateRisks(store)
-	store.PrjRiskIDs = extractIDs(risks, func(e *prj.PrjRisk) string { return e.RiskId })
+	store.PrjRiskIDs = extractIDs(risks, func(v interface{}) string { return v.(*prj.PrjRisk).RiskId })
 	fmt.Printf("  Generated %d risks\n", len(risks))
 
 	tasks := generateTasks(store) // needs PhaseIDs
-	store.PrjTaskIDs = extractIDs(tasks, func(e *prj.PrjTask) string { return e.TaskId })
+	store.PrjTaskIDs = extractIDs(tasks, func(v interface{}) string { return v.(*prj.PrjTask).TaskId })
 	fmt.Printf("  Generated %d tasks\n", len(tasks))
 
 	milestones := generateMilestones(store) // needs PhaseIDs
-	store.PrjMilestoneIDs = extractIDs(milestones, func(e *prj.PrjMilestone) string { return e.MilestoneId })
+	store.PrjMilestoneIDs = extractIDs(milestones, func(v interface{}) string { return v.(*prj.PrjMilestone).MilestoneId })
 	fmt.Printf("  Generated %d milestones\n", len(milestones))
 
 	deliverables := generateDeliverables(store) // needs TaskIDs, MilestoneIDs
@@ -119,7 +119,7 @@ func generatePrjPhase2(client *HCMClient, store *MockDataStore) error {
 // generatePrjPhase3 creates resource pools, resources (with embedded skills), and capacity plans
 func generatePrjPhase3(client *HCMClient, store *MockDataStore) error {
 	pools := generateResourcePools(store)
-	if err := runOp(client, "Resource Pools", "/erp/90/PrjResPool", &prj.PrjResourcePoolList{List: pools}, extractIDs(pools, func(e *prj.PrjResourcePool) string { return e.PoolId }), &store.PrjResourcePoolIDs); err != nil {
+	if err := runOp(client, "Resource Pools", "/erp/90/PrjResPool", &prj.PrjResourcePoolList{List: pools}, extractIDs(pools, func(v interface{}) string { return v.(*prj.PrjResourcePool).PoolId }), &store.PrjResourcePoolIDs); err != nil {
 		return err
 	}
 
@@ -130,12 +130,12 @@ func generatePrjPhase3(client *HCMClient, store *MockDataStore) error {
 	for i, s := range skills {
 		resources[i%len(resources)].Skills = append(resources[i%len(resources)].Skills, s)
 	}
-	if err := runOp(client, "Resources", "/erp/90/PrjRes", &prj.PrjResourceList{List: resources}, extractIDs(resources, func(e *prj.PrjResource) string { return e.ResourceId }), &store.PrjResourceIDs); err != nil {
+	if err := runOp(client, "Resources", "/erp/90/PrjRes", &prj.PrjResourceList{List: resources}, extractIDs(resources, func(v interface{}) string { return v.(*prj.PrjResource).ResourceId }), &store.PrjResourceIDs); err != nil {
 		return err
 	}
 
 	plans := generatePrjCapacityPlans(store)
-	if err := runOp(client, "Capacity Plans", "/erp/90/PrjCapPlan", &prj.PrjCapacityPlanList{List: plans}, extractIDs(plans, func(e *prj.PrjCapacityPlan) string { return e.PlanId }), &store.PrjCapacityPlanIDs); err != nil {
+	if err := runOp(client, "Capacity Plans", "/erp/90/PrjCapPlan", &prj.PrjCapacityPlanList{List: plans}, extractIDs(plans, func(v interface{}) string { return v.(*prj.PrjCapacityPlan).PlanId }), &store.PrjCapacityPlanIDs); err != nil {
 		return err
 	}
 
@@ -145,22 +145,22 @@ func generatePrjPhase3(client *HCMClient, store *MockDataStore) error {
 // generatePrjPhase4 creates resource allocation data
 func generatePrjPhase4(client *HCMClient, store *MockDataStore) error {
 	allocations := generateAllocations(store)
-	if err := runOp(client, "Allocations", "/erp/90/PrjAlloc", &prj.PrjAllocationList{List: allocations}, extractIDs(allocations, func(e *prj.PrjAllocation) string { return e.AllocationId }), &store.PrjAllocationIDs); err != nil {
+	if err := runOp(client, "Allocations", "/erp/90/PrjAlloc", &prj.PrjAllocationList{List: allocations}, extractIDs(allocations, func(v interface{}) string { return v.(*prj.PrjAllocation).AllocationId }), &store.PrjAllocationIDs); err != nil {
 		return err
 	}
 
 	bookings := generateBookings(store)
-	if err := runOp(client, "Bookings", "/erp/90/PrjBooking", &prj.PrjBookingList{List: bookings}, extractIDs(bookings, func(e *prj.PrjBooking) string { return e.BookingId }), &store.PrjBookingIDs); err != nil {
+	if err := runOp(client, "Bookings", "/erp/90/PrjBooking", &prj.PrjBookingList{List: bookings}, extractIDs(bookings, func(v interface{}) string { return v.(*prj.PrjBooking).BookingId }), &store.PrjBookingIDs); err != nil {
 		return err
 	}
 
 	utilizations := generateUtilizations(store)
-	if err := runOp(client, "Utilizations", "/erp/90/PrjUtil", &prj.PrjUtilizationList{List: utilizations}, extractIDs(utilizations, func(e *prj.PrjUtilization) string { return e.UtilizationId }), &store.PrjUtilizationIDs); err != nil {
+	if err := runOp(client, "Utilizations", "/erp/90/PrjUtil", &prj.PrjUtilizationList{List: utilizations}, extractIDs(utilizations, func(v interface{}) string { return v.(*prj.PrjUtilization).UtilizationId }), &store.PrjUtilizationIDs); err != nil {
 		return err
 	}
 
 	rates := generateBillingRates(store)
-	if err := runOp(client, "Billing Rates", "/erp/90/PrjBillRt", &prj.PrjBillingRateList{List: rates}, extractIDs(rates, func(e *prj.PrjBillingRate) string { return e.RateId }), &store.PrjBillingRateIDs); err != nil {
+	if err := runOp(client, "Billing Rates", "/erp/90/PrjBillRt", &prj.PrjBillingRateList{List: rates}, extractIDs(rates, func(v interface{}) string { return v.(*prj.PrjBillingRate).RateId }), &store.PrjBillingRateIDs); err != nil {
 		return err
 	}
 

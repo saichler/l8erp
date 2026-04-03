@@ -15,20 +15,19 @@ limitations under the License.
 package vendorstatements
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newVendorStatementServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.VendorStatement]("VendorStatement",
-		func(e *fin.VendorStatement) { common.GenerateID(&e.StatementId) }).
-		Require(func(e *fin.VendorStatement) string { return e.StatementId }, "StatementId").
-		Require(func(e *fin.VendorStatement) string { return e.VendorId }, "VendorId").
-		OptionalMoney(func(e *fin.VendorStatement) *l8common.Money { return e.OpeningBalance }, "OpeningBalance").
-		OptionalMoney(func(e *fin.VendorStatement) *l8common.Money { return e.TotalInvoices }, "TotalInvoices").
-		OptionalMoney(func(e *fin.VendorStatement) *l8common.Money { return e.TotalPayments }, "TotalPayments").
-		OptionalMoney(func(e *fin.VendorStatement) *l8common.Money { return e.ClosingBalance }, "ClosingBalance").
+func newVendorStatementServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.VendorStatement{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.VendorStatement).StatementId }, "StatementId").
+		Require(func(v interface{}) string { return v.(*fin.VendorStatement).VendorId }, "VendorId").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.VendorStatement).OpeningBalance }, "OpeningBalance").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.VendorStatement).TotalInvoices }, "TotalInvoices").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.VendorStatement).TotalPayments }, "TotalPayments").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.VendorStatement).ClosingBalance }, "ClosingBalance").
 		Build()
 }

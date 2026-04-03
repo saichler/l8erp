@@ -15,42 +15,52 @@ limitations under the License.
 package assets
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	"reflect"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newAssetServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.Asset]("Asset",
-		func(e *fin.Asset) { common.GenerateID(&e.AssetId) }).
+
+func toSlice(slice interface{}) []interface{} {
+	v := reflect.ValueOf(slice)
+	result := make([]interface{}, v.Len())
+	for i := 0; i < v.Len(); i++ {
+		result[i] = v.Index(i).Interface()
+	}
+	return result
+}
+
+func newAssetServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.Asset{}, vnic).
 		StatusTransition(assetTransitions()).
 		After(generateDepreciationSchedule).
 		Compute(computeAssetValues).
-		Require(func(e *fin.Asset) string { return e.AssetId }, "AssetId").
-		Require(func(e *fin.Asset) string { return e.Name }, "Name").
-		Require(func(e *fin.Asset) string { return e.CategoryId }, "CategoryId").
-		Enum(func(e *fin.Asset) int32 { return int32(e.DepreciationMethod) }, fin.DepreciationMethod_name, "DepreciationMethod").
-		Enum(func(e *fin.Asset) int32 { return int32(e.Status) }, fin.AssetStatus_name, "Status").
-		OptionalMoney(func(e *fin.Asset) *l8common.Money { return e.AcquisitionCost }, "AcquisitionCost").
-		OptionalMoney(func(e *fin.Asset) *l8common.Money { return e.SalvageValue }, "SalvageValue").
-		OptionalMoney(func(e *fin.Asset) *l8common.Money { return e.AccumulatedDepreciation }, "AccumulatedDepreciation").
-		OptionalMoney(func(e *fin.Asset) *l8common.Money { return e.NetBookValue }, "NetBookValue").
+		Require(func(v interface{}) string { return v.(*fin.Asset).AssetId }, "AssetId").
+		Require(func(v interface{}) string { return v.(*fin.Asset).Name }, "Name").
+		Require(func(v interface{}) string { return v.(*fin.Asset).CategoryId }, "CategoryId").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.Asset).DepreciationMethod) }, fin.DepreciationMethod_name, "DepreciationMethod").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.Asset).Status) }, fin.AssetStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.Asset).AcquisitionCost }, "AcquisitionCost").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.Asset).SalvageValue }, "SalvageValue").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.Asset).AccumulatedDepreciation }, "AccumulatedDepreciation").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.Asset).NetBookValue }, "NetBookValue").
 		Build()
 }
 
-func computeAssetValues(a *fin.Asset) error {
-	a.AccumulatedDepreciation = common.SumLineMoney(a.DepreciationSchedules,
-		func(s *fin.DepreciationSchedule) *l8common.Money { return s.DepreciationAmount })
+func computeAssetValues(v interface{}) error {
+	a := v.(*fin.Asset)
+	a.AccumulatedDepreciation = common.SumLineMoney(toSlice(a.DepreciationSchedules), func(v interface{}) *l8common.Money { return v.(*fin.DepreciationSchedule).DepreciationAmount })
 	a.NetBookValue = common.MoneySubtract(a.AcquisitionCost, a.AccumulatedDepreciation)
 	return nil
 }
 
-func assetTransitions() *common.StatusTransitionConfig[fin.Asset] {
-	return &common.StatusTransitionConfig[fin.Asset]{
-		StatusGetter:  func(e *fin.Asset) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *fin.Asset, s int32) { e.Status = fin.AssetStatus(s) },
-		FilterBuilder: func(e *fin.Asset) *fin.Asset {
+func assetTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*fin.Asset).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*fin.Asset).Status = fin.AssetStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*fin.Asset);
 			return &fin.Asset{AssetId: e.AssetId}
 		},
 		ServiceName:   ServiceName,

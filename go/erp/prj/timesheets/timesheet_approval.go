@@ -15,14 +15,15 @@ limitations under the License.
 package timesheets
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 	"time"
 )
 
 // rollUpTimesheetHours updates project task actual hours when a timesheet is approved.
-func rollUpTimesheetHours(ts *prj.PrjTimesheet, action ifs.Action, vnic ifs.IVNic) error {
+func rollUpTimesheetHours(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	ts := v.(*prj.PrjTimesheet)
 	if ts.Status != prj.PrjTimesheetStatus_PRJ_TIMESHEET_STATUS_APPROVED {
 		return nil
 	}
@@ -40,11 +41,12 @@ func rollUpTimesheetHours(ts *prj.PrjTimesheet, action ifs.Action, vnic ifs.IVNi
 	}
 	// Update each project's task actual hours
 	for projectId, taskHours := range projectHours {
-		project, err := common.GetEntity("PrjProj", 90,
+		projectRaw, err := common.GetEntity("PrjProj", 90,
 			&prj.PrjProject{ProjectId: projectId}, vnic)
-		if err != nil || project == nil {
+		if err != nil || projectRaw == nil {
 			continue
 		}
+		project := projectRaw.(*prj.PrjProject)
 		for _, task := range project.Tasks {
 			if hours, ok := taskHours[task.TaskId]; ok {
 				task.ActualHours += hours
@@ -65,11 +67,11 @@ func rollUpTimesheetHours(ts *prj.PrjTimesheet, action ifs.Action, vnic ifs.IVNi
 	return nil
 }
 
-func timesheetTransitions() *common.StatusTransitionConfig[prj.PrjTimesheet] {
-	return &common.StatusTransitionConfig[prj.PrjTimesheet]{
-		StatusGetter:  func(e *prj.PrjTimesheet) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *prj.PrjTimesheet, s int32) { e.Status = prj.PrjTimesheetStatus(s) },
-		FilterBuilder: func(e *prj.PrjTimesheet) *prj.PrjTimesheet {
+func timesheetTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*prj.PrjTimesheet).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*prj.PrjTimesheet).Status = prj.PrjTimesheetStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*prj.PrjTimesheet);
 			return &prj.PrjTimesheet{TimesheetId: e.TimesheetId}
 		},
 		ServiceName:   ServiceName,

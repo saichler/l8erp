@@ -14,7 +14,7 @@
 package certifications
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[comp.CompCertification, comp.CompCertificationList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CertificationId", Callback: newCompCertificationServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CertificationId", Callback: newCompCertificationServiceCallback(vnic),
+	}, &comp.CompCertification{}, &comp.CompCertificationList{}, creds, dbname, vnic)
 }
 
 func CompCertifications(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CompCertifications(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompCertification(certificationId string, vnic ifs.IVNic) (*comp.CompCertification, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &comp.CompCertification{CertificationId: certificationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompCertification{CertificationId: certificationId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*comp.CompCertification), nil
 }

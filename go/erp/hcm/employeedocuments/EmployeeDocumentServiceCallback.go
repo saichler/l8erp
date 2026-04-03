@@ -15,16 +15,17 @@ limitations under the License.
 package employeedocuments
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newEmployeeDocumentServiceCallback() ifs.IServiceCallback {
+func newEmployeeDocumentServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("EmployeeDocument",
-		func(e *hcm.EmployeeDocument) { common.GenerateID(&e.DocumentId) },
-		validateEmpDoc)
+		func(v interface{}) bool { _, ok := v.(*hcm.EmployeeDocument); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.EmployeeDocument).DocumentId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateEmpDoc(v.(*hcm.EmployeeDocument), vnic) })
 }
 
 func validateEmpDoc(entity *hcm.EmployeeDocument, vnic ifs.IVNic) error {

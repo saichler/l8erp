@@ -14,7 +14,7 @@
 package shippingmethods
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[ecom.EcomShippingMethod, ecom.EcomShippingMethodList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "MethodId", Callback: newEcomShippingMethodServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "MethodId", Callback: newEcomShippingMethodServiceCallback(vnic),
+	}, &ecom.EcomShippingMethod{}, &ecom.EcomShippingMethodList{}, creds, dbname, vnic)
 }
 
 func EcomShippingMethods(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func EcomShippingMethods(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomShippingMethod(methodId string, vnic ifs.IVNic) (*ecom.EcomShippingMethod, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &ecom.EcomShippingMethod{MethodId: methodId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomShippingMethod{MethodId: methodId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*ecom.EcomShippingMethod), nil
 }

@@ -15,14 +15,13 @@ limitations under the License.
 package tags
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/doc"
 )
 
-func newDocTagServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[doc.DocTag]("DocTag",
-		func(e *doc.DocTag) { common.GenerateID(&e.TagId) }).
-		Require(func(e *doc.DocTag) string { return e.TagId }, "TagId").
+func newDocTagServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&doc.DocTag{}, vnic).
+		Require(func(v interface{}) string { return v.(*doc.DocTag).TagId }, "TagId").
 		Build()
 }

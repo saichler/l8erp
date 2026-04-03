@@ -15,18 +15,17 @@ limitations under the License.
 package pettycash
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newPettyCashServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.PettyCash]("PettyCash",
-		func(e *fin.PettyCash) { common.GenerateID(&e.PettyCashId) }).
-		Require(func(e *fin.PettyCash) string { return e.PettyCashId }, "PettyCashId").
-		Require(func(e *fin.PettyCash) string { return e.FundName }, "FundName").
-		OptionalMoney(func(e *fin.PettyCash) *l8common.Money { return e.FundLimit }, "FundLimit").
-		OptionalMoney(func(e *fin.PettyCash) *l8common.Money { return e.CurrentBalance }, "CurrentBalance").
+func newPettyCashServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.PettyCash{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.PettyCash).PettyCashId }, "PettyCashId").
+		Require(func(v interface{}) string { return v.(*fin.PettyCash).FundName }, "FundName").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.PettyCash).FundLimit }, "FundLimit").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.PettyCash).CurrentBalance }, "CurrentBalance").
 		Build()
 }

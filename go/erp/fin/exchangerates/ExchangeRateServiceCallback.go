@@ -15,16 +15,15 @@ limitations under the License.
 package exchangerates
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newExchangeRateServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.ExchangeRate]("ExchangeRate",
-		func(e *fin.ExchangeRate) { common.GenerateID(&e.ExchangeRateId) }).
-		Require(func(e *fin.ExchangeRate) string { return e.ExchangeRateId }, "ExchangeRateId").
-		Require(func(e *fin.ExchangeRate) string { return e.FromCurrencyId }, "FromCurrencyId").
-		Require(func(e *fin.ExchangeRate) string { return e.ToCurrencyId }, "ToCurrencyId").
+func newExchangeRateServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.ExchangeRate{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.ExchangeRate).ExchangeRateId }, "ExchangeRateId").
+		Require(func(v interface{}) string { return v.(*fin.ExchangeRate).FromCurrencyId }, "FromCurrencyId").
+		Require(func(v interface{}) string { return v.(*fin.ExchangeRate).ToCurrencyId }, "ToCurrencyId").
 		Build()
 }

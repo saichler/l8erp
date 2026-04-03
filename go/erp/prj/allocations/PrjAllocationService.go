@@ -14,7 +14,7 @@
 package allocations
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[prj.PrjAllocation, prj.PrjAllocationList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "AllocationId", Callback: newPrjAllocationServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "AllocationId", Callback: newPrjAllocationServiceCallback(vnic),
+	}, &prj.PrjAllocation{}, &prj.PrjAllocationList{}, creds, dbname, vnic)
 }
 
 func PrjAllocations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PrjAllocations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjAllocation(allocationId string, vnic ifs.IVNic) (*prj.PrjAllocation, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &prj.PrjAllocation{AllocationId: allocationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjAllocation{AllocationId: allocationId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*prj.PrjAllocation), nil
 }

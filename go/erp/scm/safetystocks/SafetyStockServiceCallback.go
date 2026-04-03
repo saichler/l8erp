@@ -15,14 +15,13 @@ limitations under the License.
 package safetystocks
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newSafetyStockServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmSafetyStock]("ScmSafetyStock",
-		func(e *scm.ScmSafetyStock) { common.GenerateID(&e.SafetyStockId) }).
-		Require(func(e *scm.ScmSafetyStock) string { return e.SafetyStockId }, "SafetyStockId").
+func newSafetyStockServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmSafetyStock{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmSafetyStock).SafetyStockId }, "SafetyStockId").
 		Build()
 }

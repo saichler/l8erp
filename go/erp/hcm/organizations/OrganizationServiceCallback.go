@@ -15,15 +15,16 @@ limitations under the License.
 package organizations
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newOrganizationServiceCallback() ifs.IServiceCallback {
+func newOrganizationServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("Organization",
-		func(e *hcm.Organization) { common.GenerateID(&e.OrganizationId) },
-		validateOrg)
+		func(v interface{}) bool { _, ok := v.(*hcm.Organization); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.Organization).OrganizationId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateOrg(v.(*hcm.Organization), vnic) })
 }
 
 func validateOrg(entity *hcm.Organization, vnic ifs.IVNic) error {
@@ -53,7 +54,7 @@ func validateOrgRequiredFields(entity *hcm.Organization) error {
 }
 
 func validateOrgEnums(entity *hcm.Organization) error {
-	if err := common.ValidateEnum(entity.OrganizationType, hcm.OrganizationType_name, "OrganizationType"); err != nil {
+	if err := common.ValidateEnum(int32(entity.OrganizationType), hcm.OrganizationType_name, "OrganizationType"); err != nil {
 		return err
 	}
 	return nil

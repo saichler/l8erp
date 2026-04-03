@@ -15,28 +15,27 @@ limitations under the License.
 package creditmemos
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newCreditMemoServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.CreditMemo]("CreditMemo",
-		func(e *fin.CreditMemo) { common.GenerateID(&e.CreditMemoId) }).
+func newCreditMemoServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.CreditMemo{}, vnic).
 		StatusTransition(creditMemoTransitions()).
-		Require(func(e *fin.CreditMemo) string { return e.CreditMemoId }, "CreditMemoId").
-		Require(func(e *fin.CreditMemo) string { return e.CustomerId }, "CustomerId").
-		Enum(func(e *fin.CreditMemo) int32 { return int32(e.Status) }, fin.CreditMemoStatus_name, "Status").
-		OptionalMoney(func(e *fin.CreditMemo) *l8common.Money { return e.Amount }, "Amount").
+		Require(func(v interface{}) string { return v.(*fin.CreditMemo).CreditMemoId }, "CreditMemoId").
+		Require(func(v interface{}) string { return v.(*fin.CreditMemo).CustomerId }, "CustomerId").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.CreditMemo).Status) }, fin.CreditMemoStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.CreditMemo).Amount }, "Amount").
 		Build()
 }
 
-func creditMemoTransitions() *common.StatusTransitionConfig[fin.CreditMemo] {
-	return &common.StatusTransitionConfig[fin.CreditMemo]{
-		StatusGetter:  func(e *fin.CreditMemo) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *fin.CreditMemo, s int32) { e.Status = fin.CreditMemoStatus(s) },
-		FilterBuilder: func(e *fin.CreditMemo) *fin.CreditMemo {
+func creditMemoTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*fin.CreditMemo).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*fin.CreditMemo).Status = fin.CreditMemoStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*fin.CreditMemo);
 			return &fin.CreditMemo{CreditMemoId: e.CreditMemoId}
 		},
 		ServiceName:   ServiceName,

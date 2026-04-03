@@ -15,16 +15,15 @@ limitations under the License.
 package kbarticles
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmKBArticleServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmKBArticle]("CrmKBArticle",
-		func(e *crm.CrmKBArticle) { common.GenerateID(&e.ArticleId) }).
-		Require(func(e *crm.CrmKBArticle) string { return e.ArticleId }, "ArticleId").
-		Require(func(e *crm.CrmKBArticle) string { return e.Title }, "Title").
-		Enum(func(e *crm.CrmKBArticle) int32 { return int32(e.Status) }, crm.CrmArticleStatus_name, "Status").
+func newCrmKBArticleServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmKBArticle{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmKBArticle).ArticleId }, "ArticleId").
+		Require(func(v interface{}) string { return v.(*crm.CrmKBArticle).Title }, "Title").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmKBArticle).Status) }, crm.CrmArticleStatus_name, "Status").
 		Build()
 }

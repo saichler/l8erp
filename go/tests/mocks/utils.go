@@ -55,8 +55,8 @@ func money(store *MockDataStore, amount int64) *l8common.Money {
 
 // genLines generates N child items per parent, calling create(idx, parentIdx, childIdx, parentID).
 // Generic version — l8common uses interface{}, this keeps type safety.
-func genLines[L any](parentIDs []string, n int, create func(idx, pIdx, j int, parentID string) *L) []*L {
-	lines := make([]*L, 0, len(parentIDs)*n)
+func genLines(parentIDs []string, n int, create func(idx, pIdx, j int, parentID string) interface{}) []interface{} {
+	lines := make([]interface{}, 0, len(parentIDs)*n)
 	idx := 1
 	for pIdx, parentID := range parentIDs {
 		for j := 0; j < n; j++ {

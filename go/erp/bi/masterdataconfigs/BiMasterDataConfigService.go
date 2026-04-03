@@ -14,7 +14,7 @@
 package masterdataconfigs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[bi.BiMasterDataConfig, bi.BiMasterDataConfigList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ConfigId", Callback: newBiMasterDataConfigServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ConfigId", Callback: newBiMasterDataConfigServiceCallback(vnic),
+	}, &bi.BiMasterDataConfig{}, &bi.BiMasterDataConfigList{}, creds, dbname, vnic)
 }
 
 func BiMasterDataConfigs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func BiMasterDataConfigs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiMasterDataConfig(configId string, vnic ifs.IVNic) (*bi.BiMasterDataConfig, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &bi.BiMasterDataConfig{ConfigId: configId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiMasterDataConfig{ConfigId: configId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*bi.BiMasterDataConfig), nil
 }

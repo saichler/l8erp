@@ -15,16 +15,17 @@ limitations under the License.
 package goals
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newGoalServiceCallback() ifs.IServiceCallback {
+func newGoalServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("Goal",
-		func(e *hcm.Goal) { common.GenerateID(&e.GoalId) },
-		validateGoal)
+		func(v interface{}) bool { _, ok := v.(*hcm.Goal); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.Goal).GoalId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateGoal(v.(*hcm.Goal), vnic) })
 }
 
 func validateGoal(entity *hcm.Goal, vnic ifs.IVNic) error {

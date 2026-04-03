@@ -15,7 +15,7 @@ limitations under the License.
 package applications
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/erp/hcm/applicants"
 	"github.com/saichler/l8erp/go/erp/hcm/jobrequisitions"
 	l8common "github.com/saichler/l8common/go/types/l8common"
@@ -24,13 +24,11 @@ import (
 	"time"
 )
 
-func newApplicationServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallbackWithAfter("Application",
-		func(e *hcm.Application) { common.GenerateID(&e.ApplicationId) },
-		validateApplctn,
-		nil,
-		[]common.ActionValidateFunc[hcm.Application]{cascadeCreateEmployee},
-	)
+func newApplicationServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&hcm.Application{}, vnic).
+		Custom(validateApplctn).
+		After(cascadeCreateEmployee).
+		Build()
 }
 
 func validateApplctn(entity *hcm.Application, vnic ifs.IVNic) error {
@@ -114,10 +112,10 @@ func cascadeCreateEmployee(app *hcm.Application, action ifs.Action, vnic ifs.IVN
 		return err
 	}
 	// Look up applicant for personal info
-	applicant, _ := common.GetEntity("Applicant", 30,
+	applicantRaw, _ := common.GetEntity("Applicant", 30,
 		&hcm.Applicant{ApplicantId: app.ApplicantId}, vnic)
 	// Look up requisition for org placement
-	req, _ := common.GetEntity("JobReq", 30,
+	reqRaw, _ := common.GetEntity("JobReq", 30,
 		&hcm.JobRequisition{RequisitionId: app.RequisitionId}, vnic)
 
 	emp := &hcm.Employee{
@@ -126,11 +124,13 @@ func cascadeCreateEmployee(app *hcm.Application, action ifs.Action, vnic ifs.IVN
 		ApplicationId:    app.ApplicationId,
 		AuditInfo:        &l8common.AuditInfo{},
 	}
-	if applicant != nil {
+	if applicantRaw != nil {
+		applicant := applicantRaw.(*hcm.Applicant)
 		emp.FirstName = applicant.FirstName
 		emp.LastName = applicant.LastName
 	}
-	if req != nil {
+	if reqRaw != nil {
+		req := reqRaw.(*hcm.JobRequisition)
 		emp.DepartmentId = req.DepartmentId
 		emp.JobId = req.JobId
 		emp.PositionId = req.PositionId
@@ -139,10 +139,11 @@ func cascadeCreateEmployee(app *hcm.Application, action ifs.Action, vnic ifs.IVN
 		emp.EmploymentType = req.EmploymentType
 	}
 
-	created, err := common.PostEntity("Employee", 30, emp, vnic)
+	createdRaw, err := common.PostEntity("Employee", 30, emp, vnic)
 	if err != nil {
 		return err
 	}
+	created := createdRaw.(*hcm.Employee)
 	employeeId := created.EmployeeId
 
 	// Create default onboarding tasks

@@ -15,16 +15,15 @@ limitations under the License.
 package bookings
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
-func newPrjBookingServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjBooking]("PrjBooking",
-		func(e *prj.PrjBooking) { common.GenerateID(&e.BookingId) }).
-		Require(func(e *prj.PrjBooking) string { return e.BookingId }, "BookingId").
-		Enum(func(e *prj.PrjBooking) int32 { return int32(e.Status) }, prj.PrjBookingStatus_name, "Status").
-		DateAfter(func(e *prj.PrjBooking) int64 { return e.EndDate }, func(e *prj.PrjBooking) int64 { return e.StartDate }, "EndDate", "StartDate").
+func newPrjBookingServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjBooking{}, vnic).
+		Require(func(v interface{}) string { return v.(*prj.PrjBooking).BookingId }, "BookingId").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjBooking).Status) }, prj.PrjBookingStatus_name, "Status").
+		DateAfter(func(v interface{}) int64 { return v.(*prj.PrjBooking).EndDate }, func(v interface{}) int64 { return v.(*prj.PrjBooking).StartDate }, "EndDate", "StartDate").
 		Build()
 }

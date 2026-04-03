@@ -15,14 +15,13 @@ limitations under the License.
 package compliancereports
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/comp"
 )
 
-func newCompComplianceReportServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[comp.CompComplianceReport]("CompComplianceReport",
-		func(e *comp.CompComplianceReport) { common.GenerateID(&e.ReportId) }).
-		Require(func(e *comp.CompComplianceReport) string { return e.ReportId }, "ReportId").
+func newCompComplianceReportServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&comp.CompComplianceReport{}, vnic).
+		Require(func(v interface{}) string { return v.(*comp.CompComplianceReport).ReportId }, "ReportId").
 		Build()
 }

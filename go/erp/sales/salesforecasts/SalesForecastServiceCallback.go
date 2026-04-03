@@ -15,22 +15,21 @@ limitations under the License.
 package salesforecasts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 	l8api "github.com/saichler/l8types/go/types/l8api"
 )
 
-func newSalesForecastServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sales.SalesForecast]("SalesForecast",
-		func(e *sales.SalesForecast) { common.GenerateID(&e.ForecastId) }).
-		Require(func(e *sales.SalesForecast) string { return e.ForecastId }, "ForecastId").
-		Require(func(e *sales.SalesForecast) string { return e.Name }, "Name").
-		Require(func(e *sales.SalesForecast) string { return e.CustomerId }, "CustomerId").
-		Enum(func(e *sales.SalesForecast) int32 { return int32(e.Category) }, sales.SalesForecastCategory_name, "Category").
-		OptionalPeriod(func(e *sales.SalesForecast) *l8api.L8Period { return e.Period }, "Period").
-		OptionalMoney(func(e *sales.SalesForecast) *l8common.Money { return e.ForecastAmount }, "ForecastAmount").
-		OptionalMoney(func(e *sales.SalesForecast) *l8common.Money { return e.WeightedAmount }, "WeightedAmount").
+func newSalesForecastServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sales.SalesForecast{}, vnic).
+		Require(func(v interface{}) string { return v.(*sales.SalesForecast).ForecastId }, "ForecastId").
+		Require(func(v interface{}) string { return v.(*sales.SalesForecast).Name }, "Name").
+		Require(func(v interface{}) string { return v.(*sales.SalesForecast).CustomerId }, "CustomerId").
+		Enum(func(v interface{}) int32 { return int32(v.(*sales.SalesForecast).Category) }, sales.SalesForecastCategory_name, "Category").
+		OptionalPeriod(func(v interface{}) *l8api.L8Period { return v.(*sales.SalesForecast).Period }, "Period").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesForecast).ForecastAmount }, "ForecastAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesForecast).WeightedAmount }, "WeightedAmount").
 		Build()
 }

@@ -19,7 +19,8 @@ import (
 )
 
 // computeCampaignMetrics recalculates campaign response metrics from embedded records.
-func computeCampaignMetrics(c *crm.CrmCampaign) error {
+func computeCampaignMetrics(v interface{}) error {
+	c := v.(*crm.CrmCampaign)
 	if c.Status == crm.CrmCampaignStatus_CRM_CAMPAIGN_STATUS_PLANNED {
 		return nil
 	}

@@ -14,7 +14,7 @@
 package revenueschedules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[sales.SalesRevenueSchedule, sales.SalesRevenueScheduleList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ScheduleId", Callback: newRevenueScheduleServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ScheduleId", Callback: newRevenueScheduleServiceCallback(vnic),
+	}, &sales.SalesRevenueSchedule{}, &sales.SalesRevenueScheduleList{}, creds, dbname, vnic)
 }
 
 func RevenueSchedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func RevenueSchedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func RevenueSchedule(scheduleId string, vnic ifs.IVNic) (*sales.SalesRevenueSchedule, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &sales.SalesRevenueSchedule{ScheduleId: scheduleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesRevenueSchedule{ScheduleId: scheduleId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*sales.SalesRevenueSchedule), nil
 }

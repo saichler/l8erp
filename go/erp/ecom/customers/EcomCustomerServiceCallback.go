@@ -15,18 +15,17 @@ limitations under the License.
 package customers
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
-func newEcomCustomerServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[ecom.EcomCustomer]("EcomCustomer",
-		func(e *ecom.EcomCustomer) { common.GenerateID(&e.CustomerId) }).
-		Require(func(e *ecom.EcomCustomer) string { return e.CustomerId }, "CustomerId").
-		Require(func(e *ecom.EcomCustomer) string { return e.CurrencyId }, "CurrencyId").
-		Enum(func(e *ecom.EcomCustomer) int32 { return int32(e.CustomerType) }, ecom.EcomCustomerType_name, "CustomerType").
-		OptionalMoney(func(e *ecom.EcomCustomer) *l8common.Money { return e.TotalSpent }, "TotalSpent").
+func newEcomCustomerServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&ecom.EcomCustomer{}, vnic).
+		Require(func(v interface{}) string { return v.(*ecom.EcomCustomer).CustomerId }, "CustomerId").
+		Require(func(v interface{}) string { return v.(*ecom.EcomCustomer).CurrencyId }, "CurrencyId").
+		Enum(func(v interface{}) int32 { return int32(v.(*ecom.EcomCustomer).CustomerType) }, ecom.EcomCustomerType_name, "CustomerType").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomCustomer).TotalSpent }, "TotalSpent").
 		Build()
 }

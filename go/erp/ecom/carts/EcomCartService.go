@@ -14,7 +14,7 @@
 package carts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[ecom.EcomCart, ecom.EcomCartList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CartId", Callback: newEcomCartServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CartId", Callback: newEcomCartServiceCallback(vnic),
+	}, &ecom.EcomCart{}, &ecom.EcomCartList{}, creds, dbname, vnic)
 }
 
 func EcomCarts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func EcomCarts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomCart(cartId string, vnic ifs.IVNic) (*ecom.EcomCart, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &ecom.EcomCart{CartId: cartId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomCart{CartId: cartId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*ecom.EcomCart), nil
 }

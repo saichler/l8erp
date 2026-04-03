@@ -15,29 +15,29 @@ limitations under the License.
 package cases
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmCaseServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmCase]("CrmCase",
-		func(e *crm.CrmCase) { common.GenerateID(&e.CaseId) }).
+func newCrmCaseServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmCase{}, vnic).
 		After(cascadeCreateSurvey).
 		After(checkSLABreach).
 		Custom(applySLADeadline).
-		Require(func(e *crm.CrmCase) string { return e.CaseId }, "CaseId").
-		Require(func(e *crm.CrmCase) string { return e.Subject }, "Subject").
-		Require(func(e *crm.CrmCase) string { return e.AccountId }, "AccountId").
-		Enum(func(e *crm.CrmCase) int32 { return int32(e.CaseType) }, crm.CrmCaseType_name, "CaseType").
-		Enum(func(e *crm.CrmCase) int32 { return int32(e.Priority) }, crm.CrmCasePriority_name, "Priority").
-		Enum(func(e *crm.CrmCase) int32 { return int32(e.Status) }, crm.CrmCaseStatus_name, "Status").
+		Require(func(v interface{}) string { return v.(*crm.CrmCase).CaseId }, "CaseId").
+		Require(func(v interface{}) string { return v.(*crm.CrmCase).Subject }, "Subject").
+		Require(func(v interface{}) string { return v.(*crm.CrmCase).AccountId }, "AccountId").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmCase).CaseType) }, crm.CrmCaseType_name, "CaseType").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmCase).Priority) }, crm.CrmCasePriority_name, "Priority").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmCase).Status) }, crm.CrmCaseStatus_name, "Status").
 		Build()
 }
 
 // cascadeCreateSurvey auto-creates a customer satisfaction survey when a case is resolved.
-func cascadeCreateSurvey(crmCase *crm.CrmCase, action ifs.Action, vnic ifs.IVNic) error {
+func cascadeCreateSurvey(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	crmCase := v.(*crm.CrmCase)
 	if crmCase.Status != crm.CrmCaseStatus_CRM_CASE_STATUS_RESOLVED {
 		return nil
 	}

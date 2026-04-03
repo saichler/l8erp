@@ -17,13 +17,12 @@ package mrpruns
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/mfg"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newMfgMrpRunServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgMrpRun]("MfgMrpRun",
-		func(e *mfg.MfgMrpRun) { common.GenerateID(&e.RunId) }).
-		Require(func(e *mfg.MfgMrpRun) string { return e.RunId }, "RunId").
-		Enum(func(e *mfg.MfgMrpRun) int32 { return int32(e.Status) }, mfg.MfgMrpStatus_name, "Status").
+func newMfgMrpRunServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgMrpRun{}, vnic).
+		Require(func(v interface{}) string { return v.(*mfg.MfgMrpRun).RunId }, "RunId").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgMrpRun).Status) }, mfg.MfgMrpStatus_name, "Status").
 		Build()
 }

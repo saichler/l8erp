@@ -15,16 +15,15 @@ limitations under the License.
 package trendanalyses
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/bi"
 )
 
-func newBiTrendAnalysisServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[bi.BiTrendAnalysis]("BiTrendAnalysis",
-		func(e *bi.BiTrendAnalysis) { common.GenerateID(&e.AnalysisId) }).
-		Require(func(e *bi.BiTrendAnalysis) string { return e.AnalysisId }, "AnalysisId").
-		Enum(func(e *bi.BiTrendAnalysis) int32 { return int32(e.Direction) }, bi.BiTrendDirection_name, "Direction").
-		DateAfter(func(e *bi.BiTrendAnalysis) int64 { return e.EndDate }, func(e *bi.BiTrendAnalysis) int64 { return e.StartDate }, "EndDate", "StartDate").
+func newBiTrendAnalysisServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&bi.BiTrendAnalysis{}, vnic).
+		Require(func(v interface{}) string { return v.(*bi.BiTrendAnalysis).AnalysisId }, "AnalysisId").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiTrendAnalysis).Direction) }, bi.BiTrendDirection_name, "Direction").
+		DateAfter(func(v interface{}) int64 { return v.(*bi.BiTrendAnalysis).EndDate }, func(v interface{}) int64 { return v.(*bi.BiTrendAnalysis).StartDate }, "EndDate", "StartDate").
 		Build()
 }

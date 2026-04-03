@@ -14,7 +14,7 @@
 package downtimeevents
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[mfg.MfgDowntimeEvent, mfg.MfgDowntimeEventList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "EventId", Callback: newMfgDowntimeEventServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "EventId", Callback: newMfgDowntimeEventServiceCallback(vnic),
+	}, &mfg.MfgDowntimeEvent{}, &mfg.MfgDowntimeEventList{}, creds, dbname, vnic)
 }
 
 func MfgDowntimeEvents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func MfgDowntimeEvents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgDowntimeEvent(eventId string, vnic ifs.IVNic) (*mfg.MfgDowntimeEvent, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &mfg.MfgDowntimeEvent{EventId: eventId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgDowntimeEvent{EventId: eventId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*mfg.MfgDowntimeEvent), nil
 }

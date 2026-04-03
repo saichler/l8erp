@@ -16,14 +16,13 @@ package wishlists
 
 import (
 	"github.com/saichler/l8erp/go/types/ecom"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newEcomWishlistServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[ecom.EcomWishlist]("EcomWishlist",
-		func(e *ecom.EcomWishlist) { common.GenerateID(&e.WishlistId) }).
-		Require(func(e *ecom.EcomWishlist) string { return e.WishlistId }, "WishlistId").
-		Require(func(e *ecom.EcomWishlist) string { return e.CustomerId }, "CustomerId").
+func newEcomWishlistServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&ecom.EcomWishlist{}, vnic).
+		Require(func(v interface{}) string { return v.(*ecom.EcomWishlist).WishlistId }, "WishlistId").
+		Require(func(v interface{}) string { return v.(*ecom.EcomWishlist).CustomerId }, "CustomerId").
 		Build()
 }

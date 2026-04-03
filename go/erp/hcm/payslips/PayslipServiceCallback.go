@@ -15,7 +15,8 @@ limitations under the License.
 package payslips
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	"reflect"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/erp/hcm/payrollruns"
 	l8common "github.com/saichler/l8common/go/types/l8common"
@@ -23,17 +24,28 @@ import (
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newPayslipServiceCallback() ifs.IServiceCallback {
+
+func toSlice(slice interface{}) []interface{} {
+	v := reflect.ValueOf(slice)
+	result := make([]interface{}, v.Len())
+	for i := 0; i < v.Len(); i++ {
+		result[i] = v.Index(i).Interface()
+	}
+	return result
+}
+
+func newPayslipServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("Payslip",
-		func(e *hcm.Payslip) { common.GenerateID(&e.PayslipId) },
-		validatePayslip)
+		func(v interface{}) bool { _, ok := v.(*hcm.Payslip); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.Payslip).PayslipId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validatePayslip(v.(*hcm.Payslip), vnic) })
 }
 
 func computePayslipTotals(p *hcm.Payslip) {
 	p.TotalHours = p.RegularHours + p.OvertimeHours + p.PtoHours + p.HolidayHours + p.OtherHours
-	p.GrossPay = common.SumLineMoney(p.Earnings, func(l *hcm.PayslipLine) *l8common.Money { return l.CurrentAmount })
-	p.TotalDeductions = common.SumLineMoney(p.Deductions, func(l *hcm.PayslipLine) *l8common.Money { return l.CurrentAmount })
-	p.TotalTaxes = common.SumLineMoney(p.Taxes, func(l *hcm.PayslipLine) *l8common.Money { return l.CurrentAmount })
+	p.GrossPay = common.SumLineMoney(toSlice(p.Earnings), func(v interface{}) *l8common.Money { return v.(*hcm.PayslipLine).CurrentAmount })
+	p.TotalDeductions = common.SumLineMoney(toSlice(p.Deductions), func(v interface{}) *l8common.Money { return v.(*hcm.PayslipLine).CurrentAmount })
+	p.TotalTaxes = common.SumLineMoney(toSlice(p.Taxes), func(v interface{}) *l8common.Money { return v.(*hcm.PayslipLine).CurrentAmount })
 	p.NetPay = common.MoneySubtract(p.GrossPay, common.MoneyAdd(p.TotalDeductions, p.TotalTaxes))
 }
 

@@ -15,21 +15,20 @@ limitations under the License.
 package carts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
-func newEcomCartServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[ecom.EcomCart]("EcomCart",
-		func(e *ecom.EcomCart) { common.GenerateID(&e.CartId) }).
-		Require(func(e *ecom.EcomCart) string { return e.CartId }, "CartId").
-		Require(func(e *ecom.EcomCart) string { return e.CurrencyId }, "CurrencyId").
-		Enum(func(e *ecom.EcomCart) int32 { return int32(e.Status) }, ecom.EcomCartStatus_name, "Status").
-		OptionalMoney(func(e *ecom.EcomCart) *l8common.Money { return e.Subtotal }, "Subtotal").
-		OptionalMoney(func(e *ecom.EcomCart) *l8common.Money { return e.DiscountAmount }, "DiscountAmount").
-		OptionalMoney(func(e *ecom.EcomCart) *l8common.Money { return e.TaxAmount }, "TaxAmount").
-		OptionalMoney(func(e *ecom.EcomCart) *l8common.Money { return e.Total }, "Total").
+func newEcomCartServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&ecom.EcomCart{}, vnic).
+		Require(func(v interface{}) string { return v.(*ecom.EcomCart).CartId }, "CartId").
+		Require(func(v interface{}) string { return v.(*ecom.EcomCart).CurrencyId }, "CurrencyId").
+		Enum(func(v interface{}) int32 { return int32(v.(*ecom.EcomCart).Status) }, ecom.EcomCartStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomCart).Subtotal }, "Subtotal").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomCart).DiscountAmount }, "DiscountAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomCart).TaxAmount }, "TaxAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomCart).Total }, "Total").
 		Build()
 }

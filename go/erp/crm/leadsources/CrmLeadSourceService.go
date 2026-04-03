@@ -14,7 +14,7 @@
 package leadsources
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[crm.CrmLeadSource, crm.CrmLeadSourceList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "SourceId", Callback: newCrmLeadSourceServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "SourceId", Callback: newCrmLeadSourceServiceCallback(vnic),
+	}, &crm.CrmLeadSource{}, &crm.CrmLeadSourceList{}, creds, dbname, vnic)
 }
 
 func CrmLeadSources(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CrmLeadSources(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmLeadSource(sourceId string, vnic ifs.IVNic) (*crm.CrmLeadSource, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &crm.CrmLeadSource{SourceId: sourceId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmLeadSource{SourceId: sourceId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*crm.CrmLeadSource), nil
 }

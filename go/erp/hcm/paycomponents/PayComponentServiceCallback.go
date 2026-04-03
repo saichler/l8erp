@@ -15,15 +15,15 @@ limitations under the License.
 package paycomponents
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newPayComponentServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PayComponent",
-		func(e *hcm.PayComponent) { common.GenerateID(&e.ComponentId) },
-		nil)
+func newPayComponentServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&hcm.PayComponent{}, vnic).
+		Custom(validatePayComp).
+		Build()
 }
 
 func validatePayComp(entity *hcm.PayComponent) error {

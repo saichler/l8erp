@@ -15,14 +15,13 @@ limitations under the License.
 package oppstages
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmOppStageServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmOppStage]("CrmOppStage",
-		func(e *crm.CrmOppStage) { common.GenerateID(&e.StageId) }).
-		Require(func(e *crm.CrmOppStage) string { return e.StageId }, "StageId").
+func newCrmOppStageServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmOppStage{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmOppStage).StageId }, "StageId").
 		Build()
 }

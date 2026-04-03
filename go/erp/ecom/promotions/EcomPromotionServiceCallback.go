@@ -15,19 +15,18 @@ limitations under the License.
 package promotions
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
-func newEcomPromotionServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[ecom.EcomPromotion]("EcomPromotion",
-		func(e *ecom.EcomPromotion) { common.GenerateID(&e.PromotionId) }).
-		Require(func(e *ecom.EcomPromotion) string { return e.PromotionId }, "PromotionId").
-		Enum(func(e *ecom.EcomPromotion) int32 { return int32(e.PromotionType) }, ecom.EcomPromotionType_name, "PromotionType").
-		OptionalMoney(func(e *ecom.EcomPromotion) *l8common.Money { return e.MaxDiscount }, "MaxDiscount").
-		OptionalMoney(func(e *ecom.EcomPromotion) *l8common.Money { return e.MinPurchase }, "MinPurchase").
-		DateAfter(func(e *ecom.EcomPromotion) int64 { return e.EndDate }, func(e *ecom.EcomPromotion) int64 { return e.StartDate }, "EndDate", "StartDate").
+func newEcomPromotionServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&ecom.EcomPromotion{}, vnic).
+		Require(func(v interface{}) string { return v.(*ecom.EcomPromotion).PromotionId }, "PromotionId").
+		Enum(func(v interface{}) int32 { return int32(v.(*ecom.EcomPromotion).PromotionType) }, ecom.EcomPromotionType_name, "PromotionType").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomPromotion).MaxDiscount }, "MaxDiscount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomPromotion).MinPurchase }, "MinPurchase").
+		DateAfter(func(v interface{}) int64 { return v.(*ecom.EcomPromotion).EndDate }, func(v interface{}) int64 { return v.(*ecom.EcomPromotion).StartDate }, "EndDate", "StartDate").
 		Build()
 }

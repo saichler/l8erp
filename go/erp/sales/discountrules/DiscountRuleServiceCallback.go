@@ -15,17 +15,16 @@ limitations under the License.
 package discountrules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
-func newDiscountRuleServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sales.SalesDiscountRule]("SalesDiscountRule",
-		func(e *sales.SalesDiscountRule) { common.GenerateID(&e.RuleId) }).
-		Require(func(e *sales.SalesDiscountRule) string { return e.RuleId }, "RuleId").
-		Require(func(e *sales.SalesDiscountRule) string { return e.Name }, "Name").
-		Enum(func(e *sales.SalesDiscountRule) int32 { return int32(e.DiscountType) }, sales.SalesDiscountType_name, "DiscountType").
-		DateAfter(func(e *sales.SalesDiscountRule) int64 { return e.ExpiryDate }, func(e *sales.SalesDiscountRule) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
+func newDiscountRuleServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sales.SalesDiscountRule{}, vnic).
+		Require(func(v interface{}) string { return v.(*sales.SalesDiscountRule).RuleId }, "RuleId").
+		Require(func(v interface{}) string { return v.(*sales.SalesDiscountRule).Name }, "Name").
+		Enum(func(v interface{}) int32 { return int32(v.(*sales.SalesDiscountRule).DiscountType) }, sales.SalesDiscountType_name, "DiscountType").
+		DateAfter(func(v interface{}) int64 { return v.(*sales.SalesDiscountRule).ExpiryDate }, func(v interface{}) int64 { return v.(*sales.SalesDiscountRule).EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

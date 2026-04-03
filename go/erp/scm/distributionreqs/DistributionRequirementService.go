@@ -14,7 +14,7 @@
 package distributionreqs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmDistributionRequirement, scm.ScmDistributionRequirementList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RequirementId", Callback: newDistributionRequirementServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RequirementId", Callback: newDistributionRequirementServiceCallback(vnic),
+	}, &scm.ScmDistributionRequirement{}, &scm.ScmDistributionRequirementList{}, creds, dbname, vnic)
 }
 
 func DistributionRequirements(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func DistributionRequirements(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DistributionRequirement(requirementId string, vnic ifs.IVNic) (*scm.ScmDistributionRequirement, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmDistributionRequirement{RequirementId: requirementId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmDistributionRequirement{RequirementId: requirementId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmDistributionRequirement), nil
 }

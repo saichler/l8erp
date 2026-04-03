@@ -15,17 +15,16 @@ limitations under the License.
 package shiftschedules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-func newMfgShiftScheduleServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgShiftSchedule]("MfgShiftSchedule",
-		func(e *mfg.MfgShiftSchedule) { common.GenerateID(&e.ScheduleId) }).
-		Require(func(e *mfg.MfgShiftSchedule) string { return e.ScheduleId }, "ScheduleId").
-		Require(func(e *mfg.MfgShiftSchedule) string { return e.Name }, "Name").
-		Enum(func(e *mfg.MfgShiftSchedule) int32 { return int32(e.ShiftType) }, mfg.MfgShiftType_name, "ShiftType").
-		DateAfter(func(e *mfg.MfgShiftSchedule) int64 { return e.ExpiryDate }, func(e *mfg.MfgShiftSchedule) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
+func newMfgShiftScheduleServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgShiftSchedule{}, vnic).
+		Require(func(v interface{}) string { return v.(*mfg.MfgShiftSchedule).ScheduleId }, "ScheduleId").
+		Require(func(v interface{}) string { return v.(*mfg.MfgShiftSchedule).Name }, "Name").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgShiftSchedule).ShiftType) }, mfg.MfgShiftType_name, "ShiftType").
+		DateAfter(func(v interface{}) int64 { return v.(*mfg.MfgShiftSchedule).ExpiryDate }, func(v interface{}) int64 { return v.(*mfg.MfgShiftSchedule).EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

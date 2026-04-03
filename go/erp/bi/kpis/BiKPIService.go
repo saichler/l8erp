@@ -14,7 +14,7 @@
 package kpis
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[bi.BiKPI, bi.BiKPIList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "KpiId", Callback: newBiKPIServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "KpiId", Callback: newBiKPIServiceCallback(vnic),
+	}, &bi.BiKPI{}, &bi.BiKPIList{}, creds, dbname, vnic)
 }
 
 func BiKPIs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func BiKPIs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiKPI(kpiId string, vnic ifs.IVNic) (*bi.BiKPI, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &bi.BiKPI{KpiId: kpiId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiKPI{KpiId: kpiId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*bi.BiKPI), nil
 }

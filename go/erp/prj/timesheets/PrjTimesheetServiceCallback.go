@@ -15,12 +15,13 @@ limitations under the License.
 package timesheets
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
-func computePrjTimesheetHours(ts *prj.PrjTimesheet) error {
+func computePrjTimesheetHours(v interface{}) error {
+	ts := v.(*prj.PrjTimesheet)
 	ts.TotalHours = 0
 	ts.BillableHours = 0
 	for _, e := range ts.Entries {
@@ -33,14 +34,13 @@ func computePrjTimesheetHours(ts *prj.PrjTimesheet) error {
 	return nil
 }
 
-func newPrjTimesheetServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjTimesheet]("PrjTimesheet",
-		func(e *prj.PrjTimesheet) { common.GenerateID(&e.TimesheetId) }).
+func newPrjTimesheetServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjTimesheet{}, vnic).
 		StatusTransition(timesheetTransitions()).
 		After(rollUpTimesheetHours).
 		Compute(computePrjTimesheetHours).
-		Require(func(e *prj.PrjTimesheet) string { return e.TimesheetId }, "TimesheetId").
-		Enum(func(e *prj.PrjTimesheet) int32 { return int32(e.Status) }, prj.PrjTimesheetStatus_name, "Status").
-		DateAfter(func(e *prj.PrjTimesheet) int64 { return e.WeekEndDate }, func(e *prj.PrjTimesheet) int64 { return e.WeekStartDate }, "WeekEndDate", "WeekStartDate").
+		Require(func(v interface{}) string { return v.(*prj.PrjTimesheet).TimesheetId }, "TimesheetId").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjTimesheet).Status) }, prj.PrjTimesheetStatus_name, "Status").
+		DateAfter(func(v interface{}) int64 { return v.(*prj.PrjTimesheet).WeekEndDate }, func(v interface{}) int64 { return v.(*prj.PrjTimesheet).WeekStartDate }, "WeekEndDate", "WeekStartDate").
 		Build()
 }

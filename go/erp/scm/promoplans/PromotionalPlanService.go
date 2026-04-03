@@ -14,7 +14,7 @@
 package promoplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmPromotionalPlan, scm.ScmPromotionalPlanList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PlanId", Callback: newPromotionalPlanServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PlanId", Callback: newPromotionalPlanServiceCallback(vnic),
+	}, &scm.ScmPromotionalPlan{}, &scm.ScmPromotionalPlanList{}, creds, dbname, vnic)
 }
 
 func PromotionalPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PromotionalPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PromotionalPlan(planId string, vnic ifs.IVNic) (*scm.ScmPromotionalPlan, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmPromotionalPlan{PlanId: planId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmPromotionalPlan{PlanId: planId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmPromotionalPlan), nil
 }

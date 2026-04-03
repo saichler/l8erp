@@ -17,16 +17,15 @@ package dunningletters
 import (
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newDunningLetterServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.DunningLetter]("DunningLetter",
-		func(e *fin.DunningLetter) { common.GenerateID(&e.LetterId) }).
-		Require(func(e *fin.DunningLetter) string { return e.LetterId }, "LetterId").
-		Require(func(e *fin.DunningLetter) string { return e.CustomerId }, "CustomerId").
-		Enum(func(e *fin.DunningLetter) int32 { return int32(e.DunningLevel) }, fin.DunningLevel_name, "DunningLevel").
-		OptionalMoney(func(e *fin.DunningLetter) *l8common.Money { return e.TotalOverdue }, "TotalOverdue").
+func newDunningLetterServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.DunningLetter{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.DunningLetter).LetterId }, "LetterId").
+		Require(func(v interface{}) string { return v.(*fin.DunningLetter).CustomerId }, "CustomerId").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.DunningLetter).DunningLevel) }, fin.DunningLevel_name, "DunningLevel").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.DunningLetter).TotalOverdue }, "TotalOverdue").
 		Build()
 }

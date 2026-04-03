@@ -14,7 +14,7 @@
 package jobfamilies
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.JobFamily, hcm.JobFamilyList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "JobFamilyId", Callback: newJobFamilyServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "JobFamilyId", Callback: newJobFamilyServiceCallback(vnic),
+	}, &hcm.JobFamily{}, &hcm.JobFamilyList{}, creds, dbname, vnic)
 }
 
 func JobFamilies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func JobFamilies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func JobFamily(jobFamilyId string, vnic ifs.IVNic) (*hcm.JobFamily, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.JobFamily{JobFamilyId: jobFamilyId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.JobFamily{JobFamilyId: jobFamilyId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.JobFamily), nil
 }

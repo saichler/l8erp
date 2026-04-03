@@ -14,7 +14,7 @@
 package dataqualityrules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[bi.BiDataQualityRule, bi.BiDataQualityRuleList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RuleId", Callback: newBiDataQualityRuleServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RuleId", Callback: newBiDataQualityRuleServiceCallback(vnic),
+	}, &bi.BiDataQualityRule{}, &bi.BiDataQualityRuleList{}, creds, dbname, vnic)
 }
 
 func BiDataQualityRules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func BiDataQualityRules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiDataQualityRule(ruleId string, vnic ifs.IVNic) (*bi.BiDataQualityRule, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &bi.BiDataQualityRule{RuleId: ruleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiDataQualityRule{RuleId: ruleId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*bi.BiDataQualityRule), nil
 }

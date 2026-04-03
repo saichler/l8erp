@@ -14,38 +14,7 @@ limitations under the License.
 */
 package common
 
-import (
-	l8c "github.com/saichler/l8common/go/common"
-	"github.com/saichler/l8types/go/ifs"
-)
+import l8c "github.com/saichler/l8common/go/common"
 
-// StatusTransitionConfig defines a state machine for an entity's status field.
-// Generic wrapper — typed getters/setters delegate to l8common's interface{}-based implementation.
-type StatusTransitionConfig[T any] struct {
-	StatusGetter  func(*T) int32
-	StatusSetter  func(*T, int32)
-	FilterBuilder func(*T) *T
-	ServiceName   string
-	ServiceArea   byte
-	InitialStatus int32
-	Transitions   map[int32][]int32
-	StatusNames   map[int32]string
-}
-
-// BuildValidator returns an ActionValidateFunc that enforces status transitions.
-func (cfg *StatusTransitionConfig[T]) BuildValidator() ActionValidateFunc[T] {
-	inner := &l8c.StatusTransitionConfig{
-		StatusGetter:  func(v interface{}) int32 { return cfg.StatusGetter(v.(*T)) },
-		StatusSetter:  func(v interface{}, s int32) { cfg.StatusSetter(v.(*T), s) },
-		FilterBuilder: func(v interface{}) interface{} { return cfg.FilterBuilder(v.(*T)) },
-		ServiceName:   cfg.ServiceName,
-		ServiceArea:   cfg.ServiceArea,
-		InitialStatus: cfg.InitialStatus,
-		Transitions:   cfg.Transitions,
-		StatusNames:   cfg.StatusNames,
-	}
-	innerFn := inner.BuildValidator()
-	return func(entity *T, action ifs.Action, vnic ifs.IVNic) error {
-		return innerFn(entity, action, vnic)
-	}
-}
+// Re-export StatusTransitionConfig from l8common.
+type StatusTransitionConfig = l8c.StatusTransitionConfig

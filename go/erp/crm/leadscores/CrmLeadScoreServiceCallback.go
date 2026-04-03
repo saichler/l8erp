@@ -17,12 +17,11 @@ package leadscores
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/crm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newCrmLeadScoreServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmLeadScore]("CrmLeadScore",
-		func(e *crm.CrmLeadScore) { common.GenerateID(&e.ScoreId) }).
-		Require(func(e *crm.CrmLeadScore) string { return e.ScoreId }, "ScoreId").
+func newCrmLeadScoreServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmLeadScore{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmLeadScore).ScoreId }, "ScoreId").
 		Build()
 }

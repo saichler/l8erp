@@ -17,14 +17,15 @@ package cobraevents
 import (
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newCOBRAEventServiceCallback() ifs.IServiceCallback {
+func newCOBRAEventServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("COBRAEvent",
-		func(e *hcm.COBRAEvent) { common.GenerateID(&e.CobraEventId) },
-		validateCOBRAEvt)
+		func(v interface{}) bool { _, ok := v.(*hcm.COBRAEvent); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.COBRAEvent).CobraEventId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateCOBRAEvt(v.(*hcm.COBRAEvent), vnic) })
 }
 
 func validateCOBRAEvt(entity *hcm.COBRAEvent, vnic ifs.IVNic) error {

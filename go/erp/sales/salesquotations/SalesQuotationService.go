@@ -14,7 +14,7 @@
 package salesquotations
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[sales.SalesQuotation, sales.SalesQuotationList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "QuotationId", Callback: newSalesQuotationServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "QuotationId", Callback: newSalesQuotationServiceCallback(vnic),
+	}, &sales.SalesQuotation{}, &sales.SalesQuotationList{}, creds, dbname, vnic)
 }
 
 func SalesQuotations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func SalesQuotations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SalesQuotation(quotationId string, vnic ifs.IVNic) (*sales.SalesQuotation, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &sales.SalesQuotation{QuotationId: quotationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesQuotation{QuotationId: quotationId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*sales.SalesQuotation), nil
 }

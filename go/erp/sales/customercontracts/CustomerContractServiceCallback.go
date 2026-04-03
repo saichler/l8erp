@@ -15,19 +15,18 @@ limitations under the License.
 package customercontracts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
-func newCustomerContractServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sales.SalesCustomerContract]("SalesCustomerContract",
-		func(e *sales.SalesCustomerContract) { common.GenerateID(&e.ContractId) }).
-		Require(func(e *sales.SalesCustomerContract) string { return e.ContractId }, "ContractId").
-		Require(func(e *sales.SalesCustomerContract) string { return e.CustomerId }, "CustomerId").
-		Enum(func(e *sales.SalesCustomerContract) int32 { return int32(e.Status) }, sales.SalesContractStatus_name, "Status").
-		OptionalMoney(func(e *sales.SalesCustomerContract) *l8common.Money { return e.ContractValue }, "ContractValue").
-		DateAfter(func(e *sales.SalesCustomerContract) int64 { return e.EndDate }, func(e *sales.SalesCustomerContract) int64 { return e.StartDate }, "EndDate", "StartDate").
+func newCustomerContractServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sales.SalesCustomerContract{}, vnic).
+		Require(func(v interface{}) string { return v.(*sales.SalesCustomerContract).ContractId }, "ContractId").
+		Require(func(v interface{}) string { return v.(*sales.SalesCustomerContract).CustomerId }, "CustomerId").
+		Enum(func(v interface{}) int32 { return int32(v.(*sales.SalesCustomerContract).Status) }, sales.SalesContractStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesCustomerContract).ContractValue }, "ContractValue").
+		DateAfter(func(v interface{}) int64 { return v.(*sales.SalesCustomerContract).EndDate }, func(v interface{}) int64 { return v.(*sales.SalesCustomerContract).StartDate }, "EndDate", "StartDate").
 		Build()
 }

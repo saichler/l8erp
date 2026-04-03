@@ -14,7 +14,7 @@
 package cobraevents
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.COBRAEvent, hcm.COBRAEventList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CobraEventId", Callback: newCOBRAEventServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CobraEventId", Callback: newCOBRAEventServiceCallback(vnic),
+	}, &hcm.COBRAEvent{}, &hcm.COBRAEventList{}, creds, dbname, vnic)
 }
 
 func COBRAEvents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func COBRAEvents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func COBRAEvent(cobraEventId string, vnic ifs.IVNic) (*hcm.COBRAEvent, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.COBRAEvent{CobraEventId: cobraEventId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.COBRAEvent{CobraEventId: cobraEventId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.COBRAEvent), nil
 }

@@ -14,7 +14,7 @@
 package surveys
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[crm.CrmSurvey, crm.CrmSurveyList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "SurveyId", Callback: newCrmSurveyServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "SurveyId", Callback: newCrmSurveyServiceCallback(vnic),
+	}, &crm.CrmSurvey{}, &crm.CrmSurveyList{}, creds, dbname, vnic)
 }
 
 func CrmSurveys(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CrmSurveys(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmSurvey(surveyId string, vnic ifs.IVNic) (*crm.CrmSurvey, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &crm.CrmSurvey{SurveyId: surveyId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmSurvey{SurveyId: surveyId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*crm.CrmSurvey), nil
 }

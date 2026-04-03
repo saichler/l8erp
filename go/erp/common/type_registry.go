@@ -14,13 +14,7 @@ limitations under the License.
 */
 package common
 
-import (
-	l8c "github.com/saichler/l8common/go/common"
-	"github.com/saichler/l8types/go/ifs"
-)
+import l8c "github.com/saichler/l8common/go/common"
 
-// RegisterType registers a type and its list wrapper with the introspector and registry.
-// Generic wrapper — creates instances via new(T) and new(TList).
-func RegisterType[T any, TList any](resources ifs.IResources, pkField string) {
-	l8c.RegisterType(resources, new(T), new(TList), pkField)
-}
+// Re-export RegisterType from l8common.
+var RegisterType = l8c.RegisterType

@@ -15,15 +15,14 @@ limitations under the License.
 package distributionreqs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newDistributionRequirementServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmDistributionRequirement]("ScmDistributionRequirement",
-		func(e *scm.ScmDistributionRequirement) { common.GenerateID(&e.RequirementId) }).
-		Require(func(e *scm.ScmDistributionRequirement) string { return e.RequirementId }, "RequirementId").
-		Enum(func(e *scm.ScmDistributionRequirement) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
+func newDistributionRequirementServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmDistributionRequirement{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmDistributionRequirement).RequirementId }, "RequirementId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmDistributionRequirement).Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }

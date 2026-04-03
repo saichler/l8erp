@@ -15,22 +15,21 @@ limitations under the License.
 package expensereports
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
-func newPrjExpenseReportServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjExpenseReport]("PrjExpenseReport",
-		func(e *prj.PrjExpenseReport) { common.GenerateID(&e.ReportId) }).
+func newPrjExpenseReportServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjExpenseReport{}, vnic).
 		StatusTransition(expenseTransitions()).
 		After(rollUpExpenseCost).
 		Compute(computeExpenseTotals).
-		Require(func(e *prj.PrjExpenseReport) string { return e.ReportId }, "ReportId").
-		Enum(func(e *prj.PrjExpenseReport) int32 { return int32(e.Status) }, prj.PrjExpenseStatus_name, "Status").
-		OptionalMoney(func(e *prj.PrjExpenseReport) *l8common.Money { return e.TotalAmount }, "TotalAmount").
-		OptionalMoney(func(e *prj.PrjExpenseReport) *l8common.Money { return e.ApprovedAmount }, "ApprovedAmount").
-		OptionalMoney(func(e *prj.PrjExpenseReport) *l8common.Money { return e.ReimbursedAmount }, "ReimbursedAmount").
+		Require(func(v interface{}) string { return v.(*prj.PrjExpenseReport).ReportId }, "ReportId").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjExpenseReport).Status) }, prj.PrjExpenseStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjExpenseReport).TotalAmount }, "TotalAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjExpenseReport).ApprovedAmount }, "ApprovedAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjExpenseReport).ReimbursedAmount }, "ReimbursedAmount").
 		Build()
 }

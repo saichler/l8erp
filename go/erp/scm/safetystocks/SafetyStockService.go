@@ -14,7 +14,7 @@
 package safetystocks
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmSafetyStock, scm.ScmSafetyStockList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "SafetyStockId", Callback: newSafetyStockServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "SafetyStockId", Callback: newSafetyStockServiceCallback(vnic),
+	}, &scm.ScmSafetyStock{}, &scm.ScmSafetyStockList{}, creds, dbname, vnic)
 }
 
 func SafetyStocks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func SafetyStocks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SafetyStock(safetyStockId string, vnic ifs.IVNic) (*scm.ScmSafetyStock, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmSafetyStock{SafetyStockId: safetyStockId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmSafetyStock{SafetyStockId: safetyStockId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmSafetyStock), nil
 }

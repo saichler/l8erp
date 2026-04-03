@@ -15,15 +15,14 @@ limitations under the License.
 package controls
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/comp"
 )
 
-func newCompControlServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[comp.CompControl]("CompControl",
-		func(e *comp.CompControl) { common.GenerateID(&e.ControlId) }).
-		Require(func(e *comp.CompControl) string { return e.ControlId }, "ControlId").
-		Enum(func(e *comp.CompControl) int32 { return int32(e.ControlType) }, comp.CompControlType_name, "ControlType").
+func newCompControlServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&comp.CompControl{}, vnic).
+		Require(func(v interface{}) string { return v.(*comp.CompControl).ControlId }, "ControlId").
+		Enum(func(v interface{}) int32 { return int32(v.(*comp.CompControl).ControlType) }, comp.CompControlType_name, "ControlType").
 		Build()
 }

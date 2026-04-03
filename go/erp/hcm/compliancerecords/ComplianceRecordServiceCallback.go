@@ -15,16 +15,17 @@ limitations under the License.
 package compliancerecords
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newComplianceRecordServiceCallback() ifs.IServiceCallback {
+func newComplianceRecordServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("ComplianceRecord",
-		func(e *hcm.ComplianceRecord) { common.GenerateID(&e.RecordId) },
-		validateCompRec)
+		func(v interface{}) bool { _, ok := v.(*hcm.ComplianceRecord); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.ComplianceRecord).RecordId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateCompRec(v.(*hcm.ComplianceRecord), vnic) })
 }
 
 func validateCompRec(entity *hcm.ComplianceRecord, vnic ifs.IVNic) error {

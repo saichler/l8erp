@@ -17,13 +17,13 @@ package salarygrades
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newSalaryGradeServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalaryGrade",
-		func(e *hcm.SalaryGrade) { common.GenerateID(&e.GradeId) },
-		nil)
+func newSalaryGradeServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&hcm.SalaryGrade{}, vnic).
+		Custom(validateSalGrade).
+		Build()
 }
 
 func validateSalGrade(entity *hcm.SalaryGrade) error {

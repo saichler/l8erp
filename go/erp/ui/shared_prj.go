@@ -1,40 +1,40 @@
 package ui
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
 
 func registerPrjTypes(resources ifs.IResources) {
 	// Planning
-	common.RegisterType[prj.PrjProject, prj.PrjProjectList](resources, "ProjectId")
-	common.RegisterType[prj.PrjProjectTemplate, prj.PrjProjectTemplateList](resources, "TemplateId")
+	common.RegisterType(resources, &prj.PrjProject{}, &prj.PrjProjectList{}, "ProjectId")
+	common.RegisterType(resources, &prj.PrjProjectTemplate{}, &prj.PrjProjectTemplateList{}, "TemplateId")
 
 	// Resources
-	common.RegisterType[prj.PrjResourcePool, prj.PrjResourcePoolList](resources, "PoolId")
-	common.RegisterType[prj.PrjResource, prj.PrjResourceList](resources, "ResourceId")
-	common.RegisterType[prj.PrjAllocation, prj.PrjAllocationList](resources, "AllocationId")
-	common.RegisterType[prj.PrjBooking, prj.PrjBookingList](resources, "BookingId")
-	common.RegisterType[prj.PrjCapacityPlan, prj.PrjCapacityPlanList](resources, "PlanId")
-	common.RegisterType[prj.PrjUtilization, prj.PrjUtilizationList](resources, "UtilizationId")
+	common.RegisterType(resources, &prj.PrjResourcePool{}, &prj.PrjResourcePoolList{}, "PoolId")
+	common.RegisterType(resources, &prj.PrjResource{}, &prj.PrjResourceList{}, "ResourceId")
+	common.RegisterType(resources, &prj.PrjAllocation{}, &prj.PrjAllocationList{}, "AllocationId")
+	common.RegisterType(resources, &prj.PrjBooking{}, &prj.PrjBookingList{}, "BookingId")
+	common.RegisterType(resources, &prj.PrjCapacityPlan{}, &prj.PrjCapacityPlanList{}, "PlanId")
+	common.RegisterType(resources, &prj.PrjUtilization{}, &prj.PrjUtilizationList{}, "UtilizationId")
 
 	// Time & Expense
-	common.RegisterType[prj.PrjTimesheet, prj.PrjTimesheetList](resources, "TimesheetId")
-	common.RegisterType[prj.PrjExpenseReport, prj.PrjExpenseReportList](resources, "ReportId")
-	common.RegisterType[prj.PrjApprovalRule, prj.PrjApprovalRuleList](resources, "RuleId")
-	common.RegisterType[prj.PrjExpenseCategory, prj.PrjExpenseCategoryList](resources, "CategoryId")
-	common.RegisterType[prj.PrjExpensePolicy, prj.PrjExpensePolicyList](resources, "PolicyId")
+	common.RegisterType(resources, &prj.PrjTimesheet{}, &prj.PrjTimesheetList{}, "TimesheetId")
+	common.RegisterType(resources, &prj.PrjExpenseReport{}, &prj.PrjExpenseReportList{}, "ReportId")
+	common.RegisterType(resources, &prj.PrjApprovalRule{}, &prj.PrjApprovalRuleList{}, "RuleId")
+	common.RegisterType(resources, &prj.PrjExpenseCategory{}, &prj.PrjExpenseCategoryList{}, "CategoryId")
+	common.RegisterType(resources, &prj.PrjExpensePolicy{}, &prj.PrjExpensePolicyList{}, "PolicyId")
 
 	// Billing
-	common.RegisterType[prj.PrjBillingRate, prj.PrjBillingRateList](resources, "RateId")
-	common.RegisterType[prj.PrjBillingSchedule, prj.PrjBillingScheduleList](resources, "ScheduleId")
-	common.RegisterType[prj.PrjProjectInvoice, prj.PrjProjectInvoiceList](resources, "InvoiceId")
-	common.RegisterType[prj.PrjRevenueRecognition, prj.PrjRevenueRecognitionList](resources, "RecognitionId")
-	common.RegisterType[prj.PrjProjectBudget, prj.PrjProjectBudgetList](resources, "BudgetId")
+	common.RegisterType(resources, &prj.PrjBillingRate{}, &prj.PrjBillingRateList{}, "RateId")
+	common.RegisterType(resources, &prj.PrjBillingSchedule{}, &prj.PrjBillingScheduleList{}, "ScheduleId")
+	common.RegisterType(resources, &prj.PrjProjectInvoice{}, &prj.PrjProjectInvoiceList{}, "InvoiceId")
+	common.RegisterType(resources, &prj.PrjRevenueRecognition{}, &prj.PrjRevenueRecognitionList{}, "RecognitionId")
+	common.RegisterType(resources, &prj.PrjProjectBudget{}, &prj.PrjProjectBudgetList{}, "BudgetId")
 
 	// Analytics
-	common.RegisterType[prj.PrjStatusReport, prj.PrjStatusReportList](resources, "StatusId")
-	common.RegisterType[prj.PrjPortfolioView, prj.PrjPortfolioViewList](resources, "ViewId")
-	common.RegisterType[prj.PrjProjectKPI, prj.PrjProjectKPIList](resources, "KpiId")
+	common.RegisterType(resources, &prj.PrjStatusReport{}, &prj.PrjStatusReportList{}, "StatusId")
+	common.RegisterType(resources, &prj.PrjPortfolioView{}, &prj.PrjPortfolioViewList{}, "ViewId")
+	common.RegisterType(resources, &prj.PrjProjectKPI{}, &prj.PrjProjectKPIList{}, "KpiId")
 }

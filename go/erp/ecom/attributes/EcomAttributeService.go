@@ -14,7 +14,7 @@
 package attributes
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[ecom.EcomAttribute, ecom.EcomAttributeList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "AttributeId", Callback: newEcomAttributeServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "AttributeId", Callback: newEcomAttributeServiceCallback(vnic),
+	}, &ecom.EcomAttribute{}, &ecom.EcomAttributeList{}, creds, dbname, vnic)
 }
 
 func EcomAttributes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func EcomAttributes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomAttribute(attributeId string, vnic ifs.IVNic) (*ecom.EcomAttribute, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &ecom.EcomAttribute{AttributeId: attributeId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomAttribute{AttributeId: attributeId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*ecom.EcomAttribute), nil
 }

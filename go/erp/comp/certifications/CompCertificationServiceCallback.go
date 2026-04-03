@@ -15,17 +15,16 @@ limitations under the License.
 package certifications
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/comp"
 )
 
-func newCompCertificationServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[comp.CompCertification]("CompCertification",
-		func(e *comp.CompCertification) { common.GenerateID(&e.CertificationId) }).
-		Require(func(e *comp.CompCertification) string { return e.CertificationId }, "CertificationId").
-		Enum(func(e *comp.CompCertification) int32 { return int32(e.Status) }, comp.CompCertificationStatus_name, "Status").
-		OptionalMoney(func(e *comp.CompCertification) *l8common.Money { return e.CertificationCost }, "CertificationCost").
+func newCompCertificationServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&comp.CompCertification{}, vnic).
+		Require(func(v interface{}) string { return v.(*comp.CompCertification).CertificationId }, "CertificationId").
+		Enum(func(v interface{}) int32 { return int32(v.(*comp.CompCertification).Status) }, comp.CompCertificationStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*comp.CompCertification).CertificationCost }, "CertificationCost").
 		Build()
 }

@@ -15,16 +15,17 @@ limitations under the License.
 package careerpaths
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/jobfamilies"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newCareerPathServiceCallback() ifs.IServiceCallback {
+func newCareerPathServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("CareerPath",
-		func(e *hcm.CareerPath) { common.GenerateID(&e.CareerPathId) },
-		validateCarPath)
+		func(v interface{}) bool { _, ok := v.(*hcm.CareerPath); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.CareerPath).CareerPathId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateCarPath(v.(*hcm.CareerPath), vnic) })
 }
 
 func validateCarPath(entity *hcm.CareerPath, vnic ifs.IVNic) error {

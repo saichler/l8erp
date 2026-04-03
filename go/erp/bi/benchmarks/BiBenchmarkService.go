@@ -14,7 +14,7 @@
 package benchmarks
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[bi.BiBenchmark, bi.BiBenchmarkList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "BenchmarkId", Callback: newBiBenchmarkServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "BenchmarkId", Callback: newBiBenchmarkServiceCallback(vnic),
+	}, &bi.BiBenchmark{}, &bi.BiBenchmarkList{}, creds, dbname, vnic)
 }
 
 func BiBenchmarks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func BiBenchmarks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiBenchmark(benchmarkId string, vnic ifs.IVNic) (*bi.BiBenchmark, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &bi.BiBenchmark{BenchmarkId: benchmarkId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiBenchmark{BenchmarkId: benchmarkId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*bi.BiBenchmark), nil
 }

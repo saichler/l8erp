@@ -16,14 +16,14 @@ package salarystructures
 
 import (
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newSalaryStructureServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("SalaryStructure",
-		func(e *hcm.SalaryStructure) { common.GenerateID(&e.StructureId) },
-		nil)
+func newSalaryStructureServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&hcm.SalaryStructure{}, vnic).
+		Custom(validateSalStruct).
+		Build()
 }
 
 func validateSalStruct(entity *hcm.SalaryStructure) error {

@@ -14,7 +14,7 @@
 package payslips
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.Payslip, hcm.PayslipList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PayslipId", Callback: newPayslipServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PayslipId", Callback: newPayslipServiceCallback(vnic),
+	}, &hcm.Payslip{}, &hcm.PayslipList{}, creds, dbname, vnic)
 }
 
 func Payslips(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Payslips(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Payslip(payslipId string, vnic ifs.IVNic) (*hcm.Payslip, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.Payslip{PayslipId: payslipId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Payslip{PayslipId: payslipId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.Payslip), nil
 }

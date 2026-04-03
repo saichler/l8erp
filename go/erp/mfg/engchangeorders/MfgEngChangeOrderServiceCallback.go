@@ -15,29 +15,28 @@ limitations under the License.
 package engchangeorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-func newMfgEngChangeOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgEngChangeOrder]("MfgEngChangeOrder",
-		func(e *mfg.MfgEngChangeOrder) { common.GenerateID(&e.ChangeOrderId) }).
+func newMfgEngChangeOrderServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgEngChangeOrder{}, vnic).
 		StatusTransition(engChangeOrderTransitions()).
-		Require(func(e *mfg.MfgEngChangeOrder) string { return e.ChangeOrderId }, "ChangeOrderId").
-		Require(func(e *mfg.MfgEngChangeOrder) string { return e.Title }, "Title").
-		Enum(func(e *mfg.MfgEngChangeOrder) int32 { return int32(e.Status) }, mfg.MfgChangeOrderStatus_name, "Status").
-		OptionalMoney(func(e *mfg.MfgEngChangeOrder) *l8common.Money { return e.EstimatedCost }, "EstimatedCost").
-		OptionalMoney(func(e *mfg.MfgEngChangeOrder) *l8common.Money { return e.ActualCost }, "ActualCost").
+		Require(func(v interface{}) string { return v.(*mfg.MfgEngChangeOrder).ChangeOrderId }, "ChangeOrderId").
+		Require(func(v interface{}) string { return v.(*mfg.MfgEngChangeOrder).Title }, "Title").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgEngChangeOrder).Status) }, mfg.MfgChangeOrderStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*mfg.MfgEngChangeOrder).EstimatedCost }, "EstimatedCost").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*mfg.MfgEngChangeOrder).ActualCost }, "ActualCost").
 		Build()
 }
 
-func engChangeOrderTransitions() *common.StatusTransitionConfig[mfg.MfgEngChangeOrder] {
-	return &common.StatusTransitionConfig[mfg.MfgEngChangeOrder]{
-		StatusGetter:  func(e *mfg.MfgEngChangeOrder) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *mfg.MfgEngChangeOrder, s int32) { e.Status = mfg.MfgChangeOrderStatus(s) },
-		FilterBuilder: func(e *mfg.MfgEngChangeOrder) *mfg.MfgEngChangeOrder {
+func engChangeOrderTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*mfg.MfgEngChangeOrder).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*mfg.MfgEngChangeOrder).Status = mfg.MfgChangeOrderStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*mfg.MfgEngChangeOrder);
 			return &mfg.MfgEngChangeOrder{ChangeOrderId: e.ChangeOrderId}
 		},
 		ServiceName:   ServiceName,

@@ -14,7 +14,7 @@
 package discountrules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[sales.SalesDiscountRule, sales.SalesDiscountRuleList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RuleId", Callback: newDiscountRuleServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RuleId", Callback: newDiscountRuleServiceCallback(vnic),
+	}, &sales.SalesDiscountRule{}, &sales.SalesDiscountRuleList{}, creds, dbname, vnic)
 }
 
 func DiscountRules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func DiscountRules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DiscountRule(ruleId string, vnic ifs.IVNic) (*sales.SalesDiscountRule, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &sales.SalesDiscountRule{RuleId: ruleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesDiscountRule{RuleId: ruleId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*sales.SalesDiscountRule), nil
 }

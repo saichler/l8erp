@@ -17,15 +17,14 @@ package qualityinspections
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/mfg"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newMfgQualityInspectionServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgQualityInspection]("MfgQualityInspection",
-		func(e *mfg.MfgQualityInspection) { common.GenerateID(&e.InspectionId) }).
-		Require(func(e *mfg.MfgQualityInspection) string { return e.InspectionId }, "InspectionId").
-		Require(func(e *mfg.MfgQualityInspection) string { return e.ItemId }, "ItemId").
-		Enum(func(e *mfg.MfgQualityInspection) int32 { return int32(e.InspectionType) }, mfg.MfgInspectionType_name, "InspectionType").
-		Enum(func(e *mfg.MfgQualityInspection) int32 { return int32(e.OverallResult) }, mfg.MfgInspectionResult_name, "OverallResult").
+func newMfgQualityInspectionServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgQualityInspection{}, vnic).
+		Require(func(v interface{}) string { return v.(*mfg.MfgQualityInspection).InspectionId }, "InspectionId").
+		Require(func(v interface{}) string { return v.(*mfg.MfgQualityInspection).ItemId }, "ItemId").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgQualityInspection).InspectionType) }, mfg.MfgInspectionType_name, "InspectionType").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgQualityInspection).OverallResult) }, mfg.MfgInspectionResult_name, "OverallResult").
 		Build()
 }

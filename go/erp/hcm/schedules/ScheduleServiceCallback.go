@@ -15,16 +15,17 @@ limitations under the License.
 package schedules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newScheduleServiceCallback() ifs.IServiceCallback {
+func newScheduleServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("Schedule",
-		func(e *hcm.Schedule) { common.GenerateID(&e.ScheduleId) },
-		validateSchedule)
+		func(v interface{}) bool { _, ok := v.(*hcm.Schedule); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.Schedule).ScheduleId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateSchedule(v.(*hcm.Schedule), vnic) })
 }
 
 func validateSchedule(entity *hcm.Schedule, vnic ifs.IVNic) error {

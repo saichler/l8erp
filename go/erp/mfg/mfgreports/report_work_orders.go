@@ -20,11 +20,13 @@ import (
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
 func generateWorkOrderStatus(report *fin.FinReport, vnic ifs.IVNic) error {
-	orders, err := common.GetEntities("MfgWorkOrd", 70, &mfg.MfgWorkOrder{}, vnic)
+	ordersRaw, err := common.GetEntities("MfgWorkOrd", 70, &mfg.MfgWorkOrder{}, vnic)
+	orders := make([]*mfg.MfgWorkOrder, 0, len(ordersRaw))
+	for _, ri := range ordersRaw { orders = append(orders, ri.(*mfg.MfgWorkOrder)) }
 	if err != nil {
 		return err
 	}

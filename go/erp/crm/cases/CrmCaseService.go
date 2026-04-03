@@ -14,7 +14,7 @@
 package cases
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[crm.CrmCase, crm.CrmCaseList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CaseId", Callback: newCrmCaseServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CaseId", Callback: newCrmCaseServiceCallback(vnic),
+	}, &crm.CrmCase{}, &crm.CrmCaseList{}, creds, dbname, vnic)
 }
 
 func CrmCases(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CrmCases(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmCase(caseId string, vnic ifs.IVNic) (*crm.CrmCase, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &crm.CrmCase{CaseId: caseId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmCase{CaseId: caseId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*crm.CrmCase), nil
 }

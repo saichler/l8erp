@@ -15,19 +15,18 @@ limitations under the License.
 package commissionplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
-func newCommissionPlanServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sales.SalesCommissionPlan]("SalesCommissionPlan",
-		func(e *sales.SalesCommissionPlan) { common.GenerateID(&e.PlanId) }).
-		Require(func(e *sales.SalesCommissionPlan) string { return e.PlanId }, "PlanId").
-		Require(func(e *sales.SalesCommissionPlan) string { return e.Name }, "Name").
-		Enum(func(e *sales.SalesCommissionPlan) int32 { return int32(e.CommissionType) }, sales.SalesCommissionType_name, "CommissionType").
-		OptionalMoney(func(e *sales.SalesCommissionPlan) *l8common.Money { return e.BaseAmount }, "BaseAmount").
-		DateAfter(func(e *sales.SalesCommissionPlan) int64 { return e.ExpiryDate }, func(e *sales.SalesCommissionPlan) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
+func newCommissionPlanServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sales.SalesCommissionPlan{}, vnic).
+		Require(func(v interface{}) string { return v.(*sales.SalesCommissionPlan).PlanId }, "PlanId").
+		Require(func(v interface{}) string { return v.(*sales.SalesCommissionPlan).Name }, "Name").
+		Enum(func(v interface{}) int32 { return int32(v.(*sales.SalesCommissionPlan).CommissionType) }, sales.SalesCommissionType_name, "CommissionType").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesCommissionPlan).BaseAmount }, "BaseAmount").
+		DateAfter(func(v interface{}) int64 { return v.(*sales.SalesCommissionPlan).ExpiryDate }, func(v interface{}) int64 { return v.(*sales.SalesCommissionPlan).EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

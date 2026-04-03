@@ -14,7 +14,7 @@
 package scanjobs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[doc.DocScanJob, doc.DocScanJobList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ScanJobId", Callback: newDocScanJobServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ScanJobId", Callback: newDocScanJobServiceCallback(vnic),
+	}, &doc.DocScanJob{}, &doc.DocScanJobList{}, creds, dbname, vnic)
 }
 
 func DocScanJobs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func DocScanJobs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocScanJob(scanJobId string, vnic ifs.IVNic) (*doc.DocScanJob, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &doc.DocScanJob{ScanJobId: scanJobId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocScanJob{ScanJobId: scanJobId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*doc.DocScanJob), nil
 }

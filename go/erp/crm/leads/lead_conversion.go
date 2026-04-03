@@ -15,7 +15,7 @@ limitations under the License.
 package leads
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
@@ -24,7 +24,8 @@ import (
 
 // cascadeConvertLead auto-creates a CrmOpportunity when a lead is converted,
 // if the lead has a conversion record with CreateOpportunity=true.
-func cascadeConvertLead(lead *crm.CrmLead, action ifs.Action, vnic ifs.IVNic) error {
+func cascadeConvertLead(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	lead := v.(*crm.CrmLead)
 	if lead.Status != crm.CrmLeadStatus_CRM_LEAD_STATUS_CONVERTED {
 		return nil
 	}

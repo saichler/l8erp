@@ -14,7 +14,7 @@
 package exchangerates
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.ExchangeRate, fin.ExchangeRateList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ExchangeRateId", Callback: newExchangeRateServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ExchangeRateId", Callback: newExchangeRateServiceCallback(vnic),
+	}, &fin.ExchangeRate{}, &fin.ExchangeRateList{}, creds, dbname, vnic)
 }
 
 func ExchangeRates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func ExchangeRates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func ExchangeRate(exchangeRateId string, vnic ifs.IVNic) (*fin.ExchangeRate, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.ExchangeRate{ExchangeRateId: exchangeRateId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.ExchangeRate{ExchangeRateId: exchangeRateId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.ExchangeRate), nil
 }

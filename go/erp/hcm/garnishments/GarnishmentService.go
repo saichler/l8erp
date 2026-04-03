@@ -14,7 +14,7 @@
 package garnishments
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.Garnishment, hcm.GarnishmentList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "GarnishmentId", Callback: newGarnishmentServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "GarnishmentId", Callback: newGarnishmentServiceCallback(vnic),
+	}, &hcm.Garnishment{}, &hcm.GarnishmentList{}, creds, dbname, vnic)
 }
 
 func Garnishments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Garnishments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Garnishment(garnishmentId string, vnic ifs.IVNic) (*hcm.Garnishment, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.Garnishment{GarnishmentId: garnishmentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Garnishment{GarnishmentId: garnishmentId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.Garnishment), nil
 }

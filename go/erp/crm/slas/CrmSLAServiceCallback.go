@@ -15,16 +15,15 @@ limitations under the License.
 package slas
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmSLAServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmSLA]("CrmSLA",
-		func(e *crm.CrmSLA) { common.GenerateID(&e.SlaId) }).
-		Require(func(e *crm.CrmSLA) string { return e.SlaId }, "SlaId").
-		Require(func(e *crm.CrmSLA) string { return e.Name }, "Name").
-		Enum(func(e *crm.CrmSLA) int32 { return int32(e.AppliesToPriority) }, crm.CrmCasePriority_name, "AppliesToPriority").
+func newCrmSLAServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmSLA{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmSLA).SlaId }, "SlaId").
+		Require(func(v interface{}) string { return v.(*crm.CrmSLA).Name }, "Name").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmSLA).AppliesToPriority) }, crm.CrmCasePriority_name, "AppliesToPriority").
 		Build()
 }

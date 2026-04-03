@@ -22,7 +22,7 @@ import (
 // Sales Phase 6: Shipping
 func generateSalesPhase6(client *HCMClient, store *MockDataStore) error {
 	deliveries := generateSalesDeliveryOrders(store)
-	if err := runOp(client, "Delivery Orders", "/erp/60/DlvryOrder", &sales.SalesDeliveryOrderList{List: deliveries}, extractIDs(deliveries, func(e *sales.SalesDeliveryOrder) string { return e.DeliveryOrderId }), &store.SalesDeliveryOrderIDs); err != nil {
+	if err := runOp(client, "Delivery Orders", "/erp/60/DlvryOrder", &sales.SalesDeliveryOrderList{List: deliveries}, extractIDs(deliveries, func(v interface{}) string { return v.(*sales.SalesDeliveryOrder).DeliveryOrderId }), &store.SalesDeliveryOrderIDs); err != nil {
 		return err
 	}
 
@@ -32,12 +32,12 @@ func generateSalesPhase6(client *HCMClient, store *MockDataStore) error {
 // Sales Phase 7: Billing
 func generateSalesPhase7(client *HCMClient, store *MockDataStore) error {
 	schedules := generateSalesBillingSchedules(store)
-	if err := runOp(client, "Billing Schedules", "/erp/60/BillSched", &sales.SalesBillingScheduleList{List: schedules}, extractIDs(schedules, func(e *sales.SalesBillingSchedule) string { return e.ScheduleId }), &store.SalesBillingScheduleIDs); err != nil {
+	if err := runOp(client, "Billing Schedules", "/erp/60/BillSched", &sales.SalesBillingScheduleList{List: schedules}, extractIDs(schedules, func(v interface{}) string { return v.(*sales.SalesBillingSchedule).ScheduleId }), &store.SalesBillingScheduleIDs); err != nil {
 		return err
 	}
 
 	revenueSchedules := generateSalesRevenueSchedules(store)
-	if err := runOp(client, "Revenue Schedules", "/erp/60/RevSched", &sales.SalesRevenueScheduleList{List: revenueSchedules}, extractIDs(revenueSchedules, func(e *sales.SalesRevenueSchedule) string { return e.ScheduleId }), &store.SalesRevenueScheduleIDs); err != nil {
+	if err := runOp(client, "Revenue Schedules", "/erp/60/RevSched", &sales.SalesRevenueScheduleList{List: revenueSchedules}, extractIDs(revenueSchedules, func(v interface{}) string { return v.(*sales.SalesRevenueSchedule).ScheduleId }), &store.SalesRevenueScheduleIDs); err != nil {
 		return err
 	}
 
@@ -47,17 +47,17 @@ func generateSalesPhase7(client *HCMClient, store *MockDataStore) error {
 // Sales Phase 8: Analytics
 func generateSalesPhase8(client *HCMClient, store *MockDataStore) error {
 	plans := generateSalesCommissionPlans(store)
-	if err := runOp(client, "Commission Plans", "/erp/60/CommPlan", &sales.SalesCommissionPlanList{List: plans}, extractIDs(plans, func(e *sales.SalesCommissionPlan) string { return e.PlanId }), &store.SalesCommissionPlanIDs); err != nil {
+	if err := runOp(client, "Commission Plans", "/erp/60/CommPlan", &sales.SalesCommissionPlanList{List: plans}, extractIDs(plans, func(v interface{}) string { return v.(*sales.SalesCommissionPlan).PlanId }), &store.SalesCommissionPlanIDs); err != nil {
 		return err
 	}
 
 	targets := generateSalesTargets(store)
-	if err := runOp(client, "Sales Targets", "/erp/60/SalesTrgt", &sales.SalesTargetList{List: targets}, extractIDs(targets, func(e *sales.SalesTarget) string { return e.TargetId }), &store.SalesTargetIDs); err != nil {
+	if err := runOp(client, "Sales Targets", "/erp/60/SalesTrgt", &sales.SalesTargetList{List: targets}, extractIDs(targets, func(v interface{}) string { return v.(*sales.SalesTarget).TargetId }), &store.SalesTargetIDs); err != nil {
 		return err
 	}
 
 	forecasts := generateSalesForecasts(store)
-	if err := runOp(client, "Sales Forecasts", "/erp/60/SalesFcast", &sales.SalesForecastList{List: forecasts}, extractIDs(forecasts, func(e *sales.SalesForecast) string { return e.ForecastId }), &store.SalesForecastIDs); err != nil {
+	if err := runOp(client, "Sales Forecasts", "/erp/60/SalesFcast", &sales.SalesForecastList{List: forecasts}, extractIDs(forecasts, func(v interface{}) string { return v.(*sales.SalesForecast).ForecastId }), &store.SalesForecastIDs); err != nil {
 		return err
 	}
 

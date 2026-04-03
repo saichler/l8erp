@@ -35,7 +35,8 @@ func ResolveCurrencyRate(fromCurrency, toCurrency string, effectiveDate int64, v
 	// Find the most recent rate effective on or before the given date
 	var bestRate float64
 	var bestDate int64
-	for _, r := range rates {
+	for _, v := range rates {
+		r := v.(*fin.ExchangeRate)
 		if r.EffectiveDate <= effectiveDate && r.EffectiveDate > bestDate {
 			if r.EndDate == 0 || r.EndDate >= effectiveDate {
 				bestRate = r.Rate

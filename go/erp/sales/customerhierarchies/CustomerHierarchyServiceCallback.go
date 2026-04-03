@@ -17,13 +17,12 @@ package customerhierarchies
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/sales"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newCustomerHierarchyServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sales.SalesCustomerHierarchy]("SalesCustomerHierarchy",
-		func(e *sales.SalesCustomerHierarchy) { common.GenerateID(&e.HierarchyId) }).
-		Require(func(e *sales.SalesCustomerHierarchy) string { return e.HierarchyId }, "HierarchyId").
-		Require(func(e *sales.SalesCustomerHierarchy) string { return e.Name }, "Name").
+func newCustomerHierarchyServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sales.SalesCustomerHierarchy{}, vnic).
+		Require(func(v interface{}) string { return v.(*sales.SalesCustomerHierarchy).HierarchyId }, "HierarchyId").
+		Require(func(v interface{}) string { return v.(*sales.SalesCustomerHierarchy).Name }, "Name").
 		Build()
 }

@@ -14,7 +14,7 @@
 package rfqs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmRequestForQuotation, scm.ScmRequestForQuotationList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RfqId", Callback: newRequestForQuotationServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RfqId", Callback: newRequestForQuotationServiceCallback(vnic),
+	}, &scm.ScmRequestForQuotation{}, &scm.ScmRequestForQuotationList{}, creds, dbname, vnic)
 }
 
 func Rfqs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Rfqs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func RequestForQuotation(rfqId string, vnic ifs.IVNic) (*scm.ScmRequestForQuotation, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmRequestForQuotation{RfqId: rfqId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmRequestForQuotation{RfqId: rfqId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmRequestForQuotation), nil
 }

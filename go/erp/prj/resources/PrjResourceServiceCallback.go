@@ -15,18 +15,17 @@ limitations under the License.
 package resources
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
-func newPrjResourceServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjResource]("PrjResource",
-		func(e *prj.PrjResource) { common.GenerateID(&e.ResourceId) }).
-		Require(func(e *prj.PrjResource) string { return e.ResourceId }, "ResourceId").
-		Enum(func(e *prj.PrjResource) int32 { return int32(e.ResourceType) }, prj.PrjResourceType_name, "ResourceType").
-		OptionalMoney(func(e *prj.PrjResource) *l8common.Money { return e.HourlyCost }, "HourlyCost").
-		OptionalMoney(func(e *prj.PrjResource) *l8common.Money { return e.BillingRate }, "BillingRate").
+func newPrjResourceServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjResource{}, vnic).
+		Require(func(v interface{}) string { return v.(*prj.PrjResource).ResourceId }, "ResourceId").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjResource).ResourceType) }, prj.PrjResourceType_name, "ResourceType").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjResource).HourlyCost }, "HourlyCost").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjResource).BillingRate }, "BillingRate").
 		Build()
 }

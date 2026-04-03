@@ -14,7 +14,7 @@
 package customerpayments
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.CustomerPayment, fin.CustomerPaymentList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PaymentId", Callback: newCustomerPaymentServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PaymentId", Callback: newCustomerPaymentServiceCallback(vnic),
+	}, &fin.CustomerPayment{}, &fin.CustomerPaymentList{}, creds, dbname, vnic)
 }
 
 func CustomerPayments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CustomerPayments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CustomerPayment(paymentId string, vnic ifs.IVNic) (*fin.CustomerPayment, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.CustomerPayment{PaymentId: paymentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.CustomerPayment{PaymentId: paymentId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.CustomerPayment), nil
 }

@@ -15,21 +15,20 @@ limitations under the License.
 package items
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newItemServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmItem]("ScmItem",
-		func(e *scm.ScmItem) { common.GenerateID(&e.ItemId) }).
+func newItemServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmItem{}, vnic).
 		After(checkReorderPoint).
-		Require(func(e *scm.ScmItem) string { return e.ItemId }, "ItemId").
-		Enum(func(e *scm.ScmItem) int32 { return int32(e.ItemType) }, scm.ScmItemType_name, "ItemType").
-		Enum(func(e *scm.ScmItem) int32 { return int32(e.PlanningMethod) }, scm.ScmPlanningMethod_name, "PlanningMethod").
-		Enum(func(e *scm.ScmItem) int32 { return int32(e.ValuationMethod) }, scm.ScmValuationMethod_name, "ValuationMethod").
-		OptionalMoney(func(e *scm.ScmItem) *l8common.Money { return e.UnitCost }, "UnitCost").
-		OptionalMoney(func(e *scm.ScmItem) *l8common.Money { return e.UnitPrice }, "UnitPrice").
+		Require(func(v interface{}) string { return v.(*scm.ScmItem).ItemId }, "ItemId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmItem).ItemType) }, scm.ScmItemType_name, "ItemType").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmItem).PlanningMethod) }, scm.ScmPlanningMethod_name, "PlanningMethod").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmItem).ValuationMethod) }, scm.ScmValuationMethod_name, "ValuationMethod").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*scm.ScmItem).UnitCost }, "UnitCost").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*scm.ScmItem).UnitPrice }, "UnitPrice").
 		Build()
 }

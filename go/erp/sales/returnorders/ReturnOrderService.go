@@ -14,7 +14,7 @@
 package returnorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[sales.SalesReturnOrder, sales.SalesReturnOrderList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ReturnOrderId", Callback: newReturnOrderServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ReturnOrderId", Callback: newReturnOrderServiceCallback(vnic),
+	}, &sales.SalesReturnOrder{}, &sales.SalesReturnOrderList{}, creds, dbname, vnic)
 }
 
 func ReturnOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func ReturnOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func ReturnOrder(returnOrderId string, vnic ifs.IVNic) (*sales.SalesReturnOrder, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &sales.SalesReturnOrder{ReturnOrderId: returnOrderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesReturnOrder{ReturnOrderId: returnOrderId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*sales.SalesReturnOrder), nil
 }

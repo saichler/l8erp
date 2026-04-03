@@ -20,7 +20,8 @@ import (
 )
 
 // computeOrderTotals sums line totals into the order subtotal and calculates totalAmount.
-func computeOrderTotals(order *ecom.EcomOrder) error {
+func computeOrderTotals(v interface{}) error {
+	order := v.(*ecom.EcomOrder)
 	if len(order.Lines) == 0 {
 		return nil
 	}

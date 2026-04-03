@@ -17,14 +17,15 @@ package absences
 import (
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newAbsenceServiceCallback() ifs.IServiceCallback {
+func newAbsenceServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("Absence",
-		func(e *hcm.Absence) { common.GenerateID(&e.AbsenceId) },
-		validateAbsence)
+		func(v interface{}) bool { _, ok := v.(*hcm.Absence); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.Absence).AbsenceId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateAbsence(v.(*hcm.Absence), vnic) })
 }
 
 func validateAbsence(entity *hcm.Absence, vnic ifs.IVNic) error {

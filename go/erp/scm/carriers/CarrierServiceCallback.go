@@ -15,15 +15,14 @@ limitations under the License.
 package carriers
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newCarrierServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmCarrier]("ScmCarrier",
-		func(e *scm.ScmCarrier) { common.GenerateID(&e.CarrierId) }).
-		Require(func(e *scm.ScmCarrier) string { return e.CarrierId }, "CarrierId").
-		Enum(func(e *scm.ScmCarrier) int32 { return int32(e.CarrierType) }, scm.ScmCarrierType_name, "CarrierType").
+func newCarrierServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmCarrier{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmCarrier).CarrierId }, "CarrierId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmCarrier).CarrierType) }, scm.ScmCarrierType_name, "CarrierType").
 		Build()
 }

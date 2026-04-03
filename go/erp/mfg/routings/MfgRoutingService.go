@@ -14,7 +14,7 @@
 package routings
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[mfg.MfgRouting, mfg.MfgRoutingList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RoutingId", Callback: newMfgRoutingServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RoutingId", Callback: newMfgRoutingServiceCallback(vnic),
+	}, &mfg.MfgRouting{}, &mfg.MfgRoutingList{}, creds, dbname, vnic)
 }
 
 func MfgRoutings(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func MfgRoutings(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgRouting(routingId string, vnic ifs.IVNic) (*mfg.MfgRouting, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &mfg.MfgRouting{RoutingId: routingId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgRouting{RoutingId: routingId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*mfg.MfgRouting), nil
 }

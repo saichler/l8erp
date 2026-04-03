@@ -15,15 +15,14 @@ limitations under the License.
 package dataqualityrules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/bi"
 )
 
-func newBiDataQualityRuleServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[bi.BiDataQualityRule]("BiDataQualityRule",
-		func(e *bi.BiDataQualityRule) { common.GenerateID(&e.RuleId) }).
-		Require(func(e *bi.BiDataQualityRule) string { return e.RuleId }, "RuleId").
-		Enum(func(e *bi.BiDataQualityRule) int32 { return int32(e.LastStatus) }, bi.BiDataQualityStatus_name, "LastStatus").
+func newBiDataQualityRuleServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&bi.BiDataQualityRule{}, vnic).
+		Require(func(v interface{}) string { return v.(*bi.BiDataQualityRule).RuleId }, "RuleId").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiDataQualityRule).LastStatus) }, bi.BiDataQualityStatus_name, "LastStatus").
 		Build()
 }

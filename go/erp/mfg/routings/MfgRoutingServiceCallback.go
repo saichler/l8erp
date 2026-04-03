@@ -15,27 +15,26 @@ limitations under the License.
 package routings
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-func newMfgRoutingServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgRouting]("MfgRouting",
-		func(e *mfg.MfgRouting) { common.GenerateID(&e.RoutingId) }).
+func newMfgRoutingServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgRouting{}, vnic).
 		StatusTransition(routingTransitions()).
-		Require(func(e *mfg.MfgRouting) string { return e.RoutingId }, "RoutingId").
-		Require(func(e *mfg.MfgRouting) string { return e.ItemId }, "ItemId").
-		Enum(func(e *mfg.MfgRouting) int32 { return int32(e.Status) }, mfg.MfgBomStatus_name, "Status").
-		DateAfter(func(e *mfg.MfgRouting) int64 { return e.ExpiryDate }, func(e *mfg.MfgRouting) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
+		Require(func(v interface{}) string { return v.(*mfg.MfgRouting).RoutingId }, "RoutingId").
+		Require(func(v interface{}) string { return v.(*mfg.MfgRouting).ItemId }, "ItemId").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgRouting).Status) }, mfg.MfgBomStatus_name, "Status").
+		DateAfter(func(v interface{}) int64 { return v.(*mfg.MfgRouting).ExpiryDate }, func(v interface{}) int64 { return v.(*mfg.MfgRouting).EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }
 
-func routingTransitions() *common.StatusTransitionConfig[mfg.MfgRouting] {
-	return &common.StatusTransitionConfig[mfg.MfgRouting]{
-		StatusGetter:  func(e *mfg.MfgRouting) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *mfg.MfgRouting, s int32) { e.Status = mfg.MfgBomStatus(s) },
-		FilterBuilder: func(e *mfg.MfgRouting) *mfg.MfgRouting {
+func routingTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*mfg.MfgRouting).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*mfg.MfgRouting).Status = mfg.MfgBomStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*mfg.MfgRouting);
 			return &mfg.MfgRouting{RoutingId: e.RoutingId}
 		},
 		ServiceName:   ServiceName,

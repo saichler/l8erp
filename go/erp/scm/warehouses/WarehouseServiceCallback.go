@@ -15,15 +15,14 @@ limitations under the License.
 package warehouses
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newWarehouseServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmWarehouse]("ScmWarehouse",
-		func(e *scm.ScmWarehouse) { common.GenerateID(&e.WarehouseId) }).
-		Require(func(e *scm.ScmWarehouse) string { return e.WarehouseId }, "WarehouseId").
-		Enum(func(e *scm.ScmWarehouse) int32 { return int32(e.WarehouseType) }, scm.ScmWarehouseType_name, "WarehouseType").
+func newWarehouseServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmWarehouse{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmWarehouse).WarehouseId }, "WarehouseId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmWarehouse).WarehouseType) }, scm.ScmWarehouseType_name, "WarehouseType").
 		Build()
 }

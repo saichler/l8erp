@@ -18,13 +18,14 @@ import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newGarnishmentServiceCallback() ifs.IServiceCallback {
+func newGarnishmentServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("Garnishment",
-		func(e *hcm.Garnishment) { common.GenerateID(&e.GarnishmentId) },
-		validateGarnish)
+		func(v interface{}) bool { _, ok := v.(*hcm.Garnishment); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.Garnishment).GarnishmentId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateGarnish(v.(*hcm.Garnishment), vnic) })
 }
 
 func validateGarnish(entity *hcm.Garnishment, vnic ifs.IVNic) error {

@@ -18,28 +18,27 @@ import (
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/mfg"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newMfgNCRServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgNCR]("MfgNCR",
-		func(e *mfg.MfgNCR) { common.GenerateID(&e.NcrId) }).
+func newMfgNCRServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgNCR{}, vnic).
 		StatusTransition(ncrTransitions()).
-		Require(func(e *mfg.MfgNCR) string { return e.NcrId }, "NcrId").
-		Require(func(e *mfg.MfgNCR) string { return e.Title }, "Title").
-		Enum(func(e *mfg.MfgNCR) int32 { return int32(e.Disposition) }, mfg.MfgNCRDisposition_name, "Disposition").
-		Enum(func(e *mfg.MfgNCR) int32 { return int32(e.Severity) }, mfg.MfgNCRSeverity_name, "Severity").
-		Enum(func(e *mfg.MfgNCR) int32 { return int32(e.Status) }, mfg.MfgNCRStatus_name, "Status").
-		OptionalMoney(func(e *mfg.MfgNCR) *l8common.Money { return e.EstimatedCost }, "EstimatedCost").
-		OptionalMoney(func(e *mfg.MfgNCR) *l8common.Money { return e.ActualCost }, "ActualCost").
+		Require(func(v interface{}) string { return v.(*mfg.MfgNCR).NcrId }, "NcrId").
+		Require(func(v interface{}) string { return v.(*mfg.MfgNCR).Title }, "Title").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgNCR).Disposition) }, mfg.MfgNCRDisposition_name, "Disposition").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgNCR).Severity) }, mfg.MfgNCRSeverity_name, "Severity").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgNCR).Status) }, mfg.MfgNCRStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*mfg.MfgNCR).EstimatedCost }, "EstimatedCost").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*mfg.MfgNCR).ActualCost }, "ActualCost").
 		Build()
 }
 
-func ncrTransitions() *common.StatusTransitionConfig[mfg.MfgNCR] {
-	return &common.StatusTransitionConfig[mfg.MfgNCR]{
-		StatusGetter:  func(e *mfg.MfgNCR) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *mfg.MfgNCR, s int32) { e.Status = mfg.MfgNCRStatus(s) },
-		FilterBuilder: func(e *mfg.MfgNCR) *mfg.MfgNCR {
+func ncrTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*mfg.MfgNCR).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*mfg.MfgNCR).Status = mfg.MfgNCRStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*mfg.MfgNCR);
 			return &mfg.MfgNCR{NcrId: e.NcrId}
 		},
 		ServiceName:   ServiceName,

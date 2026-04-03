@@ -13,29 +13,7 @@
 
 package common
 
-import (
-	"errors"
-	l8c "github.com/saichler/l8common/go/common"
-)
-
-// SafeCast safely casts an interface{} to a pointer of type T.
-// Returns an error instead of panicking if the element is nil.
-func SafeCast[T any](element interface{}) (*T, error) {
-	if element == nil {
-		return nil, errors.New("entity not found")
-	}
-	result, ok := element.(*T)
-	if !ok {
-		return nil, errors.New("unexpected response type")
-	}
-	return result, nil
-}
-
-// ValidateEnum validates an enum value against its name map.
-// Generic wrapper — accepts any ~int32 enum type and casts to int32.
-func ValidateEnum[T ~int32](value T, nameMap map[int32]string, enumName string) error {
-	return l8c.ValidateEnum(int32(value), nameMap, enumName)
-}
+import l8c "github.com/saichler/l8common/go/common"
 
 // Re-export validators from l8common.
 var (
@@ -50,5 +28,6 @@ var (
 	ValidateMoney                    = l8c.ValidateMoney
 	ValidateMoneyPositive            = l8c.ValidateMoneyPositive
 	ValidateDateRange                = l8c.ValidateDateRange
+	ValidateEnum                     = l8c.ValidateEnum
 	GenerateID                       = l8c.GenerateID
 )

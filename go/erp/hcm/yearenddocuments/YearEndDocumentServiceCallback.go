@@ -15,16 +15,17 @@ limitations under the License.
 package yearenddocuments
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newYearEndDocumentServiceCallback() ifs.IServiceCallback {
+func newYearEndDocumentServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("YearEndDocument",
-		func(e *hcm.YearEndDocument) { common.GenerateID(&e.DocumentId) },
-		validateYrEndDoc)
+		func(v interface{}) bool { _, ok := v.(*hcm.YearEndDocument); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.YearEndDocument).DocumentId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateYrEndDoc(v.(*hcm.YearEndDocument), vnic) })
 }
 
 func validateYrEndDoc(entity *hcm.YearEndDocument, vnic ifs.IVNic) error {

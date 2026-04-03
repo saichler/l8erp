@@ -16,18 +16,17 @@ package documents
 
 import (
 	"github.com/saichler/l8erp/go/types/doc"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newDocDocumentServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[doc.DocDocument]("DocDocument",
-		func(e *doc.DocDocument) { common.GenerateID(&e.DocumentId) }).
+func newDocDocumentServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&doc.DocDocument{}, vnic).
 		Custom(trackDocumentVersion).
-		Require(func(e *doc.DocDocument) string { return e.DocumentId }, "DocumentId").
-		Enum(func(e *doc.DocDocument) int32 { return int32(e.AccessLevel) }, doc.DocAccessLevel_name, "AccessLevel").
-		Enum(func(e *doc.DocDocument) int32 { return int32(e.DocumentType) }, doc.DocDocumentType_name, "DocumentType").
-		Enum(func(e *doc.DocDocument) int32 { return int32(e.FileFormat) }, doc.DocFileFormat_name, "FileFormat").
-		Enum(func(e *doc.DocDocument) int32 { return int32(e.Status) }, doc.DocDocumentStatus_name, "Status").
+		Require(func(v interface{}) string { return v.(*doc.DocDocument).DocumentId }, "DocumentId").
+		Enum(func(v interface{}) int32 { return int32(v.(*doc.DocDocument).AccessLevel) }, doc.DocAccessLevel_name, "AccessLevel").
+		Enum(func(v interface{}) int32 { return int32(v.(*doc.DocDocument).DocumentType) }, doc.DocDocumentType_name, "DocumentType").
+		Enum(func(v interface{}) int32 { return int32(v.(*doc.DocDocument).FileFormat) }, doc.DocFileFormat_name, "FileFormat").
+		Enum(func(v interface{}) int32 { return int32(v.(*doc.DocDocument).Status) }, doc.DocDocumentStatus_name, "Status").
 		Build()
 }

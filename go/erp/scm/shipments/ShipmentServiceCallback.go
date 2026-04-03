@@ -18,24 +18,23 @@ import (
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newShipmentServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmShipment]("ScmShipment",
-		func(e *scm.ScmShipment) { common.GenerateID(&e.ShipmentId) }).
+func newShipmentServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmShipment{}, vnic).
 		StatusTransition(shipmentTransitions()).
-		Require(func(e *scm.ScmShipment) string { return e.ShipmentId }, "ShipmentId").
-		Enum(func(e *scm.ScmShipment) int32 { return int32(e.Status) }, scm.ScmShipmentStatus_name, "Status").
-		OptionalMoney(func(e *scm.ScmShipment) *l8common.Money { return e.FreightCost }, "FreightCost").
+		Require(func(v interface{}) string { return v.(*scm.ScmShipment).ShipmentId }, "ShipmentId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmShipment).Status) }, scm.ScmShipmentStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*scm.ScmShipment).FreightCost }, "FreightCost").
 		Build()
 }
 
-func shipmentTransitions() *common.StatusTransitionConfig[scm.ScmShipment] {
-	return &common.StatusTransitionConfig[scm.ScmShipment]{
-		StatusGetter:  func(e *scm.ScmShipment) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *scm.ScmShipment, s int32) { e.Status = scm.ScmShipmentStatus(s) },
-		FilterBuilder: func(e *scm.ScmShipment) *scm.ScmShipment {
+func shipmentTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*scm.ScmShipment).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*scm.ScmShipment).Status = scm.ScmShipmentStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*scm.ScmShipment);
 			return &scm.ScmShipment{ShipmentId: e.ShipmentId}
 		},
 		ServiceName:   ServiceName,

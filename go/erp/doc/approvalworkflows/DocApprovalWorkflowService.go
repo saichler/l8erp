@@ -14,7 +14,7 @@
 package approvalworkflows
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[doc.DocApprovalWorkflow, doc.DocApprovalWorkflowList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "WorkflowId", Callback: newDocApprovalWorkflowServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "WorkflowId", Callback: newDocApprovalWorkflowServiceCallback(vnic),
+	}, &doc.DocApprovalWorkflow{}, &doc.DocApprovalWorkflowList{}, creds, dbname, vnic)
 }
 
 func DocApprovalWorkflows(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func DocApprovalWorkflows(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocApprovalWorkflow(workflowId string, vnic ifs.IVNic) (*doc.DocApprovalWorkflow, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &doc.DocApprovalWorkflow{WorkflowId: workflowId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocApprovalWorkflow{WorkflowId: workflowId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*doc.DocApprovalWorkflow), nil
 }

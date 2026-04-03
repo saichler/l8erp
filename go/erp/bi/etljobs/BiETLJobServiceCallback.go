@@ -15,15 +15,14 @@ limitations under the License.
 package etljobs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/bi"
 )
 
-func newBiETLJobServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[bi.BiETLJob]("BiETLJob",
-		func(e *bi.BiETLJob) { common.GenerateID(&e.JobId) }).
-		Require(func(e *bi.BiETLJob) string { return e.JobId }, "JobId").
-		Enum(func(e *bi.BiETLJob) int32 { return int32(e.Status) }, bi.BiETLStatus_name, "Status").
+func newBiETLJobServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&bi.BiETLJob{}, vnic).
+		Require(func(v interface{}) string { return v.(*bi.BiETLJob).JobId }, "JobId").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiETLJob).Status) }, bi.BiETLStatus_name, "Status").
 		Build()
 }

@@ -14,7 +14,7 @@
 package trendanalyses
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[bi.BiTrendAnalysis, bi.BiTrendAnalysisList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "AnalysisId", Callback: newBiTrendAnalysisServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "AnalysisId", Callback: newBiTrendAnalysisServiceCallback(vnic),
+	}, &bi.BiTrendAnalysis{}, &bi.BiTrendAnalysisList{}, creds, dbname, vnic)
 }
 
 func BiTrendAnalyses(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func BiTrendAnalyses(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiTrendAnalysis(analysisId string, vnic ifs.IVNic) (*bi.BiTrendAnalysis, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &bi.BiTrendAnalysis{AnalysisId: analysisId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiTrendAnalysis{AnalysisId: analysisId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*bi.BiTrendAnalysis), nil
 }

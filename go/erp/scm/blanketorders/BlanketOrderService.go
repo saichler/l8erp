@@ -14,7 +14,7 @@
 package blanketorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmBlanketOrder, scm.ScmBlanketOrderList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "BlanketOrderId", Callback: newBlanketOrderServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "BlanketOrderId", Callback: newBlanketOrderServiceCallback(vnic),
+	}, &scm.ScmBlanketOrder{}, &scm.ScmBlanketOrderList{}, creds, dbname, vnic)
 }
 
 func BlanketOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func BlanketOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BlanketOrder(blanketOrderId string, vnic ifs.IVNic) (*scm.ScmBlanketOrder, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmBlanketOrder{BlanketOrderId: blanketOrderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmBlanketOrder{BlanketOrderId: blanketOrderId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmBlanketOrder), nil
 }

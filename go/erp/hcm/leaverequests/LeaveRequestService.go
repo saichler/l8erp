@@ -14,7 +14,7 @@
 package leaverequests
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.LeaveRequest, hcm.LeaveRequestList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RequestId", Callback: newLeaveRequestServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RequestId", Callback: newLeaveRequestServiceCallback(vnic),
+	}, &hcm.LeaveRequest{}, &hcm.LeaveRequestList{}, creds, dbname, vnic)
 }
 
 func LeaveRequests(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func LeaveRequests(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func LeaveRequest(requestId string, vnic ifs.IVNic) (*hcm.LeaveRequest, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.LeaveRequest{RequestId: requestId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.LeaveRequest{RequestId: requestId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.LeaveRequest), nil
 }

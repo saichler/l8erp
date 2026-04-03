@@ -15,15 +15,14 @@ limitations under the License.
 package folders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/doc"
 )
 
-func newDocFolderServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[doc.DocFolder]("DocFolder",
-		func(e *doc.DocFolder) { common.GenerateID(&e.FolderId) }).
-		Require(func(e *doc.DocFolder) string { return e.FolderId }, "FolderId").
-		Enum(func(e *doc.DocFolder) int32 { return int32(e.AccessLevel) }, doc.DocAccessLevel_name, "AccessLevel").
+func newDocFolderServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&doc.DocFolder{}, vnic).
+		Require(func(v interface{}) string { return v.(*doc.DocFolder).FolderId }, "FolderId").
+		Enum(func(v interface{}) int32 { return int32(v.(*doc.DocFolder).AccessLevel) }, doc.DocAccessLevel_name, "AccessLevel").
 		Build()
 }

@@ -15,22 +15,21 @@ limitations under the License.
 package expensepolicies
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
-func newPrjExpensePolicyServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjExpensePolicy]("PrjExpensePolicy",
-		func(e *prj.PrjExpensePolicy) { common.GenerateID(&e.PolicyId) }).
-		Require(func(e *prj.PrjExpensePolicy) string { return e.PolicyId }, "PolicyId").
-		OptionalMoney(func(e *prj.PrjExpensePolicy) *l8common.Money { return e.DailyMealLimit }, "DailyMealLimit").
-		OptionalMoney(func(e *prj.PrjExpensePolicy) *l8common.Money { return e.DailyLodgingLimit }, "DailyLodgingLimit").
-		OptionalMoney(func(e *prj.PrjExpensePolicy) *l8common.Money { return e.MileageRate }, "MileageRate").
-		OptionalMoney(func(e *prj.PrjExpensePolicy) *l8common.Money { return e.MaxSingleExpense }, "MaxSingleExpense").
-		OptionalMoney(func(e *prj.PrjExpensePolicy) *l8common.Money { return e.ReceiptThreshold }, "ReceiptThreshold").
-		OptionalMoney(func(e *prj.PrjExpensePolicy) *l8common.Money { return e.AdvanceApprovalThreshold }, "AdvanceApprovalThreshold").
-		DateAfter(func(e *prj.PrjExpensePolicy) int64 { return e.ExpiryDate }, func(e *prj.PrjExpensePolicy) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
+func newPrjExpensePolicyServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjExpensePolicy{}, vnic).
+		Require(func(v interface{}) string { return v.(*prj.PrjExpensePolicy).PolicyId }, "PolicyId").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjExpensePolicy).DailyMealLimit }, "DailyMealLimit").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjExpensePolicy).DailyLodgingLimit }, "DailyLodgingLimit").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjExpensePolicy).MileageRate }, "MileageRate").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjExpensePolicy).MaxSingleExpense }, "MaxSingleExpense").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjExpensePolicy).ReceiptThreshold }, "ReceiptThreshold").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjExpensePolicy).AdvanceApprovalThreshold }, "AdvanceApprovalThreshold").
+		DateAfter(func(v interface{}) int64 { return v.(*prj.PrjExpensePolicy).ExpiryDate }, func(v interface{}) int64 { return v.(*prj.PrjExpensePolicy).EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

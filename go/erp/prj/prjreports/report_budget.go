@@ -20,11 +20,13 @@ import (
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
 func generateProjectBudget(report *fin.FinReport, vnic ifs.IVNic) error {
-	projects, err := common.GetEntities("PrjProj", 90, &prj.PrjProject{}, vnic)
+	projectsRaw, err := common.GetEntities("PrjProj", 90, &prj.PrjProject{}, vnic)
+	projects := make([]*prj.PrjProject, 0, len(projectsRaw))
+	for _, ri := range projectsRaw { projects = append(projects, ri.(*prj.PrjProject)) }
 	if err != nil {
 		return err
 	}

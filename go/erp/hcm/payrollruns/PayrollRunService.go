@@ -14,7 +14,7 @@
 package payrollruns
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.PayrollRun, hcm.PayrollRunList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PayrollRunId", Callback: newPayrollRunServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PayrollRunId", Callback: newPayrollRunServiceCallback(vnic),
+	}, &hcm.PayrollRun{}, &hcm.PayrollRunList{}, creds, dbname, vnic)
 }
 
 func PayrollRuns(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PayrollRuns(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PayrollRun(payrollRunId string, vnic ifs.IVNic) (*hcm.PayrollRun, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.PayrollRun{PayrollRunId: payrollRunId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.PayrollRun{PayrollRunId: payrollRunId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.PayrollRun), nil
 }

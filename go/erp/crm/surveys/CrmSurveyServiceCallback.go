@@ -15,17 +15,16 @@ limitations under the License.
 package surveys
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmSurveyServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmSurvey]("CrmSurvey",
-		func(e *crm.CrmSurvey) { common.GenerateID(&e.SurveyId) }).
-		Require(func(e *crm.CrmSurvey) string { return e.SurveyId }, "SurveyId").
-		Require(func(e *crm.CrmSurvey) string { return e.Name }, "Name").
-		Require(func(e *crm.CrmSurvey) string { return e.AccountId }, "AccountId").
-		Enum(func(e *crm.CrmSurvey) int32 { return int32(e.Status) }, crm.CrmSurveyStatus_name, "Status").
+func newCrmSurveyServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmSurvey{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmSurvey).SurveyId }, "SurveyId").
+		Require(func(v interface{}) string { return v.(*crm.CrmSurvey).Name }, "Name").
+		Require(func(v interface{}) string { return v.(*crm.CrmSurvey).AccountId }, "AccountId").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmSurvey).Status) }, crm.CrmSurveyStatus_name, "Status").
 		Build()
 }

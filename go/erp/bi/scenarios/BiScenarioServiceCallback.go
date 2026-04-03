@@ -16,14 +16,13 @@ package scenarios
 
 import (
 	"github.com/saichler/l8erp/go/types/bi"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newBiScenarioServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[bi.BiScenario]("BiScenario",
-		func(e *bi.BiScenario) { common.GenerateID(&e.ScenarioId) }).
-		Require(func(e *bi.BiScenario) string { return e.ScenarioId }, "ScenarioId").
-		Enum(func(e *bi.BiScenario) int32 { return int32(e.ScenarioType) }, bi.BiScenarioType_name, "ScenarioType").
+func newBiScenarioServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&bi.BiScenario{}, vnic).
+		Require(func(v interface{}) string { return v.(*bi.BiScenario).ScenarioId }, "ScenarioId").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiScenario).ScenarioType) }, bi.BiScenarioType_name, "ScenarioType").
 		Build()
 }

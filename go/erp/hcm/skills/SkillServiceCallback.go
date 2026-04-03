@@ -15,15 +15,16 @@ limitations under the License.
 package skills
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newSkillServiceCallback() ifs.IServiceCallback {
+func newSkillServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("Skill",
-		func(e *hcm.Skill) { common.GenerateID(&e.SkillId) },
-		validateSkill)
+		func(v interface{}) bool { _, ok := v.(*hcm.Skill); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.Skill).SkillId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateSkill(v.(*hcm.Skill), vnic) })
 }
 
 func validateSkill(entity *hcm.Skill, vnic ifs.IVNic) error {

@@ -15,7 +15,7 @@ limitations under the License.
 package mfgreports
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/mfg"
@@ -23,10 +23,12 @@ import (
 )
 
 func generateProductionEfficiency(report *fin.FinReport, vnic ifs.IVNic) error {
-	orders, err := common.GetEntities("MfgWorkOrd", 70, &mfg.MfgWorkOrder{}, vnic)
+	ordersRaw, err := common.GetEntities("MfgWorkOrd", 70, &mfg.MfgWorkOrder{}, vnic)
 	if err != nil {
 		return err
 	}
+	orders := make([]*mfg.MfgWorkOrder, 0, len(ordersRaw))
+	for _, ri := range ordersRaw { orders = append(orders, ri.(*mfg.MfgWorkOrder)) }
 
 	section := &fin.FinReportSection{
 		Title:        "Production Efficiency",
@@ -70,7 +72,9 @@ func generateProductionEfficiency(report *fin.FinReport, vnic ifs.IVNic) error {
 }
 
 func generateScrapRate(report *fin.FinReport, vnic ifs.IVNic) error {
-	orders, err := common.GetEntities("MfgWorkOrd", 70, &mfg.MfgWorkOrder{}, vnic)
+	ordersRaw, err := common.GetEntities("MfgWorkOrd", 70, &mfg.MfgWorkOrder{}, vnic)
+	orders := make([]*mfg.MfgWorkOrder, 0, len(ordersRaw))
+	for _, ri := range ordersRaw { orders = append(orders, ri.(*mfg.MfgWorkOrder)) }
 	if err != nil {
 		return err
 	}

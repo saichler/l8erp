@@ -15,15 +15,15 @@ limitations under the License.
 package jobfamilies
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newJobFamilyServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("JobFamily",
-		func(e *hcm.JobFamily) { common.GenerateID(&e.JobFamilyId) },
-		nil)
+func newJobFamilyServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&hcm.JobFamily{}, vnic).
+		Custom(validateJobFam).
+		Build()
 }
 
 func validateJobFam(entity *hcm.JobFamily) error {

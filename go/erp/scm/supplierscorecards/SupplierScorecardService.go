@@ -14,7 +14,7 @@
 package supplierscorecards
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmSupplierScorecard, scm.ScmSupplierScorecardList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ScorecardId", Callback: newSupplierScorecardServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ScorecardId", Callback: newSupplierScorecardServiceCallback(vnic),
+	}, &scm.ScmSupplierScorecard{}, &scm.ScmSupplierScorecardList{}, creds, dbname, vnic)
 }
 
 func SupplierScorecards(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func SupplierScorecards(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SupplierScorecard(scorecardId string, vnic ifs.IVNic) (*scm.ScmSupplierScorecard, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmSupplierScorecard{ScorecardId: scorecardId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmSupplierScorecard{ScorecardId: scorecardId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmSupplierScorecard), nil
 }

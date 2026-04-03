@@ -15,16 +15,15 @@ limitations under the License.
 package prodschedules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-func newMfgProdScheduleServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgProdSchedule]("MfgProdSchedule",
-		func(e *mfg.MfgProdSchedule) { common.GenerateID(&e.ScheduleId) }).
-		Require(func(e *mfg.MfgProdSchedule) string { return e.ScheduleId }, "ScheduleId").
-		Enum(func(e *mfg.MfgProdSchedule) int32 { return int32(e.ScheduleType) }, mfg.MfgScheduleType_name, "ScheduleType").
-		Enum(func(e *mfg.MfgProdSchedule) int32 { return int32(e.Status) }, mfg.MfgScheduleStatus_name, "Status").
+func newMfgProdScheduleServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgProdSchedule{}, vnic).
+		Require(func(v interface{}) string { return v.(*mfg.MfgProdSchedule).ScheduleId }, "ScheduleId").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgProdSchedule).ScheduleType) }, mfg.MfgScheduleType_name, "ScheduleType").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgProdSchedule).Status) }, mfg.MfgScheduleStatus_name, "Status").
 		Build()
 }

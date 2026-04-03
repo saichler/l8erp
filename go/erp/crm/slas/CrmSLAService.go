@@ -14,7 +14,7 @@
 package slas
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[crm.CrmSLA, crm.CrmSLAList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "SlaId", Callback: newCrmSLAServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "SlaId", Callback: newCrmSLAServiceCallback(vnic),
+	}, &crm.CrmSLA{}, &crm.CrmSLAList{}, creds, dbname, vnic)
 }
 
 func CrmSLAs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CrmSLAs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmSLA(slaId string, vnic ifs.IVNic) (*crm.CrmSLA, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &crm.CrmSLA{SlaId: slaId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmSLA{SlaId: slaId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*crm.CrmSLA), nil
 }

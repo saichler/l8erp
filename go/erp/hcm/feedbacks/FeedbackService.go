@@ -14,7 +14,7 @@
 package feedbacks
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.Feedback, hcm.FeedbackList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "FeedbackId", Callback: newFeedbackServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "FeedbackId", Callback: newFeedbackServiceCallback(vnic),
+	}, &hcm.Feedback{}, &hcm.FeedbackList{}, creds, dbname, vnic)
 }
 
 func Feedbacks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Feedbacks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Feedback(feedbackId string, vnic ifs.IVNic) (*hcm.Feedback, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.Feedback{FeedbackId: feedbackId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Feedback{FeedbackId: feedbackId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.Feedback), nil
 }

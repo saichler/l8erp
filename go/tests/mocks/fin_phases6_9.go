@@ -23,25 +23,25 @@ import (
 func generateFinPhase6(client *HCMClient, store *MockDataStore) error {
 	// Generate Sales Invoices (with embedded Lines)
 	salesInvoices := generateSalesInvoices(store)
-	if err := runOp(client, "Sales Invoices", "/erp/40/SalesInv", &fin.SalesInvoiceList{List: salesInvoices}, extractIDs(salesInvoices, func(e *fin.SalesInvoice) string { return e.InvoiceId }), &store.SalesInvoiceIDs); err != nil {
+	if err := runOp(client, "Sales Invoices", "/erp/40/SalesInv", &fin.SalesInvoiceList{List: salesInvoices}, extractIDs(salesInvoices, func(v interface{}) string { return v.(*fin.SalesInvoice).InvoiceId }), &store.SalesInvoiceIDs); err != nil {
 		return err
 	}
 
 	// Generate Customer Payments (with embedded Applications)
 	customerPayments := generateCustomerPayments(store)
-	if err := runOp(client, "Customer Payments", "/erp/40/CustPmt", &fin.CustomerPaymentList{List: customerPayments}, extractIDs(customerPayments, func(e *fin.CustomerPayment) string { return e.PaymentId }), &store.CustomerPaymentIDs); err != nil {
+	if err := runOp(client, "Customer Payments", "/erp/40/CustPmt", &fin.CustomerPaymentList{List: customerPayments}, extractIDs(customerPayments, func(v interface{}) string { return v.(*fin.CustomerPayment).PaymentId }), &store.CustomerPaymentIDs); err != nil {
 		return err
 	}
 
 	// Generate Credit Memos
 	creditMemos := generateCreditMemos(store)
-	if err := runOp(client, "Credit Memos", "/erp/40/CrdtMemo", &fin.CreditMemoList{List: creditMemos}, extractIDs(creditMemos, func(e *fin.CreditMemo) string { return e.CreditMemoId }), &store.CreditMemoIDs); err != nil {
+	if err := runOp(client, "Credit Memos", "/erp/40/CrdtMemo", &fin.CreditMemoList{List: creditMemos}, extractIDs(creditMemos, func(v interface{}) string { return v.(*fin.CreditMemo).CreditMemoId }), &store.CreditMemoIDs); err != nil {
 		return err
 	}
 
 	// Generate Dunning Letters
 	dunningLetters := generateDunningLetters(store)
-	if err := runOp(client, "Dunning Letters", "/erp/40/DunLtr", &fin.DunningLetterList{List: dunningLetters}, extractIDs(dunningLetters, func(e *fin.DunningLetter) string { return e.LetterId }), &store.DunningLetterIDs); err != nil {
+	if err := runOp(client, "Dunning Letters", "/erp/40/DunLtr", &fin.DunningLetterList{List: dunningLetters}, extractIDs(dunningLetters, func(v interface{}) string { return v.(*fin.DunningLetter).LetterId }), &store.DunningLetterIDs); err != nil {
 		return err
 	}
 
@@ -52,7 +52,7 @@ func generateFinPhase6(client *HCMClient, store *MockDataStore) error {
 func generateFinPhase7(client *HCMClient, store *MockDataStore) error {
 	// Generate Journal Entries (with embedded Lines)
 	journalEntries := generateJournalEntries(store)
-	if err := runOp(client, "Journal Entries", "/erp/40/JrnlEntry", &fin.JournalEntryList{List: journalEntries}, extractIDs(journalEntries, func(e *fin.JournalEntry) string { return e.JournalEntryId }), &store.JournalEntryIDs); err != nil {
+	if err := runOp(client, "Journal Entries", "/erp/40/JrnlEntry", &fin.JournalEntryList{List: journalEntries}, extractIDs(journalEntries, func(v interface{}) string { return v.(*fin.JournalEntry).JournalEntryId }), &store.JournalEntryIDs); err != nil {
 		return err
 	}
 
@@ -63,25 +63,25 @@ func generateFinPhase7(client *HCMClient, store *MockDataStore) error {
 func generateFinPhase8(client *HCMClient, store *MockDataStore) error {
 	// Generate Cash Forecasts
 	cashForecasts := generateCashForecasts(store)
-	if err := runOp(client, "Cash Forecasts", "/erp/40/CashFcst", &fin.CashForecastList{List: cashForecasts}, extractIDs(cashForecasts, func(e *fin.CashForecast) string { return e.ForecastId }), &store.CashForecastIDs); err != nil {
+	if err := runOp(client, "Cash Forecasts", "/erp/40/CashFcst", &fin.CashForecastList{List: cashForecasts}, extractIDs(cashForecasts, func(v interface{}) string { return v.(*fin.CashForecast).ForecastId }), &store.CashForecastIDs); err != nil {
 		return err
 	}
 
 	// Generate Fund Transfers
 	fundTransfers := generateFundTransfers(store)
-	if err := runOp(client, "Fund Transfers", "/erp/40/FundXfer", &fin.FundTransferList{List: fundTransfers}, extractIDs(fundTransfers, func(e *fin.FundTransfer) string { return e.TransferId }), &store.FundTransferIDs); err != nil {
+	if err := runOp(client, "Fund Transfers", "/erp/40/FundXfer", &fin.FundTransferList{List: fundTransfers}, extractIDs(fundTransfers, func(v interface{}) string { return v.(*fin.FundTransfer).TransferId }), &store.FundTransferIDs); err != nil {
 		return err
 	}
 
 	// Generate Petty Cash
 	pettyCash := generatePettyCash(store)
-	if err := runOp(client, "Petty Cash", "/erp/40/PettyCash", &fin.PettyCashList{List: pettyCash}, extractIDs(pettyCash, func(e *fin.PettyCash) string { return e.PettyCashId }), &store.PettyCashIDs); err != nil {
+	if err := runOp(client, "Petty Cash", "/erp/40/PettyCash", &fin.PettyCashList{List: pettyCash}, extractIDs(pettyCash, func(v interface{}) string { return v.(*fin.PettyCash).PettyCashId }), &store.PettyCashIDs); err != nil {
 		return err
 	}
 
 	// Generate Assets (with embedded DepreciationSchedules, Disposals, Transfers, Maintenance, Revaluations)
 	assets := generateAssets(store)
-	if err := runOp(client, "Assets", "/erp/40/Asset", &fin.AssetList{List: assets}, extractIDs(assets, func(e *fin.Asset) string { return e.AssetId }), &store.AssetIDs); err != nil {
+	if err := runOp(client, "Assets", "/erp/40/Asset", &fin.AssetList{List: assets}, extractIDs(assets, func(v interface{}) string { return v.(*fin.Asset).AssetId }), &store.AssetIDs); err != nil {
 		return err
 	}
 

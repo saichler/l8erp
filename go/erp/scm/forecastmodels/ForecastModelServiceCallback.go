@@ -15,15 +15,14 @@ limitations under the License.
 package forecastmodels
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newForecastModelServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmForecastModel]("ScmForecastModel",
-		func(e *scm.ScmForecastModel) { common.GenerateID(&e.ModelId) }).
-		Require(func(e *scm.ScmForecastModel) string { return e.ModelId }, "ModelId").
-		Enum(func(e *scm.ScmForecastModel) int32 { return int32(e.ForecastMethod) }, scm.ScmForecastMethod_name, "ForecastMethod").
+func newForecastModelServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmForecastModel{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmForecastModel).ModelId }, "ModelId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmForecastModel).ForecastMethod) }, scm.ScmForecastMethod_name, "ForecastMethod").
 		Build()
 }

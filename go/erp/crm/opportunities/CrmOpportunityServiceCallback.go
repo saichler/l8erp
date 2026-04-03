@@ -15,30 +15,29 @@ limitations under the License.
 package opportunities
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmOpportunityServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmOpportunity]("CrmOpportunity",
-		func(e *crm.CrmOpportunity) { common.GenerateID(&e.OpportunityId) }).
+func newCrmOpportunityServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmOpportunity{}, vnic).
 		StatusTransition(crmOpportunityTransitions()).
-		Require(func(e *crm.CrmOpportunity) string { return e.OpportunityId }, "OpportunityId").
-		Require(func(e *crm.CrmOpportunity) string { return e.AccountId }, "AccountId").
-		Enum(func(e *crm.CrmOpportunity) int32 { return int32(e.Stage) }, crm.CrmSalesStage_name, "Stage").
-		Enum(func(e *crm.CrmOpportunity) int32 { return int32(e.Status) }, crm.CrmOpportunityStatus_name, "Status").
-		OptionalMoney(func(e *crm.CrmOpportunity) *l8common.Money { return e.Amount }, "Amount").
-		OptionalMoney(func(e *crm.CrmOpportunity) *l8common.Money { return e.ExpectedRevenue }, "ExpectedRevenue").
+		Require(func(v interface{}) string { return v.(*crm.CrmOpportunity).OpportunityId }, "OpportunityId").
+		Require(func(v interface{}) string { return v.(*crm.CrmOpportunity).AccountId }, "AccountId").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmOpportunity).Stage) }, crm.CrmSalesStage_name, "Stage").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmOpportunity).Status) }, crm.CrmOpportunityStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*crm.CrmOpportunity).Amount }, "Amount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*crm.CrmOpportunity).ExpectedRevenue }, "ExpectedRevenue").
 		Build()
 }
 
-func crmOpportunityTransitions() *common.StatusTransitionConfig[crm.CrmOpportunity] {
-	return &common.StatusTransitionConfig[crm.CrmOpportunity]{
-		StatusGetter:  func(e *crm.CrmOpportunity) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *crm.CrmOpportunity, s int32) { e.Status = crm.CrmOpportunityStatus(s) },
-		FilterBuilder: func(e *crm.CrmOpportunity) *crm.CrmOpportunity {
+func crmOpportunityTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*crm.CrmOpportunity).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*crm.CrmOpportunity).Status = crm.CrmOpportunityStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*crm.CrmOpportunity);
 			return &crm.CrmOpportunity{OpportunityId: e.OpportunityId}
 		},
 		ServiceName:   ServiceName,

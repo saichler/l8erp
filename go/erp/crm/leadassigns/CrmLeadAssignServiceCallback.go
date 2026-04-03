@@ -15,14 +15,13 @@ limitations under the License.
 package leadassigns
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmLeadAssignServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmLeadAssign]("CrmLeadAssign",
-		func(e *crm.CrmLeadAssign) { common.GenerateID(&e.AssignmentId) }).
-		Require(func(e *crm.CrmLeadAssign) string { return e.AssignmentId }, "AssignmentId").
+func newCrmLeadAssignServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmLeadAssign{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmLeadAssign).AssignmentId }, "AssignmentId").
 		Build()
 }

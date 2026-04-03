@@ -15,15 +15,25 @@ limitations under the License.
 package salesorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	"reflect"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
-func newSalesOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sales.SalesOrder]("SalesOrder",
-		func(e *sales.SalesOrder) { common.GenerateID(&e.SalesOrderId) }).
+
+func toSlice(slice interface{}) []interface{} {
+	v := reflect.ValueOf(slice)
+	result := make([]interface{}, v.Len())
+	for i := 0; i < v.Len(); i++ {
+		result[i] = v.Index(i).Interface()
+	}
+	return result
+}
+
+func newSalesOrderServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sales.SalesOrder{}, vnic).
 		StatusTransition(salesOrderTransitions()).
 		After(cascadeCancelDeliveryOrders).
 		After(cascadeCreateDeliveryOrder).
@@ -32,26 +42,28 @@ func newSalesOrderServiceCallback() ifs.IServiceCallback {
 		Custom(applyTaxRules).
 		Compute(computeSalesOrderTotals).
 		Custom(validateCreditLimit).
-		Require(func(e *sales.SalesOrder) string { return e.SalesOrderId }, "SalesOrderId").
-		Require(func(e *sales.SalesOrder) string { return e.CustomerId }, "CustomerId").
-		Require(func(e *sales.SalesOrder) string { return e.CurrencyId }, "CurrencyId").
-		Enum(func(e *sales.SalesOrder) int32 { return int32(e.Status) }, sales.SalesOrderStatus_name, "Status").
-		OptionalMoney(func(e *sales.SalesOrder) *l8common.Money { return e.Subtotal }, "Subtotal").
-		OptionalMoney(func(e *sales.SalesOrder) *l8common.Money { return e.DiscountTotal }, "DiscountTotal").
-		OptionalMoney(func(e *sales.SalesOrder) *l8common.Money { return e.TaxTotal }, "TaxTotal").
-		OptionalMoney(func(e *sales.SalesOrder) *l8common.Money { return e.TotalAmount }, "TotalAmount").
-		DateAfter(func(e *sales.SalesOrder) int64 { return e.RequestedDeliveryDate }, func(e *sales.SalesOrder) int64 { return e.OrderDate }, "RequestedDeliveryDate", "OrderDate").
+		Require(func(v interface{}) string { return v.(*sales.SalesOrder).SalesOrderId }, "SalesOrderId").
+		Require(func(v interface{}) string { return v.(*sales.SalesOrder).CustomerId }, "CustomerId").
+		Require(func(v interface{}) string { return v.(*sales.SalesOrder).CurrencyId }, "CurrencyId").
+		Enum(func(v interface{}) int32 { return int32(v.(*sales.SalesOrder).Status) }, sales.SalesOrderStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesOrder).Subtotal }, "Subtotal").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesOrder).DiscountTotal }, "DiscountTotal").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesOrder).TaxTotal }, "TaxTotal").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesOrder).TotalAmount }, "TotalAmount").
+		DateAfter(func(v interface{}) int64 { return v.(*sales.SalesOrder).RequestedDeliveryDate }, func(v interface{}) int64 { return v.(*sales.SalesOrder).OrderDate }, "RequestedDeliveryDate", "OrderDate").
 		Build()
 }
 
 // cascadeCancelDeliveryOrders marks related delivery orders as FAILED
 // when a sales order is cancelled.
-func cascadeCancelDeliveryOrders(order *sales.SalesOrder, action ifs.Action, vnic ifs.IVNic) error {
+func cascadeCancelDeliveryOrders(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	order := v.(*sales.SalesOrder)
 	if order.Status != sales.SalesOrderStatus_SALES_ORDER_STATUS_CANCELLED {
 		return nil
 	}
-	children, err := common.GetEntities("DlvryOrder", 60,
-		&sales.SalesDeliveryOrder{SalesOrderId: order.SalesOrderId}, vnic)
+	childrenRaw, err := common.GetEntities("DlvryOrder", 60, &sales.SalesDeliveryOrder{SalesOrderId: order.SalesOrderId}, vnic)
+	children := make([]*sales.SalesDeliveryOrder, 0, len(childrenRaw))
+	for _, ri := range childrenRaw { children = append(children, ri.(*sales.SalesDeliveryOrder)) }
 	if err != nil {
 		return err
 	}
@@ -69,7 +81,8 @@ func cascadeCancelDeliveryOrders(order *sales.SalesOrder, action ifs.Action, vni
 }
 
 // cascadeCreateDeliveryOrder auto-creates a delivery order when a sales order is confirmed.
-func cascadeCreateDeliveryOrder(order *sales.SalesOrder, action ifs.Action, vnic ifs.IVNic) error {
+func cascadeCreateDeliveryOrder(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	order := v.(*sales.SalesOrder)
 	if order.Status != sales.SalesOrderStatus_SALES_ORDER_STATUS_CONFIRMED {
 		return nil
 	}
@@ -101,7 +114,8 @@ func cascadeCreateDeliveryOrder(order *sales.SalesOrder, action ifs.Action, vnic
 	return err
 }
 
-func computeSalesOrderTotals(o *sales.SalesOrder) error {
+func computeSalesOrderTotals(v interface{}) error {
+	o := v.(*sales.SalesOrder)
 	subtotal := int64(0)
 	currencyId := ""
 	for _, line := range o.Lines {
@@ -133,17 +147,17 @@ func computeSalesOrderTotals(o *sales.SalesOrder) error {
 		return nil
 	}
 	o.Subtotal = &l8common.Money{Amount: subtotal, CurrencyId: currencyId}
-	o.DiscountTotal = common.SumLineMoney(o.Lines, func(l *sales.SalesOrderLine) *l8common.Money { return l.DiscountAmount })
-	o.TaxTotal = common.SumLineMoney(o.Lines, func(l *sales.SalesOrderLine) *l8common.Money { return l.TaxAmount })
+	o.DiscountTotal = common.SumLineMoney(toSlice(o.Lines), func(v interface{}) *l8common.Money { return v.(*sales.SalesOrderLine).DiscountAmount })
+	o.TaxTotal = common.SumLineMoney(toSlice(o.Lines), func(v interface{}) *l8common.Money { return v.(*sales.SalesOrderLine).TaxAmount })
 	o.TotalAmount = common.MoneyAdd(common.MoneySubtract(o.Subtotal, o.DiscountTotal), o.TaxTotal)
 	return nil
 }
 
-func salesOrderTransitions() *common.StatusTransitionConfig[sales.SalesOrder] {
-	return &common.StatusTransitionConfig[sales.SalesOrder]{
-		StatusGetter:  func(e *sales.SalesOrder) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *sales.SalesOrder, s int32) { e.Status = sales.SalesOrderStatus(s) },
-		FilterBuilder: func(e *sales.SalesOrder) *sales.SalesOrder {
+func salesOrderTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*sales.SalesOrder).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*sales.SalesOrder).Status = sales.SalesOrderStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*sales.SalesOrder);
 			return &sales.SalesOrder{SalesOrderId: e.SalesOrderId}
 		},
 		ServiceName:   ServiceName,

@@ -15,20 +15,19 @@ limitations under the License.
 package blanketorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newBlanketOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmBlanketOrder]("ScmBlanketOrder",
-		func(e *scm.ScmBlanketOrder) { common.GenerateID(&e.BlanketOrderId) }).
-		Require(func(e *scm.ScmBlanketOrder) string { return e.BlanketOrderId }, "BlanketOrderId").
-		Require(func(e *scm.ScmBlanketOrder) string { return e.VendorId }, "VendorId").
-		Enum(func(e *scm.ScmBlanketOrder) int32 { return int32(e.Status) }, scm.ScmPurchaseOrderStatus_name, "Status").
-		OptionalMoney(func(e *scm.ScmBlanketOrder) *l8common.Money { return e.MaxAmount }, "MaxAmount").
-		OptionalMoney(func(e *scm.ScmBlanketOrder) *l8common.Money { return e.UsedAmount }, "UsedAmount").
-		DateAfter(func(e *scm.ScmBlanketOrder) int64 { return e.EndDate }, func(e *scm.ScmBlanketOrder) int64 { return e.StartDate }, "EndDate", "StartDate").
+func newBlanketOrderServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmBlanketOrder{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmBlanketOrder).BlanketOrderId }, "BlanketOrderId").
+		Require(func(v interface{}) string { return v.(*scm.ScmBlanketOrder).VendorId }, "VendorId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmBlanketOrder).Status) }, scm.ScmPurchaseOrderStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*scm.ScmBlanketOrder).MaxAmount }, "MaxAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*scm.ScmBlanketOrder).UsedAmount }, "UsedAmount").
+		DateAfter(func(v interface{}) int64 { return v.(*scm.ScmBlanketOrder).EndDate }, func(v interface{}) int64 { return v.(*scm.ScmBlanketOrder).StartDate }, "EndDate", "StartDate").
 		Build()
 }

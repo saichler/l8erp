@@ -15,14 +15,13 @@ limitations under the License.
 package routes
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newRouteServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmRoute]("ScmRoute",
-		func(e *scm.ScmRoute) { common.GenerateID(&e.RouteId) }).
-		Require(func(e *scm.ScmRoute) string { return e.RouteId }, "RouteId").
+func newRouteServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmRoute{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmRoute).RouteId }, "RouteId").
 		Build()
 }

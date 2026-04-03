@@ -15,20 +15,19 @@ limitations under the License.
 package products
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
-func newEcomProductServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[ecom.EcomProduct]("EcomProduct",
-		func(e *ecom.EcomProduct) { common.GenerateID(&e.ProductId) }).
-		Require(func(e *ecom.EcomProduct) string { return e.ProductId }, "ProductId").
-		Enum(func(e *ecom.EcomProduct) int32 { return int32(e.ProductType) }, ecom.EcomProductType_name, "ProductType").
-		Enum(func(e *ecom.EcomProduct) int32 { return int32(e.Status) }, ecom.EcomProductStatus_name, "Status").
-		OptionalMoney(func(e *ecom.EcomProduct) *l8common.Money { return e.Price }, "Price").
-		OptionalMoney(func(e *ecom.EcomProduct) *l8common.Money { return e.CompareAtPrice }, "CompareAtPrice").
-		OptionalMoney(func(e *ecom.EcomProduct) *l8common.Money { return e.CostPrice }, "CostPrice").
+func newEcomProductServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&ecom.EcomProduct{}, vnic).
+		Require(func(v interface{}) string { return v.(*ecom.EcomProduct).ProductId }, "ProductId").
+		Enum(func(v interface{}) int32 { return int32(v.(*ecom.EcomProduct).ProductType) }, ecom.EcomProductType_name, "ProductType").
+		Enum(func(v interface{}) int32 { return int32(v.(*ecom.EcomProduct).Status) }, ecom.EcomProductStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomProduct).Price }, "Price").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomProduct).CompareAtPrice }, "CompareAtPrice").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomProduct).CostPrice }, "CostPrice").
 		Build()
 }

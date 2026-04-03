@@ -17,19 +17,18 @@ package auditschedules
 import (
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/comp"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newCompAuditScheduleServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[comp.CompAuditSchedule]("CompAuditSchedule",
-		func(e *comp.CompAuditSchedule) { common.GenerateID(&e.ScheduleId) }).
-		Require(func(e *comp.CompAuditSchedule) string { return e.ScheduleId }, "ScheduleId").
-		Enum(func(e *comp.CompAuditSchedule) int32 { return int32(e.AuditType) }, comp.CompAuditType_name, "AuditType").
-		Enum(func(e *comp.CompAuditSchedule) int32 { return int32(e.Status) }, comp.CompAuditStatus_name, "Status").
-		OptionalMoney(func(e *comp.CompAuditSchedule) *l8common.Money { return e.Budget }, "Budget").
-		OptionalMoney(func(e *comp.CompAuditSchedule) *l8common.Money { return e.ActualCost }, "ActualCost").
-		DateAfter(func(e *comp.CompAuditSchedule) int64 { return e.PlannedEndDate }, func(e *comp.CompAuditSchedule) int64 { return e.PlannedStartDate }, "PlannedEndDate", "PlannedStartDate").
-		DateAfter(func(e *comp.CompAuditSchedule) int64 { return e.ActualEndDate }, func(e *comp.CompAuditSchedule) int64 { return e.ActualStartDate }, "ActualEndDate", "ActualStartDate").
+func newCompAuditScheduleServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&comp.CompAuditSchedule{}, vnic).
+		Require(func(v interface{}) string { return v.(*comp.CompAuditSchedule).ScheduleId }, "ScheduleId").
+		Enum(func(v interface{}) int32 { return int32(v.(*comp.CompAuditSchedule).AuditType) }, comp.CompAuditType_name, "AuditType").
+		Enum(func(v interface{}) int32 { return int32(v.(*comp.CompAuditSchedule).Status) }, comp.CompAuditStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*comp.CompAuditSchedule).Budget }, "Budget").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*comp.CompAuditSchedule).ActualCost }, "ActualCost").
+		DateAfter(func(v interface{}) int64 { return v.(*comp.CompAuditSchedule).PlannedEndDate }, func(v interface{}) int64 { return v.(*comp.CompAuditSchedule).PlannedStartDate }, "PlannedEndDate", "PlannedStartDate").
+		DateAfter(func(v interface{}) int64 { return v.(*comp.CompAuditSchedule).ActualEndDate }, func(v interface{}) int64 { return v.(*comp.CompAuditSchedule).ActualStartDate }, "ActualEndDate", "ActualStartDate").
 		Build()
 }

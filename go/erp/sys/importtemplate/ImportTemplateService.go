@@ -14,7 +14,7 @@
 package importtemplate
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8types/go/types/l8api"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[l8api.L8ImportTemplate, l8api.L8ImportTemplateList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TemplateId", Callback: newImportTemplateServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "TemplateId", Callback: newImportTemplateServiceCallback(vnic),
+	}, &l8api.L8ImportTemplate{}, &l8api.L8ImportTemplateList{}, creds, dbname, vnic)
 }
 
 func ImportTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func ImportTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func ImportTemplate(templateId string, vnic ifs.IVNic) (*l8api.L8ImportTemplate, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &l8api.L8ImportTemplate{TemplateId: templateId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &l8api.L8ImportTemplate{TemplateId: templateId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*l8api.L8ImportTemplate), nil
 }

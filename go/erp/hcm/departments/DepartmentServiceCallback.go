@@ -15,16 +15,17 @@ limitations under the License.
 package departments
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/organizations"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newDepartmentServiceCallback() ifs.IServiceCallback {
+func newDepartmentServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("Department",
-		func(e *hcm.Department) { common.GenerateID(&e.DepartmentId) },
-		validateDept)
+		func(v interface{}) bool { _, ok := v.(*hcm.Department); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.Department).DepartmentId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateDept(v.(*hcm.Department), vnic) })
 }
 
 func validateDept(entity *hcm.Department, vnic ifs.IVNic) error {

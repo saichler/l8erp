@@ -15,7 +15,7 @@ limitations under the License.
 package salesquotations
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
@@ -23,7 +23,8 @@ import (
 )
 
 // cascadeCreateSalesOrder auto-creates a draft SalesOrder when a quotation is accepted.
-func cascadeCreateSalesOrder(q *sales.SalesQuotation, action ifs.Action, vnic ifs.IVNic) error {
+func cascadeCreateSalesOrder(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	q := v.(*sales.SalesQuotation)
 	if q.Status != sales.SalesQuotationStatus_QUOTATION_STATUS_ACCEPTED {
 		return nil
 	}

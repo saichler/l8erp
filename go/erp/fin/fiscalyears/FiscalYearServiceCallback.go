@@ -15,16 +15,15 @@ limitations under the License.
 package fiscalyears
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newFiscalYearServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.FiscalYear]("FiscalYear",
-		func(e *fin.FiscalYear) { common.GenerateID(&e.FiscalYearId) }).
-		Require(func(e *fin.FiscalYear) string { return e.FiscalYearId }, "FiscalYearId").
-		Require(func(e *fin.FiscalYear) string { return e.YearName }, "YearName").
-		DateAfter(func(e *fin.FiscalYear) int64 { return e.EndDate }, func(e *fin.FiscalYear) int64 { return e.StartDate }, "EndDate", "StartDate").
+func newFiscalYearServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.FiscalYear{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.FiscalYear).FiscalYearId }, "FiscalYearId").
+		Require(func(v interface{}) string { return v.(*fin.FiscalYear).YearName }, "YearName").
+		DateAfter(func(v interface{}) int64 { return v.(*fin.FiscalYear).EndDate }, func(v interface{}) int64 { return v.(*fin.FiscalYear).StartDate }, "EndDate", "StartDate").
 		Build()
 }

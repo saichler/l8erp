@@ -15,30 +15,41 @@ limitations under the License.
 package salesquotations
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	"reflect"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
-func newSalesQuotationServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sales.SalesQuotation]("SalesQuotation",
-		func(e *sales.SalesQuotation) { common.GenerateID(&e.QuotationId) }).
+
+func toSlice(slice interface{}) []interface{} {
+	v := reflect.ValueOf(slice)
+	result := make([]interface{}, v.Len())
+	for i := 0; i < v.Len(); i++ {
+		result[i] = v.Index(i).Interface()
+	}
+	return result
+}
+
+func newSalesQuotationServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sales.SalesQuotation{}, vnic).
 		StatusTransition(salesQuotationTransitions()).
 		After(cascadeCreateSalesOrder).
 		Compute(computeSalesQuotationTotals).
-		Require(func(e *sales.SalesQuotation) string { return e.QuotationId }, "QuotationId").
-		Require(func(e *sales.SalesQuotation) string { return e.CustomerId }, "CustomerId").
-		Require(func(e *sales.SalesQuotation) string { return e.CurrencyId }, "CurrencyId").
-		Enum(func(e *sales.SalesQuotation) int32 { return int32(e.Status) }, sales.SalesQuotationStatus_name, "Status").
-		OptionalMoney(func(e *sales.SalesQuotation) *l8common.Money { return e.Subtotal }, "Subtotal").
-		OptionalMoney(func(e *sales.SalesQuotation) *l8common.Money { return e.DiscountTotal }, "DiscountTotal").
-		OptionalMoney(func(e *sales.SalesQuotation) *l8common.Money { return e.TaxTotal }, "TaxTotal").
-		OptionalMoney(func(e *sales.SalesQuotation) *l8common.Money { return e.TotalAmount }, "TotalAmount").
+		Require(func(v interface{}) string { return v.(*sales.SalesQuotation).QuotationId }, "QuotationId").
+		Require(func(v interface{}) string { return v.(*sales.SalesQuotation).CustomerId }, "CustomerId").
+		Require(func(v interface{}) string { return v.(*sales.SalesQuotation).CurrencyId }, "CurrencyId").
+		Enum(func(v interface{}) int32 { return int32(v.(*sales.SalesQuotation).Status) }, sales.SalesQuotationStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesQuotation).Subtotal }, "Subtotal").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesQuotation).DiscountTotal }, "DiscountTotal").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesQuotation).TaxTotal }, "TaxTotal").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesQuotation).TotalAmount }, "TotalAmount").
 		Build()
 }
 
-func computeSalesQuotationTotals(q *sales.SalesQuotation) error {
+func computeSalesQuotationTotals(v interface{}) error {
+	q := v.(*sales.SalesQuotation)
 	subtotal := int64(0)
 	currencyId := ""
 	for _, line := range q.Lines {
@@ -70,17 +81,17 @@ func computeSalesQuotationTotals(q *sales.SalesQuotation) error {
 		return nil
 	}
 	q.Subtotal = &l8common.Money{Amount: subtotal, CurrencyId: currencyId}
-	q.DiscountTotal = common.SumLineMoney(q.Lines, func(l *sales.SalesQuotationLine) *l8common.Money { return l.DiscountAmount })
-	q.TaxTotal = common.SumLineMoney(q.Lines, func(l *sales.SalesQuotationLine) *l8common.Money { return l.TaxAmount })
+	q.DiscountTotal = common.SumLineMoney(toSlice(q.Lines), func(v interface{}) *l8common.Money { return v.(*sales.SalesQuotationLine).DiscountAmount })
+	q.TaxTotal = common.SumLineMoney(toSlice(q.Lines), func(v interface{}) *l8common.Money { return v.(*sales.SalesQuotationLine).TaxAmount })
 	q.TotalAmount = common.MoneyAdd(common.MoneySubtract(q.Subtotal, q.DiscountTotal), q.TaxTotal)
 	return nil
 }
 
-func salesQuotationTransitions() *common.StatusTransitionConfig[sales.SalesQuotation] {
-	return &common.StatusTransitionConfig[sales.SalesQuotation]{
-		StatusGetter:  func(e *sales.SalesQuotation) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *sales.SalesQuotation, s int32) { e.Status = sales.SalesQuotationStatus(s) },
-		FilterBuilder: func(e *sales.SalesQuotation) *sales.SalesQuotation {
+func salesQuotationTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*sales.SalesQuotation).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*sales.SalesQuotation).Status = sales.SalesQuotationStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*sales.SalesQuotation);
 			return &sales.SalesQuotation{QuotationId: e.QuotationId}
 		},
 		ServiceName:   ServiceName,

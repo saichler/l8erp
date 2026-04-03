@@ -14,7 +14,7 @@
 package freightrates
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmFreightRate, scm.ScmFreightRateList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RateId", Callback: newFreightRateServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RateId", Callback: newFreightRateServiceCallback(vnic),
+	}, &scm.ScmFreightRate{}, &scm.ScmFreightRateList{}, creds, dbname, vnic)
 }
 
 func FreightRates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func FreightRates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func FreightRate(rateId string, vnic ifs.IVNic) (*scm.ScmFreightRate, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmFreightRate{RateId: rateId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmFreightRate{RateId: rateId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmFreightRate), nil
 }

@@ -14,7 +14,7 @@
 package performancereviews
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.PerformanceReview, hcm.PerformanceReviewList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ReviewId", Callback: newPerformanceReviewServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ReviewId", Callback: newPerformanceReviewServiceCallback(vnic),
+	}, &hcm.PerformanceReview{}, &hcm.PerformanceReviewList{}, creds, dbname, vnic)
 }
 
 func PerformanceReviews(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PerformanceReviews(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PerformanceReview(reviewId string, vnic ifs.IVNic) (*hcm.PerformanceReview, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.PerformanceReview{ReviewId: reviewId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.PerformanceReview{ReviewId: reviewId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.PerformanceReview), nil
 }

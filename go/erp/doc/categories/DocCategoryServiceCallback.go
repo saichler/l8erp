@@ -17,12 +17,11 @@ package categories
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/doc"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newDocCategoryServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[doc.DocCategory]("DocCategory",
-		func(e *doc.DocCategory) { common.GenerateID(&e.CategoryId) }).
-		Require(func(e *doc.DocCategory) string { return e.CategoryId }, "CategoryId").
+func newDocCategoryServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&doc.DocCategory{}, vnic).
+		Require(func(v interface{}) string { return v.(*doc.DocCategory).CategoryId }, "CategoryId").
 		Build()
 }

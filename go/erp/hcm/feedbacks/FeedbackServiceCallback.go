@@ -17,14 +17,15 @@ package feedbacks
 import (
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newFeedbackServiceCallback() ifs.IServiceCallback {
+func newFeedbackServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("Feedback",
-		func(e *hcm.Feedback) { common.GenerateID(&e.FeedbackId) },
-		validateFeedback)
+		func(v interface{}) bool { _, ok := v.(*hcm.Feedback); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.Feedback).FeedbackId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateFeedback(v.(*hcm.Feedback), vnic) })
 }
 
 func validateFeedback(entity *hcm.Feedback, vnic ifs.IVNic) error {

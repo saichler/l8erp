@@ -15,14 +15,13 @@ limitations under the License.
 package benchmarks
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/bi"
 )
 
-func newBiBenchmarkServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[bi.BiBenchmark]("BiBenchmark",
-		func(e *bi.BiBenchmark) { common.GenerateID(&e.BenchmarkId) }).
-		Require(func(e *bi.BiBenchmark) string { return e.BenchmarkId }, "BenchmarkId").
+func newBiBenchmarkServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&bi.BiBenchmark{}, vnic).
+		Require(func(v interface{}) string { return v.(*bi.BiBenchmark).BenchmarkId }, "BenchmarkId").
 		Build()
 }

@@ -14,7 +14,7 @@
 package goals
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.Goal, hcm.GoalList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "GoalId", Callback: newGoalServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "GoalId", Callback: newGoalServiceCallback(vnic),
+	}, &hcm.Goal{}, &hcm.GoalList{}, creds, dbname, vnic)
 }
 
 func Goals(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Goals(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Goal(goalId string, vnic ifs.IVNic) (*hcm.Goal, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.Goal{GoalId: goalId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Goal{GoalId: goalId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.Goal), nil
 }

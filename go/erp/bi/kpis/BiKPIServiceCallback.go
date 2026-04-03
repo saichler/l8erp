@@ -17,15 +17,14 @@ package kpis
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/bi"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newBiKPIServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[bi.BiKPI]("BiKPI",
-		func(e *bi.BiKPI) { common.GenerateID(&e.KpiId) }).
+func newBiKPIServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&bi.BiKPI{}, vnic).
 		Compute(computeKPIStatus).
-		Require(func(e *bi.BiKPI) string { return e.KpiId }, "KpiId").
-		Enum(func(e *bi.BiKPI) int32 { return int32(e.Status) }, bi.BiKPIStatus_name, "Status").
-		Enum(func(e *bi.BiKPI) int32 { return int32(e.Trend) }, bi.BiTrendDirection_name, "Trend").
+		Require(func(v interface{}) string { return v.(*bi.BiKPI).KpiId }, "KpiId").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiKPI).Status) }, bi.BiKPIStatus_name, "Status").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiKPI).Trend) }, bi.BiTrendDirection_name, "Trend").
 		Build()
 }

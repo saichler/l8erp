@@ -15,28 +15,27 @@ limitations under the License.
 package boms
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-func newMfgBomServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgBom]("MfgBom",
-		func(e *mfg.MfgBom) { common.GenerateID(&e.BomId) }).
+func newMfgBomServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgBom{}, vnic).
 		StatusTransition(mfgBomTransitions()).
-		Require(func(e *mfg.MfgBom) string { return e.BomId }, "BomId").
-		Require(func(e *mfg.MfgBom) string { return e.ItemId }, "ItemId").
-		Enum(func(e *mfg.MfgBom) int32 { return int32(e.BomType) }, mfg.MfgBomType_name, "BomType").
-		Enum(func(e *mfg.MfgBom) int32 { return int32(e.Status) }, mfg.MfgBomStatus_name, "Status").
-		DateAfter(func(e *mfg.MfgBom) int64 { return e.ExpiryDate }, func(e *mfg.MfgBom) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
+		Require(func(v interface{}) string { return v.(*mfg.MfgBom).BomId }, "BomId").
+		Require(func(v interface{}) string { return v.(*mfg.MfgBom).ItemId }, "ItemId").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgBom).BomType) }, mfg.MfgBomType_name, "BomType").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgBom).Status) }, mfg.MfgBomStatus_name, "Status").
+		DateAfter(func(v interface{}) int64 { return v.(*mfg.MfgBom).ExpiryDate }, func(v interface{}) int64 { return v.(*mfg.MfgBom).EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }
 
-func mfgBomTransitions() *common.StatusTransitionConfig[mfg.MfgBom] {
-	return &common.StatusTransitionConfig[mfg.MfgBom]{
-		StatusGetter:  func(e *mfg.MfgBom) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *mfg.MfgBom, s int32) { e.Status = mfg.MfgBomStatus(s) },
-		FilterBuilder: func(e *mfg.MfgBom) *mfg.MfgBom {
+func mfgBomTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*mfg.MfgBom).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*mfg.MfgBom).Status = mfg.MfgBomStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*mfg.MfgBom);
 			return &mfg.MfgBom{BomId: e.BomId}
 		},
 		ServiceName:   ServiceName,

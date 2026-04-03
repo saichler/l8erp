@@ -17,16 +17,15 @@ package projecttemplates
 import (
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newPrjProjectTemplateServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjProjectTemplate]("PrjProjectTemplate",
-		func(e *prj.PrjProjectTemplate) { common.GenerateID(&e.TemplateId) }).
-		Require(func(e *prj.PrjProjectTemplate) string { return e.TemplateId }, "TemplateId").
-		Enum(func(e *prj.PrjProjectTemplate) int32 { return int32(e.DefaultBillingType) }, prj.PrjBillingType_name, "DefaultBillingType").
-		Enum(func(e *prj.PrjProjectTemplate) int32 { return int32(e.ProjectType) }, prj.PrjProjectType_name, "ProjectType").
-		OptionalMoney(func(e *prj.PrjProjectTemplate) *l8common.Money { return e.DefaultBudget }, "DefaultBudget").
+func newPrjProjectTemplateServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjProjectTemplate{}, vnic).
+		Require(func(v interface{}) string { return v.(*prj.PrjProjectTemplate).TemplateId }, "TemplateId").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjProjectTemplate).DefaultBillingType) }, prj.PrjBillingType_name, "DefaultBillingType").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjProjectTemplate).ProjectType) }, prj.PrjProjectType_name, "ProjectType").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjProjectTemplate).DefaultBudget }, "DefaultBudget").
 		Build()
 }

@@ -17,7 +17,7 @@ package salesreports
 import (
 	"fmt"
 
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
@@ -43,7 +43,9 @@ func quotationStatusName(s sales.SalesQuotationStatus) string {
 }
 
 func generatePipelineSummary(report *fin.FinReport, vnic ifs.IVNic) error {
-	quotations, err := common.GetEntities("SalesQuote", 60, &sales.SalesQuotation{}, vnic)
+	quotationsRaw, err := common.GetEntities("SalesQuote", 60, &sales.SalesQuotation{}, vnic)
+	quotations := make([]*sales.SalesQuotation, 0, len(quotationsRaw))
+	for _, ri := range quotationsRaw { quotations = append(quotations, ri.(*sales.SalesQuotation)) }
 	if err != nil {
 		return err
 	}

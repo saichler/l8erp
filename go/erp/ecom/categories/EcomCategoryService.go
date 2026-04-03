@@ -14,7 +14,7 @@
 package categories
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[ecom.EcomCategory, ecom.EcomCategoryList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CategoryId", Callback: newEcomCategoryServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CategoryId", Callback: newEcomCategoryServiceCallback(vnic),
+	}, &ecom.EcomCategory{}, &ecom.EcomCategoryList{}, creds, dbname, vnic)
 }
 
 func EcomCategories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func EcomCategories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomCategory(categoryId string, vnic ifs.IVNic) (*ecom.EcomCategory, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &ecom.EcomCategory{CategoryId: categoryId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomCategory{CategoryId: categoryId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*ecom.EcomCategory), nil
 }

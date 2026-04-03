@@ -14,7 +14,7 @@
 package wishlists
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[ecom.EcomWishlist, ecom.EcomWishlistList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "WishlistId", Callback: newEcomWishlistServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "WishlistId", Callback: newEcomWishlistServiceCallback(vnic),
+	}, &ecom.EcomWishlist{}, &ecom.EcomWishlistList{}, creds, dbname, vnic)
 }
 
 func EcomWishlists(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func EcomWishlists(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomWishlist(wishlistId string, vnic ifs.IVNic) (*ecom.EcomWishlist, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &ecom.EcomWishlist{WishlistId: wishlistId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomWishlist{WishlistId: wishlistId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*ecom.EcomWishlist), nil
 }

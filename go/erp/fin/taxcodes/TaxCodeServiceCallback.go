@@ -15,17 +15,16 @@ limitations under the License.
 package taxcodes
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newTaxCodeServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.TaxCode]("TaxCode",
-		func(e *fin.TaxCode) { common.GenerateID(&e.TaxCodeId) }).
-		Require(func(e *fin.TaxCode) string { return e.TaxCodeId }, "TaxCodeId").
-		Require(func(e *fin.TaxCode) string { return e.Code }, "Code").
-		Require(func(e *fin.TaxCode) string { return e.Name }, "Name").
-		Enum(func(e *fin.TaxCode) int32 { return int32(e.TaxType) }, fin.TaxType_name, "TaxType").
+func newTaxCodeServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.TaxCode{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.TaxCode).TaxCodeId }, "TaxCodeId").
+		Require(func(v interface{}) string { return v.(*fin.TaxCode).Code }, "Code").
+		Require(func(v interface{}) string { return v.(*fin.TaxCode).Name }, "Name").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.TaxCode).TaxType) }, fin.TaxType_name, "TaxType").
 		Build()
 }

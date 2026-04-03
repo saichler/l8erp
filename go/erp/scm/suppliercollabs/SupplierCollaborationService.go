@@ -14,7 +14,7 @@
 package suppliercollabs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmSupplierCollaboration, scm.ScmSupplierCollaborationList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CollaborationId", Callback: newSupplierCollaborationServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CollaborationId", Callback: newSupplierCollaborationServiceCallback(vnic),
+	}, &scm.ScmSupplierCollaboration{}, &scm.ScmSupplierCollaborationList{}, creds, dbname, vnic)
 }
 
 func SupplierCollaborations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func SupplierCollaborations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SupplierCollaboration(collaborationId string, vnic ifs.IVNic) (*scm.ScmSupplierCollaboration, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmSupplierCollaboration{CollaborationId: collaborationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmSupplierCollaboration{CollaborationId: collaborationId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmSupplierCollaboration), nil
 }

@@ -15,15 +15,15 @@ limitations under the License.
 package carriers
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newCarrierServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("Carrier",
-		func(e *hcm.Carrier) { common.GenerateID(&e.CarrierId) },
-		nil)
+func newCarrierServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&hcm.Carrier{}, vnic).
+		Custom(validateCarrier).
+		Build()
 }
 
 func validateCarrier(entity *hcm.Carrier) error {
@@ -47,7 +47,7 @@ func validateCarrierRequiredFields(entity *hcm.Carrier) error {
 }
 
 func validateCarrierEnums(entity *hcm.Carrier) error {
-	if err := common.ValidateEnum(entity.CarrierType, hcm.CarrierType_name, "CarrierType"); err != nil {
+	if err := common.ValidateEnum(int32(entity.CarrierType), hcm.CarrierType_name, "CarrierType"); err != nil {
 		return err
 	}
 	return nil

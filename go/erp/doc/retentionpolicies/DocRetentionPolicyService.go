@@ -14,7 +14,7 @@
 package retentionpolicies
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[doc.DocRetentionPolicy, doc.DocRetentionPolicyList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PolicyId", Callback: newDocRetentionPolicyServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PolicyId", Callback: newDocRetentionPolicyServiceCallback(vnic),
+	}, &doc.DocRetentionPolicy{}, &doc.DocRetentionPolicyList{}, creds, dbname, vnic)
 }
 
 func DocRetentionPolicies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func DocRetentionPolicies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocRetentionPolicy(policyId string, vnic ifs.IVNic) (*doc.DocRetentionPolicy, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &doc.DocRetentionPolicy{PolicyId: policyId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocRetentionPolicy{PolicyId: policyId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*doc.DocRetentionPolicy), nil
 }

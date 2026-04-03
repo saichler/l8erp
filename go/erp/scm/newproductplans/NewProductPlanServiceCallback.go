@@ -17,13 +17,12 @@ package newproductplans
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newNewProductPlanServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmNewProductPlan]("ScmNewProductPlan",
-		func(e *scm.ScmNewProductPlan) { common.GenerateID(&e.PlanId) }).
-		Require(func(e *scm.ScmNewProductPlan) string { return e.PlanId }, "PlanId").
-		Enum(func(e *scm.ScmNewProductPlan) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
+func newNewProductPlanServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmNewProductPlan{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmNewProductPlan).PlanId }, "PlanId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmNewProductPlan).Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }

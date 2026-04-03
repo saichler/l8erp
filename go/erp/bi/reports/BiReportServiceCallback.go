@@ -15,17 +15,16 @@ limitations under the License.
 package reports
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/bi"
 )
 
-func newBiReportServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[bi.BiReport]("BiReport",
-		func(e *bi.BiReport) { common.GenerateID(&e.ReportId) }).
-		Require(func(e *bi.BiReport) string { return e.ReportId }, "ReportId").
-		Enum(func(e *bi.BiReport) int32 { return int32(e.DefaultFormat) }, bi.BiExportFormat_name, "DefaultFormat").
-		Enum(func(e *bi.BiReport) int32 { return int32(e.ReportType) }, bi.BiReportType_name, "ReportType").
-		Enum(func(e *bi.BiReport) int32 { return int32(e.Status) }, bi.BiReportStatus_name, "Status").
+func newBiReportServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&bi.BiReport{}, vnic).
+		Require(func(v interface{}) string { return v.(*bi.BiReport).ReportId }, "ReportId").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiReport).DefaultFormat) }, bi.BiExportFormat_name, "DefaultFormat").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiReport).ReportType) }, bi.BiReportType_name, "ReportType").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiReport).Status) }, bi.BiReportStatus_name, "Status").
 		Build()
 }

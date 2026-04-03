@@ -14,7 +14,7 @@
 package paycomponents
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.PayComponent, hcm.PayComponentList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ComponentId", Callback: newPayComponentServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ComponentId", Callback: newPayComponentServiceCallback(vnic),
+	}, &hcm.PayComponent{}, &hcm.PayComponentList{}, creds, dbname, vnic)
 }
 
 func PayComponents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PayComponents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PayComponent(componentId string, vnic ifs.IVNic) (*hcm.PayComponent, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.PayComponent{ComponentId: componentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.PayComponent{ComponentId: componentId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.PayComponent), nil
 }

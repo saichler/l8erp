@@ -17,7 +17,7 @@ package finreports
 import (
 	"fmt"
 
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -27,7 +27,9 @@ func generateGLDetail(report *fin.FinReport, vnic ifs.IVNic) error {
 		return fmt.Errorf("AccountId is required for GL Detail report")
 	}
 
-	entries, err := common.GetEntities("JrnlEntry", 40, &fin.JournalEntry{}, vnic)
+	entriesRaw, err := common.GetEntities("JrnlEntry", 40, &fin.JournalEntry{}, vnic)
+	entries := make([]*fin.JournalEntry, 0, len(entriesRaw))
+	for _, ri := range entriesRaw { entries = append(entries, ri.(*fin.JournalEntry)) }
 	if err != nil {
 		return err
 	}

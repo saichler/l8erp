@@ -54,7 +54,7 @@ func generateScmPhase6(client *HCMClient, store *MockDataStore) error {
 
 	// Generate Cycle Counts (standalone Prime Object)
 	cycleCounts := generateCycleCounts(store)
-	if err := runOp(client, "Cycle Counts", "/erp/50/CycleCount", &scm.ScmCycleCountList{List: cycleCounts}, extractIDs(cycleCounts, func(e *scm.ScmCycleCount) string { return e.CycleCountId }), &store.CycleCountIDs); err != nil {
+	if err := runOp(client, "Cycle Counts", "/erp/50/CycleCount", &scm.ScmCycleCountList{List: cycleCounts}, extractIDs(cycleCounts, func(v interface{}) string { return v.(*scm.ScmCycleCount).CycleCountId }), &store.CycleCountIDs); err != nil {
 		return err
 	}
 
@@ -73,25 +73,25 @@ func generateScmPhase7(client *HCMClient, store *MockDataStore) error {
 	for i, audit := range freightAudits {
 		shipments[i%len(shipments)].FreightAudits = append(shipments[i%len(shipments)].FreightAudits, audit)
 	}
-	if err := runOp(client, "Shipments", "/erp/50/Shipment", &scm.ScmShipmentList{List: shipments}, extractIDs(shipments, func(e *scm.ScmShipment) string { return e.ShipmentId }), &store.ShipmentIDs); err != nil {
+	if err := runOp(client, "Shipments", "/erp/50/Shipment", &scm.ScmShipmentList{List: shipments}, extractIDs(shipments, func(v interface{}) string { return v.(*scm.ScmShipment).ShipmentId }), &store.ShipmentIDs); err != nil {
 		return err
 	}
 
 	// Generate Routes
 	routes := generateRoutes(store)
-	if err := runOp(client, "Routes", "/erp/50/Route", &scm.ScmRouteList{List: routes}, extractIDs(routes, func(e *scm.ScmRoute) string { return e.RouteId }), &store.RouteIDs); err != nil {
+	if err := runOp(client, "Routes", "/erp/50/Route", &scm.ScmRouteList{List: routes}, extractIDs(routes, func(v interface{}) string { return v.(*scm.ScmRoute).RouteId }), &store.RouteIDs); err != nil {
 		return err
 	}
 
 	// Generate Load Plans
 	loadPlans := generateLoadPlans(store)
-	if err := runOp(client, "Load Plans", "/erp/50/LoadPlan", &scm.ScmLoadPlanList{List: loadPlans}, extractIDs(loadPlans, func(e *scm.ScmLoadPlan) string { return e.LoadPlanId }), &store.LoadPlanIDs); err != nil {
+	if err := runOp(client, "Load Plans", "/erp/50/LoadPlan", &scm.ScmLoadPlanList{List: loadPlans}, extractIDs(loadPlans, func(v interface{}) string { return v.(*scm.ScmLoadPlan).LoadPlanId }), &store.LoadPlanIDs); err != nil {
 		return err
 	}
 
 	// Generate Return Authorizations
 	returnAuths := generateReturnAuthorizations(store)
-	if err := runOp(client, "Return Authorizations", "/erp/50/ReturnAuth", &scm.ScmReturnAuthorizationList{List: returnAuths}, extractIDs(returnAuths, func(e *scm.ScmReturnAuthorization) string { return e.RmaId }), &store.ReturnAuthorizationIDs); err != nil {
+	if err := runOp(client, "Return Authorizations", "/erp/50/ReturnAuth", &scm.ScmReturnAuthorizationList{List: returnAuths}, extractIDs(returnAuths, func(v interface{}) string { return v.(*scm.ScmReturnAuthorization).RmaId }), &store.ReturnAuthorizationIDs); err != nil {
 		return err
 	}
 
@@ -106,25 +106,25 @@ func generateScmPhase8(client *HCMClient, store *MockDataStore) error {
 	for i, acc := range forecastAccuracy {
 		demandForecasts[i%len(demandForecasts)].Accuracies = append(demandForecasts[i%len(demandForecasts)].Accuracies, acc)
 	}
-	if err := runOp(client, "Demand Forecasts", "/erp/50/DmndFcast", &scm.ScmDemandForecastList{List: demandForecasts}, extractIDs(demandForecasts, func(e *scm.ScmDemandForecast) string { return e.ForecastId }), &store.DemandForecastIDs); err != nil {
+	if err := runOp(client, "Demand Forecasts", "/erp/50/DmndFcast", &scm.ScmDemandForecastList{List: demandForecasts}, extractIDs(demandForecasts, func(v interface{}) string { return v.(*scm.ScmDemandForecast).ForecastId }), &store.DemandForecastIDs); err != nil {
 		return err
 	}
 
 	// Generate Demand Plans
 	demandPlans := generateDemandPlans(store)
-	if err := runOp(client, "Demand Plans", "/erp/50/DemandPlan", &scm.ScmDemandPlanList{List: demandPlans}, extractIDs(demandPlans, func(e *scm.ScmDemandPlan) string { return e.PlanId }), &store.DemandPlanIDs); err != nil {
+	if err := runOp(client, "Demand Plans", "/erp/50/DemandPlan", &scm.ScmDemandPlanList{List: demandPlans}, extractIDs(demandPlans, func(v interface{}) string { return v.(*scm.ScmDemandPlan).PlanId }), &store.DemandPlanIDs); err != nil {
 		return err
 	}
 
 	// Generate Promotional Plans
 	promoPlan := generatePromotionalPlans(store)
-	if err := runOp(client, "Promotional Plans", "/erp/50/PromoPlan", &scm.ScmPromotionalPlanList{List: promoPlan}, extractIDs(promoPlan, func(e *scm.ScmPromotionalPlan) string { return e.PlanId }), &store.PromotionalPlanIDs); err != nil {
+	if err := runOp(client, "Promotional Plans", "/erp/50/PromoPlan", &scm.ScmPromotionalPlanList{List: promoPlan}, extractIDs(promoPlan, func(v interface{}) string { return v.(*scm.ScmPromotionalPlan).PlanId }), &store.PromotionalPlanIDs); err != nil {
 		return err
 	}
 
 	// Generate New Product Plans
 	newProductPlans := generateNewProductPlans(store)
-	if err := runOp(client, "New Product Plans", "/erp/50/NewProdPln", &scm.ScmNewProductPlanList{List: newProductPlans}, extractIDs(newProductPlans, func(e *scm.ScmNewProductPlan) string { return e.PlanId }), &store.NewProductPlanIDs); err != nil {
+	if err := runOp(client, "New Product Plans", "/erp/50/NewProdPln", &scm.ScmNewProductPlanList{List: newProductPlans}, extractIDs(newProductPlans, func(v interface{}) string { return v.(*scm.ScmNewProductPlan).PlanId }), &store.NewProductPlanIDs); err != nil {
 		return err
 	}
 
@@ -132,37 +132,37 @@ func generateScmPhase8(client *HCMClient, store *MockDataStore) error {
 
 	// Generate Material Requirements
 	materialReqs := generateMaterialRequirements(store)
-	if err := runOp(client, "Material Requirements", "/erp/50/MatReq", &scm.ScmMaterialRequirementList{List: materialReqs}, extractIDs(materialReqs, func(e *scm.ScmMaterialRequirement) string { return e.RequirementId }), &store.MaterialRequirementIDs); err != nil {
+	if err := runOp(client, "Material Requirements", "/erp/50/MatReq", &scm.ScmMaterialRequirementList{List: materialReqs}, extractIDs(materialReqs, func(v interface{}) string { return v.(*scm.ScmMaterialRequirement).RequirementId }), &store.MaterialRequirementIDs); err != nil {
 		return err
 	}
 
 	// Generate Distribution Requirements
 	distReqs := generateDistributionRequirements(store)
-	if err := runOp(client, "Distribution Requirements", "/erp/50/DistReq", &scm.ScmDistributionRequirementList{List: distReqs}, extractIDs(distReqs, func(e *scm.ScmDistributionRequirement) string { return e.RequirementId }), &store.DistributionRequirementIDs); err != nil {
+	if err := runOp(client, "Distribution Requirements", "/erp/50/DistReq", &scm.ScmDistributionRequirementList{List: distReqs}, extractIDs(distReqs, func(v interface{}) string { return v.(*scm.ScmDistributionRequirement).RequirementId }), &store.DistributionRequirementIDs); err != nil {
 		return err
 	}
 
 	// Generate Supply Plans
 	supplyPlans := generateSupplyPlans(store)
-	if err := runOp(client, "Supply Plans", "/erp/50/SupplyPlan", &scm.ScmSupplyPlanList{List: supplyPlans}, extractIDs(supplyPlans, func(e *scm.ScmSupplyPlan) string { return e.PlanId }), &store.SupplyPlanIDs); err != nil {
+	if err := runOp(client, "Supply Plans", "/erp/50/SupplyPlan", &scm.ScmSupplyPlanList{List: supplyPlans}, extractIDs(supplyPlans, func(v interface{}) string { return v.(*scm.ScmSupplyPlan).PlanId }), &store.SupplyPlanIDs); err != nil {
 		return err
 	}
 
 	// Generate Supplier Collaborations
 	supplierCollabs := generateSupplierCollaborations(store)
-	if err := runOp(client, "Supplier Collaborations", "/erp/50/SupCollab", &scm.ScmSupplierCollaborationList{List: supplierCollabs}, extractIDs(supplierCollabs, func(e *scm.ScmSupplierCollaboration) string { return e.CollaborationId }), &store.SupplierCollaborationIDs); err != nil {
+	if err := runOp(client, "Supplier Collaborations", "/erp/50/SupCollab", &scm.ScmSupplierCollaborationList{List: supplierCollabs}, extractIDs(supplierCollabs, func(v interface{}) string { return v.(*scm.ScmSupplierCollaboration).CollaborationId }), &store.SupplierCollaborationIDs); err != nil {
 		return err
 	}
 
 	// Generate Safety Stocks
 	safetyStocks := generateSafetyStocks(store)
-	if err := runOp(client, "Safety Stocks", "/erp/50/SafeStock", &scm.ScmSafetyStockList{List: safetyStocks}, extractIDs(safetyStocks, func(e *scm.ScmSafetyStock) string { return e.SafetyStockId }), &store.SafetyStockIDs); err != nil {
+	if err := runOp(client, "Safety Stocks", "/erp/50/SafeStock", &scm.ScmSafetyStockList{List: safetyStocks}, extractIDs(safetyStocks, func(v interface{}) string { return v.(*scm.ScmSafetyStock).SafetyStockId }), &store.SafetyStockIDs); err != nil {
 		return err
 	}
 
 	// Generate Lead Times
 	leadTimes := generateLeadTimes(store)
-	if err := runOp(client, "Lead Times", "/erp/50/LeadTime", &scm.ScmLeadTimeList{List: leadTimes}, extractIDs(leadTimes, func(e *scm.ScmLeadTime) string { return e.LeadTimeId }), &store.LeadTimeIDs); err != nil {
+	if err := runOp(client, "Lead Times", "/erp/50/LeadTime", &scm.ScmLeadTimeList{List: leadTimes}, extractIDs(leadTimes, func(v interface{}) string { return v.(*scm.ScmLeadTime).LeadTimeId }), &store.LeadTimeIDs); err != nil {
 		return err
 	}
 

@@ -16,14 +16,13 @@ package contacts
 
 import (
 	"github.com/saichler/l8erp/go/types/crm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newCrmContactServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmContact]("CrmContact",
-		func(e *crm.CrmContact) { common.GenerateID(&e.ContactId) }).
-		Require(func(e *crm.CrmContact) string { return e.ContactId }, "ContactId").
-		Require(func(e *crm.CrmContact) string { return e.AccountId }, "AccountId").
+func newCrmContactServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmContact{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmContact).ContactId }, "ContactId").
+		Require(func(v interface{}) string { return v.(*crm.CrmContact).AccountId }, "AccountId").
 		Build()
 }

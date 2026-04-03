@@ -14,7 +14,7 @@
 package accounts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.Account, fin.AccountList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "AccountId", Callback: newAccountServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "AccountId", Callback: newAccountServiceCallback(vnic),
+	}, &fin.Account{}, &fin.AccountList{}, creds, dbname, vnic)
 }
 
 func Accounts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Accounts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Account(accountId string, vnic ifs.IVNic) (*fin.Account, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.Account{AccountId: accountId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.Account{AccountId: accountId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.Account), nil
 }

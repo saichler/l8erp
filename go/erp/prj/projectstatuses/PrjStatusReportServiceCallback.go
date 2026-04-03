@@ -16,18 +16,17 @@ package projectstatuses
 
 import (
 	"github.com/saichler/l8erp/go/types/prj"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newPrjStatusReportServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjStatusReport]("PrjStatusReport",
-		func(e *prj.PrjStatusReport) { common.GenerateID(&e.StatusId) }).
-		Require(func(e *prj.PrjStatusReport) string { return e.StatusId }, "StatusId").
-		Enum(func(e *prj.PrjStatusReport) int32 { return int32(e.BudgetHealth) }, prj.PrjHealthIndicator_name, "BudgetHealth").
-		Enum(func(e *prj.PrjStatusReport) int32 { return int32(e.OverallHealth) }, prj.PrjHealthIndicator_name, "OverallHealth").
-		Enum(func(e *prj.PrjStatusReport) int32 { return int32(e.ResourceHealth) }, prj.PrjHealthIndicator_name, "ResourceHealth").
-		Enum(func(e *prj.PrjStatusReport) int32 { return int32(e.ScheduleHealth) }, prj.PrjHealthIndicator_name, "ScheduleHealth").
-		Enum(func(e *prj.PrjStatusReport) int32 { return int32(e.ScopeHealth) }, prj.PrjHealthIndicator_name, "ScopeHealth").
+func newPrjStatusReportServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjStatusReport{}, vnic).
+		Require(func(v interface{}) string { return v.(*prj.PrjStatusReport).StatusId }, "StatusId").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjStatusReport).BudgetHealth) }, prj.PrjHealthIndicator_name, "BudgetHealth").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjStatusReport).OverallHealth) }, prj.PrjHealthIndicator_name, "OverallHealth").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjStatusReport).ResourceHealth) }, prj.PrjHealthIndicator_name, "ResourceHealth").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjStatusReport).ScheduleHealth) }, prj.PrjHealthIndicator_name, "ScheduleHealth").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjStatusReport).ScopeHealth) }, prj.PrjHealthIndicator_name, "ScopeHealth").
 		Build()
 }

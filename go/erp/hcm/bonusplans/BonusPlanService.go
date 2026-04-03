@@ -14,7 +14,7 @@
 package bonusplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.BonusPlan, hcm.BonusPlanList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PlanId", Callback: newBonusPlanServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PlanId", Callback: newBonusPlanServiceCallback(vnic),
+	}, &hcm.BonusPlan{}, &hcm.BonusPlanList{}, creds, dbname, vnic)
 }
 
 func BonusPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func BonusPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BonusPlan(planId string, vnic ifs.IVNic) (*hcm.BonusPlan, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.BonusPlan{PlanId: planId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.BonusPlan{PlanId: planId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.BonusPlan), nil
 }

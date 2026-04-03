@@ -14,7 +14,7 @@
 package salarygrades
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.SalaryGrade, hcm.SalaryGradeList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "GradeId", Callback: newSalaryGradeServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "GradeId", Callback: newSalaryGradeServiceCallback(vnic),
+	}, &hcm.SalaryGrade{}, &hcm.SalaryGradeList{}, creds, dbname, vnic)
 }
 
 func SalaryGrades(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func SalaryGrades(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SalaryGrade(gradeId string, vnic ifs.IVNic) (*hcm.SalaryGrade, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.SalaryGrade{GradeId: gradeId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.SalaryGrade{GradeId: gradeId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.SalaryGrade), nil
 }

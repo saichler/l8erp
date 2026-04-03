@@ -14,7 +14,7 @@
 package dunningletters
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.DunningLetter, fin.DunningLetterList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "LetterId", Callback: newDunningLetterServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "LetterId", Callback: newDunningLetterServiceCallback(vnic),
+	}, &fin.DunningLetter{}, &fin.DunningLetterList{}, creds, dbname, vnic)
 }
 
 func DunningLetters(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func DunningLetters(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DunningLetter(letterId string, vnic ifs.IVNic) (*fin.DunningLetter, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.DunningLetter{LetterId: letterId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.DunningLetter{LetterId: letterId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.DunningLetter), nil
 }

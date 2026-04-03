@@ -15,23 +15,23 @@ limitations under the License.
 package waveplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
 	"time"
 )
 
-func newWavePlanServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmWavePlan]("ScmWavePlan",
-		func(e *scm.ScmWavePlan) { common.GenerateID(&e.WavePlanId) }).
+func newWavePlanServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmWavePlan{}, vnic).
 		After(updateInventoryOnPick).
-		Require(func(e *scm.ScmWavePlan) string { return e.WavePlanId }, "WavePlanId").
-		Enum(func(e *scm.ScmWavePlan) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
+		Require(func(v interface{}) string { return v.(*scm.ScmWavePlan).WavePlanId }, "WavePlanId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmWavePlan).Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }
 
 // updateInventoryOnPick appends ISSUE stock movements and decrements bin quantities.
-func updateInventoryOnPick(wp *scm.ScmWavePlan, action ifs.Action, vnic ifs.IVNic) error {
+func updateInventoryOnPick(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	wp := v.(*scm.ScmWavePlan)
 	if wp.Status != scm.ScmTaskStatus_TASK_STATUS_COMPLETED {
 		return nil
 	}
@@ -44,15 +44,16 @@ func updateInventoryOnPick(wp *scm.ScmWavePlan, action ifs.Action, vnic ifs.IVNi
 		if err != nil || item == nil {
 			return err
 		}
+	itemTyped := item.(*scm.ScmItem)
 		var movementId string
 		common.GenerateID(&movementId)
-		item.Movements = append(item.Movements, &scm.ScmStockMovement{
+		itemTyped.Movements = append(itemTyped.Movements, &scm.ScmStockMovement{
 			MovementId:    movementId,
 			WarehouseId:   wp.WarehouseId,
 			BinId:         task.FromBinId,
 			MovementType:  scm.ScmMovementType_MOVEMENT_TYPE_ISSUE,
 			Quantity:      task.Quantity,
-			UnitOfMeasure: item.UnitOfMeasure,
+			UnitOfMeasure: itemTyped.UnitOfMeasure,
 			ReferenceId:   wp.WavePlanId,
 			ReferenceType: "WavePlan",
 			MovementDate:  now,
@@ -60,11 +61,12 @@ func updateInventoryOnPick(wp *scm.ScmWavePlan, action ifs.Action, vnic ifs.IVNi
 		if err := common.PutEntity("Item", 50, item, vnic); err != nil {
 			return err
 		}
-		wh, err := common.GetEntity("Warehouse", 50,
+		whRaw, err := common.GetEntity("Warehouse", 50,
 			&scm.ScmWarehouse{WarehouseId: wp.WarehouseId}, vnic)
-		if err != nil || wh == nil {
+		if err != nil || whRaw == nil {
 			return err
 		}
+		wh := whRaw.(*scm.ScmWarehouse)
 		if bin := findBin(wh, task.FromBinId); bin != nil {
 			bin.CurrentQuantity -= task.Quantity
 		}

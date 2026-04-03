@@ -15,15 +15,14 @@ limitations under the License.
 package loadplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newLoadPlanServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmLoadPlan]("ScmLoadPlan",
-		func(e *scm.ScmLoadPlan) { common.GenerateID(&e.LoadPlanId) }).
-		Require(func(e *scm.ScmLoadPlan) string { return e.LoadPlanId }, "LoadPlanId").
-		Enum(func(e *scm.ScmLoadPlan) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
+func newLoadPlanServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmLoadPlan{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmLoadPlan).LoadPlanId }, "LoadPlanId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmLoadPlan).Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }

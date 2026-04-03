@@ -14,7 +14,7 @@
 package courseenrollments
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.CourseEnrollment, hcm.CourseEnrollmentList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "EnrollmentId", Callback: newCourseEnrollmentServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "EnrollmentId", Callback: newCourseEnrollmentServiceCallback(vnic),
+	}, &hcm.CourseEnrollment{}, &hcm.CourseEnrollmentList{}, creds, dbname, vnic)
 }
 
 func CourseEnrollments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CourseEnrollments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CourseEnrollment(enrollmentId string, vnic ifs.IVNic) (*hcm.CourseEnrollment, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.CourseEnrollment{EnrollmentId: enrollmentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.CourseEnrollment{EnrollmentId: enrollmentId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.CourseEnrollment), nil
 }

@@ -15,18 +15,17 @@ limitations under the License.
 package paymentschedules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newPaymentScheduleServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.PaymentSchedule]("PaymentSchedule",
-		func(e *fin.PaymentSchedule) { common.GenerateID(&e.ScheduleId) }).
-		Require(func(e *fin.PaymentSchedule) string { return e.ScheduleId }, "ScheduleId").
-		Require(func(e *fin.PaymentSchedule) string { return e.VendorId }, "VendorId").
-		Require(func(e *fin.PaymentSchedule) string { return e.InvoiceId }, "InvoiceId").
-		OptionalMoney(func(e *fin.PaymentSchedule) *l8common.Money { return e.Amount }, "Amount").
+func newPaymentScheduleServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.PaymentSchedule{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.PaymentSchedule).ScheduleId }, "ScheduleId").
+		Require(func(v interface{}) string { return v.(*fin.PaymentSchedule).VendorId }, "VendorId").
+		Require(func(v interface{}) string { return v.(*fin.PaymentSchedule).InvoiceId }, "InvoiceId").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.PaymentSchedule).Amount }, "Amount").
 		Build()
 }

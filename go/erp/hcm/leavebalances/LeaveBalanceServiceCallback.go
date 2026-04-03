@@ -15,17 +15,18 @@ limitations under the License.
 package leavebalances
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/erp/hcm/leavepolicies"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newLeaveBalanceServiceCallback() ifs.IServiceCallback {
+func newLeaveBalanceServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("LeaveBalance",
-		func(e *hcm.LeaveBalance) { common.GenerateID(&e.BalanceId) },
-		validateLeaveBal)
+		func(v interface{}) bool { _, ok := v.(*hcm.LeaveBalance); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.LeaveBalance).BalanceId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateLeaveBal(v.(*hcm.LeaveBalance), vnic) })
 }
 
 func computeLeaveBalance(lb *hcm.LeaveBalance) {

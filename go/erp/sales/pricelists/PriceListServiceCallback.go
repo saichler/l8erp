@@ -17,15 +17,14 @@ package pricelists
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/sales"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newPriceListServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sales.SalesPriceList]("SalesPriceList",
-		func(e *sales.SalesPriceList) { common.GenerateID(&e.PriceListId) }).
-		Require(func(e *sales.SalesPriceList) string { return e.PriceListId }, "PriceListId").
-		Require(func(e *sales.SalesPriceList) string { return e.Name }, "Name").
-		Require(func(e *sales.SalesPriceList) string { return e.CurrencyId }, "CurrencyId").
-		DateAfter(func(e *sales.SalesPriceList) int64 { return e.ExpiryDate }, func(e *sales.SalesPriceList) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
+func newPriceListServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sales.SalesPriceList{}, vnic).
+		Require(func(v interface{}) string { return v.(*sales.SalesPriceList).PriceListId }, "PriceListId").
+		Require(func(v interface{}) string { return v.(*sales.SalesPriceList).Name }, "Name").
+		Require(func(v interface{}) string { return v.(*sales.SalesPriceList).CurrencyId }, "CurrencyId").
+		DateAfter(func(v interface{}) int64 { return v.(*sales.SalesPriceList).ExpiryDate }, func(v interface{}) int64 { return v.(*sales.SalesPriceList).EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

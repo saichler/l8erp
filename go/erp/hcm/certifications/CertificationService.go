@@ -14,7 +14,7 @@
 package certifications
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.Certification, hcm.CertificationList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CertificationId", Callback: newCertificationServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CertificationId", Callback: newCertificationServiceCallback(vnic),
+	}, &hcm.Certification{}, &hcm.CertificationList{}, creds, dbname, vnic)
 }
 
 func Certifications(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Certifications(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Certification(certificationId string, vnic ifs.IVNic) (*hcm.Certification, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.Certification{CertificationId: certificationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Certification{CertificationId: certificationId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.Certification), nil
 }

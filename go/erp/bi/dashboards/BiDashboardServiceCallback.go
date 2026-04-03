@@ -15,15 +15,14 @@ limitations under the License.
 package dashboards
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/bi"
 )
 
-func newBiDashboardServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[bi.BiDashboard]("BiDashboard",
-		func(e *bi.BiDashboard) { common.GenerateID(&e.DashboardId) }).
-		Require(func(e *bi.BiDashboard) string { return e.DashboardId }, "DashboardId").
-		Enum(func(e *bi.BiDashboard) int32 { return int32(e.Status) }, bi.BiDashboardStatus_name, "Status").
+func newBiDashboardServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&bi.BiDashboard{}, vnic).
+		Require(func(v interface{}) string { return v.(*bi.BiDashboard).DashboardId }, "DashboardId").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiDashboard).Status) }, bi.BiDashboardStatus_name, "Status").
 		Build()
 }

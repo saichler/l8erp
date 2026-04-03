@@ -17,17 +17,16 @@ package insurancepolicies
 import (
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/comp"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newCompInsurancePolicyServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[comp.CompInsurancePolicy]("CompInsurancePolicy",
-		func(e *comp.CompInsurancePolicy) { common.GenerateID(&e.InsuranceId) }).
-		Require(func(e *comp.CompInsurancePolicy) string { return e.InsuranceId }, "InsuranceId").
-		OptionalMoney(func(e *comp.CompInsurancePolicy) *l8common.Money { return e.CoverageAmount }, "CoverageAmount").
-		OptionalMoney(func(e *comp.CompInsurancePolicy) *l8common.Money { return e.Deductible }, "Deductible").
-		OptionalMoney(func(e *comp.CompInsurancePolicy) *l8common.Money { return e.Premium }, "Premium").
-		DateAfter(func(e *comp.CompInsurancePolicy) int64 { return e.ExpiryDate }, func(e *comp.CompInsurancePolicy) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
+func newCompInsurancePolicyServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&comp.CompInsurancePolicy{}, vnic).
+		Require(func(v interface{}) string { return v.(*comp.CompInsurancePolicy).InsuranceId }, "InsuranceId").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*comp.CompInsurancePolicy).CoverageAmount }, "CoverageAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*comp.CompInsurancePolicy).Deductible }, "Deductible").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*comp.CompInsurancePolicy).Premium }, "Premium").
+		DateAfter(func(v interface{}) int64 { return v.(*comp.CompInsurancePolicy).ExpiryDate }, func(v interface{}) int64 { return v.(*comp.CompInsurancePolicy).EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

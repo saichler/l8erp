@@ -14,7 +14,7 @@
 package demandplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmDemandPlan, scm.ScmDemandPlanList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PlanId", Callback: newDemandPlanServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PlanId", Callback: newDemandPlanServiceCallback(vnic),
+	}, &scm.ScmDemandPlan{}, &scm.ScmDemandPlanList{}, creds, dbname, vnic)
 }
 
 func DemandPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func DemandPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DemandPlan(planId string, vnic ifs.IVNic) (*scm.ScmDemandPlan, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmDemandPlan{PlanId: planId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmDemandPlan{PlanId: planId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmDemandPlan), nil
 }

@@ -15,23 +15,22 @@ limitations under the License.
 package projectinvoices
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
-func newPrjProjectInvoiceServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjProjectInvoice]("PrjProjectInvoice",
-		func(e *prj.PrjProjectInvoice) { common.GenerateID(&e.InvoiceId) }).
-		Require(func(e *prj.PrjProjectInvoice) string { return e.InvoiceId }, "InvoiceId").
-		Require(func(e *prj.PrjProjectInvoice) string { return e.CurrencyId }, "CurrencyId").
-		Enum(func(e *prj.PrjProjectInvoice) int32 { return int32(e.Status) }, prj.PrjInvoiceStatus_name, "Status").
-		OptionalMoney(func(e *prj.PrjProjectInvoice) *l8common.Money { return e.Subtotal }, "Subtotal").
-		OptionalMoney(func(e *prj.PrjProjectInvoice) *l8common.Money { return e.TaxAmount }, "TaxAmount").
-		OptionalMoney(func(e *prj.PrjProjectInvoice) *l8common.Money { return e.TotalAmount }, "TotalAmount").
-		OptionalMoney(func(e *prj.PrjProjectInvoice) *l8common.Money { return e.PaidAmount }, "PaidAmount").
-		OptionalMoney(func(e *prj.PrjProjectInvoice) *l8common.Money { return e.BalanceDue }, "BalanceDue").
-		DateAfter(func(e *prj.PrjProjectInvoice) int64 { return e.DueDate }, func(e *prj.PrjProjectInvoice) int64 { return e.InvoiceDate }, "DueDate", "InvoiceDate").
+func newPrjProjectInvoiceServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjProjectInvoice{}, vnic).
+		Require(func(v interface{}) string { return v.(*prj.PrjProjectInvoice).InvoiceId }, "InvoiceId").
+		Require(func(v interface{}) string { return v.(*prj.PrjProjectInvoice).CurrencyId }, "CurrencyId").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjProjectInvoice).Status) }, prj.PrjInvoiceStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjProjectInvoice).Subtotal }, "Subtotal").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjProjectInvoice).TaxAmount }, "TaxAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjProjectInvoice).TotalAmount }, "TotalAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjProjectInvoice).PaidAmount }, "PaidAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjProjectInvoice).BalanceDue }, "BalanceDue").
+		DateAfter(func(v interface{}) int64 { return v.(*prj.PrjProjectInvoice).DueDate }, func(v interface{}) int64 { return v.(*prj.PrjProjectInvoice).InvoiceDate }, "DueDate", "InvoiceDate").
 		Build()
 }

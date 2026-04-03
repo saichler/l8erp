@@ -15,15 +15,14 @@ limitations under the License.
 package datagovernances
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/bi"
 )
 
-func newBiDataGovernanceServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[bi.BiDataGovernance]("BiDataGovernance",
-		func(e *bi.BiDataGovernance) { common.GenerateID(&e.GovernanceId) }).
-		Require(func(e *bi.BiDataGovernance) string { return e.GovernanceId }, "GovernanceId").
-		Enum(func(e *bi.BiDataGovernance) int32 { return int32(e.Classification) }, bi.BiGovernanceLevel_name, "Classification").
+func newBiDataGovernanceServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&bi.BiDataGovernance{}, vnic).
+		Require(func(v interface{}) string { return v.(*bi.BiDataGovernance).GovernanceId }, "GovernanceId").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiDataGovernance).Classification) }, bi.BiGovernanceLevel_name, "Classification").
 		Build()
 }

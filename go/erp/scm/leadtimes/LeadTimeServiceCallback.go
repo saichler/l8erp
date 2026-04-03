@@ -15,14 +15,13 @@ limitations under the License.
 package leadtimes
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newLeadTimeServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmLeadTime]("ScmLeadTime",
-		func(e *scm.ScmLeadTime) { common.GenerateID(&e.LeadTimeId) }).
-		Require(func(e *scm.ScmLeadTime) string { return e.LeadTimeId }, "LeadTimeId").
+func newLeadTimeServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmLeadTime{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmLeadTime).LeadTimeId }, "LeadTimeId").
 		Build()
 }

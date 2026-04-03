@@ -15,16 +15,15 @@ limitations under the License.
 package escalations
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmEscalationServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmEscalation]("CrmEscalation",
-		func(e *crm.CrmEscalation) { common.GenerateID(&e.EscalationId) }).
-		Require(func(e *crm.CrmEscalation) string { return e.EscalationId }, "EscalationId").
-		Require(func(e *crm.CrmEscalation) string { return e.Name }, "Name").
-		Enum(func(e *crm.CrmEscalation) int32 { return int32(e.Level) }, crm.CrmEscalationLevel_name, "Level").
+func newCrmEscalationServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmEscalation{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmEscalation).EscalationId }, "EscalationId").
+		Require(func(v interface{}) string { return v.(*crm.CrmEscalation).Name }, "Name").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmEscalation).Level) }, crm.CrmEscalationLevel_name, "Level").
 		Build()
 }

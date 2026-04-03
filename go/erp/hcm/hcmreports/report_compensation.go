@@ -15,7 +15,7 @@ limitations under the License.
 package hcmreports
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
@@ -37,7 +37,9 @@ func compensationTypeName(t hcm.CompensationType) string {
 }
 
 func generateCompensationSummary(report *fin.FinReport, vnic ifs.IVNic) error {
-	comps, err := common.GetEntities("EmpComp", 30, &hcm.EmployeeCompensation{}, vnic)
+	compsRaw, err := common.GetEntities("EmpComp", 30, &hcm.EmployeeCompensation{}, vnic)
+	comps := make([]*hcm.EmployeeCompensation, 0, len(compsRaw))
+	for _, ri := range compsRaw { comps = append(comps, ri.(*hcm.EmployeeCompensation)) }
 	if err != nil {
 		return err
 	}

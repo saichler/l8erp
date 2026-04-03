@@ -14,7 +14,7 @@
 package pricelists
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[sales.SalesPriceList, sales.SalesPriceListList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PriceListId", Callback: newPriceListServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PriceListId", Callback: newPriceListServiceCallback(vnic),
+	}, &sales.SalesPriceList{}, &sales.SalesPriceListList{}, creds, dbname, vnic)
 }
 
 func PriceLists(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PriceLists(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PriceList(priceListId string, vnic ifs.IVNic) (*sales.SalesPriceList, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &sales.SalesPriceList{PriceListId: priceListId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesPriceList{PriceListId: priceListId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*sales.SalesPriceList), nil
 }

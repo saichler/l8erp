@@ -15,7 +15,7 @@ limitations under the License.
 package scmreports
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
@@ -41,7 +41,9 @@ func itemTypeName(t scm.ScmItemType) string {
 }
 
 func generateInventoryValuation(report *fin.FinReport, vnic ifs.IVNic) error {
-	items, err := common.GetEntities("Item", 50, &scm.ScmItem{}, vnic)
+	itemsRaw, err := common.GetEntities("Item", 50, &scm.ScmItem{}, vnic)
+	items := make([]*scm.ScmItem, 0, len(itemsRaw))
+	for _, ri := range itemsRaw { items = append(items, ri.(*scm.ScmItem)) }
 	if err != nil {
 		return err
 	}

@@ -14,7 +14,7 @@
 package absences
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.Absence, hcm.AbsenceList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "AbsenceId", Callback: newAbsenceServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "AbsenceId", Callback: newAbsenceServiceCallback(vnic),
+	}, &hcm.Absence{}, &hcm.AbsenceList{}, creds, dbname, vnic)
 }
 
 func Absences(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Absences(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Absence(absenceId string, vnic ifs.IVNic) (*hcm.Absence, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.Absence{AbsenceId: absenceId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Absence{AbsenceId: absenceId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.Absence), nil
 }

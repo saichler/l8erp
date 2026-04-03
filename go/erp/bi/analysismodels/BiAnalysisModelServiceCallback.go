@@ -15,16 +15,15 @@ limitations under the License.
 package analysismodels
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/bi"
 )
 
-func newBiAnalysisModelServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[bi.BiAnalysisModel]("BiAnalysisModel",
-		func(e *bi.BiAnalysisModel) { common.GenerateID(&e.ModelId) }).
-		Require(func(e *bi.BiAnalysisModel) string { return e.ModelId }, "ModelId").
-		Enum(func(e *bi.BiAnalysisModel) int32 { return int32(e.ModelType) }, bi.BiModelType_name, "ModelType").
-		Enum(func(e *bi.BiAnalysisModel) int32 { return int32(e.Status) }, bi.BiModelStatus_name, "Status").
+func newBiAnalysisModelServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&bi.BiAnalysisModel{}, vnic).
+		Require(func(v interface{}) string { return v.(*bi.BiAnalysisModel).ModelId }, "ModelId").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiAnalysisModel).ModelType) }, bi.BiModelType_name, "ModelType").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiAnalysisModel).Status) }, bi.BiModelStatus_name, "Status").
 		Build()
 }

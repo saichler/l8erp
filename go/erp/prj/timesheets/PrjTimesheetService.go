@@ -14,7 +14,7 @@
 package timesheets
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[prj.PrjTimesheet, prj.PrjTimesheetList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TimesheetId", Callback: newPrjTimesheetServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "TimesheetId", Callback: newPrjTimesheetServiceCallback(vnic),
+	}, &prj.PrjTimesheet{}, &prj.PrjTimesheetList{}, creds, dbname, vnic)
 }
 
 func PrjTimesheets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PrjTimesheets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjTimesheet(timesheetId string, vnic ifs.IVNic) (*prj.PrjTimesheet, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &prj.PrjTimesheet{TimesheetId: timesheetId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjTimesheet{TimesheetId: timesheetId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*prj.PrjTimesheet), nil
 }

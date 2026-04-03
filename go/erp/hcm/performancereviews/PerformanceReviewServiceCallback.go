@@ -15,16 +15,17 @@ limitations under the License.
 package performancereviews
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newPerformanceReviewServiceCallback() ifs.IServiceCallback {
+func newPerformanceReviewServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("PerformanceReview",
-		func(e *hcm.PerformanceReview) { common.GenerateID(&e.ReviewId) },
-		validatePerfRevw)
+		func(v interface{}) bool { _, ok := v.(*hcm.PerformanceReview); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.PerformanceReview).ReviewId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validatePerfRevw(v.(*hcm.PerformanceReview), vnic) })
 }
 
 func validatePerfRevw(entity *hcm.PerformanceReview, vnic ifs.IVNic) error {

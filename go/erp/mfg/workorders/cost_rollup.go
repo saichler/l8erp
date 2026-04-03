@@ -15,7 +15,7 @@ limitations under the License.
 package workorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8erp/go/types/scm"
@@ -25,7 +25,8 @@ import (
 
 // rollUpCosts calculates the actual cost of a completed work order from labor,
 // material consumption, and overhead, then rolls up to the parent production order.
-func rollUpCosts(wo *mfg.MfgWorkOrder, action ifs.Action, vnic ifs.IVNic) error {
+func rollUpCosts(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	wo := v.(*mfg.MfgWorkOrder)
 	if wo.Status != mfg.MfgWorkOrderStatus_MFG_WORK_ORDER_STATUS_COMPLETED {
 		return nil
 	}
@@ -38,8 +39,9 @@ func rollUpCosts(wo *mfg.MfgWorkOrder, action ifs.Action, vnic ifs.IVNic) error 
 	for _, entry := range wo.LaborEntries {
 		if entry.HoursWorked > 0 {
 			// Use work center standard rate if available
-			wc, _ := common.GetEntity("MfgWorkCtr", 70,
-				&mfg.MfgWorkCenter{WorkCenterId: entry.WorkCenterId}, vnic)
+			wcRaw, _ := common.GetEntity("MfgWorkCtr", 70, &mfg.MfgWorkCenter{WorkCenterId: entry.WorkCenterId}, vnic)
+			var wc *mfg.MfgWorkCenter
+			if wcRaw != nil { wc = wcRaw.(*mfg.MfgWorkCenter) }
 			rate := float64(50) // default $50/hr
 			if wc != nil && wc.HourlyRate > 0 {
 				rate = wc.HourlyRate
@@ -51,7 +53,9 @@ func rollUpCosts(wo *mfg.MfgWorkOrder, action ifs.Action, vnic ifs.IVNic) error 
 	materialCost := int64(0)
 	for _, c := range wo.Consumptions {
 		if c.QuantityConsumed > 0 && c.ItemId != "" {
-			item, _ := common.GetEntity("Item", 50, &scm.ScmItem{ItemId: c.ItemId}, vnic)
+			itemRaw, _ := common.GetEntity("Item", 50, &scm.ScmItem{ItemId: c.ItemId}, vnic)
+			var item *scm.ScmItem
+			if itemRaw != nil { item = itemRaw.(*scm.ScmItem) }
 			if item != nil && item.UnitCost != nil {
 				materialCost += int64(c.QuantityConsumed * float64(item.UnitCost.Amount))
 			}
@@ -62,7 +66,9 @@ func rollUpCosts(wo *mfg.MfgWorkOrder, action ifs.Action, vnic ifs.IVNic) error 
 		CurrencyId: currencyId,
 	}
 	// Roll up to parent production order
-	orders, err := common.GetEntities("MfgProdOrd", 70, &mfg.MfgProductionOrder{}, vnic)
+	ordersRaw, err := common.GetEntities("MfgProdOrd", 70, &mfg.MfgProductionOrder{}, vnic)
+	orders := make([]*mfg.MfgProductionOrder, 0, len(ordersRaw))
+	for _, ri := range ordersRaw { orders = append(orders, ri.(*mfg.MfgProductionOrder)) }
 	if err != nil {
 		return nil // non-fatal
 	}
@@ -79,7 +85,8 @@ func rollUpCosts(wo *mfg.MfgWorkOrder, action ifs.Action, vnic ifs.IVNic) error 
 }
 
 // computeWorkOrderProgress calculates quantity completed from operations.
-func computeWorkOrderProgress(wo *mfg.MfgWorkOrder) error {
+func computeWorkOrderProgress(v interface{}) error {
+	wo := v.(*mfg.MfgWorkOrder)
 	if len(wo.Operations) == 0 {
 		return nil
 	}

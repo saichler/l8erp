@@ -14,7 +14,7 @@
 package interactions
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[crm.CrmInteraction, crm.CrmInteractionList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "InteractionId", Callback: newCrmInteractionServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "InteractionId", Callback: newCrmInteractionServiceCallback(vnic),
+	}, &crm.CrmInteraction{}, &crm.CrmInteractionList{}, creds, dbname, vnic)
 }
 
 func CrmInteractions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CrmInteractions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmInteraction(interactionId string, vnic ifs.IVNic) (*crm.CrmInteraction, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &crm.CrmInteraction{InteractionId: interactionId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmInteraction{InteractionId: interactionId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*crm.CrmInteraction), nil
 }

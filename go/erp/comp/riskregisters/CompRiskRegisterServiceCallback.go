@@ -15,19 +15,18 @@ limitations under the License.
 package riskregisters
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/comp"
 )
 
-func newCompRiskRegisterServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[comp.CompRiskRegister]("CompRiskRegister",
-		func(e *comp.CompRiskRegister) { common.GenerateID(&e.RiskId) }).
+func newCompRiskRegisterServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&comp.CompRiskRegister{}, vnic).
 		Compute(computeRiskScores).
-		Require(func(e *comp.CompRiskRegister) string { return e.RiskId }, "RiskId").
-		Enum(func(e *comp.CompRiskRegister) int32 { return int32(e.Category) }, comp.CompRiskCategory_name, "Category").
-		Enum(func(e *comp.CompRiskRegister) int32 { return int32(e.Status) }, comp.CompRiskStatus_name, "Status").
-		OptionalMoney(func(e *comp.CompRiskRegister) *l8common.Money { return e.PotentialFinancialImpact }, "PotentialFinancialImpact").
+		Require(func(v interface{}) string { return v.(*comp.CompRiskRegister).RiskId }, "RiskId").
+		Enum(func(v interface{}) int32 { return int32(v.(*comp.CompRiskRegister).Category) }, comp.CompRiskCategory_name, "Category").
+		Enum(func(v interface{}) int32 { return int32(v.(*comp.CompRiskRegister).Status) }, comp.CompRiskStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*comp.CompRiskRegister).PotentialFinancialImpact }, "PotentialFinancialImpact").
 		Build()
 }

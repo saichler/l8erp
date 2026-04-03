@@ -17,14 +17,13 @@ package datasources
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/bi"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newBiDataSourceServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[bi.BiDataSource]("BiDataSource",
-		func(e *bi.BiDataSource) { common.GenerateID(&e.SourceId) }).
-		Require(func(e *bi.BiDataSource) string { return e.SourceId }, "SourceId").
-		Enum(func(e *bi.BiDataSource) int32 { return int32(e.ConnectionStatus) }, bi.BiConnectionStatus_name, "ConnectionStatus").
-		Enum(func(e *bi.BiDataSource) int32 { return int32(e.SourceType) }, bi.BiDataSourceType_name, "SourceType").
+func newBiDataSourceServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&bi.BiDataSource{}, vnic).
+		Require(func(v interface{}) string { return v.(*bi.BiDataSource).SourceId }, "SourceId").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiDataSource).ConnectionStatus) }, bi.BiConnectionStatus_name, "ConnectionStatus").
+		Enum(func(v interface{}) int32 { return int32(v.(*bi.BiDataSource).SourceType) }, bi.BiDataSourceType_name, "SourceType").
 		Build()
 }

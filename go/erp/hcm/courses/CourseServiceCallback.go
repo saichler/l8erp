@@ -15,16 +15,17 @@ limitations under the License.
 package courses
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newCourseServiceCallback() ifs.IServiceCallback {
+func newCourseServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("Course",
-		func(e *hcm.Course) { common.GenerateID(&e.CourseId) },
-		validateCourse)
+		func(v interface{}) bool { _, ok := v.(*hcm.Course); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.Course).CourseId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateCourse(v.(*hcm.Course), vnic) })
 }
 
 func validateCourse(entity *hcm.Course, vnic ifs.IVNic) error {

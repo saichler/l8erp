@@ -14,7 +14,7 @@
 package customers
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.Customer, fin.CustomerList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CustomerId", Callback: newCustomerServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CustomerId", Callback: newCustomerServiceCallback(vnic),
+	}, &fin.Customer{}, &fin.CustomerList{}, creds, dbname, vnic)
 }
 
 func Customers(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Customers(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Customer(customerId string, vnic ifs.IVNic) (*fin.Customer, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.Customer{CustomerId: customerId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.Customer{CustomerId: customerId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.Customer), nil
 }

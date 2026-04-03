@@ -15,19 +15,18 @@ limitations under the License.
 package pricerules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
 )
 
-func newEcomPriceRuleServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[ecom.EcomPriceRule]("EcomPriceRule",
-		func(e *ecom.EcomPriceRule) { common.GenerateID(&e.RuleId) }).
-		Require(func(e *ecom.EcomPriceRule) string { return e.RuleId }, "RuleId").
-		Enum(func(e *ecom.EcomPriceRule) int32 { return int32(e.DiscountType) }, ecom.EcomDiscountType_name, "DiscountType").
-		OptionalMoney(func(e *ecom.EcomPriceRule) *l8common.Money { return e.MinQuantity }, "MinQuantity").
-		OptionalMoney(func(e *ecom.EcomPriceRule) *l8common.Money { return e.MaxQuantity }, "MaxQuantity").
-		DateAfter(func(e *ecom.EcomPriceRule) int64 { return e.EndDate }, func(e *ecom.EcomPriceRule) int64 { return e.StartDate }, "EndDate", "StartDate").
+func newEcomPriceRuleServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&ecom.EcomPriceRule{}, vnic).
+		Require(func(v interface{}) string { return v.(*ecom.EcomPriceRule).RuleId }, "RuleId").
+		Enum(func(v interface{}) int32 { return int32(v.(*ecom.EcomPriceRule).DiscountType) }, ecom.EcomDiscountType_name, "DiscountType").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomPriceRule).MinQuantity }, "MinQuantity").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomPriceRule).MaxQuantity }, "MaxQuantity").
+		DateAfter(func(v interface{}) int64 { return v.(*ecom.EcomPriceRule).EndDate }, func(v interface{}) int64 { return v.(*ecom.EcomPriceRule).StartDate }, "EndDate", "StartDate").
 		Build()
 }

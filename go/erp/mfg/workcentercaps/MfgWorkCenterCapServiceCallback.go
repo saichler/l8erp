@@ -16,15 +16,14 @@ package workcentercaps
 
 import (
 	"github.com/saichler/l8erp/go/types/mfg"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newMfgWorkCenterCapServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgWorkCenterCap]("MfgWorkCenterCap",
-		func(e *mfg.MfgWorkCenterCap) { common.GenerateID(&e.CapacityId) }).
-		Require(func(e *mfg.MfgWorkCenterCap) string { return e.CapacityId }, "CapacityId").
-		Require(func(e *mfg.MfgWorkCenterCap) string { return e.WorkCenterId }, "WorkCenterId").
-		DateAfter(func(e *mfg.MfgWorkCenterCap) int64 { return e.ExpiryDate }, func(e *mfg.MfgWorkCenterCap) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
+func newMfgWorkCenterCapServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgWorkCenterCap{}, vnic).
+		Require(func(v interface{}) string { return v.(*mfg.MfgWorkCenterCap).CapacityId }, "CapacityId").
+		Require(func(v interface{}) string { return v.(*mfg.MfgWorkCenterCap).WorkCenterId }, "WorkCenterId").
+		DateAfter(func(v interface{}) int64 { return v.(*mfg.MfgWorkCenterCap).ExpiryDate }, func(v interface{}) int64 { return v.(*mfg.MfgWorkCenterCap).EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

@@ -15,7 +15,7 @@ limitations under the License.
 package items
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
@@ -24,13 +24,15 @@ import (
 
 // checkReorderPoint checks if an item's on-hand quantity has dropped below the safety stock
 // level and auto-creates a purchase requisition if so.
-func checkReorderPoint(item *scm.ScmItem, action ifs.Action, vnic ifs.IVNic) error {
+func checkReorderPoint(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	item := v.(*scm.ScmItem)
 	if item.ItemId == "" || len(item.Movements) == 0 {
 		return nil
 	}
 	// Find active safety stock for this item
-	safetyStocks, err := common.GetEntities("SafeStock", 50,
-		&scm.ScmSafetyStock{ItemId: item.ItemId}, vnic)
+	safetyStocksRaw, err := common.GetEntities("SafeStock", 50, &scm.ScmSafetyStock{ItemId: item.ItemId}, vnic)
+	safetyStocks := make([]*scm.ScmSafetyStock, 0, len(safetyStocksRaw))
+	for _, ri := range safetyStocksRaw { safetyStocks = append(safetyStocks, ri.(*scm.ScmSafetyStock)) }
 	if err != nil || len(safetyStocks) == 0 {
 		return err
 	}

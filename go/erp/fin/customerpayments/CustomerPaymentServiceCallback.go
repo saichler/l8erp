@@ -15,28 +15,28 @@ limitations under the License.
 package customerpayments
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newCustomerPaymentServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.CustomerPayment]("CustomerPayment",
-		func(e *fin.CustomerPayment) { common.GenerateID(&e.PaymentId) }).
+func newCustomerPaymentServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.CustomerPayment{}, vnic).
 		StatusTransition(customerPaymentTransitions()).
 		After(cascadeUpdateInvoicePaymentStatus).
-		Require(func(e *fin.CustomerPayment) string { return e.PaymentId }, "PaymentId").
-		Require(func(e *fin.CustomerPayment) string { return e.CustomerId }, "CustomerId").
-		Enum(func(e *fin.CustomerPayment) int32 { return int32(e.PaymentMethod) }, fin.PaymentMethod_name, "PaymentMethod").
-		Enum(func(e *fin.CustomerPayment) int32 { return int32(e.Status) }, fin.PaymentStatus_name, "Status").
-		OptionalMoney(func(e *fin.CustomerPayment) *l8common.Money { return e.Amount }, "Amount").
+		Require(func(v interface{}) string { return v.(*fin.CustomerPayment).PaymentId }, "PaymentId").
+		Require(func(v interface{}) string { return v.(*fin.CustomerPayment).CustomerId }, "CustomerId").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.CustomerPayment).PaymentMethod) }, fin.PaymentMethod_name, "PaymentMethod").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.CustomerPayment).Status) }, fin.PaymentStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.CustomerPayment).Amount }, "Amount").
 		Build()
 }
 
 // cascadeUpdateInvoicePaymentStatus updates sales invoice payment status
 // when a customer payment is completed.
-func cascadeUpdateInvoicePaymentStatus(payment *fin.CustomerPayment, action ifs.Action, vnic ifs.IVNic) error {
+func cascadeUpdateInvoicePaymentStatus(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	payment := v.(*fin.CustomerPayment)
 	if payment.Status != fin.PaymentStatus_PAYMENT_STATUS_COMPLETED {
 		return nil
 	}
@@ -44,11 +44,12 @@ func cascadeUpdateInvoicePaymentStatus(payment *fin.CustomerPayment, action ifs.
 		if app.InvoiceId == "" || app.AppliedAmount == nil {
 			continue
 		}
-		invoice, err := common.GetEntity("SalesInv", 40,
+		invoiceRaw, err := common.GetEntity("SalesInv", 40,
 			&fin.SalesInvoice{InvoiceId: app.InvoiceId}, vnic)
-		if err != nil || invoice == nil {
+		if err != nil || invoiceRaw == nil {
 			continue
 		}
+		invoice := invoiceRaw.(*fin.SalesInvoice)
 		paid := int64(0)
 		if invoice.AmountPaid != nil {
 			paid = invoice.AmountPaid.Amount
@@ -72,11 +73,11 @@ func cascadeUpdateInvoicePaymentStatus(payment *fin.CustomerPayment, action ifs.
 	return nil
 }
 
-func customerPaymentTransitions() *common.StatusTransitionConfig[fin.CustomerPayment] {
-	return &common.StatusTransitionConfig[fin.CustomerPayment]{
-		StatusGetter:  func(e *fin.CustomerPayment) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *fin.CustomerPayment, s int32) { e.Status = fin.PaymentStatus(s) },
-		FilterBuilder: func(e *fin.CustomerPayment) *fin.CustomerPayment {
+func customerPaymentTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*fin.CustomerPayment).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*fin.CustomerPayment).Status = fin.PaymentStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*fin.CustomerPayment);
 			return &fin.CustomerPayment{PaymentId: e.PaymentId}
 		},
 		ServiceName:   ServiceName,

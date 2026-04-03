@@ -14,7 +14,7 @@
 package overheads
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[mfg.MfgOverhead, mfg.MfgOverheadList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "OverheadId", Callback: newMfgOverheadServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "OverheadId", Callback: newMfgOverheadServiceCallback(vnic),
+	}, &mfg.MfgOverhead{}, &mfg.MfgOverheadList{}, creds, dbname, vnic)
 }
 
 func MfgOverheads(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func MfgOverheads(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgOverhead(overheadId string, vnic ifs.IVNic) (*mfg.MfgOverhead, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &mfg.MfgOverhead{OverheadId: overheadId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgOverhead{OverheadId: overheadId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*mfg.MfgOverhead), nil
 }

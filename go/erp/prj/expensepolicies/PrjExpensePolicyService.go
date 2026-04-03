@@ -14,7 +14,7 @@
 package expensepolicies
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[prj.PrjExpensePolicy, prj.PrjExpensePolicyList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PolicyId", Callback: newPrjExpensePolicyServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PolicyId", Callback: newPrjExpensePolicyServiceCallback(vnic),
+	}, &prj.PrjExpensePolicy{}, &prj.PrjExpensePolicyList{}, creds, dbname, vnic)
 }
 
 func PrjExpensePolicies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PrjExpensePolicies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjExpensePolicy(policyId string, vnic ifs.IVNic) (*prj.PrjExpensePolicy, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &prj.PrjExpensePolicy{PolicyId: policyId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjExpensePolicy{PolicyId: policyId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*prj.PrjExpensePolicy), nil
 }

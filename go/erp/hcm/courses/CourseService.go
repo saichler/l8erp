@@ -14,7 +14,7 @@
 package courses
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.Course, hcm.CourseList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CourseId", Callback: newCourseServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CourseId", Callback: newCourseServiceCallback(vnic),
+	}, &hcm.Course{}, &hcm.CourseList{}, creds, dbname, vnic)
 }
 
 func Courses(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Courses(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Course(courseId string, vnic ifs.IVNic) (*hcm.Course, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.Course{CourseId: courseId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Course{CourseId: courseId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.Course), nil
 }

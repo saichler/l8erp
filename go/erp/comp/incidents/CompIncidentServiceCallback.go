@@ -15,19 +15,18 @@ limitations under the License.
 package incidents
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/comp"
 )
 
-func newCompIncidentServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[comp.CompIncident]("CompIncident",
-		func(e *comp.CompIncident) { common.GenerateID(&e.IncidentId) }).
-		Require(func(e *comp.CompIncident) string { return e.IncidentId }, "IncidentId").
-		Enum(func(e *comp.CompIncident) int32 { return int32(e.Category) }, comp.CompRiskCategory_name, "Category").
-		Enum(func(e *comp.CompIncident) int32 { return int32(e.Severity) }, comp.CompSeverityLevel_name, "Severity").
-		Enum(func(e *comp.CompIncident) int32 { return int32(e.Status) }, comp.CompIncidentStatus_name, "Status").
-		OptionalMoney(func(e *comp.CompIncident) *l8common.Money { return e.FinancialImpact }, "FinancialImpact").
+func newCompIncidentServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&comp.CompIncident{}, vnic).
+		Require(func(v interface{}) string { return v.(*comp.CompIncident).IncidentId }, "IncidentId").
+		Enum(func(v interface{}) int32 { return int32(v.(*comp.CompIncident).Category) }, comp.CompRiskCategory_name, "Category").
+		Enum(func(v interface{}) int32 { return int32(v.(*comp.CompIncident).Severity) }, comp.CompSeverityLevel_name, "Severity").
+		Enum(func(v interface{}) int32 { return int32(v.(*comp.CompIncident).Status) }, comp.CompIncidentStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*comp.CompIncident).FinancialImpact }, "FinancialImpact").
 		Build()
 }

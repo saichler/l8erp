@@ -14,7 +14,7 @@
 package skills
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.Skill, hcm.SkillList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "SkillId", Callback: newSkillServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "SkillId", Callback: newSkillServiceCallback(vnic),
+	}, &hcm.Skill{}, &hcm.SkillList{}, creds, dbname, vnic)
 }
 
 func Skills(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Skills(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Skill(skillId string, vnic ifs.IVNic) (*hcm.Skill, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.Skill{SkillId: skillId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Skill{SkillId: skillId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.Skill), nil
 }

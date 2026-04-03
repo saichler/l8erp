@@ -14,7 +14,7 @@
 package productionorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[mfg.MfgProductionOrder, mfg.MfgProductionOrderList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ProdOrderId", Callback: newMfgProductionOrderServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ProdOrderId", Callback: newMfgProductionOrderServiceCallback(vnic),
+	}, &mfg.MfgProductionOrder{}, &mfg.MfgProductionOrderList{}, creds, dbname, vnic)
 }
 
 func MfgProductionOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func MfgProductionOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgProductionOrder(prodOrderId string, vnic ifs.IVNic) (*mfg.MfgProductionOrder, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &mfg.MfgProductionOrder{ProdOrderId: prodOrderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgProductionOrder{ProdOrderId: prodOrderId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*mfg.MfgProductionOrder), nil
 }

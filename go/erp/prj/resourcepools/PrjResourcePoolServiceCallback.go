@@ -15,14 +15,13 @@ limitations under the License.
 package resourcepools
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
-func newPrjResourcePoolServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjResourcePool]("PrjResourcePool",
-		func(e *prj.PrjResourcePool) { common.GenerateID(&e.PoolId) }).
-		Require(func(e *prj.PrjResourcePool) string { return e.PoolId }, "PoolId").
+func newPrjResourcePoolServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjResourcePool{}, vnic).
+		Require(func(v interface{}) string { return v.(*prj.PrjResourcePool).PoolId }, "PoolId").
 		Build()
 }

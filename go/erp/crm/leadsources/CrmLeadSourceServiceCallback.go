@@ -15,15 +15,14 @@ limitations under the License.
 package leadsources
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmLeadSourceServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmLeadSource]("CrmLeadSource",
-		func(e *crm.CrmLeadSource) { common.GenerateID(&e.SourceId) }).
-		Require(func(e *crm.CrmLeadSource) string { return e.SourceId }, "SourceId").
-		Enum(func(e *crm.CrmLeadSource) int32 { return int32(e.SourceType) }, crm.CrmLeadSourceType_name, "SourceType").
+func newCrmLeadSourceServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmLeadSource{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmLeadSource).SourceId }, "SourceId").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmLeadSource).SourceType) }, crm.CrmLeadSourceType_name, "SourceType").
 		Build()
 }

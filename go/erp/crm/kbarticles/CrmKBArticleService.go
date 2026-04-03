@@ -14,7 +14,7 @@
 package kbarticles
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[crm.CrmKBArticle, crm.CrmKBArticleList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ArticleId", Callback: newCrmKBArticleServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ArticleId", Callback: newCrmKBArticleServiceCallback(vnic),
+	}, &crm.CrmKBArticle{}, &crm.CrmKBArticleList{}, creds, dbname, vnic)
 }
 
 func CrmKBArticles(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CrmKBArticles(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmKBArticle(articleId string, vnic ifs.IVNic) (*crm.CrmKBArticle, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &crm.CrmKBArticle{ArticleId: articleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmKBArticle{ArticleId: articleId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*crm.CrmKBArticle), nil
 }

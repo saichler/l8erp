@@ -14,16 +14,15 @@
 package importtemplate
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8types/go/types/l8api"
 )
 
-func newImportTemplateServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[l8api.L8ImportTemplate]("L8ImportTemplate",
-		func(e *l8api.L8ImportTemplate) { common.GenerateID(&e.TemplateId) }).
-		Require(func(e *l8api.L8ImportTemplate) string { return e.Name }, "Name").
-		Require(func(e *l8api.L8ImportTemplate) string { return e.TargetModelType }, "TargetModelType").
-		Require(func(e *l8api.L8ImportTemplate) string { return e.TargetServiceName }, "TargetServiceName").
+func newImportTemplateServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&l8api.L8ImportTemplate{}, vnic).
+		Require(func(v interface{}) string { return v.(*l8api.L8ImportTemplate).Name }, "Name").
+		Require(func(v interface{}) string { return v.(*l8api.L8ImportTemplate).TargetModelType }, "TargetModelType").
+		Require(func(v interface{}) string { return v.(*l8api.L8ImportTemplate).TargetServiceName }, "TargetServiceName").
 		Build()
 }

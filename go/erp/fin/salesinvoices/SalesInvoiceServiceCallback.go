@@ -15,32 +15,43 @@ limitations under the License.
 package salesinvoices
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	"reflect"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newSalesInvoiceServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.SalesInvoice]("SalesInvoice",
-		func(e *fin.SalesInvoice) { common.GenerateID(&e.InvoiceId) }).
+
+func toSlice(slice interface{}) []interface{} {
+	v := reflect.ValueOf(slice)
+	result := make([]interface{}, v.Len())
+	for i := 0; i < v.Len(); i++ {
+		result[i] = v.Index(i).Interface()
+	}
+	return result
+}
+
+func newSalesInvoiceServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.SalesInvoice{}, vnic).
 		StatusTransition(salesInvoiceTransitions()).
 		After(cascadeVoidCreditMemos).
 		Compute(computeSalesInvoiceTotals).
-		Require(func(e *fin.SalesInvoice) string { return e.InvoiceId }, "InvoiceId").
-		Require(func(e *fin.SalesInvoice) string { return e.CustomerId }, "CustomerId").
-		Require(func(e *fin.SalesInvoice) string { return e.InvoiceNumber }, "InvoiceNumber").
-		Enum(func(e *fin.SalesInvoice) int32 { return int32(e.Status) }, fin.InvoiceStatus_name, "Status").
-		OptionalMoney(func(e *fin.SalesInvoice) *l8common.Money { return e.Subtotal }, "Subtotal").
-		OptionalMoney(func(e *fin.SalesInvoice) *l8common.Money { return e.TaxAmount }, "TaxAmount").
-		OptionalMoney(func(e *fin.SalesInvoice) *l8common.Money { return e.TotalAmount }, "TotalAmount").
-		OptionalMoney(func(e *fin.SalesInvoice) *l8common.Money { return e.AmountPaid }, "AmountPaid").
-		OptionalMoney(func(e *fin.SalesInvoice) *l8common.Money { return e.BalanceDue }, "BalanceDue").
-		DateAfter(func(e *fin.SalesInvoice) int64 { return e.DueDate }, func(e *fin.SalesInvoice) int64 { return e.InvoiceDate }, "DueDate", "InvoiceDate").
+		Require(func(v interface{}) string { return v.(*fin.SalesInvoice).InvoiceId }, "InvoiceId").
+		Require(func(v interface{}) string { return v.(*fin.SalesInvoice).CustomerId }, "CustomerId").
+		Require(func(v interface{}) string { return v.(*fin.SalesInvoice).InvoiceNumber }, "InvoiceNumber").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.SalesInvoice).Status) }, fin.InvoiceStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.SalesInvoice).Subtotal }, "Subtotal").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.SalesInvoice).TaxAmount }, "TaxAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.SalesInvoice).TotalAmount }, "TotalAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.SalesInvoice).AmountPaid }, "AmountPaid").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.SalesInvoice).BalanceDue }, "BalanceDue").
+		DateAfter(func(v interface{}) int64 { return v.(*fin.SalesInvoice).DueDate }, func(v interface{}) int64 { return v.(*fin.SalesInvoice).InvoiceDate }, "DueDate", "InvoiceDate").
 		Build()
 }
 
-func computeSalesInvoiceTotals(inv *fin.SalesInvoice) error {
+func computeSalesInvoiceTotals(v interface{}) error {
+	inv := v.(*fin.SalesInvoice)
 	for _, line := range inv.Lines {
 		if line.UnitPrice != nil && line.Quantity > 0 {
 			line.LineAmount = &l8common.Money{
@@ -49,8 +60,8 @@ func computeSalesInvoiceTotals(inv *fin.SalesInvoice) error {
 			}
 		}
 	}
-	inv.Subtotal = common.SumLineMoney(inv.Lines, func(l *fin.SalesInvoiceLine) *l8common.Money { return l.LineAmount })
-	inv.TaxAmount = common.SumLineMoney(inv.Lines, func(l *fin.SalesInvoiceLine) *l8common.Money { return l.TaxAmount })
+	inv.Subtotal = common.SumLineMoney(toSlice(inv.Lines), func(v interface{}) *l8common.Money { return v.(*fin.SalesInvoiceLine).LineAmount })
+	inv.TaxAmount = common.SumLineMoney(toSlice(inv.Lines), func(v interface{}) *l8common.Money { return v.(*fin.SalesInvoiceLine).TaxAmount })
 	inv.TotalAmount = common.MoneyAdd(inv.Subtotal, inv.TaxAmount)
 	inv.BalanceDue = common.MoneySubtract(inv.TotalAmount, inv.AmountPaid)
 	return nil
@@ -58,12 +69,14 @@ func computeSalesInvoiceTotals(inv *fin.SalesInvoice) error {
 
 // cascadeVoidCreditMemos marks related credit memos as VOID
 // when a sales invoice is voided.
-func cascadeVoidCreditMemos(invoice *fin.SalesInvoice, action ifs.Action, vnic ifs.IVNic) error {
+func cascadeVoidCreditMemos(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	invoice := v.(*fin.SalesInvoice)
 	if invoice.Status != fin.InvoiceStatus_INVOICE_STATUS_VOID {
 		return nil
 	}
-	children, err := common.GetEntities("CrdtMemo", 40,
-		&fin.CreditMemo{OriginalInvoiceId: invoice.InvoiceId}, vnic)
+	childrenRaw, err := common.GetEntities("CrdtMemo", 40, &fin.CreditMemo{OriginalInvoiceId: invoice.InvoiceId}, vnic)
+	children := make([]*fin.CreditMemo, 0, len(childrenRaw))
+	for _, ri := range childrenRaw { children = append(children, ri.(*fin.CreditMemo)) }
 	if err != nil {
 		return err
 	}
@@ -80,11 +93,11 @@ func cascadeVoidCreditMemos(invoice *fin.SalesInvoice, action ifs.Action, vnic i
 	return nil
 }
 
-func salesInvoiceTransitions() *common.StatusTransitionConfig[fin.SalesInvoice] {
-	return &common.StatusTransitionConfig[fin.SalesInvoice]{
-		StatusGetter:  func(e *fin.SalesInvoice) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *fin.SalesInvoice, s int32) { e.Status = fin.InvoiceStatus(s) },
-		FilterBuilder: func(e *fin.SalesInvoice) *fin.SalesInvoice {
+func salesInvoiceTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*fin.SalesInvoice).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*fin.SalesInvoice).Status = fin.InvoiceStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*fin.SalesInvoice);
 			return &fin.SalesInvoice{InvoiceId: e.InvoiceId}
 		},
 		ServiceName:   ServiceName,

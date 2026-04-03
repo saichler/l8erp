@@ -14,7 +14,7 @@
 package shifts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.Shift, hcm.ShiftList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ShiftId", Callback: newShiftServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ShiftId", Callback: newShiftServiceCallback(vnic),
+	}, &hcm.Shift{}, &hcm.ShiftList{}, creds, dbname, vnic)
 }
 
 func Shifts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Shifts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Shift(shiftId string, vnic ifs.IVNic) (*hcm.Shift, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.Shift{ShiftId: shiftId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Shift{ShiftId: shiftId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.Shift), nil
 }

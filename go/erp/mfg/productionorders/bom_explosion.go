@@ -15,7 +15,7 @@ limitations under the License.
 package productionorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -29,11 +29,12 @@ func explodeBOM(wo *mfg.MfgWorkOrder, orderQty float64, vnic ifs.IVNic) {
 	if wo.BomId == "" {
 		return
 	}
-	bom, err := common.GetEntity("MfgBom", 70,
+	bomRaw, err := common.GetEntity("MfgBom", 70,
 		&mfg.MfgBom{BomId: wo.BomId}, vnic)
-	if err != nil || bom == nil {
+	if err != nil || bomRaw == nil {
 		return
 	}
+	bom := bomRaw.(*mfg.MfgBom)
 	wo.Consumptions = explodeBOMLines(bom.Lines, orderQty, vnic, 0)
 }
 
@@ -68,8 +69,9 @@ func explodeBOMLines(lines []*mfg.MfgBomLine, orderQty float64, vnic ifs.IVNic, 
 }
 
 func findActiveBOM(itemId string, vnic ifs.IVNic) *mfg.MfgBom {
-	boms, err := common.GetEntities("MfgBom", 70,
-		&mfg.MfgBom{ItemId: itemId}, vnic)
+	bomsRaw, err := common.GetEntities("MfgBom", 70, &mfg.MfgBom{ItemId: itemId}, vnic)
+	boms := make([]*mfg.MfgBom, 0, len(bomsRaw))
+	for _, ri := range bomsRaw { boms = append(boms, ri.(*mfg.MfgBom)) }
 	if err != nil {
 		return nil
 	}

@@ -15,7 +15,7 @@ limitations under the License.
 package auditfindings
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8types/go/ifs"
@@ -26,7 +26,8 @@ const escalationThresholdDays = 30
 
 // escalateCriticalFindings auto-creates a compliance incident when a critical
 // finding has been open for longer than the escalation threshold.
-func escalateCriticalFindings(finding *comp.CompAuditFinding, action ifs.Action, vnic ifs.IVNic) error {
+func escalateCriticalFindings(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	finding := v.(*comp.CompAuditFinding)
 	if finding.Severity != comp.CompSeverityLevel_COMP_SEVERITY_CRITICAL {
 		return nil
 	}

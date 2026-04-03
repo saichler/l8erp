@@ -14,7 +14,7 @@
 package ncrs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[mfg.MfgNCR, mfg.MfgNCRList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "NcrId", Callback: newMfgNCRServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "NcrId", Callback: newMfgNCRServiceCallback(vnic),
+	}, &mfg.MfgNCR{}, &mfg.MfgNCRList{}, creds, dbname, vnic)
 }
 
 func MfgNCRs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func MfgNCRs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgNCR(ncrId string, vnic ifs.IVNic) (*mfg.MfgNCR, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &mfg.MfgNCR{NcrId: ncrId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgNCR{NcrId: ncrId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*mfg.MfgNCR), nil
 }

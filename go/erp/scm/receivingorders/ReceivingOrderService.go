@@ -14,7 +14,7 @@
 package receivingorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmReceivingOrder, scm.ScmReceivingOrderList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ReceivingOrderId", Callback: newReceivingOrderServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ReceivingOrderId", Callback: newReceivingOrderServiceCallback(vnic),
+	}, &scm.ScmReceivingOrder{}, &scm.ScmReceivingOrderList{}, creds, dbname, vnic)
 }
 
 func ReceivingOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func ReceivingOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func ReceivingOrder(receivingOrderId string, vnic ifs.IVNic) (*scm.ScmReceivingOrder, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmReceivingOrder{ReceivingOrderId: receivingOrderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmReceivingOrder{ReceivingOrderId: receivingOrderId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmReceivingOrder), nil
 }

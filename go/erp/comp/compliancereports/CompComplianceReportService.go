@@ -14,7 +14,7 @@
 package compliancereports
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[comp.CompComplianceReport, comp.CompComplianceReportList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ReportId", Callback: newCompComplianceReportServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ReportId", Callback: newCompComplianceReportServiceCallback(vnic),
+	}, &comp.CompComplianceReport{}, &comp.CompComplianceReportList{}, creds, dbname, vnic)
 }
 
 func CompComplianceReports(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CompComplianceReports(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompComplianceReport(reportId string, vnic ifs.IVNic) (*comp.CompComplianceReport, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &comp.CompComplianceReport{ReportId: reportId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompComplianceReport{ReportId: reportId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*comp.CompComplianceReport), nil
 }

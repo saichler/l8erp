@@ -15,16 +15,17 @@ limitations under the License.
 package onboardingtasks
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newOnboardingTaskServiceCallback() ifs.IServiceCallback {
+func newOnboardingTaskServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("OnboardingTask",
-		func(e *hcm.OnboardingTask) { common.GenerateID(&e.TaskId) },
-		validateOnbrdTsk)
+		func(v interface{}) bool { _, ok := v.(*hcm.OnboardingTask); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.OnboardingTask).TaskId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateOnbrdTsk(v.(*hcm.OnboardingTask), vnic) })
 }
 
 func validateOnbrdTsk(entity *hcm.OnboardingTask, vnic ifs.IVNic) error {

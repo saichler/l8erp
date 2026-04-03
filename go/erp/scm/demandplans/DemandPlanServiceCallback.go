@@ -15,17 +15,16 @@ limitations under the License.
 package demandplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newDemandPlanServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmDemandPlan]("ScmDemandPlan",
-		func(e *scm.ScmDemandPlan) { common.GenerateID(&e.PlanId) }).
-		Require(func(e *scm.ScmDemandPlan) string { return e.PlanId }, "PlanId").
-		Enum(func(e *scm.ScmDemandPlan) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
-		DateRange(func(e *scm.ScmDemandPlan) *l8common.DateRange { return e.PlanPeriod }, "PlanPeriod").
+func newDemandPlanServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmDemandPlan{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmDemandPlan).PlanId }, "PlanId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmDemandPlan).Status) }, scm.ScmTaskStatus_name, "Status").
+		DateRange(func(v interface{}) *l8common.DateRange { return v.(*scm.ScmDemandPlan).PlanPeriod }, "PlanPeriod").
 		Build()
 }

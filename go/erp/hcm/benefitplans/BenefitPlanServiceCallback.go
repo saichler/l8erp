@@ -16,16 +16,17 @@ package benefitplans
 
 import (
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/carriers"
 	"github.com/saichler/l8erp/go/erp/hcm/organizations"
 )
 
-func newBenefitPlanServiceCallback() ifs.IServiceCallback {
+func newBenefitPlanServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("BenefitPlan",
-		func(e *hcm.BenefitPlan) { common.GenerateID(&e.PlanId) },
-		validateBenPlan)
+		func(v interface{}) bool { _, ok := v.(*hcm.BenefitPlan); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.BenefitPlan).PlanId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateBenPlan(v.(*hcm.BenefitPlan), vnic) })
 }
 
 func validateBenPlan(entity *hcm.BenefitPlan, vnic ifs.IVNic) error {
@@ -61,10 +62,10 @@ func validateBenPlanRequiredFields(entity *hcm.BenefitPlan) error {
 }
 
 func validateBenPlanEnums(entity *hcm.BenefitPlan) error {
-	if err := common.ValidateEnum(entity.PlanType, hcm.BenefitPlanType_name, "PlanType"); err != nil {
+	if err := common.ValidateEnum(int32(entity.PlanType), hcm.BenefitPlanType_name, "PlanType"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(entity.Category, hcm.BenefitPlanCategory_name, "Category"); err != nil {
+	if err := common.ValidateEnum(int32(entity.Category), hcm.BenefitPlanCategory_name, "Category"); err != nil {
 		return err
 	}
 	return nil

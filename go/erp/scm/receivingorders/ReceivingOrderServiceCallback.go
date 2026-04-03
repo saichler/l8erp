@@ -15,7 +15,7 @@ limitations under the License.
 package receivingorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -23,19 +23,19 @@ import (
 	"time"
 )
 
-func newReceivingOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmReceivingOrder]("ScmReceivingOrder",
-		func(e *scm.ScmReceivingOrder) { common.GenerateID(&e.ReceivingOrderId) }).
+func newReceivingOrderServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmReceivingOrder{}, vnic).
 		After(cascadeCreatePurchaseInvoice).
 		After(updateInventoryOnReceipt).
 		Custom(validateLotSerial).
-		Require(func(e *scm.ScmReceivingOrder) string { return e.ReceivingOrderId }, "ReceivingOrderId").
-		Enum(func(e *scm.ScmReceivingOrder) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
+		Require(func(v interface{}) string { return v.(*scm.ScmReceivingOrder).ReceivingOrderId }, "ReceivingOrderId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmReceivingOrder).Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }
 
 // updateInventoryOnReceipt appends RECEIPT stock movements and increments bin quantities.
-func updateInventoryOnReceipt(recv *scm.ScmReceivingOrder, action ifs.Action, vnic ifs.IVNic) error {
+func updateInventoryOnReceipt(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	recv := v.(*scm.ScmReceivingOrder)
 	if recv.Status != scm.ScmTaskStatus_TASK_STATUS_COMPLETED {
 		return nil
 	}
@@ -48,15 +48,16 @@ func updateInventoryOnReceipt(recv *scm.ScmReceivingOrder, action ifs.Action, vn
 		if err != nil || item == nil {
 			return err
 		}
+	itemTyped := item.(*scm.ScmItem)
 		var movementId string
 		common.GenerateID(&movementId)
-		item.Movements = append(item.Movements, &scm.ScmStockMovement{
+		itemTyped.Movements = append(itemTyped.Movements, &scm.ScmStockMovement{
 			MovementId:    movementId,
 			WarehouseId:   recv.WarehouseId,
 			BinId:         task.ToBinId,
 			MovementType:  scm.ScmMovementType_MOVEMENT_TYPE_RECEIPT,
 			Quantity:      task.Quantity,
-			UnitOfMeasure: item.UnitOfMeasure,
+			UnitOfMeasure: itemTyped.UnitOfMeasure,
 			ReferenceId:   recv.ReceivingOrderId,
 			ReferenceType: "ReceivingOrder",
 			MovementDate:  now,
@@ -64,11 +65,12 @@ func updateInventoryOnReceipt(recv *scm.ScmReceivingOrder, action ifs.Action, vn
 		if err := common.PutEntity("Item", 50, item, vnic); err != nil {
 			return err
 		}
-		wh, err := common.GetEntity("Warehouse", 50,
+		whRaw, err := common.GetEntity("Warehouse", 50,
 			&scm.ScmWarehouse{WarehouseId: recv.WarehouseId}, vnic)
-		if err != nil || wh == nil {
+		if err != nil || whRaw == nil {
 			return err
 		}
+		wh := whRaw.(*scm.ScmWarehouse)
 		if bin := findBin(wh, task.ToBinId); bin != nil {
 			bin.CurrentQuantity += task.Quantity
 		}
@@ -89,7 +91,8 @@ func findBin(warehouse *scm.ScmWarehouse, binId string) *scm.ScmBin {
 }
 
 // cascadeCreatePurchaseInvoice auto-creates a purchase invoice when receiving is completed.
-func cascadeCreatePurchaseInvoice(recv *scm.ScmReceivingOrder, action ifs.Action, vnic ifs.IVNic) error {
+func cascadeCreatePurchaseInvoice(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	recv := v.(*scm.ScmReceivingOrder)
 	if recv.Status != scm.ScmTaskStatus_TASK_STATUS_COMPLETED {
 		return nil
 	}
@@ -106,8 +109,9 @@ func cascadeCreatePurchaseInvoice(recv *scm.ScmReceivingOrder, action ifs.Action
 	if err != nil || po == nil {
 		return err
 	}
-	lines := make([]*fin.PurchaseInvoiceLine, len(po.Lines))
-	for i, pl := range po.Lines {
+	poTyped := po.(*scm.ScmPurchaseOrder)
+	lines := make([]*fin.PurchaseInvoiceLine, len(poTyped.Lines))
+	for i, pl := range poTyped.Lines {
 		lines[i] = &fin.PurchaseInvoiceLine{
 			LineNumber:  pl.LineNumber,
 			Description: pl.Description,
@@ -119,14 +123,14 @@ func cascadeCreatePurchaseInvoice(recv *scm.ScmReceivingOrder, action ifs.Action
 	}
 	now := time.Now().Unix()
 	_, err = common.PostEntity("PurchInv", 40, &fin.PurchaseInvoice{
-		VendorId:         po.VendorId,
+		VendorId:         poTyped.VendorId,
 		PurchaseOrderId:  recv.PurchaseOrderId,
 		ReceivingOrderId: recv.ReceivingOrderId,
 		InvoiceDate:      now,
 		DueDate:          now + 30*24*3600,
 		Status:           fin.InvoiceStatus_INVOICE_STATUS_DRAFT,
-		TotalAmount:      po.TotalAmount,
-		BalanceDue:       po.TotalAmount,
+		TotalAmount:      poTyped.TotalAmount,
+		BalanceDue:       poTyped.TotalAmount,
 		PaymentTermDays:  30,
 		Lines:            lines,
 		AuditInfo:        &l8common.AuditInfo{},

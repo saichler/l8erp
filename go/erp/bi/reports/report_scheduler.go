@@ -18,7 +18,7 @@ import (
 	"sync"
 	"time"
 
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -68,8 +68,8 @@ func checkDueSchedules(vnic ifs.IVNic) {
 		return
 	}
 	now := time.Now().Unix()
-	for _, report := range reports {
-		checkReportSchedules(report, now, vnic)
+	for _, reportRaw := range reports {
+		checkReportSchedules(reportRaw.(*bi.BiReport), now, vnic)
 	}
 }
 

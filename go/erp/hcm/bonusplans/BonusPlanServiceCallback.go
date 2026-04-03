@@ -15,15 +15,15 @@ limitations under the License.
 package bonusplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newBonusPlanServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("BonusPlan",
-		func(e *hcm.BonusPlan) { common.GenerateID(&e.PlanId) },
-		nil)
+func newBonusPlanServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&hcm.BonusPlan{}, vnic).
+		Custom(validateBonusPlan).
+		Build()
 }
 
 func validateBonusPlan(entity *hcm.BonusPlan) error {
@@ -50,10 +50,10 @@ func validateBonusPlanRequiredFields(entity *hcm.BonusPlan) error {
 }
 
 func validateBonusPlanEnums(entity *hcm.BonusPlan) error {
-	if err := common.ValidateEnum(entity.PlanType, hcm.BonusPlanType_name, "PlanType"); err != nil {
+	if err := common.ValidateEnum(int32(entity.PlanType), hcm.BonusPlanType_name, "PlanType"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(entity.FundingType, hcm.BonusFundingType_name, "FundingType"); err != nil {
+	if err := common.ValidateEnum(int32(entity.FundingType), hcm.BonusFundingType_name, "FundingType"); err != nil {
 		return err
 	}
 	return nil

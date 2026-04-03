@@ -14,7 +14,7 @@
 package riskregisters
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[comp.CompRiskRegister, comp.CompRiskRegisterList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RiskId", Callback: newCompRiskRegisterServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RiskId", Callback: newCompRiskRegisterServiceCallback(vnic),
+	}, &comp.CompRiskRegister{}, &comp.CompRiskRegisterList{}, creds, dbname, vnic)
 }
 
 func CompRiskRegisters(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CompRiskRegisters(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompRiskRegister(riskId string, vnic ifs.IVNic) (*comp.CompRiskRegister, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &comp.CompRiskRegister{RiskId: riskId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompRiskRegister{RiskId: riskId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*comp.CompRiskRegister), nil
 }

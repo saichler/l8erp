@@ -15,18 +15,17 @@ limitations under the License.
 package billingrates
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
-func newPrjBillingRateServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjBillingRate]("PrjBillingRate",
-		func(e *prj.PrjBillingRate) { common.GenerateID(&e.RateId) }).
-		Require(func(e *prj.PrjBillingRate) string { return e.RateId }, "RateId").
-		Require(func(e *prj.PrjBillingRate) string { return e.CurrencyId }, "CurrencyId").
-		OptionalMoney(func(e *prj.PrjBillingRate) *l8common.Money { return e.Rate }, "Rate").
-		OptionalMoney(func(e *prj.PrjBillingRate) *l8common.Money { return e.OvertimeRate }, "OvertimeRate").
+func newPrjBillingRateServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjBillingRate{}, vnic).
+		Require(func(v interface{}) string { return v.(*prj.PrjBillingRate).RateId }, "RateId").
+		Require(func(v interface{}) string { return v.(*prj.PrjBillingRate).CurrencyId }, "CurrencyId").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjBillingRate).Rate }, "Rate").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjBillingRate).OvertimeRate }, "OvertimeRate").
 		Build()
 }

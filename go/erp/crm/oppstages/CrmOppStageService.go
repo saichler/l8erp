@@ -14,7 +14,7 @@
 package oppstages
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[crm.CrmOppStage, crm.CrmOppStageList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "StageId", Callback: newCrmOppStageServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "StageId", Callback: newCrmOppStageServiceCallback(vnic),
+	}, &crm.CrmOppStage{}, &crm.CrmOppStageList{}, creds, dbname, vnic)
 }
 
 func CrmOppStages(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CrmOppStages(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmOppStage(stageId string, vnic ifs.IVNic) (*crm.CrmOppStage, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &crm.CrmOppStage{StageId: stageId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmOppStage{StageId: stageId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*crm.CrmOppStage), nil
 }

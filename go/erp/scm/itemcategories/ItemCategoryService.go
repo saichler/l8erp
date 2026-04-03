@@ -14,7 +14,7 @@
 package itemcategories
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmItemCategory, scm.ScmItemCategoryList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CategoryId", Callback: newItemCategoryServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CategoryId", Callback: newItemCategoryServiceCallback(vnic),
+	}, &scm.ScmItemCategory{}, &scm.ScmItemCategoryList{}, creds, dbname, vnic)
 }
 
 func ItemCategories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func ItemCategories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func ItemCategory(categoryId string, vnic ifs.IVNic) (*scm.ScmItemCategory, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmItemCategory{CategoryId: categoryId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmItemCategory{CategoryId: categoryId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmItemCategory), nil
 }

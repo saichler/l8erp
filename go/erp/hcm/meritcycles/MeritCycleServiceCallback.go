@@ -17,13 +17,13 @@ package meritcycles
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newMeritCycleServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("MeritCycle",
-		func(e *hcm.MeritCycle) { common.GenerateID(&e.CycleId) },
-		nil)
+func newMeritCycleServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&hcm.MeritCycle{}, vnic).
+		Custom(validateMeritCyc).
+		Build()
 }
 
 func validateMeritCyc(entity *hcm.MeritCycle) error {
@@ -40,7 +40,7 @@ func validateMeritCycEnums(entity *hcm.MeritCycle) error {
 	if err := common.ValidateRequired(entity.CycleId, "CycleId"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(entity.Status, hcm.MeritCycleStatus_name, "Status"); err != nil {
+	if err := common.ValidateEnum(int32(entity.Status), hcm.MeritCycleStatus_name, "Status"); err != nil {
 		return err
 	}
 	return nil

@@ -14,7 +14,7 @@
 package serviceorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[crm.CrmServiceOrder, crm.CrmServiceOrderList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "OrderId", Callback: newCrmServiceOrderServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "OrderId", Callback: newCrmServiceOrderServiceCallback(vnic),
+	}, &crm.CrmServiceOrder{}, &crm.CrmServiceOrderList{}, creds, dbname, vnic)
 }
 
 func CrmServiceOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CrmServiceOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmServiceOrder(orderId string, vnic ifs.IVNic) (*crm.CrmServiceOrder, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &crm.CrmServiceOrder{OrderId: orderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmServiceOrder{OrderId: orderId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*crm.CrmServiceOrder), nil
 }

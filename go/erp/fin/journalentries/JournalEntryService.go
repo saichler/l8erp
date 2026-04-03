@@ -14,7 +14,7 @@
 package journalentries
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.JournalEntry, fin.JournalEntryList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "JournalEntryId", Callback: newJournalEntryServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "JournalEntryId", Callback: newJournalEntryServiceCallback(vnic),
+	}, &fin.JournalEntry{}, &fin.JournalEntryList{}, creds, dbname, vnic)
 }
 
 func JournalEntries(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func JournalEntries(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func JournalEntry(journalEntryId string, vnic ifs.IVNic) (*fin.JournalEntry, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.JournalEntry{JournalEntryId: journalEntryId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.JournalEntry{JournalEntryId: journalEntryId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.JournalEntry), nil
 }

@@ -20,7 +20,8 @@ import (
 
 // computeRiskScores calculates inherent and residual risk scores from
 // likelihood and impact ratings, and scores embedded assessments.
-func computeRiskScores(risk *comp.CompRiskRegister) error {
+func computeRiskScores(v interface{}) error {
+	risk := v.(*comp.CompRiskRegister)
 	// Compute inherent risk = likelihood × impact
 	risk.InherentRiskScore = risk.InherentLikelihood * risk.InherentImpact
 	// Compute residual risk = residual likelihood × residual impact

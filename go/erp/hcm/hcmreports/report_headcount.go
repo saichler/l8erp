@@ -17,18 +17,22 @@ package hcmreports
 import (
 	"fmt"
 
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
 
 func generateHeadcount(report *fin.FinReport, vnic ifs.IVNic) error {
-	employees, err := common.GetEntities("Employee", 30, &hcm.Employee{}, vnic)
+	employeesRaw, err := common.GetEntities("Employee", 30, &hcm.Employee{}, vnic)
+	employees := make([]*hcm.Employee, 0, len(employeesRaw))
+	for _, ri := range employeesRaw { employees = append(employees, ri.(*hcm.Employee)) }
 	if err != nil {
 		return err
 	}
-	departments, err := common.GetEntities("Dept", 30, &hcm.Department{}, vnic)
+	departmentsRaw, err := common.GetEntities("Dept", 30, &hcm.Department{}, vnic)
+	departments := make([]*hcm.Department, 0, len(departmentsRaw))
+	for _, ri := range departmentsRaw { departments = append(departments, ri.(*hcm.Department)) }
 	if err != nil {
 		return err
 	}

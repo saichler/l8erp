@@ -14,7 +14,7 @@
 package returns
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[ecom.EcomReturn, ecom.EcomReturnList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ReturnId", Callback: newEcomReturnServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ReturnId", Callback: newEcomReturnServiceCallback(vnic),
+	}, &ecom.EcomReturn{}, &ecom.EcomReturnList{}, creds, dbname, vnic)
 }
 
 func EcomReturns(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func EcomReturns(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomReturn(returnId string, vnic ifs.IVNic) (*ecom.EcomReturn, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &ecom.EcomReturn{ReturnId: returnId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomReturn{ReturnId: returnId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*ecom.EcomReturn), nil
 }

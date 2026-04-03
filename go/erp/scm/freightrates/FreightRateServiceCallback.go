@@ -17,15 +17,14 @@ package freightrates
 import (
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newFreightRateServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmFreightRate]("ScmFreightRate",
-		func(e *scm.ScmFreightRate) { common.GenerateID(&e.RateId) }).
-		Require(func(e *scm.ScmFreightRate) string { return e.RateId }, "RateId").
-		OptionalMoney(func(e *scm.ScmFreightRate) *l8common.Money { return e.RatePerUnit }, "RatePerUnit").
-		DateAfter(func(e *scm.ScmFreightRate) int64 { return e.ExpiryDate }, func(e *scm.ScmFreightRate) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
+func newFreightRateServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmFreightRate{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmFreightRate).RateId }, "RateId").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*scm.ScmFreightRate).RatePerUnit }, "RatePerUnit").
+		DateAfter(func(v interface{}) int64 { return v.(*scm.ScmFreightRate).ExpiryDate }, func(v interface{}) int64 { return v.(*scm.ScmFreightRate).EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

@@ -14,7 +14,7 @@
 package budgets
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.Budget, fin.BudgetList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "BudgetId", Callback: newBudgetServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "BudgetId", Callback: newBudgetServiceCallback(vnic),
+	}, &fin.Budget{}, &fin.BudgetList{}, creds, dbname, vnic)
 }
 
 func Budgets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Budgets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Budget(budgetId string, vnic ifs.IVNic) (*fin.Budget, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.Budget{BudgetId: budgetId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.Budget{BudgetId: budgetId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.Budget), nil
 }

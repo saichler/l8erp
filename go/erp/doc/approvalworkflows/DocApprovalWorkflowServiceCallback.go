@@ -15,15 +15,14 @@ limitations under the License.
 package approvalworkflows
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/doc"
 )
 
-func newDocApprovalWorkflowServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[doc.DocApprovalWorkflow]("DocApprovalWorkflow",
-		func(e *doc.DocApprovalWorkflow) { common.GenerateID(&e.WorkflowId) }).
-		Require(func(e *doc.DocApprovalWorkflow) string { return e.WorkflowId }, "WorkflowId").
-		Enum(func(e *doc.DocApprovalWorkflow) int32 { return int32(e.Status) }, doc.DocWorkflowStatus_name, "Status").
+func newDocApprovalWorkflowServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&doc.DocApprovalWorkflow{}, vnic).
+		Require(func(v interface{}) string { return v.(*doc.DocApprovalWorkflow).WorkflowId }, "WorkflowId").
+		Enum(func(v interface{}) int32 { return int32(v.(*doc.DocApprovalWorkflow).Status) }, doc.DocWorkflowStatus_name, "Status").
 		Build()
 }

@@ -15,15 +15,14 @@ limitations under the License.
 package archivejobs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/doc"
 )
 
-func newDocArchiveJobServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[doc.DocArchiveJob]("DocArchiveJob",
-		func(e *doc.DocArchiveJob) { common.GenerateID(&e.JobId) }).
-		Require(func(e *doc.DocArchiveJob) string { return e.JobId }, "JobId").
-		Enum(func(e *doc.DocArchiveJob) int32 { return int32(e.Status) }, doc.DocArchiveStatus_name, "Status").
+func newDocArchiveJobServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&doc.DocArchiveJob{}, vnic).
+		Require(func(v interface{}) string { return v.(*doc.DocArchiveJob).JobId }, "JobId").
+		Enum(func(v interface{}) int32 { return int32(v.(*doc.DocArchiveJob).Status) }, doc.DocArchiveStatus_name, "Status").
 		Build()
 }

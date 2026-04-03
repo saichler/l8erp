@@ -14,7 +14,7 @@
 package paystructures
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.PayStructure, hcm.PayStructureList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PayStructureId", Callback: newPayStructureServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PayStructureId", Callback: newPayStructureServiceCallback(vnic),
+	}, &hcm.PayStructure{}, &hcm.PayStructureList{}, creds, dbname, vnic)
 }
 
 func PayStructures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PayStructures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PayStructure(payStructureId string, vnic ifs.IVNic) (*hcm.PayStructure, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.PayStructure{PayStructureId: payStructureId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.PayStructure{PayStructureId: payStructureId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.PayStructure), nil
 }

@@ -15,17 +15,16 @@ limitations under the License.
 package qualityplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-func newMfgQualityPlanServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgQualityPlan]("MfgQualityPlan",
-		func(e *mfg.MfgQualityPlan) { common.GenerateID(&e.PlanId) }).
-		Require(func(e *mfg.MfgQualityPlan) string { return e.PlanId }, "PlanId").
-		Require(func(e *mfg.MfgQualityPlan) string { return e.Name }, "Name").
-		Enum(func(e *mfg.MfgQualityPlan) int32 { return int32(e.Status) }, mfg.MfgBomStatus_name, "Status").
-		DateAfter(func(e *mfg.MfgQualityPlan) int64 { return e.ExpiryDate }, func(e *mfg.MfgQualityPlan) int64 { return e.EffectiveDate }, "ExpiryDate", "EffectiveDate").
+func newMfgQualityPlanServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgQualityPlan{}, vnic).
+		Require(func(v interface{}) string { return v.(*mfg.MfgQualityPlan).PlanId }, "PlanId").
+		Require(func(v interface{}) string { return v.(*mfg.MfgQualityPlan).Name }, "Name").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgQualityPlan).Status) }, mfg.MfgBomStatus_name, "Status").
+		DateAfter(func(v interface{}) int64 { return v.(*mfg.MfgQualityPlan).ExpiryDate }, func(v interface{}) int64 { return v.(*mfg.MfgQualityPlan).EffectiveDate }, "ExpiryDate", "EffectiveDate").
 		Build()
 }

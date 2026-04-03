@@ -15,17 +15,18 @@ limitations under the License.
 package bonuspayments
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/bonusplans"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newBonusPaymentServiceCallback() ifs.IServiceCallback {
+func newBonusPaymentServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("BonusPayment",
-		func(e *hcm.BonusPayment) { common.GenerateID(&e.PaymentId) },
-		validateBonusPay)
+		func(v interface{}) bool { _, ok := v.(*hcm.BonusPayment); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.BonusPayment).PaymentId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateBonusPay(v.(*hcm.BonusPayment), vnic) })
 }
 
 func validateBonusPay(entity *hcm.BonusPayment, vnic ifs.IVNic) error {

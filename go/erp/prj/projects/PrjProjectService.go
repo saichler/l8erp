@@ -14,7 +14,7 @@
 package projects
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[prj.PrjProject, prj.PrjProjectList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ProjectId", Callback: newPrjProjectServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ProjectId", Callback: newPrjProjectServiceCallback(vnic),
+	}, &prj.PrjProject{}, &prj.PrjProjectList{}, creds, dbname, vnic)
 }
 
 func PrjProjects(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PrjProjects(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjProject(projectId string, vnic ifs.IVNic) (*prj.PrjProject, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &prj.PrjProject{ProjectId: projectId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjProject{ProjectId: projectId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*prj.PrjProject), nil
 }

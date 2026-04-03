@@ -16,13 +16,12 @@ package datacubes
 
 import (
 	"github.com/saichler/l8erp/go/types/bi"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newBiDataCubeServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[bi.BiDataCube]("BiDataCube",
-		func(e *bi.BiDataCube) { common.GenerateID(&e.CubeId) }).
-		Require(func(e *bi.BiDataCube) string { return e.CubeId }, "CubeId").
+func newBiDataCubeServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&bi.BiDataCube{}, vnic).
+		Require(func(v interface{}) string { return v.(*bi.BiDataCube).CubeId }, "CubeId").
 		Build()
 }

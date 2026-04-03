@@ -14,7 +14,7 @@
 package newproductplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmNewProductPlan, scm.ScmNewProductPlanList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PlanId", Callback: newNewProductPlanServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PlanId", Callback: newNewProductPlanServiceCallback(vnic),
+	}, &scm.ScmNewProductPlan{}, &scm.ScmNewProductPlanList{}, creds, dbname, vnic)
 }
 
 func NewProductPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func NewProductPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func NewProductPlan(planId string, vnic ifs.IVNic) (*scm.ScmNewProductPlan, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmNewProductPlan{PlanId: planId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmNewProductPlan{PlanId: planId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmNewProductPlan), nil
 }

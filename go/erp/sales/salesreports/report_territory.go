@@ -17,18 +17,22 @@ package salesreports
 import (
 	"fmt"
 
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 )
 
 func generateTerritoryPerformance(report *fin.FinReport, vnic ifs.IVNic) error {
-	territories, err := common.GetEntities("Territory", 60, &sales.SalesTerritory{}, vnic)
+	territoriesRaw, err := common.GetEntities("Territory", 60, &sales.SalesTerritory{}, vnic)
+	territories := make([]*sales.SalesTerritory, 0, len(territoriesRaw))
+	for _, ri := range territoriesRaw { territories = append(territories, ri.(*sales.SalesTerritory)) }
 	if err != nil {
 		return err
 	}
-	orders, err := common.GetEntities("SalesOrder", 60, &sales.SalesOrder{}, vnic)
+	ordersRaw, err := common.GetEntities("SalesOrder", 60, &sales.SalesOrder{}, vnic)
+	orders := make([]*sales.SalesOrder, 0, len(ordersRaw))
+	for _, ri := range ordersRaw { orders = append(orders, ri.(*sales.SalesOrder)) }
 	if err != nil {
 		return err
 	}

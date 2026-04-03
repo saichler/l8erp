@@ -1,43 +1,43 @@
 package ui
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
 
 func registerCrmTypes(resources ifs.IResources) {
 	// Lead Management
-	common.RegisterType[crm.CrmLead, crm.CrmLeadList](resources, "LeadId")
-	common.RegisterType[crm.CrmLeadSource, crm.CrmLeadSourceList](resources, "SourceId")
-	common.RegisterType[crm.CrmLeadScore, crm.CrmLeadScoreList](resources, "ScoreId")
-	common.RegisterType[crm.CrmLeadAssign, crm.CrmLeadAssignList](resources, "AssignmentId")
+	common.RegisterType(resources, &crm.CrmLead{}, &crm.CrmLeadList{}, "LeadId")
+	common.RegisterType(resources, &crm.CrmLeadSource{}, &crm.CrmLeadSourceList{}, "SourceId")
+	common.RegisterType(resources, &crm.CrmLeadScore{}, &crm.CrmLeadScoreList{}, "ScoreId")
+	common.RegisterType(resources, &crm.CrmLeadAssign{}, &crm.CrmLeadAssignList{}, "AssignmentId")
 
 	// Opportunity Management
-	common.RegisterType[crm.CrmOpportunity, crm.CrmOpportunityList](resources, "OpportunityId")
-	common.RegisterType[crm.CrmOppStage, crm.CrmOppStageList](resources, "StageId")
+	common.RegisterType(resources, &crm.CrmOpportunity{}, &crm.CrmOpportunityList{}, "OpportunityId")
+	common.RegisterType(resources, &crm.CrmOppStage{}, &crm.CrmOppStageList{}, "StageId")
 
 	// Account Management
-	common.RegisterType[crm.CrmAccount, crm.CrmAccountList](resources, "AccountId")
-	common.RegisterType[crm.CrmContact, crm.CrmContactList](resources, "ContactId")
-	common.RegisterType[crm.CrmInteraction, crm.CrmInteractionList](resources, "InteractionId")
-	common.RegisterType[crm.CrmRelationship, crm.CrmRelationshipList](resources, "RelationshipId")
+	common.RegisterType(resources, &crm.CrmAccount{}, &crm.CrmAccountList{}, "AccountId")
+	common.RegisterType(resources, &crm.CrmContact{}, &crm.CrmContactList{}, "ContactId")
+	common.RegisterType(resources, &crm.CrmInteraction{}, &crm.CrmInteractionList{}, "InteractionId")
+	common.RegisterType(resources, &crm.CrmRelationship{}, &crm.CrmRelationshipList{}, "RelationshipId")
 
 	// Marketing
-	common.RegisterType[crm.CrmCampaign, crm.CrmCampaignList](resources, "CampaignId")
-	common.RegisterType[crm.CrmEmailTemplate, crm.CrmEmailTemplateList](resources, "TemplateId")
-	common.RegisterType[crm.CrmMarketingList, crm.CrmMarketingListList](resources, "ListId")
+	common.RegisterType(resources, &crm.CrmCampaign{}, &crm.CrmCampaignList{}, "CampaignId")
+	common.RegisterType(resources, &crm.CrmEmailTemplate{}, &crm.CrmEmailTemplateList{}, "TemplateId")
+	common.RegisterType(resources, &crm.CrmMarketingList{}, &crm.CrmMarketingListList{}, "ListId")
 
 	// Customer Service
-	common.RegisterType[crm.CrmCase, crm.CrmCaseList](resources, "CaseId")
-	common.RegisterType[crm.CrmKBArticle, crm.CrmKBArticleList](resources, "ArticleId")
-	common.RegisterType[crm.CrmSLA, crm.CrmSLAList](resources, "SlaId")
-	common.RegisterType[crm.CrmEscalation, crm.CrmEscalationList](resources, "EscalationId")
-	common.RegisterType[crm.CrmSurvey, crm.CrmSurveyList](resources, "SurveyId")
+	common.RegisterType(resources, &crm.CrmCase{}, &crm.CrmCaseList{}, "CaseId")
+	common.RegisterType(resources, &crm.CrmKBArticle{}, &crm.CrmKBArticleList{}, "ArticleId")
+	common.RegisterType(resources, &crm.CrmSLA{}, &crm.CrmSLAList{}, "SlaId")
+	common.RegisterType(resources, &crm.CrmEscalation{}, &crm.CrmEscalationList{}, "EscalationId")
+	common.RegisterType(resources, &crm.CrmSurvey{}, &crm.CrmSurveyList{}, "SurveyId")
 
 	// Field Service
-	common.RegisterType[crm.CrmServiceOrder, crm.CrmServiceOrderList](resources, "OrderId")
-	common.RegisterType[crm.CrmTechnician, crm.CrmTechnicianList](resources, "TechnicianId")
-	common.RegisterType[crm.CrmServiceContract, crm.CrmServiceContractList](resources, "ContractId")
-	common.RegisterType[crm.CrmServiceSchedule, crm.CrmServiceScheduleList](resources, "ScheduleId")
+	common.RegisterType(resources, &crm.CrmServiceOrder{}, &crm.CrmServiceOrderList{}, "OrderId")
+	common.RegisterType(resources, &crm.CrmTechnician{}, &crm.CrmTechnicianList{}, "TechnicianId")
+	common.RegisterType(resources, &crm.CrmServiceContract{}, &crm.CrmServiceContractList{}, "ContractId")
+	common.RegisterType(resources, &crm.CrmServiceSchedule{}, &crm.CrmServiceScheduleList{}, "ScheduleId")
 }

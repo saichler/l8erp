@@ -22,7 +22,8 @@ const hoursPerDay = 8
 
 // computeTaskSchedule performs a forward-pass schedule calculation on project tasks,
 // propagating dates through FINISH_TO_START dependencies.
-func computeTaskSchedule(p *prj.PrjProject) error {
+func computeTaskSchedule(v interface{}) error {
+	p := v.(*prj.PrjProject)
 	if len(p.Tasks) == 0 {
 		return nil
 	}

@@ -19,13 +19,14 @@ import (
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/erp/hcm/leavepolicies"
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newLeaveRequestServiceCallback() ifs.IServiceCallback {
+func newLeaveRequestServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("LeaveRequest",
-		func(e *hcm.LeaveRequest) { common.GenerateID(&e.RequestId) },
-		validateLeaveReq)
+		func(v interface{}) bool { _, ok := v.(*hcm.LeaveRequest); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.LeaveRequest).RequestId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateLeaveReq(v.(*hcm.LeaveRequest), vnic) })
 }
 
 func validateLeaveReq(entity *hcm.LeaveRequest, vnic ifs.IVNic) error {

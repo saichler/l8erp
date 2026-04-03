@@ -15,17 +15,16 @@ limitations under the License.
 package workcenters
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-func newMfgWorkCenterServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgWorkCenter]("MfgWorkCenter",
-		func(e *mfg.MfgWorkCenter) { common.GenerateID(&e.WorkCenterId) }).
-		Require(func(e *mfg.MfgWorkCenter) string { return e.WorkCenterId }, "WorkCenterId").
-		Require(func(e *mfg.MfgWorkCenter) string { return e.Name }, "Name").
-		Require(func(e *mfg.MfgWorkCenter) string { return e.CurrencyId }, "CurrencyId").
-		Enum(func(e *mfg.MfgWorkCenter) int32 { return int32(e.WorkCenterType) }, mfg.MfgWorkCenterType_name, "WorkCenterType").
+func newMfgWorkCenterServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgWorkCenter{}, vnic).
+		Require(func(v interface{}) string { return v.(*mfg.MfgWorkCenter).WorkCenterId }, "WorkCenterId").
+		Require(func(v interface{}) string { return v.(*mfg.MfgWorkCenter).Name }, "Name").
+		Require(func(v interface{}) string { return v.(*mfg.MfgWorkCenter).CurrencyId }, "CurrencyId").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgWorkCenter).WorkCenterType) }, mfg.MfgWorkCenterType_name, "WorkCenterType").
 		Build()
 }

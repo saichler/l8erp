@@ -15,35 +15,46 @@ limitations under the License.
 package returnorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	"reflect"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
-func newReturnOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sales.SalesReturnOrder]("SalesReturnOrder",
-		func(e *sales.SalesReturnOrder) { common.GenerateID(&e.ReturnOrderId) }).
+
+func toSlice(slice interface{}) []interface{} {
+	v := reflect.ValueOf(slice)
+	result := make([]interface{}, v.Len())
+	for i := 0; i < v.Len(); i++ {
+		result[i] = v.Index(i).Interface()
+	}
+	return result
+}
+
+func newReturnOrderServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sales.SalesReturnOrder{}, vnic).
 		StatusTransition(returnOrderTransitions()).
 		Compute(computeReturnOrderTotals).
-		Require(func(e *sales.SalesReturnOrder) string { return e.ReturnOrderId }, "ReturnOrderId").
-		Require(func(e *sales.SalesReturnOrder) string { return e.SalesOrderId }, "SalesOrderId").
-		Require(func(e *sales.SalesReturnOrder) string { return e.CustomerId }, "CustomerId").
-		Enum(func(e *sales.SalesReturnOrder) int32 { return int32(e.Status) }, sales.SalesReturnStatus_name, "Status").
-		OptionalMoney(func(e *sales.SalesReturnOrder) *l8common.Money { return e.RefundAmount }, "RefundAmount").
+		Require(func(v interface{}) string { return v.(*sales.SalesReturnOrder).ReturnOrderId }, "ReturnOrderId").
+		Require(func(v interface{}) string { return v.(*sales.SalesReturnOrder).SalesOrderId }, "SalesOrderId").
+		Require(func(v interface{}) string { return v.(*sales.SalesReturnOrder).CustomerId }, "CustomerId").
+		Enum(func(v interface{}) int32 { return int32(v.(*sales.SalesReturnOrder).Status) }, sales.SalesReturnStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesReturnOrder).RefundAmount }, "RefundAmount").
 		Build()
 }
 
-func computeReturnOrderTotals(o *sales.SalesReturnOrder) error {
-	o.RefundAmount = common.SumLineMoney(o.Lines, func(l *sales.SalesReturnOrderLine) *l8common.Money { return l.LineTotal })
+func computeReturnOrderTotals(v interface{}) error {
+	o := v.(*sales.SalesReturnOrder)
+	o.RefundAmount = common.SumLineMoney(toSlice(o.Lines), func(v interface{}) *l8common.Money { return v.(*sales.SalesReturnOrderLine).LineTotal })
 	return nil
 }
 
-func returnOrderTransitions() *common.StatusTransitionConfig[sales.SalesReturnOrder] {
-	return &common.StatusTransitionConfig[sales.SalesReturnOrder]{
-		StatusGetter:  func(e *sales.SalesReturnOrder) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *sales.SalesReturnOrder, s int32) { e.Status = sales.SalesReturnStatus(s) },
-		FilterBuilder: func(e *sales.SalesReturnOrder) *sales.SalesReturnOrder {
+func returnOrderTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*sales.SalesReturnOrder).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*sales.SalesReturnOrder).Status = sales.SalesReturnStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*sales.SalesReturnOrder);
 			return &sales.SalesReturnOrder{ReturnOrderId: e.ReturnOrderId}
 		},
 		ServiceName:   ServiceName,

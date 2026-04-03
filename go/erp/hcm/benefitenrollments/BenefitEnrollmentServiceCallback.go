@@ -17,16 +17,17 @@ package benefitenrollments
 import (
 	"github.com/saichler/l8erp/go/erp/hcm/lifeevents"
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/benefitplans"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 )
 
-func newBenefitEnrollmentServiceCallback() ifs.IServiceCallback {
+func newBenefitEnrollmentServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("BenefitEnrollment",
-		func(e *hcm.BenefitEnrollment) { common.GenerateID(&e.EnrollmentId) },
-		validateBenEnroll)
+		func(v interface{}) bool { _, ok := v.(*hcm.BenefitEnrollment); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.BenefitEnrollment).EnrollmentId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateBenEnroll(v.(*hcm.BenefitEnrollment), vnic) })
 }
 
 func validateBenEnroll(entity *hcm.BenefitEnrollment, vnic ifs.IVNic) error {

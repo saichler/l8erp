@@ -15,18 +15,17 @@ limitations under the License.
 package customers
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newCustomerServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.Customer]("Customer",
-		func(e *fin.Customer) { common.GenerateID(&e.CustomerId) }).
-		Require(func(e *fin.Customer) string { return e.CustomerId }, "CustomerId").
-		Require(func(e *fin.Customer) string { return e.Name }, "Name").
-		Enum(func(e *fin.Customer) int32 { return int32(e.Status) }, fin.CustomerStatus_name, "Status").
-		OptionalMoney(func(e *fin.Customer) *l8common.Money { return e.CreditLimit }, "CreditLimit").
+func newCustomerServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.Customer{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.Customer).CustomerId }, "CustomerId").
+		Require(func(v interface{}) string { return v.(*fin.Customer).Name }, "Name").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.Customer).Status) }, fin.CustomerStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.Customer).CreditLimit }, "CreditLimit").
 		Build()
 }

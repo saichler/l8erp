@@ -14,7 +14,7 @@
 package capitalexpenditures
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.CapitalExpenditure, fin.CapitalExpenditureList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CapexId", Callback: newCapitalExpenditureServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CapexId", Callback: newCapitalExpenditureServiceCallback(vnic),
+	}, &fin.CapitalExpenditure{}, &fin.CapitalExpenditureList{}, creds, dbname, vnic)
 }
 
 func CapitalExpenditures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CapitalExpenditures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CapitalExpenditure(capexId string, vnic ifs.IVNic) (*fin.CapitalExpenditure, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.CapitalExpenditure{CapexId: capexId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.CapitalExpenditure{CapexId: capexId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.CapitalExpenditure), nil
 }

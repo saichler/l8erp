@@ -14,7 +14,7 @@
 package resources
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[prj.PrjResource, prj.PrjResourceList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ResourceId", Callback: newPrjResourceServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ResourceId", Callback: newPrjResourceServiceCallback(vnic),
+	}, &prj.PrjResource{}, &prj.PrjResourceList{}, creds, dbname, vnic)
 }
 
 func PrjResources(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PrjResources(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjResource(resourceId string, vnic ifs.IVNic) (*prj.PrjResource, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &prj.PrjResource{ResourceId: resourceId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjResource{ResourceId: resourceId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*prj.PrjResource), nil
 }

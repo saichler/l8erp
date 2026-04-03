@@ -18,15 +18,14 @@ import (
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/mfg"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newMfgDowntimeEventServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgDowntimeEvent]("MfgDowntimeEvent",
-		func(e *mfg.MfgDowntimeEvent) { common.GenerateID(&e.EventId) }).
-		Require(func(e *mfg.MfgDowntimeEvent) string { return e.EventId }, "EventId").
-		Require(func(e *mfg.MfgDowntimeEvent) string { return e.WorkCenterId }, "WorkCenterId").
-		Enum(func(e *mfg.MfgDowntimeEvent) int32 { return int32(e.DowntimeType) }, mfg.MfgDowntimeType_name, "DowntimeType").
-		OptionalMoney(func(e *mfg.MfgDowntimeEvent) *l8common.Money { return e.EstimatedLoss }, "EstimatedLoss").
+func newMfgDowntimeEventServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgDowntimeEvent{}, vnic).
+		Require(func(v interface{}) string { return v.(*mfg.MfgDowntimeEvent).EventId }, "EventId").
+		Require(func(v interface{}) string { return v.(*mfg.MfgDowntimeEvent).WorkCenterId }, "WorkCenterId").
+		Enum(func(v interface{}) int32 { return int32(v.(*mfg.MfgDowntimeEvent).DowntimeType) }, mfg.MfgDowntimeType_name, "DowntimeType").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*mfg.MfgDowntimeEvent).EstimatedLoss }, "EstimatedLoss").
 		Build()
 }

@@ -14,7 +14,7 @@
 package legalholds
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[doc.DocLegalHold, doc.DocLegalHoldList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "HoldId", Callback: newDocLegalHoldServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "HoldId", Callback: newDocLegalHoldServiceCallback(vnic),
+	}, &doc.DocLegalHold{}, &doc.DocLegalHoldList{}, creds, dbname, vnic)
 }
 
 func DocLegalHolds(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func DocLegalHolds(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocLegalHold(holdId string, vnic ifs.IVNic) (*doc.DocLegalHold, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &doc.DocLegalHold{HoldId: holdId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocLegalHold{HoldId: holdId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*doc.DocLegalHold), nil
 }

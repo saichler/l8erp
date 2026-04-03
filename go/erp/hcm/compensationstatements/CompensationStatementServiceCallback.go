@@ -15,16 +15,17 @@ limitations under the License.
 package compensationstatements
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newCompensationStatementServiceCallback() ifs.IServiceCallback {
+func newCompensationStatementServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("CompensationStatement",
-		func(e *hcm.CompensationStatement) { common.GenerateID(&e.StatementId) },
-		validateCompStmt)
+		func(v interface{}) bool { _, ok := v.(*hcm.CompensationStatement); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.CompensationStatement).StatementId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateCompStmt(v.(*hcm.CompensationStatement), vnic) })
 }
 
 func validateCompStmt(entity *hcm.CompensationStatement, vnic ifs.IVNic) error {

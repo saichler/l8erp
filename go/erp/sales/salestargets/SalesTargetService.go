@@ -14,7 +14,7 @@
 package salestargets
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[sales.SalesTarget, sales.SalesTargetList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TargetId", Callback: newSalesTargetServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "TargetId", Callback: newSalesTargetServiceCallback(vnic),
+	}, &sales.SalesTarget{}, &sales.SalesTargetList{}, creds, dbname, vnic)
 }
 
 func SalesTargets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func SalesTargets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SalesTarget(targetId string, vnic ifs.IVNic) (*sales.SalesTarget, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &sales.SalesTarget{TargetId: targetId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesTarget{TargetId: targetId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*sales.SalesTarget), nil
 }

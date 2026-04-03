@@ -14,7 +14,7 @@
 package engchangeorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[mfg.MfgEngChangeOrder, mfg.MfgEngChangeOrderList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ChangeOrderId", Callback: newMfgEngChangeOrderServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ChangeOrderId", Callback: newMfgEngChangeOrderServiceCallback(vnic),
+	}, &mfg.MfgEngChangeOrder{}, &mfg.MfgEngChangeOrderList{}, creds, dbname, vnic)
 }
 
 func MfgEngChangeOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func MfgEngChangeOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgEngChangeOrder(changeOrderId string, vnic ifs.IVNic) (*mfg.MfgEngChangeOrder, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &mfg.MfgEngChangeOrder{ChangeOrderId: changeOrderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgEngChangeOrder{ChangeOrderId: changeOrderId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*mfg.MfgEngChangeOrder), nil
 }

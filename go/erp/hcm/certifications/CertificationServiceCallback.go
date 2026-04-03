@@ -15,15 +15,16 @@ limitations under the License.
 package certifications
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newCertificationServiceCallback() ifs.IServiceCallback {
+func newCertificationServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("Certification",
-		func(e *hcm.Certification) { common.GenerateID(&e.CertificationId) },
-		validateCertification)
+		func(v interface{}) bool { _, ok := v.(*hcm.Certification); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.Certification).CertificationId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateCertification(v.(*hcm.Certification), vnic) })
 }
 
 func validateCertification(entity *hcm.Certification, vnic ifs.IVNic) error {

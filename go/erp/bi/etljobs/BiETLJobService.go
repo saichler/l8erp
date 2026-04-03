@@ -14,7 +14,7 @@
 package etljobs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[bi.BiETLJob, bi.BiETLJobList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "JobId", Callback: newBiETLJobServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "JobId", Callback: newBiETLJobServiceCallback(vnic),
+	}, &bi.BiETLJob{}, &bi.BiETLJobList{}, creds, dbname, vnic)
 }
 
 func BiETLJobs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func BiETLJobs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiETLJob(jobId string, vnic ifs.IVNic) (*bi.BiETLJob, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &bi.BiETLJob{JobId: jobId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiETLJob{JobId: jobId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*bi.BiETLJob), nil
 }

@@ -15,7 +15,7 @@ limitations under the License.
 package hcmreports
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
@@ -59,7 +59,9 @@ func leaveTypeName(t hcm.LeaveType) string {
 }
 
 func generateLeaveBalanceSummary(report *fin.FinReport, vnic ifs.IVNic) error {
-	balances, err := common.GetEntities("LeaveBal", 30, &hcm.LeaveBalance{}, vnic)
+	balancesRaw, err := common.GetEntities("LeaveBal", 30, &hcm.LeaveBalance{}, vnic)
+	balances := make([]*hcm.LeaveBalance, 0, len(balancesRaw))
+	for _, ri := range balancesRaw { balances = append(balances, ri.(*hcm.LeaveBalance)) }
 	if err != nil {
 		return err
 	}

@@ -14,7 +14,7 @@
 package salesterritories
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[sales.SalesTerritory, sales.SalesTerritoryList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TerritoryId", Callback: newSalesTerritoryServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "TerritoryId", Callback: newSalesTerritoryServiceCallback(vnic),
+	}, &sales.SalesTerritory{}, &sales.SalesTerritoryList{}, creds, dbname, vnic)
 }
 
 func SalesTerritories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func SalesTerritories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SalesTerritory(territoryId string, vnic ifs.IVNic) (*sales.SalesTerritory, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &sales.SalesTerritory{TerritoryId: territoryId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesTerritory{TerritoryId: territoryId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*sales.SalesTerritory), nil
 }

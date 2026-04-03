@@ -15,17 +15,16 @@ limitations under the License.
 package approvalmatrices
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/comp"
 )
 
-func newCompApprovalMatrixServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[comp.CompApprovalMatrix]("CompApprovalMatrix",
-		func(e *comp.CompApprovalMatrix) { common.GenerateID(&e.MatrixId) }).
-		Require(func(e *comp.CompApprovalMatrix) string { return e.MatrixId }, "MatrixId").
-		OptionalMoney(func(e *comp.CompApprovalMatrix) *l8common.Money { return e.ThresholdMin }, "ThresholdMin").
-		OptionalMoney(func(e *comp.CompApprovalMatrix) *l8common.Money { return e.ThresholdMax }, "ThresholdMax").
+func newCompApprovalMatrixServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&comp.CompApprovalMatrix{}, vnic).
+		Require(func(v interface{}) string { return v.(*comp.CompApprovalMatrix).MatrixId }, "MatrixId").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*comp.CompApprovalMatrix).ThresholdMin }, "ThresholdMin").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*comp.CompApprovalMatrix).ThresholdMax }, "ThresholdMax").
 		Build()
 }

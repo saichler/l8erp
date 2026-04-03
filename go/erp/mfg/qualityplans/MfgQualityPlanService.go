@@ -14,7 +14,7 @@
 package qualityplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[mfg.MfgQualityPlan, mfg.MfgQualityPlanList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PlanId", Callback: newMfgQualityPlanServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PlanId", Callback: newMfgQualityPlanServiceCallback(vnic),
+	}, &mfg.MfgQualityPlan{}, &mfg.MfgQualityPlanList{}, creds, dbname, vnic)
 }
 
 func MfgQualityPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func MfgQualityPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgQualityPlan(planId string, vnic ifs.IVNic) (*mfg.MfgQualityPlan, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &mfg.MfgQualityPlan{PlanId: planId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgQualityPlan{PlanId: planId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*mfg.MfgQualityPlan), nil
 }

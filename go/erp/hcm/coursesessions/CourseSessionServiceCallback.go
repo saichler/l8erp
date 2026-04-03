@@ -17,15 +17,16 @@ package coursesessions
 import (
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/courses"
 )
 
-func newCourseSessionServiceCallback() ifs.IServiceCallback {
+func newCourseSessionServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("CourseSession",
-		func(e *hcm.CourseSession) { common.GenerateID(&e.SessionId) },
-		validateCourseSession)
+		func(v interface{}) bool { _, ok := v.(*hcm.CourseSession); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.CourseSession).SessionId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateCourseSession(v.(*hcm.CourseSession), vnic) })
 }
 
 func validateCourseSession(entity *hcm.CourseSession, vnic ifs.IVNic) error {

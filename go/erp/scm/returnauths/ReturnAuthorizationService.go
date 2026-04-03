@@ -14,7 +14,7 @@
 package returnauths
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmReturnAuthorization, scm.ScmReturnAuthorizationList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RmaId", Callback: newReturnAuthorizationServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RmaId", Callback: newReturnAuthorizationServiceCallback(vnic),
+	}, &scm.ScmReturnAuthorization{}, &scm.ScmReturnAuthorizationList{}, creds, dbname, vnic)
 }
 
 func ReturnAuthorizations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func ReturnAuthorizations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func ReturnAuthorization(rmaId string, vnic ifs.IVNic) (*scm.ScmReturnAuthorization, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmReturnAuthorization{RmaId: rmaId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmReturnAuthorization{RmaId: rmaId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmReturnAuthorization), nil
 }

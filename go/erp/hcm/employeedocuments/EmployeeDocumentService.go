@@ -14,7 +14,7 @@
 package employeedocuments
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.EmployeeDocument, hcm.EmployeeDocumentList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "DocumentId", Callback: newEmployeeDocumentServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "DocumentId", Callback: newEmployeeDocumentServiceCallback(vnic),
+	}, &hcm.EmployeeDocument{}, &hcm.EmployeeDocumentList{}, creds, dbname, vnic)
 }
 
 func EmployeeDocuments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func EmployeeDocuments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EmployeeDocument(documentId string, vnic ifs.IVNic) (*hcm.EmployeeDocument, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.EmployeeDocument{DocumentId: documentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.EmployeeDocument{DocumentId: documentId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.EmployeeDocument), nil
 }

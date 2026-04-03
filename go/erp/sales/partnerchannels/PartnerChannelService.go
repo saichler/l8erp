@@ -14,7 +14,7 @@
 package partnerchannels
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[sales.SalesPartnerChannel, sales.SalesPartnerChannelList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PartnerId", Callback: newPartnerChannelServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PartnerId", Callback: newPartnerChannelServiceCallback(vnic),
+	}, &sales.SalesPartnerChannel{}, &sales.SalesPartnerChannelList{}, creds, dbname, vnic)
 }
 
 func PartnerChannels(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PartnerChannels(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PartnerChannel(partnerId string, vnic ifs.IVNic) (*sales.SalesPartnerChannel, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &sales.SalesPartnerChannel{PartnerId: partnerId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesPartnerChannel{PartnerId: partnerId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*sales.SalesPartnerChannel), nil
 }

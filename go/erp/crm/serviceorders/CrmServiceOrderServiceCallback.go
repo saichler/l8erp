@@ -17,29 +17,28 @@ package serviceorders
 import (
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/crm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newCrmServiceOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmServiceOrder]("CrmServiceOrder",
-		func(e *crm.CrmServiceOrder) { common.GenerateID(&e.OrderId) }).
+func newCrmServiceOrderServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmServiceOrder{}, vnic).
 		StatusTransition(crmServiceOrderTransitions()).
-		Require(func(e *crm.CrmServiceOrder) string { return e.OrderId }, "OrderId").
-		Require(func(e *crm.CrmServiceOrder) string { return e.AccountId }, "AccountId").
-		Enum(func(e *crm.CrmServiceOrder) int32 { return int32(e.OrderType) }, crm.CrmServiceOrderType_name, "OrderType").
-		Enum(func(e *crm.CrmServiceOrder) int32 { return int32(e.Priority) }, crm.CrmServiceOrderPriority_name, "Priority").
-		Enum(func(e *crm.CrmServiceOrder) int32 { return int32(e.Status) }, crm.CrmServiceOrderStatus_name, "Status").
-		OptionalMoney(func(e *crm.CrmServiceOrder) *l8common.Money { return e.EstimatedCost }, "EstimatedCost").
-		OptionalMoney(func(e *crm.CrmServiceOrder) *l8common.Money { return e.ActualCost }, "ActualCost").
+		Require(func(v interface{}) string { return v.(*crm.CrmServiceOrder).OrderId }, "OrderId").
+		Require(func(v interface{}) string { return v.(*crm.CrmServiceOrder).AccountId }, "AccountId").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmServiceOrder).OrderType) }, crm.CrmServiceOrderType_name, "OrderType").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmServiceOrder).Priority) }, crm.CrmServiceOrderPriority_name, "Priority").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmServiceOrder).Status) }, crm.CrmServiceOrderStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*crm.CrmServiceOrder).EstimatedCost }, "EstimatedCost").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*crm.CrmServiceOrder).ActualCost }, "ActualCost").
 		Build()
 }
 
-func crmServiceOrderTransitions() *common.StatusTransitionConfig[crm.CrmServiceOrder] {
-	return &common.StatusTransitionConfig[crm.CrmServiceOrder]{
-		StatusGetter:  func(e *crm.CrmServiceOrder) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *crm.CrmServiceOrder, s int32) { e.Status = crm.CrmServiceOrderStatus(s) },
-		FilterBuilder: func(e *crm.CrmServiceOrder) *crm.CrmServiceOrder {
+func crmServiceOrderTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*crm.CrmServiceOrder).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*crm.CrmServiceOrder).Status = crm.CrmServiceOrderStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*crm.CrmServiceOrder);
 			return &crm.CrmServiceOrder{OrderId: e.OrderId}
 		},
 		ServiceName:   ServiceName,

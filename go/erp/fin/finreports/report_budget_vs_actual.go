@@ -15,13 +15,15 @@ limitations under the License.
 package finreports
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
 
 func generateBudgetVsActual(report *fin.FinReport, vnic ifs.IVNic) error {
-	budgets, err := common.GetEntities("Budget", 40, &fin.Budget{}, vnic)
+	budgetsRaw, err := common.GetEntities("Budget", 40, &fin.Budget{}, vnic)
+	budgets := make([]*fin.Budget, 0, len(budgetsRaw))
+	for _, ri := range budgetsRaw { budgets = append(budgets, ri.(*fin.Budget)) }
 	if err != nil {
 		return err
 	}

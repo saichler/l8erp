@@ -15,15 +15,14 @@ limitations under the License.
 package scanjobs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/doc"
 )
 
-func newDocScanJobServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[doc.DocScanJob]("DocScanJob",
-		func(e *doc.DocScanJob) { common.GenerateID(&e.ScanJobId) }).
-		Require(func(e *doc.DocScanJob) string { return e.ScanJobId }, "ScanJobId").
-		Enum(func(e *doc.DocScanJob) int32 { return int32(e.Status) }, doc.DocScanStatus_name, "Status").
+func newDocScanJobServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&doc.DocScanJob{}, vnic).
+		Require(func(v interface{}) string { return v.(*doc.DocScanJob).ScanJobId }, "ScanJobId").
+		Enum(func(v interface{}) int32 { return int32(v.(*doc.DocScanJob).Status) }, doc.DocScanStatus_name, "Status").
 		Build()
 }

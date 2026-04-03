@@ -19,13 +19,14 @@ import (
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/erp/hcm/skills"
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newEmployeeSkillServiceCallback() ifs.IServiceCallback {
+func newEmployeeSkillServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("EmployeeSkill",
-		func(e *hcm.EmployeeSkill) { common.GenerateID(&e.EmployeeSkillId) },
-		validateEmployeeSkill)
+		func(v interface{}) bool { _, ok := v.(*hcm.EmployeeSkill); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.EmployeeSkill).EmployeeSkillId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateEmployeeSkill(v.(*hcm.EmployeeSkill), vnic) })
 }
 
 func validateEmployeeSkill(entity *hcm.EmployeeSkill, vnic ifs.IVNic) error {

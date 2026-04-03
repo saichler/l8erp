@@ -14,7 +14,7 @@
 package mfgreports
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,8 +25,8 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.FinReport, fin.FinReportList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
 		PrimaryKey: "ReportId", Callback: newMfgReportServiceCallback(vnic),
-	}, creds, dbname, vnic)
+	}, &fin.FinReport{}, &fin.FinReportList{}, creds, dbname, vnic)
 }

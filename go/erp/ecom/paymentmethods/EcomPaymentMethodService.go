@@ -14,7 +14,7 @@
 package paymentmethods
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[ecom.EcomPaymentMethod, ecom.EcomPaymentMethodList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "MethodId", Callback: newEcomPaymentMethodServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "MethodId", Callback: newEcomPaymentMethodServiceCallback(vnic),
+	}, &ecom.EcomPaymentMethod{}, &ecom.EcomPaymentMethodList{}, creds, dbname, vnic)
 }
 
 func EcomPaymentMethods(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func EcomPaymentMethods(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomPaymentMethod(methodId string, vnic ifs.IVNic) (*ecom.EcomPaymentMethod, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &ecom.EcomPaymentMethod{MethodId: methodId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomPaymentMethod{MethodId: methodId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*ecom.EcomPaymentMethod), nil
 }

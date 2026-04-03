@@ -14,7 +14,7 @@
 package folders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[doc.DocFolder, doc.DocFolderList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "FolderId", Callback: newDocFolderServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "FolderId", Callback: newDocFolderServiceCallback(vnic),
+	}, &doc.DocFolder{}, &doc.DocFolderList{}, creds, dbname, vnic)
 }
 
 func DocFolders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func DocFolders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocFolder(folderId string, vnic ifs.IVNic) (*doc.DocFolder, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &doc.DocFolder{FolderId: folderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocFolder{FolderId: folderId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*doc.DocFolder), nil
 }

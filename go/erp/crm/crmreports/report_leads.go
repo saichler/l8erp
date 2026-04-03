@@ -21,12 +21,14 @@ import (
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
 func generateLeadConversion(report *fin.FinReport, vnic ifs.IVNic) error {
-	leads, err := common.GetEntities("CrmLead", 80, &crm.CrmLead{}, vnic)
+	leadsRaw, err := common.GetEntities("CrmLead", 80, &crm.CrmLead{}, vnic)
+	leads := make([]*crm.CrmLead, 0, len(leadsRaw))
+	for _, ri := range leadsRaw { leads = append(leads, ri.(*crm.CrmLead)) }
 	if err != nil {
 		return err
 	}

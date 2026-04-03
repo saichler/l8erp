@@ -17,12 +17,11 @@ package policydocuments
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/comp"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newCompPolicyDocumentServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[comp.CompPolicyDocument]("CompPolicyDocument",
-		func(e *comp.CompPolicyDocument) { common.GenerateID(&e.PolicyId) }).
-		Require(func(e *comp.CompPolicyDocument) string { return e.PolicyId }, "PolicyId").
+func newCompPolicyDocumentServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&comp.CompPolicyDocument{}, vnic).
+		Require(func(v interface{}) string { return v.(*comp.CompPolicyDocument).PolicyId }, "PolicyId").
 		Build()
 }

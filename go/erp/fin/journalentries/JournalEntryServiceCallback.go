@@ -15,38 +15,49 @@ limitations under the License.
 package journalentries
 
 import (
+	"reflect"
 	"fmt"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newJournalEntryServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.JournalEntry]("JournalEntry",
-		func(e *fin.JournalEntry) { common.GenerateID(&e.JournalEntryId) }).
+
+func toSlice(slice interface{}) []interface{} {
+	v := reflect.ValueOf(slice)
+	result := make([]interface{}, v.Len())
+	for i := 0; i < v.Len(); i++ {
+		result[i] = v.Index(i).Interface()
+	}
+	return result
+}
+
+func newJournalEntryServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.JournalEntry{}, vnic).
 		StatusTransition(journalEntryTransitions()).
 		Compute(computeJournalEntryTotals).
-		Require(func(e *fin.JournalEntry) string { return e.JournalEntryId }, "JournalEntryId").
-		Require(func(e *fin.JournalEntry) string { return e.FiscalPeriodId }, "FiscalPeriodId").
-		Enum(func(e *fin.JournalEntry) int32 { return int32(e.Status) }, fin.JournalEntryStatus_name, "Status").
-		OptionalMoney(func(e *fin.JournalEntry) *l8common.Money { return e.TotalAmount }, "TotalAmount").
+		Require(func(v interface{}) string { return v.(*fin.JournalEntry).JournalEntryId }, "JournalEntryId").
+		Require(func(v interface{}) string { return v.(*fin.JournalEntry).FiscalPeriodId }, "FiscalPeriodId").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.JournalEntry).Status) }, fin.JournalEntryStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.JournalEntry).TotalAmount }, "TotalAmount").
 		Custom(validateLines).
 		Custom(validatePeriodOpen).
 		After(updateAccountBalances).
 		Build()
 }
 
-func computeJournalEntryTotals(je *fin.JournalEntry) error {
-	je.TotalAmount = common.SumLineMoney(je.Lines, func(l *fin.JournalEntryLine) *l8common.Money { return l.DebitAmount })
+func computeJournalEntryTotals(v interface{}) error {
+	je := v.(*fin.JournalEntry)
+	je.TotalAmount = common.SumLineMoney(toSlice(je.Lines), func(v interface{}) *l8common.Money { return v.(*fin.JournalEntryLine).DebitAmount })
 	return nil
 }
 
-func journalEntryTransitions() *common.StatusTransitionConfig[fin.JournalEntry] {
-	return &common.StatusTransitionConfig[fin.JournalEntry]{
-		StatusGetter:  func(e *fin.JournalEntry) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *fin.JournalEntry, s int32) { e.Status = fin.JournalEntryStatus(s) },
-		FilterBuilder: func(e *fin.JournalEntry) *fin.JournalEntry {
+func journalEntryTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*fin.JournalEntry).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*fin.JournalEntry).Status = fin.JournalEntryStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*fin.JournalEntry);
 			return &fin.JournalEntry{JournalEntryId: e.JournalEntryId}
 		},
 		ServiceName:   ServiceName,
@@ -62,7 +73,8 @@ func journalEntryTransitions() *common.StatusTransitionConfig[fin.JournalEntry] 
 
 // validateLines checks that each line has either DebitAmount or CreditAmount (not both),
 // a non-empty AccountId, and when posting enforces double-entry balance.
-func validateLines(je *fin.JournalEntry, _ ifs.IVNic) error {
+func validateLines(v interface{}, _ ifs.IVNic) error {
+	je := v.(*fin.JournalEntry)
 	for i, line := range je.Lines {
 		hasDebit := !common.MoneyIsZero(line.DebitAmount)
 		hasCredit := !common.MoneyIsZero(line.CreditAmount)
@@ -95,7 +107,8 @@ func validateLines(je *fin.JournalEntry, _ ifs.IVNic) error {
 }
 
 // validatePeriodOpen ensures the fiscal period is OPEN before posting a journal entry.
-func validatePeriodOpen(je *fin.JournalEntry, vnic ifs.IVNic) error {
+func validatePeriodOpen(v interface{}, vnic ifs.IVNic) error {
+	je := v.(*fin.JournalEntry)
 	if je.Status != fin.JournalEntryStatus_JOURNAL_ENTRY_STATUS_POSTED {
 		return nil
 	}
@@ -113,7 +126,9 @@ func validatePeriodOpen(je *fin.JournalEntry, vnic ifs.IVNic) error {
 
 // findFiscalPeriod searches all FiscalYears' embedded Periods to find a period by ID.
 func findFiscalPeriod(periodId string, vnic ifs.IVNic) (*fin.FiscalPeriod, error) {
-	years, err := common.GetEntities("FiscalYr", 40, &fin.FiscalYear{}, vnic)
+	yearsRaw, err := common.GetEntities("FiscalYr", 40, &fin.FiscalYear{}, vnic)
+	years := make([]*fin.FiscalYear, 0, len(yearsRaw))
+	for _, ri := range yearsRaw { years = append(years, ri.(*fin.FiscalYear)) }
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch fiscal years: %w", err)
 	}
@@ -128,19 +143,21 @@ func findFiscalPeriod(periodId string, vnic ifs.IVNic) (*fin.FiscalPeriod, error
 }
 
 // updateAccountBalances updates Account.Balances when a journal entry is posted.
-func updateAccountBalances(je *fin.JournalEntry, _ ifs.Action, vnic ifs.IVNic) error {
+func updateAccountBalances(v interface{}, _ ifs.Action, vnic ifs.IVNic) error {
+	je := v.(*fin.JournalEntry)
 	if je.Status != fin.JournalEntryStatus_JOURNAL_ENTRY_STATUS_POSTED {
 		return nil
 	}
 	for _, line := range je.Lines {
-		account, err := common.GetEntity("Account", 40,
+		accountRaw, err := common.GetEntity("Account", 40,
 			&fin.Account{AccountId: line.AccountId}, vnic)
 		if err != nil {
 			return fmt.Errorf("failed to fetch account %s: %w", line.AccountId, err)
 		}
-		if account == nil {
+		if accountRaw == nil {
 			return fmt.Errorf("account %s not found", line.AccountId)
 		}
+		account := accountRaw.(*fin.Account)
 		bal := findOrCreateBalance(account, je.FiscalPeriodId)
 		debit := common.MoneyAmount(line.DebitAmount)
 		credit := common.MoneyAmount(line.CreditAmount)

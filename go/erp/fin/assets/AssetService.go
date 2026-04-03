@@ -14,7 +14,7 @@
 package assets
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.Asset, fin.AssetList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "AssetId", Callback: newAssetServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "AssetId", Callback: newAssetServiceCallback(vnic),
+	}, &fin.Asset{}, &fin.AssetList{}, creds, dbname, vnic)
 }
 
 func Assets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Assets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Asset(assetId string, vnic ifs.IVNic) (*fin.Asset, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.Asset{AssetId: assetId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.Asset{AssetId: assetId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.Asset), nil
 }

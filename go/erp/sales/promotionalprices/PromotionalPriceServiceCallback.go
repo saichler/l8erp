@@ -15,19 +15,18 @@ limitations under the License.
 package promotionalprices
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
-func newPromotionalPriceServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sales.SalesPromotionalPrice]("SalesPromotionalPrice",
-		func(e *sales.SalesPromotionalPrice) { common.GenerateID(&e.PromoId) }).
-		Require(func(e *sales.SalesPromotionalPrice) string { return e.PromoId }, "PromoId").
-		Require(func(e *sales.SalesPromotionalPrice) string { return e.Name }, "Name").
-		OptionalMoney(func(e *sales.SalesPromotionalPrice) *l8common.Money { return e.PromotionalPrice }, "PromotionalPrice").
-		OptionalMoney(func(e *sales.SalesPromotionalPrice) *l8common.Money { return e.OriginalPrice }, "OriginalPrice").
-		DateAfter(func(e *sales.SalesPromotionalPrice) int64 { return e.EndDate }, func(e *sales.SalesPromotionalPrice) int64 { return e.StartDate }, "EndDate", "StartDate").
+func newPromotionalPriceServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sales.SalesPromotionalPrice{}, vnic).
+		Require(func(v interface{}) string { return v.(*sales.SalesPromotionalPrice).PromoId }, "PromoId").
+		Require(func(v interface{}) string { return v.(*sales.SalesPromotionalPrice).Name }, "Name").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesPromotionalPrice).PromotionalPrice }, "PromotionalPrice").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesPromotionalPrice).OriginalPrice }, "OriginalPrice").
+		DateAfter(func(v interface{}) int64 { return v.(*sales.SalesPromotionalPrice).EndDate }, func(v interface{}) int64 { return v.(*sales.SalesPromotionalPrice).StartDate }, "EndDate", "StartDate").
 		Build()
 }

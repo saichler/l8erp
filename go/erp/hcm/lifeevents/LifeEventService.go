@@ -14,7 +14,7 @@
 package lifeevents
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.LifeEvent, hcm.LifeEventList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "LifeEventId", Callback: newLifeEventServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "LifeEventId", Callback: newLifeEventServiceCallback(vnic),
+	}, &hcm.LifeEvent{}, &hcm.LifeEventList{}, creds, dbname, vnic)
 }
 
 func LifeEvents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func LifeEvents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func LifeEvent(lifeEventId string, vnic ifs.IVNic) (*hcm.LifeEvent, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.LifeEvent{LifeEventId: lifeEventId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.LifeEvent{LifeEventId: lifeEventId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.LifeEvent), nil
 }

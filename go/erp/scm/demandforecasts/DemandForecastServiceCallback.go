@@ -15,15 +15,14 @@ limitations under the License.
 package demandforecasts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newDemandForecastServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmDemandForecast]("ScmDemandForecast",
-		func(e *scm.ScmDemandForecast) { common.GenerateID(&e.ForecastId) }).
-		Require(func(e *scm.ScmDemandForecast) string { return e.ForecastId }, "ForecastId").
-		Enum(func(e *scm.ScmDemandForecast) int32 { return int32(e.ForecastMethod) }, scm.ScmForecastMethod_name, "ForecastMethod").
+func newDemandForecastServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmDemandForecast{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmDemandForecast).ForecastId }, "ForecastId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmDemandForecast).ForecastMethod) }, scm.ScmForecastMethod_name, "ForecastMethod").
 		Build()
 }

@@ -14,7 +14,7 @@
 package capacityplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[mfg.MfgCapacityPlan, mfg.MfgCapacityPlanList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PlanId", Callback: newMfgCapacityPlanServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PlanId", Callback: newMfgCapacityPlanServiceCallback(vnic),
+	}, &mfg.MfgCapacityPlan{}, &mfg.MfgCapacityPlanList{}, creds, dbname, vnic)
 }
 
 func MfgCapacityPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func MfgCapacityPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgCapacityPlan(planId string, vnic ifs.IVNic) (*mfg.MfgCapacityPlan, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &mfg.MfgCapacityPlan{PlanId: planId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgCapacityPlan{PlanId: planId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*mfg.MfgCapacityPlan), nil
 }

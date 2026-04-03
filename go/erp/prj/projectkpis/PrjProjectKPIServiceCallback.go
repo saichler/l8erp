@@ -15,15 +15,14 @@ limitations under the License.
 package projectkpis
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
-func newPrjProjectKPIServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjProjectKPI]("PrjProjectKPI",
-		func(e *prj.PrjProjectKPI) { common.GenerateID(&e.KpiId) }).
-		Require(func(e *prj.PrjProjectKPI) string { return e.KpiId }, "KpiId").
-		Enum(func(e *prj.PrjProjectKPI) int32 { return int32(e.Status) }, prj.PrjHealthIndicator_name, "Status").
+func newPrjProjectKPIServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjProjectKPI{}, vnic).
+		Require(func(v interface{}) string { return v.(*prj.PrjProjectKPI).KpiId }, "KpiId").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjProjectKPI).Status) }, prj.PrjHealthIndicator_name, "Status").
 		Build()
 }

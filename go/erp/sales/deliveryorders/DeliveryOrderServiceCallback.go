@@ -15,7 +15,7 @@ limitations under the License.
 package deliveryorders
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
@@ -23,21 +23,21 @@ import (
 	"time"
 )
 
-func newDeliveryOrderServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sales.SalesDeliveryOrder]("SalesDeliveryOrder",
-		func(e *sales.SalesDeliveryOrder) { common.GenerateID(&e.DeliveryOrderId) }).
+func newDeliveryOrderServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sales.SalesDeliveryOrder{}, vnic).
 		StatusTransition(deliveryOrderTransitions()).
 		After(cascadeCreateSalesInvoice).
-		Require(func(e *sales.SalesDeliveryOrder) string { return e.DeliveryOrderId }, "DeliveryOrderId").
-		Require(func(e *sales.SalesDeliveryOrder) string { return e.SalesOrderId }, "SalesOrderId").
-		Require(func(e *sales.SalesDeliveryOrder) string { return e.CustomerId }, "CustomerId").
-		Enum(func(e *sales.SalesDeliveryOrder) int32 { return int32(e.Status) }, sales.SalesDeliveryStatus_name, "Status").
-		OptionalMoney(func(e *sales.SalesDeliveryOrder) *l8common.Money { return e.ShippingCost }, "ShippingCost").
+		Require(func(v interface{}) string { return v.(*sales.SalesDeliveryOrder).DeliveryOrderId }, "DeliveryOrderId").
+		Require(func(v interface{}) string { return v.(*sales.SalesDeliveryOrder).SalesOrderId }, "SalesOrderId").
+		Require(func(v interface{}) string { return v.(*sales.SalesDeliveryOrder).CustomerId }, "CustomerId").
+		Enum(func(v interface{}) int32 { return int32(v.(*sales.SalesDeliveryOrder).Status) }, sales.SalesDeliveryStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesDeliveryOrder).ShippingCost }, "ShippingCost").
 		Build()
 }
 
 // cascadeCreateSalesInvoice auto-creates a sales invoice when a delivery is completed.
-func cascadeCreateSalesInvoice(delivery *sales.SalesDeliveryOrder, action ifs.Action, vnic ifs.IVNic) error {
+func cascadeCreateSalesInvoice(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	delivery := v.(*sales.SalesDeliveryOrder)
 	if delivery.Status != sales.SalesDeliveryStatus_DELIVERY_STATUS_DELIVERED {
 		return nil
 	}
@@ -49,8 +49,11 @@ func cascadeCreateSalesInvoice(delivery *sales.SalesDeliveryOrder, action ifs.Ac
 	// Look up the sales order for pricing info
 	var order *sales.SalesOrder
 	if delivery.SalesOrderId != "" {
-		order, _ = common.GetEntity("SalesOrder", 60,
+		orderRaw, _ := common.GetEntity("SalesOrder", 60,
 			&sales.SalesOrder{SalesOrderId: delivery.SalesOrderId}, vnic)
+		if orderRaw != nil {
+			order = orderRaw.(*sales.SalesOrder)
+		}
 	}
 	lines := make([]*fin.SalesInvoiceLine, len(delivery.Lines))
 	for i, dl := range delivery.Lines {
@@ -96,11 +99,11 @@ func cascadeCreateSalesInvoice(delivery *sales.SalesDeliveryOrder, action ifs.Ac
 	return err
 }
 
-func deliveryOrderTransitions() *common.StatusTransitionConfig[sales.SalesDeliveryOrder] {
-	return &common.StatusTransitionConfig[sales.SalesDeliveryOrder]{
-		StatusGetter:  func(e *sales.SalesDeliveryOrder) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *sales.SalesDeliveryOrder, s int32) { e.Status = sales.SalesDeliveryStatus(s) },
-		FilterBuilder: func(e *sales.SalesDeliveryOrder) *sales.SalesDeliveryOrder {
+func deliveryOrderTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*sales.SalesDeliveryOrder).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*sales.SalesDeliveryOrder).Status = sales.SalesDeliveryStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*sales.SalesDeliveryOrder);
 			return &sales.SalesDeliveryOrder{DeliveryOrderId: e.DeliveryOrderId}
 		},
 		ServiceName:   ServiceName,

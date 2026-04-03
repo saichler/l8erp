@@ -14,7 +14,7 @@
 package pettycash
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.PettyCash, fin.PettyCashList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PettyCashId", Callback: newPettyCashServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PettyCashId", Callback: newPettyCashServiceCallback(vnic),
+	}, &fin.PettyCash{}, &fin.PettyCashList{}, creds, dbname, vnic)
 }
 
 func PettyCashes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PettyCashes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PettyCash(pettyCashId string, vnic ifs.IVNic) (*fin.PettyCash, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.PettyCash{PettyCashId: pettyCashId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.PettyCash{PettyCashId: pettyCashId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.PettyCash), nil
 }

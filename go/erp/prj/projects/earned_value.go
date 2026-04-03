@@ -15,14 +15,15 @@ limitations under the License.
 package projects
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
 // computeEarnedValue recalculates EVM metrics for each earned value record
 // embedded in the project.
-func computeEarnedValue(p *prj.PrjProject) error {
+func computeEarnedValue(v interface{}) error {
+	p := v.(*prj.PrjProject)
 	if len(p.EarnedValues) == 0 || p.Budget == nil || p.Budget.Amount == 0 {
 		return nil
 	}

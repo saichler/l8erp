@@ -14,7 +14,7 @@
 package approvalmatrices
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[comp.CompApprovalMatrix, comp.CompApprovalMatrixList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "MatrixId", Callback: newCompApprovalMatrixServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "MatrixId", Callback: newCompApprovalMatrixServiceCallback(vnic),
+	}, &comp.CompApprovalMatrix{}, &comp.CompApprovalMatrixList{}, creds, dbname, vnic)
 }
 
 func CompApprovalMatrices(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CompApprovalMatrices(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompApprovalMatrix(matrixId string, vnic ifs.IVNic) (*comp.CompApprovalMatrix, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &comp.CompApprovalMatrix{MatrixId: matrixId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompApprovalMatrix{MatrixId: matrixId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*comp.CompApprovalMatrix), nil
 }

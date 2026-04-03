@@ -14,7 +14,7 @@
 package purchaseinvoices
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.PurchaseInvoice, fin.PurchaseInvoiceList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "InvoiceId", Callback: newPurchaseInvoiceServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "InvoiceId", Callback: newPurchaseInvoiceServiceCallback(vnic),
+	}, &fin.PurchaseInvoice{}, &fin.PurchaseInvoiceList{}, creds, dbname, vnic)
 }
 
 func PurchaseInvoices(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PurchaseInvoices(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PurchaseInvoice(invoiceId string, vnic ifs.IVNic) (*fin.PurchaseInvoice, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.PurchaseInvoice{InvoiceId: invoiceId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.PurchaseInvoice{InvoiceId: invoiceId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.PurchaseInvoice), nil
 }

@@ -15,18 +15,17 @@ limitations under the License.
 package accounts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmAccountServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmAccount]("CrmAccount",
-		func(e *crm.CrmAccount) { common.GenerateID(&e.AccountId) }).
-		Require(func(e *crm.CrmAccount) string { return e.AccountId }, "AccountId").
-		Enum(func(e *crm.CrmAccount) int32 { return int32(e.AccountType) }, crm.CrmAccountType_name, "AccountType").
-		Enum(func(e *crm.CrmAccount) int32 { return int32(e.Status) }, crm.CrmAccountStatus_name, "Status").
-		OptionalMoney(func(e *crm.CrmAccount) *l8common.Money { return e.AnnualRevenue }, "AnnualRevenue").
+func newCrmAccountServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmAccount{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmAccount).AccountId }, "AccountId").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmAccount).AccountType) }, crm.CrmAccountType_name, "AccountType").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmAccount).Status) }, crm.CrmAccountStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*crm.CrmAccount).AnnualRevenue }, "AnnualRevenue").
 		Build()
 }

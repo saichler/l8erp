@@ -15,30 +15,29 @@ limitations under the License.
 package capitalexpenditures
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newCapitalExpenditureServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.CapitalExpenditure]("CapitalExpenditure",
-		func(e *fin.CapitalExpenditure) { common.GenerateID(&e.CapexId) }).
+func newCapitalExpenditureServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.CapitalExpenditure{}, vnic).
 		StatusTransition(capitalExpenditureTransitions()).
-		Require(func(e *fin.CapitalExpenditure) string { return e.CapexId }, "CapexId").
-		Require(func(e *fin.CapitalExpenditure) string { return e.ProjectName }, "ProjectName").
-		Enum(func(e *fin.CapitalExpenditure) int32 { return int32(e.Status) }, fin.CapexStatus_name, "Status").
-		OptionalMoney(func(e *fin.CapitalExpenditure) *l8common.Money { return e.RequestedAmount }, "RequestedAmount").
-		OptionalMoney(func(e *fin.CapitalExpenditure) *l8common.Money { return e.ApprovedAmount }, "ApprovedAmount").
-		OptionalMoney(func(e *fin.CapitalExpenditure) *l8common.Money { return e.SpentAmount }, "SpentAmount").
+		Require(func(v interface{}) string { return v.(*fin.CapitalExpenditure).CapexId }, "CapexId").
+		Require(func(v interface{}) string { return v.(*fin.CapitalExpenditure).ProjectName }, "ProjectName").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.CapitalExpenditure).Status) }, fin.CapexStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.CapitalExpenditure).RequestedAmount }, "RequestedAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.CapitalExpenditure).ApprovedAmount }, "ApprovedAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.CapitalExpenditure).SpentAmount }, "SpentAmount").
 		Build()
 }
 
-func capitalExpenditureTransitions() *common.StatusTransitionConfig[fin.CapitalExpenditure] {
-	return &common.StatusTransitionConfig[fin.CapitalExpenditure]{
-		StatusGetter:  func(e *fin.CapitalExpenditure) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *fin.CapitalExpenditure, s int32) { e.Status = fin.CapexStatus(s) },
-		FilterBuilder: func(e *fin.CapitalExpenditure) *fin.CapitalExpenditure {
+func capitalExpenditureTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*fin.CapitalExpenditure).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*fin.CapitalExpenditure).Status = fin.CapexStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*fin.CapitalExpenditure);
 			return &fin.CapitalExpenditure{CapexId: e.CapexId}
 		},
 		ServiceName:   ServiceName,

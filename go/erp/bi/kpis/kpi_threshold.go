@@ -20,7 +20,8 @@ import (
 )
 
 // computeKPIStatus evaluates KPI thresholds and sets status/trend accordingly.
-func computeKPIStatus(kpi *bi.BiKPI) error {
+func computeKPIStatus(v interface{}) error {
+	kpi := v.(*bi.BiKPI)
 	// Compute trend from current vs previous
 	if kpi.PreviousValue != 0 {
 		if kpi.CurrentValue > kpi.PreviousValue {

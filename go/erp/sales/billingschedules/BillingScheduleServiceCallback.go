@@ -17,21 +17,20 @@ package billingschedules
 import (
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/sales"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newBillingScheduleServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sales.SalesBillingSchedule]("SalesBillingSchedule",
-		func(e *sales.SalesBillingSchedule) { common.GenerateID(&e.ScheduleId) }).
-		Require(func(e *sales.SalesBillingSchedule) string { return e.ScheduleId }, "ScheduleId").
-		Require(func(e *sales.SalesBillingSchedule) string { return e.Name }, "Name").
-		Require(func(e *sales.SalesBillingSchedule) string { return e.CustomerId }, "CustomerId").
-		Enum(func(e *sales.SalesBillingSchedule) int32 { return int32(e.Frequency) }, sales.SalesBillingFrequency_name, "Frequency").
-		Enum(func(e *sales.SalesBillingSchedule) int32 { return int32(e.Status) }, sales.SalesBillingStatus_name, "Status").
-		OptionalMoney(func(e *sales.SalesBillingSchedule) *l8common.Money { return e.TotalAmount }, "TotalAmount").
-		OptionalMoney(func(e *sales.SalesBillingSchedule) *l8common.Money { return e.BilledAmount }, "BilledAmount").
-		OptionalMoney(func(e *sales.SalesBillingSchedule) *l8common.Money { return e.RemainingAmount }, "RemainingAmount").
-		DateAfter(func(e *sales.SalesBillingSchedule) int64 { return e.EndDate }, func(e *sales.SalesBillingSchedule) int64 { return e.StartDate }, "EndDate", "StartDate").
+func newBillingScheduleServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sales.SalesBillingSchedule{}, vnic).
+		Require(func(v interface{}) string { return v.(*sales.SalesBillingSchedule).ScheduleId }, "ScheduleId").
+		Require(func(v interface{}) string { return v.(*sales.SalesBillingSchedule).Name }, "Name").
+		Require(func(v interface{}) string { return v.(*sales.SalesBillingSchedule).CustomerId }, "CustomerId").
+		Enum(func(v interface{}) int32 { return int32(v.(*sales.SalesBillingSchedule).Frequency) }, sales.SalesBillingFrequency_name, "Frequency").
+		Enum(func(v interface{}) int32 { return int32(v.(*sales.SalesBillingSchedule).Status) }, sales.SalesBillingStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesBillingSchedule).TotalAmount }, "TotalAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesBillingSchedule).BilledAmount }, "BilledAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*sales.SalesBillingSchedule).RemainingAmount }, "RemainingAmount").
+		DateAfter(func(v interface{}) int64 { return v.(*sales.SalesBillingSchedule).EndDate }, func(v interface{}) int64 { return v.(*sales.SalesBillingSchedule).StartDate }, "EndDate", "StartDate").
 		Build()
 }

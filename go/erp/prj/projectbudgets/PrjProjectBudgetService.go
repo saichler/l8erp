@@ -14,7 +14,7 @@
 package projectbudgets
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[prj.PrjProjectBudget, prj.PrjProjectBudgetList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "BudgetId", Callback: newPrjProjectBudgetServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "BudgetId", Callback: newPrjProjectBudgetServiceCallback(vnic),
+	}, &prj.PrjProjectBudget{}, &prj.PrjProjectBudgetList{}, creds, dbname, vnic)
 }
 
 func PrjProjectBudgets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PrjProjectBudgets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjProjectBudget(budgetId string, vnic ifs.IVNic) (*prj.PrjProjectBudget, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &prj.PrjProjectBudget{BudgetId: budgetId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjProjectBudget{BudgetId: budgetId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*prj.PrjProjectBudget), nil
 }

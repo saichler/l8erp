@@ -15,7 +15,7 @@ limitations under the License.
 package hcmreports
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
@@ -43,7 +43,9 @@ func reviewStatusName(s hcm.PerformanceReviewStatus) string {
 }
 
 func generatePerformanceSummary(report *fin.FinReport, vnic ifs.IVNic) error {
-	reviews, err := common.GetEntities("PerfRevw", 30, &hcm.PerformanceReview{}, vnic)
+	reviewsRaw, err := common.GetEntities("PerfRevw", 30, &hcm.PerformanceReview{}, vnic)
+	reviews := make([]*hcm.PerformanceReview, 0, len(reviewsRaw))
+	for _, ri := range reviewsRaw { reviews = append(reviews, ri.(*hcm.PerformanceReview)) }
 	if err != nil {
 		return err
 	}

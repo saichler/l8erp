@@ -14,7 +14,7 @@
 package emailtemplates
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[crm.CrmEmailTemplate, crm.CrmEmailTemplateList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TemplateId", Callback: newCrmEmailTemplateServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "TemplateId", Callback: newCrmEmailTemplateServiceCallback(vnic),
+	}, &crm.CrmEmailTemplate{}, &crm.CrmEmailTemplateList{}, creds, dbname, vnic)
 }
 
 func CrmEmailTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CrmEmailTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmEmailTemplate(templateId string, vnic ifs.IVNic) (*crm.CrmEmailTemplate, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &crm.CrmEmailTemplate{TemplateId: templateId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmEmailTemplate{TemplateId: templateId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*crm.CrmEmailTemplate), nil
 }

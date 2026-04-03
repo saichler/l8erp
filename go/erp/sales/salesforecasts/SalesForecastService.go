@@ -14,7 +14,7 @@
 package salesforecasts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[sales.SalesForecast, sales.SalesForecastList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ForecastId", Callback: newSalesForecastServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ForecastId", Callback: newSalesForecastServiceCallback(vnic),
+	}, &sales.SalesForecast{}, &sales.SalesForecastList{}, creds, dbname, vnic)
 }
 
 func SalesForecasts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func SalesForecasts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SalesForecast(forecastId string, vnic ifs.IVNic) (*sales.SalesForecast, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &sales.SalesForecast{ForecastId: forecastId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesForecast{ForecastId: forecastId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*sales.SalesForecast), nil
 }

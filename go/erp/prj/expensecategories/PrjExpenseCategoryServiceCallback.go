@@ -15,17 +15,16 @@ limitations under the License.
 package expensecategories
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
-func newPrjExpenseCategoryServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjExpenseCategory]("PrjExpenseCategory",
-		func(e *prj.PrjExpenseCategory) { common.GenerateID(&e.CategoryId) }).
-		Require(func(e *prj.PrjExpenseCategory) string { return e.CategoryId }, "CategoryId").
-		Enum(func(e *prj.PrjExpenseCategory) int32 { return int32(e.ExpenseType) }, prj.PrjExpenseType_name, "ExpenseType").
-		OptionalMoney(func(e *prj.PrjExpenseCategory) *l8common.Money { return e.DefaultLimit }, "DefaultLimit").
+func newPrjExpenseCategoryServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjExpenseCategory{}, vnic).
+		Require(func(v interface{}) string { return v.(*prj.PrjExpenseCategory).CategoryId }, "CategoryId").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjExpenseCategory).ExpenseType) }, prj.PrjExpenseType_name, "ExpenseType").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjExpenseCategory).DefaultLimit }, "DefaultLimit").
 		Build()
 }

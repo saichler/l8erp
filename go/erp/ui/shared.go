@@ -2,8 +2,7 @@ package ui
 
 import (
 	"github.com/saichler/l8bus/go/overlay/vnic"
-	common "github.com/saichler/l8common/go/generic"
-	erpcfg "github.com/saichler/l8erp/go/erp/common"
+	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8logfusion/go/types/l8logf"
 	"github.com/saichler/l8types/go/ifs"
@@ -11,7 +10,7 @@ import (
 )
 
 func CreateVnic(vnet uint32) ifs.IVNic {
-	resources := erpcfg.CreateResources("web-" + strconv.Itoa(int(vnet)))
+	resources := common.CreateResources("web-" + strconv.Itoa(int(vnet)))
 	resources.SysConfig().VnetPort = vnet
 
 	resources.Introspector().Decorators().AddPrimaryKeyDecorator(&l8logf.L8File{}, "Path", "Name")
@@ -44,73 +43,73 @@ func RegisterTypes(resources ifs.IResources) {
 
 func registerHcmTypes(resources ifs.IResources) {
 	// Core HR
-	common.RegisterType[hcm.Employee, hcm.EmployeeList](resources, "EmployeeId")
-	common.RegisterType[hcm.Position, hcm.PositionList](resources, "PositionId")
-	common.RegisterType[hcm.Job, hcm.JobList](resources, "JobId")
-	common.RegisterType[hcm.JobFamily, hcm.JobFamilyList](resources, "JobFamilyId")
-	common.RegisterType[hcm.Organization, hcm.OrganizationList](resources, "OrganizationId")
-	common.RegisterType[hcm.Department, hcm.DepartmentList](resources, "DepartmentId")
-	common.RegisterType[hcm.EmployeeDocument, hcm.EmployeeDocumentList](resources, "DocumentId")
-	common.RegisterType[hcm.ComplianceRecord, hcm.ComplianceRecordList](resources, "RecordId")
+	common.RegisterType(resources, &hcm.Employee{}, &hcm.EmployeeList{}, "EmployeeId")
+	common.RegisterType(resources, &hcm.Position{}, &hcm.PositionList{}, "PositionId")
+	common.RegisterType(resources, &hcm.Job{}, &hcm.JobList{}, "JobId")
+	common.RegisterType(resources, &hcm.JobFamily{}, &hcm.JobFamilyList{}, "JobFamilyId")
+	common.RegisterType(resources, &hcm.Organization{}, &hcm.OrganizationList{}, "OrganizationId")
+	common.RegisterType(resources, &hcm.Department{}, &hcm.DepartmentList{}, "DepartmentId")
+	common.RegisterType(resources, &hcm.EmployeeDocument{}, &hcm.EmployeeDocumentList{}, "DocumentId")
+	common.RegisterType(resources, &hcm.ComplianceRecord{}, &hcm.ComplianceRecordList{}, "RecordId")
 
 	// Payroll
-	common.RegisterType[hcm.PayStructure, hcm.PayStructureList](resources, "PayStructureId")
-	common.RegisterType[hcm.PayComponent, hcm.PayComponentList](resources, "ComponentId")
-	common.RegisterType[hcm.PayrollRun, hcm.PayrollRunList](resources, "PayrollRunId")
-	common.RegisterType[hcm.Payslip, hcm.PayslipList](resources, "PayslipId")
-	common.RegisterType[hcm.TaxWithholding, hcm.TaxWithholdingList](resources, "WithholdingId")
-	common.RegisterType[hcm.DirectDeposit, hcm.DirectDepositList](resources, "DirectDepositId")
-	common.RegisterType[hcm.Garnishment, hcm.GarnishmentList](resources, "GarnishmentId")
-	common.RegisterType[hcm.YearEndDocument, hcm.YearEndDocumentList](resources, "DocumentId")
+	common.RegisterType(resources, &hcm.PayStructure{}, &hcm.PayStructureList{}, "PayStructureId")
+	common.RegisterType(resources, &hcm.PayComponent{}, &hcm.PayComponentList{}, "ComponentId")
+	common.RegisterType(resources, &hcm.PayrollRun{}, &hcm.PayrollRunList{}, "PayrollRunId")
+	common.RegisterType(resources, &hcm.Payslip{}, &hcm.PayslipList{}, "PayslipId")
+	common.RegisterType(resources, &hcm.TaxWithholding{}, &hcm.TaxWithholdingList{}, "WithholdingId")
+	common.RegisterType(resources, &hcm.DirectDeposit{}, &hcm.DirectDepositList{}, "DirectDepositId")
+	common.RegisterType(resources, &hcm.Garnishment{}, &hcm.GarnishmentList{}, "GarnishmentId")
+	common.RegisterType(resources, &hcm.YearEndDocument{}, &hcm.YearEndDocumentList{}, "DocumentId")
 
 	// Benefits
-	common.RegisterType[hcm.BenefitPlan, hcm.BenefitPlanList](resources, "PlanId")
-	common.RegisterType[hcm.BenefitEnrollment, hcm.BenefitEnrollmentList](resources, "EnrollmentId")
-	common.RegisterType[hcm.Carrier, hcm.CarrierList](resources, "CarrierId")
-	common.RegisterType[hcm.Dependent, hcm.DependentList](resources, "DependentId")
-	common.RegisterType[hcm.LifeEvent, hcm.LifeEventList](resources, "LifeEventId")
-	common.RegisterType[hcm.COBRAEvent, hcm.COBRAEventList](resources, "CobraEventId")
+	common.RegisterType(resources, &hcm.BenefitPlan{}, &hcm.BenefitPlanList{}, "PlanId")
+	common.RegisterType(resources, &hcm.BenefitEnrollment{}, &hcm.BenefitEnrollmentList{}, "EnrollmentId")
+	common.RegisterType(resources, &hcm.Carrier{}, &hcm.CarrierList{}, "CarrierId")
+	common.RegisterType(resources, &hcm.Dependent{}, &hcm.DependentList{}, "DependentId")
+	common.RegisterType(resources, &hcm.LifeEvent{}, &hcm.LifeEventList{}, "LifeEventId")
+	common.RegisterType(resources, &hcm.COBRAEvent{}, &hcm.COBRAEventList{}, "CobraEventId")
 
 	// Time & Attendance
-	common.RegisterType[hcm.Timesheet, hcm.TimesheetList](resources, "TimesheetId")
-	common.RegisterType[hcm.LeaveRequest, hcm.LeaveRequestList](resources, "RequestId")
-	common.RegisterType[hcm.LeaveBalance, hcm.LeaveBalanceList](resources, "BalanceId")
-	common.RegisterType[hcm.LeavePolicy, hcm.LeavePolicyList](resources, "PolicyId")
-	common.RegisterType[hcm.Shift, hcm.ShiftList](resources, "ShiftId")
-	common.RegisterType[hcm.Schedule, hcm.ScheduleList](resources, "ScheduleId")
-	common.RegisterType[hcm.Holiday, hcm.HolidayList](resources, "HolidayId")
-	common.RegisterType[hcm.Absence, hcm.AbsenceList](resources, "AbsenceId")
+	common.RegisterType(resources, &hcm.Timesheet{}, &hcm.TimesheetList{}, "TimesheetId")
+	common.RegisterType(resources, &hcm.LeaveRequest{}, &hcm.LeaveRequestList{}, "RequestId")
+	common.RegisterType(resources, &hcm.LeaveBalance{}, &hcm.LeaveBalanceList{}, "BalanceId")
+	common.RegisterType(resources, &hcm.LeavePolicy{}, &hcm.LeavePolicyList{}, "PolicyId")
+	common.RegisterType(resources, &hcm.Shift{}, &hcm.ShiftList{}, "ShiftId")
+	common.RegisterType(resources, &hcm.Schedule{}, &hcm.ScheduleList{}, "ScheduleId")
+	common.RegisterType(resources, &hcm.Holiday{}, &hcm.HolidayList{}, "HolidayId")
+	common.RegisterType(resources, &hcm.Absence{}, &hcm.AbsenceList{}, "AbsenceId")
 
 	// Talent
-	common.RegisterType[hcm.PerformanceReview, hcm.PerformanceReviewList](resources, "ReviewId")
-	common.RegisterType[hcm.Goal, hcm.GoalList](resources, "GoalId")
-	common.RegisterType[hcm.Feedback, hcm.FeedbackList](resources, "FeedbackId")
-	common.RegisterType[hcm.CareerPath, hcm.CareerPathList](resources, "CareerPathId")
-	common.RegisterType[hcm.SuccessionPlan, hcm.SuccessionPlanList](resources, "PlanId")
-	common.RegisterType[hcm.JobRequisition, hcm.JobRequisitionList](resources, "RequisitionId")
-	common.RegisterType[hcm.Applicant, hcm.ApplicantList](resources, "ApplicantId")
-	common.RegisterType[hcm.Application, hcm.ApplicationList](resources, "ApplicationId")
-	common.RegisterType[hcm.OnboardingTask, hcm.OnboardingTaskList](resources, "TaskId")
+	common.RegisterType(resources, &hcm.PerformanceReview{}, &hcm.PerformanceReviewList{}, "ReviewId")
+	common.RegisterType(resources, &hcm.Goal{}, &hcm.GoalList{}, "GoalId")
+	common.RegisterType(resources, &hcm.Feedback{}, &hcm.FeedbackList{}, "FeedbackId")
+	common.RegisterType(resources, &hcm.CareerPath{}, &hcm.CareerPathList{}, "CareerPathId")
+	common.RegisterType(resources, &hcm.SuccessionPlan{}, &hcm.SuccessionPlanList{}, "PlanId")
+	common.RegisterType(resources, &hcm.JobRequisition{}, &hcm.JobRequisitionList{}, "RequisitionId")
+	common.RegisterType(resources, &hcm.Applicant{}, &hcm.ApplicantList{}, "ApplicantId")
+	common.RegisterType(resources, &hcm.Application{}, &hcm.ApplicationList{}, "ApplicationId")
+	common.RegisterType(resources, &hcm.OnboardingTask{}, &hcm.OnboardingTaskList{}, "TaskId")
 
 	// Learning
-	common.RegisterType[hcm.Course, hcm.CourseList](resources, "CourseId")
-	common.RegisterType[hcm.CourseSession, hcm.CourseSessionList](resources, "SessionId")
-	common.RegisterType[hcm.CourseEnrollment, hcm.CourseEnrollmentList](resources, "EnrollmentId")
-	common.RegisterType[hcm.Certification, hcm.CertificationList](resources, "CertificationId")
-	common.RegisterType[hcm.EmployeeCertification, hcm.EmployeeCertificationList](resources, "EmployeeCertificationId")
-	common.RegisterType[hcm.Skill, hcm.SkillList](resources, "SkillId")
-	common.RegisterType[hcm.EmployeeSkill, hcm.EmployeeSkillList](resources, "EmployeeSkillId")
-	common.RegisterType[hcm.TrainingRecord, hcm.TrainingRecordList](resources, "RecordId")
+	common.RegisterType(resources, &hcm.Course{}, &hcm.CourseList{}, "CourseId")
+	common.RegisterType(resources, &hcm.CourseSession{}, &hcm.CourseSessionList{}, "SessionId")
+	common.RegisterType(resources, &hcm.CourseEnrollment{}, &hcm.CourseEnrollmentList{}, "EnrollmentId")
+	common.RegisterType(resources, &hcm.Certification{}, &hcm.CertificationList{}, "CertificationId")
+	common.RegisterType(resources, &hcm.EmployeeCertification{}, &hcm.EmployeeCertificationList{}, "EmployeeCertificationId")
+	common.RegisterType(resources, &hcm.Skill{}, &hcm.SkillList{}, "SkillId")
+	common.RegisterType(resources, &hcm.EmployeeSkill{}, &hcm.EmployeeSkillList{}, "EmployeeSkillId")
+	common.RegisterType(resources, &hcm.TrainingRecord{}, &hcm.TrainingRecordList{}, "RecordId")
 
 	// Compensation
-	common.RegisterType[hcm.SalaryGrade, hcm.SalaryGradeList](resources, "GradeId")
-	common.RegisterType[hcm.SalaryStructure, hcm.SalaryStructureList](resources, "StructureId")
-	common.RegisterType[hcm.EmployeeCompensation, hcm.EmployeeCompensationList](resources, "CompensationId")
-	common.RegisterType[hcm.MeritIncrease, hcm.MeritIncreaseList](resources, "IncreaseId")
-	common.RegisterType[hcm.MeritCycle, hcm.MeritCycleList](resources, "CycleId")
-	common.RegisterType[hcm.BonusPlan, hcm.BonusPlanList](resources, "PlanId")
-	common.RegisterType[hcm.BonusPayment, hcm.BonusPaymentList](resources, "PaymentId")
-	common.RegisterType[hcm.EquityGrant, hcm.EquityGrantList](resources, "GrantId")
-	common.RegisterType[hcm.CompensationStatement, hcm.CompensationStatementList](resources, "StatementId")
-	common.RegisterType[hcm.MarketBenchmark, hcm.MarketBenchmarkList](resources, "BenchmarkId")
+	common.RegisterType(resources, &hcm.SalaryGrade{}, &hcm.SalaryGradeList{}, "GradeId")
+	common.RegisterType(resources, &hcm.SalaryStructure{}, &hcm.SalaryStructureList{}, "StructureId")
+	common.RegisterType(resources, &hcm.EmployeeCompensation{}, &hcm.EmployeeCompensationList{}, "CompensationId")
+	common.RegisterType(resources, &hcm.MeritIncrease{}, &hcm.MeritIncreaseList{}, "IncreaseId")
+	common.RegisterType(resources, &hcm.MeritCycle{}, &hcm.MeritCycleList{}, "CycleId")
+	common.RegisterType(resources, &hcm.BonusPlan{}, &hcm.BonusPlanList{}, "PlanId")
+	common.RegisterType(resources, &hcm.BonusPayment{}, &hcm.BonusPaymentList{}, "PaymentId")
+	common.RegisterType(resources, &hcm.EquityGrant{}, &hcm.EquityGrantList{}, "GrantId")
+	common.RegisterType(resources, &hcm.CompensationStatement{}, &hcm.CompensationStatementList{}, "StatementId")
+	common.RegisterType(resources, &hcm.MarketBenchmark{}, &hcm.MarketBenchmarkList{}, "BenchmarkId")
 }

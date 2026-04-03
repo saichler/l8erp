@@ -14,7 +14,7 @@
 package leadassigns
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[crm.CrmLeadAssign, crm.CrmLeadAssignList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "AssignmentId", Callback: newCrmLeadAssignServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "AssignmentId", Callback: newCrmLeadAssignServiceCallback(vnic),
+	}, &crm.CrmLeadAssign{}, &crm.CrmLeadAssignList{}, creds, dbname, vnic)
 }
 
 func CrmLeadAssigns(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CrmLeadAssigns(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmLeadAssign(assignmentId string, vnic ifs.IVNic) (*crm.CrmLeadAssign, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &crm.CrmLeadAssign{AssignmentId: assignmentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmLeadAssign{AssignmentId: assignmentId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*crm.CrmLeadAssign), nil
 }

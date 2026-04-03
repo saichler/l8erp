@@ -14,7 +14,7 @@
 package costrollups
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[mfg.MfgCostRollup, mfg.MfgCostRollupList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RollupId", Callback: newMfgCostRollupServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RollupId", Callback: newMfgCostRollupServiceCallback(vnic),
+	}, &mfg.MfgCostRollup{}, &mfg.MfgCostRollupList{}, creds, dbname, vnic)
 }
 
 func MfgCostRollups(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func MfgCostRollups(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgCostRollup(rollupId string, vnic ifs.IVNic) (*mfg.MfgCostRollup, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &mfg.MfgCostRollup{RollupId: rollupId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgCostRollup{RollupId: rollupId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*mfg.MfgCostRollup), nil
 }

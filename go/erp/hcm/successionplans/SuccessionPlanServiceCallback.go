@@ -18,13 +18,14 @@ import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/positions"
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newSuccessionPlanServiceCallback() ifs.IServiceCallback {
+func newSuccessionPlanServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("SuccessionPlan",
-		func(e *hcm.SuccessionPlan) { common.GenerateID(&e.PlanId) },
-		validateSuccPlan)
+		func(v interface{}) bool { _, ok := v.(*hcm.SuccessionPlan); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.SuccessionPlan).PlanId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateSuccPlan(v.(*hcm.SuccessionPlan), vnic) })
 }
 
 func validateSuccPlan(entity *hcm.SuccessionPlan, vnic ifs.IVNic) error {

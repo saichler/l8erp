@@ -17,7 +17,7 @@ package scmreports
 import (
 	"fmt"
 
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
@@ -45,7 +45,9 @@ func poStatusName(s scm.ScmPurchaseOrderStatus) string {
 }
 
 func generatePurchaseOrderSummary(report *fin.FinReport, vnic ifs.IVNic) error {
-	orders, err := common.GetEntities("PurchOrder", 50, &scm.ScmPurchaseOrder{}, vnic)
+	ordersRaw, err := common.GetEntities("PurchOrder", 50, &scm.ScmPurchaseOrder{}, vnic)
+	orders := make([]*scm.ScmPurchaseOrder, 0, len(ordersRaw))
+	for _, ri := range ordersRaw { orders = append(orders, ri.(*scm.ScmPurchaseOrder)) }
 	if err != nil {
 		return err
 	}

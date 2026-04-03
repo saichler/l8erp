@@ -15,14 +15,13 @@ limitations under the License.
 package marketinglists
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmMarketingListServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmMarketingList]("CrmMarketingList",
-		func(e *crm.CrmMarketingList) { common.GenerateID(&e.ListId) }).
-		Require(func(e *crm.CrmMarketingList) string { return e.ListId }, "ListId").
+func newCrmMarketingListServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmMarketingList{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmMarketingList).ListId }, "ListId").
 		Build()
 }

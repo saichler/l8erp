@@ -14,7 +14,7 @@
 package datasources
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/bi"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[bi.BiDataSource, bi.BiDataSourceList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "SourceId", Callback: newBiDataSourceServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "SourceId", Callback: newBiDataSourceServiceCallback(vnic),
+	}, &bi.BiDataSource{}, &bi.BiDataSourceList{}, creds, dbname, vnic)
 }
 
 func BiDataSources(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func BiDataSources(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiDataSource(sourceId string, vnic ifs.IVNic) (*bi.BiDataSource, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &bi.BiDataSource{SourceId: sourceId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiDataSource{SourceId: sourceId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*bi.BiDataSource), nil
 }

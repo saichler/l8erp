@@ -14,7 +14,7 @@
 package projecttemplates
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[prj.PrjProjectTemplate, prj.PrjProjectTemplateList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TemplateId", Callback: newPrjProjectTemplateServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "TemplateId", Callback: newPrjProjectTemplateServiceCallback(vnic),
+	}, &prj.PrjProjectTemplate{}, &prj.PrjProjectTemplateList{}, creds, dbname, vnic)
 }
 
 func PrjProjectTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PrjProjectTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjProjectTemplate(templateId string, vnic ifs.IVNic) (*prj.PrjProjectTemplate, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &prj.PrjProjectTemplate{TemplateId: templateId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjProjectTemplate{TemplateId: templateId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*prj.PrjProjectTemplate), nil
 }

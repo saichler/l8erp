@@ -14,7 +14,7 @@
 package assetcategories
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.AssetCategory, fin.AssetCategoryList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CategoryId", Callback: newAssetCategoryServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CategoryId", Callback: newAssetCategoryServiceCallback(vnic),
+	}, &fin.AssetCategory{}, &fin.AssetCategoryList{}, creds, dbname, vnic)
 }
 
 func AssetCategories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func AssetCategories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func AssetCategory(categoryId string, vnic ifs.IVNic) (*fin.AssetCategory, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.AssetCategory{CategoryId: categoryId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.AssetCategory{CategoryId: categoryId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.AssetCategory), nil
 }

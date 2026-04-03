@@ -17,17 +17,16 @@ package coupons
 import (
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/ecom"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newEcomCouponServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[ecom.EcomCoupon]("EcomCoupon",
-		func(e *ecom.EcomCoupon) { common.GenerateID(&e.CouponId) }).
-		Require(func(e *ecom.EcomCoupon) string { return e.CouponId }, "CouponId").
-		Enum(func(e *ecom.EcomCoupon) int32 { return int32(e.DiscountType) }, ecom.EcomDiscountType_name, "DiscountType").
-		OptionalMoney(func(e *ecom.EcomCoupon) *l8common.Money { return e.MaxDiscount }, "MaxDiscount").
-		OptionalMoney(func(e *ecom.EcomCoupon) *l8common.Money { return e.MinPurchase }, "MinPurchase").
-		DateAfter(func(e *ecom.EcomCoupon) int64 { return e.EndDate }, func(e *ecom.EcomCoupon) int64 { return e.StartDate }, "EndDate", "StartDate").
+func newEcomCouponServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&ecom.EcomCoupon{}, vnic).
+		Require(func(v interface{}) string { return v.(*ecom.EcomCoupon).CouponId }, "CouponId").
+		Enum(func(v interface{}) int32 { return int32(v.(*ecom.EcomCoupon).DiscountType) }, ecom.EcomDiscountType_name, "DiscountType").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomCoupon).MaxDiscount }, "MaxDiscount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*ecom.EcomCoupon).MinPurchase }, "MinPurchase").
+		DateAfter(func(v interface{}) int64 { return v.(*ecom.EcomCoupon).EndDate }, func(v interface{}) int64 { return v.(*ecom.EcomCoupon).StartDate }, "EndDate", "StartDate").
 		Build()
 }

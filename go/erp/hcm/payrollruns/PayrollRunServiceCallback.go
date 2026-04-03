@@ -17,14 +17,15 @@ package payrollruns
 import (
 	"github.com/saichler/l8erp/go/erp/hcm/organizations"
 	"github.com/saichler/l8erp/go/types/hcm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newPayrollRunServiceCallback() ifs.IServiceCallback {
+func newPayrollRunServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("PayrollRun",
-		func(e *hcm.PayrollRun) { common.GenerateID(&e.PayrollRunId) },
-		validatePayRun)
+		func(v interface{}) bool { _, ok := v.(*hcm.PayrollRun); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.PayrollRun).PayrollRunId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validatePayRun(v.(*hcm.PayrollRun), vnic) })
 }
 
 func validatePayRun(entity *hcm.PayrollRun, vnic ifs.IVNic) error {
@@ -54,10 +55,10 @@ func validatePayRunRequiredFields(entity *hcm.PayrollRun) error {
 }
 
 func validatePayRunEnums(entity *hcm.PayrollRun) error {
-	if err := common.ValidateEnum(entity.Status, hcm.PayrollRunStatus_name, "Status"); err != nil {
+	if err := common.ValidateEnum(int32(entity.Status), hcm.PayrollRunStatus_name, "Status"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(entity.RunType, hcm.PayrollRunType_name, "RunType"); err != nil {
+	if err := common.ValidateEnum(int32(entity.RunType), hcm.PayrollRunType_name, "RunType"); err != nil {
 		return err
 	}
 	return nil

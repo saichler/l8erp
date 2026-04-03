@@ -14,7 +14,7 @@
 package items
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmItem, scm.ScmItemList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ItemId", Callback: newItemServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ItemId", Callback: newItemServiceCallback(vnic),
+	}, &scm.ScmItem{}, &scm.ScmItemList{}, creds, dbname, vnic)
 }
 
 func Items(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func Items(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Item(itemId string, vnic ifs.IVNic) (*scm.ScmItem, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmItem{ItemId: itemId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmItem{ItemId: itemId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmItem), nil
 }

@@ -15,17 +15,18 @@ limitations under the License.
 package trainingrecords
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/courses"
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newTrainingRecordServiceCallback() ifs.IServiceCallback {
+func newTrainingRecordServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("TrainingRecord",
-		func(e *hcm.TrainingRecord) { common.GenerateID(&e.RecordId) },
-		validateTrainingRecord)
+		func(v interface{}) bool { _, ok := v.(*hcm.TrainingRecord); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.TrainingRecord).RecordId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateTrainingRecord(v.(*hcm.TrainingRecord), vnic) })
 }
 
 func validateTrainingRecord(entity *hcm.TrainingRecord, vnic ifs.IVNic) error {

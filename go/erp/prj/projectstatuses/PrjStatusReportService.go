@@ -14,7 +14,7 @@
 package projectstatuses
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[prj.PrjStatusReport, prj.PrjStatusReportList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "StatusId", Callback: newPrjStatusReportServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "StatusId", Callback: newPrjStatusReportServiceCallback(vnic),
+	}, &prj.PrjStatusReport{}, &prj.PrjStatusReportList{}, creds, dbname, vnic)
 }
 
 func PrjStatusReports(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PrjStatusReports(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjStatusReport(statusId string, vnic ifs.IVNic) (*prj.PrjStatusReport, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &prj.PrjStatusReport{StatusId: statusId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjStatusReport{StatusId: statusId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*prj.PrjStatusReport), nil
 }

@@ -14,7 +14,7 @@
 package opportunities
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[crm.CrmOpportunity, crm.CrmOpportunityList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "OpportunityId", Callback: newCrmOpportunityServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "OpportunityId", Callback: newCrmOpportunityServiceCallback(vnic),
+	}, &crm.CrmOpportunity{}, &crm.CrmOpportunityList{}, creds, dbname, vnic)
 }
 
 func CrmOpportunities(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CrmOpportunities(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmOpportunity(opportunityId string, vnic ifs.IVNic) (*crm.CrmOpportunity, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &crm.CrmOpportunity{OpportunityId: opportunityId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmOpportunity{OpportunityId: opportunityId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*crm.CrmOpportunity), nil
 }

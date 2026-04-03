@@ -14,7 +14,7 @@
 package benefitplans
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.BenefitPlan, hcm.BenefitPlanList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PlanId", Callback: newBenefitPlanServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PlanId", Callback: newBenefitPlanServiceCallback(vnic),
+	}, &hcm.BenefitPlan{}, &hcm.BenefitPlanList{}, creds, dbname, vnic)
 }
 
 func BenefitPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func BenefitPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BenefitPlan(planId string, vnic ifs.IVNic) (*hcm.BenefitPlan, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.BenefitPlan{PlanId: planId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.BenefitPlan{PlanId: planId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.BenefitPlan), nil
 }

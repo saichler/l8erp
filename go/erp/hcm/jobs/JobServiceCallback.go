@@ -15,16 +15,17 @@ limitations under the License.
 package jobs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/erp/hcm/jobfamilies"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newJobServiceCallback() ifs.IServiceCallback {
+func newJobServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("Job",
-		func(e *hcm.Job) { common.GenerateID(&e.JobId) },
-		validateJob)
+		func(v interface{}) bool { _, ok := v.(*hcm.Job); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.Job).JobId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateJob(v.(*hcm.Job), vnic) })
 }
 
 func validateJob(entity *hcm.Job, vnic ifs.IVNic) error {

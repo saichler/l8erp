@@ -14,7 +14,7 @@
 package tags
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[doc.DocTag, doc.DocTagList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TagId", Callback: newDocTagServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "TagId", Callback: newDocTagServiceCallback(vnic),
+	}, &doc.DocTag{}, &doc.DocTagList{}, creds, dbname, vnic)
 }
 
 func DocTags(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func DocTags(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocTag(tagId string, vnic ifs.IVNic) (*doc.DocTag, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &doc.DocTag{TagId: tagId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocTag{TagId: tagId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*doc.DocTag), nil
 }

@@ -15,7 +15,7 @@ limitations under the License.
 package cases
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 	"time"
@@ -23,13 +23,18 @@ import (
 
 // applySLADeadline sets the case DueDate based on SLA resolution time
 // when a case is created or assigned an SLA.
-func applySLADeadline(c *crm.CrmCase, vnic ifs.IVNic) error {
+func applySLADeadline(v interface{}, vnic ifs.IVNic) error {
+	c := v.(*crm.CrmCase)
 	if c.SlaId == "" || c.DueDate != 0 {
 		return nil
 	}
-	sla, err := common.GetEntity("CrmSLA", 80,
+	slaRaw, err := common.GetEntity("CrmSLA", 80,
 		&crm.CrmSLA{SlaId: c.SlaId}, vnic)
-	if err != nil || sla == nil || !sla.IsActive {
+	if err != nil || slaRaw == nil {
+		return nil
+	}
+	sla := slaRaw.(*crm.CrmSLA)
+	if !sla.IsActive {
 		return nil
 	}
 	baseTime := time.Now()
@@ -43,7 +48,8 @@ func applySLADeadline(c *crm.CrmCase, vnic ifs.IVNic) error {
 }
 
 // checkSLABreach marks a case as escalated if it's past the SLA deadline.
-func checkSLABreach(c *crm.CrmCase, action ifs.Action, vnic ifs.IVNic) error {
+func checkSLABreach(v interface{}, action ifs.Action, vnic ifs.IVNic) error {
+	c := v.(*crm.CrmCase)
 	if c.DueDate == 0 || c.IsEscalated {
 		return nil
 	}

@@ -15,15 +15,15 @@ limitations under the License.
 package paystructures
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newPayStructureServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("PayStructure",
-		func(e *hcm.PayStructure) { common.GenerateID(&e.PayStructureId) },
-		nil)
+func newPayStructureServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&hcm.PayStructure{}, vnic).
+		Custom(validatePayStruct).
+		Build()
 }
 
 func validatePayStruct(entity *hcm.PayStructure) error {

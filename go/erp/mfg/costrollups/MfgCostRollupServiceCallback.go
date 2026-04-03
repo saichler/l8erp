@@ -15,14 +15,13 @@ limitations under the License.
 package costrollups
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/mfg"
 )
 
-func newMfgCostRollupServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[mfg.MfgCostRollup]("MfgCostRollup",
-		func(e *mfg.MfgCostRollup) { common.GenerateID(&e.RollupId) }).
-		Require(func(e *mfg.MfgCostRollup) string { return e.RollupId }, "RollupId").
+func newMfgCostRollupServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&mfg.MfgCostRollup{}, vnic).
+		Require(func(v interface{}) string { return v.(*mfg.MfgCostRollup).RollupId }, "RollupId").
 		Build()
 }

@@ -15,16 +15,15 @@ limitations under the License.
 package currencies
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newCurrencyServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.Currency]("Currency",
-		func(e *fin.Currency) { common.GenerateID(&e.CurrencyId) }).
-		Require(func(e *fin.Currency) string { return e.CurrencyId }, "CurrencyId").
-		Require(func(e *fin.Currency) string { return e.Code }, "Code").
-		Require(func(e *fin.Currency) string { return e.Name }, "Name").
+func newCurrencyServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.Currency{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.Currency).CurrencyId }, "CurrencyId").
+		Require(func(v interface{}) string { return v.(*fin.Currency).Code }, "Code").
+		Require(func(v interface{}) string { return v.(*fin.Currency).Name }, "Name").
 		Build()
 }

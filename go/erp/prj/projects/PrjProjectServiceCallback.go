@@ -18,22 +18,21 @@ import (
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newPrjProjectServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjProject]("PrjProject",
-		func(e *prj.PrjProject) { common.GenerateID(&e.ProjectId) }).
+func newPrjProjectServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjProject{}, vnic).
 		Compute(computeTaskSchedule).
 		Compute(computeEarnedValue).
-		Require(func(e *prj.PrjProject) string { return e.ProjectId }, "ProjectId").
-		Enum(func(e *prj.PrjProject) int32 { return int32(e.BillingType) }, prj.PrjBillingType_name, "BillingType").
-		Enum(func(e *prj.PrjProject) int32 { return int32(e.Priority) }, prj.PrjProjectPriority_name, "Priority").
-		Enum(func(e *prj.PrjProject) int32 { return int32(e.ProjectType) }, prj.PrjProjectType_name, "ProjectType").
-		Enum(func(e *prj.PrjProject) int32 { return int32(e.Status) }, prj.PrjProjectStatus_name, "Status").
-		OptionalMoney(func(e *prj.PrjProject) *l8common.Money { return e.Budget }, "Budget").
-		OptionalMoney(func(e *prj.PrjProject) *l8common.Money { return e.ActualCost }, "ActualCost").
-		DateAfter(func(e *prj.PrjProject) int64 { return e.EndDate }, func(e *prj.PrjProject) int64 { return e.StartDate }, "EndDate", "StartDate").
-		DateAfter(func(e *prj.PrjProject) int64 { return e.ActualEndDate }, func(e *prj.PrjProject) int64 { return e.ActualStartDate }, "ActualEndDate", "ActualStartDate").
+		Require(func(v interface{}) string { return v.(*prj.PrjProject).ProjectId }, "ProjectId").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjProject).BillingType) }, prj.PrjBillingType_name, "BillingType").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjProject).Priority) }, prj.PrjProjectPriority_name, "Priority").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjProject).ProjectType) }, prj.PrjProjectType_name, "ProjectType").
+		Enum(func(v interface{}) int32 { return int32(v.(*prj.PrjProject).Status) }, prj.PrjProjectStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjProject).Budget }, "Budget").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjProject).ActualCost }, "ActualCost").
+		DateAfter(func(v interface{}) int64 { return v.(*prj.PrjProject).EndDate }, func(v interface{}) int64 { return v.(*prj.PrjProject).StartDate }, "EndDate", "StartDate").
+		DateAfter(func(v interface{}) int64 { return v.(*prj.PrjProject).ActualEndDate }, func(v interface{}) int64 { return v.(*prj.PrjProject).ActualStartDate }, "ActualEndDate", "ActualStartDate").
 		Build()
 }

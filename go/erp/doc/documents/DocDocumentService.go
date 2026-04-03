@@ -14,7 +14,7 @@
 package documents
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[doc.DocDocument, doc.DocDocumentList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "DocumentId", Callback: newDocDocumentServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "DocumentId", Callback: newDocDocumentServiceCallback(vnic),
+	}, &doc.DocDocument{}, &doc.DocDocumentList{}, creds, dbname, vnic)
 }
 
 func DocDocuments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func DocDocuments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocDocument(documentId string, vnic ifs.IVNic) (*doc.DocDocument, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &doc.DocDocument{DocumentId: documentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocDocument{DocumentId: documentId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*doc.DocDocument), nil
 }

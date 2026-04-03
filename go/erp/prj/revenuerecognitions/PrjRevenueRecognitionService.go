@@ -14,7 +14,7 @@
 package revenuerecognitions
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[prj.PrjRevenueRecognition, prj.PrjRevenueRecognitionList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RecognitionId", Callback: newPrjRevenueRecognitionServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RecognitionId", Callback: newPrjRevenueRecognitionServiceCallback(vnic),
+	}, &prj.PrjRevenueRecognition{}, &prj.PrjRevenueRecognitionList{}, creds, dbname, vnic)
 }
 
 func PrjRevenueRecognitions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PrjRevenueRecognitions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjRevenueRecognition(recognitionId string, vnic ifs.IVNic) (*prj.PrjRevenueRecognition, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &prj.PrjRevenueRecognition{RecognitionId: recognitionId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjRevenueRecognition{RecognitionId: recognitionId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*prj.PrjRevenueRecognition), nil
 }

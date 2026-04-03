@@ -14,7 +14,7 @@
 package vendorpayments
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.VendorPayment, fin.VendorPaymentList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PaymentId", Callback: newVendorPaymentServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PaymentId", Callback: newVendorPaymentServiceCallback(vnic),
+	}, &fin.VendorPayment{}, &fin.VendorPaymentList{}, creds, dbname, vnic)
 }
 
 func VendorPayments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func VendorPayments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func VendorPayment(paymentId string, vnic ifs.IVNic) (*fin.VendorPayment, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.VendorPayment{PaymentId: paymentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.VendorPayment{PaymentId: paymentId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.VendorPayment), nil
 }

@@ -15,17 +15,16 @@ limitations under the License.
 package interactions
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmInteractionServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmInteraction]("CrmInteraction",
-		func(e *crm.CrmInteraction) { common.GenerateID(&e.InteractionId) }).
-		Require(func(e *crm.CrmInteraction) string { return e.InteractionId }, "InteractionId").
-		Require(func(e *crm.CrmInteraction) string { return e.AccountId }, "AccountId").
-		Enum(func(e *crm.CrmInteraction) int32 { return int32(e.Direction) }, crm.CrmInteractionDirection_name, "Direction").
-		Enum(func(e *crm.CrmInteraction) int32 { return int32(e.InteractionType) }, crm.CrmInteractionType_name, "InteractionType").
+func newCrmInteractionServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmInteraction{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmInteraction).InteractionId }, "InteractionId").
+		Require(func(v interface{}) string { return v.(*crm.CrmInteraction).AccountId }, "AccountId").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmInteraction).Direction) }, crm.CrmInteractionDirection_name, "Direction").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmInteraction).InteractionType) }, crm.CrmInteractionType_name, "InteractionType").
 		Build()
 }

@@ -15,17 +15,16 @@ limitations under the License.
 package auditfindings
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/comp"
 )
 
-func newCompAuditFindingServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[comp.CompAuditFinding]("CompAuditFinding",
-		func(e *comp.CompAuditFinding) { common.GenerateID(&e.FindingId) }).
+func newCompAuditFindingServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&comp.CompAuditFinding{}, vnic).
 		After(escalateCriticalFindings).
-		Require(func(e *comp.CompAuditFinding) string { return e.FindingId }, "FindingId").
-		Enum(func(e *comp.CompAuditFinding) int32 { return int32(e.Severity) }, comp.CompSeverityLevel_name, "Severity").
-		Enum(func(e *comp.CompAuditFinding) int32 { return int32(e.Status) }, comp.CompFindingStatus_name, "Status").
+		Require(func(v interface{}) string { return v.(*comp.CompAuditFinding).FindingId }, "FindingId").
+		Enum(func(v interface{}) int32 { return int32(v.(*comp.CompAuditFinding).Severity) }, comp.CompSeverityLevel_name, "Severity").
+		Enum(func(v interface{}) int32 { return int32(v.(*comp.CompAuditFinding).Status) }, comp.CompFindingStatus_name, "Status").
 		Build()
 }

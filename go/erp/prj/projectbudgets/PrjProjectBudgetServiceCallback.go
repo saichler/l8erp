@@ -15,26 +15,26 @@ limitations under the License.
 package projectbudgets
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/prj"
 )
 
-func computeProjectBudget(pb *prj.PrjProjectBudget) error {
+func computeProjectBudget(v interface{}) error {
+	pb := v.(*prj.PrjProjectBudget)
 	pb.RemainingAmount = common.MoneySubtract(pb.BudgetedAmount, pb.ActualAmount)
 	pb.RemainingHours = pb.BudgetedHours - pb.ActualHours
 	return nil
 }
 
-func newPrjProjectBudgetServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[prj.PrjProjectBudget]("PrjProjectBudget",
-		func(e *prj.PrjProjectBudget) { common.GenerateID(&e.BudgetId) }).
+func newPrjProjectBudgetServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&prj.PrjProjectBudget{}, vnic).
 		Compute(computeProjectBudget).
-		Require(func(e *prj.PrjProjectBudget) string { return e.BudgetId }, "BudgetId").
-		OptionalMoney(func(e *prj.PrjProjectBudget) *l8common.Money { return e.BudgetedAmount }, "BudgetedAmount").
-		OptionalMoney(func(e *prj.PrjProjectBudget) *l8common.Money { return e.CommittedAmount }, "CommittedAmount").
-		OptionalMoney(func(e *prj.PrjProjectBudget) *l8common.Money { return e.ActualAmount }, "ActualAmount").
-		OptionalMoney(func(e *prj.PrjProjectBudget) *l8common.Money { return e.RemainingAmount }, "RemainingAmount").
+		Require(func(v interface{}) string { return v.(*prj.PrjProjectBudget).BudgetId }, "BudgetId").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjProjectBudget).BudgetedAmount }, "BudgetedAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjProjectBudget).CommittedAmount }, "CommittedAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjProjectBudget).ActualAmount }, "ActualAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*prj.PrjProjectBudget).RemainingAmount }, "RemainingAmount").
 		Build()
 }

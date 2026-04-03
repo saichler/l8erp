@@ -15,14 +15,13 @@ limitations under the License.
 package serviceschedules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmServiceScheduleServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmServiceSchedule]("CrmServiceSchedule",
-		func(e *crm.CrmServiceSchedule) { common.GenerateID(&e.ScheduleId) }).
-		Require(func(e *crm.CrmServiceSchedule) string { return e.ScheduleId }, "ScheduleId").
+func newCrmServiceScheduleServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmServiceSchedule{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmServiceSchedule).ScheduleId }, "ScheduleId").
 		Build()
 }

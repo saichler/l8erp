@@ -24,9 +24,9 @@ import (
 func generatePrjPhase5(client *HCMClient, store *MockDataStore) error {
 	// Generate timesheets and embed entries
 	timesheets := generatePrjTimesheets(store)
-	store.PrjTimesheetIDs = extractIDs(timesheets, func(e *prj.PrjTimesheet) string { return e.TimesheetId })
+	store.PrjTimesheetIDs = extractIDs(timesheets, func(v interface{}) string { return v.(*prj.PrjTimesheet).TimesheetId })
 	entries := generateTimesheetEntries(store)
-	store.PrjTimesheetEntryIDs = extractIDs(entries, func(e *prj.PrjTimesheetEntry) string { return e.EntryId })
+	store.PrjTimesheetEntryIDs = extractIDs(entries, func(v interface{}) string { return v.(*prj.PrjTimesheetEntry).EntryId })
 	fmt.Printf("  Generated %d timesheet entries\n", len(entries))
 	for i, e := range entries {
 		timesheets[i%len(timesheets)].Entries = append(timesheets[i%len(timesheets)].Entries, e)
@@ -37,9 +37,9 @@ func generatePrjPhase5(client *HCMClient, store *MockDataStore) error {
 
 	// Generate expense reports and embed entries
 	reports := generateExpenseReports(store)
-	store.PrjExpenseReportIDs = extractIDs(reports, func(e *prj.PrjExpenseReport) string { return e.ReportId })
+	store.PrjExpenseReportIDs = extractIDs(reports, func(v interface{}) string { return v.(*prj.PrjExpenseReport).ReportId })
 	expEntries := generateExpenseEntries(store)
-	store.PrjExpenseEntryIDs = extractIDs(expEntries, func(e *prj.PrjExpenseEntry) string { return e.EntryId })
+	store.PrjExpenseEntryIDs = extractIDs(expEntries, func(v interface{}) string { return v.(*prj.PrjExpenseEntry).EntryId })
 	fmt.Printf("  Generated %d expense entries\n", len(expEntries))
 	for i, e := range expEntries {
 		reports[i%len(reports)].Entries = append(reports[i%len(reports)].Entries, e)
@@ -55,9 +55,9 @@ func generatePrjPhase5(client *HCMClient, store *MockDataStore) error {
 func generatePrjPhase6(client *HCMClient, store *MockDataStore) error {
 	// Generate billing schedules and embed milestones
 	schedules := generateBillingSchedules(store)
-	store.PrjBillingScheduleIDs = extractIDs(schedules, func(e *prj.PrjBillingSchedule) string { return e.ScheduleId })
+	store.PrjBillingScheduleIDs = extractIDs(schedules, func(v interface{}) string { return v.(*prj.PrjBillingSchedule).ScheduleId })
 	milestones := generateBillingMilestones(store)
-	store.PrjBillingMilestoneIDs = extractIDs(milestones, func(e *prj.PrjBillingMilestone) string { return e.MilestoneId })
+	store.PrjBillingMilestoneIDs = extractIDs(milestones, func(v interface{}) string { return v.(*prj.PrjBillingMilestone).MilestoneId })
 	fmt.Printf("  Generated %d billing milestones\n", len(milestones))
 	for i, m := range milestones {
 		schedules[i%len(schedules)].Milestones = append(schedules[i%len(schedules)].Milestones, m)
@@ -68,7 +68,7 @@ func generatePrjPhase6(client *HCMClient, store *MockDataStore) error {
 
 	// Generate invoices and embed lines
 	invoices := generateProjectInvoices(store)
-	store.PrjProjectInvoiceIDs = extractIDs(invoices, func(e *prj.PrjProjectInvoice) string { return e.InvoiceId })
+	store.PrjProjectInvoiceIDs = extractIDs(invoices, func(v interface{}) string { return v.(*prj.PrjProjectInvoice).InvoiceId })
 	lines := generateInvoiceLines(store)
 	fmt.Printf("  Generated %d invoice lines\n", len(lines))
 	for i, l := range lines {
@@ -79,12 +79,12 @@ func generatePrjPhase6(client *HCMClient, store *MockDataStore) error {
 	}
 
 	recognitions := generateRevenueRecognitions(store)
-	if err := runOp(client, "Revenue Recognitions", "/erp/90/PrjRevRec", &prj.PrjRevenueRecognitionList{List: recognitions}, extractIDs(recognitions, func(e *prj.PrjRevenueRecognition) string { return e.RecognitionId }), &store.PrjRevenueRecognitionIDs); err != nil {
+	if err := runOp(client, "Revenue Recognitions", "/erp/90/PrjRevRec", &prj.PrjRevenueRecognitionList{List: recognitions}, extractIDs(recognitions, func(v interface{}) string { return v.(*prj.PrjRevenueRecognition).RecognitionId }), &store.PrjRevenueRecognitionIDs); err != nil {
 		return err
 	}
 
 	budgets := generateProjectBudgets(store)
-	if err := runOp(client, "Project Budgets", "/erp/90/PrjBudget", &prj.PrjProjectBudgetList{List: budgets}, extractIDs(budgets, func(e *prj.PrjProjectBudget) string { return e.BudgetId }), &store.PrjProjectBudgetIDs); err != nil {
+	if err := runOp(client, "Project Budgets", "/erp/90/PrjBudget", &prj.PrjProjectBudgetList{List: budgets}, extractIDs(budgets, func(v interface{}) string { return v.(*prj.PrjProjectBudget).BudgetId }), &store.PrjProjectBudgetIDs); err != nil {
 		return err
 	}
 
@@ -94,17 +94,17 @@ func generatePrjPhase6(client *HCMClient, store *MockDataStore) error {
 // generatePrjPhase7 creates analytics data (Prime Objects only)
 func generatePrjPhase7(client *HCMClient, store *MockDataStore) error {
 	reports := generateStatusReports(store)
-	if err := runOp(client, "Status Reports", "/erp/90/PrjStatus", &prj.PrjStatusReportList{List: reports}, extractIDs(reports, func(e *prj.PrjStatusReport) string { return e.StatusId }), &store.PrjStatusReportIDs); err != nil {
+	if err := runOp(client, "Status Reports", "/erp/90/PrjStatus", &prj.PrjStatusReportList{List: reports}, extractIDs(reports, func(v interface{}) string { return v.(*prj.PrjStatusReport).StatusId }), &store.PrjStatusReportIDs); err != nil {
 		return err
 	}
 
 	views := generatePortfolioViews(store)
-	if err := runOp(client, "Portfolio Views", "/erp/90/PrjPortflo", &prj.PrjPortfolioViewList{List: views}, extractIDs(views, func(e *prj.PrjPortfolioView) string { return e.ViewId }), &store.PrjPortfolioViewIDs); err != nil {
+	if err := runOp(client, "Portfolio Views", "/erp/90/PrjPortflo", &prj.PrjPortfolioViewList{List: views}, extractIDs(views, func(v interface{}) string { return v.(*prj.PrjPortfolioView).ViewId }), &store.PrjPortfolioViewIDs); err != nil {
 		return err
 	}
 
 	kpis := generateProjectKPIs(store)
-	if err := runOp(client, "Project KPIs", "/erp/90/PrjKPI", &prj.PrjProjectKPIList{List: kpis}, extractIDs(kpis, func(e *prj.PrjProjectKPI) string { return e.KpiId }), &store.PrjProjectKPIIDs); err != nil {
+	if err := runOp(client, "Project KPIs", "/erp/90/PrjKPI", &prj.PrjProjectKPIList{List: kpis}, extractIDs(kpis, func(v interface{}) string { return v.(*prj.PrjProjectKPI).KpiId }), &store.PrjProjectKPIIDs); err != nil {
 		return err
 	}
 

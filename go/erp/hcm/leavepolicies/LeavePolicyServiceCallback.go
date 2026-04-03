@@ -15,15 +15,15 @@ limitations under the License.
 package leavepolicies
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/hcm"
 )
 
-func newLeavePolicyServiceCallback() ifs.IServiceCallback {
-	return common.NewServiceCallback("LeavePolicy",
-		func(e *hcm.LeavePolicy) { common.GenerateID(&e.PolicyId) },
-		nil)
+func newLeavePolicyServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&hcm.LeavePolicy{}, vnic).
+		Custom(validateLeavePol).
+		Build()
 }
 
 func validateLeavePol(entity *hcm.LeavePolicy) error {
@@ -40,13 +40,13 @@ func validateLeavePolEnums(entity *hcm.LeavePolicy) error {
 	if err := common.ValidateRequired(entity.PolicyId, "PolicyId"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(entity.LeaveType, hcm.LeaveType_name, "LeaveType"); err != nil {
+	if err := common.ValidateEnum(int32(entity.LeaveType), hcm.LeaveType_name, "LeaveType"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(entity.AccrualMethod, hcm.AccrualMethod_name, "AccrualMethod"); err != nil {
+	if err := common.ValidateEnum(int32(entity.AccrualMethod), hcm.AccrualMethod_name, "AccrualMethod"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(entity.AccrualFrequency, hcm.AccrualFrequency_name, "AccrualFrequency"); err != nil {
+	if err := common.ValidateEnum(int32(entity.AccrualFrequency), hcm.AccrualFrequency_name, "AccrualFrequency"); err != nil {
 		return err
 	}
 	return nil

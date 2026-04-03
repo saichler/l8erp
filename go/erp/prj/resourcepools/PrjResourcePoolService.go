@@ -14,7 +14,7 @@
 package resourcepools
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[prj.PrjResourcePool, prj.PrjResourcePoolList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PoolId", Callback: newPrjResourcePoolServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PoolId", Callback: newPrjResourcePoolServiceCallback(vnic),
+	}, &prj.PrjResourcePool{}, &prj.PrjResourcePoolList{}, creds, dbname, vnic)
 }
 
 func PrjResourcePools(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PrjResourcePools(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjResourcePool(poolId string, vnic ifs.IVNic) (*prj.PrjResourcePool, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &prj.PrjResourcePool{PoolId: poolId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjResourcePool{PoolId: poolId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*prj.PrjResourcePool), nil
 }

@@ -15,31 +15,42 @@ limitations under the License.
 package purchaseinvoices
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	"reflect"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newPurchaseInvoiceServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.PurchaseInvoice]("PurchaseInvoice",
-		func(e *fin.PurchaseInvoice) { common.GenerateID(&e.InvoiceId) }).
+
+func toSlice(slice interface{}) []interface{} {
+	v := reflect.ValueOf(slice)
+	result := make([]interface{}, v.Len())
+	for i := 0; i < v.Len(); i++ {
+		result[i] = v.Index(i).Interface()
+	}
+	return result
+}
+
+func newPurchaseInvoiceServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.PurchaseInvoice{}, vnic).
 		StatusTransition(purchaseInvoiceTransitions()).
 		Compute(computePurchaseInvoiceTotals).
-		Require(func(e *fin.PurchaseInvoice) string { return e.InvoiceId }, "InvoiceId").
-		Require(func(e *fin.PurchaseInvoice) string { return e.VendorId }, "VendorId").
-		Require(func(e *fin.PurchaseInvoice) string { return e.InvoiceNumber }, "InvoiceNumber").
-		Enum(func(e *fin.PurchaseInvoice) int32 { return int32(e.Status) }, fin.InvoiceStatus_name, "Status").
-		OptionalMoney(func(e *fin.PurchaseInvoice) *l8common.Money { return e.Subtotal }, "Subtotal").
-		OptionalMoney(func(e *fin.PurchaseInvoice) *l8common.Money { return e.TaxAmount }, "TaxAmount").
-		OptionalMoney(func(e *fin.PurchaseInvoice) *l8common.Money { return e.TotalAmount }, "TotalAmount").
-		OptionalMoney(func(e *fin.PurchaseInvoice) *l8common.Money { return e.AmountPaid }, "AmountPaid").
-		OptionalMoney(func(e *fin.PurchaseInvoice) *l8common.Money { return e.BalanceDue }, "BalanceDue").
-		DateAfter(func(e *fin.PurchaseInvoice) int64 { return e.DueDate }, func(e *fin.PurchaseInvoice) int64 { return e.InvoiceDate }, "DueDate", "InvoiceDate").
+		Require(func(v interface{}) string { return v.(*fin.PurchaseInvoice).InvoiceId }, "InvoiceId").
+		Require(func(v interface{}) string { return v.(*fin.PurchaseInvoice).VendorId }, "VendorId").
+		Require(func(v interface{}) string { return v.(*fin.PurchaseInvoice).InvoiceNumber }, "InvoiceNumber").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.PurchaseInvoice).Status) }, fin.InvoiceStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.PurchaseInvoice).Subtotal }, "Subtotal").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.PurchaseInvoice).TaxAmount }, "TaxAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.PurchaseInvoice).TotalAmount }, "TotalAmount").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.PurchaseInvoice).AmountPaid }, "AmountPaid").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*fin.PurchaseInvoice).BalanceDue }, "BalanceDue").
+		DateAfter(func(v interface{}) int64 { return v.(*fin.PurchaseInvoice).DueDate }, func(v interface{}) int64 { return v.(*fin.PurchaseInvoice).InvoiceDate }, "DueDate", "InvoiceDate").
 		Build()
 }
 
-func computePurchaseInvoiceTotals(inv *fin.PurchaseInvoice) error {
+func computePurchaseInvoiceTotals(v interface{}) error {
+	inv := v.(*fin.PurchaseInvoice)
 	for _, line := range inv.Lines {
 		if line.UnitPrice != nil && line.Quantity > 0 {
 			line.LineAmount = &l8common.Money{
@@ -48,18 +59,18 @@ func computePurchaseInvoiceTotals(inv *fin.PurchaseInvoice) error {
 			}
 		}
 	}
-	inv.Subtotal = common.SumLineMoney(inv.Lines, func(l *fin.PurchaseInvoiceLine) *l8common.Money { return l.LineAmount })
-	inv.TaxAmount = common.SumLineMoney(inv.Lines, func(l *fin.PurchaseInvoiceLine) *l8common.Money { return l.TaxAmount })
+	inv.Subtotal = common.SumLineMoney(toSlice(inv.Lines), func(v interface{}) *l8common.Money { return v.(*fin.PurchaseInvoiceLine).LineAmount })
+	inv.TaxAmount = common.SumLineMoney(toSlice(inv.Lines), func(v interface{}) *l8common.Money { return v.(*fin.PurchaseInvoiceLine).TaxAmount })
 	inv.TotalAmount = common.MoneyAdd(inv.Subtotal, inv.TaxAmount)
 	inv.BalanceDue = common.MoneySubtract(inv.TotalAmount, inv.AmountPaid)
 	return nil
 }
 
-func purchaseInvoiceTransitions() *common.StatusTransitionConfig[fin.PurchaseInvoice] {
-	return &common.StatusTransitionConfig[fin.PurchaseInvoice]{
-		StatusGetter:  func(e *fin.PurchaseInvoice) int32 { return int32(e.Status) },
-		StatusSetter:  func(e *fin.PurchaseInvoice, s int32) { e.Status = fin.InvoiceStatus(s) },
-		FilterBuilder: func(e *fin.PurchaseInvoice) *fin.PurchaseInvoice {
+func purchaseInvoiceTransitions() *common.StatusTransitionConfig {
+	return &common.StatusTransitionConfig{
+		StatusGetter: func(v interface{}) int32 { return int32(v.(*fin.PurchaseInvoice).Status) },
+		StatusSetter: func(v interface{}, s int32) { v.(*fin.PurchaseInvoice).Status = fin.InvoiceStatus(s) },
+		FilterBuilder: func(vi interface{}) interface{} { e := vi.(*fin.PurchaseInvoice);
 			return &fin.PurchaseInvoice{InvoiceId: e.InvoiceId}
 		},
 		ServiceName:   ServiceName,

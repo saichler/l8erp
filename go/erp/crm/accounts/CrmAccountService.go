@@ -14,7 +14,7 @@
 package accounts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[crm.CrmAccount, crm.CrmAccountList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "AccountId", Callback: newCrmAccountServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "AccountId", Callback: newCrmAccountServiceCallback(vnic),
+	}, &crm.CrmAccount{}, &crm.CrmAccountList{}, creds, dbname, vnic)
 }
 
 func CrmAccounts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CrmAccounts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmAccount(accountId string, vnic ifs.IVNic) (*crm.CrmAccount, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &crm.CrmAccount{AccountId: accountId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmAccount{AccountId: accountId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*crm.CrmAccount), nil
 }

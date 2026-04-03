@@ -14,7 +14,7 @@
 package servicecontracts
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[crm.CrmServiceContract, crm.CrmServiceContractList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ContractId", Callback: newCrmServiceContractServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ContractId", Callback: newCrmServiceContractServiceCallback(vnic),
+	}, &crm.CrmServiceContract{}, &crm.CrmServiceContractList{}, creds, dbname, vnic)
 }
 
 func CrmServiceContracts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CrmServiceContracts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmServiceContract(contractId string, vnic ifs.IVNic) (*crm.CrmServiceContract, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &crm.CrmServiceContract{ContractId: contractId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmServiceContract{ContractId: contractId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*crm.CrmServiceContract), nil
 }

@@ -17,12 +17,11 @@ package suppliercollabs
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newSupplierCollaborationServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmSupplierCollaboration]("ScmSupplierCollaboration",
-		func(e *scm.ScmSupplierCollaboration) { common.GenerateID(&e.CollaborationId) }).
-		Require(func(e *scm.ScmSupplierCollaboration) string { return e.CollaborationId }, "CollaborationId").
+func newSupplierCollaborationServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmSupplierCollaboration{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmSupplierCollaboration).CollaborationId }, "CollaborationId").
 		Build()
 }

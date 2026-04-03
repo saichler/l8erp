@@ -1,50 +1,50 @@
 package ui
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
 
 func registerScmTypes(resources ifs.IResources) {
 	// Procurement
-	common.RegisterType[scm.ScmPurchaseRequisition, scm.ScmPurchaseRequisitionList](resources, "RequisitionId")
-	common.RegisterType[scm.ScmRequestForQuotation, scm.ScmRequestForQuotationList](resources, "RfqId")
-	common.RegisterType[scm.ScmPurchaseOrder, scm.ScmPurchaseOrderList](resources, "PurchaseOrderId")
-	common.RegisterType[scm.ScmBlanketOrder, scm.ScmBlanketOrderList](resources, "BlanketOrderId")
-	common.RegisterType[scm.ScmSupplierScorecard, scm.ScmSupplierScorecardList](resources, "ScorecardId")
+	common.RegisterType(resources, &scm.ScmPurchaseRequisition{}, &scm.ScmPurchaseRequisitionList{}, "RequisitionId")
+	common.RegisterType(resources, &scm.ScmRequestForQuotation{}, &scm.ScmRequestForQuotationList{}, "RfqId")
+	common.RegisterType(resources, &scm.ScmPurchaseOrder{}, &scm.ScmPurchaseOrderList{}, "PurchaseOrderId")
+	common.RegisterType(resources, &scm.ScmBlanketOrder{}, &scm.ScmBlanketOrderList{}, "BlanketOrderId")
+	common.RegisterType(resources, &scm.ScmSupplierScorecard{}, &scm.ScmSupplierScorecardList{}, "ScorecardId")
 
 	// Inventory Management
-	common.RegisterType[scm.ScmItem, scm.ScmItemList](resources, "ItemId")
-	common.RegisterType[scm.ScmItemCategory, scm.ScmItemCategoryList](resources, "CategoryId")
-	common.RegisterType[scm.ScmCycleCount, scm.ScmCycleCountList](resources, "CycleCountId")
+	common.RegisterType(resources, &scm.ScmItem{}, &scm.ScmItemList{}, "ItemId")
+	common.RegisterType(resources, &scm.ScmItemCategory{}, &scm.ScmItemCategoryList{}, "CategoryId")
+	common.RegisterType(resources, &scm.ScmCycleCount{}, &scm.ScmCycleCountList{}, "CycleCountId")
 
 	// Warehouse Management
-	common.RegisterType[scm.ScmWarehouse, scm.ScmWarehouseList](resources, "WarehouseId")
-	common.RegisterType[scm.ScmReceivingOrder, scm.ScmReceivingOrderList](resources, "ReceivingOrderId")
-	common.RegisterType[scm.ScmWavePlan, scm.ScmWavePlanList](resources, "WavePlanId")
-	common.RegisterType[scm.ScmDockSchedule, scm.ScmDockScheduleList](resources, "ScheduleId")
+	common.RegisterType(resources, &scm.ScmWarehouse{}, &scm.ScmWarehouseList{}, "WarehouseId")
+	common.RegisterType(resources, &scm.ScmReceivingOrder{}, &scm.ScmReceivingOrderList{}, "ReceivingOrderId")
+	common.RegisterType(resources, &scm.ScmWavePlan{}, &scm.ScmWavePlanList{}, "WavePlanId")
+	common.RegisterType(resources, &scm.ScmDockSchedule{}, &scm.ScmDockScheduleList{}, "ScheduleId")
 
 	// Logistics and Transportation
-	common.RegisterType[scm.ScmCarrier, scm.ScmCarrierList](resources, "CarrierId")
-	common.RegisterType[scm.ScmFreightRate, scm.ScmFreightRateList](resources, "RateId")
-	common.RegisterType[scm.ScmShipment, scm.ScmShipmentList](resources, "ShipmentId")
-	common.RegisterType[scm.ScmRoute, scm.ScmRouteList](resources, "RouteId")
-	common.RegisterType[scm.ScmLoadPlan, scm.ScmLoadPlanList](resources, "LoadPlanId")
-	common.RegisterType[scm.ScmReturnAuthorization, scm.ScmReturnAuthorizationList](resources, "RmaId")
+	common.RegisterType(resources, &scm.ScmCarrier{}, &scm.ScmCarrierList{}, "CarrierId")
+	common.RegisterType(resources, &scm.ScmFreightRate{}, &scm.ScmFreightRateList{}, "RateId")
+	common.RegisterType(resources, &scm.ScmShipment{}, &scm.ScmShipmentList{}, "ShipmentId")
+	common.RegisterType(resources, &scm.ScmRoute{}, &scm.ScmRouteList{}, "RouteId")
+	common.RegisterType(resources, &scm.ScmLoadPlan{}, &scm.ScmLoadPlanList{}, "LoadPlanId")
+	common.RegisterType(resources, &scm.ScmReturnAuthorization{}, &scm.ScmReturnAuthorizationList{}, "RmaId")
 
 	// Demand Planning
-	common.RegisterType[scm.ScmDemandForecast, scm.ScmDemandForecastList](resources, "ForecastId")
-	common.RegisterType[scm.ScmForecastModel, scm.ScmForecastModelList](resources, "ModelId")
-	common.RegisterType[scm.ScmDemandPlan, scm.ScmDemandPlanList](resources, "PlanId")
-	common.RegisterType[scm.ScmPromotionalPlan, scm.ScmPromotionalPlanList](resources, "PlanId")
-	common.RegisterType[scm.ScmNewProductPlan, scm.ScmNewProductPlanList](resources, "PlanId")
+	common.RegisterType(resources, &scm.ScmDemandForecast{}, &scm.ScmDemandForecastList{}, "ForecastId")
+	common.RegisterType(resources, &scm.ScmForecastModel{}, &scm.ScmForecastModelList{}, "ModelId")
+	common.RegisterType(resources, &scm.ScmDemandPlan{}, &scm.ScmDemandPlanList{}, "PlanId")
+	common.RegisterType(resources, &scm.ScmPromotionalPlan{}, &scm.ScmPromotionalPlanList{}, "PlanId")
+	common.RegisterType(resources, &scm.ScmNewProductPlan{}, &scm.ScmNewProductPlanList{}, "PlanId")
 
 	// Supply Planning
-	common.RegisterType[scm.ScmMaterialRequirement, scm.ScmMaterialRequirementList](resources, "RequirementId")
-	common.RegisterType[scm.ScmDistributionRequirement, scm.ScmDistributionRequirementList](resources, "RequirementId")
-	common.RegisterType[scm.ScmSupplyPlan, scm.ScmSupplyPlanList](resources, "PlanId")
-	common.RegisterType[scm.ScmSupplierCollaboration, scm.ScmSupplierCollaborationList](resources, "CollaborationId")
-	common.RegisterType[scm.ScmSafetyStock, scm.ScmSafetyStockList](resources, "SafetyStockId")
-	common.RegisterType[scm.ScmLeadTime, scm.ScmLeadTimeList](resources, "LeadTimeId")
+	common.RegisterType(resources, &scm.ScmMaterialRequirement{}, &scm.ScmMaterialRequirementList{}, "RequirementId")
+	common.RegisterType(resources, &scm.ScmDistributionRequirement{}, &scm.ScmDistributionRequirementList{}, "RequirementId")
+	common.RegisterType(resources, &scm.ScmSupplyPlan{}, &scm.ScmSupplyPlanList{}, "PlanId")
+	common.RegisterType(resources, &scm.ScmSupplierCollaboration{}, &scm.ScmSupplierCollaborationList{}, "CollaborationId")
+	common.RegisterType(resources, &scm.ScmSafetyStock{}, &scm.ScmSafetyStockList{}, "SafetyStockId")
+	common.RegisterType(resources, &scm.ScmLeadTime{}, &scm.ScmLeadTimeList{}, "LeadTimeId")
 }

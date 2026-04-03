@@ -14,7 +14,7 @@
 package shiftschedules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[mfg.MfgShiftSchedule, mfg.MfgShiftScheduleList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ScheduleId", Callback: newMfgShiftScheduleServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ScheduleId", Callback: newMfgShiftScheduleServiceCallback(vnic),
+	}, &mfg.MfgShiftSchedule{}, &mfg.MfgShiftScheduleList{}, creds, dbname, vnic)
 }
 
 func MfgShiftSchedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func MfgShiftSchedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgShiftSchedule(scheduleId string, vnic ifs.IVNic) (*mfg.MfgShiftSchedule, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &mfg.MfgShiftSchedule{ScheduleId: scheduleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgShiftSchedule{ScheduleId: scheduleId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*mfg.MfgShiftSchedule), nil
 }

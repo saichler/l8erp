@@ -15,16 +15,15 @@ limitations under the License.
 package customersegments
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/sales"
 )
 
-func newCustomerSegmentServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[sales.SalesCustomerSegment]("SalesCustomerSegment",
-		func(e *sales.SalesCustomerSegment) { common.GenerateID(&e.SegmentId) }).
-		Require(func(e *sales.SalesCustomerSegment) string { return e.SegmentId }, "SegmentId").
-		Require(func(e *sales.SalesCustomerSegment) string { return e.Name }, "Name").
-		Enum(func(e *sales.SalesCustomerSegment) int32 { return int32(e.SegmentType) }, sales.SalesSegmentType_name, "SegmentType").
+func newCustomerSegmentServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&sales.SalesCustomerSegment{}, vnic).
+		Require(func(v interface{}) string { return v.(*sales.SalesCustomerSegment).SegmentId }, "SegmentId").
+		Require(func(v interface{}) string { return v.(*sales.SalesCustomerSegment).Name }, "Name").
+		Enum(func(v interface{}) int32 { return int32(v.(*sales.SalesCustomerSegment).SegmentType) }, sales.SalesSegmentType_name, "SegmentType").
 		Build()
 }

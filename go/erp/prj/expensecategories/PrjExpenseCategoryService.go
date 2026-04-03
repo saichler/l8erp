@@ -14,7 +14,7 @@
 package expensecategories
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[prj.PrjExpenseCategory, prj.PrjExpenseCategoryList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CategoryId", Callback: newPrjExpenseCategoryServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CategoryId", Callback: newPrjExpenseCategoryServiceCallback(vnic),
+	}, &prj.PrjExpenseCategory{}, &prj.PrjExpenseCategoryList{}, creds, dbname, vnic)
 }
 
 func PrjExpenseCategories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func PrjExpenseCategories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjExpenseCategory(categoryId string, vnic ifs.IVNic) (*prj.PrjExpenseCategory, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &prj.PrjExpenseCategory{CategoryId: categoryId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjExpenseCategory{CategoryId: categoryId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*prj.PrjExpenseCategory), nil
 }

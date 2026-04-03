@@ -15,15 +15,14 @@ limitations under the License.
 package rfqs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newRequestForQuotationServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmRequestForQuotation]("ScmRequestForQuotation",
-		func(e *scm.ScmRequestForQuotation) { common.GenerateID(&e.RfqId) }).
-		Require(func(e *scm.ScmRequestForQuotation) string { return e.RfqId }, "RfqId").
-		Enum(func(e *scm.ScmRequestForQuotation) int32 { return int32(e.Status) }, scm.ScmRequisitionStatus_name, "Status").
+func newRequestForQuotationServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmRequestForQuotation{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmRequestForQuotation).RfqId }, "RfqId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmRequestForQuotation).Status) }, scm.ScmRequisitionStatus_name, "Status").
 		Build()
 }

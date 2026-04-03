@@ -14,7 +14,7 @@
 package policydocuments
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[comp.CompPolicyDocument, comp.CompPolicyDocumentList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PolicyId", Callback: newCompPolicyDocumentServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "PolicyId", Callback: newCompPolicyDocumentServiceCallback(vnic),
+	}, &comp.CompPolicyDocument{}, &comp.CompPolicyDocumentList{}, creds, dbname, vnic)
 }
 
 func CompPolicyDocuments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CompPolicyDocuments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompPolicyDocument(policyId string, vnic ifs.IVNic) (*comp.CompPolicyDocument, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &comp.CompPolicyDocument{PolicyId: policyId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompPolicyDocument{PolicyId: policyId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*comp.CompPolicyDocument), nil
 }

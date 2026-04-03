@@ -14,7 +14,7 @@
 package taxrules
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[fin.TaxRule, fin.TaxRuleList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RuleId", Callback: newTaxRuleServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RuleId", Callback: newTaxRuleServiceCallback(vnic),
+	}, &fin.TaxRule{}, &fin.TaxRuleList{}, creds, dbname, vnic)
 }
 
 func TaxRules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func TaxRules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func TaxRule(ruleId string, vnic ifs.IVNic) (*fin.TaxRule, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &fin.TaxRule{RuleId: ruleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.TaxRule{RuleId: ruleId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*fin.TaxRule), nil
 }

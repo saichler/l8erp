@@ -15,15 +15,14 @@ limitations under the License.
 package technicians
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmTechnicianServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmTechnician]("CrmTechnician",
-		func(e *crm.CrmTechnician) { common.GenerateID(&e.TechnicianId) }).
-		Require(func(e *crm.CrmTechnician) string { return e.TechnicianId }, "TechnicianId").
-		Enum(func(e *crm.CrmTechnician) int32 { return int32(e.Status) }, crm.CrmTechnicianStatus_name, "Status").
+func newCrmTechnicianServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmTechnician{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmTechnician).TechnicianId }, "TechnicianId").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmTechnician).Status) }, crm.CrmTechnicianStatus_name, "Status").
 		Build()
 }

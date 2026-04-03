@@ -15,14 +15,13 @@ limitations under the License.
 package masterdataconfigs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/bi"
 )
 
-func newBiMasterDataConfigServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[bi.BiMasterDataConfig]("BiMasterDataConfig",
-		func(e *bi.BiMasterDataConfig) { common.GenerateID(&e.ConfigId) }).
-		Require(func(e *bi.BiMasterDataConfig) string { return e.ConfigId }, "ConfigId").
+func newBiMasterDataConfigServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&bi.BiMasterDataConfig{}, vnic).
+		Require(func(v interface{}) string { return v.(*bi.BiMasterDataConfig).ConfigId }, "ConfigId").
 		Build()
 }

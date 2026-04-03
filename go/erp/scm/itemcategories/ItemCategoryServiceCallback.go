@@ -15,14 +15,13 @@ limitations under the License.
 package itemcategories
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newItemCategoryServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmItemCategory]("ScmItemCategory",
-		func(e *scm.ScmItemCategory) { common.GenerateID(&e.CategoryId) }).
-		Require(func(e *scm.ScmItemCategory) string { return e.CategoryId }, "CategoryId").
+func newItemCategoryServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmItemCategory{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmItemCategory).CategoryId }, "CategoryId").
 		Build()
 }

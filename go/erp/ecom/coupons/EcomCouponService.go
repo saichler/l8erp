@@ -14,7 +14,7 @@
 package coupons
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[ecom.EcomCoupon, ecom.EcomCouponList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CouponId", Callback: newEcomCouponServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CouponId", Callback: newEcomCouponServiceCallback(vnic),
+	}, &ecom.EcomCoupon{}, &ecom.EcomCouponList{}, creds, dbname, vnic)
 }
 
 func EcomCoupons(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func EcomCoupons(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomCoupon(couponId string, vnic ifs.IVNic) (*ecom.EcomCoupon, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &ecom.EcomCoupon{CouponId: couponId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomCoupon{CouponId: couponId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*ecom.EcomCoupon), nil
 }

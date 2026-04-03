@@ -15,7 +15,7 @@ limitations under the License.
 package leads
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 	"strings"
@@ -23,9 +23,11 @@ import (
 
 // computeLeadScore calculates a lead's score based on active scoring rules
 // and sets the rating (HOT/WARM/COLD) accordingly.
-func computeLeadScore(lead *crm.CrmLead, vnic ifs.IVNic) error {
-	rules, err := common.GetEntities("CrmLdScore", 80,
-		&crm.CrmLeadScore{IsActive: true}, vnic)
+func computeLeadScore(v interface{}, vnic ifs.IVNic) error {
+	lead := v.(*crm.CrmLead)
+	rulesRaw, err := common.GetEntities("CrmLdScore", 80, &crm.CrmLeadScore{IsActive: true}, vnic)
+	rules := make([]*crm.CrmLeadScore, 0, len(rulesRaw))
+	for _, ri := range rulesRaw { rules = append(rules, ri.(*crm.CrmLeadScore)) }
 	if err != nil || len(rules) == 0 {
 		return nil
 	}

@@ -14,7 +14,7 @@
 package salarystructures
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[hcm.SalaryStructure, hcm.SalaryStructureList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "StructureId", Callback: newSalaryStructureServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "StructureId", Callback: newSalaryStructureServiceCallback(vnic),
+	}, &hcm.SalaryStructure{}, &hcm.SalaryStructureList{}, creds, dbname, vnic)
 }
 
 func SalaryStructures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func SalaryStructures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SalaryStructure(structureId string, vnic ifs.IVNic) (*hcm.SalaryStructure, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &hcm.SalaryStructure{StructureId: structureId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.SalaryStructure{StructureId: structureId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*hcm.SalaryStructure), nil
 }

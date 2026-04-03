@@ -14,7 +14,7 @@
 package emailcaptures
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[doc.DocEmailCapture, doc.DocEmailCaptureList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CaptureId", Callback: newDocEmailCaptureServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "CaptureId", Callback: newDocEmailCaptureServiceCallback(vnic),
+	}, &doc.DocEmailCapture{}, &doc.DocEmailCaptureList{}, creds, dbname, vnic)
 }
 
 func DocEmailCaptures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func DocEmailCaptures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocEmailCapture(captureId string, vnic ifs.IVNic) (*doc.DocEmailCapture, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &doc.DocEmailCapture{CaptureId: captureId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocEmailCapture{CaptureId: captureId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*doc.DocEmailCapture), nil
 }

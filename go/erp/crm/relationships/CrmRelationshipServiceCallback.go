@@ -15,17 +15,16 @@ limitations under the License.
 package relationships
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func newCrmRelationshipServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[crm.CrmRelationship]("CrmRelationship",
-		func(e *crm.CrmRelationship) { common.GenerateID(&e.RelationshipId) }).
-		Require(func(e *crm.CrmRelationship) string { return e.RelationshipId }, "RelationshipId").
-		Require(func(e *crm.CrmRelationship) string { return e.AccountId }, "AccountId").
-		Enum(func(e *crm.CrmRelationship) int32 { return int32(e.RelationshipType) }, crm.CrmRelationshipType_name, "RelationshipType").
-		DateAfter(func(e *crm.CrmRelationship) int64 { return e.EndDate }, func(e *crm.CrmRelationship) int64 { return e.StartDate }, "EndDate", "StartDate").
+func newCrmRelationshipServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&crm.CrmRelationship{}, vnic).
+		Require(func(v interface{}) string { return v.(*crm.CrmRelationship).RelationshipId }, "RelationshipId").
+		Require(func(v interface{}) string { return v.(*crm.CrmRelationship).AccountId }, "AccountId").
+		Enum(func(v interface{}) int32 { return int32(v.(*crm.CrmRelationship).RelationshipType) }, crm.CrmRelationshipType_name, "RelationshipType").
+		DateAfter(func(v interface{}) int64 { return v.(*crm.CrmRelationship).EndDate }, func(v interface{}) int64 { return v.(*crm.CrmRelationship).StartDate }, "EndDate", "StartDate").
 		Build()
 }

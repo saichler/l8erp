@@ -14,7 +14,7 @@
 package templates
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[doc.DocTemplate, doc.DocTemplateList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TemplateId", Callback: newDocTemplateServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "TemplateId", Callback: newDocTemplateServiceCallback(vnic),
+	}, &doc.DocTemplate{}, &doc.DocTemplateList{}, creds, dbname, vnic)
 }
 
 func DocTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func DocTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocTemplate(templateId string, vnic ifs.IVNic) (*doc.DocTemplate, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &doc.DocTemplate{TemplateId: templateId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocTemplate{TemplateId: templateId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*doc.DocTemplate), nil
 }

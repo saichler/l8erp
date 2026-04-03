@@ -15,16 +15,15 @@ limitations under the License.
 package taxjurisdictions
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
-func newTaxJurisdictionServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[fin.TaxJurisdiction]("TaxJurisdiction",
-		func(e *fin.TaxJurisdiction) { common.GenerateID(&e.JurisdictionId) }).
-		Require(func(e *fin.TaxJurisdiction) string { return e.JurisdictionId }, "JurisdictionId").
-		Require(func(e *fin.TaxJurisdiction) string { return e.Name }, "Name").
-		Enum(func(e *fin.TaxJurisdiction) int32 { return int32(e.Level) }, fin.JurisdictionLevel_name, "Level").
+func newTaxJurisdictionServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&fin.TaxJurisdiction{}, vnic).
+		Require(func(v interface{}) string { return v.(*fin.TaxJurisdiction).JurisdictionId }, "JurisdictionId").
+		Require(func(v interface{}) string { return v.(*fin.TaxJurisdiction).Name }, "Name").
+		Enum(func(v interface{}) int32 { return int32(v.(*fin.TaxJurisdiction).Level) }, fin.JurisdictionLevel_name, "Level").
 		Build()
 }

@@ -14,7 +14,7 @@
 package moduleconfig
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/sys"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[sys.SysModuleConfig, sys.SysModuleConfigList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ConfigId", Callback: newSysModuleConfigServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "ConfigId", Callback: newSysModuleConfigServiceCallback(vnic),
+	}, &sys.SysModuleConfig{}, &sys.SysModuleConfigList{}, creds, dbname, vnic)
 }
 
 func SysModuleConfigs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func SysModuleConfigs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SysModuleConfig(configId string, vnic ifs.IVNic) (*sys.SysModuleConfig, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &sys.SysModuleConfig{ConfigId: configId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sys.SysModuleConfig{ConfigId: configId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*sys.SysModuleConfig), nil
 }

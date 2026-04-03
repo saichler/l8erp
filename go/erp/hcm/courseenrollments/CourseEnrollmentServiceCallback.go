@@ -21,13 +21,14 @@ import (
 	"github.com/saichler/l8erp/go/erp/hcm/employees"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"errors"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newCourseEnrollmentServiceCallback() ifs.IServiceCallback {
+func newCourseEnrollmentServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
 	return common.NewServiceCallback("CourseEnrollment",
-		func(e *hcm.CourseEnrollment) { common.GenerateID(&e.EnrollmentId) },
-		validateCourseEnrollment)
+		func(v interface{}) bool { _, ok := v.(*hcm.CourseEnrollment); return ok },
+		func(v interface{}) { common.GenerateID(&v.(*hcm.CourseEnrollment).EnrollmentId) },
+		func(v interface{}, vnic ifs.IVNic) error { return validateCourseEnrollment(v.(*hcm.CourseEnrollment), vnic) })
 }
 
 func validateCourseEnrollment(entity *hcm.CourseEnrollment, vnic ifs.IVNic) error {

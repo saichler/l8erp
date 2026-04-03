@@ -17,13 +17,12 @@ package cyclecounts
 import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8erp/go/types/scm"
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func newCycleCountServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmCycleCount]("ScmCycleCount",
-		func(e *scm.ScmCycleCount) { common.GenerateID(&e.CycleCountId) }).
-		Require(func(e *scm.ScmCycleCount) string { return e.CycleCountId }, "CycleCountId").
-		Enum(func(e *scm.ScmCycleCount) int32 { return int32(e.Status) }, scm.ScmTaskStatus_name, "Status").
+func newCycleCountServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmCycleCount{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmCycleCount).CycleCountId }, "CycleCountId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmCycleCount).Status) }, scm.ScmTaskStatus_name, "Status").
 		Build()
 }

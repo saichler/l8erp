@@ -15,18 +15,17 @@ limitations under the License.
 package returnauths
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8types/go/ifs"
 	l8common "github.com/saichler/l8common/go/types/l8common"
 	"github.com/saichler/l8erp/go/types/scm"
 )
 
-func newReturnAuthorizationServiceCallback() ifs.IServiceCallback {
-	return common.NewValidation[scm.ScmReturnAuthorization]("ScmReturnAuthorization",
-		func(e *scm.ScmReturnAuthorization) { common.GenerateID(&e.RmaId) }).
-		Require(func(e *scm.ScmReturnAuthorization) string { return e.RmaId }, "RmaId").
-		Require(func(e *scm.ScmReturnAuthorization) string { return e.CustomerId }, "CustomerId").
-		Enum(func(e *scm.ScmReturnAuthorization) int32 { return int32(e.Status) }, scm.ScmRequisitionStatus_name, "Status").
-		OptionalMoney(func(e *scm.ScmReturnAuthorization) *l8common.Money { return e.RefundAmount }, "RefundAmount").
+func newReturnAuthorizationServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
+	return common.NewValidation(&scm.ScmReturnAuthorization{}, vnic).
+		Require(func(v interface{}) string { return v.(*scm.ScmReturnAuthorization).RmaId }, "RmaId").
+		Require(func(v interface{}) string { return v.(*scm.ScmReturnAuthorization).CustomerId }, "CustomerId").
+		Enum(func(v interface{}) int32 { return int32(v.(*scm.ScmReturnAuthorization).Status) }, scm.ScmRequisitionStatus_name, "Status").
+		OptionalMoney(func(v interface{}) *l8common.Money { return v.(*scm.ScmReturnAuthorization).RefundAmount }, "RefundAmount").
 		Build()
 }

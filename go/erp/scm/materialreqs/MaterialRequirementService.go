@@ -14,7 +14,7 @@
 package materialreqs
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[scm.ScmMaterialRequirement, scm.ScmMaterialRequirementList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RequirementId", Callback: newMaterialRequirementServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "RequirementId", Callback: newMaterialRequirementServiceCallback(vnic),
+	}, &scm.ScmMaterialRequirement{}, &scm.ScmMaterialRequirementList{}, creds, dbname, vnic)
 }
 
 func MaterialRequirements(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func MaterialRequirements(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MaterialRequirement(requirementId string, vnic ifs.IVNic) (*scm.ScmMaterialRequirement, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &scm.ScmMaterialRequirement{RequirementId: requirementId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmMaterialRequirement{RequirementId: requirementId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*scm.ScmMaterialRequirement), nil
 }

@@ -14,7 +14,7 @@
 package incidents
 
 import (
-	common "github.com/saichler/l8common/go/generic"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/comp"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -25,10 +25,10 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService[comp.CompIncident, comp.CompIncidentList](common.ServiceConfig{
+	common.ActivateService(common.ServiceConfig{
 		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "IncidentId", Callback: newCompIncidentServiceCallback(),
-	}, creds, dbname, vnic)
+		PrimaryKey: "IncidentId", Callback: newCompIncidentServiceCallback(vnic),
+	}, &comp.CompIncident{}, &comp.CompIncidentList{}, creds, dbname, vnic)
 }
 
 func CompIncidents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
@@ -36,5 +36,9 @@ func CompIncidents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompIncident(incidentId string, vnic ifs.IVNic) (*comp.CompIncident, error) {
-	return common.GetEntity(ServiceName, ServiceArea, &comp.CompIncident{IncidentId: incidentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompIncident{IncidentId: incidentId}, vnic)
+	if err != nil || result == nil {
+		return nil, err
+	}
+	return result.(*comp.CompIncident), nil
 }
