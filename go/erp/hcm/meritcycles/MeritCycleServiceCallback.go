@@ -40,7 +40,7 @@ func validateMeritCycEnums(entity *hcm.MeritCycle) error {
 	if err := common.ValidateRequired(entity.CycleId, "CycleId"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(int32(entity.Status), hcm.MeritCycleStatus_name, "Status"); err != nil {
+	if err := common.ValidateEnum(entity.Status, hcm.MeritCycleStatus_name, "Status"); err != nil {
 		return err
 	}
 	return nil

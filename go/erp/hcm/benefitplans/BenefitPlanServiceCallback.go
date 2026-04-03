@@ -62,10 +62,10 @@ func validateBenPlanRequiredFields(entity *hcm.BenefitPlan) error {
 }
 
 func validateBenPlanEnums(entity *hcm.BenefitPlan) error {
-	if err := common.ValidateEnum(int32(entity.PlanType), hcm.BenefitPlanType_name, "PlanType"); err != nil {
+	if err := common.ValidateEnum(entity.PlanType, hcm.BenefitPlanType_name, "PlanType"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(int32(entity.Category), hcm.BenefitPlanCategory_name, "Category"); err != nil {
+	if err := common.ValidateEnum(entity.Category, hcm.BenefitPlanCategory_name, "Category"); err != nil {
 		return err
 	}
 	return nil

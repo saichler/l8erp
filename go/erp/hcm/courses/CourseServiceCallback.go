@@ -52,16 +52,16 @@ func validateCourseRequiredFields(entity *hcm.Course) error {
 }
 
 func validateCourseEnums(entity *hcm.Course) error {
-	if err := common.ValidateEnum(int32(entity.CourseType), hcm.CourseType_name, "CourseType"); err != nil {
+	if err := common.ValidateEnum(entity.CourseType, hcm.CourseType_name, "CourseType"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(int32(entity.DeliveryMethod), hcm.CourseDeliveryMethod_name, "DeliveryMethod"); err != nil {
+	if err := common.ValidateEnum(entity.DeliveryMethod, hcm.CourseDeliveryMethod_name, "DeliveryMethod"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(int32(entity.Category), hcm.CourseCategory_name, "Category"); err != nil {
+	if err := common.ValidateEnum(entity.Category, hcm.CourseCategory_name, "Category"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(int32(entity.Level), hcm.CourseLevel_name, "Level"); err != nil {
+	if err := common.ValidateEnum(entity.Level, hcm.CourseLevel_name, "Level"); err != nil {
 		return err
 	}
 	return nil

@@ -59,7 +59,7 @@ func validateTrnRecRequiredFields(entity *hcm.TrainingRecord) error {
 }
 
 func validateTrnRecEnums(entity *hcm.TrainingRecord) error {
-	if err := common.ValidateEnum(int32(entity.TrainingType), hcm.TrainingType_name, "TrainingType"); err != nil {
+	if err := common.ValidateEnum(entity.TrainingType, hcm.TrainingType_name, "TrainingType"); err != nil {
 		return err
 	}
 	return nil

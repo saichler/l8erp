@@ -47,7 +47,7 @@ func validateHolidayRequiredFields(entity *hcm.Holiday) error {
 }
 
 func validateHolidayEnums(entity *hcm.Holiday) error {
-	if err := common.ValidateEnum(int32(entity.HolidayType), hcm.HolidayType_name, "HolidayType"); err != nil {
+	if err := common.ValidateEnum(entity.HolidayType, hcm.HolidayType_name, "HolidayType"); err != nil {
 		return err
 	}
 	return nil

@@ -47,7 +47,7 @@ func validateCarrierRequiredFields(entity *hcm.Carrier) error {
 }
 
 func validateCarrierEnums(entity *hcm.Carrier) error {
-	if err := common.ValidateEnum(int32(entity.CarrierType), hcm.CarrierType_name, "CarrierType"); err != nil {
+	if err := common.ValidateEnum(entity.CarrierType, hcm.CarrierType_name, "CarrierType"); err != nil {
 		return err
 	}
 	return nil

@@ -48,7 +48,7 @@ func validateCertRequiredFields(entity *hcm.Certification) error {
 }
 
 func validateCertEnums(entity *hcm.Certification) error {
-	if err := common.ValidateEnum(int32(entity.CertificationType), hcm.CertificationType_name, "CertificationType"); err != nil {
+	if err := common.ValidateEnum(entity.CertificationType, hcm.CertificationType_name, "CertificationType"); err != nil {
 		return err
 	}
 	return nil

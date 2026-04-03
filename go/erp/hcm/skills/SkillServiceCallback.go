@@ -48,7 +48,7 @@ func validateSkillRequiredFields(entity *hcm.Skill) error {
 }
 
 func validateSkillEnums(entity *hcm.Skill) error {
-	if err := common.ValidateEnum(int32(entity.Category), hcm.SkillCategory_name, "Category"); err != nil {
+	if err := common.ValidateEnum(entity.Category, hcm.SkillCategory_name, "Category"); err != nil {
 		return err
 	}
 	return nil

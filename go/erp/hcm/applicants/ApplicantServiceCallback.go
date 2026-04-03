@@ -53,7 +53,7 @@ func validateApplicantRequiredFields(entity *hcm.Applicant) error {
 }
 
 func validateApplicantEnums(entity *hcm.Applicant) error {
-	if err := common.ValidateEnum(int32(entity.Source), hcm.ApplicantSource_name, "Source"); err != nil {
+	if err := common.ValidateEnum(entity.Source, hcm.ApplicantSource_name, "Source"); err != nil {
 		return err
 	}
 	return nil

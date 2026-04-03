@@ -73,7 +73,7 @@ func validateEnrollmentRequiredFields(entity *hcm.CourseEnrollment) error {
 }
 
 func validateEnrollmentEnums(entity *hcm.CourseEnrollment) error {
-	if err := common.ValidateEnum(int32(entity.Status), hcm.CourseEnrollmentStatus_name, "Status"); err != nil {
+	if err := common.ValidateEnum(entity.Status, hcm.CourseEnrollmentStatus_name, "Status"); err != nil {
 		return err
 	}
 	return nil

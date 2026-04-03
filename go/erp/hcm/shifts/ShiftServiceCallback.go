@@ -47,7 +47,7 @@ func validateShiftRequiredFields(entity *hcm.Shift) error {
 }
 
 func validateShiftEnums(entity *hcm.Shift) error {
-	if err := common.ValidateEnum(int32(entity.ShiftType), hcm.ShiftType_name, "ShiftType"); err != nil {
+	if err := common.ValidateEnum(entity.ShiftType, hcm.ShiftType_name, "ShiftType"); err != nil {
 		return err
 	}
 	return nil

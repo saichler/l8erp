@@ -54,7 +54,7 @@ func validateOrgRequiredFields(entity *hcm.Organization) error {
 }
 
 func validateOrgEnums(entity *hcm.Organization) error {
-	if err := common.ValidateEnum(int32(entity.OrganizationType), hcm.OrganizationType_name, "OrganizationType"); err != nil {
+	if err := common.ValidateEnum(entity.OrganizationType, hcm.OrganizationType_name, "OrganizationType"); err != nil {
 		return err
 	}
 	return nil

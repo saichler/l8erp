@@ -72,7 +72,7 @@ func validatePosRequiredFields(entity *hcm.Position) error {
 }
 
 func validatePosEnums(entity *hcm.Position) error {
-	if err := common.ValidateEnum(int32(entity.Status), hcm.PositionStatus_name, "Status"); err != nil {
+	if err := common.ValidateEnum(entity.Status, hcm.PositionStatus_name, "Status"); err != nil {
 		return err
 	}
 	return nil

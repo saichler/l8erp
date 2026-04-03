@@ -40,13 +40,13 @@ func validateLeavePolEnums(entity *hcm.LeavePolicy) error {
 	if err := common.ValidateRequired(entity.PolicyId, "PolicyId"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(int32(entity.LeaveType), hcm.LeaveType_name, "LeaveType"); err != nil {
+	if err := common.ValidateEnum(entity.LeaveType, hcm.LeaveType_name, "LeaveType"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(int32(entity.AccrualMethod), hcm.AccrualMethod_name, "AccrualMethod"); err != nil {
+	if err := common.ValidateEnum(entity.AccrualMethod, hcm.AccrualMethod_name, "AccrualMethod"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(int32(entity.AccrualFrequency), hcm.AccrualFrequency_name, "AccrualFrequency"); err != nil {
+	if err := common.ValidateEnum(entity.AccrualFrequency, hcm.AccrualFrequency_name, "AccrualFrequency"); err != nil {
 		return err
 	}
 	return nil

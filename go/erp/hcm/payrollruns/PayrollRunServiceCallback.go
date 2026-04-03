@@ -55,10 +55,10 @@ func validatePayRunRequiredFields(entity *hcm.PayrollRun) error {
 }
 
 func validatePayRunEnums(entity *hcm.PayrollRun) error {
-	if err := common.ValidateEnum(int32(entity.Status), hcm.PayrollRunStatus_name, "Status"); err != nil {
+	if err := common.ValidateEnum(entity.Status, hcm.PayrollRunStatus_name, "Status"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(int32(entity.RunType), hcm.PayrollRunType_name, "RunType"); err != nil {
+	if err := common.ValidateEnum(entity.RunType, hcm.PayrollRunType_name, "RunType"); err != nil {
 		return err
 	}
 	return nil

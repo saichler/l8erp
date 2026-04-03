@@ -50,10 +50,10 @@ func validateBonusPlanRequiredFields(entity *hcm.BonusPlan) error {
 }
 
 func validateBonusPlanEnums(entity *hcm.BonusPlan) error {
-	if err := common.ValidateEnum(int32(entity.PlanType), hcm.BonusPlanType_name, "PlanType"); err != nil {
+	if err := common.ValidateEnum(entity.PlanType, hcm.BonusPlanType_name, "PlanType"); err != nil {
 		return err
 	}
-	if err := common.ValidateEnum(int32(entity.FundingType), hcm.BonusFundingType_name, "FundingType"); err != nil {
+	if err := common.ValidateEnum(entity.FundingType, hcm.BonusFundingType_name, "FundingType"); err != nil {
 		return err
 	}
 	return nil

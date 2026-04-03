@@ -59,7 +59,7 @@ func validateSessionRequiredFields(entity *hcm.CourseSession) error {
 }
 
 func validateSessionEnums(entity *hcm.CourseSession) error {
-	if err := common.ValidateEnum(int32(entity.Status), hcm.SessionStatus_name, "Status"); err != nil {
+	if err := common.ValidateEnum(entity.Status, hcm.SessionStatus_name, "Status"); err != nil {
 		return err
 	}
 	return nil

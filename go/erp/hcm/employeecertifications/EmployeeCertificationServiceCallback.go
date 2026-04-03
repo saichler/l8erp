@@ -65,7 +65,7 @@ func validateEmpCertRequiredFields(entity *hcm.EmployeeCertification) error {
 }
 
 func validateEmpCertEnums(entity *hcm.EmployeeCertification) error {
-	if err := common.ValidateEnum(int32(entity.Status), hcm.CertificationStatus_name, "Status"); err != nil {
+	if err := common.ValidateEnum(entity.Status, hcm.CertificationStatus_name, "Status"); err != nil {
 		return err
 	}
 	return nil
