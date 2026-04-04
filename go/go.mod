@@ -24,6 +24,6 @@ require (
 	github.com/saichler/l8ql v0.0.0-20260322130921-a31581a0ab5f // indirect
 	github.com/saichler/l8reflect v0.0.0-20260327101437-6da0c1cef4c9 // indirect
 	github.com/saichler/l8srlz v0.0.0-20260322124809-505a0d08f95d // indirect
-	github.com/saichler/probler v0.0.0-20260401113718-6ff98e3b888e // indirect
+	github.com/saichler/probler v0.0.0-20260404183647-9cfef76fec64 // indirect
 	golang.org/x/sys v0.42.0 // indirect
 )
