@@ -36,7 +36,7 @@ func PromotionalPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PromotionalPlan(planId string, vnic ifs.IVNic) (*scm.ScmPromotionalPlan, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmPromotionalPlan{PlanId: planId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmPromotionalPlan{ PlanId: planId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

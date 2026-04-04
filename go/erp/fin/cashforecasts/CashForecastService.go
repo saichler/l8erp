@@ -36,7 +36,7 @@ func CashForecasts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CashForecast(forecastId string, vnic ifs.IVNic) (*fin.CashForecast, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.CashForecast{ForecastId: forecastId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.CashForecast{ ForecastId: forecastId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

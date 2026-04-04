@@ -36,7 +36,7 @@ func MfgCostRollups(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgCostRollup(rollupId string, vnic ifs.IVNic) (*mfg.MfgCostRollup, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgCostRollup{RollupId: rollupId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgCostRollup{ RollupId: rollupId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

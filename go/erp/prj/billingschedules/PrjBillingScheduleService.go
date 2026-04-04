@@ -36,7 +36,7 @@ func PrjBillingSchedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjBillingSchedule(scheduleId string, vnic ifs.IVNic) (*prj.PrjBillingSchedule, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjBillingSchedule{ScheduleId: scheduleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjBillingSchedule{ ScheduleId: scheduleId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

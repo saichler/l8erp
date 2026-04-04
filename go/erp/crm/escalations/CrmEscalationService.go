@@ -36,7 +36,7 @@ func CrmEscalations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmEscalation(escalationId string, vnic ifs.IVNic) (*crm.CrmEscalation, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmEscalation{EscalationId: escalationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmEscalation{ EscalationId: escalationId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

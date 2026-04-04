@@ -36,7 +36,7 @@ func FundTransfers(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func FundTransfer(transferId string, vnic ifs.IVNic) (*fin.FundTransfer, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.FundTransfer{TransferId: transferId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.FundTransfer{ TransferId: transferId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

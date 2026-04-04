@@ -36,7 +36,7 @@ func VendorPayments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func VendorPayment(paymentId string, vnic ifs.IVNic) (*fin.VendorPayment, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.VendorPayment{PaymentId: paymentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.VendorPayment{ PaymentId: paymentId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func SalesQuotations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SalesQuotation(quotationId string, vnic ifs.IVNic) (*sales.SalesQuotation, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesQuotation{QuotationId: quotationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesQuotation{ QuotationId: quotationId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

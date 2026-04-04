@@ -36,7 +36,7 @@ func CrmMarketingLists(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmMarketingList(listId string, vnic ifs.IVNic) (*crm.CrmMarketingList, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmMarketingList{ListId: listId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmMarketingList{ ListId: listId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

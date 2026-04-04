@@ -36,7 +36,7 @@ func CompCertifications(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompCertification(certificationId string, vnic ifs.IVNic) (*comp.CompCertification, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompCertification{CertificationId: certificationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompCertification{ CertificationId: certificationId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func DocScanJobs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocScanJob(scanJobId string, vnic ifs.IVNic) (*doc.DocScanJob, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocScanJob{ScanJobId: scanJobId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocScanJob{ ScanJobId: scanJobId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func CycleCounts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CycleCount(cycleCountId string, vnic ifs.IVNic) (*scm.ScmCycleCount, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmCycleCount{CycleCountId: cycleCountId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmCycleCount{ CycleCountId: cycleCountId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

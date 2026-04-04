@@ -36,7 +36,7 @@ func EcomShippingMethods(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomShippingMethod(methodId string, vnic ifs.IVNic) (*ecom.EcomShippingMethod, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomShippingMethod{MethodId: methodId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomShippingMethod{ MethodId: methodId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

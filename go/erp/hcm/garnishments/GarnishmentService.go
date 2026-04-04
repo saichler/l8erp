@@ -36,7 +36,7 @@ func Garnishments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Garnishment(garnishmentId string, vnic ifs.IVNic) (*hcm.Garnishment, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Garnishment{GarnishmentId: garnishmentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Garnishment{ GarnishmentId: garnishmentId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

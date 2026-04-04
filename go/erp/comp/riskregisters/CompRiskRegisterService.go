@@ -36,7 +36,7 @@ func CompRiskRegisters(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompRiskRegister(riskId string, vnic ifs.IVNic) (*comp.CompRiskRegister, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompRiskRegister{RiskId: riskId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompRiskRegister{ RiskId: riskId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func ExchangeRates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func ExchangeRate(exchangeRateId string, vnic ifs.IVNic) (*fin.ExchangeRate, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.ExchangeRate{ExchangeRateId: exchangeRateId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.ExchangeRate{ ExchangeRateId: exchangeRateId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func EcomReturns(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomReturn(returnId string, vnic ifs.IVNic) (*ecom.EcomReturn, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomReturn{ReturnId: returnId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomReturn{ ReturnId: returnId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

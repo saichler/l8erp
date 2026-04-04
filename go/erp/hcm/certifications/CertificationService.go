@@ -36,7 +36,7 @@ func Certifications(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Certification(certificationId string, vnic ifs.IVNic) (*hcm.Certification, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Certification{CertificationId: certificationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Certification{ CertificationId: certificationId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

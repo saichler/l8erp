@@ -36,7 +36,7 @@ func PrjApprovalRules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjApprovalRule(ruleId string, vnic ifs.IVNic) (*prj.PrjApprovalRule, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjApprovalRule{RuleId: ruleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjApprovalRule{ RuleId: ruleId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

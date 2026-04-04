@@ -36,7 +36,7 @@ func PrjCapacityPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjCapacityPlan(planId string, vnic ifs.IVNic) (*prj.PrjCapacityPlan, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjCapacityPlan{PlanId: planId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjCapacityPlan{ PlanId: planId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

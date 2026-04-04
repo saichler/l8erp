@@ -36,7 +36,7 @@ func Shifts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Shift(shiftId string, vnic ifs.IVNic) (*hcm.Shift, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Shift{ShiftId: shiftId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Shift{ ShiftId: shiftId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

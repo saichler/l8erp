@@ -36,7 +36,7 @@ func TaxRules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func TaxRule(ruleId string, vnic ifs.IVNic) (*fin.TaxRule, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.TaxRule{RuleId: ruleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.TaxRule{ RuleId: ruleId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

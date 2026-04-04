@@ -36,7 +36,7 @@ func CreditMemos(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CreditMemo(creditMemoId string, vnic ifs.IVNic) (*fin.CreditMemo, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.CreditMemo{CreditMemoId: creditMemoId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.CreditMemo{ CreditMemoId: creditMemoId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

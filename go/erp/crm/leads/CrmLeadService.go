@@ -36,7 +36,7 @@ func CrmLeads(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmLead(leadId string, vnic ifs.IVNic) (*crm.CrmLead, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmLead{LeadId: leadId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmLead{ LeadId: leadId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

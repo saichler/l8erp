@@ -36,7 +36,7 @@ func LoadPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func LoadPlan(loadPlanId string, vnic ifs.IVNic) (*scm.ScmLoadPlan, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmLoadPlan{LoadPlanId: loadPlanId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmLoadPlan{ LoadPlanId: loadPlanId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

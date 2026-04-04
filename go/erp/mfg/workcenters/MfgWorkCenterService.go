@@ -36,7 +36,7 @@ func MfgWorkCenters(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgWorkCenter(workCenterId string, vnic ifs.IVNic) (*mfg.MfgWorkCenter, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgWorkCenter{WorkCenterId: workCenterId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgWorkCenter{ WorkCenterId: workCenterId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

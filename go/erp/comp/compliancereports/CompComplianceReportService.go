@@ -36,7 +36,7 @@ func CompComplianceReports(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompComplianceReport(reportId string, vnic ifs.IVNic) (*comp.CompComplianceReport, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompComplianceReport{ReportId: reportId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompComplianceReport{ ReportId: reportId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

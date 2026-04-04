@@ -36,7 +36,7 @@ func CrmLeadScores(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmLeadScore(scoreId string, vnic ifs.IVNic) (*crm.CrmLeadScore, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmLeadScore{ScoreId: scoreId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmLeadScore{ ScoreId: scoreId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

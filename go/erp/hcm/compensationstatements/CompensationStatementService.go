@@ -36,7 +36,7 @@ func CompensationStatements(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompensationStatement(statementId string, vnic ifs.IVNic) (*hcm.CompensationStatement, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.CompensationStatement{StatementId: statementId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.CompensationStatement{ StatementId: statementId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

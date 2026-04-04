@@ -36,7 +36,7 @@ func Goals(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Goal(goalId string, vnic ifs.IVNic) (*hcm.Goal, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Goal{GoalId: goalId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Goal{ GoalId: goalId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

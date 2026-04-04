@@ -36,7 +36,7 @@ func ReturnOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func ReturnOrder(returnOrderId string, vnic ifs.IVNic) (*sales.SalesReturnOrder, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesReturnOrder{ReturnOrderId: returnOrderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesReturnOrder{ ReturnOrderId: returnOrderId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

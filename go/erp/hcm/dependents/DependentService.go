@@ -36,7 +36,7 @@ func Dependents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Dependent(dependentId string, vnic ifs.IVNic) (*hcm.Dependent, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Dependent{DependentId: dependentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Dependent{ DependentId: dependentId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

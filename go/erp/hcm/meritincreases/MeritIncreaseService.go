@@ -36,7 +36,7 @@ func MeritIncreases(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MeritIncrease(increaseId string, vnic ifs.IVNic) (*hcm.MeritIncrease, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.MeritIncrease{IncreaseId: increaseId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.MeritIncrease{ IncreaseId: increaseId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

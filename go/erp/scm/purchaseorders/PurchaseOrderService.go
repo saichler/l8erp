@@ -36,7 +36,7 @@ func PurchaseOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PurchaseOrder(purchaseOrderId string, vnic ifs.IVNic) (*scm.ScmPurchaseOrder, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmPurchaseOrder{PurchaseOrderId: purchaseOrderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmPurchaseOrder{ PurchaseOrderId: purchaseOrderId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

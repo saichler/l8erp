@@ -36,7 +36,7 @@ func CompApprovalMatrices(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompApprovalMatrix(matrixId string, vnic ifs.IVNic) (*comp.CompApprovalMatrix, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompApprovalMatrix{MatrixId: matrixId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompApprovalMatrix{ MatrixId: matrixId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

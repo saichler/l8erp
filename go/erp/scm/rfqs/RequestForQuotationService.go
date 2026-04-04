@@ -36,7 +36,7 @@ func Rfqs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func RequestForQuotation(rfqId string, vnic ifs.IVNic) (*scm.ScmRequestForQuotation, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmRequestForQuotation{RfqId: rfqId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmRequestForQuotation{ RfqId: rfqId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

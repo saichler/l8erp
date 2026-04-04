@@ -36,7 +36,7 @@ func Routes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Route(routeId string, vnic ifs.IVNic) (*scm.ScmRoute, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmRoute{RouteId: routeId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmRoute{ RouteId: routeId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

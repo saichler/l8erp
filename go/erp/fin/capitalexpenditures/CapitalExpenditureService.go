@@ -36,7 +36,7 @@ func CapitalExpenditures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CapitalExpenditure(capexId string, vnic ifs.IVNic) (*fin.CapitalExpenditure, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.CapitalExpenditure{CapexId: capexId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.CapitalExpenditure{ CapexId: capexId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func TaxExemptions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func TaxExemption(exemptionId string, vnic ifs.IVNic) (*fin.TaxExemption, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.TaxExemption{ExemptionId: exemptionId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.TaxExemption{ ExemptionId: exemptionId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

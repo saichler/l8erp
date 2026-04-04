@@ -36,7 +36,7 @@ func DockSchedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DockSchedule(scheduleId string, vnic ifs.IVNic) (*scm.ScmDockSchedule, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmDockSchedule{ScheduleId: scheduleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmDockSchedule{ ScheduleId: scheduleId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

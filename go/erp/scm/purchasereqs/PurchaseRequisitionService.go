@@ -36,7 +36,7 @@ func PurchaseRequisitions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PurchaseRequisition(requisitionId string, vnic ifs.IVNic) (*scm.ScmPurchaseRequisition, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmPurchaseRequisition{RequisitionId: requisitionId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmPurchaseRequisition{ RequisitionId: requisitionId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

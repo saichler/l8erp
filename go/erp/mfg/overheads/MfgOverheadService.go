@@ -36,7 +36,7 @@ func MfgOverheads(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgOverhead(overheadId string, vnic ifs.IVNic) (*mfg.MfgOverhead, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgOverhead{OverheadId: overheadId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgOverhead{ OverheadId: overheadId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

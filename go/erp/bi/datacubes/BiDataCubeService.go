@@ -36,7 +36,7 @@ func BiDataCubes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiDataCube(cubeId string, vnic ifs.IVNic) (*bi.BiDataCube, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiDataCube{CubeId: cubeId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiDataCube{ CubeId: cubeId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func EquityGrants(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EquityGrant(grantId string, vnic ifs.IVNic) (*hcm.EquityGrant, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.EquityGrant{GrantId: grantId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.EquityGrant{ GrantId: grantId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

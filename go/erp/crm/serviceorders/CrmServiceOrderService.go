@@ -36,7 +36,7 @@ func CrmServiceOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmServiceOrder(orderId string, vnic ifs.IVNic) (*crm.CrmServiceOrder, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmServiceOrder{OrderId: orderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmServiceOrder{ OrderId: orderId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

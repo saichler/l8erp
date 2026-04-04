@@ -36,7 +36,7 @@ func EmployeeDocuments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EmployeeDocument(documentId string, vnic ifs.IVNic) (*hcm.EmployeeDocument, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.EmployeeDocument{DocumentId: documentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.EmployeeDocument{ DocumentId: documentId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

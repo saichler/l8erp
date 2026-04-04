@@ -36,7 +36,7 @@ func SafetyStocks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SafetyStock(safetyStockId string, vnic ifs.IVNic) (*scm.ScmSafetyStock, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmSafetyStock{SafetyStockId: safetyStockId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmSafetyStock{ SafetyStockId: safetyStockId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func BankAccounts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BankAccount(bankAccountId string, vnic ifs.IVNic) (*fin.BankAccount, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.BankAccount{BankAccountId: bankAccountId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.BankAccount{ BankAccountId: bankAccountId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

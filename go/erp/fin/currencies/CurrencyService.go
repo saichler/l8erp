@@ -36,7 +36,7 @@ func Currencies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Currency(currencyId string, vnic ifs.IVNic) (*fin.Currency, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.Currency{CurrencyId: currencyId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.Currency{ CurrencyId: currencyId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

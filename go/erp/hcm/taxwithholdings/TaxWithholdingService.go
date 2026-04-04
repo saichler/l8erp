@@ -36,7 +36,7 @@ func TaxWithholdings(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func TaxWithholding(withholdingId string, vnic ifs.IVNic) (*hcm.TaxWithholding, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.TaxWithholding{WithholdingId: withholdingId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.TaxWithholding{ WithholdingId: withholdingId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

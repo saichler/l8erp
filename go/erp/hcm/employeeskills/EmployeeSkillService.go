@@ -36,7 +36,7 @@ func EmployeeSkills(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EmployeeSkill(employeeSkillId string, vnic ifs.IVNic) (*hcm.EmployeeSkill, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.EmployeeSkill{EmployeeSkillId: employeeSkillId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.EmployeeSkill{ EmployeeSkillId: employeeSkillId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func Applications(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Application(applicationId string, vnic ifs.IVNic) (*hcm.Application, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Application{ApplicationId: applicationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Application{ ApplicationId: applicationId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

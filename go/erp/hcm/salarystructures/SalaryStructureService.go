@@ -36,7 +36,7 @@ func SalaryStructures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SalaryStructure(structureId string, vnic ifs.IVNic) (*hcm.SalaryStructure, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.SalaryStructure{StructureId: structureId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.SalaryStructure{ StructureId: structureId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

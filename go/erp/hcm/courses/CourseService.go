@@ -36,7 +36,7 @@ func Courses(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Course(courseId string, vnic ifs.IVNic) (*hcm.Course, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Course{CourseId: courseId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Course{ CourseId: courseId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

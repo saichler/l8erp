@@ -13,124 +13,104 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * ERP Reference Registry - E-Commerce Models
- * Uses Layer8RefFactory for reduced boilerplate
- * Note: E-commerce models have custom endpoints
+ * ERP Reference Registry - E-Commerce Models (Desktop)
+ * Extends shared ECOM data with desktop-specific endpoint overrides
+ * Desktop ECOM entries need explicit endpoint properties for reference pickers
  */
-const refEcom = window.Layer8RefFactory;
+(function() {
+    'use strict';
 
-Layer8DReferenceRegistry.register({
-    // ========================================
-    // E-Commerce - Product Management
-    // ========================================
-    EcomProduct: {
-        endpoint: '/100/EcomProd',
-        idColumn: 'productId',
-        displayColumn: 'name',
-        selectColumns: ['productId', 'name', 'sku'],
-        displayFormat: function(item) {
-            return item.sku + ' - ' + item.name;
+    Layer8DReferenceRegistry.register({
+        ...window.ReferenceDataEcom,
+
+        // Desktop-specific: override entries that need explicit endpoints
+        EcomProduct: {
+            endpoint: '/100/EcomProd',
+            idColumn: 'productId',
+            displayColumn: 'name',
+            selectColumns: ['productId', 'name', 'sku'],
+            displayFormat: function(item) {
+                return item.sku + ' - ' + item.name;
+            },
+            displayLabel: 'Product'
         },
-        displayLabel: 'Product'
-    },
-    EcomCategory: {
-        endpoint: '/100/EcomCat',
-        idColumn: 'categoryId',
-        displayColumn: 'name',
-        selectColumns: ['categoryId', 'name', 'slug'],
-        displayLabel: 'Category'
-    },
-
-    // ========================================
-    // E-Commerce - Customer Management
-    // ========================================
-    EcomCustomer: {
-        endpoint: '/100/EcomCust',
-        idColumn: 'customerId',
-        displayColumn: 'email',
-        selectColumns: ['customerId', 'email', 'firstName', 'lastName'],
-        displayFormat: function(item) {
-            return item.firstName + ' ' + item.lastName + ' (' + item.email + ')';
+        EcomCategory: {
+            endpoint: '/100/EcomCat',
+            idColumn: 'categoryId',
+            displayColumn: 'name',
+            selectColumns: ['categoryId', 'name', 'slug'],
+            displayLabel: 'Category'
         },
-        displayLabel: 'Customer'
-    },
-
-    // ========================================
-    // E-Commerce - Order Management
-    // ========================================
-    EcomOrder: {
-        endpoint: '/100/EcomOrder',
-        idColumn: 'orderId',
-        displayColumn: 'orderNumber',
-        selectColumns: ['orderId', 'orderNumber', 'customerId'],
-        displayFormat: function(item) {
-            return 'Order #' + item.orderNumber;
+        EcomCustomer: {
+            endpoint: '/100/EcomCust',
+            idColumn: 'customerId',
+            displayColumn: 'email',
+            selectColumns: ['customerId', 'email', 'firstName', 'lastName'],
+            displayFormat: function(item) {
+                return item.firstName + ' ' + item.lastName + ' (' + item.email + ')';
+            },
+            displayLabel: 'Customer'
         },
-        displayLabel: 'Order'
-    },
-    EcomReturn: {
-        endpoint: '/100/EcomReturn',
-        idColumn: 'returnId',
-        displayColumn: 'returnNumber',
-        selectColumns: ['returnId', 'returnNumber'],
-        displayFormat: function(item) {
-            return 'Return #' + item.returnNumber;
+        EcomOrder: {
+            endpoint: '/100/EcomOrder',
+            idColumn: 'orderId',
+            displayColumn: 'orderNumber',
+            selectColumns: ['orderId', 'orderNumber', 'customerId'],
+            displayFormat: function(item) {
+                return 'Order #' + item.orderNumber;
+            },
+            displayLabel: 'Order'
         },
-        displayLabel: 'Return'
-    },
-
-    // ========================================
-    // E-Commerce - Wishlist Management
-    // ========================================
-    EcomWishlist: {
-        endpoint: '/100/EcomWish',
-        idColumn: 'wishlistId',
-        displayColumn: 'name',
-        selectColumns: ['wishlistId', 'name', 'customerId'],
-        displayLabel: 'Wishlist'
-    },
-
-    // ========================================
-    // E-Commerce - Promotions & Coupons
-    // ========================================
-    EcomPromotion: {
-        endpoint: '/100/EcomPromo',
-        idColumn: 'promotionId',
-        displayColumn: 'name',
-        selectColumns: ['promotionId', 'name'],
-        displayLabel: 'Promotion'
-    },
-    EcomCoupon: {
-        endpoint: '/100/EcomCoupon',
-        idColumn: 'couponId',
-        displayColumn: 'code',
-        selectColumns: ['couponId', 'code', 'description'],
-        displayLabel: 'Coupon'
-    },
-
-    // ========================================
-    // E-Commerce - Shipping & Payment
-    // ========================================
-    EcomShippingMethod: {
-        endpoint: '/100/EcomShip',
-        idColumn: 'methodId',
-        displayColumn: 'name',
-        selectColumns: ['methodId', 'name', 'carrier'],
-        displayFormat: function(item) {
-            return item.carrier + ' - ' + item.name;
+        EcomReturn: {
+            endpoint: '/100/EcomReturn',
+            idColumn: 'returnId',
+            displayColumn: 'returnNumber',
+            selectColumns: ['returnId', 'returnNumber'],
+            displayFormat: function(item) {
+                return 'Return #' + item.returnNumber;
+            },
+            displayLabel: 'Return'
         },
-        displayLabel: 'Shipping Method'
-    },
-    EcomPaymentMethod: {
-        endpoint: '/100/EcomPay',
-        idColumn: 'methodId',
-        displayColumn: 'name',
-        selectColumns: ['methodId', 'name', 'provider'],
-        displayFormat: function(item) {
-            return item.provider + ' - ' + item.name;
+        EcomWishlist: {
+            endpoint: '/100/EcomWish',
+            idColumn: 'wishlistId',
+            displayColumn: 'name',
+            selectColumns: ['wishlistId', 'name', 'customerId'],
+            displayLabel: 'Wishlist'
         },
-        displayLabel: 'Payment Method'
-    },
-
-    // EcomImage, EcomVariant, EcomCustomerAddress - now embedded children (no standalone services)
-});
+        EcomPromotion: {
+            endpoint: '/100/EcomPromo',
+            idColumn: 'promotionId',
+            displayColumn: 'name',
+            selectColumns: ['promotionId', 'name'],
+            displayLabel: 'Promotion'
+        },
+        EcomCoupon: {
+            endpoint: '/100/EcomCoupon',
+            idColumn: 'couponId',
+            displayColumn: 'code',
+            selectColumns: ['couponId', 'code', 'description'],
+            displayLabel: 'Coupon'
+        },
+        EcomShippingMethod: {
+            endpoint: '/100/EcomShip',
+            idColumn: 'methodId',
+            displayColumn: 'name',
+            selectColumns: ['methodId', 'name', 'carrier'],
+            displayFormat: function(item) {
+                return item.carrier + ' - ' + item.name;
+            },
+            displayLabel: 'Shipping Method'
+        },
+        EcomPaymentMethod: {
+            endpoint: '/100/EcomPay',
+            idColumn: 'methodId',
+            displayColumn: 'name',
+            selectColumns: ['methodId', 'name', 'provider'],
+            displayFormat: function(item) {
+                return item.provider + ' - ' + item.name;
+            },
+            displayLabel: 'Payment Method'
+        }
+    });
+})();

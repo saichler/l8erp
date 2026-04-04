@@ -36,7 +36,7 @@ func PrjBillingRates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjBillingRate(rateId string, vnic ifs.IVNic) (*prj.PrjBillingRate, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjBillingRate{RateId: rateId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjBillingRate{ RateId: rateId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

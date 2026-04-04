@@ -36,7 +36,7 @@ func CrmOppStages(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmOppStage(stageId string, vnic ifs.IVNic) (*crm.CrmOppStage, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmOppStage{StageId: stageId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmOppStage{ StageId: stageId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

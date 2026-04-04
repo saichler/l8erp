@@ -36,7 +36,7 @@ func BlanketOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BlanketOrder(blanketOrderId string, vnic ifs.IVNic) (*scm.ScmBlanketOrder, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmBlanketOrder{BlanketOrderId: blanketOrderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmBlanketOrder{ BlanketOrderId: blanketOrderId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

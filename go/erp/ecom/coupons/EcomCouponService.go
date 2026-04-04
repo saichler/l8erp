@@ -36,7 +36,7 @@ func EcomCoupons(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomCoupon(couponId string, vnic ifs.IVNic) (*ecom.EcomCoupon, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomCoupon{CouponId: couponId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomCoupon{ CouponId: couponId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func MfgBoms(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgBom(bomId string, vnic ifs.IVNic) (*mfg.MfgBom, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgBom{BomId: bomId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgBom{ BomId: bomId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

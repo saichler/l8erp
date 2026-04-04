@@ -36,7 +36,7 @@ func SupplierScorecards(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SupplierScorecard(scorecardId string, vnic ifs.IVNic) (*scm.ScmSupplierScorecard, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmSupplierScorecard{ScorecardId: scorecardId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmSupplierScorecard{ ScorecardId: scorecardId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

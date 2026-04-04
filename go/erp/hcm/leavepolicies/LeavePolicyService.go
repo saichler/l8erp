@@ -36,7 +36,7 @@ func LeavePolicies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func LeavePolicy(policyId string, vnic ifs.IVNic) (*hcm.LeavePolicy, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.LeavePolicy{PolicyId: policyId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.LeavePolicy{ PolicyId: policyId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

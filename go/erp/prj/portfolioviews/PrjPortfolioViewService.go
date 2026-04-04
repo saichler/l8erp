@@ -36,7 +36,7 @@ func PrjPortfolioViews(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjPortfolioView(viewId string, vnic ifs.IVNic) (*prj.PrjPortfolioView, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjPortfolioView{ViewId: viewId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjPortfolioView{ ViewId: viewId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

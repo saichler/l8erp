@@ -13,54 +13,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * ERP Reference Registry - Sales Models
- * Uses Layer8RefFactory for reduced boilerplate
+ * ERP Reference Registry - Sales Models (Desktop)
+ * Extends shared Sales data with desktop-specific entries
  */
-const refSales = window.Layer8RefFactory;
+(function() {
+    'use strict';
+    const ref = window.Layer8RefFactory;
 
-window.Layer8DReferenceRegistrySales = {
-    // ========================================
-    // Sales - Customer Models
-    // ========================================
-    ...refSales.simple('SalesCustomerHierarchy', 'hierarchyId', 'name', 'Hierarchy'),
-    ...refSales.simple('SalesCustomerSegment', 'segmentId', 'name', 'Segment'),
-    ...refSales.simple('SalesCustomerContract', 'contractId', 'contractNumber', 'Contract'),
-    ...refSales.simple('SalesPartnerChannel', 'channelId', 'name', 'Channel'),
+    window.Layer8DReferenceRegistrySales = {
+        ...window.ReferenceDataSales,
 
-    // ========================================
-    // Sales - Pricing Models
-    // ========================================
-    ...refSales.simple('SalesPriceList', 'priceListId', 'name', 'Price List'),
-    ...refSales.simple('SalesDiscountRule', 'ruleId', 'name', 'Discount Rule'),
-    ...refSales.simple('SalesPromotionalPrice', 'promoId', 'name', 'Promotion'),
+        // Desktop-specific: SalesRevenueSchedule as idOnly
+        ...ref.idOnly('SalesRevenueSchedule', 'scheduleId'),
 
-    // ========================================
-    // Sales - Order Models
-    // ========================================
-    ...refSales.simple('SalesQuotation', 'quotationId', 'quotationNumber', 'Quotation'),
-    ...refSales.simple('SalesOrder', 'salesOrderId', 'orderNumber', 'Sales Order'),
-    ...refSales.simple('SalesReturnOrder', 'returnOrderId', 'returnNumber', 'Return Order'),
-
-    // ========================================
-    // Sales - Shipping Models
-    // ========================================
-    ...refSales.simple('SalesDeliveryOrder', 'deliveryOrderId', 'deliveryNumber', 'Delivery Order'),
-
-    // ========================================
-    // Sales - Billing Models
-    // ========================================
-    ...refSales.simple('SalesBillingSchedule', 'scheduleId', 'name', 'Billing Schedule'),
-    ...refSales.idOnly('SalesRevenueSchedule', 'scheduleId'),
-
-    // ========================================
-    // Sales - Territory & Commission Models
-    // ========================================
-    ...refSales.simple('SalesTerritory', 'territoryId', 'name', 'Territory'),
-    ...refSales.simple('SalesCommissionPlan', 'planId', 'name', 'Commission Plan'),
-
-    // ========================================
-    // Sales - Analytics Models
-    // ========================================
-    ...refSales.idOnly('SalesTarget', 'targetId'),
-    ...refSales.idOnly('SalesForecast', 'forecastId')
-};
+        // Desktop-specific: analytics entries as idOnly
+        ...ref.idOnly('SalesTarget', 'targetId'),
+        ...ref.idOnly('SalesForecast', 'forecastId')
+    };
+})();

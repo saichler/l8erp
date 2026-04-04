@@ -36,7 +36,7 @@ func CompPolicyDocuments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompPolicyDocument(policyId string, vnic ifs.IVNic) (*comp.CompPolicyDocument, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompPolicyDocument{PolicyId: policyId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompPolicyDocument{ PolicyId: policyId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

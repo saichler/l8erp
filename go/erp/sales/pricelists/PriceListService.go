@@ -36,7 +36,7 @@ func PriceLists(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PriceList(priceListId string, vnic ifs.IVNic) (*sales.SalesPriceList, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesPriceList{PriceListId: priceListId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesPriceList{ PriceListId: priceListId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

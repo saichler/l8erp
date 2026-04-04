@@ -36,7 +36,7 @@ func CrmTechnicians(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmTechnician(technicianId string, vnic ifs.IVNic) (*crm.CrmTechnician, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmTechnician{TechnicianId: technicianId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmTechnician{ TechnicianId: technicianId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

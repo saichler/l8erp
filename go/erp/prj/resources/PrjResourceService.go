@@ -36,7 +36,7 @@ func PrjResources(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjResource(resourceId string, vnic ifs.IVNic) (*prj.PrjResource, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjResource{ResourceId: resourceId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjResource{ ResourceId: resourceId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

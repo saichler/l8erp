@@ -36,7 +36,7 @@ func CrmOpportunities(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmOpportunity(opportunityId string, vnic ifs.IVNic) (*crm.CrmOpportunity, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmOpportunity{OpportunityId: opportunityId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmOpportunity{ OpportunityId: opportunityId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

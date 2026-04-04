@@ -1,42 +1,22 @@
 /*
 © 2025 Sharon Aicler (saichler@gmail.com)
+
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 */
 /**
- * ERP Reference Registry - Compliance Models
- * Uses Layer8RefFactory for reduced boilerplate
+ * ERP Reference Registry - Compliance Models (Desktop)
+ * Registers shared Compliance reference data
  */
 (function() {
     'use strict';
-
-    const refComp = window.Layer8RefFactory;
-
-    Layer8DReferenceRegistry.register({
-        // ========================================
-        // Compliance - Regulatory
-        // ========================================
-        ...refComp.coded('CompRegulation', 'regulationId', 'code', 'name'),
-        ...refComp.simple('CompCertification', 'certificationId', 'name'),
-
-        // ========================================
-        // Compliance - Internal Controls
-        // ========================================
-        ...refComp.coded('CompControl', 'controlId', 'code', 'name'),
-        ...refComp.coded('CompPolicyDocument', 'documentId', 'code', 'title'),
-        ...refComp.simple('CompApprovalMatrix', 'matrixId', 'name'),
-
-        // ========================================
-        // Compliance - Risk Management
-        // ========================================
-        ...refComp.coded('CompRiskRegister', 'riskId', 'riskNumber', 'name'),
-        ...refComp.coded('CompIncident', 'incidentId', 'incidentNumber', 'title'),
-        ...refComp.coded('CompInsurancePolicy', 'insuranceId', 'policyNumber', 'name'),
-
-        // ========================================
-        // Compliance - Audit Management
-        // ========================================
-        ...refComp.simple('CompAuditSchedule', 'scheduleId', 'name'),
-        ...refComp.coded('CompAuditFinding', 'findingId', 'findingNumber', 'title'),
-        ...refComp.simple('CompComplianceReport', 'reportId', 'title')
-    });
+    Layer8DReferenceRegistry.register(window.ReferenceDataComp);
 })();

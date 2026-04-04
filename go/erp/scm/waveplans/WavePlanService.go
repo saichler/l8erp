@@ -36,7 +36,7 @@ func WavePlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func WavePlan(wavePlanId string, vnic ifs.IVNic) (*scm.ScmWavePlan, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmWavePlan{WavePlanId: wavePlanId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmWavePlan{ WavePlanId: wavePlanId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

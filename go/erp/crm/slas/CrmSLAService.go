@@ -36,7 +36,7 @@ func CrmSLAs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmSLA(slaId string, vnic ifs.IVNic) (*crm.CrmSLA, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmSLA{SlaId: slaId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmSLA{ SlaId: slaId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

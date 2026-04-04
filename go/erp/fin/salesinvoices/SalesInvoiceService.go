@@ -36,7 +36,7 @@ func SalesInvoices(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SalesInvoice(invoiceId string, vnic ifs.IVNic) (*fin.SalesInvoice, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.SalesInvoice{InvoiceId: invoiceId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.SalesInvoice{ InvoiceId: invoiceId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

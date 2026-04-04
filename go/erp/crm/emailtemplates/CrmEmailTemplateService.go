@@ -36,7 +36,7 @@ func CrmEmailTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmEmailTemplate(templateId string, vnic ifs.IVNic) (*crm.CrmEmailTemplate, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmEmailTemplate{TemplateId: templateId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmEmailTemplate{ TemplateId: templateId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

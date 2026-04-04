@@ -36,7 +36,7 @@ func BenefitEnrollments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BenefitEnrollment(enrollmentId string, vnic ifs.IVNic) (*hcm.BenefitEnrollment, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.BenefitEnrollment{EnrollmentId: enrollmentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.BenefitEnrollment{ EnrollmentId: enrollmentId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func DunningLetters(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DunningLetter(letterId string, vnic ifs.IVNic) (*fin.DunningLetter, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.DunningLetter{LetterId: letterId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.DunningLetter{ LetterId: letterId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

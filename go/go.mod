@@ -3,9 +3,9 @@ module github.com/saichler/l8erp/go
 go 1.26.1
 
 require (
-	github.com/saichler/l8agent v0.0.0-20260327104032-03223fdf7dc2
+	github.com/saichler/l8agent v0.0.0-20260404041519-33c923998e3c
 	github.com/saichler/l8bus v0.0.0-20260326134657-42f845bc01f6
-	github.com/saichler/l8common v0.0.0-20260403175533-835a5e6a4fc9
+	github.com/saichler/l8common v0.0.0-20260404161108-650729bb28eb
 	github.com/saichler/l8events v0.0.0-20260326140304-4e54a1195008
 	github.com/saichler/l8logfusion v0.0.0-20260320120056-3a3617eed28f
 	github.com/saichler/l8services v0.0.0-20260324202357-03d40602ca59

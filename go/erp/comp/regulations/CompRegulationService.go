@@ -36,7 +36,7 @@ func CompRegulations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompRegulation(regulationId string, vnic ifs.IVNic) (*comp.CompRegulation, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompRegulation{RegulationId: regulationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompRegulation{ RegulationId: regulationId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

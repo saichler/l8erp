@@ -36,7 +36,7 @@ func LeaveBalances(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func LeaveBalance(balanceId string, vnic ifs.IVNic) (*hcm.LeaveBalance, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.LeaveBalance{BalanceId: balanceId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.LeaveBalance{ BalanceId: balanceId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

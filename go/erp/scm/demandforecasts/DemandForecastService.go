@@ -36,7 +36,7 @@ func DemandForecasts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DemandForecast(forecastId string, vnic ifs.IVNic) (*scm.ScmDemandForecast, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmDemandForecast{ForecastId: forecastId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmDemandForecast{ ForecastId: forecastId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

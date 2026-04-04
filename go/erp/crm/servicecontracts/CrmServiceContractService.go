@@ -36,7 +36,7 @@ func CrmServiceContracts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmServiceContract(contractId string, vnic ifs.IVNic) (*crm.CrmServiceContract, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmServiceContract{ContractId: contractId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmServiceContract{ ContractId: contractId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

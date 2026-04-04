@@ -36,7 +36,7 @@ func LeaveRequests(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func LeaveRequest(requestId string, vnic ifs.IVNic) (*hcm.LeaveRequest, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.LeaveRequest{RequestId: requestId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.LeaveRequest{ RequestId: requestId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

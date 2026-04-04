@@ -36,7 +36,7 @@ func PrjRevenueRecognitions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjRevenueRecognition(recognitionId string, vnic ifs.IVNic) (*prj.PrjRevenueRecognition, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjRevenueRecognition{RecognitionId: recognitionId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjRevenueRecognition{ RecognitionId: recognitionId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

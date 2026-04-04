@@ -36,7 +36,7 @@ func BiETLJobs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiETLJob(jobId string, vnic ifs.IVNic) (*bi.BiETLJob, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiETLJob{JobId: jobId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiETLJob{ JobId: jobId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

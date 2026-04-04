@@ -36,7 +36,7 @@ func PrjExpenseCategories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjExpenseCategory(categoryId string, vnic ifs.IVNic) (*prj.PrjExpenseCategory, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjExpenseCategory{CategoryId: categoryId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjExpenseCategory{ CategoryId: categoryId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

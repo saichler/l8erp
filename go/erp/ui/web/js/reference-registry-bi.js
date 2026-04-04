@@ -13,47 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * ERP Reference Registry - BI Models
- * Uses Layer8RefFactory for reduced boilerplate
+ * ERP Reference Registry - BI Models (Desktop)
+ * Registers shared BI reference data
  */
-const refBi = window.Layer8RefFactory;
-
-Layer8DReferenceRegistry.register({
-    // ========================================
-    // BI - Reporting
-    // ========================================
-    ...refBi.batch([
-        ['BiReport', 'reportId', 'name'],
-        ['BiReportTemplate', 'templateId', 'name']
-    ]),
-
-    // ========================================
-    // BI - Dashboards
-    // ========================================
-    ...refBi.batch([
-        ['BiDashboard', 'dashboardId', 'name'],
-        ['BiKPI', 'kpiId', 'name']
-    ]),
-
-    // ========================================
-    // BI - Analytics
-    // ========================================
-    ...refBi.batch([
-        ['BiDataCube', 'cubeId', 'name'],
-        ['BiAnalysisModel', 'modelId', 'name'],
-        ['BiTrendAnalysis', 'analysisId', 'name'],
-        ['BiScenario', 'scenarioId', 'name'],
-        ['BiBenchmark', 'benchmarkId', 'name']
-    ]),
-
-    // ========================================
-    // BI - Data Management
-    // ========================================
-    ...refBi.batch([
-        ['BiDataSource', 'sourceId', 'name'],
-        ['BiETLJob', 'jobId', 'name'],
-        ['BiDataQualityRule', 'ruleId', 'name'],
-        ['BiMasterDataConfig', 'configId', 'name'],
-        ['BiDataGovernance', 'governanceId', 'name']
-    ])
-});
+(function() {
+    'use strict';
+    Layer8DReferenceRegistry.register(window.ReferenceDataBi);
+})();

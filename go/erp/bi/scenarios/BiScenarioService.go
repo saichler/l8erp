@@ -36,7 +36,7 @@ func BiScenarios(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiScenario(scenarioId string, vnic ifs.IVNic) (*bi.BiScenario, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiScenario{ScenarioId: scenarioId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiScenario{ ScenarioId: scenarioId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func CrmInteractions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmInteraction(interactionId string, vnic ifs.IVNic) (*crm.CrmInteraction, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmInteraction{InteractionId: interactionId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmInteraction{ InteractionId: interactionId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

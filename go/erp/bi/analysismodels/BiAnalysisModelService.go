@@ -36,7 +36,7 @@ func BiAnalysisModels(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiAnalysisModel(modelId string, vnic ifs.IVNic) (*bi.BiAnalysisModel, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiAnalysisModel{ModelId: modelId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiAnalysisModel{ ModelId: modelId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

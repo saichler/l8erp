@@ -36,7 +36,7 @@ func FreightRates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func FreightRate(rateId string, vnic ifs.IVNic) (*scm.ScmFreightRate, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmFreightRate{RateId: rateId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmFreightRate{ RateId: rateId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

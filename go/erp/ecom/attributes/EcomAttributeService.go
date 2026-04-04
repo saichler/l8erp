@@ -36,7 +36,7 @@ func EcomAttributes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomAttribute(attributeId string, vnic ifs.IVNic) (*ecom.EcomAttribute, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomAttribute{AttributeId: attributeId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomAttribute{ AttributeId: attributeId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

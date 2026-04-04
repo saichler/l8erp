@@ -36,7 +36,7 @@ func CrmSurveys(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmSurvey(surveyId string, vnic ifs.IVNic) (*crm.CrmSurvey, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmSurvey{SurveyId: surveyId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmSurvey{ SurveyId: surveyId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

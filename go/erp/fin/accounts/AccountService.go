@@ -36,7 +36,7 @@ func Accounts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Account(accountId string, vnic ifs.IVNic) (*fin.Account, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.Account{AccountId: accountId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.Account{ AccountId: accountId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

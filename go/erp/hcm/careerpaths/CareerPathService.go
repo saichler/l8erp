@@ -36,7 +36,7 @@ func CareerPaths(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CareerPath(careerPathId string, vnic ifs.IVNic) (*hcm.CareerPath, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.CareerPath{CareerPathId: careerPathId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.CareerPath{ CareerPathId: careerPathId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

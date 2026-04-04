@@ -36,7 +36,7 @@ func PrjProjectTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjProjectTemplate(templateId string, vnic ifs.IVNic) (*prj.PrjProjectTemplate, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjProjectTemplate{TemplateId: templateId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjProjectTemplate{ TemplateId: templateId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

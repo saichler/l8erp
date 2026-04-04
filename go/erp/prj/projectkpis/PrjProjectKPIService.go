@@ -36,7 +36,7 @@ func PrjProjectKPIs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjProjectKPI(kpiId string, vnic ifs.IVNic) (*prj.PrjProjectKPI, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjProjectKPI{KpiId: kpiId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjProjectKPI{ KpiId: kpiId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

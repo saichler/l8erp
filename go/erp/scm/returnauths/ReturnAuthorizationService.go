@@ -36,7 +36,7 @@ func ReturnAuthorizations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func ReturnAuthorization(rmaId string, vnic ifs.IVNic) (*scm.ScmReturnAuthorization, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmReturnAuthorization{RmaId: rmaId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmReturnAuthorization{ RmaId: rmaId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func BiBenchmarks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiBenchmark(benchmarkId string, vnic ifs.IVNic) (*bi.BiBenchmark, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiBenchmark{BenchmarkId: benchmarkId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiBenchmark{ BenchmarkId: benchmarkId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

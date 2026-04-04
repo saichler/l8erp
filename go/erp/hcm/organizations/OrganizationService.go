@@ -36,7 +36,7 @@ func Organizations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Organization(organizationId string, vnic ifs.IVNic) (*hcm.Organization, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Organization{OrganizationId: organizationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Organization{ OrganizationId: organizationId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

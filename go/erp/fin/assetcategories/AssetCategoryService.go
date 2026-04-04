@@ -36,7 +36,7 @@ func AssetCategories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func AssetCategory(categoryId string, vnic ifs.IVNic) (*fin.AssetCategory, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.AssetCategory{CategoryId: categoryId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.AssetCategory{ CategoryId: categoryId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

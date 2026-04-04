@@ -36,7 +36,7 @@ func YearEndDocuments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func YearEndDocument(documentId string, vnic ifs.IVNic) (*hcm.YearEndDocument, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.YearEndDocument{DocumentId: documentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.YearEndDocument{ DocumentId: documentId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

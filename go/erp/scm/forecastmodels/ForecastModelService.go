@@ -36,7 +36,7 @@ func ForecastModels(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func ForecastModel(modelId string, vnic ifs.IVNic) (*scm.ScmForecastModel, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmForecastModel{ModelId: modelId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmForecastModel{ ModelId: modelId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

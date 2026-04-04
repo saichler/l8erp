@@ -36,7 +36,7 @@ func EcomPaymentMethods(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomPaymentMethod(methodId string, vnic ifs.IVNic) (*ecom.EcomPaymentMethod, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomPaymentMethod{MethodId: methodId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomPaymentMethod{ MethodId: methodId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

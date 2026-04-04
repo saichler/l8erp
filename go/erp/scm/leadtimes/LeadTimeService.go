@@ -36,7 +36,7 @@ func LeadTimes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func LeadTime(leadTimeId string, vnic ifs.IVNic) (*scm.ScmLeadTime, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmLeadTime{LeadTimeId: leadTimeId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmLeadTime{ LeadTimeId: leadTimeId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

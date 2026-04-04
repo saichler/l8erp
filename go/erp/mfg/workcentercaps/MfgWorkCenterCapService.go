@@ -36,7 +36,7 @@ func MfgWorkCenterCaps(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgWorkCenterCap(capacityId string, vnic ifs.IVNic) (*mfg.MfgWorkCenterCap, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgWorkCenterCap{CapacityId: capacityId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgWorkCenterCap{ CapacityId: capacityId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -54,18 +54,9 @@ func generatePurchaseInvoices(store *MockDataStore) []*fin.PurchaseInvoice {
 			periodIdx = len(store.FiscalPeriodIDs) - 1
 		}
 
-		subtotal := int64(rand.Intn(4900000)+100000) + 100
-		taxAmount := subtotal * 7 / 100
-		totalAmount := subtotal + taxAmount
-
-		var amountPaid int64
-		switch status {
-		case fin.InvoiceStatus_INVOICE_STATUS_PAID:
-			amountPaid = totalAmount
-		case fin.InvoiceStatus_INVOICE_STATUS_PARTIALLY_PAID:
-			amountPaid = totalAmount * int64(rand.Intn(70)+10) / 100
-		}
-		balanceDue := totalAmount - amountPaid
+		isPaid := status == fin.InvoiceStatus_INVOICE_STATUS_PAID
+		isPartial := status == fin.InvoiceStatus_INVOICE_STATUS_PARTIALLY_PAID
+		amounts := calcInvoiceAmounts(isPaid, isPartial, 1001, 49000)
 
 		apAccountIdx := 6
 		if apAccountIdx >= len(store.AccountIDs) {
@@ -75,33 +66,29 @@ func generatePurchaseInvoices(store *MockDataStore) []*fin.PurchaseInvoice {
 		invoiceID := genID("pinv", i)
 
 		// Generate embedded lines (3 per invoice)
+		lineData := genInvoiceLineData("piln", 3, lineIdx)
 		lines := make([]*fin.PurchaseInvoiceLine, 3)
-		for lineNum := int32(1); lineNum <= 3; lineNum++ {
-			quantity := float64(rand.Intn(100) + 1)
-			unitPrice := int64(rand.Intn(499000) + 1000)
-			lineAmount := int64(quantity) * unitPrice
-			lineTax := lineAmount * 7 / 100
-
-			accountIdx := expenseAccountStart + (lineIdx % (len(store.AccountIDs) - expenseAccountStart))
+		for j, ld := range lineData {
+			accountIdx := expenseAccountStart + ((lineIdx + j) % (len(store.AccountIDs) - expenseAccountStart))
 			if accountIdx >= len(store.AccountIDs) {
 				accountIdx = expenseAccountStart
 			}
 
-			lines[lineNum-1] = &fin.PurchaseInvoiceLine{
-				LineId:      fmt.Sprintf("piln-%04d", lineIdx),
+			lines[j] = &fin.PurchaseInvoiceLine{
+				LineId:      ld.LineID,
 				InvoiceId:   invoiceID,
-				LineNumber:  lineNum,
+				LineNumber:  ld.LineNumber,
 				AccountId:   store.AccountIDs[accountIdx],
 				Description: lineDescriptions[rand.Intn(len(lineDescriptions))],
-				Quantity:    quantity,
-				UnitPrice:   money(store, unitPrice),
-				LineAmount:  money(store, lineAmount),
+				Quantity:    ld.Quantity,
+				UnitPrice:   money(store, ld.UnitPrice),
+				LineAmount:  money(store, ld.LineAmount),
 				TaxCodeId:   store.TaxCodeIDs[rand.Intn(len(store.TaxCodeIDs))],
-				TaxAmount:   money(store, lineTax),
+				TaxAmount:   money(store, ld.TaxAmount),
 				AuditInfo:   createAuditInfo(),
 			}
-			lineIdx++
 		}
+		lineIdx += 3
 
 		invoices[i] = &fin.PurchaseInvoice{
 			InvoiceId:        invoiceID,
@@ -112,11 +99,11 @@ func generatePurchaseInvoices(store *MockDataStore) []*fin.PurchaseInvoice {
 			CurrencyId:       store.CurrencyIDs[0],
 			FiscalPeriodId:   store.FiscalPeriodIDs[periodIdx],
 			Status:           status,
-			Subtotal:         money(store, subtotal),
-			TaxAmount:        money(store, taxAmount),
-			TotalAmount:      money(store, totalAmount),
-			AmountPaid:       money(store, amountPaid),
-			BalanceDue:       money(store, balanceDue),
+			Subtotal:         money(store, amounts.Subtotal),
+			TaxAmount:        money(store, amounts.TaxAmount),
+			TotalAmount:      money(store, amounts.TotalAmount),
+			AmountPaid:       money(store, amounts.AmountPaid),
+			BalanceDue:       money(store, amounts.BalanceDue),
 			PaymentTermDays:  30,
 			ApAccountId:      store.AccountIDs[apAccountIdx],
 			PurchaseOrderId:  pickRef(store.SCMPurchaseOrderIDs, i),

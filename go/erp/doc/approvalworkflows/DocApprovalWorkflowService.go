@@ -36,7 +36,7 @@ func DocApprovalWorkflows(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocApprovalWorkflow(workflowId string, vnic ifs.IVNic) (*doc.DocApprovalWorkflow, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocApprovalWorkflow{WorkflowId: workflowId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocApprovalWorkflow{ WorkflowId: workflowId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

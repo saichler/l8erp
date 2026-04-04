@@ -36,7 +36,7 @@ func ReceivingOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func ReceivingOrder(receivingOrderId string, vnic ifs.IVNic) (*scm.ScmReceivingOrder, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmReceivingOrder{ReceivingOrderId: receivingOrderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmReceivingOrder{ ReceivingOrderId: receivingOrderId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

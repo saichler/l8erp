@@ -36,7 +36,7 @@ func PrjStatusReports(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjStatusReport(statusId string, vnic ifs.IVNic) (*prj.PrjStatusReport, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjStatusReport{StatusId: statusId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjStatusReport{ StatusId: statusId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

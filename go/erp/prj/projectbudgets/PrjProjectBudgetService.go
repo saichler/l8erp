@@ -36,7 +36,7 @@ func PrjProjectBudgets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjProjectBudget(budgetId string, vnic ifs.IVNic) (*prj.PrjProjectBudget, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjProjectBudget{BudgetId: budgetId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjProjectBudget{ BudgetId: budgetId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

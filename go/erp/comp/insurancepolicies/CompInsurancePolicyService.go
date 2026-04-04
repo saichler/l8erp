@@ -36,7 +36,7 @@ func CompInsurancePolicies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompInsurancePolicy(insuranceId string, vnic ifs.IVNic) (*comp.CompInsurancePolicy, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompInsurancePolicy{InsuranceId: insuranceId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompInsurancePolicy{ InsuranceId: insuranceId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

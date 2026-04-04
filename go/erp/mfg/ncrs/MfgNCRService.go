@@ -36,7 +36,7 @@ func MfgNCRs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgNCR(ncrId string, vnic ifs.IVNic) (*mfg.MfgNCR, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgNCR{NcrId: ncrId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgNCR{ NcrId: ncrId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

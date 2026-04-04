@@ -13,79 +13,50 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * ERP Reference Registry - SCM Models
- * Uses Layer8RefFactory for reduced boilerplate
+ * ERP Reference Registry - SCM Models (Desktop)
+ * Extends shared SCM data with desktop-specific entries
  */
-const refScm = window.Layer8RefFactory;
+(function() {
+    'use strict';
+    const ref = window.Layer8RefFactory;
 
-window.Layer8DReferenceRegistrySCM = {
-    // ========================================
-    // SCM - Procurement Models
-    // ========================================
-    ...refScm.simple('ScmPurchaseOrder', 'purchaseOrderId', 'orderNumber', 'Purchase Order'),
-    ...refScm.simple('ScmPurchaseRequisition', 'requisitionId', 'requisitionNumber', 'Requisition'),
-    ...refScm.simple('ScmSupplierContract', 'contractId', 'contractNumber', 'Contract'),
-    ...refScm.idOnly('ScmContractTerm', 'termId'),
-    ...refScm.simple('ScmRequestForQuote', 'rfqId', 'rfqNumber', 'RFQ'),
+    window.Layer8DReferenceRegistrySCM = {
+        ...window.ReferenceDataScm,
 
-    // ========================================
-    // SCM - Inventory Models
-    // ========================================
-    ...refScm.coded('ScmItem', 'itemId', 'itemNumber', 'name'),
-    ...refScm.batch([
-        ['ScmItemCategory', 'categoryId', 'name'],
-        ['ScmInventoryLocation', 'locationId', 'name']
-    ]),
-    ...refScm.batchIdOnly([
-        ['ScmStockLevel', 'stockLevelId'],
-        ['ScmInventoryCount', 'countId'],
-        ['ScmItemPricing', 'pricingId']
-    ]),
+        // Desktop-specific: additional procurement entries
+        ...ref.simple('ScmSupplierContract', 'contractId', 'contractNumber', 'Contract'),
+        ...ref.idOnly('ScmContractTerm', 'termId'),
 
-    // ========================================
-    // SCM - Warehouse Management Models
-    // ========================================
-    ...refScm.coded('ScmWarehouse', 'warehouseId', 'code', 'name'),
-    ...refScm.simple('ScmZone', 'zoneId', 'name'),
-    ...refScm.idOnly('ScmReceivingOrder', 'receivingOrderId'),
+        // Desktop-specific: additional inventory entries
+        ...ref.simple('ScmItemCategory', 'categoryId', 'name'),
+        ...ref.simple('ScmInventoryLocation', 'locationId', 'name'),
+        ...ref.idOnly('ScmStockLevel', 'stockLevelId'),
+        ...ref.idOnly('ScmInventoryCount', 'countId'),
+        ...ref.idOnly('ScmItemPricing', 'pricingId'),
 
-    // ========================================
-    // SCM - Logistics & Transportation Models
-    // ========================================
-    ...refScm.coded('ScmShipmentCarrier', 'carrierId', 'code', 'name'),
-    ...refScm.simple('ScmShipment', 'shipmentId', 'shipmentNumber', 'Shipment'),
-    ...refScm.idOnly('ScmShipmentLine', 'lineId'),
-    ...refScm.idOnly('ScmFreightRate', 'rateId'),
-    ...refScm.simple('ScmDeliveryRoute', 'routeId', 'name'),
-    ...refScm.idOnly('ScmRouteStop', 'stopId'),
-    ...refScm.simple('ScmReturnAuthorization', 'rmaId', 'rmaNumber', 'RMA'),
+        // Desktop-specific: additional warehouse entries
+        ...ref.simple('ScmZone', 'zoneId', 'name'),
 
-    // ========================================
-    // SCM - Demand Planning Models
-    // ========================================
-    ...refScm.simple('ScmDemandForecast', 'forecastId', 'forecastId', 'Forecast'),
-    ...refScm.batchIdOnly([
-        ['ScmForecastItem', 'forecastItemId'],
-        ['ScmDemandHistory', 'historyId'],
-        ['ScmPromotionImpact', 'impactId'],
-        ['ScmConsensusAdjustment', 'adjustmentId']
-    ]),
-    ...refScm.simple('ScmSeasonalProfile', 'profileId', 'name'),
+        // Desktop-specific: additional logistics entries
+        ...ref.coded('ScmShipmentCarrier', 'carrierId', 'code', 'name'),
+        ...ref.idOnly('ScmShipmentLine', 'lineId'),
+        ...ref.simple('ScmDeliveryRoute', 'routeId', 'name'),
+        ...ref.idOnly('ScmRouteStop', 'stopId'),
 
-    // ========================================
-    // SCM - Supply Planning Models
-    // ========================================
-    ...refScm.simple('ScmSupplyPlan', 'planId', 'name', 'Supply Plan'),
-    ...refScm.batchIdOnly([
-        ['ScmMRPRun', 'mrpRunId'],
-        ['ScmMRPException', 'exceptionId'],
-        ['ScmSafetyStock', 'safetyStockId']
-    ]),
-    ...refScm.simple('ScmReorderRule', 'ruleId', 'ruleName'),
+        // Desktop-specific: additional demand planning entries
+        ...ref.idOnly('ScmForecastItem', 'forecastItemId'),
+        ...ref.idOnly('ScmDemandHistory', 'historyId'),
+        ...ref.idOnly('ScmPromotionImpact', 'impactId'),
+        ...ref.idOnly('ScmConsensusAdjustment', 'adjustmentId'),
+        ...ref.simple('ScmSeasonalProfile', 'profileId', 'name'),
 
-    // ========================================
-    // SCM - Additional Models
-    // ========================================
-    ...refScm.simple('ScmCarrier', 'carrierId', 'name', 'Carrier'),
-    ...refScm.idOnly('ScmWavePlan', 'wavePlanId')
-};
+        // Desktop-specific: additional supply planning entries
+        ...ref.idOnly('ScmMRPRun', 'mrpRunId'),
+        ...ref.idOnly('ScmMRPException', 'exceptionId'),
+        ...ref.simple('ScmReorderRule', 'ruleId', 'ruleName'),
+
+        // Desktop-specific: additional models
+        ...ref.simple('ScmCarrier', 'carrierId', 'name', 'Carrier'),
+        ...ref.idOnly('ScmWavePlan', 'wavePlanId')
+    };
+})();

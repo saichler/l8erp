@@ -36,7 +36,7 @@ func MeritCycles(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MeritCycle(cycleId string, vnic ifs.IVNic) (*hcm.MeritCycle, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.MeritCycle{CycleId: cycleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.MeritCycle{ CycleId: cycleId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

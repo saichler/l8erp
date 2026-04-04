@@ -36,7 +36,7 @@ func PayStructures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PayStructure(payStructureId string, vnic ifs.IVNic) (*hcm.PayStructure, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.PayStructure{PayStructureId: payStructureId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.PayStructure{ PayStructureId: payStructureId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

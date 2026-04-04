@@ -36,7 +36,7 @@ func CrmLeadAssigns(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmLeadAssign(assignmentId string, vnic ifs.IVNic) (*crm.CrmLeadAssign, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmLeadAssign{AssignmentId: assignmentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmLeadAssign{ AssignmentId: assignmentId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

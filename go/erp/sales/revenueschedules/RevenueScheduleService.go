@@ -36,7 +36,7 @@ func RevenueSchedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func RevenueSchedule(scheduleId string, vnic ifs.IVNic) (*sales.SalesRevenueSchedule, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesRevenueSchedule{ScheduleId: scheduleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesRevenueSchedule{ ScheduleId: scheduleId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

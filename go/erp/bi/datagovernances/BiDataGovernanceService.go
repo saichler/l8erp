@@ -36,7 +36,7 @@ func BiDataGovernances(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiDataGovernance(governanceId string, vnic ifs.IVNic) (*bi.BiDataGovernance, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiDataGovernance{GovernanceId: governanceId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiDataGovernance{ GovernanceId: governanceId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

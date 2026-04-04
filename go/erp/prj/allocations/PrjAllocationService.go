@@ -36,7 +36,7 @@ func PrjAllocations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjAllocation(allocationId string, vnic ifs.IVNic) (*prj.PrjAllocation, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjAllocation{AllocationId: allocationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjAllocation{ AllocationId: allocationId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

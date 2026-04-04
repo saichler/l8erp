@@ -36,7 +36,7 @@ func SysModuleConfigs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SysModuleConfig(configId string, vnic ifs.IVNic) (*sys.SysModuleConfig, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &sys.SysModuleConfig{ConfigId: configId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sys.SysModuleConfig{ ConfigId: configId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

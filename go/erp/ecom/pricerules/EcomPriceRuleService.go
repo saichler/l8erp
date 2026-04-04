@@ -36,7 +36,7 @@ func EcomPriceRules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomPriceRule(ruleId string, vnic ifs.IVNic) (*ecom.EcomPriceRule, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomPriceRule{RuleId: ruleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomPriceRule{ RuleId: ruleId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

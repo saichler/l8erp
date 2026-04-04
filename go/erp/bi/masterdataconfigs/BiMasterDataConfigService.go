@@ -36,7 +36,7 @@ func BiMasterDataConfigs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiMasterDataConfig(configId string, vnic ifs.IVNic) (*bi.BiMasterDataConfig, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiMasterDataConfig{ConfigId: configId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiMasterDataConfig{ ConfigId: configId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

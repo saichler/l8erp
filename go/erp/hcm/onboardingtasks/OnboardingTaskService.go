@@ -36,7 +36,7 @@ func OnboardingTasks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func OnboardingTask(taskId string, vnic ifs.IVNic) (*hcm.OnboardingTask, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.OnboardingTask{TaskId: taskId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.OnboardingTask{ TaskId: taskId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

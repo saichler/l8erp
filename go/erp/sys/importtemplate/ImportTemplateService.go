@@ -15,8 +15,8 @@ package importtemplate
 
 import (
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8types/go/types/l8api"
+	"github.com/saichler/l8types/go/ifs"
 )
 
 const (
@@ -36,7 +36,7 @@ func ImportTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func ImportTemplate(templateId string, vnic ifs.IVNic) (*l8api.L8ImportTemplate, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &l8api.L8ImportTemplate{TemplateId: templateId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &l8api.L8ImportTemplate{ TemplateId: templateId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

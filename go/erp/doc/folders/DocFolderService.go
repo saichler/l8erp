@@ -36,7 +36,7 @@ func DocFolders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocFolder(folderId string, vnic ifs.IVNic) (*doc.DocFolder, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocFolder{FolderId: folderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocFolder{ FolderId: folderId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

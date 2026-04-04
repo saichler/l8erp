@@ -36,7 +36,7 @@ func CompAuditSchedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompAuditSchedule(scheduleId string, vnic ifs.IVNic) (*comp.CompAuditSchedule, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompAuditSchedule{ScheduleId: scheduleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompAuditSchedule{ ScheduleId: scheduleId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

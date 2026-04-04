@@ -36,7 +36,7 @@ func BiDataSources(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiDataSource(sourceId string, vnic ifs.IVNic) (*bi.BiDataSource, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiDataSource{SourceId: sourceId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiDataSource{ SourceId: sourceId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func MfgShiftSchedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgShiftSchedule(scheduleId string, vnic ifs.IVNic) (*mfg.MfgShiftSchedule, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgShiftSchedule{ScheduleId: scheduleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgShiftSchedule{ ScheduleId: scheduleId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

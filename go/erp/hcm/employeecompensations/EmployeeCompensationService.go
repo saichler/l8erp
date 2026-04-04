@@ -36,7 +36,7 @@ func EmployeeCompensations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EmployeeCompensation(compensationId string, vnic ifs.IVNic) (*hcm.EmployeeCompensation, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.EmployeeCompensation{CompensationId: compensationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.EmployeeCompensation{ CompensationId: compensationId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

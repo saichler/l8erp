@@ -36,7 +36,7 @@ func DiscountRules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DiscountRule(ruleId string, vnic ifs.IVNic) (*sales.SalesDiscountRule, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesDiscountRule{RuleId: ruleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesDiscountRule{ RuleId: ruleId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

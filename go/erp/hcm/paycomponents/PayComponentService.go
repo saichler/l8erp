@@ -36,7 +36,7 @@ func PayComponents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PayComponent(componentId string, vnic ifs.IVNic) (*hcm.PayComponent, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.PayComponent{ComponentId: componentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.PayComponent{ ComponentId: componentId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

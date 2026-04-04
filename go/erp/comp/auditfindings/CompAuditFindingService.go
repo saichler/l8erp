@@ -36,7 +36,7 @@ func CompAuditFindings(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompAuditFinding(findingId string, vnic ifs.IVNic) (*comp.CompAuditFinding, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompAuditFinding{FindingId: findingId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompAuditFinding{ FindingId: findingId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

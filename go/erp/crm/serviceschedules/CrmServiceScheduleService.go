@@ -36,7 +36,7 @@ func CrmServiceSchedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmServiceSchedule(scheduleId string, vnic ifs.IVNic) (*crm.CrmServiceSchedule, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmServiceSchedule{ScheduleId: scheduleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmServiceSchedule{ ScheduleId: scheduleId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

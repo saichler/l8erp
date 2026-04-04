@@ -5,50 +5,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
 /**
  * Mobile Reference Registry - BI Module
- * Reference configurations for Business Intelligence models
- * Uses Layer8RefFactory for reduced boilerplate
+ * Registers shared BI reference data
  */
-const refBiM = window.Layer8RefFactory;
-
-window.Layer8MReferenceRegistryBI = {
-    // ========================================
-    // Reporting
-    // ========================================
-    ...refBiM.batch([
-        ['BiReport', 'reportId', 'name'],
-        ['BiReportTemplate', 'templateId', 'name']
-    ]),
-
-    // ========================================
-    // Dashboards
-    // ========================================
-    ...refBiM.batch([
-        ['BiDashboard', 'dashboardId', 'name'],
-        ['BiKPI', 'kpiId', 'name']
-    ]),
-
-    // ========================================
-    // Analytics
-    // ========================================
-    ...refBiM.batch([
-        ['BiDataCube', 'cubeId', 'name'],
-        ['BiAnalysisModel', 'modelId', 'name'],
-        ['BiTrendAnalysis', 'analysisId', 'name'],
-        ['BiScenario', 'scenarioId', 'name'],
-        ['BiBenchmark', 'benchmarkId', 'name']
-    ]),
-
-    // ========================================
-    // Data Management
-    // ========================================
-    ...refBiM.batch([
-        ['BiDataSource', 'sourceId', 'name'],
-        ['BiETLJob', 'jobId', 'name'],
-        ['BiDataQualityRule', 'ruleId', 'name'],
-        ['BiMasterDataConfig', 'configId', 'name'],
-        ['BiDataGovernance', 'governanceId', 'name']
-    ])
-};
-
-// Register with the central registry
-Layer8MReferenceRegistry.register(window.Layer8MReferenceRegistryBI);
+(function() {
+    'use strict';
+    Layer8MReferenceRegistry.register(window.ReferenceDataBi);
+})();

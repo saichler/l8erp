@@ -36,7 +36,7 @@ func DocEmailCaptures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocEmailCapture(captureId string, vnic ifs.IVNic) (*doc.DocEmailCapture, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocEmailCapture{CaptureId: captureId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocEmailCapture{ CaptureId: captureId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

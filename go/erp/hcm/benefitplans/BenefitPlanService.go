@@ -36,7 +36,7 @@ func BenefitPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BenefitPlan(planId string, vnic ifs.IVNic) (*hcm.BenefitPlan, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.BenefitPlan{PlanId: planId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.BenefitPlan{ PlanId: planId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

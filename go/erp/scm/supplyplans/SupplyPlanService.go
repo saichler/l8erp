@@ -36,7 +36,7 @@ func SupplyPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SupplyPlan(planId string, vnic ifs.IVNic) (*scm.ScmSupplyPlan, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmSupplyPlan{PlanId: planId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmSupplyPlan{ PlanId: planId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

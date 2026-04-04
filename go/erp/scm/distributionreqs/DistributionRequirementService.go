@@ -36,7 +36,7 @@ func DistributionRequirements(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DistributionRequirement(requirementId string, vnic ifs.IVNic) (*scm.ScmDistributionRequirement, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmDistributionRequirement{RequirementId: requirementId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmDistributionRequirement{ RequirementId: requirementId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func ComplianceRecords(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func ComplianceRecord(recordId string, vnic ifs.IVNic) (*hcm.ComplianceRecord, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.ComplianceRecord{RecordId: recordId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.ComplianceRecord{ RecordId: recordId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

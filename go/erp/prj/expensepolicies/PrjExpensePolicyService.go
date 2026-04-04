@@ -36,7 +36,7 @@ func PrjExpensePolicies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjExpensePolicy(policyId string, vnic ifs.IVNic) (*prj.PrjExpensePolicy, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjExpensePolicy{PolicyId: policyId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjExpensePolicy{ PolicyId: policyId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

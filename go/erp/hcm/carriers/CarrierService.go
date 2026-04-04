@@ -36,7 +36,7 @@ func Carriers(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Carrier(carrierId string, vnic ifs.IVNic) (*hcm.Carrier, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Carrier{CarrierId: carrierId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Carrier{ CarrierId: carrierId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

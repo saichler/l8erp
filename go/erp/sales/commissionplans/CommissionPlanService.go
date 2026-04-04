@@ -36,7 +36,7 @@ func CommissionPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CommissionPlan(planId string, vnic ifs.IVNic) (*sales.SalesCommissionPlan, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesCommissionPlan{PlanId: planId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesCommissionPlan{ PlanId: planId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

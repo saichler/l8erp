@@ -36,7 +36,7 @@ func EcomCategories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomCategory(categoryId string, vnic ifs.IVNic) (*ecom.EcomCategory, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomCategory{CategoryId: categoryId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomCategory{ CategoryId: categoryId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

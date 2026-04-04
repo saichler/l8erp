@@ -13,62 +13,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 /**
- * ERP Reference Registry - MFG Models
- * Uses Layer8RefFactory for reduced boilerplate
+ * ERP Reference Registry - Manufacturing Models (Desktop)
+ * Extends shared MFG data with desktop-specific entries
  */
-const refMfg = window.Layer8RefFactory;
+(function() {
+    'use strict';
+    const ref = window.Layer8RefFactory;
 
-window.Layer8DReferenceRegistryMFG = {
-    // ========================================
-    // MFG - Engineering Models
-    // ========================================
-    ...refMfg.simple('MfgBom', 'bomId', 'bomNumber', 'BOM'),
-    ...refMfg.simple('MfgRouting', 'routingId', 'routingNumber', 'Routing'),
+    window.Layer8DReferenceRegistryMFG = {
+        ...window.ReferenceDataMfg,
 
-    // ========================================
-    // MFG - Shop Floor Models
-    // ========================================
-    ...refMfg.coded('MfgWorkCenter', 'workCenterId', 'code', 'name'),
-    ...refMfg.simple('MfgShift', 'shiftId', 'name', 'Shift'),
-    ...refMfg.idOnly('MfgShiftSchedule', 'scheduleId'),
-    ...refMfg.idOnly('MfgDowntimeRecord', 'downtimeId'),
+        // Desktop-specific: additional shop floor entries
+        ...ref.simple('MfgShift', 'shiftId', 'name', 'Shift'),
+        ...ref.idOnly('MfgShiftSchedule', 'scheduleId'),
+        ...ref.idOnly('MfgDowntimeRecord', 'downtimeId'),
 
-    // ========================================
-    // MFG - Production Models
-    // ========================================
-    ...refMfg.simple('MfgWorkOrder', 'workOrderId', 'workOrderNumber', 'Work Order'),
+        // Desktop-specific: quality plan uses planNumber as display
+        ...ref.simple('MfgQualityPlan', 'planId', 'planNumber', 'Quality Plan'),
 
-    // ========================================
-    // MFG - Quality Models
-    // ========================================
-    ...refMfg.simple('MfgQualityPlan', 'planId', 'planNumber', 'Quality Plan'),
-    ...refMfg.simple('MfgQualityInspection', 'inspectionId', 'inspectionNumber', 'Inspection'),
-    ...refMfg.simple('MfgNCR', 'ncrId', 'ncrNumber', 'NCR'),
+        // Desktop-specific: additional engineering entries
+        ...ref.simple('MfgEngChangeOrder', 'changeOrderId', 'ecoNumber', 'ECO'),
 
-    // ========================================
-    // MFG - Planning Models
-    // ========================================
-    ...refMfg.idOnly('MfgMrpRun', 'runId'),
-
-    // ========================================
-    // MFG - Costing Models
-    // ========================================
-    ...refMfg.idOnly('MfgCostRollup', 'rollupId'),
-
-    // ========================================
-    // MFG - Additional Engineering Models
-    // ========================================
-    ...refMfg.simple('MfgEngChangeOrder', 'changeOrderId', 'ecoNumber', 'ECO'),
-
-    // ========================================
-    // MFG - Additional Planning Models
-    // ========================================
-    ...refMfg.simple('MfgCapacityPlan', 'planId', 'planNumber', 'Capacity Plan'),
-    ...refMfg.simple('MfgProdSchedule', 'scheduleId', 'scheduleNumber', 'Production Schedule'),
-
-    // ========================================
-    // MFG - Additional Production Models
-    // ========================================
-    ...refMfg.simple('MfgProductionOrder', 'prodOrderId', 'orderNumber', 'Production Order'),
-
-};
+        // Desktop-specific: additional planning entries
+        ...ref.idOnly('MfgMrpRun', 'runId')
+    };
+})();

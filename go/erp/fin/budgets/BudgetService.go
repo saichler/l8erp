@@ -36,7 +36,7 @@ func Budgets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Budget(budgetId string, vnic ifs.IVNic) (*fin.Budget, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.Budget{BudgetId: budgetId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.Budget{ BudgetId: budgetId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

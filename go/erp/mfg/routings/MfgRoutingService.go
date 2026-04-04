@@ -36,7 +36,7 @@ func MfgRoutings(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgRouting(routingId string, vnic ifs.IVNic) (*mfg.MfgRouting, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgRouting{RoutingId: routingId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgRouting{ RoutingId: routingId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

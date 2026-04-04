@@ -5,65 +5,43 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
 /**
  * Mobile Reference Registry - SCM Module
- * Reference configurations for Supply Chain Management models
- * Uses Layer8RefFactory for reduced boilerplate
+ * Extends shared SCM data with mobile-specific entries
  */
-const refScmM = window.Layer8RefFactory;
+(function() {
+    'use strict';
+    const ref = window.Layer8RefFactory;
 
-window.Layer8MReferenceRegistrySCM = {
-    // ========================================
-    // SCM - Procurement Models
-    // ========================================
-    ...refScmM.simple('ScmPurchaseRequisition', 'requisitionId', 'requisitionNumber', 'Requisition'),
-    ...refScmM.simple('ScmRequestForQuotation', 'rfqId', 'rfqNumber', 'RFQ'),
-    ...refScmM.simple('ScmPurchaseOrder', 'purchaseOrderId', 'orderNumber', 'Purchase Order'),
-    ...refScmM.simple('ScmBlanketOrder', 'blanketOrderId', 'orderNumber', 'Blanket Order'),
-    ...refScmM.idOnly('ScmSupplierScorecard', 'scorecardId'),
+    Layer8MReferenceRegistry.register({
+        ...window.ReferenceDataScm,
 
-    // ========================================
-    // SCM - Inventory Models
-    // ========================================
-    ...refScmM.coded('ScmItem', 'itemId', 'itemNumber', 'name'),
-    ...refScmM.simple('ScmItemCategory', 'categoryId', 'categoryName'),
-    ...refScmM.idOnly('ScmCycleCount', 'cycleCountId'),
+        // Mobile-specific: additional procurement entries
+        ...ref.simple('ScmRequestForQuotation', 'rfqId', 'rfqNumber', 'RFQ'),
+        ...ref.simple('ScmBlanketOrder', 'blanketOrderId', 'orderNumber', 'Blanket Order'),
+        ...ref.idOnly('ScmSupplierScorecard', 'scorecardId'),
 
-    // ========================================
-    // SCM - Warehouse Management Models
-    // ========================================
-    ...refScmM.coded('ScmWarehouse', 'warehouseId', 'code', 'name'),
-    ...refScmM.idOnly('ScmReceivingOrder', 'receivingOrderId'),
-    ...refScmM.simple('ScmWavePlan', 'wavePlanId', 'waveName'),
-    ...refScmM.idOnly('ScmDockSchedule', 'scheduleId'),
+        // Mobile-specific: additional inventory entries
+        ...ref.simple('ScmItemCategory', 'categoryId', 'categoryName'),
+        ...ref.idOnly('ScmCycleCount', 'cycleCountId'),
 
-    // ========================================
-    // SCM - Logistics Models
-    // ========================================
-    ...refScmM.coded('ScmCarrier', 'carrierId', 'code', 'name'),
-    ...refScmM.idOnly('ScmFreightRate', 'rateId'),
-    ...refScmM.simple('ScmShipment', 'shipmentId', 'shipmentNumber', 'Shipment'),
-    ...refScmM.simple('ScmRoute', 'routeId', 'name'),
-    ...refScmM.idOnly('ScmLoadPlan', 'loadPlanId'),
-    ...refScmM.simple('ScmReturnAuthorization', 'rmaId', 'rmaNumber', 'RMA'),
+        // Mobile-specific: additional warehouse entries
+        ...ref.simple('ScmWavePlan', 'wavePlanId', 'waveName'),
+        ...ref.idOnly('ScmDockSchedule', 'scheduleId'),
 
-    // ========================================
-    // SCM - Demand Planning Models
-    // ========================================
-    ...refScmM.simple('ScmDemandForecast', 'forecastId', 'forecastId', 'Forecast'),
-    ...refScmM.simple('ScmForecastModel', 'modelId', 'name'),
-    ...refScmM.simple('ScmDemandPlan', 'planId', 'name'),
-    ...refScmM.simple('ScmPromotionalPlan', 'planId', 'planName'),
-    ...refScmM.simple('ScmNewProductPlan', 'planId', 'productName'),
+        // Mobile-specific: additional logistics entries
+        ...ref.coded('ScmCarrier', 'carrierId', 'code', 'name'),
+        ...ref.simple('ScmRoute', 'routeId', 'name'),
+        ...ref.idOnly('ScmLoadPlan', 'loadPlanId'),
 
-    // ========================================
-    // SCM - Supply Planning Models
-    // ========================================
-    ...refScmM.idOnly('ScmMaterialRequirement', 'requirementId'),
-    ...refScmM.idOnly('ScmDistributionRequirement', 'requirementId'),
-    ...refScmM.simple('ScmSupplyPlan', 'planId', 'name', 'Supply Plan'),
-    ...refScmM.idOnly('ScmSupplierCollaboration', 'collaborationId'),
-    ...refScmM.idOnly('ScmSafetyStock', 'safetyStockId'),
-    ...refScmM.idOnly('ScmLeadTime', 'leadTimeId')
-};
+        // Mobile-specific: additional demand planning entries
+        ...ref.simple('ScmForecastModel', 'modelId', 'name'),
+        ...ref.simple('ScmDemandPlan', 'planId', 'name'),
+        ...ref.simple('ScmPromotionalPlan', 'planId', 'planName'),
+        ...ref.simple('ScmNewProductPlan', 'planId', 'productName'),
 
-// Register with the central registry
-Layer8MReferenceRegistry.register(window.Layer8MReferenceRegistrySCM);
+        // Mobile-specific: additional supply planning entries
+        ...ref.idOnly('ScmMaterialRequirement', 'requirementId'),
+        ...ref.idOnly('ScmDistributionRequirement', 'requirementId'),
+        ...ref.idOnly('ScmSupplierCollaboration', 'collaborationId'),
+        ...ref.idOnly('ScmLeadTime', 'leadTimeId')
+    });
+})();

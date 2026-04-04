@@ -36,7 +36,7 @@ func FiscalYears(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func FiscalYear(fiscalYearId string, vnic ifs.IVNic) (*fin.FiscalYear, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.FiscalYear{FiscalYearId: fiscalYearId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.FiscalYear{ FiscalYearId: fiscalYearId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

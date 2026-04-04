@@ -36,7 +36,7 @@ func DocTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocTemplate(templateId string, vnic ifs.IVNic) (*doc.DocTemplate, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocTemplate{TemplateId: templateId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocTemplate{ TemplateId: templateId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

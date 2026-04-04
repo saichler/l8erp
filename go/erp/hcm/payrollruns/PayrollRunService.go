@@ -36,7 +36,7 @@ func PayrollRuns(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PayrollRun(payrollRunId string, vnic ifs.IVNic) (*hcm.PayrollRun, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.PayrollRun{PayrollRunId: payrollRunId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.PayrollRun{ PayrollRunId: payrollRunId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

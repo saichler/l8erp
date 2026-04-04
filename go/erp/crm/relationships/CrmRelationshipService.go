@@ -36,7 +36,7 @@ func CrmRelationships(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmRelationship(relationshipId string, vnic ifs.IVNic) (*crm.CrmRelationship, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmRelationship{RelationshipId: relationshipId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmRelationship{ RelationshipId: relationshipId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

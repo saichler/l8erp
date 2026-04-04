@@ -36,7 +36,7 @@ func PerformanceReviews(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PerformanceReview(reviewId string, vnic ifs.IVNic) (*hcm.PerformanceReview, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.PerformanceReview{ReviewId: reviewId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.PerformanceReview{ ReviewId: reviewId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

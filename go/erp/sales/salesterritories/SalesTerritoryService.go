@@ -36,7 +36,7 @@ func SalesTerritories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SalesTerritory(territoryId string, vnic ifs.IVNic) (*sales.SalesTerritory, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesTerritory{TerritoryId: territoryId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesTerritory{ TerritoryId: territoryId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

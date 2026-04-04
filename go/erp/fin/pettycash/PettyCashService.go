@@ -36,7 +36,7 @@ func PettyCashes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PettyCash(pettyCashId string, vnic ifs.IVNic) (*fin.PettyCash, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.PettyCash{PettyCashId: pettyCashId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.PettyCash{ PettyCashId: pettyCashId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

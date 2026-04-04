@@ -36,7 +36,7 @@ func CrmCases(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmCase(caseId string, vnic ifs.IVNic) (*crm.CrmCase, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmCase{CaseId: caseId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmCase{ CaseId: caseId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

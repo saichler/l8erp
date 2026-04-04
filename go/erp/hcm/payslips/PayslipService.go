@@ -36,7 +36,7 @@ func Payslips(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Payslip(payslipId string, vnic ifs.IVNic) (*hcm.Payslip, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Payslip{PayslipId: payslipId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Payslip{ PayslipId: payslipId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

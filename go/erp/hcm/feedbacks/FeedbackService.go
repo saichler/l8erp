@@ -36,7 +36,7 @@ func Feedbacks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Feedback(feedbackId string, vnic ifs.IVNic) (*hcm.Feedback, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Feedback{FeedbackId: feedbackId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Feedback{ FeedbackId: feedbackId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

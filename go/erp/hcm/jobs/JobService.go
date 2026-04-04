@@ -36,7 +36,7 @@ func Jobs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Job(jobId string, vnic ifs.IVNic) (*hcm.Job, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Job{JobId: jobId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Job{ JobId: jobId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

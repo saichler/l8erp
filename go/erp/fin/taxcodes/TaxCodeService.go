@@ -36,7 +36,7 @@ func TaxCodes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func TaxCode(taxCodeId string, vnic ifs.IVNic) (*fin.TaxCode, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.TaxCode{TaxCodeId: taxCodeId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.TaxCode{ TaxCodeId: taxCodeId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

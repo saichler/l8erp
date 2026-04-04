@@ -36,7 +36,7 @@ func BiDataQualityRules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiDataQualityRule(ruleId string, vnic ifs.IVNic) (*bi.BiDataQualityRule, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiDataQualityRule{RuleId: ruleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiDataQualityRule{ RuleId: ruleId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

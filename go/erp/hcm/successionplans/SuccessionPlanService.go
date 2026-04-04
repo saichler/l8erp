@@ -36,7 +36,7 @@ func SuccessionPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SuccessionPlan(planId string, vnic ifs.IVNic) (*hcm.SuccessionPlan, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.SuccessionPlan{PlanId: planId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.SuccessionPlan{ PlanId: planId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

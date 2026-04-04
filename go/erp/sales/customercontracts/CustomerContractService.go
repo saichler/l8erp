@@ -36,7 +36,7 @@ func CustomerContracts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CustomerContract(contractId string, vnic ifs.IVNic) (*sales.SalesCustomerContract, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesCustomerContract{ContractId: contractId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesCustomerContract{ ContractId: contractId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

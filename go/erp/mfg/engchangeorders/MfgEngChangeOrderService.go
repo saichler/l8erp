@@ -36,7 +36,7 @@ func MfgEngChangeOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgEngChangeOrder(changeOrderId string, vnic ifs.IVNic) (*mfg.MfgEngChangeOrder, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgEngChangeOrder{ChangeOrderId: changeOrderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgEngChangeOrder{ ChangeOrderId: changeOrderId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

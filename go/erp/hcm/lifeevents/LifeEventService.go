@@ -36,7 +36,7 @@ func LifeEvents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func LifeEvent(lifeEventId string, vnic ifs.IVNic) (*hcm.LifeEvent, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.LifeEvent{LifeEventId: lifeEventId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.LifeEvent{ LifeEventId: lifeEventId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

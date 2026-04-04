@@ -36,7 +36,7 @@ func COBRAEvents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func COBRAEvent(cobraEventId string, vnic ifs.IVNic) (*hcm.COBRAEvent, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.COBRAEvent{CobraEventId: cobraEventId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.COBRAEvent{ CobraEventId: cobraEventId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

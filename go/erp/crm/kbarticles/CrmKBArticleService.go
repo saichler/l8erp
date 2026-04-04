@@ -36,7 +36,7 @@ func CrmKBArticles(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmKBArticle(articleId string, vnic ifs.IVNic) (*crm.CrmKBArticle, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmKBArticle{ArticleId: articleId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmKBArticle{ ArticleId: articleId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func Departments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Department(departmentId string, vnic ifs.IVNic) (*hcm.Department, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Department{DepartmentId: departmentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Department{ DepartmentId: departmentId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

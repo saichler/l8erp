@@ -36,7 +36,7 @@ func MfgDowntimeEvents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgDowntimeEvent(eventId string, vnic ifs.IVNic) (*mfg.MfgDowntimeEvent, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgDowntimeEvent{EventId: eventId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgDowntimeEvent{ EventId: eventId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

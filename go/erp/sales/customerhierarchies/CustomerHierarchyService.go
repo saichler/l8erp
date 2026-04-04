@@ -36,7 +36,7 @@ func CustomerHierarchies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CustomerHierarchy(hierarchyId string, vnic ifs.IVNic) (*sales.SalesCustomerHierarchy, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesCustomerHierarchy{HierarchyId: hierarchyId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesCustomerHierarchy{ HierarchyId: hierarchyId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

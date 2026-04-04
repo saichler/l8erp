@@ -24,6 +24,46 @@ import (
 	"github.com/saichler/l8erp/go/types/fin"
 )
 
+// vendorContactsFromData converts ContactData into VendorContact structs.
+func vendorContactsFromData(data []ContactData, emailDomain string) []*fin.VendorContact {
+	contacts := make([]*fin.VendorContact, len(data))
+	for j, c := range data {
+		contacts[j] = &fin.VendorContact{
+			ContactId: c.ContactID,
+			VendorId:  c.ParentID,
+			FirstName: c.FirstName,
+			LastName:  c.LastName,
+			Title:     c.Title,
+			Email:     strings.Replace(c.Email, "@company.com", "@"+emailDomain, 1),
+			Phone:     c.Phone,
+			IsPrimary: c.IsPrimary,
+			IsActive:  true,
+			AuditInfo: createAuditInfo(),
+		}
+	}
+	return contacts
+}
+
+// customerContactsFromData converts ContactData into CustomerContact structs.
+func customerContactsFromData(data []ContactData, emailDomain string) []*fin.CustomerContact {
+	contacts := make([]*fin.CustomerContact, len(data))
+	for j, c := range data {
+		contacts[j] = &fin.CustomerContact{
+			ContactId:  c.ContactID,
+			CustomerId: c.ParentID,
+			FirstName:  c.FirstName,
+			LastName:   c.LastName,
+			Title:      c.Title,
+			Email:      strings.Replace(c.Email, "@company.com", "@"+emailDomain, 1),
+			Phone:      c.Phone,
+			IsPrimary:  c.IsPrimary,
+			IsActive:   true,
+			AuditInfo:  createAuditInfo(),
+		}
+	}
+	return contacts
+}
+
 // generateVendors creates vendor records with embedded contacts and withholding tax configs
 func generateVendors(store *MockDataStore) []*fin.Vendor {
 	vendors := make([]*fin.Vendor, len(vendorNames))
@@ -45,31 +85,9 @@ func generateVendors(store *MockDataStore) []*fin.Vendor {
 		}
 
 		// Generate embedded vendor contacts (2 per vendor)
-		vendorContacts := make([]*fin.VendorContact, 2)
-		for j := 0; j < 2; j++ {
-			cname := randomName()
-			parts := strings.SplitN(cname, " ", 2)
-			firstName := parts[0]
-			lastName := ""
-			if len(parts) > 1 {
-				lastName = parts[1]
-			}
-			cSanitized := strings.ToLower(sanitizeEmail(firstName))
-
-			vendorContacts[j] = &fin.VendorContact{
-				ContactId: fmt.Sprintf("vcnt-%03d", contactIdx),
-				VendorId:  vndId,
-				FirstName: firstName,
-				LastName:  lastName,
-				Title:     titles[j%len(titles)],
-				Email:     fmt.Sprintf("%s@vendor.com", cSanitized),
-				Phone:     randomPhone(),
-				IsPrimary: j == 0,
-				IsActive:  true,
-				AuditInfo: createAuditInfo(),
-			}
-			contactIdx++
-		}
+		contactData := generatePersonContacts(vndId, "vcnt", 2, contactIdx, titles)
+		vendorContacts := vendorContactsFromData(contactData, "vendor.com")
+		contactIdx += 2
 
 		// Generate embedded withholding tax config (1 for first 4 vendors)
 		var whConfigs []*fin.WithholdingTaxConfig
@@ -135,31 +153,9 @@ func generateCustomers(store *MockDataStore) []*fin.Customer {
 		}
 
 		// Generate embedded customer contacts (2 per customer)
-		customerContacts := make([]*fin.CustomerContact, 2)
-		for j := 0; j < 2; j++ {
-			cname := randomName()
-			parts := strings.SplitN(cname, " ", 2)
-			firstName := parts[0]
-			lastName := ""
-			if len(parts) > 1 {
-				lastName = parts[1]
-			}
-			cSanitized := strings.ToLower(sanitizeEmail(firstName))
-
-			customerContacts[j] = &fin.CustomerContact{
-				ContactId:  fmt.Sprintf("ccnt-%03d", contactIdx),
-				CustomerId: custId,
-				FirstName:  firstName,
-				LastName:   lastName,
-				Title:      titles[j%len(titles)],
-				Email:      fmt.Sprintf("%s@customer.com", cSanitized),
-				Phone:      randomPhone(),
-				IsPrimary:  j == 0,
-				IsActive:   true,
-				AuditInfo:  createAuditInfo(),
-			}
-			contactIdx++
-		}
+		contactData := generatePersonContacts(custId, "ccnt", 2, contactIdx, titles)
+		customerContacts := customerContactsFromData(contactData, "customer.com")
+		contactIdx += 2
 
 		customers[i] = &fin.Customer{
 			CustomerId:       custId,

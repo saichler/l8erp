@@ -5,54 +5,31 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
 /**
  * Mobile Reference Registry - Manufacturing Module
- * Reference configurations for Manufacturing models
- * Uses Layer8RefFactory for reduced boilerplate
+ * Extends shared MFG data with mobile-specific entries
  */
-const refMfgM = window.Layer8RefFactory;
+(function() {
+    'use strict';
+    const ref = window.Layer8RefFactory;
 
-window.Layer8MReferenceRegistryMFG = {
-    // ========================================
-    // Manufacturing - Engineering
-    // ========================================
-    ...refMfgM.simple('MfgBom', 'bomId', 'bomNumber', 'BOM'),
-    ...refMfgM.simple('MfgRouting', 'routingId', 'routingNumber', 'Routing'),
-    ...refMfgM.coded('MfgEngChangeOrder', 'changeOrderId', 'ecoNumber', 'description'),
+    Layer8MReferenceRegistry.register({
+        ...window.ReferenceDataMfg,
 
-    // ========================================
-    // Manufacturing - Production
-    // ========================================
-    ...refMfgM.simple('MfgWorkOrder', 'workOrderId', 'workOrderNumber', 'Work Order'),
-    ...refMfgM.simple('MfgProductionOrder', 'prodOrderId', 'orderNumber', 'Production Order'),
+        // Mobile-specific: engineering entries
+        ...ref.coded('MfgEngChangeOrder', 'changeOrderId', 'ecoNumber', 'description'),
 
-    // ========================================
-    // Manufacturing - Shop Floor
-    // ========================================
-    ...refMfgM.coded('MfgWorkCenter', 'workCenterId', 'code', 'name'),
-    ...refMfgM.idOnly('MfgWorkCenterCap', 'capacityId'),
-    ...refMfgM.simple('MfgShiftSchedule', 'scheduleId', 'name', 'Shift'),
-    ...refMfgM.idOnly('MfgDowntimeEvent', 'eventId'),
+        // Mobile-specific: shop floor entries
+        ...ref.idOnly('MfgWorkCenterCap', 'capacityId'),
+        ...ref.simple('MfgShiftSchedule', 'scheduleId', 'name', 'Shift'),
+        ...ref.idOnly('MfgDowntimeEvent', 'eventId'),
 
-    // ========================================
-    // Manufacturing - Quality
-    // ========================================
-    ...refMfgM.simple('MfgQualityPlan', 'planId', 'name', 'Quality Plan'),
-    ...refMfgM.simple('MfgQualityInspection', 'inspectionId', 'inspectionNumber', 'Inspection'),
-    ...refMfgM.simple('MfgNCR', 'ncrId', 'ncrNumber', 'NCR'),
+        // Mobile-specific: quality entries
+        ...ref.simple('MfgQualityPlan', 'planId', 'name', 'Quality Plan'),
 
-    // ========================================
-    // Manufacturing - Planning
-    // ========================================
-    ...refMfgM.simple('MfgMrpRun', 'runId', 'runNumber', 'MRP Run'),
-    ...refMfgM.simple('MfgCapacityPlan', 'planId', 'planNumber', 'Capacity Plan'),
-    ...refMfgM.simple('MfgProdSchedule', 'scheduleId', 'scheduleNumber', 'Schedule'),
+        // Mobile-specific: planning entries
+        ...ref.simple('MfgMrpRun', 'runId', 'runNumber', 'MRP Run'),
 
-    // ========================================
-    // Manufacturing - Costing
-    // ========================================
-    ...refMfgM.idOnly('MfgStandardCost', 'costId'),
-    ...refMfgM.idOnly('MfgCostRollup', 'rollupId'),
-    ...refMfgM.simple('MfgOverhead', 'overheadId', 'name', 'Overhead')
-};
-
-// Register with the central registry
-Layer8MReferenceRegistry.register(window.Layer8MReferenceRegistryMFG);
+        // Mobile-specific: costing entries
+        ...ref.idOnly('MfgStandardCost', 'costId'),
+        ...ref.simple('MfgOverhead', 'overheadId', 'name', 'Overhead')
+    });
+})();

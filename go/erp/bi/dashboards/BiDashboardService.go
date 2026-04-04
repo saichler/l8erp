@@ -36,7 +36,7 @@ func BiDashboards(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiDashboard(dashboardId string, vnic ifs.IVNic) (*bi.BiDashboard, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiDashboard{DashboardId: dashboardId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiDashboard{ DashboardId: dashboardId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func MaterialRequirements(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MaterialRequirement(requirementId string, vnic ifs.IVNic) (*scm.ScmMaterialRequirement, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmMaterialRequirement{RequirementId: requirementId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &scm.ScmMaterialRequirement{ RequirementId: requirementId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

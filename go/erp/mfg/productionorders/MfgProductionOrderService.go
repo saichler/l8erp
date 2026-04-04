@@ -36,7 +36,7 @@ func MfgProductionOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgProductionOrder(prodOrderId string, vnic ifs.IVNic) (*mfg.MfgProductionOrder, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgProductionOrder{ProdOrderId: prodOrderId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgProductionOrder{ ProdOrderId: prodOrderId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

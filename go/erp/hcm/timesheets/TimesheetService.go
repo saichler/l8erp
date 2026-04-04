@@ -36,7 +36,7 @@ func Timesheets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Timesheet(timesheetId string, vnic ifs.IVNic) (*hcm.Timesheet, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Timesheet{TimesheetId: timesheetId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Timesheet{ TimesheetId: timesheetId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

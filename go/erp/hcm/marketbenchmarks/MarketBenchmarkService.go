@@ -36,7 +36,7 @@ func MarketBenchmarks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MarketBenchmark(benchmarkId string, vnic ifs.IVNic) (*hcm.MarketBenchmark, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.MarketBenchmark{BenchmarkId: benchmarkId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.MarketBenchmark{ BenchmarkId: benchmarkId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

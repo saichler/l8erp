@@ -36,7 +36,7 @@ func PromotionalPrices(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PromotionalPrice(promoId string, vnic ifs.IVNic) (*sales.SalesPromotionalPrice, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesPromotionalPrice{PromoId: promoId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesPromotionalPrice{ PromoId: promoId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

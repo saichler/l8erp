@@ -36,7 +36,7 @@ func PrjBookings(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjBooking(bookingId string, vnic ifs.IVNic) (*prj.PrjBooking, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjBooking{BookingId: bookingId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjBooking{ BookingId: bookingId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

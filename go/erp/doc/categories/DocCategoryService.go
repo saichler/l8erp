@@ -36,7 +36,7 @@ func DocCategories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocCategory(categoryId string, vnic ifs.IVNic) (*doc.DocCategory, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocCategory{CategoryId: categoryId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocCategory{ CategoryId: categoryId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

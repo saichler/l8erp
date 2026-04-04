@@ -36,7 +36,7 @@ func PrjTimesheets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjTimesheet(timesheetId string, vnic ifs.IVNic) (*prj.PrjTimesheet, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjTimesheet{TimesheetId: timesheetId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjTimesheet{ TimesheetId: timesheetId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

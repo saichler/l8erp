@@ -36,7 +36,7 @@ func PrjUtilizations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjUtilization(utilizationId string, vnic ifs.IVNic) (*prj.PrjUtilization, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjUtilization{UtilizationId: utilizationId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjUtilization{ UtilizationId: utilizationId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func Applicants(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Applicant(applicantId string, vnic ifs.IVNic) (*hcm.Applicant, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Applicant{ApplicantId: applicantId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Applicant{ ApplicantId: applicantId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

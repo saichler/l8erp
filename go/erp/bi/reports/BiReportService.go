@@ -37,7 +37,7 @@ func BiReports(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiReport(reportId string, vnic ifs.IVNic) (*bi.BiReport, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiReport{ReportId: reportId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiReport{ ReportId: reportId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

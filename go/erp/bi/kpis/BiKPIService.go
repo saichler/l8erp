@@ -36,7 +36,7 @@ func BiKPIs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiKPI(kpiId string, vnic ifs.IVNic) (*bi.BiKPI, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiKPI{KpiId: kpiId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiKPI{ KpiId: kpiId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

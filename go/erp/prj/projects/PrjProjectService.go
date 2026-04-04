@@ -36,7 +36,7 @@ func PrjProjects(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PrjProject(projectId string, vnic ifs.IVNic) (*prj.PrjProject, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjProject{ProjectId: projectId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &prj.PrjProject{ ProjectId: projectId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

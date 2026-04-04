@@ -36,7 +36,7 @@ func JournalEntries(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func JournalEntry(journalEntryId string, vnic ifs.IVNic) (*fin.JournalEntry, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.JournalEntry{JournalEntryId: journalEntryId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.JournalEntry{ JournalEntryId: journalEntryId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

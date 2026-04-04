@@ -36,7 +36,7 @@ func Customers(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Customer(customerId string, vnic ifs.IVNic) (*fin.Customer, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.Customer{CustomerId: customerId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.Customer{ CustomerId: customerId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

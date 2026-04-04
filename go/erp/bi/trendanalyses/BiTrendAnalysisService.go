@@ -36,7 +36,7 @@ func BiTrendAnalyses(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func BiTrendAnalysis(analysisId string, vnic ifs.IVNic) (*bi.BiTrendAnalysis, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiTrendAnalysis{AnalysisId: analysisId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &bi.BiTrendAnalysis{ AnalysisId: analysisId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

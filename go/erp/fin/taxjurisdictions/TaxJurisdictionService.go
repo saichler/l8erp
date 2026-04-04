@@ -36,7 +36,7 @@ func TaxJurisdictions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func TaxJurisdiction(jurisdictionId string, vnic ifs.IVNic) (*fin.TaxJurisdiction, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.TaxJurisdiction{JurisdictionId: jurisdictionId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &fin.TaxJurisdiction{ JurisdictionId: jurisdictionId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

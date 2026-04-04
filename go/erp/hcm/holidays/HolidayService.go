@@ -36,7 +36,7 @@ func Holidays(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Holiday(holidayId string, vnic ifs.IVNic) (*hcm.Holiday, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Holiday{HolidayId: holidayId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Holiday{ HolidayId: holidayId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

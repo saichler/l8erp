@@ -36,7 +36,7 @@ func EcomWishlists(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func EcomWishlist(wishlistId string, vnic ifs.IVNic) (*ecom.EcomWishlist, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomWishlist{WishlistId: wishlistId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &ecom.EcomWishlist{ WishlistId: wishlistId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

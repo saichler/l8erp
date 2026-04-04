@@ -36,7 +36,7 @@ func DocLegalHolds(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocLegalHold(holdId string, vnic ifs.IVNic) (*doc.DocLegalHold, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocLegalHold{HoldId: holdId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocLegalHold{ HoldId: holdId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

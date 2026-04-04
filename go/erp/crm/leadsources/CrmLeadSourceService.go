@@ -36,7 +36,7 @@ func CrmLeadSources(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CrmLeadSource(sourceId string, vnic ifs.IVNic) (*crm.CrmLeadSource, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmLeadSource{SourceId: sourceId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &crm.CrmLeadSource{ SourceId: sourceId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

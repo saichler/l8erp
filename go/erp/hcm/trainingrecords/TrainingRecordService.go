@@ -36,7 +36,7 @@ func TrainingRecords(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func TrainingRecord(recordId string, vnic ifs.IVNic) (*hcm.TrainingRecord, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.TrainingRecord{RecordId: recordId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.TrainingRecord{ RecordId: recordId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

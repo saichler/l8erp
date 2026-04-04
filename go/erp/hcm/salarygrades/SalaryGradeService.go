@@ -36,7 +36,7 @@ func SalaryGrades(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func SalaryGrade(gradeId string, vnic ifs.IVNic) (*hcm.SalaryGrade, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.SalaryGrade{GradeId: gradeId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.SalaryGrade{ GradeId: gradeId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

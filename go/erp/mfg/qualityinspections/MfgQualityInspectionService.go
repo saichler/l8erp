@@ -36,7 +36,7 @@ func MfgQualityInspections(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgQualityInspection(inspectionId string, vnic ifs.IVNic) (*mfg.MfgQualityInspection, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgQualityInspection{InspectionId: inspectionId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgQualityInspection{ InspectionId: inspectionId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

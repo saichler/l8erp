@@ -36,7 +36,7 @@ func DocRetentionPolicies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DocRetentionPolicy(policyId string, vnic ifs.IVNic) (*doc.DocRetentionPolicy, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocRetentionPolicy{PolicyId: policyId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &doc.DocRetentionPolicy{ PolicyId: policyId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

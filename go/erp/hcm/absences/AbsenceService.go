@@ -36,7 +36,7 @@ func Absences(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func Absence(absenceId string, vnic ifs.IVNic) (*hcm.Absence, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Absence{AbsenceId: absenceId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.Absence{ AbsenceId: absenceId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

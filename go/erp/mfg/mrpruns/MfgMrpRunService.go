@@ -36,7 +36,7 @@ func MfgMrpRuns(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func MfgMrpRun(runId string, vnic ifs.IVNic) (*mfg.MfgMrpRun, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgMrpRun{RunId: runId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &mfg.MfgMrpRun{ RunId: runId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

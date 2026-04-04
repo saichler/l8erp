@@ -36,7 +36,7 @@ func CompIncidents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func CompIncident(incidentId string, vnic ifs.IVNic) (*comp.CompIncident, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompIncident{IncidentId: incidentId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &comp.CompIncident{ IncidentId: incidentId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

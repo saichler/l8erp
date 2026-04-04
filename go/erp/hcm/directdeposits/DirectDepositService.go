@@ -36,7 +36,7 @@ func DirectDeposits(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func DirectDeposit(directDepositId string, vnic ifs.IVNic) (*hcm.DirectDeposit, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.DirectDeposit{DirectDepositId: directDepositId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &hcm.DirectDeposit{ DirectDepositId: directDepositId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}

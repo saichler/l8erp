@@ -36,7 +36,7 @@ func PartnerChannels(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
 }
 
 func PartnerChannel(partnerId string, vnic ifs.IVNic) (*sales.SalesPartnerChannel, error) {
-	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesPartnerChannel{PartnerId: partnerId}, vnic)
+	result, err := common.GetEntity(ServiceName, ServiceArea, &sales.SalesPartnerChannel{ PartnerId: partnerId }, vnic)
 	if err != nil || result == nil {
 		return nil, err
 	}
