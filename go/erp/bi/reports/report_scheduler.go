@@ -67,9 +67,19 @@ func checkDueSchedules(vnic ifs.IVNic) {
 		log.Printf("Scheduler: error fetching reports: %v", err)
 		return
 	}
+	if len(reports) == 0 {
+		return
+	}
 	now := time.Now().Unix()
 	for _, reportRaw := range reports {
-		checkReportSchedules(reportRaw.(*bi.BiReport), now, vnic)
+		if reportRaw == nil {
+			continue
+		}
+		report, ok := reportRaw.(*bi.BiReport)
+		if !ok || report == nil {
+			continue
+		}
+		checkReportSchedules(report, now, vnic)
 	}
 }
 
