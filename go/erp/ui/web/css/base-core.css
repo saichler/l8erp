@@ -226,7 +226,7 @@ body {
 }
 
 .nav-link.active {
-    background: #f0ede6;
+    background: var(--layer8d-bg-light);
     color: var(--text-primary);
     border-color: var(--border-default);
     box-shadow: none;

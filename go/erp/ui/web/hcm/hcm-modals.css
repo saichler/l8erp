@@ -59,15 +59,15 @@ limitations under the License.
     align-items: center;
     justify-content: space-between;
     padding: 20px 24px;
-    border-bottom: 1px solid #ddd7ce;
-    background: linear-gradient(135deg, #f8f5ef 0%, #f1ebe2 100%);
+    border-bottom: 1px solid var(--layer8d-border);
+    background: linear-gradient(135deg, var(--layer8d-bg-white) 0%, var(--layer8d-bg-light) 100%);
     border-radius: 16px 16px 0 0;
 }
 
 .hcm-modal-title {
     font-size: 18px;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--layer8d-text-dark);
     margin: 0;
 }
 
@@ -75,7 +75,7 @@ limitations under the License.
     background: none;
     border: none;
     font-size: 24px;
-    color: #64748b;
+    color: var(--layer8d-text-muted);
     cursor: pointer;
     padding: 4px 8px;
     border-radius: 6px;
@@ -83,8 +83,8 @@ limitations under the License.
 }
 
 .hcm-modal-close:hover {
-    background: #e6ddd0;
-    color: #1e293b;
+    background: var(--layer8d-bg-hover);
+    color: var(--layer8d-text-dark);
 }
 
 .hcm-modal-body {
@@ -98,8 +98,8 @@ limitations under the License.
     justify-content: flex-end;
     gap: 12px;
     padding: 16px 24px;
-    border-top: 1px solid #ddd7ce;
-    background: #f4f1ea;
+    border-top: 1px solid var(--layer8d-border);
+    background: var(--layer8d-bg-light);
     border-radius: 0 0 16px 16px;
 }
 
@@ -118,22 +118,22 @@ limitations under the License.
 }
 
 .hcm-details-section {
-    background: #fdfbf7;
+    background: var(--layer8d-bg-card);
     border-radius: 12px;
     padding: 16px;
-    border: 1px solid #ddd7ce;
+    border: 1px solid var(--layer8d-border);
 }
 
 .hcm-details-section-title {
     font-size: 14px;
     font-weight: 700;
-    color: #0ea5e9;
+    color: var(--layer8d-primary);
     margin: 0 0 16px 0;
     text-transform: none;
     letter-spacing: normal;
     font-family: 'Figtree', sans-serif;
     padding-bottom: 8px;
-    border-bottom: 1px solid #ddd7ce;
+    border-bottom: 1px solid var(--layer8d-border);
 }
 
 .hcm-details-grid {
@@ -150,7 +150,7 @@ limitations under the License.
 
 .hcm-details-label {
     font-size: 12px;
-    color: #475569;
+    color: var(--layer8d-text-medium);
     text-transform: none;
     letter-spacing: normal;
     font-weight: 700;
@@ -159,12 +159,12 @@ limitations under the License.
 
 .hcm-details-value {
     font-size: 14px;
-    color: #2d3748;
+    color: var(--layer8d-text-dark);
     font-family: 'Figtree', sans-serif;
     font-weight: 500;
 }
 
 .hcm-details-empty {
-    color: #a0aec0;
+    color: var(--layer8d-text-light);
     font-style: italic;
 }

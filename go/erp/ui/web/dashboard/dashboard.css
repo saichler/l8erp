@@ -33,14 +33,14 @@ limitations under the License.
 /* ============================================ */
 
 .dashboard-stat-card {
-    background: #fcfbf8;
+    background: var(--layer8d-bg-white);
     border-radius: 12px;
     padding: 20px;
     display: flex;
     align-items: center;
     gap: 16px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    border: 1px solid #ddd7ce;
+    border: 1px solid var(--layer8d-border);
     transition: all 0.3s ease;
     cursor: pointer;
 }
@@ -48,7 +48,7 @@ limitations under the License.
 .dashboard-stat-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    border-color: #c8c0b4;
+    border-color: var(--layer8d-border-dark);
 }
 
 .dashboard-stat-icon {
@@ -121,17 +121,17 @@ limitations under the License.
 .dashboard-stat-value {
     font-size: 28px;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--layer8d-text-dark);
     line-height: 1.2;
 }
 
 .dashboard-stat-value.loading {
-    color: #94a3b8;
+    color: var(--layer8d-text-light);
 }
 
 .dashboard-stat-label {
     font-size: 13px;
-    color: #64748b;
+    color: var(--layer8d-text-muted);
     font-weight: 500;
     margin-top: 4px;
 }
@@ -146,13 +146,13 @@ limitations under the License.
     gap: 12px;
     margin-bottom: 16px;
     padding-bottom: 12px;
-    border-bottom: 2px solid #ddd7ce;
+    border-bottom: 2px solid var(--layer8d-border);
 }
 
 .dashboard-section-title {
     font-size: 18px;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--layer8d-text-dark);
     margin: 0;
 }
 

@@ -243,7 +243,7 @@ limitations under the License.
 }
 
 .hcm-btn-danger:hover {
-    background: #dc2626;
+    background: var(--layer8d-error);
     box-shadow: 0 4px 8px rgba(239, 68, 68, 0.25);
     transform: translateY(-1px);
 }
@@ -270,7 +270,7 @@ limitations under the License.
 
 .hcm-status-inactive {
     background: rgba(107, 114, 128, 0.1);
-    color: #6b7280;
+    color: var(--layer8d-text-muted);
 }
 
 .hcm-status-pending {
