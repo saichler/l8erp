@@ -1,0 +1,64 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package lend;
+
+option go_package = "./types/lend";
+
+import "lend-common.proto";
+import "l8common.proto";
+import "api.proto";
+
+// ============================================================================
+// CREDIT LINES
+// ============================================================================
+
+// @PrimeObject
+// CreditLine represents a revolving credit facility with limits and drawdowns
+message CreditLine {
+  string credit_line_id = 1;
+  string credit_line_number = 2;
+  string product_id = 3;
+  string application_id = 4;
+  string customer_id = 5;
+  CreditLineStatus status = 6;
+  l8common.Money credit_limit = 7;
+  l8common.Money available_balance = 8;
+  l8common.Money outstanding_balance = 9;
+  l8common.Money accrued_interest = 10;
+  double interest_rate = 11;
+  LendInterestType interest_type = 12;
+  LendFrequency payment_frequency = 13;
+  l8common.Money minimum_payment = 14;
+  int64 opening_date = 15;
+  int64 expiration_date = 16;
+  int64 next_payment_date = 17;
+  int64 last_activity_date = 18;
+  int32 days_past_due = 19;
+  string loan_officer_id = 20;
+  string bank_account_id = 21;
+  string gl_receivable_account_id = 22;
+  string currency_id = 23;
+  repeated CreditLineDrawdown drawdowns = 40;
+  repeated CreditLineRepayment repayments = 41;
+  l8common.AuditInfo audit_info = 50;
+  map<string, string> custom_fields = 51;
+}
+
+message CreditLineList {
+  repeated CreditLine list = 1;
+  l8api.L8MetaData metadata = 2;
+}

@@ -1,0 +1,57 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package lend;
+
+option go_package = "./types/lend";
+
+import "lend-common.proto";
+import "l8common.proto";
+import "api.proto";
+
+// ============================================================================
+// LENDING COLLATERAL
+// ============================================================================
+
+// @PrimeObject
+// LendCollateral represents a pledged collateral asset
+message LendCollateral {
+  string collateral_id = 1;
+  string loan_id = 2;
+  string credit_line_id = 3;
+  string customer_id = 4;
+  string name = 5;
+  string description = 6;
+  LendCollateralType collateral_type = 7;
+  LendCollateralStatus status = 8;
+  l8common.Money pledged_value = 9;
+  l8common.Money current_value = 10;
+  string serial_number = 11;
+  string location = 12;
+  string insurance_policy = 13;
+  int64 pledge_date = 14;
+  int64 release_date = 15;
+  int64 last_valuation_date = 16;
+  string notes = 17;
+  repeated CollateralValuation valuations = 40;
+  l8common.AuditInfo audit_info = 50;
+  map<string, string> custom_fields = 51;
+}
+
+message LendCollateralList {
+  repeated LendCollateral list = 1;
+  l8api.L8MetaData metadata = 2;
+}

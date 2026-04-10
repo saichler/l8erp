@@ -188,6 +188,30 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             }
         },
 
+        // Lending Sub-Modules (Level 2)
+        lending: {
+            subModules: [
+                { key: 'products', label: 'Products', icon: 'financial' },
+                { key: 'loans', label: 'Loans', icon: 'financial' },
+                { key: 'payments', label: 'Payments', icon: 'financial' }
+            ],
+
+            services: {
+                'products': [
+                    { key: 'products', label: 'Products', icon: 'financial', endpoint: '/130/LendProd', model: 'LendProduct', idField: 'productId' },
+                    { key: 'applications', label: 'Applications', icon: 'documents', endpoint: '/130/LendApp', model: 'LendApplication', idField: 'applicationId' }
+                ],
+                'loans': [
+                    { key: 'loans', label: 'Loans', icon: 'financial', endpoint: '/130/LendLoan', model: 'Loan', idField: 'loanId' },
+                    { key: 'credit-lines', label: 'Credit Lines', icon: 'financial', endpoint: '/130/CreditLn', model: 'CreditLine', idField: 'creditLineId' }
+                ],
+                'payments': [
+                    { key: 'payments', label: 'Payments', icon: 'financial', endpoint: '/130/LendPay', model: 'LendPayment', idField: 'paymentId' },
+                    { key: 'collateral', label: 'Collateral', icon: 'warehouse', endpoint: '/130/LendCltrl', model: 'LendCollateral', idField: 'collateralId' }
+                ]
+            }
+        },
+
         // AIA Sub-Modules (Level 2)
         aia: {
             subModules: [

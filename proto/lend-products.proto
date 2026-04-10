@@ -1,0 +1,65 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package lend;
+
+option go_package = "./types/lend";
+
+import "lend-common.proto";
+import "l8common.proto";
+import "api.proto";
+
+// ============================================================================
+// LOAN PRODUCTS
+// ============================================================================
+
+// @PrimeObject
+// LendProduct defines a loan product template with terms, rates, and fee structures
+message LendProduct {
+  string product_id = 1;
+  string product_code = 2;
+  string name = 3;
+  string description = 4;
+  LendProductType product_type = 5;
+  LendProductStatus status = 6;
+  LendInterestType interest_type = 7;
+  double base_interest_rate = 8;
+  double max_interest_rate = 9;
+  double min_interest_rate = 10;
+  l8common.Money min_loan_amount = 11;
+  l8common.Money max_loan_amount = 12;
+  int32 min_term_months = 13;
+  int32 max_term_months = 14;
+  LendFrequency payment_frequency = 15;
+  double origination_fee_pct = 16;
+  double late_fee_pct = 17;
+  int32 grace_period_days = 18;
+  bool prepayment_penalty = 19;
+  bool collateral_required = 20;
+  double min_credit_score = 21;
+  string gl_receivable_account_id = 22;
+  string gl_interest_income_account_id = 23;
+  string gl_fee_income_account_id = 24;
+  string currency_id = 25;
+  bool is_active = 26;
+  l8common.AuditInfo audit_info = 30;
+  map<string, string> custom_fields = 31;
+}
+
+message LendProductList {
+  repeated LendProduct list = 1;
+  l8api.L8MetaData metadata = 2;
+}

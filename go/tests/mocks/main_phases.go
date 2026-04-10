@@ -52,6 +52,9 @@ func RunAllPhases(client *HCMClient, store *MockDataStore) {
 	// COMP Module Phases
 	runCOMPPhases(client, store)
 
+	// LEND Module Phases
+	runLENDPhases(client, store)
+
 	// AIA Module Phases — no cross-module dependencies
 	runAIAPhases(client, store)
 }

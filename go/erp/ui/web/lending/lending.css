@@ -1,0 +1,15 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+*/
+/* ============================================ */
+/* LENDING STYLES - Entry Point */
+/* ============================================ */
+/*
+ * The Lending module reuses the shared layout classes
+ * and layer8d-theme.css variables for status colors.
+ * Status rendering uses generic layer8d-status-* classes.
+ *
+ * Any Lending-specific style overrides can be added here.
+ */

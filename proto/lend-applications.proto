@@ -1,0 +1,60 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package lend;
+
+option go_package = "./types/lend";
+
+import "lend-common.proto";
+import "l8common.proto";
+import "api.proto";
+
+// ============================================================================
+// LOAN APPLICATIONS
+// ============================================================================
+
+// @PrimeObject
+// LendApplication represents a loan or credit application with review workflow
+message LendApplication {
+  string application_id = 1;
+  string application_number = 2;
+  string product_id = 3;
+  string customer_id = 4;
+  l8common.Money requested_amount = 5;
+  int32 requested_term_months = 6;
+  string purpose = 7;
+  LendApplicationStatus status = 8;
+  int64 application_date = 9;
+  int64 review_date = 10;
+  int64 decision_date = 11;
+  string loan_officer_id = 12;
+  string reviewer_id = 13;
+  double proposed_interest_rate = 14;
+  l8common.Money approved_amount = 15;
+  int32 approved_term_months = 16;
+  double credit_score = 17;
+  double debt_to_income_ratio = 18;
+  string denial_reason = 19;
+  string notes = 20;
+  repeated ApplicationDocument documents = 21;
+  l8common.AuditInfo audit_info = 30;
+  map<string, string> custom_fields = 31;
+}
+
+message LendApplicationList {
+  repeated LendApplication list = 1;
+  l8api.L8MetaData metadata = 2;
+}

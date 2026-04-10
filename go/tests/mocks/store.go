@@ -28,5 +28,6 @@ type MockDataStore struct {
 	DOCStore
 	ECOMStore
 	COMPStore
+	LENDStore
 	AIAStore
 }

@@ -75,6 +75,7 @@ limitations under the License.
     <link rel="stylesheet" href="ecom/ecom.css">
     <!-- COMP Module Styles -->
     <link rel="stylesheet" href="comp/comp.css">
+    <link rel="stylesheet" href="lending/lending.css">
     <!-- Markdown Renderer -->
     <link rel="stylesheet" href="l8ui/shared/layer8-markdown.css">
     <!-- AIA Module Styles -->
@@ -217,6 +218,10 @@ limitations under the License.
                     <span class="nav-icon">🛡️</span>
                     <span>Compliance & Risk</span>
                 </a></li>
+                <li><a href="#" data-section="lending" class="nav-link">
+                    <span class="nav-icon">🏦</span>
+                    <span>Lending</span>
+                </a></li>
                 <li><a href="#" data-section="aia" class="nav-link">
                     <span class="nav-icon">🤖</span>
                     <span>AI Agent</span>
@@ -271,6 +276,7 @@ limitations under the License.
     <script src="js/reference-data/reference-data-documents.js"></script>
     <script src="js/reference-data/reference-data-ecom.js"></script>
     <script src="js/reference-data/reference-data-comp.js"></script>
+    <script src="js/reference-data/reference-data-lending.js"></script>
     <!-- ERP Reference Registry (project-specific, consumes shared data above) -->
     <script src="js/reference-registry-hcm.js"></script>
     <script src="js/reference-registry-fin.js"></script>
@@ -285,6 +291,7 @@ limitations under the License.
     <script src="js/reference-registry-documents.js"></script>
     <script src="js/reference-registry-ecom.js"></script>
     <script src="js/reference-registry-comp.js"></script>
+    <script src="js/reference-registry-lending.js"></script>
     <!-- Notification Component (load before forms) -->
     <script src="l8ui/notification/layer8d-notification.js"></script>
     <!-- Input Formatter Component (load in order, before forms) -->
@@ -625,6 +632,19 @@ limitations under the License.
     <script src="aia/agent/agent-forms.js"></script>
     <script src="aia/aia-init.js"></script>
     <script src="aia/agent/agent-chat-init.js"></script>
+    <!-- Lending Module -->
+    <script src="lending/lending-section-config.js"></script>
+    <script src="lending/lending-config.js"></script>
+    <script src="lending/products/products-enums.js"></script>
+    <script src="lending/products/products-columns.js"></script>
+    <script src="lending/products/products-forms.js"></script>
+    <script src="lending/loans/loans-enums.js"></script>
+    <script src="lending/loans/loans-columns.js"></script>
+    <script src="lending/loans/loans-forms.js"></script>
+    <script src="lending/payments/payments-enums.js"></script>
+    <script src="lending/payments/payments-columns.js"></script>
+    <script src="lending/payments/payments-forms.js"></script>
+    <script src="lending/lending-init.js"></script>
     <!-- SYS Module -->
     <script src="l8ui/sys/l8sys-config.js"></script>
     <script src="l8ui/sys/health/l8health.js"></script>

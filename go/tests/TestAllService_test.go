@@ -99,6 +99,7 @@ func TestAllServices(t *testing.T) {
 	testServiceHandlersDOC(t, erpServicesVnic)
 	testServiceHandlersECOM(t, erpServicesVnic)
 	testServiceHandlersCOMP(t, erpServicesVnic)
+	testServiceHandlersLEND(t, erpServicesVnic)
 	testServiceHandlersSYS(t, erpServicesVnic)
 
 	// 7. Test service getters (all 376 services)
@@ -113,5 +114,6 @@ func TestAllServices(t *testing.T) {
 	testServiceGettersDOC(t, erpServicesVnic)
 	testServiceGettersECOM(t, erpServicesVnic)
 	testServiceGettersCOMP(t, erpServicesVnic)
+	testServiceGettersLEND(t, erpServicesVnic)
 	testServiceGettersSYS(t, erpServicesVnic)
 }

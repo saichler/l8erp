@@ -1,0 +1,222 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package lend;
+
+option go_package = "./types/lend";
+
+import "l8common.proto";
+
+// ============================================================================
+// LENDING COMMON ENUMS
+// ============================================================================
+
+enum LendProductType {
+  LEND_PRODUCT_TYPE_UNSPECIFIED = 0;
+  LEND_PRODUCT_TYPE_TERM_LOAN = 1;
+  LEND_PRODUCT_TYPE_LINE_OF_CREDIT = 2;
+  LEND_PRODUCT_TYPE_BRIDGE_LOAN = 3;
+  LEND_PRODUCT_TYPE_EQUIPMENT_LOAN = 4;
+  LEND_PRODUCT_TYPE_WORKING_CAPITAL = 5;
+  LEND_PRODUCT_TYPE_SBA_LOAN = 6;
+}
+
+enum LendProductStatus {
+  LEND_PRODUCT_STATUS_UNSPECIFIED = 0;
+  LEND_PRODUCT_STATUS_DRAFT = 1;
+  LEND_PRODUCT_STATUS_ACTIVE = 2;
+  LEND_PRODUCT_STATUS_DISCONTINUED = 3;
+}
+
+enum LendInterestType {
+  LEND_INTEREST_TYPE_UNSPECIFIED = 0;
+  LEND_INTEREST_TYPE_FIXED = 1;
+  LEND_INTEREST_TYPE_VARIABLE = 2;
+  LEND_INTEREST_TYPE_HYBRID = 3;
+}
+
+enum LendFrequency {
+  LEND_FREQUENCY_UNSPECIFIED = 0;
+  LEND_FREQUENCY_WEEKLY = 1;
+  LEND_FREQUENCY_BIWEEKLY = 2;
+  LEND_FREQUENCY_MONTHLY = 3;
+  LEND_FREQUENCY_QUARTERLY = 4;
+  LEND_FREQUENCY_ANNUALLY = 5;
+}
+
+enum LendApplicationStatus {
+  LEND_APPLICATION_STATUS_UNSPECIFIED = 0;
+  LEND_APPLICATION_STATUS_DRAFT = 1;
+  LEND_APPLICATION_STATUS_SUBMITTED = 2;
+  LEND_APPLICATION_STATUS_UNDER_REVIEW = 3;
+  LEND_APPLICATION_STATUS_APPROVED = 4;
+  LEND_APPLICATION_STATUS_DENIED = 5;
+  LEND_APPLICATION_STATUS_WITHDRAWN = 6;
+}
+
+enum LoanStatus {
+  LOAN_STATUS_UNSPECIFIED = 0;
+  LOAN_STATUS_PENDING = 1;
+  LOAN_STATUS_ACTIVE = 2;
+  LOAN_STATUS_DELINQUENT = 3;
+  LOAN_STATUS_DEFAULT = 4;
+  LOAN_STATUS_PAID_OFF = 5;
+  LOAN_STATUS_CLOSED = 6;
+  LOAN_STATUS_RESTRUCTURED = 7;
+}
+
+enum CreditLineStatus {
+  CREDIT_LINE_STATUS_UNSPECIFIED = 0;
+  CREDIT_LINE_STATUS_PENDING = 1;
+  CREDIT_LINE_STATUS_ACTIVE = 2;
+  CREDIT_LINE_STATUS_FROZEN = 3;
+  CREDIT_LINE_STATUS_CLOSED = 4;
+  CREDIT_LINE_STATUS_EXPIRED = 5;
+}
+
+enum LendPaymentStatus {
+  LEND_PAYMENT_STATUS_UNSPECIFIED = 0;
+  LEND_PAYMENT_STATUS_SCHEDULED = 1;
+  LEND_PAYMENT_STATUS_RECEIVED = 2;
+  LEND_PAYMENT_STATUS_APPLIED = 3;
+  LEND_PAYMENT_STATUS_REVERSED = 4;
+  LEND_PAYMENT_STATUS_FAILED = 5;
+}
+
+enum LendPaymentMethod {
+  LEND_PAYMENT_METHOD_UNSPECIFIED = 0;
+  LEND_PAYMENT_METHOD_ACH = 1;
+  LEND_PAYMENT_METHOD_WIRE = 2;
+  LEND_PAYMENT_METHOD_CHECK = 3;
+  LEND_PAYMENT_METHOD_CASH = 4;
+  LEND_PAYMENT_METHOD_AUTO_DEBIT = 5;
+}
+
+enum LendCollateralType {
+  LEND_COLLATERAL_TYPE_UNSPECIFIED = 0;
+  LEND_COLLATERAL_TYPE_REAL_ESTATE = 1;
+  LEND_COLLATERAL_TYPE_EQUIPMENT = 2;
+  LEND_COLLATERAL_TYPE_INVENTORY = 3;
+  LEND_COLLATERAL_TYPE_ACCOUNTS_RECEIVABLE = 4;
+  LEND_COLLATERAL_TYPE_VEHICLE = 5;
+  LEND_COLLATERAL_TYPE_SECURITIES = 6;
+  LEND_COLLATERAL_TYPE_CASH_DEPOSIT = 7;
+  LEND_COLLATERAL_TYPE_OTHER = 8;
+}
+
+enum LendCollateralStatus {
+  LEND_COLLATERAL_STATUS_UNSPECIFIED = 0;
+  LEND_COLLATERAL_STATUS_PLEDGED = 1;
+  LEND_COLLATERAL_STATUS_RELEASED = 2;
+  LEND_COLLATERAL_STATUS_SEIZED = 3;
+  LEND_COLLATERAL_STATUS_LIQUIDATED = 4;
+}
+
+enum LendFeeType {
+  LEND_FEE_TYPE_UNSPECIFIED = 0;
+  LEND_FEE_TYPE_ORIGINATION = 1;
+  LEND_FEE_TYPE_LATE_PAYMENT = 2;
+  LEND_FEE_TYPE_PREPAYMENT_PENALTY = 3;
+  LEND_FEE_TYPE_SERVICE = 4;
+  LEND_FEE_TYPE_NSF = 5;
+  LEND_FEE_TYPE_APPRAISAL = 6;
+  LEND_FEE_TYPE_OTHER = 7;
+}
+
+enum LendDisbursementStatus {
+  LEND_DISBURSEMENT_STATUS_UNSPECIFIED = 0;
+  LEND_DISBURSEMENT_STATUS_PENDING = 1;
+  LEND_DISBURSEMENT_STATUS_COMPLETED = 2;
+  LEND_DISBURSEMENT_STATUS_FAILED = 3;
+  LEND_DISBURSEMENT_STATUS_REVERSED = 4;
+}
+
+// ============================================================================
+// CHILD MESSAGE TYPES (embedded in Prime Objects)
+// ============================================================================
+
+message LoanDisbursement {
+  string disbursement_id = 1;
+  l8common.Money amount = 2;
+  int64 disbursement_date = 3;
+  LendDisbursementStatus status = 4;
+  string bank_account_id = 5;
+  string reference_number = 6;
+  string notes = 7;
+}
+
+message LoanFee {
+  string fee_id = 1;
+  LendFeeType fee_type = 2;
+  l8common.Money amount = 3;
+  int64 assessed_date = 4;
+  int64 paid_date = 5;
+  bool is_paid = 6;
+  string description = 7;
+}
+
+message LoanAmortizationLine {
+  int32 period_number = 1;
+  int64 due_date = 2;
+  l8common.Money payment_amount = 3;
+  l8common.Money principal_amount = 4;
+  l8common.Money interest_amount = 5;
+  l8common.Money remaining_balance = 6;
+  bool is_paid = 7;
+}
+
+message CreditLineDrawdown {
+  string drawdown_id = 1;
+  l8common.Money amount = 2;
+  int64 drawdown_date = 3;
+  string purpose = 4;
+  string reference_number = 5;
+}
+
+message CreditLineRepayment {
+  string repayment_id = 1;
+  l8common.Money amount = 2;
+  int64 repayment_date = 3;
+  string reference_number = 4;
+}
+
+message ApplicationDocument {
+  string document_id = 1;
+  string document_name = 2;
+  string document_type = 3;
+  string storage_path = 4;
+  string file_name = 5;
+  int64 file_size = 6;
+  string mime_type = 7;
+  string checksum = 8;
+  int64 uploaded_date = 9;
+}
+
+message PaymentAllocation {
+  string allocation_id = 1;
+  l8common.Money principal = 2;
+  l8common.Money interest = 3;
+  l8common.Money fees = 4;
+  l8common.Money escrow = 5;
+}
+
+message CollateralValuation {
+  string valuation_id = 1;
+  l8common.Money appraised_value = 2;
+  int64 valuation_date = 3;
+  string appraiser = 4;
+  string notes = 5;
+}

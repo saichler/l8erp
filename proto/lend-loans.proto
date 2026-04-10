@@ -1,0 +1,70 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package lend;
+
+option go_package = "./types/lend";
+
+import "lend-common.proto";
+import "l8common.proto";
+import "api.proto";
+
+// ============================================================================
+// LOANS
+// ============================================================================
+
+// @PrimeObject
+// Loan represents an active loan with amortization, balances, and status
+message Loan {
+  string loan_id = 1;
+  string loan_number = 2;
+  string product_id = 3;
+  string application_id = 4;
+  string customer_id = 5;
+  LoanStatus status = 6;
+  l8common.Money original_amount = 7;
+  l8common.Money outstanding_principal = 8;
+  l8common.Money outstanding_interest = 9;
+  l8common.Money outstanding_fees = 10;
+  l8common.Money total_balance = 11;
+  double interest_rate = 12;
+  LendInterestType interest_type = 13;
+  LendFrequency payment_frequency = 14;
+  l8common.Money payment_amount = 15;
+  int32 term_months = 16;
+  int64 origination_date = 17;
+  int64 maturity_date = 18;
+  int64 first_payment_date = 19;
+  int64 next_payment_date = 20;
+  int64 last_payment_date = 21;
+  int32 payments_made = 22;
+  int32 payments_remaining = 23;
+  int32 days_past_due = 24;
+  string loan_officer_id = 25;
+  string bank_account_id = 26;
+  string gl_receivable_account_id = 27;
+  string currency_id = 28;
+  repeated LoanDisbursement disbursements = 40;
+  repeated LoanFee fees = 41;
+  repeated LoanAmortizationLine amortization_schedule = 42;
+  l8common.AuditInfo audit_info = 50;
+  map<string, string> custom_fields = 51;
+}
+
+message LoanList {
+  repeated Loan list = 1;
+  l8api.L8MetaData metadata = 2;
+}
