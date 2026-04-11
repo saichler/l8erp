@@ -172,7 +172,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ],
                 'controls': [
                     { key: 'controls', label: 'Controls', icon: 'compliance', endpoint: '/110/CompCtrl', model: 'CompControl', idField: 'controlId' },
-                    { key: 'policies', label: 'Policies', icon: 'documents', endpoint: '/110/CompPolicy', model: 'CompPolicyDocument', idField: 'documentId' },
+                    { key: 'policies', label: 'Policies', icon: 'documents', endpoint: '/110/CompPolicy', model: 'CompPolicyDocument', idField: 'policyId' },
                     { key: 'approval-matrices', label: 'Approval Matrices', icon: 'projects', endpoint: '/110/CompAprvMx', model: 'CompApprovalMatrix', idField: 'matrixId' }
                 ],
                 'risk': [
