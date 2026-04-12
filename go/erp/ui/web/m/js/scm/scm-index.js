@@ -13,10 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 Layer8MModuleRegistry.create('MobileSCM', {
-    'Procurement': MobileProcurement,
-    'Inventory': MobileInventory,
-    'Warehouse': MobileWarehouse,
-    'Logistics': MobileLogistics,
-    'Demand Planning': MobileScmDemandPlanning,
-    'Supply Planning': MobileScmSupplyPlanning
+    'Procurement': Procurement,
+    'Inventory': Inventory,
+    'Warehouse': WarehouseManagement,
+    'Logistics': Logistics,
+    'Demand Planning': ScmDemandPlanning,
+    'Supply Planning': ScmSupplyPlanning
 });

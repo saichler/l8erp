@@ -13,8 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 Layer8MModuleRegistry.create('MobileComp', {
-    'Regulatory': MobileCompRegulatory,
-    'Controls': MobileCompControls,
-    'Risk': MobileCompRisk,
-    'Audit': MobileCompAudit
+    'Regulatory': CompRegulatory,
+    'Controls': CompControls,
+    'Risk': CompRisk,
+    'Audit': CompAudit
 });

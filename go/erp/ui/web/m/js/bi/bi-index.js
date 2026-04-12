@@ -13,8 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 Layer8MModuleRegistry.create('MobileBi', {
-    'Reporting': MobileBiReporting,
-    'Dashboards': MobileBiDashboards,
-    'Analytics': MobileBiAnalytics,
-    'Data Management': MobileBiDataManagement
+    'Reporting': BiReporting,
+    'Dashboards': BiDashboards,
+    'Analytics': BiAnalytics,
+    'Data Management': BiDataManagement
 });

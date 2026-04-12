@@ -23,7 +23,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.col('employeeNumber', 'Emp #'),
             ...col.custom('name', 'Name', (item) => {
                 const name = `${item.firstName || ''} ${item.lastName || ''}`.trim();
-                return `<a href="#" class="emp-name-link" onclick="EmployeeDetail.open('${item.employeeId}'); return false;">${escapeHtml(name)}</a>`;
+                if (typeof EmployeeDetail !== 'undefined') {
+                    return `<a href="#" class="emp-name-link" onclick="EmployeeDetail.open('${item.employeeId}'); return false;">${escapeHtml(name)}</a>`;
+                }
+                return escapeHtml(name);
             }, { sortKey: 'lastName', filterKey: 'lastName' }),
             ...col.status('employmentStatus', 'Status', enums.EMPLOYMENT_STATUS_VALUES, render.employmentStatus),
             ...col.status('employmentType', 'Type', enums.EMPLOYMENT_TYPE_VALUES, render.employmentType),

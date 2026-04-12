@@ -13,10 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 Layer8MModuleRegistry.create('MobileCrm', {
-    'Leads': MobileCrmLeads,
-    'Opportunities': MobileCrmOpportunities,
-    'Accounts': MobileCrmAccounts,
-    'Marketing': MobileCrmMarketing,
-    'Service': MobileCrmService,
-    'Field Service': MobileCrmFieldService
+    'Leads': CrmLeads,
+    'Opportunities': CrmOpportunities,
+    'Accounts': CrmAccounts,
+    'Marketing': CrmMarketing,
+    'Service': CrmService,
+    'Field Service': CrmFieldService
 });

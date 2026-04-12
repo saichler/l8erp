@@ -9,8 +9,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 (function() {
     'use strict';
 
-    var enums = MobileCoreHR.enums;
-    var render = MobileCoreHR.render;
+    var enums = CoreHR.enums;
+    var render = CoreHR.render;
 
     function escapeHtml(text) {
         return Layer8MUtils.escapeHtml(text);

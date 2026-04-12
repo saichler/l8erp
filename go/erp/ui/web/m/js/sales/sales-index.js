@@ -13,10 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 Layer8MModuleRegistry.create('MobileSales', {
-    'Customers': MobileSalesCustomers,
-    'Orders': MobileSalesOrders,
-    'Pricing': MobileSalesPricing,
-    'Shipping': MobileSalesShipping,
-    'Billing': MobileSalesBilling,
-    'Analytics': MobileSalesAnalytics
+    'Customers': SalesCustomers,
+    'Orders': SalesOrders,
+    'Pricing': SalesPricing,
+    'Shipping': SalesShipping,
+    'Billing': SalesBilling,
+    'Analytics': SalesAnalytics
 });

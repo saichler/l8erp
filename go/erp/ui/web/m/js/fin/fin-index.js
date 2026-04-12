@@ -13,11 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 Layer8MModuleRegistry.create('MobileFIN', {
-    'General Ledger': MobileGeneralLedger,
-    'Accounts Payable': MobileAccountsPayable,
-    'Accounts Receivable': MobileAccountsReceivable,
-    'Cash Management': MobileCashManagement,
-    'Fixed Assets': MobileFixedAssets,
-    'Budgeting': MobileBudgeting,
-    'Tax Management': MobileTaxManagement
+    'General Ledger': GeneralLedger,
+    'Accounts Payable': AccountsPayable,
+    'Accounts Receivable': AccountsReceivable,
+    'Cash Management': CashManagement,
+    'Fixed Assets': FixedAssets,
+    'Budgeting': Budgeting,
+    'Tax Management': TaxManagement
 });

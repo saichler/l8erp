@@ -13,9 +13,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 Layer8MModuleRegistry.create('MobilePrj', {
-    'Planning': MobilePrjPlanning,
-    'Resources': MobilePrjResources,
-    'Billing': MobilePrjBilling,
-    'Time & Expense': MobilePrjTimeExpense,
-    'Analytics': MobilePrjAnalytics
+    'Planning': PrjPlanning,
+    'Resources': PrjResources,
+    'Billing': PrjBilling,
+    'Time & Expense': PrjTimeExpense,
+    'Analytics': PrjAnalytics
 });

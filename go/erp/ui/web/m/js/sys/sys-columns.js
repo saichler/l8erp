@@ -22,7 +22,6 @@ limitations under the License.
     const col = window.Layer8ColumnFactory;
 
     window.MobileSysHealth = window.MobileSysHealth || {};
-    window.MobileSysSecurity = window.MobileSysSecurity || {};
 
     // Health data formatters
     function formatBytes(bytes) {
@@ -77,29 +76,6 @@ limitations under the License.
             ...col.custom('tx', 'TX', null, { sortKey: 'stats.txMsgCount', filterKey: 'stats.txMsgCount' }),
             ...col.custom('upTime', 'Up Time', null, { sortKey: 'startTime', filterKey: 'startTime' }),
             ...col.custom('lastPulse', 'Last Pulse', null, { sortKey: 'stats.lastMsgTime', filterKey: 'stats.lastMsgTime' })
-        ]
-    };
-
-    // Security columns
-    MobileSysSecurity.columns = {
-        L8User: [
-            ...col.col('userId', 'User ID'),
-            ...col.col('fullName', 'Full Name'),
-            ...col.col('email', 'Email'),
-            ...col.col('accountStatus', 'Status'),
-            ...col.col('portal', 'Portal'),
-            ...col.date('lastLogin', 'Last Login')
-        ],
-        L8Portal: [
-            ...col.col('portalId', 'Portal ID')
-        ],
-        L8Role: [
-            ...col.col('roleId', 'Role ID'),
-            ...col.col('roleName', 'Role Name')
-        ],
-        L8Credentials: [
-            ...col.col('id', 'ID'),
-            ...col.col('name', 'Name')
         ]
     };
 

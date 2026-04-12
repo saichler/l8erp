@@ -13,8 +13,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 Layer8MModuleRegistry.create('MobileDoc', {
-    'Storage': MobileDocStorage,
-    'Workflow': MobileDocWorkflow,
-    'Integration': MobileDocIntegration,
-    'Compliance': MobileDocCompliance
+    'Storage': DocStorage,
+    'Workflow': DocWorkflow,
+    'Integration': DocIntegration,
+    'Compliance': DocCompliance
 });

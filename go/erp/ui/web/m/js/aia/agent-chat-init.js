@@ -10,10 +10,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 (function() {
     'use strict';
 
-    window.MobileAiaAgent = window.MobileAiaAgent || {};
+    window.AiaAgent = window.AiaAgent || {};
 
     // Called by customInit pattern in layer8m-nav.js
-    MobileAiaAgent.initialize = function() {
+    AiaAgent.initialize = function() {
         if (typeof L8AgentChatMobile !== 'undefined') {
             L8AgentChatMobile.init({
                 containerId: 'aia-chat-container',

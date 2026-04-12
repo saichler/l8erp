@@ -22,7 +22,7 @@ limitations under the License.
 
     const modules = [
         MobileSysHealth,
-        MobileSysSecurity
+        L8Security
     ];
 
     function findModule(modelName) {
@@ -66,7 +66,7 @@ limitations under the License.
         const mod = findModule(modelName);
         if (!mod) return null;
         if (mod === MobileSysHealth) return 'Health';
-        if (mod === MobileSysSecurity) return 'Security';
+        if (mod === L8Security) return 'Security';
         return null;
     }
 
@@ -78,7 +78,7 @@ limitations under the License.
         getModuleName,
         modules: {
             Health: MobileSysHealth,
-            Security: MobileSysSecurity
+            Security: L8Security
         }
     };
 

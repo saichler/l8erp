@@ -13,11 +13,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 Layer8MModuleRegistry.create('MobileHCM', {
-    'Core HR': MobileCoreHR,
-    'Payroll': MobilePayroll,
-    'Benefits': MobileBenefits,
-    'Time & Attendance': MobileTime,
-    'Talent': MobileTalent,
-    'Learning': MobileLearning,
-    'Compensation': MobileCompensation
+    'Core HR': CoreHR,
+    'Payroll': Payroll,
+    'Benefits': Benefits,
+    'Time & Attendance': Time,
+    'Talent': Talent,
+    'Learning': Learning,
+    'Compensation': Compensation
 });

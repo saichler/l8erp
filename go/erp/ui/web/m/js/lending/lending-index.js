@@ -3,7 +3,7 @@
 Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
 Layer8MModuleRegistry.create('MobileLending', {
-    'Products': MobileLendProducts,
-    'Loans': MobileLendLoans,
-    'Payments': MobileLendPayments
+    'Products': LendProducts,
+    'Loans': LendLoans,
+    'Payments': LendPayments
 });
