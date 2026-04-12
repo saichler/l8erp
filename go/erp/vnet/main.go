@@ -16,14 +16,12 @@
 package main
 
 import (
-	"github.com/saichler/l8erp/go/erp/common"
-	"os"
-
 	"github.com/saichler/l8bus/go/overlay/vnet"
+	"github.com/saichler/l8erp/go/erp/common"
 )
 
 func main() {
-	resources := common.CreateResources("vnet-" + os.Getenv("HOSTNAME"))
+	resources := common.CreateResources("vnet", false)
 	net := vnet.NewVNet(resources)
 	net.Start()
 	resources.Logger().Info("vnet started!")

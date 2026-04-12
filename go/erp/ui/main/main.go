@@ -17,7 +17,6 @@ package main
 
 import (
 	"github.com/saichler/l8bus/go/overlay/health"
-	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/erp/ui"
 	"github.com/saichler/l8services/go/services/csvexport"
 	"github.com/saichler/l8services/go/services/dataimport"
@@ -28,24 +27,25 @@ import (
 )
 
 func main() {
-	startWebServer2(2773, "/data/erp")
+	startWebServer2()
 }
 
-func startWebServer2(port int, cert string) {
+func startWebServer2() {
+	nic1 := ui.CreateVnic(false)
+	nic2 := ui.CreateVnic(true)
+	server.UpdateLoginJsonPrefix(nic1.Resources().SysConfig().WebConfig.EndPointPrefix)
+
 	serverConfig := &server.RestServerConfig{
 		Host:           ipsegment.MachineIP,
-		Port:           port,
+		Port:           int(nic1.Resources().SysConfig().WebConfig.WebPort),
 		Authentication: true,
-		CertName:       cert,
-		Prefix:         common.PREFIX,
+		CertName:       nic1.Resources().SysConfig().WebConfig.Cert,
+		Prefix:         nic1.Resources().SysConfig().WebConfig.EndPointPrefix,
 	}
 	svr, err := server.NewRestServer(serverConfig)
 	if err != nil {
 		panic(err)
 	}
-
-	nic1 := ui.CreateVnic(common.ERP_VNET)
-	nic2 := ui.CreateVnic(common.ERP_LOGS_VNET)
 
 	csvexport.Activate(nic1)
 	filestore.Activate(nic1)

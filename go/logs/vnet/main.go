@@ -23,8 +23,7 @@ import (
 
 func main() {
 	logsDbDirectory := "/data/logsdb/erp"
-	resources := common.CreateResources("erp-log-vnet")
-	resources.SysConfig().VnetPort = common.ERP_LOGS_VNET
+	resources := common.CreateResources("erp-log-vnet", true)
 	net := vnet.NewVNet(resources, true)
 	net.Start()
 	logserver.ActivateLogService(logsDbDirectory, net.VnetVnic())

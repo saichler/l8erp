@@ -28,7 +28,7 @@ import (
 )
 
 func main() {
-	res := common.CreateResources("ERPServices")
+	res := common.CreateResources("ERPServices", false)
 	ifs.SetNetworkMode(ifs.NETWORK_K8s)
 	nic := vnic.NewVirtualNetworkInterface(res, nil)
 	nic.Start()
@@ -39,25 +39,31 @@ func main() {
 		startDb(nic)
 	}
 
-	services.ActivateAllServices(common.DB_CREDS, common.DB_NAME, nic)
-	services.ActivateChatService(common.DB_CREDS, common.DB_NAME, nic)
-	evtservices.ActivateEvents(common.DB_CREDS, common.DB_NAME, nic)
+	dbcred := nic.Resources().SysConfig().DataStoreConfig.Type
+	dbname := nic.Resources().SysConfig().DataStoreConfig.Name
+
+	services.ActivateAllServices(dbcred, dbname, nic)
+	services.ActivateChatService(dbcred, dbname, nic)
+	evtservices.ActivateEvents(dbcred, dbname, nic)
 
 	common.WaitForSignal(res)
 }
 
 func startDb(nic ifs.IVNic) {
-	_, user, pass, _, err := nic.Resources().Security().Credential(common.DB_CREDS, common.DB_NAME, nic.Resources())
+	dbcred := nic.Resources().SysConfig().DataStoreConfig.Type
+	dbname := nic.Resources().SysConfig().DataStoreConfig.Name
+
+	_, user, pass, _, err := nic.Resources().Security().Credential(dbcred, dbname, nic.Resources())
 	if err != nil {
-		panic(common.DB_CREDS + " " + err.Error())
+		panic(dbcred + " " + dbname + " " + err.Error())
 	}
 	// When there is no security provider
 	if user == "admin" && pass == "admin" {
-		common.DB_NAME = "admin"
+		dbname = "admin"
 	}
 
 	var cmd *exec.Cmd
-	cmd = exec.Command("nohup", "/start-postgres.sh", common.DB_NAME, user, pass)
+	cmd = exec.Command("nohup", "/start-postgres.sh", dbname, user, pass)
 	out, err := cmd.Output()
 	if err != nil {
 		panic(err)

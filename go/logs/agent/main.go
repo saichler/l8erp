@@ -24,7 +24,6 @@ import (
 	"github.com/saichler/l8logfusion/go/agent/logs"
 	"github.com/saichler/l8logfusion/go/types/l8logf"
 	"github.com/saichler/l8utils/go/utils/ipsegment"
-	"github.com/saichler/l8utils/go/utils/shared"
 )
 
 func main() {
@@ -47,7 +46,7 @@ func main() {
 		logfile = "*"
 	}
 
-	r := shared.ResourcesOf("logs", common.ERP_LOGS_VNET, 30, "")
+	r := common.CreateResources("logagent", true)
 	r.SysConfig().RemoteVnet = ip
 
 	nic := vnic.NewVirtualNetworkInterface(r, nil)

@@ -239,7 +239,26 @@ function loadSecurityService(serviceName) {
         modelName: config.modelName,
         columns: config.columns,
         rowsPerPage: 15,
-        getItemId: function(item) { return item[config.idField]; }
+        getItemId: function(item) { return item[config.idField]; },
+        onRowClick: function(item) { showSecurityDetail(config, item); }
+    });
+}
+
+function showSecurityDetail(config, item) {
+    var formDef = (typeof L8Security !== 'undefined' && L8Security.forms) ?
+        L8Security.forms[config.modelName] : null;
+    if (!formDef) {
+        console.warn('No form definition found for ' + config.modelName);
+        return;
+    }
+    Layer8MPopup.show({
+        title: formDef.title + ' Details',
+        content: Layer8MForms.renderForm(formDef, item, true),
+        size: 'large',
+        showFooter: false,
+        onShow: function(popup) {
+            Layer8MForms.initFormFields(popup.body, formDef);
+        }
     });
 }
 
@@ -304,6 +323,10 @@ function showHealthDetail(rowData) {
         detailSection('CPU Usage',
             detailRow('Percentage', rowData.cpuPercent) +
             detailRow('Raw Value', stats.cpuUsage || 0)
+        ) +
+        detailSection('Additional Details',
+            detailRow('Data Object', raw.data || 'N/A'),
+            true
         ) +
         '</div>';
 

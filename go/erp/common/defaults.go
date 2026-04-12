@@ -20,17 +20,8 @@ import (
 	"github.com/saichler/l8types/go/ifs"
 )
 
-const (
-	ERP_VNET      = 49001
-	ERP_LOGS_VNET = 49005
-	PREFIX        = "/erp/"
-)
-
-var DB_CREDS = "postgres"
-var DB_NAME = "erp"
-
-func CreateResources(alias string) ifs.IResources {
-	return l8c.CreateResources(alias, "/data/logs/erp", uint32(ERP_VNET))
+func CreateResources(alias string, logVnet bool) ifs.IResources {
+	return l8c.CreateResources(alias, logVnet)
 }
 
 var WaitForSignal = l8c.WaitForSignal
