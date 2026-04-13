@@ -156,8 +156,14 @@ limitations under the License.
     <script src="l8ui/shared/layer8d-theme-switcher.js"></script>
     <script>Layer8DThemeSwitcher.init();</script>
 
+    <!-- Reference Data (must load BEFORE reference registries) -->
+    <script src="js/reference-data/reference-data-hcm.js"></script>
+    <script src="js/reference-data/reference-data-fin.js"></script>
     <!-- HCM Reference Registry (needed by HCM forms) -->
     <script src="js/reference-registry-hcm.js"></script>
+    <!-- FIN Reference Registry (needed by compensation/payroll money fields) -->
+    <script src="js/reference-registry-fin.js"></script>
+    <script src="js/reference-registry-fin-scm.js"></script>
 
     <!-- HCM Module Config (registers HCM service endpoints for reference pickers) -->
     <script src="hcm/hcm-config.js"></script>
