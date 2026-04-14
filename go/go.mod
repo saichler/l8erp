@@ -19,10 +19,10 @@ require (
 require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/lib/pq v1.12.3 // indirect
-	github.com/saichler/l8orm v0.0.0-20260412125255-b561830c01df // indirect
+	github.com/saichler/l8orm v0.0.0-20260414115603-7d0a99aff5c3 // indirect
 	github.com/saichler/l8pollaris v0.0.0-20260331142743-079cf6e4e527 // indirect
 	github.com/saichler/l8ql v0.0.0-20260322130921-a31581a0ab5f // indirect
-	github.com/saichler/l8reflect v0.0.0-20260327101437-6da0c1cef4c9 // indirect
+	github.com/saichler/l8reflect v0.0.0-20260414115258-300dd0000aca // indirect
 	github.com/saichler/l8srlz v0.0.0-20260322124809-505a0d08f95d // indirect
 	github.com/saichler/probler v0.0.0-20260412121616-056adff8f8d0 // indirect
 	golang.org/x/sys v0.43.0 // indirect
