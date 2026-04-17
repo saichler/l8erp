@@ -100,6 +100,19 @@ limitations under the License.
                 this.applyModuleFilter();
             }
 
+            // Initialize portal switcher in header
+            if (typeof Layer8MPortalSwitcher !== 'undefined') {
+                const headerActions = document.querySelector('.header-actions');
+                if (headerActions) {
+                    Layer8MPortalSwitcher.init({
+                        container: headerActions,
+                        insertBefore: document.getElementById('refresh-btn'),
+                        apiPrefix: Layer8MConfig.getApiPrefix(),
+                        currentPath: window.location.pathname
+                    });
+                }
+            }
+
             // Initialize mobile AI chat bubble
             if (typeof L8AgentBubbleMobile !== 'undefined') {
                 L8AgentBubbleMobile.init({ chatEndpoint: '/120/AgntChat' });
