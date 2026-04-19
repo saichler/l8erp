@@ -284,4 +284,26 @@ limitations under the License.
             <line x1="1012" y1="68" x2="1004" y2="60" stroke="#fff" stroke-width="2" opacity="0.9"/>`;
     });
 
+    // Dashboard - Enterprise Overview (bar chart, pie, line graph, gauge, KPI card)
+    factory.registerTemplate('dashboard', function(gradientId) {
+        return `
+            <rect x="165" y="55" width="12" height="25" rx="2" fill="url(#${gradientId})" opacity="0.7"/>
+            <rect x="182" y="45" width="12" height="35" rx="2" fill="url(#${gradientId})" opacity="0.85"/>
+            <rect x="199" y="50" width="12" height="30" rx="2" fill="url(#${gradientId})" opacity="0.7"/>
+            <circle cx="400" cy="60" r="20" fill="none" stroke="url(#${gradientId})" stroke-width="6" opacity="0.6"/>
+            <path d="M 400,60 L 400,40 A 20,20 0 0,1 417.32,70 Z" fill="url(#${gradientId})" opacity="0.85"/>
+            <polyline points="560,70 580,55 600,62 620,45 640,52" fill="none" stroke="url(#${gradientId})" stroke-width="3" opacity="0.8"/>
+            <circle cx="560" cy="70" r="4" fill="#fff" opacity="1.0"/>
+            <circle cx="580" cy="55" r="4" fill="#fff" opacity="1.0"/>
+            <circle cx="600" cy="62" r="4" fill="#fff" opacity="1.0"/>
+            <circle cx="620" cy="45" r="4" fill="#fff" opacity="1.0"/>
+            <circle cx="640" cy="52" r="4" fill="#fff" opacity="1.0"/>
+            <path d="M 760,80 A 30,30 0 0,1 820,80" fill="none" stroke="url(#${gradientId})" stroke-width="6" opacity="0.6"/>
+            <line x1="790" y1="80" x2="805" y2="55" stroke="#fff" stroke-width="3" opacity="1.0"/>
+            <circle cx="790" cy="80" r="5" fill="#fff" opacity="1.0"/>
+            <rect x="960" y="40" width="60" height="40" rx="4" fill="url(#${gradientId})" opacity="0.5"/>
+            <line x1="970" y1="55" x2="1010" y2="55" stroke="#fff" stroke-width="2" opacity="0.9"/>
+            <line x1="970" y1="65" x2="995" y2="65" stroke="#fff" stroke-width="2" opacity="0.8"/>`;
+    });
+
 })();
