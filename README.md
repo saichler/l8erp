@@ -28,7 +28,7 @@
 
 ERP by Layer 8 is a comprehensive Enterprise Resource Planning system built from the ground up with Go. It provides a unified platform for managing all aspects of an organization — from financial operations and human capital to supply chain, manufacturing, sales, and beyond.
 
-With **12 modules**, **250 business services**, and **73 protobuf schemas** defining **658 message types** and **289 enums**, the system covers the complete enterprise lifecycle:
+With **13 modules**, **256 business services**, and **79 protobuf schemas** defining **673 message types** and **300 enums**, the system covers the complete enterprise lifecycle:
 
 - **Financial Management** — GL, AP, AR, Cash, Fixed Assets, Budgeting, Tax
 - **Human Capital** — Core HR, Payroll, Benefits, Talent, Learning, Compensation, Time & Attendance
@@ -41,30 +41,33 @@ With **12 modules**, **250 business services**, and **73 protobuf schemas** defi
 - **Document Management** — Storage, Workflows, Signatures, Compliance, Integration
 - **E-Commerce** — Catalog, Orders, Customers, Promotions
 - **Compliance & Risk** — Regulatory, Controls, Risk, Audit
+- **Lending** — Loan Products, Applications, Credit Lines, Collateral, Payments
 - **System Administration** — Module Selection, Dependencies, Configuration
 
 Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared infrastructure components including ORM, serialization, service framework, virtual networking, and web server.
 
 ## Features
 
-- **250 Business Services** across 12 integrated modules
+- **256 Business Services** across 13 integrated modules
+- **6 Role-Based Portals** — Employee Self-Service, Manager, Customer, Vendor, Partner, and Project Client portals (desktop + mobile)
 - **8 Data View Types** — Table, Chart, Kanban, Calendar, Timeline, Gantt, Tree Grid, and Wizard with per-service view switching
 - **Desktop + Mobile Apps** — full-featured web and mobile interfaces with complete view parity
 - **AI Agent** — integrated AI chat assistant with contextual ERP knowledge
 - **Dashboard** — cross-module statistics and KPI overview
 - **Module Selection** — enable/disable modules at runtime with automatic dependency management
 - **System Dependency Map** — visual module dependency graph for configuration
+- **Data Import** — CSV, JSON, and XML import with AI-assisted column mapping
 - **Multi-Currency Support** — real-time exchange rate conversion across all financial fields
-- **Protobuf Data Model** — 73 schema files defining 658 message types with cross-module references
-- **Mock Data Generation** — realistic test data generators covering all 250 services with phased dependency ordering
+- **Protobuf Data Model** — 79 schema files defining 673 message types with cross-module references
+- **Mock Data Generation** — realistic test data generators covering all 256 services with phased dependency ordering
 - **Validation Framework** — declarative validation builder with required fields, enums, and reference checks
 - **Factory-Driven UI** — shared factories for forms, columns, enums, references, sections, and SVG
 - **Full Audit Trail** — complete transaction history across all modules
-- **Marketing Site** — product landing page with feature showcase
+- **Marketing Site** — product landing page with architecture, modules, proof, and getting started pages
 - **API-First Design** — RESTful APIs for all services with L8Query language
 - **Kubernetes Native** — deploy on any K8s cluster with 6 included manifests
 - **Zero Frontend Dependencies** — pure vanilla JavaScript, no build step required
-- **Comprehensive Tests** — 25 test files covering service getters and handlers across all modules
+- **Comprehensive Tests** — 27 test files covering service getters and handlers across all modules
 
 ## Modules
 
@@ -81,8 +84,9 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared infrastr
 | **E-Commerce (ECOM)** | 13 | Catalog, Orders, Customers, Promotions |
 | **Document Management (DOC)** | 11 | Storage, Workflows, Signatures, Compliance, Integration |
 | **Compliance & Risk (COMP)** | 11 | Regulatory, Controls, Risk, Audit |
+| **Lending (LEND)** | 6 | Loan Products, Applications, Credit Lines, Collateral, Payments |
 | **System Administration (SYS)** | 2 | Module Configuration & Dependencies |
-| **Total** | **250** | |
+| **Total** | **256** | |
 
 ## Quick Start
 
@@ -113,6 +117,12 @@ go run ./erp/ui/main1/
 | Login | http://localhost:2773/login/ |
 | Desktop App | http://localhost:2773/app.html |
 | Mobile App | http://localhost:2773/m/ |
+| ESS Portal | http://localhost:2773/ess.html |
+| Manager Portal | http://localhost:2773/mgr.html |
+| Customer Portal | http://localhost:2773/customer.html |
+| Vendor Portal | http://localhost:2773/vendor.html |
+| Partner Portal | http://localhost:2773/partner.html |
+| Project Client Portal | http://localhost:2773/projclient.html |
 
 ### Demo Credentials
 
@@ -154,7 +164,7 @@ cd k8s && ./deploy.sh
 
 ```
 l8erp/
-├── proto/                       # 73 Protocol Buffer definitions (~14,200 lines)
+├── proto/                       # 79 Protocol Buffer definitions (~14,800 lines)
 │   ├── erp-common.proto         #   Shared types (Money, Address, AuditInfo, DateRange)
 │   ├── hcm-*.proto              #   HCM module (8 schemas)
 │   ├── fin-*.proto              #   Financial module (8 schemas)
@@ -167,6 +177,7 @@ l8erp/
 │   ├── doc-*.proto              #   Documents module (5 schemas)
 │   ├── ecom-*.proto             #   E-Commerce module (5 schemas)
 │   ├── comp-*.proto             #   Compliance module (5 schemas)
+│   ├── lend-*.proto             #   Lending module (7 schemas)
 │   └── make-bindings.sh         #   Generates Go types from proto files
 ├── go/
 │   ├── erp/
@@ -184,15 +195,22 @@ l8erp/
 │   │   ├── doc/                 # Document Management (11 services)
 │   │   ├── ecom/                # E-Commerce (13 services)
 │   │   ├── comp/                # Compliance & Risk (11 services)
+│   │   ├── lend/                # Lending (6 services)
 │   │   ├── sys/                 # System Administration (2 services)
 │   │   ├── main/                # ERP backend entry point + Dockerfile
 │   │   ├── ui/                  # Web server + UI assets
 │   │   │   ├── main1/           #   Web server entry point
 │   │   │   └── web/             #   Web application root
 │   │   │       ├── app.html     #     Desktop application shell
+│   │   │       ├── ess.html     #     Employee Self-Service portal
+│   │   │       ├── mgr.html     #     Manager portal
+│   │   │       ├── customer.html #    Customer portal
+│   │   │       ├── vendor.html  #     Vendor portal
+│   │   │       ├── partner.html #     Partner portal
+│   │   │       ├── projclient.html #  Project Client portal
 │   │   │       ├── l8ui/        #     Shared UI library (submodule)
 │   │   │       ├── erp-ui/      #     ERP-specific UI (SVG templates, section configs)
-│   │   │       ├── sections/    #     Section HTML files (14 sections)
+│   │   │       ├── sections/    #     Section HTML files (15 sections)
 │   │   │       ├── dashboard/   #     Cross-module dashboard
 │   │   │       ├── aia/         #     AI Agent UI
 │   │   │       ├── hcm/         #     HCM UI (config, enums, columns, forms per submodule)
@@ -206,21 +224,22 @@ l8erp/
 │   │   │       ├── documents/   #     Documents UI
 │   │   │       ├── ecom/        #     E-Commerce UI
 │   │   │       ├── comp/        #     Compliance UI
+│   │   │       ├── lending/     #     Lending UI
 │   │   │       ├── js/          #     Shared JS (reference registries, sections, utils)
-│   │   │       ├── marketing/   #     Marketing landing page
-│   │   │       ├── m/           #     Mobile app (full view parity with desktop)
+│   │   │       ├── marketing/   #     Marketing site (architecture, modules, proof, start, about)
+│   │   │       ├── m/           #     Mobile app + portals (full view parity with desktop)
 │   │   │       └── login/       #     Login page
 │   │   └── vnet/                # Virtual network layer + Dockerfile
 │   ├── logs/                    # Log infrastructure
 │   │   ├── agent/               #   Log collection agent + Dockerfile
 │   │   └── vnet/                #   Log aggregation vnet + Dockerfile
 │   ├── maint/                   # Maintenance service + Dockerfile
-│   ├── types/                   # Generated Go types from protobuf (~134,300 lines)
+│   ├── types/                   # Generated Go types from protobuf (~138,900 lines)
 │   ├── tests/                   # Test suite
-│   │   ├── *_test.go            #   25 test files (getters + handlers per module)
-│   │   └── mocks/               #   Mock data generators (122 files)
+│   │   ├── *_test.go            #   27 test files (getters + handlers per module)
+│   │   └── mocks/               #   Mock data generators (130 files)
 │   │       ├── data_*.go        #     Curated name/data arrays per module
-│   │       ├── gen_*.go         #     Entity generators (76 files)
+│   │       ├── gen_*.go         #     Entity generators (80 files)
 │   │       ├── *_phases*.go     #     Phase orchestration
 │   │       ├── store*.go        #     Shared mock data store (ID slices per module)
 │   │       └── utils.go         #     Helpers (pickRef, randomMoney, genID, genLines, ...)
@@ -296,18 +315,18 @@ This ERP is built on top of the Layer 8 open-source infrastructure:
 
 | Category | Files | Lines |
 |----------|-------|-------|
-| Go source (hand-written) | 742 | ~55,600 |
-| Go types (generated from protobuf) | — | ~134,300 |
-| JavaScript (ERP-specific) | 529 | ~47,000 |
-| JavaScript (l8ui shared library) | 146 | ~29,900 |
-| CSS (ERP-specific) | 41 | ~6,400 |
-| CSS (l8ui shared library) | 53 | ~11,500 |
-| HTML | 45 | — |
-| Protobuf schemas | 73 | ~14,200 |
-| Protobuf enums | 289 | — |
-| Mock data generators | 76 | — |
-| Mock data files (total) | 122 | — |
-| Test files | 25 | — |
+| Go source (hand-written) | 771 | ~59,400 |
+| Go types (generated from protobuf) | — | ~138,900 |
+| JavaScript (ERP-specific) | 379 | ~29,600 |
+| JavaScript (l8ui shared library) | 150 | ~30,600 |
+| CSS (ERP-specific) | 50 | ~7,600 |
+| CSS (l8ui shared library) | 56 | ~12,200 |
+| HTML | 46 | — |
+| Protobuf schemas | 79 | ~14,800 |
+| Protobuf enums | 300 | — |
+| Mock data generators | 80 | — |
+| Mock data files (total) | 130 | — |
+| Test files | 27 | — |
 
 ## UI Architecture
 
