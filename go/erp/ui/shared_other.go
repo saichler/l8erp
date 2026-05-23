@@ -7,9 +7,9 @@ import (
 	"github.com/saichler/l8erp/go/types/doc"
 	"github.com/saichler/l8erp/go/types/ecom"
 	"github.com/saichler/l8erp/go/types/sys"
-	l8events "github.com/saichler/l8events/go/types/l8events"
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8types/go/types/l8api"
+	l8events "github.com/saichler/l8types/go/types/l8events"
 )
 
 func registerBiTypes(resources ifs.IResources) {
