@@ -10,6 +10,7 @@ import (
 	"github.com/saichler/l8types/go/ifs"
 	"github.com/saichler/l8types/go/types/l8api"
 	l8events "github.com/saichler/l8types/go/types/l8events"
+	l8notify "github.com/saichler/l8types/go/types/l8notify"
 )
 
 func registerBiTypes(resources ifs.IResources) {
@@ -105,4 +106,5 @@ func registerSysTypes(resources ifs.IResources) {
 	common.RegisterType(resources, &sys.SysModuleConfig{}, &sys.SysModuleConfigList{}, "ConfigId")
 	common.RegisterType(resources, &l8api.L8ImportTemplate{}, &l8api.L8ImportTemplateList{}, "TemplateId")
 	common.RegisterType(resources, &l8events.EventRecord{}, &l8events.EventRecordList{}, "EventId")
+	resources.Registry().Register(&l8notify.L8NotificationSet{})
 }

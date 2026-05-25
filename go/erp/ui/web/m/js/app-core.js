@@ -118,6 +118,11 @@ limitations under the License.
                 L8AgentBubbleMobile.init({ chatEndpoint: '/120/AgntChat' });
             }
 
+            // Initialize WebSocket for real-time updates
+            if (typeof Layer8DWebSocket !== 'undefined') {
+                Layer8DWebSocket.init();
+            }
+
             // Setup navigation
             this.initSidebar();
 

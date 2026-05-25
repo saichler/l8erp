@@ -211,6 +211,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         L8AgentBubble.init({ chatEndpoint: '/120/AgntChat' });
     }
 
+    // Initialize WebSocket for real-time updates
+    if (typeof Layer8DWebSocket !== 'undefined') {
+        Layer8DWebSocket.init();
+    }
+
     // Load default section (dashboard)
     loadSection('dashboard');
 

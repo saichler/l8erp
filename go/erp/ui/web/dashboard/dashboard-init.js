@@ -25,4 +25,17 @@ window.initializeDashboard = function() {
     if (window.DashboardStats) {
         DashboardStats.loadAll();
     }
+
+    // Subscribe to WebSocket notifications for dashboard auto-refresh
+    if (typeof Layer8DWebSocket !== 'undefined' && window.DashboardConfig) {
+        var refreshTimer = null;
+        DashboardConfig.kpis.forEach(function(kpi) {
+            Layer8DWebSocket.subscribe(kpi.model, function() {
+                clearTimeout(refreshTimer);
+                refreshTimer = setTimeout(function() {
+                    DashboardStats.loadAll();
+                }, 1000);
+            });
+        });
+    }
 };
