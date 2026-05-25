@@ -1,0 +1,235 @@
+# Local hostPath version — single-node development and testing
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: l8erp
+  labels:
+    name: l8erp
+
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: l8erp
+  name: erp-vnet
+  labels:
+    app: erp-vnet
+spec:
+  selector:
+    matchLabels:
+      app: erp-vnet
+  template:
+    metadata:
+      labels:
+        app: erp-vnet
+    spec:
+      hostNetwork: true
+      containers:
+        - name: erp-vnet
+          image: saichler/erp-vnet:latest
+          imagePullPolicy: Always
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          ports:
+            - containerPort: 34999
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
+
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: l8erp
+  name: erp-logs-vnet
+  labels:
+    app: erp-logs-vnet
+spec:
+  selector:
+    matchLabels:
+      app: erp-logs-vnet
+  template:
+    metadata:
+      labels:
+        app: erp-logs-vnet
+    spec:
+      hostNetwork: true
+      containers:
+        - name: erp-logs-vnet
+          image: saichler/erp-logs-vnet:latest
+          imagePullPolicy: Always
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          ports:
+            - containerPort: 35004
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
+
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: l8erp
+  name: erp-log-agent
+  labels:
+    app: erp-log-agent
+spec:
+  selector:
+    matchLabels:
+      app: erp-log-agent
+  template:
+    metadata:
+      labels:
+        app: erp-log-agent
+    spec:
+      containers:
+        - name: erp-log-agent
+          image: saichler/erp-log-agent:latest
+          imagePullPolicy: Always
+          env:
+            - name: LOGPATH
+              value: /data/logs/erp
+            - name: LOGFILE
+              value: "*"
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
+
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: l8erp
+  name: erp
+  labels:
+    app: erp
+spec:
+  selector:
+    matchLabels:
+      app: erp
+  template:
+    metadata:
+      labels:
+        app: erp
+    spec:
+      containers:
+        - name: erp
+          image: saichler/erp:latest
+          imagePullPolicy: Always
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
+
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: l8erp
+  name: erp-web
+  labels:
+    app: erp-web
+spec:
+  selector:
+    matchLabels:
+      app: erp-web
+  template:
+    metadata:
+      labels:
+        app: erp-web
+    spec:
+      hostNetwork: true
+      containers:
+        - name: erp-web
+          image: saichler/erp-web:latest
+          imagePullPolicy: Always
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
+
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  namespace: l8erp
+  name: erp-maint
+  labels:
+    app: erp-maint
+spec:
+  selector:
+    matchLabels:
+      app: erp-maint
+  template:
+    metadata:
+      labels:
+        app: erp-maint
+    spec:
+      hostNetwork: true
+      containers:
+        - name: erp-maint
+          image: saichler/erp-maint:latest
+          imagePullPolicy: Always
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate

@@ -1,0 +1,273 @@
+# KIND cluster version — uses KIND's built-in standard StorageClass
+# KIND ships with rancher/local-path-provisioner pre-installed as StorageClass "standard"
+# No custom StorageClass definition needed.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: l8erp
+  labels:
+    name: l8erp
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: l8erp
+  name: erp-vnet
+  labels:
+    app: erp-vnet
+spec:
+  serviceName: erp-vnet
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erp-vnet
+  template:
+    metadata:
+      labels:
+        app: erp-vnet
+    spec:
+      hostNetwork: true
+      containers:
+        - name: erp-vnet
+          image: saichler/erp-vnet:latest
+          imagePullPolicy: Always
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          ports:
+            - containerPort: 34999
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: hdata
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 5Gi
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: l8erp
+  name: erp-logs-vnet
+  labels:
+    app: erp-logs-vnet
+spec:
+  serviceName: erp-logs-vnet
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erp-logs-vnet
+  template:
+    metadata:
+      labels:
+        app: erp-logs-vnet
+    spec:
+      hostNetwork: true
+      containers:
+        - name: erp-logs-vnet
+          image: saichler/erp-logs-vnet:latest
+          imagePullPolicy: Always
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          ports:
+            - containerPort: 35004
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: hdata
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 5Gi
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: l8erp
+  name: erp-log-agent
+  labels:
+    app: erp-log-agent
+spec:
+  serviceName: erp-log-agent
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erp-log-agent
+  template:
+    metadata:
+      labels:
+        app: erp-log-agent
+    spec:
+      containers:
+        - name: erp-log-agent
+          image: saichler/erp-log-agent:latest
+          imagePullPolicy: Always
+          env:
+            - name: LOGPATH
+              value: /data/logs/erp
+            - name: LOGFILE
+              value: "*"
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: hdata
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 2Gi
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: l8erp
+  name: erp
+  labels:
+    app: erp
+spec:
+  serviceName: erp
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erp
+  template:
+    metadata:
+      labels:
+        app: erp
+    spec:
+      containers:
+        - name: erp
+          image: saichler/erp:latest
+          imagePullPolicy: Always
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: hdata
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 10Gi
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: l8erp
+  name: erp-web
+  labels:
+    app: erp-web
+spec:
+  serviceName: erp-web
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erp-web
+  template:
+    metadata:
+      labels:
+        app: erp-web
+    spec:
+      hostNetwork: true
+      containers:
+        - name: erp-web
+          image: saichler/erp-web:latest
+          imagePullPolicy: Always
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: hdata
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 2Gi
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: l8erp
+  name: erp-maint
+  labels:
+    app: erp-maint
+spec:
+  serviceName: erp-maint
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erp-maint
+  template:
+    metadata:
+      labels:
+        app: erp-maint
+    spec:
+      hostNetwork: true
+      containers:
+        - name: erp-maint
+          image: saichler/erp-maint:latest
+          imagePullPolicy: Always
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: hdata
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 5Gi
