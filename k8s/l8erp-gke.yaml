@@ -221,38 +221,3 @@ spec:
           persistentVolumeClaim:
             claimName: l8erp-data
 
----
-
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  namespace: l8erp
-  name: erp-maint
-  labels:
-    app: erp-maint
-spec:
-  selector:
-    matchLabels:
-      app: erp-maint
-  template:
-    metadata:
-      labels:
-        app: erp-maint
-    spec:
-      hostNetwork: true
-      containers:
-        - name: erp-maint
-          image: saichler/erp-maint:latest
-          imagePullPolicy: Always
-          env:
-            - name: NODE_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP
-          volumeMounts:
-            - name: hdata
-              mountPath: /data
-      volumes:
-        - name: hdata
-          persistentVolumeClaim:
-            claimName: l8erp-data

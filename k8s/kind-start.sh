@@ -61,7 +61,6 @@ IMAGES=(
   saichler/erp-log-agent:latest
   saichler/erp:latest
   saichler/erp-web:latest
-  saichler/erp-maint:latest
 )
 
 for img in "${IMAGES[@]}"; do
@@ -83,7 +82,7 @@ echo "Waiting for erp-logs-vnet to be Ready..."
 kubectl -n l8erp rollout status statefulset/erp-logs-vnet --timeout=120s
 
 echo "Phase 2: Waiting for all services to be Ready..."
-for sts in erp erp-web erp-log-agent erp-maint; do
+for sts in erp erp-web erp-log-agent; do
   echo "  Waiting for ${sts}..."
   kubectl -n l8erp rollout status statefulset/"${sts}" --timeout=180s
 done
