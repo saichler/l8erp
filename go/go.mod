@@ -5,12 +5,12 @@ go 1.26.1
 require (
 	github.com/saichler/l8agent v0.0.0-20260404041519-33c923998e3c
 	github.com/saichler/l8bus v0.0.0-20260524152159-cc0b5c210821
-	github.com/saichler/l8common v0.0.0-20260620150610-ecbfc11d3827
+	github.com/saichler/l8common v0.0.0-20260802130603-68c2d5aa7931
 	github.com/saichler/l8events v0.0.0-20260526025458-f1445c360635
 	github.com/saichler/l8logfusion v0.0.0-20260320120056-3a3617eed28f
 	github.com/saichler/l8test v0.0.0-20260412034023-fd4cffd34f89
-	github.com/saichler/l8types v0.0.0-20260726185440-31a072a092ab
-	github.com/saichler/l8utils v0.0.0-20260613135317-d1acbebf90f1
+	github.com/saichler/l8types v0.0.0-20260801191906-5fe3812d71dc
+	github.com/saichler/l8utils v0.0.0-20260801203845-fe95aaa940f1
 	github.com/saichler/l8web v0.0.0-20260726182518-5097b8cf253e
 	google.golang.org/protobuf v1.36.11
 )
