@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TransferId", Callback: newFundTransferServiceCallback(vnic),
-	}, &fin.FundTransfer{}, &fin.FundTransferList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "TransferId", newFundTransferServiceCallback(vnic),
+		&fin.FundTransfer{}, &fin.FundTransferList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func FundTransfers(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

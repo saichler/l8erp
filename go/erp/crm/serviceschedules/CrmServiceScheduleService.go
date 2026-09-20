@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ScheduleId", Callback: newCrmServiceScheduleServiceCallback(vnic),
-	}, &crm.CrmServiceSchedule{}, &crm.CrmServiceScheduleList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ScheduleId", newCrmServiceScheduleServiceCallback(vnic),
+		&crm.CrmServiceSchedule{}, &crm.CrmServiceScheduleList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CrmServiceSchedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

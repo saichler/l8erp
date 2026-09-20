@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CarrierId", Callback: newCarrierServiceCallback(vnic),
-	}, &hcm.Carrier{}, &hcm.CarrierList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CarrierId", newCarrierServiceCallback(vnic),
+		&hcm.Carrier{}, &hcm.CarrierList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Carriers(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

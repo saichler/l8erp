@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "BenchmarkId", Callback: newMarketBenchmarkServiceCallback(vnic),
-	}, &hcm.MarketBenchmark{}, &hcm.MarketBenchmarkList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "BenchmarkId", newMarketBenchmarkServiceCallback(vnic),
+		&hcm.MarketBenchmark{}, &hcm.MarketBenchmarkList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func MarketBenchmarks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

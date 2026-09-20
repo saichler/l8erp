@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "InsuranceId", Callback: newCompInsurancePolicyServiceCallback(vnic),
-	}, &comp.CompInsurancePolicy{}, &comp.CompInsurancePolicyList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "InsuranceId", newCompInsurancePolicyServiceCallback(vnic),
+		&comp.CompInsurancePolicy{}, &comp.CompInsurancePolicyList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CompInsurancePolicies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CreditMemoId", Callback: newCreditMemoServiceCallback(vnic),
-	}, &fin.CreditMemo{}, &fin.CreditMemoList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CreditMemoId", newCreditMemoServiceCallback(vnic),
+		&fin.CreditMemo{}, &fin.CreditMemoList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CreditMemos(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

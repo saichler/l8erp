@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ModelId", Callback: newBiAnalysisModelServiceCallback(vnic),
-	}, &bi.BiAnalysisModel{}, &bi.BiAnalysisModelList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ModelId", newBiAnalysisModelServiceCallback(vnic),
+		&bi.BiAnalysisModel{}, &bi.BiAnalysisModelList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func BiAnalysisModels(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

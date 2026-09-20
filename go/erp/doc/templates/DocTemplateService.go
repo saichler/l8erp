@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TemplateId", Callback: newDocTemplateServiceCallback(vnic),
-	}, &doc.DocTemplate{}, &doc.DocTemplateList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "TemplateId", newDocTemplateServiceCallback(vnic),
+		&doc.DocTemplate{}, &doc.DocTemplateList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func DocTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

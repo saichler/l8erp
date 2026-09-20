@@ -25,8 +25,7 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ReportId", Callback: newHcmReportCallback(vnic),
-	}, &fin.FinReport{}, &fin.FinReportList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ReportId", newHcmReportCallback(vnic),
+		&fin.FinReport{}, &fin.FinReportList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }

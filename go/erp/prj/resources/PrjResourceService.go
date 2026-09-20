@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ResourceId", Callback: newPrjResourceServiceCallback(vnic),
-	}, &prj.PrjResource{}, &prj.PrjResourceList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ResourceId", newPrjResourceServiceCallback(vnic),
+		&prj.PrjResource{}, &prj.PrjResourceList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func PrjResources(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

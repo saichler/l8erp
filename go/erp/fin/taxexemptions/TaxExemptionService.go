@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ExemptionId", Callback: newTaxExemptionServiceCallback(vnic),
-	}, &fin.TaxExemption{}, &fin.TaxExemptionList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ExemptionId", newTaxExemptionServiceCallback(vnic),
+		&fin.TaxExemption{}, &fin.TaxExemptionList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func TaxExemptions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

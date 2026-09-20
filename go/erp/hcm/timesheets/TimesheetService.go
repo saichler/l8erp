@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TimesheetId", Callback: newTimesheetServiceCallback(vnic),
-	}, &hcm.Timesheet{}, &hcm.TimesheetList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "TimesheetId", newTimesheetServiceCallback(vnic),
+		&hcm.Timesheet{}, &hcm.TimesheetList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Timesheets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

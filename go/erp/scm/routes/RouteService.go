@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RouteId", Callback: newRouteServiceCallback(vnic),
-	}, &scm.ScmRoute{}, &scm.ScmRouteList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "RouteId", newRouteServiceCallback(vnic),
+		&scm.ScmRoute{}, &scm.ScmRouteList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Routes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

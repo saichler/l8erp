@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CategoryId", Callback: newAssetCategoryServiceCallback(vnic),
-	}, &fin.AssetCategory{}, &fin.AssetCategoryList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CategoryId", newAssetCategoryServiceCallback(vnic),
+		&fin.AssetCategory{}, &fin.AssetCategoryList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func AssetCategories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

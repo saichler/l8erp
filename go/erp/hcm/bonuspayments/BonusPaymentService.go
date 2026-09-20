@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PaymentId", Callback: newBonusPaymentServiceCallback(vnic),
-	}, &hcm.BonusPayment{}, &hcm.BonusPaymentList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "PaymentId", newBonusPaymentServiceCallback(vnic),
+		&hcm.BonusPayment{}, &hcm.BonusPaymentList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func BonusPayments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

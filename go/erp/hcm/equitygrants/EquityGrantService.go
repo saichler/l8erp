@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "GrantId", Callback: newEquityGrantServiceCallback(vnic),
-	}, &hcm.EquityGrant{}, &hcm.EquityGrantList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "GrantId", newEquityGrantServiceCallback(vnic),
+		&hcm.EquityGrant{}, &hcm.EquityGrantList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func EquityGrants(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

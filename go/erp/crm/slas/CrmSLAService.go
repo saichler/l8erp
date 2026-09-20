@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "SlaId", Callback: newCrmSLAServiceCallback(vnic),
-	}, &crm.CrmSLA{}, &crm.CrmSLAList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "SlaId", newCrmSLAServiceCallback(vnic),
+		&crm.CrmSLA{}, &crm.CrmSLAList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CrmSLAs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

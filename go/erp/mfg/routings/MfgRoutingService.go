@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RoutingId", Callback: newMfgRoutingServiceCallback(vnic),
-	}, &mfg.MfgRouting{}, &mfg.MfgRoutingList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "RoutingId", newMfgRoutingServiceCallback(vnic),
+		&mfg.MfgRouting{}, &mfg.MfgRoutingList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func MfgRoutings(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

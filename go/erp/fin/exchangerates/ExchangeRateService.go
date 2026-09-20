@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ExchangeRateId", Callback: newExchangeRateServiceCallback(vnic),
-	}, &fin.ExchangeRate{}, &fin.ExchangeRateList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ExchangeRateId", newExchangeRateServiceCallback(vnic),
+		&fin.ExchangeRate{}, &fin.ExchangeRateList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func ExchangeRates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CustomerId", Callback: newEcomCustomerServiceCallback(vnic),
-	}, &ecom.EcomCustomer{}, &ecom.EcomCustomerList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CustomerId", newEcomCustomerServiceCallback(vnic),
+		&ecom.EcomCustomer{}, &ecom.EcomCustomerList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func EcomCustomers(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "BalanceId", Callback: newLeaveBalanceServiceCallback(vnic),
-	}, &hcm.LeaveBalance{}, &hcm.LeaveBalanceList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "BalanceId", newLeaveBalanceServiceCallback(vnic),
+		&hcm.LeaveBalance{}, &hcm.LeaveBalanceList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func LeaveBalances(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CaptureId", Callback: newDocEmailCaptureServiceCallback(vnic),
-	}, &doc.DocEmailCapture{}, &doc.DocEmailCaptureList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CaptureId", newDocEmailCaptureServiceCallback(vnic),
+		&doc.DocEmailCapture{}, &doc.DocEmailCaptureList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func DocEmailCaptures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

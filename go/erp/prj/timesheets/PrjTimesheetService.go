@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TimesheetId", Callback: newPrjTimesheetServiceCallback(vnic),
-	}, &prj.PrjTimesheet{}, &prj.PrjTimesheetList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "TimesheetId", newPrjTimesheetServiceCallback(vnic),
+		&prj.PrjTimesheet{}, &prj.PrjTimesheetList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func PrjTimesheets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

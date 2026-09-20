@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "DashboardId", Callback: newBiDashboardServiceCallback(vnic),
-	}, &bi.BiDashboard{}, &bi.BiDashboardList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "DashboardId", newBiDashboardServiceCallback(vnic),
+		&bi.BiDashboard{}, &bi.BiDashboardList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func BiDashboards(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

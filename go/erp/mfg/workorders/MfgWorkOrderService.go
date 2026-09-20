@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "WorkOrderId", Callback: newMfgWorkOrderServiceCallback(vnic),
-	}, &mfg.MfgWorkOrder{}, &mfg.MfgWorkOrderList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "WorkOrderId", newMfgWorkOrderServiceCallback(vnic),
+		&mfg.MfgWorkOrder{}, &mfg.MfgWorkOrderList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func MfgWorkOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

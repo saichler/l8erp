@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "KpiId", Callback: newBiKPIServiceCallback(vnic),
-	}, &bi.BiKPI{}, &bi.BiKPIList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "KpiId", newBiKPIServiceCallback(vnic),
+		&bi.BiKPI{}, &bi.BiKPIList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func BiKPIs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

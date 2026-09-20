@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RuleId", Callback: newPrjApprovalRuleServiceCallback(vnic),
-	}, &prj.PrjApprovalRule{}, &prj.PrjApprovalRuleList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "RuleId", newPrjApprovalRuleServiceCallback(vnic),
+		&prj.PrjApprovalRule{}, &prj.PrjApprovalRuleList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func PrjApprovalRules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

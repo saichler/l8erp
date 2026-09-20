@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ScorecardId", Callback: newSupplierScorecardServiceCallback(vnic),
-	}, &scm.ScmSupplierScorecard{}, &scm.ScmSupplierScorecardList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ScorecardId", newSupplierScorecardServiceCallback(vnic),
+		&scm.ScmSupplierScorecard{}, &scm.ScmSupplierScorecardList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func SupplierScorecards(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

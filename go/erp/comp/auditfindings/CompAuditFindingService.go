@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "FindingId", Callback: newCompAuditFindingServiceCallback(vnic),
-	}, &comp.CompAuditFinding{}, &comp.CompAuditFindingList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "FindingId", newCompAuditFindingServiceCallback(vnic),
+		&comp.CompAuditFinding{}, &comp.CompAuditFindingList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CompAuditFindings(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -18,7 +18,7 @@ func TestMain(m *testing.M) {
 }
 
 func dropAllTables(t *testing.T) {
-	db := common.OpenDBConection("admin", "admin", "admin")
+	db := common.OpenDBConection("admin", "admin", "admin", "5432")
 	rows, err := db.Query("SELECT tablename FROM pg_tables WHERE schemaname = 'public'")
 	if err != nil {
 		t.Fatalf("Failed to query tables: %v", err)
@@ -52,8 +52,10 @@ func TestAllServices(t *testing.T) {
 	dropAllTables(t)
 
 	// 1. Activate all ERP services on the services vNic
-	services.ActivateAllServices(common.DB_CREDS, common.DB_NAME, erpServicesVnic)
-	services.ActivateChatService(common.DB_CREDS, common.DB_NAME, erpServicesVnic)
+	dbcred := erpServicesVnic.Resources().SysConfig().DataStoreConfig.Type
+	dbname := erpServicesVnic.Resources().SysConfig().DataStoreConfig.Name
+	services.ActivateAllServices(dbcred, dbname, erpServicesVnic)
+	services.ActivateChatService(dbcred, dbname, erpServicesVnic)
 	// 2. Start web server on the web service vNic (non-blocking)
 	port := 9443
 	startWebServer(port, webServiceVnic)

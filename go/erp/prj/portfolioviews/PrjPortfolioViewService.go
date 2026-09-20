@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ViewId", Callback: newPrjPortfolioViewServiceCallback(vnic),
-	}, &prj.PrjPortfolioView{}, &prj.PrjPortfolioViewList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ViewId", newPrjPortfolioViewServiceCallback(vnic),
+		&prj.PrjPortfolioView{}, &prj.PrjPortfolioViewList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func PrjPortfolioViews(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

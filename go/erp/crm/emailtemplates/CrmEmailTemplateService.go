@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TemplateId", Callback: newCrmEmailTemplateServiceCallback(vnic),
-	}, &crm.CrmEmailTemplate{}, &crm.CrmEmailTemplateList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "TemplateId", newCrmEmailTemplateServiceCallback(vnic),
+		&crm.CrmEmailTemplate{}, &crm.CrmEmailTemplateList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CrmEmailTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ConfigId", Callback: newBiMasterDataConfigServiceCallback(vnic),
-	}, &bi.BiMasterDataConfig{}, &bi.BiMasterDataConfigList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ConfigId", newBiMasterDataConfigServiceCallback(vnic),
+		&bi.BiMasterDataConfig{}, &bi.BiMasterDataConfigList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func BiMasterDataConfigs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

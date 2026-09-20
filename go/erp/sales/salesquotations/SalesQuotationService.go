@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "QuotationId", Callback: newSalesQuotationServiceCallback(vnic),
-	}, &sales.SalesQuotation{}, &sales.SalesQuotationList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "QuotationId", newSalesQuotationServiceCallback(vnic),
+		&sales.SalesQuotation{}, &sales.SalesQuotationList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func SalesQuotations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

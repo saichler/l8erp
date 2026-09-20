@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "DepartmentId", Callback: newDepartmentServiceCallback(vnic),
-	}, &hcm.Department{}, &hcm.DepartmentList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "DepartmentId", newDepartmentServiceCallback(vnic),
+		&hcm.Department{}, &hcm.DepartmentList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Departments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

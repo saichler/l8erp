@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CollaborationId", Callback: newSupplierCollaborationServiceCallback(vnic),
-	}, &scm.ScmSupplierCollaboration{}, &scm.ScmSupplierCollaborationList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CollaborationId", newSupplierCollaborationServiceCallback(vnic),
+		&scm.ScmSupplierCollaboration{}, &scm.ScmSupplierCollaborationList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func SupplierCollaborations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

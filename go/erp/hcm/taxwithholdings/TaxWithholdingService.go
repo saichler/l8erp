@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "WithholdingId", Callback: newTaxWithholdingServiceCallback(vnic),
-	}, &hcm.TaxWithholding{}, &hcm.TaxWithholdingList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "WithholdingId", newTaxWithholdingServiceCallback(vnic),
+		&hcm.TaxWithholding{}, &hcm.TaxWithholdingList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func TaxWithholdings(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

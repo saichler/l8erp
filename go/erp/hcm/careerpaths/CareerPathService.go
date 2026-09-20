@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CareerPathId", Callback: newCareerPathServiceCallback(vnic),
-	}, &hcm.CareerPath{}, &hcm.CareerPathList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CareerPathId", newCareerPathServiceCallback(vnic),
+		&hcm.CareerPath{}, &hcm.CareerPathList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CareerPaths(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

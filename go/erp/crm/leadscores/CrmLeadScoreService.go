@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ScoreId", Callback: newCrmLeadScoreServiceCallback(vnic),
-	}, &crm.CrmLeadScore{}, &crm.CrmLeadScoreList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ScoreId", newCrmLeadScoreServiceCallback(vnic),
+		&crm.CrmLeadScore{}, &crm.CrmLeadScoreList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CrmLeadScores(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

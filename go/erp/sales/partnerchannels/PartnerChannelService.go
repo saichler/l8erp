@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PartnerId", Callback: newPartnerChannelServiceCallback(vnic),
-	}, &sales.SalesPartnerChannel{}, &sales.SalesPartnerChannelList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "PartnerId", newPartnerChannelServiceCallback(vnic),
+		&sales.SalesPartnerChannel{}, &sales.SalesPartnerChannelList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func PartnerChannels(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

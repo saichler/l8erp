@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "DocumentId", Callback: newYearEndDocumentServiceCallback(vnic),
-	}, &hcm.YearEndDocument{}, &hcm.YearEndDocumentList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "DocumentId", newYearEndDocumentServiceCallback(vnic),
+		&hcm.YearEndDocument{}, &hcm.YearEndDocumentList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func YearEndDocuments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

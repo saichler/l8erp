@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "GovernanceId", Callback: newBiDataGovernanceServiceCallback(vnic),
-	}, &bi.BiDataGovernance{}, &bi.BiDataGovernanceList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "GovernanceId", newBiDataGovernanceServiceCallback(vnic),
+		&bi.BiDataGovernance{}, &bi.BiDataGovernanceList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func BiDataGovernances(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "UtilizationId", Callback: newPrjUtilizationServiceCallback(vnic),
-	}, &prj.PrjUtilization{}, &prj.PrjUtilizationList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "UtilizationId", newPrjUtilizationServiceCallback(vnic),
+		&prj.PrjUtilization{}, &prj.PrjUtilizationList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func PrjUtilizations(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

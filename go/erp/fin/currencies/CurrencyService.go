@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CurrencyId", Callback: newCurrencyServiceCallback(vnic),
-	}, &fin.Currency{}, &fin.CurrencyList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CurrencyId", newCurrencyServiceCallback(vnic),
+		&fin.Currency{}, &fin.CurrencyList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Currencies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

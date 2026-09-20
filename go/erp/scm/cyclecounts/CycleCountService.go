@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CycleCountId", Callback: newCycleCountServiceCallback(vnic),
-	}, &scm.ScmCycleCount{}, &scm.ScmCycleCountList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CycleCountId", newCycleCountServiceCallback(vnic),
+		&scm.ScmCycleCount{}, &scm.ScmCycleCountList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CycleCounts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

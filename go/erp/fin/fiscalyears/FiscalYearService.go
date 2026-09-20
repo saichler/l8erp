@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "FiscalYearId", Callback: newFiscalYearServiceCallback(vnic),
-	}, &fin.FiscalYear{}, &fin.FiscalYearList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "FiscalYearId", newFiscalYearServiceCallback(vnic),
+		&fin.FiscalYear{}, &fin.FiscalYearList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func FiscalYears(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -16,9 +16,8 @@ package common
 
 import l8c "github.com/saichler/l8common/go/common"
 
-// Re-export service factory types and functions from l8common.
-type ServiceConfig = l8c.ServiceConfig
-
+// Re-export service factory functions from l8common.
+var NewOrmSLA = l8c.NewOrmSLA
 var ActivateService = l8c.ActivateService
 var ServiceHandler = l8c.ServiceHandler
 var GetEntity = l8c.GetEntity

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PurchaseOrderId", Callback: newPurchaseOrderServiceCallback(vnic),
-	}, &scm.ScmPurchaseOrder{}, &scm.ScmPurchaseOrderList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "PurchaseOrderId", newPurchaseOrderServiceCallback(vnic),
+		&scm.ScmPurchaseOrder{}, &scm.ScmPurchaseOrderList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func PurchaseOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

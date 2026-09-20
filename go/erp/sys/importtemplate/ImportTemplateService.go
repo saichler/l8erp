@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TemplateId", Callback: newImportTemplateServiceCallback(vnic),
-	}, &l8api.L8ImportTemplate{}, &l8api.L8ImportTemplateList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "TemplateId", newImportTemplateServiceCallback(vnic),
+		&l8api.L8ImportTemplate{}, &l8api.L8ImportTemplateList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func ImportTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

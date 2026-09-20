@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PositionId", Callback: newPositionServiceCallback(vnic),
-	}, &hcm.Position{}, &hcm.PositionList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "PositionId", newPositionServiceCallback(vnic),
+		&hcm.Position{}, &hcm.PositionList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Positions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

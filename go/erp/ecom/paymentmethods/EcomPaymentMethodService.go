@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "MethodId", Callback: newEcomPaymentMethodServiceCallback(vnic),
-	}, &ecom.EcomPaymentMethod{}, &ecom.EcomPaymentMethodList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "MethodId", newEcomPaymentMethodServiceCallback(vnic),
+		&ecom.EcomPaymentMethod{}, &ecom.EcomPaymentMethodList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func EcomPaymentMethods(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CapacityId", Callback: newMfgWorkCenterCapServiceCallback(vnic),
-	}, &mfg.MfgWorkCenterCap{}, &mfg.MfgWorkCenterCapList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CapacityId", newMfgWorkCenterCapServiceCallback(vnic),
+		&mfg.MfgWorkCenterCap{}, &mfg.MfgWorkCenterCapList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func MfgWorkCenterCaps(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

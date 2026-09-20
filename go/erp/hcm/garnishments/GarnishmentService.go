@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "GarnishmentId", Callback: newGarnishmentServiceCallback(vnic),
-	}, &hcm.Garnishment{}, &hcm.GarnishmentList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "GarnishmentId", newGarnishmentServiceCallback(vnic),
+		&hcm.Garnishment{}, &hcm.GarnishmentList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Garnishments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

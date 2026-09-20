@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "GradeId", Callback: newSalaryGradeServiceCallback(vnic),
-	}, &hcm.SalaryGrade{}, &hcm.SalaryGradeList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "GradeId", newSalaryGradeServiceCallback(vnic),
+		&hcm.SalaryGrade{}, &hcm.SalaryGradeList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func SalaryGrades(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

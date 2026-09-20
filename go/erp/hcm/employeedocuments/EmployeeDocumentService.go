@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "DocumentId", Callback: newEmployeeDocumentServiceCallback(vnic),
-	}, &hcm.EmployeeDocument{}, &hcm.EmployeeDocumentList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "DocumentId", newEmployeeDocumentServiceCallback(vnic),
+		&hcm.EmployeeDocument{}, &hcm.EmployeeDocumentList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func EmployeeDocuments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TemplateId", Callback: newPrjProjectTemplateServiceCallback(vnic),
-	}, &prj.PrjProjectTemplate{}, &prj.PrjProjectTemplateList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "TemplateId", newPrjProjectTemplateServiceCallback(vnic),
+		&prj.PrjProjectTemplate{}, &prj.PrjProjectTemplateList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func PrjProjectTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

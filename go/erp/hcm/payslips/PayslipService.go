@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PayslipId", Callback: newPayslipServiceCallback(vnic),
-	}, &hcm.Payslip{}, &hcm.PayslipList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "PayslipId", newPayslipServiceCallback(vnic),
+		&hcm.Payslip{}, &hcm.PayslipList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Payslips(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

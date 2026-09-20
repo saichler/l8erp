@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ReportId", Callback: newBiReportServiceCallback(vnic),
-	}, &bi.BiReport{}, &bi.BiReportList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ReportId", newBiReportServiceCallback(vnic),
+		&bi.BiReport{}, &bi.BiReportList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 	StartScheduler(vnic)
 }
 

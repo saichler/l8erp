@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "BudgetId", Callback: newBudgetServiceCallback(vnic),
-	}, &fin.Budget{}, &fin.BudgetList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "BudgetId", newBudgetServiceCallback(vnic),
+		&fin.Budget{}, &fin.BudgetList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Budgets(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

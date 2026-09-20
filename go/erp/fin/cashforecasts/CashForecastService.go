@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ForecastId", Callback: newCashForecastServiceCallback(vnic),
-	}, &fin.CashForecast{}, &fin.CashForecastList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ForecastId", newCashForecastServiceCallback(vnic),
+		&fin.CashForecast{}, &fin.CashForecastList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CashForecasts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

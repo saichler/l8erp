@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "SurveyId", Callback: newCrmSurveyServiceCallback(vnic),
-	}, &crm.CrmSurvey{}, &crm.CrmSurveyList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "SurveyId", newCrmSurveyServiceCallback(vnic),
+		&crm.CrmSurvey{}, &crm.CrmSurveyList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CrmSurveys(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

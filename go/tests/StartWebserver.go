@@ -16,10 +16,11 @@
 package tests
 
 import (
+	"encoding/base64"
 	"github.com/saichler/l8bus/go/overlay/health"
-	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/erp/ui"
 	"github.com/saichler/l8types/go/ifs"
+	"github.com/saichler/l8types/go/sec"
 	"github.com/saichler/l8web/go/web/server"
 )
 
@@ -27,12 +28,22 @@ func startWebServer(port int, nic ifs.IVNic) ifs.IWebServer {
 	// Register UI types on the vNic's resources
 	ui.RegisterTypes(nic.Resources())
 
+	domain, private, _ := nic.Resources().Certificate()
+	if domain == "" || private == "" {
+		d, p, _ := sec.CreateCertBundle()
+		domainBytes, _ := base64.StdEncoding.DecodeString(d)
+		privateBytes, _ := base64.StdEncoding.DecodeString(p)
+		domain = string(domainBytes)
+		private = string(privateBytes)
+	}
+
 	serverConfig := &server.RestServerConfig{
 		Host:           "localhost",
 		Port:           port,
 		Authentication: true,
-		Prefix:         common.PREFIX,
-		CertName:       "/data/erp",
+		Prefix:         nic.Resources().WebPrefix(),
+		CertDomain:     domain,
+		CertPrivate:    private,
 	}
 	svr, err := server.NewRestServer(serverConfig)
 	if err != nil {

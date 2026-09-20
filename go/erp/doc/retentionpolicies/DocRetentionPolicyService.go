@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PolicyId", Callback: newDocRetentionPolicyServiceCallback(vnic),
-	}, &doc.DocRetentionPolicy{}, &doc.DocRetentionPolicyList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "PolicyId", newDocRetentionPolicyServiceCallback(vnic),
+		&doc.DocRetentionPolicy{}, &doc.DocRetentionPolicyList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func DocRetentionPolicies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

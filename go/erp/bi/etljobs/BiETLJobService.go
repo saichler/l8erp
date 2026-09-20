@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "JobId", Callback: newBiETLJobServiceCallback(vnic),
-	}, &bi.BiETLJob{}, &bi.BiETLJobList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "JobId", newBiETLJobServiceCallback(vnic),
+		&bi.BiETLJob{}, &bi.BiETLJobList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func BiETLJobs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

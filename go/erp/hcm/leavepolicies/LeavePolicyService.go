@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PolicyId", Callback: newLeavePolicyServiceCallback(vnic),
-	}, &hcm.LeavePolicy{}, &hcm.LeavePolicyList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "PolicyId", newLeavePolicyServiceCallback(vnic),
+		&hcm.LeavePolicy{}, &hcm.LeavePolicyList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func LeavePolicies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

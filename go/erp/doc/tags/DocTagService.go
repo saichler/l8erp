@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TagId", Callback: newDocTagServiceCallback(vnic),
-	}, &doc.DocTag{}, &doc.DocTagList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "TagId", newDocTagServiceCallback(vnic),
+		&doc.DocTag{}, &doc.DocTagList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func DocTags(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

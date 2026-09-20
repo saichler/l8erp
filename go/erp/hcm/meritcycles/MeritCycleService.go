@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CycleId", Callback: newMeritCycleServiceCallback(vnic),
-	}, &hcm.MeritCycle{}, &hcm.MeritCycleList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CycleId", newMeritCycleServiceCallback(vnic),
+		&hcm.MeritCycle{}, &hcm.MeritCycleList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func MeritCycles(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

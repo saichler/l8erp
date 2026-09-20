@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "HolidayId", Callback: newHolidayServiceCallback(vnic),
-	}, &hcm.Holiday{}, &hcm.HolidayList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "HolidayId", newHolidayServiceCallback(vnic),
+		&hcm.Holiday{}, &hcm.HolidayList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Holidays(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

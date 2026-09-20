@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "MatrixId", Callback: newCompApprovalMatrixServiceCallback(vnic),
-	}, &comp.CompApprovalMatrix{}, &comp.CompApprovalMatrixList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "MatrixId", newCompApprovalMatrixServiceCallback(vnic),
+		&comp.CompApprovalMatrix{}, &comp.CompApprovalMatrixList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CompApprovalMatrices(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

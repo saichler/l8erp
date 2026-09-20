@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "AbsenceId", Callback: newAbsenceServiceCallback(vnic),
-	}, &hcm.Absence{}, &hcm.AbsenceList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "AbsenceId", newAbsenceServiceCallback(vnic),
+		&hcm.Absence{}, &hcm.AbsenceList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Absences(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "WarehouseId", Callback: newWarehouseServiceCallback(vnic),
-	}, &scm.ScmWarehouse{}, &scm.ScmWarehouseList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "WarehouseId", newWarehouseServiceCallback(vnic),
+		&scm.ScmWarehouse{}, &scm.ScmWarehouseList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Warehouses(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

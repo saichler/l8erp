@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "JurisdictionId", Callback: newTaxJurisdictionServiceCallback(vnic),
-	}, &fin.TaxJurisdiction{}, &fin.TaxJurisdictionList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "JurisdictionId", newTaxJurisdictionServiceCallback(vnic),
+		&fin.TaxJurisdiction{}, &fin.TaxJurisdictionList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func TaxJurisdictions(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

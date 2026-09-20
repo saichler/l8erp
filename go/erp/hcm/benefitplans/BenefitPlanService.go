@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PlanId", Callback: newBenefitPlanServiceCallback(vnic),
-	}, &hcm.BenefitPlan{}, &hcm.BenefitPlanList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "PlanId", newBenefitPlanServiceCallback(vnic),
+		&hcm.BenefitPlan{}, &hcm.BenefitPlanList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func BenefitPlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

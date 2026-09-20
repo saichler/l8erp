@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PayrollRunId", Callback: newPayrollRunServiceCallback(vnic),
-	}, &hcm.PayrollRun{}, &hcm.PayrollRunList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "PayrollRunId", newPayrollRunServiceCallback(vnic),
+		&hcm.PayrollRun{}, &hcm.PayrollRunList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func PayrollRuns(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

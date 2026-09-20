@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "SourceId", Callback: newBiDataSourceServiceCallback(vnic),
-	}, &bi.BiDataSource{}, &bi.BiDataSourceList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "SourceId", newBiDataSourceServiceCallback(vnic),
+		&bi.BiDataSource{}, &bi.BiDataSourceList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func BiDataSources(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

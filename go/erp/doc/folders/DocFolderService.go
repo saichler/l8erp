@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "FolderId", Callback: newDocFolderServiceCallback(vnic),
-	}, &doc.DocFolder{}, &doc.DocFolderList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "FolderId", newDocFolderServiceCallback(vnic),
+		&doc.DocFolder{}, &doc.DocFolderList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func DocFolders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

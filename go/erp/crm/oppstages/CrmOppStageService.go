@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "StageId", Callback: newCrmOppStageServiceCallback(vnic),
-	}, &crm.CrmOppStage{}, &crm.CrmOppStageList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "StageId", newCrmOppStageServiceCallback(vnic),
+		&crm.CrmOppStage{}, &crm.CrmOppStageList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CrmOppStages(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

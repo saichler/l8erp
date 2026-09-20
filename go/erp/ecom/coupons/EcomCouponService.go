@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CouponId", Callback: newEcomCouponServiceCallback(vnic),
-	}, &ecom.EcomCoupon{}, &ecom.EcomCouponList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CouponId", newEcomCouponServiceCallback(vnic),
+		&ecom.EcomCoupon{}, &ecom.EcomCouponList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func EcomCoupons(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

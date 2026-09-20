@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RateId", Callback: newPrjBillingRateServiceCallback(vnic),
-	}, &prj.PrjBillingRate{}, &prj.PrjBillingRateList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "RateId", newPrjBillingRateServiceCallback(vnic),
+		&prj.PrjBillingRate{}, &prj.PrjBillingRateList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func PrjBillingRates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RunId", Callback: newMfgMrpRunServiceCallback(vnic),
-	}, &mfg.MfgMrpRun{}, &mfg.MfgMrpRunList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "RunId", newMfgMrpRunServiceCallback(vnic),
+		&mfg.MfgMrpRun{}, &mfg.MfgMrpRunList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func MfgMrpRuns(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

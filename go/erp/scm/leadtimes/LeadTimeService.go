@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "LeadTimeId", Callback: newLeadTimeServiceCallback(vnic),
-	}, &scm.ScmLeadTime{}, &scm.ScmLeadTimeList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "LeadTimeId", newLeadTimeServiceCallback(vnic),
+		&scm.ScmLeadTime{}, &scm.ScmLeadTimeList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func LeadTimes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

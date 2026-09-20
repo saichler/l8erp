@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RuleId", Callback: newBiDataQualityRuleServiceCallback(vnic),
-	}, &bi.BiDataQualityRule{}, &bi.BiDataQualityRuleList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "RuleId", newBiDataQualityRuleServiceCallback(vnic),
+		&bi.BiDataQualityRule{}, &bi.BiDataQualityRuleList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func BiDataQualityRules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

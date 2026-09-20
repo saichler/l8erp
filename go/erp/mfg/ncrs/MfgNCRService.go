@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "NcrId", Callback: newMfgNCRServiceCallback(vnic),
-	}, &mfg.MfgNCR{}, &mfg.MfgNCRList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "NcrId", newMfgNCRServiceCallback(vnic),
+		&mfg.MfgNCR{}, &mfg.MfgNCRList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func MfgNCRs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

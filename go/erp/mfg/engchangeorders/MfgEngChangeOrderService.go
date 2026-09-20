@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ChangeOrderId", Callback: newMfgEngChangeOrderServiceCallback(vnic),
-	}, &mfg.MfgEngChangeOrder{}, &mfg.MfgEngChangeOrderList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ChangeOrderId", newMfgEngChangeOrderServiceCallback(vnic),
+		&mfg.MfgEngChangeOrder{}, &mfg.MfgEngChangeOrderList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func MfgEngChangeOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

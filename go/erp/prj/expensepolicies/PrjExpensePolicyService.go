@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "PolicyId", Callback: newPrjExpensePolicyServiceCallback(vnic),
-	}, &prj.PrjExpensePolicy{}, &prj.PrjExpensePolicyList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "PolicyId", newPrjExpensePolicyServiceCallback(vnic),
+		&prj.PrjExpensePolicy{}, &prj.PrjExpensePolicyList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func PrjExpensePolicies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

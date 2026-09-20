@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RfqId", Callback: newRequestForQuotationServiceCallback(vnic),
-	}, &scm.ScmRequestForQuotation{}, &scm.ScmRequestForQuotationList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "RfqId", newRequestForQuotationServiceCallback(vnic),
+		&scm.ScmRequestForQuotation{}, &scm.ScmRequestForQuotationList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Rfqs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

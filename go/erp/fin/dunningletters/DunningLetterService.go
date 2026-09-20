@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "LetterId", Callback: newDunningLetterServiceCallback(vnic),
-	}, &fin.DunningLetter{}, &fin.DunningLetterList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "LetterId", newDunningLetterServiceCallback(vnic),
+		&fin.DunningLetter{}, &fin.DunningLetterList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func DunningLetters(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "LifeEventId", Callback: newLifeEventServiceCallback(vnic),
-	}, &hcm.LifeEvent{}, &hcm.LifeEventList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "LifeEventId", newLifeEventServiceCallback(vnic),
+		&hcm.LifeEvent{}, &hcm.LifeEventList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func LifeEvents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

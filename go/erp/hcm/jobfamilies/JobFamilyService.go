@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "JobFamilyId", Callback: newJobFamilyServiceCallback(vnic),
-	}, &hcm.JobFamily{}, &hcm.JobFamilyList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "JobFamilyId", newJobFamilyServiceCallback(vnic),
+		&hcm.JobFamily{}, &hcm.JobFamilyList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func JobFamilies(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

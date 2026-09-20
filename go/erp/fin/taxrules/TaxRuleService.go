@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RuleId", Callback: newTaxRuleServiceCallback(vnic),
-	}, &fin.TaxRule{}, &fin.TaxRuleList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "RuleId", newTaxRuleServiceCallback(vnic),
+		&fin.TaxRule{}, &fin.TaxRuleList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func TaxRules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

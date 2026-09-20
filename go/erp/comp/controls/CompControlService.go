@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ControlId", Callback: newCompControlServiceCallback(vnic),
-	}, &comp.CompControl{}, &comp.CompControlList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ControlId", newCompControlServiceCallback(vnic),
+		&comp.CompControl{}, &comp.CompControlList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CompControls(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

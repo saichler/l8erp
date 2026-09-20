@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ScenarioId", Callback: newBiScenarioServiceCallback(vnic),
-	}, &bi.BiScenario{}, &bi.BiScenarioList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ScenarioId", newBiScenarioServiceCallback(vnic),
+		&bi.BiScenario{}, &bi.BiScenarioList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func BiScenarios(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

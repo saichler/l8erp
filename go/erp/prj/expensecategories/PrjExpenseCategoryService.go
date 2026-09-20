@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CategoryId", Callback: newPrjExpenseCategoryServiceCallback(vnic),
-	}, &prj.PrjExpenseCategory{}, &prj.PrjExpenseCategoryList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CategoryId", newPrjExpenseCategoryServiceCallback(vnic),
+		&prj.PrjExpenseCategory{}, &prj.PrjExpenseCategoryList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func PrjExpenseCategories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

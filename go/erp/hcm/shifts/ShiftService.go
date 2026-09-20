@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ShiftId", Callback: newShiftServiceCallback(vnic),
-	}, &hcm.Shift{}, &hcm.ShiftList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ShiftId", newShiftServiceCallback(vnic),
+		&hcm.Shift{}, &hcm.ShiftList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Shifts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RecordId", Callback: newTrainingRecordServiceCallback(vnic),
-	}, &hcm.TrainingRecord{}, &hcm.TrainingRecordList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "RecordId", newTrainingRecordServiceCallback(vnic),
+		&hcm.TrainingRecord{}, &hcm.TrainingRecordList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func TrainingRecords(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

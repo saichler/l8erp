@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "HoldId", Callback: newDocLegalHoldServiceCallback(vnic),
-	}, &doc.DocLegalHold{}, &doc.DocLegalHoldList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "HoldId", newDocLegalHoldServiceCallback(vnic),
+		&doc.DocLegalHold{}, &doc.DocLegalHoldList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func DocLegalHolds(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

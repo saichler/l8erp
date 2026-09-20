@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "SafetyStockId", Callback: newSafetyStockServiceCallback(vnic),
-	}, &scm.ScmSafetyStock{}, &scm.ScmSafetyStockList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "SafetyStockId", newSafetyStockServiceCallback(vnic),
+		&scm.ScmSafetyStock{}, &scm.ScmSafetyStockList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func SafetyStocks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

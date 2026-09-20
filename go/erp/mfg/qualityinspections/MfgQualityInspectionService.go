@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "InspectionId", Callback: newMfgQualityInspectionServiceCallback(vnic),
-	}, &mfg.MfgQualityInspection{}, &mfg.MfgQualityInspectionList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "InspectionId", newMfgQualityInspectionServiceCallback(vnic),
+		&mfg.MfgQualityInspection{}, &mfg.MfgQualityInspectionList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func MfgQualityInspections(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

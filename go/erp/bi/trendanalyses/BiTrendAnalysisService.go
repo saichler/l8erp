@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "AnalysisId", Callback: newBiTrendAnalysisServiceCallback(vnic),
-	}, &bi.BiTrendAnalysis{}, &bi.BiTrendAnalysisList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "AnalysisId", newBiTrendAnalysisServiceCallback(vnic),
+		&bi.BiTrendAnalysis{}, &bi.BiTrendAnalysisList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func BiTrendAnalyses(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

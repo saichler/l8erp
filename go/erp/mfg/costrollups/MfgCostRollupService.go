@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RollupId", Callback: newMfgCostRollupServiceCallback(vnic),
-	}, &mfg.MfgCostRollup{}, &mfg.MfgCostRollupList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "RollupId", newMfgCostRollupServiceCallback(vnic),
+		&mfg.MfgCostRollup{}, &mfg.MfgCostRollupList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func MfgCostRollups(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

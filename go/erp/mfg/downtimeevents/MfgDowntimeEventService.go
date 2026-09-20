@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "EventId", Callback: newMfgDowntimeEventServiceCallback(vnic),
-	}, &mfg.MfgDowntimeEvent{}, &mfg.MfgDowntimeEventList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "EventId", newMfgDowntimeEventServiceCallback(vnic),
+		&mfg.MfgDowntimeEvent{}, &mfg.MfgDowntimeEventList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func MfgDowntimeEvents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

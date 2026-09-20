@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "InvoiceId", Callback: newPurchaseInvoiceServiceCallback(vnic),
-	}, &fin.PurchaseInvoice{}, &fin.PurchaseInvoiceList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "InvoiceId", newPurchaseInvoiceServiceCallback(vnic),
+		&fin.PurchaseInvoice{}, &fin.PurchaseInvoiceList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func PurchaseInvoices(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

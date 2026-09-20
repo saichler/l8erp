@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ProductId", Callback: newLendProductServiceCallback(vnic),
-	}, &lend.LendProduct{}, &lend.LendProductList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ProductId", newLendProductServiceCallback(vnic),
+		&lend.LendProduct{}, &lend.LendProductList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func LendProducts(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

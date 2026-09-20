@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "StatusId", Callback: newPrjStatusReportServiceCallback(vnic),
-	}, &prj.PrjStatusReport{}, &prj.PrjStatusReportList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "StatusId", newPrjStatusReportServiceCallback(vnic),
+		&prj.PrjStatusReport{}, &prj.PrjStatusReportList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func PrjStatusReports(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

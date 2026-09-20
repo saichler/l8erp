@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ArticleId", Callback: newCrmKBArticleServiceCallback(vnic),
-	}, &crm.CrmKBArticle{}, &crm.CrmKBArticleList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ArticleId", newCrmKBArticleServiceCallback(vnic),
+		&crm.CrmKBArticle{}, &crm.CrmKBArticleList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CrmKBArticles(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

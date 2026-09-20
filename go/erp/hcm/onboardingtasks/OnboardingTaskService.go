@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TaskId", Callback: newOnboardingTaskServiceCallback(vnic),
-	}, &hcm.OnboardingTask{}, &hcm.OnboardingTaskList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "TaskId", newOnboardingTaskServiceCallback(vnic),
+		&hcm.OnboardingTask{}, &hcm.OnboardingTaskList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func OnboardingTasks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

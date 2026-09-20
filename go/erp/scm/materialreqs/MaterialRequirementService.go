@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RequirementId", Callback: newMaterialRequirementServiceCallback(vnic),
-	}, &scm.ScmMaterialRequirement{}, &scm.ScmMaterialRequirementList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "RequirementId", newMaterialRequirementServiceCallback(vnic),
+		&scm.ScmMaterialRequirement{}, &scm.ScmMaterialRequirementList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func MaterialRequirements(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CubeId", Callback: newBiDataCubeServiceCallback(vnic),
-	}, &bi.BiDataCube{}, &bi.BiDataCubeList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CubeId", newBiDataCubeServiceCallback(vnic),
+		&bi.BiDataCube{}, &bi.BiDataCubeList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func BiDataCubes(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

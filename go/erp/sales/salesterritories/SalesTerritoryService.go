@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TerritoryId", Callback: newSalesTerritoryServiceCallback(vnic),
-	}, &sales.SalesTerritory{}, &sales.SalesTerritoryList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "TerritoryId", newSalesTerritoryServiceCallback(vnic),
+		&sales.SalesTerritory{}, &sales.SalesTerritoryList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func SalesTerritories(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

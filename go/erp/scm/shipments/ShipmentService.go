@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ShipmentId", Callback: newShipmentServiceCallback(vnic),
-	}, &scm.ScmShipment{}, &scm.ScmShipmentList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ShipmentId", newShipmentServiceCallback(vnic),
+		&scm.ScmShipment{}, &scm.ScmShipmentList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Shipments(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

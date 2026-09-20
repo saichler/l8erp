@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "MethodId", Callback: newEcomShippingMethodServiceCallback(vnic),
-	}, &ecom.EcomShippingMethod{}, &ecom.EcomShippingMethodList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "MethodId", newEcomShippingMethodServiceCallback(vnic),
+		&ecom.EcomShippingMethod{}, &ecom.EcomShippingMethodList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func EcomShippingMethods(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

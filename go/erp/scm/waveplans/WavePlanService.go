@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "WavePlanId", Callback: newWavePlanServiceCallback(vnic),
-	}, &scm.ScmWavePlan{}, &scm.ScmWavePlanList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "WavePlanId", newWavePlanServiceCallback(vnic),
+		&scm.ScmWavePlan{}, &scm.ScmWavePlanList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func WavePlans(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

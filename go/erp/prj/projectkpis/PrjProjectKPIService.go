@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "KpiId", Callback: newPrjProjectKPIServiceCallback(vnic),
-	}, &prj.PrjProjectKPI{}, &prj.PrjProjectKPIList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "KpiId", newPrjProjectKPIServiceCallback(vnic),
+		&prj.PrjProjectKPI{}, &prj.PrjProjectKPIList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func PrjProjectKPIs(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "TemplateId", Callback: newBiReportTemplateServiceCallback(vnic),
-	}, &bi.BiReportTemplate{}, &bi.BiReportTemplateList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "TemplateId", newBiReportTemplateServiceCallback(vnic),
+		&bi.BiReportTemplate{}, &bi.BiReportTemplateList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func BiReportTemplates(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

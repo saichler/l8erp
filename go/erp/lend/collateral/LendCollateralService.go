@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CollateralId", Callback: newLendCollateralServiceCallback(vnic),
-	}, &lend.LendCollateral{}, &lend.LendCollateralList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CollateralId", newLendCollateralServiceCallback(vnic),
+		&lend.LendCollateral{}, &lend.LendCollateralList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func LendCollaterals(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

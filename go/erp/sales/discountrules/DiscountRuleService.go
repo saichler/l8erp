@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RuleId", Callback: newDiscountRuleServiceCallback(vnic),
-	}, &sales.SalesDiscountRule{}, &sales.SalesDiscountRuleList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "RuleId", newDiscountRuleServiceCallback(vnic),
+		&sales.SalesDiscountRule{}, &sales.SalesDiscountRuleList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func DiscountRules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

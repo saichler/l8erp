@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "EmployeeCertificationId", Callback: newEmployeeCertificationServiceCallback(vnic),
-	}, &hcm.EmployeeCertification{}, &hcm.EmployeeCertificationList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "EmployeeCertificationId", newEmployeeCertificationServiceCallback(vnic),
+		&hcm.EmployeeCertification{}, &hcm.EmployeeCertificationList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func EmployeeCertifications(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CapexId", Callback: newCapitalExpenditureServiceCallback(vnic),
-	}, &fin.CapitalExpenditure{}, &fin.CapitalExpenditureList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CapexId", newCapitalExpenditureServiceCallback(vnic),
+		&fin.CapitalExpenditure{}, &fin.CapitalExpenditureList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func CapitalExpenditures(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

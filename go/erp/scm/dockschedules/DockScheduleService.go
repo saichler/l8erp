@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "ScheduleId", Callback: newDockScheduleServiceCallback(vnic),
-	}, &scm.ScmDockSchedule{}, &scm.ScmDockScheduleList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ScheduleId", newDockScheduleServiceCallback(vnic),
+		&scm.ScmDockSchedule{}, &scm.ScmDockScheduleList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func DockSchedules(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

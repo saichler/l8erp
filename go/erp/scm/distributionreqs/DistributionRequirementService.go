@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "RequirementId", Callback: newDistributionRequirementServiceCallback(vnic),
-	}, &scm.ScmDistributionRequirement{}, &scm.ScmDistributionRequirementList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "RequirementId", newDistributionRequirementServiceCallback(vnic),
+		&scm.ScmDistributionRequirement{}, &scm.ScmDistributionRequirementList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func DistributionRequirements(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

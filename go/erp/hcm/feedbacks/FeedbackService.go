@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "FeedbackId", Callback: newFeedbackServiceCallback(vnic),
-	}, &hcm.Feedback{}, &hcm.FeedbackList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "FeedbackId", newFeedbackServiceCallback(vnic),
+		&hcm.Feedback{}, &hcm.FeedbackList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func Feedbacks(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

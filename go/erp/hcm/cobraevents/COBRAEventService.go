@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "CobraEventId", Callback: newCOBRAEventServiceCallback(vnic),
-	}, &hcm.COBRAEvent{}, &hcm.COBRAEventList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "CobraEventId", newCOBRAEventServiceCallback(vnic),
+		&hcm.COBRAEvent{}, &hcm.COBRAEventList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func COBRAEvents(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {

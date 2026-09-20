@@ -25,10 +25,9 @@ const (
 )
 
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	common.ActivateService(common.ServiceConfig{
-		ServiceName: ServiceName, ServiceArea: ServiceArea,
-		PrimaryKey: "BlanketOrderId", Callback: newBlanketOrderServiceCallback(vnic),
-	}, &scm.ScmBlanketOrder{}, &scm.ScmBlanketOrderList{}, creds, dbname, vnic)
+	sla := common.NewOrmSLA(ServiceName, ServiceArea, "BlanketOrderId", newBlanketOrderServiceCallback(vnic),
+		&scm.ScmBlanketOrder{}, &scm.ScmBlanketOrderList{})
+	common.ActivateService(sla, creds, dbname, vnic)
 }
 
 func BlanketOrders(vnic ifs.IVNic) (ifs.IServiceHandler, bool) {
