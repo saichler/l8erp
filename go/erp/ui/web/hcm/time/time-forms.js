@@ -17,8 +17,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Basic Information', [
                 ...f.reference('employeeId', 'Employee', 'Employee', true),
                 ...f.select('status', 'Status', enums.TIMESHEET_STATUS, true),
-                ...f.date('period.startDate', 'Period Start'),
-                ...f.date('period.endDate', 'Period End'),
                 ...f.date('submittedDate', 'Submitted Date'),
                 ...f.text('submittedBy', 'Submitted By'),
                 ...f.text('approvedBy', 'Approved By'),
@@ -157,8 +155,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             f.section('Basic Information', [
                 ...f.reference('employeeId', 'Employee', 'Employee', true),
                 ...f.select('status', 'Status', enums.SCHEDULE_STATUS, true),
-                ...f.date('period.startDate', 'Period Start'),
-                ...f.date('period.endDate', 'Period End'),
                 ...f.text('publishedBy', 'Published By'),
                 ...f.date('publishedDate', 'Published Date'),
             ]),

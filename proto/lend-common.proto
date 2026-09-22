@@ -205,7 +205,7 @@ message ApplicationDocument {
   int64 uploaded_date = 9;
 }
 
-message PaymentAllocation {
+message LendPaymentAllocation {
   string allocation_id = 1;
   l8common.Money principal = 2;
   l8common.Money interest = 3;

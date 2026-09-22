@@ -40,8 +40,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.col('warehouseId', 'Warehouse'),
             ...col.date('countDate', 'Count Date'),
             ...col.enum('status', 'Status', null, render.taskStatus),
-            ...col.custom('itemsCounted', 'Items Counted', (item) => item.itemsCounted, { sortKey: 'itemsCounted' }),
-            ...col.custom('discrepancies', 'Discrepancies', (item) => item.discrepancies, { sortKey: 'discrepancies' })
+            ...col.custom('itemsCounted', 'Items Counted', (item) => String(item.itemsCounted ?? ''), { sortKey: 'itemsCounted' }),
+            ...col.custom('discrepancies', 'Discrepancies', (item) => String(item.discrepancies ?? ''), { sortKey: 'discrepancies' })
         ],
 
     };

@@ -36,7 +36,7 @@ limitations under the License.
             ...col.id('structureId'),
             ...col.basic(['code', 'name', ['currencyId', 'Currency']]),
             ...col.enum('payFrequency', 'Frequency', enums.PAY_FREQUENCY_VALUES, internal.renderPayFrequency),
-            ...col.custom('salaryGradeIds', 'Grades', (item) => item.salaryGradeIds ? item.salaryGradeIds.length : 0, { sortKey: false }),
+            ...col.custom('salaryGradeIds', 'Grades', (item) => String(item.salaryGradeIds ? item.salaryGradeIds.length : 0), { sortKey: false }),
             ...col.date('effectiveDate', 'Effective'),
             ...col.boolean('isActive', 'Active')
         ],
@@ -56,7 +56,7 @@ limitations under the License.
             ...col.basic([['employeeId', 'Employee'], ['meritCycleId', 'Cycle']]),
             ...col.money('currentSalary', 'Current'),
             ...col.money('proposedIncrease', 'Increase'),
-            ...col.custom('proposedPercentage', 'Increase %', (item) => internal.renderPercentageComp(item.proposedPercentage)),
+            ...col.custom('proposedPercentage', 'Increase %', (item) => Layer8DRenderers.renderPercentage(item.proposedPercentage)),
             ...col.enum('status', 'Status', enums.MERIT_INCREASE_STATUS_VALUES, internal.renderMeritIncreaseStatus),
             ...col.col('performanceRating', 'Rating')
         ],
@@ -66,7 +66,7 @@ limitations under the License.
             ...col.basic(['name', 'year']),
             ...col.enum('status', 'Status', enums.MERIT_CYCLE_STATUS_VALUES, internal.renderMeritCycleStatus),
             ...col.money('totalBudget', 'Budget'),
-            ...col.custom('budgetPercentage', 'Budget %', (item) => internal.renderPercentageComp(item.budgetPercentage)),
+            ...col.custom('budgetPercentage', 'Budget %', (item) => Layer8DRenderers.renderPercentage(item.budgetPercentage)),
             ...col.date('effectiveDate', 'Effective')
         ],
 
@@ -76,7 +76,7 @@ limitations under the License.
             ...col.enum('planType', 'Type', enums.BONUS_PLAN_TYPE_VALUES, internal.renderBonusPlanType),
             ...col.col('planYear', 'Year'),
             ...col.enum('frequency', 'Frequency', enums.BONUS_FREQUENCY_VALUES, internal.renderBonusFrequency),
-            ...col.custom('targetPercentage', 'Target %', (item) => internal.renderPercentageComp(item.targetPercentage)),
+            ...col.custom('targetPercentage', 'Target %', (item) => Layer8DRenderers.renderPercentage(item.targetPercentage)),
             ...col.boolean('isActive', 'Active')
         ],
 

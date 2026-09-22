@@ -40,7 +40,7 @@ limitations under the License.
         MfgEngChangeOrder: [
             ...col.id('changeOrderId'),
             ...col.basic([['ecoNumber', 'ECO #'], 'title']),
-            ...col.custom('priority', 'Priority', (item) => item.priority || 'Unknown'),
+            ...col.custom('priority', 'Priority', (item) => String(item.priority ?? 'Unknown')),
             ...col.date('requestDate', 'Request Date'),
             ...col.custom('status', 'Status', (item) => render.ecoStatus(item.status))
         ],

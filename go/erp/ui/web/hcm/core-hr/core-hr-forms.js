@@ -63,8 +63,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.ein('taxId', 'Tax ID (EIN)'),
                 ...f.text('industryCode', 'Industry Code'),
                 ...f.checkbox('isActive', 'Active'),
-                ...f.date('effectiveDate', 'Effective Date'),
-                ...f.date('endDate', 'End Date'),
                 ...f.dateRange()
             ])
         ]),
@@ -79,8 +77,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('managerId', 'Manager', 'Employee'),
                 ...f.text('costCenterId', 'Cost Center'),
                 ...f.checkbox('isActive', 'Active'),
-                ...f.date('effectiveDate', 'Effective Date'),
-                ...f.date('endDate', 'End Date'),
                 ...f.dateRange()
             ])
         ]),
@@ -100,8 +96,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('workLocationId', 'Work Location'),
                 ...f.text('costCenterId', 'Cost Center'),
                 ...f.number('filledCount', 'Filled Count'),
-                ...f.date('effectiveDate', 'Effective Date'),
-                ...f.date('endDate', 'End Date'),
                 ...f.dateRange()
             ])
         ]),
@@ -124,8 +118,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.text('requiredSkills', 'Required Skills'),
                 ...f.text('preferredSkills', 'Preferred Skills'),
                 ...f.text('certificationsRequired', 'Certifications Required'),
-                ...f.date('effectiveDate', 'Effective Date'),
-                ...f.date('endDate', 'End Date'),
                 ...f.dateRange()
             ])
         ]),

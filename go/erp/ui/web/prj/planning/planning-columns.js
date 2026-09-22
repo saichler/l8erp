@@ -23,7 +23,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.enum('priority', 'Priority', null, render.projectPriority),
             ...col.date('startDate', 'Start Date'),
             ...col.date('endDate', 'End Date'),
-            ...col.custom('percentComplete', '% Complete', (item) => item.percentComplete, { sortKey: 'percentComplete' })
+            ...col.custom('percentComplete', '% Complete', (item) => String(item.percentComplete ?? ''), { sortKey: 'percentComplete' })
         ],
 
         PrjProjectTemplate: [

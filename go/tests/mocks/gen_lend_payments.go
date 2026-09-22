@@ -86,7 +86,7 @@ func generateLendPayments(store *MockDataStore) []*lend.LendPayment {
 		feesAmt := int64(float64(payAmount) * (1.0 - principalPct) * 0.15)
 		escrowAmt := payAmount - principalAmt - interestAmt - feesAmt
 
-		payment.Allocations = []*lend.PaymentAllocation{
+		payment.Allocations = []*lend.LendPaymentAllocation{
 			{
 				AllocationId: fmt.Sprintf("alloc-%03d-01", i+1),
 				Principal:    money(store, principalAmt),

@@ -19,8 +19,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.reference('reviewerId', 'Reviewer', 'Employee', true),
                 ...f.select('reviewType', 'Review Type', enums.REVIEW_TYPE, true),
                 ...f.select('status', 'Status', enums.PERFORMANCE_REVIEW_STATUS, true),
-                ...f.date('reviewPeriod.startDate', 'Review Period Start'),
-                ...f.date('reviewPeriod.endDate', 'Review Period End'),
                 ...f.text('trainingRecommendations', 'Training Recommendations'),
                 ...f.date('employeeAcknowledgedDate', 'Employee Acknowledged Date'),
                 ...f.date('managerSubmittedDate', 'Manager Submitted Date'),

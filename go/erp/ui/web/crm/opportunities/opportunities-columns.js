@@ -21,7 +21,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.col('accountId', 'Account'),
             ...col.money('amount', 'Amount'),
             ...col.enum('stage', 'Stage', null, render.salesStage),
-            ...col.custom('probability', 'Probability %', (item) => item.probability, { sortKey: 'probability' }),
+            ...col.custom('probability', 'Probability %', (item) => String(item.probability ?? ''), { sortKey: 'probability' }),
             ...col.date('closeDate', 'Close Date'),
             ...col.enum('status', 'Status', null, render.opportunityStatus)
         ],
@@ -29,12 +29,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         CrmOppStage: [
             ...col.id('stageId'),
             ...col.col('name', 'Name'),
-            ...col.custom('sequence', 'Sequence', (item) => item.sequence, { sortKey: 'sequence' }),
-            ...col.custom('probability', 'Probability %', (item) => item.probability, { sortKey: 'probability' }),
+            ...col.custom('sequence', 'Sequence', (item) => String(item.sequence ?? ''), { sortKey: 'sequence' }),
+            ...col.custom('probability', 'Probability %', (item) => String(item.probability ?? ''), { sortKey: 'probability' }),
             ...col.col('forecastCategory', 'Forecast Category'),
-            ...col.custom('isClosed', 'Closed', (item) => item.isClosed, { sortKey: 'isClosed' }),
-            ...col.custom('isWon', 'Won', (item) => item.isWon, { sortKey: 'isWon' }),
-            ...col.custom('isActive', 'Active', (item) => item.isActive, { sortKey: 'isActive' })
+            ...col.custom('isClosed', 'Closed', (item) => String(item.isClosed ?? ''), { sortKey: 'isClosed' }),
+            ...col.custom('isWon', 'Won', (item) => String(item.isWon ?? ''), { sortKey: 'isWon' }),
+            ...col.custom('isActive', 'Active', (item) => String(item.isActive ?? ''), { sortKey: 'isActive' })
         ],
 
     };

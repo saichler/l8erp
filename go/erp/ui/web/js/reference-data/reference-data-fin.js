@@ -37,7 +37,7 @@ limitations under the License.
         ...ref.coded('Vendor', 'vendorId', 'vendorNumber', 'name'),
         ...ref.simple('PurchaseInvoice', 'invoiceId', 'invoiceNumber'),
         ...ref.idOnly('PaymentSchedule', 'scheduleId'),
-        ...ref.simple('VendorPayment', 'paymentId', 'paymentNumber'),
+        ...ref.simple('VendorPayment', 'paymentId', 'checkNumber'),
         ...ref.idOnly('VendorStatement', 'statementId'),
 
         // ========================================
@@ -46,7 +46,7 @@ limitations under the License.
         ...ref.coded('Customer', 'customerId', 'customerNumber', 'name'),
         ...ref.coded('SalesCustomer', 'customerId', 'customerNumber', 'name'),  // Alias
         ...ref.simple('SalesInvoice', 'invoiceId', 'invoiceNumber'),
-        ...ref.simple('CustomerPayment', 'paymentId', 'paymentNumber'),
+        ...ref.simple('CustomerPayment', 'paymentId', 'checkNumber'),
         ...ref.simple('CreditMemo', 'creditMemoId', 'memoNumber'),
         ...ref.idOnly('DunningLetter', 'letterId'),
 
@@ -67,7 +67,7 @@ limitations under the License.
         // Financial Management - Budgeting
         // ========================================
         ...ref.simple('Budget', 'budgetId', 'budgetName', 'Budget'),
-        ...ref.simple('CapitalExpenditure', 'capexId', 'name'),
+        ...ref.simple('CapitalExpenditure', 'capexId', 'projectName'),
         ...ref.idOnly('Forecast', 'forecastId'),
 
         // ========================================

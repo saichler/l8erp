@@ -24,7 +24,7 @@ limitations under the License.
         // ========================================
         // Documents - Storage
         // ========================================
-        ...ref.simple('DocDocument', 'documentId', 'title', 'Document'),
+        ...ref.simple('DocDocument', 'documentId', 'name', 'Document'),
         ...ref.simple('DocFolder', 'folderId', 'name'),
         ...ref.simple('DocCategory', 'categoryId', 'name'),
         ...ref.simple('DocTag', 'tagId', 'name'),

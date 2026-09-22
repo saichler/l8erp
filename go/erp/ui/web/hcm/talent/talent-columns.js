@@ -29,9 +29,9 @@ limitations under the License.
             ...col.id('reviewId'),
             ...col.basic([['employeeId', 'Employee'], ['reviewerId', 'Reviewer']]),
             ...col.enum('reviewType', 'Type', enums.REVIEW_TYPE_VALUES, (v) => renderEnum(v, enums.REVIEW_TYPE)),
-            ...col.custom('reviewPeriod', 'Period', (item) => internal.renderReviewPeriod(item.reviewPeriod), { sortKey: false }),
+            ...col.period('reviewPeriod', 'Period'),
             ...col.enum('status', 'Status', enums.PERFORMANCE_REVIEW_STATUS_VALUES, internal.renderPerformanceReviewStatus),
-            ...col.custom('overallRating', 'Rating', (item) => internal.renderRating(item.overallRating))
+            ...col.custom('overallRating', 'Rating', (item) => Layer8DRenderers.renderRating(item.overallRating))
         ],
 
         Goal: [
@@ -40,7 +40,7 @@ limitations under the License.
             ...col.enum('goalType', 'Type', enums.GOAL_TYPE_VALUES, (v) => renderEnum(v, enums.GOAL_TYPE)),
             ...col.enum('priority', 'Priority', enums.GOAL_PRIORITY_VALUES, internal.renderGoalPriority),
             ...col.enum('status', 'Status', enums.GOAL_STATUS_VALUES, internal.renderGoalStatus),
-            ...col.custom('completionPercentage', 'Progress', (item) => internal.renderPercentage(item.completionPercentage)),
+            ...col.custom('completionPercentage', 'Progress', (item) => Layer8DRenderers.renderPercentage(item.completionPercentage)),
             ...col.date('dueDate', 'Due Date')
         ],
 
@@ -56,7 +56,7 @@ limitations under the License.
         CareerPath: [
             ...col.id('careerPathId'),
             ...col.basic(['name', ['jobFamilyId', 'Job Family'], 'description']),
-            ...col.custom('steps', 'Steps', (item) => item.steps ? item.steps.length : 0, { sortKey: false }),
+            ...col.custom('steps', 'Steps', (item) => String(item.steps ? item.steps.length : 0), { sortKey: false }),
             ...col.boolean('isActive', 'Active')
         ],
 
@@ -65,7 +65,7 @@ limitations under the License.
             ...col.basic([['positionId', 'Position'], ['incumbentId', 'Incumbent']]),
             ...col.enum('status', 'Status', enums.SUCCESSION_PLAN_STATUS_VALUES, internal.renderSuccessionPlanStatus),
             ...col.enum('vacancyRisk', 'Vacancy Risk', enums.RISK_LEVEL_VALUES, internal.renderRiskLevel),
-            ...col.custom('candidates', 'Candidates', (item) => item.candidates ? item.candidates.length : 0, { sortKey: false }),
+            ...col.custom('candidates', 'Candidates', (item) => String(item.candidates ? item.candidates.length : 0), { sortKey: false }),
             ...col.date('nextReviewDate', 'Next Review')
         ],
 
@@ -92,7 +92,7 @@ limitations under the License.
             ...col.basic([['applicantId', 'Applicant'], ['requisitionId', 'Requisition']]),
             ...col.enum('status', 'Status', enums.APPLICATION_STATUS_VALUES, internal.renderApplicationStatus),
             ...col.enum('stage', 'Stage', enums.APPLICATION_STAGE_VALUES, (v) => renderEnum(v, enums.APPLICATION_STAGE)),
-            ...col.custom('overallRating', 'Rating', (item) => internal.renderRating(item.overallRating)),
+            ...col.custom('overallRating', 'Rating', (item) => Layer8DRenderers.renderRating(item.overallRating)),
             ...col.date('appliedDate', 'Applied')
         ],
 

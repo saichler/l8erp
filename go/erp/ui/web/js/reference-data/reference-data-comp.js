@@ -37,7 +37,7 @@ limitations under the License.
         // ========================================
         // Compliance - Risk Management
         // ========================================
-        ...ref.coded('CompRiskRegister', 'riskId', 'riskNumber', 'name'),
+        ...ref.coded('CompRiskRegister', 'riskId', 'code', 'title'),
         ...ref.coded('CompIncident', 'incidentId', 'incidentNumber', 'title'),
         ...ref.coded('CompInsurancePolicy', 'insuranceId', 'policyNumber', 'name'),
 

@@ -108,7 +108,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 ...f.checkbox('exempt', 'Exempt'),
                 ...f.date('effectiveDate', 'Effective Date'),
                 ...f.date('signedDate', 'Signed Date'),
-                ...f.checkbox('useNewW4', 'Use New W4'),
                 ...f.money('additionalWithholding', 'Additional Withholding'),
             ])
         ]),

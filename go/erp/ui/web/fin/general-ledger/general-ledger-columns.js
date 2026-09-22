@@ -52,7 +52,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
             ...col.id('exchangeRateId'),
             ...col.col('fromCurrencyId', 'From'),
             ...col.col('toCurrencyId', 'To'),
-            ...col.custom('rate', 'Rate', (item) => item.rate, { sortKey: 'rate' }),
+            ...col.custom('rate', 'Rate', (item) => String(item.rate ?? ''), { sortKey: 'rate' }),
             ...col.date('effectiveDate', 'Effective')
         ]
     };

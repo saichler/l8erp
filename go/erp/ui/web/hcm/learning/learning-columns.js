@@ -48,7 +48,7 @@ limitations under the License.
             ...col.id('enrollmentId'),
             ...col.basic([['employeeId', 'Employee'], ['courseId', 'Course']]),
             ...col.enum('status', 'Status', enums.COURSE_ENROLLMENT_STATUS_VALUES, internal.renderCourseEnrollmentStatus),
-            ...col.custom('progressPercentage', 'Progress', (item) => internal.renderPercentageLearning(item.progressPercentage)),
+            ...col.custom('progressPercentage', 'Progress', (item) => Layer8DRenderers.renderPercentage(item.progressPercentage)),
             ...col.col('score', 'Score'),
             ...col.custom('passed', 'Passed', (item) => renderBoolean(item.passed, { trueText: 'Pass', falseText: 'Fail' })),
             ...col.date('dueDate', 'Due Date')

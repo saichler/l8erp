@@ -45,7 +45,7 @@ message LendPayment {
   bool is_late = 14;
   l8common.Money late_fee = 15;
   string notes = 16;
-  repeated PaymentAllocation allocations = 40;
+  repeated LendPaymentAllocation allocations = 40;
   l8common.AuditInfo audit_info = 50;
   map<string, string> custom_fields = 51;
 }

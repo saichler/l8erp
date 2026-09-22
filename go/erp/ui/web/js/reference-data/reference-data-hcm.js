@@ -53,7 +53,7 @@ limitations under the License.
         ...ref.idOnly('BenefitEnrollment', 'enrollmentId'),
         ...ref.simple('Carrier', 'carrierId', 'name'),
         ...ref.person('Dependent', 'dependentId'),
-        ...ref.simple('LifeEvent', 'eventId', 'eventType'),
+        ...ref.simple('LifeEvent', 'lifeEventId', 'eventType'),
         ...ref.idOnly('COBRAEvent', 'cobraEventId'),
 
         // ========================================
@@ -98,12 +98,12 @@ limitations under the License.
         // ========================================
         // Payroll Models
         // ========================================
-        ...ref.simple('PayStructure', 'structureId', 'name'),
+        ...ref.simple('PayStructure', 'payStructureId', 'payFrequency'),
         ...ref.simple('PayComponent', 'componentId', 'name'),
         ...ref.idOnly('PayrollRun', 'payrollRunId'),
         ...ref.idOnly('Payslip', 'payslipId'),
         ...ref.idOnly('TaxWithholding', 'withholdingId'),
-        ...ref.idOnly('DirectDeposit', 'depositId'),
+        ...ref.idOnly('DirectDeposit', 'directDepositId'),
         ...ref.idOnly('Garnishment', 'garnishmentId'),
         ...ref.simple('YearEndDocument', 'documentId', 'documentType')
     };

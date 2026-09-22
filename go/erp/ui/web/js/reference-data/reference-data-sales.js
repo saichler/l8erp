@@ -27,7 +27,7 @@ limitations under the License.
         ...ref.simple('SalesCustomerHierarchy', 'hierarchyId', 'name', 'Hierarchy'),
         ...ref.simple('SalesCustomerSegment', 'segmentId', 'name', 'Segment'),
         ...ref.simple('SalesCustomerContract', 'contractId', 'contractNumber', 'Contract'),
-        ...ref.simple('SalesPartnerChannel', 'channelId', 'name', 'Channel'),
+        ...ref.simple('SalesPartnerChannel', 'partnerId', 'contactName', 'Channel'),
 
         // ========================================
         // Sales - Pricing Models

@@ -27,7 +27,7 @@ limitations under the License.
         Timesheet: [
             ...col.id('timesheetId'),
             ...col.col('employeeId', 'Employee'),
-            ...col.custom('period', 'Period', (item) => internal.renderTimePeriod(item.period), { sortKey: false }),
+            ...col.period('period', 'Period'),
             ...col.enum('status', 'Status', enums.TIMESHEET_STATUS_VALUES, internal.renderTimesheetStatus),
             ...col.custom('totalRegularHours', 'Regular', (item) => internal.renderHoursTime(item.totalRegularHours)),
             ...col.custom('totalOvertimeHours', 'Overtime', (item) => internal.renderHoursTime(item.totalOvertimeHours)),
@@ -75,7 +75,7 @@ limitations under the License.
         Schedule: [
             ...col.id('scheduleId'),
             ...col.col('employeeId', 'Employee'),
-            ...col.custom('period', 'Period', (item) => internal.renderTimePeriod(item.period), { sortKey: false }),
+            ...col.period('period', 'Period'),
             ...col.enum('status', 'Status', enums.SCHEDULE_STATUS_VALUES, internal.renderScheduleStatus),
             ...col.custom('totalScheduledHours', 'Scheduled Hours', (item) => internal.renderHoursTime(item.totalScheduledHours)),
             ...col.date('publishedDate', 'Published')
