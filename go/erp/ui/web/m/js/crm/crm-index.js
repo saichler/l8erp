@@ -18,5 +18,6 @@ Layer8MModuleRegistry.create('MobileCrm', {
     'Accounts': CrmAccounts,
     'Marketing': CrmMarketing,
     'Service': CrmService,
-    'Field Service': CrmFieldService
+    'Field Service': CrmFieldService,
+    'Reports': CrmReports
 });

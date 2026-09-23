@@ -19,5 +19,6 @@ Layer8MModuleRegistry.create('MobileFIN', {
     'Cash Management': CashManagement,
     'Fixed Assets': FixedAssets,
     'Budgeting': Budgeting,
-    'Tax Management': TaxManagement
+    'Tax Management': TaxManagement,
+    'Reports': FinReports
 });

@@ -16,38 +16,39 @@ package prjreports
 
 import (
 	"fmt"
-	"time"
 
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
+	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newPrjReportServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
-	generateOnPost := func(vi interface{}, action ifs.Action, _ ifs.IVNic) error { report := vi.(*fin.FinReport);
-		if action != ifs.POST {
-			return nil
-		}
-		report.GeneratedAt = time.Now().Unix()
-		return generatePrjReport(report, vnic)
+// prjReportAccessors adapts PrjReport for the shared report service: the id is
+// generated on POST, the generation time stamped, then the module's own
+// dispatch fills the sections.
+//
+// vnic is the activating nic, captured here so a generator queries through the
+// same connection the service was activated on.
+func prjReportAccessors(vnic ifs.IVNic) common.ReportAccessors {
+	return common.ReportAccessors{
+		TypeName:       "PrjReport",
+		Is:             func(v interface{}) bool { _, ok := v.(*prj.PrjReport); return ok },
+		SetID:          func(v interface{}) { common.GenerateID(&v.(*prj.PrjReport).ReportId) },
+		SetGeneratedAt: func(v interface{}, at int64) { v.(*prj.PrjReport).GeneratedAt = at },
+		Generate: func(v interface{}, _ ifs.IVNic) error {
+			return generatePrjReport(v.(*prj.PrjReport), vnic)
+		},
 	}
-	return common.NewServiceCallback("FinReport",
-		func(v interface{}) bool { _, ok := v.(*fin.FinReport); return ok },
-		func(v interface{}) { common.GenerateID(&v.(*fin.FinReport).ReportId) },
-		nil,
-		func(v interface{}, action ifs.Action, vnic ifs.IVNic) error { return generateOnPost(v.(*fin.FinReport), action, vnic) },
-	)
 }
 
-func generatePrjReport(report *fin.FinReport, vnic ifs.IVNic) error {
+func generatePrjReport(report *prj.PrjReport, vnic ifs.IVNic) error {
 	switch report.ReportType {
-	case fin.FinReportType(1):
+	case prj.PrjReportType_PRJ_REPORT_TYPE_PROJECT_BUDGET:
 		report.Title = "Project Budget Summary"
 		return generateProjectBudget(report, vnic)
-	case fin.FinReportType(2):
+	case prj.PrjReportType_PRJ_REPORT_TYPE_RESOURCE_UTILIZATION:
 		report.Title = "Resource Utilization"
 		return generateResourceUtilization(report, vnic)
-	case fin.FinReportType(3):
+	case prj.PrjReportType_PRJ_REPORT_TYPE_MILESTONE_TRACKING:
 		report.Title = "Milestone Tracking"
 		return generateMilestoneTracking(report, vnic)
 	default:

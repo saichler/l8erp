@@ -59,9 +59,9 @@ Layer8ModuleConfigFactory.create({
         'reports': {
             label: 'Reports', icon: '📊',
             services: [
-                { key: 'module-reports', label: 'Reports', endpoint: '/70/MfgReport', model: 'FinReport' }
+                { key: 'module-reports', label: 'Reports', endpoint: '/70/MfgReport', model: 'MfgReport' }
             ]
         }
     },
-    submodules: ['MfgEngineering', 'MfgProduction', 'MfgShopFloor', 'MfgQuality', 'MfgPlanning', 'MfgCosting', 'Reports']
+    submodules: ['MfgEngineering', 'MfgProduction', 'MfgShopFloor', 'MfgQuality', 'MfgPlanning', 'MfgCosting', 'MfgReports']
 });

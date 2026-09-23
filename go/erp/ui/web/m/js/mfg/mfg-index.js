@@ -18,5 +18,6 @@ Layer8MModuleRegistry.create('MobileMfg', {
     'Shop Floor': MfgShopFloor,
     'Quality': MfgQuality,
     'Planning': MfgPlanning,
-    'Costing': MfgCosting
+    'Costing': MfgCosting,
+    'Reports': MfgReports
 });

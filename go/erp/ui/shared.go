@@ -111,4 +111,7 @@ func registerHcmTypes(resources ifs.IResources) {
 	common.RegisterType(resources, &hcm.EquityGrant{}, &hcm.EquityGrantList{}, "GrantId")
 	common.RegisterType(resources, &hcm.CompensationStatement{}, &hcm.CompensationStatementList{}, "StatementId")
 	common.RegisterType(resources, &hcm.MarketBenchmark{}, &hcm.MarketBenchmarkList{}, "BenchmarkId")
+
+	// Reports
+	common.RegisterType(resources, &hcm.HcmReport{}, &hcm.HcmReportList{}, "ReportId")
 }

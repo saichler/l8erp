@@ -35,4 +35,6 @@ func registerSalesTypes(resources ifs.IResources) {
 	common.RegisterType(resources, &sales.SalesTerritory{}, &sales.SalesTerritoryList{}, "TerritoryId")
 	common.RegisterType(resources, &sales.SalesCommissionPlan{}, &sales.SalesCommissionPlanList{}, "PlanId")
 	common.RegisterType(resources, &sales.SalesForecast{}, &sales.SalesForecastList{}, "ForecastId")
+	// Reports
+	common.RegisterType(resources, &sales.SalesReport{}, &sales.SalesReportList{}, "ReportId")
 }

@@ -16,38 +16,39 @@ package scmreports
 
 import (
 	"fmt"
-	"time"
 
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
+	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newScmReportCallback(vnic ifs.IVNic) ifs.IServiceCallback {
-	generateOnPost := func(vi interface{}, action ifs.Action, _ ifs.IVNic) error { report := vi.(*fin.FinReport);
-		if action != ifs.POST {
-			return nil
-		}
-		report.GeneratedAt = time.Now().Unix()
-		return generateScmReport(report, vnic)
+// scmReportAccessors adapts ScmReport for the shared report service: the id is
+// generated on POST, the generation time stamped, then the module's own
+// dispatch fills the sections.
+//
+// vnic is the activating nic, captured here so a generator queries through the
+// same connection the service was activated on.
+func scmReportAccessors(vnic ifs.IVNic) common.ReportAccessors {
+	return common.ReportAccessors{
+		TypeName:       "ScmReport",
+		Is:             func(v interface{}) bool { _, ok := v.(*scm.ScmReport); return ok },
+		SetID:          func(v interface{}) { common.GenerateID(&v.(*scm.ScmReport).ReportId) },
+		SetGeneratedAt: func(v interface{}, at int64) { v.(*scm.ScmReport).GeneratedAt = at },
+		Generate: func(v interface{}, _ ifs.IVNic) error {
+			return generateScmReport(v.(*scm.ScmReport), vnic)
+		},
 	}
-	return common.NewServiceCallback("ScmReport",
-		func(v interface{}) bool { _, ok := v.(*fin.FinReport); return ok },
-		func(v interface{}) { common.GenerateID(&v.(*fin.FinReport).ReportId) },
-		nil,
-		func(v interface{}, action ifs.Action, vnic ifs.IVNic) error { return generateOnPost(v.(*fin.FinReport), action, vnic) },
-	)
 }
 
-func generateScmReport(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateScmReport(report *scm.ScmReport, vnic ifs.IVNic) error {
 	switch report.ReportType {
-	case fin.FinReportType_FIN_REPORT_TYPE_BALANCE_SHEET:
+	case scm.ScmReportType_SCM_REPORT_TYPE_INVENTORY_VALUATION:
 		report.Title = "Inventory Valuation"
 		return generateInventoryValuation(report, vnic)
-	case fin.FinReportType_FIN_REPORT_TYPE_INCOME_STATEMENT:
+	case scm.ScmReportType_SCM_REPORT_TYPE_PURCHASE_ORDER_SUMMARY:
 		report.Title = "Purchase Order Summary"
 		return generatePurchaseOrderSummary(report, vnic)
-	case fin.FinReportType_FIN_REPORT_TYPE_TRIAL_BALANCE:
+	case scm.ScmReportType_SCM_REPORT_TYPE_STOCK_BY_WAREHOUSE:
 		report.Title = "Stock by Warehouse"
 		return generateStockByWarehouse(report, vnic)
 	default:

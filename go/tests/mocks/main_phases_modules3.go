@@ -18,6 +18,9 @@ func runPRJPhases(client *HCMClient, store *MockDataStore) {
 	runPhase("PRJ Phase 6: Billing (with milestones/lines)", func() error { return generatePrjPhase6(client, store) })
 
 	runPhase("PRJ Phase 7: Analytics", func() error { return generatePrjPhase7(client, store) })
+
+	// Last: the POST runs the module generator against everything above.
+	runPhase("Project Reports", func() error { return generatePrjReportsPhase(client, store) })
 }
 
 func runBIPhases(client *HCMClient, store *MockDataStore) {

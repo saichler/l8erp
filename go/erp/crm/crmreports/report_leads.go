@@ -18,17 +18,18 @@ import (
 	"fmt"
 
 	l8common "github.com/saichler/l8common/go/types/l8common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 
 	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func generateLeadConversion(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateLeadConversion(report *crm.CrmReport, vnic ifs.IVNic) error {
 	leadsRaw, err := common.GetEntities("CrmLead", 80, &crm.CrmLead{}, vnic)
 	leads := make([]*crm.CrmLead, 0, len(leadsRaw))
-	for _, ri := range leadsRaw { leads = append(leads, ri.(*crm.CrmLead)) }
+	for _, ri := range leadsRaw {
+		leads = append(leads, ri.(*crm.CrmLead))
+	}
 	if err != nil {
 		return err
 	}
@@ -38,17 +39,17 @@ func generateLeadConversion(report *fin.FinReport, vnic ifs.IVNic) error {
 		counts[lead.Status]++
 	}
 
-	section := &fin.FinReportSection{
+	section := &crm.CrmReportSection{
 		Title:        "Lead Conversion Summary",
 		SectionTotal: &l8common.Money{Amount: 0, CurrencyId: "USD"},
 	}
 
 	total := int32(len(leads))
 	for status, count := range counts {
-		line := &fin.FinReportLine{
-			AccountName: status.String(),
+		line := &crm.CrmReportLine{
+			Label:       status.String(),
 			Description: status.String(),
-			Level:       count,
+			Count:       count,
 		}
 		section.Lines = append(section.Lines, line)
 	}
@@ -59,14 +60,14 @@ func generateLeadConversion(report *fin.FinReport, vnic ifs.IVNic) error {
 	if total > 0 {
 		conversionRate = float64(converted) / float64(total) * 100
 	}
-	section.Lines = append(section.Lines, &fin.FinReportLine{
-		AccountName:     "Conversion Rate",
-		Description:     fmt.Sprintf("%.1f%%", conversionRate),
-		IsHeader:        true,
-		VariancePercent: conversionRate,
+	section.Lines = append(section.Lines, &crm.CrmReportLine{
+		Label:       "Conversion Rate",
+		Description: fmt.Sprintf("%.1f%%", conversionRate),
+		IsHeader:    true,
+		Percentage:  conversionRate,
 	})
 
-	report.Sections = []*fin.FinReportSection{section}
+	report.Sections = []*crm.CrmReportSection{section}
 	report.GrandTotal = &l8common.Money{Amount: int64(total), CurrencyId: "USD"}
 	report.RowCount = int32(len(section.Lines))
 	return nil

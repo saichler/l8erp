@@ -20,6 +20,9 @@ func runSalesPhases(client *HCMClient, store *MockDataStore) {
 	runPhase("Sales Phase 7: Billing", func() error { return generateSalesPhase7(client, store) })
 
 	runPhase("Sales Phase 8: Analytics", func() error { return generateSalesPhase8(client, store) })
+
+	// Last: the POST runs the module generator against everything above.
+	runPhase("Sales Reports", func() error { return generateSalesReportsPhase(client, store) })
 }
 
 func runMFGPhases(client *HCMClient, store *MockDataStore) {
@@ -36,6 +39,9 @@ func runMFGPhases(client *HCMClient, store *MockDataStore) {
 	runPhase("MFG Phase 6: Planning", func() error { return generateMfgPhase6(client, store) })
 
 	runPhase("MFG Phase 7: Costing", func() error { return generateMfgPhase7(client, store) })
+
+	// Last: the POST runs the module generator against everything above.
+	runPhase("MFG Reports", func() error { return generateMfgReportsPhase(client, store) })
 }
 
 func runCRMPhases(client *HCMClient, store *MockDataStore) {
@@ -56,4 +62,7 @@ func runCRMPhases(client *HCMClient, store *MockDataStore) {
 	runPhase("CRM Phase 8: Customer Service", func() error { return generateCrmPhase8(client, store) })
 
 	runPhase("CRM Phase 9: Field Service", func() error { return generateCrmPhase9(client, store) })
+
+	// Last: the POST runs the module generator against everything above.
+	runPhase("CRM Reports", func() error { return generateCrmReportsPhase(client, store) })
 }

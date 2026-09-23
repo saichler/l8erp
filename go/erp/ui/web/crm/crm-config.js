@@ -62,9 +62,9 @@ Layer8ModuleConfigFactory.create({
         'reports': {
             label: 'Reports', icon: '📊',
             services: [
-                { key: 'module-reports', label: 'Reports', endpoint: '/80/CrmReport', model: 'FinReport' }
+                { key: 'module-reports', label: 'Reports', endpoint: '/80/CrmReport', model: 'CrmReport' }
             ]
         }
     },
-    submodules: ['CrmLeads', 'CrmOpportunities', 'CrmAccounts', 'CrmMarketing', 'CrmService', 'CrmFieldService', 'Reports']
+    submodules: ['CrmLeads', 'CrmOpportunities', 'CrmAccounts', 'CrmMarketing', 'CrmService', 'CrmFieldService', 'CrmReports']
 });

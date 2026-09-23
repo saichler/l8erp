@@ -154,7 +154,10 @@ limitations under the License.
 
     function renderProficiencyLevel(level) {
         if (!level) return '-';
-        const stars = '★'.repeat(level) + '☆'.repeat(5 - level);
+        // Clamp: String.repeat throws RangeError on a negative count, and the
+        // throw escapes the renderer and kills the whole table render.
+        const capped = Math.max(0, Math.min(5, Number(level) || 0));
+        const stars = '★'.repeat(capped) + '☆'.repeat(5 - capped);
         return `<span title="Level ${level}/5">${stars}</span>`;
     }
 

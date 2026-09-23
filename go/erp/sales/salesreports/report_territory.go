@@ -18,21 +18,24 @@ import (
 	"fmt"
 
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func generateTerritoryPerformance(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateTerritoryPerformance(report *sales.SalesReport, vnic ifs.IVNic) error {
 	territoriesRaw, err := common.GetEntities("Territory", 60, &sales.SalesTerritory{}, vnic)
 	territories := make([]*sales.SalesTerritory, 0, len(territoriesRaw))
-	for _, ri := range territoriesRaw { territories = append(territories, ri.(*sales.SalesTerritory)) }
+	for _, ri := range territoriesRaw {
+		territories = append(territories, ri.(*sales.SalesTerritory))
+	}
 	if err != nil {
 		return err
 	}
 	ordersRaw, err := common.GetEntities("SalesOrder", 60, &sales.SalesOrder{}, vnic)
 	orders := make([]*sales.SalesOrder, 0, len(ordersRaw))
-	for _, ri := range ordersRaw { orders = append(orders, ri.(*sales.SalesOrder)) }
+	for _, ri := range ordersRaw {
+		orders = append(orders, ri.(*sales.SalesOrder))
+	}
 	if err != nil {
 		return err
 	}
@@ -70,7 +73,7 @@ func generateTerritoryPerformance(report *fin.FinReport, vnic ifs.IVNic) error {
 		st.total += moneyAmount(order.TotalAmount)
 	}
 
-	section := &fin.FinReportSection{
+	section := &sales.SalesReportSection{
 		Title:        "Performance by Territory",
 		SectionTotal: newMoney(0, currencyId),
 	}
@@ -80,18 +83,18 @@ func generateTerritoryPerformance(report *fin.FinReport, vnic ifs.IVNic) error {
 		if name == "" {
 			name = fmt.Sprintf("Territory %s", terrId)
 		}
-		line := &fin.FinReportLine{
-			AccountId:   terrId,
-			AccountName: name,
-			Balance:     newMoney(st.total, currencyId),
-			Level:       st.count,
+		line := &sales.SalesReportLine{
+			ReferenceId: terrId,
+			Label:       name,
+			Amount:      newMoney(st.total, currencyId),
+			Count:       st.count,
 			Description: fmt.Sprintf("%d orders", st.count),
 		}
 		section.Lines = append(section.Lines, line)
-		section.SectionTotal = addMoney(section.SectionTotal, line.Balance)
+		section.SectionTotal = addMoney(section.SectionTotal, line.Amount)
 	}
 
-	report.Sections = []*fin.FinReportSection{section}
+	report.Sections = []*sales.SalesReportSection{section}
 	report.GrandTotal = section.SectionTotal
 	report.RowCount = countLines(report.Sections)
 	return nil

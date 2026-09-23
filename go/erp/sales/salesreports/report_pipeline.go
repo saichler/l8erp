@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -42,10 +41,12 @@ func quotationStatusName(s sales.SalesQuotationStatus) string {
 	}
 }
 
-func generatePipelineSummary(report *fin.FinReport, vnic ifs.IVNic) error {
+func generatePipelineSummary(report *sales.SalesReport, vnic ifs.IVNic) error {
 	quotationsRaw, err := common.GetEntities("SalesQuote", 60, &sales.SalesQuotation{}, vnic)
 	quotations := make([]*sales.SalesQuotation, 0, len(quotationsRaw))
-	for _, ri := range quotationsRaw { quotations = append(quotations, ri.(*sales.SalesQuotation)) }
+	for _, ri := range quotationsRaw {
+		quotations = append(quotations, ri.(*sales.SalesQuotation))
+	}
 	if err != nil {
 		return err
 	}
@@ -68,23 +69,23 @@ func generatePipelineSummary(report *fin.FinReport, vnic ifs.IVNic) error {
 		st.total += moneyAmount(q.TotalAmount)
 	}
 
-	section := &fin.FinReportSection{
+	section := &sales.SalesReportSection{
 		Title:        "Quotations by Status",
 		SectionTotal: newMoney(0, currencyId),
 	}
 
 	for status, st := range byStatus {
-		line := &fin.FinReportLine{
-			AccountName: quotationStatusName(status),
-			Balance:     newMoney(st.total, currencyId),
-			Level:       st.count,
+		line := &sales.SalesReportLine{
+			Label:       quotationStatusName(status),
+			Amount:      newMoney(st.total, currencyId),
+			Count:       st.count,
 			Description: fmt.Sprintf("%d quotations", st.count),
 		}
 		section.Lines = append(section.Lines, line)
-		section.SectionTotal = addMoney(section.SectionTotal, line.Balance)
+		section.SectionTotal = addMoney(section.SectionTotal, line.Amount)
 	}
 
-	report.Sections = []*fin.FinReportSection{section}
+	report.Sections = []*sales.SalesReportSection{section}
 	report.GrandTotal = section.SectionTotal
 	report.RowCount = countLines(report.Sections)
 	return nil

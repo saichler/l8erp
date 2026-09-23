@@ -25,7 +25,9 @@ import (
 func generateAgedPayables(report *fin.FinReport, vnic ifs.IVNic) error {
 	invoicesRaw, err := common.GetEntities("PurchInv", 40, &fin.PurchaseInvoice{}, vnic)
 	invoices := make([]*fin.PurchaseInvoice, 0, len(invoicesRaw))
-	for _, ri := range invoicesRaw { invoices = append(invoices, ri.(*fin.PurchaseInvoice)) }
+	for _, ri := range invoicesRaw {
+		invoices = append(invoices, ri.(*fin.PurchaseInvoice))
+	}
 	if err != nil {
 		return err
 	}

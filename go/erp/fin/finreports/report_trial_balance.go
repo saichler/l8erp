@@ -23,7 +23,9 @@ import (
 func generateTrialBalance(report *fin.FinReport, vnic ifs.IVNic) error {
 	accountsRaw, err := common.GetEntities("Account", 40, &fin.Account{}, vnic)
 	accounts := make([]*fin.Account, 0, len(accountsRaw))
-	for _, ri := range accountsRaw { accounts = append(accounts, ri.(*fin.Account)) }
+	for _, ri := range accountsRaw {
+		accounts = append(accounts, ri.(*fin.Account))
+	}
 	if err != nil {
 		return err
 	}

@@ -16,38 +16,39 @@ package mfgreports
 
 import (
 	"fmt"
-	"time"
 
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
+	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newMfgReportServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
-	generateOnPost := func(vi interface{}, action ifs.Action, _ ifs.IVNic) error { report := vi.(*fin.FinReport);
-		if action != ifs.POST {
-			return nil
-		}
-		report.GeneratedAt = time.Now().Unix()
-		return generateMfgReport(report, vnic)
+// mfgReportAccessors adapts MfgReport for the shared report service: the id is
+// generated on POST, the generation time stamped, then the module's own
+// dispatch fills the sections.
+//
+// vnic is the activating nic, captured here so a generator queries through the
+// same connection the service was activated on.
+func mfgReportAccessors(vnic ifs.IVNic) common.ReportAccessors {
+	return common.ReportAccessors{
+		TypeName:       "MfgReport",
+		Is:             func(v interface{}) bool { _, ok := v.(*mfg.MfgReport); return ok },
+		SetID:          func(v interface{}) { common.GenerateID(&v.(*mfg.MfgReport).ReportId) },
+		SetGeneratedAt: func(v interface{}, at int64) { v.(*mfg.MfgReport).GeneratedAt = at },
+		Generate: func(v interface{}, _ ifs.IVNic) error {
+			return generateMfgReport(v.(*mfg.MfgReport), vnic)
+		},
 	}
-	return common.NewServiceCallback("FinReport",
-		func(v interface{}) bool { _, ok := v.(*fin.FinReport); return ok },
-		func(v interface{}) { common.GenerateID(&v.(*fin.FinReport).ReportId) },
-		nil,
-		func(v interface{}, action ifs.Action, vnic ifs.IVNic) error { return generateOnPost(v.(*fin.FinReport), action, vnic) },
-	)
 }
 
-func generateMfgReport(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateMfgReport(report *mfg.MfgReport, vnic ifs.IVNic) error {
 	switch report.ReportType {
-	case fin.FinReportType(1):
+	case mfg.MfgReportType_MFG_REPORT_TYPE_PRODUCTION_EFFICIENCY:
 		report.Title = "Production Efficiency"
 		return generateProductionEfficiency(report, vnic)
-	case fin.FinReportType(2):
+	case mfg.MfgReportType_MFG_REPORT_TYPE_WORK_ORDER_STATUS:
 		report.Title = "Work Order Status Summary"
 		return generateWorkOrderStatus(report, vnic)
-	case fin.FinReportType(3):
+	case mfg.MfgReportType_MFG_REPORT_TYPE_SCRAP_RATE:
 		report.Title = "Scrap Rate Analysis"
 		return generateScrapRate(report, vnic)
 	default:

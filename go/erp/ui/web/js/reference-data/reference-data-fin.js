@@ -44,7 +44,6 @@ limitations under the License.
         // Financial Management - Accounts Receivable
         // ========================================
         ...ref.coded('Customer', 'customerId', 'customerNumber', 'name'),
-        ...ref.coded('SalesCustomer', 'customerId', 'customerNumber', 'name'),  // Alias
         ...ref.simple('SalesInvoice', 'invoiceId', 'invoiceNumber'),
         ...ref.simple('CustomerPayment', 'paymentId', 'checkNumber'),
         ...ref.simple('CreditMemo', 'creditMemoId', 'memoNumber'),

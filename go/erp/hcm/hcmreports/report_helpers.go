@@ -16,7 +16,7 @@ package hcmreports
 
 import (
 	l8common "github.com/saichler/l8common/go/types/l8common"
-	"github.com/saichler/l8erp/go/types/fin"
+	"github.com/saichler/l8erp/go/types/hcm"
 )
 
 func moneyAmount(m *l8common.Money) int64 {
@@ -41,7 +41,7 @@ func addMoney(a, b *l8common.Money) *l8common.Money {
 	return newMoney(total, cid)
 }
 
-func countLines(sections []*fin.FinReportSection) int32 {
+func countLines(sections []*hcm.HcmReportSection) int32 {
 	var n int32
 	for _, s := range sections {
 		n += int32(len(s.Lines))

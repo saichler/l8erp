@@ -18,7 +18,6 @@ import (
 	"fmt"
 
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -44,10 +43,12 @@ func poStatusName(s scm.ScmPurchaseOrderStatus) string {
 	}
 }
 
-func generatePurchaseOrderSummary(report *fin.FinReport, vnic ifs.IVNic) error {
+func generatePurchaseOrderSummary(report *scm.ScmReport, vnic ifs.IVNic) error {
 	ordersRaw, err := common.GetEntities("PurchOrder", 50, &scm.ScmPurchaseOrder{}, vnic)
 	orders := make([]*scm.ScmPurchaseOrder, 0, len(ordersRaw))
-	for _, ri := range ordersRaw { orders = append(orders, ri.(*scm.ScmPurchaseOrder)) }
+	for _, ri := range ordersRaw {
+		orders = append(orders, ri.(*scm.ScmPurchaseOrder))
+	}
 	if err != nil {
 		return err
 	}
@@ -70,25 +71,25 @@ func generatePurchaseOrderSummary(report *fin.FinReport, vnic ifs.IVNic) error {
 		st.total += moneyAmount(po.TotalAmount)
 	}
 
-	section := &fin.FinReportSection{
+	section := &scm.ScmReportSection{
 		Title:        "Purchase Orders by Status",
 		SectionTotal: newMoney(0, currencyId),
 	}
 
 	var totalOrders int32
 	for status, st := range byStatus {
-		line := &fin.FinReportLine{
-			AccountName: poStatusName(status),
-			Balance:     newMoney(st.total, currencyId),
-			Level:       st.count,
+		line := &scm.ScmReportLine{
+			Label:       poStatusName(status),
+			Amount:      newMoney(st.total, currencyId),
+			Count:       st.count,
 			Description: fmt.Sprintf("%d orders", st.count),
 		}
 		section.Lines = append(section.Lines, line)
-		section.SectionTotal = addMoney(section.SectionTotal, line.Balance)
+		section.SectionTotal = addMoney(section.SectionTotal, line.Amount)
 		totalOrders += st.count
 	}
 
-	report.Sections = []*fin.FinReportSection{section}
+	report.Sections = []*scm.ScmReportSection{section}
 	report.GrandTotal = section.SectionTotal
 	report.RowCount = countLines(report.Sections)
 	return nil

@@ -57,9 +57,9 @@ Layer8ModuleConfigFactory.create({
         'reports': {
             label: 'Reports', icon: '📊',
             services: [
-                { key: 'module-reports', label: 'Reports', endpoint: '/60/SalesRept', model: 'FinReport' }
+                { key: 'module-reports', label: 'Reports', endpoint: '/60/SalesRept', model: 'SalesReport' }
             ]
         }
     },
-    submodules: ['SalesCustomers', 'SalesOrders', 'SalesPricing', 'SalesShipping', 'SalesBilling', 'SalesAnalytics', 'Reports']
+    submodules: ['SalesCustomers', 'SalesOrders', 'SalesPricing', 'SalesShipping', 'SalesBilling', 'SalesAnalytics', 'SalesReports']
 });

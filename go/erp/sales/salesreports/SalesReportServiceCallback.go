@@ -16,38 +16,39 @@ package salesreports
 
 import (
 	"fmt"
-	"time"
 
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
+	"github.com/saichler/l8erp/go/types/sales"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newSalesReportCallback(vnic ifs.IVNic) ifs.IServiceCallback {
-	generateOnPost := func(vi interface{}, action ifs.Action, _ ifs.IVNic) error { report := vi.(*fin.FinReport);
-		if action != ifs.POST {
-			return nil
-		}
-		report.GeneratedAt = time.Now().Unix()
-		return generateSalesReport(report, vnic)
+// salesReportAccessors adapts SalesReport for the shared report service: the id is
+// generated on POST, the generation time stamped, then the module's own
+// dispatch fills the sections.
+//
+// vnic is the activating nic, captured here so a generator queries through the
+// same connection the service was activated on.
+func salesReportAccessors(vnic ifs.IVNic) common.ReportAccessors {
+	return common.ReportAccessors{
+		TypeName:       "SalesReport",
+		Is:             func(v interface{}) bool { _, ok := v.(*sales.SalesReport); return ok },
+		SetID:          func(v interface{}) { common.GenerateID(&v.(*sales.SalesReport).ReportId) },
+		SetGeneratedAt: func(v interface{}, at int64) { v.(*sales.SalesReport).GeneratedAt = at },
+		Generate: func(v interface{}, _ ifs.IVNic) error {
+			return generateSalesReport(v.(*sales.SalesReport), vnic)
+		},
 	}
-	return common.NewServiceCallback("SalesReport",
-		func(v interface{}) bool { _, ok := v.(*fin.FinReport); return ok },
-		func(v interface{}) { common.GenerateID(&v.(*fin.FinReport).ReportId) },
-		nil,
-		func(v interface{}, action ifs.Action, vnic ifs.IVNic) error { return generateOnPost(v.(*fin.FinReport), action, vnic) },
-	)
 }
 
-func generateSalesReport(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateSalesReport(report *sales.SalesReport, vnic ifs.IVNic) error {
 	switch report.ReportType {
-	case fin.FinReportType_FIN_REPORT_TYPE_BALANCE_SHEET:
+	case sales.SalesReportType_SALES_REPORT_TYPE_SALES_BY_CUSTOMER:
 		report.Title = "Sales by Customer"
 		return generateSalesByCustomer(report, vnic)
-	case fin.FinReportType_FIN_REPORT_TYPE_INCOME_STATEMENT:
+	case sales.SalesReportType_SALES_REPORT_TYPE_PIPELINE_SUMMARY:
 		report.Title = "Pipeline Summary"
 		return generatePipelineSummary(report, vnic)
-	case fin.FinReportType_FIN_REPORT_TYPE_TRIAL_BALANCE:
+	case sales.SalesReportType_SALES_REPORT_TYPE_TERRITORY_PERFORMANCE:
 		report.Title = "Territory Performance"
 		return generateTerritoryPerformance(report, vnic)
 	default:

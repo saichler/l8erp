@@ -16,38 +16,39 @@ package crmreports
 
 import (
 	"fmt"
-	"time"
 
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
+	"github.com/saichler/l8erp/go/types/crm"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newCrmReportServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
-	generateOnPost := func(vi interface{}, action ifs.Action, _ ifs.IVNic) error { report := vi.(*fin.FinReport);
-		if action != ifs.POST {
-			return nil
-		}
-		report.GeneratedAt = time.Now().Unix()
-		return generateCrmReport(report, vnic)
+// crmReportAccessors adapts CrmReport for the shared report service: the id is
+// generated on POST, the generation time stamped, then the module's own
+// dispatch fills the sections.
+//
+// vnic is the activating nic, captured here so a generator queries through the
+// same connection the service was activated on.
+func crmReportAccessors(vnic ifs.IVNic) common.ReportAccessors {
+	return common.ReportAccessors{
+		TypeName:       "CrmReport",
+		Is:             func(v interface{}) bool { _, ok := v.(*crm.CrmReport); return ok },
+		SetID:          func(v interface{}) { common.GenerateID(&v.(*crm.CrmReport).ReportId) },
+		SetGeneratedAt: func(v interface{}, at int64) { v.(*crm.CrmReport).GeneratedAt = at },
+		Generate: func(v interface{}, _ ifs.IVNic) error {
+			return generateCrmReport(v.(*crm.CrmReport), vnic)
+		},
 	}
-	return common.NewServiceCallback("FinReport",
-		func(v interface{}) bool { _, ok := v.(*fin.FinReport); return ok },
-		func(v interface{}) { common.GenerateID(&v.(*fin.FinReport).ReportId) },
-		nil,
-		func(v interface{}, action ifs.Action, vnic ifs.IVNic) error { return generateOnPost(v.(*fin.FinReport), action, vnic) },
-	)
 }
 
-func generateCrmReport(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateCrmReport(report *crm.CrmReport, vnic ifs.IVNic) error {
 	switch report.ReportType {
-	case fin.FinReportType(1):
+	case crm.CrmReportType_CRM_REPORT_TYPE_LEAD_CONVERSION:
 		report.Title = "Lead Conversion Summary"
 		return generateLeadConversion(report, vnic)
-	case fin.FinReportType(2):
+	case crm.CrmReportType_CRM_REPORT_TYPE_OPPORTUNITY_PIPELINE:
 		report.Title = "Opportunity Pipeline"
 		return generateOpportunityPipeline(report, vnic)
-	case fin.FinReportType(3):
+	case crm.CrmReportType_CRM_REPORT_TYPE_CASE_RESOLUTION:
 		report.Title = "Case Resolution Summary"
 		return generateCaseResolution(report, vnic)
 	default:

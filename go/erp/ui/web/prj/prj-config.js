@@ -56,9 +56,9 @@ Layer8ModuleConfigFactory.create({
         'reports': {
             label: 'Reports', icon: '📊',
             services: [
-                { key: 'module-reports', label: 'Reports', endpoint: '/90/PrjReport', model: 'FinReport' }
+                { key: 'module-reports', label: 'Reports', endpoint: '/90/PrjReport', model: 'PrjReport' }
             ]
         }
     },
-    submodules: ['PrjPlanning', 'PrjResources', 'PrjTimeExpense', 'PrjBilling', 'PrjAnalytics', 'Reports']
+    submodules: ['PrjPlanning', 'PrjResources', 'PrjTimeExpense', 'PrjBilling', 'PrjAnalytics', 'PrjReports']
 });

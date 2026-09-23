@@ -17,7 +17,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 { key: 'resources', label: 'Resources', icon: 'hcm' },
                 { key: 'timeexpense', label: 'Time & Expense', icon: 'time' },
                 { key: 'billing', label: 'Billing', icon: 'financial' },
-                { key: 'analytics', label: 'Analytics', icon: 'bi' }
+                { key: 'analytics', label: 'Analytics', icon: 'bi' },
+                { key: 'reports', label: 'Reports', icon: 'bi' }
             ],
 
             services: {
@@ -51,6 +52,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'status-reports', label: 'Status Reports', icon: 'documents', endpoint: '/90/PrjStatus', model: 'PrjStatusReport', idField: 'statusId', supportedViews: ['table', 'chart'] },
                     { key: 'portfolio-views', label: 'Portfolio', icon: 'projects', endpoint: '/90/PrjPortflo', model: 'PrjPortfolioView', idField: 'viewId', supportedViews: ['table', 'chart'] },
                     { key: 'kpis', label: 'KPIs', icon: 'talent', endpoint: '/90/PrjKPI', model: 'PrjProjectKPI', idField: 'kpiId', supportedViews: ['table', 'chart'] }
+                ],
+                'reports': [
+                    { key: 'module-reports', label: 'Reports', icon: 'bi', endpoint: '/90/PrjReport', model: 'PrjReport', idField: 'reportId' }
                 ]
             }
         },

@@ -102,9 +102,9 @@ Layer8ModuleConfigFactory.create({
         'reports': {
             label: 'Reports', icon: '📊',
             services: [
-                { key: 'module-reports', label: 'Reports', endpoint: '/30/HcmReport', model: 'FinReport' }
+                { key: 'module-reports', label: 'Reports', endpoint: '/30/HcmReport', model: 'HcmReport' }
             ]
         }
     },
-    submodules: ['CoreHR', 'Payroll', 'Benefits', 'Time', 'Talent', 'Learning', 'Compensation', 'Reports']
+    submodules: ['CoreHR', 'Payroll', 'Benefits', 'Time', 'Talent', 'Learning', 'Compensation', 'HcmReports']
 });

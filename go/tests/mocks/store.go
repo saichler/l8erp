@@ -30,4 +30,5 @@ type MockDataStore struct {
 	COMPStore
 	LENDStore
 	AIAStore
+	ReportsStore
 }

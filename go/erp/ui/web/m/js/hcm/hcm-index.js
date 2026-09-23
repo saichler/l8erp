@@ -19,5 +19,6 @@ Layer8MModuleRegistry.create('MobileHCM', {
     'Time & Attendance': Time,
     'Talent': Talent,
     'Learning': Learning,
-    'Compensation': Compensation
+    'Compensation': Compensation,
+    'Reports': HcmReports
 });

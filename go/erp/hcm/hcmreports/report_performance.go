@@ -16,7 +16,6 @@ package hcmreports
 
 import (
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -42,10 +41,12 @@ func reviewStatusName(s hcm.PerformanceReviewStatus) string {
 	}
 }
 
-func generatePerformanceSummary(report *fin.FinReport, vnic ifs.IVNic) error {
+func generatePerformanceSummary(report *hcm.HcmReport, vnic ifs.IVNic) error {
 	reviewsRaw, err := common.GetEntities("PerfRevw", 30, &hcm.PerformanceReview{}, vnic)
 	reviews := make([]*hcm.PerformanceReview, 0, len(reviewsRaw))
-	for _, ri := range reviewsRaw { reviews = append(reviews, ri.(*hcm.PerformanceReview)) }
+	for _, ri := range reviewsRaw {
+		reviews = append(reviews, ri.(*hcm.PerformanceReview))
+	}
 	if err != nil {
 		return err
 	}
@@ -68,7 +69,7 @@ func generatePerformanceSummary(report *fin.FinReport, vnic ifs.IVNic) error {
 		st.totalRating += int64(r.OverallRating)
 	}
 
-	section := &fin.FinReportSection{
+	section := &hcm.HcmReportSection{
 		Title:        "Reviews by Status",
 		SectionTotal: newMoney(0, currencyId),
 	}
@@ -79,11 +80,11 @@ func generatePerformanceSummary(report *fin.FinReport, vnic ifs.IVNic) error {
 		if st.count > 0 {
 			avgRating = st.totalRating / int64(st.count)
 		}
-		line := &fin.FinReportLine{
-			AccountName: reviewStatusName(status),
-			Balance:     newMoney(int64(st.count), currencyId),
+		line := &hcm.HcmReportLine{
+			Label:       reviewStatusName(status),
+			Amount:      newMoney(int64(st.count), currencyId),
 			Debit:       newMoney(avgRating, currencyId),
-			Level:       st.count,
+			Count:       st.count,
 			Description: "avg rating in Debit",
 		}
 		section.Lines = append(section.Lines, line)
@@ -91,7 +92,7 @@ func generatePerformanceSummary(report *fin.FinReport, vnic ifs.IVNic) error {
 	}
 	section.SectionTotal = newMoney(int64(totalReviews), currencyId)
 
-	report.Sections = []*fin.FinReportSection{section}
+	report.Sections = []*hcm.HcmReportSection{section}
 	report.GrandTotal = section.SectionTotal
 	report.RowCount = countLines(report.Sections)
 	return nil

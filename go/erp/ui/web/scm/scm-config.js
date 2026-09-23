@@ -69,9 +69,9 @@ Layer8ModuleConfigFactory.create({
         'reports': {
             label: 'Reports', icon: '📊',
             services: [
-                { key: 'module-reports', label: 'Reports', endpoint: '/50/ScmReport', model: 'FinReport' }
+                { key: 'module-reports', label: 'Reports', endpoint: '/50/ScmReport', model: 'ScmReport' }
             ]
         }
     },
-    submodules: ['Procurement', 'Inventory', 'WarehouseManagement', 'Logistics', 'ScmDemandPlanning', 'ScmSupplyPlanning', 'Reports']
+    submodules: ['Procurement', 'Inventory', 'WarehouseManagement', 'Logistics', 'ScmDemandPlanning', 'ScmSupplyPlanning', 'ScmReports']
 });

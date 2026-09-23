@@ -23,7 +23,9 @@ import (
 func generateBudgetVsActual(report *fin.FinReport, vnic ifs.IVNic) error {
 	budgetsRaw, err := common.GetEntities("Budget", 40, &fin.Budget{}, vnic)
 	budgets := make([]*fin.Budget, 0, len(budgetsRaw))
-	for _, ri := range budgetsRaw { budgets = append(budgets, ri.(*fin.Budget)) }
+	for _, ri := range budgetsRaw {
+		budgets = append(budgets, ri.(*fin.Budget))
+	}
 	if err != nil {
 		return err
 	}

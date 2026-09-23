@@ -47,4 +47,6 @@ func registerScmTypes(resources ifs.IResources) {
 	common.RegisterType(resources, &scm.ScmSupplierCollaboration{}, &scm.ScmSupplierCollaborationList{}, "CollaborationId")
 	common.RegisterType(resources, &scm.ScmSafetyStock{}, &scm.ScmSafetyStockList{}, "SafetyStockId")
 	common.RegisterType(resources, &scm.ScmLeadTime{}, &scm.ScmLeadTimeList{}, "LeadTimeId")
+	// Reports
+	common.RegisterType(resources, &scm.ScmReport{}, &scm.ScmReportList{}, "ReportId")
 }

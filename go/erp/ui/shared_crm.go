@@ -40,4 +40,6 @@ func registerCrmTypes(resources ifs.IResources) {
 	common.RegisterType(resources, &crm.CrmTechnician{}, &crm.CrmTechnicianList{}, "TechnicianId")
 	common.RegisterType(resources, &crm.CrmServiceContract{}, &crm.CrmServiceContractList{}, "ContractId")
 	common.RegisterType(resources, &crm.CrmServiceSchedule{}, &crm.CrmServiceScheduleList{}, "ScheduleId")
+	// Reports
+	common.RegisterType(resources, &crm.CrmReport{}, &crm.CrmReportList{}, "ReportId")
 }

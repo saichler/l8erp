@@ -16,7 +16,6 @@ package hcmreports
 
 import (
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -36,10 +35,12 @@ func compensationTypeName(t hcm.CompensationType) string {
 	}
 }
 
-func generateCompensationSummary(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateCompensationSummary(report *hcm.HcmReport, vnic ifs.IVNic) error {
 	compsRaw, err := common.GetEntities("EmpComp", 30, &hcm.EmployeeCompensation{}, vnic)
 	comps := make([]*hcm.EmployeeCompensation, 0, len(compsRaw))
-	for _, ri := range compsRaw { comps = append(comps, ri.(*hcm.EmployeeCompensation)) }
+	for _, ri := range compsRaw {
+		comps = append(comps, ri.(*hcm.EmployeeCompensation))
+	}
 	if err != nil {
 		return err
 	}
@@ -71,7 +72,7 @@ func generateCompensationSummary(report *fin.FinReport, vnic ifs.IVNic) error {
 		}
 	}
 
-	section := &fin.FinReportSection{
+	section := &hcm.HcmReportSection{
 		Title:        "Compensation by Type",
 		SectionTotal: newMoney(0, currencyId),
 	}
@@ -81,20 +82,19 @@ func generateCompensationSummary(report *fin.FinReport, vnic ifs.IVNic) error {
 		if st.count > 0 {
 			avg = st.total / int64(st.count)
 		}
-		line := &fin.FinReportLine{
-			AccountName: compensationTypeName(ct),
-			Balance:     newMoney(st.total, currencyId),
+		line := &hcm.HcmReportLine{
+			Label:       compensationTypeName(ct),
+			Amount:      newMoney(st.total, currencyId),
 			Debit:       newMoney(avg, currencyId),
 			Credit:      newMoney(st.min, currencyId),
 			PriorPeriod: newMoney(st.max, currencyId),
-			Description: "count",
 		}
-		line.Level = st.count
+		line.Count = st.count
 		section.Lines = append(section.Lines, line)
-		section.SectionTotal = addMoney(section.SectionTotal, line.Balance)
+		section.SectionTotal = addMoney(section.SectionTotal, line.Amount)
 	}
 
-	report.Sections = []*fin.FinReportSection{section}
+	report.Sections = []*hcm.HcmReportSection{section}
 	report.GrandTotal = section.SectionTotal
 	report.RowCount = countLines(report.Sections)
 	return nil

@@ -18,5 +18,6 @@ Layer8MModuleRegistry.create('MobileSCM', {
     'Warehouse': WarehouseManagement,
     'Logistics': Logistics,
     'Demand Planning': ScmDemandPlanning,
-    'Supply Planning': ScmSupplyPlanning
+    'Supply Planning': ScmSupplyPlanning,
+    'Reports': ScmReports
 });

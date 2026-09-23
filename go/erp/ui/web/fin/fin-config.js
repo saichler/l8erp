@@ -77,5 +77,5 @@ Layer8ModuleConfigFactory.create({
             ]
         }
     },
-    submodules: ['GeneralLedger', 'AccountsPayable', 'AccountsReceivable', 'CashManagement', 'FixedAssets', 'Budgeting', 'TaxManagement', 'Reports']
+    submodules: ['GeneralLedger', 'AccountsPayable', 'AccountsReceivable', 'CashManagement', 'FixedAssets', 'Budgeting', 'TaxManagement', 'FinReports']
 });

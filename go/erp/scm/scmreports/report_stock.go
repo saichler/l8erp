@@ -18,21 +18,24 @@ import (
 	"fmt"
 
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func generateStockByWarehouse(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateStockByWarehouse(report *scm.ScmReport, vnic ifs.IVNic) error {
 	itemsRaw, err := common.GetEntities("Item", 50, &scm.ScmItem{}, vnic)
 	items := make([]*scm.ScmItem, 0, len(itemsRaw))
-	for _, ri := range itemsRaw { items = append(items, ri.(*scm.ScmItem)) }
+	for _, ri := range itemsRaw {
+		items = append(items, ri.(*scm.ScmItem))
+	}
 	if err != nil {
 		return err
 	}
 	warehousesRaw, err := common.GetEntities("Warehouse", 50, &scm.ScmWarehouse{}, vnic)
 	warehouses := make([]*scm.ScmWarehouse, 0, len(warehousesRaw))
-	for _, ri := range warehousesRaw { warehouses = append(warehouses, ri.(*scm.ScmWarehouse)) }
+	for _, ri := range warehousesRaw {
+		warehouses = append(warehouses, ri.(*scm.ScmWarehouse))
+	}
 	if err != nil {
 		return err
 	}
@@ -68,7 +71,7 @@ func generateStockByWarehouse(report *fin.FinReport, vnic ifs.IVNic) error {
 		g.total += moneyAmount(item.UnitCost)
 	}
 
-	section := &fin.FinReportSection{
+	section := &scm.ScmReportSection{
 		Title:        "Stock by Warehouse",
 		SectionTotal: newMoney(0, currencyId),
 	}
@@ -78,18 +81,18 @@ func generateStockByWarehouse(report *fin.FinReport, vnic ifs.IVNic) error {
 		if name == "" {
 			name = fmt.Sprintf("Warehouse %s", whId)
 		}
-		line := &fin.FinReportLine{
-			AccountId:   whId,
-			AccountName: name,
-			Balance:     newMoney(g.total, currencyId),
-			Level:       g.count,
+		line := &scm.ScmReportLine{
+			ReferenceId: whId,
+			Label:       name,
+			Amount:      newMoney(g.total, currencyId),
+			Count:       g.count,
 			Description: fmt.Sprintf("%d items", g.count),
 		}
 		section.Lines = append(section.Lines, line)
-		section.SectionTotal = addMoney(section.SectionTotal, line.Balance)
+		section.SectionTotal = addMoney(section.SectionTotal, line.Amount)
 	}
 
-	report.Sections = []*fin.FinReportSection{section}
+	report.Sections = []*scm.ScmReportSection{section}
 	report.GrandTotal = section.SectionTotal
 	report.RowCount = countLines(report.Sections)
 	return nil

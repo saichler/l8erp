@@ -17,19 +17,30 @@ limitations under the License.
 (function() {
     'use strict';
 
-    if (typeof FIN === 'undefined') window.FIN = {};
-    if (!FIN.Reports) FIN.Reports = {};
+    window.FinReports = window.FinReports || {};
 
     var col = Layer8ColumnFactory;
-    var enums = FIN.Reports.enums;
+    var enums = FinReports.enums;
 
-    FIN.Reports.columns = {
+    FinReports.columns = {
         FinReport: [
             ...col.enum('reportType', 'Report Type', enums.REPORT_TYPE, function(v) { return Layer8DRenderers.renderEnum(v, enums.REPORT_TYPE); }),
             ...col.col('title', 'Title'),
             ...col.col('periodName', 'Period'),
+            ...col.col('fiscalYearId', 'Fiscal Year'),
+            ...col.col('fiscalPeriodId', 'Fiscal Period'),
+            ...col.col('departmentId', 'Department'),
+            ...col.col('accountId', 'Account'),
+            ...col.col('currencyId', 'Currency'),
             ...col.date('generatedAt', 'Generated'),
-            ...col.number('rowCount', 'Rows')
+            ...col.money('grandTotal', 'Grand Total'),
+            ...col.number('rowCount', 'Rows'),
+            // sections is generated server-side and nested two deep, so it gets
+            // a count here rather than an inline table in the form: the POST
+            // handler overwrites whatever was submitted.
+            ...col.custom('sections', 'Sections',
+                function(item) { return (item.sections || []).length; },
+                { sortKey: 'rowCount' })
         ]
     };
 })();

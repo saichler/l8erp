@@ -23,16 +23,20 @@ import (
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func generateSalesByCustomer(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateSalesByCustomer(report *sales.SalesReport, vnic ifs.IVNic) error {
 	ordersRaw, err := common.GetEntities("SalesOrder", 60, &sales.SalesOrder{}, vnic)
 	orders := make([]*sales.SalesOrder, 0, len(ordersRaw))
-	for _, ri := range ordersRaw { orders = append(orders, ri.(*sales.SalesOrder)) }
+	for _, ri := range ordersRaw {
+		orders = append(orders, ri.(*sales.SalesOrder))
+	}
 	if err != nil {
 		return err
 	}
 	customersRaw, err := common.GetEntities("Customer", 40, &fin.Customer{}, vnic)
 	customers := make([]*fin.Customer, 0, len(customersRaw))
-	for _, ri := range customersRaw { customers = append(customers, ri.(*fin.Customer)) }
+	for _, ri := range customersRaw {
+		customers = append(customers, ri.(*fin.Customer))
+	}
 	if err != nil {
 		return err
 	}
@@ -60,7 +64,7 @@ func generateSalesByCustomer(report *fin.FinReport, vnic ifs.IVNic) error {
 		st.total += moneyAmount(order.TotalAmount)
 	}
 
-	section := &fin.FinReportSection{
+	section := &sales.SalesReportSection{
 		Title:        "Sales by Customer",
 		SectionTotal: newMoney(0, currencyId),
 	}
@@ -70,18 +74,18 @@ func generateSalesByCustomer(report *fin.FinReport, vnic ifs.IVNic) error {
 		if name == "" {
 			name = fmt.Sprintf("Customer %s", custId)
 		}
-		line := &fin.FinReportLine{
-			AccountId:   custId,
-			AccountName: name,
-			Balance:     newMoney(st.total, currencyId),
-			Level:       st.count,
+		line := &sales.SalesReportLine{
+			ReferenceId: custId,
+			Label:       name,
+			Amount:      newMoney(st.total, currencyId),
+			Count:       st.count,
 			Description: fmt.Sprintf("%d orders", st.count),
 		}
 		section.Lines = append(section.Lines, line)
-		section.SectionTotal = addMoney(section.SectionTotal, line.Balance)
+		section.SectionTotal = addMoney(section.SectionTotal, line.Amount)
 	}
 
-	report.Sections = []*fin.FinReportSection{section}
+	report.Sections = []*sales.SalesReportSection{section}
 	report.GrandTotal = section.SectionTotal
 	report.RowCount = countLines(report.Sections)
 	return nil

@@ -17,8 +17,7 @@ limitations under the License.
 (function() {
     'use strict';
 
-    if (typeof FIN === 'undefined') window.FIN = {};
-    if (!FIN.Reports) FIN.Reports = {};
+    window.FinReports = window.FinReports || {};
 
     var factory = Layer8EnumFactory;
 
@@ -33,7 +32,7 @@ limitations under the License.
         'GL Detail'
     ]);
 
-    FIN.Reports.enums = {
+    FinReports.enums = {
         REPORT_TYPE: REPORT_TYPE.enum
     };
 })();

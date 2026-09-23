@@ -17,21 +17,48 @@ limitations under the License.
 (function() {
     'use strict';
 
-    if (typeof FIN === 'undefined') window.FIN = {};
-    if (!FIN.Reports) FIN.Reports = {};
+    window.FinReports = window.FinReports || {};
 
     var f = Layer8FormFactory;
-    var enums = FIN.Reports.enums;
+    var enums = FinReports.enums;
 
-    FIN.Reports.forms = {
+    FinReports.forms = {
         FinReport: f.form('Financial Report', [
             f.section('Report Parameters', [
                 ...f.select('reportType', 'Report Type', enums.REPORT_TYPE),
+                ...f.text('periodName', 'Period'),
                 ...f.text('fiscalYearId', 'Fiscal Year ID'),
                 ...f.text('fiscalPeriodId', 'Fiscal Period ID'),
-                ...f.text('departmentId', 'Department ID'),
+                ...f.reference('departmentId', 'Department', 'Department'),
+                ...f.reference('currencyId', 'Currency', 'Currency'),
                 ...f.text('accountId', 'Account ID')
+            ]),
+            // Filled by generateReport() on POST. Read-only because anything
+            // typed here is discarded when the report is generated, and a
+            // control whose value is silently dropped is worse than none.
+            f.section('Generated', [
+                { key: 'title', label: 'Title', type: 'text', readOnly: true },
+                { key: 'generatedAt', label: 'Generated At', type: 'date', readOnly: true },
+                { key: 'rowCount', label: 'Rows', type: 'number', readOnly: true },
+                { key: 'grandTotal', label: 'Grand Total', type: 'money', readOnly: true },
+                // sections is a child type, so it renders as an inline table in the
+                // parent's form (PrimeObjectReferences Rule 3) -- without it the
+                // report's own content is invisible everywhere in the UI. Its
+                // `lines` are a second level down, which the inline table cannot
+                // nest; Layer8FinReportViewer was written for that and is
+                // currently dead code.
+                ...f.inlineTable('sections', 'Sections', [
+                    { key: 'sectionId', label: 'Section ID', hidden: true },
+                    { key: 'title', label: 'Title' },
+                    { key: 'sectionTotal', label: 'Section Total', type: 'money' }
+                ])
             ])
         ])
+    };
+
+    // Without this the registry falls back to 'id', getItemId() returns
+    // undefined, and every row click, Edit and Delete silently does nothing.
+    FinReports.primaryKeys = {
+        FinReport: 'reportId'
     };
 })();

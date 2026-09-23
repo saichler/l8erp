@@ -16,41 +16,42 @@ package hcmreports
 
 import (
 	"fmt"
-	"time"
 
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
+	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newHcmReportCallback(vnic ifs.IVNic) ifs.IServiceCallback {
-	generateOnPost := func(vi interface{}, action ifs.Action, _ ifs.IVNic) error { report := vi.(*fin.FinReport);
-		if action != ifs.POST {
-			return nil
-		}
-		report.GeneratedAt = time.Now().Unix()
-		return generateHcmReport(report, vnic)
+// hcmReportAccessors adapts HcmReport for the shared report service: the id is
+// generated on POST, the generation time stamped, then the module's own
+// dispatch fills the sections.
+//
+// vnic is the activating nic, captured here so a generator queries through the
+// same connection the service was activated on.
+func hcmReportAccessors(vnic ifs.IVNic) common.ReportAccessors {
+	return common.ReportAccessors{
+		TypeName:       "HcmReport",
+		Is:             func(v interface{}) bool { _, ok := v.(*hcm.HcmReport); return ok },
+		SetID:          func(v interface{}) { common.GenerateID(&v.(*hcm.HcmReport).ReportId) },
+		SetGeneratedAt: func(v interface{}, at int64) { v.(*hcm.HcmReport).GeneratedAt = at },
+		Generate: func(v interface{}, _ ifs.IVNic) error {
+			return generateHcmReport(v.(*hcm.HcmReport), vnic)
+		},
 	}
-	return common.NewServiceCallback("HcmReport",
-		func(v interface{}) bool { _, ok := v.(*fin.FinReport); return ok },
-		func(v interface{}) { common.GenerateID(&v.(*fin.FinReport).ReportId) },
-		nil,
-		func(v interface{}, action ifs.Action, vnic ifs.IVNic) error { return generateOnPost(v.(*fin.FinReport), action, vnic) },
-	)
 }
 
-func generateHcmReport(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateHcmReport(report *hcm.HcmReport, vnic ifs.IVNic) error {
 	switch report.ReportType {
-	case fin.FinReportType_FIN_REPORT_TYPE_BALANCE_SHEET:
+	case hcm.HcmReportType_HCM_REPORT_TYPE_HEADCOUNT:
 		report.Title = "Headcount by Department"
 		return generateHeadcount(report, vnic)
-	case fin.FinReportType_FIN_REPORT_TYPE_INCOME_STATEMENT:
+	case hcm.HcmReportType_HCM_REPORT_TYPE_COMPENSATION_SUMMARY:
 		report.Title = "Compensation Summary"
 		return generateCompensationSummary(report, vnic)
-	case fin.FinReportType_FIN_REPORT_TYPE_TRIAL_BALANCE:
+	case hcm.HcmReportType_HCM_REPORT_TYPE_LEAVE_BALANCE:
 		report.Title = "Leave Balance Summary"
 		return generateLeaveBalanceSummary(report, vnic)
-	case fin.FinReportType_FIN_REPORT_TYPE_BUDGET_VS_ACTUAL:
+	case hcm.HcmReportType_HCM_REPORT_TYPE_PERFORMANCE_SUMMARY:
 		report.Title = "Performance Review Summary"
 		return generatePerformanceSummary(report, vnic)
 	default:

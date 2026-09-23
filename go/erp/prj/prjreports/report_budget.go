@@ -16,22 +16,23 @@ package prjreports
 
 import (
 	l8common "github.com/saichler/l8common/go/types/l8common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/prj"
 	"github.com/saichler/l8types/go/ifs"
 
 	common "github.com/saichler/l8erp/go/erp/common"
 )
 
-func generateProjectBudget(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateProjectBudget(report *prj.PrjReport, vnic ifs.IVNic) error {
 	projectsRaw, err := common.GetEntities("PrjProj", 90, &prj.PrjProject{}, vnic)
 	projects := make([]*prj.PrjProject, 0, len(projectsRaw))
-	for _, ri := range projectsRaw { projects = append(projects, ri.(*prj.PrjProject)) }
+	for _, ri := range projectsRaw {
+		projects = append(projects, ri.(*prj.PrjProject))
+	}
 	if err != nil {
 		return err
 	}
 
-	section := &fin.FinReportSection{
+	section := &prj.PrjReportSection{
 		Title:        "Project Budget Summary",
 		SectionTotal: &l8common.Money{Amount: 0, CurrencyId: "USD"},
 	}
@@ -46,12 +47,12 @@ func generateProjectBudget(report *fin.FinReport, vnic ifs.IVNic) error {
 			pct = float64(variance) / float64(budget) * 100
 		}
 
-		line := &fin.FinReportLine{
-			AccountId:       p.ProjectId,
-			AccountNumber:   p.Code,
-			AccountName:     p.Name,
+		line := &prj.PrjReportLine{
+			ReferenceId:     p.ProjectId,
+			ReferenceCode:   p.Code,
+			Label:           p.Name,
 			BudgetAmount:    p.Budget,
-			Balance:         p.ActualCost,
+			Amount:          p.ActualCost,
 			Variance:        &l8common.Money{Amount: variance, CurrencyId: "USD"},
 			VariancePercent: pct,
 			Description:     p.Status.String(),
@@ -61,7 +62,7 @@ func generateProjectBudget(report *fin.FinReport, vnic ifs.IVNic) error {
 	}
 	section.SectionTotal = &l8common.Money{Amount: totalVariance, CurrencyId: "USD"}
 
-	report.Sections = []*fin.FinReportSection{section}
+	report.Sections = []*prj.PrjReportSection{section}
 	report.GrandTotal = section.SectionTotal
 	report.RowCount = int32(len(section.Lines))
 	return nil

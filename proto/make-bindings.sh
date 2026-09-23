@@ -18,6 +18,7 @@ docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-time_attendance.proto --mount
 docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-talent.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-learning.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-compensation.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 
 # Financial Management
 docker run --user "$(id -u):$(id -g)" -e PROTO=fin-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
@@ -38,6 +39,7 @@ docker run --user "$(id -u):$(id -g)" -e PROTO=scm-warehouse.proto --mount type=
 docker run --user "$(id -u):$(id -g)" -e PROTO=scm-logistics.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=scm-demand_planning.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=scm-supply_planning.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=scm-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 
 # Sales and Distribution
 docker run --user "$(id -u):$(id -g)" -e PROTO=sales-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
@@ -47,6 +49,7 @@ docker run --user "$(id -u):$(id -g)" -e PROTO=sales-pricing.proto --mount type=
 docker run --user "$(id -u):$(id -g)" -e PROTO=sales-shipping.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=sales-billing.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=sales-analytics.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 
 # Manufacturing
 docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
@@ -56,6 +59,7 @@ docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-shopfloor.proto --mount type=
 docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-quality.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-planning.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-costing.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 
 # Customer Relationship Management
 docker run --user "$(id -u):$(id -g)" -e PROTO=crm-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
@@ -65,6 +69,7 @@ docker run --user "$(id -u):$(id -g)" -e PROTO=crm-accounts.proto --mount type=b
 docker run --user "$(id -u):$(id -g)" -e PROTO=crm-marketing.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=crm-service.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=crm-fieldservice.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 
 # Project Management
 docker run --user "$(id -u):$(id -g)" -e PROTO=prj-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
@@ -73,6 +78,7 @@ docker run --user "$(id -u):$(id -g)" -e PROTO=prj-resources.proto --mount type=
 docker run --user "$(id -u):$(id -g)" -e PROTO=prj-timeexpense.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=prj-billing.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=prj-analytics.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=prj-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
 
 # Business Intelligence
 docker run --user "$(id -u):$(id -g)" -e PROTO=bi-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest

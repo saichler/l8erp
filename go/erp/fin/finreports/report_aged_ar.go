@@ -17,8 +17,8 @@ package finreports
 import (
 	"time"
 
-	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -85,7 +85,9 @@ func isOpenInvoice(status fin.InvoiceStatus) bool {
 func generateAgedReceivables(report *fin.FinReport, vnic ifs.IVNic) error {
 	invoicesRaw, err := common.GetEntities("SalesInv", 40, &fin.SalesInvoice{}, vnic)
 	invoices := make([]*fin.SalesInvoice, 0, len(invoicesRaw))
-	for _, ri := range invoicesRaw { invoices = append(invoices, ri.(*fin.SalesInvoice)) }
+	for _, ri := range invoicesRaw {
+		invoices = append(invoices, ri.(*fin.SalesInvoice))
+	}
 	if err != nil {
 		return err
 	}

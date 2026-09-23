@@ -16,7 +16,6 @@ package scmreports
 
 import (
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/scm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -40,10 +39,12 @@ func itemTypeName(t scm.ScmItemType) string {
 	}
 }
 
-func generateInventoryValuation(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateInventoryValuation(report *scm.ScmReport, vnic ifs.IVNic) error {
 	itemsRaw, err := common.GetEntities("Item", 50, &scm.ScmItem{}, vnic)
 	items := make([]*scm.ScmItem, 0, len(itemsRaw))
-	for _, ri := range itemsRaw { items = append(items, ri.(*scm.ScmItem)) }
+	for _, ri := range itemsRaw {
+		items = append(items, ri.(*scm.ScmItem))
+	}
 	if err != nil {
 		return err
 	}
@@ -52,7 +53,7 @@ func generateInventoryValuation(report *fin.FinReport, vnic ifs.IVNic) error {
 
 	// Group items by type
 	type typeGroup struct {
-		lines []*fin.FinReportLine
+		lines []*scm.ScmReportLine
 		total int64
 	}
 	byType := make(map[scm.ScmItemType]*typeGroup)
@@ -62,11 +63,11 @@ func generateInventoryValuation(report *fin.FinReport, vnic ifs.IVNic) error {
 			continue
 		}
 		cost := moneyAmount(item.UnitCost)
-		line := &fin.FinReportLine{
-			AccountId:   item.ItemId,
-			AccountName: item.Name,
+		line := &scm.ScmReportLine{
+			ReferenceId: item.ItemId,
+			Label:       item.Name,
 			Description: item.ItemNumber,
-			Balance:     newMoney(cost, currencyId),
+			Amount:      newMoney(cost, currencyId),
 		}
 		g, ok := byType[item.ItemType]
 		if !ok {
@@ -77,10 +78,10 @@ func generateInventoryValuation(report *fin.FinReport, vnic ifs.IVNic) error {
 		g.total += cost
 	}
 
-	var sections []*fin.FinReportSection
+	var sections []*scm.ScmReportSection
 	grandTotal := int64(0)
 	for it, g := range byType {
-		section := &fin.FinReportSection{
+		section := &scm.ScmReportSection{
 			Title:        itemTypeName(it),
 			Lines:        g.lines,
 			SectionTotal: newMoney(g.total, currencyId),

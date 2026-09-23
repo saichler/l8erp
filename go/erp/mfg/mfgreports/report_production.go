@@ -15,22 +15,23 @@ limitations under the License.
 package mfgreports
 
 import (
-	common "github.com/saichler/l8erp/go/erp/common"
 	l8common "github.com/saichler/l8common/go/types/l8common"
-	"github.com/saichler/l8erp/go/types/fin"
+	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/mfg"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func generateProductionEfficiency(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateProductionEfficiency(report *mfg.MfgReport, vnic ifs.IVNic) error {
 	ordersRaw, err := common.GetEntities("MfgWorkOrd", 70, &mfg.MfgWorkOrder{}, vnic)
 	if err != nil {
 		return err
 	}
 	orders := make([]*mfg.MfgWorkOrder, 0, len(ordersRaw))
-	for _, ri := range ordersRaw { orders = append(orders, ri.(*mfg.MfgWorkOrder)) }
+	for _, ri := range ordersRaw {
+		orders = append(orders, ri.(*mfg.MfgWorkOrder))
+	}
 
-	section := &fin.FinReportSection{
+	section := &mfg.MfgReportSection{
 		Title:        "Production Efficiency",
 		SectionTotal: &l8common.Money{Amount: 0, CurrencyId: "USD"},
 	}
@@ -50,12 +51,12 @@ func generateProductionEfficiency(report *fin.FinReport, vnic ifs.IVNic) error {
 			pct = float64(variance) / float64(estimated) * 100
 		}
 
-		line := &fin.FinReportLine{
-			AccountId:       wo.WorkOrderId,
-			AccountNumber:   wo.WorkOrderNumber,
-			AccountName:     wo.WorkOrderNumber,
+		line := &mfg.MfgReportLine{
+			ReferenceId:     wo.WorkOrderId,
+			ReferenceCode:   wo.WorkOrderNumber,
+			Label:           wo.WorkOrderNumber,
 			BudgetAmount:    wo.EstimatedCost,
-			Balance:         wo.ActualCost,
+			Amount:          wo.ActualCost,
 			Variance:        &l8common.Money{Amount: variance, CurrencyId: "USD"},
 			VariancePercent: pct,
 		}
@@ -65,21 +66,23 @@ func generateProductionEfficiency(report *fin.FinReport, vnic ifs.IVNic) error {
 	}
 	section.SectionTotal = &l8common.Money{Amount: totalVariance, CurrencyId: "USD"}
 
-	report.Sections = []*fin.FinReportSection{section}
+	report.Sections = []*mfg.MfgReportSection{section}
 	report.GrandTotal = section.SectionTotal
 	report.RowCount = count
 	return nil
 }
 
-func generateScrapRate(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateScrapRate(report *mfg.MfgReport, vnic ifs.IVNic) error {
 	ordersRaw, err := common.GetEntities("MfgWorkOrd", 70, &mfg.MfgWorkOrder{}, vnic)
 	orders := make([]*mfg.MfgWorkOrder, 0, len(ordersRaw))
-	for _, ri := range ordersRaw { orders = append(orders, ri.(*mfg.MfgWorkOrder)) }
+	for _, ri := range ordersRaw {
+		orders = append(orders, ri.(*mfg.MfgWorkOrder))
+	}
 	if err != nil {
 		return err
 	}
 
-	section := &fin.FinReportSection{
+	section := &mfg.MfgReportSection{
 		Title:        "Scrap Rate Analysis",
 		SectionTotal: &l8common.Money{Amount: 0, CurrencyId: "USD"},
 	}
@@ -90,10 +93,10 @@ func generateScrapRate(report *fin.FinReport, vnic ifs.IVNic) error {
 			continue
 		}
 		scrapPct := wo.QuantityScrapped / wo.QuantityOrdered * 100
-		line := &fin.FinReportLine{
-			AccountId:       wo.WorkOrderId,
-			AccountNumber:   wo.WorkOrderNumber,
-			AccountName:     wo.WorkOrderNumber,
+		line := &mfg.MfgReportLine{
+			ReferenceId:     wo.WorkOrderId,
+			ReferenceCode:   wo.WorkOrderNumber,
+			Label:           wo.WorkOrderNumber,
 			Description:     wo.Status.String(),
 			VariancePercent: scrapPct,
 		}
@@ -108,7 +111,7 @@ func generateScrapRate(report *fin.FinReport, vnic ifs.IVNic) error {
 	}
 	section.SectionTotal = &l8common.Money{Amount: int64(overallRate * 100), CurrencyId: "USD"}
 
-	report.Sections = []*fin.FinReportSection{section}
+	report.Sections = []*mfg.MfgReportSection{section}
 	report.GrandTotal = section.SectionTotal
 	report.RowCount = int32(len(section.Lines))
 	return nil

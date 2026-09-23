@@ -17,5 +17,6 @@ Layer8MModuleRegistry.create('MobilePrj', {
     'Resources': PrjResources,
     'Billing': PrjBilling,
     'Time & Expense': PrjTimeExpense,
-    'Analytics': PrjAnalytics
+    'Analytics': PrjAnalytics,
+    'Reports': PrjReports
 });

@@ -18,5 +18,6 @@ Layer8MModuleRegistry.create('MobileSales', {
     'Pricing': SalesPricing,
     'Shipping': SalesShipping,
     'Billing': SalesBilling,
-    'Analytics': SalesAnalytics
+    'Analytics': SalesAnalytics,
+    'Reports': SalesReports
 });

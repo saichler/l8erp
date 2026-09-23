@@ -37,4 +37,6 @@ func registerPrjTypes(resources ifs.IResources) {
 	common.RegisterType(resources, &prj.PrjStatusReport{}, &prj.PrjStatusReportList{}, "StatusId")
 	common.RegisterType(resources, &prj.PrjPortfolioView{}, &prj.PrjPortfolioViewList{}, "ViewId")
 	common.RegisterType(resources, &prj.PrjProjectKPI{}, &prj.PrjProjectKPIList{}, "KpiId")
+	// Reports
+	common.RegisterType(resources, &prj.PrjReport{}, &prj.PrjReportList{}, "ReportId")
 }

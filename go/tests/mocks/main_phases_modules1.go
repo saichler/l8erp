@@ -16,6 +16,9 @@ func runHCMPhases(client *HCMClient, store *MockDataStore) {
 	runPhase("Phase 5: Transaction & Additional Objects", func() error { return generatePhase5(client, store) })
 
 	runPhase("Phase 6: Talent Acquisition", func() error { return generatePhase6(client, store) })
+
+	// Last: the POST runs the module generator against everything above.
+	runPhase("HCM Reports", func() error { return generateHcmReportsPhase(client, store) })
 }
 
 // runFINFoundation runs FIN Phases 1-3 (no HCM dependency — provides CurrencyIDs for all modules)
@@ -38,6 +41,9 @@ func runFINRemaining(client *HCMClient, store *MockDataStore) {
 	runPhase("FIN Phase 7: GL Transactions", func() error { return generateFinPhase7(client, store) })
 
 	runPhase("FIN Phase 8: Cash & Assets", func() error { return generateFinPhase8(client, store) })
+
+	// Last: the POST runs the module generator against everything above.
+	runPhase("FIN Reports", func() error { return generateFinReportsPhase(client, store) })
 }
 
 func runSCMPhases(client *HCMClient, store *MockDataStore) {
@@ -56,4 +62,7 @@ func runSCMPhases(client *HCMClient, store *MockDataStore) {
 	runPhase("SCM Phase 7: Logistics", func() error { return generateScmPhase7(client, store) })
 
 	runPhase("SCM Phase 8: Planning", func() error { return generateScmPhase8(client, store) })
+
+	// Last: the POST runs the module generator against everything above.
+	runPhase("SCM Reports", func() error { return generateScmReportsPhase(client, store) })
 }

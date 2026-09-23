@@ -18,21 +18,24 @@ import (
 	"fmt"
 
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func generateHeadcount(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateHeadcount(report *hcm.HcmReport, vnic ifs.IVNic) error {
 	employeesRaw, err := common.GetEntities("Employee", 30, &hcm.Employee{}, vnic)
 	employees := make([]*hcm.Employee, 0, len(employeesRaw))
-	for _, ri := range employeesRaw { employees = append(employees, ri.(*hcm.Employee)) }
+	for _, ri := range employeesRaw {
+		employees = append(employees, ri.(*hcm.Employee))
+	}
 	if err != nil {
 		return err
 	}
 	departmentsRaw, err := common.GetEntities("Dept", 30, &hcm.Department{}, vnic)
 	departments := make([]*hcm.Department, 0, len(departmentsRaw))
-	for _, ri := range departmentsRaw { departments = append(departments, ri.(*hcm.Department)) }
+	for _, ri := range departmentsRaw {
+		departments = append(departments, ri.(*hcm.Department))
+	}
 	if err != nil {
 		return err
 	}
@@ -52,7 +55,7 @@ func generateHeadcount(report *fin.FinReport, vnic ifs.IVNic) error {
 	}
 
 	currencyId := report.CurrencyId
-	section := &fin.FinReportSection{
+	section := &hcm.HcmReportSection{
 		Title:        "Headcount by Department",
 		SectionTotal: newMoney(0, currencyId),
 	}
@@ -63,17 +66,17 @@ func generateHeadcount(report *fin.FinReport, vnic ifs.IVNic) error {
 		if name == "" {
 			name = fmt.Sprintf("Department %s", deptId)
 		}
-		line := &fin.FinReportLine{
-			AccountId:   deptId,
-			AccountName: name,
-			Balance:     newMoney(int64(count), currencyId),
+		line := &hcm.HcmReportLine{
+			ReferenceId: deptId,
+			Label:       name,
+			Amount:      newMoney(int64(count), currencyId),
 		}
 		section.Lines = append(section.Lines, line)
 		totalHeadcount += count
 	}
 	section.SectionTotal = newMoney(int64(totalHeadcount), currencyId)
 
-	report.Sections = []*fin.FinReportSection{section}
+	report.Sections = []*hcm.HcmReportSection{section}
 	report.GrandTotal = newMoney(int64(totalHeadcount), currencyId)
 	report.RowCount = countLines(report.Sections)
 	return nil

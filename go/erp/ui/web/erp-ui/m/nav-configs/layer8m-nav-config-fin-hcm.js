@@ -19,7 +19,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 { key: 'cash-management', label: 'Cash Management', icon: 'financial' },
                 { key: 'fixed-assets', label: 'Fixed Assets', icon: 'financial' },
                 { key: 'budgeting', label: 'Budgeting', icon: 'financial' },
-                { key: 'tax-management', label: 'Tax Management', icon: 'financial' }
+                { key: 'tax-management', label: 'Tax Management', icon: 'financial' },
+                { key: 'reports', label: 'Reports', icon: 'bi' }
             ],
 
             // Services for each sub-module (Level 3) - EXACT order from desktop fin-config.js
@@ -65,6 +66,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'tax-jurisdictions', label: 'Jurisdictions', icon: 'financial', endpoint: '/40/TaxJuris', model: 'TaxJurisdiction', idField: 'jurisdictionId' },
                     { key: 'tax-rules', label: 'Tax Rules', icon: 'financial', endpoint: '/40/TaxRule', model: 'TaxRule', idField: 'ruleId' },
                     { key: 'tax-exemptions', label: 'Exemptions', icon: 'financial', endpoint: '/40/TaxExmpt', model: 'TaxExemption', idField: 'exemptionId' }
+                ],
+                'reports': [
+                    { key: 'financial-reports', label: 'Reports', icon: 'bi', endpoint: '/40/FinReport', model: 'FinReport', idField: 'reportId' }
                 ]
             }
         },
@@ -78,7 +82,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 { key: 'time', label: 'Time', icon: 'time' },
                 { key: 'talent', label: 'Talent', icon: 'talent' },
                 { key: 'learning', label: 'Learning', icon: 'learning' },
-                { key: 'compensation', label: 'Compensation', icon: 'compensation' }
+                { key: 'compensation', label: 'Compensation', icon: 'compensation' },
+                { key: 'reports', label: 'Reports', icon: 'bi' }
             ],
 
             // Services for each sub-module (Level 3) - EXACT order from desktop hcm-config.js
@@ -153,6 +158,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'equity-grants', label: 'Equity Grants', icon: 'equity-grants', endpoint: '/30/EqGrant', model: 'EquityGrant', idField: 'grantId' },
                     { key: 'comp-statements', label: 'Comp. Statements', icon: 'comp-statements', endpoint: '/30/CompStmt', model: 'CompensationStatement', idField: 'statementId' },
                     { key: 'market-benchmarks', label: 'Market Benchmarks', icon: 'market-benchmarks', endpoint: '/30/MktBench', model: 'MarketBenchmark', idField: 'benchmarkId' }
+                ],
+                'reports': [
+                    { key: 'module-reports', label: 'Reports', icon: 'bi', endpoint: '/30/HcmReport', model: 'HcmReport', idField: 'reportId' }
                 ]
             }
         }

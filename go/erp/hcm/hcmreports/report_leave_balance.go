@@ -16,7 +16,6 @@ package hcmreports
 
 import (
 	common "github.com/saichler/l8erp/go/erp/common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8erp/go/types/hcm"
 	"github.com/saichler/l8types/go/ifs"
 )
@@ -58,10 +57,12 @@ func leaveTypeName(t hcm.LeaveType) string {
 	}
 }
 
-func generateLeaveBalanceSummary(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateLeaveBalanceSummary(report *hcm.HcmReport, vnic ifs.IVNic) error {
 	balancesRaw, err := common.GetEntities("LeaveBal", 30, &hcm.LeaveBalance{}, vnic)
 	balances := make([]*hcm.LeaveBalance, 0, len(balancesRaw))
-	for _, ri := range balancesRaw { balances = append(balances, ri.(*hcm.LeaveBalance)) }
+	for _, ri := range balancesRaw {
+		balances = append(balances, ri.(*hcm.LeaveBalance))
+	}
 	if err != nil {
 		return err
 	}
@@ -88,19 +89,19 @@ func generateLeaveBalanceSummary(report *fin.FinReport, vnic ifs.IVNic) error {
 		st.available += b.Available
 	}
 
-	section := &fin.FinReportSection{
+	section := &hcm.HcmReportSection{
 		Title:        "Leave Balances by Type",
 		SectionTotal: newMoney(0, currencyId),
 	}
 
 	var totalAvailable float64
 	for lt, st := range byType {
-		line := &fin.FinReportLine{
-			AccountName: leaveTypeName(lt),
+		line := &hcm.HcmReportLine{
+			Label:       leaveTypeName(lt),
 			Debit:       newMoney(int64(st.accrued*100), currencyId),
 			Credit:      newMoney(int64(st.used*100), currencyId),
-			Balance:     newMoney(int64(st.available*100), currencyId),
-			Level:       st.employees,
+			Amount:      newMoney(int64(st.available*100), currencyId),
+			Count:       st.employees,
 			Description: "hours",
 		}
 		section.Lines = append(section.Lines, line)
@@ -108,7 +109,7 @@ func generateLeaveBalanceSummary(report *fin.FinReport, vnic ifs.IVNic) error {
 	}
 	section.SectionTotal = newMoney(int64(totalAvailable*100), currencyId)
 
-	report.Sections = []*fin.FinReportSection{section}
+	report.Sections = []*hcm.HcmReportSection{section}
 	report.GrandTotal = section.SectionTotal
 	report.RowCount = countLines(report.Sections)
 	return nil

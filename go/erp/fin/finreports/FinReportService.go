@@ -24,8 +24,11 @@ const (
 	ServiceArea = byte(40)
 )
 
+// The seventh and last report service on the shared scaffolding in
+// erp/common/report_service.go. The six module report services used to point at
+// fin.FinReport too, so all seven activated an ORM service over this one table
+// (SingleOwnerDatabaseTable); each owns its own type now.
 func Activate(creds, dbname string, vnic ifs.IVNic) {
-	sla := common.NewOrmSLA(ServiceName, ServiceArea, "ReportId", newFinReportServiceCallback(vnic),
-		&fin.FinReport{}, &fin.FinReportList{})
-	common.ActivateService(sla, creds, dbname, vnic)
+	common.ActivateReportService(ServiceName, ServiceArea, creds, dbname, vnic,
+		finReportAccessors(vnic), &fin.FinReport{}, &fin.FinReportList{})
 }

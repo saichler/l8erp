@@ -36,4 +36,6 @@ func registerMfgTypes(resources ifs.IResources) {
 	common.RegisterType(resources, &mfg.MfgStandardCost{}, &mfg.MfgStandardCostList{}, "CostId")
 	common.RegisterType(resources, &mfg.MfgCostRollup{}, &mfg.MfgCostRollupList{}, "RollupId")
 	common.RegisterType(resources, &mfg.MfgOverhead{}, &mfg.MfgOverheadList{}, "OverheadId")
+	// Reports
+	common.RegisterType(resources, &mfg.MfgReport{}, &mfg.MfgReportList{}, "ReportId")
 }

@@ -18,17 +18,18 @@ import (
 	"fmt"
 
 	l8common "github.com/saichler/l8common/go/types/l8common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 
 	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func generateCaseResolution(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateCaseResolution(report *crm.CrmReport, vnic ifs.IVNic) error {
 	casesRaw, err := common.GetEntities("CrmCase", 80, &crm.CrmCase{}, vnic)
 	cases := make([]*crm.CrmCase, 0, len(casesRaw))
-	for _, ri := range casesRaw { cases = append(cases, ri.(*crm.CrmCase)) }
+	for _, ri := range casesRaw {
+		cases = append(cases, ri.(*crm.CrmCase))
+	}
 	if err != nil {
 		return err
 	}
@@ -48,16 +49,16 @@ func generateCaseResolution(report *fin.FinReport, vnic ifs.IVNic) error {
 		}
 	}
 
-	section := &fin.FinReportSection{
+	section := &crm.CrmReportSection{
 		Title:        "Case Resolution Summary",
 		SectionTotal: &l8common.Money{Amount: 0, CurrencyId: "USD"},
 	}
 
 	for status, count := range counts {
-		line := &fin.FinReportLine{
-			AccountName: status.String(),
+		line := &crm.CrmReportLine{
+			Label:       status.String(),
 			Description: status.String(),
-			Level:       count,
+			Count:       count,
 		}
 		section.Lines = append(section.Lines, line)
 	}
@@ -67,14 +68,14 @@ func generateCaseResolution(report *fin.FinReport, vnic ifs.IVNic) error {
 	if resolvedCount > 0 {
 		avgDays = float64(totalResolutionDays) / float64(resolvedCount)
 	}
-	section.Lines = append(section.Lines, &fin.FinReportLine{
-		AccountName:     "Avg Resolution Time",
-		Description:     fmt.Sprintf("%.1f days", avgDays),
-		IsHeader:        true,
-		VariancePercent: avgDays,
+	section.Lines = append(section.Lines, &crm.CrmReportLine{
+		Label:       "Avg Resolution Time",
+		Description: fmt.Sprintf("%.1f days", avgDays),
+		IsHeader:    true,
+		Quantity:    avgDays,
 	})
 
-	report.Sections = []*fin.FinReportSection{section}
+	report.Sections = []*crm.CrmReportSection{section}
 	report.GrandTotal = &l8common.Money{Amount: int64(len(cases)), CurrencyId: "USD"}
 	report.RowCount = int32(len(section.Lines))
 	return nil

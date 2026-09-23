@@ -18,7 +18,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 { key: 'warehouse', label: 'Warehouse', icon: 'warehouse' },
                 { key: 'logistics', label: 'Logistics', icon: 'logistics' },
                 { key: 'demand-planning', label: 'Demand Planning', icon: 'demand-planning' },
-                { key: 'supply-planning', label: 'Supply Planning', icon: 'supply-planning' }
+                { key: 'supply-planning', label: 'Supply Planning', icon: 'supply-planning' },
+                { key: 'reports', label: 'Reports', icon: 'bi' }
             ],
 
             services: {
@@ -62,6 +63,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'supplier-collaborations', label: 'Collaborations', icon: 'supply-planning', endpoint: '/50/SupCollab', model: 'ScmSupplierCollaboration', idField: 'collaborationId' },
                     { key: 'safety-stocks', label: 'Safety Stock', icon: 'supply-planning', endpoint: '/50/SafeStock', model: 'ScmSafetyStock', idField: 'safetyStockId' },
                     { key: 'lead-times', label: 'Lead Times', icon: 'supply-planning', endpoint: '/50/LeadTime', model: 'ScmLeadTime', idField: 'leadTimeId' }
+                ],
+                'reports': [
+                    { key: 'module-reports', label: 'Reports', icon: 'bi', endpoint: '/50/ScmReport', model: 'ScmReport', idField: 'reportId' }
                 ]
             }
         },
@@ -74,7 +78,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 { key: 'shopfloor', label: 'Shop Floor', icon: 'manufacturing' },
                 { key: 'quality', label: 'Quality', icon: 'compliance' },
                 { key: 'planning', label: 'Planning', icon: 'demand-planning' },
-                { key: 'costing', label: 'Costing', icon: 'financial' }
+                { key: 'costing', label: 'Costing', icon: 'financial' },
+                { key: 'reports', label: 'Reports', icon: 'bi' }
             ],
 
             services: {
@@ -107,6 +112,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'standard-costs', label: 'Standard Costs', icon: 'financial', endpoint: '/70/MfgStdCost', model: 'MfgStandardCost', idField: 'costId' },
                     { key: 'cost-rollups', label: 'Cost Rollups', icon: 'demand-planning', endpoint: '/70/MfgRollup', model: 'MfgCostRollup', idField: 'rollupId' },
                     { key: 'overheads', label: 'Overheads', icon: 'organizations', endpoint: '/70/MfgOverhd', model: 'MfgOverhead', idField: 'overheadId' }
+                ],
+                'reports': [
+                    { key: 'module-reports', label: 'Reports', icon: 'bi', endpoint: '/70/MfgReport', model: 'MfgReport', idField: 'reportId' }
                 ]
             }
         },
@@ -119,7 +127,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 { key: 'pricing', label: 'Pricing', icon: 'financial' },
                 { key: 'shipping', label: 'Shipping', icon: 'logistics' },
                 { key: 'billing', label: 'Billing', icon: 'financial' },
-                { key: 'analytics', label: 'Analytics', icon: 'bi' }
+                { key: 'analytics', label: 'Analytics', icon: 'bi' },
+                { key: 'reports', label: 'Reports', icon: 'bi' }
             ],
 
             services: {
@@ -151,6 +160,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'territories', label: 'Territories', icon: 'organizations', endpoint: '/60/Territory', model: 'SalesTerritory', idField: 'territoryId' },
                     { key: 'commission-plans', label: 'Commission Plans', icon: 'financial', endpoint: '/60/CommPlan', model: 'SalesCommissionPlan', idField: 'planId' },
                     { key: 'forecasts', label: 'Forecasts', icon: 'demand-planning', endpoint: '/60/SalesFcast', model: 'SalesForecast', idField: 'forecastId', supportedViews: ['table', 'chart'] }
+                ],
+                'reports': [
+                    { key: 'module-reports', label: 'Reports', icon: 'bi', endpoint: '/60/SalesRept', model: 'SalesReport', idField: 'reportId' }
                 ]
             }
         },
@@ -163,7 +175,8 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 { key: 'accounts', label: 'Accounts', icon: 'organizations' },
                 { key: 'marketing', label: 'Marketing', icon: 'talent' },
                 { key: 'service', label: 'Service', icon: 'time' },
-                { key: 'fieldservice', label: 'Field Service', icon: 'logistics' }
+                { key: 'fieldservice', label: 'Field Service', icon: 'logistics' },
+                { key: 'reports', label: 'Reports', icon: 'bi' }
             ],
 
             services: {
@@ -200,6 +213,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                     { key: 'technicians', label: 'Technicians', icon: 'hcm', endpoint: '/80/CrmTech', model: 'CrmTechnician', idField: 'technicianId' },
                     { key: 'service-contracts', label: 'Contracts', icon: 'documents', endpoint: '/80/CrmSvcCntr', model: 'CrmServiceContract', idField: 'contractId' },
                     { key: 'service-schedules', label: 'Schedules', icon: 'time', endpoint: '/80/CrmSvcSchd', model: 'CrmServiceSchedule', idField: 'scheduleId', supportedViews: ['table', 'calendar'] }
+                ],
+                'reports': [
+                    { key: 'module-reports', label: 'Reports', icon: 'bi', endpoint: '/80/CrmReport', model: 'CrmReport', idField: 'reportId' }
                 ]
             }
         }

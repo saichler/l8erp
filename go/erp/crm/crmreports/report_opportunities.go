@@ -16,24 +16,25 @@ package crmreports
 
 import (
 	l8common "github.com/saichler/l8common/go/types/l8common"
-	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 
 	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/crm"
 )
 
-func generateOpportunityPipeline(report *fin.FinReport, vnic ifs.IVNic) error {
+func generateOpportunityPipeline(report *crm.CrmReport, vnic ifs.IVNic) error {
 	oppsRaw, err := common.GetEntities("CrmOpp", 80, &crm.CrmOpportunity{}, vnic)
 	opps := make([]*crm.CrmOpportunity, 0, len(oppsRaw))
-	for _, ri := range oppsRaw { opps = append(opps, ri.(*crm.CrmOpportunity)) }
+	for _, ri := range oppsRaw {
+		opps = append(opps, ri.(*crm.CrmOpportunity))
+	}
 	if err != nil {
 		return err
 	}
 
 	type stageGroup struct {
-		count   int32
-		total   int64
+		count    int32
+		total    int64
 		weighted int64
 	}
 	groups := make(map[crm.CrmSalesStage]*stageGroup)
@@ -50,18 +51,18 @@ func generateOpportunityPipeline(report *fin.FinReport, vnic ifs.IVNic) error {
 		g.weighted += amt * int64(opp.Probability) / 100
 	}
 
-	section := &fin.FinReportSection{
+	section := &crm.CrmReportSection{
 		Title:        "Opportunity Pipeline",
 		SectionTotal: &l8common.Money{Amount: 0, CurrencyId: "USD"},
 	}
 
 	var grandTotal, weightedTotal int64
 	for stage, g := range groups {
-		line := &fin.FinReportLine{
-			AccountName: stage.String(),
+		line := &crm.CrmReportLine{
+			Label:       stage.String(),
 			Description: stage.String(),
-			Level:       g.count,
-			Balance:     &l8common.Money{Amount: g.total, CurrencyId: "USD"},
+			Count:       g.count,
+			Amount:      &l8common.Money{Amount: g.total, CurrencyId: "USD"},
 			Variance:    &l8common.Money{Amount: g.weighted, CurrencyId: "USD"},
 		}
 		section.Lines = append(section.Lines, line)
@@ -71,13 +72,13 @@ func generateOpportunityPipeline(report *fin.FinReport, vnic ifs.IVNic) error {
 	section.SectionTotal = &l8common.Money{Amount: grandTotal, CurrencyId: "USD"}
 
 	// Add weighted pipeline summary line
-	section.Lines = append(section.Lines, &fin.FinReportLine{
-		AccountName: "Weighted Pipeline Total",
-		IsHeader:    true,
-		Balance:     &l8common.Money{Amount: weightedTotal, CurrencyId: "USD"},
+	section.Lines = append(section.Lines, &crm.CrmReportLine{
+		Label:    "Weighted Pipeline Total",
+		IsHeader: true,
+		Amount:   &l8common.Money{Amount: weightedTotal, CurrencyId: "USD"},
 	})
 
-	report.Sections = []*fin.FinReportSection{section}
+	report.Sections = []*crm.CrmReportSection{section}
 	report.GrandTotal = &l8common.Money{Amount: grandTotal, CurrencyId: "USD"}
 	report.RowCount = int32(len(section.Lines))
 	return nil

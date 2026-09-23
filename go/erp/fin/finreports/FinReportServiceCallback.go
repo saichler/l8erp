@@ -16,27 +16,28 @@ package finreports
 
 import (
 	"fmt"
-	"time"
 
 	common "github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/fin"
 	"github.com/saichler/l8types/go/ifs"
 )
 
-func newFinReportServiceCallback(vnic ifs.IVNic) ifs.IServiceCallback {
-	generateOnPost := func(vi interface{}, action ifs.Action, _ ifs.IVNic) error { report := vi.(*fin.FinReport);
-		if action != ifs.POST {
-			return nil
-		}
-		report.GeneratedAt = time.Now().Unix()
-		return generateReport(report, vnic)
+// finReportAccessors adapts FinReport for the shared report service: the id is
+// generated on POST, the generation time stamped, then generateReport() fills
+// the sections.
+//
+// vnic is the activating nic, captured here so a generator queries through the
+// same connection the service was activated on.
+func finReportAccessors(vnic ifs.IVNic) common.ReportAccessors {
+	return common.ReportAccessors{
+		TypeName:       "FinReport",
+		Is:             func(v interface{}) bool { _, ok := v.(*fin.FinReport); return ok },
+		SetID:          func(v interface{}) { common.GenerateID(&v.(*fin.FinReport).ReportId) },
+		SetGeneratedAt: func(v interface{}, at int64) { v.(*fin.FinReport).GeneratedAt = at },
+		Generate: func(v interface{}, _ ifs.IVNic) error {
+			return generateReport(v.(*fin.FinReport), vnic)
+		},
 	}
-	return common.NewServiceCallback("FinReport",
-		func(v interface{}) bool { _, ok := v.(*fin.FinReport); return ok },
-		func(v interface{}) { common.GenerateID(&v.(*fin.FinReport).ReportId) },
-		nil,
-		func(v interface{}, action ifs.Action, vnic ifs.IVNic) error { return generateOnPost(v.(*fin.FinReport), action, vnic) },
-	)
 }
 
 func generateReport(report *fin.FinReport, vnic ifs.IVNic) error {
