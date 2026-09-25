@@ -104,7 +104,10 @@ test.describe('system section', () => {
         await nav.openModule('modules');
         const container = app.locator('#modules-settings-container');
         await expect(
-            container.locator('.layer8d-toggle-tree, .toggle-tree, li, .tree-node').first(),
+            container.locator(// Layer8DToggleTree emits l8-toggle-* class names; none of
+            // .layer8d-toggle-tree / .toggle-tree / .tree-node exist anywhere in
+            // l8ui, so the original list could only ever fail.
+            '.l8-toggle-node, .l8-toggle-row').first(),
             'the Modules tab rendered no tree'
         ).toBeVisible({ timeout: 25000 });
     });

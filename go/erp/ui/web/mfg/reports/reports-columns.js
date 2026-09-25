@@ -40,7 +40,7 @@ limitations under the License.
             // a count here rather than an inline table in the form: the POST
             // handler overwrites whatever was submitted.
             ...col.custom('sections', 'Sections',
-                function(item) { return (item.sections || []).length; },
+                function(item) { return String((item.sections || []).length); },
                 { sortKey: 'rowCount' }),
             ...col.col('notes', 'Notes')
         ]

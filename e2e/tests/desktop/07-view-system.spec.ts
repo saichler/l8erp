@@ -20,7 +20,7 @@ import { desktopServicesWithAlternateViews, DESKTOP_SECTIONS } from '../../fixtu
 const VIEW_MARKERS: Record<string, string> = {
     table: '.l8-table, .l8-empty-state',
     chart: 'svg, canvas, .layer8d-chart, .l8-empty-state',
-    kanban: '.layer8d-kanban, .l8-empty-state',
+    kanban: '.layer8d-kanban-board, .l8-empty-state',
     calendar: '.layer8d-calendar, .l8-empty-state',
     timeline: '.layer8d-timeline, .l8-empty-state',
     gantt: '.layer8d-gantt, .l8-empty-state',
@@ -80,7 +80,7 @@ test.describe('view system', () => {
     });
 
     for (const { section, moduleKey, service } of withAlternates) {
-        const views = [service.viewType, ...service.alternateViews];
+        const views = [...new Set([service.viewType, ...service.alternateViews])];
         test(`${section}/${moduleKey}/${service.key} renders [${views.join(', ')}]`,
             async ({ app, consoleErrors }) => {
                 const nav = new DesktopNav(app);
@@ -96,7 +96,21 @@ test.describe('view system', () => {
                 const failures: string[] = [];
 
                 for (const view of views) {
-                    const option = slot.locator(`[data-view="${view}"], option[value="${view}"]`);
+                    // Layer8ViewSwitcher.render() emits an icon button plus a
+                    // floating menu of .l8-view-menu-item[data-view-type].
+                    // Reaching an item means opening the menu first, and the
+                    // attribute is data-view-TYPE -- looking for data-view
+                    // silently matches nothing, the view never switches, and
+                    // every non-default view then "renders nothing" because the
+                    // default table is still on screen.
+                    const toggle = slot.locator('.l8-view-toggle');
+                    if (await toggle.count()) {
+                        await toggle.first().click().catch(() => undefined);
+                        await app.waitForTimeout(200);
+                    }
+                    const option = slot.locator(
+                        `[data-view-type="${view}"], option[value="${view}"]`
+                    );
                     if (await option.count()) {
                         const tag = await option.first().evaluate((e) => e.tagName.toLowerCase());
                         if (tag === 'option') {
@@ -105,6 +119,18 @@ test.describe('view system', () => {
                             await option.first().click();
                         }
                         await app.waitForTimeout(1500);
+                    } else {
+                        // Close the menu we just opened: left open it floats
+                        // over the module tabs and the NEXT test's
+                        // openModule() click lands on it instead.
+                        if (await toggle.count()) {
+                            await toggle.first().click().catch(() => undefined);
+                        }
+                        failures.push(
+                            `${view}: the switcher offers no option for it ` +
+                            `(looked for [data-view-type="${view}"])`
+                        );
+                        continue;
                     }
 
                     const marker = VIEW_MARKERS[view] || '*';
@@ -114,6 +140,12 @@ test.describe('view system', () => {
                         );
                     }
                 }
+
+                // Same reason: an open .l8-view-menu outlives this test and
+                // intercepts the next one's navigation clicks.
+                await app.locator('.l8-view-menu.open, .l8-view-menu[style*="block"]')
+                    .first().click({ timeout: 500 }).catch(() => undefined);
+                await app.keyboard.press('Escape').catch(() => undefined);
 
                 expect(failures, `view failures:\n  ${failures.join('\n  ')}`).toEqual([]);
                 assertNoPageErrors(consoleErrors);

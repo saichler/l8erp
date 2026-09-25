@@ -278,7 +278,77 @@ This plan is written to `./plans/` and stops here, per `PlanRequirements`.
 | 4 — desktop UI | done | new `{mod}/reports/` ×6 + FIN namespace fix |
 | 5 — mobile UI | done | registries, nav config, `m/app.html`; reports reach mobile for the first time |
 | 6 — mock generators | done | `gen_reports.go`, `reports_phases.go`, `store_reports.go` |
-| 7 — cluster verification | **blocked** | needs a commit + push: the Dockerfile resolves `l8erp` from GitHub |
+| 7 — cluster verification | done (2 blocked) | images rebuilt at `e0aec5cf`, loaded into KIND; see below |
+
+### Phase 7 results (live KIND cluster)
+
+Both images rebuilt from the pushed commit — the build log confirms
+`l8erp v0.0.0-20260923120641-e0aec5cf391b`, so no stale code this time — loaded
+into KIND and the pods restarted.
+
+**Seven separate tables, confirmed at runtime.** All seven endpoints answer
+HTTP 200 for their own protobuf type and started empty: the shared-table
+violation is gone in the running system, not just in the source.
+
+**All 26 report types generate.** Seeding the seven services through the real
+API produced real sections and lines for every type in every module:
+
+| Service | Reports | sections/rows produced |
+|---|---|---|
+| FinReport | 7 | 3s/12r, 2s/14r, 1s/26r, 1s/5r, 4s/30r, 4s/23r, 1s/3r |
+| HcmReport | 4 | 1s/12r, 1s/1r, 1s/2r, 1s/1r |
+| ScmReport | 3 | 6s/25r, 1s/5r, 1s/6r |
+| MfgReport | 3 | 1s/4r, 1s/5r, 1s/20r |
+| SalesReport | 3 | 1s/20r, 1s/5r, 1s/15r |
+| CrmReport | 3 | 1s/6r, 1s/8r, 1s/6r |
+| PrjReport | 3 | 1s/15r, 1s/22r, 1s/15r |
+
+**The images were never being deployed.** Every workload in
+`k8s/l8erp-kind.yaml` carries `imagePullPolicy: Always`, so Kubernetes pulls
+`saichler/erp:latest` from Docker Hub and discards whatever `kind load` put on
+the node. With no `docker push`, the cluster ran Hub's Sep 21 binary
+(`HcmReportList` ×0) while the locally built Sep 23 image sat unused — so an
+earlier claim in this file that Phase 7 ran against the pushed commit was
+wrong; the build log only proved the image compiled, not that the pod used it.
+Verified by `grep -c HcmReportList /home/run/erp` inside the container: 0
+before, 25 after patching both StatefulSets to `IfNotPresent` and re-loading.
+
+`Always` also makes the workflow `PostImplementationE2ETesting` prescribes
+impossible ("rebuild the image, `kind load docker-image`, `kubectl delete pod`
+to force a fresh pull of the loaded image"). The patch above is live-only; the
+manifest still says `Always`, and changing it is a deployment-artifact decision
+left to the owner.
+
+Spec results, reports only — all green:
+
+| Spec | Reports covered | Result |
+|---|---|---|
+| `03-service-coverage` | 7/7 | pass (suite went 11 failed -> 2 failed, 66 passed) |
+| `11-form-rendering` | 7/7, 12–13 fields each | pass |
+| `14-inline-tables` | 7/7 `sections` tables | pass |
+
+`10/11/14` together: 174 passed, 12 failed, 11 flaky. Only **2** of those 12 are
+real (AP and AR, the orphaned rows below). The other 10 are Playwright
+`ENOENT ... .playwright-artifacts-N/traces/*.trace` — `outputDir` is the shared
+`./test-results` and Playwright clears it on startup, so launching the mobile
+suite while the desktop suite was still running destroyed the desktop run's
+in-flight traces. Operator error, not a product finding: **never run two
+suites concurrently against this config.** The same mistake invalidated a
+mobile run (19 failed, 12 of them that cascade).
+
+### The defect only the cluster could catch
+
+`col.custom('sections', ..., fn)` returned a **number**. `Layer8DTable.
+renderRow` calls `value.replace(/<[^>]*>/g, '')` on whatever `col.render`
+returns, to strip markup for the cell tooltip — so a non-string throws, and
+`fetchData`'s catch relabels it as a data error, taking down the **entire
+table** rather than one cell. All seven now return `String(...)`.
+
+Worth raising upstream: `renderRow`'s `col.key` branch coerces through
+`escapeHtml`'s `String(text)`, but its `col.render` branch does not. One
+`String()` in `l8ui/edit_table/layer8d-table-render.js:236` would turn a
+whole-table outage into a rendered cell. Not changed here — it belongs to l8ui,
+and `L8UINoProjectSpecificCode` says to push l8ui rather than edit it in place.
 
 ### Schema changes beyond the mechanical rename
 
@@ -353,11 +423,120 @@ Second Instance Rule: each report service is now ~9 non-comment lines — a
 `ServiceName`/`ServiceArea` pair and one delegating call. The per-type accessor
 closures cannot be shared further without generics, which are banned.
 
+### Two genuine product bugs the real browser found (both in l8ui) — FIXED
+
+Both fixed in the **l8ui source** (`../l8ui`), per `L8UINoProjectSpecificCode`:
+an l8ui fix goes through its own repo and a submodule bump, never an in-place
+edit of `go/erp/ui/web/l8ui`. **l8ui must be committed and pushed, and the
+submodule bumped**, or the next `git submodule update` discards them — the
+working copy inside l8erp is only mirrored so the image could be built and the
+fix verified.
+
+**1. Bar charts cannot render negative values.**
+`l8ui/chart/layer8d-chart-bar.js` computes `maxVal = Math.max(...values, 1)`
+with the baseline pinned to the bottom of the plot, then
+`barH = (d.value / maxVal) * plotH` (line 77; line 145 for the horizontal
+variant). A negative datum yields a negative height, SVG rejects the attribute,
+the bar never draws and the console fills with
+`<rect> attribute height: A negative value is not valid. ("-189.84…")`.
+Any dataset containing a variance, delta or profit/loss silently loses those
+bars — reproduced on `bi/analytics/trend-analyses`.
+
+Fixed with a signed domain rather than a clamp: a new `_domain(data)` returns
+`min(values, 0)`..`max(values, 0)`, `_getTicks(min, max)` walks that signed
+range on a rounded step and always includes zero, the axis line moves from the
+plot floor to the zero position, and each bar is drawn from zero with
+`Math.abs()` extent. `_getTicks(maxVal)` keeps its old single-argument meaning
+so nothing else that calls it breaks. Checked against negatives-only, mixed,
+all-positive, all-negative and all-zero data: no negative extents, and
+all-positive output is unchanged apart from zero now appearing as a tick.
+
+**2. A restricted account gets a completely blank shell.**
+Signed in as `hrclerk`, `#content-area` has `innerHTML.length === 0` and zero
+`.section-container`s, while all 15 sidebar links still render as visible. The
+operator, same shell, same moment: 16 115 characters and one section.
+Permissions themselves are correct — `/permissions` returns 16 models for
+`hrclerk` against 269 for `operator`.
+
+Root cause: `Layer8DModuleFilter.load()` queries `SysModuleConfig`, which the
+restricted role may not read — `operator` gets HTTP 200 `{}`, `hrclerk` gets
+HTTP 400 `access denied`. `load()` treated that as fatal and returned false, and
+`js/app.js:176` does `if (!configLoaded) return;`, aborting init before
+`loadSection('dashboard')` on line 220. Hence a blank `#content-area` with a
+full sidebar, plus `showErrorAndLogout()` on top of it
+(`ModconfigFailureNoLogout`).
+
+Fixed in `load()`: a 401/403, or a body containing `access denied`, is now a
+normal state — it warns, leaves `_loaded` false and returns true. That is the
+component's own documented safe default (`isEnabled()` reports everything
+visible when unloaded), and it grants nothing, because module config only toggles
+which modules are *shown*; the real boundary is `/permissions` plus the server's
+deny rules, which still apply. A genuine outage (any other status) stays fatal,
+so `FailFastNoSilentFallback` is preserved for the case it is about.
+
+One red herring worth recording: an earlier probe of mine queried
+`L8ModuleConfig` instead of `SysModuleConfig` and got a 400 for *both* accounts,
+which briefly looked like the cause. It was not — the operator boots through it.
+
+### Mobile suite: 8 passed / 76 failed -> 85 passed / 2 failed
+
+Almost all of it was one page-object bug of mine. Mobile has **two** card-table
+components — `Layer8MTable` emits `mobile-table-*`, `Layer8MEditTable` emits
+`mobile-edit-table-*` — and `layer8m-nav-data.js` renders services through the
+editable one (`AddingModule`: "Mobile: `new Layer8MEditTable(containerId,
+config)`"). `pages/MobileNav.ts` matched only `mobile-table-*`, so a live probe
+found `#service-table-container` holding **43 097 characters of fully rendered
+table** while every selector counted zero, and all 256 services reported "table
+never resolved". Also fixed: `openService()` was passed `subModuleKey`
+(`core-hr`) where it matches the card's visible text (`Core HR`) — Playwright's
+`hasText` is case-insensitive substring, so single-word keys like `health`
+matched by luck and hyphenated ones never did, which is exactly which 8 tests
+passed. Custom views (`aia/agent/chat`, `system/modules/module-settings`,
+`model: undefined`) are now skipped, as the desktop sweep skips `customView`.
+
+**A third product bug, found by the parity spec:** `layer8m-nav-config.js`
+enumerates each module config it merges and `lending` was absent.
+`layer8m-nav-config-prj-other.js` defines all six LEND services, but they never
+reached `LAYER8M_NAV_CONFIG`, so the sidebar showed a Lending entry (that comes
+from the base modules list) leading nowhere — every LEND service was
+desktop-only, a `MobileRules` parity violation. One line in `erp-ui/`; mobile
+went 256 -> 262 services.
+
+**A fourth, found by rewriting a bad test of mine:**
+`00-shell-integrity`'s registry check took every `window.Mobile*` global and
+demanded it be a `Layer8MModuleRegistry`, which is false for
+`MobileEmployeeDetail`, `MobileSysHealth` and `MobileApp` — three permanent
+false failures, and it never consulted the nav config its name refers to. The
+rewrite asserts what it claims: anything exposing `hasModel` implements the whole
+contract, and every nav-config module with services has a registry that knows at
+least one of its models. It immediately caught `window.MobileSYS`, hand-rolled
+instead of built by `Layer8MModuleRegistry.create()` and missing
+`getPrimaryKey` — latent only because `layer8m-nav-data.js` reads
+`serviceConfig.idField`. Added.
+
+Remaining 2 failures are genuine `aia` config gaps, left for the owner:
+`aia/conversations` (`L8AgentConversation`, the ORM-backed service) exists on
+mobile but not desktop; and `aia/chat` declares `model:
+L8AgentChatConversation` on desktop but no model on mobile. `AgntChat` is *not*
+ORM-backed — custom handler, no table — so mobile's "custom view" declaration is
+arguably the correct one, and desktop naming a model for a non-CRUD service is
+what made `04-api-contract` flag `L8AgentChatConversation` as having no page-1
+`Total`.
+
 ### Still open (found, not in this plan's scope)
 
 - `fin/reports/reports-viewer.js` (223 lines) defines `Layer8FinReportViewer`
   and is loaded by both shells, but nothing ever calls it.
 - `js/app.js` nsMap has 6 wrong namespaces.
+- **20 orphaned rows in `paymentallocation`, still blocking AP and AR.** They
+  are pre-rename LEND rows (`parentkey` like `[{24}lpay-NNN]`, type 24) stranded
+  in FIN's table when `PaymentAllocation` became `LendPaymentAllocation`; their
+  `paymentid`/`invoiceid` are NULL, so every `VendorPayment` and
+  `CustomerPayment` query dies on `Scan error on column index 3, name
+  "paymentid": converting NULL to string is unsupported`. The 20 bad rows and
+  the 20 LEND rows are exactly the same set, disjoint from the 20 good FIN
+  (`vpmt-`) rows, so the delete is unambiguous. `lendpaymentallocation` exists
+  and is empty. The assistant's sandbox blocks the write that would remove them.
 - **Mobile `primary`/`secondary` column hints.** `AddingModule`'s mobile step
   asks for them and `Layer8MTable._renderDefaultCard` reads them for the card
   title and subtitle. Only 1 of this repo's 77 column files sets them, because

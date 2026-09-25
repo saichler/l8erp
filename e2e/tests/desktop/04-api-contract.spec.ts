@@ -46,6 +46,14 @@ test.describe('API contract', () => {
         for (const m of desktopModels()) {
             try {
                 const res = await api.query(m.endpoint, `select * from ${m.model} limit 1 page 0`);
+                // A model with no rows returns no metadata block at all, which
+                // the pagination UI reads as `counts.Total || 0` -- correct for
+                // an empty table. Asserting a Total there just makes the spec
+                // fail on a freshly loaded cluster (it caught
+                // L8AgentChatConversation, which is empty until someone chats).
+                // The regression this test exists for is a model that HAS rows
+                // and still reports no Total.
+                if ((res.list || []).length === 0) continue;
                 if (res.metadata?.keyCount?.counts?.Total === undefined) {
                     missing.push(`${m.model} (${m.endpoint})`);
                 }

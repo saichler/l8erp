@@ -62,6 +62,20 @@ limitations under the License.
         return findModule(modelName) !== null;
     }
 
+    // MobileSYS is hand-rolled rather than built by
+    // Layer8MModuleRegistry.create(), so every member of the registry contract
+    // has to be supplied here. getPrimaryKey was missing: any caller resolving a
+    // SYS model's key through the registry got undefined instead of a field
+    // name. (layer8m-nav-data.js happens to read serviceConfig.idField, which is
+    // why this stayed latent.)
+    function getPrimaryKey(modelName) {
+        const mod = findModule(modelName);
+        if (mod && mod.primaryKeys && mod.primaryKeys[modelName]) {
+            return mod.primaryKeys[modelName];
+        }
+        return null;
+    }
+
     function getModuleName(modelName) {
         const mod = findModule(modelName);
         if (!mod) return null;
@@ -74,6 +88,7 @@ limitations under the License.
         getFormDef,
         getColumns,
         getTransformData,
+        getPrimaryKey,
         hasModel,
         getModuleName,
         modules: {

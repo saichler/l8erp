@@ -92,13 +92,24 @@ export class MobileNav {
 export class MobileTable {
     constructor(private page: Page) {}
 
-    cards(): Locator { return this.page.locator('.mobile-table-cards .mobile-table-card-row'); }
-    wrapper(): Locator { return this.page.locator('.mobile-table-wrapper'); }
-    empty(): Locator { return this.page.locator('.mobile-table-empty'); }
-    error(): Locator { return this.page.locator('.mobile-table-error'); }
-    loading(): Locator { return this.page.locator('.mobile-table-loading'); }
-    pagination(): Locator { return this.page.locator('.mobile-table-pagination'); }
-    filters(): Locator { return this.page.locator('.mobile-table-filters'); }
+    // Mobile has TWO card table components and the nav uses the editable one:
+    // Layer8MTable emits `mobile-table-*`, Layer8MEditTable emits
+    // `mobile-edit-table-*`, and layer8m-nav-data.js renders services through
+    // the latter (AddingModule: "Mobile: new Layer8MEditTable(containerId,
+    // config)"). Matching only `mobile-table-*` found a fully rendered 43KB
+    // table and reported "never resolved" for every service in the app.
+    cards(): Locator {
+        return this.page.locator(
+            '.mobile-table-cards .mobile-table-card-row, ' +
+            '.mobile-edit-table-cards .mobile-edit-table-card-row'
+        );
+    }
+    wrapper(): Locator { return this.page.locator('.mobile-table-wrapper, .mobile-edit-table-wrapper'); }
+    empty(): Locator { return this.page.locator('.mobile-table-empty, .mobile-edit-table-empty'); }
+    error(): Locator { return this.page.locator('.mobile-table-error, .mobile-edit-table-error'); }
+    loading(): Locator { return this.page.locator('.mobile-table-loading, .mobile-edit-table-loading'); }
+    pagination(): Locator { return this.page.locator('.mobile-table-pagination, .mobile-edit-table-pagination'); }
+    filters(): Locator { return this.page.locator('.mobile-table-filters, .mobile-edit-table-filters'); }
 
     /** Same three-way resolution as the desktop table, plus the error card. */
     async waitForResolved(timeout = 20000): Promise<'cards' | 'empty' | 'error'> {
@@ -123,7 +134,9 @@ export class MobileTable {
     async firstCardLabels(): Promise<string[]> {
         const first = this.cards().first();
         if (!(await first.count())) return [];
-        const labels = await first.locator('.mobile-table-card-label').allInnerTexts();
+        const labels = await first
+            .locator('.mobile-table-card-label, .mobile-edit-table-card-label')
+            .allInnerTexts();
         return labels.map((l) => l.replace(/:$/, '').trim()).filter(Boolean);
     }
 }

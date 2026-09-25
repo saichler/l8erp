@@ -29,6 +29,11 @@ for (const section of DESKTOP_SECTIONS) {
 
         test(`${section.section} / ${mod.moduleKey}: ${withForms.length} form(s), ${fieldTotal} field(s)`,
             async ({ app, api, consoleErrors }) => {
+                // Scale with the real work: this opens every form in the module
+                // and inspects every field. hcm/compensation is 10 forms and 202
+                // fields and timed out against the flat 120s budget, while
+                // single-form modules finish in seconds.
+                test.setTimeout(Math.max(120_000, withForms.length * 20_000 + fieldTotal * 250));
                 const problems: Problems = [];
 
                 for (const svc of withForms) {

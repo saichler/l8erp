@@ -47,6 +47,12 @@ limitations under the License.
         documents: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.documents,
         ecommerce: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.ecommerce,
         compliance: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.compliance,
+        // lending was defined in -prj-other.js but never merged here, so
+        // LAYER8M_NAV_CONFIG.lending was undefined at runtime: the sidebar
+        // showed a Lending entry (it comes from the base modules list) and
+        // tapping it reached nothing, leaving all six LEND services desktop-only
+        // (MobileRules -- Desktop/Mobile Functional Parity).
+        lending: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.lending,
         aia: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.aia,
         system: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.system,
 

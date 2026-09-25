@@ -148,8 +148,14 @@ function buildMobile() {
             const subModules = [];
             if (cfg && cfg.services) {
                 for (const [subKey, services] of Object.entries(cfg.services)) {
+                    // The sub-module CARD shows the label, not the key. A spec
+                    // that filters cards by key silently matches nothing for
+                    // every hyphenated key ('general-ledger' vs 'General
+                    // Ledger'), so capture both.
+                    const subDef = (cfg.subModules || []).find((x) => x.key === subKey);
                     subModules.push({
                         subModuleKey: subKey,
+                        subModuleLabel: (subDef && subDef.label) || subKey,
                         services: services.map((s) => {
                             // Mobile resolves columns/forms through the
                             // Layer8MModuleRegistry objects on window, keyed by

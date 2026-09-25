@@ -91,7 +91,7 @@ export interface MobileModule {
     moduleKey: string;
     label: string;
     hasSubModules: boolean;
-    subModules: { subModuleKey: string; services: MobileService[] }[];
+    subModules: { subModuleKey: string; subModuleLabel: string; services: MobileService[] }[];
 }
 
 interface Inventory {

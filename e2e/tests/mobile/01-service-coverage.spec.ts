@@ -18,22 +18,48 @@ import { test, expect, assertNoPageErrors } from '../../fixtures/test';
 import { MobileNav, MobileTable } from '../../pages/MobileNav';
 import { MOBILE_MODULES } from '../../fixtures/inventory';
 
+// One test per (module, sub-module), mirroring the desktop sweep's granularity.
+//
+// Grouping a whole module into one test does not work here: mobile reaches a
+// service by drilling home -> module -> sub-module -> service and then waiting
+// on its query, so a module-sized test walks 29 (financial), 30 (scm) or 58
+// (hcm) of those in one go and blows the 120s budget every time. Worse, the
+// timeout tears the context down mid-flight, and every later test in that
+// worker reports "Target page, context or browser has been closed" -- which
+// reads like a product failure and is not one.
 for (const mod of MOBILE_MODULES) {
-    const serviceCount = mod.subModules.reduce((a, s) => a + s.services.length, 0);
-
-    test(`mobile ${mod.moduleKey}: all ${serviceCount} service(s) load`,
+    for (const sub of mod.subModules) {
+        test(`mobile ${mod.moduleKey} / ${sub.subModuleKey}: all ${sub.services.length} service(s) load`,
         async ({ mobile, consoleErrors }) => {
+            // Each service is a four-step drill-down plus a query wait; scale
+            // with the count rather than trusting one flat budget.
+            test.setTimeout(Math.max(120_000, sub.services.length * 20_000));
             const nav = new MobileNav(mobile);
             const table = new MobileTable(mobile);
             const problems: string[] = [];
 
-            for (const sub of mod.subModules) {
+            {
                 for (const svc of sub.services) {
                     const where = `${mod.moduleKey}/${sub.subModuleKey}/${svc.key} (${svc.model})`;
 
+                    // A service with no model is a custom view (the AI chat, the
+                    // module-settings tree): it renders its own UI and issues no
+                    // L8Query by design, so a data sweep has nothing to assert.
+                    // The desktop counterpart skips service.customView likewise.
+                    if (!svc.model) continue;
+
+                    // A service with no model is a custom view (the AI chat, the
+                    // module-settings tree) -- it renders its own UI and issues
+                    // no L8Query by design, so a data sweep has nothing to
+                    // assert. The desktop counterpart skips service.customView
+                    // for the same reason.
+                    if (!svc.model) continue;
+
                     await nav.waitForHome().catch(() => undefined);
+                    // sub.subModuleLabel, never subModuleKey: the drill-down
+                    // finds the sub-module card by its visible text.
                     const query = await nav.openService(
-                        mod.moduleKey, sub.subModuleKey, svc.label, svc.model
+                        mod.moduleKey, sub.subModuleLabel, svc.label, svc.model
                     );
 
                     if (query === null) {
@@ -75,4 +101,5 @@ for (const mod of MOBILE_MODULES) {
             expect(problems, `mobile service failures:\n  ${problems.join('\n  ')}`).toEqual([]);
             assertNoPageErrors(consoleErrors);
         });
+    }
 }

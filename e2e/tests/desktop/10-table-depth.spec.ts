@@ -26,6 +26,10 @@ for (const section of DESKTOP_SECTIONS) {
 
         test(`${section.section} / ${mod.moduleKey}: table depth (${mod.services.length} service(s))`,
             async ({ app, api, consoleErrors }) => {
+                // Each service is a navigation plus paging assertions, so a
+                // 9-service module needs far more than the flat 120s budget the
+                // 1-service modules get. hcm/talent timed out on exactly this.
+                test.setTimeout(Math.max(120_000, mod.services.length * 25_000));
                 const problems: Problems = [];
 
                 for (const svc of mod.services) {

@@ -80129,6 +80129,7 @@
         "subModules": [
           {
             "subModuleKey": "general-ledger",
+            "subModuleLabel": "General Ledger",
             "services": [
               {
                 "key": "accounts",
@@ -81239,6 +81240,7 @@
           },
           {
             "subModuleKey": "accounts-payable",
+            "subModuleLabel": "Accounts Payable",
             "services": [
               {
                 "key": "vendors",
@@ -82544,6 +82546,7 @@
           },
           {
             "subModuleKey": "accounts-receivable",
+            "subModuleLabel": "Accounts Receivable",
             "services": [
               {
                 "key": "customers",
@@ -83868,6 +83871,7 @@
           },
           {
             "subModuleKey": "cash-management",
+            "subModuleLabel": "Cash Management",
             "services": [
               {
                 "key": "bank-accounts",
@@ -84770,6 +84774,7 @@
           },
           {
             "subModuleKey": "fixed-assets",
+            "subModuleLabel": "Fixed Assets",
             "services": [
               {
                 "key": "assets",
@@ -85619,6 +85624,7 @@
           },
           {
             "subModuleKey": "budgeting",
+            "subModuleLabel": "Budgeting",
             "services": [
               {
                 "key": "budgets",
@@ -86482,6 +86488,7 @@
           },
           {
             "subModuleKey": "tax-management",
+            "subModuleLabel": "Tax Management",
             "services": [
               {
                 "key": "tax-codes",
@@ -87258,6 +87265,7 @@
           },
           {
             "subModuleKey": "reports",
+            "subModuleLabel": "Reports",
             "services": [
               {
                 "key": "financial-reports",
@@ -87567,6 +87575,7 @@
         "subModules": [
           {
             "subModuleKey": "core-hr",
+            "subModuleLabel": "Core HR",
             "services": [
               {
                 "key": "employees",
@@ -89531,6 +89540,7 @@
           },
           {
             "subModuleKey": "payroll",
+            "subModuleLabel": "Payroll",
             "services": [
               {
                 "key": "pay-structures",
@@ -91597,6 +91607,7 @@
           },
           {
             "subModuleKey": "benefits",
+            "subModuleLabel": "Benefits",
             "services": [
               {
                 "key": "benefit-plans",
@@ -93398,6 +93409,7 @@
           },
           {
             "subModuleKey": "time",
+            "subModuleLabel": "Time",
             "services": [
               {
                 "key": "timesheets",
@@ -95613,6 +95625,7 @@
           },
           {
             "subModuleKey": "talent",
+            "subModuleLabel": "Talent",
             "services": [
               {
                 "key": "reviews",
@@ -98231,6 +98244,7 @@
           },
           {
             "subModuleKey": "learning",
+            "subModuleLabel": "Learning",
             "services": [
               {
                 "key": "courses",
@@ -100502,6 +100516,7 @@
           },
           {
             "subModuleKey": "compensation",
+            "subModuleLabel": "Compensation",
             "services": [
               {
                 "key": "salary-grades",
@@ -103945,6 +103960,7 @@
           },
           {
             "subModuleKey": "reports",
+            "subModuleLabel": "Reports",
             "services": [
               {
                 "key": "module-reports",
@@ -104273,6 +104289,7 @@
         "subModules": [
           {
             "subModuleKey": "procurement",
+            "subModuleLabel": "Procurement",
             "services": [
               {
                 "key": "purchase-requisitions",
@@ -105404,6 +105421,7 @@
           },
           {
             "subModuleKey": "inventory",
+            "subModuleLabel": "Inventory",
             "services": [
               {
                 "key": "items",
@@ -106281,6 +106299,7 @@
           },
           {
             "subModuleKey": "warehouse",
+            "subModuleLabel": "Warehouse",
             "services": [
               {
                 "key": "warehouses",
@@ -107375,6 +107394,7 @@
           },
           {
             "subModuleKey": "logistics",
+            "subModuleLabel": "Logistics",
             "services": [
               {
                 "key": "carriers",
@@ -108706,6 +108726,7 @@
           },
           {
             "subModuleKey": "demand-planning",
+            "subModuleLabel": "Demand Planning",
             "services": [
               {
                 "key": "demand-forecasts",
@@ -109593,6 +109614,7 @@
           },
           {
             "subModuleKey": "supply-planning",
+            "subModuleLabel": "Supply Planning",
             "services": [
               {
                 "key": "material-requirements",
@@ -110669,6 +110691,7 @@
           },
           {
             "subModuleKey": "reports",
+            "subModuleLabel": "Reports",
             "services": [
               {
                 "key": "module-reports",
@@ -110996,6 +111019,7 @@
         "subModules": [
           {
             "subModuleKey": "engineering",
+            "subModuleLabel": "Engineering",
             "services": [
               {
                 "key": "boms",
@@ -111882,6 +111906,7 @@
           },
           {
             "subModuleKey": "production",
+            "subModuleLabel": "Production",
             "services": [
               {
                 "key": "work-orders",
@@ -112862,6 +112887,7 @@
           },
           {
             "subModuleKey": "shopfloor",
+            "subModuleLabel": "Shop Floor",
             "services": [
               {
                 "key": "work-centers",
@@ -113708,6 +113734,7 @@
           },
           {
             "subModuleKey": "quality",
+            "subModuleLabel": "Quality",
             "services": [
               {
                 "key": "plans",
@@ -114714,6 +114741,7 @@
           },
           {
             "subModuleKey": "planning",
+            "subModuleLabel": "Planning",
             "services": [
               {
                 "key": "mrp-runs",
@@ -115542,6 +115570,7 @@
           },
           {
             "subModuleKey": "costing",
+            "subModuleLabel": "Costing",
             "services": [
               {
                 "key": "standard-costs",
@@ -116238,6 +116267,7 @@
           },
           {
             "subModuleKey": "reports",
+            "subModuleLabel": "Reports",
             "services": [
               {
                 "key": "module-reports",
@@ -116565,6 +116595,7 @@
         "subModules": [
           {
             "subModuleKey": "customers",
+            "subModuleLabel": "Customers",
             "services": [
               {
                 "key": "hierarchies",
@@ -117449,6 +117480,7 @@
           },
           {
             "subModuleKey": "orders",
+            "subModuleLabel": "Orders",
             "services": [
               {
                 "key": "quotations",
@@ -118557,6 +118589,7 @@
           },
           {
             "subModuleKey": "pricing",
+            "subModuleLabel": "Pricing",
             "services": [
               {
                 "key": "price-lists",
@@ -119325,6 +119358,7 @@
           },
           {
             "subModuleKey": "shipping",
+            "subModuleLabel": "Shipping",
             "services": [
               {
                 "key": "deliveries",
@@ -119926,6 +119960,7 @@
           },
           {
             "subModuleKey": "billing",
+            "subModuleLabel": "Billing",
             "services": [
               {
                 "key": "schedules",
@@ -120427,6 +120462,7 @@
           },
           {
             "subModuleKey": "analytics",
+            "subModuleLabel": "Analytics",
             "services": [
               {
                 "key": "targets",
@@ -121368,6 +121404,7 @@
           },
           {
             "subModuleKey": "reports",
+            "subModuleLabel": "Reports",
             "services": [
               {
                 "key": "module-reports",
@@ -121695,6 +121732,7 @@
         "subModules": [
           {
             "subModuleKey": "leads",
+            "subModuleLabel": "Leads",
             "services": [
               {
                 "key": "leads",
@@ -122728,6 +122766,7 @@
           },
           {
             "subModuleKey": "opportunities",
+            "subModuleLabel": "Opportunities",
             "services": [
               {
                 "key": "opportunities",
@@ -123459,6 +123498,7 @@
           },
           {
             "subModuleKey": "accounts",
+            "subModuleLabel": "Accounts",
             "services": [
               {
                 "key": "accounts",
@@ -124781,6 +124821,7 @@
           },
           {
             "subModuleKey": "marketing",
+            "subModuleLabel": "Marketing",
             "services": [
               {
                 "key": "campaigns",
@@ -125668,6 +125709,7 @@
           },
           {
             "subModuleKey": "service",
+            "subModuleLabel": "Service",
             "services": [
               {
                 "key": "cases",
@@ -127073,6 +127115,7 @@
           },
           {
             "subModuleKey": "fieldservice",
+            "subModuleLabel": "Field Service",
             "services": [
               {
                 "key": "service-orders",
@@ -128468,6 +128511,7 @@
           },
           {
             "subModuleKey": "reports",
+            "subModuleLabel": "Reports",
             "services": [
               {
                 "key": "module-reports",
@@ -128795,6 +128839,7 @@
         "subModules": [
           {
             "subModuleKey": "planning",
+            "subModuleLabel": "Planning",
             "services": [
               {
                 "key": "projects",
@@ -130008,6 +130053,7 @@
           },
           {
             "subModuleKey": "resources",
+            "subModuleLabel": "Resources",
             "services": [
               {
                 "key": "resource-pools",
@@ -131498,6 +131544,7 @@
           },
           {
             "subModuleKey": "timeexpense",
+            "subModuleLabel": "Time & Expense",
             "services": [
               {
                 "key": "timesheets",
@@ -132832,6 +132879,7 @@
           },
           {
             "subModuleKey": "billing",
+            "subModuleLabel": "Billing",
             "services": [
               {
                 "key": "billing-rates",
@@ -134397,6 +134445,7 @@
           },
           {
             "subModuleKey": "analytics",
+            "subModuleLabel": "Analytics",
             "services": [
               {
                 "key": "status-reports",
@@ -135233,6 +135282,7 @@
           },
           {
             "subModuleKey": "reports",
+            "subModuleLabel": "Reports",
             "services": [
               {
                 "key": "module-reports",
@@ -135560,6 +135610,7 @@
         "subModules": [
           {
             "subModuleKey": "reporting",
+            "subModuleLabel": "Reporting",
             "services": [
               {
                 "key": "reports",
@@ -136267,6 +136318,7 @@
           },
           {
             "subModuleKey": "dashboards",
+            "subModuleLabel": "Dashboards",
             "services": [
               {
                 "key": "dashboards",
@@ -137058,6 +137110,7 @@
           },
           {
             "subModuleKey": "analytics",
+            "subModuleLabel": "Analytics",
             "services": [
               {
                 "key": "data-cubes",
@@ -138364,6 +138417,7 @@
           },
           {
             "subModuleKey": "datamanagement",
+            "subModuleLabel": "Data Management",
             "services": [
               {
                 "key": "data-sources",
@@ -139770,6 +139824,7 @@
         "subModules": [
           {
             "subModuleKey": "storage",
+            "subModuleLabel": "Storage",
             "services": [
               {
                 "key": "documents",
@@ -141000,6 +141055,7 @@
           },
           {
             "subModuleKey": "workflow",
+            "subModuleLabel": "Workflow",
             "services": [
               {
                 "key": "approval-workflows",
@@ -141279,6 +141335,7 @@
           },
           {
             "subModuleKey": "integration",
+            "subModuleLabel": "Integration",
             "services": [
               {
                 "key": "templates",
@@ -142101,6 +142158,7 @@
           },
           {
             "subModuleKey": "compliance",
+            "subModuleLabel": "Compliance",
             "services": [
               {
                 "key": "retention-policies",
@@ -142900,6 +142958,7 @@
         "subModules": [
           {
             "subModuleKey": "catalog",
+            "subModuleLabel": "Catalog",
             "services": [
               {
                 "key": "products",
@@ -143839,6 +143898,7 @@
           },
           {
             "subModuleKey": "orders",
+            "subModuleLabel": "Orders",
             "services": [
               {
                 "key": "orders",
@@ -144798,6 +144858,7 @@
           },
           {
             "subModuleKey": "customers",
+            "subModuleLabel": "Customers",
             "services": [
               {
                 "key": "customers",
@@ -145701,6 +145762,7 @@
           },
           {
             "subModuleKey": "promotions",
+            "subModuleLabel": "Promotions",
             "services": [
               {
                 "key": "promotions",
@@ -147137,6 +147199,7 @@
         "subModules": [
           {
             "subModuleKey": "regulatory",
+            "subModuleLabel": "Regulatory",
             "services": [
               {
                 "key": "regulations",
@@ -147717,6 +147780,7 @@
           },
           {
             "subModuleKey": "controls",
+            "subModuleLabel": "Internal Controls",
             "services": [
               {
                 "key": "controls",
@@ -148641,6 +148705,7 @@
           },
           {
             "subModuleKey": "risk",
+            "subModuleLabel": "Risk Management",
             "services": [
               {
                 "key": "risk-registers",
@@ -149838,6 +149903,7 @@
           },
           {
             "subModuleKey": "audit",
+            "subModuleLabel": "Audit Management",
             "services": [
               {
                 "key": "audit-schedules",
@@ -151049,7 +151115,2986 @@
         "moduleKey": "lending",
         "label": "Lending",
         "hasSubModules": true,
-        "subModules": []
+        "subModules": [
+          {
+            "subModuleKey": "products",
+            "subModuleLabel": "Products",
+            "services": [
+              {
+                "key": "products",
+                "label": "Products",
+                "endpoint": "/130/LendProd",
+                "model": "LendProduct",
+                "idField": "productId",
+                "readOnly": false,
+                "alternateViews": [],
+                "columns": [
+                  {
+                    "key": "productCode",
+                    "label": "Code",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "name",
+                    "label": "Name",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "productType",
+                    "label": "Type",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "status",
+                    "label": "Status",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "interestType",
+                    "label": "Interest Type",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "baseInterestRate",
+                    "label": "Base Rate %",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "minLoanAmount",
+                    "label": "Min Amount",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "maxLoanAmount",
+                    "label": "Max Amount",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "isActive",
+                    "label": "Active",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  }
+                ],
+                "form": {
+                  "title": "Lending Product",
+                  "sections": [
+                    {
+                      "title": "Product Information",
+                      "fields": [
+                        {
+                          "key": "productCode",
+                          "label": "Product Code",
+                          "type": "text",
+                          "required": true,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "name",
+                          "label": "Name",
+                          "type": "text",
+                          "required": true,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "description",
+                          "label": "Description",
+                          "type": "textarea",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "productType",
+                          "label": "Product Type",
+                          "type": "select",
+                          "required": true,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8
+                          ],
+                          "columns": null
+                        },
+                        {
+                          "key": "status",
+                          "label": "Status",
+                          "type": "select",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "columns": null
+                        },
+                        {
+                          "key": "interestType",
+                          "label": "Interest Type",
+                          "type": "select",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "columns": null
+                        },
+                        {
+                          "key": "paymentFrequency",
+                          "label": "Payment Frequency",
+                          "type": "select",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                          ],
+                          "columns": null
+                        },
+                        {
+                          "key": "isActive",
+                          "label": "Active",
+                          "type": "checkbox",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Interest & Fees",
+                      "fields": [
+                        {
+                          "key": "baseInterestRate",
+                          "label": "Base Interest Rate %",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "minInterestRate",
+                          "label": "Min Interest Rate %",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "maxInterestRate",
+                          "label": "Max Interest Rate %",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "originationFeePct",
+                          "label": "Origination Fee %",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "lateFeePct",
+                          "label": "Late Fee %",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "gracePeriodDays",
+                          "label": "Grace Period (Days)",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "prepaymentPenalty",
+                          "label": "Prepayment Penalty",
+                          "type": "checkbox",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Loan Limits",
+                      "fields": [
+                        {
+                          "key": "minLoanAmount",
+                          "label": "Min Loan Amount",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "maxLoanAmount",
+                          "label": "Max Loan Amount",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "minTermMonths",
+                          "label": "Min Term (Months)",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "maxTermMonths",
+                          "label": "Max Term (Months)",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "minCreditScore",
+                          "label": "Min Credit Score",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "collateralRequired",
+                          "label": "Collateral Required",
+                          "type": "checkbox",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Accounting",
+                      "fields": [
+                        {
+                          "key": "glReceivableAccountId",
+                          "label": "GL Receivable Account",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Account",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "glInterestIncomeAccountId",
+                          "label": "GL Interest Income Account",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Account",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "glFeeIncomeAccountId",
+                          "label": "GL Fee Income Account",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Account",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "currencyId",
+                          "label": "Currency",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Currency",
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Audit",
+                      "fields": [
+                        {
+                          "key": "createdBy",
+                          "label": "Created By",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "createdAt",
+                          "label": "Created At",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "modifiedBy",
+                          "label": "Modified By",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "modifiedAt",
+                          "label": "Modified At",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    }
+                  ],
+                  "fieldCount": 29,
+                  "fieldTypes": [
+                    "checkbox",
+                    "date",
+                    "money",
+                    "number",
+                    "reference",
+                    "select",
+                    "text",
+                    "textarea"
+                  ],
+                  "lookupModels": [
+                    "Account",
+                    "Currency"
+                  ],
+                  "inlineTables": [],
+                  "requiredKeys": [
+                    "productCode",
+                    "name",
+                    "productType"
+                  ],
+                  "readOnlyKeys": [
+                    "createdBy",
+                    "createdAt",
+                    "modifiedBy",
+                    "modifiedAt"
+                  ]
+                }
+              },
+              {
+                "key": "applications",
+                "label": "Applications",
+                "endpoint": "/130/LendApp",
+                "model": "LendApplication",
+                "idField": "applicationId",
+                "readOnly": false,
+                "alternateViews": [],
+                "columns": [
+                  {
+                    "key": "applicationNumber",
+                    "label": "Application #",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "customerId",
+                    "label": "Customer",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "status",
+                    "label": "Status",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "requestedAmount",
+                    "label": "Requested",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "requestedTermMonths",
+                    "label": "Term (Mo)",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "approvedAmount",
+                    "label": "Approved",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "applicationDate",
+                    "label": "Applied",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "decisionDate",
+                    "label": "Decision",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "creditScore",
+                    "label": "Credit Score",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  }
+                ],
+                "form": {
+                  "title": "Loan Application",
+                  "sections": [
+                    {
+                      "title": "Application Information",
+                      "fields": [
+                        {
+                          "key": "applicationNumber",
+                          "label": "Application #",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "productId",
+                          "label": "Product",
+                          "type": "reference",
+                          "required": true,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "LendProduct",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "customerId",
+                          "label": "Customer",
+                          "type": "reference",
+                          "required": true,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Customer",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "status",
+                          "label": "Status",
+                          "type": "select",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7
+                          ],
+                          "columns": null
+                        },
+                        {
+                          "key": "purpose",
+                          "label": "Purpose",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Request Details",
+                      "fields": [
+                        {
+                          "key": "requestedAmount",
+                          "label": "Requested Amount",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "requestedTermMonths",
+                          "label": "Requested Term (Months)",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "proposedInterestRate",
+                          "label": "Proposed Interest Rate %",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Decision",
+                      "fields": [
+                        {
+                          "key": "approvedAmount",
+                          "label": "Approved Amount",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "approvedTermMonths",
+                          "label": "Approved Term (Months)",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "creditScore",
+                          "label": "Credit Score",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "debtToIncomeRatio",
+                          "label": "Debt-to-Income Ratio",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "denialReason",
+                          "label": "Denial Reason",
+                          "type": "textarea",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "People & Dates",
+                      "fields": [
+                        {
+                          "key": "loanOfficerId",
+                          "label": "Loan Officer",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Employee",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "reviewerId",
+                          "label": "Reviewer",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Employee",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "applicationDate",
+                          "label": "Application Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "reviewDate",
+                          "label": "Review Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "decisionDate",
+                          "label": "Decision Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "notes",
+                          "label": "Notes",
+                          "type": "textarea",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Documents",
+                      "fields": [
+                        {
+                          "key": "documents",
+                          "label": "Application Documents",
+                          "type": "inlineTable",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": [
+                            {
+                              "key": "documentId",
+                              "label": "ID",
+                              "type": "text",
+                              "hidden": true,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "documentType",
+                              "label": "Type",
+                              "type": "text",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "fileName",
+                              "label": "File Name",
+                              "type": "text",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "isVerified",
+                              "label": "Verified",
+                              "type": "checkbox",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "notes",
+                              "label": "Notes",
+                              "type": "text",
+                              "hidden": false,
+                              "lookupModel": null
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Audit",
+                      "fields": [
+                        {
+                          "key": "createdBy",
+                          "label": "Created By",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "createdAt",
+                          "label": "Created At",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "modifiedBy",
+                          "label": "Modified By",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "modifiedAt",
+                          "label": "Modified At",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    }
+                  ],
+                  "fieldCount": 24,
+                  "fieldTypes": [
+                    "date",
+                    "inlineTable",
+                    "money",
+                    "number",
+                    "reference",
+                    "select",
+                    "text",
+                    "textarea"
+                  ],
+                  "lookupModels": [
+                    "Customer",
+                    "Employee",
+                    "LendProduct"
+                  ],
+                  "inlineTables": [
+                    "documents"
+                  ],
+                  "requiredKeys": [
+                    "productId",
+                    "customerId"
+                  ],
+                  "readOnlyKeys": [
+                    "createdBy",
+                    "createdAt",
+                    "modifiedBy",
+                    "modifiedAt"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "subModuleKey": "loans",
+            "subModuleLabel": "Loans",
+            "services": [
+              {
+                "key": "loans",
+                "label": "Loans",
+                "endpoint": "/130/LendLoan",
+                "model": "Loan",
+                "idField": "loanId",
+                "readOnly": false,
+                "alternateViews": [],
+                "columns": [
+                  {
+                    "key": "loanNumber",
+                    "label": "Loan #",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "customerId",
+                    "label": "Customer",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "status",
+                    "label": "Status",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "originalAmount",
+                    "label": "Original Amount",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "totalBalance",
+                    "label": "Balance",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "interestRate",
+                    "label": "Rate %",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "interestType",
+                    "label": "Interest Type",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "originationDate",
+                    "label": "Originated",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "maturityDate",
+                    "label": "Maturity",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "daysPastDue",
+                    "label": "Days Past Due",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  }
+                ],
+                "form": {
+                  "title": "Loan",
+                  "sections": [
+                    {
+                      "title": "Loan Information",
+                      "fields": [
+                        {
+                          "key": "loanNumber",
+                          "label": "Loan Number",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "productId",
+                          "label": "Product",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "LendProduct",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "applicationId",
+                          "label": "Application",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "LendApplication",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "customerId",
+                          "label": "Customer",
+                          "type": "reference",
+                          "required": true,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Customer",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "status",
+                          "label": "Status",
+                          "type": "select",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8
+                          ],
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Financials",
+                      "fields": [
+                        {
+                          "key": "originalAmount",
+                          "label": "Original Amount",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "outstandingPrincipal",
+                          "label": "Outstanding Principal",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "outstandingInterest",
+                          "label": "Outstanding Interest",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "outstandingFees",
+                          "label": "Outstanding Fees",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "totalBalance",
+                          "label": "Total Balance",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "interestRate",
+                          "label": "Interest Rate %",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "interestType",
+                          "label": "Interest Type",
+                          "type": "select",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "columns": null
+                        },
+                        {
+                          "key": "paymentFrequency",
+                          "label": "Payment Frequency",
+                          "type": "select",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                          ],
+                          "columns": null
+                        },
+                        {
+                          "key": "paymentAmount",
+                          "label": "Payment Amount",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Term & Schedule",
+                      "fields": [
+                        {
+                          "key": "termMonths",
+                          "label": "Term (Months)",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "originationDate",
+                          "label": "Origination Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "maturityDate",
+                          "label": "Maturity Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "firstPaymentDate",
+                          "label": "First Payment Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "nextPaymentDate",
+                          "label": "Next Payment Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "lastPaymentDate",
+                          "label": "Last Payment Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "paymentsMade",
+                          "label": "Payments Made",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "paymentsRemaining",
+                          "label": "Payments Remaining",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "daysPastDue",
+                          "label": "Days Past Due",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Accounts",
+                      "fields": [
+                        {
+                          "key": "loanOfficerId",
+                          "label": "Loan Officer",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Employee",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "bankAccountId",
+                          "label": "Bank Account",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "BankAccount",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "glReceivableAccountId",
+                          "label": "GL Receivable Account",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Account",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "currencyId",
+                          "label": "Currency",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Currency",
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Disbursements",
+                      "fields": [
+                        {
+                          "key": "disbursements",
+                          "label": "Disbursements",
+                          "type": "inlineTable",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": [
+                            {
+                              "key": "disbursementId",
+                              "label": "ID",
+                              "type": "text",
+                              "hidden": true,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "amount",
+                              "label": "Amount",
+                              "type": "money",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "disbursementDate",
+                              "label": "Date",
+                              "type": "date",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "status",
+                              "label": "Status",
+                              "type": "text",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "method",
+                              "label": "Method",
+                              "type": "text",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "referenceNumber",
+                              "label": "Reference #",
+                              "type": "text",
+                              "hidden": false,
+                              "lookupModel": null
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Fees",
+                      "fields": [
+                        {
+                          "key": "fees",
+                          "label": "Fees",
+                          "type": "inlineTable",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": [
+                            {
+                              "key": "feeId",
+                              "label": "ID",
+                              "type": "text",
+                              "hidden": true,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "feeType",
+                              "label": "Type",
+                              "type": "text",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "amount",
+                              "label": "Amount",
+                              "type": "money",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "dueDate",
+                              "label": "Due Date",
+                              "type": "date",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "isPaid",
+                              "label": "Paid",
+                              "type": "checkbox",
+                              "hidden": false,
+                              "lookupModel": null
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Amortization Schedule",
+                      "fields": [
+                        {
+                          "key": "amortizationSchedule",
+                          "label": "Amortization",
+                          "type": "inlineTable",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": [
+                            {
+                              "key": "periodNumber",
+                              "label": "Period",
+                              "type": "number",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "paymentDate",
+                              "label": "Date",
+                              "type": "date",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "paymentAmount",
+                              "label": "Payment",
+                              "type": "money",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "principalAmount",
+                              "label": "Principal",
+                              "type": "money",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "interestAmount",
+                              "label": "Interest",
+                              "type": "money",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "remainingBalance",
+                              "label": "Balance",
+                              "type": "money",
+                              "hidden": false,
+                              "lookupModel": null
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Audit",
+                      "fields": [
+                        {
+                          "key": "createdBy",
+                          "label": "Created By",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "createdAt",
+                          "label": "Created At",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "modifiedBy",
+                          "label": "Modified By",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "modifiedAt",
+                          "label": "Modified At",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    }
+                  ],
+                  "fieldCount": 34,
+                  "fieldTypes": [
+                    "date",
+                    "inlineTable",
+                    "money",
+                    "number",
+                    "reference",
+                    "select",
+                    "text"
+                  ],
+                  "lookupModels": [
+                    "Account",
+                    "BankAccount",
+                    "Currency",
+                    "Customer",
+                    "Employee",
+                    "LendApplication",
+                    "LendProduct"
+                  ],
+                  "inlineTables": [
+                    "disbursements",
+                    "fees",
+                    "amortizationSchedule"
+                  ],
+                  "requiredKeys": [
+                    "customerId"
+                  ],
+                  "readOnlyKeys": [
+                    "createdBy",
+                    "createdAt",
+                    "modifiedBy",
+                    "modifiedAt"
+                  ]
+                }
+              },
+              {
+                "key": "credit-lines",
+                "label": "Credit Lines",
+                "endpoint": "/130/CreditLn",
+                "model": "CreditLine",
+                "idField": "creditLineId",
+                "readOnly": false,
+                "alternateViews": [],
+                "columns": [
+                  {
+                    "key": "creditLineNumber",
+                    "label": "Credit Line #",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "customerId",
+                    "label": "Customer",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "status",
+                    "label": "Status",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "creditLimit",
+                    "label": "Credit Limit",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "availableBalance",
+                    "label": "Available",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "outstandingBalance",
+                    "label": "Outstanding",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "interestRate",
+                    "label": "Rate %",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "openingDate",
+                    "label": "Opened",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "expirationDate",
+                    "label": "Expires",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "daysPastDue",
+                    "label": "Days Past Due",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  }
+                ],
+                "form": {
+                  "title": "Credit Line",
+                  "sections": [
+                    {
+                      "title": "Credit Line Information",
+                      "fields": [
+                        {
+                          "key": "creditLineNumber",
+                          "label": "Credit Line Number",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "productId",
+                          "label": "Product",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "LendProduct",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "applicationId",
+                          "label": "Application",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "LendApplication",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "customerId",
+                          "label": "Customer",
+                          "type": "reference",
+                          "required": true,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Customer",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "status",
+                          "label": "Status",
+                          "type": "select",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                          ],
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Financials",
+                      "fields": [
+                        {
+                          "key": "creditLimit",
+                          "label": "Credit Limit",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "availableBalance",
+                          "label": "Available Balance",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "outstandingBalance",
+                          "label": "Outstanding Balance",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "accruedInterest",
+                          "label": "Accrued Interest",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "interestRate",
+                          "label": "Interest Rate %",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "interestType",
+                          "label": "Interest Type",
+                          "type": "select",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2,
+                            3
+                          ],
+                          "columns": null
+                        },
+                        {
+                          "key": "paymentFrequency",
+                          "label": "Payment Frequency",
+                          "type": "select",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6
+                          ],
+                          "columns": null
+                        },
+                        {
+                          "key": "minimumPayment",
+                          "label": "Minimum Payment",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Dates",
+                      "fields": [
+                        {
+                          "key": "openingDate",
+                          "label": "Opening Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "expirationDate",
+                          "label": "Expiration Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "nextPaymentDate",
+                          "label": "Next Payment Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "lastActivityDate",
+                          "label": "Last Activity Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "daysPastDue",
+                          "label": "Days Past Due",
+                          "type": "number",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Accounts",
+                      "fields": [
+                        {
+                          "key": "loanOfficerId",
+                          "label": "Loan Officer",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Employee",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "bankAccountId",
+                          "label": "Bank Account",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "BankAccount",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "glReceivableAccountId",
+                          "label": "GL Receivable Account",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Account",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "currencyId",
+                          "label": "Currency",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Currency",
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Drawdowns",
+                      "fields": [
+                        {
+                          "key": "drawdowns",
+                          "label": "Drawdowns",
+                          "type": "inlineTable",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": [
+                            {
+                              "key": "drawdownId",
+                              "label": "ID",
+                              "type": "text",
+                              "hidden": true,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "amount",
+                              "label": "Amount",
+                              "type": "money",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "drawdownDate",
+                              "label": "Date",
+                              "type": "date",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "purpose",
+                              "label": "Purpose",
+                              "type": "text",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "referenceNumber",
+                              "label": "Reference #",
+                              "type": "text",
+                              "hidden": false,
+                              "lookupModel": null
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Repayments",
+                      "fields": [
+                        {
+                          "key": "repayments",
+                          "label": "Repayments",
+                          "type": "inlineTable",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": [
+                            {
+                              "key": "repaymentId",
+                              "label": "ID",
+                              "type": "text",
+                              "hidden": true,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "amount",
+                              "label": "Amount",
+                              "type": "money",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "repaymentDate",
+                              "label": "Date",
+                              "type": "date",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "referenceNumber",
+                              "label": "Reference #",
+                              "type": "text",
+                              "hidden": false,
+                              "lookupModel": null
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Audit",
+                      "fields": [
+                        {
+                          "key": "createdBy",
+                          "label": "Created By",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "createdAt",
+                          "label": "Created At",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "modifiedBy",
+                          "label": "Modified By",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "modifiedAt",
+                          "label": "Modified At",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    }
+                  ],
+                  "fieldCount": 28,
+                  "fieldTypes": [
+                    "date",
+                    "inlineTable",
+                    "money",
+                    "number",
+                    "reference",
+                    "select",
+                    "text"
+                  ],
+                  "lookupModels": [
+                    "Account",
+                    "BankAccount",
+                    "Currency",
+                    "Customer",
+                    "Employee",
+                    "LendApplication",
+                    "LendProduct"
+                  ],
+                  "inlineTables": [
+                    "drawdowns",
+                    "repayments"
+                  ],
+                  "requiredKeys": [
+                    "customerId"
+                  ],
+                  "readOnlyKeys": [
+                    "createdBy",
+                    "createdAt",
+                    "modifiedBy",
+                    "modifiedAt"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "subModuleKey": "payments",
+            "subModuleLabel": "Payments",
+            "services": [
+              {
+                "key": "payments",
+                "label": "Payments",
+                "endpoint": "/130/LendPay",
+                "model": "LendPayment",
+                "idField": "paymentId",
+                "readOnly": false,
+                "alternateViews": [],
+                "columns": [
+                  {
+                    "key": "paymentNumber",
+                    "label": "Payment #",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "customerId",
+                    "label": "Customer",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "status",
+                    "label": "Status",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "amount",
+                    "label": "Amount",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "paymentDate",
+                    "label": "Payment Date",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "dueDate",
+                    "label": "Due Date",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "paymentMethod",
+                    "label": "Method",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "referenceNumber",
+                    "label": "Reference #",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "isLate",
+                    "label": "Late",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  }
+                ],
+                "form": {
+                  "title": "Payment",
+                  "sections": [
+                    {
+                      "title": "Payment Information",
+                      "fields": [
+                        {
+                          "key": "paymentNumber",
+                          "label": "Payment Number",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "loanId",
+                          "label": "Loan",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Loan",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "creditLineId",
+                          "label": "Credit Line",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "CreditLine",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "customerId",
+                          "label": "Customer",
+                          "type": "reference",
+                          "required": true,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Customer",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "status",
+                          "label": "Status",
+                          "type": "select",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                          ],
+                          "columns": null
+                        },
+                        {
+                          "key": "amount",
+                          "label": "Amount",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Payment Details",
+                      "fields": [
+                        {
+                          "key": "paymentDate",
+                          "label": "Payment Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "dueDate",
+                          "label": "Due Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "paymentMethod",
+                          "label": "Payment Method",
+                          "type": "select",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7
+                          ],
+                          "columns": null
+                        },
+                        {
+                          "key": "referenceNumber",
+                          "label": "Reference Number",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "bankAccountId",
+                          "label": "Bank Account",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "BankAccount",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "isExtraPayment",
+                          "label": "Extra Payment",
+                          "type": "checkbox",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "isLate",
+                          "label": "Late",
+                          "type": "checkbox",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "lateFee",
+                          "label": "Late Fee",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "notes",
+                          "label": "Notes",
+                          "type": "textarea",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Allocations",
+                      "fields": [
+                        {
+                          "key": "allocations",
+                          "label": "Payment Allocations",
+                          "type": "inlineTable",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": [
+                            {
+                              "key": "allocationId",
+                              "label": "ID",
+                              "type": "text",
+                              "hidden": true,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "allocationType",
+                              "label": "Type",
+                              "type": "text",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "amount",
+                              "label": "Amount",
+                              "type": "money",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "description",
+                              "label": "Description",
+                              "type": "text",
+                              "hidden": false,
+                              "lookupModel": null
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Audit",
+                      "fields": [
+                        {
+                          "key": "createdBy",
+                          "label": "Created By",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "createdAt",
+                          "label": "Created At",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "modifiedBy",
+                          "label": "Modified By",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "modifiedAt",
+                          "label": "Modified At",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    }
+                  ],
+                  "fieldCount": 20,
+                  "fieldTypes": [
+                    "checkbox",
+                    "date",
+                    "inlineTable",
+                    "money",
+                    "reference",
+                    "select",
+                    "text",
+                    "textarea"
+                  ],
+                  "lookupModels": [
+                    "BankAccount",
+                    "CreditLine",
+                    "Customer",
+                    "Loan"
+                  ],
+                  "inlineTables": [
+                    "allocations"
+                  ],
+                  "requiredKeys": [
+                    "customerId"
+                  ],
+                  "readOnlyKeys": [
+                    "createdBy",
+                    "createdAt",
+                    "modifiedBy",
+                    "modifiedAt"
+                  ]
+                }
+              },
+              {
+                "key": "collateral",
+                "label": "Collateral",
+                "endpoint": "/130/LendCltrl",
+                "model": "LendCollateral",
+                "idField": "collateralId",
+                "readOnly": false,
+                "alternateViews": [],
+                "columns": [
+                  {
+                    "key": "name",
+                    "label": "Name",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "collateralType",
+                    "label": "Type",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "status",
+                    "label": "Status",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "pledgedValue",
+                    "label": "Pledged Value",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "currentValue",
+                    "label": "Current Value",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "customerId",
+                    "label": "Customer",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "serialNumber",
+                    "label": "Serial #",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  },
+                  {
+                    "key": "pledgeDate",
+                    "label": "Pledge Date",
+                    "primary": false,
+                    "secondary": false,
+                    "hidden": false
+                  }
+                ],
+                "form": {
+                  "title": "Collateral",
+                  "sections": [
+                    {
+                      "title": "Collateral Information",
+                      "fields": [
+                        {
+                          "key": "name",
+                          "label": "Name",
+                          "type": "text",
+                          "required": true,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "description",
+                          "label": "Description",
+                          "type": "textarea",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "collateralType",
+                          "label": "Collateral Type",
+                          "type": "select",
+                          "required": true,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5,
+                            6,
+                            7,
+                            8
+                          ],
+                          "columns": null
+                        },
+                        {
+                          "key": "status",
+                          "label": "Status",
+                          "type": "select",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2,
+                            3,
+                            4,
+                            5
+                          ],
+                          "columns": null
+                        },
+                        {
+                          "key": "loanId",
+                          "label": "Loan",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Loan",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "creditLineId",
+                          "label": "Credit Line",
+                          "type": "reference",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "CreditLine",
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "customerId",
+                          "label": "Customer",
+                          "type": "reference",
+                          "required": true,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": "Customer",
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Valuation",
+                      "fields": [
+                        {
+                          "key": "pledgedValue",
+                          "label": "Pledged Value",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "currentValue",
+                          "label": "Current Value",
+                          "type": "money",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "serialNumber",
+                          "label": "Serial Number",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "location",
+                          "label": "Location",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "insurancePolicy",
+                          "label": "Insurance Policy",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Dates",
+                      "fields": [
+                        {
+                          "key": "pledgeDate",
+                          "label": "Pledge Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "releaseDate",
+                          "label": "Release Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "lastValuationDate",
+                          "label": "Last Valuation Date",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "notes",
+                          "label": "Notes",
+                          "type": "textarea",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Valuation History",
+                      "fields": [
+                        {
+                          "key": "valuations",
+                          "label": "Valuations",
+                          "type": "inlineTable",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": [
+                            {
+                              "key": "valuationId",
+                              "label": "ID",
+                              "type": "text",
+                              "hidden": true,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "valuationDate",
+                              "label": "Date",
+                              "type": "date",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "valuedAmount",
+                              "label": "Value",
+                              "type": "money",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "appraiser",
+                              "label": "Appraiser",
+                              "type": "text",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "method",
+                              "label": "Method",
+                              "type": "text",
+                              "hidden": false,
+                              "lookupModel": null
+                            },
+                            {
+                              "key": "notes",
+                              "label": "Notes",
+                              "type": "text",
+                              "hidden": false,
+                              "lookupModel": null
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "title": "Audit",
+                      "fields": [
+                        {
+                          "key": "createdBy",
+                          "label": "Created By",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "createdAt",
+                          "label": "Created At",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "modifiedBy",
+                          "label": "Modified By",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "modifiedAt",
+                          "label": "Modified At",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    }
+                  ],
+                  "fieldCount": 21,
+                  "fieldTypes": [
+                    "date",
+                    "inlineTable",
+                    "money",
+                    "reference",
+                    "select",
+                    "text",
+                    "textarea"
+                  ],
+                  "lookupModels": [
+                    "CreditLine",
+                    "Customer",
+                    "Loan"
+                  ],
+                  "inlineTables": [
+                    "valuations"
+                  ],
+                  "requiredKeys": [
+                    "name",
+                    "collateralType",
+                    "customerId"
+                  ],
+                  "readOnlyKeys": [
+                    "createdBy",
+                    "createdAt",
+                    "modifiedBy",
+                    "modifiedAt"
+                  ]
+                }
+              }
+            ]
+          }
+        ]
       },
       {
         "moduleKey": "aia",
@@ -151058,6 +154103,7 @@
         "subModules": [
           {
             "subModuleKey": "agent",
+            "subModuleLabel": "Agent",
             "services": [
               {
                 "key": "chat",
@@ -151291,6 +154337,7 @@
         "subModules": [
           {
             "subModuleKey": "health",
+            "subModuleLabel": "Health",
             "services": [
               {
                 "key": "health-monitor",
@@ -151357,6 +154404,7 @@
           },
           {
             "subModuleKey": "security",
+            "subModuleLabel": "Security",
             "services": [
               {
                 "key": "users",
@@ -151786,6 +154834,7 @@
           },
           {
             "subModuleKey": "modules",
+            "subModuleLabel": "Modules",
             "services": [
               {
                 "key": "module-settings",

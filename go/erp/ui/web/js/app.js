@@ -180,11 +180,31 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Apply permission-based nav filtering (hide modules/services user can't GET)
     if (typeof Layer8DPermissionFilter !== 'undefined') {
         // Register resolver: maps section/module/service to model name via module configs
+        // Section key -> the global that Layer8ModuleConfigFactory created, which
+        // is literally `window[config.namespace]` -- so these must match each
+        // module config's `namespace:` string EXACTLY, including case.
+        //
+        // Eight were wrong: MFG/CRM/BI/DOC/ECOM/COMP are actually
+        // Mfg/Crm/Bi/Doc/Ecom/Comp, and lending + aia were missing outright.
+        // A miss makes the resolver return null and sidebarModels[section]
+        // empty, so Layer8DPermissionFilter had nothing to judge and left the
+        // section visible for every account -- 8 of 13 sections were never
+        // permission-filtered at all.
         const nsMap = {
             'hcm': 'HCM', 'financial': 'FIN', 'scm': 'SCM', 'sales': 'Sales',
-            'manufacturing': 'MFG', 'crm': 'CRM', 'projects': 'Prj', 'bi': 'BI',
-            'documents': 'DOC', 'ecommerce': 'ECOM', 'compliance': 'COMP'
+            'manufacturing': 'Mfg', 'crm': 'Crm', 'projects': 'Prj', 'bi': 'Bi',
+            'documents': 'Doc', 'ecommerce': 'Ecom', 'compliance': 'Comp',
+            'lending': 'Lending', 'aia': 'Aia'
         };
+        // Fail loudly on drift instead of silently degrading to "show it"
+        // (FailFastNoSilentFallback / ReportInfraBugs).
+        Object.keys(nsMap).forEach(function(section) {
+            if (!window[nsMap[section]]) {
+                console.error('app.js nsMap: section "' + section + '" maps to window.' +
+                    nsMap[section] + ', which is not defined -- that section cannot be ' +
+                    'permission-filtered and will stay visible to every account.');
+            }
+        });
         Layer8DPermissionFilter.registerResolver(function(sectionKey, moduleKey, serviceKey) {
             var ns = window[nsMap[sectionKey]];
             if (!ns || !ns.modules || !ns.modules[moduleKey]) return null;

@@ -19,7 +19,7 @@ test.describe('mobile table features', () => {
         const table = new MobileTable(mobile);
 
         await nav.waitForHome();
-        const query = await nav.openService('hcm', 'core-hr', 'Employees', 'Employee');
+        const query = await nav.openService('hcm', 'Core HR', 'Employees', 'Employee');
         expect(query, 'the mobile Employees view never issued a query').not.toBeNull();
 
         const total = await api.total('/30/Employee', 'Employee');
@@ -43,13 +43,16 @@ test.describe('mobile table features', () => {
         const nav = new MobileNav(mobile);
         const table = new MobileTable(mobile);
         await nav.waitForHome();
-        await nav.openService('hcm', 'core-hr', 'Employees', 'Employee');
+        await nav.openService('hcm', 'Core HR', 'Employees', 'Employee');
         await table.waitForResolved();
 
         const first = await table.cards().allInnerTexts();
 
+        // Layer8MEditTable is what the nav renders -- see MobileNav.cards().
         const next = mobile.locator('.mobile-table-pagination [data-action="next"], ' +
-                                    '.mobile-table-pagination-controls [data-page]').last();
+                                    '.mobile-table-pagination-controls [data-page], ' +
+                                    '.mobile-edit-table-pagination [data-action="next"], ' +
+                                    '.mobile-edit-table-pagination-controls [data-page]').last();
         test.skip(!(await next.count()), 'no pagination control rendered');
         await next.click();
         await mobile.waitForTimeout(1500);
@@ -63,7 +66,7 @@ test.describe('mobile table features', () => {
         const nav = new MobileNav(mobile);
         const table = new MobileTable(mobile);
         await nav.waitForHome();
-        await nav.openService('hcm', 'core-hr', 'Employees', 'Employee');
+        await nav.openService('hcm', 'Core HR', 'Employees', 'Employee');
 
         const state = await table.waitForResolved();
         test.skip(state !== 'cards', 'no cards to tap');

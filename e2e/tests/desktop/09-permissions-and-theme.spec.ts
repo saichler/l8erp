@@ -74,14 +74,25 @@ test.describe('permissions', () => {
         const perms = await limited.permissions();
         const visible = await nav.visibleSections();
 
-        // The hr-clerk role is scoped to HCM, so a section whose every model is
+        // The hr-clerk role is scoped to HCM, so a section whose EVERY model is
         // absent from its permission map must not be offered.
-        const leaked = desktopServices()
-            .filter((x) => visible.includes(x.section))
-            .filter((x) => !(x.service.model in perms))
-            .map((x) => `${x.section}/${x.service.model}`);
-
-        const sections = [...new Set(leaked.map((l) => l.split('/')[0]))];
+        //
+        // "every", not "any": the original version flagged a section as soon as
+        // one of its services was unpermitted, which contradicted its own
+        // message and made `hcm` a permanent false positive -- that section has
+        // ~58 services and this role legitimately reaches 16 of them. A section
+        // the user can partly use belongs in the sidebar; hiding the individual
+        // services inside it is the service-level filter's job, asserted
+        // separately.
+        const modelsBySection = new Map<string, string[]>();
+        for (const x of desktopServices()) {
+            if (!visible.includes(x.section)) continue;
+            if (!modelsBySection.has(x.section)) modelsBySection.set(x.section, []);
+            modelsBySection.get(x.section)!.push(x.service.model);
+        }
+        const sections = [...modelsBySection.entries()]
+            .filter(([, models]) => models.length > 0 && !models.some((m) => m in perms))
+            .map(([section]) => section);
         expect(
             sections,
             `sections offered to "${ENV.limitedUser}" containing only models it has no ` +

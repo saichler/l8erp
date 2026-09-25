@@ -56,20 +56,53 @@ test.describe('mobile shell integrity @smoke', () => {
         expect(cfg!.modules.length).toBeGreaterThan(0);
     });
 
-    test('every mobile module registry declared by the nav config is on window', async ({ mobile }) => {
-        const missing = await mobile.evaluate(() => {
-            const w = window as unknown as Record<string, unknown>;
-            const names = Object.keys(w).filter((k) => k.startsWith('Mobile'));
-            const broken: string[] = [];
-            for (const n of names) {
-                const reg = w[n] as { getColumns?: unknown; getFormDef?: unknown } | undefined;
-                if (reg && typeof reg === 'object' && !('getColumns' in reg)) {
-                    broken.push(`${n} is not a Layer8MModuleRegistry`);
+    test('every nav-config module resolves columns through a module registry', async ({ mobile }) => {
+        // The original version of this test took every window global starting
+        // with "Mobile" and demanded it be a Layer8MModuleRegistry. Plenty
+        // legitimately are not -- MobileEmployeeDetail is a detail-view helper,
+        // MobileSysHealth a SYS module, MobileApp the app controller -- so it
+        // reported three permanent false failures and never once looked at the
+        // nav config its name refers to.
+        //
+        // Two assertions that do hold:
+        //   1. anything that claims to be a registry exposes the whole API
+        //      (Layer8MModuleRegistry.create provides all of these);
+        //   2. every nav-config module with services has a registry that knows
+        //      at least one of its models -- which is what actually breaks when
+        //      a module's data files are missing from m/app.html.
+        const result = await mobile.evaluate(() => {
+            const w = window as unknown as Record<string, any>;
+            const API = ['getColumns', 'getFormDef', 'getPrimaryKey', 'hasModel', 'getModuleName'];
+            const incomplete: string[] = [];
+            const registries: any[] = [];
+            for (const n of Object.keys(w).filter((k) => k.startsWith('Mobile'))) {
+                const reg = w[n];
+                if (!reg || typeof reg !== 'object' || typeof reg.hasModel !== 'function') continue;
+                registries.push(reg);
+                const gaps = API.filter((m) => typeof reg[m] !== 'function');
+                if (gaps.length) incomplete.push(`${n} is missing ${gaps.join(', ')}`);
+            }
+
+            const unserved: string[] = [];
+            const cfg = w.LAYER8M_NAV_CONFIG || {};
+            for (const mod of cfg.modules || []) {
+                const block = cfg[mod.key];
+                if (!block || !block.services) continue;
+                const models: string[] = [];
+                for (const list of Object.values(block.services) as any[][]) {
+                    for (const svc of list) if (svc.model) models.push(svc.model);
+                }
+                if (models.length === 0) continue;
+                if (!models.some((m) => registries.some((r) => r.hasModel(m)))) {
+                    unserved.push(`${mod.key}: no registry knows any of its ${models.length} model(s)`);
                 }
             }
-            return broken;
+            return { incomplete, unserved, registryCount: registries.length };
         });
-        expect(missing, missing.join('\n  ')).toEqual([]);
+
+        expect(result.registryCount, 'no Layer8MModuleRegistry on window at all').toBeGreaterThan(0);
+        expect(result.incomplete, result.incomplete.join('\n  ')).toEqual([]);
+        expect(result.unserved, result.unserved.join('\n  ')).toEqual([]);
     });
 
     test('the generated inventory reports no load failure for this shell', () => {
