@@ -19,6 +19,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
                 key: 'agent', label: 'Agent', icon: '🤖', isDefault: true,
                 services: [
                     { key: 'chat', label: 'Chat', icon: '💬', isDefault: true },
+                    { key: 'conversations', label: 'Conversations', icon: '📄' },
                     { key: 'prompts', label: 'Prompts', icon: '📋' }
                 ]
             }

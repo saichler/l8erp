@@ -34,6 +34,17 @@ export class MobileNav {
         return this.page.locator('.nav-card').filter({ hasText: label }).first();
     }
 
+    /**
+     * The mobile view switcher slot (layer8m-nav-data.js renders into
+     * #service-view-switcher using the SAME shared Layer8ViewSwitcher as
+     * desktop, so the markup is .l8-view-toggle + .l8-view-menu-item
+     * [data-view-type]).
+     */
+    viewSwitcherSlot(): Locator { return this.page.locator('#service-view-switcher'); }
+
+    /** The container a mobile service view renders into. */
+    serviceContainer(): Locator { return this.page.locator('#service-table-container'); }
+
     async waitForHome(timeout = 20000): Promise<void> {
         await expect(this.cardGrid()).toBeVisible({ timeout });
     }

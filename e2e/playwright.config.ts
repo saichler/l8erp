@@ -21,7 +21,12 @@ export default defineConfig({
     // have nothing to do with the code under test -- the "infra churn vs real
     // bug" distinction PostImplementationE2ETesting warns about. Keep the
     // concurrency at what the deployment can actually serve.
-    workers: process.env.CI ? 2 : 3,
+    // 2, not 3. At three workers the artifact writers contend badly enough to
+    // fail tests in teardown ("Tearing down \"context\" exceeded the test
+    // timeout") on modules that pass comfortably on their own -- three of four
+    // failures in one verification run were this, not assertions. Two workers
+    // still halves the wall clock without manufacturing false signal.
+    workers: process.env.CI ? 2 : 2,
 
     // PostImplementationE2ETesting: a failure right after a pod restart is
     // usually the cluster still settling (stale connections, vnic mesh
@@ -46,7 +51,11 @@ export default defineConfig({
         navigationTimeout: 30_000,
         trace: 'retain-on-failure',
         screenshot: 'only-on-failure',
-        video: 'retain-on-failure'
+        // Video only on a retried test, not on every first-attempt failure:
+        // writing video for each of N parallel failures is what pushed teardown
+        // past the test timeout. A retry still captures it, so nothing
+        // diagnosable is lost.
+        video: 'on-first-retry'
     },
 
     projects: [

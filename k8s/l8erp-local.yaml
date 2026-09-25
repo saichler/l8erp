@@ -28,7 +28,7 @@ spec:
       containers:
         - name: erp-vnet
           image: saichler/erp-vnet:latest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           env:
             - name: NODE_IP
               valueFrom:
@@ -67,7 +67,7 @@ spec:
       containers:
         - name: erp-logs-vnet
           image: saichler/erp-logs-vnet:latest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           env:
             - name: NODE_IP
               valueFrom:
@@ -105,7 +105,7 @@ spec:
       containers:
         - name: erp-log-agent
           image: saichler/erp-log-agent:latest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           env:
             - name: LOGPATH
               value: /data/logs/erp
@@ -145,7 +145,7 @@ spec:
       containers:
         - name: erp
           image: saichler/erp:latest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           env:
             - name: NODE_IP
               valueFrom:
@@ -182,7 +182,7 @@ spec:
       containers:
         - name: erp-web
           image: saichler/erp-web:latest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           env:
             - name: NODE_IP
               valueFrom:

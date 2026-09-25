@@ -79564,6 +79564,161 @@
                 "form": null
               },
               {
+                "key": "conversations",
+                "label": "Conversations",
+                "endpoint": "/120/AgntConvo",
+                "model": "L8AgentConversation",
+                "viewType": "table",
+                "alternateViews": [],
+                "readOnly": false,
+                "customView": false,
+                "realtime": false,
+                "viewConfig": null,
+                "baseWhereClause": null,
+                "containerId": "agent-conversations-table-container",
+                "primaryKey": "conversationId",
+                "columns": [
+                  {
+                    "key": "conversationId",
+                    "label": "ID",
+                    "type": "id",
+                    "sortKey": "conversationId",
+                    "filterKey": "conversationId",
+                    "hasRender": false,
+                    "hasEnum": false
+                  },
+                  {
+                    "key": "title",
+                    "label": "Title",
+                    "type": null,
+                    "sortKey": "title",
+                    "filterKey": "title",
+                    "hasRender": false,
+                    "hasEnum": false
+                  },
+                  {
+                    "key": "userId",
+                    "label": "User",
+                    "type": null,
+                    "sortKey": "userId",
+                    "filterKey": "userId",
+                    "hasRender": false,
+                    "hasEnum": false
+                  },
+                  {
+                    "key": "status",
+                    "label": "Status",
+                    "type": "status",
+                    "sortKey": "status",
+                    "filterKey": "status",
+                    "hasRender": true,
+                    "hasEnum": true
+                  },
+                  {
+                    "key": "createdAt",
+                    "label": "Created",
+                    "type": "date",
+                    "sortKey": "createdAt",
+                    "filterKey": null,
+                    "hasRender": true,
+                    "hasEnum": false
+                  },
+                  {
+                    "key": "updatedAt",
+                    "label": "Updated",
+                    "type": "date",
+                    "sortKey": "updatedAt",
+                    "filterKey": null,
+                    "hasRender": true,
+                    "hasEnum": false
+                  }
+                ],
+                "form": {
+                  "title": "Conversation",
+                  "sections": [
+                    {
+                      "title": "Conversation",
+                      "fields": [
+                        {
+                          "key": "title",
+                          "label": "Title",
+                          "type": "text",
+                          "required": true,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "userId",
+                          "label": "User",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "status",
+                          "label": "Status",
+                          "type": "select",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2
+                          ],
+                          "columns": null
+                        },
+                        {
+                          "key": "createdAt",
+                          "label": "Created",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "updatedAt",
+                          "label": "Updated",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    }
+                  ],
+                  "fieldCount": 5,
+                  "fieldTypes": [
+                    "date",
+                    "select",
+                    "text"
+                  ],
+                  "lookupModels": [],
+                  "inlineTables": [],
+                  "requiredKeys": [
+                    "title"
+                  ],
+                  "readOnlyKeys": [
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
+              },
+              {
                 "key": "prompts",
                 "label": "Prompts",
                 "endpoint": "/120/AgntPrmpt",
@@ -154166,7 +154321,90 @@
                     "hidden": false
                   }
                 ],
-                "form": null
+                "form": {
+                  "title": "Conversation",
+                  "sections": [
+                    {
+                      "title": "Conversation",
+                      "fields": [
+                        {
+                          "key": "title",
+                          "label": "Title",
+                          "type": "text",
+                          "required": true,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "userId",
+                          "label": "User",
+                          "type": "text",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "status",
+                          "label": "Status",
+                          "type": "select",
+                          "required": false,
+                          "readOnly": false,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": [
+                            0,
+                            1,
+                            2
+                          ],
+                          "columns": null
+                        },
+                        {
+                          "key": "createdAt",
+                          "label": "Created",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        },
+                        {
+                          "key": "updatedAt",
+                          "label": "Updated",
+                          "type": "date",
+                          "required": false,
+                          "readOnly": true,
+                          "hidden": false,
+                          "lookupModel": null,
+                          "options": null,
+                          "columns": null
+                        }
+                      ]
+                    }
+                  ],
+                  "fieldCount": 5,
+                  "fieldTypes": [
+                    "date",
+                    "select",
+                    "text"
+                  ],
+                  "lookupModels": [],
+                  "inlineTables": [],
+                  "requiredKeys": [
+                    "title"
+                  ],
+                  "readOnlyKeys": [
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
               },
               {
                 "key": "prompts",

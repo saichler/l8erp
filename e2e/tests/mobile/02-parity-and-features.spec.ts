@@ -102,13 +102,25 @@ test.describe('desktop / mobile parity', () => {
         lending: 'lending', aia: 'aia'
     };
 
+    // Custom views are compared by presence, not by model: a service that
+    // renders its own UI declares no data model on mobile (customInit) and may
+    // still name one on desktop (customView: true, as aia/chat does). Comparing
+    // the model strings made an equivalent pair look like a gap in BOTH
+    // directions. 03-service-coverage and 14-inline-tables already skip these.
     test('every desktop service has a mobile counterpart', () => {
         const mobileModels = new Set(mobileServices().map((x) => `${x.moduleKey}|${x.service.model}`));
+        const mobileKeys = new Set(mobileServices().map((x) => `${x.moduleKey}|${x.service.key}`));
 
         const gaps: string[] = [];
         for (const { section, service } of desktopServices()) {
             const moduleKey = SECTION_TO_MODULE[section];
             if (!moduleKey) continue;
+            if (service.customView) {
+                if (!mobileKeys.has(`${moduleKey}|${service.key}`)) {
+                    gaps.push(`${section}/${service.key} (custom view)`);
+                }
+                continue;
+            }
             if (!mobileModels.has(`${moduleKey}|${service.model}`)) {
                 gaps.push(`${section}/${service.key} (${service.model})`);
             }
@@ -125,9 +137,20 @@ test.describe('desktop / mobile parity', () => {
             desktopServices().map((x) => `${SECTION_TO_MODULE[x.section] || x.section}|${x.service.model}`)
         );
 
+        const desktopKeys = new Set(
+            desktopServices().map((x) => `${SECTION_TO_MODULE[x.section] || x.section}|${x.service.key}`)
+        );
+
         const gaps: string[] = [];
         for (const { moduleKey, service } of mobileServices()) {
             if (moduleKey === 'system' || moduleKey === 'dashboard') continue;
+            // No model => custom view on the mobile side; compare by key.
+            if (!service.model) {
+                if (!desktopKeys.has(`${moduleKey}|${service.key}`)) {
+                    gaps.push(`${moduleKey}/${service.key} (custom view)`);
+                }
+                continue;
+            }
             if (!desktopModels.has(`${moduleKey}|${service.model}`)) {
                 gaps.push(`${moduleKey}/${service.key} (${service.model})`);
             }

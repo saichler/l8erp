@@ -86,10 +86,37 @@ export class DesktopNav {
     /** Switches module tab, if the section has more than one. */
     async openModule(moduleKey: string): Promise<void> {
         const tab = this.moduleTab(moduleKey);
-        if (await tab.count()) {
-            if (await tab.isVisible()) await tab.click();
+        const content = this.moduleContent(moduleKey);
+
+        // Click, then confirm, and retry the click if the pane did not activate.
+        //
+        // A single click with one assertion was the suite's most persistent
+        // flake: `.l8-module-content[data-module="X"]` never gaining `active`
+        // has hit inventory, shopfloor, campaigns and dashboards across runs.
+        // A tab click can be swallowed -- by a floating view-switcher menu, a
+        // date-picker overlay, or a section still swapping its DOM -- and one
+        // lost click in a spec that navigates 50 times was a hard failure.
+        //
+        // This retries the app's own path rather than forcing state, and still
+        // FAILS if the pane genuinely never activates, so a real navigation bug
+        // is reported exactly as before.
+        for (let attempt = 0; attempt < 3; attempt++) {
+            if (await content.evaluate((el) => el.classList.contains('active')).catch(() => false)) {
+                return;
+            }
+            if (attempt > 0) {
+                // Something is plausibly covering the tab; clear it the way the
+                // app would before trying again.
+                await this.page.keyboard.press('Escape').catch(() => undefined);
+                await this.page.waitForTimeout(250);
+            }
+            if ((await tab.count()) && (await tab.isVisible().catch(() => false))) {
+                await tab.click({ timeout: 5000 }).catch(() => undefined);
+            }
+            await content.waitFor({ state: 'attached', timeout: 5000 }).catch(() => undefined);
+            await this.page.waitForTimeout(400);
         }
-        await expect(this.moduleContent(moduleKey)).toHaveClass(/active/, { timeout: 10000 });
+        await expect(content).toHaveClass(/active/, { timeout: 10000 });
     }
 
     /**
