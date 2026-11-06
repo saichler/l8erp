@@ -13,7 +13,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
 import { test, expect, assertNoPageErrors } from '../../fixtures/test';
 import { DesktopNav } from '../../pages/DesktopNav';
-import { DesktopTable } from '../../pages/DesktopTable';
+import { DesktopTable, STALE } from '../../pages/DesktopTable';
 import { desktopServicesWithAlternateViews, DESKTOP_SECTIONS } from '../../fixtures/inventory';
 
 // What a rendered view of each type puts in the container.
@@ -95,7 +95,7 @@ test.describe('view system', () => {
                 const slot = nav.viewSwitcherSlot(moduleKey, service.key);
                 const failures: string[] = [];
 
-                for (const view of views) {
+                for (const [i, view] of views.entries()) {
                     // Layer8ViewSwitcher.render() emits an icon button plus a
                     // floating menu of .l8-view-menu-item[data-view-type].
                     // Reaching an item means opening the menu first, and the
@@ -104,21 +104,31 @@ test.describe('view system', () => {
                     // every non-default view then "renders nothing" because the
                     // default table is still on screen.
                     const toggle = slot.locator('.l8-view-toggle');
-                    if (await toggle.count()) {
-                        await toggle.first().click().catch(() => undefined);
-                        await app.waitForTimeout(200);
-                    }
                     const option = slot.locator(
                         `[data-view-type="${view}"], option[value="${view}"]`
                     );
+                    if (await toggle.count()) {
+                        await toggle.first().click().catch(() => undefined);
+                        // The menu is open once its items are on screen.
+                        await option.first().waitFor({ state: 'visible', timeout: 3000 })
+                            .catch(() => undefined);
+                    }
+                    // The first entry is the view already on screen; every other
+                    // one must REPLACE it, so tag what is there now and accept
+                    // only markup rendered after the switch.
+                    const alreadyShown = i === 0 && view === service.viewType;
                     if (await option.count()) {
+                        if (!alreadyShown) {
+                            await container.evaluate((el, attr) => {
+                                Array.from(el.children).forEach((c) => c.setAttribute(attr, '1'));
+                            }, STALE);
+                        }
                         const tag = await option.first().evaluate((e) => e.tagName.toLowerCase());
                         if (tag === 'option') {
                             await slot.locator('select').selectOption(view);
                         } else {
                             await option.first().click();
                         }
-                        await app.waitForTimeout(1500);
                     } else {
                         // Close the menu we just opened: left open it floats
                         // over the module tabs and the NEXT test's
@@ -134,7 +144,13 @@ test.describe('view system', () => {
                     }
 
                     const marker = VIEW_MARKERS[view] || '*';
-                    if (!(await container.locator(marker).count())) {
+                    const rendered = alreadyShown
+                        ? marker
+                        : `:is(${marker}):not([${STALE}]):not([${STALE}] *)`;
+                    const appeared = await container.locator(rendered).first()
+                        .waitFor({ state: 'attached', timeout: 10000 })
+                        .then(() => true, () => false);
+                    if (!appeared) {
                         failures.push(
                             `${view}: container has no ${marker} -- the view rendered nothing`
                         );

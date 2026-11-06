@@ -48,14 +48,6 @@ for (const mod of MOBILE_MODULES) {
                     // The desktop counterpart skips service.customView likewise.
                     if (!svc.model) continue;
 
-                    // A service with no model is a custom view (the AI chat, the
-                    // module-settings tree) -- it renders its own UI and issues
-                    // no L8Query by design, so a data sweep has nothing to
-                    // assert. The desktop counterpart skips service.customView
-                    // for the same reason.
-                    if (!svc.model) continue;
-
-                    await nav.waitForHome().catch(() => undefined);
                     // sub.subModuleLabel, never subModuleKey: the drill-down
                     // finds the sub-module card by its visible text.
                     const query = await nav.openService(
@@ -67,7 +59,7 @@ for (const mod of MOBILE_MODULES) {
                             `${where}: no L8Query was issued -- the drill-down never reached ` +
                             `the service, or the view threw before fetching`
                         );
-                        await mobile.goto('/m/app.html');
+                        await nav.goHome();
                         continue;
                     }
 
@@ -94,7 +86,7 @@ for (const mod of MOBILE_MODULES) {
                     }
 
                     // Back to the home grid for the next service.
-                    await mobile.goto('/m/app.html');
+                    await nav.goHome();
                 }
             }
 

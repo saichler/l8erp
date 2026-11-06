@@ -186,7 +186,11 @@ for (const [lookupModel, where] of COVERAGE) {
                 if (!picked) {
                     problems.push(`${label}: could not select a row`);
                 } else {
-                    await app.waitForTimeout(600);
+                    // The picker writes the field once it closes; wait for
+                    // the value to land rather than for a fixed pause.
+                    await expect.poll(() => field.inputValue().catch(() => ''), { timeout: 5000 })
+                        .not.toBe('')
+                        .catch(() => undefined);   // reported below
                     const stored = await field.inputValue().catch(() => '');
                     if (!stored) {
                         problems.push(`${label}: selecting a row stored no value in the field`);

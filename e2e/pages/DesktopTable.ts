@@ -10,6 +10,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 
 import { Locator, Page, expect } from '@playwright/test';
 
+/** Attribute that tags DOM the next render is expected to replace. */
+export const STALE = 'data-e2e-stale';
+
 export class DesktopTable {
     readonly root: Locator;
 
@@ -98,24 +101,39 @@ export class DesktopTable {
     }
 
     /**
-     * Types into a column's filter box and waits for the refetch.
+     * Runs `action` and waits until the table has rendered again.
+     *
+     * Layer8DTable.render() and showError() both replace the container's whole
+     * innerHTML, and a server-side table renders only once its response has
+     * been parsed (layer8d-table-data.js fetchData -> setServerData -> render).
+     * So: tag the current children, act, and wait for no tagged child to
+     * remain. That is the render itself, not a guess at how long it takes --
+     * the filter debounce, the request and the parse are all covered.
+     *
+     * Returns false when nothing re-rendered within `timeout`.
+     */
+    async rerender(action: () => Promise<unknown>, timeout = 20000): Promise<boolean> {
+        await this.root.evaluate((el, attr) => {
+            Array.from(el.children).forEach((c) => c.setAttribute(attr, '1'));
+        }, STALE).catch(() => undefined);
+        await action();
+        return expect(this.root.locator(`:scope > [${STALE}]`))
+            .toHaveCount(0, { timeout })
+            .then(() => true, () => false);
+    }
+
+    /**
+     * Types into a column's filter box and waits for the filtered render.
      *
      * Filtering before asserting visibility is a hygiene rule from
      * PostImplementationE2ETesting: on a live cluster a specific row is not
      * guaranteed to be on page 1, so specs filter for the row they created
      * instead of trusting default paging.
      */
-    async filterBy(columnKey: string, value: string): Promise<void> {
+    async filterBy(columnKey: string, value: string): Promise<boolean> {
         const input = this.root.locator(`.l8-filter-input[data-column="${columnKey}"]`);
         await expect(input).toBeVisible();
-        const settled = this.page.waitForResponse(
-            (r) => r.url().includes('body=') && r.status() === 200,
-            { timeout: 15000 }
-        ).catch(() => null);
-        await input.fill(value);
-        // layer8d-table-filter debounces server-side filtering (filterDebounceMs).
-        await settled;
-        await this.page.waitForTimeout(250);
+        return this.rerender(() => input.fill(value));
     }
 
     /** The row whose action buttons carry this record id. */

@@ -160,7 +160,9 @@ test.describe('mobile theme', () => {
         ).toEqual([]);
     });
 
-    test('switching theme repaints the mobile shell', async ({ mobile }) => {
+    // A fresh page: the theme is persisted for the whole browser context, so
+    // flipping it on the worker's shared page would leak into later tests.
+    test('switching theme repaints the mobile shell', async ({ freshMobile: mobile }) => {
         // m/app.html renders the shared Layer8DThemeSwitcher, so the mobile shell
         // must actually react to it -- a token set that only desktop honours is
         // the sort of split MobileRules parity exists to catch.
@@ -181,7 +183,12 @@ test.describe('mobile theme', () => {
             return 'attribute';
         });
 
-        await mobile.waitForTimeout(600);
+        // Wait for the repaint itself rather than a guessed duration.
+        await expect
+            .poll(() => mobile.evaluate((bg) => getComputedStyle(document.body).backgroundColor !== bg, before),
+                  { timeout: 5000 })
+            .toBe(true)
+            .catch(() => undefined);   // asserted, with a useful message, below
         const after = await mobile.evaluate(
             () => getComputedStyle(document.body).backgroundColor
         );

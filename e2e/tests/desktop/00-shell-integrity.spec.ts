@@ -19,9 +19,13 @@ import { missingGlobals, DESKTOP_REQUIRED_GLOBALS } from '../../fixtures/globals
 import { ENV } from '../../fixtures/env';
 
 test.describe('desktop shell integrity @smoke', () => {
-    test('loads with no uncaught exception and no console error', async ({ app, consoleErrors }) => {
-        await expect(app.locator('.app-container')).toBeVisible();
-        await app.waitForTimeout(2000); // let deferred init settle
+    // A fresh boot, not the worker's shared page: errors raised while booting
+    // are exactly what this test exists to catch.
+    test('loads with no uncaught exception and no console error', async ({ freshApp, consoleErrors }) => {
+        await expect(freshApp.locator('.app-container')).toBeVisible();
+        // Deferred init (KPI fetches, module filter, websocket) has settled
+        // once the network goes quiet; the shell does no background polling.
+        await freshApp.waitForLoadState('networkidle');
         assertNoPageErrors(consoleErrors);
     });
 
@@ -109,8 +113,7 @@ test.describe('desktop shell integrity @smoke', () => {
             const errors: string[] = [];
             const onError = (e: Error) => errors.push(`${e.name}: ${e.message}`);
             page.on('pageerror', onError);
-            const res = await page.goto(portal).catch(() => null);
-            await page.waitForTimeout(1500);
+            const res = await page.goto(portal, { waitUntil: 'networkidle' }).catch(() => null);
             page.off('pageerror', onError);
 
             if (!res || !res.ok()) broken.push(`${portal} -> HTTP ${res ? res.status() : 'no response'}`);

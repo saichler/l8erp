@@ -16,7 +16,8 @@ e2e/
 ├── fixtures/
 │   ├── env.ts               base URL, credentials, shell paths
 │   ├── api.ts               direct API client (auth, L8Query, CRUD, cleanup)
-│   ├── test.ts              the test fixture: api / app / mobile / consoleErrors
+│   ├── test.ts              the test fixture: api / app / mobile (shared per worker),
+│   │                        freshApp / freshMobile, consoleErrors
 │   ├── globals.ts           l8ui global resolution (window + global lexical)
 │   ├── inventory.ts         typed accessors over inventory.json
 │   └── inventory.json       GENERATED -- do not hand-edit
@@ -116,6 +117,20 @@ From `PostImplementationE2ETesting`, all learned the hard way:
 - **A cached session goes stale after a pod restart.** This suite captures a
   fresh token per worker rather than persisting one, so a redeploy cannot leave
   it holding a token signed by a dead process.
+- **No fixed sleeps.** Every wait is on an event or a condition: a response, a
+  class, an element appearing or detaching, or the DOM a render replaces.
+  `DesktopTable.rerender()` / `MobileTable.rerender()` tag the current markup,
+  act, and wait for the tag to disappear -- that is the render itself, so the
+  filter debounce, the request and the parse are all covered without guessing.
+  `npm run lint:sleep` fails on any `waitForTimeout(` or bare `setTimeout(`.
+- **One shared session per worker.** `app` / `mobile` are booted once per
+  worker, not per test (a boot is ~2s, ~1000 responses and ~60 API calls). Each
+  test starts from a reset: popups closed, the current desktop section tagged
+  stale so the test's first `openSection()` really reloads it, the mobile shell
+  sent home. After that, `openSection()` skips sections that are already
+  loaded. Playwright replaces the worker after any failure, session included.
+  Tests that assert on boot, log out, or change the theme use `freshApp` /
+  `freshMobile` instead.
 - **Distinguish infra churn from a real bug.** `retries: 1`. A failure that
   reproduces in isolation is real; one that only appears under load is not.
 - **Concurrency matches the deployment.** The target is one `erp-web` pod in
@@ -125,7 +140,8 @@ From `PostImplementationE2ETesting`, all learned the hard way:
 ## Iterating on a fix
 
 ```bash
-cd ../go/erp/ui && ./build.sh latest amd64
+# build.sh pushes to Docker Hub; for a local KIND loop build with --load instead
+cd ../go/erp/ui && docker buildx build --platform=linux/amd64 --load -t saichler/erp-web:latest .
 kind load docker-image saichler/erp-web:latest --name l8erp
 kubectl delete pod -n l8erp erp-web-0
 kubectl wait --for=condition=Ready pod/erp-web-0 -n l8erp --timeout=90s

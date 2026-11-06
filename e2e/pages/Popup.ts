@@ -91,8 +91,10 @@ export class Popup {
         const tab = this.root().locator(`.probler-popup-tab[data-tab="${paneId}"]`);
         if (!(await tab.count())) return false;
         await tab.click().catch(() => undefined);
-        await this.page.waitForTimeout(400);
-        return true;
+        // Done when the pane is the one on screen, not after a fixed pause.
+        return expect(this.root().locator(`.probler-popup-tab-pane[data-pane="${paneId}"]`))
+            .toBeVisible({ timeout: 5000 })
+            .then(() => true, () => false);
     }
 
     async openTab(tabId: string): Promise<void> {

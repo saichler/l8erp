@@ -144,13 +144,23 @@ test.describe('theme', () => {
         ).toEqual([]);
     });
 
-    test('switching to dark mode repaints the shell', async ({ app, consoleErrors }) => {
+    // A fresh page: the theme is persisted for the whole browser context, so
+    // flipping it on the worker's shared page would repaint every later test.
+    test('switching to dark mode repaints the shell', async ({ freshApp, consoleErrors }) => {
+        const app = freshApp;
         const toggle = app.locator('.theme-toggle, [data-theme-toggle], #theme-switcher').first();
         test.skip(!(await toggle.count()), 'no theme toggle in this shell');
 
         const before = await app.evaluate(() => getComputedStyle(document.body).backgroundColor);
         await toggle.click();
-        await app.waitForTimeout(600);
+
+        // Wait for the repaint itself rather than a guessed duration.
+        await expect
+            .poll(() => app.evaluate((bg) =>
+                document.documentElement.getAttribute('data-theme') === 'dark' ||
+                getComputedStyle(document.body).backgroundColor !== bg, before), { timeout: 5000 })
+            .toBe(true)
+            .catch(() => undefined);   // asserted, with a useful message, below
 
         const attr = await app.evaluate(() => document.documentElement.getAttribute('data-theme'));
         const after = await app.evaluate(() => getComputedStyle(document.body).backgroundColor);

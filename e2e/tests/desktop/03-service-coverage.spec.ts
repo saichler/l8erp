@@ -42,7 +42,7 @@ for (const section of DESKTOP_SECTIONS) {
                 // Attached before any navigation: the module factory fetches
                 // its DEFAULT service during initialize(), so that query is
                 // already in flight by the time the first click happens.
-                const queries = QueryRecorder.attach(app);
+                const queries = QueryRecorder.forPage(app);
                 const nav = new DesktopNav(app);
                 await nav.openSection(section.section);
                 await nav.openModule(mod.moduleKey);

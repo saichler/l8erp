@@ -71,10 +71,9 @@ test.describe('auth screens', () => {
 
             try {
                 const resp = await page.goto(`${ENV.baseURL}${p.url}`, {
-                    waitUntil: 'domcontentloaded'
+                    waitUntil: 'networkidle'
                 });
                 expect(resp?.status(), `${p.url} did not serve`).toBeLessThan(400);
-                await page.waitForTimeout(1500);
 
                 const bodyLen = await page.evaluate(() => document.body.innerHTML.length);
                 expect(bodyLen, `${p.url} rendered an empty body`).toBeGreaterThan(200);
@@ -238,8 +237,7 @@ test.describe('auth screens', () => {
             page.on('response', (r) => {
                 if (r.url().endsWith('.js') && r.status() === 200) loaded.push(r.url());
             });
-            await page.goto(`${ENV.baseURL}/l8ui/login/`, { waitUntil: 'load' });
-            await page.waitForTimeout(2000);
+            await page.goto(`${ENV.baseURL}/l8ui/login/`, { waitUntil: 'networkidle' });
 
             for (const script of ['layer8d-login-changepass.js', 'layer8d-login-tfa.js']) {
                 expect(

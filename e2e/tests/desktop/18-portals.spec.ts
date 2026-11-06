@@ -76,11 +76,12 @@ test.describe('portals', () => {
                     // The namespace is created by the portal's own config IIFE. If a
                     // script tag is missing, the IIFE throws and this stays undefined
                     // while the page still looks "loaded".
-                    const state = await page.evaluate(async (ns: string) => {
+                    await page.waitForFunction(
+                        (ns: string) => typeof (window as unknown as Record<string, unknown>)[ns] !== 'undefined',
+                        portal.ns, { timeout: 15000 }
+                    ).catch(() => undefined);   // asserted, with a useful message, below
+                    const state = await page.evaluate((ns: string) => {
                         const w = window as unknown as Record<string, unknown>;
-                        for (let i = 0; i < 60 && typeof w[ns] === 'undefined'; i++) {
-                            await new Promise((r) => setTimeout(r, 250));
-                        }
                         const obj = w[ns] as Record<string, unknown> | undefined;
                         return {
                             defined: typeof obj !== 'undefined',
@@ -131,8 +132,11 @@ test.describe('portals', () => {
             const ctx = await browser.newContext({ ignoreHTTPSErrors: true });
             const page = await ctx.newPage();
             try {
-                await page.goto(url, { waitUntil: 'domcontentloaded' });
-                await page.waitForTimeout(2500);
+                // Quiet network = the portal has fetched whatever it was going
+                // to fetch; the second wait covers a redirect to login, which
+                // starts a navigation of its own.
+                await page.goto(url, { waitUntil: 'networkidle' });
+                await page.waitForLoadState('networkidle');
 
                 const landed = page.url();
                 const redirectedToLogin = /login|index\.html/i.test(landed);

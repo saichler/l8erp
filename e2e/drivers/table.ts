@@ -43,7 +43,9 @@ export async function openService(
     // detail popup.
     await dismissOpenPopups(page);
 
-    const queries = QueryRecorder.attach(page);
+    // The test's recorder, started by the fixture before the test's first
+    // navigation, so a module's default-service query is never missed.
+    const queries = QueryRecorder.forPage(page);
     const nav = new DesktopNav(page);
     await nav.openSection(section);
     await nav.openModule(moduleKey);
@@ -85,16 +87,18 @@ export async function dismissOpenPopups(page: Page): Promise<void> {
         });
     }).catch(() => undefined);
 
+    const overlays = page.locator('.probler-popup-overlay');
     for (let i = 0; i < 4; i++) {
-        const overlays = page.locator('.probler-popup-overlay');
-        if ((await overlays.count()) === 0) return;
+        const open = await overlays.count();
+        if (open === 0) return;
         const close = overlays.last().locator('.probler-popup-close');
         if (await close.count()) {
             await close.click({ timeout: 3000 }).catch(() => undefined);
         } else {
             await page.keyboard.press('Escape').catch(() => undefined);
         }
-        await page.waitForTimeout(400);
+        // Wait for this popup to actually go, not for a guessed duration.
+        await expect(overlays).toHaveCount(open - 1, { timeout: 3000 }).catch(() => undefined);
     }
     await page.evaluate(() => {
         document.querySelectorAll('.probler-popup-overlay').forEach((e) => e.remove());
@@ -136,8 +140,10 @@ export async function assertPaging(
         problems.push(`${where}: ${total} rows but the next-page button is disabled`);
         return;
     }
-    await next.click();
-    await ctx.page.waitForTimeout(1500);
+    if (!(await ctx.table.rerender(() => next.click()))) {
+        problems.push(`${where}: clicking next-page never re-rendered the table`);
+        return;
+    }
 
     const after = await ctx.table.rows().allInnerTexts();
     if (after.length === 0) {
@@ -166,8 +172,7 @@ export async function assertSorting(
     if (!(await sortable.count())) return; // no sortable column configured
 
     const before = ctx.queries.forModel(service.model).length;
-    await sortable.click();
-    await ctx.page.waitForTimeout(1200);
+    await ctx.table.rerender(() => sortable.click());
 
     const sorted = ctx.queries.forModel(service.model).slice(before).find((q) => q.includes('sort-by'));
     if (!sorted) {
@@ -200,15 +205,18 @@ export async function assertFiltering(
     const input = ctx.table.root.locator(`.l8-filter-input[data-column="${filterable.key}"]`);
     if (!(await input.count()) || !(await input.isVisible())) return;
 
-    await input.fill(raw);
-    await ctx.page.waitForTimeout(1500);
+    if (!(await ctx.table.rerender(() => input.fill(raw)))) {
+        problems.push(`${where}: filtering by "${raw}" never re-rendered the table`);
+        return;
+    }
 
     const texts = await ctx.table.rows().allInnerTexts();
     if (texts.length > 0 && !texts.some((t) => t.toLowerCase().includes(raw.toLowerCase()))) {
         problems.push(`${where}: filtering by "${raw}" returned rows that do not contain it`);
     }
-    await input.fill('');
-    await ctx.page.waitForTimeout(800);
+    // The filter input is part of what render() replaces, so clear the NEW one.
+    const cleared = ctx.table.root.locator(`.l8-filter-input[data-column="${filterable.key}"]`);
+    await ctx.table.rerender(() => cleared.fill(''));
 }
 
 /**

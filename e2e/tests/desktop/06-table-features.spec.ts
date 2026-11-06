@@ -60,8 +60,8 @@ test.describe('table features', () => {
         // data-action="next" on the button, not the .l8-page-nav container.
         const next = table.root.locator('.l8-page-nav [data-action="next"]');
         await expect(next).toBeVisible();
-        await next.click();
-        await app.waitForTimeout(1200);
+        expect(await table.rerender(() => next.click()), 'clicking next-page never re-rendered the table')
+            .toBe(true);
 
         const secondRows = await table.rows().allInnerTexts();
         expect(secondRows, 'page 2 rendered no rows').not.toEqual([]);

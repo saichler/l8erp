@@ -83,7 +83,7 @@ for (const section of DESKTOP_SECTIONS) {
                         // to exist. Refresh, then filter by the primary-key
                         // column -- on a live cluster a new row is not
                         // guaranteed to land on page 1.
-                        await ctx.nav.refreshCurrentTable(section.namespace!);
+                        await ctx.nav.refreshCurrentTable(section.namespace!, ctx.table);
                         const pkColumn = svc.columns.find((c) => c.key === svc.primaryKey);
                         const pkFilter = pkColumn
                             ? ctx.table.root.locator(`.l8-filter-input[data-column="${pkColumn.key}"]`)

@@ -158,10 +158,11 @@ test.describe('exports', () => {
             // opens .l8-export-menu, whose options carry the export-* actions.
             const menu = container.locator('[data-action="export-menu"]');
             test.skip(!(await menu.count()), 'this table renders no export menu');
-            await menu.first().click();
-            await app.waitForTimeout(300);
-
             const option = container.locator(`[data-action="export-${format}"]`);
+            await menu.first().click();
+            // The menu is open once its options are on screen.
+            await option.first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined);
+
             expect(
                 await option.count(),
                 `the export menu offers no "${format}" option`

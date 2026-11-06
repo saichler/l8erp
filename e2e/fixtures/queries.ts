@@ -16,13 +16,21 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 // any point in this page's life" is the question that actually matters, and
 // only a recorder attached at page load can answer it.
 
-import { Page } from '@playwright/test';
+// On the worker's shared page (fixtures/test.ts) the fixture resets the
+// recorder at the start of every test, so "this page's life" means "this test",
+// and detaches it afterwards -- otherwise every test would leave a listener
+// behind on a page that lives for hundreds of tests.
+
+import { Page, expect } from '@playwright/test';
+
+const byPage = new WeakMap<Page, QueryRecorder>();
 
 export class QueryRecorder {
     private queries: string[] = [];
+    private readonly onRequest: (req: { url(): string }) => void;
 
     private constructor(page: Page) {
-        page.on('request', (req) => {
+        this.onRequest = (req) => {
             const url = req.url();
             if (!url.includes('body=')) return;
             try {
@@ -33,11 +41,32 @@ export class QueryRecorder {
             } catch {
                 /* not an L8Query body -- ignore */
             }
-        });
+        };
+        page.on('request', this.onRequest);
     }
 
-    static attach(page: Page): QueryRecorder {
-        return new QueryRecorder(page);
+    /** The page's current recorder, created on first use. */
+    static forPage(page: Page): QueryRecorder {
+        let rec = byPage.get(page);
+        if (!rec) {
+            rec = new QueryRecorder(page);
+            byPage.set(page, rec);
+        }
+        return rec;
+    }
+
+    /** Starts a new recording on `page`, discarding the previous one. */
+    static reset(page: Page): QueryRecorder {
+        QueryRecorder.detach(page);
+        return QueryRecorder.forPage(page);
+    }
+
+    /** Stops recording on `page`. */
+    static detach(page: Page): void {
+        const rec = byPage.get(page);
+        if (!rec) return;
+        page.off('request', rec.onRequest);
+        byPage.delete(page);
     }
 
     all(): string[] {
@@ -55,12 +84,11 @@ export class QueryRecorder {
      * `timeoutMs` for one to appear if none has yet. Returns null on timeout.
      */
     async waitForModel(model: string, timeoutMs = 20000): Promise<string | null> {
-        const deadline = Date.now() + timeoutMs;
-        for (;;) {
-            const hits = this.forModel(model);
-            if (hits.length > 0) return hits[0];
-            if (Date.now() > deadline) return null;
-            await new Promise((r) => setTimeout(r, 200));
+        try {
+            await expect.poll(() => this.forModel(model).length, { timeout: timeoutMs }).toBeGreaterThan(0);
+        } catch {
+            return null;
         }
+        return this.forModel(model)[0];
     }
 }

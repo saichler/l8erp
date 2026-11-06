@@ -5,10 +5,22 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 // The suite's test fixture. Every spec imports `test`/`expect` from here.
 //
 // It provides:
-//   - `api`     an authenticated API client (per worker),
-//   - `app`     a page already authenticated into the desktop shell,
-//   - `mobile`  a page already authenticated into the mobile shell,
-//   - `consoleErrors` every console error / uncaught exception the page raised.
+//   - `api`        an authenticated API client, one per worker,
+//   - `app`        the worker's SHARED desktop page, booted once per worker,
+//   - `mobile`     the worker's SHARED mobile page, booted once per worker,
+//   - `freshApp` / `freshMobile`  a page booted for this test alone, for the
+//                  few tests that assert on boot itself or change session-wide
+//                  state (logout, theme),
+//   - `consoleErrors` every console error / uncaught exception the page raised
+//                  DURING THIS TEST.
+//
+// Why a shared page: booting app.html costs ~2s, ~1000 responses (~8MB, served
+// no-store) and ~60 API calls (the dashboard KPIs). Paying that per test was a
+// fifth of the suite's wall clock and most of its backend load. A shared page is
+// reset at the start of every test (popups closed, the current section tagged
+// stale so the test's first openSection() reloads it for real), and Playwright
+// replaces the whole worker -- session included -- after any failing test, so
+// one test's wreckage never reaches the next.
 //
 // The console-error capture is the single highest-value thing here. The failure
 // mode this codebase actually suffers is FailFastNoSilentFallback's: a script
@@ -19,9 +31,12 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 // dedicated one -- which is why it is wired into the fixture rather than a
 // single test.
 
-import { test as base, expect, Page, BrowserContext } from '@playwright/test';
+import { test as base, expect, Page, BrowserContext, Browser, WorkerInfo, TestInfo } from '@playwright/test';
 import { Api } from './api';
 import { ENV } from './env';
+import { QueryRecorder } from './queries';
+import { dismissOpenPopups } from '../drivers/table';
+import { markSectionStale } from '../pages/DesktopNav';
 
 export interface ConsoleCapture {
     /** Uncaught exceptions (pageerror) -- always a real bug. */
@@ -34,23 +49,38 @@ export interface ConsoleCapture {
     all(): string[];
 }
 
-function attachCapture(page: Page): ConsoleCapture {
-    const cap: ConsoleCapture = {
+function newCapture(): ConsoleCapture {
+    return {
         pageErrors: [], consoleErrors: [], failedRequests: [],
         all() { return [...this.pageErrors, ...this.consoleErrors, ...this.failedRequests]; }
     };
-    page.on('pageerror', (e) => cap.pageErrors.push(`${e.name}: ${e.message}`));
-    page.on('console', (msg) => {
-        if (msg.type() === 'error') cap.consoleErrors.push(msg.text());
-    });
-    page.on('response', (res) => {
-        const s = res.status();
-        // 401 on /auth during a deliberate bad-login spec is expected; specs
-        // that care assert on it directly. Everything >= 400 is recorded and
-        // the spec decides.
-        if (s >= 400) cap.failedRequests.push(`${res.request().method()} ${res.url()} -> ${s}`);
-    });
-    return cap;
+}
+
+/**
+ * Routes a page's errors into whichever test currently owns it.
+ *
+ * A shared page outlives every test that uses it, so its listeners are attached
+ * once and write into `current` -- swapped per test -- rather than into one
+ * capture that would accumulate the whole worker's history.
+ */
+class CaptureRouter {
+    current: ConsoleCapture | null = null;
+
+    constructor(page: Page) {
+        page.on('pageerror', (e) => this.current?.pageErrors.push(`${e.name}: ${e.message}`));
+        page.on('console', (msg) => {
+            if (msg.type() === 'error') this.current?.consoleErrors.push(msg.text());
+        });
+        page.on('response', (res) => {
+            const s = res.status();
+            // 401 on /auth during a deliberate bad-login spec is expected; specs
+            // that care assert on it directly. Everything >= 400 is recorded and
+            // the spec decides.
+            if (s >= 400) {
+                this.current?.failedRequests.push(`${res.request().method()} ${res.url()} -> ${s}`);
+            }
+        });
+    }
 }
 
 /**
@@ -103,34 +133,149 @@ export async function waitForMobileReady(page: Page): Promise<void> {
     ).toBeVisible({ timeout: 45000 });
 }
 
+/**
+ * Context options for a context the suite creates itself.
+ *
+ * A worker-scoped context cannot use Playwright's test-scoped option fixtures,
+ * so it takes them from the project's `use` block -- which is what carries the
+ * Pixel 7 profile for the mobile project. Dropping these would silently turn
+ * the mobile suite into a desktop browser at a desktop viewport.
+ */
+function contextOptions(use: Record<string, unknown>) {
+    const keys = ['baseURL', 'ignoreHTTPSErrors', 'viewport', 'userAgent', 'deviceScaleFactor',
+                  'isMobile', 'hasTouch', 'locale', 'timezoneId'];
+    const out: Record<string, unknown> = {};
+    for (const k of keys) if (use[k] !== undefined) out[k] = use[k];
+    return out;
+}
+
+interface Session {
+    page: Page;
+    router: CaptureRouter;
+}
+
+async function openSession(
+    browser: Browser, workerInfo: WorkerInfo, api: Api, shell: string, ready: (p: Page) => Promise<void>
+): Promise<{ context: BrowserContext; session: Session }> {
+    const use = workerInfo.project.use as Record<string, unknown>;
+    const context = await browser.newContext(contextOptions(use));
+    if (typeof use.actionTimeout === 'number') context.setDefaultTimeout(use.actionTimeout);
+    if (typeof use.navigationTimeout === 'number') context.setDefaultNavigationTimeout(use.navigationTimeout);
+    await seedSession(context, api.token, ENV.user);
+    const page = await context.newPage();
+    const router = new CaptureRouter(page);
+    await page.goto(shell);
+    await ready(page);
+    return { context, session: { page, router } };
+}
+
+/**
+ * Hands a shared page to one test and takes it back afterwards.
+ *
+ * On failure the shared page is screenshotted by hand: Playwright's automatic
+ * failure screenshot only covers the test's own `page`, which a test on the
+ * shared session never creates.
+ */
+async function lendSession(
+    session: Session, capture: ConsoleCapture, testInfo: TestInfo,
+    reset: (page: Page) => Promise<void>, use: (page: Page) => Promise<void>
+): Promise<void> {
+    session.router.current = capture;
+    QueryRecorder.reset(session.page);
+    await reset(session.page);
+    try {
+        await use(session.page);
+    } finally {
+        if (testInfo.status !== testInfo.expectedStatus && !session.page.isClosed()) {
+            const shot = await session.page.screenshot().catch(() => null);
+            if (shot) await testInfo.attach('shared-page-on-failure', { body: shot, contentType: 'image/png' });
+        }
+        session.router.current = null;
+        QueryRecorder.detach(session.page);
+    }
+}
+
+/** Desktop reset: nothing left open, and the next openSection() reloads for real. */
+async function resetDesktop(page: Page): Promise<void> {
+    await dismissOpenPopups(page);
+    await markSectionStale(page);
+}
+
+/**
+ * Mobile reset: no popup left open, and back to the home grid -- both through
+ * the app's own API. A detail popup left by the previous test otherwise sits
+ * over the grid and intercepts every tap of this one.
+ */
+async function resetMobile(page: Page): Promise<void> {
+    await page.evaluate(() => {
+        const w = window as unknown as {
+            Layer8MPopup?: { closeAll(): void };
+            Layer8MNav?: { showHome(): void };
+        };
+        w.Layer8MPopup?.closeAll();
+        w.Layer8MNav?.showHome();
+    });
+    await expect(page.locator('.mobile-popup-overlay.open')).toHaveCount(0, { timeout: 5000 });
+    await expect(page.locator('.nav-card[data-module]').first()).toBeVisible({ timeout: 15000 });
+}
+
 type Fixtures = {
-    api: Api;
     consoleErrors: ConsoleCapture;
     app: Page;
     mobile: Page;
+    freshApp: Page;
+    freshMobile: Page;
 };
 
-export const test = base.extend<Fixtures>({
-    api: async ({}, use) => {
+type WorkerFixtures = {
+    api: Api;
+    desktopSession: Session;
+    mobileSession: Session;
+};
+
+export const test = base.extend<Fixtures, WorkerFixtures>({
+    api: [async ({}, use) => {
         const api = await Api.login();
         await use(api);
         await api.dispose();
+    }, { scope: 'worker' }],
+
+    desktopSession: [async ({ browser, api }, use, workerInfo) => {
+        const { context, session } =
+            await openSession(browser, workerInfo, api, ENV.desktopShell, waitForDesktopReady);
+        await use(session);
+        await context.close();
+    }, { scope: 'worker' }],
+
+    mobileSession: [async ({ browser, api }, use, workerInfo) => {
+        const { context, session } =
+            await openSession(browser, workerInfo, api, ENV.mobileShell, waitForMobileReady);
+        await use(session);
+        await context.close();
+    }, { scope: 'worker' }],
+
+    consoleErrors: async ({}, use) => {
+        await use(newCapture());
     },
 
-    consoleErrors: async ({ page }, use) => {
-        await use(attachCapture(page));
+    app: async ({ desktopSession, consoleErrors }, use, testInfo) => {
+        await lendSession(desktopSession, consoleErrors, testInfo, resetDesktop, use);
     },
 
-    app: async ({ page, context, api, consoleErrors }, use) => {
-        void consoleErrors; // ensure listeners are attached before navigation
+    mobile: async ({ mobileSession, consoleErrors }, use, testInfo) => {
+        await lendSession(mobileSession, consoleErrors, testInfo, resetMobile, use);
+    },
+
+    freshApp: async ({ page, context, api, consoleErrors }, use) => {
+        new CaptureRouter(page).current = consoleErrors;
         await seedSession(context, api.token, ENV.user);
         await page.goto(ENV.desktopShell);
         await waitForDesktopReady(page);
         await use(page);
     },
 
-    mobile: async ({ page, context, api, consoleErrors }, use) => {
-        void consoleErrors;
+    freshMobile: async ({ page, context, api, consoleErrors }, use) => {
+        new CaptureRouter(page).current = consoleErrors;
         await seedSession(context, api.token, ENV.user);
         await page.goto(ENV.mobileShell);
         await waitForMobileReady(page);

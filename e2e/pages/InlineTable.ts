@@ -78,12 +78,17 @@ export class InlineTable {
     async openAddRow(): Promise<boolean> {
         const add = this.addButton();
         if (!(await add.count()) || !(await add.isVisible())) return false;
-        const before = await this.page.locator('.probler-popup-overlay').count();
+        const overlays = this.page.locator('.probler-popup-overlay');
+        const before = await overlays.count();
+        const rowsBefore = await this.rows().count();
         await add.click();
-        // Either a stacked popup opens, or the row is appended inline.
-        await this.page.waitForTimeout(700);
-        const after = await this.page.locator('.probler-popup-overlay').count();
-        return after > before || (await this.rows().count()) > 0;
+        // Either a stacked popup opens, or a row is appended inline -- wait for
+        // whichever happens, not for a fixed pause.
+        return expect
+            .poll(async () => (await overlays.count()) > before || (await this.rows().count()) > rowsBefore,
+                  { timeout: 5000 })
+            .toBe(true)
+            .then(() => true, () => false);
     }
 
     async rowCount(): Promise<number> {

@@ -16,7 +16,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 // that module's forms undefined, and the failure is silent unless something
 // opens the form and looks.
 
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { Popup } from '../pages/Popup';
 import { DesktopTable } from '../pages/DesktopTable';
 import { FormDef, FormField, DesktopService } from '../fixtures/inventory';
@@ -296,15 +296,8 @@ export async function assertRequiredValidation(
 
     // Filling a date field leaves the datepicker overlay covering the footer.
     await dismissTransientOverlays(page);
-    await popup.saveButton().click();
-    await page.waitForTimeout(1800);
-
-    const stillOpen = await popup.root().count();
-    const notified = await page
-        .locator('.layer8d-notification-error, .notification-error, .field-error, .form-error')
-        .count();
-
-    if (stillOpen > 0 || notified > 0) return; // validation blocked it -- nothing written
+    const outcome = await clickSaveAndWaitForOutcome(page, popup);
+    if (outcome === 'blocked') return; // validation blocked it -- nothing written
 
     problems.push(
         `${where}: saving with ${form.requiredKeys.length} empty required field(s) ` +
@@ -322,6 +315,41 @@ export async function assertRequiredValidation(
             api.deleteById(service.endpoint, service.model, pk, id)
         );
     }
+}
+
+/** Selector for every way the app reports a refused save. */
+const SAVE_ERROR = '.layer8d-notification-error, .notification-error, .field-error, .form-error';
+
+/**
+ * Clicks Save and waits for the app to answer, one way or the other.
+ *
+ * A save always ends visibly: Layer8DFormsModal reports a client-side
+ * validation failure or a server rejection through Layer8DNotification.error,
+ * and a successful save closes the popup. So the wait is on whichever of those
+ * happens first, never on a guessed duration.
+ *
+ *   'blocked'  an error was reported, or the popup is still open with nothing
+ *              reported once the wait expires (a save that did nothing),
+ *   'closed'   the popup closed without an error -- the save was accepted.
+ */
+export async function clickSaveAndWaitForOutcome(
+    page: Page, popup: Popup, timeout = 10000
+): Promise<'blocked' | 'closed'> {
+    const overlays = page.locator('.probler-popup-overlay');
+    const openBefore = await overlays.count();
+    const errorsBefore = await page.locator(SAVE_ERROR).count();
+    await popup.saveButton().click();
+
+    const seen: { outcome: 'blocked' | 'closed' | 'pending' } = { outcome: 'pending' };
+    await expect
+        .poll(async () => {
+            if ((await page.locator(SAVE_ERROR).count()) > errorsBefore) seen.outcome = 'blocked';
+            else if ((await overlays.count()) < openBefore) seen.outcome = 'closed';
+            return seen.outcome;
+        }, { timeout })
+        .not.toBe('pending')
+        .catch(() => undefined);
+    return seen.outcome === 'closed' ? 'closed' : 'blocked';
 }
 
 /** Primary keys currently in a model, or null when they cannot be listed. */

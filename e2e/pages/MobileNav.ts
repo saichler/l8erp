@@ -49,6 +49,22 @@ export class MobileNav {
         await expect(this.cardGrid()).toBeVisible({ timeout });
     }
 
+    /**
+     * Returns to the home grid through the app's own navigation.
+     *
+     * Replaces reloading /m/app.html between services, which re-downloaded the
+     * whole bundle and re-ran boot (~2s) for every one of ~260 services. Home is
+     * identified by its MODULE cards -- sub-module and service grids reuse
+     * .nav-card-grid, but only home cards carry data-module.
+     */
+    async goHome(): Promise<void> {
+        await this.page.evaluate(() => {
+            const w = window as unknown as { Layer8MNav?: { showHome(): void } };
+            w.Layer8MNav?.showHome();
+        });
+        await expect(this.page.locator('.nav-card[data-module]').first()).toBeVisible({ timeout: 15000 });
+    }
+
     async openModule(moduleKey: string): Promise<void> {
         await this.moduleCard(moduleKey).click();
         await expect(this.cardGrid()).toBeVisible({ timeout: 15000 });
@@ -88,9 +104,14 @@ export class MobileNav {
             .catch(() => null);
 
         await this.openModule(moduleKey);
+        // Each level replaces the grid, so wait for the card of the NEXT level
+        // to be on screen before clicking it; a click aimed at the previous
+        // grid's markup is silently lost.
         const sub = this.cardByLabel(subModuleLabel);
+        await sub.waitFor({ state: 'visible', timeout: 10000 }).catch(() => undefined);
         if (await sub.count()) await sub.click();
         const svc = this.cardByLabel(serviceLabel);
+        await svc.waitFor({ state: 'visible', timeout: 10000 }).catch(() => undefined);
         if (await svc.count()) await svc.click();
 
         const req = await queryPromise;
@@ -121,6 +142,23 @@ export class MobileTable {
     loading(): Locator { return this.page.locator('.mobile-table-loading, .mobile-edit-table-loading'); }
     pagination(): Locator { return this.page.locator('.mobile-table-pagination, .mobile-edit-table-pagination'); }
     filters(): Locator { return this.page.locator('.mobile-table-filters, .mobile-edit-table-filters'); }
+
+    /**
+     * Runs `action` and waits until the card list has rendered again: the
+     * current cards are tagged first, and the list has re-rendered once no
+     * tagged card is left and the list resolved into cards, empty or error.
+     * Returns false when nothing re-rendered within `timeout`.
+     */
+    async rerender(action: () => Promise<unknown>, timeout = 20000): Promise<boolean> {
+        await this.cards().evaluateAll((els) => els.forEach((e) => e.setAttribute('data-e2e-stale', '1')));
+        await action();
+        const gone = await expect(this.page.locator('[data-e2e-stale]'))
+            .toHaveCount(0, { timeout })
+            .then(() => true, () => false);
+        if (!gone) return false;
+        await this.waitForResolved(timeout).catch(() => undefined);
+        return true;
+    }
 
     /** Same three-way resolution as the desktop table, plus the error card. */
     async waitForResolved(timeout = 20000): Promise<'cards' | 'empty' | 'error'> {

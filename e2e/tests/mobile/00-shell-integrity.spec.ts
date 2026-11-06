@@ -15,9 +15,13 @@ import { MobileNav } from '../../pages/MobileNav';
 import { missingGlobals, MOBILE_REQUIRED_GLOBALS } from '../../fixtures/globals';
 
 test.describe('mobile shell integrity @smoke', () => {
-    test('loads with no uncaught exception and no console error', async ({ mobile, consoleErrors }) => {
-        await new MobileNav(mobile).waitForHome();
-        await mobile.waitForTimeout(2000);
+    // A fresh boot, not the worker's shared page: errors raised while booting
+    // are exactly what this test exists to catch.
+    test('loads with no uncaught exception and no console error', async ({ freshMobile, consoleErrors }) => {
+        await new MobileNav(freshMobile).waitForHome();
+        // The mobile shell does no background polling, so a quiet network
+        // means deferred init has finished.
+        await freshMobile.waitForLoadState('networkidle');
         assertNoPageErrors(consoleErrors);
     });
 

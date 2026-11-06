@@ -12,6 +12,24 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 // at `{moduleKey}-{serviceKey}-table-container`.
 
 import { Page, Locator, expect } from '@playwright/test';
+import { DesktopTable, STALE } from './DesktopTable';
+
+/**
+ * Tags the section currently on screen as stale.
+ *
+ * sections.js replaces #content-area's innerHTML on every load, so a container
+ * WITHOUT the tag is, by construction, markup rendered after this call. The
+ * shared-page fixture calls this at the start of every test, which makes the
+ * test's first openSection() a real reload even when that section is already
+ * showing -- a test never inherits another test's filters, open views or
+ * half-edited state.
+ */
+export async function markSectionStale(page: Page): Promise<void> {
+    await page.evaluate((attr) => {
+        document.querySelectorAll('#content-area .section-container')
+            .forEach((c) => c.setAttribute(attr, '1'));
+    }, STALE);
+}
 
 export class DesktopNav {
     constructor(private page: Page) {}
@@ -38,34 +56,43 @@ export class DesktopNav {
     }
 
     /**
-     * Clicks a sidebar section and waits for its generated markup to land.
+     * Shows a sidebar section, loading it only when it is not already loaded.
      *
-     * Waiting on `.section-container` alone is NOT enough and produces flaky,
-     * half-rendered reads: sections.js sets `#content-area` to opacity 0, then
-     * replaces its innerHTML 200ms later, then restores opacity 50ms after
-     * that. Between the click and the swap the PREVIOUS section's container is
-     * still in the DOM and already visible, so the wait resolves immediately
-     * and any assertion that follows races the replacement.
+     * Re-clicking the active section re-fetches its HTML, re-runs every module
+     * initializer and re-queries the default service -- once per service in a
+     * sweep that was ~1,500 needless reloads per run. A section that is active
+     * and not tagged stale is exactly what a reload would produce, so it is
+     * used as-is.
      *
-     * Opacity back at 1 is the signal that the second timeout has fired, which
-     * means the new markup is in place and the generator has run.
-     *
-     * Read the INLINE opacity, not the computed one. After the first load
-     * sections.js leaves a 0.5s opacity transition on #content-area, so right
-     * after the click the computed value is still animating down from 1 and a
-     * poll of getComputedStyle passes before the swap has even started -- the
-     * old section's DOM is then used and detached mid-click. The inline value
-     * is set to '0' synchronously by the click handler and back to '1' only
-     * after the new markup is in place.
+     * When a load is needed, completion is detected without timing: the old
+     * container is tagged before the click, so a visible untagged container is
+     * the NEW markup, and the inline opacity back at '1' is sections.js's own
+     * last step (its swap runs 200ms after the click, the fade-in 50ms after
+     * that). The inline value, not the computed one: the 0.5s opacity
+     * transition keeps the computed value near 1 at the start of the fade-out,
+     * which is how the old opacity poll returned before the swap had begun.
      */
     async openSection(section: string): Promise<void> {
-        await this.sidebarLink(section).click();
-        await expect(this.sidebarLink(section)).toHaveClass(/active/, { timeout: 15000 });
-        await expect(this.contentArea().locator('.section-container')).toBeVisible({ timeout: 15000 });
+        const link = this.sidebarLink(section);
+        const loaded = await this.page.evaluate(({ name, attr }) => {
+            const l = document.querySelector(`.nav-link[data-section="${name}"]`);
+            const area = document.getElementById('content-area');
+            const c = document.querySelector('#content-area .section-container');
+            return !!l && l.classList.contains('active') && !!area && area.style.opacity !== '0' &&
+                   !!c && !c.hasAttribute(attr);
+        }, { name: section, attr: STALE });
+        if (loaded) return;
+
+        await markSectionStale(this.page);
+        await link.click();
+        await expect(link).toHaveClass(/active/, { timeout: 15000 });
+        await expect(
+            this.contentArea().locator(`.section-container:not([${STALE}])`),
+            `section "${section}" never replaced the previous section's markup`
+        ).toBeVisible({ timeout: 15000 });
         await expect
             .poll(
-                async () =>
-                    this.contentArea().evaluate((el) => (el as HTMLElement).style.opacity),
+                () => this.contentArea().evaluate((el) => (el as HTMLElement).style.opacity),
                 { timeout: 15000, message: `section "${section}" never finished fading in` }
             )
             .toBe('1');
@@ -107,7 +134,8 @@ export class DesktopNav {
         //
         // This retries the app's own path rather than forcing state, and still
         // FAILS if the pane genuinely never activates, so a real navigation bug
-        // is reported exactly as before.
+        // is reported exactly as before. Each attempt waits on the `active`
+        // class itself, so a click that lands costs no extra time.
         for (let attempt = 0; attempt < 3; attempt++) {
             if (await content.evaluate((el) => el.classList.contains('active')).catch(() => false)) {
                 return;
@@ -116,30 +144,30 @@ export class DesktopNav {
                 // Something is plausibly covering the tab; clear it the way the
                 // app would before trying again.
                 await this.page.keyboard.press('Escape').catch(() => undefined);
-                await this.page.waitForTimeout(250);
             }
             if ((await tab.count()) && (await tab.isVisible().catch(() => false))) {
                 await tab.click({ timeout: 5000 }).catch(() => undefined);
             }
-            await content.waitFor({ state: 'attached', timeout: 5000 }).catch(() => undefined);
-            await this.page.waitForTimeout(400);
+            const active = await expect(content).toHaveClass(/active/, { timeout: 4000 })
+                .then(() => true, () => false);
+            if (active) return;
         }
         await expect(content).toHaveClass(/active/, { timeout: 10000 });
     }
 
     /**
-     * Forces the active table to re-fetch.
+     * Forces the active table to re-fetch, and waits for it to re-render.
      *
      * layer8d-module-navigation.js exposes refreshCurrentTable() on each module
      * namespace; calling it is how the app itself refreshes after a write, so
-     * the test uses the same path rather than reloading the page.
+     * the test uses the same path rather than reloading the page. Returns
+     * false when the table did not re-render.
      */
-    async refreshCurrentTable(namespace: string): Promise<void> {
-        await this.page.evaluate((ns: string) => {
+    async refreshCurrentTable(namespace: string, table: DesktopTable): Promise<boolean> {
+        return table.rerender(() => this.page.evaluate((ns: string) => {
             const w = window as unknown as Record<string, { refreshCurrentTable?: () => void }>;
             w[ns]?.refreshCurrentTable?.();
-        }, namespace);
-        await this.page.waitForTimeout(1200);
+        }, namespace));
     }
 
     /**

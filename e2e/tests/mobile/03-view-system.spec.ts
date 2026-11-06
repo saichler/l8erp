@@ -133,11 +133,13 @@ test.describe('mobile view system', () => {
                     // the item carries data-view-TYPE and is unreachable until
                     // the menu is open.
                     const toggle = slot.locator('.l8-view-toggle');
+                    const item = slot.locator(`[data-view-type="${view}"]`);
                     if (await toggle.count()) {
                         await toggle.first().click().catch(() => undefined);
-                        await mobile.waitForTimeout(200);
+                        // The menu is open once its items are on screen.
+                        await item.first().waitFor({ state: 'visible', timeout: 3000 })
+                            .catch(() => undefined);
                     }
-                    const item = slot.locator(`[data-view-type="${view}"]`);
                     if (!(await item.count())) {
                         if (await toggle.count()) {
                             await toggle.first().click().catch(() => undefined);
@@ -146,7 +148,18 @@ test.describe('mobile view system', () => {
                         continue;
                     }
                     await item.first().click();
-                    await mobile.waitForTimeout(1800);
+
+                    // Wait for the view to show up -- its wrapper class or its
+                    // drawn content -- instead of a fixed pause; whatever is on
+                    // screen when the wait ends is what gets reported below.
+                    await expect
+                        .poll(() => container.evaluate((el, a) =>
+                            el.classList.contains(`layer8m-${a.t}-container`) ||
+                            el.querySelector(a.m) !== null,
+                            { t: view, m: INNER_MARKER[view] || '*' }).catch(() => false),
+                        { timeout: 10000 })
+                        .toBe(true)
+                        .catch(() => undefined);
 
                     const outer = await container.evaluate(
                         (el, t) => el.classList.contains(`layer8m-${t}-container`),

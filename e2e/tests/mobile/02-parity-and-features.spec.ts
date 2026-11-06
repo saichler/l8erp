@@ -54,8 +54,8 @@ test.describe('mobile table features', () => {
                                     '.mobile-edit-table-pagination [data-action="next"], ' +
                                     '.mobile-edit-table-pagination-controls [data-page]').last();
         test.skip(!(await next.count()), 'no pagination control rendered');
-        await next.click();
-        await mobile.waitForTimeout(1500);
+        expect(await table.rerender(() => next.click()), 'tapping next-page never re-rendered the cards')
+            .toBe(true);
 
         const second = await table.cards().allInnerTexts();
         expect(second, 'page 2 rendered no cards').not.toEqual([]);

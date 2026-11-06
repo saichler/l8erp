@@ -20,6 +20,7 @@ import { DesktopNav } from '../../pages/DesktopNav';
 import { DesktopTable } from '../../pages/DesktopTable';
 import { Popup } from '../../pages/Popup';
 import { safeCleanup } from '../../fixtures/api';
+import { clickSaveAndWaitForOutcome } from '../../drivers/forms';
 
 const ENDPOINT = '/30/JobFamily';
 const MODEL = 'JobFamily';
@@ -110,8 +111,16 @@ test.describe('CRUD through the UI', () => {
         expect(updated!.status, `update returned HTTP ${updated!.status}`).toBeLessThan(400);
         await popup.waitForClosed();
 
-        const afterEdit = await api.query(ENDPOINT, `select * from ${MODEL} where code=${code}`);
-        expect(afterEdit.list[0].name).toBe(newName);
+        // Poll, not one read: a GET issued right after the PUT can still be
+        // served the pre-edit row (observed once in a smoke run; the identical
+        // query was answered from before the write). The edit must land within
+        // the window -- a write that never shows up still fails here.
+        await expect
+            .poll(async () => {
+                const r = await api.query(ENDPOINT, `select * from ${MODEL} where code=${code}`);
+                return r.list[0]?.name;
+            }, { timeout: 10000, message: 'the edited name never reached the API' })
+            .toBe(newName);
 
         // --- row click opens the detail view ------------------------------
         await table.filterBy('code', code);
@@ -155,17 +164,14 @@ test.describe('CRUD through the UI', () => {
 
         await table.addButton().click();
         await popup.waitForOpen();
-        await popup.saveButton().click();
 
         // Either the popup stays open with an error, or a notification fires --
         // what must NOT happen is a silent close with a row written.
-        await app.waitForTimeout(1500);
-        const stillOpen = await popup.root().count();
-        const notified = await app.locator('.layer8d-notification-error, .notification-error').count();
+        const outcome = await clickSaveAndWaitForOutcome(app, popup);
         expect(
-            stillOpen > 0 || notified > 0,
+            outcome,
             'saving an empty required form neither blocked nor reported an error'
-        ).toBeTruthy();
+        ).toBe('blocked');
 
         await popup.close().catch(() => undefined);
         assertNoPageErrors(consoleErrors, ['required']);

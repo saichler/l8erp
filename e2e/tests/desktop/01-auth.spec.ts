@@ -58,7 +58,9 @@ test.describe('authentication @smoke', () => {
         expect(withoutGet, `operator lacks GET on: ${withoutGet.join(', ')}`).toEqual([]);
     });
 
-    test('logging out clears the session', async ({ app }) => {
+    // A fresh page: logging out ends the session, which must not happen to the
+    // worker's shared page that later tests run on.
+    test('logging out clears the session', async ({ freshApp: app }) => {
         const logout = app.locator('.logout-btn');
         await expect(logout).toBeVisible();
         await logout.click();

@@ -19,7 +19,7 @@ import { DESKTOP_SECTIONS } from '../../fixtures/inventory';
 import { openService, expectNoProblems, Problems, dismissTransientOverlays } from '../../drivers/table';
 import { openAddForm } from '../../drivers/forms';
 import { InlineTable } from '../../pages/InlineTable';
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 
 /**
  * Closes stacked popups until only `depth` remain, using the app's own close
@@ -33,9 +33,10 @@ import { Page } from '@playwright/test';
  * that rather than carry on against corrupted state.
  */
 async function collapseToDepth(page: Page, depth: number): Promise<boolean> {
+    const overlays = page.locator('.probler-popup-overlay');
     for (let i = 0; i < 5; i++) {
-        const overlays = page.locator('.probler-popup-overlay');
-        if ((await overlays.count()) <= depth) return true;
+        const open = await overlays.count();
+        if (open <= depth) return true;
         // The row editor carries date-picker triggers; an open
         // .layer8d-datepicker-overlay sits over its close button and silently
         // swallows the click.
@@ -50,7 +51,8 @@ async function collapseToDepth(page: Page, depth: number): Promise<boolean> {
         } else {
             await page.keyboard.press('Escape').catch(() => undefined);
         }
-        await page.waitForTimeout(400);
+        // Wait for this popup to actually go, not for a guessed duration.
+        await expect(overlays).toHaveCount(open - 1, { timeout: 3000 }).catch(() => undefined);
     }
     return (await page.locator('.probler-popup-overlay').count()) <= depth;
 }

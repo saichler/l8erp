@@ -112,13 +112,16 @@ export async function assertCreateThroughUi(
     // need not equal the string that was entered, and the lookup silently
     // misses a record that was created perfectly well.
     let id = '';
-    for (let i = 0; i < 6 && !id; i++) {
-        const after = await snapshotIds(api, service);
-        for (const candidate of after) {
-            if (!idsBefore.has(candidate)) { id = candidate; break; }
-        }
-        if (!id) await new Promise((r) => setTimeout(r, 700));
-    }
+    await expect
+        .poll(async () => {
+            const after = await snapshotIds(api, service);
+            for (const candidate of after) {
+                if (!idsBefore.has(candidate)) { id = candidate; break; }
+            }
+            return id;
+        }, { timeout: 5000 })
+        .not.toBe('')
+        .catch(() => undefined);
 
     if (!id) {
         problems.push(
@@ -210,8 +213,9 @@ export async function assertDeleteThroughUi(
     const confirm = page.locator('.probler-popup-overlay .probler-popup-footer .btn-primary');
     await confirm.waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined);
     if (await confirm.count()) {
+        // No wait here: the poll below waits on the outcome that matters, the
+        // record disappearing from the API.
         await confirm.last().click({ timeout: 8000 }).catch(() => undefined);
-        await page.waitForTimeout(600);
     }
 
     let gone = false;

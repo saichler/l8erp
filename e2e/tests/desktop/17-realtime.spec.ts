@@ -38,16 +38,17 @@ function realtimeServices() {
 
 test.describe('realtime', () => {
     test('the websocket client is loaded and connects @smoke', async ({ app }) => {
-        const state = await app.evaluate(async () => {
+        // app.js calls init() during boot; wait for the upgrade to report
+        // connected rather than racing it.
+        await app.waitForFunction(() => {
+            const w = window as unknown as { Layer8DWebSocket?: { isConnected?(): boolean } };
+            return !w.Layer8DWebSocket || !!w.Layer8DWebSocket.isConnected?.();
+        }, null, { timeout: 10000 }).catch(() => undefined);   // asserted below
+        const state = await app.evaluate(() => {
             const w = window as unknown as {
                 Layer8DWebSocket?: { isConnected?(): boolean; subscribe?: unknown };
             };
             if (!w.Layer8DWebSocket) return { present: false, connected: false };
-            // app.js calls init() during boot; give the upgrade a moment to settle
-            // rather than racing it.
-            for (let i = 0; i < 40 && !w.Layer8DWebSocket.isConnected?.(); i++) {
-                await new Promise((r) => setTimeout(r, 250));
-            }
             return { present: true, connected: !!w.Layer8DWebSocket.isConnected?.() };
         });
 
@@ -111,13 +112,12 @@ test.describe('realtime', () => {
         try {
             await api.post('/0/ImprtTmpl', template);
 
-            const hits = await app.evaluate(async () => {
-                const w = window as unknown as { __e2eHits: unknown[] };
-                for (let i = 0; i < 60 && w.__e2eHits.length === 0; i++) {
-                    await new Promise((r) => setTimeout(r, 250));
-                }
-                return w.__e2eHits.length;
-            });
+            await app.waitForFunction(
+                () => (window as unknown as { __e2eHits: unknown[] }).__e2eHits.length > 0,
+                null, { timeout: 15000 }
+            ).catch(() => undefined);   // asserted below
+            const hits = await app.evaluate(
+                () => (window as unknown as { __e2eHits: unknown[] }).__e2eHits.length);
 
             expect(
                 hits,
