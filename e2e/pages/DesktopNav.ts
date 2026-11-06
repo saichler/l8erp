@@ -49,6 +49,14 @@ export class DesktopNav {
      *
      * Opacity back at 1 is the signal that the second timeout has fired, which
      * means the new markup is in place and the generator has run.
+     *
+     * Read the INLINE opacity, not the computed one. After the first load
+     * sections.js leaves a 0.5s opacity transition on #content-area, so right
+     * after the click the computed value is still animating down from 1 and a
+     * poll of getComputedStyle passes before the swap has even started -- the
+     * old section's DOM is then used and detached mid-click. The inline value
+     * is set to '0' synchronously by the click handler and back to '1' only
+     * after the new markup is in place.
      */
     async openSection(section: string): Promise<void> {
         await this.sidebarLink(section).click();
@@ -57,7 +65,7 @@ export class DesktopNav {
         await expect
             .poll(
                 async () =>
-                    this.contentArea().evaluate((el) => getComputedStyle(el).opacity),
+                    this.contentArea().evaluate((el) => (el as HTMLElement).style.opacity),
                 { timeout: 15000, message: `section "${section}" never finished fading in` }
             )
             .toBe('1');
