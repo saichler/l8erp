@@ -18,9 +18,9 @@ package main
 import (
 	"fmt"
 	"github.com/saichler/l8bus/go/overlay/vnic"
+	"github.com/saichler/l8common/go/system"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/erp/services"
-	evtservices "github.com/saichler/l8events/go/services"
 	"github.com/saichler/l8types/go/ifs"
 	"os"
 	"os/exec"
@@ -44,7 +44,9 @@ func main() {
 
 	services.ActivateAllServices(dbcred, dbname, nic)
 	services.ActivateChatService(dbcred, dbname, nic)
-	evtservices.ActivateEvents(dbcred, dbname, nic)
+	// Required system services (l8events, l8notify) -- always through
+	// l8common's system.Activate, never the individual Activate* functions.
+	system.Activate(dbcred, dbname, nic)
 
 	common.WaitForSignal(res)
 }

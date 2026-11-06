@@ -76815,7 +76815,7 @@
                       "title": "Audit",
                       "fields": [
                         {
-                          "key": "createdBy",
+                          "key": "auditInfo.createdBy",
                           "label": "Created By",
                           "type": "text",
                           "required": false,
@@ -76826,9 +76826,9 @@
                           "columns": null
                         },
                         {
-                          "key": "createdAt",
+                          "key": "auditInfo.createdAt",
                           "label": "Created At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -76837,7 +76837,7 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedBy",
+                          "key": "auditInfo.modifiedBy",
                           "label": "Modified By",
                           "type": "text",
                           "required": false,
@@ -76848,9 +76848,9 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedAt",
+                          "key": "auditInfo.modifiedAt",
                           "label": "Modified At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -76864,7 +76864,7 @@
                   "fieldCount": 29,
                   "fieldTypes": [
                     "checkbox",
-                    "date",
+                    "datetime",
                     "money",
                     "number",
                     "reference",
@@ -76883,10 +76883,10 @@
                     "productType"
                   ],
                   "readOnlyKeys": [
-                    "createdBy",
-                    "createdAt",
-                    "modifiedBy",
-                    "modifiedAt"
+                    "auditInfo.createdBy",
+                    "auditInfo.createdAt",
+                    "auditInfo.modifiedBy",
+                    "auditInfo.modifiedAt"
                   ]
                 }
               },
@@ -77284,7 +77284,7 @@
                       "title": "Audit",
                       "fields": [
                         {
-                          "key": "createdBy",
+                          "key": "auditInfo.createdBy",
                           "label": "Created By",
                           "type": "text",
                           "required": false,
@@ -77295,9 +77295,9 @@
                           "columns": null
                         },
                         {
-                          "key": "createdAt",
+                          "key": "auditInfo.createdAt",
                           "label": "Created At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -77306,7 +77306,7 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedBy",
+                          "key": "auditInfo.modifiedBy",
                           "label": "Modified By",
                           "type": "text",
                           "required": false,
@@ -77317,9 +77317,9 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedAt",
+                          "key": "auditInfo.modifiedAt",
                           "label": "Modified At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -77333,6 +77333,7 @@
                   "fieldCount": 24,
                   "fieldTypes": [
                     "date",
+                    "datetime",
                     "inlineTable",
                     "money",
                     "number",
@@ -77354,10 +77355,10 @@
                     "customerId"
                   ],
                   "readOnlyKeys": [
-                    "createdBy",
-                    "createdAt",
-                    "modifiedBy",
-                    "modifiedAt"
+                    "auditInfo.createdBy",
+                    "auditInfo.createdAt",
+                    "auditInfo.modifiedBy",
+                    "auditInfo.modifiedAt"
                   ]
                 }
               }
@@ -77990,7 +77991,7 @@
                       "title": "Audit",
                       "fields": [
                         {
-                          "key": "createdBy",
+                          "key": "auditInfo.createdBy",
                           "label": "Created By",
                           "type": "text",
                           "required": false,
@@ -78001,9 +78002,9 @@
                           "columns": null
                         },
                         {
-                          "key": "createdAt",
+                          "key": "auditInfo.createdAt",
                           "label": "Created At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -78012,7 +78013,7 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedBy",
+                          "key": "auditInfo.modifiedBy",
                           "label": "Modified By",
                           "type": "text",
                           "required": false,
@@ -78023,9 +78024,9 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedAt",
+                          "key": "auditInfo.modifiedAt",
                           "label": "Modified At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -78039,6 +78040,7 @@
                   "fieldCount": 34,
                   "fieldTypes": [
                     "date",
+                    "datetime",
                     "inlineTable",
                     "money",
                     "number",
@@ -78064,10 +78066,10 @@
                     "customerId"
                   ],
                   "readOnlyKeys": [
-                    "createdBy",
-                    "createdAt",
-                    "modifiedBy",
-                    "modifiedAt"
+                    "auditInfo.createdBy",
+                    "auditInfo.createdAt",
+                    "auditInfo.modifiedBy",
+                    "auditInfo.modifiedAt"
                   ]
                 }
               },
@@ -78564,7 +78566,7 @@
                       "title": "Audit",
                       "fields": [
                         {
-                          "key": "createdBy",
+                          "key": "auditInfo.createdBy",
                           "label": "Created By",
                           "type": "text",
                           "required": false,
@@ -78575,9 +78577,9 @@
                           "columns": null
                         },
                         {
-                          "key": "createdAt",
+                          "key": "auditInfo.createdAt",
                           "label": "Created At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -78586,7 +78588,7 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedBy",
+                          "key": "auditInfo.modifiedBy",
                           "label": "Modified By",
                           "type": "text",
                           "required": false,
@@ -78597,9 +78599,9 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedAt",
+                          "key": "auditInfo.modifiedAt",
                           "label": "Modified At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -78613,6 +78615,7 @@
                   "fieldCount": 28,
                   "fieldTypes": [
                     "date",
+                    "datetime",
                     "inlineTable",
                     "money",
                     "number",
@@ -78637,10 +78640,10 @@
                     "customerId"
                   ],
                   "readOnlyKeys": [
-                    "createdBy",
-                    "createdAt",
-                    "modifiedBy",
-                    "modifiedAt"
+                    "auditInfo.createdBy",
+                    "auditInfo.createdAt",
+                    "auditInfo.modifiedBy",
+                    "auditInfo.modifiedAt"
                   ]
                 }
               }
@@ -78990,7 +78993,7 @@
                       "title": "Audit",
                       "fields": [
                         {
-                          "key": "createdBy",
+                          "key": "auditInfo.createdBy",
                           "label": "Created By",
                           "type": "text",
                           "required": false,
@@ -79001,9 +79004,9 @@
                           "columns": null
                         },
                         {
-                          "key": "createdAt",
+                          "key": "auditInfo.createdAt",
                           "label": "Created At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -79012,7 +79015,7 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedBy",
+                          "key": "auditInfo.modifiedBy",
                           "label": "Modified By",
                           "type": "text",
                           "required": false,
@@ -79023,9 +79026,9 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedAt",
+                          "key": "auditInfo.modifiedAt",
                           "label": "Modified At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -79040,6 +79043,7 @@
                   "fieldTypes": [
                     "checkbox",
                     "date",
+                    "datetime",
                     "inlineTable",
                     "money",
                     "reference",
@@ -79060,10 +79064,10 @@
                     "customerId"
                   ],
                   "readOnlyKeys": [
-                    "createdBy",
-                    "createdAt",
-                    "modifiedBy",
-                    "modifiedAt"
+                    "auditInfo.createdBy",
+                    "auditInfo.createdAt",
+                    "auditInfo.modifiedBy",
+                    "auditInfo.modifiedAt"
                   ]
                 }
               },
@@ -79429,7 +79433,7 @@
                       "title": "Audit",
                       "fields": [
                         {
-                          "key": "createdBy",
+                          "key": "auditInfo.createdBy",
                           "label": "Created By",
                           "type": "text",
                           "required": false,
@@ -79440,9 +79444,9 @@
                           "columns": null
                         },
                         {
-                          "key": "createdAt",
+                          "key": "auditInfo.createdAt",
                           "label": "Created At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -79451,7 +79455,7 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedBy",
+                          "key": "auditInfo.modifiedBy",
                           "label": "Modified By",
                           "type": "text",
                           "required": false,
@@ -79462,9 +79466,9 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedAt",
+                          "key": "auditInfo.modifiedAt",
                           "label": "Modified At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -79478,6 +79482,7 @@
                   "fieldCount": 21,
                   "fieldTypes": [
                     "date",
+                    "datetime",
                     "inlineTable",
                     "money",
                     "reference",
@@ -79499,10 +79504,10 @@
                     "customerId"
                   ],
                   "readOnlyKeys": [
-                    "createdBy",
-                    "createdAt",
-                    "modifiedBy",
-                    "modifiedAt"
+                    "auditInfo.createdBy",
+                    "auditInfo.createdAt",
+                    "auditInfo.modifiedBy",
+                    "auditInfo.modifiedAt"
                   ]
                 }
               }
@@ -151678,7 +151683,7 @@
                       "title": "Audit",
                       "fields": [
                         {
-                          "key": "createdBy",
+                          "key": "auditInfo.createdBy",
                           "label": "Created By",
                           "type": "text",
                           "required": false,
@@ -151689,9 +151694,9 @@
                           "columns": null
                         },
                         {
-                          "key": "createdAt",
+                          "key": "auditInfo.createdAt",
                           "label": "Created At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -151700,7 +151705,7 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedBy",
+                          "key": "auditInfo.modifiedBy",
                           "label": "Modified By",
                           "type": "text",
                           "required": false,
@@ -151711,9 +151716,9 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedAt",
+                          "key": "auditInfo.modifiedAt",
                           "label": "Modified At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -151727,7 +151732,7 @@
                   "fieldCount": 29,
                   "fieldTypes": [
                     "checkbox",
-                    "date",
+                    "datetime",
                     "money",
                     "number",
                     "reference",
@@ -151746,10 +151751,10 @@
                     "productType"
                   ],
                   "readOnlyKeys": [
-                    "createdBy",
-                    "createdAt",
-                    "modifiedBy",
-                    "modifiedAt"
+                    "auditInfo.createdBy",
+                    "auditInfo.createdAt",
+                    "auditInfo.modifiedBy",
+                    "auditInfo.modifiedAt"
                   ]
                 }
               },
@@ -152123,7 +152128,7 @@
                       "title": "Audit",
                       "fields": [
                         {
-                          "key": "createdBy",
+                          "key": "auditInfo.createdBy",
                           "label": "Created By",
                           "type": "text",
                           "required": false,
@@ -152134,9 +152139,9 @@
                           "columns": null
                         },
                         {
-                          "key": "createdAt",
+                          "key": "auditInfo.createdAt",
                           "label": "Created At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -152145,7 +152150,7 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedBy",
+                          "key": "auditInfo.modifiedBy",
                           "label": "Modified By",
                           "type": "text",
                           "required": false,
@@ -152156,9 +152161,9 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedAt",
+                          "key": "auditInfo.modifiedAt",
                           "label": "Modified At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -152172,6 +152177,7 @@
                   "fieldCount": 24,
                   "fieldTypes": [
                     "date",
+                    "datetime",
                     "inlineTable",
                     "money",
                     "number",
@@ -152193,10 +152199,10 @@
                     "customerId"
                   ],
                   "readOnlyKeys": [
-                    "createdBy",
-                    "createdAt",
-                    "modifiedBy",
-                    "modifiedAt"
+                    "auditInfo.createdBy",
+                    "auditInfo.createdAt",
+                    "auditInfo.modifiedBy",
+                    "auditInfo.modifiedAt"
                   ]
                 }
               }
@@ -152803,7 +152809,7 @@
                       "title": "Audit",
                       "fields": [
                         {
-                          "key": "createdBy",
+                          "key": "auditInfo.createdBy",
                           "label": "Created By",
                           "type": "text",
                           "required": false,
@@ -152814,9 +152820,9 @@
                           "columns": null
                         },
                         {
-                          "key": "createdAt",
+                          "key": "auditInfo.createdAt",
                           "label": "Created At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -152825,7 +152831,7 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedBy",
+                          "key": "auditInfo.modifiedBy",
                           "label": "Modified By",
                           "type": "text",
                           "required": false,
@@ -152836,9 +152842,9 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedAt",
+                          "key": "auditInfo.modifiedAt",
                           "label": "Modified At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -152852,6 +152858,7 @@
                   "fieldCount": 34,
                   "fieldTypes": [
                     "date",
+                    "datetime",
                     "inlineTable",
                     "money",
                     "number",
@@ -152877,10 +152884,10 @@
                     "customerId"
                   ],
                   "readOnlyKeys": [
-                    "createdBy",
-                    "createdAt",
-                    "modifiedBy",
-                    "modifiedAt"
+                    "auditInfo.createdBy",
+                    "auditInfo.createdAt",
+                    "auditInfo.modifiedBy",
+                    "auditInfo.modifiedAt"
                   ]
                 }
               },
@@ -153351,7 +153358,7 @@
                       "title": "Audit",
                       "fields": [
                         {
-                          "key": "createdBy",
+                          "key": "auditInfo.createdBy",
                           "label": "Created By",
                           "type": "text",
                           "required": false,
@@ -153362,9 +153369,9 @@
                           "columns": null
                         },
                         {
-                          "key": "createdAt",
+                          "key": "auditInfo.createdAt",
                           "label": "Created At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -153373,7 +153380,7 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedBy",
+                          "key": "auditInfo.modifiedBy",
                           "label": "Modified By",
                           "type": "text",
                           "required": false,
@@ -153384,9 +153391,9 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedAt",
+                          "key": "auditInfo.modifiedAt",
                           "label": "Modified At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -153400,6 +153407,7 @@
                   "fieldCount": 28,
                   "fieldTypes": [
                     "date",
+                    "datetime",
                     "inlineTable",
                     "money",
                     "number",
@@ -153424,10 +153432,10 @@
                     "customerId"
                   ],
                   "readOnlyKeys": [
-                    "createdBy",
-                    "createdAt",
-                    "modifiedBy",
-                    "modifiedAt"
+                    "auditInfo.createdBy",
+                    "auditInfo.createdAt",
+                    "auditInfo.modifiedBy",
+                    "auditInfo.modifiedAt"
                   ]
                 }
               }
@@ -153753,7 +153761,7 @@
                       "title": "Audit",
                       "fields": [
                         {
-                          "key": "createdBy",
+                          "key": "auditInfo.createdBy",
                           "label": "Created By",
                           "type": "text",
                           "required": false,
@@ -153764,9 +153772,9 @@
                           "columns": null
                         },
                         {
-                          "key": "createdAt",
+                          "key": "auditInfo.createdAt",
                           "label": "Created At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -153775,7 +153783,7 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedBy",
+                          "key": "auditInfo.modifiedBy",
                           "label": "Modified By",
                           "type": "text",
                           "required": false,
@@ -153786,9 +153794,9 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedAt",
+                          "key": "auditInfo.modifiedAt",
                           "label": "Modified At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -153803,6 +153811,7 @@
                   "fieldTypes": [
                     "checkbox",
                     "date",
+                    "datetime",
                     "inlineTable",
                     "money",
                     "reference",
@@ -153823,10 +153832,10 @@
                     "customerId"
                   ],
                   "readOnlyKeys": [
-                    "createdBy",
-                    "createdAt",
-                    "modifiedBy",
-                    "modifiedAt"
+                    "auditInfo.createdBy",
+                    "auditInfo.createdAt",
+                    "auditInfo.modifiedBy",
+                    "auditInfo.modifiedAt"
                   ]
                 }
               },
@@ -154170,7 +154179,7 @@
                       "title": "Audit",
                       "fields": [
                         {
-                          "key": "createdBy",
+                          "key": "auditInfo.createdBy",
                           "label": "Created By",
                           "type": "text",
                           "required": false,
@@ -154181,9 +154190,9 @@
                           "columns": null
                         },
                         {
-                          "key": "createdAt",
+                          "key": "auditInfo.createdAt",
                           "label": "Created At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -154192,7 +154201,7 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedBy",
+                          "key": "auditInfo.modifiedBy",
                           "label": "Modified By",
                           "type": "text",
                           "required": false,
@@ -154203,9 +154212,9 @@
                           "columns": null
                         },
                         {
-                          "key": "modifiedAt",
+                          "key": "auditInfo.modifiedAt",
                           "label": "Modified At",
-                          "type": "date",
+                          "type": "datetime",
                           "required": false,
                           "readOnly": true,
                           "hidden": false,
@@ -154219,6 +154228,7 @@
                   "fieldCount": 21,
                   "fieldTypes": [
                     "date",
+                    "datetime",
                     "inlineTable",
                     "money",
                     "reference",
@@ -154240,10 +154250,10 @@
                     "customerId"
                   ],
                   "readOnlyKeys": [
-                    "createdBy",
-                    "createdAt",
-                    "modifiedBy",
-                    "modifiedAt"
+                    "auditInfo.createdBy",
+                    "auditInfo.createdAt",
+                    "auditInfo.modifiedBy",
+                    "auditInfo.modifiedAt"
                   ]
                 }
               }

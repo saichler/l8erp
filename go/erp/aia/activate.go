@@ -19,7 +19,9 @@ func AgentConfig(creds, dbname string, vnic ifs.IVNic) agent.AgentConfig {
 		ServiceArea: ServiceArea,
 		DBCreds:     creds,
 		DBName:      dbname,
-		LLMCreds:    "Anthropic",
+		LLMCreds:    "TestLLM",
+		LLMProvider: "openai",
+		LLMCredKey:  "chat",
 		DefaultPrompts: []*l8agent.L8AgentPrompt{
 			{
 				Name:           "Financial Analyst",
@@ -43,10 +45,10 @@ func AgentConfig(creds, dbname string, vnic ifs.IVNic) agent.AgentConfig {
 				AllowedModules: []string{"scm", "mfg"},
 			},
 			{
-				Name:           "Executive Summary",
-				Description:    "Cross-module KPI summaries for executives",
-				SystemPrompt:   "You are an executive assistant. Provide high-level KPI summaries across all modules. Always use aggregate queries to present counts, totals, and averages rather than individual records.",
-				Category:       int32(l8agent.L8AgentPromptCategory_L8_AGENT_PROMPT_CATEGORY_ANALYSIS),
+				Name:         "Executive Summary",
+				Description:  "Cross-module KPI summaries for executives",
+				SystemPrompt: "You are an executive assistant. Provide high-level KPI summaries across all modules. Always use aggregate queries to present counts, totals, and averages rather than individual records.",
+				Category:     int32(l8agent.L8AgentPromptCategory_L8_AGENT_PROMPT_CATEGORY_ANALYSIS),
 			},
 		},
 	}

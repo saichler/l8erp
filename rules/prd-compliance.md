@@ -39,7 +39,7 @@ Every PRD MUST be reviewed against ALL active global rules before it is consider
 
 #### Deployment
 - New deployable services include build.sh, Dockerfile, K8s YAML (deployment-artifacts)
-- run-local.sh section is included (run-local-script)
+- KIND scripts (kind-start.sh with mock seeding, kind-stop.sh) and an e2e Playwright suite are included
 - K8s YAMLs include all required entries (k8s-yaml-required-entries)
 
 #### Configuration
@@ -67,7 +67,6 @@ go/
 ├── go.sum
 ├── vendor/                          # Vendored dependencies
 ├── build-all-images.sh              # Builds all Docker images
-├── run-local.sh                     # Local development startup
 ├── <module>/                        # Module directory (e.g., erp/, bugs/)
 │   ├── common/                      # Shared constants (PREFIX, defaults)
 │   ├── <submodule>/                 # One directory per service group

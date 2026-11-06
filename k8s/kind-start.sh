@@ -93,6 +93,9 @@ for sts in erp erp-web erp-log-agent; do
   "${KUBECTL[@]}" -n l8erp rollout status statefulset/"${sts}" --timeout=180s
 done
 
+echo "Phase 3: Seeding mock data..."
+"${SCRIPT_DIR}/seed-mocks.sh"
+
 echo ""
 echo "KIND cluster '${CLUSTER_NAME}' is up and l8erp is deployed."
 echo "Run 'kubectl get pods -n l8erp' to check status."

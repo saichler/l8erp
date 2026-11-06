@@ -106,5 +106,7 @@ func registerSysTypes(resources ifs.IResources) {
 	common.RegisterType(resources, &sys.SysModuleConfig{}, &sys.SysModuleConfigList{}, "ConfigId")
 	common.RegisterType(resources, &l8api.L8ImportTemplate{}, &l8api.L8ImportTemplateList{}, "TemplateId")
 	common.RegisterType(resources, &l8events.EventRecord{}, &l8events.EventRecordList{}, "EventId")
+	common.RegisterType(resources, &l8notify.NotifyRecord{}, &l8notify.NotifyRecordList{}, "NotifyId")
+	common.RegisterType(resources, &l8notify.IntegrationConfig{}, &l8notify.IntegrationConfigList{}, "IntegrationId")
 	resources.Registry().Register(&l8notify.L8NotificationSet{})
 }

@@ -95,19 +95,21 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared infrastr
 - Go 1.25 or later
 - Docker (for PostgreSQL and deployment)
 
-### Run Locally
+### Run Locally (KIND)
 
 ```bash
 # Clone the repository
 git clone https://github.com/saichler/l8erp.git
-cd l8erp/go
+cd l8erp/k8s
 
-# Full local startup (builds, starts DB, loads mock data)
-./run-local.sh
+# Create the KIND cluster, deploy l8erp and seed mock data
+./kind-start.sh
 
-# Or run just the web server
-go run ./erp/ui/main1/
+# Tear it down
+./kind-stop.sh
 ```
+
+All testing runs end-to-end against this cluster with Playwright; see `e2e/README.md`.
 
 ### Access the Application
 
@@ -243,8 +245,7 @@ l8erp/
 │   │       ├── *_phases*.go     #     Phase orchestration
 │   │       ├── store*.go        #     Shared mock data store (ID slices per module)
 │   │       └── utils.go         #     Helpers (pickRef, randomMoney, genID, genLines, ...)
-│   ├── vendor/                  # Vendored Go dependencies
-│   └── run-local.sh             # Full local development startup script
+│   └── vendor/                  # Vendored Go dependencies
 ├── k8s/                         # 6 Kubernetes manifests + deploy/undeploy scripts
 └── tools/                       # Dev tools (REST client, migration scripts)
 ```
@@ -394,21 +395,13 @@ cd ../proto && ./make-bindings.sh
 
 The frontend uses no build tools. Edit files in `go/erp/ui/web/` and refresh the browser.
 
-### Local Development
+### Local Development and Testing
 
-The `run-local.sh` script handles the full local setup:
+Local runs and all testing use a KIND cluster plus the Playwright suite:
 
-1. Cleans and fetches Go dependencies
-2. Starts a PostgreSQL container
-3. Builds all binaries (backend, vnet, UI, mock data generator)
-4. Copies web assets
-5. Starts all services in dependency order
-6. Uploads mock data
-7. Generates a cleanup script (`kill_demo.sh`)
-
-```bash
-cd go && ./run-local.sh
-```
+1. `k8s/kind-start.sh` creates the cluster, loads the local images, deploys every service and seeds mock data (`k8s/seed-mocks.sh`)
+2. `cd e2e && npm test` runs the desktop and mobile end-to-end suites
+3. `k8s/kind-stop.sh` deletes the cluster
 
 ## License
 
