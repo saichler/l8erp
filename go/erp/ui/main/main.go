@@ -18,9 +18,15 @@ package main
 import (
 	"github.com/saichler/l8common/go/common"
 	"github.com/saichler/l8erp/go/erp/ui"
+	"github.com/saichler/l8web/go/web/server"
 )
 
 func main() {
+	// The agent chat (AgntChat, area 120 -- aia.ServiceArea) waits on the LLM:
+	// the first message of a conversation alone takes ~30s to read, and tool
+	// calls add rounds, so it gets longer than the default 30s per request.
+	server.SetServiceTimeout("AgntChat", 120, 300)
+
 	svr := common.CreateWebServer("web", ui.RegisterTypes)
 	svr.Start()
 }
