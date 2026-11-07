@@ -13,6 +13,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+// Unsubscribe handles from the previous dashboard load, so re-entering the
+// dashboard replaces its websocket listeners instead of stacking them.
+var dashboardUnsubscribers = [];
+
 // Dashboard Initialization
 window.initializeDashboard = function() {
     // Render the stats grid
@@ -26,16 +30,19 @@ window.initializeDashboard = function() {
         DashboardStats.loadAll();
     }
 
-    // Subscribe to WebSocket notifications for dashboard auto-refresh
+    // Live KPIs: a pushed change to any KPI model reloads the counts (debounced,
+    // so a burst of changes reloads once).
+    dashboardUnsubscribers.forEach(function(unsubscribe) { unsubscribe(); });
+    dashboardUnsubscribers = [];
     if (typeof Layer8DWebSocket !== 'undefined' && window.DashboardConfig) {
         var refreshTimer = null;
         DashboardConfig.kpis.forEach(function(kpi) {
-            Layer8DWebSocket.subscribe(kpi.model, function() {
+            dashboardUnsubscribers.push(Layer8DWebSocket.subscribe(kpi.model, function() {
                 clearTimeout(refreshTimer);
                 refreshTimer = setTimeout(function() {
                     DashboardStats.loadAll();
                 }, 1000);
-            });
+            }));
         });
     }
 };

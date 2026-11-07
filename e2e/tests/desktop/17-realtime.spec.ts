@@ -4,37 +4,23 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
 // PHASE 10 -- realtime.
 //
-// The plan's premise was "for services with realtime: true, mutate from a second
-// client and assert the open table updates". Measured against the real configs,
-// that set is EMPTY: no ERP service config on either platform sets
-// `realtime: true`. The only consumer in the whole tree is
-// l8ui/sys/health/l8health.js:63 (the Health table).
+// Every screen is live: l8ui tables, data-source views and their mobile
+// counterparts default to realtime (a server-side view registers its query with
+// `register=true` and applies pushed changes in place; `realtime: false` opts
+// out). The server pushes a change only to sessions whose REGISTERED query
+// matches the record, so every probe here registers before it mutates.
 //
-// So this spec asserts what is actually there, and records the gap explicitly
-// rather than passing a vacuous loop over zero services:
-//
-//   1. the transport works           -- /ws accepts an authenticated upgrade
-//   2. the client is wired           -- Layer8DWebSocket loaded and connected
-//   3. a subscription delivers       -- subscribe to a model, mutate it over the
-//                                       API, and the callback fires without a
-//                                       reload
-//   4. the opt-in count is visible   -- a documented expectation, so the day a
-//                                       service turns realtime on, coverage for
-//                                       it is demanded rather than silently
-//                                       skipped
-//
-// Point 3 is the one that matters: it exercises the whole path (browser socket ->
-// L8Bus multicast -> WsNotifyService -> client callback) against a real mutation,
-// which is what the plan asked for, using a model that exists rather than one
-// that opts in.
+//   1. the client is wired      -- Layer8DWebSocket loaded and connected
+//   2. a subscription delivers  -- register, subscribe, mutate over the API from
+//                                  a second client, the callback fires
+//   3. a screen is live         -- an open table shows a row another client
+//                                  created and drops it when that client
+//                                  deletes it, with no re-fetch
 
 import { test, expect } from '../../fixtures/test';
-import { desktopServices } from '../../fixtures/inventory';
-
-/** Models the UI marks realtime. Currently only Health does, from inside l8ui. */
-function realtimeServices() {
-    return desktopServices().filter((x) => x.service.realtime);
-}
+import { DesktopNav } from '../../pages/DesktopNav';
+import { DesktopTable } from '../../pages/DesktopTable';
+import { QueryRecorder } from '../../fixtures/queries';
 
 test.describe('realtime', () => {
     test('the websocket client is loaded and connects @smoke', async ({ app }) => {
@@ -66,51 +52,37 @@ test.describe('realtime', () => {
     });
 
     test('a subscription receives a notification for a real mutation', async ({ app, api }) => {
-        test.setTimeout(120_000);
-        // KNOWN GAP, marked expected-to-fail rather than deleted or skipped.
-        //
-        // Measured: /ws accepts the authenticated upgrade and the client reports
-        // connected, but observing raw frames with page.on('websocket') during a
-        // successful POST shows frameCount=0. So the transport is up and NOTHING
-        // PUBLISHES -- l8web's WsNotifyService forwards L8Bus multicast, and no
-        // ERP service posts a notification for a CRUD write.
-        //
-        // test.fail() is deliberate over test.skip(): a skip hides the gap, while
-        // this keeps the assertion running and turns the moment publication starts
-        // working into a LOUD failure telling us to drop this marker. It is also
-        // why the spec does not simply assert zero services opt in -- that would
-        // bake the gap in as correct.
-        test.fail(true,
-            'realtime publication is not implemented: /ws connects but the server ' +
-            'pushes no frames for a CRUD mutation (see ReportInfraBugs)');
-
-        // Subscribe in the page, then mutate over the API from this process --
-        // genuinely a second client, which is what makes the multicast path real.
-        await app.evaluate(() => {
+        // Register exactly the way a live view does, then subscribe, then mutate
+        // over the API from this process -- genuinely a second client, which is
+        // what makes the multicast path real. JobFamily is an ordinary
+        // ORM-backed service; L8ImportTemplate (/0/ImprtTmpl) was used before
+        // and pushes nothing even to a registered query.
+        const registered = await app.evaluate(async () => {
             const w = window as unknown as {
                 Layer8DWebSocket: { subscribe(m: string, cb: (p: unknown) => void): () => void };
+                Layer8DConfig: { resolveEndpoint(p: string): string };
+                getAuthHeaders(): Record<string, string>;
                 __e2eHits?: unknown[];
                 __e2eUnsub?: () => void;
             };
             w.__e2eHits = [];
-            w.__e2eUnsub = w.Layer8DWebSocket.subscribe('L8ImportTemplate', (payload) => {
+            w.__e2eUnsub = w.Layer8DWebSocket.subscribe('JobFamily', (payload) => {
                 w.__e2eHits!.push(payload);
             });
+            const q = encodeURIComponent(JSON.stringify(
+                { text: 'select * from JobFamily limit 10 page 0 register=true' }));
+            const r = await fetch(w.Layer8DConfig.resolveEndpoint('/30/JobFamily') + '?body=' + q,
+                { headers: w.getAuthHeaders() });
+            return r.status;
         });
+        expect(registered, 'registering the query failed').toBe(200);
 
-        const templateId = `e2e-rt-${Date.now()}`;
-        const template = {
-            templateId,
-            name: 'E2E Realtime Probe',
-            description: 'created by the realtime spec',
-            targetModelType: 'Employee',
-            targetServiceName: 'Employee',
-            targetServiceArea: 30,
-            sourceFormat: 'csv'
-        };
-
+        const code = `E2ESUB${Date.now()}`;
+        let id = '';
         try {
-            await api.post('/0/ImprtTmpl', template);
+            await api.post('/30/JobFamily', { code, name: `E2E Realtime ${code}`, description: 'realtime probe' });
+            const created = await api.query('/30/JobFamily', `select * from JobFamily where code=${code}`);
+            id = String(created.list[0]?.jobFamilyId ?? '');
 
             await app.waitForFunction(
                 () => (window as unknown as { __e2eHits: unknown[] }).__e2eHits.length > 0,
@@ -121,9 +93,9 @@ test.describe('realtime', () => {
 
             expect(
                 hits,
-                'the websocket delivered no notification for a real POST -- the path is ' +
-                'browser socket -> L8Bus multicast -> WsNotifyService -> subscribe() callback, ' +
-                'and a break anywhere in it makes every realtime table silently static'
+                'the websocket delivered no notification for a real POST to a registered ' +
+                'query -- the path is browser socket -> L8Bus multicast -> WsNotifyService -> ' +
+                'subscribe() callback, and a break anywhere in it makes every screen static'
             ).toBeGreaterThan(0);
         } finally {
             await app.evaluate(() => {
@@ -131,37 +103,43 @@ test.describe('realtime', () => {
                 if (typeof w.__e2eUnsub === 'function') w.__e2eUnsub();
             }).catch(() => undefined);
             // Always remove the probe row, even if the assertion above failed.
-            await api.deleteById('/0/ImprtTmpl', 'L8ImportTemplate', 'templateId', templateId)
-                .catch(() => undefined);
+            if (id) await api.deleteById('/30/JobFamily', 'JobFamily', 'jobFamilyId', id).catch(() => undefined);
         }
     });
 
-    test('every service that opts into realtime has a live table to prove it', async ({ app }) => {
-        const services = realtimeServices();
+    test('an open table shows another client\'s add and delete without re-fetching', async ({ app, api }) => {
+        const nav = new DesktopNav(app);
+        await nav.openSection('hcm');
+        await nav.openModule('core-hr');
+        await nav.openService('core-hr', 'job-families');
+        const table = new DesktopTable(app, 'core-hr', 'job-families');
+        await table.waitForResolved();
 
-        // Not a vacuous pass: record the measured state so this becomes a real
-        // assertion the moment a service opts in.
-        if (services.length === 0) {
-            const healthUsesIt = await app.evaluate(() => {
-                // l8health.js passes realtime:true into its own table config.
-                return typeof (window as unknown as { L8Health?: unknown }).L8Health !== 'undefined';
-            });
+        const code = `E2ERT${Date.now()}`;
+        const row = table.root.locator('.l8-table tbody tr').filter({ hasText: code });
+        const queries = QueryRecorder.forPage(app);
+        let id = '';
+        try {
+            const before = queries.forModel('JobFamily').length;
+            await api.post('/30/JobFamily', { code, name: `E2E Realtime ${code}`, description: 'realtime probe' });
+            const created = await api.query('/30/JobFamily', `select * from JobFamily where code=${code}`);
+            id = String(created.list[0]?.jobFamilyId ?? '');
+
+            // A live add lands at the top of page 1, straight from the push.
+            await expect(row, 'the row another client created never appeared in the open table')
+                .toHaveCount(1, { timeout: 15000 });
+
+            await api.deleteById('/30/JobFamily', 'JobFamily', 'jobFamilyId', id);
+            id = '';
+            await expect(row, 'the row another client deleted is still in the open table')
+                .toHaveCount(0, { timeout: 15000 });
+
             expect(
-                healthUsesIt,
-                'no ERP service config sets realtime:true AND L8Health (the only realtime ' +
-                'consumer in the tree, l8ui/sys/health/l8health.js:63) is not loaded either -- ' +
-                'the realtime path would then have no exercise at all'
-            ).toBe(true);
-            return;
+                queries.forModel('JobFamily').length,
+                'the table re-fetched to show the change -- live updates must apply the pushed record'
+            ).toBe(before);
+        } finally {
+            if (id) await api.deleteById('/30/JobFamily', 'JobFamily', 'jobFamilyId', id).catch(() => undefined);
         }
-
-        // If services start opting in, each must actually render a table.
-        const missing = services
-            .filter((x) => !x.service.containerId)
-            .map((x) => `${x.section}/${x.moduleKey}/${x.service.key}`);
-        expect(
-            missing,
-            `services declaring realtime but with no table container:\n  ${missing.join('\n  ')}`
-        ).toEqual([]);
     });
 });

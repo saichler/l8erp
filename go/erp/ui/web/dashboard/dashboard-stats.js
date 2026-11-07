@@ -36,7 +36,9 @@ window.DashboardStats = {
         }
 
         try {
-            const body = encodeURIComponent(JSON.stringify({ text: kpi.query }));
+            // register=true makes the server push changes to this KPI's model
+            // over the websocket, which is what keeps the dashboard live.
+            const body = encodeURIComponent(JSON.stringify({ text: kpi.query + ' register=true' }));
             const endpoint = Layer8DConfig.resolveEndpoint(kpi.endpoint);
             const url = endpoint + '?body=' + body;
 
