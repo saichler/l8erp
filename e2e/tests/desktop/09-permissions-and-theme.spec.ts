@@ -18,6 +18,23 @@ import { DesktopNav } from '../../pages/DesktopNav';
 import { Api } from '../../fixtures/api';
 import { ENV } from '../../fixtures/env';
 import { desktopServices } from '../../fixtures/inventory';
+import { DesktopTable } from '../../pages/DesktopTable';
+import type { Page, BrowserContext } from '@playwright/test';
+
+/** Boots the desktop shell on `page` as `user`, the way the real login does. */
+async function bootShellAs(page: Page, context: BrowserContext, user: string, token: string) {
+    await context.addInitScript(
+        ([t, u]) => {
+            try {
+                sessionStorage.setItem('bearerToken', t as string);
+                sessionStorage.setItem('username', u as string);
+            } catch { /* ignore */ }
+        },
+        [token, user]
+    );
+    await page.goto(ENV.desktopShell);
+    await waitForDesktopReady(page);
+}
 
 test.describe('permissions', () => {
     test('the shell loaded a non-empty permission map @smoke', async ({ app }) => {
@@ -55,17 +72,7 @@ test.describe('permissions', () => {
             return;
         }
 
-        await context.addInitScript(
-            ([t, u]) => {
-                try {
-                    sessionStorage.setItem('bearerToken', t as string);
-                    sessionStorage.setItem('username', u as string);
-                } catch { /* ignore */ }
-            },
-            [limited.token, ENV.limitedUser]
-        );
-        await page.goto(ENV.desktopShell);
-        await waitForDesktopReady(page);
+        await bootShellAs(page, context, ENV.limitedUser, limited.token);
 
         const nav = new DesktopNav(page);
         // The permission filter runs as part of that boot sequence, so the
@@ -102,28 +109,52 @@ test.describe('permissions', () => {
         await limited.dispose();
     });
 
-    test('write buttons are hidden for a model the user cannot POST', async ({ app }) => {
-        const perms = (await app.evaluate(() => {
+    // The view-only account against the operator, on the same service: the
+    // operator's Add button proves the locator and the screen are right, so the
+    // view-only assertion cannot pass just because nothing rendered.
+    test('write buttons are hidden for a model the user cannot POST', async ({ app, page, context }) => {
+        const operatorPerms = (await app.evaluate(() => {
             const w = window as unknown as { Layer8DPermissions?: Record<string, number[]> };
             return w.Layer8DPermissions || {};
         })) as Record<string, number[]>;
+        const readOnly = await Api.login(ENV.readOnlyUser, ENV.readOnlyPass);
+        const readOnlyPerms = await readOnly.permissions();
 
-        const readOnlyModel = desktopServices().find(
-            (x) => perms[x.service.model] && !perms[x.service.model].includes(1)
-        );
-        test.skip(!readOnlyModel, 'this account can POST to every model');
-
-        const { section, moduleKey, service } = readOnlyModel!;
-        const nav = new DesktopNav(app);
-        await nav.openSection(section);
-        await nav.openModule(moduleKey);
-        await nav.openService(moduleKey, service.key);
-
-        const add = nav.tableContainer(moduleKey, service.key).locator('.l8-btn-primary');
+        const POST = 1;
+        const target = desktopServices().find((x) => {
+            const ro = readOnlyPerms[x.service.model];
+            const op = operatorPerms[x.service.model];
+            return ro && !ro.includes(POST) && op && op.includes(POST);
+        });
         expect(
-            await add.count(),
-            `${service.model} offers an Add button although /permissions withholds POST`
-        ).toBe(0);
+            target,
+            `"${ENV.readOnlyUser}" has no navigable model it can view but not POST -- ` +
+            `this test needs one (check its role in erp.json)`
+        ).toBeTruthy();
+        const { section, moduleKey, service } = target!;
+
+        const opNav = new DesktopNav(app);
+        await opNav.openSection(section);
+        await opNav.openModule(moduleKey);
+        await opNav.openService(moduleKey, service.key);
+        const opTable = new DesktopTable(app, moduleKey, service.key);
+        await opTable.waitForResolved();
+        await expect(opTable.addButton(), `the operator gets no Add button on ${service.model}`)
+            .not.toHaveCount(0);
+
+        await bootShellAs(page, context, ENV.readOnlyUser, readOnly.token);
+        const roNav = new DesktopNav(page);
+        await roNav.openSection(section);
+        await roNav.openModule(moduleKey);
+        await roNav.openService(moduleKey, service.key);
+        const roTable = new DesktopTable(page, moduleKey, service.key);
+        await roTable.waitForResolved();
+        await expect(
+            roTable.addButton(),
+            `${service.model} offers "${ENV.readOnlyUser}" an Add button although /permissions withholds POST`
+        ).toHaveCount(0);
+
+        await readOnly.dispose();
     });
 });
 
@@ -148,11 +179,20 @@ test.describe('theme', () => {
     // flipping it on the worker's shared page would repaint every later test.
     test('switching to dark mode repaints the shell', async ({ freshApp, consoleErrors }) => {
         const app = freshApp;
-        const toggle = app.locator('.theme-toggle, [data-theme-toggle], #theme-switcher').first();
-        test.skip(!(await toggle.count()), 'no theme toggle in this shell');
+        // The shell's theme control is Layer8DThemeSwitcher's picker: a button
+        // that opens a menu of themes (app.html, .layer8d-theme-picker).
+        const picker = app.locator('.layer8d-theme-picker').first();
+        await expect(picker, 'the shell has no theme picker').toBeVisible();
 
+        // Start from light so the switch to dark is a real change; the saved
+        // or OS-preferred theme could already be dark.
+        await app.evaluate(() => {
+            (window as unknown as { Layer8DThemeSwitcher: { setTheme(n: string): void } })
+                .Layer8DThemeSwitcher.setTheme('light');
+        });
         const before = await app.evaluate(() => getComputedStyle(document.body).backgroundColor);
-        await toggle.click();
+        await picker.locator('.layer8d-theme-btn').click();
+        await picker.locator('.layer8d-theme-option[data-theme-name="dark"]').click();
 
         // Wait for the repaint itself rather than a guessed duration.
         await expect

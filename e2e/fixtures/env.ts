@@ -35,6 +35,14 @@ export const ENV = {
     limitedUser: env('L8ERP_LIMITED_USER', 'hrclerk'),
     limitedPass: env('L8ERP_LIMITED_PASS', 'hrClerk123!'),
 
+    /**
+     * A view-only account (the platform's default `viewer`: GET on every
+     * model, no POST), used to assert write controls are withheld. hrclerk
+     * cannot serve here: it can POST to every model it can navigate to.
+     */
+    readOnlyUser: env('L8ERP_READONLY_USER', 'viewer'),
+    readOnlyPass: env('L8ERP_READONLY_PASS', 'Viewer123!'),
+
     /** Shell paths. Mobile is the real mobile bundle, never a resized desktop. */
     desktopShell: '/app.html',
     mobileShell: '/m/app.html',
