@@ -54,9 +54,11 @@ spec:
         app: erp-vnet
     spec:
       hostNetwork: true
+      imagePullSecrets:
+        - name: harbor-pull
       containers:
         - name: erp-vnet
-          image: saichler/erp-vnet:latest
+          image: registry.layer-8.dev:44443/erp/erp-vnet:latest
           imagePullPolicy: Always
           env:
             - name: NODE_IP
@@ -92,9 +94,11 @@ spec:
         app: erp-logs-vnet
     spec:
       hostNetwork: true
+      imagePullSecrets:
+        - name: harbor-pull
       containers:
         - name: erp-logs-vnet
-          image: saichler/erp-logs-vnet:latest
+          image: registry.layer-8.dev:44443/erp/erp-logs-vnet:latest
           imagePullPolicy: Always
           env:
             - name: NODE_IP
@@ -129,9 +133,11 @@ spec:
       labels:
         app: erp-log-agent
     spec:
+      imagePullSecrets:
+        - name: harbor-pull
       containers:
         - name: erp-log-agent
-          image: saichler/erp-log-agent:latest
+          image: registry.layer-8.dev:44443/erp/erp-log-agent:latest
           imagePullPolicy: Always
           env:
             - name: LOGPATH
@@ -168,9 +174,11 @@ spec:
       labels:
         app: erp
     spec:
+      imagePullSecrets:
+        - name: harbor-pull
       containers:
         - name: erp
-          image: saichler/erp:latest
+          image: registry.layer-8.dev:44443/erp/erp:latest
           imagePullPolicy: Always
           env:
             - name: NODE_IP
@@ -204,9 +212,11 @@ spec:
         app: erp-web
     spec:
       hostNetwork: true
+      imagePullSecrets:
+        - name: harbor-pull
       containers:
         - name: erp-web
-          image: saichler/erp-web:latest
+          image: registry.layer-8.dev:44443/erp/erp-web:latest
           imagePullPolicy: Always
           env:
             - name: NODE_IP

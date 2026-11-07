@@ -1,4 +1,4 @@
-FROM saichler/builder:latest AS build
+FROM builder:latest AS build
 
 # Populated automatically by buildx from --platform (blank => host default).
 ARG TARGETOS=linux
@@ -16,7 +16,7 @@ RUN /patch.sh
 WORKDIR /home/src/github.com/saichler/build
 RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o log-vnet
 
-FROM saichler/erp-security:latest AS final
+FROM erp-security:latest AS final
 COPY --from=build /home/src/github.com/saichler/build/log-vnet /home/run/log-vnet
 
 ENTRYPOINT ["/home/run/log-vnet"]

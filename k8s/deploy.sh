@@ -14,4 +14,5 @@ fi
 echo "Targeting kubectl context: ${KUBE_CONTEXT}"
 KUBECTL=(kubectl --context "${KUBE_CONTEXT}")
 
+KUBE_CONTEXT="${KUBE_CONTEXT}" "$(dirname "$0")/secrets.sh"
 "${KUBECTL[@]}" apply -f ./l8erp-local.yaml

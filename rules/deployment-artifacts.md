@@ -13,16 +13,17 @@ Each main method has a `build.sh` + `Dockerfile` in its directory:
 
 | Image | Directory | Base Image | K8s Kind | Notes |
 |-------|-----------|------------|----------|-------|
-| `saichler/erp` | `go/erp/main/` | `saichler/erp-postgres` | StatefulSet | Backend ERP service |
-| `saichler/erp-web` | `go/erp/ui/` | `saichler/erp-security` | DaemonSet (hostNetwork) | Web UI — runs 2 binaries via entrypoint.sh |
-| `saichler/erp-vnet` | `go/erp/vnet/` | `saichler/erp-security` | DaemonSet (hostNetwork) | Virtual network |
-| `saichler/erp-logs-vnet` | `go/logs/vnet/` | `saichler/erp-security` | DaemonSet (hostNetwork) | Log aggregation vnet |
-| `saichler/erp-log-agent` | `go/logs/agent/` | `saichler/erp-security` | DaemonSet | Log collection agent |
+| `registry.layer-8.dev:44443/erp/erp` | `go/erp/main/` | `erp-postgres` (local) | StatefulSet | Backend ERP service |
+| `registry.layer-8.dev:44443/erp/erp-web` | `go/erp/ui/` | `erp-security` (local) | DaemonSet (hostNetwork) | Web UI — runs 2 binaries via entrypoint.sh |
+| `registry.layer-8.dev:44443/erp/erp-vnet` | `go/erp/vnet/` | `erp-security` (local) | DaemonSet (hostNetwork) | Virtual network |
+| `registry.layer-8.dev:44443/erp/erp-logs-vnet` | `go/logs/vnet/` | `erp-security` (local) | DaemonSet (hostNetwork) | Log aggregation vnet |
+| `registry.layer-8.dev:44443/erp/erp-log-agent` | `go/logs/agent/` | `erp-security` (local) | DaemonSet | Log collection agent |
 
 ### Build Pipeline
-- **Per-image**: `build.sh` runs `docker build --no-cache --platform=linux/amd64` and `docker push`
+- **Per-image**: `build.sh [tag] [amd64|arm64]` runs `docker buildx build --no-cache --push` to the private Harbor project `registry.layer-8.dev:44443/erp` (log in once with `l8secure/harbor/harbor-login.sh erp`)
+- **Base images are local**: `builder`, `erp-security` and `erp-postgres` are built by l8secure into the local Docker store and never pushed; build them for the same architecture first
 - **All images**: `go/build-all-images.sh` calls each `build.sh` in order
-- **Dockerfile pattern**: Multi-stage build — `saichler/builder:latest` compiles Go, final stage copies binary to runtime image
+- **Dockerfile pattern**: Multi-stage build — `builder:latest` (local, from l8secure) compiles Go, final stage copies binary to runtime image
 
 ### Kubernetes Manifests (`k8s/`)
 - `deploy.sh` — applies all YAMLs in dependency order (vnet first, then logs, erp, web, log-agent)
@@ -30,6 +31,7 @@ Each main method has a `build.sh` + `Dockerfile` in its directory:
 - `clean.sh` — undeploys, wipes data dirs, redeploys
 - Each service gets its own namespace (e.g., `erp`, `erp-web`, `erp-vnet`)
 - All containers mount `/data` from host via `hostPath`
+- baremetal/gke/local pods pull with the `harbor-pull` Secret, which `k8s/secrets.sh` creates (deploy.sh runs it); KIND loads images into the nodes instead
 
 ## PRD Section Template
 
@@ -39,10 +41,10 @@ When a PRD introduces a new deployable service, include this section:
 ## Deployment
 
 ### Docker Image
-- **Image name**: `saichler/<image-name>:latest`
+- **Image name**: `registry.layer-8.dev:44443/erp/<image-name>:latest`
 - **Directory**: `go/<path-to-main>/`
-- **Base image (build)**: `saichler/builder:latest`
-- **Base image (runtime)**: `saichler/erp-security:latest` (or `erp-postgres` if needs DB)
+- **Base image (build)**: `builder:latest` (local, from l8secure)
+- **Base image (runtime)**: `erp-security:latest` (local, from l8secure) (or `erp-postgres` if needs DB)
 - **Binary name**: `<binary>`
 - **Source files to COPY**: `main.go` (and any shared*.go files)
 
@@ -51,20 +53,19 @@ Standard pattern:
 ```bash
 #!/usr/bin/env bash
 set -e
-docker build --no-cache --platform=linux/amd64 -t saichler/<image-name>:latest .
-docker push saichler/<image-name>:latest
+docker buildx build --no-cache --platform=linux/amd64 -t registry.layer-8.dev:44443/erp/<image-name>:latest --push .
 ```
 
 ### Dockerfile
 Standard multi-stage pattern:
 ```dockerfile
-FROM saichler/builder:latest AS build
+FROM builder:latest AS build
 COPY main.go /home/src/github.com/saichler/build/
 RUN go mod init
 RUN GOPROXY=direct GOPRIVATE=github.com go mod tidy
 RUN go build -o <binary>
 
-FROM saichler/erp-security:latest AS final
+FROM erp-security:latest AS final
 COPY --from=build /home/src/github.com/saichler/build/<binary> /home/run/<binary>
 ENTRYPOINT ["/home/run/<binary>"]
 ```

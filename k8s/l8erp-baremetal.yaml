@@ -45,9 +45,11 @@ spec:
                 matchLabels:
                   app: erp-vnet
               topologyKey: kubernetes.io/hostname
+      imagePullSecrets:
+        - name: harbor-pull
       containers:
         - name: erp-vnet
-          image: saichler/erp-vnet:latest
+          image: registry.layer-8.dev:44443/erp/erp-vnet:latest
           imagePullPolicy: Always
           env:
             - name: NODE_IP
@@ -97,9 +99,11 @@ spec:
                 matchLabels:
                   app: erp-logs-vnet
               topologyKey: kubernetes.io/hostname
+      imagePullSecrets:
+        - name: harbor-pull
       containers:
         - name: erp-logs-vnet
-          image: saichler/erp-logs-vnet:latest
+          image: registry.layer-8.dev:44443/erp/erp-logs-vnet:latest
           imagePullPolicy: Always
           env:
             - name: NODE_IP
@@ -148,9 +152,11 @@ spec:
                 matchLabels:
                   app: erp-log-agent
               topologyKey: kubernetes.io/hostname
+      imagePullSecrets:
+        - name: harbor-pull
       containers:
         - name: erp-log-agent
-          image: saichler/erp-log-agent:latest
+          image: registry.layer-8.dev:44443/erp/erp-log-agent:latest
           imagePullPolicy: Always
           env:
             - name: LOGPATH
@@ -201,9 +207,11 @@ spec:
                 matchLabels:
                   app: erp
               topologyKey: kubernetes.io/hostname
+      imagePullSecrets:
+        - name: harbor-pull
       containers:
         - name: erp
-          image: saichler/erp:latest
+          image: registry.layer-8.dev:44443/erp/erp:latest
           imagePullPolicy: Always
           env:
             - name: NODE_IP
@@ -251,9 +259,11 @@ spec:
                 matchLabels:
                   app: erp-web
               topologyKey: kubernetes.io/hostname
+      imagePullSecrets:
+        - name: harbor-pull
       containers:
         - name: erp-web
-          image: saichler/erp-web:latest
+          image: registry.layer-8.dev:44443/erp/erp-web:latest
           imagePullPolicy: Always
           env:
             - name: NODE_IP

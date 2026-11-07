@@ -62,11 +62,11 @@ echo "Waiting for nodes to be Ready..."
 
 echo "Loading Docker images into KIND cluster..."
 IMAGES=(
-  saichler/erp-vnet:latest
-  saichler/erp-logs-vnet:latest
-  saichler/erp-log-agent:latest
-  saichler/erp:latest
-  saichler/erp-web:latest
+  registry.layer-8.dev:44443/erp/erp-vnet:latest
+  registry.layer-8.dev:44443/erp/erp-logs-vnet:latest
+  registry.layer-8.dev:44443/erp/erp-log-agent:latest
+  registry.layer-8.dev:44443/erp/erp:latest
+  registry.layer-8.dev:44443/erp/erp-web:latest
 )
 
 for img in "${IMAGES[@]}"; do

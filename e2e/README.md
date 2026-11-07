@@ -140,9 +140,9 @@ From `PostImplementationE2ETesting`, all learned the hard way:
 ## Iterating on a fix
 
 ```bash
-# build.sh pushes to Docker Hub; for a local KIND loop build with --load instead
-cd ../go/erp/ui && docker buildx build --platform=linux/amd64 --load -t saichler/erp-web:latest .
-kind load docker-image saichler/erp-web:latest --name l8erp
+# build.sh pushes to Harbor (registry.layer-8.dev:44443/erp); for a local KIND loop build with --load instead
+cd ../go/erp/ui && docker buildx build --platform=linux/amd64 --load -t registry.layer-8.dev:44443/erp/erp-web:latest .
+kind load docker-image registry.layer-8.dev:44443/erp/erp-web:latest --name l8erp
 kubectl delete pod -n l8erp erp-web-0
 kubectl wait --for=condition=Ready pod/erp-web-0 -n l8erp --timeout=90s
 cd ../../../e2e && npm test

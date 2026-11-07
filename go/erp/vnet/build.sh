@@ -17,6 +17,5 @@ done
 PLATFORM="linux/amd64,linux/arm64"
 [ -n "$ARCH" ] && PLATFORM="linux/$ARCH"
 
-echo "Building saichler/erp-vnet:${TAG} for ${PLATFORM}"
-docker buildx build --no-cache --platform="$PLATFORM" -t saichler/erp-vnet:${TAG} .
-docker push saichler/erp-vnet:${TAG}
+echo "Building registry.layer-8.dev:44443/erp/erp-vnet:${TAG} for ${PLATFORM}"
+docker buildx build --no-cache --platform="$PLATFORM" -t registry.layer-8.dev:44443/erp/erp-vnet:${TAG} --push .
