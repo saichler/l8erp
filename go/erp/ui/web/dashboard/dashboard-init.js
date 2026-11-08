@@ -13,10 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-// Unsubscribe handles from the previous dashboard load, so re-entering the
-// dashboard replaces its websocket listeners instead of stacking them.
-var dashboardUnsubscribers = [];
-
 // Dashboard Initialization
 window.initializeDashboard = function() {
     // Render the stats grid
@@ -25,24 +21,25 @@ window.initializeDashboard = function() {
         statsGrid.innerHTML = DashboardStats.renderStatsGrid();
     }
 
-    // Load all stats
+    // Load all stats. loadAll registers every KPI query (synchronously, before
+    // its first request) under the 'dashboard' live slot, owned by this entry.
     if (window.DashboardStats) {
+        DashboardStats.liveOwner = {};
         DashboardStats.loadAll();
     }
 
     // Live KPIs: a pushed change to any KPI model reloads the counts (debounced,
-    // so a burst of changes reloads once).
-    dashboardUnsubscribers.forEach(function(unsubscribe) { unsubscribe(); });
-    dashboardUnsubscribers = [];
-    if (typeof Layer8DWebSocket !== 'undefined' && window.DashboardConfig) {
+    // so a burst of changes reloads once). The listeners belong to the live
+    // slot, so re-entering the dashboard or evicting it removes them.
+    if (typeof Layer8DWebSocket !== 'undefined' && window.DashboardConfig && window.DashboardStats) {
         var refreshTimer = null;
         DashboardConfig.kpis.forEach(function(kpi) {
-            dashboardUnsubscribers.push(Layer8DWebSocket.subscribe(kpi.model, function() {
+            Layer8DWebSocket.listen('dashboard', DashboardStats.liveOwner, kpi.model, function() {
                 clearTimeout(refreshTimer);
                 refreshTimer = setTimeout(function() {
                     DashboardStats.loadAll();
                 }, 1000);
-            }));
+            });
         });
     }
 };

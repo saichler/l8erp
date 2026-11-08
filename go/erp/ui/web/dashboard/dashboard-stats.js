@@ -15,6 +15,11 @@ limitations under the License.
 
 // Dashboard Stats Loader
 window.DashboardStats = {
+    // This dashboard instance as the owner of the 'dashboard' live slot;
+    // initializeDashboard replaces it on every entry, so a re-entry takes the
+    // slot over and drops the previous entry's listeners.
+    liveOwner: {},
+
     // Load all KPI stats in parallel
     async loadAll() {
         const config = window.DashboardConfig;
@@ -36,10 +41,15 @@ window.DashboardStats = {
         }
 
         try {
-            // register=true makes the server push changes to this KPI's model
-            // over the websocket, which is what keeps the dashboard live.
-            const body = encodeURIComponent(JSON.stringify({ text: kpi.query + ' register=true' }));
+            // The dashboard is one live component: all its KPI queries register
+            // under one live slot ('dashboard'), so the server pushes changes to
+            // their models while the dashboard is among the live components.
             const endpoint = Layer8DConfig.resolveEndpoint(kpi.endpoint);
+            const query = typeof Layer8DWebSocket !== 'undefined'
+                ? Layer8DWebSocket.registerQuery('dashboard', this.liveOwner, endpoint, kpi.query,
+                    { onReconnect: () => this.loadAll() })
+                : { text: kpi.query };
+            const body = encodeURIComponent(JSON.stringify(query));
             const url = endpoint + '?body=' + body;
 
             const response = await fetch(url, {

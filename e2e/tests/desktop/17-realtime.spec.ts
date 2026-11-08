@@ -16,6 +16,9 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 //   3. a screen is live         -- an open table shows a row another client
 //                                  created and drops it when that client
 //                                  deletes it, with no re-fetch
+//   4. live slots               -- at most 5 components are live; opening a
+//                                  6th unregisters the oldest, which then
+//                                  stops receiving changes
 
 import { test, expect } from '../../fixtures/test';
 import { DesktopNav } from '../../pages/DesktopNav';
@@ -69,8 +72,9 @@ test.describe('realtime', () => {
             w.__e2eUnsub = w.Layer8DWebSocket.subscribe('JobFamily', (payload) => {
                 w.__e2eHits!.push(payload);
             });
-            const q = encodeURIComponent(JSON.stringify(
-                { text: 'select * from JobFamily limit 10 page 0 register=true' }));
+            const q = encodeURIComponent(JSON.stringify({
+                text: 'select * from JobFamily limit 10 page 0',
+                register: 'L8_REGISTER_REGISTER', registerId: 'e2e-subscription-probe' }));
             const r = await fetch(w.Layer8DConfig.resolveEndpoint('/30/JobFamily') + '?body=' + q,
                 { headers: w.getAuthHeaders() });
             return r.status;
@@ -98,9 +102,19 @@ test.describe('realtime', () => {
                 'subscribe() callback, and a break anywhere in it makes every screen static'
             ).toBeGreaterThan(0);
         } finally {
-            await app.evaluate(() => {
-                const w = window as unknown as { __e2eUnsub?: () => void };
+            await app.evaluate(async () => {
+                const w = window as unknown as {
+                    __e2eUnsub?: () => void;
+                    Layer8DConfig: { resolveEndpoint(p: string): string };
+                    getAuthHeaders(): Record<string, string>;
+                };
                 if (typeof w.__e2eUnsub === 'function') w.__e2eUnsub();
+                // Drop the probe's registration the way an evicted component does.
+                const q = encodeURIComponent(JSON.stringify({
+                    text: 'select * from JobFamily limit 10 page 0',
+                    register: 'L8_REGISTER_UNREGISTER', registerId: 'e2e-subscription-probe' }));
+                await fetch(w.Layer8DConfig.resolveEndpoint('/30/JobFamily') + '?body=' + q,
+                    { headers: w.getAuthHeaders() });
             }).catch(() => undefined);
             // Always remove the probe row, even if the assertion above failed.
             if (id) await api.deleteById('/30/JobFamily', 'JobFamily', 'jobFamilyId', id).catch(() => undefined);
@@ -140,6 +154,51 @@ test.describe('realtime', () => {
             ).toBe(before);
         } finally {
             if (id) await api.deleteById('/30/JobFamily', 'JobFamily', 'jobFamilyId', id).catch(() => undefined);
+        }
+    });
+
+    test('only the 5 most recently used components stay live; the oldest is unregistered', async ({ app }) => {
+        const unregistered: string[] = [];
+        const onRequest = (r: { url(): string }) => {
+            const body = new URL(r.url()).searchParams.get('body');
+            if (!body || !body.includes('L8_REGISTER_UNREGISTER')) return;
+            unregistered.push(JSON.parse(body).registerId);
+        };
+        app.on('request', onRequest);
+        const live = () => app.evaluate(() =>
+            (window as unknown as { Layer8DWebSocket: { liveIds(): string[] } }).Layer8DWebSocket.liveIds());
+        const idOf = (module: string, svc: string) => `${module}-${svc}-table-container`;
+
+        try {
+            const nav = new DesktopNav(app);
+            await nav.openSection('hcm');
+            await nav.openModule('core-hr');
+            // Employees opens with the module; switching back to it after Job
+            // Families is a use, so the five most recently used are these.
+            for (const svc of ['job-families', 'employees', 'departments', 'positions', 'jobs']) {
+                await nav.openService('core-hr', svc);
+                await new DesktopTable(app, 'core-hr', svc).waitForResolved();
+            }
+            expect(await live(), 'the five most recently used tables').toEqual(
+                ['job-families', 'employees', 'departments', 'positions', 'jobs'].map((s) => idOf('core-hr', s)));
+
+            // A sixth evicts the least recently used -- Job Families, not
+            // Employees, which was used again after it.
+            await nav.openModule('payroll');
+            await nav.openService('payroll', 'pay-structures');
+            await new DesktopTable(app, 'payroll', 'pay-structures').waitForResolved();
+            await expect
+                .poll(() => unregistered, { timeout: 10000, message: 'Job Families was never unregistered' })
+                .toContain(idOf('core-hr', 'job-families'));
+
+            const ids = await live();
+            expect(ids.length, `live slots: ${ids.join(', ')}`).toBe(5);
+            expect(ids).not.toContain(idOf('core-hr', 'job-families'));
+            expect(ids).toContain(idOf('core-hr', 'employees'));
+            expect(unregistered, 'a component that is still live was unregistered')
+                .not.toContain(idOf('core-hr', 'employees'));
+        } finally {
+            app.off('request', onRequest);
         }
     });
 });
