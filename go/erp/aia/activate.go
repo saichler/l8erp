@@ -4,6 +4,8 @@
 package aia
 
 import (
+	_ "embed"
+
 	agent "github.com/saichler/l8agent/go"
 	"github.com/saichler/l8agent/go/types/l8agent"
 	"github.com/saichler/l8types/go/ifs"
@@ -12,6 +14,11 @@ import (
 const (
 	ServiceArea = byte(120)
 )
+
+// helpDocs is the user help guide answered by '@help' prompts in the agent chat.
+//
+//go:embed help.md
+var helpDocs string
 
 func AgentConfig(creds, dbname string, vnic ifs.IVNic) agent.AgentConfig {
 	return agent.AgentConfig{
@@ -22,6 +29,7 @@ func AgentConfig(creds, dbname string, vnic ifs.IVNic) agent.AgentConfig {
 		LLMCreds:    "TestLLM",
 		LLMProvider: "openai",
 		LLMCredKey:  "chat",
+		HelpDocs:    helpDocs,
 		DefaultPrompts: []*l8agent.L8AgentPrompt{
 			{
 				Name:           "Financial Analyst",
