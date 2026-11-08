@@ -169,7 +169,7 @@ spec:
       # names resolve to the LAN load balancer that serves them (192.168.1.121).
       hostAliases:
         - ip: "192.168.1.121"
-          hostnames: ["llm.test-llm.dev", "embed.test-llm.dev", "muse.test-llm.dev"]
+          hostnames: ["llm.test-llm.dev", "embed.test-llm.dev", "muse.test-llm.dev", "tools.test-llm.dev"]
       containers:
         - name: erp
           image: registry.layer-8.dev:44443/erp/erp:latest

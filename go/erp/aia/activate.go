@@ -30,6 +30,9 @@ func AgentConfig(creds, dbname string, vnic ifs.IVNic) agent.AgentConfig {
 		LLMProvider: "openai",
 		LLMCredKey:  "chat",
 		HelpDocs:    helpDocs,
+		// Web tools service (POST /v1/search, /v1/fetch) giving '@web' prompts live web access.
+		// Without it '@web' answers from model knowledge only (no weather, news, prices).
+		WebToolsURL: "https://tools.test-llm.dev",
 		DefaultPrompts: []*l8agent.L8AgentPrompt{
 			{
 				Name:           "Financial Analyst",
