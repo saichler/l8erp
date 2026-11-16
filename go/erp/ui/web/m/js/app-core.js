@@ -113,10 +113,8 @@ limitations under the License.
                 }
             }
 
-            // Initialize mobile AI chat bubble
-            if (typeof L8AgentBubbleMobile !== 'undefined') {
-                L8AgentBubbleMobile.init({ chatEndpoint: '/120/AgntChat' });
-            }
+            // Floating chat bubble (l8chat): users, groups and Tanto, the AI agent.
+            L8ChatBubbleMobile.init({ endpoints: ERP_CHAT_ENDPOINTS });
 
             // Initialize WebSocket for real-time updates
             if (typeof Layer8DWebSocket !== 'undefined') {

@@ -148,17 +148,218 @@ spec:
       labels:
         app: erp
     spec:
-      # The agent calls the LLM at its public name (*.test-llm.dev, public
-      # certificate). Inside the LAN that public IP does not loop back, so the
-      # names resolve to the LAN load balancer that serves them (192.168.1.121).
+      imagePullSecrets:
+        - name: harbor-pull
+      containers:
+        - name: erp
+          image: registry.layer-8.dev:44443/erp/erp:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
+
+---
+
+# erp-chat-orm: chat persistence (l8ai, area 81) with its own postgres (chatdb)
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: l8erp
+  name: erp-chat-orm
+  labels:
+    app: erp-chat-orm
+spec:
+  serviceName: erp-chat-orm
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erp-chat-orm
+  template:
+    metadata:
+      labels:
+        app: erp-chat-orm
+    spec:
+      imagePullSecrets:
+        - name: harbor-pull
+      containers:
+        - name: erp-chat-orm
+          image: registry.layer-8.dev:44443/erp/erp-chat-orm:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
+
+---
+
+# erp-chat: chat instances (l8ai): single writers of their conversations
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: l8erp
+  name: erp-chat
+  labels:
+    app: erp-chat
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: erp-chat
+  template:
+    metadata:
+      labels:
+        app: erp-chat
+    spec:
+      terminationGracePeriodSeconds: 30
+      imagePullSecrets:
+        - name: harbor-pull
+      containers:
+        - name: erp-chat
+          image: registry.layer-8.dev:44443/erp/erp-chat:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
+
+---
+
+# erp-chat-router: chat router (l8ai): conversation index + public chat services
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: l8erp
+  name: erp-chat-router
+  labels:
+    app: erp-chat-router
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: erp-chat-router
+  template:
+    metadata:
+      labels:
+        app: erp-chat-router
+    spec:
+      imagePullSecrets:
+        - name: harbor-pull
+      containers:
+        - name: erp-chat-router
+          image: registry.layer-8.dev:44443/erp/erp-chat-router:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
+
+---
+
+# erp-chat-users: chat users (l8ai): presence and groups
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: l8erp
+  name: erp-chat-users
+  labels:
+    app: erp-chat-users
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: erp-chat-users
+  template:
+    metadata:
+      labels:
+        app: erp-chat-users
+    spec:
+      imagePullSecrets:
+        - name: harbor-pull
+      containers:
+        - name: erp-chat-users
+          image: registry.layer-8.dev:44443/erp/erp-chat-users:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+      volumes:
+        - name: hdata
+          hostPath:
+            path: /data
+            type: DirectoryOrCreate
+
+---
+
+# erp-chat-agent: Tanto, the AI agent (l8ai ChatAgent)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: l8erp
+  name: erp-chat-agent
+  labels:
+    app: erp-chat-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erp-chat-agent
+  template:
+    metadata:
+      labels:
+        app: erp-chat-agent
+    spec:
+      # Tanto calls the LLM / web tools by name; inside the LAN their public IP
+      # does not loop back (kind-start.sh drops these off that LAN).
       hostAliases:
         - ip: "192.168.1.121"
           hostnames: ["llm.test-llm.dev", "embed.test-llm.dev", "muse.test-llm.dev", "tools.test-llm.dev"]
       imagePullSecrets:
         - name: harbor-pull
       containers:
-        - name: erp
-          image: registry.layer-8.dev:44443/erp/erp:latest
+        - name: erp-chat-agent
+          image: registry.layer-8.dev:44443/erp/erp-chat-agent:latest
           imagePullPolicy: IfNotPresent
           env:
             - name: NODE_IP

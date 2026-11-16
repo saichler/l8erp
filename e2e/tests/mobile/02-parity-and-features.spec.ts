@@ -99,12 +99,12 @@ test.describe('desktop / mobile parity', () => {
         hcm: 'hcm', financial: 'financial', scm: 'scm', sales: 'sales',
         manufacturing: 'manufacturing', crm: 'crm', projects: 'projects', bi: 'bi',
         documents: 'documents', ecommerce: 'ecommerce', compliance: 'compliance',
-        lending: 'lending', aia: 'aia'
+        lending: 'lending'
     };
 
     // Custom views are compared by presence, not by model: a service that
     // renders its own UI declares no data model on mobile (customInit) and may
-    // still name one on desktop (customView: true, as aia/chat does). Comparing
+    // still name one on desktop (customView: true). Comparing
     // the model strings made an equivalent pair look like a gap in BOTH
     // directions. 03-service-coverage and 14-inline-tables already skip these.
     test('every desktop service has a mobile counterpart', () => {

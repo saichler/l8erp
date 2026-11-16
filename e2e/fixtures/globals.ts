@@ -54,7 +54,11 @@ export const DESKTOP_REQUIRED_GLOBALS = [
     'Layer8DDataSource', 'Layer8DViewFactory', 'Layer8ViewSwitcher',
     'Layer8DServiceRegistry', 'Layer8DModuleCRUD', 'Layer8DModuleNavigation',
     'Layer8DToggleTree', 'Layer8DModuleFilter', 'Layer8DPermissionFilter',
-    'Layer8ModuleFactoryCore', 'Layer8DModuleFactory', 'Layer8DWebSocket'
+    'Layer8ModuleFactoryCore', 'Layer8DModuleFactory', 'Layer8DWebSocket',
+    // Chat (l8chat)
+    'L8ChatApi', 'L8ChatStore', 'L8ChatLive', 'L8ChatSession', 'L8ChatFiles', 'L8ChatStatus',
+    'L8ChatSidebar', 'L8ChatConvList', 'L8ChatComposer', 'L8ChatThread', 'L8ChatGroupDialog', 'L8ChatConvDialog',
+    'Layer8Markdown', 'ERP_CHAT_ENDPOINTS', 'L8ChatBubble'
 ];
 
 /** Globals the mobile bundle must have -- its own plus the shared desktop ones. */
@@ -68,5 +72,9 @@ export const MOBILE_REQUIRED_GLOBALS = [
     'Layer8QueryBuilder', 'Layer8EnumFactory', 'Layer8RefFactory', 'Layer8ColumnFactory',
     'Layer8FormFactory', 'Layer8FormChips', 'Layer8FieldParsers', 'Layer8PeriodSelector',
     'Layer8InlineTableState', 'Layer8ReferenceConfigResolver', 'Layer8DatepickerGrid',
-    'Layer8ViewSwitcher', 'Layer8DToggleTree', 'Layer8DModuleFilter'
+    'Layer8ViewSwitcher', 'Layer8DToggleTree', 'Layer8DModuleFilter',
+    // Chat (l8chat)
+    'L8ChatApi', 'L8ChatStore', 'L8ChatLive', 'L8ChatSession', 'L8ChatFiles', 'L8ChatStatus',
+    'L8ChatSidebar', 'L8ChatConvList', 'L8ChatComposer', 'L8ChatThread', 'L8ChatGroupDialog', 'L8ChatConvDialog',
+    'Layer8Markdown', 'ERP_CHAT_ENDPOINTS', 'L8ChatMobile', 'L8ChatBubbleMobile'
 ];

@@ -29,6 +29,5 @@ type MockDataStore struct {
 	ECOMStore
 	COMPStore
 	LENDStore
-	AIAStore
 	ReportsStore
 }

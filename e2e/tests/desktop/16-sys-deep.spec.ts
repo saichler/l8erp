@@ -190,30 +190,3 @@ test.describe('module config', () => {
     });
 });
 
-test.describe('agent', () => {
-    test('the conversations service serves its own type', async ({ api }) => {
-        // Independent of the LLM: AgntConvo is a plain ORM service, and this is the
-        // model the desktop conversations table (added in this session) reads.
-        const res = await api.query('/120/AgntConvo', 'select * from L8AgentConversation limit 5 page 0');
-        expect(Array.isArray(res.list), 'AgntConvo returned no list').toBe(true);
-    });
-
-    test('chat send/receive', async ({ api }) => {
-        // AgntChat is a live LLM endpoint, not an ORM table. Without
-        // ANTHROPIC_API_KEY the erp pod logs "AI Agent chat will not work" at
-        // startup, so a failure here would report an unconfigured capability as
-        // a defect. Probe first, and skip with the real reason.
-        let reachable = false;
-        try {
-            await api.query('/120/AgntChat', 'select * from L8AgentChatConversation limit 1 page 0');
-            reachable = true;
-        } catch { /* fall through to the skip */ }
-        test.skip(!reachable,
-            'AgntChat is not serving queries -- ANTHROPIC_API_KEY is unset on this cluster');
-
-        const res = await api.post('/120/AgntChat', {
-            message: 'ping from the e2e suite', conversationId: ''
-        }).catch((e) => ({ error: (e as Error).message }));
-        expect(res, 'the chat endpoint returned nothing').toBeTruthy();
-    });
-});

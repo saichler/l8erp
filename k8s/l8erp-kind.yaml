@@ -164,12 +164,6 @@ spec:
       labels:
         app: erp
     spec:
-      # The agent calls the LLM at its public name (*.test-llm.dev, public
-      # certificate). Inside the LAN that public IP does not loop back, so the
-      # names resolve to the LAN load balancer that serves them (192.168.1.121).
-      hostAliases:
-        - ip: "192.168.1.121"
-          hostnames: ["llm.test-llm.dev", "embed.test-llm.dev", "muse.test-llm.dev", "tools.test-llm.dev"]
       containers:
         - name: erp
           image: registry.layer-8.dev:44443/erp/erp:latest
@@ -191,6 +185,227 @@ spec:
         resources:
           requests:
             storage: 10Gi
+
+---
+
+# erp-chat-orm: chat persistence (l8ai, area 81) with its own postgres (chatdb)
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: l8erp
+  name: erp-chat-orm
+  labels:
+    app: erp-chat-orm
+spec:
+  serviceName: erp-chat-orm
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erp-chat-orm
+  template:
+    metadata:
+      labels:
+        app: erp-chat-orm
+    spec:
+      containers:
+        - name: erp-chat-orm
+          image: registry.layer-8.dev:44443/erp/erp-chat-orm:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: hdata
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 10Gi
+
+---
+
+# erp-chat: chat instances (l8ai): single writers of their conversations
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: l8erp
+  name: erp-chat
+  labels:
+    app: erp-chat
+spec:
+  serviceName: erp-chat
+  replicas: 3
+  selector:
+    matchLabels:
+      app: erp-chat
+  template:
+    metadata:
+      labels:
+        app: erp-chat
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: erp-chat
+          image: registry.layer-8.dev:44443/erp/erp-chat:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: hdata
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 2Gi
+
+---
+
+# erp-chat-router: chat router (l8ai): conversation index + public chat services
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: l8erp
+  name: erp-chat-router
+  labels:
+    app: erp-chat-router
+spec:
+  serviceName: erp-chat-router
+  replicas: 2
+  selector:
+    matchLabels:
+      app: erp-chat-router
+  template:
+    metadata:
+      labels:
+        app: erp-chat-router
+    spec:
+      containers:
+        - name: erp-chat-router
+          image: registry.layer-8.dev:44443/erp/erp-chat-router:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: hdata
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 2Gi
+
+---
+
+# erp-chat-users: chat users (l8ai): presence and groups
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: l8erp
+  name: erp-chat-users
+  labels:
+    app: erp-chat-users
+spec:
+  serviceName: erp-chat-users
+  replicas: 2
+  selector:
+    matchLabels:
+      app: erp-chat-users
+  template:
+    metadata:
+      labels:
+        app: erp-chat-users
+    spec:
+      containers:
+        - name: erp-chat-users
+          image: registry.layer-8.dev:44443/erp/erp-chat-users:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: hdata
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 2Gi
+
+---
+
+# erp-chat-agent: Tanto, the AI agent (l8ai ChatAgent)
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: l8erp
+  name: erp-chat-agent
+  labels:
+    app: erp-chat-agent
+spec:
+  serviceName: erp-chat-agent
+  replicas: 1
+  selector:
+    matchLabels:
+      app: erp-chat-agent
+  template:
+    metadata:
+      labels:
+        app: erp-chat-agent
+    spec:
+      # Tanto calls the LLM / web tools by name; inside the LAN their public IP
+      # does not loop back (kind-start.sh drops these off that LAN).
+      hostAliases:
+        - ip: "192.168.1.121"
+          hostnames: ["llm.test-llm.dev", "embed.test-llm.dev", "muse.test-llm.dev", "tools.test-llm.dev"]
+      containers:
+        - name: erp-chat-agent
+          image: registry.layer-8.dev:44443/erp/erp-chat-agent:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+          volumeMounts:
+            - name: hdata
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: hdata
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 2Gi
 
 ---
 

@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             'hcm': 'HCM', 'financial': 'FIN', 'scm': 'SCM', 'sales': 'Sales',
             'manufacturing': 'Mfg', 'crm': 'Crm', 'projects': 'Prj', 'bi': 'Bi',
             'documents': 'Doc', 'ecommerce': 'Ecom', 'compliance': 'Comp',
-            'lending': 'Lending', 'aia': 'Aia'
+            'lending': 'Lending'
         };
         // Fail loudly on drift instead of silently degrading to "show it"
         // (FailFastNoSilentFallback / ReportInfraBugs).
@@ -226,10 +226,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         Layer8DPermissionFilter.applyToSidebar(sidebarModels);
     }
 
-    // Initialize floating AI chat bubble
-    if (typeof L8AgentBubble !== 'undefined') {
-        L8AgentBubble.init({ chatEndpoint: '/120/AgntChat' });
-    }
+    // Floating chat bubble (l8chat): users, groups and Tanto, the AI agent.
+    L8ChatBubble.init({ endpoints: ERP_CHAT_ENDPOINTS });
 
     // Initialize WebSocket for real-time updates
     if (typeof Layer8DWebSocket !== 'undefined') {

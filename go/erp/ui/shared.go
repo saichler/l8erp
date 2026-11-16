@@ -1,6 +1,7 @@
 package ui
 
 import (
+	l8aicommon "github.com/saichler/l8ai/go/ai/common"
 	"github.com/saichler/l8bus/go/overlay/vnic"
 	"github.com/saichler/l8erp/go/erp/common"
 	"github.com/saichler/l8erp/go/types/hcm"
@@ -36,7 +37,9 @@ func RegisterTypes(resources ifs.IResources) {
 	registerEcomTypes(resources)
 	registerCompTypes(resources)
 	registerLendTypes(resources)
-	registerAiaTypes(resources)
+	// Chat and the Tanto agent (l8ai, area 81); the security plugin registers
+	// the LLM provider/profile types.
+	l8aicommon.RegisterTypes(resources)
 	registerSysTypes(resources)
 }
 

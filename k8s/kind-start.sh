@@ -67,6 +67,11 @@ IMAGES=(
   registry.layer-8.dev:44443/erp/erp-log-agent:latest
   registry.layer-8.dev:44443/erp/erp:latest
   registry.layer-8.dev:44443/erp/erp-web:latest
+  registry.layer-8.dev:44443/erp/erp-chat-orm:latest
+  registry.layer-8.dev:44443/erp/erp-chat:latest
+  registry.layer-8.dev:44443/erp/erp-chat-router:latest
+  registry.layer-8.dev:44443/erp/erp-chat-users:latest
+  registry.layer-8.dev:44443/erp/erp-chat-agent:latest
 )
 
 for img in "${IMAGES[@]}"; do
@@ -79,7 +84,47 @@ for img in "${IMAGES[@]}"; do
 done
 
 echo "Phase 1: Deploying namespace + vnets..."
-"${KUBECTL[@]}" apply -f "${SCRIPT_DIR}/l8erp-kind.yaml"
+# hostAliases map LAN-only names (the LLM and web tools of the chat agent) to
+# LAN addresses. They are used only when this machine is on the subnet of
+# those addresses; elsewhere they are left out and the pods resolve the public
+# names. The pods cannot decide this themselves: on KIND their node's address
+# is a docker address, not this machine's.
+ip2int() { local IFS=.; read -r a b c d <<< "$1"; echo $(( (a << 24) + (b << 16) + (c << 8) + d )); }
+in_subnet() {
+  local ip="$1" cidr="$2" bits mask
+  bits="${cidr#*/}"
+  mask=$(( bits == 0 ? 0 : (0xFFFFFFFF << (32 - bits)) & 0xFFFFFFFF ))
+  (( ($(ip2int "$ip") & mask) == ($(ip2int "${cidr%/*}") & mask) ))
+}
+on_lan_of() {
+  command -v ip &>/dev/null || return 1
+  local cidr
+  for cidr in $(ip -o -4 addr show scope global | awk '{print $4}'); do
+    in_subnet "$1" "$cidr" && return 0
+  done
+  return 1
+}
+MANIFEST="${SCRIPT_DIR}/l8erp-kind.yaml"
+LAN_IPS=$(grep -A2 'hostAliases:' "${MANIFEST}" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | sort -u)
+USE_LAN=1
+for lan_ip in ${LAN_IPS}; do
+  on_lan_of "${lan_ip}" || USE_LAN=""
+done
+if [ -n "${LAN_IPS}" ] && [ -z "${USE_LAN}" ]; then
+  echo "Not on the LAN of ${LAN_IPS//$'\n'/ }: deploying without hostAliases (public names)."
+  APPLIED="$(mktemp)"
+  trap 'rm -f "${APPLIED}"' EXIT
+  # Drop each hostAliases block: the key line and the lines indented under it.
+  awk '
+    /^[[:space:]]*hostAliases:/ { skip = 1; match($0, /^[[:space:]]*/); indent = RLENGTH; next }
+    skip { match($0, /^[[:space:]]*/); if (RLENGTH > indent) next; skip = 0 }
+    { print }
+  ' "${MANIFEST}" > "${APPLIED}"
+  MANIFEST="${APPLIED}"
+elif [ -n "${LAN_IPS}" ]; then
+  echo "On the LAN of ${LAN_IPS//$'\n'/ }: deploying with hostAliases."
+fi
+"${KUBECTL[@]}" apply -f "${MANIFEST}"
 
 echo "Waiting for erp-vnet to be Ready..."
 "${KUBECTL[@]}" -n l8erp rollout status statefulset/erp-vnet --timeout=120s
@@ -88,7 +133,7 @@ echo "Waiting for erp-logs-vnet to be Ready..."
 "${KUBECTL[@]}" -n l8erp rollout status statefulset/erp-logs-vnet --timeout=120s
 
 echo "Phase 2: Waiting for all services to be Ready..."
-for sts in erp erp-web erp-log-agent; do
+for sts in erp erp-web erp-log-agent erp-chat-orm erp-chat erp-chat-router erp-chat-users erp-chat-agent; do
   echo "  Waiting for ${sts}..."
   "${KUBECTL[@]}" -n l8erp rollout status statefulset/"${sts}" --timeout=180s
 done

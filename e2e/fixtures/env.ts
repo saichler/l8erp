@@ -43,6 +43,15 @@ export const ENV = {
     readOnlyUser: env('L8ERP_READONLY_USER', 'viewer'),
     readOnlyPass: env('L8ERP_READONLY_PASS', 'Viewer123!'),
 
+    /**
+     * A second writing account (role operator) for the chat specs: the peer
+     * that sends to and receives from `user`. Seeded in erp.json.
+     */
+    chatPeerUser: env('L8ERP_CHAT_PEER_USER', 'operator2'),
+    chatPeerPass: env('L8ERP_CHAT_PEER_PASS', 'Oper123!'),
+    chatPeerName: env('L8ERP_CHAT_PEER_NAME', 'Second Operator'),
+    userName: env('L8ERP_USER_NAME', 'Default Operator'),
+
     /** Shell paths. Mobile is the real mobile bundle, never a resized desktop. */
     desktopShell: '/app.html',
     mobileShell: '/m/app.html',

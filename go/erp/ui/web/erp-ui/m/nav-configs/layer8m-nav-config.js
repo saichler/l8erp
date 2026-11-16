@@ -53,7 +53,6 @@ limitations under the License.
         // tapping it reached nothing, leaving all six LEND services desktop-only
         // (MobileRules -- Desktop/Mobile Functional Parity).
         lending: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.lending,
-        aia: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.aia,
         system: window.LAYER8M_NAV_CONFIG_PRJ_OTHER.system,
 
         // Icons from icons config

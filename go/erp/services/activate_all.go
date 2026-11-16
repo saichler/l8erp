@@ -25,7 +25,6 @@ func ActivateAllServices(creds, dbname string, nic ifs.IVNic) {
 	all = append(all, collectEcomActivations(creds, dbname, nic)...)
 	all = append(all, collectCompActivations(creds, dbname, nic)...)
 	all = append(all, collectLendActivations(creds, dbname, nic)...)
-	all = append(all, collectAiaActivations(creds, dbname, nic)...)
 	all = append(all, collectSysActivations(creds, dbname, nic)...)
 
 	sem := make(chan struct{}, parallelWorkers)

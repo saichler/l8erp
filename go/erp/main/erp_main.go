@@ -43,7 +43,6 @@ func main() {
 	dbname := nic.Resources().SysConfig().DataStoreConfig.Name
 
 	services.ActivateAllServices(dbcred, dbname, nic)
-	services.ActivateChatService(dbcred, dbname, nic)
 	// Required system services (l8events, l8notify) -- always through
 	// l8common's system.Activate, never the individual Activate* functions.
 	system.Activate(dbcred, dbname, nic)

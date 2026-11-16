@@ -22,6 +22,11 @@ IMAGES=(
     "Maint:maint"
     "Log Agent:logs/agent"
     "Log Vnet:logs/vnet"
+    "Chat ORM:erp/chat-orm"
+    "Chat:erp/chat"
+    "Chat Router:erp/chat-router"
+    "Chat Users:erp/chat-users"
+    "Chat Agent:erp/chat-agent"
 )
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
