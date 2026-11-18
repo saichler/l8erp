@@ -10,115 +10,115 @@ wget https://raw.githubusercontent.com/saichler/l8common/refs/heads/main/proto/l
 # comes from the vendored l8common dependency, not from local generation.
 
 # Human Capital Management
-docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-core_hr.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-payroll.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-benefits.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-time_attendance.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-talent.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-learning.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-compensation.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-core_hr.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-payroll.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-benefits.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-time_attendance.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-talent.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-learning.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-compensation.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 
 # Financial Management
-docker run --user "$(id -u):$(id -g)" -e PROTO=fin-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=fin-general_ledger.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=fin-accounts_payable.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=fin-accounts_receivable.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=fin-cash_management.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=fin-fixed_assets.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=fin-budgeting.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=fin-tax.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=fin-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=fin-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=fin-general_ledger.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=fin-accounts_payable.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=fin-accounts_receivable.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=fin-cash_management.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=fin-fixed_assets.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=fin-budgeting.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=fin-tax.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=fin-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 
 # Supply Chain Management
-docker run --user "$(id -u):$(id -g)" -e PROTO=scm-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=scm-procurement.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=scm-inventory.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=scm-warehouse.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=scm-logistics.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=scm-demand_planning.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=scm-supply_planning.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=scm-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=scm-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=scm-procurement.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=scm-inventory.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=scm-warehouse.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=scm-logistics.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=scm-demand_planning.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=scm-supply_planning.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=scm-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 
 # Sales and Distribution
-docker run --user "$(id -u):$(id -g)" -e PROTO=sales-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=sales-customer.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=sales-orders.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=sales-pricing.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=sales-shipping.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=sales-billing.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=sales-analytics.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=sales-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-customer.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-orders.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-pricing.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-shipping.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-billing.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-analytics.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sales-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 
 # Manufacturing
-docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-engineering.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-production.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-shopfloor.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-quality.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-planning.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-costing.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-engineering.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-production.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-shopfloor.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-quality.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-planning.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-costing.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=mfg-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 
 # Customer Relationship Management
-docker run --user "$(id -u):$(id -g)" -e PROTO=crm-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=crm-leads.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=crm-opportunities.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=crm-accounts.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=crm-marketing.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=crm-service.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=crm-fieldservice.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=crm-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-leads.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-opportunities.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-accounts.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-marketing.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-service.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-fieldservice.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=crm-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 
 # Project Management
-docker run --user "$(id -u):$(id -g)" -e PROTO=prj-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=prj-planning.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=prj-resources.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=prj-timeexpense.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=prj-billing.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=prj-analytics.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=prj-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=prj-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=prj-planning.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=prj-resources.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=prj-timeexpense.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=prj-billing.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=prj-analytics.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=prj-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 
 # Business Intelligence
-docker run --user "$(id -u):$(id -g)" -e PROTO=bi-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=bi-reporting.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=bi-dashboards.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=bi-analytics.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=bi-datamanagement.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=bi-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=bi-reporting.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=bi-dashboards.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=bi-analytics.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=bi-datamanagement.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 
 # Document Management
-docker run --user "$(id -u):$(id -g)" -e PROTO=doc-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=doc-storage.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=doc-workflow.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=doc-integration.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=doc-compliance.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=doc-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=doc-storage.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=doc-workflow.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=doc-integration.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=doc-compliance.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 
 # E-Commerce
-docker run --user "$(id -u):$(id -g)" -e PROTO=ecom-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=ecom-catalog.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=ecom-orders.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=ecom-customers.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=ecom-promotions.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=ecom-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=ecom-catalog.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=ecom-orders.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=ecom-customers.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=ecom-promotions.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 
 # Compliance and Risk Management
-docker run --user "$(id -u):$(id -g)" -e PROTO=comp-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=comp-regulatory.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=comp-controls.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=comp-risk.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=comp-audit.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=comp-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=comp-regulatory.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=comp-controls.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=comp-risk.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=comp-audit.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 
 # Lending
-docker run --user "$(id -u):$(id -g)" -e PROTO=lend-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=lend-products.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=lend-applications.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=lend-loans.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=lend-creditlines.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=lend-payments.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
-docker run --user "$(id -u):$(id -g)" -e PROTO=lend-collateral.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=lend-common.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=lend-products.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=lend-applications.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=lend-loans.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=lend-creditlines.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=lend-payments.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=lend-collateral.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 
 # System
-docker run --user "$(id -u):$(id -g)" -e PROTO=sys-moduleconfig.proto --mount type=bind,source="$PWD",target=/home/proto/ -i saichler/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=sys-moduleconfig.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 
 rm api.proto l8common.proto
 
