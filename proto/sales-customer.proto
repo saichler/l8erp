@@ -22,6 +22,7 @@ import "sales-common.proto";
 import "sales-pricing.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // ============================================================================
 // CUSTOMER MANAGEMENT MESSAGES
@@ -98,9 +99,9 @@ message SalesPartnerChannel {
   string partner_id = 1;
   string name = 2;
   SalesPartnerType partner_type = 3;
-  string contact_name = 4;
-  string email = 5;
-  string phone = 6;
+  string contact_name = 4 [(l8ai.AIMask) = true];
+  string email = 5 [(l8ai.AIMask) = true];
+  string phone = 6 [(l8ai.AIMask) = true];
   l8common.Address address = 7;
   double commission_rate = 8;
   string territory_id = 9;

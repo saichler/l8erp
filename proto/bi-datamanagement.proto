@@ -21,6 +21,7 @@ option go_package = "./types/bi";
 import "bi-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // ============================================================================
 // DATA MANAGEMENT MESSAGES
@@ -33,7 +34,7 @@ message BiDataSource {
   string name = 2;
   string description = 3;
   BiDataSourceType source_type = 4;
-  string connection_string = 5;
+  string connection_string = 5 [(l8ai.AIMask) = true];
   string host = 6;
   int32 port = 7;
   string database = 8;

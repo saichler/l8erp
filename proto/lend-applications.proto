@@ -21,6 +21,7 @@ option go_package = "./types/lend";
 import "lend-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // ============================================================================
 // LOAN APPLICATIONS
@@ -45,8 +46,8 @@ message LendApplication {
   double proposed_interest_rate = 14;
   l8common.Money approved_amount = 15;
   int32 approved_term_months = 16;
-  double credit_score = 17;
-  double debt_to_income_ratio = 18;
+  double credit_score = 17 [(l8ai.AIMask) = true];
+  double debt_to_income_ratio = 18 [(l8ai.AIMask) = true];
   string denial_reason = 19;
   string notes = 20;
   repeated ApplicationDocument documents = 21;

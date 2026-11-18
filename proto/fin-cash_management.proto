@@ -21,6 +21,7 @@ option go_package = "./types/fin";
 import "fin-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // ============================================================================
 // CASH MANAGEMENT MESSAGES
@@ -32,10 +33,10 @@ message BankAccount {
   string bank_account_id = 1;
   string account_name = 2;
   string bank_name = 3;
-  string account_number_masked = 4;
-  string routing_number = 5;
+  string account_number_masked = 4 [(l8ai.AIMask) = true];
+  string routing_number = 5 [(l8ai.AIMask) = true];
   string swift_code = 6;
-  string iban = 7;
+  string iban = 7 [(l8ai.AIMask) = true];
   BankAccountType account_type = 8;
   BankAccountStatus status = 9;
   string currency_id = 10;

@@ -22,6 +22,7 @@ option go_package = "./types/comp";
 import "comp-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // =====================
 // RISK REGISTER
@@ -179,9 +180,9 @@ message CompInsurancePolicy {
     repeated string covered_risks = 15;
     repeated string exclusions = 16;
     string policy_document_id = 17;            // cross-ref: DocDocument
-    string contact_name = 18;
-    string contact_phone = 19;
-    string contact_email = 20;
+    string contact_name = 18 [(l8ai.AIMask) = true];
+    string contact_phone = 19 [(l8ai.AIMask) = true];
+    string contact_email = 20 [(l8ai.AIMask) = true];
     int32 renewal_lead_days = 21;
     string responsible_id = 22;                // cross-ref: Employee
     map<string, string> custom_fields = 23;

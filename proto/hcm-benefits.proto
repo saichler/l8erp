@@ -22,6 +22,7 @@ option go_package = "./types/hcm";
 import "hcm-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // ============================================================================
 // BENEFITS ADMINISTRATION MESSAGES
@@ -151,7 +152,7 @@ message BenefitEnrollment {
   repeated string covered_dependent_ids = 15;
 
   // Primary care (for medical)
-  string primary_care_provider = 16;
+  string primary_care_provider = 16 [(l8ai.AIMask) = true];
   string primary_care_provider_id = 17;
 
   map<string, string> custom_fields = 18;
@@ -187,9 +188,9 @@ message BenefitElection {
   string election_id = 1;
   string election_type = 2;          // Plan-specific election type
   string election_value = 3;         // The elected value
-  l8common.Money contribution_amount = 4;     // For contribution-based (401k, HSA)
-  double contribution_percentage = 5;
-  l8common.Money annual_amount = 6;
+  l8common.Money contribution_amount = 4 [(l8ai.AIMask) = true];     // For contribution-based (401k, HSA)
+  double contribution_percentage = 5 [(l8ai.AIMask) = true];
+  l8common.Money annual_amount = 6 [(l8ai.AIMask) = true];
 }
 
 // Beneficiary designation for life insurance, retirement, etc.
@@ -197,14 +198,14 @@ message Beneficiary {
   string beneficiary_id = 1;
   string enrollment_id = 2;
   BeneficiaryType beneficiary_type = 3;
-  string name = 4;
+  string name = 4 [(l8ai.AIMask) = true];
   string relationship = 5;
-  int64 date_of_birth = 6;
-  string ssn_masked = 7;
+  int64 date_of_birth = 6 [(l8ai.AIMask) = true];
+  string ssn_masked = 7 [(l8ai.AIMask) = true];
   double percentage = 8;
   bool is_contingent = 9;
-  l8common.Address address = 10;
-  string phone = 11;
+  l8common.Address address = 10 [(l8ai.AIMask) = true];
+  string phone = 11 [(l8ai.AIMask) = true];
   l8common.AuditInfo audit_info = 12;
 }
 
@@ -221,18 +222,18 @@ enum BeneficiaryType {
 message Dependent {
   string dependent_id = 1;
   string employee_id = 2;
-  string first_name = 3;
-  string middle_name = 4;
-  string last_name = 5;
+  string first_name = 3 [(l8ai.AIMask) = true];
+  string middle_name = 4 [(l8ai.AIMask) = true];
+  string last_name = 5 [(l8ai.AIMask) = true];
   DependentRelationship relationship = 6;
-  int64 date_of_birth = 7;
-  Gender gender = 8;
-  string ssn_masked = 9;
+  int64 date_of_birth = 7 [(l8ai.AIMask) = true];
+  Gender gender = 8 [(l8ai.AIMask) = true];
+  string ssn_masked = 9 [(l8ai.AIMask) = true];
   bool is_student = 10;
-  bool is_disabled = 11;
-  bool is_tobacco_user = 12;
+  bool is_disabled = 11 [(l8ai.AIMask) = true];
+  bool is_tobacco_user = 12 [(l8ai.AIMask) = true];
   int64 coverage_end_date = 13;  // Age-out date
-  l8common.Address address = 14;
+  l8common.Address address = 14 [(l8ai.AIMask) = true];
   VerificationStatus verification_status = 15;
   l8common.AuditInfo audit_info = 16;
 }
@@ -312,7 +313,7 @@ message Carrier {
   string fax = 7;
   string email = 8;
   string website = 9;
-  string contact_name = 10;
+  string contact_name = 10 [(l8ai.AIMask) = true];
   string employer_group_number = 11;
   string billing_account_number = 12;
   string edi_payer_id = 13;

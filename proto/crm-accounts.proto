@@ -21,6 +21,7 @@ option go_package = "./types/crm";
 import "crm-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // ============================================================================
 // ACCOUNT MANAGEMENT MESSAGES
@@ -64,20 +65,20 @@ message CrmAccountList {
 message CrmContact {
   string contact_id = 1;
   string account_id = 2;                   // cross-ref: CrmAccount
-  string first_name = 3;
-  string last_name = 4;
+  string first_name = 3 [(l8ai.AIMask) = true];
+  string last_name = 4 [(l8ai.AIMask) = true];
   string title = 5;
   string department = 6;
-  string email = 7;
-  string phone = 8;
-  string mobile = 9;
-  string fax = 10;
-  l8common.Address mailing_address = 11;
+  string email = 7 [(l8ai.AIMask) = true];
+  string phone = 8 [(l8ai.AIMask) = true];
+  string mobile = 9 [(l8ai.AIMask) = true];
+  string fax = 10 [(l8ai.AIMask) = true];
+  l8common.Address mailing_address = 11 [(l8ai.AIMask) = true];
   string reports_to_id = 12;               // cross-ref: CrmContact (self-reference)
   string owner_id = 13;                    // cross-ref: HCM Employee
   bool is_primary = 14;
   string description = 15;
-  int64 birthdate = 16;
+  int64 birthdate = 16 [(l8ai.AIMask) = true];
   bool do_not_call = 17;
   bool do_not_email = 18;
   string lead_source_id = 19;              // cross-ref: CrmLeadSource

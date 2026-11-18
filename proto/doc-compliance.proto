@@ -22,6 +22,7 @@ option go_package = "./types/doc";
 import "doc-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // =====================
 // RETENTION POLICY
@@ -96,7 +97,7 @@ message DocAccessLog {
   string version_id = 3;                    // cross-ref: DocDocumentVersion
   DocAccessAction action = 4;
   string user_id = 5;                       // cross-ref: HCM Employee
-  string user_name = 6;
+  string user_name = 6 [(l8ai.AIMask) = true];
   int64 access_date = 7;
   string ip_address = 8;
   string user_agent = 9;
@@ -152,7 +153,7 @@ message DocAuditTrail {
   string entity_type = 5;                   // e.g., "document", "folder", "workflow"
   string entity_id = 6;
   string user_id = 7;                       // cross-ref: HCM Employee
-  string user_name = 8;
+  string user_name = 8 [(l8ai.AIMask) = true];
   int64 timestamp = 9;
   string old_values = 10;                   // JSON of previous state
   string new_values = 11;                   // JSON of new state

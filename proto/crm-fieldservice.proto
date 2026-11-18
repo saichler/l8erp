@@ -21,6 +21,7 @@ option go_package = "./types/crm";
 import "crm-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // ============================================================================
 // FIELD SERVICE MESSAGES
@@ -67,13 +68,13 @@ message CrmServiceOrderList {
 message CrmTechnician {
   string technician_id = 1;
   string employee_id = 2;                  // cross-ref: HCM Employee
-  string name = 3;
-  string email = 4;
-  string phone = 5;
+  string name = 3 [(l8ai.AIMask) = true];
+  string email = 4 [(l8ai.AIMask) = true];
+  string phone = 5 [(l8ai.AIMask) = true];
   CrmTechnicianStatus status = 6;
   repeated string skills = 7;
   string territory = 8;
-  l8common.Address home_location = 9;
+  l8common.Address home_location = 9 [(l8ai.AIMask) = true];
   double hourly_rate = 10;
   double overtime_rate = 11;
   int32 max_daily_orders = 12;

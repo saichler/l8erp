@@ -22,6 +22,7 @@ import "fin-common.proto";
 import "fin-tax.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // ============================================================================
 // ACCOUNTS PAYABLE MESSAGES
@@ -59,12 +60,12 @@ message VendorList {
 message VendorContact {
   string contact_id = 1;
   string vendor_id = 2;
-  string first_name = 3;
-  string last_name = 4;
+  string first_name = 3 [(l8ai.AIMask) = true];
+  string last_name = 4 [(l8ai.AIMask) = true];
   string title = 5;
-  string email = 6;
-  string phone = 7;
-  string fax = 8;
+  string email = 6 [(l8ai.AIMask) = true];
+  string phone = 7 [(l8ai.AIMask) = true];
+  string fax = 8 [(l8ai.AIMask) = true];
   bool is_primary = 9;
   bool is_active = 10;
   string notes = 11;

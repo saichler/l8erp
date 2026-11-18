@@ -21,6 +21,7 @@ option go_package = "./types/sales";
 import "sales-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // ============================================================================
 // SALES ANALYTICS MESSAGES
@@ -115,7 +116,7 @@ message SalesCommissionCalc {
   int64 calculation_date = 4;
   l8common.Money sales_amount = 5;
   double commission_rate = 6;
-  l8common.Money commission_amount = 7;
+  l8common.Money commission_amount = 7 [(l8ai.AIMask) = true];
   string status = 8;
   int64 paid_date = 9;
   string notes = 10;

@@ -3,6 +3,7 @@
 set -e
 
 wget https://raw.githubusercontent.com/saichler/l8types/refs/heads/main/proto/api.proto
+wget https://raw.githubusercontent.com/saichler/l8ai/refs/heads/main/proto/aimask.proto
 wget https://raw.githubusercontent.com/saichler/l8common/refs/heads/main/proto/l8common.proto
 
 # Use the protoc image to run protoc.sh and generate the bindings.
@@ -121,6 +122,7 @@ docker run --user "$(id -u):$(id -g)" -e PROTO=lend-collateral.proto --mount typ
 docker run --user "$(id -u):$(id -g)" -e PROTO=sys-moduleconfig.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 
 rm api.proto l8common.proto
+rm aimask.proto
 
 # Now move the generated bindings to the models directory and clean up
 rm -rf ../go/types
@@ -147,3 +149,4 @@ find . -name "*.go" -type f -exec sed -i 's|"./types/ecom"|"github.com/saichler/
 find . -name "*.go" -type f -exec sed -i 's|"./types/comp"|"github.com/saichler/l8erp/go/types/comp"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/lend"|"github.com/saichler/l8erp/go/types/lend"|g' {} +
 find . -name "*.go" -type f -exec sed -i 's|"./types/sys"|"github.com/saichler/l8erp/go/types/sys"|g' {} +
+find . -name "*.go" -type f -exec sed -i 's|"./types/l8ai"|"github.com/saichler/l8ai/go/types/l8ai"|g' {} +

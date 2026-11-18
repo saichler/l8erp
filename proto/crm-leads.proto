@@ -21,6 +21,7 @@ option go_package = "./types/crm";
 import "crm-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // ============================================================================
 // LEAD MANAGEMENT MESSAGES
@@ -30,10 +31,10 @@ import "api.proto";
 // CrmLead represents a sales lead or prospect
 message CrmLead {
   string lead_id = 1;
-  string first_name = 2;
-  string last_name = 3;
-  string email = 4;
-  string phone = 5;
+  string first_name = 2 [(l8ai.AIMask) = true];
+  string last_name = 3 [(l8ai.AIMask) = true];
+  string email = 4 [(l8ai.AIMask) = true];
+  string phone = 5 [(l8ai.AIMask) = true];
   string company = 6;
   string title = 7;
   string industry = 8;
@@ -45,7 +46,7 @@ message CrmLead {
   string website = 14;
   int32 employee_count = 15;
   l8common.Money annual_revenue = 16;
-  l8common.Address address = 17;
+  l8common.Address address = 17 [(l8ai.AIMask) = true];
   int64 last_activity_date = 18;
   int32 score = 19;
   string campaign_id = 20;                 // cross-ref: CrmCampaign (optional)

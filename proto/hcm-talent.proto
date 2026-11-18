@@ -22,6 +22,7 @@ option go_package = "./types/hcm";
 import "hcm-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // ============================================================================
 // TALENT MANAGEMENT MESSAGES
@@ -106,12 +107,12 @@ enum RequisitionType {
 // Applicant represents a job applicant
 message Applicant {
   string applicant_id = 1;
-  string first_name = 2;
-  string last_name = 3;
-  string email = 4;
-  string phone = 5;
-  l8common.Address address = 6;
-  string linkedin_url = 7;
+  string first_name = 2 [(l8ai.AIMask) = true];
+  string last_name = 3 [(l8ai.AIMask) = true];
+  string email = 4 [(l8ai.AIMask) = true];
+  string phone = 5 [(l8ai.AIMask) = true];
+  l8common.Address address = 6 [(l8ai.AIMask) = true];
+  string linkedin_url = 7 [(l8ai.AIMask) = true];
   string portfolio_url = 8;
 
   // Application source
@@ -130,10 +131,10 @@ message Applicant {
   repeated string skills = 17;
 
   // EEO data (optional, for compliance)
-  Gender gender = 18;
-  string ethnicity = 19;
-  bool is_veteran = 20;
-  bool is_disabled = 21;
+  Gender gender = 18 [(l8ai.AIMask) = true];
+  string ethnicity = 19 [(l8ai.AIMask) = true];
+  bool is_veteran = 20 [(l8ai.AIMask) = true];
+  bool is_disabled = 21 [(l8ai.AIMask) = true];
 
   int64 created_date = 22;
   map<string, string> custom_fields = 23;
@@ -201,9 +202,9 @@ message Application {
   int64 disposition_date = 12;
 
   // Rating
-  double overall_rating = 13;
+  double overall_rating = 13 [(l8ai.AIMask) = true];
 
-  string notes = 14;
+  string notes = 14 [(l8ai.AIMask) = true];
   map<string, string> custom_fields = 15;
   l8common.AuditInfo audit_info = 16;
 }
@@ -290,11 +291,11 @@ enum InterviewStatus {
 message InterviewFeedback {
   string feedback_id = 1;
   string interviewer_id = 2;
-  int32 overall_rating = 3;          // 1-5
-  string recommendation = 4;          // Hire, No Hire, etc.
-  string strengths = 5;
-  string weaknesses = 6;
-  string notes = 7;
+  int32 overall_rating = 3 [(l8ai.AIMask) = true];          // 1-5
+  string recommendation = 4 [(l8ai.AIMask) = true];          // Hire, No Hire, etc.
+  string strengths = 5 [(l8ai.AIMask) = true];
+  string weaknesses = 6 [(l8ai.AIMask) = true];
+  string notes = 7 [(l8ai.AIMask) = true];
   int64 submitted_date = 8;
 }
 
@@ -370,16 +371,16 @@ message PerformanceReview {
   // Ratings
   repeated CompetencyRating competencies = 8;
   repeated GoalRating goals = 9;
-  int32 overall_rating = 10;         // 1-5 scale
-  string overall_rating_label = 11;  // Exceeds, Meets, etc.
+  int32 overall_rating = 10 [(l8ai.AIMask) = true];         // 1-5 scale
+  string overall_rating_label = 11 [(l8ai.AIMask) = true];  // Exceeds, Meets, etc.
 
   // Comments
-  string employee_comments = 12;
-  string manager_comments = 13;
-  string summary = 14;
+  string employee_comments = 12 [(l8ai.AIMask) = true];
+  string manager_comments = 13 [(l8ai.AIMask) = true];
+  string summary = 14 [(l8ai.AIMask) = true];
 
   // Development
-  string development_plan = 15;
+  string development_plan = 15 [(l8ai.AIMask) = true];
   repeated string training_recommendations = 16;
 
   // Acknowledgment
@@ -390,7 +391,7 @@ message PerformanceReview {
 
   // Calibration
   bool is_calibrated = 21;
-  string calibration_notes = 22;
+  string calibration_notes = 22 [(l8ai.AIMask) = true];
 
   map<string, string> custom_fields = 23;
   l8common.AuditInfo audit_info = 24;
@@ -432,18 +433,18 @@ enum ReviewType {
 message CompetencyRating {
   string competency_id = 1;
   string competency_name = 2;
-  int32 rating = 3;
-  string rating_label = 4;
-  string comments = 5;
+  int32 rating = 3 [(l8ai.AIMask) = true];
+  string rating_label = 4 [(l8ai.AIMask) = true];
+  string comments = 5 [(l8ai.AIMask) = true];
 }
 
 message GoalRating {
   string goal_id = 1;
   string goal_name = 2;
-  int32 rating = 3;
-  string rating_label = 4;
+  int32 rating = 3 [(l8ai.AIMask) = true];
+  string rating_label = 4 [(l8ai.AIMask) = true];
   double completion_percentage = 5;
-  string comments = 6;
+  string comments = 6 [(l8ai.AIMask) = true];
 }
 
 // @PrimeObject
@@ -582,10 +583,10 @@ enum RiskLevel {
 message SuccessionCandidate {
   string employee_id = 1;
   ReadinessLevel readiness = 2;
-  string development_needs = 3;
+  string development_needs = 3 [(l8ai.AIMask) = true];
   repeated string development_actions = 4;
   int32 ranking = 5;
-  string notes = 6;
+  string notes = 6 [(l8ai.AIMask) = true];
 }
 
 enum ReadinessLevel {
@@ -637,7 +638,7 @@ message Feedback {
 
   repeated FeedbackQuestion responses = 8;
 
-  string general_comments = 9;
+  string general_comments = 9 [(l8ai.AIMask) = true];
   bool is_anonymous = 10;
 
   int64 requested_date = 11;
@@ -683,6 +684,6 @@ message FeedbackQuestion {
   string question_id = 1;
   string question_text = 2;
   string response_type = 3;          // rating, text, choice
-  int32 rating_response = 4;
-  string text_response = 5;
+  int32 rating_response = 4 [(l8ai.AIMask) = true];
+  string text_response = 5 [(l8ai.AIMask) = true];
 }

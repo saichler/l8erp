@@ -19,6 +19,7 @@ package hcm;
 option go_package = "./types/hcm";
 
 import "l8common.proto";
+import "aimask.proto";
 
 // ============================================================================
 // HCM-SPECIFIC COMMON TYPES
@@ -27,12 +28,12 @@ import "l8common.proto";
 // EmergencyContact represents an employee's emergency contact
 message EmergencyContact {
   string contact_id = 1;
-  string name = 2;
+  string name = 2 [(l8ai.AIMask) = true];
   string relationship = 3;
-  string phone_primary = 4;
-  string phone_secondary = 5;
-  string email = 6;
-  l8common.Address address = 7;
+  string phone_primary = 4 [(l8ai.AIMask) = true];
+  string phone_secondary = 5 [(l8ai.AIMask) = true];
+  string email = 6 [(l8ai.AIMask) = true];
+  l8common.Address address = 7 [(l8ai.AIMask) = true];
   int32 priority = 8;  // 1 = primary, 2 = secondary, etc.
 }
 

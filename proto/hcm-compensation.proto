@@ -22,6 +22,7 @@ option go_package = "./types/hcm";
 import "hcm-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // ============================================================================
 // COMPENSATION MANAGEMENT MESSAGES
@@ -81,12 +82,12 @@ message EmployeeCompensation {
   string compensation_id = 1;
   string employee_id = 2;
   CompensationType compensation_type = 3;
-  l8common.Money base_salary = 4;
+  l8common.Money base_salary = 4 [(l8ai.AIMask) = true];
   PayFrequency pay_frequency = 5;
   string currency_id = 6;
   string salary_grade_id = 7;
   double compa_ratio = 8;            // Position in range
-  l8common.Money hourly_rate = 9;
+  l8common.Money hourly_rate = 9 [(l8ai.AIMask) = true];
   double fte = 10;                   // Full-time equivalent
   int64 effective_date = 11;
   int64 end_date = 12;
@@ -115,10 +116,10 @@ message MeritIncrease {
   string increase_id = 1;
   string employee_id = 2;
   string merit_cycle_id = 3;
-  l8common.Money current_salary = 4;
-  l8common.Money proposed_increase = 5;
-  double proposed_percentage = 6;
-  l8common.Money new_salary = 7;
+  l8common.Money current_salary = 4 [(l8ai.AIMask) = true];
+  l8common.Money proposed_increase = 5 [(l8ai.AIMask) = true];
+  double proposed_percentage = 6 [(l8ai.AIMask) = true];
+  l8common.Money new_salary = 7 [(l8ai.AIMask) = true];
   l8common.Money budget_amount = 8;
   double compa_ratio_before = 9;
   double compa_ratio_after = 10;
@@ -126,11 +127,11 @@ message MeritIncrease {
 
   // Performance link
   string review_id = 12;
-  int32 performance_rating = 13;
+  int32 performance_rating = 13 [(l8ai.AIMask) = true];
 
   // Recommendations
-  l8common.Money manager_recommended = 14;
-  l8common.Money hr_approved = 15;
+  l8common.Money manager_recommended = 14 [(l8ai.AIMask) = true];
+  l8common.Money hr_approved = 15 [(l8ai.AIMask) = true];
 
   // Effective date
   int64 effective_date = 16;
@@ -271,12 +272,12 @@ message BonusPayment {
   string reason = 5;
 
   // Amount
-  l8common.Money target_amount = 6;
-  l8common.Money actual_amount = 7;
-  double payout_percentage = 8;
+  l8common.Money target_amount = 6 [(l8ai.AIMask) = true];
+  l8common.Money actual_amount = 7 [(l8ai.AIMask) = true];
+  double payout_percentage = 8 [(l8ai.AIMask) = true];
 
   // Performance factors
-  double individual_performance_factor = 9;
+  double individual_performance_factor = 9 [(l8ai.AIMask) = true];
   double team_performance_factor = 10;
   double company_performance_factor = 11;
 
@@ -326,7 +327,7 @@ message EquityGrant {
   int64 shares_granted = 6;
   l8common.Money grant_price = 7;             // Strike price for options
   l8common.Money fair_market_value = 8;
-  l8common.Money total_value = 9;
+  l8common.Money total_value = 9 [(l8ai.AIMask) = true];
 
   // Vesting
   VestingSchedule vesting_schedule = 10;
@@ -420,36 +421,36 @@ message CompensationStatement {
   int64 as_of_date = 4;
 
   // Base compensation
-  l8common.Money base_salary = 5;
-  l8common.Money hourly_equivalent = 6;
+  l8common.Money base_salary = 5 [(l8ai.AIMask) = true];
+  l8common.Money hourly_equivalent = 6 [(l8ai.AIMask) = true];
 
   // Variable pay
-  l8common.Money bonus_target = 7;
-  l8common.Money bonus_actual = 8;
-  l8common.Money commissions = 9;
+  l8common.Money bonus_target = 7 [(l8ai.AIMask) = true];
+  l8common.Money bonus_actual = 8 [(l8ai.AIMask) = true];
+  l8common.Money commissions = 9 [(l8ai.AIMask) = true];
 
   // Equity
-  l8common.Money equity_value = 10;
+  l8common.Money equity_value = 10 [(l8ai.AIMask) = true];
   int64 equity_shares = 11;
 
   // Benefits
-  l8common.Money employer_health_contribution = 12;
-  l8common.Money employer_dental_contribution = 13;
-  l8common.Money employer_vision_contribution = 14;
-  l8common.Money employer_life_contribution = 15;
-  l8common.Money employer_disability_contribution = 16;
-  l8common.Money employer_retirement_contribution = 17;
-  l8common.Money employer_hsa_contribution = 18;
+  l8common.Money employer_health_contribution = 12 [(l8ai.AIMask) = true];
+  l8common.Money employer_dental_contribution = 13 [(l8ai.AIMask) = true];
+  l8common.Money employer_vision_contribution = 14 [(l8ai.AIMask) = true];
+  l8common.Money employer_life_contribution = 15 [(l8ai.AIMask) = true];
+  l8common.Money employer_disability_contribution = 16 [(l8ai.AIMask) = true];
+  l8common.Money employer_retirement_contribution = 17 [(l8ai.AIMask) = true];
+  l8common.Money employer_hsa_contribution = 18 [(l8ai.AIMask) = true];
 
   // Other
-  l8common.Money employer_payroll_taxes = 19;
-  l8common.Money other_benefits_value = 20;
-  l8common.Money perks_value = 21;
+  l8common.Money employer_payroll_taxes = 19 [(l8ai.AIMask) = true];
+  l8common.Money other_benefits_value = 20 [(l8ai.AIMask) = true];
+  l8common.Money perks_value = 21 [(l8ai.AIMask) = true];
 
   // Totals
-  l8common.Money total_cash_compensation = 22;
-  l8common.Money total_benefits_value = 23;
-  l8common.Money total_compensation = 24;
+  l8common.Money total_cash_compensation = 22 [(l8ai.AIMask) = true];
+  l8common.Money total_benefits_value = 23 [(l8ai.AIMask) = true];
+  l8common.Money total_compensation = 24 [(l8ai.AIMask) = true];
 
   string pdf_url = 25;
   l8common.AuditInfo audit_info = 26;

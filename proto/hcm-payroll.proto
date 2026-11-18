@@ -22,6 +22,7 @@ option go_package = "./types/hcm";
 import "hcm-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // ============================================================================
 // PAYROLL MESSAGES
@@ -216,25 +217,25 @@ message Payslip {
   double total_hours = 11;
 
   // Pay details
-  repeated PayslipLine earnings = 12;
-  repeated PayslipLine deductions = 13;
-  repeated PayslipLine taxes = 14;
+  repeated PayslipLine earnings = 12 [(l8ai.AIMask) = true];
+  repeated PayslipLine deductions = 13 [(l8ai.AIMask) = true];
+  repeated PayslipLine taxes = 14 [(l8ai.AIMask) = true];
   repeated PayslipLine employer_contributions = 15;
 
   // Totals
-  l8common.Money gross_pay = 16;
-  l8common.Money total_deductions = 17;
-  l8common.Money total_taxes = 18;
-  l8common.Money net_pay = 19;
+  l8common.Money gross_pay = 16 [(l8ai.AIMask) = true];
+  l8common.Money total_deductions = 17 [(l8ai.AIMask) = true];
+  l8common.Money total_taxes = 18 [(l8ai.AIMask) = true];
+  l8common.Money net_pay = 19 [(l8ai.AIMask) = true];
 
   // Year-to-date
-  l8common.Money ytd_gross = 20;
-  l8common.Money ytd_deductions = 21;
-  l8common.Money ytd_taxes = 22;
-  l8common.Money ytd_net = 23;
+  l8common.Money ytd_gross = 20 [(l8ai.AIMask) = true];
+  l8common.Money ytd_deductions = 21 [(l8ai.AIMask) = true];
+  l8common.Money ytd_taxes = 22 [(l8ai.AIMask) = true];
+  l8common.Money ytd_net = 23 [(l8ai.AIMask) = true];
 
   // Payment info
-  repeated PaymentDistribution distributions = 24;
+  repeated PaymentDistribution distributions = 24 [(l8ai.AIMask) = true];
 
   l8common.AuditInfo audit_info = 25;
 }
@@ -282,14 +283,14 @@ message TaxWithholding {
   TaxType tax_type = 3;
   string tax_jurisdiction = 4;       // Federal, state code, locality
   string form_version = 5;           // W-4 2020, W-4 2019, etc.
-  FilingStatus filing_status = 6;
-  int32 allowances = 7;              // Old W-4 style
+  FilingStatus filing_status = 6 [(l8ai.AIMask) = true];
+  int32 allowances = 7 [(l8ai.AIMask) = true];              // Old W-4 style
   bool use_new_w4 = 8;               // 2020+ W-4
-  l8common.Money additional_withholding = 9;
+  l8common.Money additional_withholding = 9 [(l8ai.AIMask) = true];
   bool exempt = 10;
   int64 effective_date = 11;
   int64 signed_date = 12;
-  map<string, string> form_data = 13;  // Form-specific fields
+  map<string, string> form_data = 13 [(l8ai.AIMask) = true];  // Form-specific fields
   l8common.AuditInfo audit_info = 14;
 }
 
@@ -321,10 +322,10 @@ message DirectDepositList {
 message DirectDeposit {
   string direct_deposit_id = 1;
   string employee_id = 2;
-  string account_name = 3;
+  string account_name = 3 [(l8ai.AIMask) = true];
   string bank_name = 4;
-  string routing_number = 5;
-  string account_number_masked = 6;  // Only last 4 digits
+  string routing_number = 5 [(l8ai.AIMask) = true];
+  string account_number_masked = 6 [(l8ai.AIMask) = true];  // Only last 4 digits
   AccountType account_type = 7;
   DepositType deposit_type = 8;
   l8common.Money fixed_amount = 9;
@@ -360,15 +361,15 @@ message Garnishment {
   string garnishment_id = 1;
   string employee_id = 2;
   GarnishmentType garnishment_type = 3;
-  string case_number = 4;
+  string case_number = 4 [(l8ai.AIMask) = true];
   string issuing_authority = 5;
-  string payee_name = 6;
-  string payee_address = 7;
-  l8common.Money total_amount_owed = 8;
-  l8common.Money amount_per_period = 9;
-  double percentage = 10;
+  string payee_name = 6 [(l8ai.AIMask) = true];
+  string payee_address = 7 [(l8ai.AIMask) = true];
+  l8common.Money total_amount_owed = 8 [(l8ai.AIMask) = true];
+  l8common.Money amount_per_period = 9 [(l8ai.AIMask) = true];
+  double percentage = 10 [(l8ai.AIMask) = true];
   l8common.Money maximum_percentage = 11;     // Disposable income limit
-  l8common.Money amount_paid_to_date = 12;
+  l8common.Money amount_paid_to_date = 12 [(l8ai.AIMask) = true];
   int64 start_date = 13;
   int64 end_date = 14;
   int32 priority = 15;               // Processing order
@@ -416,7 +417,7 @@ message YearEndDocument {
   bool is_corrected = 10;
   string original_document_id = 11;  // If correction
   string file_url = 12;
-  map<string, string> box_data = 13; // Box values (W-2 boxes, etc.)
+  map<string, string> box_data = 13 [(l8ai.AIMask) = true]; // Box values (W-2 boxes, etc.)
   l8common.AuditInfo audit_info = 14;
 }
 

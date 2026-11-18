@@ -22,6 +22,7 @@ option go_package = "./types/doc";
 import "doc-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // =====================
 // ATTACHMENT
@@ -109,9 +110,9 @@ message DocEmailCapture {
   string capture_id = 1;
   string document_id = 2;                   // cross-ref: DocDocument (created)
   DocEmailCaptureStatus status = 3;
-  string from_address = 4;
-  string to_addresses = 5;
-  string cc_addresses = 6;
+  string from_address = 4 [(l8ai.AIMask) = true];
+  string to_addresses = 5 [(l8ai.AIMask) = true];
+  string cc_addresses = 6 [(l8ai.AIMask) = true];
   string subject = 7;
   string body_preview = 8;
   int64 received_date = 9;

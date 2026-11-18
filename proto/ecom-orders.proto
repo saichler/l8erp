@@ -22,6 +22,7 @@ option go_package = "./types/ecom";
 import "ecom-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // =====================
 // ORDER
@@ -44,8 +45,8 @@ message EcomOrder {
     string coupon_code = 12;
     string shipping_method_id = 13;         // cross-ref: EcomShippingMethod
     string payment_method_id = 14;          // cross-ref: EcomPaymentMethod
-    l8common.Address billing_address = 15;
-    l8common.Address shipping_address = 16;
+    l8common.Address billing_address = 15 [(l8ai.AIMask) = true];
+    l8common.Address shipping_address = 16 [(l8ai.AIMask) = true];
     string notes = 17;
     string customer_notes = 18;
     string ip_address = 19;

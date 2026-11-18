@@ -21,6 +21,7 @@ option go_package = "./types/bi";
 import "bi-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // ============================================================================
 // REPORTING MESSAGES
@@ -92,7 +93,7 @@ message BiReportSchedule {
   int64 next_run = 11;
   int64 last_run = 12;
   BiExportFormat output_format = 13;
-  string delivery_email = 14;
+  string delivery_email = 14 [(l8ai.AIMask) = true];
   bool is_active = 15;
   map<string, string> parameters = 16;
   map<string, string> custom_fields = 17;
@@ -136,7 +137,7 @@ message BiReportSubscription {
   string schedule_id = 3;                   // cross-ref: BiReportSchedule
   string subscriber_id = 4;                 // cross-ref: HCM Employee
   BiExportFormat format = 5;
-  string delivery_email = 6;
+  string delivery_email = 6 [(l8ai.AIMask) = true];
   bool include_empty = 7;
   bool is_active = 8;
   map<string, string> custom_fields = 9;

@@ -22,6 +22,7 @@ option go_package = "./types/doc";
 import "doc-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // =====================
 // CHECKOUT
@@ -104,12 +105,12 @@ message DocSignature {
   DocSignatureType signature_type = 4;
   DocSignatureStatus status = 5;
   string signer_id = 6;                     // cross-ref: HCM Employee
-  string signer_name = 7;
-  string signer_email = 8;
+  string signer_name = 7 [(l8ai.AIMask) = true];
+  string signer_email = 8 [(l8ai.AIMask) = true];
   int64 requested_date = 9;
   int64 signed_date = 10;
   int64 expiry_date = 11;
-  string signature_data = 12;
+  string signature_data = 12 [(l8ai.AIMask) = true];
   string certificate_id = 13;
   string ip_address = 14;
   string reason = 15;

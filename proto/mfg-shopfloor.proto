@@ -21,6 +21,7 @@ option go_package = "./types/mfg";
 import "mfg-common.proto";
 import "l8common.proto";
 import "api.proto";
+import "aimask.proto";
 
 // ============================================================================
 // WORK CENTER MESSAGES
@@ -89,7 +90,7 @@ message MfgLaborEntry {
   double quantity_completed = 9;
   double quantity_scrapped = 10;
   string labor_type = 11;                // DIRECT, INDIRECT, SETUP
-  double hourly_rate = 12;
+  double hourly_rate = 12 [(l8ai.AIMask) = true];
   l8common.Money labor_cost = 13;
   string notes = 14;
   l8common.AuditInfo audit_info = 15;
