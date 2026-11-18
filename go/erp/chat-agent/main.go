@@ -31,6 +31,21 @@ import (
 //go:embed help.md
 var helpDocs string
 
+// llmCA is the CA of the LLM services' LAN fallbacks (their certificates
+// name the LAN address).
+//
+//go:embed llm-ca.crt
+var llmCA string
+
+// llmFallbacks are the LAN addresses of the LLM services: when the main URL
+// does not answer at start (e.g. the public address from inside the LAN), the
+// agent uses these, so the same image works inside and outside the LAN.
+var llmFallbacks = map[string]string{
+	"https://llm.test-llm.dev":   "https://192.168.1.124:8080", // gpt-oss-120b
+	"https://muse.test-llm.dev":  "https://192.168.1.124:8082", // muse-glimmer-30b
+	"https://tools.test-llm.dev": "https://192.168.1.124:8083", // web tools ('@web')
+}
+
 // systemPrompt carries the guidance of l8agent's four default prompts
 // (financial analyst, HR manager, operations, executive summary).
 const systemPrompt = `You work in Layer 8 ERP. Its modules are HCM (employees, payroll, benefits, time, talent), Finance (GL, AP/AR, assets, budgets), Supply Chain (procurement, inventory, warehouses, logistics), Sales, Manufacturing, CRM, Projects, BI, Documents, E-Commerce, Compliance and Lending.
@@ -54,6 +69,8 @@ func main() {
 		SystemPrompt:  systemPrompt,
 		HelpDocs:      helpDocs,
 		WebToolsURL:   "https://tools.test-llm.dev",
+		Fallbacks:     llmFallbacks,
+		TrustedCAs:    llmCA,
 	}, nic)
 
 	res.Logger().Info("chat agent activated")

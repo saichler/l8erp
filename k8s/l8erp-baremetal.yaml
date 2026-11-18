@@ -460,11 +460,6 @@ spec:
       labels:
         app: erp-chat-agent
     spec:
-      # Tanto calls the LLM / web tools by name; inside the LAN their public IP
-      # does not loop back (kind-start.sh drops these off that LAN).
-      hostAliases:
-        - ip: "192.168.1.121"
-          hostnames: ["llm.test-llm.dev", "embed.test-llm.dev", "muse.test-llm.dev", "tools.test-llm.dev"]
       imagePullSecrets:
         - name: harbor-pull
       containers:
