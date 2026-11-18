@@ -4,7 +4,7 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 */
 // Chat on the mobile bundle: the Tanto thread's LLM profile picker (the same
 // thread view as the desktop) names the profiles and stores a choice, and the
-// desktop-only column folding is not offered.
+// desktop-only column folding and maximize are not offered.
 
 import { test, expect, assertNoPageErrors } from '../../fixtures/test';
 import { ENV } from '../../fixtures/env';
@@ -65,9 +65,10 @@ test.describe('chat LLM profile picker (mobile)', () => {
         assertNoPageErrors(consoleErrors);
     });
 
-    test('the column fold buttons are not offered on mobile', async ({ mobile, consoleErrors }) => {
+    test('the column fold and maximize buttons are not offered on mobile', async ({ mobile, consoleErrors }) => {
         const chat = new Chat(mobile, true);
         await chat.open();
+        await expect(chat.panel().locator('.l8chat-maximize'), 'mobile chat is already full screen').toHaveCount(0);
         await expect(chat.panel().locator('.l8chat-m-peers .l8chat-collapse')).toBeHidden();
         await chat.peer(TANTO).click();
         await expect(chat.panel().locator('.l8chat-m-convs.l8chat-m-active')).toBeVisible();

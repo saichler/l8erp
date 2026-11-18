@@ -123,6 +123,19 @@ export class Chat {
             `${what} (x ${b.x}..${b.x + b.width}) is clipped by the ${col} column (x ${c.x}..${c.x + c.width})`).toBe(true);
     }
 
+    // ---- maximize / restore (desktop) ----
+
+    maximizeButton(): Locator { return this.panel().locator('.l8chat-maximize'); }
+
+    /** Maximizes the panel to the window, or restores its normal size. */
+    async setMaximized(max: boolean): Promise<void> {
+        const isMax = await this.panel().evaluate((el) => el.classList.contains('l8chat-bubble-max'));
+        if (isMax !== max) await this.maximizeButton().click();
+        if (max) await expect(this.panel()).toHaveClass(/l8chat-bubble-max/);
+        else await expect(this.panel()).not.toHaveClass(/l8chat-bubble-max/);
+        await expect(this.maximizeButton()).toHaveAttribute('title', max ? 'Restore' : 'Maximize');
+    }
+
     async send(text: string): Promise<void> {
         await this.panel().locator('.l8chat-input').fill(text);
         await this.panel().locator('.l8chat-send').click();

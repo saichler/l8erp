@@ -11,6 +11,10 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 // on opening a conversation; choosing one is stored on the conversation and
 // stamped on the next message; it is absent from non-Tanto threads.
 //
+// Maximize: the header's maximize button fills the window with the panel and
+// restores it to its normal size; the choice stays across closing and
+// reopening the panel.
+//
 // Columns: the sidebar and the conversation list fold to the left into a
 // strip that still shows every status / unread dot (each row's name is its
 // tooltip), the folded rows still open what they open, and the folded state
@@ -216,6 +220,44 @@ test.describe('chat collapsible side columns', () => {
         await freshApp.reload();
         await chat.open();
         await expect(chat.column('sidebar')).not.toHaveClass(/l8chat-col-collapsed/);
+        assertNoPageErrors(consoleErrors);
+    });
+});
+
+test.describe('chat maximize', () => {
+    test('the panel maximizes to the window and restores to its size @smoke', async ({ app, consoleErrors }) => {
+        const chat = new Chat(app);
+        await chat.open();
+        try {
+            await chat.setMaximized(false);
+            const normal = (await chat.panel().boundingBox())!;
+            const viewport = app.viewportSize()!;
+            expect(normal.width, 'the normal panel already fills the window').toBeLessThan(viewport.width);
+
+            await chat.setMaximized(true);
+            await expect.poll(async () => {
+                const b = (await chat.panel().boundingBox())!;
+                return [Math.round(b.x), Math.round(b.y), Math.round(b.width), Math.round(b.height)];
+            }, { message: 'the maximized panel does not fill the window' })
+                .toEqual([0, 0, viewport.width, viewport.height]);
+            // Still usable: the header buttons and the chat are on screen.
+            await expect(chat.panel().locator('.l8chat-close')).toBeInViewport();
+            await expect(chat.peers().first()).toBeVisible();
+
+            // Closing and reopening keeps it maximized.
+            await chat.close();
+            await chat.open();
+            await expect(chat.panel()).toHaveClass(/l8chat-bubble-max/);
+
+            await chat.setMaximized(false);
+            await expect.poll(async () => {
+                const b = (await chat.panel().boundingBox())!;
+                return [Math.round(b.x), Math.round(b.y), Math.round(b.width), Math.round(b.height)];
+            }, { message: 'the panel did not restore to its normal size' })
+                .toEqual([Math.round(normal.x), Math.round(normal.y), Math.round(normal.width), Math.round(normal.height)]);
+        } finally {
+            await chat.setMaximized(false);
+        }
         assertNoPageErrors(consoleErrors);
     });
 });
