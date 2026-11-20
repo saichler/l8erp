@@ -154,6 +154,22 @@ spec:
               topologyKey: kubernetes.io/hostname
       imagePullSecrets:
         - name: harbor-pull
+      initContainers:
+        # Wait for the vnet on this node before starting: services connect to
+        # $NODE_IP and panic if the vnet does not answer their first requests.
+        # The extra sleep lets a vnet that just opened its port finish starting.
+        - name: wait-for-vnet
+          image: registry.layer-8.dev:44443/erp/erp-log-agent:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - for p in 48884 48891; do until nc -z -w 2 "$NODE_IP" "$p"; do echo "waiting for vnet $NODE_IP:$p"; sleep 2; done; done; sleep 10
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
       containers:
         - name: erp-log-agent
           image: registry.layer-8.dev:44443/erp/erp-log-agent:latest
@@ -209,6 +225,22 @@ spec:
               topologyKey: kubernetes.io/hostname
       imagePullSecrets:
         - name: harbor-pull
+      initContainers:
+        # Wait for the vnet on this node before starting: services connect to
+        # $NODE_IP and panic if the vnet does not answer their first requests.
+        # The extra sleep lets a vnet that just opened its port finish starting.
+        - name: wait-for-vnet
+          image: registry.layer-8.dev:44443/erp/erp:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - for p in 48884; do until nc -z -w 2 "$NODE_IP" "$p"; do echo "waiting for vnet $NODE_IP:$p"; sleep 2; done; done; sleep 10
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
       containers:
         - name: erp
           image: registry.layer-8.dev:44443/erp/erp:latest
@@ -254,6 +286,22 @@ spec:
     spec:
       imagePullSecrets:
         - name: harbor-pull
+      initContainers:
+        # Wait for the vnet on this node before starting: services connect to
+        # $NODE_IP and panic if the vnet does not answer their first requests.
+        # The extra sleep lets a vnet that just opened its port finish starting.
+        - name: wait-for-vnet
+          image: registry.layer-8.dev:44443/erp/erp-chat-orm:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - for p in 48884; do until nc -z -w 2 "$NODE_IP" "$p"; do echo "waiting for vnet $NODE_IP:$p"; sleep 2; done; done; sleep 10
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
       containers:
         - name: erp-chat-orm
           image: registry.layer-8.dev:44443/erp/erp-chat-orm:latest
@@ -309,6 +357,22 @@ spec:
                     app: erp-chat
       imagePullSecrets:
         - name: harbor-pull
+      initContainers:
+        # Wait for the vnet on this node before starting: services connect to
+        # $NODE_IP and panic if the vnet does not answer their first requests.
+        # The extra sleep lets a vnet that just opened its port finish starting.
+        - name: wait-for-vnet
+          image: registry.layer-8.dev:44443/erp/erp-chat:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - for p in 48884; do until nc -z -w 2 "$NODE_IP" "$p"; do echo "waiting for vnet $NODE_IP:$p"; sleep 2; done; done; sleep 10
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
       containers:
         - name: erp-chat
           image: registry.layer-8.dev:44443/erp/erp-chat:latest
@@ -363,6 +427,22 @@ spec:
                     app: erp-chat-router
       imagePullSecrets:
         - name: harbor-pull
+      initContainers:
+        # Wait for the vnet on this node before starting: services connect to
+        # $NODE_IP and panic if the vnet does not answer their first requests.
+        # The extra sleep lets a vnet that just opened its port finish starting.
+        - name: wait-for-vnet
+          image: registry.layer-8.dev:44443/erp/erp-chat-router:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - for p in 48884; do until nc -z -w 2 "$NODE_IP" "$p"; do echo "waiting for vnet $NODE_IP:$p"; sleep 2; done; done; sleep 10
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
       containers:
         - name: erp-chat-router
           image: registry.layer-8.dev:44443/erp/erp-chat-router:latest
@@ -417,6 +497,22 @@ spec:
                     app: erp-chat-users
       imagePullSecrets:
         - name: harbor-pull
+      initContainers:
+        # Wait for the vnet on this node before starting: services connect to
+        # $NODE_IP and panic if the vnet does not answer their first requests.
+        # The extra sleep lets a vnet that just opened its port finish starting.
+        - name: wait-for-vnet
+          image: registry.layer-8.dev:44443/erp/erp-chat-users:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - for p in 48884; do until nc -z -w 2 "$NODE_IP" "$p"; do echo "waiting for vnet $NODE_IP:$p"; sleep 2; done; done; sleep 10
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
       containers:
         - name: erp-chat-users
           image: registry.layer-8.dev:44443/erp/erp-chat-users:latest
@@ -462,6 +558,22 @@ spec:
     spec:
       imagePullSecrets:
         - name: harbor-pull
+      initContainers:
+        # Wait for the vnet on this node before starting: services connect to
+        # $NODE_IP and panic if the vnet does not answer their first requests.
+        # The extra sleep lets a vnet that just opened its port finish starting.
+        - name: wait-for-vnet
+          image: registry.layer-8.dev:44443/erp/erp-chat-agent:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - for p in 48884; do until nc -z -w 2 "$NODE_IP" "$p"; do echo "waiting for vnet $NODE_IP:$p"; sleep 2; done; done; sleep 10
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
       containers:
         - name: erp-chat-agent
           image: registry.layer-8.dev:44443/erp/erp-chat-agent:latest
@@ -514,6 +626,22 @@ spec:
               topologyKey: kubernetes.io/hostname
       imagePullSecrets:
         - name: harbor-pull
+      initContainers:
+        # Wait for the vnet on this node before starting: services connect to
+        # $NODE_IP and panic if the vnet does not answer their first requests.
+        # The extra sleep lets a vnet that just opened its port finish starting.
+        - name: wait-for-vnet
+          image: registry.layer-8.dev:44443/erp/erp-web:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - for p in 48884 48891; do until nc -z -w 2 "$NODE_IP" "$p"; do echo "waiting for vnet $NODE_IP:$p"; sleep 2; done; done; sleep 10
+          env:
+            - name: NODE_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
       containers:
         - name: erp-web
           image: registry.layer-8.dev:44443/erp/erp-web:latest
