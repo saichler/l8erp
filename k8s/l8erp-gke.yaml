@@ -141,7 +141,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp-log-agent:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c
@@ -198,7 +198,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c
@@ -254,7 +254,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp-chat-orm:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c
@@ -310,7 +310,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp-chat:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c
@@ -365,7 +365,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp-chat-router:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c
@@ -420,7 +420,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp-chat-users:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c
@@ -475,7 +475,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp-chat-agent:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c
@@ -529,7 +529,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp-web:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c

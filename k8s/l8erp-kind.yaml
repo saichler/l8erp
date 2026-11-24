@@ -32,7 +32,7 @@ spec:
       containers:
         - name: erp-vnet
           image: registry.layer-8.dev:44443/erp/erp-vnet:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: NODE_IP
               valueFrom:
@@ -77,7 +77,7 @@ spec:
       containers:
         - name: erp-logs-vnet
           image: registry.layer-8.dev:44443/erp/erp-logs-vnet:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: NODE_IP
               valueFrom:
@@ -124,7 +124,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp-log-agent:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c
@@ -137,7 +137,7 @@ spec:
       containers:
         - name: erp-log-agent
           image: registry.layer-8.dev:44443/erp/erp-log-agent:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: LOGPATH
               value: /data/logs/erp
@@ -186,7 +186,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c
@@ -199,7 +199,7 @@ spec:
       containers:
         - name: erp
           image: registry.layer-8.dev:44443/erp/erp:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: NODE_IP
               valueFrom:
@@ -245,7 +245,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp-chat-orm:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c
@@ -258,7 +258,7 @@ spec:
       containers:
         - name: erp-chat-orm
           image: registry.layer-8.dev:44443/erp/erp-chat-orm:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: NODE_IP
               valueFrom:
@@ -305,7 +305,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp-chat:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c
@@ -318,7 +318,7 @@ spec:
       containers:
         - name: erp-chat
           image: registry.layer-8.dev:44443/erp/erp-chat:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: NODE_IP
               valueFrom:
@@ -364,7 +364,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp-chat-router:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c
@@ -377,7 +377,7 @@ spec:
       containers:
         - name: erp-chat-router
           image: registry.layer-8.dev:44443/erp/erp-chat-router:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: NODE_IP
               valueFrom:
@@ -423,7 +423,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp-chat-users:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c
@@ -436,7 +436,7 @@ spec:
       containers:
         - name: erp-chat-users
           image: registry.layer-8.dev:44443/erp/erp-chat-users:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: NODE_IP
               valueFrom:
@@ -482,7 +482,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp-chat-agent:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c
@@ -495,7 +495,7 @@ spec:
       containers:
         - name: erp-chat-agent
           image: registry.layer-8.dev:44443/erp/erp-chat-agent:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: NODE_IP
               valueFrom:
@@ -541,7 +541,7 @@ spec:
         # The extra sleep lets a vnet that just opened its port finish starting.
         - name: wait-for-vnet
           image: registry.layer-8.dev:44443/erp/erp-web:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - sh
             - -c
@@ -554,7 +554,7 @@ spec:
       containers:
         - name: erp-web
           image: registry.layer-8.dev:44443/erp/erp-web:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           env:
             - name: NODE_IP
               valueFrom:
