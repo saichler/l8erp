@@ -23,8 +23,8 @@ limitations under the License.
     right: 0;
     height: calc(var(--bottom-nav-height) + var(--sab));
     padding-bottom: var(--sab);
-    background: var(--bg-primary);
-    border-top: 1px solid var(--border-light);
+    background: var(--layer8d-bg-white);
+    border-top: 1px solid var(--layer8d-border);
     display: flex;
     justify-content: space-around;
     align-items: stretch;
@@ -38,7 +38,7 @@ limitations under the License.
     align-items: center;
     justify-content: center;
     padding: var(--spacing-sm) var(--spacing-xs);
-    color: var(--text-secondary);
+    color: var(--layer8d-text-medium);
     text-decoration: none;
     transition: color var(--transition-fast);
     position: relative;
@@ -66,7 +66,7 @@ limitations under the License.
 }
 
 .nav-item:active {
-    background: var(--bg-tertiary);
+    background: var(--layer8d-bg-input);
 }
 
 .nav-icon {
@@ -129,7 +129,7 @@ limitations under the License.
     bottom: 0;
     left: 0;
     right: 0;
-    background: var(--bg-primary);
+    background: var(--layer8d-bg-white);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     max-height: 70vh;
     transform: translateY(100%);
@@ -154,7 +154,7 @@ limitations under the License.
     align-items: center;
     justify-content: space-between;
     padding: 0 var(--spacing-md) var(--spacing-md);
-    border-bottom: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--layer8d-border);
 }
 
 .more-drawer-title {
@@ -168,10 +168,10 @@ limitations under the License.
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-tertiary);
+    background: var(--layer8d-bg-input);
     border: none;
     border-radius: 50%;
-    color: var(--text-secondary);
+    color: var(--layer8d-text-medium);
     font-size: 20px;
 }
 
@@ -188,12 +188,12 @@ limitations under the License.
     grid-column: 1 / -1;
     font-size: var(--font-size-xs);
     font-weight: 600;
-    color: var(--text-secondary);
+    color: var(--layer8d-text-medium);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     padding: var(--spacing-sm) 0;
     margin-top: var(--spacing-sm);
-    border-top: 1px solid var(--border-light);
+    border-top: 1px solid var(--layer8d-border);
 }
 
 .more-menu-section-title:first-child {
@@ -208,16 +208,16 @@ limitations under the License.
     padding: var(--spacing-md);
     border-radius: var(--radius-md);
     text-decoration: none;
-    color: var(--text-primary);
+    color: var(--layer8d-text-dark);
     transition: background var(--transition-fast);
 }
 
 .more-menu-item:active {
-    background: var(--bg-tertiary);
+    background: var(--layer8d-bg-input);
 }
 
 .more-menu-item.active {
-    background: var(--bg-tertiary);
+    background: var(--layer8d-bg-input);
     color: var(--layer8d-primary);
 }
 
@@ -227,7 +227,7 @@ limitations under the License.
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-tertiary);
+    background: var(--layer8d-bg-input);
     border-radius: var(--radius-md);
     margin-bottom: var(--spacing-sm);
 }
@@ -250,7 +250,7 @@ limitations under the License.
 /* User section in drawer */
 .more-drawer-user {
     padding: var(--spacing-md);
-    border-top: 1px solid var(--border-light);
+    border-top: 1px solid var(--layer8d-border);
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
@@ -261,7 +261,7 @@ limitations under the License.
     height: 44px;
     border-radius: 50%;
     background: var(--layer8d-primary);
-    color: white;
+    color: var(--layer8d-on-primary, white);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -275,17 +275,17 @@ limitations under the License.
 
 .more-drawer-user-name {
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--layer8d-text-dark);
 }
 
 .more-drawer-user-role {
     font-size: var(--font-size-sm);
-    color: var(--text-secondary);
+    color: var(--layer8d-text-medium);
 }
 
 .more-drawer-logout {
     padding: var(--spacing-sm) var(--spacing-md);
-    background: var(--bg-tertiary);
+    background: var(--layer8d-bg-input);
     border: none;
     border-radius: var(--radius-md);
     color: var(--status-terminated);

@@ -38,7 +38,7 @@ limitations under the License.
     bottom: 0;
     width: 280px;
     max-width: 85vw;
-    background: var(--bg-primary);
+    background: var(--layer8d-bg-white);
     transform: translateX(-100%);
     transition: transform var(--transition-normal);
     z-index: 201;
@@ -54,7 +54,7 @@ limitations under the License.
 
 .sidebar-header {
     padding: var(--spacing-lg) var(--spacing-md);
-    border-bottom: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--layer8d-border);
     flex-shrink: 0;
 }
 
@@ -88,7 +88,7 @@ limitations under the License.
 .sidebar-section-title {
     font-size: var(--font-size-xs);
     font-weight: 600;
-    color: var(--text-secondary);
+    color: var(--layer8d-text-medium);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     padding: var(--spacing-sm) var(--spacing-md);
@@ -100,7 +100,7 @@ limitations under the License.
     gap: var(--spacing-sm);
     padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--radius-sm);
-    color: var(--text-primary);
+    color: var(--layer8d-text-dark);
     text-decoration: none;
     transition: background var(--transition-fast);
     font-size: var(--font-size-base);
@@ -108,7 +108,7 @@ limitations under the License.
 }
 
 .sidebar-item:active {
-    background: var(--bg-tertiary);
+    background: var(--layer8d-bg-input);
 }
 
 .sidebar-item.active {
@@ -141,7 +141,7 @@ limitations under the License.
     gap: var(--spacing-sm);
     padding: var(--spacing-xs) var(--spacing-md);
     border-radius: var(--radius-sm);
-    color: var(--text-secondary);
+    color: var(--layer8d-text-medium);
     text-decoration: none;
     font-size: var(--font-size-sm);
     transition: all var(--transition-fast);
@@ -156,7 +156,7 @@ limitations under the License.
 /* User section */
 .sidebar-user {
     padding: var(--spacing-md);
-    border-top: 1px solid var(--border-light);
+    border-top: 1px solid var(--layer8d-border);
     flex-shrink: 0;
     padding-bottom: calc(var(--spacing-md) + var(--sab));
 }
@@ -173,7 +173,7 @@ limitations under the License.
     height: 40px;
     border-radius: 50%;
     background: var(--layer8d-primary);
-    color: white;
+    color: var(--layer8d-on-primary, white);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -187,19 +187,19 @@ limitations under the License.
 
 .sidebar-user-name {
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--layer8d-text-dark);
     font-size: var(--font-size-base);
 }
 
 .sidebar-user-role {
     font-size: var(--font-size-sm);
-    color: var(--text-secondary);
+    color: var(--layer8d-text-medium);
 }
 
 .sidebar-logout-btn {
     width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
-    background: var(--bg-tertiary);
+    background: var(--layer8d-bg-input);
     border: none;
     border-radius: var(--radius-md);
     color: var(--status-terminated);
@@ -213,5 +213,5 @@ limitations under the License.
 }
 
 .sidebar-logout-btn:active {
-    background: var(--border-light);
+    background: var(--layer8d-border);
 }

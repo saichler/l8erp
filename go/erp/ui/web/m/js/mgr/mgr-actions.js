@@ -26,28 +26,24 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
         }
     };
 
-    // Shared PATCH helper (works for both desktop and mobile)
+    // Mobile PATCH helper. Feedback uses the mobile toasts (Layer8MUtils);
+    // Layer8DNotification is not loaded in the mobile shell, so the old
+    // typeof-guarded calls silently showed nothing.
     if (!MGR._patchStatus) {
         MGR._patchStatus = function(endpoint, data, successMsg) {
-            var headers;
-            if (typeof getAuthHeaders === 'function') {
-                headers = getAuthHeaders();
-            } else {
-                var token = Layer8MAuth.getBearerToken();
-                headers = { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' };
-            }
+            var token = Layer8MAuth.getBearerToken();
             fetch(Layer8DConfig.resolveEndpoint(endpoint), {
                 method: 'PATCH',
-                headers: headers,
+                headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             }).then(function(r) {
                 if (r.ok) {
-                    if (typeof Layer8DNotification !== 'undefined') Layer8DNotification.success(successMsg);
+                    Layer8MUtils.showSuccess(successMsg);
                 } else {
-                    if (typeof Layer8DNotification !== 'undefined') Layer8DNotification.error('Action failed.');
+                    Layer8MUtils.showError('Action failed (HTTP ' + r.status + ').');
                 }
-            }).catch(function() {
-                if (typeof Layer8DNotification !== 'undefined') Layer8DNotification.error('Network error.');
+            }).catch(function(e) {
+                Layer8MUtils.showError('Network error: ' + e.message);
             });
         };
     }

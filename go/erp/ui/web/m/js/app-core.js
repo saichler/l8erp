@@ -31,13 +31,21 @@ limitations under the License.
 
     // Global showErrorAndLogout for layer8d-module-filter.js compatibility
     window.showErrorAndLogout = function(message, detail) {
-        if (typeof Layer8MAuth !== 'undefined') {
-            Layer8MAuth.showErrorAndLogout(message, detail);
-        } else {
-            alert(message + (detail ? '\n\n' + detail : ''));
-            window.location.href = '/l8ui/login/';
-        }
+        Layer8MAuth.showErrorAndLogout(message, detail);
     };
+
+    // Fetch a startup resource the app cannot work without. Any failure throws
+    // (FailFastNoSilentFallback): a missing permissions map is read by l8ui as
+    // PERMISSIVE, and a missing currency cache breaks every Money field.
+    async function fetchRequiredJson(url, token, what) {
+        const resp = await fetch(url, {
+            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+        });
+        if (!resp.ok) throw new Error(what + ': ' + url + ' returned HTTP ' + resp.status);
+        const data = await resp.json();
+        if (data === null || typeof data !== 'object') throw new Error(what + ': ' + url + ' did not return an object');
+        return data;
+    }
 
     window.MobileApp = {
         /**
@@ -59,67 +67,59 @@ limitations under the License.
             // Get auth token for API calls
             const token = Layer8MAuth.getBearerToken();
 
-            // Load currency cache for Money form fields
+            // Required startup data: the per-type action permissions, then the
+            // currency + exchange-rate caches (Money fields). A failure stops
+            // the app.
             try {
-                const query = encodeURIComponent(JSON.stringify({ text: 'select * from Currency where isActive=true' }));
-                const resp = await fetch(`/erp/40/Currency?body=${query}`, {
-                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-                });
-                if (resp.ok) {
-                    const data = await resp.json();
-                    if (data.list && window.Layer8DUtils) Layer8DUtils.setCurrencyCache(data.list);
-                }
-            } catch (e) { console.warn('Failed to load currencies:', e); }
+                // Permissions first: everything after it is decided by them.
+                const perms = await fetchRequiredJson('/permissions', token, 'Permissions');
+                window.Layer8DPermissions = perms;
+                const canGet = (model) => Array.isArray(perms[model]) && perms[model].indexOf(5) !== -1;
 
-            // Load exchange rate cache for currency conversion
-            try {
-                const xrQuery = encodeURIComponent(JSON.stringify({ text: 'select * from ExchangeRate' }));
-                const xrResp = await fetch(`/erp/40/XchgRate?body=${xrQuery}`, {
-                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-                });
-                if (xrResp.ok) {
-                    const xrData = await xrResp.json();
-                    if (xrData.list && window.Layer8DUtils) Layer8DUtils.setExchangeRateCache(xrData.list);
+                // Currency caches only for accounts allowed to read them (the server
+                // answers an unpermitted read with an error); a fetch that is made
+                // and fails stops the app.
+                let currencies = [];
+                if (canGet('Currency')) {
+                    const query = encodeURIComponent(JSON.stringify({ text: 'select * from Currency where isActive=true' }));
+                    currencies = (await fetchRequiredJson(`/erp/40/Currency?body=${query}`, token, 'Currency cache')).list || [];
                 }
-            } catch (e) { console.warn('Failed to load exchange rates:', e); }
+                Layer8DUtils.setCurrencyCache(currencies);
 
-            // Load per-type action permissions for the current user
-            try {
-                const permResp = await fetch('/permissions', {
-                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
-                });
-                if (permResp.ok) {
-                    window.Layer8DPermissions = await permResp.json();
+                let rates = [];
+                if (canGet('ExchangeRate')) {
+                    const xrQuery = encodeURIComponent(JSON.stringify({ text: 'select * from ExchangeRate' }));
+                    rates = (await fetchRequiredJson(`/erp/40/XchgRate?body=${xrQuery}`, token, 'Exchange-rate cache')).list || [];
                 }
-            } catch (e) { console.warn('Failed to load permissions:', e); }
+                Layer8DUtils.setExchangeRateCache(rates);
+            } catch (e) {
+                console.error('ERP startup failed:', e);
+                window.showErrorAndLogout('The application could not load required data.', e.message);
+                throw e;
+            }
 
             // Load module configuration — blocks app if server not ready
-            if (typeof Layer8DModuleFilter !== 'undefined') {
-                const configLoaded = await Layer8DModuleFilter.load(token);
-                if (!configLoaded) return; // logout already triggered
-                this.applyModuleFilter();
-            }
+            const configLoaded = await Layer8DModuleFilter.load(token);
+            if (!configLoaded) return; // logout already triggered
+            this.applyModuleFilter();
 
             // Initialize portal switcher in header
-            if (typeof Layer8MPortalSwitcher !== 'undefined') {
-                const headerActions = document.querySelector('.header-actions');
-                if (headerActions) {
-                    Layer8MPortalSwitcher.init({
-                        container: headerActions,
-                        insertBefore: document.getElementById('refresh-btn'),
-                        apiPrefix: Layer8MConfig.getApiPrefix(),
-                        currentPath: window.location.pathname
-                    });
-                }
+            const headerActions = document.querySelector('.header-actions');
+            if (headerActions) {
+                Layer8MPortalSwitcher.init({
+                    container: headerActions,
+                    insertBefore: document.getElementById('refresh-btn'),
+                    apiPrefix: Layer8MConfig.getApiPrefix(),
+                    currentPath: window.location.pathname
+                });
             }
-
-            // Floating chat bubble (l8chat): users, groups and Tanto, the AI agent.
-            L8ChatBubbleMobile.init({ endpoints: ERP_CHAT_ENDPOINTS });
 
             // Initialize WebSocket for real-time updates
-            if (typeof Layer8DWebSocket !== 'undefined') {
-                Layer8DWebSocket.init();
-            }
+            Layer8DWebSocket.init();
+
+            // Floating chat bubble (l8chat): users, groups and Tanto, the AI agent.
+            // Mobile: after Layer8DWebSocket.init() (L8Chat rule).
+            L8ChatBubbleMobile.init({ endpoints: ERP_CHAT_ENDPOINTS });
 
             // Setup navigation
             this.initSidebar();
@@ -213,6 +213,12 @@ limitations under the License.
             if (!sectionUrl) {
                 console.error('Unknown section:', section);
                 return;
+            }
+
+            // Leaving the dashboard: release the home KPIs' live slot.
+            if (section !== 'dashboard' && window.MobileDashboardKpis) {
+                window.MobileDashboardKpis.stop();
+                window.MobileDashboardKpis = null;
             }
 
             // Update navigation state

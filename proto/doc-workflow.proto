@@ -112,7 +112,7 @@ message DocSignature {
   int64 expiry_date = 11;
   string signature_data = 12 [(l8ai.AIMask) = true];
   string certificate_id = 13;
-  string ip_address = 14;
+  string ip_address = 14 [(l8ai.AIMask) = true];
   string reason = 15;
   map<string, string> custom_fields = 16;
   l8common.AuditInfo audit_info = 17;

@@ -31,12 +31,37 @@ if kind get clusters 2>/dev/null | grep -q "^${CLUSTER_NAME}$"; then
   exit 1
 fi
 
+# Harbor pull credentials for the KIND nodes. The Harbor project is private
+# and every manifest uses imagePullPolicy: Always (a `kind load`-ed image is
+# not used), so the kubelet must authenticate. Kind's documented way: mount a
+# docker config.json at /var/lib/kubelet/config.json on every node. Only the
+# Harbor entry is copied out of the host's docker config.
+REGISTRY="registry.layer-8.dev:44443"
+REG_DIR="${HOME}/.cache/l8erp-kind"
+REG_CONFIG="${REG_DIR}/registry-config.json"
+mkdir -p "${REG_DIR}"
+chmod 700 "${REG_DIR}"
+( umask 077
+  python3 - "${HOME}/.docker/config.json" "${REGISTRY}" > "${REG_CONFIG}" <<'PYEOF'
+import json, sys
+cfg = json.load(open(sys.argv[1]))
+reg = sys.argv[2]
+auth = cfg.get('auths', {}).get(reg, {}).get('auth')
+if not auth:
+    sys.exit('no inline auth for %s in %s -- run: docker login %s' % (reg, sys.argv[1], reg))
+json.dump({'auths': {reg: {'auth': auth}}}, sys.stdout)
+PYEOF
+)
+
 # Write cluster config
-cat > "${SCRIPT_DIR}/${KIND_CONFIG}" <<'EOF'
+cat > "${SCRIPT_DIR}/${KIND_CONFIG}" <<EOF
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
   - role: control-plane
+    extraMounts:
+      - hostPath: ${REG_CONFIG}
+        containerPath: /var/lib/kubelet/config.json
     kubeadmConfigPatches:
       - |
         kind: InitConfiguration
@@ -45,6 +70,9 @@ nodes:
             - key: node-role.kubernetes.io/control-plane
               effect: NoSchedule
   - role: worker
+    extraMounts:
+      - hostPath: ${REG_CONFIG}
+        containerPath: /var/lib/kubelet/config.json
     extraPortMappings:
       - containerPort: 2773
         hostPort: 2773
@@ -60,8 +88,9 @@ kind create cluster --name "${CLUSTER_NAME}" --config "${SCRIPT_DIR}/${KIND_CONF
 echo "Waiting for nodes to be Ready..."
 "${KUBECTL[@]}" wait --for=condition=Ready nodes --all --timeout=120s
 
-# Images are pulled from Harbor (imagePullPolicy: Always); push changed images
-# to registry.layer-8.dev:44443/erp before starting. No `kind load`.
+# Images are pulled from Harbor (imagePullPolicy: Always) with the credentials
+# mounted above; push changed images to registry.layer-8.dev:44443/erp before
+# starting. No `kind load`.
 
 echo "Phase 1: Deploying namespace + vnets..."
 MANIFEST="${SCRIPT_DIR}/l8erp-kind.yaml"

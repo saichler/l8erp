@@ -99,9 +99,9 @@ message DocAccessLog {
   string user_id = 5;                       // cross-ref: HCM Employee
   string user_name = 6 [(l8ai.AIMask) = true];
   int64 access_date = 7;
-  string ip_address = 8;
-  string user_agent = 9;
-  string session_id = 10;
+  string ip_address = 8 [(l8ai.AIMask) = true];
+  string user_agent = 9 [(l8ai.AIMask) = true];
+  string session_id = 10 [(l8ai.AIMask) = true];
   bool success = 11;
   string failure_reason = 12;
   string details = 13;
@@ -158,8 +158,8 @@ message DocAuditTrail {
   string old_values = 10;                   // JSON of previous state
   string new_values = 11;                   // JSON of new state
   string change_summary = 12;
-  string ip_address = 13;
-  string session_id = 14;
+  string ip_address = 13 [(l8ai.AIMask) = true];
+  string session_id = 14 [(l8ai.AIMask) = true];
   map<string, string> custom_fields = 15;
   l8common.AuditInfo audit_info = 16;
 }

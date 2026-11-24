@@ -75,8 +75,8 @@ message CrmTechnician {
   repeated string skills = 7;
   string territory = 8;
   l8common.Address home_location = 9 [(l8ai.AIMask) = true];
-  double hourly_rate = 10;
-  double overtime_rate = 11;
+  double hourly_rate = 10 [(l8ai.AIMask) = true];
+  double overtime_rate = 11 [(l8ai.AIMask) = true];
   int32 max_daily_orders = 12;
   bool is_active = 13;
   map<string, string> custom_fields = 14;
@@ -168,7 +168,7 @@ message CrmServiceVisit {
   double travel_hours = 9;
   double travel_distance = 10;
   string work_performed = 11;
-  string customer_signature = 12;
+  string customer_signature = 12 [(l8ai.AIMask) = true];
   int32 customer_rating = 13;
   string customer_feedback = 14;
   l8common.Money labor_cost = 15;

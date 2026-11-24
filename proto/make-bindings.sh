@@ -17,8 +17,10 @@ docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-payroll.proto --mount type=bi
 docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-benefits.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-time_attendance.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-talent.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-performance.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-learning.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-compensation.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
+docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-equity.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 docker run --user "$(id -u):$(id -g)" -e PROTO=hcm-reports.proto --mount type=bind,source="$PWD",target=/home/proto/ -i registry.layer-8.dev:44443/library/protoc:latest
 
 # Financial Management

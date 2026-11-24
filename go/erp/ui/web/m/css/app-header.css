@@ -23,8 +23,8 @@ limitations under the License.
     right: 0;
     height: calc(var(--header-height) + var(--sat));
     padding-top: var(--sat);
-    background: var(--bg-primary);
-    border-bottom: 1px solid var(--border-light);
+    background: var(--layer8d-bg-white);
+    border-bottom: 1px solid var(--layer8d-border);
     display: flex;
     align-items: center;
     padding-inline: var(--spacing-md);
@@ -39,13 +39,13 @@ limitations under the License.
     justify-content: center;
     background: none;
     border: none;
-    color: var(--text-primary);
+    color: var(--layer8d-text-dark);
     border-radius: var(--radius-sm);
     transition: background var(--transition-fast);
 }
 
 .header-menu-btn:active {
-    background: var(--bg-tertiary);
+    background: var(--layer8d-bg-input);
 }
 
 .header-menu-btn svg {
@@ -58,7 +58,7 @@ limitations under the License.
     flex: 1;
     font-size: var(--font-size-lg);
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--layer8d-text-dark);
     margin-left: var(--spacing-sm);
     white-space: nowrap;
     overflow: hidden;
@@ -96,14 +96,14 @@ limitations under the License.
     justify-content: center;
     background: none;
     border: none;
-    color: var(--text-secondary);
+    color: var(--layer8d-text-medium);
     border-radius: var(--radius-sm);
     transition: all var(--transition-fast);
 }
 
 .header-action-btn:active {
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
+    background: var(--layer8d-bg-input);
+    color: var(--layer8d-text-dark);
 }
 
 .header-action-btn svg {
@@ -117,7 +117,7 @@ limitations under the License.
     gap: var(--spacing-sm);
     padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-full);
-    background: var(--bg-tertiary);
+    background: var(--layer8d-bg-input);
 }
 
 .header-user-avatar {
@@ -125,7 +125,7 @@ limitations under the License.
     height: 28px;
     border-radius: 50%;
     background: var(--layer8d-primary);
-    color: white;
+    color: var(--layer8d-on-primary, white);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -136,7 +136,7 @@ limitations under the License.
 .header-username {
     font-size: var(--font-size-sm);
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--layer8d-text-dark);
     max-width: 80px;
     white-space: nowrap;
     overflow: hidden;
@@ -155,12 +155,12 @@ limitations under the License.
 .page-title {
     font-size: var(--font-size-xl);
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--layer8d-text-dark);
 }
 
 .page-subtitle {
     font-size: var(--font-size-sm);
-    color: var(--text-secondary);
+    color: var(--layer8d-text-medium);
     margin-top: var(--spacing-xs);
 }
 

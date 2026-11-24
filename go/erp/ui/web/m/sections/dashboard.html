@@ -39,7 +39,7 @@ limitations under the License.
                 </svg>
             </div>
             <div class="nav-stat-content">
-                <div class="nav-stat-value" id="stat-pending">-</div>
+                <div class="nav-stat-value" id="stat-pending-leave">-</div>
                 <div class="nav-stat-label">Pending Leave</div>
             </div>
         </div>
@@ -53,7 +53,7 @@ limitations under the License.
                 </svg>
             </div>
             <div class="nav-stat-content">
-                <div class="nav-stat-value" id="stat-sales-orders">-</div>
+                <div class="nav-stat-value" id="stat-open-sales-orders">-</div>
                 <div class="nav-stat-label">Open Orders</div>
             </div>
         </div>
@@ -66,7 +66,7 @@ limitations under the License.
                 </svg>
             </div>
             <div class="nav-stat-content">
-                <div class="nav-stat-value" id="stat-cases">-</div>
+                <div class="nav-stat-value" id="stat-open-cases">-</div>
                 <div class="nav-stat-label">Open Cases</div>
             </div>
         </div>
@@ -79,7 +79,7 @@ limitations under the License.
                 </svg>
             </div>
             <div class="nav-stat-content">
-                <div class="nav-stat-value" id="stat-projects">-</div>
+                <div class="nav-stat-value" id="stat-active-projects">-</div>
                 <div class="nav-stat-label">Active Projects</div>
             </div>
         </div>
@@ -93,7 +93,7 @@ limitations under the License.
                 </svg>
             </div>
             <div class="nav-stat-content">
-                <div class="nav-stat-value" id="stat-invoices">-</div>
+                <div class="nav-stat-value" id="stat-pending-invoices">-</div>
                 <div class="nav-stat-label">Pending Invoices</div>
             </div>
         </div>
@@ -109,7 +109,7 @@ limitations under the License.
                 </svg>
             </div>
             <div class="nav-stat-content">
-                <div class="nav-stat-value" id="stat-pos">-</div>
+                <div class="nav-stat-value" id="stat-open-pos">-</div>
                 <div class="nav-stat-label">Open POs</div>
             </div>
         </div>
@@ -122,7 +122,7 @@ limitations under the License.
                 </svg>
             </div>
             <div class="nav-stat-content">
-                <div class="nav-stat-value" id="stat-wos">-</div>
+                <div class="nav-stat-value" id="stat-wos-in-progress">-</div>
                 <div class="nav-stat-label">WOs In Progress</div>
             </div>
         </div>
@@ -137,7 +137,7 @@ limitations under the License.
                 </svg>
             </div>
             <div class="nav-stat-content">
-                <div class="nav-stat-value" id="stat-dashboards">-</div>
+                <div class="nav-stat-value" id="stat-active-dashboards">-</div>
                 <div class="nav-stat-label">Dashboards</div>
             </div>
         </div>
@@ -153,7 +153,7 @@ limitations under the License.
                 </svg>
             </div>
             <div class="nav-stat-content">
-                <div class="nav-stat-value" id="stat-documents">-</div>
+                <div class="nav-stat-value" id="stat-total-documents">-</div>
                 <div class="nav-stat-label">Documents</div>
             </div>
         </div>
@@ -182,7 +182,7 @@ limitations under the License.
                 </svg>
             </div>
             <div class="nav-stat-content">
-                <div class="nav-stat-value" id="stat-incidents">-</div>
+                <div class="nav-stat-value" id="stat-open-incidents">-</div>
                 <div class="nav-stat-label">Incidents</div>
             </div>
         </div>
@@ -203,50 +203,24 @@ limitations under the License.
 </style>
 
 <script>
+// Mobile home KPIs: the same KPI definitions as the desktop dashboard
+// (dashboard/dashboard-config.js) and the same live mechanism (ErpLiveKpis):
+// registered under the 'm-dashboard' live slot, reloaded on pushed changes,
+// released when the shell leaves the dashboard (app-core.js).
 function initMobileDashboard() {
-    loadDashboardStats();
+    window.MobileDashboardKpis = ErpLiveKpis.start({
+        id: 'm-dashboard',
+        kpis: DashboardConfig.kpis,
+        resolveEndpoint: function(endpoint) { return Layer8MConfig.resolveEndpoint(endpoint); },
+        getJson: function(url) { return Layer8MAuth.get(url); },
+        render: function(kpi, count) {
+            var element = document.getElementById('stat-' + kpi.id);
+            if (!element) return;
+            element.textContent = count === null ? 'error' : String(count);
+            element.classList.toggle('error', count === null);
+        },
+        isShown: function() { return !!document.getElementById('nav-stats'); }
+    });
     Layer8MNav.showHome();
-}
-
-async function loadDashboardStats() {
-    const kpis = [
-        { id: 'stat-employees', endpoint: '/30/Employee', query: 'select * from Employee limit 1 page 0' },
-        { id: 'stat-pending', endpoint: '/30/LeaveReq', query: 'select * from LeaveRequest where status=2 limit 1 page 0' },
-        { id: 'stat-sales-orders', endpoint: '/60/SalesOrder', query: 'select * from SalesOrder where status=1 limit 1 page 0' },
-        { id: 'stat-cases', endpoint: '/80/CrmCase', query: 'select * from CrmCase where status=1 limit 1 page 0' },
-        { id: 'stat-projects', endpoint: '/90/PrjProj', query: 'select * from PrjProject where status=2 limit 1 page 0' },
-        { id: 'stat-invoices', endpoint: '/40/SalesInv', query: 'select * from SalesInvoice where status=1 limit 1 page 0' },
-        { id: 'stat-pos', endpoint: '/50/PurchOrder', query: 'select * from ScmPurchaseOrder where status=1 limit 1 page 0' },
-        { id: 'stat-wos', endpoint: '/70/MfgWorkOrd', query: 'select * from MfgWorkOrder where status=2 limit 1 page 0' },
-        { id: 'stat-dashboards', endpoint: '/35/BiDashbrd', query: 'select * from BiDashboard where status=2 limit 1 page 0' },
-        { id: 'stat-documents', endpoint: '/45/DocDoc', query: 'select * from DocDocument limit 1 page 0' },
-        { id: 'stat-ecom-orders', endpoint: '/100/EcomOrder', query: 'select * from EcomOrder where status=1 limit 1 page 0' },
-        { id: 'stat-incidents', endpoint: '/110/CompIncdnt', query: 'select * from CompIncident where status=1 limit 1 page 0' }
-    ];
-
-    // Load all KPIs in parallel
-    await Promise.all(kpis.map(kpi => loadKPI(kpi)));
-}
-
-async function loadKPI(kpi) {
-    try {
-        const body = encodeURIComponent(JSON.stringify({ text: kpi.query }));
-        const response = await Layer8MAuth.get(Layer8MConfig.resolveEndpoint(kpi.endpoint) + '?body=' + body);
-
-        const element = document.getElementById(kpi.id);
-        if (element) {
-            if (response && response.metadata?.keyCount?.counts) {
-                element.textContent = response.metadata.keyCount.counts.Total || 0;
-            } else {
-                element.textContent = '0';
-            }
-        }
-    } catch (error) {
-        console.error(`Failed to load KPI ${kpi.id}:`, error);
-        const element = document.getElementById(kpi.id);
-        if (element) {
-            element.textContent = '0';
-        }
-    }
 }
 </script>

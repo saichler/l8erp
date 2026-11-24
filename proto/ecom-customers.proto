@@ -150,8 +150,8 @@ message EcomCart {
     string coupon_code = 12;
     string currency_id = 13;
     int32 item_count = 14;
-    string ip_address = 15;
-    string user_agent = 16;
+    string ip_address = 15 [(l8ai.AIMask) = true];
+    string user_agent = 16 [(l8ai.AIMask) = true];
     map<string, string> custom_fields = 17;
     l8common.AuditInfo audit_info = 18;
 }

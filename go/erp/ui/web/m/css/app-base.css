@@ -77,8 +77,8 @@ body {
     font-family: var(--font-family);
     font-size: var(--font-size-base);
     line-height: 1.5;
-    color: var(--text-primary);
-    background: var(--bg-secondary);
+    color: var(--layer8d-text-dark);
+    background: var(--layer8d-bg-light);
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -180,23 +180,23 @@ button, .btn {
 
 .btn-primary {
     background: var(--layer8d-primary);
-    color: var(--text-light);
+    color: var(--layer8d-text-light);
 }
 
 .btn-secondary {
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
+    background: var(--layer8d-bg-input);
+    color: var(--layer8d-text-dark);
 }
 
 .btn-danger {
     background: var(--status-terminated);
-    color: var(--text-light);
+    color: var(--layer8d-text-light);
 }
 
 .btn-outline {
     background: transparent;
     border: 1px solid var(--border-default);
-    color: var(--text-primary);
+    color: var(--layer8d-text-dark);
 }
 
 .btn-full {
@@ -216,7 +216,7 @@ a:focus, button:focus {
     align-items: center;
     justify-content: center;
     min-height: 200px;
-    color: var(--text-muted);
+    color: var(--layer8d-text-muted);
     gap: var(--spacing-sm);
 }
 
@@ -224,7 +224,7 @@ a:focus, button:focus {
     content: '';
     width: 28px;
     height: 28px;
-    border: 3px solid var(--border-light);
+    border: 3px solid var(--layer8d-border);
     border-top-color: var(--layer8d-primary);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
@@ -250,7 +250,7 @@ a:focus, button:focus {
 .mobile-loading-spinner {
     width: 32px;
     height: 32px;
-    border: 3px solid var(--border-light);
+    border: 3px solid var(--layer8d-border);
     border-top-color: var(--layer8d-primary);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
@@ -258,7 +258,7 @@ a:focus, button:focus {
 
 .mobile-loading-text {
     font-size: var(--font-size-sm);
-    color: var(--text-secondary);
+    color: var(--layer8d-text-medium);
 }
 
 /* Toast notifications */
@@ -306,7 +306,7 @@ a:focus, button:focus {
     justify-content: center;
     padding: var(--spacing-xl);
     text-align: center;
-    color: var(--text-secondary);
+    color: var(--layer8d-text-medium);
 }
 
 .empty-state-icon {
@@ -318,32 +318,32 @@ a:focus, button:focus {
 .empty-state-title {
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-semibold);
-    color: var(--text-primary);
+    color: var(--layer8d-text-dark);
     margin-bottom: var(--spacing-xs);
 }
 
 .empty-state-message {
     font-size: var(--font-size-sm);
-    color: var(--text-muted);
+    color: var(--layer8d-text-muted);
 }
 
 /* Section container */
 .section-container {
-    background: var(--bg-secondary);
+    background: var(--layer8d-bg-light);
     min-height: 100%;
 }
 
 /* Card */
 .card {
-    background: var(--bg-card);
+    background: var(--layer8d-bg-card);
     border-radius: var(--radius-md);
-    border: 1px solid var(--border-light);
+    border: 1px solid var(--layer8d-border);
     overflow: hidden;
 }
 
 .card-header {
     padding: var(--spacing-md);
-    border-bottom: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--layer8d-border);
 }
 
 .card-body {
@@ -352,7 +352,7 @@ a:focus, button:focus {
 
 .card-footer {
     padding: var(--spacing-md);
-    border-top: 1px solid var(--border-light);
+    border-top: 1px solid var(--layer8d-border);
 }
 
 /* Scrollbar styles */
@@ -366,7 +366,7 @@ a:focus, button:focus {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--border-light);
+    background: var(--layer8d-border);
     border-radius: 2px;
 }
 

@@ -17,29 +17,12 @@ limitations under the License.
 window.initializeDashboard = function() {
     // Render the stats grid
     const statsGrid = document.getElementById('dashboard-stats-grid');
-    if (statsGrid && window.DashboardStats) {
-        statsGrid.innerHTML = DashboardStats.renderStatsGrid();
-    }
+    if (!statsGrid) throw new Error('dashboard: #dashboard-stats-grid not found');
+    statsGrid.innerHTML = DashboardStats.renderStatsGrid();
 
-    // Load all stats. loadAll registers every KPI query (synchronously, before
-    // its first request) under the 'dashboard' live slot, owned by this entry.
-    if (window.DashboardStats) {
-        DashboardStats.liveOwner = {};
-        DashboardStats.loadAll();
-    }
-
-    // Live KPIs: a pushed change to any KPI model reloads the counts (debounced,
-    // so a burst of changes reloads once). The listeners belong to the live
-    // slot, so re-entering the dashboard or evicting it removes them.
-    if (typeof Layer8DWebSocket !== 'undefined' && window.DashboardConfig && window.DashboardStats) {
-        var refreshTimer = null;
-        DashboardConfig.kpis.forEach(function(kpi) {
-            Layer8DWebSocket.listen('dashboard', DashboardStats.liveOwner, kpi.model, function() {
-                clearTimeout(refreshTimer);
-                refreshTimer = setTimeout(function() {
-                    DashboardStats.loadAll();
-                }, 1000);
-            });
-        });
-    }
+    // Live KPIs (ErpLiveKpis): every KPI query registers under the
+    // 'dashboard' live slot, a pushed change to any KPI model reloads the
+    // counts (debounced), and leaving the section releases the slot
+    // (js/sections.js -> DashboardStats.stop()).
+    DashboardStats.start();
 };

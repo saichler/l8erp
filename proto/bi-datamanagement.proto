@@ -38,13 +38,13 @@ message BiDataSource {
   string host = 6;
   int32 port = 7;
   string database = 8;
-  string username = 9;
+  string username = 9 [(l8ai.AIMask) = true];
   string schema = 10;
   BiConnectionStatus connection_status = 11;
   int64 last_connected = 12;
   int64 last_sync = 13;
   bool is_active = 14;
-  map<string, string> connection_params = 15;
+  map<string, string> connection_params = 15 [(l8ai.AIMask) = true];
   map<string, string> custom_fields = 16;
   l8common.AuditInfo audit_info = 17;
 }

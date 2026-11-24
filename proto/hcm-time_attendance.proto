@@ -105,9 +105,9 @@ message TimeEntry {
   bool is_billable = 19;
 
   // Location (for mobile clock)
-  double latitude = 20;
-  double longitude = 21;
-  string ip_address = 22;
+  double latitude = 20 [(l8ai.AIMask) = true];
+  double longitude = 21 [(l8ai.AIMask) = true];
+  string ip_address = 22 [(l8ai.AIMask) = true];
 
   l8common.AuditInfo audit_info = 23;
 }
@@ -150,7 +150,7 @@ message LeaveRequest {
   double total_hours = 7;
   double total_days = 8;
   LeaveRequestStatus status = 9;
-  string reason = 10;
+  string reason = 10 [(l8ai.AIMask) = true];
   bool is_partial_day = 11;
   string partial_day_type = 12;     // AM, PM, or specific hours
 

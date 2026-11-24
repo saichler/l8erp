@@ -77,8 +77,8 @@ function showErrorAndLogout(message, detail) {
     localStorage.removeItem('bearerToken');
     localStorage.removeItem('rememberedUser');
 
-    // If Layer8DPopup is available, show a blocking popup
-    if (typeof Layer8DPopup !== 'undefined') {
+    // Show a blocking popup (Layer8DPopup is required -- see erp-deps-check.js)
+    {
         Layer8DPopup.show({
             title: 'Session Error',
             content: '<div style="padding:16px;">' +
@@ -94,19 +94,26 @@ function showErrorAndLogout(message, detail) {
                 window.location.href = 'l8ui/login/index.html';
             }
         });
-    } else {
-        // Fallback if popup not loaded yet
-        alert(message + (detail ? '\n\n' + detail : ''));
-        window.location.href = 'l8ui/login/index.html';
     }
+}
+
+// Fetch a startup resource the app cannot work without. Any failure throws
+// (FailFastNoSilentFallback): a missing permissions map is read by l8ui as
+// PERMISSIVE, and a missing currency cache breaks every Money field.
+async function fetchRequiredJson(url, bearerToken, what) {
+    const resp = await fetch(url, {
+        headers: { 'Authorization': `Bearer ${bearerToken}`, 'Content-Type': 'application/json' }
+    });
+    if (!resp.ok) throw new Error(what + ': ' + url + ' returned HTTP ' + resp.status);
+    const data = await resp.json();
+    if (data === null || typeof data !== 'object') throw new Error(what + ': ' + url + ' did not return an object');
+    return data;
 }
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', async function() {
     // Load app configuration first
-    if (typeof Layer8DConfig !== 'undefined') {
-        await Layer8DConfig.load();
-    }
+    await Layer8DConfig.load();
 
     // Check if bearer token exists (user is logged in)
     // Using sessionStorage so session is cleared when browser tab is closed
@@ -127,58 +134,50 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.querySelector('.username').textContent = username;
 
     // Initialize portal switcher (non-blocking)
-    if (typeof Layer8DPortalSwitcher !== 'undefined') {
-        Layer8DPortalSwitcher.init({
-            container: document.querySelector('.header-right'),
-            insertBefore: document.querySelector('.user-menu'),
-            apiPrefix: Layer8DConfig.getApiPrefix(),
-            currentPath: window.location.pathname
-        });
+    Layer8DPortalSwitcher.init({
+        container: document.querySelector('.header-right'),
+        insertBefore: document.querySelector('.user-menu'),
+        apiPrefix: Layer8DConfig.getApiPrefix(),
+        currentPath: window.location.pathname
+    });
+
+    // Required startup data: the per-type action permissions, then the
+    // currency + exchange-rate caches (Money fields). A failure stops the app.
+    try {
+        // Permissions first: everything after it is decided by them.
+        const perms = await fetchRequiredJson('/permissions', bearerToken, 'Permissions');
+        window.Layer8DPermissions = perms;
+        const canGet = (model) => Array.isArray(perms[model]) && perms[model].indexOf(5) !== -1;
+
+        // Currency caches only for accounts allowed to read them (the server
+        // answers an unpermitted read with an error); a fetch that is made
+        // and fails stops the app.
+        let currencies = [];
+        if (canGet('Currency')) {
+            const query = encodeURIComponent(JSON.stringify({ text: 'select * from Currency where isActive=true' }));
+            currencies = (await fetchRequiredJson(`/erp/40/Currency?body=${query}`, bearerToken, 'Currency cache')).list || [];
+        }
+        Layer8DUtils.setCurrencyCache(currencies);
+
+        let rates = [];
+        if (canGet('ExchangeRate')) {
+            const xrQuery = encodeURIComponent(JSON.stringify({ text: 'select * from ExchangeRate' }));
+            rates = (await fetchRequiredJson(`/erp/40/XchgRate?body=${xrQuery}`, bearerToken, 'Exchange-rate cache')).list || [];
+        }
+        Layer8DUtils.setExchangeRateCache(rates);
+    } catch (e) {
+        console.error('ERP startup failed:', e);
+        showErrorAndLogout('The application could not load required data.', e.message);
+        throw e;
     }
-
-    // Load currency cache for Money form fields
-    try {
-        const query = encodeURIComponent(JSON.stringify({ text: 'select * from Currency where isActive=true' }));
-        const resp = await fetch(`/erp/40/Currency?body=${query}`, {
-            headers: { 'Authorization': `Bearer ${bearerToken}`, 'Content-Type': 'application/json' }
-        });
-        if (resp.ok) {
-            const data = await resp.json();
-            if (data.list) Layer8DUtils.setCurrencyCache(data.list);
-        }
-    } catch (e) { console.warn('Failed to load currencies:', e); }
-
-    // Load exchange rate cache for currency conversion
-    try {
-        const xrQuery = encodeURIComponent(JSON.stringify({ text: 'select * from ExchangeRate' }));
-        const xrResp = await fetch(`/erp/40/XchgRate?body=${xrQuery}`, {
-            headers: { 'Authorization': `Bearer ${bearerToken}`, 'Content-Type': 'application/json' }
-        });
-        if (xrResp.ok) {
-            const xrData = await xrResp.json();
-            if (xrData.list) Layer8DUtils.setExchangeRateCache(xrData.list);
-        }
-    } catch (e) { console.warn('Failed to load exchange rates:', e); }
-
-    // Load per-type action permissions for the current user
-    try {
-        const permResp = await fetch('/permissions', {
-            headers: { 'Authorization': `Bearer ${bearerToken}`, 'Content-Type': 'application/json' }
-        });
-        if (permResp.ok) {
-            window.Layer8DPermissions = await permResp.json();
-        }
-    } catch (e) { console.warn('Failed to load permissions:', e); }
 
     // Load module configuration — blocks app if server not ready
-    if (typeof Layer8DModuleFilter !== 'undefined') {
-        const configLoaded = await Layer8DModuleFilter.load(bearerToken);
-        if (!configLoaded) return; // logout already triggered
-        Layer8DModuleFilter.applyToSidebar();
-    }
+    const configLoaded = await Layer8DModuleFilter.load(bearerToken);
+    if (!configLoaded) return; // logout already triggered
+    Layer8DModuleFilter.applyToSidebar();
 
     // Apply permission-based nav filtering (hide modules/services user can't GET)
-    if (typeof Layer8DPermissionFilter !== 'undefined') {
+    {
         // Register resolver: maps section/module/service to model name via module configs
         // Section key -> the global that Layer8ModuleConfigFactory created, which
         // is literally `window[config.namespace]` -- so these must match each
@@ -227,12 +226,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     // Floating chat bubble (l8chat): users, groups and Tanto, the AI agent.
+    // Desktop: before Layer8DWebSocket.init() (L8Chat rule).
     L8ChatBubble.init({ endpoints: ERP_CHAT_ENDPOINTS });
 
     // Initialize WebSocket for real-time updates
-    if (typeof Layer8DWebSocket !== 'undefined') {
-        Layer8DWebSocket.init();
-    }
+    Layer8DWebSocket.init();
 
     // Load default section (dashboard)
     loadSection('dashboard');

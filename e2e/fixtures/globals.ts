@@ -58,7 +58,9 @@ export const DESKTOP_REQUIRED_GLOBALS = [
     // Chat (l8chat)
     'L8ChatApi', 'L8ChatStore', 'L8ChatLive', 'L8ChatSession', 'L8ChatFiles', 'L8ChatStatus',
     'L8ChatSidebar', 'L8ChatConvList', 'L8ChatComposer', 'L8ChatThread', 'L8ChatGroupDialog', 'L8ChatConvDialog',
-    'Layer8Markdown', 'ERP_CHAT_ENDPOINTS', 'L8ChatBubble'
+    'Layer8Markdown', 'ERP_CHAT_ENDPOINTS', 'L8ChatBubble',
+    // Live dashboard KPIs (erp-ui/erp-live-kpis.js)
+    'ErpLiveKpis', 'DashboardConfig', 'DashboardStats'
 ];
 
 /** Globals the mobile bundle must have -- its own plus the shared desktop ones. */
@@ -76,5 +78,7 @@ export const MOBILE_REQUIRED_GLOBALS = [
     // Chat (l8chat)
     'L8ChatApi', 'L8ChatStore', 'L8ChatLive', 'L8ChatSession', 'L8ChatFiles', 'L8ChatStatus',
     'L8ChatSidebar', 'L8ChatConvList', 'L8ChatComposer', 'L8ChatThread', 'L8ChatGroupDialog', 'L8ChatConvDialog',
-    'Layer8Markdown', 'ERP_CHAT_ENDPOINTS', 'L8ChatMobile', 'L8ChatBubbleMobile'
+    'Layer8Markdown', 'ERP_CHAT_ENDPOINTS', 'L8ChatMobile', 'L8ChatBubbleMobile',
+    // Live home KPIs (erp-ui/erp-live-kpis.js + dashboard/dashboard-config.js)
+    'ErpLiveKpis', 'DashboardConfig'
 ];

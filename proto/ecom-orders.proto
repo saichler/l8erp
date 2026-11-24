@@ -49,8 +49,8 @@ message EcomOrder {
     l8common.Address shipping_address = 16 [(l8ai.AIMask) = true];
     string notes = 17;
     string customer_notes = 18;
-    string ip_address = 19;
-    string user_agent = 20;
+    string ip_address = 19 [(l8ai.AIMask) = true];
+    string user_agent = 20 [(l8ai.AIMask) = true];
     string sales_order_id = 21;             // cross-ref: Sales SalesOrder
     string warehouse_id = 22;               // cross-ref: SCM Warehouse
     int64 shipped_date = 23;

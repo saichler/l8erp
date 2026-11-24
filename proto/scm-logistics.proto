@@ -20,6 +20,7 @@ option go_package = "./types/scm";
 
 import "scm-common.proto";
 import "l8common.proto";
+import "aimask.proto";
 import "api.proto";
 
 // ============================================================================
@@ -142,8 +143,8 @@ message ScmLoadPlanList {
 message ScmDeliveryProof {
   string proof_id = 1;
   int64 delivery_date = 3;
-  string received_by = 4;
-  string signature = 5;
+  string received_by = 4 [(l8ai.AIMask) = true];
+  string signature = 5 [(l8ai.AIMask) = true];
   string photo_url = 6;
   string notes = 7;
   string status = 8;

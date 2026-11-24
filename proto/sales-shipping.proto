@@ -115,7 +115,7 @@ message SalesDeliveryConfirm {
   string confirm_id = 1;
   int64 confirm_date = 2;
   string received_by = 3 [(l8ai.AIMask) = true];
-  string signature_path = 4;
+  string signature_path = 4 [(l8ai.AIMask) = true];
   string notes = 5;
   bool is_damaged = 6;
   string damage_description = 7;

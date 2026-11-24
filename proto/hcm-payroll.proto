@@ -220,7 +220,7 @@ message Payslip {
   repeated PayslipLine earnings = 12 [(l8ai.AIMask) = true];
   repeated PayslipLine deductions = 13 [(l8ai.AIMask) = true];
   repeated PayslipLine taxes = 14 [(l8ai.AIMask) = true];
-  repeated PayslipLine employer_contributions = 15;
+  repeated PayslipLine employer_contributions = 15 [(l8ai.AIMask) = true];
 
   // Totals
   l8common.Money gross_pay = 16 [(l8ai.AIMask) = true];

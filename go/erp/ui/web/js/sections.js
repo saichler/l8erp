@@ -34,76 +34,20 @@ const sections = {
 
 // Section initialization functions
 const sectionInitializers = {
-    dashboard: () => {
-        if (typeof initializeDashboard === 'function') {
-            initializeDashboard();
-        }
-    },
-    hcm: () => {
-        if (typeof initializeHCM === 'function') {
-            initializeHCM();
-        }
-    },
-    financial: () => {
-        if (typeof initializeFIN === 'function') {
-            initializeFIN();
-        }
-    },
-    scm: () => {
-        if (typeof initializeSCM === 'function') {
-            initializeSCM();
-        }
-    },
-    sales: () => {
-        if (typeof initializeSales === 'function') {
-            initializeSales();
-        }
-    },
-    crm: () => {
-        if (typeof initializeCrm === 'function') {
-            initializeCrm();
-        }
-    },
-    manufacturing: () => {
-        if (typeof initializeMfg === 'function') {
-            initializeMfg();
-        }
-    },
-    projects: () => {
-        if (typeof initializePrj === 'function') {
-            initializePrj();
-        }
-    },
-    bi: () => {
-        if (typeof initializeBi === 'function') {
-            initializeBi();
-        }
-    },
-    documents: () => {
-        if (typeof initializeDoc === 'function') {
-            initializeDoc();
-        }
-    },
-    ecommerce: () => {
-        if (typeof initializeEcom === 'function') {
-            initializeEcom();
-        }
-    },
-    compliance: () => {
-        if (typeof initializeComp === 'function') {
-            initializeComp();
-        }
-    },
-    lending: () => {
-        if (typeof initializeLending === 'function') {
-            initializeLending();
-        }
-    },
-    system: () => {
-        if (typeof initializeL8Sys === 'function') {
-            initializeL8Sys();
-        }
-    }
+    dashboard: () => initializeDashboard(),
+    hcm: () => initializeHCM(),
+    financial: () => initializeFIN(),
+    scm: () => initializeSCM(),
+    sales: () => initializeSales(),
+    crm: () => initializeCrm(),
+    manufacturing: () => initializeMfg(),
+    projects: () => initializePrj(),
+    bi: () => initializeBi(),
+    documents: () => initializeDoc(),
+    ecommerce: () => initializeEcom(),
+    compliance: () => initializeComp(),
+    lending: () => initializeLending(),
+    system: () => initializeL8Sys()
 };
 
 // Load section content dynamically
@@ -115,6 +59,10 @@ function loadSection(sectionName) {
         contentArea.innerHTML = '<div class="section-container"><h2 class="section-title">Error</h2><div class="section-content">Section not found.</div></div>';
         return;
     }
+
+    // Leaving the dashboard: release its live KPI slot so it does not hold
+    // one of the page's live slots (and its listeners) while hidden.
+    if (sectionName !== 'dashboard') DashboardStats.stop();
 
     // Add fade-out animation
     contentArea.style.opacity = '0';

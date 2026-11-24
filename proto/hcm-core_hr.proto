@@ -43,8 +43,8 @@ message Employee {
   int64 date_of_birth = 8 [(l8ai.AIMask) = true];
   Gender gender = 9 [(l8ai.AIMask) = true];
   MaritalStatus marital_status = 10 [(l8ai.AIMask) = true];
-  string nationality = 11;
-  string citizenship = 12;
+  string nationality = 11 [(l8ai.AIMask) = true];
+  string citizenship = 12 [(l8ai.AIMask) = true];
   string national_id = 13 [(l8ai.AIMask) = true];      // SSN, SIN, NI number, etc.
   string national_id_type = 14; // Type of national ID
 
@@ -72,7 +72,7 @@ message Employee {
   string cost_center_id = 31;
 
   // Photo
-  string photo_url = 32;
+  string photo_url = 32 [(l8ai.AIMask) = true];
 
   // Custom fields
   map<string, string> custom_fields = 33;

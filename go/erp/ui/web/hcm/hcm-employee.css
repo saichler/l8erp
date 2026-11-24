@@ -63,8 +63,8 @@ limitations under the License.
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-    color: white;
+    background: linear-gradient(135deg, var(--layer8d-primary) 0%, var(--layer8d-primary-dark) 100%);
+    color: var(--layer8d-on-primary, white);
     display: flex;
     align-items: center;
     justify-content: center;

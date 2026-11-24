@@ -15,69 +15,47 @@ limitations under the License.
 
 // Dashboard Stats Loader
 window.DashboardStats = {
-    // This dashboard instance as the owner of the 'dashboard' live slot;
-    // initializeDashboard replaces it on every entry, so a re-entry takes the
-    // slot over and drops the previous entry's listeners.
-    liveOwner: {},
+    // The live KPI handle (ErpLiveKpis) of the dashboard currently shown;
+    // initializeDashboard starts it, leaving the section stops it.
+    live: null,
 
-    // Load all KPI stats in parallel
-    async loadAll() {
+    // Start (or restart) the live KPIs under the 'dashboard' live slot.
+    start() {
         const config = window.DashboardConfig;
-        if (!config || !config.kpis) {
-            console.error('DashboardConfig not found');
-            return;
-        }
-
-        // Load all KPIs in parallel
-        const promises = config.kpis.map(kpi => this.loadKPI(kpi));
-        await Promise.all(promises);
+        if (!config || !config.kpis) throw new Error('DashboardConfig not found');
+        this.live = ErpLiveKpis.start({
+            id: 'dashboard',
+            kpis: config.kpis,
+            resolveEndpoint: (endpoint) => Layer8DConfig.resolveEndpoint(endpoint),
+            getJson: async (url) => {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json', ...getAuthHeaders() }
+                });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return response.json();
+            },
+            render: (kpi, count) => this.renderKPI(kpi, count),
+            isShown: () => !!document.getElementById('dashboard-stats-grid')
+        });
+        return this.live;
     },
 
-    // Load a single KPI
-    async loadKPI(kpi) {
+    // Stop the live KPIs (the user left the dashboard section).
+    stop() {
+        if (this.live) {
+            this.live.stop();
+            this.live = null;
+        }
+    },
+
+    // Render one KPI value; count === null means the load failed.
+    renderKPI(kpi, count) {
         const element = document.getElementById(`dashboard-stat-${kpi.id}`);
-        if (!element) {
-            return;
-        }
-
-        try {
-            // The dashboard is one live component: all its KPI queries register
-            // under one live slot ('dashboard'), so the server pushes changes to
-            // their models while the dashboard is among the live components.
-            const endpoint = Layer8DConfig.resolveEndpoint(kpi.endpoint);
-            const query = typeof Layer8DWebSocket !== 'undefined'
-                ? Layer8DWebSocket.registerQuery('dashboard', this.liveOwner, endpoint, kpi.query,
-                    { onReconnect: () => this.loadAll() })
-                : { text: kpi.query };
-            const body = encodeURIComponent(JSON.stringify(query));
-            const url = endpoint + '?body=' + body;
-
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...(typeof getAuthHeaders === 'function' ? getAuthHeaders() : {})
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            let count = 0;
-            if (data && data.metadata?.keyCount?.counts) {
-                count = data.metadata.keyCount.counts[kpi.countField] || 0;
-            }
-
-            element.textContent = this.formatNumber(count);
-            element.classList.remove('loading');
-        } catch (error) {
-            console.error(`Failed to load KPI ${kpi.id}:`, error);
-            element.textContent = '0';
-            element.classList.remove('loading');
-        }
+        if (!element) return;
+        element.textContent = count === null ? 'error' : this.formatNumber(count);
+        element.classList.toggle('error', count === null);
+        element.classList.remove('loading');
     },
 
     // Format large numbers with commas
@@ -93,17 +71,15 @@ window.DashboardStats = {
 
     // Navigate to module section when card is clicked
     navigateToSection(section) {
-        if (typeof loadSection === 'function') {
-            // Update active nav link
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-                if (link.dataset.section === section) {
-                    link.classList.add('active');
-                }
-            });
-            // Load the section
-            loadSection(section);
-        }
+        // Update active nav link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+            if (link.dataset.section === section) {
+                link.classList.add('active');
+            }
+        });
+        // Load the section
+        loadSection(section);
     },
 
     // Render the stats grid

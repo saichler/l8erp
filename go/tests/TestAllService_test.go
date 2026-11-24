@@ -55,7 +55,6 @@ func TestAllServices(t *testing.T) {
 	dbcred := erpServicesVnic.Resources().SysConfig().DataStoreConfig.Type
 	dbname := erpServicesVnic.Resources().SysConfig().DataStoreConfig.Name
 	services.ActivateAllServices(dbcred, dbname, erpServicesVnic)
-	services.ActivateChatService(dbcred, dbname, erpServicesVnic)
 	// 2. Start web server on the web service vNic (non-blocking)
 	port := 9443
 	startWebServer(port, webServiceVnic)

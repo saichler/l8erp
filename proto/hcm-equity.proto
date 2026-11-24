@@ -1,0 +1,215 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package hcm;
+
+option go_package = "./types/hcm";
+
+
+import "l8common.proto";
+import "api.proto";
+import "aimask.proto";
+
+// ============================================================================
+// EQUITY, COMPENSATION STATEMENTS AND MARKET BENCHMARKS
+// (split from hcm-compensation.proto -- file size limit)
+// ============================================================================
+
+// @PrimeObject
+// EquityGrant represents stock/equity grants
+message EquityGrant {
+  string grant_id = 1;
+  string employee_id = 2;
+  string plan_id = 3;
+  EquityGrantType grant_type = 4;
+  string grant_number = 5;
+
+  // Grant details
+  int64 shares_granted = 6 [(l8ai.AIMask) = true];
+  l8common.Money grant_price = 7;             // Strike price for options
+  l8common.Money fair_market_value = 8;
+  l8common.Money total_value = 9 [(l8ai.AIMask) = true];
+
+  // Vesting
+  VestingSchedule vesting_schedule = 10;
+  int64 shares_vested = 11 [(l8ai.AIMask) = true];
+  int64 shares_unvested = 12 [(l8ai.AIMask) = true];
+  int64 shares_exercised = 13 [(l8ai.AIMask) = true];
+  int64 shares_forfeited = 14;
+  int64 shares_cancelled = 15;
+
+  // Dates
+  int64 grant_date = 16;
+  int64 vest_start_date = 17;
+  int64 expiration_date = 18;
+
+  EquityGrantStatus status = 19;
+
+  // Approval
+  string approved_by = 20;
+  int64 approved_date = 21;
+  string board_approval_date = 22;
+
+  string agreement_document_id = 23;
+  string notes = 24;
+  l8common.AuditInfo audit_info = 25;
+}
+
+message EquityGrantList {
+  repeated EquityGrant list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum EquityGrantType {
+  EQUITY_GRANT_TYPE_UNSPECIFIED = 0;
+  EQUITY_GRANT_TYPE_ISO = 1;         // Incentive stock options
+  EQUITY_GRANT_TYPE_NSO = 2;         // Non-qualified stock options
+  EQUITY_GRANT_TYPE_RSU = 3;         // Restricted stock units
+  EQUITY_GRANT_TYPE_RSA = 4;         // Restricted stock awards
+  EQUITY_GRANT_TYPE_ESPP = 5;        // Employee stock purchase plan
+  EQUITY_GRANT_TYPE_PHANTOM = 6;     // Phantom stock
+  EQUITY_GRANT_TYPE_SAR = 7;         // Stock appreciation rights
+}
+
+enum EquityGrantStatus {
+  EQUITY_GRANT_STATUS_UNSPECIFIED = 0;
+  EQUITY_GRANT_STATUS_PENDING = 1;
+  EQUITY_GRANT_STATUS_ACTIVE = 2;
+  EQUITY_GRANT_STATUS_FULLY_VESTED = 3;
+  EQUITY_GRANT_STATUS_EXERCISED = 4;
+  EQUITY_GRANT_STATUS_EXPIRED = 5;
+  EQUITY_GRANT_STATUS_FORFEITED = 6;
+  EQUITY_GRANT_STATUS_CANCELLED = 7;
+}
+
+message VestingSchedule {
+  VestingType vesting_type = 1;
+  int32 cliff_months = 2;
+  int32 total_months = 3;
+  VestingFrequency frequency = 4;
+  double cliff_percentage = 5;
+  repeated VestingMilestone milestones = 6;
+}
+
+enum VestingType {
+  VESTING_TYPE_UNSPECIFIED = 0;
+  VESTING_TYPE_TIME_BASED = 1;
+  VESTING_TYPE_PERFORMANCE_BASED = 2;
+  VESTING_TYPE_HYBRID = 3;
+  VESTING_TYPE_IMMEDIATE = 4;
+}
+
+enum VestingFrequency {
+  VESTING_FREQUENCY_UNSPECIFIED = 0;
+  VESTING_FREQUENCY_MONTHLY = 1;
+  VESTING_FREQUENCY_QUARTERLY = 2;
+  VESTING_FREQUENCY_ANNUALLY = 3;
+}
+
+message VestingMilestone {
+  int64 date = 1;
+  double percentage = 2;
+  int64 shares = 3;
+  bool is_cliff = 4;
+}
+
+// @PrimeObject
+// CompensationStatement represents a total compensation statement
+message CompensationStatement {
+  string statement_id = 1;
+  string employee_id = 2;
+  int32 statement_year = 3;
+  int64 as_of_date = 4;
+
+  // Base compensation
+  l8common.Money base_salary = 5 [(l8ai.AIMask) = true];
+  l8common.Money hourly_equivalent = 6 [(l8ai.AIMask) = true];
+
+  // Variable pay
+  l8common.Money bonus_target = 7 [(l8ai.AIMask) = true];
+  l8common.Money bonus_actual = 8 [(l8ai.AIMask) = true];
+  l8common.Money commissions = 9 [(l8ai.AIMask) = true];
+
+  // Equity
+  l8common.Money equity_value = 10 [(l8ai.AIMask) = true];
+  int64 equity_shares = 11 [(l8ai.AIMask) = true];
+
+  // Benefits
+  l8common.Money employer_health_contribution = 12 [(l8ai.AIMask) = true];
+  l8common.Money employer_dental_contribution = 13 [(l8ai.AIMask) = true];
+  l8common.Money employer_vision_contribution = 14 [(l8ai.AIMask) = true];
+  l8common.Money employer_life_contribution = 15 [(l8ai.AIMask) = true];
+  l8common.Money employer_disability_contribution = 16 [(l8ai.AIMask) = true];
+  l8common.Money employer_retirement_contribution = 17 [(l8ai.AIMask) = true];
+  l8common.Money employer_hsa_contribution = 18 [(l8ai.AIMask) = true];
+
+  // Other
+  l8common.Money employer_payroll_taxes = 19 [(l8ai.AIMask) = true];
+  l8common.Money other_benefits_value = 20 [(l8ai.AIMask) = true];
+  l8common.Money perks_value = 21 [(l8ai.AIMask) = true];
+
+  // Totals
+  l8common.Money total_cash_compensation = 22 [(l8ai.AIMask) = true];
+  l8common.Money total_benefits_value = 23 [(l8ai.AIMask) = true];
+  l8common.Money total_compensation = 24 [(l8ai.AIMask) = true];
+
+  string pdf_url = 25;
+  l8common.AuditInfo audit_info = 26;
+}
+
+message CompensationStatementList {
+  repeated CompensationStatement list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+// @PrimeObject
+// MarketBenchmark for compensation benchmarking
+message MarketBenchmark {
+  string benchmark_id = 1;
+  string organization_id = 2;
+  string job_id = 3;
+  string job_title = 4;
+  string survey_source = 5;
+  int32 survey_year = 6;
+  string market_definition = 7;      // Geographic/industry scope
+
+  // Market data
+  l8common.Money market_25th = 8;
+  l8common.Money market_50th = 9;
+  l8common.Money market_75th = 10;
+  l8common.Money market_90th = 11;
+  l8common.Money market_average = 12;
+
+  // Total compensation data
+  l8common.Money total_cash_25th = 13;
+  l8common.Money total_cash_50th = 14;
+  l8common.Money total_cash_75th = 15;
+
+  // Comparison
+  l8common.Money internal_average = 16;
+  double market_index = 17;          // Internal vs market ratio
+
+  int64 effective_date = 18;
+  int64 expiration_date = 19;
+
+  string notes = 20;
+  l8common.AuditInfo audit_info = 21;
+}
+
+message MarketBenchmarkList {
+  repeated MarketBenchmark list = 1;
+  l8api.L8MetaData metadata = 2;
+}

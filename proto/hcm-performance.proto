@@ -1,0 +1,361 @@
+/*
+© 2025 Sharon Aicler (saichler@gmail.com)
+
+Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
+You may obtain a copy of the License at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package hcm;
+
+option go_package = "./types/hcm";
+
+
+import "l8common.proto";
+import "api.proto";
+import "aimask.proto";
+
+
+// ============================================================================
+// PERFORMANCE, GOALS, SUCCESSION, CAREER AND 360 FEEDBACK MESSAGES
+// (split from hcm-talent.proto -- file size limit)
+// ============================================================================
+
+// @PrimeObject
+// PerformanceReview represents a performance evaluation
+message PerformanceReview {
+  string review_id = 1;
+  string employee_id = 2;
+  string reviewer_id = 3;
+  ReviewCycle review_cycle = 4;
+  l8common.DateRange review_period = 5;
+  PerformanceReviewStatus status = 6;
+  ReviewType review_type = 7;
+
+  // Ratings
+  repeated CompetencyRating competencies = 8;
+  repeated GoalRating goals = 9;
+  int32 overall_rating = 10 [(l8ai.AIMask) = true];         // 1-5 scale
+  string overall_rating_label = 11 [(l8ai.AIMask) = true];  // Exceeds, Meets, etc.
+
+  // Comments
+  string employee_comments = 12 [(l8ai.AIMask) = true];
+  string manager_comments = 13 [(l8ai.AIMask) = true];
+  string summary = 14 [(l8ai.AIMask) = true];
+
+  // Development
+  string development_plan = 15 [(l8ai.AIMask) = true];
+  repeated string training_recommendations = 16;
+
+  // Acknowledgment
+  int64 employee_acknowledged_date = 17;
+  int64 manager_submitted_date = 18;
+  string hr_reviewer_id = 19;
+  int64 hr_approved_date = 20;
+
+  // Calibration
+  bool is_calibrated = 21;
+  string calibration_notes = 22 [(l8ai.AIMask) = true];
+
+  map<string, string> custom_fields = 23;
+  l8common.AuditInfo audit_info = 24;
+}
+
+message PerformanceReviewList {
+  repeated PerformanceReview list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+message ReviewCycle {
+  string cycle_id = 1;
+  string name = 2;
+  int32 year = 3;
+  l8common.DateRange period = 4;
+}
+
+enum PerformanceReviewStatus {
+  PERFORMANCE_REVIEW_STATUS_UNSPECIFIED = 0;
+  PERFORMANCE_REVIEW_STATUS_NOT_STARTED = 1;
+  PERFORMANCE_REVIEW_STATUS_SELF_REVIEW = 2;
+  PERFORMANCE_REVIEW_STATUS_MANAGER_REVIEW = 3;
+  PERFORMANCE_REVIEW_STATUS_CALIBRATION = 4;
+  PERFORMANCE_REVIEW_STATUS_HR_REVIEW = 5;
+  PERFORMANCE_REVIEW_STATUS_ACKNOWLEDGMENT = 6;
+  PERFORMANCE_REVIEW_STATUS_COMPLETED = 7;
+}
+
+enum ReviewType {
+  REVIEW_TYPE_UNSPECIFIED = 0;
+  REVIEW_TYPE_ANNUAL = 1;
+  REVIEW_TYPE_SEMI_ANNUAL = 2;
+  REVIEW_TYPE_QUARTERLY = 3;
+  REVIEW_TYPE_PROBATIONARY = 4;
+  REVIEW_TYPE_PROJECT = 5;
+  REVIEW_TYPE_AD_HOC = 6;
+}
+
+message CompetencyRating {
+  string competency_id = 1;
+  string competency_name = 2;
+  int32 rating = 3 [(l8ai.AIMask) = true];
+  string rating_label = 4 [(l8ai.AIMask) = true];
+  string comments = 5 [(l8ai.AIMask) = true];
+}
+
+message GoalRating {
+  string goal_id = 1;
+  string goal_name = 2;
+  int32 rating = 3 [(l8ai.AIMask) = true];
+  string rating_label = 4 [(l8ai.AIMask) = true];
+  double completion_percentage = 5;
+  string comments = 6 [(l8ai.AIMask) = true];
+}
+
+// @PrimeObject
+// Goal represents an employee goal
+message Goal {
+  string goal_id = 1;
+  string employee_id = 2;
+  string parent_goal_id = 3;         // For cascading goals
+  string title = 4;
+  string description = 5;
+  GoalType goal_type = 6;
+  GoalCategory goal_category = 7;
+  GoalStatus status = 8;
+  GoalPriority priority = 9;
+
+  // Dates
+  int64 start_date = 10;
+  int64 due_date = 11;
+  int64 completed_date = 12;
+
+  // Progress
+  double completion_percentage = 13;
+  double weight = 14;                // For weighted goals
+
+  // Key results (OKR style)
+  repeated KeyResult key_results = 15;
+
+  // Alignment
+  repeated string aligned_goal_ids = 16;
+
+  // Comments
+  repeated GoalComment comments = 17;
+
+  // Review link
+  string review_id = 18;
+
+  map<string, string> custom_fields = 19;
+  l8common.AuditInfo audit_info = 20;
+}
+
+message GoalList {
+  repeated Goal list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum GoalType {
+  GOAL_TYPE_UNSPECIFIED = 0;
+  GOAL_TYPE_INDIVIDUAL = 1;
+  GOAL_TYPE_TEAM = 2;
+  GOAL_TYPE_DEPARTMENT = 3;
+  GOAL_TYPE_COMPANY = 4;
+}
+
+enum GoalCategory {
+  GOAL_CATEGORY_UNSPECIFIED = 0;
+  GOAL_CATEGORY_PERFORMANCE = 1;
+  GOAL_CATEGORY_DEVELOPMENT = 2;
+  GOAL_CATEGORY_CAREER = 3;
+  GOAL_CATEGORY_PROJECT = 4;
+}
+
+enum GoalStatus {
+  GOAL_STATUS_UNSPECIFIED = 0;
+  GOAL_STATUS_DRAFT = 1;
+  GOAL_STATUS_ACTIVE = 2;
+  GOAL_STATUS_ON_TRACK = 3;
+  GOAL_STATUS_AT_RISK = 4;
+  GOAL_STATUS_BEHIND = 5;
+  GOAL_STATUS_COMPLETED = 6;
+  GOAL_STATUS_CANCELLED = 7;
+}
+
+enum GoalPriority {
+  GOAL_PRIORITY_UNSPECIFIED = 0;
+  GOAL_PRIORITY_LOW = 1;
+  GOAL_PRIORITY_MEDIUM = 2;
+  GOAL_PRIORITY_HIGH = 3;
+  GOAL_PRIORITY_CRITICAL = 4;
+}
+
+message KeyResult {
+  string key_result_id = 1;
+  string description = 2;
+  double target_value = 3;
+  double current_value = 4;
+  string unit = 5;
+  double completion_percentage = 6;
+}
+
+message GoalComment {
+  string comment_id = 1;
+  string author_id = 2;
+  string content = 3;
+  int64 created_date = 4;
+}
+
+// @PrimeObject
+// SuccessionPlan for succession planning
+message SuccessionPlan {
+  string plan_id = 1;
+  string position_id = 2;            // Key position being planned for
+  string incumbent_id = 3;           // Current holder
+  SuccessionPlanStatus status = 4;
+  RiskLevel vacancy_risk = 5;
+  string impact_assessment = 6;
+
+  repeated SuccessionCandidate candidates = 7;
+
+  int64 review_date = 8;
+  int64 next_review_date = 9;
+  string notes = 10;
+  l8common.AuditInfo audit_info = 11;
+}
+
+message SuccessionPlanList {
+  repeated SuccessionPlan list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum SuccessionPlanStatus {
+  SUCCESSION_PLAN_STATUS_UNSPECIFIED = 0;
+  SUCCESSION_PLAN_STATUS_DRAFT = 1;
+  SUCCESSION_PLAN_STATUS_ACTIVE = 2;
+  SUCCESSION_PLAN_STATUS_ON_HOLD = 3;
+  SUCCESSION_PLAN_STATUS_CLOSED = 4;
+}
+
+enum RiskLevel {
+  RISK_LEVEL_UNSPECIFIED = 0;
+  RISK_LEVEL_LOW = 1;
+  RISK_LEVEL_MEDIUM = 2;
+  RISK_LEVEL_HIGH = 3;
+  RISK_LEVEL_CRITICAL = 4;
+}
+
+message SuccessionCandidate {
+  string employee_id = 1;
+  ReadinessLevel readiness = 2;
+  string development_needs = 3 [(l8ai.AIMask) = true];
+  repeated string development_actions = 4;
+  int32 ranking = 5;
+  string notes = 6 [(l8ai.AIMask) = true];
+}
+
+enum ReadinessLevel {
+  READINESS_LEVEL_UNSPECIFIED = 0;
+  READINESS_LEVEL_READY_NOW = 1;
+  READINESS_LEVEL_READY_1_YEAR = 2;
+  READINESS_LEVEL_READY_2_YEARS = 3;
+  READINESS_LEVEL_READY_3_PLUS_YEARS = 4;
+}
+
+// @PrimeObject
+// CareerPath represents career development paths
+message CareerPath {
+  string career_path_id = 1;
+  string name = 2;
+  string description = 3;
+  string job_family_id = 4;
+  repeated CareerPathStep steps = 5;
+  bool is_active = 6;
+  l8common.AuditInfo audit_info = 7;
+}
+
+message CareerPathList {
+  repeated CareerPath list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+message CareerPathStep {
+  int32 step_order = 1;
+  string job_id = 2;
+  string job_title = 3;
+  string job_level = 4;
+  repeated string required_skills = 5;
+  repeated string required_certifications = 6;
+  string experience_requirement = 7;
+  int32 typical_tenure_months = 8;
+}
+
+// @PrimeObject
+// Feedback for 360-degree feedback
+message Feedback {
+  string feedback_id = 1;
+  string employee_id = 2;            // Employee receiving feedback
+  string provider_id = 3;            // Employee giving feedback
+  FeedbackType feedback_type = 4;
+  string review_cycle_id = 5;
+  FeedbackRelationship relationship = 6;
+  FeedbackStatus status = 7;
+
+  repeated FeedbackQuestion responses = 8;
+
+  string general_comments = 9 [(l8ai.AIMask) = true];
+  bool is_anonymous = 10;
+
+  int64 requested_date = 11;
+  int64 due_date = 12;
+  int64 submitted_date = 13;
+
+  l8common.AuditInfo audit_info = 14;
+}
+
+message FeedbackList {
+  repeated Feedback list = 1;
+  l8api.L8MetaData metadata = 2;
+}
+
+enum FeedbackType {
+  FEEDBACK_TYPE_UNSPECIFIED = 0;
+  FEEDBACK_TYPE_360_REVIEW = 1;
+  FEEDBACK_TYPE_PEER = 2;
+  FEEDBACK_TYPE_UPWARD = 3;
+  FEEDBACK_TYPE_CONTINUOUS = 4;
+  FEEDBACK_TYPE_RECOGNITION = 5;
+}
+
+enum FeedbackRelationship {
+  FEEDBACK_RELATIONSHIP_UNSPECIFIED = 0;
+  FEEDBACK_RELATIONSHIP_MANAGER = 1;
+  FEEDBACK_RELATIONSHIP_PEER = 2;
+  FEEDBACK_RELATIONSHIP_DIRECT_REPORT = 3;
+  FEEDBACK_RELATIONSHIP_SKIP_LEVEL = 4;
+  FEEDBACK_RELATIONSHIP_CROSS_FUNCTIONAL = 5;
+  FEEDBACK_RELATIONSHIP_EXTERNAL = 6;
+}
+
+enum FeedbackStatus {
+  FEEDBACK_STATUS_UNSPECIFIED = 0;
+  FEEDBACK_STATUS_REQUESTED = 1;
+  FEEDBACK_STATUS_IN_PROGRESS = 2;
+  FEEDBACK_STATUS_SUBMITTED = 3;
+  FEEDBACK_STATUS_DECLINED = 4;
+}
+
+message FeedbackQuestion {
+  string question_id = 1;
+  string question_text = 2;
+  string response_type = 3;          // rating, text, choice
+  int32 rating_response = 4 [(l8ai.AIMask) = true];
+  string text_response = 5 [(l8ai.AIMask) = true];
+}

@@ -23,7 +23,6 @@ Layer 8 Ecosystem is licensed under the Apache License, Version 2.0.
 import { test, expect } from '../../fixtures/test';
 import { DesktopNav } from '../../pages/DesktopNav';
 import { DesktopTable } from '../../pages/DesktopTable';
-import { QueryRecorder } from '../../fixtures/queries';
 
 test.describe('realtime', () => {
     test('the websocket client is loaded and connects @smoke', async ({ app }) => {
@@ -121,7 +120,12 @@ test.describe('realtime', () => {
         }
     });
 
-    test('an open table shows another client\'s add and delete without re-fetching', async ({ app, api }) => {
+    test('an open table shows another client\'s add and delete, re-fetching its page live', async ({ app, api }) => {
+        // l8ui live-change contract (3a68362): the server pushes only changes
+        // that belong to a view's displayed page. An add, or a delete of a row
+        // on the page, re-fetches the page under the table's live registerId,
+        // which also re-registers it so the server's page snapshot follows --
+        // that is what makes the later delete of the new row reach this table.
         const nav = new DesktopNav(app);
         await nav.openSection('hcm');
         await nav.openModule('core-hr');
@@ -129,30 +133,39 @@ test.describe('realtime', () => {
         const table = new DesktopTable(app, 'core-hr', 'job-families');
         await table.waitForResolved();
 
+        const registerId = 'core-hr-job-families-table-container';
+        const liveRefetches: string[] = [];
+        const onRequest = (r: { url(): string }) => {
+            const url = r.url();
+            if (!url.includes('/30/JobFamily?body=')) return;
+            const body = new URL(url).searchParams.get('body');
+            if (body && body.includes(`"registerId":"${registerId}"`) &&
+                !body.includes('L8_REGISTER_UNREGISTER')) liveRefetches.push(body);
+        };
+
         const code = `E2ERT${Date.now()}`;
         const row = table.root.locator('.l8-table tbody tr').filter({ hasText: code });
-        const queries = QueryRecorder.forPage(app);
         let id = '';
+        app.on('request', onRequest);
         try {
-            const before = queries.forModel('JobFamily').length;
             await api.post('/30/JobFamily', { code, name: `E2E Realtime ${code}`, description: 'realtime probe' });
             const created = await api.query('/30/JobFamily', `select * from JobFamily where code=${code}`);
             id = String(created.list[0]?.jobFamilyId ?? '');
 
-            // A live add lands at the top of page 1, straight from the push.
             await expect(row, 'the row another client created never appeared in the open table')
                 .toHaveCount(1, { timeout: 15000 });
+            const afterAdd = liveRefetches.length;
+            expect(afterAdd, 'the pushed add did not re-fetch (and re-register) the live page').toBeGreaterThan(0);
 
             await api.deleteById('/30/JobFamily', 'JobFamily', 'jobFamilyId', id);
             id = '';
-            await expect(row, 'the row another client deleted is still in the open table')
+            await expect(row, 'the row another client deleted is still in the open table -- ' +
+                'the server never pushed the delete because the page snapshot was not re-registered')
                 .toHaveCount(0, { timeout: 15000 });
-
-            expect(
-                queries.forModel('JobFamily').length,
-                'the table re-fetched to show the change -- live updates must apply the pushed record'
-            ).toBe(before);
+            expect(liveRefetches.length, 'the pushed delete of an on-page row did not re-fetch the page')
+                .toBeGreaterThan(afterAdd);
         } finally {
+            app.off('request', onRequest);
             if (id) await api.deleteById('/30/JobFamily', 'JobFamily', 'jobFamilyId', id).catch(() => undefined);
         }
     });
