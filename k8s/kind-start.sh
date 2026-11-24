@@ -60,28 +60,8 @@ kind create cluster --name "${CLUSTER_NAME}" --config "${SCRIPT_DIR}/${KIND_CONF
 echo "Waiting for nodes to be Ready..."
 "${KUBECTL[@]}" wait --for=condition=Ready nodes --all --timeout=120s
 
-echo "Loading Docker images into KIND cluster..."
-IMAGES=(
-  registry.layer-8.dev:44443/erp/erp-vnet:latest
-  registry.layer-8.dev:44443/erp/erp-logs-vnet:latest
-  registry.layer-8.dev:44443/erp/erp-log-agent:latest
-  registry.layer-8.dev:44443/erp/erp:latest
-  registry.layer-8.dev:44443/erp/erp-web:latest
-  registry.layer-8.dev:44443/erp/erp-chat-orm:latest
-  registry.layer-8.dev:44443/erp/erp-chat:latest
-  registry.layer-8.dev:44443/erp/erp-chat-router:latest
-  registry.layer-8.dev:44443/erp/erp-chat-users:latest
-  registry.layer-8.dev:44443/erp/erp-chat-agent:latest
-)
-
-for img in "${IMAGES[@]}"; do
-  if docker image inspect "$img" &>/dev/null; then
-    echo "  Loading $img..."
-    kind load docker-image "$img" --name "${CLUSTER_NAME}"
-  else
-    echo "  SKIP $img (not found locally — will pull from registry)"
-  fi
-done
+# Images are pulled from Harbor (imagePullPolicy: Always); push changed images
+# to registry.layer-8.dev:44443/erp before starting. No `kind load`.
 
 echo "Phase 1: Deploying namespace + vnets..."
 MANIFEST="${SCRIPT_DIR}/l8erp-kind.yaml"
