@@ -31,6 +31,7 @@
                 <div class="logo-subtitle">Built on Layer 8</div>
             </div>
             <ul class="nav-links">
+                <li><a href="ai.html" class="nav-ai">AI &amp; Security</a></li>
                 <li><a href="architecture.html">Architecture</a></li>
                 <li><a href="modules.html">Modules</a></li>
                 <li><a href="proof.html">Proof</a></li>
@@ -41,7 +42,7 @@
             </ul>
             <div class="nav-buttons">
                 <iframe src="https://github.com/sponsors/saichler/button" title="Sponsor saichler" height="32" width="114" style="border: 0; border-radius: 6px; vertical-align: middle;"></iframe>
-                <a href="#" data-modal="demo" class="demo-button">Demo</a>
+                <a href="#" data-modal="demo" class="demo-button">Live Demo</a>
                 <a href="start.html" class="cta-button">Start</a>
             </div>
         </nav>
@@ -50,33 +51,35 @@
     <main>
         <section class="hero">
             <div class="container hero-layout">
-                <div id="demoBanner" class="demo-banner">
-                    <div class="demo-banner-content">
-                        <span class="demo-banner-text">Live demo available</span>
-                        <a href="#" data-modal="demo" class="demo-banner-link">Try it now &rarr;</a>
+                <div id="demoCta" class="demo-cta">
+                    <div class="demo-cta-text">
+                        <span class="demo-cta-live"><span class="demo-cta-pulse"></span>Live demo &middot; open now</span>
+                        <strong>Try the full ERP and the Tanto AI agent yourself.</strong>
+                        <span class="demo-cta-creds">Username <code>operator</code> &middot; Password <code>Oper123!</code></span>
                     </div>
-                    <button class="demo-banner-close" onclick="dismissDemoBanner()" title="Dismiss">&times;</button>
+                    <a href="#" data-modal="demo" class="demo-cta-button">Launch the live demo &rarr;</a>
                 </div>
-                <p class="hero-eyebrow">ERP / Layer 8 Product</p>
-                <h1>One operating system for finance, people, supply chain, projects, manufacturing, and control functions.</h1>
-                <p class="hero-summary">ERP by Layer 8 is a multi-domain enterprise platform built as explicit service groups and shared UI primitives, not a stack of unrelated modules behind a common login.</p>
-                <p class="hero-secondary">It is designed for operators who need accounting, workforce, inventory, production, analytics, documents, and compliance to behave like one system with shared structure, shared workflows, and shared runtime conventions.</p>
+                <p class="hero-eyebrow">ERP / Layer 8 Product &middot; Privacy-first AI</p>
+                <h1>The ERP with an AI agent that never sees your sensitive data.</h1>
+                <p class="hero-summary">Ask Tanto, the AI agent built into ERP by Layer 8, about headcount, payables, inventory or pipeline and get answers from your real data. Salaries, national IDs, bank accounts, contact details and other sensitive fields are replaced with tokens <em>before</em> anything reaches the language model, and restored only in the answer shown to you.</p>
+                <p class="hero-secondary">Tanto runs every query as the person asking, with that person's permissions. It has no account, no password and no back door. Behind it is a full ERP: 256 services across finance, people, supply chain, manufacturing, sales, CRM, projects, BI, documents, compliance and lending.</p>
                 <div class="hero-proof">
                     <div class="proof-item">
-                        <span class="proof-label">Coverage</span>
-                        <strong>Finance, HCM, SCM, MFG, CRM, BI, docs, projects, lending</strong>
+                        <span class="proof-label">Sensitive data</span>
+                        <strong>Masked before the LLM: 237 fields marked in the data model</strong>
                     </div>
                     <div class="proof-item">
-                        <span class="proof-label">System shape</span>
-                        <strong>256 services across 13 module families</strong>
+                        <span class="proof-label">AI identity</span>
+                        <strong>Runs as you, with your permissions. No AI superuser.</strong>
                     </div>
                     <div class="proof-item">
-                        <span class="proof-label">UI model</span>
-                        <strong>Shared shell, shared popups, shared view types</strong>
+                        <span class="proof-label">Your model</span>
+                        <strong>Hosted or self-hosted LLMs, chosen per conversation</strong>
                     </div>
                 </div>
                 <div class="hero-buttons">
-                    <a href="start.html" class="btn-primary">Start</a>
+                    <a href="#" data-modal="demo" class="btn-primary">Launch the live demo</a>
+                    <a href="ai.html" class="btn-secondary">How the AI keeps data safe</a>
                     <a href="https://github.com/saichler/l8erp" target="_blank" class="btn-secondary">GitHub</a>
                 </div>
                 <div class="hero-badges">
@@ -85,6 +88,101 @@
                     <span class="badge">Kubernetes Ready</span>
                     <span class="badge">Zero JS Dependencies</span>
                     <span class="badge">Layer 8 UI</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="ai-differentiators" id="ai">
+            <div class="section-header">
+                <div class="container">
+                    <p class="section-kicker">Why Tanto is different</p>
+                    <h2>Most AI assistants send your records to the model. Tanto sends tokens.</h2>
+                    <p>Tanto is a participant in the ERP's built-in team chat. It answers questions with live queries against the system. It was designed so that a leaked prompt, a curious model provider or an over-eager agent never exposes what it should not.</p>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="container">
+                    <div class="features-grid ai-grid">
+                        <div class="feature-card ai-card reveal">
+                            <span class="ai-card-tag">Data never leaks to the LLM</span>
+                            <h3>Sensitive fields are masked by design</h3>
+                            <p>Every sensitive field is declared once in the data model. Before a query result reaches the model, its value and any total over it become a token such as <code>[MASK_7QX2KD]</code>. The model reasons over tokens; you see the real values.</p>
+                        </div>
+                        <div class="feature-card ai-card reveal">
+                            <span class="ai-card-tag">Runs as you</span>
+                            <h3>Your permissions, not an AI superuser</h3>
+                            <p>Every tool call runs with the identity of the person asking, so row scope and deny rules apply exactly as they do in the app. If your session expires, the AI stops instead of retrying under another identity.</p>
+                        </div>
+                        <div class="feature-card ai-card reveal">
+                            <span class="ai-card-tag">No credentials to steal</span>
+                            <h3>The agent is not a user</h3>
+                            <p>Tanto has no login, password or role. Its replies are accepted only from verified agent instances on the current turn, so no browser token can post as Tanto.</p>
+                        </div>
+                        <div class="feature-card ai-card reveal">
+                            <span class="ai-card-tag">Typed text is protected too</span>
+                            <h3>Free text is masked by shape</h3>
+                            <p>Social security numbers, money amounts, emails and phone numbers that people type into the chat are tokenized before they reach the model, and so are conversation summaries.</p>
+                        </div>
+                        <div class="feature-card ai-card reveal">
+                            <span class="ai-card-tag">Bounded queries</span>
+                            <h3>No bulk extraction</h3>
+                            <p>An unbounded <code>select *</code> is rejected. Lists are capped at 100 rows, and totals must use aggregates (count, sum, avg, min, max), which keeps record-level data out of the model.</p>
+                        </div>
+                        <div class="feature-card ai-card reveal">
+                            <span class="ai-card-tag">Your model, your choice</span>
+                            <h3>Hosted or on-premise LLMs</h3>
+                            <p>Administrators configure LLM providers and profiles centrally (Anthropic, or any OpenAI-compatible endpoint, including models on your own servers), and users pick a profile per conversation. The demo runs on self-hosted open-weight models.</p>
+                        </div>
+                    </div>
+                    <div class="compare-table-wrap reveal">
+                        <table class="compare-table">
+                            <thead>
+                                <tr><th></th><th>Typical bolt-on AI assistant</th><th>Tanto in ERP by Layer 8</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Sensitive values</td><td>Sent to the model provider in clear text</td><td>Replaced with tokens before the model; restored only for you</td></tr>
+                                <tr><td>Identity</td><td>A service account or broad API key</td><td>The requesting user, with their permissions</td></tr>
+                                <tr><td>Agent credentials</td><td>A bot account that can be stolen</td><td>None; the agent is not a user</td></tr>
+                                <tr><td>Data volume</td><td>Whatever the tool returns</td><td>Bounded lists, aggregates for totals</td></tr>
+                                <tr><td>Model choice</td><td>One vendor's cloud</td><td>Any provider, including self-hosted, per conversation</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="hero-buttons ai-actions">
+                        <a href="ai.html" class="btn-primary">Read how it works</a>
+                        <a href="#" data-modal="demo" class="btn-secondary">Ask Tanto in the live demo</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="latest">
+            <div class="section-header">
+                <div class="container">
+                    <p class="section-kicker">Latest</p>
+                    <h2>What is new in the platform.</h2>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="container">
+                    <div class="features-grid">
+                        <div class="feature-card reveal">
+                            <h3>Built-in team chat</h3>
+                            <p>Direct messages, groups, presence and file sharing in a bubble on every screen, on desktop and mobile. Tanto is pinned at the top. The chat runs as its own scalable services, designed for 20,000 users.</p>
+                        </div>
+                        <div class="feature-card reveal">
+                            <h3>Live everywhere</h3>
+                            <p>Open tables, dashboard KPIs and chat update over websockets as other people change the data. There is no refresh button to remember.</p>
+                        </div>
+                        <div class="feature-card reveal">
+                            <h3>Tested on Kubernetes</h3>
+                            <p>770 end-to-end browser tests, desktop and mobile, run against the real images deployed on a Kubernetes cluster.</p>
+                        </div>
+                        <div class="feature-card reveal">
+                            <h3>Fails loudly, never silently</h3>
+                            <p>Startup checks every dependency and stops with a visible error instead of half-working, so problems surface on day one.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -146,6 +244,7 @@
                 </div>
             </div>
             <div class="footer-links">
+                <a href="ai.html">AI &amp; Security</a>
                 <a href="architecture.html">Architecture</a>
                 <a href="modules.html">Modules</a>
                 <a href="proof.html">Proof</a>

@@ -1,4 +1,4 @@
-@media (max-width: 1080px) {
+@media (max-width: 1280px) {
     nav {
         flex-wrap: wrap;
     }
@@ -54,8 +54,13 @@
     .btn-primary,
     .btn-secondary,
     .cta-button,
-    .demo-button {
+    .demo-button,
+    .demo-cta-button {
         width: 100%;
+    }
+
+    .demo-cta {
+        padding: 1.25rem;
     }
 
     .arch-diagram,

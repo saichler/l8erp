@@ -119,19 +119,11 @@
         });
     }
 
-    window.dismissDemoBanner = function() {
-        const banner = document.getElementById('demoBanner');
-        if (banner) {
-            banner.classList.add('hidden');
-            sessionStorage.setItem('demoBannerDismissed', 'true');
-        }
-    };
-
-    if (sessionStorage.getItem('demoBannerDismissed') === 'true') {
-        const banner = document.getElementById('demoBanner');
-        if (banner) banner.classList.add('hidden');
-    }
-
     initAnchors();
     initModals();
+
+    // The other pages' "Live Demo" button links to index.html#demo.
+    if (window.location.hash === '#demo') {
+        openModal('demo');
+    }
 })();

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Tanto, the AI agent in ERP by Layer 8: AI chat over your live ERP data, with sensitive fields masked before they reach the LLM and every query run with the user's own permissions.">
+    <title>AI &amp; Security - ERP by Layer 8</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="js/mobile-detect.js"></script>
+    <link rel="stylesheet" href="css/landing-base.css">
+    <link rel="stylesheet" href="css/landing-header.css">
+    <link rel="stylesheet" href="css/landing-hero.css">
+    <link rel="stylesheet" href="css/landing-sections.css">
+    <link rel="stylesheet" href="css/landing-footer.css">
+    <link rel="stylesheet" href="css/landing-modals.css">
+    <link rel="stylesheet" href="css/landing-animations.css">
+    <link rel="stylesheet" href="css/landing-responsive.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <div class="logo-mark">
+                    <img src="logo.gif" alt="ERP by Layer 8" class="logo-image">
+                    <span>ERP by Layer 8</span>
+                </div>
+                <div class="logo-subtitle">Built on Layer 8</div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="ai.html" class="nav-ai">AI &amp; Security</a></li>
+                <li><a href="architecture.html">Architecture</a></li>
+                <li><a href="modules.html">Modules</a></li>
+                <li><a href="proof.html">Proof</a></li>
+                <li><a href="start.html">Start</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="https://github.com/saichler/l8erp" target="_blank">GitHub</a></li>
+            </ul>
+            <div class="nav-buttons">
+                <a href="index.html" class="demo-button">Home</a>
+                <a href="#" data-modal="demo" class="demo-button demo-button-live">Live Demo</a>
+                <a href="start.html" class="cta-button">Start</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero page-hero">
+            <div class="container hero-layout">
+                <div class="demo-cta">
+                    <div class="demo-cta-text">
+                        <span class="demo-cta-live"><span class="demo-cta-pulse"></span>Live demo &middot; open now</span>
+                        <strong>Ask Tanto about the demo company yourself.</strong>
+                        <span class="demo-cta-creds">Username <code>operator</code> &middot; Password <code>Oper123!</code></span>
+                    </div>
+                    <a href="#" data-modal="demo" class="demo-cta-button">Launch the live demo &rarr;</a>
+                </div>
+                <p class="hero-eyebrow">AI &amp; Security</p>
+                <h1>An AI agent built for business data, so sensitive values never leak to the model.</h1>
+                <p class="hero-summary">Tanto (Layer8) is the AI agent in ERP by Layer 8. It lives in the built-in team chat, answers questions with live queries against your ERP, and can create and update records when you ask. Every design decision starts from one rule: the language model gets the least it needs to reason, and nothing it could leak.</p>
+            </div>
+        </section>
+
+        <section class="ai-differentiators">
+            <div class="section-header">
+                <div class="container">
+                    <p class="section-kicker">How a question is answered</p>
+                    <h2>Your data goes out as tokens and comes back as answers.</h2>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="container">
+                    <ol class="ai-flow">
+                        <li><strong>You ask in the chat.</strong> For example: "What is the average base salary in Engineering, and who is the highest paid?" Social security numbers, money amounts, emails and phone numbers in your message are tokenized before the model sees it.</li>
+                        <li><strong>The model plans a query.</strong> It knows the ERP's models and services, not your records. A query that would pull an unbounded list is rejected; totals must use aggregates.</li>
+                        <li><strong>The query runs as you.</strong> Tanto executes it with your identity, so it sees exactly the rows and fields you are allowed to see. There is no AI service account that bypasses permissions.</li>
+                        <li><strong>Sensitive fields become tokens.</strong> Every field marked sensitive in the data model, and every aggregate over it, is replaced with a stable token like <code>[MASK_7QX2KD]</code> before the result goes to the model. The same value always gets the same token in a conversation, so the model can still compare and group.</li>
+                        <li><strong>The answer is restored for you.</strong> The tokens in the model's reply are swapped back to the real values only in the message shown to you. The model provider never receives them.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="section-header">
+                <div class="container">
+                    <p class="section-kicker">What is masked</p>
+                    <h2>237 sensitive fields in the ERP data model are masked from the AI.</h2>
+                    <p>Sensitivity is declared in the data model with one annotation, <code>[(l8ai.AIMask) = true]</code>, and enforced from the compiled schema at run time. Nothing is guessed from field names, so the agent never hides a value it needs and never sends one it should not. An automated test fails if a known sensitive field loses its annotation.</p>
+                    <div class="masked-list">
+                        <span class="badge">Names &amp; dates of birth</span>
+                        <span class="badge">National IDs &amp; SSNs</span>
+                        <span class="badge">Emails, phones &amp; addresses</span>
+                        <span class="badge">Bank account &amp; routing numbers</span>
+                        <span class="badge">Salaries &amp; payroll totals</span>
+                        <span class="badge">Equity grants</span>
+                        <span class="badge">Performance ratings &amp; reviews</span>
+                        <span class="badge">Signatures</span>
+                        <span class="badge">IP addresses &amp; sessions</span>
+                        <span class="badge">Connection strings &amp; credentials</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="ai-differentiators">
+            <div class="section-header">
+                <div class="container">
+                    <p class="section-kicker">Security model</p>
+                    <h2>More than masking.</h2>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="container">
+                    <div class="features-grid ai-grid">
+                        <div class="feature-card ai-card reveal">
+                            <span class="ai-card-tag">Identity</span>
+                            <h3>The agent is not a user</h3>
+                            <p>Tanto has no login, password or role, so there are no AI credentials to steal. Its replies are accepted only from verified agent instances for the current turn, and no browser token can post as Tanto.</p>
+                        </div>
+                        <div class="feature-card ai-card reveal">
+                            <span class="ai-card-tag">Authorization</span>
+                            <h3>Your permissions, every call</h3>
+                            <p>Each tool call carries the requester's identity, so row scope and deny rules apply. When the session ends, the turn ends with a message asking you to sign in again. It never falls back to another identity.</p>
+                        </div>
+                        <div class="feature-card ai-card reveal">
+                            <span class="ai-card-tag">Context hygiene</span>
+                            <h3>Tool results are not replayed</h3>
+                            <p>Raw query results are never carried from turn to turn; only the assistant's final text is kept. Long conversations are summarized, and the summaries are masked like everything else.</p>
+                        </div>
+                        <div class="feature-card ai-card reveal">
+                            <span class="ai-card-tag">Model choice</span>
+                            <h3>Hosted or on-premise LLMs</h3>
+                            <p>LLM providers and profiles are managed centrally in the security service, together with their API keys. Use Anthropic or any OpenAI-compatible endpoint, including models on your own servers, and pick the profile per conversation.</p>
+                        </div>
+                        <div class="feature-card ai-card reveal">
+                            <span class="ai-card-tag">Scale</span>
+                            <h3>A chat built to scale</h3>
+                            <p>The chat and the agent are separate services: a router, in-memory chat instances, a transactional chat database, presence and groups, and horizontally scaled agent instances. It is designed for 20,000 users.</p>
+                        </div>
+                        <div class="feature-card ai-card reveal">
+                            <span class="ai-card-tag">Live</span>
+                            <h3>Real-time by default</h3>
+                            <p>Messages, conversations and presence arrive over websockets in order, with automatic gap filling after a reconnect. The same chat runs on desktop and mobile, with groups, file sharing and Markdown answers you can copy.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="section-header">
+                <div class="container">
+                    <p class="section-kicker">Compared</p>
+                    <h2>Tanto versus a typical bolt-on AI assistant.</h2>
+                </div>
+            </div>
+            <div class="section-content">
+                <div class="container">
+                    <div class="compare-table-wrap">
+                        <table class="compare-table">
+                            <thead>
+                                <tr><th></th><th>Typical bolt-on AI assistant</th><th>Tanto in ERP by Layer 8</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Sensitive values</td><td>Sent to the model provider in clear text</td><td>Replaced with tokens before the model; restored only for you</td></tr>
+                                <tr><td>What is sensitive</td><td>Guessed from names, or not considered</td><td>Declared in the data model, enforced from the schema</td></tr>
+                                <tr><td>Identity</td><td>A service account or broad API key</td><td>The requesting user, with their permissions</td></tr>
+                                <tr><td>Agent credentials</td><td>A bot account that can be stolen</td><td>None; the agent is not a user</td></tr>
+                                <tr><td>Data volume</td><td>Whatever the tool returns</td><td>Bounded lists, aggregates for totals</td></tr>
+                                <tr><td>Model choice</td><td>One vendor's cloud</td><td>Any provider, including self-hosted, per conversation</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="hero-buttons ai-actions">
+                        <a href="#" data-modal="demo" class="btn-primary">Launch the live demo</a>
+                        <a href="https://github.com/saichler/l8ai" target="_blank" class="btn-secondary">l8ai on GitHub</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="landing-footer">
+        <div class="container footer-layout">
+            <div class="footer-brand">
+                <img src="logo.gif" alt="ERP by Layer 8" class="footer-logo">
+                <div>
+                    <strong>ERP by Layer 8</strong>
+                    <p>Enterprise domains on a shared runtime, shared shell, and shared UI system.</p>
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="ai.html">AI &amp; Security</a>
+                <a href="architecture.html">Architecture</a>
+                <a href="modules.html">Modules</a>
+                <a href="proof.html">Proof</a>
+                <a href="start.html">Start</a>
+                <a href="about.html">About</a>
+                <a href="index.html">Home</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="modal-container"></div>
+    <script src="js/landing.js"></script>
+</body>
+</html>

@@ -66,6 +66,7 @@ limitations under the License.
     <!-- Mobile Navigation -->
     <nav class="mobile-nav" id="mobileNav">
         <ul class="nav-links">
+            <li><a href="#ai" data-close-nav>AI &amp; Security</a></li>
             <li><a href="#modules" data-close-nav>Modules</a></li>
             <li><a href="#features" data-close-nav>Features</a></li>
             <li><a href="#architecture" data-close-nav>Architecture</a></li>
@@ -96,24 +97,23 @@ limitations under the License.
             </div>
 
             <div class="hero-content">
-                <div id="demoBanner" class="demo-banner">
-                    <div class="demo-banner-content">
-                        <span class="demo-banner-pulse"></span>
-                        <span class="demo-banner-text">Live Demo Available</span>
-                        <a href="#" class="demo-banner-link" id="demoBannerLink">Try it now &rarr;</a>
-                    </div>
-                    <button class="demo-banner-close" onclick="dismissDemoBanner()" title="Dismiss">&times;</button>
+                <div id="demoCta" class="demo-cta">
+                    <span class="demo-cta-live"><span class="demo-banner-pulse"></span>Live demo &middot; open now</span>
+                    <strong class="demo-cta-title">Try the full ERP and the Tanto AI agent yourself.</strong>
+                    <span class="demo-cta-creds">Username <code>operator</code> &middot; Password <code>Oper123!</code></span>
+                    <a href="#" class="demo-cta-button" id="demoBannerLink">Launch the live demo &rarr;</a>
                 </div>
                 <div class="hero-logo">
                     <img src="../logo.gif" alt="ERP">
                 </div>
                 <h1 class="hero-title">
-                    <span class="gradient-text">Enterprise Resource Planning</span>
-                    Built for Modern Business
+                    <span class="gradient-text">The ERP with an AI agent</span>
+                    that never sees your sensitive data
                 </h1>
                 <p class="hero-subtitle">
-                    13 modules. 256 services. 8 view types. Financial Management, Human Capital,
-                    Supply Chain, Manufacturing, Sales, CRM, Lending, and more.
+                    Ask Tanto about your business and get answers from live data. Sensitive fields are masked
+                    before anything reaches the AI, and every query runs with your own permissions.
+                    13 modules, 256 services, desktop and mobile.
                 </p>
                 <div class="hero-buttons">
                     <a href="#get-started" class="btn btn-primary btn-block">Get Started</a>
@@ -124,6 +124,72 @@ limitations under the License.
                     <span class="badge">Protobuf</span>
                     <span class="badge">Kubernetes</span>
                     <span class="badge">Zero JS Deps</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Section: the differentiators, first after the hero -->
+        <section id="ai" class="features-section ai-section">
+            <div class="section-title">
+                <h2 class="gradient-text">AI That Cannot Leak Your Data</h2>
+                <p>Most AI assistants send your records to the model. Tanto sends tokens.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">&#128274;</div>
+                    <div class="feature-content">
+                        <h4>Sensitive fields masked</h4>
+                        <p>237 fields (IDs, salaries, bank accounts, contact details and more) become tokens before the LLM; you see the real values</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">&#128100;</div>
+                    <div class="feature-content">
+                        <h4>Runs as you</h4>
+                        <p>Every query uses your permissions; there is no AI superuser</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">&#128273;</div>
+                    <div class="feature-content">
+                        <h4>No AI credentials</h4>
+                        <p>The agent is not a user: no login or password to steal</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">&#9998;</div>
+                    <div class="feature-content">
+                        <h4>Typed text protected</h4>
+                        <p>SSNs, amounts, emails and phones in messages are masked too</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">&#128202;</div>
+                    <div class="feature-content">
+                        <h4>No bulk extraction</h4>
+                        <p>Bounded lists; totals use aggregates</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">&#127968;</div>
+                    <div class="feature-content">
+                        <h4>Your model</h4>
+                        <p>Hosted or self-hosted LLMs, chosen per conversation</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">&#128172;</div>
+                    <div class="feature-content">
+                        <h4>Built-in team chat</h4>
+                        <p>DMs, groups, presence and files, live on desktop and mobile</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -689,20 +755,6 @@ go run ./go/erp/ui/main1/</code>
                 if (e.key === 'Escape') closeModal();
             });
 
-            // Demo banner dismiss
-            window.dismissDemoBanner = function() {
-                var banner = document.getElementById('demoBanner');
-                if (banner) {
-                    banner.classList.add('hidden');
-                    sessionStorage.setItem('demoBannerDismissed', 'true');
-                }
-            };
-
-            // Restore banner state on load
-            if (sessionStorage.getItem('demoBannerDismissed') === 'true') {
-                var banner = document.getElementById('demoBanner');
-                if (banner) banner.classList.add('hidden');
-            }
         })();
     </script>
 </body>

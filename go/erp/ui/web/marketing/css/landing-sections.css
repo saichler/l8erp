@@ -163,3 +163,136 @@ main section {
 .feature-card-link:hover {
     color: inherit;
 }
+
+/* AI differentiators */
+.ai-differentiators {
+    background: var(--color-bg-alt);
+}
+
+.ai-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.ai-card {
+    border-top: 3px solid var(--color-accent);
+}
+
+.ai-card-tag {
+    display: inline-block;
+    margin-bottom: 0.75rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.ai-card code,
+.ai-flow code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    padding: 0.05rem 0.35rem;
+    background: var(--color-bg-alt);
+    border-radius: 4px;
+}
+
+.compare-table-wrap {
+    margin-top: 2rem;
+    overflow-x: auto;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+}
+
+.compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.98rem;
+}
+
+.compare-table th,
+.compare-table td {
+    padding: 0.9rem 1.1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+}
+
+.compare-table th {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+}
+
+.compare-table td:first-child {
+    font-weight: 600;
+    color: var(--color-text);
+    white-space: nowrap;
+}
+
+.compare-table td:nth-child(2) {
+    color: var(--color-text-muted);
+}
+
+.compare-table td:nth-child(3) {
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.compare-table th:nth-child(3),
+.compare-table td:nth-child(3) {
+    background: var(--color-accent-soft);
+}
+
+.ai-actions {
+    margin-top: 2rem;
+}
+
+.ai-flow {
+    display: grid;
+    gap: 1rem;
+    counter-reset: flow;
+}
+
+.ai-flow li {
+    list-style: none;
+    position: relative;
+    padding: 1.1rem 1.25rem 1.1rem 3.6rem;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+}
+
+.ai-flow li strong {
+    color: var(--color-text);
+}
+
+.ai-flow li::before {
+    counter-increment: flow;
+    content: counter(flow);
+    position: absolute;
+    left: 1.1rem;
+    top: 1.05rem;
+    width: 1.8rem;
+    height: 1.8rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.masked-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}

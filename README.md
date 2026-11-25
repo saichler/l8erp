@@ -6,7 +6,7 @@
 
 <p align="center">
   <strong>Enterprise Resource Planning System</strong><br>
-  Built for the Modern Enterprise
+  with an AI agent that never sees your sensitive data
 </p>
 
 <p align="center">
@@ -18,9 +18,57 @@
   <img src="https://img.shields.io/badge/License-Apache%202.0-blue?style=flat-square" alt="License">
 </p>
 
+<h1 align="center">
+  🚀 <a href="https://www.l8erp.one">TRY THE LIVE DEMO → www.l8erp.one</a>
+</h1>
+
 <p align="center">
-  <a href="https://www.l8erp.one"><strong>Live Site</strong></a>
+  <a href="https://www.l8erp.one"><img src="https://img.shields.io/badge/%E2%96%B6%20LIVE%20DEMO-www.l8erp.one-0070f3?style=for-the-badge&labelColor=111111" alt="Live demo" height="44"></a>
 </p>
+
+<p align="center">
+  <strong>Username:</strong> <code>operator</code> &nbsp;·&nbsp; <strong>Password:</strong> <code>Oper123!</code><br>
+  Log in, open the chat bubble at the bottom right, and ask <strong>Tanto</strong> about the company.
+</p>
+
+---
+
+## Why the AI is different
+
+Most AI assistants send your records to the model. **Tanto (Layer8)**, the AI agent built into ERP by Layer 8, sends tokens.
+
+Tanto is a participant in the ERP's built-in team chat ([l8ai](https://github.com/saichler/l8ai)). It answers questions with live queries against the ERP and can create and update records on request. It is designed so that a leaked prompt, a curious model provider or an over-eager agent never exposes what it should not:
+
+| | Typical bolt-on AI assistant | Tanto in ERP by Layer 8 |
+|---|---|---|
+| **Sensitive values** | Sent to the model provider in clear text | Replaced with tokens before the model; restored only in the answer shown to you |
+| **What is sensitive** | Guessed from field names, or not considered | Declared in the data model, enforced from the compiled schema |
+| **Identity** | A service account or broad API key | The requesting user, with their permissions |
+| **Agent credentials** | A bot account that can be stolen | None: the agent is not a user |
+| **Data volume** | Whatever the tool returns | Bounded lists; totals use aggregates |
+| **Model choice** | One vendor's cloud | Any provider, including self-hosted, per conversation |
+
+### How sensitive data is kept from the AI
+
+1. **Declared in the data model.** A sensitive field carries one annotation in its `.proto`: `[(l8ai.AIMask) = true]`. The ERP marks **237 fields** this way: names and dates of birth, national IDs and SSNs, emails, phones and addresses, bank account and routing numbers, salaries and payroll totals, equity grants, performance ratings, signatures, IP addresses and data-source credentials. The agent reads the annotation from the generated descriptors at run time. It never guesses from field names. `go/tests/aimask` fails if a known sensitive field loses its annotation.
+2. **Masked before the model.** In every tool result, a masked value (and any aggregate over it, such as `sum(salary.amount)`) is replaced with a deterministic token, `[MASK_<HMAC(secret, conversation|value)>]`. The same value gets the same token throughout a conversation, across turns and agent instances, so the model can still compare and group values it cannot read.
+3. **Typed text is masked too.** SSNs, money amounts, emails and phone numbers in user messages and conversation summaries are tokenized by their shape.
+4. **Restored only for you.** Tokens in the model's reply are swapped back to the real values only in the message shown to the user, who is already allowed to see them. The unmask map is built per call and is never shared or persisted.
+5. **Tool results are not replayed.** Raw query results are not carried from turn to turn; only the assistant's final text is kept.
+
+### AI security model
+
+- **Runs as you.** Every tool call carries the requesting user's identity, so row scope and deny rules apply exactly as they do in the UI. If the session has expired, the turn ends with a message asking the user to sign in again. It never falls back to another identity.
+- **The agent is not a user.** Tanto has no login, password or role, so there are no credentials to steal. A reply is accepted only from a verified `ChatAgent` instance carrying the conversation's current turn id, so no browser token can post as Tanto.
+- **No bulk extraction.** An unbounded `select *` is rejected: lists need an id filter or a `limit` of at most 100, and totals must use aggregates (`count`, `sum`, `avg`, `min`, `max`).
+- **Your model, centrally managed.** LLM providers and profiles, including their API keys, live in the security service (l8secure). Use Anthropic or any OpenAI-compatible endpoint, including models on your own servers. Users pick the profile per conversation. The demo runs on self-hosted open-weight models.
+- **Masking is not access control.** Masking keeps values from the LLM. What a user may see is still decided by l8secure.
+
+### The chat
+
+- Direct messages, groups, presence (online, away, custom), file sharing and Markdown answers with copy, in a bubble on every screen, on desktop and mobile
+- Live over websockets, applied in order, with automatic gap filling after a reconnect
+- Scalable services, designed for 20,000 users: `chat-router`, in-memory `chat` instances, a transactional `chat-orm`, `chat-users` for presence and groups, and horizontally scaled `chat-agent` instances
 
 ---
 
@@ -52,7 +100,9 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared infrastr
 - **6 Role-Based Portals** — Employee Self-Service, Manager, Customer, Vendor, Partner, and Project Client portals (desktop + mobile)
 - **8 Data View Types** — Table, Chart, Kanban, Calendar, Timeline, Gantt, Tree Grid, and Wizard with per-service view switching
 - **Desktop + Mobile Apps** — full-featured web and mobile interfaces with complete view parity
-- **AI Agent** — integrated AI chat assistant with contextual ERP knowledge
+- **Tanto AI Agent** — answers from live ERP data with sensitive fields masked before the LLM, running as the requesting user (see [Why the AI is different](#why-the-ai-is-different))
+- **Team Chat** — direct messages, groups, presence and files on every screen, desktop and mobile, with the AI agent as one participant
+- **Live Updates** — open tables, dashboard KPIs and chat update over websockets as data changes
 - **Dashboard** — cross-module statistics and KPI overview
 - **Module Selection** — enable/disable modules at runtime with automatic dependency management
 - **System Dependency Map** — visual module dependency graph for configuration
@@ -67,7 +117,7 @@ Part of the **Layer 8 Ecosystem**, this ERP system benefits from shared infrastr
 - **API-First Design** — RESTful APIs for all services with L8Query language
 - **Kubernetes Native** — deploy on any K8s cluster with 6 included manifests
 - **Zero Frontend Dependencies** — pure vanilla JavaScript, no build step required
-- **Comprehensive Tests** — 27 test files covering service getters and handlers across all modules
+- **Comprehensive Tests** — 770 Playwright end-to-end tests (desktop + mobile) against the real images on a Kubernetes (KIND) cluster, plus Go service tests
 
 ## Modules
 
@@ -150,13 +200,17 @@ docker build -t erp-web -f go/erp/ui/Dockerfile go/
 # Deploy all components
 cd k8s && ./deploy.sh
 
-# Components (6 manifests):
-#   vnet       (DaemonSet)    — Virtual network overlay
-#   logs       (DaemonSet)    — Log aggregation vnet
-#   erp        (StatefulSet)  — ERP backend services
-#   web        (DaemonSet)    — Web UI on all nodes
-#   log-agent  (DaemonSet)    — Log collection agent
-#   maint      (Service)      — Maintenance operations
+# Components:
+#   erp-vnet        — Virtual network overlay
+#   erp-logs-vnet   — Log aggregation vnet
+#   erp-log-agent   — Log collection agent
+#   erp             — ERP backend services
+#   erp-chat-orm    — Chat database (transactional)
+#   erp-chat        — Chat instances (in-memory, conversation owners)
+#   erp-chat-router — Routes each conversation to its owning instance
+#   erp-chat-users  — Presence and groups
+#   erp-chat-agent  — Tanto, the AI agent
+#   erp-web         — Web UI
 
 # Teardown
 ./undeploy.sh
@@ -185,7 +239,11 @@ l8erp/
 │   ├── erp/
 │   │   ├── common/              # Shared: validation builder, service factory, defaults
 │   │   ├── services/            # Module activation (activate_hcm.go, activate_fin.go, ...)
-│   │   ├── aia/                 # AI Agent (chat assistant)
+│   │   ├── chat/                # Chat instances (l8ai) + Dockerfile
+│   │   ├── chat-router/         # Chat router + Dockerfile
+│   │   ├── chat-users/          # Presence and groups + Dockerfile
+│   │   ├── chat-orm/            # Chat database service + Dockerfile
+│   │   ├── chat-agent/          # Tanto, the AI agent (system prompt, help docs) + Dockerfile
 │   │   ├── hcm/                 # Human Capital Management (58 services)
 │   │   ├── fin/                 # Financial Management (29 services)
 │   │   ├── scm/                 # Supply Chain Management (30 services)
@@ -214,7 +272,6 @@ l8erp/
 │   │   │       ├── erp-ui/      #     ERP-specific UI (SVG templates, section configs)
 │   │   │       ├── sections/    #     Section HTML files (15 sections)
 │   │   │       ├── dashboard/   #     Cross-module dashboard
-│   │   │       ├── aia/         #     AI Agent UI
 │   │   │       ├── hcm/         #     HCM UI (config, enums, columns, forms per submodule)
 │   │   │       ├── fin/         #     Financial UI
 │   │   │       ├── scm/         #     SCM UI
@@ -246,7 +303,8 @@ l8erp/
 │   │       ├── store*.go        #     Shared mock data store (ID slices per module)
 │   │       └── utils.go         #     Helpers (pickRef, randomMoney, genID, genLines, ...)
 │   └── vendor/                  # Vendored Go dependencies
-├── k8s/                         # 6 Kubernetes manifests + deploy/undeploy scripts
+├── e2e/                         # Playwright end-to-end suite (desktop + mobile)
+├── k8s/                         # Kubernetes manifests (KIND, local, bare metal, GKE) + scripts
 └── tools/                       # Dev tools (REST client, migration scripts)
 ```
 
@@ -287,6 +345,7 @@ l8erp/
 | Backend | Go 1.25 |
 | Database | PostgreSQL 14+ |
 | Frontend | Vanilla JavaScript (zero dependencies, no build step) |
+| AI | l8ai agent; Anthropic or any OpenAI-compatible LLM, hosted or self-hosted |
 | UI Library | [l8ui](https://github.com/saichler/l8ui) (shared component framework) |
 | API | REST with L8Query language |
 | Serialization | Protocol Buffers |
@@ -301,7 +360,9 @@ This ERP is built on top of the Layer 8 open-source infrastructure:
 
 | Component | Purpose |
 |-----------|---------|
-| [l8ui](https://github.com/saichler/l8ui) | Shared UI component library (tables, forms, charts, kanban, etc.) |
+| [l8ai](https://github.com/saichler/l8ai) | Scalable chat and the Tanto AI agent with sensitive-field masking |
+| l8secure | Security: users, roles, permissions, LLM providers and profiles |
+| [l8ui](https://github.com/saichler/l8ui) | Shared UI component library (tables, forms, charts, kanban, chat, etc.) |
 | [l8bus](https://github.com/saichler/l8bus) | Message bus and virtual network overlay |
 | [l8orm](https://github.com/saichler/l8orm) | Object-relational mapping |
 | [l8services](https://github.com/saichler/l8services) | Service framework (activation, callbacks, routing) |
