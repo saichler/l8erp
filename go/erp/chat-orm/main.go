@@ -14,7 +14,7 @@
  */
 
 // erp-chat-orm: the chat persistence services (l8ai, area 81) on this pod's
-// own postgres database, chatdb (a key of the "postgres" credentials).
+// own postgres database, the system config's ChatStoreConfig.
 package main
 
 import (
@@ -28,8 +28,6 @@ import (
 	"github.com/saichler/l8types/go/ifs"
 )
 
-const chatDB = "chatdb"
-
 func main() {
 	res := common.CreateResources("chat-orm", false)
 	ifs.SetNetworkMode(ifs.NETWORK_K8s)
@@ -37,9 +35,12 @@ func main() {
 	nic.Start()
 	nic.WaitForConnection()
 
-	creds := nic.Resources().SysConfig().DataStoreConfig.Type
-	startDb(creds, chatDB, nic)
-	orm.ActivateOrm(creds, chatDB, nic)
+	chatStore := nic.Resources().SysConfig().ChatStoreConfig
+	if chatStore == nil || chatStore.Name == "" {
+		panic("the system config has no ChatStoreConfig")
+	}
+	startDb(chatStore.Type, chatStore.Name, nic)
+	orm.ActivateOrm(chatStore.Type, chatStore.Name, nic)
 
 	res.Logger().Info("chat orm activated")
 	common.WaitForSignal(res)
